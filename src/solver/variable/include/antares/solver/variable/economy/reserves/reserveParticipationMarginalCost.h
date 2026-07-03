@@ -3,6 +3,7 @@
 #pragma once
 
 #include "antares/solver/variable/variable.h"
+#include <antares/solver/simulation/reserve-index-maps.h>
 
 #include "vCardReserveParticipationMarginalCost.h"
 
@@ -137,7 +138,7 @@ public:
                  results.data.area->allCapacityReservations.value().areaCapacityReservations
                    | std::views::keys)
             {
-                Yuni::String caption = results.data.study.runtime.reserveIDToName.value().at(
+                Yuni::String caption = results.data.study.reserveMaps->idToName.at(
                   reserveID);
                 caption << "_MRG.COST";
                 results.variableCaption = caption;

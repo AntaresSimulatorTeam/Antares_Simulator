@@ -3,6 +3,7 @@
 #pragma once
 
 #include "antares/solver/variable/variable.h"
+#include <antares/solver/simulation/reserve-index-maps.h>
 
 #include "vCardReserveParticipationUnsuppliedSpilled.h"
 
@@ -142,7 +143,7 @@ public:
                  results.data.area->allCapacityReservations.value().areaCapacityReservations
                    | std::views::keys)
             {
-                std::string reserveName = results.data.study.runtime.reserveIDToName.value().at(
+                std::string reserveName = results.data.study.reserveMaps->idToName.at(
                   reserveID);
                 Yuni::String caption = reserveName;
                 caption << "_SPIL.";

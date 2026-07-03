@@ -6,10 +6,12 @@
 #include <cassert>
 #include <cmath>
 #include <map>
+#include <memory>
 #include <ranges>
 
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include <antares/logs/logs.h>
+#include <antares/solver/simulation/reserve-index-maps.h>
 #include <antares/solver/simulation/sim_structure_probleme_economique.h>
 #include <antares/study/study.h>
 
@@ -493,8 +495,9 @@ void prepareClustersInMustRunMode(Data::Study& study,
 
 void buildReserveIndexMaps(Data::Study& study, const PROBLEME_HEBDO& problem)
 {
-    auto& reserveParticipationIndexMaps = study.runtime.reserveParticipationIndexMaps;
-    auto& reserveIDToName = study.runtime.reserveIDToName;
+    auto maps = std::make_shared<ReserveIndexMaps>();
+    auto& participationIndexMaps = maps->participationIndexMaps;
+    auto& idToName = maps->idToName;
 
     auto loadReserveParticipations =
       [&](const Data::Area* area, const CAPACITY_RESERVATION& reserve)
@@ -502,7 +505,7 @@ void buildReserveIndexMaps(Data::Study& study, const PROBLEME_HEBDO& problem)
         // Thermal clusters
         for (auto& [clusterId, reserveParticipation]: reserve.AllThermalReservesParticipation)
         {
-            reserveParticipationIndexMaps.value().at(area->id).thermalClusters.insert(
+            participationIndexMaps.at(area->id).thermalClusters.insert(
               {{reserve.reserveID, reserveParticipation.clusterName},
                reserveParticipation.areaIndexClusterParticipation});
         }
@@ -510,7 +513,7 @@ void buildReserveIndexMaps(Data::Study& study, const PROBLEME_HEBDO& problem)
         // Short Term Storage
         for (auto& [clusterId, reserveParticipation]: reserve.AllSTStorageReservesParticipation)
         {
-            reserveParticipationIndexMaps.value().at(area->id).STStorageClusters.insert(
+            participationIndexMaps.at(area->id).STStorageClusters.insert(
               {{reserve.reserveID, reserveParticipation.clusterName},
                reserveParticipation.areaIndexClusterParticipation});
         }
@@ -518,24 +521,22 @@ void buildReserveIndexMaps(Data::Study& study, const PROBLEME_HEBDO& problem)
         // Hydro
         for (auto& reserveParticipation: reserve.AllHydroReservesParticipation)
         {
-            reserveParticipationIndexMaps.value().at(area->id).Hydro.insert(
+            participationIndexMaps.at(area->id).Hydro.insert(
               {reserve.reserveID, reserveParticipation.areaIndexClusterParticipation});
         }
     };
 
-    reserveParticipationIndexMaps.emplace();
-    reserveIDToName.emplace();
     for (const auto& area: study.areas | std::views::values)
     {
-        reserveParticipationIndexMaps.value().emplace(
-          area->id,
-          Data::StudyRuntimeInfos::ReserveIndexMap{});
+        participationIndexMaps.emplace(area->id, ReserveIndexMaps::AreaReserveIndexMap{});
         for (const auto& reserve: problem.allReserves.value()[area->index].areaCapacityReservations)
         {
-            reserveIDToName.value().try_emplace(reserve.reserveID, reserve.reserveName);
+            idToName.try_emplace(reserve.reserveID, reserve.reserveName);
             loadReserveParticipations(area.get(), reserve);
         }
     }
+
+    study.reserveMaps = std::move(maps);
 }
 
 } // namespace Antares::Solver::Simulation

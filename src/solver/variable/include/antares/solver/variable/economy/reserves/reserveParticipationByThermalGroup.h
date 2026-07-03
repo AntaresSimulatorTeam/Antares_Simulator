@@ -3,6 +3,7 @@
 #pragma once
 
 #include "antares/solver/variable/variable.h"
+#include <antares/solver/simulation/reserve-index-maps.h>
 
 #include "vCardReserveParticipationByThermalGroup.h"
 
@@ -158,7 +159,7 @@ public:
                          results.data.area->allCapacityReservations->reserveGroupPartThermal.at(
                            reserveID))
                     {
-                        Yuni::String caption = results.data.study.runtime.reserveIDToName.value()
+                        Yuni::String caption = results.data.study.reserveMaps->idToName
                                                  .at(reserveID);
                         caption << "_" << group;
                         results.variableCaption = caption;

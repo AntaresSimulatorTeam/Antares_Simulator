@@ -3,6 +3,7 @@
 #pragma once
 
 #include "reserveParticipationTemplate.h"
+#include <antares/solver/simulation/reserve-index-maps.h>
 #include "vCardReserveParticipationByDispatchableOnUnitsPlant.h"
 
 namespace Antares::Solver::Variable::Economy::Reserves
@@ -36,7 +37,7 @@ public:
     bool hasIndexMapping(const Data::Study& study, const Data::Area* area) const
     {
         return study.parameters.include.reserves
-               && !study.runtime.reserveParticipationIndexMaps.value()
+               && !study.reserveMaps->participationIndexMaps
                      .at(area->id)
                      .thermalClusters.empty();
     }
@@ -47,11 +48,10 @@ public:
                              int precision,
                              unsigned int numSpace) const
     {
-        auto [reserveID, clusterName] = results.data.study.runtime.reserveParticipationIndexMaps
-                                          .value()
+        auto [reserveID, clusterName] = results.data.study.reserveMaps->participationIndexMaps
                                           .at(results.data.area->id)
                                           .thermalClusters.right.at(i);
-        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        auto reserveName = results.data.study.reserveMaps->idToName.at(reserveID);
         results.variableCaption = reserveName + "_" + clusterName;
         results.variableUnit = VCardType::Unit();
         pValuesForTheCurrentYear[numSpace][i]
@@ -76,7 +76,7 @@ inline void ReserveParticipationByDispatchableOnUnitsPlant::populateHourlyValues
                    .at(clusterName))
             {
                 pValuesForTheCurrentYear[numSpace]
-                                        [state.study.runtime.reserveParticipationIndexMaps.value()
+                                        [state.study.reserveMaps->participationIndexMaps
                                            .at(state.area->id)
                                            .thermalClusters.left.at(
                                              std::make_pair(reserveName, clusterName))]
