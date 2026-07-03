@@ -74,6 +74,21 @@ protected:
     std::string areaLocation() const;
     std::vector<std::string>& names() const;
 
+    const std::string& getArea() const
+    {
+        return area_.value();
+    }
+
+    const std::string& getOrigin() const
+    {
+        return origin_;
+    }
+
+    const std::string& getDestination() const
+    {
+        return destination_;
+    }
+
 private:
     std::string origin_;
     std::string destination_;

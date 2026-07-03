@@ -92,7 +92,10 @@ void Namer::SetLinkElementName(unsigned elementIndex, const std::string& element
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[elementIndex] = name;
-    RecordLegacyVariableInfo(elementIndex, elementType, origin_ + AREA_SEP + destination_);
+    // Alphabetical order per the ST nomenclature
+    const auto& [a1, a2] = (origin_ < destination_) ? std::tie(origin_, destination_)
+                                                    : std::tie(destination_, origin_);
+    RecordLegacyVariableInfo(elementIndex, elementType, a1 + "_" + a2 + "_link");
 }
 
 void Namer::SetAreaElementNameHour(unsigned elementIndex, const std::string& elementType) const
@@ -113,7 +116,7 @@ void Namer::SetAreaElementName(unsigned elementIndex,
     std::string time = TimeIdentifier(timeGranularity);
     std::string name = BuildName(elementType, location, time);
     names_[elementIndex] = name;
-    RecordLegacyVariableInfo(elementIndex, elementType, area_.value());
+    RecordLegacyVariableInfo(elementIndex, elementType, area_.value() + "_node");
 }
 
 void VariableNamer::SetAreaVariableName(unsigned varIndex,
@@ -135,7 +138,7 @@ void Namer::SetThermalClusterElementName(unsigned varIndex,
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
-    RecordLegacyVariableInfo(varIndex, elementType, clusterName);
+    RecordLegacyVariableInfo(varIndex, elementType, area_.value() + "_thermal" + clusterName);
 }
 
 void Namer::SetThermalClusterAndReserveElementName(unsigned varIndex,
@@ -148,7 +151,7 @@ void Namer::SetThermalClusterAndReserveElementName(unsigned varIndex,
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
-    RecordLegacyVariableInfo(varIndex, elementType, reserveName);
+    RecordLegacyVariableInfo(varIndex, elementType, area_.value() + "_thermal_" + clusterName);
 }
 
 void Namer::SetThermalClusterAndReservesElementName(unsigned varIndex,
@@ -162,7 +165,7 @@ void Namer::SetThermalClusterAndReservesElementName(unsigned varIndex,
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
-    RecordLegacyVariableInfo(varIndex, elementType, reserveName1 + "," + reserveName2);
+    RecordLegacyVariableInfo(varIndex, elementType, area_.value() + "_thermal_" + clusterName);
 }
 
 void Namer::SetSTStorageClusterElementName(unsigned varIndex,
@@ -174,7 +177,7 @@ void Namer::SetSTStorageClusterElementName(unsigned varIndex,
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
-    RecordLegacyVariableInfo(varIndex, elementType, clusterName);
+    RecordLegacyVariableInfo(varIndex, elementType, area_.value() + "_short_term_storage_" + clusterName);
 }
 
 void Namer::SetSTStorageClusterAndReserveElementName(unsigned varIndex,
@@ -187,7 +190,7 @@ void Namer::SetSTStorageClusterAndReserveElementName(unsigned varIndex,
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
-    RecordLegacyVariableInfo(varIndex, elementType, reserveName);
+    RecordLegacyVariableInfo(varIndex, elementType, area_.value() + "_short_term_storage_" + clusterName);
 }
 
 void Namer::SetHydroElementName(unsigned varIndex,
@@ -198,7 +201,7 @@ void Namer::SetHydroElementName(unsigned varIndex,
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
-    RecordLegacyVariableInfo(varIndex, elementType, clusterName);
+    RecordLegacyVariableInfo(varIndex, elementType, area_.value() + "_hydro_storage");
 }
 
 void Namer::SetHydroAndReserveElementName(unsigned varIndex,
@@ -211,7 +214,7 @@ void Namer::SetHydroAndReserveElementName(unsigned varIndex,
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
-    RecordLegacyVariableInfo(varIndex, elementType, reserveName);
+    RecordLegacyVariableInfo(varIndex, elementType, area_.value() + "_hydro_storage");
 }
 
 void Namer::SetThermalClusterReserveElementName(unsigned varIndex,
@@ -430,31 +433,37 @@ void VariableNamer::ShortTermStorageCostVariationWithdrawal(unsigned varIndex,
 void VariableNamer::HydProd(unsigned varIndex) const
 {
     SetAreaElementNameHour(varIndex, "HydProd");
+    legacyInfo_[varIndex]->component = getArea() + "_hydro_storage";
 }
 
 void VariableNamer::HydProdDown(unsigned varIndex) const
 {
     SetAreaElementNameHour(varIndex, "HydProdDown");
+    legacyInfo_[varIndex]->component = getArea() + "_hydro_storage";
 }
 
 void VariableNamer::HydProdUp(unsigned varIndex) const
 {
     SetAreaElementNameHour(varIndex, "HydProdUp");
+    legacyInfo_[varIndex]->component = getArea() + "_hydro_storage";
 }
 
 void VariableNamer::Pumping(unsigned varIndex) const
 {
     SetAreaElementNameHour(varIndex, "Pumping");
+    legacyInfo_[varIndex]->component = getArea() + "_hydro_storage";
 }
 
 void VariableNamer::HydroLevel(unsigned varIndex) const
 {
     SetAreaElementNameHour(varIndex, "HydroLevel");
+    legacyInfo_[varIndex]->component = getArea() + "_hydro_storage";
 }
 
 void VariableNamer::Overflow(unsigned varIndex) const
 {
     SetAreaElementNameHour(varIndex, "Overflow");
+    legacyInfo_[varIndex]->component = getArea() + "_hydro_storage";
 }
 
 void VariableNamer::LayerStorage(unsigned varIndex, int layerIndex) const
@@ -465,6 +474,7 @@ void VariableNamer::LayerStorage(unsigned varIndex, int layerIndex) const
 void VariableNamer::FinalStorage(unsigned varIndex) const
 {
     SetAreaElementNameHour(varIndex, "FinalStorage");
+    legacyInfo_[varIndex]->component = getArea() + "_hydro_storage";
 }
 
 void VariableNamer::UnsuppliedEnergy(unsigned varIndex) const
@@ -570,6 +580,10 @@ void ConstraintNamer::FinalStockEquivalent(unsigned constrIndex) const
 void ConstraintNamer::FinalStockExpression(unsigned constrIndex) const
 {
     SetAreaElementNameHour(constrIndex, "FinalStockExpression");
+    if (legacyInfo_ && (*legacyInfo_)[constrIndex])
+    {
+        (*legacyInfo_)[constrIndex]->component = getArea() + "_hydro_storage";
+    }
 }
 
 void ConstraintNamer::BindingConstraint(
