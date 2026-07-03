@@ -8,9 +8,7 @@
 
 #include <antares/study/area/scratchpad.h>
 
-namespace Antares
-{
-namespace Solver
+namespace Antares::Solver
 {
 
 double randomReservoirLevel(double min, double avg, double max, MersenneTwister& random)
@@ -87,8 +85,10 @@ double BetaVariable(double a, double b, MersenneTwister& random)
     return y / (y + z);
 }
 
-} // namespace Solver
+} // namespace Antares::Solver
 
+namespace Antares
+{
 HydroManagement::HydroManagement(const Data::AreaList& areas,
                                  const Data::Parameters& params,
                                  const Date::Calendar& calendar,

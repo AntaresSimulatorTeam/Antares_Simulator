@@ -18,8 +18,9 @@
 namespace Antares
 {
 class IniFile;
+} // namespace Antares
 
-namespace Data
+namespace Antares::Data
 {
 // Forward declarations
 class Study;
@@ -462,8 +463,7 @@ enum class mpsExportStatus : int
 
 std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status);
 mpsExportStatus stringToMPSexportStatus(const AnyString& value);
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 namespace Antares::Data::ScenarioBuilder
 {
