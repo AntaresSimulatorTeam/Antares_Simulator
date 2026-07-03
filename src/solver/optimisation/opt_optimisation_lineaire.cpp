@@ -16,8 +16,8 @@
 
 using namespace Antares::Solver;
 using namespace IO::Outputs;
-using Antares::Solver::Optimization::ExportBehavior;
-using Antares::Solver::Optimization::OptimizationOptions;
+using Antares::Optimization::ExportBehavior;
+using Antares::Optimization::OptimizationOptions;
 
 namespace
 {

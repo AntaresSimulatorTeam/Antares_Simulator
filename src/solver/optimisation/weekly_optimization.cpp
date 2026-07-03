@@ -7,12 +7,12 @@
 
 using namespace Antares::IO::Outputs;
 
-namespace Antares::Solver::Optimization
+namespace Antares::Optimization
 {
 WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
                                        PROBLEME_HEBDO* problemeHebdo,
-                                       IResultWriter& writer,
-                                       Simulation::ISimulationObserver& simulationObserver,
+                                       Solver::IResultWriter& writer,
+                                       Solver::Simulation::ISimulationObserver& simulationObserver,
                                        bool writeSimuTable):
     options_(options),
     problemeHebdo_(problemeHebdo),
@@ -39,4 +39,4 @@ OptimisationsSimulationTable* WeeklyOptimization::simulationTables()
     return simulationTables_.get();
 }
 
-} // namespace Antares::Solver::Optimization
+} // namespace Antares::Optimization

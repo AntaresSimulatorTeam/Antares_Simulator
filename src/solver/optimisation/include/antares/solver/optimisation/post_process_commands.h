@@ -5,6 +5,8 @@
 
 #include "antares/solver/simulation/base_post_process.h"
 
+// Kept in Antares::Solver::Simulation (not the optim subtree): these are simulation
+// post-processing commands, not optimization-model code.
 namespace Antares::Solver::Simulation
 {
 class DispatchableMarginPostProcessCmd final: public basePostProcessCommand

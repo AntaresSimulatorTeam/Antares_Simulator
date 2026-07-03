@@ -22,8 +22,8 @@ class OptimEntityContainer;
 }
 
 using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
-using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
-using SingleOptimOptions = Antares::Solver::Optimization::SingleOptimOptions;
+using OptimizationOptions = Antares::Optimization::OptimizationOptions;
+using SingleOptimOptions = Antares::Optimization::SingleOptimOptions;
 
 namespace Antares::IO::Outputs
 {

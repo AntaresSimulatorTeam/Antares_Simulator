@@ -13,5 +13,5 @@
  * has compilation issues), and under development for XPRESS.
  */
 void SolveQuadraticProblemWithOrtools(
-  const Antares::Solver::Optimization::SingleOptimOptions& options,
+  const Antares::Optimization::SingleOptimOptions& options,
   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre);

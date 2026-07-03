@@ -10,4 +10,4 @@ using namespace operations_research;
 
 void ORTOOLS_Simplexe(PROBLEME_ANTARES_A_RESOUDRE* problemeHebdo,
                       MPSolver* ProbSpx,
-                      const Antares::Solver::Optimization::SingleOptimOptions& options);
+                      const Antares::Optimization::SingleOptimOptions& options);

@@ -19,7 +19,7 @@
 
 using namespace Antares::Data;
 
-namespace Antares::Solver::Optimization
+namespace Antares::Optimization
 {
 
 void CsrQuadraticProblem::setConstraintsOnFlows(ConstraintBuilder& builder)
@@ -143,4 +143,4 @@ void CsrQuadraticProblem::buildConstraintMatrix()
     setBindingConstraints(builder);
 }
 
-} // namespace Antares::Solver::Optimization
+} // namespace Antares::Optimization

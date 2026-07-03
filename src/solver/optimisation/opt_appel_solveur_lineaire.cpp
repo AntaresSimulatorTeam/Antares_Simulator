@@ -42,7 +42,7 @@ using namespace Antares::IO;
 using namespace Antares::IO::Outputs;
 
 using Antares::Solver::IResultWriter;
-using Antares::Solver::Optimization::SingleOptimOptions;
+using Antares::Optimization::SingleOptimOptions;
 
 struct SimplexResult
 {

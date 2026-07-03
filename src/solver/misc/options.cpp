@@ -299,5 +299,5 @@ void Settings::reset()
     noOutput = false;
     forceZipOutput = false;
 
-    solverOptions = Antares::Solver::Optimization::CmdLineOptimOptions{};
+    solverOptions = Antares::Optimization::CmdLineOptimOptions{};
 }

@@ -365,7 +365,7 @@ void Application::prepare(int argc, const char* argv[])
         // Set solver options from command line
         pStudy->parameters.optOptions.initializeWith(options.solverOptions);
 
-        using namespace Antares::Solver::Optimization;
+        using namespace Antares::Optimization;
         // TODO
         pStudy->parameters.optOptions.exportBehavior = pStudy->parameters.include.exportStructure
                                                          ? ExportBehavior::Once

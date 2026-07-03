@@ -32,7 +32,7 @@ struct QpFixture
     std::vector<double> primals;
     std::vector<double> duals;
     std::vector<double> reducedCosts;
-    Antares::Solver::Optimization::SingleOptimOptions options;
+    Antares::Optimization::SingleOptimOptions options;
 
     void solve()
     {
