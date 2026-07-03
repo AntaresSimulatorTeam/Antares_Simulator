@@ -3,8 +3,9 @@
 
 #pragma once
 
-#include "reserveParticipationTemplate.h"
 #include <antares/solver/simulation/reserve-index-maps.h>
+
+#include "reserveParticipationTemplate.h"
 #include "vCardReserveParticipationByHydro.h"
 
 namespace Antares::Solver::Variable::Economy::Reserves
@@ -66,11 +67,10 @@ inline void ReserveParticipationByHydro::populateHourlyValues(State& state, unsi
                .at(state.area->index)
                .reserveParticipationPerHydroForYear[state.hourInTheYear]["Hydro"])
         {
-            pValuesForTheCurrentYear[numSpace]
-                                    [state.study.reserveMaps->participationIndexMaps
-                                       .at(state.area->id)
-                                       .Hydro.left.at(reserveName)]
-                                      .hour[state.hourInTheYear]
+            pValuesForTheCurrentYear[numSpace][state.study.reserveMaps->participationIndexMaps
+                                                 .at(state.area->id)
+                                                 .Hydro.left.at(reserveName)]
+              .hour[state.hourInTheYear]
               = reserveParticipation;
         }
     }

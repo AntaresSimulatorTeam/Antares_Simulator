@@ -101,7 +101,6 @@ public:
         uint hydros = 0;
     } counts;
 
-
     //! Override enable/disable TS generation per cluster
     bool thermalTSRefresh = false;
 

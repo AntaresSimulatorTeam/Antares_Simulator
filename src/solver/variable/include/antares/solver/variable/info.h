@@ -5,8 +5,8 @@
 #define __SOLVER_VARIABLE_INFO_H__
 
 #include <cmath>
-#include <antares/solver/simulation/reserve-index-maps.h>
 
+#include <antares/solver/simulation/reserve-index-maps.h>
 #include "antares/solver/variable/surveyresults.h"
 #include "antares/study/fwd.h"
 

@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: MPL-2.0
 #pragma once
 
-#include "reserveParticipationTemplate.h"
 #include <antares/solver/simulation/reserve-index-maps.h>
+
+#include "reserveParticipationTemplate.h"
 #include "vCardReserveParticipationBySTStorage.h"
 
 namespace Antares::Solver::Variable::Economy::Reserves
@@ -35,9 +36,7 @@ public:
     bool hasIndexMapping(const Data::Study& study, const Data::Area* area) const
     {
         return study.parameters.include.reserves
-               && !study.reserveMaps->participationIndexMaps
-                     .at(area->id)
-                     .STStorageClusters.empty();
+               && !study.reserveMaps->participationIndexMaps.at(area->id).STStorageClusters.empty();
     }
 
     void buildReportForIndex(SurveyResults& results,
@@ -72,12 +71,10 @@ inline void ReserveParticipationBySTStorage::populateHourlyValues(State& state,
                  resData.reserveParticipationPerSTStorageClusterForYear.at(state.hourInTheYear)
                    .at(clusterName))
             {
-                pValuesForTheCurrentYear[numSpace]
-                                        [state.study.reserveMaps->participationIndexMaps
-                                           .at(state.area->id)
-                                           .STStorageClusters.left.at(
-                                             std::make_pair(reserveName, clusterName))]
-                                          .hour[state.hourInTheYear]
+                pValuesForTheCurrentYear
+                  [numSpace][state.study.reserveMaps->participationIndexMaps.at(state.area->id)
+                               .STStorageClusters.left.at(std::make_pair(reserveName, clusterName))]
+                    .hour[state.hourInTheYear]
                   = reserveParticipation;
             }
         }

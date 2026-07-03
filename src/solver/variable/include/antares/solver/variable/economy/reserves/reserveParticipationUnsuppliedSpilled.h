@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: MPL-2.0
 #pragma once
 
-#include "antares/solver/variable/variable.h"
 #include <antares/solver/simulation/reserve-index-maps.h>
+#include "antares/solver/variable/variable.h"
 
 #include "vCardReserveParticipationUnsuppliedSpilled.h"
 
@@ -143,8 +143,7 @@ public:
                  results.data.area->allCapacityReservations.value().areaCapacityReservations
                    | std::views::keys)
             {
-                std::string reserveName = results.data.study.reserveMaps->idToName.at(
-                  reserveID);
+                std::string reserveName = results.data.study.reserveMaps->idToName.at(reserveID);
                 Yuni::String caption = reserveName;
                 caption << "_SPIL.";
                 results.variableCaption = caption; // VCardType::Caption();
