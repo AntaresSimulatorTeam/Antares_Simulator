@@ -224,7 +224,7 @@ inline ISimulation<ImplementationType>::ISimulation(
     pNbMaxPerformedYearsInParallel(0),
     pYearByYear(study.parameters.yearByYear),
     pDurationCollector(duration_collector),
-    pQueueService(std::make_shared<Yuni::Job::QueueService>()),
+    pQueueService(std::make_shared<Concurrency::ThreadPool>()),
     pResultWriter(resultWriter),
     simulationObserver_(simulationObserver)
 {
@@ -400,9 +400,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // List of parallel years sets
     std::vector<setOfParallelYears> setsOfParallelYears;
 
-    // Number of threads to perform the jobs waiting in the queue
-    pQueueService->maximumThreadCount(pNbMaxPerformedYearsInParallel);
-
     regenerateTimeSeries(study, pResultWriter, pDurationCollector);
     HydroInputsChecker hydroInputsChecker(study);
     logs.info() << " Doing hydro validation";
@@ -482,9 +479,8 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         }
     }
 
-    pQueueService->start();
-    pQueueService->wait(Yuni::qseIdle);
-    pQueueService->stop();
+    // Number of threads to perform the jobs waiting in the queue
+    pQueueService->start(pNbMaxPerformedYearsInParallel);
 
     results.join();
     pResultWriter.flush();

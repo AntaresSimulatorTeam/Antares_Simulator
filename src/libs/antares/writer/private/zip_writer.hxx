@@ -5,8 +5,6 @@
 
 #include "antares/concurrency/concurrency.h"
 
-#include "ensure_queue_started.h"
-
 namespace Antares::Solver
 {
 template<class ContentType>
@@ -18,11 +16,9 @@ void ZipWriter::addEntryFromBufferHelper(const std::filesystem::path& entryPath,
         return;
     }
 
-    EnsureQueueStartedIfNeeded ensureQueue(this, pQueueService);
     pendingTasks_.add(Concurrency::AddTask(
-      *pQueueService,
-      ZipWriteJob<ContentType>(*this, entryPath.string(), entryContent, pDurationCollector),
-      Yuni::Job::priorityLow));
+      *pThreadPool,
+      ZipWriteJob<ContentType>(*this, entryPath.string(), entryContent, pDurationCollector)));
 }
 
 } // namespace Antares::Solver

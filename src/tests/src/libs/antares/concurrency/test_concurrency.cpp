@@ -7,15 +7,11 @@
 
 #include "antares/concurrency/concurrency.h"
 
-using namespace Yuni::Job;
 using namespace Antares::Concurrency;
 
-std::unique_ptr<QueueService> createThreadPool(int size)
+std::unique_ptr<ThreadPool> createThreadPool(unsigned size)
 {
-    auto threadPool = std::make_unique<QueueService>();
-    threadPool->maximumThreadCount(size);
-    threadPool->start();
-    return threadPool;
+    return std::make_unique<ThreadPool>(size);
 }
 
 BOOST_AUTO_TEST_CASE(test_no_error)
@@ -97,6 +93,69 @@ BOOST_AUTO_TEST_CASE(allow_to_use_function_object_pointer)
     TaskFuture future = AddTask(*threadPool, functionObjectPtr);
     future.get();
     BOOST_CHECK(functionObjectPtr->called);
+}
+
+BOOST_AUTO_TEST_CASE(tasks_added_before_start_run_only_after_start)
+{
+    ThreadPool threadPool;
+    std::atomic<int> counter = 0;
+    Task incrementCounter = [&counter]() { counter++; };
+    FutureSet futures;
+    for (int i = 0; i < 5; i++)
+    {
+        futures.add(AddTask(threadPool, incrementCounter));
+    }
+    // No worker exists yet: nothing can have run
+    BOOST_CHECK(counter == 0);
+    threadPool.start(2);
+    futures.join();
+    BOOST_CHECK(counter == 5);
+}
+
+BOOST_AUTO_TEST_CASE(destructor_drains_pending_tasks)
+{
+    std::atomic<int> counter = 0;
+    std::vector<TaskFuture> futures;
+    {
+        ThreadPool threadPool(1);
+        for (int i = 0; i < 20; i++)
+        {
+            futures.push_back(AddTask(threadPool, [&counter]() { counter++; }));
+        }
+        // Destroying the pool must complete all queued tasks before joining
+    }
+    for (auto& future: futures)
+    {
+        BOOST_CHECK_NO_THROW(future.get());
+    }
+    BOOST_CHECK(counter == 20);
+}
+
+BOOST_AUTO_TEST_CASE(worker_survives_task_exception)
+{
+    auto threadPool = createThreadPool(1);
+    TaskFuture failing = AddTask(*threadPool, failingTask<TestException>());
+    int counter = 0;
+    TaskFuture following = AddTask(*threadPool, [&counter]() { counter++; });
+    BOOST_CHECK_THROW(failing.get(), TestException);
+    following.get();
+    BOOST_CHECK(counter == 1);
+}
+
+BOOST_AUTO_TEST_CASE(single_worker_runs_tasks_in_fifo_order)
+{
+    auto threadPool = createThreadPool(1);
+    std::vector<int> order;
+    FutureSet futures;
+    for (int i = 0; i < 10; i++)
+    {
+        futures.add(AddTask(*threadPool, [&order, i]() { order.push_back(i); }));
+    }
+    futures.join();
+    for (int i = 0; i < 10; i++)
+    {
+        BOOST_CHECK(order[i] == i);
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()
