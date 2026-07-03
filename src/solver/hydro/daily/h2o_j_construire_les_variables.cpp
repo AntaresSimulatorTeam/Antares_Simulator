@@ -6,7 +6,7 @@
 
 #include "spx_constantes_externes.h"
 
-namespace DoneesOptimisationJournaliere
+namespace Antares::Solver::Hydro::Daily
 {
 void H2O_j_ConstruireLesVariables(
   int NbPdt,
@@ -53,4 +53,4 @@ void H2O_j_ConstruireLesVariables(
     TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
     AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = nullptr;
 }
-} // namespace DoneesOptimisationJournaliere
+} // namespace Antares::Solver::Hydro::Daily
