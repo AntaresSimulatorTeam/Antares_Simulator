@@ -102,19 +102,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                                                                    clusterName,
                                                                    reserveName);
                     NombreDeVariables++;
-
-                    variableManager.OffThermalClusterReserveParticipation(
-                      clusterReserveParticipation.globalIndexClusterParticipation,
-                      pdt)
-                      = NombreDeVariables;
-                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                      = VARIABLE_BORNEE_DES_DEUX_COTES;
-                    ProblemeAResoudre->VariablesEntieres[NombreDeVariables]
-                      = problemeHebdo->OptimisationAvecVariablesEntieres;
-                    variableNamer.ParticipationOfOffUnitsToReserve(NombreDeVariables,
-                                                                   clusterName,
-                                                                   reserveName);
-                    NombreDeVariables++;
                 }
 
                 // For all units in cluster
