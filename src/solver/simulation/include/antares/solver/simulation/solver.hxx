@@ -24,6 +24,16 @@
 namespace Antares::Solver::Simulation
 {
 
+// Forward declaration: solver.hxx and common-eco-adq.h include each other, so
+// depending on the entry point common-eco-adq.h's own declaration may not yet be
+// visible when the template body below is parsed. Declaring it here makes the
+// dependent call resolvable at the template definition context regardless of
+// include order (needed for the explicit ISimulation<> instantiations).
+void prepareClustersInMustRunMode(Data::Study& study,
+                                  Data::Area::ScratchMap& scratchmap,
+                                  uint year,
+                                  Data::SimulationMode mode);
+
 template<class Impl>
 class yearJob
 {
