@@ -8,21 +8,21 @@
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/system-model/system.h"
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
-namespace LinearProblemApi
+namespace Api
 {
 class ILinearProblem;
 class IMipConstraint;
-} // namespace LinearProblemApi
+} // namespace Api
 class OptimEntityContainer;
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem
 
 namespace Antares::Optimization
 {
 using ConstraintIndicesHelper = std::function<
   std::vector<unsigned>(const PROBLEME_HEBDO* problemeHebdo,
-                        const Optimisation::LinearProblemApi::FillContext& ctx,
+                        const LinearProblem::Api::FillContext& ctx,
                         const unsigned& areaIndex)>;
 
 /**
@@ -33,49 +33,49 @@ using ConstraintIndicesHelper = std::function<
  * based on the connections between components and areas in the Antares study.
  */
 class ComponentToAreaConnectionFiller final
-    : public Optimisation::LinearProblemApi::LinearProblemFiller
+    : public LinearProblem::Api::LinearProblemFiller
 {
 public:
     explicit ComponentToAreaConnectionFiller(
       const PROBLEME_HEBDO* problemeHebdo,
-      Optimisation::OptimEntityContainer& optimContainer,
-      const Optimisation::LinearProblemApi::ILinearProblemData* data,
-      const Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
+      LinearProblem::OptimEntityContainer& optimContainer,
+      const LinearProblem::Api::ILinearProblemData* data,
+      const LinearProblem::ScenarioGroupRepository& scenarioGroupRepository);
 
-    void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addVariables(const LinearProblem::Api::FillContext& ctx) override;
+    void addConstraints(const LinearProblem::Api::FillContext& ctx) override;
+    void addObjectives(const LinearProblem::Api::FillContext& ctx) override;
 
 private:
     // Data members
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
-    Optimisation::OptimEntityContainer& optimEntityContainer_;
-    Optimisation::LinearProblemApi::ILinearProblem& pb_;
-    const Optimisation::LinearProblemApi::ILinearProblemData* data_;
-    const Optimisation::ScenarioGroupRepository& scenarioGroupRepo_;
+    LinearProblem::OptimEntityContainer& optimEntityContainer_;
+    LinearProblem::Api::ILinearProblem& pb_;
+    const LinearProblem::Api::ILinearProblemData* data_;
+    const LinearProblem::ScenarioGroupRepository& scenarioGroupRepo_;
 
     std::map<std::string, unsigned> areaIndices_;
 
     // Function members
     void checkAreasFromConnexionsExist();
 
-    std::vector<Optimisation::LinearProblemApi::IMipConstraint*> fetchConstraints(
-      const Optimisation::LinearProblemApi::FillContext& ctx,
+    std::vector<LinearProblem::Api::IMipConstraint*> fetchConstraints(
+      const LinearProblem::Api::FillContext& ctx,
       const std::vector<unsigned>& constraintsIndices);
 
     void addExpressionToConstraint(
       const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
-      const Optimisation::LinearProblemApi::FillContext& ctx,
-      const std::vector<Optimisation::LinearProblemApi::IMipConstraint*>& constraintIndices) const;
+      const LinearProblem::Api::FillContext& ctx,
+      const std::vector<LinearProblem::Api::IMipConstraint*>& constraintIndices) const;
 
     TimeDependentLinearExpression linearExpressionAtPortField(
       const std::string& portId,
       const std::string& fieldId,
       const ModelerStudy::SystemModel::Component& component,
-      const Optimisation::LinearProblemApi::FillContext& ctx);
+      const LinearProblem::Api::FillContext& ctx);
 
-    void addPortContributionToLinearPb(const Optimisation::LinearProblemApi::FillContext& ctx,
+    void addPortContributionToLinearPb(const LinearProblem::Api::FillContext& ctx,
                                        const ModelerStudy::SystemModel::Component& component,
                                        const std::string& portId,
                                        const std::string& portField,

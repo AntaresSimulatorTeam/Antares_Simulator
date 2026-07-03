@@ -24,10 +24,10 @@ struct ModelerData
 {
     std::vector<ModelerStudy::SystemModel::Library> libraries;
     std::unique_ptr<ModelerStudy::SystemModel::System> system;
-    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries;
-    Optimisation::ScenarioGroupRepository scenarioGroupRepository;
+    std::unique_ptr<LinearProblem::Api::ILinearProblemData> dataSeries;
+    LinearProblem::ScenarioGroupRepository scenarioGroupRepository;
     ResolutionMode resolutionMode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
-    Optimisation::BendersDecomposition bendersDecomposition;
+    LinearProblem::BendersDecomposition bendersDecomposition;
 };
 
 // Operator for printing ResolutionMode in logs and tests

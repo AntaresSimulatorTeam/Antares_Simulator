@@ -11,7 +11,7 @@
 #include <antares/solver/utils/ortools_utils.h>
 #include "antares/optimisation/linear-problem-mpsolver-impl/mipVariable.h"
 
-namespace Antares::Optimisation::LinearProblemMpsolverImpl
+namespace Antares::LinearProblem::MpsolverImpl
 {
 
 OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName):
@@ -21,7 +21,7 @@ OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solver
 {
 }
 
-LinearProblemApi::IMipVariable* OrtoolsLinearProblem::addVariable(double lb,
+Api::IMipVariable* OrtoolsLinearProblem::addVariable(double lb,
                                                                   double ub,
                                                                   bool integer,
                                                                   const std::string& name)
@@ -43,35 +43,35 @@ LinearProblemApi::IMipVariable* OrtoolsLinearProblem::addVariable(double lb,
     return variables_.back().get();
 }
 
-const std::vector<std::unique_ptr<LinearProblemApi::IMipVariable>>&
+const std::vector<std::unique_ptr<Api::IMipVariable>>&
 OrtoolsLinearProblem::getVariables() const
 {
     return variables_;
 }
 
-LinearProblemApi::IMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
+Api::IMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
                                                                      double ub,
                                                                      const std::string& name)
 {
     return addVariable(lb, ub, false, name);
 }
 
-LinearProblemApi::IMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
+Api::IMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
                                                                      double ub,
                                                                      const std::string& name)
 {
     return addVariable(lb, ub, true, name);
 }
 
-LinearProblemApi::IMipVariable* OrtoolsLinearProblem::getVariable(std::size_t index) const
+Api::IMipVariable* OrtoolsLinearProblem::getVariable(std::size_t index) const
 {
     return variables_.at(index).get();
 }
 
-LinearProblemApi::IMipVariable* OrtoolsLinearProblem::lookupVariable(const std::string& name) const
+Api::IMipVariable* OrtoolsLinearProblem::lookupVariable(const std::string& name) const
 {
     auto it = std::ranges::find_if(variables_,
-                                   [&name](const std::unique_ptr<LinearProblemApi::IMipVariable>& v)
+                                   [&name](const std::unique_ptr<Api::IMipVariable>& v)
                                    { return v->getName() == name; });
     if (it != variables_.end())
     {
@@ -80,12 +80,12 @@ LinearProblemApi::IMipVariable* OrtoolsLinearProblem::lookupVariable(const std::
     return nullptr;
 }
 
-LinearProblemApi::IMipConstraint* OrtoolsLinearProblem::lookupConstraint(
+Api::IMipConstraint* OrtoolsLinearProblem::lookupConstraint(
   const std::string& name) const
 {
     auto it = std::ranges::find_if(constraints_,
                                    [&name](
-                                     const std::unique_ptr<LinearProblemApi::IMipConstraint>& c)
+                                     const std::unique_ptr<Api::IMipConstraint>& c)
                                    { return c->getName() == name; });
     if (it != constraints_.end())
     {
@@ -99,7 +99,7 @@ int OrtoolsLinearProblem::variableCount() const
     return mpSolver_->NumVariables();
 }
 
-LinearProblemApi::IMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
+Api::IMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
                                                                       double ub,
                                                                       const std::string& name)
 {
@@ -114,13 +114,13 @@ LinearProblemApi::IMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
     return constraints_.back().get();
 }
 
-const std::vector<std::unique_ptr<LinearProblemApi::IMipConstraint>>&
+const std::vector<std::unique_ptr<Api::IMipConstraint>>&
 OrtoolsLinearProblem::getConstraints() const
 {
     return constraints_;
 }
 
-LinearProblemApi::IMipConstraint* OrtoolsLinearProblem::getConstraint(std::size_t index) const
+Api::IMipConstraint* OrtoolsLinearProblem::getConstraint(std::size_t index) const
 {
     return constraints_.at(index).get();
 }
@@ -130,27 +130,27 @@ int OrtoolsLinearProblem::constraintCount() const
     return mpSolver_->NumConstraints();
 }
 
-static const operations_research::MPVariable* getMpVar(const LinearProblemApi::IMipVariable* var)
+static const operations_research::MPVariable* getMpVar(const Api::IMipVariable* var)
 
 {
     const auto* OrtoolsMipVar = dynamic_cast<const OrtoolsMipVariable*>(var);
     if (!OrtoolsMipVar)
     {
         logs.error()
-          << "Invalid cast, tried from LinearProblemApi::IMipVariable to OrtoolsMipVariable";
+          << "Invalid cast, tried from Api::IMipVariable to OrtoolsMipVariable";
         throw std::bad_cast();
     }
     return OrtoolsMipVar->getMpVar();
 }
 
-void OrtoolsLinearProblem::setObjectiveCoefficient(LinearProblemApi::IMipVariable* var,
+void OrtoolsLinearProblem::setObjectiveCoefficient(Api::IMipVariable* var,
                                                    double coefficient)
 {
     objective_->SetCoefficient(getMpVar(var), coefficient);
 }
 
 double OrtoolsLinearProblem::getObjectiveCoefficient(
-  const LinearProblemApi::IMipVariable* var) const
+  const Api::IMipVariable* var) const
 {
     return objective_->GetCoefficient(getMpVar(var));
 }
@@ -222,4 +222,4 @@ bool OrtoolsLinearProblem::isLP() const
     return isLP_;
 }
 
-} // namespace Antares::Optimisation::LinearProblemMpsolverImpl
+} // namespace Antares::LinearProblem::MpsolverImpl

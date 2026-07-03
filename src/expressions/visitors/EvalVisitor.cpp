@@ -14,7 +14,7 @@
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/utils/vector-utils.h"
 
-using namespace Antares::Optimisation;
+using namespace Antares::LinearProblem;
 using namespace Antares::Utils;
 
 namespace Antares::Expressions::Visitors
@@ -22,10 +22,10 @@ namespace Antares::Expressions::Visitors
 // Time sum utilities are provided by TimeSumUtils.h
 
 EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
-                         const LinearProblemApi::FillContext& fillContext,
+                         const Api::FillContext& fillContext,
                          const ModelerStudy::SystemModel::Component& component,
-                         const LinearProblemApi::ILinearProblemData* data,
-                         const LinearProblemApi::IScenario& scenario):
+                         const Api::ILinearProblemData* data,
+                         const Api::IScenario& scenario):
     // TODO put component or its id inside context, it is already component-bound.
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
@@ -254,7 +254,7 @@ EvaluationResult EvalVisitor::visitDual(const Nodes::FunctionNode* node)
          ++timeStep)
     {
         const auto localTimeStep = timeStep - fillContext_.getLocalFirstTimeStep();
-        if (Optimisation::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
+        if (LinearProblem::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
                                                   timeStep,
                                                   fillContext_,
                                                   *this))

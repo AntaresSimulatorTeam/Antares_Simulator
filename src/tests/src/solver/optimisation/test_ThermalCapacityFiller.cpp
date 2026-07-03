@@ -11,9 +11,9 @@ using namespace std::string_literals;
 
 using namespace Antares::Optimization;
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::Optimisation;
-using namespace LinearProblemApi;
-using namespace LinearProblemDataImpl;
+using namespace Antares::LinearProblem;
+using namespace Api;
+using namespace DataImpl;
 
 static const auto thermalConnectionLib = R"(
 library:

@@ -18,7 +18,7 @@
 
 using namespace Antares::IO::Outputs;
 using namespace Antares::Error;
-using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::LinearProblem::Api;
 
 namespace Antares::Writer
 {

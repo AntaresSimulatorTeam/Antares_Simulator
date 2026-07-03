@@ -9,7 +9,7 @@
 
 #include <antares/optimisation/linear-problem-api/IScenario.h>
 
-namespace Antares::Optimisation::LinearProblemDataImpl
+namespace Antares::LinearProblem::DataImpl
 {
 
 class IDataSeries
@@ -23,12 +23,12 @@ public:
     }
 
     [[nodiscard]] virtual double getData(
-      LinearProblemApi::IScenario::TimeSeriesNumber time_series_number,
+      Api::IScenario::TimeSeriesNumber time_series_number,
       unsigned int hour) const
       = 0;
 
     [[nodiscard]] virtual std::span<const double> getData(
-      LinearProblemApi::IScenario::TimeSeriesNumber time_series_number,
+      Api::IScenario::TimeSeriesNumber time_series_number,
       unsigned firstHour,
       unsigned lastHour) const
       = 0;
@@ -42,4 +42,4 @@ private:
     std::string name_;
 };
 
-} // namespace Antares::Optimisation::LinearProblemDataImpl
+} // namespace Antares::LinearProblem::DataImpl

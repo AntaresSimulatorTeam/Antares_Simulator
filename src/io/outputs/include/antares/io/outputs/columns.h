@@ -82,7 +82,7 @@ static std::string FormatValue(const U& v)
     {
         return FromDouble(v);
     }
-    else if constexpr (std::is_same_v<U, Optimisation::LinearProblemApi::MipBasisStatus>)
+    else if constexpr (std::is_same_v<U, LinearProblem::Api::MipBasisStatus>)
     {
         return StatusToString(v);
     }

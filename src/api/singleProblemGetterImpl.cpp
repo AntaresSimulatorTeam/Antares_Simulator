@@ -22,7 +22,7 @@
 #include "antares/solver/simulation/simulation.h"
 #include "antares/writer/i_writer.h"
 
-using namespace Optimisation::LinearProblemApi;
+using namespace LinearProblem::Api;
 
 namespace
 {
@@ -358,7 +358,7 @@ std::unique_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProb
     }
 
     std::unique_ptr<ILinearProblem> linearProblem = std::make_unique<
-      Antares::Optimisation::LinearProblemApi::StructuredLinearProblem>();
+      Antares::LinearProblem::Api::StructuredLinearProblem>();
     fillProblem(*linearProblem, id);
 
     return linearProblem;
@@ -368,14 +368,14 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProbl
 {
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
-    Optimisation::LinearProblemApi::FillContext fillCtx = buildFillContext(&pb_,
+    LinearProblem::Api::FillContext fillCtx = buildFillContext(&pb_,
                                                                            numeroDeLIntervalle);
     const auto modelerData = pb_.modelerData;
     bool hasModelerData = modelerData != nullptr;
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
 
-    Optimisation::OptimEntityContainer optimEntityContainer(problem);
+    LinearProblem::OptimEntityContainer optimEntityContainer(problem);
     if (hasModelerData)
     {
         modelerData->bendersDecomposition.setCurrentProblemId(problemName({id.year, id.week + 1}));
@@ -511,8 +511,8 @@ void writeWeekMPS(const std::unique_ptr<ILinearProblem>& weekly,
 Solver::ProblemEntity SingleProblemGetter::getMasterProblem() const
 {
     using namespace Antares::Solver;
-    using namespace Antares::Optimisation;
-    using namespace Antares::Optimisation::LinearProblemApi;
+    using namespace Antares::LinearProblem;
+    using namespace Antares::LinearProblem::Api;
 
     logs.info() << "Building master problem and Benders decomposition...";
 
@@ -529,8 +529,8 @@ Solver::ProblemEntity SingleProblemGetter::getMasterProblem() const
 void SingleProblemGetter::writeMasterAndStructure() const
 {
     using namespace Antares::Solver;
-    using namespace Antares::Optimisation;
-    using namespace Antares::Optimisation::LinearProblemApi;
+    using namespace Antares::LinearProblem;
+    using namespace Antares::LinearProblem::Api;
 
     logs.info() << "Building master problem and Benders decomposition...";
 

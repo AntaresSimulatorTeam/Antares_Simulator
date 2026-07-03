@@ -43,7 +43,7 @@ using namespace Antares::Data;
 // ---------------------------------
 // Full mps writing
 // ---------------------------------
-MPSwriter::MPSwriter(const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+MPSwriter::MPSwriter(const LinearProblem::Api::ILinearProblem& linearProblem,
                      uint optNumber,
                      bool keepNames):
     I_MPS_writer(optNumber),
@@ -68,7 +68,7 @@ mpsWriterFactory::mpsWriterFactory(
   Data::mpsExportStatus exportMPS,
   bool exportMPSOnError,
   const int current_optim_number,
-  const Optimisation::LinearProblemApi::ILinearProblem& linearProblem):
+  const LinearProblem::Api::ILinearProblem& linearProblem):
     export_mps_(exportMPS),
     export_mps_on_error_(exportMPSOnError),
     linearProblem_(linearProblem),

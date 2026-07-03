@@ -8,24 +8,24 @@
 
 namespace Antares::Solver::LoadFiles
 {
-std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadDataSeries(
+std::unique_ptr<LinearProblem::Api::ILinearProblemData> loadDataSeries(
   const std::filesystem::path& studyPath)
 {
     try
     {
-        Optimisation::LinearProblemDataImpl::DataSeriesRepository dataSeriesRepository = IO::
+        LinearProblem::DataImpl::DataSeriesRepository dataSeriesRepository = IO::
           Inputs::DataSeriesCsvImporter::DataSeriesRepoImporter::importFromDirectory(
             studyPath / "input" / "data-series",
             '\t');
         logs.info() << "Data-series loaded";
-        return std::make_unique<Optimisation::LinearProblemDataImpl::LinearProblemData>(
+        return std::make_unique<LinearProblem::DataImpl::LinearProblemData>(
           std::move(dataSeriesRepository));
     }
     catch (const std::exception& e)
     {
         // data-series are not mandatory
         logs.warning() << "Data-series could not be loaded: " << e.what();
-        return std::make_unique<Optimisation::LinearProblemDataImpl::LinearProblemData>();
+        return std::make_unique<LinearProblem::DataImpl::LinearProblemData>();
     }
 }
 } // namespace Antares::Solver::LoadFiles

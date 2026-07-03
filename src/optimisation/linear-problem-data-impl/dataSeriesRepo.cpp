@@ -3,7 +3,7 @@
 
 #include "antares/optimisation/linear-problem-data-impl/dataSeriesRepo.h"
 
-namespace Antares::Optimisation::LinearProblemDataImpl
+namespace Antares::LinearProblem::DataImpl
 {
 void DataSeriesRepository::addDataSeries(std::unique_ptr<IDataSeries> dataSeries)
 {
@@ -27,4 +27,4 @@ IDataSeries& DataSeriesRepository::getDataSeries(const std::string& setId) const
     }
     return *(dataSeries_.at(setId));
 }
-} // namespace Antares::Optimisation::LinearProblemDataImpl
+} // namespace Antares::LinearProblem::DataImpl

@@ -9,7 +9,7 @@
 
 #include "dataSeries.h"
 
-namespace Antares::Optimisation::LinearProblemDataImpl
+namespace Antares::LinearProblem::DataImpl
 {
 class TimeSeriesSet: public IDataSeries
 {
@@ -20,7 +20,7 @@ public:
     void add(std::vector<double>&& ts);
     double getData(unsigned tsNumber, unsigned hour) const override;
     [[nodiscard]] std::span<const double> getData(
-      LinearProblemApi::IScenario::TimeSeriesNumber tsNumber,
+      Api::IScenario::TimeSeriesNumber tsNumber,
       unsigned firstHour,
       unsigned lastHour) const override;
 
@@ -56,4 +56,4 @@ public:
     };
 };
 
-} // namespace Antares::Optimisation::LinearProblemDataImpl
+} // namespace Antares::LinearProblem::DataImpl

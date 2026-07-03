@@ -8,7 +8,7 @@
 #include "antares/solver/optimisation/LegacyExtraOutputs.h"
 
 using Antares::IO::Outputs::SimulationTable;
-using Antares::Optimisation::LinearProblemApi::FillContext;
+using Antares::LinearProblem::Api::FillContext;
 using Antares::Optimization::AddLegacyExtraOutputs;
 using Antares::Optimization::LegacyVariableInfo;
 

@@ -21,7 +21,7 @@ void AddLegacyExtraOutputs(Antares::IO::Outputs::SimulationTable& simulationTabl
                            const std::vector<double>& linearCosts,
                            const std::vector<std::optional<LegacyVariableInfo>>& constraintsInfo,
                            const std::vector<double>& constraintDuals,
-                           const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+                           const Antares::LinearProblem::Api::FillContext& fillContext,
                            unsigned currentBlock);
 
 } // namespace Antares::Optimization

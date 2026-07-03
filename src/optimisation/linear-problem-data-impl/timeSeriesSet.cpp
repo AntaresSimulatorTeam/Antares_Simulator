@@ -9,7 +9,7 @@
 #include "antares/exception/LoadingError.hpp"
 #include "antares/exception/RuntimeError.hpp"
 
-namespace Antares::Optimisation::LinearProblemDataImpl
+namespace Antares::LinearProblem::DataImpl
 {
 TimeSeriesSet::TimeSeriesSet(std::string name, unsigned int height):
     IDataSeries::IDataSeries(name),
@@ -45,7 +45,7 @@ void TimeSeriesSet::add(std::vector<double>&& ts)
     tsSet_.push_back(std::move(ts));
 }
 
-double TimeSeriesSet::getData(LinearProblemApi::IScenario::TimeSeriesNumber tsNumber,
+double TimeSeriesSet::getData(Api::IScenario::TimeSeriesNumber tsNumber,
                               unsigned hour) const
 {
     if (tsNumber == 0)
@@ -71,7 +71,7 @@ double TimeSeriesSet::getData(LinearProblemApi::IScenario::TimeSeriesNumber tsNu
 }
 
 [[nodiscard]] std::span<const double> TimeSeriesSet::getData(
-  LinearProblemApi::IScenario::TimeSeriesNumber tsNumber,
+  Api::IScenario::TimeSeriesNumber tsNumber,
   unsigned firstHour,
   unsigned lastHour) const
 {
@@ -99,4 +99,4 @@ double TimeSeriesSet::getData(LinearProblemApi::IScenario::TimeSeriesNumber tsNu
     return std::span(tsSet.begin() + firstHour, tsSet.begin() + lastHour + 1);
 }
 
-} // namespace Antares::Optimisation::LinearProblemDataImpl
+} // namespace Antares::LinearProblem::DataImpl

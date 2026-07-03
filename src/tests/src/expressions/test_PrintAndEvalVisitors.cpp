@@ -22,14 +22,14 @@ using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::Optimisation;
+using namespace Antares::LinearProblem;
 
 BOOST_AUTO_TEST_SUITE(_PrintAndEvalNodes_)
 
 BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
 {
     // Mock dependency
-    struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
+    struct MockLinearProblemData: Antares::LinearProblem::Api::ILinearProblemData
     {
         [[nodiscard]] double getData(const std::string&, unsigned int, unsigned int) const override
         {
@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
 
     std::map<std::string, double> variables; // Not needed for this test
 
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
+    Antares::LinearProblem::Api::EmptyScenario emptyScenario;
     auto model = createModelWithParameters(params);
     const std::vector<Component> components{createComponent(model, "compo", system_parameters)};
     EvaluationContext context(&components.back(), &mockData, &emptyScenario);
@@ -689,7 +689,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param_scenario_only, MyDummyFixture)
     BOOST_CHECK_EQUAL(std::stod(value), eval);
 }
 
-struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
+struct MockLinearProblemData: Antares::LinearProblem::Api::ILinearProblemData
 {
     [[nodiscard]] double getData(const std::string& dataSetId,
                                  const unsigned /*scenario*/,
@@ -770,12 +770,12 @@ struct TimeDependentParameterFixture
     Model model;
     std::string compoName = "1245";
     std::vector<Component> components;
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo;
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo;
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer = OptimEntityContainer(linearProblem);
 
     std::unique_ptr<Antares::Expressions::Visitors::EvalVisitor> evalVisitor;
-    Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 1, 0, 1, 1};
+    Antares::LinearProblem::Api::FillContext ctx{0, 1, 0, 1, 1};
 
     TimeDependentParameterFixture(
       std::map<std::string, ParameterTypeAndValue> additionnalParams = {})
@@ -832,7 +832,7 @@ EvaluationResult CreateAndEvaluateTimeNode(Node* p)
     NodeType root(&paramNode, p);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
+    Antares::LinearProblem::Api::EmptyScenario emptyScenario;
 
     unsigned first = 0;
     unsigned last = 2;
@@ -844,12 +844,12 @@ EvaluationResult CreateAndEvaluateTimeNode(Node* p)
                                               VariabilityType::VARYING_IN_TIME_ONLY);
     const auto compoName = "1245";
     const std::vector<Component> components{createComponent(model, compoName, {param})};
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
-    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{first,
+    const Antares::LinearProblem::Api::FillContext fillContext{first,
                                                                            last /*three hours*/,
                                                                            first,
                                                                            last,
@@ -889,7 +889,7 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
     TimeSumNode root(from, to, &paramNode);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
+    Antares::LinearProblem::Api::EmptyScenario emptyScenario;
 
     unsigned first = 0;
     unsigned last = 2;
@@ -901,13 +901,13 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
                                               VariabilityType::VARYING_IN_TIME_ONLY);
     const auto compoName = "1245";
     const std::vector<Component> components{createComponent(model, compoName, {param})};
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
-    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{first,
+    const Antares::LinearProblem::Api::FillContext fillContext{first,
                                                                            last /*three hours*/,
                                                                            first,
                                                                            last,
@@ -962,7 +962,7 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
     AllTimeSumNode root(&paramNode);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
+    Antares::LinearProblem::Api::EmptyScenario emptyScenario;
 
     unsigned first = 0;
     unsigned last = 2;
@@ -974,13 +974,13 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
                                               VariabilityType::VARYING_IN_TIME_ONLY);
     const auto compoName = "1245";
     const std::vector<Component> components{createComponent(model, compoName, {param})};
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
-    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{first,
+    const Antares::LinearProblem::Api::FillContext fillContext{first,
                                                                            last /*three hours*/,
                                                                            first,
                                                                            last,
@@ -1020,12 +1020,12 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
                                               VariabilityType::VARYING_IN_TIME_ONLY);
     const auto compoName = "1245";
     const std::vector<Component> components{createComponent(model, compoName, {param})};
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
-    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{hour_0,
+    const Antares::LinearProblem::Api::FillContext fillContext{hour_0,
                                                                            hour_1 /*two hours*/,
                                                                            hour_0,
                                                                            hour_1,
@@ -1077,7 +1077,7 @@ void evaluate_time_dependent_operation()
     BinaryNode root(&literal, &paramNode); // Correctly use the type as a template argument
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
+    Antares::LinearProblem::Api::EmptyScenario emptyScenario;
     unsigned hour_0 = 1;
     unsigned hour_1 = 2;
 
@@ -1090,13 +1090,13 @@ void evaluate_time_dependent_operation()
 
     const std::vector<Component> components{createComponent(model, compoName, {param})};
 
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
-    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{hour_0,
+    const Antares::LinearProblem::Api::FillContext fillContext{hour_0,
                                                                            hour_1 /*three hours*/,
                                                                            hour_0,
                                                                            hour_1,
@@ -1123,7 +1123,7 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
     const std::string value = "dummy";
 
     MockLinearProblemData dummy_data;
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
+    Antares::LinearProblem::Api::EmptyScenario emptyScenario;
     std::vector<unsigned int> hours = {1, 2};
 
     Model model = createModelWithParameters(
@@ -1134,12 +1134,12 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
     const auto compoName = "1245";
     const std::vector<Component> components{createComponent(model, compoName, {param})};
 
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
-    const Antares::Optimisation::LinearProblemApi::FillContext
+    const Antares::LinearProblem::Api::FillContext
       fillContext{hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0};
     EvalVisitor visitor(optimContainer,
                         fillContext,
@@ -1170,7 +1170,7 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
     const std::string value = "dummy";
 
     MockLinearProblemData dummy_data;
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
+    Antares::LinearProblem::Api::EmptyScenario emptyScenario;
     std::vector<unsigned int> hours = {1, 2};
 
     Model model = createModelWithParameters(
@@ -1182,12 +1182,12 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
 
     const std::vector<Component> components{createComponent(model, compoName, {param})};
 
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
-    const Antares::Optimisation::LinearProblemApi::FillContext
+    const Antares::LinearProblem::Api::FillContext
       fillContext{hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0};
     EvalVisitor visitor(optimContainer,
                         fillContext,
@@ -1718,7 +1718,7 @@ BOOST_AUTO_TEST_CASE(HandleEmptyString)
 
 BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
 {
-    Antares::Optimisation::LinearProblemApi::FillContext fillContext{0, 2, 10, 12, 0};
+    Antares::LinearProblem::Api::FillContext fillContext{0, 2, 10, 12, 0};
     ModelBuilder modelBuilder;
 
     unsigned varIndex = 0;
@@ -1741,9 +1741,9 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
 
     ComponentBuilder component_builder;
     std::vector components = {component_builder.withModel(&model).withId("my_component").build()};
-    LinearProblemDataImpl::LinearProblemData testData;
+    DataImpl::LinearProblemData testData;
 
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     PredfinedSolutionLinearProblemMock linearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);

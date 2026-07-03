@@ -8,8 +8,8 @@
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-using namespace Antares::Optimisation;
-using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::LinearProblem;
+using namespace Antares::LinearProblem::Api;
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Expressions::Visitors;
 

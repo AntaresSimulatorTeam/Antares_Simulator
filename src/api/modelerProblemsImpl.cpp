@@ -20,7 +20,7 @@ ModelerProblems::ModelerProblems(const std::filesystem::path& studyPath)
     modeler_->exportStructureFile();
 }
 
-void logProblemSize(const Optimisation::LinearProblemApi::ILinearProblem* problem,
+void logProblemSize(const LinearProblem::Api::ILinearProblem* problem,
                     const std::string& name)
 {
     logs.info() << name << ": " << problem->variableCount() << " variables, "

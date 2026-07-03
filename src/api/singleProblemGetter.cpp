@@ -28,7 +28,7 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
     return impl_->getWeeklyData(id);
 }
 
-std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>
+std::unique_ptr<LinearProblem::Api::ILinearProblem>
 SingleProblemGetter::getWeeklyProblem(WeeklyProblemId id)
 {
     return impl_->getWeeklyProblem(id);

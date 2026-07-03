@@ -17,11 +17,11 @@ namespace
 {
 unsigned countActiveConstraintTimesteps(
   const Antares::ModelerStudy::SystemModel::Constraint& constraint,
-  const Antares::Optimisation::LinearProblemApi::FillContext& ctx,
-  const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
+  const Antares::LinearProblem::Api::FillContext& ctx,
+  const Antares::LinearProblem::OptimEntityContainer& optimEntityContainer,
   const Antares::ModelerStudy::SystemModel::Component& component,
-  const Antares::Optimisation::LinearProblemApi::ILinearProblemData* data,
-  const Antares::Optimisation::ScenarioGroupRepository& scenarioGroupRepo)
+  const Antares::LinearProblem::Api::ILinearProblemData* data,
+  const Antares::LinearProblem::ScenarioGroupRepository& scenarioGroupRepo)
 {
     if (constraint.outOfBoundsProcessingMode()
         == Antares::ModelerStudy::SystemModel::OutOfBoundsProcessingMode::CYCLIC)
@@ -32,10 +32,10 @@ unsigned countActiveConstraintTimesteps(
     const auto& scenario = scenarioGroupRepo.scenario(component.getScenarioGroupId());
     Visitors::EvalVisitor evalVisitor(optimEntityContainer, ctx, component, data, scenario);
     unsigned activeConstraintCount = 0;
-    for (const auto timeStep: Antares::Optimisation::IntegerInterval{ctx.getLocalFirstTimeStep(),
+    for (const auto timeStep: Antares::LinearProblem::IntegerInterval{ctx.getLocalFirstTimeStep(),
                                                                      ctx.getLocalLastTimeStep()})
     {
-        if (!Antares::Optimisation::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
+        if (!Antares::LinearProblem::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
                                                             timeStep,
                                                             ctx,
                                                             evalVisitor))
@@ -51,7 +51,7 @@ using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::ModelerStudy::SystemModel;
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 
 class VariableNames
@@ -115,7 +115,7 @@ class AddVariableVisitor
 {
 public:
     AddVariableVisitor(const Variable& variable,
-                       LinearProblemApi::ILinearProblem& linear_problem,
+                       Api::ILinearProblem& linear_problem,
                        const VariableNames& variableNames,
                        const Dimensions& dimensions);
 
@@ -131,13 +131,13 @@ public:
 
 private:
     const bool isInteger_;
-    LinearProblemApi::ILinearProblem& linear_problem_;
+    Api::ILinearProblem& linear_problem_;
     const VariableNames& variableNames_;
     const Dimensions& dims_;
 };
 
 AddVariableVisitor::AddVariableVisitor(const Variable& variable,
-                                       LinearProblemApi::ILinearProblem& linear_problem,
+                                       Api::ILinearProblem& linear_problem,
                                        const VariableNames& variableNames,
                                        const Dimensions& dimensions):
     isInteger_(variable.Type() != ValueType::FLOAT),
@@ -227,7 +227,7 @@ void AddVariableVisitor::operator()(const std::vector<double>& lb,
 }
 
 ComponentFiller::ComponentFiller(const Component& component,
-                                 const LinearProblemApi::ILinearProblemData* data,
+                                 const Api::ILinearProblemData* data,
                                  OptimEntityContainer& optimEntityContainer,
                                  const ScenarioGroupRepository& scenarioGroupRepo,
                                  Solver::Config::Location targetLocation,
@@ -242,19 +242,19 @@ ComponentFiller::ComponentFiller(const Component& component,
 {
 }
 
-bool checkTimeSteps(const LinearProblemApi::FillContext& ctx)
+bool checkTimeSteps(const Api::FillContext& ctx)
 {
     return ctx.getLocalFirstTimeStep() <= ctx.getLocalLastTimeStep();
 }
 
-Dimensions getDimensions(const LinearProblemApi::FillContext& ctx)
+Dimensions getDimensions(const Api::FillContext& ctx)
 {
     Dimensions dims(IntegerInterval{ctx.getYear(), ctx.getYear()},
                     IntegerInterval(ctx.getLocalFirstTimeStep(), ctx.getLocalLastTimeStep()));
     return dims;
 }
 
-Dimensions getDimensions(const Variable& var, const LinearProblemApi::FillContext& ctx)
+Dimensions getDimensions(const Variable& var, const Api::FillContext& ctx)
 {
     if (!var.isTimeDependent())
     {
@@ -263,7 +263,7 @@ Dimensions getDimensions(const Variable& var, const LinearProblemApi::FillContex
     return getDimensions(ctx);
 }
 
-void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
+void ComponentFiller::addVariables(const Api::FillContext& ctx)
 {
     if (!checkTimeSteps(ctx))
     {
@@ -336,7 +336,7 @@ void ComponentFiller::addStaticConstraint(const LinearConstraint& linear_constra
 
 void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear_constraints,
                                                   const std::string& constraint_id,
-                                                  const LinearProblemApi::FillContext& ctx,
+                                                  const Api::FillContext& ctx,
                                                   const Constraint& constraint) const
 {
     const auto dims = getDimensions(ctx);
@@ -359,7 +359,7 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
         for (const auto t: dims.getTimesteps())
         {
             const auto localIndex = static_cast<std::size_t>(t - firstTimestep);
-            if (Antares::Optimisation::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
+            if (Antares::LinearProblem::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
                                                                t,
                                                                ctx,
                                                                evalVisitor))
@@ -400,7 +400,7 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
     }
 }
 
-void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
+void ComponentFiller::addConstraints(const Api::FillContext& ctx)
 {
     const auto& contraints = component_.getModel()->Constraints();
     ReadLinearConstraintVisitor visitor(optimEntityContainer_,
@@ -449,7 +449,7 @@ void ComponentFiller::addStaticObjective(const Optimization::LinearExpression& e
     }
 }
 
-void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
+void ComponentFiller::addObjectives(const Api::FillContext& ctx)
 {
     auto* model = component_.getModel();
     ReadLinearExpressionVisitor visitor(optimEntityContainer_,
@@ -479,4 +479,4 @@ VariabilityType ComponentFiller::getVariability(const Node* node, const Componen
     Visitors::VariabilityVisitor variability_visitor(optimEntityContainer_, component);
     return variability_visitor.dispatch(node);
 }
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem

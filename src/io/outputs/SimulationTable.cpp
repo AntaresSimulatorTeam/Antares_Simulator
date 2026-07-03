@@ -20,7 +20,7 @@ SimulationTable::SimulationTable()
     scenario_index_ = storage_.addIntegralColumn("scenario_index");
     value_ = storage_.addOptionalColumn<double>("value");
     basis_status_ = storage_
-                      .addOptionalColumn<Antares::Optimisation::LinearProblemApi::MipBasisStatus>(
+                      .addOptionalColumn<Antares::LinearProblem::Api::MipBasisStatus>(
                         "basis_status");
 }
 

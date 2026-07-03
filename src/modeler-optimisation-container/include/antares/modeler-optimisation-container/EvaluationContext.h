@@ -10,13 +10,13 @@
 
 #include "antares/study/system-model/component.h"
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 class IScenario;
 class ILinearProblemData;
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace Antares::LinearProblem::Api
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 
 /**
@@ -37,8 +37,8 @@ public:
      * @param variables variable values.
      */
     explicit EvaluationContext(const ModelerStudy::SystemModel::Component* component,
-                               const Optimisation::LinearProblemApi::ILinearProblemData* data,
-                               const Optimisation::LinearProblemApi::IScenario* scenario);
+                               const LinearProblem::Api::ILinearProblemData* data,
+                               const LinearProblem::Api::IScenario* scenario);
 
     /**
      * @brief Retrieves the value of a parameter.
@@ -59,14 +59,14 @@ public:
                                               unsigned int firstHour,
                                               unsigned int lastHour) const;
 
-    [[nodiscard]] Optimisation::VariabilityType getParameterType(const std::string& key) const;
+    [[nodiscard]] LinearProblem::VariabilityType getParameterType(const std::string& key) const;
 
     [[nodiscard]] ModelerStudy::SystemModel::ParameterTypeAndValue getParameter(
       const std::string& key) const;
 
-    [[nodiscard]] const Optimisation::LinearProblemApi::ILinearProblemData& data() const;
+    [[nodiscard]] const LinearProblem::Api::ILinearProblemData& data() const;
 
-    [[nodiscard]] const Optimisation::LinearProblemApi::IScenario& scenario() const;
+    [[nodiscard]] const LinearProblem::Api::IScenario& scenario() const;
 
     template<class T>
     struct CouldNotEvaluateConstantParameter: T
@@ -76,7 +76,7 @@ public:
 
 private:
     const ModelerStudy::SystemModel::Component* component_;
-    const Optimisation::LinearProblemApi::ILinearProblemData* data_;
-    const Optimisation::LinearProblemApi::IScenario* scenario_;
+    const LinearProblem::Api::ILinearProblemData* data_;
+    const LinearProblem::Api::IScenario* scenario_;
 };
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem

@@ -8,7 +8,7 @@
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipVariable.h>
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 
-namespace Antares::Optimisation::LinearProblemMpsolverImpl
+namespace Antares::LinearProblem::MpsolverImpl
 {
 
 OrtoolsMipConstraint::OrtoolsMipConstraint(operations_research::MPConstraint* mpConstraint):
@@ -41,26 +41,26 @@ double OrtoolsMipConstraint::getUb() const
     return mpConstraint_->ub();
 }
 
-void OrtoolsMipConstraint::setCoefficient(LinearProblemApi::IMipVariable* var, double coefficient)
+void OrtoolsMipConstraint::setCoefficient(Api::IMipVariable* var, double coefficient)
 {
     auto* mpvar = dynamic_cast<OrtoolsMipVariable*>(var);
     if (!mpvar)
     {
         logs.error()
-          << "Invalid cast, tried from LinearProblemApi::IMipVariable to OrtoolsMipVariable";
+          << "Invalid cast, tried from Api::IMipVariable to OrtoolsMipVariable";
         throw std::bad_cast();
     }
 
     mpConstraint_->SetCoefficient(mpvar->getMpVar(), coefficient);
 }
 
-double OrtoolsMipConstraint::getCoefficient(const LinearProblemApi::IMipVariable* var) const
+double OrtoolsMipConstraint::getCoefficient(const Api::IMipVariable* var) const
 {
     const auto* mpvar = dynamic_cast<const OrtoolsMipVariable*>(var);
     if (!mpvar)
     {
         logs.error()
-          << "Invalid cast, tried from LinearProblemApi::IMipVariable to OrtoolsMipVariable";
+          << "Invalid cast, tried from Api::IMipVariable to OrtoolsMipVariable";
         throw std::bad_cast();
     }
 
@@ -90,9 +90,9 @@ const std::string& OrtoolsMipConstraint::getName() const
     return mpConstraint_->name();
 }
 
-LinearProblemApi::MipBasisStatus OrtoolsMipConstraint::getMipBasisStatus() const
+Api::MipBasisStatus OrtoolsMipConstraint::getMipBasisStatus() const
 {
     return convertOrtoolsBasisStatus(mpConstraint_->basis_status());
 }
 
-} // namespace Antares::Optimisation::LinearProblemMpsolverImpl
+} // namespace Antares::LinearProblem::MpsolverImpl

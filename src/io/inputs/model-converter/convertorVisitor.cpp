@@ -16,7 +16,7 @@ namespace Antares::IO::Inputs::ModelConverter
 {
 
 using namespace Antares::Expressions::Nodes;
-using namespace Antares::Optimisation;
+using namespace Antares::LinearProblem;
 
 /// Visitor to convert ANTLR expressions to Antares::Expressions::Nodes
 class ConvertorVisitor final: public ExprVisitor

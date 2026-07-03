@@ -18,7 +18,7 @@
 #include "antares/study/system-model/model.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::Optimisation;
+using namespace Antares::LinearProblem;
 using namespace Antares::Solver;
 
 namespace Test::Modeler
@@ -49,12 +49,12 @@ struct LinearProblemBuildingFixture
 {
     std::unordered_map<std::string, Model> models;
     Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> nodeRegistry;
-    std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblem> pb;
+    std::unique_ptr<Antares::LinearProblem::Api::ILinearProblem> pb;
     std::vector<Component> components;
-    Antares::Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data_;
+    Antares::LinearProblem::DataImpl::LinearProblemData dummy_data_;
     ModelerData modelerData;
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo;
-    std::unique_ptr<Antares::Optimisation::OptimEntityContainer> optimEntityContainer;
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo;
+    std::unique_ptr<Antares::LinearProblem::OptimEntityContainer> optimEntityContainer;
 
     void createModel(const std::string& modelId,
                      const std::vector<std::string>& parameterIds,
@@ -94,13 +94,13 @@ struct LinearProblemBuildingFixture
 
     Antares::Expressions::Nodes::Node* parameter(
       const std::string& paramId,
-      const Antares::Optimisation::VariabilityType& variability = Antares::Optimisation::
+      const Antares::LinearProblem::VariabilityType& variability = Antares::LinearProblem::
         VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
     Antares::Expressions::Nodes::Node* variable(
       const std::string& varId,
       unsigned int index,
-      const Antares::Optimisation::VariabilityType& variability = Antares::Optimisation::
+      const Antares::LinearProblem::VariabilityType& variability = Antares::LinearProblem::
         VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
     Antares::Expressions::Nodes::Node* multiply(Antares::Expressions::Nodes::Node* node1,
@@ -112,12 +112,12 @@ struct LinearProblemBuildingFixture
     Antares::Expressions::Nodes::Node* negate(Antares::Expressions::Nodes::Node* node);
 
     void buildLinearProblem(
-      Antares::Optimisation::LinearProblemApi::FillContext& time_scenario_ctx,
-      Antares::Optimisation::LinearProblemDataImpl::LinearProblemData& dummy_data,
-      std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IScenario>>& scenarios);
+      Antares::LinearProblem::Api::FillContext& time_scenario_ctx,
+      Antares::LinearProblem::DataImpl::LinearProblemData& dummy_data,
+      std::vector<std::unique_ptr<Antares::LinearProblem::Api::IScenario>>& scenarios);
 
     void buildLinearProblem(
-      Antares::Optimisation::LinearProblemApi::FillContext& time_scenario_ctx);
+      Antares::LinearProblem::Api::FillContext& time_scenario_ctx);
 
     void buildLinearProblem();
 
@@ -127,7 +127,7 @@ struct LinearProblemBuildingFixture
         auto system = systemBuilder.withId("system").withComponents(std::move(components)).build();
         modelerData.system = std::make_unique<System>(std::move(system));
         modelerData.dataSeries = std::make_unique<
-          Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(std::move(dummy_data_));
+          Antares::LinearProblem::DataImpl::LinearProblemData>(std::move(dummy_data_));
         modelerData.scenarioGroupRepository = std::move(scenarioGroupRepo);
         return modelerData;
     }

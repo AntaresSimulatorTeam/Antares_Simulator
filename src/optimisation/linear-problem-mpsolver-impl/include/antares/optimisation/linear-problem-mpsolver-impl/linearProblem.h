@@ -16,47 +16,47 @@ class MPSolverParameters;
 class MPObjective;
 } // namespace operations_research
 
-namespace Antares::Optimisation::LinearProblemMpsolverImpl
+namespace Antares::LinearProblem::MpsolverImpl
 {
 
-class OrtoolsLinearProblem: public LinearProblemApi::ILinearProblem
+class OrtoolsLinearProblem: public Api::ILinearProblem
 {
 public:
     OrtoolsLinearProblem(bool isMip, const std::string& solverName);
     ~OrtoolsLinearProblem() override = default;
 
-    LinearProblemApi::IMipVariable* addNumVariable(double lb,
+    Api::IMipVariable* addNumVariable(double lb,
                                                    double ub,
                                                    const std::string& name) override;
 
-    LinearProblemApi::IMipVariable* addIntVariable(double lb,
+    Api::IMipVariable* addIntVariable(double lb,
                                                    double ub,
                                                    const std::string& name) override;
 
-    LinearProblemApi::IMipVariable* addVariable(double lb,
+    Api::IMipVariable* addVariable(double lb,
                                                 double ub,
                                                 bool integer,
                                                 const std::string& name) override;
-    [[nodiscard]] const std::vector<std::unique_ptr<LinearProblemApi::IMipVariable>>& getVariables()
+    [[nodiscard]] const std::vector<std::unique_ptr<Api::IMipVariable>>& getVariables()
       const override;
-    [[nodiscard]] LinearProblemApi::IMipVariable* getVariable(std::size_t index) const override;
-    [[nodiscard]] LinearProblemApi::IMipVariable* lookupVariable(
+    [[nodiscard]] Api::IMipVariable* getVariable(std::size_t index) const override;
+    [[nodiscard]] Api::IMipVariable* lookupVariable(
       const std::string& name) const override;
 
     [[nodiscard]] int variableCount() const override;
 
-    LinearProblemApi::IMipConstraint* addConstraint(double lb,
+    Api::IMipConstraint* addConstraint(double lb,
                                                     double ub,
                                                     const std::string& name) override;
-    [[nodiscard]] const std::vector<std::unique_ptr<LinearProblemApi::IMipConstraint>>&
+    [[nodiscard]] const std::vector<std::unique_ptr<Api::IMipConstraint>>&
     getConstraints() const override;
-    [[nodiscard]] LinearProblemApi::IMipConstraint* getConstraint(std::size_t index) const override;
-    [[nodiscard]] LinearProblemApi::IMipConstraint* lookupConstraint(
+    [[nodiscard]] Api::IMipConstraint* getConstraint(std::size_t index) const override;
+    [[nodiscard]] Api::IMipConstraint* lookupConstraint(
       const std::string& name) const override;
     [[nodiscard]] int constraintCount() const override;
 
-    void setObjectiveCoefficient(LinearProblemApi::IMipVariable* var, double coefficient) override;
-    double getObjectiveCoefficient(const LinearProblemApi::IMipVariable* var) const override;
+    void setObjectiveCoefficient(Api::IMipVariable* var, double coefficient) override;
+    double getObjectiveCoefficient(const Api::IMipVariable* var) const override;
 
     /**
      * @brief Sets the constant offset for the objective function.
@@ -107,11 +107,11 @@ private:
     operations_research::MPObjective* objective_{nullptr};
     operations_research::MPSolverParameters params_;
 
-    std::vector<std::unique_ptr<LinearProblemApi::IMipVariable>> variables_;
-    std::vector<std::unique_ptr<LinearProblemApi::IMipConstraint>> constraints_;
+    std::vector<std::unique_ptr<Api::IMipVariable>> variables_;
+    std::vector<std::unique_ptr<Api::IMipConstraint>> constraints_;
 
     std::unique_ptr<OrtoolsMipSolution> solution_;
     bool isLP_{true};
 };
 
-} // namespace Antares::Optimisation::LinearProblemMpsolverImpl
+} // namespace Antares::LinearProblem::MpsolverImpl

@@ -8,7 +8,7 @@
 #include "antares/solver/optimisation/LegacySolutionView.h"
 
 using Antares::IO::Outputs::SimulationTable;
-using Antares::Optimisation::LinearProblemApi::FillContext;
+using Antares::LinearProblem::Api::FillContext;
 
 namespace Antares::Optimization
 {
