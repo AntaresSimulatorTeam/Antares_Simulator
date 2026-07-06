@@ -1,0 +1,26 @@
+system:
+  id: sys_example_14_6
+  description: >
+    Single component with one variable x and time series p = {1, 2, 3, 4, 5}.
+    The constraint x >= sum(t-2 .. t+0, p) is a three-element lookback window.
+    The lower bound t-2 produces negative raw indices at early timesteps; these
+    wrap cyclically: -2 -> 3, -1 -> 4 (for a 5-element window).
+    Expected:
+      t=1: x >= 4+5+1 = 10
+      t=2: x >= 5+1+2 =  8
+      t=3: x >= 1+2+3 =  6
+      t=4: x >= 2+3+4 =  9
+      t=5: x >= 3+4+5 = 12
+    x = [10, 8, 6, 9, 12], objective = 45.
+
+  model-libraries: lib_example_14_6
+
+  components:
+    - id: c1
+      model: lib_example_14_6.lookback_sum_demo
+
+      parameters:
+        - id: p
+          time-dependent: true
+          scenario-dependent: false
+          value: p_14_6
