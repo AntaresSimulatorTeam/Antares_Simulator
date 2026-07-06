@@ -192,12 +192,11 @@ struct Fixture
                                double minStablePower = 300.,
                                double minGenPower = 500.)
     {
-        context.thermalMarginByCluster.try_emplace(
-          "area1$$cluster1",
-          unitSize,
-          minStablePower,
-          std::vector<double>{availability},
-          std::vector<double>{minGenPower});
+        context.thermalMarginByCluster.try_emplace("area1$$cluster1",
+                                                   unitSize,
+                                                   minStablePower,
+                                                   std::vector<double>{availability},
+                                                   std::vector<double>{minGenPower});
         return *this;
     }
 
@@ -241,7 +240,7 @@ BOOST_AUTO_TEST_CASE(extra_output_entries_carry_block_time_and_scenario)
 
     const auto row = FindRow(table, "prop_cost", "cluster1");
     BOOST_REQUIRE(row.has_value());
-    BOOST_CHECK_EQUAL(row->block, "1");               // currentBlock (0-indexed, same as mapper path)
+    BOOST_CHECK_EQUAL(row->block, "1"); // currentBlock (0-indexed, same as mapper path)
     BOOST_CHECK_EQUAL(row->absoluteTimeIndex, "168"); // timeIndex (raw, same as mapper path)
     BOOST_CHECK_EQUAL(row->blockTimeIndex, "0");      // first timestep of the block
     BOOST_CHECK_EQUAL(row->scenarioIndex, "2");

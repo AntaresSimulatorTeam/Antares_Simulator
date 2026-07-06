@@ -133,7 +133,8 @@ public:
     void NODU(unsigned varIndex, const std::string& clusterName) const;
     void NumberStoppingDispatchableUnits(unsigned varIndex, const std::string& clusterName) const;
     void NumberStartingDispatchableUnits(unsigned varIndex, const std::string& clusterName) const;
-    void NumberBreakingDownDispatchableUnits(unsigned varIndex, const std::string& clusterName) const;
+    void NumberBreakingDownDispatchableUnits(unsigned varIndex,
+                                             const std::string& clusterName) const;
     void DirectFlow(unsigned varIndex) const;
     void PositiveDirectFlow(unsigned varIndex) const;
     void PositiveIndirectFlow(unsigned varIndex) const;
@@ -141,8 +142,10 @@ public:
     void ShortTermStorageWithdrawal(unsigned varIndex, const std::string& sts_name) const;
     void ShortTermStorageLevel(unsigned varIndex, const std::string& sts_name) const;
     void ShortTermStorageOverflow(unsigned varIndex, const std::string& sts_name) const;
-    void ShortTermStorageCostVariationInjection(unsigned varIndex, const std::string& sts_name) const;
-    void ShortTermStorageCostVariationWithdrawal(unsigned varIndex, const std::string& sts_name) const;
+    void ShortTermStorageCostVariationInjection(unsigned varIndex,
+                                                const std::string& sts_name) const;
+    void ShortTermStorageCostVariationWithdrawal(unsigned varIndex,
+                                                 const std::string& sts_name) const;
     void HydProd(unsigned varIndex) const;
     void HydProdDown(unsigned varIndex) const;
     void HydProdUp(unsigned varIndex) const;
@@ -156,7 +159,9 @@ public:
     void AreaBalance(unsigned varIndex) const;
 
 private:
-    void SetAreaVariableName(unsigned varIndex, const std::string& variableType, int layerIndex) const;
+    void SetAreaVariableName(unsigned varIndex,
+                             const std::string& variableType,
+                             int layerIndex) const;
     void SetShortTermStorageVariableName(unsigned varIndex,
                                          const std::string& variableType,
                                          const std::string& sts_name) const;
@@ -189,8 +194,10 @@ public:
     void AreaHydroLevel(unsigned constrIndex) const;
     void FinalStockEquivalent(unsigned constrIndex) const;
     void FinalStockExpression(unsigned constrIndex) const;
-    void NbUnitsOutageLessThanNbUnitsStop(unsigned constrIndex, const std::string& clusterName) const;
-    void NbDispUnitsMinBoundSinceMinUpTime(unsigned constrIndex, const std::string& clusterName) const;
+    void NbUnitsOutageLessThanNbUnitsStop(unsigned constrIndex,
+                                          const std::string& clusterName) const;
+    void NbDispUnitsMinBoundSinceMinUpTime(unsigned constrIndex,
+                                           const std::string& clusterName) const;
     void MinDownTime(unsigned constrIndex, const std::string& clusterName) const;
     void PMaxReserve(unsigned constrIndex,
                      const std::string& clusterName,
@@ -222,7 +229,8 @@ public:
                            const std::string& clusterName,
                            const std::string& reserveName) const;
     void STReleaseCapacityThresholdsUp(unsigned constrIndex, const std::string& clusterName) const;
-    void STReleaseCapacityThresholdsDown(unsigned constrIndex, const std::string& clusterName) const;
+    void STReleaseCapacityThresholdsDown(unsigned constrIndex,
+                                         const std::string& clusterName) const;
     void STStoreCapacityThresholdsUp(unsigned constrIndex, const std::string& clusterName) const;
     void STStoreCapacityThresholdsDown(unsigned constrIndex, const std::string& clusterName) const;
     void STStorageLevelReserveParticipation(unsigned constrIndex,
@@ -245,10 +253,13 @@ public:
     void HydroStoreMaxReserve(unsigned constrIndex,
                               const std::string& clusterName,
                               const std::string& reserveName) const;
-    void HydroReleaseCapacityThresholdsUp(unsigned constrIndex, const std::string& clusterName) const;
-    void HydroReleaseCapacityThresholdsDown(unsigned constrIndex, const std::string& clusterName) const;
+    void HydroReleaseCapacityThresholdsUp(unsigned constrIndex,
+                                          const std::string& clusterName) const;
+    void HydroReleaseCapacityThresholdsDown(unsigned constrIndex,
+                                            const std::string& clusterName) const;
     void HydroStoreCapacityThresholdsUp(unsigned constrIndex, const std::string& clusterName) const;
-    void HydroStoreCapacityThresholdsDown(unsigned constrIndex, const std::string& clusterName) const;
+    void HydroStoreCapacityThresholdsDown(unsigned constrIndex,
+                                          const std::string& clusterName) const;
     void HydroLevelReserveParticipation(ReserveType type,
                                         unsigned constrIndex,
                                         const std::string& clusterName) const;
