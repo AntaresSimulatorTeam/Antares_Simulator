@@ -226,6 +226,7 @@ bool readReserveParameters(const fs::path& folderInput, Area& area, const YAML::
             ret = false;
         }
     }
+    area.allCapacityReservations.value().TSNumbers.clear();
     fs::path filePath = folderInput / "reserves" / area.id / (capacityReservation.id() + ".txt");
     capacityReservation.loadNeedFromFile(filePath);
     area.allCapacityReservations.value().areaCapacityReservations.emplace(capacityReservation.id(),
