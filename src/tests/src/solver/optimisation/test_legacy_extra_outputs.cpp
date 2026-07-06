@@ -192,12 +192,12 @@ struct Fixture
                                double minStablePower = 300.,
                                double minGenPower = 500.)
     {
-        LegacyExtraOutputsContext::ThermalMarginData margin;
-        margin.unitSize = unitSize;
-        margin.minStablePower = minStablePower;
-        margin.availability = {availability};
-        margin.minGenPower = {minGenPower};
-        context.thermalMarginByCluster["area1$$cluster1"] = margin;
+        context.thermalMarginByCluster.try_emplace(
+          "area1$$cluster1",
+          unitSize,
+          minStablePower,
+          std::vector<double>{availability},
+          std::vector<double>{minGenPower});
         return *this;
     }
 
