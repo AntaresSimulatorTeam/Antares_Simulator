@@ -101,11 +101,11 @@ struct LegacyExtraOutputsContext
         // Min stable power per unit (PminDuPalierThermiquePendantUneHeure).
         double minStablePower = 0.;
         // Available power per hour-in-week (PuissanceDisponibleDuPalierThermique).
-        const std::vector<double>& availability;
+        std::vector<double> availability;
         // Min generation per hour-in-week (PuissanceMinDuPalierThermique), i.e.
         // min(availability, modulation-based floor); equals the spec's
         // min(., M) once clamped against availability.
-        const std::vector<double>& minGenPower;
+        std::vector<double> minGenPower;
     };
 
     std::unordered_map<std::string, ThermalMarginData> thermalMarginByCluster;
