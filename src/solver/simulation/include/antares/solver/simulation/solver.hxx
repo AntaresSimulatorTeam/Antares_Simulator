@@ -129,7 +129,7 @@ public:
         yearRandomNumbers& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
 
         // 1 - Applying random levels for current year
-        auto randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
+        const std::vector<double>& randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
         // 2 - Getting the numpspace and scratchMap associated to the current year
         unsigned numSpace = numspaceManager.getAvailableNumSpace();
@@ -454,14 +454,19 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     randomForParallelYears.compute(study, endYear, isYearPerformed, randomHydroGenerator);
 
     // hydro checks
+
     for (uint year = firstYear; year < endYear; ++year)
     {
         if (study.parameters.yearsFilter[year])
         {
-            hydroInputsChecker.Execute(year);
+            uint indexYear = randomForParallelYears.yearNumberToIndex[year];
+            yearRandomNumbers& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
+            const std::vector<double>& randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
+
+            hydroInputsChecker.Execute(year, randomReservoirLevel);
         }
     }
-    hydroInputsChecker.CheckForErrors();
+    hydroInputsChecker.checkForErrors();
 
     NumSpaceManager numspaceManager(pNbMaxPerformedYearsInParallel);
 
