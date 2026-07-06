@@ -8,7 +8,6 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/bind.h>
-#include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
 #include <yuni/thread/thread.h>
 
@@ -107,9 +106,12 @@ public:
 /*!
 ** This class is thread-safe.
 */
-class Walker final: public Yuni::NonCopyable<Walker>
+class Walker final
 {
 public:
+    Walker(const Walker&) = delete;
+    Walker& operator=(const Walker&) = delete;
+
     Walker();
     explicit Walker(const AnyString& logprefix);
     ~Walker();

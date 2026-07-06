@@ -8,7 +8,6 @@
 #include <mutex>
 #include <stack>
 
-#include <yuni/core/noncopyable.h>
 #include <yuni/core/system/cpu.h>
 #include <yuni/core/system/suspend.h>
 #include <yuni/io/directory/info.h>
@@ -82,9 +81,12 @@ protected:
     void waitForAllJobs() const;
 
 private:
-    class DirectoryContext final: private Yuni::NonCopyable<DirectoryContext>
+    class DirectoryContext final
     {
     public:
+        DirectoryContext(const DirectoryContext&) = delete;
+        DirectoryContext& operator=(const DirectoryContext&) = delete;
+
         using Stack = std::stack<DirectoryContext*>;
 
         explicit DirectoryContext(const String& path):

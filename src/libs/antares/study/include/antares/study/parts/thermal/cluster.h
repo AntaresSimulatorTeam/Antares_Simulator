@@ -11,7 +11,6 @@
 #include <vector>
 
 #include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
 
 #include <antares/solver/ts-generator/law.h>
 

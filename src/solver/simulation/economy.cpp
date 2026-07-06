@@ -242,4 +242,8 @@ void Economy::simulationEnd()
     }
 }
 
+// Single definition of ISimulation<Economy> for the whole build; every other TU
+// uses the extern-template declaration in economy.h.
+template class ISimulation<Economy>;
+
 } // namespace Antares::Solver::Simulation

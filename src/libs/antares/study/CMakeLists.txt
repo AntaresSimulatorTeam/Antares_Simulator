@@ -293,6 +293,7 @@ target_link_libraries(study
         yuni-static-core
         Antares::date
         Antares::inifile
+        Antares::io
         Antares::study-utils
         Antares::solverUtils
         Antares::correlation
@@ -306,6 +307,7 @@ target_link_libraries(study
         Antares::enums
         antares-solver-simulation
         antares-core
+        yaml-cpp::yaml-cpp
         PRIVATE
         Antares::antares-study-system-model
         linear-problem-api

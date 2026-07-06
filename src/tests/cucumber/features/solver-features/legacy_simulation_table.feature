@@ -10,7 +10,7 @@ Feature: Legacy variables in simulation table
   #     is visible in the CSV output
   #   - the row carries the value the legacy solver computed for that hour
 
-  @fast @short
+  @short
   Scenario: Legacy UnsuppliedEnergy is mapped to unsupplied_energy and carries the solver value
     # "002 Thermal fleet - Base" has a single area (id "area") with a known
     # shortfall of 52 MW on "2 JAN 09:00" of year 1, i.e. absolute hour 33
@@ -26,7 +26,7 @@ Feature: Legacy variables in simulation table
       | block | component  | output            | timestep | scenario | value |
       | 0     | area | unsupplied_energy | 33       | 0        | 52    |
 
-  @fast @short
+  @short
   Scenario: Extra outputs prop_cost and imbalance_cost are derived from the legacy solution
     # Same study, same shortfall hour (absolute hour 33, block 0). With 52 MW
     # of unsupplied energy every thermal cluster is at its maximum, so:

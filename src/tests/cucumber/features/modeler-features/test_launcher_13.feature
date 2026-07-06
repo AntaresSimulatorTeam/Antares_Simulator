@@ -1,6 +1,6 @@
 Feature: 13 - Investment problems
 
-  @fast
+  @short
   Scenario: 13_1: Simple investment - variables & objective constributions
     Given the modeler study path is "modeler/13_1"
     When I run antares modeler
@@ -17,7 +17,7 @@ Feature: 13 - Investment problems
       | master  | continuous_generator_candidate.p_max | 0     |
       | 1-1     | continuous_generator_candidate.p_max | 3     |
 
-  @fast
+  @short
   Scenario: 13_2: Simple generation expansion problem on one node, one timestep and one scenario with two candidates: one continuous and one discrete.
     Given the modeler study path is "modeler/13_2"
     When I run antares modeler
@@ -39,7 +39,7 @@ Feature: 13 - Investment problems
       | 1-1     | continuous_generator_candidate.p_max | 3     |
       | 1-1     | discrete_generator_candidate.p_max   | 5     |
 
-  @fast
+  @short
   Scenario: 13_1: Problem generator - simple investment
     Given the modeler study path is "modeler/13_1"
     When I run antares problem generator
@@ -56,7 +56,7 @@ Feature: 13 - Investment problems
       | master  | continuous_generator_candidate.p_max | 0     |
       | 1-1     | continuous_generator_candidate.p_max | 3     |
 
-  @fast
+  @short
   Scenario: 13_2: Problem generator - generation expansion
     Given the modeler study path is "modeler/13_2"
     When I run antares problem generator

@@ -11,7 +11,6 @@
 #include <vector>
 
 #include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
 
 #include <antares/array/matrix.h>
@@ -31,9 +30,12 @@ struct CompareAreaName;
 /*!
 ** \brief Definition for a single area
 */
-class Area final: private Yuni::NonCopyable<Area>
+class Area final
 {
 public:
+    Area(const Area&) = delete;
+    Area& operator=(const Area&) = delete;
+
     using NameSet = std::set<AreaName>;
     using Map = std::map<AreaName, Area*>;
     using Vector = std::vector<Area*>;
@@ -98,17 +100,6 @@ public:
     ** \return A pointer to an existing link if found, NULL otherwise
     */
     const AreaLink* findExistingLinkWith(const Area& with) const;
-
-    //! \name Memory management
-    //@{
-    /*!
-    ** \brief Load all data not already loaded
-    **
-    ** If the load-on-demand is enabled, some data might not be loaded (see `Matrix`)
-    ** However, we would like to be able to force the load of all data, especially
-    ** when saving a study.
-    ** The flag `invalidateJIT` will be reset to false.
-    */
 
     //! \name Thermal clusters min stable power validity checking
     //@{
@@ -230,17 +221,6 @@ public:
     mutable std::vector<AreaScratchpad> scratchpad;
     //@}
 
-    //! \name Data
-    //@{
-    /*!
-    ** \brief Invalidate (JIT)
-    **
-    ** A non-zero value if the missing data must be loaded from HDD for the next
-    ** save (only valid if JIT enabled).
-    */
-    mutable bool invalidateJIT = false;
-    //@}
-
 private:
     void createMissingTimeSeries();
     void createMissingPrepros();
@@ -275,9 +255,12 @@ private:
 ** printf("Area name : `%s`\n", (*(l->byIndex[2])).name);
 ** \endcode
 */
-class AreaList final: public Yuni::NonCopyable<AreaList>
+class AreaList final
 {
 public:
+    AreaList(const AreaList&) = delete;
+    AreaList& operator=(const AreaList&) = delete;
+
     using OwningAreaMap = std::map<AreaName, std::unique_ptr<Area>>;
 
     //! An iterator

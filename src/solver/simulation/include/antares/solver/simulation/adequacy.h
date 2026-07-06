@@ -81,6 +81,10 @@ private:
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
 }; // class Adequacy
 
+// See economy.h: concentrate the single ISimulation<Adequacy> instantiation in
+// adequacy.cpp rather than re-instantiating it in every consuming TU.
+extern template class ISimulation<Adequacy>;
+
 } // namespace Antares::Solver::Simulation
 
 #endif // __SOLVER_SIMULATION_ADEQUACY_H__

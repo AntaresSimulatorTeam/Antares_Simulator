@@ -18,6 +18,8 @@
 
 namespace fs = std::filesystem;
 
+using namespace Antares;
+
 namespace
 {
 FatalError fatalError(const std::string& areaName, int year)
