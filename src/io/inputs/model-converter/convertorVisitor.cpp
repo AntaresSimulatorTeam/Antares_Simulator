@@ -148,7 +148,15 @@ Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
     // tree conversion
     Expressions::Registry<Node> registry;
     ConvertorVisitor visitor(registry, model);
-    auto root = std::any_cast<Node*>(visitor.visit(tree));
+    Node* root;
+    try
+    {
+        root = std::any_cast<Node*>(visitor.visit(tree));
+    }
+    catch (InputError& e)
+    {
+        throw InputError("Error while converting expression '" + exprStr + "': " + e.what());
+    }
     return Expressions::NodeRegistry(root, std::move(registry));
 }
 
