@@ -380,4 +380,8 @@ void Adequacy::simulationEnd()
     }
 }
 
+// Single definition of ISimulation<Adequacy> for the whole build; every other TU
+// uses the extern-template declaration in adequacy.h.
+template class ISimulation<Adequacy>;
+
 } // namespace Antares::Solver::Simulation

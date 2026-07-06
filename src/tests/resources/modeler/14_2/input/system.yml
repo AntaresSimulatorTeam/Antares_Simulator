@@ -1,0 +1,20 @@
+system:
+  id: sys_example_14_2
+  description: >
+    Single component with one variable x and time series p = {2, 4, 6, 8, 10}.
+    The constraint x >= sum(1 .. 3, p) uses fully fixed bounds: indices 1, 2, 3
+    are always accessed regardless of the current timestep.
+    p[1]+p[2]+p[3] = 4+6+8 = 18 at every timestep.
+    Expected: x = 18 at all 5 timesteps, objective = 90.
+
+  model-libraries: lib_example_14_2
+
+  components:
+    - id: c1
+      model: lib_example_14_2.fixed_bounds_demo
+
+      parameters:
+        - id: p
+          time-dependent: true
+          scenario-dependent: false
+          value: p_14_2

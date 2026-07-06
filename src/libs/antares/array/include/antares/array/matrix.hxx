@@ -184,16 +184,14 @@ template<class T, class ReadWriteT>
 inline Matrix<T, ReadWriteT>::Matrix():
     width(0),
     height(0),
-    entry(nullptr),
-    jit(nullptr)
+    entry(nullptr)
 {
 }
 
 template<class T, class ReadWriteT>
 Matrix<T, ReadWriteT>::Matrix(uint w, uint h):
     width(w),
-    height(h),
-    jit(nullptr)
+    height(h)
 {
     if (0 == width or 0 == height)
     {
@@ -214,8 +212,7 @@ Matrix<T, ReadWriteT>::Matrix(uint w, uint h):
 template<class T, class ReadWriteT>
 Matrix<T, ReadWriteT>::Matrix(const Matrix<T, ReadWriteT>& rhs):
     width(rhs.width),
-    height(rhs.height),
-    jit(nullptr)
+    height(rhs.height)
 {
     if (0 == width or 0 == height)
     {
@@ -248,8 +245,7 @@ template<class U, class V>
 Matrix<T, ReadWriteT>::Matrix(const Matrix<U, V>& rhs):
     width(0),
     height(0),
-    entry(nullptr),
-    jit(nullptr)
+    entry(nullptr)
 {
     copyFrom(rhs);
 }
@@ -257,10 +253,6 @@ Matrix<T, ReadWriteT>::Matrix(const Matrix<U, V>& rhs):
 template<class T, class ReadWriteT>
 Matrix<T, ReadWriteT>::~Matrix()
 {
-    assert((JIT::enabled or (jit == NULL))
-           and "Internal variable jit is set but JIT is not globally enabled (overflow?)");
-    delete jit;
-
     if (entry)
     {
         for (uint i = 0; i != width; ++i)
@@ -354,37 +346,16 @@ inline void Matrix<T, ReadWriteT>::fillUnit()
 }
 
 template<class T, class ReadWriteT>
-inline void Matrix<T, ReadWriteT>::reset(uint w, uint h, bool fixedSize)
+inline void Matrix<T, ReadWriteT>::reset(uint w, uint h)
 {
-    resize(w, h, fixedSize);
+    resize(w, h);
     zero();
-}
-
-template<class T, class ReadWriteT>
-bool Matrix<T, ReadWriteT>::internalLoadJITData(const AnyString& filename,
-                                                uint minWidth,
-                                                uint maxHeight,
-                                                uint options)
-{
-    // To avoid undefined behavior when filename is jit->sourceFilename
-    // we have to make a copy first.
-    jit = JIT::Reset(jit, YString(filename));
-
-    JIT::MarkAsNotLoaded(jit);
-    clear();
-    jit->minWidth = minWidth;
-    jit->maxHeight = maxHeight;
-    jit->options = options;
-    return true;
 }
 
 template<class T, class ReadWriteT>
 inline bool Matrix<T, ReadWriteT>::loadFromCSVFile(const AnyString& filename)
 {
-    return loadFromCSVFile(filename,
-                           1,
-                           0,
-                           optImmediate | optNoWarnIfEmpty | optNeverFails | optQuiet);
+    return loadFromCSVFile(filename, 1, 0, optNoWarnIfEmpty | optNeverFails | optQuiet);
 }
 
 template<class T, class ReadWriteT>
@@ -404,17 +375,7 @@ bool Matrix<T, ReadWriteT>::loadFromCSVFile(const AnyString& filename,
                                             BufferType* buffer)
 {
     assert(not filename.empty() and "Matrix<>:: loadFromCSVFile: empty filename");
-    // As the loading might be expensive, especially when dealing with
-    // numerous matrices, we may want to delay this loading (a `lazy` mode)
-    if (JIT::enabled and not(options & optImmediate))
-    {
-        return internalLoadJITData(filename, minWidth, maxHeight, options);
-    }
-    else
-    {
-        // Reading data from file
-        return internalLoadCSVFile(filename, minWidth, maxHeight, options, buffer);
-    }
+    return internalLoadCSVFile(filename, minWidth, maxHeight, options, buffer);
 }
 
 template<class T, class ReadWriteT>
@@ -511,7 +472,7 @@ void Matrix<T, ReadWriteT>::reset()
 }
 
 template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::resize(uint w, uint h, bool fixedSize)
+void Matrix<T, ReadWriteT>::resize(uint w, uint h)
 {
     // Asserts
     // This limit is correlated with the maximal amount of years
@@ -549,22 +510,6 @@ void Matrix<T, ReadWriteT>::resize(uint w, uint h, bool fixedSize)
             {
                 Antares::Memory::Allocate<T>(entry[i], height);
             }
-        }
-    }
-
-    // JIT Update
-    if (JIT::enabled and not jit and fixedSize)
-    {
-        jit = JIT::Reset(jit);
-    }
-
-    if (jit and w != 0 and h != 0)
-    {
-        jit->minWidth = w;
-        jit->maxHeight = h;
-        if (fixedSize)
-        {
-            jit->options = jit->options | optFixedSize;
         }
     }
 }
@@ -648,7 +593,7 @@ bool Matrix<T, ReadWriteT>::loadFromBuffer(const AnyString& filename,
     // Directly resizing the matrix when its size is well-known
     if (fixedSize)
     {
-        reset(minWidth, maxHeight, true);
+        reset(minWidth, maxHeight);
     }
     else
     {
@@ -1055,26 +1000,6 @@ bool Matrix<T, ReadWriteT>::internalLoadCSVFile(const AnyString& filename,
         reset(minWidth, maxHeight);
     }
 
-    // Post-processing when the Load-on-Demand is enabled
-    if (JIT::enabled and not jit and (0 != (options & optFixedSize)))
-    {
-        jit = JIT::Reset(jit, filename);
-    }
-
-    if (jit)
-    {
-        jit->alreadyLoaded = true;
-        jit->modified = false;
-        jit->minWidth = (options & optFixedSize) ? (!width ? minWidth : width) : 1;
-        jit->maxHeight = height;
-        jit->options = options;
-        if (jit->sourceFilename.empty())
-        {
-            jit->sourceFilename = filename;
-            assert(not jit->sourceFilename.empty());
-        }
-    }
-
     // We return `true` in any cases to not stop the execution of the solver, since
     // it may not be a fatal error
     return result;
@@ -1195,24 +1120,6 @@ bool Matrix<T, ReadWriteT>::internalSaveCSVFile(const AnyString& filename,
                                                 PredicateT& predicate,
                                                 bool saveEvenIfAllZero) const
 {
-    JIT::just_in_time_manager jit_mgr(jit, filename);
-
-    jit_mgr.record_current_jit_state(width, height);
-
-    if (jit_mgr.jit_activated() && jit_mgr.matrix_content_in_memory_is_same_as_on_disk())
-    {
-        // No difference between actual matrix content in memory and matrix on disk, so we don't
-        // need to save on disk. Besides, as jit is on, we do not need it in memory, and matrix is
-        // cleared.
-        jit_mgr.clear_matrix(this);
-        return true;
-    }
-
-    if (jit_mgr.jit_activated() && jit_mgr.do_we_force_matrix_load_from_disk())
-    {
-        jit_mgr.load_matrix(this);
-    }
-
     // Attempt to open the file, and to write data
     // We have write access to the file
     logs.debug() << "  :: writing `" << filename << "' (" << width << 'x' << height << ')';
@@ -1236,8 +1143,6 @@ bool Matrix<T, ReadWriteT>::internalSaveCSVFile(const AnyString& filename,
     // Attempt to open the file, and to write data
     // We have write access to the file
     logs.debug() << "  :: [end] writing `" << filename << "' (" << width << 'x' << height << ')';
-
-    jit_mgr.unload_matrix_properly_from_memory(this);
 
     return true;
 }
@@ -1299,20 +1204,6 @@ void Matrix<T, ReadWriteT>::resizeWithoutDataLost(uint x, uint y, const T& defVa
         }
     }
     logs.debug() << "  :: end resizeWithoutDataLost";
-}
-
-template<class T, class ReadWriteT>
-bool Matrix<T, ReadWriteT>::loadAllJITData() const
-{
-    if (jit and not JIT::IsReady(jit))
-    {
-        return (const_cast<Matrix<T, ReadWriteT>*>(this))
-          ->loadFromCSVFile(jit->sourceFilename,
-                            jit->minWidth,
-                            jit->maxHeight,
-                            jit->options | optImmediate);
-    }
-    return true;
 }
 
 template<class T, class ReadWriteT>
@@ -1465,20 +1356,6 @@ void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>& rhs)
             }
         }
     }
-
-    if (rhs.jit)
-    {
-        if (not jit)
-        {
-            jit = new JIT::Informations(*rhs.jit);
-        }
-        else
-        {
-            jit->options = rhs.jit->options;
-            jit->minWidth = rhs.jit->minWidth;
-            jit->maxHeight = rhs.jit->maxHeight;
-        }
-    }
 }
 
 template<class T, class ReadWriteT>
@@ -1499,7 +1376,6 @@ void Matrix<T, ReadWriteT>::swap(Matrix<T, ReadWriteT>& rhs) noexcept
     swap(this->width, rhs.width);
     swap(this->height, rhs.height);
     swap(this->entry, rhs.entry);
-    swap(this->jit, rhs.jit);
 }
 
 template<class T, class ReadWriteT>
@@ -1524,7 +1400,6 @@ inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(Matrix<T, ReadWri
 
     width = rhs.width;
     height = rhs.height;
-    jit = rhs.jit;
     if (0 == width || 0 == height)
     {
         entry = nullptr;
@@ -1537,7 +1412,6 @@ inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(Matrix<T, ReadWri
     }
     // Prevent spurious de-allocation from rhs's destructor
     rhs.entry = nullptr;
-    rhs.jit = nullptr;
     rhs.width = 0;
     rhs.height = 0;
     return *this;
@@ -1576,22 +1450,6 @@ void Matrix<T, ReadWriteT>::print() const
             std::cout << entry[x][y];
         }
         std::cout << "]\n";
-    }
-}
-
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::unloadFromMemory() const
-{
-    if (jit)
-    {
-        if (jit->alreadyLoaded and not jit->modified and not jit->sourceFilename.empty())
-        {
-            // ugly, but to not break the whole code design
-            auto& thisNotConst = const_cast<Matrix&>(*this);
-
-            thisNotConst.clear();
-            JIT::MarkAsNotLoaded(thisNotConst.jit);
-        }
     }
 }
 

@@ -58,7 +58,7 @@ static void checkSetSolverSpecificParameters(bool status,
 {
     if (!status)
     {
-        throw Error::InvalidSolverSpecificParameters(solverName, specificParameters);
+        throw Antares::Error::InvalidSolverSpecificParameters(solverName, specificParameters);
     }
 }
 
@@ -197,11 +197,11 @@ void removeTemporaryFile(const std::string& tmpPath)
     }
     catch (fs::filesystem_error& e)
     {
-        logs.error() << e.what();
+        Antares::logs.error() << e.what();
     }
     if (!ret)
     {
-        logs.warning() << "Could not remove temporary file " << tmpPath;
+        Antares::logs.warning() << "Could not remove temporary file " << tmpPath;
     }
 }
 
