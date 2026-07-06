@@ -1,0 +1,27 @@
+library:
+  id: lib_example_14_1
+  description: simple sum bound test model
+
+  models:
+    - id: sum_bound_demo
+      description: Single variable constrained by a time sum with fixed lower bound and t+ upper bound
+      parameters:
+        - id: p
+          time-dependent: true
+          scenario-dependent: false
+      variables:
+        - id: x
+          lower-bound: 0
+          upper-bound: 1000
+          variable-type: continuous
+          # x[0] >= sum(0..1, p) = 1 + 2 = 3
+          # x[1] >= sum(0..2, p) = 1 + 2 + 3 = 6
+          # x[2] >= sum(0..3, p) = 1 + 2 + 3 + 4 = 10
+          # x[3] >= sum(0..4, p) = 1 + 2 + 3 + 4 + 5 = 15
+          # x[4] >= sum(0..5, p) = 1 + 2 + 3 + 4 + 5 + 1 = 16 (cyclic)
+      constraints:
+        - id: lower_bound_from_sum
+          expression: x >= sum(0 .. t+1, p)
+      objective-contributions:
+        - id: objective
+          expression: sum(x)

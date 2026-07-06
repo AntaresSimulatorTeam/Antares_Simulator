@@ -2,8 +2,12 @@ set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/scBuilderDataInterface.h
         include/antares/study/scenario-builder/TSnumberData.h
         scenario-builder/TSnumberData.cpp
-        include/antares/study/scenario-builder/hydroLevelsData.h
-        scenario-builder/hydroLevelsData.cpp
+        include/antares/study/scenario-builder/HydroLevelsData.h
+        scenario-builder/HydroLevelsData.cpp
+        include/antares/study/scenario-builder/HydroFinalLevelsData.h
+        scenario-builder/HydroFinalLevelsData.cpp
+        include/antares/study/scenario-builder/HydroInitialLevelsData.h
+        scenario-builder/HydroInitialLevelsData.cpp
         include/antares/study/scenario-builder/rules.h
         include/antares/study/scenario-builder/rules.hxx
         scenario-builder/rules.cpp
@@ -291,6 +295,7 @@ target_link_libraries(study
         yuni-static-core
         Antares::date
         Antares::inifile
+        Antares::io
         Antares::study-utils
         Antares::solverUtils
         Antares::correlation
@@ -304,6 +309,7 @@ target_link_libraries(study
         Antares::enums
         antares-solver-simulation
         antares-core
+        yaml-cpp::yaml-cpp
         PRIVATE
         Antares::antares-study-system-model
         linear-problem-api

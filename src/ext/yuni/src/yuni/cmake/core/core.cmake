@@ -91,20 +91,12 @@ add_library(yuni-static-core STATIC
 		core/bit/array.hxx
 		core/bit/bit.h
 		core/bit/bit.hxx
-		core/bit.h
-		core/boundingbox.h
-		core/color/fwd.h
-		core/color/rgb.h
-		core/color/rgb.hxx
-		core/color/rgba.h
-		core/color/rgba.hxx
 		core/dictionary.h
 		core/dynamiclibrary/file.cpp
 		core/dynamiclibrary/file.h
 		core/dynamiclibrary/file.hxx
 		core/dynamiclibrary/symbol.h
 		core/dynamiclibrary/symbol.hxx
-		core/dynamiclibrary.h
 		core/event/event.h
 		core/event/event.hxx
 		core/event/flow/continuous.h
@@ -115,18 +107,9 @@ add_library(yuni-static-core STATIC
 		core/event/loop.fwd.h
 		core/event/loop.h
 		core/event/loop.hxx
-		core/event/observer/item.h
-		core/event/observer/item.hxx
-		core/event/observer/observer.h
-		core/event/observer/observer.hxx
 		core/event/statistics/none.h
 		core/event/traits.h
-		core/event.h
-		core/exceptions/badcast.h
-		core/exceptions.h
 		core/foreach.h
-		core/functional/fold.h
-		core/functional/fold.hxx
 		core/fwd.h
 		core/getopt/option.cpp
 		core/getopt/option.h
@@ -155,60 +138,15 @@ add_library(yuni-static-core STATIC
 		core/logs.h
 		core/math
 		core/math/base.h
-		core/math/complex.h
-		core/math/complex.hxx
-		core/math/distance.h
-		core/math/distance.hxx
-		core/math/exponential.h
-		core/math/exponential.hxx
-		core/math/geometry/boundingbox.h
-		core/math/geometry/boundingbox.hxx
-		core/math/geometry/edge.h
-		core/math/geometry/point2D.h
-		core/math/geometry/point2D.hxx
-		core/math/geometry/point3D.h
-		core/math/geometry/quaternion.h
-		core/math/geometry/quaternion.hxx
-		core/math/geometry/rect2D.h
-		core/math/geometry/rect2D.hxx
-		core/math/geometry/triangle.h
-		core/math/geometry/vector3D.h
-		core/math/geometry/vector3D.hxx
-		core/math/geometry/vertex.h
-		core/math/geometry.h
-		core/math/geometry.hxx
-		core/math/log.h
-		core/math/log.hxx
 		core/math/math.h
 		core/math/math.hxx
 		core/math/msvc.hxx
-		core/math/random/constant.h
-		core/math/random/default.h
-		core/math/random/default.hxx
 		core/math/random/distribution.h
 		core/math/random/distribution.hxx
-		core/math/random/range.h
-		core/math/random/range.hxx
-		core/math/random/table.h
-		core/math/random/table.hxx
-		core/math/trigonometric.h
-		core/math/trigonometric.hxx
 		core/math.h
 		core/noncopyable.h
 		core/nonmovable.h
-		core/nullable/extension.hxx
-		core/nullable/holder.h
-		core/nullable/nullable.h
-		core/nullable/nullable.hxx
-		core/nullable.h
-		core/point2D.h
-		core/point3D.h
-		core/predicate/result/and.h
-		core/predicate/result/or.h
-		core/predicate/result/sum.h
 		core/preprocessor/capabilities.h
-		core/preprocessor/enum.h
-		core/preprocessor/math.h
 		core/preprocessor/std.h
 		core/preprocessor/unixes.h
 		core/preprocessor/windows.h
@@ -219,8 +157,6 @@ add_library(yuni-static-core STATIC
 		core/process/program/windows.inc.hpp
 		core/process/program/unix.inc.hpp
 		core/process.h
-		core/quaternion.h
-		core/rect2D.h
 		core/singleton/policies/creation.h
 		core/singleton/policies/lifetime.h
 		core/singleton/singleton.h
@@ -272,7 +208,6 @@ add_library(yuni-static-core STATIC
 		core/string/wstring.cpp
 		core/string/wstring.hxx
 		core/string.h
-		core/suspend.h
 		core/system/capabilities.h
 		core/system/console/console.cpp
 		core/system/console/console.h
@@ -300,45 +235,14 @@ add_library(yuni-static-core STATIC
 		core/traits/extension/into-cstring.h
 		core/traits/extension/length.h
 		core/traits/length.h
-		core/tree/n/iterator/childiterator.h
-		core/tree/n/iterator/childiterator.hxx
-		core/tree/n/iterator/depthinfixiterator.h
-		core/tree/n/iterator/depthinfixiterator.hxx
-		core/tree/n/iterator/depthprefixiterator.h
-		core/tree/n/iterator/depthprefixiterator.hxx
-		core/tree/n/iterator/depthsuffixiterator.h
-		core/tree/n/iterator/depthsuffixiterator.hxx
-		core/tree/n/iterator/iterator.h
-		core/tree/n/treeN.h
-		core/tree/n/treeN.hxx
-		core/tree/treeN.h
-		core/tribool.h
-		core/tribool.hxx
-		core/unit/angle.h
-		core/unit/data.h
-		core/unit/define.h
-		core/unit/length
-		core/unit/length/extra.h
-		core/unit/length/length.h
-		core/unit/length/metric.h
-		core/unit/length.h
-		core/unit/luminance.h
-		core/unit/time.h
-		core/unit/undef.h
-		core/unit/unit.h
-		core/unit/unit.hxx
-		core/unit.h
 		core/utils/hexdump.cpp
 		core/utils/hexdump.h
 		core/utils/hexdump.hxx
-		core/utils/utils.h
-		core/utils.h
 		core/validator/text/default.h
 		core/validator/text/default.hxx
 		core/validator/text/default.private.h
 		core/validator/text/validator.h
 		core/validator/validator.h
-		core/vector3D.h
 		core/version/version.cpp
 		core/version/version.h
 		core/version/version.hxx

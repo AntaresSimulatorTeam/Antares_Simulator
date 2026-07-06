@@ -167,12 +167,97 @@ void AddLinkPropCost(SimulationTable& simulationTable,
                          + indirectCost.value() * indirect.value();
     AddExtraOutputEntry(simulationTable, "prop_cost", info, value, fillContext, currentBlock);
 }
+
+// price = -dual(area balance constraint): the stored dual is the negative of
+// the marginal price (the legacy outputs print -CoutsMarginauxHoraires).
+void AddAreaPrice(SimulationTable& simulationTable,
+                  const LegacyVariableInfo& info,
+                  std::size_t index,
+                  const std::vector<double>& constraintDuals,
+                  const FillContext& fillContext,
+                  unsigned currentBlock)
+{
+    AddExtraOutputEntry(simulationTable,
+                        "price",
+                        info,
+                        -constraintDuals[index],
+                        fillContext,
+                        currentBlock);
+}
+
+// is_near_loss_of_load = 1 when the area price approaches the unsupplied
+// energy cost (within 5), 0 otherwise. The unsupplied energy cost is the
+// linear objective coefficient on the area's UnsuppliedEnergy variable, found
+// through the solution view; skipped if that variable is not recorded.
+void AddAreaIsNearLossOfLoad(SimulationTable& simulationTable,
+                             const LegacyVariableInfo& info,
+                             std::size_t index,
+                             const std::vector<double>& constraintDuals,
+                             const LegacySolutionView& solution,
+                             const FillContext& fillContext,
+                             unsigned currentBlock)
+{
+    const auto unsuppliedCost = solution.linearCost("UnsuppliedEnergy",
+                                                    info.component,
+                                                    info.timeIndex);
+    if (!unsuppliedCost)
+    {
+        return;
+    }
+
+    const double price = -constraintDuals[index];
+    constexpr unsigned cutoff = 5;
+    AddExtraOutputEntry(simulationTable,
+                        "is_near_loss_of_load",
+                        info,
+                        price > unsuppliedCost.value() - cutoff ? 1. : 0.,
+                        fillContext,
+                        currentBlock);
+}
+
+// capacity_shadow_price = |dual(flow dissociation constraint)|. The
+// constraint only exists (and is only recorded) for links managed with
+// hurdle costs.
+void AddLinkCapacityShadowPrice(SimulationTable& simulationTable,
+                                const LegacyVariableInfo& info,
+                                std::size_t index,
+                                const std::vector<double>& constraintDuals,
+                                const FillContext& fillContext,
+                                unsigned currentBlock)
+{
+    AddExtraOutputEntry(simulationTable,
+                        "capacity_shadow_price",
+                        info,
+                        std::abs(constraintDuals[index]),
+                        fillContext,
+                        currentBlock);
+}
+
+// hydro_shadow_price = dual(final stock expression constraint); one per area
+// and week, recorded only when accurate water value mode is on.
+void AddHydroShadowPrice(SimulationTable& simulationTable,
+                         const LegacyVariableInfo& info,
+                         std::size_t index,
+                         const std::vector<double>& constraintDuals,
+                         const FillContext& fillContext,
+                         unsigned currentBlock)
+{
+    AddExtraOutputEntry(simulationTable,
+                        "hydro_shadow_price",
+                        info,
+                        constraintDuals[index],
+                        fillContext,
+                        currentBlock);
+}
+
 } // namespace
 
 void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                            const std::vector<std::optional<LegacyVariableInfo>>& variablesInfo,
                            const std::vector<double>& solutionValues,
                            const std::vector<double>& linearCosts,
+                           const std::vector<std::optional<LegacyVariableInfo>>& constraintsInfo,
+                           const std::vector<double>& constraintDuals,
                            const FillContext& fillContext,
                            unsigned currentBlock)
 {
@@ -241,6 +326,45 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                             solution,
                             fillContext,
                             currentBlock);
+        }
+    }
+
+    for (std::size_t index = 0; index < constraintsInfo.size(); ++index)
+    {
+        const auto& info = constraintsInfo[index];
+        if (!info)
+        {
+            continue;
+        }
+
+        if (info->name == "AreaBalance")
+        {
+            AddAreaPrice(simulationTable, *info, index, constraintDuals, fillContext, currentBlock);
+            AddAreaIsNearLossOfLoad(simulationTable,
+                                    *info,
+                                    index,
+                                    constraintDuals,
+                                    solution,
+                                    fillContext,
+                                    currentBlock);
+        }
+        else if (info->name == "FlowDissociation")
+        {
+            AddLinkCapacityShadowPrice(simulationTable,
+                                       *info,
+                                       index,
+                                       constraintDuals,
+                                       fillContext,
+                                       currentBlock);
+        }
+        else if (info->name == "FinalStockExpression")
+        {
+            AddHydroShadowPrice(simulationTable,
+                                *info,
+                                index,
+                                constraintDuals,
+                                fillContext,
+                                currentBlock);
         }
     }
 }

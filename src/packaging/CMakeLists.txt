@@ -89,7 +89,6 @@ set(TARGET_LIBS #No alias
         args_helper
         checks
         locale
-        yuni-static-uuid
 
         # executable
         antares-solver

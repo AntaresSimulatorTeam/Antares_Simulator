@@ -13,7 +13,9 @@ void FlowDissociation::add(int pdt, int interco)
         const auto origin = builder.data.NomsDesPays[data.PaysOrigineDeLInterconnexion[interco]];
         const auto destination = builder.data
                                    .NomsDesPays[data.PaysExtremiteDeLInterconnexion[interco]];
-        ConstraintNamer namer(builder.data.NomDesContraintes);
+        // The recording constructor: this dual feeds the `capacity_shadow_price`
+        // extra output of the simulation table.
+        ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.LegacyConstraintsInfo);
         namer.updateExtremities(origin, destination);
         namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
         namer.FlowDissociation(builder.data.nombreDeContraintes);
