@@ -302,8 +302,8 @@ bool XCast::loadFromFolder(const fs::path& folder)
                 logs.error() << "TS-Generator: Conversion: Invalid range: " << p;
             }
         }
-        conversion[conversion.width - 1][0]
-          = (float)1.0e+19; // + std::numeric_limits<float>::max();
+        conversion[conversion.width - 1][0] = (float)1.0e+19; // +
+                                                              // std::numeric_limits<float>::max();
         conversion[conversion.width - 1][1] = conversion[conversion.width - 2][1];
     }
     else
