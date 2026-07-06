@@ -1,0 +1,23 @@
+system:
+  id: sys_example_14_7
+  description: >
+    Single component with constant parameters p=10 and c=20.
+    The constraint x = sum(5 .. 3, p) + c has inverted fixed bounds (5 > 3),
+    so the sum is always empty and x must equal c = 20 at every timestep.
+    Expected: x = 20 at all timesteps, objective = 100.
+
+  model-libraries: lib_example_14_7
+
+  components:
+    - id: c1
+      model: lib_example_14_7.inverted_fixed_bounds_demo
+
+      parameters:
+        - id: p
+          time-dependent: false
+          scenario-dependent: false
+          value: 10
+        - id: c
+          time-dependent: false
+          scenario-dependent: false
+          value: 20

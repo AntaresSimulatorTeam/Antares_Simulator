@@ -1,0 +1,20 @@
+system:
+  id: sys_example_14_3
+  description: >
+    Single component with one variable x and time series p = {1, 2, 3, 4, 5}.
+    The constraint x >= sum(t+0 .. t+1, p) is a two-element sliding window.
+    Both bounds are t-relative (TPlusNode), which was the only form supported
+    before PR #3615. This study acts as a regression test.
+    Expected: x = [3, 5, 7, 9, 6], objective = 30.
+
+  model-libraries: lib_example_14_3
+
+  components:
+    - id: c1
+      model: lib_example_14_3.symmetric_tplus_demo
+
+      parameters:
+        - id: p
+          time-dependent: true
+          scenario-dependent: false
+          value: p_14_3
