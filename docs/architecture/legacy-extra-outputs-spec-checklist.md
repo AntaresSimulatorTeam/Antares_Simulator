@@ -184,51 +184,45 @@ endpoints' `*_port.price`.
 
 ## Design building blocks still needed
 
-The remaining work clusters around a few reusable capabilities. Implementing each
-once unlocks several outputs.
+Since the derived outputs are computed by iterating the study structure and
+reading the solved problem through the correspondence tables (see
+`legacy-extra-outputs.md`), most former blockers are gone: any area price is one
+dual read away, and cluster- or storage-level operands are unambiguous because
+the loops carry the (area, cluster) pair. The remaining work:
 
-### (A) Area-price map  — ✅ implemented
-A lookup `area → price` (i.e. `-dual(AreaBalance)`), built from the recorded
-`AreaBalance` constraints + duals already passed to `AddLegacyExtraOutputs`
-(`BuildPriceByArea` in `LegacyExtraOutputs.cpp`, run once up front before the
-variable dispatch loop). Now consumed by **thermal profit** and **link
-abs/alg_congestion_fee**. Still to wire onto it: **STS profit** (needs C) and the
-area `balance_port.price` field (E).
-- Caveat: zero on MIP weeks (duals not extracted) — same limitation as `price`.
+### (A) STS outputs
+The STS loop does not exist yet in `AddLegacyExtraOutputs`; the variable indices
+are already available (`vm.ShortTermStorageInjection/Withdrawal/Level`). **STS
+profit** = `price(area) × (withdrawal − injection)` needs only that loop.
+- Caveat: dual-derived values are zero on MIP weeks (duals not extracted) — same
+  limitation as `price`.
 
-### (B) Anchorless study-data emission path
-A way to emit ST rows for components that are **not** LP variables (renewable
-clusters, misc-gen entries). Emits per component/hour from study data carried in
-the context. Unlocks: **renewable** + **misc_gen** `generation_power` /
-`minus_generation`, and their `balance_port.flow` fields.
-- Needs the `available_power` series plumbed into the context, plus the component
-  naming conventions (`{area}_wind/_solar/_run_of_river`, the misc-gen table).
+### (B) Anchorless study-data emission
+Rows for components that are **not** LP variables (renewable clusters, misc-gen
+entries) are emitted the same way as everything else — per component/hour from
+`PROBLEME_HEBDO` study data — they just need their loop and the component naming
+conventions (`{area}_wind/_solar/_run_of_river`, the misc-gen table). Unlocks
+**renewable** + **misc_gen** `generation_power` / `minus_generation`, and their
+`balance_port.flow` fields.
 
-### (C) View area-qualification
-Teach `LegacySolutionView` to key by area in addition to component, so cluster- and
-storage-level companion lookups are unambiguous across areas. Unlocks robust
-**STS profit** (combine withdrawal + injection of the same storage). The `area`
-field on `LegacyVariableInfo` already exists; this extends the view's key.
-
-### (D) Per-area layer aggregation
+### (C) Per-area layer aggregation
 Accumulate `cost_layer · LayerStorage` across the `LayerStorage` variables of one
-area and emit a single per-area row. Unlocks **bellman_value**.
+area (`vm.LayerStorage(pays, layer)`) and emit a single per-area row. Unlocks
+**bellman_value**.
 
-### (E) Port-field emission layer (§2.5)
+### (D) Port-field emission layer (§2.5)
 A hard-coded table of `port.field → expression` emitted into the ST, reusing
 already-computed values where possible (`balance_port.price` = `price`, thermal
 `balance_port.flow` = `generation_power`, link `out/in_port.flow` = `±flow`).
 Unlocks all of §2.5. Needed in full for the GEMS port views; the congestion fees
-(2.4.2.6) only need the *price* port values, which (A) already provides directly.
+(2.4.2.6) only need the *price* port values, which the balance duals already
+provide directly.
 
 ---
 
 ## Suggested order
 
-1. ~~**(A) Area-price map** → unlocks thermal profit, STS profit (with C), and link
-   congestion fees in one go.~~ ✅ done — thermal profit and link congestion fees
-   are emitted; STS profit and `balance_port.price` still pending (need C / E).
-2. **(C) View area-qualification** → enables STS profit cleanly; small, additive.
-3. **(D) Per-area layer aggregation** → bellman_value; self-contained.
-4. **(B) Anchorless emission path** → renewable + misc_gen; distinct mechanism.
-5. **(E) Port fields** → §2.5; mostly reuses prior values.
+1. **(A) STS outputs** → STS profit; one more entity loop.
+2. **(C) Per-area layer aggregation** → bellman_value; self-contained.
+3. **(B) Anchorless emission path** → renewable + misc_gen; distinct loop.
+4. **(D) Port fields** → §2.5; mostly reuses prior values.

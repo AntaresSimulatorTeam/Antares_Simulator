@@ -68,7 +68,7 @@ std::string Namer::linkLocation() const
 
 std::string Namer::areaLocation() const
 {
-    return LocationIdentifier(area_, AREA);
+    return LocationIdentifier(area_.value(), AREA);
 }
 
 std::vector<std::string>& Namer::names() const
@@ -82,7 +82,7 @@ void Namer::RecordLegacyVariableInfo(unsigned index,
 {
     if (legacyInfo_ != nullptr)
     {
-        (*legacyInfo_)[index] = {output, component, timeStep(), area()};
+        (*legacyInfo_)[index] = {output, component, timeStep()};
     }
 }
 
@@ -109,11 +109,11 @@ void Namer::SetAreaElementName(unsigned elementIndex,
                                const std::string& elementType,
                                const std::string& timeGranularity) const
 {
-    std::string location = LocationIdentifier(area_, AREA);
+    std::string location = LocationIdentifier(area_.value(), AREA);
     std::string time = TimeIdentifier(timeGranularity);
     std::string name = BuildName(elementType, location, time);
     names_[elementIndex] = name;
-    RecordLegacyVariableInfo(elementIndex, elementType, area_);
+    RecordLegacyVariableInfo(elementIndex, elementType, area_.value());
 }
 
 void VariableNamer::SetAreaVariableName(unsigned varIndex,

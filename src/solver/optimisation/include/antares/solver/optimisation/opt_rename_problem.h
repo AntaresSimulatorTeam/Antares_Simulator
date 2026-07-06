@@ -23,8 +23,8 @@ public:
     void updateExtremities(const std::string& origin, const std::string& destination);
 
 protected:
-    // Records the structured legacy description of a variable, parallel to the name.
-    // No-op when this namer was built without a recording target.
+    // Records the structured legacy description of a variable, parallel to the
+    // name. No-op when this namer was built without a recording target.
     void RecordLegacyVariableInfo(unsigned index,
                                   const std::string& output,
                                   const std::string& component) const;
@@ -32,11 +32,6 @@ protected:
     unsigned timeStep() const
     {
         return timeStep_;
-    }
-
-    const std::string& area() const
-    {
-        return area_;
     }
 
     void SetLinkElementName(unsigned varIndex, const std::string& variableType) const;
@@ -82,7 +77,7 @@ protected:
 private:
     std::string origin_;
     std::string destination_;
-    std::string area_;
+    std::optional<std::string> area_;
     unsigned timeStep_ = 0;
     std::vector<std::string>& names_;
     LegacyInfoVec* legacyInfo_ = nullptr;
@@ -171,14 +166,6 @@ class ConstraintNamer: public Namer
 {
 public:
     using Namer::Namer;
-
-    // Recording constructor: constraints named through this instance also get
-    // their structured legacy description recorded (used for constraints whose
-    // dual feeds an extra output of the simulation table).
-    ConstraintNamer(std::vector<std::string>& names, LegacyInfoVec& legacyInfo):
-        Namer(names, &legacyInfo)
-    {
-    }
 
     void FlowDissociation(unsigned constrIndex) const;
     void AreaBalance(unsigned constrIndex) const;
