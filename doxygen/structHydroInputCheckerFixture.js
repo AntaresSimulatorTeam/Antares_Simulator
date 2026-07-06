@@ -7,6 +7,6 @@ var structHydroInputCheckerFixture =
     [ "operator=", "structHydroInputCheckerFixture.html#ad7a952b6a0703ae3caede77975f31e98", null ],
     [ "operator=", "structHydroInputCheckerFixture.html#a8af4b039030d1aed6ffa2178e6caab10", null ],
     [ "area_1", "structHydroInputCheckerFixture.html#acb8d6ed103701af94597775942d4dde4", null ],
-    [ "hydroInputsChecker", "structHydroInputCheckerFixture.html#a6f72df9fc270ba0b4a6c40861040648b", null ],
+    [ "hydroInputsChecker", "structHydroInputCheckerFixture.html#a1330af27c4a345ef39b2b980b9de52be", null ],
     [ "study", "structHydroInputCheckerFixture.html#ad27c4c63b0d4947a7531a074df5fde9c", null ]
 ];
