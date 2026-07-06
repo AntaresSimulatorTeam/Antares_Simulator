@@ -11,7 +11,6 @@
 #include <vector>
 
 #include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
 
 #include <antares/solver/ts-generator/law.h>
 
@@ -63,7 +62,7 @@ public:
     explicit ThermalCluster(Data::Area* parent);
 
     ThermalCluster() = delete;
-    ~ThermalCluster() = default;
+    ~ThermalCluster() override = default;
 
     //! \name Spinning
     //@{

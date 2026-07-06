@@ -365,6 +365,7 @@ void setupMinimalProblem(PROBLEME_HEBDO& problemeHebdo, ProblemFeasibility feasi
     probleme->CoutsReduits = {0.0};
     probleme->VariablesEntieres = {false};
     probleme->LegacyVariablesInfo.assign(nbVar, std::nullopt);
+    probleme->LegacyConstraintsInfo.assign(nbConstraints, std::nullopt);
 
     // Constraint matrix setup
     probleme->IndicesDebutDeLigne = {0, 1};

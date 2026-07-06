@@ -9,7 +9,6 @@
 #include <vector>
 
 #include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
 
 #include <antares/array/matrix.h>
@@ -28,11 +27,15 @@ namespace Antares::Data
 // Forward declaration
 struct CompareBindingConstraintName;
 
-class BindingConstraint final: public Yuni::NonCopyable<BindingConstraint>
+class BindingConstraint final
 {
     friend class BindingConstraintLoader;
 
 public:
+    BindingConstraint() = default;
+    BindingConstraint(const BindingConstraint&) = delete;
+    BindingConstraint& operator=(const BindingConstraint&) = delete;
+
     enum Type
     {
         //! Unknown status

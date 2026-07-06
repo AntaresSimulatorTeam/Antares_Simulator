@@ -31,6 +31,7 @@ public:
     const std::vector<const char*>& NomsDesPays;
     const uint32_t& weekInTheYear;
     const uint32_t& NombreDePasDeTemps;
+    std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>& LegacyConstraintsInfo;
 };
 
 /*! \verbatim

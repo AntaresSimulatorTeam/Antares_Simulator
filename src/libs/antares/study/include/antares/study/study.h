@@ -7,7 +7,6 @@
 #include <memory>
 
 #include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
 
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/correlation/correlation.h>
@@ -30,9 +29,12 @@ namespace Antares::Data
 ** \brief Antares Study
 */
 
-class Study: public Yuni::NonCopyable<Study>
+class Study
 {
 public:
+    Study(const Study&) = delete;
+    Study& operator=(const Study&) = delete;
+
     using Ptr = std::shared_ptr<Study>;
     //! Set of studies
     using Set = std::set<Ptr>;
