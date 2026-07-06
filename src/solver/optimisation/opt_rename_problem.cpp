@@ -335,7 +335,8 @@ void VariableNamer::ParticipationOfOffUnitsToReserve(unsigned varIndex,
                                            reserveName);
 }
 
-void VariableNamer::InternalUnsatisfiedReserve(unsigned varIndex, const std::string& reserveName) const
+void VariableNamer::InternalUnsatisfiedReserve(unsigned varIndex,
+                                               const std::string& reserveName) const
 {
     SetThermalClusterReserveElementName(varIndex, "InternalUnsatisfiedReserve", reserveName);
 }
@@ -571,9 +572,10 @@ void ConstraintNamer::FinalStockExpression(unsigned constrIndex) const
     SetAreaElementNameHour(constrIndex, "FinalStockExpression");
 }
 
-void ConstraintNamer::BindingConstraint(unsigned constrIndex,
-                                        const std::string& name,
-                                        const std::pair<std::string, std::string>& timeGranularity) const
+void ConstraintNamer::BindingConstraint(
+  unsigned constrIndex,
+  const std::string& name,
+  const std::pair<std::string, std::string>& timeGranularity) const
 {
     std::string time = TimeIdentifier(timeGranularity.first);
     std::string new_name = BuildName(name, timeGranularity.second, time);
@@ -651,17 +653,20 @@ void ConstraintNamer::SymmetryReserveParticipation(unsigned constrIndex,
                                             reserveName2);
 }
 
-void ConstraintNamer::POffUnitsUpperBound(unsigned constrIndex, const std::string& clusterName) const
+void ConstraintNamer::POffUnitsUpperBound(unsigned constrIndex,
+                                          const std::string& clusterName) const
 {
     SetThermalClusterElementName(constrIndex, "POffUnitsUpperBound", clusterName);
 }
 
-void ConstraintNamer::POutCapacityThresholdInf(unsigned constrIndex, const std::string& clusterName) const
+void ConstraintNamer::POutCapacityThresholdInf(unsigned constrIndex,
+                                               const std::string& clusterName) const
 {
     SetThermalClusterElementName(constrIndex, "POutCapacityThresholdInf", clusterName);
 }
 
-void ConstraintNamer::POutCapacityThresholdSup(unsigned constrIndex, const std::string& clusterName) const
+void ConstraintNamer::POutCapacityThresholdSup(unsigned constrIndex,
+                                               const std::string& clusterName) const
 {
     SetThermalClusterElementName(constrIndex, "POutCapacityThresholdSup", clusterName);
 }
@@ -852,19 +857,22 @@ void ConstraintNamer::HydroEnergyLevelReserveParticipation(unsigned constrIndex,
                                   reserveName);
 }
 
-void ConstraintNamer::HydroGlobalEnergyLevelReserveParticipationDown(unsigned constrIndex,
-                                                                     const std::string& clusterName) const
+void ConstraintNamer::HydroGlobalEnergyLevelReserveParticipationDown(
+  unsigned constrIndex,
+  const std::string& clusterName) const
 {
     SetHydroElementName(constrIndex, "HydroGlobalEnergyLevelReserveParticipationDown", clusterName);
 }
 
-void ConstraintNamer::HydroGlobalEnergyLevelReserveParticipationUp(unsigned constrIndex,
-                                                                   const std::string& clusterName) const
+void ConstraintNamer::HydroGlobalEnergyLevelReserveParticipationUp(
+  unsigned constrIndex,
+  const std::string& clusterName) const
 {
     SetHydroElementName(constrIndex, "HydroGlobalEnergyLevelReserveParticipationUp", clusterName);
 }
 
-void ConstraintNamer::ReserveSatisfaction(unsigned constrIndex, const std::string& reserveName) const
+void ConstraintNamer::ReserveSatisfaction(unsigned constrIndex,
+                                          const std::string& reserveName) const
 {
     SetThermalClusterReserveElementName(constrIndex, "ReserveSatisfaction", reserveName);
 }
