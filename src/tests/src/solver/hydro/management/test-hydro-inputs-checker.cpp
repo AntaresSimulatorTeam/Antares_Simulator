@@ -11,6 +11,7 @@
 #include "antares/solver/hydro/management/HydroErrorsCollector.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 
+using namespace Antares;
 using namespace Antares::Solver;
 using namespace Antares::Data;
 

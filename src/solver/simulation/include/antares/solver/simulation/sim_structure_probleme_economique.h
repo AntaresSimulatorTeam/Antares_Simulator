@@ -591,13 +591,13 @@ struct PROBLEME_HEBDO
 
     uint32_t NombreDeContraintesCouplantes = 0;
     std::vector<CONTRAINTES_COUPLANTES> MatriceDesContraintesCouplantes;
-    std::unordered_map<std::shared_ptr<Data::BindingConstraint>, std::vector<double>>
+    std::unordered_map<std::shared_ptr<BindingConstraint>, std::vector<double>>
       ResultatsContraintesCouplantes;
 
     std::vector<SOLDE_MOYEN_DES_ECHANGES> SoldeMoyenHoraire; // Used for quadratic opt
     /* Implementation details : I/O, error management, etc. */
 
-    Data::mpsExportStatus ExportMPS = Data::mpsExportStatus::NO_EXPORT;
+    mpsExportStatus ExportMPS = mpsExportStatus::NO_EXPORT;
     bool exportMPSOnError = false;
     bool NamedProblems = false;
     bool exportSolutions = false;
@@ -740,6 +740,6 @@ public:
       ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
-    Solver::ModelerData* modelerData = nullptr;
+    Antares::Solver::ModelerData* modelerData = nullptr;
 };
 #endif
