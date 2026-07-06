@@ -133,7 +133,7 @@ bool readReserveParameters(const fs::path& folderInput, Area& area, const YAML::
         return false;
     }
 
-    CapacityReservation capacityReservation;
+    CapacityReservation capacityReservation(area.allCapacityReservations.value().TSNumbers);
     capacityReservation.setName(reserveName);
 
     for (const auto& entry: reserveNode)

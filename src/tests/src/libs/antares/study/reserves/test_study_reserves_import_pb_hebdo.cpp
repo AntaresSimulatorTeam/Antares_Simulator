@@ -165,11 +165,11 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
     std::ofstream file(studyPath / "myreserveA.yml");
     file << R"(participations:
   certifications:
-    - reserve: ReserveUp
+    - reserve: ReserveUpA
       participation-cost: 1.1
       max-store: 2.2
       max-release: 3.3
-    - reserve: ReserveDown
+    - reserve: ReserveDownA
       participation-cost: 4.4
       max-store: 5.5
       max-release: 6.6
@@ -179,7 +179,7 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
     std::ofstream fileB(studyPath / "myreserveB.yml");
     fileB << R"(participations:
   certifications:
-    - reserve: ReserveUp
+    - reserve: ReserveUpB
       participation-cost: 9.9
       max-store: 8.8
       max-release: 7.7

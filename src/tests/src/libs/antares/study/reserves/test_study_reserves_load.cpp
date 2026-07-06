@@ -1257,10 +1257,18 @@ reserves:
 
     std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "reserveup.txt");
     fileNeedsUp << "2\n3\n";
+    for (int i = 2; i < HOURS_PER_YEAR; ++i)
+    {
+        fileNeedsUp << "0\n";
+    }
     fileNeedsUp.close();
 
     std::ofstream fileNeedsDown(studyPath / "reserves" / "a" / "reservedown.txt");
     fileNeedsDown << "4\n5\n6\n";
+    for (int i = 3; i < HOURS_PER_YEAR; ++i)
+    {
+        fileNeedsDown << "0\n";
+    }
     fileNeedsDown.close();
     accessForTests::loadReservesParameters(studyPath, *areaA);
 
@@ -1297,145 +1305,18 @@ reserves:
       areaA->allCapacityReservations.value().getReserveByID("reserveup")->unsuppliedCost,
       5.5);
 
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().TSNumbers.height(), 0);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().TSNumbers.height(), 0);
-
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reserveup")
-                        ->need->getCoefficient(0, 0),
-                      2);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reserveup")
-                        ->need->getCoefficient(0, 1),
-                      3);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reservedown")
-                        ->need->getCoefficient(0, 0),
-                      4);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reservedown")
-                        ->need->getCoefficient(0, 1),
-                      5);
-}
-
-BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_needs_size, OneProblemWithoutReservesOneAreaWithLogger)
-{
-    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-    std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.ini");
-    file << "[ReserveUp]\n";
-    file << "type = up\n ";
-    file << "\n ";
-    file << "[ReserveDown]\n";
-    file << "type = down\n ";
-    file.close();
-
-    std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "reserveup.txt");
-    for (int i = 0; i < HOURS_PER_YEAR; ++i)
-    {
-        fileNeedsUp << "2\t3\t4\n";
-    }
-    fileNeedsUp.close();
-
-    std::ofstream fileNeedsDown(studyPath / "reserves" / "a" / "reservedown.txt");
-    for (int i = 0; i < HOURS_PER_YEAR; ++i)
-    {
-        fileNeedsDown << "4\t5\n";
-    }
-    fileNeedsDown.close();
-    accessForTests::loadReservesParameters(studyPath, *areaA);
-
-    BOOST_CHECK(
-      getErrors().contains("Inconsistent size of need time series for capacity reservation "
-                           "`reservedown` in area `A`. Expected size: 3, actual size: 2"));
-}
-
-// Test multiple series for the need of reserves separated by tabs
-BOOST_FIXTURE_TEST_CASE(test_readReserve_multipleTS_need,
-                        OneProblemWithoutReservesOneAreaWithLogger)
-{
-    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-    std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.ini");
-    file << "[ReserveUp]\n";
-    file << "type = up\n ";
-    file << "\n ";
-    file << "[ReserveDown]\n";
-    file << "type = down\n ";
-    file.close();
-
-    std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "reserveup.txt");
-    for (int i = 0; i < HOURS_PER_YEAR / 2; ++i)
-    {
-        fileNeedsUp << "2\t3\t4\n";
-        fileNeedsUp << "4\t5\t6\n";
-    }
-    fileNeedsUp.close();
-
-    std::ofstream fileNeedsDown(studyPath / "reserves" / "a" / "reservedown.txt");
-    for (int i = 0; i < HOURS_PER_YEAR / 2; ++i)
-    {
-        fileNeedsDown << "7\t8\t9\n";
-        fileNeedsDown << "10\t11\t12\n";
-    }
-    fileNeedsDown.close();
-    accessForTests::loadReservesParameters(studyPath, *areaA);
-
-    areaA->allCapacityReservations.value().TSNumbers.reset(3);
-    areaA->allCapacityReservations.value().TSNumbers[0] = 0;
-    areaA->allCapacityReservations.value().TSNumbers[1] = 1;
-    areaA->allCapacityReservations.value().TSNumbers[2] = 2;
-
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().TSNumbers.height(), 3);
-
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reserveup")
-                        ->need->getCoefficient(0, 0),
-                      2);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reserveup")
-                        ->need->getCoefficient(1, 0),
-                      3);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reserveup")
-                        ->need->getCoefficient(2, 0),
-                      4);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reservedown")
-                        ->need->getCoefficient(0, 0),
-                      7);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reservedown")
-                        ->need->getCoefficient(1, 0),
-                      8);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reservedown")
-                        ->need->getCoefficient(2, 0),
-                      9);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reserveup")
-                        ->need->getCoefficient(0, 1),
-                      4);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reserveup")
-                        ->need->getCoefficient(1, 1),
-                      5);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reserveup")
-                        ->need->getCoefficient(2, 1),
-                      6);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reservedown")
-                        ->need->getCoefficient(0, 1),
-                      10);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reservedown")
-                        ->need->getCoefficient(1, 1),
-                      11);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reservedown")
-                        ->need->getCoefficient(2, 1),
-                      12);
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByID("reserveup")->need->timeSeries.height,
+      HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByID("reserveup")->need->timeSeries[0][0],
+      2);
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByID("reserveup")->need->timeSeries[0][1],
+      3);
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByID("reservedown")->need->timeSeries[0][0],
+      4);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_readReserve_negative_parameters_values,
