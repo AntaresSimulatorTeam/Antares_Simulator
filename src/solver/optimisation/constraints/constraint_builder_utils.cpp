@@ -24,6 +24,5 @@ ConstraintBuilderData NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre
             ProblemeAResoudre.NomDesContraintes,
             problemeHebdo->NomsDesPays,
             problemeHebdo->weekInTheYear,
-            problemeHebdo->NombreDePasDeTemps,
-            ProblemeAResoudre.LegacyConstraintsInfo};
+            problemeHebdo->NombreDePasDeTemps};
 }

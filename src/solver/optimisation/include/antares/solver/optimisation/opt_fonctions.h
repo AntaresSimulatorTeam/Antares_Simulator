@@ -10,7 +10,6 @@
 #include "antares/config/config.h"
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/solver/optim-model-filler/BendersDecomposition.h"
-#include "antares/solver/optimisation/LegacyExtraOutputsContext.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/study/parameters/adq-patch-params.h"
@@ -66,15 +65,13 @@ void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 **
 ** \return True si l'operation s'est bien deroulee, false si le probleme n'a pas de solution
 */
-bool OPT_AppelDuSimplexe(
-  const SingleOptimOptions& options,
-  PROBLEME_HEBDO*,
-  int,
-  const int,
-  const OptPeriodStringGenerator&,
-  Solver::IResultWriter& writer,
-  IO::Outputs::SimulationTable* simulationTable,
-  const Antares::Optimization::LegacyExtraOutputsContext& extraOutputsContext);
+bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
+                         PROBLEME_HEBDO*,
+                         int,
+                         const int,
+                         const OptPeriodStringGenerator&,
+                         Solver::IResultWriter& writer,
+                         IO::Outputs::SimulationTable* simulationTable);
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,

@@ -19,7 +19,6 @@
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyExtraOutputs.h"
-#include "antares/solver/optimisation/LegacyExtraOutputsContext.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyNameMapper.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
@@ -66,27 +65,18 @@ static void logProblemSize(const MPSolver* mpSolver)
 namespace
 {
 void FillLegacySimulationTable(SimulationTable& simulationTable,
-                               const PROBLEME_HEBDO& problemeHebdo,
-                               const LegacyExtraOutputsContext& extraOutputsContext,
+                               PROBLEME_HEBDO& problemeHebdo,
                                const FillContext& fillContext,
                                const LegacyNameMapper& nameMapper,
                                unsigned currentBlock)
 {
     const PROBLEME_ANTARES_A_RESOUDRE& problem = *problemeHebdo.ProblemeAResoudre;
-    const unsigned globalFirstTimeStep = fillContext.getGlobalFirstTimeStep();
-    const unsigned globalLastTimeStep = fillContext.getGlobalLastTimeStep();
-    const unsigned int block = currentBlock;
 
-    // LegacyVariablesInfo, X and CoutLineaire are all sized to NombreDeVariables, and
-    // LegacyConstraintsInfo and CoutsMarginauxDesContraintes to NombreDeContraintes, in
-    // resizeProbleme, so the index-based reads below are always in bounds.
+    // LegacyVariablesInfo, X and CoutLineaire are all sized to NombreDeVariables
+    // in resizeProbleme, so the index-based reads below are always in bounds.
     assert(problem.LegacyVariablesInfo.size() == static_cast<std::size_t>(problem.NombreDeVariables)
            && problem.X.size() == static_cast<std::size_t>(problem.NombreDeVariables)
            && problem.CoutLineaire.size() == static_cast<std::size_t>(problem.NombreDeVariables));
-    assert(problem.LegacyConstraintsInfo.size()
-             == static_cast<std::size_t>(problem.NombreDeContraintes)
-           && problem.CoutsMarginauxDesContraintes.size()
-                == static_cast<std::size_t>(problem.NombreDeContraintes));
     for (int index = 0; index < problem.NombreDeVariables; ++index)
     {
         const auto& info = problem.LegacyVariablesInfo[static_cast<std::size_t>(index)];
@@ -95,31 +85,18 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
             continue;
         }
 
-        std::optional<unsigned> blockTimeIndex;
-        if (info->timeIndex >= globalFirstTimeStep && info->timeIndex <= globalLastTimeStep)
-        {
-            blockTimeIndex = info->timeIndex - globalFirstTimeStep;
-        }
-
-        simulationTable.addEntry({.block = block,
+        simulationTable.addEntry({.block = currentBlock,
                                   .component = info->component,
                                   .output = nameMapper.mapOutput(info->name),
                                   .absolute_time_index = info->timeIndex,
-                                  .block_time_index = blockTimeIndex,
+                                  .block_time_index = LegacyBlockTimeIndex(fillContext,
+                                                                           info->timeIndex),
                                   .scenario_index = fillContext.getYear(),
                                   .value = problem.X[static_cast<std::size_t>(index)],
                                   .status = std::nullopt});
     }
 
-    AddLegacyExtraOutputs(simulationTable,
-                          problem.LegacyVariablesInfo,
-                          problem.X,
-                          problem.CoutLineaire,
-                          problem.LegacyConstraintsInfo,
-                          problem.CoutsMarginauxDesContraintes,
-                          extraOutputsContext,
-                          fillContext,
-                          currentBlock);
+    AddLegacyExtraOutputs(simulationTable, problemeHebdo, fillContext, currentBlock);
 }
 } // namespace
 
@@ -221,8 +198,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           const int optimizationNumber,
                                           const OptPeriodStringGenerator& optPeriodStringGenerator,
                                           IResultWriter& writer,
-                                          SimulationTable* simulationTable,
-                                          const LegacyExtraOutputsContext& extraOutputsContext)
+                                          SimulationTable* simulationTable)
 {
     Utils::TimeMeasurement measure;
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
@@ -331,7 +307,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         static constexpr LegacyNameMapper legacyNameMapper;
         FillLegacySimulationTable(*simulationTable,
                                   *problemeHebdo,
-                                  extraOutputsContext,
                                   fillCtx,
                                   legacyNameMapper,
                                   currentBlock);
@@ -351,8 +326,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          const int optimizationNumber,
                          const OptPeriodStringGenerator& optPeriodStringGenerator,
                          IResultWriter& writer,
-                         SimulationTable* simulationTable,
-                         const LegacyExtraOutputsContext& extraOutputsContext)
+                         SimulationTable* simulationTable)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
@@ -362,8 +336,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                                                        optimizationNumber,
                                                        optPeriodStringGenerator,
                                                        writer,
-                                                       simulationTable,
-                                                       extraOutputsContext);
+                                                       simulationTable);
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
     {
