@@ -1,6 +1,5 @@
 var NAVTREEINDEX8 =
 {
-"classAntares_1_1Data_1_1ThermalClusterList.html#a6571ba17ab5a261aad5c52881d544843":[9,0,0,3,73,15],
 "classAntares_1_1Data_1_1ThermalClusterList.html#a65a09431eb9a19c370ca9e13b44c8b15":[9,0,0,3,73,3],
 "classAntares_1_1Data_1_1ThermalClusterList.html#a755f169cd8bbb6bd163cd06c52c40746":[9,0,0,3,73,6],
 "classAntares_1_1Data_1_1ThermalClusterList.html#a85572ed427c83991a46989ab697a6f03":[9,0,0,3,73,10],
@@ -27,11 +26,10 @@ var NAVTREEINDEX8 =
 "classAntares_1_1Data_1_1TimeSeries.html#a8c9852ce8855a49cf4b8975f4e3d3001":[9,0,0,3,11,11],
 "classAntares_1_1Data_1_1TimeSeries.html#a8d66ce53c741ebd34a0ecf96b8f129fa":[9,0,0,3,11,5],
 "classAntares_1_1Data_1_1TimeSeries.html#a979a48a707d1f6cf03004b5ab338ea6f":[9,0,0,3,11,8],
-"classAntares_1_1Data_1_1TimeSeries.html#a9a058e7e7986055de297402ba56380ed":[9,0,0,3,11,16],
-"classAntares_1_1Data_1_1TimeSeries.html#a9cc0e90ae654015d90e61a90520bc147":[9,0,0,3,11,17],
+"classAntares_1_1Data_1_1TimeSeries.html#a9a058e7e7986055de297402ba56380ed":[9,0,0,3,11,15],
+"classAntares_1_1Data_1_1TimeSeries.html#a9cc0e90ae654015d90e61a90520bc147":[9,0,0,3,11,16],
 "classAntares_1_1Data_1_1TimeSeries.html#aabe9084264b4cee564dec8088008c95d":[9,0,0,3,11,9],
 "classAntares_1_1Data_1_1TimeSeries.html#ac735c94dbd5498649138cfd80e4811ae":[9,0,0,3,11,2],
-"classAntares_1_1Data_1_1TimeSeries.html#ace9a21508d42697346216042b034e280":[9,0,0,3,11,15],
 "classAntares_1_1Data_1_1TimeSeries.html#ae3f9002c882d8d4c9e9741e0f7afe609":[9,0,0,3,11,14],
 "classAntares_1_1Data_1_1TimeSeries.html#ae494bc3c9fcedfe95b423ba40ac8701d":[9,0,0,3,11,3],
 "classAntares_1_1Data_1_1TimeSeriesNumbers.html":[9,0,0,3,10],
@@ -249,5 +247,7 @@ var NAVTREEINDEX8 =
 "classAntares_1_1Expressions_1_1Nodes_1_1ASTPreOrderIteratorConst.html#afbfbb971373ae689bcf86d5ec9ebf939":[9,0,0,6,0,2,2],
 "classAntares_1_1Expressions_1_1Nodes_1_1ASTconst.html":[9,0,0,6,0,3],
 "classAntares_1_1Expressions_1_1Nodes_1_1ASTconst.html#a0a542fda182fddd30180725f41387320":[9,0,0,6,0,3,1],
-"classAntares_1_1Expressions_1_1Nodes_1_1ASTconst.html#ab4ef26bef0acd9ee3a679b8a57bd822d":[9,0,0,6,0,3,2]
+"classAntares_1_1Expressions_1_1Nodes_1_1ASTconst.html#ab4ef26bef0acd9ee3a679b8a57bd822d":[9,0,0,6,0,3,2],
+"classAntares_1_1Expressions_1_1Nodes_1_1ASTconst.html#acbfc2ce59346ff119636b72897b55742":[9,0,0,6,0,3,0],
+"classAntares_1_1Expressions_1_1Nodes_1_1AllTimeSumNode.html":[9,0,0,6,0,4]
 };

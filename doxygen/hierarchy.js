@@ -444,7 +444,6 @@ var hierarchy =
     [ "Antares::IO::Inputs::ForbidNodes::ForbiddenNodes", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes.html", null ],
     [ "Antares::Concurrency::FutureSet", "classAntares_1_1Concurrency_1_1FutureSet.html", null ],
     [ "Antares::Solver::Workflow::GenerationAndResolutionConfig", "structAntares_1_1Solver_1_1Workflow_1_1GenerationAndResolutionConfig.html", null ],
-    [ "global_JIT_manager", "classglobal__JIT__manager.html", null ],
     [ "Antares::Data::ShortTermStorage::GroupsHours", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours.html", null ],
     [ "Antares::Data::Symmetries::GroupsSymmetries", "classAntares_1_1Data_1_1Symmetries_1_1GroupsSymmetries.html", null ],
     [ "Antares::Solver::HebdoProblemToLpsTranslator", "classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html", null ],
@@ -638,7 +637,6 @@ var hierarchy =
     [ "Antares::Data::Parameters::IncludeOptions", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html", null ],
     [ "Antares::Optimization::InfeasibleProblemReport", "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html", null ],
     [ "Antares::Solver::Variable::Economy::InflowsTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1InflowsTraits.html", null ],
-    [ "JIT::Informations", "classJIT_1_1Informations.html", null ],
     [ "IniConstraint", "structIniConstraint.html", null ],
     [ "Antares::IniFile", "classAntares_1_1IniFile.html", null ],
     [ "InputFixture< size >", "structInputFixture.html", null ],
@@ -816,10 +814,8 @@ var hierarchy =
         [ "Antares::Solver::Variable::Economy::TimeSeriesValuesLoad", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html", null ]
       ] ]
     ] ],
-    [ "JIT", "classJIT.html", null ],
     [ "Antares::Solver::Variable::JoinAll< Wrappers >", "classAntares_1_1Solver_1_1Variable_1_1JoinAll.html", null ],
     [ "json_collector.jsonCollector", "classjson__collector_1_1jsonCollector.html", null ],
-    [ "JIT::just_in_time_manager", "classJIT_1_1just__in__time__manager.html", null ],
     [ "Antares::Optimization::LegacyNameMapper", "classAntares_1_1Optimization_1_1LegacyNameMapper.html", null ],
     [ "Antares::Writer::LegacySimulationTablesWriter", "classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html", null ],
     [ "Antares::Optimization::LegacySolutionView", "classAntares_1_1Optimization_1_1LegacySolutionView.html", null ],

@@ -1,6 +1,6 @@
 var classHydro__problem__costs =
 [
-    [ "Hydro_problem_costs", "classHydro__problem__costs.html#afc7a8e2b24e3171ec6c97792073ac868", null ],
+    [ "Hydro_problem_costs", "classHydro__problem__costs.html#a06f3666d53ddb7782f793ef34b6c4214", null ],
     [ "get_deviationMax_cost", "classHydro__problem__costs.html#aae4c1b67f230fe9cd1547d8532766f0d", null ],
     [ "get_deviations_cost", "classHydro__problem__costs.html#a2bdc9b0a457e87c939c8680f067d8395", null ],
     [ "get_end_days_levels_cost", "classHydro__problem__costs.html#a622782915ebb0432fd791d4ac4ab88e0", null ],

@@ -1,9 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"classAntares_1_1Matrix.html#abad4f764e17de0076ecdd89ffd1dbf50":[9,0,0,16,48],
-"classAntares_1_1Matrix.html#abd33027367a96cd135aa252625989a17":[9,0,0,16,26],
-"classAntares_1_1Matrix.html#ac0e2adb05e204d5a40cd129d9fb0593f":[9,0,0,16,18],
-"classAntares_1_1Matrix.html#ac274bc7b3c1bdc83cc88328325b2cafb":[9,0,0,16,28],
 "classAntares_1_1Matrix.html#ac74055baf078418c65cc5fb4e36e5621":[9,0,0,16,39],
 "classAntares_1_1Matrix.html#ad3e680df09187bc91ea10cccaa319ac0":[9,0,0,16,1],
 "classAntares_1_1Matrix.html#ad755d3a73c9e6b8346e6cce8a218e511":[9,0,0,16,15],
@@ -11,7 +7,6 @@ var NAVTREEINDEX11 =
 "classAntares_1_1Matrix.html#ae2b850e976d3b46e48e561642320a27d":[9,0,0,16,36],
 "classAntares_1_1Matrix.html#ae30aa9ea83dbe8013e5e64266a7bdcb4":[9,0,0,16,35],
 "classAntares_1_1Matrix.html#ae9fbf27ece013465cea076dc3122b4dc":[9,0,0,16,13],
-"classAntares_1_1Matrix.html#aeadbf3080154bb8f6a00f2f626f80760":[9,0,0,16,61],
 "classAntares_1_1Matrix.html#aee9c0d9034965ca45044eaf65d713ca9":[9,0,0,16,29],
 "classAntares_1_1Matrix.html#af1d70e01bafdf778ca902a1b44a2cea1":[9,0,0,16,30],
 "classAntares_1_1Matrix.html#af66f9ca57ceb18ff0ecbd867e76c812c":[9,0,0,16,31],
@@ -249,5 +244,10 @@ var NAVTREEINDEX11 =
 "classAntares_1_1Optimisation_1_1EvaluationContextProvider.html#a7290fd27e7d1df1454bb857124cb5a08":[9,0,0,9,16,2],
 "classAntares_1_1Optimisation_1_1EvaluationContextProvider.html#aa6f9652914b3c57c39a5654757f1b2e7":[9,0,0,9,16,0],
 "classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html":[9,0,0,9,14,0],
-"classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html#a09b09f4c705e89993b3a5397b8547321":[9,0,0,9,14,0,3]
+"classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html#a09b09f4c705e89993b3a5397b8547321":[9,0,0,9,14,0,3],
+"classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html#a8524f0366bb37e2eaa1ac22fd50abd12":[9,0,0,9,14,0,2],
+"classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html#ada2507a594426107ebfd7a3c394771c2":[9,0,0,9,14,0,0],
+"classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html#af4b7fb2743dc02a423f29397a93cce3e":[9,0,0,9,14,0,1],
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1EmptyScenario.html":[9,0,0,9,0,6],
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1EmptyScenario.html#a04256403b93a2b5aaf881786c30cecea":[9,0,0,9,0,6,0]
 };

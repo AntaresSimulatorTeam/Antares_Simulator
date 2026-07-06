@@ -12,7 +12,6 @@ var classAntares_1_1Matrix =
       [ "optNone", "classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2aeace5101cedad1888fbf3accbe4509ae", null ],
       [ "optFixedSize", "classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a49efeee2664a8ac46263360755d54140", null ],
       [ "optQuiet", "classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a1d85b0d52cc96d30d04776011c3819e3", null ],
-      [ "optImmediate", "classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a0e4056ff6da75ffd399efee823cc8508", null ],
       [ "optNoWarnIfEmpty", "classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a921105aa2239c4f7cc8e1532a24f89ee", null ],
       [ "optNeverFails", "classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a34cdfceff80957c5a70e8c89f022a7b5", null ]
     ] ],
@@ -57,8 +56,8 @@ var classAntares_1_1Matrix =
     [ "pasteToColumn", "classAntares_1_1Matrix.html#a1cb6b532918e9b20971228ceff5691a2", null ],
     [ "print", "classAntares_1_1Matrix.html#abad4f764e17de0076ecdd89ffd1dbf50", null ],
     [ "reset", "classAntares_1_1Matrix.html#a27263c4fa77cf86903aec456b2b601c7", null ],
-    [ "reset", "classAntares_1_1Matrix.html#a24148b1db609b61561e0dca4dd1da862", null ],
-    [ "resize", "classAntares_1_1Matrix.html#a97823ff73bcf91cc895d4062694b9274", null ],
+    [ "reset", "classAntares_1_1Matrix.html#a7f67780b1384de0d1c57b158abdeb00c", null ],
+    [ "resize", "classAntares_1_1Matrix.html#a75a491b82aa1d1d01d491b7e2c4c19c6", null ],
     [ "resizeWithoutDataLost", "classAntares_1_1Matrix.html#aa09d1bad486bc165a32b0f8c5cc9d7db", null ],
     [ "roundAllEntries", "classAntares_1_1Matrix.html#a8ee708527d156f55dc1fb4e3af4b6a59", null ],
     [ "saveBufferToFile", "classAntares_1_1Matrix.html#aacbb68af18c9554b16a3ba3b68af905d", null ],
@@ -68,10 +67,8 @@ var classAntares_1_1Matrix =
     [ "saveToCSVFile", "classAntares_1_1Matrix.html#afcd774e8473b853fd280c7e529b4e56c", null ],
     [ "saveToFileDescriptor", "classAntares_1_1Matrix.html#a261a8cba5f5041e41ff09c8f418f4464", null ],
     [ "swap", "classAntares_1_1Matrix.html#aa338871dd3da89cdd112a638d06ce4df", null ],
-    [ "unloadFromMemory", "classAntares_1_1Matrix.html#aeadbf3080154bb8f6a00f2f626f80760", null ],
     [ "zero", "classAntares_1_1Matrix.html#a0764fae6bafeb8425318d6e0e379727b", null ],
     [ "entry", "classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230", null ],
     [ "height", "classAntares_1_1Matrix.html#aa0436d000cfb7438a083eeb9df48e01e", null ],
-    [ "jit", "classAntares_1_1Matrix.html#a0299a9df246248542586fb3319c6ad24", null ],
     [ "width", "classAntares_1_1Matrix.html#a94b3558d8413485d98daadada6e1aba6", null ]
 ];

@@ -198,9 +198,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:a1868a4e5143c0fa1fb5dcec8afae1887"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a link with another area is already established.  <a href="classAntares_1_1Data_1_1Area.html#a1868a4e5143c0fa1fb5dcec8afae1887">More...</a><br /></td></tr>
 <tr class="separator:a1868a4e5143c0fa1fb5dcec8afae1887"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Thermal clusters min stable power validity checking</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p>Load all data not already loaded</p>
-<p>If the load-on-demand is enabled, some data might not be loaded (see <code><a class="el" href="classAntares_1_1Matrix.html" title="A n-by-n matrix.">Matrix</a></code>) However, we would like to be able to force the load of all data, especially when saving a study. The flag <code>invalidateJIT</code> will be reset to false. </p>
-</div></td></tr>
 <tr class="memitem:a79528edfda396dafea0bde19fe39f870"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Area.html#a79528edfda396dafea0bde19fe39f870">thermalClustersMinStablePowerValidity</a> (std::vector&lt; YString &gt; &amp;output) const</td></tr>
 <tr class="memdesc:a79528edfda396dafea0bde19fe39f870"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check the validity of min stable power for all thermal clusters.  <a href="classAntares_1_1Data_1_1Area.html#a79528edfda396dafea0bde19fe39f870">More...</a><br /></td></tr>
 <tr class="separator:a79528edfda396dafea0bde19fe39f870"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -300,16 +297,12 @@ uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Area.html#a0d0be28ae244a6617e86872e78983980">filterYearByYear</a> = filterAll</td></tr>
 <tr class="memdesc:a0d0be28ae244a6617e86872e78983980"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print results for the area in the year-by-year mode. <br /></td></tr>
 <tr class="separator:a0d0be28ae244a6617e86872e78983980"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">Dynamic</div></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Dynamic</h2></td></tr>
 <tr class="memitem:ae1f30bcfc28c2daaf3a7f0f9ccd258c9"><td class="memItemLeft" align="right" valign="top"><a id="ae1f30bcfc28c2daaf3a7f0f9ccd258c9"></a>
 std::vector&lt; <a class="el" href="classAntares_1_1Data_1_1AreaScratchpad.html">AreaScratchpad</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Area.html#ae1f30bcfc28c2daaf3a7f0f9ccd258c9">scratchpad</a></td></tr>
 <tr class="memdesc:ae1f30bcfc28c2daaf3a7f0f9ccd258c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scratchpad used temporary calculations (solver only) <br /></td></tr>
 <tr class="separator:ae1f30bcfc28c2daaf3a7f0f9ccd258c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader">Data</h2></td></tr>
-<tr class="memitem:aea3eea7d65bbe3c769cce5c70190d112"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Area.html#aea3eea7d65bbe3c769cce5c70190d112">invalidateJIT</a> = false</td></tr>
-<tr class="memdesc:aea3eea7d65bbe3c769cce5c70190d112"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invalidate (<a class="el" href="classJIT.html">JIT</a>)  <a href="classAntares_1_1Data_1_1Area.html#aea3eea7d65bbe3c769cce5c70190d112">More...</a><br /></td></tr>
-<tr class="separator:aea3eea7d65bbe3c769cce5c70190d112"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Definition for a single area. </p>
@@ -461,31 +454,6 @@ std::vector&lt; <a class="el" href="classAntares_1_1Data_1_1AreaScratchpad.html"
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="aea3eea7d65bbe3c769cce5c70190d112"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea3eea7d65bbe3c769cce5c70190d112">&#9670;&nbsp;</a></span>invalidateJIT</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Antares::Data::Area::invalidateJIT = false</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">mutable</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Invalidate (<a class="el" href="classJIT.html">JIT</a>) </p>
-<p>A non-zero value if the missing data must be loaded from HDD for the next save (only valid if <a class="el" href="classJIT.html">JIT</a> enabled). </p>
-
-</div>
-</div>
 <a id="ac74841a9a281b7c81fba4d370ec1fd1f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac74841a9a281b7c81fba4d370ec1fd1f">&#9670;&nbsp;</a></span>miscGen</h2>
 

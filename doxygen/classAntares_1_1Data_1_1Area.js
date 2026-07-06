@@ -26,7 +26,6 @@ var classAntares_1_1Data_1_1Area =
     [ "hydro", "classAntares_1_1Data_1_1Area.html#a775400215ce72bf8376fb16c63e67251", null ],
     [ "id", "classAntares_1_1Data_1_1Area.html#afacded20cddfb40dd6a587fd63ecc395", null ],
     [ "index", "classAntares_1_1Data_1_1Area.html#a90abcca3d7d84d70337f48f9ade4af76", null ],
-    [ "invalidateJIT", "classAntares_1_1Data_1_1Area.html#aea3eea7d65bbe3c769cce5c70190d112", null ],
     [ "links", "classAntares_1_1Data_1_1Area.html#a252af1475a95c85e3b43898c06a3213b", null ],
     [ "load", "classAntares_1_1Data_1_1Area.html#ae4e3f8a84b134ddb98c68e9bfd9238ed", null ],
     [ "miscGen", "classAntares_1_1Data_1_1Area.html#ac74841a9a281b7c81fba4d370ec1fd1f", null ],

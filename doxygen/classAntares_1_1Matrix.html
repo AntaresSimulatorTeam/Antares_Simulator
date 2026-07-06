@@ -149,10 +149,9 @@ Public Types</h2></td></tr>
 &#160;&#160;<a class="el" href="classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2aeace5101cedad1888fbf3accbe4509ae">optNone</a> = 0
 , <a class="el" href="classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a49efeee2664a8ac46263360755d54140">optFixedSize</a> = 1
 , <a class="el" href="classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a1d85b0d52cc96d30d04776011c3819e3">optQuiet</a> = 2
-, <a class="el" href="classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a0e4056ff6da75ffd399efee823cc8508">optImmediate</a> = 4
+, <a class="el" href="classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a921105aa2239c4f7cc8e1532a24f89ee">optNoWarnIfEmpty</a> = 16
 , <br />
-&#160;&#160;<a class="el" href="classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a921105aa2239c4f7cc8e1532a24f89ee">optNoWarnIfEmpty</a> = 16
-, <a class="el" href="classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a34cdfceff80957c5a70e8c89f022a7b5">optNeverFails</a> = 32
+&#160;&#160;<a class="el" href="classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a34cdfceff80957c5a70e8c89f022a7b5">optNeverFails</a> = 32
 <br />
  }</td></tr>
 <tr class="memdesc:a1e00393f6359fa63e2bb0b5c35d279d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options when loading a file.  <a href="classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2">More...</a><br /></td></tr>
@@ -266,9 +265,9 @@ template&lt;class PredicateT &gt; </td></tr>
 <tr class="memitem:a261a8cba5f5041e41ff09c8f418f4464"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>saveToFileDescriptor</b> (std::string &amp;data, uint precision, bool print_dimensions, PredicateT &amp;predicate) const</td></tr>
 <tr class="separator:a261a8cba5f5041e41ff09c8f418f4464"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Operations on columns and rows</div></td></tr>
-<tr class="memitem:a97823ff73bcf91cc895d4062694b9274"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Matrix.html#a97823ff73bcf91cc895d4062694b9274">resize</a> (uint w, uint h, bool fixedSize=false)</td></tr>
-<tr class="memdesc:a97823ff73bcf91cc895d4062694b9274"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resize the matrix.  <a href="classAntares_1_1Matrix.html#a97823ff73bcf91cc895d4062694b9274">More...</a><br /></td></tr>
-<tr class="separator:a97823ff73bcf91cc895d4062694b9274"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75a491b82aa1d1d01d491b7e2c4c19c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Matrix.html#a75a491b82aa1d1d01d491b7e2c4c19c6">resize</a> (uint w, uint h)</td></tr>
+<tr class="memdesc:a75a491b82aa1d1d01d491b7e2c4c19c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resize the matrix.  <a href="classAntares_1_1Matrix.html#a75a491b82aa1d1d01d491b7e2c4c19c6">More...</a><br /></td></tr>
+<tr class="separator:a75a491b82aa1d1d01d491b7e2c4c19c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa09d1bad486bc165a32b0f8c5cc9d7db"><td class="memItemLeft" align="right" valign="top"><a id="aa09d1bad486bc165a32b0f8c5cc9d7db"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Matrix.html#aa09d1bad486bc165a32b0f8c5cc9d7db">resizeWithoutDataLost</a> (uint x, uint y, const T &amp;defVal=T())</td></tr>
 <tr class="memdesc:aa09d1bad486bc165a32b0f8c5cc9d7db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resize the matrix without destroying its content. <br /></td></tr>
@@ -281,9 +280,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Matrix.html#a27263c4fa77cf86903aec456b2b601c7">reset</a> ()</td></tr>
 <tr class="memdesc:a27263c4fa77cf86903aec456b2b601c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Empty the matrix and mark it as modified. <br /></td></tr>
 <tr class="separator:a27263c4fa77cf86903aec456b2b601c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24148b1db609b61561e0dca4dd1da862"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Matrix.html#a24148b1db609b61561e0dca4dd1da862">reset</a> (uint w, uint h, bool fixedSize=false)</td></tr>
-<tr class="memdesc:a24148b1db609b61561e0dca4dd1da862"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resize a matrix and reset its values.  <a href="classAntares_1_1Matrix.html#a24148b1db609b61561e0dca4dd1da862">More...</a><br /></td></tr>
-<tr class="separator:a24148b1db609b61561e0dca4dd1da862"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f67780b1384de0d1c57b158abdeb00c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Matrix.html#a7f67780b1384de0d1c57b158abdeb00c">reset</a> (uint w, uint h)</td></tr>
+<tr class="memdesc:a7f67780b1384de0d1c57b158abdeb00c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resize a matrix and reset its values.  <a href="classAntares_1_1Matrix.html#a7f67780b1384de0d1c57b158abdeb00c">More...</a><br /></td></tr>
+<tr class="separator:a7f67780b1384de0d1c57b158abdeb00c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6111eb87847669e96b97fcdf0a2403c5"><td class="memItemLeft" align="right" valign="top"><a id="a6111eb87847669e96b97fcdf0a2403c5"></a>
 <a class="el" href="classAntares_1_1Matrix.html#a6eec615a826a63c0df822f87a4510f1f">ColumnType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Matrix.html#a6111eb87847669e96b97fcdf0a2403c5">column</a> (uint n)</td></tr>
 <tr class="memdesc:a6111eb87847669e96b97fcdf0a2403c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the Nth column. <br /></td></tr>
@@ -365,9 +364,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:aba3cdd8d647239701bd0a07c976dd63a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shift all rows of a specific column. <br /></td></tr>
 <tr class="separator:aba3cdd8d647239701bd0a07c976dd63a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Memory Management</div></td></tr>
-<tr class="memitem:aeadbf3080154bb8f6a00f2f626f80760"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Matrix.html#aeadbf3080154bb8f6a00f2f626f80760">unloadFromMemory</a> () const</td></tr>
-<tr class="memdesc:aeadbf3080154bb8f6a00f2f626f80760"><td class="mdescLeft">&#160;</td><td class="mdescRight">Force the Load of data (if not done) for the next save and mark the matrix as modified.  <a href="classAntares_1_1Matrix.html#aeadbf3080154bb8f6a00f2f626f80760">More...</a><br /></td></tr>
-<tr class="separator:aeadbf3080154bb8f6a00f2f626f80760"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6efb67c1b998ea7ffdc0a1e1b4252e62"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Matrix.html#a6efb67c1b998ea7ffdc0a1e1b4252e62">empty</a> () const</td></tr>
 <tr class="memdesc:a6efb67c1b998ea7ffdc0a1e1b4252e62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get if the matrix is empty.  <a href="classAntares_1_1Matrix.html#a6efb67c1b998ea7ffdc0a1e1b4252e62">More...</a><br /></td></tr>
 <tr class="separator:a6efb67c1b998ea7ffdc0a1e1b4252e62"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -389,10 +385,6 @@ uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <a class="el" href="classAntares_1_1Matrix.html#a6eec615a826a63c0df822f87a4510f1f">ColumnType</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a></td></tr>
 <tr class="memdesc:a74c6c7ead4e77284edea439f5eedc230"><td class="mdescLeft">&#160;</td><td class="mdescRight">All entries of the matrix (bidimensional array) <br /></td></tr>
 <tr class="separator:a74c6c7ead4e77284edea439f5eedc230"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0299a9df246248542586fb3319c6ad24"><td class="memItemLeft" align="right" valign="top"><a id="a0299a9df246248542586fb3319c6ad24"></a>
-<a class="el" href="classJIT_1_1Informations.html">JIT::Informations</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Matrix.html#a0299a9df246248542586fb3319c6ad24">jit</a></td></tr>
-<tr class="memdesc:a0299a9df246248542586fb3319c6ad24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Just-in-time informations. <br /></td></tr>
-<tr class="separator:a0299a9df246248542586fb3319c6ad24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49c3488ebf0abd976eb311f1f46c66b1"><td class="memItemLeft" align="right" valign="top"><a id="a49c3488ebf0abd976eb311f1f46c66b1"></a>
 <a class="el" href="classAntares_1_1Matrix.html">Matrix</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Matrix.html#a49c3488ebf0abd976eb311f1f46c66b1">operator=</a> (const <a class="el" href="classAntares_1_1Matrix.html">Matrix</a> &amp;rhs)</td></tr>
 <tr class="memdesc:a49c3488ebf0abd976eb311f1f46c66b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignement. <br /></td></tr>
@@ -474,8 +466,6 @@ template&lt;class T  = double, class ReadWriteT  = T&gt; </div>
 <tr><td class="fieldname"><a id="a1e00393f6359fa63e2bb0b5c35d279d2a49efeee2664a8ac46263360755d54140"></a>optFixedSize&#160;</td><td class="fielddoc"><p>The matrix can not see its size modified. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a1e00393f6359fa63e2bb0b5c35d279d2a1d85b0d52cc96d30d04776011c3819e3"></a>optQuiet&#160;</td><td class="fielddoc"><p>Do not produce warnings/errors. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a1e00393f6359fa63e2bb0b5c35d279d2a0e4056ff6da75ffd399efee823cc8508"></a>optImmediate&#160;</td><td class="fielddoc"><p>Do not postpone the loading. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a1e00393f6359fa63e2bb0b5c35d279d2a921105aa2239c4f7cc8e1532a24f89ee"></a>optNoWarnIfEmpty&#160;</td><td class="fielddoc"><p>Do not warn if the file is empty. </p>
 </td></tr>
@@ -674,7 +664,7 @@ template&lt;class T , class ReadWriteT &gt; </div>
 </div><div class="memdoc">
 
 <p>Load entries from a CSV file. </p>
-<p>The data might not be actually loaded, if the load-on-demand is enabled. If the param <code>fixedSize</code> is false, the number of columns will be automatically detected from the first row in the CSV file.</p>
+<p>If the param <code>fixedSize</code> is false, the number of columns will be automatically detected from the first row in the CSV file.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">filename</td><td>A filename to a CSV file </td></tr>
@@ -682,7 +672,6 @@ template&lt;class T , class ReadWriteT &gt; </div>
     <tr><td class="paramname">maxHeight</td><td>The new height </td></tr>
     <tr><td class="paramname">fixedSize</td><td>True to not automatically determine the width of the matrix </td></tr>
     <tr><td class="paramname">warning</td><td>True to produce warnings when an error occurs </td></tr>
-    <tr><td class="paramname">immediate</td><td>True to not postpone the loading </td></tr>
     <tr><td class="paramname">buffer</td><td>An optional buffer for reading the file </td></tr>
   </table>
   </dd>
@@ -782,8 +771,8 @@ template&lt;class U &gt; </div>
 
 </div>
 </div>
-<a id="a24148b1db609b61561e0dca4dd1da862"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24148b1db609b61561e0dca4dd1da862">&#9670;&nbsp;</a></span>reset()</h2>
+<a id="a7f67780b1384de0d1c57b158abdeb00c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f67780b1384de0d1c57b158abdeb00c">&#9670;&nbsp;</a></span>reset()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -803,13 +792,7 @@ template&lt;class T , class ReadWriteT &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint&#160;</td>
-          <td class="paramname"><em>h</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>fixedSize</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>h</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -831,14 +814,14 @@ template&lt;class T , class ReadWriteT &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classAntares_1_1Matrix.html#a97823ff73bcf91cc895d4062694b9274" title="Resize the matrix.">resize()</a> </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classAntares_1_1Matrix.html#a75a491b82aa1d1d01d491b7e2c4c19c6" title="Resize the matrix.">resize()</a> </dd>
 <dd>
 <a class="el" href="classAntares_1_1Matrix.html#a0764fae6bafeb8425318d6e0e379727b" title="Make the matrix a zero matrix.">zero()</a> </dd></dl>
 
 </div>
 </div>
-<a id="a97823ff73bcf91cc895d4062694b9274"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a97823ff73bcf91cc895d4062694b9274">&#9670;&nbsp;</a></span>resize()</h2>
+<a id="a75a491b82aa1d1d01d491b7e2c4c19c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75a491b82aa1d1d01d491b7e2c4c19c6">&#9670;&nbsp;</a></span>resize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -855,13 +838,7 @@ template&lt;class T , class ReadWriteT &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint&#160;</td>
-          <td class="paramname"><em>h</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>fixedSize</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>h</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -931,7 +908,6 @@ template&lt;class PredicateT &gt; </div>
 </div><div class="memdoc">
 
 <p>Write the content of a matrix into a single file. </p>
-<p>If <a class="el" href="classJIT.html">JIT</a> is enabled, the matrix will be resized to 0x0 if the write is successful.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">m</td><td>The matrix </td></tr>
@@ -985,7 +961,6 @@ template&lt;class T , class ReadWriteT &gt; </div>
 </div><div class="memdoc">
 
 <p>Write the content of a matrix into a single file. </p>
-<p>If <a class="el" href="classJIT.html">JIT</a> is enabled, the matrix will be resized to 0x0 if the write is successful.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">m</td><td>The matrix </td></tr>
@@ -994,27 +969,6 @@ template&lt;class T , class ReadWriteT &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A non-zero value if the operation succeeded, 0 otherwise </dd></dl>
-
-</div>
-</div>
-<a id="aeadbf3080154bb8f6a00f2f626f80760"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeadbf3080154bb8f6a00f2f626f80760">&#9670;&nbsp;</a></span>unloadFromMemory()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T , class ReadWriteT &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void Matrix::unloadFromMemory</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Force the Load of data (if not done) for the next save and mark the matrix as modified. </p>
-<p>This method is only useful if the load-on-demand is used. The matrix will be marked as modified to force the written.</p>
-<p>Try to remove from memory all data from the matrix</p>
-<p>This is possible only when enough informations is provided by the <a class="el" href="classJIT.html">JIT</a> structure and when the matrix is not modified </p>
 
 </div>
 </div>

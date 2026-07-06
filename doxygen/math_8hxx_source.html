@@ -163,7 +163,7 @@ $(document).ready(function(){initNavTree('math_8hxx_source.html',''); initResiza
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">static</span> <span class="keywordtype">float</span> maximum(<span class="keywordtype">float</span> a, <span class="keywordtype">float</span> b, <span class="keywordtype">float</span> g, <span class="keywordtype">float</span> d, <span class="keywordtype">int</span> l)</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordflow">switch</span> (<a class="code" href="classAntares_1_1Data_1_1XCast.html#a6d97c533d309ba1bde2763d7117ba613">Data::XCast::Distribution</a>(l))</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordflow">switch</span> (Data::XCast::Distribution(l))</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    {</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">case</span> Data::XCast::dtBeta:</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">case</span> Data::XCast::dtUniform:</div>
@@ -198,7 +198,7 @@ $(document).ready(function(){initNavTree('math_8hxx_source.html',''); initResiza
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword">static</span> <span class="keywordtype">float</span> esperance(<span class="keywordtype">float</span> a, <span class="keywordtype">float</span> b, <span class="keywordtype">float</span> g, <span class="keywordtype">float</span> d, <span class="keywordtype">int</span> l)</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;{</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="comment">// note : valeur exprimee en valeur relative par rapport au minimum</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">switch</span> (<a class="code" href="classAntares_1_1Data_1_1XCast.html#a6d97c533d309ba1bde2763d7117ba613">Data::XCast::Distribution</a>(l))</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">switch</span> (Data::XCast::Distribution(l))</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    {</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordflow">case</span> Data::XCast::dtBeta:</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keywordflow">return</span> (a * (d - g)) / (a + b);</div>
@@ -224,7 +224,7 @@ $(document).ready(function(){initNavTree('math_8hxx_source.html',''); initResiza
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="keyword">static</span> <span class="keywordtype">float</span> standard(<span class="keywordtype">float</span> a, <span class="keywordtype">float</span> b, <span class="keywordtype">float</span> g, <span class="keywordtype">float</span> d, <span class="keywordtype">int</span> l)</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;{</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordflow">switch</span> (<a class="code" href="classAntares_1_1Data_1_1XCast.html#a6d97c533d309ba1bde2763d7117ba613">Data::XCast::Distribution</a>(l))</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordflow">switch</span> (Data::XCast::Distribution(l))</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    {</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordflow">case</span> Data::XCast::dtBeta:</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    {</div>
@@ -269,7 +269,7 @@ $(document).ready(function(){initNavTree('math_8hxx_source.html',''); initResiza
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160; </div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="keyword">static</span> <span class="keywordtype">float</span> diffusion(<span class="keywordtype">float</span> a, <span class="keywordtype">float</span> b, <span class="keywordtype">float</span> g, <span class="keywordtype">float</span> d, <span class="keywordtype">int</span> l, <span class="keywordtype">float</span> t, <span class="keywordtype">float</span> x)</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;{</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordflow">switch</span> (<a class="code" href="classAntares_1_1Data_1_1XCast.html#a6d97c533d309ba1bde2763d7117ba613">Data::XCast::Distribution</a>(l))</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordflow">switch</span> (Data::XCast::Distribution(l))</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    {</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="keywordflow">case</span> Data::XCast::dtBeta:</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    {</div>
@@ -350,7 +350,7 @@ $(document).ready(function(){initNavTree('math_8hxx_source.html',''); initResiza
 <div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160; </div>
 <div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="keyword">static</span> <span class="keywordtype">bool</span> verification(<span class="keywordtype">float</span> a, <span class="keywordtype">float</span> b, <span class="keywordtype">float</span> g, <span class="keywordtype">float</span> d, <span class="keywordtype">int</span> l, <span class="keywordtype">float</span> t)</div>
 <div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;{</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keywordflow">switch</span> (<a class="code" href="classAntares_1_1Data_1_1XCast.html#a6d97c533d309ba1bde2763d7117ba613">Data::XCast::Distribution</a>(l))</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keywordflow">switch</span> (Data::XCast::Distribution(l))</div>
 <div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    {</div>
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    <span class="keywordflow">case</span> Data::XCast::dtBeta:</div>
 <div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    {</div>
@@ -383,7 +383,7 @@ $(document).ready(function(){initNavTree('math_8hxx_source.html',''); initResiza
 <div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160; </div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;<span class="keyword">static</span> <span class="keywordtype">float</span> maxiDiffusion(<span class="keywordtype">float</span> a, <span class="keywordtype">float</span> b, <span class="keywordtype">float</span> g, <span class="keywordtype">float</span> d, <span class="keywordtype">int</span> l, <span class="keywordtype">float</span> t)</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;{</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    <span class="keywordflow">switch</span> (<a class="code" href="classAntares_1_1Data_1_1XCast.html#a6d97c533d309ba1bde2763d7117ba613">Data::XCast::Distribution</a>(l))</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    <span class="keywordflow">switch</span> (Data::XCast::Distribution(l))</div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    {</div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    <span class="keywordflow">case</span> Data::XCast::dtBeta:</div>
 <div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    {</div>
@@ -441,7 +441,6 @@ $(document).ready(function(){initNavTree('math_8hxx_source.html',''); initResiza
 <div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;}</div>
 <div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160; </div>
 <div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;} <span class="comment">// namespace Antares::TSGenerator::XCast</span></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1XCast_html_a6d97c533d309ba1bde2763d7117ba613"><div class="ttname"><a href="classAntares_1_1Data_1_1XCast.html#a6d97c533d309ba1bde2763d7117ba613">Antares::Data::XCast::Distribution</a></div><div class="ttdeci">Distribution</div><div class="ttdoc">All available probability distribution.</div><div class="ttdef"><b>Definition:</b> xcast.h:41</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

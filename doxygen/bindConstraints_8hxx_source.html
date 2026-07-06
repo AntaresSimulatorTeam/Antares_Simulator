@@ -214,10 +214,10 @@ $(document).ready(function(){initNavTree('bindConstraints_8hxx_source.html','');
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;}</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> VariableList&gt;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keywordtype">void</span> BindingConstraints&lt;VariableList&gt;::initializeFromStudy(<a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study)</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keywordtype">void</span> BindingConstraints&lt;VariableList&gt;::initializeFromStudy(Data::Study&amp; study)</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;{</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keyword">const</span> std::vector&lt;std::shared_ptr&lt;Data::BindingConstraint&gt;&gt;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;      inequalityByPtr = study.<a class="code" href="classAntares_1_1Data_1_1Study.html#a24abc348d810c423a622796e34afe476">bindingConstraints</a>.getPtrForInequalityBindingConstraints();</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;      inequalityByPtr = study.bindingConstraints.getPtrForInequalityBindingConstraints();</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="comment">// The total number of inequality binding constraints count</span></div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="comment">// (we don&#39;t count BCs with equality sign)</span></div>
@@ -347,7 +347,7 @@ $(document).ready(function(){initNavTree('bindConstraints_8hxx_source.html','');
 <div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT&gt;</div>
 <div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> BindingConstraints&lt;VariableList&gt;::retrieveResultsForArea(</div>
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;  <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Storage&lt;VCardToFindT&gt;::ResultsType</a>** result,</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;  <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>* area)</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;  <span class="keyword">const</span> Data::Area* area)</div>
 <div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;{</div>
 <div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    VariableList::template retrieveResultsForArea&lt;VCardToFindT&gt;(result, area);</div>
 <div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;}</div>
@@ -391,7 +391,7 @@ $(document).ready(function(){initNavTree('bindConstraints_8hxx_source.html','');
 <div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> VariableList&gt;</div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> SearchVCardT, <span class="keyword">class</span> O&gt;</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> BindingConstraints&lt;VariableList&gt;::computeSpatialAggregateWith(O&amp; out,</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;                                                                          <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>* area,</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;                                                                          <span class="keyword">const</span> Data::Area* area,</div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;                                                                          uint numSpace)</div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;{</div>
 <div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    VariableList::template computeSpatialAggregateWith&lt;SearchVCardT, O&gt;(out, area, numSpace);</div>
@@ -401,7 +401,7 @@ $(document).ready(function(){initNavTree('bindConstraints_8hxx_source.html','');
 <div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT&gt;</div>
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> BindingConstraints&lt;VariableList&gt;::retrieveResultsForLink(</div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;  <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Storage&lt;VCardToFindT&gt;::ResultsType</a>** result,</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;  <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1AreaLink.html">Data::AreaLink</a>* link)</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;  <span class="keyword">const</span> Data::AreaLink* link)</div>
 <div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;{</div>
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;    VariableList::template retrieveResultsForLink&lt;VCardToFindT&gt;(result, link);</div>
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;}</div>
@@ -410,16 +410,11 @@ $(document).ready(function(){initNavTree('bindConstraints_8hxx_source.html','');
 <div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> VCardToFindT&gt;</div>
 <div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> BindingConstraints&lt;VariableList&gt;::retrieveResultsForThermalCluster(</div>
 <div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;  <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Storage&lt;VCardToFindT&gt;::ResultsType</a>** result,</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;  <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1ThermalCluster.html">Data::ThermalCluster</a>* cluster)</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;  <span class="keyword">const</span> Data::ThermalCluster* cluster)</div>
 <div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;{</div>
 <div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;    VariableList::template retrieveResultsForThermalCluster&lt;VCardToFindT&gt;(result, cluster);</div>
 <div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;}</div>
 <div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable</span></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1AreaLink_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a></div><div class="ttdoc">Definition of a link between two areas (Interconnection)</div><div class="ttdef"><b>Definition:</b> links.h:40</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:34</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdoc">Antares Study.</div><div class="ttdef"><b>Definition:</b> study.h:33</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html_a24abc348d810c423a622796e34afe476"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html#a24abc348d810c423a622796e34afe476">Antares::Data::Study::bindingConstraints</a></div><div class="ttdeci">BindingConstraintsRepository bindingConstraints</div><div class="ttdoc">Binding constraints.</div><div class="ttdef"><b>Definition:</b> study.h:278</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1ThermalCluster_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalCluster.html">Antares::Data::ThermalCluster</a></div><div class="ttdoc">A single thermal cluster.</div><div class="ttdef"><b>Definition:</b> cluster.h:58</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1BindingConstraints_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html">Antares::Solver::Variable::BindingConstraints</a></div><div class="ttdef"><b>Definition:</b> bindConstraints.h:47</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1BindingConstraints_html_abc755c7cef780aa61b7ebaff30175514"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#abc755c7cef780aa61b7ebaff30175514">Antares::Solver::Variable::BindingConstraints::RetrieveVariableList</a></div><div class="ttdeci">static void RetrieveVariableList(PredicateT &amp;predicate)</div><div class="ttdoc">Retrieve the list of all individual variables.</div><div class="ttdef"><b>Definition:</b> bindConstraints.hxx:57</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Storage_html_aba435529310e04ef723164ce08e52b10"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Antares::Solver::Variable::Storage::ResultsType</a></div><div class="ttdeci">VariableAccessor&lt; typename VCardT::ResultsType, VCardT::columnCount &gt;::Type ResultsType</div><div class="ttdoc">The true type used for the results.</div><div class="ttdef"><b>Definition:</b> info.h:907</div></div>

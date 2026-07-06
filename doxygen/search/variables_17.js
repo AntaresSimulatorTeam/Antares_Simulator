@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['xcast_4545',['xcast',['../classAntares_1_1Data_1_1Load_1_1Prepro.html#a05071e4983baa9f74b370aebdddeced8',1,'Antares::Data::Load::Prepro::xcast()'],['../classAntares_1_1Data_1_1Solar_1_1Prepro.html#a56b187c8d98fb8a4213641b72d9ac43a',1,'Antares::Data::Solar::Prepro::xcast()'],['../classAntares_1_1Data_1_1Wind_1_1Prepro.html#aea3600b697dd706572d498474d0b897d',1,'Antares::Data::Wind::Prepro::xcast()']]]
+  ['year_4507',['year',['../structAntares_1_1Data_1_1StudyRangeLimits.html#aa9b570da298468b19ad9a5b134128734',1,'Antares::Data::StudyRangeLimits::year()'],['../classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html#ae3330a8bd1ccdfb52f5f58c90542e627',1,'Antares::TSGenerator::XCast::XCast::year()'],['../classAntares_1_1Solver_1_1Variable_1_1State.html#a9f14e17920dde5520eb3c0ff7785a3f4',1,'Antares::Solver::Variable::State::year()'],['../classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#a162e38ee1810314d6efe3d0e328204a8',1,'Antares::Solver::Variable::IntermediateValues::year()'],['../classJobFileReader.html#a181dbf72e030ce104178772da7fcfca9',1,'JobFileReader::year()']]],
+  ['yearbyyear_4508',['yearByYear',['../classAntares_1_1Data_1_1Parameters.html#a58d4b984e821e8b2f0e9c0db2a7c0808',1,'Antares::Data::Parameters']]],
+  ['yearbyyearresults_4509',['yearByYearResults',['../classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ad402c65d36e0295eaf960a06ac40d863',1,'Antares::Solver::Variable::SurveyResults']]],
+  ['yearsfilter_4510',['yearsFilter',['../classAntares_1_1Data_1_1Parameters.html#ab7f5d4a5a299695f98c9c20e1525f970',1,'Antares::Data::Parameters']]]
 ];
