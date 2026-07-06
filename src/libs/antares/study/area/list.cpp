@@ -230,7 +230,8 @@ bool readReserveParameters(const fs::path& folderInput, Area& area, const YAML::
     fs::path filePath = folderInput / "reserves" / area.id / (capacityReservation.id() + ".txt");
     capacityReservation.loadNeedFromFile(filePath);
     area.allCapacityReservations.value().areaCapacityReservations.emplace(capacityReservation.id(),
-                                                                          std::move(capacityReservation));
+                                                                          std::move(
+                                                                            capacityReservation));
     area.allCapacityReservations.value().rebuildIndexes();
     return ret;
 }
