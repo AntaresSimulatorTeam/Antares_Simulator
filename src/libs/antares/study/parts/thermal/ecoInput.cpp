@@ -37,7 +37,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
             ret = fuelcost.loadFromCSVFile(filename.string(),
                                            1,
                                            HOURS_PER_YEAR,
-                                           Matrix<>::optImmediate,
+                                           Matrix<>::optNone,
                                            &dataBuffer)
                   && ret;
             if (study.parameters.derated)
@@ -52,7 +52,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
             ret = co2cost.loadFromCSVFile(filename.string(),
                                           1,
                                           HOURS_PER_YEAR,
-                                          Matrix<>::optImmediate,
+                                          Matrix<>::optNone,
                                           &dataBuffer)
                   && ret;
             if (study.parameters.derated)

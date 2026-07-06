@@ -58,4 +58,5 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings,
 void checkStudyFolder(const std::string& studyFolder);
 std::string fixStudyFolder(const std::string& studyFolder);
 void printPIDtoDisk(const Settings& settings);
-void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options);
+void checkAndCorrectSettingsAndOptions(Settings& settings,
+                                       Antares::Data::StudyLoadOptions& options);
