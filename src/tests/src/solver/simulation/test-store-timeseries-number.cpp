@@ -19,6 +19,7 @@
 #include "antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
 
+using namespace Antares;
 using namespace Antares::Solver;
 using namespace Antares::Data;
 namespace fs = std::filesystem;

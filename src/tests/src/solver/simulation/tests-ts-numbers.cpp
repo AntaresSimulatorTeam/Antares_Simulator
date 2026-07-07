@@ -14,6 +14,7 @@
 #include "antares/solver/ts-generator/generator.h"
 
 using namespace Yuni;
+using namespace Antares;
 using namespace Antares::Data;
 using namespace Antares::Solver::TimeSeriesNumbers;
 

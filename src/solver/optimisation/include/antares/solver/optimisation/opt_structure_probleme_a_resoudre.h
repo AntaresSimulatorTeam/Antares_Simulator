@@ -4,6 +4,7 @@
 #pragma once
 
 #include <algorithm>
+#include <memory>
 #include <optional>
 #include <string>
 #include <vector>
@@ -11,7 +12,10 @@
 #include <antares/solver/utils/basis_status.h>
 #include "antares/solver/optimisation/LegacyVariableInfo.h"
 
-#include "ortools/linear_solver/linear_solver.h"
+namespace operations_research
+{
+class MPSolver;
+}
 
 /*--------------------------------------------------------------------------------------*/
 

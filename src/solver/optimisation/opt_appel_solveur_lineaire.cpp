@@ -33,6 +33,7 @@
 #include "spx_constantes_externes.h"
 
 using namespace operations_research;
+using namespace Antares;
 using namespace Antares::Optimization;
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
@@ -40,8 +41,8 @@ using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::IO;
 using namespace Antares::IO::Outputs;
 
-using Solver::IResultWriter;
-using Solver::Optimization::SingleOptimOptions;
+using Antares::Solver::IResultWriter;
+using Antares::Solver::Optimization::SingleOptimOptions;
 
 struct SimplexResult
 {

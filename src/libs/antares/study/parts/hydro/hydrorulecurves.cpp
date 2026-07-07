@@ -46,7 +46,7 @@ private:
                                   / std::string("reservoir_" + areaID_ + ".txt");
 
         Matrix<double> standardRuleCurves;
-        standardRuleCurves.reset(3L, DAYS_PER_YEAR, true);
+        standardRuleCurves.reset(3L, DAYS_PER_YEAR);
 
         Matrix<>::BufferType fileContent;
 
@@ -56,11 +56,11 @@ private:
                                                       Matrix<>::optFixedSize,
                                                       &fileContent);
 
-        min_.timeSeries.reset(1U, DAYS_PER_YEAR, true);
+        min_.timeSeries.reset(1U, DAYS_PER_YEAR);
         min_.timeSeries.pasteToColumn(0, standardRuleCurves[RuleCurves::minimum]);
-        avg_.timeSeries.reset(1U, DAYS_PER_YEAR, true);
+        avg_.timeSeries.reset(1U, DAYS_PER_YEAR);
         avg_.timeSeries.pasteToColumn(0, standardRuleCurves[RuleCurves::average]);
-        max_.timeSeries.reset(1U, DAYS_PER_YEAR, true);
+        max_.timeSeries.reset(1U, DAYS_PER_YEAR);
         max_.timeSeries.pasteToColumn(0, standardRuleCurves[RuleCurves::maximum]);
 
         return ret;

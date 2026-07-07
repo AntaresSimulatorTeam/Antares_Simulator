@@ -24,7 +24,7 @@ HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study):
 {
 }
 
-void HydroInputsChecker::Execute(uint year)
+void HydroInputsChecker::Execute(uint year, const std::vector<double>& initialReservoirLevels)
 {
     prepareInflows_.loadInflows(year);
     minGenerationScaling_.Run(year);
@@ -38,8 +38,10 @@ void HydroInputsChecker::Execute(uint year)
     }
     if (parameters_.useCustomScenario)
     {
-        CheckFinalReservoirLevelsConfiguration(year);
+        checkFinalReservoirLevelsConfiguration(year);
     }
+    checkInitialReservoirLevel(year, initialReservoirLevels);
+
     prepareInflows_.changeInflowsToAccommodateFinalLevels(year);
 }
 
@@ -217,7 +219,7 @@ bool HydroInputsChecker::checkGenerationPowerConsistency(uint year)
     return ret;
 }
 
-void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
+void HydroInputsChecker::checkFinalReservoirLevelsConfiguration(uint year)
 {
     if (!parameters_.yearsFilter.at(year))
     {
@@ -249,10 +251,47 @@ void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
               area.hydro.deltaBetweenFinalAndInitialLevels[year] = finalLevel - initialLevel;
           }
       });
-} // End function CheckFinalReservoirLevelsConfiguration
+} // End function checkFinalReservoirLevelsConfiguration
 
-void HydroInputsChecker::CheckForErrors() const
+void HydroInputsChecker::checkForErrors() const
 {
-    errorCollector_.CheckForErrors();
+    errorCollector_.checkForErrors();
+}
+
+void HydroInputsChecker::checkInitialReservoirLevel(
+  uint year,
+  const std::vector<double>& initialReservoirLevels)
+{
+    // Skip years not in the user playlist
+    if (!parameters_.yearsFilter.at(year))
+    {
+        return;
+    }
+
+    areas_.each(
+      [this, &initialReservoirLevels, &year](const Data::Area& area)
+      {
+          // if deltaBetweenFinalAndInitialLevels[year] has no value, it means
+          // the final level is implicitly equal to the initial level
+          // in which case it needs to be checked against rule curves on the last day
+          if (!area.hydro.deltaBetweenFinalAndInitialLevels[year].has_value())
+          {
+              const auto* minRuleCurves = area.hydro.series->ruleCurves.min.getColumn(year);
+              const auto* maxRuleCurves = area.hydro.series->ruleCurves.max.getColumn(year);
+              const double initialLevel = initialReservoirLevels[area.index];
+
+              if (initialLevel < minRuleCurves[DAYS_PER_YEAR - 1]
+                  || initialLevel > maxRuleCurves[DAYS_PER_YEAR - 1])
+              {
+                  logs.warning() << "Final reservoir level (= initial level) for area '"
+                                 << area.name << "' in year " << year
+                                 << " is outside the valid range defined by the rule curves. "
+                                 << "Initial level: " << initialLevel << ", " << "Expected range: ["
+                                 << minRuleCurves[DAYS_PER_YEAR - 1] << ", "
+                                 << maxRuleCurves[DAYS_PER_YEAR - 1] << "]. "
+                                 << "The prescribed final reservoir level cannot be fullfiled.";
+              }
+          }
+      });
 }
 } // namespace Antares

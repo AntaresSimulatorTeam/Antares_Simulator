@@ -13,7 +13,7 @@
 namespace Antares
 {
 
-void HydroErrorsCollector::CheckForErrors() const
+void HydroErrorsCollector::checkForErrors() const
 {
     if (!areasErrorMap_.empty())
     {
