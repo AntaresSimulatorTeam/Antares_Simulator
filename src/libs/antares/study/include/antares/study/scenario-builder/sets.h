@@ -13,9 +13,12 @@ namespace Antares::Data::ScenarioBuilder
 /*!
 ** \brief Sets for TS numbers, for all years and a single timeseries
 */
-class Sets final: private Yuni::NonCopyable<Sets>
+class Sets final
 {
 public:
+    Sets(const Sets&) = delete;
+    Sets& operator=(const Sets&) = delete;
+
     //! Iterator
     using iterator = Rules::Map::iterator;
     //! Const iterator
@@ -61,26 +64,26 @@ public:
     **
     ** \return A non-null pointer if the operation succeeded, null otherwise
     */
-    Rules::Ptr createNew(const RulesScenarioName& name);
+    Rules::Ptr createNew(const std::string& name);
 
     /*!
     ** \brief Test if a rules set exist
     **
     ** \param lname Name of the rule set (in lower case)
     */
-    bool exists(const RulesScenarioName& lname) const;
+    bool exists(const std::string& lname) const;
 
     /*!
     ** \brief Find a rule set
     */
-    Rules::Ptr find(const RulesScenarioName& lname) const;
+    Rules::Ptr find(const std::string& lname) const;
 
     /*!
     ** \brief Delete a ruleset
     **
     ** \return True if the operation suceeded, false otherwise
     */
-    bool remove(const RulesScenarioName& lname);
+    bool remove(const std::string& lname);
 
     iterator begin();
     const_iterator begin() const;

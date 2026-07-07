@@ -5,7 +5,6 @@
 #define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_H__
 
 #include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
 
 #include <antares/array/matrix.h>
 
@@ -32,9 +31,6 @@ public:
         productionFactor
     };
 
-    //! Set of renewable clusters
-    using Set = std::set<RenewableCluster*, CompareClusterName>;
-
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -44,29 +40,13 @@ public:
     //@}
 
     /*!
-    ** \brief Reset to default values
-    **
-    ** This method should only be called from the GUI
-    */
-    void reset() override;
-
-    /*!
     ** \brief Check and fix all values of a renewable cluster
     **
     ** \return False if an error has been detected and fixed with a default value
     */
     bool integrityCheck() override;
 
-    /*!
-    ** \brief Copy data from another cluster
-    **
-    ** The name and the id will remain untouched.
-    */
-    void copyFrom(const RenewableCluster& cluster);
-
     bool setTimeSeriesModeFromString(const YString& value);
-
-    YString getTimeSeriesModeAsString() const;
 
     /* !
     ** Get production value at time-step ts

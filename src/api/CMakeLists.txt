@@ -35,6 +35,7 @@ target_include_directories(solver_api
 find_package(Boost REQUIRED COMPONENTS iostreams)
 target_link_libraries(solver_api
         PRIVATE
+        Antares::concurrency
         Antares::file-tree-study-loader
         Antares::study
         Antares::study-loader
@@ -54,7 +55,10 @@ target_sources(single_problem_api
 	PRIVATE
 	singleProblemGetter.cpp
 	singleProblemGetterImpl.cpp
-	include/antares/api/singleProblemGetter.h)
+	include/antares/api/singleProblemGetter.h
+	modelerProblems.cpp
+	modelerProblemsImpl.cpp
+	include/antares/api/modelerProblems.h)
 
 target_include_directories(single_problem_api
         PUBLIC
@@ -64,12 +68,12 @@ target_include_directories(single_problem_api
 
 target_link_libraries(single_problem_api
         PRIVATE
-	fmt::fmt
         antares-solver-simulation
-        Antares::optimization-options
-	model_antares
-	Antares::hydro
-	Antares::file-tree-study-loader
+        model_antares
+        modeler-lib
+        load-modeler-files
+        Antares::hydro
+        Antares::file-tree-study-loader
         PUBLIC
         Antares::study
         Antares::lps)
@@ -78,6 +82,7 @@ target_link_libraries(single_problem_api
 add_executable(antares-problem-generator main.cpp)
 target_link_libraries(antares-problem-generator
 	single_problem_api)
+copy_project_shared_lib(simulation-table-writers antares-problem-generator)
 
 install(DIRECTORY include/antares
         DESTINATION "include")

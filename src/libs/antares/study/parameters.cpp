@@ -185,10 +185,6 @@ const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::Hyd
 bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax& mode,
                                     const std::string& text)
 {
-    if (text.empty())
-    {
-        return false;
-    }
     if (text == "daily")
     {
         mode = Parameters::Compatibility::HydroPmax::Daily;
@@ -197,6 +193,22 @@ bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax& mode,
     if (text == "hourly")
     {
         mode = Parameters::Compatibility::HydroPmax::Hourly;
+        return true;
+    }
+    return false;
+}
+
+bool StringToCompatibilityHydroRuleCurves(Parameters::Compatibility::HydroRuleCurves& mode,
+                                          const std::string& text)
+{
+    if (text == "single")
+    {
+        mode = Parameters::Compatibility::HydroRuleCurves::Single;
+        return true;
+    }
+    if (text == "scenarized")
+    {
+        mode = Parameters::Compatibility::HydroRuleCurves::Scenarized;
         return true;
     }
     return false;
@@ -243,8 +255,6 @@ void Parameters::reset()
 {
     // Mode
     mode = SimulationMode::Economy;
-    // Calendar
-    horizon.clear();
 
     // Reset output variables print info tool
     variablesPrintInfo.clear();
@@ -287,8 +297,6 @@ void Parameters::reset()
 
     // timeseries numbers
     storeTimeseriesNumbers = false;
-    // readonly
-    readonly = false;
     synthesis = true;
 
     // Hydro heuristic policy
@@ -316,6 +324,8 @@ void Parameters::reset()
     include.reserve.spinning = true;
     include.reserve.primary = true;
     simplexOptimizationRange = sorWeek;
+
+    include.reserves = false;
 
     include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.exportStructure = false;
@@ -349,7 +359,7 @@ bool Parameters::isTSGeneratedByPrepro(const TimeSeriesType ts) const
 static bool SGDIntLoadFamily_General(Parameters& d,
                                      const String& key,
                                      const String& value,
-                                     const String& rawvalue)
+                                     const String&)
 {
     if (key == "active-rules-scenario")
     {
@@ -384,13 +394,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     if (key == "generate")
     {
         return ConvertCStrToListTimeSeries(value, d.timeSeriesToGenerate);
-    }
-
-    if (key == "horizon")
-    {
-        d.horizon = rawvalue;
-        d.horizon.trim(" \t\n\r");
-        return true;
     }
 
     // Same time-series
@@ -460,11 +463,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         // Only by TS generator. We skip it here (otherwise, we get a reading error).
         return true;
     }
-    // readonly
-    if (key == "readonly")
-    {
-        return value.to<bool>(d.readonly);
-    }
 
     if (key == "simulation.start")
     {
@@ -489,6 +487,7 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     {
         return value.to<bool>(d.yearByYear);
     }
+
     return false;
 }
 
@@ -556,7 +555,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     }
     if (key == "include-loopflowfee") // backward compatibility
     {
-        return true; // value.to<bool>(d.include.loopFlowFee);
+        return true;
     }
     if (key == "include-tc-minstablepower")
     {
@@ -581,6 +580,10 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     if (key == "include-primaryreserve")
     {
         return value.to<bool>(d.include.reserve.primary);
+    }
+    if (key == "include-reserves")
+    {
+        return value.to<bool>(d.include.reserves);
     }
 
     if (key == "include-exportmps")
@@ -985,6 +988,11 @@ static bool SGDIntLoadFamily_Compatibility(Parameters& d,
         return StringToCompatibilityHydroPmax(d.compatibility.hydroPmax, value);
     }
 
+    if (key == "hydro-rule-curves")
+    {
+        return StringToCompatibilityHydroRuleCurves(d.compatibility.hydroRuleCurves, value);
+    }
+
     return false;
 }
 
@@ -1096,6 +1104,18 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
         {
             logNotSupported(key, StudyVersion(9, 3));
         }
+        return true;
+    }
+
+    // was never used, metadata
+    if (key == "horizon")
+    {
+        return true;
+    }
+
+    // ignored since the GUI is gone
+    if (key == "readonly")
+    {
         return true;
     }
 
@@ -1350,9 +1370,6 @@ void Parameters::setYearWeight(uint year, float weight)
 
 void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 {
-    // We don't care of the variable `horizon` since it is not used by the solver
-    horizon.clear();
-
     // Simplex optimization range
     switch (simplexOptimizationRange)
     {
@@ -1546,6 +1563,11 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     if (!include.reserve.primary)
     {
         logs.info() << "  :: ignoring primary reserves";
+    }
+    if (!include.reserves)
+    {
+        logs.info() << "  :: ignoring reserves (new implementation / not related to "
+                       "primary/strategic/spinning reserves)";
     }
     if (!include.reserve.strategic)
     {

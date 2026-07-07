@@ -19,6 +19,7 @@ add_subdirectory(ts-generator)
 add_subdirectory(utils)
 add_subdirectory(variable)
 add_subdirectory(optim-model-filler)
+add_subdirectory(workflow)
 
 #
 # Resource file for Windows
@@ -69,7 +70,6 @@ set(ANTARES_SOLVER_LIBS
         Antares::optimization-options
         Antares::signal-handling
         Antares::locale
-        yuni-static-uuid
         yuni-static-core
         ${CMAKE_THREADS_LIBS_INIT}
 )
@@ -96,13 +96,14 @@ target_link_libraries(antares-solver
 
 target_include_directories(antares-solver
         PRIVATE
-        ${CMAKE_SOURCE_DIR}/solver
+        ${CMAKE_SOURCE_DIR}/src/solver
 )
 
 import_std_libs(antares-solver)
 executable_strip(antares-solver)
 
 copy_dependency(sirius_solver antares-solver)
+copy_project_shared_lib(simulation-table-writers antares-solver)
 
 #TODO : not working inside macro
 install(TARGETS antares-solver EXPORT antares-solver DESTINATION bin)

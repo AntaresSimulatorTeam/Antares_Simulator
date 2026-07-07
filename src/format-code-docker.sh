@@ -66,7 +66,7 @@ gather_files() {
     while IFS= read -r f; do
       [ -n "$f" ] && FILES+=("$f")
     done < <(cd "$SCRIPT_DIR" && find "${SOURCE_DIRS[@]}" -regextype egrep -regex ".*\\.(c|cxx|cpp|cc|h|hxx|hpp)$" \
-                 ! -path '*/additionalConstraintRhsExpression/*' ! -path '*/scenarioBuilderExpression/*' ! -path '*/antlr-interface/*' 2>/dev/null)
+                 ! -path '*/additionalConstraintRhsExpression/*' ! -path '*/scenarioBuilderExpression/*' ! -path '*/antlr-interface/*' ! -path '*/reservesParsing/*' 2>/dev/null)
   else
     for a in "${ARGS[@]}"; do
       if [[ "$a" = /* ]] && [[ "$a" == "$PROJECT_ROOT"/* ]]; then
@@ -206,12 +206,13 @@ format_with_docker() {
   trap 'rm -f "$TMP_LIST"' EXIT
   printf '%s\n' "${FILES[@]}" > "$TMP_LIST"
   INSIDE_LIST="/workspace/src/$(basename "$TMP_LIST")"
+  DOCKER_USER="$(id -u):$(id -g)"
 
   echo "Formatting ${#FILES[@]} files using Docker image $CLANG_FORMAT_IMAGE..."
   if [ -n "$STYLE_DOCKER" ]; then
-    docker run --rm -v "$PROJECT_ROOT:/workspace" -w /workspace/src "$CLANG_FORMAT_IMAGE" bash -c "set -euo pipefail; while IFS= read -r file || [ -n \"\$file\" ]; do if [ -n \"\$file\" ]; then echo \"Formatting: \$file\"; clang-format $STYLE_DOCKER -i --verbose \"\$file\"; fi; done < $INSIDE_LIST"
+    docker run --rm --user "$DOCKER_USER" -v "$PROJECT_ROOT:/workspace" -w /workspace/src "$CLANG_FORMAT_IMAGE" bash -c "set -euo pipefail; while IFS= read -r file || [ -n \"\$file\" ]; do if [ -n \"\$file\" ]; then echo \"Formatting: \$file\"; clang-format $STYLE_DOCKER -i --verbose \"\$file\"; fi; done < $INSIDE_LIST"
   else
-    docker run --rm -v "$PROJECT_ROOT:/workspace" -w /workspace/src "$CLANG_FORMAT_IMAGE" bash -c "set -euo pipefail; while IFS= read -r file || [ -n \"\$file\" ]; do if [ -n \"\$file\" ]; then echo \"Formatting: \$file\"; clang-format -i --verbose \"\$file\"; fi; done < $INSIDE_LIST"
+    docker run --rm --user "$DOCKER_USER" -v "$PROJECT_ROOT:/workspace" -w /workspace/src "$CLANG_FORMAT_IMAGE" bash -c "set -euo pipefail; while IFS= read -r file || [ -n \"\$file\" ]; do if [ -n \"\$file\" ]; then echo \"Formatting: \$file\"; clang-format -i --verbose \"\$file\"; fi; done < $INSIDE_LIST"
   fi
 }
 

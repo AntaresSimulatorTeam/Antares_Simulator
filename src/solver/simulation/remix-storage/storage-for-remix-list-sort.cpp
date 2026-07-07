@@ -1,3 +1,6 @@
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include <algorithm>
 #include <ranges>
 
@@ -7,7 +10,7 @@ namespace Antares::Solver::Simulation
 {
 void StorageListSort::add(const double capacity, const std::shared_ptr<IStorageForRemix> sts)
 {
-    pairs_capa_storage_.push_back({capacity, sts});
+    pairs_capa_storage_.emplace_back(capacity, sts);
 }
 
 ListStorageForRemix StorageListSort::makeSortedList()

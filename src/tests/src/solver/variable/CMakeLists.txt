@@ -1,4 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 
 add_boost_test(test-intermediate
     SRC test_intermediate.cpp dummyVariable.h
@@ -17,6 +17,18 @@ add_boost_test(test-residual-load
 
 add_boost_test(test-dynamic-aggregation
     SRC test_dynamic.cpp
+    LIBS
+    antares-solver-variable
+    in-memory-study)
+
+add_boost_test(test-setofareas-reports
+    SRC test_setofareas_reports.cpp
+    LIBS
+    antares-solver-variable
+    result_writer)
+
+add_boost_test(test-nodu-by-plant
+    SRC test_NbOfDispatchedUnitsByPlant.cpp
     LIBS
     antares-solver-variable
     in-memory-study)

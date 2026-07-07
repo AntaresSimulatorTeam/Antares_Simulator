@@ -80,10 +80,17 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
         return true;
     }
 
+    // Skip time series loading for disabled clusters
+    if (!enabled)
+    {
+        logs.info() << "Skipping time series loading for disabled cluster: " << id();
+        return true;
+    }
+
     auto& buffer = s.bufferLoadingTS;
 
     bool ret = true;
-    fs::path seriesPath = folder / parentArea->id.to<std::string>() / id() / "series.txt";
+    fs::path seriesPath = folder / parentArea->id / id() / "series.txt";
 
     ret = series.timeSeries.loadFromCSVFile(seriesPath.string(), 1, HOURS_PER_YEAR, &s.dataBuffer)
           && ret;
@@ -99,15 +106,6 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
 }
 
 #undef SEP
-
-void Cluster::reset()
-{
-    unitCount = 0;
-    enabled = true;
-    nominalCapacity = 0.;
-
-    series.timeSeries.reset(1, HOURS_PER_YEAR);
-}
 
 bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const
 {

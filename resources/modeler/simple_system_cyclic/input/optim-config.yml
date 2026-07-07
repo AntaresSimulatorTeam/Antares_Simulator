@@ -1,0 +1,39 @@
+# Copyright (c) 2026, RTE (https://www.rte-france.com)
+#
+# See AUTHORS.txt
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+#
+# This file is part of the Antares project.
+models:
+  - id: simple_models.generator
+    model-decomposition:
+      variables:
+        - id: p_nom
+          location: master-and-subproblems
+      objective-contributions:
+        - id: capital_objective
+          location: master
+        - id: operational_objective
+          location: subproblems
+    
+
+
+  - id: simple_models.storage_unit
+    model-decomposition:
+      variables:
+        - id: p_nom
+          location: master-and-subproblems
+      objective-contributions:
+        - id: capital_objective
+          location: master
+        - id: operational_objective
+          location: subproblems
+    out-of-bounds-processing:
+      constraints:
+        - id: state_of_charge_balance
+          mode: cyclic 

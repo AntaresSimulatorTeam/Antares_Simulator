@@ -1,12 +1,12 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "antares/io/outputs/ISimulationTable.h"
 #include "antares/optimization-options/options.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
+using namespace IO::Outputs;
 using Antares::Solver::Optimization::OptimizationOptions;
 
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
@@ -46,7 +46,7 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
 
     OPT_MaxDesPmaxHydrauliques(problemeHebdo);
 
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+    if (problemeHebdo->OptimisationNotFastMode)
     {
         OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(problemeHebdo);
     }

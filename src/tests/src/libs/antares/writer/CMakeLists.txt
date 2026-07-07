@@ -1,9 +1,12 @@
-include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 
+# ---------------
 # Zip writer
+# ---------------
 add_boost_test(test-writer
   SRC test_writer.cpp
   LIBS
+  Antares::concurrency
   Antares::result_writer
   test_utils_unit
   MINIZIP::minizip)

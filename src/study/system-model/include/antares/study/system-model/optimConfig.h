@@ -15,6 +15,9 @@ enum class Location
 
 const char* LocationToStr(Location loc);
 
+bool isInSubProblem(const Location& l);
+bool isInMasterProblem(const Location& l);
+
 bool AreLocationsCompatibleForFillers(Location lhs, Location rhs);
 // stricter for MASTER_AND_SUBPROLEMS
 bool AreLocationsCompatibleForExpressions(Location lhs, Location rhs);

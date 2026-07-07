@@ -4,14 +4,17 @@ set(SRC_VARIABLE
         include/antares/solver/variable/variable.h
         include/antares/solver/variable/variable.hxx
         include/antares/solver/variable/info.h
+        include/antares/solver/variable/print.h
         include/antares/solver/variable/container.h
         include/antares/solver/variable/container.hxx
-        include/antares/solver/variable/endoflist.h
+        include/antares/solver/variable/container-scope-defaults.h
+        include/antares/solver/variable/tuple_variable_list.h
         include/antares/solver/variable/state.h
         state.cpp
         include/antares/solver/variable/state.hxx
         include/antares/solver/variable/area.h
         include/antares/solver/variable/area.hxx
+        include/antares/solver/variable/area.inc.hxx
         include/antares/solver/variable/setofareas.h
         include/antares/solver/variable/setofareas.hxx
         include/antares/solver/variable/bindConstraints.h
@@ -50,10 +53,14 @@ source_group("variable\\storage" FILES ${SRC_VARIABLE_STORAGE})
 
 set(SRC_VARIABLE_COMMON
         # Commons
-        include/antares/solver/variable/commons/join.h
+        include/antares/solver/variable/commons/join_all.h
+        include/antares/solver/variable/commons/compose-all.h
         include/antares/solver/variable/commons/load.h
         include/antares/solver/variable/commons/wind.h
         include/antares/solver/variable/commons/hydro.h
+        include/antares/solver/variable/commons/generation.h
+        include/antares/solver/variable/commons/hour_utils.h
+        include/antares/solver/variable/commons/timeseries_base.h
         include/antares/solver/variable/commons/rowBalance.h
         include/antares/solver/variable/commons/psp.h
         include/antares/solver/variable/commons/miscGenMinusRowPSP.h
@@ -77,12 +84,18 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/all.h
         include/antares/solver/variable/economy/economy_base.h
         include/antares/solver/variable/economy/links.h
-        include/antares/solver/variable/economy/economy_base.h
+
+        # Base classes / mixins for Economy variables
+        include/antares/solver/variable/economy/multi_column_base.h
+        include/antares/solver/variable/economy/dynamic_multi_column_base.h
+        include/antares/solver/variable/economy/DispatchablePlantByCluster_base.h
+        include/antares/solver/variable/economy/STStorageByCluster_base.h
 
         # Variables for Economy
         include/antares/solver/variable/economy/max-mrg-utils.h
         max-mrg-utils.cpp
         include/antares/solver/variable/economy/max-mrg.h
+        include/antares/solver/variable/economy/max-mrg-csr.h
         include/antares/solver/variable/economy/price.h
         include/antares/solver/variable/economy/balance.h
         include/antares/solver/variable/economy/operatingCost.h
@@ -120,13 +133,37 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/loldCsr.h
         include/antares/solver/variable/economy/lolp.h
         include/antares/solver/variable/economy/lolp_base.h
+        include/antares/solver/variable/economy/lolpCsr.h
         include/antares/solver/variable/economy/nearPriceCap.h
         include/antares/solver/variable/economy/avail-dispatchable-generation.h
         include/antares/solver/variable/economy/dispatchable-generation-margin.h
         include/antares/solver/variable/economy/residual.h
         include/antares/solver/variable/economy/unsupliedEnergy.h
 
+        # Reserves
+        include/antares/solver/variable/economy/reserves/reserveParticipationBase.h
+        include/antares/solver/variable/economy/reserves/reserveParticipationByDispatchableOffUnitsPlant.h
+        include/antares/solver/variable/economy/reserves/reserveParticipationByDispatchableOnUnitsPlant.h
+        include/antares/solver/variable/economy/reserves/reserveParticipationByHydro.h
+        include/antares/solver/variable/economy/reserves/reserveParticipationBySTStorage.h
+        include/antares/solver/variable/economy/reserves/reserveParticipationBySTStorageGroup.h
+        include/antares/solver/variable/economy/reserves/reserveParticipationByThermalGroup.h
+        include/antares/solver/variable/economy/reserves/reserveParticipationCost.h
+        include/antares/solver/variable/economy/reserves/reserveParticipationMarginalCost.h
+        include/antares/solver/variable/economy/reserves/reserveParticipationTemplate.h
+        include/antares/solver/variable/economy/reserves/reserveParticipationUnsuppliedSpilled.h
+        include/antares/solver/variable/economy/reserves/vCardReserveParticipationByDispatchableOffUnitsPlant.h
+        include/antares/solver/variable/economy/reserves/vCardReserveParticipationByDispatchableOnUnitsPlant.h
+        include/antares/solver/variable/economy/reserves/vCardReserveParticipationByHydro.h
+        include/antares/solver/variable/economy/reserves/vCardReserveParticipationBySTStorage.h
+        include/antares/solver/variable/economy/reserves/vCardReserveParticipationBySTStorageGroup.h
+        include/antares/solver/variable/economy/reserves/vCardReserveParticipationByThermalGroup.h
+        include/antares/solver/variable/economy/reserves/vCardReserveParticipationMarginalCost.h
+        include/antares/solver/variable/economy/reserves/vCardReserveParticipationUnsuppliedSpilled.h
+
         # Links
+        include/antares/solver/variable/economy/links/links_base.h
+        include/antares/solver/variable/economy/links/static_link_base.h
         include/antares/solver/variable/economy/links/flowLinear.h
         include/antares/solver/variable/economy/links/flowLinearAbs.h
         include/antares/solver/variable/economy/links/loopFlow.h
@@ -137,6 +174,7 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/links/marginalCost.h
         include/antares/solver/variable/economy/links/congestionProbability.h
         include/antares/solver/variable/economy/overallCostCsr.h
+
 
         # Binding constraints
         include/antares/solver/variable/economy/bindingConstraints/bindingConstraintsMarginalCost.h

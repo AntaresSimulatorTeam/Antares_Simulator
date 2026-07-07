@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
+#include <vector>
+
 #include <antares/study/area/area.h>
 #include "antares/date/date.h"
 #include "antares/solver/hydro/management/HydroErrorsCollector.h"
@@ -16,9 +18,9 @@ class HydroInputsChecker final
 {
 public:
     explicit HydroInputsChecker(Antares::Data::Study& study);
-    void Execute(uint year);
-    void CheckForErrors() const;
-    void CheckFinalReservoirLevelsConfiguration(uint year);
+    void Execute(uint year, const std::vector<double>& initialReservoirLevels);
+    void checkForErrors() const;
+    void checkFinalReservoirLevelsConfiguration(uint year);
 
 private:
     Data::AreaList& areas_;
@@ -42,6 +44,10 @@ private:
     bool checksOnGenerationPowerBounds(uint year);
     //! check minimum generation is lower than available inflows
     bool checkMinGeneration(uint year);
+    //! check reservoir levels
+    bool checkRuleCurves(uint year);
+    //! check initial reservoir level is within rule curve bounds
+    void checkInitialReservoirLevel(uint year, const std::vector<double>& initialReservoirLevels);
 };
 
 } // namespace Antares

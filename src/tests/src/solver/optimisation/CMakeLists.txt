@@ -1,4 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 add_boost_test(unit-tests-for-solver-optimisation
         SRC
         test_main.cpp
@@ -9,8 +9,15 @@ add_boost_test(unit-tests-for-solver-optimisation
         test_ThermalCapacityFiller.cpp
         test_area_connections--spillage--unsupE.cpp
         test_mip_detection.cpp
+        test_legacy_name_mapper.cpp
+        test_legacy_solution_view.cpp
+        test_legacy_extra_outputs.cpp
+        ${CMAKE_SOURCE_DIR}/src/solver/optimisation/LegacyNameMapper.cpp
+        ${CMAKE_SOURCE_DIR}/src/solver/optimisation/LegacySolutionView.cpp
+        ${CMAKE_SOURCE_DIR}/src/solver/optimisation/LegacyExtraOutputs.cpp
         LIBS
         antares-study-system-model
+        Antares::simulation-table
         Antares::linear-problem-mpsolver-impl
         Antares::optim-model-filler
         Antares::linear-problem-data-impl
@@ -18,7 +25,9 @@ add_boost_test(unit-tests-for-solver-optimisation
         Antares::yml-model
         Antares::model-converter
         Antares::yml-system
-        Antares::tests::inmemory-modeler)
+        Antares::tests::inmemory-modeler
+        INCLUDE
+        ${CMAKE_SOURCE_DIR}/src/solver/optimisation/include)
 
 add_subdirectory(adequacy_patch)
 add_subdirectory(translator)

@@ -91,6 +91,9 @@ public:
       const Nodes::TimeSumNode* node) override;
 
     Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::TPlusNode* node) override;
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::AllTimeSumNode* node) override;
 
     Antares::Optimization::TimeDependentLinearExpression visit(
@@ -100,14 +103,16 @@ private:
     Optimization::TimeDependentLinearExpression visitPower(const Nodes::FunctionNode* node);
     Optimization::TimeDependentLinearExpression visitFloor(const Nodes::FunctionNode* node);
     Optimization::TimeDependentLinearExpression visitCeil(const Nodes::FunctionNode* node);
+    Optimization::TimeDependentLinearExpression visitRound(const Nodes::FunctionNode* node);
+    Optimization::TimeDependentLinearExpression visitAbs(const Nodes::FunctionNode* node);
 
     const Antares::Optimisation::OptimEntityContainer& optimEntityContainer_;
     const Antares::ModelerStudy::SystemModel::Component& component_;
     const Optimisation::ScenarioGroupRepository& scenarioGroupRepo_;
-    const Optimisation::LinearProblemApi::IScenario* scenario_;
+    const Optimisation::LinearProblemApi::IScenario& scenario_;
+    Antares::Expressions::Visitors::EvalVisitor evalVisitor_;
     const Antares::Optimisation::EvaluationContext evalContext_;
     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext_;
-    Antares::Expressions::Visitors::EvalVisitor evalVisitor_;
     const Optimisation::LinearProblemApi::ILinearProblemData* data_;
 
     const unsigned nbtimeSteps_;

@@ -5,9 +5,8 @@
 #include <mutex>
 
 #include <antares/logs/logs.h>
-#include "antares/io/outputs/ISimulationTable.h"
+#include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
-#include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
@@ -16,6 +15,7 @@
 #include "antares/solver/utils/filename.h"
 
 using namespace Antares::Solver;
+using namespace IO::Outputs;
 using Antares::Solver::Optimization::ExportBehavior;
 using Antares::Solver::Optimization::OptimizationOptions;
 
@@ -130,7 +130,7 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
                            Solver::IResultWriter& writer,
                            int optimizationNumber,
                            Solver::Simulation::ISimulationObserver& simulationObserver,
-                           Antares::IO::Outputs::ISimulationTable* simulationTable)
+                           Antares::IO::Outputs::SimulationTable* simulationTable)
 {
     const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                         ->NombreDePasDeTempsPourUneOptimisation;
@@ -205,7 +205,7 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
 
 void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
 {
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+    if (problemeHebdo->OptimisationNotFastMode)
     {
         OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(problemeHebdo);
     }
@@ -229,6 +229,7 @@ void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits.resize(nombreDeVariables);
     ProblemeAResoudre->PositionDeLaVariable.resize(nombreDeVariables);
     ProblemeAResoudre->NomDesVariables.resize(nombreDeVariables);
+    ProblemeAResoudre->LegacyVariablesInfo.resize(nombreDeVariables);
     ProblemeAResoudre->VariablesEntieres.resize(nombreDeVariables);
 
     ProblemeAResoudre->Sens.resize(nombreDeContraintes);
@@ -239,6 +240,7 @@ void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     ProblemeAResoudre->CoutsMarginauxDesContraintes.resize(nombreDeContraintes);
     ProblemeAResoudre->ComplementDeLaBase.resize(nombreDeContraintes);
     ProblemeAResoudre->NomDesContraintes.resize(nombreDeContraintes);
+    ProblemeAResoudre->LegacyConstraintsInfo.resize(nombreDeContraintes);
 }
 } // namespace
 
@@ -288,7 +290,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode
     // and if the 1st one failed.
-    if (ret && !problemeHebdo->Expansion && !problemeHebdo->OptimisationAvecVariablesEntieres)
+    if (ret && !problemeHebdo->Expansion && problemeHebdo->useThermalHeuristic)
     {
         // We need to adjust some stuff before running the 2nd optimisation
         runThermalHeuristic(problemeHebdo);

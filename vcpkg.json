@@ -1,0 +1,47 @@
+{
+  "name": "antares-simulator",
+  "version-string": "10.1.1",
+  "dependencies": [
+    {
+      "name": "sirius-solver",
+      "version>=": "1.9"
+    },
+    {
+      "name": "boost-test",
+      "version>=": "1.86.0"
+    },
+    {
+      "name": "boost-core",
+      "version>=": "1.86.0"
+    },
+    {
+      "name": "boost-iostreams",
+      "version>=": "1.86.0"
+    },
+    {
+      "name": "boost-bimap",
+      "version>=": "1.86.0"
+    },
+    {
+      "name": "minizip-ng",
+      "default-features": false,
+      "version>=": "4.0.0",
+      "features": [
+        "zlib"
+      ]
+    },
+    {
+      "name": "yaml-cpp"
+    },
+    {
+      "name": "antlr4"
+    },
+    {
+      "name": "fmt"
+    },
+    {
+      "name": "arrow",
+      "features": ["parquet"]
+    }
+  ]
+}

@@ -18,6 +18,7 @@
 #include <antares/writer/result_format.h>
 #include "antares/antares/antares.h"
 #include "antares/study/fwd.h"
+#include "antares/writer/table_format.h"
 
 #include "parameters/adq-patch-params.h"
 #include "variable-print-info.h"
@@ -145,7 +146,7 @@ public:
     //! \name Mode
     //@{
     //! Mode of the study (adequacy, economy...)
-    SimulationMode mode;
+    SimulationMode mode{SimulationMode::Economy};
     //@}
 
     //! \name Horizon
@@ -157,17 +158,17 @@ public:
     //! \name Calendar
     //@{
     //! Number of years to study
-    uint nbYears;
+    uint nbYears{1};
     //! Simulation days interval
     Date::DayInterval simulationDays;
     //! Day of the 1st january
-    DayOfTheWeek dayOfThe1stJanuary;
+    DayOfTheWeek dayOfThe1stJanuary{monday};
     //! First day in the week
-    DayOfTheWeek firstWeekday;
+    DayOfTheWeek firstWeekday{monday};
     //! The first month of the simulation year
-    MonthName firstMonthInYear;
+    MonthName firstMonthInYear{january};
     //! Leap year
-    bool leapYear;
+    bool leapYear{false};
     //@}
 
     //! \name Additional
@@ -175,9 +176,9 @@ public:
     //! Export results each year
     bool yearByYear;
     //! Derated
-    bool derated;
+    bool derated = false;
     //! Custom scenario
-    bool useCustomScenario;
+    bool useCustomScenario = false;
     //! Custom playlist (each year will be manually selected by the user)
     bool userPlaylist;
     //! Flag to perform the calculations or not from the solver
@@ -277,7 +278,6 @@ public:
     ** generaldata.ini. The default value is `false`.
     */
     bool readonly;
-
     //! Write the simulation synthesis into the output
     bool synthesis;
 
@@ -308,6 +308,9 @@ public:
 
         } reserve;
 
+        //! New implemention of reserves, not related to the primary/spinning/strategic reserves
+        bool reserves;
+
         struct Thermal
         {
             // Thermal cluster min stable power
@@ -337,6 +340,12 @@ public:
             Hourly
         };
         HydroPmax hydroPmax = HydroPmax::Daily;
+        enum class HydroRuleCurves
+        {
+            Single,
+            Scenarized
+        };
+        HydroRuleCurves hydroRuleCurves = HydroRuleCurves::Single;
     };
 
     Compatibility compatibility;
@@ -402,7 +411,7 @@ public:
     //! Transmission capacities
     GlobalTransmissionCapacities transmissionCapacities;
     //! Simplex optimization range (day/week)
-    SimplexOptimization simplexOptimizationRange;
+    SimplexOptimization simplexOptimizationRange = sorWeek;
     //@}
 
     AdequacyPatch::AdqPatchParams adqPatchParams;
@@ -410,7 +419,7 @@ public:
     //! \name Scenariio Builder - Rules
     //@{
     //! The current active rules for building scenarios (useful if building mode == custom)
-    RulesScenarioName activeRulesScenario;
+    std::string activeRulesScenario;
     //@}
 
     //! \name Output
@@ -419,6 +428,9 @@ public:
     // This variable is not stored within the study but only used by the solver
     bool noOutput = false;
     //@}
+
+    // In case we print simulation tables, do we print it in csv or parquet ?
+    Writer::TableFormat simuTableFormat = Writer::TableFormat::CSV;
 
     bool hydroDebug;
 
@@ -441,7 +453,7 @@ public:
     bool namedProblems;
 
     // All options related to linear & quadratic optimization
-    Antares::Solver::Optimization::OptimizationOptions optOptions;
+    Solver::Optimization::OptimizationOptions optOptions;
 
 private:
     void resetPlayedYears(uint nbOfYears);

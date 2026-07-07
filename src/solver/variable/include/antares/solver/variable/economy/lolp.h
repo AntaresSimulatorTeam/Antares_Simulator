@@ -4,6 +4,7 @@
 #ifndef SOLVER_VARIABLE_ECONOMY_LOLP_H__
 #define SOLVER_VARIABLE_ECONOMY_LOLP_H__
 
+#include "economy_base.h"
 #include "lolp_base.h"
 
 namespace Antares::Solver::Variable::Economy
@@ -21,16 +22,16 @@ struct LOLPTraits: public LOLP_Base_Traits
         return "LOLP";
     }
 
-    static bool checkCondition(const State& state)
+    static void setHourlyValue(IntermediateValues& iv, const State& state, unsigned int)
     {
-        return state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek] > 0.;
+        if (state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek] > 0.)
+        {
+            iv[state.hourInTheYear] = value(state);
+        }
     }
 };
 
-using VCardLOLP = VCard_Base<LOLPTraits>;
-
-template<class NextT = Container::EndOfList>
-using LOLP = Economy_Base<LOLPTraits, NextT>;
+using LOLP = EconomyVariableBase<LOLPTraits>;
 
 } // namespace Antares::Solver::Variable::Economy
 

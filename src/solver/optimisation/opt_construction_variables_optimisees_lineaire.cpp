@@ -3,6 +3,7 @@
 
 #include <spx_constantes_externes.h>
 
+#include "antares/solver/optimisation/opt_construction_variables_reserves.h"
 #include "antares/solver/optimisation/opt_rename_problem.h"
 #include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -17,7 +18,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
     int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                   ->NombreDePasDeTempsPourUneOptimisation;
     int NombreDeVariables = 0;
-    VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables);
+    VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables,
+                                ProblemeAResoudre->LegacyVariablesInfo);
     auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 
     for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
@@ -261,10 +263,15 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 
     ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
 
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+    if (problemeHebdo->OptimisationNotFastMode)
     {
         OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
                                                                                       false);
+        if (problemeHebdo->allReserves)
+        {
+            OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(problemeHebdo,
+                                                                                  false);
+        }
     }
 
     return;

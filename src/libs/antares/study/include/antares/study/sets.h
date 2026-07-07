@@ -192,6 +192,15 @@ public:
     SetAreasType& operator[](uint i);
     const SetAreasType& operator[](uint i) const;
 
+    TypePtr add(const IDType& name, const TypePtr& data, Options& opts)
+    {
+        pMap[name] = data;
+        pOptions[name] = opts;
+        return data;
+    }
+
+    void rebuildIndexes();
+
 private:
     TypePtr add(const IDType& name)
     {
@@ -208,18 +217,10 @@ private:
         return data;
     }
 
-    TypePtr add(const IDType& name, const TypePtr& data, Options& opts)
-    {
-        pMap[name] = data;
-        pOptions[name] = opts;
-        return data;
-    }
-
     /*!
     ** \brief Rebuild the lists of a group from the rules
     */
     void rebuildFromRules(const IDType& id, SetHandlerAreas& handler);
-    void rebuildIndexes();
 
     //! All groups
     MapType pMap;

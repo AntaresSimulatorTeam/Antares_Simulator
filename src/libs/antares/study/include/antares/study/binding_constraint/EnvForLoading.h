@@ -24,14 +24,14 @@ public:
     }
 
     EnvForLoading(const EnvForLoading&) = default;
-    EnvForLoading& operator=(const EnvForLoading&) = default;
-    EnvForLoading(EnvForLoading&&) noexcept = default;
-    EnvForLoading& operator=(EnvForLoading&&) noexcept = default;
+    EnvForLoading& operator=(const EnvForLoading&) = delete;
+    EnvForLoading(EnvForLoading&&) noexcept = delete;
+    EnvForLoading& operator=(EnvForLoading&&) noexcept = delete;
 
     //! INI file
     std::filesystem::path iniFilename;
     //! Current section
-    IniFile::Section* section;
+    IniFile::Section* section{nullptr};
 
     Yuni::Clob buffer;
     Matrix<>::BufferType matrixBuffer;

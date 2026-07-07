@@ -45,6 +45,7 @@ public:
     };
 
     StateForAnArea& operator[](size_t areaIndex);
+    const StateForAnArea& operator[](size_t areaIndex) const;
 
 private:
     std::vector<StateForAnArea> thermal;
@@ -73,6 +74,26 @@ public:
     void initFromThermalClusterIndex(const unsigned int clusterEnabledIndex);
 
     /*!
+    ** \brief Initialize some variable according a short term storage cluster index
+    **
+    ** We assume here that the variables related to an area
+    ** are properly initialized.
+    **
+    ** \param areaWideIndex Index of the short term storage cluster for the current area
+    */
+    void initFromShortTermStorageClusterIndex(const unsigned int areaWideIndex);
+
+    /*!
+    ** \brief Initialize some variable according a Hydro index
+    **
+    ** We assume here that the variables related to an area
+    ** are properly initialized.
+    **
+    ** \param areaWideIndex Index of the Hydro for the current area
+    */
+    void initFromHydroIndex(const unsigned int areaWideIndex);
+
+    /*!
     ** \brief End the year by smoothing the thermal units run
     ** and computing costs.
     ** We assume here that the variables related to an area
@@ -82,6 +103,10 @@ public:
     */
 
     void yearEndBuildFromThermalClusterIndex(const unsigned int clusterEnabledIndex);
+
+    void calculateReserveParticipationCosts();
+
+    void initFromHydro();
 
 private:
     /*!
@@ -140,6 +165,9 @@ public:
     //! The current thermal cluster (used in yearEndBuildForEachThermalCluster functions)
     Data::ThermalCluster* thermalCluster;
 
+    //! The current Short Term Storage cluster
+    Data::ShortTermStorage::STStorageCluster* STStorageCluster;
+
     //! The current renewable cluster
     Data::RenewableCluster* renewableCluster;
     //! The Scratchpad for the current area
@@ -163,6 +191,90 @@ public:
 
     //! Thermal production for the current thermal cluster for the whole year
     double thermalClusterProductionForYear[HOURS_PER_YEAR];
+
+    struct ReserveData
+    {
+        struct DetailledParticipation
+        {
+            double totalParticipation = 0;
+            double onUnitsParticipation = 0;
+            double offUnitsParticipation = 0;
+
+            void addParticipation(double participation)
+            {
+                totalParticipation += participation;
+            }
+
+            void addOffParticipation(double participation)
+            {
+                offUnitsParticipation += participation;
+                totalParticipation += participation;
+            }
+
+            void addOnParticipation(double participation)
+            {
+                onUnitsParticipation += participation;
+                totalParticipation += participation;
+            }
+        };
+
+        struct ReserveParticipationPerGroupForYear
+        {
+            //! Reserve Participation for all thermal group types (nuclear / coal / ...) for
+            //! the whole year per reserve
+            std::map<std::string, std::map<ReserveID, double>> thermalGroupsReserveParticipation;
+
+            //! Reserve Participation for all thermal Short Term storages types (PSP /
+            //! Battery / ...) for the whole year per reserve
+            std::map<std::string, std::map<ReserveID, double>>
+              shortTermStorageGroupsReserveParticipation;
+        };
+
+        //! All type of clusters reserves participations
+        std::vector<ReserveParticipationPerGroupForYear> reserveParticipationPerGroupForYear{
+          HOURS_PER_YEAR};
+
+        //! Reserve Participation for each thermal cluster per reserve
+        std::vector<std::map<std::string, std::map<ReserveID, DetailledParticipation>>>
+          reserveParticipationPerThermalClusterForYear{HOURS_PER_YEAR};
+
+        //! Reserve Participation for each STStorage cluster per reserve
+        std::vector<std::map<std::string, std::map<ReserveID, double>>>
+          reserveParticipationPerSTStorageClusterForYear{HOURS_PER_YEAR};
+
+        //! Reserve Participation for each Hydro per reserve
+        std::vector<std::map<std::string, std::map<ReserveID, double>>>
+          reserveParticipationPerHydroForYear{HOURS_PER_YEAR};
+
+        //! Reserve Participation cost for the whole year
+        std::vector<double> reserveParticipationCostForYear;
+
+        //! Reserves participation cost of the thermal cluster for the whole year
+        std::vector<double> thermalClusterReserveParticipationCostForYear;
+
+        //! Reserves participation cost of the Short Term Storage cluster for the whole year
+        std::vector<double> STStorageClusterReserveParticipationCostForYear;
+
+        //! Reserves participation cost of the Hydro for the whole year
+        std::vector<double> HydroReserveParticipationCostForYear;
+
+        ReserveData()
+        {
+            reserveParticipationCostForYear.resize(HOURS_PER_YEAR, 0);
+            thermalClusterReserveParticipationCostForYear.resize(HOURS_PER_YEAR, 0);
+            STStorageClusterReserveParticipationCostForYear.resize(HOURS_PER_YEAR, 0);
+            HydroReserveParticipationCostForYear.resize(HOURS_PER_YEAR, 0);
+            reserveParticipationPerSTStorageClusterForYear.clear();
+            reserveParticipationPerSTStorageClusterForYear.resize(HOURS_PER_YEAR);
+            reserveParticipationPerHydroForYear.clear();
+            reserveParticipationPerHydroForYear.resize(HOURS_PER_YEAR);
+            reserveParticipationPerThermalClusterForYear.clear();
+            reserveParticipationPerThermalClusterForYear.resize(HOURS_PER_YEAR);
+        }
+    };
+
+    ReserveOpt<std::vector<ReserveData>> reserveData;
+
     //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
     //! ucMILP (accurate)
     uint thermalClusterDispatchedUnitsCountForYear[HOURS_PER_YEAR];
@@ -175,9 +287,6 @@ public:
     double thermalClusterPMinOfTheClusterForYear[HOURS_PER_YEAR];
 
     double renewableClusterProduction;
-
-    //! Dispatchable margin for the current area (valid only from weekForEachArea)
-    const double* dispatchableMargin;
     //@}
 
     //! Probleme Hebdo

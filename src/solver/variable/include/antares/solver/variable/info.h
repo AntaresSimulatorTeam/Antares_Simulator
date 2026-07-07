@@ -9,8 +9,139 @@
 #include "antares/solver/variable/surveyresults.h"
 #include "antares/study/fwd.h"
 
+#include "economy/reserves/vCardReserveParticipationByDispatchableOffUnitsPlant.h"
+#include "economy/reserves/vCardReserveParticipationByDispatchableOnUnitsPlant.h"
+#include "economy/reserves/vCardReserveParticipationByHydro.h"
+#include "economy/reserves/vCardReserveParticipationBySTStorage.h"
+#include "economy/reserves/vCardReserveParticipationBySTStorageGroup.h"
+#include "economy/reserves/vCardReserveParticipationByThermalGroup.h"
+#include "economy/reserves/vCardReserveParticipationMarginalCost.h"
+#include "economy/reserves/vCardReserveParticipationUnsuppliedSpilled.h"
+
 namespace Antares::Solver::Variable
 {
+// Centralized, extensible compile-time dispatch to set captions for VCard types
+// Default returns false (no caption set); specializations handle concrete types.
+template<class VCardT>
+struct vcard_caption_traits
+{
+    static bool apply(SurveyResults&, uint)
+    {
+        return false;
+    }
+};
+
+// Specializations for Reserve Participation VCards
+template<>
+struct vcard_caption_traits<Economy::Reserves::VCardReserveParticipationByDispatchableOnUnitsPlant>
+{
+    static bool apply(SurveyResults& results, uint i)
+    {
+        const auto& thermal = results.data.area->thermal;
+        auto [clusterName, reserveID] = thermal.list
+                                          .reserveParticipationClusterAt(results.data.area, i);
+        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        results.variableCaption = reserveName + "_" + clusterName;
+        return true;
+    }
+};
+
+template<>
+struct vcard_caption_traits<Economy::Reserves::VCardReserveParticipationByDispatchableOffUnitsPlant>
+{
+    static bool apply(SurveyResults& results, uint i)
+    {
+        const auto& thermal = results.data.area->thermal;
+        auto [clusterName, reserveID] = thermal.list
+                                          .reserveParticipationClusterAt(results.data.area, i);
+        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        results.variableCaption = reserveName + "_" + clusterName + "_off";
+        return true;
+    }
+};
+
+template<>
+struct vcard_caption_traits<Economy::Reserves::VCardReserveParticipationByThermalGroup>
+{
+    static bool apply(SurveyResults& results, uint i)
+    {
+        const auto& thermal = results.data.area->thermal;
+        auto [groupName, reserveID] = thermal.list.reserveParticipationGroupAt(results.data.area,
+                                                                               i);
+        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        results.variableCaption = reserveName + "_" + groupName;
+        return true;
+    }
+};
+
+template<>
+struct vcard_caption_traits<Economy::Reserves::VCardReserveParticipationBySTStorage>
+{
+    static bool apply(SurveyResults& results, uint i)
+    {
+        const auto& shortTermStorage = results.data.area->shortTermStorage;
+        auto [clusterName, reserveID] = shortTermStorage
+                                          .reserveParticipationClusterAt(results.data.area, i);
+        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        results.variableCaption = reserveName + "_" + clusterName;
+        return true;
+    }
+};
+
+template<>
+struct vcard_caption_traits<Economy::Reserves::VCardReserveParticipationBySTStorageGroup>
+{
+    static bool apply(SurveyResults& results, uint i)
+    {
+        const auto& shortTermStorage = results.data.area->shortTermStorage;
+        auto [groupName, reserveID] = shortTermStorage
+                                        .reserveParticipationGroupAt(results.data.area, i);
+        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        results.variableCaption = reserveName + "_" + groupName;
+        return true;
+    }
+};
+
+template<>
+struct vcard_caption_traits<Economy::Reserves::VCardReserveParticipationByHydro>
+{
+    static bool apply(SurveyResults& results, uint i)
+    {
+        const auto& hydro = results.data.area->hydro;
+        auto reserveName = hydro.reserveParticipationAt(results.data.area, i);
+        results.variableCaption = reserveName.value() + "_Hydro";
+        return true;
+    }
+};
+
+template<>
+struct vcard_caption_traits<Economy::Reserves::VCardReserveParticipationUnsuppliedSpilled>
+{
+    static bool apply(SurveyResults& results, uint i)
+    {
+        auto [unsuppliedOrSpilled, reserveID] = results.data.area->allCapacityReservations.value()
+                                                  .reserveParticipationUnsuppliedSpilledAt(i);
+        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        results.variableCaption = reserveName + "_"
+                                  + std::string(Economy::Reserves::unsuppliedSpilledToString(
+                                    unsuppliedOrSpilled));
+        return true;
+    }
+};
+
+template<>
+struct vcard_caption_traits<Economy::Reserves::VCardReserveParticipationMarginalCost>
+{
+    static bool apply(SurveyResults& results, uint i)
+    {
+        const auto& reserveID = results.data.area->allCapacityReservations.value()
+                                  .getReserveAtIndex(i);
+        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        results.variableCaption = reserveName + "_MRG.COST";
+        return true;
+    }
+};
+
 template<class T>
 struct SpecifierRemover
 {
@@ -436,6 +567,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
             results.variableCaption = st_storage_part.storagesByIndex[idx].properties.name;
             return true;
         }
+
         return true;
     }
 
@@ -449,9 +581,16 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         bool res;
         if (*results.isPrinted)
         {
+            const Data::PartThermal& thermal = results.data.area->thermal;
+            const auto& shortTermStorage = results.data.area->shortTermStorage;
+            const auto& hydro = results.data.area->hydro;
             for (uint i = 0; i != container.size(); ++i)
             {
-                res = setClusterCaption(results, fileLevel, i);
+                res = vcard_caption_traits<VCardType>::apply(results, i);
+                if (!res)
+                {
+                    res = setClusterCaption(results, fileLevel, i);
+                }
                 if (!res)
                 {
                     return;

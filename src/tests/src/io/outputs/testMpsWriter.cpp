@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <filesystem>
 #define WIN32_LEAN_AND_MEAN
 
 #include <fstream>
@@ -31,7 +32,6 @@
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
 #include "antares/io/outputs/MPSGenerator.h"
 #include "antares/solver/modeler/Modeler.h"
-#include "antares/solver/modeler/fileWriter/FileWriter.h"
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
@@ -40,10 +40,9 @@ using namespace Antares;
 using namespace Antares::Solver;
 using namespace Antares::IO::Outputs; //
 namespace fs = std::filesystem;
-const fs::path resources = std::filesystem::path(CMAKE_SOURCE_DIR) / "tests" / "resources"
-                           / "modeler";
+const fs::path resources = std::filesystem::path(RESOURCES_DIR) / "modeler";
 
-const std::set<std::string> ignoreList{"1_3", "1_5"};
+const std::set<std::string> ignoreList{"1_3", "1_5", "simple_system_cyclic", "simple_system_drop"};
 BOOST_AUTO_TEST_SUITE(ValidateMps)
 
 bool isProblemEmpty(const ILinearProblem& problem)
@@ -140,39 +139,29 @@ void checkProblem(const ILinearProblem& originalProblem, const fs::path& mpsPath
     checkObjective(originalProblem, fromMps);
 }
 
-void checkMPS(const fs::path& studyPath, Modeler& modeler)
+void checkMPS(Modeler& modeler, fs::path outputPath)
 {
-    modeler.run();
     const auto& masterProblem = modeler.masterProblem();
     if (masterProblem && !isProblemEmpty(*masterProblem))
     {
-        checkProblem(*masterProblem, studyPath / "output" / "master.mps");
+        checkProblem(*masterProblem, outputPath / "master.mps");
     }
-    checkProblem(*modeler.subproblems().at(0), studyPath / "output" / "1-1.mps");
+    checkProblem(*modeler.subproblems().at(0), outputPath / "1-1.mps");
 }
 
-struct MpsWriterTestFixture
+void processStudy(const filesystem::path& studyDir)
 {
-    LoadFiles::FileLoader loader;
-    FileWriter writer;
+    LoadFiles::FileLoader loader(studyDir);
 
-    explicit MpsWriterTestFixture(const fs::path& studyPath):
-        loader(studyPath),
-        writer(studyPath)
-    {
-    }
+    fs::path outputPath = studyDir / "output";
+    fs::create_directory(outputPath);
 
-    Modeler build()
-    {
-        return {loader, writer};
-    }
-};
+    Modeler modeler(loader, outputPath, TableFormat::CSV);
+    modeler.run();
 
-void processStudy(const filesystem::path& entry)
-{
-    MpsWriterTestFixture fixture(entry);
-    auto modeler = fixture.build();
-    checkMPS(entry, modeler);
+    checkMPS(modeler, outputPath);
+
+    fs::remove_all(outputPath);
 }
 
 void checkEpic2Studies()
@@ -183,10 +172,10 @@ void checkEpic2Studies()
         {
             continue;
         }
-        const auto& path = subEntry.path();
-        if (!ignoreList.contains(path.filename().string()))
+        const auto& studyDir = subEntry.path();
+        if (!ignoreList.contains(studyDir.filename().string()))
         {
-            processStudy(path);
+            processStudy(studyDir);
         }
     }
 }
@@ -200,17 +189,25 @@ BOOST_AUTO_TEST_CASE(TestALLModelerStudiesMps)
         {
             continue;
         }
-        const auto& path = entry.path();
-        if (!ignoreList.contains(path.filename().string()))
+        const auto& studyDir = entry.path();
+        if (!ignoreList.contains(studyDir.filename().string()))
         {
-            if (path.filename().string() == "epic2")
+            if (studyDir.filename().string() == "epic2")
             {
                 checkEpic2Studies();
                 continue;
             }
-            processStudy(path);
+            processStudy(studyDir);
         }
     }
+}
+
+// gp : this test fails in Win + Debug
+// gp : it's also run in tests TestALLModelerStudiesMps above
+BOOST_AUTO_TEST_CASE(test_13_1)
+{
+    const auto& studyDir = resources / "13_1";
+    processStudy(studyDir);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -334,7 +331,7 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_EmptyProblem)
     setUpMPSFile("empty_problem.mps");
 
     BOOST_CHECK_NO_THROW({
-        auto mps = MPSGenerator(problem, "EmptyProblem").run();
+        auto mps = MPSGenerator(problem, "EmptyProblem", true).run();
         MPSFileWriter::write(mpsFile, mps);
     });
 }
@@ -361,7 +358,7 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_SimpleProblem)
     setUpMPSFile("simple_problem.mps");
 
     BOOST_CHECK_NO_THROW({
-        auto mps = MPSGenerator(problem, "SimpleProblem").run();
+        auto mps = MPSGenerator(problem, "SimpleProblem", true).run();
         MPSFileWriter::write(mpsFile, mps);
     });
 
@@ -401,7 +398,7 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_MixedIntegerProblem)
 
     setUpMPSFile("mip_problem.mps");
 
-    auto mps = MPSGenerator(problem, "MIPProblem").run();
+    auto mps = MPSGenerator(problem, "MIPProblem", true).run();
     MPSFileWriter::write(mpsFile, mps);
 
     BOOST_CHECK(fs::exists(mpsFile));
@@ -421,7 +418,7 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_BinaryVariable)
     problem.setMinimization();
 
     setUpMPSFile("binary_problem.mps");
-    auto mps = MPSGenerator(problem, "BinaryProblem").run();
+    auto mps = MPSGenerator(problem, "BinaryProblem", true).run();
     MPSFileWriter::write(mpsFile, mps);
 
     BOOST_CHECK(fs::exists(mpsFile));
@@ -450,7 +447,7 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_FreeVariables)
 
     setUpMPSFile("free_var_problem.mps");
 
-    auto mps = MPSGenerator(problem, "FreeVarProblem").run();
+    auto mps = MPSGenerator(problem, "FreeVarProblem", true).run();
     MPSFileWriter::write(mpsFile, mps);
     BOOST_CHECK(fs::exists(mpsFile));
 
@@ -476,7 +473,7 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_FixedVariable)
 
     setUpMPSFile("fixed_var_problem.mps");
 
-    auto mps = MPSGenerator(problem, "FixedVarProblem").run();
+    auto mps = MPSGenerator(problem, "FixedVarProblem", true).run();
     MPSFileWriter::write(mpsFile, mps);
 
     BOOST_CHECK(fs::exists(mpsFile));
@@ -507,7 +504,7 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_EqualityConstraint)
 
     setUpMPSFile("eq_constraint_problem.mps");
 
-    auto mps = MPSGenerator(problem, "EqConstraintProblem").run();
+    auto mps = MPSGenerator(problem, "EqConstraintProblem", true).run();
     MPSFileWriter::write(mpsFile, mps);
 
     BOOST_CHECK(fs::exists(mpsFile));
@@ -535,7 +532,7 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_ObjectiveOffset)
 
     setUpMPSFile("offset_problem.mps");
 
-    auto mps = MPSGenerator(problem, "OffsetProblem").run();
+    auto mps = MPSGenerator(problem, "OffsetProblem", true).run();
     MPSFileWriter::write(mpsFile, mps);
 
     BOOST_CHECK(fs::exists(mpsFile));
@@ -587,7 +584,7 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_InvalidPath)
 
     BOOST_CHECK_THROW(
       {
-          auto mps = MPSGenerator(problem, "InvalidPathProblem").run();
+          auto mps = MPSGenerator(problem, "InvalidPathProblem", true).run();
           MPSFileWriter::write(invalidPath, mps);
       },
       std::runtime_error);
@@ -606,7 +603,7 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_VariableNamesWithForbiddenChars)
 
     setUpMPSFile("invalid_names_problem.mps");
 
-    auto mps = MPSGenerator(problem, "InvalidNamesProblem").run();
+    auto mps = MPSGenerator(problem, "InvalidNamesProblem", true).run();
     MPSFileWriter::write(mpsFile, mps);
 
     BOOST_CHECK(fs::exists(mpsFile));
@@ -634,7 +631,7 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_DuplicateVariableNames)
 
     setUpMPSFile("duplicate_names_problem.mps");
 
-    auto mps = MPSGenerator(problem, "DuplicateNamesProblem").run();
+    auto mps = MPSGenerator(problem, "DuplicateNamesProblem", true).run();
     MPSFileWriter::write(mpsFile, mps);
     BOOST_CHECK(fs::exists(mpsFile));
 
@@ -660,7 +657,7 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_ZeroCoefficients)
 
     setUpMPSFile("zero_coef_problem.mps");
 
-    auto mps = MPSGenerator(problem, "ZeroCoefProblem").run();
+    auto mps = MPSGenerator(problem, "ZeroCoefProblem", true).run();
     MPSFileWriter::write(mpsFile, mps);
 
     BOOST_CHECK(fs::exists(mpsFile));
@@ -680,7 +677,7 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_NegativeIntegerBounds)
 
     setUpMPSFile("neg_int_problem.mps");
 
-    auto mps = MPSGenerator(problem, "NegIntProblem").run();
+    auto mps = MPSGenerator(problem, "NegIntProblem", true).run();
     MPSFileWriter::write(mpsFile, mps);
 
     BOOST_CHECK(fs::exists(mpsFile));
@@ -709,7 +706,7 @@ BOOST_AUTO_TEST_CASE(MPSGenerator_UnboundedIntegerVariable)
 
     setUpMPSFile("unbounded_int_problem.mps");
 
-    auto mps = MPSGenerator(problem, "UnboundedIntProblem").run();
+    auto mps = MPSGenerator(problem, "UnboundedIntProblem", true).run();
     MPSFileWriter::write(mpsFile, mps);
 
     BOOST_CHECK(fs::exists(mpsFile));

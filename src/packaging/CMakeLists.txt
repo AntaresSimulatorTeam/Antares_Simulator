@@ -57,7 +57,6 @@ set(TARGET_LIBS #No alias
 
         # array
         io
-        jit
         AntaresMemory
 
         # date
@@ -83,43 +82,60 @@ set(TARGET_LIBS #No alias
         linear-problem-data-impl
         linear-problem-mpsolver-impl
         modeler-lib
+        workflow
 
         # solver-lib
         args_helper
         checks
         locale
-        yuni-static-uuid
 
         # executable
         antares-solver
 
         # modeler libs
         antlr-interface
+        system-model-base
         antares-study-system-model
         load-modeler-files
-		write-modeler-files
         modeler-optimisation-container
         expressions
         optim-model-filler
+		forbidden-nodes
+        input-error
         yml-system
         yml-model
+		yml-utils
         model-converter
         modeler-parameters
         data-series-csv-importer
         expressions-iterators
-        additional-constraint-rhs-antlr-interface
-        modeler-simulation-table
+		additional-constraint-rhs-antlr-interface
+		simulation-table
+        simu-table-generator
         scenario-builder-antlr
         scenario-group-parser
         yml-optim-config
         enums
         modeler-checks
-	structured-linear-problem
+		structured-linear-problem
+        reserves-parsing-antlr-interface
 )
 
 install(TARGETS ${TARGET_LIBS}
         EXPORT AntaresTargets
         LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        RUNTIME DESTINATION bin
+        INCLUDES DESTINATION include
+)
+
+# parquet_writer: install to bin (not lib) for runtime loading by executables.
+# It is NOT in TARGET_LIBS to avoid installing its .so to lib/.
+# It IS added to the export set here so that result_writer (which depends on it)
+# can correctly resolve the dependency in the generated CMake config.
+install(TARGETS simulation-table-writers
+        EXPORT AntaresTargets
+        LIBRARY DESTINATION bin
         ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
         INCLUDES DESTINATION include

@@ -3,13 +3,14 @@
 
 #ifndef __SOLVER_SIMULATION_SOLVER_HXX__
 #define __SOLVER_SIMULATION_SOLVER_HXX__
+#include <memory>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/date/date.h>
 #include <antares/exception/InitializationError.hpp>
 #include <antares/logs/logs.h>
 #include "antares/concurrency/concurrency.h"
-#include "antares/io/outputs/SimulationTableCsv.h"
+#include "antares/io/outputs/SimulationTable.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/simulation/common-eco-adq.h"
@@ -19,10 +20,19 @@
 #include "antares/solver/simulation/regenerate_timeseries.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
-#include "antares/solver/variable/print.h"
 
 namespace Antares::Solver::Simulation
 {
+
+// Forward declaration: solver.hxx and common-eco-adq.h include each other, so
+// depending on the entry point common-eco-adq.h's own declaration may not yet be
+// visible when the template body below is parsed. Declaring it here makes the
+// dependent call resolvable at the template definition context regardless of
+// include order (needed for the explicit ISimulation<> instantiations).
+void prepareClustersInMustRunMode(Data::Study& study,
+                                  Data::Area::ScratchMap& scratchmap,
+                                  uint year,
+                                  Data::SimulationMode mode);
 
 template<class Impl>
 class yearJob
@@ -119,7 +129,7 @@ public:
         yearRandomNumbers& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
 
         // 1 - Applying random levels for current year
-        auto randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
+        const std::vector<double>& randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
         // 2 - Getting the numpspace and scratchMap associated to the current year
         unsigned numSpace = numspaceManager.getAvailableNumSpace();
@@ -154,19 +164,11 @@ public:
                                              optWriter,
                                              pDurationCollector,
                                              scratchmap);
-        if (!study.parameters.noOutput)
-        {
-            auto& simTable = simulation_->getSimulationTable(numSpace);
-
-            auto buffers = simTable.moveBuffers();
-
-            simulation_->storeYearBuffers(y, std::move(buffers.first), std::move(buffers.second));
-        }
 
         // Log failing weeks
         logFailedWeek(y, study, failedWeekList);
 
-        simulation_->variables.yearEndBuild(state, y, numSpace);
+        simulation_->variables.buildThermalClusterYearEndResults(state, y, numSpace);
 
         // 7 - End of the year, this is the last stade where the variables can retrieve
         // their data for this year.
@@ -232,7 +234,7 @@ inline ISimulation<ImplementationType>::ISimulation(
     pNbMaxPerformedYearsInParallel(0),
     pYearByYear(study.parameters.yearByYear),
     pDurationCollector(duration_collector),
-    pQueueService(study.pQueueService),
+    pQueueService(std::make_shared<Concurrency::ThreadPool>(study.maxNbYearsInParallel)),
     pResultWriter(resultWriter),
     simulationObserver_(simulationObserver)
 {
@@ -272,12 +274,6 @@ void ISimulation<ImplementationType>::run()
 
     logs.info() << "Allocating resources...";
 
-    // Memory usage
-    {
-        Variable::PrintInfosStdCout c;
-        ImplementationType::variables.template provideInformations<Variable::PrintInfosStdCout>(c);
-    }
-
     ImplementationType::setNbPerformedYearsInParallel(pNbMaxPerformedYearsInParallel);
 
     if (settings.tsGeneratorsOnly)
@@ -288,10 +284,6 @@ void ISimulation<ImplementationType>::run()
         logs.info() << " Only the preprocessors are enabled.";
 
         regenerateTimeSeries(study, pResultWriter, pDurationCollector);
-
-        // Destroy the TS Generators if any
-        // It will export the time-series into the output at the same time
-        TSGenerator::DestroyAll(study);
     }
     else
     {
@@ -326,9 +318,6 @@ void ISimulation<ImplementationType>::run()
             pDurationCollector("mc_years")
               << [finalYear, &state, this] { loopThroughYears(0, finalYear, state); };
         }
-        // Destroy the TS Generators if any
-        // It will export the time-series into the output in the same time
-        TSGenerator::DestroyAll(study);
 
         // Post operations
         pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };
@@ -421,9 +410,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // List of parallel years sets
     std::vector<setOfParallelYears> setsOfParallelYears;
 
-    // Number of threads to perform the jobs waiting in the queue
-    pQueueService->maximumThreadCount(pNbMaxPerformedYearsInParallel);
-
     regenerateTimeSeries(study, pResultWriter, pDurationCollector);
     HydroInputsChecker hydroInputsChecker(study);
     logs.info() << " Doing hydro validation";
@@ -465,14 +451,19 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     randomForParallelYears.compute(study, endYear, isYearPerformed, randomHydroGenerator);
 
     // hydro checks
+
     for (uint year = firstYear; year < endYear; ++year)
     {
         if (study.parameters.yearsFilter[year])
         {
-            hydroInputsChecker.Execute(year);
+            uint indexYear = randomForParallelYears.yearNumberToIndex[year];
+            yearRandomNumbers& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
+            const std::vector<double>& randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
+
+            hydroInputsChecker.Execute(year, randomReservoirLevel);
         }
     }
-    hydroInputsChecker.CheckForErrors();
+    hydroInputsChecker.checkForErrors();
 
     NumSpaceManager numspaceManager(pNbMaxPerformedYearsInParallel);
 
@@ -503,14 +494,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
         }
     }
 
-    pQueueService->start();
-
-    pQueueService->wait(Yuni::qseIdle);
-    pQueueService->stop();
-    if (!study.parameters.noOutput)
-    {
-        aggregateAndWriteSimulationTables();
-    }
     results.join();
     pResultWriter.flush();
     // On regarde si au moins une année du lot n'a pas trouvé de solution
@@ -531,55 +514,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Writing annual costs statistics
     pAnnualStatistics.endStandardDeviations();
     pAnnualStatistics.writeToOutput(pResultWriter);
-}
-
-template<class ImplementationType>
-void ISimulation<ImplementationType>::storeYearBuffers(uint year,
-                                                       std::string&& firstBuffer,
-                                                       std::string&& secondBuffer)
-{
-    std::lock_guard lock(buffersMutex_);
-    yearSimulationBuffers_.emplace(year,
-                                   std::pair{std::move(firstBuffer), std::move(secondBuffer)});
-}
-
-template<class ImplementationType>
-void ISimulation<ImplementationType>::aggregateAndWriteSimulationTables()
-{
-    std::lock_guard lock(buffersMutex_);
-    std::string globalFirstBuffer;
-    std::string globalSecondBuffer;
-    // dans l'ordre des années
-    for (uint year = 0; year < study.parameters.nbYears; ++year)
-    {
-        auto it = yearSimulationBuffers_.find(year);
-        if (it != yearSimulationBuffers_.end())
-        {
-            globalFirstBuffer += it->second.first;
-            globalSecondBuffer += it->second.second;
-        }
-    }
-    const auto header = ImplementationType::getSimulationTableHeader() + "\n";
-    if (!globalFirstBuffer.empty())
-    {
-        std::string writerEntry = header + std::move(globalFirstBuffer);
-        pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-1.csv", writerEntry);
-    }
-    if (!globalSecondBuffer.empty())
-    {
-        std::string writerEntry = header + std::move(globalSecondBuffer);
-        pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-2.csv", writerEntry);
-    }
-
-    yearSimulationBuffers_.clear();
-}
-
-template<class ImplementationType>
-OptimisationsSimulationTable& ISimulation<ImplementationType>::getSimulationTable(uint numSpace)
-{
-    // Cette méthode doit être implémentée dans la classe dérivée (Economy)
-    // pour retourner la table spécifique à l'espace numérique
-    return ImplementationType::getSimulationTable(numSpace);
 }
 } // namespace Antares::Solver::Simulation
 

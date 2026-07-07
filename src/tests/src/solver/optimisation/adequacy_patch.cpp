@@ -369,13 +369,14 @@ BOOST_AUTO_TEST_CASE(check_adq_param_wrong_mode)
     auto p = createParams();
     BOOST_CHECK_THROW(p.checkAdqPatchSimulationModeEconomyOnly(
                         Antares::Data::SimulationMode::Adequacy),
-                      Error::IncompatibleSimulationModeForAdqPatch);
+                      Antares::Error::IncompatibleSimulationModeForAdqPatch);
 }
 
 BOOST_AUTO_TEST_CASE(check_adq_param_wrong_hurdle_cost)
 {
     auto p = createParams();
-    BOOST_CHECK_THROW(p.checkAdqPatchIncludeHurdleCost(false), Error::IncompatibleHurdleCostCSR);
+    BOOST_CHECK_THROW(p.checkAdqPatchIncludeHurdleCost(false),
+                      Antares::Error::IncompatibleHurdleCostCSR);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

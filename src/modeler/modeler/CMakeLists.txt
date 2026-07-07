@@ -5,17 +5,18 @@ target_sources(modeler-lib
         Modeler.cpp
         include/antares/solver/modeler/Modeler.h
         include/antares/solver/modeler/ILoader.h
-        include/antares/solver/modeler/IWriter.h
         include/antares/solver/modeler/ModelerData.h
 )
 
 target_link_libraries(modeler-lib
+        PUBLIC
         Antares::modeler-parameters
         Antares::optim-model-filler
         Antares::linear-problem-api
         Antares::structured-linear-problem
         # TODO FIXME don't depend on implementations
         Antares::linear-problem-mpsolver-impl
+        Antares::modeler-optimisation-container
 )
 
 target_include_directories(modeler-lib

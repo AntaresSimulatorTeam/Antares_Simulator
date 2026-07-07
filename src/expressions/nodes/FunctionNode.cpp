@@ -30,6 +30,10 @@ std::string FunctionNodeTypeToString(FunctionNodeType type)
         return "floor";
     case FunctionNodeType::ceil:
         return "ceil";
+    case FunctionNodeType::round:
+        return "round";
+    case FunctionNodeType::abs:
+        return "abs";
     default:
         return "Unknown function";
     }

@@ -18,6 +18,7 @@ set(SRC_Expressions
         visitors/InvalidNode.cpp
         visitors/NodeVisitor.cpp
         visitors/PrintVisitor.cpp
+        visitors/TimeSumUtils.cpp
         visitors/VariabilityVisitor.cpp
 
 
@@ -47,6 +48,7 @@ set(SRC_Expressions
         include/antares/expressions/nodes/TimeIndexNode.h
         include/antares/expressions/nodes/FunctionNode.h
 
+	include/antares/expressions/visitors/TimeSumUtils.h
 
         include/antares/expressions/visitors/AstDOTStyleVisitor.h
         include/antares/expressions/visitors/CloneVisitor.h
@@ -82,6 +84,7 @@ add_library(Antares::expressions ALIAS expressions)
 target_link_libraries(expressions
         PUBLIC
         Boost::headers
+        Antares::system-model-base
         Antares::antares-study-system-model
         Antares::logs
         Antares::vector-utils

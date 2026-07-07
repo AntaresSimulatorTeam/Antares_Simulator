@@ -12,6 +12,7 @@ on:
     - doc/*
     - dependabot/**
     - tests/*
+    - copilot/*
   schedule:
   - cron: '21 2 * * *'
   workflow_call:
@@ -27,6 +28,7 @@ env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
+  RUN_DEVELOP_TESTS: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || inputs.run-tests == 'true' }}
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
   REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
 
@@ -39,7 +41,6 @@ jobs:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       os: windows-2022
-      vcpkgPackages: boost-test
       triplet: x64-windows-release
       # Caching strategy of VCPKG dependencies
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
@@ -48,7 +49,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
 
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         ref: ${{ env.REF }}
 
@@ -75,12 +76,12 @@ jobs:
 
     - name: Restore ccache cache
       id: cache
-      uses: actions/cache/restore@v5
+      uses: actions/cache/restore@v6
       with:
         path: ${{ github.workspace }}/.ccache_windows
         key: ${{ env.os }}-${{ github.ref_name }}
         restore-keys: |
-          ${{ env.os }}-  
+          ${{ env.os }}-
 
     - name: Configure ccache
       run: |
@@ -88,7 +89,7 @@ jobs:
         ccache --set-config=max_size=500M
         ccache --set-config=compression=true
         ccache -p
-        ccache -z            
+        ccache -z
 
     - name: Install VCPKG
       shell: bash
@@ -97,10 +98,10 @@ jobs:
 
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary
-      uses: actions/cache/restore@v5
+      uses: actions/cache/restore@v6
       with:
         path: ${{ github.workspace }}/vcpkg_cache
-        key: vcpkg-cache-windows-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        key: vcpkg-cache-windows-${{ hashFiles('vcpkg.json', '.git/modules/vcpkg/HEAD') }}
         # Allows to restore a cache when deps have only partially changed (like adding a dependency)
         restore-keys: vcpkg-cache-windows-
 
@@ -126,7 +127,7 @@ jobs:
     - name: Configure
       shell: bash
       run: |
-        cmake -B _build -S src \
+        cmake -B _build -S . \
         -DCMAKE_PREFIX_PATH="${{ env.ORTOOLS_DIR }}/install" \
         -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
         -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
@@ -186,7 +187,7 @@ jobs:
 
     - name: Init submodule Antares_Simulator_Tests_NR
       run: |
-        git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests_NR
+        git submodule update --init --depth 1 resources/Antares_Simulator_Tests_NR
 
     - name: Run named mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
@@ -197,17 +198,17 @@ jobs:
         os: ${{ env.os }}
         variant: "named-mps"
 
-    - name: Run fast cucumber
+    - name: Run short cucumber
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
       uses: ./.github/workflows/cucumber-tests
       with:
-        tags: "fast"
+        tags: "@short"
 
-    - name: Run cucumber on modeler
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+    - name: Run medium cucumber
+      if: ${{ env.RUN_DEVELOP_TESTS == 'true' && !cancelled() }}
       uses: ./.github/workflows/cucumber-tests
       with:
-        feature: "features/modeler-features"
+        tags: "@medium"
 
     - name: Run unit and end-to-end tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
@@ -295,12 +296,6 @@ jobs:
         batch-name: short-tests
         os: ${{ env.os }}
 
-    - name: Run cucumber on v9.2 tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/cucumber-tests
-      with:
-        feature: "features/solver-features/tests_for_v9.2.feature"
-
     - name: Run mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
       uses: ./.github/workflows/run-tests
@@ -332,11 +327,11 @@ jobs:
         batch-name: medium-tests
         os: ${{ env.os }}
 
-    - name: Run cucumber on medium-tests
+    - name: Run long cucumber
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
       uses: ./.github/workflows/cucumber-tests
       with:
-        feature: "features/solver-features/medium_tests.feature"
+        tags: "@long"
 
     - name: Run long-tests-1
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
@@ -362,12 +357,6 @@ jobs:
         batch-name: long-tests-3
         os: ${{ env.os }}
 
-    - name: Run cucumber on hybrid studies
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/cucumber-tests
-      with:
-        feature: "features/solver-features/hybrid_studies.feature"
-
     - name: Barrier
       if: ${{ !success() }}
       run: exit 1
@@ -377,19 +366,19 @@ jobs:
       run: |
         cd _build
         FIXED_PATH=${ORTOOLS_DIR//\\//}
-        cp ${FIXED_PATH}/install/bin/*.dll* solver/Release
+        cp ${FIXED_PATH}/install/bin/*.dll* src/solver/Release
 
     - name: Create solver-only archive
       shell: pwsh
       run: |
         cd _build
-        Compress-Archive -Path solver/Release/antares-solver.exe, solver/Release/*.dll -DestinationPath antares-solver_windows.zip -Force
+        Compress-Archive -Path src/solver/Release/antares-solver.exe, src/solver/Release/*.dll -DestinationPath antares-solver_windows.zip -Force
 
     - name: NSIS Installer creation
       shell: bash
       run: |
         rm -rf src/tests/resources/Antares_Simulator_Tests
-        rm -rf src/tests/resources/Antares_Simulator_Tests_NR
+        rm -rf resources/Antares_Simulator_Tests_NR
         cd _build
         cpack -GNSIS
         export NSIS_NAME=$(ls *.exe)
@@ -418,21 +407,21 @@ jobs:
       shell: bash
 
     - name: Update continuous-delivery release
-      if: github.ref == 'refs/heads/develop'
+      if: github.ref == 'refs/heads/develop' && env.IS_RELEASE != 'true'
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        mv _build/rte-antares-*-installer-64bits.exe _build/rte-antares-cd-installer-64bits.exe
-        mv _build/rte-antares-*-installer-64bits.zip _build/rte-antares-cd-installer-64bits.zip
+        mv _build/antares-*-win64.exe _build/antares-cd-win64.exe
+        mv _build/antares-*-win64.zip _build/antares-cd-win64.zip
         gh release upload --clobber continuous-delivery _build/*.zip _build/*.exe
 
     - name: Cache vcpkg binary dir
       if: always()
       id: save-cache-vcpkg-binary
-      uses: actions/cache/save@v5
+      uses: actions/cache/save@v6
       with:
         path: ${{ github.workspace }}/vcpkg_cache
-        key: vcpkg-cache-windows-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        key: vcpkg-cache-windows-${{ hashFiles('vcpkg.json', '.git/modules/vcpkg/HEAD') }}
 
     - name: Display ccache statistics
       run: ccache -s
@@ -451,7 +440,7 @@ jobs:
 
     - name: Save ccache cache
       if: ${{ !cancelled() }}
-      uses: actions/cache/save@v5
+      uses: actions/cache/save@v6
       with:
         path: ${{ github.workspace }}/.ccache_windows
         key: ${{ steps.cache.outputs.cache-primary-key }}

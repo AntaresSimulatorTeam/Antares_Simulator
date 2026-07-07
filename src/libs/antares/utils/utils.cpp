@@ -5,9 +5,13 @@
 
 #include <sstream>
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <antares/logs/logs.h>
 
 using namespace Yuni;
+
+namespace fs = std::filesystem;
 
 namespace Antares
 {
@@ -63,7 +67,7 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
         {
             std::string begin = token.substr(0, pos);
             std::string end = token.substr(pos + 1);
-            pairs.push_back({begin, end});
+            pairs.emplace_back(begin, end);
         }
         else
         {
@@ -78,6 +82,11 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
 
 namespace Utils
 {
+
+bool compareCaseInsensitive(const std::string& str1, const std::string& str2)
+{
+    return boost::algorithm::to_lower_copy(str1) == boost::algorithm::to_lower_copy(str2);
+}
 
 bool isZero(double d)
 {
@@ -195,6 +204,32 @@ void TimeMeasurement::reset()
 {
     start_ = clock::now();
     end_ = start_;
+}
+
+constexpr unsigned maxFolderSameTime = 2000;
+
+bool generatePathWithSuffix(fs::path& outputPath, const std::string& suffix)
+{
+    // suffix can be ".zip" or empty
+    std::string candidate = outputPath.string() + suffix;
+    if (fs::exists(candidate))
+    {
+        unsigned int index = 1;
+        do
+        {
+            ++index;
+            candidate = outputPath.string() + '-' + std::to_string(index) + suffix;
+        } while (fs::exists(candidate) && index < maxFolderSameTime);
+
+        if (index >= maxFolderSameTime)
+        {
+            logs.error() << "Output folder already exists: " << candidate;
+            return false;
+        }
+
+        outputPath += '-' + std::to_string(index) + suffix;
+    }
+    return true;
 }
 
 } // namespace Utils

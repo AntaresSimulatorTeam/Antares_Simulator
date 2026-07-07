@@ -9,6 +9,7 @@
 
 namespace Antares::IO::Inputs::YmlModel
 {
+
 // Define structures
 struct Parameter
 {

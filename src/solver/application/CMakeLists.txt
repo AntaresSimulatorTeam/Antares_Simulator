@@ -18,6 +18,7 @@ add_library(Antares::application ALIAS application)
 target_link_libraries(application
         PUBLIC
         yuni-static-core
+        Antares::concurrency
         Antares::study
         Antares::infoCollection
         solver-lib
@@ -28,7 +29,7 @@ target_link_libraries(application
         Antares::signal-handling
         Antares::resources
         Antares::file-tree-study-loader
-        Antares::modeler-simulation-table
+        Antares::simu-table-generator
 )
 
 target_include_directories(application

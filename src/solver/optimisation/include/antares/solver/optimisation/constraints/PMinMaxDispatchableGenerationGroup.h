@@ -15,6 +15,6 @@ class PMinMaxDispatchableGenerationGroup final: public AbstractStartUpCostsGroup
 {
 public:
     using AbstractStartUpCostsGroup::AbstractStartUpCostsGroup;
-    ~PMinMaxDispatchableGenerationGroup() = default;
+    ~PMinMaxDispatchableGenerationGroup() override = default;
     void BuildConstraints() override;
 };

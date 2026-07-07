@@ -71,7 +71,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_below_810(const fs::path& folder)
     if (!tmpMatrix.loadFromCSVFile(path.string(),
                                    matrixWidth,
                                    HOURS_PER_YEAR,
-                                   Matrix<>::optFixedSize | Matrix<>::optImmediate))
+                                   Matrix<>::optFixedSize))
     {
         return false;
     }
@@ -172,7 +172,7 @@ bool AreaLink::loadTimeSeries(const StudyVersion& version, const fs::path& folde
 void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
     std::string filename = with->id + ".txt";
-    fs::path path = fs::path("ts-numbers") / "ntc" / from->id.to<std::string>() / filename;
+    fs::path path = fs::path("ts-numbers") / "ntc" / from->id / filename;
 
     std::string buffer;
     timeseriesNumbers.saveToBuffer(buffer);
@@ -181,7 +181,7 @@ void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 
 void AreaLink::resetToDefaultValues()
 {
-    parameters.reset(fhlMax, HOURS_PER_YEAR, true);
+    parameters.reset(fhlMax, HOURS_PER_YEAR);
     directCapacities.reset();
     indirectCapacities.reset();
 

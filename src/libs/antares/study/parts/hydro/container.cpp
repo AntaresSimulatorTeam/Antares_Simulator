@@ -3,12 +3,18 @@
 
 #include "antares/study/parts/hydro/container.h"
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <antares/inifile/inifile.h>
+#include <antares/study/area/capacityReservation.h>
+#include <antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h>
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
+#include "antares/study/parts/reserves/reservesParticipationsLoader.h"
 #include "antares/study/study.h"
 
 namespace fs = std::filesystem;
 
+using namespace Yuni;
 #define SEP Yuni::IO::Separator
 
 namespace Antares::Data
@@ -53,17 +59,14 @@ void PartHydro::reset()
     leewayUpperBound = 1.;
     overflowSpilledCostDifference = 1.;
 
-    inflowPattern.reset(1, DAYS_PER_YEAR, true);
+    inflowPattern.reset(1, DAYS_PER_YEAR);
     inflowPattern.fillColumn(0, 1.0);
-    reservoirLevel.reset(3, DAYS_PER_YEAR, true);
-    reservoirLevel.fillColumn(average, 0.5);
-    reservoirLevel.fillColumn(maximum, 1.);
-    waterValues.reset(101, DAYS_PER_YEAR, true);
-    dailyNbHoursAtGenPmax.reset(1, DAYS_PER_YEAR, true);
+    waterValues.reset(101, DAYS_PER_YEAR);
+    dailyNbHoursAtGenPmax.reset(1, DAYS_PER_YEAR);
     dailyNbHoursAtGenPmax.fillColumn(0, 24.);
-    dailyNbHoursAtPumpPmax.reset(1, DAYS_PER_YEAR, true);
+    dailyNbHoursAtPumpPmax.reset(1, DAYS_PER_YEAR);
     dailyNbHoursAtPumpPmax.fillColumn(0, 24.);
-    creditModulation.reset(101, 2, true);
+    creditModulation.reset(101, 2);
     creditModulation.fill(1);
     // reset of the hydro allocation - however we don't have any information
     // about the current area, which should be by default 1.
@@ -98,7 +101,7 @@ static bool loadProperties(Study& study,
     for (; property; property = property->next)
     {
         AreaName id = property->key;
-        id.toLower();
+        boost::to_lower(id);
 
         Area* area = study.areas.find(id);
         if (area)
@@ -133,6 +136,12 @@ bool PartHydro::LoadIniFile(Study& study, const std::filesystem::path& folder)
     if (IniFile::Section* section = ini.find("intra-daily-modulation"))
     {
         ret = loadProperties(study, section->firstProperty, path, &PartHydro::intraDailyModulation)
+              && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("inter-monthly-breakdown"))
+    {
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::intermonthlyBreakdown)
               && ret;
     }
 
@@ -269,15 +278,6 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
                                                             &study.dataBuffer)
                 && ret;
 
-          std::string reservoirId = "reservoir_" + area.id + ".txt";
-          fs::path reservoirPath = capacityPath / reservoirId;
-          ret = area.hydro.reservoirLevel.loadFromCSVFile(reservoirPath.string(),
-                                                          3,
-                                                          DAYS_PER_YEAR,
-                                                          Matrix<>::optFixedSize,
-                                                          &study.dataBuffer)
-                && ret;
-
           std::string waterValueId = "waterValues_" + area.id + ".txt";
           fs::path waterValuePath = capacityPath / waterValueId;
           ret = area.hydro.waterValues.loadFromCSVFile(waterValuePath.string(),
@@ -300,7 +300,7 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
     return ret;
 }
 
-bool PartHydro::checkReservoirLevels(const Study& study)
+bool PartHydro::checkInflowPatternAndCredModul(const Study& study)
 {
     bool ret = true;
 
@@ -314,21 +314,6 @@ bool PartHydro::checkReservoirLevels(const Study& study)
             {
                 logs.error() << areaName << ": invalid inflow value";
                 errorInflow = true;
-                ret = false;
-            }
-        }
-        bool errorLevels = false;
-        auto& colMin = area->hydro.reservoirLevel[minimum];
-        auto& colAvg = area->hydro.reservoirLevel[average];
-        auto& colMax = area->hydro.reservoirLevel[maximum];
-        for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)
-        {
-            if (!errorLevels
-                && (colMin[day] < 0 || colAvg[day] < 0 || colMin[day] > colMax[day]
-                    || colAvg[day] > 100 || colMax[day] > 100))
-            {
-                logs.error() << areaName << ": invalid reservoir level value";
-                errorLevels = true;
                 ret = false;
             }
         }
@@ -429,7 +414,7 @@ bool PartHydro::checkProperties(Study& study)
 
 bool PartHydro::validate(Study& study)
 {
-    bool ret = checkReservoirLevels(study);
+    bool ret = checkInflowPatternAndCredModul(study);
     return checkProperties(study) && ret;
 }
 
@@ -582,10 +567,7 @@ bool PartHydro::SaveToFolder(const AreaList& areas,
           buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
                          << "inflowPattern_" << area.id << ".txt";
           ret = area.hydro.inflowPattern.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
-          // reservoir
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "reservoir_"
-                         << area.id << ".txt";
-          ret = area.hydro.reservoirLevel.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
+          // water values
           buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "waterValues_"
                          << area.id << ".txt";
           ret = area.hydro.waterValues.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
@@ -599,29 +581,11 @@ bool PartHydro::SaveToFolder(const AreaList& areas,
 void PartHydro::copyFrom(const PartHydro& rhs)
 {
     // credit modulations
-    {
-        creditModulation = rhs.creditModulation;
-        creditModulation.unloadFromMemory();
-        rhs.creditModulation.unloadFromMemory();
-    }
+    creditModulation = rhs.creditModulation;
     // inflow pattern
-    {
-        inflowPattern = rhs.inflowPattern;
-        inflowPattern.unloadFromMemory();
-        rhs.inflowPattern.unloadFromMemory();
-    }
-    // reservoir levels
-    {
-        reservoirLevel = rhs.reservoirLevel;
-        reservoirLevel.unloadFromMemory();
-        rhs.reservoirLevel.unloadFromMemory();
-    }
+    inflowPattern = rhs.inflowPattern;
     // water values
-    {
-        waterValues = rhs.waterValues;
-        waterValues.unloadFromMemory();
-        rhs.waterValues.unloadFromMemory();
-    }
+    waterValues = rhs.waterValues;
     // values
     {
         interDailyBreakdown = rhs.interDailyBreakdown;
@@ -642,18 +606,10 @@ void PartHydro::copyFrom(const PartHydro& rhs)
     }
 
     // max daily gen
-    {
-        dailyNbHoursAtGenPmax = rhs.dailyNbHoursAtGenPmax;
-        dailyNbHoursAtGenPmax.unloadFromMemory();
-        rhs.dailyNbHoursAtGenPmax.unloadFromMemory();
-    }
+    dailyNbHoursAtGenPmax = rhs.dailyNbHoursAtGenPmax;
 
     // max daily pump
-    {
-        dailyNbHoursAtPumpPmax = rhs.dailyNbHoursAtPumpPmax;
-        dailyNbHoursAtPumpPmax.unloadFromMemory();
-        rhs.dailyNbHoursAtPumpPmax.unloadFromMemory();
-    }
+    dailyNbHoursAtPumpPmax = rhs.dailyNbHoursAtPumpPmax;
 }
 
 bool PartHydro::LoadDailyMaxEnergy(const fs::path& folder, const std::string& areaid)
@@ -705,6 +661,45 @@ bool PartHydro::CheckDailyMaxEnergy(const AnyString& areaName)
     }
 
     return ret;
+}
+
+bool PartHydro::loadReserveParticipations(Area& area, const std::filesystem::path& file)
+{
+    HydroReserveLoader loader;
+    return loader.load(area, file);
+}
+
+uint PartHydro::reserveParticipationsCount() const
+{
+    return reserveParticipationContainer
+             ? reserveParticipationContainer.value().reserveParticipationsCount()
+             : 0;
+}
+
+std::optional<ReserveID> PartHydro::reserveParticipationAt(const Area* area,
+                                                           unsigned int index) const
+{
+    int globalReserveParticipationIdx = 0;
+
+    for (const auto& reserveID:
+         area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+    {
+        if (reserveParticipationContainer.value().isParticipatingInReserve(reserveID))
+        {
+            if (static_cast<unsigned int>(globalReserveParticipationIdx) == index)
+            {
+                return reserveID;
+            }
+            globalReserveParticipationIdx++;
+        }
+    }
+    return std::nullopt;
+}
+
+uint PartHydro::count() const
+{
+    // Retournez 1 si le stockage long terme est activé, 0 sinon
+    return series->TScount() ? 1 : 0;
 }
 
 double getWaterValue(const double& level /* format : in % of reservoir capacity */,

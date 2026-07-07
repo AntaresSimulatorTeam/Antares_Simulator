@@ -1,3 +1,6 @@
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/solver/hydro/management/HydroErrorsCollector.h"
 
 #include <ranges>
@@ -10,7 +13,7 @@
 namespace Antares
 {
 
-void HydroErrorsCollector::CheckForErrors() const
+void HydroErrorsCollector::checkForErrors() const
 {
     if (!areasErrorMap_.empty())
     {

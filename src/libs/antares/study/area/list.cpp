@@ -3,35 +3,241 @@
 
 #include <cassert>
 #include <fstream>
+#include <ranges>
+#include <string>
+#include <yaml-cpp/yaml.h>
 
-#include <yuni/io/file.h>
+#include <boost/algorithm/string/trim.hpp>
+
+#include <yuni/core/string.h>
 
 #include <antares/inifile/inifile.h>
+#include <antares/io/file.h>
 #include <antares/logs/logs.h>
+#include <antares/study/area/capacityReservation.h>
 #include <antares/study/area/scratchpad.h>
-#include "antares/antares/antares.h"
 #include "antares/array/matrix.h"
-#include "antares/study//study.h"
 #include "antares/study/area/area.h"
+#include "antares/study/area/forTestsOnlyList.h"
 #include "antares/study/parts/load/prepro.h"
 #include "antares/study/parts/parts.h"
+#include "antares/study/study.h"
 #include "antares/utils/utils.h"
 
 #define SEP IO::Separator
 
 using namespace Yuni;
-
 namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
 namespace // anonymous
 {
+static void toLower(std::string& str)
+{
+    for (char& c: str)
+    {
+        c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    }
+}
+
+template<typename T>
+bool tryParseYamlField(const YAML::Node& node, T& value, const std::string& warningMsg)
+{
+    try
+    {
+        value = node.as<T>();
+        return true;
+    }
+    catch (const YAML::Exception&)
+    {
+        logs.warning() << warningMsg;
+        return false;
+    }
+}
+
+bool readReservesAreaParameters(Area& area, const YAML::Node& params)
+{
+    bool ret = true;
+    for (const auto& param: params)
+    {
+        std::string key = param.first.as<std::string>();
+        toLower(key);
+
+        if (key == "energy-activation-ratio-up")
+        {
+            if (!tryParseYamlField(
+                  param.second,
+                  area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.up,
+                  area.name + " : invalid maximum energy activation ratio for UP reserves"))
+            {
+                ret = false;
+            }
+        }
+        else if (key == "energy-activation-ratio-down")
+        {
+            if (!tryParseYamlField(
+                  param.second,
+                  area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.down,
+                  area.name + " : invalid maximum energy activation ratio for DOWN reserves"))
+            {
+                ret = false;
+            }
+        }
+        else if (key == "reference-activation-duration-up")
+        {
+            if (!tryParseYamlField(
+                  param.second,
+                  area.allCapacityReservations.value().referenceGlobalActivationDuration.up,
+                  area.name + " : invalid reference energy activation duration for UP reserves"))
+            {
+                ret = false;
+            }
+        }
+        else if (key == "reference-activation-duration-down")
+        {
+            if (!tryParseYamlField(
+                  param.second,
+                  area.allCapacityReservations.value().referenceGlobalActivationDuration.down,
+                  area.name + " : invalid reference energy activation duration for DOWN reserves"))
+            {
+                ret = false;
+            }
+        }
+        else
+        {
+            logs.warning() << area.name << " : invalid key " << key
+                           << " inside global reserve parameters";
+            ret = false;
+        }
+    }
+    return ret;
+}
+
+bool readReserveParameters(const fs::path& folderInput, Area& area, const YAML::Node& reserveNode)
+{
+    bool ret = true;
+
+    std::string reserveName;
+    if (!tryParseYamlField(reserveNode["name"],
+                           reserveName,
+                           area.name + " : reserve missing required 'name' field"))
+    {
+        return false;
+    }
+
+    ReserveID reserveId = transformNameIntoID(reserveName);
+    if (area.allCapacityReservations.value().contains(reserveId))
+    {
+        logs.error() << area.name << " : reserve name already exists for reserve " << reserveName;
+        return false;
+    }
+
+    CapacityReservation capacityReservation;
+    capacityReservation.setName(reserveName);
+
+    for (const auto& entry: reserveNode)
+    {
+        std::string key = entry.first.as<std::string>();
+        toLower(key);
+
+        if (key == "name")
+        {
+            continue;
+        }
+        if (key == "failure-cost")
+        {
+            if (!tryParseYamlField(entry.second,
+                                   capacityReservation.unsuppliedCost,
+                                   area.name + " : invalid failure cost for reserve "
+                                     + reserveName))
+            {
+                ret = false;
+            }
+        }
+        else if (key == "spillage-cost")
+        {
+            if (!tryParseYamlField(entry.second,
+                                   capacityReservation.spillageCost,
+                                   area.name + " : invalid spillage cost for reserve "
+                                     + reserveName))
+            {
+                ret = false;
+            }
+        }
+        else if (key == "power-activation-ratio")
+        {
+            if (!tryParseYamlField(entry.second,
+                                   capacityReservation.powerActivationRatio,
+                                   area.name + " : invalid maximum activation ratio for reserve "
+                                     + reserveName))
+            {
+                ret = false;
+            }
+        }
+        else if (key == "energy-activation-ratio")
+        {
+            if (!tryParseYamlField(entry.second,
+                                   capacityReservation.energyActivationRatio,
+                                   area.name + " : invalid energy activation ratio for reserve "
+                                     + reserveName))
+            {
+                ret = false;
+            }
+        }
+        else if (key == "reference-activation-duration")
+        {
+            if (!tryParseYamlField(entry.second,
+                                   capacityReservation.referenceActivationDuration,
+                                   area.name
+                                     + " : invalid reference activation duration for reserve "
+                                     + reserveName))
+            {
+                ret = false;
+            }
+        }
+        else if (key == "type")
+        {
+            std::string value;
+            if (!tryParseYamlField(entry.second,
+                                   value,
+                                   area.name + " : invalid type for reserve " + reserveName))
+            {
+                ret = false;
+            }
+            else if (value == "up")
+            {
+                capacityReservation.type = ReserveType::UP;
+            }
+            else if (value == "down")
+            {
+                capacityReservation.type = ReserveType::DOWN;
+            }
+            else
+            {
+                logs.warning() << area.name << " : invalid type for reserve " << reserveName;
+                ret = false;
+            }
+        }
+        else
+        {
+            logs.warning() << area.name << " : invalid key " << key
+                           << " inside reserve parameters for " << reserveName;
+            ret = false;
+        }
+    }
+    fs::path filePath = folderInput / "reserves" / area.id / (capacityReservation.id() + ".txt");
+    capacityReservation.loadNeedFromFile(filePath);
+    area.allCapacityReservations.value().areaCapacityReservations.emplace(capacityReservation.id(),
+                                                                          capacityReservation);
+    return ret;
+}
+
 static bool AreaListLoadThermalDataFromFile(AreaList& list, const fs::path& filename)
 {
     // Reset to 0
     list.each(
-      [](Data::Area& area)
+      [](Area& area)
       {
           area.thermal.unsuppliedEnergyCost = 0.;
           area.thermal.spilledEnergyCost = 0.;
@@ -158,49 +364,6 @@ bool AreaList::empty() const
     return areas.empty();
 }
 
-AreaLink* AreaListAddLink(AreaList* l, const char area[], const char with[], bool warning)
-{
-    // Asserts
-    assert(l);
-    assert(area);
-    assert(with);
-
-    if (!l->empty())
-    {
-        logs.debug() << "    . " << area << " -> " << with;
-
-        AreaName givenName = area;
-        AreaName name = transformNameIntoID(givenName);
-        Area* a = AreaListLFind(l, name.c_str());
-        if (a)
-        {
-            givenName = with;
-            name.clear();
-            name = transformNameIntoID(givenName);
-            Area* b = l->find(name);
-            if (b && !a->findExistingLinkWith(*b))
-            {
-                return AreaAddLinkBetweenAreas(a, b, warning);
-            }
-        }
-    }
-    return nullptr;
-}
-
-AreaLink* AreaList::findLink(const AreaName& area, const AreaName& with)
-{
-    auto i = areas.find(area);
-    if (i != areas.end())
-    {
-        auto j = areas.find(with);
-        if (j != areas.end())
-        {
-            return (*(i->second)).findExistingLinkWith(*(j->second));
-        }
-    }
-    return nullptr;
-}
-
 const AreaLink* AreaList::findLink(const AreaName& area, const AreaName& with) const
 {
     auto i = areas.find(area);
@@ -225,7 +388,7 @@ void AreaList::rebuildIndexes()
     auto end = areas.end();
     for (auto i = areas.begin(); i != end; ++i, ++indx)
     {
-        Area* area = i->second;
+        Area* area = i->second.get();
         byIndex[indx] = area;
         area->index = indx;
     }
@@ -241,7 +404,7 @@ Area* AreaList::add(Area* a)
         [[maybe_unused]] unsigned count = (uint)areas.size(); // used for assert
 
         // Adding the area in the list
-        areas[a->id] = a;
+        areas[a->id] = std::unique_ptr<Area>(a);
         rebuildIndexes();
 
         assert(areas.size() == (count + 1) and "Invalid count of areas in the map");
@@ -262,6 +425,16 @@ Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyStrin
 {
     if (!name || !lname)
     {
+        if (name.empty())
+        {
+            logs.warning() << "ignoring invalid area name: `" << name;
+        }
+        return nullptr;
+    }
+
+    if (CheckForbiddenCharacterInAreaName(name))
+    {
+        logs.error() << "Invalid area name: `" << name << "` contains forbidden character `*`";
         return nullptr;
     }
     // Look up
@@ -299,36 +472,20 @@ bool AreaList::loadListFromFile(const fs::path& filename)
 
     // Initialization of the strings
     AreaName name;
-    AreaName lname;
     // Each lines in the file
     std::string buffer;
-    uint line = 0;
     while (std::getline(file, buffer))
     {
-        ++line;
         // The area name
         name = buffer;
-        name.trim(" \t\n\r");
+        boost::trim(name);
         if (name.empty())
         {
             continue;
         }
 
-        lname.clear();
-        lname = transformNameIntoID(name);
-        if (lname.empty())
-        {
-            logs.warning() << "ignoring invalid area name: `" << name << "`, " << filename
-                           << ": line " << line;
-            continue;
-        }
-        if (CheckForbiddenCharacterInAreaName(name))
-        {
-            logs.error() << "character '*' is forbidden in area name: `" << name << "`";
-            continue;
-        }
         // Add the area in the list
-        AreaListAddFromNames(*this, name, lname);
+        addAreaToListOfAreas(*this, name);
     }
 
     switch (areas.size())
@@ -345,10 +502,10 @@ bool AreaList::loadListFromFile(const fs::path& filename)
     return true;
 }
 
-void AreaList::saveLinkListToBuffer(Yuni::Clob& buffer) const
+void AreaList::saveLinkListToBuffer(std::ostream& buffer) const
 {
     each(
-      [&buffer](const Data::Area& area)
+      [&buffer](const Area& area)
       {
           buffer << area.id << '\n';
           auto end = area.links.end();
@@ -366,32 +523,31 @@ static void readAdqPatchMode(Study& study, Area& area)
         return;
     }
 
-    fs::path adqPath = study.folderInput / "areas" / area.id.to<std::string>()
-                       / "adequacy_patch.ini";
+    fs::path adqPath = study.folderInput / "areas" / area.id / "adequacy_patch.ini";
     IniFile ini;
     if (ini.open(adqPath))
     {
         auto* section = ini.find("adequacy-patch");
         for (auto* p = section->firstProperty; p; p = p->next)
         {
-            CString<30, false> tmp;
-            tmp = p->key;
-            tmp.toLower();
-            if (tmp == "adequacy-patch-mode")
+            CString<30, false> key;
+            key = p->key;
+            key.toLower();
+            if (key == "adequacy-patch-mode")
             {
                 auto value = (p->value).toLower();
 
                 if (value == "virtual")
                 {
-                    area.adequacyPatchMode = Data::AdequacyPatch::virtualArea;
+                    area.adequacyPatchMode = AdequacyPatch::virtualArea;
                 }
                 else if (value == "inside")
                 {
-                    area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaInsideAdqPatch;
+                    area.adequacyPatchMode = AdequacyPatch::physicalAreaInsideAdqPatch;
                 }
                 else
                 {
-                    area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaOutsideAdqPatch;
+                    area.adequacyPatchMode = AdequacyPatch::physicalAreaOutsideAdqPatch;
                 }
             }
         }
@@ -438,8 +594,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     const auto studyVersion = study.header.version;
 
     // DSM, Reserves, D-1
-    fs::path reservesPath = (study.folderInput / "reserves" / area.id.to<std::string>())
-                              .replace_extension("txt");
+    fs::path reservesPath = (study.folderInput / "reserves" / area.id).replace_extension("txt");
     ret = area.reserves.loadFromCSVFile(reservesPath.string(),
                                         fhrMax,
                                         HOURS_PER_YEAR,
@@ -471,7 +626,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
           && ret;
 
     // Check misc gen
-    buffer.clear() << "Misc Gen: `" << area.id << '`';
+    buffer = "Misc Gen: `" + area.id + '`';
     ret = checkMatrixPositive(area.miscGen, buffer, fhhPSP) && ret;
 
     // Links
@@ -485,7 +640,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         if (area.load.prepro) // Prepro
         {
-            fs::path loadPath = study.folderInput / "load" / "prepro" / area.id.to<std::string>();
+            fs::path loadPath = study.folderInput / "load" / "prepro" / area.id;
             ret = area.load.prepro->loadFromFolder(loadPath) && ret;
         }
         if (!area.load.prepro) // Series
@@ -497,11 +652,17 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         }
     }
 
+    // Reserves
+    if (study.parameters.include.reserves)
+    {
+        ret = accessForTests::loadReservesParameters(study.folderInput, area) && ret;
+    }
+
     // Solar
     {
         if (area.solar.prepro) // Prepro
         {
-            fs::path solarPath = study.folderInput / "solar" / "prepro" / area.id.to<std::string>();
+            fs::path solarPath = study.folderInput / "solar" / "prepro" / area.id;
             ret = area.solar.prepro->loadFromFolder(solarPath) && ret;
         }
         if (!area.solar.prepro) // Series
@@ -538,9 +699,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
         case Parameters::Compatibility::HydroPmax::Daily:
         {
-            HydroMaxTimeSeriesReader reader(area.hydro,
-                                            area.id.to<std::string>(),
-                                            area.name.to<std::string>());
+            HydroMaxTimeSeriesReader reader(area.hydro, area.id, area.name);
             ret = reader.read(pathHydro.string()) && ret;
             break;
         }
@@ -554,16 +713,31 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
               "Value not supported for study.parameters.compatibility.hydroPmax");
         }
 
+        RuleCurvesLoaderService ruleCurvesLoaderService(area.hydro.series->ruleCurves);
+
+        ret = ruleCurvesLoaderService.LoadFromFolder(area.id,
+                                                     pathHydro,
+                                                     study.parameters.compatibility.hydroRuleCurves)
+              && ret;
+
         area.hydro.series->resizeTSinDeratedMode(study.parameters.derated,
                                                  studyVersion,
                                                  study.parameters.compatibility.hydroPmax);
+
+        if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
+            && study.parameters.include.reserves)
+        {
+            fs::path reservesHydroPath = study.folderInput / "hydro" / "common" / area.id
+                                         / "reserve-participations.yml";
+            area.hydro.loadReserveParticipations(area, reservesHydroPath);
+        }
     }
 
     // Wind
     {
         if (area.wind.prepro) // Prepro
         {
-            fs::path windPath = study.folderInput / "wind" / "prepro" / area.id.to<std::string>();
+            fs::path windPath = study.folderInput / "wind" / "prepro" / area.id;
             ret = area.wind.prepro->loadFromFolder(windPath) && ret;
         }
         if (!area.wind.prepro) // Series
@@ -588,16 +762,30 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             area.thermal.list.enableMustrunForEveryone();
         }
+        if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
+            && study.parameters.include.reserves)
+        {
+            fs::path reservesThermal = study.folderInput / "thermal" / "clusters" / area.id
+                                       / "reserve-participations.yml";
+            area.thermal.list.loadReserveParticipations(area, reservesThermal);
+        }
     }
 
     // Short term storage
     if (studyVersion >= StudyVersion(8, 6))
     {
-        fs::path seriesPath = study.folderInput / "st-storage" / "series"
-                              / area.id.to<std::string>();
+        fs::path seriesPath = study.folderInput / "st-storage" / "series" / area.id;
 
         ret = area.shortTermStorage.loadSeriesFromFolder(seriesPath, studyVersion) && ret;
         ret = area.shortTermStorage.validate(studyVersion) && ret;
+
+        if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
+            && study.parameters.include.reserves)
+        {
+            fs::path reservesFilePath = study.folderInput / "st-storage" / "clusters" / area.id
+                                        / "reserve-participations.yml";
+            area.shortTermStorage.loadReserveParticipations(area, reservesFilePath);
+        }
     }
 
     // Renewable cluster list
@@ -611,8 +799,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     readAdqPatchMode(study, area);
 
     // Nodal Optimization
-    fs::path nodalPath = study.folderInput / "areas" / area.id.to<std::string>()
-                         / "optimization.ini";
+    fs::path nodalPath = study.folderInput / "areas" / area.id / "optimization.ini";
 
     IniFile ini;
     if (!ini.open(nodalPath))
@@ -626,10 +813,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
           for (auto* p = section.firstProperty; p; p = p->next)
           {
               bool value = p->value.to<bool>();
-              CString<30, false> tmp;
-              tmp = p->key;
-              tmp.toLower();
-              if (tmp == "non-dispatchable-power")
+              CString<30, false> key;
+              key = p->key;
+              key.toLower();
+              if (key == "non-dispatchable-power")
               {
                   if (value)
                   {
@@ -637,7 +824,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                   }
                   continue;
               }
-              if (tmp == "dispatchable-hydro-power")
+              if (key == "dispatchable-hydro-power")
               {
                   if (value)
                   {
@@ -645,7 +832,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                   }
                   continue;
               }
-              if (tmp == "other-dispatchable-power")
+              if (key == "other-dispatchable-power")
               {
                   if (value)
                   {
@@ -653,17 +840,17 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                   }
                   continue;
               }
-              if (tmp == "filter-synthesis")
+              if (key == "filter-synthesis")
               {
                   area.filterSynthesis = stringIntoDatePrecision(p->value);
                   continue;
               }
-              if (tmp == "filter-year-by-year")
+              if (key == "filter-year-by-year")
               {
                   area.filterYearByYear = stringIntoDatePrecision(p->value);
                   continue;
               }
-              if (tmp == "spread-unsupplied-energy-cost")
+              if (key == "spread-unsupplied-energy-cost")
               {
                   if (!p->value.to<double>(area.spreadUnsuppliedEnergyCost))
                   {
@@ -672,7 +859,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                   }
                   continue;
               }
-              if (tmp == "spread-spilled-energy-cost")
+              if (key == "spread-spilled-energy-cost")
               {
                   if (!p->value.to<double>(area.spreadSpilledEnergyCost))
                   {
@@ -720,7 +907,7 @@ void AreaList::ensureDataIsInitialized(Parameters& params)
 bool AreaList::loadFromFolder(const StudyLoadOptions& options)
 {
     bool ret = true;
-    Clob buffer;
+    std::string buffer;
     auto studyVersion = pStudy.header.version;
 
     // Load the list of all available areas
@@ -751,8 +938,8 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         for (auto i = areas.begin(); i != end; ++i)
         {
             Area& area = *(i->second);
-            fs::path areaPath = thermalPath / "clusters" / area.id.to<std::string>();
-            ret = area.thermal.list.loadFromFolder(pStudy, areaPath, &area) && ret;
+            fs::path areaPath = thermalPath / "clusters" / area.id;
+            ret = area.thermal.list.loadFromFolder(areaPath, &area) && ret;
             ret = area.thermal.list.validateClusters(pStudy.parameters) && ret;
         }
     }
@@ -796,7 +983,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         for (auto i = areas.begin(); i != end; ++i)
         {
             Area& area = *(i->second);
-            fs::path areaPath = renewClusterPath / area.id.to<std::string>();
+            fs::path areaPath = renewClusterPath / area.id;
             ret = area.renewable.list.loadFromFolder(areaPath, &area) && ret;
             ret = area.renewable.list.validateClusters() && ret;
         }
@@ -808,7 +995,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     // Load all nodes
     uint indx = 0;
     each(
-      [&options, &ret, &buffer, &indx, this](Data::Area& area)
+      [&options, &ret, &buffer, &indx, this](Area& area)
       {
           // Progression
           options.logMessage.clear()
@@ -827,27 +1014,27 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
 Area* AreaList::find(const AreaName& id)
 {
     auto i = this->areas.find(id);
-    return (i != this->areas.end()) ? i->second : nullptr;
+    return (i != this->areas.end()) ? i->second.get() : nullptr;
 }
 
 const Area* AreaList::find(const AreaName& id) const
 {
     auto i = this->areas.find(id);
-    return (i != this->areas.end()) ? i->second : nullptr;
+    return (i != this->areas.end()) ? i->second.get() : nullptr;
 }
 
 Area* AreaList::findFromName(const AreaName& name)
 {
     AreaName id = transformNameIntoID(name);
     auto i = this->areas.find(id);
-    return (i != this->areas.end()) ? i->second : nullptr;
+    return (i != this->areas.end()) ? i->second.get() : nullptr;
 }
 
 const Area* AreaList::findFromName(const AreaName& name) const
 {
     AreaName id = transformNameIntoID(name);
     auto i = this->areas.find(id);
-    return (i != this->areas.end()) ? i->second : nullptr;
+    return (i != this->areas.end()) ? i->second.get() : nullptr;
 }
 
 Area* AreaListLFind(AreaList* l, const char lname[])
@@ -855,7 +1042,7 @@ Area* AreaListLFind(AreaList* l, const char lname[])
     if (l && !l->areas.empty() && lname)
     {
         auto i = l->areas.find(AreaName(lname));
-        return (i != l->areas.end()) ? i->second : nullptr;
+        return (i != l->areas.end()) ? i->second.get() : nullptr;
     }
     return nullptr;
 }
@@ -867,9 +1054,9 @@ Area* AreaListFindPtr(AreaList* l, const Area* ptr)
         auto end = l->areas.end();
         for (auto i = l->areas.begin(); i != end; ++i)
         {
-            if (ptr == i->second)
+            if (ptr == i->second.get())
             {
-                return i->second;
+                return i->second.get();
             }
         }
     }
@@ -882,11 +1069,11 @@ void AreaListEnsureDataLoadPrepro(AreaList* l)
     assert(l);
 
     l->each(
-      [](Data::Area& area)
+      [](Area& area)
       {
           if (!area.load.prepro)
           {
-              area.load.prepro = std::make_unique<Antares::Data::Load::Prepro>();
+              area.load.prepro = std::make_unique<Load::Prepro>();
           }
       });
 }
@@ -897,11 +1084,11 @@ void AreaListEnsureDataSolarPrepro(AreaList* l)
     assert(l);
 
     l->each(
-      [](Data::Area& area)
+      [](Area& area)
       {
           if (!area.solar.prepro)
           {
-              area.solar.prepro = std::make_unique<Antares::Data::Solar::Prepro>();
+              area.solar.prepro = std::make_unique<Solar::Prepro>();
           }
       });
 }
@@ -912,11 +1099,11 @@ void AreaListEnsureDataWindPrepro(AreaList* l)
     assert(l);
 
     l->each(
-      [](Data::Area& area)
+      [](Area& area)
       {
           if (!area.wind.prepro)
           {
-              area.wind.prepro = std::make_unique<Antares::Data::Wind::Prepro>();
+              area.wind.prepro = std::make_unique<Wind::Prepro>();
           }
       });
 }
@@ -927,7 +1114,7 @@ void AreaListEnsureDataHydroTimeSeries(AreaList* l)
     assert(l);
 
     l->each(
-      [](Data::Area& area)
+      [](Area& area)
       {
           if (!area.hydro.series)
           {
@@ -942,7 +1129,7 @@ void AreaListEnsureDataHydroPrepro(AreaList* l)
     assert(l);
 
     l->each(
-      [](Data::Area& area)
+      [](Area& area)
       {
           if (!area.hydro.prepro)
           {
@@ -953,13 +1140,13 @@ void AreaListEnsureDataHydroPrepro(AreaList* l)
 
 void AreaListEnsureDataThermalPrepro(AreaList* l)
 {
-    l->each([](Data::Area& area) { area.thermal.list.ensureDataPrepro(); });
+    l->each([](Area& area) { area.thermal.list.ensureDataPrepro(); });
 }
 
 uint AreaList::areaLinkCount() const
 {
     uint ret = 0;
-    each([&ret](const Data::Area& area) { ret += (uint)area.links.size(); });
+    each([&ret](const Area& area) { ret += (uint)area.links.size(); });
     return ret;
 }
 
@@ -967,17 +1154,17 @@ void AreaList::resizeAllTimeseriesNumbers(uint n)
 {
     // Ask to resize the matrices dedicated to the sampled timeseries numbers
     // for each area
-    each([n](Data::Area& area) { area.resizeAllTimeseriesNumbers(n); });
+    each([n](Area& area) { area.resizeAllTimeseriesNumbers(n); });
 }
 
-AreaLink* AreaList::findLinkFromINIKey(const AnyString& key)
+const AreaLink* AreaList::findLinkFromINIKey(const AnyString& key) const
 {
     if (key.empty())
     {
         return nullptr;
     }
     auto offset = key.find('%');
-    if (offset == AreaName::npos || (0 == offset) || (offset == key.size() - 1))
+    if (offset == AnyString::npos || (0 == offset) || (offset == key.size() - 1))
     {
         return nullptr;
     }
@@ -994,7 +1181,7 @@ ThermalCluster* AreaList::findClusterFromINIKey(const AnyString& key)
         return nullptr;
     }
     auto offset = key.find('.');
-    if (offset == AreaName::npos || (0 == offset) || (offset == key.size() - 1))
+    if (offset == AnyString::npos || (0 == offset) || (offset == key.size() - 1))
     {
         return nullptr;
     }
@@ -1025,5 +1212,100 @@ Area::ScratchMap AreaList::buildScratchMap(uint numspace)
     each([&scratchmap, &numspace](Area& a) { scratchmap.try_emplace(&a, a.scratchpad[numspace]); });
     return scratchmap;
 }
+
+namespace accessForTests
+{
+void validateCapacityReservations(const Area& area)
+{
+    if (area.allCapacityReservations)
+    {
+        errorIfNegativeValue("maxGlobalEnergyActivationRatio up",
+                             area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.up,
+                             area.name);
+        errorIfNegativeValue(
+          "maxGlobalEnergyActivationRatio down",
+          area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.down,
+          area.name);
+        errorIfNegativeValue(
+          "referenceGlobalActivationDuration up",
+          area.allCapacityReservations.value().referenceGlobalActivationDuration.up,
+          area.name);
+        errorIfNegativeValue(
+          "referenceGlobalActivationDuration down",
+          area.allCapacityReservations.value().referenceGlobalActivationDuration.down,
+          area.name);
+        for (const auto& [resID, capacityRes]:
+             area.allCapacityReservations.value().areaCapacityReservations)
+        {
+            errorIfNegativeValue("energyActivationRatio",
+                                 capacityRes.energyActivationRatio,
+                                 area.name,
+                                 std::nullopt,
+                                 resID);
+            errorIfNegativeValue("powerActivationRatio",
+                                 capacityRes.powerActivationRatio,
+                                 area.name,
+                                 std::nullopt,
+                                 resID);
+            errorIfNegativeValue("referenceActivationDuration",
+                                 capacityRes.referenceActivationDuration,
+                                 area.name,
+                                 std::nullopt,
+                                 resID);
+        }
+    }
+}
+
+bool loadReservesParameters(fs::path& folderInput, Area& area)
+{
+    bool ret = true;
+    fs::path reservesFile = folderInput / "reserves" / area.id / "reserves.yml";
+    area.allCapacityReservations.emplace();
+
+    if (!fs::exists(reservesFile))
+    {
+        logs.info() << "No reserves file found for area " << area.name;
+        return ret;
+    }
+
+    std::string content;
+    try
+    {
+        content = IO::readFile(reservesFile);
+    }
+    catch (const std::exception& e)
+    {
+        logs.error() << "Failed to read reserves file: " << reservesFile << " - " << e.what();
+        return false;
+    }
+
+    YAML::Node root;
+    try
+    {
+        root = YAML::Load(content);
+    }
+    catch (const YAML::Exception& e)
+    {
+        logs.error() << "Invalid reserves config : " << reservesFile << " " << e.what();
+        return false;
+    }
+
+    if (root["global-parameters"])
+    {
+        ret = readReservesAreaParameters(area, root["global-parameters"]) && ret;
+    }
+
+    if (root["reserves"])
+    {
+        for (const auto& reserveNode: root["reserves"])
+        {
+            ret = readReserveParameters(folderInput, area, reserveNode) && ret;
+        }
+    }
+
+    validateCapacityReservations(area);
+    return ret;
+}
+} // namespace accessForTests
 
 } // namespace Antares::Data

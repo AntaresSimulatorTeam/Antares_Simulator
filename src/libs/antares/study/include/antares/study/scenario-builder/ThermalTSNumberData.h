@@ -15,7 +15,7 @@ class thermalTSNumberData final: public TSNumberData
 {
 public:
     thermalTSNumberData() = default;
-    virtual ~thermalTSNumberData() = default;
+    ~thermalTSNumberData() override = default;
 
     bool reset(const Study& study) override;
 

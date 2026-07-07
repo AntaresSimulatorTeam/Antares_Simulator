@@ -11,43 +11,84 @@
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
-#include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 #include "antares/io/outputs/MPSGenerator.h"
+#include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/solver/modeler/ILoader.h"
-#include "antares/solver/modeler/IWriter.h"
 #include "antares/utils/utils.h"
+#include "antares/writer/table_writer_factory.h"
 
 using namespace Antares;
+using namespace Antares::Writer;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::Optimization;
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::IO::Outputs;
 
 namespace Antares::Solver
 {
-Modeler::Modeler(ILoader& loader, IWriter& writer):
-    loader_{loader},
-    writer_{writer}
+
+bool checkSolution(const IMipSolution* solution)
 {
-    try
+    if (!solution)
     {
-        parameters_ = loader_.loadParameters();
-        logs.info() << "Parameters loaded";
-        auto data = loader_.loadAll();
-        if (!data.has_value())
-        {
-            throw ModelerError("Error while loading files, exiting");
-        }
-        // Move the loaded ModelerData out of the optional to avoid copying
-        // (ModelerData contains unique_ptr members and is move-only).
-        data_ = std::move(*data);
+        logs.error() << "Solution to linear optimization is empty";
+        return false;
     }
-    catch (const LoadFiles::ErrorLoadingYaml&)
+
+    auto status = solution->getStatus();
+    if (status == MipStatus::OPTIMAL || status == MipStatus::FEASIBLE)
+    {
+        return true;
+    }
+
+    logs.error() << "Problem during linear optimization";
+    return false;
+}
+
+fs::path makeOutputPath(fs::path studyPath)
+{
+    const auto simulationId = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
+    fs::path outputPath = studyPath / "output" / simulationId;
+
+    // avoid overwriting existing output by adding a suffix (-2, -3, etc.)
+    if (!Utils::generatePathWithSuffix(outputPath))
+    {
+        throw Modeler::ModelerError("Output folder already exists: " + outputPath.string());
+    }
+
+    logs.info() << "Output folder : " << outputPath;
+    if (!fs::is_directory(outputPath) && !fs::create_directories(outputPath))
+    {
+        throw Modeler::ModelerError("Failed to create output directory. Exiting simulation.");
+    }
+    return outputPath;
+}
+
+Modeler::Modeler(ILoader& loader, fs::path ouputPath, TableFormat tableFormat):
+    loader_{loader},
+    outputPath_{std::move(ouputPath)},
+    tableFormat_(tableFormat)
+{
+    parameters_ = loader_.loadParameters();
+    logs.info() << "Parameters loaded";
+    auto data = loader_.loadAll();
+    if (!data.has_value())
     {
         throw ModelerError("Error while loading files, exiting");
     }
+    // Move the loaded ModelerData out of the optional to avoid copying
+    // (ModelerData contains unique_ptr members and is move-only).
+    data_ = std::move(*data);
+
+    timeScenarioCtx_ = std::make_unique<FillContext>(
+      parameters_.firstTimeStep,
+      parameters_.lastTimeStep,
+      parameters_.firstTimeStep, // global = local, single time block in pure modeler (for now)
+      parameters_.lastTimeStep,  // global = local
+      0);
 }
 
 class SystemLinearProblemBuilder final
@@ -184,117 +225,104 @@ IMipSolution* Modeler::solveSubproblem()
     return solution;
 }
 
-void Modeler::writeSubProblemSimulationTable(
+IMipSolution* Modeler::subProbSolution()
+{
+    return subProbSolution_;
+}
+
+SimulationTable Modeler::makeSimulationTable(
   const IMipSolution* solution,
   const OptimEntityContainer& subproblemOptimEntityContainer,
   const FillContext& timeScenarioCtx) const
 {
-    switch (solution->getStatus())
-    {
-    case MipStatus::OPTIMAL:
-    case MipStatus::FEASIBLE:
-    {
-        if (!parameters_.noOutput)
-        {
-            auto& subproblem_1_1 = subproblems_[0];
-            writer_.writeSimulationTable(*subproblem_1_1,
-                                         *solution,
-                                         data_,
-                                         subproblemOptimEntityContainer,
-                                         timeScenarioCtx);
-        }
-    }
-    break;
-    default:
-        logs.error() << "Problem during linear optimization";
-    }
+    // gp : subproblem_1_1 is defined the same way in multiple places
+    auto& subproblem_1_1 = subproblems_[0];
+
+    SimulationTable simulationTable;
+
+    FillSimulationTable(simulationTable,
+                        *subproblem_1_1,
+                        solution->getObjectiveValue(),
+                        data_,
+                        subproblemOptimEntityContainer,
+                        timeScenarioCtx,
+                        0,
+                        IO::Outputs::TimeConversionMode::SingleBlock);
+    return simulationTable;
 }
 
 void Modeler::exportMps() const
 {
-    const auto& output = writer_.outputPath();
-
     // 1-1.mps
     if (auto& subproblem_1_1 = subproblems_[0])
     {
-        const auto mps = IO::Outputs::MPSGenerator(*subproblem_1_1, "1-1").run();
-        Antares::IO::Outputs::MPSFileWriter::write(output / "1-1.mps", mps);
+        const auto mps = IO::Outputs::MPSGenerator(*subproblem_1_1, "1-1", true).run();
+        Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / "1-1.mps", mps);
     }
     // master.mps
     if (masterProblem_)
     {
-        const auto mps = IO::Outputs::MPSGenerator(*masterProblem_, "master").run();
-        Antares::IO::Outputs::MPSFileWriter::write(output / "master.mps", mps);
+        const auto mps = IO::Outputs::MPSGenerator(*masterProblem_, "master", true).run();
+        Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / "master.mps", mps);
     }
 }
 
 void Modeler::exportStructureFile() const
 {
-    const auto& output = writer_.outputPath();
-
     // structure.txt
     const BendersDecompositionWriter writer(data_.bendersDecomposition);
-    std::ofstream of(output / "structure.txt");
+    std::ofstream of(outputPath_ / "structure.txt");
     writer.write(of);
 }
 
-void Modeler::run()
+void Modeler::buildProblems()
 {
     Utils::TimeMeasurement measure;
 
     logs.info() << "linear problem of System loaded";
-    // Problem is MIP if any variable of any component is not continuous
 
-    // Todo: scenario
-    FillContext timeScenarioCtx = {
-      parameters_.firstTimeStep,
-      parameters_.lastTimeStep,
-      parameters_.firstTimeStep, // global = local, single time block in pure modeler (for now)
-      parameters_.lastTimeStep,  // global = local
-      0};
-
-    // Sub problem
-
-    // Master
-
-    auto masterEntities = buildProblem(data_,
-                                       Config::Location::MASTER,
-                                       "master",
-                                       &data_.bendersDecomposition,
-                                       timeScenarioCtx,
-                                       ResolutionMode::BENDERS_DECOMPOSITION,
-                                       std::nullopt);
-    masterProblem_ = std::move(masterEntities.problem);
-    // Subproblem
-    auto [subproblem, subproblemOptimEntityContainer] = buildProblem(data_,
-                                                                     Config::Location::SUBPROBLEMS,
-                                                                     "1-1",
-                                                                     &data_.bendersDecomposition,
-                                                                     timeScenarioCtx,
-                                                                     data_.resolutionMode,
-                                                                     parameters_.solver);
-    subproblems_.emplace_back(std::move(subproblem));
-
-    auto& subproblem_1_1 = subproblems_[0];
-    // gp : class SystemLinearProblemBuilder should be renamed into ComponentFillersBuilder
-    // gp : and build() should return the vector of component fillers
-    // Subproblem
+    buildMasterProblem();
+    buildSubProblem();
 
     logs.info() << "Linear problem provided";
 
+    auto& subproblem_1_1 = subproblems_[0];
     logs.info() << "Number of variables: " << subproblem_1_1->variableCount();
     logs.info() << "Number of constraints: " << subproblem_1_1->constraintCount();
 
     measure.tick();
     logs.info();
     logs.info() << "Modeler build took " << measure.toStringInSeconds();
+}
 
-    // if simulation table or mps are requested
-    if (!parameters_.noOutput || parameters_.exportMps)
-    {
-        const auto simulationTableSuffix = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
-        writer_.init(simulationTableSuffix);
-    }
+void Modeler::buildMasterProblem()
+{
+    auto masterEntities = buildProblem(data_,
+                                       Config::Location::MASTER,
+                                       "master",
+                                       &data_.bendersDecomposition,
+                                       *timeScenarioCtx_,
+                                       ResolutionMode::BENDERS_DECOMPOSITION,
+                                       std::nullopt);
+    masterProblem_ = std::move(masterEntities.problem);
+}
+
+void Modeler::buildSubProblem()
+{
+    auto [subproblem, subproblemOptimEntityContainer] = buildProblem(data_,
+                                                                     Config::Location::SUBPROBLEMS,
+                                                                     "1-1",
+                                                                     &data_.bendersDecomposition,
+                                                                     *timeScenarioCtx_,
+                                                                     data_.resolutionMode,
+                                                                     parameters_.solver);
+    subproblems_.emplace_back(std::move(subproblem));
+    subproblemOptimEntityContainer_ = std::move(subproblemOptimEntityContainer);
+}
+
+void Modeler::run()
+{
+    buildProblems();
     if (parameters_.exportMps)
     {
         exportMps();
@@ -302,8 +330,24 @@ void Modeler::run()
     }
     if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
     {
-        auto* solution = solveSubproblem();
-        writeSubProblemSimulationTable(solution, *subproblemOptimEntityContainer, timeScenarioCtx);
+        subProbSolution_ = solveSubproblem();
+        if (!checkSolution(subProbSolution_))
+        {
+            return;
+        }
+
+        if (!parameters_.noOutput)
+        {
+            auto simulationTable = makeSimulationTable(subProbSolution_,
+                                                       *subproblemOptimEntityContainer_,
+                                                       *timeScenarioCtx_);
+
+            auto outputFile = outputPath_ / "simulation-table";
+            ITableWriter::Ptr writer = makeTableWriter(tableFormat_, outputFile);
+            writer->writeTable(simulationTable);
+
+            logs.info() << "Simulation table is written in: " << outputFile.string();
+        }
     }
 }
 

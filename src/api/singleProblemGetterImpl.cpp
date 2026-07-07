@@ -7,14 +7,13 @@
 #include <stdexcept>
 #include <string>
 
-#include "antares/application/ScenarioBuilderOwner.h"
+#include <antares/optimisation/linear-problem-api/StructuredLinearProblem.h>
+#include <antares/writer/null_result_writer.h>
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/io/outputs/MPSGenerator.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
-#include "antares/solver/modeler/Modeler.h"
-#include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
@@ -23,7 +22,6 @@
 #include "antares/solver/simulation/simulation.h"
 #include "antares/writer/i_writer.h"
 
-#include "fmt/format.h"
 using namespace Optimisation::LinearProblemApi;
 
 namespace
@@ -312,7 +310,7 @@ void SingleProblemGetter::setWeeklyData(WeeklyProblemId& id)
 
     OPT_MaxDesPmaxHydrauliques(&pb_);
 
-    if (pb_.OptimisationAvecCoutsDeDemarrage)
+    if (pb_.OptimisationNotFastMode)
     {
         OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(&pb_);
     }
@@ -358,11 +356,9 @@ std::unique_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProb
                                                                constraintsMemo_,
                                                                id.week);
     }
-    SingleOptimOptions options;
 
     std::unique_ptr<ILinearProblem> linearProblem = std::make_unique<
-      Antares::Optimization::LegacyOrtoolsLinearProblem>(pb_.OptimisationAvecVariablesEntieres,
-                                                         options.solverName);
+      Antares::Optimisation::LinearProblemApi::StructuredLinearProblem>();
     fillProblem(*linearProblem, id);
 
     return linearProblem;
@@ -378,8 +374,6 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProbl
     bool hasModelerData = modelerData != nullptr;
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
-    const Optimisation::ScenarioGroupRepository* modelerScenarioGroupRepository
-      = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
     Optimisation::OptimEntityContainer optimEntityContainer(problem);
     if (hasModelerData)
@@ -387,11 +381,7 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProbl
         modelerData->bendersDecomposition.setCurrentProblemId(problemName({id.year, id.week + 1}));
     }
 
-    fillLinearProblem(fillCtx,
-                      &pb_,
-                      optimEntityContainer,
-                      true,
-                      &modelerData->bendersDecomposition);
+    fillLinearProblem(fillCtx, &pb_, optimEntityContainer, &modelerData->bendersDecomposition);
 }
 
 const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
@@ -403,16 +393,6 @@ const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
 
     auto& dataForYear = allData_[year];
 
-    /*
-      Side effects for HydroInputsChecker are limited to the year scope
-      inside the study.
-      more specifically, area.hydro.managementData[year]
-      So "out-of-order" such as calls "y=0, y=4, y=0" should be fine
-    */
-    Antares::HydroInputsChecker hydroInputsChecker(*study_);
-    hydroInputsChecker.Execute(year);
-    hydroInputsChecker.CheckForErrors();
-
     Antares::Solver::Simulation::prepareClustersInMustRunMode(*study_,
                                                               scratchmap_,
                                                               year,
@@ -420,6 +400,19 @@ const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
 
     uint indexYear = randomForParallelYears_->yearNumberToIndex[year];
     auto& randomForCurrentYear = randomForParallelYears_->pYears[indexYear];
+
+    /*
+      HydroInputsChecker::Execute() must be called BEFORE computeHydroLevels()
+      because it populates area.hydro.managementData[year].inflows, which is
+      needed by hydroManagement.makeVentilation() (called from computeHydroLevels).
+
+      Side effects for HydroInputsChecker are limited to the year scope
+      inside the study, specifically area.hydro.managementData[year].
+      So "out-of-order" such as calls "y=0, y=4, y=0" should be fine.
+    */
+    Antares::HydroInputsChecker hydroInputsChecker(*study_);
+    hydroInputsChecker.Execute(year, randomForCurrentYear.pReservoirLevels);
+    hydroInputsChecker.checkForErrors();
 
     dataForYear = computeHydroLevels(year, randomForCurrentYear.pReservoirLevels);
 
@@ -450,7 +443,7 @@ YearlyData SingleProblemGetter::computeHydroLevels(unsigned year,
             continue;
         }
         auto inflows = area->hydro.series->storage.getColumn(year);
-        auto& level = hydroLevels[area];
+        auto& level = hydroLevels[area.get()];
 
         // Initialize first week level
         uint firstDay = calendar.weeks[0].daysYear.first;
@@ -510,7 +503,7 @@ void writeWeekMPS(const std::unique_ptr<ILinearProblem>& weekly,
 {
     auto name = problemName(id);
 
-    IO::Outputs::MPSGenerator mpsGenerator(*weekly, name + ".mps");
+    IO::Outputs::MPSGenerator mpsGenerator(*weekly, name + ".mps", true);
     std::string mps = mpsGenerator.run();
 
     logs.info() << "Printing problem: " << name << '\n';
@@ -554,7 +547,7 @@ void SingleProblemGetter::writeMasterAndStructure() const
         return;
     }
 
-    auto mps = IO::Outputs::MPSGenerator(*masterProblem, "master").run();
+    auto mps = IO::Outputs::MPSGenerator(*masterProblem, "master", true).run();
     resultWriter_->addEntryFromBuffer("master.mps", mps);
     logs.info() << "Written: " << "master.mps";
 

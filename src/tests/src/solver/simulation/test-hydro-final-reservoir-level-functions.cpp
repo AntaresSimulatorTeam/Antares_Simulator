@@ -12,6 +12,7 @@
 
 #include "include/antares/solver/hydro/management/HydroInputsChecker.h"
 
+using namespace Antares;
 using namespace Antares::Solver;
 using namespace Antares::Data;
 
@@ -29,8 +30,17 @@ struct Fixture
         study->parameters.firstMonthInYear = january;
         uint nbYears = study->parameters.nbYears = 2;
 
-        area_1 = study->areaAdd("Area1");
-        area_2 = study->areaAdd("Area2");
+        area_1 = addAreaToListOfAreas(study->areas, "Area1");
+        area_2 = addAreaToListOfAreas(study->areas, "Area2");
+
+        for (auto* area: {area_1, area_2})
+        {
+            if (area)
+            {
+                area->createMissingData();
+                area->resetToDefaultValues();
+            }
+        }
 
         area_1->hydro.reservoirManagement = true;
         area_2->hydro.reservoirManagement = true;
@@ -46,13 +56,12 @@ struct Fixture
         area_2->hydro.reservoirCapacity = 300.;
 
         // Set reservoir max and min daily levels, but just for the last day in year
-        area_1->hydro.reservoirLevel.resize(3, DAYS_PER_YEAR);
-        area_1->hydro.reservoirLevel[PartHydro::minimum][DAYS_PER_YEAR - 1] = 2.4;
-        area_1->hydro.reservoirLevel[PartHydro::maximum][DAYS_PER_YEAR - 1] = 6.5;
 
-        area_2->hydro.reservoirLevel.resize(3, DAYS_PER_YEAR);
-        area_2->hydro.reservoirLevel[PartHydro::minimum][DAYS_PER_YEAR - 1] = 2.7;
-        area_2->hydro.reservoirLevel[PartHydro::maximum][DAYS_PER_YEAR - 1] = 6.4;
+        area_1->hydro.series->ruleCurves.min[0][DAYS_PER_YEAR - 1] = 2.4;
+        area_1->hydro.series->ruleCurves.max[0][DAYS_PER_YEAR - 1] = 6.5;
+
+        area_2->hydro.series->ruleCurves.min[0][DAYS_PER_YEAR - 1] = 2.7;
+        area_2->hydro.series->ruleCurves.max[0][DAYS_PER_YEAR - 1] = 6.4;
 
         // Resize vector final levels delta with initial levels
         area_1->hydro.deltaBetweenFinalAndInitialLevels.resize(nbYears);
@@ -265,10 +274,8 @@ BOOST_AUTO_TEST_CASE(check_all_areas_final_levels_when_config_is_ok___all_checks
 
     for (uint year: {0, 1})
     {
-        hydro_input_checker.CheckFinalReservoirLevelsConfiguration(year);
+        hydro_input_checker.checkFinalReservoirLevelsConfiguration(year);
     }
-    // CheckFinalReservoirLevelsConfiguration(*study, 0);
-    // CheckFinalReservoirLevelsConfiguration(*study, 1);
 
     // Checks on Area 1 modifier
     BOOST_CHECK_EQUAL(area_1->hydro.deltaBetweenFinalAndInitialLevels[0].has_value(), true);

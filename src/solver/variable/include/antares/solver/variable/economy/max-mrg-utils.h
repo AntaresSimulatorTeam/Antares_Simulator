@@ -1,3 +1,6 @@
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
 #include <antares/series/series.h>
@@ -42,7 +45,7 @@ class MaxMrgUsualDataFactory: public MaxMrgDataFactory
     using MaxMrgDataFactory::MaxMrgDataFactory;
 
 public:
-    virtual MaxMRGinput data() override;
+    MaxMRGinput data() override;
 };
 
 class MaxMrgCSRdataFactory: public MaxMrgDataFactory
@@ -50,7 +53,7 @@ class MaxMrgCSRdataFactory: public MaxMrgDataFactory
     using MaxMrgDataFactory::MaxMrgDataFactory;
 
 public:
-    virtual MaxMRGinput data() override;
+    MaxMRGinput data() override;
 };
 
 } // namespace Antares::Solver::Variable::Economy

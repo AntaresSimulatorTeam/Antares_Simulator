@@ -36,12 +36,12 @@ inline Sets::const_iterator Sets::end() const
     return pMap.end();
 }
 
-inline bool Sets::exists(const RulesScenarioName& lname) const
+inline bool Sets::exists(const std::string& lname) const
 {
     return pMap.find(lname) != pMap.end();
 }
 
-inline Rules::Ptr Sets::find(const RulesScenarioName& lname) const
+inline Rules::Ptr Sets::find(const std::string& lname) const
 {
     using namespace Yuni;
     const_iterator i = pMap.find(lname);

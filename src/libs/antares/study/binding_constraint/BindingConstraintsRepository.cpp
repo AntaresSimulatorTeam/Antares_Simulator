@@ -108,10 +108,10 @@ std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnySt
 }
 
 std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::LoadBindingConstraint(
-  EnvForLoading env)
+  const EnvForLoading& env)
 {
     BindingConstraintLoader loader;
-    return loader.load(std::move(env));
+    return loader.load(env);
 }
 
 bool BindingConstraintsRepository::loadFromFolder(Study& study,

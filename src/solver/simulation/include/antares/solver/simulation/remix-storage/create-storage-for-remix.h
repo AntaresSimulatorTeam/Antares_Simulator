@@ -1,3 +1,6 @@
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
 #include "storage-for-remix-no-levels.h"
@@ -24,6 +27,7 @@ std::shared_ptr<IStorageForRemix> makeSTSforRemix(std::vector<double>& withdrawa
                                                   std::vector<double>& levels,
                                                   const std::vector<double>& pmax,
                                                   const std::vector<double>& inflows,
+                                                  const std::vector<double>& overflows,
                                                   const std::vector<double>& injection,
                                                   const std::vector<double>& lowRuleCurve,
                                                   const std::vector<double>& upRuleCurve,

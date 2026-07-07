@@ -6,6 +6,8 @@
 #include <cmath>
 
 #include <antares/expressions/visitors/NodeVisitor.h>
+#include <antares/expressions/visitors/TimeSumUtils.h>
+#include <antares/expressions/visitors/VariabilityVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
 #include "antares/exception/InvalidArgumentError.hpp"
@@ -37,10 +39,10 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
     optimEntityContainer_(optimEntityContainer),
     component_(component),
     scenarioGroupRepo_(scenarioGroupRepo),
-    scenario_(&scenarioGroupRepo.scenario(component.getScenarioGroupId())),
-    evalContext_(&component, data, scenario_),
-    fillContext_(fillContext),
+    scenario_(scenarioGroupRepo.scenario(component.getScenarioGroupId())),
     evalVisitor_(optimEntityContainer, fillContext, component, data, scenario_),
+    evalContext_(&component, data, &scenario_),
+    fillContext_(fillContext),
     data_(data),
     nbtimeSteps_(fillContext.getLocalNumberOfTimeSteps())
 {
@@ -232,28 +234,56 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::TimeSumNode* node)
 {
     auto expression = dispatch(node->expression());
+    Visitors::VariabilityVisitor variabilityVisitor(optimEntityContainer_, component_);
 
-    const auto from = static_cast<int>(evalVisitor_.dispatch(node->from()).valueAsDouble());
-    const auto to = static_cast<int>(evalVisitor_.dispatch(node->to()).valueAsDouble());
+    // Variability checks are independent of the local timestep (AST is immutable,
+    // visitor doesn't use current timestep), so perform them once before the loop.
+    Antares::Expressions::Visitors::checkTimeSumBoundVariability(node->from(), variabilityVisitor);
+    Antares::Expressions::Visitors::checkTimeSumBoundVariability(node->to(), variabilityVisitor);
 
     if (expression.isConstant())
     {
-        // example from=0, to=2 => length({0, 1, 2}) = 3
-        expression *= static_cast<double>(to - from + 1);
-        return expression;
+        TimeDependentLinearExpression ret(nbtimeSteps_);
+        for (unsigned localTimeStep = 0; localTimeStep < nbtimeSteps_; ++localTimeStep)
+        {
+            const auto from = Antares::Expressions::Visitors::resolveTimeSumBound(node->from(),
+                                                                                  evalVisitor_,
+                                                                                  localTimeStep);
+            const auto to = Antares::Expressions::Visitors::resolveTimeSumBound(node->to(),
+                                                                                evalVisitor_,
+                                                                                localTimeStep);
+            if (from <= to)
+            {
+                auto term = expression[0];
+                term *= static_cast<double>(to - from + 1);
+                ret[localTimeStep] += term;
+            }
+        }
+        return ret;
     }
 
     TimeDependentLinearExpression ret(nbtimeSteps_);
-    expression.rotate(from);
-    for (int t = from; t <= to; ++t)
+    for (unsigned localTimeStep = 0; localTimeStep < nbtimeSteps_; ++localTimeStep)
     {
-        ret += expression;
-        if (t < to)
-        {
-            expression.rotate(1);
-        }
+        const auto from = Antares::Expressions::Visitors::resolveTimeSumBound(node->from(),
+                                                                              evalVisitor_,
+                                                                              localTimeStep);
+        const auto to = Antares::Expressions::Visitors::resolveTimeSumBound(node->to(),
+                                                                            evalVisitor_,
+                                                                            localTimeStep);
+        Antares::Expressions::Visitors::forEachTimeSumIndex(
+          from,
+          to,
+          static_cast<int>(nbtimeSteps_),
+          [&ret, &expression, localTimeStep](int timeIndex)
+          { ret[localTimeStep] += expression[timeIndex]; });
     }
     return ret;
+}
+
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::TPlusNode* node)
+{
+    return TimeDependentLinearExpression(evalVisitor_.dispatch(node).valueAsDouble());
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::AllTimeSumNode* node)
@@ -308,9 +338,13 @@ auto checkIsConstant = [](const std::string& op, const auto& expression)
 
 auto checkExpressionIsConstantForFloor = [](const auto& expr) { checkIsConstant("floor", expr); };
 auto checkExpressionIsConstantForCeil = [](const auto& expr) { checkIsConstant("ceil", expr); };
+auto checkExpressionIsConstantForRound = [](const auto& expr) { checkIsConstant("round", expr); };
+auto checkExpressionIsConstantForAbs = [](const auto& expr) { checkIsConstant("abs", expr); };
 
 auto floorExpression = [](auto& expr) { expr.constant(std::floor(expr.constant())); };
 auto ceilExpression = [](auto& expr) { expr.constant(std::ceil(expr.constant())); };
+auto roundExpression = [](auto& expr) { expr.constant(std::round(expr.constant())); };
+auto absExpression = [](auto& expr) { expr.constant(std::abs(expr.constant())); };
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visitFloor(
   const Nodes::FunctionNode* node)
@@ -327,6 +361,23 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visitCeil(
     auto expressions = dispatch(node->getOperands()[0]);
     std::ranges::for_each(expressions, checkExpressionIsConstantForCeil);
     std::ranges::for_each(expressions, ceilExpression);
+    return expressions;
+}
+
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visitRound(
+  const Nodes::FunctionNode* node)
+{
+    auto expressions = dispatch(node->getOperands()[0]);
+    std::ranges::for_each(expressions, checkExpressionIsConstantForRound);
+    std::ranges::for_each(expressions, roundExpression);
+    return expressions;
+}
+
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visitAbs(const Nodes::FunctionNode* node)
+{
+    auto expressions = dispatch(node->getOperands()[0]);
+    std::ranges::for_each(expressions, checkExpressionIsConstantForAbs);
+    std::ranges::for_each(expressions, absExpression);
     return expressions;
 }
 
@@ -351,6 +402,10 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Fu
         return visitFloor(node);
     case Nodes::FunctionNodeType::ceil:
         return visitCeil(node);
+    case Nodes::FunctionNodeType::round:
+        return visitRound(node);
+    case Nodes::FunctionNodeType::abs:
+        return visitAbs(node);
     default:
         throw std::runtime_error("Function " + node->typeToString() + " is not implemented.");
     }

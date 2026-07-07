@@ -30,16 +30,16 @@ TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
     switch (mode)
     {
     case TimeConversionMode::WeeklyBlocks:
-        return {.block = currentBlock + 1,
-                .blockTimeIndex = timeStep + 1,
-                .absoluteTimeIndex = currentBlock * 168 + timeStep + 1};
+        return {.block = currentBlock,
+                .blockTimeIndex = timeStep,
+                .absoluteTimeIndex = currentBlock * 168 + timeStep};
     case TimeConversionMode::DailyBlocks:
-        return {.block = currentBlock + 1,
-                .blockTimeIndex = timeStep + 1,
-                .absoluteTimeIndex = currentBlock * 24 + timeStep + 1};
+        return {.block = currentBlock,
+                .blockTimeIndex = timeStep,
+                .absoluteTimeIndex = currentBlock * 24 + timeStep};
     case TimeConversionMode::SingleBlock:
     default:
-        return {.block = 1, .blockTimeIndex = timeStep + 1, .absoluteTimeIndex = timeStep + 1};
+        return {.block = 0, .blockTimeIndex = timeStep, .absoluteTimeIndex = timeStep};
     }
 }
 
@@ -65,7 +65,7 @@ std::string BuildModelerConstraintName(const std::string& componentId,
     return key;
 }
 
-void addVariableEntries(ISimulationTable& simulationTable,
+void addVariableEntries(SimulationTable& simulationTable,
                         const ILinearProblem& linearProblem,
                         const FillContext& fillContext,
                         const ModelerStudy::SystemModel::Component& component,
@@ -96,7 +96,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
             TimeBlock tb = timeStep ? convertBlockTimeStepToAbsoluteTimeStep(*timeStep,
                                                                              timeConversionMode,
                                                                              currentBlock)
-                                    : TimeBlock{.block = currentBlock + 1,
+                                    : TimeBlock{.block = currentBlock,
                                                 .blockTimeIndex = std::nullopt,
                                                 .absoluteTimeIndex = std::nullopt};
             const auto& var = componentVariables[timeStep.value_or(0)];
@@ -161,13 +161,13 @@ void handleDependingOnVariability(
     }
 }
 
-void addConstraintEntries(ISimulationTable& simulationTable,
+void addConstraintEntries(SimulationTable& simulationTable,
                           const ILinearProblem& linearProblem,
                           const FillContext& fillContext,
                           const ModelerStudy::SystemModel::Component& component,
                           const OptimEntityContainer& optimEntityContainer,
                           const LinearProblemApi::ILinearProblemData* data,
-                          const LinearProblemApi::IScenario* scenario,
+                          const LinearProblemApi::IScenario& scenario,
                           unsigned currentBlock,
                           const TimeConversionMode& timeConversionMode,
                           unsigned year,
@@ -236,7 +236,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
                                                                        timeConversionMode,
                                                                        currentBlock)
-                              : TimeBlock{.block = currentBlock + 1,
+                              : TimeBlock{.block = currentBlock,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
             simulationTable.addEntry(
@@ -256,13 +256,13 @@ void addConstraintEntries(ISimulationTable& simulationTable,
     }
 }
 
-void addObjectiveValue(ISimulationTable& simulation,
+void addObjectiveValue(SimulationTable& simulation,
                        double objectiveValue,
                        unsigned currentBlock,
                        unsigned year)
 {
     // TODO : handle scenario-independent objectives in full-modeler mode
-    simulation.addEntry({.block = currentBlock + 1,
+    simulation.addEntry({.block = currentBlock,
                          .component = std::nullopt,
                          .output = "OBJECTIVE_VALUE",
                          .absolute_time_index = std::nullopt,
@@ -272,7 +272,7 @@ void addObjectiveValue(ISimulationTable& simulation,
                          .status = MipBasisStatus::NOT_AVAILABLE});
 }
 
-void addEntriesForNode(ISimulationTable& simulationTable,
+void addEntriesForNode(SimulationTable& simulationTable,
                        const FillContext& fillContext,
                        Visitors::EvalVisitor& evalVisitor,
                        Visitors::VariabilityVisitor& variabilityVisitor,
@@ -316,7 +316,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
         TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
                                                                    timeConversionMode,
                                                                    currentBlock)
-                          : TimeBlock{.block = currentBlock + 1,
+                          : TimeBlock{.block = currentBlock,
                                       .blockTimeIndex = std::nullopt,
                                       .absoluteTimeIndex = std::nullopt};
         auto val = ts ? value.getValueInVector(ts.value()) : value.valueAsDouble();
@@ -332,7 +332,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
     handleDependingOnVariability(fillContext, year, variability, handle);
 }
 
-void addPortEntries(ISimulationTable& simulationTable,
+void addPortEntries(SimulationTable& simulationTable,
                     const FillContext& fillContext,
                     const ModelerStudy::SystemModel::Component& component,
                     Visitors::EvalVisitor& evalVisitor,
@@ -361,7 +361,7 @@ void addPortEntries(ISimulationTable& simulationTable,
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
                                                                        timeConversionMode,
                                                                        currentBlock)
-                              : TimeBlock{.block = currentBlock + 1,
+                              : TimeBlock{.block = currentBlock,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
 
@@ -381,7 +381,7 @@ void addPortEntries(ISimulationTable& simulationTable,
     }
 }
 
-void addExtraOutputEntries(ISimulationTable& simulationTable,
+void addExtraOutputEntries(SimulationTable& simulationTable,
                            const FillContext& fillContext,
                            const ModelerStudy::SystemModel::Component& component,
                            Visitors::EvalVisitor& evalVisitor,
@@ -411,7 +411,7 @@ void addExtraOutputEntries(ISimulationTable& simulationTable,
     }
 }
 
-void FillSimulationTable(ISimulationTable& simulationTable,
+void FillSimulationTable(SimulationTable& simulationTable,
                          const ILinearProblem& linearProblem,
                          double objectiveValue,
                          const Solver::ModelerData& modelerData,
@@ -430,8 +430,8 @@ void FillSimulationTable(ISimulationTable& simulationTable,
         const auto& scenario = modelerData.scenarioGroupRepository.scenario(
           component.getScenarioGroupId());
 
-        Visitors::EvalVisitor evalVisitor(optimContainer, fillContext, component, data, &scenario);
-        Visitors::VariabilityVisitor variabilityVisitor(optimContainer, component, data, &scenario);
+        Visitors::EvalVisitor evalVisitor(optimContainer, fillContext, component, data, scenario);
+        Visitors::VariabilityVisitor variabilityVisitor(optimContainer, component);
 
         addVariableEntries(simulationTable,
                            linearProblem,
@@ -448,7 +448,7 @@ void FillSimulationTable(ISimulationTable& simulationTable,
                              component,
                              optimContainer,
                              data,
-                             &scenario,
+                             scenario,
                              currentBlock,
                              timeConversionMode,
                              year,

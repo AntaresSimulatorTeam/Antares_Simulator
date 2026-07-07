@@ -3,12 +3,8 @@
 set(SOURCES
         modelConverter.cpp
         convertorVisitor.cpp
-        ForbiddenNodesVisitor.cpp
-        ForbiddenNodes.cpp
         include/antares/io/inputs/model-converter/modelConverter.h
         include/antares/io/inputs/model-converter/convertorVisitor.h
-        include/antares/io/inputs/model-converter/ForbiddenNodes.h
-        include/antares/io/inputs/model-converter/ForbiddenNodesVisitor.h
 )
 
 # Create the library
@@ -23,12 +19,15 @@ target_include_directories(model-converter
 
 # Link dependencies (if any)
 target_link_libraries(model-converter
+        PUBLIC
+        Antares::input-error
         PRIVATE
         Antares::antares-study-system-model
         Antares::yml-model
         Antares::antlr-interface
         Antares::expressions
         Antares::expressions-iterators
+		Antares::forbidden-nodes
 )
 
 install(DIRECTORY include/antares

@@ -9,10 +9,11 @@
 #include <vector>
 
 #include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
 
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>
+#include <antares/study/area/ReserveOpt.h>
+#include <antares/study/area/reserveParticipationContainer.h>
 
 #include "../../fwd.h"
 
@@ -27,9 +28,6 @@ struct CompareClusterName final
 
 class Cluster
 {
-public:
-    using Set = std::set<Cluster*, CompareClusterName>;
-
 public:
     Cluster(Area* parent);
 
@@ -49,13 +47,6 @@ public:
     ** \return False if an error has been detected and fixed with a default value
     */
     virtual bool integrityCheck() = 0;
-
-    /*!
-    ** \brief Reset to default values
-    **
-    ** This method should only be called from the GUI
-    */
-    virtual void reset();
 
     bool saveDataSeriesToFolder(const AnyString& folder) const;
     bool loadDataSeriesFromFolder(Study& s, const std::filesystem::path& folder);
@@ -92,6 +83,11 @@ public:
     ** [modulation cost, modulation capacity, market bid modulation] per hour
     */
     Matrix<> modulation;
+
+    //! Reserve participation container to store the participation of the cluster in the reserves
+    //! and the symmetries
+    ReserveOpt<ReserveParticipationContainer<ThermalClusterReserveParticipation>>
+      reserveParticipationContainer;
 
 protected:
     std::string pName;

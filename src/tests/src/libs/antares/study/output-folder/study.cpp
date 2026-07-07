@@ -126,7 +126,7 @@ BOOST_FIXTURE_TEST_CASE(adequacy_zip_label_now, Fixture)
     std::ofstream zip_file(outputRoot / "20221230-0914adq-test.zip");
     zip_file << "I am a zip file. Well, not really.";
 
-    const fs::path expectedOutput_suffix = outputRoot / "20221230-0914adq-test-2";
+    const fs::path expectedOutput_suffix = outputRoot / "20221230-0914adq-test-2.zip";
     const fs::path actualOutput_suffix = StudyCreateOutputPath(mode,
                                                                fmt,
                                                                outputRoot,

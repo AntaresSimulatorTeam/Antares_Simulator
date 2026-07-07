@@ -4,8 +4,6 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_LOAD_CONTAINER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_LOAD_CONTAINER_H__
 
-#include <yuni/core/noncopyable.h>
-
 #include <antares/series/series.h>
 
 namespace Antares::Data::Load
@@ -13,9 +11,12 @@ namespace Antares::Data::Load
 
 class Prepro;
 
-class Container final: private Yuni::NonCopyable<Container>
+class Container final
 {
 public:
+    Container(const Container&) = delete;
+    Container& operator=(const Container&) = delete;
+
     //! \name Constructor & Destructor
     //@{
     /*!

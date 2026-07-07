@@ -5,7 +5,7 @@
 
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
-    if (!problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+    if (!problemeHebdo->OptimisationNotFastMode)
     {
         return;
     }

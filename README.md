@@ -2,7 +2,6 @@
 
 [![Status][ubuntu_ci_svg]][ubuntu_ci_link]
 [![Status][windows_ci_svg]][windows_ci_link]
-[![Status][centos_ci_svg]][centos_ci_link]
 [![Status][oraclelinux_ci_svg]][oraclelinux_ci_link]
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=AntaresSimulatorTeam_Antares_Simulator&metric=alert_status)](https://sonarcloud.io/dashboard?id=AntaresSimulatorTeam_Antares_Simulator)
 [![License: MPL v2](https://img.shields.io/badge/License-MPLv2-blue.svg)](https://www.mozilla.org/en-US/MPL/2.0/)
@@ -30,25 +29,25 @@ In May 2018, RTE decided to release the project under the GPLv3 license.
 In January 2024, RTE, as the exclusive copyright owner, decided to switch from the GPLv3 to the MPLv2 license,
 starting with the 9.0 version of Antares Simulator.
 
-# Links:
+# Links
 
-- Antares website:  https://antares-simulator.org
-- RTE web site : http://www.rte-france.com/
+- Antares user documentation: https://antares-doc.readthedocs.io/
+- Antares Simulator technical documentation: https://antares-simulator.readthedocs.io/
+- RTE-I website for Antares: https://antares-simulator.org
+- RTE website: http://www.rte-france.com/
 - Doxygen code documentation: https://antaressimulatorteam.github.io/Antares_Simulator/doxygen
-- Antares Web: https://antares-web.readthedocs.io
 
 # Installation
 
 This software suite has been tested under:
 
-* Ubuntu 20.04 [![Status][ubuntu_ci_svg]][ubuntu_ci_link]
+* Ubuntu 22.04 [![Status][ubuntu_ci_svg]][ubuntu_ci_link]
 * Microsoft Windows with Visual Studio 2022 (64-bit) [![Status][windows_ci_svg]][windows_ci_link]
-* Centos7 [![Status][centos_ci_svg]][centos_ci_link]
-* Oracle Linux [![Status][oraclelinux_ci_svg]][oraclelinux_ci_link]
+* Oracle Linux 8 [![Status][oraclelinux_ci_svg]][oraclelinux_ci_link]
 
-Antares Simulator is built using CMake.
-For installation instructions, please visit the [documentation website](https://antares-simulator.readthedocs.io/)
-or [its sources](docs/developer-guide/0-Introduction.md).
+Build instructions [here](docs/developer-guide/3-Build.md)
+
+For installation instructions, please visit the [documentation website](https://antares-simulator.readthedocs.io/) or [its sources](docs/developer-guide/0-Introduction.md).
 
 # Source Code Content
 
@@ -56,7 +55,6 @@ or [its sources](docs/developer-guide/0-Introduction.md).
 * [CERTIFICATE](CERTIFICATE.txt)     - A standard DCO that has to be signed by every contributor
 * [CONTRIBUTING](CONTRIBUTING.md)         - How to submit patches and discuss code evolutions
 * [COPYING](COPYING.txt)            - The MPL v2 license.
-* [NEWS](NEWS.md)                 - Important modifications between the releases.
 * [README](README.md)             - This file.
 * [ROADMAP](ROADMAP.txt)            - Main orientations for further developments
 * [THANKS](THANKS.txt)             - Attribution notices for external libraries and contributors.
@@ -72,14 +70,10 @@ or [its sources](docs/developer-guide/0-Introduction.md).
 
 [windows_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/windows-vcpkg.yml/badge.svg?branch=develop
 
-[centos_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/centos7.yml/badge.svg?branch=develop
-
 [ubuntu_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/ubuntu.yml
 
 [oraclelinux_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/oracle8.yml/badge.svg?branch=develop
 
 [windows_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/windows-vcpkg.yml
-
-[centos_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/centos7.yml
 
 [oraclelinux_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/oracle8.yml

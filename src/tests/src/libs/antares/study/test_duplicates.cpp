@@ -24,8 +24,8 @@ BOOST_AUTO_TEST_SUITE(study_duplicates)
 struct DuplicateFixture: public Antares::UnitTests::CaptureAntaresLogs
 {
     std::unique_ptr<Study> study = std::make_unique<Study>();
-    Data::Area* areaA = study->areaAdd("A");
-    Data::Area* areaB = study->areaAdd("B");
+    Antares::Data::Area* areaA = addAreaToListOfAreas(study->areas, "A");
+    Antares::Data::Area* areaB = addAreaToListOfAreas(study->areas, "B");
 
     void addBindingConstraint(const std::string& name)
     {
@@ -33,21 +33,23 @@ struct DuplicateFixture: public Antares::UnitTests::CaptureAntaresLogs
     }
 };
 
-void addThermalCluster(Data::Area* area, const std::string& name)
+void addThermalCluster(Antares::Data::Area* area, const std::string& name)
 {
     auto c = std::make_shared<ThermalCluster>(area);
     c->setName(name);
     area->thermal.list.addToCompleteList(c);
+    area->thermal.list.buildIndexes();
 }
 
-void addRenewableCluster(Data::Area* area, const std::string& name)
+void addRenewableCluster(Antares::Data::Area* area, const std::string& name)
 {
     auto c = std::make_shared<RenewableCluster>(area);
     c->setName(name);
     area->renewable.list.addToCompleteList(c);
+    area->renewable.list.buildIndexes();
 }
 
-void addShortTermStorage(Data::Area* area, const std::string& name)
+void addShortTermStorage(Antares::Data::Area* area, const std::string& name)
 {
     STStorageCluster cluster;
     cluster.properties.name = name;

@@ -307,14 +307,14 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
         for (auto i = arealist->areas.begin(); i != end; ++i)
         {
             // Ref to the area
-            auto* area = i->second;
+            auto* area = i->second.get();
 
             {
                 // Do not display useless messages
                 logs.verbosityLevel = Logs::Verbosity::Warning::level;
                 // Load all thermal clusters
                 buffer.clear() << infos->folder << "/input/thermal/clusters/" << area->id;
-                if (not area->thermal.list.loadFromFolder(*study, buffer.c_str(), area))
+                if (not area->thermal.list.loadFromFolder(buffer.c_str(), area))
                 {
                     delete arealist;
                     delete study;

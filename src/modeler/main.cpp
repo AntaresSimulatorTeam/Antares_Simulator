@@ -1,20 +1,40 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <filesystem>
 #include <fstream>
 
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/Modeler.h>
-#include "antares/solver/modeler/fileWriter/FileWriter.h"
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
+#include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/solver/simulation/solver.h"
+#include "antares/writer/table_format.h"
 
 using namespace Antares;
+using namespace Antares::Writer;
+namespace fs = std::filesystem;
 
 static void usage()
 {
     std::cout << "Usage:\n"
-              << "antares-modeler <path/to/study>\n";
+              << "antares-modeler <path/to/study> [--parquet]\n";
+}
+
+TableFormat getTableFormat(int argc, const char** argv)
+{
+    if (argc <= 2)
+    {
+        return TableFormat::CSV;
+    }
+
+    std::string parquetOption = argv[2];
+    if (parquetOption == "--parquet")
+    {
+        return TableFormat::Parquet;
+    }
+
+    return TableFormat::CSV;
 }
 
 int main(int argc, const char** argv)
@@ -27,10 +47,13 @@ int main(int argc, const char** argv)
         return EXIT_FAILURE;
     }
 
-    std::filesystem::path studyPath(argv[1]);
+    // Options parsing
+    fs::path studyPath(argv[1]);
+    TableFormat tableFormat = getTableFormat(argc, argv);
+
     logs.info() << "Study path: " << studyPath;
 
-    if (!std::filesystem::is_directory(studyPath))
+    if (!fs::is_directory(studyPath))
     {
         logs.error() << "The path provided isn't a valid directory, exiting";
         return EXIT_FAILURE;
@@ -39,11 +62,16 @@ int main(int argc, const char** argv)
     try
     {
         LoadFiles::FileLoader loader(studyPath);
-        Solver::FileWriter writer(studyPath);
-        Solver::Modeler modeler(loader, writer);
+        fs::path outputPath = makeOutputPath(studyPath);
+        Modeler modeler(loader, outputPath, tableFormat);
         modeler.run();
     }
-    catch (const Solver::Modeler::ModelerError& e)
+    catch (const LoadFiles::ErrorLoadingYaml& e)
+    {
+        logs.error() << "Modeler loading error: " << e.what() << "\nExiting simulation.";
+        return EXIT_FAILURE;
+    }
+    catch (const Modeler::ModelerError& e)
     {
         logs.error() << "Modeler error: " << e.what() << "\nExiting simulation.";
         return EXIT_FAILURE;

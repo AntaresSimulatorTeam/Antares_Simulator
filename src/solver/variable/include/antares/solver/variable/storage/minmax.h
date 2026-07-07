@@ -8,46 +8,26 @@
 
 namespace Antares::Solver::Variable::R::AllYears
 {
-template<class NextT = Empty>
-class Min;
-template<class NextT = Empty>
-class Max;
 
-template<bool OpInferior, class NextT = Empty>
-struct MinMaxBase: public NextT
+class MinMaxBase
 {
 public:
-    //! Type of the net item in the list
-    typedef NextT NextType;
+    static constexpr int categoryFile = Variable::Category::FileLevel::allFile;
 
-    enum
-    {
-        //! The count if item in the list
-        count = 1 + NextT::count,
-
-        categoryFile = NextT::categoryFile | Variable::Category::FileLevel::allFile,
-    };
-
-    //! Name of the filter
     static const char* Name()
     {
         return "minmaxbase";
     }
 
-    MinMaxBase()
-    {
-    }
-
-    ~MinMaxBase()
-    {
-    }
+    MinMaxBase() = default;
+    ~MinMaxBase() = default;
 
     void initializeFromStudy(Data::Study& study);
 
     template<class S, class VCardT>
     void buildSurveyReport(SurveyResults& report,
-                           const S& results,
-                           int dataLevel,
+                           const S& /*results*/,
+                           int /*dataLevel*/,
                            int fileLevel,
                            int precision) const
     {
@@ -57,27 +37,26 @@ public:
             {
             case Category::hourly:
                 InternalExportIndices<HOURS_PER_YEAR, VCardT>(report,
-                                                              Memory::RawPointer(
-                                                                minmax.hourly.data()),
+                                                              minmax.hourly.indices.data(),
                                                               fileLevel);
                 break;
             case Category::daily:
                 InternalExportIndices<DAYS_PER_YEAR, VCardT>(report,
-                                                             minmax.daily.data(),
+                                                             minmax.daily.indices.data(),
                                                              fileLevel);
                 break;
             case Category::weekly:
                 InternalExportIndices<WEEKS_PER_YEAR, VCardT>(report,
-                                                              minmax.weekly.data(),
+                                                              minmax.weekly.indices.data(),
                                                               fileLevel);
                 break;
             case Category::monthly:
                 InternalExportIndices<MONTHS_PER_YEAR, VCardT>(report,
-                                                               minmax.monthly.data(),
+                                                               minmax.monthly.indices.data(),
                                                                fileLevel);
                 break;
             case Category::annual:
-                InternalExportIndices<1, VCardT>(report, minmax.annual.data(), fileLevel);
+                InternalExportIndices<1, VCardT>(report, minmax.annual.indices.data(), fileLevel);
                 break;
             }
         }
@@ -86,100 +65,73 @@ public:
             switch (precision)
             {
             case Category::hourly:
-                InternalExportValues<HOURS_PER_YEAR, VCardT>(report,
-                                                             Memory::RawPointer(
-                                                               minmax.hourly.data()));
+                InternalExportValues<HOURS_PER_YEAR, VCardT>(report, minmax.hourly.values.data());
                 break;
             case Category::daily:
-                InternalExportValues<DAYS_PER_YEAR, VCardT>(report, minmax.daily.data());
+                InternalExportValues<DAYS_PER_YEAR, VCardT>(report, minmax.daily.values.data());
                 break;
             case Category::weekly:
-                InternalExportValues<WEEKS_PER_YEAR, VCardT>(report, minmax.weekly.data());
+                InternalExportValues<WEEKS_PER_YEAR, VCardT>(report, minmax.weekly.values.data());
                 break;
             case Category::monthly:
-                InternalExportValues<MONTHS_PER_YEAR, VCardT>(report, minmax.monthly.data());
+                InternalExportValues<MONTHS_PER_YEAR, VCardT>(report, minmax.monthly.values.data());
                 break;
             case Category::annual:
-                InternalExportValues<1, VCardT>(report, minmax.annual.data());
+                InternalExportValues<1, VCardT>(report, minmax.annual.values.data());
                 break;
             }
         }
-        // Next
-        NextType::template buildSurveyReport<S, VCardT>(report,
-                                                        results,
-                                                        dataLevel,
-                                                        fileLevel,
-                                                        precision);
+    }
+
+    template<class VCardT>
+    void buildDigest(SurveyResults& /*report*/, int /*digestLevel*/, int /*dataLevel*/) const
+    {
     }
 
     void reset();
 
     void merge(uint year, const IntermediateValues& rhs);
 
-    template<template<class> class DecoratorT>
-    Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
-    {
-        return NextType::template hourlyValuesForSpatialAggregate<DecoratorT>();
-    }
-
 protected:
     MinMaxData minmax;
 
+    bool isInf_ = true;
+
 private:
     template<uint Size, class VCardT>
-    static void InternalExportIndices(SurveyResults& report,
-                                      const MinMaxData::Data* array,
-                                      int fileLevel);
+    void InternalExportIndices(SurveyResults& report, const uint16_t* indices, int fileLevel) const;
 
     template<uint Size, class VCardT>
-    static void InternalExportValues(SurveyResults& report, const MinMaxData::Data* array);
+    void InternalExportValues(SurveyResults& report, const double* values) const;
 
 }; // class MinMaxBase
 
-template<class NextT>
-class Min: public MinMaxBase<true, NextT>
+class Min: public MinMaxBase
 {
 public:
-    //! Implementation
-    typedef MinMaxBase<true, NextT> MinMaxImplementationType;
-    //! Type of the net item in the list
-    typedef NextT NextType;
+    Min()
+    {
+        isInf_ = true;
+    }
 
-public:
-    //! Name of the filter
     static const char* Name()
     {
         return "min";
     }
-
-    enum
-    {
-        //! The count if item in the list
-        count = MinMaxImplementationType::count,
-    };
 };
 
-template<class NextT>
-class Max: public MinMaxBase<false, NextT>
+class Max: public MinMaxBase
 {
 public:
-    //! Implementation
-    typedef MinMaxBase<false, NextT> MinMaxImplementationType;
-    //! Type of the net item in the list
-    typedef NextT NextType;
+    Max()
+    {
+        isInf_ = false;
+    }
 
-public:
-    //! Name of the filter
     static const char* Name()
     {
         return "max";
     }
-
-    enum
-    {
-        //! The count if item in the list
-        count = MinMaxImplementationType::count,
-    };
 };
 
 } // namespace Antares::Solver::Variable::R::AllYears

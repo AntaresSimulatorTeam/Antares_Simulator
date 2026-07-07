@@ -16,7 +16,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
     int nombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                   ->NombreDePasDeTempsPourUneOptimisation;
     int nombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-    VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables);
+    VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables,
+                                ProblemeAResoudre->LegacyVariablesInfo);
     const bool intVariables = problemeHebdo->OptimisationAvecVariablesEntieres;
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {

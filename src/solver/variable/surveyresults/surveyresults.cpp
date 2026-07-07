@@ -161,7 +161,6 @@ SurveyResultsData::SurveyResultsData(const Data::Study& s, const Yuni::String& o
     thermalCluster(nullptr),
     area(nullptr),
     link(nullptr),
-    setOfAreasIndex((uint)-1),
     study(s),
     nbYears(s.parameters.nbYears),
     effectiveNbYears(s.parameters.effectiveNbYears),

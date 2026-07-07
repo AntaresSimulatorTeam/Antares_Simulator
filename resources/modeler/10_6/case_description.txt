@@ -1,0 +1,7 @@
+Test 10_6 : one time step
+
+One area (base_zone)
+One load : 90 MW
+One generator, with max_power = 100 MW. One generator has got a generation cost = 10.
+
+Expected results: see associated system.yml

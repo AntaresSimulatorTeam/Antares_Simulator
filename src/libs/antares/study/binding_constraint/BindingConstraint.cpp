@@ -605,12 +605,12 @@ void BindingConstraint::clearAndReset(const AnyString& name,
     }
     case typeHourly:
     {
-        RHSTimeSeries_.reset(columnMax, 8784, true);
+        RHSTimeSeries_.reset(columnMax, 8784);
         break;
     }
     case typeDaily:
     {
-        RHSTimeSeries_.reset(columnMax, 366, true);
+        RHSTimeSeries_.reset(columnMax, 366);
         break;
     }
     case typeWeekly:

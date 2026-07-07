@@ -14,6 +14,7 @@
 #include "antares/solver/ts-generator/generator.h"
 
 using namespace Yuni;
+using namespace Antares;
 using namespace Antares::Data;
 using namespace Antares::Solver::TimeSeriesNumbers;
 
@@ -35,7 +36,12 @@ void initializeStudy(Study::Ptr study, unsigned int nbYears = 1)
 // ========================
 Area* addAreaToStudy(Study::Ptr study, const std::string& areaName)
 {
-    Area* area = study->areaAdd(areaName);
+    Area* area = addAreaToListOfAreas(study->areas, areaName);
+    if (area)
+    {
+        area->createMissingData();
+        area->resetToDefaultValues();
+    }
     BOOST_CHECK(area);
 
     return area;
@@ -48,11 +54,13 @@ Area* addAreaToStudy(Study::Ptr study, const std::string& areaName)
 void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 {
     area->thermal.list.addToCompleteList(cluster);
+    area->thermal.list.buildIndexes();
 }
 
 void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 {
     area->renewable.list.addToCompleteList(cluster);
+    area->renewable.list.buildIndexes();
 }
 
 template<class ClusterType>

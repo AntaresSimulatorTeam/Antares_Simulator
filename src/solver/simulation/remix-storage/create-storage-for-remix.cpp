@@ -1,3 +1,6 @@
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
 
 #include "antares/solver/simulation/remix-storage/storage-for-remix-with-levels.h"
@@ -49,6 +52,7 @@ std::shared_ptr<IStorageForRemix> makeSTSforRemix(std::vector<double>& withdrawa
                                                   std::vector<double>& levels,
                                                   const std::vector<double>& pmax,
                                                   const std::vector<double>& inflows,
+                                                  const std::vector<double>& overflows,
                                                   const std::vector<double>& injection,
                                                   const std::vector<double>& lowRuleCurve,
                                                   const std::vector<double>& upRuleCurve,
@@ -58,8 +62,6 @@ std::shared_ptr<IStorageForRemix> makeSTSforRemix(std::vector<double>& withdrawa
                                                   const std::string& name)
 {
     size_t size = withdrawal.size();
-
-    std::vector<double> overflows(size, 0.);
     std::vector<double> pmin(size, 0.);
 
     return std::make_shared<StorageForRemixWithLevels>(withdrawal,

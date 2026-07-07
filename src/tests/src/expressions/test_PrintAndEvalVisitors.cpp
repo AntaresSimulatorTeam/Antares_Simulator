@@ -36,11 +36,11 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
             return 123.45; // Mock return value for testing
         }
 
-        [[nodiscard]] virtual std::span<const double> getData(
+        [[nodiscard]] std::span<const double> getData(
           [[maybe_unused]] const std::string& dataSetId,
           [[maybe_unused]] unsigned timeSeriesNumber,
           [[maybe_unused]] unsigned firstHour,
-          [[maybe_unused]] unsigned lastHour) const
+          [[maybe_unused]] unsigned lastHour) const override
         {
             static std::vector<double> data = {123.45};
             return data;
@@ -587,7 +587,7 @@ BOOST_FIXTURE_TEST_CASE(comparisonEqualNode_complex, MyDummyFixture)
                         ctx,
                         *compo,
                         &data,
-                        &scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
+                        scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
 
     const double num = 221.3;
     Node* equalLiteralParam = create<EqualNode>(create<LiteralNode>(num), &root);
@@ -661,7 +661,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
                         ctx,
                         *compo,
                         &data,
-                        &scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
+                        scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
 
     const double eval = visitor.dispatch(&root).valueAsDouble();
 
@@ -682,7 +682,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param_scenario_only, MyDummyFixture)
                         ctx,
                         *compo,
                         &data,
-                        &scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
+                        scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
 
     const double eval = visitor.dispatch(&root).valueAsDouble();
 
@@ -801,7 +801,7 @@ struct TimeDependentParameterFixture
                                                     ctx,
                                                     components.front(),
                                                     &dummy_data,
-                                                    &scenarioGroupRepo.scenario(
+                                                    scenarioGroupRepo.scenario(
                                                       components.front().getScenarioGroupId()));
     }
 };
@@ -849,11 +849,16 @@ EvaluationResult CreateAndEvaluateTimeNode(Node* p)
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
+    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{first,
+                                                                           last /*three hours*/,
+                                                                           first,
+                                                                           last,
+                                                                           0};
     EvalVisitor visitor(optimContainer,
-                        {first, last /*three hours*/, first, last, 0},
+                        fillContext,
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
 
     return visitor.dispatch(&root);
 }
@@ -902,25 +907,53 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
+    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{first,
+                                                                           last /*three hours*/,
+                                                                           first,
+                                                                           last,
+                                                                           0};
     EvalVisitor visitor(optimContainer,
-                        {first, last /*three hours*/, first, last, 0},
+                        fillContext,
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
 
     return visitor.dispatch(&root);
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_timeSum_param, MyDummyFixture)
 {
-    LiteralNode from(0.0);
-    LiteralNode to(1.0);
+    LiteralNode fromOffset(0.0);
+    LiteralNode toOffset(1.0);
+    TPlusNode from(&fromOffset);
+    TPlusNode to(&toOffset);
     const auto eval = CreateAndEvaluateTimeSumNode(&from, &to).valuesAsVector();
     // from MockLinearProblemData  param TSdata is {0, 1, 2}
     // here we applied TimeSum from t+0 and to t+1
     BOOST_CHECK_EQUAL(eval.at(0), 0 + 1); // add param.at(0)+param.at(1)
     BOOST_CHECK_EQUAL(eval.at(1), 1 + 2); // add param.at(1)+param.at(2)
     BOOST_CHECK_EQUAL(eval.at(2), 2 + 0); // add param.at(2)+param.at(0)
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_timeSum_param_with_mixed_bounds, MyDummyFixture)
+{
+    LiteralNode fromFixed(1.0);
+    LiteralNode toOffset(1.0);
+    TPlusNode to(&toOffset);
+
+    const auto eval = CreateAndEvaluateTimeSumNode(&fromFixed, &to).valuesAsVector();
+
+    BOOST_CHECK_EQUAL(eval.at(0), 1);         // p[1]
+    BOOST_CHECK_EQUAL(eval.at(1), 1 + 2);     // p[1] + p[2]
+    BOOST_CHECK_EQUAL(eval.at(2), 1 + 2 + 0); // p[1] + p[2] + p[0]
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_tPlusNode, MyDummyFixture)
+{
+    LiteralNode offset(2.0);
+    TPlusNode tPlus(&offset);
+
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(&tPlus).valueAsDouble(), 2.0);
 }
 
 EvaluationResult CreateAndEvaluateAllTimeSumNode()
@@ -947,11 +980,16 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
+    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{first,
+                                                                           last /*three hours*/,
+                                                                           first,
+                                                                           last,
+                                                                           0};
     EvalVisitor visitor(optimContainer,
-                        {first, last /*three hours*/, first, last, 0},
+                        fillContext,
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     return visitor.dispatch(&root);
 }
 
@@ -987,11 +1025,16 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
+    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{hour_0,
+                                                                           hour_1 /*two hours*/,
+                                                                           hour_0,
+                                                                           hour_1,
+                                                                           0};
     EvalVisitor visitor(optimContainer,
-                        {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
+                        fillContext,
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], hour_0 * literal.value());
@@ -1053,11 +1096,16 @@ void evaluate_time_dependent_operation()
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
+    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{hour_0,
+                                                                           hour_1 /*three hours*/,
+                                                                           hour_0,
+                                                                           hour_1,
+                                                                           0};
     EvalVisitor visitor(optimContainer,
-                        {hour_0, hour_1 /*three hours*/, hour_0, hour_1, 0},
+                        fillContext,
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], evalExpected<BinaryNode>(literal.value(), hour_0));
@@ -1091,11 +1139,13 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
+    const Antares::Optimisation::LinearProblemApi::FillContext
+      fillContext{hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0};
     EvalVisitor visitor(optimContainer,
-                        {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
+                        fillContext,
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
     std::vector<double> result_before_timeShift = {evalExpected<BinaryNode>(literal.value(),
@@ -1137,11 +1187,13 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
+    const Antares::Optimisation::LinearProblemApi::FillContext
+      fillContext{hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0};
     EvalVisitor visitor(optimContainer,
-                        {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
+                        fillContext,
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
 
     const auto eval = visitor.dispatch(&root).valueAsDouble();
 
@@ -1435,8 +1487,8 @@ BOOST_FIXTURE_TEST_CASE(PrintTimeShiftNode, MyDummyFixture)
 
 BOOST_FIXTURE_TEST_CASE(PrintTimeSumNode, MyDummyFixture)
 {
-    Node* from = create<LiteralNode>(1.);
-    Node* to = create<LiteralNode>(23);
+    Node* from = create<TPlusNode>(create<LiteralNode>(1.));
+    Node* to = create<TPlusNode>(create<LiteralNode>(23));
     Node* expression = create<ParameterNode>("p");
     PrintVisitor printVisitor;
     // --
@@ -1445,12 +1497,31 @@ BOOST_FIXTURE_TEST_CASE(PrintTimeSumNode, MyDummyFixture)
     BOOST_CHECK(printVisitor.dispatch(positive_shift) == "sum(t+1.000000 .. t+23.000000, p)");
     // --
 
-    Node* mfrom = create<LiteralNode>(-1.);
-    Node* mto = create<LiteralNode>(-23);
+    Node* mfrom = create<TPlusNode>(create<LiteralNode>(-1.));
+    Node* mto = create<TPlusNode>(create<LiteralNode>(-23));
     Node* negative_shift = create<TimeSumNode>(mfrom, mto, expression);
     auto m = printVisitor.dispatch(negative_shift);
 
     BOOST_CHECK(printVisitor.dispatch(negative_shift) == "sum(t-1.000000 .. t-23.000000, p)");
+}
+
+BOOST_FIXTURE_TEST_CASE(PrintTimeSumNodeWithFixedBounds, MyDummyFixture)
+{
+    Node* from = create<LiteralNode>(1.);
+    Node* to = create<LiteralNode>(23);
+    Node* expression = create<ParameterNode>("p");
+    PrintVisitor printVisitor;
+
+    Node* fixed_bounds = create<TimeSumNode>(from, to, expression);
+    BOOST_CHECK(printVisitor.dispatch(fixed_bounds) == "sum(1.000000 .. 23.000000, p)");
+}
+
+BOOST_FIXTURE_TEST_CASE(PrintTPlusNode, MyDummyFixture)
+{
+    PrintVisitor printVisitor;
+    Node* tPlus = create<TPlusNode>(create<LiteralNode>(2.));
+
+    BOOST_CHECK(printVisitor.dispatch(tPlus) == "t+2.000000");
 }
 
 BOOST_FIXTURE_TEST_CASE(PrintAllTimeSumNode, MyDummyFixture)
@@ -1508,6 +1579,34 @@ BOOST_FIXTURE_TEST_CASE(print_ceil_applied_to_a_parameter, MyDummyFixture)
     Node* ceil_node = create<FunctionNode>(FunctionNodeType::ceil, create<ParameterNode>("p"));
     PrintVisitor printVisitor;
     BOOST_CHECK(printVisitor.dispatch(ceil_node) == "ceil(p)");
+}
+
+BOOST_FIXTURE_TEST_CASE(print_round_applied_to_a_literal, MyDummyFixture)
+{
+    Node* round_node = create<FunctionNode>(FunctionNodeType::round, create<LiteralNode>(3.7));
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(round_node) == "round(3.700000)");
+}
+
+BOOST_FIXTURE_TEST_CASE(print_round_applied_to_a_parameter, MyDummyFixture)
+{
+    Node* round_node = create<FunctionNode>(FunctionNodeType::round, create<ParameterNode>("p"));
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(round_node) == "round(p)");
+}
+
+BOOST_FIXTURE_TEST_CASE(print_abs_applied_to_a_literal, MyDummyFixture)
+{
+    Node* abs_node = create<FunctionNode>(FunctionNodeType::abs, create<LiteralNode>(3.7));
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(abs_node) == "abs(3.700000)");
+}
+
+BOOST_FIXTURE_TEST_CASE(print_abs_applied_to_a_parameter, MyDummyFixture)
+{
+    Node* abs_node = create<FunctionNode>(FunctionNodeType::abs, create<ParameterNode>("p"));
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(abs_node) == "abs(p)");
 }
 
 BOOST_AUTO_TEST_CASE(shift_empty_vector)
@@ -1668,7 +1767,7 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
                         fillContext,
                         components.back(),
                         &testData,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     double eval = visitor.dispatch(root).valueAsDouble();
     BOOST_CHECK_EQUAL(eval, 12.5);
 
@@ -1697,6 +1796,19 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
     BOOST_CHECK_EQUAL(evalVector[0], 45.3);
     BOOST_CHECK_EQUAL(evalVector[1], 78.9);
     BOOST_CHECK_EQUAL(evalVector[2], 714.5);
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_timeSum_inverted_bounds_returns_zero, MyDummyFixture)
+{
+    LiteralNode fromOffset(5.0);
+    LiteralNode toOffset(1.0);
+    TPlusNode from(&fromOffset);
+    TPlusNode to(&toOffset);
+    const auto eval = CreateAndEvaluateTimeSumNode(&from, &to).valuesAsVector();
+
+    BOOST_CHECK_EQUAL(eval.at(0), 0.0);
+    BOOST_CHECK_EQUAL(eval.at(1), 0.0);
+    BOOST_CHECK_EQUAL(eval.at(2), 0.0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

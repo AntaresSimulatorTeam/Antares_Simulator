@@ -4,7 +4,6 @@
 #include "antares/solver/utils/mps_utils.h"
 
 #include <antares/study/study.h>
-#include "antares/io/outputs/ISimulationTable.h"
 #include "antares/io/outputs/MPSGenerator.h"
 #include "antares/solver/utils/ortools_utils.h"
 
@@ -45,9 +44,11 @@ using namespace Antares::Data;
 // Full mps writing
 // ---------------------------------
 MPSwriter::MPSwriter(const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
-                     uint optNumber):
+                     uint optNumber,
+                     bool keepNames):
     I_MPS_writer(optNumber),
-    linearProblem_(linearProblem)
+    linearProblem_(linearProblem),
+    keepNames_(keepNames)
 {
 }
 
@@ -57,7 +58,7 @@ void MPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string& fi
     logs.info() << "Writing MPS File: `" << filename << "'";
 
     // 1. Write MPS
-    auto mps = Antares::IO::Outputs::MPSGenerator(linearProblem_, filename).run();
+    auto mps = Antares::IO::Outputs::MPSGenerator(linearProblem_, filename, keepNames_).run();
 
     // 2. add the mps
     writer.addEntryFromBuffer(filename, mps);
@@ -90,11 +91,11 @@ bool mpsWriterFactory::doWeExportMPS()
     }
 }
 
-std::unique_ptr<I_MPS_writer> mpsWriterFactory::create()
+std::unique_ptr<I_MPS_writer> mpsWriterFactory::create(bool keepNames)
 {
     if (doWeExportMPS())
     {
-        return createFullmpsWriter();
+        return createFullmpsWriter(keepNames);
     }
 
     return std::make_unique<nullMPSwriter>();
@@ -104,13 +105,13 @@ std::unique_ptr<I_MPS_writer> mpsWriterFactory::createOnOptimizationError()
 {
     if (export_mps_on_error_ || doWeExportMPS())
     {
-        return createFullmpsWriter();
+        return createFullmpsWriter(true); // Always keep names for error MPS — aids debugging
     }
 
     return std::make_unique<nullMPSwriter>();
 }
 
-std::unique_ptr<I_MPS_writer> mpsWriterFactory::createFullmpsWriter()
+std::unique_ptr<I_MPS_writer> mpsWriterFactory::createFullmpsWriter(bool keepNames)
 {
-    return std::make_unique<MPSwriter>(linearProblem_, current_optim_number_);
+    return std::make_unique<MPSwriter>(linearProblem_, current_optim_number_, keepNames);
 }

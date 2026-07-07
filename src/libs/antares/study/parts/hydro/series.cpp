@@ -1,12 +1,13 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include "antares/study/parts/hydro/series.h"
+
 #include <algorithm>
 
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
 
-#include <antares/exception/LoadingError.hpp>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/study/parts/hydro/series.h>
@@ -68,7 +69,8 @@ DataSeriesHydro::DataSeriesHydro():
     storage(timeseriesNumbers),
     mingen(timeseriesNumbers),
     maxHourlyGenPower(timeseriesNumbers),
-    maxHourlyPumpPower(timeseriesNumbers)
+    maxHourlyPumpPower(timeseriesNumbers),
+    ruleCurves(timeseriesNumbers)
 {
     timeseriesNumbers.registerSeries(&ror, "ror");
     timeseriesNumbers.registerSeries(&storage, "storage");
@@ -90,10 +92,6 @@ void DataSeriesHydro::copyGenerationTS(const DataSeriesHydro& source)
     ror.timeSeries = source.ror.timeSeries;
     storage.timeSeries = source.storage.timeSeries;
     mingen.timeSeries = source.mingen.timeSeries;
-
-    source.ror.unloadFromMemory();
-    source.storage.unloadFromMemory();
-    source.mingen.unloadFromMemory();
 }
 
 void DataSeriesHydro::reset()
@@ -210,7 +208,10 @@ uint DataSeriesHydro::TScount() const
                                            ror.numberOfColumns(),
                                            mingen.numberOfColumns(),
                                            maxHourlyGenPower.numberOfColumns(),
-                                           maxHourlyPumpPower.numberOfColumns()});
+                                           maxHourlyPumpPower.numberOfColumns(),
+                                           ruleCurves.max.numberOfColumns(),
+                                           ruleCurves.min.numberOfColumns(),
+                                           ruleCurves.avg.numberOfColumns()});
 
     return *std::max_element(nbColumns.begin(), nbColumns.end());
 }
@@ -236,5 +237,7 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
             maxHourlyPumpPower.averageTimeseries();
         }
     }
+
+    ruleCurves.averageTimeSeries();
 }
 } // namespace Antares::Data

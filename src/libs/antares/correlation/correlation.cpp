@@ -8,7 +8,6 @@
 #include "antares/study/area/area.h"
 #include "antares/study/study.h"
 
-using namespace Yuni;
 using namespace Antares;
 
 namespace Antares::Data
@@ -108,8 +107,11 @@ static inline void ReadCorrelationCoefficients(Correlation& correlation,
             continue;
         }
 
-        const AreaName::Size offset = p->key.find('%');
-        if (offset == AreaName::npos or !offset or offset == p->key.size() - 1)
+        // First case corresponds to "not found"
+        // Second corresponds to "%" in first position
+        // Third correspond to "%" in last position
+        const size_t offset = p->key.find('%');
+        if (offset == std::string::npos or !offset or offset == p->key.size() - 1)
         {
             logs.error() << ini.filename() << ": '" << p->key << "': invalid token";
             continue;
@@ -153,36 +155,6 @@ static inline void ReadCorrelationCoefficients(Correlation& correlation,
             }
         }
     }
-}
-
-static inline void ExportCorrelationCoefficients(Study& study,
-                                                 const Matrix<>& m,
-                                                 IO::File::Stream& file,
-                                                 const std::string& name)
-{
-    if (m.empty() or m.width != m.height)
-    {
-        return;
-    }
-
-    file << '[' << name << "]\n";
-
-    // For each column
-    for (uint x = 0; x != m.width; ++x)
-    {
-        const AreaName& from = study.areas.byIndex[x]->id;
-
-        auto& col = m.entry[x];
-        for (uint y = 0; y < x; ++y)
-        {
-            if (!Utils::isZero(col[y]))
-            {
-                file << from << '%' << study.areas.byIndex[y]->id << " = " << col[y] << '\n';
-            }
-        }
-    }
-
-    file << '\n';
 }
 
 int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, int warnings)
@@ -274,11 +246,21 @@ const char* Correlation::ModeToCString(Mode mode)
     return "unknown";
 }
 
-Correlation::Mode Correlation::CStringToMode(const AnyString& str)
+Correlation::Mode Correlation::CStringToMode(const std::string& str)
 {
-    ShortString64 s(str);
-    s.trim(" \t\r\n");
-    s.toLower();
+    std::string s = str;
+    // trim
+    const std::string ws = " \t\r\n";
+    auto start = s.find_first_not_of(ws);
+    if (start == std::string::npos)
+    {
+        return modeNone;
+    }
+    auto end = s.find_last_not_of(ws);
+    s = s.substr(start, end - start + 1);
+    // toLower
+    std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
+
     if (s == "annual")
     {
         return modeAnnual;
@@ -409,7 +391,7 @@ void Correlation::set(Matrix<>& m, const Area& from, const Area& to, double v)
 
 static inline uint FindMappedAreaName(const AreaName& name,
                                       const Study& study,
-                                      const Area::NameMapping& mapping)
+                                      const AreaNameMapping& mapping)
 {
     auto i = mapping.find(name);
     if (i != mapping.end())
@@ -426,7 +408,7 @@ static void CopyFromSingleMatrix(const Matrix<>& mxsrc,
                                  const Study& studySource,
                                  uint areaSource,
                                  uint areaTarget,
-                                 const Area::NameMapping& mapping,
+                                 const AreaNameMapping& mapping,
                                  const Study& study)
 {
     // for (uint x = 0; x <= areaSource; ++x)
@@ -458,7 +440,7 @@ static void CopyFromSingleMatrix(const Matrix<>& mxsrc,
 void Correlation::copyFrom(const Correlation& source,
                            const Study& studySource,
                            const AreaName& areaSource,
-                           const Area::NameMapping& mapping,
+                           const AreaNameMapping& mapping,
                            const Study& study)
 {
     if (study.areas.size() <= 1)

@@ -6,6 +6,10 @@
 
 #include <optional>
 
+#include <antares/inifile/inifile.h>
+#include <antares/study/area/ReserveOpt.h>
+#include <antares/study/area/reserveParticipationContainer.h>
+
 #include "../../fwd.h"
 #include "allocation.h"
 #include "prepro.h"
@@ -86,6 +90,12 @@ public:
         pumpMod,
     };
 
+    struct HydroReserveParticipationWithName
+    {
+        std::reference_wrapper<StorageClusterReserveParticipation> reserveParticipation;
+        std::string reserveID;
+    };
+
     static bool LoadIniFile(Study& study, const std::filesystem::path& folder);
 
     /*!
@@ -136,6 +146,15 @@ public:
 
     bool CheckDailyMaxEnergy(const AnyString& areaName);
 
+    uint reserveParticipationsCount() const;
+
+    std::optional<ReserveID> reserveParticipationAt(const Area* area, unsigned int index) const;
+
+    uint count() const;
+
+    bool loadReserveParticipations(Area& area, const std::filesystem::path& file);
+
+public:
     //! Inter-daily breakdown (previously called Smoothing Factor or alpha)
     double interDailyBreakdown;
     //! Intra-daily modulation
@@ -179,9 +198,6 @@ public:
     //! Daily Inflow Patern ([default 1, 0<x<dayspermonth]x365)
     Matrix<double> inflowPattern;
 
-    //! Daily reservoir level ({min,avg,max}x365)
-    Matrix<double> reservoirLevel;
-
     //! Daily water value ({0,1,2%...100%}x365)
     Matrix<double> waterValues;
 
@@ -202,10 +218,15 @@ public:
 
     std::vector<std::optional<double>> deltaBetweenFinalAndInitialLevels;
 
+    //! Reserve participation container to store the participation of the cluster in the reserves
+    //! and the symmetries
+    ReserveOpt<ReserveParticipationContainer<StorageClusterReserveParticipation>>
+      reserveParticipationContainer;
+
     double overflowSpilledCostDifference = 1.;
 
 private:
-    static bool checkReservoirLevels(const Study& study);
+    static bool checkInflowPatternAndCredModul(const Study& study);
     static bool checkProperties(Study& study);
 
 }; // class PartHydro

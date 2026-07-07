@@ -107,6 +107,114 @@ The nature of this contribution depends on the field :
 These fields are independent : you don't have to define the 3 of them at the same time, you can define only one (as long as its value is an existing port in the same port type).
 
 These fields must be present in the **area-connection** section of a port type, even if they are not defined (= corresponding value is empty). 
+
+#### Migrating existing YAML files (version 9.3.x -> 10.x)
+If you already have hybrid-study model libraries written with the previous syntax, update the `area-connection` and `thermal-capacity-connection` sections as follows. The format was changed in version 10.0.0 of Antares_Simulator.
+
+For `area-connection`:
+
+- `injection-field` has been renamed to `injection-to-balance`
+- `area-connection` must now be a YAML mapping, not a YAML list
+- the mapping must contain exactly these 3 keys: `injection-to-balance`, `spillage-bound`, `unsupplied-energy-bound`
+- unused keys must still be present, with an empty value
+
+Before:
+~~~yaml
+port-types:
+  - id: port-to-area
+    fields:
+      - id: flow
+      - id: to-area-bound
+      - id: from-area-bound
+    area-connection:
+      - injection-field: flow
+      - spillage-bound: to-area-bound
+      - unsupplied-energy-bound: from-area-bound
+~~~
+
+After:
+~~~yaml
+port-types:
+  - id: port-to-area
+    fields:
+      - id: flow
+      - id: to-area-bound
+      - id: from-area-bound
+    area-connection:
+      injection-to-balance: flow
+      spillage-bound: to-area-bound
+      unsupplied-energy-bound: from-area-bound
+~~~
+
+If one of the three fields is unused, keep it with an empty value:
+
+~~~yaml
+port-types:
+  - id: port-to-area
+    fields:
+      - id: flow
+    area-connection:
+      injection-to-balance: flow
+      spillage-bound:
+      unsupplied-energy-bound:
+~~~
+
+For `thermal-capacity-connection`:
+
+- `thermal-capacity-connection` must now be a YAML mapping, not a YAML list
+- the mapping must contain the single key `capacity-field`
+
+Before:
+~~~yaml
+port-types:
+  - id: capacity_port
+    fields:
+      - id: capacity
+    thermal-capacity-connection:
+      - capacity-field: capacity
+~~~
+
+After:
+~~~yaml
+port-types:
+  - id: capacity_port
+    fields:
+      - id: capacity
+    thermal-capacity-connection:
+      capacity-field: capacity
+~~~
+
+The `area-connections` and `thermal-capacity-connections` sections in the system file do not change in this migration.
+
+#### Connecting modeler components to thermal clusters
+Hybrid studies can also connect a modeler component to a legacy thermal cluster. This is used for investment studies, where a new capacity expression from the modeler side limits the thermal cluster production.
+
+The setup is similar to `area-connection`:
+
+- in the model library, the port type may define a `thermal-capacity-connection` field, which names the port field used as the capacity expression
+- in the system file, `thermal-capacity-connections` links a component port to a thermal cluster identified by its `area` and `cluster-id`
+
+Model library:
+~~~yaml
+port-types:
+  - id: capacity_port
+    fields:
+      - id: capacity
+    thermal-capacity-connection:
+      capacity-field: capacity
+~~~
+
+System file:
+~~~yaml
+thermal-capacity-connections:
+  - component: my_thermal_invest
+    port: capacity_port
+    thermal-component:
+      area: fr
+      cluster-id: nuclear1
+~~~
+
+The linked port field is then used as an upper bound on the thermal cluster dispatchable production, hour by hour. When this connection is present, the legacy thermal capacity time series is ignored for that cluster and replaced by the expression coming from the modeler port.
  
 #### Adding a linear expression in optimization model
 When you connect a component to an area via a port (containing an **area-connection** section), you must respect conventions on the GEMS side.

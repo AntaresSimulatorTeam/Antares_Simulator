@@ -19,9 +19,10 @@
 
 using namespace std::string_literals;
 
-using namespace Optimization;
+using namespace Antares;
+using namespace Antares::Optimization;
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Optimisation;
+using namespace Antares::Optimisation;
 using namespace LinearProblemApi;
 using namespace LinearProblemDataImpl;
 
@@ -152,7 +153,7 @@ struct ComponentToAreaConnectionFillerFixture
         libraries.push_back(IO::Inputs::ModelConverter::convert(parserModel.parse(libraryYaml)));
 
         IO::Inputs::YmlSystem::Parser parserSystem;
-        auto ymlSystem = parserSystem.parse(systemYaml);
+        auto ymlSystem = parserSystem.parse(systemYaml, "");
         auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
 
         to_return->system = std::make_unique<System>(std::move(system));

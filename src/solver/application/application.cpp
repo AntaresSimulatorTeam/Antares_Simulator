@@ -18,7 +18,6 @@
 #include "antares/antares/version.h"
 #include "antares/checks/checksOnLPsolver.h"
 #include "antares/config/config.h"
-#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/signal-handling/public.h"
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
@@ -153,6 +152,11 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         // no output ?
         study.parameters.noOutput = pSettings.noOutput;
 
+        if (pSettings.parquetFmtForSimuTables)
+        {
+            study.parameters.simuTableFormat = Writer::TableFormat::Parquet;
+        }
+
         if (pSettings.forceZipOutput)
         {
             pParameters->resultFormat = Antares::Data::zipArchive;
@@ -162,10 +166,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     {
         loadingException = std::current_exception();
     }
-
-    // This settings can only be enabled from the solver
-    // Prepare the output for the study
-    study.prepareOutput();
 
     // Initialize the result writer
     prepareWriter(study, pDurationCollector);
@@ -234,7 +234,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             throw Error::InvalidFileName();
         }
 
-        writeComment(study);
+        writeComment();
     }
 
     if (!study.initializeRuntimeInfos())
@@ -447,22 +447,20 @@ void Application::resetLogFilename() const
 void Application::prepareWriter(const Antares::Data::Study& study,
                                 Benchmarking::DurationCollector& duration_collector)
 {
-    ioQueueService = std::make_shared<Yuni::Job::QueueService>();
-    ioQueueService->maximumThreadCount(1);
-    ioQueueService->start();
+    ioQueueService = std::make_shared<Concurrency::ThreadPool>(1);
     resultWriter = resultWriterFactory(study.parameters.resultFormat,
                                        study.folderOutput,
                                        ioQueueService,
                                        duration_collector);
 }
 
-void Application::writeComment(Data::Study& study)
+void Application::writeComment()
 {
-    study.buffer.clear() << "simulation-comments.txt";
+    fs::path commentsPath = "simulation-comments.txt";
 
     if (!pSettings.commentFile.empty())
     {
-        resultWriter->addEntryFromFile(study.buffer.c_str(), pSettings.commentFile.c_str());
+        resultWriter->addEntryFromFile(commentsPath, pSettings.commentFile);
 
         pSettings.commentFile.clear();
     }

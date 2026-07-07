@@ -2,8 +2,12 @@ set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/scBuilderDataInterface.h
         include/antares/study/scenario-builder/TSnumberData.h
         scenario-builder/TSnumberData.cpp
-        include/antares/study/scenario-builder/hydroLevelsData.h
-        scenario-builder/hydroLevelsData.cpp
+        include/antares/study/scenario-builder/HydroLevelsData.h
+        scenario-builder/HydroLevelsData.cpp
+        include/antares/study/scenario-builder/HydroFinalLevelsData.h
+        scenario-builder/HydroFinalLevelsData.cpp
+        include/antares/study/scenario-builder/HydroInitialLevelsData.h
+        scenario-builder/HydroInitialLevelsData.cpp
         include/antares/study/scenario-builder/rules.h
         include/antares/study/scenario-builder/rules.hxx
         scenario-builder/rules.cpp
@@ -37,8 +41,13 @@ source_group("study\\scenario builder" FILES ${SRC_MATRIX})
 set(SRC_AREAS
         include/antares/study/area/constants.h
         include/antares/study/area/area.h
+        include/antares/study/area/capacityReservation.h
+        include/antares/study/area/reserveParticipation.h
+        include/antares/study/area/reserveParticipationContainer.h
+        include/antares/study/area/ReserveOpt.h
         include/antares/study/area/area.hxx
         include/antares/study/area/scratchpad.h
+		include/antares/study/area/forTestsOnlyList.h
         area/scratchpad.cpp
         area/area.cpp
         area/links.cpp
@@ -54,6 +63,7 @@ set(SRC_STUDY_PART_COMMON
         include/antares/study/parts/common/cluster.h
         include/antares/study/parts/common/cluster_list.h
         parts/common/cluster_list.cpp
+        include/antares/study/parts/common/CustomErrorListener.h
 )
 source_group("study\\part\\common" FILES ${SRC_STUDY_PART_COMMON})
 
@@ -85,6 +95,15 @@ set(SRC_STUDY_PART_RENEWABLE
         parts/renewable/cluster_list.cpp
 )
 source_group("study\\part\\renewable" FILES ${SRC_STUDY_PART_RENEWABLE})
+
+set(SRC_STUDY_PART_RESERVES
+        include/antares/study/parts/reserves/reservesParticipationsLoader.h
+        include/antares/study/parts/reserves/SymmetryCollectorVisitor.h
+        include/antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h
+        parts/reserves/makeGroupsofSymmetriesFromString.cpp
+)
+source_group("study\\part\\reserves" FILES ${SRC_STUDY_PART_RESERVES})
+
 set(SRC_STUDY_PART_SHORT_TERM_STORAGE
         include/antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h
         parts/short-term-storage/makeGroupsOfHoursFromString.cpp
@@ -98,6 +117,7 @@ set(SRC_STUDY_PART_SHORT_TERM_STORAGE
         include/antares/study/parts/short-term-storage/additionalConstraints.h
         parts/short-term-storage/cluster.cpp
         parts/short-term-storage/additionalConstraints.cpp
+        include/antares/study/parts/common/CustomErrorListener.h
 )
 source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
 
@@ -122,6 +142,8 @@ set(SRC_STUDY_PART_HYDRO
         parts/hydro/allocation.cpp
         include/antares/study/parts/hydro/hydromaxtimeseriesreader.h
         parts/hydro/hydromaxtimeseriesreader.cpp
+        include/antares/study/parts/hydro/hydrorulecurves.h
+        parts/hydro/hydrorulecurves.cpp
 )
 source_group("study\\part\\hydro" FILES ${SRC_STUDY_PART_HYDRO})
 
@@ -244,6 +266,7 @@ set(SRC_ALL
         ${SRC_STUDY_PART_COMMON}
         ${SRC_STUDY_PART_THERMAL}
         ${SRC_STUDY_PART_RENEWABLE}
+        ${SRC_STUDY_PART_RESERVES}
         ${SRC_STUDY_PART_SHORT_TERM_STORAGE}
         ${SRC_STUDY_SCENARIO_BUILDER}
         ${SRC_STUDY}
@@ -268,32 +291,35 @@ add_library(Antares::study ALIAS study)
 target_link_libraries(study
         PUBLIC
         yuni-static-core
-        Antares::date #parameters
-        Antares::inifile #parameters
-        Antares::study-utils #area.hxx
-        Antares::solverUtils #sim_structure_probleme_economique.h -> optimization_statistics.h
+        Antares::date
+        Antares::inifile
+        Antares::io
+        Antares::study-utils
+        Antares::solverUtils
         Antares::correlation
         Antares::path
         Antares::mersenne
-        Antares::result_writer #study.h
+        Antares::result_writer
         Antares::series
         Antares::array
-        antares-core
-        antares-solver-simulation
         Antares::hydro
+        Antares::scenario-builder-utils
+        Antares::enums
+        antares-solver-simulation
+        antares-core
+        yaml-cpp::yaml-cpp
+        PRIVATE
         Antares::antares-study-system-model
         linear-problem-api
         Antares::load-modeler-files
         Antares::modeler-parameters
         Antares::modeler-lib
-        Antares::scenario-builder-utils
-        Antares::enums
-        PRIVATE
         Antares::exception
         fmt::fmt
         Antares::benchmarking
         antares-solver-variable
         Antares::additional-constraint-rhs-antlr-interface
+        Antares::reserves-parsing-antlr-interface
 )
 
 target_include_directories(study

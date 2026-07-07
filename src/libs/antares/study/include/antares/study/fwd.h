@@ -6,6 +6,8 @@
 
 #include <bit>
 #include <map>
+#include <ranges>
+#include <string>
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
@@ -40,13 +42,7 @@ class StudyRuntimeInfos;
 class Correlation;
 
 //! Name of a single area
-using AreaName = Yuni::CString<ant_k_area_name_max_length, true>;
-//! Name of a single link
-using AreaLinkName = Yuni::CString<ant_k_area_name_max_length * 2 + 1, true>;
-
-using ConstraintName = Yuni::CString<ant_k_constraint_name_max_length, true>;
-
-using RulesScenarioName = Yuni::CString<64, true>;
+using AreaName = std::string;
 
 //! Name mapping
 using AreaNameMapping = std::map<AreaName, AreaName>;
@@ -217,13 +213,6 @@ constexpr unsigned int allTimeSeriesMask = static_cast<unsigned int>(timeSeriesL
 ** These values are mainly used for mask bits
 */
 constexpr unsigned int timeSeriesCount = std::popcount(allTimeSeriesMask);
-
-template<unsigned int T>
-requires(T > 0 && (T & (T - 1)) == 0) // T must be power of two
-struct TimeSeriesBitPatternIntoIndex
-{
-    static constexpr int value = std::countr_zero(T);
-};
 
 template<int T>
 struct TimeSeriesToCStr;
@@ -488,5 +477,48 @@ namespace Benchmarking
 {
 class DurationCollector;
 }
+
+namespace Antares::Data
+{
+enum class ReserveType
+{
+    DOWN = 0,
+    UP = 1
+};
+
+enum class UnsuppliedSpilled
+{
+    //! Spilled
+    Spilled = 0,
+    //! Unsupplied
+    Unsupplied,
+
+    //! The highest value
+    Count
+};
+
+template<typename T>
+struct ReserveTypeData
+{
+    T up;
+    T down;
+
+    // Optional: array-style access
+    T& operator[](ReserveType type)
+    {
+        return (type == ReserveType::UP) ? up : down;
+    }
+
+    const T& operator[](ReserveType type) const
+    {
+        return (type == ReserveType::UP) ? up : down;
+    }
+};
+
+inline auto filter(ReserveType type)
+{
+    return std::views::filter([type](const auto& r) { return r.type == type; });
+}
+} // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_FWD_H__

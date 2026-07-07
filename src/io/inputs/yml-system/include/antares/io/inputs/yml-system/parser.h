@@ -9,6 +9,6 @@ namespace Antares::IO::Inputs::YmlSystem
 class Parser final
 {
 public:
-    System parse(const std::string& content);
+    System parse(const std::string& content, const std::string& pathFromRoot);
 };
 } // namespace Antares::IO::Inputs::YmlSystem

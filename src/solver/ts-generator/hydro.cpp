@@ -257,8 +257,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
               {
                   const int precision = 0;
                   const std::string mcYear = "mc-0";
-                  fs::path outputFolder = fs::path("ts-generator") / "hydro" / mcYear
-                                          / area.id.to<std::string>();
+                  fs::path outputFolder = fs::path("ts-generator") / "hydro" / mcYear / area.id;
 
                   std::string buffer;
                   area.hydro.series->ror.timeSeries.saveToBuffer(buffer, precision);

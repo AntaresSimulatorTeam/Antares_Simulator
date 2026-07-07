@@ -11,8 +11,6 @@
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
 
-class ISimulationTable;
-
 namespace Antares::Solver::Simulation
 {
 static void RecalculDesEchangesMoyens(Data::Study& study,
@@ -31,7 +29,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
             if (balance[j])
             {
                 problem.SoldeMoyenHoraire[i].SoldeMoyenDuPays[j] = balance[j]
-                                                                     ->avgdata
+                                                                     ->avgdata()
                                                                      .hourly[decalPasDeTemps];
             }
             else

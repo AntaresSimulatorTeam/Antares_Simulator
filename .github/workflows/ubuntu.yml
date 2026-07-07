@@ -12,6 +12,7 @@ on:
     - doc/*
     - dependabot/**
     - tests/*
+    - copilot/*
   schedule:
   - cron: '21 2 * * *'
   workflow_call:
@@ -27,6 +28,7 @@ env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
+  RUN_DEVELOP_TESTS: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || inputs.run-tests == 'true' }}
   RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
   REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
@@ -46,8 +48,16 @@ jobs:
     runs-on: ubuntu-22.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - testNRTarget: versionTestNR
+          isUploadTarget: true
+        - testNRTarget: latestTestNR
+          isUploadTarget: false
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         ref: ${{ env.REF }}
 
@@ -56,10 +66,10 @@ jobs:
 
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary
-      uses: actions/cache/restore@v5
+      uses: actions/cache/restore@v6
       with:
         path: ${{ github.workspace }}/vcpkg_cache
-        key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        key: vcpkg-cache-ubuntu-${{ hashFiles('vcpkg.json', '.git/modules/vcpkg/HEAD') }}
         # Allows to restore a cache when deps have only partially changed (like adding a dependency)
         restore-keys: vcpkg-cache-ubuntu-
 
@@ -69,12 +79,12 @@ jobs:
 
     - name: Restore ccache cache
       id: cache
-      uses: actions/cache/restore@v5
+      uses: actions/cache/restore@v6
       with:
         path: ${{ github.workspace }}/.ccache_ubuntu
         key: ${{ env.os }}-${{ github.ref_name }}
         restore-keys: |
-          ${{ env.os }}-  
+          ${{ env.os }}-
 
     - name: Configure ccache
       run: |
@@ -114,7 +124,7 @@ jobs:
 
     - name: Configure
       run: |
-        cmake -B _build -S src \
+        cmake -B _build -S . \
         -DCMAKE_C_COMPILER_LAUNCHER=ccache \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
@@ -130,13 +140,13 @@ jobs:
         cmake --build _build -j$(nproc)
 
     - name: Creation of complete .tar.gz archive
-      if: ${{ success() }}
+      if: ${{ success() && matrix.isUploadTarget }}
       run: |
         cd _build
         cpack -G TGZ -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
     - name: Creation of solver only .tar.gz archive
-      if: ${{ success() }}
+      if: ${{ success() && matrix.isUploadTarget }}
       run: |
         cd _build
         cmake --install . --prefix install
@@ -148,7 +158,7 @@ jobs:
         rm -rf install
 
     - name: Both previous archives upload
-      if: ${{ success() }}
+      if: ${{ success() && matrix.isUploadTarget }}
       uses: actions/upload-artifact@v7
       with:
         name: ubuntu-targz
@@ -180,9 +190,15 @@ jobs:
       run: |
         echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
 
-    - name: Init submodule Antares_Simulator_Tests_NR
+    - name: Init submodule Antares_Simulator_Tests_NR (committed submodule)
+      if: ${{ matrix.testNRTarget == 'versionTestNR' }}
       run: |
-        git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests_NR
+        git submodule update --init --depth 1 --recursive resources/Antares_Simulator_Tests_NR
+
+    - name: Init submodule Antares_Simulator_Tests_NR (latest)
+      if: ${{ matrix.testNRTarget == 'latestTestNR' }}
+      run: |
+        git submodule update --init --remote --recursive resources/Antares_Simulator_Tests_NR
 
     - name: Run named mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -193,17 +209,17 @@ jobs:
         os: ${{ env.os }}
         variant: "named-mps"
 
-    - name: Run fast cucumber
+    - name: Run short cucumber
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
       uses: ./.github/workflows/cucumber-tests
       with:
-        tags: "fast"
+        tags: "@short"
 
-    - name: Run cucumber on modeler
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+    - name: Run medium cucumber
+      if: ${{ env.RUN_DEVELOP_TESTS == 'true' && !cancelled() }}
       uses: ./.github/workflows/cucumber-tests
       with:
-        feature: "features/modeler-features"
+        tags: "@medium"
 
     - name: Run unit and end-to-end tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -229,7 +245,7 @@ jobs:
       if: ${{ failure() }}
       uses: actions/upload-artifact@v7
       with:
-        name: test-log
+        name: test-log-${{ matrix.testNRTarget }}
         path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
 
     - name: Run tests about infinity on BCs RHS
@@ -306,12 +322,6 @@ jobs:
         os: ${{ env.os }}
 
 
-    - name: Run cucumber on v9.2 tests
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/cucumber-tests
-      with:
-        feature: "features/solver-features/tests_for_v9.2.feature"
-
     - name: Run mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
       uses: ./.github/workflows/run-tests
@@ -343,11 +353,11 @@ jobs:
         batch-name: medium-tests
         os: ${{ env.os }}
 
-    - name: Run cucumber on medium-tests
+    - name: Run long cucumber
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
       uses: ./.github/workflows/cucumber-tests
       with:
-        feature: "features/solver-features/medium_tests.feature"
+        tags: "@long"
 
     - name: Run long-tests-1
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}
@@ -374,22 +384,18 @@ jobs:
         os: ${{ env.os }}
 
 
-    - name: Run cucumber on hybrid studies
-      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
-      uses: ./.github/workflows/cucumber-tests
-      with:
-        feature: "features/solver-features/hybrid_studies.feature"
-
     - name: Barrier
       if: ${{ !success() }}
       run: exit 1
 
     - name: Installer .deb creation
+      if: ${{ matrix.isUploadTarget }}
       run: |
         cd _build
         cpack -G DEB -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
     - name: Installer deb upload push
+      if: ${{ matrix.isUploadTarget }}
       uses: actions/upload-artifact@v7
       with:
         name: deb
@@ -397,7 +403,7 @@ jobs:
 
 
     - name: Publish assets
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.IS_RELEASE == 'true' && matrix.isUploadTarget }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
         tag: ${{ github.event.inputs.release_tag }}
@@ -406,7 +412,7 @@ jobs:
 
 
     - name: Update continuous-delivery release
-      if: github.ref == 'refs/heads/develop'
+      if: ${{ github.ref == 'refs/heads/develop' && matrix.isUploadTarget  && env.IS_RELEASE != 'true' }}
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
@@ -420,10 +426,10 @@ jobs:
     - name: Cache vcpkg binary dir
       if: always()
       id: save-cache-vcpkg-binary
-      uses: actions/cache/save@v5
+      uses: actions/cache/save@v6
       with:
         path: ${{ github.workspace }}/vcpkg_cache
-        key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        key: vcpkg-cache-ubuntu-${{ hashFiles('vcpkg.json', '.git/modules/vcpkg/HEAD') }}
 
     - name: Display ccache statistics
       run: ccache -s
@@ -442,7 +448,7 @@ jobs:
 
     - name: Save ccache cache
       if: ${{ !cancelled() }}
-      uses: actions/cache/save@v5
+      uses: actions/cache/save@v6
       with:
         path: ${{ github.workspace }}/.ccache_ubuntu
         key: ${{ steps.cache.outputs.cache-primary-key }}

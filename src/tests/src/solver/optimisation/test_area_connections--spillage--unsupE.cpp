@@ -17,9 +17,10 @@
 
 using namespace std::string_literals;
 
-using namespace Optimization;
+using namespace Antares;
+using namespace Antares::Optimization;
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Optimisation;
+using namespace Antares::Optimisation;
 using namespace LinearProblemApi;
 using namespace LinearProblemDataImpl;
 
@@ -129,7 +130,7 @@ std::unique_ptr<Solver::ModelerData> AreaConnectionFixture::buildModelerSystem()
       parserModel.parse(libraryYamlWithSpillageAndUnsuppliedEnergyBound)));
 
     IO::Inputs::YmlSystem::Parser parserSystem;
-    auto ymlSystem = parserSystem.parse(systemYamlAreaConnection);
+    auto ymlSystem = parserSystem.parse(systemYamlAreaConnection, "");
     auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
 
     to_return->system = std::make_unique<System>(std::move(system));

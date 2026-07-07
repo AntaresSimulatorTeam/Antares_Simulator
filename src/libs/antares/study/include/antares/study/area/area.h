@@ -5,15 +5,17 @@
 #define __ANTARES_LIBS_STUDY_AREAS_H__
 
 #include <filesystem>
+#include <ostream>
 #include <set>
 #include <stdlib.h>
 #include <vector>
 
 #include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
 
 #include <antares/array/matrix.h>
+#include <antares/study/area/ReserveOpt.h>
+#include <antares/study/area/capacityReservation.h>
 #include <antares/study/parameters/adq-patch-params.h>
 #include "antares/study/filter.h"
 #include "antares/study/parts/parts.h"
@@ -28,19 +30,16 @@ struct CompareAreaName;
 /*!
 ** \brief Definition for a single area
 */
-class Area final: private Yuni::NonCopyable<Area>
+class Area final
 {
 public:
+    Area(const Area&) = delete;
+    Area& operator=(const Area&) = delete;
+
     using NameSet = std::set<AreaName>;
-    using Set = std::set<Area*, CompareAreaName>;
-    using LinkMap = std::map<Area*, AreaLink::Set, CompareAreaName>;
     using Map = std::map<AreaName, Area*>;
     using Vector = std::vector<Area*>;
-    using VectorConst = std::vector<const Area*>;
-    using List = std::list<Area*>;
     using ScratchMap = std::map<const Area*, AreaScratchpad&>;
-    //! Name mapping -> must be replaced by AreaNameMapping
-    using NameMapping = std::map<AreaName, AreaName>;
 
     //! \name Constructor & Destructor
     //@{
@@ -100,19 +99,7 @@ public:
     ** \param with Any area
     ** \return A pointer to an existing link if found, NULL otherwise
     */
-    AreaLink* findExistingLinkWith(Area& with);
     const AreaLink* findExistingLinkWith(const Area& with) const;
-
-    //! \name Memory management
-    //@{
-    /*!
-    ** \brief Load all data not already loaded
-    **
-    ** If the load-on-demand is enabled, some data might not be loaded (see `Matrix`)
-    ** However, we would like to be able to force the load of all data, especially
-    ** when saving a study.
-    ** The flag `invalidateJIT` will be reset to false.
-    */
 
     //! \name Thermal clusters min stable power validity checking
     //@{
@@ -215,6 +202,9 @@ public:
     double spreadSpilledEnergyCost = 0.;
     //@}
 
+    /// \name AllCapacityReservations structure to keep track of the added capacity reservations
+    ReserveOpt<AllCapacityReservations> allCapacityReservations;
+
     //! \name Output filtering
     //@{
     //! Print results for the area in the simulation synthesis
@@ -229,17 +219,6 @@ public:
     ** \brief Scratchpad used temporary calculations (solver only)
     */
     mutable std::vector<AreaScratchpad> scratchpad;
-    //@}
-
-    //! \name Data
-    //@{
-    /*!
-    ** \brief Invalidate (JIT)
-    **
-    ** A non-zero value if the missing data must be loaded from HDD for the next
-    ** save (only valid if JIT enabled).
-    */
-    mutable bool invalidateJIT = false;
     //@}
 
 private:
@@ -276,19 +255,24 @@ private:
 ** printf("Area name : `%s`\n", (*(l->byIndex[2])).name);
 ** \endcode
 */
-class AreaList final: public Yuni::NonCopyable<AreaList>
+class AreaList final
 {
 public:
+    AreaList(const AreaList&) = delete;
+    AreaList& operator=(const AreaList&) = delete;
+
+    using OwningAreaMap = std::map<AreaName, std::unique_ptr<Area>>;
+
     //! An iterator
-    using iterator = Area::Map::iterator;
+    using iterator = OwningAreaMap::iterator;
     //! A const iterator
-    using const_iterator = Area::Map::const_iterator;
+    using const_iterator = OwningAreaMap::const_iterator;
     //! An iterator
-    using reverse_iterator = Area::Map::reverse_iterator;
+    using reverse_iterator = OwningAreaMap::reverse_iterator;
     //! A const iterator
-    using const_reverse_iterator = Area::Map::const_reverse_iterator;
+    using const_reverse_iterator = OwningAreaMap::const_reverse_iterator;
     //! Key-value type
-    using value_type = Area::Map::value_type;
+    using value_type = OwningAreaMap::value_type;
 
     //! \name Constructor & Destructor
     //@{
@@ -296,8 +280,6 @@ public:
     ** \brief Default constructor
     */
     explicit AreaList(Study& study);
-    ~AreaList() = default;
-    //@}
 
     //! \name Iterating through all areas
     //@{
@@ -374,7 +356,7 @@ public:
     ** \param filename The file to read
     ** \return A non-zero value if the operation was successful, 0 otherwise
     */
-    void saveLinkListToBuffer(Yuni::Clob& buffer) const;
+    void saveLinkListToBuffer(std::ostream& buffer) const;
 
     //! \name Areas
     //@{
@@ -434,13 +416,12 @@ public:
     ** \param area The name of the first area (in lowercase)
     ** \param with The name of the second area (in lowercase)
     */
-    AreaLink* findLink(const AreaName& area, const AreaName& with);
     const AreaLink* findLink(const AreaName& area, const AreaName& with) const;
 
     /*!
     ** \brief Try to find the link from a given INI key (<area1>%<area2>)
     */
-    AreaLink* findLinkFromINIKey(const AnyString& key);
+    const AreaLink* findLinkFromINIKey(const AnyString& key) const;
 
     /*!
     ** \brief Try to find the cluster from a given INI key (<area>.<cluster>)
@@ -477,7 +458,7 @@ public:
     //! All areas by their index
     std::vector<Area*> byIndex;
     //! All areas in the list
-    Area::Map areas;
+    OwningAreaMap areas;
 
     //! Name set (must be updated by updateNameSet)
     // used by the copy/paste
@@ -549,15 +530,6 @@ Area* addAreaToListOfAreas(AreaList& list, const AnyString& name);
 ** \return A valid pointer to the area if successful, NULL otherwise
 */
 Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyString& lname);
-
-/*!
-** \brief Try to establish a link between two areas
-**
-** \param l The list of areas
-** \param area The area to make a link
-** \param with The area to link with
-*/
-AreaLink* AreaListAddLink(AreaList* l, const char area[], const char with[], bool warning = true);
 
 void AreaListClearAllLinks(AreaList* l);
 

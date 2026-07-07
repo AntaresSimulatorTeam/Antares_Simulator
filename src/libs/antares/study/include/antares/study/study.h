@@ -7,8 +7,6 @@
 #include <memory>
 
 #include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
-#include <yuni/job/queue/service.h>
 
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/correlation/correlation.h>
@@ -20,7 +18,6 @@
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
 #include "area/store-timeseries-numbers.h"
-#include "binding_constraint/BindingConstraint.h"
 #include "fwd.h"
 #include "header.h"
 #include "parameters.h"
@@ -32,9 +29,12 @@ namespace Antares::Data
 ** \brief Antares Study
 */
 
-class Study: public Yuni::NonCopyable<Study>
+class Study
 {
 public:
+    Study(const Study&) = delete;
+    Study& operator=(const Study&) = delete;
+
     using Ptr = std::shared_ptr<Study>;
     //! Set of studies
     using Set = std::set<Ptr>;
@@ -44,19 +44,6 @@ public:
     //! Multiple sets of areas
     using SetsOfAreas = Antares::Data::Sets;
 
-    //! Extension filename
-    using FileExtension = std::string;
-
-    /*!
-    ** \brief Extract the title of a study
-    **
-    ** \param folder A study folder
-    ** \param[out] out      The variable where the title will be written
-    ** \param      warnings False to prevent warnings/errors when loading
-    ** \return True if the operation succeeded, false otherwise
-    */
-    static bool TitleFromStudyFolder(const AnyString& folder, YString& out, bool warnings = false);
-
     /*!
     ** \brief Get if a folder if a study
     **
@@ -64,15 +51,6 @@ public:
     ** \return True if the folder is a study, false otherwise
     */
     static bool IsRootStudy(const AnyString& folder);
-
-    /*!
-    ** \brief Get if a folder if a study
-    **
-    ** \param folder A study folder
-    ** \param buffer A buffer to reuse for temporary operations
-    ** \return True if the folder is a study, false otherwise
-    */
-    static bool IsRootStudy(const AnyString& folder, YString& buffer);
 
     //! \name Constructor & Destructor
     //@{
@@ -106,31 +84,7 @@ public:
     ** \brief Clear all ressources held by the study
     */
     void clear();
-
-    /*!
-    ** \brief Save the study into a folder
-    **
-    ** \param folder The folder where to write data
-    ** \return True if succeeded, false otherwise
-    */
-    bool saveToFolder(const AnyString& newfolder);
     //@}
-
-    //! \name Areas
-    //@{
-    /*!
-    ** \brief Try to find a name for a new area
-    **
-    ** \param out      The new name
-    ** \param basename The root base name
-    ** \return True if a new name has been found, false otherwise
-    */
-    bool modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename);
-
-    /*!
-    ** \brief Add an area and make all required initialization
-    */
-    Area* areaAdd(const AreaName& name);
 
     //! \name Time-series
     //@{
@@ -360,14 +314,6 @@ public:
     StudyRuntimeInfos runtime;
 
     /*!
-    ** \brief The file extension for file within the input ('txt' or 'csv')
-    **
-    ** Since the v3.1, the file extensions in the input have been renamed into .txt,
-    ** (instead of .csv)
-    */
-    FileExtension inputExtension = "txt";
-
-    /*!
     ** \name Cache
     */
 
@@ -375,24 +321,10 @@ public:
     ** \brief Mark the whole study as modified
     */
     //@{
-    //! A buffer for temporary operations on filename
-    mutable YString buffer;
     //! A buffer for temporary operations on large amount of data
     mutable Matrix<>::BufferType dataBuffer;
     //! A buffer used when loading time-series for dealing with filenames (prepro/series only)
     mutable YString bufferLoadingTS;
-    //@}
-
-    //! The queue service that runs every set of parallel years
-    std::shared_ptr<Yuni::Job::QueueService> pQueueService;
-
-    //! \name TS Generators
-    //@{
-    /*!
-    ** \brief Time-series generators used by the solver
-    ** \warning These variables should not be used directly
-    */
-    void* cacheTSGenerator[timeSeriesCount];
 
     //@}
 
@@ -440,11 +372,6 @@ protected:
 private:
     std::unique_ptr<Solver::ModelerData> modelerInput_;
 }; // class Study
-
-/*!
-** \brief Icon to use for studies
-*/
-extern YString StudyIconFile;
 
 std::filesystem::path StudyCreateOutputPath(SimulationMode mode,
                                             ResultFormat fmt,

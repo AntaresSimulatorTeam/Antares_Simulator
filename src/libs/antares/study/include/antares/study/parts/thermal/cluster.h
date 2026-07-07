@@ -11,7 +11,6 @@
 #include <vector>
 
 #include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
 
 #include <antares/solver/ts-generator/law.h>
 
@@ -60,24 +59,10 @@ class ThermalCluster final: public Cluster
 public:
     Pollutant emissions;
 
-    //! Set of thermal clusters
-    using Set = std::set<ThermalCluster*, CompareClusterName>;
-    //! Set of thermal clusters (pointer)
-    using SetPointer = std::set<ThermalCluster*>;
-    //! Vector of thermal clusters
-    using Vector = std::vector<Data::ThermalCluster*>;
-
     explicit ThermalCluster(Data::Area* parent);
 
     ThermalCluster() = delete;
-    ~ThermalCluster() = default;
-
-    /*!
-    ** \brief Reset to default values
-    **
-    ** This method should only be called from the GUI
-    */
-    void reset() override;
+    ~ThermalCluster() override = default;
 
     //! \name Spinning
     //@{
@@ -106,13 +91,6 @@ public:
     ** \return False if an error has been detected and fixed with a default value
     */
     bool integrityCheck() override;
-
-    /*!
-    ** \brief Copy data from another cluster
-    **
-    ** The name and the id will remain untouched.
-    */
-    void copyFrom(const ThermalCluster& cluster);
 
     //! \name validity of Min Stable Power
     //@{

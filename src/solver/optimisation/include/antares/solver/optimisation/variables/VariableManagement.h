@@ -1,3 +1,6 @@
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -22,6 +25,63 @@ public:
                                 unsigned int hourInWeek,
                                 int offset = 0,
                                 int delta = 0);
+
+    int& RunningThermalClusterReserveParticipation(unsigned int index,
+                                                   unsigned int hourInWeek,
+                                                   int offset = 0,
+                                                   int delta = 0);
+
+    int& OffThermalClusterReserveParticipation(unsigned int index,
+                                               unsigned int hourInWeek,
+                                               int offset = 0,
+                                               int delta = 0);
+
+    int& ThermalClusterReserveParticipation(unsigned int index,
+                                            unsigned int hourInWeek,
+                                            int offset = 0,
+                                            int delta = 0);
+
+    int& STStorageClusterReserveParticipation(ReserveType type,
+                                              unsigned int index,
+                                              unsigned int hourInWeek,
+                                              int offset = 0,
+                                              int delta = 0);
+
+    int& STStorageReleaseClusterReserveParticipation(unsigned int index,
+                                                     unsigned int hourInWeek,
+                                                     int offset = 0,
+                                                     int delta = 0);
+
+    int& STStorageStoreClusterReserveParticipation(unsigned int index,
+                                                   unsigned int hourInWeek,
+                                                   int offset = 0,
+                                                   int delta = 0);
+
+    int& HydroReserveParticipation(ReserveType type,
+                                   unsigned int index,
+                                   unsigned int hourInWeek,
+                                   int offset = 0,
+                                   int delta = 0);
+
+    int& HydroReleaseReserveParticipation(unsigned int index,
+                                          unsigned int hourInWeek,
+                                          int offset = 0,
+                                          int delta = 0);
+
+    int& HydroStoreReserveParticipation(unsigned int index,
+                                        unsigned int hourInWeek,
+                                        int offset = 0,
+                                        int delta = 0);
+
+    int& InternalUnsatisfiedReserve(unsigned int index,
+                                    unsigned int hourInWeek,
+                                    int offset = 0,
+                                    int delta = 0);
+
+    int& InternalExcessReserve(unsigned int index,
+                               unsigned int hourInWeek,
+                               int offset = 0,
+                               int delta = 0);
 
     int& NumberOfDispatchableUnits(unsigned int index,
                                    unsigned int hourInWeek,

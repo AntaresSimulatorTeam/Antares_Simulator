@@ -7,13 +7,15 @@
 #include <vector>
 
 #include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
 
 namespace FSWalker
 {
-class EventsRegistry: private Yuni::NonCopyable<EventsRegistry>
+class EventsRegistry
 {
 public:
+    EventsRegistry(const EventsRegistry&) = delete;
+    EventsRegistry& operator=(const EventsRegistry&) = delete;
+
     using OnDirectoryEventList = std::vector<OnDirectoryEvent>;
     using OnFileEventList = std::vector<OnFileEvent>;
     using IndexList = std::vector<uint>;

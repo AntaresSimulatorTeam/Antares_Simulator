@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import shutil
 
 
 class solver_input_handler:
@@ -11,9 +12,15 @@ class solver_input_handler:
         self.files_path["general"] = self.study_root_dir / "settings" / "generaldata.ini"
         self.files_path["study"] = self.study_root_dir / "study.antares"
         self.files_path["thermal"] = self.study_root_dir / "study.antares"
-        reference = self.study_root_dir / "output" / "reference"
-        self.files_path["simulation_table1"] = reference / "simulation_table--optim-nb-1.csv"
-        self.files_path["simulation_table2"] = reference / "simulation_table--optim-nb-2.csv"
+        self.reference = self.study_root_dir / "output" / "reference"
+        self.files_path["simulation_table1"] = self.reference / "simulation_table--optim-nb-1.csv"
+        self.files_path["simulation_table2"] = self.reference / "simulation_table--optim-nb-2.csv"
+        self.files_path["input"] = self.study_root_dir / "input"
+        self.files_path["reserves"] = self.study_root_dir / "input" / "reserves"
+        self.files_path["reserve_ini_folder"] = self.study_root_dir / ".." / "reserves_ini_files"
+
+    def reference_dir(self):
+        return self.reference
 
     def get_value(self, variable, file_nick_name):
         # File path
@@ -71,3 +78,58 @@ class solver_input_handler:
             return open(self.files_path["simulation_table2"], 'r').readlines()
         else:
             return None
+
+    def copy_reserve_yml_from_file(self, origin, destination):
+        # File path
+        fileToReplace = os.path.join(self.study_root_dir, *destination)
+        fileToCopy = os.path.join(self.study_root_dir, *origin)
+        shutil.copyfile(fileToCopy, fileToReplace)
+
+    def set_input(self, input_file, section, variable, value):
+        """Set `variable = value` inside `[section]` of an input/ ini file.
+
+        Matches the key by exact equality (the substring before `=`, stripped),
+        so a variable named `area` does not collide with `area2`, `area.name`,
+        etc. Appends the variable line if missing in the section, and appends
+        both the section and the variable line if the section is absent.
+        Creates the file and parent directories if they don't exist.
+        """
+        file = self.study_root_dir / "input" / input_file.replace("/", os.sep)
+        
+        # Create parent directories if they don't exist
+        file.parent.mkdir(parents=True, exist_ok=True)
+        
+        # Create the file if it doesn't exist
+        if not file.exists():
+            file.touch()
+        
+        content_out = []
+        in_section = False
+        section_seen = False
+        var_written = False
+        with open(file) as f:
+            for line in f:
+                if line.startswith("["):
+                    if in_section and not var_written:
+                        content_out.append(f"{variable} = {value}\n")
+                        var_written = True
+                    in_section = line.strip() == f"[{section}]"
+                    if in_section:
+                        section_seen = True
+                    content_out.append(line)
+                else:
+                    key = line.split('=', 1)[0].strip() if '=' in line else None
+                    if in_section and key == variable:
+                        content_out.append(f"{variable} = {value}\n")
+                        var_written = True
+                    else:
+                        content_out.append(line)
+        if in_section and not var_written:
+            content_out.append(f"{variable} = {value}\n")
+            var_written = True
+        if not section_seen:
+            if content_out and not content_out[-1].endswith("\n"):
+                content_out.append("\n")
+            content_out.append(f"\n[{section}]\n{variable} = {value}\n")
+        with open(file, "w") as f:
+            f.writelines(content_out)

@@ -1,3 +1,6 @@
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/solver/optimisation/variables/VariableManagement.h"
 
 using namespace VariableManagement;
@@ -49,6 +52,134 @@ int& VariableManager::DispatchableProduction(unsigned int index,
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
 
     return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariableDuPalierThermique[index];
+}
+
+int& VariableManager::RunningThermalClusterReserveParticipation(unsigned int index,
+                                                                unsigned int hourInWeek,
+                                                                int offset,
+                                                                int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .reservesIndices.value()
+      .runningThermalClusterParticipation[index];
+}
+
+int& VariableManager::OffThermalClusterReserveParticipation(unsigned int index,
+                                                            unsigned int hourInWeek,
+                                                            int offset,
+                                                            int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .reservesIndices.value()
+      .offThermalClusterParticipation[index];
+}
+
+int& VariableManager::ThermalClusterReserveParticipation(unsigned int index,
+                                                         unsigned int hourInWeek,
+                                                         int offset,
+                                                         int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .reservesIndices.value()
+      .thermalClusterParticipation[index];
+}
+
+int& VariableManager::STStorageClusterReserveParticipation(ReserveType type,
+                                                           unsigned int index,
+                                                           unsigned int hourInWeek,
+                                                           int offset,
+                                                           int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .reservesIndices.value()
+      .STStorageClusterParticipation[type][index];
+}
+
+int& VariableManager::STStorageReleaseClusterReserveParticipation(unsigned int index,
+                                                                  unsigned int hourInWeek,
+                                                                  int offset,
+                                                                  int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .reservesIndices.value()
+      .STStorageReleaseClusterParticipation[index];
+}
+
+int& VariableManager::STStorageStoreClusterReserveParticipation(unsigned int index,
+                                                                unsigned int hourInWeek,
+                                                                int offset,
+                                                                int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .reservesIndices.value()
+      .STStorageStoreClusterParticipation[index];
+}
+
+int& VariableManager::HydroReserveParticipation(ReserveType type,
+                                                unsigned int index,
+                                                unsigned int hourInWeek,
+                                                int offset,
+                                                int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+    return CorrespondanceVarNativesVarOptim_[pdt].reservesIndices.value().HydroParticipation[type]
+                                                                                            [index];
+}
+
+int& VariableManager::HydroReleaseReserveParticipation(unsigned int index,
+                                                       unsigned int hourInWeek,
+                                                       int offset,
+                                                       int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .reservesIndices.value()
+      .HydroReleaseParticipation[index];
+}
+
+int& VariableManager::HydroStoreReserveParticipation(unsigned int index,
+                                                     unsigned int hourInWeek,
+                                                     int offset,
+                                                     int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .reservesIndices.value()
+      .HydroStoreParticipation[index];
+}
+
+int& VariableManager::InternalUnsatisfiedReserve(unsigned int index,
+                                                 unsigned int hourInWeek,
+                                                 int offset,
+                                                 int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+
+    return CorrespondanceVarNativesVarOptim_[pdt]
+      .reservesIndices.value()
+      .internalUnsatisfied[index];
+}
+
+int& VariableManager::InternalExcessReserve(unsigned int index,
+                                            unsigned int hourInWeek,
+                                            int offset,
+                                            int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+
+    return CorrespondanceVarNativesVarOptim_[pdt].reservesIndices.value().internalExcess[index];
 }
 
 int& VariableManager::NumberOfDispatchableUnits(unsigned int index,

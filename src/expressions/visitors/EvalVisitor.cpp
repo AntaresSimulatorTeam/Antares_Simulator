@@ -7,6 +7,7 @@
 #include <stdexcept>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/visitors/TimeSumUtils.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 #include "antares/expressions/ShiftVector.h"
@@ -18,11 +19,13 @@ using namespace Antares::Utils;
 
 namespace Antares::Expressions::Visitors
 {
+// Time sum utilities are provided by TimeSumUtils.h
+
 EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
                          const LinearProblemApi::FillContext& fillContext,
                          const ModelerStudy::SystemModel::Component& component,
                          const LinearProblemApi::ILinearProblemData* data,
-                         const LinearProblemApi::IScenario* scenario):
+                         const LinearProblemApi::IScenario& scenario):
     // TODO put component or its id inside context, it is already component-bound.
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
@@ -30,7 +33,7 @@ EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
     component_(component),
     data_(data),
     scenario_(scenario),
-    evalContext_(&component, data, scenario),
+    evalContext_(&component, data, &scenario),
     fillContext_(fillContext)
 {
 }
@@ -136,6 +139,10 @@ EvaluationResult EvalVisitor::visit(const Nodes::NegationNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldNode* node)
 {
+    // gp : what's the point of this function ?
+    // gp : indeed, it seems that, considering function visit below
+    // gp : (visit(const Nodes::PortFieldSumNode* node)), we never call the current function.
+    // gp : in this case, it should be empty, at least to make it clear it's dead code.
     std::string portId = node->getPortName();
     std::string fieldId = node->getFieldName();
 
@@ -180,11 +187,28 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 {
     auto result = dispatch(node->expression());
-    const auto from = static_cast<int>(dispatch(node->from()).valueAsDouble());
-    const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
-
     result.toConstantVector(fillContext_.getLocalNumberOfTimeSteps());
-    return result.timeSumOnVector(from, to);
+
+    std::vector<double> values(fillContext_.getLocalNumberOfTimeSteps(), 0.0);
+    for (unsigned localTimeStep = 0; localTimeStep < values.size(); ++localTimeStep)
+    {
+        const auto from = resolveTimeSumBound(node->from(), *this, localTimeStep);
+        const auto to = resolveTimeSumBound(node->to(), *this, localTimeStep);
+        forEachTimeSumIndex(from,
+                            to,
+                            static_cast<int>(values.size()),
+                            [&values, &result, localTimeStep](int timeIndex)
+                            { values[localTimeStep] += result[timeIndex].valueAsDouble(); });
+    }
+
+    return EvaluationResult(values);
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::TPlusNode* node)
+{
+    const auto offset = static_cast<int>(dispatch(node->child()).valueAsDouble());
+    return EvaluationResult(
+      static_cast<double>(static_cast<unsigned>(fillContext_.getGlobalFirstTimeStep()) + offset));
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
@@ -252,6 +276,8 @@ EvaluationResult EvalVisitor::visitDual(const Nodes::FunctionNode* node)
 auto PowerOp = [](const auto& a, const auto& b) { return std::pow(a, b); };
 auto FloorOp = [](double d) { return std::floor(d); };
 auto CeilOp = [](double d) { return std::ceil(d); };
+auto RoundOp = [](double d) { return std::round(d); };
+auto AbsOp = [](double d) { return std::abs(d); };
 
 EvaluationResult EvalVisitor::visitPow(const Nodes::FunctionNode* node)
 {
@@ -271,6 +297,18 @@ EvaluationResult EvalVisitor::visitCeil(const Nodes::FunctionNode* node)
 {
     auto* ceil_arg = node->getOperands()[0];
     return dispatch(ceil_arg).evaluateUnaryOperation(CeilOp);
+}
+
+EvaluationResult EvalVisitor::visitRound(const Nodes::FunctionNode* node)
+{
+    auto* round_arg = node->getOperands()[0];
+    return dispatch(round_arg).evaluateUnaryOperation(RoundOp);
+}
+
+EvaluationResult EvalVisitor::visitAbs(const Nodes::FunctionNode* node)
+{
+    auto* abs_arg = node->getOperands()[0];
+    return dispatch(abs_arg).evaluateUnaryOperation(AbsOp);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
@@ -293,6 +331,10 @@ EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
         return visitFloor(node);
     case Nodes::FunctionNodeType::ceil:
         return visitCeil(node);
+    case Nodes::FunctionNodeType::round:
+        return visitRound(node);
+    case Nodes::FunctionNodeType::abs:
+        return visitAbs(node);
     default:
         return EvaluationResult(0);
     }
@@ -401,7 +443,6 @@ EvaluationResult EvaluationResult::timeSumOnVector(int from, int to) const
 {
     const std::vector<double> values = valuesAsVector(); // Exception throw if value_ not a vector
     std::vector<double> to_return(values.size(), 0.);
-
     for (int shift = from; shift <= to; ++shift)
     {
         std::vector<double> shifted_values = shiftVector(values, shift);

@@ -92,11 +92,7 @@ struct TestVariabilityVisitorFixture
         scenarios.push_back(std::move(scenario0));
 
         fixture.buildLinearProblem(ctx, data_, scenarios);
-        variabilityVisitor.emplace(*fixture.optimEntityContainer,
-                                   fixture.components[0],
-                                   &data_,
-                                   &fixture.scenarioGroupRepo.scenario(
-                                     fixture.components[0].getScenarioGroupId()));
+        variabilityVisitor.emplace(*fixture.optimEntityContainer, fixture.components[0]);
     }
 };
 
@@ -164,6 +160,16 @@ BOOST_AUTO_TEST_CASE(timeSumNode_expression)
 
     TimeSumNode t3(&literalNode, &parameterNode, &variableNode);
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t3), VariabilityType::VARYING_IN_TIME_ONLY);
+}
+
+BOOST_AUTO_TEST_CASE(tPlusNode_expression)
+{
+    TPlusNode t1(&parameterNode);
+
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t1), VariabilityType::VARYING_IN_SCENARIO_ONLY);
+
+    TPlusNode t2(&variableNode);
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t2), VariabilityType::VARYING_IN_TIME_ONLY);
 }
 
 BOOST_AUTO_TEST_CASE(alltimeSumNode_expression)
@@ -258,6 +264,42 @@ BOOST_AUTO_TEST_CASE(variability_of_ceil_operator___case_varying_in_scenario_onl
     FunctionNode ceilNode(FunctionNodeType::ceil, &paramNode);
 
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&ceilNode),
+                      VariabilityType::VARYING_IN_SCENARIO_ONLY);
+}
+
+BOOST_AUTO_TEST_CASE(variability_of_round_operator___case_constant)
+{
+    LiteralNode literalNode(3.7);
+    FunctionNode roundNode(FunctionNodeType::round, &literalNode);
+
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&roundNode),
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+}
+
+BOOST_AUTO_TEST_CASE(variability_of_round_operator___case_varying_in_scenario_only)
+{
+    ParameterNode paramNode = ParameterNode("param", VariabilityType::VARYING_IN_TIME_ONLY);
+    FunctionNode roundNode(FunctionNodeType::round, &paramNode);
+
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&roundNode),
+                      VariabilityType::VARYING_IN_SCENARIO_ONLY);
+}
+
+BOOST_AUTO_TEST_CASE(variability_of_abs_operator___case_constant)
+{
+    LiteralNode literalNode(3.7);
+    FunctionNode absNode(FunctionNodeType::abs, &literalNode);
+
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&absNode),
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+}
+
+BOOST_AUTO_TEST_CASE(variability_of_abs_operator___case_varying_in_scenario_only)
+{
+    ParameterNode paramNode = ParameterNode("param", VariabilityType::VARYING_IN_TIME_ONLY);
+    FunctionNode absNode(FunctionNodeType::abs, &paramNode);
+
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&absNode),
                       VariabilityType::VARYING_IN_SCENARIO_ONLY);
 }
 
@@ -360,11 +402,7 @@ BOOST_AUTO_TEST_CASE(overwrite_variability_in_model_by_variablility_in_component
     scenarios.push_back(std::move(scenario0));
 
     fixture.buildLinearProblem(ctx, data2_, scenarios);
-    variabilityVisitor.emplace(*fixture.optimEntityContainer,
-                               fixture.components[1],
-                               &data2_,
-                               &fixture.scenarioGroupRepo.scenario(
-                                 fixture.components[1].getScenarioGroupId()));
+    variabilityVisitor.emplace(*fixture.optimEntityContainer, fixture.components[1]);
 
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&parameterNode),
                       VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);

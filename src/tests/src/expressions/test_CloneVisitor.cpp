@@ -78,6 +78,21 @@ BOOST_FIXTURE_TEST_CASE(clone_TimeSumNode, Registry<Node>)
     BOOST_CHECK(expression->value() == "da");
 }
 
+BOOST_FIXTURE_TEST_CASE(clone_TPlusNode, Registry<Node>)
+{
+    LiteralNode offset(35.);
+    const TPlusNode node(&offset);
+
+    CloneVisitor clone_visitor(*this);
+    const auto clone = clone_visitor.dispatch(&node);
+    const auto cloneTPlus = dynamic_cast<TPlusNode*>(clone);
+
+    BOOST_REQUIRE(cloneTPlus);
+    const auto child = dynamic_cast<LiteralNode*>(cloneTPlus->child());
+    BOOST_REQUIRE(child);
+    BOOST_CHECK(child->value() == 35);
+}
+
 BOOST_FIXTURE_TEST_CASE(clone_AllTimeSumNode, Registry<Node>)
 {
     ParameterNode expr("da");

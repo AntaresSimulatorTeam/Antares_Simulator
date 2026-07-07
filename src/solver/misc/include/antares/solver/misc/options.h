@@ -41,6 +41,9 @@ public:
     //! True to disable the writing in the output folder
     bool noOutput = false;
 
+    // In case we print simulation tables, do we print it in csv or parquet ?
+    bool parquetFmtForSimuTables = false;
+
     Yuni::String PID;
     bool forceZipOutput = false;
     Antares::Solver::Optimization::CmdLineOptimOptions solverOptions;
@@ -55,4 +58,5 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings,
 void checkStudyFolder(const std::string& studyFolder);
 std::string fixStudyFolder(const std::string& studyFolder);
 void printPIDtoDisk(const Settings& settings);
-void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options);
+void checkAndCorrectSettingsAndOptions(Settings& settings,
+                                       Antares::Data::StudyLoadOptions& options);

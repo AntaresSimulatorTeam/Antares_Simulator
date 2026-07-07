@@ -11,6 +11,7 @@
 
 #include <antares/study/study.h>
 
+using namespace Antares;
 using namespace Antares::Data;
 
 IniFile validINI()
@@ -18,7 +19,6 @@ IniFile validINI()
     std::stringstream s;
     s << R"([general]
             mode = Economy
-            horizon = 2000
             nbyears = 5
             simulation.start = 1
             simulation.end = 365
@@ -40,7 +40,6 @@ IniFile validINI()
             nbtimeseriessolar = 1
             intra-modal =
             inter-modal =
-            readonly = false
 
             [input]
             import =

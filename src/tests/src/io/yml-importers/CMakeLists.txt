@@ -1,4 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 
 add_boost_test(TestYmlModel
         SRC
@@ -15,6 +15,7 @@ add_boost_test(TestYmlModel
         Antares::exception
         Antares::expressions
         Antares::model-converter
+        Antares::forbidden-nodes
         Antares::yml-model
         Antares::yml-optim-config
         Antares::yml-system

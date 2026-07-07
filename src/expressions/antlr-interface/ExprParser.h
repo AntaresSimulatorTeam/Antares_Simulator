@@ -18,8 +18,8 @@ public:
   };
 
   enum {
-    RulePortFieldExpr = 0, RuleFullexpr = 1, RuleExpr = 2, RuleArgList = 3, 
-    RuleAtom = 4, RuleShift = 5, RuleShift_expr = 6, RuleRight_expr = 7
+    RulePortFieldExpr = 0, RuleFullexpr = 1, RuleSum_bound = 2, RuleExpr = 3, 
+    RuleArgList = 4, RuleAtom = 5, RuleShift = 6, RuleShift_expr = 7, RuleRight_expr = 8
   };
 
   explicit ExprParser(antlr4::TokenStream *input);
@@ -41,6 +41,7 @@ public:
 
   class PortFieldExprContext;
   class FullexprContext;
+  class Sum_boundContext;
   class ExprContext;
   class ArgListContext;
   class AtomContext;
@@ -75,6 +76,20 @@ public:
   };
 
   FullexprContext* fullexpr();
+
+  class  Sum_boundContext : public antlr4::ParserRuleContext {
+  public:
+    Sum_boundContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    ExprContext *expr();
+    ShiftContext *shift();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Sum_boundContext* sum_bound();
 
   class  ExprContext : public antlr4::ParserRuleContext {
   public:
@@ -200,11 +215,11 @@ public:
   public:
     TimeSumContext(ExprContext *ctx);
 
-    ExprParser::ShiftContext *from = nullptr;
-    ExprParser::ShiftContext *to = nullptr;
+    ExprParser::Sum_boundContext *from = nullptr;
+    ExprParser::Sum_boundContext *to = nullptr;
     ExprContext *expr();
-    std::vector<ShiftContext *> shift();
-    ShiftContext* shift(size_t i);
+    std::vector<Sum_boundContext *> sum_bound();
+    Sum_boundContext* sum_bound(size_t i);
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };

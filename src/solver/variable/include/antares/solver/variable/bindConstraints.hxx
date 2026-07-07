@@ -13,11 +13,11 @@
 
 namespace Antares::Solver::Variable
 {
-template<class NextT>
-void BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
-                                                  int dataLevel,
-                                                  int fileLevel,
-                                                  int precision) const
+template<class VariableList>
+void BindingConstraints<VariableList>::buildSurveyReport(SurveyResults& results,
+                                                         int dataLevel,
+                                                         int fileLevel,
+                                                         int precision) const
 {
     if (bool bcDataLevel = dataLevel & Category::DataLevel::bindingConstraint; !bcDataLevel)
     {
@@ -26,18 +26,18 @@ void BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
 
     for (uint i = 0; i != pBCcount; ++i)
     {
-        const NextType& bc = pBindConstraints[i];
+        const VariableList& bc = pBindConstraints[i];
 
         bc.buildSurveyReport(results, dataLevel, fileLevel, precision);
     }
 }
 
-template<class NextT>
-void BindingConstraints<NextT>::buildAnnualSurveyReport(SurveyResults& results,
-                                                        int dataLevel,
-                                                        int fileLevel,
-                                                        int precision,
-                                                        uint numSpace) const
+template<class VariableList>
+void BindingConstraints<VariableList>::buildAnnualSurveyReport(SurveyResults& results,
+                                                               int dataLevel,
+                                                               int fileLevel,
+                                                               int precision,
+                                                               uint numSpace) const
 {
     if (bool bcDataLevel = dataLevel & Category::DataLevel::bindingConstraint; !bcDataLevel)
     {
@@ -46,43 +46,21 @@ void BindingConstraints<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 
     for (uint i = 0; i != pBCcount; ++i)
     {
-        const NextType& bc = pBindConstraints[i];
+        const VariableList& bc = pBindConstraints[i];
 
         bc.buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
     }
 }
 
-template<class NextT>
+template<class VariableList>
 template<class PredicateT>
-inline void BindingConstraints<NextT>::RetrieveVariableList(PredicateT& predicate)
+inline void BindingConstraints<VariableList>::RetrieveVariableList(PredicateT& predicate)
 {
-    NextType::RetrieveVariableList(predicate);
+    VariableList::RetrieveVariableList(predicate);
 }
 
-template<class NextT>
-template<class I>
-inline void BindingConstraints<NextT>::provideInformations(I& infos)
-{
-    // Begining of the node
-    if (VCardType::nodeDepthForGUI)
-    {
-        infos.template beginNode<VCardType>();
-        // Next variable in the list
-        NextType::template provideInformations<I>(infos);
-        // End of the node
-        infos.endNode();
-    }
-    else
-    {
-        // Giving our VCard
-        infos.template addVCard<VCardType>();
-        // Next variable in the list
-        NextType::template provideInformations<I>(infos);
-    }
-}
-
-template<class NextT>
-void BindingConstraints<NextT>::simulationBegin()
+template<class VariableList>
+void BindingConstraints<VariableList>::simulationBegin()
 {
     for (auto& bc: pBindConstraints)
     {
@@ -90,8 +68,8 @@ void BindingConstraints<NextT>::simulationBegin()
     }
 }
 
-template<class NextT>
-void BindingConstraints<NextT>::simulationEnd()
+template<class VariableList>
+void BindingConstraints<VariableList>::simulationEnd()
 {
     for (auto& bc: pBindConstraints)
     {
@@ -99,13 +77,15 @@ void BindingConstraints<NextT>::simulationEnd()
     }
 }
 
-template<class NextT>
-void BindingConstraints<NextT>::yearEndBuild(State& /*state*/, uint /*year*/, uint /*numSpace*/)
+template<class VariableList>
+void BindingConstraints<VariableList>::buildThermalClusterYearEndResults(State& /*state*/,
+                                                                         uint /*year*/,
+                                                                         uint /*numSpace*/)
 {
 }
 
-template<class NextT>
-void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
+template<class VariableList>
+void BindingConstraints<VariableList>::initializeFromStudy(Data::Study& study)
 {
     const std::vector<std::shared_ptr<Data::BindingConstraint>>
       inequalityByPtr = study.bindingConstraints.getPtrForInequalityBindingConstraints();
@@ -122,7 +102,7 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 
     for (uint i = 0; i != pBCcount; ++i)
     {
-        NextType& bc = pBindConstraints[i];
+        VariableList& bc = pBindConstraints[i];
 
         bc.setAssociatedBindConstraint(inequalityByPtr[i]);
         bc.initializeFromStudy(study);
@@ -134,7 +114,7 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
     // Here we supply the max number of columns to the variable print info collector
     // This is a ugly hack (it's a work around).
     // We should have a simple call to :
-    //      NextType::supplyMaxNumberOfColumns(study);
+    //      VariableList::supplyMaxNumberOfColumns(study);
     // Instead, we have a few lines as a hack.
     // What we have to do is add to the print info collector a single VariablePrintInfo
     // that has a max columns size of : (nb of inequality BCs) x ResultsType::count
@@ -144,14 +124,14 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
     // to make BC output variables (like BindingConstMarginCost) some DYNAMIC variables.
     if (pBCcount > 0)
     {
-        NextType& bc = pBindConstraints[0];
+        VariableList& bc = pBindConstraints[0];
         bc.setBindConstraintsCount(pBCcount);
         bc.supplyMaxNumberOfColumns(study);
     }
 }
 
-template<class NextT>
-void BindingConstraints<NextT>::computeSummary(unsigned int year, unsigned int numSpace)
+template<class VariableList>
+void BindingConstraints<VariableList>::computeSummary(unsigned int year, unsigned int numSpace)
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
@@ -160,8 +140,8 @@ void BindingConstraints<NextT>::computeSummary(unsigned int year, unsigned int n
     }
 }
 
-template<class NextT>
-void BindingConstraints<NextT>::yearBegin(uint year, uint numSpace)
+template<class VariableList>
+void BindingConstraints<VariableList>::yearBegin(uint year, uint numSpace)
 {
     // Broadcast to all binding constraints
     for (uint i = 0; i != pBCcount; ++i)
@@ -170,8 +150,8 @@ void BindingConstraints<NextT>::yearBegin(uint year, uint numSpace)
     }
 }
 
-template<class NextT>
-void BindingConstraints<NextT>::yearEnd(uint year, uint numSpace)
+template<class VariableList>
+void BindingConstraints<VariableList>::yearEnd(uint year, uint numSpace)
 {
     // Broadcast to all binding constraints
     for (uint i = 0; i != pBCcount; ++i)
@@ -180,8 +160,8 @@ void BindingConstraints<NextT>::yearEnd(uint year, uint numSpace)
     }
 }
 
-template<class NextT>
-void BindingConstraints<NextT>::weekBegin(State& state)
+template<class VariableList>
+void BindingConstraints<VariableList>::weekBegin(State& state)
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
@@ -189,8 +169,8 @@ void BindingConstraints<NextT>::weekBegin(State& state)
     }
 }
 
-template<class NextT>
-void BindingConstraints<NextT>::weekEnd(State& state)
+template<class VariableList>
+void BindingConstraints<VariableList>::weekEnd(State& state)
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
@@ -198,8 +178,8 @@ void BindingConstraints<NextT>::weekEnd(State& state)
     }
 }
 
-template<class NextT>
-void BindingConstraints<NextT>::hourBegin(uint hourInTheYear)
+template<class VariableList>
+void BindingConstraints<VariableList>::hourBegin(uint hourInTheYear)
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
@@ -207,8 +187,8 @@ void BindingConstraints<NextT>::hourBegin(uint hourInTheYear)
     }
 }
 
-template<class NextT>
-void BindingConstraints<NextT>::hourEnd(State& state, uint hourInTheYear)
+template<class VariableList>
+void BindingConstraints<VariableList>::hourEnd(State& state, uint hourInTheYear)
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
@@ -216,8 +196,8 @@ void BindingConstraints<NextT>::hourEnd(State& state, uint hourInTheYear)
     }
 }
 
-template<class NextT>
-void BindingConstraints<NextT>::weekForEachArea(State& state, unsigned int numSpace)
+template<class VariableList>
+void BindingConstraints<VariableList>::weekForEachArea(State& state, unsigned int numSpace)
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
@@ -225,8 +205,8 @@ void BindingConstraints<NextT>::weekForEachArea(State& state, unsigned int numSp
     }
 }
 
-template<class NextT>
-void BindingConstraints<NextT>::hourForEachArea(State& state, unsigned int numSpace)
+template<class VariableList>
+void BindingConstraints<VariableList>::hourForEachArea(State& state, unsigned int numSpace)
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
@@ -234,19 +214,19 @@ void BindingConstraints<NextT>::hourForEachArea(State& state, unsigned int numSp
     }
 }
 
-template<class NextT>
+template<class VariableList>
 template<class VCardToFindT>
-inline void BindingConstraints<NextT>::retrieveResultsForArea(
+inline void BindingConstraints<VariableList>::retrieveResultsForArea(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::Area* area)
 {
-    NextType::template retrieveResultsForArea<VCardToFindT>(result, area);
+    VariableList::template retrieveResultsForArea<VCardToFindT>(result, area);
 }
 
-template<class NextT>
-void BindingConstraints<NextT>::buildDigest(SurveyResults& results,
-                                            int digestLevel,
-                                            int dataLevel) const
+template<class VariableList>
+void BindingConstraints<VariableList>::buildDigest(SurveyResults& results,
+                                                   int digestLevel,
+                                                   int dataLevel) const
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
@@ -254,24 +234,24 @@ void BindingConstraints<NextT>::buildDigest(SurveyResults& results,
     }
 }
 
-template<class NextT>
+template<class VariableList>
 template<class V>
-void BindingConstraints<NextT>::simulationEndSpatialAggregates(V& allVars)
+void BindingConstraints<VariableList>::simulationEndSpatialAggregates(V& allVars)
 {
-    NextType::template simulationEndSpatialAggregates<V>(allVars);
+    VariableList::template simulationEndSpatialAggregates<V>(allVars);
 }
 
-template<class NextT>
+template<class VariableList>
 template<class V>
-void BindingConstraints<NextT>::computeSpatialAggregatesSummary(V& allVars,
-                                                                unsigned int year,
-                                                                unsigned int numSpace)
+void BindingConstraints<VariableList>::computeSpatialAggregatesSummary(V& allVars,
+                                                                       unsigned int year,
+                                                                       unsigned int numSpace)
 {
-    NextType::template computeSpatialAggregatesSummary<V>(allVars, year, numSpace);
+    VariableList::template computeSpatialAggregatesSummary<V>(allVars, year, numSpace);
 }
 
-template<class NextT>
-void BindingConstraints<NextT>::beforeYearByYearExport(uint year, uint numSpace)
+template<class VariableList>
+void BindingConstraints<VariableList>::beforeYearByYearExport(uint year, uint numSpace)
 {
     for (uint i = 0; i != pBCcount; ++i)
     {
@@ -279,30 +259,30 @@ void BindingConstraints<NextT>::beforeYearByYearExport(uint year, uint numSpace)
     }
 }
 
-template<class NextT>
+template<class VariableList>
 template<class SearchVCardT, class O>
-inline void BindingConstraints<NextT>::computeSpatialAggregateWith(O& out,
-                                                                   const Data::Area* area,
-                                                                   uint numSpace)
+inline void BindingConstraints<VariableList>::computeSpatialAggregateWith(O& out,
+                                                                          const Data::Area* area,
+                                                                          uint numSpace)
 {
-    NextType::template computeSpatialAggregateWith<SearchVCardT, O>(out, area, numSpace);
+    VariableList::template computeSpatialAggregateWith<SearchVCardT, O>(out, area, numSpace);
 }
 
-template<class NextT>
+template<class VariableList>
 template<class VCardToFindT>
-inline void BindingConstraints<NextT>::retrieveResultsForLink(
+inline void BindingConstraints<VariableList>::retrieveResultsForLink(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::AreaLink* link)
 {
-    NextType::template retrieveResultsForLink<VCardToFindT>(result, link);
+    VariableList::template retrieveResultsForLink<VCardToFindT>(result, link);
 }
 
-template<class NextT>
+template<class VariableList>
 template<class VCardToFindT>
-inline void BindingConstraints<NextT>::retrieveResultsForThermalCluster(
+inline void BindingConstraints<VariableList>::retrieveResultsForThermalCluster(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::ThermalCluster* cluster)
 {
-    NextType::template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
+    VariableList::template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
 }
 } // namespace Antares::Solver::Variable

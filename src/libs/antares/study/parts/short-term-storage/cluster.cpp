@@ -11,6 +11,12 @@
 
 namespace Antares::Data::ShortTermStorage
 {
+
+std::string STStorageCluster::getGroup()
+{
+    return properties.groupName;
+}
+
 bool STStorageCluster::loadFromSection(const IniFile::Section& section)
 {
     if (!section.firstProperty)
@@ -61,6 +67,12 @@ bool STStorageCluster::validate(StudyVersion studyVersion) const
 bool STStorageCluster::loadSeries(const std::filesystem::path& folder,
                                   StudyVersion studyVersion) const
 {
+    if (!enabled())
+    {
+        logs.info() << "Skipping time series loading for disabled cluster";
+        return true;
+    }
+
     bool ret = series->loadFromFolder(folder, studyVersion);
     series->fillDefaultSeriesIfEmpty(); // fill series if no file series
     return ret;

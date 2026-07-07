@@ -35,7 +35,7 @@ ModelerStudy::SystemModel::System loadSystem(
     YmlSystem::System systemObj;
     try
     {
-        systemObj = parser.parse(systemStr);
+        systemObj = parser.parse(systemStr, (fs::path("input") / filename).string());
     }
     catch (const YAML::Exception& e)
     {
@@ -49,7 +49,7 @@ ModelerStudy::SystemModel::System loadSystem(
     }
     catch (const std::runtime_error& e)
     {
-        logs.error() << "Error while converting the system yaml to components";
+        logs.error() << "Error while converting the system yml to components";
         throw ErrorLoadingYaml(e.what());
     }
 }

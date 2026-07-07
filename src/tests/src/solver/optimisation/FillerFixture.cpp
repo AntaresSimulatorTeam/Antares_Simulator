@@ -13,9 +13,9 @@
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
 using namespace std::string_literals;
 
-using namespace Optimization;
+using namespace Antares::Optimization;
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Optimisation;
+using namespace Antares::Optimisation;
 using namespace LinearProblemApi;
 using namespace LinearProblemDataImpl;
 
@@ -46,12 +46,13 @@ void FillerFixture::setData(const std::string& name, const std::vector<double>& 
 void FillerFixture::setUpModelerSystem(const std::string& systemYaml,
                                        const std::string& libraryYaml)
 {
-    IO::Inputs::YmlModel::Parser parserModel;
-    libraries.push_back(IO::Inputs::ModelConverter::convert(parserModel.parse(libraryYaml)));
-    IO::Inputs::YmlSystem::Parser parserSystem;
-    auto ymlSystem = parserSystem.parse(systemYaml);
-    auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
-    modelerData = std::make_unique<Solver::ModelerData>();
+    Antares::IO::Inputs::YmlModel::Parser parserModel;
+    libraries.push_back(
+      Antares::IO::Inputs::ModelConverter::convert(parserModel.parse(libraryYaml)));
+    Antares::IO::Inputs::YmlSystem::Parser parserSystem;
+    auto ymlSystem = parserSystem.parse(systemYaml, "");
+    auto system = Antares::IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
+    modelerData = std::make_unique<Antares::Solver::ModelerData>();
     modelerData->system = std::make_unique<System>(std::move(system));
     problemeHebdo->modelerData = modelerData.get();
 }
@@ -103,33 +104,16 @@ void FillerFixture::addEmptyConstraintsToLinearProblem(std::vector<std::string>&
     }
 }
 
-void FillerFixture::addEmptyConstraints(std::vector<std::string>& constraintNames,
-                                        bool useNamedProblems,
-                                        double rhs)
+void FillerFixture::addEmptyConstraints(std::vector<std::string>& constraintNames, double rhs)
 {
     problemeHebdo->ProblemeAResoudre->NomDesContraintes = constraintNames;
     problemeHebdo->ProblemeAResoudre->NombreDeContraintes = constraintNames.size();
-    if (useNamedProblems)
-    {
-        addEmptyConstraintsToLinearProblem(constraintNames, rhs);
-    }
-    else
-    {
-        std::vector<std::string> lpConstraintNames;
-        for (unsigned int i = 0; i < constraintNames.size(); ++i)
-        {
-            lpConstraintNames.push_back("c" + std::to_string(i));
-        }
-        addEmptyConstraintsToLinearProblem(lpConstraintNames, rhs);
-    }
+    addEmptyConstraintsToLinearProblem(constraintNames, rhs);
 }
 
-void FillerFixture::addLegacyLp(std::vector<std::string>& constraintNames,
-                                bool useNamedProblems,
-                                double rhs)
+void FillerFixture::addLegacyLp(std::vector<std::string>& constraintNames, double rhs)
 {
-    problemeHebdo->NamedProblems = useNamedProblems;
-    addEmptyConstraints(constraintNames, useNamedProblems, rhs);
+    addEmptyConstraints(constraintNames, rhs);
 }
 
 void FillerFixture::fillProblemWithThermalCapacityConnectionFiller(
