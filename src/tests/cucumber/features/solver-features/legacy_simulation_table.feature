@@ -143,9 +143,11 @@ Feature: Legacy variables in simulation table
       # 10 000 000 MWh reservoir and the initial level for hour 1 of week 1 is
       # 5 110 638.139 MWh => 51.10638138.
       | 0     | he        | level_percentage   | 0        | 0        | 51.10638138    |
-      # actual_inflows = round(inflows). The "he" hydro series carry no natural
-      # inflow (empty mod.txt / ror.txt), so the rounded inflow is 0 at hour 1.
-      | 0     | he        | actual_inflows     | 0        | 0        | 0             |
+      # actual_inflows = round(inflows). The "he" area has empty mod.txt/ror.txt,
+      # but hydro TS generation is enabled for this study (generate = hydro,
+      # seed-tsgen-hydro = 5489), so the inflow used is the generated series,
+      # not the empty input files: 1873 MWh at hour 1 of MC year 0.
+      | 0     | he        | actual_inflows     | 0        | 0        | 1873          |
 
   @fast @short
   Scenario: actual_num_units_on is emitted in accurate unit-commitment mode
