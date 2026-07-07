@@ -3,13 +3,11 @@
 
 #pragma once
 
-#include <yuni/core/event/event.h>
-#include <yuni/core/string.h>
+#include <yuni/core/event/interfaces.h>
+#include <yuni/thread/policy.h>
 
 #include <antares/benchmarking/DurationCollector.h>
-#include <antares/benchmarking/timer.h>
 #include <antares/concurrency/concurrency.h>
-#include <antares/study/load-options.h>
 #include <antares/study/study.h>
 #include <antares/writer/i_writer.h>
 #include "antares/infoCollection/StudyInfoCollector.h"
