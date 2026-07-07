@@ -1,5 +1,11 @@
 var NAVTREEINDEX41 =
 {
+"structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#a40d4976e84282615ec5ddf7e00733d5a":[9,0,7,3,4],
+"structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#a7fd19f35b8a3e8321bbc3b15dcd3e561":[9,0,7,3,0],
+"structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#a947f6a698bb348ff4872d5419a8d9751":[9,0,7,3,3],
+"structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#ab8af32e63fb1e1555ab3851846534eef":[9,0,7,3,6],
+"structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#aca645fbfa46d3eb2dd50bf6a56c7a4a7":[9,0,7,3,1],
+"structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#af4a274f693d8567c84f2d0203503350a":[9,0,7,3,2],
 "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html":[9,0,7,0],
 "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#a0aa3d054e8ff91debf0ce3403ddd8745":[9,0,7,0,2],
 "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#a104aec0788f479dcaaf594d36fa04a02":[9,0,7,0,0],
@@ -243,11 +249,5 @@ var NAVTREEINDEX41 =
 "structMaxUnsupEnergyData.html":[9,0,194],
 "structMaxUnsupEnergyData.html#affa35adf6cf7fd9dab4ec5156edae35e":[9,0,194,0],
 "structMinDownTimeData.html":[9,0,197],
-"structMinDownTimeData.html#a25fbdeb8bd2a6b48f223a2afc46d9d9d":[9,0,197,0],
-"structMinDownTimeData.html#ab2fd94e338af9d85bd906efeb289f04e":[9,0,197,1],
-"structMinDownTimeData.html#ac26197b0f4ac8429161825ce6385db29":[9,0,197,2],
-"structMinHydroPowerData.html":[9,0,200],
-"structMinHydroPowerData.html#a24a0318ec864d5d3cccc16fdf449db18":[9,0,200,2],
-"structMinHydroPowerData.html#ae608d18b4923971be95eacb3b4d1802e":[9,0,200,0],
-"structMinHydroPowerData.html#af66d42ef2021b6be1733e1bd218fb62d":[9,0,200,1]
+"structMinDownTimeData.html#a25fbdeb8bd2a6b48f223a2afc46d9d9d":[9,0,197,0]
 };

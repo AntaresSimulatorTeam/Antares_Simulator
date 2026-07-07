@@ -1,5 +1,11 @@
 var NAVTREEINDEX42 =
 {
+"structMinDownTimeData.html#ab2fd94e338af9d85bd906efeb289f04e":[9,0,197,1],
+"structMinDownTimeData.html#ac26197b0f4ac8429161825ce6385db29":[9,0,197,2],
+"structMinHydroPowerData.html":[9,0,200],
+"structMinHydroPowerData.html#a24a0318ec864d5d3cccc16fdf449db18":[9,0,200,2],
+"structMinHydroPowerData.html#ae608d18b4923971be95eacb3b4d1802e":[9,0,200,0],
+"structMinHydroPowerData.html#af66d42ef2021b6be1733e1bd218fb62d":[9,0,200,1],
 "structMipDetectionFixture.html":[9,0,202],
 "structMipDetectionFixture.html#a647ac4f041996db922da67809b47f505":[9,0,202,0],
 "structMockConstraint_1_1MockExpression.html":[9,0,204,0],
@@ -243,11 +249,5 @@ var NAVTREEINDEX42 =
 "structPenaltyCostOnVariation.html":[9,0,251],
 "structPenaltyCostOnVariation.html#a206042553930f57c6b35493756d9c9fc":[9,0,251,0],
 "structPenaltyCostOnVariation.html#a7edad1a63c5d4c331699879d83f87c5e":[9,0,251,1],
-"structPower.html":[9,0,259],
-"structPower.html#aae6a4d23beb552e9df998c869124ae5f":[9,0,259,0],
-"structPower.html#ab93e3b3a0eaa860eac94a6cecbaba860":[9,0,259,1],
-"structPredfinedSolutionLinearProblemMock.html":[9,0,260],
-"structPredfinedSolutionLinearProblemMock.html#aa041c856336474bf029e4001a01c8063":[9,0,260,1],
-"structPredfinedSolutionLinearProblemMock.html#aa850951e7d48f862083b1ebf397b437d":[9,0,260,0],
-"structPredicateIdentity.html":[9,0,261]
+"structPower.html":[9,0,259]
 };

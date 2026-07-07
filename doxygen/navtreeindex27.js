@@ -247,7 +247,7 @@ var NAVTREEINDEX27 =
 "classsolver__input__handler_1_1solver__input__handler.html#afd3b4e884b0b1c758734bb6ca3fae3a0":[9,0,18,0,3],
 "classsolver__output__handler_1_1result__type.html":[9,0,19,0],
 "classsolver__output__handler_1_1solver__output__handler.html":[9,0,19,1],
-"classsolver__output__handler_1_1solver__output__handler.html#a004ebb503223503d853b0082ae4fb0ef":[9,0,19,1,9],
-"classsolver__output__handler_1_1solver__output__handler.html#a0624b1ed2fe6487e74fddac2fc0888e6":[9,0,19,1,28],
-"classsolver__output__handler_1_1solver__output__handler.html#a072885a78978daa3fe848158d1109b78":[9,0,19,1,25]
+"classsolver__output__handler_1_1solver__output__handler.html#a004ebb503223503d853b0082ae4fb0ef":[9,0,19,1,10],
+"classsolver__output__handler_1_1solver__output__handler.html#a0624b1ed2fe6487e74fddac2fc0888e6":[9,0,19,1,30],
+"classsolver__output__handler_1_1solver__output__handler.html#a072885a78978daa3fe848158d1109b78":[9,0,19,1,27]
 };
