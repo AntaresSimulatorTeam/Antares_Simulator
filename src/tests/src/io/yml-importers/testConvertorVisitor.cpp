@@ -55,9 +55,11 @@ BOOST_AUTO_TEST_CASE(identifier)
                           .description = "description",
                           .parameters = {{"param1", true, false}, {"param2", false, false}},
                           .variables = {{"varP",
-                                         "7",
-                                         "pmin",
-                                         YmlModel::ValueType::CONTINUOUS,
+                                          "7",
+                                          0,
+                                          "pmin",
+                                          0,
+                                          YmlModel::ValueType::CONTINUOUS,
                                          false,
                                          false,
                                          "test.yaml"}},
@@ -65,7 +67,7 @@ BOOST_AUTO_TEST_CASE(identifier)
                           .port_field_definitions = {},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .objectives = {{"objective-id", "", 0, "test.yaml"}},
                           .extra_outputs = {}};
 
     std::string expression = "param1";
@@ -84,9 +86,11 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
                           .description = "description",
                           .parameters = {{"param1", true, false}},
                           .variables = {{"varP",
-                                         "7",
-                                         "pmin",
-                                         YmlModel::ValueType::CONTINUOUS,
+                                          "7",
+                                          0,
+                                          "pmin",
+                                          0,
+                                          YmlModel::ValueType::CONTINUOUS,
                                          false,
                                          false,
                                          "test.yaml"}},
@@ -94,7 +98,7 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
                           .port_field_definitions = {},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .objectives = {{"objective-id", "", 0, "test.yaml"}},
                           .extra_outputs = {}};
 
     std::string expression = "abc"; // not a param or var
@@ -203,10 +207,10 @@ BOOST_AUTO_TEST_CASE(portfield)
                           .parameters = {},
                           .variables = {},
                           .ports = {{.id = "port1", .type = "blue"}},
-                          .port_field_definitions = {{"port1", "field1", ""}},
+                          .port_field_definitions = {{"port1", "field1", "", 0}},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .objectives = {{"objective-id", "", 0, "test.yaml"}},
                           .extra_outputs = {}};
     std::string expression = "port1.field1";
     auto expr = convertExpressionToNode(expression, model);
@@ -224,10 +228,10 @@ BOOST_AUTO_TEST_CASE(portfieldSum)
                           .parameters = {},
                           .variables = {},
                           .ports = {{.id = "port1", .type = "blue"}},
-                          .port_field_definitions = {{"port1", "field1", ""}},
+                          .port_field_definitions = {{"port1", "field1", "", 0}},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .objectives = {{"objective-id", "", 0, "test.yaml"}},
                           .extra_outputs = {}};
 
     std::string expression = "sum_connections(port1.field1)";
@@ -249,9 +253,11 @@ YmlModel::Model createYmlModel()
                           .description = "description",
                           .parameters = {{"param1", true, false}, {"param2", false, false}},
                           .variables = {{"varP",
-                                         "7",
-                                         "pmin",
-                                         YmlModel::ValueType::CONTINUOUS,
+                                          "7",
+                                          0,
+                                          "pmin",
+                                          0,
+                                          YmlModel::ValueType::CONTINUOUS,
                                          false,
                                          false,
                                          "test.yaml"}},
@@ -259,7 +265,7 @@ YmlModel::Model createYmlModel()
                           .port_field_definitions = {},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .objectives = {{"objective-id", "", 0, "test.yaml"}},
                           .extra_outputs = {}};
 
     return model;
@@ -421,9 +427,9 @@ struct SupplyModelForDualOperator
                           .variables = {},
                           .ports = {},
                           .port_field_definitions = {},
-                          .constraints = {{"constraintA", "", "test.yaml", ""}},
-                          .binding_constraints = {{"constraintB", "", "test.yaml", ""}},
-                          .objectives = {{"objective-id", "", "test.yaml"}},
+                           .constraints = {{"constraintA", "", 0, "test.yaml", ""}},
+                           .binding_constraints = {{"constraintB", "", 0, "test.yaml", ""}},
+                          .objectives = {{"objective-id", "", 0, "test.yaml"}},
                           .extra_outputs = {}};
 };
 
@@ -478,16 +484,20 @@ struct SupplyModelForFunctionalOperator
                           .description = "description",
                           .parameters = {{"pmin", true, false}},
                           .variables = {{"varA",
-                                         "7",
-                                         "pmin",
-                                         YmlModel::ValueType::CONTINUOUS,
+                                          "7",
+                                          0,
+                                          "pmin",
+                                          0,
+                                          YmlModel::ValueType::CONTINUOUS,
                                          false,
                                          false,
                                          "test.yaml"},
                                         {"varB",
-                                         "7",
-                                         "pmin",
-                                         YmlModel::ValueType::CONTINUOUS,
+                                          "7",
+                                          0,
+                                          "pmin",
+                                          0,
+                                          YmlModel::ValueType::CONTINUOUS,
                                          false,
                                          false,
                                          "test.yaml"}},
@@ -495,7 +505,7 @@ struct SupplyModelForFunctionalOperator
                           .port_field_definitions = {},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .objectives = {{"objective-id", "", 0, "test.yaml"}},
                           .extra_outputs = {}};
 
     ForbiddenNodes forbiddenNodes;

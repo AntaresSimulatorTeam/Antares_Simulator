@@ -21,9 +21,12 @@ class Expression final
 public:
     Expression() = default;
 
-    explicit Expression(const std::string& value, Expressions::NodeRegistry root):
+    explicit Expression(const std::string& value,
+                        Expressions::NodeRegistry root,
+                        std::string fileAndLineNb = ""):
         value_(value),
         root_(std::move(root)),
+        fileAndLineNb_(std::move(fileAndLineNb)),
         empty_(!root_.node)
     {
     }
@@ -43,9 +46,16 @@ public:
         return empty_;
     }
 
+    const std::string& FileAndLineNb() const
+    {
+        return fileAndLineNb_;
+    }
+
 private:
     std::string value_;
     Expressions::NodeRegistry root_;
+    /// used for error reporting only
+    std::string fileAndLineNb_;
     bool empty_ = true;
 };
 

@@ -45,7 +45,9 @@ struct Variable
 {
     std::string id;
     std::string lower_bound;
+    size_t lower_bound_lineNb = 0;
     std::string upper_bound;
+    size_t upper_bound_lineNb = 0;
     ValueType variable_type;
     bool time_dependent;
     bool scenario_dependent;
@@ -63,12 +65,14 @@ struct PortFieldDefinition
     std::string port;
     std::string field;
     std::string definition;
+    size_t definition_lineNb = 0;
 };
 
 struct Constraint
 {
     std::string id;
     std::string expression;
+    size_t expression_lineNb = 0;
     std::string location;
     std::string out_of_bounds_processing_mode;
 };
@@ -77,12 +81,14 @@ struct ExtraOutput
 {
     std::string id;
     std::string expression;
+    size_t expression_lineNb = 0;
 };
 
 struct Objective
 {
     std::string id;
     std::string expression;
+    size_t expression_lineNb = 0;
     std::string location;
 };
 
@@ -90,6 +96,7 @@ struct Model
 {
     std::string id;
     std::string description;
+    std::string filename;
     std::vector<Parameter> parameters;
     std::vector<Variable> variables;
     std::vector<Port> ports;
@@ -120,6 +127,7 @@ struct Library
 {
     std::string id;
     std::string description;
+    std::string filename;
     std::vector<PortType> port_types;
     std::vector<Model> models;
 };

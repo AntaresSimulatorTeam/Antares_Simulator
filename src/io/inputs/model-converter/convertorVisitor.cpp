@@ -4,6 +4,7 @@
 #include <ExprVisitor.h>
 
 #include <boost/algorithm/string.hpp>
+#include <fmt/format.h>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
@@ -121,7 +122,8 @@ private:
 };
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
-                                                  const YmlModel::Model& model)
+                                                  const YmlModel::Model& model,
+                                                  const std::string& fileAndLineNb)
 {
     if (exprStr.empty())
     {
@@ -155,7 +157,10 @@ Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
     }
     catch (InputError& e)
     {
-        throw InputError("Error while converting expression '" + exprStr + "': " + e.what());
+        throw InputError(fmt::format("File {} : Error while converting expression '{}': {}",
+                                     fileAndLineNb,
+                                     exprStr,
+                                     e.what()));
     }
     return Expressions::NodeRegistry(root, std::move(registry));
 }
