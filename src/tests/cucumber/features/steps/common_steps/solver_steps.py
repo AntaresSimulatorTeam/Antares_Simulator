@@ -53,11 +53,11 @@ def change_transmission_capacities(context, link, value):
     context.sih.set_value(variable="transmission-capacities", value=value, file_path=file_path)
 
 @when('I replace the "{destinationPath}" file with "{originPath}"')
-def replace_reserve_ini(context, destinationPath, originPath):
+def replace_reserve_yml(context, destinationPath, originPath):
     destination = destinationPath.split("/")
     origin = originPath.split("/")
     input_handler = solver_input_handler(Path(context.study_path))
-    input_handler.copy_reserve_ini_from_file(origin, destination)
+    input_handler.copy_reserve_yml_from_file(origin, destination)
 
 
 @given('in input "{input_file}" section "{section}" variable "{variable}" is set to "{value}"')
@@ -824,3 +824,34 @@ def check_storages_values_for_specific_year_hour_and_cluster(context, area, year
     else:
         raise NotImplementedError(f"Unknown value for variable injection_or_withdrawal '{injection_or_withdrawal}'")
     assert_double_close(float(actual_storage_value.item()), float(value_storage), 1e-6)
+
+
+@then('the simulation has two optimization iterations')
+def check_two_optimization_iterations(context):
+    output_path = Path(context.output_path)
+    optim_nb_1_files = list(output_path.glob("*optim-nb-1*"))
+    optim_nb_2_files = list(output_path.glob("*optim-nb-2*"))
+    assert len(optim_nb_1_files) > 0, \
+        f"No first optimization output files found in {output_path}"
+    assert len(optim_nb_2_files) > 0, \
+        f"No second optimization output files found in {output_path}. " \
+        f"This means the thermal heuristic did not run (only 1 iteration)."
+    
+@then('in area "{area}", during year {year:d}, weekly overall cost for week {week:d} is {value:g}')
+def check_weekly_overall_cost(context, area, year, week, value):
+    actual = context.soh.get_weekly_overall_cost_eur(area, year, week)
+    assert_double_close(value, actual, 0.001, f"Weekly OV. COST week {week}")
+    
+@then('in area "{area}", during year {year:d}, NODU for all hours matches reference')
+def check_all_nodu_against_reference(context, area, year):
+    actual_nodu = context.soh.get_hourly_nodu(area, year)
+    ref_nodu = context.soh.get_reference_nodu(context.study_path)
+    assert len(actual_nodu) == len(ref_nodu), \
+        f"Length mismatch: simulation has {len(actual_nodu)} hours, reference has {len(ref_nodu)} hours"
+    mismatches = []
+    for hour in range(len(ref_nodu)):
+        if int(actual_nodu.iloc[hour]) != int(ref_nodu.iloc[hour]):
+            mismatches.append(
+                f"  Hour {hour}: expected {int(ref_nodu.iloc[hour])}, got {int(actual_nodu.iloc[hour])}")
+    assert len(mismatches) == 0, \
+        f"NODU mismatches found:\n" + "\n".join(mismatches[:20])

@@ -117,7 +117,7 @@ bool BindingConstraintLoader::loadTimeSeries(EnvForLoading& env,
       env.buffer,
       1,
       (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8784 : 366,
-      Matrix<>::optImmediate,
+      Matrix<>::optNone,
       &env.matrixBuffer);
     if (load_ok)
     {
@@ -145,7 +145,7 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(
     if (intermediate.loadFromCSVFile(env.buffer,
                                      BindingConstraint::columnMax,
                                      height,
-                                     Matrix<>::optImmediate | Matrix<>::optFixedSize,
+                                     Matrix<>::optFixedSize,
                                      &env.matrixBuffer))
     {
         if (bindingConstraint->pComments.empty())

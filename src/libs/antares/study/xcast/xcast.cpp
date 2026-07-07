@@ -148,13 +148,13 @@ XCast::~XCast()
 
 void XCast::resetToDefaultValues()
 {
-    data.reset(dataMax, 12, true);
+    data.reset(dataMax, 12);
     data.fillColumn(dataCoeffAlpha, 1.f);
     data.fillColumn(dataCoeffBeta, 1.f);
     data.fillColumn(dataCoeffDelta, 1.f);
     data.fillColumn(dataCoeffTheta, 1.f);
     data.fillColumn(dataCoeffMu, 1.f);
-    K.reset(12, 24, true);
+    K.reset(12, 24);
     distribution = dtBeta;
     capacity = 0.;
     useConversion = false;
@@ -288,32 +288,29 @@ bool XCast::loadFromFolder(const fs::path& folder)
     p = folder / "conversion.txt";
 
     ret = conversion.loadFromCSVFile(p.string(), 3, 2, opts, &readBuffer) && ret;
-    if (not JIT::enabled)
+    if (conversion.width >= 3 && conversion.width <= conversionMaxPoints)
     {
-        if (conversion.width >= 3 && conversion.width <= conversionMaxPoints)
+        // We will overwrite the left and the right value
+        // Warning !!! std::numeric_limits must not be used
+        //  it produces unwanted behavior on Linux
+        conversion[0][0] = (float)(-1.0e+19); // - std::numeric_limits<float>::max();
+        conversion[0][1] = conversion[1][1];
+        for (uint x = 1; x < conversion.width - 1; ++x)
         {
-            // We will overwrite the left and the right value
-            // Warning !!! std::numeric_limits must not be used
-            //  it produces unwanted behavior on Linux
-            conversion[0][0] = (float)(-1.0e+19); // - std::numeric_limits<float>::max();
-            conversion[0][1] = conversion[1][1];
-            for (uint x = 1; x < conversion.width - 1; ++x)
+            if (conversion[x][0] <= -1.0e+19 || conversion[x][0] >= +1.0e+19)
             {
-                if (conversion[x][0] <= -1.0e+19 || conversion[x][0] >= +1.0e+19)
-                {
-                    logs.error() << "TS-Generator: Conversion: Invalid range: " << p;
-                }
+                logs.error() << "TS-Generator: Conversion: Invalid range: " << p;
             }
-            conversion[conversion.width - 1][0]
-              = (float)1.0e+19; // + std::numeric_limits<float>::max();
-            conversion[conversion.width - 1][1] = conversion[conversion.width - 2][1];
         }
-        else
-        {
-            logs.warning() << "Invalid transfer function: '" << p << "'";
-            resetTransferFunction();
-            useConversion = false;
-        }
+        conversion[conversion.width - 1][0] = (float)1.0e+19; // +
+                                                              // std::numeric_limits<float>::max();
+        conversion[conversion.width - 1][1] = conversion[conversion.width - 2][1];
+    }
+    else
+    {
+        logs.warning() << "Invalid transfer function: '" << p << "'";
+        resetTransferFunction();
+        useConversion = false;
     }
 
     return ret;
@@ -394,18 +391,14 @@ void XCast::copyFrom(const XCast& rhs)
 {
     // Coeffs
     data = rhs.data;
-    rhs.data.unloadFromMemory();
     // K
     K = rhs.K;
-    rhs.K.unloadFromMemory();
     // translation
     translation = rhs.translation;
-    rhs.translation.unloadFromMemory();
     useTranslation = rhs.useTranslation;
 
     // Conversion
     conversion = rhs.conversion;
-    rhs.conversion.unloadFromMemory();
     useConversion = rhs.useConversion;
 
     // capacity

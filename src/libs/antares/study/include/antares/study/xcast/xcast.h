@@ -7,16 +7,18 @@
 #include <vector>
 
 #include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
 
 #include <antares/array/matrix.h>
 #include <antares/study/fwd.h>
 
 namespace Antares::Data
 {
-class XCast final: private Yuni::NonCopyable<XCast>
+class XCast final
 {
 public:
+    XCast(const XCast&) = delete;
+    XCast& operator=(const XCast&) = delete;
+
     /*!
     ** \brief All coefficients
     */

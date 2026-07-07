@@ -1,6 +1,6 @@
 Feature: 1 - Simple end-to-end tests to test temporal expression management
 
-  @fast
+  @short
   Scenario: 1.1: One model with one load and two generators, two timesteps
     Given the modeler study path is "modeler/1_1"
     When I run antares modeler
@@ -11,7 +11,7 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
       | node1     | gen1_p | 0-1      | 80    |
       | node1     | gen2_p | 0-1      | 20    |
 
-  @fast
+  @short
   Scenario: 1.2: One model with one load and two generators, two timesteps ; mix of constant parameters and timeseries
     Given the modeler study path is "modeler/1_2"
     When I run antares modeler
@@ -22,14 +22,14 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
       | node1     | gen1_p | 0-1      | 80    |
       | node1     | gen2_p | 0-1      | 20    |
 
-  @fast
+  @short
   Scenario: 1.3: One model with one load and two generators, one timestep ; fails because of timeseries of different lengths
     Given the modeler study path is "modeler/1_3"
     When I run antares modeler
     Then the simulation fails
 
 
-  @fast
+  @short
   Scenario: 1.4: test system with one load (100 MW) and two generators in the same node (with Pmax_1 = 80 MW & Pmax_2 = 200 MW) ; gen1 has a fixed switch on cost. Two timesteps.
     Given the modeler study path is "modeler/1_4"
     When I run antares modeler
@@ -45,13 +45,13 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
       | node1     | on_off_gen1_p | 1        | 0     |
 
 
-  @fast
+  @short
   Scenario: 1.5: One model with one load and two generators, one timestep ; fails because of timeseries given for parameter with time_dependant = false
     Given the modeler study path is "modeler/1_5"
     When I run antares modeler
     Then the simulation fails
 
-  @fast
+  @short
   Scenario: 1.6: One model with one load and two generators, 100 timesteps
     Given the modeler study path is "modeler/1_6"
     When I run antares modeler
@@ -62,7 +62,7 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
       | node1     | gen1_p | 0-99    | 80    |
       | node1     | gen2_p | 0-99    | 20    |
 
-  @fast
+  @short
   Scenario: 1.7: One variable bounded below by a time sum with fixed lower bound and t+ upper bound
     Given the modeler study path is "modeler/14_1"
     When I run antares modeler
@@ -76,7 +76,7 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
       | c1        | x      | 3        | 15    |
       | c1        | x      | 4        | 16    |
 
-  @fast
+  @short
   Scenario: 1.8: Both bounds fixed - sum always accesses the same indices regardless of current timestep
     Given the modeler study path is "modeler/14_2"
     When I run antares modeler
@@ -86,7 +86,7 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
       | component | output | timestep | value |
       | c1        | x      | 0-4      | 18    |
 
-  @fast
+  @short
   Scenario: 1.9: Both bounds t-relative - symmetric two-element sliding window (regression test)
     Given the modeler study path is "modeler/14_3"
     When I run antares modeler
@@ -100,7 +100,7 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
       | c1        | x      | 3        | 9     |
       | c1        | x      | 4        | 6     |
 
-  @fast
+  @short
   Scenario: 1.10: Inverted t+ bounds (from > to) with constant parameter - detects constant-branch bug
     Given the modeler study path is "modeler/14_4"
     When I run antares modeler
@@ -110,7 +110,7 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
       | component | output | timestep | value |
       | c1        | x      | 0-4      | 20    |
 
-  @fast
+  @short
   Scenario: 1.11: Fixed bounds with cyclic wrap-around - upper index exceeds window size
     Given the modeler study path is "modeler/14_5"
     When I run antares modeler
@@ -120,7 +120,7 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
       | component | output | timestep | value |
       | c1        | x      | 0-4      | 12    |
 
-  @fast
+  @short
   Scenario: 1.12: Negative t+ lower bound - three-element lookback window with cyclic wrap at start
     Given the modeler study path is "modeler/14_6"
     When I run antares modeler
@@ -134,7 +134,7 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
       | c1        | x      | 3        | 9     |
       | c1        | x      | 4        | 12    |
 
-  @fast
+  @short
   Scenario: 1.13: Inverted fixed bounds (from > to) with constant parameter - empty sum should give zero
     Given the modeler study path is "modeler/14_7"
     When I run antares modeler

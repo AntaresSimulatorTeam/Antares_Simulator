@@ -14,6 +14,20 @@ std::string MakeKey(const std::string& name, const std::string& component, unsig
 {
     return name + '\x1F' + component + '\x1F' + std::to_string(timeIndex);
 }
+
+std::unordered_map<std::string, std::size_t> BuildIndex(
+  const std::vector<std::optional<LegacyVariableInfo>>& infos)
+{
+    std::unordered_map<std::string, std::size_t> indexByKey;
+    for (std::size_t index = 0; index < infos.size(); ++index)
+    {
+        if (const auto& info = infos[index])
+        {
+            indexByKey.emplace(MakeKey(info->name, info->component, info->timeIndex), index);
+        }
+    }
+    return indexByKey;
+}
 } // namespace
 
 LegacySolutionView::LegacySolutionView(
@@ -21,7 +35,8 @@ LegacySolutionView::LegacySolutionView(
   const std::vector<double>& solutionValues,
   const std::vector<double>& linearCosts):
     solutionValues_(solutionValues),
-    linearCosts_(linearCosts)
+    linearCosts_(linearCosts),
+    indexByKey_(BuildIndex(variablesInfo))
 {
     for (std::size_t index = 0; index < variablesInfo.size(); ++index)
     {

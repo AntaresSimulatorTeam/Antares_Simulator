@@ -21,9 +21,11 @@ target_include_directories(simulation-table
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
+find_package(fmt REQUIRED)
 target_link_libraries(simulation-table
         PUBLIC
-        Antares::linear-problem-api)
+        Antares::linear-problem-api
+        fmt::fmt)
 
 
 # =======================================

@@ -24,6 +24,9 @@ env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
+  RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
+  RUN_DEVELOP_TESTS: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || inputs.run-tests == 'true' }}
+  RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
   REF: ${{ inputs.target_branch =='' && github.ref_name || inputs.target_branch}}
 
 jobs:
@@ -69,7 +72,7 @@ jobs:
 
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary
-      uses: actions/cache/restore@v5
+      uses: actions/cache/restore@v6
       with:
         path: ${{ env.VCPKG_CACHE_DIR }}
         key: vcpkg-cache-oracle8-${{ hashFiles('vcpkg.json', '.git/modules/vcpkg/HEAD') }}
@@ -175,7 +178,7 @@ jobs:
     - name: Cache vcpkg binary dir
       if: ${{ !cancelled() }}
       id: save-cache-vcpkg-binary
-      uses: actions/cache/save@v5
+      uses: actions/cache/save@v6
       with:
         path: ${{ env.VCPKG_CACHE_DIR }}
         key: vcpkg-cache-oracle8-${{ hashFiles('vcpkg.json', '.git/modules/vcpkg/HEAD') }}

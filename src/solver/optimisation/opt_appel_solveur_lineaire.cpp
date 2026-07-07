@@ -33,6 +33,7 @@
 #include "spx_constantes_externes.h"
 
 using namespace operations_research;
+using namespace Antares;
 using namespace Antares::Optimization;
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
@@ -40,8 +41,8 @@ using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::IO;
 using namespace Antares::IO::Outputs;
 
-using Solver::IResultWriter;
-using Solver::Optimization::SingleOptimOptions;
+using Antares::Solver::IResultWriter;
+using Antares::Solver::Optimization::SingleOptimOptions;
 
 struct SimplexResult
 {
@@ -74,11 +75,16 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
     const unsigned globalLastTimeStep = fillContext.getGlobalLastTimeStep();
     const unsigned int block = currentBlock;
 
-    // LegacyVariablesInfo, X and CoutLineaire are all sized to NombreDeVariables in
-    // resizeProbleme, so indexing by [0, NombreDeVariables) below is always in bounds.
+    // LegacyVariablesInfo, X and CoutLineaire are all sized to NombreDeVariables, and
+    // LegacyConstraintsInfo and CoutsMarginauxDesContraintes to NombreDeContraintes, in
+    // resizeProbleme, so the index-based reads below are always in bounds.
     assert(problem.LegacyVariablesInfo.size() == static_cast<std::size_t>(problem.NombreDeVariables)
            && problem.X.size() == static_cast<std::size_t>(problem.NombreDeVariables)
            && problem.CoutLineaire.size() == static_cast<std::size_t>(problem.NombreDeVariables));
+    assert(problem.LegacyConstraintsInfo.size()
+             == static_cast<std::size_t>(problem.NombreDeContraintes)
+           && problem.CoutsMarginauxDesContraintes.size()
+                == static_cast<std::size_t>(problem.NombreDeContraintes));
     for (int index = 0; index < problem.NombreDeVariables; ++index)
     {
         const auto& info = problem.LegacyVariablesInfo[static_cast<std::size_t>(index)];
@@ -107,6 +113,8 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
                           problem.LegacyVariablesInfo,
                           problem.X,
                           problem.CoutLineaire,
+                          problem.LegacyConstraintsInfo,
+                          problem.CoutsMarginauxDesContraintes,
                           fillContext,
                           currentBlock);
 }

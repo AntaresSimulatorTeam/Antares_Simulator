@@ -8,13 +8,15 @@
 
 #include "pi_constantes_externes.h"
 
+using namespace Antares;
+
 void HourlyCSRProblem::constructVariableENS()
 {
     int& NumberOfVariables = problemeAResoudre_.NombreDeVariables;
     NumberOfVariables = 0;
 
     // variables: ENS of each area inside adq patch
-    logs.debug() << " ENS of each area inside adq patch: ";
+    Antares::logs.debug() << " ENS of each area inside adq patch: ";
     for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
         // Only ENS for areas inside adq patch are considered as variables
@@ -25,8 +27,8 @@ void HourlyCSRProblem::constructVariableENS()
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             varToBeSetToZeroIfBelowThreshold.insert(NumberOfVariables);
             ensVariablesInsideAdqPatch.insert(NumberOfVariables);
-            logs.debug() << NumberOfVariables << " ENS[" << area << "].-["
-                         << problemeHebdo_->NomsDesPays[area] << "].";
+            Antares::logs.debug() << NumberOfVariables << " ENS[" << area << "].-["
+                                  << problemeHebdo_->NomsDesPays[area] << "].";
 
             NumberOfVariables++;
         }

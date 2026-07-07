@@ -6,20 +6,56 @@ toc_depth: 2
 
 ## Branch 10.1.x
 
+### 10.1.1
+
 #### Features
 
 * Remove CentOS7 support (#3639)
 * Allow problem-generator to load GEMS studies [ANT-4847] (#3563)
+* Allow fixed timeSum bounds [ANT-4421] (#3615)
 
 #### Bugfixes
 
 * Fix bounds on fictious load and max unsupplied in adequacy patch [ANT-4906] (#3572)
+* Fix thermal component silently accepting null data [ANT-4979] (#3674)
+* Add loading for inter-monthly breakdown hydro properties [ANT-4985] (#3661)
+* Skip loading of disabled clusters, short-term storage and binding constraints [ANT-4899] (#3580, #3636)
+* Fix MPS export for integer variables [ANT-4925] (#3629)
+* Fix stale symbols when changing branch [ANT-4963] (#3631)
+* Avoid info() log spam in binding constraint loading (#3623)
+* Fix double free on OL8 (#3621)
+* Fix thermal memory leaks (#3618)
+
+#### Documentation
+
+* Remove polyfill.io JS dependency - compromised library (#3683)
+* Update links in README.md (#3679)
+* Add migration guide for area-connection & thermal-capacity-connection [ANT-4481] (#3630)
+* Add missing system deps (#3612)
+* Align user doc on field "include-unfeasible-problem-behavior" (#3590)
 
 #### For developers
 
 * Add parquet as a dependency. Ground work for future support of parquet files. (#3499)
 * Add missing system deps for CentOS7 & OL8 (#3589)
 * Refactoring of yml configuration error handling (#3523, #3526, #3578, #3583)
+* Add unit tests for binding-constraints validation, timeSum bounds and YmlSystem decoder error paths (#3646, #3652, #3659)
+* Run tests also on top (#3617)
+* Update tests NR submodule (#3613)
+* Improve const-correctness in EvalVisitor and output variable helper (#3570, #3637)
+* Reduce memory consumption of minmax (#3588)
+* Fix absl linking in debug (#3616)
+* Update vcpkg tag & baseline (#3625)
+* Fix build warnings (#3614, #3634, #3635, #3641)
+
+#### CI
+
+* Bump Sonar scanner and sonarqube-scan-action (#3620, #3663, #3686)
+* Set user for clang-format in Docker run (#3666)
+* Fix CI on Ubuntu (#3650)
+* Don't upload delivery when a version is released (#3632)
+* Use Antares_Simulator_Tests_NR commit-id for release generation (#3628)
+* Handle copilot/* branches (#3581)
 
 ### 10.1.0
 

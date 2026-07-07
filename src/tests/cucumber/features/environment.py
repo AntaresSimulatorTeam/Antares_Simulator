@@ -14,6 +14,10 @@ def check_userdata_exists(context, data_name: str):
             f"The following parameter should be defined in 'behave.ini' or in the command line when calling behave: {data_name}")
 
 def after_scenario(context, scenario):
+    # reset solver overrides set by `the linear/quadratic solver is X` steps
+    # so they don't leak into later scenarios via behave's run-global userdata
+    context.config.userdata.pop("linear-solver", None)
+    context.config.userdata.pop("quadratic-solver", None)
     # post-processing a test: remove tmp copy of study
     if hasattr(context, "tmp_workdir") and context.tmp_workdir is not None:
         rmtree(context.tmp_workdir)

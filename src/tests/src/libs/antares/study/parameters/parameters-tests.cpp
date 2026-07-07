@@ -11,6 +11,7 @@
 
 #include <antares/study/study.h>
 
+using namespace Antares;
 using namespace Antares::Data;
 
 IniFile validINI()
