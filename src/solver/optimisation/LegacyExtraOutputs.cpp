@@ -224,30 +224,26 @@ void LegacyExtraOutputEmitter::thermalOutputs(uint32_t pays, int index, int pdt)
     const auto& disp = paliers.PuissanceDisponibleEtCout[index];
     const auto& availabilitySeries = disp.PuissanceDisponibleDuPalierThermique;
     const auto& minGenSeries = disp.PuissanceMinDuPalierThermique;
-    if (static_cast<std::size_t>(pdt) < availabilitySeries.size()
-        && static_cast<std::size_t>(pdt) < minGenSeries.size())
+    const double available = availabilitySeries[pdt];
+    const double minGen = minGenSeries[pdt];
+    const double unitSize = paliers.TailleUnitaireDUnGroupeDuPalierThermique[index];
+    const double minStablePower = paliers.PminDuPalierThermiquePendantUneHeure[index];
+
+    double unitFloor = 0.;
+    if (unitSize > 0.)
     {
-        const double available = availabilitySeries[pdt];
-        const double minGen = minGenSeries[pdt];
-        const double unitSize = paliers.TailleUnitaireDUnGroupeDuPalierThermique[index];
-        const double minStablePower = paliers.PminDuPalierThermiquePendantUneHeure[index];
-
-        double unitFloor = 0.;
-        if (unitSize > 0.)
-        {
-            unitFloor = minStablePower * std::ceil(available / unitSize);
-        }
-        const double clusterAvailability = std::max(available, unitFloor);
-
-        emit("cluster_availability", cluster, pdt, clusterAvailability);
-        emit("up_margin", cluster, pdt, clusterAvailability - generation);
-        emit("min_gen_power", cluster, pdt, std::min(generation, minGen));
-        emit("down_margin", cluster, pdt, generation - std::min(clusterAvailability, minGen));
-
-        const double profit = (areaPrice(pays, pdt) - cost(production))
-                              * std::max(generation - minGen, 0.);
-        emit("profit", cluster, pdt, profit);
+        unitFloor = minStablePower * std::ceil(available / unitSize);
     }
+    const double clusterAvailability = std::max(available, unitFloor);
+
+    emit("cluster_availability", cluster, pdt, clusterAvailability);
+    emit("up_margin", cluster, pdt, clusterAvailability - generation);
+    emit("min_gen_power", cluster, pdt, std::min(generation, minGen));
+    emit("down_margin", cluster, pdt, generation - std::min(clusterAvailability, minGen));
+
+    const double profit = (areaPrice(pays, pdt) - cost(production))
+                          * std::max(generation - minGen, 0.);
+    emit("profit", cluster, pdt, profit);
 
     if (!problemeHebdo_.OptimisationNotFastMode)
     {

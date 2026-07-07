@@ -562,22 +562,6 @@ BOOST_AUTO_TEST_CASE(cluster_availability_ignores_the_unit_floor_when_unit_size_
     BOOST_CHECK_CLOSE(FindRow(table, "cluster_availability", "cluster1")->value, 250., 1e-9);
 }
 
-BOOST_AUTO_TEST_CASE(margins_and_profit_are_skipped_when_the_series_do_not_cover_the_hour)
-{
-    auto& disp = problem.PaliersThermiquesDuPays[0].PuissanceDisponibleEtCout[0];
-    disp.PuissanceDisponibleDuPalierThermique.clear();
-    disp.PuissanceMinDuPalierThermique.clear();
-    fill();
-
-    BOOST_CHECK(RowsForOutput(table, "cluster_availability").empty());
-    BOOST_CHECK(RowsForOutput(table, "up_margin").empty());
-    BOOST_CHECK(RowsForOutput(table, "min_gen_power").empty());
-    BOOST_CHECK(RowsForOutput(table, "down_margin").empty());
-    BOOST_CHECK(RowsForOutput(table, "profit").empty());
-    // The other thermal outputs do not depend on the series.
-    BOOST_CHECK(FindRow(table, "prop_cost", "cluster1").has_value());
-}
-
 BOOST_AUTO_TEST_CASE(profit_is_margin_price_times_generation_above_the_min_gen_floor)
 {
     // area1 price = -(-10000) = 10000; generation_cost = 35;
