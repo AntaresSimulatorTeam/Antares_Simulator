@@ -224,7 +224,7 @@ inline ISimulation<ImplementationType>::ISimulation(
     pNbMaxPerformedYearsInParallel(0),
     pYearByYear(study.parameters.yearByYear),
     pDurationCollector(duration_collector),
-    pQueueService(std::make_shared<Concurrency::ThreadPool>()),
+    pQueueService(std::make_shared<Concurrency::ThreadPool>(study.maxNbYearsInParallel)),
     pResultWriter(resultWriter),
     simulationObserver_(simulationObserver)
 {
@@ -478,9 +478,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
             results.add(Concurrency::AddTask(*pQueueService, task));
         }
     }
-
-    // Number of threads to perform the jobs waiting in the queue
-    pQueueService->start(pNbMaxPerformedYearsInParallel);
 
     results.join();
     pResultWriter.flush();

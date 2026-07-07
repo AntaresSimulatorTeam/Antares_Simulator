@@ -8,7 +8,11 @@ namespace Antares::Concurrency
 
 ThreadPool::ThreadPool(unsigned threadCount)
 {
-    start(threadCount);
+    workers_.reserve(threadCount);
+    for (unsigned i = 0; i < threadCount; ++i)
+    {
+        workers_.emplace_back([this] { workerLoop(); });
+    }
 }
 
 ThreadPool::~ThreadPool()
@@ -20,20 +24,6 @@ ThreadPool::~ThreadPool()
     condition_.notify_all();
     // workers_ are std::jthread: they join on destruction, after having
     // drained the remaining tasks (see workerLoop exit condition).
-}
-
-void ThreadPool::start(unsigned threadCount)
-{
-    std::lock_guard lock(mutex_);
-    if (!workers_.empty())
-    {
-        return;
-    }
-    workers_.reserve(threadCount);
-    for (unsigned i = 0; i < threadCount; ++i)
-    {
-        workers_.emplace_back([this] { workerLoop(); });
-    }
 }
 
 TaskFuture ThreadPool::add(Task task)

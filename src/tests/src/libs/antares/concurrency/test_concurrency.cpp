@@ -95,23 +95,6 @@ BOOST_AUTO_TEST_CASE(allow_to_use_function_object_pointer)
     BOOST_CHECK(functionObjectPtr->called);
 }
 
-BOOST_AUTO_TEST_CASE(tasks_added_before_start_run_only_after_start)
-{
-    ThreadPool threadPool;
-    std::atomic<int> counter = 0;
-    Task incrementCounter = [&counter]() { counter++; };
-    FutureSet futures;
-    for (int i = 0; i < 5; i++)
-    {
-        futures.add(AddTask(threadPool, incrementCounter));
-    }
-    // No worker exists yet: nothing can have run
-    BOOST_CHECK(counter == 0);
-    threadPool.start(2);
-    futures.join();
-    BOOST_CHECK(counter == 5);
-}
-
 BOOST_AUTO_TEST_CASE(destructor_drains_pending_tasks)
 {
     std::atomic<int> counter = 0;

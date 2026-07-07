@@ -22,16 +22,12 @@ using TaskFuture = std::future<void>;
 /*!
  * \brief A fixed-size pool of worker threads consuming tasks in FIFO order.
  *
- * The pool supports deferred start: tasks added before start() are queued
- * and only begin executing once start() spawns the workers. The destructor
- * completes all queued tasks before joining the workers, provided the pool
- * was started; destroying a never-started pool with queued tasks leaves
- * their futures with a broken promise.
+ * Worker threads are spawned by the constructor and run until destruction.
+ * The destructor completes all queued tasks before joining the workers.
  */
 class ThreadPool
 {
 public:
-    ThreadPool() = default;
     explicit ThreadPool(unsigned threadCount);
     ~ThreadPool();
 
@@ -39,11 +35,6 @@ public:
     ThreadPool& operator=(const ThreadPool&) = delete;
     ThreadPool(ThreadPool&&) = delete;
     ThreadPool& operator=(ThreadPool&&) = delete;
-
-    /*!
-     * \brief Spawns the worker threads. No-op if the pool is already started.
-     */
-    void start(unsigned threadCount);
 
     /*!
      * \brief Queues the provided task and returns the corresponding std::future.
