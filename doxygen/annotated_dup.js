@@ -15,6 +15,7 @@ var annotated_dup =
         [ "Detail", null, [
           [ "CopyableCallable", "classAntares_1_1Concurrency_1_1Detail_1_1CopyableCallable.html", "classAntares_1_1Concurrency_1_1Detail_1_1CopyableCallable" ]
         ] ],
+        [ "ThreadPool", "classAntares_1_1Concurrency_1_1ThreadPool.html", "classAntares_1_1Concurrency_1_1ThreadPool" ],
         [ "FutureSet", "classAntares_1_1Concurrency_1_1FutureSet.html", "classAntares_1_1Concurrency_1_1FutureSet" ]
       ] ],
       [ "Data", null, [
@@ -736,7 +737,6 @@ var annotated_dup =
         [ "IResultWriter", "classAntares_1_1Solver_1_1IResultWriter.html", "classAntares_1_1Solver_1_1IResultWriter" ],
         [ "InMemoryWriter", "classAntares_1_1Solver_1_1InMemoryWriter.html", "classAntares_1_1Solver_1_1InMemoryWriter" ],
         [ "NullResultWriter", "classAntares_1_1Solver_1_1NullResultWriter.html", "classAntares_1_1Solver_1_1NullResultWriter" ],
-        [ "EnsureQueueStartedIfNeeded", "classAntares_1_1Solver_1_1EnsureQueueStartedIfNeeded.html", "classAntares_1_1Solver_1_1EnsureQueueStartedIfNeeded" ],
         [ "ImmediateFileResultWriter", "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html", "classAntares_1_1Solver_1_1ImmediateFileResultWriter" ],
         [ "ZipWriteJob", "classAntares_1_1Solver_1_1ZipWriteJob.html", "classAntares_1_1Solver_1_1ZipWriteJob" ],
         [ "ZipWriter", "classAntares_1_1Solver_1_1ZipWriter.html", "classAntares_1_1Solver_1_1ZipWriter" ],

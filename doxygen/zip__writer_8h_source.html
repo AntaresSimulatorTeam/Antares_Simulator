@@ -132,101 +132,98 @@ $(document).ready(function(){initNavTree('zip__writer_8h_source.html',''); initR
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;mutex&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;yuni/core/string.h&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;yuni/job/queue/service.h&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;antares/benchmarking/DurationCollector.h&gt;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;antares/concurrency/concurrency.h&quot;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;antares/writer/i_writer.h&quot;</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">namespace </span>Antares::Solver</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;mutex&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;antares/benchmarking/DurationCollector.h&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;antares/concurrency/concurrency.h&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;antares/writer/i_writer.h&quot;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>Antares::Solver</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">enum class</span> ZipState</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">enum class</span> ZipState</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    can_receive_data,</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    blocking</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;};</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    can_receive_data,</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    blocking</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;};</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">class </span>ZipWriter;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">class </span>ZipWriter;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> ContentT&gt;</div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1ZipWriteJob.html">   31</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1ZipWriteJob.html">ZipWriteJob</a> final</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1ZipWriteJob.html">ZipWriteJob</a>(<a class="code" href="classAntares_1_1Solver_1_1ZipWriter.html">ZipWriter</a>&amp; writer,</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                <span class="keyword">const</span> std::string&amp; entryPath,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                ContentT&amp; content,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                <a class="code" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; duration_collector);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">void</span> writeEntry();</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordtype">void</span> operator()()</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        writeEntry();</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="comment">// Pointer to Zip handle</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">void</span>* pZipHandle;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="comment">// Protect pZipHandle against concurrent writes, since minizip-ng isn&#39;t thread-safe</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    std::mutex&amp; pZipMutex;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="comment">// State</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    ZipState&amp; pState;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="comment">// Entry path for the new file within the zip archive</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">const</span> std::string pEntryPath;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="comment">// Content of the new file</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    ContentT pContent;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="comment">// Benchmarking. How long do we wait ? How long does the zip write take ?</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; pDurationCollector;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;};</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1ZipWriter.html">   60</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1ZipWriter.html">ZipWriter</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;{</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1ZipWriter.html">ZipWriter</a>(std::shared_ptr&lt;Yuni::Job::QueueService&gt; qs,</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;              <span class="keyword">const</span> std::filesystem::path&amp; archivePath,</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;              <a class="code" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; duration_collector);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    ~<a class="code" href="classAntares_1_1Solver_1_1ZipWriter.html">ZipWriter</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> addEntryFromBuffer(<span class="keyword">const</span> std::filesystem::path&amp; entryPath,</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                            std::string&amp; entryContent) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">void</span> addEntryFromFile(<span class="keyword">const</span> std::filesystem::path&amp; entryPath,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                          <span class="keyword">const</span> std::filesystem::path&amp; filePath) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Solver_1_1ZipWriter.html#a1aada9478675d3a460f1561be42a140e">flush</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">bool</span> needsTheJobQueue() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordtype">void</span> finalize(<span class="keywordtype">bool</span> verbose) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1ZipWriteJob.html">ZipWriteJob</a>&lt;Yuni::Clob&gt;;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    friend class <a class="code" href="classAntares_1_1Solver_1_1ZipWriteJob.html">ZipWriteJob</a>&lt;std::string&gt;;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">// Queue where jobs will be appended</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    std::shared_ptr&lt;Yuni::Job::QueueService&gt; pQueueService;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="comment">// Prevent concurrent writes to the zip file</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    std::mutex pZipMutex;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// minizip-ng requires a void* as a zip handle.</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    void* pZipHandle;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// State, to allow/prevent new jobs being added to the queue</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    ZipState pState;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="comment">// Absolute path to the archive</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    const std::filesystem::path pArchivePath;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="comment">// Benchmarking. Passed to jobs</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <a class="code" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; pDurationCollector;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <a class="code" href="classAntares_1_1Concurrency_1_1FutureSet.html">Concurrency::FutureSet</a> pendingTasks_;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    template&lt;class ContentType&gt;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    void addEntryFromBufferHelper(const std::filesystem::path&amp; entryPath,</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                                  ContentType&amp; entryContent);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;};</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;} <span class="comment">// namespace Antares::Solver</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">#include &quot;zip_writer.hxx&quot;</span></div>
-<div class="ttc" id="aclassAntares_1_1Concurrency_1_1FutureSet_html"><div class="ttname"><a href="classAntares_1_1Concurrency_1_1FutureSet.html">Antares::Concurrency::FutureSet</a></div><div class="ttdoc">Utility class to gather futures to wait for.</div><div class="ttdef"><b>Definition:</b> concurrency.h:44</div></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> ContentT&gt;</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1ZipWriteJob.html">   29</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1ZipWriteJob.html">ZipWriteJob</a> final</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1ZipWriteJob.html">ZipWriteJob</a>(<a class="code" href="classAntares_1_1Solver_1_1ZipWriter.html">ZipWriter</a>&amp; writer,</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;                <span class="keyword">const</span> std::string&amp; entryPath,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                ContentT&amp; content,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                <a class="code" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; duration_collector);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">void</span> writeEntry();</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">void</span> operator()()</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        writeEntry();</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    }</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="comment">// Pointer to Zip handle</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">void</span>* pZipHandle;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="comment">// Protect pZipHandle against concurrent writes, since minizip-ng isn&#39;t thread-safe</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    std::mutex&amp; pZipMutex;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="comment">// State</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    ZipState&amp; pState;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="comment">// Entry path for the new file within the zip archive</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">const</span> std::string pEntryPath;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="comment">// Content of the new file</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    ContentT pContent;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="comment">// Benchmarking. How long do we wait ? How long does the zip write take ?</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; pDurationCollector;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;};</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1ZipWriter.html">   58</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1ZipWriter.html">ZipWriter</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;{</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1ZipWriter.html">ZipWriter</a>(std::shared_ptr&lt;Concurrency::ThreadPool&gt; threadPool,</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;              <span class="keyword">const</span> std::filesystem::path&amp; archivePath,</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;              <a class="code" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; duration_collector);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    ~<a class="code" href="classAntares_1_1Solver_1_1ZipWriter.html">ZipWriter</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">void</span> addEntryFromBuffer(<span class="keyword">const</span> std::filesystem::path&amp; entryPath,</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                            std::string&amp; entryContent) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> addEntryFromFile(<span class="keyword">const</span> std::filesystem::path&amp; entryPath,</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                          <span class="keyword">const</span> std::filesystem::path&amp; filePath) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Solver_1_1ZipWriter.html#a1aada9478675d3a460f1561be42a140e">flush</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">bool</span> needsTheJobQueue() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">void</span> finalize(<span class="keywordtype">bool</span> verbose) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1ZipWriteJob.html">ZipWriteJob</a>&lt;std::string&gt;;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="comment">// Thread pool where jobs will be appended</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    std::shared_ptr&lt;Concurrency::ThreadPool&gt; pThreadPool;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="comment">// Prevent concurrent writes to the zip file</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    std::mutex pZipMutex;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="comment">// minizip-ng requires a void* as a zip handle.</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    void* pZipHandle;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">// State, to allow/prevent new jobs being added to the queue</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    ZipState pState;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="comment">// Absolute path to the archive</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    const std::filesystem::path pArchivePath;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="comment">// Benchmarking. Passed to jobs</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="code" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; pDurationCollector;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="classAntares_1_1Concurrency_1_1FutureSet.html">Concurrency::FutureSet</a> pendingTasks_;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    template&lt;class ContentType&gt;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    void addEntryFromBufferHelper(const std::filesystem::path&amp; entryPath,</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                                  ContentType&amp; entryContent);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;};</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;} <span class="comment">// namespace Antares::Solver</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">#include &quot;zip_writer.hxx&quot;</span></div>
+<div class="ttc" id="aclassAntares_1_1Concurrency_1_1FutureSet_html"><div class="ttname"><a href="classAntares_1_1Concurrency_1_1FutureSet.html">Antares::Concurrency::FutureSet</a></div><div class="ttdoc">Utility class to gather futures to wait for.</div><div class="ttdef"><b>Definition:</b> concurrency.h:78</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:15</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1ZipWriteJob_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1ZipWriteJob.html">Antares::Solver::ZipWriteJob</a></div><div class="ttdef"><b>Definition:</b> zip_writer.h:32</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1ZipWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1ZipWriter.html">Antares::Solver::ZipWriter</a></div><div class="ttdef"><b>Definition:</b> zip_writer.h:61</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1ZipWriteJob_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1ZipWriteJob.html">Antares::Solver::ZipWriteJob</a></div><div class="ttdef"><b>Definition:</b> zip_writer.h:30</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1ZipWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1ZipWriter.html">Antares::Solver::ZipWriter</a></div><div class="ttdef"><b>Definition:</b> zip_writer.h:59</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1ZipWriter_html_a1aada9478675d3a460f1561be42a140e"><div class="ttname"><a href="classAntares_1_1Solver_1_1ZipWriter.html#a1aada9478675d3a460f1561be42a140e">Antares::Solver::ZipWriter::flush</a></div><div class="ttdeci">void flush() override</div><div class="ttdef"><b>Definition:</b> zip_writer.cpp:203</div></div>
 <div class="ttc" id="aclassBenchmarking_1_1DurationCollector_html"><div class="ttname"><a href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a></div><div class="ttdef"><b>Definition:</b> DurationCollector.h:19</div></div>
 </div><!-- fragment --></div><!-- contents -->

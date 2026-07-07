@@ -26,11 +26,12 @@ var namespaces_dup =
         [ "Detail", null, [
           [ "CopyableCallable", "classAntares_1_1Concurrency_1_1Detail_1_1CopyableCallable.html", "classAntares_1_1Concurrency_1_1Detail_1_1CopyableCallable" ]
         ] ],
+        [ "ThreadPool", "classAntares_1_1Concurrency_1_1ThreadPool.html", "classAntares_1_1Concurrency_1_1ThreadPool" ],
         [ "FutureSet", "classAntares_1_1Concurrency_1_1FutureSet.html", "classAntares_1_1Concurrency_1_1FutureSet" ],
         [ "Task", "concurrency_8h.html#a39143050ae5feb9369c264b2dea30f33", null ],
         [ "TaskFuture", "concurrency_8h.html#ac92662a0e0f846c3fa57fd2e5bdc1fd7", null ],
-        [ "AddTask", "concurrency_8h.html#a7903355e4b828c15c1280c2111482fb8", null ],
-        [ "AddTask", "concurrency_8cpp.html#abfb2aae84aed4bd80cdee1c9cdbec100", null ]
+        [ "AddTask", "concurrency_8h.html#aade2ae101f3ed860b6c27f85df1ce674", null ],
+        [ "AddTask", "concurrency_8cpp.html#a2d5a0e93507b60089a8b3fd3981b874b", null ]
       ] ],
       [ "Constants", null, [
         [ "daysPerMonth", "libs_2antares_2include_2antares_2antares_2constants_8h.html#a0fce63f36e3f678c5597e6f38c5f90f0", null ],
@@ -1588,7 +1589,6 @@ var namespaces_dup =
         [ "IResultWriter", "classAntares_1_1Solver_1_1IResultWriter.html", "classAntares_1_1Solver_1_1IResultWriter" ],
         [ "InMemoryWriter", "classAntares_1_1Solver_1_1InMemoryWriter.html", "classAntares_1_1Solver_1_1InMemoryWriter" ],
         [ "NullResultWriter", "classAntares_1_1Solver_1_1NullResultWriter.html", "classAntares_1_1Solver_1_1NullResultWriter" ],
-        [ "EnsureQueueStartedIfNeeded", "classAntares_1_1Solver_1_1EnsureQueueStartedIfNeeded.html", "classAntares_1_1Solver_1_1EnsureQueueStartedIfNeeded" ],
         [ "ImmediateFileResultWriter", "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html", "classAntares_1_1Solver_1_1ImmediateFileResultWriter" ],
         [ "ZipWriteJob", "classAntares_1_1Solver_1_1ZipWriteJob.html", "classAntares_1_1Solver_1_1ZipWriteJob" ],
         [ "ZipWriter", "classAntares_1_1Solver_1_1ZipWriter.html", "classAntares_1_1Solver_1_1ZipWriter" ],
@@ -1657,7 +1657,7 @@ var namespaces_dup =
         [ "operator<<", "ModelerData_8h.html#ae589ebe159662ac9534f60b58140872a", null ],
         [ "problemName", "LpsFromAntares_8h.html#a4d52985d43d59ef854f3a608e0ab4032", null ],
         [ "randomReservoirLevel", "management_8h.html#a61fe8e29c1c9060a07d6e3a496d50908", null ],
-        [ "resultWriterFactory", "writer__factory_8h.html#a63ba6455aa38a7d4e78e0968833366a8", null ],
+        [ "resultWriterFactory", "writer__factory_8h.html#ac6d8ad5f1e9a7808f0a899e2a05ef561", null ],
         [ "runSimulation", "simulation-run_8cpp.html#a2b9f17dd0707f6fb3abf8b7d80660842", null ],
         [ "setApplicationResultWriter", "common_8cpp.html#ae2fed9f7d2e4e0ab70cbc200785b5a36", null ],
         [ "simulationRun", "simulation-run_8h.html#ad10952af654466497e57a3b210d59841", null ],

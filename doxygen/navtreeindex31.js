@@ -1,9 +1,12 @@
 var NAVTREEINDEX31 =
 {
+"functions_s.html":[9,3,0,18],
+"functions_t.html":[9,3,0,19],
+"functions_type.html":[9,3,3],
 "functions_u.html":[9,3,0,20],
 "functions_v.html":[9,3,0,21],
-"functions_vars.html":[9,3,2,0],
 "functions_vars.html":[9,3,2],
+"functions_vars.html":[9,3,2,0],
 "functions_vars_b.html":[9,3,2,1],
 "functions_vars_c.html":[9,3,2,2],
 "functions_vars_d.html":[9,3,2,3],
@@ -129,8 +132,8 @@ var NAVTREEINDEX31 =
 "hydroCost_8h_source.html":[10,0,0,8,11,0,0,0,0,3,13],
 "hydro_8cpp.html#a3f5a55066990f8dd175afb8a7c864625":[8,0,0,16,7],
 "hydro_8h.html":[10,0,0,8,11,0,0,0,0,1,4],
-"hydro_8h.html#ad325b73ee3c003cf5d3bf81860e47e0f":[10,0,0,8,11,0,0,0,0,1,4,2],
 "hydro_8h.html#ad325b73ee3c003cf5d3bf81860e47e0f":[8,0,0,14,8,5,169],
+"hydro_8h.html#ad325b73ee3c003cf5d3bf81860e47e0f":[10,0,0,8,11,0,0,0,0,1,4,2],
 "hydro_8h_source.html":[10,0,0,8,11,0,0,0,0,1,4],
 "hydromaxtimeseriesreader_8h_source.html":[10,0,0,4,0,25,0,0,0,5,1,3],
 "hydrorulecurves_8h_source.html":[10,0,0,4,0,25,0,0,0,5,1,4],
@@ -139,7 +142,7 @@ var NAVTREEINDEX31 =
 "hydrostorage_8h_source.html":[10,0,0,8,11,0,0,0,0,3,14],
 "i__table__writer_8h_source.html":[10,0,0,4,0,29,0,0,0,0],
 "i__writer_8h_source.html":[10,0,0,4,0,29,0,0,0,1],
-"immediate__file__writer_8h_source.html":[10,0,0,4,0,29,1,2],
+"immediate__file__writer_8h_source.html":[10,0,0,4,0,29,1,1],
 "import__helper_8py.html#aa974063ef554e07ce24987062c9177e6":[8,0,35,0,1],
 "import__helper_8py.html#ad6fe9b51dec32c23aa7db73f6e39981e":[8,0,35,0,0],
 "in-memory-study_8h_source.html":[10,0,0,10,1,0,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX31 =
 "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a08ebcd3d0f8306c6f971c7888563422da4f80b2033bae8837cebe98243db130c6":[8,0,0,4,122,1],
 "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a08ebcd3d0f8306c6f971c7888563422da59eaa9fd5aafbce4b2bef436850b7d19":[8,0,0,4,122,5],
 "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a08ebcd3d0f8306c6f971c7888563422daad933e76501bbaf3942282d11988efa4":[8,0,0,4,122,2],
-"libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a08ebcd3d0f8306c6f971c7888563422dac166ae7370f78b115389c5ce3010fac0":[8,0,0,4,122,4],
-"libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a08ebcd3d0f8306c6f971c7888563422dac4e3bd65f0f67dae64adb62c08200138":[8,0,0,4,122,3],
-"libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a08ebcd3d0f8306c6f971c7888563422daf77458d92dd4536069b761106efe4130":[8,0,0,4,122,6],
-"libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a08ebcd3d0f8306c6f971c7888563422dafeac92c904bca62c1a209b3ce73ae31b":[8,0,0,4,122,0]
+"libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a08ebcd3d0f8306c6f971c7888563422dac166ae7370f78b115389c5ce3010fac0":[8,0,0,4,122,4]
 };

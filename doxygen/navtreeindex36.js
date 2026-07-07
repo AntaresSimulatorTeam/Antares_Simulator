@@ -1,5 +1,8 @@
 var NAVTREEINDEX36 =
 {
+"structAntares_1_1Data_1_1ThermalClusterReserveParticipation.html#a4c43c82234a3564609382c0e131311b2":[9,0,0,3,20,0],
+"structAntares_1_1Data_1_1ThermalClusterReserveParticipation.html#afb2ac0b88b10eeb9df77b94faffa3fef":[9,0,0,3,20,2],
+"structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html":[9,0,0,3,72,0],
 "structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html#a6e836e62cb70a05a1bdc8664e17839f6":[9,0,0,3,72,0,0],
 "structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html#a90dd24750f941d6aa1117b62dbe3f4ca":[9,0,0,3,72,0,1],
 "structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html#aa955a40716989149d8e85a7e643593bb":[9,0,0,3,72,0,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX36 =
 "structAntares_1_1Optimization_1_1LegacyVariableInfo.html#a4ad2494aadb94b87d4c13ef02bb6453e":[9,0,0,10,24,0],
 "structAntares_1_1Optimization_1_1LegacyVariableInfo.html#ae2808fc8cf18bf3e85495fcaeb02bee3":[9,0,0,10,24,1],
 "structAntares_1_1Optimization_1_1LegacyVariableInfo.html#ae47cb152ff265ff007d6febf687b1483":[9,0,0,10,24,2],
-"structAntares_1_1Optimization_1_1MCYearAndTime.html":[9,0,0,10,17],
-"structAntares_1_1Optimization_1_1MCYearAndTime.html#aa4fbd59a9b4d362139518c774ad64a78":[9,0,0,10,17,1],
-"structAntares_1_1Optimization_1_1MCYearAndTime.html#ae2dbeb09dbdf7b87750797ae394ca7e6":[9,0,0,10,17,2],
-"structAntares_1_1Optimization_1_1MCYearAndTime.html#af523489c66678cdf6721b3c0775c1952":[9,0,0,10,17,0]
+"structAntares_1_1Optimization_1_1MCYearAndTime.html":[9,0,0,10,17]
 };

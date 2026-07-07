@@ -1,5 +1,8 @@
 var NAVTREEINDEX33 =
 {
+"md_src_tests_run_study_tests_readme.html#autotoc_md47":[5,3],
+"md_src_tests_run_study_tests_readme.html#autotoc_md48":[5,4],
+"md_src_tests_run_study_tests_readme.html#autotoc_md49":[5,5],
 "md_src_tests_run_study_tests_readme.html#autotoc_md50":[5,5,0],
 "md_src_tests_run_study_tests_readme.html#autotoc_md51":[5,5,1],
 "md_src_tests_run_study_tests_readme.html#autotoc_md52":[5,5,2],
@@ -206,10 +209,10 @@ var NAVTREEINDEX33 =
 "parameters_8h.html#a566fde971ca2fe65af38bc296508833d":[8,0,0,4,179],
 "parameters_8h.html#adff229c76accf7f81a67165a1b7ac6a3":[8,0,0,4,193],
 "parameters_8h_source.html":[10,0,0,4,0,25,0,0,0,17],
-"parquet__arrow__utils_8h_source.html":[10,0,0,4,0,29,1,3],
+"parquet__arrow__utils_8h_source.html":[10,0,0,4,0,29,1,2],
 "parquet__table__writer_8cpp.html#ac8520dbee4a7eb767f0506750b257f23":[8,0,0,19,17],
 "parquet__table__writer_8cpp.html#aec2a4958635b3766bed8e3772f487b2b":[8,0,0,19,22],
-"parquet__table__writer_8h_source.html":[10,0,0,4,0,29,1,4],
+"parquet__table__writer_8h_source.html":[10,0,0,4,0,29,1,3],
 "parseModelerParameters_8h.html#aec770ce15d1ae94b5c46e6d8575f038f":[8,0,0,14,4,19],
 "parseModelerParameters_8h_source.html":[10,0,0,5,3,0,0,0,0,0,1],
 "parse__linear__expression_8py.html#aeedd9bd949821f252bd8004fcc6fa513":[8,0,24,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX33 =
 "productionByDispatchablePlant_8h.html#a69dcc4c3812e726a7684cb0a67c8fcc9":[8,0,0,14,8,5,166],
 "productionByDispatchablePlant_8h.html#a920e4b0e57675dc61ec421019ab08684":[8,0,0,14,8,5,138],
 "productionByDispatchablePlant_8h_source.html":[10,0,0,8,11,0,0,0,0,3,40],
-"productionByRenewablePlant_8h.html#a45e64a8563c83524fcd18bc05e224eb5":[8,0,0,14,8,5,139],
-"productionByRenewablePlant_8h_source.html":[10,0,0,8,11,0,0,0,0,3,41],
-"profitByPlant_8h.html#a6b5f09d8f414f67a1bce22323519111f":[8,0,0,14,8,5,140],
-"profitByPlant_8h_source.html":[10,0,0,8,11,0,0,0,0,3,42]
+"productionByRenewablePlant_8h.html#a45e64a8563c83524fcd18bc05e224eb5":[8,0,0,14,8,5,139]
 };

@@ -400,7 +400,6 @@ var hierarchy =
     [ "Antares::Solver::Variable::Empty", "structAntares_1_1Solver_1_1Variable_1_1Empty.html", null ],
     [ "Antares::Solver::Variable::Economy::detail::EmptyAuxiliaryData", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1EmptyAuxiliaryData.html", null ],
     [ "ENERGIES_ET_PUISSANCES_HYDRAULIQUES", "structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html", null ],
-    [ "Antares::Solver::EnsureQueueStartedIfNeeded", "classAntares_1_1Solver_1_1EnsureQueueStartedIfNeeded.html", null ],
     [ "Antares::Data::EnvForLoading", "classAntares_1_1Data_1_1EnvForLoading.html", null ],
     [ "Antares::API::Error", "structAntares_1_1API_1_1Error.html", null ],
     [ "json_collector.error", "classjson__collector_1_1error.html", null ],
@@ -1510,6 +1509,7 @@ var hierarchy =
       [ "FixtureFull", "structFixtureFull.html", null ]
     ] ],
     [ "Antares::Solver::Variable::ThermalState", "classAntares_1_1Solver_1_1Variable_1_1ThermalState.html", null ],
+    [ "Antares::Concurrency::ThreadPool", "classAntares_1_1Concurrency_1_1ThreadPool.html", null ],
     [ "TIME_MEASURE", "structTIME__MEASURE.html", null ],
     [ "Antares::IO::Outputs::TimeBlock", "structAntares_1_1IO_1_1Outputs_1_1TimeBlock.html", null ],
     [ "Antares::Data::TimeDependantHydroManagementData", "structAntares_1_1Data_1_1TimeDependantHydroManagementData.html", null ],

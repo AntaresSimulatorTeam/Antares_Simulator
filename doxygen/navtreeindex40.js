@@ -1,5 +1,8 @@
 var NAVTREEINDEX40 =
 {
+"structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#af45632a6e506b396e03a8ed0d062dc76":[9,0,79,2],
+"structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#aff53c62edba248fe08988c61ed6931e2":[9,0,79,1],
+"structCOUTS__DE__TRANSPORT.html":[9,0,84],
 "structCOUTS__DE__TRANSPORT.html#a4a112bd111ab3f51856fbf7512b060c2":[9,0,84,1],
 "structCOUTS__DE__TRANSPORT.html#a63d52906b6b3c3ae9157d67ef9c12e15":[9,0,84,0],
 "structCOUTS__DE__TRANSPORT.html#a72112dfad1040cf816ecff19c6d04827":[9,0,84,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX40 =
 "structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#a947f6a698bb348ff4872d5419a8d9751":[9,0,7,3,3],
 "structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#ab8af32e63fb1e1555ab3851846534eef":[9,0,7,3,6],
 "structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#aca645fbfa46d3eb2dd50bf6a56c7a4a7":[9,0,7,3,1],
-"structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#af4a274f693d8567c84f2d0203503350a":[9,0,7,3,2],
-"structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html":[9,0,7,0],
-"structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#a0aa3d054e8ff91debf0ce3403ddd8745":[9,0,7,0,2],
-"structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#a104aec0788f479dcaaf594d36fa04a02":[9,0,7,0,0]
+"structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#af4a274f693d8567c84f2d0203503350a":[9,0,7,3,2]
 };
