@@ -200,11 +200,6 @@ public:
             double onUnitsParticipation = 0;
             double offUnitsParticipation = 0;
 
-            void addParticipation(double participation)
-            {
-                totalParticipation += participation;
-            }
-
             void addOffParticipation(double participation)
             {
                 offUnitsParticipation += participation;
@@ -243,8 +238,8 @@ public:
           reserveParticipationPerSTStorageClusterForYear{HOURS_PER_YEAR};
 
         //! Reserve Participation for each Hydro per reserve
-        std::vector<std::map<std::string, std::map<ReserveID, double>>>
-          reserveParticipationPerHydroForYear{HOURS_PER_YEAR};
+        std::vector<std::map<ReserveID, double>> reserveParticipationPerHydroForYear{
+          HOURS_PER_YEAR};
 
         //! Reserve Participation cost for the whole year
         std::vector<double> reserveParticipationCostForYear;
@@ -258,18 +253,15 @@ public:
         //! Reserves participation cost of the Hydro for the whole year
         std::vector<double> HydroReserveParticipationCostForYear;
 
-        ReserveData()
+        ReserveData():
+            reserveParticipationPerThermalClusterForYear(HOURS_PER_YEAR),
+            reserveParticipationPerSTStorageClusterForYear(HOURS_PER_YEAR),
+            reserveParticipationPerHydroForYear(HOURS_PER_YEAR),
+            reserveParticipationCostForYear(HOURS_PER_YEAR, 0),
+            thermalClusterReserveParticipationCostForYear(HOURS_PER_YEAR, 0),
+            STStorageClusterReserveParticipationCostForYear(HOURS_PER_YEAR, 0),
+            HydroReserveParticipationCostForYear(HOURS_PER_YEAR, 0)
         {
-            reserveParticipationCostForYear.resize(HOURS_PER_YEAR, 0);
-            thermalClusterReserveParticipationCostForYear.resize(HOURS_PER_YEAR, 0);
-            STStorageClusterReserveParticipationCostForYear.resize(HOURS_PER_YEAR, 0);
-            HydroReserveParticipationCostForYear.resize(HOURS_PER_YEAR, 0);
-            reserveParticipationPerSTStorageClusterForYear.clear();
-            reserveParticipationPerSTStorageClusterForYear.resize(HOURS_PER_YEAR);
-            reserveParticipationPerHydroForYear.clear();
-            reserveParticipationPerHydroForYear.resize(HOURS_PER_YEAR);
-            reserveParticipationPerThermalClusterForYear.clear();
-            reserveParticipationPerThermalClusterForYear.resize(HOURS_PER_YEAR);
         }
     };
 
