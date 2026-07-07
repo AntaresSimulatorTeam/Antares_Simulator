@@ -503,6 +503,7 @@ void SIM_InitialisationProblemeHebdo(Study& study,
                   ? pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index]
                   : cluster->minStablePower;
             pbPalier.NomsDesPaliersThermiques[cluster->index] = cluster->name().c_str();
+            pbPalier.emissionFactors[cluster->index] = cluster->emissions.factors;
         }
 
         if (study.parameters.unitCommitment.ucMode
