@@ -111,9 +111,9 @@ enum VarOffset : int
 // nbPdt * constraintsPerHour.
 enum ConstraintOffset : int
 {
-    balanceArea1 = 0, // dual -10000
-    balanceArea2 = 1, // dual -50
-    balanceArea3 = 2, // dual -75
+    balanceArea1 = 0,          // dual -10000
+    balanceArea2 = 1,          // dual -50
+    balanceArea3 = 2,          // dual -75
     flowDissociationLink0 = 3, // dual -3
     constraintsPerHour = 4
 };
@@ -194,8 +194,8 @@ struct Fixture
                                                         base + spillageArea2,
                                                         base + spillageArea3};
             vars.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique = {base + nodu};
-            vars.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique = {base
-                                                                                   + numberStarting};
+            vars.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique = {
+              base + numberStarting};
             vars.NumeroDeVariableDuFluxDirect = {base + directFlowLink0, base + directFlowLink1};
             vars.NumeroDeVariableDuFluxDirectPositif = {base + positiveDirectLink0, -1};
             vars.NumeroDeVariableDuFluxIndirectPositif = {base + positiveIndirectLink0, -1};
@@ -211,8 +211,9 @@ struct Fixture
             constraints.NumeroDeContrainteDeDissociationDeFlux = {cntBase + flowDissociationLink0,
                                                                   -1};
 
-            solved.X.insert(solved.X.end(),
-                            {3600., 52., 7., 13., 0., 2.3, 120., 120., 0., 0.2, 0., -30., 4000., 1.});
+            solved.X.insert(
+              solved.X.end(),
+              {3600., 52., 7., 13., 0., 2.3, 120., 120., 0., 0.2, 0., -30., 4000., 1.});
             solved.CoutLineaire.insert(
               solved.CoutLineaire.end(),
               {35., 10000., 4., 20000., 1., 100., 0., 0.5, 0.7, 9000., 1., 0., 0., 5000.});

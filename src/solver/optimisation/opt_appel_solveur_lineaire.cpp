@@ -86,15 +86,15 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
             continue;
         }
 
-        simulationTable.addEntry({.block = currentBlock,
-                                  .component = info->component,
-                                  .output = nameMapper.mapOutput(info->name),
-                                  .absolute_time_index = info->timeIndex,
-                                  .block_time_index = LegacyBlockTimeIndex(fillContext,
-                                                                           info->timeIndex),
-                                  .scenario_index = fillContext.getYear(),
-                                  .value = problem.X[static_cast<std::size_t>(index)],
-                                  .status = std::nullopt});
+        simulationTable.addEntry(
+          {.block = currentBlock,
+           .component = info->component,
+           .output = nameMapper.mapOutput(info->name),
+           .absolute_time_index = info->timeIndex,
+           .block_time_index = LegacyBlockTimeIndex(fillContext, info->timeIndex),
+           .scenario_index = fillContext.getYear(),
+           .value = problem.X[static_cast<std::size_t>(index)],
+           .status = std::nullopt});
     }
 
     AddLegacyExtraOutputs(simulationTable, problemeHebdo, fillContext, currentBlock);

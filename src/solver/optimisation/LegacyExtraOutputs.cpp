@@ -123,8 +123,10 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
     const int unsupplied = variableManager_.UnsuppliedEnergy(pays, pdt);
     const int spillage = variableManager_.Spillage(pays, pdt);
 
-
-    emit("imbalance_cost", area, pdt, cost(spillage) * x(spillage) + cost(unsupplied) * x(unsupplied));
+    emit("imbalance_cost",
+         area,
+         pdt,
+         cost(spillage) * x(spillage) + cost(unsupplied) * x(unsupplied));
 
     constexpr double lossOfLoadThreshold = 0.5;
     emit("is_loss_of_load", area, pdt, x(unsupplied) > lossOfLoadThreshold ? 1. : 0.);
@@ -138,7 +140,10 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
     emit("price", area, pdt, price);
 
     constexpr double nearLossOfLoadCutoff = 5.;
-    emit("is_near_loss_of_load", area, pdt, price > cost(unsupplied) - nearLossOfLoadCutoff ? 1. : 0.);
+    emit("is_near_loss_of_load",
+         area,
+         pdt,
+         price > cost(unsupplied) - nearLossOfLoadCutoff ? 1. : 0.);
 
     const int hydroLevel = variableManager_.HydroLevel(pays, pdt);
     if (hydroLevel < 0)
@@ -162,7 +167,6 @@ void LegacyExtraOutputEmitter::linkOutputs(uint32_t interco, int pdt)
     const uint32_t destination = problemeHebdo_.PaysExtremiteDeLInterconnexion[interco];
     const std::string link = std::string(problemeHebdo_.NomsDesPays[origin]) + "$$"
                              + problemeHebdo_.NomsDesPays[destination];
-
 
     const double flow = x(variableManager_.DirectFlow(interco, pdt));
     emit("abs_flow", link, pdt, std::abs(flow));
