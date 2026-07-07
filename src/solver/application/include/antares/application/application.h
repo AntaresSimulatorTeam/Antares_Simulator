@@ -3,12 +3,11 @@
 
 #pragma once
 
-#include <yuni/core/string.h>
-#include <yuni/job/queue/service.h>
+#include <yuni/core/event/interfaces.h>
+#include <yuni/thread/policy.h>
 
 #include <antares/benchmarking/DurationCollector.h>
-#include <antares/benchmarking/timer.h>
-#include <antares/study/load-options.h>
+#include <antares/concurrency/concurrency.h>
 #include <antares/study/study.h>
 #include <antares/writer/i_writer.h>
 #include "antares/infoCollection/StudyInfoCollector.h"
@@ -109,7 +108,7 @@ private:
     Benchmarking::DurationCollector pDurationCollector;
     Benchmarking::OptimizationInfo pOptimizationInfo;
 
-    std::shared_ptr<Yuni::Job::QueueService> ioQueueService;
+    std::shared_ptr<Concurrency::ThreadPool> ioQueueService;
     IResultWriter::Ptr resultWriter = nullptr;
     std::vector<std::pair<LogType, std::string>> messagesStack;
 
