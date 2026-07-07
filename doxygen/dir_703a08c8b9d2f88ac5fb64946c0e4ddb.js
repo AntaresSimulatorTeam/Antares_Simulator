@@ -9,7 +9,6 @@ var dir_703a08c8b9d2f88ac5fb64946c0e4ddb =
     [ "LegacyFiller.h", "LegacyFiller_8h_source.html", null ],
     [ "LegacyNameMapper.h", "LegacyNameMapper_8h_source.html", null ],
     [ "LegacyOrtoolsLinearProblem.h", "LegacyOrtoolsLinearProblem_8h_source.html", null ],
-    [ "LegacySolutionView.h", "LegacySolutionView_8h_source.html", null ],
     [ "LegacyVariableInfo.h", "LegacyVariableInfo_8h_source.html", null ],
     [ "LinearProblemMatrix.h", "LinearProblemMatrix_8h_source.html", null ],
     [ "LinearProblemMatrixReserves.h", "LinearProblemMatrixReserves_8h_source.html", null ],

@@ -1,9 +1,5 @@
 var NAVTREEINDEX19 =
 {
-"classAntares_1_1Solver_1_1WeeklyProblemTranslationException.html#a84b3b3a9e2491032990c1699973ec64e":[9,0,0,11,30,0],
-"classAntares_1_1Solver_1_1WindAreaNumberOfTSretriever.html":[9,0,0,11,35],
-"classAntares_1_1Solver_1_1WindAreaNumberOfTSretriever.html#ac54377fc6a5e2188a2e62be2fbd9675f":[9,0,0,11,35,0],
-"classAntares_1_1Solver_1_1ZipWriteJob.html":[9,0,0,11,14],
 "classAntares_1_1Solver_1_1ZipWriteJob.html#a27257432194787f9e890fd0ea0c26b27":[9,0,0,11,14,0],
 "classAntares_1_1Solver_1_1ZipWriteJob.html#a3302c4a5702b380870f36cf296160f24":[9,0,0,11,14,1],
 "classAntares_1_1Solver_1_1ZipWriteJob.html#a4dbb249d778d3520efbb55aafc99257e":[9,0,0,11,14,2],
@@ -249,5 +245,9 @@ var NAVTREEINDEX19 =
 "classConstraintBuilder.html#a3dc9eaf843b193b133e932b6cfff8799":[9,0,71,29],
 "classConstraintBuilder.html#a439c21d67593fa6a0dc3ae52dd48acea":[9,0,71,8],
 "classConstraintBuilder.html#a4469cf86c75b00314c7a079cd1a5803e":[9,0,71,43],
-"classConstraintBuilder.html#a4608ddc31508c2f0222a5b3dcae9b7df":[9,0,71,23]
+"classConstraintBuilder.html#a4608ddc31508c2f0222a5b3dcae9b7df":[9,0,71,23],
+"classConstraintBuilder.html#a51619522ef95290fe281632a02b126ab":[9,0,71,36],
+"classConstraintBuilder.html#a52b0b0e7dc6b890df4f55cf3b72f773c":[9,0,71,37],
+"classConstraintBuilder.html#a5350ba86b3e6069d5ffcc18e616baedc":[9,0,71,14],
+"classConstraintBuilder.html#a5a580a13081be8d511d1f44e0a66262a":[9,0,71,1]
 };

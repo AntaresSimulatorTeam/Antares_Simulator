@@ -5,6 +5,7 @@ var structPALIERS__THERMIQUES =
     [ "CoutFixeDeMarcheDUnGroupeDuPalierThermique", "structPALIERS__THERMIQUES.html#a4ee9f15511ecee5b3f6c5cac62081d54", null ],
     [ "DureeMinimaleDArretDUnGroupeDuPalierThermique", "structPALIERS__THERMIQUES.html#a149cc50e87d77f26a520c88717e21afb", null ],
     [ "DureeMinimaleDeMarcheDUnGroupeDuPalierThermique", "structPALIERS__THERMIQUES.html#a807a030ce0e639cee68677214702f7dc", null ],
+    [ "emissionFactors", "structPALIERS__THERMIQUES.html#aa4b19bad0b35285c3992de0f88ad289d", null ],
     [ "minUpDownTime", "structPALIERS__THERMIQUES.html#a68951178376642797781f14f997ff926", null ],
     [ "NombreDePaliersThermiques", "structPALIERS__THERMIQUES.html#aab069a4e3eff9a4f05a829d3f118a49e", null ],
     [ "NomsDesPaliersThermiques", "structPALIERS__THERMIQUES.html#a316762f6b1a65b009ef87293486c7243", null ],

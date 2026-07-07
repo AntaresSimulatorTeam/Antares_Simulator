@@ -1,12 +1,5 @@
 var NAVTREEINDEX27 =
 {
-"classaverageResults.html#a65fc52006d17d336751236d89db3539e":[9,0,42,6],
-"classaverageResults.html#a79b01b9bd7244c47925000a3afaa56e3":[9,0,42,0],
-"classaverageResults.html#a9fc84303c97f3bc89919bded4fe52a1c":[9,0,42,2],
-"classaverageResults.html#aede4a40aa4b50496e963a64ccc8c223f":[9,0,42,3],
-"classbenchmark_1_1StudyList.html":[9,0,2,0],
-"classbenchmark_1_1StudyList.html#a047edc902c27c253247a628d96f5b7db":[9,0,2,0,0],
-"classbenchmark_1_1StudyList.html#a1b2f85062d5aec612958b768d7af07db":[9,0,2,0,7],
 "classbenchmark_1_1StudyList.html#a3596c35ae229a6227143639a1f7ac8e6":[9,0,2,0,6],
 "classbenchmark_1_1StudyList.html#a3a481cd5d47745ef4585e73b21c700bc":[9,0,2,0,1],
 "classbenchmark_1_1StudyList.html#a6805faf052d3d9931023f0cdffb65983":[9,0,2,0,4],
@@ -249,5 +242,12 @@ var NAVTREEINDEX27 =
 "classsolver__output__handler_1_1solver__output__handler.html":[9,0,19,1],
 "classsolver__output__handler_1_1solver__output__handler.html#a004ebb503223503d853b0082ae4fb0ef":[9,0,19,1,10],
 "classsolver__output__handler_1_1solver__output__handler.html#a0624b1ed2fe6487e74fddac2fc0888e6":[9,0,19,1,30],
-"classsolver__output__handler_1_1solver__output__handler.html#a072885a78978daa3fe848158d1109b78":[9,0,19,1,27]
+"classsolver__output__handler_1_1solver__output__handler.html#a072885a78978daa3fe848158d1109b78":[9,0,19,1,27],
+"classsolver__output__handler_1_1solver__output__handler.html#a25c8cd845e2d48d5ef77feb13917a1b7":[9,0,19,1,0],
+"classsolver__output__handler_1_1solver__output__handler.html#a289f3ebc24a88608376ece0c1082f2dd":[9,0,19,1,22],
+"classsolver__output__handler_1_1solver__output__handler.html#a2a26afa28b40137471c46906942bf33f":[9,0,19,1,34],
+"classsolver__output__handler_1_1solver__output__handler.html#a2a455bfa6f7a553909145147e0369d4c":[9,0,19,1,14],
+"classsolver__output__handler_1_1solver__output__handler.html#a2de3fec535ac01c71a8e4f9a67487ab5":[9,0,19,1,41],
+"classsolver__output__handler_1_1solver__output__handler.html#a2ff6c50dd52e7dccc37921586b3bf47f":[9,0,19,1,24],
+"classsolver__output__handler_1_1solver__output__handler.html#a31881648801b8bcccf052246b9487ddd":[9,0,19,1,1]
 };

@@ -6,7 +6,6 @@ var classConstraintBuilderData =
     [ "IncrementDAllocationMatriceDesContraintes", "classConstraintBuilderData.html#affe4ab3629a15197818fd98715faf4ab", null ],
     [ "IndicesColonnes", "classConstraintBuilderData.html#a103d5d6e456f40e98c9a28d5f161b316", null ],
     [ "IndicesDebutDeLigne", "classConstraintBuilderData.html#a8e40ee2b384883c4e7cafd8a691650fd", null ],
-    [ "LegacyConstraintsInfo", "classConstraintBuilderData.html#aa1310df08e4f4a3d45a2f560505fb1ab", null ],
     [ "nombreDeContraintes", "classConstraintBuilderData.html#ab5108935ecaf99e92f02ac03f17449e1", null ],
     [ "NombreDePasDeTemps", "classConstraintBuilderData.html#ad256f40709a92d92c9848ba7e2861ad8", null ],
     [ "NombreDePasDeTempsPourUneOptimisation", "classConstraintBuilderData.html#a38086e5a0a290c04c0fe9507340903af", null ],

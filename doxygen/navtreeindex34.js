@@ -1,12 +1,5 @@
 var NAVTREEINDEX34 =
 {
-"productionByDispatchablePlant_8h.html#a920e4b0e57675dc61ec421019ab08684":[8,0,0,14,8,5,138],
-"productionByDispatchablePlant_8h_source.html":[10,0,0,8,11,0,0,0,0,3,40],
-"productionByRenewablePlant_8h.html#a45e64a8563c83524fcd18bc05e224eb5":[8,0,0,14,8,5,139],
-"productionByRenewablePlant_8h_source.html":[10,0,0,8,11,0,0,0,0,3,41],
-"profitByPlant_8h.html#a6b5f09d8f414f67a1bce22323519111f":[8,0,0,14,8,5,140],
-"profitByPlant_8h_source.html":[10,0,0,8,11,0,0,0,0,3,42],
-"progress_8h_source.html":[10,0,0,11,1,4],
 "progress_8hxx_source.html":[10,0,0,11,1,5],
 "properties_8h_source.html":[10,0,0,4,0,25,0,0,0,5,5,4],
 "psp_8h_source.html":[10,0,0,8,11,0,0,0,0,1,8],
@@ -45,7 +38,7 @@ var NAVTREEINDEX34 =
 "renewable_2cluster_8hxx_source.html":[10,0,0,4,0,25,0,0,0,5,3,1],
 "renewable_2cluster__list_8h_source.html":[10,0,0,4,0,25,0,0,0,5,3,2],
 "renewable_2defines_8h_source.html":[10,0,0,4,0,25,0,0,0,5,3,5],
-"report_8cpp.html#afca59b8c35ac2975defa738d1098f969":[8,0,0,12,38],
+"report_8cpp.html#afca59b8c35ac2975defa738d1098f969":[8,0,0,12,37],
 "report_8h_source.html":[10,0,0,8,2,0,0,0,0,1],
 "reportbuilder_8hxx_source.html":[10,0,0,8,11,0,0,0,0,5,1],
 "reserveParticipationBase_8h.html#a2a061041cc609fd86191597f410ba87e":[8,0,0,14,8,5,1,22],
@@ -249,5 +242,12 @@ var NAVTREEINDEX34 =
 "solver__steps_8py.html#a7fae04fe284fbcee4746ed5c1cec8fa5":[8,0,32,50],
 "solver__steps_8py.html#a8397c561d5d9a21b01dfcf697e8fbb30":[8,0,32,9],
 "solver__steps_8py.html#a8a5cf7620b720b9e26db4a6b12b8f708":[8,0,32,23],
-"solver__steps_8py.html#a8c31314aab190376232a12ffc3b94bce":[8,0,32,43]
+"solver__steps_8py.html#a8c31314aab190376232a12ffc3b94bce":[8,0,32,43],
+"solver__steps_8py.html#a940c7814e59b5dcd32843954474d498f":[8,0,32,21],
+"solver__steps_8py.html#a95b7c83f57ed7816eef1bf41641d05e9":[8,0,32,14],
+"solver__steps_8py.html#a9a20cf8bba1102648ac8da70d572218f":[8,0,32,24],
+"solver__steps_8py.html#a9b57d898de72258c60168f75218628c4":[8,0,32,73],
+"solver__steps_8py.html#aa281a354ead0677f44051587f789b3a2":[8,0,32,26],
+"solver__steps_8py.html#aa7e74c81bced6d4c9353bccd5dfb933f":[8,0,32,49],
+"solver__steps_8py.html#aa89f5a48dc1f209824c0d34f3be1f8ba":[8,0,32,65]
 };

@@ -1,12 +1,5 @@
 var NAVTREEINDEX37 =
 {
-"structAntares_1_1Optimisation_1_1OptimComponent.html#ad4bcb63d94fb1aff618251865731fe45":[9,0,0,9,4,1],
-"structAntares_1_1Optimization_1_1LegacyVariableInfo.html":[9,0,0,10,24],
-"structAntares_1_1Optimization_1_1LegacyVariableInfo.html#a4ad2494aadb94b87d4c13ef02bb6453e":[9,0,0,10,24,0],
-"structAntares_1_1Optimization_1_1LegacyVariableInfo.html#ae2808fc8cf18bf3e85495fcaeb02bee3":[9,0,0,10,24,1],
-"structAntares_1_1Optimization_1_1LegacyVariableInfo.html#ae47cb152ff265ff007d6febf687b1483":[9,0,0,10,24,2],
-"structAntares_1_1Optimization_1_1MCYearAndTime.html":[9,0,0,10,17],
-"structAntares_1_1Optimization_1_1MCYearAndTime.html#aa4fbd59a9b4d362139518c774ad64a78":[9,0,0,10,17,1],
 "structAntares_1_1Optimization_1_1MCYearAndTime.html#ae2dbeb09dbdf7b87750797ae394ca7e6":[9,0,0,10,17,2],
 "structAntares_1_1Optimization_1_1MCYearAndTime.html#af523489c66678cdf6721b3c0775c1952":[9,0,0,10,17,0],
 "structAntares_1_1Optimization_1_1VariableBounds.html":[9,0,0,10,4],
@@ -249,5 +242,12 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostTraits.html#a913deb950ea279e7e8c05773cd757929":[9,0,0,11,6,5,71,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCostTraits.html":[9,0,0,11,6,5,73],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCostTraits.html#ac9df8dd45924f9e36e6468948c3e5457":[9,0,0,11,6,5,73,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsrTraits.html":[9,0,0,11,6,5,75]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsrTraits.html":[9,0,0,11,6,5,75],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsrTraits.html#a7008dbcc7e56128a041c48b48e1db824":[9,0,0,11,6,5,75,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsrTraits.html#acde9a3be5701cc4c4d21e646eb697772":[9,0,0,11,6,5,75,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostTraits.html":[9,0,0,11,6,5,74],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostTraits.html#ac2fae52d6ec1c3dbde209f9fb56b059c":[9,0,0,11,6,5,74,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverflowsTraits.html":[9,0,0,11,6,5,76],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverflowsTraits.html#ae37d681153711b1ff64c60139a17b31f":[9,0,0,11,6,5,76,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP_1_1Statistics.html":[9,0,0,11,6,5,12,0]
 };

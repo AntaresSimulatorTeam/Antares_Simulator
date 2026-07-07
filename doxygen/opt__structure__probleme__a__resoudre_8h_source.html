@@ -226,21 +226,16 @@ $(document).ready(function(){initNavTree('opt__structure__probleme__a__resoudre_
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment">       Filled by VariableNamer at the same time as the variable name. */</span></div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    std::vector&lt;std::optional&lt;Antares::Optimization::LegacyVariableInfo&gt;&gt; LegacyVariablesInfo;</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="comment">/* Structured legacy description of each constraint, parallel to NomDesContraintes.</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment">       Filled by ConstraintNamer at the same time as the constraint name; only the</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment">       constraints whose dual is needed for an extra output are recorded. */</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    std::vector&lt;std::optional&lt;Antares::Optimization::LegacyVariableInfo&gt;&gt; LegacyConstraintsInfo;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    std::vector&lt;bool&gt; VariablesEntieres; <span class="comment">// true = int, false = continuous</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="comment">// PIMPL is used to break dependency to OR-Tools&#39; linear_solver.h (big header)</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1BasisStatus.html">Antares::Optimization::BasisStatus</a> basisStatus;</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    std::vector&lt;bool&gt; VariablesEntieres; <span class="comment">// true = int, false = continuous</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="comment">// PIMPL is used to break dependency to OR-Tools&#39; linear_solver.h (big header)</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1BasisStatus.html">Antares::Optimization::BasisStatus</a> basisStatus;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordtype">void</span> clearBasis()</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    {</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        basisStatus.clear();</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    }</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;};</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">void</span> clearBasis()</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    {</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        basisStatus.clear();</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    }</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;};</div>
 <div class="ttc" id="aclassAntares_1_1Optimization_1_1BasisStatus_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1BasisStatus.html">Antares::Optimization::BasisStatus</a></div><div class="ttdef"><b>Definition:</b> basis_status.h:23</div></div>
 <div class="ttc" id="aclassPROBLEME__ANTARES__A__RESOUDRE_html"><div class="ttname"><a href="classPROBLEME__ANTARES__A__RESOUDRE.html">PROBLEME_ANTARES_A_RESOUDRE</a></div><div class="ttdef"><b>Definition:</b> opt_structure_probleme_a_resoudre.h:24</div></div>
 </div><!-- fragment --></div><!-- contents -->

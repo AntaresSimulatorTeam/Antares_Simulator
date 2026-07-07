@@ -8,7 +8,6 @@ var structConstraintBuilderDataFixture =
     [ "IncrementDAllocationMatriceDesContraintes", "structConstraintBuilderDataFixture.html#a9ba36caf0d8d544c817c2defe1660377", null ],
     [ "IndicesColonnes", "structConstraintBuilderDataFixture.html#abacece14106b0c9bb9d5e164ca4fa696", null ],
     [ "IndicesDebutDeLigne", "structConstraintBuilderDataFixture.html#ad4123c30b936ca6a0b39956735469781", null ],
-    [ "LegacyConstraintsInfo", "structConstraintBuilderDataFixture.html#a2b6873717a08fb13f34217c9f97659a5", null ],
     [ "nbTimeStepsOptim", "structConstraintBuilderDataFixture.html#aa13eb7e49db9b7f8fa7c2d1c27c578d6", null ],
     [ "nombreDeContraintes", "structConstraintBuilderDataFixture.html#a8ba4f19902fc5c556e75d0a8fa4ac9ae", null ],
     [ "NombreDePasDeTemps", "structConstraintBuilderDataFixture.html#a28a06b2cf215c5f930f6f502ec5146dd", null ],

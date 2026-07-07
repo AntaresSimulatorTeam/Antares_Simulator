@@ -16,7 +16,6 @@ var classPROBLEME__ANTARES__A__RESOUDRE =
     [ "IncrementDAllocationMatriceDesContraintes", "classPROBLEME__ANTARES__A__RESOUDRE.html#a88b87c7005384a718915c532aeaf9f51", null ],
     [ "IndicesColonnes", "classPROBLEME__ANTARES__A__RESOUDRE.html#a156ccfb113537a38142a71f097831552", null ],
     [ "IndicesDebutDeLigne", "classPROBLEME__ANTARES__A__RESOUDRE.html#a9ce4f0681a5ce2dcdfbd78de022e3bcc", null ],
-    [ "LegacyConstraintsInfo", "classPROBLEME__ANTARES__A__RESOUDRE.html#a0d45695a74ddd4a8a45e40fc8d466556", null ],
     [ "LegacyVariablesInfo", "classPROBLEME__ANTARES__A__RESOUDRE.html#a1f49003f8c7e06eceb7c7d5f8b48c715", null ],
     [ "NombreDeContraintes", "classPROBLEME__ANTARES__A__RESOUDRE.html#aebe8399eb6a38a2b3e17a673768bf0ad", null ],
     [ "NombreDeTermesDansLaMatriceDesContraintes", "classPROBLEME__ANTARES__A__RESOUDRE.html#a95cd8cafa4ed036c10981b931fd358e4", null ],
