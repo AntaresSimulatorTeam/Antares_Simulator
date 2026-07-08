@@ -135,7 +135,7 @@ endif (WIN32)
 # symbols. --start-group/--end-group tells ld to re-scan until all are resolved.
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     add_link_options("LINKER:--start-group")
-endif()
+endif ()
 
 #
 # Beta
@@ -328,6 +328,10 @@ endif ()
 
 # TODO : review Standard Settings
 include(src/cmake/common-settings.cmake)
+
+# Opt-in build/link time profiling (-DANTARES_TIME_TRACE=ON). Must be included
+# before any add_subdirectory() so the flags reach every target.
+include(src/cmake/build-profiling.cmake)
 
 add_subdirectory("src/config")
 

@@ -35,6 +35,7 @@ target_include_directories(solver_api
 find_package(Boost REQUIRED COMPONENTS iostreams)
 target_link_libraries(solver_api
         PRIVATE
+        Antares::concurrency
         Antares::file-tree-study-loader
         Antares::study
         Antares::study-loader

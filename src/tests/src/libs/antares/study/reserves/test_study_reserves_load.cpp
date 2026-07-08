@@ -19,14 +19,14 @@
 using Antares::UnitTests::CaptureAntaresLogs;
 using namespace Antares::Data;
 
-void addThermalCluster(Data::Area* area, const std::string& name)
+void addThermalCluster(Area* area, const std::string& name)
 {
     auto c = std::make_shared<ThermalCluster>(area);
     c->setName(name);
     area->thermal.list.addToCompleteList(c);
 }
 
-void addShortTermStorage(Data::Area* area, const std::string& name)
+void addShortTermStorage(Area* area, const std::string& name)
 {
     ShortTermStorage::STStorageCluster cluster;
     cluster.properties.name = name;

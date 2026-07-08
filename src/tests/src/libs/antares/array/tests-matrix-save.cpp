@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_SUITE(coeffs_are_double__save_into_double)
 BOOST_AUTO_TEST_CASE(matrix_only_0s_and__no_print_dim___result_is_empty)
 {
     Matrix_easy_to_fill<double, double> mtx;
-    mtx.reset(2, 2, true);
+    mtx.reset(2, 2);
     mtx.saveToCSVFile("path/to/an/output/file");
     BOOST_REQUIRE_EQUAL(mtx.data, "");
 }
@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(matrix_only_0s_and__no_print_dim___result_is_empty)
 BOOST_AUTO_TEST_CASE(matrix_only_0s__print_dim___get_only_a_title_and_the_0s)
 {
     Matrix_easy_to_fill<double, double> mtx;
-    mtx.reset(2, 2, true);
+    mtx.reset(2, 2);
     mtx.saveToCSVFile("path/to/an/output/file", 0, true);
     BOOST_REQUIRE_EQUAL(mtx.data, "size:2x2\n0\t0\n0\t0\n");
 }
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_SUITE(coeffs_are_int__save_into_double)
 BOOST_AUTO_TEST_CASE(matrix_only_0s_and__no_print_dim___result_is_empty)
 {
     Matrix_easy_to_fill<int, double> mtx(2, 2);
-    mtx.reset(2, 2, true);
+    mtx.reset(2, 2);
     mtx.saveToCSVFile("path/to/an/output/file");
     BOOST_REQUIRE_EQUAL(mtx.data, "");
 }
@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE(matrix_only_0s_and__no_print_dim___result_is_empty)
 BOOST_AUTO_TEST_CASE(matrix_only_0s__print_dim___get_only_a_title_and_the_0s)
 {
     Matrix_easy_to_fill<int, double> mtx;
-    mtx.reset(2, 2, true);
+    mtx.reset(2, 2);
     mtx.saveToCSVFile("path/to/an/output/file", 0, true);
     BOOST_REQUIRE_EQUAL(mtx.data, "size:2x2\n0\t0\n0\t0\n");
 }
@@ -145,7 +145,7 @@ BOOST_AUTO_TEST_SUITE(coeffs_are_int__save_into_int)
 BOOST_AUTO_TEST_CASE(matrix_only_0s_and_no_print_dim___result_is_empty)
 {
     Matrix_easy_to_fill<int, int> mtx(2, 2);
-    mtx.reset(2, 2, true);
+    mtx.reset(2, 2);
     mtx.saveToCSVFile("path/to/an/output/file");
     BOOST_REQUIRE_EQUAL(mtx.data, "");
 }
@@ -215,120 +215,6 @@ BOOST_AUTO_TEST_CASE(precision_has_no_effect_on_int_coeffs)
     Matrix_easy_to_fill<double, int> mtx(3, 2, {1.99, -2.49, 3, -4.99, -5, 6.99});
     mtx.saveToCSVFile("path/to/an/output/file", 5, true);
     BOOST_REQUIRE_EQUAL(mtx.data, "size:2x3\n1\t-2\n3\t-4\n-5\t6\n");
-}
-
-BOOST_AUTO_TEST_SUITE_END()
-
-// ===================
-// ===  About JIT  ===
-// ===================
-
-BOOST_AUTO_TEST_SUITE(jit)
-
-BOOST_AUTO_TEST_CASE(JIT_enabler_built__jit_also_built)
-{
-    {
-        global_JIT_manager global_JIT_to(true);
-        BOOST_CHECK(JIT::enabled);
-    }
-    BOOST_CHECK(not JIT::enabled);
-}
-
-BOOST_AUTO_TEST_CASE(global_JIT_off___matrix_built_with_any_constructor_or_reset____jit_not_built)
-{
-    Matrix_load_bypass<double, double> mtx_1, mtx_2(2, 2);
-    BOOST_CHECK(not mtx_1.jit);
-    BOOST_CHECK(not mtx_2.jit);
-    mtx_1.reset(2, 2, true);
-    BOOST_CHECK(not mtx_1.jit);
-}
-
-BOOST_AUTO_TEST_CASE(global_JIT_on___matrix_built_with_any_constructor____jit_not_built)
-{
-    global_JIT_manager global_JIT_to(true);
-    Matrix_load_bypass<double, double> mtx_1, mtx_2(2, 2);
-    BOOST_CHECK(not mtx_1.jit);
-    BOOST_CHECK(not mtx_2.jit);
-    mtx_1.reset(2, 2, true);
-    BOOST_CHECK(mtx_1.jit);
-}
-
-BOOST_AUTO_TEST_CASE(global_JIT_on___matrix_built_with_reset____jit_built)
-{
-    global_JIT_manager global_JIT_to(true);
-    Matrix_load_bypass<double, double> mtx;
-    mtx.reset(2, 2, true);
-    BOOST_CHECK(mtx.jit);
-}
-
-BOOST_AUTO_TEST_CASE(global_JIT_ON__reset__save____no_load_done)
-{
-    global_JIT_manager global_JIT_to(true);
-    Matrix_load_bypass<double, double> mtx;
-    mtx.reset(2, 2, true);
-    mtx.saveToCSVFile("path/to/an/output/file", 3, false);
-    BOOST_CHECK(not mtx.loadFromCSVFile_called);
-    BOOST_CHECK(not mtx.jit->loadDataIfNotAlreadyDone);
-    BOOST_CHECK(not mtx.jit->alreadyLoaded);
-}
-
-BOOST_AUTO_TEST_CASE(global_JIT_ON__reset__save__force_loadData_to_ON____no_load_done)
-{
-    global_JIT_manager global_JIT_to(true);
-    Matrix_load_bypass<double, double> mtx;
-    mtx.reset(2, 2, true);
-    mtx.jit->loadDataIfNotAlreadyDone = true;
-    mtx.saveToCSVFile("path/to/an/output/file", 3, false);
-    BOOST_CHECK(not mtx.loadFromCSVFile_called);
-    BOOST_CHECK(not mtx.jit->alreadyLoaded);
-}
-
-BOOST_AUTO_TEST_CASE(
-  global_JIT_ON__reset__save__force_loadData_to_ON__alreadyLoaded_to_OFF____load_done)
-{
-    global_JIT_manager global_JIT_to(true);
-    Matrix_load_bypass<double, double> mtx;
-    mtx.reset(2, 2, true);
-    mtx.jit->loadDataIfNotAlreadyDone = true;
-    mtx.jit->alreadyLoaded = false;
-    mtx.saveToCSVFile("path/to/an/output/file", 3, false);
-}
-
-BOOST_AUTO_TEST_CASE(matrix_not_empty_cleared_BEFORE_it_can_be_saved)
-{
-    global_JIT_manager global_JIT_to(true);
-    Matrix_load_bypass<double, double> mtx(2, 2, {1.99, 2.44, -3.999, -1.51});
-    mtx.jit = JIT::Reset(mtx.jit);
-    mtx.jit->modified = false;
-    mtx.saveToCSVFile("path/to/an/output/file", 3, false);
-    BOOST_CHECK(not mtx.loadFromCSVFile_called);
-    BOOST_CHECK(mtx.empty());
-}
-
-BOOST_AUTO_TEST_CASE(global_JIT_ON___matrix_saved_and_cleared)
-{
-    global_JIT_manager global_JIT_to(true);
-    Matrix_load_bypass<double, double> mtx(2, 2, {1.99, 2.44, -3.999, -1.51});
-    mtx.saveToCSVFile("path/to/an/output/file", 3, false);
-    BOOST_CHECK(mtx.empty());
-}
-
-BOOST_AUTO_TEST_CASE(global_JIT_OFF_jit_off___matrix_never_cleared)
-{
-    global_JIT_manager global_JIT_to(false);
-    Matrix_load_bypass<double, double> mtx(2, 2, {1.99, 2.44, -3.999, -1.51});
-    mtx.saveToCSVFile("path/to/an/output/file", 3, false);
-    BOOST_CHECK(not mtx.empty());
-}
-
-BOOST_AUTO_TEST_CASE(global_JIT_ON_jit_off___matrix_cleared)
-{
-    global_JIT_manager global_JIT_to(true);
-    Matrix_load_bypass<double, double> mtx(2, 2, {1.99, 2.44, -3.999, -1.51});
-    delete mtx.jit; // Turning jit off
-    mtx.jit = nullptr;
-    mtx.saveToCSVFile("path/to/an/output/file", 3, false);
-    BOOST_CHECK(mtx.empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

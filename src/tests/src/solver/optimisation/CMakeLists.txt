@@ -10,11 +10,11 @@ add_boost_test(unit-tests-for-solver-optimisation
         test_area_connections--spillage--unsupE.cpp
         test_mip_detection.cpp
         test_legacy_name_mapper.cpp
-        test_legacy_solution_view.cpp
         test_legacy_extra_outputs.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/LegacyNameMapper.cpp
-        ${CMAKE_SOURCE_DIR}/src/solver/optimisation/LegacySolutionView.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/LegacyExtraOutputs.cpp
+        ${CMAKE_SOURCE_DIR}/src/solver/optimisation/variables/VariableManagement.cpp
+        ${CMAKE_SOURCE_DIR}/src/solver/optimisation/variables/VariableManagerUtils.cpp
         LIBS
         antares-study-system-model
         Antares::simulation-table

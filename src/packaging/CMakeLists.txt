@@ -57,7 +57,6 @@ set(TARGET_LIBS #No alias
 
         # array
         io
-        jit
         AntaresMemory
 
         # date
