@@ -249,7 +249,8 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
         hourlyCsrProblem.run(week, year);
 
         if (problemeHebdo_->exportMPSOnError
-            && hourlyCsrProblem.problemeAResoudre_.ExistenceDUneSolution == NON_PI)
+              && hourlyCsrProblem.problemeAResoudre_.ExistenceDUneSolution == NON_PI
+            || problemeHebdo_->ExportMPS != Data::mpsExportStatus::NO_EXPORT)
         {
             const std::string filename = fmt::format("problem-csr-y{}-w{}-h{}.mps",
                                                      year + 1,
