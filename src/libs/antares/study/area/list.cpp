@@ -18,7 +18,6 @@
 #include <antares/study/area/scratchpad.h>
 #include "antares/array/matrix.h"
 #include "antares/study/area/area.h"
-#include "antares/study/area/forTestsOnlyList.h"
 #include "antares/study/parts/load/prepro.h"
 #include "antares/study/parts/parts.h"
 #include "antares/study/study.h"
@@ -655,7 +654,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Reserves
     if (study.parameters.include.reserves)
     {
-        ret = accessForTests::loadReservesParameters(study.folderInput, area) && ret;
+        ret = Antares::Data::loadReservesParameters(study.folderInput, area) && ret;
     }
 
     // Solar
@@ -1213,8 +1212,6 @@ Area::ScratchMap AreaList::buildScratchMap(uint numspace)
     return scratchmap;
 }
 
-namespace accessForTests
-{
 void validateCapacityReservations(const Area& area)
 {
     if (area.allCapacityReservations)
@@ -1306,6 +1303,5 @@ bool loadReservesParameters(fs::path& folderInput, Area& area)
     validateCapacityReservations(area);
     return ret;
 }
-} // namespace accessForTests
 
 } // namespace Antares::Data
