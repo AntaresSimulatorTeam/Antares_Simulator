@@ -10,6 +10,8 @@
 #include "antares/solver/utils/ortools_utils.h"
 #include "antares/utils/utils.h"
 
+using namespace Antares;
+
 namespace
 {
 namespace fs = std::filesystem;

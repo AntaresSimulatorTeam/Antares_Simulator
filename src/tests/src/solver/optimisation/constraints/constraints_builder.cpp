@@ -129,9 +129,6 @@ struct ConstraintBuilderDataFixture
       10,
       std::vector<int>(5, -1));
     std::vector<std::string> NomDesContraintes = std::vector<std::string>(100, "");
-    std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>
-      LegacyConstraintsInfo = std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>(
-        100);
 
     void set_correspondances_des_variables()
     {
@@ -167,8 +164,7 @@ struct ConstraintBuilderDataFixture
                 NomDesContraintes,
                 NomsDesPays,
                 weekInTheYear,
-                NombreDePasDeTemps,
-                LegacyConstraintsInfo};
+                NombreDePasDeTemps};
     }
 };
 

@@ -1,0 +1,29 @@
+library:
+  id: lib_example_14_4
+  description: Inverted t+ bounds (from > to) with a constant parameter
+
+  models:
+    - id: inverted_bounds_demo
+      description: >
+        Variable constrained by x = sum(t+2 .. t+0, p) + c.
+        The bounds t+2 and t+0 always satisfy from > to, so the sum
+        is always empty and equals zero.
+        Expected: x = 0 + c = 20 at every timestep, objective = 5 * 20 = 100.
+      parameters:
+        - id: p
+          time-dependent: false
+          scenario-dependent: false
+        - id: c
+          time-dependent: false
+          scenario-dependent: false
+      variables:
+        - id: x
+          lower-bound: 0
+          upper-bound: 1000
+          variable-type: continuous
+      constraints:
+        - id: equality_from_inverted_sum
+          expression: x = sum(t+2 .. t+0, p) + c
+      objective-contributions:
+        - id: objective
+          expression: sum(x)

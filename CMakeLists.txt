@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
 set(ANTARES_VERSION_HI 10)
-set(ANTARES_VERSION_LO 0)
+set(ANTARES_VERSION_LO 1)
 set(ANTARES_VERSION_REVISION 1)
 
 # Beta release
@@ -135,7 +135,7 @@ endif (WIN32)
 # symbols. --start-group/--end-group tells ld to re-scan until all are resolved.
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     add_link_options("LINKER:--start-group")
-endif()
+endif ()
 
 #
 # Beta

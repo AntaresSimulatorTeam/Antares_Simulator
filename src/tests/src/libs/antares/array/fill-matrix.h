@@ -31,7 +31,7 @@ public:
         Matrix<T, ReadWriteT>()
     {
         BOOST_REQUIRE_EQUAL(height * width, vec.size());
-        this->reset(width, height, true);
+        this->reset(width, height);
         uint count = 0;
         for (uint j = 0; j < height; j++)
         {

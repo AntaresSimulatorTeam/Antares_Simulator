@@ -1,0 +1,32 @@
+library:
+  id: lib_example_14_3
+  description: Both sum bounds are t-relative (symmetric sliding window), regression test
+
+  models:
+    - id: symmetric_tplus_demo
+      description: >
+        Variable bounded below by sum(t+0 .. t+1, p): a two-element window sliding with t.
+        This is a regression test ensuring the refactored TimeSumNode evaluation
+        (which now handles both fixed and t+ bounds) still produces correct results
+        for the original all-t-relative form.
+        With p = {1, 2, 3, 4, 5}:
+          t=0: p[0]+p[1] = 1+2 = 3
+          t=1: p[1]+p[2] = 2+3 = 5
+          t=2: p[2]+p[3] = 3+4 = 7
+          t=3: p[3]+p[4] = 4+5 = 9
+          t=4: p[4]+p[0] = 5+1 = 6  (cyclic wrap)
+      parameters:
+        - id: p
+          time-dependent: true
+          scenario-dependent: false
+      variables:
+        - id: x
+          lower-bound: 0
+          upper-bound: 1000
+          variable-type: continuous
+      constraints:
+        - id: lower_bound_from_sliding_sum
+          expression: x >= sum(t+0 .. t+1, p)
+      objective-contributions:
+        - id: objective
+          expression: sum(x)

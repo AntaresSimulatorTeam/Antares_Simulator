@@ -92,10 +92,6 @@ void DataSeriesHydro::copyGenerationTS(const DataSeriesHydro& source)
     ror.timeSeries = source.ror.timeSeries;
     storage.timeSeries = source.storage.timeSeries;
     mingen.timeSeries = source.mingen.timeSeries;
-
-    source.ror.unloadFromMemory();
-    source.storage.unloadFromMemory();
-    source.mingen.unloadFromMemory();
 }
 
 void DataSeriesHydro::reset()

@@ -15,8 +15,8 @@ int main(const int argc, const char** argv)
 {
     if (argc < 2)
     {
-        logs.error() << "Please provide valid study path.";
-        logs.error() << "Usage:" << argv[0] << "/path/to/study";
+        Antares::logs.error() << "Please provide valid study path.";
+        Antares::logs.error() << "Usage:" << argv[0] << "/path/to/study";
         return 1;
     }
 
@@ -27,19 +27,19 @@ int main(const int argc, const char** argv)
 
     if (fs::exists(antaresMarker))
     {
-        logs.info() << "Loading Antares study...";
+        Antares::logs.info() << "Loading Antares study...";
         const SingleProblemGetter getter(studyPath);
         getter.printProblems();
     }
     else if (fs::exists(modelerMarker))
     {
-        logs.info() << "Loading Modeler study...";
+        Antares::logs.info() << "Loading Modeler study...";
         const ModelerProblems modelerProblems(studyPath);
         modelerProblems.logSize();
     }
     else
     {
-        logs.error() << "Invalid study path: neither Antares nor Modeler study found.";
+        Antares::logs.error() << "Invalid study path: neither Antares nor Modeler study found.";
         return 1;
     }
 

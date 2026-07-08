@@ -176,9 +176,4 @@ void TimeSeries::averageTimeseries()
     timeSeries.averageTimeseries();
 }
 
-void TimeSeries::unloadFromMemory() const
-{
-    timeSeries.unloadFromMemory();
-}
-
 } // namespace Antares::Data

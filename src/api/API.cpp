@@ -5,6 +5,7 @@
 
 #include <SimulationObserver.h>
 
+#include <antares/concurrency/concurrency.h>
 #include <antares/writer/writer_factory.h>
 #include "antares/application/application.h"
 #include "antares/benchmarking/DurationCollector.h"
@@ -59,9 +60,7 @@ SimulationResults APIInternal::execute(
     Settings settings;
     Benchmarking::DurationCollector durationCollector;
     Benchmarking::OptimizationInfo optimizationInfo;
-    auto ioQueueService = std::make_shared<Yuni::Job::QueueService>();
-    ioQueueService->maximumThreadCount(1);
-    ioQueueService->start();
+    auto ioQueueService = std::make_shared<Concurrency::ThreadPool>(1);
 
     study_->folderOutput = output;
     auto resultWriter = Solver::resultWriterFactory(parameters.resultFormat,
