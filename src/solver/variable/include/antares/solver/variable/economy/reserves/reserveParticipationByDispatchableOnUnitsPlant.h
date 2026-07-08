@@ -50,7 +50,7 @@ public:
         auto [reserveID, clusterName] = results.data.study.runtime.reserveParticipationIndexMaps
                                           .value()
                                           .at(results.data.area->id)
-                                          .thermalClusters.right.at(i);
+                                          .thermalClustersByIndex.at(i);
         auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
         results.variableCaption = reserveName + "_" + clusterName;
         results.variableUnit = VCardType::Unit();
@@ -78,7 +78,7 @@ inline void ReserveParticipationByDispatchableOnUnitsPlant::populateHourlyValues
                 pValuesForTheCurrentYear[numSpace]
                                         [state.study.runtime.reserveParticipationIndexMaps.value()
                                            .at(state.area->id)
-                                           .thermalClusters.left.at(
+                                           .thermalClusters.at(
                                              std::make_pair(reserveName, clusterName))]
                                           .hour[state.hourInTheYear]
                   = reserveParticipation.onUnitsParticipation;

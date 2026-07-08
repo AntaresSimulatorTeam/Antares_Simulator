@@ -296,24 +296,32 @@ void StudyRuntimeInfos::initializeReservesIndexMaps(const Study& study,
         // Thermal clusters
         for (auto& [clusterId, reserveParticipation]: reserve.AllThermalReservesParticipation)
         {
-            reserveParticipationIndexMaps.value().at(area->id).thermalClusters.insert(
-              {{reserve.reserveID, reserveParticipation.clusterName},
-               reserveParticipation.areaIndexClusterParticipation});
+            auto& rMap = reserveParticipationIndexMaps.value().at(area->id);
+            int idx = reserveParticipation.areaIndexClusterParticipation;
+            rMap.thermalClusters.insert(
+              {{reserve.reserveID, reserveParticipation.clusterName}, idx});
+            rMap.thermalClustersByIndex.insert(
+              {idx, {reserve.reserveID, reserveParticipation.clusterName}});
         }
 
         // Short Term Storage
         for (auto& [clusterId, reserveParticipation]: reserve.AllSTStorageReservesParticipation)
         {
-            reserveParticipationIndexMaps.value().at(area->id).STStorageClusters.insert(
-              {{reserve.reserveID, reserveParticipation.clusterName},
-               reserveParticipation.areaIndexClusterParticipation});
+            auto& rMap = reserveParticipationIndexMaps.value().at(area->id);
+            int idx = reserveParticipation.areaIndexClusterParticipation;
+            rMap.STStorageClusters.insert(
+              {{reserve.reserveID, reserveParticipation.clusterName}, idx});
+            rMap.STStorageClustersByIndex.insert(
+              {idx, {reserve.reserveID, reserveParticipation.clusterName}});
         }
 
         // Hydro
         for (auto& reserveParticipation: reserve.AllHydroReservesParticipation)
         {
-            reserveParticipationIndexMaps.value().at(area->id).Hydro.insert(
-              {reserve.reserveID, reserveParticipation.areaIndexClusterParticipation});
+            auto& rMap = reserveParticipationIndexMaps.value().at(area->id);
+            int idx = reserveParticipation.areaIndexClusterParticipation;
+            rMap.Hydro.insert({reserve.reserveID, idx});
+            rMap.HydroByIndex.insert({idx, reserve.reserveID});
         }
     };
 

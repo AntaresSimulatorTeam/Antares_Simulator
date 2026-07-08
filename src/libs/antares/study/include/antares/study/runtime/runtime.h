@@ -7,7 +7,8 @@
 #include <string>
 #include <vector>
 
-#include <boost/bimap.hpp>
+#include <map>
+#include <utility>
 
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include <antares/study/parameters.h>
@@ -114,9 +115,16 @@ public:
 
     struct ReserveIndexMap
     {
-        boost::bimap<std::pair<ReserveID, std::string>, int> thermalClusters;
-        boost::bimap<std::pair<ReserveID, std::string>, int> STStorageClusters;
-        boost::bimap<ReserveID, int> Hydro;
+        // Forward map: (reserveID, clusterName) -> index
+        std::map<std::pair<ReserveID, std::string>, int> thermalClusters;
+        // Reverse index: index -> (reserveID, clusterName)
+        std::map<int, std::pair<ReserveID, std::string>> thermalClustersByIndex;
+
+        std::map<std::pair<ReserveID, std::string>, int> STStorageClusters;
+        std::map<int, std::pair<ReserveID, std::string>> STStorageClustersByIndex;
+
+        std::map<ReserveID, int> Hydro;
+        std::map<int, ReserveID> HydroByIndex;
     };
 
     //! Map used to access reserves participation indices

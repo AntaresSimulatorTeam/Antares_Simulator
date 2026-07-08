@@ -162,7 +162,7 @@ void State::initFromShortTermStorageClusterIndex(const uint clusterAreaWideIndex
             double participation = hourlyResults->ShortTermStorageReserves
                                      .value()[study.runtime.reserveParticipationIndexMaps.value()
                                                 .at(area->id)
-                                                .STStorageClusters.left.at(
+                                                .STStorageClusters.at(
                                                   std::make_pair(resID, STStorageCluster->id))]
                                      .reserveParticipationOfCluster.value()[hourInTheWeek];
             resData.STStorageClusterReserveParticipationCostForYear[hourInTheYear]
@@ -198,7 +198,7 @@ void State::initFromHydro()
                                      .reserveParticipationOfCluster
                                      .value()[study.runtime.reserveParticipationIndexMaps.value()
                                                 .at(area->id)
-                                                .Hydro.left.at(resID)];
+                                                .Hydro.at(resID)];
             resData.HydroReserveParticipationCostForYear[hourInTheYear]
               += participation * Hydro.reserveParticipationContainer.value().reserveCost(resID);
 
@@ -294,7 +294,7 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
         {
             int reserveParticipationIdx = study.runtime.reserveParticipationIndexMaps.value()
                                             .at(area->id)
-                                            .thermalClusters.left.at(
+                                            .thermalClusters.at(
                                               std::make_pair(reserveID, thermalCluster->id()));
             if (reserveParticipationIdx != -1)
             {

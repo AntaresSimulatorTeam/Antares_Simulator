@@ -46,7 +46,7 @@ public:
     {
         const auto reserveID = results.data.study.runtime.reserveParticipationIndexMaps.value()
                                  .at(results.data.area->id)
-                                 .Hydro.right.at(i);
+                                 .HydroByIndex.at(i);
         auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
         results.variableCaption = reserveName + "_Hydro";
         results.variableUnit = VCardType::Unit();
@@ -68,7 +68,7 @@ inline void ReserveParticipationByHydro::populateHourlyValues(State& state, unsi
             pValuesForTheCurrentYear[numSpace]
                                     [state.study.runtime.reserveParticipationIndexMaps.value()
                                        .at(state.area->id)
-                                       .Hydro.left.at(reserveName)]
+                                       .Hydro.at(reserveName)]
                                       .hour[state.hourInTheYear]
               = reserveParticipation;
         }

@@ -48,7 +48,7 @@ public:
         auto [reserveID, clusterName] = results.data.study.runtime.reserveParticipationIndexMaps
                                           .value()
                                           .at(results.data.area->id)
-                                          .STStorageClusters.right.at(i);
+                                          .STStorageClustersByIndex.at(i);
         auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
         results.variableCaption = reserveName + "_" + clusterName;
         results.variableUnit = VCardType::Unit();
@@ -75,7 +75,7 @@ inline void ReserveParticipationBySTStorage::populateHourlyValues(State& state,
                 pValuesForTheCurrentYear[numSpace]
                                         [state.study.runtime.reserveParticipationIndexMaps.value()
                                            .at(state.area->id)
-                                           .STStorageClusters.left.at(
+                                           .STStorageClusters.at(
                                              std::make_pair(reserveName, clusterName))]
                                           .hour[state.hourInTheYear]
                   = reserveParticipation;
