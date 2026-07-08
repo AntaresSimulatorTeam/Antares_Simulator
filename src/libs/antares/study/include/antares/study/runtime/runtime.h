@@ -4,11 +4,10 @@
 #ifndef __ANTARES_LIBS_STUDY_RUNTIME_RUNTIME_INFOS_H__
 #define __ANTARES_LIBS_STUDY_RUNTIME_RUNTIME_INFOS_H__
 
-#include <string>
-#include <vector>
-
 #include <map>
+#include <string>
 #include <utility>
+#include <vector>
 
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include <antares/study/parameters.h>
