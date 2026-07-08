@@ -449,9 +449,9 @@ BOOST_AUTO_TEST_CASE(models_properly_parsed)
     BOOST_CHECK(model.constraints.empty());
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].id, "objective");
-BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].expression.expression, "objective");
-BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[1].id, "objective2");
-BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[1].expression.expression, "objective2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].expression, "objective");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[1].id, "objective2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[1].expression, "objective2");
 }
 
 // Test library with multiple models
@@ -491,12 +491,12 @@ BOOST_AUTO_TEST_CASE(library_can_contain_multiple_models)
     BOOST_CHECK_EQUAL(libraryObj.models[0].description, "model_description1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].id, "objective1");
-BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].expression.expression, "objective1");
-BOOST_CHECK_EQUAL(libraryObj.models[1].id, "model_id2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].expression, "objective1");
+    BOOST_CHECK_EQUAL(libraryObj.models[1].id, "model_id2");
     BOOST_CHECK_EQUAL(libraryObj.models[1].description, "model_description2");
     BOOST_CHECK_EQUAL(libraryObj.models[1].objectives.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[1].objectives[0].id, "objective2");
-    BOOST_CHECK_EQUAL(libraryObj.models[1].objectives[0].expression.expression, "objective2");
+    BOOST_CHECK_EQUAL(libraryObj.models[1].objectives[0].expression, "objective2");
 }
 
 // Test library with one model containing parameters
@@ -627,8 +627,8 @@ BOOST_AUTO_TEST_CASE(variables_properly_parsed)
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].variables.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].id, "var_name");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound.expression, "0");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound.expression, "1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, "0");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, "1");
 }
 
 // Test library with one model containing multiple variables
@@ -662,11 +662,11 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_variables)
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].variables.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].id, "var_name1");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound.expression, "0");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound.expression, "1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, "0");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, "1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].id, "var_name2");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].lower_bound.expression, "-1");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].upper_bound.expression, "2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].lower_bound, "-1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].upper_bound, "2");
 }
 
 // variable bounds are strings expressions
@@ -695,8 +695,8 @@ BOOST_AUTO_TEST_CASE(variables_bounds_are_literals)
         )"s;
     YmlModel::Library libraryObj = parser.parse(library);
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].id, "var_name");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound.expression, "near-zero");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound.expression, "pmax");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, "near-zero");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, "pmax");
 }
 
 // variable variable-type
@@ -840,7 +840,7 @@ BOOST_AUTO_TEST_CASE(model_port_fileds_properly_parsed)
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].port_field_definitions.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].port, "port_name");
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].field, "field_name");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].definition.expression, "definition");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].definition, "definition");
 }
 
 // Test library with one model containing multiple port field definitions
@@ -875,10 +875,10 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_portfields)
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].port_field_definitions.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].port, "port_name1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].field, "field_name1");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].definition.expression, "definition1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].definition, "definition1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[1].port, "port_name2");
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[1].field, "field_name2");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[1].definition.expression, "definition2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[1].definition, "definition2");
 }
 
 // Test library with one model containing constraints
@@ -908,7 +908,7 @@ BOOST_AUTO_TEST_CASE(constraints_properly_parsed)
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].constraints.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].id, "constraint_name");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].expression.expression, "expression");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].expression, "expression");
 }
 
 // Test library with one model containing multiple constraints
@@ -940,9 +940,9 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_constraints)
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].constraints.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].id, "constraint_name1");
-BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].expression.expression, "expression1");
-BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[1].id, "constraint_name2");
-BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[1].expression.expression, "expression2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].expression, "expression1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[1].id, "constraint_name2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[1].expression, "expression2");
 }
 
 // Test error when model is not a map
@@ -1022,7 +1022,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_extra_outputs)
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].extra_outputs.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[0].id, "output_name1");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[0].expression.expression, "expression1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[0].expression, "expression1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].id, "output_name2");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].expression.expression, "expression2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].expression, "expression2");
 }

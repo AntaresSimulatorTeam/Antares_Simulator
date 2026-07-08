@@ -70,13 +70,6 @@ public:
 };
 
 template<>
-class convert<Antares::IO::Inputs::YmlModel::Expression>
-{
-public:
-    static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::Expression& rhs);
-};
-
-template<>
 class convert<Antares::IO::Inputs::YmlModel::Variable>
 {
 public:
