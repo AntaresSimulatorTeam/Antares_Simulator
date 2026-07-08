@@ -66,6 +66,7 @@ public:
     void areaOutputs(uint32_t pays, int pdt);
     void linkOutputs(uint32_t interco, int pdt);
     void thermalOutputs(uint32_t pays, int index, int pdt);
+    void shortTermStorageOutputs(uint32_t pays, int pdt);
     void weeklyHydroOutputs(uint32_t pays) const;
 
 private:
@@ -269,6 +270,19 @@ void LegacyExtraOutputEmitter::thermalOutputs(uint32_t pays, int index, int pdt)
     emit("non_prop_cost", cluster, pdt, startupCost * startedUnits + cost(nodu) * unitsOn);
 }
 
+void LegacyExtraOutputEmitter::shortTermStorageOutputs(uint32_t pays, int pdt)
+{
+    const double price = areaPrice(pays, pdt);
+    for (const auto& storage: problemeHebdo_.ShortTermStorage[pays])
+    {
+        const double withdrawal = x(
+          variableManager_.ShortTermStorageWithdrawal(storage.clusterGlobalIndex, pdt));
+        const double injection = x(
+          variableManager_.ShortTermStorageInjection(storage.clusterGlobalIndex, pdt));
+        emit("profit", storage.name, pdt, std::floor((withdrawal - injection) * price + 0.5));
+    }
+}
+
 void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays) const
 {
     if (!problemeHebdo_.CaracteristiquesHydrauliques[pays].AccurateWaterValue)
@@ -296,6 +310,7 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
         for (uint32_t pays = 0; pays < problemeHebdo.NombreDePays; ++pays)
         {
             emitter.areaOutputs(pays, pdt);
+            emitter.shortTermStorageOutputs(pays, pdt);
 
             const PALIERS_THERMIQUES& paliers = problemeHebdo.PaliersThermiquesDuPays[pays];
             for (int index = 0; index < paliers.NombreDePaliersThermiques; ++index)

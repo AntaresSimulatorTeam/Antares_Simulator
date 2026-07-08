@@ -117,16 +117,16 @@ either endpoint area has no recorded price.
 
 ---
 
-## 2.4.2.7 — Model: short_term_storage  ⬜ not started
+## 2.4.2.7 — Model: short_term_storage  ✅ complete
 
-| Done | Output | Formula | Design |
+| Done | Output | Formula | Anchor |
 |------|--------|---------|--------|
-| [ ] | `profit` | `floor((withdrawal_power - injection_power)·area_price + 0.5)` | **Area-price map** (A) + **view area-qualification** (C) |
+| [x] | `profit` | `floor((withdrawal_power - injection_power)·area_price + 0.5)` | `ShortTermStorageWithdrawal`/`Injection` via `problemeHebdo.ShortTermStorage[pays]` (price = balance dual) |
 
-`ShortTermStorageInjection`/`Withdrawal` are recorded with the storage name as
-component; the namer's area is captured (`info.area`), but combining the two
-variables of the same storage needs the view to key by area too (storage names can
-collide across areas), plus the area price (A).
+Emitted per storage of each area inside the hourly loop; the (area, storage)
+pair comes from the study-structure iteration, so no view-side area
+qualification is needed. Dual-derived, hence zero on MIP weeks (same
+limitation as `price`).
 
 ---
 
@@ -176,7 +176,7 @@ endpoints' `*_port.price`.
 | thermal | 23 / 23 | — |
 | load | 1 / 1 | — |
 | link | 9 / 9 | — |
-| short_term_storage | 0 / 1 | profit |
+| short_term_storage | 1 / 1 | — |
 | hydro | 3 / 4 | bellman_value |
 | ports (2.5) | 0 / 9 | all |
 
@@ -190,10 +190,9 @@ reading the solved problem through the correspondence tables (see
 dual read away, and cluster- or storage-level operands are unambiguous because
 the loops carry the (area, cluster) pair. The remaining work:
 
-### (A) STS outputs
-The STS loop does not exist yet in `AddLegacyExtraOutputs`; the variable indices
-are already available (`vm.ShortTermStorageInjection/Withdrawal/Level`). **STS
-profit** = `price(area) × (withdrawal − injection)` needs only that loop.
+### (A) STS outputs — ✅ done
+The per-area STS loop now runs in `AddLegacyExtraOutputs` and emits **STS
+profit** = `floor(price(area) × (withdrawal − injection) + 0.5)`.
 - Caveat: dual-derived values are zero on MIP weeks (duals not extracted) — same
   limitation as `price`.
 
@@ -222,7 +221,7 @@ provide directly.
 
 ## Suggested order
 
-1. **(A) STS outputs** → STS profit; one more entity loop.
+1. ~~**(A) STS outputs** → STS profit; one more entity loop.~~ done
 2. **(C) Per-area layer aggregation** → bellman_value; self-contained.
 3. **(B) Anchorless emission path** → renewable + misc_gen; distinct loop.
 4. **(D) Port fields** → §2.5; mostly reuses prior values.

@@ -103,7 +103,9 @@ enum VarOffset : int
     directFlowLink1 = 11,       // area2$$area3: X -30
     hydroLevelArea1 = 12,       // X 4000
     numberStarting = 13,        // cluster1: X 1, cost 5000 (startup cost)
-    variablesPerHour = 14
+    stsInjection = 14,          // battery1 (area2): X 40
+    stsWithdrawal = 15,         // battery1 (area2): X 100
+    variablesPerHour = 16
 };
 
 // Per-hour layout of the constraints, followed by one weekly
@@ -172,6 +174,12 @@ struct Fixture
         problem.PaliersThermiquesDuPays[1].NombreDePaliersThermiques = 0;
         problem.PaliersThermiquesDuPays[2].NombreDePaliersThermiques = 0;
 
+        // One short-term storage, "battery1" in area2.
+        problem.ShortTermStorage.resize(3);
+        auto& storage = problem.ShortTermStorage[1].emplace_back();
+        storage.name = "battery1";
+        storage.clusterGlobalIndex = 0;
+
         problem.CorrespondanceVarNativesVarOptim.resize(nbPdt);
         problem.CorrespondanceCntNativesCntOptim.resize(nbPdt);
         auto& solved = *problem.ProblemeAResoudre;
@@ -202,6 +210,8 @@ struct Fixture
             // Only area1 manages a reservoir; -1 is the "no variable" sentinel
             // written by the construction site.
             vars.NumeroDeVariablesDeNiveau = {base + hydroLevelArea1, -1, -1};
+            vars.SIM_ShortTermStorage.InjectionVariable = {base + stsInjection};
+            vars.SIM_ShortTermStorage.WithdrawalVariable = {base + stsWithdrawal};
 
             const int cntBase = pdt * constraintsPerHour;
             auto& constraints = problem.CorrespondanceCntNativesCntOptim[pdt];
@@ -213,10 +223,24 @@ struct Fixture
 
             solved.X.insert(
               solved.X.end(),
-              {3600., 52., 7., 13., 0., 2.3, 120., 120., 0., 0.2, 0., -30., 4000., 1.});
-            solved.CoutLineaire.insert(
-              solved.CoutLineaire.end(),
-              {35., 10000., 4., 20000., 1., 100., 0., 0.5, 0.7, 9000., 1., 0., 0., 5000.});
+              {3600., 52., 7., 13., 0., 2.3, 120., 120., 0., 0.2, 0., -30., 4000., 1., 40., 100.});
+            solved.CoutLineaire.insert(solved.CoutLineaire.end(),
+                                       {35.,
+                                        10000.,
+                                        4.,
+                                        20000.,
+                                        1.,
+                                        100.,
+                                        0.,
+                                        0.5,
+                                        0.7,
+                                        9000.,
+                                        1.,
+                                        0.,
+                                        0.,
+                                        5000.,
+                                        0.,
+                                        0.});
             solved.CoutsMarginauxDesContraintes.insert(solved.CoutsMarginauxDesContraintes.end(),
                                                        {-10000., -50., -75., -3.});
         }
@@ -490,6 +514,34 @@ BOOST_AUTO_TEST_CASE(hydro_shadow_price_is_skipped_without_accurate_water_value)
     BOOST_CHECK(RowsForOutput(table, "hydro_shadow_price").empty());
 }
 
+BOOST_AUTO_TEST_CASE(storage_profit_is_net_withdrawal_times_area_price)
+{
+    fill();
+
+    // battery1 is in area2 (price 50): floor((100 - 40) * 50 + 0.5) = 3000.
+    const auto row = FindRow(table, "profit", "battery1");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_EQUAL(row->value, 3000.);
+}
+
+BOOST_AUTO_TEST_CASE(storage_profit_is_rounded_to_the_nearest_integer)
+{
+    // (100.01 - 40) * 50 = 3000.5, rounded up by the floor(x + 0.5) formula.
+    problem.ProblemeAResoudre->X[stsWithdrawal] = 100.01;
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "profit", "battery1")->value, 3001.);
+}
+
+BOOST_AUTO_TEST_CASE(storage_profit_is_negative_when_injecting_at_positive_price)
+{
+    problem.ProblemeAResoudre->X[stsWithdrawal] = 10.;
+    fill();
+
+    // floor((10 - 40) * 50 + 0.5) = -1500.
+    BOOST_CHECK_EQUAL(FindRow(table, "profit", "battery1")->value, -1500.);
+}
+
 BOOST_AUTO_TEST_CASE(emissions_are_generation_power_times_each_factor)
 {
     fill();
@@ -632,8 +684,9 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
     //        indicators, 2 congestion fees, prop_cost,
     //        capacity_shadow_price) = 9; link 1 without the hurdle-cost
     //        outputs = 7                                          = 16
+    // Short-term storage: battery1's profit                       = 1
     // Weekly: hydro_shadow_price (area1)                          = 1
-    BOOST_CHECK_EQUAL(table.rowCount(), 17 + 21 + 16 + 1);
+    BOOST_CHECK_EQUAL(table.rowCount(), 17 + 21 + 16 + 1 + 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
