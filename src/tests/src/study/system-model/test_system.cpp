@@ -230,4 +230,3 @@ BOOST_AUTO_TEST_CASE(PrintReceiverFieldRole)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-

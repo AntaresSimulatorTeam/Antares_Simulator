@@ -480,20 +480,30 @@ BOOST_FIXTURE_TEST_CASE(WrongDualExpression, SupplyModelForDualOperator)
 
 struct SupplyModelForFunctionalOperator
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"pmin", true, false}},
-      .variables
-      = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false, "test.yaml"},
-         {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false, "test.yaml"}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", "", "test.yaml"}},
-      .extra_outputs = {},
-      .filename = ""};
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {{"pmin", true, false}},
+                          .variables = {{"varA",
+                                         "7",
+                                         "pmin",
+                                         YmlModel::ValueType::CONTINUOUS,
+                                         false,
+                                         false,
+                                         "test.yaml"},
+                                        {"varB",
+                                         "7",
+                                         "pmin",
+                                         YmlModel::ValueType::CONTINUOUS,
+                                         false,
+                                         false,
+                                         "test.yaml"}},
+                          .ports = {},
+                          .port_field_definitions = {},
+                          .constraints = {},
+                          .binding_constraints = {},
+                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .extra_outputs = {},
+                          .filename = ""};
 
     ForbiddenNodes forbiddenNodes;
 };
@@ -1043,4 +1053,3 @@ BOOST_FIXTURE_TEST_CASE(abs_operator_forbidden_on_variable_with_forbidden_nodes,
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-

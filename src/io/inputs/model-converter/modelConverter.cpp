@@ -359,10 +359,10 @@ std::vector<Objective> convertObjectives(const YmlModel::Model& model)
     objectives.reserve(model.objectives.size());
     for (const auto& objective: model.objectives)
     {
-        auto nodeRegistry = convertExpressionToNode(
-          objective.expression,
-          model,
-          buildFileAndLineNb(model.filename, objective.expressionLineNb));
+        auto nodeRegistry = convertExpressionToNode(objective.expression,
+                                                    model,
+                                                    buildFileAndLineNb(model.filename,
+                                                                       objective.expressionLineNb));
         ForbiddenNodesVisitor(forbiddenInObjective, objective.expression)
           .dispatch(nodeRegistry.node);
         objectives.emplace_back(objective.id,

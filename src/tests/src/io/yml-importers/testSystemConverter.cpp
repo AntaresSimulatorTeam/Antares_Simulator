@@ -434,4 +434,3 @@ BOOST_FIXTURE_TEST_CASE(DuplicatedCompo, PrepareYaml)
                           checkMessage("System has at least two components with the same id "
                                        "('N'), this is not supported"));
 }
-
