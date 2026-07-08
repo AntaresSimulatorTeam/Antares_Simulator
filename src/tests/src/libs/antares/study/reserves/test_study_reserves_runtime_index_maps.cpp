@@ -10,9 +10,9 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/unit_test_suite.hpp>
 
+// TODO remove this header
 #include <antares/solver/simulation/forTestsOnlySimCalculEco.h>
 #include <antares/solver/simulation/sim_structure_probleme_economique.h>
-#include <antares/study/area/forTestsOnlyList.h>
 #include <antares/study/study.h>
 #include "antares/study/runtime/runtime.h"
 
