@@ -22,8 +22,13 @@ supplies the row's component and time index.
 |------|--------|---------|--------|
 | [x] | `price` | `dual(balance)` (stored as `-dual`) | `AreaBalance` constraint |
 | [x] | `imbalance_cost` | `spillage_cost·spilled + unsupplied_energy_cost·unsupplied` | `UnsuppliedEnergy` |
-| [x] | `is_loss_of_load` | `unsupplied_energy > 0.5` | `UnsuppliedEnergy` |
+| [x] | `is_loss_of_load` | `unsupplied_energy > 0` | `UnsuppliedEnergy` |
+| [x] | `is_significant_loss_of_load` | `unsupplied_energy > 0.5` | `UnsuppliedEnergy` |
 | [x] | `is_near_loss_of_load` | `dual(balance) > unsupplied_energy_cost - 5` | `AreaBalance` constraint |
+
+Adequacy-patch outputs (`domestic_unsupplied_energy` / DENS,
+`is_local_matching_rule_violated` / LMR.VIOL) are **blocked on ANT-5240** (spec
+still being written); CSR outputs are explicitly out of scope per the spec.
 
 ---
 
@@ -170,7 +175,7 @@ endpoints' `*_port.price`.
 
 | Model | Implemented | Remaining |
 |-------|-------------|-----------|
-| area | 4 / 4 | — |
+| area | 5 / 5 | — (adequacy-patch rows blocked on ANT-5240) |
 | renewable | 0 / 2 | generation_power, minus_generation |
 | misc_gen | 0 / 2 | generation_power, minus_generation |
 | thermal | 23 / 23 | — |

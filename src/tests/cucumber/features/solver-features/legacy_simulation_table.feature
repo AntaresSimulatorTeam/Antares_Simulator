@@ -36,8 +36,8 @@ Feature: Legacy variables in simulation table
     #       peak:      80 * (8 * 100) =  64000
     #   - imbalance_cost = unsupplied_energy_cost * unsupplied_energy
     #     + spilled_energy_cost * spilled_energy = 10000 * 52 + 0 * 0 = 520000
-    #   - is_loss_of_load = 1 since unsupplied energy (52) exceeds the 0.5 MW
-    #     threshold
+    #   - is_loss_of_load = 1 since unsupplied energy (52) is positive, and
+    #     is_significant_loss_of_load = 1 since it exceeds the 0.5 MW threshold
     #   - price = -dual(balance) = 10000: with unsupplied energy strictly
     #     between its bounds, the marginal MW is served at the unsupplied
     #     energy cost
@@ -68,6 +68,7 @@ Feature: Legacy variables in simulation table
       | 0     | peak      | prop_cost      | 33       | 0        | 64000  |
       | 0     | area      | imbalance_cost | 33       | 0        | 520000 |
       | 0     | area      | is_loss_of_load | 33      | 0        | 1      |
+      | 0     | area      | is_significant_loss_of_load | 33 | 0  | 1      |
       | 0     | area      | price          | 33       | 0        | 10000  |
       | 0     | area      | is_near_loss_of_load | 33  | 0        | 1      |
       | 0     | area      | actual_load    | 33       | 0        | 6111   |
@@ -212,6 +213,7 @@ Feature: Legacy variables in simulation table
       | 0     | semi base | actual_num_units_on | 33       | 0        | 5     |
       | 0     | peak      | actual_num_units_on | 33       | 0        | 8     |
       | 0     | area      | is_loss_of_load     | 33       | 0        | 1     |
+      | 0     | area      | is_significant_loss_of_load | 33 | 0     | 1     |
       | 0     | base      | co2_emissions        | 33       | 0        | 4320  |
       | 0     | semi base | co2_emissions        | 33       | 0        | 900   |
       | 0     | peak      | co2_emissions        | 33       | 0        | 560   |

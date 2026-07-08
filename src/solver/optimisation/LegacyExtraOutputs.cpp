@@ -128,8 +128,12 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
          pdt,
          cost(spillage) * x(spillage) + cost(unsupplied) * x(unsupplied));
 
-    constexpr double lossOfLoadThreshold = 0.5;
-    emit("is_loss_of_load", area, pdt, x(unsupplied) > lossOfLoadThreshold ? 1. : 0.);
+    constexpr double significantLossOfLoadThreshold = 0.5;
+    emit("is_significant_loss_of_load",
+         area,
+         pdt,
+         x(unsupplied) > significantLossOfLoadThreshold ? 1. : 0.);
+    emit("is_loss_of_load", area, pdt, x(unsupplied) > 0. ? 1. : 0.);
     emit("actual_load",
          area,
          pdt,
