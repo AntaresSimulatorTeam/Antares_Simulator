@@ -1,0 +1,21 @@
+system:
+  id: sys_example_14_5
+  description: >
+    Single component with one variable x and time series p = {1, 2, 3, 4, 5}.
+    The constraint x >= sum(3 .. 6, p) uses fixed bounds where the upper bound (6)
+    exceeds the last valid index (4 for a 5-timestep window).
+    The cyclic normalisation applies: index 5 -> 0, index 6 -> 1.
+    Accessed indices are always {3, 4, 0, 1}: p[3]+p[4]+p[0]+p[1] = 4+5+1+2 = 12.
+    Expected: x = 12 at all 5 timesteps, objective = 60.
+
+  model-libraries: lib_example_14_5
+
+  components:
+    - id: c1
+      model: lib_example_14_5.fixed_bounds_wrap_demo
+
+      parameters:
+        - id: p
+          time-dependent: true
+          scenario-dependent: false
+          value: p_14_5

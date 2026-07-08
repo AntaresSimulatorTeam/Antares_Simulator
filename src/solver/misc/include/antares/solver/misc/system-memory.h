@@ -11,12 +11,12 @@ class SystemMemoryLogger final: public Yuni::Thread::Timer
 {
 public:
     SystemMemoryLogger();
-    virtual ~SystemMemoryLogger();
+    ~SystemMemoryLogger() override;
 
 protected:
-    virtual bool onInterval(uint);
+    bool onInterval(uint) override;
 
-    virtual bool onStarting();
+    bool onStarting() override;
 
 }; // class SystemMemoryLogguer
 

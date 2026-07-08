@@ -75,18 +75,21 @@ std::vector<std::string>& Namer::names()
     return names_;
 }
 
-void Namer::RecordLegacyVariableInfo(unsigned /*index*/,
-                                     const std::string& /*output*/,
-                                     const std::string& /*component*/)
-{
-    // No-op for the base namer (e.g. ConstraintNamer); only VariableNamer records legacy info.
-}
-
 void VariableNamer::RecordLegacyVariableInfo(unsigned index,
                                              const std::string& output,
                                              const std::string& component)
 {
     legacyInfo_[index] = {output, component, timeStep()};
+}
+
+void ConstraintNamer::RecordLegacyVariableInfo(unsigned index,
+                                               const std::string& output,
+                                               const std::string& component)
+{
+    if (legacyInfo_ != nullptr)
+    {
+        (*legacyInfo_)[index] = {output, component, timeStep()};
+    }
 }
 
 void Namer::SetLinkElementName(unsigned elementIndex, const std::string& elementType)

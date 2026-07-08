@@ -5,7 +5,6 @@
 
 #include <unordered_set>
 
-#include <yuni/core/noncopyable.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/io/file.h>
 
@@ -24,9 +23,12 @@ enum
     maxLogEntriesRetention = 1000,
 };
 
-class UserData: private Yuni::NonCopyable<UserData>
+class UserData
 {
 public:
+    UserData(const UserData&) = delete;
+    UserData& operator=(const UserData&) = delete;
+
     UserData():
         bytesDeleted(0),
         filesDeleted(0),

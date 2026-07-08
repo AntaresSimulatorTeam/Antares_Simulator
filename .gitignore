@@ -50,6 +50,7 @@ src/distrib/unix/packages.sh
 src/distrib/unix/rpm/pkginfo-*
 src/distrib/unix/rpm/*.rpm
 src/distrib/changelog.txt
+distrib
 
 _build*
 .vscode/

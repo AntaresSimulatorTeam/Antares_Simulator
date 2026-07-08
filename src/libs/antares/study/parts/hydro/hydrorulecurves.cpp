@@ -40,7 +40,7 @@ public:
     using RuleCurvesLoader::RuleCurvesLoader;
 
 private:
-    bool load() override final
+    bool load() final
     {
         const fs::path filePath = baseFolder_ / "common" / "capacity"
                                   / std::string("reservoir_" + areaID_ + ".txt");
@@ -73,7 +73,7 @@ public:
     using RuleCurvesLoader::RuleCurvesLoader;
 
 private:
-    bool load() override final
+    bool load() final
     {
         const fs::path path = baseFolder_ / "series" / areaID_;
         Matrix<>::BufferType fileContent;

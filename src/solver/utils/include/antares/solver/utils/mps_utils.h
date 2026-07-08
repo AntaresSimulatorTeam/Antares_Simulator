@@ -35,7 +35,7 @@ protected:
 class MPSwriter: public I_MPS_writer
 {
 public:
-    virtual ~MPSwriter() = default;
+    ~MPSwriter() override = default;
     MPSwriter(const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
               uint currentOptimNumber,
               bool keepNames);
@@ -49,7 +49,7 @@ private:
 class nullMPSwriter: public I_MPS_writer
 {
 public:
-    virtual ~nullMPSwriter() = default;
+    ~nullMPSwriter() override = default;
     using I_MPS_writer::I_MPS_writer;
 
     void runIfNeeded(Solver::IResultWriter& /*writer*/, const std::string& /*filename*/) override

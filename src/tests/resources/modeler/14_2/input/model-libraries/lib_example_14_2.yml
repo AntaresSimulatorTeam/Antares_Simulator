@@ -1,0 +1,26 @@
+library:
+  id: lib_example_14_2
+  description: Fixed sum bounds with time-varying parameter
+
+  models:
+    - id: fixed_bounds_demo
+      description: >
+        Variable bounded below by a time sum with both bounds fixed (not t-relative).
+        sum(1 .. 3, p) always accesses indices 1, 2, 3 regardless of current timestep.
+        With p = {2, 4, 6, 8, 10}: p[1]+p[2]+p[3] = 4+6+8 = 18 at every timestep.
+      parameters:
+        - id: p
+          time-dependent: true
+          scenario-dependent: false
+      variables:
+        - id: x
+          lower-bound: 0
+          upper-bound: 1000
+          variable-type: continuous
+          # x[t] >= sum(1..3, p) = p[1]+p[2]+p[3] = 4+6+8 = 18 for all t (fixed indices)
+      constraints:
+        - id: lower_bound_from_fixed_sum
+          expression: x >= sum(1 .. 3, p)
+      objective-contributions:
+        - id: objective
+          expression: sum(x)

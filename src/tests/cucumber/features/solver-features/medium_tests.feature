@@ -1,6 +1,6 @@
 Feature: medium tests
 
-  @fast @medium @incomplete
+  @long @incomplete
   Scenario: 035 Mixed Expansion - Smart grid model 2
     Given the solver study path is "Antares_Simulator_Tests_NR/medium-tests/035 Mixed Expansion - Smart grid model 2"
     When I run antares simulator
