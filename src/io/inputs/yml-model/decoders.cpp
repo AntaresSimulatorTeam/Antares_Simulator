@@ -281,7 +281,7 @@ bool convert<YmlModel::PortFieldDefinition>::decode(const Node& node,
     rhs.port = node["port"].as<std::string>();
     rhs.field = node["field"].as<std::string>();
     rhs.definition = node["definition"].as<std::string>();
-    rhs.definition_lineNb = node["definition"].Mark().line + 1;
+    rhs.expressionLineNb = node["definition"].Mark().line + 1;
     return true;
 }
 
@@ -294,7 +294,7 @@ bool convert<YmlModel::Constraint>::decode(const Node& node, YmlModel::Constrain
 
     rhs.id = node["id"].as<std::string>("");
     rhs.expression = node["expression"].as<std::string>();
-    rhs.expression_lineNb = node["expression"].Mark().line + 1;
+    rhs.expressionLineNb = node["expression"].Mark().line + 1;
     rhs.location = node["location"].as<std::string>("subproblems");
     return true;
 }
@@ -308,7 +308,7 @@ bool convert<YmlModel::ExtraOutput>::decode(const Node& node, YmlModel::ExtraOut
 
     rhs.id = node["id"].as<std::string>("");
     rhs.expression = node["expression"].as<std::string>();
-    rhs.expression_lineNb = node["expression"].Mark().line + 1;
+    rhs.expressionLineNb = node["expression"].Mark().line + 1;
     return true;
 }
 
@@ -321,7 +321,7 @@ bool convert<YmlModel::Objective>::decode(const Node& node, YmlModel::Objective&
 
     rhs.id = node["id"].as<std::string>("");
     rhs.expression = node["expression"].as<std::string>();
-    rhs.expression_lineNb = node["expression"].Mark().line + 1;
+    rhs.expressionLineNb = node["expression"].Mark().line + 1;
     rhs.location = node["location"].as<std::string>("subproblems");
     return true;
 }

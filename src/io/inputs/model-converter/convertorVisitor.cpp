@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <ExprVisitor.h>
+#include <fmt/format.h>
 
 #include <boost/algorithm/string.hpp>
-#include <fmt/format.h>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
@@ -157,7 +157,7 @@ Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
     }
     catch (InputError& e)
     {
-        throw InputError(fmt::format("File {} : Error while converting expression '{}': {}",
+        throw InputError(fmt::format("in file '{}' : Error while converting expression '{}': {}",
                                      fileAndLineNb,
                                      exprStr,
                                      e.what()));

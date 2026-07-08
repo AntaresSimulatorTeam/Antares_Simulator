@@ -161,7 +161,8 @@ std::vector<Variable> convertVariables(const YmlModel::Model& model)
     for (const auto& variable: model.variables)
     {
         Expression lb(variable.lower_bound,
-                      convertExpressionToNode(variable.lower_bound, model,
+                      convertExpressionToNode(variable.lower_bound,
+                                              model,
                                               buildFileAndLineNb(model.filename,
                                                                  variable.lower_bound_lineNb)));
         if (lb.RootNode())
@@ -170,7 +171,8 @@ std::vector<Variable> convertVariables(const YmlModel::Model& model)
               .dispatch(lb.RootNode());
         }
         Expression ub(variable.upper_bound,
-                      convertExpressionToNode(variable.upper_bound, model,
+                      convertExpressionToNode(variable.upper_bound,
+                                              model,
                                               buildFileAndLineNb(model.filename,
                                                                  variable.upper_bound_lineNb)));
         if (ub.RootNode())
@@ -247,9 +249,10 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                              + " , field not found: " + pfdefinition.field);
         }
 
-        auto nodeRegistry = convertExpressionToNode(pfdefinition.definition, model,
-                                                     buildFileAndLineNb(model.filename,
-                                                                        pfdefinition.definition_lineNb));
+        auto nodeRegistry = convertExpressionToNode(
+          pfdefinition.definition,
+          model,
+          buildFileAndLineNb(model.filename, pfdefinition.expressionLineNb));
 
         using namespace Antares::Expressions::Nodes;
         AST preorder(nodeRegistry.node);
@@ -283,9 +286,10 @@ static Constraint createConstraint(const YmlModel::Constraint& constraint,
                                    const ForbiddenNodes& forbiddenNodes,
                                    bool isBindingConstraint = false)
 {
-    auto nodeRegistry = convertExpressionToNode(constraint.expression, model,
-                                                 buildFileAndLineNb(model.filename,
-                                                                    constraint.expression_lineNb));
+    auto nodeRegistry = convertExpressionToNode(constraint.expression,
+                                                model,
+                                                buildFileAndLineNb(model.filename,
+                                                                   constraint.expressionLineNb));
     ForbiddenNodesVisitor(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
     return {constraint.id,
             Expression{constraint.expression, std::move(nodeRegistry)},
@@ -331,9 +335,10 @@ std::vector<ExtraOutput> convertExtraOutputs(const YmlModel::Model& model)
 
     for (const auto& extraOutput: model.extra_outputs)
     {
-        auto nodeRegistry = convertExpressionToNode(extraOutput.expression, model,
-                                                     buildFileAndLineNb(model.filename,
-                                                                        extraOutput.expression_lineNb));
+        auto nodeRegistry = convertExpressionToNode(
+          extraOutput.expression,
+          model,
+          buildFileAndLineNb(model.filename, extraOutput.expressionLineNb));
         ForbiddenNodesVisitor(forbiddenInExtraOutput, extraOutput.expression)
           .dispatch(nodeRegistry.node);
         extraOutputs.emplace_back(extraOutput.id,
@@ -354,9 +359,10 @@ std::vector<Objective> convertObjectives(const YmlModel::Model& model)
     objectives.reserve(model.objectives.size());
     for (const auto& objective: model.objectives)
     {
-        auto nodeRegistry = convertExpressionToNode(objective.expression, model,
-                                                     buildFileAndLineNb(model.filename,
-                                                                        objective.expression_lineNb));
+        auto nodeRegistry = convertExpressionToNode(
+          objective.expression,
+          model,
+          buildFileAndLineNb(model.filename, objective.expressionLineNb));
         ForbiddenNodesVisitor(forbiddenInObjective, objective.expression)
           .dispatch(nodeRegistry.node);
         objectives.emplace_back(objective.id,

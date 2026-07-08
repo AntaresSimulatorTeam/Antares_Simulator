@@ -65,7 +65,8 @@ static Model createModelWith2PortsOneWayExchange()
                              .constraints = {},
                              .binding_constraints = {},
                              .objectives = {},
-                             .extra_outputs = {}};
+                             .extra_outputs = {},
+                             .filename = ""};
     auto nodeRegistry = convertExpressionToNode(var.id, ymlmodel);
     std::vector<PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.emplace_back(port1,
@@ -146,7 +147,8 @@ static Model createModelWith2Ports2WayExchange()
                              .constraints = {},
                              .binding_constraints = {},
                              .objectives = {},
-                             .extra_outputs = {}};
+                             .extra_outputs = {},
+                             .filename = ""};
     auto nodeRegistryForVar = convertExpressionToNode(var.id, ymlmodel);
     auto nodeRegistryForP = convertExpressionToNode(p.id, ymlmodel);
     std::vector<PortFieldDefinition> portFieldDefinitions;
@@ -228,3 +230,4 @@ BOOST_AUTO_TEST_CASE(PrintReceiverFieldRole)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+

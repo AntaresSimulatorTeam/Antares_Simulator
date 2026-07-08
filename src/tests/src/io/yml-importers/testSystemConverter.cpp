@@ -26,10 +26,11 @@ struct LibraryObjects
                            .variables = {},
                            .ports = {},
                            .port_field_definitions = {},
-                            .constraints = {{"constraint1", "cost", 0, "subproblems", ""}},
+                           .constraints = {{"constraint1", "cost", "subproblems", ""}},
                            .binding_constraints = {},
                            .objectives = {},
-                           .extra_outputs = {}};
+                           .extra_outputs = {},
+                           .filename = ""};
 
     YmlSystem::Parser parser;
     YmlModel::Library library;
@@ -433,3 +434,4 @@ BOOST_FIXTURE_TEST_CASE(DuplicatedCompo, PrepareYaml)
                           checkMessage("System has at least two components with the same id "
                                        "('N'), this is not supported"));
 }
+
