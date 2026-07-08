@@ -3,9 +3,9 @@
 
 #define BOOST_TEST_MODULE study
 #include <algorithm>
-#include <fstream>
 #include <files-system.h>
 #include <filesystem>
+#include <fstream>
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/unit_test_suite.hpp>
@@ -126,10 +126,10 @@ struct ReservesIndexMapsFixture
         reserveDown.setName("ReserveDown");
 
         areaA->allCapacityReservations = AllCapacityReservations();
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace(reserveUp.id(), reserveUp);
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace(reserveDown.id(), reserveDown);
+        areaA->allCapacityReservations.value().areaCapacityReservations.emplace(reserveUp.id(),
+                                                                                reserveUp);
+        areaA->allCapacityReservations.value().areaCapacityReservations.emplace(reserveDown.id(),
+                                                                                reserveDown);
     }
 
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
@@ -140,7 +140,7 @@ struct ReservesIndexMapsFixture
 /*!
  * \brief Extended fixture: two areas with thermal clusters and different reserves.
  */
-struct ReservesIndexMapsTwoAreasFixture : ReservesIndexMapsFixture
+struct ReservesIndexMapsTwoAreasFixture: ReservesIndexMapsFixture
 {
     ReservesIndexMapsTwoAreasFixture()
     {
@@ -169,10 +169,10 @@ struct ReservesIndexMapsTwoAreasFixture : ReservesIndexMapsFixture
         reserveDownA.energyActivationRatio = 0.8;
         reserveDownA.setName("ReserveDownA");
 
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace(reserveUpA.id(), reserveUpA);
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace(reserveDownA.id(), reserveDownA);
+        areaA->allCapacityReservations.value().areaCapacityReservations.emplace(reserveUpA.id(),
+                                                                                reserveUpA);
+        areaA->allCapacityReservations.value().areaCapacityReservations.emplace(reserveDownA.id(),
+                                                                                reserveDownA);
 
         // Area B: only ReserveUpB
         CapacityReservation reserveUpB;
@@ -184,8 +184,8 @@ struct ReservesIndexMapsTwoAreasFixture : ReservesIndexMapsFixture
         reserveUpB.setName("ReserveUpB");
 
         areaB->allCapacityReservations = AllCapacityReservations();
-        areaB->allCapacityReservations.value()
-          .areaCapacityReservations.emplace(reserveUpB.id(), reserveUpB);
+        areaB->allCapacityReservations.value().areaCapacityReservations.emplace(reserveUpB.id(),
+                                                                                reserveUpB);
     }
 
     Area* areaB = nullptr;
@@ -197,8 +197,7 @@ BOOST_AUTO_TEST_SUITE(reserves_runtime_index_maps)
 // Test: initializeReservesIndexMaps with no reserve participations
 // Validates that maps are initialized but empty when no participations exist.
 // ============================================================================
-BOOST_FIXTURE_TEST_CASE(initializeReservesIndexMaps_no_participations,
-                        ReservesIndexMapsFixture)
+BOOST_FIXTURE_TEST_CASE(initializeReservesIndexMaps_no_participations, ReservesIndexMapsFixture)
 {
     importCapacityReservations(study->areas, *problemeHebdo);
 
@@ -228,8 +227,7 @@ BOOST_FIXTURE_TEST_CASE(initializeReservesIndexMaps_no_participations,
 // Test: initializeReservesIndexMaps with mixed participations (thermal + STS + hydro)
 // Validates all three participation types and their reverse mappings in a single area.
 // ============================================================================
-BOOST_FIXTURE_TEST_CASE(initializeReservesIndexMaps_mixed_participations,
-                        ReservesIndexMapsFixture)
+BOOST_FIXTURE_TEST_CASE(initializeReservesIndexMaps_mixed_participations, ReservesIndexMapsFixture)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
@@ -286,7 +284,6 @@ BOOST_FIXTURE_TEST_CASE(initializeReservesIndexMaps_mixed_participations,
     // Note: "reservedown" (index 0) < "reserveup" (index 1) alphabetically
     int indexA = study->areas.find("a")->index;
     {
-        auto& areaReserves = problemeHebdo->allReserves.value()[indexA];
         populateThermalParticipation(*problemeHebdo, indexA, 0, 0, "Thermal1", 0, 0);
         populateSTSParticipation(*problemeHebdo, indexA, 1, "STStorage1", 1, 1);
     }
@@ -388,8 +385,7 @@ BOOST_AUTO_TEST_CASE(initializeReservesIndexMaps_empty_study)
 // Test: initializeReservesIndexMaps when reserves are disabled
 // Validates that maps are initialized even when reserves are disabled in study params.
 // ============================================================================
-BOOST_FIXTURE_TEST_CASE(initializeReservesIndexMaps_reserves_disabled,
-                        ReservesIndexMapsFixture)
+BOOST_FIXTURE_TEST_CASE(initializeReservesIndexMaps_reserves_disabled, ReservesIndexMapsFixture)
 {
     study->parameters.include.reserves = false;
     importCapacityReservations(study->areas, *problemeHebdo);
