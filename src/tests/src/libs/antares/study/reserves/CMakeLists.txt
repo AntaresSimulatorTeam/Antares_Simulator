@@ -17,3 +17,8 @@ add_boost_test(test_symmetries
   SRC test_symmetries.cpp
   LIBS Antares::study
   test_utils_unit)
+
+add_boost_test(test_study_reserves_runtime_index_maps
+  SRC test_study_reserves_runtime_index_maps.cpp
+  LIBS Antares::study
+  test_utils_unit)
