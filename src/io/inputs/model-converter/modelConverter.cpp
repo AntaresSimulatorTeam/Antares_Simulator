@@ -163,8 +163,7 @@ std::vector<Variable> convertVariables(const YmlModel::Model& model)
         Expression lb(variable.lower_bound,
                       convertExpressionToNode(variable.lower_bound, model,
                                               buildFileAndLineNb(model.filename,
-                                                                 variable.lower_bound_lineNb)),
-                      buildFileAndLineNb(model.filename, variable.lower_bound_lineNb));
+                                                                 variable.lower_bound_lineNb)));
         if (lb.RootNode())
         {
             ForbiddenNodesVisitor(forbiddenInVariableBounds, variable.lower_bound)
@@ -173,8 +172,7 @@ std::vector<Variable> convertVariables(const YmlModel::Model& model)
         Expression ub(variable.upper_bound,
                       convertExpressionToNode(variable.upper_bound, model,
                                               buildFileAndLineNb(model.filename,
-                                                                 variable.upper_bound_lineNb)),
-                      buildFileAndLineNb(model.filename, variable.upper_bound_lineNb));
+                                                                 variable.upper_bound_lineNb)));
         if (ub.RootNode())
         {
             ForbiddenNodesVisitor(forbiddenInVariableBounds, variable.upper_bound)
@@ -272,9 +270,7 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
         portFieldDefinitions.emplace_back(*itPort,
                                           *itField,
                                           Expression(pfdefinition.definition,
-                                                     std::move(nodeRegistry),
-                                                     buildFileAndLineNb(model.filename,
-                                                                        pfdefinition.definition_lineNb)));
+                                                     std::move(nodeRegistry)));
 
         // A definition for a port field means this field is a sender
         itPort->setFieldRole(itField->Id(), FieldRole::Sender);
@@ -292,9 +288,7 @@ static Constraint createConstraint(const YmlModel::Constraint& constraint,
                                                                     constraint.expression_lineNb));
     ForbiddenNodesVisitor(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
     return {constraint.id,
-            Expression{constraint.expression,
-                       std::move(nodeRegistry),
-                       buildFileAndLineNb(model.filename, constraint.expression_lineNb)},
+            Expression{constraint.expression, std::move(nodeRegistry)},
             convertLocation(constraint.location),
             convertOutOfBoundsProcessingMode(constraint.out_of_bounds_processing_mode),
             isBindingConstraint};
@@ -343,10 +337,7 @@ std::vector<ExtraOutput> convertExtraOutputs(const YmlModel::Model& model)
         ForbiddenNodesVisitor(forbiddenInExtraOutput, extraOutput.expression)
           .dispatch(nodeRegistry.node);
         extraOutputs.emplace_back(extraOutput.id,
-                                  Expression{extraOutput.expression,
-                                             std::move(nodeRegistry),
-                                             buildFileAndLineNb(model.filename,
-                                                                extraOutput.expression_lineNb)});
+                                  Expression{extraOutput.expression, std::move(nodeRegistry)});
     }
     return extraOutputs;
 }
@@ -369,10 +360,7 @@ std::vector<Objective> convertObjectives(const YmlModel::Model& model)
         ForbiddenNodesVisitor(forbiddenInObjective, objective.expression)
           .dispatch(nodeRegistry.node);
         objectives.emplace_back(objective.id,
-                                Expression{objective.expression,
-                                           std::move(nodeRegistry),
-                                           buildFileAndLineNb(model.filename,
-                                                              objective.expression_lineNb)},
+                                Expression{objective.expression, std::move(nodeRegistry)},
                                 convertLocation(objective.location));
     }
     return objectives;
