@@ -224,23 +224,9 @@ struct Fixture
             solved.X.insert(
               solved.X.end(),
               {3600., 52., 7., 13., 0., 2.3, 120., 120., 0., 0.2, 0., -30., 4000., 1., 40., 100.});
-            solved.CoutLineaire.insert(solved.CoutLineaire.end(),
-                                       {35.,
-                                        10000.,
-                                        4.,
-                                        20000.,
-                                        1.,
-                                        100.,
-                                        0.,
-                                        0.5,
-                                        0.7,
-                                        9000.,
-                                        1.,
-                                        0.,
-                                        0.,
-                                        5000.,
-                                        0.,
-                                        0.});
+            solved.CoutLineaire.insert(
+              solved.CoutLineaire.end(),
+              {35., 10000., 4., 20000., 1., 100., 0., 0.5, 0.7, 9000., 1., 0., 0., 5000., 0., 0.});
             solved.CoutsMarginauxDesContraintes.insert(solved.CoutsMarginauxDesContraintes.end(),
                                                        {-10000., -50., -75., -3.});
         }
