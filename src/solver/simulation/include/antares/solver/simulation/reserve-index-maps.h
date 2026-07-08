@@ -4,6 +4,7 @@
 
 #include <map>
 #include <string>
+#include <type_traits>
 #include <utility>
 
 #include <boost/bimap.hpp>
@@ -26,12 +27,44 @@ struct ReserveIndexMaps
         boost::bimap<std::pair<ReserveID, std::string>, int> thermalClusters;
         boost::bimap<std::pair<ReserveID, std::string>, int> STStorageClusters;
         boost::bimap<ReserveID, int> Hydro;
+
+        AreaReserveIndexMap() = default;
+        AreaReserveIndexMap(const AreaReserveIndexMap&) = default;
+        AreaReserveIndexMap& operator=(const AreaReserveIndexMap&) = default;
+
+        // boost::bimap does not guarantee a noexcept move, so we swap into a
+        // default-constructed instance instead of relying on its move ctor/assign.
+        AreaReserveIndexMap(AreaReserveIndexMap&& other) noexcept
+        {
+            thermalClusters.swap(other.thermalClusters);
+            STStorageClusters.swap(other.STStorageClusters);
+            Hydro.swap(other.Hydro);
+        }
+
+        AreaReserveIndexMap& operator=(AreaReserveIndexMap&& other) noexcept
+        {
+            thermalClusters.swap(other.thermalClusters);
+            STStorageClusters.swap(other.STStorageClusters);
+            Hydro.swap(other.Hydro);
+            return *this;
+        }
     };
 
     //! Reserve participation indices, per area
     std::map<Data::AreaName, AreaReserveIndexMap> participationIndexMaps;
     //! Reserve display name, per reserve ID
     std::map<ReserveID, ReserveName> idToName;
+
+    ReserveIndexMaps() = default;
+    ReserveIndexMaps(const ReserveIndexMaps&) = default;
+    ReserveIndexMaps& operator=(const ReserveIndexMaps&) = default;
+    ReserveIndexMaps(ReserveIndexMaps&&) noexcept = default;
+    ReserveIndexMaps& operator=(ReserveIndexMaps&&) noexcept = default;
 };
+
+static_assert(std::is_nothrow_move_constructible_v<ReserveIndexMaps>,
+              "ReserveIndexMaps must be nothrow move constructible");
+static_assert(std::is_nothrow_move_assignable_v<ReserveIndexMaps>,
+              "ReserveIndexMaps must be nothrow move assignable");
 
 } // namespace Antares::Solver::Simulation
