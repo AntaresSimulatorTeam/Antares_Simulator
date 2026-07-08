@@ -21,8 +21,6 @@ using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::IO::Inputs;
 using namespace Antares::IO::Inputs::ForbidNodes;
 
-namespace Antares::IO::Inputs::ModelConverter
-{
 namespace
 {
 std::string buildFileAndLineNb(const std::string& filename, size_t lineNb)
@@ -31,10 +29,12 @@ std::string buildFileAndLineNb(const std::string& filename, size_t lineNb)
     {
         return {};
     }
-    return filename + ", line " + std::to_string(lineNb);
+    return fmt::format("'{}', line {}", filename, std::to_string(lineNb));
 }
 } // anonymous namespace
 
+namespace Antares::IO::Inputs::ModelConverter
+{
 static OutOfBoundsProcessingMode convertOutOfBoundsProcessingMode(const std::string& mode)
 {
     if (mode.empty() || mode == "cyclic")

@@ -157,7 +157,7 @@ Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
     }
     catch (InputError& e)
     {
-        throw InputError(fmt::format("in file '{}' : Error while converting expression '{}': {}",
+        throw InputError(fmt::format("in file {} : Error while converting expression '{}': {}",
                                      fileAndLineNb,
                                      exprStr,
                                      e.what()));
