@@ -282,7 +282,29 @@ BOOST_AUTO_TEST_CASE(imbalance_cost_combines_unsupplied_and_spilled_energy)
     BOOST_CHECK_CLOSE(row->value, 4. * 7. + 10000. * 52., 1e-9);
 }
 
-BOOST_AUTO_TEST_CASE(is_loss_of_load_is_one_above_threshold_and_zero_below)
+BOOST_AUTO_TEST_CASE(is_significant_loss_of_load_is_one_above_threshold_and_zero_below)
+{
+    fill();
+
+    const auto rows = RowsForOutput(table, "is_significant_loss_of_load");
+    BOOST_REQUIRE_EQUAL(rows.size(), 3);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area1")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area2")->value, 1.);
+    // 0.2 MW of unsupplied energy is below the 0.5 MW threshold.
+    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area3")->value, 0.);
+}
+
+BOOST_AUTO_TEST_CASE(is_significant_loss_of_load_is_zero_exactly_at_threshold)
+{
+    // The threshold check is strict (> 0.5), so exactly 0.5 MW must not count
+    // as significant loss of load.
+    problem.ProblemeAResoudre->X[unsuppliedArea3] = 0.5;
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area3")->value, 0.);
+}
+
+BOOST_AUTO_TEST_CASE(is_loss_of_load_is_one_for_any_positive_unsupplied_energy)
 {
     fill();
 
@@ -290,15 +312,13 @@ BOOST_AUTO_TEST_CASE(is_loss_of_load_is_one_above_threshold_and_zero_below)
     BOOST_REQUIRE_EQUAL(rows.size(), 3);
     BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area1")->value, 1.);
     BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area2")->value, 1.);
-    // 0.2 MW of unsupplied energy is below the 0.5 MW threshold.
-    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3")->value, 0.);
+    // Strict > 0: even 0.2 MW below the significance threshold counts.
+    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3")->value, 1.);
 }
 
-BOOST_AUTO_TEST_CASE(is_loss_of_load_is_zero_exactly_at_threshold)
+BOOST_AUTO_TEST_CASE(is_loss_of_load_is_zero_without_unsupplied_energy)
 {
-    // The threshold check is strict (> 0.5), so exactly 0.5 MW must not count
-    // as loss of load.
-    problem.ProblemeAResoudre->X[unsuppliedArea3] = 0.5;
+    problem.ProblemeAResoudre->X[unsuppliedArea3] = 0.;
     fill();
 
     BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3")->value, 0.);
@@ -661,9 +681,10 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
 {
     fill();
 
-    // Areas: 3 x (imbalance_cost, is_loss_of_load, actual_load, price,
+    // Areas: 3 x (imbalance_cost, is_significant_loss_of_load,
+    //             is_loss_of_load, actual_load, price,
     //             is_near_loss_of_load) + area1's level_percentage and
-    //             actual_inflows                                  = 17
+    //             actual_inflows                                  = 20
     // Thermal: prop_cost + 13 emissions + 4 margins + profit
     //          + actual_num_units_on + non_prop_cost              = 21
     // Links: link 0 (abs_flow, minus_flow, actual_loop_flow, 2 congestion
@@ -672,7 +693,7 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
     //        outputs = 7                                          = 16
     // Short-term storage: battery1's profit                       = 1
     // Weekly: hydro_shadow_price (area1)                          = 1
-    BOOST_CHECK_EQUAL(table.rowCount(), 17 + 21 + 16 + 1 + 1);
+    BOOST_CHECK_EQUAL(table.rowCount(), 20 + 21 + 16 + 1 + 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

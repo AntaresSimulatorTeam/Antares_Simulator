@@ -14,6 +14,7 @@ source_group("exception" FILES ${SRC_PROJ})
 
 add_library(${PROJ} ${SRC_PROJ})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
+set_target_properties(${PROJ} PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
 set_target_properties(${PROJ} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 

@@ -26,7 +26,7 @@ SimulationTable::SimulationTable()
 
 SimulationTable::SimulationTable(SimulationTable&& other) noexcept = default;
 
-void SimulationTable::addEntry(const SimulationTableEntry& entry)
+void SimulationTable::addEntry(const SimulationTableEntry& entry) const
 {
     block_->add(entry.block);
     component_->add(entry.component);
@@ -59,7 +59,6 @@ std::vector<std::vector<std::string>> SimulationTable::storageIntoRows() const
     for (size_t row_index = 0; row_index < row_count; ++row_index)
     {
         auto& row = rows[row_index];
-        row.reserve(columns.size());
         for (const auto& column: columns)
         {
             row.push_back(column->toString(row_index));
@@ -68,7 +67,7 @@ std::vector<std::vector<std::string>> SimulationTable::storageIntoRows() const
     return rows;
 }
 
-void SimulationTable::clear()
+void SimulationTable::clear() const
 {
     storage_.clear();
 }
