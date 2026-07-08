@@ -495,6 +495,9 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         problem.PaliersThermiquesDuPays[k]
           .DureeMinimaleDArretDUnGroupeDuPalierThermique.assign(nbPaliers, 0);
         problem.PaliersThermiquesDuPays[k].NomsDesPaliersThermiques.resize(nbPaliers);
+        problem.PaliersThermiquesDuPays[k].emissionFactors.assign(
+          nbPaliers,
+          std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX>{});
 
         problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimise.assign(7, 0.);
         problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParJour.assign(7, 0.);
