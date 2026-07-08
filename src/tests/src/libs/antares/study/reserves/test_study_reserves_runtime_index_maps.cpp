@@ -367,16 +367,16 @@ BOOST_FIXTURE_TEST_CASE(initializeReservesIndexMaps_two_areas_different_reserves
 // ============================================================================
 BOOST_AUTO_TEST_CASE(initializeReservesIndexMaps_empty_study)
 {
-    Study study;
-    study.parameters.include.reserves = true;
-    study.parameters.simulationDays.first = 0;
-    study.parameters.simulationDays.end = 7;
+    auto study = std::make_unique<Study>();
+    study->parameters.include.reserves = true;
+    study->parameters.simulationDays.first = 0;
+    study->parameters.simulationDays.end = 7;
 
     PROBLEME_HEBDO problemeHebdo;
     problemeHebdo.allReserves = std::vector<::AREA_RESERVES_VECTOR>();
 
     StudyRuntimeInfos runtimeInfos;
-    runtimeInfos.initializeReservesIndexMaps(study, problemeHebdo);
+    runtimeInfos.initializeReservesIndexMaps(*study, problemeHebdo);
 
     BOOST_CHECK(runtimeInfos.reserveParticipationIndexMaps.has_value());
     BOOST_CHECK(runtimeInfos.reserveIDToName.has_value());
