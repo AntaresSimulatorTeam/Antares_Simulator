@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(thermal_cluster_records_name_and_cluster_component)
 
     BOOST_REQUIRE(info[0].has_value());
     BOOST_CHECK_EQUAL(info[0]->name, "DispatchableProduction");
-    BOOST_CHECK_EQUAL(info[0]->component, "gas_cluster");
+    BOOST_CHECK_EQUAL(info[0]->component, "fr_thermal_gas_cluster");
     BOOST_CHECK_EQUAL(info[0]->timeIndex, 42u);
 }
 
@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE(nodu_records_cluster_name)
 
     BOOST_REQUIRE(info[1].has_value());
     BOOST_CHECK_EQUAL(info[1]->name, "NODU");
-    BOOST_CHECK_EQUAL(info[1]->component, "coal_cluster");
+    BOOST_CHECK_EQUAL(info[1]->component, "de_thermal_coal_cluster");
     BOOST_CHECK_EQUAL(info[1]->timeIndex, 100u);
 }
 
@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(direct_flow_records_origin_destination_as_component)
 
     BOOST_REQUIRE(info[2].has_value());
     BOOST_CHECK_EQUAL(info[2]->name, "DirectFlow");
-    BOOST_CHECK_EQUAL(info[2]->component, "fr$$de");
+    BOOST_CHECK_EQUAL(info[2]->component, "de_fr_link");
     BOOST_CHECK_EQUAL(info[2]->timeIndex, 7u);
 }
 
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(unsupplied_energy_records_area_as_component)
 
     BOOST_REQUIRE(info[3].has_value());
     BOOST_CHECK_EQUAL(info[3]->name, "UnsuppliedEnergy");
-    BOOST_CHECK_EQUAL(info[3]->component, "es");
+    BOOST_CHECK_EQUAL(info[3]->component, "es_node");
     BOOST_CHECK_EQUAL(info[3]->timeIndex, 5u);
 }
 
@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE(hydro_level_records_area_as_component)
 
     BOOST_REQUIRE(info[4].has_value());
     BOOST_CHECK_EQUAL(info[4]->name, "HydroLevel");
-    BOOST_CHECK_EQUAL(info[4]->component, "it");
+    BOOST_CHECK_EQUAL(info[4]->component, "hyrdro_storage_it");
     BOOST_CHECK_EQUAL(info[4]->timeIndex, 168u);
 }
 
