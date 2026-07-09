@@ -22,9 +22,8 @@ public:
     {
     }
 
-    [[nodiscard]] virtual double getData(
-      Api::IScenario::TimeSeriesNumber time_series_number,
-      unsigned int hour) const
+    [[nodiscard]] virtual double getData(Api::IScenario::TimeSeriesNumber time_series_number,
+                                         unsigned int hour) const
       = 0;
 
     [[nodiscard]] virtual std::span<const double> getData(

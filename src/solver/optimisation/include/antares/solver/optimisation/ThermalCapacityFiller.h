@@ -59,9 +59,8 @@ private:
       const ModelerStudy::SystemModel::Component& component,
       const std::string& portId,
       const ModelerStudy::SystemModel::ThermalComponent& thermalCapacityConnection);
-    LinearProblem::Api::IMipVariable* getDispatchableProductionVariable(
-      int thermalClusterIndex,
-      unsigned pdt);
+    LinearProblem::Api::IMipVariable* getDispatchableProductionVariable(int thermalClusterIndex,
+                                                                        unsigned pdt);
     void addCapacityFieldConstraint(const TimeDependentLinearExpression& linearExpression,
                                     const LinearProblem::Api::FillContext& ctx,
                                     int clusterIndex,

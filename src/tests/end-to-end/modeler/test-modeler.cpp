@@ -170,8 +170,7 @@ public:
     Models models;
     std::vector<Component> components;
     Test::Modeler::LinearProblemBuildingFixture fixture;
-    std::unique_ptr<Api::ILinearProblemData>
-      data = std::make_unique<ConstantDataSeries>(0.);
+    std::unique_ptr<Api::ILinearProblemData> data = std::make_unique<ConstantDataSeries>(0.);
     Nodes::Node* lower_bound = fixture.literal(0.0);
     bool timeDependent{false};
     std::map<std::string, PTV> parameters{};
@@ -217,8 +216,8 @@ struct TSDimensions
 };
 
 DataImpl::TimeSeriesSet constantTimeSeriesSets(const std::string& id,
-                                                            std::span<double> values,
-                                                            unsigned int nRows = 1)
+                                               std::span<double> values,
+                                               unsigned int nRows = 1)
 {
     DataImpl::TimeSeriesSet timeSeriesSet(id, nRows);
     for (double value: values)
@@ -235,8 +234,8 @@ DataImpl::TimeSeriesSet constantTimeSeriesSets(const std::string& id,
 }
 
 DataImpl::TimeSeriesSet constantTimeSeriesSet(const std::string& id,
-                                                           double value = 0.,
-                                                           TSDimensions dims = {1, 1})
+                                              double value = 0.,
+                                              TSDimensions dims = {1, 1})
 {
     std::vector<double> values(dims.nCols, value);
     return constantTimeSeriesSets(id, values, dims.nRows);
@@ -251,8 +250,8 @@ BOOST_AUTO_TEST_CASE(system_with_two_time_series_use_default_first_all_2)
 
     DataImpl::DataSeriesRepository data_series_repository;
     std::vector<double> values = {2, 3, 4};
-    data_series_repository.addDataSeries(std::make_unique<DataImpl::TimeSeriesSet>(
-      constantTimeSeriesSets("GROUPA", values, 1)));
+    data_series_repository.addDataSeries(
+      std::make_unique<DataImpl::TimeSeriesSet>(constantTimeSeriesSets("GROUPA", values, 1)));
     inMemoryLoader.data = std::make_unique<DataImpl::LinearProblemData>(
       std::move(data_series_repository));
 
@@ -271,8 +270,8 @@ BOOST_AUTO_TEST_CASE(system_with_three_time_series_use_second_one_all_3)
 
     DataImpl::DataSeriesRepository data_series_repository;
     std::vector<double> values = {2, 3, 4};
-    data_series_repository.addDataSeries(std::make_unique<DataImpl::TimeSeriesSet>(
-      constantTimeSeriesSets("GROUPA", values, 1)));
+    data_series_repository.addDataSeries(
+      std::make_unique<DataImpl::TimeSeriesSet>(constantTimeSeriesSets("GROUPA", values, 1)));
     inMemoryLoader.data = std::make_unique<DataImpl::LinearProblemData>(
       std::move(data_series_repository));
 

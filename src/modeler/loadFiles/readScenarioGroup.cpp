@@ -41,9 +41,9 @@ LinearProblem::ScenarioGroupRepository parseScenarioGroupRepository(std::ifstrea
             std::string groupId = parsedLine.groupName;
             boost::to_upper(groupId); // all groups are uppercase
 
-            alreadyCreatedScenarios.emplace(
-              groupId,
-              std::make_unique<LinearProblem::DataImpl::Scenario>(groupId));
+            alreadyCreatedScenarios.emplace(groupId,
+                                            std::make_unique<LinearProblem::DataImpl::Scenario>(
+                                              groupId));
             alreadyCreatedScenarios[groupId]->setTimeSerieNumber(parsedLine.year,
                                                                  parsedLine.timeSeriesNumber);
         }

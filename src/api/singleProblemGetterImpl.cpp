@@ -357,8 +357,8 @@ std::unique_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProb
                                                                id.week);
     }
 
-    std::unique_ptr<ILinearProblem> linearProblem = std::make_unique<
-      Antares::LinearProblem::Api::StructuredLinearProblem>();
+    std::unique_ptr<ILinearProblem>
+      linearProblem = std::make_unique<Antares::LinearProblem::Api::StructuredLinearProblem>();
     fillProblem(*linearProblem, id);
 
     return linearProblem;
@@ -368,8 +368,7 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProbl
 {
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
-    LinearProblem::Api::FillContext fillCtx = buildFillContext(&pb_,
-                                                                           numeroDeLIntervalle);
+    LinearProblem::Api::FillContext fillCtx = buildFillContext(&pb_, numeroDeLIntervalle);
     const auto modelerData = pb_.modelerData;
     bool hasModelerData = modelerData != nullptr;
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()

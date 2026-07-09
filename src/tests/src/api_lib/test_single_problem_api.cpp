@@ -715,8 +715,8 @@ ModelerData OneParameterOneVariableOneConstraint()
       linearProblemData = std::make_unique<DataImpl::LinearProblemData>(
         DataImpl::DataSeriesRepository{});
     //---
-    std::unique_ptr<Api::IScenario>
-      scenario = std::make_unique<DataImpl::Scenario>("scenario_group");
+    std::unique_ptr<Api::IScenario> scenario = std::make_unique<DataImpl::Scenario>(
+      "scenario_group");
     ScenarioGroupRepository scenarioGroupRepository;
     scenarioGroupRepository.addScenario("scenario_group", std::move(scenario));
     //---

@@ -41,8 +41,8 @@ using namespace Antares::LinearProblem::MpsolverImpl;
 using namespace Antares::IO;
 using namespace Antares::IO::Outputs;
 
-using Antares::Solver::IResultWriter;
 using Antares::Optimization::SingleOptimOptions;
+using Antares::Solver::IResultWriter;
 
 struct SimplexResult
 {

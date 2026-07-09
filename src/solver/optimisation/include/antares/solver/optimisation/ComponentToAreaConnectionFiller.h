@@ -32,8 +32,7 @@ using ConstraintIndicesHelper = std::function<
  * This class is responsible for adding variables, constraints, and objectives to the linear problem
  * based on the connections between components and areas in the Antares study.
  */
-class ComponentToAreaConnectionFiller final
-    : public LinearProblem::Api::LinearProblemFiller
+class ComponentToAreaConnectionFiller final: public LinearProblem::Api::LinearProblemFiller
 {
 public:
     explicit ComponentToAreaConnectionFiller(

@@ -16,9 +16,8 @@ namespace Antares::Optimization
 // Block-relative time index of an absolute hour, empty when the hour falls
 // outside the block's global time window. Shared by the raw legacy rows and
 // the derived extra outputs so both use the same row conventions.
-std::optional<unsigned> LegacyBlockTimeIndex(
-  const LinearProblem::Api::FillContext& fillContext,
-  unsigned timeIndex);
+std::optional<unsigned> LegacyBlockTimeIndex(const LinearProblem::Api::FillContext& fillContext,
+                                             unsigned timeIndex);
 
 // Adds the derived "extra outputs" of the legacy solver to the simulation
 // table. Iterates the study structure (areas, links, thermal clusters) hour

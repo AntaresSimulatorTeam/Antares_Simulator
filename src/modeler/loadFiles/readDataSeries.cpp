@@ -13,10 +13,10 @@ std::unique_ptr<LinearProblem::Api::ILinearProblemData> loadDataSeries(
 {
     try
     {
-        LinearProblem::DataImpl::DataSeriesRepository dataSeriesRepository = IO::
-          Inputs::DataSeriesCsvImporter::DataSeriesRepoImporter::importFromDirectory(
-            studyPath / "input" / "data-series",
-            '\t');
+        LinearProblem::DataImpl::DataSeriesRepository dataSeriesRepository = IO::Inputs::
+          DataSeriesCsvImporter::DataSeriesRepoImporter::importFromDirectory(studyPath / "input"
+                                                                               / "data-series",
+                                                                             '\t');
         logs.info() << "Data-series loaded";
         return std::make_unique<LinearProblem::DataImpl::LinearProblemData>(
           std::move(dataSeriesRepository));

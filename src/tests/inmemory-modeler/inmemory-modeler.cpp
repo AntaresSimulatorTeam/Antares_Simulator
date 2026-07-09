@@ -57,8 +57,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(
     linear_problem_builder.build(time_scenario_ctx);
 }
 
-void LinearProblemBuildingFixture::buildLinearProblem(
-  Api::FillContext& time_scenario_ctx)
+void LinearProblemBuildingFixture::buildLinearProblem(Api::FillContext& time_scenario_ctx)
 {
     std::vector<std::unique_ptr<Api::IScenario>> scenarios;
     buildLinearProblem(time_scenario_ctx, dummy_data_, scenarios);

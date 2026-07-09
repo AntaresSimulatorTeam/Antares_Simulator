@@ -73,7 +73,7 @@ Component createComponent(const YmlSystem::Component& c, const std::vector<Libra
           id,
           ParameterTypeAndValue{.id = id,
                                 .type = LinearProblem::variability(time_dependent,
-                                                                  scenario_dependent),
+                                                                   scenario_dependent),
                                 .value = value});
     }
 

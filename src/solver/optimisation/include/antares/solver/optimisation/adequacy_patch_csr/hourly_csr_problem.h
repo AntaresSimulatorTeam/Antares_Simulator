@@ -52,10 +52,9 @@ class HourlyCSRProblem final
     using AdqPatchParams = AdequacyPatch::AdqPatchParams;
 
 public:
-    explicit HourlyCSRProblem(
-      const AdqPatchParams& adqPatchParams,
-      PROBLEME_HEBDO* p,
-      const Antares::Optimization::OptimizationOptions& solverOptions):
+    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams,
+                              PROBLEME_HEBDO* p,
+                              const Antares::Optimization::OptimizationOptions& solverOptions):
         solverOptions_(solverOptions),
         adqPatchParams_(adqPatchParams),
         variableManager_(p->CorrespondanceVarNativesVarOptim,

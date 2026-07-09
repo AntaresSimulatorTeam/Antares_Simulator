@@ -25,34 +25,26 @@ public:
     OrtoolsLinearProblem(bool isMip, const std::string& solverName);
     ~OrtoolsLinearProblem() override = default;
 
-    Api::IMipVariable* addNumVariable(double lb,
-                                                   double ub,
-                                                   const std::string& name) override;
+    Api::IMipVariable* addNumVariable(double lb, double ub, const std::string& name) override;
 
-    Api::IMipVariable* addIntVariable(double lb,
-                                                   double ub,
-                                                   const std::string& name) override;
+    Api::IMipVariable* addIntVariable(double lb, double ub, const std::string& name) override;
 
     Api::IMipVariable* addVariable(double lb,
-                                                double ub,
-                                                bool integer,
-                                                const std::string& name) override;
+                                   double ub,
+                                   bool integer,
+                                   const std::string& name) override;
     [[nodiscard]] const std::vector<std::unique_ptr<Api::IMipVariable>>& getVariables()
       const override;
     [[nodiscard]] Api::IMipVariable* getVariable(std::size_t index) const override;
-    [[nodiscard]] Api::IMipVariable* lookupVariable(
-      const std::string& name) const override;
+    [[nodiscard]] Api::IMipVariable* lookupVariable(const std::string& name) const override;
 
     [[nodiscard]] int variableCount() const override;
 
-    Api::IMipConstraint* addConstraint(double lb,
-                                                    double ub,
-                                                    const std::string& name) override;
-    [[nodiscard]] const std::vector<std::unique_ptr<Api::IMipConstraint>>&
-    getConstraints() const override;
+    Api::IMipConstraint* addConstraint(double lb, double ub, const std::string& name) override;
+    [[nodiscard]] const std::vector<std::unique_ptr<Api::IMipConstraint>>& getConstraints()
+      const override;
     [[nodiscard]] Api::IMipConstraint* getConstraint(std::size_t index) const override;
-    [[nodiscard]] Api::IMipConstraint* lookupConstraint(
-      const std::string& name) const override;
+    [[nodiscard]] Api::IMipConstraint* lookupConstraint(const std::string& name) const override;
     [[nodiscard]] int constraintCount() const override;
 
     void setObjectiveCoefficient(Api::IMipVariable* var, double coefficient) override;

@@ -850,10 +850,10 @@ EvaluationResult CreateAndEvaluateTimeNode(Node* p)
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
     const Antares::LinearProblem::Api::FillContext fillContext{first,
-                                                                           last /*three hours*/,
-                                                                           first,
-                                                                           last,
-                                                                           0};
+                                                               last /*three hours*/,
+                                                               first,
+                                                               last,
+                                                               0};
     EvalVisitor visitor(optimContainer,
                         fillContext,
                         components.back(),
@@ -908,10 +908,10 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
     optimContainer.addFromSystemComponents(components);
 
     const Antares::LinearProblem::Api::FillContext fillContext{first,
-                                                                           last /*three hours*/,
-                                                                           first,
-                                                                           last,
-                                                                           0};
+                                                               last /*three hours*/,
+                                                               first,
+                                                               last,
+                                                               0};
     EvalVisitor visitor(optimContainer,
                         fillContext,
                         components.back(),
@@ -981,10 +981,10 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
     optimContainer.addFromSystemComponents(components);
 
     const Antares::LinearProblem::Api::FillContext fillContext{first,
-                                                                           last /*three hours*/,
-                                                                           first,
-                                                                           last,
-                                                                           0};
+                                                               last /*three hours*/,
+                                                               first,
+                                                               last,
+                                                               0};
     EvalVisitor visitor(optimContainer,
                         fillContext,
                         components.back(),
@@ -1026,10 +1026,10 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
     optimContainer.addFromSystemComponents(components);
 
     const Antares::LinearProblem::Api::FillContext fillContext{hour_0,
-                                                                           hour_1 /*two hours*/,
-                                                                           hour_0,
-                                                                           hour_1,
-                                                                           0};
+                                                               hour_1 /*two hours*/,
+                                                               hour_0,
+                                                               hour_1,
+                                                               0};
     EvalVisitor visitor(optimContainer,
                         fillContext,
                         components.back(),
@@ -1097,10 +1097,10 @@ void evaluate_time_dependent_operation()
     optimContainer.addFromSystemComponents(components);
 
     const Antares::LinearProblem::Api::FillContext fillContext{hour_0,
-                                                                           hour_1 /*three hours*/,
-                                                                           hour_0,
-                                                                           hour_1,
-                                                                           0};
+                                                               hour_1 /*three hours*/,
+                                                               hour_0,
+                                                               hour_1,
+                                                               0};
     EvalVisitor visitor(optimContainer,
                         fillContext,
                         components.back(),
@@ -1139,8 +1139,11 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
-    const Antares::LinearProblem::Api::FillContext
-      fillContext{hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0};
+    const Antares::LinearProblem::Api::FillContext fillContext{hours.at(0),
+                                                               hours.at(1) /*two hours*/,
+                                                               hours.at(0),
+                                                               hours.at(1),
+                                                               0};
     EvalVisitor visitor(optimContainer,
                         fillContext,
                         components.back(),
@@ -1187,8 +1190,11 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
-    const Antares::LinearProblem::Api::FillContext
-      fillContext{hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0};
+    const Antares::LinearProblem::Api::FillContext fillContext{hours.at(0),
+                                                               hours.at(1) /*two hours*/,
+                                                               hours.at(0),
+                                                               hours.at(1),
+                                                               0};
     EvalVisitor visitor(optimContainer,
                         fillContext,
                         components.back(),

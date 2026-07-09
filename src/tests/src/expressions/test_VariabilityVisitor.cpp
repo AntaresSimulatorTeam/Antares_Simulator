@@ -80,8 +80,7 @@ struct TestVariabilityVisitorFixture
           {build_context_parameter_with("param", "0", VariabilityType::VARYING_IN_SCENARIO_ONLY)},
           "group");
 
-        auto bounds_time_series = std::make_unique<DataImpl::TimeSeriesSet>("bounds",
-                                                                                         3);
+        auto bounds_time_series = std::make_unique<DataImpl::TimeSeriesSet>("bounds", 3);
         Api::FillContext ctx{0, 2, 0, 2, 0};
         // setting 3 hours (including h 1 and 2)
         bounds_time_series->add({10., 11., 12.});

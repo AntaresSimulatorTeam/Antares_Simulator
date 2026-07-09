@@ -22,9 +22,9 @@ OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solver
 }
 
 Api::IMipVariable* OrtoolsLinearProblem::addVariable(double lb,
-                                                                  double ub,
-                                                                  bool integer,
-                                                                  const std::string& name)
+                                                     double ub,
+                                                     bool integer,
+                                                     const std::string& name)
 {
     if (ub < lb)
     {
@@ -43,22 +43,21 @@ Api::IMipVariable* OrtoolsLinearProblem::addVariable(double lb,
     return variables_.back().get();
 }
 
-const std::vector<std::unique_ptr<Api::IMipVariable>>&
-OrtoolsLinearProblem::getVariables() const
+const std::vector<std::unique_ptr<Api::IMipVariable>>& OrtoolsLinearProblem::getVariables() const
 {
     return variables_;
 }
 
 Api::IMipVariable* OrtoolsLinearProblem::addNumVariable(double lb,
-                                                                     double ub,
-                                                                     const std::string& name)
+                                                        double ub,
+                                                        const std::string& name)
 {
     return addVariable(lb, ub, false, name);
 }
 
 Api::IMipVariable* OrtoolsLinearProblem::addIntVariable(double lb,
-                                                                     double ub,
-                                                                     const std::string& name)
+                                                        double ub,
+                                                        const std::string& name)
 {
     return addVariable(lb, ub, true, name);
 }
@@ -80,12 +79,10 @@ Api::IMipVariable* OrtoolsLinearProblem::lookupVariable(const std::string& name)
     return nullptr;
 }
 
-Api::IMipConstraint* OrtoolsLinearProblem::lookupConstraint(
-  const std::string& name) const
+Api::IMipConstraint* OrtoolsLinearProblem::lookupConstraint(const std::string& name) const
 {
     auto it = std::ranges::find_if(constraints_,
-                                   [&name](
-                                     const std::unique_ptr<Api::IMipConstraint>& c)
+                                   [&name](const std::unique_ptr<Api::IMipConstraint>& c)
                                    { return c->getName() == name; });
     if (it != constraints_.end())
     {
@@ -100,8 +97,8 @@ int OrtoolsLinearProblem::variableCount() const
 }
 
 Api::IMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
-                                                                      double ub,
-                                                                      const std::string& name)
+                                                         double ub,
+                                                         const std::string& name)
 {
     auto* mpConstraint = mpSolver_->MakeRowConstraint(lb, ub, name);
 
@@ -114,8 +111,8 @@ Api::IMipConstraint* OrtoolsLinearProblem::addConstraint(double lb,
     return constraints_.back().get();
 }
 
-const std::vector<std::unique_ptr<Api::IMipConstraint>>&
-OrtoolsLinearProblem::getConstraints() const
+const std::vector<std::unique_ptr<Api::IMipConstraint>>& OrtoolsLinearProblem::getConstraints()
+  const
 {
     return constraints_;
 }
@@ -136,21 +133,18 @@ static const operations_research::MPVariable* getMpVar(const Api::IMipVariable* 
     const auto* OrtoolsMipVar = dynamic_cast<const OrtoolsMipVariable*>(var);
     if (!OrtoolsMipVar)
     {
-        logs.error()
-          << "Invalid cast, tried from Api::IMipVariable to OrtoolsMipVariable";
+        logs.error() << "Invalid cast, tried from Api::IMipVariable to OrtoolsMipVariable";
         throw std::bad_cast();
     }
     return OrtoolsMipVar->getMpVar();
 }
 
-void OrtoolsLinearProblem::setObjectiveCoefficient(Api::IMipVariable* var,
-                                                   double coefficient)
+void OrtoolsLinearProblem::setObjectiveCoefficient(Api::IMipVariable* var, double coefficient)
 {
     objective_->SetCoefficient(getMpVar(var), coefficient);
 }
 
-double OrtoolsLinearProblem::getObjectiveCoefficient(
-  const Api::IMipVariable* var) const
+double OrtoolsLinearProblem::getObjectiveCoefficient(const Api::IMipVariable* var) const
 {
     return objective_->GetCoefficient(getMpVar(var));
 }

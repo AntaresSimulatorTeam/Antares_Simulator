@@ -33,12 +33,12 @@ unsigned countActiveConstraintTimesteps(
     Visitors::EvalVisitor evalVisitor(optimEntityContainer, ctx, component, data, scenario);
     unsigned activeConstraintCount = 0;
     for (const auto timeStep: Antares::LinearProblem::IntegerInterval{ctx.getLocalFirstTimeStep(),
-                                                                     ctx.getLocalLastTimeStep()})
+                                                                      ctx.getLocalLastTimeStep()})
     {
         if (!Antares::LinearProblem::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
-                                                            timeStep,
-                                                            ctx,
-                                                            evalVisitor))
+                                                             timeStep,
+                                                             ctx,
+                                                             evalVisitor))
         {
             ++activeConstraintCount;
         }
@@ -360,9 +360,9 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
         {
             const auto localIndex = static_cast<std::size_t>(t - firstTimestep);
             if (Antares::LinearProblem::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
-                                                               t,
-                                                               ctx,
-                                                               evalVisitor))
+                                                                t,
+                                                                ctx,
+                                                                evalVisitor))
             {
                 logs.debug() << "Constraint " << constraint_id
                              << " was ignored because it is marked as DROP for t = " << t;

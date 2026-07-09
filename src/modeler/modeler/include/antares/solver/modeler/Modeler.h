@@ -73,14 +73,12 @@ public:
 
     ILoader& loader_; // gp : make it private
 
-    [[nodiscard]] const std::unique_ptr<LinearProblem::Api::ILinearProblem>&
-    masterProblem() const
+    [[nodiscard]] const std::unique_ptr<LinearProblem::Api::ILinearProblem>& masterProblem() const
     {
         return masterProblem_;
     }
 
-    [[nodiscard]] const std::vector<
-      std::unique_ptr<LinearProblem::Api::ILinearProblem>>&
+    [[nodiscard]] const std::vector<std::unique_ptr<LinearProblem::Api::ILinearProblem>>&
     subproblems() const
     {
         return subproblems_;

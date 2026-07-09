@@ -45,8 +45,7 @@ void TimeSeriesSet::add(std::vector<double>&& ts)
     tsSet_.push_back(std::move(ts));
 }
 
-double TimeSeriesSet::getData(Api::IScenario::TimeSeriesNumber tsNumber,
-                              unsigned hour) const
+double TimeSeriesSet::getData(Api::IScenario::TimeSeriesNumber tsNumber, unsigned hour) const
 {
     if (tsNumber == 0)
     {

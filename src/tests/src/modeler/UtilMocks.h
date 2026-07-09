@@ -97,8 +97,7 @@ public:
     {
     }
 
-    double getCoefficient(
-      const Antares::LinearProblem::Api::IMipVariable*) const override
+    double getCoefficient(const Antares::LinearProblem::Api::IMipVariable*) const override
     {
         return 1.0;
     }
@@ -162,33 +161,31 @@ public:
         return isLP_;
     }
 
-    Antares::LinearProblem::Api::IMipConstraint* lookupConstraint(
-      const std::string&) const override
+    Antares::LinearProblem::Api::IMipConstraint* lookupConstraint(const std::string&) const override
     {
-        static MockMipConstraint mockConstraint(
-          Antares::LinearProblem::Api::MipBasisStatus::BASIC);
+        static MockMipConstraint mockConstraint(Antares::LinearProblem::Api::MipBasisStatus::BASIC);
         return &mockConstraint;
     }
 
     // ILinearProblem interface (minimal implementation for testing)
     Antares::LinearProblem::Api::IMipVariable* addVariable(double,
-                                                                       double,
-                                                                       bool,
-                                                                       const std::string&) override
+                                                           double,
+                                                           bool,
+                                                           const std::string&) override
     {
         variables_.push_back(RandomVariable());
         return variables_.back().get();
     }
 
-    Antares::LinearProblem::Api::IMipConstraint*
-    addConstraint(double, double, const std::string&) override
+    Antares::LinearProblem::Api::IMipConstraint* addConstraint(double,
+                                                               double,
+                                                               const std::string&) override
     {
         constraints_.push_back(RandomConstraint());
         return constraints_.back().get();
     }
 
-    void setObjectiveCoefficient(Antares::LinearProblem::Api::IMipVariable*,
-                                 double) override
+    void setObjectiveCoefficient(Antares::LinearProblem::Api::IMipVariable*, double) override
     {
     }
 
@@ -202,16 +199,18 @@ public:
         return std::numeric_limits<double>::infinity();
     }
 
-    Antares::LinearProblem::Api::IMipVariable*
-    addNumVariable(double, double, const std::string&) override
+    Antares::LinearProblem::Api::IMipVariable* addNumVariable(double,
+                                                              double,
+                                                              const std::string&) override
     {
         variableCount_++;
         variables_.push_back(RandomVariable());
         return variables_.back().get();
     }
 
-    Antares::LinearProblem::Api::IMipVariable*
-    addIntVariable(double, double, const std::string&) override
+    Antares::LinearProblem::Api::IMipVariable* addIntVariable(double,
+                                                              double,
+                                                              const std::string&) override
     {
         variableCount_++;
         variables_.push_back(RandomVariable());
@@ -228,8 +227,7 @@ public:
         return mockMipVariable;
     }
 
-    static std::unique_ptr<Antares::LinearProblem::Api::IMipConstraint>
-    RandomConstraint()
+    static std::unique_ptr<Antares::LinearProblem::Api::IMipConstraint> RandomConstraint()
     {
         std::unique_ptr<Antares::LinearProblem::Api::IMipConstraint>
           mockMipConstraint = std::make_unique<MockMipConstraint>(
@@ -244,18 +242,16 @@ public:
     }
 
     [[nodiscard]]
-    const std::vector<std::unique_ptr<Antares::LinearProblem::Api::IMipVariable>>&
-    getVariables() const override
+    const std::vector<std::unique_ptr<Antares::LinearProblem::Api::IMipVariable>>& getVariables()
+      const override
     {
         return variables_;
     }
 
     [[nodiscard]]
-    Antares::LinearProblem::Api::IMipConstraint* getConstraint(
-      std::size_t) const override
+    Antares::LinearProblem::Api::IMipConstraint* getConstraint(std::size_t) const override
     {
-        static MockMipConstraint mock(
-          Antares::LinearProblem::Api::MipBasisStatus::AT_LOWER_BOUND);
+        static MockMipConstraint mock(Antares::LinearProblem::Api::MipBasisStatus::AT_LOWER_BOUND);
         return &mock;
     }
 
@@ -269,10 +265,9 @@ public:
     [[nodiscard]] Antares::LinearProblem::Api::IMipVariable* lookupVariable(
       const std::string&) const override
     {
-        static MockMipVariable mock(
-          12.25,
-          Antares::LinearProblem::Api::MipBasisStatus::AT_LOWER_BOUND,
-          false);
+        static MockMipVariable mock(12.25,
+                                    Antares::LinearProblem::Api::MipBasisStatus::AT_LOWER_BOUND,
+                                    false);
         return &mock;
     }
 
@@ -286,8 +281,7 @@ public:
         return constraintCount_;
     }
 
-    double getObjectiveCoefficient(
-      const Antares::LinearProblem::Api::IMipVariable*) const override
+    double getObjectiveCoefficient(const Antares::LinearProblem::Api::IMipVariable*) const override
     {
         return 0.;
     }
@@ -327,8 +321,7 @@ public:
 protected:
     bool isLP_;
     std::vector<std::unique_ptr<Antares::LinearProblem::Api::IMipVariable>> variables_;
-    std::vector<std::unique_ptr<Antares::LinearProblem::Api::IMipConstraint>>
-      constraints_;
+    std::vector<std::unique_ptr<Antares::LinearProblem::Api::IMipConstraint>> constraints_;
     int variableCount_ = 0;
     int constraintCount_ = 0;
 };
@@ -454,9 +447,8 @@ inline Antares::LinearProblem::ScenarioGroupRepository makeScenarioGroupRepo(
   const Antares::ModelerStudy::SystemModel::Component& component)
 {
     Antares::LinearProblem::ScenarioGroupRepository repository;
-    repository.addScenario(
-      component.getScenarioGroupId(),
-      std::make_unique<Antares::LinearProblem::Api::EmptyScenario>());
+    repository.addScenario(component.getScenarioGroupId(),
+                           std::make_unique<Antares::LinearProblem::Api::EmptyScenario>());
     return repository;
 }
 

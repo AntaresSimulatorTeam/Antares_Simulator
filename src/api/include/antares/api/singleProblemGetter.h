@@ -31,8 +31,7 @@ public:
     // NOTE week indices start at 1
     // year indices start at 0
     WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id);
-    std::unique_ptr<LinearProblem::Api::ILinearProblem> getWeeklyProblem(
-      WeeklyProblemId id);
+    std::unique_ptr<LinearProblem::Api::ILinearProblem> getWeeklyProblem(WeeklyProblemId id);
 
     // TODO[FOM] This should not be necessary
     void writeNTCTimeSeries(const std::filesystem::path& outputDir);

@@ -31,7 +31,6 @@ private:
     std::shared_ptr<OptionalColumn<unsigned int>> block_time_index_;
     std::shared_ptr<IntegralColumn> scenario_index_;
     std::shared_ptr<OptionalColumn<double>> value_;
-    std::shared_ptr<OptionalColumn<Antares::LinearProblem::Api::MipBasisStatus>>
-      basis_status_;
+    std::shared_ptr<OptionalColumn<Antares::LinearProblem::Api::MipBasisStatus>> basis_status_;
 };
 } // namespace Antares::IO::Outputs

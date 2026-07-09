@@ -215,9 +215,9 @@ void addConstraintEntries(SimulationTable& simulationTable,
                 if (modelConstr.outOfBoundsProcessingMode()
                       == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP
                     && LinearProblem::hasOutOfBoundsTimeShift(modelConstr.expression().RootNode(),
-                                                             *ts,
-                                                             fillContext,
-                                                             evalVisitor))
+                                                              *ts,
+                                                              fillContext,
+                                                              evalVisitor))
                 {
                     activeConstraint = nullptr;
                 }
@@ -304,9 +304,9 @@ void addEntriesForNode(SimulationTable& simulationTable,
                 if (constraint.outOfBoundsProcessingMode()
                       == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP
                     && LinearProblem::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
-                                                             *ts,
-                                                             fillContext,
-                                                             evalVisitor))
+                                                              *ts,
+                                                              fillContext,
+                                                              evalVisitor))
                 {
                     return;
                 }

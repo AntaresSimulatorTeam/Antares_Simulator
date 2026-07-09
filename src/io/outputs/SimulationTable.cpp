@@ -19,9 +19,8 @@ SimulationTable::SimulationTable()
     block_time_index_ = storage_.addOptionalColumn<unsigned int>("block_time_index");
     scenario_index_ = storage_.addIntegralColumn("scenario_index");
     value_ = storage_.addOptionalColumn<double>("value");
-    basis_status_ = storage_
-                      .addOptionalColumn<Antares::LinearProblem::Api::MipBasisStatus>(
-                        "basis_status");
+    basis_status_ = storage_.addOptionalColumn<Antares::LinearProblem::Api::MipBasisStatus>(
+      "basis_status");
 }
 
 SimulationTable::SimulationTable(SimulationTable&& other) noexcept = default;

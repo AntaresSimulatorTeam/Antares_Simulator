@@ -19,10 +19,9 @@ public:
     void add(const std::vector<double>& ts);
     void add(std::vector<double>&& ts);
     double getData(unsigned tsNumber, unsigned hour) const override;
-    [[nodiscard]] std::span<const double> getData(
-      Api::IScenario::TimeSeriesNumber tsNumber,
-      unsigned firstHour,
-      unsigned lastHour) const override;
+    [[nodiscard]] std::span<const double> getData(Api::IScenario::TimeSeriesNumber tsNumber,
+                                                  unsigned firstHour,
+                                                  unsigned lastHour) const override;
 
 private:
     unsigned height_ = 0;

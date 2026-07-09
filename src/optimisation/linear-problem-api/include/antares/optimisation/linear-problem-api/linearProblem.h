@@ -48,9 +48,7 @@ public:
     [[nodiscard]] virtual const std::vector<std::unique_ptr<IMipConstraint>>& getConstraints() const
       = 0;
     [[nodiscard]] virtual IMipConstraint* getConstraint(std::size_t index) const = 0;
-    [[nodiscard]] virtual Api::IMipConstraint* lookupConstraint(
-      const std::string& name) const
-      = 0;
+    [[nodiscard]] virtual Api::IMipConstraint* lookupConstraint(const std::string& name) const = 0;
     [[nodiscard]] virtual int constraintCount() const = 0;
 
     /// Set the objective coefficient for a given variable
