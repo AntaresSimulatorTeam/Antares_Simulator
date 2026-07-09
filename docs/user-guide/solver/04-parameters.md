@@ -462,7 +462,7 @@ _**This section is under construction**_
     - `optim-2`: export MPS for second step of the optimization
     - `both-optims` or `true`: export MPS for both steps of the optimization
 
-> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-include-exportmps-parameter).
+> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-include-exportmps-parameter).
 
 ---
 #### include-export-solutions
@@ -511,7 +511,7 @@ _**This section is under construction**_
     - `error-dry`: stop simulation
     - `error-verbose`: stop simulation, and export the MPS of the unfeasible problem
   
-> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-include-unfeasible-problem-behavior-parameter).
+> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-include-unfeasible-problem-behavior-parameter).
 
 ---
 #### linear-solver-param
@@ -627,7 +627,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `cold start`
     - `hot start`
 
-> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-initial-reservoir-levels-parameter).
+> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-initial-reservoir-levels-parameter).
 
 ---
 #### hydro-heuristic-policy
@@ -641,7 +641,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `accommodate rule curves`
     - `maximize generation`
 
-> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-hydro-heuristic-policy-parameter).
+> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-hydro-heuristic-policy-parameter).
 
 ---
 #### hydro-pricing-mode
@@ -655,7 +655,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `fast`
     - `accurate`: Note that this mode is significantly slower than the `fast` mode.
 
-> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-hydro-pricing-mode-parameter).
+> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-hydro-pricing-mode-parameter).
 
 ---
 #### power-fluctuations
@@ -704,7 +704,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `accurate`: Heuristic in which 2 LP problems are solved. Explicit modelling for the number of ON/OFF units. Slower than `fast`.
     - `milp`: A single MILP problem is solved, with explicit modelling for the number of ON/OFF units. Slower than `accurate`.
 
-> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-unit-commitment-mode-parameter).
+> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-unit-commitment-mode-parameter).
 
 ---
 #### number-of-cores-mode
@@ -730,7 +730,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `aggregated`
     - `clusters`
 
-> _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-renewable-generation-modelling-parameter).
+> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-renewable-generation-modelling-parameter).
 
 ---
 #### day-ahead-reserve-management

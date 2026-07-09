@@ -68,7 +68,6 @@ nav:
       - 'Other features':
           - 'Batch Runner': 'user-guide/other-features/batchrun.md'
           - 'Config Checker': 'user-guide/other-features/config.md'
-          - 'GUI': 'user-guide/other-features/ui-simulator.md'
           - 'Kirchhoff''s constraint generator': 'user-guide/other-features/kirchhoff-constraints-builder.md'
           - 'Study Cleaner': 'user-guide/other-features/study-cleaner.md'
           - 'Study Finder': 'user-guide/other-features/study-finder.md'
@@ -129,5 +128,10 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
+
+exclude_docs: |
+  /Architecture/
+  /Architecture_Decision_Records/
+  README.md
 
 copyright: Copyright &copy; 2007 - 2025 RTE

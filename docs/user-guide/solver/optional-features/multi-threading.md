@@ -14,12 +14,12 @@ Provided that hardware resources are large enough, this mode may reduce signific
 
 To benefit from multi-threading, the simulation must be run in the following context:
 
-- The [parallel](../02-command-line.md#simulation) option must be enabled (it is disabled by default)
-- The simulation [mode](../static-modeler/04-parameters.md#mode) must be either `Adequacy` or `Economy`
+- The [parallel](../10-command-line.md#simulation) option must be enabled (it is disabled by default)
+- The simulation [mode](../04-parameters.md#mode) must be either `Adequacy` or `Economy`
 
 When the "parallel" solver option is used, each Monte-Carlo year is dispatched in an individual process on the available CPU cores.
 The number of such individual processes depends on the characteristics of the local hardware and on the value given to
-the study-dependent [number-of-cores-mode](../static-modeler/04-parameters.md#number-of-cores-mode) advanced parameter.
+the study-dependent [number-of-cores-mode](../04-parameters.md#number-of-cores-mode) advanced parameter.
 This parameter can take five different values (Minimum, Low, Medium, High, Maximum).
 The number of independent processes resulting from the combination (local hardware + study settings) is given in the
 following table, which shows the CPU allowances granted in the different configurations.
@@ -68,8 +68,3 @@ Starting from 9.2 we changed the formula for the number of cores to simplify. He
 -|         _12_          |     1     |     3     |     6     |     9      |    11     |
 -|      _S &gt; 12_      |     1     | Ceil(S/4) | Ceil(S/2) | Ceil(3S/4) |    S-1    |
 
-
-[^23]: When the number of MC years to run is smaller than the allowance, the parallel run includes all of these years in a single bundle and there is no "reduced allowance" message
-
-[^24]:
-The smallest bundle in this case is the ninth (year number 97 to year number 100).The first 8 bundles involve 12 MC years each.

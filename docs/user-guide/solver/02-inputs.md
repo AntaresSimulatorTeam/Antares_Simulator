@@ -298,7 +298,7 @@ a choice can be made between different tabs:
   - Generate TS: Parameter to specify the behavior of this cluster for TS generation. **This cluster-wise parameter takes priority over the study-wide one.** It can hold three values:
     - Force generation: TS for this cluster will be generated
     - Force no generation: TS for this cluster will not be generated
-    - Use global parameter: Will use the parameter for the study (the one in the [Simulation Window](#simulation)).
+    - Use global parameter: Will use the parameter for the study.
   - Fixed cost (No-Load heat cost) (€ / hour of operation )
   - Start-up cost (€/start-up)
   - Market bid (€/MWh)

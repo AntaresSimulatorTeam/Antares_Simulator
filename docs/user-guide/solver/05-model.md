@@ -465,7 +465,7 @@ Besides, in the expression of constraints , all occurrences of are replaced by $
 ### Loop flow
 In Antares Simulator, a loop flow is an fixed amount of power flowing circularly through the grid when all "nodes" are perfectly balanced (no import and no export).
 For a given link, user can ask to include the related passive loop flow.
-For details on including loop flow, see [Links](02-inputs.md#lnks)).
+For details on including loop flow, see [Links](02-inputs.md#links)).
 
 When loop flow is not included for link $l$, relations between $F\_l$, $F\_l^+$ and $F\_l^-$ are given in [Balance between load and generation](#balance-between-load-and-generation).
 
@@ -609,17 +609,7 @@ costs that can be defined through the user interface (CLB – cost lower bound :
 
 [^3]: See «hydro» sections of the General User guide ("hydro" standing as a generic name for all types of energy storage facilities)
 
-Copyright © RTE 2007-2023 – Version 8.6.0
-
-Last Rev : M. Doquet - 25 JAN 2023
-
-[^10]: Contraints 10(a) are not implemented if the "heuristic" mode is used without any leeway and if there are no pumping capacities. <br> Contraints 10(b) are implemented if the "heuristic" mode is used without any leeway. <br> Contraints 10(c) are implemented if there are pumping capacities.
-
 [^12]: Contraints 12(a) are implemented only if the "heuristic" mode is used. <br> Contraints 12(b) are implemented only if the "power fluctuations" option is set to "minimize ramping". <br> Contraints 12(c) are implemented only if the "power fluctuations" option is set to "minimize excursion".
-
-[^14]: Constraints 14(a) are not implemented if the "heuristic" mode is used without any leeway and if there are no pumping capacities. <br> Constraints 14(b) and 14(c) are implemented only if the option "hydro pricing mode" is set to "accurate".
-
-[^14a]: In the equation attached to the first time slot t, $R_{\lambda_{t-1}}$ is not a variable but a parameter (reservoir initial level)
 
 [^8]: The constraints implemented depend on the option selected for unit commitment. In "fast" mode, implementation is restricted to (16), whereas "accurate" mode involved modelling of constraints (16) to (23). Note that in both cases, a heuristic stage takes place between the "uplifted" and "nominal" optimization runs to deal with integrity issues.
 

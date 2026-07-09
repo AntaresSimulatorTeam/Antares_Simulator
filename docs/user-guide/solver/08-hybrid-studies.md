@@ -97,7 +97,7 @@ expression contributing to a constraint of the linear problem.
 The nature of this contribution depends on the field : 
 
   - **injection-to-balance**: the linear expression is injected in the balance constraint of the area.
-	This is done with respect to a convention (see next [Optimization model](#optimization-model)).
+	This is done with respect to a convention.
 	
   - **spillage-bound**: the linear expression is added to the sum of all variables or linear expressions already used 
     to bound the spillage in the constraint called "fictitious load".
@@ -334,4 +334,4 @@ For more details why we adpot these conventions, please read [this article](http
 ## Troubleshooting
 
 ### Your model does not behave as expected
-Check that your model respects the internal optimization model's injection [convention](#optimization-model).
+Check that your model respects the internal optimization model's injection convention.
