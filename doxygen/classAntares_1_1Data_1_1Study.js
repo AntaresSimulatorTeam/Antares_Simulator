@@ -57,6 +57,7 @@ var classAntares_1_1Data_1_1Study =
     [ "preproSolarCorrelation", "classAntares_1_1Data_1_1Study.html#aaf996a639ab75c54a0c7fea79690904c", null ],
     [ "preproWindCorrelation", "classAntares_1_1Data_1_1Study.html#afa7b3fa15d4d5328f0ff2a887032f3fb", null ],
     [ "pStartTime", "classAntares_1_1Data_1_1Study.html#a88ebb1f45ea6a296e131f3a096b6f6c5", null ],
+    [ "reserveMaps", "classAntares_1_1Data_1_1Study.html#a975d5c35ea67a5fa7476ec3808d131aa", null ],
     [ "runtime", "classAntares_1_1Data_1_1Study.html#acb39944d58dae61bef9ae4ab12d8a3f5", null ],
     [ "scenarioFinalHydroLevels", "classAntares_1_1Data_1_1Study.html#a94f8d690266d4a8f119289260fd9144f", null ],
     [ "scenarioInitialHydroLevels", "classAntares_1_1Data_1_1Study.html#aa42db178e46759ddcfe6e052a4fda2a0", null ],

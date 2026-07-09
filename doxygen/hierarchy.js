@@ -71,6 +71,7 @@ var hierarchy =
       [ "Antares::Solver::WindAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1WindAreaNumberOfTSretriever.html", null ]
     ] ],
     [ "Antares::HydroErrorsCollector::AreaReference", "classAntares_1_1HydroErrorsCollector_1_1AreaReference.html", null ],
+    [ "Antares::Solver::Simulation::ReserveIndexMaps::AreaReserveIndexMap", "structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps_1_1AreaReserveIndexMap.html", null ],
     [ "Antares::Solver::Variable::Areas< VariableList >", "classAntares_1_1Solver_1_1Variable_1_1Areas.html", null ],
     [ "Antares::Data::AreaScratchpad", "classAntares_1_1Data_1_1AreaScratchpad.html", null ],
     [ "Antares::Expressions::Nodes::AST", "classAntares_1_1Expressions_1_1Nodes_1_1AST.html", null ],
@@ -1178,7 +1179,7 @@ var hierarchy =
     [ "RESERVE_PARTICIPATION_WITH_RESERVE_NAME< T >", "structRESERVE__PARTICIPATION__WITH__RESERVE__NAME.html", null ],
     [ "Antares::Solver::Variable::State::ReserveData", "structAntares_1_1Solver_1_1Variable_1_1State_1_1ReserveData.html", null ],
     [ "ReserveData", "structReserveData.html", null ],
-    [ "Antares::Data::StudyRuntimeInfos::ReserveIndexMap", "structAntares_1_1Data_1_1StudyRuntimeInfos_1_1ReserveIndexMap.html", null ],
+    [ "Antares::Solver::Simulation::ReserveIndexMaps", "structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps.html", null ],
     [ "Antares::Data::ReserveParticipationBase", "structAntares_1_1Data_1_1ReserveParticipationBase.html", [
       [ "Antares::Data::StorageClusterReserveParticipation", "structAntares_1_1Data_1_1StorageClusterReserveParticipation.html", null ],
       [ "Antares::Data::ThermalClusterReserveParticipation", "structAntares_1_1Data_1_1ThermalClusterReserveParticipation.html", null ]

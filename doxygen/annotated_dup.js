@@ -490,6 +490,7 @@ var annotated_dup =
           [ "StorageListSort", "classAntares_1_1Solver_1_1Simulation_1_1StorageListSort.html", "classAntares_1_1Solver_1_1Simulation_1_1StorageListSort" ],
           [ "StorageForRemixNoLevels", "classAntares_1_1Solver_1_1Simulation_1_1StorageForRemixNoLevels.html", "classAntares_1_1Solver_1_1Simulation_1_1StorageForRemixNoLevels" ],
           [ "StorageForRemixWithLevels", "classAntares_1_1Solver_1_1Simulation_1_1StorageForRemixWithLevels.html", "classAntares_1_1Solver_1_1Simulation_1_1StorageForRemixWithLevels" ],
+          [ "ReserveIndexMaps", "structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps.html", "structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps" ],
           [ "yearJob", "classAntares_1_1Solver_1_1Simulation_1_1yearJob.html", "classAntares_1_1Solver_1_1Simulation_1_1yearJob" ],
           [ "ISimulation", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation" ],
           [ "setOfParallelYears", "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html", "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears" ],

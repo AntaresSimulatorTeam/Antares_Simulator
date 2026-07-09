@@ -1,13 +1,9 @@
 var classAntares_1_1Data_1_1StudyRuntimeInfos =
 [
     [ "Counts", "structAntares_1_1Data_1_1StudyRuntimeInfos_1_1Counts.html", "structAntares_1_1Data_1_1StudyRuntimeInfos_1_1Counts" ],
-    [ "ReserveIndexMap", "structAntares_1_1Data_1_1StudyRuntimeInfos_1_1ReserveIndexMap.html", "structAntares_1_1Data_1_1StudyRuntimeInfos_1_1ReserveIndexMap" ],
-    [ "ReserveID", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#ac58d5150bc9b05c17082f8aa542521be", null ],
-    [ "ReserveName", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a922bbd7980805d2cbd02b82fb54a5759", null ],
     [ "StudyRuntimeInfos", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#af1f6117511f38d9392284eddb2005989", null ],
     [ "~StudyRuntimeInfos", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#ac0abd4cba8aa233c5057aea91d5aec24", null ],
     [ "initializeRandomNumberGenerators", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#aacc2750e79b6547eed327099a892ddeb", null ],
-    [ "initializeReservesIndexMaps", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a49ef233e646fb21780208da5b0468f04", null ],
     [ "interconnectionsCount", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#ab4d318ce6ad6362387f96e6d71d44fa1", null ],
     [ "loadFromStudy", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a54efdc144f837bfda2010785d3751a1c", null ],
     [ "areaLink", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a4f469a0171c62a239b36529b78a171a1", null ],
@@ -17,8 +13,6 @@ var classAntares_1_1Data_1_1StudyRuntimeInfos =
     [ "quadraticOptimizationHasFailed", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a0a53bd4cf37a20a44e2db60badb91c3d", null ],
     [ "random", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a823b3b90b5b1c12dccbfdabbfde03d1e", null ],
     [ "rangeLimits", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a36b313472b05b5476d364fe767a9f6eb", null ],
-    [ "reserveIDToName", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#ada020fe4fca95b099eae8463829cd4da", null ],
-    [ "reserveParticipationIndexMaps", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a46cdb9e120b379059c3eaca99996c68a", null ],
     [ "simulationDaysPerMonth", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a6290bc3235ea00ff7855432ea88e8d8a", null ],
     [ "simulationDaysPerWeek", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a92ba0809695d5c1dcb83ad622039d515", null ],
     [ "thermalTSRefresh", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a168022ca9dc58de1f91001cb54c96887", null ],

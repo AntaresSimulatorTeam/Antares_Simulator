@@ -389,6 +389,8 @@ std::unique_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_
 <tr class="memitem:acb39944d58dae61bef9ae4ab12d8a3f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Data_1_1StudyRuntimeInfos.html">StudyRuntimeInfos</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#acb39944d58dae61bef9ae4ab12d8a3f5">runtime</a></td></tr>
 <tr class="memdesc:acb39944d58dae61bef9ae4ab12d8a3f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runtime informations.  <a href="classAntares_1_1Data_1_1Study.html#acb39944d58dae61bef9ae4ab12d8a3f5">More...</a><br /></td></tr>
 <tr class="separator:acb39944d58dae61bef9ae4ab12d8a3f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a975d5c35ea67a5fa7476ec3808d131aa"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps.html">Solver::Simulation::ReserveIndexMaps</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#a975d5c35ea67a5fa7476ec3808d131aa">reserveMaps</a></td></tr>
+<tr class="separator:a975d5c35ea67a5fa7476ec3808d131aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05e9fea00b649e34465951809f6ecb85"><td class="memItemLeft" align="right" valign="top"><a id="a05e9fea00b649e34465951809f6ecb85"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#a05e9fea00b649e34465951809f6ecb85">scenarioRulesLoadIfNotAvailable</a> ()</td></tr>
 <tr class="memdesc:a05e9fea00b649e34465951809f6ecb85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the data related to the scenario builder if not available. <br /></td></tr>
@@ -800,6 +802,21 @@ template&lt;TimeSeriesType TimeSeriesT&gt; </div>
 
 <p>Mark the whole study as modified. </p>
 <p>A buffer for temporary operations on large amount of data </p>
+
+</div>
+</div>
+<a id="a975d5c35ea67a5fa7476ec3808d131aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a975d5c35ea67a5fa7476ec3808d131aa">&#9670;&nbsp;</a></span>reserveMaps</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps.html">Solver::Simulation::ReserveIndexMaps</a>&gt; Antares::Data::Study::reserveMaps</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Lookup tables mapping reserves to their solver-side participation indices. Owned by the solver (opaque handle), populated once the weekly problem is built. </p>
 
 </div>
 </div>
