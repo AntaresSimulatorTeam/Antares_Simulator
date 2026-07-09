@@ -157,10 +157,18 @@ Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
     }
     catch (InputError& e)
     {
-        throw InputError(fmt::format("in file {} : Error while converting expression '{}': {}",
-                                     fileAndLineNb,
-                                     exprStr,
-                                     e.what()));
+        if (fileAndLineNb.empty())
+        {
+            throw InputError(
+              fmt::format("Error while converting expression '{}': {}", exprStr, e.what()));
+        }
+        else
+        {
+            throw InputError(fmt::format("in {} : Error while converting expression '{}': {}",
+                                         fileAndLineNb,
+                                         exprStr,
+                                         e.what()));
+        }
     }
     return Expressions::NodeRegistry(root, std::move(registry));
 }

@@ -23,13 +23,15 @@ using namespace Antares::IO::Inputs::ForbidNodes;
 
 namespace
 {
+
+/// used for error reporting
 std::string buildFileAndLineNb(const std::string& filename, size_t lineNb)
 {
     if (lineNb == 0)
     {
         return {};
     }
-    return fmt::format("'{}', line {}", filename, std::to_string(lineNb));
+    return fmt::format("'{}', line {}", filename, lineNb);
 }
 } // anonymous namespace
 
@@ -153,7 +155,8 @@ ValueType convertType(YmlModel::ValueType type)
  * \param model The YmlModel::Model object containing variables.
  * \return A vector of SystemModel::Variable objects.
  */
-std::vector<Variable> convertVariables(const YmlModel::Model& model)
+std::vector<Variable> convertVariables(const YmlModel::Model& model,
+                                       const std::string& libraryFileName)
 {
     std::vector<Variable> variables;
     variables.reserve(model.variables.size());
@@ -163,7 +166,7 @@ std::vector<Variable> convertVariables(const YmlModel::Model& model)
         Expression lb(variable.lower_bound,
                       convertExpressionToNode(variable.lower_bound,
                                               model,
-                                              buildFileAndLineNb(model.filename,
+                                              buildFileAndLineNb(libraryFileName,
                                                                  variable.lower_bound_lineNb)));
         if (lb.RootNode())
         {
@@ -173,7 +176,7 @@ std::vector<Variable> convertVariables(const YmlModel::Model& model)
         Expression ub(variable.upper_bound,
                       convertExpressionToNode(variable.upper_bound,
                                               model,
-                                              buildFileAndLineNb(model.filename,
+                                              buildFileAndLineNb(libraryFileName,
                                                                  variable.upper_bound_lineNb)));
         if (ub.RootNode())
         {
@@ -223,7 +226,8 @@ std::vector<Port> convertPorts(const YmlModel::Model& model, const std::vector<P
  * \return A vector of SystemModel::PortFieldDefinition objects.
  */
 std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Model& model,
-                                                             std::vector<Port>& ports)
+                                                             std::vector<Port>& ports,
+                                                             const std::string& libraryFileName)
 {
     std::vector<PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.reserve(model.port_field_definitions.size());
@@ -252,7 +256,7 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
         auto nodeRegistry = convertExpressionToNode(
           pfdefinition.definition,
           model,
-          buildFileAndLineNb(model.filename, pfdefinition.expressionLineNb));
+          buildFileAndLineNb(libraryFileName, pfdefinition.expressionLineNb));
 
         using namespace Antares::Expressions::Nodes;
         AST preorder(nodeRegistry.node);
@@ -284,11 +288,12 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
 static Constraint createConstraint(const YmlModel::Constraint& constraint,
                                    const YmlModel::Model& model,
                                    const ForbiddenNodes& forbiddenNodes,
+                                   const std::string& libraryFileName,
                                    bool isBindingConstraint = false)
 {
     auto nodeRegistry = convertExpressionToNode(constraint.expression,
                                                 model,
-                                                buildFileAndLineNb(model.filename,
+                                                buildFileAndLineNb(libraryFileName,
                                                                    constraint.expressionLineNb));
     ForbiddenNodesVisitor(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
     return {constraint.id,
@@ -304,20 +309,22 @@ static Constraint createConstraint(const YmlModel::Constraint& constraint,
  * \param model The YmlModel::Model object containing constraints.
  * \return A vector of SystemModel::Constraint objects.
  */
-std::vector<Constraint> convertConstraints(const YmlModel::Model& model)
+std::vector<Constraint> convertConstraints(const YmlModel::Model& model,
+                                           const std::string& libraryFileName)
 {
     std::vector<Constraint> constraints;
     constraints.reserve(model.constraints.size());
 
     for (const auto& constraint: model.constraints)
     {
-        constraints.push_back(createConstraint(constraint, model, forbiddenInConstraint));
+        constraints.push_back(
+          createConstraint(constraint, model, forbiddenInConstraint, libraryFileName));
     }
 
     for (const auto& constraint: model.binding_constraints)
     {
         constraints.push_back(
-          createConstraint(constraint, model, forbiddenInBindingConstraint, true));
+          createConstraint(constraint, model, forbiddenInBindingConstraint, libraryFileName, true));
     }
     return constraints;
 }
@@ -328,7 +335,8 @@ std::vector<Constraint> convertConstraints(const YmlModel::Model& model)
  * \param model The YmlModel::Model object containing extra outputs.
  * \return A vector of SystemModel::ExtraOutput objects.
  */
-std::vector<ExtraOutput> convertExtraOutputs(const YmlModel::Model& model)
+std::vector<ExtraOutput> convertExtraOutputs(const YmlModel::Model& model,
+                                             const std::string& libraryFileName)
 {
     std::vector<ExtraOutput> extraOutputs;
     extraOutputs.reserve(model.extra_outputs.size());
@@ -338,7 +346,7 @@ std::vector<ExtraOutput> convertExtraOutputs(const YmlModel::Model& model)
         auto nodeRegistry = convertExpressionToNode(
           extraOutput.expression,
           model,
-          buildFileAndLineNb(model.filename, extraOutput.expressionLineNb));
+          buildFileAndLineNb(libraryFileName, extraOutput.expressionLineNb));
         ForbiddenNodesVisitor(forbiddenInExtraOutput, extraOutput.expression)
           .dispatch(nodeRegistry.node);
         extraOutputs.emplace_back(extraOutput.id,
@@ -353,7 +361,8 @@ std::vector<ExtraOutput> convertExtraOutputs(const YmlModel::Model& model)
  * \param model The YmlModel::Model object containing objectives.
  * \return A vector of SystemModel::Expression objects.
  */
-std::vector<Objective> convertObjectives(const YmlModel::Model& model)
+std::vector<Objective> convertObjectives(const YmlModel::Model& model,
+                                         const std::string& libraryFileName)
 {
     std::vector<Objective> objectives;
     objectives.reserve(model.objectives.size());
@@ -361,7 +370,7 @@ std::vector<Objective> convertObjectives(const YmlModel::Model& model)
     {
         auto nodeRegistry = convertExpressionToNode(objective.expression,
                                                     model,
-                                                    buildFileAndLineNb(model.filename,
+                                                    buildFileAndLineNb(libraryFileName,
                                                                        objective.expressionLineNb));
         ForbiddenNodesVisitor(forbiddenInObjective, objective.expression)
           .dispatch(nodeRegistry.node);
@@ -383,18 +392,17 @@ std::vector<Model> convertModels(const YmlModel::Library& library,
 {
     std::vector<Model> models;
     models.reserve(library.models.size());
-    for (auto model: library.models)
+    for (const auto& model: library.models)
     {
-        model.filename = library.filename;
         ModelBuilder modelBuilder;
         std::vector<Parameter> parameters = convertParameters(model);
-        std::vector<Variable> variables = convertVariables(model);
+        std::vector<Variable> variables = convertVariables(model, library.filename);
         std::vector<Port> ports = convertPorts(model, portTypes);
-        std::vector<PortFieldDefinition> portFieldDefinitions = convertPortFieldDefinitions(model,
-                                                                                            ports);
-        std::vector<Constraint> constraints = convertConstraints(model);
-        std::vector<ExtraOutput> extraOutputs = convertExtraOutputs(model);
-        std::vector<Objective> objectives = convertObjectives(model);
+        std::vector<PortFieldDefinition>
+          portFieldDefinitions = convertPortFieldDefinitions(model, ports, library.filename);
+        std::vector<Constraint> constraints = convertConstraints(model, library.filename);
+        std::vector<ExtraOutput> extraOutputs = convertExtraOutputs(model, library.filename);
+        std::vector<Objective> objectives = convertObjectives(model, library.filename);
 
         auto modelObj = modelBuilder.withId(model.id)
                           .withObjectives(std::move(objectives))
