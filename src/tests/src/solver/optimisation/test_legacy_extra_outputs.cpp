@@ -232,7 +232,19 @@ struct Fixture
         }
         problem.NumeroDeContrainteExpressionStockFinal = {nbPdt * constraintsPerHour, 0, 0};
         solved.CoutsMarginauxDesContraintes.push_back(42.);
-        solved.NombreDeVariables = nbPdt * variablesPerHour;
+
+        // Two weekly LayerStorage variables for area1 (accurate water value),
+        // appended after the hourly variables: X 500 / 250, cost -20 / -10
+        // (the construction site writes -WaterLayerValues as the coefficient).
+        const int firstLayerVariable = nbPdt * variablesPerHour;
+        problem.NumeroDeVariableDeTrancheDeStock = {
+          {firstLayerVariable, firstLayerVariable + 1},
+          {},
+          {}};
+        solved.X.insert(solved.X.end(), {500., 250.});
+        solved.CoutLineaire.insert(solved.CoutLineaire.end(), {-20., -10.});
+
+        solved.NombreDeVariables = nbPdt * variablesPerHour + 2;
         solved.NombreDeContraintes = nbPdt * constraintsPerHour + 1;
     }
 
@@ -520,6 +532,27 @@ BOOST_AUTO_TEST_CASE(hydro_shadow_price_is_skipped_without_accurate_water_value)
     BOOST_CHECK(RowsForOutput(table, "hydro_shadow_price").empty());
 }
 
+BOOST_AUTO_TEST_CASE(bellman_value_sums_the_layer_costs_times_layer_storages)
+{
+    fill();
+
+    const auto rows = RowsForOutput(table, "bellman_value");
+    BOOST_REQUIRE_EQUAL(rows.size(), 1);
+    BOOST_CHECK_EQUAL(rows[0].component, "area1");
+    // -20 * 500 + -10 * 250, the objective coefficients being -WaterLayerValues.
+    BOOST_CHECK_EQUAL(rows[0].value, -12500.);
+    // Anchored on the last hour of the interval, like hydro_shadow_price.
+    BOOST_CHECK_EQUAL(rows[0].absoluteTimeIndex, "168");
+}
+
+BOOST_AUTO_TEST_CASE(bellman_value_is_skipped_without_accurate_water_value)
+{
+    problem.CaracteristiquesHydrauliques[0].AccurateWaterValue = false;
+    fill();
+
+    BOOST_CHECK(RowsForOutput(table, "bellman_value").empty());
+}
+
 BOOST_AUTO_TEST_CASE(storage_profit_is_net_withdrawal_times_area_price)
 {
     fill();
@@ -692,8 +725,8 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
     //        capacity_shadow_price) = 9; link 1 without the hurdle-cost
     //        outputs = 7                                          = 16
     // Short-term storage: battery1's profit                       = 1
-    // Weekly: hydro_shadow_price (area1)                          = 1
-    BOOST_CHECK_EQUAL(table.rowCount(), 20 + 21 + 16 + 1 + 1);
+    // Weekly: area1's hydro_shadow_price and bellman_value        = 2
+    BOOST_CHECK_EQUAL(table.rowCount(), 20 + 21 + 16 + 1 + 2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

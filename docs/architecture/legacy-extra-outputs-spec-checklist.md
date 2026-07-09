@@ -135,19 +135,19 @@ limitation as `price`).
 
 ---
 
-## 2.4.2.8 — Model: hydro  🟨 mostly done (bellman_value left)
+## 2.4.2.8 — Model: hydro  ✅ complete
 
 | Done | Output | Formula | Anchor / Design |
 |------|--------|---------|-----------------|
 | [x] | `level_percentage` | `level / reservoir_capacity · 100` | `HydroLevel` (capacity in context) |
 | [x] | `actual_inflows` | `round(inflows)` | `HydroLevel` (inflows in context) |
 | [x] | `hydro_shadow_price` | `dual(FinalStockExpression)` | `FinalStockExpression` constraint |
-| [ ] | `bellman_value` | `sum(cost_layer · LayerStorage)` | **Per-area layer aggregation** (D) |
+| [x] | `bellman_value` | `sum(cost_layer · LayerStorage)` | `LayerStorage` variables of the area (weekly, accurate water value only) |
 
-`LayerStorage` variables are recorded with the layer index as component and are now
-area-qualified (`info.area`); `cost_layer` is their objective coefficient
-(`CoutLineaire`). The row is per area, so the layers of one area must be summed and
-emitted once on the area (D).
+`bellman_value` sums `CoutLineaire · X` over the area's `LayerStorage` variables
+(the coefficient is `-WaterLayerValues[layer]`, written by the cost-assignment
+site) and is emitted once per area on the interval's last hour, like
+`hydro_shadow_price`.
 
 ---
 
@@ -182,7 +182,7 @@ endpoints' `*_port.price`.
 | load | 1 / 1 | — |
 | link | 9 / 9 | — |
 | short_term_storage | 1 / 1 | — |
-| hydro | 3 / 4 | bellman_value |
+| hydro | 4 / 4 | — |
 | ports (2.5) | 0 / 9 | all |
 
 ---
@@ -209,10 +209,10 @@ conventions (`{area}_wind/_solar/_run_of_river`, the misc-gen table). Unlocks
 **renewable** + **misc_gen** `generation_power` / `minus_generation`, and their
 `balance_port.flow` fields.
 
-### (C) Per-area layer aggregation
-Accumulate `cost_layer · LayerStorage` across the `LayerStorage` variables of one
-area (`vm.LayerStorage(pays, layer)`) and emit a single per-area row. Unlocks
-**bellman_value**.
+### (C) Per-area layer aggregation — ✅ done
+`cost_layer · LayerStorage` is accumulated across the `LayerStorage` variables of
+one area (`vm.LayerStorage(pays, layer)`) and emitted as a single per-area
+**bellman_value** row in `weeklyHydroOutputs`.
 
 ### (D) Port-field emission layer (§2.5)
 A hard-coded table of `port.field → expression` emitted into the ST, reusing
@@ -227,6 +227,6 @@ provide directly.
 ## Suggested order
 
 1. ~~**(A) STS outputs** → STS profit; one more entity loop.~~ done
-2. **(C) Per-area layer aggregation** → bellman_value; self-contained.
+2. ~~**(C) Per-area layer aggregation** → bellman_value; self-contained.~~ done
 3. **(B) Anchorless emission path** → renewable + misc_gen; distinct loop.
 4. **(D) Port fields** → §2.5; mostly reuses prior values.

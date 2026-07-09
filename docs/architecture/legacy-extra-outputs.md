@@ -16,7 +16,7 @@ for pdt in [0, NombreDePasDeTempsPourUneOptimisation):
     for each area:            areaOutputs(pays, pdt)
     for each thermal cluster: thermalOutputs(pays, index, pdt)
     for each link:            linkOutputs(interco, pdt)
-for each area:                weeklyHydroOutputs(pays)   # hydro_shadow_price
+for each area:                weeklyHydroOutputs(pays)   # hydro_shadow_price, bellman_value
 ```
 
 Three sources cover every formula:
@@ -59,6 +59,7 @@ Emitters skip outputs whose anchor does not exist, mirroring the construction si
 | `level_percentage` | area | `X[ih] / TailleReservoir × 100` | skipped when the capacity is non-positive |
 | `actual_inflows` | area | `round(ApportNaturelHoraire[pdt])` | only areas with a managed reservoir |
 | `hydro_shadow_price` | area | `dual(FinalStockExpression)` | weekly, accurate water value mode only |
+| `bellman_value` | area | `Σ_layer CoutLineaire[il] × X[il]` | `il = vm.LayerStorage(pays, layer)`; weekly, accurate water value mode only |
 | `profit` | storage | `floor((X[iw] − X[ii]) × price + 0.5)` | `iw/ii = vm.ShortTermStorageWithdrawal/Injection(clusterGlobalIndex)`; price = balance dual of the storage's area |
 | `abs_flow` | link | `abs(X[idf])` | `idf = vm.DirectFlow` (signed) |
 | `minus_flow` | link | `−X[idf]` | GEMS sign convention |

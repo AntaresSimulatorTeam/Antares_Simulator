@@ -67,7 +67,7 @@ public:
     void linkOutputs(uint32_t interco, int pdt);
     void thermalOutputs(uint32_t pays, int index, int pdt);
     void shortTermStorageOutputs(uint32_t pays, int pdt);
-    void weeklyHydroOutputs(uint32_t pays) const;
+    void weeklyHydroOutputs(uint32_t pays);
 
 private:
     void emit(const std::string& output, const std::string& component, int pdt, double value) const;
@@ -287,7 +287,7 @@ void LegacyExtraOutputEmitter::shortTermStorageOutputs(uint32_t pays, int pdt)
     }
 }
 
-void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays) const
+void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays)
 {
     if (!problemeHebdo_.CaracteristiquesHydrauliques[pays].AccurateWaterValue)
     {
@@ -298,6 +298,15 @@ void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays) const
          problemeHebdo_.NomsDesPays[pays],
          pdt,
          dual(problemeHebdo_.NumeroDeContrainteExpressionStockFinal[pays]));
+
+    const std::size_t layerCount = problemeHebdo_.NumeroDeVariableDeTrancheDeStock[pays].size();
+    double bellmanValue = 0.;
+    for (std::size_t layer = 0; layer < layerCount; ++layer)
+    {
+        const int layerStorage = variableManager_.LayerStorage(pays, layer);
+        bellmanValue += cost(layerStorage) * x(layerStorage);
+    }
+    emit("bellman_value", problemeHebdo_.NomsDesPays[pays], pdt, bellmanValue);
 }
 
 } // namespace
