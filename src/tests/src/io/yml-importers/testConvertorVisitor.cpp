@@ -55,8 +55,8 @@ BOOST_AUTO_TEST_CASE(identifier)
                           .description = "description",
                           .parameters = {{"param1", true, false}, {"param2", false, false}},
                           .variables = {{"varP",
-                                         "7",
-                                         "pmin",
+                                          YmlModel::ExpressionLineNumber{"7", 0},
+                                          YmlModel::ExpressionLineNumber{"pmin", 0},
                                          YmlModel::ValueType::CONTINUOUS,
                                          false,
                                          false,
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(identifier)
                           .port_field_definitions = {},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .objectives = {{"objective-id", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml"}},
                           .extra_outputs = {},
                           .filename = ""};
 
@@ -85,8 +85,8 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
                           .description = "description",
                           .parameters = {{"param1", true, false}, {"param2", false, false}},
                           .variables = {{"varP",
-                                         "7",
-                                         "pmin",
+                                          YmlModel::ExpressionLineNumber{"7", 0},
+                                          YmlModel::ExpressionLineNumber{"pmin", 0},
                                          YmlModel::ValueType::CONTINUOUS,
                                          false,
                                          false,
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
                           .port_field_definitions = {},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .objectives = {{"objective-id", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml"}},
                           .extra_outputs = {},
                           .filename = ""};
 
@@ -205,10 +205,10 @@ BOOST_AUTO_TEST_CASE(portfield)
                           .parameters = {},
                           .variables = {},
                           .ports = {{.id = "port1", .type = "blue"}},
-                          .port_field_definitions = {{"port1", "field1", "", 0}},
+                          .port_field_definitions = {{"port1", "field1", YmlModel::ExpressionLineNumber{"", 0}}},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .objectives = {{"objective-id", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml"}},
                           .extra_outputs = {},
                           .filename = ""};
     std::string expression = "port1.field1";
@@ -227,10 +227,10 @@ BOOST_AUTO_TEST_CASE(portfieldSum)
                           .parameters = {},
                           .variables = {},
                           .ports = {{.id = "port1", .type = "blue"}},
-                          .port_field_definitions = {{"port1", "field1", "", 0}},
+                          .port_field_definitions = {{"port1", "field1", YmlModel::ExpressionLineNumber{"", 0}}},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .objectives = {{"objective-id", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml"}},
                           .extra_outputs = {},
                           .filename = ""};
 
@@ -253,8 +253,8 @@ YmlModel::Model createYmlModel()
                           .description = "description",
                           .parameters = {{"param1", true, false}, {"param2", false, false}},
                           .variables = {{"varP",
-                                         "7",
-                                         "pmin",
+                                          YmlModel::ExpressionLineNumber{"7", 0},
+                                          YmlModel::ExpressionLineNumber{"pmin", 0},
                                          YmlModel::ValueType::CONTINUOUS,
                                          false,
                                          false,
@@ -263,7 +263,7 @@ YmlModel::Model createYmlModel()
                           .port_field_definitions = {},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .objectives = {{"objective-id", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml"}},
                           .extra_outputs = {},
                           .filename = ""};
 
@@ -426,9 +426,9 @@ struct SupplyModelForDualOperator
                           .variables = {},
                           .ports = {},
                           .port_field_definitions = {},
-                          .constraints = {{"constraintA", "", "test.yaml", ""}},
-                          .binding_constraints = {{"constraintB", "", "test.yaml", ""}},
-                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .constraints = {{"constraintA", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml", ""}},
+                          .binding_constraints = {{"constraintB", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml", ""}},
+                          .objectives = {{"objective-id", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml"}},
                           .extra_outputs = {},
                           .filename = ""};
 };
@@ -484,15 +484,15 @@ struct SupplyModelForFunctionalOperator
                           .description = "description",
                           .parameters = {{"pmin", true, false}},
                           .variables = {{"varA",
-                                         "7",
-                                         "pmin",
+                                          YmlModel::ExpressionLineNumber{"7", 0},
+                                          YmlModel::ExpressionLineNumber{"pmin", 0},
                                          YmlModel::ValueType::CONTINUOUS,
                                          false,
                                          false,
                                          "test.yaml"},
                                         {"varB",
-                                         "7",
-                                         "pmin",
+                                          YmlModel::ExpressionLineNumber{"7", 0},
+                                          YmlModel::ExpressionLineNumber{"pmin", 0},
                                          YmlModel::ValueType::CONTINUOUS,
                                          false,
                                          false,
@@ -501,7 +501,7 @@ struct SupplyModelForFunctionalOperator
                           .port_field_definitions = {},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .objectives = {{"objective-id", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml"}},
                           .extra_outputs = {},
                           .filename = ""};
 

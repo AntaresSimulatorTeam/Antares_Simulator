@@ -41,18 +41,23 @@ inline std::string toString(const ValueType& value_type)
     }
 }
 
+struct ExpressionLineNumber
+{
+    std::string input_expr;
+    
+    /// used for error reporting only
+    size_t line_number;
+};
+
 struct Variable
 {
     std::string id;
-    std::string lower_bound;
-    std::string upper_bound;
+    ExpressionLineNumber lower_bound;
+    ExpressionLineNumber upper_bound;
     ValueType variable_type;
     bool time_dependent;
     bool scenario_dependent;
     std::string location;
-
-    size_t lower_bound_lineNb = 0;
-    size_t upper_bound_lineNb = 0;
 };
 
 struct Port
@@ -65,40 +70,28 @@ struct PortFieldDefinition
 {
     std::string port;
     std::string field;
-    std::string definition;
-
-    /// used for error reporting only
-    size_t expressionLineNb = 0;
+    ExpressionLineNumber definition;
 };
 
 struct Constraint
 {
     std::string id;
-    std::string expression;
+    ExpressionLineNumber expression;
     std::string location;
     std::string out_of_bounds_processing_mode;
-
-    /// used for error reporting only
-    size_t expressionLineNb = 0;
 };
 
 struct ExtraOutput
 {
     std::string id;
-    std::string expression;
-
-    /// used for error reporting only
-    size_t expressionLineNb = 0;
+    ExpressionLineNumber expression;
 };
 
 struct Objective
 {
     std::string id;
-    std::string expression;
+    ExpressionLineNumber expression;
     std::string location;
-
-    /// used for error reporting only
-    size_t expressionLineNb = 0;
 };
 
 struct Model
