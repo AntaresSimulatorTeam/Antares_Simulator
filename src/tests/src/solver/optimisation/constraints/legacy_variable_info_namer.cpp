@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE(hydro_level_records_area_as_component)
 
     BOOST_REQUIRE(info[4].has_value());
     BOOST_CHECK_EQUAL(info[4]->name, "HydroLevel");
-    BOOST_CHECK_EQUAL(info[4]->component, "it_hyrdro_storage");
+    BOOST_CHECK_EQUAL(info[4]->component, "it_hydro_storage");
     BOOST_CHECK_EQUAL(info[4]->timeIndex, 168u);
 }
 
