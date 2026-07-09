@@ -27,7 +27,7 @@ class RemixHydroPostProcessCmd final: public basePostProcessCommand
 public:
     RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
                              AreaList& areas,
-                             const Data::Parameters& params,
+                             const Parameters& params,
                              unsigned int numSpace,
                              IResultWriter& resultWriter);
     void execute(const optRuntimeData& opt_runtime_data) override;
@@ -35,7 +35,7 @@ public:
 private:
     const AreaList& area_list_;
     unsigned int numSpace_ = 0;
-    const Data::Parameters& params_;
+    const Parameters& params_;
     IResultWriter& resultWriter_;
 };
 
@@ -68,13 +68,13 @@ class InterpolateWaterValuePostProcessCmd final: public basePostProcessCommand
 public:
     InterpolateWaterValuePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
                                         AreaList& areas,
-                                        const Date::Calendar& calendar);
+                                        const Calendar& calendar);
 
     void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
     const AreaList& area_list_;
-    const Date::Calendar& calendar_;
+    const Calendar& calendar_;
 };
 
 class HydroLevelsFinalUpdatePostProcessCmd final: public basePostProcessCommand
@@ -105,7 +105,7 @@ private:
     std::set<int> identifyHoursForCurtailmentSharing(const std::vector<double>& sumENS) const;
     std::set<int> getHoursRequiringCurtailmentSharing() const;
 
-    using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+    using AdqPatchParams = AdequacyPatch::AdqPatchParams;
     const AreaList& area_list_;
     const AdqPatchParams& adqPatchParams_;
     unsigned int numSpace_ = 0;

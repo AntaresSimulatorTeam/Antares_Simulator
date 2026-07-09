@@ -17,7 +17,7 @@ namespace Antares::Optimization
 // outside the block's global time window. Shared by the raw legacy rows and
 // the derived extra outputs so both use the same row conventions.
 std::optional<unsigned> LegacyBlockTimeIndex(
-  const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+  const LinearProblem::Api::FillContext& fillContext,
   unsigned timeIndex);
 
 // Adds the derived "extra outputs" of the legacy solver to the simulation
@@ -28,9 +28,9 @@ std::optional<unsigned> LegacyBlockTimeIndex(
 // problemeHebdo. problemeHebdo is non-const only because the correspondence
 // accessors (VariableManager) expose indices as mutable references; nothing
 // is written.
-void AddLegacyExtraOutputs(Antares::IO::Outputs::SimulationTable& simulationTable,
+void AddLegacyExtraOutputs(IO::Outputs::SimulationTable& simulationTable,
                            PROBLEME_HEBDO& problemeHebdo,
-                           const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+                           const LinearProblem::Api::FillContext& fillContext,
                            unsigned currentBlock);
 
 } // namespace Antares::Optimization

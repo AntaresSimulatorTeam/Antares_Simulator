@@ -344,7 +344,7 @@ struct ShortTermStorageData
 {
     std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
 
-    const std::vector<::AREA_INPUT>& ShortTermStorage;
+    const std::vector<AREA_INPUT>& ShortTermStorage;
 };
 
 struct ShortTermStorageCumulativeConstraintData: ShortTermStorageData
@@ -357,9 +357,9 @@ using namespace Antares::Data;
 struct ReserveData
 {
     bool Simulation;
-    std::vector<::AREA_RESERVES_VECTOR>& areaReserves;
+    std::vector<AREA_RESERVES_VECTOR>& areaReserves;
     std::vector<PALIERS_THERMIQUES>& thermalClusters;
-    std::vector<::AREA_INPUT>& shortTermStorageOfArea;
+    std::vector<AREA_INPUT>& shortTermStorageOfArea;
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES>& hydroOfArea;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
 

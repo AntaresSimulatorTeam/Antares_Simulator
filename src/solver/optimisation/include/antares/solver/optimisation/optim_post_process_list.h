@@ -15,7 +15,7 @@ public:
     OptPostProcessList(PROBLEME_HEBDO* problemeHebdo,
                        uint numSpace,
                        AreaList& areas,
-                       const Data::Parameters& params,
+                       const Parameters& params,
                        Calendar& calendar,
                        IResultWriter& resultWriter);
 

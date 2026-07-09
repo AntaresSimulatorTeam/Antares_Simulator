@@ -49,7 +49,7 @@ struct PROBLEME_HEBDO;
 
 class HourlyCSRProblem final
 {
-    using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+    using AdqPatchParams = AdequacyPatch::AdqPatchParams;
 
 public:
     explicit HourlyCSRProblem(

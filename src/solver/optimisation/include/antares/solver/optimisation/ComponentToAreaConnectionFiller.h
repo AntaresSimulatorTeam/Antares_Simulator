@@ -65,7 +65,7 @@ private:
       const std::vector<unsigned>& constraintsIndices);
 
     void addExpressionToConstraint(
-      const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
+      const TimeDependentLinearExpression& linearExpression,
       const LinearProblem::Api::FillContext& ctx,
       const std::vector<LinearProblem::Api::IMipConstraint*>& constraintIndices) const;
 

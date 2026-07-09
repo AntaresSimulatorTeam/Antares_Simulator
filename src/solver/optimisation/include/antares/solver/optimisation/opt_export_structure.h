@@ -6,4 +6,4 @@
 #include "antares/writer/i_writer.h"
 struct PROBLEME_HEBDO;
 
-void OPT_ExportStructures(PROBLEME_HEBDO* problemeHebdo, Antares::Solver::IResultWriter& writer);
+void OPT_ExportStructures(PROBLEME_HEBDO* problemeHebdo, Solver::IResultWriter& writer);

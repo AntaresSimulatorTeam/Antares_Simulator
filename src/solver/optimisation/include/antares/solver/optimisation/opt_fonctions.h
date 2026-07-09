@@ -21,7 +21,7 @@ namespace Antares::LinearProblem
 class OptimEntityContainer;
 }
 
-using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+using AdqPatchParams = AdequacyPatch::AdqPatchParams;
 using OptimizationOptions = Antares::Optimization::OptimizationOptions;
 using SingleOptimOptions = Antares::Optimization::SingleOptimOptions;
 

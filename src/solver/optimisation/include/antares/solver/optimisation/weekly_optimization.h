@@ -29,7 +29,7 @@ public:
     IO::Outputs::OptimisationsSimulationTable* simulationTables();
 
 private:
-    Antares::Optimization::OptimizationOptions options_;
+    OptimizationOptions options_;
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
     Solver::IResultWriter& writer_;
     std::reference_wrapper<Solver::Simulation::ISimulationObserver> simulationObserver_;

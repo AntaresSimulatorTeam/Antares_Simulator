@@ -13,5 +13,5 @@ struct ModelerData;
 namespace Antares::Optimization
 {
 bool hasIntegerVariables(const Solver::ModelerData* modelerData,
-                         Antares::Solver::Config::Location location);
+                         Solver::Config::Location location);
 } // namespace Antares::Optimization
