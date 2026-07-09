@@ -15,12 +15,7 @@ source_group("exception" FILES ${SRC_PROJ})
 add_library(${PROJ} ${SRC_PROJ})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
-# libexception.a is linked into the SHARED library simulation-table-writers, so
-# its objects must be position-independent. (Restored after "Revert feat: pch"
-# dropped this together with the PCH work.)
-set_target_properties(${PROJ} PROPERTIES
-        POSITION_INDEPENDENT_CODE ON
-)
+set_target_properties(${PROJ} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 target_include_directories(${PROJ}
         PUBLIC

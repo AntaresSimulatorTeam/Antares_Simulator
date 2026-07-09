@@ -447,9 +447,7 @@ void Application::resetLogFilename() const
 void Application::prepareWriter(const Antares::Data::Study& study,
                                 Benchmarking::DurationCollector& duration_collector)
 {
-    ioQueueService = std::make_shared<Yuni::Job::QueueService>();
-    ioQueueService->maximumThreadCount(1);
-    ioQueueService->start();
+    ioQueueService = std::make_shared<Concurrency::ThreadPool>(1);
     resultWriter = resultWriterFactory(study.parameters.resultFormat,
                                        study.folderOutput,
                                        ioQueueService,

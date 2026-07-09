@@ -6,8 +6,6 @@
 #include <filesystem>
 #include <string>
 
-#include <yuni/core/string.h>
-
 #include "antares/writer/i_writer.h"
 
 namespace Antares::Solver

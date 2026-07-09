@@ -28,7 +28,8 @@ constexpr auto supportedVersions = std::to_array({
   StudyVersion(9, 1),
   StudyVersion(9, 2),
   StudyVersion(9, 3),
-  StudyVersion(10, 0)
+  StudyVersion(10, 0),
+  StudyVersion(10, 1),
   // Add new versions here
 });
 
