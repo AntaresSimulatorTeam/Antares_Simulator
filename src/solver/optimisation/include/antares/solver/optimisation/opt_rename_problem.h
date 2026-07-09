@@ -89,6 +89,19 @@ protected:
         return destination_;
     }
 
+    auto& getLegacyInfo()
+    {
+        return legacyInfo_;
+    }
+
+    void overrideComponent(unsigned index, const std::string& component)
+    {
+        if (legacyInfo_ && (*legacyInfo_)[index])
+        {
+            (*legacyInfo_)[index]->component = component;
+        }
+    }
+
 private:
     std::string origin_;
     std::string destination_;
@@ -156,17 +169,17 @@ public:
                                                 const std::string& sts_name) const;
     void ShortTermStorageCostVariationWithdrawal(unsigned varIndex,
                                                  const std::string& sts_name) const;
-    void HydProd(unsigned varIndex) const;
-    void HydProdDown(unsigned varIndex) const;
-    void HydProdUp(unsigned varIndex) const;
-    void Pumping(unsigned varIndex) const;
-    void HydroLevel(unsigned varIndex) const;
-    void Overflow(unsigned varIndex) const;
-    void FinalStorage(unsigned varIndex) const;
-    void LayerStorage(unsigned varIndex, int layerIndex) const;
-    void UnsuppliedEnergy(unsigned varIndex) const;
-    void Spillage(unsigned varIndex) const;
-    void AreaBalance(unsigned varIndex) const;
+    void HydProd(unsigned varIndex);
+    void HydProdDown(unsigned varIndex);
+    void HydProdUp(unsigned varIndex);
+    void Pumping(unsigned varIndex);
+    void HydroLevel(unsigned varIndex);
+    void Overflow(unsigned varIndex);
+    void FinalStorage(unsigned varIndex);
+    void LayerStorage(unsigned varIndex, int layerIndex);
+    void UnsuppliedEnergy(unsigned varIndex);
+    void Spillage(unsigned varIndex);
+    void AreaBalance(unsigned varIndex);
 
 private:
     void SetAreaVariableName(unsigned varIndex,
@@ -183,7 +196,7 @@ public:
     using Namer::Namer;
 
     void FlowDissociation(unsigned constrIndex) const;
-    void AreaBalance(unsigned constrIndex) const;
+    void AreaBalance(unsigned constrIndex);
     void FictiveLoads(unsigned constrIndex) const;
     void MaxUnsuppliedEnergy(unsigned constrIndex) const;
     void HydroPower(unsigned constrIndex) const;
@@ -195,7 +208,7 @@ public:
     void MaxPumping(unsigned constrIndex) const;
     void AreaHydroLevel(unsigned constrIndex) const;
     void FinalStockEquivalent(unsigned constrIndex) const;
-    void FinalStockExpression(unsigned constrIndex) const;
+    void FinalStockExpression(unsigned constrIndex);
     void NbUnitsOutageLessThanNbUnitsStop(unsigned constrIndex,
                                           const std::string& clusterName) const;
     void NbDispUnitsMinBoundSinceMinUpTime(unsigned constrIndex,

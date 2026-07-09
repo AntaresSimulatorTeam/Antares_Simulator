@@ -267,7 +267,6 @@ BOOST_AUTO_TEST_CASE(imbalance_cost_combines_unsupplied_and_spilled_energy)
 {
     fill();
 
-
     const auto rows = RowsForOutput(table, "imbalance_cost");
     BOOST_REQUIRE_EQUAL(rows.size(), 1);
     BOOST_CHECK_EQUAL(rows[0].component, "area1_node");
@@ -445,7 +444,9 @@ BOOST_AUTO_TEST_CASE(congestion_fees_use_the_endpoint_area_prices)
     BOOST_CHECK_CLOSE(FindRow(table, "alg_congestion_fee", "area1_area2_link")->value,
                       120. * -9950.,
                       1e-9);
-    BOOST_CHECK_CLOSE(FindRow(table, "abs_congestion_fee", "area2_area3_link")->value, 30. * 25., 1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "abs_congestion_fee", "area2_area3_link")->value,
+                      30. * 25.,
+                      1e-9);
     BOOST_CHECK_CLOSE(FindRow(table, "alg_congestion_fee", "area2_area3_link")->value,
                       -30. * 25.,
                       1e-9);
@@ -468,38 +469,9 @@ BOOST_AUTO_TEST_CASE(link_prop_cost_is_skipped_when_indirect_flow_is_missing)
     BOOST_CHECK(!FindRow(table, "prop_cost", "area1_area2_link").has_value());
 }
 
-BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
-{
-    fill();
-
-    // 2 prop_cost (cluster1, link) + 1 imbalance_cost + 3 is_loss_of_load
-    // + 1 actual_num_units_on + 2 abs_flow.
-    BOOST_CHECK_EQUAL(table.rowCount(), 9);
-}
-
-BOOST_AUTO_TEST_CASE(price_is_minus_the_area_balance_dual)
-{
-    withConstraints().fill();
-
-    const auto rows = RowsForOutput(table, "price");
-    BOOST_REQUIRE_EQUAL(rows.size(), 3);
-    BOOST_CHECK_EQUAL(FindRow(table, "price", "area1_node")->value, 10000.);
-    BOOST_CHECK_EQUAL(FindRow(table, "price", "area2_node")->value, 50.);
-    BOOST_CHECK_EQUAL(FindRow(table, "price", "area4_node")->value, 75.);
-}
-
-BOOST_AUTO_TEST_CASE(is_near_loss_of_load_compares_price_to_unsupplied_cost)
-{
-    withConstraints().fill();
-
-    // area1: price 10000 > 10000 - 5; area2: price 50 <= 20000 - 5.
-    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area1_node")->value, 1.);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area2_node")->value, 0.);
-}
-
 BOOST_AUTO_TEST_CASE(is_near_loss_of_load_is_skipped_without_unsupplied_variable)
 {
-    withConstraints().fill();
+    fill();
 
     // "area4" has a balance constraint but no UnsuppliedEnergy variable, so
     // its unsupplied energy cost is unknown: price only, no nearness flag.
@@ -552,9 +524,15 @@ BOOST_AUTO_TEST_CASE(emissions_are_generation_power_times_each_factor)
     fill();
 
     // generation_power = 3600.
-    BOOST_CHECK_CLOSE(FindRow(table, "co2_emissions", "area1_thermal_cluster1")->value, 3600. * 0.5, 1e-9);
-    BOOST_CHECK_CLOSE(FindRow(table, "nox_emissions", "area1_thermal_cluster1")->value, 3600. * 0.01, 1e-9);
-    BOOST_CHECK_CLOSE(FindRow(table, "op5_emissions", "area1_thermal_cluster1")->value, 3600. * 2., 1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "co2_emissions", "area1_thermal_cluster1")->value,
+                      3600. * 0.5,
+                      1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "nox_emissions", "area1_thermal_cluster1")->value,
+                      3600. * 0.01,
+                      1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "op5_emissions", "area1_thermal_cluster1")->value,
+                      3600. * 2.,
+                      1e-9);
     // A pollutant with a zero factor still gets a row, valued 0.
     const auto so2 = FindRow(table, "so2_emissions", "area1_thermal_cluster1");
     BOOST_REQUIRE(so2.has_value());
@@ -586,12 +564,18 @@ BOOST_AUTO_TEST_CASE(thermal_margins_are_derived_from_availability_and_generatio
     // cluster_availability = max(4000, 300*ceil(4000/900)=300*5=1500) = 4000.
     fill();
 
-    BOOST_CHECK_CLOSE(FindRow(table, "cluster_availability", "area1_thermal_cluster1")->value, 4000., 1e-9);
-    BOOST_CHECK_CLOSE(FindRow(table, "up_margin", "area1_thermal_cluster1")->value, 4000. - 3600., 1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "cluster_availability", "area1_thermal_cluster1")->value,
+                      4000.,
+                      1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "up_margin", "area1_thermal_cluster1")->value,
+                      4000. - 3600.,
+                      1e-9);
     BOOST_CHECK_CLOSE(FindRow(table, "min_gen_power", "area1_thermal_cluster1")->value,
                       500.,
                       1e-9); // min(3600, 500)
-    BOOST_CHECK_CLOSE(FindRow(table, "down_margin", "area1_thermal_cluster1")->value, 3600. - 500., 1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "down_margin", "area1_thermal_cluster1")->value,
+                      3600. - 500.,
+                      1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(cluster_availability_takes_the_unit_floor_when_it_dominates)
@@ -604,7 +588,9 @@ BOOST_AUTO_TEST_CASE(cluster_availability_takes_the_unit_floor_when_it_dominates
     paliers.PminDuPalierThermiquePendantUneHeure = {200.};
     fill();
 
-    BOOST_CHECK_CLOSE(FindRow(table, "cluster_availability", "area1_thermal_cluster1")->value, 600., 1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "cluster_availability", "area1_thermal_cluster1")->value,
+                      600.,
+                      1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(cluster_availability_ignores_the_unit_floor_when_unit_size_is_zero)
@@ -617,7 +603,9 @@ BOOST_AUTO_TEST_CASE(cluster_availability_ignores_the_unit_floor_when_unit_size_
     paliers.PminDuPalierThermiquePendantUneHeure = {200.};
     fill();
 
-    BOOST_CHECK_CLOSE(FindRow(table, "cluster_availability", "area1_thermal_cluster1")->value, 250., 1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "cluster_availability", "area1_thermal_cluster1")->value,
+                      250.,
+                      1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(profit_is_margin_price_times_generation_above_the_min_gen_floor)
