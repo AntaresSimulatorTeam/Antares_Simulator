@@ -3,15 +3,19 @@ hide:
  - toc
 ---
 
-<style>
-/* hide title in this page */
-.md-typeset h1 {
-    display: none;
-}
-</style>
-
-![antares logo](assets/antares.png){ .add-padding-and-white-bg }
-
+<div style="display: flex; align-items: center; margin-bottom: 30px; justify-content: center;">
+  <img
+    src="assets/logo-antares.svg"
+    alt="Antares Logo"
+    style="height: 150px; width: 150px; margin-right: 30px;"
+  />
+  <div>
+    <h1 style="margin: 0;">Antares Simulator</h1>
+    <p style="margin: 5px 0 0 0; font-size: 1.2em; color: #666;">
+        Core computations for Antares 
+    </p>
+  </div>
+</div>
 
 [![Status][ubuntu_ci_svg]][ubuntu_ci_link] 
 [![Status][windows_ci_svg]][windows_ci_link] 
