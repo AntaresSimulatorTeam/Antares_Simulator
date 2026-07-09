@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE(hydro_level_records_area_as_component)
 
     BOOST_REQUIRE(info[4].has_value());
     BOOST_CHECK_EQUAL(info[4]->name, "HydroLevel");
-    BOOST_CHECK_EQUAL(info[4]->component, "hyrdro_storage_it");
+    BOOST_CHECK_EQUAL(info[4]->component, "it_hyrdro_storage");
     BOOST_CHECK_EQUAL(info[4]->timeIndex, 168u);
 }
 
@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(sts_injection_records_injection_name_and_storage_component)
 
     BOOST_REQUIRE(info[5].has_value());
     BOOST_CHECK_EQUAL(info[5]->name, "Injection");
-    BOOST_CHECK_EQUAL(info[5]->component, "battery");
+    BOOST_CHECK_EQUAL(info[5]->component, "fr_short_term_storage_battery");
     BOOST_CHECK_EQUAL(info[5]->timeIndex, 10u);
 }
 
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE(sts_withdrawal_records_withdrawal_name_and_storage_componen
 
     BOOST_REQUIRE(info[6].has_value());
     BOOST_CHECK_EQUAL(info[6]->name, "Withdrawal");
-    BOOST_CHECK_EQUAL(info[6]->component, "battery");
+    BOOST_CHECK_EQUAL(info[6]->component, "fr_short_term_storage_battery");
     BOOST_CHECK_EQUAL(info[6]->timeIndex, 10u);
 }
 
