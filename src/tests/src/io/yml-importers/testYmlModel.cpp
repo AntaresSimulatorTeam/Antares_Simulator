@@ -840,7 +840,8 @@ BOOST_AUTO_TEST_CASE(model_port_fileds_properly_parsed)
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].port_field_definitions.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].port, "port_name");
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].field, "field_name");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].definition.input_expr, "definition");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].definition.input_expr,
+                      "definition");
 }
 
 // Test library with one model containing multiple port field definitions
@@ -875,10 +876,12 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_portfields)
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].port_field_definitions.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].port, "port_name1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].field, "field_name1");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].definition.input_expr, "definition1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].definition.input_expr,
+                      "definition1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[1].port, "port_name2");
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[1].field, "field_name2");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[1].definition.input_expr, "definition2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[1].definition.input_expr,
+                      "definition2");
 }
 
 // Test library with one model containing constraints

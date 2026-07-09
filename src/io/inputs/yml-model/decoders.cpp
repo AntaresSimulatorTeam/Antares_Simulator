@@ -8,6 +8,7 @@
 
 #include <antares/io/inputs/InputError.h>
 #include <antares/io/inputs/yml-utils/YmlTreeDisplayer.h>
+
 #include "include/antares/io/inputs/yml-model/Library.h"
 
 using namespace Antares::IO::Inputs;
@@ -247,8 +248,10 @@ bool convert<YmlModel::Variable>::decode(const Node& node, YmlModel::Variable& r
 
     checkMandatoryIdField(node, "variable");
     rhs.id = node["id"].as<std::string>();
-    rhs.lower_bound = node["lower-bound"].as<YmlModel::ExpressionLineNumber>(YmlModel::ExpressionLineNumber{});
-    rhs.upper_bound = node["upper-bound"].as<YmlModel::ExpressionLineNumber>(YmlModel::ExpressionLineNumber{});
+    rhs.lower_bound = node["lower-bound"].as<YmlModel::ExpressionLineNumber>(
+      YmlModel::ExpressionLineNumber{});
+    rhs.upper_bound = node["upper-bound"].as<YmlModel::ExpressionLineNumber>(
+      YmlModel::ExpressionLineNumber{});
     rhs.variable_type = node["variable-type"].as<YmlModel::ValueType>(
       YmlModel::ValueType::CONTINUOUS);
     rhs.time_dependent = node["time-dependent"].as<bool>(true);

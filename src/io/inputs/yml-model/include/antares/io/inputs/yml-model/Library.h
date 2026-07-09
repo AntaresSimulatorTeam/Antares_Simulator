@@ -44,7 +44,7 @@ inline std::string toString(const ValueType& value_type)
 struct ExpressionLineNumber
 {
     std::string input_expr;
-    
+
     /// used for error reporting only
     size_t line_number;
 };
