@@ -1,6 +1,6 @@
 Feature: 6 - Simple end-to-end tests to test port management
 
-  @fast
+  @short
   Scenario: 6.1: One system with three components: one balance node, one load and one 2 gen-component
     Given the modeler study path is "modeler/6_1"
     When I run antares modeler
@@ -13,7 +13,7 @@ Feature: 6 - Simple end-to-end tests to test port management
       | 0     | NG        | injection_port.flow | 0        | 0        | 100   |
       | 0     | NL        | injection_port.flow |          | 0        | -100  |
 
-  @fast
+  @short
   Scenario: 6.2: test system with 3 components : one balance node, one load (100 MW) and one component with two generators (with Pmax_1 = 80 MW & Pmax_2 = 200 MW) ; gen1 has a fixed cost. Two time steps.
     Given the modeler study path is "modeler/6_2"
     When I run antares modeler
@@ -30,7 +30,7 @@ Feature: 6 - Simple end-to-end tests to test port management
       | NG        | injection_port.flow | 0-1      | 0        | 100   |
       | NL        | injection_port.flow |          | 0        | -100  |
 
-  @fast
+  @short
   Scenario: 6.3: test system with 4 components : one balance node, one load (100 MW), two components of generators (with Pmax_1 = 80 MW and Pmax_2 = 200 MW). Two time steps.
     Given the modeler study path is "modeler/6_3"
     When I run antares modeler
@@ -50,7 +50,7 @@ Feature: 6 - Simple end-to-end tests to test port management
       | NG2       | injection_port.flow | 1        | 0        | 100   |
       | NL        | injection_port.flow |          | 0        | -100  |
 
-  @fast
+  @short
   Scenario: 6.1 - with scenario builder: Same as 6.1, but the load's first MC year is linked to 2nd timeseries in load.tsv
     Given the modeler study path is "modeler/6_1_scenariobuilder"
     When I run antares modeler

@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define BOOST_TEST_MODULE study
 #include <algorithm>
@@ -179,27 +161,32 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    std::ofstream file(studyPath / "myreserveA.ini");
-    file << "[ReserveUp]\n";
-    file << "participation-cost = 1.1\n";
-    file << "max-store = 2.2\n";
-    file << "max-release = 3.3\n";
-    file << "\n";
-    file << "[ReserveDown]\n";
-    file << "participation-cost = 4.4\n";
-    file << "max-store = 5.5\n";
-    file << "max-release = 6.6\n";
+    std::ofstream file(studyPath / "myreserveA.yml");
+    file << R"(participations:
+  certifications:
+    - reserve: ReserveUp
+      participation-cost: 1.1
+      max-store: 2.2
+      max-release: 3.3
+    - reserve: ReserveDown
+      participation-cost: 4.4
+      max-store: 5.5
+      max-release: 6.6
+)";
     file.close();
 
-    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserveA.ini");
-
-    std::ofstream fileB(studyPath / "myreserveB.ini");
-    fileB << "[ReserveUp]\n";
-    fileB << "participation-cost = 9.9\n";
-    fileB << "max-store = 8.8\n";
-    fileB << "max-release = 7.7\n";
+    std::ofstream fileB(studyPath / "myreserveB.yml");
+    fileB << R"(participations:
+  certifications:
+    - reserve: ReserveUp
+      participation-cost: 9.9
+      max-store: 8.8
+      max-release: 7.7
+)";
     fileB.close();
-    areaA->hydro.loadReserveParticipations(*areaB, studyPath / "myreserveB.ini");
+
+    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserveA.yml");
+    areaA->hydro.loadReserveParticipations(*areaB, studyPath / "myreserveB.yml");
 
     areaA->hydro.reserveParticipationContainer.value().addReserveParticipationSymmetry(
       {"reserveup", "reservedown"});

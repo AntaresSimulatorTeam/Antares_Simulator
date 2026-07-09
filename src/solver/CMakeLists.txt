@@ -70,7 +70,6 @@ set(ANTARES_SOLVER_LIBS
         Antares::optimization-options
         Antares::signal-handling
         Antares::locale
-        yuni-static-uuid
         yuni-static-core
         ${CMAKE_THREADS_LIBS_INIT}
 )

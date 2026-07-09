@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
 set(ANTARES_VERSION_HI 10)
-set(ANTARES_VERSION_LO 0)
+set(ANTARES_VERSION_LO 1)
 set(ANTARES_VERSION_REVISION 1)
 
 # Beta release
@@ -135,7 +135,7 @@ endif (WIN32)
 # symbols. --start-group/--end-group tells ld to re-scan until all are resolved.
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     add_link_options("LINKER:--start-group")
-endif()
+endif ()
 
 #
 # Beta
@@ -328,6 +328,10 @@ endif ()
 
 # TODO : review Standard Settings
 include(src/cmake/common-settings.cmake)
+
+# Opt-in build/link time profiling (-DANTARES_TIME_TRACE=ON). Must be included
+# before any add_subdirectory() so the flags reach every target.
+include(src/cmake/build-profiling.cmake)
 
 add_subdirectory("src/config")
 

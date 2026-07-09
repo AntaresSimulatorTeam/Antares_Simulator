@@ -54,7 +54,6 @@ target_link_libraries(simulation-table-writers
 add_library(Antares::simulation-table-writers ALIAS simulation-table-writers)
 
 add_library(result_writer
-        ensure_queue_started.cpp
         immediate_file_writer.cpp
         in_memory_writer.cpp
         null_result_writer.cpp
@@ -63,7 +62,6 @@ add_library(result_writer
         include/antares/writer/null_result_writer.h
         include/antares/writer/result_format.h
         include/antares/writer/writer_factory.h
-        private/ensure_queue_started.h
         private/immediate_file_writer.h
         private/zip_writer.h
         writer_factory.cpp
@@ -84,7 +82,6 @@ target_link_libraries(result_writer
         PUBLIC
         Antares::exception
         Antares::benchmarking
-        yuni-static-core
         # simulation-table-writers is a SHARED library (DLL on Windows). Since result_writer
         # is STATIC, consumers inherit its shared library dependencies at link time.
         # Using PUBLIC ensures MSVC's project reference system copies the DLL to

@@ -4,32 +4,32 @@
 #pragma once
 
 #include <optional>
-#include <vector>
 
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
-#include "antares/solver/optimisation/LegacyVariableInfo.h"
+
+struct PROBLEME_HEBDO;
 
 namespace Antares::Optimization
 {
 
+// Block-relative time index of an absolute hour, empty when the hour falls
+// outside the block's global time window. Shared by the raw legacy rows and
+// the derived extra outputs so both use the same row conventions.
+std::optional<unsigned> LegacyBlockTimeIndex(
+  const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+  unsigned timeIndex);
+
 // Adds the derived "extra outputs" of the legacy solver to the simulation
-// table, computed from the weekly solution:
-//  - thermal `prop_cost`: linear objective coefficient on the cluster's
-//    generation variable times the generated power;
-//  - thermal `actual_num_units_on`: ceil of the NODU variable;
-//  - area `imbalance_cost`: spillage_cost * spilled_energy
-//    + unsupplied_energy_cost * unsupplied_energy, where both costs are the
-//    linear objective coefficients on the corresponding area variables;
-//  - area `is_loss_of_load`: 1 when unsupplied_energy > 0.5, else 0;
-//  - link `abs_flow`: absolute value of the (signed) flow;
-//  - link `prop_cost`: hurdle costs times positive direct/indirect flows,
-//    the hurdle costs being the objective coefficients on those variables
-//    (only emitted for links managed with hurdle costs).
+// table. Iterates the study structure (areas, links, thermal clusters) hour
+// by hour and reads the solved problem through the variable / constraint
+// correspondence tables, so every operand is fetched by index; study data
+// (capacities, inflows, emission factors, ...) is read straight from
+// problemeHebdo. problemeHebdo is non-const only because the correspondence
+// accessors (VariableManager) expose indices as mutable references; nothing
+// is written.
 void AddLegacyExtraOutputs(Antares::IO::Outputs::SimulationTable& simulationTable,
-                           const std::vector<std::optional<LegacyVariableInfo>>& variablesInfo,
-                           const std::vector<double>& solutionValues,
-                           const std::vector<double>& linearCosts,
+                           PROBLEME_HEBDO& problemeHebdo,
                            const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
                            unsigned currentBlock);
 

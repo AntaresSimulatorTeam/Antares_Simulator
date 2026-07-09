@@ -7,7 +7,6 @@
 #include <memory>
 
 #include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
 
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/correlation/correlation.h>
@@ -24,15 +23,23 @@
 #include "parameters.h"
 #include "sets.h"
 
+namespace Antares::Solver::Simulation
+{
+struct ReserveIndexMaps;
+}
+
 namespace Antares::Data
 {
 /*!
 ** \brief Antares Study
 */
 
-class Study: public Yuni::NonCopyable<Study>
+class Study
 {
 public:
+    Study(const Study&) = delete;
+    Study& operator=(const Study&) = delete;
+
     using Ptr = std::shared_ptr<Study>;
     //! Set of studies
     using Set = std::set<Ptr>;
@@ -310,6 +317,10 @@ public:
     ** These informations are only needed when a study is processed.
     */
     StudyRuntimeInfos runtime;
+
+    //! Lookup tables mapping reserves to their solver-side participation indices.
+    //! Owned by the solver (opaque handle), populated once the weekly problem is built.
+    std::shared_ptr<Solver::Simulation::ReserveIndexMaps> reserveMaps;
 
     /*!
     ** \name Cache

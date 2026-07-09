@@ -20,7 +20,6 @@ set(SRC_MATRIX_LIB
         ${src_libs_antares}/array/include/antares/array/matrix.hxx
 
         # Necessary cpp files
-        ${src_libs_antares}/jit/jit.cpp
         logs/logs.cpp)
 
 add_library(matrix ${SRC_MATRIX_LIB})
@@ -31,8 +30,7 @@ target_link_libraries(matrix
 
 target_include_directories(matrix
         PRIVATE
-        "${CMAKE_CURRENT_SOURCE_DIR}/logs"
-        "${src_libs_antares}/jit/include")
+        "${CMAKE_CURRENT_SOURCE_DIR}/logs")
 
 # Building tests on Matrix save operations
 add_boost_test(tests-matrix-save
@@ -45,10 +43,8 @@ add_boost_test(tests-matrix-save
         INCLUDE
         "${src_libs_antares}/array/include"
         "${src_libs_antares}/io/include"
-        "${src_libs_antares}/jit/include"
         "${src_libs_antares}/memory/include"
         "${CMAKE_CURRENT_SOURCE_DIR}/logs"
-        "${CMAKE_CURRENT_SOURCE_DIR}/jit"
         "${CMAKE_SOURCE_DIR}/src/tests/src/libs"
         LIBS
         matrix
@@ -66,10 +62,8 @@ add_boost_test(tests-matrix-load
         INCLUDE
         "${src_libs_antares}/array/include"
         "${src_libs_antares}/io/include"
-        "${src_libs_antares}/jit/include"
         "${src_libs_antares}/memory/include"
         "${CMAKE_CURRENT_SOURCE_DIR}/logs"
-        "${CMAKE_CURRENT_SOURCE_DIR}/jit"
         "${CMAKE_SOURCE_DIR}/src/tests/src/libs"
         LIBS
         matrix

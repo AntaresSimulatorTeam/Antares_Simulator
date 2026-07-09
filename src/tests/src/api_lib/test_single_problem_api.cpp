@@ -814,11 +814,10 @@ BOOST_AUTO_TEST_CASE(simple_model_one_component)
     auto study = buildStudy(true, true);
 
     study->setModelerData(std::make_unique<ModelerData>(OneParameterOneVariableOneConstraint()));
-    auto queueService = std::make_shared<Yuni::Job::QueueService>();
     Benchmarking::DurationCollector durationCollector;
     auto resultWriter = resultWriterFactory(Data::ResultFormat::inMemory,
                                             "",
-                                            queueService,
+                                            nullptr,
                                             durationCollector);
     Implementation::SingleProblemGetter getter({std::move(study), resultWriter});
     //-- check mps and structure.txt

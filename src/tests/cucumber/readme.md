@@ -10,11 +10,18 @@ defined in a `.feature` file. Features are under the [features](./features) fold
 Every feature has multiple scenarios (every scenario represents a test case).  
 A scenario can be tagged in order to add it to a category, allowing us to run the tests on a filtered subset of the 
 scenarios later. The tags currently used in Antares are:
-- @fast: tests that run fast
-- @slow: tests that run slow
-- @short: tests from the legacy "short-tests" batch
-- @medium: tests from the legacy "medium-tests" batch
-- @flaky: quarantine for flaky tests (i.e. sometimes pass, sometimes fail) that are to be skipped by the CI
+
+**Execution-time tags** (every scenario must carry exactly one):
+- @short: simulation completes in under 30 seconds — run on all branches (feature/*, fix/*, develop push, scheduled)
+- @medium: simulation completes in 30–120 seconds — run on develop push and scheduled only
+- @long: simulation takes over 120 seconds, or is otherwise unfit for commit-time CI — run on scheduled only
+
+**Orthogonal tags** (can be combined freely with the time tags above):
+- @flaky: quarantine for tests that sometimes pass and sometimes fail — skipped by the CI by default (via `~@flaky`)
+- @valid-hydro: scenarios from the valid-hydro study set
+- @hydro, @storage: domain tags for hydro / storage scenarios
+- @useless: legacy GUI training scenarios kept for historical reference
+- @incomplete: scenario body is not yet fully written — kept to avoid losing the study reference
 
 ### Steps structure
 Currently, tests are being migrated from the [legacy non-regression testing process](../run-study-tests). Thus, they 
@@ -82,7 +89,15 @@ behave -D antares-solver=/path/to/some/other/anatres-solver -D linear-solver=sci
 ### In the CI
 Cucumber tests are run in the same way as the legacy tests in the Ubuntu & Windows CIs, except that they don't need the 
 reference values from the SimTest repository, since reference values are stored explicitly in the feature files.
-Note that tests marked as "@flaky" are skipped by default.  
+The CI runs three tiers of cucumber tests depending on the trigger:
+
+| Tier | Tag filter | Trigger |
+|------|-----------|---------|
+| Short | `@short` | Every push (all branches) |
+| Medium | `@medium` | Push to `develop` only |
+| Long | `@long` | Scheduled nightly run only |
+
+Tests marked `@flaky` are always skipped (via `~@flaky`).  
 Workflow file: [here](../../../.github/workflows/cucumber-tests/action.yml)
 
 ## Under the hood

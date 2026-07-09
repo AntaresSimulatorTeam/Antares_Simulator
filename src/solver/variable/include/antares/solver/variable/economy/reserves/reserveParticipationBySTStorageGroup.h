@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 #pragma once
 
+#include <antares/solver/simulation/reserve-index-maps.h>
 #include "antares/solver/variable/variable.h"
 
 #include "vCardReserveParticipationBySTStorageGroup.h"
@@ -158,8 +159,8 @@ public:
                          results.data.area->allCapacityReservations->reserveGroupPartSTS.at(
                            reserveID))
                     {
-                        Yuni::String caption = results.data.study.runtime.reserveIDToName.value()
-                                                 .at(reserveID);
+                        Yuni::String caption = results.data.study.reserveMaps->idToName.at(
+                          reserveID);
                         caption << "_" << group;
                         results.variableCaption = caption;
                         results.variableUnit = VCardType::Unit();

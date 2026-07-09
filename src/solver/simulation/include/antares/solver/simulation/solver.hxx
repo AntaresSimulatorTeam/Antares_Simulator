@@ -24,6 +24,16 @@
 namespace Antares::Solver::Simulation
 {
 
+// Forward declaration: solver.hxx and common-eco-adq.h include each other, so
+// depending on the entry point common-eco-adq.h's own declaration may not yet be
+// visible when the template body below is parsed. Declaring it here makes the
+// dependent call resolvable at the template definition context regardless of
+// include order (needed for the explicit ISimulation<> instantiations).
+void prepareClustersInMustRunMode(Data::Study& study,
+                                  Data::Area::ScratchMap& scratchmap,
+                                  uint year,
+                                  Data::SimulationMode mode);
+
 template<class Impl>
 class yearJob
 {
@@ -119,7 +129,7 @@ public:
         yearRandomNumbers& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
 
         // 1 - Applying random levels for current year
-        auto randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
+        const std::vector<double>& randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
         // 2 - Getting the numpspace and scratchMap associated to the current year
         unsigned numSpace = numspaceManager.getAvailableNumSpace();
@@ -224,7 +234,7 @@ inline ISimulation<ImplementationType>::ISimulation(
     pNbMaxPerformedYearsInParallel(0),
     pYearByYear(study.parameters.yearByYear),
     pDurationCollector(duration_collector),
-    pQueueService(std::make_shared<Yuni::Job::QueueService>()),
+    pQueueService(std::make_shared<Concurrency::ThreadPool>(study.maxNbYearsInParallel)),
     pResultWriter(resultWriter),
     simulationObserver_(simulationObserver)
 {
@@ -400,9 +410,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // List of parallel years sets
     std::vector<setOfParallelYears> setsOfParallelYears;
 
-    // Number of threads to perform the jobs waiting in the queue
-    pQueueService->maximumThreadCount(pNbMaxPerformedYearsInParallel);
-
     regenerateTimeSeries(study, pResultWriter, pDurationCollector);
     HydroInputsChecker hydroInputsChecker(study);
     logs.info() << " Doing hydro validation";
@@ -444,14 +451,19 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     randomForParallelYears.compute(study, endYear, isYearPerformed, randomHydroGenerator);
 
     // hydro checks
+
     for (uint year = firstYear; year < endYear; ++year)
     {
         if (study.parameters.yearsFilter[year])
         {
-            hydroInputsChecker.Execute(year);
+            uint indexYear = randomForParallelYears.yearNumberToIndex[year];
+            yearRandomNumbers& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
+            const std::vector<double>& randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
+
+            hydroInputsChecker.Execute(year, randomReservoirLevel);
         }
     }
-    hydroInputsChecker.CheckForErrors();
+    hydroInputsChecker.checkForErrors();
 
     NumSpaceManager numspaceManager(pNbMaxPerformedYearsInParallel);
 
@@ -481,10 +493,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
             results.add(Concurrency::AddTask(*pQueueService, task));
         }
     }
-
-    pQueueService->start();
-    pQueueService->wait(Yuni::qseIdle);
-    pQueueService->stop();
 
     results.join();
     pResultWriter.flush();

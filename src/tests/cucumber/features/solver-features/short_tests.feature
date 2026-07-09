@@ -1,6 +1,6 @@
 Feature: short tests
 
-  @fast @short
+  @short
   Scenario: 001 One node - passive
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/001 One node - passive"
     When I run antares simulator
@@ -8,7 +8,7 @@ Feature: short tests
     And the simulation takes less than 5 seconds
     And the annual system cost is 0
 
-  @fast @short
+  @short
   Scenario: 002 Thermal fleet - Base
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/002 Thermal fleet - Base"
     When I run antares simulator
@@ -18,7 +18,7 @@ Feature: short tests
     And in area "AREA", during year 1, loss of load lasts 1 hours
     And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
 
-  @fast @short
+  @short
   Scenario: 003 Thermal fleet - Must-run
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/003 Thermal fleet - Must-run"
     When I run antares simulator
@@ -29,7 +29,7 @@ Feature: short tests
     And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
     And in area "AREA", during year 1, hourly production of "non-dispatchable semi base" is always equal to 300 MWh
 
-  @fast @short
+  @short
   Scenario: 004 Thermal fleet - Partial must-run
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/004 Thermal fleet - Partial must-run"
     When I run antares simulator
@@ -40,7 +40,7 @@ Feature: short tests
     And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
     And in area "AREA", during year 1, hourly production of "semi base" is always greater than 300 MWh
 
-  @fast @short
+  @short
   Scenario: 005 Thermal fleet - Minimum stable power and min up down times
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/005 Thermal fleet - Minimum stable power and min up down times"
     When I run antares simulator
@@ -57,7 +57,7 @@ Feature: short tests
     # And in area "AREA", unit "semi base" respects a minimum up duration of 6 hours, and a minimum down duration of 12 hours
     # And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
 
-  @fast @short
+  @short
   Scenario: 006 Thermal fleet - Extra costs
     # Like previous test, but with extra non-proportional (NP) costs
     # NP costs = 1756400 ; OP costs = 2.75816e+07 (like test 5) => Total cost = 2.9338e+07
@@ -77,7 +77,7 @@ Feature: short tests
     # And in area "AREA", unit "semi base" respects a minimum up duration of 6 hours, and a minimum down duration of 12 hours
     # And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
 
-  @fast @short
+  @short
   Scenario: 007 Thermal fleet - Fast unit commitment
     # This example is the first of a set of two that are comparing the two unit-commitment modes of Antares.
     # Fast mode
@@ -100,7 +100,7 @@ Feature: short tests
     # And in area "AREA", unit "semi base" respects a minimum up duration of 12 hours, and a minimum down duration of 12 hours
     # And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
 
-  @fast @short
+  @short
   Scenario: 008 Thermal fleet - Accurate unit commitment
     # Like previous test, but with unit commitment
     # => overall cost is better, there are less startups, and min up & down time are not equal
@@ -124,7 +124,7 @@ Feature: short tests
     # And in area "AREA", unit "semi base" respects a minimum up duration of 6 hours, and a minimum down duration of 12 hours
     # And in area "AREA", unit "peak" respects a minimum up duration of 2 hours, and a minimum down duration of 2 hours
 
-  @fast @short
+  @short
   Scenario: 009 TS generation - Thermal power
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/009 TS generation - Thermal power"
     When I run antares simulator
@@ -136,7 +136,7 @@ Feature: short tests
     And in area "THER NODE", during year 1, "semi" produces 3634800 MWh
     And in area "THER NODE", during year 1, "peak" produces 0 MWh
 
-  @fast @short
+  @short
   Scenario: 010 TS generation - Wind speed
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/010 TS generation - Wind speed"
     When I run antares simulator
@@ -149,7 +149,7 @@ Feature: short tests
       | WIND SPEED NODE-2 | 1    | 14298218          |
       | WIND SPEED NODE-3 | 1    | 14250852          |
 
-  @fast @short
+  @short
   Scenario: 011 TS generation - Wind power - small scale
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/011 TS generation - Wind power - small scale"
     When I run antares simulator
@@ -162,7 +162,7 @@ Feature: short tests
       | WIND POWER-2 | 1    | 14677959          |
       | WIND POWER-3 | 1    | 14655040          |
 
-  @fast @short
+  @short
   Scenario: 012 TS Generation - Wind power - large scale
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/012 TS Generation - Wind power - large scale"
     When I run antares simulator
@@ -175,7 +175,7 @@ Feature: short tests
       | WIND POWER-2 | 1    | 5105365           |
       | WIND POWER-3 | 1    | 4833574           |
 
-  @fast @short
+  @short
   Scenario: 013 TS Generation - Solar power
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/013 TS Generation - Solar power"
     When I run antares simulator
@@ -186,7 +186,7 @@ Feature: short tests
     And in area "SOLAR GEN NODE", during year 1, total unsupplied energy is 14827003 MWh
     And in area "SOLAR GEN NODE", during year 1, "default" produces 0 MWh
 
-  @fast @short
+  @short
   Scenario: 014 TS generation - Load
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/014 TS generation - Load"
     When I run antares simulator
@@ -197,7 +197,7 @@ Feature: short tests
     And in area "LOAD NODE", during year 1, total unsupplied energy is 399828376 MWh
     And in area "LOAD NODE", during year 1, "default" produces 0 MWh
 
-  @fast @short @hydro @storage
+  @short @hydro @storage
   Scenario: 015 TS generation - Hydro power
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/015 TS generation - Hydro power"
     When I run antares simulator
@@ -214,7 +214,7 @@ Feature: short tests
     And in area "HYDRO NODE-2", during year 1, "default-2" produces 0 MWh
     And in area "HYDRO NODE-3", during year 1, "default" produces 0 MWh
 
-  @fast @short
+  @short
   Scenario: 016 Probabilistic vs deterministic - 1
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/016 Probabilistic vs deterministic - 1"
     When I run antares simulator
@@ -232,7 +232,7 @@ Feature: short tests
     And in area "WEST", during year 1, "sb" produces 79883404 MWh
     And in area "WEST", during year 1, "p" produces 9271101 MWh
 
-  @fast @short
+  @short
   Scenario: 018 Probabilistic vs deterministic - 3
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/018 Probabilistic vs deterministic - 3"
     When I run antares simulator
@@ -250,7 +250,7 @@ Feature: short tests
     And in area "WEST", during year 1, "sb" produces 79753394 MWh
     And in area "WEST", during year 1, "p" produces 6570858 MWh
 
-  @fast @short
+  @short
   Scenario: 020 Single mesh - DC law
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/020 Single mesh - DC law"
     When I run antares simulator
@@ -288,7 +288,7 @@ Feature: short tests
     And in area "NODE 3", during year 2, "aggregate 2" produces 4498661 MWh
     And in area "NODE 3", during year 2, "aggregate 3" produces 2326009 MWh
 
-  @fast @short
+  @short
   Scenario: 021 Four areas - DC law
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/021 Four areas - DC law"
     When I run antares simulator
@@ -298,7 +298,7 @@ Feature: short tests
       | EXP       | STD       | MIN       | MAX       |
       | 7.972e+10 | 2.258e+10 | 5.613e+10 | 1.082e+11 |
 
-  @fast @short @useless
+  @short @useless
   Scenario: 053 System Map Editor - 1
     # This was meant to be a GUI training scenario. Keeping it simple: only checking if simulation works & overall cost.
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/053 System Map Editor - 1"
@@ -307,7 +307,7 @@ Feature: short tests
     And the simulation takes less than 20 seconds
     And the expected value of the annual system cost is 668214000000
 
-  @fast @short @useless
+  @short @useless
   Scenario: 054 System Map Editor -2
     # This was meant to be a GUI training scenario. Keeping it simple: only checking if simulation works & overall cost.
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/054 System Map Editor -2"
@@ -316,7 +316,7 @@ Feature: short tests
     And the simulation takes less than 20 seconds
     And the expected value of the annual system cost is 2485600000000
 
-  @fast @short @useless
+  @short @useless
   Scenario: 055 System Map Editor - 3
     # This was meant to be a GUI training scenario. Keeping it simple: only checking if simulation works & overall cost.
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/055 System Map Editor - 3"
@@ -325,7 +325,7 @@ Feature: short tests
     And the simulation takes less than 20 seconds
     And the expected value of the annual system cost is 760011000000
 
-  @fast @short @useless
+  @short @useless
   Scenario: 056 System Map Editor - 4
     # This was meant to be a GUI training scenario. Keeping it simple: only checking if simulation works & overall cost.
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/056 System Map Editor - 4"
@@ -334,7 +334,7 @@ Feature: short tests
     And the simulation takes less than 20 seconds
     And the expected value of the annual system cost is 2485600000000
 
-  @fast @short @hydro @storage
+  @short @hydro @storage
   Scenario: 065 Pumped storage plant -explicit model-01
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/065 Pumped storage plant -explicit model-01"
     When I run antares simulator
@@ -349,7 +349,7 @@ Feature: short tests
       | west  | 2    |                  |               | 571415  | 149644         | 0                 |
     # Spilled energy in "& psp" is ok because water value is set to 0
 
-  @fast @short @hydro @storage
+  @short @hydro @storage
   Scenario: 065.bis Pumped storage plant -explicit model-01 - zero transmission capacity
     # Like the previous case, but with no transmission capacity between "west" and "& psp"
     # This makes overall system cost go up (like described in the study notes)
@@ -367,7 +367,7 @@ Feature: short tests
       | west  | 2    |                  |               | -101739 | 430418         | 0                 |
     # Hydro production in "& psp" is actually spilled but it's ok because water value is set to 0
 
-  @fast @short @hydro @storage
+  @short @hydro @storage
   Scenario: 066 Pumped storage plant -explicit model-02
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/066 Pumped storage plant -explicit model-02"
     When I run antares simulator
@@ -382,7 +382,7 @@ Feature: short tests
       | west  | 2    |                  |               | 621201  | 144877         | 0                 |
     # Hydro has to spill some energy in "& psp" year 2 because of inflows
 
-  @fast @short @hydro @storage
+  @short @hydro @storage
   Scenario: 066.bis Pumped storage plant -explicit model-02 - zero transmission capacity
     # Like the previous case, but with no transmission capacity between "west" and "& psp"
     # This makes overall system cost go up (like described in the study notes)

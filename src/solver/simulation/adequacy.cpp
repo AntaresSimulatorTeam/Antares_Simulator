@@ -63,7 +63,7 @@ bool Adequacy::simulationBegin()
                                             numSpace);
             if (study.parameters.include.reserves)
             {
-                study.runtime.initializeReservesIndexMaps(study, pProblemesHebdo[numSpace]);
+                buildReserveIndexMaps(study, pProblemesHebdo[numSpace]);
             }
         }
     }
@@ -379,5 +379,9 @@ void Adequacy::simulationEnd()
         ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
     }
 }
+
+// Single definition of ISimulation<Adequacy> for the whole build; every other TU
+// uses the extern-template declaration in adequacy.h.
+template class ISimulation<Adequacy>;
 
 } // namespace Antares::Solver::Simulation
