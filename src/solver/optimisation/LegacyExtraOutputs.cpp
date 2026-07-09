@@ -67,6 +67,7 @@ public:
     void linkOutputs(uint32_t interco, int pdt);
     void thermalOutputs(uint32_t pays, int index, int pdt);
     void shortTermStorageOutputs(uint32_t pays, int pdt);
+    void inputGenerationOutputs(uint32_t pays, int pdt) const;
     void weeklyHydroOutputs(uint32_t pays);
 
 private:
@@ -287,6 +288,22 @@ void LegacyExtraOutputEmitter::shortTermStorageOutputs(uint32_t pays, int pdt)
     }
 }
 
+void LegacyExtraOutputEmitter::inputGenerationOutputs(uint32_t pays, int pdt) const
+{
+    // Sized by SIM_RenseignementProblemeHebdo; empty when the caller did not
+    // provide the input series (e.g. problems built outside the simulation).
+    if (pays >= problemeHebdo_.InputGenerationOfArea.size())
+    {
+        return;
+    }
+    for (const auto& entry: problemeHebdo_.InputGenerationOfArea[pays])
+    {
+        const double power = entry.availablePower[pdt];
+        emit("generation_power", entry.componentName, pdt, power);
+        emit("minus_generation", entry.componentName, pdt, -power);
+    }
+}
+
 void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays)
 {
     if (!problemeHebdo_.CaracteristiquesHydrauliques[pays].AccurateWaterValue)
@@ -324,6 +341,7 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
         {
             emitter.areaOutputs(pays, pdt);
             emitter.shortTermStorageOutputs(pays, pdt);
+            emitter.inputGenerationOutputs(pays, pdt);
 
             const PALIERS_THERMIQUES& paliers = problemeHebdo.PaliersThermiquesDuPays[pays];
             for (int index = 0; index < paliers.NombreDePaliersThermiques; ++index)

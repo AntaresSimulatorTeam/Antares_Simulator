@@ -32,30 +32,32 @@ still being written); CSR outputs are explicitly out of scope per the spec.
 
 ---
 
-## 2.4.2.2 — Model: renewable  ⬜ not started
+## 2.4.2.2 — Model: renewable  ✅ complete
 
-| Done | Output | Formula | Design |
-|------|--------|---------|--------|
-| [ ] | `generation_power` | `available_power` | **Anchorless emission path** (B) |
-| [ ] | `minus_generation` | `-available_power` | **Anchorless emission path** (B) |
+| Done | Output | Formula | Anchor / Design |
+|------|--------|---------|-----------------|
+| [x] | `generation_power` | `available_power` | `InputGenerationOfArea` series (B) |
+| [x] | `minus_generation` | `-available_power` | `InputGenerationOfArea` series (B) |
 
 `available_power` is input data (cluster TS in cluster mode; `area.wind/solar.series`
 or `area.hydro.series->ror` in aggregated mode). Renewables are **not** LP variables
-in the legacy weekly problem, so there is no recorded anchor — these rows need a
-new path that emits per component/hour straight from study data. Component naming:
-`{area}_wind`, `{area}_solar`, `{area}_run_of_river` (aggregated) or the cluster name.
+in the legacy weekly problem, so `SIM_RenseignementProblemeHebdo` copies the week's
+series into `PROBLEME_HEBDO::InputGenerationOfArea` and the emitter reads them
+per component/hour. Component naming: `{area}_wind`, `{area}_solar`,
+`{area}_run_of_river` (aggregated) or the cluster name (clusters mode; enabled
+clusters only, matching the must-run aggregation).
 
 ---
 
-## 2.4.2.3 — Model: misc_gen  ⬜ not started
+## 2.4.2.3 — Model: misc_gen  ✅ complete
 
-| Done | Output | Formula | Design |
-|------|--------|---------|--------|
-| [ ] | `generation_power` | `available_power` | **Anchorless emission path** (B) |
-| [ ] | `minus_generation` | `-available_power` | **Anchorless emission path** (B) |
+| Done | Output | Formula | Anchor / Design |
+|------|--------|---------|-----------------|
+| [x] | `generation_power` | `available_power` | `InputGenerationOfArea` series (B) |
+| [x] | `minus_generation` | `-available_power` | `InputGenerationOfArea` series (B) |
 
-`available_power = miscGen.entry[MiscGenIndex]`. Same anchorless need as renewable.
-Component → `miscGen.entry` index mapping:
+`available_power = miscGen.entry[MiscGenIndex]`. Same input-series path as
+renewable. Component → `miscGen.entry` index mapping:
 
 | Component | MiscGenIndex |
 |-----------|--------------|
@@ -176,8 +178,8 @@ endpoints' `*_port.price`.
 | Model | Implemented | Remaining |
 |-------|-------------|-----------|
 | area | 5 / 5 | — (adequacy-patch rows blocked on ANT-5240) |
-| renewable | 0 / 2 | generation_power, minus_generation |
-| misc_gen | 0 / 2 | generation_power, minus_generation |
+| renewable | 2 / 2 | — |
+| misc_gen | 2 / 2 | — |
 | thermal | 23 / 23 | — |
 | load | 1 / 1 | — |
 | link | 9 / 9 | — |
@@ -201,13 +203,13 @@ profit** = `floor(price(area) × (withdrawal − injection) + 0.5)`.
 - Caveat: dual-derived values are zero on MIP weeks (duals not extracted) — same
   limitation as `price`.
 
-### (B) Anchorless study-data emission
-Rows for components that are **not** LP variables (renewable clusters, misc-gen
-entries) are emitted the same way as everything else — per component/hour from
-`PROBLEME_HEBDO` study data — they just need their loop and the component naming
-conventions (`{area}_wind/_solar/_run_of_river`, the misc-gen table). Unlocks
-**renewable** + **misc_gen** `generation_power` / `minus_generation`, and their
-`balance_port.flow` fields.
+### (B) Anchorless study-data emission — ✅ done
+✅ done — `SIM_RenseignementProblemeHebdo` copies the week's input-only series
+(renewables, misc gen) into `PROBLEME_HEBDO::InputGenerationOfArea`
+(`fillInputGenerationSeries` in `sim_calcul_economique.cpp`), and the emitter's
+`inputGenerationOutputs` walks them per component/hour. Provides **renewable** +
+**misc_gen** `generation_power` / `minus_generation`; their `balance_port.flow`
+fields (§2.5) can reuse the same series.
 
 ### (C) Per-area layer aggregation — ✅ done
 `cost_layer · LayerStorage` is accumulated across the `LayerStorage` variables of
@@ -228,5 +230,5 @@ provide directly.
 
 1. ~~**(A) STS outputs** → STS profit; one more entity loop.~~ done
 2. ~~**(C) Per-area layer aggregation** → bellman_value; self-contained.~~ done
-3. **(B) Anchorless emission path** → renewable + misc_gen; distinct loop.
+3. ~~**(B) Anchorless emission path** → renewable + misc_gen; distinct loop.~~ done
 4. **(D) Port fields** → §2.5; mostly reuses prior values.

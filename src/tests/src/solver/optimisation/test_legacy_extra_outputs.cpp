@@ -180,6 +180,15 @@ struct Fixture
         storage.name = "battery1";
         storage.clusterGlobalIndex = 0;
 
+        // Input-only generation series for area1: aggregated wind and one
+        // misc-gen entry, as filled by SIM_RenseignementProblemeHebdo.
+        problem.InputGenerationOfArea.resize(3);
+        problem.InputGenerationOfArea[0].push_back(
+          {.componentName = "area1_wind", .availablePower = std::vector<double>(nbPdt, 320.)});
+        problem.InputGenerationOfArea[0].push_back(
+          {.componentName = "area1_combined_heat_power",
+           .availablePower = std::vector<double>(nbPdt, 12.5)});
+
         problem.CorrespondanceVarNativesVarOptim.resize(nbPdt);
         problem.CorrespondanceCntNativesCntOptim.resize(nbPdt);
         auto& solved = *problem.ProblemeAResoudre;
@@ -553,6 +562,29 @@ BOOST_AUTO_TEST_CASE(bellman_value_is_skipped_without_accurate_water_value)
     BOOST_CHECK(RowsForOutput(table, "bellman_value").empty());
 }
 
+BOOST_AUTO_TEST_CASE(input_generation_emits_power_and_its_negation_per_component)
+{
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "generation_power", "area1_wind")->value, 320.);
+    BOOST_CHECK_EQUAL(FindRow(table, "minus_generation", "area1_wind")->value, -320.);
+    BOOST_CHECK_EQUAL(FindRow(table, "generation_power", "area1_combined_heat_power")->value,
+                      12.5);
+    BOOST_CHECK_EQUAL(FindRow(table, "minus_generation", "area1_combined_heat_power")->value,
+                      -12.5);
+    // Areas without input series produce no rows.
+    BOOST_CHECK_EQUAL(RowsForOutput(table, "generation_power").size(), 2);
+}
+
+BOOST_AUTO_TEST_CASE(input_generation_is_skipped_when_the_series_are_absent)
+{
+    problem.InputGenerationOfArea.clear();
+    fill();
+
+    BOOST_CHECK(RowsForOutput(table, "generation_power").empty());
+    BOOST_CHECK(RowsForOutput(table, "minus_generation").empty());
+}
+
 BOOST_AUTO_TEST_CASE(storage_profit_is_net_withdrawal_times_area_price)
 {
     fill();
@@ -725,8 +757,10 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
     //        capacity_shadow_price) = 9; link 1 without the hurdle-cost
     //        outputs = 7                                          = 16
     // Short-term storage: battery1's profit                       = 1
+    // Input generation: 2 area1 components x (generation_power,
+    //                    minus_generation)                         = 4
     // Weekly: area1's hydro_shadow_price and bellman_value        = 2
-    BOOST_CHECK_EQUAL(table.rowCount(), 20 + 21 + 16 + 1 + 2);
+    BOOST_CHECK_EQUAL(table.rowCount(), 20 + 21 + 16 + 1 + 4 + 2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

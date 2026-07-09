@@ -14,6 +14,8 @@ The legacy (weekly) solver exposes its results in the modeler simulation table i
 ```
 for pdt in [0, NombreDePasDeTempsPourUneOptimisation):
     for each area:            areaOutputs(pays, pdt)
+                              shortTermStorageOutputs(pays, pdt)
+                              inputGenerationOutputs(pays, pdt)  # renewable / misc gen
     for each thermal cluster: thermalOutputs(pays, index, pdt)
     for each link:            linkOutputs(interco, pdt)
 for each area:                weeklyHydroOutputs(pays)   # hydro_shadow_price, bellman_value
@@ -61,6 +63,8 @@ Emitters skip outputs whose anchor does not exist, mirroring the construction si
 | `hydro_shadow_price` | area | `dual(FinalStockExpression)` | weekly, accurate water value mode only |
 | `bellman_value` | area | `Σ_layer CoutLineaire[il] × X[il]` | `il = vm.LayerStorage(pays, layer)`; weekly, accurate water value mode only |
 | `profit` | storage | `floor((X[iw] − X[ii]) × price + 0.5)` | `iw/ii = vm.ShortTermStorageWithdrawal/Injection(clusterGlobalIndex)`; price = balance dual of the storage's area |
+| `generation_power` | renewable / misc gen | `availablePower[pdt]` | `InputGenerationOfArea[pays]`, filled from study series by `SIM_RenseignementProblemeHebdo` (not an LP variable) |
+| `minus_generation` | renewable / misc gen | `−availablePower[pdt]` | as above |
 | `abs_flow` | link | `abs(X[idf])` | `idf = vm.DirectFlow` (signed) |
 | `minus_flow` | link | `−X[idf]` | GEMS sign convention |
 | `actual_loop_flow` | link | `ValeurDeLoopFlowOrigineVersExtremite[interco]` | input parameter |

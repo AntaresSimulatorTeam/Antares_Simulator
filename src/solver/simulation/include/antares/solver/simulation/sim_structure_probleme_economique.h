@@ -589,6 +589,19 @@ struct PROBLEME_HEBDO
     uint32_t NumberOfShortTermStorages = 0;
     std::vector<::AREA_INPUT> ShortTermStorage;
 
+    // Input-data generation series (renewable clusters or aggregated
+    // wind/solar/ROR, misc gen entries) copied from the study each week so the
+    // simulation-table extra outputs can emit rows for components that are not
+    // LP variables. Outer index: area; availablePower is indexed by hour in
+    // the week.
+    struct INPUT_GENERATION
+    {
+        std::string componentName;
+        std::vector<double> availablePower;
+    };
+
+    std::vector<std::vector<INPUT_GENERATION>> InputGenerationOfArea;
+
     /* Optimization problem */
     std::vector<bool> DefaillanceNegativeUtiliserPMinThermique;
     std::vector<bool> DefaillanceNegativeUtiliserHydro;
