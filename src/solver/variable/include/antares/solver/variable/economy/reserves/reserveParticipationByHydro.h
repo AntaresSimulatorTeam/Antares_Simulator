@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <antares/solver/simulation/reserve-index-maps.h>
+
 #include "reserveParticipationTemplate.h"
 #include "vCardReserveParticipationByHydro.h"
 
@@ -35,7 +37,7 @@ public:
     bool hasIndexMapping(const Data::Study& study, const Data::Area* area) const
     {
         return study.parameters.include.reserves
-               && !study.runtime.reserveParticipationIndexMaps.value().at(area->id).Hydro.empty();
+               && !study.reserveMaps->participationIndexMaps.at(area->id).Hydro.empty();
     }
 
     void buildReportForIndex(SurveyResults& results,
@@ -44,10 +46,10 @@ public:
                              int precision,
                              unsigned int numSpace) const
     {
-        const auto reserveID = results.data.study.runtime.reserveParticipationIndexMaps.value()
+        const auto reserveID = results.data.study.reserveMaps->participationIndexMaps
                                  .at(results.data.area->id)
                                  .Hydro.right.at(i);
-        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        auto reserveName = results.data.study.reserveMaps->idToName.at(reserveID);
         results.variableCaption = reserveName + "_Hydro";
         results.variableUnit = VCardType::Unit();
         pValuesForTheCurrentYear[numSpace][i]
@@ -65,11 +67,10 @@ inline void ReserveParticipationByHydro::populateHourlyValues(State& state, unsi
                .at(state.area->index)
                .reserveParticipationPerHydroForYear[state.hourInTheYear]["Hydro"])
         {
-            pValuesForTheCurrentYear[numSpace]
-                                    [state.study.runtime.reserveParticipationIndexMaps.value()
-                                       .at(state.area->id)
-                                       .Hydro.left.at(reserveName)]
-                                      .hour[state.hourInTheYear]
+            pValuesForTheCurrentYear[numSpace][state.study.reserveMaps->participationIndexMaps
+                                                 .at(state.area->id)
+                                                 .Hydro.left.at(reserveName)]
+              .hour[state.hourInTheYear]
               = reserveParticipation;
         }
     }

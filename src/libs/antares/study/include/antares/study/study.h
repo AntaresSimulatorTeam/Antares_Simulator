@@ -23,6 +23,11 @@
 #include "parameters.h"
 #include "sets.h"
 
+namespace Antares::Solver::Simulation
+{
+struct ReserveIndexMaps;
+}
+
 namespace Antares::Data
 {
 /*!
@@ -312,6 +317,10 @@ public:
     ** These informations are only needed when a study is processed.
     */
     StudyRuntimeInfos runtime;
+
+    //! Lookup tables mapping reserves to their solver-side participation indices.
+    //! Owned by the solver (opaque handle), populated once the weekly problem is built.
+    std::shared_ptr<Solver::Simulation::ReserveIndexMaps> reserveMaps;
 
     /*!
     ** \name Cache
