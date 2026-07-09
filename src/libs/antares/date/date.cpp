@@ -405,13 +405,15 @@ void Calendar::reset()
         months[m].days = StandardDaysPerMonths[realmonth];
         months[m].realmonth = (MonthName)realmonth;
 
-        if (m < MONTHS_PER_YEAR)
-        {
-            auto& textmonth = text.months[m];
-            textmonth.name = MonthToString(realmonth);
-            textmonth.shortName = MonthToShortString(realmonth);
-            textmonth.shortUpperName = MonthToUpperShortString(realmonth);
-        }
+        // text.months has the same 13 slots as the data `months` array: index 12
+        // is the wrap-around segment of a shifted-start calendar, and is also the
+        // month assigned to trailing hours when maxHoursInYear (24 * 366) exceeds
+        // the days of a non-leap year. Populating it avoids an out-of-bounds read
+        // in the text representation below.
+        auto& textmonth = text.months[m];
+        textmonth.name = MonthToString(realmonth);
+        textmonth.shortName = MonthToShortString(realmonth);
+        textmonth.shortUpperName = MonthToUpperShortString(realmonth);
     }
 
     text.weekdays[0] = DayOfTheWeekToString(monday);

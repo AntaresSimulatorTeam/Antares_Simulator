@@ -23,6 +23,10 @@ inline IVariable<ChildT, VCardT>::IVariable()
     for (uint i = 0; i < pColumnCount; i++)
     {
         isPrinted[i] = true;
+        // Default to "applicable"; broadcastNonApplicability() may set it later.
+        // Without this, columns whose applicability is never broadcast would be
+        // read uninitialized when exporting results.
+        isNonApplicable[i] = false;
     }
 }
 
