@@ -329,6 +329,10 @@ endif ()
 # TODO : review Standard Settings
 include(src/cmake/common-settings.cmake)
 
+# Opt-in build/link time profiling (-DANTARES_TIME_TRACE=ON). Must be included
+# before any add_subdirectory() so the flags reach every target.
+include(src/cmake/build-profiling.cmake)
+
 add_subdirectory("src/config")
 
 # Configure config.h with current ANTARES version

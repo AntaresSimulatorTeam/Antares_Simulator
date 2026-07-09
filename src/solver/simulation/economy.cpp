@@ -67,7 +67,7 @@ bool Economy::simulationBegin()
                                             numSpace);
             if (study.parameters.include.reserves)
             {
-                study.runtime.initializeReservesIndexMaps(study, pProblemesHebdo[numSpace]);
+                buildReserveIndexMaps(study, pProblemesHebdo[numSpace]);
             }
 
             weeklyOptProblems_.emplace_back(study.parameters.optOptions,

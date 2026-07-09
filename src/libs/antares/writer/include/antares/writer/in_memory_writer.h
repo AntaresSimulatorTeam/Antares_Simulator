@@ -7,8 +7,6 @@
 #include <mutex>
 #include <string>
 
-#include <yuni/core/string.h>
-
 #include <antares/benchmarking/DurationCollector.h>
 #include "antares/writer/i_writer.h"
 

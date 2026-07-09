@@ -4,6 +4,7 @@
 #ifndef __SOLVER_SIMULATION_ECO_STRUCTS_H__
 #define __SOLVER_SIMULATION_ECO_STRUCTS_H__
 
+#include <array>
 #include <memory>
 #include <vector>
 
@@ -395,6 +396,12 @@ struct PALIERS_THERMIQUES
     std::vector<int> DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
     std::vector<int> DureeMinimaleDArretDUnGroupeDuPalierThermique;
     std::vector<std::string> NomsDesPaliersThermiques;
+
+    // Per-cluster pollutant emission factors (tons/MWh), indexed by cluster like
+    // the vectors above. Carried only so the legacy extra outputs can emit
+    // co2_emissions ... op5_emissions = generation_power * factor; not used by
+    // the optimization itself.
+    std::vector<std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX>> emissionFactors;
 };
 
 struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
