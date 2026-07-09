@@ -7,6 +7,8 @@
 #include <fstream>
 #include <utility>
 
+#include <fmt/format.h>
+
 #include <antares/exception/InvalidArgumentError.hpp>
 #include <antares/exception/RuntimeError.hpp>
 
@@ -17,42 +19,41 @@ namespace fs = std::filesystem;
 namespace Antares::Writer
 {
 
-std::string escape(const std::string& cell)
+// Appends `cell` to `buf`, quoting it only when it contains a character that requires it.
+// Appending straight into the shared buffer (rather than returning a std::string per cell)
+// avoids one allocation/copy per cell in the common, non-quoted case.
+void appendEscaped(fmt::memory_buffer& buf, const std::string& cell)
 {
     bool needs_quotes = cell.find_first_of(",\n\r\t\"") != std::string::npos;
     if (!needs_quotes)
     {
-        return cell;
+        buf.append(cell);
+        return;
     }
 
-    std::string out;
-    out.reserve(cell.size() + 2);
-    out.push_back('"');
+    buf.push_back('"');
     for (char c: cell)
     {
         if (c == '"')
         {
-            out.push_back('"');
+            buf.push_back('"');
         }
-        out.push_back(c);
+        buf.push_back(c);
     }
-    out.push_back('"');
-    return out;
+    buf.push_back('"');
 }
 
-std::string make_line(const std::vector<std::string>& cols)
+void appendLine(fmt::memory_buffer& buf, const std::vector<std::string>& cols)
 {
-    std::string out;
     for (size_t i = 0; i < cols.size(); ++i)
     {
         if (i)
         {
-            out += ',';
+            buf.push_back(',');
         }
-        out += escape(cols[i]);
+        appendEscaped(buf, cols[i]);
     }
-    out += '\n';
-    return out;
+    buf.push_back('\n');
 }
 
 CsvTableWriter::CsvTableWriter(const std::filesystem::path& filePath):
@@ -81,19 +82,27 @@ void CsvTableWriter::writeTable(const SimulationTable& simuTable) const
         throw RuntimeError("CsvTableWriter: cannot open output file: " + output_file_.string());
     }
 
-    std::vector<std::string> names;
-    std::ranges::transform(columns,
-                           std::back_inserter(names),
-                           [](const auto& col) { return col->name(); });
-    if (!names.empty())
+    fmt::memory_buffer buf;
+
+    if (!columns.empty())
     {
-        out << make_line(names);
+        for (size_t i = 0; i < columns.size(); ++i)
+        {
+            if (i)
+            {
+                buf.push_back(',');
+            }
+            appendEscaped(buf, columns[i]->name());
+        }
+        buf.push_back('\n');
     }
 
     for (const auto& r: rows)
     {
-        out << make_line(r);
+        appendLine(buf, r);
     }
+
+    out.write(buf.data(), static_cast<std::streamsize>(buf.size()));
 }
 
 } // namespace Antares::Writer
