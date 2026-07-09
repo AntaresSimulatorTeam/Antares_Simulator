@@ -4,6 +4,7 @@
 #include <stdexcept>
 #define WIN32_LEAN_AND_MEAN
 
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
@@ -216,6 +217,42 @@ BOOST_AUTO_TEST_CASE(MultipleEntries)
 
     // Count lines (should be numEntries)
     BOOST_CHECK_EQUAL(table.rowCount(), numEntries);
+}
+
+// The writer flushes its buffer to disk in chunks rather than holding the whole CSV in
+// memory. This table is large enough to cross that threshold several times, so a chunk
+// boundary landing in the middle of a line would show up as a corrupt or missing row.
+BOOST_FIXTURE_TEST_CASE(WriteTable_LargeTableCrossingFlushBoundary, SimulationTableFileFixture)
+{
+    SimulationTable table;
+    const size_t numEntries = 50000;
+    for (size_t i = 0; i < numEntries; ++i)
+    {
+        SimulationTableEntry entry{.block = static_cast<unsigned>(i + 1),
+                                   .component = "comp" + std::to_string(i),
+                                   .output = "var" + std::to_string(i),
+                                   .absolute_time_index = i * 10,
+                                   .block_time_index = i % 168,
+                                   .scenario_index = static_cast<unsigned>(i % 10),
+                                   .value = static_cast<double>(i),
+                                   .status = MipBasisStatus::BASIC};
+        table.addEntry(entry);
+    }
+
+    csv_writer.writeTable(table);
+    std::string content = readFileContent(out_file_path);
+
+    // Sanity check: the payload must actually exceed the writer's flush threshold (1 MiB),
+    // otherwise this test would silently degrade into a single-chunk case.
+    BOOST_CHECK_GT(content.size(), 1u << 20);
+
+    // One header line + one line per entry, and nothing lost or duplicated in between.
+    BOOST_CHECK_EQUAL(std::ranges::count(content, '\n'), numEntries + 1);
+
+    // First and last data rows survive intact.
+    BOOST_CHECK(content.find("\n1,comp0,var0,0,0,0,0,Basic\n") != std::string::npos);
+    BOOST_CHECK(content.find("\n50000,comp49999,var49999,499990,103,9,49999,Basic\n")
+                != std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
