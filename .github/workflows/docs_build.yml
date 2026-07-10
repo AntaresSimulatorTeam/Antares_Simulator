@@ -1,0 +1,24 @@
+name: Docs Build Check
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check external link validity
+        uses: tcort/github-action-markdown-link-check@v1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' 
+
+      - name: Install dependencies with pip
+        run: pip install -r requirements-doc.txt
+
+      # Fail notably if an internal link is incorrect
+      - name: Build MkDocs
+        run: mkdocs build --strict
