@@ -30,9 +30,7 @@ theme:
 nav:
   - 'Home': 'index.md'
   - 'User guide':
-      - 'Overview': 'user-guide/01-overview.md'
       - 'Installation': 'user-guide/02-install.md'
-      - 'Getting started': 'user-guide/03-getting_started.md'
       - 'Solver':
           - 'Overview': 'user-guide/solver/01-overview-solver.md'
           - 'Input files': 'user-guide/solver/02-inputs.md'

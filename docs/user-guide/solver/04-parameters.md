@@ -24,11 +24,11 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Default value:** `economy`
 - **Usage:** this parameter sets the study mode for Antares
     - `economy/economic`: Antares simulator will try to ensure balance between load and generation, while minimizing the 
-      economical cost of the grid's operation (more on this [here](../01-overview.md#transmission-project-profitability)). "Economy" simulations make a full use of 
+      economical cost of the grid's operation. "Economy" simulations make a full use of 
       *Antares* optimization capabilities. They require economic as well as technical input data and may demand a lot 
       of computer resources.
     - `adequacy`: in this mode, all power plants' operational cost is considered zero. Antares' only objective is to ensure
-      balance between load and generation (more on this [here](../01-overview.md#generation-adequacy-problems)). "Adequacy" simulations are faster and require only 
+      balance between load and generation. "Adequacy" simulations are faster and require only 
       technical input data. Their results are limited to adequacy indicators.
     - `expansion`: Antares simulator will optimize the investments on the grid, minimizing both investments and
       operational costs.
