@@ -120,4 +120,10 @@ exclude_docs: |
   /Architecture_Decision_Records/
   README.md
 
+validation:
+  omitted_files: warn
+  absolute_links: warn  # Or 'relative_to_docs' - new in MkDocs 1.6
+  unrecognized_links: warn
+  anchors: warn
+
 copyright: Copyright &copy; 2007 - 2025 RTE
