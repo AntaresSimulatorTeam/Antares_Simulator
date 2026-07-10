@@ -243,7 +243,7 @@ The following group types can be used for dynamic aggregation:
 
 - For short-term storage `LEVEL` columns, values represent **averages** (not hourly values) computed over the period of time (day, week, month or year)
 - The number of columns generated scales with the number of districts and groups defined in your study
-- To enable dynamic aggregation, define [sets of areas](02-inputs.md) in your study input
+- To enable dynamic aggregation, define [sets of areas](inputs.md) in your study input
 
 [^11]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
 
@@ -251,7 +251,7 @@ The following group types can be used for dynamic aggregation:
 
 [^13]: NODU and NP Cost do not appear in "Adequacy" results since these variables are irrelevant in that context
 
-[^adqp]: Please note that this output variable is only available in the economy mode, if adequacy patch is activated and the area the output variable belongs to is inside the adequacy patch domain (see [Adequacy Patch](optional-features/adequacy-patch.md))
+[^adqp]: Please note that this output variable is only available in the economy mode, if adequacy patch is activated and the area the output variable belongs to is inside the adequacy patch domain (see [Adequacy Patch](https://antares-doc.readthedocs.io/en/latest/reference/adequacy-patch/))
 
 [^14]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
 
@@ -263,7 +263,7 @@ The following group types can be used for dynamic aggregation:
 
 ### The Annual System Cost Output file
 
-In addition to the general files introduced in [Output Files](03-outputs.md), the Output folder of each economic or adequacy simulation includes, at its root, a file "Annual\_System\_Cost.txt" It presents the metrics of a global Monte-Carlo variable further denoted ASC.
+In addition to the general files introduced in [Output Files](outputs.md#output-files), the Output folder of each economic or adequacy simulation includes, at its root, a file "Annual\_System\_Cost.txt" It presents the metrics of a global Monte-Carlo variable further denoted ASC.
 
 The value of ASC for any given simulated year is defined as the sum, over all areas and links, of the annual values of the area-variable "OV.COST" and of the link-variable "HURD. COST".
 

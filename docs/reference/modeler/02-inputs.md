@@ -74,7 +74,7 @@ port-types:
 - **area-connection** _(optional)_: used only for hybrid (solver x modeler) studies, ignored
   by [antares-modeler](08-command-line.md).
   For more information on hybrid
-  studies, [see the relevant documentation](../solver/08-hybrid-studies.md#selecting-the-area-connection-port-fields).
+  studies, [see the relevant documentation](../solver/hybrid-studies.md#selecting-the-area-connection-port-fields).
 
 ### Models
 
@@ -328,7 +328,7 @@ connections:
 The **area-connections** section is used only for hybrid (solver x modeler) studies, and is ignored
 by [antares-modeler](08-command-line.md).  
 For more information on hybrid
-studies, [see the relevant documentation](../solver/08-hybrid-studies.md#connecting-modeler-components-to-legacy-areas).
+studies, [see the relevant documentation](../solver/hybrid-studies.md#connecting-modeler-components-to-legacy-areas).
 
 ## Optim-config file
 

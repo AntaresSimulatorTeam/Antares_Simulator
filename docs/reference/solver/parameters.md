@@ -156,7 +156,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
   - `true`: the simulation will be carried out on a mix of deterministic and probabilistic conditions,
     with some time-series randomly drawn and others set to user-defined values. This option allows setting
     up detailed "what if" simulations that may help to understand the phenomena at work and quantify various kinds
-    of risk indicators. To set up the simulation profile, use the [scenario builder](02-inputs.md).
+    of risk indicators. To set up the simulation profile, use the [scenario builder](inputs.md).
 
 > _**WARNING:**_ this parameter cannot be used with parameter [derated](#derated)  
 > _**WARNING:**_ if set to `true`, parameter [active-rules-scenario](#active-rules-scenario) must be set
@@ -182,7 +182,7 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
-- **Usage:** set to `true` in order to select a specific subset of the optimization variables to print in the [output files](03-outputs.md),
+- **Usage:** set to `true` in order to select a specific subset of the optimization variables to print in the [output files](outputs.md),
   using a thematic filter. Use the [variables selection parameters](#variables-selection-parameters) to define the filter.  
   Thematic Trimming does not reduce computation time, but can bring some benefits on total runtime (smaller files to 
   write). It can save a lot of disk space in simulations where only a few variables are of interest.
@@ -249,7 +249,7 @@ These parameters are listed under the `[output]` section in the `.ini` file.
 - **Default value:** `false`
 - **Usage:**
     - `false`: no storage of the time-series numbers (either randomly drawn or user-defined) used to set up the simulation.
-    - `true`: a [specific output folder](03-outputs.md) will be created to store all the time-series numbers drawn 
+    - `true`: a [specific output folder](outputs.md) will be created to store all the time-series numbers drawn 
       when preparing the Monte-Carlo years.
 
 ---
@@ -303,7 +303,7 @@ _**This section is under construction**_
 - **Required:** no
 - **Default value:**
 - **Usage:** if [storenewset](#storenewset) is set to `true`, this parameter selects those of them that should be
-  written in the [output files](03-outputs.md).
+  written in the [output files](outputs.md).
 
 ---
 ## Optimization parameters
@@ -462,7 +462,7 @@ _**This section is under construction**_
     - `optim-2`: export MPS for second step of the optimization
     - `both-optims` or `true`: export MPS for both steps of the optimization
 
-> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-include-exportmps-parameter).
+> _**Note:**_ You can find more information on this parameter [here](appendix.md#details-on-the-include-exportmps-parameter).
 
 ---
 #### include-export-solutions
@@ -511,7 +511,7 @@ _**This section is under construction**_
     - `error-dry`: stop simulation
     - `error-verbose`: stop simulation, and export the MPS of the unfeasible problem
   
-> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-include-unfeasible-problem-behavior-parameter).
+> _**Note:**_ You can find more information on this parameter [here](appendix.md#details-on-the-include-unfeasible-problem-behavior-parameter).
 
 ---
 #### linear-solver-param
@@ -531,7 +531,7 @@ _**This section is under construction**_
 
 ---
 ## Adequacy-patch parameters
-Defines a set of options related to the [adequacy patch](optional-features/adequacy-patch.md).
+Defines a set of options related to the [adequacy patch](https://antares-doc.readthedocs.io/en/latest/reference/adequacy-patch/).
 The set of preferences is study-specific; it can be changed at any time and saved along with study data.  
 These parameters are listed under the `[adequacy patch]` section in the `.ini` file.  
 
@@ -540,7 +540,7 @@ These parameters are listed under the `[adequacy patch]` section in the `.ini` f
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
-- **Usage:** set this parameter to `true` if you want to enable the [Adequacy Patch](optional-features/adequacy-patch.md) algorithm.
+- **Usage:** set this parameter to `true` if you want to enable the [Adequacy Patch](https://antares-doc.readthedocs.io/en/latest/reference/adequacy-patch/) algorithm.
 
 ---
 #### set-to-null-ntc-from-physical-out-to-physical-in-for-first-step
@@ -627,7 +627,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `cold start`
     - `hot start`
 
-> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-initial-reservoir-levels-parameter).
+> _**Note:**_ You can find more information on this parameter [here](appendix.md#details-on-the-initial-reservoir-levels-parameter).
 
 ---
 #### hydro-heuristic-policy
@@ -641,7 +641,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `accommodate rule curves`
     - `maximize generation`
 
-> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-hydro-heuristic-policy-parameter).
+> _**Note:**_ You can find more information on this parameter [here](appendix.md#details-on-the-hydro-heuristic-policy-parameter).
 
 ---
 #### hydro-pricing-mode
@@ -655,7 +655,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `fast`
     - `accurate`: Note that this mode is significantly slower than the `fast` mode.
 
-> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-hydro-pricing-mode-parameter).
+> _**Note:**_ You can find more information on this parameter [here](appendix.md#details-on-the-hydro-pricing-mode-parameter).
 
 ---
 #### power-fluctuations
@@ -704,7 +704,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `accurate`: Heuristic in which 2 LP problems are solved. Explicit modelling for the number of ON/OFF units. Slower than `fast`.
     - `milp`: A single MILP problem is solved, with explicit modelling for the number of ON/OFF units. Slower than `accurate`.
 
-> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-unit-commitment-mode-parameter).
+> _**Note:**_ You can find more information on this parameter [here](appendix.md#details-on-the-unit-commitment-mode-parameter).
 
 ---
 #### number-of-cores-mode
@@ -730,7 +730,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `aggregated`
     - `clusters`
 
-> _**Note:**_ You can find more information on this parameter [here](09-appendix.md#details-on-the-renewable-generation-modelling-parameter).
+> _**Note:**_ You can find more information on this parameter [here](appendix.md#details-on-the-renewable-generation-modelling-parameter).
 
 ---
 #### day-ahead-reserve-management

@@ -2,18 +2,18 @@
 
 
 Antares-Solver allows conducting "hybrid" (solver x [modeler](../modeler/01-overview-modeler.md)) studies.  
-This enables using [antares-solver studies](02-inputs.md), in which the simulated system is enriched with components 
+This enables using [antares-solver studies](inputs.md), in which the simulated system is enriched with components 
 that are described in the [antares-modeler format](../modeler/05-model.md).
 
 ## Input structure
-To define a hybrid study, define a [solver study](02-inputs.md), and simply add the [modeler files and directories](../modeler/02-inputs.md) 
+To define a hybrid study, define a [solver study](inputs.md), and simply add the [modeler files and directories](../modeler/02-inputs.md) 
 to the input directory.    
-The parameter.yml file from modeler studies is not needed (if it exists, it will be ignored). The [solver parameters](04-parameters.md) 
+The parameter.yml file from modeler studies is not needed (if it exists, it will be ignored). The [solver parameters](parameters.md) 
 are used, since hybrid studies are conducted using [antares-solver](https://antares-doc.readthedocs.io/en/latest/programmatic/antares-solver-cli/).  
 You can find simple examples by checking out the studies used in our [test base](https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/src/tests/cucumber/features/solver-features/hybrid_studies.feature).  
 
 ## Output files
-The hybrid simulation outputs the [same files as a legacy study](03-outputs.md). But these files only contain the 
+The hybrid simulation outputs the [same files as a legacy study](outputs.md). But these files only contain the 
 optimization results of the system components that were created by the legacy study.  
 
 The results of the modeler's components optimization is exported under the simulation table format, described in 
@@ -64,7 +64,7 @@ area-connections:
 - **component**: the IDs of the component to connect to the area, as defined in the [components section](../modeler/02-inputs.md#components)
 - **port**: the ID of the component's port to connect to the area (as defined by the model of the component). This port 
   must be of a type that defines an area-connection injection field (see [next paragraph](#selecting-the-area-connection-port-fields))
-- **area**: the ID of the area to connect the component to, as defined in the [antares-solver input files](02-inputs.md).
+- **area**: the ID of the area to connect the component to, as defined in the [antares-solver input files](inputs.md).
 
 
 #### Selecting the area-connection port fields

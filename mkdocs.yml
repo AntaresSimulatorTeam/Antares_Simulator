@@ -28,62 +28,62 @@ theme:
         name: Switch to light mode
 
 nav:
-  - 'Home': 'index.md'
+  - Home: index.md
   - Reference:
-      - 'Installation': 'user-guide/02-install.md'
-      - 'Solver':
-          - 'Input files': 'user-guide/solver/02-inputs.md'
-          - 'Output files': 'user-guide/solver/03-outputs.md'
-          - 'Parameters': 'user-guide/solver/04-parameters.md'
-          - 'Hybrid studies': 'user-guide/solver/08-hybrid-studies.md'
-          - 'Appendix': 'user-guide/solver/09-appendix.md'
+      - Installation: reference/installation.md
+      - Solver:
+          - Input files: reference/solver/inputs.md
+          - Output files: reference/solver/outputs.md
+          - Parameters: reference/solver/parameters.md
+          - Hybrid studies: reference/solver/hybrid-studies.md
+          - Appendix: reference/solver/appendix.md
           - Optimization engine support:
-              - FICO® Xpress Optimizer: 'user-guide/solver/optional-features/xpress.md'
-      - 'Modeler':
-          - 'Overview': 'user-guide/modeler/01-overview-modeler.md'
-          - 'Input files': 'user-guide/modeler/02-inputs.md'
-          - 'Output files': 'user-guide/modeler/03-outputs.md'
-          - 'Parameters': 'user-guide/modeler/04-parameters.md'
-          - 'Optimization model': 'user-guide/modeler/05-model.md'
-          - 'Heuristics': 'user-guide/modeler/06-heuristics.md'
-          - 'Standard library': 'user-guide/modeler/07-standard-library.md'
-          - 'Command-line interface': 'user-guide/modeler/08-command-line.md'
-          - 'Expressions': 'user-guide/modeler/09-expressions.md'
-      - 'Time-series generation':
-          - 'Overview': 'user-guide/ts-generator/01-overview-tsgenerator.md'
-          - 'Input files': 'user-guide/ts-generator/02-inputs.md'
-          - 'Output files': 'user-guide/ts-generator/03-outputs.md'
-          - 'Parameters': 'user-guide/ts-generator/04-parameters.md'
-          - 'Algorithm': 'user-guide/ts-generator/05-algorithm.md'
-          - 'Command-line instructions': 'user-guide/ts-generator/06-command-line.md'
-      - 'Other features':
-          - 'Batch Runner': 'user-guide/other-features/batchrun.md'
-          - 'Config Checker': 'user-guide/other-features/config.md'
-          - 'Kirchhoff''s constraint generator': 'user-guide/other-features/kirchhoff-constraints-builder.md'
-          - 'Study Cleaner': 'user-guide/other-features/study-cleaner.md'
-          - 'Study Finder': 'user-guide/other-features/study-finder.md'
-          - 'Study Updater': 'user-guide/other-features/study-updater.md'
-          - 'Vacuum': 'user-guide/other-features/vacuum.md'
-          - 'Year-by-Year Aggregator': 'user-guide/other-features/ybyaggregator.md'
-      - 'Migration guides': 'user-guide/04-migration-guides.md'
-      - 'Attribution notices': 'user-guide/05-attribution_notices.md'
-  - 'Developer guide':
-      - 'Overview': 'developer-guide/0-Overview.md'
-      - 'Development requirements': 'developer-guide/1-Development-requirements.md'
-      - 'Dependencies install': 'developer-guide/2-Dependencies-install.md'
-      - 'Build': 'developer-guide/3-Build.md'
-      - 'ANTLR4 code generation': 'developer-guide/7-antlr4.md'
-      - 'Tests (user)': 'developer-guide/4-Tests-user.md'
-      - 'Tests (developer)': 'developer-guide/4-Tests-dev.md'
-      - 'Installer creation': 'developer-guide/5-Installer-creation.md'
-      - 'Contributing': 'developer-guide/6-Contributing.md'
-      - 'Continuous Integration': 'developer-guide/continuous-integration.md'
-      - 'Docker, CMake presets and CLion': 'developer-guide/9-DockerAndCMakePresets.md'
-      - 'OR-tools integration': 'developer-guide/ortools-integration.md'
-      - 'Study format conventions': 'developer-guide/8-study-format-conventions.md'
-      - 'Changelog': 'developer-guide/CHANGELOG.md'
-      - 'Software architecture':
-          - 'Dynamic modeler architecture': 'developer-guide/Architecture/Dynamic-modeler-architecture.md'
+              - FICO® Xpress Optimizer: reference/solver/optional-features/xpress.md
+      - Modeler:
+          - Overview: reference/modeler/01-overview-modeler.md
+          - Input files: reference/modeler/02-inputs.md
+          - Output files: reference/modeler/03-outputs.md
+          - Parameters: reference/modeler/04-parameters.md
+          - Optimization model: reference/modeler/05-model.md
+          - Heuristics: reference/modeler/06-heuristics.md
+          - Standard library: reference/modeler/07-standard-library.md
+          - Command-line interface: reference/modeler/08-command-line.md
+          - Expressions: reference/modeler/09-expressions.md
+      - Time-series generation:
+          - Overview: reference/ts-generator/01-overview-tsgenerator.md
+          - Input files: reference/ts-generator/02-inputs.md
+          - Output files: reference/ts-generator/03-outputs.md
+          - Parameters: reference/ts-generator/04-parameters.md
+          - Algorithm: reference/ts-generator/05-algorithm.md
+          - Command-line instructions: reference/ts-generator/06-command-line.md
+      - Other features:
+          - Batch Runner: reference/other-features/batchrun.md
+          - Config Checker: reference/other-features/config.md
+          - Kirchhoff's constraint generator: reference/other-features/kirchhoff-constraints-builder.md
+          - Study Cleaner: reference/other-features/study-cleaner.md
+          - Study Finder: reference/other-features/study-finder.md
+          - Study Updater: reference/other-features/study-updater.md
+          - Vacuum: reference/other-features/vacuum.md
+          - Year-by-Year Aggregator: reference/other-features/ybyaggregator.md
+      - Migration guides: reference/migration-guides.md
+      - Attribution notices: reference/attribution-notices.md
+  - Developer guide:
+      - Overview: developer-guide/0-Overview.md
+      - Development requirements: developer-guide/1-Development-requirements.md
+      - Dependencies install: developer-guide/2-Dependencies-install.md
+      - Build: developer-guide/3-Build.md
+      - ANTLR4 code generation: developer-guide/7-antlr4.md
+      - Tests (user): developer-guide/4-Tests-user.md
+      - Tests (developer): developer-guide/4-Tests-dev.md
+      - Installer creation: developer-guide/5-Installer-creation.md
+      - Contributing: developer-guide/6-Contributing.md
+      - Continuous Integration: developer-guide/continuous-integration.md
+      - Docker, CMake presets and CLion: developer-guide/9-DockerAndCMakePresets.md
+      - OR-tools integration: developer-guide/ortools-integration.md
+      - Study format conventions: developer-guide/8-study-format-conventions.md
+      - Changelog: developer-guide/CHANGELOG.md
+      - Software architecture:
+          - Dynamic modeler architecture: developer-guide/Architecture/Dynamic-modeler-architecture.md
 
 
 plugins:
