@@ -9,7 +9,7 @@ that are described in the [antares-modeler format](../modeler/05-model.md).
 To define a hybrid study, define a [solver study](02-inputs.md), and simply add the [modeler files and directories](../modeler/02-inputs.md) 
 to the input directory.    
 The parameter.yml file from modeler studies is not needed (if it exists, it will be ignored). The [solver parameters](04-parameters.md) 
-are used, since hybrid studies are conducted using [antares-solver](10-command-line.md).  
+are used, since hybrid studies are conducted using [antares-solver](https://antares-doc.readthedocs.io/en/latest/programmatic/antares-solver-cli/).  
 You can find simple examples by checking out the studies used in our [test base](https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/src/tests/cucumber/features/solver-features/hybrid_studies.feature).  
 
 ## Output files
@@ -32,7 +32,7 @@ One of the most useful use cases is the added ability to define new types of sys
 using the new [modelling language](../modeler/05-model.md), and inserting these system components into existing studies, 
 by connecting them to "areas". 
 Such connections allow : 
-- adding generation or consumption to an existing area, thus modifying its [balance constraint](05-model.md#balance-between-load-and-generation).
+- adding generation or consumption to an existing area, thus modifying its [balance constraint](https://antares-doc.readthedocs.io/en/latest/reference/optimization-problem/#balance-between-load-and-generation).
 - bounding unsupplied energy or spillage with linear expressions coming from modeler components.
 
 This is implemented in Antares thanks to the [ports](../modeler/05-model.md#ports-and-connections) concept.  

@@ -2,7 +2,7 @@
 
 ## Study structure
 
-Like the Antares [solver](../solver/01-overview-solver.md), the Antares modeler input is a directory, that should be organized by the user as
+Like the Antares solver, the Antares modeler input is a directory, that should be organized by the user as
 follows:
 
 - _**root directory with any name**_

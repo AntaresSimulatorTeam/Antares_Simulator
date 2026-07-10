@@ -916,7 +916,7 @@ collectRemixDebugInfo (#3278)
 
 #### Improvements
 
-* Changed the formula for the number of cores [details](../user-guide/solver/optional-features/multi-threading.md)
+* Changed the formula for the number of cores [details](https://antares-doc.readthedocs.io/en/latest/reference/config-advanced-parameters/#simulation-cores)
 * Expose API [ANT-1158] (#1993)
 * Adequacy patch CSR - revamp output variables [ANT-1932] (#2306)
 * batchrun forwards options to antares-solver [ANT-2314] (#2463)

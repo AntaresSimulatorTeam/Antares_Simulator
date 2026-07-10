@@ -29,23 +29,16 @@ theme:
 
 nav:
   - 'Home': 'index.md'
-  - 'User guide':
+  - Reference:
       - 'Installation': 'user-guide/02-install.md'
       - 'Solver':
-          - 'Overview': 'user-guide/solver/01-overview-solver.md'
           - 'Input files': 'user-guide/solver/02-inputs.md'
           - 'Output files': 'user-guide/solver/03-outputs.md'
           - 'Parameters': 'user-guide/solver/04-parameters.md'
-          - 'Optimization model': 'user-guide/solver/05-model.md'
-          - 'Hydro heuristics': 'user-guide/solver/06-hydro-heuristics.md'
-          - 'Thermal heuristics': 'user-guide/solver/07-thermal-heuristic.md'
           - 'Hybrid studies': 'user-guide/solver/08-hybrid-studies.md'
           - 'Appendix': 'user-guide/solver/09-appendix.md'
-          - 'Command-line interface': 'user-guide/solver/10-command-line.md'
-          - 'Optional features':
-              - 'Multi-threading': 'user-guide/solver/optional-features/multi-threading.md'
-              - 'Adequacy patch': 'user-guide/solver/optional-features/adequacy-patch.md'
-              - 'Usage with FICO® Xpress Optimizer': 'user-guide/solver/optional-features/xpress.md'
+          - Optimization engine support:
+              - FICO® Xpress Optimizer: 'user-guide/solver/optional-features/xpress.md'
       - 'Modeler':
           - 'Overview': 'user-guide/modeler/01-overview-modeler.md'
           - 'Input files': 'user-guide/modeler/02-inputs.md'
@@ -91,11 +84,6 @@ nav:
       - 'Changelog': 'developer-guide/CHANGELOG.md'
       - 'Software architecture':
           - 'Dynamic modeler architecture': 'developer-guide/Architecture/Dynamic-modeler-architecture.md'
-  - 'External links':
-      - 'Antares ecosystem': 'https://antares-doc.readthedocs.io'
-      - 'Antares website': 'https://antares-simulator.org'
-      - 'RTE website': 'http://www.rte-france.com/'
-  - 'Contact': 'https://github.com/AntaresSimulatorTeam/Antares_Simulator/issues/new?template=support_request.md'
 
 
 plugins:

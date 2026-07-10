@@ -331,7 +331,7 @@ These parameters are listed under the `[optimization]` section in the `.ini` fil
   Weekly optimization performs a more refined unit commitment, especially when [unit-commitment-mode](#unit-commitment-mode) 
   is set to `accurate`.
 
-> More information here: [The heuristic for seasonal hydro pre-allocation](06-hydro-heuristics.md#seasonal-hydro-pre-allocation)
+> More information here: [The heuristic for seasonal hydro pre-allocation](https://antares-doc.readthedocs.io/en/latest/reference/hydro-heuristic/)
 
 ---
 #### transmission-capacities
@@ -716,7 +716,7 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `maximum`
 - **Required:** no
 - **Default value:** `medium`
-- **Usage:** use this parameter to configure [multi-threading](optional-features/multi-threading.md).
+- **Usage:** use this parameter to configure [multi-threading](https://antares-doc.readthedocs.io/en/latest/reference/config-advanced-parameters/#simulation-cores).
 
 ---
 #### renewable-generation-modelling

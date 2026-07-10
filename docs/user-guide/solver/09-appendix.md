@@ -126,7 +126,7 @@ met:
   cores, years of the k-th batch
   [^19] may start with the ending levels of the years processed in the (k-1)-th batch.
 
-- The parallelization context (see [Multi-threading](optional-features/multi-threading.md)) must be set to ensure that
+- The parallelization context (see [Multi-threading](https://antares-doc.readthedocs.io/en/latest/reference/config-advanced-parameters/#simulation-cores)) must be set to ensure that
   the M Monte-Carlo years to simulate will be processed in a round number of K consecutive batches of B years in parallel 
 
 The first year of the simulation, and more generally years belonging to the first simulation batch in parallel mode, are
