@@ -29,7 +29,7 @@ YAML::Node makeConnection(const std::string& component1,
     return conn;
 }
 
-void appendModelerData(YAML::Node& systemYaml, const Solver::ModelerData& modelerData)
+void appendModelerData(YAML::Node& systemYaml, const Antares::Solver::ModelerData& modelerData)
 {
     YAML::Node system = systemYaml["system"];
 
@@ -118,48 +118,39 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
     study.areas.each(
       [&components, &connections](const Area& area)
       {
-          std::string areaLoc = areaLocation(area.id);
+          std::string areaLoc = BuildAreaNodeComponentId(area.id);
 
           components.push_back(areaToYaml(area));
           components.push_back(loadToYaml(area));
-          connections.push_back(makeConnection(makeComponentId(area.id, "Load"),
-                                               "balance_port",
-                                               areaLoc,
-                                               "balance_port"));
+          connections.push_back(
+            makeConnection(area.id + "_load", "balance_port", areaLoc, "balance_port"));
 
           components.push_back(windToYaml(area));
-          connections.push_back(makeConnection(makeComponentId(area.id, "Wind"),
-                                               "balance_port",
-                                               areaLoc,
-                                               "balance_port"));
+          connections.push_back(
+            makeConnection(area.id + "_wind", "balance_port", areaLoc, "balance_port"));
 
           components.push_back(solarToYaml(area));
-          connections.push_back(makeConnection(makeComponentId(area.id, "Solar"),
-                                               "balance_port",
-                                               areaLoc,
-                                               "balance_port"));
+          connections.push_back(
+            makeConnection(area.id + "_solar", "balance_port", areaLoc, "balance_port"));
 
           components.push_back(rorToYaml(area));
-          connections.push_back(makeConnection(makeComponentId(area.id, "ROR"),
-                                               "balance_port",
-                                               areaLoc,
-                                               "balance_port"));
+          connections.push_back(
+            makeConnection(area.id + "_ror", "balance_port", areaLoc, "balance_port"));
 
           for (int i = 0; i < MiscGenIndex::fhhMax; ++i)
           {
               components.push_back(miscGenToYaml(area, i));
-              connections.push_back(
-                makeConnection(makeComponentId(area.id, "MiscGen", miscGenTypeName(i)),
-                               "balance_port",
-                               areaLoc,
-                               "balance_port"));
+              connections.push_back(makeConnection(area.id + "_miscgen_" + miscGenTypeName(i),
+                                                   "balance_port",
+                                                   areaLoc,
+                                                   "balance_port"));
           }
 
           for (const auto& cluster: area.thermal.list.all())
           {
               components.push_back(thermalClusterToYaml(*cluster));
               connections.push_back(
-                makeConnection(makeComponentId(area.id, "ThermalCluster", cluster->id()),
+                makeConnection(BuildThermalClusterComponentId(area.id, cluster->id()),
                                "balance_port",
                                areaLoc,
                                "balance_port"));
@@ -169,7 +160,7 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
           {
               components.push_back(renewableClusterToYaml(*cluster));
               connections.push_back(
-                makeConnection(makeComponentId(area.id, "RenewableCluster", cluster->id()),
+                makeConnection(BuildRenewableClusterComponentId(area.id, cluster->id()),
                                "balance_port",
                                areaLoc,
                                "balance_port"));
@@ -179,14 +170,14 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
           {
               components.push_back(shortTermStorageToYaml(area, st));
               connections.push_back(
-                makeConnection(makeComponentId(area.id, "ShortTermStorage", st.id),
+                makeConnection(BuildSTStorageClusterComponentId(area.id, st.id),
                                "balance_port",
                                areaLoc,
                                "balance_port"));
           }
 
           components.push_back(longTermStorageToYaml(area));
-          connections.push_back(makeConnection(makeComponentId(area.id, "Hydro"),
+          connections.push_back(makeConnection(BuildHydroStorageComponentId(area.id),
                                                "balance_port",
                                                areaLoc,
                                                "balance_port"));
@@ -195,10 +186,9 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
           {
               components.push_back(linkToYaml(*link));
 
-              std::string linkId = LocationIdentifier(link->from->id + AREA_SEP + link->with->id,
-                                                      LINK);
-              std::string area1Loc = areaLocation(link->from->id);
-              std::string area2Loc = areaLocation(link->with->id);
+              std::string linkId = BuildLinkComponentId(link->from->id, link->with->id);
+              std::string area1Loc = BuildAreaNodeComponentId(link->from->id);
+              std::string area2Loc = BuildAreaNodeComponentId(link->with->id);
 
               if (link->from->id < link->with->id)
               {

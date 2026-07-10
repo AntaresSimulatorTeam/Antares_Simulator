@@ -11,9 +11,6 @@ namespace Antares::ViewBuilder
 {
 
 std::string areaLocation(const std::string& areaId);
-std::string makeComponentId(const std::string& areaId,
-                            const std::string& childType,
-                            const std::string& childId = "");
 std::string miscGenTypeName(int index);
 
 YAML::Node areaToYaml(const Data::Area& area);

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include "antares/application/application.h"
+
 #include <chrono>
 
 #include <antares/antares/fatal-error.h>

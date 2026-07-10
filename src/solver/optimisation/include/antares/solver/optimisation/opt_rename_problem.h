@@ -20,6 +20,45 @@ inline std::string LocationIdentifier(const std::string& location, const std::st
     return locationType + "<" + location + ">";
 }
 
+// ── Component ID builders (underscore format, shared with view‑builder) ──
+
+inline std::string BuildAreaNodeComponentId(const std::string& areaId)
+{
+    return areaId + "_node";
+}
+
+inline std::string BuildThermalClusterComponentId(const std::string& areaId,
+                                                  const std::string& clusterName)
+{
+    return areaId + "_thermal_" + clusterName;
+}
+
+inline std::string BuildSTStorageClusterComponentId(const std::string& areaId,
+                                                    const std::string& clusterName)
+{
+    return areaId + "_short_term_storage_" + clusterName;
+}
+
+inline std::string BuildRenewableClusterComponentId(const std::string& areaId,
+                                                    const std::string& clusterName)
+{
+    return areaId + "_renewable_" + clusterName;
+}
+
+inline std::string BuildHydroStorageComponentId(const std::string& areaId)
+{
+    return areaId + "_hydro_storage";
+}
+
+inline std::string BuildLinkComponentId(const std::string& origin, const std::string& destination)
+{
+    if (origin < destination)
+    {
+        return origin + "_" + destination + "_link";
+    }
+    return destination + "_" + origin + "_link";
+}
+
 // Structured legacy descriptions, parallel to the names vector.
 using LegacyInfoVec = std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>;
 
