@@ -357,8 +357,11 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                 auto& Pt = problem.PaliersThermiquesDuPays[areaIdx]
                              .PuissanceDisponibleEtCout[cluster->index];
 
+                Pt.CoutHoraireDeProductionDuPalierThermiqueSansBruit[hourInWeek]
+                  = cluster->getCostProvider().getMarketBidCost(hourInYear, year);
+
                 Pt.CoutHoraireDeProductionDuPalierThermique[hourInWeek]
-                  = cluster->getCostProvider().getMarketBidCost(hourInYear, year)
+                  = Pt.CoutHoraireDeProductionDuPalierThermiqueSansBruit[hourInWeek]
                     + thermalNoises[areaIdx][cluster->areaWideIndex];
 
                 Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] = cluster->series

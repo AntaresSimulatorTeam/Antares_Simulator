@@ -295,6 +295,10 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 
     std::vector<double> CoutHoraireDeProductionDuPalierThermique;
 
+    // User-provided market bid cost, without the yearly thermal noise added
+    // to CoutHoraireDeProductionDuPalierThermique for the optimisation
+    std::vector<double> CoutHoraireDeProductionDuPalierThermiqueSansBruit;
+
     std::vector<int> NombreMaxDeGroupesEnMarcheDuPalierThermique;
     std::vector<int> NombreMinDeGroupesEnMarcheDuPalierThermique;
 };

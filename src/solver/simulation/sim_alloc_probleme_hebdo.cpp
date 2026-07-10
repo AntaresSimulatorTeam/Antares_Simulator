@@ -563,6 +563,9 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
               .CoutHoraireDeProductionDuPalierThermique.assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k]
               .PuissanceDisponibleEtCout[j]
+              .CoutHoraireDeProductionDuPalierThermiqueSansBruit.assign(NombreDePasDeTemps, 0.);
+            problem.PaliersThermiquesDuPays[k]
+              .PuissanceDisponibleEtCout[j]
               .PuissanceDisponibleDuPalierThermique.assign(NombreDePasDeTemps, 0.);
             problem.PaliersThermiquesDuPays[k]
               .PuissanceDisponibleEtCout[j]

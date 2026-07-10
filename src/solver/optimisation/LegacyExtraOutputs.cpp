@@ -239,7 +239,14 @@ void LegacyExtraOutputEmitter::thermalOutputs(uint32_t pays, int index, int pdt)
     const int production = variableManager_.DispatchableProduction(palier, pdt);
     const double generation = x(production);
 
-    emit("prop_cost", cluster, pdt, cost(production) * generation);
+    // Use the user-provided market bid cost, not the noised marginal cost
+    // fed to the optimisation
+    emit("prop_cost",
+         cluster,
+         pdt,
+         paliers.PuissanceDisponibleEtCout[index]
+             .CoutHoraireDeProductionDuPalierThermiqueSansBruit[pdt]
+           * generation);
     emit("balance_port.flow", cluster, pdt, generation);
 
     for (std::size_t pollutant = 0; pollutant < emissionOutputNames.size(); ++pollutant)

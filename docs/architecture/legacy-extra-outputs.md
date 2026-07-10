@@ -43,7 +43,7 @@ Emitters skip outputs whose anchor does not exist, mirroring the construction si
 
 | Output | Entity | Formula | Operands |
 |--------|--------|---------|----------|
-| `prop_cost` (thermal) | cluster | `CoutLineaire[ip] × X[ip]` | `ip = vm.DispatchableProduction` |
+| `prop_cost` (thermal) | cluster | `marketBid × X[ip]` | `ip = vm.DispatchableProduction`; `marketBid = CoutHoraireDeProductionDuPalierThermiqueSansBruit[pdt]`, the user market bid cost without thermal noise |
 | `co2_emissions` … `op5_emissions` | cluster | `X[ip] × emission_factor[pollutant]` | `PaliersThermiquesDuPays.emissionFactors` |
 | `cluster_availability` | cluster | `max(avail, minStablePower × ceil(avail / unitSize))` | spinning-adjusted quantities of the weekly problem (see §5) |
 | `up_margin` | cluster | `cluster_availability − X[ip]` | as above |
@@ -52,7 +52,7 @@ Emitters skip outputs whose anchor does not exist, mirroring the construction si
 | `profit` | cluster | `(price − CoutLineaire[ip]) × max(X[ip] − minGen[pdt], 0)` | area price = balance dual of the cluster's area |
 | `actual_num_units_on` | cluster | `ceil(X[in])` | `in = vm.NumberOfDispatchableUnits` (may be fractional when relaxed) |
 | `non_prop_cost` | cluster | `startup_cost × started + fixed_cost × ceil(X[in])` | startup cost = coefficient on `NumberStartingDispatchableUnits`; `started` compares `ceil(NODU)` against `pdt−1`, dropped at the interval's first hour |
-| `imbalance_cost` | area | `spillCost × spilled + unsCost × unsupplied` | `vm.Spillage`, `vm.UnsuppliedEnergy` |
+| `imbalance_cost` | area | `spillCost × spilled + unsCost × unsupplied` | `vm.Spillage`, `vm.UnsuppliedEnergy`; costs = `CoutDeDefaillanceNegative/PositiveSansBruit[pays]`, the user costs without noise |
 | `is_loss_of_load` | area | `X[iu] > 0 ? 1 : 0` | strict positivity |
 | `is_significant_loss_of_load` | area | `X[iu] > 0.5 ? 1 : 0` | 0.5 MW solver-noise threshold |
 | `actual_load` | area | `ConsommationAbattueDuPays + AllMustRunGenerationOfArea` | residual load plus must-run (raw input load) |
@@ -96,7 +96,7 @@ The `price` formula negates the stored dual: with the legacy balance-constraint 
 
 ## 5. Known Caveats
 
-- **Cost noise.** `CoutLineaire` holds the costs the optimizer actually used, which the legacy solver deliberately perturbs to break degeneracy (`PrepareRandomNumbers` in `src/solver/simulation/common-eco-adq.cpp`); each thermal cost gets a noise whose absolute value is forced into `[5e-4, 6e-4]` even with a zero `spread-cost`, and the unsupplied/spilled costs get the same treatment. Every cost-derived output (`prop_cost`, `imbalance_cost`, `non_prop_cost`, `profit`) deviates from the theoretical `study_cost × quantity` accordingly (relative error ≈ `6e-4 / cheapest_cost`); tests comparing against theoretical values must allow for this (the cucumber scenario uses a relative tolerance of `1e-4`). The quantities themselves (`X`) are unaffected.
+- **Cost noise.** `CoutLineaire` holds the costs the optimizer actually used, which the legacy solver deliberately perturbs to break degeneracy (`PrepareRandomNumbers` in `src/solver/simulation/common-eco-adq.cpp`); each thermal cost gets a noise whose absolute value is forced into `[5e-4, 6e-4]` even with a zero `spread-cost`, and the unsupplied/spilled costs get the same treatment. Thermal `prop_cost` and `imbalance_cost` therefore do **not** read `CoutLineaire`: they use the un-noised user costs kept alongside the noised ones (`CoutHoraireDeProductionDuPalierThermiqueSansBruit`, `CoutDeDefaillancePositive/NegativeSansBruit`), so they match the theoretical `study_cost × quantity` exactly. Outputs still derived from the perturbed optimisation (`non_prop_cost` via `CoutLineaire`, `is_near_loss_of_load`'s VoLL threshold, and every dual-derived value such as `price` and `profit`) deviate accordingly; the noise can also shift the dispatch itself between equal-cost solutions. The quantities (`X`) are otherwise unaffected.
 - **MIP solves.** When the weekly problem is a MIP, OR-Tools' dual extraction is skipped and `CoutsMarginauxDesContraintes` is zero-filled (`extract_from_MPSolver`, a known TODO in `ortools_utils.cpp`), so every dual-derived output (`price`, `is_near_loss_of_load`, fees, shadow prices, `profit`) reads 0 — the same caveat as the legacy marginal-price output.
 - **Spinning and the margin formulas.** The thermal availability series and unit size are already multiplied by `(1 − spinning/100)` at load time (`cluster.cpp::calculationOfSpinning`). The spec writes `cluster_availability` with the raw quantities and re-applies the factor; algebraically it cancels, so the formulas use the spinning-adjusted quantities the problem already holds.
 - **Cross-time terms.** `non_prop_cost` uses `NODU[t−1]`; at the first hour of an optimisation interval the previous value is not part of the solution and the start-up term is dropped.

@@ -89,7 +89,8 @@ std::optional<Row> FindRowAt(const SimulationTable& table,
 // does: by index.
 enum VarOffset : int
 {
-    dispatchableProduction = 0, // cluster1 (area1): X 3600, cost 35
+    dispatchableProduction = 0, // cluster1 (area1): X 3600, cost 35.0005
+                                // (user market bid 35 + noise)
     unsuppliedArea1 = 1,        // X 52,  cost 10000.0005 (user cost 10000 + noise)
     spillageArea1 = 2,          // X 7,   cost 4.0005 (user cost 4 + noise)
     unsuppliedArea2 = 3,        // X 13,  cost 20000
@@ -176,6 +177,11 @@ struct Fixture
         paliers.emissionFactors[0][Antares::Data::Pollutant::NOX] = 0.01;
         paliers.emissionFactors[0][Antares::Data::Pollutant::OP5] = 2.;
         paliers.PuissanceDisponibleEtCout.resize(1);
+        // User-provided market bid cost; the CoutLineaire entry for the
+        // production variable below is deliberately different (it carries the
+        // thermal noise).
+        paliers.PuissanceDisponibleEtCout[0]
+          .CoutHoraireDeProductionDuPalierThermiqueSansBruit.assign(nbPdt, 35.);
         paliers.PuissanceDisponibleEtCout[0].PuissanceDisponibleDuPalierThermique.assign(nbPdt,
                                                                                          4000.);
         paliers.PuissanceDisponibleEtCout[0].PuissanceMinDuPalierThermique.assign(nbPdt, 500.);
@@ -260,7 +266,7 @@ struct Fixture
                              700.,
                              100.});
             solved.CoutLineaire.insert(solved.CoutLineaire.end(),
-                                       {35.,
+                                       {35.0005,
                                         10000.0005,
                                         4.0005,
                                         20000.,
@@ -314,7 +320,7 @@ struct Fixture
 
 BOOST_FIXTURE_TEST_SUITE(test_legacy_extra_outputs, Fixture)
 
-BOOST_AUTO_TEST_CASE(thermal_prop_cost_is_generation_cost_times_generation_power)
+BOOST_AUTO_TEST_CASE(thermal_prop_cost_is_market_bid_cost_times_generation_power)
 {
     fill();
 

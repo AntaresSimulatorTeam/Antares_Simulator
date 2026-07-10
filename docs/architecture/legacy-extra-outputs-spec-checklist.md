@@ -21,7 +21,7 @@ supplies the row's component and time index.
 | Done | Output | Formula | Anchor |
 |------|--------|---------|--------|
 | [x] | `price` | `dual(balance)` (stored as `-dual`) | `AreaBalance` constraint |
-| [x] | `imbalance_cost` | `spillage_cost·spilled + unsupplied_energy_cost·unsupplied` | `UnsuppliedEnergy` |
+| [x] | `imbalance_cost` | `spillage_cost·spilled + unsupplied_energy_cost·unsupplied` (user costs, un-noised: `CoutDeDefaillance*SansBruit`) | `UnsuppliedEnergy` |
 | [x] | `is_loss_of_load` | `unsupplied_energy > 0` | `UnsuppliedEnergy` |
 | [x] | `is_significant_loss_of_load` | `unsupplied_energy > 0.5` | `UnsuppliedEnergy` |
 | [x] | `is_near_loss_of_load` | `dual(balance) > unsupplied_energy_cost - 5` | `AreaBalance` constraint |
@@ -77,7 +77,7 @@ renewable. Component → `miscGen.entry` index mapping:
 | Done | Output | Formula | Anchor / Design |
 |------|--------|---------|-----------------|
 | [x] | `actual_num_units_on` | `ceil(num_units_on)` | `NODU` |
-| [x] | `prop_cost` | `generation_cost · generation_power` | `DispatchableProduction` |
+| [x] | `prop_cost` | `market_bid_cost · generation_power` (user cost, un-noised: `CoutHoraireDeProductionDuPalierThermiqueSansBruit`) | `DispatchableProduction` |
 | [x] | `non_prop_cost` | `startup_cost·max(0, ceil(N) - ceil(N)[t-1]) + fixed_cost·ceil(N)` | `NODU` (+ `NumberStartingDispatchableUnits` via view) |
 | [x] | `cluster_availability` | `max(cmg·(1-s), mpu·ceil(cmg/Mpu))` | `DispatchableProduction` (spinning cancels) |
 | [x] | `min_gen_power` | `min(generation_power, min_gen_mod·num_units·Mpu)` | `DispatchableProduction` |
