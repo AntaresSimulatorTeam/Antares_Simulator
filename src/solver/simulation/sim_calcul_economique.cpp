@@ -338,6 +338,10 @@ void SIM_InitialisationProblemeHebdo(Study& study,
 
         problem.CoutDeDefaillanceNegative[i] = area.thermal.spilledEnergyCost;
 
+        problem.CoutDeDefaillancePositiveSansBruit[i] = area.thermal.unsuppliedEnergyCost;
+
+        problem.CoutDeDefaillanceNegativeSansBruit[i] = area.thermal.spilledEnergyCost;
+
         // Hydraulic
         problem.CoutDeDebordement[i] = area.thermal.spilledEnergyCost
                                        + area.hydro.overflowSpilledCostDifference;

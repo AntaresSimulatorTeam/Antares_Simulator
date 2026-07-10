@@ -125,10 +125,12 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
     const int unsupplied = variableManager_.UnsuppliedEnergy(pays, pdt);
     const int spillage = variableManager_.Spillage(pays, pdt);
 
+    // Use the user-provided costs, not the noised ones fed to the optimisation
     emit("imbalance_cost",
          area,
          pdt,
-         cost(spillage) * x(spillage) + cost(unsupplied) * x(unsupplied));
+         problemeHebdo_.CoutDeDefaillanceNegativeSansBruit[pays] * x(spillage)
+           + problemeHebdo_.CoutDeDefaillancePositiveSansBruit[pays] * x(unsupplied));
 
     constexpr double significantLossOfLoadThreshold = 0.5;
     emit("is_significant_loss_of_load",

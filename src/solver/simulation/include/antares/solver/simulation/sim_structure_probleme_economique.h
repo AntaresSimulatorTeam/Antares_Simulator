@@ -579,6 +579,11 @@ struct PROBLEME_HEBDO
     std::vector<double> CoutDeDefaillancePositive;
     std::vector<double> CoutDeDefaillanceNegative;
 
+    // User-provided unsupplied/spilled energy costs, without the yearly noise
+    // added to CoutDeDefaillancePositive/Negative for the optimisation
+    std::vector<double> CoutDeDefaillancePositiveSansBruit;
+    std::vector<double> CoutDeDefaillanceNegativeSansBruit;
+
     std::vector<double> CoutDeDebordement;
 
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;

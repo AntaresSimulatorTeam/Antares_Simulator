@@ -90,8 +90,8 @@ std::optional<Row> FindRowAt(const SimulationTable& table,
 enum VarOffset : int
 {
     dispatchableProduction = 0, // cluster1 (area1): X 3600, cost 35
-    unsuppliedArea1 = 1,        // X 52,  cost 10000
-    spillageArea1 = 2,          // X 7,   cost 4
+    unsuppliedArea1 = 1,        // X 52,  cost 10000.0005 (user cost 10000 + noise)
+    spillageArea1 = 2,          // X 7,   cost 4.0005 (user cost 4 + noise)
     unsuppliedArea2 = 3,        // X 13,  cost 20000
     spillageArea2 = 4,          // X 0,   cost 1
     nodu = 5,                   // cluster1: X 2.3, cost 100 (fixed cost)
@@ -145,6 +145,12 @@ struct Fixture
         problem.CoutDeTransport.resize(2);
         problem.CoutDeTransport[0].IntercoGereeAvecDesCouts = true;
         problem.CoutDeTransport[1].IntercoGereeAvecDesCouts = false;
+
+        // User-provided imbalance costs; the CoutLineaire entries for the
+        // unsupplied/spillage variables below are deliberately different
+        // (they carry the optimisation noise).
+        problem.CoutDeDefaillancePositiveSansBruit = {10000., 10000., 10000.};
+        problem.CoutDeDefaillanceNegativeSansBruit = {4., 4., 4.};
 
         problem.ConsommationsAbattues.resize(nbPdt);
         problem.AllMustRunGeneration.resize(nbPdt);
@@ -255,8 +261,8 @@ struct Fixture
                              100.});
             solved.CoutLineaire.insert(solved.CoutLineaire.end(),
                                        {35.,
-                                        10000.,
-                                        4.,
+                                        10000.0005,
+                                        4.0005,
                                         20000.,
                                         1.,
                                         100.,
