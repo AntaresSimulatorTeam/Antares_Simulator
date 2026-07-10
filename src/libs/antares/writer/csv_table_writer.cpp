@@ -4,10 +4,9 @@
 #include "private/csv_table_writer.h"
 
 #include <filesystem>
+#include <fmt/format.h>
 #include <fstream>
 #include <utility>
-
-#include <fmt/format.h>
 
 #include <antares/exception/InvalidArgumentError.hpp>
 #include <antares/exception/RuntimeError.hpp>
