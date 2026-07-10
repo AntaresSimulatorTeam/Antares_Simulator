@@ -116,13 +116,13 @@ markdown_extensions:
       alternate_style: true
 
 exclude_docs: |
-  /Architecture/
-  /Architecture_Decision_Records/
+  /architecture/
+  /architecture-decision-records/
   README.md
 
 validation:
   omitted_files: warn
-  absolute_links: warn  # Or 'relative_to_docs' - new in MkDocs 1.6
+  absolute_links: warn  
   unrecognized_links: warn
   anchors: warn
 
