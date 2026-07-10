@@ -105,7 +105,9 @@ enum VarOffset : int
     numberStarting = 13,        // cluster1: X 1, cost 5000 (startup cost)
     stsInjection = 14,          // battery1 (area2): X 40
     stsWithdrawal = 15,         // battery1 (area2): X 100
-    variablesPerHour = 16
+    hydProdArea1 = 16,          // X 700
+    pumpingArea1 = 17,          // X 100
+    variablesPerHour = 18
 };
 
 // Per-hour layout of the constraints, followed by one weekly
@@ -219,6 +221,8 @@ struct Fixture
             // Only area1 manages a reservoir; -1 is the "no variable" sentinel
             // written by the construction site.
             vars.NumeroDeVariablesDeNiveau = {base + hydroLevelArea1, -1, -1};
+            vars.NumeroDeVariablesDeLaProdHyd = {base + hydProdArea1, -1, -1};
+            vars.NumeroDeVariablesDePompage = {base + pumpingArea1, -1, -1};
             vars.SIM_ShortTermStorage.InjectionVariable = {base + stsInjection};
             vars.SIM_ShortTermStorage.WithdrawalVariable = {base + stsWithdrawal};
 
@@ -230,12 +234,44 @@ struct Fixture
             constraints.NumeroDeContrainteDeDissociationDeFlux = {cntBase + flowDissociationLink0,
                                                                   -1};
 
-            solved.X.insert(
-              solved.X.end(),
-              {3600., 52., 7., 13., 0., 2.3, 120., 120., 0., 0.2, 0., -30., 4000., 1., 40., 100.});
-            solved.CoutLineaire.insert(
-              solved.CoutLineaire.end(),
-              {35., 10000., 4., 20000., 1., 100., 0., 0.5, 0.7, 9000., 1., 0., 0., 5000., 0., 0.});
+            solved.X.insert(solved.X.end(),
+                            {3600.,
+                             52.,
+                             7.,
+                             13.,
+                             0.,
+                             2.3,
+                             120.,
+                             120.,
+                             0.,
+                             0.2,
+                             0.,
+                             -30.,
+                             4000.,
+                             1.,
+                             40.,
+                             100.,
+                             700.,
+                             100.});
+            solved.CoutLineaire.insert(solved.CoutLineaire.end(),
+                                       {35.,
+                                        10000.,
+                                        4.,
+                                        20000.,
+                                        1.,
+                                        100.,
+                                        0.,
+                                        0.5,
+                                        0.7,
+                                        9000.,
+                                        1.,
+                                        0.,
+                                        0.,
+                                        5000.,
+                                        0.,
+                                        0.,
+                                        0.,
+                                        0.});
             solved.CoutsMarginauxDesContraintes.insert(solved.CoutsMarginauxDesContraintes.end(),
                                                        {-10000., -50., -75., -3.});
         }
@@ -562,6 +598,66 @@ BOOST_AUTO_TEST_CASE(bellman_value_is_skipped_without_accurate_water_value)
     BOOST_CHECK(RowsForOutput(table, "bellman_value").empty());
 }
 
+BOOST_AUTO_TEST_CASE(port_field_balance_price_mirrors_the_area_price)
+{
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area1")->value, 10000.);
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area2")->value, 50.);
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area3")->value, 75.);
+}
+
+BOOST_AUTO_TEST_CASE(port_field_load_flow_is_minus_the_raw_load)
+{
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_load")->value, -(790. + 10.));
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area2_load")->value, -(500. + 0.));
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area3_load")->value, -(280. + 20.));
+}
+
+BOOST_AUTO_TEST_CASE(port_field_hydro_flow_is_generation_minus_pumping)
+{
+    fill();
+
+    // Only area1 has hydro production variables: 700 generated, 100 pumped.
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_hydro")->value, 600.);
+    BOOST_CHECK(!FindRow(table, "balance_port.flow", "area2_hydro").has_value());
+    BOOST_CHECK(!FindRow(table, "balance_port.flow", "area3_hydro").has_value());
+}
+
+BOOST_AUTO_TEST_CASE(port_field_hydro_flow_ignores_pumping_when_absent)
+{
+    for (auto& vars: problem.CorrespondanceVarNativesVarOptim)
+    {
+        vars.NumeroDeVariablesDePompage[0] = -1;
+    }
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_hydro")->value, 700.);
+}
+
+BOOST_AUTO_TEST_CASE(port_field_link_flows_are_the_signed_flow_and_its_negation)
+{
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "out_port.flow", "area1$$area2")->value, 120.);
+    BOOST_CHECK_EQUAL(FindRow(table, "in_port.flow", "area1$$area2")->value, -120.);
+    BOOST_CHECK_EQUAL(FindRow(table, "out_port.flow", "area2$$area3")->value, -30.);
+    BOOST_CHECK_EQUAL(FindRow(table, "in_port.flow", "area2$$area3")->value, 30.);
+}
+
+BOOST_AUTO_TEST_CASE(port_field_flows_cover_thermal_storage_and_input_generation)
+{
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "cluster1")->value, 3600.);
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "battery1")->value, 100. - 40.);
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_wind")->value, 320.);
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_combined_heat_power")->value,
+                      12.5);
+}
+
 BOOST_AUTO_TEST_CASE(input_generation_emits_power_and_its_negation_per_component)
 {
     fill();
@@ -758,9 +854,12 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
     //        outputs = 7                                          = 16
     // Short-term storage: battery1's profit                       = 1
     // Input generation: 2 area1 components x (generation_power,
-    //                    minus_generation)                         = 4
+    //                    minus_generation, balance_port.flow)      = 6
+    // Port fields: 3 balance_port.price + 3 {area}_load flows
+    //              + area1_hydro flow + 2 links x (out_port.flow,
+    //              in_port.flow) + cluster1 and battery1 flows     = 13
     // Weekly: area1's hydro_shadow_price and bellman_value        = 2
-    BOOST_CHECK_EQUAL(table.rowCount(), 20 + 21 + 16 + 1 + 4 + 2);
+    BOOST_CHECK_EQUAL(table.rowCount(), 20 + 21 + 16 + 1 + 6 + 13 + 2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

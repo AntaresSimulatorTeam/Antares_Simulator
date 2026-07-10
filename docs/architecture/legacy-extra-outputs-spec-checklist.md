@@ -153,23 +153,26 @@ site) and is emitted once per area on the interval's last hour, like
 
 ---
 
-## 2.5 — Port fields written to the ST  ⬜ not started
+## 2.5 — Port fields written to the ST  ✅ complete
 
-Same emission mechanism as extra-outputs ("hard-coded list of extra expressions").
-Needed both as standalone ST entries and because the congestion fees read the link
-endpoints' `*_port.price`.
+Same emission mechanism as extra-outputs; the port field name is the ST `output`.
+Component naming: models sharing the area's identity get their own suffixed
+component so `balance_port.flow` rows cannot collide — `{area}_load` (load) and
+`{area}_hydro` (long_term_storage); everything else uses the component of its
+extra-outputs (area, cluster, storage, `origin$$destination`, input-generation
+names).
 
-| Done | Model | Port field | Definition | Design |
-|------|-------|-----------|------------|--------|
-| [ ] | area | `balance_port.price` | `dual(balance)` | **Port-field emission** (E); value = `price` (already computed) |
-| [ ] | load | `balance_port.flow` | `-load` | (E); load already in context |
-| [ ] | link | `out_port.flow` | `flow` | (E) |
-| [ ] | link | `in_port.flow` | `-flow` | (E) |
-| [ ] | renewable | `balance_port.flow` | `available_power` | (E) + anchorless data (B) |
-| [ ] | miscellaneous_generation | `balance_port.flow` | `available_power` | (E) + anchorless data (B) |
-| [ ] | thermal | `balance_port.flow` | `generation_power` | (E); raw output exists |
-| [ ] | short_term_storage | `balance_port.flow` | `withdrawal_power - injection_power` | (E) + view (C) |
-| [ ] | long_term_storage | `balance_port.flow` | `withdrawal_power - injection_power` | (E) |
+| Done | Model | Component | Port field | Definition |
+|------|-------|-----------|-----------|------------|
+| [x] | area | `{area}` | `balance_port.price` | `dual(balance)` (same value as `price`) |
+| [x] | load | `{area}_load` | `balance_port.flow` | `-load` (raw load, as `actual_load`) |
+| [x] | link | `origin$$destination` | `out_port.flow` | `flow` |
+| [x] | link | `origin$$destination` | `in_port.flow` | `-flow` |
+| [x] | renewable | input-generation names | `balance_port.flow` | `available_power` |
+| [x] | miscellaneous_generation | input-generation names | `balance_port.flow` | `available_power` |
+| [x] | thermal | cluster name | `balance_port.flow` | `generation_power` |
+| [x] | short_term_storage | storage name | `balance_port.flow` | `withdrawal_power - injection_power` |
+| [x] | long_term_storage | `{area}_hydro` | `balance_port.flow` | `HydProd - Pumping` (skipped without hydro production; pumping term dropped when absent) |
 
 ---
 
@@ -185,7 +188,7 @@ endpoints' `*_port.price`.
 | link | 9 / 9 | — |
 | short_term_storage | 1 / 1 | — |
 | hydro | 4 / 4 | — |
-| ports (2.5) | 0 / 9 | all |
+| ports (2.5) | 9 / 9 | — |
 
 ---
 
@@ -216,13 +219,12 @@ fields (§2.5) can reuse the same series.
 one area (`vm.LayerStorage(pays, layer)`) and emitted as a single per-area
 **bellman_value** row in `weeklyHydroOutputs`.
 
-### (D) Port-field emission layer (§2.5)
-A hard-coded table of `port.field → expression` emitted into the ST, reusing
-already-computed values where possible (`balance_port.price` = `price`, thermal
-`balance_port.flow` = `generation_power`, link `out/in_port.flow` = `±flow`).
-Unlocks all of §2.5. Needed in full for the GEMS port views; the congestion fees
-(2.4.2.6) only need the *price* port values, which the balance duals already
-provide directly.
+### (D) Port-field emission layer (§2.5) — ✅ done
+The port fields are emitted alongside the extra-outputs they reuse
+(`balance_port.price` = `price`, thermal `balance_port.flow` =
+`generation_power`, link `out/in_port.flow` = `±flow`, storage and
+input-generation flows from their existing operands, `{area}_hydro` from
+`HydProd`/`Pumping`).
 
 ---
 
@@ -231,4 +233,4 @@ provide directly.
 1. ~~**(A) STS outputs** → STS profit; one more entity loop.~~ done
 2. ~~**(C) Per-area layer aggregation** → bellman_value; self-contained.~~ done
 3. ~~**(B) Anchorless emission path** → renewable + misc_gen; distinct loop.~~ done
-4. **(D) Port fields** → §2.5; mostly reuses prior values.
+4. ~~**(D) Port fields** → §2.5; mostly reuses prior values.~~ done

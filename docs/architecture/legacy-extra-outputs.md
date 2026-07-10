@@ -65,6 +65,15 @@ Emitters skip outputs whose anchor does not exist, mirroring the construction si
 | `profit` | storage | `floor((X[iw] − X[ii]) × price + 0.5)` | `iw/ii = vm.ShortTermStorageWithdrawal/Injection(clusterGlobalIndex)`; price = balance dual of the storage's area |
 | `generation_power` | renewable / misc gen | `availablePower[pdt]` | `InputGenerationOfArea[pays]`, filled from study series by `SIM_RenseignementProblemeHebdo` (not an LP variable) |
 | `minus_generation` | renewable / misc gen | `−availablePower[pdt]` | as above |
+
+The §2.5 port fields are emitted by the same functions, with the port field name
+as the ST output: `balance_port.price` (area, = `price`), `out_port.flow` /
+`in_port.flow` (link, = `±flow`), and `balance_port.flow` for thermal
+(`generation_power`), short-term storage (`withdrawal − injection`), renewable /
+misc gen (`availablePower`), load (`−rawLoad`, component `{area}_load`) and
+long-term storage (`X[HydProd] − X[Pumping]`, component `{area}_hydro`, skipped
+without hydro production). The `_load` / `_hydro` suffixes keep the two
+area-level `balance_port.flow` rows from colliding on the area name.
 | `abs_flow` | link | `abs(X[idf])` | `idf = vm.DirectFlow` (signed) |
 | `minus_flow` | link | `−X[idf]` | GEMS sign convention |
 | `actual_loop_flow` | link | `ValeurDeLoopFlowOrigineVersExtremite[interco]` | input parameter |

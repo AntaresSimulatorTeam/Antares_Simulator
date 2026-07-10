@@ -136,20 +136,34 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
          pdt,
          x(unsupplied) > significantLossOfLoadThreshold ? 1. : 0.);
     emit("is_loss_of_load", area, pdt, x(unsupplied) > 0. ? 1. : 0.);
-    emit("actual_load",
-         area,
-         pdt,
-         problemeHebdo_.ConsommationsAbattues[pdt].ConsommationAbattueDuPays[pays]
-           + problemeHebdo_.AllMustRunGeneration[pdt].AllMustRunGenerationOfArea[pays]);
+
+    const double rawLoad = problemeHebdo_.ConsommationsAbattues[pdt].ConsommationAbattueDuPays[pays]
+                           + problemeHebdo_.AllMustRunGeneration[pdt]
+                               .AllMustRunGenerationOfArea[pays];
+    emit("actual_load", area, pdt, rawLoad);
 
     const double price = areaPrice(pays, pdt);
     emit("price", area, pdt, price);
+    emit("balance_port.price", area, pdt, price);
 
     constexpr double nearLossOfLoadCutoff = 5.;
     emit("is_near_loss_of_load",
          area,
          pdt,
          price > cost(unsupplied) - nearLossOfLoadCutoff ? 1. : 0.);
+
+    // Port fields of the load and long_term_storage models, emitted on their
+    // own components ({area}_load, {area}_hydro) so their balance_port.flow
+    // rows cannot collide with each other on the area name.
+    emit("balance_port.flow", area + "_load", pdt, -rawLoad);
+
+    const int hydProd = variableManager_.HydProd(pays, pdt);
+    if (hydProd >= 0)
+    {
+        const int pumping = variableManager_.Pumping(pays, pdt);
+        const double netWithdrawal = x(hydProd) - (pumping >= 0 ? x(pumping) : 0.);
+        emit("balance_port.flow", area + "_hydro", pdt, netWithdrawal);
+    }
 
     const int hydroLevel = variableManager_.HydroLevel(pays, pdt);
     if (hydroLevel < 0)
@@ -177,6 +191,8 @@ void LegacyExtraOutputEmitter::linkOutputs(uint32_t interco, int pdt)
     const double flow = x(variableManager_.DirectFlow(interco, pdt));
     emit("abs_flow", link, pdt, std::abs(flow));
     emit("minus_flow", link, pdt, -flow);
+    emit("out_port.flow", link, pdt, flow);
+    emit("in_port.flow", link, pdt, -flow);
 
     const auto& ntc = problemeHebdo_.ValeursDeNTC[pdt];
     emit("actual_loop_flow", link, pdt, ntc.ValeurDeLoopFlowOrigineVersExtremite[interco]);
@@ -222,6 +238,7 @@ void LegacyExtraOutputEmitter::thermalOutputs(uint32_t pays, int index, int pdt)
     const double generation = x(production);
 
     emit("prop_cost", cluster, pdt, cost(production) * generation);
+    emit("balance_port.flow", cluster, pdt, generation);
 
     for (std::size_t pollutant = 0; pollutant < emissionOutputNames.size(); ++pollutant)
     {
@@ -285,6 +302,7 @@ void LegacyExtraOutputEmitter::shortTermStorageOutputs(uint32_t pays, int pdt)
         const double injection = x(
           variableManager_.ShortTermStorageInjection(storage.clusterGlobalIndex, pdt));
         emit("profit", storage.name, pdt, std::floor((withdrawal - injection) * price + 0.5));
+        emit("balance_port.flow", storage.name, pdt, withdrawal - injection);
     }
 }
 
@@ -301,6 +319,7 @@ void LegacyExtraOutputEmitter::inputGenerationOutputs(uint32_t pays, int pdt) co
         const double power = entry.availablePower[pdt];
         emit("generation_power", entry.componentName, pdt, power);
         emit("minus_generation", entry.componentName, pdt, -power);
+        emit("balance_port.flow", entry.componentName, pdt, power);
     }
 }
 
