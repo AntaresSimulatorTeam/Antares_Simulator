@@ -5,6 +5,7 @@
 
 #include <cmath>
 
+#include <fmt/printf.h>
 #include <yuni/yuni.h>
 
 #include <antares/logs/logs.h>
@@ -312,11 +313,10 @@ inline void SurveyResults::writeDateToFileDescriptor(uint row, int precisionLeve
     }
 }
 
-template<class StringT, class ConvertT, class PrecisionT>
+template<class StringT, class PrecisionT>
 inline void SurveyResults::AppendDoubleValue(uint& error,
                                              double v,
                                              StringT& buffer,
-                                             ConvertT& conversionBuffer,
                                              const PrecisionT& precision,
                                              const bool isNotApplicable)
 {
@@ -326,58 +326,35 @@ inline void SurveyResults::AppendDoubleValue(uint& error,
         return;
     }
 
-    if (!Utils::isZero(v))
-    {
-        if (std::isnan(v))
-        {
-            buffer.append("\tNaN", 4);
-            // We should disabled errors on NaN if the quadratic optimization has failed
-            if (++error == 1 && !data.study.runtime.quadraticOptimizationHasFailed)
-            {
-                logs.error() << "'NaN' value detected";
-            }
-        }
-        else
-        {
-            if (std::isinf(v))
-            {
-                buffer.append((v > 0) ? "\t+inf" : "\t-inf", 5);
-                if (++error == 1)
-                {
-                    logs.error() << "'infinite' value detected";
-                }
-            }
-            else
-            {
-#ifdef YUNI_OS_MSVC
-                int sizePrintf = ::sprintf_s(conversionBuffer + 1,
-                                             sizeof(conversionBuffer) - 2,
-                                             precision.c_str(),
-                                             v);
-#else
-                int sizePrintf = ::snprintf(conversionBuffer + 1,
-                                            sizeof(conversionBuffer) - 2,
-                                            precision.c_str(),
-                                            v);
-#endif
-
-                if (sizePrintf >= 0)
-                {
-                    // +1 is related to the tab character already present in the
-                    // conversion buffer
-                    buffer.append((const char*)conversionBuffer, 1 + sizePrintf);
-                }
-                else
-                {
-                    buffer += "\tERR";
-                }
-            }
-        }
-    }
-    else
+    if (Utils::isZero(v))
     {
         buffer.append("\t0", 2);
+        return;
     }
+
+    if (std::isnan(v))
+    {
+        buffer.append("\tNaN", 4);
+        // We should disabled errors on NaN if the quadratic optimization has failed
+        if (++error == 1 && !data.study.runtime.quadraticOptimizationHasFailed)
+        {
+            logs.error() << "'NaN' value detected";
+        }
+        return;
+    }
+
+    if (std::isinf(v))
+    {
+        buffer.append((v > 0) ? "\t+inf" : "\t-inf", 5);
+        if (++error == 1)
+        {
+            logs.error() << "'infinite' value detected";
+        }
+        return;
+    }
+
+    const std::string formatted = fmt::sprintf(std::string("\t") + precision.c_str(), v);
+    buffer.append(formatted.data(), formatted.size());
 }
 
 /*!
@@ -756,8 +733,6 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
                                             data.columnIndex);
     }
 
-    char conversionBuffer[256];
-    conversionBuffer[0] = '\t';
     uint error = 0;
 
 #ifndef NDEBUG
@@ -784,7 +759,6 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
             AppendDoubleValue(error,
                               values[x][y],
                               data.fileBuffer,
-                              conversionBuffer,
                               precision[x],
                               nonApplicableStatus[x]);
         }

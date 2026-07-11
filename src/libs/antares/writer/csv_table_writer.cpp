@@ -18,32 +18,9 @@ namespace fs = std::filesystem;
 namespace Antares::Writer
 {
 
-// Appends `cell` to `buf`, quoting it only when it contains a character that requires it.
-// Appending straight into the shared buffer (rather than returning a std::string per cell)
-// avoids one allocation/copy per cell in the common, non-quoted case.
-void appendEscaped(fmt::memory_buffer& buf, const std::string& cell)
-{
-    bool needs_quotes = cell.find_first_of(",\n\r\t\"") != std::string::npos;
-    if (!needs_quotes)
-    {
-        buf.append(cell);
-        return;
-    }
-
-    buf.push_back('"');
-    for (char c: cell)
-    {
-        if (c == '"')
-        {
-            buf.push_back('"');
-        }
-        buf.push_back(c);
-    }
-    buf.push_back('"');
-}
-
 // Reads row `rowIndex` straight from the columns, so the table never has to be transposed
-// into a vector of rows just to be written.
+// into a vector of rows just to be written. Each column formats its own value directly into
+// `buf` (see IColumn::appendTo), so no per-cell std::string is allocated.
 void appendRow(fmt::memory_buffer& buf,
                const std::vector<std::shared_ptr<IColumn>>& columns,
                size_t rowIndex)
@@ -54,14 +31,14 @@ void appendRow(fmt::memory_buffer& buf,
         {
             buf.push_back(',');
         }
-        appendEscaped(buf, columns[i]->toString(rowIndex));
+        columns[i]->appendTo(buf, rowIndex);
     }
     buf.push_back('\n');
 }
 
 // Above this size, flush the accumulated buffer to disk instead of growing it further,
 // so writing a very large table doesn't require holding the whole CSV in memory at once.
-constexpr size_t chunkFlushThreshold = 1 << 20; // 1 MiB
+constexpr size_t chunkFlushThreshold = 100 << 20; // 1 MiB
 
 void flushIfNeeded(fmt::memory_buffer& buf, std::ofstream& out, bool force = false)
 {
@@ -111,7 +88,7 @@ void CsvTableWriter::writeTable(const SimulationTable& simuTable) const
         {
             buf.push_back(',');
         }
-        appendEscaped(buf, columns[i]->name());
+        AppendEscaped(buf, columns[i]->name());
     }
     buf.push_back('\n');
 
