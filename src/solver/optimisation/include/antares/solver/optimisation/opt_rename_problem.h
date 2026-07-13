@@ -35,11 +35,16 @@ protected:
     }
 
     void SetLinkElementName(unsigned varIndex, const std::string& variableType) const;
-    void SetAreaElementNameHour(unsigned varIndex, const std::string& variableType) const;
-    void SetAreaElementNameWeek(unsigned varIndex, const std::string& variableType) const;
+    void SetAreaElementNameHour(unsigned varIndex,
+                                const std::string& variableType,
+                                std::string component = {}) const;
+    void SetAreaElementNameWeek(unsigned varIndex,
+                                const std::string& variableType,
+                                std::string component = {}) const;
     void SetAreaElementName(unsigned varIndex,
                             const std::string& variableType,
-                            const std::string& timeGranularity) const;
+                            const std::string& timeGranularity,
+                            std::string component = {}) const;
     void SetThermalClusterElementName(unsigned varIndex,
                                       const std::string& variableType,
                                       const std::string& clusterName) const;
@@ -73,14 +78,6 @@ protected:
     std::string linkLocation() const;
     std::string areaLocation() const;
     std::vector<std::string>& names() const;
-
-    void overrideComponent(unsigned index, const std::string& component) const
-    {
-        if (legacyInfo_ && (*legacyInfo_)[index])
-        {
-            (*legacyInfo_)[index]->component = component;
-        }
-    }
 
 protected:
     const std::string& getArea() const
@@ -170,7 +167,8 @@ public:
 private:
     void SetAreaVariableName(unsigned varIndex,
                              const std::string& variableType,
-                             int layerIndex) const;
+                             int layerIndex,
+                             std::string component = {}) const;
     void SetShortTermStorageVariableName(unsigned varIndex,
                                          const std::string& variableType,
                                          const std::string& sts_name) const;
