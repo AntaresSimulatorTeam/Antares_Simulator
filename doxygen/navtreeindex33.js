@@ -1,5 +1,6 @@
 var NAVTREEINDEX33 =
 {
+"nbOfDispatchedUnits_8h_source.html":[10,0,0,8,11,0,0,0,0,3,29],
 "nearPriceCap_8h.html#a0ccf764ecff249ed58b92a3c416e3cc9":[8,0,0,14,8,5,129],
 "nearPriceCap_8h.html#a9bc81019a96355ed256af3134ff28fc3":[8,0,0,14,8,5,176],
 "nearPriceCap_8h.html#ae4c312a5614cd3dabec99918aab0459c":[8,0,0,14,8,5,175],
@@ -248,6 +249,5 @@ var NAVTREEINDEX33 =
 "sets_8hxx_source.html":[10,0,0,4,0,25,0,0,0,7,14],
 "shave-peaks-by-remix-help_8h.html#a0dca85fdb36f5289211a7723ba109b2d":[8,0,0,14,6,44],
 "shave-peaks-by-remix-help_8h.html#a194416baeb9057cc4e1803e5b6f5a1cf":[8,0,0,14,6,75],
-"shave-peaks-by-remix-help_8h.html#a1ce7f2520ce4e57370b5a56f0e861710":[8,0,0,14,6,72],
-"shave-peaks-by-remix-help_8h.html#a6030c96de573a2966ac86c71d0bf601f":[8,0,0,14,6,73]
+"shave-peaks-by-remix-help_8h.html#a1ce7f2520ce4e57370b5a56f0e861710":[8,0,0,14,6,72]
 };

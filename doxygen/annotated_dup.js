@@ -270,6 +270,7 @@ var annotated_dup =
           ] ],
           [ "YmlModel", null, [
             [ "Parameter", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter" ],
+            [ "ExpressionLineNumber", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1ExpressionLineNumber.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1ExpressionLineNumber" ],
             [ "Variable", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable" ],
             [ "Port", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Port.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Port" ],
             [ "PortFieldDefinition", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortFieldDefinition" ],
@@ -977,6 +978,7 @@ var annotated_dup =
       [ "convert< Antares::IO::Inputs::YmlModel::ExtraOutput >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1ExtraOutput_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlModel::Objective >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Objective_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlModel::Model >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model_01_4.html", null ],
+      [ "convert< Antares::IO::Inputs::YmlModel::ExpressionLineNumber >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1ExpressionLineNumber_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::Variable >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::Constraint >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcessing >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ConstraintOutOfBoundsProcessing_01_4.html", null ],

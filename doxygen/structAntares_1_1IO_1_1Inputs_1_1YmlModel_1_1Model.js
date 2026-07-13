@@ -4,6 +4,7 @@ var structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model =
     [ "constraints", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a991357b92d6acbaec6e0877b133b46e1", null ],
     [ "description", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a82c0cdeb8dad0a3270583083abfd74b7", null ],
     [ "extra_outputs", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a47eea7a8ca9da089ad35e1a4219fb844", null ],
+    [ "filename", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a0a06bf20aa4f968f5be397791f0b0b70", null ],
     [ "id", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#aefd931eb14e56b25dd9393dc106c7bc2", null ],
     [ "objectives", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a7d4b503011eacf135860c56e7c6915ef", null ],
     [ "parameters", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html#a1eea023dcba20540618d61892d406a43", null ],

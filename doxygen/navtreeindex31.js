@@ -1,5 +1,6 @@
 var NAVTREEINDEX31 =
 {
+"immediate__file__writer_8h_source.html":[10,0,0,4,0,29,1,1],
 "import__helper_8py.html#aa974063ef554e07ce24987062c9177e6":[8,0,35,0,1],
 "import__helper_8py.html#ad6fe9b51dec32c23aa7db73f6e39981e":[8,0,35,0,0],
 "in-memory-study_8h_source.html":[10,0,0,10,1,0,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX31 =
 "linear-problem-api_2include_2antares_2optimisation_2linear-problem-api_2linearProblem_8h_source.html":[10,0,0,7,0,0,0,0,0,5],
 "linear-problem-api_2include_2antares_2optimisation_2linear-problem-api_2mipConstraint_8h_source.html":[10,0,0,7,0,0,0,0,0,8],
 "linear-problem-api_2include_2antares_2optimisation_2linear-problem-api_2mipSolution_8h_source.html":[10,0,0,7,0,0,0,0,0,9],
-"linear-problem-api_2include_2antares_2optimisation_2linear-problem-api_2mipVariable_8h_source.html":[10,0,0,7,0,0,0,0,0,10],
-"linear-problem-mpsolver-impl_2include_2antares_2optimisation_2linear-problem-mpsolver-impl_2linearProblem_8h_source.html":[10,0,0,7,2,0,0,0,0,1]
+"linear-problem-api_2include_2antares_2optimisation_2linear-problem-api_2mipVariable_8h_source.html":[10,0,0,7,0,0,0,0,0,10]
 };

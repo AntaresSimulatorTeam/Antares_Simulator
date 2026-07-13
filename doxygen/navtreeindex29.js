@@ -1,5 +1,6 @@
 var NAVTREEINDEX29 =
 {
+"dir_78b16d83f19ed5108ba7d586f55397e6.html":[10,0,0,8,11,0,0,0,0,5],
 "dir_79a3e724839bc9216a240bf576933a1b.html":[10,0,0,4,0,25,0,0],
 "dir_7acb574795f0d1ecf7b69272c4205017.html":[10,0,0,3,1,2,0],
 "dir_7b8037b01c904e47e6df8336b21c3e01.html":[10,0,0,4,0,7],
@@ -246,8 +247,7 @@ var NAVTREEINDEX29 =
 "economy__base_8h.html#af4aa3dd6d1511ffeddf13f60ddd9d4e9":[8,0,0,14,8,5,0,9],
 "economy__base_8h_source.html":[10,0,0,8,11,0,0,0,0,3,12],
 "empty_8h_source.html":[10,0,0,8,11,0,0,0,0,4,2],
-"enum__operators_8h.html#a030d5b7b80927da1c7c71ca4221680f5":[8,0,0,8,0,4,13],
+"enum__operators_8h.html#a030d5b7b80927da1c7c71ca4221680f5":[8,0,0,8,0,4,14],
 "enum__operators_8h.html#a5b42803d363465d2075144cd54313270":[8,0,0,10,0,37],
-"enum__operators_8h_source.html":[10,0,0,10,2,0,0,0],
-"environment_8py.html#a360300d8639ad0ab850999869af599b4":[8,0,11,0]
+"enum__operators_8h_source.html":[10,0,0,10,2,0,0,0]
 };

@@ -1,5 +1,11 @@
 var NAVTREEINDEX38 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html#ac36e5150842762abe1110826c959657b":[9,0,0,11,6,5,88,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html#adf8974bb8c4251568ad30ab242a93cf3":[9,0,0,11,6,5,88,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardStaticLinkBase.html":[9,0,0,11,6,5,50],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardStaticLinkBase.html#a11c3ff3d963e2aef330f236d15abf438":[9,0,0,11,6,5,50,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardStaticLinkBase.html#a4e1e0615db407216edacc01eb01b47b1":[9,0,0,11,6,5,50,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardStaticLinkBase.html#aa930dfdd04505885d700daf8f605365a":[9,0,0,11,6,5,50,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html":[9,0,0,11,6,5,16],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#a04ad5e4066b38c1b2c80ed10d6a8325d":[9,0,0,11,6,5,16,5],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#a6c61d2d66aadcd9af843930955991f0f":[9,0,0,11,6,5,16,2],
@@ -243,11 +249,5 @@ var NAVTREEINDEX38 =
 "structBindingConstraintHourData.html":[9,0,50],
 "structBindingConstraintHourData.html#a27bb87e1a9e47ed53a15f453b4145616":[9,0,50,1],
 "structBindingConstraintHourData.html#aa6d2ee09d5ee5b276ba157c2d38ee5ae":[9,0,50,2],
-"structBindingConstraintHourData.html#ae2d31d694a5b2ab4b1e800ccd06fedbf":[9,0,50,0],
-"structBindingConstraintWeekData.html":[9,0,52],
-"structBindingConstraintWeekData.html#a0d31772c925c9429acd3329f86b62952":[9,0,52,0],
-"structBindingConstraintWeekData.html#a790812a2a36988439140a2ea950e65ef":[9,0,52,1],
-"structBindingConstraintWeekData.html#af28aa3939428e8cf2f50653b61dafea9":[9,0,52,2],
-"structCAPACITY__RESERVATION.html":[9,0,58],
-"structCAPACITY__RESERVATION.html#a17e1e6f450f2e3876bbe0f76c2d35761":[9,0,58,0]
+"structBindingConstraintHourData.html#ae2d31d694a5b2ab4b1e800ccd06fedbf":[9,0,50,0]
 };

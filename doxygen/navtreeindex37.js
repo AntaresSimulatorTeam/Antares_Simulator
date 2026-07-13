@@ -1,5 +1,11 @@
 var NAVTREEINDEX37 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#a32c1c5444e58201fc070103e9b9929a3":[9,0,0,11,6,2,7,5],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#a673a99772e1d89bf3dab49608d5ed58d":[9,0,0,11,6,2,7,4],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#a6ce988d38a7a4a76ea166b5468f018d4":[9,0,0,11,6,2,7,3],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#a70d69ceb941a8f90fb487b631f60134c":[9,0,0,11,6,2,7,2],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#ab978c0f6d4af01ec9449180f86ce184e":[9,0,0,11,6,2,7,1],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#acb325c8a2b5905eb7e17feeaedba9a12":[9,0,0,11,6,2,7,6],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy_1_1Multiple.html":[9,0,0,11,6,2,7,0],
 "structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html":[9,0,0,11,6,15],
 "structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#a0866bd54ac1b61fef63100596ca5ac25":[9,0,0,11,6,15,1],
@@ -243,11 +249,5 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html":[9,0,0,11,6,5,88],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html#a146cf8321618c610c84f2c5f43d92a81":[9,0,0,11,6,5,88,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html#a82e0a9e2310482ede5528aa9c3b19d1d":[9,0,0,11,6,5,88,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html#a8a705f33b1735cf8ffa2b3c563356f88":[9,0,0,11,6,5,88,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html#ac36e5150842762abe1110826c959657b":[9,0,0,11,6,5,88,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html#adf8974bb8c4251568ad30ab242a93cf3":[9,0,0,11,6,5,88,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardStaticLinkBase.html":[9,0,0,11,6,5,50],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardStaticLinkBase.html#a11c3ff3d963e2aef330f236d15abf438":[9,0,0,11,6,5,50,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardStaticLinkBase.html#a4e1e0615db407216edacc01eb01b47b1":[9,0,0,11,6,5,50,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardStaticLinkBase.html#aa930dfdd04505885d700daf8f605365a":[9,0,0,11,6,5,50,2]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html#a8a705f33b1735cf8ffa2b3c563356f88":[9,0,0,11,6,5,88,1]
 };
