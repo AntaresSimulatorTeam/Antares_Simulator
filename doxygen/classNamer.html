@@ -168,15 +168,15 @@ unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>timeStep</b> () c
 <tr class="memitem:a09b3b636bd67684e07da225f84875c34"><td class="memItemLeft" align="right" valign="top"><a id="a09b3b636bd67684e07da225f84875c34"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>SetLinkElementName</b> (unsigned varIndex, const std::string &amp;variableType) const</td></tr>
 <tr class="separator:a09b3b636bd67684e07da225f84875c34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afae1c301ee544d32490e14eed974876d"><td class="memItemLeft" align="right" valign="top"><a id="afae1c301ee544d32490e14eed974876d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetAreaElementNameHour</b> (unsigned varIndex, const std::string &amp;variableType) const</td></tr>
-<tr class="separator:afae1c301ee544d32490e14eed974876d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13089e6167f524c5dd5f80e70744cb18"><td class="memItemLeft" align="right" valign="top"><a id="a13089e6167f524c5dd5f80e70744cb18"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetAreaElementNameWeek</b> (unsigned varIndex, const std::string &amp;variableType) const</td></tr>
-<tr class="separator:a13089e6167f524c5dd5f80e70744cb18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76fc497c089087cbcb151394185fb43a"><td class="memItemLeft" align="right" valign="top"><a id="a76fc497c089087cbcb151394185fb43a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>SetAreaElementName</b> (unsigned varIndex, const std::string &amp;variableType, const std::string &amp;timeGranularity) const</td></tr>
-<tr class="separator:a76fc497c089087cbcb151394185fb43a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25b11151ddccce1a2a9aac924d1b5c58"><td class="memItemLeft" align="right" valign="top"><a id="a25b11151ddccce1a2a9aac924d1b5c58"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SetAreaElementNameHour</b> (unsigned varIndex, const std::string &amp;variableType, std::string component={}) const</td></tr>
+<tr class="separator:a25b11151ddccce1a2a9aac924d1b5c58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacb70a0bb4e3a4175f1886226188edac"><td class="memItemLeft" align="right" valign="top"><a id="aacb70a0bb4e3a4175f1886226188edac"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SetAreaElementNameWeek</b> (unsigned varIndex, const std::string &amp;variableType, std::string component={}) const</td></tr>
+<tr class="separator:aacb70a0bb4e3a4175f1886226188edac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab407ee41f2e0f0c5570bb315cbc586ec"><td class="memItemLeft" align="right" valign="top"><a id="ab407ee41f2e0f0c5570bb315cbc586ec"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SetAreaElementName</b> (unsigned varIndex, const std::string &amp;variableType, const std::string &amp;timeGranularity, std::string component={}) const</td></tr>
+<tr class="separator:ab407ee41f2e0f0c5570bb315cbc586ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac06b6d6ba3960cf6273f4022ef177874"><td class="memItemLeft" align="right" valign="top"><a id="ac06b6d6ba3960cf6273f4022ef177874"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>SetThermalClusterElementName</b> (unsigned varIndex, const std::string &amp;variableType, const std::string &amp;clusterName) const</td></tr>
 <tr class="separator:ac06b6d6ba3960cf6273f4022ef177874"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -213,6 +213,9 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>areaLocation</
 <tr class="memitem:a002c1c330cce7dd834886b5f95ce2aa6"><td class="memItemLeft" align="right" valign="top"><a id="a002c1c330cce7dd834886b5f95ce2aa6"></a>
 std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>names</b> () const</td></tr>
 <tr class="separator:a002c1c330cce7dd834886b5f95ce2aa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa87b8a85733f8def01bcebf5f60c5815"><td class="memItemLeft" align="right" valign="top"><a id="aa87b8a85733f8def01bcebf5f60c5815"></a>
+const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getArea</b> () const</td></tr>
+<tr class="separator:aa87b8a85733f8def01bcebf5f60c5815"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/solver/optimisation/include/antares/solver/optimisation/<a class="el" href="opt__rename__problem_8h_source.html">opt_rename_problem.h</a></li>
