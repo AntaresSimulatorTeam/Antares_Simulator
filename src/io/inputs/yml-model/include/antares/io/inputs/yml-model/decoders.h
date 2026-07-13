@@ -117,4 +117,11 @@ class convert<Antares::IO::Inputs::YmlModel::Model>
 public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::Model& rhs);
 };
+
+template<>
+class convert<Antares::IO::Inputs::YmlModel::ExpressionLineNumber>
+{
+public:
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::ExpressionLineNumber& rhs);
+};
 } // namespace YAML
