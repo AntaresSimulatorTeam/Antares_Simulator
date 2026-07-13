@@ -43,7 +43,6 @@ var classAntares_1_1Data_1_1Parameters =
     [ "hydroPricing", "classAntares_1_1Data_1_1Parameters.html#a91d3c6a1a6c42902fe293c87d0b07d05", null ],
     [ "include", "classAntares_1_1Data_1_1Parameters.html#af3a7cd564c1393356641dae9c5054276", null ],
     [ "interModal", "classAntares_1_1Data_1_1Parameters.html#a97da00b0ed23dcfd056e2287b2a6d28d", null ],
-    [ "intraModal", "classAntares_1_1Data_1_1Parameters.html#ae74580d04e1dfe5622419a21207c6a86", null ],
     [ "leapYear", "classAntares_1_1Data_1_1Parameters.html#a0d961081d5df614638783cc94da11b35", null ],
     [ "mode", "classAntares_1_1Data_1_1Parameters.html#a78e0f056264051b537ad5f76e207c98e", null ],
     [ "namedProblems", "classAntares_1_1Data_1_1Parameters.html#a7d784baad6bc118f51185e828e2c2f03", null ],

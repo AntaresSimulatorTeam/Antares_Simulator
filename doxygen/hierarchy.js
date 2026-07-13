@@ -61,15 +61,6 @@ var hierarchy =
     [ "AreaHydroLevelData", "structAreaHydroLevelData.html", null ],
     [ "Antares::Data::AreaLink", "classAntares_1_1Data_1_1AreaLink.html", null ],
     [ "Antares::Data::AreaList", "classAntares_1_1Data_1_1AreaList.html", null ],
-    [ "Antares::Solver::AreaNumberOfTSretriever", "classAntares_1_1Solver_1_1AreaNumberOfTSretriever.html", [
-      [ "Antares::Solver::AreaLinksTransCapaNumberOfTSretriever", "classAntares_1_1Solver_1_1AreaLinksTransCapaNumberOfTSretriever.html", null ],
-      [ "Antares::Solver::HydroAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1HydroAreaNumberOfTSretriever.html", null ],
-      [ "Antares::Solver::LoadAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1LoadAreaNumberOfTSretriever.html", null ],
-      [ "Antares::Solver::RenewClustersAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1RenewClustersAreaNumberOfTSretriever.html", null ],
-      [ "Antares::Solver::SolarAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1SolarAreaNumberOfTSretriever.html", null ],
-      [ "Antares::Solver::ThermalAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html", null ],
-      [ "Antares::Solver::WindAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1WindAreaNumberOfTSretriever.html", null ]
-    ] ],
     [ "Antares::HydroErrorsCollector::AreaReference", "classAntares_1_1HydroErrorsCollector_1_1AreaReference.html", null ],
     [ "Antares::Solver::Simulation::ReserveIndexMaps::AreaReserveIndexMap", "structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps_1_1AreaReserveIndexMap.html", null ],
     [ "Antares::Solver::Variable::Areas< VariableList >", "classAntares_1_1Solver_1_1Variable_1_1Areas.html", null ],
@@ -653,7 +644,6 @@ var hierarchy =
     [ "Yuni::Extension::CString::Into< Antares::Data::LocalTSGenerationBehavior >", "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1LocalTSGenerationBehavior_01_4.html", null ],
     [ "Yuni::Extension::CString::Into< Antares::Data::StatisticalLaw >", "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1StatisticalLaw_01_4.html", null ],
     [ "IntoUTF8ArgsTranslator", "classIntoUTF8ArgsTranslator.html", null ],
-    [ "Antares::Solver::IntraModalConsistencyChecker", "classAntares_1_1Solver_1_1IntraModalConsistencyChecker.html", null ],
     [ "std::invalid_argument", null, [
       [ "Antares::Data::ShortTermStorage::ShortTermStorageAdditionalConstraintsError", "structAntares_1_1Data_1_1ShortTermStorage_1_1ShortTermStorageAdditionalConstraintsError.html", null ],
       [ "Antares::Data::Symmetries::SymmetriesError", "structAntares_1_1Data_1_1Symmetries_1_1SymmetriesError.html", null ],

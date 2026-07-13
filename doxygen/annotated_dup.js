@@ -756,16 +756,7 @@ var annotated_dup =
         [ "WeeklyDataFromAntares", "structAntares_1_1Solver_1_1WeeklyDataFromAntares.html", "structAntares_1_1Solver_1_1WeeklyDataFromAntares" ],
         [ "LpsFromAntares", "classAntares_1_1Solver_1_1LpsFromAntares.html", "classAntares_1_1Solver_1_1LpsFromAntares" ],
         [ "WeeklyProblemTranslationException", "classAntares_1_1Solver_1_1WeeklyProblemTranslationException.html", "classAntares_1_1Solver_1_1WeeklyProblemTranslationException" ],
-        [ "HebdoProblemToLpsTranslator", "classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html", "classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator" ],
-        [ "AreaNumberOfTSretriever", "classAntares_1_1Solver_1_1AreaNumberOfTSretriever.html", "classAntares_1_1Solver_1_1AreaNumberOfTSretriever" ],
-        [ "LoadAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1LoadAreaNumberOfTSretriever.html", "classAntares_1_1Solver_1_1LoadAreaNumberOfTSretriever" ],
-        [ "HydroAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1HydroAreaNumberOfTSretriever.html", "classAntares_1_1Solver_1_1HydroAreaNumberOfTSretriever" ],
-        [ "WindAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1WindAreaNumberOfTSretriever.html", "classAntares_1_1Solver_1_1WindAreaNumberOfTSretriever" ],
-        [ "SolarAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1SolarAreaNumberOfTSretriever.html", "classAntares_1_1Solver_1_1SolarAreaNumberOfTSretriever" ],
-        [ "ThermalAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever.html", "classAntares_1_1Solver_1_1ThermalAreaNumberOfTSretriever" ],
-        [ "RenewClustersAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1RenewClustersAreaNumberOfTSretriever.html", "classAntares_1_1Solver_1_1RenewClustersAreaNumberOfTSretriever" ],
-        [ "AreaLinksTransCapaNumberOfTSretriever", "classAntares_1_1Solver_1_1AreaLinksTransCapaNumberOfTSretriever.html", "classAntares_1_1Solver_1_1AreaLinksTransCapaNumberOfTSretriever" ],
-        [ "IntraModalConsistencyChecker", "classAntares_1_1Solver_1_1IntraModalConsistencyChecker.html", "classAntares_1_1Solver_1_1IntraModalConsistencyChecker" ]
+        [ "HebdoProblemToLpsTranslator", "classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html", "classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator" ]
       ] ],
       [ "TSGenerator", null, [
         [ "Predicate", null, [

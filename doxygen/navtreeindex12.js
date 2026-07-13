@@ -1,6 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipConstraint.html#ae6f913700254dd0c671c1e5bd77cb72d":[9,0,0,9,0,14,4],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipConstraint.html#aea0af2de2a41c2755af7c1aa5db491f9":[9,0,0,9,0,14,13],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipVariable.html":[9,0,0,9,0,13],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipVariable.html#a3122c90eeebbdf402f0bf85b7c714b4a":[9,0,0,9,0,13,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html#ac6f530525ccca32d03d7fe69efc9474b":[9,0,0,10,1,0],
 "classAntares_1_1Optimization_1_1LegacyFiller.html":[9,0,0,10,20],
 "classAntares_1_1Optimization_1_1LegacyFiller.html#a02da15836278b369ed9f184377384b2d":[9,0,0,10,20,3],
-"classAntares_1_1Optimization_1_1LegacyFiller.html#a1aa09dde6609a83bf289178e146314fa":[9,0,0,10,20,0]
+"classAntares_1_1Optimization_1_1LegacyFiller.html#a1aa09dde6609a83bf289178e146314fa":[9,0,0,10,20,0],
+"classAntares_1_1Optimization_1_1LegacyFiller.html#a893c7064c63aa06ada7c7727f5e9edcb":[9,0,0,10,20,2]
 };
