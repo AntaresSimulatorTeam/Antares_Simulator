@@ -250,8 +250,10 @@ bool convert<YmlModel::Variable>::decode(const Node& node, YmlModel::Variable& r
     rhs.id = node["id"].as<std::string>();
     rhs.lower_bound = node["lower-bound"].as<YmlModel::ExpressionLineNumber>(
       YmlModel::ExpressionLineNumber{});
+    // optional key
     rhs.upper_bound = node["upper-bound"].as<YmlModel::ExpressionLineNumber>(
       YmlModel::ExpressionLineNumber{});
+    // optional key
     rhs.variable_type = node["variable-type"].as<YmlModel::ValueType>(
       YmlModel::ValueType::CONTINUOUS);
     rhs.time_dependent = node["time-dependent"].as<bool>(true);
