@@ -253,15 +253,12 @@ public:
         //! Reserves participation cost of the Hydro for the whole year
         std::vector<double> HydroReserveParticipationCostForYear;
 
-        ReserveData():
-            reserveParticipationPerThermalClusterForYear(HOURS_PER_YEAR),
-            reserveParticipationPerSTStorageClusterForYear(HOURS_PER_YEAR),
-            reserveParticipationPerHydroForYear(HOURS_PER_YEAR),
-            reserveParticipationCostForYear(HOURS_PER_YEAR, 0),
-            thermalClusterReserveParticipationCostForYear(HOURS_PER_YEAR, 0),
-            STStorageClusterReserveParticipationCostForYear(HOURS_PER_YEAR, 0),
-            HydroReserveParticipationCostForYear(HOURS_PER_YEAR, 0)
+        ReserveData()
         {
+            reserveParticipationCostForYear.assign(HOURS_PER_YEAR, 0);
+            thermalClusterReserveParticipationCostForYear.assign(HOURS_PER_YEAR, 0);
+            STStorageClusterReserveParticipationCostForYear.assign(HOURS_PER_YEAR, 0);
+            HydroReserveParticipationCostForYear.assign(HOURS_PER_YEAR, 0);
         }
     };
 
