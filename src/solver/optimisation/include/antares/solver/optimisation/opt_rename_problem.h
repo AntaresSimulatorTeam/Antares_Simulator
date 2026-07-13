@@ -35,11 +35,16 @@ protected:
     }
 
     void SetLinkElementName(unsigned varIndex, const std::string& variableType) const;
-    void SetAreaElementNameHour(unsigned varIndex, const std::string& variableType) const;
-    void SetAreaElementNameWeek(unsigned varIndex, const std::string& variableType) const;
+    void SetAreaElementNameHour(unsigned varIndex,
+                                const std::string& variableType,
+                                std::string component = {}) const;
+    void SetAreaElementNameWeek(unsigned varIndex,
+                                const std::string& variableType,
+                                std::string component = {}) const;
     void SetAreaElementName(unsigned varIndex,
                             const std::string& variableType,
-                            const std::string& timeGranularity) const;
+                            const std::string& timeGranularity,
+                            std::string component = {}) const;
     void SetThermalClusterElementName(unsigned varIndex,
                                       const std::string& variableType,
                                       const std::string& clusterName) const;
@@ -73,6 +78,12 @@ protected:
     std::string linkLocation() const;
     std::string areaLocation() const;
     std::vector<std::string>& names() const;
+
+protected:
+    const std::string& getArea() const
+    {
+        return area_.value();
+    }
 
 private:
     std::string origin_;
@@ -156,7 +167,8 @@ public:
 private:
     void SetAreaVariableName(unsigned varIndex,
                              const std::string& variableType,
-                             int layerIndex) const;
+                             int layerIndex,
+                             std::string component = {}) const;
     void SetShortTermStorageVariableName(unsigned varIndex,
                                          const std::string& variableType,
                                          const std::string& sts_name) const;
