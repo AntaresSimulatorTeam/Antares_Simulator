@@ -294,10 +294,9 @@ struct Fixture
         // appended after the hourly variables: X 500 / 250, cost -20 / -10
         // (the construction site writes -WaterLayerValues as the coefficient).
         const int firstLayerVariable = nbPdt * variablesPerHour;
-        problem.NumeroDeVariableDeTrancheDeStock = {
-          {firstLayerVariable, firstLayerVariable + 1},
-          {},
-          {}};
+        problem.NumeroDeVariableDeTrancheDeStock = {{firstLayerVariable, firstLayerVariable + 1},
+                                                    {},
+                                                    {}};
         solved.X.insert(solved.X.end(), {500., 250.});
         solved.CoutLineaire.insert(solved.CoutLineaire.end(), {-20., -10.});
 
@@ -676,8 +675,7 @@ BOOST_AUTO_TEST_CASE(input_generation_emits_power_and_its_negation_per_component
 
     BOOST_CHECK_EQUAL(FindRow(table, "generation_power", "area1_wind")->value, 320.);
     BOOST_CHECK_EQUAL(FindRow(table, "minus_generation", "area1_wind")->value, -320.);
-    BOOST_CHECK_EQUAL(FindRow(table, "generation_power", "area1_combined_heat_power")->value,
-                      12.5);
+    BOOST_CHECK_EQUAL(FindRow(table, "generation_power", "area1_combined_heat_power")->value, 12.5);
     BOOST_CHECK_EQUAL(FindRow(table, "minus_generation", "area1_combined_heat_power")->value,
                       -12.5);
     // Areas without input series produce no rows.
