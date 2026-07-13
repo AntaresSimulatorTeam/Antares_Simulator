@@ -152,6 +152,30 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         // no output ?
         study.parameters.noOutput = pSettings.noOutput;
 
+        // Output selection, the command line overrides the study
+        if (pSettings.noLegacyOutputs)
+        {
+            study.parameters.legacyOutputs = false;
+        }
+
+        if (pSettings.forceSimulationTable)
+        {
+            study.parameters.simulationTable = true;
+        }
+
+        if (!study.parameters.noOutput && !study.parameters.legacyOutputs
+            && !study.parameters.simulationTable)
+        {
+            logs.warning() << "Both legacy outputs and simulation tables are disabled: no "
+                              "simulation results will be written";
+        }
+
+        if (study.getModelerData() && !study.parameters.writeSimulationTable())
+        {
+            logs.warning() << "Simulation tables are disabled: the results of the modeler "
+                              "components will not be written";
+        }
+
         if (pSettings.parquetFmtForSimuTables)
         {
             study.parameters.simuTableFormat = Writer::TableFormat::Parquet;

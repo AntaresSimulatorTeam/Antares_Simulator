@@ -35,6 +35,8 @@ hide:
 | -c, --comment-file=VALUE | Specify the file to copy as comments of the simulation                                            |
 | -f, --force              | Ignore all warnings at loading                                                                    |
 | --no-output              | Do not write the results in the output folder                                                     |
+| --no-legacy-outputs      | Do not write the [legacy outputs](04-parameters.md#legacy-outputs), whatever the study says       |
+| --simulation-table       | Write the [simulation tables](04-parameters.md#simulation-table), whatever the study says         |
 | -y, --year=VALUE         | Override the [number of MC years](04-parameters.md#nbyears)                                       |
 | --year-by-year           | Force the [writing the result output for each year](04-parameters.md#year-by-year) (economy only) |
 | --derated                | Force the [derated](04-parameters.md#derated) mode                                                |

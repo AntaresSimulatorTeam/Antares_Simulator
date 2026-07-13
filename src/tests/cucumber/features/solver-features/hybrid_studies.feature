@@ -1,5 +1,8 @@
 Feature: hybrid (simulator+modeler) studies
 
+  Background:
+    Given the simulation tables are written
+
   @short
   Scenario: 001 One node - passive + modeler test 1_1
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/001 One node - passive"

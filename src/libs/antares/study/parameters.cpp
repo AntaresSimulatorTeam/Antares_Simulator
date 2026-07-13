@@ -224,6 +224,16 @@ bool Parameters::adequacy() const
     return mode == SimulationMode::Adequacy;
 }
 
+bool Parameters::writeLegacyOutputs() const
+{
+    return !noOutput && legacyOutputs;
+}
+
+bool Parameters::writeSimulationTable() const
+{
+    return !noOutput && simulationTable;
+}
+
 void Parameters::resetSeeds()
 {
     // Initialize all seeds
@@ -297,6 +307,9 @@ void Parameters::reset()
     // timeseries numbers
     storeTimeseriesNumbers = false;
     synthesis = true;
+
+    legacyOutputs = true;
+    simulationTable = false;
 
     // Hydro heuristic policy
     hydroHeuristicPolicy.hhPolicy = hhpAccommodateRuleCurves;
@@ -514,6 +527,14 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
     if (key == "synthesis")
     {
         return value.to<bool>(d.synthesis);
+    }
+    if (key == "legacy-outputs")
+    {
+        return value.to<bool>(d.legacyOutputs);
+    }
+    if (key == "simulation-table")
+    {
+        return value.to<bool>(d.simulationTable);
     }
     if (key == "hydro-debug")
     {

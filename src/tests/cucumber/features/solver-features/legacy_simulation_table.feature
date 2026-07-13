@@ -1,5 +1,8 @@
 Feature: Legacy variables in simulation table
 
+  Background:
+    Given the simulation tables are written
+
   # The legacy solver populates PROBLEME_ANTARES_A_RESOUDRE::NomDesVariables
   # with names of the form `<Output>::<location>::hour<N>`. After the per-week
   # solve, FillLegacySimulationTable parses those names, applies LegacyNameMapper

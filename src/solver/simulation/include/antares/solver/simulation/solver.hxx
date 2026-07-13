@@ -243,7 +243,8 @@ inline ISimulation<ImplementationType>::ISimulation(
     logs.checkpoint() << "Running the simulation (" << ImplementationType::Name() << ')';
     logs.info() << "Allocating resources...";
 
-    if (pYearByYear && (settings.noOutput || settings.tsGeneratorsOnly))
+    if (pYearByYear
+        && (settings.noOutput || settings.tsGeneratorsOnly || !study.parameters.legacyOutputs))
     {
         pYearByYear = false;
     }
@@ -352,14 +353,17 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
     }
     else
     {
-        if (synthesis)
+        const auto& parameters = study.parameters;
+        if (not parameters.legacyOutputs) // disabled by parameters
         {
-            const auto& parameters = study.parameters;
-            if (not parameters.synthesis) // disabled by parameters
-            {
-                logs.info() << "The simulation synthesis is disabled.";
-                return;
-            }
+            logs.info() << "The legacy outputs are disabled.";
+            return;
+        }
+
+        if (synthesis and not parameters.synthesis) // disabled by parameters
+        {
+            logs.info() << "The simulation synthesis is disabled.";
+            return;
         }
 
         // The target folder

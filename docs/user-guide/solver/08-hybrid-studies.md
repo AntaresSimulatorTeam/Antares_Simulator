@@ -20,6 +20,11 @@ The results of the modeler's components optimization is exported under the simul
 the [modeler outputs page](../modeler/03-outputs.md), in the same output folder as the legacy outputs.  
 One simulation table for each optimization step (called `simulation_table--optim-nb-X`) will be generated.
 
+Simulation tables are **not** written by default: set [`simulation-table = true`](04-parameters.md#simulation-table) in
+the `[output]` section of `generaldata.ini` (or run the solver with `--simulation-table`) to get them. The two families
+of results are independent, so a hybrid study can write the legacy outputs only, the simulation tables only
+([`legacy-outputs = false`](04-parameters.md#legacy-outputs)), or both.
+
 > _**Note:**_ 
 > Because every MC year is divided into multiple simplex ranges (blocks), time-independent outputs will appear once for 
 > every block in the simulation table.

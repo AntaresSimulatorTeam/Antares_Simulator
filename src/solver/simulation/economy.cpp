@@ -74,7 +74,7 @@ bool Economy::simulationBegin()
                                             &pProblemesHebdo[numSpace],
                                             resultWriter_,
                                             simulationObserver_.get(),
-                                            !study.parameters.noOutput);
+                                            study.parameters.writeSimulationTable());
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,

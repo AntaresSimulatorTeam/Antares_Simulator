@@ -59,6 +59,14 @@ void addParameterOptions(Yuni::GetOpt::Parser& parser,
                    ' ',
                    "no-output",
                    "Do not write the results in the output folder");
+    parser.addFlag(settings.noLegacyOutputs,
+                   ' ',
+                   "no-legacy-outputs",
+                   "Do not write the legacy results (mc-all, mc-ind), whatever the study says");
+    parser.addFlag(settings.forceSimulationTable,
+                   ' ',
+                   "simulation-table",
+                   "Write the simulation tables, whatever the study says");
     parser.add(options.nbYears, 'y', "year", "Override the number of MC years");
     parser.addFlag(options.forceYearByYear,
                    ' ',
@@ -297,6 +305,8 @@ void Settings::reset()
     ignoreConstraints = false;
     tsGeneratorsOnly = false;
     noOutput = false;
+    noLegacyOutputs = false;
+    forceSimulationTable = false;
     forceZipOutput = false;
 
     solverOptions = Antares::Solver::Optimization::CmdLineOptimOptions{};

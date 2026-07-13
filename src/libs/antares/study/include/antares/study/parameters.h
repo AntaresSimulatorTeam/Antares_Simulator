@@ -42,6 +42,14 @@ public:
     bool adequacy() const;
     //@}
 
+    //! \name Output selection
+    //@{
+    //! Get if the legacy result files (mc-all, mc-ind) must be written
+    bool writeLegacyOutputs() const;
+    //! Get if the simulation table(s) must be written
+    bool writeSimulationTable() const;
+    //@}
+
     /*!
     ** \brief Reset the playlist (played years and associated years)
     */
@@ -418,6 +426,10 @@ public:
     //! No output
     // This variable is not stored within the study but only used by the solver
     bool noOutput = false;
+    //! Write the legacy result files (mc-all, mc-ind)
+    bool legacyOutputs = true;
+    //! Write the simulation table(s)
+    bool simulationTable = false;
     //@}
 
     // In case we print simulation tables, do we print it in csv or parquet ?

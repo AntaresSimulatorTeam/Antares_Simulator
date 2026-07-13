@@ -66,6 +66,11 @@ def set_input_section_variable(context, input_file, section, variable, value):
                           variable=variable, value=value)
 
 
+@given('the simulation tables are written')
+def enable_simulation_tables(context):
+    context.write_simu_tables = True
+
+
 @given('the linear solver is {solver_name}')
 def set_linear_solver(context, solver_name):
     context.config.userdata["linear-solver"] = solver_name
@@ -358,6 +363,8 @@ def build_antares_solver_command(context):
         command.append('--named-mps-problems')
     if context.parallel:
         command.append('--force-parallel=4')
+    if getattr(context, "write_simu_tables", False):
+        command.append('--simulation-table')
     return command
 
 
