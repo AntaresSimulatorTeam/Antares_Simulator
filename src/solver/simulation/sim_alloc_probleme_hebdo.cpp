@@ -549,8 +549,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         problem.ResultatsHoraires[k].ProductionThermique.resize(NombreDePasDeTemps);
         if (resEnabled)
         {
-            problem.ResultatsHoraires[k].Reserves.emplace();
-            problem.ResultatsHoraires[k].Reserves.value().resize(NombreDePasDeTemps);
+            problem.ResultatsHoraires[k].Reserves.emplace(NombreDePasDeTemps);
             problem.ResultatsHoraires[k].HydroUsage.resize(NombreDePasDeTemps);
         }
 
@@ -597,42 +596,24 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
               .NombreDeGroupesQuiTombentEnPanneDuPalier.assign(nbPaliers, 0.);
             if (resEnabled)
             {
-                problem.ResultatsHoraires[k]
-                  .ProductionThermique[j]
-                  .ParticipationReservesDuPalier.emplace();
-                problem.ResultatsHoraires[k]
-                  .ProductionThermique[j]
-                  .ParticipationReservesDuPalier.value()
-                  .assign(nbThermalReserveParticipations, 0.);
-                problem.ResultatsHoraires[k]
-                  .ProductionThermique[j]
-                  .ParticipationReservesDuPalierOn.emplace();
-                problem.ResultatsHoraires[k]
-                  .ProductionThermique[j]
-                  .ParticipationReservesDuPalierOn.value()
-                  .assign(nbThermalReserveParticipations, 0.);
-                problem.ResultatsHoraires[k]
-                  .ProductionThermique[j]
-                  .ParticipationReservesDuPalierOff.emplace();
-                problem.ResultatsHoraires[k]
-                  .ProductionThermique[j]
-                  .ParticipationReservesDuPalierOff.value()
-                  .assign(nbThermalReserveParticipations, 0.);
-
-                problem.ResultatsHoraires[k]
-                  .Reserves.value()[j]
-                  .ValeursHorairesInternalUnsatisfied.assign(nbReserves, 0.);
-                problem.ResultatsHoraires[k]
-                  .Reserves.value()[j]
-                  .ValeursHorairesInternalExcessReserve.assign(nbReserves, 0.);
-                problem.ResultatsHoraires[k].Reserves.value()[j].CoutsMarginauxHoraires.assign(
-                  nbReserves,
+                {
+                    auto& thermal = problem.ResultatsHoraires[k].ProductionThermique[j];
+                    thermal.ParticipationReservesDuPalier.emplace(nbThermalReserveParticipations,
+                                                                  0.);
+                    thermal.ParticipationReservesDuPalierOn.emplace(nbThermalReserveParticipations,
+                                                                    0.);
+                    thermal.ParticipationReservesDuPalierOff.emplace(nbThermalReserveParticipations,
+                                                                     0.);
+                }
+                {
+                    auto& res = problem.ResultatsHoraires[k].Reserves.value()[j];
+                    res.ValeursHorairesInternalUnsatisfied.assign(nbReserves, 0.);
+                    res.ValeursHorairesInternalExcessReserve.assign(nbReserves, 0.);
+                    res.CoutsMarginauxHoraires.assign(nbReserves, 0.);
+                }
+                problem.ResultatsHoraires[k].HydroUsage[j].reserveParticipationOfCluster.emplace(
+                  nbHydroReserveParticipations,
                   0.);
-                problem.ResultatsHoraires[k].HydroUsage[j].reserveParticipationOfCluster.emplace();
-                problem.ResultatsHoraires[k]
-                  .HydroUsage[j]
-                  .reserveParticipationOfCluster.value()
-                  .assign(nbHydroReserveParticipations, 0.);
             }
         }
         // Short term storage results
