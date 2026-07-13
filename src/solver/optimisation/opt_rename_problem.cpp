@@ -434,67 +434,67 @@ void VariableNamer::ShortTermStorageCostVariationWithdrawal(unsigned varIndex,
     SetShortTermStorageVariableName(varIndex, "CostVariationWithdrawal", sts_name);
 }
 
-void VariableNamer::HydProd(unsigned varIndex)
+void VariableNamer::HydProd(unsigned varIndex) const
 {
     SetAreaElementNameHour(varIndex, "HydProd");
     overrideComponent(varIndex, getArea() + "_hydro_storage");
 }
 
-void VariableNamer::HydProdDown(unsigned varIndex)
+void VariableNamer::HydProdDown(unsigned varIndex) const
 {
     SetAreaElementNameHour(varIndex, "HydProdDown");
     overrideComponent(varIndex, getArea() + "_hydro_storage");
 }
 
-void VariableNamer::HydProdUp(unsigned varIndex)
+void VariableNamer::HydProdUp(unsigned varIndex) const
 {
     SetAreaElementNameHour(varIndex, "HydProdUp");
     overrideComponent(varIndex, getArea() + "_hydro_storage");
 }
 
-void VariableNamer::Pumping(unsigned varIndex)
+void VariableNamer::Pumping(unsigned varIndex) const
 {
     SetAreaElementNameHour(varIndex, "Pumping");
     overrideComponent(varIndex, getArea() + "_hydro_storage");
 }
 
-void VariableNamer::HydroLevel(unsigned varIndex)
+void VariableNamer::HydroLevel(unsigned varIndex) const
 {
     SetAreaElementNameHour(varIndex, "HydroLevel");
     overrideComponent(varIndex, getArea() + "_hydro_storage");
 }
 
-void VariableNamer::Overflow(unsigned varIndex)
+void VariableNamer::Overflow(unsigned varIndex) const
 {
     SetAreaElementNameHour(varIndex, "Overflow");
     overrideComponent(varIndex, getArea() + "_hydro_storage");
 }
 
-void VariableNamer::LayerStorage(unsigned varIndex, int layerIndex)
+void VariableNamer::LayerStorage(unsigned varIndex, int layerIndex) const
 {
     SetAreaVariableName(varIndex, "LayerStorage", layerIndex);
     overrideComponent(varIndex, getArea() + "_hydro_storage");
 }
 
-void VariableNamer::FinalStorage(unsigned varIndex)
+void VariableNamer::FinalStorage(unsigned varIndex) const
 {
     SetAreaElementNameHour(varIndex, "FinalStorage");
     overrideComponent(varIndex, getArea() + "_hydro_storage");
 }
 
-void VariableNamer::UnsuppliedEnergy(unsigned varIndex)
+void VariableNamer::UnsuppliedEnergy(unsigned varIndex) const
 {
     SetAreaElementNameHour(varIndex, "UnsuppliedEnergy");
     overrideComponent(varIndex, getArea() + "_node");
 }
 
-void VariableNamer::Spillage(unsigned varIndex)
+void VariableNamer::Spillage(unsigned varIndex) const
 {
     SetAreaElementNameHour(varIndex, "Spillage");
     overrideComponent(varIndex, getArea() + "_node");
 }
 
-void VariableNamer::AreaBalance(unsigned varIndex)
+void VariableNamer::AreaBalance(unsigned varIndex) const
 {
     SetAreaElementNameHour(varIndex, "AreaBalance");
     overrideComponent(varIndex, getArea() + "_node");
@@ -515,7 +515,7 @@ void ConstraintNamer::CsrAreaBalance(unsigned constrIndex) const
     SetAreaElementNameHour(constrIndex, "CsrAreaBalance");
 }
 
-void ConstraintNamer::AreaBalance(unsigned constrIndex)
+void ConstraintNamer::AreaBalance(unsigned constrIndex) const
 {
     SetAreaElementNameHour(constrIndex, "AreaBalance");
     overrideComponent(constrIndex, getArea() + "_node");
@@ -586,7 +586,7 @@ void ConstraintNamer::FinalStockEquivalent(unsigned constrIndex) const
     SetAreaElementNameHour(constrIndex, "FinalStockEquivalent");
 }
 
-void ConstraintNamer::FinalStockExpression(unsigned constrIndex)
+void ConstraintNamer::FinalStockExpression(unsigned constrIndex) const
 {
     SetAreaElementNameHour(constrIndex, "FinalStockExpression");
     overrideComponent(constrIndex, getArea() + "_hydro_storage");
