@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MPL-2.0
 #pragma once
 
+#include <antares/solver/simulation/reserve-index-maps.h>
+
 #include "reserveParticipationTemplate.h"
 #include "vCardReserveParticipationByDispatchableOffUnitsPlant.h"
 
@@ -37,9 +39,7 @@ public:
     bool hasIndexMapping(const Data::Study& study, const Data::Area* area) const
     {
         return study.parameters.include.reserves
-               && !study.runtime.reserveParticipationIndexMaps.value()
-                     .at(area->id)
-                     .thermalClusters.empty();
+               && !study.reserveMaps->participationIndexMaps.at(area->id).thermalClusters.empty();
     }
 
     void buildReportForIndex(SurveyResults& results,
@@ -48,11 +48,10 @@ public:
                              int precision,
                              unsigned int numSpace) const
     {
-        auto [reserveID, clusterName] = results.data.study.runtime.reserveParticipationIndexMaps
-                                          .value()
+        auto [reserveID, clusterName] = results.data.study.reserveMaps->participationIndexMaps
                                           .at(results.data.area->id)
                                           .thermalClusters.right.at(i);
-        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        auto reserveName = results.data.study.reserveMaps->idToName.at(reserveID);
         results.variableCaption = reserveName + "_" + clusterName + "_off";
         results.variableUnit = VCardType::Unit();
         pValuesForTheCurrentYear[numSpace][i]
@@ -76,12 +75,10 @@ inline void ReserveParticipationByDispatchableOffUnitsPlant::populateHourlyValue
                  resData.reserveParticipationPerThermalClusterForYear.at(state.hourInTheYear)
                    .at(clusterName))
             {
-                pValuesForTheCurrentYear[numSpace]
-                                        [state.study.runtime.reserveParticipationIndexMaps.value()
-                                           .at(state.area->id)
-                                           .thermalClusters.left.at(
-                                             std::make_pair(reserveName, clusterName))]
-                                          .hour[state.hourInTheYear]
+                pValuesForTheCurrentYear
+                  [numSpace][state.study.reserveMaps->participationIndexMaps.at(state.area->id)
+                               .thermalClusters.left.at(std::make_pair(reserveName, clusterName))]
+                    .hour[state.hourInTheYear]
                   = reserveParticipation.offUnitsParticipation;
             }
         }
