@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <ExprVisitor.h>
+#include <fmt/format.h>
 
 #include <boost/algorithm/string.hpp>
 
@@ -121,7 +122,8 @@ private:
 };
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
-                                                  const YmlModel::Model& model)
+                                                  const YmlModel::Model& model,
+                                                  const std::string& fileAndLineNb)
 {
     if (exprStr.empty())
     {
@@ -148,7 +150,26 @@ Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
     // tree conversion
     Expressions::Registry<Node> registry;
     ConvertorVisitor visitor(registry, model);
-    auto root = std::any_cast<Node*>(visitor.visit(tree));
+    Node* root;
+    try
+    {
+        root = std::any_cast<Node*>(visitor.visit(tree));
+    }
+    catch (InputError& e)
+    {
+        if (fileAndLineNb.empty())
+        {
+            throw InputError(
+              fmt::format("Error while converting expression '{}': {}", exprStr, e.what()));
+        }
+        else
+        {
+            throw InputError(fmt::format("in {} : Error while converting expression '{}': {}",
+                                         fileAndLineNb,
+                                         exprStr,
+                                         e.what()));
+        }
+    }
     return Expressions::NodeRegistry(root, std::move(registry));
 }
 
