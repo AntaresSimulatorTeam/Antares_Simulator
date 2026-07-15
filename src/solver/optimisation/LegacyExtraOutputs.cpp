@@ -148,6 +148,7 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
     emit("price", area, pdt, price);
     emit("balance_port.price", area, pdt, price);
 
+    // 5 MW threshold for near LoL detection
     constexpr double nearLossOfLoadCutoff = 5.;
     emit("is_near_loss_of_load",
          area,
