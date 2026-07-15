@@ -24,7 +24,7 @@ Feature: Legacy variables in simulation table
     And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
     And the modeler outputs contain the following entries
       | block | component  | output            | timestep | scenario | value |
-      | 0     | area | unsupplied_energy | 33       | 0        | 52    |
+      | 0     | area_node | unsupplied_energy | 33       | 0        | 52    |
 
   @short
   Scenario: Extra outputs prop_cost and imbalance_cost are derived from the legacy solution
@@ -104,13 +104,13 @@ Feature: Legacy variables in simulation table
     Then the simulation succeeds
     And the modeler outputs contain the following entries with relative tolerance 1e-4
       | block | component  | output                  | timestep | scenario | value   |
-      | 2     | east$$west | abs_flow                | 425      | 0        | 213.452 |
-      | 2     | east$$west | minus_flow              | 425      | 0        | -213.452 |
-      | 2     | east$$west | actual_loop_flow        | 425      | 0        | 0       |
-      | 2     | east$$west | prop_cost               | 425      | 0        | 213.452 |
-      | 2     | east$$west | capacity_shadow_price   | 425      | 0        | 1.0     |
-      | 2     | east       | price                   | 425      | 0        | 44.926  |
-      | 2     | west       | price                   | 425      | 0        | 45.926  |
+      | 2     | east_west_link | abs_flow                | 425      | 0        | 213.452 |
+      | 2     | east_west_link | minus_flow              | 425      | 0        | -213.452 |
+      | 2     | east_west_link | actual_loop_flow        | 425      | 0        | 0       |
+      | 2     | east_west_link | prop_cost               | 425      | 0        | 213.452 |
+      | 2     | east_west_link | capacity_shadow_price   | 425      | 0        | 1.0     |
+      | 2     | east_node       | price                   | 425      | 0        | 44.926  |
+      | 2     | west_node       | price                   | 425      | 0        | 45.926  |
 
       # is_directly/indirectly_congested compare the (signed) DirectFlow to the
       # link's per-hour capacity (3000 MW direct and indirect, constant in this
@@ -118,8 +118,8 @@ Feature: Legacy variables in simulation table
       # indicators are 0; the saturation case (= 1) is covered by the unit
       # tests, since no realistic single-week dispatch on this fixture pushes
       # the link to 3000 MW.
-      | 2     | east$$west | is_directly_congested   | 425      | 0        | 0       |
-      | 2     | east$$west | is_indirectly_congested | 425      | 0        | 0       |
+      | 2     | east_west_link | is_directly_congested   | 425      | 0        | 0       |
+      | 2     | east_west_link | is_indirectly_congested | 425      | 0        | 0       |
 
   @fast @short
   Scenario: hydro_shadow_price is emitted when hydro-pricing-mode is accurate
@@ -139,16 +139,16 @@ Feature: Legacy variables in simulation table
     Then the simulation succeeds
     And the modeler outputs contain the following entries
       | block | component | output             | timestep | scenario | value |
-      | 0     | he        | hydro_shadow_price | 167      | 0        | -56   |
+      | 0     | he_hydro_storage        | hydro_shadow_price | 167      | 0        | -56   |
       # level_percentage = HydroLevel / reservoir_capacity * 100. The "he" area has a
       # 10 000 000 MWh reservoir and the initial level for hour 1 of week 1 is
       # 5 110 638.139 MWh => 51.10638138.
-      | 0     | he        | level_percentage   | 0        | 0        | 51.10638138    |
+      | 0     | he_hydro_storage        | level_percentage   | 0        | 0        | 51.10638138    |
       # actual_inflows = round(inflows). The "he" area has empty mod.txt/ror.txt,
       # but hydro TS generation is enabled for this study (generate = hydro,
       # seed-tsgen-hydro = 5489), so the inflow used is the generated series,
       # not the empty input files: 1873 MWh at hour 1 of MC year 0.
-      | 0     | he        | actual_inflows     | 0        | 0        | 1873          |
+      | 0     | he_hydro_storage        | actual_inflows     | 0        | 0        | 1873          |
 
   @fast @short
   Scenario: actual_num_units_on is emitted in accurate unit-commitment mode
@@ -231,9 +231,9 @@ Feature: Legacy variables in simulation table
     # 1e-4 covers a few-EUR drift on a 126000 cost while still pinning the value.
     And the modeler outputs contain the following entries with relative tolerance 1e-4
       | block | component | output         | timestep | scenario | value  |
-      | 0     | base      | prop_cost      | 33       | 0        | 126000 |
-      | 0     | semi base | prop_cost      | 33       | 0        | 75000  |
-      | 0     | peak      | prop_cost      | 33       | 0        | 64000  |
-      | 0     | base      | non_prop_cost | 33       | 0        | 6800  |
-      | 0     | area      | imbalance_cost | 33       | 0        | 1040000 |
+      | 0     | area_thermal_base      | prop_cost      | 33       | 0        | 126000 |
+      | 0     | area_thermal_semi base | prop_cost      | 33       | 0        | 75000  |
+      | 0     | area_thermal_peak      | prop_cost      | 33       | 0        | 64000  |
+      | 0     | area_thermal_base      | non_prop_cost | 33       | 0        | 6800  |
+      | 0     | area_node      | imbalance_cost | 33       | 0        | 1040000 |
 
