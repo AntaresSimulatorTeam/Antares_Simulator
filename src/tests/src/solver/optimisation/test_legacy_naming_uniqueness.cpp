@@ -64,8 +64,6 @@ struct ConstraintNamerFixture
 
 BOOST_AUTO_TEST_SUITE(LegacyNamingUniqueness)
 
-// ── Area variables → {area}_node ──
-
 BOOST_FIXTURE_TEST_CASE(area_variable_component_is_area_node, NamerFixture)
 {
     setupArea("west");
@@ -91,8 +89,6 @@ BOOST_FIXTURE_TEST_CASE(different_areas_produce_different_node_components, Namer
     BOOST_CHECK_EQUAL(legacyInfo[0]->component, "west_node");
     BOOST_CHECK_EQUAL(legacyInfo[1]->component, "east_node");
 }
-
-// ── Thermal variables → {area}_thermal_{cluster} ──
 
 BOOST_FIXTURE_TEST_CASE(thermal_component_includes_area_and_cluster, NamerFixture)
 {
@@ -120,8 +116,6 @@ BOOST_FIXTURE_TEST_CASE(nodu_has_same_component_as_dispatachable_production, Nam
     BOOST_CHECK_EQUAL(legacyInfo[0]->component, legacyInfo[1]->component);
 }
 
-// ── Short term storage → {area}_short_term_storage_{cluster} ──
-
 BOOST_FIXTURE_TEST_CASE(sts_component_includes_area_and_cluster, NamerFixture)
 {
     setupArea("west");
@@ -145,8 +139,6 @@ BOOST_FIXTURE_TEST_CASE(sts_injection_and_withdrawal_share_component, NamerFixtu
     varNamer.ShortTermStorageWithdrawal(1, "battery");
     BOOST_CHECK_EQUAL(legacyInfo[0]->component, legacyInfo[1]->component);
 }
-
-// ── Link variables → {area1}_{area2}_link (alphabetical) ──
 
 BOOST_FIXTURE_TEST_CASE(link_component_is_alphabetically_ordered, NamerFixture)
 {
@@ -174,8 +166,6 @@ BOOST_FIXTURE_TEST_CASE(link_flow_variables_share_component, NamerFixture)
     BOOST_CHECK_EQUAL(legacyInfo[1]->component, legacyInfo[2]->component);
     BOOST_CHECK_EQUAL(legacyInfo[0]->component, "area1_area2_link");
 }
-
-// ── Hydro variables → {area}_hydro_storage ──
 
 BOOST_FIXTURE_TEST_CASE(hydro_prod_component_is_area_hydro_storage, NamerFixture)
 {
@@ -208,8 +198,6 @@ BOOST_FIXTURE_TEST_CASE(hydro_component_differs_from_node_component, NamerFixtur
     BOOST_CHECK_NE(legacyInfo[0]->component, legacyInfo[1]->component);
 }
 
-// ── Constraint components ──
-
 BOOST_FIXTURE_TEST_CASE(area_balance_constraint_component_is_area_node, ConstraintNamerFixture)
 {
     setupArea("west");
@@ -231,13 +219,11 @@ BOOST_FIXTURE_TEST_CASE(final_stock_expression_constraint_is_hydro, ConstraintNa
     BOOST_CHECK_EQUAL(legacyInfo[0]->component, "west_hydro_storage");
 }
 
-// ── Cross-category uniqueness ──
-
 BOOST_FIXTURE_TEST_CASE(thermal_and_node_components_never_collide, NamerFixture)
 {
     setupArea("west");
     varNamer.UnsuppliedEnergy(0);
-    varNamer.DispatchableProduction(1, "node"); // adversarial cluster name
+    varNamer.DispatchableProduction(1, "node");
     BOOST_CHECK_NE(legacyInfo[0]->component, legacyInfo[1]->component);
 }
 

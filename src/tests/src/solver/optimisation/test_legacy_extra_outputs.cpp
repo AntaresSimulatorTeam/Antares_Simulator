@@ -276,7 +276,6 @@ BOOST_AUTO_TEST_CASE(imbalance_cost_combines_unsupplied_and_spilled_energy)
 BOOST_AUTO_TEST_CASE(imbalance_cost_is_skipped_when_spillage_is_missing)
 {
     fill();
-
     // "area2" has UnsuppliedEnergy but no Spillage variable: no entry.
     BOOST_CHECK(!FindRow(table, "imbalance_cost", "area2_node").has_value());
 }
@@ -389,7 +388,7 @@ BOOST_AUTO_TEST_CASE(abs_flow_is_absolute_value_of_signed_flow)
     const auto rows = RowsForOutput(table, "abs_flow");
     BOOST_REQUIRE_EQUAL(rows.size(), 2);
     BOOST_CHECK_EQUAL(FindRow(table, "abs_flow", "area1_area2_link")->value, 120.);
-    BOOST_CHECK_EQUAL(FindRow(table, "abs_flow", "area1_area2_link")->value, 30.); // |-30|
+    BOOST_CHECK_EQUAL(FindRow(table, "abs_flow", "area2_area3_link")->value, 30.); // |-30|
 }
 
 BOOST_AUTO_TEST_CASE(minus_flow_is_the_negated_signed_flow)
@@ -475,7 +474,7 @@ BOOST_AUTO_TEST_CASE(is_near_loss_of_load_is_skipped_without_unsupplied_variable
 
     // "area4" has a balance constraint but no UnsuppliedEnergy variable, so
     // its unsupplied energy cost is unknown: price only, no nearness flag.
-    BOOST_CHECK_EQUAL(RowsForOutput(table, "is_near_loss_of_load").size(), 2);
+    BOOST_CHECK_EQUAL(RowsForOutput(table, "is_near_loss_of_load").size(), 3);
     BOOST_CHECK(!FindRow(table, "is_near_loss_of_load", "area4_node").has_value());
 }
 

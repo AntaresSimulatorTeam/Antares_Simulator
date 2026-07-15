@@ -251,15 +251,6 @@ public:
     //! \name Correlated draws
     //@{
     /*!
-    ** \brief TimeSeries where the draws are correlated
-    **
-    ** This value is a mask bits for timeSeries.
-    ** \see TimeSeries
-    ** This is the historical correlation mode
-    */
-    uint intraModal;
-
-    /*!
     ** \brief Inter-modal
     */
     uint interModal;

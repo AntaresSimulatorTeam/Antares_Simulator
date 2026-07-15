@@ -156,7 +156,7 @@ BOOST_AUTO_TEST_CASE(library_id_and_description_parsed_properly)
             description: "test_description"
             port-types: []
             models: []
-        )"s;
+    )"s;
     YmlModel::Library libraryObj = parser.parse(library);
     BOOST_CHECK_EQUAL(libraryObj.id, "test_id");
     BOOST_CHECK_EQUAL(libraryObj.description, "test_description");
@@ -176,7 +176,7 @@ BOOST_AUTO_TEST_CASE(port_types_properly_parsed)
                   fields:
                       - id: "port_name"
             models: []
-        )"s;
+    )"s;
     YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.port_types[0].id, "porttype_id");
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(port_types_with_thermal_capacity_connection_properly_parsed
                  thermal-capacity-connection:
                    capacity-field: capacity
             models: []
-        )"s;
+    )"s;
     YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
     const auto& capacity_port_type = libraryObj.port_types[0];
@@ -224,7 +224,7 @@ BOOST_AUTO_TEST_CASE(port_types_with_empty__thermal_capacity_connection_field)
                  thermal-capacity-connection:
                    capacity-field:
             models: []
-        )"s;
+    )"s;
     auto libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
     const auto& capacity_port_type = libraryObj.port_types[0];
@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_CASE(port_types_with_empty__area_connection_fields)
                    spillage-bound:
                    unsupplied-energy-bound:
             models: []
-        )"s;
+    )"s;
     auto libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
     const auto& capacity_port_type = libraryObj.port_types[0];
@@ -278,7 +278,7 @@ BOOST_AUTO_TEST_CASE(port_types_with_only_injection_field__in_area_connection)
                    spillage-bound:
                    unsupplied-energy-bound:
             models: []
-        )"s;
+    )"s;
     auto libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
     const auto& capacity_port_type = libraryObj.port_types[0];
@@ -306,7 +306,7 @@ BOOST_AUTO_TEST_CASE(port_types_with_only_spillage_bound_field__in_area_connecti
                    spillage-bound: f1
                    unsupplied-energy-bound:
             models: []
-        )"s;
+    )"s;
     auto libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
     const auto& capacity_port_type = libraryObj.port_types[0];
@@ -334,7 +334,7 @@ BOOST_AUTO_TEST_CASE(port_types_with_only_unsupplied_energy_bound_field__in_area
                    spillage-bound:
                    unsupplied-energy-bound: f2
             models: []
-        )"s;
+    )"s;
     auto libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
     const auto& capacity_port_type = libraryObj.port_types[0];
@@ -360,7 +360,7 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)
                  thermal-capacity-connection:
 
             models: []
-        )"s;
+    )"s;
     BOOST_REQUIRE_THROW((void)parser.parse(library), InputError);
 }
 
@@ -378,7 +378,7 @@ BOOST_AUTO_TEST_CASE(area__connection_should_have_exactly_3_fields)
                  area-connection:
 
             models: []
-        )"s;
+    )"s;
     BOOST_REQUIRE_THROW((void)parser.parse(library), YAML::TypedBadConversion<YmlModel::PortType>);
 }
 
@@ -400,7 +400,7 @@ BOOST_AUTO_TEST_CASE(library_can_contain_multiple_port_types)
                   fields:
                       - id: "port_name2"
             models: []
-        )"s;
+    )"s;
     YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.port_types[0].id, "porttype_id1");
@@ -449,9 +449,9 @@ BOOST_AUTO_TEST_CASE(models_properly_parsed)
     BOOST_CHECK(model.constraints.empty());
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].id, "objective");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].expression, "objective");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].expression.input_expr, "objective");
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[1].id, "objective2");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[1].expression, "objective2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[1].expression.input_expr, "objective2");
 }
 
 // Test library with multiple models
@@ -491,12 +491,12 @@ BOOST_AUTO_TEST_CASE(library_can_contain_multiple_models)
     BOOST_CHECK_EQUAL(libraryObj.models[0].description, "model_description1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].id, "objective1");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].expression, "objective1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].objectives[0].expression.input_expr, "objective1");
     BOOST_CHECK_EQUAL(libraryObj.models[1].id, "model_id2");
     BOOST_CHECK_EQUAL(libraryObj.models[1].description, "model_description2");
     BOOST_CHECK_EQUAL(libraryObj.models[1].objectives.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[1].objectives[0].id, "objective2");
-    BOOST_CHECK_EQUAL(libraryObj.models[1].objectives[0].expression, "objective2");
+    BOOST_CHECK_EQUAL(libraryObj.models[1].objectives[0].expression.input_expr, "objective2");
 }
 
 // Test library with one model containing parameters
@@ -627,8 +627,8 @@ BOOST_AUTO_TEST_CASE(variables_properly_parsed)
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].variables.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].id, "var_name");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, "0");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, "1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound.input_expr, "0");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound.input_expr, "1");
 }
 
 // Test library with one model containing multiple variables
@@ -662,11 +662,11 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_variables)
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].variables.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].id, "var_name1");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, "0");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, "1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound.input_expr, "0");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound.input_expr, "1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].id, "var_name2");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].lower_bound, "-1");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].upper_bound, "2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].lower_bound.input_expr, "-1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[1].upper_bound.input_expr, "2");
 }
 
 // variable bounds are strings expressions
@@ -695,8 +695,8 @@ BOOST_AUTO_TEST_CASE(variables_bounds_are_literals)
         )"s;
     YmlModel::Library libraryObj = parser.parse(library);
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].id, "var_name");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, "near-zero");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, "pmax");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound.input_expr, "near-zero");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound.input_expr, "pmax");
 }
 
 // variable variable-type
@@ -840,7 +840,8 @@ BOOST_AUTO_TEST_CASE(model_port_fileds_properly_parsed)
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].port_field_definitions.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].port, "port_name");
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].field, "field_name");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].definition, "definition");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].definition.input_expr,
+                      "definition");
 }
 
 // Test library with one model containing multiple port field definitions
@@ -875,10 +876,12 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_portfields)
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].port_field_definitions.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].port, "port_name1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].field, "field_name1");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].definition, "definition1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].definition.input_expr,
+                      "definition1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[1].port, "port_name2");
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[1].field, "field_name2");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[1].definition, "definition2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[1].definition.input_expr,
+                      "definition2");
 }
 
 // Test library with one model containing constraints
@@ -908,7 +911,7 @@ BOOST_AUTO_TEST_CASE(constraints_properly_parsed)
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].constraints.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].id, "constraint_name");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].expression, "expression");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].expression.input_expr, "expression");
 }
 
 // Test library with one model containing multiple constraints
@@ -940,9 +943,9 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_constraints)
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].constraints.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].id, "constraint_name1");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].expression, "expression1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].expression.input_expr, "expression1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[1].id, "constraint_name2");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[1].expression, "expression2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[1].expression.input_expr, "expression2");
 }
 
 // Test error when model is not a map
@@ -1022,7 +1025,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_extra_outputs)
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].extra_outputs.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[0].id, "output_name1");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[0].expression, "expression1");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[0].expression.input_expr, "expression1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].id, "output_name2");
-    BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].expression, "expression2");
+    BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].expression.input_expr, "expression2");
 }
