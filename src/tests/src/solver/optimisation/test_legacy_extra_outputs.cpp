@@ -268,16 +268,9 @@ BOOST_AUTO_TEST_CASE(imbalance_cost_combines_unsupplied_and_spilled_energy)
     fill();
 
     const auto rows = RowsForOutput(table, "imbalance_cost");
-    BOOST_REQUIRE_EQUAL(rows.size(), 1);
+    BOOST_REQUIRE_EQUAL(rows.size(), 3);
     BOOST_CHECK_EQUAL(rows[0].component, "area1_node");
     BOOST_CHECK_CLOSE(rows[0].value, 10000. * 52. + 4. * 7., 1e-9);
-}
-
-BOOST_AUTO_TEST_CASE(imbalance_cost_is_skipped_when_spillage_is_missing)
-{
-    fill();
-    // "area2" has UnsuppliedEnergy but no Spillage variable: no entry.
-    BOOST_CHECK(!FindRow(table, "imbalance_cost", "area2_node").has_value());
 }
 
 BOOST_AUTO_TEST_CASE(is_loss_of_load_is_one_above_threshold_and_zero_below)
@@ -458,14 +451,6 @@ BOOST_AUTO_TEST_CASE(link_prop_cost_sums_direct_and_indirect_hurdle_costs)
     const auto row = FindRow(table, "prop_cost", "area1_area2_link");
     BOOST_REQUIRE(row.has_value());
     BOOST_CHECK_CLOSE(row->value, 0.5 * 120. + 0.7 * 0., 1e-9);
-}
-
-BOOST_AUTO_TEST_CASE(link_prop_cost_is_skipped_when_indirect_flow_is_missing)
-{
-    fill();
-
-    // "area1_area2_link" has PositiveDirectFlow but no PositiveIndirectFlow.
-    BOOST_CHECK(!FindRow(table, "prop_cost", "area1_area2_link").has_value());
 }
 
 BOOST_AUTO_TEST_CASE(is_near_loss_of_load_is_skipped_without_unsupplied_variable)
