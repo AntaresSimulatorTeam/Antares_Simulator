@@ -1,7 +1,7 @@
 var classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster =
 [
     [ "enabled", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html#af0ce68b78758444149ef1407b37ebf92", null ],
-    [ "getGroup", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html#a899745d878e91d0582b4514bbb02a197", null ],
+    [ "getGroup", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html#abaa8f2c6ebd1b25af0a564c3afe22a75", null ],
     [ "loadFromSection", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html#a70afcbf0cb5d37129be239c392c23f86", null ],
     [ "loadSeries", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html#a072e67aff6450f1caa66be8b2471d531", null ],
     [ "validate", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html#a877d5499d461d574b8aabd4830f62eef", null ],

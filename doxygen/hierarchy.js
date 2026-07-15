@@ -1612,6 +1612,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::VCardSTStorageByClusterBase< Traits >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html", null ],
     [ "Vec3", "structVec3.html", null ],
     [ "Antares::VENTILATION_HYDRO_RESULTS_BY_AREA", "structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html", null ],
+    [ "ViewBuilderFixture", "structViewBuilderFixture.html", null ],
     [ "FSWalker::Walker", "classFSWalker_1_1Walker.html", null ],
     [ "FSWalker::WalkerThread", "classFSWalker_1_1WalkerThread.html", null ],
     [ "Antares::Optimization::WatchedConstraint", "classAntares_1_1Optimization_1_1WatchedConstraint.html", [

@@ -1730,6 +1730,24 @@ var namespaces_dup =
         [ "sum", "vector-utils_8h.html#a769b4101d8ecb47b5072ba6dbbe98734", null ],
         [ "maxFolderSameTime", "utils_8cpp.html#a3e69fe3927d336b9ed56cebbe28bb837", null ]
       ] ],
+      [ "ViewBuilder", null, [
+        [ "areaLocation", "legacyToYaml_8h.html#aa57f37d0a0b7f556edadfe17dd039a17", null ],
+        [ "areaToYaml", "legacyToYaml_8h.html#aba2e2dbb9adc8c38abadb6804e660644", null ],
+        [ "exportSystemForView", "generateSystemForView_8cpp.html#a29722fd70d0750415fc314586cf46b15", null ],
+        [ "generateSystemForView", "generateSystemForView_8cpp.html#ad237bcc794787b0ef6f57e62d33d64c5", null ],
+        [ "generateSystemLegacyComponents", "generateSystemForView_8cpp.html#ac6b5befac46704c74875ed534ab563e1", null ],
+        [ "linkToYaml", "legacyToYaml_8h.html#a1fd1fc6822ce52d49a1e571b74dc9eef", null ],
+        [ "loadToYaml", "legacyToYaml_8h.html#a015299cf964cc3e4b1a36b7f056489af", null ],
+        [ "longTermStorageToYaml", "legacyToYaml_8h.html#af4568ac887798e2bfaf278cf7b2588bf", null ],
+        [ "miscGenToYaml", "legacyToYaml_8h.html#a0e52ab99c8796a98a552052a14dd90d2", null ],
+        [ "miscGenTypeName", "legacyToYaml_8h.html#a12a8fa1a395bc18f7aa07a7ab50b2a0e", null ],
+        [ "renewableClusterToYaml", "legacyToYaml_8h.html#aa5f1f5b95d94adbc88979a804c4e9f41", null ],
+        [ "rorToYaml", "legacyToYaml_8h.html#a9e20a564f23c9928e9681ec73f8a5bfb", null ],
+        [ "shortTermStorageToYaml", "legacyToYaml_8h.html#a5de4e9a458eefe0c013fd41b48387a34", null ],
+        [ "solarToYaml", "legacyToYaml_8h.html#a450cee4aefa2b9205ff8059ef5f65267", null ],
+        [ "thermalClusterToYaml", "legacyToYaml_8h.html#a3dca757a1153272c8caf2485336f5e28", null ],
+        [ "windToYaml", "legacyToYaml_8h.html#a61b2de204e3d8186156794c5dda196a2", null ]
+      ] ],
       [ "Writer", null, [
         [ "ColumnAdapterFactory", "classAntares_1_1Writer_1_1ColumnAdapterFactory.html", "classAntares_1_1Writer_1_1ColumnAdapterFactory" ],
         [ "IColumnAdapter", "classAntares_1_1Writer_1_1IColumnAdapter.html", "classAntares_1_1Writer_1_1IColumnAdapter" ],
