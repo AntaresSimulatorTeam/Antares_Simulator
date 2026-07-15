@@ -148,13 +148,13 @@ BOOST_FIXTURE_TEST_CASE(reset, Fixture)
     BOOST_CHECK_EQUAL(p.optOptions.quadraticOptimOptions.solverName, "sirius");
 }
 
-BOOST_FIXTURE_TEST_CASE(output_selection_defaults_to_legacy_outputs_only, Fixture)
+BOOST_FIXTURE_TEST_CASE(output_selection_defaults_to_monte_carlo_results_only, Fixture)
 {
     p.reset();
 
-    BOOST_CHECK_EQUAL(p.legacyOutputs, true);
+    BOOST_CHECK_EQUAL(p.writeMonteCarloResults, true);
     BOOST_CHECK_EQUAL(p.simulationTable, false);
-    BOOST_CHECK_EQUAL(p.writeLegacyOutputs(), true);
+    BOOST_CHECK_EQUAL(p.shouldWriteMonteCarloResults(), true);
     BOOST_CHECK_EQUAL(p.writeSimulationTable(), false);
 }
 
@@ -162,25 +162,38 @@ BOOST_FIXTURE_TEST_CASE(output_selection_is_read_from_ini, Fixture)
 {
     std::stringstream s;
     s << R"([output]
-            legacy-outputs = false
+            monte-carlo-results = false
             simulation-table = true)";
     IniFile ini;
     ini.readStream(s);
 
     p.loadFromINI(ini, version);
 
-    BOOST_CHECK_EQUAL(p.writeLegacyOutputs(), false);
+    BOOST_CHECK_EQUAL(p.shouldWriteMonteCarloResults(), false);
     BOOST_CHECK_EQUAL(p.writeSimulationTable(), true);
+}
+
+BOOST_FIXTURE_TEST_CASE(deprecated_legacy_outputs_key_is_still_read, Fixture)
+{
+    std::stringstream s;
+    s << R"([output]
+            legacy-outputs = false)";
+    IniFile ini;
+    ini.readStream(s);
+
+    p.loadFromINI(ini, version);
+
+    BOOST_CHECK_EQUAL(p.shouldWriteMonteCarloResults(), false);
 }
 
 BOOST_FIXTURE_TEST_CASE(no_output_disables_both_output_families, Fixture)
 {
     p.reset();
-    p.legacyOutputs = true;
+    p.writeMonteCarloResults = true;
     p.simulationTable = true;
     p.noOutput = true;
 
-    BOOST_CHECK_EQUAL(p.writeLegacyOutputs(), false);
+    BOOST_CHECK_EQUAL(p.shouldWriteMonteCarloResults(), false);
     BOOST_CHECK_EQUAL(p.writeSimulationTable(), false);
 }
 

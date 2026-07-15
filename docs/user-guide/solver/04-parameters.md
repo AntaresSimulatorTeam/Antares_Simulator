@@ -235,14 +235,16 @@ The two parameters below select which families of results are written. They only
 output is enabled, i.e. when the solver is not run with `--no-output`.
 
 ---
-#### legacy-outputs
+#### monte-carlo-results
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `true`
 - **Usage:**
-    - `true`: the [legacy result files](03-outputs.md) (`mc-all`, `mc-ind`) are written. They remain subject to the
+    - `true`: the [Monte-Carlo result files](03-outputs.md) (`mc-all`, `mc-ind`) are written. They remain subject to the
       [synthesis](#synthesis) and [year-by-year](#year-by-year) parameters.
-    - `false`: no legacy result file is written. Can be forced from the command line with `--no-legacy-outputs`.
+    - `false`: no Monte-Carlo result file is written. Can be forced from the command line with `--no-monte-carlo-results`.
+
+> _**Note:**_ The deprecated key `legacy-outputs` is still accepted as an alias for backward compatibility.
 
 ---
 #### simulation-table

@@ -44,8 +44,8 @@ public:
 
     //! \name Output selection
     //@{
-    //! Get if the legacy result files (mc-all, mc-ind) must be written
-    bool writeLegacyOutputs() const;
+    //! Get if the Monte-Carlo result files (mc-all, mc-ind) must be written
+    bool shouldWriteMonteCarloResults() const;
     //! Get if the simulation table(s) must be written
     bool writeSimulationTable() const;
     //@}
@@ -426,8 +426,8 @@ public:
     //! No output
     // This variable is not stored within the study but only used by the solver
     bool noOutput = false;
-    //! Write the legacy result files (mc-all, mc-ind)
-    bool legacyOutputs = true;
+    //! Write the Monte-Carlo result files (mc-all, mc-ind)
+    bool writeMonteCarloResults = true;
     //! Write the simulation table(s)
     bool simulationTable = false;
     //@}

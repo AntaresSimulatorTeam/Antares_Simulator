@@ -224,9 +224,9 @@ bool Parameters::adequacy() const
     return mode == SimulationMode::Adequacy;
 }
 
-bool Parameters::writeLegacyOutputs() const
+bool Parameters::shouldWriteMonteCarloResults() const
 {
-    return !noOutput && legacyOutputs;
+    return !noOutput && writeMonteCarloResults;
 }
 
 bool Parameters::writeSimulationTable() const
@@ -308,7 +308,7 @@ void Parameters::reset()
     storeTimeseriesNumbers = false;
     synthesis = true;
 
-    legacyOutputs = true;
+    writeMonteCarloResults = true;
     simulationTable = false;
 
     // Hydro heuristic policy
@@ -528,9 +528,10 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
     {
         return value.to<bool>(d.synthesis);
     }
-    if (key == "legacy-outputs")
+    // `legacy-outputs` is the deprecated alias kept for backward compatibility
+    if (key == "monte-carlo-results" || key == "legacy-outputs")
     {
-        return value.to<bool>(d.legacyOutputs);
+        return value.to<bool>(d.writeMonteCarloResults);
     }
     if (key == "simulation-table")
     {

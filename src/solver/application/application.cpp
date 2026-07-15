@@ -153,9 +153,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         study.parameters.noOutput = pSettings.noOutput;
 
         // Output selection, the command line overrides the study
-        if (pSettings.noLegacyOutputs)
+        if (pSettings.noMonteCarloResults)
         {
-            study.parameters.legacyOutputs = false;
+            study.parameters.writeMonteCarloResults = false;
         }
 
         if (pSettings.forceSimulationTable)
@@ -163,10 +163,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             study.parameters.simulationTable = true;
         }
 
-        if (!study.parameters.noOutput && !study.parameters.legacyOutputs
+        if (!study.parameters.noOutput && !study.parameters.writeMonteCarloResults
             && !study.parameters.simulationTable)
         {
-            logs.warning() << "Both legacy outputs and simulation tables are disabled: no "
+            logs.warning() << "Both Monte-Carlo results and simulation tables are disabled: no "
                               "simulation results will be written";
         }
 

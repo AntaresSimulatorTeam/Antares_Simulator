@@ -59,10 +59,11 @@ void addParameterOptions(Yuni::GetOpt::Parser& parser,
                    ' ',
                    "no-output",
                    "Do not write the results in the output folder");
-    parser.addFlag(settings.noLegacyOutputs,
+    parser.addFlag(settings.noMonteCarloResults,
                    ' ',
-                   "no-legacy-outputs",
-                   "Do not write the legacy results (mc-all, mc-ind), whatever the study says");
+                   "no-monte-carlo-results",
+                   "Do not write the Monte-Carlo results (mc-all, mc-ind), whatever the study "
+                   "says");
     parser.addFlag(settings.forceSimulationTable,
                    ' ',
                    "simulation-table",
@@ -305,7 +306,7 @@ void Settings::reset()
     ignoreConstraints = false;
     tsGeneratorsOnly = false;
     noOutput = false;
-    noLegacyOutputs = false;
+    noMonteCarloResults = false;
     forceSimulationTable = false;
     forceZipOutput = false;
 

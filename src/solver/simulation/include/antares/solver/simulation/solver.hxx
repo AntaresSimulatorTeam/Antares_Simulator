@@ -244,7 +244,8 @@ inline ISimulation<ImplementationType>::ISimulation(
     logs.info() << "Allocating resources...";
 
     if (pYearByYear
-        && (settings.noOutput || settings.tsGeneratorsOnly || !study.parameters.legacyOutputs))
+        && (settings.noOutput || settings.tsGeneratorsOnly
+            || !study.parameters.writeMonteCarloResults))
     {
         pYearByYear = false;
     }
@@ -354,9 +355,9 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
     else
     {
         const auto& parameters = study.parameters;
-        if (not parameters.legacyOutputs) // disabled by parameters
+        if (not parameters.writeMonteCarloResults) // disabled by parameters
         {
-            logs.info() << "The legacy outputs are disabled.";
+            logs.info() << "The Monte-Carlo results are disabled.";
             return;
         }
 

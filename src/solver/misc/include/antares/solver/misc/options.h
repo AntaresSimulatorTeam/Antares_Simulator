@@ -41,8 +41,8 @@ public:
     //! True to disable the writing in the output folder
     bool noOutput = false;
 
-    //! Override the study's output selection ([output] legacy-outputs / simulation-table)
-    bool noLegacyOutputs = false;
+    //! Override the study's output selection ([output] monte-carlo-results / simulation-table)
+    bool noMonteCarloResults = false;
     bool forceSimulationTable = false;
 
     // In case we print simulation tables, do we print it in csv or parquet ?
