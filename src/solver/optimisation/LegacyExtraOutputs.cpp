@@ -149,11 +149,14 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
     emit("balance_port.price", area, pdt, price);
 
     // 5 MW threshold for near LoL detection
+    // Use the user-provided cost, not the noised one fed to the optimisation
     constexpr double nearLossOfLoadCutoff = 5.;
     emit("is_near_loss_of_load",
          area,
          pdt,
-         price > cost(unsupplied) - nearLossOfLoadCutoff ? 1. : 0.);
+         price > problemeHebdo_.CoutDeDefaillancePositiveSansBruit[pays] - nearLossOfLoadCutoff
+           ? 1.
+           : 0.);
 
     // Port fields of the load and long_term_storage models, emitted on their
     // own components ({area}_load, {area}_hydro) so their balance_port.flow
@@ -284,7 +287,10 @@ void LegacyExtraOutputEmitter::thermalOutputs(uint32_t pays, int index, int pdt)
     emit("min_gen_power", cluster, pdt, std::min(generation, minGen));
     emit("down_margin", cluster, pdt, generation - std::min(clusterAvailability, minGen));
 
-    const double profit = (areaPrice(pays, pdt) - cost(production))
+    // Use the user-provided market bid cost, not the noised marginal cost
+    // fed to the optimisation
+    const double marketBidCost = disp.CoutHoraireDeProductionDuPalierThermiqueSansBruit[pdt];
+    const double profit = (areaPrice(pays, pdt) - marketBidCost)
                           * std::max(generation - minGen, 0.);
     emit("profit", cluster, pdt, profit);
 
