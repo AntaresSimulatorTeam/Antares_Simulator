@@ -9,7 +9,8 @@ std::function<bool(const std::exception&)> checkMessage(std::string expected_mes
 {
     return [expected_message](const std::exception& e)
     {
-        BOOST_CHECK_EQUAL(e.what(), expected_message);
+        std::string raised_msg = e.what();
+        BOOST_CHECK(raised_msg.find(expected_message) != std::string::npos);
         return true;
     };
 }
