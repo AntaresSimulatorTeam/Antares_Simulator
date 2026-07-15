@@ -11,6 +11,7 @@ add_boost_test(unit-tests-for-solver-optimisation
         test_mip_detection.cpp
         test_legacy_name_mapper.cpp
         test_legacy_extra_outputs.cpp
+        test_legacy_naming_uniqueness.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/LegacyNameMapper.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/LegacyExtraOutputs.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/variables/VariableManagement.cpp
