@@ -165,8 +165,9 @@ void State::initFromShortTermStorageClusterIndex(const uint clusterAreaWideIndex
                                                 .STStorageClusters.left.at(
                                                   std::make_pair(resID, STStorageCluster->id))]
                                      .reserveParticipationOfCluster.value()[hourInTheWeek];
-            const double participationCost
-              = participation * STStorageCluster->reserveParticipationContainer->reserveCost(resID);
+            const double participationCost = participation
+                                             * STStorageCluster->reserveParticipationContainer
+                                                 ->reserveCost(resID);
 
             resData.STStorageClusterReserveParticipationCostForYear[hourInTheYear]
               += participationCost;
@@ -201,8 +202,9 @@ void State::initFromHydro()
                                      .reserveParticipationOfCluster
                                      .value()[study.reserveMaps->participationIndexMaps.at(area->id)
                                                 .Hydro.left.at(resID)];
-            const double participationCost
-              = participation * Hydro.reserveParticipationContainer->reserveCost(resID);
+            const double participationCost = participation
+                                             * Hydro.reserveParticipationContainer->reserveCost(
+                                               resID);
 
             resData.HydroReserveParticipationCostForYear[hourInTheYear] += participationCost;
             resData.reserveParticipationCostForYear[hourInTheYear] += participationCost;
@@ -310,11 +312,12 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
                                             .ParticipationReservesDuPalierOff
                                             .value()[reserveParticipationIdx];
 
-                const double participationCost
-                  = participationOn
-                      * thermalCluster->reserveParticipationContainer->reserveCost(reserveID)
-                    + participationOff
-                        * thermalCluster->reserveParticipationContainer->reserveCostOff(reserveID);
+                const double participationCost = participationOn
+                                                   * thermalCluster->reserveParticipationContainer
+                                                       ->reserveCost(reserveID)
+                                                 + participationOff
+                                                     * thermalCluster->reserveParticipationContainer
+                                                         ->reserveCostOff(reserveID);
 
                 thermal[area->index].thermalClustersOperatingCost[clusterEnabledIndex]
                   += participationCost;
