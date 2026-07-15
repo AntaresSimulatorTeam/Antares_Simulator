@@ -10,6 +10,55 @@
 #include <antares/study/fwd.h>
 #include "antares/solver/optimisation/LegacyVariableInfo.h"
 
+inline const std::string SEP = "::";
+inline const std::string AREA_SEP = "$$";
+inline const std::string LINK("link");
+inline const std::string AREA("area");
+
+inline std::string LocationIdentifier(const std::string& location, const std::string& locationType)
+{
+    return locationType + "<" + location + ">";
+}
+
+// ── Component ID builders (underscore format, shared with view‑builder) ──
+
+inline std::string BuildAreaNodeComponentId(const std::string& areaId)
+{
+    return areaId + "_node";
+}
+
+inline std::string BuildThermalClusterComponentId(const std::string& areaId,
+                                                  const std::string& clusterName)
+{
+    return areaId + "_thermal_" + clusterName;
+}
+
+inline std::string BuildSTStorageClusterComponentId(const std::string& areaId,
+                                                    const std::string& clusterName)
+{
+    return areaId + "_short_term_storage_" + clusterName;
+}
+
+inline std::string BuildRenewableClusterComponentId(const std::string& areaId,
+                                                    const std::string& clusterName)
+{
+    return areaId + "_renewable_" + clusterName;
+}
+
+inline std::string BuildHydroStorageComponentId(const std::string& areaId)
+{
+    return areaId + "_hydro_storage";
+}
+
+inline std::string BuildLinkComponentId(const std::string& origin, const std::string& destination)
+{
+    if (origin < destination)
+    {
+        return origin + "_" + destination + "_link";
+    }
+    return destination + "_" + origin + "_link";
+}
+
 // Structured legacy descriptions, parallel to the names vector.
 using LegacyInfoVec = std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>;
 
@@ -152,17 +201,17 @@ public:
                                                 const std::string& sts_name) const;
     void ShortTermStorageCostVariationWithdrawal(unsigned varIndex,
                                                  const std::string& sts_name) const;
-    void HydProd(unsigned varIndex) const;
-    void HydProdDown(unsigned varIndex) const;
-    void HydProdUp(unsigned varIndex) const;
-    void Pumping(unsigned varIndex) const;
-    void HydroLevel(unsigned varIndex) const;
-    void Overflow(unsigned varIndex) const;
-    void FinalStorage(unsigned varIndex) const;
-    void LayerStorage(unsigned varIndex, int layerIndex) const;
-    void UnsuppliedEnergy(unsigned varIndex) const;
-    void Spillage(unsigned varIndex) const;
-    void AreaBalance(unsigned varIndex) const;
+    void HydProd(unsigned varIndex);
+    void HydProdDown(unsigned varIndex);
+    void HydProdUp(unsigned varIndex);
+    void Pumping(unsigned varIndex);
+    void HydroLevel(unsigned varIndex);
+    void Overflow(unsigned varIndex);
+    void FinalStorage(unsigned varIndex);
+    void LayerStorage(unsigned varIndex, int layerIndex);
+    void UnsuppliedEnergy(unsigned varIndex);
+    void Spillage(unsigned varIndex);
+    void AreaBalance(unsigned varIndex);
 
 private:
     void SetAreaVariableName(unsigned varIndex,
@@ -180,7 +229,7 @@ public:
     using Namer::Namer;
 
     void FlowDissociation(unsigned constrIndex) const;
-    void AreaBalance(unsigned constrIndex) const;
+    void AreaBalance(unsigned constrIndex);
     void FictiveLoads(unsigned constrIndex) const;
     void MaxUnsuppliedEnergy(unsigned constrIndex) const;
     void HydroPower(unsigned constrIndex) const;
@@ -192,7 +241,7 @@ public:
     void MaxPumping(unsigned constrIndex) const;
     void AreaHydroLevel(unsigned constrIndex) const;
     void FinalStockEquivalent(unsigned constrIndex) const;
-    void FinalStockExpression(unsigned constrIndex) const;
+    void FinalStockExpression(unsigned constrIndex);
     void NbUnitsOutageLessThanNbUnitsStop(unsigned constrIndex,
                                           const std::string& clusterName) const;
     void NbDispUnitsMinBoundSinceMinUpTime(unsigned constrIndex,
