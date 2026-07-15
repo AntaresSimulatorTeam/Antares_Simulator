@@ -1,8 +1,5 @@
 var NAVTREEINDEX37 =
 {
-"structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html#a4bd8081695649bb320a3cad9fc7c1cf3":[9,0,0,11,1,2,4],
-"structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html#a5e6e432cd78814b71a287cf985fc6e47":[9,0,0,11,1,2,1],
-"structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html#a668a9cd4bcb7ac0c6d801e08c8d94b98":[9,0,0,11,1,2,0],
 "structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html#a8436a11217c10847153e8df71d0c66fd":[9,0,0,11,1,2,3],
 "structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html#ad26873407d9e666726a09e94b5e243b5":[9,0,0,11,1,2,2],
 "structAntares_1_1Solver_1_1Implementation_1_1Tag.html":[9,0,0,11,1,4],
@@ -249,5 +246,8 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP_1_1Statistics.html":[9,0,0,11,6,5,12,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSRTraits.html":[9,0,0,11,6,5,78],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSRTraits.html#ad4ac2ee24c0a52d6ed5383da2d01da90":[9,0,0,11,6,5,78,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceTraits.html":[9,0,0,11,6,5,77]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceTraits.html":[9,0,0,11,6,5,77],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceTraits.html#a5aec729a71c87d32023d9d869c35ebff":[9,0,0,11,6,5,77,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlantTraits.html":[9,0,0,11,6,5,79],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlantTraits.html#a2963824f5faeba5624add1c68ee0dbb5":[9,0,0,11,6,5,79,0]
 };

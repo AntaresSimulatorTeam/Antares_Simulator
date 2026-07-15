@@ -1,6 +1,5 @@
 var NAVTREEINDEX6 =
 {
-"classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ac5d3c613d375f4ce00b4549a50494802":[9,0,0,3,2,8,8],
 "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ac715bb520d5fd16f8963d6bf96bcfae3":[9,0,0,3,2,8,17],
 "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#acea0363b5bbdafbb250ad1d1622a00bc":[9,0,0,3,2,8,2],
 "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ae52f41ddac67eb3b765923b88995a198":[9,0,0,3,2,8,13],
@@ -249,5 +248,6 @@ var NAVTREEINDEX6 =
 "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#abbf2e70d2d2eec0e40d650d31da94045":[9,0,0,3,3,4,3],
 "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#aded097f4633514c7377b8408bafa1f7c":[9,0,0,3,3,4,9],
 "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#ae3707aa93d6f154e15705dd11e8b8258":[9,0,0,3,3,4,13],
-"classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#af2339ee00e3c45b75a44233684dc2daf":[9,0,0,3,3,4,0]
+"classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#af2339ee00e3c45b75a44233684dc2daf":[9,0,0,3,3,4,0],
+"classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html":[9,0,0,3,3,7]
 };

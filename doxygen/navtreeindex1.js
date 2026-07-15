@@ -1,6 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"ForbiddenNodes_8cpp.html#a4d5f653b4fa36c81aa621fc92d1e2b3a":[8,0,0,8,0,1,21],
 "ForbiddenNodes_8cpp.html#a4fa054506bf4131503a1a16236006364":[8,0,0,8,0,1,7],
 "ForbiddenNodes_8cpp.html#a558c246917266f37695fca1a9e8ed2f8":[8,0,0,8,0,1,17],
 "ForbiddenNodes_8cpp.html#a678f2f44291c0bdc22cd56be4f357f96":[8,0,0,8,0,1,12],
@@ -67,9 +66,9 @@ var NAVTREEINDEX1 =
 "ILoader_8h_source.html":[10,0,0,5,2,0,0,0,0,0],
 "IName_8h_source.html":[10,0,0,2,1,0,0,4],
 "IScenario_8h_source.html":[10,0,0,7,0,0,0,0,0,4],
-"ISimulationObserver_8h_source.html":[10,0,0,8,8,0,0,0,0,10],
+"ISimulationObserver_8h_source.html":[10,0,0,8,8,0,0,0,0,9],
 "IStudyLoader_8h_source.html":[10,0,0,4,0,26,0,0,0,0],
-"ITimeSeriesNumbersWriter_8h_source.html":[10,0,0,8,8,0,0,0,0,11],
+"ITimeSeriesNumbersWriter_8h_source.html":[10,0,0,8,8,0,0,0,0,10],
 "InitializationError_8hpp_source.html":[10,0,0,4,0,9,0,0,0,1],
 "InputError_8h_source.html":[10,0,0,3,1,2,0,0,0,0],
 "InvalidArgumentError_8hpp_source.html":[10,0,0,4,0,9,0,0,0,2],
@@ -189,7 +188,7 @@ var NAVTREEINDEX1 =
 "ReadLinearExpressionVisitor_8h_source.html":[10,0,0,8,5,0,0,0,0,8],
 "Registry_8hxx_source.html":[10,0,0,2,1,0,0,6],
 "RenewableTSNumberData_8h_source.html":[10,0,0,4,0,25,0,0,0,7,8],
-"ReserveOpt_8h_source.html":[10,0,0,4,0,25,0,0,0,0,6],
+"ReserveOpt_8h_source.html":[10,0,0,4,0,25,0,0,0,0,5],
 "ReserveParticipationGroup_8h_source.html":[10,0,0,8,6,1,0,0,0,1,56],
 "ReserveSatisfaction_8h_source.html":[10,0,0,8,6,1,0,0,0,1,57],
 "RotateIndex_8h_source.html":[10,0,0,2,1,0,0,7],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "SimulationTableGenerator_8h.html#a49e57b34701637c25c2aa209f8a365f5":[8,0,0,8,1,26],
 "SimulationTableGenerator_8h.html#ad34c3f3a36ca379aa9e2e41dd2775e52":[8,0,0,8,1,19],
 "SimulationTableGenerator_8h.html#ad34c3f3a36ca379aa9e2e41dd2775e52a5ae68a535ceaa166cf8c89637789763c":[8,0,0,8,1,19,2],
-"SimulationTableGenerator_8h.html#ad34c3f3a36ca379aa9e2e41dd2775e52a95e3727fd5f0aede28af2086f421b699":[8,0,0,8,1,19,0]
+"SimulationTableGenerator_8h.html#ad34c3f3a36ca379aa9e2e41dd2775e52a95e3727fd5f0aede28af2086f421b699":[8,0,0,8,1,19,0],
+"SimulationTableGenerator_8h.html#ad34c3f3a36ca379aa9e2e41dd2775e52add38c1a30e05c3a66419dc5abed2771b":[8,0,0,8,1,19,1]
 };

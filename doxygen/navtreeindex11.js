@@ -1,6 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"classAntares_1_1Matrix.html#abd33027367a96cd135aa252625989a17":[9,0,0,16,26],
 "classAntares_1_1Matrix.html#ac0e2adb05e204d5a40cd129d9fb0593f":[9,0,0,16,18],
 "classAntares_1_1Matrix.html#ac274bc7b3c1bdc83cc88328325b2cafb":[9,0,0,16,28],
 "classAntares_1_1Matrix.html#ac74055baf078418c65cc5fb4e36e5621":[9,0,0,16,39],
@@ -249,5 +248,6 @@ var NAVTREEINDEX11 =
 "classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html":[9,0,0,9,14,0],
 "classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html#a09b09f4c705e89993b3a5397b8547321":[9,0,0,9,14,0,3],
 "classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html#a8524f0366bb37e2eaa1ac22fd50abd12":[9,0,0,9,14,0,2],
-"classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html#ada2507a594426107ebfd7a3c394771c2":[9,0,0,9,14,0,0]
+"classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html#ada2507a594426107ebfd7a3c394771c2":[9,0,0,9,14,0,0],
+"classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html#af4b7fb2743dc02a423f29397a93cce3e":[9,0,0,9,14,0,1]
 };

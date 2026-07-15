@@ -1,6 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"classNamer.html#ac18bc9de714eaf65a3d6d2afe346f6e7":[9,0,219,13],
 "classNamer.html#ac844fc8d8fe1eb2526eb21aac8ea284f":[9,0,219,19],
 "classNamer.html#ae2c77e7c6bf503715d12acceb5f4a36e":[9,0,219,16],
 "classNamer.html#ae6da21c928174d80ff099562c49b3a10":[9,0,219,10],
@@ -249,5 +248,6 @@ var NAVTREEINDEX24 =
 "classSTStoreMaxReserve.html#ae2ac0ea361489bc49685f50ac6af6e38":[9,0,340,1],
 "classScalingLoader.html":[9,0,296],
 "classScalingLoader.html#a7a99b8d068d9e7f44c10a664bc5b65b1":[9,0,296,1],
-"classScalingLoader.html#a83b7171ed320d1b15e17c211cfe33454":[9,0,296,6]
+"classScalingLoader.html#a83b7171ed320d1b15e17c211cfe33454":[9,0,296,6],
+"classScalingLoader.html#a9308c20353fa1875112b245f1c8cbb4b":[9,0,296,4]
 };

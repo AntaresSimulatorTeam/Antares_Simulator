@@ -1,8 +1,5 @@
 var NAVTREEINDEX36 =
 {
-"structAntares_1_1Date_1_1Calendar_1_1Settings.html#a576c127cbbe0448b583e186a8dabac1a":[9,0,0,4,2,0,1],
-"structAntares_1_1Date_1_1Calendar_1_1Settings.html#a74af88b90038e83fb25c558efa1d9178":[9,0,0,4,2,0,3],
-"structAntares_1_1Date_1_1Calendar_1_1Settings.html#a7fab86c6a9e2d7cd718e66af498fa662":[9,0,0,4,2,0,0],
 "structAntares_1_1Date_1_1DayInterval.html":[9,0,0,4,1],
 "structAntares_1_1Date_1_1DayInterval.html#a0dc9599f70b43803e74b1dca42748d03":[9,0,0,4,1,1],
 "structAntares_1_1Date_1_1DayInterval.html#a2d4af235f35e11feb8121cd64c6de06b":[9,0,0,4,1,3],
@@ -249,5 +246,8 @@ var NAVTREEINDEX36 =
 "structAntares_1_1Solver_1_1ConstantDataFromAntares.html#adc9c31a9de5f9a8382e341a04404904a":[9,0,0,11,27,5],
 "structAntares_1_1Solver_1_1ConstantDataFromAntares.html#ae6ecd9ab036dc5b6c8889f7ef9344757":[9,0,0,11,27,2],
 "structAntares_1_1Solver_1_1ConstantDataFromAntares.html#af9fb2c8e16c9d2386c2c91fafeda848b":[9,0,0,11,27,4],
-"structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html":[9,0,0,11,1,2]
+"structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html":[9,0,0,11,1,2],
+"structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html#a4bd8081695649bb320a3cad9fc7c1cf3":[9,0,0,11,1,2,4],
+"structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html#a5e6e432cd78814b71a287cf985fc6e47":[9,0,0,11,1,2,1],
+"structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html#a668a9cd4bcb7ac0c6d801e08c8d94b98":[9,0,0,11,1,2,0]
 };
