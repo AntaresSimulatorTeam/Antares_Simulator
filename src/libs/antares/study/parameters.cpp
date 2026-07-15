@@ -292,7 +292,6 @@ void Parameters::reset()
     // Import
     exportTimeSeriesInInput = 0; // None
     // Same selection
-    intraModal = 0; // None
     interModal = 0; // None
 
     // timeseries numbers
@@ -396,11 +395,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         return ConvertCStrToListTimeSeries(value, d.timeSeriesToGenerate);
     }
 
-    // Same time-series
-    if (key == "intra-modal")
-    {
-        return ConvertCStrToListTimeSeries(value, d.intraModal);
-    }
     // Same time-series
     if (key == "inter-modal")
     {
@@ -1011,10 +1005,18 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
 {
     // Comparisons kept for compatibility reasons
 
-    // Same time-series
-    if (key == "correlateddraws")
+    // Ignored since 9.3 : intra-modal correlation no longer exists (load/wind/solar
+    // time-series generation was removed), only "correlateddraws" (its former name) and
+    // "intra-modal" itself are kept here so old studies don't fail to parse
+    if (key == "correlateddraws" || key == "intra-modal")
     {
-        return ConvertCStrToListTimeSeries(value, d.intraModal);
+        String trimmed = rawvalue;
+        trimmed.trim();
+        if (!trimmed.empty())
+        {
+            logNotSupported(key, StudyVersion(9, 3));
+        }
+        return true;
     }
     // Scenario builder
     if (key == "custom-ts-numbers")
