@@ -47,8 +47,7 @@ std::pair<std::string, ReserveID> ClusterList<ClusterT>::reserveParticipationClu
         for (auto& cluster: allClusters_)
         {
             if (cluster->reserveParticipationContainer
-                && cluster->reserveParticipationContainer->isParticipatingInReserve(
-                  reserveID))
+                && cluster->reserveParticipationContainer->isParticipatingInReserve(reserveID))
             {
                 if (static_cast<unsigned int>(globalReserveParticipationIdx) == index)
                 {

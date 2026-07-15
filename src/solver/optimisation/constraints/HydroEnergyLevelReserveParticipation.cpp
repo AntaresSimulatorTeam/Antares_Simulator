@@ -45,8 +45,8 @@ void HydroEnergyLevelReserveParticipation::add(int pays, int cluster, int reserv
                 builder.lessThan();
 
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .reservesIndices->HydroEnergyLevelParticipation[reserveParticipation
-                                                   .globalIndexClusterParticipation]
+                  .reservesIndices->HydroEnergyLevelParticipation
+                    [reserveParticipation.globalIndexClusterParticipation]
                   = builder.data.nombreDeContraintes;
 
                 ConstraintNamer namer(builder.data.NomDesContraintes);

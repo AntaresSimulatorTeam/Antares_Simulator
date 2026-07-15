@@ -306,19 +306,15 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
 
                 thermal[area->index].thermalClustersOperatingCost[clusterEnabledIndex]
                   += participationOn
-                       * thermalCluster->reserveParticipationContainer->reserveCost(
-                         reserveID)
+                       * thermalCluster->reserveParticipationContainer->reserveCost(reserveID)
                      + participationOff
-                         * thermalCluster->reserveParticipationContainer->reserveCostOff(
-                           reserveID);
+                         * thermalCluster->reserveParticipationContainer->reserveCostOff(reserveID);
 
                 resData.thermalClusterReserveParticipationCostForYear[hourInTheYear]
                   += participationOn
-                       * thermalCluster->reserveParticipationContainer->reserveCost(
-                         reserveID)
+                       * thermalCluster->reserveParticipationContainer->reserveCost(reserveID)
                      + participationOff
-                         * thermalCluster->reserveParticipationContainer->reserveCostOff(
-                           reserveID);
+                         * thermalCluster->reserveParticipationContainer->reserveCostOff(reserveID);
 
                 resData.reserveParticipationPerGroupForYear[hourInTheYear]
                   .thermalGroupsReserveParticipation[thermalCluster->getGroup()][reserveID]

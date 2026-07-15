@@ -79,8 +79,7 @@ std::size_t ThermalClusterList::reserveParticipationsCount() const
       {
           if (cluster->reserveParticipationContainer.has_value() && cluster->isEnabled())
           {
-              return total
-                     + cluster->reserveParticipationContainer->reserveParticipationsCount();
+              return total + cluster->reserveParticipationContainer->reserveParticipationsCount();
           }
           else
           {

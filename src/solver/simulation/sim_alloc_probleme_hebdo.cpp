@@ -173,32 +173,33 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         if (study.parameters.include.reserves)
         {
             variablesMapping.reservesIndices.emplace();
-            variablesMapping.reservesIndices->runningThermalClusterParticipation.assign(
-              thermalCount * capacityReservationCount,
-              0);
-            variablesMapping.reservesIndices->offThermalClusterParticipation.assign(thermalCount * capacityReservationCount, 0);
-            variablesMapping.reservesIndices->thermalClusterParticipation.assign(thermalCount * capacityReservationCount, 0);
-            variablesMapping.reservesIndices->STStorageClusterParticipation.down.assign(
-              shortTermStorageCount * capacityReservationCount,
-              0);
-            variablesMapping.reservesIndices->STStorageClusterParticipation.up.assign(
-              shortTermStorageCount * capacityReservationCount,
-              0);
-            variablesMapping.reservesIndices->STStorageReleaseClusterParticipation.assign(
-              shortTermStorageCount * capacityReservationCount,
-              0);
-            variablesMapping.reservesIndices->STStorageStoreClusterParticipation.assign(
-              shortTermStorageCount * capacityReservationCount,
-              0);
+            variablesMapping.reservesIndices->runningThermalClusterParticipation
+              .assign(thermalCount * capacityReservationCount, 0);
+            variablesMapping.reservesIndices->offThermalClusterParticipation
+              .assign(thermalCount * capacityReservationCount, 0);
+            variablesMapping.reservesIndices->thermalClusterParticipation
+              .assign(thermalCount * capacityReservationCount, 0);
+            variablesMapping.reservesIndices->STStorageClusterParticipation.down
+              .assign(shortTermStorageCount * capacityReservationCount, 0);
+            variablesMapping.reservesIndices->STStorageClusterParticipation.up
+              .assign(shortTermStorageCount * capacityReservationCount, 0);
+            variablesMapping.reservesIndices->STStorageReleaseClusterParticipation
+              .assign(shortTermStorageCount * capacityReservationCount, 0);
+            variablesMapping.reservesIndices->STStorageStoreClusterParticipation
+              .assign(shortTermStorageCount * capacityReservationCount, 0);
 
-            variablesMapping.reservesIndices->HydroParticipation.up.assign(hydroCount * capacityReservationCount, 0);
-            variablesMapping.reservesIndices->HydroParticipation.down.assign(hydroCount * capacityReservationCount, 0);
-            variablesMapping.reservesIndices->HydroReleaseParticipation.assign(hydroCount * capacityReservationCount, 0);
-            variablesMapping.reservesIndices->HydroStoreParticipation.assign(hydroCount * capacityReservationCount, 0);
+            variablesMapping.reservesIndices->HydroParticipation.up
+              .assign(hydroCount * capacityReservationCount, 0);
+            variablesMapping.reservesIndices->HydroParticipation.down
+              .assign(hydroCount * capacityReservationCount, 0);
+            variablesMapping.reservesIndices->HydroReleaseParticipation
+              .assign(hydroCount * capacityReservationCount, 0);
+            variablesMapping.reservesIndices->HydroStoreParticipation
+              .assign(hydroCount * capacityReservationCount, 0);
 
-            variablesMapping.reservesIndices->internalUnsatisfied.assign(capacityReservationCount, 0);
-            variablesMapping.reservesIndices->internalExcess.assign(capacityReservationCount,
-                                                                           0);
+            variablesMapping.reservesIndices->internalUnsatisfied.assign(capacityReservationCount,
+                                                                         0);
+            variablesMapping.reservesIndices->internalExcess.assign(capacityReservationCount, 0);
         }
 
         variablesMapping.SIM_ShortTermStorage.OverflowVariable.assign(shortTermStorageCount, 0);
@@ -256,13 +257,11 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         if (study.parameters.include.reserves)
         {
             problem.CorrespondanceCntNativesCntOptim[k].reservesIndices.emplace();
-            problem.CorrespondanceCntNativesCntOptim[k].reservesIndices->need.assign(
-              capacityReservationCount,
-              -1);
             problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices->powerOffGroupUnitsInThermalClusterParticipating.assign(thermalCount
-                                                                        * capacityReservationCount,
-                                                                      -1);
+              .reservesIndices->need.assign(capacityReservationCount, -1);
+            problem.CorrespondanceCntNativesCntOptim[k]
+              .reservesIndices->powerOffGroupUnitsInThermalClusterParticipating
+              .assign(thermalCount * capacityReservationCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices->maxPowerOffUnitsInThermalCluster.assign(thermalCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
@@ -271,36 +270,42 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
               .reservesIndices->thermalClusterPOutBoundMax.assign(thermalCount, -1);
 
             problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices->STStorageClusterMaxReleaseParticipation.assign(shortTermStorageCount
-                                                                * capacityReservationCount,
-                                                              -1);
+              .reservesIndices->STStorageClusterMaxReleaseParticipation
+              .assign(shortTermStorageCount * capacityReservationCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices->STStorageClusterMaxStoreParticipation.assign(shortTermStorageCount
-                                                              * capacityReservationCount,
-                                                            -1);
+              .reservesIndices->STStorageClusterMaxStoreParticipation
+              .assign(shortTermStorageCount * capacityReservationCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices->STStorageClusterReleaseCapacityThresholdsMax.assign(shortTermStorageCount, -1);
+              .reservesIndices->STStorageClusterReleaseCapacityThresholdsMax
+              .assign(shortTermStorageCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices->STStorageClusterReleaseCapacityThresholdsMin.assign(shortTermStorageCount, -1);
+              .reservesIndices->STStorageClusterReleaseCapacityThresholdsMin
+              .assign(shortTermStorageCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices->STStorageClusterStoreCapacityThresholds.assign(shortTermStorageCount, -1);
+              .reservesIndices->STStorageClusterStoreCapacityThresholds
+              .assign(shortTermStorageCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices->STStorageLevelParticipation.down.assign(shortTermStorageCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices->STStorageLevelParticipation.up.assign(shortTermStorageCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices->STStorageEnergyLevelParticipation.assign(shortTermStorageCount
-                                                          * capacityReservationCount,
-                                                        -1);
+              .reservesIndices->STStorageEnergyLevelParticipation
+              .assign(shortTermStorageCount * capacityReservationCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices->STStorageGlobalStockEnergyLevelParticipation.up.assign(shortTermStorageCount, -1);
+              .reservesIndices->STStorageGlobalStockEnergyLevelParticipation.up
+              .assign(shortTermStorageCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices->STStorageGlobalStockEnergyLevelParticipation.down.assign(shortTermStorageCount, -1);
+              .reservesIndices->STStorageGlobalStockEnergyLevelParticipation.down
+              .assign(shortTermStorageCount, -1);
 
             problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices->HydroMaxReleaseParticipation.assign(hydroCount * capacityReservationCount, -1);
+              .reservesIndices->HydroMaxReleaseParticipation.assign(hydroCount
+                                                                      * capacityReservationCount,
+                                                                    -1);
             problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices->HydroMaxStoreParticipation.assign(hydroCount * capacityReservationCount, -1);
+              .reservesIndices->HydroMaxStoreParticipation.assign(hydroCount
+                                                                    * capacityReservationCount,
+                                                                  -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices->HydroReleaseCapacityThresholdsMax.assign(hydroCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
@@ -312,7 +317,9 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices->HydroLevelParticipation.up.assign(hydroCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices->HydroEnergyLevelParticipation.assign(hydroCount * capacityReservationCount, -1);
+              .reservesIndices->HydroEnergyLevelParticipation.assign(hydroCount
+                                                                       * capacityReservationCount,
+                                                                     -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices->HydroGlobalEnergyLevelParticipationUp.assign(hydroCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
@@ -438,9 +445,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
                                                     ? study.areas.byIndex[k]
                                                         ->hydro.reserveParticipationsCount()
                                                     : 0;
-        const uint nbReserves = resEnabled
-                                  ? study.areas.byIndex[k]->allCapacityReservations->size()
-                                  : 0;
+        const uint nbReserves = resEnabled ? study.areas.byIndex[k]->allCapacityReservations->size()
+                                           : 0;
 
         problem.PaliersThermiquesDuPays[k].minUpDownTime.assign(nbPaliers, 0);
         problem.PaliersThermiquesDuPays[k].PminDuPalierThermiquePendantUneHeure.assign(nbPaliers,
@@ -595,9 +601,9 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
                   nbReserves,
                   0.);
                 problem.ResultatsHoraires[k].HydroUsage[j].reserveParticipationOfCluster.emplace();
-                problem.ResultatsHoraires[k]
-                  .HydroUsage[j]
-                  .reserveParticipationOfCluster->assign(nbHydroReserveParticipations, 0.);
+                problem.ResultatsHoraires[k].HydroUsage[j].reserveParticipationOfCluster->assign(
+                  nbHydroReserveParticipations,
+                  0.);
             }
         }
         // Short term storage results

@@ -229,7 +229,7 @@ bool readReserveParameters(const fs::path& folderInput, Area& area, const YAML::
     fs::path filePath = folderInput / "reserves" / area.id / (capacityReservation.id() + ".txt");
     capacityReservation.loadNeedFromFile(filePath);
     area.allCapacityReservations->areaCapacityReservations.emplace(capacityReservation.id(),
-                                                                          capacityReservation);
+                                                                   capacityReservation);
     return ret;
 }
 
@@ -1222,18 +1222,15 @@ void validateCapacityReservations(const Area& area)
         errorIfNegativeValue("maxGlobalEnergyActivationRatio up",
                              area.allCapacityReservations->maxGlobalEnergyActivationRatio.up,
                              area.name);
-        errorIfNegativeValue(
-          "maxGlobalEnergyActivationRatio down",
-          area.allCapacityReservations->maxGlobalEnergyActivationRatio.down,
-          area.name);
-        errorIfNegativeValue(
-          "referenceGlobalActivationDuration up",
-          area.allCapacityReservations->referenceGlobalActivationDuration.up,
-          area.name);
-        errorIfNegativeValue(
-          "referenceGlobalActivationDuration down",
-          area.allCapacityReservations->referenceGlobalActivationDuration.down,
-          area.name);
+        errorIfNegativeValue("maxGlobalEnergyActivationRatio down",
+                             area.allCapacityReservations->maxGlobalEnergyActivationRatio.down,
+                             area.name);
+        errorIfNegativeValue("referenceGlobalActivationDuration up",
+                             area.allCapacityReservations->referenceGlobalActivationDuration.up,
+                             area.name);
+        errorIfNegativeValue("referenceGlobalActivationDuration down",
+                             area.allCapacityReservations->referenceGlobalActivationDuration.down,
+                             area.name);
         for (const auto& [resID, capacityRes]:
              area.allCapacityReservations->areaCapacityReservations)
         {

@@ -207,8 +207,7 @@ void ProcessSolveResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
         for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; ++i)
         {
             auto var = model.variable(i);
-            primals.emplace_back(
-              resultStatus->best_primal_solution().variable_values.at(var));
+            primals.emplace_back(resultStatus->best_primal_solution().variable_values.at(var));
             reducedCosts.emplace_back(resultStatus->reduced_costs().at(var));
         }
         FillWithValues(ProblemeAResoudre->X, primals);
@@ -223,8 +222,7 @@ void ProcessSolveResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
             duals.reserve(ProblemeAResoudre->NombreDeContraintes);
             for (int i = 0; i < ProblemeAResoudre->NombreDeContraintes; ++i)
             {
-                duals.emplace_back(
-                  resultStatus->dual_values().at(model.linear_constraint(i)));
+                duals.emplace_back(resultStatus->dual_values().at(model.linear_constraint(i)));
             }
             FillWithValues(ProblemeAResoudre->CoutsMarginauxDesContraintes, duals);
             FillWithValues(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux, duals);

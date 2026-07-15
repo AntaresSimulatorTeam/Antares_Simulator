@@ -286,8 +286,7 @@ std::pair<std::string, ReserveID> STStorageInput::reserveParticipationClusterAt(
         for (auto& cluster: storagesByIndex)
         {
             if (cluster.reserveParticipationContainer
-                && cluster.reserveParticipationContainer->isParticipatingInReserve(
-                  reserveID))
+                && cluster.reserveParticipationContainer->isParticipatingInReserve(reserveID))
             {
                 if (globalReserveParticipationIdx == index)
                 {
@@ -366,8 +365,7 @@ uint STStorageInput::reserveParticipationsCount() const
       [](int total, const STStorageCluster& cluster)
       {
           return cluster.reserveParticipationContainer
-                   ? total
-                       + cluster.reserveParticipationContainer->reserveParticipationsCount()
+                   ? total + cluster.reserveParticipationContainer->reserveParticipationsCount()
                    : total;
       });
 }

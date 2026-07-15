@@ -128,8 +128,7 @@ int& VariableManager::HydroReserveParticipation(ReserveType type,
                                                 int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
-    return CorrespondanceVarNativesVarOptim_[pdt].reservesIndices->HydroParticipation[type]
-                                                                                            [index];
+    return CorrespondanceVarNativesVarOptim_[pdt].reservesIndices->HydroParticipation[type][index];
 }
 
 int& VariableManager::HydroReleaseReserveParticipation(unsigned int index,
@@ -138,8 +137,7 @@ int& VariableManager::HydroReleaseReserveParticipation(unsigned int index,
                                                        int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
-    return CorrespondanceVarNativesVarOptim_[pdt]
-      .reservesIndices->HydroReleaseParticipation[index];
+    return CorrespondanceVarNativesVarOptim_[pdt].reservesIndices->HydroReleaseParticipation[index];
 }
 
 int& VariableManager::HydroStoreReserveParticipation(unsigned int index,
@@ -148,8 +146,7 @@ int& VariableManager::HydroStoreReserveParticipation(unsigned int index,
                                                      int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
-    return CorrespondanceVarNativesVarOptim_[pdt]
-      .reservesIndices->HydroStoreParticipation[index];
+    return CorrespondanceVarNativesVarOptim_[pdt].reservesIndices->HydroStoreParticipation[index];
 }
 
 int& VariableManager::InternalUnsatisfiedReserve(unsigned int index,
@@ -159,8 +156,7 @@ int& VariableManager::InternalUnsatisfiedReserve(unsigned int index,
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
 
-    return CorrespondanceVarNativesVarOptim_[pdt]
-      .reservesIndices->internalUnsatisfied[index];
+    return CorrespondanceVarNativesVarOptim_[pdt].reservesIndices->internalUnsatisfied[index];
 }
 
 int& VariableManager::InternalExcessReserve(unsigned int index,

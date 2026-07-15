@@ -62,15 +62,18 @@ struct OneProblemWithReservesTwoAreas
         tmpCapacityReservationDownB.setName("ReserveDownB");
 
         areaA->allCapacityReservations = AllCapacityReservations();
-        areaA->allCapacityReservations->areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUp);
-        areaA->allCapacityReservations->areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDown);
+        areaA->allCapacityReservations->areaCapacityReservations.emplace("reserveup",
+                                                                         tmpCapacityReservationUp);
+        areaA->allCapacityReservations->areaCapacityReservations
+          .emplace("reservedown", tmpCapacityReservationDown);
 
         areaB->allCapacityReservations = AllCapacityReservations();
-        areaB->allCapacityReservations->areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUpB);
-        areaB->allCapacityReservations->areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDownB);
+        areaB->allCapacityReservations->areaCapacityReservations.emplace("reserveup",
+                                                                         tmpCapacityReservationUpB);
+        areaB->allCapacityReservations->areaCapacityReservations
+          .emplace("reservedown", tmpCapacityReservationDownB);
 
-        areaA->allCapacityReservations->areaCapacityReservations.at("reserveup")
-          .need.resize(2);
+        areaA->allCapacityReservations->areaCapacityReservations.at("reserveup").need.resize(2);
         areaA->allCapacityReservations->areaCapacityReservations.at("reserveup").need[0] = 2;
         areaA->allCapacityReservations->areaCapacityReservations.at("reserveup").need[1] = 3;
     }

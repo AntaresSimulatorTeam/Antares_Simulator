@@ -80,7 +80,8 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
             r.counts.reserveParticipations += area.thermal.list.reserveParticipationsCount();
             r.counts.reserveParticipations += area.shortTermStorage.reserveParticipationsCount();
             r.counts.reserveParticipations += area.hydro.reserveParticipationsCount();
-            r.counts.capacityReservations += area.allCapacityReservations->areaCapacityReservations.size();
+            r.counts.capacityReservations += area.allCapacityReservations->areaCapacityReservations
+                                               .size();
         }
 
         r.counts.shortTermStorages += area.shortTermStorage.count();
