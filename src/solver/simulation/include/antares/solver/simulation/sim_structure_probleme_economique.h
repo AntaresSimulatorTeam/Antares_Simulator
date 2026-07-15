@@ -609,6 +609,8 @@ struct PROBLEME_HEBDO
         std::vector<double> availablePower;
     };
 
+    //Per area we have several elements:
+    //wind, solar, renewables, run_of_river, miscGenComponents
     std::vector<std::vector<INPUT_GENERATION>> InputGenerationOfArea;
 
     /* Optimization problem */
