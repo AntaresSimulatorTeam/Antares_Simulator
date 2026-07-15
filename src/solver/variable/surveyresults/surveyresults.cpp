@@ -4,8 +4,8 @@
 #include "antares/solver/variable/surveyresults/surveyresults.h"
 
 #include <cmath>
-
 #include <fmt/printf.h>
+
 #include <yuni/yuni.h>
 
 #include <antares/logs/logs.h>
