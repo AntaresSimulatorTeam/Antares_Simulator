@@ -118,7 +118,7 @@ void LegacyExtraOutputEmitter::emit(const std::string& output,
 
 void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
 {
-    const std::string area = problemeHebdo_.NomsDesPays[pays];
+    const std::string area = std::string(problemeHebdo_.NomsDesPays[pays]) + "_node";
 
     const int unsupplied = variableManager_.UnsuppliedEnergy(pays, pdt);
     const int spillage = variableManager_.Spillage(pays, pdt);
@@ -151,13 +151,15 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
         return;
     }
     const auto& hydro = problemeHebdo_.CaracteristiquesHydrauliques[pays];
+    const std::string hydroComponent = std::string(problemeHebdo_.NomsDesPays[pays])
+                                       + "_hydro_storage";
     if (hydro.TailleReservoir > 0.)
     {
-        emit("level_percentage", area, pdt, x(hydroLevel) / hydro.TailleReservoir * 100.);
+        emit("level_percentage", hydroComponent, pdt, x(hydroLevel) / hydro.TailleReservoir * 100.);
     }
     if (static_cast<std::size_t>(pdt) < hydro.ApportNaturelHoraire.size())
     {
-        emit("actual_inflows", area, pdt, std::round(hydro.ApportNaturelHoraire[pdt]));
+        emit("actual_inflows", hydroComponent, pdt, std::round(hydro.ApportNaturelHoraire[pdt]));
     }
 }
 
@@ -165,8 +167,10 @@ void LegacyExtraOutputEmitter::linkOutputs(uint32_t interco, int pdt)
 {
     const uint32_t origin = problemeHebdo_.PaysOrigineDeLInterconnexion[interco];
     const uint32_t destination = problemeHebdo_.PaysExtremiteDeLInterconnexion[interco];
-    const std::string link = std::string(problemeHebdo_.NomsDesPays[origin]) + "$$"
-                             + problemeHebdo_.NomsDesPays[destination];
+    const auto& o = problemeHebdo_.NomsDesPays[origin];
+    const auto& d = problemeHebdo_.NomsDesPays[destination];
+    const auto& [a1, a2] = (o < d) ? std::tie(o, d) : std::tie(d, o);
+    const std::string link = std::string(a1) + "_" + std::string(a2) + "_link";
 
     const double flow = x(variableManager_.DirectFlow(interco, pdt));
     emit("abs_flow", link, pdt, std::abs(flow));
@@ -209,7 +213,9 @@ void LegacyExtraOutputEmitter::linkOutputs(uint32_t interco, int pdt)
 void LegacyExtraOutputEmitter::thermalOutputs(uint32_t pays, int index, int pdt)
 {
     const PALIERS_THERMIQUES& paliers = problemeHebdo_.PaliersThermiquesDuPays[pays];
-    const std::string& cluster = paliers.NomsDesPaliersThermiques[index];
+    const std::string& clusterName = paliers.NomsDesPaliersThermiques[index];
+    const std::string cluster = std::string(problemeHebdo_.NomsDesPays[pays]) + "_thermal_"
+                                + clusterName;
     const int palier = paliers.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
     const int production = variableManager_.DispatchableProduction(palier, pdt);
@@ -277,7 +283,7 @@ void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays) const
     }
     const int pdt = problemeHebdo_.NombreDePasDeTempsPourUneOptimisation - 1;
     emit("hydro_shadow_price",
-         problemeHebdo_.NomsDesPays[pays],
+         std::string(problemeHebdo_.NomsDesPays[pays]) + "_hydro_storage",
          pdt,
          dual(problemeHebdo_.NumeroDeContrainteExpressionStockFinal[pays]));
 }
