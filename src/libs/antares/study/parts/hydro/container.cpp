@@ -672,7 +672,7 @@ bool PartHydro::loadReserveParticipations(Area& area, const std::filesystem::pat
 uint PartHydro::reserveParticipationsCount() const
 {
     return reserveParticipationContainer
-             ? reserveParticipationContainer.value().reserveParticipationsCount()
+             ? reserveParticipationContainer->reserveParticipationsCount()
              : 0;
 }
 
@@ -682,9 +682,9 @@ std::optional<ReserveID> PartHydro::reserveParticipationAt(const Area* area,
     int globalReserveParticipationIdx = 0;
 
     for (const auto& reserveID:
-         area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+         area->allCapacityReservations->areaCapacityReservations | std::views::keys)
     {
-        if (reserveParticipationContainer.value().isParticipatingInReserve(reserveID))
+        if (reserveParticipationContainer->isParticipatingInReserve(reserveID))
         {
             if (static_cast<unsigned int>(globalReserveParticipationIdx) == index)
             {

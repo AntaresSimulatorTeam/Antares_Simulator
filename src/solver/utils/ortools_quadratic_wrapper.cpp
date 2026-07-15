@@ -197,7 +197,7 @@ void ProcessSolveResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                         absl::StatusOr<SolveResult> resultStatus)
 {
     // Store results (status, primals, duals, reduced costs) in problem structure
-    if (resultStatus.ok() && resultStatus.value().has_primal_feasible_solution())
+    if (resultStatus.ok() && resultStatus->has_primal_feasible_solution())
     {
         ProblemeAResoudre->ExistenceDUneSolution = OUI_PI;
         std::vector<double> primals;
@@ -208,8 +208,8 @@ void ProcessSolveResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
         {
             auto var = model.variable(i);
             primals.emplace_back(
-              resultStatus.value().best_primal_solution().variable_values.at(var));
-            reducedCosts.emplace_back(resultStatus.value().reduced_costs().at(var));
+              resultStatus->best_primal_solution().variable_values.at(var));
+            reducedCosts.emplace_back(resultStatus->reduced_costs().at(var));
         }
         FillWithValues(ProblemeAResoudre->X, primals);
         FillWithValues(ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees, primals);
@@ -217,14 +217,14 @@ void ProcessSolveResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
         FillWithValues(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits, reducedCosts);
 
         // Dual values
-        if (resultStatus.value().has_dual_feasible_solution())
+        if (resultStatus->has_dual_feasible_solution())
         {
             std::vector<double> duals;
             duals.reserve(ProblemeAResoudre->NombreDeContraintes);
             for (int i = 0; i < ProblemeAResoudre->NombreDeContraintes; ++i)
             {
                 duals.emplace_back(
-                  resultStatus.value().dual_values().at(model.linear_constraint(i)));
+                  resultStatus->dual_values().at(model.linear_constraint(i)));
             }
             FillWithValues(ProblemeAResoudre->CoutsMarginauxDesContraintes, duals);
             FillWithValues(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux, duals);

@@ -45,7 +45,7 @@ public:
         pValuesForTheCurrentYear.resize(pNbYearsParallel);
 
         pSize = study->parameters.include.reserves
-                  ? area->allCapacityReservations.value().areaCapacityReservations.size() * 2
+                  ? area->allCapacityReservations->areaCapacityReservations.size() * 2
                   : 0;
 
         if (pSize)
@@ -140,7 +140,7 @@ public:
             results.variableUnit = VCardType::Unit();
             int column = 0;
             for (const auto& reserveID:
-                 results.data.area->allCapacityReservations.value().areaCapacityReservations
+                 results.data.area->allCapacityReservations->areaCapacityReservations
                    | std::views::keys)
             {
                 std::string reserveName = results.data.study.reserveMaps->idToName.at(reserveID);

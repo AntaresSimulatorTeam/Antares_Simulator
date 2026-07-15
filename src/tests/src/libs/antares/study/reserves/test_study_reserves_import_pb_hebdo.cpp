@@ -62,22 +62,17 @@ struct OneProblemWithReservesTwoAreas
         tmpCapacityReservationDownB.setName("ReserveDownB");
 
         areaA->allCapacityReservations = AllCapacityReservations();
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUp);
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDown);
+        areaA->allCapacityReservations->areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUp);
+        areaA->allCapacityReservations->areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDown);
 
         areaB->allCapacityReservations = AllCapacityReservations();
-        areaB->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUpB);
-        areaB->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDownB);
+        areaB->allCapacityReservations->areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUpB);
+        areaB->allCapacityReservations->areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDownB);
 
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.at("reserveup")
+        areaA->allCapacityReservations->areaCapacityReservations.at("reserveup")
           .need.resize(2);
-        areaA->allCapacityReservations.value().areaCapacityReservations.at("reserveup").need[0] = 2;
-        areaA->allCapacityReservations.value().areaCapacityReservations.at("reserveup").need[1] = 3;
+        areaA->allCapacityReservations->areaCapacityReservations.at("reserveup").need[0] = 2;
+        areaA->allCapacityReservations->areaCapacityReservations.at("reserveup").need[1] = 3;
     }
 
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
@@ -188,7 +183,7 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
     areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserveA.yml");
     areaA->hydro.loadReserveParticipations(*areaB, studyPath / "myreserveB.yml");
 
-    areaA->hydro.reserveParticipationContainer.value().addReserveParticipationSymmetry(
+    areaA->hydro.reserveParticipationContainer->addReserveParticipationSymmetry(
       {"reserveup", "reservedown"});
 
     importCapacityReservations(study->areas, *problemeHebdo);

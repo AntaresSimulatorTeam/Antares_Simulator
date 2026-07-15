@@ -281,12 +281,12 @@ std::pair<std::string, ReserveID> STStorageInput::reserveParticipationClusterAt(
     unsigned int globalReserveParticipationIdx = 0;
 
     for (const auto& reserveID:
-         area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+         area->allCapacityReservations->areaCapacityReservations | std::views::keys)
     {
         for (auto& cluster: storagesByIndex)
         {
             if (cluster.reserveParticipationContainer
-                && cluster.reserveParticipationContainer.value().isParticipatingInReserve(
+                && cluster.reserveParticipationContainer->isParticipatingInReserve(
                   reserveID))
             {
                 if (globalReserveParticipationIdx == index)
@@ -308,7 +308,7 @@ std::pair<std::string, ReserveID> STStorageInput::reserveParticipationGroupAt(
 {
     unsigned int column = 0;
     for (const auto& reserveID:
-         area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+         area->allCapacityReservations->areaCapacityReservations | std::views::keys)
     {
         if (area->allCapacityReservations->reserveGroupPartSTS.contains(reserveID))
         {
@@ -367,7 +367,7 @@ uint STStorageInput::reserveParticipationsCount() const
       {
           return cluster.reserveParticipationContainer
                    ? total
-                       + cluster.reserveParticipationContainer.value().reserveParticipationsCount()
+                       + cluster.reserveParticipationContainer->reserveParticipationsCount()
                    : total;
       });
 }

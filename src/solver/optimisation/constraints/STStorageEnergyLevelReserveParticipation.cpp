@@ -47,8 +47,7 @@ void STStorageEnergyLevelReserveParticipation::add(int pays, int cluster, int re
                 builder.lessThan();
 
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .reservesIndices.value()
-                  .STStorageEnergyLevelParticipation[reserveParticipation
+                  .reservesIndices->STStorageEnergyLevelParticipation[reserveParticipation
                                                        .globalIndexClusterParticipation]
                   = builder.data.nombreDeContraintes;
 

@@ -99,17 +99,12 @@ public:
         tmpCapacityReservationDownTwo.energyActivationRatio = 18;
 
         areaA->allCapacityReservations = AllCapacityReservations();
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUp);
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reserveuptwo", tmpCapacityReservationUpTwo);
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reserveupthree", tmpCapacityReservationUpThree);
+        areaA->allCapacityReservations->areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUp);
+        areaA->allCapacityReservations->areaCapacityReservations.emplace("reserveuptwo", tmpCapacityReservationUpTwo);
+        areaA->allCapacityReservations->areaCapacityReservations.emplace("reserveupthree", tmpCapacityReservationUpThree);
 
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDown);
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reservedowntwo", tmpCapacityReservationDownTwo);
+        areaA->allCapacityReservations->areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDown);
+        areaA->allCapacityReservations->areaCapacityReservations.emplace("reservedowntwo", tmpCapacityReservationDownTwo);
     }
 
     std::unique_ptr<Study> study;
@@ -167,16 +162,12 @@ struct OneProblemWithReservesTwoAreas
         tmpCapacityReservationDownB.energyActivationRatio = 18;
 
         areaA->allCapacityReservations = AllCapacityReservations();
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUp);
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDown);
+        areaA->allCapacityReservations->areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUp);
+        areaA->allCapacityReservations->areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDown);
 
         areaB->allCapacityReservations = AllCapacityReservations();
-        areaB->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUpB);
-        areaB->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDownB);
+        areaB->allCapacityReservations->areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUpB);
+        areaB->allCapacityReservations->areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDownB);
     }
 
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
@@ -200,15 +191,13 @@ BOOST_AUTO_TEST_CASE(reserve_add)
     tmpCapacityReservationUp.type = ReserveType::UP;
     tmpCapacityReservationUp.unsuppliedCost = 0;
     areaA->allCapacityReservations = AllCapacityReservations();
-    areaA->allCapacityReservations.value()
-      .areaCapacityReservations.emplace("ReserveUp", tmpCapacityReservationUp);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().size(), 1);
-    BOOST_CHECK(areaA->allCapacityReservations.value().getReserveByID("ReserveUp") != nullptr);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().getReserveByID("ReserveNULL"),
+    areaA->allCapacityReservations->areaCapacityReservations.emplace("ReserveUp", tmpCapacityReservationUp);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->size(), 1);
+    BOOST_CHECK(areaA->allCapacityReservations->getReserveByID("ReserveUp") != nullptr);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->getReserveByID("ReserveNULL"),
                       nullptr);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().contains("ReserveUp"), true);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .areaCapacityReservations.at("ReserveUp")
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->contains("ReserveUp"), true);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->areaCapacityReservations.at("ReserveUp")
                         .unsuppliedCost,
                       0);
 }
@@ -221,76 +210,62 @@ BOOST_AUTO_TEST_CASE(reserve_add_double)
 
     CapacityReservation tmpCapacityReservationTwo;
     areaA->allCapacityReservations = AllCapacityReservations();
-    areaA->allCapacityReservations.value().areaCapacityReservations.emplace("Reserve",
+    areaA->allCapacityReservations->areaCapacityReservations.emplace("Reserve",
                                                                             tmpCapacityReservation);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().size(), 1);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().contains("Reserve"), true);
-    areaA->allCapacityReservations.value()
-      .areaCapacityReservations.emplace("Reserve", tmpCapacityReservationTwo);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().size(), 1);
-    areaA->allCapacityReservations.value()
-      .areaCapacityReservations.emplace("ReserveTwo", tmpCapacityReservationTwo);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().size(), 2);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->size(), 1);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->contains("Reserve"), true);
+    areaA->allCapacityReservations->areaCapacityReservations.emplace("Reserve", tmpCapacityReservationTwo);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->size(), 1);
+    areaA->allCapacityReservations->areaCapacityReservations.emplace("ReserveTwo", tmpCapacityReservationTwo);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->size(), 2);
 }
 
 BOOST_FIXTURE_TEST_CASE(reserve_one_area, OneProblemWithReservesOneArea)
 {
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().size(), 5);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .areaCapacityReservations.at("reserveup")
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->size(), 5);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->areaCapacityReservations.at("reserveup")
                         .unsuppliedCost,
                       1);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .areaCapacityReservations.at("reserveup")
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->areaCapacityReservations.at("reserveup")
                         .referenceActivationDuration,
                       2);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .areaCapacityReservations.at("reserveup")
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->areaCapacityReservations.at("reserveup")
                         .powerActivationRatio,
                       3);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .areaCapacityReservations.at("reserveup")
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->areaCapacityReservations.at("reserveup")
                         .energyActivationRatio,
                       4);
 
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .areaCapacityReservations.at("reservedown")
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->areaCapacityReservations.at("reservedown")
                         .unsuppliedCost,
                       5);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .areaCapacityReservations.at("reservedown")
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->areaCapacityReservations.at("reservedown")
                         .referenceActivationDuration,
                       6);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .areaCapacityReservations.at("reservedown")
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->areaCapacityReservations.at("reservedown")
                         .powerActivationRatio,
                       7);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .areaCapacityReservations.at("reservedown")
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->areaCapacityReservations.at("reservedown")
                         .energyActivationRatio,
                       8);
 }
 
 BOOST_FIXTURE_TEST_CASE(reserve_up_two_areas, OneProblemWithReservesTwoAreas)
 {
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().size(), 2);
-    BOOST_CHECK_EQUAL(areaB->allCapacityReservations.value().size(), 2);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .areaCapacityReservations.at("reserveup")
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->size(), 2);
+    BOOST_CHECK_EQUAL(areaB->allCapacityReservations->size(), 2);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->areaCapacityReservations.at("reserveup")
                         .unsuppliedCost,
                       1);
 
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .areaCapacityReservations.at("reservedown")
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->areaCapacityReservations.at("reservedown")
                         .unsuppliedCost,
                       5);
 
-    BOOST_CHECK_EQUAL(areaB->allCapacityReservations.value()
-                        .areaCapacityReservations.at("reserveup")
+    BOOST_CHECK_EQUAL(areaB->allCapacityReservations->areaCapacityReservations.at("reserveup")
                         .unsuppliedCost,
                       11);
-    BOOST_CHECK_EQUAL(areaB->allCapacityReservations.value()
-                        .areaCapacityReservations.at("reservedown")
+    BOOST_CHECK_EQUAL(areaB->allCapacityReservations->areaCapacityReservations.at("reservedown")
                         .unsuppliedCost,
                       15);
 }
@@ -319,26 +294,20 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_One_No_Symmetries
     BOOST_CHECK(
       !areaA->thermal.list.findInAll("cluster2")->reserveParticipationContainer.has_value());
     BOOST_CHECK(areaA->thermal.list.findInAll("cluster1")
-                  ->reserveParticipationContainer.value()
-                  .isParticipatingInReserve("reserveup"));
+                  ->reserveParticipationContainer->isParticipatingInReserve("reserveup"));
     BOOST_CHECK(!areaA->thermal.list.findInAll("cluster1")
-                   ->reserveParticipationContainer.value()
-                   .isParticipatingInReserve("reservedown"));
+                   ->reserveParticipationContainer->isParticipatingInReserve("reservedown"));
     BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .reserveMaxPower("reserveup"),
+                        ->reserveParticipationContainer->reserveMaxPower("reserveup"),
                       9.9);
     BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .reserveCost("reserveup"),
+                        ->reserveParticipationContainer->reserveCost("reserveup"),
                       8.8);
     BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .reserveMaxPowerOff("reserveup"),
+                        ->reserveParticipationContainer->reserveMaxPowerOff("reserveup"),
                       7.7);
     BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .reserveCostOff("reserveup"),
+                        ->reserveParticipationContainer->reserveCostOff("reserveup"),
                       6.6);
 }
 
@@ -411,62 +380,50 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Symmetries,
     BOOST_CHECK(
       !areaA->thermal.list.findInAll("cluster2")->reserveParticipationContainer.has_value());
     BOOST_CHECK(areaA->thermal.list.findInAll("cluster1")
-                  ->reserveParticipationContainer.value()
-                  .isParticipatingInReserve("reserveup"));
+                  ->reserveParticipationContainer->isParticipatingInReserve("reserveup"));
     BOOST_CHECK(areaA->thermal.list.findInAll("cluster1")
-                  ->reserveParticipationContainer.value()
-                  .isParticipatingInReserve("reservedown"));
+                  ->reserveParticipationContainer->isParticipatingInReserve("reservedown"));
 
     BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .getNbSymGroups(),
+                        ->reserveParticipationContainer->getNbSymGroups(),
                       3);
 
     BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .symmetricalIndices("reserveup")
+                        ->reserveParticipationContainer->symmetricalIndices("reserveup")
                         .size(),
                       1);
 
     BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .symmetricalIndices("reservedown")
+                        ->reserveParticipationContainer->symmetricalIndices("reservedown")
                         .size(),
                       2);
 
     BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .symmetricalIndices("reserveupthree")
+                        ->reserveParticipationContainer->symmetricalIndices("reserveupthree")
                         .size(),
                       1);
 
     BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .symmetricalIndices("reserveuptwo")
+                        ->reserveParticipationContainer->symmetricalIndices("reserveuptwo")
                         .size(),
                       1);
 
     BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .symmetricalIndices("reservedowntwo")
+                        ->reserveParticipationContainer->symmetricalIndices("reservedowntwo")
                         .size(),
                       1);
 
     std::vector<int> symDown = areaA->thermal.list.findInAll("cluster1")
-                                 ->reserveParticipationContainer.value()
-                                 .symmetricalIndices("reservedown");
+                                 ->reserveParticipationContainer->symmetricalIndices("reservedown");
 
     int symUp = areaA->thermal.list.findInAll("cluster1")
-                  ->reserveParticipationContainer.value()
-                  .symmetricalIndices("reserveup")
+                  ->reserveParticipationContainer->symmetricalIndices("reserveup")
                   .at(0);
     int symUpTwo = areaA->thermal.list.findInAll("cluster1")
-                     ->reserveParticipationContainer.value()
-                     .symmetricalIndices("reserveuptwo")
+                     ->reserveParticipationContainer->symmetricalIndices("reserveuptwo")
                      .at(0);
     int symUpThree = areaA->thermal.list.findInAll("cluster1")
-                       ->reserveParticipationContainer.value()
-                       .symmetricalIndices("reserveupthree")
+                       ->reserveParticipationContainer->symmetricalIndices("reserveupthree")
                        .at(0);
     BOOST_CHECK_EQUAL(
       count(symDown.begin(), symDown.end(), symUp),
@@ -752,31 +709,25 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Triple_Symmetry,
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
     BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .symmetricalIndices("reserveup")
+                        ->reserveParticipationContainer->symmetricalIndices("reserveup")
                         .size(),
                       1);
     BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .symmetricalIndices("reservedown")
+                        ->reserveParticipationContainer->symmetricalIndices("reservedown")
                         .size(),
                       1);
     BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .symmetricalIndices("reservedowntwo")
+                        ->reserveParticipationContainer->symmetricalIndices("reservedowntwo")
                         .size(),
                       1);
     int symUp = areaA->thermal.list.findInAll("cluster1")
-                  ->reserveParticipationContainer.value()
-                  .symmetricalIndices("reserveup")
+                  ->reserveParticipationContainer->symmetricalIndices("reserveup")
                   .at(0);
     int symDown = areaA->thermal.list.findInAll("cluster1")
-                    ->reserveParticipationContainer.value()
-                    .symmetricalIndices("reservedown")
+                    ->reserveParticipationContainer->symmetricalIndices("reservedown")
                     .at(0);
     int symDownTwo = areaA->thermal.list.findInAll("cluster1")
-                       ->reserveParticipationContainer.value()
-                       .symmetricalIndices("reservedowntwo")
+                       ->reserveParticipationContainer->symmetricalIndices("reservedowntwo")
                        .at(0);
     BOOST_CHECK_EQUAL(symUp, symDown);
     BOOST_CHECK_EQUAL(symUp, symDownTwo); // all of them are participating to the same symmetry
@@ -867,22 +818,22 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_Symmetries,
 
     BOOST_CHECK(areaA->hydro.reserveParticipationContainer.has_value());
 
-    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer.value().isParticipatingInReserve(
+    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer->isParticipatingInReserve(
                         "reserveup"),
                       true);
 
-    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer.value().isParticipatingInReserve(
+    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer->isParticipatingInReserve(
                         "reservedown"),
                       true);
 
-    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer.value().getNbSymGroups(), 3);
+    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer->getNbSymGroups(), 3);
 
-    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer.value().reserveCost("reserveup"),
+    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer->reserveCost("reserveup"),
                       9.9);
-    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer.value().reserveMaxStore(
+    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer->reserveMaxStore(
                         "reserveup"),
                       8.8);
-    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer.value().reserveMaxRelease(
+    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer->reserveMaxRelease(
                         "reserveup"),
                       7.7);
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
@@ -1162,35 +1113,34 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_minimal, OneProblemWithoutReservesOn
     BOOST_CHECK_EQUAL(areaA->allCapacityReservations.has_value(), true);
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().referenceGlobalActivationDuration.up,
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->referenceGlobalActivationDuration.up,
                       1);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().referenceGlobalActivationDuration.down,
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->referenceGlobalActivationDuration.down,
                       1);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().maxGlobalEnergyActivationRatio.up, 1);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().maxGlobalEnergyActivationRatio.down,
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->maxGlobalEnergyActivationRatio.up, 1);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->maxGlobalEnergyActivationRatio.down,
                       1);
-    BOOST_CHECK(areaA->allCapacityReservations.value().getReserveByID("reserveup") != nullptr);
-    BOOST_CHECK(areaA->allCapacityReservations.value().getReserveByID("reserveup")->type
+    BOOST_CHECK(areaA->allCapacityReservations->getReserveByID("reserveup") != nullptr);
+    BOOST_CHECK(areaA->allCapacityReservations->getReserveByID("reserveup")->type
                 == ReserveType::DOWN);
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reserveup")->energyActivationRatio,
+      areaA->allCapacityReservations->getReserveByID("reserveup")->energyActivationRatio,
       1);
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reserveup")->powerActivationRatio,
+      areaA->allCapacityReservations->getReserveByID("reserveup")->powerActivationRatio,
       0);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reserveup")
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->getReserveByID("reserveup")
                         ->referenceActivationDuration,
                       1);
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reserveup")->spillageCost,
+      areaA->allCapacityReservations->getReserveByID("reserveup")->spillageCost,
       0);
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reserveup")->unsuppliedCost,
+      areaA->allCapacityReservations->getReserveByID("reserveup")->unsuppliedCost,
       0);
 
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reserveup")->need.size(),
+      areaA->allCapacityReservations->getReserveByID("reserveup")->need.size(),
       0);
 }
 
@@ -1282,52 +1232,51 @@ reserves:
 
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().referenceGlobalActivationDuration.up,
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->referenceGlobalActivationDuration.up,
                       8);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().referenceGlobalActivationDuration.down,
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->referenceGlobalActivationDuration.down,
                       9);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().maxGlobalEnergyActivationRatio.up,
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->maxGlobalEnergyActivationRatio.up,
                       6.6);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().maxGlobalEnergyActivationRatio.down,
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->maxGlobalEnergyActivationRatio.down,
                       7.7);
-    BOOST_CHECK(areaA->allCapacityReservations.value().getReserveByID("reserveup") != nullptr);
-    BOOST_CHECK(areaA->allCapacityReservations.value().getReserveByID("reservedown") != nullptr);
-    BOOST_CHECK(areaA->allCapacityReservations.value().getReserveByID("reserveup")->type
+    BOOST_CHECK(areaA->allCapacityReservations->getReserveByID("reserveup") != nullptr);
+    BOOST_CHECK(areaA->allCapacityReservations->getReserveByID("reservedown") != nullptr);
+    BOOST_CHECK(areaA->allCapacityReservations->getReserveByID("reserveup")->type
                 == ReserveType::UP);
-    BOOST_CHECK(areaA->allCapacityReservations.value().getReserveByID("reservedown")->type
+    BOOST_CHECK(areaA->allCapacityReservations->getReserveByID("reservedown")->type
                 == ReserveType::DOWN);
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reserveup")->energyActivationRatio,
+      areaA->allCapacityReservations->getReserveByID("reserveup")->energyActivationRatio,
       2.2);
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reserveup")->powerActivationRatio,
+      areaA->allCapacityReservations->getReserveByID("reserveup")->powerActivationRatio,
       3.3);
-    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value()
-                        .getReserveByID("reserveup")
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations->getReserveByID("reserveup")
                         ->referenceActivationDuration,
                       2);
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reserveup")->spillageCost,
+      areaA->allCapacityReservations->getReserveByID("reserveup")->spillageCost,
       4.4);
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reserveup")->unsuppliedCost,
+      areaA->allCapacityReservations->getReserveByID("reserveup")->unsuppliedCost,
       5.5);
 
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reserveup")->need.size(),
+      areaA->allCapacityReservations->getReserveByID("reserveup")->need.size(),
       2);
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reservedown")->need.size(),
+      areaA->allCapacityReservations->getReserveByID("reservedown")->need.size(),
       3);
 
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reserveup")->need.at(0),
+      areaA->allCapacityReservations->getReserveByID("reserveup")->need.at(0),
       2);
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reserveup")->need.at(1),
+      areaA->allCapacityReservations->getReserveByID("reserveup")->need.at(1),
       3);
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reservedown")->need.at(0),
+      areaA->allCapacityReservations->getReserveByID("reservedown")->need.at(0),
       4);
 }
 
@@ -1474,8 +1423,7 @@ BOOST_FIXTURE_TEST_CASE(test_validateCapacityReservations_noNegative,
 BOOST_FIXTURE_TEST_CASE(test_validateCapacityReservations_OneNegative,
                         OneProblemWithReservesOneAreaWithLogger)
 {
-    areaA->allCapacityReservations.value()
-      .areaCapacityReservations.at("reserveup")
+    areaA->allCapacityReservations->areaCapacityReservations.at("reserveup")
       .powerActivationRatio
       = -1;
     accessForTests::validateCapacityReservations(*areaA);

@@ -27,8 +27,7 @@ void STReleaseMaxReserve::add(int pays, int reserve, int cluster, int pdt)
             1.0)
           .lessThan();
         data.CorrespondanceCntNativesCntOptim[pdt]
-          .reservesIndices.value()
-          .STStorageClusterMaxReleaseParticipation[reserveParticipation
+          .reservesIndices->STStorageClusterMaxReleaseParticipation[reserveParticipation
                                                      .globalIndexClusterParticipation]
           = builder.data.nombreDeContraintes;
 

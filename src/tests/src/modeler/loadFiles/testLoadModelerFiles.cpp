@@ -49,7 +49,7 @@ BOOST_FIXTURE_TEST_CASE(read_one_lib_treile, FixtureLoadFile)
 
     auto res = Antares::Solver::LoadFiles::loadLibraries(studyPath);
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res.value().first;
+    const auto& libraries = res->first;
     BOOST_CHECK_EQUAL(libraries[0].Id(), "lib_id");
 }
 
@@ -60,7 +60,7 @@ BOOST_FIXTURE_TEST_CASE(dont_read_bad_extension, FixtureLoadFile)
     // If no .yml libraries are found in an existing directory, the function returns an optional
     // containing a pair whose first element is an empty vector of libraries.
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res.value().first;
+    const auto& libraries = res->first;
     BOOST_CHECK(libraries.empty());
 }
 
@@ -126,7 +126,7 @@ BOOST_FIXTURE_TEST_CASE(read_several_lib_file, FixtureLoadFile)
 
     auto res = Antares::Solver::LoadFiles::loadLibraries(studyPath);
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res.value().first;
+    const auto& libraries = res->first;
 
     auto checkLibIdInVector = [&libraries](const std::string& libId)
     {
@@ -171,7 +171,7 @@ BOOST_FIXTURE_TEST_CASE(read_system_file, FixtureLoadFile)
 
     auto res = Antares::Solver::LoadFiles::loadLibraries(studyPath);
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res.value().first;
+    const auto& libraries = res->first;
     BOOST_CHECK_NO_THROW(Antares::Solver::LoadFiles::loadSystem(studyPath, libraries));
 }
 
@@ -199,7 +199,7 @@ BOOST_FIXTURE_TEST_CASE(read_invalid_system_file, FixtureLoadFile)
 
     auto res = Antares::Solver::LoadFiles::loadLibraries(studyPath);
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res.value().first;
+    const auto& libraries = res->first;
     BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadSystem(studyPath, libraries),
                       std::runtime_error);
 }
@@ -236,7 +236,7 @@ BOOST_FIXTURE_TEST_CASE(scenario_group_is_optional, FixtureLoadFile)
 
     auto res = Antares::Solver::LoadFiles::loadLibraries(studyPath);
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res.value().first;
+    const auto& libraries = res->first;
     auto system = Antares::Solver::LoadFiles::loadSystem(studyPath, libraries);
     const auto compoK = std::ranges::find_if(system.Components(),
                                              [](const auto& comp) { return comp.Id() == "K"; });

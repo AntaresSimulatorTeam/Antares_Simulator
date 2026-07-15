@@ -68,7 +68,7 @@ bool readReservesAreaParameters(Area& area, const YAML::Node& params)
         {
             if (!tryParseYamlField(
                   param.second,
-                  area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.up,
+                  area.allCapacityReservations->maxGlobalEnergyActivationRatio.up,
                   area.name + " : invalid maximum energy activation ratio for UP reserves"))
             {
                 ret = false;
@@ -78,7 +78,7 @@ bool readReservesAreaParameters(Area& area, const YAML::Node& params)
         {
             if (!tryParseYamlField(
                   param.second,
-                  area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.down,
+                  area.allCapacityReservations->maxGlobalEnergyActivationRatio.down,
                   area.name + " : invalid maximum energy activation ratio for DOWN reserves"))
             {
                 ret = false;
@@ -88,7 +88,7 @@ bool readReservesAreaParameters(Area& area, const YAML::Node& params)
         {
             if (!tryParseYamlField(
                   param.second,
-                  area.allCapacityReservations.value().referenceGlobalActivationDuration.up,
+                  area.allCapacityReservations->referenceGlobalActivationDuration.up,
                   area.name + " : invalid reference energy activation duration for UP reserves"))
             {
                 ret = false;
@@ -98,7 +98,7 @@ bool readReservesAreaParameters(Area& area, const YAML::Node& params)
         {
             if (!tryParseYamlField(
                   param.second,
-                  area.allCapacityReservations.value().referenceGlobalActivationDuration.down,
+                  area.allCapacityReservations->referenceGlobalActivationDuration.down,
                   area.name + " : invalid reference energy activation duration for DOWN reserves"))
             {
                 ret = false;
@@ -127,7 +127,7 @@ bool readReserveParameters(const fs::path& folderInput, Area& area, const YAML::
     }
 
     ReserveID reserveId = transformNameIntoID(reserveName);
-    if (area.allCapacityReservations.value().contains(reserveId))
+    if (area.allCapacityReservations->contains(reserveId))
     {
         logs.error() << area.name << " : reserve name already exists for reserve " << reserveName;
         return false;
@@ -228,7 +228,7 @@ bool readReserveParameters(const fs::path& folderInput, Area& area, const YAML::
     }
     fs::path filePath = folderInput / "reserves" / area.id / (capacityReservation.id() + ".txt");
     capacityReservation.loadNeedFromFile(filePath);
-    area.allCapacityReservations.value().areaCapacityReservations.emplace(capacityReservation.id(),
+    area.allCapacityReservations->areaCapacityReservations.emplace(capacityReservation.id(),
                                                                           capacityReservation);
     return ret;
 }
@@ -1220,22 +1220,22 @@ void validateCapacityReservations(const Area& area)
     if (area.allCapacityReservations)
     {
         errorIfNegativeValue("maxGlobalEnergyActivationRatio up",
-                             area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.up,
+                             area.allCapacityReservations->maxGlobalEnergyActivationRatio.up,
                              area.name);
         errorIfNegativeValue(
           "maxGlobalEnergyActivationRatio down",
-          area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.down,
+          area.allCapacityReservations->maxGlobalEnergyActivationRatio.down,
           area.name);
         errorIfNegativeValue(
           "referenceGlobalActivationDuration up",
-          area.allCapacityReservations.value().referenceGlobalActivationDuration.up,
+          area.allCapacityReservations->referenceGlobalActivationDuration.up,
           area.name);
         errorIfNegativeValue(
           "referenceGlobalActivationDuration down",
-          area.allCapacityReservations.value().referenceGlobalActivationDuration.down,
+          area.allCapacityReservations->referenceGlobalActivationDuration.down,
           area.name);
         for (const auto& [resID, capacityRes]:
-             area.allCapacityReservations.value().areaCapacityReservations)
+             area.allCapacityReservations->areaCapacityReservations)
         {
             errorIfNegativeValue("energyActivationRatio",
                                  capacityRes.energyActivationRatio,

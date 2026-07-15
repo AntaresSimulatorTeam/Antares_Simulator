@@ -63,8 +63,7 @@ inline void ReserveParticipationByHydro::populateHourlyValues(State& state, unsi
     if (hasIndexMapping(state.study, state.area))
     {
         for (const auto& [reserveName, reserveParticipation]:
-             state.reserveData.value()
-               .at(state.area->index)
+             state.reserveData->at(state.area->index)
                .reserveParticipationPerHydroForYear[state.hourInTheYear]["Hydro"])
         {
             pValuesForTheCurrentYear[numSpace][state.study.reserveMaps->participationIndexMaps

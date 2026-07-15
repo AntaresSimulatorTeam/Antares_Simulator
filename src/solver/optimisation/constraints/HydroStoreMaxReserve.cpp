@@ -23,8 +23,7 @@ void HydroStoreMaxReserve::add(int pays, int reserve, int cluster, int pdt)
           .HydroStoreReserveParticipation(reserveParticipation.globalIndexClusterParticipation, 1.0)
           .lessThan();
         data.CorrespondanceCntNativesCntOptim[pdt]
-          .reservesIndices.value()
-          .HydroMaxStoreParticipation[reserveParticipation.globalIndexClusterParticipation]
+          .reservesIndices->HydroMaxStoreParticipation[reserveParticipation.globalIndexClusterParticipation]
           = builder.data.nombreDeContraintes;
 
         ConstraintNamer namer(builder.data.NomDesContraintes);
