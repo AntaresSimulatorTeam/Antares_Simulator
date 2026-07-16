@@ -13,8 +13,8 @@ SimulationTable::SimulationTable()
 
 {
     block_ = storage_.addIntegralColumn("block");
-    component_ = storage_.addOptionalColumn<std::string>("component");
-    output_ = storage_.addStringColumn("output");
+    component_ = storage_.addInternedStringColumn("component");
+    output_ = storage_.addInternedStringColumn("output");
     absolute_time_index_ = storage_.addOptionalColumn<unsigned int>("absolute_time_index");
     block_time_index_ = storage_.addOptionalColumn<unsigned int>("block_time_index");
     scenario_index_ = storage_.addIntegralColumn("scenario_index");

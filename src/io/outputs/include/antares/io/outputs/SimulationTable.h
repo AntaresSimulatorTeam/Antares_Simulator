@@ -25,8 +25,8 @@ public:
 private:
     ColumnBasedStorage storage_;
     std::shared_ptr<IntegralColumn> block_;
-    std::shared_ptr<OptionalColumn<std::string>> component_;
-    std::shared_ptr<StringColumn> output_;
+    std::shared_ptr<InternedStringColumn> component_;
+    std::shared_ptr<InternedStringColumn> output_;
     std::shared_ptr<OptionalColumn<unsigned int>> absolute_time_index_;
     std::shared_ptr<OptionalColumn<unsigned int>> block_time_index_;
     std::shared_ptr<IntegralColumn> scenario_index_;
