@@ -86,12 +86,10 @@ public:
         linkNames_.reserve(problemeHebdo.NombreDInterconnexions);
         for (uint32_t interco = 0; interco < problemeHebdo.NombreDInterconnexions; ++interco)
         {
-            const std::string o = problemeHebdo
-                                    .NomsDesPays[problemeHebdo
-                                                   .PaysOrigineDeLInterconnexion[interco]];
-            const std::string d = problemeHebdo
-                                    .NomsDesPays[problemeHebdo
-                                                   .PaysExtremiteDeLInterconnexion[interco]];
+            const std::string o = problemeHebdo.NomsDesPays
+                                    [problemeHebdo.PaysOrigineDeLInterconnexion[interco]];
+            const std::string d = problemeHebdo.NomsDesPays
+                                    [problemeHebdo.PaysExtremiteDeLInterconnexion[interco]];
             const auto& [a1, a2] = (o < d) ? std::tie(o, d) : std::tie(d, o);
             linkNames_.push_back(a1 + "_" + a2 + "_link");
         }

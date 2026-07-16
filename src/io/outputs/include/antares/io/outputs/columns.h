@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
-#include <fmt/format.h>
 #include <cstdint>
+#include <fmt/format.h>
 #include <limits>
 #include <optional>
 #include <string>
@@ -212,8 +212,7 @@ public:
 private:
     uint32_t intern(const std::string& value)
     {
-        auto [it, inserted] = lookup_.try_emplace(value,
-                                                  static_cast<uint32_t>(dictionary_.size()));
+        auto [it, inserted] = lookup_.try_emplace(value, static_cast<uint32_t>(dictionary_.size()));
         if (inserted)
         {
             dictionary_.push_back(value);
