@@ -5,6 +5,9 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <yuni/io/directory.h>
+#include <yuni/io/file.h>
+#include <yuni/io/filename-manipulation.h>
 
 #include <antares/logs/logs.h>
 #include "antares/config/config.h"
