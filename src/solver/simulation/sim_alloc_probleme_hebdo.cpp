@@ -210,52 +210,36 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
             }
         }
 
-        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesBilansPays.assign(nbPays,
-                                                                                           0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContraintePourEviterLesChargesFictives.assign(nbPays, 0);
-        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesNiveauxPays.assign(nbPays,
-                                                                                            0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContraintePourBornerLaDefaillance.assign(nbPays, 0);
+        auto& cntMapping = problem.CorrespondanceCntNativesCntOptim[k];
 
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageLevelConstraint.assign(shortTermStorageCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageCostVariationInjectionForward.assign(shortTermStorageCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageCostVariationInjectionBackward.assign(shortTermStorageCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageCostVariationWithdrawalForward.assign(shortTermStorageCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageCostVariationWithdrawalBackward.assign(shortTermStorageCount, 0);
+        for (auto* v: {&cntMapping.NumeroDeContrainteDesBilansPays,
+                       &cntMapping.NumeroDeContraintePourEviterLesChargesFictives,
+                       &cntMapping.NumeroDeContrainteDesNiveauxPays,
+                       &cntMapping.NumeroDeContraintePourBornerLaDefaillance,
+                       &cntMapping.NumeroPremiereContrainteDeReserveParZone,
+                       &cntMapping.NumeroDeuxiemeContrainteDeReserveParZone})
+        {
+            v->assign(nbPays, 0);
+        }
 
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageCostVariationInjectionForward.assign(shortTermStorageCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageCostVariationInjectionBackward.assign(shortTermStorageCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageCostVariationWithdrawalForward.assign(shortTermStorageCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageCostVariationWithdrawalBackward.assign(shortTermStorageCount, 0);
+        for (auto* v: {&cntMapping.ShortTermStorageLevelConstraint,
+                       &cntMapping.ShortTermStorageCostVariationInjectionForward,
+                       &cntMapping.ShortTermStorageCostVariationInjectionBackward,
+                       &cntMapping.ShortTermStorageCostVariationWithdrawalForward,
+                       &cntMapping.ShortTermStorageCostVariationWithdrawalBackward})
+        {
+            v->assign(shortTermStorageCount, 0);
+        }
 
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroPremiereContrainteDeReserveParZone.assign(nbPays, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeuxiemeContrainteDeReserveParZone.assign(nbPays, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContrainteDeDissociationDeFlux.assign(linkCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContrainteDesContraintesCouplantes.assign(activeConstraints.size(), 0);
+        for (auto* v: {&cntMapping.NumeroDeContrainteDesContraintesDeDureeMinDeMarche,
+                       &cntMapping.NumeroDeContrainteDesContraintesDeDureeMinDArret,
+                       &cntMapping.NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne})
+        {
+            v->assign(thermalCount, 0);
+        }
 
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContrainteDesContraintesDeDureeMinDeMarche.assign(thermalCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContrainteDesContraintesDeDureeMinDArret.assign(thermalCount, 0);
-
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
-          .assign(thermalCount, 0);
+        cntMapping.NumeroDeContrainteDeDissociationDeFlux.assign(linkCount, 0);
+        cntMapping.NumeroDeContrainteDesContraintesCouplantes.assign(activeConstraints.size(), 0);
 
         problem.VariablesDualesDesContraintesDeNTC[k]
           .VariableDualeParInterconnexion.assign(linkCount, 0.);
@@ -264,47 +248,55 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         {
             problem.CorrespondanceCntNativesCntOptim[k].reservesIndices.emplace();
             auto& resCorresp = problem.CorrespondanceCntNativesCntOptim[k].reservesIndices.value();
+
             resCorresp.need.assign(capacityReservationCount, -1);
-            resCorresp.powerOffGroupUnitsInThermalClusterParticipating
-              .assign(thermalCount * capacityReservationCount, -1);
-            resCorresp.maxPowerOffUnitsInThermalCluster.assign(thermalCount, -1);
-            resCorresp.thermalClusterPOutBoundMin.assign(thermalCount, -1);
-            resCorresp.thermalClusterPOutBoundMax.assign(thermalCount, -1);
 
-            resCorresp.STStorageClusterMaxReleaseParticipation.assign(shortTermStorageCount
-                                                                        * capacityReservationCount,
-                                                                      -1);
-            resCorresp.STStorageClusterMaxStoreParticipation.assign(shortTermStorageCount
-                                                                      * capacityReservationCount,
-                                                                    -1);
+            for (auto* v: {&resCorresp.maxPowerOffUnitsInThermalCluster,
+                           &resCorresp.thermalClusterPOutBoundMin,
+                           &resCorresp.thermalClusterPOutBoundMax})
+            {
+                v->assign(thermalCount, -1);
+            }
 
-            resCorresp.STStorageClusterReleaseCapacityThresholdsMax.assign(shortTermStorageCount,
-                                                                           -1);
-            resCorresp.STStorageClusterReleaseCapacityThresholdsMin.assign(shortTermStorageCount,
-                                                                           -1);
-            resCorresp.STStorageClusterStoreCapacityThresholds.assign(shortTermStorageCount, -1);
-            resCorresp.STStorageLevelParticipation.down.assign(shortTermStorageCount, -1);
-            resCorresp.STStorageLevelParticipation.up.assign(shortTermStorageCount, -1);
-            resCorresp.STStorageEnergyLevelParticipation.assign(shortTermStorageCount
-                                                                  * capacityReservationCount,
-                                                                -1);
-            resCorresp.STStorageGlobalStockEnergyLevelParticipation.up.assign(shortTermStorageCount,
-                                                                              -1);
-            resCorresp.STStorageGlobalStockEnergyLevelParticipation.down
-              .assign(shortTermStorageCount, -1);
+            resCorresp.powerOffGroupUnitsInThermalClusterParticipating.assign(
+              thermalCount * capacityReservationCount,
+              -1);
 
-            resCorresp.HydroMaxReleaseParticipation.assign(hydroCount * capacityReservationCount,
-                                                           -1);
-            resCorresp.HydroMaxStoreParticipation.assign(hydroCount * capacityReservationCount, -1);
-            resCorresp.HydroReleaseCapacityThresholdsMax.assign(hydroCount, -1);
-            resCorresp.HydroReleaseCapacityThresholdsMin.assign(hydroCount, -1);
-            resCorresp.HydroStoreCapacityThresholds.assign(hydroCount, -1);
-            resCorresp.HydroLevelParticipation.down.assign(hydroCount, -1);
-            resCorresp.HydroLevelParticipation.up.assign(hydroCount, -1);
-            resCorresp.HydroEnergyLevelParticipation.assign(hydroCount * capacityReservationCount,
-                                                            -1);
-            resCorresp.HydroGlobalEnergyLevelParticipationUp.assign(hydroCount, -1);
-            resCorresp.HydroGlobalEnergyLevelParticipationDown.assign(hydroCount, -1);
+            for (auto* v: {&resCorresp.STStorageClusterMaxReleaseParticipation,
+                           &resCorresp.STStorageClusterMaxStoreParticipation,
+                           &resCorresp.STStorageEnergyLevelParticipation})
+            {
+                v->assign(shortTermStorageCount * capacityReservationCount, -1);
+            }
+
+            for (auto* v: {&resCorresp.STStorageClusterReleaseCapacityThresholdsMax,
+                           &resCorresp.STStorageClusterReleaseCapacityThresholdsMin,
+                           &resCorresp.STStorageClusterStoreCapacityThresholds,
+                           &resCorresp.STStorageLevelParticipation.down,
+                           &resCorresp.STStorageLevelParticipation.up,
+                           &resCorresp.STStorageGlobalStockEnergyLevelParticipation.up,
+                           &resCorresp.STStorageGlobalStockEnergyLevelParticipation.down})
+            {
+                v->assign(shortTermStorageCount, -1);
+            }
+
+            for (auto* v: {&resCorresp.HydroMaxReleaseParticipation,
+                           &resCorresp.HydroMaxStoreParticipation,
+                           &resCorresp.HydroEnergyLevelParticipation})
+            {
+                v->assign(hydroCount * capacityReservationCount, -1);
+            }
+
+            for (auto* v: {&resCorresp.HydroReleaseCapacityThresholdsMax,
+                           &resCorresp.HydroReleaseCapacityThresholdsMin,
+                           &resCorresp.HydroStoreCapacityThresholds,
+                           &resCorresp.HydroLevelParticipation.down,
+                           &resCorresp.HydroLevelParticipation.up,
+                           &resCorresp.HydroGlobalEnergyLevelParticipationUp,
+                           &resCorresp.HydroGlobalEnergyLevelParticipationDown})
+            {
+                v->assign(hydroCount, -1);
+            }
         }
     }
 }
