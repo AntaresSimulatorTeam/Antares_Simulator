@@ -149,7 +149,8 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
               &variablesMapping.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique,
               &variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique,
               &variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique,
-              &variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique})
+              &variablesMapping
+                 .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique})
         {
             v->assign(thermalCount, 0);
         }
@@ -231,9 +232,10 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
             v->assign(shortTermStorageCount, 0);
         }
 
-        for (auto* v: {&cntMapping.NumeroDeContrainteDesContraintesDeDureeMinDeMarche,
-                       &cntMapping.NumeroDeContrainteDesContraintesDeDureeMinDArret,
-                       &cntMapping.NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne})
+        for (auto* v:
+             {&cntMapping.NumeroDeContrainteDesContraintesDeDureeMinDeMarche,
+              &cntMapping.NumeroDeContrainteDesContraintesDeDureeMinDArret,
+              &cntMapping.NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne})
         {
             v->assign(thermalCount, 0);
         }
@@ -258,9 +260,8 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
                 v->assign(thermalCount, -1);
             }
 
-            resCorresp.powerOffGroupUnitsInThermalClusterParticipating.assign(
-              thermalCount * capacityReservationCount,
-              -1);
+            resCorresp.powerOffGroupUnitsInThermalClusterParticipating
+              .assign(thermalCount * capacityReservationCount, -1);
 
             for (auto* v: {&resCorresp.STStorageClusterMaxReleaseParticipation,
                            &resCorresp.STStorageClusterMaxStoreParticipation,
@@ -445,9 +446,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         }
 
         palier.NomsDesPaliersThermiques.resize(nbPaliers);
-        palier.emissionFactors.assign(
-          nbPaliers,
-          std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX>{});
+        palier.emissionFactors
+          .assign(nbPaliers, std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX>{});
 
         auto& hydro = problem.CaracteristiquesHydrauliques[k];
 
@@ -482,8 +482,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
 
         for (auto* v: {&resultats.ValeursHorairesDeDefaillancePositive,
                        &resultats.ValeursHorairesDeDefaillancePositiveCSR,
-                       &resultats.ValeursHorairesDENS,        // adq patch
-                       &resultats.ValeursHorairesDtgMrgCsr,   // adq patch
+                       &resultats.ValeursHorairesDENS,      // adq patch
+                       &resultats.ValeursHorairesDtgMrgCsr, // adq patch
                        &resultats.ValeursHorairesDeDefaillanceNegative,
                        &resultats.TurbinageHoraire,
                        &resultats.PompageHoraire,
@@ -539,7 +539,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             }
             if (resEnabled)
             {
-                production.ParticipationReservesDuPalier.emplace(nbThermalReserveParticipations, 0.);
+                production.ParticipationReservesDuPalier.emplace(nbThermalReserveParticipations,
+                                                                 0.);
                 production.ParticipationReservesDuPalierOn.emplace(nbThermalReserveParticipations,
                                                                    0.);
                 production.ParticipationReservesDuPalierOff.emplace(nbThermalReserveParticipations,
@@ -550,9 +551,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
                 res.ValeursHorairesInternalExcessReserve.assign(nbReserves, 0.);
                 res.CoutsMarginauxHoraires.assign(nbReserves, 0.);
 
-                resultats.HydroUsage[j].reserveParticipationOfCluster.emplace(
-                  nbHydroReserveParticipations,
-                  0.);
+                resultats.HydroUsage[j]
+                  .reserveParticipationOfCluster.emplace(nbHydroReserveParticipations, 0.);
             }
         }
         // Short term storage results
@@ -562,10 +562,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         for (uint sts = 0; sts < nbShortTermStorage; sts++)
         {
             auto& storage = resultats.ShortTermStorage[sts];
-            for (auto* v: {&storage.injection,
-                           &storage.withdrawal,
-                           &storage.level,
-                           &storage.overflow})
+            for (auto* v:
+                 {&storage.injection, &storage.withdrawal, &storage.level, &storage.overflow})
             {
                 v->resize(NombreDePasDeTemps);
             }
