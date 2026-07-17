@@ -136,75 +136,79 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         problem.SoldeMoyenHoraire[k].SoldeMoyenDuPays.assign(nbPays, 0.);
 
         auto& variablesMapping = problem.CorrespondanceVarNativesVarOptim[k];
-        variablesMapping.NumeroDeVariableDuFluxDirect.assign(linkCount, 0);
-        variablesMapping.NumeroDeVariableDuFluxDirectPositif.assign(linkCount, 0);
-        variablesMapping.NumeroDeVariableDuFluxIndirectPositif.assign(linkCount, 0);
 
-        variablesMapping.NumeroDeVariableDuPalierThermique.assign(thermalCount, 0);
-        variablesMapping.NumeroDeVariablesDeLaProdHyd.assign(nbPays, 0);
-        variablesMapping.NumeroDeVariablesDePompage.assign(nbPays, 0);
-        variablesMapping.NumeroDeVariablesDeNiveau.assign(nbPays, 0);
-        variablesMapping.NumeroDeVariablesDeDebordement.assign(nbPays, 0);
-        variablesMapping.NumeroDeVariableDefaillancePositive.assign(nbPays, 0);
-        variablesMapping.NumeroDeVariableDefaillanceNegative.assign(nbPays, 0);
+        for (auto* v: {&variablesMapping.NumeroDeVariableDuFluxDirect,
+                       &variablesMapping.NumeroDeVariableDuFluxDirectPositif,
+                       &variablesMapping.NumeroDeVariableDuFluxIndirectPositif})
+        {
+            v->assign(linkCount, 0);
+        }
 
-        variablesMapping.NumeroDeVariablesVariationHydALaBaisse.assign(nbPays, 0);
+        for (auto* v:
+             {&variablesMapping.NumeroDeVariableDuPalierThermique,
+              &variablesMapping.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique,
+              &variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique,
+              &variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique,
+              &variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique})
+        {
+            v->assign(thermalCount, 0);
+        }
 
-        variablesMapping.NumeroDeVariablesVariationHydALaHausse.assign(nbPays, 0);
+        for (auto* v: {&variablesMapping.NumeroDeVariablesDeLaProdHyd,
+                       &variablesMapping.NumeroDeVariablesDePompage,
+                       &variablesMapping.NumeroDeVariablesDeNiveau,
+                       &variablesMapping.NumeroDeVariablesDeDebordement,
+                       &variablesMapping.NumeroDeVariableDefaillancePositive,
+                       &variablesMapping.NumeroDeVariableDefaillanceNegative,
+                       &variablesMapping.NumeroDeVariablesVariationHydALaBaisse,
+                       &variablesMapping.NumeroDeVariablesVariationHydALaHausse})
+        {
+            v->assign(nbPays, 0);
+        }
 
-        variablesMapping.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique
-          .assign(thermalCount, 0);
-        variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique
-          .assign(thermalCount, 0);
-        variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique
-          .assign(thermalCount, 0);
-        variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
-          .assign(thermalCount, 0);
-
-        variablesMapping.SIM_ShortTermStorage.InjectionVariable.assign(shortTermStorageCount, 0);
-        variablesMapping.SIM_ShortTermStorage.WithdrawalVariable.assign(shortTermStorageCount, 0);
-        variablesMapping.SIM_ShortTermStorage.LevelVariable.assign(shortTermStorageCount, 0);
-
-        variablesMapping.SIM_ShortTermStorage.CostVariationInjection.assign(shortTermStorageCount,
-                                                                            0);
-        variablesMapping.SIM_ShortTermStorage.CostVariationWithdrawal.assign(shortTermStorageCount,
-                                                                             0);
+        for (auto* v: {&variablesMapping.SIM_ShortTermStorage.InjectionVariable,
+                       &variablesMapping.SIM_ShortTermStorage.WithdrawalVariable,
+                       &variablesMapping.SIM_ShortTermStorage.LevelVariable,
+                       &variablesMapping.SIM_ShortTermStorage.CostVariationInjection,
+                       &variablesMapping.SIM_ShortTermStorage.CostVariationWithdrawal,
+                       &variablesMapping.SIM_ShortTermStorage.OverflowVariable})
+        {
+            v->assign(shortTermStorageCount, 0);
+        }
 
         if (study.parameters.include.reserves)
         {
             variablesMapping.reservesIndices.emplace();
             auto& varMapping = variablesMapping.reservesIndices.value();
-            varMapping.runningThermalClusterParticipation.assign(thermalCount
-                                                                   * capacityReservationCount,
-                                                                 0);
-            varMapping.offThermalClusterParticipation.assign(thermalCount
-                                                               * capacityReservationCount,
-                                                             0);
-            varMapping.thermalClusterParticipation.assign(thermalCount * capacityReservationCount,
-                                                          0);
-            varMapping.STStorageClusterParticipation.down.assign(shortTermStorageCount
-                                                                   * capacityReservationCount,
-                                                                 0);
-            varMapping.STStorageClusterParticipation.up.assign(shortTermStorageCount
-                                                                 * capacityReservationCount,
-                                                               0);
-            varMapping.STStorageReleaseClusterParticipation.assign(shortTermStorageCount
-                                                                     * capacityReservationCount,
-                                                                   0);
-            varMapping.STStorageStoreClusterParticipation.assign(shortTermStorageCount
-                                                                   * capacityReservationCount,
-                                                                 0);
 
-            varMapping.HydroParticipation.up.assign(hydroCount * capacityReservationCount, 0);
-            varMapping.HydroParticipation.down.assign(hydroCount * capacityReservationCount, 0);
-            varMapping.HydroReleaseParticipation.assign(hydroCount * capacityReservationCount, 0);
-            varMapping.HydroStoreParticipation.assign(hydroCount * capacityReservationCount, 0);
+            for (auto* v: {&varMapping.runningThermalClusterParticipation,
+                           &varMapping.offThermalClusterParticipation,
+                           &varMapping.thermalClusterParticipation})
+            {
+                v->assign(thermalCount * capacityReservationCount, 0);
+            }
 
-            varMapping.internalUnsatisfied.assign(capacityReservationCount, 0);
-            varMapping.internalExcess.assign(capacityReservationCount, 0);
+            for (auto* v: {&varMapping.STStorageClusterParticipation.down,
+                           &varMapping.STStorageClusterParticipation.up,
+                           &varMapping.STStorageReleaseClusterParticipation,
+                           &varMapping.STStorageStoreClusterParticipation})
+            {
+                v->assign(shortTermStorageCount * capacityReservationCount, 0);
+            }
+
+            for (auto* v: {&varMapping.HydroParticipation.up,
+                           &varMapping.HydroParticipation.down,
+                           &varMapping.HydroReleaseParticipation,
+                           &varMapping.HydroStoreParticipation})
+            {
+                v->assign(hydroCount * capacityReservationCount, 0);
+            }
+
+            for (auto* v: {&varMapping.internalUnsatisfied, &varMapping.internalExcess})
+            {
+                v->assign(capacityReservationCount, 0);
+            }
         }
-
-        variablesMapping.SIM_ShortTermStorage.OverflowVariable.assign(shortTermStorageCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesBilansPays.assign(nbPays,
                                                                                            0);
