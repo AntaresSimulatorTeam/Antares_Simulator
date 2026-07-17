@@ -3,6 +3,8 @@
 
 #include "antares/application/application.h"
 
+#include <chrono>
+
 #include <antares/antares/fatal-error.h>
 #include <antares/application/ScenarioBuilderOwner.h>
 #include <antares/benchmarking/timer.h>
@@ -14,6 +16,7 @@
 #include <antares/study/duplicates.h>
 #include <antares/study/header.h>
 #include <antares/sys/policy.h>
+#include <antares/view-builder/viewBuilder.h>
 #include <antares/writer/writer_factory.h>
 #include "antares/antares/version.h"
 #include "antares/checks/checksOnLPsolver.h"
@@ -427,6 +430,10 @@ void Application::execute()
 
     // Save about-the-study files (comments, notes, etc.)
     pStudy->saveAboutTheStudy(*resultWriter);
+
+    ViewBuilder::exportSystemForView(*pStudy, resultWriter.get());
+    logs.info() << "system-for-views.yml has been generated in the output folder.";
+
     SystemMemoryLogger memoryReport;
     memoryReport.interval(1000 * 60 * 5); // 5 minutes
     memoryReport.start();

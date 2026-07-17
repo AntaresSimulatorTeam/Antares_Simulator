@@ -92,6 +92,7 @@ target_link_libraries(antares-solver
         PRIVATE
         solver-lib
         Antares::application
+        Antares::view-builder
 )
 
 target_include_directories(antares-solver
