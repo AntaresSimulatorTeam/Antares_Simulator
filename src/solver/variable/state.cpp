@@ -201,8 +201,7 @@ void State::initFromHydro()
             resData.HydroReserveParticipationCostForYear[hourInTheYear]
               += participation * Hydro.reserveParticipationContainer->reserveCost(resID);
 
-            resData.reserveParticipationPerHydroForYear[hourInTheYear]["Hydro"][resID]
-              += participation;
+            resData.reserveParticipationPerHydroForYear[hourInTheYear][resID] += participation;
         }
     }
 }
