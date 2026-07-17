@@ -422,145 +422,135 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
                                   ? study.areas.byIndex[k]->allCapacityReservations.value().size()
                                   : 0;
 
-        problem.PaliersThermiquesDuPays[k].minUpDownTime.assign(nbPaliers, 0);
-        problem.PaliersThermiquesDuPays[k].PminDuPalierThermiquePendantUneHeure.assign(nbPaliers,
-                                                                                       0.);
-        problem.PaliersThermiquesDuPays[k].PminDuPalierThermiquePendantUnJour.assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k]
-          .TailleUnitaireDUnGroupeDuPalierThermique.assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k]
-          .NumeroDuPalierDansLEnsembleDesPaliersThermiques.assign(nbPaliers, 0);
+        auto& palier = problem.PaliersThermiquesDuPays[k];
 
-        problem.PaliersThermiquesDuPays[k]
-          .CoutDeDemarrageDUnGroupeDuPalierThermique.assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k].CoutDArretDUnGroupeDuPalierThermique.assign(nbPaliers,
-                                                                                       0.);
-        problem.PaliersThermiquesDuPays[k]
-          .CoutFixeDeMarcheDUnGroupeDuPalierThermique.assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k].pminDUnGroupeDuPalierThermique.assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k].PmaxDUnGroupeDuPalierThermique.assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k]
-          .DureeMinimaleDeMarcheDUnGroupeDuPalierThermique.assign(nbPaliers, 0);
-        problem.PaliersThermiquesDuPays[k]
-          .DureeMinimaleDArretDUnGroupeDuPalierThermique.assign(nbPaliers, 0);
-        problem.PaliersThermiquesDuPays[k].NomsDesPaliersThermiques.resize(nbPaliers);
-        problem.PaliersThermiquesDuPays[k].emissionFactors.assign(
+        for (auto* v: {&palier.minUpDownTime,
+                       &palier.NumeroDuPalierDansLEnsembleDesPaliersThermiques,
+                       &palier.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique,
+                       &palier.DureeMinimaleDArretDUnGroupeDuPalierThermique})
+        {
+            v->assign(nbPaliers, 0);
+        }
+
+        for (auto* v: {&palier.PminDuPalierThermiquePendantUneHeure,
+                       &palier.PminDuPalierThermiquePendantUnJour,
+                       &palier.TailleUnitaireDUnGroupeDuPalierThermique,
+                       &palier.CoutDeDemarrageDUnGroupeDuPalierThermique,
+                       &palier.CoutDArretDUnGroupeDuPalierThermique,
+                       &palier.CoutFixeDeMarcheDUnGroupeDuPalierThermique,
+                       &palier.pminDUnGroupeDuPalierThermique,
+                       &palier.PmaxDUnGroupeDuPalierThermique})
+        {
+            v->assign(nbPaliers, 0.);
+        }
+
+        palier.NomsDesPaliersThermiques.resize(nbPaliers);
+        palier.emissionFactors.assign(
           nbPaliers,
           std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX>{});
 
-        problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimise.assign(7, 0.);
-        problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParJour.assign(7, 0.);
-        problem.CaracteristiquesHydrauliques[k]
-          .ContrainteDePmaxHydrauliqueHoraire.assign(NombreDePasDeTemps, 0.);
-        problem.CaracteristiquesHydrauliques[k]
-          .ContrainteDePmaxHydrauliqueHoraireRef.assign(NombreDePasDeTemps, 0.);
+        auto& hydro = problem.CaracteristiquesHydrauliques[k];
 
-        problem.CaracteristiquesHydrauliques[k].MaxEnergieHydrauParIntervalleOptimise.assign(7, 0.);
-        problem.CaracteristiquesHydrauliques[k].MinEnergieHydrauParIntervalleOptimise.assign(7, 0.);
+        for (auto* v: {&hydro.CntEnergieH2OParIntervalleOptimise,
+                       &hydro.CntEnergieH2OParJour,
+                       &hydro.MaxEnergieHydrauParIntervalleOptimise,
+                       &hydro.MinEnergieHydrauParIntervalleOptimise,
+                       &hydro.MaxEnergiePompageParIntervalleOptimise})
+        {
+            v->assign(7, 0.);
+        }
 
-        problem.CaracteristiquesHydrauliques[k].NiveauHoraireSup.assign(NombreDePasDeTemps, 0.);
-        problem.CaracteristiquesHydrauliques[k].NiveauHoraireInf.assign(NombreDePasDeTemps, 0.);
-        problem.CaracteristiquesHydrauliques[k].ApportNaturelHoraire.assign(NombreDePasDeTemps, 0.);
-        problem.CaracteristiquesHydrauliques[k].MingenHoraire.assign(NombreDePasDeTemps, 0.);
+        for (auto* v: {&hydro.ContrainteDePmaxHydrauliqueHoraire,
+                       &hydro.ContrainteDePmaxHydrauliqueHoraireRef,
+                       &hydro.NiveauHoraireSup,
+                       &hydro.NiveauHoraireInf,
+                       &hydro.ApportNaturelHoraire,
+                       &hydro.MingenHoraire,
+                       &hydro.ContrainteDePmaxPompageHoraire})
+        {
+            v->assign(NombreDePasDeTemps, 0.);
+        }
 
-        problem.CaracteristiquesHydrauliques[k].WaterLayerValues.assign(100, 0.);
-        problem.CaracteristiquesHydrauliques[k].InflowForTimeInterval.assign(100, 0.);
-
-        problem.CaracteristiquesHydrauliques[k].MaxEnergiePompageParIntervalleOptimise.assign(7,
-                                                                                              0.);
-        problem.CaracteristiquesHydrauliques[k]
-          .ContrainteDePmaxPompageHoraire.assign(NombreDePasDeTemps, 0.);
+        for (auto* v: {&hydro.WaterLayerValues, &hydro.InflowForTimeInterval})
+        {
+            v->assign(100, 0.);
+        }
 
         problem.ReserveJMoins1[k].ReserveHoraireJMoins1.assign(NombreDePasDeTemps, 0.);
 
-        problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive.assign(NombreDePasDeTemps,
-                                                                                 0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillancePositiveCSR.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].ValeursHorairesDENS.assign(NombreDePasDeTemps,
-                                                                0.); // adq patch
-        problem.ResultatsHoraires[k].ValeursHorairesLmrViolations.assign(NombreDePasDeTemps,
-                                                                         0); // adq patch
-        problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr.assign(NombreDePasDeTemps,
-                                                                     0.); // adq patch
+        auto& resultats = problem.ResultatsHoraires[k];
 
-        problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegative.assign(NombreDePasDeTemps,
-                                                                                 0.);
-        problem.ResultatsHoraires[k].TurbinageHoraire.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].PompageHoraire.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].CoutsMarginauxHoraires.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].CoutsMarginauxHorairesCSR.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].niveauxHoraires.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].valeurH2oHoraire.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].debordementsHoraires.assign(NombreDePasDeTemps, 0.);
+        for (auto* v: {&resultats.ValeursHorairesDeDefaillancePositive,
+                       &resultats.ValeursHorairesDeDefaillancePositiveCSR,
+                       &resultats.ValeursHorairesDENS,        // adq patch
+                       &resultats.ValeursHorairesDtgMrgCsr,   // adq patch
+                       &resultats.ValeursHorairesDeDefaillanceNegative,
+                       &resultats.TurbinageHoraire,
+                       &resultats.PompageHoraire,
+                       &resultats.CoutsMarginauxHoraires,
+                       &resultats.CoutsMarginauxHorairesCSR,
+                       &resultats.niveauxHoraires,
+                       &resultats.valeurH2oHoraire,
+                       &resultats.debordementsHoraires})
+        {
+            v->assign(NombreDePasDeTemps, 0.);
+        }
 
-        problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout.resize(nbPaliers);
-        problem.ResultatsHoraires[k].ProductionThermique.resize(NombreDePasDeTemps);
+        resultats.ValeursHorairesLmrViolations.assign(NombreDePasDeTemps, 0); // adq patch
+
+        palier.PuissanceDisponibleEtCout.resize(nbPaliers);
+        resultats.ProductionThermique.resize(NombreDePasDeTemps);
         if (resEnabled)
         {
-            problem.ResultatsHoraires[k].Reserves.emplace(NombreDePasDeTemps);
-            problem.ResultatsHoraires[k].HydroUsage.resize(NombreDePasDeTemps);
+            resultats.Reserves.emplace(NombreDePasDeTemps);
+            resultats.HydroUsage.resize(NombreDePasDeTemps);
         }
 
         for (unsigned j = 0; j < nbPaliers; ++j)
         {
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .CoutHoraireDeProductionDuPalierThermique.assign(NombreDePasDeTemps, 0.);
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .PuissanceDisponibleDuPalierThermique.assign(NombreDePasDeTemps, 0.);
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .PuissanceDisponibleDuPalierThermiqueRef.assign(NombreDePasDeTemps, 0.);
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .PuissanceMinDuPalierThermique.assign(NombreDePasDeTemps, 0.);
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .PuissanceMinDuPalierThermiqueRef.assign(NombreDePasDeTemps, 0.);
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .NombreMaxDeGroupesEnMarcheDuPalierThermique.assign(NombreDePasDeTemps, 0);
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .NombreMinDeGroupesEnMarcheDuPalierThermique.assign(NombreDePasDeTemps, 0);
+            auto& puissance = palier.PuissanceDisponibleEtCout[j];
+
+            for (auto* v: {&puissance.CoutHoraireDeProductionDuPalierThermique,
+                           &puissance.PuissanceDisponibleDuPalierThermique,
+                           &puissance.PuissanceDisponibleDuPalierThermiqueRef,
+                           &puissance.PuissanceMinDuPalierThermique,
+                           &puissance.PuissanceMinDuPalierThermiqueRef})
+            {
+                v->assign(NombreDePasDeTemps, 0.);
+            }
+
+            for (auto* v: {&puissance.NombreMaxDeGroupesEnMarcheDuPalierThermique,
+                           &puissance.NombreMinDeGroupesEnMarcheDuPalierThermique})
+            {
+                v->assign(NombreDePasDeTemps, 0);
+            }
         }
         for (unsigned j = 0; j < NombreDePasDeTemps; j++)
         {
-            problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalier.assign(
-              nbPaliers,
-              0.);
-            problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
-              .NombreDeGroupesEnMarcheDuPalier.assign(nbPaliers, 0.);
-            problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
-              .NombreDeGroupesQuiDemarrentDuPalier.assign(nbPaliers, 0.);
-            problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
-              .NombreDeGroupesQuiSArretentDuPalier.assign(nbPaliers, 0.);
-            problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
-              .NombreDeGroupesQuiTombentEnPanneDuPalier.assign(nbPaliers, 0.);
+            auto& production = resultats.ProductionThermique[j];
+
+            for (auto* v: {&production.ProductionThermiqueDuPalier,
+                           &production.NombreDeGroupesEnMarcheDuPalier,
+                           &production.NombreDeGroupesQuiDemarrentDuPalier,
+                           &production.NombreDeGroupesQuiSArretentDuPalier,
+                           &production.NombreDeGroupesQuiTombentEnPanneDuPalier})
+            {
+                v->assign(nbPaliers, 0.);
+            }
             if (resEnabled)
             {
-                {
-                    auto& thermal = problem.ResultatsHoraires[k].ProductionThermique[j];
-                    thermal.ParticipationReservesDuPalier.emplace(nbThermalReserveParticipations,
-                                                                  0.);
-                    thermal.ParticipationReservesDuPalierOn.emplace(nbThermalReserveParticipations,
+                production.ParticipationReservesDuPalier.emplace(nbThermalReserveParticipations, 0.);
+                production.ParticipationReservesDuPalierOn.emplace(nbThermalReserveParticipations,
+                                                                   0.);
+                production.ParticipationReservesDuPalierOff.emplace(nbThermalReserveParticipations,
                                                                     0.);
-                    thermal.ParticipationReservesDuPalierOff.emplace(nbThermalReserveParticipations,
-                                                                     0.);
-                }
-                {
-                    auto& res = problem.ResultatsHoraires[k].Reserves.value()[j];
-                    res.ValeursHorairesInternalUnsatisfied.assign(nbReserves, 0.);
-                    res.ValeursHorairesInternalExcessReserve.assign(nbReserves, 0.);
-                    res.CoutsMarginauxHoraires.assign(nbReserves, 0.);
-                }
-                problem.ResultatsHoraires[k].HydroUsage[j].reserveParticipationOfCluster.emplace(
+
+                auto& res = resultats.Reserves.value()[j];
+                res.ValeursHorairesInternalUnsatisfied.assign(nbReserves, 0.);
+                res.ValeursHorairesInternalExcessReserve.assign(nbReserves, 0.);
+                res.CoutsMarginauxHoraires.assign(nbReserves, 0.);
+
+                resultats.HydroUsage[j].reserveParticipationOfCluster.emplace(
                   nbHydroReserveParticipations,
                   0.);
             }
@@ -568,24 +558,25 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         // Short term storage results
 
         const unsigned long nbShortTermStorage = study.areas.byIndex[k]->shortTermStorage.count();
-        problem.ResultatsHoraires[k].ShortTermStorage.resize(nbShortTermStorage);
+        resultats.ShortTermStorage.resize(nbShortTermStorage);
         for (uint sts = 0; sts < nbShortTermStorage; sts++)
         {
-            problem.ResultatsHoraires[k].ShortTermStorage[sts].injection.resize(NombreDePasDeTemps);
-            problem.ResultatsHoraires[k].ShortTermStorage[sts].withdrawal.resize(
-              NombreDePasDeTemps);
-            problem.ResultatsHoraires[k].ShortTermStorage[sts].level.resize(NombreDePasDeTemps);
-            problem.ResultatsHoraires[k].ShortTermStorage[sts].overflow.resize(NombreDePasDeTemps);
+            auto& storage = resultats.ShortTermStorage[sts];
+            for (auto* v: {&storage.injection,
+                           &storage.withdrawal,
+                           &storage.level,
+                           &storage.overflow})
+            {
+                v->resize(NombreDePasDeTemps);
+            }
         }
 
         if (resEnabled)
         {
-            problem.ResultatsHoraires[k].ShortTermStorageReserves.emplace(
-              nbSTStorageReserveParticipations);
+            resultats.ShortTermStorageReserves.emplace(nbSTStorageReserveParticipations);
             for (uint stsRes = 0; stsRes < nbSTStorageReserveParticipations; stsRes++)
             {
-                problem.ResultatsHoraires[k]
-                  .ShortTermStorageReserves.value()[stsRes]
+                resultats.ShortTermStorageReserves.value()[stsRes]
                   .reserveParticipationOfCluster.emplace(NombreDePasDeTemps, 0.);
             }
         }
