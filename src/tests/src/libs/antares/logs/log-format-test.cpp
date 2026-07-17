@@ -171,9 +171,9 @@ BOOST_FIXTURE_TEST_CASE(no_ansi_escape_bytes_in_file, LogsUnderTest)
 
 BOOST_FIXTURE_TEST_CASE(thread_number_appends_dash_suffix_to_application_name, LogsUnderTest)
 {
-    Yuni::Logs::threadNumber() = 42;
+    Logs::threadNumber() = 42;
     logs.info() << "with thread";
-    Yuni::Logs::threadNumber().reset();
+    Logs::threadNumber().reset();
     logs.info() << "without thread";
 
     const auto lines = fileLines();
@@ -276,18 +276,9 @@ BOOST_AUTO_TEST_SUITE(callback_contract)
 
 namespace
 {
-// NOTE: the IEventObserver base is required by the current (Yuni::Event) callback
-// implementation to connect a member function; it becomes unnecessary once the
-// logging backend stops using Yuni events.
 struct CallbackRecorder final
-    : public Yuni::IEventObserver<CallbackRecorder, Yuni::Policy::SingleThreaded>
 {
     std::vector<std::pair<int, std::string>> received;
-
-    ~CallbackRecorder() override
-    {
-        destroyBoundEvents();
-    }
 
     void onLogMessage(int level, const std::string& message)
     {

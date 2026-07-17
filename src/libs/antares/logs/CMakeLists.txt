@@ -19,10 +19,6 @@ if (WIN32)
     find_library(WS2_32_LIBRARY ws2_32)
     target_link_libraries(${PROJ} PUBLIC wsock32 ws2_32)
 endif ()
-target_link_libraries(${PROJ}
-        PUBLIC
-        yuni-static-core
-)
 
 target_include_directories(${PROJ}
         PUBLIC

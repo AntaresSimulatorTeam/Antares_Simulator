@@ -295,12 +295,12 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
 
     // Do not display useless messages
     logs.info() << "  :: analyzing the study data";
-    logs.verbosityLevel = Logs::Verbosity::Warning::level;
+    logs.verbosityLevel = Antares::Logs::Verbosity::Warning::level;
 
     if (arealist->loadListFromFile(buffer.c_str()))
     {
         // restoring standard verbosity level
-        logs.verbosityLevel = Logs::Verbosity::Debug::level;
+        logs.verbosityLevel = Antares::Logs::Verbosity::Debug::level;
 
         // Browse all areas
         auto end = arealist->areas.end();
@@ -311,7 +311,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
 
             {
                 // Do not display useless messages
-                logs.verbosityLevel = Logs::Verbosity::Warning::level;
+                logs.verbosityLevel = Antares::Logs::Verbosity::Warning::level;
                 // Load all thermal clusters
                 buffer.clear() << infos->folder << "/input/thermal/clusters/" << area->id;
                 if (not area->thermal.list.loadFromFolder(buffer.c_str(), area))
@@ -330,7 +330,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
                 }
 
                 // restoring standard verbosity level
-                logs.verbosityLevel = Logs::Verbosity::Debug::level;
+                logs.verbosityLevel = Antares::Logs::Verbosity::Debug::level;
             }
 
             // Exclude
@@ -341,7 +341,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
             // Interconnections
             {
                 // Do not display useless messages
-                logs.verbosityLevel = Logs::Verbosity::Warning::level;
+                logs.verbosityLevel = Antares::Logs::Verbosity::Warning::level;
                 // load all links
                 buffer.clear() << infos->folder << "/input/links/" << area->id;
                 if (not AreaLinksLoadFromFolder(*study, arealist, area, buffer.c_str()))
@@ -351,7 +351,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
                     return false;
                 }
                 // restoring standard verbosity level
-                logs.verbosityLevel = Logs::Verbosity::Debug::level;
+                logs.verbosityLevel = Antares::Logs::Verbosity::Debug::level;
             }
             listOfFilesAnDirectoriesToKeepForLinks(p, area, buffer);
             area->clearAllLinks();
@@ -365,7 +365,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
     }
 
     // restoring standard verbosity level
-    logs.verbosityLevel = Logs::Verbosity::Debug::level;
+    logs.verbosityLevel = Antares::Logs::Verbosity::Debug::level;
 
     delete arealist;
 

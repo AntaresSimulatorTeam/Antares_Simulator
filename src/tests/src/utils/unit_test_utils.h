@@ -6,19 +6,20 @@
 #include <set>
 #include <string>
 
-#include "yuni/core/event/interfaces.h"
-
 std::function<bool(const std::exception&)> checkMessage(std::string expected_message);
 std::function<bool(const std::exception&)> containsMessage(std::string expected_message);
 
 namespace Antares::UnitTests
 {
-class CaptureAntaresLogs
-    : public Yuni::IEventObserver<CaptureAntaresLogs, Yuni::Policy::SingleThreaded>
+class CaptureAntaresLogs final
 {
 public:
     CaptureAntaresLogs();
-    ~CaptureAntaresLogs() override;
+    ~CaptureAntaresLogs();
+    CaptureAntaresLogs(const CaptureAntaresLogs&) = delete;
+    CaptureAntaresLogs& operator=(const CaptureAntaresLogs&) = delete;
+    CaptureAntaresLogs(CaptureAntaresLogs&&) = delete;
+    CaptureAntaresLogs& operator=(CaptureAntaresLogs&&) = delete;
 
     const std::set<std::string>& getFatals() const;
     const std::set<std::string>& getErrors() const;
