@@ -11,7 +11,7 @@ std::function<bool(const std::exception&)> containsMessage(std::string expected_
 
 namespace Antares::UnitTests
 {
-class CaptureAntaresLogs final
+class CaptureAntaresLogs
 {
 public:
     CaptureAntaresLogs();
