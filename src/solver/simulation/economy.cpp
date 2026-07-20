@@ -202,7 +202,7 @@ bool Economy::year(Variable::State& state,
         hourInTheYear += nbHoursInAWeek;
     }
 
-    durationCollector("simulation_table_export") << [&]()
+    durationCollector("simulation_table_export") << [this, &state, &simulationTables]()
     {
         if (simulationTables && !study.folderOutput.empty())
         {
