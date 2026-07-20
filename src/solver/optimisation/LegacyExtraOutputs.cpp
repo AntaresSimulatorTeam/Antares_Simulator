@@ -167,8 +167,8 @@ void LegacyExtraOutputEmitter::linkOutputs(uint32_t interco, int pdt)
 {
     const uint32_t origin = problemeHebdo_.PaysOrigineDeLInterconnexion[interco];
     const uint32_t destination = problemeHebdo_.PaysExtremiteDeLInterconnexion[interco];
-    const auto& o = problemeHebdo_.NomsDesPays[origin];
-    const auto& d = problemeHebdo_.NomsDesPays[destination];
+    const std::string o = problemeHebdo_.NomsDesPays[origin];
+    const std::string d = problemeHebdo_.NomsDesPays[destination];
     const auto& [a1, a2] = (o < d) ? std::tie(o, d) : std::tie(d, o);
     const std::string link = std::string(a1) + "_" + std::string(a2) + "_link";
 

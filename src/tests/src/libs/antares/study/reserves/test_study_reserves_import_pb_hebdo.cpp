@@ -9,10 +9,8 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/unit_test_suite.hpp>
 
-#include <antares/solver/simulation/forTestsOnlySimCalculEco.h>
 #include <antares/solver/simulation/sim_structure_probleme_economique.h>
 #include <antares/solver/simulation/simulation.h>
-#include "antares/study/area/forTestsOnlyList.h"
 #include "antares/study/study.h"
 
 using namespace Antares::Data;
