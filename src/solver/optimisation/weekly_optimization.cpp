@@ -19,10 +19,6 @@ WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
     writer_(writer),
     simulationObserver_(simulationObserver)
 {
-    if (writeSimuTable)
-    {
-        simulationTables_ = std::make_unique<OptimisationsSimulationTable>();
-    }
 }
 
 void WeeklyOptimization::solve()
