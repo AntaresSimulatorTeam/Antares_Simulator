@@ -21,7 +21,7 @@ the [modeler outputs page](../modeler/03-outputs.md), in the same output folder 
 One simulation table for each optimization step (called `simulation_table--optim-nb-X`) will be generated.
 
 Simulation tables are **not** written by default: set [`simulation-table = true`](04-parameters.md#simulation-table) in
-the `[output]` section of `generaldata.ini` (or run the solver with `--simulation-table`) to get them. The two families
+the `[output]` section of `generaldata.ini` (or run the solver with `--output=simulation-table`) to get them. The two families
 of results are independent, so a hybrid study can write the Monte-Carlo results only, the simulation tables only
 ([`monte-carlo-results = false`](04-parameters.md#monte-carlo-results)), or both.
 

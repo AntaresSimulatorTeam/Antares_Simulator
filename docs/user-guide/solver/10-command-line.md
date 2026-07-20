@@ -34,9 +34,7 @@ hide:
 | -g, --generators-only    | Run the time-series generators only                                                               |
 | -c, --comment-file=VALUE | Specify the file to copy as comments of the simulation                                            |
 | -f, --force              | Ignore all warnings at loading                                                                    |
-| --no-output              | Do not write the results in the output folder                                                     |
-| --no-monte-carlo-results | Do not write the [Monte-Carlo results](04-parameters.md#monte-carlo-results), whatever the study says |
-| --simulation-table       | Write the [simulation tables](04-parameters.md#simulation-table), whatever the study says         |
+| --output=VALUE           | Select which output families to write: `all`, `none`, `monte-carlo`, `simulation-table`. Default: follow the study's [output] settings |
 | -y, --year=VALUE         | Override the [number of MC years](04-parameters.md#nbyears)                                       |
 | --year-by-year           | Force the [writing the result output for each year](04-parameters.md#year-by-year) (economy only) |
 | --derated                | Force the [derated](04-parameters.md#derated) mode                                                |

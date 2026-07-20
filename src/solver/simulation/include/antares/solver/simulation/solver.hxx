@@ -244,7 +244,7 @@ inline ISimulation<ImplementationType>::ISimulation(
     logs.info() << "Allocating resources...";
 
     if (pYearByYear
-        && (settings.noOutput || settings.tsGeneratorsOnly
+        && (study.parameters.noOutput || settings.tsGeneratorsOnly
             || !study.parameters.writeMonteCarloResults))
     {
         pYearByYear = false;
@@ -343,7 +343,7 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
     // this is the case e.g if synthesis == true (writing mc-all)
     // Don't restart the queue if the writer doesn't need it
 
-    assert(!settings.noOutput);
+    assert(!study.parameters.noOutput);
     assert(!settings.tsGeneratorsOnly);
 
     if (!pNbYearsReallyPerformed)

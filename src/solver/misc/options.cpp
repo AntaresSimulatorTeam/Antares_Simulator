@@ -55,19 +55,11 @@ void addParameterOptions(Yuni::GetOpt::Parser& parser,
                "comment-file",
                "Specify the file to copy as comments of the simulation");
     parser.addFlag(settings.ignoreLoadingErrors, 'f', "force", "Ignore all errors at loading");
-    parser.addFlag(settings.noOutput,
-                   ' ',
-                   "no-output",
-                   "Do not write the results in the output folder");
-    parser.addFlag(settings.noMonteCarloResults,
-                   ' ',
-                   "no-monte-carlo-results",
-                   "Do not write the Monte-Carlo results (mc-all, mc-ind), whatever the study "
-                   "says");
-    parser.addFlag(settings.forceSimulationTable,
-                   ' ',
-                   "simulation-table",
-                   "Write the simulation tables, whatever the study says");
+    parser.add(settings.outputSelection,
+               ' ',
+               "output",
+               "Select which output families to write: all, none, monte-carlo, "
+               "simulation-table (default: follow the study's [output] settings)");
     parser.add(options.nbYears, 'y', "year", "Override the number of MC years");
     parser.addFlag(options.forceYearByYear,
                    ' ',
@@ -262,7 +254,7 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Antares::Data::StudyL
 
     options.checkForceSimulationMode();
 
-    if (settings.noOutput && settings.forceZipOutput)
+    if (settings.outputSelection == "none" && settings.forceZipOutput)
     {
         throw Error::IncompatibleOutputOptions("no-output and zip-output options are incompatible");
     }
@@ -305,10 +297,9 @@ void Settings::reset()
     ignoreLoadingErrors = false;
     ignoreConstraints = false;
     tsGeneratorsOnly = false;
-    noOutput = false;
-    noMonteCarloResults = false;
-    forceSimulationTable = false;
     forceZipOutput = false;
+
+    outputSelection.clear();
 
     solverOptions = Antares::Solver::Optimization::CmdLineOptimOptions{};
 }

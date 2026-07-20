@@ -364,7 +364,7 @@ def build_antares_solver_command(context):
     if context.parallel:
         command.append('--force-parallel=4')
     if getattr(context, "write_simu_tables", False):
-        command.append('--simulation-table')
+        command.append('--output=simulation-table')
     return command
 
 

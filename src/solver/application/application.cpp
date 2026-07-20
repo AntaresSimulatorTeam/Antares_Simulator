@@ -128,7 +128,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
 
     // Force some options
-    options.prepareOutput = !pSettings.noOutput;
+    options.prepareOutput = pSettings.outputSelection != "none";
     options.ignoreConstraints = pSettings.ignoreConstraints;
 
     // Load the study from a folder
@@ -153,17 +153,34 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         }
 
         // no output ?
-        study.parameters.noOutput = pSettings.noOutput;
+        // study.parameters.noOutput = pSettings.noOutput;
 
         // Output selection, the command line overrides the study
-        if (pSettings.noMonteCarloResults)
+        if (pSettings.outputSelection == "all")
         {
-            study.parameters.writeMonteCarloResults = false;
+            study.parameters.writeMonteCarloResults = true;
+            study.parameters.simulationTable = true;
         }
 
-        if (pSettings.forceSimulationTable)
+        else if (pSettings.outputSelection == "none")
         {
+            study.parameters.noOutput = true;
+        }
+        else if (pSettings.outputSelection == "monte-carlo")
+        {
+            study.parameters.writeMonteCarloResults = true;
+            study.parameters.simulationTable = false;
+        }
+
+        else if (pSettings.outputSelection == "simulation-table")
+        {
+            study.parameters.writeMonteCarloResults = false;
             study.parameters.simulationTable = true;
+        }
+        else if (!pSettings.outputSelection.empty())
+        {
+            throw FatalError("Invalid value for --output: '" + pSettings.outputSelection
+                             + "' (expected all, none, monte-carlo or simulation-table)");
         }
 
         if (!study.parameters.noOutput && !study.parameters.writeMonteCarloResults
@@ -215,7 +232,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     logs.info();
 
-    if (pSettings.noOutput)
+    if (pSettings.outputSelection == "none")
     {
         logs.info() << "The output has been disabled.";
         logs.info();
@@ -254,7 +271,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
 
     // Checking for filename length limits
-    if (!pSettings.noOutput)
+    if (pSettings.outputSelection != "none")
     {
         if (!study.checkForFilenameLimits())
         {

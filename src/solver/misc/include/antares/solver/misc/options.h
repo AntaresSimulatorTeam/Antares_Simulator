@@ -38,12 +38,8 @@ public:
     //! Run the TS generator only
     bool tsGeneratorsOnly = false;
 
-    //! True to disable the writing in the output folder
-    bool noOutput = false;
-
     //! Override the study's output selection ([output] monte-carlo-results / simulation-table)
-    bool noMonteCarloResults = false;
-    bool forceSimulationTable = false;
+    std::string outputSelection;
 
     // In case we print simulation tables, do we print it in csv or parquet ?
     bool parquetFmtForSimuTables = false;
