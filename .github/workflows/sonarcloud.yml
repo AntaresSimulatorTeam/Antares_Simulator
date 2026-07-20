@@ -156,12 +156,28 @@ jobs:
         cd _build
         ctest -C Release --output-on-failure -R "^unfeasible$"
 
-    - name: Run short-tests
+    - name: Run short-tests-1
       if: ${{ !cancelled() }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{ env.SIMTEST }}
-        batch-name: short-tests
+        batch-name: short-tests-1
+        os: ${{ env.os }}
+
+    - name: Run short-tests-2
+      if: ${{ !cancelled() }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{ env.SIMTEST }}
+        batch-name: short-tests-2
+        os: ${{ env.os }}
+
+    - name: Run short-tests-3
+      if: ${{ !cancelled() }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{ env.SIMTEST }}
+        batch-name: short-tests-3
         os: ${{ env.os }}
 
     - name: Run tests on adequacy patch (CSR)
