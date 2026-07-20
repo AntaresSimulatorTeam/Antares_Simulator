@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE(optimization_range_set_to_week)
 // settings.settings.outputSelection == "none" && settings.forceZipOutput
 BOOST_AUTO_TEST_CASE(output_settings_are_incompatible___exception_raised)
 {
-    settings.outputSelection == "none";
+    settings.outputSelection = "none";
     settings.forceZipOutput = true;
     std::string err_msg = "no-output and zip-output options are incompatible";
     BOOST_CHECK_EXCEPTION(checkAndCorrectSettingsAndOptions(settings, options),
