@@ -23,7 +23,6 @@ public:
     }
 
     void setAreaTSnumber(const uint year, uint value);
-    uint get(const uint year) const;
     bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;
 
@@ -36,15 +35,6 @@ private:
     //! The attached area, if any
     const Area* pArea = nullptr;
 };
-
-inline uint ReservesNeedTSNumberData::get(const uint year) const
-{
-    if (year < pTSNumberRules.height)
-    {
-        return pTSNumberRules[0][year];
-    }
-    return 0;
-}
 
 inline CString<512, false> ReservesNeedTSNumberData::get_prefix() const
 {
