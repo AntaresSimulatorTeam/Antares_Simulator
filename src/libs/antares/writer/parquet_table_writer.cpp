@@ -46,9 +46,19 @@ std::shared_ptr<arrow::Table> makeArrowTable(const IO::Outputs::SimulationTable&
 
 ParquetTableWriter::ParquetTableWriter(const std::filesystem::path& filePath,
                                        TableFormat tableFormat):
-    output_file_(filePath),
     table_format_(tableFormat)
 {
+    auto adjustedPath = filePath;
+    if (tableFormat == TableFormat::CSV)
+    {
+        adjustedPath.replace_extension(".csv");
+    }
+    else
+    {
+        adjustedPath.replace_extension(".parquet");
+    }
+    output_file_ = adjustedPath;
+
     auto p = output_file_.parent_path();
     if (!p.empty())
     {
@@ -65,8 +75,21 @@ void ParquetTableWriter::writeParquet(const fs::path& file_path,
     // Open output file
     auto outfile = throwOnResultKO(arrow::io::FileOutputStream::Open(file_path.string()));
 
+    // Configure Parquet writer properties
+    auto writer_props = parquet::WriterProperties::Builder()
+                          .compression(arrow::Compression::SNAPPY)
+                          ->version(parquet::ParquetVersion::PARQUET_2_6)
+                          ->build();
+
+    auto arrow_props = parquet::ArrowWriterProperties::Builder().store_schema()->build();
+
     // Write as Parquet
-    throwOnStatusKO(parquet::arrow::WriteTable(*table, arrow::default_memory_pool(), outfile));
+    throwOnStatusKO(parquet::arrow::WriteTable(*table,
+                                               arrow::default_memory_pool(),
+                                               outfile,
+                                               /*chunk_size=*/1024,
+                                               writer_props,
+                                               arrow_props));
 }
 
 void ParquetTableWriter::writeCsv(const fs::path& file_path,
@@ -76,6 +99,7 @@ void ParquetTableWriter::writeCsv(const fs::path& file_path,
 
     // Configure CSV writer options
     auto csv_options = arrow::csv::WriteOptions::Defaults();
+    // TODO prevent special characters "\n", ",", etc. in component & variable names
     csv_options.quoting_style = arrow::csv::QuotingStyle::None;
     csv_options.quoting_header = arrow::csv::QuotingStyle::None;
 
@@ -95,14 +119,14 @@ void ParquetTableWriter::writeTable(const IO::Outputs::SimulationTable& simuTabl
 
     switch (table_format_)
     {
-        case TableFormat::Parquet:
-            writeParquet(output_file_, simuTable);
-            break;
-        case TableFormat::CSV:
-            writeCsv(output_file_, simuTable);
-            break;
-        default:
-            throw std::invalid_argument("ParquetTableWriter: unknown table format");
+    case TableFormat::Parquet:
+        writeParquet(output_file_, simuTable);
+        break;
+    case TableFormat::CSV:
+        writeCsv(output_file_, simuTable);
+        break;
+    default:
+        throw std::invalid_argument("ParquetTableWriter: unknown table format");
     }
 }
 

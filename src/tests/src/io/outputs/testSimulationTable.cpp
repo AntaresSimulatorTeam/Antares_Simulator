@@ -37,8 +37,8 @@
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/writer/LegacySimulationTablesWriter.h"
 #include "antares/writer/in_memory_writer.h"
-
 #include "antares/writer/parquet_table_writer.h"
+
 #include "UtilMocks.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
@@ -260,8 +260,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
     tables.secondOptimSimulationTable()->addEntry(entry2);
 
     auto tempDir = std::filesystem::temp_directory_path();
-    LegacySimulationTablesWriter legacyWriter(tempDir, 1 /* year */,
-                                              TableFormat::CSV);
+    LegacySimulationTablesWriter legacyWriter(tempDir, 1 /* year */, TableFormat::CSV);
     legacyWriter.write(tables);
 
     // Check that both CSV files were created
@@ -320,8 +319,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_ParquetFormat_CreatesCorrectFiles)
     tables.secondOptimSimulationTable()->addEntry(entry2);
 
     auto tempDir = std::filesystem::temp_directory_path();
-    LegacySimulationTablesWriter legacyWriter(tempDir, 1 /* year */,
-                                              TableFormat::Parquet);
+    LegacySimulationTablesWriter legacyWriter(tempDir, 1 /* year */, TableFormat::Parquet);
     legacyWriter.write(tables);
 
     // Check that both Parquet files were created
@@ -337,7 +335,8 @@ BOOST_AUTO_TEST_CASE(WriteTo_ParquetFormat_CreatesCorrectFiles)
         PARQUET_ASSIGN_OR_THROW(infile, arrow::io::ReadableFile::Open(file1.string()));
 
         std::unique_ptr<parquet::arrow::FileReader> reader;
-        PARQUET_ASSIGN_OR_THROW(reader, parquet::arrow::OpenFile(infile, arrow::default_memory_pool()));
+        PARQUET_ASSIGN_OR_THROW(reader,
+                                parquet::arrow::OpenFile(infile, arrow::default_memory_pool()));
 
         auto table_or = reader->ReadTable();
         BOOST_CHECK(table_or.ok());
@@ -353,7 +352,8 @@ BOOST_AUTO_TEST_CASE(WriteTo_ParquetFormat_CreatesCorrectFiles)
         PARQUET_ASSIGN_OR_THROW(infile, arrow::io::ReadableFile::Open(file2.string()));
 
         std::unique_ptr<parquet::arrow::FileReader> reader;
-        PARQUET_ASSIGN_OR_THROW(reader, parquet::arrow::OpenFile(infile, arrow::default_memory_pool()));
+        PARQUET_ASSIGN_OR_THROW(reader,
+                                parquet::arrow::OpenFile(infile, arrow::default_memory_pool()));
 
         auto table_or = reader->ReadTable();
         BOOST_CHECK(table_or.ok());
@@ -815,8 +815,6 @@ BOOST_FIXTURE_TEST_CASE(UnicodeCharacters_InNames, SimulationTableFileFixture)
 BOOST_FIXTURE_TEST_CASE(CSVEscaping_SpecialCharacters, SimulationTableFileFixture)
 {
     SimulationTable table;
-    // Arrow CSV with QuotingStyle::None throws on structural characters (commas, quotes)
-    // Test with safe special characters
     SimulationTableEntry entry{.block = 1,
                                .component = "comp@with@at",
                                .output = "var#with#hash",
@@ -1355,8 +1353,6 @@ BOOST_FIXTURE_TEST_CASE(LargeValues_HandledCorrectly, SimulationTableFileFixture
 BOOST_FIXTURE_TEST_CASE(SpecialCharacters_InComponentNames, SimulationTableFileFixture)
 {
     SimulationTable table;
-    // Arrow CSV with QuotingStyle::None throws on structural characters (commas, quotes)
-    // So we test with characters that are safe for unquoted CSV
     SimulationTableEntry entry{.block = 1,
                                .component = "comp-with-dashes",
                                .output = "var_with_underscores",

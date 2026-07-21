@@ -6,7 +6,6 @@
 #include <antares/exception/RuntimeError.hpp>
 
 #include "antares/writer/parquet_table_writer.h"
-#include "antares/writer/table_writer_factory.h"
 
 namespace fs = std::filesystem;
 using namespace Antares::IO::Outputs;
@@ -53,7 +52,7 @@ void LegacySimulationTablesWriter::writeForOptim(const SimulationTable* table,
                                                  unsigned optim_number)
 {
     auto filepath = makeSimuTableFilePath(folder_, year_, optim_number);
-    auto writer = makeTableWriter(tableFormat_, filepath);
+    auto writer = std::make_unique<ParquetTableWriter>(filepath, tableFormat_);
     writer->writeTable(*table);
 }
 
