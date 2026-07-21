@@ -42,11 +42,8 @@ std::shared_ptr<arrow::Table> makeArrowTable(const IO::Outputs::SimulationTable&
     return arrow::Table::Make(schema, std::move(arrow_columns));
 }
 
-} // anonymous namespace
-
-ParquetTableWriter::ParquetTableWriter(const std::filesystem::path& filePath,
-                                       TableFormat tableFormat):
-    table_format_(tableFormat)
+[[nodiscard]] std::filesystem::path replaceExtension(const std::filesystem::path& filePath,
+                                                     TableFormat tableFormat)
 {
     auto adjustedPath = filePath;
     if (tableFormat == TableFormat::CSV)
@@ -57,8 +54,16 @@ ParquetTableWriter::ParquetTableWriter(const std::filesystem::path& filePath,
     {
         adjustedPath.replace_extension(".parquet");
     }
-    output_file_ = adjustedPath;
+    return adjustedPath;
+}
 
+} // anonymous namespace
+
+ParquetTableWriter::ParquetTableWriter(const std::filesystem::path& filePath,
+                                       TableFormat tableFormat):
+    output_file_(replaceExtension(filePath, tableFormat)),
+    table_format_(tableFormat)
+{
     auto p = output_file_.parent_path();
     if (!p.empty())
     {
