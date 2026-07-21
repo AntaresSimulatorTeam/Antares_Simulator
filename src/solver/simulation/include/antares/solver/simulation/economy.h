@@ -80,6 +80,12 @@ private:
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
 }; // class Economy
 
+// ISimulation<Economy> is heavy to instantiate (run/loopThroughYears, the
+// year-job/std::function chain, and the whole Variable output container). It is
+// used by ~10 TUs; declaring it extern here concentrates the single definition
+// in economy.cpp instead of re-instantiating it in every one of them.
+extern template class ISimulation<Economy>;
+
 } // namespace Antares::Solver::Simulation
 
 #endif // __SOLVER_SIMULATION_ECONOMY_H__

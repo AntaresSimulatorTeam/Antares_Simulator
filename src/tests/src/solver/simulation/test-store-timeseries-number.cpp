@@ -19,6 +19,7 @@
 #include "antares/solver/simulation/BindingConstraintsTimeSeriesNumbersWriter.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
 
+using namespace Antares;
 using namespace Antares::Solver;
 using namespace Antares::Data;
 namespace fs = std::filesystem;
@@ -33,7 +34,6 @@ void initializeStudy(Study& study)
 
     study.parameters.renewableGeneration.toAggregated(); // Default
 
-    study.parameters.intraModal = 0;
     study.parameters.interModal = 0;
 }
 

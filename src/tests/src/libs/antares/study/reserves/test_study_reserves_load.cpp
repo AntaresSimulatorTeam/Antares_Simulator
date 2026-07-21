@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "antares/antares/constants.h"
 #define BOOST_TEST_MODULE study
 #include <algorithm>
 #include <files-system.h>
@@ -14,20 +13,19 @@
 #include <antares/logs/logs.h>
 #include <antares/solver/simulation/sim_structure_probleme_economique.h>
 #include <antares/solver/simulation/simulation.h>
-#include "antares/study/area/forTestsOnlyList.h"
 #include "antares/study/study.h"
 
 using Antares::UnitTests::CaptureAntaresLogs;
 using namespace Antares::Data;
 
-void addThermalCluster(Data::Area* area, const std::string& name)
+void addThermalCluster(Area* area, const std::string& name)
 {
     auto c = std::make_shared<ThermalCluster>(area);
     c->setName(name);
     area->thermal.list.addToCompleteList(c);
 }
 
-void addShortTermStorage(Data::Area* area, const std::string& name)
+void addShortTermStorage(Area* area, const std::string& name)
 {
     ShortTermStorage::STStorageCluster cluster;
     cluster.properties.name = name;
@@ -1119,9 +1117,10 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_file_missing_needs,
   - name: ReserveUp
 )";
     file.close();
-    accessForTests::loadReservesParameters(studyPath, *areaA);
-    BOOST_CHECK(getErrors().contains("I/O Error: not found: '"
-                                     + (studyPath / "reserves" / "a" / "reserveup.txt'").string()));
+    BOOST_CHECK_EXCEPTION(
+      Antares::Data::loadReservesParameters(studyPath, *areaA),
+      std::runtime_error,
+      checkMessage("Could not open " + (studyPath / "reserves" / "a" / "reserveup.txt").string()));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_minimal, OneProblemWithoutReservesOneAreaWithLogger)
@@ -1141,7 +1140,7 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_minimal, OneProblemWithoutReservesOn
     }
     fileNeeds.close();
     BOOST_CHECK_EQUAL(areaA->allCapacityReservations.has_value(), false);
-    accessForTests::loadReservesParameters(studyPath, *areaA);
+    Antares::Data::loadReservesParameters(studyPath, *areaA);
     BOOST_CHECK_EQUAL(areaA->allCapacityReservations.has_value(), true);
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
@@ -1192,7 +1191,7 @@ global-parameters:
     std::ofstream fileNeeds(studyPath / "reserves" / "a" / "reserveup.txt");
     fileNeeds << "\n";
     fileNeeds.close();
-    accessForTests::loadReservesParameters(studyPath, *areaA);
+    Antares::Data::loadReservesParameters(studyPath, *areaA);
 
     BOOST_CHECK_EQUAL(getErrors().size(), 1);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
@@ -1222,7 +1221,7 @@ global-parameters:
         fileNeeds << "1\n";
     }
     fileNeeds.close();
-    accessForTests::loadReservesParameters(studyPath, *areaA);
+    Antares::Data::loadReservesParameters(studyPath, *areaA);
 
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 2);
@@ -1270,7 +1269,7 @@ reserves:
         fileNeedsDown << "0\n";
     }
     fileNeedsDown.close();
-    accessForTests::loadReservesParameters(studyPath, *areaA);
+    Antares::Data::loadReservesParameters(studyPath, *areaA);
 
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
@@ -1347,7 +1346,7 @@ global-parameters:
 
     std::ofstream fileNeedsDown(studyPath / "reserves" / "a" / "reservedown.txt");
     fileNeedsDown.close();
-    accessForTests::loadReservesParameters(studyPath, *areaA);
+    Antares::Data::loadReservesParameters(studyPath, *areaA);
     BOOST_CHECK_EQUAL(getErrors().size(), 7);
     BOOST_CHECK(
       getErrors().contains("A : invalid maxGlobalEnergyActivationRatio down can not be negative"));
@@ -1393,7 +1392,7 @@ global-parameters:
 
     std::ofstream fileNeedsDown(studyPath / "reserves" / "a" / "reservedown.txt");
     fileNeedsDown.close();
-    accessForTests::loadReservesParameters(studyPath, *areaA);
+    Antares::Data::loadReservesParameters(studyPath, *areaA);
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 10);
     BOOST_CHECK(getWarnings().contains("A : invalid type for reserve ReserveUp"));
@@ -1429,7 +1428,7 @@ global-parameters:
 
     std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "reserveup.txt");
     fileNeedsUp.close();
-    accessForTests::loadReservesParameters(studyPath, *areaA);
+    Antares::Data::loadReservesParameters(studyPath, *areaA);
     BOOST_CHECK_EQUAL(getErrors().size(), 1);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
     BOOST_CHECK(getErrors().contains("A : reserve name already exists for reserve ReserveUp"));
@@ -1453,7 +1452,7 @@ BOOST_FIXTURE_TEST_CASE(test_negative_value, CaptureAntaresLogs)
 BOOST_FIXTURE_TEST_CASE(test_validateCapacityReservations_noNegative,
                         OneProblemWithReservesOneAreaWithLogger)
 {
-    accessForTests::validateCapacityReservations(*areaA);
+    Antares::Data::validateCapacityReservations(*areaA);
 
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
@@ -1466,7 +1465,7 @@ BOOST_FIXTURE_TEST_CASE(test_validateCapacityReservations_OneNegative,
       .areaCapacityReservations.at("reserveup")
       .powerActivationRatio
       = -1;
-    accessForTests::validateCapacityReservations(*areaA);
+    Antares::Data::validateCapacityReservations(*areaA);
 
     BOOST_CHECK_EQUAL(getErrors().size(), 1);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);

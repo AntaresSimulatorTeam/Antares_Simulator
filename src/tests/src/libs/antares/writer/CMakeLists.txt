@@ -6,6 +6,7 @@ include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 add_boost_test(test-writer
   SRC test_writer.cpp
   LIBS
+  Antares::concurrency
   Antares::result_writer
   test_utils_unit
   MINIZIP::minizip)

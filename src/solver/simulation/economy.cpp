@@ -67,7 +67,7 @@ bool Economy::simulationBegin()
                                             numSpace);
             if (study.parameters.include.reserves)
             {
-                study.runtime.initializeReservesIndexMaps(study, pProblemesHebdo[numSpace]);
+                buildReserveIndexMaps(study, pProblemesHebdo[numSpace]);
             }
 
             weeklyOptProblems_.emplace_back(study.parameters.optOptions,
@@ -241,5 +241,9 @@ void Economy::simulationEnd()
         ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
     }
 }
+
+// Single definition of ISimulation<Economy> for the whole build; every other TU
+// uses the extern-template declaration in economy.h.
+template class ISimulation<Economy>;
 
 } // namespace Antares::Solver::Simulation

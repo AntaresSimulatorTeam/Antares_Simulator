@@ -38,7 +38,9 @@ YmlModel::Library loadSingleLibrary(const fs::path& filePath)
 
     try
     {
-        return YmlModel::Parser::parse(libraryStr);
+        auto lib = YmlModel::Parser::parse(libraryStr);
+        lib.filename = filePath.string();
+        return lib;
     }
     catch (const YAML::Exception& e)
     {

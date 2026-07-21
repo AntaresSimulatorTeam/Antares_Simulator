@@ -5,6 +5,7 @@
 
 #include <cmath>
 
+#include <antares/solver/simulation/reserve-index-maps.h>
 #include <antares/study/study.h>
 #include "antares/solver/variable/variable.h"
 
@@ -160,8 +161,7 @@ void State::initFromShortTermStorageClusterIndex(const uint clusterAreaWideIndex
              STStorageCluster->reserveParticipationContainer.value().getReservesParticipations())
         {
             double participation = hourlyResults->ShortTermStorageReserves
-                                     .value()[study.runtime.reserveParticipationIndexMaps.value()
-                                                .at(area->id)
+                                     .value()[study.reserveMaps->participationIndexMaps.at(area->id)
                                                 .STStorageClusters.left.at(
                                                   std::make_pair(resID, STStorageCluster->id))]
                                      .reserveParticipationOfCluster.value()[hourInTheWeek];
@@ -196,14 +196,12 @@ void State::initFromHydro()
         {
             double participation = hourlyResults->HydroUsage[hourInTheWeek]
                                      .reserveParticipationOfCluster
-                                     .value()[study.runtime.reserveParticipationIndexMaps.value()
-                                                .at(area->id)
+                                     .value()[study.reserveMaps->participationIndexMaps.at(area->id)
                                                 .Hydro.left.at(resID)];
             resData.HydroReserveParticipationCostForYear[hourInTheYear]
               += participation * Hydro.reserveParticipationContainer.value().reserveCost(resID);
 
-            resData.reserveParticipationPerHydroForYear[hourInTheYear]["Hydro"][resID]
-              += participation;
+            resData.reserveParticipationPerHydroForYear[hourInTheYear][resID] += participation;
         }
     }
 }
@@ -292,8 +290,7 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
         for (const auto& [reserveID, reserveParticipation]:
              thermalCluster->reserveParticipationContainer.value().getReservesParticipations())
         {
-            int reserveParticipationIdx = study.runtime.reserveParticipationIndexMaps.value()
-                                            .at(area->id)
+            int reserveParticipationIdx = study.reserveMaps->participationIndexMaps.at(area->id)
                                             .thermalClusters.left.at(
                                               std::make_pair(reserveID, thermalCluster->id()));
             if (reserveParticipationIdx != -1)

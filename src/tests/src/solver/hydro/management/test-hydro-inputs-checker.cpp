@@ -11,6 +11,7 @@
 #include "antares/solver/hydro/management/HydroErrorsCollector.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 
+using namespace Antares;
 using namespace Antares::Solver;
 using namespace Antares::Data;
 
@@ -21,7 +22,9 @@ struct HydroInputCheckerFixture
     HydroInputCheckerFixture& operator=(const HydroInputCheckerFixture& f) = delete;
     HydroInputCheckerFixture& operator=(const HydroInputCheckerFixture&& f) = delete;
 
-    HydroInputCheckerFixture()
+    HydroInputCheckerFixture():
+        study(std::make_shared<Study>()),
+        hydroInputsChecker(*study)
     {
         // Simulation last day must be 365 so that final level checks succeeds
         study->parameters.simulationDays.end = 365;
@@ -34,6 +37,8 @@ struct HydroInputCheckerFixture
             area_1->createMissingData();
             area_1->resetToDefaultValues();
         }
+        study->parameters.yearsFilter = {true};
+
         study->areas.rebuildIndexes();
 
         area_1->hydro.reservoirManagement = false;
@@ -67,10 +72,9 @@ struct HydroInputCheckerFixture
 
     ~HydroInputCheckerFixture() = default;
 
-    Study::Ptr study = std::make_shared<Study>();
+    Study::Ptr study;
+    HydroInputsChecker hydroInputsChecker;
     Area* area_1;
-    std::shared_ptr<HydroInputsChecker> hydroInputsChecker = std::make_shared<HydroInputsChecker>(
-      *study);
 };
 
 BOOST_FIXTURE_TEST_SUITE(hydro_inputs_checker, HydroInputCheckerFixture)
@@ -78,40 +82,40 @@ BOOST_FIXTURE_TEST_SUITE(hydro_inputs_checker, HydroInputCheckerFixture)
 BOOST_AUTO_TEST_CASE(reservoir_levels_are_valid)
 {
     uint year = 0;
-    hydroInputsChecker->Execute(0);
-    BOOST_CHECK_NO_THROW(hydroInputsChecker->CheckForErrors());
+    hydroInputsChecker.Execute(0, {0.0});
+    BOOST_CHECK_NO_THROW(hydroInputsChecker.checkForErrors());
 }
 
 BOOST_AUTO_TEST_CASE(reservoir_levels_are_invalid_case_1)
 {
     uint year = 0;
     area_1->hydro.series->ruleCurves.min.timeSeries[0][4] = 0.9;
-    hydroInputsChecker->Execute(0);
-    BOOST_CHECK_THROW(hydroInputsChecker->CheckForErrors(), FatalError);
+    hydroInputsChecker.Execute(0, {0.0});
+    BOOST_CHECK_THROW(hydroInputsChecker.checkForErrors(), FatalError);
 }
 
 BOOST_AUTO_TEST_CASE(reservoir_levels_are_invalid_case_2)
 {
     uint year = 0;
     area_1->hydro.series->ruleCurves.max.timeSeries[0][4] = 1.1;
-    hydroInputsChecker->Execute(0);
-    BOOST_CHECK_THROW(hydroInputsChecker->CheckForErrors(), FatalError);
+    hydroInputsChecker.Execute(0, {0.0});
+    BOOST_CHECK_THROW(hydroInputsChecker.checkForErrors(), FatalError);
 }
 
 BOOST_AUTO_TEST_CASE(reservoir_levels_are_invalid_case_3)
 {
     uint year = 0;
     area_1->hydro.series->ruleCurves.avg.timeSeries[0][4] = 1.1;
-    hydroInputsChecker->Execute(0);
-    BOOST_CHECK_THROW(hydroInputsChecker->CheckForErrors(), FatalError);
+    hydroInputsChecker.Execute(0, {0.0});
+    BOOST_CHECK_THROW(hydroInputsChecker.checkForErrors(), FatalError);
 }
 
 BOOST_AUTO_TEST_CASE(reservoir_levels_are_invalid_case_4)
 {
     uint year = 0;
     area_1->hydro.series->ruleCurves.min.timeSeries[0][4] = -0.1;
-    hydroInputsChecker->Execute(0);
-    BOOST_CHECK_THROW(hydroInputsChecker->CheckForErrors(), FatalError);
+    hydroInputsChecker.Execute(0, {0.0});
+    BOOST_CHECK_THROW(hydroInputsChecker.checkForErrors(), FatalError);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

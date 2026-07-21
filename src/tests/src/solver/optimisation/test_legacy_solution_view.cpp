@@ -19,9 +19,9 @@ struct Fixture
     Fixture()
     {
         info.resize(4);
-        info[0] = LegacyVariableInfo{"UnsuppliedEnergy", "area1", 7};
-        info[1] = LegacyVariableInfo{"Spillage", "area1", 7};
-        info[3] = LegacyVariableInfo{"UnsuppliedEnergy", "area2", 7};
+        info[0] = LegacyVariableInfo{"UnsuppliedEnergy", "area1_node", 7};
+        info[1] = LegacyVariableInfo{"Spillage", "area1_node", 7};
+        info[3] = LegacyVariableInfo{"UnsuppliedEnergy", "area2_node", 7};
     }
 
     std::vector<std::optional<LegacyVariableInfo>> info;
@@ -35,32 +35,32 @@ BOOST_FIXTURE_TEST_SUITE(test_legacy_solution_view, Fixture)
 BOOST_AUTO_TEST_CASE(value_of_recorded_variable_is_found)
 {
     const LegacySolutionView view(info, values, costs);
-    BOOST_REQUIRE(view.value("UnsuppliedEnergy", "area1", 7).has_value());
-    BOOST_CHECK_EQUAL(*view.value("UnsuppliedEnergy", "area1", 7), 52.);
-    BOOST_CHECK_EQUAL(*view.value("Spillage", "area1", 7), 0.);
+    BOOST_REQUIRE(view.value("UnsuppliedEnergy", "area1_node", 7).has_value());
+    BOOST_CHECK_EQUAL(*view.value("UnsuppliedEnergy", "area1_node", 7), 52.);
+    BOOST_CHECK_EQUAL(*view.value("Spillage", "area1_node", 7), 0.);
 }
 
 BOOST_AUTO_TEST_CASE(linear_cost_of_recorded_variable_is_found)
 {
     const LegacySolutionView view(info, values, costs);
-    BOOST_REQUIRE(view.linearCost("UnsuppliedEnergy", "area1", 7).has_value());
-    BOOST_CHECK_EQUAL(*view.linearCost("UnsuppliedEnergy", "area1", 7), 10000.);
+    BOOST_REQUIRE(view.linearCost("UnsuppliedEnergy", "area1_node", 7).has_value());
+    BOOST_CHECK_EQUAL(*view.linearCost("UnsuppliedEnergy", "area1_node", 7), 10000.);
 }
 
 BOOST_AUTO_TEST_CASE(same_name_is_distinguished_by_component)
 {
     const LegacySolutionView view(info, values, costs);
-    BOOST_CHECK_EQUAL(*view.value("UnsuppliedEnergy", "area2", 7), 13.);
-    BOOST_CHECK_EQUAL(*view.linearCost("UnsuppliedEnergy", "area2", 7), 20000.);
+    BOOST_CHECK_EQUAL(*view.value("UnsuppliedEnergy", "area2_node", 7), 13.);
+    BOOST_CHECK_EQUAL(*view.linearCost("UnsuppliedEnergy", "area2_node", 7), 20000.);
 }
 
 BOOST_AUTO_TEST_CASE(unknown_name_component_or_time_is_not_found)
 {
     const LegacySolutionView view(info, values, costs);
-    BOOST_CHECK(!view.value("DispatchableProduction", "area1", 7).has_value());
-    BOOST_CHECK(!view.value("UnsuppliedEnergy", "area3", 7).has_value());
-    BOOST_CHECK(!view.value("UnsuppliedEnergy", "area1", 8).has_value());
-    BOOST_CHECK(!view.linearCost("UnsuppliedEnergy", "area1", 8).has_value());
+    BOOST_CHECK(!view.value("DispatchableProduction", "area1_node", 7).has_value());
+    BOOST_CHECK(!view.value("UnsuppliedEnergy", "area3_node", 7).has_value());
+    BOOST_CHECK(!view.value("UnsuppliedEnergy", "area1_node", 8).has_value());
+    BOOST_CHECK(!view.linearCost("UnsuppliedEnergy", "area1_node", 8).has_value());
 }
 
 BOOST_AUTO_TEST_CASE(variables_without_recorded_info_are_not_indexed)

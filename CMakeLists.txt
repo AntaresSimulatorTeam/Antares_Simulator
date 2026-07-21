@@ -329,6 +329,10 @@ endif ()
 # TODO : review Standard Settings
 include(src/cmake/common-settings.cmake)
 
+# Opt-in build/link time profiling (-DANTARES_TIME_TRACE=ON). Must be included
+# before any add_subdirectory() so the flags reach every target.
+include(src/cmake/build-profiling.cmake)
+
 add_subdirectory("src/config")
 
 # Configure config.h with current ANTARES version
@@ -351,6 +355,7 @@ add_subdirectory("src/study")         #antares study model
 add_subdirectory("src/solver")     #antares solver and all associated libs
 add_subdirectory("src/modeler")       #antares modeler
 add_subdirectory("src/modeler-optimisation-container")       #antares modeler
+add_subdirectory("src/view-builder")                         #legacy study to YAML converter
 
 # Tools
 if (BUILD_TOOLS)

@@ -152,11 +152,9 @@ void Area::resetToDefaultValues()
     // Renewable
     renewable.reset();
     // Fatal hors hydro
-    miscGen.reset(fhhMax, HOURS_PER_YEAR, true);
+    miscGen.reset(fhhMax, HOURS_PER_YEAR);
     // reserves
-    reserves.reset(fhrMax, HOURS_PER_YEAR, true);
-    //  invalidate the whole area
-    invalidateJIT = true;
+    reserves.reset(fhrMax, HOURS_PER_YEAR);
 }
 
 void Area::resizeAllTimeseriesNumbers(uint nbYears)

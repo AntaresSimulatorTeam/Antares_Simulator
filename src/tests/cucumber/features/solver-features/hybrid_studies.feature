@@ -140,3 +140,14 @@ Feature: hybrid (simulator+modeler) studies
       |       | gen1      | generation.flow_field  | 168-335   | 0        | 100   |
       |       | load1     | consumption.flow_field | 168-335 | 0        | -100  |
     And the objective value is 5040
+
+  @fast @short
+  Scenario: MILP with thermal heuristic - two MILP iterations with heuristic in between
+    Given the solver study path is "Antares_Simulator_Tests_NR/thermal_milp_gems_and_thermal_legacy"
+    And the linear solver is highs
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation has two optimization iterations
+    And in area "west", during year 1, weekly overall cost for week 1 is 4441208
+    And in area "west", during year 1, NODU for all hours matches reference
+

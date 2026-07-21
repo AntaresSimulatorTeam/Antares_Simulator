@@ -120,6 +120,9 @@ void prepareClustersInMustRunMode(Data::Study& study,
                                   uint year,
                                   Data::SimulationMode mode);
 
+//! Build the reserve-participation index maps in the study runtime from a weekly problem
+void buildReserveIndexMaps(Data::Study& study, const PROBLEME_HEBDO& problem);
+
 } // namespace Antares::Solver::Simulation
 
 #endif // __SOLVER_SIMULATION_COMMON_ECONOMY_ADEQUACY_H__

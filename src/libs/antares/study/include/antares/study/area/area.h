@@ -101,17 +101,6 @@ public:
     */
     const AreaLink* findExistingLinkWith(const Area& with) const;
 
-    //! \name Memory management
-    //@{
-    /*!
-    ** \brief Load all data not already loaded
-    **
-    ** If the load-on-demand is enabled, some data might not be loaded (see `Matrix`)
-    ** However, we would like to be able to force the load of all data, especially
-    ** when saving a study.
-    ** The flag `invalidateJIT` will be reset to false.
-    */
-
     //! \name Thermal clusters min stable power validity checking
     //@{
     /*!
@@ -230,17 +219,6 @@ public:
     ** \brief Scratchpad used temporary calculations (solver only)
     */
     mutable std::vector<AreaScratchpad> scratchpad;
-    //@}
-
-    //! \name Data
-    //@{
-    /*!
-    ** \brief Invalidate (JIT)
-    **
-    ** A non-zero value if the missing data must be loaded from HDD for the next
-    ** save (only valid if JIT enabled).
-    */
-    mutable bool invalidateJIT = false;
     //@}
 
 private:
@@ -584,6 +562,16 @@ void AreaListEnsureDataHydroPrepro(AreaList* l);
 ** \brief Ensure data for thermal prepro are initialized
 */
 void AreaListEnsureDataThermalPrepro(AreaList* l);
+
+/*!
+** \brief Load reserves parameters for an area
+*/
+bool loadReservesParameters(fs::path& folderInput, Area& area);
+
+/*!
+** \brief Validate capacity reservations for an area
+*/
+void validateCapacityReservations(const Area& area);
 
 /*!
 ** \brief to check that Area name does not contains character *

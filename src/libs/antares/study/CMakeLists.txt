@@ -49,8 +49,7 @@ set(SRC_AREAS
         include/antares/study/area/ReserveOpt.h
         include/antares/study/area/area.hxx
         include/antares/study/area/scratchpad.h
-		include/antares/study/area/forTestsOnlyList.h
-        area/scratchpad.cpp
+	        area/scratchpad.cpp
         area/area.cpp
         area/links.cpp
         include/antares/study/area/links.h
