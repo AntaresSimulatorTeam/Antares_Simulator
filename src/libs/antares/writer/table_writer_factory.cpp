@@ -10,17 +10,19 @@ namespace fs = std::filesystem;
 namespace Antares::Writer
 {
 
-std::unique_ptr<ParquetTableWriter> makeTableWriter(TableFormat tableFormat, fs::path& filePath)
+std::unique_ptr<ParquetTableWriter> makeTableWriter(TableFormat tableFormat,
+                                                    const fs::path& filePath)
 {
+    fs::path adjustedPath = filePath;
     if (tableFormat == TableFormat::CSV)
     {
-        filePath.replace_extension(".csv");
+        adjustedPath.replace_extension(".csv");
     }
     else
     {
-        filePath.replace_extension(".parquet");
+        adjustedPath.replace_extension(".parquet");
     }
-    return std::make_unique<ParquetTableWriter>(filePath, tableFormat);
+    return std::make_unique<ParquetTableWriter>(adjustedPath, tableFormat);
 }
 
 } // namespace Antares::Writer

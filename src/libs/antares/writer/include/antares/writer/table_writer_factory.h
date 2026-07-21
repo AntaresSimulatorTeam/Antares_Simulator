@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <filesystem>
 #include <memory>
 
 #include "parquet_table_writer.h"
@@ -11,6 +12,6 @@
 
 namespace Antares::Writer
 {
-SIMULATION_TABLE_WRITERS_EXPORT std::unique_ptr<ParquetTableWriter> makeTableWriter(
-  TableFormat tableFormat, std::filesystem::path& filePath);
+[[nodiscard]] SIMULATION_TABLE_WRITERS_EXPORT std::unique_ptr<ParquetTableWriter> makeTableWriter(
+  TableFormat tableFormat, const std::filesystem::path& filePath);
 } // namespace Antares::Writer

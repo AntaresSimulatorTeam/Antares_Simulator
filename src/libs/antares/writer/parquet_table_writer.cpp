@@ -4,8 +4,6 @@
 #include "antares/writer/parquet_table_writer.h"
 
 #include <filesystem>
-#include <fstream>
-#include <sstream>
 #include <stdexcept>
 #include <utility>
 
@@ -20,13 +18,15 @@
 #include "columnToArrowAdapter.h"
 #include "private/parquet_arrow_utils.h"
 
-using namespace Antares::IO::Outputs;
 namespace fs = std::filesystem;
 
 namespace Antares::Writer
 {
 
-std::shared_ptr<arrow::Table> makeArrowTable(const SimulationTable& simuTable)
+namespace
+{
+
+std::shared_ptr<arrow::Table> makeArrowTable(const IO::Outputs::SimulationTable& simuTable)
 {
     const auto& columns = simuTable.columns();
 
@@ -42,6 +42,8 @@ std::shared_ptr<arrow::Table> makeArrowTable(const SimulationTable& simuTable)
     return arrow::Table::Make(schema, std::move(arrow_columns));
 }
 
+} // anonymous namespace
+
 ParquetTableWriter::ParquetTableWriter(const std::filesystem::path& filePath,
                                        TableFormat tableFormat):
     output_file_(filePath),
@@ -56,13 +58,8 @@ ParquetTableWriter::ParquetTableWriter(const std::filesystem::path& filePath,
 }
 
 void ParquetTableWriter::writeParquet(const fs::path& file_path,
-                                      const SimulationTable& simuTable) const
+                                      const IO::Outputs::SimulationTable& simuTable) const
 {
-    if (simuTable.columns().empty())
-    {
-        throw std::invalid_argument("ParquetTableWriter: simulation table is empty");
-    }
-
     auto table = makeArrowTable(simuTable);
 
     // Open output file
@@ -73,13 +70,8 @@ void ParquetTableWriter::writeParquet(const fs::path& file_path,
 }
 
 void ParquetTableWriter::writeCsv(const fs::path& file_path,
-                                  const SimulationTable& simuTable) const
+                                  const IO::Outputs::SimulationTable& simuTable) const
 {
-    if (simuTable.columns().empty())
-    {
-        throw std::invalid_argument("ParquetTableWriter: simulation table is empty");
-    }
-
     auto table = makeArrowTable(simuTable);
 
     // Configure CSV writer options
@@ -94,8 +86,13 @@ void ParquetTableWriter::writeCsv(const fs::path& file_path,
     throwOnStatusKO(arrow::csv::WriteCSV(*table, csv_options, outfile.get()));
 }
 
-void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
+void ParquetTableWriter::writeTable(const IO::Outputs::SimulationTable& simuTable) const
 {
+    if (simuTable.columns().empty())
+    {
+        throw std::invalid_argument("ParquetTableWriter: simulation table is empty");
+    }
+
     switch (table_format_)
     {
         case TableFormat::Parquet:
@@ -104,6 +101,8 @@ void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
         case TableFormat::CSV:
             writeCsv(output_file_, simuTable);
             break;
+        default:
+            throw std::invalid_argument("ParquetTableWriter: unknown table format");
     }
 }
 
