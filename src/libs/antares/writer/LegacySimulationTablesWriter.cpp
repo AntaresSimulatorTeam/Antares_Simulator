@@ -4,7 +4,6 @@
 #include "include/antares/writer/LegacySimulationTablesWriter.h"
 
 #include <antares/exception/RuntimeError.hpp>
-
 #include "antares/writer/parquet_table_writer.h"
 
 namespace fs = std::filesystem;

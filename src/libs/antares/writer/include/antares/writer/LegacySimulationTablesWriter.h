@@ -4,7 +4,6 @@
 #pragma once
 
 #include <filesystem>
-#include <memory>
 
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/io/outputs/SimulationTable.h"

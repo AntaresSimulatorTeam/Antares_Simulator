@@ -15,7 +15,6 @@
 #include <parquet/exception.h>
 
 #include "antares/io/outputs/SimulationTable.h"
-
 #include "antares/writer/parquet_table_writer.h"
 
 namespace fs = std::filesystem;
