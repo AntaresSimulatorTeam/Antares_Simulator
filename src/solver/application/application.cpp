@@ -156,7 +156,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         // study.parameters.noOutput = pSettings.noOutput;
 
         // Output selection, the command line overrides the study
-        if (pSettings.outputSelection == "all")
+        if (pSettings.outputSelection == "all" || pSettings.outputSelection.empty())
         {
             study.parameters.writeMonteCarloResults = true;
             study.parameters.simulationTable = true;
@@ -177,7 +177,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             study.parameters.writeMonteCarloResults = false;
             study.parameters.simulationTable = true;
         }
-        else if (!pSettings.outputSelection.empty())
+        else
         {
             throw FatalError("Invalid value for --output: '" + pSettings.outputSelection
                              + "' (expected all, none, monte-carlo or simulation-table)");
