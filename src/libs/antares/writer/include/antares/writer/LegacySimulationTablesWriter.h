@@ -4,22 +4,24 @@
 #pragma once
 
 #include <filesystem>
+#include <memory>
 
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/io/outputs/SimulationTable.h"
 
-#include "i_table_writer.h"
 #include "simulation-table-writers_export.h"
 #include "table_format.h"
 
 namespace Antares::Writer
 {
+class ParquetTableWriter;
+
 class SIMULATION_TABLE_WRITERS_EXPORT LegacySimulationTablesWriter
 {
 public:
     LegacySimulationTablesWriter(const std::filesystem::path& folder,
                                  const unsigned year,
-                                 TableFormat = TableFormat::CSV);
+                                 TableFormat tableFormat = TableFormat::CSV);
     void write(IO::Outputs::OptimisationsSimulationTable& tables);
 
 private:

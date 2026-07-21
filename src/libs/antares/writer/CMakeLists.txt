@@ -6,17 +6,13 @@ find_package(Parquet REQUIRED)
 find_package(Arrow REQUIRED)
 
 add_library(simulation-table-writers SHARED
-        include/antares/writer/i_table_writer.h
         LegacySimulationTablesWriter.cpp
-        i_table_writer.cpp
         include/antares/writer/table_writer_factory.h
+        include/antares/writer/parquet_table_writer.h
         private/parquet_arrow_utils.h
         columnToArrowAdapter.cpp
         table_writer_factory.cpp
         parquet_table_writer.cpp
-        private/parquet_table_writer.h
-        csv_table_writer.cpp
-        private/csv_table_writer.h
 )
 
 generate_export_header(simulation-table-writers
@@ -57,7 +53,6 @@ add_library(result_writer
         immediate_file_writer.cpp
         in_memory_writer.cpp
         null_result_writer.cpp
-        include/antares/writer/i_table_writer.h
         include/antares/writer/in_memory_writer.h # Public (for tests)
         include/antares/writer/null_result_writer.h
         include/antares/writer/result_format.h

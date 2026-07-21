@@ -1,12 +1,15 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "private/parquet_table_writer.h"
+#include "antares/writer/parquet_table_writer.h"
 
 #include <filesystem>
+#include <fstream>
 #include <sstream>
 #include <stdexcept>
 #include <utility>
+
+#include "antares/io/outputs/SimulationTable.h"
 
 // Arrow / Parquet
 #include <arrow/api.h>
@@ -23,7 +26,7 @@ namespace fs = std::filesystem;
 namespace Antares::Writer
 {
 
-std::shared_ptr<arrow::Table> makeArrowTable(const Antares::IO::Outputs::SimulationTable& simuTable)
+std::shared_ptr<arrow::Table> makeArrowTable(const SimulationTable& simuTable)
 {
     const auto& columns = simuTable.columns();
 
@@ -39,35 +42,69 @@ std::shared_ptr<arrow::Table> makeArrowTable(const Antares::IO::Outputs::Simulat
     return arrow::Table::Make(schema, std::move(arrow_columns));
 }
 
-void writeParquet(const std::shared_ptr<arrow::Table>& table, const fs::path& file_path)
+ParquetTableWriter::ParquetTableWriter(const std::filesystem::path& filePath,
+                                       TableFormat tableFormat):
+    output_file_(filePath),
+    table_format_(tableFormat)
 {
-    // --- 1. Open output file ---
-    auto outfile = throwOnResultKO(arrow::io::FileOutputStream::Open(file_path.string()));
-
-    // --- 2. Configure CSV writer options ---
-    auto csv_options = arrow::csv::WriteOptions::Defaults();
-    csv_options.quoting_style = arrow::csv::QuotingStyle::None;
-    csv_options.quoting_header = arrow::csv::QuotingStyle::None;
-
-    // --- 3. Write ---
-    throwOnStatusKO(arrow::csv::WriteCSV(*table, csv_options, outfile.get()));
+    auto p = output_file_.parent_path();
+    if (!p.empty())
+    {
+        std::error_code ec;
+        std::filesystem::create_directories(p, ec);
+    }
 }
 
-ParquetTableWriter::ParquetTableWriter(const std::filesystem::path& filePath):
-    ITableWriter(filePath)
+void ParquetTableWriter::writeParquet(const fs::path& file_path,
+                                      const SimulationTable& simuTable) const
 {
-}
-
-void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
-{
-    // Basic validations
     if (simuTable.columns().empty())
     {
         throw std::invalid_argument("ParquetTableWriter: simulation table is empty");
     }
 
     auto table = makeArrowTable(simuTable);
-    writeParquet(table, output_file_);
+
+    // Open output file
+    auto outfile = throwOnResultKO(arrow::io::FileOutputStream::Open(file_path.string()));
+
+    // Write as Parquet
+    throwOnStatusKO(parquet::arrow::WriteTable(*table, arrow::default_memory_pool(), outfile));
+}
+
+void ParquetTableWriter::writeCsv(const fs::path& file_path,
+                                  const SimulationTable& simuTable) const
+{
+    if (simuTable.columns().empty())
+    {
+        throw std::invalid_argument("ParquetTableWriter: simulation table is empty");
+    }
+
+    auto table = makeArrowTable(simuTable);
+
+    // Configure CSV writer options
+    auto csv_options = arrow::csv::WriteOptions::Defaults();
+    csv_options.quoting_style = arrow::csv::QuotingStyle::None;
+    csv_options.quoting_header = arrow::csv::QuotingStyle::None;
+
+    // Open output file
+    auto outfile = throwOnResultKO(arrow::io::FileOutputStream::Open(file_path.string()));
+
+    // Write as CSV
+    throwOnStatusKO(arrow::csv::WriteCSV(*table, csv_options, outfile.get()));
+}
+
+void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
+{
+    switch (table_format_)
+    {
+        case TableFormat::Parquet:
+            writeParquet(output_file_, simuTable);
+            break;
+        case TableFormat::CSV:
+            writeCsv(output_file_, simuTable);
+            break;
+    }
 }
 
 } // namespace Antares::Writer

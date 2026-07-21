@@ -5,7 +5,7 @@
 
 #include <antares/exception/RuntimeError.hpp>
 
-#include "include/antares/writer/table_writer_factory.h"
+#include "antares/writer/parquet_table_writer.h"
 
 namespace fs = std::filesystem;
 using namespace Antares::IO::Outputs;
@@ -24,12 +24,24 @@ static void check_is_existing_folder(const fs::path& folder)
 
 static fs::path makeSimuTableFilePath(const fs::path& parentFolder,
                                       const unsigned year,
-                                      const unsigned optim_nb)
+                                      const unsigned optim_nb,
+                                      TableFormat tableFormat)
 {
     // File name without extension
     std::string filename = "simulation-table-" + std::to_string(year) + "-optim-nb-"
                            + std::to_string(optim_nb);
-    return parentFolder / filename;
+    auto filepath = parentFolder / filename;
+
+    // Add appropriate extension based on format
+    if (tableFormat == TableFormat::CSV)
+    {
+        filepath.replace_extension(".csv");
+    }
+    else
+    {
+        filepath.replace_extension(".parquet");
+    }
+    return filepath;
 }
 
 LegacySimulationTablesWriter::LegacySimulationTablesWriter(const fs::path& folder,
@@ -51,8 +63,8 @@ void LegacySimulationTablesWriter::write(OptimisationsSimulationTable& tables)
 void LegacySimulationTablesWriter::writeForOptim(const SimulationTable* table,
                                                  unsigned optim_number)
 {
-    auto filepath = makeSimuTableFilePath(folder_, year_, optim_number);
-    ITableWriter::Ptr writer = makeTableWriter(tableFormat_, filepath);
+    auto filepath = makeSimuTableFilePath(folder_, year_, optim_number, tableFormat_);
+    auto writer = std::make_unique<ParquetTableWriter>(filepath, tableFormat_);
     writer->writeTable(*table);
 }
 
