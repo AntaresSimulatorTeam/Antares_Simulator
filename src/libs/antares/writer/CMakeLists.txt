@@ -75,11 +75,6 @@ target_link_libraries(result_writer
         PUBLIC
         Antares::exception
         Antares::benchmarking
-        # simulation-table-writers is a SHARED library (DLL on Windows). Since result_writer
-        # is STATIC, consumers inherit its shared library dependencies at link time.
-        # Using PUBLIC ensures MSVC's project reference system copies the DLL to
-        # all consuming targets' output directories.
-        simulation-table-writers
         PRIVATE
         MINIZIP::minizip
         logs

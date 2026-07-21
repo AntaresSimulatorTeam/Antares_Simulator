@@ -51,8 +51,8 @@ void LegacySimulationTablesWriter::writeForOptim(const SimulationTable* table,
                                                  unsigned optim_number)
 {
     auto filepath = makeSimuTableFilePath(folder_, year_, optim_number);
-    auto writer = std::make_unique<ParquetTableWriter>(filepath, tableFormat_);
-    writer->writeTable(*table);
+    ParquetTableWriter writer(filepath, tableFormat_);
+    writer.writeTable(*table);
 }
 
 } // namespace Antares::Writer

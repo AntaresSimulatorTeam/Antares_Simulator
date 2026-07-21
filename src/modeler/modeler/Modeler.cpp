@@ -343,9 +343,8 @@ void Modeler::run()
                                                        *timeScenarioCtx_);
 
             auto outputFile = outputPath_ / "simulation-table";
-            auto writer = std::make_unique<ParquetTableWriter>(outputFile, tableFormat_);
-            writer->writeTable(simulationTable);
-
+            ParquetTableWriter writer(outputFile, tableFormat_);
+            writer.writeTable(simulationTable);
             logs.info() << "Simulation table is written in: " << outputFile.string();
         }
     }
