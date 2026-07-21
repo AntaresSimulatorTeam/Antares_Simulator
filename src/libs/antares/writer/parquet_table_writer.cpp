@@ -10,6 +10,7 @@
 
 // Arrow / Parquet
 #include <arrow/api.h>
+#include <arrow/csv/writer.h>
 #include <arrow/io/api.h>
 #include <parquet/arrow/writer.h>
 
@@ -43,21 +44,13 @@ void writeParquet(const std::shared_ptr<arrow::Table>& table, const fs::path& fi
     // --- 1. Open output file ---
     auto outfile = throwOnResultKO(arrow::io::FileOutputStream::Open(file_path.string()));
 
-    // --- 2. Configure Parquet writer ---
-    auto writer_props = parquet::WriterProperties::Builder()
-                          .compression(arrow::Compression::SNAPPY)
-                          ->version(parquet::ParquetVersion::PARQUET_2_6)
-                          ->build();
-
-    auto arrow_props = parquet::ArrowWriterProperties::Builder().store_schema()->build();
+    // --- 2. Configure CSV writer options ---
+    auto csv_options = arrow::csv::WriteOptions::Defaults();
+    csv_options.quoting_style = arrow::csv::QuotingStyle::None;
+    csv_options.quoting_header = arrow::csv::QuotingStyle::None;
 
     // --- 3. Write ---
-    throwOnStatusKO(parquet::arrow::WriteTable(*table,
-                                               arrow::default_memory_pool(),
-                                               outfile,
-                                               /*chunk_size=*/1024,
-                                               writer_props,
-                                               arrow_props));
+    throwOnStatusKO(arrow::csv::WriteCSV(*table, csv_options, outfile.get()));
 }
 
 ParquetTableWriter::ParquetTableWriter(const std::filesystem::path& filePath):
