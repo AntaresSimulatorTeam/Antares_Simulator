@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <unordered_set>
-
 #include <yaml-cpp/yaml.h>
 
 #include <antares/io/inputs/InputError.h>
@@ -117,7 +116,7 @@ YAML::Node generateSystemForView(const Antares::Data::Study& study)
 }
 
 YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study,
-                                         std::unordered_set<std::string>& legacyComponentIds)
+                                          std::unordered_set<std::string>& legacyComponentIds)
 {
     YAML::Node system;
     system["id"] = study.folder.string();
@@ -138,40 +137,42 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study,
           legacyComponentIds.insert(areaLoc);
 
           components.push_back(loadToYaml(area));
-          legacyComponentIds.insert(area.id + "_load");
+          legacyComponentIds.insert(BuildLoadComponentId(area.id));
           connections.push_back(
-            makeConnection(area.id + "_load", "balance_port", areaLoc, "balance_port"));
+            makeConnection(BuildLoadComponentId(area.id), "balance_port", areaLoc, "balance_port"));
 
           components.push_back(windToYaml(area));
-          legacyComponentIds.insert(area.id + "_wind");
+          legacyComponentIds.insert(BuildWindComponentId(area.id));
           connections.push_back(
-            makeConnection(area.id + "_wind", "balance_port", areaLoc, "balance_port"));
+            makeConnection(BuildWindComponentId(area.id), "balance_port", areaLoc, "balance_port"));
 
           components.push_back(solarToYaml(area));
-          legacyComponentIds.insert(area.id + "_solar");
-          connections.push_back(
-            makeConnection(area.id + "_solar", "balance_port", areaLoc, "balance_port"));
+          legacyComponentIds.insert(BuildSolarComponentId(area.id));
+          connections.push_back(makeConnection(BuildSolarComponentId(area.id),
+                                               "balance_port",
+                                               areaLoc,
+                                               "balance_port"));
 
           components.push_back(rorToYaml(area));
-          legacyComponentIds.insert(area.id + "_ror");
+          legacyComponentIds.insert(BuildRorComponentId(area.id));
           connections.push_back(
-            makeConnection(area.id + "_ror", "balance_port", areaLoc, "balance_port"));
+            makeConnection(BuildRorComponentId(area.id), "balance_port", areaLoc, "balance_port"));
 
           for (int i = 0; i < MiscGenIndex::fhhMax; ++i)
           {
               components.push_back(miscGenToYaml(area, i));
-              legacyComponentIds.insert(area.id + "_miscgen_" + miscGenTypeName(i));
-              connections.push_back(makeConnection(area.id + "_miscgen_" + miscGenTypeName(i),
-                                                   "balance_port",
-                                                   areaLoc,
-                                                   "balance_port"));
+              legacyComponentIds.insert(BuildMiscGenComponentId(area.id, miscGenTypeName(i)));
+              connections.push_back(
+                makeConnection(BuildMiscGenComponentId(area.id, miscGenTypeName(i)),
+                               "balance_port",
+                               areaLoc,
+                               "balance_port"));
           }
 
           for (const auto& cluster: area.thermal.list.all())
           {
               components.push_back(thermalClusterToYaml(*cluster));
-              legacyComponentIds.insert(
-                BuildThermalClusterComponentId(area.id, cluster->id()));
+              legacyComponentIds.insert(BuildThermalClusterComponentId(area.id, cluster->id()));
               connections.push_back(
                 makeConnection(BuildThermalClusterComponentId(area.id, cluster->id()),
                                "balance_port",
@@ -182,8 +183,7 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study,
           for (const auto& cluster: area.renewable.list.all())
           {
               components.push_back(renewableClusterToYaml(*cluster));
-              legacyComponentIds.insert(
-                BuildRenewableClusterComponentId(area.id, cluster->id()));
+              legacyComponentIds.insert(BuildRenewableClusterComponentId(area.id, cluster->id()));
               connections.push_back(
                 makeConnection(BuildRenewableClusterComponentId(area.id, cluster->id()),
                                "balance_port",
@@ -194,13 +194,11 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study,
           for (const auto& st: area.shortTermStorage.storagesByIndex)
           {
               components.push_back(shortTermStorageToYaml(area, st));
-              legacyComponentIds.insert(
-                BuildSTStorageClusterComponentId(area.id, st.id));
-              connections.push_back(
-                makeConnection(BuildSTStorageClusterComponentId(area.id, st.id),
-                               "balance_port",
-                               areaLoc,
-                               "balance_port"));
+              legacyComponentIds.insert(BuildSTStorageClusterComponentId(area.id, st.id));
+              connections.push_back(makeConnection(BuildSTStorageClusterComponentId(area.id, st.id),
+                                                   "balance_port",
+                                                   areaLoc,
+                                                   "balance_port"));
           }
 
           components.push_back(longTermStorageToYaml(area));
