@@ -13,7 +13,7 @@
 
 namespace Antares::Writer
 {
-class ParquetTableWriter;
+class SimulationTableWriter;
 
 class SIMULATION_TABLE_WRITERS_EXPORT LegacySimulationTablesWriter
 {

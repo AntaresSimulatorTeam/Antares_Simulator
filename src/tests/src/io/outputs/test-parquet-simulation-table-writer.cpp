@@ -15,7 +15,7 @@
 #include <parquet/exception.h>
 
 #include "antares/io/outputs/SimulationTable.h"
-#include "antares/writer/parquet_table_writer.h"
+#include "antares/writer/simulation_table_writer.h"
 
 namespace fs = std::filesystem;
 using namespace Antares::IO::Outputs;
@@ -95,7 +95,7 @@ BOOST_FIXTURE_TEST_CASE(write_SimuTable_then_read_it_back___reading_fits, LocalF
     table.addEntry(entry);
 
     // Act
-    Antares::Writer::ParquetTableWriter writer(file_path, Antares::Writer::TableFormat::Parquet);
+    Antares::Writer::SimulationTableWriter writer(file_path, Antares::Writer::TableFormat::Parquet);
     writer.writeTable(table);
 
     // Assert
@@ -154,7 +154,7 @@ BOOST_FIXTURE_TEST_CASE(write_table_with_many_empty_entries_then_read_it_back___
     table.addEntry(entry);
 
     // Act
-    Antares::Writer::ParquetTableWriter writer(file_path, Antares::Writer::TableFormat::Parquet);
+    Antares::Writer::SimulationTableWriter writer(file_path, Antares::Writer::TableFormat::Parquet);
     writer.writeTable(table);
 
     // Assert
@@ -211,7 +211,7 @@ BOOST_FIXTURE_TEST_CASE(write_3_lines_table_then_read_it_back___read_fits, Local
     table.addEntry(line_2);
 
     // Act
-    Antares::Writer::ParquetTableWriter writer(file_path, Antares::Writer::TableFormat::Parquet);
+    Antares::Writer::SimulationTableWriter writer(file_path, Antares::Writer::TableFormat::Parquet);
     writer.writeTable(table);
 
     // Assert

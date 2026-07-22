@@ -1,7 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "antares/writer/parquet_table_writer.h"
+#include "antares/writer/simulation_table_writer.h"
 
 #include <filesystem>
 #include <stdexcept>
@@ -59,8 +59,8 @@ std::shared_ptr<arrow::Table> makeArrowTable(const IO::Outputs::SimulationTable&
 
 } // anonymous namespace
 
-ParquetTableWriter::ParquetTableWriter(const std::filesystem::path& filePath,
-                                       TableFormat tableFormat):
+SimulationTableWriter::SimulationTableWriter(const std::filesystem::path& filePath,
+                                             TableFormat tableFormat):
     output_file_(replaceExtension(filePath, tableFormat)),
     table_format_(tableFormat)
 {
@@ -72,8 +72,8 @@ ParquetTableWriter::ParquetTableWriter(const std::filesystem::path& filePath,
     }
 }
 
-void ParquetTableWriter::writeParquet(const fs::path& file_path,
-                                      const IO::Outputs::SimulationTable& simuTable) const
+void SimulationTableWriter::writeParquet(const fs::path& file_path,
+                                         const IO::Outputs::SimulationTable& simuTable) const
 {
     auto table = makeArrowTable(simuTable);
 
@@ -97,8 +97,8 @@ void ParquetTableWriter::writeParquet(const fs::path& file_path,
                                                arrow_props));
 }
 
-void ParquetTableWriter::writeCsv(const fs::path& file_path,
-                                  const IO::Outputs::SimulationTable& simuTable) const
+void SimulationTableWriter::writeCsv(const fs::path& file_path,
+                                      const IO::Outputs::SimulationTable& simuTable) const
 {
     auto table = makeArrowTable(simuTable);
 
@@ -116,11 +116,11 @@ void ParquetTableWriter::writeCsv(const fs::path& file_path,
     throwOnStatusKO(arrow::csv::WriteCSV(*table, csv_options, outfile.get()));
 }
 
-void ParquetTableWriter::writeTable(const IO::Outputs::SimulationTable& simuTable) const
+void SimulationTableWriter::writeTable(const IO::Outputs::SimulationTable& simuTable) const
 {
     if (simuTable.columns().empty())
     {
-        throw std::invalid_argument("ParquetTableWriter: simulation table is empty");
+        throw std::invalid_argument("SimulationTableWriter: simulation table is empty");
     }
 
     switch (table_format_)
@@ -132,7 +132,7 @@ void ParquetTableWriter::writeTable(const IO::Outputs::SimulationTable& simuTabl
         writeCsv(output_file_, simuTable);
         break;
     default:
-        throw std::invalid_argument("ParquetTableWriter: unknown table format");
+        throw std::invalid_argument("SimulationTableWriter: unknown table format");
     }
 }
 

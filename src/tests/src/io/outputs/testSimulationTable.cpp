@@ -37,7 +37,7 @@
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/writer/LegacySimulationTablesWriter.h"
 #include "antares/writer/in_memory_writer.h"
-#include "antares/writer/parquet_table_writer.h"
+#include "antares/writer/simulation_table_writer.h"
 
 #include "UtilMocks.h"
 
@@ -114,7 +114,7 @@ struct SimulationTableFileFixture
 {
     SimulationTableFileFixture():
         out_file_path(fs::temp_directory_path() / "simulation-table.csv"),
-        parquet_writer(out_file_path, TableFormat::CSV)
+        simulation_table_writer(out_file_path, TableFormat::CSV)
     {
         remove_if_exists();
     }
@@ -125,7 +125,7 @@ struct SimulationTableFileFixture
     }
 
     fs::path out_file_path;
-    ParquetTableWriter parquet_writer;
+    SimulationTableWriter simulation_table_writer;
 
 private:
     void remove_if_exists()
@@ -158,7 +158,7 @@ BOOST_FIXTURE_TEST_CASE(AddEntry_SingleEntry, SimulationTableFileFixture)
                                .status = MipBasisStatus::BASIC};
 
     table.addEntry(entry);
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
     // Arrow CSV: header + data row, status is written as a string
@@ -179,7 +179,7 @@ BOOST_FIXTURE_TEST_CASE(AddEntry_WithNullOptionals, SimulationTableFileFixture)
                                .status = std::nullopt};
 
     table.addEntry(entry);
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
     // Arrow CSV: null values are written as "None"
@@ -697,7 +697,7 @@ BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
                        TimeConversionMode::SingleBlock,
                        0);
 
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
     // Should have entries for all 4 variable types with different time/scenario combinations
@@ -728,7 +728,7 @@ BOOST_FIXTURE_TEST_CASE(RoundTrip_DataIntegrity, SimulationTableFileFixture)
         table.addEntry(entry);
     }
 
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
 
     // Parse the CSV output manually to verify data integrity
     std::ifstream file_istream(out_file_path);
@@ -805,7 +805,7 @@ BOOST_FIXTURE_TEST_CASE(UnicodeCharacters_InNames, SimulationTableFileFixture)
                                .status = MipBasisStatus::BASIC};
 
     BOOST_CHECK_NO_THROW(table.addEntry(entry));
-    BOOST_CHECK_NO_THROW(parquet_writer.writeTable(table));
+    BOOST_CHECK_NO_THROW(simulation_table_writer.writeTable(table));
     std::string content = readFileContent(out_file_path);
 
     BOOST_CHECK(content.find("cömpönént_测试") != std::string::npos);
@@ -825,7 +825,7 @@ BOOST_FIXTURE_TEST_CASE(CSVEscaping_SpecialCharacters, SimulationTableFileFixtur
                                .status = MipBasisStatus::BASIC};
 
     table.addEntry(entry);
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
     BOOST_CHECK(content.find("comp@with@at") != std::string::npos);
@@ -871,7 +871,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockTimeIndexUsesLocalStep)
                         1,
                         TimeConversionMode::WeeklyBlocks);
 
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
     BOOST_CHECK(content.find("1,comp1,var4,168,0") != std::string::npos);
@@ -894,7 +894,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_DailyBlockTimeIndexUsesLocalStep)
                         1,
                         TimeConversionMode::DailyBlocks);
 
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
     BOOST_CHECK(content.find("1,comp1,var4,24,0") != std::string::npos);
@@ -917,7 +917,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SingleBlockTimeIndexUsesLocalStep)
                         0,
                         TimeConversionMode::SingleBlock);
 
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
     BOOST_CHECK(content.find("0,comp1,var4,0,0") != std::string::npos);
@@ -940,7 +940,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockConstraintTimeIndexUsesLocal
                         1,
                         TimeConversionMode::WeeklyBlocks);
 
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
     BOOST_CHECK(content.find("1,comp1,constraint2,168,0,0") != std::string::npos);
@@ -964,7 +964,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ForceScenarioIndexForTimeOnlyVariables)
                         TimeConversionMode::SingleBlock,
                         true);
 
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
     BOOST_CHECK(content.find("0,comp1,constraint1,None,None,0") != std::string::npos);
@@ -986,7 +986,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_BlockTimeIndexAbsentForScenarioOnlyOutp
                         0,
                         TimeConversionMode::SingleBlock);
 
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
     BOOST_CHECK(content.find("0,comp1,var3,None,None,0") != std::string::npos);
@@ -1008,7 +1008,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_VariabilityCombinations)
                         0,
                         TimeConversionMode::SingleBlock);
 
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
     BOOST_CHECK(content.find("0,comp1,var1,None,None,0,") != std::string::npos);
@@ -1063,7 +1063,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
                         0,
                         TimeConversionMode::SingleBlock);
 
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
     BOOST_CHECK(content.find(",componentToto,ct_drop,0,0,") != std::string::npos);
@@ -1092,7 +1092,7 @@ BOOST_FIXTURE_TEST_CASE(EmptyStrings_AllFields, SimulationTableFileFixture)
 
     table.addEntry(entry);
 
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
     BOOST_CHECK(content.find("0,,,None,None,0,None,None") != std::string::npos);
@@ -1114,7 +1114,7 @@ BOOST_FIXTURE_TEST_CASE(VeryLongStrings_ComponentNames, SimulationTableFileFixtu
                                .status = MipBasisStatus::BASIC};
 
     BOOST_CHECK_NO_THROW(table.addEntry(entry));
-    BOOST_CHECK_NO_THROW(parquet_writer.writeTable(table));
+    BOOST_CHECK_NO_THROW(simulation_table_writer.writeTable(table));
 
     std::string content = readFileContent(out_file_path);
     BOOST_CHECK(content.find(longComponent) != std::string::npos);
@@ -1168,7 +1168,7 @@ BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, SimulationTableFileFixture)
                                .value = 123.45,
                                .status = MipBasisStatus::BASIC};
     table.addEntry(entry);
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
 
     BOOST_CHECK(std::filesystem::exists(out_file_path));
 
@@ -1314,7 +1314,7 @@ BOOST_FIXTURE_TEST_CASE(FullWorkflow_CreateWriteRead, SimulationTableFileFixture
         table.addEntry(entry);
     }
 
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
 
     // Verify file exists and has correct name
     BOOST_CHECK(std::filesystem::exists(out_file_path));
@@ -1347,7 +1347,7 @@ BOOST_FIXTURE_TEST_CASE(LargeValues_HandledCorrectly, SimulationTableFileFixture
                                .status = MipBasisStatus::BASIC};
 
     BOOST_CHECK_NO_THROW(table.addEntry(entry));
-    BOOST_CHECK_NO_THROW(parquet_writer.writeTable(table));
+    BOOST_CHECK_NO_THROW(simulation_table_writer.writeTable(table));
 }
 
 BOOST_FIXTURE_TEST_CASE(SpecialCharacters_InComponentNames, SimulationTableFileFixture)
@@ -1363,7 +1363,7 @@ BOOST_FIXTURE_TEST_CASE(SpecialCharacters_InComponentNames, SimulationTableFileF
                                .status = MipBasisStatus::BASIC};
 
     table.addEntry(entry);
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
 
     std::string content = readFileContent(out_file_path);
     BOOST_CHECK(content.find("comp-with-dashes") != std::string::npos);
@@ -1383,7 +1383,7 @@ BOOST_FIXTURE_TEST_CASE(ZeroValues_HandledCorrectly, SimulationTableFileFixture)
                                .status = MipBasisStatus::FREE};
 
     table.addEntry(entry);
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
 
     std::string content = readFileContent(out_file_path);
     BOOST_CHECK(content.find("0,,") != std::string::npos);
@@ -1403,7 +1403,7 @@ BOOST_FIXTURE_TEST_CASE(NegativeValues_HandledCorrectly, SimulationTableFileFixt
                                .status = MipBasisStatus::BASIC};
 
     table.addEntry(entry);
-    parquet_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
 
     std::string content = readFileContent(out_file_path);
     BOOST_CHECK(content.find("-123.456") != std::string::npos);

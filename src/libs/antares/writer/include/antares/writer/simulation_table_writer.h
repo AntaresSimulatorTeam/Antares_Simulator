@@ -16,10 +16,10 @@ class SimulationTable;
 namespace Antares::Writer
 {
 
-class SIMULATION_TABLE_WRITERS_EXPORT ParquetTableWriter final
+class SIMULATION_TABLE_WRITERS_EXPORT SimulationTableWriter final
 {
 public:
-    ParquetTableWriter(const std::filesystem::path& filePath, TableFormat tableFormat);
+    SimulationTableWriter(const std::filesystem::path& filePath, TableFormat tableFormat);
     void writeTable(const IO::Outputs::SimulationTable& simuTable) const;
 
 private:

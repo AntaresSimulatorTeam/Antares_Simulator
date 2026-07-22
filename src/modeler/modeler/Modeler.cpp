@@ -17,7 +17,7 @@
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/solver/modeler/ILoader.h"
 #include "antares/utils/utils.h"
-#include "antares/writer/parquet_table_writer.h"
+#include "antares/writer/simulation_table_writer.h"
 
 using namespace Antares;
 using namespace Antares::Writer;
@@ -343,7 +343,7 @@ void Modeler::run()
                                                        *timeScenarioCtx_);
 
             auto outputFile = outputPath_ / "simulation-table";
-            ParquetTableWriter writer(outputFile, tableFormat_);
+            SimulationTableWriter writer(outputFile, tableFormat_);
             writer.writeTable(simulationTable);
             logs.info() << "Simulation table is written in: " << outputFile.string();
         }

@@ -7,10 +7,10 @@ find_package(Arrow REQUIRED)
 
 add_library(simulation-table-writers SHARED
         LegacySimulationTablesWriter.cpp
-        include/antares/writer/parquet_table_writer.h
+        include/antares/writer/simulation_table_writer.h
         private/parquet_arrow_utils.h
         columnToArrowAdapter.cpp
-        parquet_table_writer.cpp
+        simulation_table_writer.cpp
 )
 
 generate_export_header(simulation-table-writers
