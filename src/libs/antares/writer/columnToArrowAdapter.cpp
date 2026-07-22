@@ -39,25 +39,6 @@ void addOptionalsToBuilder(const std::vector<std::optional<T>>& in, B& builder)
     throwOnStatusKO(builder.AppendValues(values, valid));
 }
 
-std::vector<std::optional<unsigned>> to_optional_int(
-  const std::vector<std::optional<MipBasisStatus>>& v)
-{
-    std::vector<std::optional<unsigned>> to_return;
-    to_return.reserve(v.size());
-    for (const auto& e: v)
-    {
-        if (e.has_value())
-        {
-            to_return.push_back(static_cast<unsigned>(*e));
-        }
-        else
-        {
-            to_return.push_back(std::nullopt);
-        }
-    }
-    return to_return;
-}
-
 // ==========================
 // Class StringColumnAdapter
 // ==========================
@@ -220,27 +201,6 @@ std::shared_ptr<arrow::Array> OptIntColumnAdapter::makeArray() const
 {
     arrow::UInt32Builder builder;
     addOptionalsToBuilder(column_->data(), builder);
-    return throwOnResultKO(builder.Finish());
-}
-
-// ========================================
-// Class OptMipBasisStatusColumnAdapter
-// ========================================
-OptMipBasisStatusColumnAdapter::OptMipBasisStatusColumnAdapter(
-  const OptionalColumn<MipBasisStatus>* column):
-    column_(column)
-{
-}
-
-std::shared_ptr<arrow::Field> OptMipBasisStatusColumnAdapter::makeField() const
-{
-    return arrow::field(column_->name(), arrow::uint32());
-}
-
-std::shared_ptr<arrow::Array> OptMipBasisStatusColumnAdapter::makeArray() const
-{
-    arrow::UInt32Builder builder;
-    addOptionalsToBuilder(to_optional_int(column_->data()), builder);
     return throwOnResultKO(builder.Finish());
 }
 
