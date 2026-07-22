@@ -47,14 +47,14 @@ void checkForDuplicatesBetweenLegacyAndModeler(YAML::Node& systemYaml,
         if (legacyIds.contains(component.Id()))
         {
             throw Antares::IO::Inputs::InputError(
-              fmt::format("Duplicate component id '{}' found in both legacy and modeler components",
+              fmt::format("GEMS component '{}' cannot be named like that due to a conflict with a "
+                          "legacy component, please rename it",
                           component.Id()));
         }
     }
 }
 
-void appendModelerData(YAML::Node& systemYaml,
-                       const Antares::Solver::ModelerData& modelerData)
+void appendModelerData(YAML::Node& systemYaml, const Antares::Solver::ModelerData& modelerData)
 {
     YAML::Node system = systemYaml["system"];
 
