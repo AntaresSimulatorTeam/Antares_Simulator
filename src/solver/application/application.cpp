@@ -128,7 +128,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
 
     // Force some options
-    options.prepareOutput = pSettings.outputSelection != "none";
+    options.prepareOutput = true;
     options.ignoreConstraints = pSettings.ignoreConstraints;
 
     // Load the study from a folder
@@ -153,38 +153,34 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         }
 
         // no output ?
-        // study.parameters.noOutput = pSettings.noOutput;
+        pSettings.resolveOutputSelection();
 
         // Output selection, the command line overrides the study
-        if (pSettings.outputSelection == "all" || pSettings.outputSelection.empty())
+        if (pSettings.outputSelection == OutputSelection::All
+            || pSettings.outputSelection == OutputSelection::Default)
         {
             study.parameters.writeMonteCarloResults = true;
             study.parameters.simulationTable = true;
         }
 
-        else if (pSettings.outputSelection == "none")
+        else if (pSettings.outputSelection == OutputSelection::None)
         {
-            study.parameters.noOutput = true;
+            study.parameters.writeMonteCarloResults = false;
+            study.parameters.simulationTable = false;
         }
-        else if (pSettings.outputSelection == "monte-carlo")
+        else if (pSettings.outputSelection == OutputSelection::MonteCarlo)
         {
             study.parameters.writeMonteCarloResults = true;
             study.parameters.simulationTable = false;
         }
 
-        else if (pSettings.outputSelection == "simulation-table")
+        else if (pSettings.outputSelection == OutputSelection::SimulationTable)
         {
             study.parameters.writeMonteCarloResults = false;
             study.parameters.simulationTable = true;
         }
-        else
-        {
-            throw FatalError("Invalid value for --output: '" + pSettings.outputSelection
-                             + "' (expected all, none, monte-carlo or simulation-table)");
-        }
 
-        if (!study.parameters.noOutput && !study.parameters.writeMonteCarloResults
-            && !study.parameters.simulationTable)
+        if (!study.parameters.writeMonteCarloResults && !study.parameters.simulationTable)
         {
             logs.warning() << "Both Monte-Carlo results and simulation tables are disabled: no "
                               "simulation results will be written";
@@ -232,9 +228,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     logs.info();
 
-    if (pSettings.outputSelection == "none")
+    if (pSettings.outputSelection == OutputSelection::None)
     {
-        logs.info() << "The output has been disabled.";
+        logs.info() << "Monte-Carlo results and simulation tables are disabled.";
         logs.info();
     }
 
@@ -261,25 +257,19 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             // Actually importing the log file is useless here.
             // However, since we have warnings/errors, it allows to have a piece of
             // log when the unexpected happens.
-            if (!study.parameters.noOutput)
-            {
-                study.importLogsToOutputFolder(*resultWriter);
-            }
+            study.importLogsToOutputFolder(*resultWriter);
             // empty line
             logs.info();
         }
     }
 
     // Checking for filename length limits
-    if (pSettings.outputSelection != "none")
+    if (!study.checkForFilenameLimits())
     {
-        if (!study.checkForFilenameLimits())
-        {
-            throw Error::InvalidFileName();
-        }
-
-        writeComment();
+        throw Error::InvalidFileName();
     }
+
+    writeComment();
 
     if (!study.initializeRuntimeInfos())
     {
@@ -583,7 +573,7 @@ Application::~Application()
         }; // Catching log exception
 
         // Copy the log file if a result writer is available
-        if (!pStudy->parameters.noOutput && resultWriter)
+        if (resultWriter)
         {
             pStudy->importLogsToOutputFolder(*resultWriter);
         }

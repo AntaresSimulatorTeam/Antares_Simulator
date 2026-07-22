@@ -55,7 +55,7 @@ void addParameterOptions(Yuni::GetOpt::Parser& parser,
                "comment-file",
                "Specify the file to copy as comments of the simulation");
     parser.addFlag(settings.ignoreLoadingErrors, 'f', "force", "Ignore all errors at loading");
-    parser.add(settings.outputSelection,
+    parser.add(settings.outputSelectionStr,
                ' ',
                "output",
                "Select which output families to write: all, none, monte-carlo, "
@@ -254,7 +254,7 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Antares::Data::StudyL
 
     options.checkForceSimulationMode();
 
-    if (settings.outputSelection == "none" && settings.forceZipOutput)
+    if (settings.outputSelection == OutputSelection::None && settings.forceZipOutput)
     {
         throw Error::IncompatibleOutputOptions("no-output and zip-output options are incompatible");
     }
@@ -299,7 +299,37 @@ void Settings::reset()
     tsGeneratorsOnly = false;
     forceZipOutput = false;
 
-    outputSelection.clear();
+    outputSelectionStr.clear();
+    outputSelection = OutputSelection::Default;
 
     solverOptions = Antares::Solver::Optimization::CmdLineOptimOptions{};
+}
+
+void Settings::resolveOutputSelection()
+{
+    if (outputSelectionStr.empty())
+    {
+        outputSelection = OutputSelection::Default;
+    }
+    else if (outputSelectionStr == "all")
+    {
+        outputSelection = OutputSelection::All;
+    }
+    else if (outputSelectionStr == "none")
+    {
+        outputSelection = OutputSelection::None;
+    }
+    else if (outputSelectionStr == "monte-carlo")
+    {
+        outputSelection = OutputSelection::MonteCarlo;
+    }
+    else if (outputSelectionStr == "simulation-table")
+    {
+        outputSelection = OutputSelection::SimulationTable;
+    }
+    else
+    {
+        throw std::runtime_error("Invalid value for --output: '" + outputSelectionStr
+                                 + "' (expected all, none, monte-carlo or simulation-table)");
+    }
 }

@@ -65,12 +65,6 @@ def set_input_section_variable(context, input_file, section, variable, value):
     context.sih.set_input(input_file=input_file, section=section,
                           variable=variable, value=value)
 
-
-@given('the simulation tables are written')
-def enable_simulation_tables(context):
-    context.write_simu_tables = True
-
-
 @given('the linear solver is {solver_name}')
 def set_linear_solver(context, solver_name):
     context.config.userdata["linear-solver"] = solver_name
@@ -89,6 +83,10 @@ def parse_options(context, options):
 
         if options.count("--parallel") > 0:
             context.parallel = True
+
+        for opt in options.split():
+            if opt.startswith("--output="):
+                context.output_selection = opt.split("=", 1)[1]
 
 @when('I run antares simulator')
 @when('I run antares simulator with {options}')
@@ -363,8 +361,8 @@ def build_antares_solver_command(context):
         command.append('--named-mps-problems')
     if context.parallel:
         command.append('--force-parallel=4')
-    if getattr(context, "write_simu_tables", False):
-        command.append('--output=simulation-table')
+    if getattr(context, "output_selection", None):
+        command.append(f'--output={context.output_selection}')
     return command
 
 

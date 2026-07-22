@@ -226,12 +226,12 @@ bool Parameters::adequacy() const
 
 bool Parameters::shouldWriteMonteCarloResults() const
 {
-    return !noOutput && writeMonteCarloResults;
+    return writeMonteCarloResults;
 }
 
 bool Parameters::writeSimulationTable() const
 {
-    return !noOutput && simulationTable;
+    return simulationTable;
 }
 
 void Parameters::resetSeeds()

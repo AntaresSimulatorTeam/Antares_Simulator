@@ -78,7 +78,6 @@ void Study::parameterFiller(const StudyLoadOptions& options)
 {
     if (!options.prepareOutput)
     {
-        parameters.noOutput = true;
         parameters.yearByYear = false;
         parameters.timeSeriesToArchive = 0;
         parameters.storeTimeseriesNumbers = false;

@@ -243,9 +243,7 @@ inline ISimulation<ImplementationType>::ISimulation(
     logs.checkpoint() << "Running the simulation (" << ImplementationType::Name() << ')';
     logs.info() << "Allocating resources...";
 
-    if (pYearByYear
-        && (study.parameters.noOutput || settings.tsGeneratorsOnly
-            || !study.parameters.writeMonteCarloResults))
+    if (pYearByYear && (settings.tsGeneratorsOnly || !study.parameters.writeMonteCarloResults))
     {
         pYearByYear = false;
     }
@@ -343,7 +341,6 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
     // this is the case e.g if synthesis == true (writing mc-all)
     // Don't restart the queue if the writer doesn't need it
 
-    assert(!study.parameters.noOutput);
     assert(!settings.tsGeneratorsOnly);
 
     if (!pNbYearsReallyPerformed)
@@ -355,38 +352,35 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
     else
     {
         const auto& parameters = study.parameters;
-        if (not parameters.writeMonteCarloResults) // disabled by parameters
+        if (synthesis && settings.outputSelection.shouldExportMonteCarloResults())
         {
-            logs.info() << "The Monte-Carlo results are disabled.";
-            return;
-        }
+            if (synthesis and not parameters.synthesis) // disabled by parameters
+            {
+                logs.info() << "The simulation synthesis is disabled.";
+                return;
+            }
 
-        if (synthesis and not parameters.synthesis) // disabled by parameters
-        {
-            logs.info() << "The simulation synthesis is disabled.";
-            return;
-        }
+            // The target folder
+            String newPath;
+            newPath << ImplementationType::Name() << Yuni::IO::Separator;
+            if (synthesis)
+            {
+                newPath << "mc-all";
+            }
+            else
+            {
+                CString<10, false> tmp;
+                tmp = (year + 1);
+                newPath << "mc-ind" << Yuni::IO::Separator << "00000";
+                newPath.overwriteRight(tmp);
+            }
 
-        // The target folder
-        String newPath;
-        newPath << ImplementationType::Name() << Yuni::IO::Separator;
-        if (synthesis)
-        {
-            newPath << "mc-all";
+            // Dumping
+            ImplementationType::variables.exportSurveyResults(synthesis,
+                                                              newPath,
+                                                              numSpace,
+                                                              pResultWriter);
         }
-        else
-        {
-            CString<10, false> tmp;
-            tmp = (year + 1);
-            newPath << "mc-ind" << Yuni::IO::Separator << "00000";
-            newPath.overwriteRight(tmp);
-        }
-
-        // Dumping
-        ImplementationType::variables.exportSurveyResults(synthesis,
-                                                          newPath,
-                                                          numSpace,
-                                                          pResultWriter);
     }
 }
 

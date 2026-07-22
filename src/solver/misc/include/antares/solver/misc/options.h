@@ -12,6 +12,49 @@
 #include <antares/optimization-options/options.h>
 #include <antares/study/study.h>
 
+//! Selects which output families to write
+
+class OutputSelection
+{
+public:
+    enum Value
+    {
+        Default,        // no flag passed
+        All,            // --output=all
+        None,           // --output=none
+        MonteCarlo,     // --output=monte-carlo
+        SimulationTable // --output=simulation-table
+    };
+
+    OutputSelection(Value v = Default):
+        value_(v)
+    {
+    }
+
+    bool shouldExportMonteCarloResults() const
+    {
+        return value_ != None && value_ != SimulationTable;
+    }
+
+    bool shouldExportSimulationTable() const
+    {
+        return value_ != None && value_ != MonteCarlo;
+    }
+
+    bool operator==(Value v) const
+    {
+        return value_ == v;
+    }
+
+    bool operator!=(Value v) const
+    {
+        return value_ != v;
+    }
+
+private:
+    Value value_;
+};
+
 /*!
 ** \brief Command line settings for launching the simulation
 */
@@ -38,8 +81,14 @@ public:
     //! Run the TS generator only
     bool tsGeneratorsOnly = false;
 
-    //! Override the study's output selection ([output] monte-carlo-results / simulation-table)
-    std::string outputSelection;
+    //! Override the study's output selection
+    OutputSelection outputSelection = OutputSelection::Default;
+
+    //! Raw string from CLI, converted to outputSelection after parsing
+    std::string outputSelectionStr;
+
+    //! Convert outputSelectionStr to outputSelection (call after parsing)
+    void resolveOutputSelection();
 
     // In case we print simulation tables, do we print it in csv or parquet ?
     bool parquetFmtForSimuTables = false;

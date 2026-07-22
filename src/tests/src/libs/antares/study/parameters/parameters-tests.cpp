@@ -186,17 +186,6 @@ BOOST_FIXTURE_TEST_CASE(deprecated_legacy_outputs_key_is_still_read, Fixture)
     BOOST_CHECK_EQUAL(p.shouldWriteMonteCarloResults(), false);
 }
 
-BOOST_FIXTURE_TEST_CASE(no_output_disables_both_output_families, Fixture)
-{
-    p.reset();
-    p.writeMonteCarloResults = true;
-    p.simulationTable = true;
-    p.noOutput = true;
-
-    BOOST_CHECK_EQUAL(p.shouldWriteMonteCarloResults(), false);
-    BOOST_CHECK_EQUAL(p.writeSimulationTable(), false);
-}
-
 BOOST_FIXTURE_TEST_CASE(initializing_solvers_options_with_cmd_line_options, Fixture)
 {
     options.solverOptions.linearSolver = "xpress";
