@@ -295,78 +295,52 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
 BOOST_AUTO_TEST_CASE(WriteTo_ParquetFormat_CreatesCorrectFiles)
 {
     OptimisationsSimulationTable tables;
-
-    // Add entries to both tables
-    SimulationTableEntry entry1{.block = 1,
-                                .component = "comp1",
-                                .output = "var1",
-                                .absolute_time_index = 1,
-                                .block_time_index = 1,
-                                .scenario_index = 0,
-                                .value = 10.0,
-                                .status = MipBasisStatus::BASIC};
-
-    SimulationTableEntry entry2{.block = 2,
-                                .component = "comp2",
-                                .output = "var2",
-                                .absolute_time_index = 2,
-                                .block_time_index = 2,
-                                .scenario_index = 1,
-                                .value = 20.0,
-                                .status = MipBasisStatus::FREE};
-
-    tables.firstOptimSimulationTable()->addEntry(entry1);
-    tables.secondOptimSimulationTable()->addEntry(entry2);
+    tables.firstOptimSimulationTable()->addEntry({.block = 1,
+                                                  .component = "comp1",
+                                                  .output = "var1",
+                                                  .absolute_time_index = 1,
+                                                  .block_time_index = 1,
+                                                  .scenario_index = 0,
+                                                  .value = 10.0,
+                                                  .status = MipBasisStatus::BASIC});
+    tables.secondOptimSimulationTable()->addEntry({.block = 2,
+                                                   .component = "comp2",
+                                                   .output = "var2",
+                                                   .absolute_time_index = 2,
+                                                   .block_time_index = 2,
+                                                   .scenario_index = 1,
+                                                   .value = 20.0,
+                                                   .status = MipBasisStatus::FREE});
 
     auto tempDir = std::filesystem::temp_directory_path();
-    LegacySimulationTablesWriter legacyWriter(tempDir, 1 /* year */, TableFormat::Parquet);
-    legacyWriter.write(tables);
+    LegacySimulationTablesWriter(tempDir, 1, TableFormat::Parquet).write(tables);
 
-    // Check that both Parquet files were created
-    auto file1 = tempDir / "simulation-table-1-optim-nb-1.parquet";
-    auto file2 = tempDir / "simulation-table-1-optim-nb-2.parquet";
+    const auto file1 = tempDir / "simulation-table-1-optim-nb-1.parquet";
+    const auto file2 = tempDir / "simulation-table-1-optim-nb-2.parquet";
 
-    BOOST_CHECK(std::filesystem::exists(file1));
-    BOOST_CHECK(std::filesystem::exists(file2));
-
-    // Read and verify content of first file using Arrow/Parquet reader
+    // Helper to verify file content
+    auto verifyParquet = [](const std::filesystem::path& path)
     {
+        BOOST_CHECK(std::filesystem::exists(path));
         std::shared_ptr<arrow::io::ReadableFile> infile;
-        PARQUET_ASSIGN_OR_THROW(infile, arrow::io::ReadableFile::Open(file1.string()));
-
+        PARQUET_ASSIGN_OR_THROW(infile, arrow::io::ReadableFile::Open(path.string()));
         std::unique_ptr<parquet::arrow::FileReader> reader;
         PARQUET_ASSIGN_OR_THROW(reader,
                                 parquet::arrow::OpenFile(infile, arrow::default_memory_pool()));
-
         auto table_or = reader->ReadTable();
         BOOST_CHECK(table_or.ok());
-
         auto readTable = *table_or;
         BOOST_CHECK_EQUAL(readTable->num_rows(), 1);
         BOOST_CHECK_EQUAL(readTable->num_columns(), 8);
-    }
+    };
 
-    // Read and verify content of second file
-    {
-        std::shared_ptr<arrow::io::ReadableFile> infile;
-        PARQUET_ASSIGN_OR_THROW(infile, arrow::io::ReadableFile::Open(file2.string()));
+    verifyParquet(file1);
+    verifyParquet(file2);
 
-        std::unique_ptr<parquet::arrow::FileReader> reader;
-        PARQUET_ASSIGN_OR_THROW(reader,
-                                parquet::arrow::OpenFile(infile, arrow::default_memory_pool()));
-
-        auto table_or = reader->ReadTable();
-        BOOST_CHECK(table_or.ok());
-
-        auto readTable = *table_or;
-        BOOST_CHECK_EQUAL(readTable->num_rows(), 1);
-        BOOST_CHECK_EQUAL(readTable->num_columns(), 8);
-    }
-
-    // Remove the created files
     std::filesystem::remove(file1);
     std::filesystem::remove(file2);
 }
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(VariableDictionaryTests)
@@ -1387,7 +1361,7 @@ BOOST_FIXTURE_TEST_CASE(ZeroValues_HandledCorrectly, SimulationTableFileFixture)
 
     std::string content = readFileContent(out_file_path);
     BOOST_CHECK(content.find("0,,") != std::string::npos);
-    BOOST_CHECK(content.find(",Free") != std::string::npos);
+    BOOST_CHECK(content.find(",0,Free") != std::string::npos);
 }
 
 BOOST_FIXTURE_TEST_CASE(NegativeValues_HandledCorrectly, SimulationTableFileFixture)
