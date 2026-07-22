@@ -15,6 +15,7 @@
 #include <antares/inifile/inifile.h>
 #include <antares/optimization-options/options.h>
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
+#include <antares/study/output-selection.h>
 #include <antares/writer/result_format.h>
 #include "antares/antares/antares.h"
 #include "antares/study/fwd.h"
@@ -45,9 +46,11 @@ public:
     //! \name Output selection
     //@{
     //! Get if the Monte-Carlo result files (mc-all, mc-ind) must be written
-    bool shouldWriteMonteCarloResults() const;
+    bool writeMonteCarloResults() const;
     //! Get if the simulation table(s) must be written
     bool writeSimulationTable() const;
+    //! Output selection (Monte-Carlo results, simulation tables, etc.)
+    OutputSelection outputSelection;
     //@}
 
     /*!
@@ -419,14 +422,6 @@ public:
     //@{
     //! The current active rules for building scenarios (useful if building mode == custom)
     std::string activeRulesScenario;
-    //@}
-
-    //! \name Output
-    //@{
-    //! Write the Monte-Carlo result files (mc-all, mc-ind)
-    bool writeMonteCarloResults = true;
-    //! Write the simulation table(s)
-    bool simulationTable = false;
     //@}
 
     // In case we print simulation tables, do we print it in csv or parquet ?

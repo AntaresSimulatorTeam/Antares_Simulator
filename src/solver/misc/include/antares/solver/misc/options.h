@@ -4,52 +4,17 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include <yuni/yuni.h>
 #include <yuni/core/getopt.h>
 #include <yuni/core/string.h>
 
 #include <antares/optimization-options/options.h>
+#include <antares/study/output-selection.h>
 #include <antares/study/study.h>
 
-//! Selects which output families to write
-
-class OutputSelection
-{
-public:
-    enum Value
-    {
-        All,            // --output=all
-        None,           // --output=none
-        MonteCarlo,     // --output=monte-carlo
-        SimulationTable // --output=simulation-table
-    };
-
-    OutputSelection() = default;
-
-    explicit OutputSelection(Value v):
-        value_(v)
-    {
-    }
-
-    bool shouldExportMonteCarloResults() const
-    {
-        return value_ == All || value_ == MonteCarlo;
-    }
-
-    bool shouldExportSimulationTable() const
-    {
-        return value_ == All || value_ == SimulationTable;
-    }
-
-    bool operator==(Value v) const
-    {
-        return value_ == v;
-    }
-
-private:
-    Value value_ = MonteCarlo;
-};
+// OutputSelection is now defined in antares/study/output-selection.h
 
 /*!
 ** \brief Command line settings for launching the simulation
@@ -78,7 +43,7 @@ public:
     bool tsGeneratorsOnly = false;
 
     //! Override the study's output selection
-    OutputSelection outputSelection;
+    Antares::Data::OutputSelection outputSelection;
 
     //! Raw string from CLI, converted to outputSelection after parsing
     std::string outputSelectionStr;

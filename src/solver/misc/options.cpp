@@ -59,7 +59,7 @@ void addParameterOptions(Yuni::GetOpt::Parser& parser,
                ' ',
                "output",
                "Select which output families to write: all, none, monte-carlo, "
-               "simulation-table (default: follow the study's [output] settings)");
+               "simulation-table (default: monte-carlo)");
     parser.add(options.nbYears, 'y', "year", "Override the number of MC years");
     parser.addFlag(options.forceYearByYear,
                    ' ',
@@ -194,6 +194,7 @@ void applySimplexOptimRange(const Settings& settings, Antares::Data::StudyLoadOp
 
     throw Error::InvalidOptimizationRange();
 }
+
 } // namespace
 
 std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings,
@@ -254,7 +255,7 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Antares::Data::StudyL
 
     options.checkForceSimulationMode();
 
-    if (settings.outputSelection == OutputSelection::None && settings.forceZipOutput)
+    if (settings.outputSelection == Antares::Data::OutputSelection::None && settings.forceZipOutput)
     {
         throw Error::IncompatibleOutputOptions("no-output and zip-output options are incompatible");
     }
@@ -300,36 +301,12 @@ void Settings::reset()
     forceZipOutput = false;
 
     outputSelectionStr.clear();
-    outputSelection = OutputSelection{};
+    outputSelection = Antares::Data::OutputSelection{};
 
     solverOptions = Antares::Solver::Optimization::CmdLineOptimOptions{};
 }
 
 void Settings::resolveOutputSelection()
 {
-    if (outputSelectionStr.empty())
-    {
-        outputSelection = OutputSelection{};
-    }
-    else if (outputSelectionStr == "all")
-    {
-        outputSelection = OutputSelection{OutputSelection::All};
-    }
-    else if (outputSelectionStr == "none")
-    {
-        outputSelection = OutputSelection{OutputSelection::None};
-    }
-    else if (outputSelectionStr == "monte-carlo")
-    {
-        outputSelection = OutputSelection{OutputSelection::MonteCarlo};
-    }
-    else if (outputSelectionStr == "simulation-table")
-    {
-        outputSelection = OutputSelection{OutputSelection::SimulationTable};
-    }
-    else
-    {
-        throw std::runtime_error("Invalid value for --output: '" + outputSelectionStr
-                                 + "' (expected all, none, monte-carlo or simulation-table)");
-    }
+    outputSelection.fromString(outputSelectionStr);
 }

@@ -243,7 +243,7 @@ inline ISimulation<ImplementationType>::ISimulation(
     logs.checkpoint() << "Running the simulation (" << ImplementationType::Name() << ')';
     logs.info() << "Allocating resources...";
 
-    if (pYearByYear && (settings.tsGeneratorsOnly || !study.parameters.writeMonteCarloResults))
+    if (pYearByYear && (settings.tsGeneratorsOnly || !study.parameters.writeMonteCarloResults()))
     {
         pYearByYear = false;
     }

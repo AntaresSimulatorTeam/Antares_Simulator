@@ -229,27 +229,11 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 
 ---
 ## Output parameters
-These parameters are listed under the `[output]` section in the `.ini` file.
+This parameter is listed under the `[output]` section in the `.ini` file.
 
-The two parameters below select which families of results are written. They are only used when
-no `--output` flag is passed on the command line. When `--output` is specified, it overrides both
-parameters entirely (see [command line options](10-command-line.md)).
-
----
-#### monte-carlo-results
-...
-
----
-#### synthesis
-- **Expected value:** `true` or `false`
-- **Required:** no
-- **Default value:** `true`
-- **Usage:**
-    - `true`: synthetic results will be stored in a directory: `Study_name/OUTPUT/simu_tag/Economy/mc-all`
-
----
-#### simulation-table
-...
+The `synthesis` parameter controls whether the Monte-Carlo synthesis is written. The selection of
+which result families are produced is done from the command line with `--output` (see
+[command line options](10-command-line.md)).
 
 ---
 #### synthesis

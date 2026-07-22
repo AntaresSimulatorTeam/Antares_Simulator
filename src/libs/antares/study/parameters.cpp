@@ -224,14 +224,14 @@ bool Parameters::adequacy() const
     return mode == SimulationMode::Adequacy;
 }
 
-bool Parameters::shouldWriteMonteCarloResults() const
+bool Parameters::writeMonteCarloResults() const
 {
-    return writeMonteCarloResults;
+    return outputSelection.shouldExportMonteCarloResults();
 }
 
 bool Parameters::writeSimulationTable() const
 {
-    return simulationTable;
+    return outputSelection.shouldExportSimulationTable();
 }
 
 void Parameters::resetSeeds()
@@ -307,9 +307,6 @@ void Parameters::reset()
     // timeseries numbers
     storeTimeseriesNumbers = false;
     synthesis = true;
-
-    writeMonteCarloResults = true;
-    simulationTable = false;
 
     // Hydro heuristic policy
     hydroHeuristicPolicy.hhPolicy = hhpAccommodateRuleCurves;

@@ -181,8 +181,42 @@ BOOST_AUTO_TEST_CASE(output_settings_are_incompatible___exception_raised)
     settings.forceZipOutput = true;
     std::string err_msg = "no-output and zip-output options are incompatible";
     BOOST_CHECK_EXCEPTION(checkAndCorrectSettingsAndOptions(settings, options),
-                          std::runtime_error,
+                          Antares::Error::IncompatibleOutputOptions,
                           checkMessage(err_msg));
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(output_selection)
+
+BOOST_AUTO_TEST_CASE(output_selection_defaults_to_monte_carlo)
+{
+    Settings settings;
+
+    BOOST_CHECK(settings.outputSelection.shouldExportMonteCarloResults());
+    BOOST_CHECK(!settings.outputSelection.shouldExportSimulationTable());
+}
+
+BOOST_AUTO_TEST_CASE(output_selection_can_be_parsed_from_string)
+{
+    Settings settings;
+    settings.outputSelectionStr = "simulation-table";
+
+    settings.resolveOutputSelection();
+
+    BOOST_CHECK(!settings.outputSelection.shouldExportMonteCarloResults());
+    BOOST_CHECK(settings.outputSelection.shouldExportSimulationTable());
+}
+
+BOOST_AUTO_TEST_CASE(output_selection_rejects_invalid_value)
+{
+    Settings settings;
+    settings.outputSelectionStr = "invalid";
+
+    std::string err_msg = "Invalid value for --output: 'invalid'";
+    BOOST_CHECK_EXCEPTION(settings.resolveOutputSelection(),
+                          std::runtime_error,
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

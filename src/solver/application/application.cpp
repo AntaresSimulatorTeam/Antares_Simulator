@@ -154,32 +154,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
         // no output ?
         pSettings.resolveOutputSelection();
+        // Resolve the command-line output selection and apply to study parameters
+        study.parameters.outputSelection = pSettings.outputSelection;
 
-        // Output selection, the command line overrides the study
-        if (pSettings.outputSelection == OutputSelection::All)
-        {
-            study.parameters.writeMonteCarloResults = true;
-            study.parameters.simulationTable = true;
-        }
-
-        else if (pSettings.outputSelection == OutputSelection::None)
-        {
-            study.parameters.writeMonteCarloResults = false;
-            study.parameters.simulationTable = false;
-        }
-        else if (pSettings.outputSelection == OutputSelection::MonteCarlo)
-        {
-            study.parameters.writeMonteCarloResults = true;
-            study.parameters.simulationTable = false;
-        }
-
-        else if (pSettings.outputSelection == OutputSelection::SimulationTable)
-        {
-            study.parameters.writeMonteCarloResults = false;
-            study.parameters.simulationTable = true;
-        }
-
-        if (!study.parameters.writeMonteCarloResults && !study.parameters.simulationTable)
+        if (!study.parameters.writeMonteCarloResults() && !study.parameters.writeSimulationTable())
         {
             logs.warning() << "Both Monte-Carlo results and simulation tables are disabled: no "
                               "simulation results will be written";
@@ -227,7 +205,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     logs.info();
 
-    if (pSettings.outputSelection == OutputSelection::None)
+    if (pSettings.outputSelection == Antares::Data::OutputSelection::None)
     {
         logs.info() << "Monte-Carlo results and simulation tables are disabled.";
         logs.info();

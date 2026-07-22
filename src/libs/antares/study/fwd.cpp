@@ -5,6 +5,7 @@
 
 #include <algorithm>
 
+#include <antares/study/output-selection.h>
 #include <antares/writer/result_format.h>
 
 using namespace Yuni;
@@ -531,6 +532,16 @@ template<>
 const std::initializer_list<std::string>& getNames<SimplexOptimization>()
 {
     static const std::initializer_list<std::string> il = {"unknown", "day", "week"};
+    return il;
+}
+
+template<>
+const std::initializer_list<std::string>& getNames<OutputSelection::Value>()
+{
+    static const std::initializer_list<std::string> il = {"all",
+                                                          "none",
+                                                          "monte-carlo",
+                                                          "simulation-table"};
     return il;
 }
 } // namespace Enum
