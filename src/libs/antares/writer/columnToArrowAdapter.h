@@ -126,21 +126,6 @@ private:
     const IO::Outputs::OptionalColumn<unsigned>* column_;
 };
 
-// ================================
-// Class OptMipBasisStatusColumnAdapter
-// ================================
-class OptMipBasisStatusColumnAdapter: public IColumnAdapter
-{
-public:
-    explicit OptMipBasisStatusColumnAdapter(
-      const IO::Outputs::OptionalColumn<Optimisation::LinearProblemApi::MipBasisStatus>* column);
-    std::shared_ptr<arrow::Field> makeField() const override;
-    std::shared_ptr<arrow::Array> makeArray() const override;
-
-private:
-    const IO::Outputs::OptionalColumn<Optimisation::LinearProblemApi::MipBasisStatus>* column_;
-};
-
 // ===========================
 // Column adapter factory
 // ===========================

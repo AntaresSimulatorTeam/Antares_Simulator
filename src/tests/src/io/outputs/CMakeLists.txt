@@ -20,7 +20,9 @@ add_boost_test(testOutputs
         Antares::load-modeler-files
         Antares::simulation-table-writers
         ortools::ortools
-        Boost::unit_test_framework)
+        Boost::unit_test_framework
+        "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Arrow::arrow_static,Arrow::arrow_shared>"
+        "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Parquet::parquet_static,Parquet::parquet_shared>")
 
 target_compile_definitions(testOutputs PRIVATE
         RESOURCES_DIR="${CMAKE_SOURCE_DIR}/resources"
