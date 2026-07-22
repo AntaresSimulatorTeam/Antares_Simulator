@@ -470,11 +470,13 @@ var hierarchy =
       [ "Antares::IO::Outputs::TypedColumn< std::string >", "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html", null ],
       [ "Antares::IO::Outputs::TypedColumn< unsigned >", "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html", null ],
       [ "Antares::IO::Outputs::TypedColumn< Optimisation::LinearProblemApi::MipBasisStatus >", "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html", null ],
+      [ "Antares::IO::Outputs::InternedStringColumn", "classAntares_1_1IO_1_1Outputs_1_1InternedStringColumn.html", null ],
       [ "Antares::IO::Outputs::TypedColumn< T >", "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html", null ]
     ] ],
     [ "Antares::Writer::IColumnAdapter", "classAntares_1_1Writer_1_1IColumnAdapter.html", [
       [ "Antares::Writer::DoubleColumnAdapter", "classAntares_1_1Writer_1_1DoubleColumnAdapter.html", null ],
       [ "Antares::Writer::IntColumnAdapter", "classAntares_1_1Writer_1_1IntColumnAdapter.html", null ],
+      [ "Antares::Writer::InternedStringColumnAdapter", "classAntares_1_1Writer_1_1InternedStringColumnAdapter.html", null ],
       [ "Antares::Writer::OptDoubleColumnAdapter", "classAntares_1_1Writer_1_1OptDoubleColumnAdapter.html", null ],
       [ "Antares::Writer::OptIntColumnAdapter", "classAntares_1_1Writer_1_1OptIntColumnAdapter.html", null ],
       [ "Antares::Writer::OptMipBasisStatusColumnAdapter", "classAntares_1_1Writer_1_1OptMipBasisStatusColumnAdapter.html", null ],
