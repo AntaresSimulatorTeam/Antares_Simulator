@@ -4,6 +4,8 @@
 #include <utility>
 #include <yaml-cpp/yaml.h>
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <antares/solver/optimisation/opt_rename_problem.h>
 #include <antares/study/area/constants.h>
 #include <antares/study/study.h>
@@ -40,35 +42,22 @@ YAML::Node makeComponent(const std::string& id,
     return component;
 }
 
-std::string miscGenTechnologyValue(int index)
+std::string miscGenValue(int index)
 {
     switch (index)
     {
     case MiscGenIndex::fhhCHP:
-        return "chp";
+        return "combined_heat_power";
     case MiscGenIndex::fhhBioMass:
         return "biomass";
     case MiscGenIndex::fhhBioGaz:
-        return "biogaz";
+        return "biogas";
     case MiscGenIndex::fhhWaste:
         return "waste";
     case MiscGenIndex::fhhGeoThermal:
         return "geothermal";
     case MiscGenIndex::fhhOther:
         return "other";
-    case MiscGenIndex::fhhPSP:
-        return "psp";
-    case MiscGenIndex::fhhRowBalance:
-        return "rowbalance";
-    default:
-        return "unknown";
-    }
-}
-
-std::string miscGenMiscellaneousType(int index)
-{
-    switch (index)
-    {
     case MiscGenIndex::fhhPSP:
         return "pumped_storage_power";
     case MiscGenIndex::fhhRowBalance:
@@ -157,18 +146,18 @@ YAML::Node linkToYaml(const AreaLink& link)
 
 YAML::Node thermalClusterToYaml(const ThermalCluster& cluster)
 {
-    return makeComponent(
-      BuildThermalClusterComponentId(cluster.parentArea->id, cluster.id()),
-      "antares_legacy_models.thermal",
-      {{"carrier", "electricity"}, {"technology", cluster.getGroup()}});
+    return makeComponent(BuildThermalClusterComponentId(cluster.parentArea->id, cluster.id()),
+                         "antares_legacy_models.thermal",
+                         {{"carrier", "electricity"},
+                          {"technology", boost::to_lower_copy(cluster.getGroup())}});
 }
 
 YAML::Node renewableClusterToYaml(const RenewableCluster& cluster)
 {
-    return makeComponent(
-      BuildRenewableClusterComponentId(cluster.parentArea->id, cluster.id()),
-      "antares_legacy_models.renewable",
-      {{"carrier", "electricity"}, {"technology", cluster.getGroup()}});
+    return makeComponent(BuildRenewableClusterComponentId(cluster.parentArea->id, cluster.id()),
+                         "antares_legacy_models.renewable",
+                         {{"carrier", "electricity"},
+                          {"technology", boost::to_lower_copy(cluster.getGroup())}});
 }
 
 YAML::Node miscGenToYaml(const Area& area, int miscGenIndex)
@@ -176,8 +165,8 @@ YAML::Node miscGenToYaml(const Area& area, int miscGenIndex)
     return makeComponent(BuildMiscGenComponentId(area.id, miscGenTypeName(miscGenIndex)),
                          "antares_legacy_models.miscellaneous_generation",
                          {{"carrier", "electricity"},
-                          {"technology", miscGenTechnologyValue(miscGenIndex)},
-                          {"miscellaneous_type", miscGenMiscellaneousType(miscGenIndex)}});
+                          {"technology", miscGenValue(miscGenIndex)},
+                          {"miscellaneous_type", miscGenValue(miscGenIndex)}});
 }
 
 YAML::Node shortTermStorageToYaml(const Area& area,
@@ -185,7 +174,8 @@ YAML::Node shortTermStorageToYaml(const Area& area,
 {
     return makeComponent(BuildSTStorageClusterComponentId(area.id, storage.id),
                          "antares_legacy_models.short_term_storage",
-                         {{"carrier", "electricity"}, {"group", storage.getGroup()}});
+                         {{"carrier", "electricity"},
+                          {"group", boost::to_lower_copy(storage.getGroup())}});
 }
 
 YAML::Node longTermStorageToYaml(const Area& area)
