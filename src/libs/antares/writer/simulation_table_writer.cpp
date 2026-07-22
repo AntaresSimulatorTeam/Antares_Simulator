@@ -46,14 +46,7 @@ std::shared_ptr<arrow::Table> makeArrowTable(const IO::Outputs::SimulationTable&
                                                      TableFormat tableFormat)
 {
     auto adjustedPath = filePath;
-    if (tableFormat == TableFormat::CSV)
-    {
-        adjustedPath.replace_extension(".csv");
-    }
-    else
-    {
-        adjustedPath.replace_extension(".parquet");
-    }
+    adjustedPath.replace_extension(tableFormat == TableFormat::CSV ? ".csv" : ".parquet");
     return adjustedPath;
 }
 
@@ -104,7 +97,6 @@ void SimulationTableWriter::writeCsv(const fs::path& file_path,
 
     // Configure CSV writer options
     auto csv_options = arrow::csv::WriteOptions::Defaults();
-    // TODO prevent special characters "\n", ",", etc. in component & variable names
     csv_options.quoting_style = arrow::csv::QuotingStyle::None;
     csv_options.quoting_header = arrow::csv::QuotingStyle::None;
     csv_options.null_string = "None";
