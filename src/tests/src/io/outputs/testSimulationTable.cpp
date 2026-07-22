@@ -182,9 +182,9 @@ BOOST_FIXTURE_TEST_CASE(AddEntry_WithNullOptionals, SimulationTableFileFixture)
     parquet_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
-    // Arrow CSV: null values are empty strings (not "None")
+    // Arrow CSV: null values are written as "None"
     BOOST_CHECK(content.find("block,component,output") != std::string::npos);
-    BOOST_CHECK(content.find("2,comp2,var2,,,0,,") != std::string::npos);
+    BOOST_CHECK(content.find("2,comp2,var2,None,None,0,None,None") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(Clear_RemovesAllEntries)
@@ -967,7 +967,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ForceScenarioIndexForTimeOnlyVariables)
     parquet_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
-    BOOST_CHECK(content.find("0,comp1,constraint1,,,0") != std::string::npos);
+    BOOST_CHECK(content.find("0,comp1,constraint1,None,None,0") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_BlockTimeIndexAbsentForScenarioOnlyOutputs)
@@ -989,7 +989,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_BlockTimeIndexAbsentForScenarioOnlyOutp
     parquet_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
-    BOOST_CHECK(content.find("0,comp1,var3,,,0") != std::string::npos);
+    BOOST_CHECK(content.find("0,comp1,var3,None,None,0") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_VariabilityCombinations)
@@ -1011,10 +1011,10 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_VariabilityCombinations)
     parquet_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
-    BOOST_CHECK(content.find("0,comp1,var1,,,0,") != std::string::npos);
+    BOOST_CHECK(content.find("0,comp1,var1,None,None,0,") != std::string::npos);
     BOOST_CHECK(content.find("0,comp1,var2,0,0,0") != std::string::npos);
     BOOST_CHECK(content.find("0,comp1,var2,1,1,0") != std::string::npos);
-    BOOST_CHECK(content.find("0,comp1,var3,,,0") != std::string::npos);
+    BOOST_CHECK(content.find("0,comp1,var3,None,None,0") != std::string::npos);
     BOOST_CHECK(content.find("0,comp1,var4,0,0,0") != std::string::npos);
     BOOST_CHECK(content.find("0,comp1,var4,1,1,0") != std::string::npos);
 }
@@ -1095,7 +1095,7 @@ BOOST_FIXTURE_TEST_CASE(EmptyStrings_AllFields, SimulationTableFileFixture)
     parquet_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
-    BOOST_CHECK(content.find("0,,,,,0,,") != std::string::npos);
+    BOOST_CHECK(content.find("0,,,None,None,0,None,None") != std::string::npos);
 }
 
 BOOST_FIXTURE_TEST_CASE(VeryLongStrings_ComponentNames, SimulationTableFileFixture)

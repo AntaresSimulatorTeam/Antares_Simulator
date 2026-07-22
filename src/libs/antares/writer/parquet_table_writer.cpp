@@ -107,6 +107,7 @@ void ParquetTableWriter::writeCsv(const fs::path& file_path,
     // TODO prevent special characters "\n", ",", etc. in component & variable names
     csv_options.quoting_style = arrow::csv::QuotingStyle::None;
     csv_options.quoting_header = arrow::csv::QuotingStyle::None;
+    csv_options.null_string = "None";
 
     // Open output file
     auto outfile = throwOnResultKO(arrow::io::FileOutputStream::Open(file_path.string()));
