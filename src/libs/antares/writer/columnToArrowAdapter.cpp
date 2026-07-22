@@ -100,6 +100,39 @@ std::shared_ptr<arrow::Array> IntColumnAdapter::makeArray() const
 }
 
 // ================================
+// Class InternedStringColumnAdapter
+// ================================
+InternedStringColumnAdapter::InternedStringColumnAdapter(const InternedStringColumn* column):
+    column_(column)
+{
+}
+
+std::shared_ptr<arrow::Field> InternedStringColumnAdapter::makeField() const
+{
+    return arrow::field(column_->name(), arrow::utf8());
+}
+
+std::shared_ptr<arrow::Array> InternedStringColumnAdapter::makeArray() const
+{
+    arrow::StringBuilder builder;
+    const auto& dictionary = column_->dictionary();
+
+    for (const uint32_t index: column_->indices())
+    {
+        if (index == InternedStringColumn::nullIndex)
+        {
+            throwOnStatusKO(builder.AppendNull());
+        }
+        else
+        {
+            throwOnStatusKO(builder.Append(dictionary[index]));
+        }
+    }
+
+    return throwOnResultKO(builder.Finish());
+}
+
+// ================================
 // Class OptStringColumnAdapter
 // ================================
 OptStringColumnAdapter::OptStringColumnAdapter(const OptionalColumn<std::string>* column):
@@ -228,6 +261,11 @@ public:
         return std::make_shared<OptStringColumnAdapter>(&col);
     }
 
+    std::shared_ptr<IColumnAdapter> visit(const InternedStringColumn& col) override
+    {
+        return std::make_shared<InternedStringColumnAdapter>(&col);
+    }
+
     std::shared_ptr<IColumnAdapter> visit(const OptionalColumn<double>& col) override
     {
         return std::make_shared<OptDoubleColumnAdapter>(&col);
@@ -236,11 +274,6 @@ public:
     std::shared_ptr<IColumnAdapter> visit(const OptionalColumn<unsigned>& col) override
     {
         return std::make_shared<OptIntColumnAdapter>(&col);
-    }
-
-    std::shared_ptr<IColumnAdapter> visit(const OptionalColumn<MipBasisStatus>& col) override
-    {
-        return std::make_shared<OptMipBasisStatusColumnAdapter>(&col);
     }
 };
 
