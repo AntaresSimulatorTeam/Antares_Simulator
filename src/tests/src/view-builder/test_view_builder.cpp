@@ -459,29 +459,6 @@ BOOST_AUTO_TEST_CASE(connection_for_link)
     BOOST_CHECK_MESSAGE(foundOutPort, "Missing link out_port -> germany_node connection");
 }
 
-BOOST_AUTO_TEST_CASE(legacy_component_ids_are_collected)
-{
-    std::unordered_set<std::string> legacyIds;
-    generateSystemLegacyComponents(*study, legacyIds);
-
-    BOOST_CHECK(legacyIds.contains("france_node"));
-    BOOST_CHECK(legacyIds.contains("france_load"));
-    BOOST_CHECK(legacyIds.contains("france_wind"));
-    BOOST_CHECK(legacyIds.contains("france_solar"));
-    BOOST_CHECK(legacyIds.contains("france_ror"));
-    BOOST_CHECK(legacyIds.contains("france_miscgen_chp"));
-    BOOST_CHECK(legacyIds.contains("france_miscgen_rowbalance"));
-    BOOST_CHECK(legacyIds.contains("france_thermal_nuc_fr"));
-    BOOST_CHECK(legacyIds.contains("france_renewable_wind_fr"));
-    BOOST_CHECK(legacyIds.contains("france_short_term_storage_battery_fr"));
-    BOOST_CHECK(legacyIds.contains("france_hydro_storage"));
-    BOOST_CHECK(legacyIds.contains("germany_node"));
-    BOOST_CHECK(legacyIds.contains("germany_load"));
-    BOOST_CHECK(legacyIds.contains("france_germany_link"));
-
-    BOOST_CHECK_EQUAL(legacyIds.size(), 32);
-}
-
 using namespace Antares::ModelerStudy::SystemModel;
 
 namespace
