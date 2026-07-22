@@ -59,7 +59,7 @@ void addParameterOptions(Yuni::GetOpt::Parser& parser,
                ' ',
                "output",
                "Select which output families to write: all, none, monte-carlo, "
-               "simulation-table (default: monte-carlo)");
+               "simulation-tables (default: monte-carlo)");
     parser.add(options.nbYears, 'y', "year", "Override the number of MC years");
     parser.addFlag(options.forceYearByYear,
                    ' ',

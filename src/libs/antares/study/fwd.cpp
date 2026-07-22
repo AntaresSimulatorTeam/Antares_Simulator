@@ -541,7 +541,7 @@ const std::initializer_list<std::string>& getNames<OutputSelection::Value>()
     static const std::initializer_list<std::string> il = {"all",
                                                           "none",
                                                           "monte-carlo",
-                                                          "simulation-table"};
+                                                          "simulation-tables"};
     return il;
 }
 } // namespace Enum

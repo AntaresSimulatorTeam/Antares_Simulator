@@ -44,14 +44,14 @@ public:
         {
             value_ = None;
         }
-        else if (input == "simulation-table")
+        else if (input == "simulation-tables")
         {
             value_ = SimulationTable;
         }
         else
         {
             throw std::runtime_error("Invalid value for --output: '" + input
-                                     + "' (expected all, none, monte-carlo or simulation-table)");
+                                     + "' (expected all, none, monte-carlo or simulation-tables)");
         }
     }
 

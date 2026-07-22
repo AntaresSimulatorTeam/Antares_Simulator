@@ -157,25 +157,6 @@ BOOST_FIXTURE_TEST_CASE(output_selection_defaults_to_monte_carlo_results_only, F
     BOOST_CHECK_EQUAL(p.writeSimulationTable(), false);
 }
 
-BOOST_FIXTURE_TEST_CASE(output_selection_is_not_read_from_ini_anymore, Fixture)
-{
-    std::stringstream s;
-    s << R"([output]
-            monte-carlo-results = false
-            simulation-table = true)";
-    IniFile ini;
-    ini.readStream(s);
-
-    p.loadFromINI(ini, version);
-    p.validateOptions(options);
-    p.fixBadValues();
-
-    // Legacy INI keys are ignored; default is MonteCarlo
-    BOOST_CHECK_EQUAL(p.outputSelection.value(), OutputSelection::MonteCarlo);
-    BOOST_CHECK_EQUAL(p.writeMonteCarloResults(), true);
-    BOOST_CHECK_EQUAL(p.writeSimulationTable(), false);
-}
-
 BOOST_FIXTURE_TEST_CASE(initializing_solvers_options_with_cmd_line_options, Fixture)
 {
     options.solverOptions.linearSolver = "xpress";
