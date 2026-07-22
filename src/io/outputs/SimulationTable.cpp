@@ -19,9 +19,7 @@ SimulationTable::SimulationTable()
     block_time_index_ = storage_.addOptionalColumn<unsigned int>("block_time_index");
     scenario_index_ = storage_.addIntegralColumn("scenario_index");
     value_ = storage_.addOptionalColumn<double>("value");
-    basis_status_ = storage_
-                      .addOptionalColumn<Antares::Optimisation::LinearProblemApi::MipBasisStatus>(
-                        "basis_status");
+    basis_status_ = storage_.addInternedStringColumn("basis_status");
 }
 
 SimulationTable::SimulationTable(SimulationTable&& other) noexcept = default;
@@ -35,7 +33,7 @@ void SimulationTable::addEntry(const SimulationTableEntry& entry)
     block_time_index_->add(entry.block_time_index);
     scenario_index_->add(entry.scenario_index);
     value_->add(entry.value);
-    basis_status_->add(entry.status);
+    basis_status_->add(StatusToString(entry.status));
 }
 
 const std::vector<std::shared_ptr<IColumn>>& SimulationTable::columns() const
