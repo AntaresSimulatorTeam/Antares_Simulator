@@ -15,6 +15,7 @@
 #include <parquet/exception.h>
 
 #include "antares/io/outputs/SimulationTable.h"
+#include "antares/optimisation/linear-problem-api/hasStatus.h"
 #include "antares/writer/simulation_table_writer.h"
 
 namespace fs = std::filesystem;
