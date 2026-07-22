@@ -1,7 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include <unordered_set>
+#include <algorithm>
 #include <yaml-cpp/yaml.h>
 
 #include <antares/io/inputs/InputError.h>
@@ -34,23 +34,32 @@ YAML::Node makeConnection(const std::string& component1,
 void checkForDuplicatesBetweenLegacyAndModeler(YAML::Node& systemYaml,
                                                const Antares::Solver::ModelerData* modelerData)
 {
-    std::unordered_set<std::string> legacyIds;
-    YAML::Node system = systemYaml["system"];
+    std::set<std::string> legacyIds;
+    std::set<std::string> gemsIds;
 
-    for (const auto& component: system["components"])
+    for (const auto& component: systemYaml["system"]["components"])
     {
         legacyIds.insert(component["id"].as<std::string>());
     }
 
     for (const auto& component: modelerData->system->Components())
     {
-        if (legacyIds.contains(component.Id()))
-        {
-            throw Antares::IO::Inputs::InputError(
-              fmt::format("GEMS component '{}' cannot be named like that due to a conflict with a "
-                          "legacy component, please rename it",
-                          component.Id()));
-        }
+        gemsIds.insert(component.Id());
+    }
+
+    std::vector<std::string> duplicates;
+    std::set_intersection(legacyIds.begin(),
+                          legacyIds.end(),
+                          gemsIds.begin(),
+                          gemsIds.end(),
+                          std::back_inserter(duplicates));
+
+    if (!duplicates.empty())
+    {
+        throw Antares::IO::Inputs::InputError(
+          fmt::format("GEMS component(s) '{}' cannot be named like that due to a conflict with a "
+                      "legacy component(s), please rename it",
+                      boost::join(duplicates, ", ")));
     }
 }
 

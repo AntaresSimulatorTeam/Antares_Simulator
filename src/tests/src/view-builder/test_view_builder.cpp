@@ -522,15 +522,13 @@ BOOST_AUTO_TEST_CASE(no_duplicate_id_passes)
     BOOST_REQUIRE(componentsNode.IsSequence());
     BOOST_CHECK_EQUAL(componentsNode.size(), 33);
 
-    bool found = false;
-    for (const auto& comp: componentsNode)
-    {
-        if (comp["id"].as<std::string>() == "unique_modeler_component")
-        {
-            found = true;
-        }
-    }
-    BOOST_CHECK(found);
+    const auto it = std::find_if(componentsNode.begin(),
+                                 componentsNode.end(),
+                                 [](const YAML::Node& comp) {
+                                     return comp["id"].as<std::string>()
+                                            == "unique_modeler_component";
+                                 });
+    BOOST_CHECK(it != componentsNode.end());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
