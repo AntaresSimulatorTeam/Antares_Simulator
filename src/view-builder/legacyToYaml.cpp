@@ -42,7 +42,7 @@ YAML::Node makeComponent(const std::string& id,
     return component;
 }
 
-std::string miscGenValue(int index)
+std::string miscGenTechnologyValue(int index)
 {
     switch (index)
     {
@@ -58,6 +58,19 @@ std::string miscGenValue(int index)
         return "geothermal";
     case MiscGenIndex::fhhOther:
         return "other";
+    case MiscGenIndex::fhhPSP:
+        return "pumped_storage_power";
+    case MiscGenIndex::fhhRowBalance:
+        return "rest_world";
+    default:
+        return "unknown";
+    }
+}
+
+std::string miscGenMiscellaneousType(int index)
+{
+    switch (index)
+    {
     case MiscGenIndex::fhhPSP:
         return "pumped_storage_power";
     case MiscGenIndex::fhhRowBalance:
@@ -165,8 +178,8 @@ YAML::Node miscGenToYaml(const Area& area, int miscGenIndex)
     return makeComponent(BuildMiscGenComponentId(area.id, miscGenTypeName(miscGenIndex)),
                          "antares_legacy_models.miscellaneous_generation",
                          {{"carrier", "electricity"},
-                          {"technology", miscGenValue(miscGenIndex)},
-                          {"miscellaneous_type", miscGenValue(miscGenIndex)}});
+                          {"technology", miscGenTechnologyValue(miscGenIndex)},
+                          {"miscellaneous_type", miscGenMiscellaneousType(miscGenIndex)}});
 }
 
 YAML::Node shortTermStorageToYaml(const Area& area,
