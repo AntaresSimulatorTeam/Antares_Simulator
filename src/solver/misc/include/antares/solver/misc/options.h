@@ -14,8 +14,6 @@
 #include <antares/study/output-selection.h>
 #include <antares/study/study.h>
 
-// OutputSelection is now defined in antares/study/output-selection.h
-
 /*!
 ** \brief Command line settings for launching the simulation
 */
