@@ -76,14 +76,6 @@ bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& option
 
 void Study::parameterFiller(const StudyLoadOptions& options)
 {
-    if (!options.prepareOutput)
-    {
-        parameters.yearByYear = false;
-        parameters.timeSeriesToArchive = 0;
-        parameters.storeTimeseriesNumbers = false;
-        parameters.synthesis = false;
-    }
-
     // We can not run the simulation if the study folder is not in the latest
     // version and that we would like to re-importe the generated timeseries
     // We have time-series to import

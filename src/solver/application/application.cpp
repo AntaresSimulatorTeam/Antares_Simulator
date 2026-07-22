@@ -128,7 +128,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
 
     // Force some options
-    options.prepareOutput = true;
     options.ignoreConstraints = pSettings.ignoreConstraints;
 
     // Load the study from a folder
