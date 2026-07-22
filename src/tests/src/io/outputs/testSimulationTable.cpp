@@ -250,7 +250,7 @@ BOOST_FIXTURE_TEST_CASE(WriteTable_LargeTableCrossingFlushBoundary, SimulationTa
         table.addEntry(entry);
     }
 
-    csv_writer.writeTable(table);
+    simulation_table_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
     // Sanity check: the payload must actually exceed the writer's flush threshold (1 MiB),
