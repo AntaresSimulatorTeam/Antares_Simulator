@@ -447,6 +447,12 @@ def check_res_participation_for_specific_year_and_cluster_yearly(context, area, 
 def check_res_participation_for_specific_year_and_cluster_yearly_inferior(context, area, year, res, cluster, res_part):
     assert (context.soh.get_reserve_total_participation_for_year_and_cluster(area, year, res,cluster) < res_part)
 
+
+@then('in area "{area}", during year {year:d}, total reserve participation cost is {expected_cost:g} Euro')
+def check_reserve_participation_cost(context, area, year, expected_cost):
+    actual_cost = context.soh.get_reserve_participation_cost(area, year)
+    assert_double_close(expected_cost, actual_cost, 1e-6, "Reserve participation cost")
+
 @step('the message "{log}" is reported in the logs')
 def ckeck_log_exists(context, log):
     for log_line in context.logs_err.splitlines():

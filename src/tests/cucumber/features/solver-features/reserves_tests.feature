@@ -642,7 +642,8 @@ Scenario: ST_3UP_unavailable_reserves_test3
 	  And in area "AREA", during year 1, for cluster "Hydro" and reserve "Res_2", total reserve participation power is 1680 MWh
     And in area "AREA", during year 1, for cluster "Hydro" and reserve "Res_1", on "1 JAN 06:00", reserve participation power is 6 MWh
 	  And in area "AREA", during year 1, for cluster "Hydro" and reserve "Res_2", on "1 JAN 06:00", reserve participation power is 10 MWh
-    And the annual system cost is 2.1504e+06
+    And in area "AREA", during year 1, total reserve participation cost is 436.8 Euro
+    And the annual system cost is 2.1508368e+06
 	
 
 @short
@@ -655,7 +656,7 @@ Scenario: ST_3UP_unavailable_reserves_test3
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "Hydro" and reserve "Res_1", total reserve participation power is inferior to 1000 MWh
 	  And in area "AREA", during year 1, for cluster "Hydro" and reserve "Res_2", total reserve participation power is 1680 MWh
-    And the annual system cost is 2.15533e+06
+    And the annual system cost is 2.15577e+06
 
 
 @short
@@ -668,7 +669,7 @@ Scenario: ST_3UP_unavailable_reserves_test3
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "Hydro" and reserve "Res_1", total reserve participation power is 1008 MWh
 	  And in area "AREA", during year 1, for cluster "Hydro" and reserve "Res_2", total reserve participation power is inferior to 1680 MWh
-    And the annual system cost is 2.15718e+06
+    And the annual system cost is 2.15761e+06
 
 @medium
 # Lot 3_1 : intégration des contraintes de symétries
