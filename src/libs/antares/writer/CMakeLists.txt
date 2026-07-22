@@ -40,7 +40,6 @@ target_link_libraries(simulation-table-writers
   Antares::simulation-table
   Antares::exception
   PRIVATE
-  fmt::fmt
   # Keep Arrow/Parquet inside lib simulation-table-writers to avoid re-linking their static
   # objects into consumers, which can double-register/destroy generated globals.
   "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Arrow::arrow_static,Arrow::arrow_shared>"
