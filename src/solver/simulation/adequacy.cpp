@@ -128,7 +128,12 @@ bool Adequacy::year(Variable::State& state,
     // of each year
     currentProblem.ProblemeAResoudre->clearBasis();
 
-    std::unique_ptr<Antares::IO::Outputs::OptimisationsSimulationTable> simulationTables = nullptr;
+    std::unique_ptr<Antares::IO::Outputs::OptimisationsSimulationTable> simulationTables;
+    if (!study.parameters.noOutput)
+    {
+        simulationTables = std::make_unique<Antares::IO::Outputs::OptimisationsSimulationTable>();
+    }
+
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;

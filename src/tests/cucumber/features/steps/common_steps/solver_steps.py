@@ -158,7 +158,8 @@ def get_quadratic_solver(context) -> str:
 
 @then('the simulation takes less than {seconds:g} seconds')
 def check_simu_time(context, seconds):
-    pass
+    assert context.soh.get_simu_time() <= seconds, f"Simulation time {context.soh.get_simu_time()} exceeds {seconds} seconds"
+
 
 @then('in area "{area}", during year {year:d}, loss of load lasts {lold_hours:d} hours')
 def check_lold_duration(context, area, year, lold_hours):
