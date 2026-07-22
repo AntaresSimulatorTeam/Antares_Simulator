@@ -98,7 +98,7 @@ void SimulationTableWriter::writeParquet(const fs::path& file_path,
 }
 
 void SimulationTableWriter::writeCsv(const fs::path& file_path,
-                                      const IO::Outputs::SimulationTable& simuTable) const
+                                     const IO::Outputs::SimulationTable& simuTable) const
 {
     auto table = makeArrowTable(simuTable);
 
