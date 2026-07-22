@@ -6,6 +6,7 @@
 #include <optional>
 #include <string>
 #include <vector>
+
 #include <boost/algorithm/string/case_conv.hpp>
 
 #include <antares/study/fwd.h>
