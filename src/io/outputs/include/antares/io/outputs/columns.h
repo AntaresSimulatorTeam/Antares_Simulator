@@ -85,10 +85,6 @@ static std::string FormatValue(const U& v)
     {
         return FromDouble(v);
     }
-    else if constexpr (std::is_same_v<U, Optimisation::LinearProblemApi::MipBasisStatus>)
-    {
-        return StatusToString(v);
-    }
     else if constexpr (is_optional_v<U>)
     {
         return v ? FormatValue(*v) : "None";

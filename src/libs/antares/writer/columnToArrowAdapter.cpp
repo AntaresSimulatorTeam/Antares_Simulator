@@ -284,11 +284,6 @@ public:
     {
         return std::make_shared<OptIntColumnAdapter>(&col);
     }
-
-    std::shared_ptr<IColumnAdapter> visit(const OptionalColumn<MipBasisStatus>& col) override
-    {
-        return std::make_shared<OptMipBasisStatusColumnAdapter>(&col);
-    }
 };
 
 std::shared_ptr<IColumnAdapter> makeColumnAdapter(const IColumn& column)
