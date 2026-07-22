@@ -195,7 +195,7 @@ YAML::Node longTermStorageToYaml(const Area& area)
 {
     return makeComponent(BuildHydroStorageComponentId(area.id),
                          "antares_legacy_models.long_term_storage",
-                         {{"carrier", "electricity"}, {"group", "hydro"}});
+                         {{"carrier", "electricity"}});
 }
 
 } // namespace Antares::ViewBuilder
