@@ -16,6 +16,8 @@
 
 #include "antares/io/outputs/SimulationTable.h"
 
+#include "antares/optimisation/linear-problem-api/hasStatus.h"
+
 #include "private/parquet_table_writer.h"
 
 namespace fs = std::filesystem;
@@ -136,8 +138,8 @@ BOOST_FIXTURE_TEST_CASE(write_SimuTable_then_read_it_back___reading_fits, LocalF
     BOOST_CHECK_EQUAL(value->Value(0), entry.value.value());
 
     // entry : status
-    auto status = getColumn<arrow::Int32Array>(read_table, 7);
-    BOOST_CHECK_EQUAL(status->Value(0), static_cast<unsigned>(entry.status.value()));
+    auto status = getColumn<arrow::StringArray>(read_table, 7);
+    BOOST_CHECK_EQUAL(status->Value(0), StatusToString(entry.status));
 }
 
 BOOST_FIXTURE_TEST_CASE(write_table_with_many_empty_entries_then_read_it_back___read_fits,
@@ -196,7 +198,7 @@ BOOST_FIXTURE_TEST_CASE(write_table_with_many_empty_entries_then_read_it_back___
     BOOST_CHECK(!value->IsValid(0));
 
     // entry : status
-    auto status = getColumn<arrow::Int32Array>(read_table, 7);
+    auto status = getColumn<arrow::StringArray>(read_table, 7);
     BOOST_CHECK(!status->IsValid(0));
 }
 
@@ -267,8 +269,8 @@ BOOST_FIXTURE_TEST_CASE(write_3_lines_table_then_read_it_back___read_fits, Local
     BOOST_CHECK_EQUAL(col_6->Value(2), line_2.value.value());
 
     // column 7 (status):
-    auto col_7 = getColumn<arrow::Int32Array>(read_table, 7);
-    BOOST_CHECK_EQUAL(col_7->Value(0), (unsigned)line_0.status.value());
-    BOOST_CHECK_EQUAL(col_7->Value(1), (unsigned)line_1.status.value());
+    auto col_7 = getColumn<arrow::StringArray>(read_table, 7);
+    BOOST_CHECK_EQUAL(col_7->Value(0), StatusToString(line_0.status));
+    BOOST_CHECK_EQUAL(col_7->Value(1), StatusToString(line_1.status));
     BOOST_CHECK(!col_7->IsValid(2));
 }
