@@ -39,25 +39,6 @@ void addOptionalsToBuilder(const std::vector<std::optional<T>>& in, B& builder)
     throwOnStatusKO(builder.AppendValues(values, valid));
 }
 
-std::vector<std::optional<unsigned>> to_optional_int(
-  const std::vector<std::optional<MipBasisStatus>>& v)
-{
-    std::vector<std::optional<unsigned>> to_return;
-    to_return.reserve(v.size());
-    for (const auto& e: v)
-    {
-        if (e.has_value())
-        {
-            to_return.push_back(static_cast<unsigned>(*e));
-        }
-        else
-        {
-            to_return.push_back(std::nullopt);
-        }
-    }
-    return to_return;
-}
-
 // ==========================
 // Class StringColumnAdapter
 // ==========================
@@ -201,13 +182,23 @@ OptMipBasisStatusColumnAdapter::OptMipBasisStatusColumnAdapter(
 
 std::shared_ptr<arrow::Field> OptMipBasisStatusColumnAdapter::makeField() const
 {
-    return arrow::field(column_->name(), arrow::uint32());
+    return arrow::field(column_->name(), arrow::utf8());
 }
 
 std::shared_ptr<arrow::Array> OptMipBasisStatusColumnAdapter::makeArray() const
 {
-    arrow::UInt32Builder builder;
-    addOptionalsToBuilder(to_optional_int(column_->data()), builder);
+    arrow::StringBuilder builder;
+    for (const auto& element: column_->data())
+    {
+        if (element.has_value())
+        {
+            throwOnStatusKO(builder.Append(StatusToString(element)));
+        }
+        else
+        {
+            throwOnStatusKO(builder.AppendNull());
+        }
+    }
     return throwOnResultKO(builder.Finish());
 }
 

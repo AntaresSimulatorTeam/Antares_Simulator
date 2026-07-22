@@ -161,9 +161,9 @@ BOOST_FIXTURE_TEST_CASE(AddEntry_SingleEntry, SimulationTableFileFixture)
     parquet_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
-    // Arrow CSV: header + data row, status is numeric (4=BASIC)
+    // Arrow CSV: header + data row, status is written as a string
     BOOST_CHECK(content.find("block,component,output") != std::string::npos);
-    BOOST_CHECK(content.find("1,comp1,var1,100,50,2,42.5,4") != std::string::npos);
+    BOOST_CHECK(content.find("1,comp1,var1,100,50,2,42.5,Basic") != std::string::npos);
 }
 
 BOOST_FIXTURE_TEST_CASE(AddEntry_WithNullOptionals, SimulationTableFileFixture)
@@ -271,12 +271,12 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
     BOOST_CHECK(std::filesystem::exists(file2));
 
     // Read and verify content of first file
-    // Arrow CSV: status is numeric (4=BASIC, 0=FREE)
+    // Arrow CSV: status is written as a string
     {
         std::ifstream f(file1);
         std::string content{std::istreambuf_iterator<char>(f), {}};
         BOOST_CHECK(content.find("block,component,output") != std::string::npos);
-        BOOST_CHECK(content.find("1,comp1,var1,1,1,0,10,4") != std::string::npos);
+        BOOST_CHECK(content.find("1,comp1,var1,1,1,0,10,Basic") != std::string::npos);
     }
 
     // Read and verify content of second file
@@ -284,7 +284,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
         std::ifstream f(file2);
         std::string content{std::istreambuf_iterator<char>(f), {}};
         BOOST_CHECK(content.find("block,component,output") != std::string::npos);
-        BOOST_CHECK(content.find("2,comp2,var2,2,2,1,20,0") != std::string::npos);
+        BOOST_CHECK(content.find("2,comp2,var2,2,2,1,20,Free") != std::string::npos);
     }
 
     // Remove the created files
@@ -1175,7 +1175,7 @@ BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, SimulationTableFileFixture)
     std::string content = readFileContent(out_file_path);
 
     BOOST_CHECK(content.find("block,component,output") != std::string::npos);
-    BOOST_CHECK(content.find("1,test_comp,test_var,1,1,0,123.45,4") != std::string::npos);
+    BOOST_CHECK(content.find("1,test_comp,test_var,1,1,0,123.45,Basic") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -1387,8 +1387,7 @@ BOOST_FIXTURE_TEST_CASE(ZeroValues_HandledCorrectly, SimulationTableFileFixture)
 
     std::string content = readFileContent(out_file_path);
     BOOST_CHECK(content.find("0,,") != std::string::npos);
-    // FREE = 0 in numeric enum
-    BOOST_CHECK(content.find(",0,0") != std::string::npos);
+    BOOST_CHECK(content.find(",Free") != std::string::npos);
 }
 
 BOOST_FIXTURE_TEST_CASE(NegativeValues_HandledCorrectly, SimulationTableFileFixture)
