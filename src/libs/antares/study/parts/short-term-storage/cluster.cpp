@@ -12,7 +12,7 @@
 namespace Antares::Data::ShortTermStorage
 {
 
-std::string STStorageCluster::getGroup()
+std::string STStorageCluster::getGroup() const
 {
     return properties.groupName;
 }
