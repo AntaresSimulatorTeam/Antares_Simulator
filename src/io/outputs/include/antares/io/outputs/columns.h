@@ -8,6 +8,7 @@
 #include <optional>
 #include <string>
 #include <string_view>
+#include <unordered_map>
 #include <vector>
 
 #include "antares/io/outputs/IColumnAdapterVisitor.h"
@@ -27,7 +28,7 @@ namespace Antares::IO::Outputs
 class IColumn
 {
 public:
-    explicit IColumn(const std::string name):
+    explicit IColumn(const std::string& name):
         name_(name)
     {
     }
@@ -136,10 +137,6 @@ static void AppendFormattedValue(fmt::memory_buffer& buf, const U& v)
     {
         fmt::format_to(std::back_inserter(buf), "{:.15g}", v);
     }
-    else if constexpr (std::is_same_v<U, Optimisation::LinearProblemApi::MipBasisStatus>)
-    {
-        buf.append(StatusToString(v));
-    }
     else if constexpr (is_optional_v<U>)
     {
         if (v)
@@ -161,7 +158,7 @@ template<typename T>
 class TypedColumn final: public IColumn
 {
 public:
-    explicit TypedColumn(std::string name):
+    explicit TypedColumn(const std::string& name):
         IColumn(name)
     {
     }
@@ -219,7 +216,7 @@ class InternedStringColumn final: public IColumn
 public:
     static constexpr uint32_t nullIndex = std::numeric_limits<uint32_t>::max();
 
-    explicit InternedStringColumn(std::string name):
+    explicit InternedStringColumn(const std::string& name):
         IColumn(name)
     {
     }
@@ -238,6 +235,19 @@ public:
     {
         const uint32_t dictionaryIndex = indices_.at(index);
         return dictionaryIndex == nullIndex ? "None" : dictionary_[dictionaryIndex];
+    }
+
+    void appendTo(fmt::memory_buffer& buf, size_t index) const override
+    {
+        const uint32_t dictionaryIndex = indices_.at(index);
+        if (dictionaryIndex == nullIndex)
+        {
+            buf.append(std::string_view("None"));
+        }
+        else
+        {
+            AppendEscaped(buf, dictionary_[dictionaryIndex]);
+        }
     }
 
     [[nodiscard]] size_t size() const override
