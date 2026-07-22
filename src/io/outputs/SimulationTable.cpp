@@ -33,9 +33,8 @@ void SimulationTable::addEntry(const SimulationTableEntry& entry)
     block_time_index_->add(entry.block_time_index);
     scenario_index_->add(entry.scenario_index);
     value_->add(entry.value);
-    basis_status_->add(entry.status.has_value()
-                        ? std::make_optional(StatusToString(entry.status))
-                        : std::nullopt);
+    basis_status_->add(entry.status.has_value() ? std::make_optional(StatusToString(entry.status))
+                                                : std::nullopt);
 }
 
 const std::vector<std::shared_ptr<IColumn>>& SimulationTable::columns() const

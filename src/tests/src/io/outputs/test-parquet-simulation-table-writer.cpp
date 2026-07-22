@@ -15,7 +15,6 @@
 #include <parquet/exception.h>
 
 #include "antares/io/outputs/SimulationTable.h"
-
 #include "antares/optimisation/linear-problem-api/hasStatus.h"
 
 #include "private/parquet_table_writer.h"
