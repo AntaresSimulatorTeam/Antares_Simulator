@@ -2180,6 +2180,7 @@ var namespaces_dup =
       [ "check_res_participation_for_specific_year_and_group_hourly", "solver__steps_8py.html#af90fe75e53476fcc5800eba6355ad434", null ],
       [ "check_res_participation_for_specific_year_hour_and_cluster", "solver__steps_8py.html#a1993d6a31431e8777ffa65f381773acd", null ],
       [ "check_res_unsp_for_specific_year_hourly", "solver__steps_8py.html#a7e8c09c644d1e5bcb1a13ccf1ef2d49d", null ],
+      [ "check_reserve_participation_cost", "solver__steps_8py.html#afedd4e5a4dae2e111f1c547932a814ea", null ],
       [ "check_simu_time", "solver__steps_8py.html#ab2dde1f1dea0fb35c42f79d1b100a659", null ],
       [ "check_simulation_tables", "solver__steps_8py.html#a8c31314aab190376232a12ffc3b94bce", null ],
       [ "check_spilled_energy_value", "solver__steps_8py.html#ad370ece761d0ee9e8e90cb7b839547e0", null ],
