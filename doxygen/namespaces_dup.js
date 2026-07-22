@@ -1759,24 +1759,14 @@ var namespaces_dup =
         [ "OptStringColumnAdapter", "classAntares_1_1Writer_1_1OptStringColumnAdapter.html", "classAntares_1_1Writer_1_1OptStringColumnAdapter" ],
         [ "OptDoubleColumnAdapter", "classAntares_1_1Writer_1_1OptDoubleColumnAdapter.html", "classAntares_1_1Writer_1_1OptDoubleColumnAdapter" ],
         [ "OptIntColumnAdapter", "classAntares_1_1Writer_1_1OptIntColumnAdapter.html", "classAntares_1_1Writer_1_1OptIntColumnAdapter" ],
-        [ "OptMipBasisStatusColumnAdapter", "classAntares_1_1Writer_1_1OptMipBasisStatusColumnAdapter.html", "classAntares_1_1Writer_1_1OptMipBasisStatusColumnAdapter" ],
-        [ "ITableWriter", "classAntares_1_1Writer_1_1ITableWriter.html", "classAntares_1_1Writer_1_1ITableWriter" ],
         [ "LegacySimulationTablesWriter", "classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html", "classAntares_1_1Writer_1_1LegacySimulationTablesWriter" ],
-        [ "CsvTableWriter", "classAntares_1_1Writer_1_1CsvTableWriter.html", "classAntares_1_1Writer_1_1CsvTableWriter" ],
-        [ "ParquetTableWriter", "classAntares_1_1Writer_1_1ParquetTableWriter.html", "classAntares_1_1Writer_1_1ParquetTableWriter" ],
+        [ "SimulationTableWriter", "classAntares_1_1Writer_1_1SimulationTableWriter.html", "classAntares_1_1Writer_1_1SimulationTableWriter" ],
         [ "TableFormat", "table__format_8h.html#a0381893c1d8965a118bc7d6c1807077a", [
           [ "CSV", "table__format_8h.html#a0381893c1d8965a118bc7d6c1807077aacc8d68c551c4a9a6d5313e07de4deafd", null ],
           [ "Parquet", "table__format_8h.html#a0381893c1d8965a118bc7d6c1807077aaace780da4816e1e457db8c57d60b5d66", null ]
         ] ],
         [ "addOptionalsToBuilder", "columnToArrowAdapter_8cpp.html#a6a1d6b718262eac99dd715804a751f1d", null ],
-        [ "escape", "csv__table__writer_8cpp.html#a697690aa3501e8b9365f3fa7d3013840", null ],
-        [ "make_line", "csv__table__writer_8cpp.html#ae4083b588270ee4226ca2e40c7c37440", null ],
-        [ "makeArrowTable", "parquet__table__writer_8cpp.html#ac8520dbee4a7eb767f0506750b257f23", null ],
-        [ "makeColumnAdapter", "columnToArrowAdapter_8cpp.html#a6bdaaf43ed2091940e93b4bbba363e9d", null ],
-        [ "makeTableWriter", "table__writer__factory_8cpp.html#a8d1962dcc40e9f941ebc5f8d6136be97", null ],
-        [ "makeTableWriter", "table__writer__factory_8h.html#a117302899c5cae1928bb78f8939189ad", null ],
-        [ "to_optional_int", "columnToArrowAdapter_8cpp.html#a71bc63ef77898c55d101599380a6606e", null ],
-        [ "writeParquet", "parquet__table__writer_8cpp.html#aec2a4958635b3766bed8e3772f487b2b", null ]
+        [ "makeColumnAdapter", "columnToArrowAdapter_8cpp.html#a6bdaaf43ed2091940e93b4bbba363e9d", null ]
       ] ],
       [ "Matrix", "classAntares_1_1Matrix.html", "classAntares_1_1Matrix" ],
       [ "I_mtx_to_buffer_dumper", "classAntares_1_1I__mtx__to__buffer__dumper.html", "classAntares_1_1I__mtx__to__buffer__dumper" ],
@@ -2004,12 +1994,6 @@ var namespaces_dup =
       [ "reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", "classfind__reference_1_1reference__folder__finder" ],
       [ "find_reference_folder", "find__reference_8py.html#a9a1c9809dbe51b7d00621cd03854ec6e", null ]
     ] ],
-    [ "Fixtures", null, [
-      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
-      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
-      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
-      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
-    ] ],
     [ "fixtures", null, [
       [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
       [ "antares_problem_generator", "fixtures_8py.html#a532fab1323b92d1f3eb74f5213a6b6c0", null ],
@@ -2018,6 +2002,12 @@ var namespaces_dup =
       [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
       [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
       [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
+    ] ],
+    [ "Fixtures", null, [
+      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
+      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
+      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
+      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
     ] ],
     [ "FSWalker", null, [
       [ "FileJob", "classFSWalker_1_1FileJob.html", "classFSWalker_1_1FileJob" ],

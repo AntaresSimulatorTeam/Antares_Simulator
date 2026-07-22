@@ -469,7 +469,6 @@ var hierarchy =
       [ "Antares::IO::Outputs::TypedColumn< double >", "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html", null ],
       [ "Antares::IO::Outputs::TypedColumn< std::string >", "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html", null ],
       [ "Antares::IO::Outputs::TypedColumn< unsigned >", "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html", null ],
-      [ "Antares::IO::Outputs::TypedColumn< Optimisation::LinearProblemApi::MipBasisStatus >", "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html", null ],
       [ "Antares::IO::Outputs::InternedStringColumn", "classAntares_1_1IO_1_1Outputs_1_1InternedStringColumn.html", null ],
       [ "Antares::IO::Outputs::TypedColumn< T >", "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html", null ]
     ] ],
@@ -479,7 +478,6 @@ var hierarchy =
       [ "Antares::Writer::InternedStringColumnAdapter", "classAntares_1_1Writer_1_1InternedStringColumnAdapter.html", null ],
       [ "Antares::Writer::OptDoubleColumnAdapter", "classAntares_1_1Writer_1_1OptDoubleColumnAdapter.html", null ],
       [ "Antares::Writer::OptIntColumnAdapter", "classAntares_1_1Writer_1_1OptIntColumnAdapter.html", null ],
-      [ "Antares::Writer::OptMipBasisStatusColumnAdapter", "classAntares_1_1Writer_1_1OptMipBasisStatusColumnAdapter.html", null ],
       [ "Antares::Writer::OptStringColumnAdapter", "classAntares_1_1Writer_1_1OptStringColumnAdapter.html", null ],
       [ "Antares::Writer::StringColumnAdapter", "classAntares_1_1Writer_1_1StringColumnAdapter.html", null ]
     ] ],
@@ -697,10 +695,6 @@ var hierarchy =
     [ "Antares::IStudyLoader", "classAntares_1_1IStudyLoader.html", [
       [ "Antares::FileTreeStudyLoader", "classAntares_1_1FileTreeStudyLoader.html", null ],
       [ "InMemoryStudyLoader", "classInMemoryStudyLoader.html", null ]
-    ] ],
-    [ "Antares::Writer::ITableWriter", "classAntares_1_1Writer_1_1ITableWriter.html", [
-      [ "Antares::Writer::CsvTableWriter", "classAntares_1_1Writer_1_1CsvTableWriter.html", null ],
-      [ "Antares::Writer::ParquetTableWriter", "classAntares_1_1Writer_1_1ParquetTableWriter.html", null ]
     ] ],
     [ "Antares::Optimisation::IntegerInterval::Iterator", "classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html", null ],
     [ "Antares::Solver::Simulation::ITimeSeriesNumbersWriter", "classAntares_1_1Solver_1_1Simulation_1_1ITimeSeriesNumbersWriter.html", [
@@ -1309,6 +1303,7 @@ var hierarchy =
     [ "SimulationTableFileFixture", "structSimulationTableFileFixture.html", [
       [ "BasicProblemFixture", "structBasicProblemFixture.html", null ]
     ] ],
+    [ "Antares::Writer::SimulationTableWriter", "classAntares_1_1Writer_1_1SimulationTableWriter.html", null ],
     [ "SimuTableFixture", "structSimuTableFixture.html", [
       [ "LocalFixture", "structLocalFixture.html", null ]
     ] ],

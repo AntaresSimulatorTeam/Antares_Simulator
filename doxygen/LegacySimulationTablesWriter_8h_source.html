@@ -137,30 +137,29 @@ $(document).ready(function(){initNavTree('LegacySimulationTablesWriter_8h_source
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;antares/io/outputs/OptimisationsSimulationTable.h&quot;</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;antares/io/outputs/SimulationTable.h&quot;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;i_table_writer.h&quot;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;simulation-table-writers_export.h&quot;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;table_format.h&quot;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">namespace </span>Antares::Writer</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html">   17</a></span>&#160;<span class="keyword">class </span>SIMULATION_TABLE_WRITERS_EXPORT <a class="code" href="classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html">LegacySimulationTablesWriter</a></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html">LegacySimulationTablesWriter</a>(<span class="keyword">const</span> std::filesystem::path&amp; folder,</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;                                 <span class="keyword">const</span> <span class="keywordtype">unsigned</span> year,</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;                                 TableFormat = TableFormat::CSV);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">void</span> write(<a class="code" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">IO::Outputs::OptimisationsSimulationTable</a>&amp; tables);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">void</span> writeForOptim(<span class="keyword">const</span> <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">IO::Outputs::SimulationTable</a>* table, <span class="keywordtype">unsigned</span> optim_number);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">unsigned</span> year_ = 0;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    TableFormat tableFormat_;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">const</span> std::filesystem::path folder_;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;};</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;} <span class="comment">// namespace Antares::Writer</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;simulation-table-writers_export.h&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;table_format.h&quot;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>Antares::Writer</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html">   16</a></span>&#160;<span class="keyword">class </span>SIMULATION_TABLE_WRITERS_EXPORT <a class="code" href="classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html">LegacySimulationTablesWriter</a></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html">LegacySimulationTablesWriter</a>(<span class="keyword">const</span> std::filesystem::path&amp; folder,</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;                                 <span class="keyword">const</span> <span class="keywordtype">unsigned</span> year,</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;                                 TableFormat tableFormat = TableFormat::CSV);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">void</span> write(<a class="code" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">IO::Outputs::OptimisationsSimulationTable</a>&amp; tables);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> writeForOptim(<span class="keyword">const</span> <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">IO::Outputs::SimulationTable</a>* table, <span class="keywordtype">unsigned</span> optim_number);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">unsigned</span> year_ = 0;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    TableFormat tableFormat_;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">const</span> std::filesystem::path folder_;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;};</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;} <span class="comment">// namespace Antares::Writer</span></div>
 <div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">Antares::IO::Outputs::OptimisationsSimulationTable</a></div><div class="ttdef"><b>Definition:</b> OptimisationsSimulationTable.h:11</div></div>
 <div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1SimulationTable_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a></div><div class="ttdef"><b>Definition:</b> SimulationTable.h:15</div></div>
-<div class="ttc" id="aclassAntares_1_1Writer_1_1LegacySimulationTablesWriter_html"><div class="ttname"><a href="classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html">Antares::Writer::LegacySimulationTablesWriter</a></div><div class="ttdef"><b>Definition:</b> LegacySimulationTablesWriter.h:18</div></div>
+<div class="ttc" id="aclassAntares_1_1Writer_1_1LegacySimulationTablesWriter_html"><div class="ttname"><a href="classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html">Antares::Writer::LegacySimulationTablesWriter</a></div><div class="ttdef"><b>Definition:</b> LegacySimulationTablesWriter.h:17</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

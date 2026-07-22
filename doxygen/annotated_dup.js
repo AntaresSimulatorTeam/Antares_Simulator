@@ -792,11 +792,8 @@ var annotated_dup =
         [ "OptStringColumnAdapter", "classAntares_1_1Writer_1_1OptStringColumnAdapter.html", "classAntares_1_1Writer_1_1OptStringColumnAdapter" ],
         [ "OptDoubleColumnAdapter", "classAntares_1_1Writer_1_1OptDoubleColumnAdapter.html", "classAntares_1_1Writer_1_1OptDoubleColumnAdapter" ],
         [ "OptIntColumnAdapter", "classAntares_1_1Writer_1_1OptIntColumnAdapter.html", "classAntares_1_1Writer_1_1OptIntColumnAdapter" ],
-        [ "OptMipBasisStatusColumnAdapter", "classAntares_1_1Writer_1_1OptMipBasisStatusColumnAdapter.html", "classAntares_1_1Writer_1_1OptMipBasisStatusColumnAdapter" ],
-        [ "ITableWriter", "classAntares_1_1Writer_1_1ITableWriter.html", "classAntares_1_1Writer_1_1ITableWriter" ],
         [ "LegacySimulationTablesWriter", "classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html", "classAntares_1_1Writer_1_1LegacySimulationTablesWriter" ],
-        [ "CsvTableWriter", "classAntares_1_1Writer_1_1CsvTableWriter.html", "classAntares_1_1Writer_1_1CsvTableWriter" ],
-        [ "ParquetTableWriter", "classAntares_1_1Writer_1_1ParquetTableWriter.html", "classAntares_1_1Writer_1_1ParquetTableWriter" ]
+        [ "SimulationTableWriter", "classAntares_1_1Writer_1_1SimulationTableWriter.html", "classAntares_1_1Writer_1_1SimulationTableWriter" ]
       ] ],
       [ "Matrix", "classAntares_1_1Matrix.html", "classAntares_1_1Matrix" ],
       [ "I_mtx_to_buffer_dumper", "classAntares_1_1I__mtx__to__buffer__dumper.html", "classAntares_1_1I__mtx__to__buffer__dumper" ],

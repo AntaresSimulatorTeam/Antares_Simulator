@@ -81,7 +81,7 @@ var NAVTREEINDEX1 =
 "LegacyFiller_8h_source.html":[10,0,0,8,6,1,0,0,0,6],
 "LegacyNameMapper_8h_source.html":[10,0,0,8,6,1,0,0,0,7],
 "LegacyOrtoolsLinearProblem_8h_source.html":[10,0,0,8,6,1,0,0,0,8],
-"LegacySimulationTablesWriter_8h_source.html":[10,0,0,4,0,29,0,0,0,3],
+"LegacySimulationTablesWriter_8h_source.html":[10,0,0,4,0,29,0,0,0,2],
 "LegacyVariableInfo_8h_source.html":[10,0,0,8,6,1,0,0,0,9],
 "LessThanOrEqualNode_8h_source.html":[10,0,0,2,1,0,0,1,9],
 "Library_8h.html#a39c9e56d286c25f88b8ac37d95f33157":[8,0,0,8,0,4,13],
