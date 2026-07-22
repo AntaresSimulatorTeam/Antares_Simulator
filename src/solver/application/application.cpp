@@ -156,8 +156,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         pSettings.resolveOutputSelection();
 
         // Output selection, the command line overrides the study
-        if (pSettings.outputSelection == OutputSelection::All
-            || pSettings.outputSelection == OutputSelection::Default)
+        if (pSettings.outputSelection == OutputSelection::All)
         {
             study.parameters.writeMonteCarloResults = true;
             study.parameters.simulationTable = true;

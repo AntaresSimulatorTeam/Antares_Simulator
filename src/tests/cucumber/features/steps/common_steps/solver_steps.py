@@ -361,7 +361,7 @@ def build_antares_solver_command(context):
         command.append('--named-mps-problems')
     if context.parallel:
         command.append('--force-parallel=4')
-    if getattr(context, "output_selection", None):
+    if hasattr(context, "output_selection"):
         command.append(f'--output={context.output_selection}')
     return command
 

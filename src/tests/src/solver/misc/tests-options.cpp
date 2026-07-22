@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE(optimization_range_set_to_week)
 // settings.settings.outputSelection == OutputSelection::None&& settings.forceZipOutput
 BOOST_AUTO_TEST_CASE(output_settings_are_incompatible___exception_raised)
 {
-    settings.outputSelection = OutputSelection::None;
+    settings.outputSelection = OutputSelection{OutputSelection::None};
     settings.forceZipOutput = true;
     std::string err_msg = "no-output and zip-output options are incompatible";
     BOOST_CHECK_EXCEPTION(checkAndCorrectSettingsAndOptions(settings, options),
@@ -203,7 +203,7 @@ BOOST_AUTO_TEST_CASE(reset_restores_default_values)
     settings.ignoreLoadingErrors = true;
     settings.ignoreConstraints = true;
     settings.tsGeneratorsOnly = true;
-    settings.outputSelection = OutputSelection::None;
+    settings.outputSelection = OutputSelection{OutputSelection::None};
     settings.forceZipOutput = true;
 
     settings.solverOptions.linearSolver = "custom-linear";
@@ -252,7 +252,7 @@ BOOST_AUTO_TEST_CASE(default_parser_resets_settings_and_keeps_defaults)
     settings.simulationName = "simulation";
     settings.commentFile = "comment";
     settings.simplexOptimRange = "day";
-    settings.outputSelection = OutputSelection::None;
+    settings.outputSelection = OutputSelection{OutputSelection::None};
     settings.forceZipOutput = true;
 
     StudyLoadOptions options;

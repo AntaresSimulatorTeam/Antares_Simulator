@@ -231,31 +231,25 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ## Output parameters
 These parameters are listed under the `[output]` section in the `.ini` file.
 
-The two parameters below select which families of results are written. They only apply when the writing of the
-output is enabled, i.e. when the solver is not run with `--output=none`.
+The two parameters below select which families of results are written. They are only used when
+no `--output` flag is passed on the command line. When `--output` is specified, it overrides both
+parameters entirely (see [command line options](10-command-line.md)).
 
 ---
 #### monte-carlo-results
+...
+
+---
+#### synthesis
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `true`
 - **Usage:**
-    - `true`: the [Monte-Carlo result files](03-outputs.md) (`mc-all`, `mc-ind`) are written. They remain subject to the
-      [synthesis](#synthesis) and [year-by-year](#year-by-year) parameters.
-    - `false`: no Monte-Carlo result file is written. Can be forced from the command line with `--output=none`or `--output=simulation-table` .
-
-> _**Note:**_ The deprecated key `legacy-outputs` is still accepted as an alias for backward compatibility.
+    - `true`: synthetic results will be stored in a directory: `Study_name/OUTPUT/simu_tag/Economy/mc-all`
 
 ---
 #### simulation-table
-- **Expected value:** `true` or `false`
-- **Required:** no
-- **Default value:** `false`
-- **Usage:**
-    - `false`: no simulation table is written.
-    - `true`: one [simulation table](../modeler/03-outputs.md) per Monte-Carlo year and optimization step is written.
-      This is the only way to get the results of the modeler components of a [hybrid study](08-hybrid-studies.md).
-      Can be forced from the command line with `--output=simulation-table`, and its format chosen with `--parquet`.
+...
 
 ---
 #### synthesis

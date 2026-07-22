@@ -158,34 +158,6 @@ BOOST_FIXTURE_TEST_CASE(output_selection_defaults_to_monte_carlo_results_only, F
     BOOST_CHECK_EQUAL(p.writeSimulationTable(), false);
 }
 
-BOOST_FIXTURE_TEST_CASE(output_selection_is_read_from_ini, Fixture)
-{
-    std::stringstream s;
-    s << R"([output]
-            monte-carlo-results = false
-            simulation-table = true)";
-    IniFile ini;
-    ini.readStream(s);
-
-    p.loadFromINI(ini, version);
-
-    BOOST_CHECK_EQUAL(p.shouldWriteMonteCarloResults(), false);
-    BOOST_CHECK_EQUAL(p.writeSimulationTable(), true);
-}
-
-BOOST_FIXTURE_TEST_CASE(deprecated_legacy_outputs_key_is_still_read, Fixture)
-{
-    std::stringstream s;
-    s << R"([output]
-            legacy-outputs = false)";
-    IniFile ini;
-    ini.readStream(s);
-
-    p.loadFromINI(ini, version);
-
-    BOOST_CHECK_EQUAL(p.shouldWriteMonteCarloResults(), false);
-}
-
 BOOST_FIXTURE_TEST_CASE(initializing_solvers_options_with_cmd_line_options, Fixture)
 {
     options.solverOptions.linearSolver = "xpress";

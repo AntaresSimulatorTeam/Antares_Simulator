@@ -528,15 +528,6 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
     {
         return value.to<bool>(d.synthesis);
     }
-    // `legacy-outputs` is the deprecated alias kept for backward compatibility
-    if (key == "monte-carlo-results" || key == "legacy-outputs")
-    {
-        return value.to<bool>(d.writeMonteCarloResults);
-    }
-    if (key == "simulation-table")
-    {
-        return value.to<bool>(d.simulationTable);
-    }
     if (key == "hydro-debug")
     {
         return value.to<bool>(d.hydroDebug);

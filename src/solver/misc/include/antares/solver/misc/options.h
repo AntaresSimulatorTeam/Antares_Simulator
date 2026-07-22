@@ -19,26 +19,27 @@ class OutputSelection
 public:
     enum Value
     {
-        Default,        // no flag passed
         All,            // --output=all
         None,           // --output=none
         MonteCarlo,     // --output=monte-carlo
         SimulationTable // --output=simulation-table
     };
 
-    OutputSelection(Value v = Default):
+    OutputSelection() = default;
+
+    explicit OutputSelection(Value v):
         value_(v)
     {
     }
 
     bool shouldExportMonteCarloResults() const
     {
-        return value_ != None && value_ != SimulationTable;
+        return value_ == All || value_ == MonteCarlo;
     }
 
     bool shouldExportSimulationTable() const
     {
-        return value_ != None && value_ != MonteCarlo;
+        return value_ == All || value_ == SimulationTable;
     }
 
     bool operator==(Value v) const
@@ -46,13 +47,8 @@ public:
         return value_ == v;
     }
 
-    bool operator!=(Value v) const
-    {
-        return value_ != v;
-    }
-
 private:
-    Value value_;
+    Value value_ = MonteCarlo;
 };
 
 /*!
@@ -82,7 +78,7 @@ public:
     bool tsGeneratorsOnly = false;
 
     //! Override the study's output selection
-    OutputSelection outputSelection = OutputSelection::Default;
+    OutputSelection outputSelection;
 
     //! Raw string from CLI, converted to outputSelection after parsing
     std::string outputSelectionStr;

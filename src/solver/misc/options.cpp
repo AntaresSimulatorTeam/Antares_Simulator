@@ -300,7 +300,7 @@ void Settings::reset()
     forceZipOutput = false;
 
     outputSelectionStr.clear();
-    outputSelection = OutputSelection::Default;
+    outputSelection = OutputSelection{};
 
     solverOptions = Antares::Solver::Optimization::CmdLineOptimOptions{};
 }
@@ -309,23 +309,23 @@ void Settings::resolveOutputSelection()
 {
     if (outputSelectionStr.empty())
     {
-        outputSelection = OutputSelection::Default;
+        outputSelection = OutputSelection{};
     }
     else if (outputSelectionStr == "all")
     {
-        outputSelection = OutputSelection::All;
+        outputSelection = OutputSelection{OutputSelection::All};
     }
     else if (outputSelectionStr == "none")
     {
-        outputSelection = OutputSelection::None;
+        outputSelection = OutputSelection{OutputSelection::None};
     }
     else if (outputSelectionStr == "monte-carlo")
     {
-        outputSelection = OutputSelection::MonteCarlo;
+        outputSelection = OutputSelection{OutputSelection::MonteCarlo};
     }
     else if (outputSelectionStr == "simulation-table")
     {
-        outputSelection = OutputSelection::SimulationTable;
+        outputSelection = OutputSelection{OutputSelection::SimulationTable};
     }
     else
     {
