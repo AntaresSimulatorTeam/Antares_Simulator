@@ -354,7 +354,7 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
         const auto& parameters = study.parameters;
         if (synthesis && settings.outputSelection.shouldExportMonteCarloResults())
         {
-            if (synthesis and not parameters.synthesis) // disabled by parameters
+            if (parameters.synthesis) // disabled by parameters
             {
                 logs.info() << "The simulation synthesis is disabled.";
                 return;
