@@ -204,37 +204,6 @@ std::shared_ptr<arrow::Array> OptIntColumnAdapter::makeArray() const
     return throwOnResultKO(builder.Finish());
 }
 
-// ========================================
-// Class OptMipBasisStatusColumnAdapter
-// ========================================
-OptMipBasisStatusColumnAdapter::OptMipBasisStatusColumnAdapter(
-  const OptionalColumn<MipBasisStatus>* column):
-    column_(column)
-{
-}
-
-std::shared_ptr<arrow::Field> OptMipBasisStatusColumnAdapter::makeField() const
-{
-    return arrow::field(column_->name(), arrow::utf8());
-}
-
-std::shared_ptr<arrow::Array> OptMipBasisStatusColumnAdapter::makeArray() const
-{
-    arrow::StringBuilder builder;
-    for (const auto& element: column_->data())
-    {
-        if (element.has_value())
-        {
-            throwOnStatusKO(builder.Append(StatusToString(element)));
-        }
-        else
-        {
-            throwOnStatusKO(builder.AppendNull());
-        }
-    }
-    return throwOnResultKO(builder.Finish());
-}
-
 // ===============================
 // Column adapter factory
 // ===============================
