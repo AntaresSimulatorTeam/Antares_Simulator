@@ -127,6 +127,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         study.simulationName = pSettings.simulationName;
     }
 
+    // Resolve the command-line output selection and apply to study parameters
+    pSettings.resolveOutputSelection();
+    pStudy->parameters.outputSelection = pSettings.outputSelection;
+
     // Force some options
     options.ignoreConstraints = pSettings.ignoreConstraints;
 
@@ -150,11 +154,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         {
             throw Error::Duplicates();
         }
-
-        // no output ?
-        pSettings.resolveOutputSelection();
-        // Resolve the command-line output selection and apply to study parameters
-        study.parameters.outputSelection = pSettings.outputSelection;
 
         if (!study.parameters.writeMonteCarloResults() && !study.parameters.writeSimulationTable())
         {
