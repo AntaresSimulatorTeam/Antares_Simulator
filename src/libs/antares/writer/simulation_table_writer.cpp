@@ -85,7 +85,7 @@ void SimulationTableWriter::writeParquet(const fs::path& file_path,
     throwOnStatusKO(parquet::arrow::WriteTable(*table,
                                                arrow::default_memory_pool(),
                                                outfile,
-                                               /*chunk_size=*/1024,
+                                               /*chunk_size=*/64*1024,
                                                writer_props,
                                                arrow_props));
 }
