@@ -370,7 +370,7 @@ protected:
     void loadModelerComponents();
     void checkModelerDataCompatibility() const;
 
-    void parameterFiller(const StudyLoadOptions& options);
+    void parameterFiller();
 
     //! \name Misc
     //@{
