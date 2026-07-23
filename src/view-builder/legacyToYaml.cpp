@@ -42,7 +42,25 @@ YAML::Node makeComponent(const std::string& id,
     return component;
 }
 
-std::string miscGenTechnologyValue(int index)
+std::string miscGenMiscellaneousType(int index)
+{
+    switch (index)
+    {
+    case MiscGenIndex::fhhPSP:
+        return "pumped_storage_power";
+    case MiscGenIndex::fhhRowBalance:
+        return "rest_world";
+    default:
+        return "misc_ndg";
+    }
+}
+
+} // anonymous namespace
+
+namespace Antares::ViewBuilder
+{
+
+std::string miscGenTypeName(int index)
 {
     switch (index)
     {
@@ -67,52 +85,9 @@ std::string miscGenTechnologyValue(int index)
     }
 }
 
-std::string miscGenMiscellaneousType(int index)
-{
-    switch (index)
-    {
-    case MiscGenIndex::fhhPSP:
-        return "pumped_storage_power";
-    case MiscGenIndex::fhhRowBalance:
-        return "rest_world";
-    default:
-        return "misc_ndg";
-    }
-}
-
-} // anonymous namespace
-
-namespace Antares::ViewBuilder
-{
-
 std::string areaLocation(const std::string& areaId)
 {
     return BuildAreaNodeComponentId(areaId);
-}
-
-std::string miscGenTypeName(int index)
-{
-    switch (index)
-    {
-    case MiscGenIndex::fhhCHP:
-        return "chp";
-    case MiscGenIndex::fhhBioMass:
-        return "biomass";
-    case MiscGenIndex::fhhBioGaz:
-        return "biogaz";
-    case MiscGenIndex::fhhWaste:
-        return "waste";
-    case MiscGenIndex::fhhGeoThermal:
-        return "geothermal";
-    case MiscGenIndex::fhhOther:
-        return "other";
-    case MiscGenIndex::fhhPSP:
-        return "psp";
-    case MiscGenIndex::fhhRowBalance:
-        return "rowbalance";
-    default:
-        return "unknown";
-    }
 }
 
 YAML::Node areaToYaml(const Area& area)
@@ -178,7 +153,7 @@ YAML::Node miscGenToYaml(const Area& area, int miscGenIndex)
     return makeComponent(BuildMiscGenComponentId(area.id, miscGenTypeName(miscGenIndex)),
                          "antares_legacy_models.miscellaneous_generation",
                          {{"carrier", "electricity"},
-                          {"technology", miscGenTechnologyValue(miscGenIndex)},
+                          {"technology", miscGenTypeName(miscGenIndex)},
                           {"miscellaneous_type", miscGenMiscellaneousType(miscGenIndex)}});
 }
 
