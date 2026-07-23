@@ -3,13 +3,13 @@ Feature: hybrid (simulator+modeler) studies
   @short
   Scenario: 001 One node - passive + modeler test 1_1
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/001 One node - passive"
-    When I run antares simulator with --output=simulation-tables
+    When I run antares simulator
     Then the simulation succeeds
 
   @short
   Scenario: 002 Thermal fleet - Base + modeler test 1_1
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/002 Thermal fleet - Base"
-    When I run antares simulator with --output=simulation-tables
+    When I run antares simulator
     Then the simulation succeeds
     And the annual system cost is 27288600
     And in area "AREA", during year 1, loss of load lasts 1 hours
@@ -18,7 +18,7 @@ Feature: hybrid (simulator+modeler) studies
   @short
   Scenario: Empty legacy node with one generator component and one load component (168h simplex)
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_0"
-    When I run antares simulator with --output=simulation-tables
+    When I run antares simulator with --output=all
     Then the simulation succeeds
     And the simulation takes less than 10 seconds
     # 100MW @ 0.3€/MW/h, for 1 week = 5040 €
@@ -35,7 +35,7 @@ Feature: hybrid (simulator+modeler) studies
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=6200) (168h simplex)
     # copy of short test 002, with no legacy thermal cluster, replaced by one component
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
-    When I run antares simulator with --output=simulation-tables
+    When I run antares simulator with --output=all
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
     # for now, modeler costs does not figure in system cost txt
@@ -47,7 +47,7 @@ Feature: hybrid (simulator+modeler) studies
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=5900) (168h simplex)
     # copy of previous case, with reduced max_p on generator => loss of load of 52MW on 1 hour
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_2"
-    When I run antares simulator with --output=simulation-tables
+    When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
     # for now, modeler costs does not figure in system cost txt
@@ -58,7 +58,7 @@ Feature: hybrid (simulator+modeler) studies
   @short
   Scenario: Legacy node with one legacy thermal cluster, and one load component (constant load of 3000 MW)
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_3"
-    When I run antares simulator with --output=simulation-tables
+    When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
     # for now, modeler costs does not figure in system cost txt
@@ -71,7 +71,7 @@ Feature: hybrid (simulator+modeler) studies
     # copy of test 3_6_1, both weeks are clones
     # except max_p of the generator component is 6200 in first week, 5900 in second
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_4"
-    When I run antares simulator with --output=simulation-tables
+    When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
     # for now, modeler costs does not figure in system cost txt
@@ -83,7 +83,7 @@ Feature: hybrid (simulator+modeler) studies
   @short
   Scenario: Invalid study - scenario-independent variable
     Given the solver study path is "Antares_Simulator_Tests_NR/invalid-studies/hybrid/Scenario-independent variable"
-    When I run antares simulator with --output=simulation-tables
+    When I run antares simulator
     Then the simulation fails
     And the message "Scenario-independent variables are not supported in hybrid studies" is reported in the logs
 
@@ -91,7 +91,7 @@ Feature: hybrid (simulator+modeler) studies
   Scenario: Two studies with same structure should have the same objective value at each time step
     Given the study path 1 is "Antares_Simulator_Tests_NR/hybrid/14_1/five_steps_hybrid_fixed_load"
     And the study path 2 is "Antares_Simulator_Tests_NR/hybrid/14_1/five_steps_hybrid_flexible_load"
-    When I run antares simulator on all studies
+    When I run antares simulator on all studies with --output=simulation-tables
     Then all simulations succeed
     And for each time step, all studies have the same objective value
 
@@ -122,7 +122,7 @@ Feature: hybrid (simulator+modeler) studies
   Scenario: A load from GEMS is taken into account in balance constraint
 
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_8/"
-    When I run antares simulator with --named-mps-problems
+    When I run antares simulator with --named-mps-problems --output=simulation-tables
     Then the simulation succeeds
     And the simulation takes less than 10 seconds
 	And the objective value is 186360
@@ -132,7 +132,7 @@ Feature: hybrid (simulator+modeler) studies
   Scenario: Use simulation week properly for GEMS components
 
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/hybrid_week_2/"
-    When I run antares simulator with --named-mps-problems
+    When I run antares simulator with --output=simulation-tables
     Then the simulation succeeds
     And the simulation takes less than 10 seconds
     And the modeler outputs contain the following entries
@@ -145,7 +145,7 @@ Feature: hybrid (simulator+modeler) studies
   Scenario: MILP with thermal heuristic - two MILP iterations with heuristic in between
     Given the solver study path is "Antares_Simulator_Tests_NR/thermal_milp_gems_and_thermal_legacy"
     And the linear solver is highs
-    When I run antares simulator with --output=simulation-tables
+    When I run antares simulator with --output=all
     Then the simulation succeeds
     And the simulation has two optimization iterations
     And in area "west", during year 1, weekly overall cost for week 1 is 4441208

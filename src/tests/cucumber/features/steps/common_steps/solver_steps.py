@@ -482,12 +482,11 @@ def _store_simulation_result(context, study_index: int):
     context.multi_studies.append(result)
 
 
-def _run_study_at_index(context, study_index: int, study_path: Path):
+def _run_study_at_index(context, study_index: int, study_path: Path, options):
     """Run a single study and store its results"""
     context.study_path = study_path
+    parse_options(context, options)
     init_simulation(context)
-    context.named_mps_problems = False
-    context.parallel = False
     run_simulation(context)
     _store_simulation_result(context, study_index)
 
@@ -510,10 +509,11 @@ def nth_study_path_is(context, study_num, string):
     context.study_paths[study_num - 1] = study_path
 
 
-@when('I run antares simulator on all studies')
-def run_antares_on_all_studies(context):
+@when('I run antares simulator on all studies with {options}')
+def run_antares_on_all_studies(context, options):
     """Run simulator on all defined studies"""
     _initialize_multi_study_context(context)
+    parse_options(context, options)
 
     assert hasattr(context, 'study_paths'), "No study paths defined"
     assert len(context.study_paths) > 0, "No study paths defined"
@@ -521,7 +521,7 @@ def run_antares_on_all_studies(context):
     # Run all studies
     for idx, study_path in enumerate(context.study_paths):
         assert study_path is not None, f"Study path at index {idx} is not defined"
-        _run_study_at_index(context, idx, study_path)
+        _run_study_at_index(context, idx, study_path, options)
 
 
 @then('all simulations succeed')
