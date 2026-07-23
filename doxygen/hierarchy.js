@@ -999,6 +999,7 @@ var hierarchy =
       [ "LocalFixture", "structLocalFixture.html", null ]
     ] ],
     [ "OutputRetriever", "classOutputRetriever.html", null ],
+    [ "Antares::Data::OutputSelection", "classAntares_1_1Data_1_1OutputSelection.html", null ],
     [ "Antares::Solver::Variable::Economy::OverallCostCsrTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsrTraits.html", null ],
     [ "Antares::Solver::Variable::Adequacy::OverallCostTraits", "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCostTraits.html", null ],
     [ "Antares::Solver::Variable::Economy::OverallCostTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostTraits.html", null ],

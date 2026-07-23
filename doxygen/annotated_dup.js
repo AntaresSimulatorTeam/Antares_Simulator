@@ -112,6 +112,7 @@ var annotated_dup =
         [ "ReserveTypeData", "structAntares_1_1Data_1_1ReserveTypeData.html", "structAntares_1_1Data_1_1ReserveTypeData" ],
         [ "StudyHeader", "classAntares_1_1Data_1_1StudyHeader.html", "classAntares_1_1Data_1_1StudyHeader" ],
         [ "StudyLoadOptions", "classAntares_1_1Data_1_1StudyLoadOptions.html", "classAntares_1_1Data_1_1StudyLoadOptions" ],
+        [ "OutputSelection", "classAntares_1_1Data_1_1OutputSelection.html", "classAntares_1_1Data_1_1OutputSelection" ],
         [ "Parameters", "classAntares_1_1Data_1_1Parameters.html", "classAntares_1_1Data_1_1Parameters" ],
         [ "CompareClusterName", "structAntares_1_1Data_1_1CompareClusterName.html", "structAntares_1_1Data_1_1CompareClusterName" ],
         [ "Cluster", "classAntares_1_1Data_1_1Cluster.html", "classAntares_1_1Data_1_1Cluster" ],
