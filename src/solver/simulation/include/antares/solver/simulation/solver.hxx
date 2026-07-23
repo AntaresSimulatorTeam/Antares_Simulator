@@ -353,6 +353,12 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
     {
         if (settings.outputSelection.shouldExportMonteCarloResults())
         {
+            if (synthesis && !study.parameters.synthesis)
+            {
+                logs.info() << "The simulation synthesis is disabled.";
+                return;
+            }
+
             // The target folder
             String newPath;
             newPath << ImplementationType::Name() << Yuni::IO::Separator;
