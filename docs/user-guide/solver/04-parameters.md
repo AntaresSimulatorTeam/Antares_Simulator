@@ -231,9 +231,6 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 ## Output parameters
 This parameter is listed under the `[output]` section in the `.ini` file.
 
-The `synthesis` parameter controls whether the Monte-Carlo synthesis is written. The selection of
-which result families are produced is done from the command line with `--output` (see
-[command line options](10-command-line.md)).
 
 ---
 #### synthesis
