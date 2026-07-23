@@ -74,7 +74,7 @@ bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& option
     return true;
 }
 
-void Study::parameterFiller(const StudyLoadOptions& options)
+void Study::parameterFiller()
 {
     // We can not run the simulation if the study folder is not in the latest
     // version and that we would like to re-importe the generated timeseries
@@ -159,7 +159,7 @@ bool Study::internalLoadFromFolder(const fs::path& path,
         // Sets of areas & links
         ret = internalLoadSets() && ret;
 
-        parameterFiller(options);
+        parameterFiller();
     };
 
     // Modeler components for hybrid studies

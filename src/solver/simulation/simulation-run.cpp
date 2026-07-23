@@ -20,7 +20,7 @@ Benchmarking::OptimizationInfo runSimulation(Antares::Data::Study& study,
     simulation.checkWriter();
     simulation.run();
 
-    if (settings.tsGeneratorsOnly)
+    if (!settings.tsGeneratorsOnly && settings.outputSelection.shouldExportMonteCarloResults())
     {
         durationCollector("synthesis_export")
           << [&simulation] { simulation.writeResults(/*synthesis:*/ true); };
