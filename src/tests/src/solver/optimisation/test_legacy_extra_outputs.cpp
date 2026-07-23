@@ -185,6 +185,7 @@ struct Fixture
         paliers.PuissanceDisponibleEtCout[0].PuissanceDisponibleDuPalierThermique.assign(nbPdt,
                                                                                          4000.);
         paliers.PuissanceDisponibleEtCout[0].PuissanceMinDuPalierThermique.assign(nbPdt, 500.);
+        paliers.PuissanceDisponibleEtCout[0].CoutHoraireDeProductionDuPalierThermiqueSansBruit.assign(nbPdt, 30.);
         problem.PaliersThermiquesDuPays[1].NombreDePaliersThermiques = 0;
         problem.PaliersThermiquesDuPays[2].NombreDePaliersThermiques = 0;
 
@@ -202,6 +203,9 @@ struct Fixture
         problem.InputGenerationOfArea[0].push_back(
           {.componentName = "area1_combined_heat_power",
            .availablePower = std::vector<double>(nbPdt, 12.5)});
+
+        problem.CoutDeDefaillancePositiveSansBruit = {9500., 19000., 8500.};
+        problem.CoutDeDefaillanceNegativeSansBruit = {3., 0.5, 0.5};
 
         problem.CorrespondanceVarNativesVarOptim.resize(nbPdt);
         problem.CorrespondanceCntNativesCntOptim.resize(nbPdt);
@@ -325,7 +329,7 @@ BOOST_AUTO_TEST_CASE(thermal_prop_cost_is_market_bid_cost_times_generation_power
 
     const auto row = FindRow(table, "prop_cost", "area1_thermal_cluster1");
     BOOST_REQUIRE(row.has_value());
-    BOOST_CHECK_CLOSE(row->value, 35. * 3600., 1e-9);
+    BOOST_CHECK_CLOSE(row->value, 30. * 3600., 1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(extra_output_entries_carry_block_time_and_scenario)
@@ -348,7 +352,7 @@ BOOST_AUTO_TEST_CASE(imbalance_cost_combines_unsupplied_and_spilled_energy)
     const auto rows = RowsForOutput(table, "imbalance_cost");
     BOOST_REQUIRE_EQUAL(rows.size(), 3);
     BOOST_CHECK_EQUAL(rows[0].component, "area1_node");
-    BOOST_CHECK_CLOSE(rows[0].value, 10000. * 52. + 4. * 7., 1e-9);
+    BOOST_CHECK_CLOSE(rows[0].value, 9500. * 52. + 3. * 7., 1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(is_significant_loss_of_load_is_one_above_threshold_and_zero_below)
@@ -417,7 +421,7 @@ BOOST_AUTO_TEST_CASE(is_near_loss_of_load_compares_price_to_unsupplied_cost)
 {
     fill();
 
-    // area1: price 10000 > 10000 - 5; area2: 50 <= 20000 - 5; area3: 75 <= 9000 - 5.
+    // area1: price 10000 > 9500 - 5; area2: 50 <= 19000 - 5; area3: 75 <= 8500 - 5.
     BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area1_node")->value, 1.);
     BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area2_node")->value, 0.);
     BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area3_node")->value, 0.);
@@ -823,14 +827,14 @@ BOOST_AUTO_TEST_CASE(cluster_availability_ignores_the_unit_floor_when_unit_size_
 
 BOOST_AUTO_TEST_CASE(profit_is_margin_price_times_generation_above_the_min_gen_floor)
 {
-    // area1 price = -(-10000) = 10000; generation_cost = 35;
+    // area1 price = -(-10000) = 10000; unperturbed market bid cost = 30;
     // generation_power = 3600; min_gen_power floor = 500.
-    // profit = (10000 - 35) * max(3600 - 500, 0) = 9965 * 3100.
+    // profit = (10000 - 30) * max(3600 - 500, 0) = 9970 * 3100.
     fill();
 
     const auto row = FindRow(table, "profit", "area1_thermal_cluster1");
     BOOST_REQUIRE(row.has_value());
-    BOOST_CHECK_CLOSE(row->value, 9965. * 3100., 1e-9);
+    BOOST_CHECK_CLOSE(row->value, 9970. * 3100., 1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(profit_is_zero_when_generation_does_not_exceed_the_floor)
