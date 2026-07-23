@@ -134,9 +134,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Force some options
     options.ignoreConstraints = pSettings.ignoreConstraints;
 
-    // Load the study from a folder
-    Benchmarking::Timer timer;
-
     std::exception_ptr loadingException;
     try
     {
