@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(output_selection_defaults_to_monte_carlo)
 BOOST_AUTO_TEST_CASE(output_selection_can_be_parsed_from_string)
 {
     Settings settings;
-    settings.outputSelectionStr = "simulation-table";
+    settings.outputSelectionStr = "simulation-tables";
 
     settings.resolveOutputSelection();
 
