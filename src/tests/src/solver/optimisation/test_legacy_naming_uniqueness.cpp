@@ -64,11 +64,11 @@ struct ConstraintNamerFixture
 
 BOOST_AUTO_TEST_SUITE(LegacyNamingUniqueness)
 
-BOOST_FIXTURE_TEST_CASE(area_variable_component_is_area_node, NamerFixture)
+BOOST_FIXTURE_TEST_CASE(area_variable_component_is_area_load, NamerFixture)
 {
     setupArea("west");
     varNamer.UnsuppliedEnergy(0);
-    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "west_node");
+    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "west_load");
 }
 
 BOOST_FIXTURE_TEST_CASE(spillage_component_matches_unsupplied_energy, NamerFixture)
@@ -86,8 +86,8 @@ BOOST_FIXTURE_TEST_CASE(different_areas_produce_different_node_components, Namer
     setupArea("east");
     varNamer.UnsuppliedEnergy(1);
     BOOST_CHECK_NE(legacyInfo[0]->component, legacyInfo[1]->component);
-    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "west_node");
-    BOOST_CHECK_EQUAL(legacyInfo[1]->component, "east_node");
+    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "west_load");
+    BOOST_CHECK_EQUAL(legacyInfo[1]->component, "east_load");
 }
 
 BOOST_FIXTURE_TEST_CASE(thermal_component_includes_area_and_cluster, NamerFixture)
@@ -198,11 +198,11 @@ BOOST_FIXTURE_TEST_CASE(hydro_component_differs_from_node_component, NamerFixtur
     BOOST_CHECK_NE(legacyInfo[0]->component, legacyInfo[1]->component);
 }
 
-BOOST_FIXTURE_TEST_CASE(area_balance_constraint_component_is_area_node, ConstraintNamerFixture)
+BOOST_FIXTURE_TEST_CASE(area_balance_constraint_component_is_area_load, ConstraintNamerFixture)
 {
     setupArea("west");
     constrNamer.AreaBalance(0);
-    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "west_node");
+    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "west_load");
 }
 
 BOOST_FIXTURE_TEST_CASE(flow_dissociation_constraint_component_is_link, ConstraintNamerFixture)
@@ -223,7 +223,7 @@ BOOST_FIXTURE_TEST_CASE(thermal_and_node_components_never_collide, NamerFixture)
 {
     setupArea("west");
     varNamer.UnsuppliedEnergy(0);
-    varNamer.DispatchableProduction(1, "node");
+    varNamer.DispatchableProduction(1, "load");
     BOOST_CHECK_NE(legacyInfo[0]->component, legacyInfo[1]->component);
 }
 

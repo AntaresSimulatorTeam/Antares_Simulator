@@ -269,7 +269,7 @@ BOOST_AUTO_TEST_CASE(imbalance_cost_combines_unsupplied_and_spilled_energy)
 
     const auto rows = RowsForOutput(table, "imbalance_cost");
     BOOST_REQUIRE_EQUAL(rows.size(), 3);
-    BOOST_CHECK_EQUAL(rows[0].component, "area1_node");
+    BOOST_CHECK_EQUAL(rows[0].component, "area1_load");
     BOOST_CHECK_CLOSE(rows[0].value, 10000. * 52. + 4. * 7., 1e-9);
 }
 
@@ -279,10 +279,10 @@ BOOST_AUTO_TEST_CASE(is_loss_of_load_is_one_above_threshold_and_zero_below)
 
     const auto rows = RowsForOutput(table, "is_loss_of_load");
     BOOST_REQUIRE_EQUAL(rows.size(), 3);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area1_node")->value, 1.);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area2_node")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area1_load")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area2_load")->value, 1.);
     // 0.2 MW of unsupplied energy is below the 0.5 MW threshold.
-    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3_node")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3_load")->value, 0.);
 }
 
 BOOST_AUTO_TEST_CASE(is_loss_of_load_is_zero_exactly_at_threshold)
@@ -292,16 +292,16 @@ BOOST_AUTO_TEST_CASE(is_loss_of_load_is_zero_exactly_at_threshold)
     problem.ProblemeAResoudre->X[unsuppliedArea3] = 0.5;
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3_node")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3_load")->value, 0.);
 }
 
 BOOST_AUTO_TEST_CASE(actual_load_is_the_residual_load_plus_must_run_generation)
 {
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area1_node")->value, 790. + 10.);
-    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area2_node")->value, 500. + 0.);
-    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area3_node")->value, 280. + 20.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area1_load")->value, 790. + 10.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area2_load")->value, 500. + 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area3_load")->value, 280. + 20.);
 }
 
 BOOST_AUTO_TEST_CASE(price_is_minus_the_area_balance_dual)
@@ -310,9 +310,9 @@ BOOST_AUTO_TEST_CASE(price_is_minus_the_area_balance_dual)
 
     const auto rows = RowsForOutput(table, "price");
     BOOST_REQUIRE_EQUAL(rows.size(), 3);
-    BOOST_CHECK_EQUAL(FindRow(table, "price", "area1_node")->value, 10000.);
-    BOOST_CHECK_EQUAL(FindRow(table, "price", "area2_node")->value, 50.);
-    BOOST_CHECK_EQUAL(FindRow(table, "price", "area3_node")->value, 75.);
+    BOOST_CHECK_EQUAL(FindRow(table, "price", "area1_load")->value, 10000.);
+    BOOST_CHECK_EQUAL(FindRow(table, "price", "area2_load")->value, 50.);
+    BOOST_CHECK_EQUAL(FindRow(table, "price", "area3_load")->value, 75.);
 }
 
 BOOST_AUTO_TEST_CASE(is_near_loss_of_load_compares_price_to_unsupplied_cost)
@@ -320,9 +320,9 @@ BOOST_AUTO_TEST_CASE(is_near_loss_of_load_compares_price_to_unsupplied_cost)
     fill();
 
     // area1: price 10000 > 10000 - 5; area2: 50 <= 20000 - 5; area3: 75 <= 9000 - 5.
-    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area1_node")->value, 1.);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area2_node")->value, 0.);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area3_node")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area1_load")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area2_load")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area3_load")->value, 0.);
 }
 
 BOOST_AUTO_TEST_CASE(level_percentage_is_hydro_level_over_reservoir_capacity)
@@ -460,7 +460,7 @@ BOOST_AUTO_TEST_CASE(is_near_loss_of_load_is_skipped_without_unsupplied_variable
     // "area4" has a balance constraint but no UnsuppliedEnergy variable, so
     // its unsupplied energy cost is unknown: price only, no nearness flag.
     BOOST_CHECK_EQUAL(RowsForOutput(table, "is_near_loss_of_load").size(), 3);
-    BOOST_CHECK(!FindRow(table, "is_near_loss_of_load", "area4_node").has_value());
+    BOOST_CHECK(!FindRow(table, "is_near_loss_of_load", "area4_load").has_value());
 }
 
 BOOST_AUTO_TEST_CASE(capacity_shadow_price_is_the_absolute_flow_dissociation_dual)

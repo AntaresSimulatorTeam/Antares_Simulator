@@ -72,7 +72,7 @@ void Namer::RecordLegacyVariableInfo(unsigned index,
 {
     if (legacyInfo_ != nullptr)
     {
-        (*legacyInfo_)[index] = {output, component, timeStep()};
+        (*legacyInfo_)[index] = {output, boost::algorithm::to_lower_copy(component), timeStep()};
     }
 }
 
@@ -489,17 +489,17 @@ void VariableNamer::FinalStorage(unsigned varIndex)
 
 void VariableNamer::UnsuppliedEnergy(unsigned varIndex)
 {
-    SetAreaElementNameHour(varIndex, "UnsuppliedEnergy", BuildAreaNodeComponentId(getArea()));
+    SetAreaElementNameHour(varIndex, "UnsuppliedEnergy", BuildLoadComponentId(getArea()));
 }
 
 void VariableNamer::Spillage(unsigned varIndex)
 {
-    SetAreaElementNameHour(varIndex, "Spillage", BuildAreaNodeComponentId(getArea()));
+    SetAreaElementNameHour(varIndex, "Spillage", BuildLoadComponentId(getArea()));
 }
 
 void VariableNamer::AreaBalance(unsigned varIndex)
 {
-    SetAreaElementNameHour(varIndex, "AreaBalance", BuildAreaNodeComponentId(getArea()));
+    SetAreaElementNameHour(varIndex, "AreaBalance", BuildLoadComponentId(getArea()));
 }
 
 void ConstraintNamer::FlowDissociation(unsigned constrIndex) const
@@ -519,7 +519,7 @@ void ConstraintNamer::CsrAreaBalance(unsigned constrIndex) const
 
 void ConstraintNamer::AreaBalance(unsigned constrIndex)
 {
-    SetAreaElementNameHour(constrIndex, "AreaBalance", BuildAreaNodeComponentId(getArea()));
+    SetAreaElementNameHour(constrIndex, "AreaBalance", BuildLoadComponentId(getArea()));
 }
 
 void ConstraintNamer::FictiveLoads(unsigned constrIndex) const

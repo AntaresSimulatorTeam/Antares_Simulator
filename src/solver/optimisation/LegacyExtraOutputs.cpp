@@ -70,7 +70,7 @@ public:
         for (uint32_t pays = 0; pays < problemeHebdo.NombreDePays; ++pays)
         {
             const std::string area = problemeHebdo.NomsDesPays[pays];
-            areaNames_.push_back(area + "_node");
+            areaNames_.push_back(area + "_load");
             hydroStorageNames_.push_back(area + "_hydro_storage");
 
             const PALIERS_THERMIQUES& paliers = problemeHebdo.PaliersThermiquesDuPays[pays];

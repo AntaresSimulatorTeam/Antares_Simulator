@@ -23,7 +23,7 @@ Feature: Legacy variables in simulation table
     And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
     And the modeler outputs contain the following entries
       | block | component  | output            | timestep | scenario | value |
-      | 0     | area_node | unsupplied_energy | 33       | 0        | 52    |
+      | 0     | area_load | unsupplied_energy | 33       | 0        | 52    |
 
   @short
   Scenario: Extra outputs prop_cost and imbalance_cost are derived from the legacy solution
@@ -65,11 +65,11 @@ Feature: Legacy variables in simulation table
       | 0     | area_thermal_base      | prop_cost      | 33       | 0        | 126000 |
       | 0     | area_thermal_semi base | prop_cost      | 33       | 0        | 75000  |
       | 0     | area_thermal_peak      | prop_cost      | 33       | 0        | 64000  |
-      | 0     | area_node      | imbalance_cost | 33       | 0        | 520000 |
-      | 0     | area_node      | is_loss_of_load | 33      | 0        | 1      |
-      | 0     | area_node      | price          | 33       | 0        | 10000  |
-      | 0     | area_node      | is_near_loss_of_load | 33  | 0        | 1      |
-      | 0     | area_node      | actual_load    | 33       | 0        | 6111   |
+      | 0     | area_load      | imbalance_cost | 33       | 0        | 520000 |
+      | 0     | area_load      | is_loss_of_load | 33      | 0        | 1      |
+      | 0     | area_load      | price          | 33       | 0        | 10000  |
+      | 0     | area_load      | is_near_loss_of_load | 33  | 0        | 1      |
+      | 0     | area_load      | actual_load    | 33       | 0        | 6111   |
 
   @fast @short
   Scenario: Link extra outputs are derived from the legacy flow variables and duals
@@ -107,8 +107,8 @@ Feature: Legacy variables in simulation table
       | 2     | east_west_link | actual_loop_flow        | 425      | 0        | 0       |
       | 2     | east_west_link | prop_cost               | 425      | 0        | 213.452 |
       | 2     | east_west_link | capacity_shadow_price   | 425      | 0        | 1.0     |
-      | 2     | east_node       | price                   | 425      | 0        | 44.926  |
-      | 2     | west_node       | price                   | 425      | 0        | 45.926  |
+      | 2     | east_load       | price                   | 425      | 0        | 44.926  |
+      | 2     | west_load       | price                   | 425      | 0        | 45.926  |
 
       # is_directly/indirectly_congested compare the (signed) DirectFlow to the
       # link's per-hour capacity (3000 MW direct and indirect, constant in this
@@ -210,7 +210,7 @@ Feature: Legacy variables in simulation table
       | 0     | area_thermal_base      | actual_num_units_on | 33       | 0        | 4     |
       | 0     | area_thermal_semi base | actual_num_units_on | 33       | 0        | 5     |
       | 0     | area_thermal_peak      | actual_num_units_on | 33       | 0        | 8     |
-      | 0     | area_node      | is_loss_of_load     | 33       | 0        | 1     |
+      | 0     | area_load      | is_loss_of_load     | 33       | 0        | 1     |
       | 0     | area_thermal_base      | co2_emissions        | 33       | 0        | 4320  |
       | 0     | area_thermal_semi base | co2_emissions        | 33       | 0        | 900   |
       | 0     | area_thermal_peak      | co2_emissions        | 33       | 0        | 560   |
@@ -232,5 +232,5 @@ Feature: Legacy variables in simulation table
       | 0     | area_thermal_semi base | prop_cost      | 33       | 0        | 75000  |
       | 0     | area_thermal_peak      | prop_cost      | 33       | 0        | 64000  |
       | 0     | area_thermal_base      | non_prop_cost | 33       | 0        | 6800  |
-      | 0     | area_node      | imbalance_cost | 33       | 0        | 1040000 |
+      | 0     | area_load      | imbalance_cost | 33       | 0        | 1040000 |
 
