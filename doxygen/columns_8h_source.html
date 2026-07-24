@@ -156,7 +156,7 @@ $(document).ready(function(){initNavTree('columns_8h_source.html',''); initResiz
 <div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classAntares_1_1IO_1_1Outputs_1_1IColumn.html">   27</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1IO_1_1Outputs_1_1IColumn.html">IColumn</a></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1IColumn.html">IColumn</a>(<span class="keyword">const</span> std::string name):</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1IColumn.html">IColumn</a>(<span class="keyword">const</span> std::string&amp; name):</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        name_(name)</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    {</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    }</div>
@@ -228,7 +228,7 @@ $(document).ready(function(){initNavTree('columns_8h_source.html',''); initResiz
 <div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html">   99</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html">TypedColumn</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1IColumn.html">IColumn</a></div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;{</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html">TypedColumn</a>(std::string name):</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html">TypedColumn</a>(<span class="keyword">const</span> std::string&amp; name):</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1IColumn.html">IColumn</a>(name)</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    {</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    }</div>
@@ -281,7 +281,7 @@ $(document).ready(function(){initNavTree('columns_8h_source.html',''); initResiz
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <span class="keyword">static</span> constexpr uint32_t nullIndex = std::numeric_limits&lt;uint32_t&gt;::max();</div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1InternedStringColumn.html">InternedStringColumn</a>(std::string name):</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1InternedStringColumn.html">InternedStringColumn</a>(<span class="keyword">const</span> std::string&amp; name):</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1IColumn.html">IColumn</a>(name)</div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    {</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    }</div>
