@@ -986,28 +986,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                     }
                 }
 
-                double weekGenerationTarget = 1.;
-                double marginGen = 1.;
-
-                if (area.hydro.reservoirManagement && area.hydro.useHeuristicTarget
-                    && not area.hydro.useLeeway)
-                {
-                    double weekTarget_tmp = 0.;
-                    for (uint j = 0; j < 7; ++j)
-                    {
-                        uint day = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
-                        weekTarget_tmp += hydroVentilationResults[k]
-                                            .HydrauliqueModulableQuotidien[day];
-                    }
-
-                    if (weekTarget_tmp != 0.)
-                    {
-                        weekGenerationTarget = weekTarget_tmp;
-                    }
-
-                    marginGen = weekGenerationTarget;
-                }
-
                 if (not problem.CaracteristiquesHydrauliques[k].TurbinageEntreBornes)
                 {
                     for (uint j = 0; j < 7; ++j)
@@ -1016,8 +994,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                         problem.CaracteristiquesHydrauliques[k]
                           .CntEnergieH2OParIntervalleOptimise[j]
                           = hydroVentilationResults[k].HydrauliqueModulableQuotidien[day]
-                            * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation
-                            * marginGen / weekGenerationTarget;
+                            * problem.CaracteristiquesHydrauliques[k].WeeklyGeneratingModulation;
                     }
                 }
 
