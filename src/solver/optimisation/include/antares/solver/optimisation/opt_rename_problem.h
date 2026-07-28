@@ -50,6 +50,32 @@ inline std::string BuildHydroStorageComponentId(const std::string& areaId)
     return areaId + "_hydro_storage";
 }
 
+inline std::string BuildLoadComponentId(const std::string& areaId)
+{
+    return areaId + "_load";
+}
+
+inline std::string BuildWindComponentId(const std::string& areaId)
+{
+    return areaId + "_wind";
+}
+
+inline std::string BuildSolarComponentId(const std::string& areaId)
+{
+    return areaId + "_solar";
+}
+
+inline std::string BuildRorComponentId(const std::string& areaId)
+{
+    return areaId + "_run_of_river";
+}
+
+inline std::string BuildMiscGenComponentId(const std::string& areaId,
+                                           const std::string& miscGenType)
+{
+    return areaId + "_miscgen_" + miscGenType;
+}
+
 inline std::string BuildLinkComponentId(const std::string& origin, const std::string& destination)
 {
     if (origin < destination)

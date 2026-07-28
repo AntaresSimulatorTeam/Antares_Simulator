@@ -122,28 +122,28 @@ YAML::Node areaToYaml(const Area& area)
 
 YAML::Node loadToYaml(const Area& area)
 {
-    return makeComponent(area.id + "_load",
+    return makeComponent(BuildLoadComponentId(area.id),
                          "antares_legacy_models.load",
                          {{"carrier", "electricity"}});
 }
 
 YAML::Node windToYaml(const Area& area)
 {
-    return makeComponent(area.id + "_wind",
+    return makeComponent(BuildWindComponentId(area.id),
                          "antares_legacy_models.renewable",
                          {{"carrier", "electricity"}, {"technology", "wind"}});
 }
 
 YAML::Node solarToYaml(const Area& area)
 {
-    return makeComponent(area.id + "_solar",
+    return makeComponent(BuildSolarComponentId(area.id),
                          "antares_legacy_models.renewable",
                          {{"carrier", "electricity"}, {"technology", "solar"}});
 }
 
 YAML::Node rorToYaml(const Area& area)
 {
-    return makeComponent(area.id + "_ror",
+    return makeComponent(BuildRorComponentId(area.id),
                          "antares_legacy_models.renewable",
                          {{"carrier", "electricity"}, {"technology", "run_of_river"}});
 }
@@ -173,7 +173,7 @@ YAML::Node renewableClusterToYaml(const RenewableCluster& cluster)
 
 YAML::Node miscGenToYaml(const Area& area, int miscGenIndex)
 {
-    return makeComponent(area.id + "_miscgen_" + miscGenTypeName(miscGenIndex),
+    return makeComponent(BuildMiscGenComponentId(area.id, miscGenTypeName(miscGenIndex)),
                          "antares_legacy_models.miscellaneous_generation",
                          {{"carrier", "electricity"},
                           {"technology", miscGenTechnologyValue(miscGenIndex)},

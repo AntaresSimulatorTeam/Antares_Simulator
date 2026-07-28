@@ -65,7 +65,6 @@ def set_input_section_variable(context, input_file, section, variable, value):
     context.sih.set_input(input_file=input_file, section=section,
                           variable=variable, value=value)
 
-
 @given('the linear solver is {solver_name}')
 def set_linear_solver(context, solver_name):
     context.config.userdata["linear-solver"] = solver_name
@@ -84,6 +83,10 @@ def parse_options(context, options):
 
         if options.count("--parallel") > 0:
             context.parallel = True
+
+        for opt in options.split():
+            if opt.startswith("--output="):
+                context.output_selection = opt.split("=", 1)[1]
 
 @when('I run antares simulator')
 @when('I run antares simulator with {options}')
@@ -358,6 +361,8 @@ def build_antares_solver_command(context):
         command.append('--named-mps-problems')
     if context.parallel:
         command.append('--force-parallel=4')
+    if hasattr(context, "output_selection"):
+        command.append(f'--output={context.output_selection}')
     return command
 
 
@@ -477,12 +482,11 @@ def _store_simulation_result(context, study_index: int):
     context.multi_studies.append(result)
 
 
-def _run_study_at_index(context, study_index: int, study_path: Path):
+def _run_study_at_index(context, study_index: int, study_path: Path, options):
     """Run a single study and store its results"""
     context.study_path = study_path
+    parse_options(context, options)
     init_simulation(context)
-    context.named_mps_problems = False
-    context.parallel = False
     run_simulation(context)
     _store_simulation_result(context, study_index)
 
@@ -505,10 +509,11 @@ def nth_study_path_is(context, study_num, string):
     context.study_paths[study_num - 1] = study_path
 
 
-@when('I run antares simulator on all studies')
-def run_antares_on_all_studies(context):
+@when('I run antares simulator on all studies with {options}')
+def run_antares_on_all_studies(context, options):
     """Run simulator on all defined studies"""
     _initialize_multi_study_context(context)
+    parse_options(context, options)
 
     assert hasattr(context, 'study_paths'), "No study paths defined"
     assert len(context.study_paths) > 0, "No study paths defined"
@@ -516,7 +521,7 @@ def run_antares_on_all_studies(context):
     # Run all studies
     for idx, study_path in enumerate(context.study_paths):
         assert study_path is not None, f"Study path at index {idx} is not defined"
-        _run_study_at_index(context, idx, study_path)
+        _run_study_at_index(context, idx, study_path, options)
 
 
 @then('all simulations succeed')
