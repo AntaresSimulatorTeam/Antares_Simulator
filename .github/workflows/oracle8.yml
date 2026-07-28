@@ -9,6 +9,7 @@ on:
     - dependabot/*
     - release/*
     - copilot/*
+    - fix/remove-ld-group
   schedule:
   - cron: '21 2 * * *'
   workflow_call:
