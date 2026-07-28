@@ -7,11 +7,12 @@
 #include <limits>
 #include <optional>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 #include "antares/io/outputs/IColumnAdapterVisitor.h"
 #include "antares/optimisation/linear-problem-api/hasStatus.h"
+
+#include <boost/unordered/unordered_flat_map.hpp>
 
 // Forward declarations
 namespace Antares::Writer
@@ -218,6 +219,6 @@ private:
 
     std::vector<uint32_t> indices_;
     std::vector<std::string> dictionary_;
-    std::unordered_map<std::string, uint32_t> lookup_;
+    boost::unordered_flat_map<std::string, uint32_t> lookup_;
 };
 } // namespace Antares::IO::Outputs
