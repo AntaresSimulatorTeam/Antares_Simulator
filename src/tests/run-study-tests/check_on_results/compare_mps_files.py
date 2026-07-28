@@ -78,7 +78,7 @@ class compare_mps_files(check_interface):
         return is_lp
 
     def check_numbers(self, left, right, msg: str):
-        check(left == approx(right, rel=1e-6), msg)
+        check(left == approx(right, abs=1e-12, rel=1e-6), msg)
 
     def compare_variables(self, pair, ref_model, out_model):
         ref_vars = extract_variables(ref_model)
