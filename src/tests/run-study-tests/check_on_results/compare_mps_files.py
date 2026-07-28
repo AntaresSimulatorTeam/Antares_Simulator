@@ -148,7 +148,7 @@ class compare_mps_files(check_interface):
         check(ref_nb_vars == out_nb_vars,
               f"Difference in number of variables between files {pair[0]} and {pair[1]}")
 
-    def compare_files(self, pair, ref_mps, out_mps):
+    def compare_files(self, ref_mps, out_mps):
         ref_content = open(ref_mps).read()
         output_content = open(out_mps).read()
         return ref_content == output_content
