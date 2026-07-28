@@ -1,6 +1,5 @@
 var NAVTREEINDEX37 =
 {
-"structAntares_1_1Optimisation_1_1LinearConstraint.html#a5ceba66ee7f56c87f4a4c284321c59e0":[9,0,0,9,17,1],
 "structAntares_1_1Optimisation_1_1LinearConstraint.html#a8cf6457b8e67eb9ac8341f5da940e8ca":[9,0,0,9,17,0],
 "structAntares_1_1Optimisation_1_1LinearConstraint.html#acada13098d61c5d5346a4266fdad206c":[9,0,0,9,17,2],
 "structAntares_1_1Optimisation_1_1OptimComponent.html":[9,0,0,9,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCostTraits.html#a6cccad533c3bc29fdfd16647d3d5b7df":[9,0,0,11,6,5,49,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html":[9,0,0,11,6,5,60],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a308c339f6688b207e9f2b7690e31c07e":[9,0,0,11,6,5,60,7],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a360313c3f187df389a34559151ed9c61":[9,0,0,11,6,5,60,8]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a360313c3f187df389a34559151ed9c61":[9,0,0,11,6,5,60,8],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a42f54f01275968f5b0f5b4496c1d2f8c":[9,0,0,11,6,5,60,5]
 };

@@ -1886,8 +1886,7 @@ var namespaces_dup =
         [ "check_no_mps", "classcheck__on__results_1_1check__no__mps_1_1check__no__mps.html", "classcheck__on__results_1_1check__no__mps_1_1check__no__mps" ]
       ] ],
       [ "compare_mps_files", null, [
-        [ "compare_mps_files", "classcheck__on__results_1_1compare__mps__files_1_1compare__mps__files.html", "classcheck__on__results_1_1compare__mps__files_1_1compare__mps__files" ],
-        [ "tol", "compare__mps__files_8py.html#a30d3154dfdff4e3c489d342ea6e8209b", null ]
+        [ "compare_mps_files", "classcheck__on__results_1_1compare__mps__files_1_1compare__mps__files.html", "classcheck__on__results_1_1compare__mps__files_1_1compare__mps__files" ]
       ] ],
       [ "create_checks", null, [
         [ "create_check_hydro_level", "create__checks_8py.html#ac0708f92e0f2302e73ba709c8563bb46", null ],

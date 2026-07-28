@@ -1,6 +1,5 @@
 var NAVTREEINDEX41 =
 {
-"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#af4cb6a19a317bd38a8984bb23b152863":[9,0,6,1,7],
 "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html":[9,0,6,2],
 "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#a1a14f57c2b1c8d36940981722639f22b":[9,0,6,2,8],
 "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#a6be5bf1c6d902ffb7f8e7c7d2c9efbc3":[9,0,6,2,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX41 =
 "structLEVEL__FLEX__UP__NODE.html#a4d34a008c7753813ad6f5374fe9413fd":[9,0,178,0],
 "structLibererProbleme.html":[9,0,179],
 "structLibererProbleme.html#ab10b4f84e3f5d13d48839c153fa251a6":[9,0,179,0],
-"structLibraryObjects.html":[9,0,180]
+"structLibraryObjects.html":[9,0,180],
+"structLibraryObjects.html#a1155e5ed272e63eafa3d39c75d90e400":[9,0,180,3]
 };
