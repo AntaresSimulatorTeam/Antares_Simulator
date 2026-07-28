@@ -74,7 +74,7 @@ bool Economy::simulationBegin()
                                             &pProblemesHebdo[numSpace],
                                             resultWriter_,
                                             simulationObserver_.get(),
-                                            !study.parameters.noOutput);
+                                            study.parameters.writeSimulationTable());
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
@@ -202,14 +202,17 @@ bool Economy::year(Variable::State& state,
         hourInTheYear += nbHoursInAWeek;
     }
 
-    if (simulationTables && !study.folderOutput.empty())
+    durationCollector("simulation_table_export") << [this, &state, &simulationTables]()
     {
-        LegacySimulationTablesWriter legacyWriter(study.folderOutput,
-                                                  state.year,
-                                                  study.parameters.simuTableFormat);
-        legacyWriter.write(*simulationTables);
-        simulationTables->clear();
-    }
+        if (simulationTables && !study.folderOutput.empty())
+        {
+            LegacySimulationTablesWriter legacyWriter(study.folderOutput,
+                                                      state.year,
+                                                      study.parameters.simuTableFormat);
+            legacyWriter.write(*simulationTables);
+            simulationTables->clear();
+        }
+    };
 
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);

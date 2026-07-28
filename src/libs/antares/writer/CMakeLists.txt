@@ -19,7 +19,6 @@ generate_export_header(simulation-table-writers
 )
 
 set_target_properties(simulation-table-writers PROPERTIES
-    CXX_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN YES
 )
 
@@ -39,9 +38,10 @@ target_link_libraries(simulation-table-writers
   PUBLIC
   Antares::simulation-table
   Antares::exception
-  PRIVATE
-  # Keep Arrow/Parquet inside lib simulation-table-writers to avoid re-linking their static
-  # objects into consumers, which can double-register/destroy generated globals.
+  # Arrow/Parquet must be PUBLIC so their symbols are exported from the .so.
+  # This lets consumers (e.g. test executables) resolve Arrow/Parquet symbols
+  # transitively without duplicating the static library's global objects,
+  # which would cause double-free at program exit.
   "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Arrow::arrow_static,Arrow::arrow_shared>"
   "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Parquet::parquet_static,Parquet::parquet_shared>")
 

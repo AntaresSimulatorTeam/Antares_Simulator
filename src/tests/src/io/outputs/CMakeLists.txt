@@ -21,8 +21,12 @@ add_boost_test(testOutputs
         Antares::simulation-table-writers
         ortools::ortools
         Boost::unit_test_framework
-        "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Arrow::arrow_static,Arrow::arrow_shared>"
-        "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Parquet::parquet_static,Parquet::parquet_shared>")
+        # Arrow/Parquet are linked transitively via Antares::simulation-table-writers.
+        # Linking them directly here would duplicate the static library's global objects
+        # (e.g. std::map<int, char const*> in parquet::format), causing a double-free
+        # at program exit when both copies are destroyed.
+        # The test's direct use of parquet::arrow::OpenFile resolves through the .so.
+)
 
 target_compile_definitions(testOutputs PRIVATE
         RESOURCES_DIR="${CMAKE_SOURCE_DIR}/resources"
