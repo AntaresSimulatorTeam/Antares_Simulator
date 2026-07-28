@@ -3,6 +3,8 @@
 
 #include "antares/application/application.h"
 
+#include <chrono>
+
 #include <antares/antares/fatal-error.h>
 #include <antares/application/ScenarioBuilderOwner.h>
 #include <antares/benchmarking/timer.h>
@@ -14,6 +16,7 @@
 #include <antares/study/duplicates.h>
 #include <antares/study/header.h>
 #include <antares/sys/policy.h>
+#include <antares/view-builder/viewBuilder.h>
 #include <antares/writer/writer_factory.h>
 #include "antares/antares/version.h"
 #include "antares/checks/checksOnLPsolver.h"
@@ -124,12 +127,12 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         study.simulationName = pSettings.simulationName;
     }
 
-    // Force some options
-    options.prepareOutput = !pSettings.noOutput;
-    options.ignoreConstraints = pSettings.ignoreConstraints;
+    // Resolve the command-line output selection and apply to study parameters
+    pSettings.resolveOutputSelection();
+    pStudy->parameters.outputSelection = pSettings.outputSelection;
 
-    // Load the study from a folder
-    Benchmarking::Timer timer;
+    // Force some options
+    options.ignoreConstraints = pSettings.ignoreConstraints;
 
     std::exception_ptr loadingException;
     try
@@ -149,8 +152,17 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             throw Error::Duplicates();
         }
 
-        // no output ?
-        study.parameters.noOutput = pSettings.noOutput;
+        if (!study.parameters.writeMonteCarloResults() && !study.parameters.writeSimulationTable())
+        {
+            logs.warning() << "Both Monte-Carlo results and simulation tables are disabled: no "
+                              "simulation results will be written";
+        }
+
+        if (study.getModelerData() && !study.parameters.writeSimulationTable())
+        {
+            logs.warning() << "Simulation tables are disabled: the results of the modeler "
+                              "components will not be written";
+        }
 
         if (pSettings.parquetFmtForSimuTables)
         {
@@ -188,9 +200,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     logs.info();
 
-    if (pSettings.noOutput)
+    if (pSettings.outputSelection == Antares::Data::OutputSelection::None)
     {
-        logs.info() << "The output has been disabled.";
+        logs.info() << "Monte-Carlo results and simulation tables are disabled.";
         logs.info();
     }
 
@@ -217,25 +229,19 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             // Actually importing the log file is useless here.
             // However, since we have warnings/errors, it allows to have a piece of
             // log when the unexpected happens.
-            if (!study.parameters.noOutput)
-            {
-                study.importLogsToOutputFolder(*resultWriter);
-            }
+            study.importLogsToOutputFolder(*resultWriter);
             // empty line
             logs.info();
         }
     }
 
     // Checking for filename length limits
-    if (!pSettings.noOutput)
+    if (!study.checkForFilenameLimits())
     {
-        if (!study.checkForFilenameLimits())
-        {
-            throw Error::InvalidFileName();
-        }
-
-        writeComment();
+        throw Error::InvalidFileName();
     }
+
+    writeComment();
 
     if (!study.initializeRuntimeInfos())
     {
@@ -403,6 +409,10 @@ void Application::execute()
 
     // Save about-the-study files (comments, notes, etc.)
     pStudy->saveAboutTheStudy(*resultWriter);
+
+    ViewBuilder::exportSystemForView(*pStudy, resultWriter.get());
+    logs.info() << "system-for-views.yml has been generated in the output folder.";
+
     SystemMemoryLogger memoryReport;
     memoryReport.interval(1000 * 60 * 5); // 5 minutes
     memoryReport.start();
@@ -535,7 +545,7 @@ Application::~Application()
         }; // Catching log exception
 
         // Copy the log file if a result writer is available
-        if (!pStudy->parameters.noOutput && resultWriter)
+        if (resultWriter)
         {
             pStudy->importLogsToOutputFolder(*resultWriter);
         }
