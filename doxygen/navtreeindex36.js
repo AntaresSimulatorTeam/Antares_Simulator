@@ -1,6 +1,5 @@
 var NAVTREEINDEX36 =
 {
-"structAntares_1_1Data_1_1StudyRuntimeInfos_1_1Counts.html#a7f56d750f49616b3a6a7706d9ec14f6b":[9,0,0,3,82,0,5],
 "structAntares_1_1Data_1_1StudyRuntimeInfos_1_1Counts.html#ab1d15e414de7944f22d81b787cc59e2f":[9,0,0,3,82,0,4],
 "structAntares_1_1Data_1_1StudyRuntimeInfos_1_1Counts.html#aeaead9ba25885d85d6c1acef71e884f5":[9,0,0,3,82,0,0],
 "structAntares_1_1Data_1_1Symmetries_1_1SymmetriesError.html":[9,0,0,3,5,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX36 =
 "structAntares_1_1Optimisation_1_1IntegerInterval.html#a9d08b48a136929d46b197cfdff5354ba":[9,0,0,9,14,1],
 "structAntares_1_1Optimisation_1_1IntegerInterval.html#aa8d3be5f206aaa4a89ff863189947a8d":[9,0,0,9,14,5],
 "structAntares_1_1Optimisation_1_1LinearConstraint.html":[9,0,0,9,17],
-"structAntares_1_1Optimisation_1_1LinearConstraint.html#a5ceba66ee7f56c87f4a4c284321c59e0":[9,0,0,9,17,1]
+"structAntares_1_1Optimisation_1_1LinearConstraint.html#a5ceba66ee7f56c87f4a4c284321c59e0":[9,0,0,9,17,1],
+"structAntares_1_1Optimisation_1_1LinearConstraint.html#a8cf6457b8e67eb9ac8341f5da940e8ca":[9,0,0,9,17,0]
 };

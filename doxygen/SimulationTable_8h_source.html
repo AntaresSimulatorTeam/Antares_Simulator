@@ -149,20 +149,19 @@ $(document).ready(function(){initNavTree('SimulationTable_8h_source.html',''); i
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">const</span> std::vector&lt;std::shared_ptr&lt;IColumn&gt;&gt;&amp; columns() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">size_t</span> rowCount() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">void</span> clear();</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    std::vector&lt;std::vector&lt;std::string&gt;&gt; storageIntoRows() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1ColumnBasedStorage.html">ColumnBasedStorage</a> storage_;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    std::shared_ptr&lt;IntegralColumn&gt; block_;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    std::shared_ptr&lt;InternedStringColumn&gt; component_;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    std::shared_ptr&lt;InternedStringColumn&gt; output_;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    std::shared_ptr&lt;OptionalColumn&lt;unsigned int&gt;&gt; absolute_time_index_;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    std::shared_ptr&lt;OptionalColumn&lt;unsigned int&gt;&gt; block_time_index_;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    std::shared_ptr&lt;IntegralColumn&gt; scenario_index_;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    std::shared_ptr&lt;OptionalColumn&lt;double&gt;&gt; value_;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    std::shared_ptr&lt;InternedStringColumn&gt; basis_status_;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;};</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;} <span class="comment">// namespace Antares::IO::Outputs</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1ColumnBasedStorage.html">ColumnBasedStorage</a> storage_;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    std::shared_ptr&lt;IntegralColumn&gt; block_;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    std::shared_ptr&lt;InternedStringColumn&gt; component_;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    std::shared_ptr&lt;InternedStringColumn&gt; output_;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    std::shared_ptr&lt;OptionalColumn&lt;unsigned int&gt;&gt; absolute_time_index_;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    std::shared_ptr&lt;OptionalColumn&lt;unsigned int&gt;&gt; block_time_index_;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    std::shared_ptr&lt;IntegralColumn&gt; scenario_index_;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    std::shared_ptr&lt;OptionalColumn&lt;double&gt;&gt; value_;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    std::shared_ptr&lt;InternedStringColumn&gt; basis_status_;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;};</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;} <span class="comment">// namespace Antares::IO::Outputs</span></div>
 <div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1ColumnBasedStorage_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1ColumnBasedStorage.html">Antares::IO::Outputs::ColumnBasedStorage</a></div><div class="ttdef"><b>Definition:</b> storage.h:15</div></div>
 <div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1SimulationTable_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a></div><div class="ttdef"><b>Definition:</b> SimulationTable.h:15</div></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html">Antares::IO::Outputs::SimulationTableEntry</a></div><div class="ttdef"><b>Definition:</b> SimulationTableEntry.h:13</div></div>

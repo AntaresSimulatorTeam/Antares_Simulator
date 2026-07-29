@@ -1,6 +1,5 @@
 var NAVTREEINDEX42 =
 {
-"structLibraryObjects.html#a74880fc76846c403dea19cd76bebafca":[9,0,180,2],
 "structLibraryObjects.html#a96e5b0162c73283464e9eaf99795eef0":[9,0,180,1],
 "structLibraryObjects.html#a9fcf420a76c93ce5acb7976f5845f55e":[9,0,180,0],
 "structLibraryObjects.html#acd96135fd5d49a4b8a3a67effa20df95":[9,0,180,4],
@@ -92,8 +91,8 @@ var NAVTREEINDEX42 =
 "structOneProblemWithReservesTwoAreas.html#a331428318e6c36868dce97f9c9cfa3e8":[9,0,236,3],
 "structOneProblemWithReservesTwoAreas.html#a7250c525c7711e1466b41d69227484d9":[9,0,236,6],
 "structOneProblemWithReservesTwoAreas.html#a7912a54705e13acd89fcee12460d3fde":[9,0,236,9],
-"structOneProblemWithReservesTwoAreas.html#a79d7790fa3ed04e726fc7d2a3ba232ab":[9,0,236,0],
 "structOneProblemWithReservesTwoAreas.html#a79d7790fa3ed04e726fc7d2a3ba232ab":[9,0,236,1],
+"structOneProblemWithReservesTwoAreas.html#a79d7790fa3ed04e726fc7d2a3ba232ab":[9,0,236,0],
 "structOneProblemWithReservesTwoAreas.html#abd29cd87b37000c5fdc63efb4fc4fe7f":[9,0,236,5],
 "structOneProblemWithReservesTwoAreas.html#ac997e0d703ca6efcf88f6cc10b50361f":[9,0,236,7],
 "structOneProblemWithReservesTwoAreas.html#ad1ddbab28d4e207587b4340dc19905bf":[9,0,236,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX42 =
 "structPRODUCTION__THERMIQUE__OPTIMALE.html#a527b256b3488dbedcd5544b3bc8c467e":[9,0,270,4],
 "structPRODUCTION__THERMIQUE__OPTIMALE.html#a57b5d2a641a6a01c098d3a08935540ba":[9,0,270,3],
 "structPRODUCTION__THERMIQUE__OPTIMALE.html#a75b9ade05ead6922b0b00bc3b4f10007":[9,0,270,6],
-"structPRODUCTION__THERMIQUE__OPTIMALE.html#ad91cf62eece1c6b2fb0b02df666566ac":[9,0,270,5]
+"structPRODUCTION__THERMIQUE__OPTIMALE.html#ad91cf62eece1c6b2fb0b02df666566ac":[9,0,270,5],
+"structPRODUCTION__THERMIQUE__OPTIMALE.html#ae8203031f9963b1ca409daeaca22f96d":[9,0,270,7]
 };

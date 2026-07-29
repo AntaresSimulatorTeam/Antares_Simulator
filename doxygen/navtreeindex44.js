@@ -1,6 +1,5 @@
 var NAVTREEINDEX44 =
 {
-"structStudyFixture.html#a563176200ef504c61e5264189f0d38bb":[9,0,345,9],
 "structStudyFixture.html#a79050046161e92da8d3cd1d036aeee12":[9,0,345,6],
 "structStudyFixture.html#a7bb40e5d558cca55d2e8635fb9b8741c":[9,0,345,5],
 "structStudyFixture.html#a7f9294e12e51c105bfe982bcc69ec640":[9,0,345,12],
@@ -249,5 +248,6 @@ var NAVTREEINDEX44 =
 "test__from__json_8py.html#ab2ba411f3538696d0867db1a003fcbd4":[8,0,41,5],
 "test__from__json_8py.html#ab3062cb5e76773cb6972a11fffb33dc5":[8,0,41,6],
 "test__from__json_8py.html#af2f1edd52ced5dc10758d7c340a149e7":[8,0,41,4],
-"test__unfeasible__problem_8py.html#a08716db6ef1d87ab63133ff33935018d":[8,0,42,19]
+"test__unfeasible__problem_8py.html#a08716db6ef1d87ab63133ff33935018d":[8,0,42,19],
+"test__unfeasible__problem_8py.html#a08c2e8bafa69d1c63b1b1d86c946040e":[8,0,42,16]
 };

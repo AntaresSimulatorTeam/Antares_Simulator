@@ -1,6 +1,5 @@
 var NAVTREEINDEX34 =
 {
-"productionByDispatchablePlant_8h.html#a69dcc4c3812e726a7684cb0a67c8fcc9":[8,0,0,14,8,5,166],
 "productionByDispatchablePlant_8h.html#a920e4b0e57675dc61ec421019ab08684":[8,0,0,14,8,5,138],
 "productionByDispatchablePlant_8h_source.html":[10,0,0,8,11,0,0,0,0,3,40],
 "productionByRenewablePlant_8h.html#a45e64a8563c83524fcd18bc05e224eb5":[8,0,0,14,8,5,139],
@@ -249,5 +248,6 @@ var NAVTREEINDEX34 =
 "solver__steps_8py.html#a7696c1bc76e2ff40a4c0d748f3cadeae":[8,0,32,20],
 "solver__steps_8py.html#a7b477055733f9ddc85ef26e18a7c4e2d":[8,0,32,28],
 "solver__steps_8py.html#a7e8c09c644d1e5bcb1a13ccf1ef2d49d":[8,0,32,41],
-"solver__steps_8py.html#a7fae04fe284fbcee4746ed5c1cec8fa5":[8,0,32,51]
+"solver__steps_8py.html#a7fae04fe284fbcee4746ed5c1cec8fa5":[8,0,32,51],
+"solver__steps_8py.html#a8397c561d5d9a21b01dfcf697e8fbb30":[8,0,32,9]
 };

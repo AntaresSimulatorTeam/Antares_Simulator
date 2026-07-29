@@ -1,6 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"classAntares_1_1Optimisation_1_1DefaultScenario.html#af8545fdc3cb4abd369f95572885ec7f8":[9,0,0,9,7,0],
 "classAntares_1_1Optimisation_1_1Dimensions.html":[9,0,0,9,15],
 "classAntares_1_1Optimisation_1_1Dimensions.html#a1658640cd6df97460a92111b610ca45e":[9,0,0,9,15,5],
 "classAntares_1_1Optimisation_1_1Dimensions.html#a21781e17abe32467a86c035ed37e99e9":[9,0,0,9,15,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#a88ed3d6317fca4f49260a612490f996d":[9,0,0,9,2,0,25],
 "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#aa36387991bb3d9a25a47631f9114a98e":[9,0,0,9,2,0,17],
 "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#aa953f9df0f202626a7fbd5b9f1905e45":[9,0,0,9,2,0,18],
-"classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#aae6631b7fac7dabb949d5b63ba8ac914":[9,0,0,9,2,0,23]
+"classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#aae6631b7fac7dabb949d5b63ba8ac914":[9,0,0,9,2,0,23],
+"classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html#ab2dd3699d651f8cb791ddd6ce6b2ecb8":[9,0,0,9,2,0,15]
 };
