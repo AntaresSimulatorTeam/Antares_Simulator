@@ -37,7 +37,7 @@ class compare_mps_files(check_interface):
             ref_mps = pair[0]
             out_mps = pair[1]
 
-            if not self.compare_files(pair, ref_mps, out_mps):
+            if not self.compare_files(ref_mps, out_mps):
                 print(f"Difference between files {pair[0]} and {pair[1]}")
                 self.compare_models(pair, str(ref_mps), str(out_mps))
 
