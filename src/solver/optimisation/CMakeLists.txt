@@ -85,8 +85,6 @@ set(RTESOLVER_OPT
 
         constraints/ConstraintBuilder.cpp
         include/antares/solver/optimisation/constraints/ConstraintBuilder.h
-        constraints/constraint_builder_utils.cpp
-        include/antares/solver/optimisation/constraints/constraint_builder_utils.h
         include/antares/solver/optimisation/constraints/AreaBalance.h
         constraints/AreaBalance.cpp
         include/antares/solver/optimisation/constraints/FictitiousLoad.h
