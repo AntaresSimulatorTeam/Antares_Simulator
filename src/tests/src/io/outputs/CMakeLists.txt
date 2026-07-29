@@ -40,14 +40,15 @@ add_boost_test(test-parquet-simulation-table-writer
         SRC
         test-parquet-simulation-table-writer.cpp
         LIBS
+        # Arrow/Parquet are linked transitively via Antares::simulation-table-writers.
+        # Linking them directly would duplicate the static library's global objects
+        # (e.g. std::map<int, char const*> in parquet::format), causing a double-free
+        # at program exit when both copies are destroyed.
+        # The test's direct use of parquet::arrow::OpenFile resolves through the .so.
         Antares::simulation-table-writers
-        "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Arrow::arrow_static,Arrow::arrow_shared>"
-        "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Parquet::parquet_static,Parquet::parquet_shared>"
         INCLUDE
         # gp : headers from target "simulation-table-writers" are needed to compile "test-parquet-simulation-table-writer"
         # gp : but they can't be located by this target, so we add the following instruction.
         "${CMAKE_SOURCE_DIR}/src/libs/antares/writer")
 
 copy_project_shared_lib(Antares::simulation-table-writers test-parquet-simulation-table-writer)
-
-copy_project_shared_lib(simulation-table-writers testOutputs)
