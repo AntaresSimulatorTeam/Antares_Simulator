@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(unsupplied_energy_records_area_as_component)
 
     BOOST_REQUIRE(info[3].has_value());
     BOOST_CHECK_EQUAL(info[3]->name, "UnsuppliedEnergy");
-    BOOST_CHECK_EQUAL(info[3]->component, "es_node");
+    BOOST_CHECK_EQUAL(info[3]->component, "es_load");
     BOOST_CHECK_EQUAL(info[3]->timeIndex, 5u);
 }
 
