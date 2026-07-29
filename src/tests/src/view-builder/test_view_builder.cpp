@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE(thermal_component)
             BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
             BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
             BOOST_CHECK_EQUAL(props[1]["id"].as<std::string>(), "technology");
-            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "OTHER");
+            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "other");
         }
     }
     BOOST_CHECK(found);
@@ -217,7 +217,7 @@ BOOST_AUTO_TEST_CASE(renewable_component)
             BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
             BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
             BOOST_CHECK_EQUAL(props[1]["id"].as<std::string>(), "technology");
-            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "OTHER");
+            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "other");
         }
     }
     BOOST_CHECK(found);
@@ -242,7 +242,7 @@ BOOST_AUTO_TEST_CASE(sts_component)
             BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
             BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
             BOOST_CHECK_EQUAL(props[1]["id"].as<std::string>(), "group");
-            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "OTHER1");
+            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "other1");
         }
     }
     BOOST_CHECK(found);
@@ -263,11 +263,9 @@ BOOST_AUTO_TEST_CASE(hydro_component)
                               "antares_legacy_models.long_term_storage");
             auto props = comp["properties"];
             BOOST_REQUIRE(props.IsSequence());
-            BOOST_REQUIRE_EQUAL(props.size(), 2);
+            BOOST_REQUIRE_EQUAL(props.size(), 1);
             BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
             BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
-            BOOST_CHECK_EQUAL(props[1]["id"].as<std::string>(), "group");
-            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "hydro");
         }
     }
     BOOST_CHECK(found);
@@ -308,19 +306,19 @@ BOOST_AUTO_TEST_CASE(misc_gen_components)
     };
 
     std::vector<MiscGenTestCase> miscGenCases = {
-      {"chp", "chp", "misc_ndg"},
+      {"combined_heat_power", "combined_heat_power", "misc_ndg"},
       {"biomass", "biomass", "misc_ndg"},
-      {"biogaz", "biogaz", "misc_ndg"},
+      {"biogas", "biogas", "misc_ndg"},
       {"waste", "waste", "misc_ndg"},
       {"geothermal", "geothermal", "misc_ndg"},
       {"other", "other", "misc_ndg"},
-      {"psp", "psp", "pumped_storage_power"},
-      {"rowbalance", "rowbalance", "rest_world"},
+      {"pumped_storage_power", "pumped_storage_power", "pumped_storage_power"},
+      {"rest_world", "rest_world", "rest_world"},
     };
 
     for (const auto& [name, expectedTech, expectedMiscType]: miscGenCases)
     {
-        std::string expectedId = "france_miscgen_" + name;
+        std::string expectedId = "france_" + name;
         bool found = false;
         for (const auto& comp: components)
         {
