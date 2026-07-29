@@ -1,34 +1,17 @@
 project(result-writer)
 
-include(GenerateExportHeader)
-
 find_package(Parquet REQUIRED)
 find_package(Arrow REQUIRED)
 
-add_library(simulation-table-writers SHARED
+add_library(simulation-table-writers
         LegacySimulationTablesWriter.cpp
         include/antares/writer/simulation_table_writer.h
         private/parquet_arrow_utils.h
         columnToArrowAdapter.cpp
-        simulation_table_writer.cpp
-)
-
-generate_export_header(simulation-table-writers
-    BASE_NAME SIMULATION_TABLE_WRITERS
-    EXPORT_FILE_NAME "${CMAKE_CURRENT_BINARY_DIR}/simulation-table-writers_export.h"
-)
-
-set_target_properties(simulation-table-writers PROPERTIES
-    VISIBILITY_INLINES_HIDDEN YES
-)
-
-set_target_properties(simulation-table-writers PROPERTIES
-    WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
+        simulation_table_writer.cpp)
 
 target_include_directories(simulation-table-writers
     PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>  # For the generated simulation-table-writers_export.h
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/private
@@ -38,10 +21,6 @@ target_link_libraries(simulation-table-writers
   PUBLIC
   Antares::simulation-table
   Antares::exception
-  # Arrow/Parquet must be PUBLIC so their symbols are exported from the .so.
-  # This lets consumers (e.g. test executables) resolve Arrow/Parquet symbols
-  # transitively without duplicating the static library's global objects,
-  # which would cause double-free at program exit.
   "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Arrow::arrow_static,Arrow::arrow_shared>"
   "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Parquet::parquet_static,Parquet::parquet_shared>")
 
@@ -66,7 +45,6 @@ add_library(Antares::result_writer ALIAS result_writer)
 target_include_directories(result_writer
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>  # For the generated simulation-table-writers_export.h
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/private
 )
@@ -94,6 +72,3 @@ install(DIRECTORY include/antares
         DESTINATION "include"
 )
 
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/simulation-table-writers_export.h"
-        DESTINATION "include/antares/writer"
-)
