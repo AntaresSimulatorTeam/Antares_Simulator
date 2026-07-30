@@ -7,6 +7,7 @@
 #include <array>
 #include <cmath>
 #include <string>
+#include <vector>
 
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/optimisation/variables/VariableManagerUtils.h"
@@ -61,6 +62,37 @@ public:
         fillContext_(fillContext),
         block_(currentBlock)
     {
+        // Component names are used for every time step of the week: build them
+        // once instead of re-concatenating them on each hourly call.
+        areaNames_.reserve(problemeHebdo.NombreDePays);
+        hydroStorageNames_.reserve(problemeHebdo.NombreDePays);
+        thermalNames_.reserve(problemeHebdo.NombreDePays);
+        for (uint32_t pays = 0; pays < problemeHebdo.NombreDePays; ++pays)
+        {
+            const std::string area = problemeHebdo.NomsDesPays[pays];
+            areaNames_.push_back(area + "_node");
+            hydroStorageNames_.push_back(area + "_hydro_storage");
+
+            const PALIERS_THERMIQUES& paliers = problemeHebdo.PaliersThermiquesDuPays[pays];
+            auto& clusterNames = thermalNames_.emplace_back();
+            clusterNames.reserve(paliers.NombreDePaliersThermiques);
+            for (int index = 0; index < paliers.NombreDePaliersThermiques; ++index)
+            {
+                clusterNames.push_back(area + "_thermal_"
+                                       + paliers.NomsDesPaliersThermiques[index]);
+            }
+        }
+
+        linkNames_.reserve(problemeHebdo.NombreDInterconnexions);
+        for (uint32_t interco = 0; interco < problemeHebdo.NombreDInterconnexions; ++interco)
+        {
+            const std::string o = problemeHebdo.NomsDesPays
+                                    [problemeHebdo.PaysOrigineDeLInterconnexion[interco]];
+            const std::string d = problemeHebdo.NomsDesPays
+                                    [problemeHebdo.PaysExtremiteDeLInterconnexion[interco]];
+            const auto& [a1, a2] = (o < d) ? std::tie(o, d) : std::tie(d, o);
+            linkNames_.push_back(a1 + "_" + a2 + "_link");
+        }
     }
 
     void areaOutputs(uint32_t pays, int pdt);
@@ -98,6 +130,12 @@ private:
     VariableManagement::VariableManager variableManager_;
     const FillContext& fillContext_;
     unsigned block_;
+
+    // Component names, precomputed once per week (see constructor).
+    std::vector<std::string> areaNames_;
+    std::vector<std::string> hydroStorageNames_;
+    std::vector<std::vector<std::string>> thermalNames_;
+    std::vector<std::string> linkNames_;
 };
 
 void LegacyExtraOutputEmitter::emit(const std::string& output,
@@ -118,7 +156,7 @@ void LegacyExtraOutputEmitter::emit(const std::string& output,
 
 void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
 {
-    const std::string area = problemeHebdo_.NomsDesPays[pays];
+    const std::string& area = areaNames_[pays];
 
     const int unsupplied = variableManager_.UnsuppliedEnergy(pays, pdt);
     const int spillage = variableManager_.Spillage(pays, pdt);
@@ -151,13 +189,14 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
         return;
     }
     const auto& hydro = problemeHebdo_.CaracteristiquesHydrauliques[pays];
+    const std::string& hydroComponent = hydroStorageNames_[pays];
     if (hydro.TailleReservoir > 0.)
     {
-        emit("level_percentage", area, pdt, x(hydroLevel) / hydro.TailleReservoir * 100.);
+        emit("level_percentage", hydroComponent, pdt, x(hydroLevel) / hydro.TailleReservoir * 100.);
     }
     if (static_cast<std::size_t>(pdt) < hydro.ApportNaturelHoraire.size())
     {
-        emit("actual_inflows", area, pdt, std::round(hydro.ApportNaturelHoraire[pdt]));
+        emit("actual_inflows", hydroComponent, pdt, std::round(hydro.ApportNaturelHoraire[pdt]));
     }
 }
 
@@ -165,8 +204,7 @@ void LegacyExtraOutputEmitter::linkOutputs(uint32_t interco, int pdt)
 {
     const uint32_t origin = problemeHebdo_.PaysOrigineDeLInterconnexion[interco];
     const uint32_t destination = problemeHebdo_.PaysExtremiteDeLInterconnexion[interco];
-    const std::string link = std::string(problemeHebdo_.NomsDesPays[origin]) + "$$"
-                             + problemeHebdo_.NomsDesPays[destination];
+    const std::string& link = linkNames_[interco];
 
     const double flow = x(variableManager_.DirectFlow(interco, pdt));
     emit("abs_flow", link, pdt, std::abs(flow));
@@ -209,7 +247,7 @@ void LegacyExtraOutputEmitter::linkOutputs(uint32_t interco, int pdt)
 void LegacyExtraOutputEmitter::thermalOutputs(uint32_t pays, int index, int pdt)
 {
     const PALIERS_THERMIQUES& paliers = problemeHebdo_.PaliersThermiquesDuPays[pays];
-    const std::string& cluster = paliers.NomsDesPaliersThermiques[index];
+    const std::string& cluster = thermalNames_[pays][static_cast<std::size_t>(index)];
     const int palier = paliers.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
     const int production = variableManager_.DispatchableProduction(palier, pdt);
@@ -277,7 +315,7 @@ void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays) const
     }
     const int pdt = problemeHebdo_.NombreDePasDeTempsPourUneOptimisation - 1;
     emit("hydro_shadow_price",
-         problemeHebdo_.NomsDesPays[pays],
+         hydroStorageNames_[pays],
          pdt,
          dual(problemeHebdo_.NumeroDeContrainteExpressionStockFinal[pays]));
 }

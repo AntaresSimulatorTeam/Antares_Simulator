@@ -564,6 +564,16 @@ void AreaListEnsureDataHydroPrepro(AreaList* l);
 void AreaListEnsureDataThermalPrepro(AreaList* l);
 
 /*!
+** \brief Load reserves parameters for an area
+*/
+bool loadReservesParameters(fs::path& folderInput, Area& area);
+
+/*!
+** \brief Validate capacity reservations for an area
+*/
+void validateCapacityReservations(const Area& area);
+
+/*!
 ** \brief to check that Area name does not contains character *
 */
 inline bool CheckForbiddenCharacterInAreaName(const AnyString& name)

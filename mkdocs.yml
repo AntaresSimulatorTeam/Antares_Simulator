@@ -35,6 +35,7 @@ nav:
           - Input files: reference/solver/inputs.md
           - Output files: reference/solver/outputs.md
           - Parameters: reference/solver/parameters.md
+          - Command-line: reference/solver/command-line.md
           - Hybrid studies: reference/solver/hybrid-studies.md
           - Appendix: reference/solver/appendix.md
           - Optimization engine support:

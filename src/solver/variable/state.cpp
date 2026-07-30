@@ -165,9 +165,13 @@ void State::initFromShortTermStorageClusterIndex(const uint clusterAreaWideIndex
                                                 .STStorageClusters.left.at(
                                                   std::make_pair(resID, STStorageCluster->id))]
                                      .reserveParticipationOfCluster.value()[hourInTheWeek];
+            const double participationCost = participation
+                                             * STStorageCluster->reserveParticipationContainer
+                                                 ->reserveCost(resID);
+
             resData.STStorageClusterReserveParticipationCostForYear[hourInTheYear]
-              += participation
-                 * STStorageCluster->reserveParticipationContainer.value().reserveCost(resID);
+              += participationCost;
+            resData.reserveParticipationCostForYear[hourInTheYear] += participationCost;
 
             resData.reserveParticipationPerGroupForYear[hourInTheYear]
               .shortTermStorageGroupsReserveParticipation[STStorageCluster->getGroup()][resID]
@@ -198,11 +202,14 @@ void State::initFromHydro()
                                      .reserveParticipationOfCluster
                                      .value()[study.reserveMaps->participationIndexMaps.at(area->id)
                                                 .Hydro.left.at(resID)];
-            resData.HydroReserveParticipationCostForYear[hourInTheYear]
-              += participation * Hydro.reserveParticipationContainer.value().reserveCost(resID);
+            const double participationCost = participation
+                                             * Hydro.reserveParticipationContainer->reserveCost(
+                                               resID);
 
-            resData.reserveParticipationPerHydroForYear[hourInTheYear]["Hydro"][resID]
-              += participation;
+            resData.HydroReserveParticipationCostForYear[hourInTheYear] += participationCost;
+            resData.reserveParticipationCostForYear[hourInTheYear] += participationCost;
+
+            resData.reserveParticipationPerHydroForYear[hourInTheYear][resID] += participation;
         }
     }
 }
@@ -304,21 +311,19 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
                                             .ParticipationReservesDuPalierOff
                                             .value()[reserveParticipationIdx];
 
+                const double participationCost = participationOn
+                                                   * thermalCluster->reserveParticipationContainer
+                                                       ->reserveCost(reserveID)
+                                                 + participationOff
+                                                     * thermalCluster->reserveParticipationContainer
+                                                         ->reserveCostOff(reserveID);
+
                 thermal[area->index].thermalClustersOperatingCost[clusterEnabledIndex]
-                  += participationOn
-                       * thermalCluster->reserveParticipationContainer.value().reserveCost(
-                         reserveID)
-                     + participationOff
-                         * thermalCluster->reserveParticipationContainer.value().reserveCostOff(
-                           reserveID);
+                  += participationCost;
 
                 resData.thermalClusterReserveParticipationCostForYear[hourInTheYear]
-                  += participationOn
-                       * thermalCluster->reserveParticipationContainer.value().reserveCost(
-                         reserveID)
-                     + participationOff
-                         * thermalCluster->reserveParticipationContainer.value().reserveCostOff(
-                           reserveID);
+                  += participationCost;
+                resData.reserveParticipationCostForYear[hourInTheYear] += participationCost;
 
                 resData.reserveParticipationPerGroupForYear[hourInTheYear]
                   .thermalGroupsReserveParticipation[thermalCluster->getGroup()][reserveID]
@@ -498,9 +503,9 @@ void State::calculateReserveParticipationCosts()
         for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
         {
             resData.reserveParticipationCostForYear[h]
-              += resData.thermalClusterReserveParticipationCostForYear[h]
-                 + resData.STStorageClusterReserveParticipationCostForYear[h]
-                 + resData.HydroReserveParticipationCostForYear[h];
+              = resData.thermalClusterReserveParticipationCostForYear[h]
+                + resData.STStorageClusterReserveParticipationCostForYear[h]
+                + resData.HydroReserveParticipationCostForYear[h];
         }
     }
 }

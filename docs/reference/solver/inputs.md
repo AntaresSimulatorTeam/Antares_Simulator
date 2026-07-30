@@ -705,8 +705,8 @@ The folder "reserves" is used to define the reserves in each area. For each area
 
 ```yaml
 global-parameters:
-  energy-activation-ratio-up: 10.0    # double
-  energy-activation-ratio-down: 10.0    # double 
+  energy-activation-ratio-up: 0.1    # double
+  energy-activation-ratio-down: 0.1    # double 
   reference-activation-duration-up: 10   # int
   reference-activation-duration-down: 10   # int 
 
