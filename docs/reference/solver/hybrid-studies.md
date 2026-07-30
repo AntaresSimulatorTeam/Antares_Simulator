@@ -2,18 +2,18 @@
 
 
 Antares-Solver allows conducting "hybrid" (solver x [modeler](../modeler/01-overview-modeler.md)) studies.  
-This enables using [antares-solver studies](02-inputs.md), in which the simulated system is enriched with components 
+This enables using [antares-solver studies](inputs.md), in which the simulated system is enriched with components 
 that are described in the [antares-modeler format](../modeler/05-model.md).
 
 ## Input structure
-To define a hybrid study, define a [solver study](02-inputs.md), and simply add the [modeler files and directories](../modeler/02-inputs.md) 
+To define a hybrid study, define a [solver study](inputs.md), and simply add the [modeler files and directories](../modeler/02-inputs.md) 
 to the input directory.    
-The parameter.yml file from modeler studies is not needed (if it exists, it will be ignored). The [solver parameters](04-parameters.md) 
-are used, since hybrid studies are conducted using [antares-solver](10-command-line.md).  
+The parameter.yml file from modeler studies is not needed (if it exists, it will be ignored). The [solver parameters](parameters.md) 
+are used, since hybrid studies are conducted using [antares-solver](https://antares-doc.readthedocs.io/en/latest/programmatic/antares-solver-cli/).  
 You can find simple examples by checking out the studies used in our [test base](https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/src/tests/cucumber/features/solver-features/hybrid_studies.feature).  
 
 ## Output files
-The hybrid simulation outputs the [same files as a legacy study](03-outputs.md). But these files only contain the 
+The hybrid simulation outputs the [same files as a legacy study](outputs.md). But these files only contain the 
 optimization results of the system components that were created by the legacy study.  
 
 The results of the modeler's components optimization is exported under the simulation table format, described in 
@@ -36,7 +36,7 @@ One of the most useful use cases is the added ability to define new types of sys
 using the new [modelling language](../modeler/05-model.md), and inserting these system components into existing studies, 
 by connecting them to "areas". 
 Such connections allow : 
-- adding generation or consumption to an existing area, thus modifying its [balance constraint](05-model.md#balance-between-load-and-generation).
+- adding generation or consumption to an existing area, thus modifying its [balance constraint](https://antares-doc.readthedocs.io/en/latest/reference/optimization-problem/#balance-between-load-and-generation).
 - bounding unsupplied energy or spillage with linear expressions coming from modeler components.
 
 This is implemented in Antares thanks to the [ports](../modeler/05-model.md#ports-and-connections) concept.  
@@ -68,7 +68,7 @@ area-connections:
 - **component**: the IDs of the component to connect to the area, as defined in the [components section](../modeler/02-inputs.md#components)
 - **port**: the ID of the component's port to connect to the area (as defined by the model of the component). This port 
   must be of a type that defines an area-connection injection field (see [next paragraph](#selecting-the-area-connection-port-fields))
-- **area**: the ID of the area to connect the component to, as defined in the [antares-solver input files](02-inputs.md).
+- **area**: the ID of the area to connect the component to, as defined in the [antares-solver input files](inputs.md).
 
 
 #### Selecting the area-connection port fields
@@ -101,7 +101,7 @@ expression contributing to a constraint of the linear problem.
 The nature of this contribution depends on the field : 
 
   - **injection-to-balance**: the linear expression is injected in the balance constraint of the area.
-	This is done with respect to a convention (see next [Optimization model](#optimization-model)).
+	This is done with respect to a convention.
 	
   - **spillage-bound**: the linear expression is added to the sum of all variables or linear expressions already used 
     to bound the spillage in the constraint called "fictitious load".
@@ -338,4 +338,4 @@ For more details why we adpot these conventions, please read [this article](http
 ## Troubleshooting
 
 ### Your model does not behave as expected
-Check that your model respects the internal optimization model's injection [convention](#optimization-model).
+Check that your model respects the internal optimization model's injection convention.

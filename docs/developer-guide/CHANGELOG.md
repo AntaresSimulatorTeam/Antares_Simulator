@@ -427,7 +427,7 @@ collectRemixDebugInfo (#3278)
 
 #### Improvements
 
-* Ascending compatibility [ANT-3989](#3161)
+* Ascending compatibility [ANT-3989] (#3161)
 * Add a deprecated message to the GUI [ANT-4042] (#3238)(#3240)
 * Fix: Reduce log spam and improve information (#3232)
 * Interprétation des valeurs d'usage [ANT-3894] (#3132)
@@ -835,7 +835,7 @@ collectRemixDebugInfo (#3278)
 * Don't rebuild optimization problem at every simplex resolution (#2722)
 * Enable extra linear solvers: PDLP & HiGHS (#2693)
 * Rebuild MPSolver between solves & transmit basis when using sirius [ANT-1287] (#2868)
-* fix infeasible problem analyzer, remove "safe resolution mode" [ANT-3507](#2898)
+* fix infeasible problem analyzer, remove "safe resolution mode" [ANT-3507] (#2898)
 
 ## Branch 9.2.x
 
@@ -916,7 +916,7 @@ collectRemixDebugInfo (#3278)
 
 #### Improvements
 
-* Changed the formula for the number of cores [details](../user-guide/solver/optional-features/multi-threading.md)
+* Changed the formula for the number of cores [details](https://antares-doc.readthedocs.io/en/latest/reference/config-advanced-parameters/#simulation-cores)
 * Expose API [ANT-1158] (#1993)
 * Adequacy patch CSR - revamp output variables [ANT-1932] (#2306)
 * batchrun forwards options to antares-solver [ANT-2314] (#2463)
@@ -986,7 +986,7 @@ collectRemixDebugInfo (#3278)
 * Add iterators on ASTs, allowing for loops (#2387)
 * Use variable dict (#2670)(#2655)
 * Support time dependency [ANT-2749] (#2622)
-* Import modeler data-series [ANT-2033](#2621)
+* Import modeler data-series [ANT-2033] (#2621)
 * Simplify ComponentFiller::addVariables (#2615)
 * add of unit tests for time dependant expression [ANT-2608] (#2597)
 * Refactor modeler code (#2616)
@@ -1582,7 +1582,7 @@ collectRemixDebugInfo (#3278)
 * Fix error when writing files over 80Mb into a zip (#1488)
 * Fix memory leaks (#1468)
 * Fix segfault, add !skipped to enabled constraints (#1441)
-* Backport [v8.4.3](#v843-082023) changes
+* Backport [v8.4.3](#843-082023) changes
 
 #### GUI
 
@@ -1679,7 +1679,7 @@ collectRemixDebugInfo (#3278)
 
 #### Bugfixes
 
-* Backport [v8.4.3](#v843-082023) changes
+* Backport [v8.4.3](#843-082023) changes
 
 ### 8.6.1 (06/2023)
 --------------------
@@ -1738,7 +1738,7 @@ collectRemixDebugInfo (#3278)
 
 #### Changes
 
-* Backport [v8.4.3](#v843-082023) changes
+* Backport [v8.4.3](#843-082023) changes
 
 ### 8.5.0 (02/2022)
 --------------------

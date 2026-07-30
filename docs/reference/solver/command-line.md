@@ -12,11 +12,11 @@ hide:
 | command                             | usage                                                                                                                                                                                               |
 |:------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | -i, --input                         | Study folder                                                                                                                                                                                        |
-| --expansion                         | Force the simulation in [expansion](04-parameters.md#mode) mode                                                                                                                                     |
-| --economy                           | Force the simulation in [economy](04-parameters.md#mode) mode                                                                                                                                       |
-| --adequacy                          | Force the simulation in [adequacy](04-parameters.md#mode) mode                                                                                                                                      |
-| --parallel                          | Enable [parallel](optional-features/multi-threading.md) computation of MC years                                                                                                                     |
-| --force-parallel=VALUE              | Override the max number of years computed [simultaneously](optional-features/multi-threading.md)                                                                                                    |
+| --expansion                         | Force the simulation in [expansion](./parameters.md#mode) mode                                                                                                                                     |
+| --economy                           | Force the simulation in [economy](./parameters.md#mode) mode                                                                                                                                       |
+| --adequacy                          | Force the simulation in [adequacy](./parameters.md#mode) mode                                                                                                                                      |
+| --parallel                          | Enable [parallel](https://antares-doc.readthedocs.io/en/latest/reference/config-advanced-parameters/#simulation-cores) computation of MC years                                                                                                                     |
+| --force-parallel=VALUE              | Override the max number of years computed [simultaneously](https://antares-doc.readthedocs.io/en/latest/reference/config-advanced-parameters/#simulation-cores)                                                                                                    |
 | --linear-solver=VALUE               | The optimization solver to use for linear problems. Possible values are: `sirius` (default, LP only), `coin`, `xpress`, `scip` (MIP only), `glpk` (Linux only), `highs`, `pdlp` (LP only), `gurobi` |
 | --linear-solver-param=VALUE         | Linear solver-specific parameters. Syntax is solver-dependent, and only supported for `scip` and `xpress`                                                                                           |
 | --linear-solver-param-optim-1=VALUE | Linear solver-specific parameters for first optimization. Only supported for `scip` and `xpress`.                                                                                                   |
@@ -35,9 +35,9 @@ hide:
 | -c, --comment-file=VALUE | Specify the file to copy as comments of the simulation                                            |
 | -f, --force              | Ignore all warnings at loading                                                                    |
 | --output=VALUE           | Select which output families to write: `all`, `none`, `monte-carlo`, `simulation-tables`. Default: `monte-carlo` |
-| -y, --year=VALUE         | Override the [number of MC years](04-parameters.md#nbyears)                                       |
-| --year-by-year           | Force the [writing the result output for each year](04-parameters.md#year-by-year) (economy only) |
-| --derated                | Force the [derated](04-parameters.md#derated) mode                                                |
+| -y, --year=VALUE         | Override the [number of MC years](parameters.md#nbyears)                                       |
+| --year-by-year           | Force the [writing the result output for each year](parameters.md#year-by-year) (economy only) |
+| --derated                | Force the [derated](parameters.md#derated) mode                                                |
 | -z, --zip-output         | Write the results into a single zip archive                                                       |
 | --parquet                | Write simulation table in format parquet instead of csv format                                    |
 
@@ -45,7 +45,7 @@ hide:
 
 | command                  | usage                                                                                                                                                                                                                                                                                     |
 |:-------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| --optimization-range     | Force the [simplex optimization range](04-parameters.md#simplex-range) ('day' or 'week')                                                                                                                                                                                                  |
+| --optimization-range     | Force the [simplex optimization range](parameters.md#simplex-range) ('day' or 'week')                                                                                                                                                                                                  |
 | --no-constraints         | Ignore all binding constraints                                                                                                                                                                                                                                                            |
 | --no-ts-import           | Do not import timeseries into the input folder (this option may be useful for running old studies without upgrade)                                                                                                                                                                        |
 | -m, --mps-export         | Export anonymous MPS, weekly or daily optimal UC+dispatch linear (MPS will be named if the problem is infeasible)                                                                                                                                                                         |

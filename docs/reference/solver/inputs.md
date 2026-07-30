@@ -107,7 +107,8 @@ It is based on the edition of a special "sets.ini" file.
 - Make sure that the sets.ini file is ready for use before opening the Antares study. Attempts to update the sets.ini file while the study is opened will not be effective.
 - Definition of meaningless districts (references to nodes that do not exist,…) will generate warnings in the GUI log files.
 
-**HOW TO UPDATE / CREATE the file** : using any text editor, or, better yet, [using Antares extensions](../03-getting_started.md#using-extensions).
+**HOW TO UPDATE / CREATE the file** : using any text editor, or, better yet, using 
+[Antares Craft](https://github.com/AntaresSimulatorTeam/antares_craft).
 
 **WHERE TO FIND / STORE THE FILE** : INPUT/areas/sets.ini
 
@@ -298,7 +299,7 @@ a choice can be made between different tabs:
   - Generate TS: Parameter to specify the behavior of this cluster for TS generation. **This cluster-wise parameter takes priority over the study-wide one.** It can hold three values:
     - Force generation: TS for this cluster will be generated
     - Force no generation: TS for this cluster will not be generated
-    - Use global parameter: Will use the parameter for the study (the one in the [Simulation Window](#simulation)).
+    - Use global parameter: Will use the parameter for the study.
   - Fixed cost (No-Load heat cost) (€ / hour of operation )
   - Start-up cost (€/start-up)
   - Market bid (€/MWh)
@@ -399,7 +400,7 @@ In the main Window, the user may pick any area appearing in the list and is then
 - The "spatial correlation" tab gives access to an annual inter-area correlation matrix that will be used by the stochastic generator if it is activated. Correlations are expressed in percentages, hence to be valid this matrix must be symmetric, p.s.d, with a main diagonal of 100s and all terms lying between (-100 ,+100)
 
 
-- The "Allocation" tab gives access to an annual inter-area allocation matrix A(i,j) that may be used during a heuristic hydro pre-allocation process, regardless of whether the stochastic time-series generator is used or not. This matrix describes the weights that are given to the loads of areas (i) in the definition of the monthly and weekly hydro storage generation profiles of areas (j). The way this is done in detailed in [Heuristics](06-hydro-heuristics.md#seasonal-hydro-pre-allocation).
+- The "Allocation" tab gives access to an annual inter-area allocation matrix A(i,j) that may be used during a heuristic hydro pre-allocation process, regardless of whether the stochastic time-series generator is used or not. This matrix describes the weights that are given to the loads of areas (i) in the definition of the monthly and weekly hydro storage generation profiles of areas (j). The way this is done in detailed in [Heuristics](https://antares-doc.readthedocs.io/en/latest/reference/hydro-heuristic/).
 
 
 - The "local data" tab is used to set up the parameters of the stochastic generator_ **AND** _to define techno-economic characteristics of the hydro system that are used in Economy and Adequacy optimizations. For the purpose of versatility (use of the hydro section to model storage facilities quite different in size and nature), this "local tab" is itself divided up into four different subtabs whose list follows and which are further described:
@@ -476,7 +477,7 @@ It includes 15 parameters (out of which 7 are booleans) presented hereafter:
 
 - "Inter-daily breakdown" and "Inter-monthly breakdown" : parameters used in the assessment, through a
   heuristic process, of an "ideal" seasonal generation profile, if the use of such a profile is required
-  (the heuristic itself is presented in [Heuristics](06-hydro-heuristics.md#seasonal-hydro-pre-allocation))
+  (the heuristic itself is presented in [Heuristics](https://antares-doc.readthedocs.io/en/latest/reference/hydro-heuristic/))
 
 - "Intra-daily modulation": parameter which represents, for the storage power, the maximum authorized value for
   the ratio of the daily peak to the average power generated throughout the day. This parameter is meant to allow
@@ -489,7 +490,7 @@ It includes 15 parameters (out of which 7 are booleans) presented hereafter:
 
   - The whole amount of STOR energy of each month MUST be used during this month (no long-term storage)
 
-  - The actual daily generation should follow, during the month, an "ideal" profile defined by the heuristic defined in [Heuristics](06-hydro-heuristics.md#seasonal-hydro-pre-allocation)
+  - The actual daily generation should follow, during the month, an "ideal" profile defined by the heuristic defined in [Heuristics](https://antares-doc.readthedocs.io/en/latest/reference/hydro-heuristic/)
 
   Choosing "Yes" implies that available data allow or require explicit modeling of the storage facility,
   regardless of whether a pre-allocation heuristic is used or not.
