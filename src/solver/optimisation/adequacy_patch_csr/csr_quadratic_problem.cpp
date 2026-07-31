@@ -11,7 +11,7 @@
 #include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFlowDissociation.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrMaxEnsLoad.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
-#include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
+#include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
@@ -131,11 +131,8 @@ void CsrQuadraticProblem::buildConstraintMatrix()
 
     problemeAResoudre_.NombreDeContraintes = 0;
     problemeAResoudre_.NombreDeTermesDansLaMatriceDesContraintes = 0;
-    auto builder_data = NewGetConstraintBuilderFromProblemHebdoAndProblemAResoudre(
-      problemeHebdo_,
-      problemeAResoudre_);
 
-    auto builder = ConstraintBuilder(builder_data);
+    ConstraintBuilder builder(problemeHebdo_, problemeAResoudre_);
     setConstraintsOnFlows(builder);
     setNodeBalanceConstraints(builder);
     setFictitiousLoadConstraints(builder);
