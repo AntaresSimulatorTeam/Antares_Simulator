@@ -47,26 +47,6 @@ size_t SimulationTable::rowCount() const
     return storage_.rowCount();
 }
 
-std::vector<std::vector<std::string>> SimulationTable::storageIntoRows() const
-{
-    std::vector<std::vector<std::string>> rows; // to return
-    const size_t row_count = storage_.rowCount();
-    const auto& columns = storage_.columns();
-
-    rows.clear();
-    rows.resize(row_count);
-    for (size_t row_index = 0; row_index < row_count; ++row_index)
-    {
-        auto& row = rows[row_index];
-        row.reserve(columns.size());
-        for (const auto& column: columns)
-        {
-            row.push_back(column->toString(row_index));
-        }
-    }
-    return rows;
-}
-
 void SimulationTable::clear()
 {
     storage_.clear();

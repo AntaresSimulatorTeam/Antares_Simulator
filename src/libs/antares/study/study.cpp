@@ -240,10 +240,6 @@ void Study::prepareOutput()
 {
     pStartTime = std::time(nullptr);
 
-    if (parameters.noOutput)
-    {
-        return;
-    }
     fs::path baseFolderOutput = folder / "output";
 
     folderOutput = StudyCreateOutputPath(parameters.mode,
@@ -301,31 +297,28 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     std::string output = f.str();
     resultWriter.addEntryFromBuffer(aboutPath, output);
 
-    if (!parameters.noOutput)
+    // Write all available areas as a reminder
     {
-        // Write all available areas as a reminder
+        std::string buffer;
+        aboutPath = fs::path("about-the-study") / "areas.txt";
+        for (auto i = setsOfAreas.begin(); i != setsOfAreas.end(); ++i)
         {
-            std::string buffer;
-            aboutPath = fs::path("about-the-study") / "areas.txt";
-            for (auto i = setsOfAreas.begin(); i != setsOfAreas.end(); ++i)
+            if (setsOfAreas.hasOutput(i->first))
             {
-                if (setsOfAreas.hasOutput(i->first))
-                {
-                    buffer += "@ " + i->first + "\r\n";
-                }
+                buffer += "@ " + i->first + "\r\n";
             }
-            areas.each([&buffer](const Data::Area& area) { buffer += area.name + "\r\n"; });
-            resultWriter.addEntryFromBuffer(aboutPath, buffer);
         }
+        areas.each([&buffer](const Data::Area& area) { buffer += area.name + "\r\n"; });
+        resultWriter.addEntryFromBuffer(aboutPath, buffer);
+    }
 
-        // Write all available links as a reminder
-        {
-            aboutPath = fs::path("about-the-study") / "links.txt";
-            std::ostringstream linkBuffer;
-            areas.saveLinkListToBuffer(linkBuffer);
-            std::string linkContent = linkBuffer.str();
-            resultWriter.addEntryFromBuffer(aboutPath, linkContent);
-        }
+    // Write all available links as a reminder
+    {
+        aboutPath = fs::path("about-the-study") / "links.txt";
+        std::ostringstream linkBuffer;
+        areas.saveLinkListToBuffer(linkBuffer);
+        std::string linkContent = linkBuffer.str();
+        resultWriter.addEntryFromBuffer(aboutPath, linkContent);
     }
 }
 

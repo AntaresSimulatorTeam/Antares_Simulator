@@ -20,7 +20,6 @@ public:
     const std::vector<std::shared_ptr<IColumn>>& columns() const;
     size_t rowCount() const;
     void clear();
-    std::vector<std::vector<std::string>> storageIntoRows() const;
 
 private:
     ColumnBasedStorage storage_;

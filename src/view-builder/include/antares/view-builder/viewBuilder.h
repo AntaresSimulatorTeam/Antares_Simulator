@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <unordered_set>
 #include <yaml-cpp/yaml.h>
 
 #include <antares/study/study.h>

@@ -10,8 +10,8 @@ Feature: 13 - Investment problems
       | continuous_generator_candidate.p_max | 0    | 1000 | 400  |
     And the subproblem contains the following variables
       | name                            | xmin | xmax | cost |
-      | my_node.spillage_s0_t0          | 0    | 1e6  | 1    |
-      | my_node.unsupplied_energy_s0_t0 | 0    | 1e6  | 501  |
+      | my_node.spillage_s0_t0          | 0    | inf  | 1    |
+      | my_node.unsupplied_energy_s0_t0 | 0    | inf  | 501  |
     And the structure file contains the following entries
       | problem | variable                             | index |
       | master  | continuous_generator_candidate.p_max | 0     |
@@ -29,8 +29,8 @@ Feature: 13 - Investment problems
       | discrete_generator_candidate.nb_units | 0    | 10   | 0    |
     And the subproblem contains the following variables
       | name                                         | xmin | xmax | cost |
-      | my_node.spillage_s0_t0                       | 0    | 1e6  | 1    |
-      | my_node.unsupplied_energy_s0_t0              | 0    | 1e6  | 501  |
+      | my_node.spillage_s0_t0                       | 0    | inf  | 1    |
+      | my_node.unsupplied_energy_s0_t0              | 0    | inf  | 501  |
       | already_installed_generator.generation_s0_t0 | 0    | 200  | 45   |
     And the structure file contains the following entries
       | problem | variable                             | index |
@@ -49,8 +49,8 @@ Feature: 13 - Investment problems
       | continuous_generator_candidate.p_max | 0    | 1000 | 400  |
     And the subproblem contains the following variables
       | name                            | xmin | xmax | cost |
-      | my_node.spillage_s0_t0          | 0    | 1e6  | 1    |
-      | my_node.unsupplied_energy_s0_t0 | 0    | 1e6  | 501  |
+      | my_node.spillage_s0_t0          | 0    | inf  | 1    |
+      | my_node.unsupplied_energy_s0_t0 | 0    | inf  | 501  |
     And the structure file contains the following entries
       | problem | variable                             | index |
       | master  | continuous_generator_candidate.p_max | 0     |
@@ -68,8 +68,8 @@ Feature: 13 - Investment problems
       | discrete_generator_candidate.nb_units | 0    | 10   | 0    |
     And the subproblem contains the following variables
       | name                                         | xmin | xmax | cost |
-      | my_node.spillage_s0_t0                       | 0    | 1e6  | 1    |
-      | my_node.unsupplied_energy_s0_t0              | 0    | 1e6  | 501  |
+      | my_node.spillage_s0_t0                       | 0    | inf  | 1    |
+      | my_node.unsupplied_energy_s0_t0              | 0    | inf  | 501  |
       | already_installed_generator.generation_s0_t0 | 0    | 200  | 45   |
     And the structure file contains the following entries
       | problem | variable                             | index |
