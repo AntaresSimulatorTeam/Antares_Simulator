@@ -39,9 +39,16 @@ TableFormat getTableFormat(int argc, const char** argv)
 
 void exportSystemForViews(fs::path studyPath, fs::path outputPath)
 {
-    fs::path systemInput = studyPath / "input" / "system.yml";
-    fs::path systemOutput = outputPath / "system-for-views.yml";
-    fs::copy(systemInput, systemOutput);
+    try
+    {
+        fs::path systemInput = studyPath / "input" / "system.yml";
+        fs::path systemOutput = outputPath / "system-for-views.yml";
+        fs::copy(systemInput, systemOutput);
+    }
+    catch (const std::exception& e)
+    {
+        logs.error() << "Error while exporting system-for-views.yml: " << e.what();
+    }
 }
 
 int main(int argc, const char** argv)
