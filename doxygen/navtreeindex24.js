@@ -1,5 +1,6 @@
 var NAVTREEINDEX24 =
 {
+"classNamer.html#a09b3b636bd67684e07da225f84875c34":[9,0,219,12],
 "classNamer.html#a0ca8b823767b175ca936132613f36dca":[9,0,219,6],
 "classNamer.html#a1df1b3bd135b02c640a99f35c85685a0":[9,0,219,20],
 "classNamer.html#a25b11151ddccce1a2a9aac924d1b5c58":[9,0,219,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX24 =
 "classSTReserveDownParticipation.html#a836c24829287bae965e48469bb4f74ae":[9,0,330,0],
 "classSTReserveParticipation.html":[9,0,331],
 "classSTReserveParticipation.html#a386c711f3e72a4c485e6b0b7399c4a29":[9,0,331,1],
-"classSTReserveParticipation.html#ac818df6290c6ee3292b8a0ff30d6d0ce":[9,0,331,0],
-"classSTStorageEnergyLevelReserveParticipation.html":[9,0,336]
+"classSTReserveParticipation.html#ac818df6290c6ee3292b8a0ff30d6d0ce":[9,0,331,0]
 };

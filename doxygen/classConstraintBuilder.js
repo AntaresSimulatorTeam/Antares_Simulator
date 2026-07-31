@@ -2,7 +2,8 @@ var classConstraintBuilder =
 [
     [ "ConstraintBuilderInvalidOperator", "classConstraintBuilder_1_1ConstraintBuilderInvalidOperator.html", null ],
     [ "ConstraintBuilder", "classConstraintBuilder.html#a5a580a13081be8d511d1f44e0a66262a", null ],
-    [ "ConstraintBuilder", "classConstraintBuilder.html#aefa90a408f1b50028a9a3162f5ab3929", null ],
+    [ "ConstraintBuilder", "classConstraintBuilder.html#a7f26c97200afee721c37e6eaed8c5306", null ],
+    [ "ConstraintBuilder", "classConstraintBuilder.html#a2b998f42425bf4f7b805512aebfff878", null ],
     [ "build", "classConstraintBuilder.html#a6154a8e04e39b9b4bcdf080cfa2c7acc", null ],
     [ "DirectFlow", "classConstraintBuilder.html#a29b648fad2d93b4b439139da80d16672", null ],
     [ "DispatchableProduction", "classConstraintBuilder.html#a103ba21ae3fd03df815a55aea68ce111", null ],
@@ -45,5 +46,5 @@ var classConstraintBuilder =
     [ "ThermalClusterReserveParticipation", "classConstraintBuilder.html#ae1ffdc6689c66169c877fdcc498938cb", null ],
     [ "UnsuppliedEnergy", "classConstraintBuilder.html#a4469cf86c75b00314c7a079cd1a5803e", null ],
     [ "updateHourWithinWeek", "classConstraintBuilder.html#a1daa3a79a8586a9a95e6bbd973830075", null ],
-    [ "data", "classConstraintBuilder.html#a206bfb317c63a99e019b7cdd19d2350a", null ]
+    [ "data", "classConstraintBuilder.html#af5107433c4b4ec44a388697264c32ffe", null ]
 ];
