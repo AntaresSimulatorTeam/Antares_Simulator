@@ -21,14 +21,14 @@ using namespace Antares::Data;
 
 constexpr double LEVEL_TOLERANCE_MWH = 1.e-6;
 
-void importCapacityReservations(AreaList& areas, PROBLEME_HEBDO& problem)
+void importCapacityReservations(const AreaList& areas, PROBLEME_HEBDO& problem)
 {
     int globalReserveIndex = 0;
     problem.allReserves = std::vector<::AREA_RESERVES_VECTOR>(areas.size());
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
         int areaReserveIndex = 0;
-        auto area = areas[areaIndex];
+        const auto* area = areas[areaIndex];
         auto& areaReserves = problem.allReserves.value()[areaIndex];
         for (auto type: {ReserveType::DOWN, ReserveType::UP})
         {
@@ -63,8 +63,8 @@ void importCapacityReservations(AreaList& areas, PROBLEME_HEBDO& problem)
     }
 }
 
-static void importShortTermStorages(Data::Parameters parameters,
-                                    AreaList& areas,
+static void importShortTermStorages(const Data::Parameters parameters,
+                                    const AreaList& areas,
                                     std::vector<::AREA_INPUT>& ShortTermStorageOut,
                                     PROBLEME_HEBDO& problem)
 {
@@ -189,7 +189,7 @@ static void importShortTermStorages(Data::Parameters parameters,
     }
 }
 
-void importHydroReserves(AreaList& areas, PROBLEME_HEBDO& problem)
+void importHydroReserves(const AreaList& areas, PROBLEME_HEBDO& problem)
 {
     int globalReserveIndex = 0;
     int globalHydroParticipationIndex = 0;
@@ -197,7 +197,7 @@ void importHydroReserves(AreaList& areas, PROBLEME_HEBDO& problem)
     {
         int areaReserveIndex = 0;
         int areaClusterParticipationIndex = 0;
-        auto area = areas[areaIndex];
+        const auto* area = areas[areaIndex];
         auto& hydro = area->hydro;
 
         if (area->allCapacityReservations && hydro.reserveParticipationContainer)
@@ -252,14 +252,14 @@ void importHydroReserves(AreaList& areas, PROBLEME_HEBDO& problem)
     }
 }
 
-void SIM_InitialisationProblemeHebdo(Study& study,
+void SIM_InitialisationProblemeHebdo(const Study& study,
                                      PROBLEME_HEBDO& problem,
                                      unsigned int NombreDePasDeTemps,
                                      uint numspace)
 {
     int NombrePaliers;
 
-    auto& parameters = study.parameters;
+    const auto& parameters = study.parameters;
 
     // For hybrid studies
     problem.modelerData = study.getModelerData();

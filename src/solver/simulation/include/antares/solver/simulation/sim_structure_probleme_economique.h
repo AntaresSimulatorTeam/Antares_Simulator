@@ -756,6 +756,6 @@ public:
 };
 
 // Import functions for capacity and hydro reserves
-void importCapacityReservations(Antares::Data::AreaList& areas, PROBLEME_HEBDO& problem);
-void importHydroReserves(Antares::Data::AreaList& areas, PROBLEME_HEBDO& problem);
+void importCapacityReservations(const Antares::Data::AreaList& areas, PROBLEME_HEBDO& problem);
+void importHydroReserves(const Antares::Data::AreaList& areas, PROBLEME_HEBDO& problem);
 #endif

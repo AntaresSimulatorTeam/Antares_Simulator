@@ -216,8 +216,7 @@ void SingleProblemGetter::initConstantData()
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(&pb_);
 
-    auto builder_data = NewGetConstraintBuilderFromProblemHebdo(&pb_);
-    ConstraintBuilder builder(builder_data);
+    ConstraintBuilder builder(&pb_);
     LinearProblemMatrix linearProblemMatrix(&pb_, builder);
     linearProblemMatrix.Run();
     auto* PbAResoudre = pb_.ProblemeAResoudre.get();

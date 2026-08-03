@@ -228,6 +228,16 @@ bool Parameters::adequacy() const
     return mode == SimulationMode::Adequacy;
 }
 
+bool Parameters::writeMonteCarloResults() const
+{
+    return outputSelection.shouldExportMonteCarloResults();
+}
+
+bool Parameters::writeSimulationTable() const
+{
+    return outputSelection.shouldExportSimulationTable();
+}
+
 void Parameters::resetSeeds()
 {
     // Initialize all seeds

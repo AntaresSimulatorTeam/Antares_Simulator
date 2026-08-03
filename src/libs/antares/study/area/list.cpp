@@ -1208,7 +1208,7 @@ void AreaList::updateNameIDSet() const
     }
 }
 
-Area::ScratchMap AreaList::buildScratchMap(uint numspace)
+Area::ScratchMap AreaList::buildScratchMap(uint numspace) const
 {
     Area::ScratchMap scratchmap;
     each([&scratchmap, &numspace](Area& a) { scratchmap.try_emplace(&a, a.scratchpad[numspace]); });

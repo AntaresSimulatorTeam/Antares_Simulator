@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <antares/study/fwd.h>
 #include "antares/solver/optimisation/LegacyVariableInfo.h"
 
@@ -28,26 +30,52 @@ inline std::string BuildAreaNodeComponentId(const std::string& areaId)
 }
 
 inline std::string BuildThermalClusterComponentId(const std::string& areaId,
-                                                  const std::string& clusterName)
+                                                  const std::string& clusterId)
 {
-    return areaId + "_thermal_" + clusterName;
+    return areaId + "_thermal_" + clusterId;
 }
 
 inline std::string BuildSTStorageClusterComponentId(const std::string& areaId,
-                                                    const std::string& clusterName)
+                                                    const std::string& clusterId)
 {
-    return areaId + "_short_term_storage_" + clusterName;
+    return areaId + "_short_term_storage_" + clusterId;
 }
 
 inline std::string BuildRenewableClusterComponentId(const std::string& areaId,
-                                                    const std::string& clusterName)
+                                                    const std::string& clusterId)
 {
-    return areaId + "_renewable_" + clusterName;
+    return areaId + "_renewable_" + clusterId;
 }
 
 inline std::string BuildHydroStorageComponentId(const std::string& areaId)
 {
     return areaId + "_hydro_storage";
+}
+
+inline std::string BuildLoadComponentId(const std::string& areaId)
+{
+    return areaId + "_load";
+}
+
+inline std::string BuildWindComponentId(const std::string& areaId)
+{
+    return areaId + "_wind";
+}
+
+inline std::string BuildSolarComponentId(const std::string& areaId)
+{
+    return areaId + "_solar";
+}
+
+inline std::string BuildRorComponentId(const std::string& areaId)
+{
+    return areaId + "_run_of_river";
+}
+
+inline std::string BuildMiscGenComponentId(const std::string& areaId,
+                                           const std::string& miscGenType)
+{
+    return areaId + "_" + miscGenType;
 }
 
 inline std::string BuildLinkComponentId(const std::string& origin, const std::string& destination)

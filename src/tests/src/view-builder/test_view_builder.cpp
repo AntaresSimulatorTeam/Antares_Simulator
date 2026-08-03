@@ -4,10 +4,13 @@
 #define BOOST_TEST_MODULE view_builder_tests
 #define WIN32_LEAN_AND_MEAN
 
+#include <unordered_set>
 #include <yaml-cpp/yaml.h>
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/io/inputs/InputError.h>
+#include <antares/solver/modeler/ModelerData.h>
 #include <antares/study/area/area.h>
 #include <antares/study/area/constants.h>
 #include <antares/study/area/links.h>
@@ -15,11 +18,16 @@
 #include <antares/study/parts/short-term-storage/cluster.h>
 #include <antares/study/parts/thermal/cluster.h>
 #include <antares/study/study.h>
+#include <antares/study/system-model/component.h>
+#include <antares/study/system-model/library.h>
+#include <antares/study/system-model/model.h>
+#include <antares/study/system-model/system.h>
 #include <antares/view-builder/legacyToYaml.h>
 #include <antares/view-builder/viewBuilder.h>
 
 using namespace Antares::Data;
 using namespace Antares::ViewBuilder;
+using namespace Antares::ModelerStudy::SystemModel;
 
 struct ViewBuilderFixture
 {
@@ -185,7 +193,7 @@ BOOST_AUTO_TEST_CASE(thermal_component)
             BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
             BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
             BOOST_CHECK_EQUAL(props[1]["id"].as<std::string>(), "technology");
-            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "OTHER");
+            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "other");
         }
     }
     BOOST_CHECK(found);
@@ -209,7 +217,7 @@ BOOST_AUTO_TEST_CASE(renewable_component)
             BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
             BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
             BOOST_CHECK_EQUAL(props[1]["id"].as<std::string>(), "technology");
-            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "OTHER");
+            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "other");
         }
     }
     BOOST_CHECK(found);
@@ -234,7 +242,7 @@ BOOST_AUTO_TEST_CASE(sts_component)
             BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
             BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
             BOOST_CHECK_EQUAL(props[1]["id"].as<std::string>(), "group");
-            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "OTHER1");
+            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "other1");
         }
     }
     BOOST_CHECK(found);
@@ -255,11 +263,9 @@ BOOST_AUTO_TEST_CASE(hydro_component)
                               "antares_legacy_models.long_term_storage");
             auto props = comp["properties"];
             BOOST_REQUIRE(props.IsSequence());
-            BOOST_REQUIRE_EQUAL(props.size(), 2);
+            BOOST_REQUIRE_EQUAL(props.size(), 1);
             BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
             BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
-            BOOST_CHECK_EQUAL(props[1]["id"].as<std::string>(), "group");
-            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "hydro");
         }
     }
     BOOST_CHECK(found);
@@ -300,19 +306,19 @@ BOOST_AUTO_TEST_CASE(misc_gen_components)
     };
 
     std::vector<MiscGenTestCase> miscGenCases = {
-      {"chp", "chp", "misc_ndg"},
+      {"combined_heat_power", "combined_heat_power", "misc_ndg"},
       {"biomass", "biomass", "misc_ndg"},
-      {"biogaz", "biogaz", "misc_ndg"},
+      {"biogas", "biogas", "misc_ndg"},
       {"waste", "waste", "misc_ndg"},
       {"geothermal", "geothermal", "misc_ndg"},
       {"other", "other", "misc_ndg"},
-      {"psp", "psp", "pumped_storage_power"},
-      {"rowbalance", "rowbalance", "rest_world"},
+      {"pumped_storage_power", "pumped_storage_power", "pumped_storage_power"},
+      {"rest_world", "rest_world", "rest_world"},
     };
 
     for (const auto& [name, expectedTech, expectedMiscType]: miscGenCases)
     {
-        std::string expectedId = "france_miscgen_" + name;
+        std::string expectedId = "france_" + name;
         bool found = false;
         for (const auto& comp: components)
         {
@@ -449,6 +455,78 @@ BOOST_AUTO_TEST_CASE(connection_for_link)
     }
     BOOST_CHECK_MESSAGE(foundInPort, "Missing link in_port -> france_node connection");
     BOOST_CHECK_MESSAGE(foundOutPort, "Missing link out_port -> germany_node connection");
+}
+
+using namespace Antares::ModelerStudy::SystemModel;
+
+namespace
+{
+
+Antares::ModelerStudy::SystemModel::Model buildDummyModel()
+{
+    return Antares::ModelerStudy::SystemModel::ModelBuilder()
+      .withId("dummy_model")
+      .withLibraryId("dummy_library")
+      .build();
+}
+
+} // anonymous namespace
+
+BOOST_AUTO_TEST_CASE(duplicate_id_between_legacy_and_modeler_throws)
+{
+    Model model = buildDummyModel();
+
+    Library library = LibraryBuilder().withId("dummy_library").build();
+
+    std::vector<Component> components;
+    components.emplace_back(ComponentBuilder().withId("france_node").withModel(&model).build());
+
+    SystemBuilder systemBuilder;
+    auto system = systemBuilder.withId("test_system").withComponents(std::move(components)).build();
+
+    auto modelerData = std::make_unique<Antares::Solver::ModelerData>();
+    modelerData->libraries = {library};
+    modelerData->system = std::make_unique<System>(std::move(system));
+
+    study->setModelerData(std::move(modelerData));
+
+    BOOST_CHECK_THROW(generateSystemForView(*study), Antares::IO::Inputs::InputError);
+}
+
+BOOST_AUTO_TEST_CASE(no_duplicate_id_passes)
+{
+    Model model = buildDummyModel();
+
+    Library library = LibraryBuilder().withId("dummy_library").build();
+
+    std::vector<Component> components;
+    components.emplace_back(
+      ComponentBuilder().withId("unique_modeler_component").withModel(&model).build());
+
+    SystemBuilder systemBuilder;
+    auto system = systemBuilder.withId("test_system").withComponents(std::move(components)).build();
+
+    auto modelerData = std::make_unique<Antares::Solver::ModelerData>();
+    modelerData->libraries = {library};
+    modelerData->system = std::make_unique<System>(std::move(system));
+
+    study->setModelerData(std::move(modelerData));
+
+    YAML::Node root = generateSystemForView(*study);
+    BOOST_REQUIRE(root.IsMap());
+    BOOST_REQUIRE(root["system"].IsDefined());
+
+    auto componentsNode = root["system"]["components"];
+    BOOST_REQUIRE(componentsNode.IsSequence());
+    BOOST_CHECK_EQUAL(componentsNode.size(), 33);
+
+    const auto it = std::find_if(componentsNode.begin(),
+                                 componentsNode.end(),
+                                 [](const YAML::Node& comp) {
+                                     return comp["id"].as<std::string>()
+                                            == "unique_modeler_component";
+                                 });
+    BOOST_CHECK(it != componentsNode.end());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
