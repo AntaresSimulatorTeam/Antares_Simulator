@@ -253,3 +253,13 @@ def check_structure(context):
 
     assert not missing, f"Missing entries: {missing}"
     assert not extra, f"Unexpected entries: {extra}"
+
+@then(u'the system-for-views.yml is correctly exported')
+def check_system_for_views_exported(context):
+    output_folder = Path(parse_output_folder_from_logs(context.logs_out))
+    system_for_views_file = output_folder / "system-for-views.yml"
+    assert system_for_views_file.exists(), f"{system_for_views_file} does not exist"
+
+    system_input_path = Path(context.study_path) / "input" / "system.yml"
+    system_input_file = system_input_path.open()
+    assert system_input_file.read() == system_for_views_file.read_text(), "system-for-views.yml content does not match system.yml"
