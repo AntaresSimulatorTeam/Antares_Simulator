@@ -180,7 +180,7 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
     const double rawLoad = problemeHebdo_.ConsommationsAbattues[pdt].ConsommationAbattueDuPays[pays]
                            + problemeHebdo_.AllMustRunGeneration[pdt]
                                .AllMustRunGenerationOfArea[pays];
-    emit("actual_load", area, pdt, rawLoad);
+    emit("actual_load", fmt::format("{}_load", problemeHebdo_.NomsDesPays[pays]), pdt, rawLoad);
 
     const double price = areaPrice(pays, pdt);
     emit("price", area, pdt, price);
