@@ -62,15 +62,15 @@ Feature: Legacy variables in simulation table
     Then the simulation succeeds
     And the modeler outputs contain the following entries with relative tolerance 1e-4
       | block | component | output         | timestep | scenario | value  |
-      | 0     | base      | prop_cost      | 33       | 0        | 126000 |
-      | 0     | semi base | prop_cost      | 33       | 0        | 75000  |
-      | 0     | peak      | prop_cost      | 33       | 0        | 64000  |
-      | 0     | area      | imbalance_cost | 33       | 0        | 520000 |
-      | 0     | area      | is_loss_of_load | 33      | 0        | 1      |
-      | 0     | area      | is_significant_loss_of_load | 33 | 0  | 1      |
-      | 0     | area      | price          | 33       | 0        | 10000  |
-      | 0     | area      | is_near_loss_of_load | 33  | 0        | 1      |
-      | 0     | area      | actual_load    | 33       | 0        | 6111   |
+      | 0     | area_thermal_base      | prop_cost      | 33       | 0        | 126000 |
+      | 0     | area_thermal_semi base | prop_cost      | 33       | 0        | 75000  |
+      | 0     | area_thermal_peak      | prop_cost      | 33       | 0        | 64000  |
+      | 0     | area_node      | imbalance_cost | 33       | 0        | 520000 |
+      | 0     | area_node      | is_loss_of_load | 33      | 0        | 1      |
+      | 0     | area_node      | is_significant_loss_of_load | 33 | 0  | 1      |
+      | 0     | area_node      | price          | 33       | 0        | 10000  |
+      | 0     | area_node      | is_near_loss_of_load | 33  | 0        | 1      |
+      | 0     | area_load      | actual_load    | 33       | 0        | 6111   |
 
   @fast @short
   Scenario: Link extra outputs are derived from the legacy flow variables and duals
@@ -208,22 +208,22 @@ Feature: Legacy variables in simulation table
     Then the simulation succeeds
     And the modeler outputs contain the following entries
       | block | component | output              | timestep | scenario | value |
-      | 0     | base      | actual_num_units_on | 33       | 0        | 4     |
-      | 0     | semi base | actual_num_units_on | 33       | 0        | 5     |
-      | 0     | peak      | actual_num_units_on | 33       | 0        | 8     |
-      | 0     | area      | is_loss_of_load     | 33       | 0        | 1     |
-      | 0     | area      | is_significant_loss_of_load | 33 | 0     | 1     |
-      | 0     | base      | co2_emissions        | 33       | 0        | 4320  |
-      | 0     | semi base | co2_emissions        | 33       | 0        | 900   |
-      | 0     | peak      | co2_emissions        | 33       | 0        | 560   |
-      | 0     | base      | cluster_availability | 33       | 0        | 3600  |
-      | 0     | semi base | cluster_availability | 33       | 0        | 1500  |
-      | 0     | peak      | cluster_availability | 33       | 0        | 800   |
-      | 0     | base      | up_margin            | 33       | 0        | 0     |
-      | 0     | semi base | up_margin            | 33       | 0        | 0     |
-      | 0     | peak      | up_margin            | 33       | 0        | 0     |
-      | 0     | base      | min_gen_power        | 33       | 0        | 0     |
-      | 0     | base      | down_margin          | 33       | 0        | 3600  |
+      | 0     | area_thermal_base      | actual_num_units_on | 33       | 0        | 4     |
+      | 0     | area_thermal_semi base | actual_num_units_on | 33       | 0        | 5     |
+      | 0     | area_thermal_peak      | actual_num_units_on | 33       | 0        | 8     |
+      | 0     | area_node      | is_loss_of_load     | 33       | 0        | 1     |
+      | 0     | area_node      | is_significant_loss_of_load | 33 | 0     | 1     |
+      | 0     | area_thermal_base      | co2_emissions        | 33       | 0        | 4320  |
+      | 0     | area_thermal_semi base | co2_emissions        | 33       | 0        | 900   |
+      | 0     | area_thermal_peak      | co2_emissions        | 33       | 0        | 560   |
+      | 0     | area_thermal_base      | cluster_availability | 33       | 0        | 3600  |
+      | 0     | area_thermal_semi base | cluster_availability | 33       | 0        | 1500  |
+      | 0     | area_thermal_peak      | cluster_availability | 33       | 0        | 800   |
+      | 0     | area_thermal_base      | up_margin            | 33       | 0        | 0     |
+      | 0     | area_thermal_semi base | up_margin            | 33       | 0        | 0     |
+      | 0     | area_thermal_peak      | up_margin            | 33       | 0        | 0     |
+      | 0     | area_thermal_base      | min_gen_power        | 33       | 0        | 0     |
+      | 0     | area_thermal_base      | down_margin          | 33       | 0        | 3600  |
     # prop_cost and imbalance_cost are derived from objective coefficients, which
     # carry the legacy anti-degeneracy noise (PrepareRandomNumbers forces |noise|
     # into [5e-4, 6e-4] per cost), so they need the relaxed tolerance: relative

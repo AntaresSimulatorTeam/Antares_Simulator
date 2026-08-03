@@ -199,14 +199,20 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
     // Port fields of the load and long_term_storage models, emitted on their
     // own components ({area}_load, {area}_hydro) so their balance_port.flow
     // rows cannot collide with each other on the area name.
-    emit("balance_port.flow", area + "_load", pdt, -rawLoad);
+    emit("balance_port.flow",
+         fmt::format("{}_load", problemeHebdo_.NomsDesPays[pays]),
+         pdt,
+         -rawLoad);
 
     const int hydProd = variableManager_.HydProd(pays, pdt);
     if (hydProd >= 0)
     {
         const int pumping = variableManager_.Pumping(pays, pdt);
         const double netWithdrawal = x(hydProd) - (pumping >= 0 ? x(pumping) : 0.);
-        emit("balance_port.flow", area + "_hydro", pdt, netWithdrawal);
+        emit("balance_port.flow",
+             fmt::format("{}_hydro", problemeHebdo_.NomsDesPays[pays]),
+             pdt,
+             netWithdrawal);
     }
 
     const int hydroLevel = variableManager_.HydroLevel(pays, pdt);

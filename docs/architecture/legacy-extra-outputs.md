@@ -29,7 +29,7 @@ Three sources cover every formula:
 | Dual of a constraint | `CoutsMarginauxDesContraintes[c]`, with `c` from the constraint correspondence tables: `CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays[pays]`, `.NumeroDeContrainteDeDissociationDeFlux[interco]`, `NumeroDeContrainteExpressionStockFinal[pays]` |
 | Study data that is not in the problem's objective (capacities, inflows, load, emission factors, unit data) | straight from `PROBLEME_HEBDO`: `ValeursDeNTC[pdt]`, `CaracteristiquesHydrauliques[pays]`, `ConsommationsAbattues[pdt]` + `AllMustRunGeneration[pdt]`, `PaliersThermiquesDuPays[pays]` |
 
-Row conventions are fixed in one place (`LegacyExtraOutputEmitter::emit`): the absolute hour is `weekInTheYear * 168 + pdt` (matching the time index recorded on the raw rows), `block_time_index` comes from `LegacyBlockTimeIndex` (shared with the raw-row loop), `scenario_index = fillContext.getYear()`. Components are the area name, the cluster name, or `origin$$destination` for links.
+Row conventions are fixed in one place (`LegacyExtraOutputEmitter::emit`): the absolute hour is `weekInTheYear * 168 + pdt` (matching the time index recorded on the raw rows), `block_time_index` comes from `LegacyBlockTimeIndex` (shared with the raw-row loop), `scenario_index = fillContext.getYear()`. Components follow the uniqueness convention: `{area}_node` for area rows, `{area}_hydro_storage` for the hydro storage, `{area}_thermal_{cluster}` for thermal clusters, `{origin}_{destination}_link` for links (endpoints sorted), `{area}_load` / `{area}_hydro` for the load / long-term-storage port rows.
 
 ### Guards
 
@@ -55,7 +55,7 @@ Emitters skip outputs whose anchor does not exist, mirroring the construction si
 | `imbalance_cost` | area | `spillCost × spilled + unsCost × unsupplied` | `vm.Spillage`, `vm.UnsuppliedEnergy`; costs = `CoutDeDefaillanceNegative/PositiveSansBruit[pays]`, the user costs without noise |
 | `is_loss_of_load` | area | `X[iu] > 0 ? 1 : 0` | strict positivity |
 | `is_significant_loss_of_load` | area | `X[iu] > 0.5 ? 1 : 0` | 0.5 MW solver-noise threshold |
-| `actual_load` | area | `ConsommationAbattueDuPays + AllMustRunGenerationOfArea` | residual load plus must-run (raw input load) |
+| `actual_load` | `{area}_load` | `ConsommationAbattueDuPays + AllMustRunGenerationOfArea` | residual load plus must-run (raw input load) |
 | `price` | area | `−dual(AreaBalance)` | see sign note below |
 | `is_near_loss_of_load` | area | `price > unsCost − 5 ? 1 : 0` | `unsCost = CoutLineaire[iu]` |
 | `level_percentage` | area | `X[ih] / TailleReservoir × 100` | skipped when the capacity is non-positive |

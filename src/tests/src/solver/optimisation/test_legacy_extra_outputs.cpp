@@ -362,10 +362,10 @@ BOOST_AUTO_TEST_CASE(is_significant_loss_of_load_is_one_above_threshold_and_zero
 
     const auto rows = RowsForOutput(table, "is_significant_loss_of_load");
     BOOST_REQUIRE_EQUAL(rows.size(), 3);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area1")->value, 1.);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area2")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area1_node")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area2_node")->value, 1.);
     // 0.2 MW of unsupplied energy is below the 0.5 MW threshold.
-    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area3")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area3_node")->value, 0.);
 }
 
 BOOST_AUTO_TEST_CASE(is_significant_loss_of_load_is_zero_exactly_at_threshold)
@@ -375,7 +375,7 @@ BOOST_AUTO_TEST_CASE(is_significant_loss_of_load_is_zero_exactly_at_threshold)
     problem.ProblemeAResoudre->X[unsuppliedArea3] = 0.5;
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area3")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area3_node")->value, 0.);
 }
 
 BOOST_AUTO_TEST_CASE(is_loss_of_load_is_one_for_any_positive_unsupplied_energy)
@@ -384,10 +384,10 @@ BOOST_AUTO_TEST_CASE(is_loss_of_load_is_one_for_any_positive_unsupplied_energy)
 
     const auto rows = RowsForOutput(table, "is_loss_of_load");
     BOOST_REQUIRE_EQUAL(rows.size(), 3);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area1")->value, 1.);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area2")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area1_node")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area2_node")->value, 1.);
     // Strict > 0: even 0.2 MW below the significance threshold counts.
-    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3_node")->value, 1.);
 }
 
 BOOST_AUTO_TEST_CASE(is_loss_of_load_is_zero_without_unsupplied_energy)
@@ -395,16 +395,16 @@ BOOST_AUTO_TEST_CASE(is_loss_of_load_is_zero_without_unsupplied_energy)
     problem.ProblemeAResoudre->X[unsuppliedArea3] = 0.;
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3_node")->value, 0.);
 }
 
 BOOST_AUTO_TEST_CASE(actual_load_is_the_residual_load_plus_must_run_generation)
 {
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area1_node")->value, 790. + 10.);
-    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area2_node")->value, 500. + 0.);
-    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area3_node")->value, 280. + 20.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area1_load")->value, 790. + 10.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area2_load")->value, 500. + 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area3_load")->value, 280. + 20.);
 }
 
 BOOST_AUTO_TEST_CASE(price_is_minus_the_area_balance_dual)
@@ -631,9 +631,9 @@ BOOST_AUTO_TEST_CASE(port_field_balance_price_mirrors_the_area_price)
 {
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area1")->value, 10000.);
-    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area2")->value, 50.);
-    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area3")->value, 75.);
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area1_node")->value, 10000.);
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area2_node")->value, 50.);
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area3_node")->value, 75.);
 }
 
 BOOST_AUTO_TEST_CASE(port_field_load_flow_is_minus_the_raw_load)
@@ -670,17 +670,17 @@ BOOST_AUTO_TEST_CASE(port_field_link_flows_are_the_signed_flow_and_its_negation)
 {
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "out_port.flow", "area1$$area2")->value, 120.);
-    BOOST_CHECK_EQUAL(FindRow(table, "in_port.flow", "area1$$area2")->value, -120.);
-    BOOST_CHECK_EQUAL(FindRow(table, "out_port.flow", "area2$$area3")->value, -30.);
-    BOOST_CHECK_EQUAL(FindRow(table, "in_port.flow", "area2$$area3")->value, 30.);
+    BOOST_CHECK_EQUAL(FindRow(table, "out_port.flow", "area1_area2_link")->value, 120.);
+    BOOST_CHECK_EQUAL(FindRow(table, "in_port.flow", "area1_area2_link")->value, -120.);
+    BOOST_CHECK_EQUAL(FindRow(table, "out_port.flow", "area2_area3_link")->value, -30.);
+    BOOST_CHECK_EQUAL(FindRow(table, "in_port.flow", "area2_area3_link")->value, 30.);
 }
 
 BOOST_AUTO_TEST_CASE(port_field_flows_cover_thermal_storage_and_input_generation)
 {
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "cluster1")->value, 3600.);
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_thermal_cluster1")->value, 3600.);
     BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "battery1")->value, 100. - 40.);
     BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_wind")->value, 320.);
     BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_combined_heat_power")->value,
