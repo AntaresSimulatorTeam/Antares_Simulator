@@ -14,20 +14,19 @@ using Antares::Optimization::AddLegacyExtraOutputs;
 
 namespace
 {
-// Rows as produced by SimulationTable::storageIntoRows(), column order:
-// block, component, output, absolute_time_index, block_time_index,
-// scenario_index, value, basis_status.
+// Column order: block, component, output, absolute_time_index,
+// block_time_index, scenario_index, value, basis_status.
 struct Row
 {
-    explicit Row(const std::vector<std::string>& columns):
-        block(columns[0]),
-        component(columns[1]),
-        output(columns[2]),
-        absoluteTimeIndex(columns[3]),
-        blockTimeIndex(columns[4]),
-        scenarioIndex(columns[5]),
-        value(std::stod(columns[6])),
-        basisStatus(columns[7])
+    explicit Row(const SimulationTable& table, size_t rowIndex):
+        block(table.columns()[0]->toString(rowIndex)),
+        component(table.columns()[1]->toString(rowIndex)),
+        output(table.columns()[2]->toString(rowIndex)),
+        absoluteTimeIndex(table.columns()[3]->toString(rowIndex)),
+        blockTimeIndex(table.columns()[4]->toString(rowIndex)),
+        scenarioIndex(table.columns()[5]->toString(rowIndex)),
+        value(std::stod(table.columns()[6]->toString(rowIndex))),
+        basisStatus(table.columns()[7]->toString(rowIndex))
     {
     }
 
@@ -44,11 +43,12 @@ struct Row
 std::vector<Row> RowsForOutput(const SimulationTable& table, const std::string& output)
 {
     std::vector<Row> rows;
-    for (const auto& columns: table.storageIntoRows())
+    const auto& cols = table.columns();
+    for (size_t i = 0; i < table.rowCount(); ++i)
     {
-        if (columns[2] == output)
+        if (cols[2]->toString(i) == output)
         {
-            rows.emplace_back(columns);
+            rows.emplace_back(table, i);
         }
     }
     return rows;
@@ -530,9 +530,11 @@ BOOST_AUTO_TEST_CASE(emissions_emit_one_row_per_pollutant)
     // One row per pollutant in Pollutant::PollutantEnum, all on "cluster1".
     BOOST_CHECK_EQUAL(RowsForOutput(table, "co2_emissions").size(), 1);
     std::size_t emissionRows = 0;
-    for (const auto& columns: table.storageIntoRows())
+    const auto& cols = table.columns();
+    for (size_t i = 0; i < table.rowCount(); ++i)
     {
-        if (columns[2].size() > 10 && columns[2].substr(columns[2].size() - 10) == "_emissions")
+        const auto out = cols[2]->toString(i);
+        if (out.size() > 10 && out.substr(out.size() - 10) == "_emissions")
         {
             ++emissionRows;
         }

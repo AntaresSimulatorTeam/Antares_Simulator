@@ -31,8 +31,6 @@ add_boost_test(testOutputs
 target_compile_definitions(testOutputs PRIVATE
         RESOURCES_DIR="${CMAKE_SOURCE_DIR}/resources"
 )
-
-copy_project_shared_lib(Antares::simulation-table-writers testOutputs)
 # ---------------------------------------
 # test-parquet-simulation-table-writer
 # ---------------------------------------
@@ -50,5 +48,3 @@ add_boost_test(test-parquet-simulation-table-writer
         # gp : headers from target "simulation-table-writers" are needed to compile "test-parquet-simulation-table-writer"
         # gp : but they can't be located by this target, so we add the following instruction.
         "${CMAKE_SOURCE_DIR}/src/libs/antares/writer")
-
-copy_project_shared_lib(Antares::simulation-table-writers test-parquet-simulation-table-writer)
