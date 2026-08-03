@@ -6,6 +6,7 @@ Feature: Parquet output format tests for antares-modeler
     When I run antares modeler with parquet
     Then the simulation succeeds
     And the objective value is 320
+    And the system-for-views.yml is correctly exported
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
       | node1     | gen1_p | 0-1      | 80    |

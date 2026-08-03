@@ -19,6 +19,11 @@ public:
         return addColumn<StringColumn>(name);
     }
 
+    std::shared_ptr<InternedStringColumn> addInternedStringColumn(const std::string& name)
+    {
+        return addColumn<InternedStringColumn>(name);
+    }
+
     std::shared_ptr<IntegralColumn> addIntegralColumn(const std::string& name)
     {
         return addColumn<IntegralColumn>(name);
