@@ -749,4 +749,8 @@ public:
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     Antares::Solver::ModelerData* modelerData = nullptr;
 };
+
+// Import functions for capacity and hydro reserves
+void importCapacityReservations(const Antares::Data::AreaList& areas, PROBLEME_HEBDO& problem);
+void importHydroReserves(const Antares::Data::AreaList& areas, PROBLEME_HEBDO& problem);
 #endif

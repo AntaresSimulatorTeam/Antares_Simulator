@@ -438,7 +438,7 @@ public:
     //@{
 
     /// create a map with the corresponding scratchpad for each area link to this numspace
-    Area::ScratchMap buildScratchMap(uint numspace);
+    Area::ScratchMap buildScratchMap(uint numspace) const;
 
     /*!
     ** \brief Update the name id set
@@ -562,6 +562,16 @@ void AreaListEnsureDataHydroPrepro(AreaList* l);
 ** \brief Ensure data for thermal prepro are initialized
 */
 void AreaListEnsureDataThermalPrepro(AreaList* l);
+
+/*!
+** \brief Load reserves parameters for an area
+*/
+bool loadReservesParameters(fs::path& folderInput, Area& area);
+
+/*!
+** \brief Validate capacity reservations for an area
+*/
+void validateCapacityReservations(const Area& area);
 
 /*!
 ** \brief to check that Area name does not contains character *

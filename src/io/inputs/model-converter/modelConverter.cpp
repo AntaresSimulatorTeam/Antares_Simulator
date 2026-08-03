@@ -408,6 +408,7 @@ std::vector<Model> convertModels(const YmlModel::Library& library,
         std::vector<Objective> objectives = convertObjectives(model, library.filename);
 
         auto modelObj = modelBuilder.withId(model.id)
+                          .withLibraryId(library.id)
                           .withObjectives(std::move(objectives))
                           .withParameters(std::move(parameters))
                           .withVariables(std::move(variables))
