@@ -57,7 +57,6 @@ set(TARGET_LIBS #No alias
 
         # array
         io
-        jit
         AntaresMemory
 
         # date
@@ -89,7 +88,6 @@ set(TARGET_LIBS #No alias
         args_helper
         checks
         locale
-        yuni-static-uuid
 
         # executable
         antares-solver
@@ -121,6 +119,7 @@ set(TARGET_LIBS #No alias
         modeler-checks
 		structured-linear-problem
         reserves-parsing-antlr-interface
+        view-builder
 )
 
 install(TARGETS ${TARGET_LIBS}

@@ -15,6 +15,7 @@
 
 #include <antares/study/study.h>
 
+using namespace Antares;
 using namespace Antares::Solver;
 using namespace Antares::Data;
 namespace fs = std::filesystem;
@@ -29,7 +30,6 @@ void initializeStudy(Study& study)
 
     study.parameters.renewableGeneration.toAggregated(); // Default
 
-    study.parameters.intraModal = 0;
     study.parameters.interModal = 0;
 }
 

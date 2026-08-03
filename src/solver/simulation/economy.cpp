@@ -67,14 +67,14 @@ bool Economy::simulationBegin()
                                             numSpace);
             if (study.parameters.include.reserves)
             {
-                study.runtime.initializeReservesIndexMaps(study, pProblemesHebdo[numSpace]);
+                buildReserveIndexMaps(study, pProblemesHebdo[numSpace]);
             }
 
             weeklyOptProblems_.emplace_back(study.parameters.optOptions,
                                             &pProblemesHebdo[numSpace],
                                             resultWriter_,
                                             simulationObserver_.get(),
-                                            !study.parameters.noOutput);
+                                            study.parameters.writeSimulationTable());
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
@@ -202,14 +202,17 @@ bool Economy::year(Variable::State& state,
         hourInTheYear += nbHoursInAWeek;
     }
 
-    if (simulationTables && !study.folderOutput.empty())
+    durationCollector("simulation_table_export") << [this, &state, &simulationTables]()
     {
-        LegacySimulationTablesWriter legacyWriter(study.folderOutput,
-                                                  state.year,
-                                                  study.parameters.simuTableFormat);
-        legacyWriter.write(*simulationTables);
-        simulationTables->clear();
-    }
+        if (simulationTables && !study.folderOutput.empty())
+        {
+            LegacySimulationTablesWriter legacyWriter(study.folderOutput,
+                                                      state.year,
+                                                      study.parameters.simuTableFormat);
+            legacyWriter.write(*simulationTables);
+            simulationTables->clear();
+        }
+    };
 
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);
@@ -241,5 +244,9 @@ void Economy::simulationEnd()
         ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
     }
 }
+
+// Single definition of ISimulation<Economy> for the whole build; every other TU
+// uses the extern-template declaration in economy.h.
+template class ISimulation<Economy>;
 
 } // namespace Antares::Solver::Simulation

@@ -9,7 +9,6 @@
 #include <vector>
 
 #include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
 
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>

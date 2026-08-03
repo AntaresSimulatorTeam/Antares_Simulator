@@ -53,18 +53,17 @@ def change_transmission_capacities(context, link, value):
     context.sih.set_value(variable="transmission-capacities", value=value, file_path=file_path)
 
 @when('I replace the "{destinationPath}" file with "{originPath}"')
-def replace_reserve_ini(context, destinationPath, originPath):
+def replace_reserve_yml(context, destinationPath, originPath):
     destination = destinationPath.split("/")
     origin = originPath.split("/")
     input_handler = solver_input_handler(Path(context.study_path))
-    input_handler.copy_reserve_ini_from_file(origin, destination)
+    input_handler.copy_reserve_yml_from_file(origin, destination)
 
 
 @given('in input "{input_file}" section "{section}" variable "{variable}" is set to "{value}"')
 def set_input_section_variable(context, input_file, section, variable, value):
     context.sih.set_input(input_file=input_file, section=section,
                           variable=variable, value=value)
-
 
 @given('the linear solver is {solver_name}')
 def set_linear_solver(context, solver_name):
@@ -84,6 +83,10 @@ def parse_options(context, options):
 
         if options.count("--parallel") > 0:
             context.parallel = True
+
+        for opt in options.split():
+            if opt.startswith("--output="):
+                context.output_selection = opt.split("=", 1)[1]
 
 @when('I run antares simulator')
 @when('I run antares simulator with {options}')
@@ -358,6 +361,8 @@ def build_antares_solver_command(context):
         command.append('--named-mps-problems')
     if context.parallel:
         command.append('--force-parallel=4')
+    if hasattr(context, "output_selection"):
+        command.append(f'--output={context.output_selection}')
     return command
 
 
@@ -442,6 +447,12 @@ def check_res_participation_for_specific_year_and_cluster_yearly(context, area, 
 def check_res_participation_for_specific_year_and_cluster_yearly_inferior(context, area, year, res, cluster, res_part):
     assert (context.soh.get_reserve_total_participation_for_year_and_cluster(area, year, res,cluster) < res_part)
 
+
+@then('in area "{area}", during year {year:d}, total reserve participation cost is {expected_cost:g} Euro')
+def check_reserve_participation_cost(context, area, year, expected_cost):
+    actual_cost = context.soh.get_reserve_participation_cost(area, year)
+    assert_double_close(expected_cost, actual_cost, 1e-6, "Reserve participation cost")
+
 @step('the message "{log}" is reported in the logs')
 def ckeck_log_exists(context, log):
     for log_line in context.logs_err.splitlines():
@@ -471,12 +482,11 @@ def _store_simulation_result(context, study_index: int):
     context.multi_studies.append(result)
 
 
-def _run_study_at_index(context, study_index: int, study_path: Path):
+def _run_study_at_index(context, study_index: int, study_path: Path, options):
     """Run a single study and store its results"""
     context.study_path = study_path
+    parse_options(context, options)
     init_simulation(context)
-    context.named_mps_problems = False
-    context.parallel = False
     run_simulation(context)
     _store_simulation_result(context, study_index)
 
@@ -499,10 +509,11 @@ def nth_study_path_is(context, study_num, string):
     context.study_paths[study_num - 1] = study_path
 
 
-@when('I run antares simulator on all studies')
-def run_antares_on_all_studies(context):
+@when('I run antares simulator on all studies with {options}')
+def run_antares_on_all_studies(context, options):
     """Run simulator on all defined studies"""
     _initialize_multi_study_context(context)
+    parse_options(context, options)
 
     assert hasattr(context, 'study_paths'), "No study paths defined"
     assert len(context.study_paths) > 0, "No study paths defined"
@@ -510,7 +521,7 @@ def run_antares_on_all_studies(context):
     # Run all studies
     for idx, study_path in enumerate(context.study_paths):
         assert study_path is not None, f"Study path at index {idx} is not defined"
-        _run_study_at_index(context, idx, study_path)
+        _run_study_at_index(context, idx, study_path, options)
 
 
 @then('all simulations succeed')
@@ -824,3 +835,34 @@ def check_storages_values_for_specific_year_hour_and_cluster(context, area, year
     else:
         raise NotImplementedError(f"Unknown value for variable injection_or_withdrawal '{injection_or_withdrawal}'")
     assert_double_close(float(actual_storage_value.item()), float(value_storage), 1e-6)
+
+
+@then('the simulation has two optimization iterations')
+def check_two_optimization_iterations(context):
+    output_path = Path(context.output_path)
+    optim_nb_1_files = list(output_path.glob("*optim-nb-1*"))
+    optim_nb_2_files = list(output_path.glob("*optim-nb-2*"))
+    assert len(optim_nb_1_files) > 0, \
+        f"No first optimization output files found in {output_path}"
+    assert len(optim_nb_2_files) > 0, \
+        f"No second optimization output files found in {output_path}. " \
+        f"This means the thermal heuristic did not run (only 1 iteration)."
+    
+@then('in area "{area}", during year {year:d}, weekly overall cost for week {week:d} is {value:g}')
+def check_weekly_overall_cost(context, area, year, week, value):
+    actual = context.soh.get_weekly_overall_cost_eur(area, year, week)
+    assert_double_close(value, actual, 0.001, f"Weekly OV. COST week {week}")
+    
+@then('in area "{area}", during year {year:d}, NODU for all hours matches reference')
+def check_all_nodu_against_reference(context, area, year):
+    actual_nodu = context.soh.get_hourly_nodu(area, year)
+    ref_nodu = context.soh.get_reference_nodu(context.study_path)
+    assert len(actual_nodu) == len(ref_nodu), \
+        f"Length mismatch: simulation has {len(actual_nodu)} hours, reference has {len(ref_nodu)} hours"
+    mismatches = []
+    for hour in range(len(ref_nodu)):
+        if int(actual_nodu.iloc[hour]) != int(ref_nodu.iloc[hour]):
+            mismatches.append(
+                f"  Hour {hour}: expected {int(ref_nodu.iloc[hour])}, got {int(actual_nodu.iloc[hour])}")
+    assert len(mismatches) == 0, \
+        f"NODU mismatches found:\n" + "\n".join(mismatches[:20])

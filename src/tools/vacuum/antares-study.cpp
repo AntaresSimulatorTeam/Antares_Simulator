@@ -21,9 +21,12 @@ enum
     traces = 0
 };
 
-class UserData: private Yuni::NonCopyable<UserData>
+class UserData
 {
 public:
+    UserData(const UserData&) = delete;
+    UserData& operator=(const UserData&) = delete;
+
     UserData():
         bytesDeleted(0),
         filesDeleted(0),

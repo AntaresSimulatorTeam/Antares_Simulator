@@ -5,18 +5,19 @@
 #include <fstream>
 #include <ranges>
 #include <string>
+#include <yaml-cpp/yaml.h>
 
 #include <boost/algorithm/string/trim.hpp>
 
 #include <yuni/core/string.h>
 
 #include <antares/inifile/inifile.h>
+#include <antares/io/file.h>
 #include <antares/logs/logs.h>
 #include <antares/study/area/capacityReservation.h>
 #include <antares/study/area/scratchpad.h>
 #include "antares/array/matrix.h"
 #include "antares/study/area/area.h"
-#include "antares/study/area/forTestsOnlyList.h"
 #include "antares/study/parts/load/prepro.h"
 #include "antares/study/parts/parts.h"
 #include "antares/study/study.h"
@@ -39,54 +40,66 @@ static void toLower(std::string& str)
     }
 }
 
-bool readReservesAreaParameters(Area& area, const IniFile::Section& section)
+template<typename T>
+bool tryParseYamlField(const YAML::Node& node, T& value, const std::string& warningMsg)
+{
+    try
+    {
+        value = node.as<T>();
+        return true;
+    }
+    catch (const YAML::Exception&)
+    {
+        logs.warning() << warningMsg;
+        return false;
+    }
+}
+
+bool readReservesAreaParameters(Area& area, const YAML::Node& params)
 {
     bool ret = true;
-    for (auto* p = section.firstProperty; p; p = p->next)
+    for (const auto& param: params)
     {
-        std::string key = p->key;
+        std::string key = param.first.as<std::string>();
         toLower(key);
 
         if (key == "energy-activation-ratio-up")
         {
-            if (!p->value.to<double>(
-                  area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.up))
+            if (!tryParseYamlField(
+                  param.second,
+                  area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.up,
+                  area.name + " : invalid maximum energy activation ratio for UP reserves"))
             {
-                logs.warning() << area.name
-                               << " : invalid maximum energy activation ratio for UP reserves";
                 ret = false;
             }
         }
         else if (key == "energy-activation-ratio-down")
         {
-            if (!p->value.to<double>(
-                  area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.down))
+            if (!tryParseYamlField(
+                  param.second,
+                  area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.down,
+                  area.name + " : invalid maximum energy activation ratio for DOWN reserves"))
             {
-                logs.warning() << area.name
-                               << " : invalid maximum energy activation ratio for "
-                                  "DOWN reserves";
                 ret = false;
             }
         }
         else if (key == "reference-activation-duration-up")
         {
-            if (!p->value.to<int>(
-                  area.allCapacityReservations.value().referenceGlobalActivationDuration.up))
+            if (!tryParseYamlField(
+                  param.second,
+                  area.allCapacityReservations.value().referenceGlobalActivationDuration.up,
+                  area.name + " : invalid reference energy activation duration for UP reserves"))
             {
-                logs.warning() << area.name
-                               << " : invalid reference energy activation duration "
-                                  "for UP reserves";
                 ret = false;
             }
         }
         else if (key == "reference-activation-duration-down")
         {
-            if (!p->value.to<int>(
-                  area.allCapacityReservations.value().referenceGlobalActivationDuration.down))
+            if (!tryParseYamlField(
+                  param.second,
+                  area.allCapacityReservations.value().referenceGlobalActivationDuration.down,
+                  area.name + " : invalid reference energy activation duration for DOWN reserves"))
             {
-                logs.warning() << area.name
-                               << " : invalid reference energy activation duration "
-                                  "for DOWN reserves";
                 ret = false;
             }
         }
@@ -100,89 +113,115 @@ bool readReservesAreaParameters(Area& area, const IniFile::Section& section)
     return ret;
 }
 
-bool readReserveParameters(const fs::path& folderInput, Area& area, const IniFile::Section& section)
+bool readReserveParameters(const fs::path& folderInput, Area& area, const YAML::Node& reserveNode)
 {
     bool ret = true;
-    if (area.allCapacityReservations.value().contains(transformNameIntoID(section.name)))
+
+    std::string reserveName;
+    if (!tryParseYamlField(reserveNode["name"],
+                           reserveName,
+                           area.name + " : reserve missing required 'name' field"))
     {
-        logs.error() << area.name << " : reserve name already exists for reserve " << section.name;
+        return false;
+    }
+
+    ReserveID reserveId = transformNameIntoID(reserveName);
+    if (area.allCapacityReservations.value().contains(reserveId))
+    {
+        logs.error() << area.name << " : reserve name already exists for reserve " << reserveName;
         return false;
     }
 
     CapacityReservation capacityReservation;
-    capacityReservation.setName(section.name);
+    capacityReservation.setName(reserveName);
 
-    for (auto* p = section.firstProperty; p; p = p->next)
+    for (const auto& entry: reserveNode)
     {
-        std::string key = p->key;
+        std::string key = entry.first.as<std::string>();
         toLower(key);
 
+        if (key == "name")
+        {
+            continue;
+        }
         if (key == "failure-cost")
         {
-            if (!p->value.to<double>(capacityReservation.unsuppliedCost))
+            if (!tryParseYamlField(entry.second,
+                                   capacityReservation.unsuppliedCost,
+                                   area.name + " : invalid failure cost for reserve "
+                                     + reserveName))
             {
-                logs.warning() << area.name << " : invalid failure cost for reserve "
-                               << section.name;
                 ret = false;
             }
         }
         else if (key == "spillage-cost")
         {
-            if (!p->value.to<double>(capacityReservation.spillageCost))
+            if (!tryParseYamlField(entry.second,
+                                   capacityReservation.spillageCost,
+                                   area.name + " : invalid spillage cost for reserve "
+                                     + reserveName))
             {
-                logs.warning() << area.name << " : invalid spillage cost for reserve "
-                               << section.name;
                 ret = false;
             }
         }
         else if (key == "power-activation-ratio")
         {
-            if (!p->value.to<double>(capacityReservation.powerActivationRatio))
+            if (!tryParseYamlField(entry.second,
+                                   capacityReservation.powerActivationRatio,
+                                   area.name + " : invalid maximum activation ratio for reserve "
+                                     + reserveName))
             {
-                logs.warning() << area.name << " : invalid maximum activation ratio for reserve "
-                               << section.name;
                 ret = false;
             }
         }
         else if (key == "energy-activation-ratio")
         {
-            if (!p->value.to<double>(capacityReservation.energyActivationRatio))
+            if (!tryParseYamlField(entry.second,
+                                   capacityReservation.energyActivationRatio,
+                                   area.name + " : invalid energy activation ratio for reserve "
+                                     + reserveName))
             {
-                logs.warning() << area.name << " : invalid energy activation ratio for reserve "
-                               << section.name;
                 ret = false;
             }
         }
         else if (key == "reference-activation-duration")
         {
-            if (!p->value.to<int>(capacityReservation.referenceActivationDuration))
+            if (!tryParseYamlField(entry.second,
+                                   capacityReservation.referenceActivationDuration,
+                                   area.name
+                                     + " : invalid reference activation duration for reserve "
+                                     + reserveName))
             {
-                logs.warning() << area.name
-                               << " : invalid reference activation duration for reserve "
-                               << section.name;
                 ret = false;
             }
         }
         else if (key == "type")
         {
-            if (p->value == "up")
+            std::string value;
+            if (!tryParseYamlField(entry.second,
+                                   value,
+                                   area.name + " : invalid type for reserve " + reserveName))
+            {
+                ret = false;
+            }
+            else if (value == "up")
             {
                 capacityReservation.type = ReserveType::UP;
             }
-            else if (p->value == "down")
+            else if (value == "down")
             {
                 capacityReservation.type = ReserveType::DOWN;
             }
             else
             {
-                logs.warning() << area.name << " : invalid type for reserve " << section.name;
+                logs.warning() << area.name << " : invalid type for reserve " << reserveName;
                 ret = false;
             }
         }
         else
         {
             logs.warning() << area.name << " : invalid key " << key
-                           << " inside reserve parameters for " << section.name;
+                           << " inside reserve parameters for " << reserveName;
             ret = false;
         }
     }
@@ -615,7 +654,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Reserves
     if (study.parameters.include.reserves)
     {
-        ret = accessForTests::loadReservesParameters(study.folderInput, area) && ret;
+        ret = Antares::Data::loadReservesParameters(study.folderInput, area) && ret;
     }
 
     // Solar
@@ -687,9 +726,9 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
             && study.parameters.include.reserves)
         {
-            fs::path reservesHydroIniPath = study.folderInput / "hydro" / "common" / area.id
-                                            / "reserves.ini";
-            area.hydro.loadReserveParticipations(area, reservesHydroIniPath);
+            fs::path reservesHydroPath = study.folderInput / "hydro" / "common" / area.id
+                                         / "reserve-participations.yml";
+            area.hydro.loadReserveParticipations(area, reservesHydroPath);
         }
     }
 
@@ -726,7 +765,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             && study.parameters.include.reserves)
         {
             fs::path reservesThermal = study.folderInput / "thermal" / "clusters" / area.id
-                                       / "reserves.ini";
+                                       / "reserve-participations.yml";
             area.thermal.list.loadReserveParticipations(area, reservesThermal);
         }
     }
@@ -742,9 +781,9 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
             && study.parameters.include.reserves)
         {
-            fs::path reservesIniFilePath = study.folderInput / "st-storage" / "clusters" / area.id
-                                           / "reserves.ini";
-            area.shortTermStorage.loadReserveParticipations(area, reservesIniFilePath);
+            fs::path reservesFilePath = study.folderInput / "st-storage" / "clusters" / area.id
+                                        / "reserve-participations.yml";
+            area.shortTermStorage.loadReserveParticipations(area, reservesFilePath);
         }
     }
 
@@ -1173,8 +1212,6 @@ Area::ScratchMap AreaList::buildScratchMap(uint numspace)
     return scratchmap;
 }
 
-namespace accessForTests
-{
 void validateCapacityReservations(const Area& area)
 {
     if (area.allCapacityReservations)
@@ -1219,27 +1256,52 @@ void validateCapacityReservations(const Area& area)
 bool loadReservesParameters(fs::path& folderInput, Area& area)
 {
     bool ret = true;
-    fs::path reservesIni = folderInput / "reserves" / area.id / "reserves.ini";
-    IniFile ini;
+    fs::path reservesFile = folderInput / "reserves" / area.id / "reserves.yml";
     area.allCapacityReservations.emplace();
-    if (ini.open(reservesIni, false))
+
+    if (!fs::exists(reservesFile))
     {
-        ini.each(
-          [&](const IniFile::Section& section)
-          {
-              if (section.name == "globalparameters")
-              {
-                  ret = readReservesAreaParameters(area, section) && ret;
-              }
-              else
-              {
-                  ret = readReserveParameters(folderInput, area, section) && ret;
-              }
-          });
-        validateCapacityReservations(area);
+        logs.info() << "No reserves file found for area " << area.name;
+        return ret;
     }
+
+    std::string content;
+    try
+    {
+        content = IO::readFile(reservesFile);
+    }
+    catch (const std::exception& e)
+    {
+        logs.error() << "Failed to read reserves file: " << reservesFile << " - " << e.what();
+        return false;
+    }
+
+    YAML::Node root;
+    try
+    {
+        root = YAML::Load(content);
+    }
+    catch (const YAML::Exception& e)
+    {
+        logs.error() << "Invalid reserves config : " << reservesFile << " " << e.what();
+        return false;
+    }
+
+    if (root["global-parameters"])
+    {
+        ret = readReservesAreaParameters(area, root["global-parameters"]) && ret;
+    }
+
+    if (root["reserves"])
+    {
+        for (const auto& reserveNode: root["reserves"])
+        {
+            ret = readReserveParameters(folderInput, area, reserveNode) && ret;
+        }
+    }
+
+    validateCapacityReservations(area);
     return ret;
 }
-} // namespace accessForTests
 
 } // namespace Antares::Data

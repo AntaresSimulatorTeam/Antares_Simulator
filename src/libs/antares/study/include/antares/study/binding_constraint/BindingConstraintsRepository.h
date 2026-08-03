@@ -14,9 +14,12 @@
 
 namespace Antares::Data
 {
-class BindingConstraintsRepository final: public Yuni::NonCopyable<BindingConstraintsRepository>
+class BindingConstraintsRepository final
 {
 public:
+    BindingConstraintsRepository(const BindingConstraintsRepository&) = delete;
+    BindingConstraintsRepository& operator=(const BindingConstraintsRepository&) = delete;
+
     //! Vector of binding constraints
     using Vector = std::vector<std::shared_ptr<BindingConstraint>>;
 

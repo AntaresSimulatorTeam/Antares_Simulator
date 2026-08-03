@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
-#include <iomanip>
+#include <cstdint>
+#include <fmt/format.h>
+#include <limits>
 #include <optional>
-#include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "antares/io/outputs/IColumnAdapterVisitor.h"
@@ -25,7 +27,7 @@ namespace Antares::IO::Outputs
 class IColumn
 {
 public:
-    explicit IColumn(const std::string name):
+    explicit IColumn(const std::string& name):
         name_(name)
     {
     }
@@ -69,9 +71,7 @@ inline constexpr bool is_optional_v = is_optional<T>::value;
 
 [[maybe_unused]] static std::string FromDouble(const double value)
 {
-    std::ostringstream oss;
-    oss << std::setprecision(15) << value;
-    return oss.str();
+    return fmt::format("{:.15g}", value);
 }
 
 template<typename U>
@@ -84,10 +84,6 @@ static std::string FormatValue(const U& v)
     else if constexpr (std::is_floating_point_v<U>)
     {
         return FromDouble(v);
-    }
-    else if constexpr (std::is_same_v<U, Optimisation::LinearProblemApi::MipBasisStatus>)
-    {
-        return StatusToString(v);
     }
     else if constexpr (is_optional_v<U>)
     {
@@ -103,7 +99,7 @@ template<typename T>
 class TypedColumn final: public IColumn
 {
 public:
-    explicit TypedColumn(std::string name):
+    explicit TypedColumn(const std::string& name):
         IColumn(name)
     {
     }
@@ -145,5 +141,83 @@ public:
 
 private:
     std::vector<T> data_;
+};
+
+// Column of strings with few distinct values (component / output names): each
+// distinct string is stored once in a dictionary and rows only hold a 32-bit
+// index into it, instead of one std::string (and its heap allocation) per row.
+// An absent value (std::nullopt) is encoded as nullIndex.
+class InternedStringColumn final: public IColumn
+{
+public:
+    static constexpr uint32_t nullIndex = std::numeric_limits<uint32_t>::max();
+
+    explicit InternedStringColumn(const std::string& name):
+        IColumn(name)
+    {
+    }
+
+    void add(const std::string& value)
+    {
+        indices_.push_back(intern(value));
+    }
+
+    void add(const std::optional<std::string>& value)
+    {
+        indices_.push_back(value ? intern(*value) : nullIndex);
+    }
+
+    [[nodiscard]] std::string toString(size_t index) const override
+    {
+        const uint32_t dictionaryIndex = indices_.at(index);
+        return dictionaryIndex == nullIndex ? "None" : dictionary_[dictionaryIndex];
+    }
+
+    [[nodiscard]] size_t size() const override
+    {
+        return indices_.size();
+    }
+
+    void reserve(size_t capacity) override
+    {
+        indices_.reserve(capacity);
+    }
+
+    void clear() override
+    {
+        indices_.clear();
+        dictionary_.clear();
+        lookup_.clear();
+    }
+
+    const std::vector<uint32_t>& indices() const
+    {
+        return indices_;
+    }
+
+    const std::vector<std::string>& dictionary() const
+    {
+        return dictionary_;
+    }
+
+    std::shared_ptr<IColumnAdapter> accept(IColumnAdapterVisitor& visitor) const override
+    {
+        return visitor.visit(*this);
+    }
+
+private:
+    uint32_t intern(const std::string& value)
+    {
+        auto [it, inserted] = lookup_.try_emplace(value, static_cast<uint32_t>(dictionary_.size()));
+        if (inserted)
+        {
+            dictionary_.push_back(value);
+        }
+        return it->second;
+    }
+
+    std::vector<uint32_t> indices_;
+    std::vector<std::string> dictionary_;
+    std::unordered_map<std::string, uint32_t> lookup_;
 };
 } // namespace Antares::IO::Outputs

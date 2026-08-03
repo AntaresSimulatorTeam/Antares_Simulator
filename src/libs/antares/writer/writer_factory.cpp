@@ -12,7 +12,7 @@ namespace Antares::Solver
 {
 IResultWriter::Ptr resultWriterFactory(Antares::Data::ResultFormat fmt,
                                        const std::filesystem::path& folderOutput,
-                                       std::shared_ptr<Yuni::Job::QueueService> qs,
+                                       std::shared_ptr<Concurrency::ThreadPool> threadPool,
                                        Benchmarking::DurationCollector& duration_collector)
 {
     using namespace Antares::Data;
@@ -20,7 +20,7 @@ IResultWriter::Ptr resultWriterFactory(Antares::Data::ResultFormat fmt,
     switch (fmt)
     {
     case zipArchive:
-        return std::make_shared<ZipWriter>(qs, folderOutput, duration_collector);
+        return std::make_shared<ZipWriter>(threadPool, folderOutput, duration_collector);
     case inMemory:
         return std::make_shared<InMemoryWriter>(duration_collector);
     case legacyFilesDirectories:
