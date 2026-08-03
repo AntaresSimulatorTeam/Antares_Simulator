@@ -37,6 +37,20 @@ TableFormat getTableFormat(int argc, const char** argv)
     return TableFormat::CSV;
 }
 
+void exportSystemForViews(fs::path studyPath, fs::path outputPath)
+{
+    try
+    {
+        fs::path systemInput = studyPath / "input" / "system.yml";
+        fs::path systemOutput = outputPath / "system-for-views.yml";
+        fs::copy(systemInput, systemOutput);
+    }
+    catch (const std::exception& e)
+    {
+        logs.error() << "Error while exporting system-for-views.yml: " << e.what();
+    }
+}
+
 int main(int argc, const char** argv)
 {
     logs.applicationName("modeler");
@@ -64,6 +78,7 @@ int main(int argc, const char** argv)
         LoadFiles::FileLoader loader(studyPath);
         fs::path outputPath = makeOutputPath(studyPath);
         Modeler modeler(loader, outputPath, tableFormat);
+        exportSystemForViews(studyPath, outputPath);
         modeler.run();
     }
     catch (const LoadFiles::ErrorLoadingYaml& e)

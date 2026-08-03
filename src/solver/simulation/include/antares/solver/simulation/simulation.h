@@ -22,7 +22,7 @@ void SIM_AllocationProblemeHebdo(const Antares::Data::Study& study,
 /*!
 ** \brief Alloue et initialise un probleme hebdo
 */
-void SIM_InitialisationProblemeHebdo(Antares::Data::Study& study,
+void SIM_InitialisationProblemeHebdo(const Antares::Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      unsigned int NombreDePasDeTemps,
                                      uint numspace);
