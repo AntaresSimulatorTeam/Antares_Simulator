@@ -543,7 +543,7 @@ void SIM_InitialisationProblemeHebdo(const Study& study,
                         reserveParticipation.participationCostOff
                           = cluster->reserveParticipationContainer.value().reserveCostOff(
                             reserveID);
-                        reserveParticipation.clusterName = cluster->name();
+                        reserveParticipation.clusterName = cluster->id();
                         reserveParticipation.clusterIdInArea = cluster->index;
                         reserveParticipation.clusterId = NombrePaliers + cluster->index;
                         reserveParticipation.globalIndexClusterParticipation
