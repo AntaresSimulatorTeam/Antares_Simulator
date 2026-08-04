@@ -11,13 +11,13 @@
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
 #include "antares/study/system-model/system.h"
 
-using Antares::Optimization::LegacyFiller;
-using Antares::Optimization::ThermalCapacityFiller;
+using Antares::Optimisation::BendersDecomposition;
 using Antares::Optimisation::ComponentFiller;
+using Antares::Optimisation::OptimEntityContainer;
 using Antares::Optimisation::LinearProblemApi::FillContext;
 using Antares::Optimisation::LinearProblemApi::LinearProblemBuilder;
-using Antares::Optimisation::OptimEntityContainer;
-using Antares::Optimisation::BendersDecomposition;
+using Antares::Optimization::LegacyFiller;
+using Antares::Optimization::ThermalCapacityFiller;
 
 using Antares::Utils::TimeMeasurement;
 
@@ -25,7 +25,8 @@ namespace Antares::Solver::Optimization::Simplex
 {
 
 void LpFiller::fillModelerComponents(
-  std::vector<std::unique_ptr<Optimisation::LinearProblemApi::LinearProblemFiller>>& fillersCollection,
+  std::vector<std::unique_ptr<Optimisation::LinearProblemApi::LinearProblemFiller>>&
+    fillersCollection,
   Antares::Solver::ModelerData* modelerData,
   OptimEntityContainer& optimEntityContainer,
   BendersDecomposition* bendersDecomposition)
@@ -44,8 +45,9 @@ void LpFiller::fillModelerComponents(
     }
 }
 
-Optimisation::LinearProblemApi::FillContext
-LpFiller::buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
+Optimisation::LinearProblemApi::FillContext LpFiller::buildFillContext(
+  const PROBLEME_HEBDO* problemeHebdo,
+  int NumIntervalle)
 {
     unsigned globalFirst, globalLast;
     unsigned localFirst = 0, localLast;
@@ -63,11 +65,7 @@ LpFiller::buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumIntervall
         globalLast = globalFirst + nTsInDay - 1;
         localLast = nTsInDay - 1;
     }
-    return {localFirst,
-            localLast,
-            globalFirst,
-            globalLast,
-            problemeHebdo->year};
+    return {localFirst, localLast, globalFirst, globalLast, problemeHebdo->year};
 }
 
 void LpFiller::fillLinearProblem(const Optimisation::LinearProblemApi::FillContext& fillCtx,
@@ -75,7 +73,8 @@ void LpFiller::fillLinearProblem(const Optimisation::LinearProblemApi::FillConte
                                  Optimisation::OptimEntityContainer& optimEntityContainer,
                                  Optimisation::BendersDecomposition* bendersDecomposition)
 {
-    std::vector<std::unique_ptr<Optimisation::LinearProblemApi::LinearProblemFiller>> fillersCollection;
+    std::vector<std::unique_ptr<Optimisation::LinearProblemApi::LinearProblemFiller>>
+      fillersCollection;
     fillersCollection.push_back(
       std::make_unique<Antares::Optimization::LegacyFiller>(optimEntityContainer.Problem(),
                                                             problemeHebdo));
@@ -121,10 +120,12 @@ void LpFiller::fillLinearProblem(const Optimisation::LinearProblemApi::FillConte
 // ──────────────────────────────────────────────────────────────
 // Free-function wrappers for backward compatibility.
 // ──────────────────────────────────────────────────────────────
-Antares::Optimisation::LinearProblemApi::FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo,
-                                                                      int NumIntervalle)
+Antares::Optimisation::LinearProblemApi::FillContext buildFillContext(
+  const PROBLEME_HEBDO* problemeHebdo,
+  int NumIntervalle)
 {
-    return Antares::Solver::Optimization::Simplex::LpFiller::buildFillContext(problemeHebdo, NumIntervalle);
+    return Antares::Solver::Optimization::Simplex::LpFiller::buildFillContext(problemeHebdo,
+                                                                              NumIntervalle);
 }
 
 void fillLinearProblem(const Antares::Optimisation::LinearProblemApi::FillContext& fillCtx,
@@ -133,7 +134,7 @@ void fillLinearProblem(const Antares::Optimisation::LinearProblemApi::FillContex
                        Antares::Optimisation::BendersDecomposition* bendersDecomposition)
 {
     Antares::Solver::Optimization::Simplex::LpFiller::fillLinearProblem(fillCtx,
-                                         problemeHebdo,
-                                         optimEntityContainer,
-                                         bendersDecomposition);
+                                                                        problemeHebdo,
+                                                                        optimEntityContainer,
+                                                                        bendersDecomposition);
 }

@@ -43,13 +43,14 @@ public:
      * @param optimizationNumber Which optimization pass (1st or 2nd).
      * @return Always returns false to signal infeasibility to the caller.
      */
-    static bool analyze(PROBLEME_HEBDO* problemeHebdo,
-                        const std::shared_ptr<Antares::Optimization::LegacyOrtoolsLinearProblem>& originalProblem,
-                        const SingleOptimOptions& options,
-                        int NumIntervalle,
-                        const OptPeriodStringGenerator& periodString,
-                        Solver::IResultWriter& writer,
-                        int optimizationNumber);
+    static bool analyze(
+      PROBLEME_HEBDO* problemeHebdo,
+      const std::shared_ptr<Antares::Optimization::LegacyOrtoolsLinearProblem>& originalProblem,
+      const SingleOptimOptions& options,
+      int NumIntervalle,
+      const OptPeriodStringGenerator& periodString,
+      Solver::IResultWriter& writer,
+      int optimizationNumber);
 };
 
 } // namespace Antares::Solver::Optimization::Simplex

@@ -74,7 +74,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          const OptPeriodStringGenerator&,
                          Solver::IResultWriter& writer,
                          IO::Outputs::SimulationTable* simulationTable);
-}
+} // namespace Antares::Solver::Optimization
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,

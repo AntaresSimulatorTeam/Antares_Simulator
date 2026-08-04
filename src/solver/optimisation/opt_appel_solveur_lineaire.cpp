@@ -5,16 +5,16 @@
 
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
+#include "antares/io/outputs/SimulationTable.h"
 #include "antares/optimization-options/options.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "antares/solver/utils/opt_period_string_generator.h"
-#include "antares/writer/i_writer.h"
-#include "antares/io/outputs/SimulationTable.h"
-#include "antares/solver/optimisation/simplex/SimplexOrchestrator.h"
-#include "antares/solver/optimisation/simplex/SimplexResult.h"
 #include "antares/solver/optimisation/simplex/InfeasibilityAnalyzer.h"
 #include "antares/solver/optimisation/simplex/LpFiller.h"
+#include "antares/solver/optimisation/simplex/SimplexOrchestrator.h"
+#include "antares/solver/optimisation/simplex/SimplexResult.h"
+#include "antares/solver/utils/opt_period_string_generator.h"
+#include "antares/writer/i_writer.h"
 
 using Antares::Solver::Optimization::Simplex::applyResults;
 using Antares::Solver::Optimization::Simplex::InfeasibilityAnalyzer;

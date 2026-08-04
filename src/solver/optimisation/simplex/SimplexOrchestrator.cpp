@@ -3,9 +3,8 @@
 
 #include "antares/solver/optimisation/simplex/SimplexOrchestrator.h"
 
-#include <spx_constantes_externes.h>
-
 #include <cassert>
+#include <spx_constantes_externes.h>
 
 #include <antares/antares/constants.h>
 #include <antares/antares/fatal-error.h>
@@ -17,25 +16,23 @@
 #include "antares/solver/optimisation/LegacyExtraOutputs.h"
 #include "antares/solver/optimisation/LegacyNameMapper.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/simplex/InfeasibilityAnalyzer.h"
+#include "antares/solver/optimisation/simplex/LpFiller.h"
+#include "antares/solver/optimisation/simplex/SimplexResult.h"
 #include "antares/solver/utils/filename.h"
 #include "antares/solver/utils/mps_utils.h"
-#include "antares/solver/optimisation/simplex/LpFiller.h"
-#include "antares/solver/optimisation/simplex/InfeasibilityAnalyzer.h"
-#include "antares/solver/optimisation/simplex/SimplexResult.h"
 
 using Antares::Constants::nbHoursInAWeek;
+using Antares::Optimisation::BendersDecomposition;
+using Antares::Optimisation::OptimEntityContainer;
+using Antares::Optimisation::LinearProblemApi::FillContext;
 using Antares::Optimization::LegacyNameMapper;
 using Antares::Optimization::LegacyOrtoolsLinearProblem;
-using Antares::Optimisation::BendersDecomposition;
-using Antares::Optimisation::LinearProblemApi::FillContext;
-using Antares::Optimisation::OptimEntityContainer;
 
 using Antares::Solver::IResultWriter;
 using Antares::Solver::Optimization::SingleOptimOptions;
 using MPSolver = operations_research::MPSolver;
 using SimulationTable = IO::Outputs::SimulationTable;
-
-
 
 namespace
 {
@@ -43,12 +40,12 @@ static std::once_flag logProblemSizeFlag;
 
 static void logProblemSizeOnce(const MPSolver* mpSolver)
 {
-    Antares::logs.info();
-    Antares::logs.info();
-    Antares::logs.info() << " Total Problem size : " << mpSolver->NumVariables() << " variables, "
-                         << mpSolver->NumConstraints() << " constraints";
-    Antares::logs.info();
-    Antares::logs.info();
+    logs.info();
+    logs.info();
+    logs.info() << " Total Problem size : " << mpSolver->NumVariables() << " variables, "
+                << mpSolver->NumConstraints() << " constraints";
+    logs.info();
+    logs.info();
 }
 
 void fillLegacySimulationTable(SimulationTable& simulationTable,
@@ -77,13 +74,17 @@ void fillLegacySimulationTable(SimulationTable& simulationTable,
            .component = info->component,
            .output = nameMapper.mapOutput(info->name),
            .absolute_time_index = info->timeIndex,
-           .block_time_index = Antares::Optimization::LegacyBlockTimeIndex(fillContext, info->timeIndex),
+           .block_time_index = Antares::Optimization::LegacyBlockTimeIndex(fillContext,
+                                                                           info->timeIndex),
            .scenario_index = fillContext.getYear(),
            .value = problem.X[static_cast<std::size_t>(index)],
            .status = std::nullopt});
     }
 
-    Antares::Optimization::AddLegacyExtraOutputs(simulationTable, problemeHebdo, fillContext, currentBlock);
+    Antares::Optimization::AddLegacyExtraOutputs(simulationTable,
+                                                 problemeHebdo,
+                                                 fillContext,
+                                                 currentBlock);
 }
 } // namespace
 
@@ -96,14 +97,14 @@ SimplexOrchestrator::SimplexOrchestrator(SingleOptimOptions options,
                                          int optimizationNumber,
                                          const OptPeriodStringGenerator* periodString,
                                          Solver::IResultWriter& writer,
-                                         IO::Outputs::SimulationTable* simulationTable)
-    : options_(std::move(options))
-    , problemeHebdo_(problemeHebdo)
-    , NumIntervalle_(NumIntervalle)
-    , optimizationNumber_(optimizationNumber)
-    , periodString_(periodString)
-    , writer_(writer)
-    , simulationTable_(simulationTable)
+                                         IO::Outputs::SimulationTable* simulationTable):
+    options_(std::move(options)),
+    problemeHebdo_(problemeHebdo),
+    NumIntervalle_(NumIntervalle),
+    optimizationNumber_(optimizationNumber),
+    periodString_(periodString),
+    writer_(writer),
+    simulationTable_(simulationTable)
 {
 }
 
@@ -119,9 +120,7 @@ SimplexResult SimplexOrchestrator::solve()
     const bool isMip = problemeHebdo_->OptimisationAvecVariablesEntieres;
 
     // Step 1: Create LP problem
-    ortoolsProblem_ = std::make_shared<LegacyOrtoolsLinearProblem>(
-      isMip,
-      options_.solverName);
+    ortoolsProblem_ = std::make_shared<LegacyOrtoolsLinearProblem>(isMip, options_.solverName);
 
     // Step 2: Fill LP
     createAndFillLp();
@@ -142,7 +141,7 @@ SimplexResult SimplexOrchestrator::solve()
     ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver_.get(), options_);
 
     measure_.tick();
-    Antares::logs.info() << fmt::format("Problem {}-{} solved in {}",
+    logs.info() << fmt::format("Problem {}-{} solved in {}",
                                problemeHebdo_->year,
                                problemeHebdo_->weekInTheYear,
                                measure_.toStringInSeconds());
@@ -159,8 +158,8 @@ SimplexResult SimplexOrchestrator::solve()
                 ProblemeAResoudre->ProblemesSpx[NumIntervalle_].reset();
             }
 
-            Antares::logs.info() << " Solver: resolution failed";
-            Antares::logs.debug() << " solver: resetting";
+            logs.info() << " Solver: resolution failed";
+            logs.debug() << " solver: resetting";
             return {.timeMeasure = timeMeasure_,
                     .originalProblem = ortoolsProblem_,
                     .objectiveValue = 0,
@@ -214,9 +213,10 @@ void SimplexOrchestrator::exportMps()
 
 void SimplexOrchestrator::fillSimulationTable()
 {
-    IO::Outputs::TimeConversionMode timeConversionMode = problemeHebdo_->OptimisationAuPasHebdomadaire
-                                                         ? IO::Outputs::TimeConversionMode::WeeklyBlocks
-                                                         : IO::Outputs::TimeConversionMode::DailyBlocks;
+    IO::Outputs::TimeConversionMode timeConversionMode
+      = problemeHebdo_->OptimisationAuPasHebdomadaire
+          ? IO::Outputs::TimeConversionMode::WeeklyBlocks
+          : IO::Outputs::TimeConversionMode::DailyBlocks;
 
     // Compute the current block index (weekly blocks if optimization is weekly,
     // daily blocks otherwise).
@@ -234,14 +234,14 @@ void SimplexOrchestrator::fillSimulationTable()
     if (problemeHebdo_->modelerData)
     {
         IO::Outputs::FillSimulationTable(*simulationTable_,
-                            *ortoolsProblem_,
-                            ::getObjectiveValue(solver_.get()),
-                            *problemeHebdo_->modelerData,
-                            *optimEntityContainer_,
-                            *fillCtx_,
-                            currentBlock,
-                            timeConversionMode,
-                            true);
+                                         *ortoolsProblem_,
+                                         ::getObjectiveValue(solver_.get()),
+                                         *problemeHebdo_->modelerData,
+                                         *optimEntityContainer_,
+                                         *fillCtx_,
+                                         currentBlock,
+                                         timeConversionMode,
+                                         true);
     }
 
     static constexpr LegacyNameMapper legacyNameMapper;

@@ -8,25 +8,26 @@
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/utils/mps_utils.h"
-#include "antares/solver/utils/filename.h"
 #include "antares/solver/optimisation/simplex/LpFiller.h"
+#include "antares/solver/utils/filename.h"
+#include "antares/solver/utils/mps_utils.h"
 
-using Antares::Optimization::LegacyOrtoolsLinearProblem;
-using Antares::Optimisation::LinearProblemApi::FillContext;
 using Antares::Optimisation::OptimEntityContainer;
+using Antares::Optimisation::LinearProblemApi::FillContext;
+using Antares::Optimization::LegacyOrtoolsLinearProblem;
 using Antares::Solver::IResultWriter;
 
 namespace Antares::Solver::Optimization::Simplex
 {
 
-bool InfeasibilityAnalyzer::analyze(PROBLEME_HEBDO* problemeHebdo,
-                                    const std::shared_ptr<Antares::Optimization::LegacyOrtoolsLinearProblem>& originalProblem,
-                                    const SingleOptimOptions& options,
-                                    int NumIntervalle,
-                                    const OptPeriodStringGenerator& periodString,
-                                    IResultWriter& writer,
-                                    int optimizationNumber)
+bool InfeasibilityAnalyzer::analyze(
+  PROBLEME_HEBDO* problemeHebdo,
+  const std::shared_ptr<Antares::Optimization::LegacyOrtoolsLinearProblem>& originalProblem,
+  const SingleOptimOptions& options,
+  int NumIntervalle,
+  const OptPeriodStringGenerator& periodString,
+  IResultWriter& writer,
+  int optimizationNumber)
 {
     const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
@@ -42,16 +43,13 @@ bool InfeasibilityAnalyzer::analyze(PROBLEME_HEBDO* problemeHebdo,
     analyzer->printReport();
 
     // Export MPS for error diagnostics (using original problem data)
-    mpsWriterFactory mps_writer_factory(
-      problemeHebdo->ExportMPS,
-      problemeHebdo->exportMPSOnError,
-      optimizationNumber,
-      *originalProblem);
+    mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
+                                        problemeHebdo->exportMPSOnError,
+                                        optimizationNumber,
+                                        *originalProblem);
 
     auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
-    const std::string filename = ::createMPSfilename(
-      periodString,
-      optimizationNumber);
+    const std::string filename = ::createMPSfilename(periodString, optimizationNumber);
     mps_writer_on_error->runIfNeeded(writer, filename);
 
     return false;
