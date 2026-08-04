@@ -16,22 +16,26 @@ const std::unordered_map<std::string, std::string> LegacyNameMapper::variableNam
   {"DispatchableProduction", "generation_power"},
   {"NODU", "num_units_on"},
   {"NumberStartingDispatchableUnits", "num_units_starting"},
-  {"NumberStopingDispatchableUnits", "num_units_stopping"},
   {"NumberBreakingDownDispatchableUnits", "num_units_failing"},
+  {"NumberStoppingDispatchableUnits", "num_units_stopping"},
 
   // Short term storage
   {"Injection", "injection_power"},
   {"Withdrawal", "withdrawal_power"},
   {"Level", "level"},
-  // CostVariationInjection
-  // CostVariationWithdrawal
-  // Overflow
+  {"CostVariationInjection", "injection_variation"},
+  {"CostVariationWithdrawal", "withdrawal_variation"},
 
   // Area
   {"UnsuppliedEnergy", "unsupplied_energy"},
   {"Spillage", "spilled_energy"},
 
   // Hydro
+  {"HydProd", "withdrawal_power"},
+  {"Pumping", "injection_power"},
+  {"HydroLevel", "level"},
+  {"Overflow", "overflow"},
+
   // Identity
 };
 
