@@ -210,7 +210,7 @@ void SimplexOrchestrator::exportMps()
 {
     std::call_once(logProblemSizeFlag, logProblemSizeOnce, solver_.get());
 
-    mpsFilename_ = ::createMPSfilename(periodString_, optimizationNumber_);
+    const std::string mpsFilename = ::createMPSfilename(periodString_, optimizationNumber_);
 
     mpsWriterFactory mps_writer_factory(problemeHebdo_.ExportMPS,
                                         problemeHebdo_.exportMPSOnError,
@@ -218,7 +218,7 @@ void SimplexOrchestrator::exportMps()
                                         *ortoolsProblem_);
 
     auto mps_writer = mps_writer_factory.create(problemeHebdo_.NamedProblems);
-    mps_writer->runIfNeeded(writer_, mpsFilename_);
+    mps_writer->runIfNeeded(writer_, mpsFilename);
 }
 
 void SimplexOrchestrator::fillSimulationTable()

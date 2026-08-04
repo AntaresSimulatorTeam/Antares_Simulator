@@ -85,7 +85,6 @@ private:
     std::optional<Optimisation::LinearProblemApi::FillContext> fillCtx_;
     std::unique_ptr<Optimisation::OptimEntityContainer> optimEntityContainer_;
     std::shared_ptr<operations_research::MPSolver> solver_;
-    std::string mpsFilename_;
 
     // Timing
     Utils::TimeMeasurement measure_;
