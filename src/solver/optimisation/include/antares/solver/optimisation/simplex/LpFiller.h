@@ -25,7 +25,7 @@ namespace Antares::Solver::Optimization::Simplex
  * - Creating and populating an OptimEntityContainer
  * - Invoking fillers (LegacyFiller, ComponentFiller, etc.) via LinearProblemBuilder
  */
-class LpFiller
+class LpFiller final
 {
 public:
     /**

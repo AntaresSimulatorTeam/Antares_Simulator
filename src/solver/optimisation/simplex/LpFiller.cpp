@@ -11,30 +11,35 @@
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
 #include "antares/study/system-model/system.h"
 
-using namespace Antares;
-using namespace Antares::Optimization;
-using namespace Antares::Optimisation::LinearProblemApi;
-using namespace Antares::Solver;
+using Antares::Optimization::LegacyFiller;
+using Antares::Optimization::ThermalCapacityFiller;
+using Antares::Optimisation::ComponentFiller;
+using Antares::Optimisation::LinearProblemApi::FillContext;
+using Antares::Optimisation::LinearProblemApi::LinearProblemBuilder;
+using Antares::Optimisation::OptimEntityContainer;
+using Antares::Optimisation::BendersDecomposition;
+
+using Antares::Utils::TimeMeasurement;
 
 namespace Antares::Solver::Optimization::Simplex
 {
 
 void LpFiller::fillModelerComponents(
   std::vector<std::unique_ptr<Optimisation::LinearProblemApi::LinearProblemFiller>>& fillersCollection,
-  Solver::ModelerData* modelerData,
-  Optimisation::OptimEntityContainer& optimEntityContainer,
-  Optimisation::BendersDecomposition* bendersDecomposition)
+  Antares::Solver::ModelerData* modelerData,
+  OptimEntityContainer& optimEntityContainer,
+  BendersDecomposition* bendersDecomposition)
 {
     const auto& components = modelerData->system->Components();
     optimEntityContainer.addFromSystemComponents(components);
     for (const auto& component: components)
     {
         fillersCollection.push_back(
-          std::make_unique<Optimisation::ComponentFiller>(component,
+          std::make_unique<ComponentFiller>(component,
                                             modelerData->dataSeries.get(),
                                             optimEntityContainer,
                                             modelerData->scenarioGroupRepository,
-                                            Solver::Config::Location::SUBPROBLEMS,
+                                            Antares::Solver::Config::Location::SUBPROBLEMS,
                                             bendersDecomposition));
     }
 }
@@ -74,7 +79,7 @@ void LpFiller::fillLinearProblem(const Optimisation::LinearProblemApi::FillConte
     fillersCollection.push_back(
       std::make_unique<Antares::Optimization::LegacyFiller>(optimEntityContainer.Problem(),
                                                             problemeHebdo));
-    Utils::TimeMeasurement measure;
+    TimeMeasurement measure;
     if (problemeHebdo->modelerData)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
@@ -108,7 +113,7 @@ void LpFiller::fillLinearProblem(const Optimisation::LinearProblemApi::FillConte
 
     measure.tick();
 
-    logs.debug() << "Modeler build took " << measure.toStringInSeconds();
+    Antares::logs.debug() << "Modeler build took " << measure.toStringInSeconds();
 }
 
 } // namespace Antares::Solver::Optimization::Simplex

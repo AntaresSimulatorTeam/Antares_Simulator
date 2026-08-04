@@ -19,7 +19,7 @@ namespace Antares::Solver::Optimization::Simplex
  * Contains timing measurements, the original LP problem reference,
  * the objective value, and whether the solver found a valid solution.
  */
-struct SimplexResult
+struct SimplexResult final
 {
     TIME_MEASURE timeMeasure;
     std::shared_ptr<Antares::Optimization::LegacyOrtoolsLinearProblem> originalProblem;

@@ -36,7 +36,7 @@ namespace Antares::Solver::Optimization::Simplex
  *
  * This replaces the monolithic OPT_TryToCallSimplex function.
  */
-class SimplexOrchestrator
+class SimplexOrchestrator final
 {
 public:
     SimplexOrchestrator(SingleOptimOptions options,
@@ -56,18 +56,11 @@ public:
 private:
     void exportMps();
     void fillSimulationTable();
-    void logProblemSize();
-    SimplexResult handleFailure();
 
     /**
      * @brief Create and fill the LP problem.
      */
     void createAndFillLp();
-
-    /**
-     * @brief Solve with timing.
-     */
-    void solveWithTimer();
 
     // Configuration
     SingleOptimOptions options_;

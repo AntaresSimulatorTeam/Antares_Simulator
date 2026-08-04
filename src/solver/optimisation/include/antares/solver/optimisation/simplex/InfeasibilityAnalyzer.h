@@ -4,13 +4,14 @@
 #ifndef ANTARES_SOLVER_OPTIMISATION_SIMPLEX_INFEASIBILITY_ANALYZER_H
 #define ANTARES_SOLVER_OPTIMISATION_SIMPLEX_INFEASIBILITY_ANALYZER_H
 
+#include <memory>
 #include <string>
 
 #include "antares/optimization-options/options.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/opt_period_string_generator.h"
 #include "antares/writer/i_writer.h"
-#include "antares/solver/optimisation/simplex/SimplexResult.h"
 
 namespace Antares::Solver::Optimization::Simplex
 {
@@ -27,14 +28,14 @@ namespace Antares::Solver::Optimization::Simplex
  * This eliminates the code duplication that existed in the error path
  * of the original OPT_AppelDuSimplexe function.
  */
-class InfeasibilityAnalyzer
+class InfeasibilityAnalyzer final
 {
 public:
     /**
      * @brief Analyze an infeasible problem and produce diagnostics.
      *
      * @param problemeHebdo The weekly optimization problem.
-     * @param originalResult The failed simplex result (contains original problem for MPS export).
+     * @param originalProblem The original LP problem (for MPS export on error).
      * @param options Solver options.
      * @param NumIntervalle The interval number.
      * @param periodString Period string generator for MPS filename.
@@ -43,7 +44,7 @@ public:
      * @return Always returns false to signal infeasibility to the caller.
      */
     static bool analyze(PROBLEME_HEBDO* problemeHebdo,
-                        const SimplexResult& originalResult,
+                        const std::shared_ptr<Antares::Optimization::LegacyOrtoolsLinearProblem>& originalProblem,
                         const SingleOptimOptions& options,
                         int NumIntervalle,
                         const OptPeriodStringGenerator& periodString,

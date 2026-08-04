@@ -16,9 +16,9 @@
 #include "antares/solver/optimisation/simplex/InfeasibilityAnalyzer.h"
 #include "antares/solver/optimisation/simplex/LpFiller.h"
 
-using namespace Antares::Solver;
-using namespace Antares::Solver::Optimization;
-using namespace Antares::Solver::Optimization::Simplex;
+using Antares::Solver::Optimization::Simplex::applyResults;
+using Antares::Solver::Optimization::Simplex::InfeasibilityAnalyzer;
+using Antares::Solver::Optimization::Simplex::SimplexOrchestrator;
 
 namespace Antares::Solver::Optimization
 {
@@ -48,7 +48,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
     else
     {
         return InfeasibilityAnalyzer::analyze(problemeHebdo,
-                                              result,
+                                              result.originalProblem,
                                               options,
                                               NumIntervalle,
                                               optPeriodStringGenerator,
