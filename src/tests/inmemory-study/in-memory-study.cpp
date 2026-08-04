@@ -6,6 +6,7 @@
 #include "in-memory-study.h"
 
 #include "antares/application/ScenarioBuilderOwner.h"
+#include "antares/utils/utils.h"
 
 void initializeStudy(Study* study)
 {
@@ -43,6 +44,7 @@ Antares::Data::ShortTermStorage::STStorageCluster* addSTSToArea(Area* area,
 {
     Antares::Data::ShortTermStorage::STStorageCluster sts;
     sts.properties.name = stsName;
+    sts.id = transformNameIntoID(stsName);
     auto& storages = area->shortTermStorage.storagesByIndex;
     storages.push_back(sts);
     return &storages.back();
