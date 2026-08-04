@@ -60,6 +60,8 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
 
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 
+namespace Antares::Solver::Optimization
+{
 /*!
 ** \brief Appel du solver
 **
@@ -68,10 +70,11 @@ void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          PROBLEME_HEBDO*,
                          int,
-                         const int,
+                         int,
                          const OptPeriodStringGenerator&,
                          Solver::IResultWriter& writer,
                          IO::Outputs::SimulationTable* simulationTable);
+}
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
@@ -104,6 +107,12 @@ void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
+
+// ──────────────────────────────────────────────────────────────
+// LP Filling (moved to Simplex namespace)
+// These declarations are kept for backward compatibility.
+// New code should use Antares::Solver::Optimization::Simplex::LpFiller.
+// ──────────────────────────────────────────────────────────────
 Optimisation::LinearProblemApi::FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo,
                                                              int NumIntervalle);
 void fillLinearProblem(const Optimisation::LinearProblemApi::FillContext& fillCtx,
