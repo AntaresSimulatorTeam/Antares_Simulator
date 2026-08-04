@@ -111,7 +111,7 @@ Currently mapped names, grouped by domain:
 | Thermal            | `NODU`                                | `num_units_on`       |
 | Thermal            | `NumberStartingDispatchableUnits`     | `num_units_starting` |
 | Thermal            | `NumberStopingDispatchableUnits`      | `num_units_stopping` |
-| Thermal            | `NumberBreakingDownDispatchableUnits` | `num_units_falling`  |
+| Thermal            | `NumberBreakingDownDispatchableUnits` | `num_units_failing`  |
 | Short term storage | `Injection`                           | `injection_power`    |
 | Short term storage | `Withdrawal`                          | `withdrawal_power`   |
 | Short term storage | `Level`                               | `level`              |

@@ -17,7 +17,7 @@ const std::unordered_map<std::string, std::string> LegacyNameMapper::variableNam
   {"NODU", "num_units_on"},
   {"NumberStartingDispatchableUnits", "num_units_starting"},
   {"NumberStopingDispatchableUnits", "num_units_stopping"},
-  {"NumberBreakingDownDispatchableUnits", "num_units_falling"},
+  {"NumberBreakingDownDispatchableUnits", "num_units_failing"},
 
   // Short term storage
   {"Injection", "injection_power"},

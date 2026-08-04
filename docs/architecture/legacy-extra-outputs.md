@@ -14,9 +14,11 @@ The legacy (weekly) solver exposes its results in the modeler simulation table i
 ```
 for pdt in [0, NombreDePasDeTempsPourUneOptimisation):
     for each area:            areaOutputs(pays, pdt)
+                              shortTermStorageOutputs(pays, pdt)
+                              inputGenerationOutputs(pays, pdt)  # renewable / misc gen
     for each thermal cluster: thermalOutputs(pays, index, pdt)
     for each link:            linkOutputs(interco, pdt)
-for each area:                weeklyHydroOutputs(pays)   # hydro_shadow_price
+for each area:                weeklyHydroOutputs(pays)   # hydro_shadow_price, bellman_value
 ```
 
 Three sources cover every formula:
@@ -27,7 +29,7 @@ Three sources cover every formula:
 | Dual of a constraint | `CoutsMarginauxDesContraintes[c]`, with `c` from the constraint correspondence tables: `CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays[pays]`, `.NumeroDeContrainteDeDissociationDeFlux[interco]`, `NumeroDeContrainteExpressionStockFinal[pays]` |
 | Study data that is not in the problem's objective (capacities, inflows, load, emission factors, unit data) | straight from `PROBLEME_HEBDO`: `ValeursDeNTC[pdt]`, `CaracteristiquesHydrauliques[pays]`, `ConsommationsAbattues[pdt]` + `AllMustRunGeneration[pdt]`, `PaliersThermiquesDuPays[pays]` |
 
-Row conventions are fixed in one place (`LegacyExtraOutputEmitter::emit`): the absolute hour is `weekInTheYear * 168 + pdt` (matching the time index recorded on the raw rows), `block_time_index` comes from `LegacyBlockTimeIndex` (shared with the raw-row loop), `scenario_index = fillContext.getYear()`. Components are the area name, the cluster name, or `origin$$destination` for links.
+Row conventions are fixed in one place (`LegacyExtraOutputEmitter::emit`): the absolute hour is `weekInTheYear * 168 + pdt` (matching the time index recorded on the raw rows), `block_time_index` comes from `LegacyBlockTimeIndex` (shared with the raw-row loop), `scenario_index = fillContext.getYear()`. Components follow the uniqueness convention: `{area}_node` for area rows, `{area}_hydro_storage` for the hydro storage, `{area}_thermal_{cluster}` for thermal clusters, `{origin}_{destination}_link` for links (endpoints sorted), `{area}_load` / `{area}_hydro` for the load / long-term-storage port rows.
 
 ### Guards
 
@@ -41,7 +43,7 @@ Emitters skip outputs whose anchor does not exist, mirroring the construction si
 
 | Output | Entity | Formula | Operands |
 |--------|--------|---------|----------|
-| `prop_cost` (thermal) | cluster | `CoutLineaire[ip] × X[ip]` | `ip = vm.DispatchableProduction` |
+| `prop_cost` (thermal) | cluster | `marketBid × X[ip]` | `ip = vm.DispatchableProduction`; `marketBid = CoutHoraireDeProductionDuPalierThermiqueSansBruit[pdt]`, the user market bid cost without thermal noise |
 | `co2_emissions` … `op5_emissions` | cluster | `X[ip] × emission_factor[pollutant]` | `PaliersThermiquesDuPays.emissionFactors` |
 | `cluster_availability` | cluster | `max(avail, minStablePower × ceil(avail / unitSize))` | spinning-adjusted quantities of the weekly problem (see §5) |
 | `up_margin` | cluster | `cluster_availability − X[ip]` | as above |
@@ -50,14 +52,28 @@ Emitters skip outputs whose anchor does not exist, mirroring the construction si
 | `profit` | cluster | `(price − CoutLineaire[ip]) × max(X[ip] − minGen[pdt], 0)` | area price = balance dual of the cluster's area |
 | `actual_num_units_on` | cluster | `ceil(X[in])` | `in = vm.NumberOfDispatchableUnits` (may be fractional when relaxed) |
 | `non_prop_cost` | cluster | `startup_cost × started + fixed_cost × ceil(X[in])` | startup cost = coefficient on `NumberStartingDispatchableUnits`; `started` compares `ceil(NODU)` against `pdt−1`, dropped at the interval's first hour |
-| `imbalance_cost` | area | `spillCost × spilled + unsCost × unsupplied` | `vm.Spillage`, `vm.UnsuppliedEnergy` |
-| `is_loss_of_load` | area | `X[iu] > 0.5 ? 1 : 0` | 0.5 MW solver-noise threshold |
-| `actual_load` | area | `ConsommationAbattueDuPays + AllMustRunGenerationOfArea` | residual load plus must-run (raw input load) |
+| `imbalance_cost` | area | `spillCost × spilled + unsCost × unsupplied` | `vm.Spillage`, `vm.UnsuppliedEnergy`; costs = `CoutDeDefaillanceNegative/PositiveSansBruit[pays]`, the user costs without noise |
+| `is_loss_of_load` | area | `X[iu] > 0 ? 1 : 0` | strict positivity |
+| `is_significant_loss_of_load` | area | `X[iu] > 0.5 ? 1 : 0` | 0.5 MW solver-noise threshold |
+| `actual_load` | `{area}_load` | `ConsommationAbattueDuPays + AllMustRunGenerationOfArea` | residual load plus must-run (raw input load) |
 | `price` | area | `−dual(AreaBalance)` | see sign note below |
 | `is_near_loss_of_load` | area | `price > unsCost − 5 ? 1 : 0` | `unsCost = CoutLineaire[iu]` |
 | `level_percentage` | area | `X[ih] / TailleReservoir × 100` | skipped when the capacity is non-positive |
 | `actual_inflows` | area | `round(ApportNaturelHoraire[pdt])` | only areas with a managed reservoir |
 | `hydro_shadow_price` | area | `dual(FinalStockExpression)` | weekly, accurate water value mode only |
+| `bellman_value` | area | `Σ_layer CoutLineaire[il] × X[il]` | `il = vm.LayerStorage(pays, layer)`; weekly, accurate water value mode only |
+| `profit` | storage | `floor((X[iw] − X[ii]) × price + 0.5)` | `iw/ii = vm.ShortTermStorageWithdrawal/Injection(clusterGlobalIndex)`; price = balance dual of the storage's area |
+| `generation_power` | renewable / misc gen | `availablePower[pdt]` | `InputGenerationOfArea[pays]`, filled from study series by `SIM_RenseignementProblemeHebdo` (not an LP variable) |
+| `minus_generation` | renewable / misc gen | `−availablePower[pdt]` | as above |
+
+The §2.5 port fields are emitted by the same functions, with the port field name
+as the ST output: `balance_port.price` (area, = `price`), `out_port.flow` /
+`in_port.flow` (link, = `±flow`), and `balance_port.flow` for thermal
+(`generation_power`), short-term storage (`withdrawal − injection`), renewable /
+misc gen (`availablePower`), load (`−rawLoad`, component `{area}_load`) and
+long-term storage (`X[HydProd] − X[Pumping]`, component `{area}_hydro`, skipped
+without hydro production). The `_load` / `_hydro` suffixes keep the two
+area-level `balance_port.flow` rows from colliding on the area name.
 | `abs_flow` | link | `abs(X[idf])` | `idf = vm.DirectFlow` (signed) |
 | `minus_flow` | link | `−X[idf]` | GEMS sign convention |
 | `actual_loop_flow` | link | `ValeurDeLoopFlowOrigineVersExtremite[interco]` | input parameter |
@@ -80,7 +96,7 @@ The `price` formula negates the stored dual: with the legacy balance-constraint 
 
 ## 5. Known Caveats
 
-- **Cost noise.** `CoutLineaire` holds the costs the optimizer actually used, which the legacy solver deliberately perturbs to break degeneracy (`PrepareRandomNumbers` in `src/solver/simulation/common-eco-adq.cpp`); each thermal cost gets a noise whose absolute value is forced into `[5e-4, 6e-4]` even with a zero `spread-cost`, and the unsupplied/spilled costs get the same treatment. Every cost-derived output (`prop_cost`, `imbalance_cost`, `non_prop_cost`, `profit`) deviates from the theoretical `study_cost × quantity` accordingly (relative error ≈ `6e-4 / cheapest_cost`); tests comparing against theoretical values must allow for this (the cucumber scenario uses a relative tolerance of `1e-4`). The quantities themselves (`X`) are unaffected.
+- **Cost noise.** `CoutLineaire` holds the costs the optimizer actually used, which the legacy solver deliberately perturbs to break degeneracy (`PrepareRandomNumbers` in `src/solver/simulation/common-eco-adq.cpp`); each thermal cost gets a noise whose absolute value is forced into `[5e-4, 6e-4]` even with a zero `spread-cost`, and the unsupplied/spilled costs get the same treatment. Thermal `prop_cost` and `imbalance_cost` therefore do **not** read `CoutLineaire`: they use the un-noised user costs kept alongside the noised ones (`CoutHoraireDeProductionDuPalierThermiqueSansBruit`, `CoutDeDefaillancePositive/NegativeSansBruit`), so they match the theoretical `study_cost × quantity` exactly. Outputs still derived from the perturbed optimisation (`non_prop_cost` via `CoutLineaire`, `is_near_loss_of_load`'s VoLL threshold, and every dual-derived value such as `price` and `profit`) deviate accordingly; the noise can also shift the dispatch itself between equal-cost solutions. The quantities (`X`) are otherwise unaffected.
 - **MIP solves.** When the weekly problem is a MIP, OR-Tools' dual extraction is skipped and `CoutsMarginauxDesContraintes` is zero-filled (`extract_from_MPSolver`, a known TODO in `ortools_utils.cpp`), so every dual-derived output (`price`, `is_near_loss_of_load`, fees, shadow prices, `profit`) reads 0 — the same caveat as the legacy marginal-price output.
 - **Spinning and the margin formulas.** The thermal availability series and unit size are already multiplied by `(1 − spinning/100)` at load time (`cluster.cpp::calculationOfSpinning`). The spec writes `cluster_availability` with the raw quantities and re-applies the factor; algebraically it cancels, so the formulas use the spinning-adjusted quantities the problem already holds.
 - **Cross-time terms.** `non_prop_cost` uses `NODU[t−1]`; at the first hour of an optimisation interval the previous value is not part of the solution and the start-up term is dropped.
