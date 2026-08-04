@@ -58,6 +58,15 @@ private:
     void fillSimulationTable();
 
     /**
+     * @brief Handle solver outcome: reset on failure, throw on internal error.
+     *
+     * @return true if the solver found a valid solution (OUI_SPX),
+     *         false if the solver failed (caller should return infeasible result).
+     * @throws FatalError if the solver reported an internal error (SPX_ERREUR_INTERNE).
+     */
+    bool handleSolve() const;
+
+    /**
      * @brief Create and fill the LP problem.
      */
     void createAndFillLp();

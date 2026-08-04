@@ -149,23 +149,12 @@ SimplexResult SimplexOrchestrator::solve()
     optimizationStatistics.addSolveTime(timeMeasure_.solveTime);
 
     // Step 6: Handle result
-    if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX)
+    if (!handleSolve())
     {
-        if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
-        {
-            if (solver_)
-            {
-                ProblemeAResoudre->ProblemesSpx[NumIntervalle_].reset();
-            }
-
-            logs.info() << " Solver: resolution failed";
-            logs.debug() << " solver: resetting";
-            return {.timeMeasure = timeMeasure_,
-                    .originalProblem = ortoolsProblem_,
-                    .objectiveValue = 0,
-                    .success = false};
-        }
-        throw Antares::FatalError("Internal error: insufficient memory");
+        return {.timeMeasure = timeMeasure_,
+                .originalProblem = ortoolsProblem_,
+                .objectiveValue = 0,
+                .success = false};
     }
 
     // Success path: fill simulation table
@@ -178,6 +167,27 @@ SimplexResult SimplexOrchestrator::solve()
             .originalProblem = ortoolsProblem_,
             .objectiveValue = ::getObjectiveValue(solver_.get()),
             .success = true};
+}
+
+bool SimplexOrchestrator::handleSolve() const
+{
+    const auto& ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
+    if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX)
+    {
+        if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
+        {
+            if (solver_)
+            {
+                ProblemeAResoudre->ProblemesSpx[NumIntervalle_].reset();
+            }
+
+            logs.info() << " Solver: resolution failed";
+            logs.debug() << " solver: resetting";
+            return false;
+        }
+        throw Antares::FatalError("Internal error: insufficient memory");
+    }
+    return true;
 }
 
 void SimplexOrchestrator::createAndFillLp()
