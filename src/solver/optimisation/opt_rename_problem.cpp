@@ -42,8 +42,8 @@ void Namer::UpdateArea(const std::string& area)
 
 void Namer::updateExtremities(const std::string& origin, const std::string& destination)
 {
-    origin_ = origin;
-    destination_ = destination;
+    origin_ = boost::to_lower_copy(origin);
+    destination_ = boost::to_lower_copy(destination);
 }
 
 std::string Namer::TimeIdentifier(const std::string& timeGranularity) const
