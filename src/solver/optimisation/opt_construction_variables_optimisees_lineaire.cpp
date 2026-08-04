@@ -79,20 +79,20 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.ShortTermStorageInjection(NombreDeVariables, storage.name);
+                variableNamer.ShortTermStorageInjection(NombreDeVariables, storage.id);
                 NombreDeVariables++;
                 // 2. Withdrawal
                 variableManager.ShortTermStorageWithdrawal(clusterGlobalIndex, pdt)
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.ShortTermStorageWithdrawal(NombreDeVariables, storage.name);
+                variableNamer.ShortTermStorageWithdrawal(NombreDeVariables, storage.id);
                 NombreDeVariables++;
                 // 3. Level
                 variableManager.ShortTermStorageLevel(clusterGlobalIndex, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.ShortTermStorageLevel(NombreDeVariables, storage.name);
+                variableNamer.ShortTermStorageLevel(NombreDeVariables, storage.id);
                 NombreDeVariables++;
 
                 // 4. Cost Variation Injection
@@ -103,7 +103,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                     ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                       = VARIABLE_BORNEE_INFERIEUREMENT;
                     variableNamer.ShortTermStorageCostVariationInjection(NombreDeVariables,
-                                                                         storage.name);
+                                                                         storage.id);
                     ++NombreDeVariables;
                 }
                 // 5. Cost Variation Withdrawal
@@ -114,7 +114,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                     ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                       = VARIABLE_BORNEE_INFERIEUREMENT;
                     variableNamer.ShortTermStorageCostVariationWithdrawal(NombreDeVariables,
-                                                                          storage.name);
+                                                                          storage.id);
                     ++NombreDeVariables;
                 }
                 // 6. Overflow
@@ -124,7 +124,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                       = NombreDeVariables;
                     ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                       = VARIABLE_BORNEE_INFERIEUREMENT;
-                    variableNamer.ShortTermStorageOverflow(NombreDeVariables, storage.name);
+                    variableNamer.ShortTermStorageOverflow(NombreDeVariables, storage.id);
                     NombreDeVariables++;
                 }
             }
