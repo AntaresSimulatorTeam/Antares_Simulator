@@ -632,6 +632,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::InflowsTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1InflowsTraits.html", null ],
     [ "IniConstraint", "structIniConstraint.html", null ],
     [ "Antares::IniFile", "classAntares_1_1IniFile.html", null ],
+    [ "PROBLEME_HEBDO::INPUT_GENERATION", "structPROBLEME__HEBDO_1_1INPUT__GENERATION.html", null ],
     [ "InputFixture< size >", "structInputFixture.html", null ],
     [ "IntegerIndex< TSData >", "classIntegerIndex.html", null ],
     [ "Antares::Optimisation::IntegerInterval", "structAntares_1_1Optimisation_1_1IntegerInterval.html", null ],

@@ -1,6 +1,7 @@
 var structPDISP__ET__COUTS__HORAIRES__PAR__PALIER =
 [
     [ "CoutHoraireDeProductionDuPalierThermique", "structPDISP__ET__COUTS__HORAIRES__PAR__PALIER.html#a87d8de4c6dddf36d6cd32a175f5c7299", null ],
+    [ "CoutHoraireDeProductionDuPalierThermiqueSansBruit", "structPDISP__ET__COUTS__HORAIRES__PAR__PALIER.html#ac240ec3354e364e71d41072fa7fa0857", null ],
     [ "NombreMaxDeGroupesEnMarcheDuPalierThermique", "structPDISP__ET__COUTS__HORAIRES__PAR__PALIER.html#a701e96b569a2bcb72b8c30025b9555be", null ],
     [ "NombreMinDeGroupesEnMarcheDuPalierThermique", "structPDISP__ET__COUTS__HORAIRES__PAR__PALIER.html#a7d28a75b7340abad4be51817e0d00290", null ],
     [ "PuissanceDisponibleDuPalierThermique", "structPDISP__ET__COUTS__HORAIRES__PAR__PALIER.html#a3f423e7813fab6f798109c8937e8673d", null ],

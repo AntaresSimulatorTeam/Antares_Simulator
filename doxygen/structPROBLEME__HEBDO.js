@@ -1,5 +1,6 @@
 var structPROBLEME__HEBDO =
 [
+    [ "INPUT_GENERATION", "structPROBLEME__HEBDO_1_1INPUT__GENERATION.html", "structPROBLEME__HEBDO_1_1INPUT__GENERATION" ],
     [ "adequacyPatchRuntimeData", "structPROBLEME__HEBDO.html#a1862a41c78d34acfc9610039167ba523", null ],
     [ "AllMustRunGeneration", "structPROBLEME__HEBDO.html#aec9c53d5a9c97e2ea31496246ff126e1", null ],
     [ "allReserves", "structPROBLEME__HEBDO.html#a9614128358d659f120c737c98ea7360f", null ],
@@ -13,7 +14,9 @@ var structPROBLEME__HEBDO =
     [ "CorrespondanceVarNativesVarOptim", "structPROBLEME__HEBDO.html#aa826dba6ab406b007011d6a163a7c67b", null ],
     [ "CoutDeDebordement", "structPROBLEME__HEBDO.html#a84092aa3795e495aecb914c80939b272", null ],
     [ "CoutDeDefaillanceNegative", "structPROBLEME__HEBDO.html#af56fe0bd2d9ef8e26e2f30e943ea9f68", null ],
+    [ "CoutDeDefaillanceNegativeSansBruit", "structPROBLEME__HEBDO.html#a22132cbec676464873240955a336d0da", null ],
     [ "CoutDeDefaillancePositive", "structPROBLEME__HEBDO.html#a07183c5dd75ac3acdab780ded4fcac99", null ],
+    [ "CoutDeDefaillancePositiveSansBruit", "structPROBLEME__HEBDO.html#a190a59a6c26b2e5796525d4920c55f7a", null ],
     [ "CoutDeTransport", "structPROBLEME__HEBDO.html#add9be1ced9b805fa846b85f51a5a4315", null ],
     [ "coutOptimalSolution1", "structPROBLEME__HEBDO.html#af2de3f1772222279506098113c8c7168", null ],
     [ "coutOptimalSolution2", "structPROBLEME__HEBDO.html#a3ced5b477b233ac4aa8114a606a5c485", null ],
@@ -29,6 +32,7 @@ var structPROBLEME__HEBDO =
     [ "IndexDebutIntercoOrigine", "structPROBLEME__HEBDO.html#ac87ec3a8d1bdf07351353269eeb498ed", null ],
     [ "IndexSuivantIntercoExtremite", "structPROBLEME__HEBDO.html#a98738ce7409d10cbf182d4bcee3a4bc2", null ],
     [ "IndexSuivantIntercoOrigine", "structPROBLEME__HEBDO.html#add9542cebc75248e272c90cede2375fb", null ],
+    [ "InputGenerationOfArea", "structPROBLEME__HEBDO.html#ac2b1ba57c800b76d1772ed3578d4e269", null ],
     [ "LeProblemeADejaEteInstancie", "structPROBLEME__HEBDO.html#ad4142fb598b4e07a6b3e4ce16f526a13", null ],
     [ "MatriceDesContraintesCouplantes", "structPROBLEME__HEBDO.html#ac63bbc4fdd336961fb5cb674fc7b7dd7", null ],
     [ "modelerData", "structPROBLEME__HEBDO.html#a64d99b2be2f835fff045e788008ab599", null ],

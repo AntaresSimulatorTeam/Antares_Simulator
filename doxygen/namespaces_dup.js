@@ -838,7 +838,7 @@ var namespaces_dup =
           [ "addEntriesForNode", "SimulationTableGenerator_8cpp.html#a808ed1edd18e105ac10c45e22acdf028", null ],
           [ "addExtraOutputEntries", "SimulationTableGenerator_8cpp.html#a19471e14f56c8140615712a3b27fe292", null ],
           [ "addObjectiveValue", "SimulationTableGenerator_8cpp.html#af1c601bababe3648a91689cc4de2b35f", null ],
-          [ "addPortEntries", "SimulationTableGenerator_8cpp.html#aa5d9af0803f65ac48d5b892552029f8b", null ],
+          [ "addPortEntries", "SimulationTableGenerator_8cpp.html#a6560c2f764d825abbeea64163140719a", null ],
           [ "addVariableEntries", "SimulationTableGenerator_8h.html#a36da9a834f224a7cf79237d0630baddb", null ],
           [ "BuildModelerConstraintName", "SimulationTableGenerator_8h.html#a49e57b34701637c25c2aa209f8a365f5", null ],
           [ "Columns", "MPSGenerator_8cpp.html#aa2c4dc41f52f0af5151dca29393fff5a", null ],

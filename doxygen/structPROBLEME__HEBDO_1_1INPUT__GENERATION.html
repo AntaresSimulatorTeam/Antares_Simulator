@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/optimisation/include/antares/solver/optimisation/constraints/ConstraintGroup.h Source File</title>
+<title>Antares Simulator: PROBLEME_HEBDO::INPUT_GENERATION Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('ConstraintGroup_8h_source.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structPROBLEME__HEBDO_1_1INPUT__GENERATION.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -123,42 +123,32 @@ $(document).ready(function(){initNavTree('ConstraintGroup_8h_source.html',''); i
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structPROBLEME__HEBDO_1_1INPUT__GENERATION-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">ConstraintGroup.h</div>  </div>
+<div class="title">PROBLEME_HEBDO::INPUT_GENERATION Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;antares/solver/optimisation/constraints/ConstraintBuilder.h&quot;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;antares/solver/optimisation/opt_structure_probleme_a_resoudre.h&quot;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;antares/solver/simulation/sim_structure_probleme_economique.h&quot;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classConstraintGroup.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="classConstraintGroup.html">ConstraintGroup</a></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classConstraintGroup.html">ConstraintGroup</a>(<a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>* problemeHebdo, <a class="code" href="classConstraintBuilder.html">ConstraintBuilder</a>&amp; builder):</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        problemeHebdo_(problemeHebdo),</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        builder_(builder)</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    {</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    }</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classConstraintGroup.html">ConstraintGroup</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> BuildConstraints() = 0;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>* problemeHebdo_;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="classConstraintBuilder.html">ConstraintBuilder</a>&amp; builder_;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;};</div>
-<div class="ttc" id="aclassConstraintBuilder_html"><div class="ttname"><a href="classConstraintBuilder.html">ConstraintBuilder</a></div><div class="ttdef"><b>Definition:</b> ConstraintBuilder.h:49</div></div>
-<div class="ttc" id="aclassConstraintGroup_html"><div class="ttname"><a href="classConstraintGroup.html">ConstraintGroup</a></div><div class="ttdef"><b>Definition:</b> ConstraintGroup.h:11</div></div>
-<div class="ttc" id="astructPROBLEME__HEBDO_html"><div class="ttname"><a href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a></div><div class="ttdef"><b>Definition:</b> sim_structure_probleme_economique.h:547</div></div>
-</div><!-- fragment --></div><!-- contents -->
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a14aaa67e52a640026e6d658c158ece62"><td class="memItemLeft" align="right" valign="top"><a id="a14aaa67e52a640026e6d658c158ece62"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>componentName</b></td></tr>
+<tr class="separator:a14aaa67e52a640026e6d658c158ece62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fb470a2b369dce1546331df0ea8492a"><td class="memItemLeft" align="right" valign="top"><a id="a5fb470a2b369dce1546331df0ea8492a"></a>
+std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>availablePower</b></td></tr>
+<tr class="separator:a5fb470a2b369dce1546331df0ea8492a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/solver/simulation/include/antares/solver/simulation/<a class="el" href="sim__structure__probleme__economique_8h_source.html">sim_structure_probleme_economique.h</a></li>
+</ul>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_58214dbee968e8ac661492141d050741.html">optimisation</a></li><li class="navelem"><a class="el" href="dir_7f9265255be167d9fc7d889839beddde.html">include</a></li><li class="navelem"><a class="el" href="dir_4f3aa64cbfddff7c3784c9e1340ff9b3.html">antares</a></li><li class="navelem"><a class="el" href="dir_e3cb1c1c156f8a1a0f5e657d39af19ce.html">solver</a></li><li class="navelem"><a class="el" href="dir_703a08c8b9d2f88ac5fb64946c0e4ddb.html">optimisation</a></li><li class="navelem"><a class="el" href="dir_673a42b4d32adff6df2ecb8198a5dc4a.html">constraints</a></li><li class="navelem"><b>ConstraintGroup.h</b></li>
+    <li class="navelem"><a class="el" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a></li><li class="navelem"><a class="el" href="structPROBLEME__HEBDO_1_1INPUT__GENERATION.html">INPUT_GENERATION</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
