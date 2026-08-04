@@ -120,9 +120,8 @@ void LpFiller::fillLinearProblem(const Optimisation::LinearProblemApi::FillConte
 // ──────────────────────────────────────────────────────────────
 // Free-function wrappers for backward compatibility.
 // ──────────────────────────────────────────────────────────────
-Antares::Optimisation::LinearProblemApi::FillContext buildFillContext(
-  PROBLEME_HEBDO& problemeHebdo,
-  int NumIntervalle)
+Antares::Optimisation::LinearProblemApi::FillContext buildFillContext(PROBLEME_HEBDO& problemeHebdo,
+                                                                      int NumIntervalle)
 {
     return Antares::Solver::Optimization::Simplex::LpFiller::buildFillContext(problemeHebdo,
                                                                               NumIntervalle);

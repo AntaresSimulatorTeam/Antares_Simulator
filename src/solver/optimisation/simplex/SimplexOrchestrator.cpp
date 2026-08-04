@@ -224,9 +224,8 @@ void SimplexOrchestrator::exportMps()
 void SimplexOrchestrator::fillSimulationTable()
 {
     IO::Outputs::TimeConversionMode timeConversionMode
-      = problemeHebdo_.OptimisationAuPasHebdomadaire
-          ? IO::Outputs::TimeConversionMode::WeeklyBlocks
-          : IO::Outputs::TimeConversionMode::DailyBlocks;
+      = problemeHebdo_.OptimisationAuPasHebdomadaire ? IO::Outputs::TimeConversionMode::WeeklyBlocks
+                                                     : IO::Outputs::TimeConversionMode::DailyBlocks;
 
     // Compute the current block index (weekly blocks if optimization is weekly,
     // daily blocks otherwise).

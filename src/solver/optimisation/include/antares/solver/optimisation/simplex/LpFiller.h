@@ -86,9 +86,8 @@ class OptimEntityContainer;
 class BendersDecomposition;
 } // namespace Antares::Optimisation
 
-Antares::Optimisation::LinearProblemApi::FillContext buildFillContext(
-  PROBLEME_HEBDO& problemeHebdo,
-  int NumIntervalle);
+Antares::Optimisation::LinearProblemApi::FillContext buildFillContext(PROBLEME_HEBDO& problemeHebdo,
+                                                                      int NumIntervalle);
 void fillLinearProblem(const Antares::Optimisation::LinearProblemApi::FillContext& fillCtx,
                        PROBLEME_HEBDO& problemeHebdo,
                        Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
