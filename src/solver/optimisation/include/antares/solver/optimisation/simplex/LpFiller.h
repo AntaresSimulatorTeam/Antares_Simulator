@@ -70,27 +70,4 @@ private:
 
 } // namespace Antares::Solver::Optimization::Simplex
 
-// ──────────────────────────────────────────────────────────────
-// Free-function wrappers for backward compatibility.
-// These match the original declarations in opt_fonctions.h
-// and are used by legacy callers (e.g. api/singleProblemGetterImpl.cpp).
-// ──────────────────────────────────────────────────────────────
-namespace Antares::Optimisation::LinearProblemApi
-{
-struct FillContext;
-}
-
-namespace Antares::Optimisation
-{
-class OptimEntityContainer;
-class BendersDecomposition;
-} // namespace Antares::Optimisation
-
-Antares::Optimisation::LinearProblemApi::FillContext buildFillContext(PROBLEME_HEBDO& problemeHebdo,
-                                                                      int NumIntervalle);
-void fillLinearProblem(const Antares::Optimisation::LinearProblemApi::FillContext& fillCtx,
-                       PROBLEME_HEBDO& problemeHebdo,
-                       Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
-                       Antares::Optimisation::BendersDecomposition* bendersDecomposition = nullptr);
-
 #endif // ANTARES_SOLVER_OPTIMISATION_SIMPLEX_LP_FILLER_H
