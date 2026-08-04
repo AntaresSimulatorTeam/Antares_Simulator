@@ -171,7 +171,7 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
                            optPeriodStringGenerator.get());
 
         if (!OPT_AppelDuSimplexe(options,
-                                 problemeHebdo,
+                                 *problemeHebdo,
                                  numeroDeLIntervalle,
                                  optimizationNumber,
                                  *optPeriodStringGenerator,

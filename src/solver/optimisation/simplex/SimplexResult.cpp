@@ -10,12 +10,12 @@
 namespace Antares::Solver::Optimization::Simplex
 {
 
-void applyResults(PROBLEME_HEBDO* problemeHebdo,
+void applyResults(PROBLEME_HEBDO& problemeHebdo,
                   const SimplexResult& result,
                   int NumIntervalle,
                   int optimizationNumber)
 {
-    const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    const auto& ProblemeAResoudre = problemeHebdo.ProblemeAResoudre;
     double optimizationCost = result.objectiveValue;
 
     for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
@@ -35,17 +35,17 @@ void applyResults(PROBLEME_HEBDO* problemeHebdo,
     {
         const int opt = optimizationNumber - 1;
         assert(opt >= 0 && opt < 2);
-        problemeHebdo->timeMeasure[opt] = result.timeMeasure;
+        problemeHebdo.timeMeasure[opt] = result.timeMeasure;
     }
 
     if (optimizationNumber == PREMIERE_OPTIMISATION)
     {
-        problemeHebdo->coutOptimalSolution1[static_cast<unsigned int>(NumIntervalle)]
+        problemeHebdo.coutOptimalSolution1[static_cast<unsigned int>(NumIntervalle)]
           = optimizationCost;
     }
     else
     {
-        problemeHebdo->coutOptimalSolution2[static_cast<unsigned int>(NumIntervalle)]
+        problemeHebdo.coutOptimalSolution2[static_cast<unsigned int>(NumIntervalle)]
           = optimizationCost;
     }
     for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)

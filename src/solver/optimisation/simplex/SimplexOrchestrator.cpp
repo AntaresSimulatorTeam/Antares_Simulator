@@ -92,10 +92,10 @@ namespace Antares::Solver::Optimization::Simplex
 {
 
 SimplexOrchestrator::SimplexOrchestrator(SingleOptimOptions options,
-                                         PROBLEME_HEBDO* problemeHebdo,
+                                         PROBLEME_HEBDO& problemeHebdo,
                                          int NumIntervalle,
                                          int optimizationNumber,
-                                         const OptPeriodStringGenerator* periodString,
+                                         const OptPeriodStringGenerator& periodString,
                                          Solver::IResultWriter& writer,
                                          IO::Outputs::SimulationTable* simulationTable):
     options_(std::move(options)),
@@ -110,14 +110,14 @@ SimplexOrchestrator::SimplexOrchestrator(SingleOptimOptions options,
 
 SimplexResult SimplexOrchestrator::solve()
 {
-    const auto& ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
+    const auto& ProblemeAResoudre = problemeHebdo_.ProblemeAResoudre;
 
     const int opt = optimizationNumber_ - 1;
     assert(opt >= 0 && opt < 2);
-    OptimizationStatistics& optimizationStatistics = problemeHebdo_->optimizationStatistics[opt];
+    OptimizationStatistics& optimizationStatistics = problemeHebdo_.optimizationStatistics[opt];
 
-    const auto& modelerData = problemeHebdo_->modelerData;
-    const bool isMip = problemeHebdo_->OptimisationAvecVariablesEntieres;
+    const auto& modelerData = problemeHebdo_.modelerData;
+    const bool isMip = problemeHebdo_.OptimisationAvecVariablesEntieres;
 
     // Step 1: Create LP problem
     ortoolsProblem_ = std::make_shared<LegacyOrtoolsLinearProblem>(isMip, options_.solverName);
@@ -142,8 +142,8 @@ SimplexResult SimplexOrchestrator::solve()
 
     measure_.tick();
     logs.info() << fmt::format("Problem {}-{} solved in {}",
-                               problemeHebdo_->year,
-                               problemeHebdo_->weekInTheYear,
+                               problemeHebdo_.year,
+                               problemeHebdo_.weekInTheYear,
                                measure_.toStringInSeconds());
     timeMeasure_.solveTime = measure_.duration_ms();
     optimizationStatistics.addSolveTime(timeMeasure_.solveTime);
@@ -171,7 +171,7 @@ SimplexResult SimplexOrchestrator::solve()
 
 bool SimplexOrchestrator::handleSolve() const
 {
-    const auto& ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
+    const auto& ProblemeAResoudre = problemeHebdo_.ProblemeAResoudre;
     if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX)
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
@@ -193,7 +193,7 @@ bool SimplexOrchestrator::handleSolve() const
 void SimplexOrchestrator::createAndFillLp()
 {
     fillCtx_ = LpFiller::buildFillContext(problemeHebdo_, NumIntervalle_);
-    const auto& modelerData = problemeHebdo_->modelerData;
+    const auto& modelerData = problemeHebdo_.modelerData;
     bool hasModelerData = modelerData != nullptr;
     optimEntityContainer_ = std::make_unique<OptimEntityContainer>(*ortoolsProblem_);
 
@@ -210,29 +210,29 @@ void SimplexOrchestrator::exportMps()
 {
     std::call_once(logProblemSizeFlag, logProblemSizeOnce, solver_.get());
 
-    mpsFilename_ = ::createMPSfilename(*periodString_, optimizationNumber_);
+    mpsFilename_ = ::createMPSfilename(periodString_, optimizationNumber_);
 
-    mpsWriterFactory mps_writer_factory(problemeHebdo_->ExportMPS,
-                                        problemeHebdo_->exportMPSOnError,
+    mpsWriterFactory mps_writer_factory(problemeHebdo_.ExportMPS,
+                                        problemeHebdo_.exportMPSOnError,
                                         optimizationNumber_,
                                         *ortoolsProblem_);
 
-    auto mps_writer = mps_writer_factory.create(problemeHebdo_->NamedProblems);
+    auto mps_writer = mps_writer_factory.create(problemeHebdo_.NamedProblems);
     mps_writer->runIfNeeded(writer_, mpsFilename_);
 }
 
 void SimplexOrchestrator::fillSimulationTable()
 {
     IO::Outputs::TimeConversionMode timeConversionMode
-      = problemeHebdo_->OptimisationAuPasHebdomadaire
+      = problemeHebdo_.OptimisationAuPasHebdomadaire
           ? IO::Outputs::TimeConversionMode::WeeklyBlocks
           : IO::Outputs::TimeConversionMode::DailyBlocks;
 
     // Compute the current block index (weekly blocks if optimization is weekly,
     // daily blocks otherwise).
     unsigned currentBlock;
-    const unsigned heure = static_cast<unsigned>(problemeHebdo_->HeureDansLAnnee);
-    if (problemeHebdo_->OptimisationAuPasHebdomadaire)
+    const unsigned heure = static_cast<unsigned>(problemeHebdo_.HeureDansLAnnee);
+    if (problemeHebdo_.OptimisationAuPasHebdomadaire)
     {
         currentBlock = heure / nbHoursInAWeek;
     }
@@ -241,12 +241,12 @@ void SimplexOrchestrator::fillSimulationTable()
         currentBlock = heure / HOURS_PER_DAY + static_cast<unsigned>(NumIntervalle_);
     }
 
-    if (problemeHebdo_->modelerData)
+    if (problemeHebdo_.modelerData)
     {
         IO::Outputs::FillSimulationTable(*simulationTable_,
                                          *ortoolsProblem_,
                                          ::getObjectiveValue(solver_.get()),
-                                         *problemeHebdo_->modelerData,
+                                         *problemeHebdo_.modelerData,
                                          *optimEntityContainer_,
                                          *fillCtx_,
                                          currentBlock,
@@ -256,7 +256,7 @@ void SimplexOrchestrator::fillSimulationTable()
 
     static constexpr LegacyNameMapper legacyNameMapper;
     fillLegacySimulationTable(*simulationTable_,
-                              *problemeHebdo_,
+                              problemeHebdo_,
                               *fillCtx_,
                               legacyNameMapper,
                               currentBlock);

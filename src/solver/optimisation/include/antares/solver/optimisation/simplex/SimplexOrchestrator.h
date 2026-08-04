@@ -40,10 +40,10 @@ class SimplexOrchestrator final
 {
 public:
     SimplexOrchestrator(SingleOptimOptions options,
-                        PROBLEME_HEBDO* problemeHebdo,
+                        PROBLEME_HEBDO& problemeHebdo,
                         int NumIntervalle,
                         int optimizationNumber,
-                        const OptPeriodStringGenerator* periodString,
+                        const OptPeriodStringGenerator& periodString,
                         Solver::IResultWriter& writer,
                         IO::Outputs::SimulationTable* simulationTable);
 
@@ -73,10 +73,10 @@ private:
 
     // Configuration
     SingleOptimOptions options_;
-    PROBLEME_HEBDO* problemeHebdo_;
+    PROBLEME_HEBDO& problemeHebdo_;
     int NumIntervalle_;
     int optimizationNumber_;
-    const OptPeriodStringGenerator* periodString_;
+    const OptPeriodStringGenerator& periodString_;
     Solver::IResultWriter& writer_;
     IO::Outputs::SimulationTable* simulationTable_;
 

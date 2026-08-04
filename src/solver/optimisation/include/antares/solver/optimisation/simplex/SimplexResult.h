@@ -39,7 +39,7 @@ struct SimplexResult final
  * @param NumIntervalle The interval number (used for cost array indexing).
  * @param optimizationNumber Which optimization pass (1st or 2nd).
  */
-void applyResults(PROBLEME_HEBDO* problemeHebdo,
+void applyResults(PROBLEME_HEBDO& problemeHebdo,
                   const SimplexResult& result,
                   int NumIntervalle,
                   int optimizationNumber);

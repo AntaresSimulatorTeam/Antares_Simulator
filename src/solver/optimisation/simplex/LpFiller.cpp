@@ -27,49 +27,49 @@ namespace Antares::Solver::Optimization::Simplex
 void LpFiller::fillModelerComponents(
   std::vector<std::unique_ptr<Optimisation::LinearProblemApi::LinearProblemFiller>>&
     fillersCollection,
-  Antares::Solver::ModelerData* modelerData,
+  const ModelerData& modelerData,
   OptimEntityContainer& optimEntityContainer,
   BendersDecomposition* bendersDecomposition)
 {
-    const auto& components = modelerData->system->Components();
+    const auto& components = modelerData.system->Components();
     optimEntityContainer.addFromSystemComponents(components);
     for (const auto& component: components)
     {
         fillersCollection.push_back(
           std::make_unique<ComponentFiller>(component,
-                                            modelerData->dataSeries.get(),
+                                            modelerData.dataSeries.get(),
                                             optimEntityContainer,
-                                            modelerData->scenarioGroupRepository,
+                                            modelerData.scenarioGroupRepository,
                                             Antares::Solver::Config::Location::SUBPROBLEMS,
                                             bendersDecomposition));
     }
 }
 
 Optimisation::LinearProblemApi::FillContext LpFiller::buildFillContext(
-  const PROBLEME_HEBDO* problemeHebdo,
+  PROBLEME_HEBDO& problemeHebdo,
   int NumIntervalle)
 {
     unsigned globalFirst, globalLast;
     unsigned localFirst = 0, localLast;
     auto nTsInDay = HOURS_PER_DAY;
-    if (problemeHebdo->OptimisationAuPasHebdomadaire)
+    if (problemeHebdo.OptimisationAuPasHebdomadaire)
     {
-        globalFirst = static_cast<unsigned>(problemeHebdo->HeureDansLAnnee);
-        globalLast = globalFirst + nTsInDay * problemeHebdo->NombreDeJours - 1;
-        localLast = nTsInDay * problemeHebdo->NombreDeJours - 1;
+        globalFirst = static_cast<unsigned>(problemeHebdo.HeureDansLAnnee);
+        globalLast = globalFirst + nTsInDay * problemeHebdo.NombreDeJours - 1;
+        localLast = nTsInDay * problemeHebdo.NombreDeJours - 1;
     }
     else
     {
-        globalFirst = static_cast<unsigned>(problemeHebdo->HeureDansLAnnee)
+        globalFirst = static_cast<unsigned>(problemeHebdo.HeureDansLAnnee)
                       + static_cast<unsigned>(NumIntervalle) * nTsInDay;
         globalLast = globalFirst + nTsInDay - 1;
         localLast = nTsInDay - 1;
     }
-    return {localFirst, localLast, globalFirst, globalLast, problemeHebdo->year};
+    return {localFirst, localLast, globalFirst, globalLast, problemeHebdo.year};
 }
 
 void LpFiller::fillLinearProblem(const Optimisation::LinearProblemApi::FillContext& fillCtx,
-                                 PROBLEME_HEBDO* problemeHebdo,
+                                 PROBLEME_HEBDO& problemeHebdo,
                                  Optimisation::OptimEntityContainer& optimEntityContainer,
                                  Optimisation::BendersDecomposition* bendersDecomposition)
 {
@@ -77,13 +77,13 @@ void LpFiller::fillLinearProblem(const Optimisation::LinearProblemApi::FillConte
       fillersCollection;
     fillersCollection.push_back(
       std::make_unique<Antares::Optimization::LegacyFiller>(optimEntityContainer.Problem(),
-                                                            problemeHebdo));
+                                                            &problemeHebdo));
     TimeMeasurement measure;
-    if (problemeHebdo->modelerData)
+    if (problemeHebdo.modelerData)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
         fillModelerComponents(fillersCollection,
-                              problemeHebdo->modelerData,
+                              *problemeHebdo.modelerData,
                               optimEntityContainer,
                               bendersDecomposition);
 
@@ -91,16 +91,16 @@ void LpFiller::fillLinearProblem(const Optimisation::LinearProblemApi::FillConte
         // Must be the last one, because it uses constraints defined by the other fillers !!
         fillersCollection.push_back(
           std::make_unique<Antares::Optimization::ComponentToAreaConnectionFiller>(
-            problemeHebdo,
+            &problemeHebdo,
             optimEntityContainer,
-            problemeHebdo->modelerData->dataSeries.get(),
-            problemeHebdo->modelerData->scenarioGroupRepository));
+            problemeHebdo.modelerData->dataSeries.get(),
+            problemeHebdo.modelerData->scenarioGroupRepository));
 
         fillersCollection.push_back(std::make_unique<Antares::Optimization::ThermalCapacityFiller>(
-          problemeHebdo,
+          &problemeHebdo,
           optimEntityContainer,
-          problemeHebdo->modelerData->dataSeries.get(),
-          problemeHebdo->modelerData->scenarioGroupRepository));
+          problemeHebdo.modelerData->dataSeries.get(),
+          problemeHebdo.modelerData->scenarioGroupRepository));
     }
 
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
@@ -121,7 +121,7 @@ void LpFiller::fillLinearProblem(const Optimisation::LinearProblemApi::FillConte
 // Free-function wrappers for backward compatibility.
 // ──────────────────────────────────────────────────────────────
 Antares::Optimisation::LinearProblemApi::FillContext buildFillContext(
-  const PROBLEME_HEBDO* problemeHebdo,
+  PROBLEME_HEBDO& problemeHebdo,
   int NumIntervalle)
 {
     return Antares::Solver::Optimization::Simplex::LpFiller::buildFillContext(problemeHebdo,
@@ -129,7 +129,7 @@ Antares::Optimisation::LinearProblemApi::FillContext buildFillContext(
 }
 
 void fillLinearProblem(const Antares::Optimisation::LinearProblemApi::FillContext& fillCtx,
-                       PROBLEME_HEBDO* problemeHebdo,
+                       PROBLEME_HEBDO& problemeHebdo,
                        Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
                        Antares::Optimisation::BendersDecomposition* bendersDecomposition)
 {

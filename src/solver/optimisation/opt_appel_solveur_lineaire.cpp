@@ -24,7 +24,7 @@ namespace Antares::Solver::Optimization
 {
 
 bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
-                         PROBLEME_HEBDO* problemeHebdo,
+                         PROBLEME_HEBDO& problemeHebdo,
                          int NumIntervalle,
                          int optimizationNumber,
                          const OptPeriodStringGenerator& optPeriodStringGenerator,
@@ -35,7 +35,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                                      problemeHebdo,
                                      NumIntervalle,
                                      optimizationNumber,
-                                     &optPeriodStringGenerator,
+                                     optPeriodStringGenerator,
                                      writer,
                                      simulationTable);
     auto result = orchestrator.solve();

@@ -35,7 +35,7 @@ public:
      * @return FillContext with local/global time step ranges.
      */
     static Optimisation::LinearProblemApi::FillContext buildFillContext(
-      const PROBLEME_HEBDO* problemeHebdo,
+      PROBLEME_HEBDO& problemeHebdo,
       int NumIntervalle);
 
     /**
@@ -52,7 +52,7 @@ public:
      */
     static void fillLinearProblem(
       const Optimisation::LinearProblemApi::FillContext& fillCtx,
-      PROBLEME_HEBDO* problemeHebdo,
+      PROBLEME_HEBDO& problemeHebdo,
       Optimisation::OptimEntityContainer& optimEntityContainer,
       Optimisation::BendersDecomposition* bendersDecomposition = nullptr);
 
@@ -63,7 +63,7 @@ private:
     static void fillModelerComponents(
       std::vector<std::unique_ptr<Optimisation::LinearProblemApi::LinearProblemFiller>>&
         fillersCollection,
-      Solver::ModelerData* modelerData,
+      const ModelerData& modelerData,
       Optimisation::OptimEntityContainer& optimEntityContainer,
       Optimisation::BendersDecomposition* bendersDecomposition);
 };
@@ -87,10 +87,10 @@ class BendersDecomposition;
 } // namespace Antares::Optimisation
 
 Antares::Optimisation::LinearProblemApi::FillContext buildFillContext(
-  const PROBLEME_HEBDO* problemeHebdo,
+  PROBLEME_HEBDO& problemeHebdo,
   int NumIntervalle);
 void fillLinearProblem(const Antares::Optimisation::LinearProblemApi::FillContext& fillCtx,
-                       PROBLEME_HEBDO* problemeHebdo,
+                       PROBLEME_HEBDO& problemeHebdo,
                        Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
                        Antares::Optimisation::BendersDecomposition* bendersDecomposition = nullptr);
 

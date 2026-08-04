@@ -44,7 +44,7 @@ public:
      * @return Always returns false to signal infeasibility to the caller.
      */
     static bool analyze(
-      PROBLEME_HEBDO* problemeHebdo,
+      PROBLEME_HEBDO& problemeHebdo,
       const std::shared_ptr<Antares::Optimization::LegacyOrtoolsLinearProblem>& originalProblem,
       const SingleOptimOptions& options,
       int NumIntervalle,

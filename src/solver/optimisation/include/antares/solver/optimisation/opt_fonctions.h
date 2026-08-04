@@ -68,7 +68,7 @@ namespace Antares::Solver::Optimization
 ** \return True si l'operation s'est bien deroulee, false si le probleme n'a pas de solution
 */
 bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
-                         PROBLEME_HEBDO*,
+                         PROBLEME_HEBDO&,
                          int,
                          int,
                          const OptPeriodStringGenerator&,

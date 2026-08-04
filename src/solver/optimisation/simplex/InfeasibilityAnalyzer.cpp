@@ -21,7 +21,7 @@ namespace Antares::Solver::Optimization::Simplex
 {
 
 bool InfeasibilityAnalyzer::analyze(
-  PROBLEME_HEBDO* problemeHebdo,
+  PROBLEME_HEBDO& problemeHebdo,
   const std::shared_ptr<Antares::Optimization::LegacyOrtoolsLinearProblem>& originalProblem,
   const SingleOptimOptions& options,
   int NumIntervalle,
@@ -29,7 +29,7 @@ bool InfeasibilityAnalyzer::analyze(
   IResultWriter& writer,
   int optimizationNumber)
 {
-    const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
+    const bool isMip = problemeHebdo.OptimisationAvecVariablesEntieres;
 
     // Duplicate the LP filling logic for infeasibility analysis
     LegacyOrtoolsLinearProblem infeasibleProblem(isMip, options.solverName);
@@ -43,8 +43,8 @@ bool InfeasibilityAnalyzer::analyze(
     analyzer->printReport();
 
     // Export MPS for error diagnostics (using original problem data)
-    mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
-                                        problemeHebdo->exportMPSOnError,
+    mpsWriterFactory mps_writer_factory(problemeHebdo.ExportMPS,
+                                        problemeHebdo.exportMPSOnError,
                                         optimizationNumber,
                                         *originalProblem);
 

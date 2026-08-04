@@ -368,7 +368,7 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProbl
 {
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
-    Optimisation::LinearProblemApi::FillContext fillCtx = buildFillContext(&pb_,
+    Optimisation::LinearProblemApi::FillContext fillCtx = buildFillContext(pb_,
                                                                            numeroDeLIntervalle);
     const auto modelerData = pb_.modelerData;
     bool hasModelerData = modelerData != nullptr;
@@ -381,7 +381,7 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProbl
         modelerData->bendersDecomposition.setCurrentProblemId(problemName({id.year, id.week + 1}));
     }
 
-    fillLinearProblem(fillCtx, &pb_, optimEntityContainer, &modelerData->bendersDecomposition);
+    fillLinearProblem(fillCtx, pb_, optimEntityContainer, &modelerData->bendersDecomposition);
 }
 
 const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
