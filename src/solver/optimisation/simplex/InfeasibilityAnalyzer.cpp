@@ -18,7 +18,6 @@ using namespace Antares;
 using namespace Antares::Optimization;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Solver;
-using namespace Antares::Solver::Optimization;
 
 namespace Antares::Solver::Optimization::Simplex
 {

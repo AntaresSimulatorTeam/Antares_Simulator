@@ -107,16 +107,4 @@ void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
-
-// ──────────────────────────────────────────────────────────────
-// LP Filling (moved to Simplex namespace)
-// These declarations are kept for backward compatibility.
-// New code should use Antares::Solver::Optimization::Simplex::LpFiller.
-// ──────────────────────────────────────────────────────────────
-Optimisation::LinearProblemApi::FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo,
-                                                             int NumIntervalle);
-void fillLinearProblem(const Optimisation::LinearProblemApi::FillContext& fillCtx,
-                       PROBLEME_HEBDO* problemeHebdo,
-                       Optimisation::OptimEntityContainer& optimEntityContainer,
-                       Optimisation::BendersDecomposition* bendersDecomposition = nullptr);
 #endif /* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */

@@ -17,6 +17,7 @@
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/simplex/LpFiller.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/regenerate_timeseries.h"
 #include "antares/solver/simulation/simulation.h"

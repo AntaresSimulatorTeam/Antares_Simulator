@@ -4,8 +4,6 @@
 #include "antares/solver/optimisation/simplex/LpFiller.h"
 
 #include <antares/logs/logs.h>
-#include <fmt/format.h>
-#include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
@@ -114,3 +112,23 @@ void LpFiller::fillLinearProblem(const Optimisation::LinearProblemApi::FillConte
 }
 
 } // namespace Antares::Solver::Optimization::Simplex
+
+// ──────────────────────────────────────────────────────────────
+// Free-function wrappers for backward compatibility.
+// ──────────────────────────────────────────────────────────────
+Antares::Optimisation::LinearProblemApi::FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo,
+                                                                      int NumIntervalle)
+{
+    return Antares::Solver::Optimization::Simplex::LpFiller::buildFillContext(problemeHebdo, NumIntervalle);
+}
+
+void fillLinearProblem(const Antares::Optimisation::LinearProblemApi::FillContext& fillCtx,
+                       PROBLEME_HEBDO* problemeHebdo,
+                       Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
+                       Antares::Optimisation::BendersDecomposition* bendersDecomposition)
+{
+    Antares::Solver::Optimization::Simplex::LpFiller::fillLinearProblem(fillCtx,
+                                         problemeHebdo,
+                                         optimEntityContainer,
+                                         bendersDecomposition);
+}
