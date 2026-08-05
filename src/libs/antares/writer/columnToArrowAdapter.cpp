@@ -116,25 +116,19 @@ std::shared_ptr<arrow::Array> InternedStringColumnAdapter::makeArray() const
 {
     arrow::StringBuilder builder;
     const auto& dictionary = column_->dictionary();
-    const auto& indices = column_->indices();
 
-    std::vector<std::string> values(indices.size());
-    std::vector<uint8_t> valid(indices.size());
-
-    for (size_t i = 0; i < indices.size(); ++i)
+    for (const uint32_t index: column_->indices())
     {
-        if (indices[i] == InternedStringColumn::nullIndex)
+        if (index == InternedStringColumn::nullIndex)
         {
-            valid[i] = 0;
+            throwOnStatusKO(builder.AppendNull());
         }
         else
         {
-            valid[i] = 1;
-            values[i] = dictionary[indices[i]];
+            throwOnStatusKO(builder.Append(dictionary[index]));
         }
     }
 
-    throwOnStatusKO(builder.AppendValues(values, valid.data()));
     return throwOnResultKO(builder.Finish());
 }
 
