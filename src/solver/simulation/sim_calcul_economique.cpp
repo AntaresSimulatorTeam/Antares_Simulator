@@ -106,7 +106,7 @@ static void importShortTermStorages(const Data::Parameters parameters,
             toInsert.overflowCost = area->thermal.spilledEnergyCost
                                     + area->hydro.overflowSpilledCostDifference;
 
-            toInsert.name = st.properties.name;
+            toInsert.name = st.id;
             for (const auto& constraint: st.additionalConstraints)
             {
                 if (constraint->enabled)
@@ -508,7 +508,7 @@ void SIM_InitialisationProblemeHebdo(const Study& study,
               = (pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index] < cluster->minStablePower)
                   ? pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index]
                   : cluster->minStablePower;
-            pbPalier.NomsDesPaliersThermiques[cluster->index] = cluster->name().c_str();
+            pbPalier.NomsDesPaliersThermiques[cluster->index] = cluster->id();
             pbPalier.emissionFactors[cluster->index] = cluster->emissions.factors;
         }
 
