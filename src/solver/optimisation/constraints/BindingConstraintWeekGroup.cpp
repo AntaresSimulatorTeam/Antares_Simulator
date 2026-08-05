@@ -3,8 +3,6 @@
 
 #include "antares/solver/optimisation/constraints/BindingConstraintWeekGroup.h"
 
-#include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
-
 BindingConstraintWeekData BindingConstraintWeekGroup::GetBindingConstraintWeekDataFromProblemHebdo()
 {
     return {.MatriceDesContraintesCouplantes = problemeHebdo_->MatriceDesContraintesCouplantes,

@@ -66,6 +66,11 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
 
     problem.CoutDeDefaillancePositive.assign(nbPays, 0);
     problem.CoutDeDefaillanceNegative.assign(nbPays, 0);
+    problem.CoutDeDefaillancePositiveSansBruit.assign(nbPays, 0);
+    problem.CoutDeDefaillanceNegativeSansBruit.assign(nbPays, 0);
+
+    problem.CoutDeDefaillancePositiveSansBruit.assign(nbPays, 0);
+    problem.CoutDeDefaillanceNegativeSansBruit.assign(nbPays, 0);
 
     problem.CoutDeDebordement.assign(nbPays, 0);
 
@@ -511,6 +516,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             auto& puissance = palier.PuissanceDisponibleEtCout[j];
 
             for (auto* v: {&puissance.CoutHoraireDeProductionDuPalierThermique,
+                           &puissance.CoutHoraireDeProductionDuPalierThermiqueSansBruit,
                            &puissance.PuissanceDisponibleDuPalierThermique,
                            &puissance.PuissanceDisponibleDuPalierThermiqueRef,
                            &puissance.PuissanceMinDuPalierThermique,
