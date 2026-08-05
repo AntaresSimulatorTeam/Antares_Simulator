@@ -193,7 +193,7 @@ if (${BUILD_MERSENNE_TWISTER_PYBIND11})
 endif ()
 
 #Boost header libraries
-find_package(Boost REQUIRED)
+find_package(Boost CONFIG REQUIRED)
 
 find_package(antlr4-runtime REQUIRED)
 find_package(yaml-cpp REQUIRED)
