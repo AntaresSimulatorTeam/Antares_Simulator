@@ -9,10 +9,9 @@
 #include <string>
 #include <vector>
 
-#include "antares/io/outputs/IColumnAdapterVisitor.h"
-#include "antares/optimisation/linear-problem-api/hasStatus.h"
-
 #include <boost/unordered/unordered_flat_map.hpp>
+
+#include "antares/io/outputs/IColumnAdapterVisitor.h"
 
 // Forward declarations
 namespace Antares::Writer
