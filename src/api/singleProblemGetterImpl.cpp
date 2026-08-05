@@ -23,8 +23,6 @@
 #include "antares/solver/simulation/simulation.h"
 #include "antares/writer/i_writer.h"
 
-
-
 namespace
 {
 constexpr int optimizationNumber = 1;  // the 1st optim is available for now
@@ -334,12 +332,11 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
 {
     setWeeklyData(id);
     // by convention, weeks start at 1 from the caller's POV, but at 0 in Simulator
-    return translator_.translate(pb_.ProblemeAResoudre.get(),
-                                 problemName({id.year, id.week + 1}));
+    return translator_.translate(pb_.ProblemeAResoudre.get(), problemName({id.year, id.week + 1}));
 }
 
-std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> SingleProblemGetter::getWeeklyProblem(
-  WeeklyProblemId id)
+std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>
+SingleProblemGetter::getWeeklyProblem(WeeklyProblemId id)
 {
     setWeeklyData(id);
     auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
@@ -359,8 +356,8 @@ std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> SingleProblemGet
                                                                id.week);
     }
 
-    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> linearProblem = std::make_unique<
-      Optimisation::LinearProblemApi::StructuredLinearProblem>();
+    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>
+      linearProblem = std::make_unique<Optimisation::LinearProblemApi::StructuredLinearProblem>();
     fillProblem(*linearProblem, id);
 
     return linearProblem;
@@ -371,18 +368,20 @@ void SingleProblemGetter::fillProblem(Optimisation::LinearProblemApi::ILinearPro
 {
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
-    Optimisation::LinearProblemApi::FillContext fillCtx =
-      Solver::Optimization::Simplex::LpFiller::buildFillContext(pb_, numeroDeLIntervalle);
+    Optimisation::LinearProblemApi::FillContext fillCtx = Solver::Optimization::Simplex::LpFiller::
+      buildFillContext(pb_, numeroDeLIntervalle);
     const auto modelerData = pb_.modelerData;
     bool hasModelerData = modelerData != nullptr;
-    const Optimisation::LinearProblemApi::ILinearProblemData* modelerDataSeries =
-      hasModelerData ? modelerData->dataSeries.get() : nullptr;
+    const Optimisation::LinearProblemApi::ILinearProblemData* modelerDataSeries = hasModelerData
+                                                                                    ? modelerData
+                                                                                        ->dataSeries
+                                                                                        .get()
+                                                                                    : nullptr;
 
     Optimisation::OptimEntityContainer optimEntityContainer(problem);
     if (hasModelerData)
     {
-        modelerData->bendersDecomposition.setCurrentProblemId(
-          problemName({id.year, id.week + 1}));
+        modelerData->bendersDecomposition.setCurrentProblemId(problemName({id.year, id.week + 1}));
     }
 
     Solver::Optimization::Simplex::LpFiller::fillLinearProblem(fillCtx,
