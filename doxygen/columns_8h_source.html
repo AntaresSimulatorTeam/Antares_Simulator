@@ -136,11 +136,11 @@ $(document).ready(function(){initNavTree('columns_8h_source.html',''); initResiz
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;limits&gt;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;optional&gt;</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;antares/io/outputs/IColumnAdapterVisitor.h&quot;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;antares/optimisation/linear-problem-api/hasStatus.h&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;boost/unordered/unordered_flat_map.hpp&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;antares/io/outputs/IColumnAdapterVisitor.h&quot;</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">// Forward declarations</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">namespace </span>Antares::Writer</div>
@@ -347,7 +347,7 @@ $(document).ready(function(){initNavTree('columns_8h_source.html',''); initResiz
 <div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160; </div>
 <div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    std::vector&lt;uint32_t&gt; indices_;</div>
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    std::vector&lt;std::string&gt; dictionary_;</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    std::unordered_map&lt;std::string, uint32_t&gt; lookup_;</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    boost::unordered_flat_map&lt;std::string, uint32_t&gt; lookup_;</div>
 <div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;};</div>
 <div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;} <span class="comment">// namespace Antares::IO::Outputs</span></div>
 <div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1IColumnAdapterVisitor_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1IColumnAdapterVisitor.html">Antares::IO::Outputs::IColumnAdapterVisitor</a></div><div class="ttdef"><b>Definition:</b> IColumnAdapterVisitor.h:36</div></div>
