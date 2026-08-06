@@ -25,6 +25,7 @@ find_package(fmt REQUIRED)
 target_link_libraries(simulation-table
         PUBLIC
         Antares::linear-problem-api
+        Boost::headers
         fmt::fmt)
 
 

@@ -70,6 +70,7 @@ void Namer::RecordLegacyVariableInfo(unsigned index,
                                      const std::string& output,
                                      const std::string& component) const
 {
+    // TODO should be checked when class is created, not each time we add
     if (legacyInfo_ != nullptr)
     {
         (*legacyInfo_)[index] = {output, component, timeStep()};
