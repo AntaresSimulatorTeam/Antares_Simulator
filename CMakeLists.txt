@@ -192,6 +192,9 @@ if (${BUILD_MERSENNE_TWISTER_PYBIND11})
     find_package(pybind11 REQUIRED)
 endif ()
 
+option(USE_JEMALLOC "Link executables against jemalloc" OFF)
+message(STATUS "Use jemalloc: ${USE_JEMALLOC}")
+
 #Boost header libraries
 find_package(Boost REQUIRED)
 

@@ -5,6 +5,7 @@ on:
     types: [ created ]
   push:
     branches:
+    - test-jemalloc
     - develop
     - dependabot/*
     - release/*
@@ -54,6 +55,7 @@ jobs:
       run: |
         dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core
         dnf install -y unzip libuuid-devel gcc-toolset-11 zlib-devel perl-IPC-Cmd perl-Text-Template perl-Data-Dumper perl-Time-Piece flex bison
+        dnf install -y jemalloc-devel
 
     - name: Checkout
       run: |
@@ -112,6 +114,7 @@ jobs:
           -DBUILD_TESTING=ON \
           -DBUILD_TOOLS=ON \
           -DBUILD_UI=OFF \
+          -DUSE_JEMALLOC=ON \
           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install
 
     - name: Build

@@ -190,6 +190,18 @@ if (ICC)
 endif ()
 
 
+# jemalloc allocator (optional)
+if (USE_JEMALLOC)
+    if (WIN32)
+        message(WARNING "{antares} USE_JEMALLOC is not supported on Windows, ignoring")
+    else ()
+        message(STATUS "{antares} Linking against jemalloc")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -ljemalloc")
+        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -ljemalloc")
+    endif ()
+endif ()
+
+
 #TODO : check these macro
 macro(import_std_libs TARGET)
     if (MSVC10)

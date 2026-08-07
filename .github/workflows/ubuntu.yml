@@ -99,6 +99,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install uuid-dev
         sudo apt-get install xsltproc
+        sudo apt-get install libjemalloc-dev
 
     - name: Config OR-Tools URL
       run: |
@@ -132,6 +133,7 @@ jobs:
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_TESTING=ON \
         -DBUILD_TOOLS=ON \
+        -DUSE_JEMALLOC=ON \
         -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
         -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python"
 
