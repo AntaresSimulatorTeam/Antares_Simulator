@@ -280,6 +280,7 @@ void TestingSimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO& problem
                                                    int optimizationNumber,
                                                    std::string_view name)
 {
+    std::lock_guard<std::mutex> lock(mutex);
     auto* pb = problemeHebdo.ProblemeAResoudre.get();
     std::string nameStr(name.begin(), name.end());
     auto& toInsert = problems[std::make_pair(optimizationNumber, nameStr)];
