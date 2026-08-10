@@ -185,7 +185,8 @@ var NAVTREEINDEX25 =
 "classTest_1_1BasisStatus.html#aae1a39ea0b8595db664e44fa8343f853":[9,0,23,1,3],
 "classTest_1_1BasisStatus.html#ab5eb23c83289e3bba6a2e82c22c3be41":[9,0,23,1,1],
 "classTestingSimulationObserver.html":[9,0,366],
-"classTestingSimulationObserver.html#a2e339252e8c94eb4df449850547bf472":[9,0,366,4],
+"classTestingSimulationObserver.html#a2bcd4c282e1260d7997c9e6689b1b5c2":[9,0,366,4],
+"classTestingSimulationObserver.html#a2e339252e8c94eb4df449850547bf472":[9,0,366,5],
 "classTestingSimulationObserver.html#aa9f0cc6bd7276380da14b77a021d7954":[9,0,366,3],
 "classThermalClusterConfig.html":[9,0,369],
 "classThermalClusterConfig.html#a4ff955dc1e59e02e9ac7c4a5437a5bfc":[9,0,369,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX25 =
 "classVariableManagement_1_1VariableManager.html#a9af0557fd0c30fd4dc8ad2056cd6d64a":[9,0,24,0,20],
 "classVariableManagement_1_1VariableManager.html#aafc9e3db642b8a4f66b0a2e28b347326":[9,0,24,0,29],
 "classVariableManagement_1_1VariableManager.html#abb8ab5eda576538a4e180fc72b87ab61":[9,0,24,0,9],
-"classVariableManagement_1_1VariableManager.html#abf677f92f5dd4947ad7e01eaf183ee12":[9,0,24,0,11],
-"classVariableManagement_1_1VariableManager.html#abf705f60dc4920f6934849896c6aeecb":[9,0,24,0,18]
+"classVariableManagement_1_1VariableManager.html#abf677f92f5dd4947ad7e01eaf183ee12":[9,0,24,0,11]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX36 =
 {
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html":[9,0,0,7,0,3,2],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#a44a9013c3f447e60a1fa26253dd35610":[9,0,0,7,0,3,2,3],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#a706725679a03cd8397f5b15a41498aec":[9,0,0,7,0,3,2,6],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#a87b9532067b2a7ebef4065b957bbb57d":[9,0,0,7,0,3,2,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX36 =
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a992390dd588e93253efbda96291fe50e":[9,0,0,11,6,0,1,2],
 "structAntares_1_1Solver_1_1Variable_1_1Areas_1_1Statistics.html":[9,0,0,11,6,9,0],
 "structAntares_1_1Solver_1_1Variable_1_1BindingConstraints_1_1Statistics.html":[9,0,0,11,6,11,0],
-"structAntares_1_1Solver_1_1Variable_1_1Category_1_1NextLevel.html":[9,0,0,11,6,1,0],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll.html":[9,0,0,11,6,2,0]
+"structAntares_1_1Solver_1_1Variable_1_1Category_1_1NextLevel.html":[9,0,0,11,6,1,0]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX27 =
 {
+"classfind__reference_1_1reference__folder__finder.html#a943b51ca83e40fe0e331837897064acf":[9,0,9,0,6],
 "classfind__reference_1_1reference__folder__finder.html#ab57075f28bdda199b129facf6418d73c":[9,0,9,0,1],
 "classfind__reference_1_1reference__folder__finder.html#af0d0c093fb4453e5a5ed505f3826cd53":[9,0,9,0,3],
 "classfixtures_1_1check__handler.html":[9,0,10,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX27 =
 "correlation_8cpp.html#a9a1f1ad410f2e473f8391aec20ca7c05":[8,0,0,4,165],
 "correlation_8h.html#a3044629170a3c5e770d14b52e62e60bc":[8,0,0,4,166],
 "correlation_8h.html#a3e41b0cbe29d425086f931e08113c076":[8,0,0,4,167],
-"correlation_8h_source.html":[10,0,0,4,0,6,0,0,0,0],
-"correlation_8hxx_source.html":[10,0,0,4,0,6,0,0,0,1]
+"correlation_8h_source.html":[10,0,0,4,0,6,0,0,0,0]
 };
