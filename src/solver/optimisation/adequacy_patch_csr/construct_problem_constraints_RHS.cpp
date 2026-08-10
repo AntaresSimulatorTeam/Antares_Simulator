@@ -6,6 +6,8 @@
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
+using namespace Antares;
+
 void HourlyCSRProblem::setRHSvalueOnFlows()
 {
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
@@ -22,8 +24,8 @@ void HourlyCSRProblem::setRHSvalueOnFlows()
             {
                 int Cnt = it->second;
                 problemeAResoudre_.SecondMembre[Cnt] = 0.;
-                logs.debug() << Cnt << "Flow=D-I: RHS[" << Cnt
-                             << "] = " << problemeAResoudre_.SecondMembre[Cnt];
+                Antares::logs.debug() << Cnt << "Flow=D-I: RHS[" << Cnt
+                                      << "] = " << problemeAResoudre_.SecondMembre[Cnt];
             }
         }
     }

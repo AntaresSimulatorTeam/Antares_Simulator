@@ -31,7 +31,6 @@ public:
     const std::vector<const char*>& NomsDesPays;
     const uint32_t& weekInTheYear;
     const uint32_t& NombreDePasDeTemps;
-    std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>& LegacyConstraintsInfo;
 };
 
 /*! \verbatim
@@ -51,12 +50,35 @@ class ConstraintBuilder final
 public:
     ConstraintBuilder() = delete;
 
-    explicit ConstraintBuilder(ConstraintBuilderData& data):
-        data(data),
+    explicit ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo,
+                               PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre):
+        data({ProblemeAResoudre.Pi,
+              ProblemeAResoudre.Colonne,
+              ProblemeAResoudre.NombreDeContraintes,
+              ProblemeAResoudre.NombreDeTermesDansLaMatriceDesContraintes,
+              ProblemeAResoudre.IndicesDebutDeLigne,
+              ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes,
+              ProblemeAResoudre.IndicesColonnes,
+              ProblemeAResoudre.NombreDeTermesDesLignes,
+              ProblemeAResoudre.Sens,
+              ProblemeAResoudre.IncrementDAllocationMatriceDesContraintes,
+              problemeHebdo->CorrespondanceVarNativesVarOptim,
+              problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
+              problemeHebdo->NumeroDeVariableStockFinal,
+              problemeHebdo->NumeroDeVariableDeTrancheDeStock,
+              ProblemeAResoudre.NomDesContraintes,
+              problemeHebdo->NomsDesPays,
+              problemeHebdo->weekInTheYear,
+              problemeHebdo->NombreDePasDeTemps}),
         variableManager_(data.CorrespondanceVarNativesVarOptim,
                          data.NumeroDeVariableStockFinal,
                          data.NumeroDeVariableDeTrancheDeStock,
                          data.NombreDePasDeTempsPourUneOptimisation)
+    {
+    }
+
+    explicit ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo):
+        ConstraintBuilder(problemeHebdo, *problemeHebdo->ProblemeAResoudre)
     {
     }
 
@@ -280,7 +302,7 @@ public:
         return nombreDeTermes_;
     }
 
-    ConstraintBuilderData& data;
+    ConstraintBuilderData data;
 
 private:
     void OPT_ChargerLaContrainteDansLaMatriceDesContraintes();

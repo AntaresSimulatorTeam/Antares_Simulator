@@ -8,7 +8,8 @@ target_include_directories(concurrency PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-target_link_libraries(concurrency yuni-static-core)
+find_package(Threads REQUIRED)
+target_link_libraries(concurrency PUBLIC Threads::Threads)
 
 install(DIRECTORY include/antares
         DESTINATION "include"

@@ -20,7 +20,6 @@ void PreproAvailability::copyFrom(const PreproAvailability& rhs)
     id = rhs.id;
     unitCount = rhs.unitCount;
     data = rhs.data;
-    rhs.data.unloadFromMemory();
 }
 
 bool PreproAvailability::saveToFolder(const AnyString& folder) const
@@ -122,7 +121,7 @@ bool PreproAvailability::validate() const
 
 void PreproAvailability::reset()
 {
-    data.reset(preproAvailabilityMax, DAYS_PER_YEAR, true);
+    data.reset(preproAvailabilityMax, DAYS_PER_YEAR);
 
     auto& colFoDuration = data[foDuration];
     auto& colPoDuration = data[poDuration];

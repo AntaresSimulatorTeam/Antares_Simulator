@@ -102,21 +102,27 @@ is not part of the mapping is written to the `output` column unchanged.
 
 Currently mapped names, grouped by domain:
 
-| Domain             | Legacy variable name                  | `output` value       |
-|--------------------|---------------------------------------|----------------------|
-| Link               | `DirectFlow`                          | `flow`               |
-| Link               | `PositiveDirectFlow`                  | `direct_flow`        |
-| Link               | `PositiveIndirectFlow`                | `indirect_flow`      |
-| Thermal            | `DispatchableProduction`              | `generation_power`   |
-| Thermal            | `NODU`                                | `num_units_on`       |
-| Thermal            | `NumberStartingDispatchableUnits`     | `num_units_starting` |
-| Thermal            | `NumberStopingDispatchableUnits`      | `num_units_stopping` |
-| Thermal            | `NumberBreakingDownDispatchableUnits` | `num_units_falling`  |
-| Short term storage | `Injection`                           | `injection_power`    |
-| Short term storage | `Withdrawal`                          | `withdrawal_power`   |
-| Short term storage | `Level`                               | `level`              |
-| Area               | `UnsuppliedEnergy`                    | `unsupplied_energy`  |
-| Area               | `Spillage`                            | `spilled_energy`     |
+| Domain             | Legacy variable name                  | `output` value        |
+|--------------------|---------------------------------------|-----------------------|
+| Link               | `DirectFlow`                          | `flow`                |
+| Link               | `PositiveDirectFlow`                  | `direct_flow`         |
+| Link               | `PositiveIndirectFlow`                | `indirect_flow`       |
+| Thermal            | `DispatchableProduction`              | `generation_power`    |
+| Thermal            | `NODU`                                | `num_units_on`        |
+| Thermal            | `NumberStartingDispatchableUnits`     | `num_units_starting`  |
+| Thermal            | `NumberStoppingDispatchableUnits`     | `num_units_stopping`  |
+| Thermal            | `NumberBreakingDownDispatchableUnits` | `num_units_failing`   |
+| Short term storage | `Injection`                           | `injection_power`     |
+| Short term storage | `Withdrawal`                          | `withdrawal_power`    |
+| Short term storage | `Level`                               | `level`               |
+| Short term storage | `CostVariationInjection`              | `injection_variation` |
+| Short term storage | `CostVariationWithdrawal`             | `withdrawal_variation`|
+| Area               | `UnsuppliedEnergy`                    | `unsupplied_energy`   |
+| Area               | `Spillage`                            | `spilled_energy`      |
+| Hydro              | `HydProd`                             | `withdrawal_power`    |
+| Hydro              | `Pumping`                             | `injection_power`     |
+| Hydro              | `HydroLevel`                          | `level`               |
+| Hydro              | `Overflow`                            | `overflow`            |
 
 This mapping only affects how legacy variables are labelled in the simulation table; it does not change
 the values nor the structure of the output. The mapping is gradually extended as more legacy variables

@@ -4,6 +4,7 @@
 #ifndef __SOLVER_SIMULATION_ECO_STRUCTS_H__
 #define __SOLVER_SIMULATION_ECO_STRUCTS_H__
 
+#include <array>
 #include <memory>
 #include <vector>
 
@@ -302,6 +303,10 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 
     std::vector<double> CoutHoraireDeProductionDuPalierThermique;
 
+    // User-provided market bid cost, without the yearly thermal noise added
+    // to CoutHoraireDeProductionDuPalierThermique for the optimisation
+    std::vector<double> CoutHoraireDeProductionDuPalierThermiqueSansBruit;
+
     std::vector<int> NombreMaxDeGroupesEnMarcheDuPalierThermique;
     std::vector<int> NombreMinDeGroupesEnMarcheDuPalierThermique;
 };
@@ -403,6 +408,12 @@ struct PALIERS_THERMIQUES
     std::vector<int> DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
     std::vector<int> DureeMinimaleDArretDUnGroupeDuPalierThermique;
     std::vector<std::string> NomsDesPaliersThermiques;
+
+    // Per-cluster pollutant emission factors (tons/MWh), indexed by cluster like
+    // the vectors above. Carried only so the legacy extra outputs can emit
+    // co2_emissions ... op5_emissions = generation_power * factor; not used by
+    // the optimization itself.
+    std::vector<std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX>> emissionFactors;
 
     //! maximum hourly upward power ramping rate for a thermal unit (MW/hour)
     std::vector<double> maxUpwardPowerRampingRate;
@@ -589,6 +600,11 @@ struct PROBLEME_HEBDO
     std::vector<double> CoutDeDefaillancePositive;
     std::vector<double> CoutDeDefaillanceNegative;
 
+    // User-provided unsupplied/spilled energy costs, without the yearly noise
+    // added to CoutDeDefaillancePositive/Negative for the optimisation
+    std::vector<double> CoutDeDefaillancePositiveSansBruit;
+    std::vector<double> CoutDeDefaillanceNegativeSansBruit;
+
     std::vector<double> CoutDeDebordement;
 
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
@@ -599,6 +615,21 @@ struct PROBLEME_HEBDO
     uint32_t NumberOfShortTermStorages = 0;
     std::vector<::AREA_INPUT> ShortTermStorage;
 
+    // Input-data generation series (renewable clusters or aggregated
+    // wind/solar/ROR, misc gen entries) copied from the study each week so the
+    // simulation-table extra outputs can emit rows for components that are not
+    // LP variables. Outer index: area; availablePower is indexed by hour in
+    // the week.
+    struct INPUT_GENERATION
+    {
+        std::string componentName;
+        std::vector<double> availablePower;
+    };
+
+    // Per area we have several elements:
+    // wind, solar, renewables, run_of_river, miscGenComponents
+    std::vector<std::vector<INPUT_GENERATION>> InputGenerationOfArea;
+
     /* Optimization problem */
     std::vector<bool> DefaillanceNegativeUtiliserPMinThermique;
     std::vector<bool> DefaillanceNegativeUtiliserHydro;
@@ -608,13 +639,13 @@ struct PROBLEME_HEBDO
 
     uint32_t NombreDeContraintesCouplantes = 0;
     std::vector<CONTRAINTES_COUPLANTES> MatriceDesContraintesCouplantes;
-    std::unordered_map<std::shared_ptr<Data::BindingConstraint>, std::vector<double>>
+    std::unordered_map<std::shared_ptr<BindingConstraint>, std::vector<double>>
       ResultatsContraintesCouplantes;
 
     std::vector<SOLDE_MOYEN_DES_ECHANGES> SoldeMoyenHoraire; // Used for quadratic opt
     /* Implementation details : I/O, error management, etc. */
 
-    Data::mpsExportStatus ExportMPS = Data::mpsExportStatus::NO_EXPORT;
+    mpsExportStatus ExportMPS = mpsExportStatus::NO_EXPORT;
     bool exportMPSOnError = false;
     bool NamedProblems = false;
     bool exportSolutions = false;
@@ -757,6 +788,10 @@ public:
       ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
-    Solver::ModelerData* modelerData = nullptr;
+    Antares::Solver::ModelerData* modelerData = nullptr;
 };
+
+// Import functions for capacity and hydro reserves
+void importCapacityReservations(const Antares::Data::AreaList& areas, PROBLEME_HEBDO& problem);
+void importHydroReserves(const Antares::Data::AreaList& areas, PROBLEME_HEBDO& problem);
 #endif

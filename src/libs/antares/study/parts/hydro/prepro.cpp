@@ -71,7 +71,7 @@ void PreproHydro::reset()
 {
     intermonthlyCorrelation = 0.5;
     // data
-    data.reset(hydroPreproMax, 12, true);
+    data.reset(hydroPreproMax, 12);
     // Expectation
     auto& col = data[expectation];
     for (uint i = 0; i != 12; ++i)
@@ -84,18 +84,17 @@ void PreproHydro::copyFrom(const PreproHydro& rhs)
 {
     intermonthlyCorrelation = rhs.intermonthlyCorrelation;
     data = rhs.data;
-    rhs.data.unloadFromMemory();
 }
 
 bool PreproHydro::loadFromFolder(Study& s, const std::string& areaID, const fs::path& folder)
 {
     enum
     {
-        mtrxOption = Matrix<>::optFixedSize | Matrix<>::optImmediate,
+        mtrxOption = Matrix<>::optFixedSize,
     };
 
     constexpr int maxNbOfLineToLoad = 12;
-    data.resize(hydroPreproMax, 12, true);
+    data.resize(hydroPreproMax, 12);
 
     fs::path preproPath = folder / areaID / "prepro.ini";
     bool ret = PreproHydroLoadSettings(this, preproPath);

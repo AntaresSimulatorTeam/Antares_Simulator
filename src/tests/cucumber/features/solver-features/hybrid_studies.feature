@@ -18,7 +18,7 @@ Feature: hybrid (simulator+modeler) studies
   @short
   Scenario: Empty legacy node with one generator component and one load component (168h simplex)
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_0"
-    When I run antares simulator
+    When I run antares simulator with --output=all
     Then the simulation succeeds
     And the simulation takes less than 10 seconds
     # 100MW @ 0.3€/MW/h, for 1 week = 5040 €
@@ -35,7 +35,7 @@ Feature: hybrid (simulator+modeler) studies
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=6200) (168h simplex)
     # copy of short test 002, with no legacy thermal cluster, replaced by one component
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
-    When I run antares simulator
+    When I run antares simulator with --output=all
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
     # for now, modeler costs does not figure in system cost txt
@@ -91,7 +91,7 @@ Feature: hybrid (simulator+modeler) studies
   Scenario: Two studies with same structure should have the same objective value at each time step
     Given the study path 1 is "Antares_Simulator_Tests_NR/hybrid/14_1/five_steps_hybrid_fixed_load"
     And the study path 2 is "Antares_Simulator_Tests_NR/hybrid/14_1/five_steps_hybrid_flexible_load"
-    When I run antares simulator on all studies
+    When I run antares simulator on all studies with --output=simulation-tables
     Then all simulations succeed
     And for each time step, all studies have the same objective value
 
@@ -122,7 +122,7 @@ Feature: hybrid (simulator+modeler) studies
   Scenario: A load from GEMS is taken into account in balance constraint
 
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_8/"
-    When I run antares simulator with --named-mps-problems
+    When I run antares simulator with --named-mps-problems --output=simulation-tables
     Then the simulation succeeds
     And the simulation takes less than 10 seconds
 	And the objective value is 186360
@@ -132,7 +132,7 @@ Feature: hybrid (simulator+modeler) studies
   Scenario: Use simulation week properly for GEMS components
 
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/hybrid_week_2/"
-    When I run antares simulator with --named-mps-problems
+    When I run antares simulator with --output=simulation-tables
     Then the simulation succeeds
     And the simulation takes less than 10 seconds
     And the modeler outputs contain the following entries
@@ -140,3 +140,14 @@ Feature: hybrid (simulator+modeler) studies
       |       | gen1      | generation.flow_field  | 168-335   | 0        | 100   |
       |       | load1     | consumption.flow_field | 168-335 | 0        | -100  |
     And the objective value is 5040
+
+  @fast @short
+  Scenario: MILP with thermal heuristic - two MILP iterations with heuristic in between
+    Given the solver study path is "Antares_Simulator_Tests_NR/thermal_milp_gems_and_thermal_legacy"
+    And the linear solver is highs
+    When I run antares simulator with --output=all
+    Then the simulation succeeds
+    And the simulation has two optimization iterations
+    And in area "west", during year 1, weekly overall cost for week 1 is 4441208
+    And in area "west", during year 1, NODU for all hours matches reference
+

@@ -4,7 +4,7 @@
 #include "antares/solver/hydro/daily2/h2o2_j_donnees_optimisation.h"
 #include "antares/study/fwd.h"
 
-Hydro_problem_costs::Hydro_problem_costs(const Data::Parameters& parameters)
+Hydro_problem_costs::Hydro_problem_costs(const Antares::Data::Parameters& parameters)
 {
     constexpr unsigned int noiseSeed = 0x79683264; // "hyd2" in hexa
     noiseGenerator.reset(noiseSeed);
@@ -15,10 +15,10 @@ Hydro_problem_costs::Hydro_problem_costs(const Data::Parameters& parameters)
 
     switch (parameters.hydroHeuristicPolicy.hhPolicy)
     {
-    case Data::hhpMaximizeGeneration:
+    case Antares::Data::hhpMaximizeGeneration:
         waste = 33 * 68.;
         break;
-    case Data::hhpAccommodateRuleCurves:
+    case Antares::Data::hhpAccommodateRuleCurves:
         waste = 34.0;
         break;
     default:
