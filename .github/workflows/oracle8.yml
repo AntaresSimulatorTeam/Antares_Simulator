@@ -110,23 +110,23 @@ jobs:
         cmake -B _build -S . \
           -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/vcpkg/scripts/buildsystems/vcpkg.cmake \
           -DVCPKG_TARGET_TRIPLET=x64-linux-release \
-          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_BUILD_TYPE=Debug \
           -DBUILD_TESTING=ON \
           -DBUILD_TOOLS=ON \
           -DBUILD_UI=OFF \
-          -DUSE_JEMALLOC=ON \
+          -DUSE_JEMALLOC=OFF \
           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install
 
     - name: Build
       run: |
         source /opt/rh/gcc-toolset-11/enable
-        cmake --build _build --config Release -j$(nproc)
+        cmake --build _build --config Debug -j$(nproc)
 
     - name: Run unit and end-to-end tests
       if: ${{ env.IS_PUSH == 'true' }}
       run: |
         cd _build
-        ctest -C Release --output-on-failure -L "unit|end-to-end"
+        ctest -C Debug --output-on-failure -L "unit|end-to-end"
 
     - name: Installer .rpm creation
       run: |

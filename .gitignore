@@ -74,5 +74,4 @@ _codeql_detected_source_root
 doxygen-awesome-css/
 html/
 
-_build_jemalloc
-_install_jemalloc
+_install*
