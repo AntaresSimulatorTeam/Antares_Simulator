@@ -27,7 +27,7 @@ runs:
 
  - name: Run tests
     # Disable "fail fast" behavior
-    shell: bash
+    shell: bash {0}
     run: |
            cd _build
            ctest -C Release --output-on-failure -R ${{inputs.variant}}
