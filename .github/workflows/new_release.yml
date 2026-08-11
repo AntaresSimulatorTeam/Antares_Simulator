@@ -90,12 +90,24 @@ jobs:
 
       - name: Get Antares_Simulator_Tests_NR commit hash
         id: get_test_commit
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -euo pipefail
           # Ensure the submodule is checked out
           git submodule update --init resources/Antares_Simulator_Tests_NR
           # Get the commit hash for the specific submodule path
           COMMIT_HASH=$(git ls-tree HEAD resources/Antares_Simulator_Tests_NR | awk '{print $3}')
-          echo "commit_hash=${COMMIT_HASH}" >> "$GITHUB_OUTPUT"
+
+          tests_repo="AntaresSimulatorTeam/Antares_Simulator_Tests_NR"
+          asset_url="https://github.com/${tests_repo}/releases/download/${COMMIT_HASH}/study-batches.txt"
+          if curl -sfIL -o /dev/null "$asset_url"; then
+            echo "Release asset found for ${COMMIT_HASH}; pinning antares_tests_tag to it."
+            echo "commit_hash=${COMMIT_HASH}" >> "$GITHUB_OUTPUT"
+          else
+            echo "No study-batches.txt release found for ${COMMIT_HASH} in ${tests_repo}; falling back to Tests_NR main branch."
+            echo "commit_hash=" >> "$GITHUB_OUTPUT"
+          fi
 
   generate_results:
     name: Generate Results
