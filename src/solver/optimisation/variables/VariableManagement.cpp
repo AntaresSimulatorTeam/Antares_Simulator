@@ -341,7 +341,7 @@ int& VariableManager::Overflow(unsigned int index, unsigned int hourInWeek, int 
     return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariablesDeDebordement[index];
 }
 
-int& VariableManager::FinalStorage(unsigned int index)
+int& VariableManager::FinalStorageLevel(unsigned int index)
 {
     return NumeroDeVariableStockFinal_[index];
 }

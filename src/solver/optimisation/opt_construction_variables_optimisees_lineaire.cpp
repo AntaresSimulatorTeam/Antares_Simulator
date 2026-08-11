@@ -237,9 +237,9 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
         variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
         {
-            variableManager.FinalStorage(pays) = NombreDeVariables;
+            variableManager.FinalStorageLevel(pays) = NombreDeVariables;
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;
-            variableNamer.FinalStorage(NombreDeVariables);
+            variableNamer.FinalStorageLevel(NombreDeVariables);
             NombreDeVariables++;
 
             for (uint nblayer = 0; nblayer < 100; nblayer++)
@@ -253,7 +253,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
         }
         else
         {
-            variableManager.FinalStorage(pays) = -1;
+            variableManager.FinalStorageLevel(pays) = -1;
             for (uint nblayer = 0; nblayer < 100; nblayer++)
             {
                 variableManager.LayerStorage(pays, nblayer) = -1;

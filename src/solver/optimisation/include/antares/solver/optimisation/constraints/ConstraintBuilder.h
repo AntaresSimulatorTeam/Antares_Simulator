@@ -213,7 +213,7 @@ public:
 
     ConstraintBuilder& Overflow(unsigned int index, double coeff);
 
-    ConstraintBuilder& FinalStorage(unsigned int index, double coeff);
+    ConstraintBuilder& FinalStorageLevel(unsigned int index, double coeff);
 
     ConstraintBuilder& UnsuppliedEnergy(unsigned int index, double coeff);
 

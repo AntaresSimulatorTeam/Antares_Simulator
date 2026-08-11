@@ -235,7 +235,7 @@ public:
     void Pumping(unsigned varIndex);
     void HydroLevel(unsigned varIndex);
     void Overflow(unsigned varIndex);
-    void FinalStorage(unsigned varIndex);
+    void FinalStorageLevel(unsigned varIndex);
     void LayerStorage(unsigned varIndex, int layerIndex);
     void UnsuppliedEnergy(unsigned varIndex);
     void Spillage(unsigned varIndex);

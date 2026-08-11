@@ -297,9 +297,9 @@ ConstraintBuilder& ConstraintBuilder::Overflow(unsigned int index, double coeff)
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::FinalStorage(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::FinalStorageLevel(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.FinalStorage(index), coeff);
+    AddVariable(variableManager_.FinalStorageLevel(index), coeff);
     return *this;
 }
 

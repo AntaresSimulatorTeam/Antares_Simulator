@@ -483,7 +483,7 @@ void VariableNamer::LayerStorage(unsigned varIndex, int layerIndex)
                         BuildHydroStorageComponentId(getArea()));
 }
 
-void VariableNamer::FinalStorage(unsigned varIndex)
+void VariableNamer::FinalStorageLevel(unsigned varIndex)
 {
     SetAreaElementNameHour(varIndex, "final_level", BuildHydroStorageComponentId(getArea()));
 }
