@@ -183,7 +183,7 @@ BOOST_FIXTURE_TEST_CASE(all_hydro_variables_share_component, NamerFixture)
     varNamer.Pumping(3);
     varNamer.HydroLevel(4);
     varNamer.Overflow(5);
-    varNamer.FinalStorageLevel(6);
+    varNamer.FinalStorage(6);
     for (unsigned i = 1; i <= 6; ++i)
     {
         BOOST_CHECK_EQUAL(legacyInfo[i]->component, "west_hydro_storage");

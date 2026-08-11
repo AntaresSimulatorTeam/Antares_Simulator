@@ -155,7 +155,7 @@ public:
 
     int& Overflow(unsigned int index, unsigned int hourInWeek, int offset = 0, int delta = 0);
 
-    int& FinalStorageLevel(unsigned int index);
+    int& FinalStorage(unsigned int index);
 
     int& LayerStorage(unsigned area, unsigned layer);
 

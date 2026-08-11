@@ -436,7 +436,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
     {
         if (problemeHebdo->CaracteristiquesHydrauliques[pays].AccurateWaterValue)
         {
-            int var = variableManager.FinalStorageLevel(pays);
+            int var = variableManager.FinalStorage(pays);
             if (var >= 0)
             {
                 Xmin[var] = -(LINFINI_ANTARES);

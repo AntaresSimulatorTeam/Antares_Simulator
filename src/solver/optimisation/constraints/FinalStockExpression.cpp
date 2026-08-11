@@ -10,7 +10,7 @@ void FinalStockExpression::add(int pays)
     if (data.CaracteristiquesHydrauliques[pays].AccurateWaterValue)
     /*  expression constraint : - StockFinal +sum (stocklayers) = 0*/
     {
-        builder.updateHourWithinWeek(pdt).FinalStorageLevel(pays, -1.0);
+        builder.updateHourWithinWeek(pdt).FinalStorage(pays, -1.0);
         for (int layerindex = 0; layerindex < 100; layerindex++)
         {
             builder.LayerStorage(pays, layerindex, 1.0);
