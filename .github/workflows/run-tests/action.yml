@@ -25,9 +25,9 @@ runs:
            unzip -q batch.zip
            rm batch.zip
 
-  - name: Run tests
+ - name: Run tests
     # Disable "fail fast" behavior
-    shell: bash {0}
+    shell: bash
     run: |
            cd _build
            ctest -C Release --output-on-failure -R ${{inputs.variant}}
