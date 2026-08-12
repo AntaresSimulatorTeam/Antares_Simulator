@@ -76,3 +76,6 @@ html/
 
 _build_jemalloc
 _install_jemalloc
+_build_tcmalloc
+_install_tcmalloc
+_install_debug

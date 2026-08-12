@@ -195,6 +195,13 @@ endif ()
 option(USE_JEMALLOC "Link executables against jemalloc" OFF)
 message(STATUS "Use jemalloc: ${USE_JEMALLOC}")
 
+option(USE_TCMALLOC "Link executables against tcmalloc" OFF)
+message(STATUS "Use tcmalloc: ${USE_TCMALLOC}")
+
+if (USE_JEMALLOC AND USE_TCMALLOC)
+    message(FATAL_ERROR "{antares} USE_JEMALLOC and USE_TCMALLOC are mutually exclusive")
+endif ()
+
 #Boost header libraries
 find_package(Boost REQUIRED)
 

@@ -201,6 +201,17 @@ if (USE_JEMALLOC)
     endif ()
 endif ()
 
+# tcmalloc allocator (optional)
+if (USE_TCMALLOC)
+    if (WIN32)
+        message(WARNING "{antares} USE_TCMALLOC is not supported on Windows, ignoring")
+    else ()
+        message(STATUS "{antares} Linking against tcmalloc")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -ltcmalloc")
+        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -ltcmalloc")
+    endif ()
+endif ()
+
 
 #TODO : check these macro
 macro(import_std_libs TARGET)

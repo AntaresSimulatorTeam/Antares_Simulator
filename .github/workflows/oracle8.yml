@@ -6,6 +6,7 @@ on:
   push:
     branches:
     - test-jemalloc
+    - test-tcmalloc
     - develop
     - dependabot/*
     - release/*
@@ -55,7 +56,7 @@ jobs:
       run: |
         dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core
         dnf install -y unzip libuuid-devel gcc-toolset-11 zlib-devel perl-IPC-Cmd perl-Text-Template perl-Data-Dumper perl-Time-Piece flex bison
-        dnf install -y jemalloc-devel
+        dnf install -y jemalloc-devel gperftools-devel
 
     - name: Checkout
       run: |
@@ -107,6 +108,11 @@ jobs:
     - name: Configure
       run: |
         source /opt/rh/gcc-toolset-11/enable
+        if [ "${{ env.REF }}" = "test-tcmalloc" ]; then
+          ALLOCATOR_FLAG="-DUSE_TCMALLOC=ON"
+        else
+          ALLOCATOR_FLAG="-DUSE_JEMALLOC=ON"
+        fi
         cmake -B _build -S . \
           -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/vcpkg/scripts/buildsystems/vcpkg.cmake \
           -DVCPKG_TARGET_TRIPLET=x64-linux-release \
@@ -114,7 +120,7 @@ jobs:
           -DBUILD_TESTING=ON \
           -DBUILD_TOOLS=ON \
           -DBUILD_UI=OFF \
-          -DUSE_JEMALLOC=ON \
+          $ALLOCATOR_FLAG \
           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install
 
     - name: Build
