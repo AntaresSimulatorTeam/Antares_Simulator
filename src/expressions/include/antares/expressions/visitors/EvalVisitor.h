@@ -310,21 +310,21 @@ public:
      * @param fillContext
      */
 
-    explicit EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
-                         const Optimisation::LinearProblemApi::FillContext& fillContext,
+    explicit EvalVisitor(const LinearProblem::OptimEntityContainer& optimContainer,
+                         const LinearProblem::Api::FillContext& fillContext,
                          const ModelerStudy::SystemModel::Component& component,
-                         const Optimisation::LinearProblemApi::ILinearProblemData* data,
-                         const Optimisation::LinearProblemApi::IScenario& scenario);
+                         const LinearProblem::Api::ILinearProblemData* data,
+                         const LinearProblem::Api::IScenario& scenario);
 
     std::string name() const override;
 
 private:
-    const Optimisation::OptimEntityContainer& optimContainer_;
+    const LinearProblem::OptimEntityContainer& optimContainer_;
     const ModelerStudy::SystemModel::Component& component_;
-    const Optimisation::LinearProblemApi::ILinearProblemData* data_;
-    const Optimisation::LinearProblemApi::IScenario& scenario_;
-    const Optimisation::EvaluationContext evalContext_;
-    const Optimisation::LinearProblemApi::FillContext& fillContext_;
+    const LinearProblem::Api::ILinearProblemData* data_;
+    const LinearProblem::Api::IScenario& scenario_;
+    const LinearProblem::EvaluationContext evalContext_;
+    const LinearProblem::Api::FillContext& fillContext_;
 
     EvaluationResult visit(const Nodes::SumNode* node) override;
     EvaluationResult visit(const Nodes::SubtractionNode* node) override;

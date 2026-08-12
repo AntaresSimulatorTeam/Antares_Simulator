@@ -22,12 +22,12 @@
 
 using namespace Antares::Expressions;
 using namespace Antares::Solver;
-using namespace Antares::Optimisation;
+using namespace Antares::LinearProblem;
 using namespace Antares::IO::Outputs;
 using PTV = ParameterTypeAndValue;
 using VV = VariabilityType;
 
-class ConstantDataSeries: public LinearProblemApi::ILinearProblemData
+class ConstantDataSeries: public Api::ILinearProblemData
 {
 public:
     explicit ConstantDataSeries(double value):
@@ -68,7 +68,7 @@ Component copyComponent(const Component& c)
       .build();
 }
 
-class DefaultScenario final: public LinearProblemApi::IScenario
+class DefaultScenario final: public Api::IScenario
 {
 public:
     using IScenario::IScenario;
@@ -162,7 +162,7 @@ public:
 
     void addScenario(const std::string& str, int year, int timeSeriesNumber)
     {
-        auto scenario = std::make_unique<LinearProblemDataImpl::Scenario>(str);
+        auto scenario = std::make_unique<DataImpl::Scenario>(str);
         scenario->setTimeSerieNumber(year, timeSeriesNumber);
         scenarioGroupRepository.addScenario(str, std::move(scenario));
     }
@@ -170,8 +170,7 @@ public:
     Models models;
     std::vector<Component> components;
     Test::Modeler::LinearProblemBuildingFixture fixture;
-    std::unique_ptr<LinearProblemApi::ILinearProblemData>
-      data = std::make_unique<ConstantDataSeries>(0.);
+    std::unique_ptr<Api::ILinearProblemData> data = std::make_unique<ConstantDataSeries>(0.);
     Nodes::Node* lower_bound = fixture.literal(0.0);
     bool timeDependent{false};
     std::map<std::string, PTV> parameters{};
@@ -216,11 +215,11 @@ struct TSDimensions
     int nCols{1};
 };
 
-LinearProblemDataImpl::TimeSeriesSet constantTimeSeriesSets(const std::string& id,
-                                                            std::span<double> values,
-                                                            unsigned int nRows = 1)
+DataImpl::TimeSeriesSet constantTimeSeriesSets(const std::string& id,
+                                               std::span<double> values,
+                                               unsigned int nRows = 1)
 {
-    LinearProblemDataImpl::TimeSeriesSet timeSeriesSet(id, nRows);
+    DataImpl::TimeSeriesSet timeSeriesSet(id, nRows);
     for (double value: values)
     {
         if (nRows == 0)
@@ -234,9 +233,9 @@ LinearProblemDataImpl::TimeSeriesSet constantTimeSeriesSets(const std::string& i
     return timeSeriesSet;
 }
 
-LinearProblemDataImpl::TimeSeriesSet constantTimeSeriesSet(const std::string& id,
-                                                           double value = 0.,
-                                                           TSDimensions dims = {1, 1})
+DataImpl::TimeSeriesSet constantTimeSeriesSet(const std::string& id,
+                                              double value = 0.,
+                                              TSDimensions dims = {1, 1})
 {
     std::vector<double> values(dims.nCols, value);
     return constantTimeSeriesSets(id, values, dims.nRows);
@@ -249,11 +248,11 @@ BOOST_AUTO_TEST_CASE(system_with_two_time_series_use_default_first_all_2)
     inMemoryLoader.setLowerBoundToParameter("paramA");
     inMemoryLoader.addParameter("paramA");
 
-    LinearProblemDataImpl::DataSeriesRepository data_series_repository;
+    DataImpl::DataSeriesRepository data_series_repository;
     std::vector<double> values = {2, 3, 4};
-    data_series_repository.addDataSeries(std::make_unique<LinearProblemDataImpl::TimeSeriesSet>(
-      constantTimeSeriesSets("GROUPA", values, 1)));
-    inMemoryLoader.data = std::make_unique<LinearProblemDataImpl::LinearProblemData>(
+    data_series_repository.addDataSeries(
+      std::make_unique<DataImpl::TimeSeriesSet>(constantTimeSeriesSets("GROUPA", values, 1)));
+    inMemoryLoader.data = std::make_unique<DataImpl::LinearProblemData>(
       std::move(data_series_repository));
 
     Modeler modeler(inMemoryLoader, {}, TableFormat::CSV);
@@ -269,11 +268,11 @@ BOOST_AUTO_TEST_CASE(system_with_three_time_series_use_second_one_all_3)
     inMemoryLoader.setLowerBoundToParameter("paramA");
     inMemoryLoader.addParameter("paramA");
 
-    LinearProblemDataImpl::DataSeriesRepository data_series_repository;
+    DataImpl::DataSeriesRepository data_series_repository;
     std::vector<double> values = {2, 3, 4};
-    data_series_repository.addDataSeries(std::make_unique<LinearProblemDataImpl::TimeSeriesSet>(
-      constantTimeSeriesSets("GROUPA", values, 1)));
-    inMemoryLoader.data = std::make_unique<LinearProblemDataImpl::LinearProblemData>(
+    data_series_repository.addDataSeries(
+      std::make_unique<DataImpl::TimeSeriesSet>(constantTimeSeriesSets("GROUPA", values, 1)));
+    inMemoryLoader.data = std::make_unique<DataImpl::LinearProblemData>(
       std::move(data_series_repository));
 
     inMemoryLoader.addScenario("GROUPA", 0, 2); // Year 0, timeseriesNumber 1

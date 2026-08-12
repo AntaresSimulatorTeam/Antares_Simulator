@@ -9,7 +9,7 @@
 #include <antares/solver/utils/ortools_quadratic_wrapper.h>
 #include <antares/solver/utils/ortools_utils.h>
 
-using Antares::Solver::Optimization::SingleOptimOptions;
+using Antares::Optimization::SingleOptimOptions;
 using namespace operations_research::math_opt;
 
 constexpr double infinity = std::numeric_limits<double>::infinity();

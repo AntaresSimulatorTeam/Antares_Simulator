@@ -21,10 +21,10 @@
 
 using namespace Antares;
 using namespace Antares::Writer;
-using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
+using namespace Antares::LinearProblem::MpsolverImpl;
 using namespace Antares::Optimization;
-using namespace Antares::Optimisation;
-using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::LinearProblem;
+using namespace Antares::LinearProblem::Api;
 using namespace Antares::IO::Outputs;
 
 namespace Antares::Solver

@@ -11,14 +11,14 @@ namespace Antares::Solver::Simulation
 
 class AdqPatchPostProcessList final: public interfacePostProcessList
 {
-    using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+    using AdqPatchParams = AdequacyPatch::AdqPatchParams;
 
 public:
     AdqPatchPostProcessList(const AdqPatchParams& adqPatchParams,
                             PROBLEME_HEBDO* problemeHebdo,
                             uint numSpace,
                             AreaList& areas,
-                            const Data::Parameters& params,
+                            const Parameters& params,
                             Calendar& calendar,
                             IResultWriter& resultWriter);
 

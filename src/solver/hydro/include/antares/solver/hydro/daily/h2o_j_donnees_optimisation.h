@@ -13,7 +13,7 @@
 
 #define LINFINI 1.e+80
 
-namespace DoneesOptimisationJournaliere
+namespace Antares::Solver::Hydro::Daily
 {
 /*--------------------------------------------------------------------------------------*/
 /* Matrice des contraintes: il y aura une seule instance pour tous les reservoirs */
@@ -115,5 +115,5 @@ struct PROBLEME_HYDRAULIQUE
     /* Il y en a 1 par reservoir. Un probleme couvre 1 mois */
     std::vector<PROBLEME_SPX_WRAPPER> ProblemeSpx;
 };
-} // namespace DoneesOptimisationJournaliere
+} // namespace Antares::Solver::Hydro::Daily
 #endif
