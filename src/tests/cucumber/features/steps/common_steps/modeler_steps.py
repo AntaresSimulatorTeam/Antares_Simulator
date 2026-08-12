@@ -63,6 +63,20 @@ def check_simulation_table_content(context, tolerance):
     check_st_entries(context.simu_table, expected_entries, tolerance)
 
 
+@step('the modeler outputs contain no entries for component "{component}"')
+def modeler_output_has_no_entries_for_component(context, component):
+    assert context.simu_table.has_no_rows_for_component(component), (
+        f"Expected no rows for component '{component}', but some were found"
+    )
+
+
+@step('the modeler outputs contain entries for component "{component}"')
+def modeler_output_has_entries_for_component(context, component):
+    assert context.simu_table.has_rows_for_component(component), (
+        f"Expected at least one row for component '{component}', but none were found"
+    )
+
+
 def read_int_range(row, key: str):
     if row[key] != "":
         array = row[key].split("-")

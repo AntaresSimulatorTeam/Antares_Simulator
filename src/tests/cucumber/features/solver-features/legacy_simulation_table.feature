@@ -150,6 +150,45 @@ Feature: Legacy variables in simulation table
       | 0     | he_hydro_storage        | actual_inflows     | 0        | 0        | 1873          |
 
   @fast @short
+  Scenario: Input-generation rows are absent for components whose series are entirely zero
+    # Study "002 Thermal fleet - Base" runs with renewable-generation-modelling
+    # = aggregated. Its "area" has real wind data (input/wind/series/wind_area.txt),
+    # but empty solar, misc-gen and run-of-river series
+    # (input/solar/series/solar_area.txt, input/misc-gen/miscgen-area.txt,
+    # input/hydro/series/area/ror.txt are all 0-line files, which Antares
+    # loads as an all-zero series) -- exactly the "no meaningful production"
+    # case this filtering targets. Before the fix these still produced
+    # generation_power/minus_generation/balance_port.flow rows valued 0;
+    # after it, the components are omitted entirely, while the (non-zero)
+    # wind component is untouched.
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/002 Thermal fleet - Base"
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation succeeds
+    And the modeler outputs contain entries for component "area_wind"
+    And the modeler outputs contain no entries for component "area_solar"
+    And the modeler outputs contain no entries for component "area_run_of_river"
+    And the modeler outputs contain no entries for component "area_combined_heat_power"
+    And the modeler outputs contain no entries for component "area_biomass"
+    And the modeler outputs contain no entries for component "area_biogas"
+    And the modeler outputs contain no entries for component "area_waste"
+    And the modeler outputs contain no entries for component "area_geothermal"
+    And the modeler outputs contain no entries for component "area_other"
+    And the modeler outputs contain no entries for component "area_pumped_storage_power"
+    And the modeler outputs contain no entries for component "area_rest_world"
+
+  @fast @short
+  Scenario: actual_load and its balance-port row are absent for an area with an all-zero load series
+    # Same base study as above, on a temporary copy with its load series
+    # emptied (the same "empty file -> all-zero series" convention). With no
+    # load at all, area_load's actual_load and balance_port.flow rows should
+    # be suppressed like any other all-zero-series component.
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/002 Thermal fleet - Base"
+    And in input "load/series/load_area.txt" the time series is emptied
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation succeeds
+    And the modeler outputs contain no entries for component "area_load"
+
+  @fast @short
   Scenario: actual_num_units_on is emitted in accurate unit-commitment mode
     # Study "008 Thermal fleet - Accurate unit commitment" is the accurate-mode
     # twin of 002 (same area, same clusters, same shortfall on absolute hour 34

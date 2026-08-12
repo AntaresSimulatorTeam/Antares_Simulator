@@ -98,6 +98,19 @@ class SimulationTable:
             )
         return float(df["value"].iloc[0])
 
+    def has_no_rows_for_component(self, component: str) -> bool:
+        """True if the simulation table has no row at all for `component`.
+
+        Used to check that structurally inactive objects (an all-zero series,
+        a disabled cluster/link) were entirely suppressed, rather than
+        looking up one specific (output, timestep) combination.
+        """
+        return self._dataframe[self._dataframe["component"] == component].empty
+
+    def has_rows_for_component(self, component: str) -> bool:
+        """True if the simulation table has at least one row for `component`."""
+        return not self.has_no_rows_for_component(component)
+
     def get_objective_value(self) -> float:
         """Returns the objective value from the simulation table (scenario_index == 0)."""
         df = self._dataframe[

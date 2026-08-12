@@ -65,6 +65,16 @@ def set_input_section_variable(context, input_file, section, variable, value):
     context.sih.set_input(input_file=input_file, section=section,
                           variable=variable, value=value)
 
+
+@given('in input "{series_file}" the time series is emptied')
+def empty_input_series(context, series_file):
+    # An empty series file is Antares' own convention for "no data": the
+    # series loads as a single all-zero column (see e.g. the "he" area's
+    # empty mod.txt/ror.txt in the "Accurate hydro pricing" fixture).
+    file_path = context.study_path / "input" / Path(series_file.replace("/", os.sep))
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+    file_path.write_text("")
+
 @given('the linear solver is {solver_name}')
 def set_linear_solver(context, solver_name):
     context.config.userdata["linear-solver"] = solver_name
