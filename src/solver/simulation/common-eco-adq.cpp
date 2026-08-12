@@ -6,9 +6,13 @@
 #include <cassert>
 #include <cmath>
 #include <map>
+#include <memory>
+#include <ranges>
 
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include <antares/logs/logs.h>
+#include <antares/solver/simulation/reserve-index-maps.h>
+#include <antares/solver/simulation/sim_structure_probleme_economique.h>
 #include <antares/study/study.h>
 
 namespace Antares::Solver::Simulation
@@ -357,9 +361,15 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                 auto& Pt = problem.PaliersThermiquesDuPays[areaIdx]
                              .PuissanceDisponibleEtCout[cluster->index];
 
+                Pt.CoutHoraireDeProductionDuPalierThermiqueSansBruit[hourInWeek]
+                  = cluster->getCostProvider().getMarketBidCost(hourInYear, year);
+
                 Pt.CoutHoraireDeProductionDuPalierThermique[hourInWeek]
-                  = cluster->getCostProvider().getMarketBidCost(hourInYear, year)
+                  = Pt.CoutHoraireDeProductionDuPalierThermiqueSansBruit[hourInWeek]
                     + thermalNoises[areaIdx][cluster->areaWideIndex];
+
+                Pt.CoutHoraireDeProductionDuPalierThermiqueSansBruit[hourInWeek]
+                  = cluster->getCostProvider().getMarketBidCost(hourInYear, year);
 
                 Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] = cluster->series
                                                                         .getCoefficient(year,
@@ -487,6 +497,52 @@ void prepareClustersInMustRunMode(Data::Study& study,
             }
         }
     }
+}
+
+void buildReserveIndexMaps(Data::Study& study, const PROBLEME_HEBDO& problem)
+{
+    auto maps = std::make_shared<ReserveIndexMaps>();
+    auto& participationIndexMaps = maps->participationIndexMaps;
+    auto& idToName = maps->idToName;
+
+    auto loadReserveParticipations =
+      [&](const Data::Area* area, const CAPACITY_RESERVATION& reserve)
+    {
+        // Thermal clusters
+        for (auto& [clusterId, reserveParticipation]: reserve.AllThermalReservesParticipation)
+        {
+            participationIndexMaps.at(area->id).thermalClusters.insert(
+              {{reserve.reserveID, reserveParticipation.clusterName},
+               reserveParticipation.areaIndexClusterParticipation});
+        }
+
+        // Short Term Storage
+        for (auto& [clusterId, reserveParticipation]: reserve.AllSTStorageReservesParticipation)
+        {
+            participationIndexMaps.at(area->id).STStorageClusters.insert(
+              {{reserve.reserveID, reserveParticipation.clusterName},
+               reserveParticipation.areaIndexClusterParticipation});
+        }
+
+        // Hydro
+        for (auto& reserveParticipation: reserve.AllHydroReservesParticipation)
+        {
+            participationIndexMaps.at(area->id).Hydro.insert(
+              {reserve.reserveID, reserveParticipation.areaIndexClusterParticipation});
+        }
+    };
+
+    for (const auto& area: study.areas | std::views::values)
+    {
+        participationIndexMaps.emplace(area->id, ReserveIndexMaps::AreaReserveIndexMap{});
+        for (const auto& reserve: problem.allReserves.value()[area->index].areaCapacityReservations)
+        {
+            idToName.try_emplace(reserve.reserveID, reserve.reserveName);
+            loadReserveParticipations(area.get(), reserve);
+        }
+    }
+
+    study.reserveMaps = std::move(maps);
 }
 
 } // namespace Antares::Solver::Simulation

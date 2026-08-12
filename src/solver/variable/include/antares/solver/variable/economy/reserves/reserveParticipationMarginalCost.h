@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 #pragma once
 
+#include <antares/solver/simulation/reserve-index-maps.h>
 #include "antares/solver/variable/variable.h"
 
 #include "vCardReserveParticipationMarginalCost.h"
@@ -137,8 +138,7 @@ public:
                  results.data.area->allCapacityReservations.value().areaCapacityReservations
                    | std::views::keys)
             {
-                Yuni::String caption = results.data.study.runtime.reserveIDToName.value().at(
-                  reserveID);
+                Yuni::String caption = results.data.study.reserveMaps->idToName.at(reserveID);
                 caption << "_MRG.COST";
                 results.variableCaption = caption;
                 pValuesForTheCurrentYear[numSpace][column]

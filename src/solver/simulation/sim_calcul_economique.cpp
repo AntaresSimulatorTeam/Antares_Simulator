@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <algorithm>
+#include <array>
 #include <sstream>
+#include <utility>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/study/area/scratchpad.h>
@@ -21,14 +23,14 @@ using namespace Antares::Data;
 
 constexpr double LEVEL_TOLERANCE_MWH = 1.e-6;
 
-void importCapacityReservations(AreaList& areas, PROBLEME_HEBDO& problem)
+void importCapacityReservations(const AreaList& areas, PROBLEME_HEBDO& problem)
 {
     int globalReserveIndex = 0;
     problem.allReserves = std::vector<::AREA_RESERVES_VECTOR>(areas.size());
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
         int areaReserveIndex = 0;
-        auto area = areas[areaIndex];
+        const auto* area = areas[areaIndex];
         auto& areaReserves = problem.allReserves.value()[areaIndex];
         for (auto type: {ReserveType::DOWN, ReserveType::UP})
         {
@@ -64,8 +66,8 @@ void importCapacityReservations(AreaList& areas, PROBLEME_HEBDO& problem)
     }
 }
 
-static void importShortTermStorages(Data::Parameters parameters,
-                                    AreaList& areas,
+static void importShortTermStorages(const Data::Parameters parameters,
+                                    const AreaList& areas,
                                     std::vector<::AREA_INPUT>& ShortTermStorageOut,
                                     PROBLEME_HEBDO& problem)
 {
@@ -104,7 +106,7 @@ static void importShortTermStorages(Data::Parameters parameters,
             toInsert.overflowCost = area->thermal.spilledEnergyCost
                                     + area->hydro.overflowSpilledCostDifference;
 
-            toInsert.name = st.properties.name;
+            toInsert.name = st.id;
             for (const auto& constraint: st.additionalConstraints)
             {
                 if (constraint->enabled)
@@ -190,7 +192,7 @@ static void importShortTermStorages(Data::Parameters parameters,
     }
 }
 
-void importHydroReserves(AreaList& areas, PROBLEME_HEBDO& problem)
+void importHydroReserves(const AreaList& areas, PROBLEME_HEBDO& problem)
 {
     int globalReserveIndex = 0;
     int globalHydroParticipationIndex = 0;
@@ -198,7 +200,7 @@ void importHydroReserves(AreaList& areas, PROBLEME_HEBDO& problem)
     {
         int areaReserveIndex = 0;
         int areaClusterParticipationIndex = 0;
-        auto area = areas[areaIndex];
+        const auto* area = areas[areaIndex];
         auto& hydro = area->hydro;
 
         if (area->allCapacityReservations && hydro.reserveParticipationContainer)
@@ -253,14 +255,14 @@ void importHydroReserves(AreaList& areas, PROBLEME_HEBDO& problem)
     }
 }
 
-void SIM_InitialisationProblemeHebdo(Study& study,
+void SIM_InitialisationProblemeHebdo(const Study& study,
                                      PROBLEME_HEBDO& problem,
                                      unsigned int NombreDePasDeTemps,
                                      uint numspace)
 {
     int NombrePaliers;
 
-    auto& parameters = study.parameters;
+    const auto& parameters = study.parameters;
 
     // For hybrid studies
     problem.modelerData = study.getModelerData();
@@ -335,6 +337,10 @@ void SIM_InitialisationProblemeHebdo(Study& study,
         problem.CoutDeDefaillancePositive[i] = area.thermal.unsuppliedEnergyCost;
 
         problem.CoutDeDefaillanceNegative[i] = area.thermal.spilledEnergyCost;
+
+        problem.CoutDeDefaillancePositiveSansBruit[i] = area.thermal.unsuppliedEnergyCost;
+
+        problem.CoutDeDefaillanceNegativeSansBruit[i] = area.thermal.spilledEnergyCost;
 
         // Hydraulic
         problem.CoutDeDebordement[i] = area.thermal.spilledEnergyCost
@@ -502,7 +508,8 @@ void SIM_InitialisationProblemeHebdo(Study& study,
               = (pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index] < cluster->minStablePower)
                   ? pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index]
                   : cluster->minStablePower;
-            pbPalier.NomsDesPaliersThermiques[cluster->index] = cluster->name().c_str();
+            pbPalier.NomsDesPaliersThermiques[cluster->index] = cluster->id();
+            pbPalier.emissionFactors[cluster->index] = cluster->emissions.factors;
         }
 
         if (study.parameters.unitCommitment.ucMode
@@ -536,7 +543,7 @@ void SIM_InitialisationProblemeHebdo(Study& study,
                         reserveParticipation.participationCostOff
                           = cluster->reserveParticipationContainer.value().reserveCostOff(
                             reserveID);
-                        reserveParticipation.clusterName = cluster->name();
+                        reserveParticipation.clusterName = cluster->id();
                         reserveParticipation.clusterIdInArea = cluster->index;
                         reserveParticipation.clusterId = NombrePaliers + cluster->index;
                         reserveParticipation.globalIndexClusterParticipation
@@ -579,6 +586,73 @@ void SIM_InitialisationProblemeHebdo(Study& study,
     problem.NombreDePaliersThermiques = NombrePaliers;
 
     problem.LeProblemeADejaEteInstancie = false;
+}
+
+// Copies the week's input-only generation series (components that are not LP
+// variables) into the problem, one entry per simulation-table component. The
+// component naming follows the ST convention: `{area}_wind`, `{area}_solar`,
+// `{area}_run_of_river`, the misc-gen table below (aggregated data), or the
+// cluster name (renewable clusters mode).
+static void fillInputGenerationSeries(const Study& study,
+                                      PROBLEME_HEBDO& problem,
+                                      const int PasDeTempsDebut)
+{
+    constexpr std::array<std::pair<const char*, Data::MiscGenIndex>, Data::fhhMax>
+      miscGenComponents = {{{"_combined_heat_power", Data::fhhCHP},
+                            {"_biomass", Data::fhhBioMass},
+                            {"_biogas", Data::fhhBioGaz},
+                            {"_waste", Data::fhhWaste},
+                            {"_geothermal", Data::fhhGeoThermal},
+                            {"_other", Data::fhhOther},
+                            {"_pumped_storage_power", Data::fhhPSP},
+                            {"_rest_world", Data::fhhRowBalance}}};
+
+    const unsigned year = problem.year;
+    const unsigned nbPdt = problem.NombreDePasDeTemps;
+    problem.InputGenerationOfArea.assign(study.areas.size(), {});
+
+    for (uint k = 0; k < study.areas.size(); ++k)
+    {
+        const auto& area = *(study.areas.byIndex[k]);
+        const std::string areaId = area.id.c_str();
+        auto& entries = problem.InputGenerationOfArea[k];
+
+        auto addEntry = [&entries, PasDeTempsDebut, nbPdt](std::string componentName,
+                                                           const auto& valueAtHourInYear)
+        {
+            auto& entry = entries.emplace_back();
+            entry.componentName = std::move(componentName);
+            entry.availablePower.resize(nbPdt);
+            for (unsigned hourInWeek = 0; hourInWeek < nbPdt; ++hourInWeek)
+            {
+                entry.availablePower[hourInWeek] = valueAtHourInYear(PasDeTempsDebut + hourInWeek);
+            }
+        };
+
+        if (study.parameters.renewableGeneration.isAggregated())
+        {
+            addEntry(areaId + "_wind",
+                     [&](int hour) { return area.wind.series.getCoefficient(year, hour); });
+            addEntry(areaId + "_solar",
+                     [&](int hour) { return area.solar.series.getCoefficient(year, hour); });
+        }
+        else
+        {
+            for (const auto& cluster: area.renewable.list.each_enabled())
+            {
+                addEntry(cluster->name(),
+                         [&](int hour) { return cluster->valueAtTimeStep(year, hour); });
+            }
+        }
+        addEntry(areaId + "_run_of_river",
+                 [&](int hour) { return area.hydro.series->ror.getCoefficient(year, hour); });
+
+        for (const auto& [suffix, miscGenIndex]: miscGenComponents)
+        {
+            addEntry(areaId + suffix,
+                     [&, index = miscGenIndex](int hour) { return area.miscGen[index][hour]; });
+        }
+    }
 }
 
 void SIM_RenseignementProblemeHebdo(const Study& study,
@@ -1142,4 +1216,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraireRef
           = problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire;
     }
+
+    fillInputGenerationSeries(study, problem, PasDeTempsDebut);
 }

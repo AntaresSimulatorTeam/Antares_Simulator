@@ -63,7 +63,7 @@ bool Adequacy::simulationBegin()
                                             numSpace);
             if (study.parameters.include.reserves)
             {
-                study.runtime.initializeReservesIndexMaps(study, pProblemesHebdo[numSpace]);
+                buildReserveIndexMaps(study, pProblemesHebdo[numSpace]);
             }
         }
     }
@@ -129,7 +129,7 @@ bool Adequacy::year(Variable::State& state,
     currentProblem.ProblemeAResoudre->clearBasis();
 
     std::unique_ptr<Antares::IO::Outputs::OptimisationsSimulationTable> simulationTables;
-    if (!study.parameters.noOutput)
+    if (study.parameters.writeSimulationTable())
     {
         simulationTables = std::make_unique<Antares::IO::Outputs::OptimisationsSimulationTable>();
     }

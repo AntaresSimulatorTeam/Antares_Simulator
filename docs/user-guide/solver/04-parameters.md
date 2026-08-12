@@ -229,7 +229,8 @@ These parameters are listed under the `[general]` section in the `.ini` file.
 
 ---
 ## Output parameters
-These parameters are listed under the `[output]` section in the `.ini` file.
+This parameter is listed under the `[output]` section in the `.ini` file.
+
 
 ---
 #### synthesis

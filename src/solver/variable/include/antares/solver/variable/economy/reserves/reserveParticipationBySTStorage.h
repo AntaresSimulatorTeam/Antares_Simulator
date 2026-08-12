@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MPL-2.0
 #pragma once
 
+#include <antares/solver/simulation/reserve-index-maps.h>
+
 #include "reserveParticipationTemplate.h"
 #include "vCardReserveParticipationBySTStorage.h"
 
@@ -34,9 +36,7 @@ public:
     bool hasIndexMapping(const Data::Study& study, const Data::Area* area) const
     {
         return study.parameters.include.reserves
-               && !study.runtime.reserveParticipationIndexMaps.value()
-                     .at(area->id)
-                     .STStorageClusters.empty();
+               && !study.reserveMaps->participationIndexMaps.at(area->id).STStorageClusters.empty();
     }
 
     void buildReportForIndex(SurveyResults& results,
@@ -45,11 +45,10 @@ public:
                              int precision,
                              unsigned int numSpace) const
     {
-        auto [reserveID, clusterName] = results.data.study.runtime.reserveParticipationIndexMaps
-                                          .value()
+        auto [reserveID, clusterName] = results.data.study.reserveMaps->participationIndexMaps
                                           .at(results.data.area->id)
                                           .STStorageClusters.right.at(i);
-        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        auto reserveName = results.data.study.reserveMaps->idToName.at(reserveID);
         results.variableCaption = reserveName + "_" + clusterName;
         results.variableUnit = VCardType::Unit();
         pValuesForTheCurrentYear[numSpace][i]
@@ -64,20 +63,16 @@ inline void ReserveParticipationBySTStorage::populateHourlyValues(State& state,
     if (hasIndexMapping(state.study, state.area))
     {
         const auto& resData = state.reserveData.value().at(state.area->index);
-        for (const auto& clusterName:
-             resData.reserveParticipationPerSTStorageClusterForYear.at(state.hourInTheYear)
-               | std::views::keys)
+        const auto& hourlyData = resData.reserveParticipationPerSTStorageClusterForYear.at(
+          state.hourInTheYear);
+        for (const auto& [clusterName, reserveMap]: hourlyData)
         {
-            for (const auto& [reserveName, reserveParticipation]:
-                 resData.reserveParticipationPerSTStorageClusterForYear.at(state.hourInTheYear)
-                   .at(clusterName))
+            for (const auto& [reserveName, reserveParticipation]: reserveMap)
             {
-                pValuesForTheCurrentYear[numSpace]
-                                        [state.study.runtime.reserveParticipationIndexMaps.value()
-                                           .at(state.area->id)
-                                           .STStorageClusters.left.at(
-                                             std::make_pair(reserveName, clusterName))]
-                                          .hour[state.hourInTheYear]
+                pValuesForTheCurrentYear
+                  [numSpace][state.study.reserveMaps->participationIndexMaps.at(state.area->id)
+                               .STStorageClusters.left.at(std::make_pair(reserveName, clusterName))]
+                    .hour[state.hourInTheYear]
                   = reserveParticipation;
             }
         }
