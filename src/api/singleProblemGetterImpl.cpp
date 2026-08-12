@@ -17,12 +17,11 @@
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/simplex/LpFiller.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/regenerate_timeseries.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/writer/i_writer.h"
-
-using namespace Optimisation::LinearProblemApi;
 
 namespace
 {
@@ -336,7 +335,8 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
     return translator_.translate(pb_.ProblemeAResoudre.get(), problemName({id.year, id.week + 1}));
 }
 
-std::unique_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProblemId id)
+std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>
+SingleProblemGetter::getWeeklyProblem(WeeklyProblemId id)
 {
     setWeeklyData(id);
     auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
@@ -356,23 +356,27 @@ std::unique_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProb
                                                                id.week);
     }
 
-    std::unique_ptr<ILinearProblem> linearProblem = std::make_unique<
-      Antares::Optimisation::LinearProblemApi::StructuredLinearProblem>();
+    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>
+      linearProblem = std::make_unique<Optimisation::LinearProblemApi::StructuredLinearProblem>();
     fillProblem(*linearProblem, id);
 
     return linearProblem;
 }
 
-void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProblemId& id)
+void SingleProblemGetter::fillProblem(Optimisation::LinearProblemApi::ILinearProblem& problem,
+                                      const WeeklyProblemId& id)
 {
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
-    Optimisation::LinearProblemApi::FillContext fillCtx = buildFillContext(&pb_,
-                                                                           numeroDeLIntervalle);
+    Optimisation::LinearProblemApi::FillContext fillCtx = Solver::Optimization::Simplex::LpFiller::
+      buildFillContext(pb_, numeroDeLIntervalle);
     const auto modelerData = pb_.modelerData;
     bool hasModelerData = modelerData != nullptr;
-    const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
-                                                                 : nullptr;
+    const Optimisation::LinearProblemApi::ILinearProblemData* modelerDataSeries = hasModelerData
+                                                                                    ? modelerData
+                                                                                        ->dataSeries
+                                                                                        .get()
+                                                                                    : nullptr;
 
     Optimisation::OptimEntityContainer optimEntityContainer(problem);
     if (hasModelerData)
@@ -380,7 +384,10 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProbl
         modelerData->bendersDecomposition.setCurrentProblemId(problemName({id.year, id.week + 1}));
     }
 
-    fillLinearProblem(fillCtx, &pb_, optimEntityContainer, &modelerData->bendersDecomposition);
+    Solver::Optimization::Simplex::LpFiller::fillLinearProblem(fillCtx,
+                                                               pb_,
+                                                               optimEntityContainer,
+                                                               &modelerData->bendersDecomposition);
 }
 
 const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
@@ -496,7 +503,7 @@ bool SingleProblemGetter::areWeeksIndependent() const
                                });
 }
 
-void writeWeekMPS(const std::unique_ptr<ILinearProblem>& weekly,
+void writeWeekMPS(const std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>& weekly,
                   const WeeklyProblemId& id,
                   IResultWriter::Ptr& resultWriter)
 {

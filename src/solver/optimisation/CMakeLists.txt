@@ -25,6 +25,14 @@ set(RTESOLVER_OPT
         opt_verification_presence_reserve_jmoins1.cpp
         opt_init_contraintes_hydrauliques.cpp
         opt_appel_solveur_lineaire.cpp
+        simplex/LpFiller.cpp
+        include/antares/solver/optimisation/simplex/LpFiller.h
+        simplex/SimplexOrchestrator.cpp
+        include/antares/solver/optimisation/simplex/SimplexOrchestrator.h
+        simplex/SimplexResult.cpp
+        include/antares/solver/optimisation/simplex/SimplexResult.h
+        simplex/InfeasibilityAnalyzer.cpp
+        include/antares/solver/optimisation/simplex/InfeasibilityAnalyzer.h
         opt_restaurer_les_donnees.cpp
         opt_gestion_des_couts_cas_quadratique.cpp
         opt_gestion_des_couts_cas_quadratique.cpp

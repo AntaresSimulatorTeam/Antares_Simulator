@@ -60,18 +60,21 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
 
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 
+namespace Antares::Solver::Optimization
+{
 /*!
 ** \brief Appel du solver
 **
 ** \return True si l'operation s'est bien deroulee, false si le probleme n'a pas de solution
 */
 bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
-                         PROBLEME_HEBDO*,
+                         PROBLEME_HEBDO&,
                          int,
-                         const int,
+                         int,
                          const OptPeriodStringGenerator&,
                          Solver::IResultWriter& writer,
                          IO::Outputs::SimulationTable* simulationTable);
+} // namespace Antares::Solver::Optimization
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
@@ -104,10 +107,4 @@ void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
-Optimisation::LinearProblemApi::FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo,
-                                                             int NumIntervalle);
-void fillLinearProblem(const Optimisation::LinearProblemApi::FillContext& fillCtx,
-                       PROBLEME_HEBDO* problemeHebdo,
-                       Optimisation::OptimEntityContainer& optimEntityContainer,
-                       Optimisation::BendersDecomposition* bendersDecomposition = nullptr);
 #endif /* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */

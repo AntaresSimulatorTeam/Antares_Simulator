@@ -431,7 +431,7 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_trigger_analyzer_or_named_flag)
     SimulationTable simulationTable;
 
     const bool result = OPT_AppelDuSimplexe(options,
-                                            &problemeHebdo,
+                                            problemeHebdo,
                                             0, // NumIntervalle
                                             1, // optimizationNumber
                                             generator,
@@ -495,7 +495,7 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
     SimulationTable simulationTable;
 
     const bool result = OPT_AppelDuSimplexe(options,
-                                            &problemeHebdo,
+                                            problemeHebdo,
                                             0, // NumIntervalle
                                             1, // optimizationNumber
                                             generator,
