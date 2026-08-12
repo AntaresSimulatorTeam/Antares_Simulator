@@ -39,6 +39,8 @@ std::shared_ptr<const InactiveComponentsAnalyzer> BuildInactiveComponentsAnalyze
         analyzer->setRorAllZero(pays, area.hydro.series->ror.timeSeries.containsOnlyZero());
         analyzer->setSolarAllZero(pays, area.solar.series.timeSeries.containsOnlyZero());
         analyzer->setWindAllZero(pays, area.wind.series.timeSeries.containsOnlyZero());
+        analyzer->setHydroInflowAllZero(pays,
+                                        area.hydro.series->storage.timeSeries.containsOnlyZero());
         for (unsigned column = 0; column < Data::fhhMax; ++column)
         {
             analyzer->setMiscGenColumnAllZero(pays, column, columnIsAllZero(area.miscGen, column));

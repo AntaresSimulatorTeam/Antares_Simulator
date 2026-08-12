@@ -58,6 +58,11 @@ void InactiveComponentsAnalyzer::setMiscGenColumnAllZero(uint32_t pays,
     columns[column] = value;
 }
 
+void InactiveComponentsAnalyzer::setHydroInflowAllZero(uint32_t pays, bool value)
+{
+    setFlag(hydroInflowAllZero_, pays, value);
+}
+
 bool InactiveComponentsAnalyzer::loadIsAllZero(uint32_t pays) const
 {
     return getFlag(loadAllZero_, pays);
@@ -86,6 +91,11 @@ bool InactiveComponentsAnalyzer::miscGenColumnIsAllZero(uint32_t pays, unsigned 
     }
     const auto& columns = miscGenColumnAllZero_[pays];
     return column < columns.size() && columns[column];
+}
+
+bool InactiveComponentsAnalyzer::hydroInflowIsAllZero(uint32_t pays) const
+{
+    return getFlag(hydroInflowAllZero_, pays);
 }
 
 } // namespace Antares::Optimization

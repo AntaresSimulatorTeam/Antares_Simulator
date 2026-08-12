@@ -261,7 +261,17 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
     }
 
     const int hydProd = variableManager_.HydProd(pays, pdt);
-    if (hydProd >= 0)
+    // Suppressed only when BOTH the reservoir is unmanaged AND its inflow is
+    // entirely zero: an unmanaged reservoir can still have legitimate
+    // turbine generation, so reservoirManagement alone is not enough (unlike
+    // level_percentage/actual_inflows above, which are already guarded by
+    // the HydroLevel variable's existence).
+    const bool hydroBalancePortIsSuppressed = !problemeHebdo_.CaracteristiquesHydrauliques[pays]
+                                                  .SuiviNiveauHoraire
+                                              && problemeHebdo_.inactiveComponents
+                                              && problemeHebdo_.inactiveComponents
+                                                   ->hydroInflowIsAllZero(pays);
+    if (hydProd >= 0 && !hydroBalancePortIsSuppressed)
     {
         const int pumping = variableManager_.Pumping(pays, pdt);
         const double netWithdrawal = x(hydProd) - (pumping >= 0 ? x(pumping) : 0.);

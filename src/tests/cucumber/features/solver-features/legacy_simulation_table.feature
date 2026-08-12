@@ -189,6 +189,23 @@ Feature: Legacy variables in simulation table
     And the modeler outputs contain no entries for component "area_load"
 
   @fast @short
+  Scenario: hydro balance_port.flow is absent when reservoir is unmanaged and inflow is entirely zero
+    # Base study "hydro/hydro-parameters" with reservoir management disabled
+    # (reservoir=false) AND its inflow series (mod.txt) emptied -- both
+    # conditions together, since reservoir=false alone (with real inflow)
+    # still produces legitimate turbine generation, as the existing
+    # hydro_parameters.feature scenario outline shows (year-2 production of
+    # 109200 MWh with reservoir=false but real inflow). "area_hydro" only
+    # ever carries the balance_port.flow row, so its absence here is a
+    # precise check that this specific row was suppressed.
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hydro/hydro-parameters"
+    And in input "hydro/hydro.ini" section "reservoir" variable "area" is set to "false"
+    And in input "hydro/series/area/mod.txt" the time series is emptied
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation succeeds
+    And the modeler outputs contain no entries for component "area_hydro"
+
+  @fast @short
   Scenario: actual_num_units_on is emitted in accurate unit-commitment mode
     # Study "008 Thermal fleet - Accurate unit commitment" is the accurate-mode
     # twin of 002 (same area, same clusters, same shortfall on absolute hour 34

@@ -669,6 +669,47 @@ BOOST_AUTO_TEST_CASE(port_field_hydro_flow_ignores_pumping_when_absent)
     BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_hydro")->value, 700.);
 }
 
+// --- Suppression of the hydro balance_port.flow row when the reservoir is
+// unmanaged AND its inflow series is entirely zero (point 2). Unlike
+// level_percentage/actual_inflows (guarded by the HydroLevel variable, i.e.
+// reservoirManagement alone), this row is anchored on HydProd, which exists
+// independently of reservoir management: suppressing it needs both
+// conditions, since a non-managed reservoir can still have legitimate
+// turbine generation.
+
+BOOST_AUTO_TEST_CASE(hydro_balance_port_flow_is_suppressed_when_reservoir_unmanaged_and_inflow_all_zero)
+{
+    problem.CaracteristiquesHydrauliques[0].SuiviNiveauHoraire = false;
+    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    analyzer->setHydroInflowAllZero(0, true);
+    problem.inactiveComponents = analyzer;
+    fill();
+
+    BOOST_CHECK(!FindRow(table, "balance_port.flow", "area1_hydro").has_value());
+}
+
+BOOST_AUTO_TEST_CASE(hydro_balance_port_flow_is_kept_when_reservoir_unmanaged_but_inflow_nonzero)
+{
+    problem.CaracteristiquesHydrauliques[0].SuiviNiveauHoraire = false;
+    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    analyzer->setHydroInflowAllZero(0, false);
+    problem.inactiveComponents = analyzer;
+    fill();
+
+    BOOST_CHECK(FindRow(table, "balance_port.flow", "area1_hydro").has_value());
+}
+
+BOOST_AUTO_TEST_CASE(hydro_balance_port_flow_is_kept_when_reservoir_managed_even_if_inflow_all_zero)
+{
+    problem.CaracteristiquesHydrauliques[0].SuiviNiveauHoraire = true;
+    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    analyzer->setHydroInflowAllZero(0, true);
+    problem.inactiveComponents = analyzer;
+    fill();
+
+    BOOST_CHECK(FindRow(table, "balance_port.flow", "area1_hydro").has_value());
+}
+
 BOOST_AUTO_TEST_CASE(port_field_link_flows_are_the_signed_flow_and_its_negation)
 {
     fill();
