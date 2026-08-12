@@ -32,7 +32,7 @@ target_include_directories(solver_api
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/private>
 )
 
-find_package(Boost REQUIRED COMPONENTS iostreams)
+find_package(Boost CONFIG REQUIRED COMPONENTS iostreams)
 target_link_libraries(solver_api
         PRIVATE
         Antares::concurrency

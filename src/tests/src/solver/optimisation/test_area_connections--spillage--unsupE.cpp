@@ -20,9 +20,9 @@ using namespace std::string_literals;
 using namespace Antares;
 using namespace Antares::Optimization;
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::Optimisation;
-using namespace LinearProblemApi;
-using namespace LinearProblemDataImpl;
+using namespace Antares::LinearProblem;
+using namespace Api;
+using namespace DataImpl;
 
 static const auto libraryYamlWithSpillageAndUnsuppliedEnergyBound = R"(
 library:
@@ -96,7 +96,7 @@ struct AreaConnectionFixture
     ScenarioGroupRepository scenarioGroupRepository; // Empty
 
     // ... Hybrid / Legacy linear problem
-    LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem;
+    MpsolverImpl::OrtoolsLinearProblem linearProblem;
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
     std::unique_ptr<OptimEntityContainer> optimContainer;
 

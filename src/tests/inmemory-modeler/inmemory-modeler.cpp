@@ -13,7 +13,7 @@
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/parameter.h"
 
-using namespace Antares::Optimisation;
+using namespace Antares::LinearProblem;
 using namespace Antares::Expressions;
 using namespace Antares::Solver;
 
@@ -28,11 +28,11 @@ std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
 }
 
 void LinearProblemBuildingFixture::buildLinearProblem(
-  LinearProblemApi::FillContext& time_scenario_ctx,
-  LinearProblemDataImpl::LinearProblemData& dummy_data,
-  std::vector<std::unique_ptr<LinearProblemApi::IScenario>>& scenarios)
+  Api::FillContext& time_scenario_ctx,
+  DataImpl::LinearProblemData& dummy_data,
+  std::vector<std::unique_ptr<Api::IScenario>>& scenarios)
 {
-    std::vector<std::unique_ptr<LinearProblemApi::LinearProblemFiller>> fillers;
+    std::vector<std::unique_ptr<Api::LinearProblemFiller>> fillers;
     // All LP variables coordinates (component id, variable id, scenario, time step)
 
     for (auto& scenario: scenarios)
@@ -40,7 +40,7 @@ void LinearProblemBuildingFixture::buildLinearProblem(
         auto name = scenario->group();
         scenarioGroupRepo.addScenario(name, std::move(scenario));
     }
-    pb = std::make_unique<LinearProblemMpsolverImpl::OrtoolsLinearProblem>(false, "sirius");
+    pb = std::make_unique<MpsolverImpl::OrtoolsLinearProblem>(false, "sirius");
     optimEntityContainer = std::make_unique<OptimEntityContainer>(*pb);
     optimEntityContainer->addFromSystemComponents(components);
     for (auto& component: components)
@@ -52,21 +52,20 @@ void LinearProblemBuildingFixture::buildLinearProblem(
                                                     Config::Location::SUBPROBLEMS);
         fillers.push_back(std::move(cf));
     }
-    LinearProblemApi::LinearProblemBuilder linear_problem_builder(fillers);
+    Api::LinearProblemBuilder linear_problem_builder(fillers);
 
     linear_problem_builder.build(time_scenario_ctx);
 }
 
-void LinearProblemBuildingFixture::buildLinearProblem(
-  LinearProblemApi::FillContext& time_scenario_ctx)
+void LinearProblemBuildingFixture::buildLinearProblem(Api::FillContext& time_scenario_ctx)
 {
-    std::vector<std::unique_ptr<LinearProblemApi::IScenario>> scenarios;
+    std::vector<std::unique_ptr<Api::IScenario>> scenarios;
     buildLinearProblem(time_scenario_ctx, dummy_data_, scenarios);
 }
 
 void LinearProblemBuildingFixture::buildLinearProblem()
 {
-    LinearProblemApi::FillContext time_scenario_ctx = {0, 0, 0, 0, 0};
+    Api::FillContext time_scenario_ctx = {0, 0, 0, 0, 0};
     buildLinearProblem(time_scenario_ctx);
 }
 

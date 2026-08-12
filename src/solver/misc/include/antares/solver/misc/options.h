@@ -54,7 +54,7 @@ public:
 
     Yuni::String PID;
     bool forceZipOutput = false;
-    Antares::Solver::Optimization::CmdLineOptimOptions solverOptions;
+    Antares::Optimization::CmdLineOptimOptions solverOptions;
 }; // class Settings
 
 /*!

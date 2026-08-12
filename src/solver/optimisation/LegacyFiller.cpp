@@ -5,12 +5,12 @@
 
 #include <spx_constantes_externes.h>
 
-using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::LinearProblem::Api;
 
 namespace Antares::Optimization
 {
 
-LegacyFiller::LegacyFiller(Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+LegacyFiller::LegacyFiller(LinearProblem::Api::ILinearProblem& linearProblem,
                            const PROBLEME_HEBDO* problemeHebdo):
     problemeAResoudre_(problemeHebdo->ProblemeAResoudre.get()),
     linearProblem_(linearProblem)

@@ -11,7 +11,7 @@
 
 #include "UtilMocks.h"
 
-using namespace Antares::Optimisation;
+using namespace Antares::LinearProblem;
 using namespace Antares::Expressions;
 using namespace Antares::ModelerStudy;
 using namespace Antares::Expressions::Nodes;
@@ -20,16 +20,16 @@ using namespace Antares::Expressions::Visitors;
 inline ScenarioGroupRepository createScenario()
 {
     ScenarioGroupRepository scenarioGroupRepository;
-    auto scenarioPtr = std::make_unique<LinearProblemDataImpl::Scenario>("SCENARIO_GROUP");
+    auto scenarioPtr = std::make_unique<DataImpl::Scenario>("SCENARIO_GROUP");
     scenarioPtr->setTimeSerieNumber(0, 1);
     scenarioGroupRepository.addScenario("SCENARIO_GROUP", std::move(scenarioPtr));
-    scenarioPtr = std::make_unique<LinearProblemDataImpl::Scenario>("GROUP");
+    scenarioPtr = std::make_unique<DataImpl::Scenario>("GROUP");
     scenarioPtr->setTimeSerieNumber(0, 1);
     scenarioGroupRepository.addScenario("GROUP", std::move(scenarioPtr));
     return scenarioGroupRepository;
 }
 
-struct MockLinearProblemData: LinearProblemApi::ILinearProblemData
+struct MockLinearProblemData: Api::ILinearProblemData
 {
     [[nodiscard]] double getData(const std::string& /*dataSetId*/,
                                  unsigned /*scenario*/,
@@ -54,13 +54,13 @@ struct VisitorFixture: Registry<Node>
 {
     MockLinearProblem linearProblem;
     MockLinearProblemData data;
-    LinearProblemApi::EmptyScenario empty_scenario;
+    Api::EmptyScenario empty_scenario;
     ScenarioGroupRepository scenarioGroupRepository;
     SystemModel::Model m;
 
     OptimEntityContainer optimContainer;
     std::vector<SystemModel::Component> components;
-    LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
+    Api::FillContext ctx{0, 0, 0, 0, 0};
 
     VisitorFixture():
         linearProblem(false),

@@ -6,9 +6,9 @@
 
 #include "antares/optimisation/linear-problem-api/hasStatus.h"
 
-namespace Antares::Optimisation::LinearProblemMpsolverImpl
+namespace Antares::LinearProblem::MpsolverImpl
 {
-LinearProblemApi::MipBasisStatus convertOrtoolsBasisStatus(
+Api::MipBasisStatus convertOrtoolsBasisStatus(
   const operations_research::MPSolver::BasisStatus& status);
 
-} // namespace Antares::Optimisation::LinearProblemMpsolverImpl
+} // namespace Antares::LinearProblem::MpsolverImpl

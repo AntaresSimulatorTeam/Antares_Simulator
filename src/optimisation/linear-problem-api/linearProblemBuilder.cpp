@@ -6,7 +6,7 @@
 
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 
 LinearProblemBuilder::LinearProblemBuilder(
@@ -22,4 +22,4 @@ void LinearProblemBuilder::build(const FillContext& ctx)
     std::ranges::for_each(fillers_, [&](const auto& filler) { filler->addObjectives(ctx); });
 }
 
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace Antares::LinearProblem::Api

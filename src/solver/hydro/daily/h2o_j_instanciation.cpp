@@ -4,7 +4,7 @@
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
-namespace DoneesOptimisationJournaliere
+namespace Antares::Solver::Hydro::Daily
 {
 DONNEES_MENSUELLES H2O_J_Instanciation()
 {
@@ -156,4 +156,4 @@ DONNEES_MENSUELLES H2O_J_Instanciation()
 
     return DonneesMensuelles;
 }
-} // namespace DoneesOptimisationJournaliere
+} // namespace Antares::Solver::Hydro::Daily
