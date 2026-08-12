@@ -275,7 +275,7 @@ void LegacyExtraOutputEmitter::linkOutputs(uint32_t interco, int pdt)
 
     const int dissociation = problemeHebdo_.CorrespondanceCntNativesCntOptim[pdt]
                                .NumeroDeContrainteDeDissociationDeFlux[interco];
-    emit("capacity_shadow_price", link, pdt, std::abs(dual(dissociation)));
+    emit("capacity_shadow_price", link, pdt, -dual(dissociation));
 }
 
 void LegacyExtraOutputEmitter::thermalOutputs(uint32_t pays, int index, int pdt)
@@ -400,7 +400,7 @@ void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays)
     for (std::size_t layer = 0; layer < layerCount; ++layer)
     {
         const int layerStorage = variableManager_.LayerStorage(pays, layer);
-        bellmanValue += cost(layerStorage) * x(layerStorage);
+        bellmanValue -= cost(layerStorage) * x(layerStorage);
     }
     emit("bellman_value", problemeHebdo_.NomsDesPays[pays], pdt, bellmanValue);
 }
