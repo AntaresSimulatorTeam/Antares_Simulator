@@ -138,34 +138,34 @@ $(document).ready(function(){initNavTree('Dimensions_8h_source.html',''); initRe
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;MCYearAndTime.h&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html">Antares::Optimisation::LinearProblemApi</a></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAntares_1_1LinearProblem_1_1Api.html">Antares::LinearProblem::Api</a></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">class </span>IMipVariable;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;}</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAntares_1_1Optimisation.html">Antares::Optimisation</a></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAntares_1_1LinearProblem.html">Antares::LinearProblem</a></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="structAntares_1_1Optimisation_1_1IntegerInterval.html">   20</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Optimisation_1_1IntegerInterval.html">IntegerInterval</a></div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="structAntares_1_1LinearProblem_1_1IntegerInterval.html">   20</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1LinearProblem_1_1IntegerInterval.html">IntegerInterval</a></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;{</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> initialTime = 0;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> finalTime = 0;</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html">   25</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html">Iterator</a> final</div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classAntares_1_1LinearProblem_1_1IntegerInterval_1_1Iterator.html">   25</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classAntares_1_1LinearProblem_1_1IntegerInterval_1_1Iterator.html">Iterator</a> final</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    {</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html">Iterator</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> current);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1LinearProblem_1_1IntegerInterval_1_1Iterator.html">Iterator</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> current);</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> operator*() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <a class="code" href="classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html">Iterator</a>&amp; operator++();</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html">Iterator</a>&amp; other) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <a class="code" href="classAntares_1_1LinearProblem_1_1IntegerInterval_1_1Iterator.html">Iterator</a>&amp; operator++();</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> <a class="code" href="classAntares_1_1LinearProblem_1_1IntegerInterval_1_1Iterator.html">Iterator</a>&amp; other) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> current_;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    };</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    [[nodiscard]] <a class="code" href="classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html">Iterator</a> begin()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    [[nodiscard]] <a class="code" href="classAntares_1_1LinearProblem_1_1IntegerInterval_1_1Iterator.html">Iterator</a> begin()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html">Iterator</a>(initialTime);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="classAntares_1_1LinearProblem_1_1IntegerInterval_1_1Iterator.html">Iterator</a>(initialTime);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    }</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    [[nodiscard]] Iterator end()<span class="keyword"> const</span></div>
@@ -179,16 +179,16 @@ $(document).ready(function(){initNavTree('Dimensions_8h_source.html',''); initRe
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    }</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;};</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1Dimensions.html">   53</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1Dimensions.html">Dimensions</a> final</div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classAntares_1_1LinearProblem_1_1Dimensions.html">   53</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1LinearProblem_1_1Dimensions.html">Dimensions</a> final</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="classAntares_1_1Optimisation_1_1Dimensions.html">Dimensions</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="classAntares_1_1Optimisation_1_1Dimensions.html">Dimensions</a>(std::optional&lt;IntegerInterval&gt; mcyearInterval,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="classAntares_1_1LinearProblem_1_1Dimensions.html">Dimensions</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="classAntares_1_1LinearProblem_1_1Dimensions.html">Dimensions</a>(std::optional&lt;IntegerInterval&gt; mcyearInterval,</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;               std::optional&lt;IntegerInterval&gt; timeInterval);</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    [[nodiscard]] <span class="keywordtype">bool</span> isTimeDependent() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    [[nodiscard]] <span class="keywordtype">bool</span> isScenarioDependent() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    [[nodiscard]] <a class="code" href="structAntares_1_1Optimisation_1_1IntegerInterval.html">IntegerInterval</a> getTimesteps() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    [[nodiscard]] <a class="code" href="structAntares_1_1Optimisation_1_1IntegerInterval.html">IntegerInterval</a> getScenarioIndices() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    [[nodiscard]] <a class="code" href="structAntares_1_1LinearProblem_1_1IntegerInterval.html">IntegerInterval</a> getTimesteps() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    [[nodiscard]] <a class="code" href="structAntares_1_1LinearProblem_1_1IntegerInterval.html">IntegerInterval</a> getScenarioIndices() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    [[nodiscard]] <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> getNumberOfTimesteps() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">private</span>:</div>
@@ -202,12 +202,12 @@ $(document).ready(function(){initNavTree('Dimensions_8h_source.html',''); initRe
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                              std::optional&lt;Optimization::MCYearAndTime::MCYear&gt; mcyear,</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                              std::optional&lt;unsigned int&gt; timestep);</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;} <span class="comment">// namespace Antares::Optimisation</span></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1Dimensions_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1Dimensions.html">Antares::Optimisation::Dimensions</a></div><div class="ttdef"><b>Definition:</b> Dimensions.h:54</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html">Antares::Optimisation::IntegerInterval::Iterator</a></div><div class="ttdef"><b>Definition:</b> Dimensions.h:26</div></div>
-<div class="ttc" id="anamespaceAntares_1_1Optimisation_1_1LinearProblemApi_html"><div class="ttname"><a href="namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html">Antares::Optimisation::LinearProblemApi</a></div><div class="ttdoc">Namespace for the classes related to the linear problem API.</div><div class="ttdef"><b>Definition:</b> SimulationTableGenerator.h:24</div></div>
-<div class="ttc" id="anamespaceAntares_1_1Optimisation_html"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html">Antares::Optimisation</a></div><div class="ttdef"><b>Definition:</b> VariableNode.h:12</div></div>
-<div class="ttc" id="astructAntares_1_1Optimisation_1_1IntegerInterval_html"><div class="ttname"><a href="structAntares_1_1Optimisation_1_1IntegerInterval.html">Antares::Optimisation::IntegerInterval</a></div><div class="ttdef"><b>Definition:</b> Dimensions.h:21</div></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;} <span class="comment">// namespace Antares::LinearProblem</span></div>
+<div class="ttc" id="aclassAntares_1_1LinearProblem_1_1Dimensions_html"><div class="ttname"><a href="classAntares_1_1LinearProblem_1_1Dimensions.html">Antares::LinearProblem::Dimensions</a></div><div class="ttdef"><b>Definition:</b> Dimensions.h:54</div></div>
+<div class="ttc" id="aclassAntares_1_1LinearProblem_1_1IntegerInterval_1_1Iterator_html"><div class="ttname"><a href="classAntares_1_1LinearProblem_1_1IntegerInterval_1_1Iterator.html">Antares::LinearProblem::IntegerInterval::Iterator</a></div><div class="ttdef"><b>Definition:</b> Dimensions.h:26</div></div>
+<div class="ttc" id="anamespaceAntares_1_1LinearProblem_1_1Api_html"><div class="ttname"><a href="namespaceAntares_1_1LinearProblem_1_1Api.html">Antares::LinearProblem::Api</a></div><div class="ttdoc">Namespace for the classes related to the linear problem API.</div><div class="ttdef"><b>Definition:</b> SimulationTableGenerator.h:24</div></div>
+<div class="ttc" id="anamespaceAntares_1_1LinearProblem_html"><div class="ttname"><a href="namespaceAntares_1_1LinearProblem.html">Antares::LinearProblem</a></div><div class="ttdef"><b>Definition:</b> VariableNode.h:12</div></div>
+<div class="ttc" id="astructAntares_1_1LinearProblem_1_1IntegerInterval_html"><div class="ttname"><a href="structAntares_1_1LinearProblem_1_1IntegerInterval.html">Antares::LinearProblem::IntegerInterval</a></div><div class="ttdef"><b>Definition:</b> Dimensions.h:21</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

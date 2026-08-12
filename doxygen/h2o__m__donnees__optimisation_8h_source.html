@@ -140,13 +140,13 @@ $(document).ready(function(){initNavTree('h2o__m__donnees__optimisation_8h_sourc
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#define LINFINI 1.e+80</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>DonneesOptimisationMensuelle</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Hydro::Monthly</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">/*--------------------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">/* Matrice des contraintes: il y aura une seule instance pour tous les reservoirs */</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">/* Dans ce struct il n&#39;y a que des donnees qui sont lues et surtout pas ecrites   */</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">/* Ce struct est instancie une seule fois                                         */</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html">   20</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html">PROBLEME_LINEAIRE_PARTIE_FIXE</a></div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html">   20</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html">PROBLEME_LINEAIRE_PARTIE_FIXE</a></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;{</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">int</span> NombreDeVariables{0};</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    std::vector&lt;double&gt; CoutLineaire;</div>
@@ -164,7 +164,7 @@ $(document).ready(function(){initNavTree('h2o__m__donnees__optimisation_8h_sourc
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;};</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">/* Partie variable renseignee avant le lancement de l&#39;optimisation de chaque reservoir */</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html">   38</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html">PROBLEME_LINEAIRE_PARTIE_VARIABLE</a></div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html">   38</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html">PROBLEME_LINEAIRE_PARTIE_VARIABLE</a></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="comment">/* Donnees variables de la matrice des contraintes */</span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="comment">/* On met quand-meme les bornes dans la partie variable pour le cas ou on voudrait avoir</span></div>
@@ -200,7 +200,7 @@ $(document).ready(function(){initNavTree('h2o__m__donnees__optimisation_8h_sourc
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;};</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">/* Les correspondances des variables */</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html">   74</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html">CORRESPONDANCE_DES_VARIABLES</a></div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1CORRESPONDANCE__DES__VARIABLES.html">   74</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1CORRESPONDANCE__DES__VARIABLES.html">CORRESPONDANCE_DES_VARIABLES</a></div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;{</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    std::vector&lt;int&gt; NumeroDeVariableVolume;</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    std::vector&lt;int&gt; NumeroDeVariableTurbine;</div>
@@ -214,24 +214,24 @@ $(document).ready(function(){initNavTree('h2o__m__donnees__optimisation_8h_sourc
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;};</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">/* Structure uniquement exploitee par l&#39;optimisation (donc a ne pas acceder depuis l&#39;exterieur) */</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html">   88</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html">PROBLEME_HYDRAULIQUE</a></div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__HYDRAULIQUE.html">   88</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__HYDRAULIQUE.html">PROBLEME_HYDRAULIQUE</a></div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;{</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">int</span> NombreDeReservoirs{0};</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <a class="code" href="structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html">CORRESPONDANCE_DES_VARIABLES</a> CorrespondanceDesVariables{};</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1CORRESPONDANCE__DES__VARIABLES.html">CORRESPONDANCE_DES_VARIABLES</a> CorrespondanceDesVariables{};</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html">PROBLEME_LINEAIRE_PARTIE_FIXE</a> ProblemeLineairePartieFixe{};</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html">PROBLEME_LINEAIRE_PARTIE_VARIABLE</a> ProblemeLineairePartieVariable{};</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html">PROBLEME_LINEAIRE_PARTIE_FIXE</a> ProblemeLineairePartieFixe{};</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html">PROBLEME_LINEAIRE_PARTIE_VARIABLE</a> ProblemeLineairePartieVariable{};</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    std::vector&lt;PROBLEME_SPX_WRAPPER&gt; ProblemeSpx; <span class="comment">/* Il y en a 1 par reservoir */</span></div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">double</span> CoutDeLaSolution{0.};</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordtype">double</span> CoutDeLaSolutionBruite{0.};</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;};</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;} <span class="comment">// namespace DonneesOptimisationMensuelle</span></div>
-<div class="ttc" id="astructDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES_html"><div class="ttname"><a href="structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html">DonneesOptimisationMensuelle::CORRESPONDANCE_DES_VARIABLES</a></div><div class="ttdef"><b>Definition:</b> h2o_m_donnees_optimisation.h:75</div></div>
-<div class="ttc" id="astructDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE_html"><div class="ttname"><a href="structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html">DonneesOptimisationMensuelle::PROBLEME_HYDRAULIQUE</a></div><div class="ttdef"><b>Definition:</b> h2o_m_donnees_optimisation.h:89</div></div>
-<div class="ttc" id="astructDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE_html"><div class="ttname"><a href="structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html">DonneesOptimisationMensuelle::PROBLEME_LINEAIRE_PARTIE_FIXE</a></div><div class="ttdef"><b>Definition:</b> h2o_m_donnees_optimisation.h:21</div></div>
-<div class="ttc" id="astructDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE_html"><div class="ttname"><a href="structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html">DonneesOptimisationMensuelle::PROBLEME_LINEAIRE_PARTIE_VARIABLE</a></div><div class="ttdef"><b>Definition:</b> h2o_m_donnees_optimisation.h:39</div></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;} <span class="comment">// namespace Antares::Solver::Hydro::Monthly</span></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1CORRESPONDANCE__DES__VARIABLES_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1CORRESPONDANCE__DES__VARIABLES.html">Antares::Solver::Hydro::Monthly::CORRESPONDANCE_DES_VARIABLES</a></div><div class="ttdef"><b>Definition:</b> h2o_m_donnees_optimisation.h:75</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__HYDRAULIQUE_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__HYDRAULIQUE.html">Antares::Solver::Hydro::Monthly::PROBLEME_HYDRAULIQUE</a></div><div class="ttdef"><b>Definition:</b> h2o_m_donnees_optimisation.h:89</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__FIXE_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html">Antares::Solver::Hydro::Monthly::PROBLEME_LINEAIRE_PARTIE_FIXE</a></div><div class="ttdef"><b>Definition:</b> h2o_m_donnees_optimisation.h:21</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html">Antares::Solver::Hydro::Monthly::PROBLEME_LINEAIRE_PARTIE_VARIABLE</a></div><div class="ttdef"><b>Definition:</b> h2o_m_donnees_optimisation.h:39</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

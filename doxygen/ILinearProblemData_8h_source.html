@@ -137,12 +137,12 @@ $(document).ready(function(){initNavTree('ILinearProblemData_8h_source.html','')
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html">Antares::Optimisation::LinearProblemApi</a></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAntares_1_1LinearProblem_1_1Api.html">Antares::LinearProblem::Api</a></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">   16</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">FillContext</a> final</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html">   16</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html">FillContext</a> final</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">FillContext</a>(<span class="keywordtype">unsigned</span> localFirstTimeStep,</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html">FillContext</a>(<span class="keywordtype">unsigned</span> localFirstTimeStep,</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;                <span class="keywordtype">unsigned</span> localLastTimeStep,</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;                <span class="keywordtype">unsigned</span> globalFirstTimeStep,</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;                <span class="keywordtype">unsigned</span> globalLastTimeStep,</div>
@@ -214,10 +214,10 @@ $(document).ready(function(){initNavTree('ILinearProblemData_8h_source.html','')
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordtype">unsigned</span> year_ = 0;</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;};</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">   95</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">ILinearProblemData</a></div>
+<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblemData.html">   95</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblemData.html">ILinearProblemData</a></div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;{</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">ILinearProblemData</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblemData.html">ILinearProblemData</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    [[nodiscard]] <span class="keyword">virtual</span> <span class="keywordtype">double</span> getData(<span class="keyword">const</span> std::string&amp; dataSetId,</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;                                         <span class="keywordtype">unsigned</span> timeSeriesNumber,</div>
@@ -230,10 +230,10 @@ $(document).ready(function(){initNavTree('ILinearProblemData_8h_source.html','')
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;      = 0;</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;};</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;} <span class="comment">// namespace Antares::Optimisation::LinearProblemApi</span></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a></div><div class="ttdoc">Context for filling linear problem data. Contains temporal information.</div><div class="ttdef"><b>Definition:</b> ILinearProblemData.h:17</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Antares::Optimisation::LinearProblemApi::ILinearProblemData</a></div><div class="ttdoc">Interface for linear problem data. Provides a method to retrieve data for a specific dataset,...</div><div class="ttdef"><b>Definition:</b> ILinearProblemData.h:96</div></div>
-<div class="ttc" id="anamespaceAntares_1_1Optimisation_1_1LinearProblemApi_html"><div class="ttname"><a href="namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html">Antares::Optimisation::LinearProblemApi</a></div><div class="ttdoc">Namespace for the classes related to the linear problem API.</div><div class="ttdef"><b>Definition:</b> SimulationTableGenerator.h:24</div></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;} <span class="comment">// namespace Antares::LinearProblem::Api</span></div>
+<div class="ttc" id="aclassAntares_1_1LinearProblem_1_1Api_1_1FillContext_html"><div class="ttname"><a href="classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html">Antares::LinearProblem::Api::FillContext</a></div><div class="ttdoc">Context for filling linear problem data. Contains temporal information.</div><div class="ttdef"><b>Definition:</b> ILinearProblemData.h:17</div></div>
+<div class="ttc" id="aclassAntares_1_1LinearProblem_1_1Api_1_1ILinearProblemData_html"><div class="ttname"><a href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblemData.html">Antares::LinearProblem::Api::ILinearProblemData</a></div><div class="ttdoc">Interface for linear problem data. Provides a method to retrieve data for a specific dataset,...</div><div class="ttdef"><b>Definition:</b> ILinearProblemData.h:96</div></div>
+<div class="ttc" id="anamespaceAntares_1_1LinearProblem_1_1Api_html"><div class="ttname"><a href="namespaceAntares_1_1LinearProblem_1_1Api.html">Antares::LinearProblem::Api</a></div><div class="ttdoc">Namespace for the classes related to the linear problem API.</div><div class="ttdef"><b>Definition:</b> SimulationTableGenerator.h:24</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

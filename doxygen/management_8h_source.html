@@ -142,21 +142,21 @@ $(document).ready(function(){initNavTree('management_8h_source.html',''); initRe
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;antares/date/date.h&quot;</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;antares/writer/i_writer.h&quot;</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">namespace </span>Antares</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Variable</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">namespace </span>Solver</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">namespace </span><a class="code" href="classVariable.html">Variable</a></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;{</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">class </span>State;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;}</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordtype">double</span> randomReservoirLevel(<span class="keywordtype">double</span> min, <span class="keywordtype">double</span> avg, <span class="keywordtype">double</span> max, MersenneTwister&amp; random);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keywordtype">double</span> BetaVariable(<span class="keywordtype">double</span> a, <span class="keywordtype">double</span> b, MersenneTwister&amp; random);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keywordtype">double</span> GammaVariable(<span class="keywordtype">double</span> a, MersenneTwister&amp; random);</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">class </span>State;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;}</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">namespace </span>Antares::Solver</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;{</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keywordtype">double</span> randomReservoirLevel(<span class="keywordtype">double</span> min, <span class="keywordtype">double</span> avg, <span class="keywordtype">double</span> max, MersenneTwister&amp; random);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keywordtype">double</span> BetaVariable(<span class="keywordtype">double</span> a, <span class="keywordtype">double</span> b, MersenneTwister&amp; random);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordtype">double</span> GammaVariable(<span class="keywordtype">double</span> a, MersenneTwister&amp; random);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;} <span class="comment">// namespace Antares::Solver</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;} <span class="comment">// namespace Solver</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">namespace </span>Antares</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
 <div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html">   31</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    std::vector&lt;double&gt; HydrauliqueModulableQuotidien; <span class="comment">/* indice par jour */</span></div>
@@ -226,7 +226,6 @@ $(document).ready(function(){initNavTree('management_8h_source.html',''); initRe
 <div class="ttc" id="aclassAntares_1_1HydroManagement_html"><div class="ttname"><a href="classAntares_1_1HydroManagement.html">Antares::HydroManagement</a></div><div class="ttdef"><b>Definition:</b> management.h:45</div></div>
 <div class="ttc" id="aclassAntares_1_1HydroManagement_html_ad49914ee7986f175f6e72e4ecce180af"><div class="ttname"><a href="classAntares_1_1HydroManagement.html#ad49914ee7986f175f6e72e4ecce180af">Antares::HydroManagement::makeVentilation</a></div><div class="ttdeci">void makeVentilation(const std::vector&lt; double &gt; &amp;randomReservoirLevel, uint y, Antares::Data::Area::ScratchMap &amp;scratchmap)</div><div class="ttdoc">Perform the hydro ventilation.</div><div class="ttdef"><b>Definition:</b> management.cpp:251</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:15</div></div>
-<div class="ttc" id="aclassVariable_html"><div class="ttname"><a href="classVariable.html">Variable</a></div><div class="ttdef"><b>Definition:</b> variable.h:8</div></div>
 <div class="ttc" id="astructAntares_1_1Data_1_1TimeDependantHydroManagementData_html"><div class="ttname"><a href="structAntares_1_1Data_1_1TimeDependantHydroManagementData.html">Antares::Data::TimeDependantHydroManagementData</a></div><div class="ttdoc">Hydro Management Data for a given area.</div><div class="ttdef"><b>Definition:</b> container.h:44</div></div>
 <div class="ttc" id="astructAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA_html"><div class="ttname"><a href="structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html">Antares::VENTILATION_HYDRO_RESULTS_BY_AREA</a></div><div class="ttdef"><b>Definition:</b> management.h:32</div></div>
 </div><!-- fragment --></div><!-- contents -->

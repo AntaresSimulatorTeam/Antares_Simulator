@@ -137,7 +137,7 @@ $(document).ready(function(){initNavTree('_2home_2runner_2work_2Antares_Simulato
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The new index after applying the rotation.</dd></dl>
-<p>// Example usage with visual representation: Optimisation::LinearProblemApi::FillContext fillContext; fillContext.NumberOfTimestep = 5; // Range size is 5 fillContext.firstTimeStep = 10; // First timestep is 10 // Timesteps range: {10, 11, 12, 13, 14}</p>
+<p>// Example usage with visual representation: LinearProblem::Api::FillContext fillContext; fillContext.NumberOfTimestep = 5; // Range size is 5 fillContext.firstTimeStep = 10; // First timestep is 10 // Timesteps range: {10, 11, 12, 13, 14}</p>
 <p>unsigned key = 12; int shift = 2; int newIndex = rotatedIndex(key, shift, fillContext);</p>
 <p>// Step-by-step calculation: // 1. Normalize shift: shift = (2 % 5 + 5) % 5 = 2 // 2. Compute relative position of key: key - firstTimeStep = 12 - 10 = 2 // 3. Apply shift: (2 + 2) % 5 = 4 // 4. Convert back to original range: 10 + 4 = 14 // newIndex will be 14</p>
 <div class="fragment"><div class="line"><span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
@@ -148,7 +148,7 @@ $(document).ready(function(){initNavTree('_2home_2runner_2work_2Antares_Simulato
 <div class="line"> </div>
 <div class="line"><span class="keyword">inline</span> <span class="keywordtype">int</span> rotatedIndex(<span class="keywordtype">unsigned</span> key,</div>
 <div class="line">                        <span class="keywordtype">int</span> shift,</div>
-<div class="line">                        <span class="keyword">const</span> <a name="_a0"></a><a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a>&amp; fillContext)</div>
+<div class="line">                        <span class="keyword">const</span> <a name="_a0"></a><a class="code" href="classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html">Antares::LinearProblem::Api::FillContext</a>&amp; fillContext)</div>
 <div class="line">{</div>
 <div class="line">    <span class="keywordtype">unsigned</span> rangeSize = fillContext.<a name="a1"></a>getLocalNumberOfTimeSteps();</div>
 <div class="line"> </div>
@@ -159,7 +159,7 @@ $(document).ready(function(){initNavTree('_2home_2runner_2work_2Antares_Simulato
 <div class="line">    <span class="keywordflow">return</span> fillContext.<a name="a2"></a>getLocalFirstTimeStep()</div>
 <div class="line">           + (key - fillContext.getLocalFirstTimeStep() + shift) % rangeSize;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a></div><div class="ttdoc">Context for filling linear problem data. Contains temporal information.</div><div class="ttdef"><b>Definition:</b> ILinearProblemData.h:17</div></div>
+<div class="ttc" id="aclassAntares_1_1LinearProblem_1_1Api_1_1FillContext_html"><div class="ttname"><a href="classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html">Antares::LinearProblem::Api::FillContext</a></div><div class="ttdoc">Context for filling linear problem data. Contains temporal information.</div><div class="ttdef"><b>Definition:</b> ILinearProblemData.h:17</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

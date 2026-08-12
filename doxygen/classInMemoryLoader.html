@@ -159,7 +159,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setModels</b> (Models
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setLowerBoundToParameter</b> (const std::string &amp;parameterId)</td></tr>
 <tr class="separator:aff967ab7187585d8eab40e3d15be2923"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f5a6f3f37638bd9e2a0137359dec693"><td class="memItemLeft" align="right" valign="top"><a id="a3f5a6f3f37638bd9e2a0137359dec693"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addParameter</b> (const std::string &amp;str, const <a class="el" href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">VV</a> &amp;type=VV::VARYING_IN_TIME_AND_SCENARIO)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addParameter</b> (const std::string &amp;str, const <a class="el" href="namespaceAntares_1_1LinearProblem.html#ab1e508d2bb9acf47acf8e6056c448ba8">VV</a> &amp;type=VV::VARYING_IN_TIME_AND_SCENARIO)</td></tr>
 <tr class="separator:a3f5a6f3f37638bd9e2a0137359dec693"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2007ee88594550698a6ba5ddee49af67"><td class="memItemLeft" align="right" valign="top"><a id="a2007ee88594550698a6ba5ddee49af67"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>addScenario</b> (const std::string &amp;str, int year, int timeSeriesNumber)</td></tr>
@@ -176,9 +176,9 @@ std::vector&lt; <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_
 <tr class="memitem:a4fe34e86e4502e536d69db56604478e1"><td class="memItemLeft" align="right" valign="top"><a id="a4fe34e86e4502e536d69db56604478e1"></a>
 <a class="el" href="structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html">Test::Modeler::LinearProblemBuildingFixture</a>&#160;</td><td class="memItemRight" valign="bottom"><b>fixture</b></td></tr>
 <tr class="separator:a4fe34e86e4502e536d69db56604478e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f51a7f9ca972b39a596275bd1df1ab8"><td class="memItemLeft" align="right" valign="top"><a id="a2f51a7f9ca972b39a596275bd1df1ab8"></a>
-std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">LinearProblemApi::ILinearProblemData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>data</b> = std::make_unique&lt;<a class="el" href="classConstantDataSeries.html">ConstantDataSeries</a>&gt;(0.)</td></tr>
-<tr class="separator:a2f51a7f9ca972b39a596275bd1df1ab8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a456f0ab69eab670a288eaee036f5ba6d"><td class="memItemLeft" align="right" valign="top"><a id="a456f0ab69eab670a288eaee036f5ba6d"></a>
+std::unique_ptr&lt; <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblemData.html">Api::ILinearProblemData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>data</b> = std::make_unique&lt;<a class="el" href="classConstantDataSeries.html">ConstantDataSeries</a>&gt;(0.)</td></tr>
+<tr class="separator:a456f0ab69eab670a288eaee036f5ba6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f101c69b56e8de27425fad23f20520a"><td class="memItemLeft" align="right" valign="top"><a id="a4f101c69b56e8de27425fad23f20520a"></a>
 <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>lower_bound</b> = fixture.literal(0.0)</td></tr>
 <tr class="separator:a4f101c69b56e8de27425fad23f20520a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,7 +192,7 @@ std::map&lt; std::string, <a class="el" href="structAntares_1_1ModelerStudy_1_1S
 std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>parameterIds</b> {}</td></tr>
 <tr class="separator:a729ccd1e3762fa30513c24126f2cd7dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3461ba29ffb878622070d9c8e536904"><td class="memItemLeft" align="right" valign="top"><a id="ae3461ba29ffb878622070d9c8e536904"></a>
-<a class="el" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">ScenarioGroupRepository</a>&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioGroupRepository</b> {}</td></tr>
+<a class="el" href="classAntares_1_1LinearProblem_1_1ScenarioGroupRepository.html">ScenarioGroupRepository</a>&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioGroupRepository</b> {}</td></tr>
 <tr class="separator:ae3461ba29ffb878622070d9c8e536904"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b2af70cb1c8bd618be35d1f95701d66"><td class="memItemLeft" align="right" valign="top"><a id="a3b2af70cb1c8bd618be35d1f95701d66"></a>
 std::unordered_map&lt; std::string, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>groupes</b></td></tr>

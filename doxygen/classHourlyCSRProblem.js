@@ -1,6 +1,6 @@
 var classHourlyCSRProblem =
 [
-    [ "HourlyCSRProblem", "classHourlyCSRProblem.html#a0bbfe5a015b179a2e6b093d8bf616ccd", null ],
+    [ "HourlyCSRProblem", "classHourlyCSRProblem.html#a9ebeb4a2dad9c45058a4773d4f9f3a6b", null ],
     [ "HourlyCSRProblem", "classHourlyCSRProblem.html#afa523f3b628a7b39da9842dc53038bde", null ],
     [ "operator=", "classHourlyCSRProblem.html#ab3bd53f11f7d145239d4fb00263c9cc9", null ],
     [ "run", "classHourlyCSRProblem.html#a66ec7819122565c6d9ce634b42dd4317", null ],

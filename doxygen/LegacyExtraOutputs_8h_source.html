@@ -145,26 +145,23 @@ $(document).ready(function(){initNavTree('LegacyExtraOutputs_8h_source.html','')
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">// Block-relative time index of an absolute hour, empty when the hour falls</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">// outside the block&#39;s global time window. Shared by the raw legacy rows and</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">// the derived extra outputs so both use the same row conventions.</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;std::optional&lt;unsigned&gt; LegacyBlockTimeIndex(</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a>&amp; fillContext,</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="keywordtype">unsigned</span> timeIndex);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">// Adds the derived &quot;extra outputs&quot; of the legacy solver to the simulation</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">// table. Iterates the study structure (areas, links, thermal clusters) hour</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// by hour and reads the solved problem through the variable / constraint</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// correspondence tables, so every operand is fetched by index; study data</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">// (capacities, inflows, emission factors, ...) is read straight from</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// problemeHebdo. problemeHebdo is non-const only because the correspondence</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// accessors (VariableManager) expose indices as mutable references; nothing</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// is written.</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keywordtype">void</span> AddLegacyExtraOutputs(<a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a>&amp; simulationTable,</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                           <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problemeHebdo,</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;                           <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a>&amp; fillContext,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                           <span class="keywordtype">unsigned</span> currentBlock);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;} <span class="comment">// namespace Antares::Optimization</span></div>
-<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1SimulationTable_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a></div><div class="ttdef"><b>Definition:</b> SimulationTable.h:15</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a></div><div class="ttdoc">Context for filling linear problem data. Contains temporal information.</div><div class="ttdef"><b>Definition:</b> ILinearProblemData.h:17</div></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;std::optional&lt;unsigned&gt; LegacyBlockTimeIndex(<span class="keyword">const</span> LinearProblem::Api::FillContext&amp; fillContext,</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;                                             <span class="keywordtype">unsigned</span> timeIndex);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">// Adds the derived &quot;extra outputs&quot; of the legacy solver to the simulation</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">// table. Iterates the study structure (areas, links, thermal clusters) hour</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">// by hour and reads the solved problem through the variable / constraint</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// correspondence tables, so every operand is fetched by index; study data</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// (capacities, inflows, emission factors, ...) is read straight from</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">// problemeHebdo. problemeHebdo is non-const only because the correspondence</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// accessors (VariableManager) expose indices as mutable references; nothing</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// is written.</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keywordtype">void</span> AddLegacyExtraOutputs(IO::Outputs::SimulationTable&amp; simulationTable,</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;                           <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problemeHebdo,</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                           <span class="keyword">const</span> LinearProblem::Api::FillContext&amp; fillContext,</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;                           <span class="keywordtype">unsigned</span> currentBlock);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;} <span class="comment">// namespace Antares::Optimization</span></div>
 <div class="ttc" id="astructPROBLEME__HEBDO_html"><div class="ttname"><a href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a></div><div class="ttdef"><b>Definition:</b> sim_structure_probleme_economique.h:547</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

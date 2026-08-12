@@ -21,6 +21,6 @@ var classAntares_1_1Data_1_1StudyLoadOptions =
     [ "noTimeseriesImportIntoInput", "classAntares_1_1Data_1_1StudyLoadOptions.html#a6d101aeacfd15c3b07fc41acce1b5ced", null ],
     [ "simplexOptimizationRange", "classAntares_1_1Data_1_1StudyLoadOptions.html#a2ef386b36efcd3f12fd76d8756207510", null ],
     [ "simulationName", "classAntares_1_1Data_1_1StudyLoadOptions.html#a7f46b763fc9723a43fc17b176f068273", null ],
-    [ "solverOptions", "classAntares_1_1Data_1_1StudyLoadOptions.html#a26528ad441dfb71aff8b27dffbaee652", null ],
+    [ "solverOptions", "classAntares_1_1Data_1_1StudyLoadOptions.html#a651736fc403ef74a023c045af37c3461", null ],
     [ "studyFolder", "classAntares_1_1Data_1_1StudyLoadOptions.html#a8b2652d4b8d243b3b49d4f9359f1d2d1", null ]
 ];

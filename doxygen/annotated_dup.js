@@ -324,6 +324,60 @@ var annotated_dup =
           [ "MpsColumnEntry", "structAntares_1_1IO_1_1Outputs_1_1MpsColumnEntry.html", "structAntares_1_1IO_1_1Outputs_1_1MpsColumnEntry" ]
         ] ]
       ] ],
+      [ "LinearProblem", "namespaceAntares_1_1LinearProblem.html", [
+        [ "Api", "namespaceAntares_1_1LinearProblem_1_1Api.html", [
+          [ "IHasBounds", "classAntares_1_1LinearProblem_1_1Api_1_1IHasBounds.html", "classAntares_1_1LinearProblem_1_1Api_1_1IHasBounds" ],
+          [ "IHasName", "classAntares_1_1LinearProblem_1_1Api_1_1IHasName.html", "classAntares_1_1LinearProblem_1_1Api_1_1IHasName" ],
+          [ "IHasStatus", "classAntares_1_1LinearProblem_1_1Api_1_1IHasStatus.html", "classAntares_1_1LinearProblem_1_1Api_1_1IHasStatus" ],
+          [ "FillContext", "classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html", "classAntares_1_1LinearProblem_1_1Api_1_1FillContext" ],
+          [ "ILinearProblemData", "classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblemData.html", "classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblemData" ],
+          [ "IScenario", "classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html", "classAntares_1_1LinearProblem_1_1Api_1_1IScenario" ],
+          [ "EmptyScenario", "classAntares_1_1LinearProblem_1_1Api_1_1EmptyScenario.html", "classAntares_1_1LinearProblem_1_1Api_1_1EmptyScenario" ],
+          [ "ILinearProblem", "classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html", "classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem" ],
+          [ "LinearProblemBuilder", "classAntares_1_1LinearProblem_1_1Api_1_1LinearProblemBuilder.html", "classAntares_1_1LinearProblem_1_1Api_1_1LinearProblemBuilder" ],
+          [ "LinearProblemFiller", "classAntares_1_1LinearProblem_1_1Api_1_1LinearProblemFiller.html", "classAntares_1_1LinearProblem_1_1Api_1_1LinearProblemFiller" ],
+          [ "IMipConstraint", "classAntares_1_1LinearProblem_1_1Api_1_1IMipConstraint.html", "classAntares_1_1LinearProblem_1_1Api_1_1IMipConstraint" ],
+          [ "IMipSolution", "classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html", "classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution" ],
+          [ "IMipVariable", "classAntares_1_1LinearProblem_1_1Api_1_1IMipVariable.html", "classAntares_1_1LinearProblem_1_1Api_1_1IMipVariable" ],
+          [ "StructuredMipVariable", "classAntares_1_1LinearProblem_1_1Api_1_1StructuredMipVariable.html", "classAntares_1_1LinearProblem_1_1Api_1_1StructuredMipVariable" ],
+          [ "StructuredMipConstraint", "classAntares_1_1LinearProblem_1_1Api_1_1StructuredMipConstraint.html", "classAntares_1_1LinearProblem_1_1Api_1_1StructuredMipConstraint" ],
+          [ "StructuredLinearProblem", "classAntares_1_1LinearProblem_1_1Api_1_1StructuredLinearProblem.html", "classAntares_1_1LinearProblem_1_1Api_1_1StructuredLinearProblem" ],
+          [ "VarFillerContext", "classAntares_1_1LinearProblem_1_1Api_1_1VarFillerContext.html", "classAntares_1_1LinearProblem_1_1Api_1_1VarFillerContext" ],
+          [ "OneConstraintFiller", "classAntares_1_1LinearProblem_1_1Api_1_1OneConstraintFiller.html", "classAntares_1_1LinearProblem_1_1Api_1_1OneConstraintFiller" ],
+          [ "OneVarFiller", "classAntares_1_1LinearProblem_1_1Api_1_1OneVarFiller.html", "classAntares_1_1LinearProblem_1_1Api_1_1OneVarFiller" ],
+          [ "TwoVarsTwoConstraintsFiller", "classAntares_1_1LinearProblem_1_1Api_1_1TwoVarsTwoConstraintsFiller.html", "classAntares_1_1LinearProblem_1_1Api_1_1TwoVarsTwoConstraintsFiller" ]
+        ] ],
+        [ "DataImpl", null, [
+          [ "IDataSeries", "classAntares_1_1LinearProblem_1_1DataImpl_1_1IDataSeries.html", "classAntares_1_1LinearProblem_1_1DataImpl_1_1IDataSeries" ],
+          [ "DataSeriesRepository", "classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository.html", "classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository" ],
+          [ "LinearProblemData", "classAntares_1_1LinearProblem_1_1DataImpl_1_1LinearProblemData.html", "classAntares_1_1LinearProblem_1_1DataImpl_1_1LinearProblemData" ],
+          [ "Scenario", "classAntares_1_1LinearProblem_1_1DataImpl_1_1Scenario.html", "classAntares_1_1LinearProblem_1_1DataImpl_1_1Scenario" ],
+          [ "TimeSeriesSet", "classAntares_1_1LinearProblem_1_1DataImpl_1_1TimeSeriesSet.html", "classAntares_1_1LinearProblem_1_1DataImpl_1_1TimeSeriesSet" ]
+        ] ],
+        [ "MpsolverImpl", null, [
+          [ "OrtoolsLinearProblem", "classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html", "classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem" ],
+          [ "OrtoolsMipConstraint", "classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsMipConstraint.html", "classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsMipConstraint" ],
+          [ "OrtoolsMipSolution", "classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsMipSolution.html", "classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsMipSolution" ],
+          [ "OrtoolsMipVariable", "classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsMipVariable.html", "classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsMipVariable" ]
+        ] ],
+        [ "EvaluationContext", "classAntares_1_1LinearProblem_1_1EvaluationContext.html", "classAntares_1_1LinearProblem_1_1EvaluationContext" ],
+        [ "OptimComponent", "structAntares_1_1LinearProblem_1_1OptimComponent.html", "structAntares_1_1LinearProblem_1_1OptimComponent" ],
+        [ "OptimEntityContainer", "classAntares_1_1LinearProblem_1_1OptimEntityContainer.html", "classAntares_1_1LinearProblem_1_1OptimEntityContainer" ],
+        [ "ScenarioGroupRepository", "classAntares_1_1LinearProblem_1_1ScenarioGroupRepository.html", "classAntares_1_1LinearProblem_1_1ScenarioGroupRepository" ],
+        [ "DefaultScenario", "classAntares_1_1LinearProblem_1_1DefaultScenario.html", "classAntares_1_1LinearProblem_1_1DefaultScenario" ],
+        [ "VariableNames", "classAntares_1_1LinearProblem_1_1VariableNames.html", "classAntares_1_1LinearProblem_1_1VariableNames" ],
+        [ "AddVariableVisitor", "classAntares_1_1LinearProblem_1_1AddVariableVisitor.html", "classAntares_1_1LinearProblem_1_1AddVariableVisitor" ],
+        [ "CouplingVariable", "structAntares_1_1LinearProblem_1_1CouplingVariable.html", "structAntares_1_1LinearProblem_1_1CouplingVariable" ],
+        [ "BendersDecomposition", "classAntares_1_1LinearProblem_1_1BendersDecomposition.html", "classAntares_1_1LinearProblem_1_1BendersDecomposition" ],
+        [ "BendersDecompositionWriter", "classAntares_1_1LinearProblem_1_1BendersDecompositionWriter.html", "classAntares_1_1LinearProblem_1_1BendersDecompositionWriter" ],
+        [ "ComponentFiller", "classAntares_1_1LinearProblem_1_1ComponentFiller.html", "classAntares_1_1LinearProblem_1_1ComponentFiller" ],
+        [ "IntegerInterval", "structAntares_1_1LinearProblem_1_1IntegerInterval.html", "structAntares_1_1LinearProblem_1_1IntegerInterval" ],
+        [ "Dimensions", "classAntares_1_1LinearProblem_1_1Dimensions.html", "classAntares_1_1LinearProblem_1_1Dimensions" ],
+        [ "EvaluationContextProvider", "classAntares_1_1LinearProblem_1_1EvaluationContextProvider.html", "classAntares_1_1LinearProblem_1_1EvaluationContextProvider" ],
+        [ "LinearConstraint", "structAntares_1_1LinearProblem_1_1LinearConstraint.html", "structAntares_1_1LinearProblem_1_1LinearConstraint" ],
+        [ "ReadLinearConstraintVisitor", "classAntares_1_1LinearProblem_1_1ReadLinearConstraintVisitor.html", "classAntares_1_1LinearProblem_1_1ReadLinearConstraintVisitor" ],
+        [ "ReadLinearExpressionVisitor", "classAntares_1_1LinearProblem_1_1ReadLinearExpressionVisitor.html", "classAntares_1_1LinearProblem_1_1ReadLinearExpressionVisitor" ]
+      ] ],
       [ "ModelerStudy", null, [
         [ "SystemModel", null, [
           [ "Expression", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression" ],
@@ -354,61 +408,10 @@ var annotated_dup =
           [ "Variable", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Variable.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Variable" ]
         ] ]
       ] ],
-      [ "Optimisation", "namespaceAntares_1_1Optimisation.html", [
-        [ "LinearProblemApi", "namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html", [
-          [ "IHasBounds", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds" ],
-          [ "IHasName", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName" ],
-          [ "IHasStatus", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus" ],
-          [ "FillContext", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext" ],
-          [ "ILinearProblemData", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData" ],
-          [ "IScenario", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario" ],
-          [ "EmptyScenario", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1EmptyScenario.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1EmptyScenario" ],
-          [ "ILinearProblem", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem" ],
-          [ "LinearProblemBuilder", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemBuilder.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemBuilder" ],
-          [ "LinearProblemFiller", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemFiller.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1LinearProblemFiller" ],
-          [ "IMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint" ],
-          [ "IMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution" ],
-          [ "IMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable" ],
-          [ "StructuredMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipVariable.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipVariable" ],
-          [ "StructuredMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipConstraint.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipConstraint" ],
-          [ "StructuredLinearProblem", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredLinearProblem.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredLinearProblem" ],
-          [ "VarFillerContext", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1VarFillerContext.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1VarFillerContext" ],
-          [ "OneConstraintFiller", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1OneConstraintFiller.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1OneConstraintFiller" ],
-          [ "OneVarFiller", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1OneVarFiller.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1OneVarFiller" ],
-          [ "TwoVarsTwoConstraintsFiller", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1TwoVarsTwoConstraintsFiller.html", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1TwoVarsTwoConstraintsFiller" ]
-        ] ],
-        [ "LinearProblemDataImpl", null, [
-          [ "IDataSeries", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1IDataSeries.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1IDataSeries" ],
-          [ "DataSeriesRepository", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository" ],
-          [ "LinearProblemData", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData" ],
-          [ "Scenario", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1Scenario.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1Scenario" ],
-          [ "TimeSeriesSet", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet.html", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet" ]
-        ] ],
-        [ "LinearProblemMpsolverImpl", null, [
-          [ "OrtoolsLinearProblem", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem" ],
-          [ "OrtoolsMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint" ],
-          [ "OrtoolsMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution" ],
-          [ "OrtoolsMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable" ]
-        ] ],
-        [ "EvaluationContext", "classAntares_1_1Optimisation_1_1EvaluationContext.html", "classAntares_1_1Optimisation_1_1EvaluationContext" ],
-        [ "OptimComponent", "structAntares_1_1Optimisation_1_1OptimComponent.html", "structAntares_1_1Optimisation_1_1OptimComponent" ],
-        [ "OptimEntityContainer", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html", "classAntares_1_1Optimisation_1_1OptimEntityContainer" ],
-        [ "ScenarioGroupRepository", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository" ],
-        [ "DefaultScenario", "classAntares_1_1Optimisation_1_1DefaultScenario.html", "classAntares_1_1Optimisation_1_1DefaultScenario" ],
-        [ "VariableNames", "classAntares_1_1Optimisation_1_1VariableNames.html", "classAntares_1_1Optimisation_1_1VariableNames" ],
-        [ "AddVariableVisitor", "classAntares_1_1Optimisation_1_1AddVariableVisitor.html", "classAntares_1_1Optimisation_1_1AddVariableVisitor" ],
-        [ "CouplingVariable", "structAntares_1_1Optimisation_1_1CouplingVariable.html", "structAntares_1_1Optimisation_1_1CouplingVariable" ],
-        [ "BendersDecomposition", "classAntares_1_1Optimisation_1_1BendersDecomposition.html", "classAntares_1_1Optimisation_1_1BendersDecomposition" ],
-        [ "BendersDecompositionWriter", "classAntares_1_1Optimisation_1_1BendersDecompositionWriter.html", "classAntares_1_1Optimisation_1_1BendersDecompositionWriter" ],
-        [ "ComponentFiller", "classAntares_1_1Optimisation_1_1ComponentFiller.html", "classAntares_1_1Optimisation_1_1ComponentFiller" ],
-        [ "IntegerInterval", "structAntares_1_1Optimisation_1_1IntegerInterval.html", "structAntares_1_1Optimisation_1_1IntegerInterval" ],
-        [ "Dimensions", "classAntares_1_1Optimisation_1_1Dimensions.html", "classAntares_1_1Optimisation_1_1Dimensions" ],
-        [ "EvaluationContextProvider", "classAntares_1_1Optimisation_1_1EvaluationContextProvider.html", "classAntares_1_1Optimisation_1_1EvaluationContextProvider" ],
-        [ "LinearConstraint", "structAntares_1_1Optimisation_1_1LinearConstraint.html", "structAntares_1_1Optimisation_1_1LinearConstraint" ],
-        [ "ReadLinearConstraintVisitor", "classAntares_1_1Optimisation_1_1ReadLinearConstraintVisitor.html", "classAntares_1_1Optimisation_1_1ReadLinearConstraintVisitor" ],
-        [ "ReadLinearExpressionVisitor", "classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor.html", "classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor" ]
-      ] ],
       [ "Optimization", null, [
+        [ "SingleOptimOptions", "structAntares_1_1Optimization_1_1SingleOptimOptions.html", "structAntares_1_1Optimization_1_1SingleOptimOptions" ],
+        [ "CmdLineOptimOptions", "structAntares_1_1Optimization_1_1CmdLineOptimOptions.html", "structAntares_1_1Optimization_1_1CmdLineOptimOptions" ],
+        [ "OptimizationOptions", "classAntares_1_1Optimization_1_1OptimizationOptions.html", "classAntares_1_1Optimization_1_1OptimizationOptions" ],
         [ "ConstraintSlackAnalysis", "classAntares_1_1Optimization_1_1ConstraintSlackAnalysis.html", "classAntares_1_1Optimization_1_1ConstraintSlackAnalysis" ],
         [ "InfeasibleProblemReport", "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html", "classAntares_1_1Optimization_1_1InfeasibleProblemReport" ],
         [ "UnfeasibilityAnalysis", "classAntares_1_1Optimization_1_1UnfeasibilityAnalysis.html", "classAntares_1_1Optimization_1_1UnfeasibilityAnalysis" ],
@@ -428,18 +431,36 @@ var annotated_dup =
         [ "LinearExpression", "classAntares_1_1Optimization_1_1LinearExpression.html", "classAntares_1_1Optimization_1_1LinearExpression" ],
         [ "MCYearAndTime", "structAntares_1_1Optimization_1_1MCYearAndTime.html", "structAntares_1_1Optimization_1_1MCYearAndTime" ],
         [ "TimeDependentLinearExpression", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html", "classAntares_1_1Optimization_1_1TimeDependentLinearExpression" ],
+        [ "CsrQuadraticProblem", "classAntares_1_1Optimization_1_1CsrQuadraticProblem.html", "classAntares_1_1Optimization_1_1CsrQuadraticProblem" ],
         [ "ComponentToAreaConnectionFiller", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller.html", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller" ],
         [ "LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", "classAntares_1_1Optimization_1_1LegacyFiller" ],
         [ "LegacyNameMapper", "classAntares_1_1Optimization_1_1LegacyNameMapper.html", "classAntares_1_1Optimization_1_1LegacyNameMapper" ],
         [ "LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem" ],
         [ "LegacyVariableInfo", "structAntares_1_1Optimization_1_1LegacyVariableInfo.html", "structAntares_1_1Optimization_1_1LegacyVariableInfo" ],
         [ "ThermalCapacityFiller", "classAntares_1_1Optimization_1_1ThermalCapacityFiller.html", "classAntares_1_1Optimization_1_1ThermalCapacityFiller" ],
+        [ "WeeklyOptimization", "classAntares_1_1Optimization_1_1WeeklyOptimization.html", "classAntares_1_1Optimization_1_1WeeklyOptimization" ],
         [ "BasisStatusImpl", "classAntares_1_1Optimization_1_1BasisStatusImpl.html", "classAntares_1_1Optimization_1_1BasisStatusImpl" ],
         [ "BasisStatus", "classAntares_1_1Optimization_1_1BasisStatus.html", "classAntares_1_1Optimization_1_1BasisStatus" ]
       ] ],
       [ "Solver", null, [
         [ "Checks", null, [
           [ "LocationError", "classAntares_1_1Solver_1_1Checks_1_1LocationError.html", null ]
+        ] ],
+        [ "Hydro", null, [
+          [ "Daily", null, [
+            [ "DONNEES_MENSUELLES", "structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1DONNEES__MENSUELLES.html", "structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1DONNEES__MENSUELLES" ],
+            [ "PROBLEME_LINEAIRE_PARTIE_FIXE", "structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html", "structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__LINEAIRE__PARTIE__FIXE" ],
+            [ "PROBLEME_LINEAIRE_PARTIE_VARIABLE", "structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html", "structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE" ],
+            [ "CORRESPONDANCE_DES_CONTRAINTES", "structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1CORRESPONDANCE__DES__CONTRAINTES.html", "structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1CORRESPONDANCE__DES__CONTRAINTES" ],
+            [ "CORRESPONDANCE_DES_VARIABLES", "structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1CORRESPONDANCE__DES__VARIABLES.html", "structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1CORRESPONDANCE__DES__VARIABLES" ],
+            [ "PROBLEME_HYDRAULIQUE", "structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__HYDRAULIQUE.html", "structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__HYDRAULIQUE" ]
+          ] ],
+          [ "Monthly", null, [
+            [ "PROBLEME_LINEAIRE_PARTIE_FIXE", "structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html", "structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__FIXE" ],
+            [ "PROBLEME_LINEAIRE_PARTIE_VARIABLE", "structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html", "structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE" ],
+            [ "CORRESPONDANCE_DES_VARIABLES", "structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1CORRESPONDANCE__DES__VARIABLES.html", "structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1CORRESPONDANCE__DES__VARIABLES" ],
+            [ "PROBLEME_HYDRAULIQUE", "structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__HYDRAULIQUE.html", "structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__HYDRAULIQUE" ]
+          ] ]
         ] ],
         [ "Implementation", null, [
           [ "ModelerProblems", "classAntares_1_1Solver_1_1Implementation_1_1ModelerProblems.html", "classAntares_1_1Solver_1_1Implementation_1_1ModelerProblems" ],
@@ -456,13 +477,6 @@ var annotated_dup =
         [ "LoadFiles", null, [
           [ "FileLoader", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader.html", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader" ],
           [ "ErrorLoadingYaml", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml" ]
-        ] ],
-        [ "Optimization", null, [
-          [ "SingleOptimOptions", "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html", "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions" ],
-          [ "CmdLineOptimOptions", "structAntares_1_1Solver_1_1Optimization_1_1CmdLineOptimOptions.html", "structAntares_1_1Solver_1_1Optimization_1_1CmdLineOptimOptions" ],
-          [ "OptimizationOptions", "classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html", "classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions" ],
-          [ "CsrQuadraticProblem", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem.html", "classAntares_1_1Solver_1_1Optimization_1_1CsrQuadraticProblem" ],
-          [ "WeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization" ]
         ] ],
         [ "Simulation", null, [
           [ "AdqPatchPostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList.html", "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList" ],
@@ -877,20 +891,6 @@ var annotated_dup =
     ] ],
     [ "cucumber_collector", null, [
       [ "cucumberCollector", "classcucumber__collector_1_1cucumberCollector.html", "classcucumber__collector_1_1cucumberCollector" ]
-    ] ],
-    [ "DoneesOptimisationJournaliere", null, [
-      [ "DONNEES_MENSUELLES", "structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html", "structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES" ],
-      [ "PROBLEME_LINEAIRE_PARTIE_FIXE", "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html", "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE" ],
-      [ "PROBLEME_LINEAIRE_PARTIE_VARIABLE", "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html", "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE" ],
-      [ "CORRESPONDANCE_DES_CONTRAINTES", "structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html", "structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES" ],
-      [ "CORRESPONDANCE_DES_VARIABLES", "structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html", "structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES" ],
-      [ "PROBLEME_HYDRAULIQUE", "structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html", "structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE" ]
-    ] ],
-    [ "DonneesOptimisationMensuelle", null, [
-      [ "PROBLEME_LINEAIRE_PARTIE_FIXE", "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html", "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE" ],
-      [ "PROBLEME_LINEAIRE_PARTIE_VARIABLE", "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html", "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE" ],
-      [ "CORRESPONDANCE_DES_VARIABLES", "structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html", "structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES" ],
-      [ "PROBLEME_HYDRAULIQUE", "structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html", "structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE" ]
     ] ],
     [ "find_output", null, [
       [ "output_folder_finder", "classfind__output_1_1output__folder__finder.html", "classfind__output_1_1output__folder__finder" ]

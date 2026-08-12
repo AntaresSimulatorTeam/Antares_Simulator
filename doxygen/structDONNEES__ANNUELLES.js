@@ -5,7 +5,7 @@ var structDONNEES__ANNUELLES =
     [ "CoutViolMaxDuVolumeMin", "structDONNEES__ANNUELLES.html#a3e3060acaf9b0174f806cc0cb8cbeae6", null ],
     [ "overflow", "structDONNEES__ANNUELLES.html#a32fafb68a12664845fe25df8a44d70b8", null ],
     [ "overflowfCost", "structDONNEES__ANNUELLES.html#aa7eee1f28faab26df05e739439cd5efa", null ],
-    [ "ProblemeHydraulique", "structDONNEES__ANNUELLES.html#a3a6f462e2ad6a15754861d3876db74a3", null ],
+    [ "ProblemeHydraulique", "structDONNEES__ANNUELLES.html#a1e99848d3724f0d06874b28b2d356374", null ],
     [ "ResultatsValides", "structDONNEES__ANNUELLES.html#ab8133b08f01e628289699c34c8f7db79", null ],
     [ "Turbine", "structDONNEES__ANNUELLES.html#a0a55d18ec598c1bc4c7244c68e8d0acf", null ],
     [ "TurbineCible", "structDONNEES__ANNUELLES.html#a719d75e04942abbcfaa0fed99412fcae", null ],

@@ -137,25 +137,24 @@ $(document).ready(function(){initNavTree('LegacyOrtoolsLinearProblem_8h_source.h
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>Antares::Optimization</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html">LegacyOrtoolsLinearProblem</a> final</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    : <span class="keyword">public</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html">Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html">LegacyOrtoolsLinearProblem</a>(<span class="keywordtype">bool</span> isMip, <span class="keyword">const</span> std::string&amp; solverName):</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        OrtoolsLinearProblem(isMip, solverName)</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    {</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="comment">// nothing else to do</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    }</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    std::shared_ptr&lt;operations_research::MPSolver&gt; getMpSolver()</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    {</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keywordflow">return</span> mpSolver_;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    }</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;};</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;} <span class="comment">// namespace Antares::Optimization</span></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html">Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem</a></div><div class="ttdef"><b>Definition:</b> linearProblem.h:23</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html">Antares::Optimization::LegacyOrtoolsLinearProblem</a></div><div class="ttdef"><b>Definition:</b> LegacyOrtoolsLinearProblem.h:13</div></div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html">LegacyOrtoolsLinearProblem</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html">LinearProblem::MpsolverImpl::OrtoolsLinearProblem</a></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html">LegacyOrtoolsLinearProblem</a>(<span class="keywordtype">bool</span> isMip, <span class="keyword">const</span> std::string&amp; solverName):</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        OrtoolsLinearProblem(isMip, solverName)</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    {</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="comment">// nothing else to do</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    }</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    std::shared_ptr&lt;MPSolver&gt; getMpSolver()</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    {</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordflow">return</span> mpSolver_;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    }</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;};</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;} <span class="comment">// namespace Antares::Optimization</span></div>
+<div class="ttc" id="aclassAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem_html"><div class="ttname"><a href="classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html">Antares::LinearProblem::MpsolverImpl::OrtoolsLinearProblem</a></div><div class="ttdef"><b>Definition:</b> linearProblem.h:23</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html">Antares::Optimization::LegacyOrtoolsLinearProblem</a></div><div class="ttdef"><b>Definition:</b> LegacyOrtoolsLinearProblem.h:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

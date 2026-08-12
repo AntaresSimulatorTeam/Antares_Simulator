@@ -1,7 +1,7 @@
 var classAntares_1_1Optimization_1_1LegacyFiller =
 [
-    [ "LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html#a1aa09dde6609a83bf289178e146314fa", null ],
-    [ "addConstraints", "classAntares_1_1Optimization_1_1LegacyFiller.html#a97b1ec66c5617c52c065aa5d64450346", null ],
-    [ "addObjectives", "classAntares_1_1Optimization_1_1LegacyFiller.html#a893c7064c63aa06ada7c7727f5e9edcb", null ],
-    [ "addVariables", "classAntares_1_1Optimization_1_1LegacyFiller.html#a02da15836278b369ed9f184377384b2d", null ]
+    [ "LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html#a3633ce1552dbbe69f5b47fd89ce1f5f6", null ],
+    [ "addConstraints", "classAntares_1_1Optimization_1_1LegacyFiller.html#a11d79d39cc8b1d5aa0cc7bd399b1460f", null ],
+    [ "addObjectives", "classAntares_1_1Optimization_1_1LegacyFiller.html#af6ff0d945cab73ff36ad94b75ee162d0", null ],
+    [ "addVariables", "classAntares_1_1Optimization_1_1LegacyFiller.html#aa0ffc8e59c42c498e05344c7f9a09749", null ]
 ];

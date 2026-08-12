@@ -1,8 +1,8 @@
 var classMockMipVariable =
 [
-    [ "MockMipVariable", "classMockMipVariable.html#af6cb9fa1c9c615f7b176832b3d7f2e75", null ],
+    [ "MockMipVariable", "classMockMipVariable.html#afcbc70aaeee42b73ad8c3f48857e5816", null ],
     [ "getLb", "classMockMipVariable.html#aee318be77be770fa41b15f73a9fe6dd4", null ],
-    [ "getMipBasisStatus", "classMockMipVariable.html#a0df71729969c09f9ce96aec3ba75a116", null ],
+    [ "getMipBasisStatus", "classMockMipVariable.html#a1e1aed184e33aad510beaa569b0f60ab", null ],
     [ "getName", "classMockMipVariable.html#acdd76cc0fae5672910cd2728fc189ba7", null ],
     [ "getUb", "classMockMipVariable.html#a04e08742f544c69a1352bf1b2e22c014", null ],
     [ "isInteger", "classMockMipVariable.html#a8491c358ff4528c617df72ff2e8fdbe4", null ],

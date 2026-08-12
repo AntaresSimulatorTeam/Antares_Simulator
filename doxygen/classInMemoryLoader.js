@@ -8,7 +8,7 @@ var classInMemoryLoader =
     [ "setLowerBoundToParameter", "classInMemoryLoader.html#aff967ab7187585d8eab40e3d15be2923", null ],
     [ "setModels", "classInMemoryLoader.html#a9b2b1f17b3f87edd7b15b905b1155a37", null ],
     [ "components", "classInMemoryLoader.html#a19609fd1931f6b2853d75597a25a25f4", null ],
-    [ "data", "classInMemoryLoader.html#a2f51a7f9ca972b39a596275bd1df1ab8", null ],
+    [ "data", "classInMemoryLoader.html#a456f0ab69eab670a288eaee036f5ba6d", null ],
     [ "fixture", "classInMemoryLoader.html#a4fe34e86e4502e536d69db56604478e1", null ],
     [ "groupes", "classInMemoryLoader.html#a3b2af70cb1c8bd618be35d1f95701d66", null ],
     [ "lower_bound", "classInMemoryLoader.html#a4f101c69b56e8de27425fad23f20520a", null ],

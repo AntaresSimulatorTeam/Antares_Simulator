@@ -134,27 +134,29 @@ $(document).ready(function(){initNavTree('optim__post__process__list_8h_source.h
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;antares/solver/simulation/base_post_process.h&quot;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Simulation</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
-<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList.html">OptPostProcessList</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html">interfacePostProcessList</a></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">// Kept in Antares::Solver::Simulation (not the optim subtree): this is simulation</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">// post-processing, not optimization-model code.</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Simulation</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList.html">OptPostProcessList</a>(<a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>* problemeHebdo,</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;                       uint numSpace,</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;                       <a class="code" href="classAntares_1_1Data_1_1AreaList.html">AreaList</a>&amp; areas,</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;                       <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Parameters.html">Data::Parameters</a>&amp; params,</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;                       <a class="code" href="classAntares_1_1Date_1_1Calendar.html">Calendar</a>&amp; calendar,</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;                       <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a>&amp; resultWriter);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    ~<a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList.html">OptPostProcessList</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;};</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;} <span class="comment">// namespace Antares::Solver::Simulation</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList.html">   12</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList.html">OptPostProcessList</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html">interfacePostProcessList</a></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList.html">OptPostProcessList</a>(<a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>* problemeHebdo,</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;                       uint numSpace,</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;                       <a class="code" href="classAntares_1_1Data_1_1AreaList.html">AreaList</a>&amp; areas,</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;                       <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Parameters.html">Parameters</a>&amp; params,</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;                       <a class="code" href="classAntares_1_1Date_1_1Calendar.html">Calendar</a>&amp; calendar,</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;                       <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a>&amp; resultWriter);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    ~<a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList.html">OptPostProcessList</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;};</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;} <span class="comment">// namespace Antares::Solver::Simulation</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaList_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a></div><div class="ttdoc">A list of areas.</div><div class="ttdef"><b>Definition:</b> area.h:259</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Parameters_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Parameters.html">Antares::Data::Parameters</a></div><div class="ttdoc">General data for a study.</div><div class="ttdef"><b>Definition:</b> parameters.h:36</div></div>
 <div class="ttc" id="aclassAntares_1_1Date_1_1Calendar_html"><div class="ttname"><a href="classAntares_1_1Date_1_1Calendar.html">Antares::Date::Calendar</a></div><div class="ttdef"><b>Definition:</b> date.h:164</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:15</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList.html">Antares::Solver::Simulation::OptPostProcessList</a></div><div class="ttdef"><b>Definition:</b> optim_post_process_list.h:11</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList.html">Antares::Solver::Simulation::OptPostProcessList</a></div><div class="ttdef"><b>Definition:</b> optim_post_process_list.h:13</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html">Antares::Solver::Simulation::interfacePostProcessList</a></div><div class="ttdef"><b>Definition:</b> base_post_process.h:48</div></div>
 <div class="ttc" id="astructPROBLEME__HEBDO_html"><div class="ttname"><a href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a></div><div class="ttdef"><b>Definition:</b> sim_structure_probleme_economique.h:547</div></div>
 </div><!-- fragment --></div><!-- contents -->

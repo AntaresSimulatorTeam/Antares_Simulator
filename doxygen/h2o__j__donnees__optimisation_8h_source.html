@@ -142,13 +142,13 @@ $(document).ready(function(){initNavTree('h2o__j__donnees__optimisation_8h_sourc
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#define LINFINI 1.e+80</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">namespace </span>DoneesOptimisationJournaliere</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Hydro::Daily</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">/*--------------------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">/* Matrice des contraintes: il y aura une seule instance pour tous les reservoirs */</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">/* Dans ce struct il n&#39;y a que des donnees qui sont lues et surtout pas ecrites   */</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">/* Ce struct est instancie une seule fois                                         */</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html">   22</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html">PROBLEME_LINEAIRE_PARTIE_FIXE</a></div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html">   22</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html">PROBLEME_LINEAIRE_PARTIE_FIXE</a></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;{</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">int</span> NombreDeVariables{0};</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    std::vector&lt;double&gt; CoutLineaire;</div>
@@ -171,7 +171,7 @@ $(document).ready(function(){initNavTree('h2o__j__donnees__optimisation_8h_sourc
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;};</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">/* Partie variable renseignee avant le lancement de l&#39;optimisation de chaque reservoir */</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html">   45</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html">PROBLEME_LINEAIRE_PARTIE_VARIABLE</a></div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html">   45</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html">PROBLEME_LINEAIRE_PARTIE_VARIABLE</a></div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="comment">/* Donnees variables de la matrice des contraintes */</span></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="comment">/* On met quand-meme les bornes dans la partie variable pour le cas ou on voudrait avoir</span></div>
@@ -207,7 +207,7 @@ $(document).ready(function(){initNavTree('h2o__j__donnees__optimisation_8h_sourc
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;};</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">/* Les correspondances fixes des contraintes */</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html">   81</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html">CORRESPONDANCE_DES_CONTRAINTES</a></div>
+<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1CORRESPONDANCE__DES__CONTRAINTES.html">   81</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1CORRESPONDANCE__DES__CONTRAINTES.html">CORRESPONDANCE_DES_CONTRAINTES</a></div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;{</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordtype">int</span> NumeroDeContrainteDEnergieMensuelle{0};    <span class="comment">/* Somme des turbines = somme des cibles */</span></div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteSurXi;      <span class="comment">/* turbine[t] + xi[t] &gt;= cible[t] */</span></div>
@@ -217,7 +217,7 @@ $(document).ready(function(){initNavTree('h2o__j__donnees__optimisation_8h_sourc
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;};</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">/* Les correspondances des variables */</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html">   91</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html">CORRESPONDANCE_DES_VARIABLES</a></div>
+<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1CORRESPONDANCE__DES__VARIABLES.html">   91</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1CORRESPONDANCE__DES__VARIABLES.html">CORRESPONDANCE_DES_VARIABLES</a></div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;{</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    std::vector&lt;int&gt; NumeroDeVariableTurbine; <span class="comment">/* Turbines */</span></div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="comment">// int NumeroDeLaVariableMu{0};              /* Variable de deversement (total sur la periode)</span></div>
@@ -230,7 +230,7 @@ $(document).ready(function(){initNavTree('h2o__j__donnees__optimisation_8h_sourc
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;};</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">/* Structure uniquement exploitee par l&#39;optimisation (donc a ne pas acceder depuis l&#39;exterieur) */</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html">  104</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html">PROBLEME_HYDRAULIQUE</a></div>
+<div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__HYDRAULIQUE.html">  104</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__HYDRAULIQUE.html">PROBLEME_HYDRAULIQUE</a></div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;{</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordtype">int</span> NombreDeProblemes{0};</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    std::vector&lt;int&gt; NbJoursDUnProbleme;</div>
@@ -244,13 +244,13 @@ $(document).ready(function(){initNavTree('h2o__j__donnees__optimisation_8h_sourc
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="comment">/* Il y en a 1 par reservoir. Un probleme couvre 1 mois */</span></div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    std::vector&lt;PROBLEME_SPX_WRAPPER&gt; ProblemeSpx;</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;};</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;} <span class="comment">// namespace DoneesOptimisationJournaliere</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;} <span class="comment">// namespace Antares::Solver::Hydro::Daily</span></div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="astructDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES_html"><div class="ttname"><a href="structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__CONTRAINTES.html">DoneesOptimisationJournaliere::CORRESPONDANCE_DES_CONTRAINTES</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:82</div></div>
-<div class="ttc" id="astructDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES_html"><div class="ttname"><a href="structDoneesOptimisationJournaliere_1_1CORRESPONDANCE__DES__VARIABLES.html">DoneesOptimisationJournaliere::CORRESPONDANCE_DES_VARIABLES</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:92</div></div>
-<div class="ttc" id="astructDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE_html"><div class="ttname"><a href="structDoneesOptimisationJournaliere_1_1PROBLEME__HYDRAULIQUE.html">DoneesOptimisationJournaliere::PROBLEME_HYDRAULIQUE</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:105</div></div>
-<div class="ttc" id="astructDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE_html"><div class="ttname"><a href="structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html">DoneesOptimisationJournaliere::PROBLEME_LINEAIRE_PARTIE_FIXE</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:23</div></div>
-<div class="ttc" id="astructDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE_html"><div class="ttname"><a href="structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html">DoneesOptimisationJournaliere::PROBLEME_LINEAIRE_PARTIE_VARIABLE</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:46</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Hydro_1_1Daily_1_1CORRESPONDANCE__DES__CONTRAINTES_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1CORRESPONDANCE__DES__CONTRAINTES.html">Antares::Solver::Hydro::Daily::CORRESPONDANCE_DES_CONTRAINTES</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:82</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Hydro_1_1Daily_1_1CORRESPONDANCE__DES__VARIABLES_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1CORRESPONDANCE__DES__VARIABLES.html">Antares::Solver::Hydro::Daily::CORRESPONDANCE_DES_VARIABLES</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:92</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__HYDRAULIQUE_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__HYDRAULIQUE.html">Antares::Solver::Hydro::Daily::PROBLEME_HYDRAULIQUE</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:105</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__LINEAIRE__PARTIE__FIXE_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html">Antares::Solver::Hydro::Daily::PROBLEME_LINEAIRE_PARTIE_FIXE</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:23</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html">Antares::Solver::Hydro::Daily::PROBLEME_LINEAIRE_PARTIE_VARIABLE</a></div><div class="ttdef"><b>Definition:</b> h2o_j_donnees_optimisation.h:46</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

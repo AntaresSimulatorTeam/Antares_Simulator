@@ -199,7 +199,7 @@ $(document).ready(function(){initNavTree('LpsFromAntares_8h_source.html',''); in
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    std::vector&lt;double&gt; RHS; <span class="comment">// Vecteur des second membre des contraintes, taille =</span></div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// NombreDeContraintes</span></div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    std::string name;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    std::unique_ptr&lt;Optimisation::LinearProblemApi::ILinearProblem&gt; linearProblem;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    std::unique_ptr&lt;LinearProblem::Api::ILinearProblem&gt; linearProblem;</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">auto</span> operator&lt;=&gt;(<span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">WeeklyDataFromAntares</a>&amp; other) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;};</div>

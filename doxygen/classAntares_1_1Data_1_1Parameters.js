@@ -56,7 +56,7 @@ var classAntares_1_1Data_1_1Parameters =
     [ "nbTimeSeriesWind", "classAntares_1_1Data_1_1Parameters.html#adf27a1980d99322a294ed7260a7a66a4", null ],
     [ "nbYears", "classAntares_1_1Data_1_1Parameters.html#afd5b783afaaee5a8706c7fd2d01147ff", null ],
     [ "ncMode", "classAntares_1_1Data_1_1Parameters.html#a45cff9ebdb86a19b15529df124351afc", null ],
-    [ "optOptions", "classAntares_1_1Data_1_1Parameters.html#a685931d65645c37bae0f88f05c671ed3", null ],
+    [ "optOptions", "classAntares_1_1Data_1_1Parameters.html#ac666bb7350a72abba8646bfedbf81655", null ],
     [ "outputSelection", "classAntares_1_1Data_1_1Parameters.html#a9119301f90a31b8c3cf6b72b479fd9d1", null ],
     [ "policy", "classAntares_1_1Data_1_1Parameters.html#aeeedda0cb5d5615ea0ba3b13634fb553", null ],
     [ "power", "classAntares_1_1Data_1_1Parameters.html#a8db1ecd2fae2807ea51ed22a1cffe1f5", null ],

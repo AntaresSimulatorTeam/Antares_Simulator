@@ -7,7 +7,7 @@ var classAntares_1_1Solver_1_1SingleProblemGetter =
     [ "getMasterProblem", "classAntares_1_1Solver_1_1SingleProblemGetter.html#ae83bcd6f7cb824f77667d50985c7ec3a", null ],
     [ "getProblemIds", "classAntares_1_1Solver_1_1SingleProblemGetter.html#a2f69b06241987cb3d116a504de3b12eb", null ],
     [ "getWeeklyData", "classAntares_1_1Solver_1_1SingleProblemGetter.html#a0d217ecec39e7584f6167f63be17dd61", null ],
-    [ "getWeeklyProblem", "classAntares_1_1Solver_1_1SingleProblemGetter.html#a366cddefdd0aefd5330105be793c3c08", null ],
+    [ "getWeeklyProblem", "classAntares_1_1Solver_1_1SingleProblemGetter.html#a147c695f13a99c4e5c5ae4101f4117a7", null ],
     [ "printProblems", "classAntares_1_1Solver_1_1SingleProblemGetter.html#a7129bc80ae6e230afac331715bc35c71", null ],
     [ "writeNTCTimeSeries", "classAntares_1_1Solver_1_1SingleProblemGetter.html#ae625c9a225b8b34cf95f6bdb59e2a5ad", null ],
     [ "writeStudyDescriptionFiles", "classAntares_1_1Solver_1_1SingleProblemGetter.html#a70484175188fcdc158658a740917b940", null ]
