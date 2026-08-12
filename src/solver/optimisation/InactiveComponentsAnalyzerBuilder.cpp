@@ -31,6 +31,7 @@ std::shared_ptr<const InactiveComponentsAnalyzer> BuildInactiveComponentsAnalyze
 {
     auto analyzer = std::make_shared<InactiveComponentsAnalyzer>();
 
+    uint32_t interco = 0;
     for (uint32_t pays = 0; pays < study.areas.size(); ++pays)
     {
         const auto& area = *(study.areas[pays]);
@@ -44,6 +45,19 @@ std::shared_ptr<const InactiveComponentsAnalyzer> BuildInactiveComponentsAnalyze
         for (unsigned column = 0; column < Data::fhhMax; ++column)
         {
             analyzer->setMiscGenColumnAllZero(pays, column, columnIsAllZero(area.miscGen, column));
+        }
+
+        // Links are numbered by walking areas then, per area, their `links`
+        // map, matching StudyRuntimeInfosInitializeAreaLinks's nested order
+        // (both alphabetical), so `interco` lines up with PROBLEME_HEBDO's.
+        for (const auto& [linkName, link]: area.links)
+        {
+            const bool bothDirectionsAllZero = link->directCapacities.timeSeries
+                                                  .containsOnlyZero()
+                                                && link->indirectCapacities.timeSeries
+                                                     .containsOnlyZero();
+            analyzer->setLinkAllZero(interco, bothDirectionsAllZero);
+            ++interco;
         }
     }
 

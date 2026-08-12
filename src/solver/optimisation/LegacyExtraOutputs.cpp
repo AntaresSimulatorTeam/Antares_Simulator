@@ -300,6 +300,11 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
 
 void LegacyExtraOutputEmitter::linkOutputs(uint32_t interco, int pdt)
 {
+    if (problemeHebdo_.inactiveComponents && problemeHebdo_.inactiveComponents->linkIsAllZero(interco))
+    {
+        return;
+    }
+
     const uint32_t origin = problemeHebdo_.PaysOrigineDeLInterconnexion[interco];
     const uint32_t destination = problemeHebdo_.PaysExtremiteDeLInterconnexion[interco];
     const std::string& link = linkNames_[interco];

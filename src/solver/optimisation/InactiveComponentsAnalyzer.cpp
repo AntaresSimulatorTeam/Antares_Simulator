@@ -63,6 +63,11 @@ void InactiveComponentsAnalyzer::setHydroInflowAllZero(uint32_t pays, bool value
     setFlag(hydroInflowAllZero_, pays, value);
 }
 
+void InactiveComponentsAnalyzer::setLinkAllZero(uint32_t interco, bool value)
+{
+    setFlag(linkAllZero_, interco, value);
+}
+
 bool InactiveComponentsAnalyzer::loadIsAllZero(uint32_t pays) const
 {
     return getFlag(loadAllZero_, pays);
@@ -96,6 +101,11 @@ bool InactiveComponentsAnalyzer::miscGenColumnIsAllZero(uint32_t pays, unsigned 
 bool InactiveComponentsAnalyzer::hydroInflowIsAllZero(uint32_t pays) const
 {
     return getFlag(hydroInflowAllZero_, pays);
+}
+
+bool InactiveComponentsAnalyzer::linkIsAllZero(uint32_t interco) const
+{
+    return getFlag(linkAllZero_, interco);
 }
 
 } // namespace Antares::Optimization

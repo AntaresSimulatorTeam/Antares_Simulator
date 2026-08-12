@@ -206,6 +206,20 @@ Feature: Legacy variables in simulation table
     And the modeler outputs contain no entries for component "area_hydro"
 
   @fast @short
+  Scenario: link outputs are entirely absent when both NTC directions are zero across the whole study
+    # Same base study as the "Link extra outputs" scenario above (east-west,
+    # hurdle-cost link), on a temporary copy with both direction capacity
+    # series emptied (the "empty file -> all-zero series" convention). No
+    # explicit "disabled" flag exists on links, so a link with zero capacity
+    # in both directions across the whole study is treated as inactive.
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/Hurdle-cost link"
+    And in input "links/east/capacities/west_direct.txt" the time series is emptied
+    And in input "links/east/capacities/west_indirect.txt" the time series is emptied
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation succeeds
+    And the modeler outputs contain no entries for component "east_west_link"
+
+  @fast @short
   Scenario: actual_num_units_on is emitted in accurate unit-commitment mode
     # Study "008 Thermal fleet - Accurate unit commitment" is the accurate-mode
     # twin of 002 (same area, same clusters, same shortfall on absolute hour 34

@@ -589,6 +589,37 @@ BOOST_AUTO_TEST_CASE(hurdle_cost_outputs_are_skipped_for_links_without_hurdle_co
     BOOST_CHECK(!FindRow(table, "capacity_shadow_price", "area2_area3_link").has_value());
 }
 
+// --- Suppression of the entire row set for a link flagged all-zero (both
+// NTC directions zero across the whole study, point 3) by the precomputed
+// analyzer.
+
+BOOST_AUTO_TEST_CASE(link_outputs_are_entirely_suppressed_when_flagged_all_zero)
+{
+    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    analyzer->setLinkAllZero(0, true); // area1_area2_link
+    problem.inactiveComponents = analyzer;
+    fill();
+
+    BOOST_CHECK(!FindRow(table, "abs_flow", "area1_area2_link").has_value());
+    BOOST_CHECK(!FindRow(table, "minus_flow", "area1_area2_link").has_value());
+    BOOST_CHECK(!FindRow(table, "out_port.flow", "area1_area2_link").has_value());
+    BOOST_CHECK(!FindRow(table, "in_port.flow", "area1_area2_link").has_value());
+    BOOST_CHECK(!FindRow(table, "prop_cost", "area1_area2_link").has_value());
+    BOOST_CHECK(!FindRow(table, "capacity_shadow_price", "area1_area2_link").has_value());
+    // The other link (index 1) is unaffected.
+    BOOST_CHECK(FindRow(table, "abs_flow", "area2_area3_link").has_value());
+}
+
+BOOST_AUTO_TEST_CASE(link_outputs_are_kept_when_the_all_zero_flag_is_false)
+{
+    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    analyzer->setLinkAllZero(0, false);
+    problem.inactiveComponents = analyzer;
+    fill();
+
+    BOOST_CHECK(FindRow(table, "abs_flow", "area1_area2_link").has_value());
+}
+
 BOOST_AUTO_TEST_CASE(hydro_shadow_price_is_the_final_stock_expression_dual)
 {
     fill();

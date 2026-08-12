@@ -29,6 +29,7 @@ public:
     void setWindAllZero(uint32_t pays, bool value);
     void setMiscGenColumnAllZero(uint32_t pays, unsigned column, bool value);
     void setHydroInflowAllZero(uint32_t pays, bool value);
+    void setLinkAllZero(uint32_t interco, bool value);
 
     [[nodiscard]] bool loadIsAllZero(uint32_t pays) const;
     [[nodiscard]] bool rorIsAllZero(uint32_t pays) const;
@@ -36,6 +37,7 @@ public:
     [[nodiscard]] bool windIsAllZero(uint32_t pays) const;
     [[nodiscard]] bool miscGenColumnIsAllZero(uint32_t pays, unsigned column) const;
     [[nodiscard]] bool hydroInflowIsAllZero(uint32_t pays) const;
+    [[nodiscard]] bool linkIsAllZero(uint32_t interco) const;
 
 private:
     static bool getFlag(const std::vector<bool>& flags, uint32_t pays);
@@ -47,6 +49,7 @@ private:
     std::vector<bool> windAllZero_;
     std::vector<std::vector<bool>> miscGenColumnAllZero_; // [pays][column]
     std::vector<bool> hydroInflowAllZero_;
+    std::vector<bool> linkAllZero_;
 };
 
 } // namespace Antares::Optimization
