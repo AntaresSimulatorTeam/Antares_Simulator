@@ -682,8 +682,9 @@ BOOST_AUTO_TEST_CASE(port_field_flows_cover_thermal_storage_and_input_generation
     fill();
 
     BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_thermal_cluster1")->value, 3600.);
-    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area2_short_term_storage_battery1")->value,
-                      100. - 40.);
+    BOOST_CHECK_EQUAL(
+      FindRow(table, "balance_port.flow", "area2_short_term_storage_battery1")->value,
+      100. - 40.);
     BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_wind")->value, 320.);
     BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_combined_heat_power")->value,
                       12.5);
