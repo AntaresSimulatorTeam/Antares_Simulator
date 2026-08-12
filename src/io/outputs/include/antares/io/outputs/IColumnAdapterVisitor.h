@@ -19,6 +19,8 @@ namespace Antares::IO::Outputs
 template<typename T>
 class TypedColumn;
 
+class InternedStringColumn;
+
 // Define type aliases
 using StringColumn = TypedColumn<std::string>;
 using IntegralColumn = TypedColumn<unsigned>;
@@ -40,8 +42,6 @@ public:
     virtual std::shared_ptr<IColumnAdapter> visit(const OptionalColumn<std::string>&) = 0;
     virtual std::shared_ptr<IColumnAdapter> visit(const OptionalColumn<double>&) = 0;
     virtual std::shared_ptr<IColumnAdapter> visit(const OptionalColumn<unsigned>&) = 0;
-
-    virtual std::shared_ptr<IColumnAdapter>
-    visit(const OptionalColumn<LinearProblem::Api::MipBasisStatus>&) = 0;
+    virtual std::shared_ptr<IColumnAdapter> visit(const InternedStringColumn&) = 0;
 };
 } // namespace Antares::IO::Outputs

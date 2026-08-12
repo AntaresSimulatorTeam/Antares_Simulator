@@ -22,7 +22,7 @@ class STStorageCluster final
 {
 public:
     //! \brief Get the group name string
-    std::string getGroup();
+    std::string getGroup() const;
 
     bool enabled() const;
 

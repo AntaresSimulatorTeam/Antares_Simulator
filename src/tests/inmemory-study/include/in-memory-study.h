@@ -4,6 +4,7 @@
 #pragma once
 #define WIN32_LEAN_AND_MEAN
 #include <limits>
+#include <mutex>
 
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
@@ -312,7 +313,7 @@ public:
     };
 
     std::map<std::pair<int, std::string>, SingleProblem> problems;
-
+    std::mutex mutex;
     void notifyHebdoProblem(const PROBLEME_HEBDO& problemeHebdo,
                             int optimizationNumber,
                             std::string_view name) override;

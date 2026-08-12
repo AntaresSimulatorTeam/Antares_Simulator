@@ -332,7 +332,7 @@ void addEntriesForNode(SimulationTable& simulationTable,
     handleDependingOnVariability(fillContext, year, variability, handle);
 }
 
-void addPortEntries(SimulationTable& simulationTable,
+void addPortEntries(const SimulationTable& simulationTable,
                     const FillContext& fillContext,
                     const ModelerStudy::SystemModel::Component& component,
                     Visitors::EvalVisitor& evalVisitor,

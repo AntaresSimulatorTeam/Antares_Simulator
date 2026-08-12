@@ -6,6 +6,7 @@
 #include "in-memory-study.h"
 
 #include "antares/application/ScenarioBuilderOwner.h"
+#include "antares/utils/utils.h"
 
 void initializeStudy(Study* study)
 {
@@ -43,6 +44,7 @@ Antares::Data::ShortTermStorage::STStorageCluster* addSTSToArea(Area* area,
 {
     Antares::Data::ShortTermStorage::STStorageCluster sts;
     sts.properties.name = stsName;
+    sts.id = transformNameIntoID(stsName);
     auto& storages = area->shortTermStorage.storagesByIndex;
     storages.push_back(sts);
     return &storages.back();
@@ -278,6 +280,7 @@ void TestingSimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO& problem
                                                    int optimizationNumber,
                                                    std::string_view name)
 {
+    std::lock_guard<std::mutex> lock(mutex);
     auto* pb = problemeHebdo.ProblemeAResoudre.get();
     std::string nameStr(name.begin(), name.end());
     auto& toInsert = problems[std::make_pair(optimizationNumber, nameStr)];

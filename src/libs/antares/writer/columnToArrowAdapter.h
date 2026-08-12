@@ -71,6 +71,20 @@ private:
 };
 
 // ================================
+// Class InternedStringColumnAdapter
+// ================================
+class InternedStringColumnAdapter: public IColumnAdapter
+{
+public:
+    explicit InternedStringColumnAdapter(const IO::Outputs::InternedStringColumn* column);
+    std::shared_ptr<arrow::Field> makeField() const override;
+    std::shared_ptr<arrow::Array> makeArray() const override;
+
+private:
+    const IO::Outputs::InternedStringColumn* column_;
+};
+
+// ================================
 // Class OptStringColumnAdapter
 // ================================
 class OptStringColumnAdapter: public IColumnAdapter
@@ -110,21 +124,6 @@ public:
 
 private:
     const IO::Outputs::OptionalColumn<unsigned>* column_;
-};
-
-// ================================
-// Class OptMipBasisStatusColumnAdapter
-// ================================
-class OptMipBasisStatusColumnAdapter: public IColumnAdapter
-{
-public:
-    explicit OptMipBasisStatusColumnAdapter(
-      const IO::Outputs::OptionalColumn<LinearProblem::Api::MipBasisStatus>* column);
-    std::shared_ptr<arrow::Field> makeField() const override;
-    std::shared_ptr<arrow::Array> makeArray() const override;
-
-private:
-    const IO::Outputs::OptionalColumn<LinearProblem::Api::MipBasisStatus>* column_;
 };
 
 // ===========================

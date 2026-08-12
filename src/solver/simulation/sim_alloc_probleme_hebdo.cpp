@@ -66,6 +66,11 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
 
     problem.CoutDeDefaillancePositive.assign(nbPays, 0);
     problem.CoutDeDefaillanceNegative.assign(nbPays, 0);
+    problem.CoutDeDefaillancePositiveSansBruit.assign(nbPays, 0);
+    problem.CoutDeDefaillanceNegativeSansBruit.assign(nbPays, 0);
+
+    problem.CoutDeDefaillancePositiveSansBruit.assign(nbPays, 0);
+    problem.CoutDeDefaillanceNegativeSansBruit.assign(nbPays, 0);
 
     problem.CoutDeDebordement.assign(nbPays, 0);
 
@@ -136,126 +141,112 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         problem.SoldeMoyenHoraire[k].SoldeMoyenDuPays.assign(nbPays, 0.);
 
         auto& variablesMapping = problem.CorrespondanceVarNativesVarOptim[k];
-        variablesMapping.NumeroDeVariableDuFluxDirect.assign(linkCount, 0);
-        variablesMapping.NumeroDeVariableDuFluxDirectPositif.assign(linkCount, 0);
-        variablesMapping.NumeroDeVariableDuFluxIndirectPositif.assign(linkCount, 0);
 
-        variablesMapping.NumeroDeVariableDuPalierThermique.assign(thermalCount, 0);
-        variablesMapping.NumeroDeVariablesDeLaProdHyd.assign(nbPays, 0);
-        variablesMapping.NumeroDeVariablesDePompage.assign(nbPays, 0);
-        variablesMapping.NumeroDeVariablesDeNiveau.assign(nbPays, 0);
-        variablesMapping.NumeroDeVariablesDeDebordement.assign(nbPays, 0);
-        variablesMapping.NumeroDeVariableDefaillancePositive.assign(nbPays, 0);
-        variablesMapping.NumeroDeVariableDefaillanceNegative.assign(nbPays, 0);
+        for (auto* v: {&variablesMapping.NumeroDeVariableDuFluxDirect,
+                       &variablesMapping.NumeroDeVariableDuFluxDirectPositif,
+                       &variablesMapping.NumeroDeVariableDuFluxIndirectPositif})
+        {
+            v->assign(linkCount, 0);
+        }
 
-        variablesMapping.NumeroDeVariablesVariationHydALaBaisse.assign(nbPays, 0);
+        for (auto* v:
+             {&variablesMapping.NumeroDeVariableDuPalierThermique,
+              &variablesMapping.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique,
+              &variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique,
+              &variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique,
+              &variablesMapping
+                 .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique})
+        {
+            v->assign(thermalCount, 0);
+        }
 
-        variablesMapping.NumeroDeVariablesVariationHydALaHausse.assign(nbPays, 0);
+        for (auto* v: {&variablesMapping.NumeroDeVariablesDeLaProdHyd,
+                       &variablesMapping.NumeroDeVariablesDePompage,
+                       &variablesMapping.NumeroDeVariablesDeNiveau,
+                       &variablesMapping.NumeroDeVariablesDeDebordement,
+                       &variablesMapping.NumeroDeVariableDefaillancePositive,
+                       &variablesMapping.NumeroDeVariableDefaillanceNegative,
+                       &variablesMapping.NumeroDeVariablesVariationHydALaBaisse,
+                       &variablesMapping.NumeroDeVariablesVariationHydALaHausse})
+        {
+            v->assign(nbPays, 0);
+        }
 
-        variablesMapping.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique
-          .assign(thermalCount, 0);
-        variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique
-          .assign(thermalCount, 0);
-        variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique
-          .assign(thermalCount, 0);
-        variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
-          .assign(thermalCount, 0);
-
-        variablesMapping.SIM_ShortTermStorage.InjectionVariable.assign(shortTermStorageCount, 0);
-        variablesMapping.SIM_ShortTermStorage.WithdrawalVariable.assign(shortTermStorageCount, 0);
-        variablesMapping.SIM_ShortTermStorage.LevelVariable.assign(shortTermStorageCount, 0);
-
-        variablesMapping.SIM_ShortTermStorage.CostVariationInjection.assign(shortTermStorageCount,
-                                                                            0);
-        variablesMapping.SIM_ShortTermStorage.CostVariationWithdrawal.assign(shortTermStorageCount,
-                                                                             0);
+        for (auto* v: {&variablesMapping.SIM_ShortTermStorage.InjectionVariable,
+                       &variablesMapping.SIM_ShortTermStorage.WithdrawalVariable,
+                       &variablesMapping.SIM_ShortTermStorage.LevelVariable,
+                       &variablesMapping.SIM_ShortTermStorage.CostVariationInjection,
+                       &variablesMapping.SIM_ShortTermStorage.CostVariationWithdrawal,
+                       &variablesMapping.SIM_ShortTermStorage.OverflowVariable})
+        {
+            v->assign(shortTermStorageCount, 0);
+        }
 
         if (study.parameters.include.reserves)
         {
             variablesMapping.reservesIndices.emplace();
-            variablesMapping.reservesIndices.value().runningThermalClusterParticipation.assign(
-              thermalCount * capacityReservationCount,
-              0);
-            variablesMapping.reservesIndices.value()
-              .offThermalClusterParticipation.assign(thermalCount * capacityReservationCount, 0);
-            variablesMapping.reservesIndices.value()
-              .thermalClusterParticipation.assign(thermalCount * capacityReservationCount, 0);
-            variablesMapping.reservesIndices.value().STStorageClusterParticipation.down.assign(
-              shortTermStorageCount * capacityReservationCount,
-              0);
-            variablesMapping.reservesIndices.value().STStorageClusterParticipation.up.assign(
-              shortTermStorageCount * capacityReservationCount,
-              0);
-            variablesMapping.reservesIndices.value().STStorageReleaseClusterParticipation.assign(
-              shortTermStorageCount * capacityReservationCount,
-              0);
-            variablesMapping.reservesIndices.value().STStorageStoreClusterParticipation.assign(
-              shortTermStorageCount * capacityReservationCount,
-              0);
+            auto& varMapping = variablesMapping.reservesIndices.value();
 
-            variablesMapping.reservesIndices.value()
-              .HydroParticipation.up.assign(hydroCount * capacityReservationCount, 0);
-            variablesMapping.reservesIndices.value()
-              .HydroParticipation.down.assign(hydroCount * capacityReservationCount, 0);
-            variablesMapping.reservesIndices.value()
-              .HydroReleaseParticipation.assign(hydroCount * capacityReservationCount, 0);
-            variablesMapping.reservesIndices.value()
-              .HydroStoreParticipation.assign(hydroCount * capacityReservationCount, 0);
+            for (auto* v: {&varMapping.runningThermalClusterParticipation,
+                           &varMapping.offThermalClusterParticipation,
+                           &varMapping.thermalClusterParticipation})
+            {
+                v->assign(thermalCount * capacityReservationCount, 0);
+            }
 
-            variablesMapping.reservesIndices.value()
-              .internalUnsatisfied.assign(capacityReservationCount, 0);
-            variablesMapping.reservesIndices.value().internalExcess.assign(capacityReservationCount,
-                                                                           0);
+            for (auto* v: {&varMapping.STStorageClusterParticipation.down,
+                           &varMapping.STStorageClusterParticipation.up,
+                           &varMapping.STStorageReleaseClusterParticipation,
+                           &varMapping.STStorageStoreClusterParticipation})
+            {
+                v->assign(shortTermStorageCount * capacityReservationCount, 0);
+            }
+
+            for (auto* v: {&varMapping.HydroParticipation.up,
+                           &varMapping.HydroParticipation.down,
+                           &varMapping.HydroReleaseParticipation,
+                           &varMapping.HydroStoreParticipation})
+            {
+                v->assign(hydroCount * capacityReservationCount, 0);
+            }
+
+            for (auto* v: {&varMapping.internalUnsatisfied, &varMapping.internalExcess})
+            {
+                v->assign(capacityReservationCount, 0);
+            }
         }
 
-        variablesMapping.SIM_ShortTermStorage.OverflowVariable.assign(shortTermStorageCount, 0);
+        auto& cntMapping = problem.CorrespondanceCntNativesCntOptim[k];
 
-        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesBilansPays.assign(nbPays,
-                                                                                           0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContraintePourEviterLesChargesFictives.assign(nbPays, 0);
-        problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesNiveauxPays.assign(nbPays,
-                                                                                            0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContraintePourBornerLaDefaillance.assign(nbPays, 0);
+        for (auto* v: {&cntMapping.NumeroDeContrainteDesBilansPays,
+                       &cntMapping.NumeroDeContraintePourEviterLesChargesFictives,
+                       &cntMapping.NumeroDeContrainteDesNiveauxPays,
+                       &cntMapping.NumeroDeContraintePourBornerLaDefaillance,
+                       &cntMapping.NumeroPremiereContrainteDeReserveParZone,
+                       &cntMapping.NumeroDeuxiemeContrainteDeReserveParZone})
+        {
+            v->assign(nbPays, 0);
+        }
 
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageLevelConstraint.assign(shortTermStorageCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageCostVariationInjectionForward.assign(shortTermStorageCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageCostVariationInjectionBackward.assign(shortTermStorageCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageCostVariationWithdrawalForward.assign(shortTermStorageCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageCostVariationWithdrawalBackward.assign(shortTermStorageCount, 0);
+        for (auto* v: {&cntMapping.ShortTermStorageLevelConstraint,
+                       &cntMapping.ShortTermStorageCostVariationInjectionForward,
+                       &cntMapping.ShortTermStorageCostVariationInjectionBackward,
+                       &cntMapping.ShortTermStorageCostVariationWithdrawalForward,
+                       &cntMapping.ShortTermStorageCostVariationWithdrawalBackward})
+        {
+            v->assign(shortTermStorageCount, 0);
+        }
 
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageCostVariationInjectionForward.assign(shortTermStorageCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageCostVariationInjectionBackward.assign(shortTermStorageCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageCostVariationWithdrawalForward.assign(shortTermStorageCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ShortTermStorageCostVariationWithdrawalBackward.assign(shortTermStorageCount, 0);
+        for (auto* v:
+             {&cntMapping.NumeroDeContrainteDesContraintesDeDureeMinDeMarche,
+              &cntMapping.NumeroDeContrainteDesContraintesDeDureeMinDArret,
+              &cntMapping.NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne})
+        {
+            v->assign(thermalCount, 0);
+        }
 
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroPremiereContrainteDeReserveParZone.assign(nbPays, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeuxiemeContrainteDeReserveParZone.assign(nbPays, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContrainteDeDissociationDeFlux.assign(linkCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContrainteDesContraintesCouplantes.assign(activeConstraints.size(), 0);
-
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContrainteDesContraintesDeDureeMinDeMarche.assign(thermalCount, 0);
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContrainteDesContraintesDeDureeMinDArret.assign(thermalCount, 0);
-
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
-          .assign(thermalCount, 0);
+        cntMapping.NumeroDeContrainteDeDissociationDeFlux.assign(linkCount, 0);
+        cntMapping.NumeroDeContrainteDesContraintesCouplantes.assign(activeConstraints.size(), 0);
 
         problem.VariablesDualesDesContraintesDeNTC[k]
           .VariableDualeParInterconnexion.assign(linkCount, 0.);
@@ -263,91 +254,55 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         if (study.parameters.include.reserves)
         {
             problem.CorrespondanceCntNativesCntOptim[k].reservesIndices.emplace();
-            problem.CorrespondanceCntNativesCntOptim[k].reservesIndices.value().need.assign(
-              capacityReservationCount,
-              -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .powerOffGroupUnitsInThermalClusterParticipating.assign(thermalCount
-                                                                        * capacityReservationCount,
-                                                                      -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .maxPowerOffUnitsInThermalCluster.assign(thermalCount, -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .thermalClusterPOutBoundMin.assign(thermalCount, -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .thermalClusterPOutBoundMax.assign(thermalCount, -1);
+            auto& resCorresp = problem.CorrespondanceCntNativesCntOptim[k].reservesIndices.value();
 
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .STStorageClusterMaxReleaseParticipation.assign(shortTermStorageCount
-                                                                * capacityReservationCount,
-                                                              -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .STStorageClusterMaxStoreParticipation.assign(shortTermStorageCount
-                                                              * capacityReservationCount,
-                                                            -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .STStorageClusterReleaseCapacityThresholdsMax.assign(shortTermStorageCount, -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .STStorageClusterReleaseCapacityThresholdsMin.assign(shortTermStorageCount, -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .STStorageClusterStoreCapacityThresholds.assign(shortTermStorageCount, -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .STStorageLevelParticipation.down.assign(shortTermStorageCount, -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .STStorageLevelParticipation.up.assign(shortTermStorageCount, -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .STStorageEnergyLevelParticipation.assign(shortTermStorageCount
-                                                          * capacityReservationCount,
-                                                        -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .STStorageGlobalStockEnergyLevelParticipation.up.assign(shortTermStorageCount, -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .STStorageGlobalStockEnergyLevelParticipation.down.assign(shortTermStorageCount, -1);
+            resCorresp.need.assign(capacityReservationCount, -1);
 
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .HydroMaxReleaseParticipation.assign(hydroCount * capacityReservationCount, -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .HydroMaxStoreParticipation.assign(hydroCount * capacityReservationCount, -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .HydroReleaseCapacityThresholdsMax.assign(hydroCount, -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .HydroReleaseCapacityThresholdsMin.assign(hydroCount, -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .HydroStoreCapacityThresholds.assign(hydroCount, -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .HydroLevelParticipation.down.assign(hydroCount, -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .HydroLevelParticipation.up.assign(hydroCount, -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .HydroEnergyLevelParticipation.assign(hydroCount * capacityReservationCount, -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .HydroGlobalEnergyLevelParticipationUp.assign(hydroCount, -1);
-            problem.CorrespondanceCntNativesCntOptim[k]
-              .reservesIndices.value()
-              .HydroGlobalEnergyLevelParticipationDown.assign(hydroCount, -1);
+            for (auto* v: {&resCorresp.maxPowerOffUnitsInThermalCluster,
+                           &resCorresp.thermalClusterPOutBoundMin,
+                           &resCorresp.thermalClusterPOutBoundMax})
+            {
+                v->assign(thermalCount, -1);
+            }
+
+            resCorresp.powerOffGroupUnitsInThermalClusterParticipating
+              .assign(thermalCount * capacityReservationCount, -1);
+
+            for (auto* v: {&resCorresp.STStorageClusterMaxReleaseParticipation,
+                           &resCorresp.STStorageClusterMaxStoreParticipation,
+                           &resCorresp.STStorageEnergyLevelParticipation})
+            {
+                v->assign(shortTermStorageCount * capacityReservationCount, -1);
+            }
+
+            for (auto* v: {&resCorresp.STStorageClusterReleaseCapacityThresholdsMax,
+                           &resCorresp.STStorageClusterReleaseCapacityThresholdsMin,
+                           &resCorresp.STStorageClusterStoreCapacityThresholds,
+                           &resCorresp.STStorageLevelParticipation.down,
+                           &resCorresp.STStorageLevelParticipation.up,
+                           &resCorresp.STStorageGlobalStockEnergyLevelParticipation.up,
+                           &resCorresp.STStorageGlobalStockEnergyLevelParticipation.down})
+            {
+                v->assign(shortTermStorageCount, -1);
+            }
+
+            for (auto* v: {&resCorresp.HydroMaxReleaseParticipation,
+                           &resCorresp.HydroMaxStoreParticipation,
+                           &resCorresp.HydroEnergyLevelParticipation})
+            {
+                v->assign(hydroCount * capacityReservationCount, -1);
+            }
+
+            for (auto* v: {&resCorresp.HydroReleaseCapacityThresholdsMax,
+                           &resCorresp.HydroReleaseCapacityThresholdsMin,
+                           &resCorresp.HydroStoreCapacityThresholds,
+                           &resCorresp.HydroLevelParticipation.down,
+                           &resCorresp.HydroLevelParticipation.up,
+                           &resCorresp.HydroGlobalEnergyLevelParticipationUp,
+                           &resCorresp.HydroGlobalEnergyLevelParticipationDown})
+            {
+                v->assign(hydroCount, -1);
+            }
         }
     }
 }
@@ -473,195 +428,160 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
                                   ? study.areas.byIndex[k]->allCapacityReservations.value().size()
                                   : 0;
 
-        problem.PaliersThermiquesDuPays[k].minUpDownTime.assign(nbPaliers, 0);
-        problem.PaliersThermiquesDuPays[k].PminDuPalierThermiquePendantUneHeure.assign(nbPaliers,
-                                                                                       0.);
-        problem.PaliersThermiquesDuPays[k].PminDuPalierThermiquePendantUnJour.assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k]
-          .TailleUnitaireDUnGroupeDuPalierThermique.assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k]
-          .NumeroDuPalierDansLEnsembleDesPaliersThermiques.assign(nbPaliers, 0);
+        auto& palier = problem.PaliersThermiquesDuPays[k];
 
-        problem.PaliersThermiquesDuPays[k]
-          .CoutDeDemarrageDUnGroupeDuPalierThermique.assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k].CoutDArretDUnGroupeDuPalierThermique.assign(nbPaliers,
-                                                                                       0.);
-        problem.PaliersThermiquesDuPays[k]
-          .CoutFixeDeMarcheDUnGroupeDuPalierThermique.assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k].pminDUnGroupeDuPalierThermique.assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k].PmaxDUnGroupeDuPalierThermique.assign(nbPaliers, 0.);
-        problem.PaliersThermiquesDuPays[k]
-          .DureeMinimaleDeMarcheDUnGroupeDuPalierThermique.assign(nbPaliers, 0);
-        problem.PaliersThermiquesDuPays[k]
-          .DureeMinimaleDArretDUnGroupeDuPalierThermique.assign(nbPaliers, 0);
-        problem.PaliersThermiquesDuPays[k].NomsDesPaliersThermiques.resize(nbPaliers);
-        problem.PaliersThermiquesDuPays[k].emissionFactors.assign(
-          nbPaliers,
-          std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX>{});
+        for (auto* v: {&palier.minUpDownTime,
+                       &palier.NumeroDuPalierDansLEnsembleDesPaliersThermiques,
+                       &palier.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique,
+                       &palier.DureeMinimaleDArretDUnGroupeDuPalierThermique})
+        {
+            v->assign(nbPaliers, 0);
+        }
 
-        problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParIntervalleOptimise.assign(7, 0.);
-        problem.CaracteristiquesHydrauliques[k].CntEnergieH2OParJour.assign(7, 0.);
-        problem.CaracteristiquesHydrauliques[k]
-          .ContrainteDePmaxHydrauliqueHoraire.assign(NombreDePasDeTemps, 0.);
-        problem.CaracteristiquesHydrauliques[k]
-          .ContrainteDePmaxHydrauliqueHoraireRef.assign(NombreDePasDeTemps, 0.);
+        for (auto* v: {&palier.PminDuPalierThermiquePendantUneHeure,
+                       &palier.PminDuPalierThermiquePendantUnJour,
+                       &palier.TailleUnitaireDUnGroupeDuPalierThermique,
+                       &palier.CoutDeDemarrageDUnGroupeDuPalierThermique,
+                       &palier.CoutDArretDUnGroupeDuPalierThermique,
+                       &palier.CoutFixeDeMarcheDUnGroupeDuPalierThermique,
+                       &palier.pminDUnGroupeDuPalierThermique,
+                       &palier.PmaxDUnGroupeDuPalierThermique})
+        {
+            v->assign(nbPaliers, 0.);
+        }
 
-        problem.CaracteristiquesHydrauliques[k].MaxEnergieHydrauParIntervalleOptimise.assign(7, 0.);
-        problem.CaracteristiquesHydrauliques[k].MinEnergieHydrauParIntervalleOptimise.assign(7, 0.);
+        palier.NomsDesPaliersThermiques.resize(nbPaliers);
+        palier.emissionFactors
+          .assign(nbPaliers, std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX>{});
 
-        problem.CaracteristiquesHydrauliques[k].NiveauHoraireSup.assign(NombreDePasDeTemps, 0.);
-        problem.CaracteristiquesHydrauliques[k].NiveauHoraireInf.assign(NombreDePasDeTemps, 0.);
-        problem.CaracteristiquesHydrauliques[k].ApportNaturelHoraire.assign(NombreDePasDeTemps, 0.);
-        problem.CaracteristiquesHydrauliques[k].MingenHoraire.assign(NombreDePasDeTemps, 0.);
+        auto& hydro = problem.CaracteristiquesHydrauliques[k];
 
-        problem.CaracteristiquesHydrauliques[k].WaterLayerValues.assign(100, 0.);
-        problem.CaracteristiquesHydrauliques[k].InflowForTimeInterval.assign(100, 0.);
+        for (auto* v: {&hydro.CntEnergieH2OParIntervalleOptimise,
+                       &hydro.CntEnergieH2OParJour,
+                       &hydro.MaxEnergieHydrauParIntervalleOptimise,
+                       &hydro.MinEnergieHydrauParIntervalleOptimise,
+                       &hydro.MaxEnergiePompageParIntervalleOptimise})
+        {
+            v->assign(7, 0.);
+        }
 
-        problem.CaracteristiquesHydrauliques[k].MaxEnergiePompageParIntervalleOptimise.assign(7,
-                                                                                              0.);
-        problem.CaracteristiquesHydrauliques[k]
-          .ContrainteDePmaxPompageHoraire.assign(NombreDePasDeTemps, 0.);
+        for (auto* v: {&hydro.ContrainteDePmaxHydrauliqueHoraire,
+                       &hydro.ContrainteDePmaxHydrauliqueHoraireRef,
+                       &hydro.NiveauHoraireSup,
+                       &hydro.NiveauHoraireInf,
+                       &hydro.ApportNaturelHoraire,
+                       &hydro.MingenHoraire,
+                       &hydro.ContrainteDePmaxPompageHoraire})
+        {
+            v->assign(NombreDePasDeTemps, 0.);
+        }
+
+        for (auto* v: {&hydro.WaterLayerValues, &hydro.InflowForTimeInterval})
+        {
+            v->assign(100, 0.);
+        }
 
         problem.ReserveJMoins1[k].ReserveHoraireJMoins1.assign(NombreDePasDeTemps, 0.);
 
-        problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive.assign(NombreDePasDeTemps,
-                                                                                 0.);
-        problem.ResultatsHoraires[k]
-          .ValeursHorairesDeDefaillancePositiveCSR.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].ValeursHorairesDENS.assign(NombreDePasDeTemps,
-                                                                0.); // adq patch
-        problem.ResultatsHoraires[k].ValeursHorairesLmrViolations.assign(NombreDePasDeTemps,
-                                                                         0); // adq patch
-        problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr.assign(NombreDePasDeTemps,
-                                                                     0.); // adq patch
+        auto& resultats = problem.ResultatsHoraires[k];
 
-        problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegative.assign(NombreDePasDeTemps,
-                                                                                 0.);
-        problem.ResultatsHoraires[k].TurbinageHoraire.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].PompageHoraire.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].CoutsMarginauxHoraires.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].CoutsMarginauxHorairesCSR.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].niveauxHoraires.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].valeurH2oHoraire.assign(NombreDePasDeTemps, 0.);
-        problem.ResultatsHoraires[k].debordementsHoraires.assign(NombreDePasDeTemps, 0.);
+        for (auto* v: {&resultats.ValeursHorairesDeDefaillancePositive,
+                       &resultats.ValeursHorairesDeDefaillancePositiveCSR,
+                       &resultats.ValeursHorairesDENS,      // adq patch
+                       &resultats.ValeursHorairesDtgMrgCsr, // adq patch
+                       &resultats.ValeursHorairesDeDefaillanceNegative,
+                       &resultats.TurbinageHoraire,
+                       &resultats.PompageHoraire,
+                       &resultats.CoutsMarginauxHoraires,
+                       &resultats.CoutsMarginauxHorairesCSR,
+                       &resultats.niveauxHoraires,
+                       &resultats.valeurH2oHoraire,
+                       &resultats.debordementsHoraires})
+        {
+            v->assign(NombreDePasDeTemps, 0.);
+        }
 
-        problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout.resize(nbPaliers);
-        problem.ResultatsHoraires[k].ProductionThermique.resize(NombreDePasDeTemps);
+        resultats.ValeursHorairesLmrViolations.assign(NombreDePasDeTemps, 0); // adq patch
+
+        palier.PuissanceDisponibleEtCout.resize(nbPaliers);
+        resultats.ProductionThermique.resize(NombreDePasDeTemps);
         if (resEnabled)
         {
-            problem.ResultatsHoraires[k].Reserves.emplace();
-            problem.ResultatsHoraires[k].Reserves.value().resize(NombreDePasDeTemps);
-            problem.ResultatsHoraires[k].HydroUsage.resize(NombreDePasDeTemps);
+            resultats.Reserves.emplace(NombreDePasDeTemps);
+            resultats.HydroUsage.resize(NombreDePasDeTemps);
         }
 
         for (unsigned j = 0; j < nbPaliers; ++j)
         {
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .CoutHoraireDeProductionDuPalierThermique.assign(NombreDePasDeTemps, 0.);
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .PuissanceDisponibleDuPalierThermique.assign(NombreDePasDeTemps, 0.);
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .PuissanceDisponibleDuPalierThermiqueRef.assign(NombreDePasDeTemps, 0.);
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .PuissanceMinDuPalierThermique.assign(NombreDePasDeTemps, 0.);
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .PuissanceMinDuPalierThermiqueRef.assign(NombreDePasDeTemps, 0.);
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .NombreMaxDeGroupesEnMarcheDuPalierThermique.assign(NombreDePasDeTemps, 0);
-            problem.PaliersThermiquesDuPays[k]
-              .PuissanceDisponibleEtCout[j]
-              .NombreMinDeGroupesEnMarcheDuPalierThermique.assign(NombreDePasDeTemps, 0);
+            auto& puissance = palier.PuissanceDisponibleEtCout[j];
+
+            for (auto* v: {&puissance.CoutHoraireDeProductionDuPalierThermique,
+                           &puissance.CoutHoraireDeProductionDuPalierThermiqueSansBruit,
+                           &puissance.PuissanceDisponibleDuPalierThermique,
+                           &puissance.PuissanceDisponibleDuPalierThermiqueRef,
+                           &puissance.PuissanceMinDuPalierThermique,
+                           &puissance.PuissanceMinDuPalierThermiqueRef})
+            {
+                v->assign(NombreDePasDeTemps, 0.);
+            }
+
+            for (auto* v: {&puissance.NombreMaxDeGroupesEnMarcheDuPalierThermique,
+                           &puissance.NombreMinDeGroupesEnMarcheDuPalierThermique})
+            {
+                v->assign(NombreDePasDeTemps, 0);
+            }
         }
         for (unsigned j = 0; j < NombreDePasDeTemps; j++)
         {
-            problem.ResultatsHoraires[k].ProductionThermique[j].ProductionThermiqueDuPalier.assign(
-              nbPaliers,
-              0.);
-            problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
-              .NombreDeGroupesEnMarcheDuPalier.assign(nbPaliers, 0.);
-            problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
-              .NombreDeGroupesQuiDemarrentDuPalier.assign(nbPaliers, 0.);
-            problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
-              .NombreDeGroupesQuiSArretentDuPalier.assign(nbPaliers, 0.);
-            problem.ResultatsHoraires[k]
-              .ProductionThermique[j]
-              .NombreDeGroupesQuiTombentEnPanneDuPalier.assign(nbPaliers, 0.);
+            auto& production = resultats.ProductionThermique[j];
+
+            for (auto* v: {&production.ProductionThermiqueDuPalier,
+                           &production.NombreDeGroupesEnMarcheDuPalier,
+                           &production.NombreDeGroupesQuiDemarrentDuPalier,
+                           &production.NombreDeGroupesQuiSArretentDuPalier,
+                           &production.NombreDeGroupesQuiTombentEnPanneDuPalier})
+            {
+                v->assign(nbPaliers, 0.);
+            }
             if (resEnabled)
             {
-                problem.ResultatsHoraires[k]
-                  .ProductionThermique[j]
-                  .ParticipationReservesDuPalier.emplace();
-                problem.ResultatsHoraires[k]
-                  .ProductionThermique[j]
-                  .ParticipationReservesDuPalier.value()
-                  .assign(nbThermalReserveParticipations, 0.);
-                problem.ResultatsHoraires[k]
-                  .ProductionThermique[j]
-                  .ParticipationReservesDuPalierOn.emplace();
-                problem.ResultatsHoraires[k]
-                  .ProductionThermique[j]
-                  .ParticipationReservesDuPalierOn.value()
-                  .assign(nbThermalReserveParticipations, 0.);
-                problem.ResultatsHoraires[k]
-                  .ProductionThermique[j]
-                  .ParticipationReservesDuPalierOff.emplace();
-                problem.ResultatsHoraires[k]
-                  .ProductionThermique[j]
-                  .ParticipationReservesDuPalierOff.value()
-                  .assign(nbThermalReserveParticipations, 0.);
+                production.ParticipationReservesDuPalier.emplace(nbThermalReserveParticipations,
+                                                                 0.);
+                production.ParticipationReservesDuPalierOn.emplace(nbThermalReserveParticipations,
+                                                                   0.);
+                production.ParticipationReservesDuPalierOff.emplace(nbThermalReserveParticipations,
+                                                                    0.);
 
-                problem.ResultatsHoraires[k]
-                  .Reserves.value()[j]
-                  .ValeursHorairesInternalUnsatisfied.assign(nbReserves, 0.);
-                problem.ResultatsHoraires[k]
-                  .Reserves.value()[j]
-                  .ValeursHorairesInternalExcessReserve.assign(nbReserves, 0.);
-                problem.ResultatsHoraires[k].Reserves.value()[j].CoutsMarginauxHoraires.assign(
-                  nbReserves,
-                  0.);
-                problem.ResultatsHoraires[k].HydroUsage[j].reserveParticipationOfCluster.emplace();
-                problem.ResultatsHoraires[k]
-                  .HydroUsage[j]
-                  .reserveParticipationOfCluster.value()
-                  .assign(nbHydroReserveParticipations, 0.);
+                auto& res = resultats.Reserves.value()[j];
+                res.ValeursHorairesInternalUnsatisfied.assign(nbReserves, 0.);
+                res.ValeursHorairesInternalExcessReserve.assign(nbReserves, 0.);
+                res.CoutsMarginauxHoraires.assign(nbReserves, 0.);
+
+                resultats.HydroUsage[j]
+                  .reserveParticipationOfCluster.emplace(nbHydroReserveParticipations, 0.);
             }
         }
         // Short term storage results
 
         const unsigned long nbShortTermStorage = study.areas.byIndex[k]->shortTermStorage.count();
-        problem.ResultatsHoraires[k].ShortTermStorage.resize(nbShortTermStorage);
+        resultats.ShortTermStorage.resize(nbShortTermStorage);
         for (uint sts = 0; sts < nbShortTermStorage; sts++)
         {
-            problem.ResultatsHoraires[k].ShortTermStorage[sts].injection.resize(NombreDePasDeTemps);
-            problem.ResultatsHoraires[k].ShortTermStorage[sts].withdrawal.resize(
-              NombreDePasDeTemps);
-            problem.ResultatsHoraires[k].ShortTermStorage[sts].level.resize(NombreDePasDeTemps);
-            problem.ResultatsHoraires[k].ShortTermStorage[sts].overflow.resize(NombreDePasDeTemps);
+            auto& storage = resultats.ShortTermStorage[sts];
+            for (auto* v:
+                 {&storage.injection, &storage.withdrawal, &storage.level, &storage.overflow})
+            {
+                v->resize(NombreDePasDeTemps);
+            }
         }
 
         if (resEnabled)
         {
-            problem.ResultatsHoraires[k].ShortTermStorageReserves.emplace();
-            problem.ResultatsHoraires[k].ShortTermStorageReserves.value().resize(
-              nbSTStorageReserveParticipations);
+            resultats.ShortTermStorageReserves.emplace(nbSTStorageReserveParticipations);
             for (uint stsRes = 0; stsRes < nbSTStorageReserveParticipations; stsRes++)
             {
-                problem.ResultatsHoraires[k]
-                  .ShortTermStorageReserves.value()[stsRes]
-                  .reserveParticipationOfCluster.emplace();
-                problem.ResultatsHoraires[k]
-                  .ShortTermStorageReserves.value()[stsRes]
-                  .reserveParticipationOfCluster.value()
-                  .assign(NombreDePasDeTemps, 0.);
+                resultats.ShortTermStorageReserves.value()[stsRes]
+                  .reserveParticipationOfCluster.emplace(NombreDePasDeTemps, 0.);
             }
         }
     }

@@ -27,8 +27,7 @@ public:
 public:
     //! The number of MC years (non-zero to force the value)
     uint nbYears;
-    //! True to prepare the output folder
-    bool prepareOutput;
+
     //! Force the year-by-year flag
     bool forceYearByYear;
 

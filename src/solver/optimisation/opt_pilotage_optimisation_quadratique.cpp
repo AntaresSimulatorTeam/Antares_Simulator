@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include "antares/solver/optimisation/QuadraticProblemMatrix.h"
-#include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
+#include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
 #include "antares/solver/optimisation/opt_appel_solveur_quadratique.h"
 
 bool OPT_PilotageOptimisationQuadratique(const SingleOptimOptions& options,
@@ -11,8 +11,7 @@ bool OPT_PilotageOptimisationQuadratique(const SingleOptimOptions& options,
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
         OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(problemeHebdo);
-        auto builder_data = NewGetConstraintBuilderFromProblemHebdo(problemeHebdo);
-        ConstraintBuilder builder(builder_data);
+        ConstraintBuilder builder(problemeHebdo);
         QuadraticProblemMatrix(problemeHebdo, builder).Run();
 
         problemeHebdo->LeProblemeADejaEteInstancie = true;

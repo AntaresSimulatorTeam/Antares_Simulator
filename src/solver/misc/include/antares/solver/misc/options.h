@@ -4,12 +4,14 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include <yuni/yuni.h>
 #include <yuni/core/getopt.h>
 #include <yuni/core/string.h>
 
 #include <antares/optimization-options/options.h>
+#include <antares/study/output-selection.h>
 #include <antares/study/study.h>
 
 /*!
@@ -38,8 +40,14 @@ public:
     //! Run the TS generator only
     bool tsGeneratorsOnly = false;
 
-    //! True to disable the writing in the output folder
-    bool noOutput = false;
+    //! Override the study's output selection
+    Antares::Data::OutputSelection outputSelection;
+
+    //! Raw string from CLI, converted to outputSelection after parsing
+    std::string outputSelectionStr;
+
+    //! Convert outputSelectionStr to outputSelection (call after parsing)
+    void resolveOutputSelection();
 
     // In case we print simulation tables, do we print it in csv or parquet ?
     bool parquetFmtForSimuTables = false;
