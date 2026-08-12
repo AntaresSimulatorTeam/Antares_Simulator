@@ -546,6 +546,11 @@ struct VARIABLES_DUALES_INTERCONNEXIONS
     std::vector<double> VariableDualeParInterconnexion;
 };
 
+namespace Antares::Optimisation
+{
+class OptimEntityContainer;
+}
+
 struct PROBLEME_HEBDO
 {
     uint32_t weekInTheYear = 0;
@@ -775,6 +780,7 @@ public:
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     Antares::Solver::ModelerData* modelerData = nullptr;
+    Antares::Optimisation::OptimEntityContainer* optimEntityContainer = nullptr;
 };
 
 // Import functions for capacity and hydro reserves

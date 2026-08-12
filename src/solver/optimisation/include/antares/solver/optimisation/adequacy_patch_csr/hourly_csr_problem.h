@@ -112,6 +112,8 @@ private:
     // Costs
     void setQuadraticCost();
     void setLinearCost();
+    // GEMS contribution for hybrid studies
+    double computeGemsContributionForArea(uint32_t area, const std::string& portFieldName) const;
 
     const Antares::Optimization::OptimizationOptions& solverOptions_;
 

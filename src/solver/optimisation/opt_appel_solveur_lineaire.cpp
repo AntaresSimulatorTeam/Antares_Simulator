@@ -224,6 +224,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
     OptimEntityContainer optimEntityContainer(*ortoolsProblem);
+    problemeHebdo->optimEntityContainer = &optimEntityContainer;
 
     BendersDecomposition* bendersDecomposition = hasModelerData ? &modelerData->bendersDecomposition
                                                                 : nullptr;
@@ -320,7 +321,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         measure.tick();
         timeMeasure.simulationTableFillTime = measure.duration_ms();
     }
-
+    problemeHebdo->optimEntityContainer = nullptr;
     return {.timeMeasure = timeMeasure,
             .originalProblem = ortoolsProblem,
             .objectiveValue = getObjectiveValue(solver.get())};
@@ -374,13 +375,13 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         // TODO remove this if..else
         if (optimizationNumber == PREMIERE_OPTIMISATION)
         {
-            problemeHebdo->coutOptimalSolution1[static_cast<unsigned int>(NumIntervalle)]
-              = optimizationCost;
+            problemeHebdo
+              ->coutOptimalSolution1[static_cast<unsigned int>(NumIntervalle)] = optimizationCost;
         }
         else
         {
-            problemeHebdo->coutOptimalSolution2[static_cast<unsigned int>(NumIntervalle)]
-              = optimizationCost;
+            problemeHebdo
+              ->coutOptimalSolution2[static_cast<unsigned int>(NumIntervalle)] = optimizationCost;
         }
         for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
