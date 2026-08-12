@@ -111,6 +111,17 @@ class SimulationTable:
         """True if the simulation table has at least one row for `component`."""
         return not self.has_no_rows_for_component(component)
 
+    def has_no_rows_for_component_and_output(self, component: str, output: str) -> bool:
+        """True if no row matches both `component` and `output`.
+
+        Narrower than has_no_rows_for_component: useful when a component
+        still legitimately carries rows from an unrelated mechanism (e.g.
+        raw per-variable rows) and only a specific derived output's absence
+        needs checking.
+        """
+        df = self._dataframe
+        return df[(df["component"] == component) & (df["output"] == output)].empty
+
     def get_objective_value(self) -> float:
         """Returns the objective value from the simulation table (scenario_index == 0)."""
         df = self._dataframe[

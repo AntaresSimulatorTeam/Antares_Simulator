@@ -206,18 +206,31 @@ Feature: Legacy variables in simulation table
     And the modeler outputs contain no entries for component "area_hydro"
 
   @fast @short
-  Scenario: link outputs are entirely absent when both NTC directions are zero across the whole study
+  Scenario: derived link outputs are absent when both NTC directions are zero across the whole study
     # Same base study as the "Link extra outputs" scenario above (east-west,
     # hurdle-cost link), on a temporary copy with both direction capacity
     # series emptied (the "empty file -> all-zero series" convention). No
     # explicit "disabled" flag exists on links, so a link with zero capacity
     # in both directions across the whole study is treated as inactive.
+    #
+    # This only suppresses the *derived* extra-output rows produced by
+    # AddLegacyExtraOutputs (abs_flow, prop_cost, congestion indicators,
+    # port fields, ...) -- it does not touch the separate *raw* per-variable
+    # rows (flow, direct_flow, indirect_flow), which are out of this
+    # feature's scope and still exist as long as the link's LP variables do.
     Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/Hurdle-cost link"
     And in input "links/east/capacities/west_direct.txt" the time series is emptied
     And in input "links/east/capacities/west_indirect.txt" the time series is emptied
     When I run antares simulator with --output=simulation-tables
     Then the simulation succeeds
-    And the modeler outputs contain no entries for component "east_west_link"
+    And the modeler outputs contain no "abs_flow" entries for component "east_west_link"
+    And the modeler outputs contain no "minus_flow" entries for component "east_west_link"
+    And the modeler outputs contain no "out_port.flow" entries for component "east_west_link"
+    And the modeler outputs contain no "in_port.flow" entries for component "east_west_link"
+    And the modeler outputs contain no "prop_cost" entries for component "east_west_link"
+    And the modeler outputs contain no "capacity_shadow_price" entries for component "east_west_link"
+    And the modeler outputs contain no "is_directly_congested" entries for component "east_west_link"
+    And the modeler outputs contain no "is_indirectly_congested" entries for component "east_west_link"
 
   @fast @short
   Scenario: actual_num_units_on is emitted in accurate unit-commitment mode
