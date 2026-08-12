@@ -5,6 +5,7 @@
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
+#include "antares/solver/optimisation/InactiveComponentsAnalyzerBuilder.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/common-eco-adq.h"
@@ -59,12 +60,16 @@ bool Economy::simulationBegin()
         weeklyOptProblems_.clear();
         postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
 
+        const auto inactiveComponents = Antares::Optimization::BuildInactiveComponentsAnalyzer(
+          study);
+
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             SIM_InitialisationProblemeHebdo(study,
                                             pProblemesHebdo[numSpace],
                                             nbHoursInAWeek,
                                             numSpace);
+            pProblemesHebdo[numSpace].inactiveComponents = inactiveComponents;
             if (study.parameters.include.reserves)
             {
                 buildReserveIndexMaps(study, pProblemesHebdo[numSpace]);

@@ -6,6 +6,7 @@
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
+#include "antares/solver/optimisation/InactiveComponentsAnalyzerBuilder.h"
 #include "antares/solver/simulation/solver_utils.h"
 #include "antares/writer/LegacySimulationTablesWriter.h"
 
@@ -55,12 +56,17 @@ bool Adequacy::simulationBegin()
     if (!preproOnly)
     {
         pProblemesHebdo.resize(pNbMaxPerformedYearsInParallel);
+
+        const auto inactiveComponents = Antares::Optimization::BuildInactiveComponentsAnalyzer(
+          study);
+
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             SIM_InitialisationProblemeHebdo(study,
                                             pProblemesHebdo[numSpace],
                                             nbHoursInAWeek,
                                             numSpace);
+            pProblemesHebdo[numSpace].inactiveComponents = inactiveComponents;
             if (study.parameters.include.reserves)
             {
                 buildReserveIndexMaps(study, pProblemesHebdo[numSpace]);
