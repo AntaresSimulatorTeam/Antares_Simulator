@@ -206,9 +206,8 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
             continue;
         }
 
-        const CONTRAINTES_COUPLANTES&
-          MatriceDesContraintesCouplantes = problemeHebdo_
-                                              ->MatriceDesContraintesCouplantes[CntCouplante];
+        const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
+          = problemeHebdo_->MatriceDesContraintesCouplantes[CntCouplante];
 
         int Cnt = numberOfConstraintCsrHourlyBinding[CntCouplante];
 
