@@ -3,12 +3,90 @@
 
 #include <pi_constantes_externes.h>
 
+#include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/visitors/EvalVisitor.h>
+#include <antares/solver/modeler/ModelerData.h>
+#include <antares/study/system-model/component.h>
+#include <antares/study/system-model/portType.h>
+#include <antares/study/system-model/system.h>
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using namespace Yuni;
+
+double HourlyCSRProblem::computeGemsContributionForArea(uint32_t area,
+                                                        const std::string& portFieldName) const
+{
+    auto* modelerData = problemeHebdo_->modelerData;
+    if (!modelerData || !modelerData->system)
+    {
+        return 0.0;
+    }
+
+    double contribution = 0.0;
+    const std::string areaName = problemeHebdo_->NomsDesPays[area];
+
+    for (const auto& component: modelerData->system->Components())
+    {
+        for (const auto& [portId, connectedArea]: component.portToAreaConnections())
+        {
+            if (connectedArea != areaName)
+            {
+                continue;
+            }
+
+            const auto& port = component.findPort(portId, "");
+            const auto& areaConnection = port.Type().areaConnection();
+            if (!areaConnection)
+            {
+                continue;
+            }
+
+            std::string fieldId;
+            if (portFieldName == "unsupplied_energy_bound")
+            {
+                fieldId = areaConnection->unsupplied_energy_bound;
+            }
+            else if (portFieldName == "spillage_bound")
+            {
+                fieldId = areaConnection->spillage_bound;
+            }
+
+            if (fieldId.empty())
+            {
+                continue;
+            }
+
+            auto* expressionNode = component.nodeAtPortField(portId, fieldId);
+
+            auto* optimEntityContainer = problemeHebdo_->optimEntityContainer;
+            if (!optimEntityContainer)
+            {
+                continue;
+            }
+
+            const auto& scenario = modelerData->scenarioGroupRepository.scenario(
+              component.getScenarioGroupId());
+            Optimisation::LinearProblemApi::FillContext fillContext(
+              triggeredHour,
+              triggeredHour,
+              triggeredHour + problemeHebdo_->HeureDansLAnnee,
+              triggeredHour + problemeHebdo_->HeureDansLAnnee,
+              problemeHebdo_->year);
+            Expressions::Visitors::EvalVisitor evalVisitor(*optimEntityContainer,
+                                                           fillContext,
+                                                           component,
+                                                           modelerData->dataSeries.get(),
+                                                           scenario);
+            contribution += evalVisitor.dispatch(expressionNode).valueAsDouble();
+
+            (void)expressionNode;
+        }
+    }
+    return contribution;
+}
 
 void HourlyCSRProblem::setBoundsOnENS()
 {
@@ -23,8 +101,11 @@ void HourlyCSRProblem::setBoundsOnENS()
             int var = variableManager_.UnsuppliedEnergy(area, triggeredHour);
 
             problemeAResoudre_.Xmin[var] = -belowThisThresholdSetToZero;
-            problemeAResoudre_.Xmax[var] = problemeHebdo_->ResultatsHoraires[area]
-                                             .ValeursHorairesDENS[triggeredHour]
+            double ensLegacy = problemeHebdo_->ResultatsHoraires[area]
+                                 .ValeursHorairesDENS[triggeredHour];
+            double gemsContribution = computeGemsContributionForArea(area,
+                                                                     "unsupplied_energy_bound");
+            problemeAResoudre_.Xmax[var] = ensLegacy + gemsContribution
                                            + belowThisThresholdSetToZero;
 
             problemeAResoudre_.X[var] = problemeHebdo_->ResultatsHoraires[area]
@@ -33,8 +114,8 @@ void HourlyCSRProblem::setBoundsOnENS()
             AdresseDuResultat = &(problemeHebdo_->ResultatsHoraires[area]
                                     .ValeursHorairesDeDefaillancePositive[triggeredHour]);
 
-            problemeAResoudre_.AdresseOuPlacerLaValeurDesVariablesOptimisees[var]
-              = AdresseDuResultat;
+            problemeAResoudre_
+              .AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = AdresseDuResultat;
 
             logs.debug() << var << ": " << problemeAResoudre_.Xmin[var] << ", "
                          << problemeAResoudre_.Xmax[var];
@@ -61,8 +142,8 @@ void HourlyCSRProblem::setBoundsOnSpilledEnergy()
             double* AdresseDuResultat = &(problemeHebdo_->ResultatsHoraires[area]
                                             .ValeursHorairesDeDefaillanceNegative[triggeredHour]);
 
-            problemeAResoudre_.AdresseOuPlacerLaValeurDesVariablesOptimisees[var]
-              = AdresseDuResultat;
+            problemeAResoudre_
+              .AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = AdresseDuResultat;
 
             logs.debug() << var << ": " << problemeAResoudre_.Xmin[var] << ", "
                          << problemeAResoudre_.Xmax[var];

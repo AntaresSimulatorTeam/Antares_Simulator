@@ -551,6 +551,11 @@ struct VARIABLES_DUALES_INTERCONNEXIONS
     std::vector<double> VariableDualeParInterconnexion;
 };
 
+namespace Antares::Optimisation
+{
+class OptimEntityContainer;
+}
+
 struct PROBLEME_HEBDO
 {
     uint32_t weekInTheYear = 0;
@@ -798,6 +803,10 @@ public:
     /// alive past the solve so a post-process simulation table can re-emit the
     /// modeler component rows. Null unless retainSolvedModelerProblem is set.
     std::shared_ptr<const Antares::Optimization::SolvedModelerProblem> lastSolvedModelerProblem;
+    
+    /// \brief Kept alive past the solve so the CSR adequacy patch post-process
+    /// can evaluate GEMS port field expressions via EvalVisitor.
+    Antares::Optimisation::OptimEntityContainer* optimEntityContainer = nullptr;
 };
 
 // Import functions for capacity and hydro reserves

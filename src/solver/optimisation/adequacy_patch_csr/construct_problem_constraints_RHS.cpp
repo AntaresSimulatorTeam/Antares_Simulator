@@ -142,7 +142,8 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                 }
 
                 // RHS = STt - (1-BT)*STmint + BH*Ht + BF*(Ft - Lt) + BH*STS_net_production
-                double rhs = stt - stmint + ht + bfTerm + stsNetProduction;
+                double gemsSpillageBound = computeGemsContributionForArea(Area, "spillage_bound");
+                double rhs = stt - stmint + ht + bfTerm + stsNetProduction + gemsSpillageBound;
 
                 problemeAResoudre_.SecondMembre[Cnt] = rhs;
                 logs.debug() << Cnt << ": FictitiousLoad: RHS[" << Cnt
@@ -175,9 +176,11 @@ void HourlyCSRProblem::setRHSMaxEnsLoadValue()
                                                         .AllMustRunGenerationOfArea[Area]);
                 load += MaxMustRunGenOfArea;
 
-                if (load >= 0.)
+                double gemsEnsBound = computeGemsContributionForArea(Area,
+                                                                     "unsupplied_energy_bound");
+                if (load + gemsEnsBound >= 0.)
                 {
-                    SecondMembre[Cnt] = load + 1e-5;
+                    SecondMembre[Cnt] = load + gemsEnsBound + 1e-5;
                 }
 
                 logs.debug() << Cnt << ": MaxEnsLoad: RHS[" << Cnt << "] = " << SecondMembre[Cnt]
@@ -203,8 +206,9 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
             continue;
         }
 
-        const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-          = problemeHebdo_->MatriceDesContraintesCouplantes[CntCouplante];
+        const CONTRAINTES_COUPLANTES&
+          MatriceDesContraintesCouplantes = problemeHebdo_
+                                              ->MatriceDesContraintesCouplantes[CntCouplante];
 
         int Cnt = numberOfConstraintCsrHourlyBinding[CntCouplante];
 

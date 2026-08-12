@@ -189,6 +189,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     // Heap-allocated so it can outlive this call: a post-process simulation
     // table re-emits the modeler rows through it, long after the solve.
     auto optimEntityContainer = std::make_shared<OptimEntityContainer>(*ortoolsProblem);
+    problemeHebdo->optimEntityContainer = &optimEntityContainer;
 
     BendersDecomposition* bendersDecomposition = hasModelerData ? &modelerData->bendersDecomposition
                                                                 : nullptr;
@@ -310,7 +311,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         measure.tick();
         timeMeasure.simulationTableFillTime = measure.duration_ms();
     }
-
+    problemeHebdo->optimEntityContainer = nullptr;
     return {.timeMeasure = timeMeasure,
             .originalProblem = ortoolsProblem,
             .objectiveValue = getObjectiveValue(solver.get())};
@@ -364,13 +365,13 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         // TODO remove this if..else
         if (optimizationNumber == PREMIERE_OPTIMISATION)
         {
-            problemeHebdo->coutOptimalSolution1[static_cast<unsigned int>(NumIntervalle)]
-              = optimizationCost;
+            problemeHebdo
+              ->coutOptimalSolution1[static_cast<unsigned int>(NumIntervalle)] = optimizationCost;
         }
         else
         {
-            problemeHebdo->coutOptimalSolution2[static_cast<unsigned int>(NumIntervalle)]
-              = optimizationCost;
+            problemeHebdo
+              ->coutOptimalSolution2[static_cast<unsigned int>(NumIntervalle)] = optimizationCost;
         }
         for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
