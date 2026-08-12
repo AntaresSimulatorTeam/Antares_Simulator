@@ -245,7 +245,8 @@ private:
     void SetAreaVariableName(unsigned varIndex,
                              const std::string& variableType,
                              int layerIndex,
-                             std::string component = {}) const;
+                             std::string component = {},
+                             std::string legacyName = {}) const;
     void SetShortTermStorageVariableName(unsigned varIndex,
                                          const std::string& variableType,
                                          const std::string& sts_name) const;
