@@ -303,7 +303,7 @@ void Settings::reset()
     outputSelectionStr.clear();
     outputSelection = Antares::Data::OutputSelection{};
 
-    solverOptions = Antares::Solver::Optimization::CmdLineOptimOptions{};
+    solverOptions = Antares::Optimization::CmdLineOptimOptions{};
 }
 
 void Settings::resolveOutputSelection()
