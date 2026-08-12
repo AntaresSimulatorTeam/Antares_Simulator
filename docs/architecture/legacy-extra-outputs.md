@@ -29,7 +29,7 @@ Three sources cover every formula:
 | Dual of a constraint | `CoutsMarginauxDesContraintes[c]`, with `c` from the constraint correspondence tables: `CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays[pays]`, `.NumeroDeContrainteDeDissociationDeFlux[interco]`, `NumeroDeContrainteExpressionStockFinal[pays]` |
 | Study data that is not in the problem's objective (capacities, inflows, load, emission factors, unit data) | straight from `PROBLEME_HEBDO`: `ValeursDeNTC[pdt]`, `CaracteristiquesHydrauliques[pays]`, `ConsommationsAbattues[pdt]` + `AllMustRunGeneration[pdt]`, `PaliersThermiquesDuPays[pays]` |
 
-Row conventions are fixed in one place (`LegacyExtraOutputEmitter::emit`): the absolute hour is `weekInTheYear * 168 + pdt` (matching the time index recorded on the raw rows), `block_time_index` comes from `LegacyBlockTimeIndex` (shared with the raw-row loop), `scenario_index = fillContext.getYear()`. Components follow the uniqueness convention: `{area}_node` for area rows, `{area}_hydro_storage` for the hydro storage, `{area}_thermal_{cluster}` for thermal clusters, `{origin}_{destination}_link` for links (endpoints sorted), `{area}_load` / `{area}_hydro` for the load / long-term-storage port rows.
+Row conventions are fixed in one place (`LegacyExtraOutputEmitter::emit`): the absolute hour is `weekInTheYear * 168 + pdt` (matching the time index recorded on the raw rows), `block_time_index` comes from `LegacyBlockTimeIndex` (shared with the raw-row loop), `scenario_index = fillContext.getYear()`. Components follow the uniqueness convention: `{area}_node` for area rows, `{area}_hydro_storage` for the hydro storage, `{area}_thermal_{cluster}` for thermal clusters, `{area}_short_term_storage_{name}` for short-term storages, `{origin}_{destination}_link` for links (endpoints sorted), `{area}_load` / `{area}_hydro_storage` for the load / long-term-storage port rows.
 
 ### Guards
 
@@ -61,7 +61,7 @@ Emitters skip outputs whose anchor does not exist, mirroring the construction si
 | `level_percentage` | area | `X[ih] / TailleReservoir × 100` | skipped when the capacity is non-positive |
 | `actual_inflows` | area | `round(ApportNaturelHoraire[pdt])` | only areas with a managed reservoir |
 | `hydro_shadow_price` | area | `dual(FinalStockExpression)` | weekly, accurate water value mode only |
-| `bellman_value` | area | `Σ_layer CoutLineaire[il] × X[il]` | `il = vm.LayerStorage(pays, layer)`; weekly, accurate water value mode only |
+| `bellman_value` | area | `−Σ_layer CoutLineaire[il] × X[il]` | `il = vm.LayerStorage(pays, layer)`; weekly, accurate water value mode only |
 | `profit` | storage | `floor((X[iw] − X[ii]) × price + 0.5)` | `iw/ii = vm.ShortTermStorageWithdrawal/Injection(clusterGlobalIndex)`; price = balance dual of the storage's area |
 | `generation_power` | renewable / misc gen | `availablePower[pdt]` | `InputGenerationOfArea[pays]`, filled from study series by `SIM_RenseignementProblemeHebdo` (not an LP variable) |
 | `minus_generation` | renewable / misc gen | `−availablePower[pdt]` | as above |
@@ -69,10 +69,11 @@ Emitters skip outputs whose anchor does not exist, mirroring the construction si
 The §2.5 port fields are emitted by the same functions, with the port field name
 as the ST output: `balance_port.price` (area, = `price`), `out_port.flow` /
 `in_port.flow` (link, = `±flow`), and `balance_port.flow` for thermal
-(`generation_power`), short-term storage (`withdrawal − injection`), renewable /
-misc gen (`availablePower`), load (`−rawLoad`, component `{area}_load`) and
-long-term storage (`X[HydProd] − X[Pumping]`, component `{area}_hydro`, skipped
-without hydro production). The `_load` / `_hydro` suffixes keep the two
+(`generation_power`), short-term storage (`withdrawal − injection`, component
+`{area}_short_term_storage_{name}`), renewable / misc gen (`availablePower`),
+load (`−rawLoad`, component `{area}_load`) and long-term storage
+(`X[HydProd] − X[Pumping]`, component `{area}_hydro_storage`, skipped without
+hydro production). The `_load` / `_hydro_storage` suffixes keep the two
 area-level `balance_port.flow` rows from colliding on the area name.
 | `abs_flow` | link | `abs(X[idf])` | `idf = vm.DirectFlow` (signed) |
 | `minus_flow` | link | `−X[idf]` | GEMS sign convention |

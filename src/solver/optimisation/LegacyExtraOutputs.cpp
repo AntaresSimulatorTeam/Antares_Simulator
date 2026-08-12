@@ -197,8 +197,8 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
            : 0.);
 
     // Port fields of the load and long_term_storage models, emitted on their
-    // own components ({area}_load, {area}_hydro) so their balance_port.flow
-    // rows cannot collide with each other on the area name.
+    // own components ({area}_load, {area}_hydro_storage) so their
+    // balance_port.flow rows cannot collide with each other on the area name.
     emit("balance_port.flow",
          fmt::format("{}_load", problemeHebdo_.NomsDesPays[pays]),
          pdt,
@@ -209,10 +209,7 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
     {
         const int pumping = variableManager_.Pumping(pays, pdt);
         const double netWithdrawal = x(hydProd) - (pumping >= 0 ? x(pumping) : 0.);
-        emit("balance_port.flow",
-             fmt::format("{}_hydro", problemeHebdo_.NomsDesPays[pays]),
-             pdt,
-             netWithdrawal);
+        emit("balance_port.flow", hydroStorageNames_[pays], pdt, netWithdrawal);
     }
 
     const int hydroLevel = variableManager_.HydroLevel(pays, pdt);
@@ -361,8 +358,11 @@ void LegacyExtraOutputEmitter::shortTermStorageOutputs(uint32_t pays, int pdt)
           variableManager_.ShortTermStorageWithdrawal(storage.clusterGlobalIndex, pdt));
         const double injection = x(
           variableManager_.ShortTermStorageInjection(storage.clusterGlobalIndex, pdt));
-        emit("profit", storage.name, pdt, std::floor((withdrawal - injection) * price + 0.5));
-        emit("balance_port.flow", storage.name, pdt, withdrawal - injection);
+        const std::string component = fmt::format("{}_short_term_storage_{}",
+                                                  problemeHebdo_.NomsDesPays[pays],
+                                                  storage.name);
+        emit("profit", component, pdt, std::floor((withdrawal - injection) * price + 0.5));
+        emit("balance_port.flow", component, pdt, withdrawal - injection);
     }
 }
 
