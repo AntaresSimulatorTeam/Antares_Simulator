@@ -28,7 +28,6 @@ inline void State::startANewYear()
         study.areas.each([this](const auto& area) { reserveData->at(area.index) = ReserveData(); });
     }
 
-
     // Re-initializing annual costs (to be printed in output into separate files)
     annualSystemCost = 0.;
     optimalSolutionCost1 = 0.;

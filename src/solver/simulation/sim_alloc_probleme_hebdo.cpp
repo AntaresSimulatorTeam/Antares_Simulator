@@ -142,7 +142,6 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
 
         auto& variablesMapping = problem.CorrespondanceVarNativesVarOptim[k];
 
-
         for (auto* v: {&variablesMapping.NumeroDeVariableDuFluxDirect,
                        &variablesMapping.NumeroDeVariableDuFluxDirectPositif,
                        &variablesMapping.NumeroDeVariableDuFluxIndirectPositif})
@@ -155,8 +154,7 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
               &variablesMapping.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique,
               &variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique,
               &variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique,
-              &variablesMapping
-                 .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique,
+              &variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique,
               &variablesMapping.powerRampingIncreaseIndex,
               &variablesMapping.powerRampingDecreaseIndex})
         {
