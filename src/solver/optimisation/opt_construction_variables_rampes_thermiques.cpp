@@ -17,7 +17,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireRampesThermiqu
     int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                   ->NombreDePasDeTempsPourUneOptimisation;
     int& NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-    VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables);
+    VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables,
+                                ProblemeAResoudre->LegacyVariablesInfo);
 
     for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
     {

@@ -938,7 +938,10 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         {
             Area& area = *(i->second);
             fs::path areaPath = thermalPath / "clusters" / area.id;
-            ret = area.thermal.list.loadFromFolder(areaPath, &area) && ret;
+            ret = area.thermal.list.loadFromFolder(areaPath,
+                                                   &area,
+                                                   pStudy.parameters.include.thermal_ramping)
+                  && ret;
             ret = area.thermal.list.validateClusters(pStudy.parameters) && ret;
         }
     }

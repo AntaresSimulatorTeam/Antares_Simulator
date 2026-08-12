@@ -314,7 +314,10 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
                 logs.verbosityLevel = Logs::Verbosity::Warning::level;
                 // Load all thermal clusters
                 buffer.clear() << infos->folder << "/input/thermal/clusters/" << area->id;
-                if (not area->thermal.list.loadFromFolder(buffer.c_str(), area))
+                if (not area->thermal.list.loadFromFolder(
+                      buffer.c_str(),
+                      area,
+                      study->parameters.include.thermal_ramping))
                 {
                     delete arealist;
                     delete study;

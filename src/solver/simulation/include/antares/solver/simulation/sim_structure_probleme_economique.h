@@ -397,7 +397,7 @@ struct PALIERS_THERMIQUES
     std::vector<double> TailleUnitaireDUnGroupeDuPalierThermique;
     std::vector<double> PminDuPalierThermiquePendantUneHeure;
     std::vector<double> PminDuPalierThermiquePendantUnJour;
-    std::vector<uint> NumeroDuPalierDansLEnsembleDesPaliersThermiques;
+    std::vector<int> NumeroDuPalierDansLEnsembleDesPaliersThermiques;
     std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER> PuissanceDisponibleEtCout;
 
     std::vector<double> CoutDeDemarrageDUnGroupeDuPalierThermique;

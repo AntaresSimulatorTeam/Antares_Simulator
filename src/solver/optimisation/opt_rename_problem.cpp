@@ -362,17 +362,14 @@ void VariableNamer::InternalExcessReserve(unsigned varIndex, const std::string& 
     SetThermalClusterReserveElementName(varIndex, "InternalExcessReserve", reserveName);
 }
 
-void VariableNamer::DispatchableProduction(unsigned varIndex, const std::string& clusterName) const
-{
-    SetThermalClusterElementName(varIndex, "DispatchableProduction", clusterName);
-}
-
-void VariableNamer::ProductionIncreaseAboveMin(unsigned varIndex, const std::string& clusterName) const
+void VariableNamer::ProductionIncreaseAboveMin(unsigned varIndex,
+                                               const std::string& clusterName) const
 {
     SetThermalClusterElementName(varIndex, "ProductionIncreaseAboveMin", clusterName);
 }
 
-void VariableNamer::ProductionDecreaseAboveMin(unsigned varIndex, const std::string& clusterName) const
+void VariableNamer::ProductionDecreaseAboveMin(unsigned varIndex,
+                                               const std::string& clusterName) const
 {
     SetThermalClusterElementName(varIndex, "ProductionDecreaseAboveMin", clusterName);
 }
@@ -927,12 +924,14 @@ void ConstraintNamer::PMinDispatchableGeneration(unsigned constrIndex,
     SetThermalClusterElementName(constrIndex, "PMinDispatchableGeneration", clusterName);
 }
 
-void ConstraintNamer::RampingIncreaseRate(unsigned constrIndex, const std::string& clusterName) const
+void ConstraintNamer::RampingIncreaseRate(unsigned constrIndex,
+                                          const std::string& clusterName) const
 {
     SetThermalClusterElementName(constrIndex, "RampingIncreaseRate", clusterName);
 }
 
-void ConstraintNamer::RampingDecreaseRate(unsigned constrIndex, const std::string& clusterName) const
+void ConstraintNamer::RampingDecreaseRate(unsigned constrIndex,
+                                          const std::string& clusterName) const
 {
     SetThermalClusterElementName(constrIndex, "RampingDecreaseRate", clusterName);
 }

@@ -106,7 +106,9 @@ std::size_t ThermalClusterList::capacityReservationsCount() const
     return uniqueReservations.size();
 }
 
-bool ThermalClusterList::loadFromFolder(const fs::path& folder, Area* area)
+bool ThermalClusterList::loadFromFolder(const fs::path& folder,
+                                        Area* area,
+                                        bool rampingEnabledGlobal)
 {
     assert(area && "A parent area is required");
 
@@ -137,10 +139,7 @@ bool ThermalClusterList::loadFromFolder(const fs::path& folder, Area* area)
         auto cluster = std::make_shared<ThermalCluster>(area);
 
         // Load data of a thermal cluster from a ini file section
-        if (!ThermalClusterLoadFromSection(area->name,
-                                           *cluster,
-                                           *section,
-                                           study.parameters.include.thermal_ramping))
+        if (!ThermalClusterLoadFromSection(area->name, *cluster, *section, rampingEnabledGlobal))
         {
             continue;
         }
