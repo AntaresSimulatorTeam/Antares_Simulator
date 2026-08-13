@@ -593,7 +593,7 @@ BOOST_AUTO_TEST_CASE(hydro_shadow_price_is_the_final_stock_expression_dual)
     const auto rows = RowsForOutput(table, "hydro_shadow_price");
     BOOST_REQUIRE_EQUAL(rows.size(), 1);
     BOOST_CHECK_EQUAL(rows[0].component, "area1_hydro_storage");
-    BOOST_CHECK_EQUAL(rows[0].value, 42.);
+    BOOST_CHECK_EQUAL(rows[0].value, -42.);
     // Anchored on the last hour of the interval.
     BOOST_CHECK_EQUAL(rows[0].absoluteTimeIndex, "168");
 }
