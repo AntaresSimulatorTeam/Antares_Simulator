@@ -10,18 +10,6 @@
 #include "antares/study/parts/common/cluster.h"
 #include "antares/study/study.h"
 
-namespace // anonymous
-{
-struct TSNumbersPredicate
-{
-    uint32_t operator()(uint32_t value) const
-    {
-        return value + 1;
-    }
-};
-
-} // anonymous namespace
-
 namespace Antares::Data
 {
 using namespace Yuni;
