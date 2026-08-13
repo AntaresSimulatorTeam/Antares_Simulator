@@ -143,7 +143,7 @@ limitation as `price`).
 |------|--------|---------|-----------------|
 | [x] | `level_percentage` | `level / reservoir_capacity · 100` | `HydroLevel` (capacity in context) |
 | [x] | `actual_inflows` | `round(inflows)` | `HydroLevel` (inflows in context) |
-| [x] | `hydro_shadow_price` | `dual(FinalStockExpression)` | `FinalStockExpression` constraint |
+| [x] | `hydro_shadow_price` | `-dual(FinalStockExpression)` | `FinalStockExpression` constraint |
 | [x] | `bellman_value` | `−sum(cost_layer · LayerStorage)` | `LayerStorage` variables of the area (weekly, accurate water value only) |
 
 `bellman_value` sums `−CoutLineaire · X` over the area's `LayerStorage` variables
