@@ -17,17 +17,19 @@
 
 using namespace Yuni;
 
-double HourlyCSRProblem::computeGemsContributionForArea(uint32_t area,
-                                                        const std::string& portFieldName) const
+double computeGemsContributionForArea(const PROBLEME_HEBDO* problemeHebdo,
+                                      uint32_t area,
+                                      int triggeredHour,
+                                      const std::string& portFieldName)
 {
-    auto* modelerData = problemeHebdo_->modelerData;
+    auto* modelerData = problemeHebdo->modelerData;
     if (!modelerData || !modelerData->system)
     {
         return 0.0;
     }
 
     double contribution = 0.0;
-    const std::string areaName = problemeHebdo_->NomsDesPays[area];
+    const std::string areaName = problemeHebdo->NomsDesPays[area];
 
     for (const auto& component: modelerData->system->Components())
     {
@@ -62,7 +64,7 @@ double HourlyCSRProblem::computeGemsContributionForArea(uint32_t area,
 
             auto* expressionNode = component.nodeAtPortField(portId, fieldId);
 
-            auto* optimEntityContainer = problemeHebdo_->optimEntityContainer;
+            auto* optimEntityContainer = problemeHebdo->optimEntityContainer;
             if (!optimEntityContainer)
             {
                 continue;
@@ -71,17 +73,17 @@ double HourlyCSRProblem::computeGemsContributionForArea(uint32_t area,
             const auto& scenario = modelerData->scenarioGroupRepository.scenario(
               component.getScenarioGroupId());
             Antares::LinearProblem::Api::FillContext fillContext(
-              triggeredHour,
-              triggeredHour,
-              triggeredHour + problemeHebdo_->HeureDansLAnnee,
-              triggeredHour + problemeHebdo_->HeureDansLAnnee,
-              problemeHebdo_->year);
+              0,                                              // localFirst
+              0,                                              // localLast
+              triggeredHour + problemeHebdo->HeureDansLAnnee, // globalFirst
+              triggeredHour + problemeHebdo->HeureDansLAnnee, // globalLast
+              problemeHebdo->year);
             Expressions::Visitors::EvalVisitor evalVisitor(*optimEntityContainer,
                                                            fillContext,
                                                            component,
                                                            modelerData->dataSeries.get(),
                                                            scenario);
-            contribution += evalVisitor.dispatch(expressionNode).valueAsDouble();
+            contribution += evalVisitor.dispatch(expressionNode).valuesAsVector()[0];
 
             (void)expressionNode;
         }
@@ -104,7 +106,9 @@ void HourlyCSRProblem::setBoundsOnENS()
             problemeAResoudre_.Xmin[var] = -belowThisThresholdSetToZero;
             double ensLegacy = problemeHebdo_->ResultatsHoraires[area]
                                  .ValeursHorairesDENS[triggeredHour];
-            double gemsContribution = computeGemsContributionForArea(area,
+            double gemsContribution = computeGemsContributionForArea(problemeHebdo_,
+                                                                     area,
+                                                                     triggeredHour,
                                                                      "unsupplied_energy_bound");
             problemeAResoudre_.Xmax[var] = ensLegacy + gemsContribution
                                            + belowThisThresholdSetToZero;

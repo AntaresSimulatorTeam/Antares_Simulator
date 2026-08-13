@@ -46,6 +46,12 @@ struct LinkVariable
 };
 
 struct PROBLEME_HEBDO;
+// GEMS contribution for hybrid studies
+double computeGemsContributionForArea(const PROBLEME_HEBDO* problemeHebdo,
+                                      uint32_t area,
+                                      int triggeredHour,
+                                      const std::string& portFieldName);
+;
 
 class HourlyCSRProblem final
 {
@@ -112,8 +118,6 @@ private:
     // Costs
     void setQuadraticCost();
     void setLinearCost();
-    // GEMS contribution for hybrid studies
-    double computeGemsContributionForArea(uint32_t area, const std::string& portFieldName) const;
 
     const Antares::Optimization::OptimizationOptions& solverOptions_;
 
