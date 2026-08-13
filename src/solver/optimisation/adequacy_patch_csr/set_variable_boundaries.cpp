@@ -5,6 +5,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
+#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/modeler/ModelerData.h>
 #include <antares/study/system-model/component.h>
 #include <antares/study/system-model/portType.h>
@@ -69,7 +70,7 @@ double HourlyCSRProblem::computeGemsContributionForArea(uint32_t area,
 
             const auto& scenario = modelerData->scenarioGroupRepository.scenario(
               component.getScenarioGroupId());
-            Optimisation::LinearProblemApi::FillContext fillContext(
+            Antares::LinearProblem::Api::FillContext fillContext(
               triggeredHour,
               triggeredHour,
               triggeredHour + problemeHebdo_->HeureDansLAnnee,

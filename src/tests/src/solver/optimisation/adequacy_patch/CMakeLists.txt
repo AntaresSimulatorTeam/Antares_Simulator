@@ -4,4 +4,5 @@ add_boost_test(tests-adq-patch
         SRC adequacy_patch.cpp
         LIBS
         model_antares
-        array)
+        array
+        antares-study-system-model)
