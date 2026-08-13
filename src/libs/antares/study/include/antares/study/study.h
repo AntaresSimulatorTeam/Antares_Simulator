@@ -332,8 +332,6 @@ public:
     //@{
     //! A buffer for temporary operations on large amount of data
     mutable Matrix<>::BufferType dataBuffer;
-    //! A buffer used when loading time-series for dealing with filenames (prepro/series only)
-    mutable YString bufferLoadingTS;
 
     //@}
 

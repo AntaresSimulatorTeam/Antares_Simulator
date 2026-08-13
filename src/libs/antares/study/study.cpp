@@ -20,14 +20,6 @@ namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
-//! Clear then shrink a string
-template<class StringT>
-static inline void ClearAndShrink(StringT& string)
-{
-    string.clear();
-    string.shrink();
-}
-
 Study::Study():
     areas(*this)
 {
@@ -43,39 +35,10 @@ Study::Study():
     preproHydroCorrelation.timeSeries = timeSeriesHydro;
 }
 
-Study::~Study()
-{
-    clear();
-}
-
-void Study::clear()
-{
-    scenarioRules.reset();
-
-    // areas
-    setsOfAreas.clear();
-
-    preproLoadCorrelation.clear();
-    preproSolarCorrelation.clear();
-    preproWindCorrelation.clear();
-    preproHydroCorrelation.clear();
-
-    bindingConstraintsGroups.clear();
-
-    // no folder
-    ClearAndShrink(header.caption);
-    ClearAndShrink(header.author);
-    ClearAndShrink(header.editor);
-    folder.clear();
-    folderInput.clear();
-    folderOutput.clear();
-    folderSettings.clear();
-}
-
 void Study::reduceMemoryUsage()
 {
-    ClearAndShrink(dataBuffer);
-    ClearAndShrink(bufferLoadingTS);
+    dataBuffer.clear();
+    dataBuffer.shrink();
 }
 
 unsigned Study::getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode)

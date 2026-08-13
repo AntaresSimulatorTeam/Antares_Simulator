@@ -87,8 +87,6 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
         return true;
     }
 
-    auto& buffer = s.bufferLoadingTS;
-
     bool ret = true;
     fs::path seriesPath = folder / parentArea->id / id() / "series.txt";
 
