@@ -185,8 +185,8 @@ struct Fixture
         paliers.PuissanceDisponibleEtCout[0].PuissanceMinDuPalierThermique.assign(nbPdt, 500.);
         paliers.PuissanceDisponibleEtCout[0]
           .CoutHoraireDeProductionDuPalierThermiqueSansBruit.assign(nbPdt, 30.);
-        paliers.PuissanceDisponibleEtCout[0]
-          .CoutMarginalDeProductionDuPalierThermique.assign(nbPdt, 40.);
+        paliers.PuissanceDisponibleEtCout[0].CoutMarginalDeProductionDuPalierThermique.assign(nbPdt,
+                                                                                              40.);
         problem.PaliersThermiquesDuPays[1].NombreDePaliersThermiques = 0;
         problem.PaliersThermiquesDuPays[2].NombreDePaliersThermiques = 0;
 
