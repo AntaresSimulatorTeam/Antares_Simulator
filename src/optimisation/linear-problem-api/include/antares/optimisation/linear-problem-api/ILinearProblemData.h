@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 /** \brief Context for filling linear problem data.
  * Contains temporal information
@@ -108,4 +108,4 @@ public:
       = 0;
 };
 
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace Antares::LinearProblem::Api

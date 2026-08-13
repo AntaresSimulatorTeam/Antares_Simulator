@@ -25,7 +25,7 @@ using namespace Antares;
 
 // TODO : there are 2 SolveWithSirius(...) solving a quadratic problem by interior point.
 // TODO : we should try to avoid code duplications.
-static void SolveWithSirius(const Solver::Optimization::SingleOptimOptions& options,
+static void SolveWithSirius(const Optimization::SingleOptimOptions& options,
                             PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
     if (!options.solverParameters.empty())
@@ -157,7 +157,7 @@ static void ProcessResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
     }
 }
 
-bool OPT_AppelDuSolveurQuadratique(const Solver::Optimization::SingleOptimOptions& options,
+bool OPT_AppelDuSolveurQuadratique(const Optimization::SingleOptimOptions& options,
                                    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
     // as long as sirius quadratic optimization is not supported through or-tools, we have to keep

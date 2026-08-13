@@ -57,7 +57,7 @@ public:
     uint maxNbYearsInParallel;
 
     //! All options related to linear & quadratic optimization
-    Antares::Solver::Optimization::CmdLineOptimOptions solverOptions;
+    Antares::Optimization::CmdLineOptimOptions solverOptions;
 
     //! Temporary string for passing log message
     mutable Yuni::String logMessage;

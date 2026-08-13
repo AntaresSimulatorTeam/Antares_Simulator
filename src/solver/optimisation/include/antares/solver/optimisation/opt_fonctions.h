@@ -16,14 +16,14 @@
 
 #include "adequacy_patch_csr/hourly_csr_problem.h"
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 class OptimEntityContainer;
 }
 
-using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
-using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
-using SingleOptimOptions = Antares::Solver::Optimization::SingleOptimOptions;
+using AdqPatchParams = AdequacyPatch::AdqPatchParams;
+using OptimizationOptions = Antares::Optimization::OptimizationOptions;
+using SingleOptimOptions = Antares::Optimization::SingleOptimOptions;
 
 namespace Antares::IO::Outputs
 {
@@ -104,10 +104,10 @@ void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
-Optimisation::LinearProblemApi::FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo,
-                                                             int NumIntervalle);
-void fillLinearProblem(const Optimisation::LinearProblemApi::FillContext& fillCtx,
+LinearProblem::Api::FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo,
+                                                 int NumIntervalle);
+void fillLinearProblem(const LinearProblem::Api::FillContext& fillCtx,
                        PROBLEME_HEBDO* problemeHebdo,
-                       Optimisation::OptimEntityContainer& optimEntityContainer,
-                       Optimisation::BendersDecomposition* bendersDecomposition = nullptr);
+                       LinearProblem::OptimEntityContainer& optimEntityContainer,
+                       LinearProblem::BendersDecomposition* bendersDecomposition = nullptr);
 #endif /* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */

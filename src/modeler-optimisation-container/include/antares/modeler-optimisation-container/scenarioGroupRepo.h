@@ -9,18 +9,18 @@
 
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 class ScenarioGroupRepository final
 {
 public:
     void addScenario(const std::string& groupId,
-                     std::unique_ptr<LinearProblemApi::IScenario>&& scenario);
+                     std::unique_ptr<Api::IScenario>&& scenario);
 
-    [[nodiscard]] const LinearProblemApi::IScenario& scenario(const std::string& groupId) const;
+    [[nodiscard]] const Api::IScenario& scenario(const std::string& groupId) const;
 
 private:
-    std::map<std::string, std::unique_ptr<LinearProblemApi::IScenario>> scenarioGroups_;
+    std::map<std::string, std::unique_ptr<Api::IScenario>> scenarioGroups_;
 
 public:
     class AlreadyExists final: public std::invalid_argument
@@ -35,4 +35,4 @@ public:
         explicit DoesNotExist(const std::string& groupId);
     };
 };
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem
