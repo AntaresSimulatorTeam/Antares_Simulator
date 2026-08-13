@@ -4,6 +4,7 @@
 #define BOOST_TEST_MODULE study
 #include <files-system.h>
 #include <unit_test_utils.h>
+#include <antares/inifile/inifile.h>
 using Antares::UnitTests::CaptureAntaresLogs;
 
 #include <boost/test/unit_test.hpp>
@@ -51,7 +52,7 @@ class OneProblemOneAreaRampingWithLogger: public OneProblemOneAreaRamping, publi
 {
 };
 
-void addThermalCluster(Data::Area* area, const std::string& name)
+static void addThermalCluster(Area* area, const std::string& name)
 {
     auto c = std::make_shared<ThermalCluster>(area);
     c->setName(name);
@@ -80,7 +81,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_load_cluster_ramp_parameters, OneProblemOne
     file << "power-decrease-cost = 9.900000\n";
     file.close();
 
-    IniFile ini;
+    Antares::IniFile ini;
     BOOST_CHECK_EQUAL(ini.open(studyPath / "list.ini"), true);
     auto* section = ini.firstSection;
     BOOST_CHECK_EQUAL(section->name.empty(), false);
@@ -110,7 +111,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_load_cluster_ramp_parameters, OneProblemOne
     rampingStats << *cluster->ramping;
 
     BOOST_CHECK_EQUAL("powerIncreaseCost = 4.4\tpowerDecreaseCost = "
-                      "5.5\tmaxDownwardPowerRampingRate = 2.2\tmaxDownwardPowerRampingRate = 3.3",
+                      "5.5\tmaxUpwardPowerRampingRate = 2.2\tmaxDownwardPowerRampingRate = 3.3",
                       rampingStats.str());
 
     BOOST_CHECK_EQUAL(cluster2->name(), "thermal_2");
@@ -138,7 +139,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_load_cluster_no_ramp_parameters, OneProblem
     file << "power-decrease-cost = 9.900000\n";
     file.close();
 
-    IniFile ini;
+    Antares::IniFile ini;
     BOOST_CHECK_EQUAL(ini.open(studyPath / "list.ini"), true);
     auto* section = ini.firstSection;
     BOOST_CHECK_EQUAL(section->name.empty(), false);
@@ -178,7 +179,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_load_cluster_invalid_ramp_parameters,
     file << "\n";
     file.close();
 
-    IniFile ini;
+    Antares::IniFile ini;
     BOOST_CHECK_EQUAL(ini.open(studyPath / "list.ini"), true);
     auto* section = ini.firstSection;
     BOOST_CHECK_EQUAL(section->name.empty(), false);
