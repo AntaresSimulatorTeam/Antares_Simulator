@@ -23,7 +23,7 @@ Use `ctest -N` to see all available tests
 To run JSON tests, a [study batch](https://github.com/AntaresSimulatorTeam/SimTest/releases) is first required.
 
 ```bash
-cd ${Antares_Simulator_ROOT}/src/tests/resources/batches
+cd ${Antares_Simulator_ROOT}/resources/batches
 wget https://github.com/AntaresSimulatorTeam/SimTest/releases/download/v8.3.2/valid-defaillance-ubuntu-20.04.zip
 unzip valid-defaillance-ubuntu-20.04.zip
 cd ${Antares_Simulator_ROOT}/build

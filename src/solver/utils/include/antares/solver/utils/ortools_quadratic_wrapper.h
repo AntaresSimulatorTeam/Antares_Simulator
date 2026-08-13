@@ -12,6 +12,5 @@
  * Currently, QP support in MathOpt is implemented for Gurobi and SIP (though SCIP in OR-Tools
  * has compilation issues), and under development for XPRESS.
  */
-void SolveQuadraticProblemWithOrtools(
-  const Antares::Solver::Optimization::SingleOptimOptions& options,
-  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre);
+void SolveQuadraticProblemWithOrtools(const Antares::Optimization::SingleOptimOptions& options,
+                                      PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre);

@@ -18,5 +18,6 @@ target_include_directories(view-builder
 target_link_libraries(view-builder
     PUBLIC
     Antares::antares-core
+    Antares::input-error
     yaml-cpp::yaml-cpp
 )

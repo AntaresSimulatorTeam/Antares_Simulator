@@ -50,12 +50,35 @@ class ConstraintBuilder final
 public:
     ConstraintBuilder() = delete;
 
-    explicit ConstraintBuilder(ConstraintBuilderData& data):
-        data(data),
+    explicit ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo,
+                               PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre):
+        data({ProblemeAResoudre.Pi,
+              ProblemeAResoudre.Colonne,
+              ProblemeAResoudre.NombreDeContraintes,
+              ProblemeAResoudre.NombreDeTermesDansLaMatriceDesContraintes,
+              ProblemeAResoudre.IndicesDebutDeLigne,
+              ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes,
+              ProblemeAResoudre.IndicesColonnes,
+              ProblemeAResoudre.NombreDeTermesDesLignes,
+              ProblemeAResoudre.Sens,
+              ProblemeAResoudre.IncrementDAllocationMatriceDesContraintes,
+              problemeHebdo->CorrespondanceVarNativesVarOptim,
+              problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
+              problemeHebdo->NumeroDeVariableStockFinal,
+              problemeHebdo->NumeroDeVariableDeTrancheDeStock,
+              ProblemeAResoudre.NomDesContraintes,
+              problemeHebdo->NomsDesPays,
+              problemeHebdo->weekInTheYear,
+              problemeHebdo->NombreDePasDeTemps}),
         variableManager_(data.CorrespondanceVarNativesVarOptim,
                          data.NumeroDeVariableStockFinal,
                          data.NumeroDeVariableDeTrancheDeStock,
                          data.NombreDePasDeTempsPourUneOptimisation)
+    {
+    }
+
+    explicit ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo):
+        ConstraintBuilder(problemeHebdo, *problemeHebdo->ProblemeAResoudre)
     {
     }
 
@@ -269,7 +292,7 @@ public:
         return nombreDeTermes_;
     }
 
-    ConstraintBuilderData& data;
+    ConstraintBuilderData data;
 
 private:
     void OPT_ChargerLaContrainteDansLaMatriceDesContraintes();
@@ -344,7 +367,7 @@ struct ShortTermStorageData
 {
     std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
 
-    const std::vector<::AREA_INPUT>& ShortTermStorage;
+    const std::vector<AREA_INPUT>& ShortTermStorage;
 };
 
 struct ShortTermStorageCumulativeConstraintData: ShortTermStorageData
@@ -357,9 +380,9 @@ using namespace Antares::Data;
 struct ReserveData
 {
     bool Simulation;
-    std::vector<::AREA_RESERVES_VECTOR>& areaReserves;
+    std::vector<AREA_RESERVES_VECTOR>& areaReserves;
     std::vector<PALIERS_THERMIQUES>& thermalClusters;
-    std::vector<::AREA_INPUT>& shortTermStorageOfArea;
+    std::vector<AREA_INPUT>& shortTermStorageOfArea;
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES>& hydroOfArea;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
 

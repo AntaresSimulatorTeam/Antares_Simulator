@@ -1,5 +1,4 @@
 Feature: Legacy variables in simulation table
-
   # The legacy solver populates PROBLEME_ANTARES_A_RESOUDRE::NomDesVariables
   # with names of the form `<Output>::<location>::hour<N>`. After the per-week
   # solve, FillLegacySimulationTable parses those names, applies LegacyNameMapper
@@ -19,7 +18,7 @@ Feature: Legacy variables in simulation table
     # `UnsuppliedEnergy::area<area>::hour<33>` (0-based legacy hour); is stored as
     # component=area, output=unsupplied_energy, absolute_time_index=33.
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/002 Thermal fleet - Base"
-    When I run antares simulator
+    When I run antares simulator with --output=all
     Then the simulation succeeds
     And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
     And the modeler outputs contain the following entries
@@ -36,8 +35,8 @@ Feature: Legacy variables in simulation table
     #       peak:      80 * (8 * 100) =  64000
     #   - imbalance_cost = unsupplied_energy_cost * unsupplied_energy
     #     + spilled_energy_cost * spilled_energy = 10000 * 52 + 0 * 0 = 520000
-    #   - is_loss_of_load = 1 since unsupplied energy (52) exceeds the 0.5 MW
-    #     threshold
+    #   - is_loss_of_load = 1 since unsupplied energy (52) is positive, and
+    #     is_significant_loss_of_load = 1 since it exceeds the 0.5 MW threshold
     #   - price = -dual(balance) = 10000: with unsupplied energy strictly
     #     between its bounds, the marginal MW is served at the unsupplied
     #     energy cost
@@ -59,7 +58,7 @@ Feature: Legacy variables in simulation table
     # tolerance: relative 1e-4 covers a noise of 6e-4 on the cheapest cost
     # (35) while still pinning the value to the theoretical formula.
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/002 Thermal fleet - Base"
-    When I run antares simulator
+    When I run antares simulator with --output=simulation-tables
     Then the simulation succeeds
     And the modeler outputs contain the following entries with relative tolerance 1e-4
       | block | component | output         | timestep | scenario | value  |
@@ -68,9 +67,10 @@ Feature: Legacy variables in simulation table
       | 0     | area_thermal_peak      | prop_cost      | 33       | 0        | 64000  |
       | 0     | area_node      | imbalance_cost | 33       | 0        | 520000 |
       | 0     | area_node      | is_loss_of_load | 33      | 0        | 1      |
+      | 0     | area_node      | is_significant_loss_of_load | 33 | 0  | 1      |
       | 0     | area_node      | price          | 33       | 0        | 10000  |
       | 0     | area_node      | is_near_loss_of_load | 33  | 0        | 1      |
-      | 0     | area_node      | actual_load    | 33       | 0        | 6111   |
+      | 0     | area_load      | actual_load    | 33       | 0        | 6111   |
 
   @fast @short
   Scenario: Link extra outputs are derived from the legacy flow variables and duals
@@ -99,7 +99,7 @@ Feature: Legacy variables in simulation table
     # Per-area prices at the same hour bracket the hurdle cost:
     #   price west = price east + 1 EUR/MWh.
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/Hurdle-cost link"
-    When I run antares simulator
+    When I run antares simulator with --output=simulation-tables
     Then the simulation succeeds
     And the modeler outputs contain the following entries with relative tolerance 1e-4
       | block | component  | output                  | timestep | scenario | value   |
@@ -134,7 +134,7 @@ Feature: Legacy variables in simulation table
     # -56 EUR/MWh for this fixture, set by the calibrated water values).
     # The legacy extra output writes the dual as-is (no sign flip).
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/Accurate hydro pricing"
-    When I run antares simulator
+    When I run antares simulator with --output=simulation-tables
     Then the simulation succeeds
     And the modeler outputs contain the following entries
       | block | component | output             | timestep | scenario | value |
@@ -204,7 +204,7 @@ Feature: Legacy variables in simulation table
     #                 = generation_power (3600 / 1500 / 800)
     # These are quantities / study data, so no anti-degeneracy noise applies.
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/008 Thermal fleet - Accurate unit commitment"
-    When I run antares simulator
+    When I run antares simulator with --output=simulation-tables
     Then the simulation succeeds
     And the modeler outputs contain the following entries
       | block | component | output              | timestep | scenario | value |
@@ -212,6 +212,7 @@ Feature: Legacy variables in simulation table
       | 0     | area_thermal_semi base | actual_num_units_on | 33       | 0        | 5     |
       | 0     | area_thermal_peak      | actual_num_units_on | 33       | 0        | 8     |
       | 0     | area_node      | is_loss_of_load     | 33       | 0        | 1     |
+      | 0     | area_node      | is_significant_loss_of_load | 33 | 0     | 1     |
       | 0     | area_thermal_base      | co2_emissions        | 33       | 0        | 4320  |
       | 0     | area_thermal_semi base | co2_emissions        | 33       | 0        | 900   |
       | 0     | area_thermal_peak      | co2_emissions        | 33       | 0        | 560   |

@@ -11,7 +11,7 @@
 
 #include "dataSeries.h"
 
-namespace Antares::Optimisation::LinearProblemDataImpl
+namespace Antares::LinearProblem::DataImpl
 {
 
 class DataSeriesRepository
@@ -51,4 +51,4 @@ public:
     };
 };
 
-} // namespace Antares::Optimisation::LinearProblemDataImpl
+} // namespace Antares::LinearProblem::DataImpl

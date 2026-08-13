@@ -27,10 +27,10 @@ ModelerStudy::SystemModel::System loadSystem(
   const std::filesystem::path& studyPath,
   const std::vector<ModelerStudy::SystemModel::Library>& libraries);
 
-std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadDataSeries(
+std::unique_ptr<LinearProblem::Api::ILinearProblemData> loadDataSeries(
   const std::filesystem::path& studyPath);
 
-Optimisation::ScenarioGroupRepository loadScenarioGroupRepository(
+LinearProblem::ScenarioGroupRepository loadScenarioGroupRepository(
   const std::filesystem::path& studyPath);
 
 void handleYamlError(const YAML::Exception& e, const std::string& filename);

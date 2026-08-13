@@ -15,6 +15,7 @@
 #include <antares/inifile/inifile.h>
 #include <antares/optimization-options/options.h>
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
+#include <antares/study/output-selection.h>
 #include <antares/writer/result_format.h>
 #include "antares/antares/antares.h"
 #include "antares/study/fwd.h"
@@ -40,6 +41,16 @@ public:
     bool economy() const;
     //! Get if the simulation is in adequacy mode
     bool adequacy() const;
+    //@}
+
+    //! \name Output selection
+    //@{
+    //! Get if the Monte-Carlo result files (mc-all, mc-ind) must be written
+    bool writeMonteCarloResults() const;
+    //! Get if the simulation table(s) must be written
+    bool writeSimulationTable() const;
+    //! Output selection (Monte-Carlo results, simulation tables, etc.)
+    OutputSelection outputSelection;
     //@}
 
     /*!
@@ -413,13 +424,6 @@ public:
     std::string activeRulesScenario;
     //@}
 
-    //! \name Output
-    //@{
-    //! No output
-    // This variable is not stored within the study but only used by the solver
-    bool noOutput = false;
-    //@}
-
     // In case we print simulation tables, do we print it in csv or parquet ?
     Writer::TableFormat simuTableFormat = Writer::TableFormat::CSV;
 
@@ -444,7 +448,7 @@ public:
     bool namedProblems;
 
     // All options related to linear & quadratic optimization
-    Solver::Optimization::OptimizationOptions optOptions;
+    Optimization::OptimizationOptions optOptions;
 
 private:
     void resetPlayedYears(uint nbOfYears);

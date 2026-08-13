@@ -23,7 +23,7 @@ const std::string GUROBI_PARAMS
                  // https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html#threads
                  // for Gurobi threads (and other) parameter reference
 
-using Antares::Solver::Optimization::SingleOptimOptions;
+using Antares::Optimization::SingleOptimOptions;
 
 // TODO use Objective().Value() instead
 // This is a temporary workaround for Windows

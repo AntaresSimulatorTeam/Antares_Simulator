@@ -32,7 +32,7 @@ target_include_directories(solver_api
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/private>
 )
 
-find_package(Boost REQUIRED COMPONENTS iostreams)
+find_package(Boost CONFIG REQUIRED COMPONENTS iostreams)
 target_link_libraries(solver_api
         PRIVATE
         Antares::concurrency
@@ -82,7 +82,6 @@ target_link_libraries(single_problem_api
 add_executable(antares-problem-generator main.cpp)
 target_link_libraries(antares-problem-generator
 	single_problem_api)
-copy_project_shared_lib(simulation-table-writers antares-problem-generator)
 
 install(DIRECTORY include/antares
         DESTINATION "include")

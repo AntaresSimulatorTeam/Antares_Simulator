@@ -22,7 +22,7 @@ Model createModelWithoutParameters()
 std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
   const std::string& id,
   const std::string& value,
-  const Antares::Optimisation::VariabilityType& type)
+  const Antares::LinearProblem::VariabilityType& type)
 {
     return {id, {.id = id, .type = type, .value = value}};
 }

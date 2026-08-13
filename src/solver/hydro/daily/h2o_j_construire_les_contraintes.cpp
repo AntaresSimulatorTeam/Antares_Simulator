@@ -4,7 +4,7 @@
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
-namespace DoneesOptimisationJournaliere
+namespace Antares::Solver::Hydro::Daily
 {
 void H2O_J_ConstruireLesContraintes(int NbPdt,
                                     std::vector<int>& NumeroDeVariableTurbine,
@@ -105,4 +105,4 @@ void H2O_J_ConstruireLesContraintes(int NbPdt,
         NombreDeContraintes++;
     }
 }
-} // namespace DoneesOptimisationJournaliere
+} // namespace Antares::Solver::Hydro::Daily

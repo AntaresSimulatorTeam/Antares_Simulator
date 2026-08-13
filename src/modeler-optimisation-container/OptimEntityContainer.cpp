@@ -6,12 +6,12 @@
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::LinearProblem::Api;
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 
-OptimEntityContainer::OptimEntityContainer(LinearProblemApi::ILinearProblem& linearProblem):
+OptimEntityContainer::OptimEntityContainer(Api::ILinearProblem& linearProblem):
     linearProblem_(linearProblem)
 {
 }
@@ -109,4 +109,4 @@ void OptimEntityContainer::registerConstraint(const Component& component,
     optimComponent.modelConstraintCounts.push_back(count);
 }
 
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem

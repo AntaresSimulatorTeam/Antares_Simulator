@@ -135,11 +135,10 @@ public:
     IResultWriter& pResultWriter;
 
 private:
-    template<class StringT, class ConvertT, class PrecisionT>
+    template<class StringT, class PrecisionT>
     void AppendDoubleValue(uint& error,
                            const double v,
                            StringT& buffer,
-                           ConvertT& conversionBuffer,
                            const PrecisionT& precision,
                            const bool isNotApplicable);
 
