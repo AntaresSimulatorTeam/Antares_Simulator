@@ -550,8 +550,6 @@ Application::~Application()
             pStudy->importLogsToOutputFolder(*resultWriter);
         }
 
-        // release all reference to the current study held by this class
-        pStudy->clear();
         pStudy = nullptr;
 
         LocalPolicy::Close();

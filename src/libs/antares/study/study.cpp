@@ -35,6 +35,8 @@ Study::Study():
     preproHydroCorrelation.timeSeries = timeSeriesHydro;
 }
 
+Study::~Study() = default;
+
 void Study::reduceMemoryUsage()
 {
     dataBuffer.clear();
