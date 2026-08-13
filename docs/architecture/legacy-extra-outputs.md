@@ -43,7 +43,7 @@ Emitters skip outputs whose anchor does not exist, mirroring the construction si
 
 | Output | Entity | Formula | Operands |
 |--------|--------|---------|----------|
-| `prop_cost` (thermal) | cluster | `marketBid × X[ip]` | `ip = vm.DispatchableProduction`; `marketBid = CoutHoraireDeProductionDuPalierThermiqueSansBruit[pdt]`, the user market bid cost without thermal noise |
+| `prop_cost` (thermal) | cluster | `marginalCost × X[ip]` | `ip = vm.DispatchableProduction`; `marginalCost = CoutMarginalDeProductionDuPalierThermique[pdt]` |
 | `co2_emissions` … `op5_emissions` | cluster | `X[ip] × emission_factor[pollutant]` | `PaliersThermiquesDuPays.emissionFactors` |
 | `cluster_availability` | cluster | `max(avail, minStablePower × ceil(avail / unitSize))` | spinning-adjusted quantities of the weekly problem (see §5) |
 | `up_margin` | cluster | `cluster_availability − X[ip]` | as above |

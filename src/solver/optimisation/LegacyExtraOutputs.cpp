@@ -289,8 +289,7 @@ void LegacyExtraOutputEmitter::thermalOutputs(uint32_t pays, int index, int pdt)
     emit("prop_cost",
          cluster,
          pdt,
-         paliers.PuissanceDisponibleEtCout[index]
-             .CoutHoraireDeProductionDuPalierThermiqueSansBruit[pdt]
+         paliers.PuissanceDisponibleEtCout[index].CoutMarginalDeProductionDuPalierThermique[pdt]
            * generation);
     emit("balance_port.flow", cluster, pdt, generation);
 

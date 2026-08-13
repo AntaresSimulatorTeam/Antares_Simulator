@@ -77,7 +77,7 @@ renewable. Component → `miscGen.entry` index mapping:
 | Done | Output | Formula | Anchor / Design |
 |------|--------|---------|-----------------|
 | [x] | `actual_num_units_on` | `ceil(num_units_on)` | `NODU` |
-| [x] | `prop_cost` | `market_bid_cost · generation_power` (user cost, un-noised: `CoutHoraireDeProductionDuPalierThermiqueSansBruit`) | `DispatchableProduction` |
+| [x] | `prop_cost` | `market_bid_cost · generation_power` (user cost, un-noised: `CoutMarginalDeProductionDuPalierThermique`) | `DispatchableProduction` |
 | [x] | `non_prop_cost` | `startup_cost·max(0, ceil(N) - ceil(N)[t-1]) + fixed_cost·ceil(N)` | `NODU` (+ `NumberStartingDispatchableUnits` via view) |
 | [x] | `cluster_availability` | `max(cmg·(1-s), mpu·ceil(cmg/Mpu))` | `DispatchableProduction` (spinning cancels) |
 | [x] | `min_gen_power` | `min(generation_power, min_gen_mod·num_units·Mpu)` | `DispatchableProduction` |

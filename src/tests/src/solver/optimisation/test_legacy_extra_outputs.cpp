@@ -180,13 +180,13 @@ struct Fixture
         // User-provided market bid cost; the CoutLineaire entry for the
         // production variable below is deliberately different (it carries the
         // thermal noise).
-        paliers.PuissanceDisponibleEtCout[0]
-          .CoutHoraireDeProductionDuPalierThermiqueSansBruit.assign(nbPdt, 35.);
         paliers.PuissanceDisponibleEtCout[0].PuissanceDisponibleDuPalierThermique.assign(nbPdt,
                                                                                          4000.);
         paliers.PuissanceDisponibleEtCout[0].PuissanceMinDuPalierThermique.assign(nbPdt, 500.);
         paliers.PuissanceDisponibleEtCout[0]
           .CoutHoraireDeProductionDuPalierThermiqueSansBruit.assign(nbPdt, 30.);
+        paliers.PuissanceDisponibleEtCout[0]
+          .CoutMarginalDeProductionDuPalierThermique.assign(nbPdt, 40.);
         problem.PaliersThermiquesDuPays[1].NombreDePaliersThermiques = 0;
         problem.PaliersThermiquesDuPays[2].NombreDePaliersThermiques = 0;
 
@@ -330,7 +330,7 @@ BOOST_AUTO_TEST_CASE(thermal_prop_cost_is_market_bid_cost_times_generation_power
 
     const auto row = FindRow(table, "prop_cost", "area1_thermal_cluster1");
     BOOST_REQUIRE(row.has_value());
-    BOOST_CHECK_CLOSE(row->value, 30. * 3600., 1e-9);
+    BOOST_CHECK_CLOSE(row->value, 40. * 3600., 1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(extra_output_entries_carry_block_time_and_scenario)

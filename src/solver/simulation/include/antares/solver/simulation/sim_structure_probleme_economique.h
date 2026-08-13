@@ -299,6 +299,8 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
     // to CoutHoraireDeProductionDuPalierThermique for the optimisation
     std::vector<double> CoutHoraireDeProductionDuPalierThermiqueSansBruit;
 
+    std::vector<double> CoutMarginalDeProductionDuPalierThermique;
+
     std::vector<int> NombreMaxDeGroupesEnMarcheDuPalierThermique;
     std::vector<int> NombreMinDeGroupesEnMarcheDuPalierThermique;
 };
