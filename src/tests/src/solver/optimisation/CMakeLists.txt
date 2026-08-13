@@ -12,9 +12,11 @@ add_boost_test(unit-tests-for-solver-optimisation
         test_legacy_name_mapper.cpp
         test_legacy_extra_outputs.cpp
         test_legacy_naming_uniqueness.cpp
+        test_inactive_components_analyzer_builder.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/LegacyNameMapper.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/LegacyExtraOutputs.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/InactiveComponentsAnalyzer.cpp
+        ${CMAKE_SOURCE_DIR}/src/solver/optimisation/InactiveComponentsAnalyzerBuilder.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/variables/VariableManagement.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/variables/VariableManagerUtils.cpp
         LIBS
@@ -28,6 +30,7 @@ add_boost_test(unit-tests-for-solver-optimisation
         Antares::model-converter
         Antares::yml-system
         Antares::tests::inmemory-modeler
+        Antares::tests::in-memory-study
         INCLUDE
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/include)
 

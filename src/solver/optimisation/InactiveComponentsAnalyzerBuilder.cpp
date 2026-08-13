@@ -24,6 +24,33 @@ bool columnIsAllZero(const Matrix<>& matrix, unsigned column)
     }
     return true;
 }
+
+// A component can have several chronicles (columns) in its matrix, only some
+// of which are ever drawn by the scenario builder / TS-number generator for
+// this study's Monte-Carlo years (`ts.timeseriesNumbers`, filled once, before
+// the simulation loop, in TimeSeriesNumbers::Generate). A chronicle that
+// exists in the file but is never selected for any year should not keep the
+// component "active": only the selected chronicles matter.
+bool selectedColumnsAreAllZero(const Data::TimeSeries& ts)
+{
+    const uint32_t nbYears = ts.timeseriesNumbers.height();
+    if (nbYears == 0)
+    {
+        return ts.timeSeries.containsOnlyZero();
+    }
+    for (uint32_t year = 0; year < nbYears; ++year)
+    {
+        const double* values = ts.getColumn(year);
+        for (uint32_t h = 0; h < ts.timeSeries.height; ++h)
+        {
+            if (!Utils::isZero(values[h]))
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 } // namespace
 
 std::shared_ptr<const InactiveComponentsAnalyzer> BuildInactiveComponentsAnalyzer(
@@ -36,12 +63,11 @@ std::shared_ptr<const InactiveComponentsAnalyzer> BuildInactiveComponentsAnalyze
     {
         const auto& area = *(study.areas[pays]);
 
-        analyzer->setLoadAllZero(pays, area.load.series.timeSeries.containsOnlyZero());
-        analyzer->setRorAllZero(pays, area.hydro.series->ror.timeSeries.containsOnlyZero());
-        analyzer->setSolarAllZero(pays, area.solar.series.timeSeries.containsOnlyZero());
-        analyzer->setWindAllZero(pays, area.wind.series.timeSeries.containsOnlyZero());
-        analyzer->setHydroInflowAllZero(pays,
-                                        area.hydro.series->storage.timeSeries.containsOnlyZero());
+        analyzer->setLoadAllZero(pays, selectedColumnsAreAllZero(area.load.series));
+        analyzer->setRorAllZero(pays, selectedColumnsAreAllZero(area.hydro.series->ror));
+        analyzer->setSolarAllZero(pays, selectedColumnsAreAllZero(area.solar.series));
+        analyzer->setWindAllZero(pays, selectedColumnsAreAllZero(area.wind.series));
+        analyzer->setHydroInflowAllZero(pays, selectedColumnsAreAllZero(area.hydro.series->storage));
         for (unsigned column = 0; column < Data::fhhMax; ++column)
         {
             analyzer->setMiscGenColumnAllZero(pays, column, columnIsAllZero(area.miscGen, column));
@@ -52,10 +78,9 @@ std::shared_ptr<const InactiveComponentsAnalyzer> BuildInactiveComponentsAnalyze
         // (both alphabetical), so `interco` lines up with PROBLEME_HEBDO's.
         for (const auto& [linkName, link]: area.links)
         {
-            const bool bothDirectionsAllZero = link->directCapacities.timeSeries
-                                                  .containsOnlyZero()
-                                                && link->indirectCapacities.timeSeries
-                                                     .containsOnlyZero();
+            const bool bothDirectionsAllZero = selectedColumnsAreAllZero(link->directCapacities)
+                                                && selectedColumnsAreAllZero(
+                                                  link->indirectCapacities);
             analyzer->setLinkAllZero(interco, bothDirectionsAllZero);
             ++interco;
         }
