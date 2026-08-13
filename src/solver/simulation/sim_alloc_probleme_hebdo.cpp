@@ -517,6 +517,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
 
             for (auto* v: {&puissance.CoutHoraireDeProductionDuPalierThermique,
                            &puissance.CoutHoraireDeProductionDuPalierThermiqueSansBruit,
+                           &puissance.CoutMarginalDeProductionDuPalierThermique,
                            &puissance.PuissanceDisponibleDuPalierThermique,
                            &puissance.PuissanceDisponibleDuPalierThermiqueRef,
                            &puissance.PuissanceMinDuPalierThermique,
