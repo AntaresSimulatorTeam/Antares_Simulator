@@ -10,8 +10,6 @@
 
 namespace fs = std::filesystem;
 
-#define SEP Yuni::IO::Separator
-
 namespace Antares::Data
 {
 EconomicInputData::EconomicInputData() = default;

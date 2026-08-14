@@ -24,8 +24,6 @@ ThermalClusterList::~ThermalClusterList()
     clearAll();
 }
 
-#define SEP Yuni::IO::Separator
-
 std::string ThermalClusterList::typeID() const
 {
     return "thermal";

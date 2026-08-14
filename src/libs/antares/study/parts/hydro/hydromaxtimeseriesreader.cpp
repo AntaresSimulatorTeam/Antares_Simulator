@@ -6,8 +6,6 @@
 #include <antares/inifile/inifile.h>
 #include "antares/study/study.h"
 
-#define SEP Yuni::IO::Separator
-
 namespace Antares::Data
 {
 
@@ -41,15 +39,16 @@ static bool checkPower(const Matrix<>& dailyMaxPumpAndGen, const std::string& ar
 
 bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const std::string& folder)
 {
-    std::string filePath;
+    std::filesystem::path filePath;
     Matrix<>::BufferType fileContent;
     bool ret = true;
 
-    filePath = folder + SEP + "common" + SEP + "capacity" + SEP + "maxpower_" + areaID_ + ".txt";
+    std::string filename = "maxpower_" + std::string(areaID_) + ".txt";
+    filePath = std::filesystem::path(folder) / "common" / "capacity" / filename;
 
     //  It is necessary to load maxpower_ txt file.
 
-    ret = hydro_.dailyMaxPumpAndGen.loadFromCSVFile(filePath,
+    ret = hydro_.dailyMaxPumpAndGen.loadFromCSVFile(filePath.string(),
                                                     4U,
                                                     DAYS_PER_YEAR,
                                                     Matrix<>::optFixedSize,

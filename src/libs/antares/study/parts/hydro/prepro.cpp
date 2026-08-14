@@ -11,8 +11,6 @@ using namespace Antares;
 
 namespace fs = std::filesystem;
 
-#define SEP Yuni::IO::Separator
-
 namespace Antares::Data
 {
 

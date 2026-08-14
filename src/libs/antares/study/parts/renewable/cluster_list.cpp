@@ -13,8 +13,6 @@ namespace fs = std::filesystem;
 namespace Antares::Data
 {
 
-#define SEP Yuni::IO::Separator
-
 std::string RenewableClusterList::typeID() const
 {
     return "renewables";
@@ -148,7 +146,5 @@ bool RenewableClusterList::validateClusters() const
 
     return ret;
 }
-
-#undef SEP
 
 } // namespace Antares::Data
