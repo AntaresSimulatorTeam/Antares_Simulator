@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "yuni/core/fwd.h"
+#include <string>
 
 #include <antares/array/matrix.h>
 #include <antares/inifile/inifile.h>
@@ -33,9 +33,9 @@ public:
     //! Current section
     IniFile::Section* section{nullptr};
 
-    Yuni::Clob buffer;
+    std::string buffer;
     Matrix<>::BufferType matrixBuffer;
-    Yuni::Clob folder;
+    std::string folder;
 
     //! List of areas
     AreaList& areaList;

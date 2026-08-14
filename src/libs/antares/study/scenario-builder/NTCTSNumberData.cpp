@@ -13,17 +13,17 @@ namespace Antares::Data::ScenarioBuilder
 {
 bool ntcTSNumberData::reset(const Study& study)
 {
-    const uint nbYears = study.parameters.nbYears;
+    const unsigned int nbYears = study.parameters.nbYears;
     assert(pArea != nullptr);
 
-    auto linkCount = (uint)pArea->links.size();
+    auto linkCount = (unsigned int)pArea->links.size();
 
     // Resize
     pTSNumberRules.reset(linkCount, nbYears);
     return true;
 }
 
-void ntcTSNumberData::setTSnumber(const Antares::Data::AreaLink* link, const uint year, uint value)
+void ntcTSNumberData::setTSnumber(const Antares::Data::AreaLink* link, const unsigned int year, unsigned int value)
 {
     assert(link != nullptr);
     if (year < pTSNumberRules.height && link->indexForArea < pTSNumberRules.width)
@@ -35,30 +35,30 @@ void ntcTSNumberData::setTSnumber(const Antares::Data::AreaLink* link, const uin
 bool ntcTSNumberData::apply(Study& study)
 {
     bool ret = true;
-    CString<512, false> logprefix;
+    std::string logprefix;
     // Errors
-    uint errors = 0;
+    unsigned int errors = 0;
 
     // Alias to the current area
     assert(pArea != nullptr);
     assert(pArea->index < study.areas.size());
     const Area& area = *(study.areas.byIndex[pArea->index]);
 
-    const uint ntcGeneratedTScount = get_tsGenCount(study);
+    const unsigned int ntcGeneratedTScount = get_tsGenCount(study);
 
     for (const auto& i: pArea->links)
     {
         auto* link = i.second;
-        uint linkIndex = link->indexForArea;
+        unsigned int linkIndex = link->indexForArea;
         assert(linkIndex < pTSNumberRules.width);
         const auto& col = pTSNumberRules[linkIndex];
-        logprefix.clear() << "NTC: area '" << area.name << "', link: '" << link->getName() << "': ";
+        logprefix = "NTC: area '" + area.name + "', link: '" + link->getName() + "': ";
         ret = ApplyToMatrix(errors, logprefix, *link, col, ntcGeneratedTScount) && ret;
     }
     return ret;
 }
 
-uint ntcTSNumberData::get_tsGenCount(const Study& /* study */) const
+unsigned int ntcTSNumberData::get_tsGenCount(const Study& /* study */) const
 {
     return 0;
 }

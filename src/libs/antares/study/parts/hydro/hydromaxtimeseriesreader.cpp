@@ -6,9 +6,7 @@
 #include <antares/inifile/inifile.h>
 #include "antares/study/study.h"
 
-using namespace Yuni;
-
-#define SEP IO::Separator
+#define SEP Yuni::IO::Separator
 
 namespace Antares::Data
 {
@@ -25,10 +23,10 @@ HydroMaxTimeSeriesReader::HydroMaxTimeSeriesReader(PartHydro& hydro,
 
 static bool checkPower(const Matrix<>& dailyMaxPumpAndGen, const std::string& areaName)
 {
-    for (uint i = 0; i < 4U; ++i)
+    for (unsigned int i = 0; i < 4U; ++i)
     {
         auto& col = dailyMaxPumpAndGen[i];
-        for (uint day = 0; day < DAYS_PER_YEAR; ++day)
+        for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
         {
             if (col[day] < 0. || (i % 2U /*column hours*/ && col[day] > 24.))
             {
@@ -41,14 +39,13 @@ static bool checkPower(const Matrix<>& dailyMaxPumpAndGen, const std::string& ar
     return true;
 }
 
-bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& folder)
+bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const std::string& folder)
 {
-    YString filePath;
+    std::string filePath;
     Matrix<>::BufferType fileContent;
     bool ret = true;
 
-    filePath.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxpower_"
-                     << areaID_ << ".txt";
+    filePath = folder + SEP + "common" + SEP + "capacity" + SEP + "maxpower_" + areaID_ + ".txt";
 
     //  It is necessary to load maxpower_ txt file.
 
@@ -87,7 +84,7 @@ void HydroMaxTimeSeriesReader::copyDailyMaxPumpingEnergy() const
     dailyNbHoursAtPumpPmax.pasteToColumn(0, dailyMaxPumpE);
 }
 
-bool HydroMaxTimeSeriesReader::read(const AnyString& folder)
+bool HydroMaxTimeSeriesReader::read(const std::string& folder)
 {
     bool ret = loadDailyMaxPowersAndEnergies(folder);
     ret = checkPower(hydro_.dailyMaxPumpAndGen, areaName_) && ret;

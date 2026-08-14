@@ -12,15 +12,12 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 
-#include "yuni/core/string/string.h"
-
 #include <antares/utils/utils.h>
 #include "antares/study/binding_constraint/BindingConstraint.h"
 #include "antares/study/version.h"
 
 namespace Antares::Data
 {
-using namespace Yuni;
 
 std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(EnvForLoading env)
 {
@@ -56,44 +53,53 @@ bool BindingConstraintLoader::SeparateValue(const EnvForLoading& env,
                                             int& o)
 {
     bool ret = true;
-    CString<64> stringWO = p->value;
-    String::Size setVal = p->value.find('%');
-    uint occurrence = 0;
-    stringWO.words("%",
-                   [&occurrence, &setVal, &env, &ret, &p, &w, &o](const CString<64>& part)
-                   {
-                       if (occurrence == 0)
-                       {
-                           if (setVal == 0) // weight is null
-                           {
-                               if (!part.to<int>(o))
-                               {
-                                   logs.error() << env.iniFilename << ": in [" << env.section->name
-                                                << "]: `" << p->key << "`: invalid offset";
-                                   ret = false;
-                               }
-                           }
-                           else // weight is not null
-                           {
-                               if (!part.to<double>(w))
-                               {
-                                   logs.error() << env.iniFilename << ": in [" << env.section->name
-                                                << "]: `" << p->key << "`: invalid weight";
-                                   ret = false;
-                               }
-                           }
-                       }
+    const std::string value = std::string(p->value);
+    const std::size_t setVal = value.find('%');
+    unsigned int occurrence = 0;
 
-                       if (occurrence == 1 && setVal != 0 && !part.to<int>(o))
-                       {
-                           logs.error() << env.iniFilename << ": in [" << env.section->name
-                                        << "]: `" << p->key << "`: invalid offset";
-                           ret = false;
-                       }
+    std::size_t pos = 0;
+    while (pos <= value.size())
+    {
+        const std::size_t end = value.find('%', pos);
+        const std::string part = value.substr(pos,
+                                              end == std::string::npos ? std::string::npos
+                                                                       : end - pos);
+        if (occurrence == 0)
+        {
+            if (setVal == 0) // weight is null
+            {
+                if (!Antares::stringToInt(part, o))
+                {
+                    logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `"
+                                 << p->key << "`: invalid offset";
+                    ret = false;
+                }
+            }
+            else // weight is not null
+            {
+                if (!Antares::stringToDouble(part, w))
+                {
+                    logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `"
+                                 << p->key << "`: invalid weight";
+                    ret = false;
+                }
+            }
+        }
 
-                       ++occurrence;
-                       return ret; // continue to iterate
-                   });
+        if (occurrence == 1 && setVal != 0 && !Antares::stringToInt(part, o))
+        {
+            logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
+                         << "`: invalid offset";
+            ret = false;
+        }
+
+        ++occurrence;
+        if (end == std::string::npos)
+        {
+            break;
+        }
+        pos = end + 1;
+    }
     return ret;
 }
 
@@ -112,7 +118,7 @@ bool BindingConstraintLoader::loadTimeSeries(EnvForLoading& env,
                                              BindingConstraint::Operator operatorType,
                                              BindingConstraint* bindingConstraint) const
 {
-    env.buffer.clear() << bindingConstraint->timeSeriesFileName(env);
+    env.buffer = bindingConstraint->timeSeriesFileName(env);
     bool load_ok = bindingConstraint->RHSTimeSeries_.loadFromCSVFile(
       env.buffer,
       1,
@@ -139,7 +145,7 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(
   EnvForLoading& env,
   BindingConstraint* bindingConstraint) const
 {
-    env.buffer.clear() << env.folder << IO::Separator << bindingConstraint->pID << ".txt";
+    env.buffer = env.folder + Yuni::IO::Separator + bindingConstraint->pID + ".txt";
     Matrix<> intermediate;
     const int height = (bindingConstraint->pType == BindingConstraint::typeHourly) ? 8784 : 366;
     if (intermediate.loadFromCSVFile(env.buffer,
@@ -204,48 +210,48 @@ void BindingConstraintLoader::populateConstraint(const EnvForLoading& env,
 
         if (p->key == "name")
         {
-            bc->pName = p->value;
+            bc->pName = std::string(p->value);
             continue;
         }
         if (p->key == "id")
         {
-            bc->pID = p->value;
+            bc->pID = std::string(p->value);
             boost::to_lower(bc->pID);
             continue;
         }
         if (p->key == "enabled")
         {
-            bc->pEnabled = p->value.to<bool>();
+            bc->pEnabled = Antares::stringToBool(std::string(p->value));
             continue;
         }
         if (p->key == "type")
         {
-            bc->pType = BindingConstraint::StringToType(p->value);
+            bc->pType = BindingConstraint::StringToType(std::string(p->value));
             continue;
         }
         if (p->key == "operator")
         {
-            bc->pOperator = BindingConstraint::StringToOperator(p->value);
+            bc->pOperator = BindingConstraint::StringToOperator(std::string(p->value));
             continue;
         }
         if (p->key == "filter-year-by-year")
         {
-            bc->pFilterYearByYear = stringIntoDatePrecision(p->value);
+            bc->pFilterYearByYear = stringIntoDatePrecision(std::string(p->value));
             continue;
         }
         if (p->key == "filter-synthesis")
         {
-            bc->pFilterSynthesis = stringIntoDatePrecision(p->value);
+            bc->pFilterSynthesis = stringIntoDatePrecision(std::string(p->value));
             continue;
         }
         if (p->key == "comments")
         {
-            bc->pComments = p->value;
+            bc->pComments = std::string(p->value);
             continue;
         }
         if (p->key == "group")
         {
-            bc->group_ = p->value.c_str();
+            bc->group_ = std::string(p->value);
             continue;
         }
         parseWeightAndOffset(env, p, bc);
@@ -260,18 +266,19 @@ void BindingConstraintLoader::parseWeightAndOffset(const EnvForLoading& env,
     double w = .0;
     int o = 0;
 
+    const std::string key = std::string(p->key);
     // Separate the value
-    if (auto setKey = p->key.find('%'); setKey != 0 && setKey != String::npos) // It is a link
+    if (auto setKey = key.find('%'); setKey != 0 && setKey != std::string::npos) // It is a link
     {
         if (bool ret = SeparateValue(env, p, w, o); !ret)
         {
             return;
         }
 
-        const AreaLink* lnk = env.areaList.findLinkFromINIKey(p->key);
+        const AreaLink* lnk = env.areaList.findLinkFromINIKey(key);
         if (!lnk)
         {
-            logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
+            logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << key
                          << "`: link not found";
             return;
         }
@@ -290,10 +297,10 @@ void BindingConstraintLoader::parseWeightAndOffset(const EnvForLoading& env,
     else // It must be a cluster
     {
         // Separate the key
-        setKey = p->key.find('.');
-        if (0 == setKey || setKey == String::npos)
+        setKey = key.find('.');
+        if (0 == setKey || setKey == std::string::npos)
         {
-            logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
+            logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << key
                          << "`: invalid key";
             return;
         }
@@ -303,10 +310,10 @@ void BindingConstraintLoader::parseWeightAndOffset(const EnvForLoading& env,
             return;
         }
 
-        const ThermalCluster* clstr = env.areaList.findClusterFromINIKey(p->key);
+        const ThermalCluster* clstr = env.areaList.findClusterFromINIKey(key);
         if (!clstr)
         {
-            logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
+            logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << key
                          << "`: cluster not found";
             return;
         }

@@ -4,11 +4,12 @@
 #ifndef __ANTARES_LIB_FINDER_FINDER_H__
 #define __ANTARES_LIB_FINDER_FINDER_H__
 
+#include <atomic>
+#include <list>
 #include <mutex>
-
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include <yuni/io/directory/iterator.h>
+#include <string>
+#include <thread>
+#include <vector>
 
 #include "antares/study/study.h"
 
@@ -49,7 +50,7 @@ public:
     ** If a lookup was already in progress, it will be stopped before.
     ** \param folder The root folder where to start the lookup
     */
-    void lookup(const Yuni::String& folder);
+    void lookup(const std::string& folder);
 
     /*!
     ** \brief Start a new lookup from a list of folder
@@ -57,19 +58,19 @@ public:
     ** If a lookup was already in progress, it will be stopped before.
     ** \param folders The list of folders where to start the lookup
     */
-    void lookup(const Yuni::String::Vector& folders);
+    void lookup(const std::vector<std::string>& folders);
     /*!
     ** \brief Start a new lookup from a list of folder
     **
     ** If a lookup was already in progress, it will be stopped before.
     ** \param folders The list of folders where to start the lookup
     */
-    void lookup(const Yuni::String::List& folders);
+    void lookup(const std::list<std::string>& folders);
 
     /*!
     ** \brief Stop a lookup currently in progress
     */
-    void stop(uint timeout = defaultTimeout);
+    void stop(unsigned int timeout = defaultTimeout);
 
     /*!
     ** \brief Wait Indefinitely for the end of the lookup
@@ -79,13 +80,13 @@ public:
     /*!
     ** \brief Wait for the end of the lookup (with timeout)
     */
-    void wait(uint timeout);
+    void wait(unsigned int timeout);
 
 public: // Events
     /*!
     ** \brief Event triggered when a lookup has been found
     */
-    virtual void onStudyFound(const Yuni::String& folder, const StudyVersion& version) = 0;
+    virtual void onStudyFound(const std::string& folder, const StudyVersion& version) = 0;
 
     /*!
     ** \brief Event triggered when a lookup has finished gracefully
@@ -109,7 +110,12 @@ protected:
     std::mutex mutex;
 
 private:
-    Yuni::IO::Directory::IIterator<true>* pLycos;
+    void startLookup(const std::vector<std::string>& folders);
+
+    //! Background thread performing the lookup
+    std::thread pThread;
+    //! Set to true to ask the lookup to stop
+    std::atomic<bool> pStopRequested {false};
 
 }; // class StudyFinder
 

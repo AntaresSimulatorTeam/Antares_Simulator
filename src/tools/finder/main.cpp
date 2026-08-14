@@ -26,7 +26,7 @@ public:
     {
     }
 
-    void onStudyFound(const String& folder, const Data::StudyVersion& version)
+    void onStudyFound(const std::string& folder, const Data::StudyVersion& version)
     {
         std::cout << folder;
         if (extra)
@@ -99,7 +99,7 @@ int main(int argc, const char* argv[])
     MyStudyFinder finder;
     finder.extra = optExtra;
     finder.csv = optCSV;
-    finder.lookup(optInput);
+    finder.lookup(std::vector<std::string>(optInput.begin(), optInput.end()));
     finder.wait();
     return 0;
 }

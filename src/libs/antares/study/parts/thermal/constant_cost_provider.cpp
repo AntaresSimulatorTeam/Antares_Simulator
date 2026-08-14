@@ -10,19 +10,19 @@ ConstantCostProvider::ConstantCostProvider(const ThermalCluster& cluster):
 {
 }
 
-double ConstantCostProvider::getOperatingCost(uint /*serieIndex*/, uint hourInTheYear) const
+double ConstantCostProvider::getOperatingCost(unsigned int /*serieIndex*/, unsigned int hourInTheYear) const
 {
     const auto* modCost = cluster.modulation[thermalModulationCost];
     return cluster.marginalCost * modCost[hourInTheYear];
 }
 
-double ConstantCostProvider::getMarginalCost(uint /*serieIndex*/, uint hourInTheYear) const
+double ConstantCostProvider::getMarginalCost(unsigned int /*serieIndex*/, unsigned int hourInTheYear) const
 {
     const double mod = cluster.modulation[Data::thermalModulationCost][hourInTheYear];
     return cluster.marginalCost * mod;
 }
 
-double ConstantCostProvider::getMarketBidCost(uint hourInTheYear, uint /*year*/) const
+double ConstantCostProvider::getMarketBidCost(unsigned int hourInTheYear, unsigned int /*year*/) const
 {
     const double mod = cluster.modulation[thermalModulationMarketBid][hourInTheYear];
     return cluster.marketBidCost * mod;

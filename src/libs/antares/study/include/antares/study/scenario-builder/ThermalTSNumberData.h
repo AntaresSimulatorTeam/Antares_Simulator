@@ -24,30 +24,30 @@ public:
         pArea = area;
     }
 
-    void setTSnumber(const Antares::Data::ThermalCluster* cluster, const uint year, uint value);
-    uint get(const Antares::Data::ThermalCluster* cluster, const uint year) const;
+    void setTSnumber(const Antares::Data::ThermalCluster* cluster, const unsigned int year, unsigned int value);
+    unsigned int get(const Antares::Data::ThermalCluster* cluster, const unsigned int year) const;
     bool apply(Study& study) override;
-    CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const override;
+    std::string get_prefix() const override;
+    unsigned int get_tsGenCount(const Study& study) const override;
 
 private:
     //! The attached area, if any
     const Area* pArea = nullptr;
 };
 
-inline uint thermalTSNumberData::get(const Antares::Data::ThermalCluster* cluster,
-                                     const uint year) const
+inline unsigned int thermalTSNumberData::get(const Antares::Data::ThermalCluster* cluster,
+                                     const unsigned int year) const
 {
     assert(cluster != nullptr);
     if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
     {
-        const uint index = cluster->areaWideIndex;
+        const unsigned int index = cluster->areaWideIndex;
         return pTSNumberRules[index][year];
     }
     return 0;
 }
 
-inline CString<512, false> thermalTSNumberData::get_prefix() const
+inline std::string thermalTSNumberData::get_prefix() const
 {
     return "t,";
 }

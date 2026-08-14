@@ -6,15 +6,15 @@
 #include <limits>
 
 #include <antares/inifile/inifile.h>
+#include <antares/io/file.h>
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
 #include "antares/study//study.h"
 
-using namespace Yuni;
 
 namespace fs = std::filesystem;
 
-#define SEP IO::Separator
+static const std::string SEP(1, '/');
 
 namespace Antares::Data
 {
@@ -26,12 +26,11 @@ const char* XCast::TSTranslationUseToCString(TSTranslationUse use)
     return names[use];
 }
 
-XCast::TSTranslationUse XCast::CStringToTSTranslationUse(const AnyString& str)
+XCast::TSTranslationUse XCast::CStringToTSTranslationUse(const std::string& str)
 {
     if (not str.empty())
     {
-        CString<40, false> s(str);
-        s.toLower();
+        const std::string s = Antares::stringToLower(str);
         if (s == "never" || s == "do not use" || s == "none" || s == "no")
         {
             return tsTranslationNone;
@@ -71,16 +70,15 @@ const char* XCast::DistributionToNameID(XCast::Distribution d)
     return names[d];
 }
 
-XCast::Distribution XCast::StringToDistribution(AnyString text)
+XCast::Distribution XCast::StringToDistribution(const std::string& text)
 {
     // temporary string for text manipulation
-    text.trim(" \r\t\n");
-    CString<20, false> id(text);
-    id.toLower();
+    std::string id = Antares::stringTrim(text);
+    id = Antares::stringToLower(id);
 
     if (id.size() == 1)
     {
-        switch (id.first()) // one letter, mainly used from the interface
+        switch (id.front()) // one letter, mainly used from the interface
         {
         case 'b':
             return dtBeta;
@@ -134,7 +132,7 @@ XCast::XCast(TimeSeriesType ts):
     timeSeries(ts)
 {
     K.resize(12, 24);
-    data.resize((uint)dataMax, 12);
+    data.resize((unsigned int)dataMax, 12);
     // Do nothing
 }
 
@@ -173,8 +171,6 @@ bool XCast::loadFromFolder(const fs::path& folder)
     useTranslation = tsTranslationNone;
     useConversion = false;
 
-    // A temporary buffer for filename manipulations
-    Clob buffer;
     // A temporary buffer for reading matrices
     Matrix<>::BufferType readBuffer;
     // Return value
@@ -194,11 +190,10 @@ bool XCast::loadFromFolder(const fs::path& folder)
                   for (const IniFile::Property* p = section.firstProperty; p != nullptr;
                        p = p->next)
                   {
-                      CString<30, false> key = p->key;
-                      key.toLower();
+                      const std::string key = Antares::stringToLower(std::string(p->key));
                       if (key == "distribution")
                       {
-                          distribution = StringToDistribution(p->value);
+                          distribution = StringToDistribution(std::string(p->value));
                           if (distribution == dtNone)
                           {
                               logs.warning() << settingsPath
@@ -210,7 +205,7 @@ bool XCast::loadFromFolder(const fs::path& folder)
                       }
                       if (key == "capacity")
                       {
-                          capacity = p->value.to<double>();
+                          capacity = Antares::stringToDouble(std::string(p->value));
                           if (capacity < 0.)
                           {
                               logs.warning()
@@ -221,12 +216,12 @@ bool XCast::loadFromFolder(const fs::path& folder)
                       }
                       if (key == "conversion" || key == "transfer-function" || key == "convertion")
                       {
-                          useConversion = p->value.to<bool>();
+                          useConversion = Antares::stringToBool(std::string(p->value));
                           continue;
                       }
                       if (key == "translation" || key == "ts-average")
                       {
-                          useTranslation = CStringToTSTranslationUse(p->value);
+                          useTranslation = CStringToTSTranslationUse(std::string(p->value));
                           continue;
                       }
 
@@ -252,14 +247,14 @@ bool XCast::loadFromFolder(const fs::path& folder)
     fs::path p = folder / "data.txt";
 
     // Performing normal loading
-    ret = data.loadFromCSVFile(p.string(), (uint)dataMax, 12, Matrix<>::optFixedSize, &readBuffer)
+    ret = data.loadFromCSVFile(p.string(), (unsigned int)dataMax, 12, Matrix<>::optFixedSize, &readBuffer)
           && ret;
 
     // K
     p = folder / "k.txt";
     ret = K.loadFromCSVFile(p.string(), 12, 24, Matrix<>::optFixedSize, &readBuffer) && ret;
 
-    uint opts = Matrix<>::optNone;
+    unsigned int opts = Matrix<>::optNone;
 
     // Time-series translation
     p = folder / "translation.txt";
@@ -295,7 +290,7 @@ bool XCast::loadFromFolder(const fs::path& folder)
         //  it produces unwanted behavior on Linux
         conversion[0][0] = (float)(-1.0e+19); // - std::numeric_limits<float>::max();
         conversion[0][1] = conversion[1][1];
-        for (uint x = 1; x < conversion.width - 1; ++x)
+        for (unsigned int x = 1; x < conversion.width - 1; ++x)
         {
             if (conversion[x][0] <= -1.0e+19 || conversion[x][0] >= +1.0e+19)
             {
@@ -327,9 +322,11 @@ void XCast::resetTransferFunction()
     conversion[2][1] = 0.f;
 }
 
-bool XCast::saveToFolder(const AnyString& folder) const
+bool XCast::saveToFolder(const std::string& folder) const
 {
-    if (!IO::Directory::Create(folder))
+    std::error_code ec;
+    std::filesystem::create_directories(folder, ec);
+    if (ec)
     {
         logs.error() << "I/O Error: Impossible to create '" << folder << "'";
         return false;
@@ -337,24 +334,18 @@ bool XCast::saveToFolder(const AnyString& folder) const
 
     // result
     bool ret = true;
-    // A temporary buffer for filename manipulations
-    Clob buffer;
 
     // Coefficients
-    buffer.clear() << folder << SEP << "data.txt";
-    ret = data.saveToCSVFile(buffer) && ret;
+    ret = data.saveToCSVFile(folder + SEP + "data.txt") && ret;
 
     // K
-    buffer.clear() << folder << SEP << "k.txt";
-    ret = K.saveToCSVFile(buffer);
+    ret = K.saveToCSVFile(folder + SEP + "k.txt");
 
     // TimeSeriesAverage
-    buffer.clear() << folder << SEP << "translation.txt";
-    ret = translation.saveToCSVFile(buffer);
+    ret = translation.saveToCSVFile(folder + SEP + "translation.txt");
 
     // Transfer function
-    buffer.clear() << folder << SEP << "conversion.txt";
-    ret = conversion.saveToCSVFile(buffer);
+    ret = conversion.saveToCSVFile(folder + SEP + "conversion.txt");
 
     // Settings
     IniFile ini;
@@ -377,14 +368,14 @@ bool XCast::saveToFolder(const AnyString& folder) const
     }
 
     // Writing the INI file
-    buffer.clear() << folder << SEP << "settings.ini";
+    const std::string settingsPath = folder + SEP + "settings.ini";
     if (s->empty())
     {
         // If the section is empty, an empty file will take less
         // disk space and the parsing will be faster (of course)
-        return IO::File::CreateEmptyFile(buffer) && ret;
+        return Antares::IO::fileSetContent(settingsPath, "") && ret;
     }
-    return ini.save(buffer) && ret;
+    return ini.save(settingsPath) && ret;
 }
 
 void XCast::copyFrom(const XCast& rhs)

@@ -9,7 +9,6 @@
 #include <antares/logs/logs.h>
 #include "antares/study/study.h"
 
-using namespace Yuni;
 
 namespace Antares::Data::ScenarioBuilder
 {
@@ -95,7 +94,7 @@ bool Sets::remove(const std::string& lname)
     return true;
 }
 
-bool Sets::internalLoadFromINIFile(const AnyString& filename)
+bool Sets::internalLoadFromINIFile(const std::string& filename)
 {
     // Logs
     logs.info() << "  > loading scenario builder data from " << filename;

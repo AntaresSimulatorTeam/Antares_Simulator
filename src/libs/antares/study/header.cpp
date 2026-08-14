@@ -7,12 +7,8 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "yuni/core/system/username.h"
-
 #include <antares/logs/logs.h>
 #include "antares/study/version.h"
-
-using namespace Yuni;
 
 namespace fs = std::filesystem;
 
@@ -38,8 +34,11 @@ void StudyHeader::reset()
     dateCreated = ::time(nullptr);
     dateLastSave = dateCreated;
     // Author
-    String username;
-    System::Username(username);
+    std::string username;
+    if (const char* logname = std::getenv("LOGNAME"))
+    {
+        username = logname;
+    }
     author = username;
     editor = username;
 }
@@ -179,7 +178,7 @@ bool StudyHeader::loadFromFile(const fs::path& filename, bool warnings)
     return (ini.open(filename, warnings)) ? internalLoadFromINIFile(ini, warnings) : false;
 }
 
-bool StudyHeader::saveToFile(const AnyString& filename, bool upgradeVersion)
+bool StudyHeader::saveToFile(const std::string& filename, bool upgradeVersion)
 {
     IniFile ini;
     CopySettingsToIni(ini, upgradeVersion);

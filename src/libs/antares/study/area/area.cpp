@@ -4,15 +4,12 @@
 #include "antares/study/area/area.h"
 
 #include <cassert>
-
-#include <yuni/yuni.h>
+#include <string>
 
 #include "antares/study/area/scratchpad.h"
 #include "antares/study/parts/load/prepro.h"
 #include "antares/study/study.h"
 #include "antares/utils/utils.h"
-
-using namespace Yuni;
 
 namespace Antares::Data
 {
@@ -22,14 +19,14 @@ Area::Area():
 {
 }
 
-Area::Area(const AnyString& name):
+Area::Area(const std::string& name):
     Area()
 {
     this->name = name;
     this->id = Antares::transformNameIntoID(this->name);
 }
 
-Area::Area(const AnyString& name, const AnyString& id):
+Area::Area(const std::string& name, const std::string& id):
     Area()
 {
     this->name = name;
@@ -135,8 +132,8 @@ void Area::resetToDefaultValues()
     spreadSpilledEnergyCost = 0.;
 
     // Filtering
-    filterSynthesis = (uint)filterAll;
-    filterYearByYear = (uint)filterAll;
+    filterSynthesis = (unsigned int)filterAll;
+    filterYearByYear = (unsigned int)filterAll;
 
     // Load
     load.resetToDefault();
@@ -157,7 +154,7 @@ void Area::resetToDefaultValues()
     reserves.reset(fhrMax, HOURS_PER_YEAR);
 }
 
-void Area::resizeAllTimeseriesNumbers(uint nbYears)
+void Area::resizeAllTimeseriesNumbers(unsigned int nbYears)
 {
     assert(hydro.series and "series must not be nullptr !");
 
@@ -175,7 +172,7 @@ void Area::resizeAllTimeseriesNumbers(uint nbYears)
     shortTermStorage.resizeTimeseriesNumbers(nbYears);
 }
 
-bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) const
+bool Area::thermalClustersMinStablePowerValidity(std::vector<std::string>& output) const
 {
     bool noErrorMinStabPow = true;
     for (auto& cluster: thermal.list.each_enabled())
@@ -194,7 +191,7 @@ bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) c
 
 void Area::buildLinksIndexes()
 {
-    uint areaIndx = 0;
+    unsigned int areaIndx = 0;
 
     auto end = links.end();
     for (auto i = links.begin(); i != end; ++i)

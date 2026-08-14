@@ -6,9 +6,8 @@
 #include <algorithm>
 
 #include <antares/study/output-selection.h>
+#include <antares/utils/utils.h>
 #include <antares/writer/result_format.h>
-
-using namespace Yuni;
 
 namespace Antares::Data
 {
@@ -77,16 +76,14 @@ const char* SeedToID(SeedIndex seed)
 }
 
 // ... Hydro heuristic policy ...
-HydroHeuristicPolicy StringToHydroHeuristicPolicy(const AnyString& text)
+HydroHeuristicPolicy StringToHydroHeuristicPolicy(const std::string& text)
 {
-    if (!text)
+    if (text.empty())
     {
         return hhpUnknown;
     }
 
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
+    const std::string s = stringToLower(stringTrim(text));
     if (s == "accommodate rule curves")
     {
         return hhpAccommodateRuleCurves;
@@ -114,16 +111,14 @@ const char* HydroHeuristicPolicyToCString(HydroHeuristicPolicy hhPolicy)
 }
 
 // ... Hydro pricing ...
-HydroPricingMode StringToHydroPricingMode(const AnyString& text)
+HydroPricingMode StringToHydroPricingMode(const std::string& text)
 {
-    if (!text)
+    if (text.empty())
     {
         return hpUnknown;
     }
 
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
+    const std::string s = stringToLower(stringTrim(text));
     if (s == "fast")
     {
         return hpHeuristic;
@@ -150,16 +145,14 @@ const char* HydroPricingModeToCString(HydroPricingMode hpm)
     return "";
 }
 
-PowerFluctuations StringToPowerFluctuations(const AnyString& text)
+PowerFluctuations StringToPowerFluctuations(const std::string& text)
 {
-    if (!text)
+    if (text.empty())
     {
         return lssUnknown;
     }
 
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
+    const std::string s = stringToLower(stringTrim(text));
     if (s == "minimize ramping")
     {
         return lssMinimizeRamping;
@@ -192,16 +185,14 @@ const char* PowerFluctuationsToCString(PowerFluctuations fluctuations)
     return "";
 }
 
-SheddingPolicy StringToSheddingPolicy(const AnyString& text)
+SheddingPolicy StringToSheddingPolicy(const std::string& text)
 {
-    if (!text)
+    if (text.empty())
     {
         return shpUnknown;
     }
 
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
+    const std::string s = stringToLower(stringTrim(text));
     if (s == "shave peaks")
     {
         return shpShavePeaks;
@@ -234,16 +225,14 @@ const char* SheddingPolicyToCString(SheddingPolicy strategy)
     return "";
 }
 
-UnitCommitmentMode StringToUnitCommitmentMode(const AnyString& text)
+UnitCommitmentMode StringToUnitCommitmentMode(const std::string& text)
 {
-    if (!text)
+    if (text.empty())
     {
         return ucUnknown;
     }
 
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
+    const std::string s = stringToLower(stringTrim(text));
     if (s == "fast")
     {
         return ucHeuristicFast;
@@ -276,16 +265,14 @@ const char* UnitCommitmentModeToCString(UnitCommitmentMode ucommitment)
     return "";
 }
 
-NumberOfCoresMode StringToNumberOfCoresMode(const AnyString& text)
+NumberOfCoresMode StringToNumberOfCoresMode(const std::string& text)
 {
-    if (!text)
+    if (text.empty())
     {
         return ncUnknown;
     }
 
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
+    const std::string s = stringToLower(stringTrim(text));
     if (s == "minimum")
     {
         return ncMin;
@@ -361,16 +348,14 @@ std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status)
     }
 }
 
-mpsExportStatus stringToMPSexportStatus(const AnyString& value)
+mpsExportStatus stringToMPSexportStatus(const std::string& value)
 {
-    if (!value)
+    if (value.empty())
     {
         return mpsExportStatus::UNKNOWN_EXPORT;
     }
 
-    CString<24, false> v = value;
-    v.trim();
-    v.toLower();
+    const std::string v = stringToLower(stringTrim(value));
     if (v == "both-optims"
         || v == "true") // Case "true" : for compatibily with older study versions
     {
@@ -421,12 +406,10 @@ std::string GlobalTransmissionCapacitiesToString_Display(
     return result;
 }
 
-bool stringToGlobalTransmissionCapacities(const AnyString& value, GlobalTransmissionCapacities& out)
+bool stringToGlobalTransmissionCapacities(const std::string& value, GlobalTransmissionCapacities& out)
 {
     using GlobalNTCtype = GlobalTransmissionCapacities;
-    CString<64, false> v = value;
-    v.trim();
-    v.toLower();
+    const std::string v = stringToLower(stringTrim(value));
     if (v == "local-values" || v == "true" || v == "enabled")
     {
         out = GlobalNTCtype::localValuesForAllLinks;

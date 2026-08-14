@@ -3,20 +3,15 @@
 
 #include "antares/study/parts/hydro/prepro.h"
 
-#include <yuni/yuni.h>
-#include <yuni/io/directory.h>
-#include <yuni/io/file.h>
-
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include "antares/study/study.h"
 
 using namespace Antares;
-using namespace Yuni;
 
 namespace fs = std::filesystem;
 
-#define SEP IO::Separator
+#define SEP Yuni::IO::Separator
 
 namespace Antares::Data
 {
@@ -39,8 +34,7 @@ static bool PreproHydroLoadSettings(PreproHydro* h, const fs::path& filename)
             p = s->find("intermonthly-correlation");
             if (p || (p = s->find("intermonthlycorrelationvalue")))
             {
-                const CString<20, false> t = p->value;
-                ret = t.to(h->intermonthlyCorrelation);
+                ret = p->value.to(h->intermonthlyCorrelation);
             }
             else
             {
@@ -74,7 +68,7 @@ void PreproHydro::reset()
     data.reset(hydroPreproMax, 12);
     // Expectation
     auto& col = data[expectation];
-    for (uint i = 0; i != 12; ++i)
+    for (unsigned int i = 0; i != 12; ++i)
     {
         col[i] = 0.;
     }

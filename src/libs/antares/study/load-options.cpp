@@ -25,9 +25,9 @@ StudyLoadOptions::StudyLoadOptions():
 
 void StudyLoadOptions::checkForceSimulationMode()
 {
-    const uint number_of_enabled_force_options = static_cast<uint>(forceExpansion)
-                                                 + static_cast<uint>(forceEconomy)
-                                                 + static_cast<uint>(forceAdequacy);
+    const unsigned int number_of_enabled_force_options = static_cast<unsigned int>(forceExpansion)
+                                                 + static_cast<unsigned int>(forceEconomy)
+                                                 + static_cast<unsigned int>(forceAdequacy);
 
     if (number_of_enabled_force_options > 1)
     {

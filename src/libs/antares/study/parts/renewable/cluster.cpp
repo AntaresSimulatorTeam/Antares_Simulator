@@ -9,7 +9,6 @@
 #include <antares/logs/logs.h>
 #include "antares/study/study.h"
 
-using namespace Yuni;
 using namespace Antares;
 
 namespace Antares::Data
@@ -41,7 +40,7 @@ bool Data::RenewableCluster::integrityCheck()
     return ret;
 }
 
-bool Data::RenewableCluster::setTimeSeriesModeFromString(const YString& value)
+bool Data::RenewableCluster::setTimeSeriesModeFromString(const std::string& value)
 {
     if (value == "power-generation")
     {
@@ -56,7 +55,7 @@ bool Data::RenewableCluster::setTimeSeriesModeFromString(const YString& value)
     return false;
 }
 
-double RenewableCluster::valueAtTimeStep(uint year, uint hourInYear) const
+double RenewableCluster::valueAtTimeStep(unsigned int year, unsigned int hourInYear) const
 {
     if (!enabled)
     {

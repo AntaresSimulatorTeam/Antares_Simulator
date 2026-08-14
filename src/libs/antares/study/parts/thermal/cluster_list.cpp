@@ -12,7 +12,6 @@
 
 namespace Antares::Data
 {
-using namespace Yuni;
 
 namespace fs = std::filesystem;
 
@@ -25,7 +24,7 @@ ThermalClusterList::~ThermalClusterList()
     clearAll();
 }
 
-#define SEP IO::Separator
+#define SEP Yuni::IO::Separator
 
 std::string ThermalClusterList::typeID() const
 {
@@ -38,7 +37,7 @@ static bool ThermalClusterLoadFromSection(const std::string& areaName,
 
 void ThermalClusterList::rebuildIndex() const
 {
-    uint indx = 0;
+    unsigned int indx = 0;
     for (auto& c: each_enabled_and_not_mustrun())
     {
         c->index = indx++;
@@ -214,7 +213,7 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     }
     if (p->key == "costgeneration")
     {
-        return p->value.to(cluster.costgeneration);
+        return stringToCostGeneration(std::string(p->value), cluster.costgeneration);
     }
     if (p->key == "enabled")
     {
@@ -236,15 +235,15 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     }
     if (p->key == "gen-ts")
     {
-        return p->value.to(cluster.tsGenBehavior);
+        return stringToLocalTSGenerationBehavior(std::string(p->value), cluster.tsGenBehavior);
     }
     if (p->key == "law.planned")
     {
-        return p->value.to(cluster.plannedLaw);
+        return stringToStatisticalLaw(std::string(p->value), cluster.plannedLaw);
     }
     if (p->key == "law.forced")
     {
-        return p->value.to(cluster.forcedLaw);
+        return stringToStatisticalLaw(std::string(p->value), cluster.forcedLaw);
     }
     if (p->key == "market-bid-cost")
     {
@@ -266,11 +265,11 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
 
     if (p->key == "min-up-time")
     {
-        return p->value.to<uint>(cluster.minUpTime);
+        return p->value.to<unsigned int>(cluster.minUpTime);
     }
     if (p->key == "min-down-time")
     {
-        return p->value.to<uint>(cluster.minDownTime);
+        return p->value.to<unsigned int>(cluster.minDownTime);
     }
     if (p->key == "name")
     {
@@ -296,7 +295,7 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
 
     if (p->key == "unitcount")
     {
-        return p->value.to<uint>(cluster.unitCount);
+        return p->value.to<unsigned int>(cluster.unitCount);
     }
     if (p->key == "volatility.planned")
     {

@@ -3,67 +3,85 @@
 
 #include "antares/study/finder/finder.h"
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include <yuni/io/directory/iterator.h>
+#include <filesystem>
 
 #include "antares/study/study.h"
-
-using namespace Yuni;
 
 namespace Antares::Data
 {
 namespace // anonymous namespace
 {
-class MyIterator final: public IO::Directory::IIterator<true>
+class Traverser
 {
 public:
-    using IteratorType = IO::Directory::IIterator<true>;
-    using Flow = IO::Flow;
-
-public:
-    MyIterator(StudyFinder& finder):
+    Traverser(StudyFinder& finder):
         pFinder(finder)
     {
     }
 
-    ~MyIterator() override
+    // Recursively look for study folders from a set of root folders.
+    // The traversal is aborted as soon as the `stop` flag is set.
+    void run(const std::vector<std::string>& roots, const std::atomic<bool>& stop)
     {
-        // For code robustness and to avoid corrupt vtable
-        stop();
-    }
-
-protected:
-    bool onStart(const String& filename) override
-    {
-        return (IO::flowContinue == onBeginFolder(filename, filename, filename));
-    }
-
-    Flow onBeginFolder(const String& filename, const String&, const String&) override
-    {
-        const StudyVersion versionFound = StudyHeader::tryToFindTheVersion(filename);
-        if (versionFound > StudyVersion::latest())
+        for (const auto& root: roots)
         {
-            return IO::flowSkip;
+            if (stop.load())
+            {
+                pFinder.onLookupAborted();
+                return;
+            }
+            if (!scanFolder(root, stop))
+            {
+                return;
+            }
         }
-        if (versionFound == StudyVersion::unknown())
-        {
-            return IO::flowContinue;
-        }
-
-        // We have found a study !
-        pFinder.onStudyFound(filename, versionFound);
-        return IO::flowSkip;
-    }
-
-    void onTerminate() override
-    {
         pFinder.onLookupFinished();
     }
 
-    void onAbort() override
+private:
+    // Return false to stop the whole traversal
+    bool scanFolder(const std::string& folder, const std::atomic<bool>& stop)
     {
-        pFinder.onLookupAborted();
+        std::error_code ec;
+        std::filesystem::recursive_directory_iterator end;
+        std::filesystem::recursive_directory_iterator it(folder, ec);
+        if (ec)
+        {
+            return true;
+        }
+
+        for (; it != end; it.increment(ec))
+        {
+            if (stop.load())
+            {
+                return false;
+            }
+            if (ec)
+            {
+                return false;
+            }
+            if (!it->is_directory())
+            {
+                continue;
+            }
+
+            const std::string current = it->path().string();
+            const StudyVersion versionFound = StudyHeader::tryToFindTheVersion(current);
+            if (versionFound == StudyVersion::unknown())
+            {
+                continue;
+            }
+            if (versionFound > StudyVersion::latest())
+            {
+                it.disable_recursion_pending();
+                continue;
+            }
+
+            // We have found a study !
+            pFinder.onStudyFound(current, versionFound);
+            it.disable_recursion_pending();
+        }
+        return !stop.load();
     }
 
 public:
@@ -72,110 +90,76 @@ public:
 
 } // anonymous namespace
 
-StudyFinder::StudyFinder():
-    pLycos(nullptr)
-{
-}
+StudyFinder::StudyFinder() = default;
 
 StudyFinder::StudyFinder(const StudyFinder&):
-    pLycos(nullptr)
+    pStopRequested {false}
 {
 }
 
 StudyFinder::~StudyFinder()
 {
-    if (pLycos)
+    if (pThread.joinable())
     {
-        stop();
-        delete pLycos;
+        pThread.join();
     }
 }
 
-void StudyFinder::stop(uint timeout)
+void StudyFinder::stop(unsigned int)
 {
     std::lock_guard locker(mutex);
-    if (pLycos)
+    pStopRequested.store(true);
+    if (pThread.joinable())
     {
-        pLycos->stop(timeout);
+        pThread.join();
     }
+    pStopRequested.store(false);
 }
 
 void StudyFinder::wait()
 {
     std::lock_guard locker(mutex);
-    if (pLycos)
+    if (pThread.joinable())
     {
-        pLycos->wait();
+        pThread.join();
     }
 }
 
-void StudyFinder::wait(uint timeout)
+void StudyFinder::wait(unsigned int)
 {
-    std::lock_guard locker(mutex);
-    if (pLycos)
-    {
-        pLycos->wait(timeout);
-    }
+    wait();
 }
 
-void StudyFinder::lookup(const Yuni::String::Vector& folder)
+void StudyFinder::startLookup(const std::vector<std::string>& folders)
 {
     std::lock_guard locker(mutex);
-    if (pLycos)
+    if (pThread.joinable())
     {
-        pLycos->stop(10000);
+        pStopRequested.store(true);
+        pThread.join();
     }
-    else
-    {
-        pLycos = new MyIterator(*this);
-    }
+    pStopRequested.store(false);
 
-    pLycos->clear();
-    const Yuni::String::Vector::const_iterator end = folder.end();
-    for (Yuni::String::Vector::const_iterator i = folder.begin(); i != end; ++i)
-    {
-        pLycos->add(*i);
-    }
-
-    pLycos->start();
+    pThread = std::thread([this, folders]()
+                          {
+                              Traverser traverser(*this);
+                              traverser.run(folders, pStopRequested);
+                          });
 }
 
-void StudyFinder::lookup(const Yuni::String::List& folder)
+void StudyFinder::lookup(const std::vector<std::string>& folders)
 {
-    std::lock_guard locker(mutex);
-    if (pLycos)
-    {
-        pLycos->stop(10000);
-    }
-    else
-    {
-        pLycos = new MyIterator(*this);
-    }
-
-    pLycos->clear();
-    const Yuni::String::List::const_iterator end = folder.end();
-    for (Yuni::String::List::const_iterator i = folder.begin(); i != end; ++i)
-    {
-        pLycos->add(*i);
-    }
-    pLycos->start();
+    startLookup(folders);
 }
 
-void StudyFinder::lookup(const String& folder)
+void StudyFinder::lookup(const std::list<std::string>& folders)
 {
-    std::lock_guard locker(mutex);
-    if (pLycos)
-    {
-        pLycos->stop(10000);
-    }
-    else
-    {
-        pLycos = new MyIterator(*this);
-    }
+    startLookup(std::vector<std::string>(folders.begin(), folders.end()));
+}
 
-    pLycos->clear();
-    pLycos->add(folder);
-    pLycos->start();
+void StudyFinder::lookup(const std::string& folder)
+{
+    startLookup({folder});
 }
 
 } // namespace Antares::Data

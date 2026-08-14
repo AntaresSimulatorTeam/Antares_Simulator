@@ -3,12 +3,11 @@
 
 #include "antares/study/parts/load/container.h"
 
-#include <yuni/yuni.h>
+
 
 #include "antares/study/parts/load/prepro.h"
 #include "antares/study/study.h"
 
-using namespace Yuni;
 
 namespace Antares::Data::Load
 {
