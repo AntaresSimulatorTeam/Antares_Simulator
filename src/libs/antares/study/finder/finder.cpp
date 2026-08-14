@@ -14,7 +14,7 @@ namespace // anonymous namespace
 class Traverser
 {
 public:
-    Traverser(StudyFinder& finder):
+    explicit Traverser(StudyFinder& finder):
         pFinder(finder)
     {
     }

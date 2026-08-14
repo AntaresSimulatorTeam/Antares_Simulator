@@ -77,8 +77,11 @@ BindingConstraint::Type BindingConstraint::StringToType(const std::string& text)
             }
             break;
         }
+        default:
+            break;
         }
     }
+    logs.error() << "invalid type for binding constraint (got '" << text << "')";
     return typeUnknown;
 }
 
@@ -381,7 +384,7 @@ void BindingConstraint::buildFormula(std::string& s) const
         }
         SNPRINTF(tmp, sizeof(tmp), "%.2f", weight);
 
-        s += '(' + std::string(tmp) + " x " + sourceLink->getName();
+        s += '(' + std::string(tmp) + " x " + (sourceLink ? sourceLink->getName() : "");
 
         if (auto at = pLinkOffsets.find(sourceLink); at != pLinkOffsets.end())
         {
@@ -408,7 +411,7 @@ void BindingConstraint::buildFormula(std::string& s) const
         }
         SNPRINTF(tmp, sizeof(tmp), "%.2f", weight);
 
-        s += '(' + std::string(tmp) + " x " + thermalCluster->getFullName();
+        s += '(' + std::string(tmp) + " x " + (thermalCluster ? thermalCluster->getFullName() : "");
 
         if (auto at = pClusterOffsets.find(thermalCluster); at != pClusterOffsets.end())
         {
