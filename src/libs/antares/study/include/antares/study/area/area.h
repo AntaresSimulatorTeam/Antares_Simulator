@@ -438,7 +438,7 @@ public:
     //@{
 
     /// create a map with the corresponding scratchpad for each area link to this numspace
-    Area::ScratchMap buildScratchMap(uint numspace);
+    Area::ScratchMap buildScratchMap(uint numspace) const;
 
     /*!
     ** \brief Update the name id set

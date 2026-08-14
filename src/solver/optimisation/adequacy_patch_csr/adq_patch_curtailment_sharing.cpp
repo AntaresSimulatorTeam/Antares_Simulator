@@ -140,9 +140,7 @@ void HourlyCSRProblem::buildProblemVariables()
 
 void HourlyCSRProblem::buildProblemConstraintsLHS()
 {
-    Antares::Solver::Optimization::CsrQuadraticProblem csrProb(problemeHebdo_,
-                                                               problemeAResoudre_,
-                                                               *this);
+    Antares::Optimization::CsrQuadraticProblem csrProb(problemeHebdo_, problemeAResoudre_, *this);
     csrProb.buildConstraintMatrix();
 }
 

@@ -7,7 +7,7 @@
 #include <antares/logs/logs.h>
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
-#include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
+#include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
@@ -16,8 +16,8 @@
 
 using namespace Antares::Solver;
 using namespace IO::Outputs;
-using Antares::Solver::Optimization::ExportBehavior;
-using Antares::Solver::Optimization::OptimizationOptions;
+using Antares::Optimization::ExportBehavior;
+using Antares::Optimization::OptimizationOptions;
 
 namespace
 {
@@ -267,8 +267,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(problemeHebdo);
 
-    auto builder_data = NewGetConstraintBuilderFromProblemHebdo(problemeHebdo);
-    ConstraintBuilder builder(builder_data);
+    ConstraintBuilder builder(problemeHebdo);
     LinearProblemMatrix linearProblemMatrix(problemeHebdo, builder);
     linearProblemMatrix.Run();
     resizeProbleme(problemeHebdo->ProblemeAResoudre.get(),

@@ -9,7 +9,7 @@
 
 #include <antares/optimisation/linear-problem-data-impl/timeSeriesSet.h>
 
-using namespace Antares::Optimisation::LinearProblemDataImpl;
+using namespace Antares::LinearProblem::DataImpl;
 
 BOOST_AUTO_TEST_CASE(adding_to_a_TS_set_a_TS_with_the_wrong_size___exception_raised)
 {

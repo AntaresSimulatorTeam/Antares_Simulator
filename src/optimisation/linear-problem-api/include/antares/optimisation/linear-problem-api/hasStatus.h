@@ -4,7 +4,7 @@
 #pragma once
 #include <optional>
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 // TODO this is dummy copy of ortools basis status, to avoid including and linking against
 // that lib
@@ -20,7 +20,7 @@ enum class MipBasisStatus : unsigned int
 
 inline std::string StatusToString(const std::optional<MipBasisStatus>& status)
 {
-    using namespace Antares::Optimisation::LinearProblemApi;
+    using namespace Antares::LinearProblem::Api;
     // TODO shorten returns
     if (status.has_value())
     {
@@ -53,4 +53,4 @@ public:
     virtual MipBasisStatus getMipBasisStatus() const = 0;
 };
 
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace Antares::LinearProblem::Api

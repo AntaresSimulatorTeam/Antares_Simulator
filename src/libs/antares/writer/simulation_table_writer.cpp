@@ -75,7 +75,10 @@ void SimulationTableWriter::writeParquet(const fs::path& file_path,
 
     // Configure Parquet writer properties
     auto writer_props = parquet::WriterProperties::Builder()
-                          .compression(arrow::Compression::SNAPPY)
+                          .compression(arrow::Compression::ZSTD)
+                          ->compression_level(2)
+                          ->data_pagesize(2 * 1024 * 1024)
+                          ->write_batch_size(256 * 1024)
                           ->version(parquet::ParquetVersion::PARQUET_2_6)
                           ->build();
 
@@ -85,7 +88,7 @@ void SimulationTableWriter::writeParquet(const fs::path& file_path,
     throwOnStatusKO(parquet::arrow::WriteTable(*table,
                                                arrow::default_memory_pool(),
                                                outfile,
-                                               /*chunk_size=*/1024,
+                                               /*chunk_size=*/1024 * 1024,
                                                writer_props,
                                                arrow_props));
 }

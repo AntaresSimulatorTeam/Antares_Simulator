@@ -10,10 +10,10 @@ namespace operations_research
 class MPVariable; // forward declaration
 }
 
-namespace Antares::Optimisation::LinearProblemMpsolverImpl
+namespace Antares::LinearProblem::MpsolverImpl
 {
 
-class OrtoolsMipVariable final: public LinearProblemApi::IMipVariable
+class OrtoolsMipVariable final: public Api::IMipVariable
 {
 public:
     void setLb(double lb) override;
@@ -29,7 +29,7 @@ public:
     bool isInteger() const override;
 
     const operations_research::MPVariable* getMpVar() const;
-    LinearProblemApi::MipBasisStatus getMipBasisStatus() const override;
+    Api::MipBasisStatus getMipBasisStatus() const override;
     double solutionValue() const override;
     double reducedCost() const override;
     ~OrtoolsMipVariable() override = default;
@@ -40,4 +40,4 @@ private:
     operations_research::MPVariable* mpVar_;
 };
 
-} // namespace Antares::Optimisation::LinearProblemMpsolverImpl
+} // namespace Antares::LinearProblem::MpsolverImpl

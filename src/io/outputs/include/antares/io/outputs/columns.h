@@ -7,11 +7,11 @@
 #include <limits>
 #include <optional>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
+#include <boost/unordered/unordered_flat_map.hpp>
+
 #include "antares/io/outputs/IColumnAdapterVisitor.h"
-#include "antares/optimisation/linear-problem-api/hasStatus.h"
 
 // Forward declarations
 namespace Antares::Writer
@@ -27,7 +27,7 @@ namespace Antares::IO::Outputs
 class IColumn
 {
 public:
-    explicit IColumn(const std::string name):
+    explicit IColumn(const std::string& name):
         name_(name)
     {
     }
@@ -99,7 +99,7 @@ template<typename T>
 class TypedColumn final: public IColumn
 {
 public:
-    explicit TypedColumn(std::string name):
+    explicit TypedColumn(const std::string& name):
         IColumn(name)
     {
     }
@@ -152,7 +152,7 @@ class InternedStringColumn final: public IColumn
 public:
     static constexpr uint32_t nullIndex = std::numeric_limits<uint32_t>::max();
 
-    explicit InternedStringColumn(std::string name):
+    explicit InternedStringColumn(const std::string& name):
         IColumn(name)
     {
     }
@@ -218,6 +218,6 @@ private:
 
     std::vector<uint32_t> indices_;
     std::vector<std::string> dictionary_;
-    std::unordered_map<std::string, uint32_t> lookup_;
+    boost::unordered_flat_map<std::string, uint32_t> lookup_;
 };
 } // namespace Antares::IO::Outputs

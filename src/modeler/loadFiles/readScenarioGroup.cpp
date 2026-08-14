@@ -21,11 +21,11 @@ namespace
 const std::filesystem::path SCENARIO_BUILDER_PATH = "input/data-series/modeler-scenariobuilder.dat";
 }
 
-Optimisation::ScenarioGroupRepository parseScenarioGroupRepository(std::ifstream file)
+LinearProblem::ScenarioGroupRepository parseScenarioGroupRepository(std::ifstream file)
 {
-    Optimisation::ScenarioGroupRepository scenarioGroupRepository;
+    LinearProblem::ScenarioGroupRepository scenarioGroupRepository;
     ScenarioGroupParser parser;
-    std::map<std::string, std::unique_ptr<Optimisation::LinearProblemDataImpl::Scenario>>
+    std::map<std::string, std::unique_ptr<LinearProblem::DataImpl::Scenario>>
       alreadyCreatedScenarios;
     std::string line;
     while (std::getline(file, line))
@@ -41,9 +41,9 @@ Optimisation::ScenarioGroupRepository parseScenarioGroupRepository(std::ifstream
             std::string groupId = parsedLine.groupName;
             boost::to_upper(groupId); // all groups are uppercase
 
-            alreadyCreatedScenarios.emplace(
-              groupId,
-              std::make_unique<Optimisation::LinearProblemDataImpl::Scenario>(groupId));
+            alreadyCreatedScenarios.emplace(groupId,
+                                            std::make_unique<LinearProblem::DataImpl::Scenario>(
+                                              groupId));
             alreadyCreatedScenarios[groupId]->setTimeSerieNumber(parsedLine.year,
                                                                  parsedLine.timeSeriesNumber);
         }
@@ -59,7 +59,7 @@ Optimisation::ScenarioGroupRepository parseScenarioGroupRepository(std::ifstream
     return scenarioGroupRepository;
 }
 
-Optimisation::ScenarioGroupRepository loadScenarioGroupRepository(
+LinearProblem::ScenarioGroupRepository loadScenarioGroupRepository(
   const std::filesystem::path& studyPath)
 {
     try
