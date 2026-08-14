@@ -342,13 +342,13 @@ bool XCast::saveToFolder(const std::string& folder) const
     ret = data.saveToCSVFile(folder + SEP + "data.txt") && ret;
 
     // K
-    ret = K.saveToCSVFile(folder + SEP + "k.txt");
+    ret = K.saveToCSVFile(folder + SEP + "k.txt") && ret;
 
     // TimeSeriesAverage
-    ret = translation.saveToCSVFile(folder + SEP + "translation.txt");
+    ret = translation.saveToCSVFile(folder + SEP + "translation.txt") && ret;
 
     // Transfer function
-    ret = conversion.saveToCSVFile(folder + SEP + "conversion.txt");
+    ret = conversion.saveToCSVFile(folder + SEP + "conversion.txt") && ret;
 
     // Settings
     IniFile ini;
