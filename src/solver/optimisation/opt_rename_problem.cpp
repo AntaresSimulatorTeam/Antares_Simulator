@@ -120,7 +120,8 @@ void Namer::SetAreaElementName(unsigned elementIndex,
 void VariableNamer::SetAreaVariableName(unsigned varIndex,
                                         const std::string& variableType,
                                         int layerIndex,
-                                        std::string component) const
+                                        std::string component,
+                                        std::string legacyName) const
 {
     std::string location = areaLocation() + SEP + "Layer<" + std::to_string(layerIndex) + ">";
     std::string time = TimeIdentifier(HOUR);
@@ -130,7 +131,11 @@ void VariableNamer::SetAreaVariableName(unsigned varIndex,
     {
         component = getArea();
     }
-    RecordLegacyVariableInfo(varIndex, variableType, std::move(component));
+    if (legacyName.empty())
+    {
+        legacyName = variableType;
+    }
+    RecordLegacyVariableInfo(varIndex, legacyName, std::move(component));
 }
 
 void Namer::SetThermalClusterElementName(unsigned varIndex,
@@ -480,7 +485,8 @@ void VariableNamer::LayerStorage(unsigned varIndex, int layerIndex)
     SetAreaVariableName(varIndex,
                         "LayerStorage",
                         layerIndex,
-                        BuildHydroStorageComponentId(getArea()));
+                        BuildHydroStorageComponentId(getArea()),
+                        "final_storage_layer_" + std::to_string(layerIndex));
 }
 
 void VariableNamer::FinalStorage(unsigned varIndex)

@@ -35,6 +35,7 @@ const std::unordered_map<std::string, std::string> LegacyNameMapper::variableNam
   {"Pumping", "injection_power"},
   {"HydroLevel", "level"},
   {"Overflow", "overflow"},
+  {"FinalStorage", "final_level"},
 
   // Identity
 };
