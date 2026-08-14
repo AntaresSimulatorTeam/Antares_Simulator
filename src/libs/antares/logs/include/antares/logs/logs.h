@@ -296,16 +296,30 @@ private:
     std::ofstream pFile;
 };
 
+// Declared here, at namespace scope, so every translation unit that includes this header sees a
+// real top-level `extern` declaration before any use. A declaration nested inside these inline
+// accessor functions is not enough to reliably establish external linkage for the `const`
+// definitions in logs.cpp under MSVC.
+extern const LevelInfo levelInfoFatal;
+extern const LevelInfo levelInfoError;
+extern const LevelInfo levelInfoWarning;
+extern const LevelInfo levelInfoCheckpoint;
+extern const LevelInfo levelInfoNotice;
+extern const LevelInfo levelInfoProgress;
+extern const LevelInfo levelInfoInfo;
+extern const LevelInfo levelInfoCompatibility;
+#ifndef NDEBUG
+extern const LevelInfo levelInfoDebug;
+#endif
+
 #define ANTARES_LOGS_LEVEL_ACCESSOR_IMPL(NAME, TAG) \
     inline LogBuffer Logger::NAME()                 \
     {                                               \
-        extern const LevelInfo levelInfo##TAG;      \
         return LogBuffer(*this, levelInfo##TAG);    \
     }                                               \
     template<class U>                               \
     inline LogBuffer Logger::NAME(const U& u)       \
     {                                               \
-        extern const LevelInfo levelInfo##TAG;      \
         return LogBuffer(*this, levelInfo##TAG, u); \
     }
 
