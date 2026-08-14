@@ -3,7 +3,11 @@
 
 #include "antares/solver/simulation/remix-storage/storage-for-remix-with-levels.h"
 
+#include <iomanip>
+#include <sstream>
 #include <stdexcept>
+
+#include <antares/logs/logs.h>
 
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
 
@@ -72,6 +76,18 @@ void StorageForRemixWithLevels::checkLevels()
 {
     if (!(levels_ <= ruleCurveUp_ + TOLERANCE) || !(ruleCurveLow_ - TOLERANCE <= levels_))
     {
+        for (size_t h = 0; h < levels_.size(); ++h)
+        {
+            if (levels_[h] > ruleCurveUp_[h] + TOLERANCE || levels_[h] < ruleCurveLow_[h] - TOLERANCE)
+            {
+                std::ostringstream msg;
+                msg << std::setprecision(17) << name() << " - hour " << h
+                    << " : level = " << levels_[h] << ", low rule curve = " << ruleCurveLow_[h]
+                    << ", up rule curve = " << ruleCurveUp_[h] << ", tolerance = " << TOLERANCE;
+                logs.notice() << msg.str();
+            }
+        }
+
         throw std::invalid_argument(error_msg_start_hydro_remix
                                     + "levels computed from input don't respect reservoir bounds");
     }
