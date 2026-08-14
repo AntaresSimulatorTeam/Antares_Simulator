@@ -35,7 +35,7 @@ public:
 
     std::string buffer;
     Matrix<>::BufferType matrixBuffer;
-    std::string folder;
+    std::filesystem::path folder;
 
     //! List of areas
     AreaList& areaList;
