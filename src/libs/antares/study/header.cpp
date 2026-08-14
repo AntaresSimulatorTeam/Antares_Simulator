@@ -14,7 +14,7 @@ namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
-// TODO this method should be removed - use Yuni::String instead
+
 static inline int ConvertCStrToTimeT(const char* s, time_t* var)
 {
     assert(s);
