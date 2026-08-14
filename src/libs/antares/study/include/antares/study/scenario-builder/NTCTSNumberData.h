@@ -23,7 +23,9 @@ public:
         pArea = area;
     }
 
-    void setTSnumber(const Antares::Data::AreaLink* link, const unsigned int year, unsigned int value);
+    void setTSnumber(const Antares::Data::AreaLink* link,
+                     const unsigned int year,
+                     unsigned int value);
     unsigned int get(const Antares::Data::AreaLink* link, const unsigned int year) const;
     bool apply(Study& study) override;
     std::string get_prefix() const override;
@@ -34,7 +36,8 @@ private:
     const Area* pArea = nullptr;
 };
 
-inline unsigned int ntcTSNumberData::get(const Antares::Data::AreaLink* link, const unsigned int year) const
+inline unsigned int ntcTSNumberData::get(const Antares::Data::AreaLink* link,
+                                         const unsigned int year) const
 {
     assert(link != nullptr);
     if (year < pTSNumberRules.height && link->indexForArea < pTSNumberRules.width)

@@ -3,11 +3,8 @@
 
 #include "antares/study/parts/solar/container.h"
 
-
-
 #include "antares/study/parts/parts.h"
 #include "antares/study/study.h"
-
 
 namespace Antares::Data::Solar
 {

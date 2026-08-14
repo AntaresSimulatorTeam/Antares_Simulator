@@ -7,7 +7,6 @@
 
 #include "antares/study/study.h"
 
-
 namespace Antares::Data
 {
 
@@ -175,14 +174,16 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
 void AreaScratchpad::CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& hourlyMaxGenMatrix,
                                                         const Matrix<double>& hourlyMaxPumpMatrix)
 {
-    for (unsigned int nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxGenMatrix.width; ++nbOfTimeSeries)
+    for (unsigned int nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxGenMatrix.width;
+         ++nbOfTimeSeries)
     {
         auto& hourlyMaxGenColumn = hourlyMaxGenMatrix[nbOfTimeSeries];
         auto& MeanMaxDailyGenPowerColumn = meanMaxDailyGenPower.timeSeries[nbOfTimeSeries];
         CalculateDailyMeanPower(hourlyMaxGenColumn, MeanMaxDailyGenPowerColumn);
     }
 
-    for (unsigned int nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxPumpMatrix.width; ++nbOfTimeSeries)
+    for (unsigned int nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxPumpMatrix.width;
+         ++nbOfTimeSeries)
     {
         auto& MeanMaxDailyPumpPowerColumn = meanMaxDailyPumpPower.timeSeries[nbOfTimeSeries];
         auto& hourlyMaxPumpColumn = hourlyMaxPumpMatrix[nbOfTimeSeries];

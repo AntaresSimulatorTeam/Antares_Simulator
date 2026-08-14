@@ -3,8 +3,6 @@
 
 #include "antares/study/parts/renewable/container.h"
 
-
-
 #include <antares/logs/logs.h>
 #include "antares/study/study.h"
 

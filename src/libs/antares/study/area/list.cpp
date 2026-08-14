@@ -21,8 +21,6 @@
 #include "antares/study/study.h"
 #include "antares/utils/utils.h"
 
-#define SEP Yuni::IO::Separator
-
 namespace fs = std::filesystem;
 
 namespace Antares::Data

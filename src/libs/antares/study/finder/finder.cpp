@@ -93,7 +93,7 @@ public:
 StudyFinder::StudyFinder() = default;
 
 StudyFinder::StudyFinder(const StudyFinder&):
-    pStopRequested {false}
+    pStopRequested{false}
 {
 }
 
@@ -140,11 +140,12 @@ void StudyFinder::startLookup(const std::vector<std::string>& folders)
     }
     pStopRequested.store(false);
 
-    pThread = std::thread([this, folders]()
-                          {
-                              Traverser traverser(*this);
-                              traverser.run(folders, pStopRequested);
-                          });
+    pThread = std::thread(
+      [this, folders]()
+      {
+          Traverser traverser(*this);
+          traverser.run(folders, pStopRequested);
+      });
 }
 
 void StudyFinder::lookup(const std::vector<std::string>& folders)

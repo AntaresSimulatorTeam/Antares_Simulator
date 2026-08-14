@@ -4,7 +4,6 @@
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_SETS_H__
 #define __LIBS_STUDY_SCENARIO_BUILDER_SETS_H__
 
-
 #include "rules.h"
 
 namespace Antares::Data::ScenarioBuilder

@@ -8,8 +8,6 @@
 #include <functional>
 #include <vector>
 
-
-
 #include "antares/study/binding_constraint/BindingConstraintLoader.h"
 #include "antares/study/study.h"
 #include "antares/utils/utils.h"
@@ -394,7 +392,8 @@ void BindingConstraint::buildFormula(std::string& s) const
             }
             if (o < 0)
             {
-                s += " x (t - " + std::to_string(std::abs(pLinkOffsets.find(sourceLink)->second)) + ')';
+                s += " x (t - " + std::to_string(std::abs(pLinkOffsets.find(sourceLink)->second))
+                     + ')';
             }
         }
 
@@ -416,7 +415,8 @@ void BindingConstraint::buildFormula(std::string& s) const
             int o = at->second;
             if (o > 0)
             {
-                s += " x (t + " + std::to_string(pClusterOffsets.find(thermalCluster)->second) + ')';
+                s += " x (t + " + std::to_string(pClusterOffsets.find(thermalCluster)->second)
+                     + ')';
             }
             if (o < 0)
             {

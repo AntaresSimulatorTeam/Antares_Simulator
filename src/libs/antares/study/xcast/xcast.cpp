@@ -11,7 +11,6 @@
 #include <antares/utils/utils.h>
 #include "antares/study//study.h"
 
-
 namespace fs = std::filesystem;
 
 static const std::string SEP(1, '/');
@@ -247,7 +246,11 @@ bool XCast::loadFromFolder(const fs::path& folder)
     fs::path p = folder / "data.txt";
 
     // Performing normal loading
-    ret = data.loadFromCSVFile(p.string(), (unsigned int)dataMax, 12, Matrix<>::optFixedSize, &readBuffer)
+    ret = data.loadFromCSVFile(p.string(),
+                               (unsigned int)dataMax,
+                               12,
+                               Matrix<>::optFixedSize,
+                               &readBuffer)
           && ret;
 
     // K

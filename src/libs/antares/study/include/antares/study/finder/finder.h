@@ -115,7 +115,7 @@ private:
     //! Background thread performing the lookup
     std::thread pThread;
     //! Set to true to ask the lookup to stop
-    std::atomic<bool> pStopRequested {false};
+    std::atomic<bool> pStopRequested{false};
 
 }; // class StudyFinder
 

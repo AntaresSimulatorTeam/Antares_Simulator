@@ -121,7 +121,8 @@ private:
     bool readLink(const std::vector<std::string>& instrs, const std::string& value);
     bool readBindingConstraints(const std::vector<std::string>& splitKey, const std::string& value);
 
-    bool readShortTermStorageInflows(const std::vector<std::string>& splitKey, const std::string& value);
+    bool readShortTermStorageInflows(const std::vector<std::string>& splitKey,
+                                     const std::string& value);
 
     bool readShortTermStorageAdditionalConstraints(const std::vector<std::string>& splitKey,
                                                    const std::string& value);

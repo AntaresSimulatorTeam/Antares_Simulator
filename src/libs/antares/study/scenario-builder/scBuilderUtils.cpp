@@ -9,8 +9,6 @@
 #include <sstream>
 #include <string>
 
-
-
 namespace Antares::Data::ScenarioBuilder
 {
 std::string fromHydroLevelToString(double d)

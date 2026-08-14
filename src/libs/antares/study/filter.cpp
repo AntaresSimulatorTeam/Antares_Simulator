@@ -70,8 +70,9 @@ unsigned int stringIntoDatePrecision(const std::string& string)
     while (begin <= string.size())
     {
         const std::size_t end = string.find_first_of(separators, begin);
-        const std::string word = string.substr(begin, end == std::string::npos ? std::string::npos
-                                                                               : end - begin);
+        const std::string word = string.substr(begin,
+                                               end == std::string::npos ? std::string::npos
+                                                                        : end - begin);
         const std::string lower = Antares::stringToLower(word);
         if (lower == "hourly")
         {

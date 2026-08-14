@@ -3,11 +3,8 @@
 
 #include "antares/study/parts/load/container.h"
 
-
-
 #include "antares/study/parts/load/prepro.h"
 #include "antares/study/study.h"
-
 
 namespace Antares::Data::Load
 {

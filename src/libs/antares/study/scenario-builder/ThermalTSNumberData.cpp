@@ -57,8 +57,8 @@ bool thermalTSNumberData::apply(Study& study)
         const auto& col = pTSNumberRules[cluster->areaWideIndex];
 
         unsigned int tsGenCount = cluster->tsGenBehavior == LocalTSGenerationBehavior::forceNoGen
-                            ? cluster->series.timeSeries.width
-                            : get_tsGenCount(study);
+                                    ? cluster->series.timeSeries.width
+                                    : get_tsGenCount(study);
 
         logprefix = "Thermal: area '" + area.name + "', cluster: '" + cluster->name() + "': ";
         ret = ApplyToMatrix(errors, logprefix, cluster->series, col, tsGenCount) && ret;

@@ -9,7 +9,6 @@
 #include <antares/logs/logs.h>
 #include "antares/study/study.h"
 
-
 namespace Antares::Data::ScenarioBuilder
 {
 Sets::Sets():

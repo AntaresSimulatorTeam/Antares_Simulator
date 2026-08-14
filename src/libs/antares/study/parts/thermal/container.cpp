@@ -6,8 +6,6 @@
 #include <algorithm>
 #include <functional>
 
-
-
 #include <antares/logs/logs.h>
 #include "antares/study/study.h"
 

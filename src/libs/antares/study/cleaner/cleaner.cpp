@@ -3,14 +3,10 @@
 
 #include "antares/study/cleaner.h"
 
-
-
-
 #include <antares/logs/logs.h>
 #include <antares/study/header.h>
 #include "antares/study/cleaner/versions.h"
 #include "antares/study/version.h"
-
 
 #define STUDY_CLEANER_LOG "[study cleaner] "
 

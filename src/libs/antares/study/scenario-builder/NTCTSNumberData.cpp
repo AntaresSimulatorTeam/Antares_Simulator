@@ -23,7 +23,9 @@ bool ntcTSNumberData::reset(const Study& study)
     return true;
 }
 
-void ntcTSNumberData::setTSnumber(const Antares::Data::AreaLink* link, const unsigned int year, unsigned int value)
+void ntcTSNumberData::setTSnumber(const Antares::Data::AreaLink* link,
+                                  const unsigned int year,
+                                  unsigned int value)
 {
     assert(link != nullptr);
     if (year < pTSNumberRules.height && link->indexForArea < pTSNumberRules.width)

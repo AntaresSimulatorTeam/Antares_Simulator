@@ -406,7 +406,8 @@ std::string GlobalTransmissionCapacitiesToString_Display(
     return result;
 }
 
-bool stringToGlobalTransmissionCapacities(const std::string& value, GlobalTransmissionCapacities& out)
+bool stringToGlobalTransmissionCapacities(const std::string& value,
+                                          GlobalTransmissionCapacities& out)
 {
     using GlobalNTCtype = GlobalTransmissionCapacities;
     const std::string v = stringToLower(stringTrim(value));

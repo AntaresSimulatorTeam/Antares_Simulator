@@ -9,7 +9,6 @@
 #include <ranges>
 #include <string>
 
-
 #include "antares/antares/constants.h"
 #include "antares/enums/Enum.hpp"
 
