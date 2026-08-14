@@ -67,7 +67,8 @@ std::shared_ptr<const InactiveComponentsAnalyzer> BuildInactiveComponentsAnalyze
         analyzer->setRorAllZero(pays, selectedColumnsAreAllZero(area.hydro.series->ror));
         analyzer->setSolarAllZero(pays, selectedColumnsAreAllZero(area.solar.series));
         analyzer->setWindAllZero(pays, selectedColumnsAreAllZero(area.wind.series));
-        analyzer->setHydroInflowAllZero(pays, selectedColumnsAreAllZero(area.hydro.series->storage));
+        analyzer->setHydroInflowAllZero(pays,
+                                        selectedColumnsAreAllZero(area.hydro.series->storage));
         for (unsigned column = 0; column < Data::fhhMax; ++column)
         {
             analyzer->setMiscGenColumnAllZero(pays, column, columnIsAllZero(area.miscGen, column));
@@ -79,8 +80,8 @@ std::shared_ptr<const InactiveComponentsAnalyzer> BuildInactiveComponentsAnalyze
         for (const auto& [linkName, link]: area.links)
         {
             const bool bothDirectionsAllZero = selectedColumnsAreAllZero(link->directCapacities)
-                                                && selectedColumnsAreAllZero(
-                                                  link->indirectCapacities);
+                                               && selectedColumnsAreAllZero(
+                                                 link->indirectCapacities);
             analyzer->setLinkAllZero(interco, bothDirectionsAllZero);
             ++interco;
         }

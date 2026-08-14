@@ -708,7 +708,8 @@ BOOST_AUTO_TEST_CASE(port_field_hydro_flow_ignores_pumping_when_absent)
 // conditions, since a non-managed reservoir can still have legitimate
 // turbine generation.
 
-BOOST_AUTO_TEST_CASE(hydro_balance_port_flow_is_suppressed_when_reservoir_unmanaged_and_inflow_all_zero)
+BOOST_AUTO_TEST_CASE(
+  hydro_balance_port_flow_is_suppressed_when_reservoir_unmanaged_and_inflow_all_zero)
 {
     problem.CaracteristiquesHydrauliques[0].SuiviNiveauHoraire = false;
     auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();

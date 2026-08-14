@@ -42,9 +42,7 @@ void InactiveComponentsAnalyzer::setWindAllZero(uint32_t pays, bool value)
     setFlag(windAllZero_, pays, value);
 }
 
-void InactiveComponentsAnalyzer::setMiscGenColumnAllZero(uint32_t pays,
-                                                          unsigned column,
-                                                          bool value)
+void InactiveComponentsAnalyzer::setMiscGenColumnAllZero(uint32_t pays, unsigned column, bool value)
 {
     if (pays >= miscGenColumnAllZero_.size())
     {

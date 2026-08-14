@@ -6,6 +6,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/solver/optimisation/InactiveComponentsAnalyzerBuilder.h"
+
 #include "in-memory-study.h"
 
 using Antares::Optimization::BuildInactiveComponentsAnalyzer;

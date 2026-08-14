@@ -267,7 +267,7 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
     // level_percentage/actual_inflows above, which are already guarded by
     // the HydroLevel variable's existence).
     const bool hydroBalancePortIsSuppressed = !problemeHebdo_.CaracteristiquesHydrauliques[pays]
-                                                  .SuiviNiveauHoraire
+                                                 .SuiviNiveauHoraire
                                               && problemeHebdo_.inactiveComponents
                                               && problemeHebdo_.inactiveComponents
                                                    ->hydroInflowIsAllZero(pays);
@@ -300,7 +300,8 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
 
 void LegacyExtraOutputEmitter::linkOutputs(uint32_t interco, int pdt)
 {
-    if (problemeHebdo_.inactiveComponents && problemeHebdo_.inactiveComponents->linkIsAllZero(interco))
+    if (problemeHebdo_.inactiveComponents
+        && problemeHebdo_.inactiveComponents->linkIsAllZero(interco))
     {
         return;
     }
