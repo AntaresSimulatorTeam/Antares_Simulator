@@ -25,4 +25,33 @@ void FillLegacySimulationTable(Antares::IO::Outputs::SimulationTable& simulation
                                const LegacyNameMapper& nameMapper,
                                unsigned currentBlock);
 
+// Block index of the week problemeHebdo currently holds. Same expression as the
+// weekly branch of OPT_TryToCallSimplex, for callers that run once per week
+// rather than once per optimisation interval.
+unsigned LegacyWeeklyBlock(const PROBLEME_HEBDO& problemeHebdo);
+
+// Publishes the legacy results as they stand *after* post-processing.
+//
+// Post-processes (remix hydro / shave-peaks, the adequacy patch, ...) mutate
+// PROBLEME_HEBDO's result structures in place and never write back into
+// ProblemeAResoudre::X, so a plain fill would re-emit the values the solver
+// left. AdresseOuPlacerLaValeurDesVariablesOptimisees already points at the
+// exact result slot of each variable -- OPT_AppelDuSimplexe publishes with
+// `*address = X[i]` -- so reading those addresses back into X republishes the
+// post-processed state and lets the regular fill be reused unchanged. The same
+// holds for the duals through AdresseOuPlacerLaValeurDesCoutsMarginaux, which
+// UpdateMrgPriceAfterCSRcmd overwrites in place.
+//
+// X and the duals are restored before returning, so calling this cannot change
+// anything the simulation computes afterwards.
+//
+// Does nothing (with a one-time warning) when the simplex optimization range is
+// daily: the week is then solved in seven intervals that each rebuild the
+// address table, so only the last day would be readable here.
+void DumpLegacySimulationTableAfterPostProcess(
+  Antares::IO::Outputs::SimulationTable& simulationTable,
+  PROBLEME_HEBDO& problemeHebdo,
+  const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+  unsigned currentBlock);
+
 } // namespace Antares::Optimization
