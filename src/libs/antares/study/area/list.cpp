@@ -652,7 +652,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Reserves
-    if (study.parameters.include.reserves)
+    if (study.parameters.include.reserves && studyVersion >= StudyVersion(10, 1))
     {
         ret = Antares::Data::loadReservesParameters(study.folderInput, area) && ret;
     }
@@ -724,7 +724,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                                                  study.parameters.compatibility.hydroPmax);
 
         if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
-            && study.parameters.include.reserves)
+            && study.parameters.include.reserves && studyVersion >= StudyVersion(10, 1))
         {
             fs::path reservesHydroPath = study.folderInput / "hydro" / "common" / area.id
                                          / "reserve-participations.yml";
@@ -762,7 +762,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             area.thermal.list.enableMustrunForEveryone();
         }
         if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
-            && study.parameters.include.reserves)
+            && study.parameters.include.reserves && studyVersion >= StudyVersion(10, 1))
         {
             fs::path reservesThermal = study.folderInput / "thermal" / "clusters" / area.id
                                        / "reserve-participations.yml";
@@ -779,7 +779,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         ret = area.shortTermStorage.validate(studyVersion) && ret;
 
         if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
-            && study.parameters.include.reserves)
+            && study.parameters.include.reserves && studyVersion >= StudyVersion(10, 1))
         {
             fs::path reservesFilePath = study.folderInput / "st-storage" / "clusters" / area.id
                                         / "reserve-participations.yml";
