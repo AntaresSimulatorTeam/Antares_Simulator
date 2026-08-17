@@ -16,10 +16,13 @@ namespace Antares::IO::Outputs
 class OptimisationsSimulationTable
 {
 public:
-    // Stage names of the two optimisation passes. They are part of the output
-    // file names, so they must not change.
+    // Stage names. They are part of the output file names, so they must not
+    // change. The first two are produced during the weekly solve, the others
+    // after a post-process has moved the results.
     static constexpr const char* firstOptimStage = "optim-nb-1";
     static constexpr const char* secondOptimStage = "optim-nb-2";
+    static constexpr const char* remixHydroStage = "remix-hydro";
+    static constexpr const char* adequacyPatchStage = "adequacy-patch";
 
     SimulationTable* firstOptimSimulationTable();
     SimulationTable* secondOptimSimulationTable();
