@@ -10,19 +10,19 @@
 
 namespace Antares::Optimization
 {
-class LegacyFiller final: public Optimisation::LinearProblemApi::LinearProblemFiller
+class LegacyFiller final: public LinearProblem::Api::LinearProblemFiller
 {
 public:
-    explicit LegacyFiller(Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+    explicit LegacyFiller(LinearProblem::Api::ILinearProblem& linearProblem,
                           const PROBLEME_HEBDO* problemeHebdo);
-    void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;
+    void addVariables(const LinearProblem::Api::FillContext& ctx) override;
+    void addConstraints(const LinearProblem::Api::FillContext& ctx) override;
+    void addObjectives(const LinearProblem::Api::FillContext& ctx) override;
 
 private:
     const PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre_;
 
-    Optimisation::LinearProblemApi::ILinearProblem& linearProblem_;
+    LinearProblem::Api::ILinearProblem& linearProblem_;
     void CreateVariable(unsigned idxVar) const;
     void CopyVariables() const;
     void UpdateContraints(unsigned idxRow) const;

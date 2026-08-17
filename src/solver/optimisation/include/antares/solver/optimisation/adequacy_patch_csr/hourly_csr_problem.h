@@ -49,13 +49,12 @@ struct PROBLEME_HEBDO;
 
 class HourlyCSRProblem final
 {
-    using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+    using AdqPatchParams = AdequacyPatch::AdqPatchParams;
 
 public:
-    explicit HourlyCSRProblem(
-      const AdqPatchParams& adqPatchParams,
-      PROBLEME_HEBDO* p,
-      const Antares::Solver::Optimization::OptimizationOptions& solverOptions):
+    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams,
+                              PROBLEME_HEBDO* p,
+                              const Antares::Optimization::OptimizationOptions& solverOptions):
         solverOptions_(solverOptions),
         adqPatchParams_(adqPatchParams),
         variableManager_(p->CorrespondanceVarNativesVarOptim,
@@ -90,7 +89,7 @@ private:
     void setProblemCost();
     void solveProblem(unsigned int week,
                       int year,
-                      const Antares::Solver::Optimization::OptimizationOptions& options);
+                      const Antares::Optimization::OptimizationOptions& options);
     void allocateProblem();
 
     // variable construction
@@ -114,7 +113,7 @@ private:
     void setQuadraticCost();
     void setLinearCost();
 
-    const Antares::Solver::Optimization::OptimizationOptions& solverOptions_;
+    const Antares::Optimization::OptimizationOptions& solverOptions_;
 
 public:
     // TODO [gp] : try to make these members private

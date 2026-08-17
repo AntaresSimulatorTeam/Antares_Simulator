@@ -19,7 +19,7 @@
 #include "singleProblemGetterImpl.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::Optimisation;
+using namespace Antares::LinearProblem;
 using namespace Antares::Expressions::Nodes;
 constexpr double EPSILON = 1.e-6;
 
@@ -711,12 +711,12 @@ ModelerData OneParameterOneVariableOneConstraint()
                               .build());
     auto system = std::make_unique<ModelerStudy::SystemModel::System>(
       SystemBuilder().withId("system").withComponents(std::move(components)).build());
-    std::unique_ptr<LinearProblemApi::ILinearProblemData>
-      linearProblemData = std::make_unique<LinearProblemDataImpl::LinearProblemData>(
-        LinearProblemDataImpl::DataSeriesRepository{});
+    std::unique_ptr<Api::ILinearProblemData>
+      linearProblemData = std::make_unique<DataImpl::LinearProblemData>(
+        DataImpl::DataSeriesRepository{});
     //---
-    std::unique_ptr<LinearProblemApi::IScenario>
-      scenario = std::make_unique<LinearProblemDataImpl::Scenario>("scenario_group");
+    std::unique_ptr<Api::IScenario> scenario = std::make_unique<DataImpl::Scenario>(
+      "scenario_group");
     ScenarioGroupRepository scenarioGroupRepository;
     scenarioGroupRepository.addScenario("scenario_group", std::move(scenario));
     //---

@@ -8,12 +8,12 @@
 
 #include "scenarioGroupRepo.h"
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 class EvaluationContextProvider final: public Expressions::IEvaluationContextProvider
 {
 public:
-    explicit EvaluationContextProvider(const LinearProblemApi::ILinearProblemData& data,
+    explicit EvaluationContextProvider(const Api::ILinearProblemData& data,
                                        const ScenarioGroupRepository& scenarioGroupRepository,
                                        std::map<std::string, double> variables = {});
     ~EvaluationContextProvider() override = default;
@@ -22,8 +22,8 @@ public:
       const ModelerStudy::SystemModel::Component& component) const override;
 
 private:
-    const LinearProblemApi::ILinearProblemData& data_;
+    const Api::ILinearProblemData& data_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
     const std::map<std::string, double> variables_;
 };
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem

@@ -10,7 +10,7 @@
 #include "antares/exception/LoadingError.hpp"
 
 using namespace Antares;
-using namespace Antares::Solver::Optimization;
+using namespace Antares::Optimization;
 
 struct CmdLineOptionsFixture
 {

@@ -556,7 +556,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
 
 #ifdef TRACES
     printf(
-      "Optimisation auxiliaire: NombreDeVariables %d NombreDeContraintes %d NbTermesMatrice %d\n",
+      "LinearProblem auxiliaire: NombreDeVariables %d NombreDeContraintes %d NbTermesMatrice %d\n",
       NombreDeVariables,
       NombreDeContraintes,
       NbTermesMatrice);

@@ -14,7 +14,7 @@
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using Antares::IO::Outputs::SimulationTable;
-using Antares::Optimisation::LinearProblemApi::FillContext;
+using Antares::LinearProblem::Api::FillContext;
 
 namespace Antares::Optimization
 {
@@ -275,10 +275,7 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
     {
         const int pumping = variableManager_.Pumping(pays, pdt);
         const double netWithdrawal = x(hydProd) - (pumping >= 0 ? x(pumping) : 0.);
-        emit("balance_port.flow",
-             fmt::format("{}_hydro", problemeHebdo_.NomsDesPays[pays]),
-             pdt,
-             netWithdrawal);
+        emit("balance_port.flow", hydroStorageNames_[pays], pdt, netWithdrawal);
     }
 
     const int hydroLevel = variableManager_.HydroLevel(pays, pdt);
@@ -364,8 +361,7 @@ void LegacyExtraOutputEmitter::thermalOutputs(uint32_t pays, int index, int pdt)
     emit("prop_cost",
          cluster,
          pdt,
-         paliers.PuissanceDisponibleEtCout[index]
-             .CoutHoraireDeProductionDuPalierThermiqueSansBruit[pdt]
+         paliers.PuissanceDisponibleEtCout[index].CoutMarginalDeProductionDuPalierThermique[pdt]
            * generation);
     emit("balance_port.flow", cluster, pdt, generation);
 
@@ -433,8 +429,11 @@ void LegacyExtraOutputEmitter::shortTermStorageOutputs(uint32_t pays, int pdt)
           variableManager_.ShortTermStorageWithdrawal(storage.clusterGlobalIndex, pdt));
         const double injection = x(
           variableManager_.ShortTermStorageInjection(storage.clusterGlobalIndex, pdt));
-        emit("profit", storage.name, pdt, std::floor((withdrawal - injection) * price + 0.5));
-        emit("balance_port.flow", storage.name, pdt, withdrawal - injection);
+        const std::string component = fmt::format("{}_short_term_storage_{}",
+                                                  problemeHebdo_.NomsDesPays[pays],
+                                                  storage.name);
+        emit("profit", component, pdt, std::floor((withdrawal - injection) * price + 0.5));
+        emit("balance_port.flow", component, pdt, withdrawal - injection);
     }
 }
 
@@ -469,14 +468,14 @@ void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays)
     emit("hydro_shadow_price",
          hydroStorageNames_[pays],
          pdt,
-         dual(problemeHebdo_.NumeroDeContrainteExpressionStockFinal[pays]));
+         -dual(problemeHebdo_.NumeroDeContrainteExpressionStockFinal[pays]));
 
     const std::size_t layerCount = problemeHebdo_.NumeroDeVariableDeTrancheDeStock[pays].size();
     double bellmanValue = 0.;
     for (std::size_t layer = 0; layer < layerCount; ++layer)
     {
         const int layerStorage = variableManager_.LayerStorage(pays, layer);
-        bellmanValue += cost(layerStorage) * x(layerStorage);
+        bellmanValue -= cost(layerStorage) * x(layerStorage);
     }
     emit("bellman_value", problemeHebdo_.NomsDesPays[pays], pdt, bellmanValue);
 }
