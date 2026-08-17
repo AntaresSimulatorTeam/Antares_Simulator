@@ -3,8 +3,6 @@
 
 #include "antares/solver/simulation/remix-storage/storage-for-remix-with-levels.h"
 
-#include <iomanip>
-#include <sstream>
 #include <stdexcept>
 
 #include <antares/logs/logs.h>
@@ -83,11 +81,15 @@ void StorageForRemixWithLevels::checkLevels()
         {
             if (levels_[h] > ruleCurveUp_[h] + TOLERANCE || levels_[h] < ruleCurveLow_[h] - TOLERANCE)
             {
-                std::ostringstream msg;
-                msg << std::setprecision(17) << name() << " - hour " << h
-                    << " : level = " << levels_[h] << ", low rule curve = " << ruleCurveLow_[h]
-                    << ", up rule curve = " << ruleCurveUp_[h] << ", tolerance = " << TOLERANCE;
-                logs.notice() << msg.str();
+                logs.notice().appendFormat(
+                  "%s - hour %zu : level = %.17g, low rule curve = %.17g, up rule curve = %.17g, "
+                  "tolerance = %.17g",
+                  name().c_str(),
+                  h,
+                  levels_[h],
+                  ruleCurveLow_[h],
+                  ruleCurveUp_[h],
+                  TOLERANCE);
             }
         }
 
@@ -116,8 +118,15 @@ void StorageForRemixWithLevels::checkInput(size_t size)
         throw std::invalid_argument(error_msg_start_hydro_remix + "all arrays of sizes 0");
     }
 
-    if (ruleCurveUp_ + TOLERANCE <= initLevel_)
+    if (ruleCurveUp_[0] + TOLERANCE <= initLevel_)
     {
+        logs.notice().appendFormat(
+          "%s - initial level = %.17g, up rule curve at hour 0 = %.17g, tolerance = %.17g",
+          name().c_str(),
+          initLevel_,
+          ruleCurveUp_[0],
+          TOLERANCE);
+
         throw std::invalid_argument(error_msg_start_hydro_remix
                                     + "initial level > reservoir capacity");
     }
