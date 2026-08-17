@@ -187,9 +187,7 @@ jobs:
 
     - name: Init submodule Antares_Simulator_Tests_NR
       run: |
-        git clone --depth 1 --branch scalian_ramping_tests \
-      https://github.com/sylvmara/Antares_Simulator_Tests_NR.git \
-      resources/Antares_Simulator_Tests_NR
+        git clone --depth 1 --branch scalian_ramping_tests https://github.com/sylvmara/Antares_Simulator_Tests_NR.git resources/Antares_Simulator_Tests_NR
 
     - name: Run named mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
