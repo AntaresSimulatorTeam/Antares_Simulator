@@ -250,6 +250,7 @@ set(RTESOLVER_OPT
         LegacyExtraOutputs.cpp
         include/antares/solver/optimisation/LegacySimulationTableSnapshot.h
         LegacySimulationTableSnapshot.cpp
+        LegacySimulationTableStage.cpp
         include/antares/solver/optimisation/InactiveComponentsAnalyzer.h
         InactiveComponentsAnalyzer.cpp
         include/antares/solver/optimisation/InactiveComponentsAnalyzerBuilder.h
