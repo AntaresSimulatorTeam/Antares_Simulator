@@ -18,11 +18,10 @@
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
-#include "antares/solver/optimisation/LegacyExtraOutputs.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyNameMapper.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
-#include "antares/solver/optimisation/LegacyVariableInfo.h"
+#include "antares/solver/optimisation/LegacySimulationTableSnapshot.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -62,44 +61,6 @@ static void logProblemSize(const MPSolver* mpSolver)
     logs.info();
     logs.info();
 }
-
-namespace
-{
-void FillLegacySimulationTable(SimulationTable& simulationTable,
-                               PROBLEME_HEBDO& problemeHebdo,
-                               const FillContext& fillContext,
-                               const LegacyNameMapper& nameMapper,
-                               unsigned currentBlock)
-{
-    const PROBLEME_ANTARES_A_RESOUDRE& problem = *problemeHebdo.ProblemeAResoudre;
-
-    // LegacyVariablesInfo, X and CoutLineaire are all sized to NombreDeVariables
-    // in resizeProbleme, so the index-based reads below are always in bounds.
-    assert(problem.LegacyVariablesInfo.size() == static_cast<std::size_t>(problem.NombreDeVariables)
-           && problem.X.size() == static_cast<std::size_t>(problem.NombreDeVariables)
-           && problem.CoutLineaire.size() == static_cast<std::size_t>(problem.NombreDeVariables));
-    for (int index = 0; index < problem.NombreDeVariables; ++index)
-    {
-        const auto& info = problem.LegacyVariablesInfo[static_cast<std::size_t>(index)];
-        if (!info)
-        {
-            continue;
-        }
-
-        simulationTable.addEntry(
-          {.block = currentBlock,
-           .component = info->component,
-           .output = nameMapper.mapOutput(info->name),
-           .absolute_time_index = info->timeIndex,
-           .block_time_index = LegacyBlockTimeIndex(fillContext, info->timeIndex),
-           .scenario_index = fillContext.getYear(),
-           .value = problem.X[static_cast<std::size_t>(index)],
-           .status = std::nullopt});
-    }
-
-    AddLegacyExtraOutputs(simulationTable, problemeHebdo, fillContext, currentBlock);
-}
-} // namespace
 
 static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
