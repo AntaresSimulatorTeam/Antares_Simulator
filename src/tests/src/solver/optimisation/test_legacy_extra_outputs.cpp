@@ -9,11 +9,15 @@
 
 #include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
 #include "antares/solver/optimisation/LegacyExtraOutputs.h"
+#include "antares/solver/optimisation/LegacySimulationTableSnapshot.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using Antares::IO::Outputs::SimulationTable;
 using Antares::LinearProblem::Api::FillContext;
 using Antares::Optimization::AddLegacyExtraOutputs;
+using Antares::Optimization::DumpLegacySimulationTableAfterPostProcess;
+using Antares::Optimization::LegacyVariableInfo;
+using Antares::Optimization::LegacyWeeklyBlock;
 
 namespace
 {
@@ -1093,6 +1097,117 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
     //              battery1 flows                                  = 13
     // Weekly: area1's hydro_shadow_price and bellman_value        = 2
     BOOST_CHECK_EQUAL(table.rowCount(), 20 + 21 + 16 + 1 + 6 + 13 + 2);
+}
+
+// Wires the result addresses the way OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire
+// does for the quantities post-processing moves, so the fixture can be mutated
+// the way remix hydro / the adequacy patch mutate a solved week.
+void wireResultAddresses(PROBLEME_HEBDO& problem)
+{
+    problem.OptimisationAuPasHebdomadaire = true;
+    problem.HeureDansLAnnee = 168;
+
+    auto& solved = *problem.ProblemeAResoudre;
+    solved.LegacyVariablesInfo.assign(solved.NombreDeVariables, std::nullopt);
+    solved.AdresseOuPlacerLaValeurDesVariablesOptimisees.assign(solved.NombreDeVariables, nullptr);
+    solved.AdresseOuPlacerLaValeurDesCoutsMarginaux.assign(solved.NombreDeContraintes, nullptr);
+
+    problem.ResultatsHoraires.resize(problem.NombreDePays);
+    for (auto& hourlyResults: problem.ResultatsHoraires)
+    {
+        hourlyResults.ValeursHorairesDeDefaillancePositive.assign(1, 0.);
+        hourlyResults.CoutsMarginauxHoraires.assign(1, 0.);
+    }
+    problem.ValeursDeNTC[0].ValeurDuFlux.assign(problem.NombreDInterconnexions, 0.);
+
+    solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[unsuppliedArea1]
+      = &problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0];
+    solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[directFlowLink0]
+      = &problem.ValeursDeNTC[0].ValeurDuFlux[0];
+    solved.AdresseOuPlacerLaValeurDesCoutsMarginaux[balanceArea1]
+      = &problem.ResultatsHoraires[0].CoutsMarginauxHoraires[0];
+
+    // Publish the solved values, as OPT_AppelDuSimplexe does right after the solve.
+    problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0] = solved
+                                                                            .X[unsuppliedArea1];
+    problem.ValeursDeNTC[0].ValeurDuFlux[0] = solved.X[directFlowLink0];
+    problem.ResultatsHoraires[0].CoutsMarginauxHoraires[0] = solved
+                                                               .CoutsMarginauxDesContraintes
+                                                                 [balanceArea1];
+
+    solved.LegacyVariablesInfo[unsuppliedArea1] = LegacyVariableInfo{.name = "UnsuppliedEnergy",
+                                                                     .component = "area1_node",
+                                                                     .timeIndex = 168};
+}
+
+BOOST_AUTO_TEST_CASE(post_process_dump_reads_results_mutated_after_the_solve)
+{
+    wireResultAddresses(problem);
+
+    // Remix hydro shaves the peak: 32 MW of the shortfall are served by storage.
+    problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0] = 20.;
+    // The adequacy patch reprices the hour at the area's unsupplied energy cost.
+    problem.ResultatsHoraires[0].CoutsMarginauxHoraires[0] = -9500.;
+
+    DumpLegacySimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
+
+    // Raw row: the recorded variable now carries the post-processed value, not X.
+    const auto raw = FindRow(table, "unsupplied_energy", "area1_node");
+    BOOST_REQUIRE(raw.has_value());
+    BOOST_CHECK_CLOSE(raw->value, 20., 1e-9);
+
+    // Derived rows are recomputed from the refreshed solution: imbalance_cost is
+    // spillCost * spilled + unsuppliedCost * unsupplied.
+    const auto imbalance = FindRow(table, "imbalance_cost", "area1_node");
+    BOOST_REQUIRE(imbalance.has_value());
+    BOOST_CHECK_CLOSE(imbalance->value, 3. * 7. + 9500. * 20., 1e-9);
+
+    // ... and price follows the repriced dual, negated.
+    const auto price = FindRow(table, "price", "area1_node");
+    BOOST_REQUIRE(price.has_value());
+    BOOST_CHECK_CLOSE(price->value, 9500., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(post_process_dump_leaves_the_solver_state_untouched)
+{
+    wireResultAddresses(problem);
+    const auto& solved = *problem.ProblemeAResoudre;
+    const std::vector<double> xBefore = solved.X;
+    const std::vector<double> dualsBefore = solved.CoutsMarginauxDesContraintes;
+
+    problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0] = 20.;
+    problem.ResultatsHoraires[0].CoutsMarginauxHoraires[0] = -9500.;
+
+    DumpLegacySimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
+
+    BOOST_CHECK(solved.X == xBefore);
+    BOOST_CHECK(solved.CoutsMarginauxDesContraintes == dualsBefore);
+    // Specifically, the refreshed entries are back to what the optimizer left.
+    BOOST_CHECK_CLOSE(solved.X[unsuppliedArea1], 52., 1e-9);
+    BOOST_CHECK_CLOSE(solved.CoutsMarginauxDesContraintes[balanceArea1], -10000., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(post_process_dump_is_skipped_when_the_optimization_range_is_daily)
+{
+    wireResultAddresses(problem);
+    problem.OptimisationAuPasHebdomadaire = false;
+    problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0] = 20.;
+
+    DumpLegacySimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
+
+    BOOST_CHECK_EQUAL(table.rowCount(), 0u);
+}
+
+BOOST_AUTO_TEST_CASE(weekly_block_is_derived_from_the_hour_in_the_year)
+{
+    problem.HeureDansLAnnee = 168;
+    BOOST_CHECK_EQUAL(LegacyWeeklyBlock(problem), 1u);
+
+    problem.HeureDansLAnnee = 0;
+    BOOST_CHECK_EQUAL(LegacyWeeklyBlock(problem), 0u);
+
+    problem.HeureDansLAnnee = 3 * 168 + 5;
+    BOOST_CHECK_EQUAL(LegacyWeeklyBlock(problem), 3u);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
