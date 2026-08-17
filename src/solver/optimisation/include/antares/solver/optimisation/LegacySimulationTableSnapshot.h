@@ -4,7 +4,9 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
+#include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
 
@@ -84,5 +86,16 @@ void DumpSimulationTableAfterPostProcess(
   PROBLEME_HEBDO& problemeHebdo,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
   unsigned currentBlock);
+
+// Dumps into the `stage` table of a year's tables, deriving the week's fill
+// context and block from problemeHebdo. No-op when `tables` is null, i.e. when
+// the run does not write simulation tables.
+//
+// Defined in its own translation unit because it needs buildFillContext, which
+// drags in the solver call chain; callers that already have a fill context
+// should use the overload above.
+void DumpSimulationTableStage(Antares::IO::Outputs::OptimisationsSimulationTable* tables,
+                              const std::string& stage,
+                              PROBLEME_HEBDO& problemeHebdo);
 
 } // namespace Antares::Optimization

@@ -431,19 +431,7 @@ DumpSimulationTablePostProcessCmd::DumpSimulationTablePostProcessCmd(
 
 void DumpSimulationTablePostProcessCmd::execute(const optRuntimeData&)
 {
-    if (tables_ == nullptr)
-    {
-        return;
-    }
-
-    // The whole week is one block here: post-processing runs once the week is
-    // solved, not once per optimisation interval.
-    const auto fillContext = buildFillContext(problemeHebdo_, 0);
-    Antares::Optimization::DumpSimulationTableAfterPostProcess(
-      *tables_->tableForStage(stage_),
-      *problemeHebdo_,
-      fillContext,
-      Antares::Optimization::LegacyWeeklyBlock(*problemeHebdo_));
+    Antares::Optimization::DumpSimulationTableStage(tables_, stage_, *problemeHebdo_);
 }
 
 } // namespace Antares::Solver::Simulation
