@@ -44,6 +44,13 @@ void LegacySimulationTablesWriter::write(OptimisationsSimulationTable& tables)
 {
     for (const auto& [stage, table]: tables.stages())
     {
+        // A stage with no rows produced nothing worth reporting -- e.g. a
+        // post-process dump that declined to run. Writing it would emit a
+        // header-only file suggesting the stage ran and found nothing.
+        if (table.rowCount() == 0)
+        {
+            continue;
+        }
         writeForStage(table, stage);
     }
 }
