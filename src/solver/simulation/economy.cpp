@@ -81,6 +81,10 @@ bool Economy::simulationBegin()
                                             simulationObserver_.get(),
                                             study.parameters.writeSimulationTable());
 
+            // The tables live on the heap behind a unique_ptr member, so this
+            // pointer survives the reallocations of weeklyOptProblems_ that the
+            // next iterations of this loop cause. Null when the run does not
+            // write simulation tables.
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
               &pProblemesHebdo[numSpace],
@@ -88,7 +92,8 @@ bool Economy::simulationBegin()
               study.areas,
               study.parameters,
               study.calendar,
-              resultWriter_);
+              resultWriter_,
+              weeklyOptProblems_[numSpace].simulationTables());
         }
     }
 
