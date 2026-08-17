@@ -77,7 +77,7 @@ renewable. Component → `miscGen.entry` index mapping:
 | Done | Output | Formula | Anchor / Design |
 |------|--------|---------|-----------------|
 | [x] | `actual_num_units_on` | `ceil(num_units_on)` | `NODU` |
-| [x] | `prop_cost` | `market_bid_cost · generation_power` (user cost, un-noised: `CoutHoraireDeProductionDuPalierThermiqueSansBruit`) | `DispatchableProduction` |
+| [x] | `prop_cost` | `market_bid_cost · generation_power` (user cost, un-noised: `CoutMarginalDeProductionDuPalierThermique`) | `DispatchableProduction` |
 | [x] | `non_prop_cost` | `startup_cost·max(0, ceil(N) - ceil(N)[t-1]) + fixed_cost·ceil(N)` | `NODU` (+ `NumberStartingDispatchableUnits` via view) |
 | [x] | `cluster_availability` | `max(cmg·(1-s), mpu·ceil(cmg/Mpu))` | `DispatchableProduction` (spinning cancels) |
 | [x] | `min_gen_power` | `min(generation_power, min_gen_mod·num_units·Mpu)` | `DispatchableProduction` |
@@ -143,13 +143,13 @@ limitation as `price`).
 |------|--------|---------|-----------------|
 | [x] | `level_percentage` | `level / reservoir_capacity · 100` | `HydroLevel` (capacity in context) |
 | [x] | `actual_inflows` | `round(inflows)` | `HydroLevel` (inflows in context) |
-| [x] | `hydro_shadow_price` | `dual(FinalStockExpression)` | `FinalStockExpression` constraint |
-| [x] | `bellman_value` | `sum(cost_layer · LayerStorage)` | `LayerStorage` variables of the area (weekly, accurate water value only) |
+| [x] | `hydro_shadow_price` | `-dual(FinalStockExpression)` | `FinalStockExpression` constraint |
+| [x] | `bellman_value` | `−sum(cost_layer · LayerStorage)` | `LayerStorage` variables of the area (weekly, accurate water value only) |
 
-`bellman_value` sums `CoutLineaire · X` over the area's `LayerStorage` variables
+`bellman_value` sums `−CoutLineaire · X` over the area's `LayerStorage` variables
 (the coefficient is `-WaterLayerValues[layer]`, written by the cost-assignment
-site) and is emitted once per area on the interval's last hour, like
-`hydro_shadow_price`.
+site, so the value is `Σ WaterLayerValues · X`) and is emitted once per area on
+the interval's last hour, like `hydro_shadow_price`.
 
 ---
 
@@ -158,9 +158,9 @@ site) and is emitted once per area on the interval's last hour, like
 Same emission mechanism as extra-outputs; the port field name is the ST `output`.
 Component naming: models sharing the area's identity get their own suffixed
 component so `balance_port.flow` rows cannot collide — `{area}_load` (load) and
-`{area}_hydro` (long_term_storage); everything else uses the component of its
-extra-outputs (area, cluster, storage, `origin$$destination`, input-generation
-names).
+`{area}_hydro_storage` (long_term_storage); everything else uses the component of
+its extra-outputs (area, cluster, storage `{area}_short_term_storage_{name}`,
+`origin$$destination`, input-generation names).
 
 | Done | Model | Component | Port field | Definition |
 |------|-------|-----------|-----------|------------|
@@ -171,8 +171,8 @@ names).
 | [x] | renewable | input-generation names | `balance_port.flow` | `available_power` |
 | [x] | miscellaneous_generation | input-generation names | `balance_port.flow` | `available_power` |
 | [x] | thermal | cluster name | `balance_port.flow` | `generation_power` |
-| [x] | short_term_storage | storage name | `balance_port.flow` | `withdrawal_power - injection_power` |
-| [x] | long_term_storage | `{area}_hydro` | `balance_port.flow` | `HydProd - Pumping` (skipped without hydro production; pumping term dropped when absent) |
+| [x] | short_term_storage | `{area}_short_term_storage_{name}` | `balance_port.flow` | `withdrawal_power - injection_power` |
+| [x] | long_term_storage | `{area}_hydro_storage` | `balance_port.flow` | `HydProd - Pumping` (skipped without hydro production; pumping term dropped when absent) |
 
 ---
 
@@ -215,7 +215,7 @@ profit** = `floor(price(area) × (withdrawal − injection) + 0.5)`.
 fields (§2.5) can reuse the same series.
 
 ### (C) Per-area layer aggregation — ✅ done
-`cost_layer · LayerStorage` is accumulated across the `LayerStorage` variables of
+`−cost_layer · LayerStorage` is accumulated across the `LayerStorage` variables of
 one area (`vm.LayerStorage(pays, layer)`) and emitted as a single per-area
 **bellman_value** row in `weeklyHydroOutputs`.
 
@@ -223,7 +223,7 @@ one area (`vm.LayerStorage(pays, layer)`) and emitted as a single per-area
 The port fields are emitted alongside the extra-outputs they reuse
 (`balance_port.price` = `price`, thermal `balance_port.flow` =
 `generation_power`, link `out/in_port.flow` = `±flow`, storage and
-input-generation flows from their existing operands, `{area}_hydro` from
+input-generation flows from their existing operands, `{area}_hydro_storage` from
 `HydProd`/`Pumping`).
 
 ---

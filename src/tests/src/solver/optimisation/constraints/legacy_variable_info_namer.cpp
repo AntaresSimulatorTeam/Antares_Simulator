@@ -92,6 +92,19 @@ BOOST_AUTO_TEST_CASE(hydro_level_records_area_as_component)
     BOOST_CHECK_EQUAL(info[4]->timeIndex, 168u);
 }
 
+BOOST_AUTO_TEST_CASE(layer_storage_records_final_storage_layer_name_with_index)
+{
+    namer.UpdateArea("fr");
+    namer.UpdateTimeStep(42);
+    namer.LayerStorage(7, 0);
+
+    BOOST_REQUIRE(info[7].has_value());
+    BOOST_CHECK_EQUAL(info[7]->name, "final_storage_layer_0");
+    BOOST_CHECK_EQUAL(info[7]->component, "fr_hydro_storage");
+    BOOST_CHECK_EQUAL(info[7]->timeIndex, 42u);
+    BOOST_CHECK_EQUAL(names[7], "LayerStorage::area<fr>::Layer<0>::hour<42>");
+}
+
 BOOST_AUTO_TEST_CASE(sts_injection_records_injection_name_and_storage_component)
 {
     namer.UpdateArea("fr");
