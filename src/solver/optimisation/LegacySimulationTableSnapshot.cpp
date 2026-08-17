@@ -11,6 +11,9 @@
 
 #include <antares/antares/constants.h>
 #include <antares/logs/logs.h>
+#include "antares/io/outputs/SimulationTableGenerator.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optimisation/LegacyExtraOutputs.h"
 #include "antares/solver/optimisation/LegacyVariableInfo.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
@@ -112,10 +115,10 @@ unsigned LegacyWeeklyBlock(const PROBLEME_HEBDO& problemeHebdo)
     return static_cast<unsigned>(problemeHebdo.HeureDansLAnnee) / Constants::nbHoursInAWeek;
 }
 
-void DumpLegacySimulationTableAfterPostProcess(SimulationTable& simulationTable,
-                                               PROBLEME_HEBDO& problemeHebdo,
-                                               const FillContext& fillContext,
-                                               unsigned currentBlock)
+void DumpSimulationTableAfterPostProcess(SimulationTable& simulationTable,
+                                         PROBLEME_HEBDO& problemeHebdo,
+                                         const FillContext& fillContext,
+                                         unsigned currentBlock)
 {
     if (!problemeHebdo.OptimisationAuPasHebdomadaire)
     {
@@ -127,6 +130,22 @@ void DumpLegacySimulationTableAfterPostProcess(SimulationTable& simulationTable,
                                              "range is daily";
                        });
         return;
+    }
+
+    // Modeler rows first, as during the solve, so a stage table has the same
+    // row order as the optimisation ones.
+    if (const auto& solved = problemeHebdo.lastSolvedModelerProblem;
+        solved && problemeHebdo.modelerData)
+    {
+        IO::Outputs::FillSimulationTable(simulationTable,
+                                         *solved->problem,
+                                         solved->objectiveValue,
+                                         *problemeHebdo.modelerData,
+                                         *solved->entities,
+                                         fillContext,
+                                         currentBlock,
+                                         IO::Outputs::TimeConversionMode::WeeklyBlocks,
+                                         true);
     }
 
     static constexpr LegacyNameMapper nameMapper;

@@ -17,6 +17,11 @@
 using namespace Antares::Data;
 class AdequacyPatchRuntimeData;
 
+namespace Antares::Optimization
+{
+struct SolvedModelerProblem;
+}
+
 struct CORRESPONDANCES_DES_VARIABLES
 {
     // Avoid accidental copies
@@ -781,6 +786,11 @@ public:
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     Antares::Solver::ModelerData* modelerData = nullptr;
+
+    // Modeler side of the last optimisation pass of the current week, kept alive
+    // past the solve so a post-process simulation table can re-emit the modeler
+    // component rows. Null unless simulation tables are written.
+    std::shared_ptr<const Antares::Optimization::SolvedModelerProblem> lastSolvedModelerProblem;
 };
 
 // Import functions for capacity and hydro reserves
