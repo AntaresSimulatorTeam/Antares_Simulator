@@ -4,6 +4,7 @@
 #define BOOST_TEST_MODULE study
 #include <files-system.h>
 #include <unit_test_utils.h>
+
 #include <antares/inifile/inifile.h>
 using Antares::UnitTests::CaptureAntaresLogs;
 
