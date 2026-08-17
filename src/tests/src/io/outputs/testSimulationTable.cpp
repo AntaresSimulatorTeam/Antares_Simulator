@@ -378,6 +378,71 @@ BOOST_AUTO_TEST_CASE(WriteTo_ParquetFormat_CreatesCorrectFiles)
     std::filesystem::remove(file2);
 }
 
+BOOST_AUTO_TEST_CASE(TableForStage_CreatesOnDemandAndKeepsPointersStable)
+{
+    OptimisationsSimulationTable tables;
+    BOOST_CHECK(tables.stages().empty());
+
+    SimulationTable* remix = tables.tableForStage("remix-hydro");
+    BOOST_REQUIRE(remix != nullptr);
+    BOOST_CHECK_EQUAL(tables.stages().size(), 1u);
+
+    // Asking again for the same stage returns the same table.
+    BOOST_CHECK(tables.tableForStage("remix-hydro") == remix);
+
+    // Adding stages must not invalidate pointers already handed out:
+    // OPT_OptimisationLineaire grabs the optim-nb-1 table before optim-nb-2 exists.
+    SimulationTable* first = tables.firstOptimSimulationTable();
+    SimulationTable* second = tables.secondOptimSimulationTable();
+    BOOST_CHECK(first != second);
+    BOOST_CHECK(tables.tableForStage("remix-hydro") == remix);
+    BOOST_CHECK(tables.tableForStage("optim-nb-1") == first);
+    BOOST_CHECK_EQUAL(tables.stages().size(), 3u);
+
+    remix->addEntry({.block = 0,
+                     .component = "comp",
+                     .output = "var",
+                     .absolute_time_index = 0,
+                     .block_time_index = 0,
+                     .scenario_index = 0,
+                     .value = 1.0,
+                     .status = std::nullopt});
+    BOOST_CHECK_EQUAL(remix->rowCount(), 1u);
+
+    // clear() empties every table but keeps the stages, which recur every year.
+    tables.clear();
+    BOOST_CHECK_EQUAL(tables.stages().size(), 3u);
+    BOOST_CHECK_EQUAL(remix->rowCount(), 0u);
+}
+
+BOOST_AUTO_TEST_CASE(WriteTo_NamesOneFilePerStage)
+{
+    OptimisationsSimulationTable tables;
+    const SimulationTableEntry entry{.block = 1,
+                                     .component = "comp1",
+                                     .output = "var1",
+                                     .absolute_time_index = 1,
+                                     .block_time_index = 1,
+                                     .scenario_index = 0,
+                                     .value = 10.0,
+                                     .status = MipBasisStatus::BASIC};
+    tables.firstOptimSimulationTable()->addEntry(entry);
+    tables.secondOptimSimulationTable()->addEntry(entry);
+    tables.tableForStage("remix-hydro")->addEntry(entry);
+
+    auto tempDir = std::filesystem::temp_directory_path();
+    LegacySimulationTablesWriter(tempDir, 7 /* year */, TableFormat::CSV).write(tables);
+
+    for (const auto* name: {"simulation-table-7-optim-nb-1.csv",
+                            "simulation-table-7-optim-nb-2.csv",
+                            "simulation-table-7-remix-hydro.csv"})
+    {
+        const auto file = tempDir / name;
+        BOOST_CHECK_MESSAGE(std::filesystem::exists(file), "missing " + std::string(name));
+        std::filesystem::remove(file);
+    }
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(VariableDictionaryTests)
