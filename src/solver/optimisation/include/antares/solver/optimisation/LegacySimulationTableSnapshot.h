@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
 
@@ -10,8 +12,31 @@
 
 struct PROBLEME_HEBDO;
 
+namespace Antares::Optimisation
+{
+class OptimEntityContainer;
+
+namespace LinearProblemApi
+{
+class ILinearProblem;
+}
+} // namespace Antares::Optimisation
+
 namespace Antares::Optimization
 {
+
+// The modeler side of the last optimisation pass of a week, kept alive past the
+// solve so a post-process dump can re-emit the modeler component rows.
+//
+// Cheap to hold: OrtoolsMipVariable only wraps a raw MPVariable*, and the
+// MPSolver that owns the data is already retained for the whole week in
+// PROBLEME_ANTARES_A_RESOUDRE::ProblemesSpx.
+struct SolvedModelerProblem
+{
+    std::shared_ptr<const Antares::Optimisation::LinearProblemApi::ILinearProblem> problem;
+    std::shared_ptr<const Antares::Optimisation::OptimEntityContainer> entities;
+    double objectiveValue = 0.;
+};
 
 // Writes the legacy solver's contribution to the simulation table: one raw row
 // per named optimisation variable (value = X[i], name translated through
@@ -31,7 +56,13 @@ void FillLegacySimulationTable(
 // rather than once per optimisation interval.
 unsigned LegacyWeeklyBlock(const PROBLEME_HEBDO& problemeHebdo);
 
-// Publishes the legacy results as they stand *after* post-processing.
+// Publishes the results as they stand *after* post-processing.
+//
+// In hybrid mode the modeler component rows are re-emitted first, from
+// PROBLEME_HEBDO::lastSolvedModelerProblem, so a stage table describes the whole
+// system rather than only its legacy half. Their values are necessarily the ones
+// the solver left: post-processing mutates the legacy result structures only, and
+// cannot move a modeler variable.
 //
 // Post-processes (remix hydro / shave-peaks, the adequacy patch, ...) mutate
 // PROBLEME_HEBDO's result structures in place and never write back into
@@ -49,7 +80,7 @@ unsigned LegacyWeeklyBlock(const PROBLEME_HEBDO& problemeHebdo);
 // Does nothing (with a one-time warning) when the simplex optimization range is
 // daily: the week is then solved in seven intervals that each rebuild the
 // address table, so only the last day would be readable here.
-void DumpLegacySimulationTableAfterPostProcess(
+void DumpSimulationTableAfterPostProcess(
   Antares::IO::Outputs::SimulationTable& simulationTable,
   PROBLEME_HEBDO& problemeHebdo,
   const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,

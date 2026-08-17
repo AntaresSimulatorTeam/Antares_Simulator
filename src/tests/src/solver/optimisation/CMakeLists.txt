@@ -23,6 +23,7 @@ add_boost_test(unit-tests-for-solver-optimisation
         LIBS
         antares-study-system-model
         Antares::simulation-table
+        Antares::simu-table-generator
         Antares::linear-problem-mpsolver-impl
         Antares::optim-model-filler
         Antares::linear-problem-data-impl
