@@ -180,7 +180,7 @@ void writeColoredMessage(std::ostream& out,
 #endif
     }
 }
-
+ 
 void writeDecorated(std::ostream& out,
                     const LevelInfo& level,
                     const std::string& applicationName,
@@ -219,6 +219,99 @@ Logger::Logger()
 #endif
 }
 
+std::string timestamp()
+{
+    std::time_t now = std::time(nullptr);
+    std::tm tmBuffer{};
+#ifdef _WIN32
+    localtime_s(&tmBuffer, &now);
+#else
+    localtime_r(&now, &tmBuffer);
+#endif
+    char timestamp[20]; // "YYYY-MM-DD HH:MM:SS" + '\0'
+    std::strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", &tmBuffer);
+
+    return '[' + std::string(timestamp) + ']';
+}
+
+std::string application(const std::string& appliName)
+{
+    std::string result = '[' + appliName;
+    if (const auto& tnum = threadNumber(); tnum.has_value())
+    {
+        result += '-' + std::to_string(*tnum);
+    }
+    result += ']';
+    return result;
+}
+
+std::string tag(const LevelInfo& level)
+{
+    return '[' + std::string(level.tag) + ']';
+}
+
+std::string setTagColor(std::ostream& out, const LevelInfo& level)
+{
+    if (level.tagColorAnsi)
+    {
+#ifdef _WIN32
+        setConsoleColor(out, level.tagColorWin);
+#else
+        return level.tagColorAnsi;
+#endif
+    }
+    return {};
+}
+
+std::string setMsgColor(std::ostream& out, const LevelInfo& level)
+{
+    if (level.messageColorAnsi)
+    {
+#ifdef _WIN32
+        setConsoleColor(out, level.messageColorWin);
+#else
+        return level.messageColorAnsi;
+#endif
+    }
+    return {};
+}
+
+std::string removeColor(std::ostream& out)
+{
+#ifdef _WIN32
+    setConsoleColor(out, winDefault);
+#else
+    out << "\x1b[0m";
+#endif
+    return {};
+}
+
+void writeToConsole(const LevelInfo& level, const std::string& appliName, const std::string& msg)
+{
+    std::ostream& console = level.toStderr ? std::cerr : std::cout;
+    console << timestamp();
+    console << application(appliName);
+    console << setTagColor(console, level) << tag(level) << removeColor(console);
+    console << ' ';
+    console << setMsgColor(console, level) << msg << removeColor(console);
+    console << '\n';
+    console.flush();
+}
+
+void writeToFile(std::ofstream& file,
+                 const LevelInfo& level,
+                 const std::string& appliName,
+                 const std::string& msg)
+{
+    file << timestamp() << application(appliName) << tag(level) << ' ' << msg;
+#ifdef _WIN32
+    file << "\r\n";
+#else
+    pFile << '\n';
+#endif
+    file.flush();
+}
+
 void Logger::dispatch(const LevelInfo& level, const std::string& message)
 {
     std::lock_guard lock(pMutex);
@@ -227,21 +320,8 @@ void Logger::dispatch(const LevelInfo& level, const std::string& message)
         return;
     }
 
-    std::ostream& consoleStream = level.toStderr ? std::cerr : std::cout;
-    writeDecorated(consoleStream, level, pApplicationName, message, /* colorsAllowed */ true);
-    consoleStream << '\n';
-    consoleStream.flush();
-
-    if (pFile.is_open())
-    {
-        writeDecorated(pFile, level, pApplicationName, message, /* colorsAllowed */ false);
-#ifdef _WIN32
-        pFile << "\r\n";
-#else
-        pFile << '\n';
-#endif
-        pFile.flush();
-    }
+    writeToConsole(level, pApplicationName, message);
+    writeToFile(pFile, level, pApplicationName, message);
 
     if (level.notifyCallback && !callback.empty() && !message.empty())
     {
