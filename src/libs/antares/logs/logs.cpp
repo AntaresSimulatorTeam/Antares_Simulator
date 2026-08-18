@@ -56,11 +56,11 @@ constexpr WORD winWhite = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE
 #else
 namespace
 {
-constexpr int winDefault = 0;
-constexpr int winRed = 0;
-constexpr int winYellow = 0;
-constexpr int winGreen = 0;
-constexpr int winWhite = 0;
+[[maybe_unused]] constexpr int winDefault = 0;
+[[maybe_unused]] constexpr int winRed = 0;
+[[maybe_unused]] constexpr int winYellow = 0;
+[[maybe_unused]] constexpr int winGreen = 0;
+[[maybe_unused]] constexpr int winWhite = 0;
 } // namespace
 #endif
 
