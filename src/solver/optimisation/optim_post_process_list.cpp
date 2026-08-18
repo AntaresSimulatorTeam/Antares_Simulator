@@ -8,14 +8,13 @@
 
 namespace Antares::Solver::Simulation
 {
-OptPostProcessList::OptPostProcessList(
-  PROBLEME_HEBDO* problemeHebdo,
-  uint numSpace,
-  AreaList& areas,
-  const Data::Parameters& params,
-  Calendar& calendar,
-  IResultWriter& resultWriter,
-  IO::Outputs::OptimisationsSimulationTable* simulationTables):
+OptPostProcessList::OptPostProcessList(PROBLEME_HEBDO* problemeHebdo,
+                                       uint numSpace,
+                                       AreaList& areas,
+                                       const Data::Parameters& params,
+                                       Calendar& calendar,
+                                       IResultWriter& resultWriter,
+                                       IO::Outputs::OptimisationsSimulationTable* simulationTables):
     interfacePostProcessList(problemeHebdo, numSpace)
 {
     post_process_list.push_back(

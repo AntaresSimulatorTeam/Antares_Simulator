@@ -6,8 +6,8 @@
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
-#include "antares/solver/optimisation/LegacySimulationTableSnapshot.h"
 #include "antares/solver/optimisation/InactiveComponentsAnalyzerBuilder.h"
+#include "antares/solver/optimisation/LegacySimulationTableSnapshot.h"
 #include "antares/solver/simulation/solver_utils.h"
 #include "antares/writer/LegacySimulationTablesWriter.h"
 

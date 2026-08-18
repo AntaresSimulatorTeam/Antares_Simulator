@@ -280,9 +280,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         problemeHebdo->lastSolvedModelerProblem = std::make_shared<
           const Antares::Optimization::SolvedModelerProblem>(
           Antares::Optimization::SolvedModelerProblem{.problem = ortoolsProblem,
-                                                       .entities = optimEntityContainer,
-                                                       .objectiveValue = getObjectiveValue(
-                                                         solver.get())});
+                                                      .entities = optimEntityContainer,
+                                                      .objectiveValue = getObjectiveValue(
+                                                        solver.get())});
 
         measure.tick();
         timeMeasure.simulationTableFillTime = measure.duration_ms();
