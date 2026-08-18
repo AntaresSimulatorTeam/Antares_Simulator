@@ -119,7 +119,7 @@ public:
     LogsUnderTest(LogsUnderTest&&) = delete;
     LogsUnderTest& operator=(LogsUnderTest&&) = delete;
 
-    std::vector<std::string> fileLines() const
+    std::vector<std::string> readLogFile() const
     {
         return readLines(logFilePath_);
     }
@@ -149,7 +149,7 @@ BOOST_FIXTURE_TEST_CASE(each_level_has_exact_tag_bytes, LogsUnderTest)
     logs.info() << "message";
     logs.compatibility() << "message";
 
-    const auto lines = fileLines();
+    const auto lines = readLogFile();
     BOOST_REQUIRE_EQUAL(lines.size(), 8);
     checkLine(lines[0], R"(\[test\]\[fatal\] message)");
     checkLine(lines[1], R"(\[test\]\[error\] message)");
@@ -164,7 +164,7 @@ BOOST_FIXTURE_TEST_CASE(each_level_has_exact_tag_bytes, LogsUnderTest)
 BOOST_FIXTURE_TEST_CASE(no_ansi_escape_bytes_in_file, LogsUnderTest)
 {
     logs.error() << "colored on console, plain in file";
-    const auto lines = fileLines();
+    const auto lines = readLogFile();
     BOOST_REQUIRE_EQUAL(lines.size(), 1);
     BOOST_CHECK(lines[0].find('\x1b') == std::string::npos);
 }
@@ -176,7 +176,7 @@ BOOST_FIXTURE_TEST_CASE(thread_number_appends_dash_suffix_to_application_name, L
     Logs::threadNumber().reset();
     logs.info() << "without thread";
 
-    const auto lines = fileLines();
+    const auto lines = readLogFile();
     BOOST_REQUIRE_EQUAL(lines.size(), 2);
     checkLine(lines[0], R"(\[test-42\]\[infos\] with thread)");
     checkLine(lines[1], R"(\[test\]\[infos\] without thread)");
@@ -185,7 +185,7 @@ BOOST_FIXTURE_TEST_CASE(thread_number_appends_dash_suffix_to_application_name, L
 BOOST_FIXTURE_TEST_CASE(empty_flush_writes_prefix_and_trailing_space, LogsUnderTest)
 {
     logs.info();
-    const auto lines = fileLines();
+    const auto lines = readLogFile();
     BOOST_REQUIRE_EQUAL(lines.size(), 1);
     checkLine(lines[0], R"(\[test\]\[infos\] )");
     BOOST_CHECK_EQUAL(lines[0].back(), ' ');
@@ -194,7 +194,7 @@ BOOST_FIXTURE_TEST_CASE(empty_flush_writes_prefix_and_trailing_space, LogsUnderT
 BOOST_FIXTURE_TEST_CASE(message_passed_as_argument_is_logged, LogsUnderTest)
 {
     logs.info("direct argument");
-    const auto lines = fileLines();
+    const auto lines = readLogFile();
     BOOST_REQUIRE_EQUAL(lines.size(), 1);
     checkLine(lines[0], R"(\[test\]\[infos\] direct argument)");
 }
@@ -208,7 +208,7 @@ BOOST_FIXTURE_TEST_CASE(floating_point_uses_printf_f_format, LogsUnderTest)
     logs.info() << 3.5;
     logs.info() << 3.5f;
     logs.info() << -0.25;
-    const auto lines = fileLines();
+    const auto lines = readLogFile();
     BOOST_REQUIRE_EQUAL(lines.size(), 3);
     checkLine(lines[0], R"(\[test\]\[infos\] 3\.500000)");
     checkLine(lines[1], R"(\[test\]\[infos\] 3\.500000)");
@@ -219,7 +219,7 @@ BOOST_FIXTURE_TEST_CASE(integers_are_decimal, LogsUnderTest)
 {
     logs.info() << 42 << ' ' << -7 << ' ' << static_cast<uint64_t>(18446744073709551615ull) << ' '
                 << static_cast<short>(-3) << ' ' << 0u;
-    const auto lines = fileLines();
+    const auto lines = readLogFile();
     BOOST_REQUIRE_EQUAL(lines.size(), 1);
     checkLine(lines[0], R"(\[test\]\[infos\] 42 -7 18446744073709551615 -3 0)");
 }
@@ -227,7 +227,7 @@ BOOST_FIXTURE_TEST_CASE(integers_are_decimal, LogsUnderTest)
 BOOST_FIXTURE_TEST_CASE(bool_is_spelled_out, LogsUnderTest)
 {
     logs.info() << true << ' ' << false;
-    const auto lines = fileLines();
+    const auto lines = readLogFile();
     BOOST_REQUIRE_EQUAL(lines.size(), 1);
     checkLine(lines[0], R"(\[test\]\[infos\] true false)");
 }
@@ -235,7 +235,7 @@ BOOST_FIXTURE_TEST_CASE(bool_is_spelled_out, LogsUnderTest)
 BOOST_FIXTURE_TEST_CASE(char_types_append_as_characters_not_numbers, LogsUnderTest)
 {
     logs.info() << 'x' << static_cast<unsigned char>(65);
-    const auto lines = fileLines();
+    const auto lines = readLogFile();
     BOOST_REQUIRE_EQUAL(lines.size(), 1);
     checkLine(lines[0], R"(\[test\]\[infos\] xA)");
 }
@@ -244,7 +244,7 @@ BOOST_FIXTURE_TEST_CASE(filesystem_path_is_streamed_raw_without_quotes, LogsUnde
 {
     const std::filesystem::path path("some dir/sub");
     logs.info() << "Output folder : " << path;
-    const auto lines = fileLines();
+    const auto lines = readLogFile();
     BOOST_REQUIRE_EQUAL(lines.size(), 1);
     const std::string expected = std::string("Output folder : ") + escapeForRegex(path.string());
     checkLine(lines[0], R"(\[test\]\[infos\] )" + expected);
@@ -255,7 +255,7 @@ BOOST_FIXTURE_TEST_CASE(std_string_and_literals_append_verbatim, LogsUnderTest)
 {
     const std::string part = "std::string part";
     logs.info() << "literal " << part;
-    const auto lines = fileLines();
+    const auto lines = readLogFile();
     BOOST_REQUIRE_EQUAL(lines.size(), 1);
     checkLine(lines[0], R"(\[test\]\[infos\] literal std::string part)");
 }
@@ -264,7 +264,7 @@ BOOST_FIXTURE_TEST_CASE(append_format_uses_printf_semantics, LogsUnderTest)
 {
     logs.info().appendFormat("%s: %02luh%02lum%02lus", "Total", 1ul, 2ul, 3ul);
     logs.info().appendFormat("value = %e", 1234.5);
-    const auto lines = fileLines();
+    const auto lines = readLogFile();
     BOOST_REQUIRE_EQUAL(lines.size(), 2);
     checkLine(lines[0], R"(\[test\]\[infos\] Total: 01h02m03s)");
     checkLine(lines[1], R"(\[test\]\[infos\] value = 1\.234500e\+03)");
@@ -373,7 +373,7 @@ BOOST_FIXTURE_TEST_CASE(messages_above_verbosity_level_are_dropped, LogsUnderTes
     logs.error() << "written";
     logs.fatal() << "also written";
 
-    const auto lines = fileLines();
+    const auto lines = readLogFile();
     BOOST_REQUIRE_EQUAL(lines.size(), 2);
     checkLine(lines[0], R"(\[test\]\[error\] written)");
     checkLine(lines[1], R"(\[test\]\[fatal\] also written)");
@@ -462,7 +462,7 @@ BOOST_FIXTURE_TEST_CASE(logfile_getter_returns_path_and_reopening_appends, LogsU
     BOOST_REQUIRE(logs.logfile(logFilePath().string()));
     logs.info() << "second";
 
-    const auto lines = fileLines();
+    const auto lines = readLogFile();
     BOOST_REQUIRE_EQUAL(lines.size(), 2);
     checkLine(lines[0], R"(\[test\]\[infos\] first)");
     checkLine(lines[1], R"(\[test\]\[infos\] second)");
