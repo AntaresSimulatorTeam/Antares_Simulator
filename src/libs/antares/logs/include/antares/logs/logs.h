@@ -164,10 +164,12 @@ public:
 
     void appendFormat(const char[], ...) const
     {
+        //noop
     }
 
     void vappendFormat(const char[], va_list) const
     {
+        //noop
     }
 };
 
