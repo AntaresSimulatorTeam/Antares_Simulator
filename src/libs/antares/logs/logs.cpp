@@ -69,7 +69,7 @@ const LevelInfo levelInfoFatal = {Verbosity::Fatal::level,
                                   true,
                                   true,
                                   "\x1b[0;31m",
-                                  nullptr,
+                                  "\x1b[0m", // default : no color for message
                                   ANTARES_LOGS_WIN_COLOR(winRed)
                                     ANTARES_LOGS_WIN_COLOR(winDefault)};
 const LevelInfo levelInfoError = {Verbosity::Error::level,
@@ -77,7 +77,7 @@ const LevelInfo levelInfoError = {Verbosity::Error::level,
                                   true,
                                   true,
                                   "\x1b[0;31m",
-                                  nullptr,
+                                  "\x1b[0m", // default : no color for message
                                   ANTARES_LOGS_WIN_COLOR(winRed)
                                     ANTARES_LOGS_WIN_COLOR(winDefault)};
 const LevelInfo levelInfoWarning = {Verbosity::Warning::level,
@@ -85,7 +85,7 @@ const LevelInfo levelInfoWarning = {Verbosity::Warning::level,
                                     true,
                                     true,
                                     "\x1b[0;33m",
-                                    nullptr,
+                                    "\x1b[0m", // default : no color for message
                                     ANTARES_LOGS_WIN_COLOR(winYellow)
                                       ANTARES_LOGS_WIN_COLOR(winDefault)};
 const LevelInfo levelInfoCheckpoint = {Verbosity::Checkpoint::level,
@@ -101,7 +101,7 @@ const LevelInfo levelInfoNotice = {Verbosity::Notice::level,
                                    false,
                                    true,
                                    "\x1b[0;32m",
-                                   nullptr,
+                                   "\x1b[0m", // default : no color for message
                                    ANTARES_LOGS_WIN_COLOR(winGreen)
                                      ANTARES_LOGS_WIN_COLOR(winDefault)};
 
@@ -109,8 +109,8 @@ const LevelInfo levelInfoInfo = {Verbosity::Info::level,
                                  "infos",
                                  false,
                                  true,
-                                 nullptr,
-                                 nullptr,
+                                 "\x1b[0m", // default : no color for tag
+                                 "\x1b[0m", // default : no color for message
                                  ANTARES_LOGS_WIN_COLOR(winDefault)
                                    ANTARES_LOGS_WIN_COLOR(winDefault)};
 
@@ -118,8 +118,8 @@ const LevelInfo levelInfoDebug = {Verbosity::Debug::level,
                                   "debug",
                                   false,
                                   false,
-                                  nullptr,
-                                  nullptr,
+                                  "\x1b[0m", // default : no color for tag
+                                  "\x1b[0m", // default : no color for message
                                   ANTARES_LOGS_WIN_COLOR(winDefault)
                                     ANTARES_LOGS_WIN_COLOR(winDefault)};
 
@@ -180,28 +180,22 @@ std::string tag(const LevelInfo& level)
 
 std::string setTagColor(std::ostream& out, const LevelInfo& level)
 {
-    if (level.tagColorAnsi)
-    {
 #ifdef _WIN32
-        setConsoleColor(out, level.tagColorWin);
+    setConsoleColor(out, level.tagColorWin);
+    return {};
 #else
         return level.tagColorAnsi;
 #endif
-    }
-    return {};
 }
 
 std::string setMsgColor(std::ostream& out, const LevelInfo& level)
 {
-    if (level.messageColorAnsi)
-    {
 #ifdef _WIN32
-        setConsoleColor(out, level.messageColorWin);
-#else
-        return level.messageColorAnsi;
-#endif
-    }
+    setConsoleColor(out, level.messageColorWin);
     return {};
+#else
+    return level.messageColorAnsi;
+#endif
 }
 
 std::string removeColor(std::ostream& out)
