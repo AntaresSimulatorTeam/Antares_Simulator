@@ -178,18 +178,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>copyFrom</b> (const <
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a936d638d0cfaeec15c878f97e367b965">LoadDailyMaxEnergy</a> (const std::filesystem::path &amp;folder, const std::string &amp;areaid)</td></tr>
 <tr class="memdesc:a936d638d0cfaeec15c878f97e367b965"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load daily max energy. <br /></td></tr>
 <tr class="separator:a936d638d0cfaeec15c878f97e367b965"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a750b7bb11e93e55240989f71f87e1a51"><td class="memItemLeft" align="right" valign="top"><a id="a750b7bb11e93e55240989f71f87e1a51"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>CheckDailyMaxEnergy</b> (const AnyString &amp;areaName)</td></tr>
-<tr class="separator:a750b7bb11e93e55240989f71f87e1a51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6432e751d7b5976db4b4aaa8f8863803"><td class="memItemLeft" align="right" valign="top"><a id="a6432e751d7b5976db4b4aaa8f8863803"></a>
-uint&#160;</td><td class="memItemRight" valign="bottom"><b>reserveParticipationsCount</b> () const</td></tr>
-<tr class="separator:a6432e751d7b5976db4b4aaa8f8863803"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fbe918eeac42368bee47cd51e247a0d"><td class="memItemLeft" align="right" valign="top"><a id="a9fbe918eeac42368bee47cd51e247a0d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>CheckDailyMaxEnergy</b> (const std::string &amp;areaName)</td></tr>
+<tr class="separator:a9fbe918eeac42368bee47cd51e247a0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a589071b2fce865de291a84f933e87c26"><td class="memItemLeft" align="right" valign="top"><a id="a589071b2fce865de291a84f933e87c26"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>reserveParticipationsCount</b> () const</td></tr>
+<tr class="separator:a589071b2fce865de291a84f933e87c26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b8c00b6dc9b64efae8ea322766f3fbc"><td class="memItemLeft" align="right" valign="top"><a id="a9b8c00b6dc9b64efae8ea322766f3fbc"></a>
 std::optional&lt; ReserveID &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>reserveParticipationAt</b> (const <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> *area, unsigned int index) const</td></tr>
 <tr class="separator:a9b8c00b6dc9b64efae8ea322766f3fbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e2b1c2fe0c27f7a755e8ef3693d85b7"><td class="memItemLeft" align="right" valign="top"><a id="a2e2b1c2fe0c27f7a755e8ef3693d85b7"></a>
-uint&#160;</td><td class="memItemRight" valign="bottom"><b>count</b> () const</td></tr>
-<tr class="separator:a2e2b1c2fe0c27f7a755e8ef3693d85b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a150052e679cea74072bafb6a7100a8a2"><td class="memItemLeft" align="right" valign="top"><a id="a150052e679cea74072bafb6a7100a8a2"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>count</b> () const</td></tr>
+<tr class="separator:a150052e679cea74072bafb6a7100a8a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a493df76dea6efb4fc8e3596c19741ca9"><td class="memItemLeft" align="right" valign="top"><a id="a493df76dea6efb4fc8e3596c19741ca9"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>loadReserveParticipations</b> (<a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> &amp;area, const std::filesystem::path &amp;file)</td></tr>
 <tr class="separator:a493df76dea6efb4fc8e3596c19741ca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -205,9 +205,9 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>LoadIniFile</b
 <tr class="memitem:ac3d9fad9b3e6c888828ac9a2fa747a2c"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PartHydro.html#ac3d9fad9b3e6c888828ac9a2fa747a2c">validate</a> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study)</td></tr>
 <tr class="memdesc:ac3d9fad9b3e6c888828ac9a2fa747a2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check and validate the loaded datas.  <a href="classAntares_1_1Data_1_1PartHydro.html#ac3d9fad9b3e6c888828ac9a2fa747a2c">More...</a><br /></td></tr>
 <tr class="separator:ac3d9fad9b3e6c888828ac9a2fa747a2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fd93c64d7eab554cf02bf1c33acb1f7"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a1fd93c64d7eab554cf02bf1c33acb1f7">SaveToFolder</a> (const <a class="el" href="classAntares_1_1Data_1_1AreaList.html">AreaList</a> &amp;areas, const AnyString &amp;folder, const Parameters::Compatibility::HydroPmax hydroPmax)</td></tr>
-<tr class="memdesc:a1fd93c64d7eab554cf02bf1c33acb1f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save data from several containers to a folder (except data for the prepro and time-series)  <a href="classAntares_1_1Data_1_1PartHydro.html#a1fd93c64d7eab554cf02bf1c33acb1f7">More...</a><br /></td></tr>
-<tr class="separator:a1fd93c64d7eab554cf02bf1c33acb1f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8aac3e7b7ec491abc36a8be252f2d9fa"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a8aac3e7b7ec491abc36a8be252f2d9fa">SaveToFolder</a> (const <a class="el" href="classAntares_1_1Data_1_1AreaList.html">AreaList</a> &amp;areas, const std::string &amp;folder, const Parameters::Compatibility::HydroPmax hydroPmax)</td></tr>
+<tr class="memdesc:a8aac3e7b7ec491abc36a8be252f2d9fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save data from several containers to a folder (except data for the prepro and time-series)  <a href="classAntares_1_1Data_1_1PartHydro.html#a8aac3e7b7ec491abc36a8be252f2d9fa">More...</a><br /></td></tr>
+<tr class="separator:a8aac3e7b7ec491abc36a8be252f2d9fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -303,9 +303,9 @@ std::unique_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.
 <tr class="memitem:a0d96e101233797cfb12db1db9dcfd796"><td class="memItemLeft" align="right" valign="top"><a id="a0d96e101233797cfb12db1db9dcfd796"></a>
 <a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>dailyNbHoursAtPumpPmax</b></td></tr>
 <tr class="separator:a0d96e101233797cfb12db1db9dcfd796"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49186f4a17c78d54db5979d281e712ba"><td class="memItemLeft" align="right" valign="top"><a id="a49186f4a17c78d54db5979d281e712ba"></a>
-std::unordered_map&lt; uint, <a class="el" href="structAntares_1_1Data_1_1AreaDependantHydroManagementData.html">AreaDependantHydroManagementData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>managementData</b></td></tr>
-<tr class="separator:a49186f4a17c78d54db5979d281e712ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebcd863156d02a667eb105200885e23e"><td class="memItemLeft" align="right" valign="top"><a id="aebcd863156d02a667eb105200885e23e"></a>
+std::unordered_map&lt; unsigned int, <a class="el" href="structAntares_1_1Data_1_1AreaDependantHydroManagementData.html">AreaDependantHydroManagementData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>managementData</b></td></tr>
+<tr class="separator:aebcd863156d02a667eb105200885e23e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36f7dbaea392641b1b66a419df926a7e"><td class="memItemLeft" align="right" valign="top"><a id="a36f7dbaea392641b1b66a419df926a7e"></a>
 std::vector&lt; std::optional&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>deltaBetweenFinalAndInitialLevels</b></td></tr>
 <tr class="separator:a36f7dbaea392641b1b66a419df926a7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -406,8 +406,8 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>overflowSpilledCost
 
 </div>
 </div>
-<a id="a1fd93c64d7eab554cf02bf1c33acb1f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1fd93c64d7eab554cf02bf1c33acb1f7">&#9670;&nbsp;</a></span>SaveToFolder()</h2>
+<a id="a8aac3e7b7ec491abc36a8be252f2d9fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8aac3e7b7ec491abc36a8be252f2d9fa">&#9670;&nbsp;</a></span>SaveToFolder()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -424,7 +424,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>overflowSpilledCost
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const AnyString &amp;&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>folder</em>, </td>
         </tr>
         <tr>

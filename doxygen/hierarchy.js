@@ -47,9 +47,6 @@ var hierarchy =
     [ "Antares::Solver::Simulation::annualCostsStatistics", "classAntares_1_1Solver_1_1Simulation_1_1annualCostsStatistics.html", null ],
     [ "antares_problem_generator.AntaresProblemGeneratorRun", "classantares__problem__generator_1_1AntaresProblemGeneratorRun.html", null ],
     [ "Antares::API::APIInternal", "classAntares_1_1API_1_1APIInternal.html", null ],
-    [ "Yuni::Extension::CString::Append< CStringT, Antares::Data::CostGeneration >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1CostGeneration_01_4.html", null ],
-    [ "Yuni::Extension::CString::Append< CStringT, Antares::Data::LocalTSGenerationBehavior >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1LocalTSGenerationBehavior_01_4.html", null ],
-    [ "Yuni::Extension::CString::Append< CStringT, Antares::Data::StatisticalLaw >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1StatisticalLaw_01_4.html", null ],
     [ "Antares::Data::Area", "classAntares_1_1Data_1_1Area.html", null ],
     [ "AREA_RESERVES_VECTOR", "structAREA__RESERVES__VECTOR.html", null ],
     [ "AreaBalanceData", "structAreaBalanceData.html", null ],
@@ -641,9 +638,6 @@ var hierarchy =
       [ "Antares::Solver::Simulation::OptPostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList.html", null ]
     ] ],
     [ "Antares::Solver::Variable::IntermediateValues", "classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html", null ],
-    [ "Yuni::Extension::CString::Into< Antares::Data::CostGeneration >", "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1CostGeneration_01_4.html", null ],
-    [ "Yuni::Extension::CString::Into< Antares::Data::LocalTSGenerationBehavior >", "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1LocalTSGenerationBehavior_01_4.html", null ],
-    [ "Yuni::Extension::CString::Into< Antares::Data::StatisticalLaw >", "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1StatisticalLaw_01_4.html", null ],
     [ "IntoUTF8ArgsTranslator", "classIntoUTF8ArgsTranslator.html", null ],
     [ "std::invalid_argument", null, [
       [ "Antares::Data::ShortTermStorage::ShortTermStorageAdditionalConstraintsError", "structAntares_1_1Data_1_1ShortTermStorage_1_1ShortTermStorageAdditionalConstraintsError.html", null ],
@@ -1538,7 +1532,6 @@ var hierarchy =
       [ "Antares::IO::Outputs::is_optional< std::optional< U > >", "structAntares_1_1IO_1_1Outputs_1_1is__optional_3_01std_1_1optional_3_01U_01_4_01_4.html", null ]
     ] ],
     [ "TSDimensions", "structTSDimensions.html", null ],
-    [ "TSNumbersPredicate", "structTSNumbersPredicate.html", null ],
     [ "Antares::Solver::Variable::detail::TupleContains< T, Tuple >", "structAntares_1_1Solver_1_1Variable_1_1detail_1_1TupleContains.html", null ],
     [ "Antares::Solver::Variable::Container::TupleVariableList< Vars >", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1TupleVariableList.html", null ],
     [ "TwoConstraintsCreator_OneSubPb_OneMaster", "structTwoConstraintsCreator__OneSubPb__OneMaster.html", null ],

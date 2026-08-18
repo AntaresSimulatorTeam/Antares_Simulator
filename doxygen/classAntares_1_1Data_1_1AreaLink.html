@@ -151,9 +151,9 @@ using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaLink.html#ab3d58b94c1be6c8546dccb5732ecafbf">Map</a> = std::map&lt; AreaName, <a class="el" href="classAntares_1_1Data_1_1AreaLink.html">AreaLink</a> * &gt;</td></tr>
 <tr class="memdesc:ab3d58b94c1be6c8546dccb5732ecafbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map of links. <br /></td></tr>
 <tr class="separator:ab3d58b94c1be6c8546dccb5732ecafbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4bde62f19d5bffa6f6494cbeaece25f9"><td class="memItemLeft" align="right" valign="top"><a id="a4bde62f19d5bffa6f6494cbeaece25f9"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>NamePair</b> = std::pair&lt; Yuni::String, Yuni::String &gt;</td></tr>
-<tr class="separator:a4bde62f19d5bffa6f6494cbeaece25f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3989dab5ddb95404020d2fd78a5da314"><td class="memItemLeft" align="right" valign="top"><a id="a3989dab5ddb95404020d2fd78a5da314"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>NamePair</b> = std::pair&lt; std::string, std::string &gt;</td></tr>
+<tr class="separator:a3989dab5ddb95404020d2fd78a5da314"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -185,9 +185,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>storeTimeseriesNumber
 <tr class="memitem:a4a002ef94fafebb634a3e7247f562797"><td class="memItemLeft" align="right" valign="top"><a id="a4a002ef94fafebb634a3e7247f562797"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>resetToDefaultValues</b> ()</td></tr>
 <tr class="separator:a4a002ef94fafebb634a3e7247f562797"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f83b613025c0ccbc9a2d76370144e43"><td class="memItemLeft" align="right" valign="top"><a id="a0f83b613025c0ccbc9a2d76370144e43"></a>
-Yuni::String&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> () const</td></tr>
-<tr class="separator:a0f83b613025c0ccbc9a2d76370144e43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ea28cb9dba2665cb93b146ef961e9f4"><td class="memItemLeft" align="right" valign="top"><a id="a4ea28cb9dba2665cb93b146ef961e9f4"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> () const</td></tr>
+<tr class="separator:a4ea28cb9dba2665cb93b146ef961e9f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abec06adf2ea4dcabac9f6f6633c5b919"><td class="memItemLeft" align="right" valign="top"><a id="abec06adf2ea4dcabac9f6f6633c5b919"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isLinkPhysical</b> () const</td></tr>
 <tr class="separator:abec06adf2ea4dcabac9f6f6633c5b919"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -242,33 +242,33 @@ AssetType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 <tr class="memdesc:afec7a458508d5d545aa22e2dad68382f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag for the asset type (AC/DC/Other) <br /></td></tr>
 <tr class="separator:afec7a458508d5d545aa22e2dad68382f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Indexes</div></td></tr>
-<tr class="memitem:a58bb616e56a1eb3743c0ca5760095ee4"><td class="memItemLeft" align="right" valign="top"><a id="a58bb616e56a1eb3743c0ca5760095ee4"></a>
-uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaLink.html#a58bb616e56a1eb3743c0ca5760095ee4">index</a></td></tr>
-<tr class="memdesc:a58bb616e56a1eb3743c0ca5760095ee4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Index of the link in the entire list if Interconnections. <br /></td></tr>
-<tr class="separator:a58bb616e56a1eb3743c0ca5760095ee4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01260d1c55a80feb3269a1c9dd8dabfb"><td class="memItemLeft" align="right" valign="top"><a id="a01260d1c55a80feb3269a1c9dd8dabfb"></a>
-uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaLink.html#a01260d1c55a80feb3269a1c9dd8dabfb">indexForArea</a></td></tr>
-<tr class="memdesc:a01260d1c55a80feb3269a1c9dd8dabfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Index of the link in the list of interconnection of the main area. <br /></td></tr>
-<tr class="separator:a01260d1c55a80feb3269a1c9dd8dabfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c6a141bfa941960036eb1d141a06ca1"><td class="memItemLeft" align="right" valign="top"><a id="a6c6a141bfa941960036eb1d141a06ca1"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaLink.html#a6c6a141bfa941960036eb1d141a06ca1">index</a></td></tr>
+<tr class="memdesc:a6c6a141bfa941960036eb1d141a06ca1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Index of the link in the entire list if Interconnections. <br /></td></tr>
+<tr class="separator:a6c6a141bfa941960036eb1d141a06ca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ab6dc5f9d0ae11da59d9b331f86a77a"><td class="memItemLeft" align="right" valign="top"><a id="a9ab6dc5f9d0ae11da59d9b331f86a77a"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaLink.html#a9ab6dc5f9d0ae11da59d9b331f86a77a">indexForArea</a></td></tr>
+<tr class="memdesc:a9ab6dc5f9d0ae11da59d9b331f86a77a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Index of the link in the list of interconnection of the main area. <br /></td></tr>
+<tr class="separator:a9ab6dc5f9d0ae11da59d9b331f86a77a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Comments</div></td></tr>
-<tr class="memitem:a69fdd449a621f365e3f770baf1a15f7e"><td class="memItemLeft" align="right" valign="top"><a id="a69fdd449a621f365e3f770baf1a15f7e"></a>
-Yuni::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaLink.html#a69fdd449a621f365e3f770baf1a15f7e">comments</a></td></tr>
-<tr class="memdesc:a69fdd449a621f365e3f770baf1a15f7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Comments. <br /></td></tr>
-<tr class="separator:a69fdd449a621f365e3f770baf1a15f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac789ac1c25e2a202c72044afeb4d62ee"><td class="memItemLeft" align="right" valign="top"><a id="ac789ac1c25e2a202c72044afeb4d62ee"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaLink.html#ac789ac1c25e2a202c72044afeb4d62ee">comments</a></td></tr>
+<tr class="memdesc:ac789ac1c25e2a202c72044afeb4d62ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Comments. <br /></td></tr>
+<tr class="separator:ac789ac1c25e2a202c72044afeb4d62ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62f67e59c7a18fdc2c1ebaf78f62a933"><td class="memItemLeft" align="right" valign="top"><a id="a62f67e59c7a18fdc2c1ebaf78f62a933"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaLink.html#a62f67e59c7a18fdc2c1ebaf78f62a933">displayComments</a></td></tr>
 <tr class="memdesc:a62f67e59c7a18fdc2c1ebaf78f62a933"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag for displaying comments. <br /></td></tr>
 <tr class="separator:a62f67e59c7a18fdc2c1ebaf78f62a933"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Output filtering</h2></td></tr>
-<tr class="memitem:abfa36b9c45bf51c5bdd9ad863eda2085"><td class="memItemLeft" align="right" valign="top"><a id="abfa36b9c45bf51c5bdd9ad863eda2085"></a>
-uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaLink.html#abfa36b9c45bf51c5bdd9ad863eda2085">filterSynthesis</a></td></tr>
-<tr class="memdesc:abfa36b9c45bf51c5bdd9ad863eda2085"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print results for the area in the simulation synthesis. <br /></td></tr>
-<tr class="separator:abfa36b9c45bf51c5bdd9ad863eda2085"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83b87793efb7e0aa271da6264e1cd850"><td class="memItemLeft" align="right" valign="top"><a id="a83b87793efb7e0aa271da6264e1cd850"></a>
-uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaLink.html#a83b87793efb7e0aa271da6264e1cd850">filterYearByYear</a></td></tr>
-<tr class="memdesc:a83b87793efb7e0aa271da6264e1cd850"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print results for the area in the year-by-year mode. <br /></td></tr>
-<tr class="separator:a83b87793efb7e0aa271da6264e1cd850"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8168d7f1ef70200f7335f046091223fb"><td class="memItemLeft" align="right" valign="top"><a id="a8168d7f1ef70200f7335f046091223fb"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaLink.html#a8168d7f1ef70200f7335f046091223fb">filterSynthesis</a></td></tr>
+<tr class="memdesc:a8168d7f1ef70200f7335f046091223fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print results for the area in the simulation synthesis. <br /></td></tr>
+<tr class="separator:a8168d7f1ef70200f7335f046091223fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabc550d2a52e4c01e365228da05c09c0"><td class="memItemLeft" align="right" valign="top"><a id="aabc550d2a52e4c01e365228da05c09c0"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaLink.html#aabc550d2a52e4c01e365228da05c09c0">filterYearByYear</a></td></tr>
+<tr class="memdesc:aabc550d2a52e4c01e365228da05c09c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print results for the area in the year-by-year mode. <br /></td></tr>
+<tr class="separator:aabc550d2a52e4c01e365228da05c09c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac32b5df249acdb8872d1795c37bf0176"><td class="memItemLeft" align="right" valign="top"><a id="ac32b5df249acdb8872d1795c37bf0176"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaLink.html#ac32b5df249acdb8872d1795c37bf0176">color</a> [3]</td></tr>
 <tr class="memdesc:ac32b5df249acdb8872d1795c37bf0176"><td class="mdescLeft">&#160;</td><td class="mdescRight">Colors. <br /></td></tr>

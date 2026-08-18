@@ -13,14 +13,14 @@ var classAntares_1_1Data_1_1StudyLoadOptions =
     [ "forceYearByYear", "classAntares_1_1Data_1_1StudyLoadOptions.html#a4875ece3163e52e25ac0efdd7faf12e9", null ],
     [ "ignoreConstraints", "classAntares_1_1Data_1_1StudyLoadOptions.html#a59fea6741a9c51f256d82c7ba740b7f5", null ],
     [ "listSolvers", "classAntares_1_1Data_1_1StudyLoadOptions.html#a321b549782e271d775df3390e22f8ba2", null ],
-    [ "logMessage", "classAntares_1_1Data_1_1StudyLoadOptions.html#adf6f5e11176d0b8178e26988b28a5b58", null ],
-    [ "maxNbYearsInParallel", "classAntares_1_1Data_1_1StudyLoadOptions.html#afce3627865b70364ce39f6a16ccb3a49", null ],
+    [ "logMessage", "classAntares_1_1Data_1_1StudyLoadOptions.html#a7258bc09760b4be6c86ebee5a3587738", null ],
+    [ "maxNbYearsInParallel", "classAntares_1_1Data_1_1StudyLoadOptions.html#a1af6a81fd663ad196e04556b75bc73c5", null ],
     [ "mpsToExport", "classAntares_1_1Data_1_1StudyLoadOptions.html#ae8d39c7e1c8b47f84b368499d2c0cdb5", null ],
     [ "namedProblems", "classAntares_1_1Data_1_1StudyLoadOptions.html#ab050b0cc2f04f643ac71bd7e57dfd4bd", null ],
-    [ "nbYears", "classAntares_1_1Data_1_1StudyLoadOptions.html#ad4ac05f7bbfb4a51f549fd6e6ea281d9", null ],
+    [ "nbYears", "classAntares_1_1Data_1_1StudyLoadOptions.html#a76ede76b0ea05b34e1bb4103f3794670", null ],
     [ "noTimeseriesImportIntoInput", "classAntares_1_1Data_1_1StudyLoadOptions.html#a6d101aeacfd15c3b07fc41acce1b5ced", null ],
     [ "simplexOptimizationRange", "classAntares_1_1Data_1_1StudyLoadOptions.html#a2ef386b36efcd3f12fd76d8756207510", null ],
-    [ "simulationName", "classAntares_1_1Data_1_1StudyLoadOptions.html#a7f46b763fc9723a43fc17b176f068273", null ],
+    [ "simulationName", "classAntares_1_1Data_1_1StudyLoadOptions.html#a43fa7c3dff887aa8bc7ccf798e144551", null ],
     [ "solverOptions", "classAntares_1_1Data_1_1StudyLoadOptions.html#a651736fc403ef74a023c045af37c3461", null ],
-    [ "studyFolder", "classAntares_1_1Data_1_1StudyLoadOptions.html#a8b2652d4b8d243b3b49d4f9359f1d2d1", null ]
+    [ "studyFolder", "classAntares_1_1Data_1_1StudyLoadOptions.html#a302c8e0414f593a12c98da67d68e836a", null ]
 ];

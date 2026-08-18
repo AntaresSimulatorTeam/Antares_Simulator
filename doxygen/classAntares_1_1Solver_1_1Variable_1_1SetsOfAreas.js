@@ -21,8 +21,8 @@ var classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas =
     [ "simulationEndSpatialAggregates", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#adf0bd240b098b189598377cb37607aac", null ],
     [ "yearEndSpatialAggregates", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a8d89c9c157cc460f83a85fcdc7375f12", null ],
     [ "yearEndSpatialAggregates", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#ad98f3433b325e28c45557ac721046b97", null ],
-    [ "pIds", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#af18654b36d2bf430dabd73476cc53974", null ],
-    [ "pNames", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a1925bc0eaf00e4964c50a5042d376a8c", null ],
+    [ "pIds", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a9bd45e2de9573f75464549edd9eac0ad", null ],
+    [ "pNames", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#aa6fc352aeea70885004057dc21ab0c49", null ],
     [ "pOriginalSets", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a980f4e4ac946b0ffaa2bc27e52a0daaa", null ],
     [ "pSetsOfAreas", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a0642b17a1c8d2462edb7329379647338", null ],
     [ "pStudy", "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a2d629c994c516b20f8d12d35effaeeec", null ]

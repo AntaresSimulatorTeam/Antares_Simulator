@@ -989,18 +989,6 @@ var annotated_dup =
       [ "convert< Power >", "structYAML_1_1convert_3_01Power_01_4.html", null ],
       [ "convert< Monster >", "structYAML_1_1convert_3_01Monster_01_4.html", null ]
     ] ],
-    [ "Yuni", null, [
-      [ "Extension", null, [
-        [ "CString", null, [
-          [ "Append< CStringT, Antares::Data::StatisticalLaw >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1StatisticalLaw_01_4.html", null ],
-          [ "Append< CStringT, Antares::Data::CostGeneration >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1CostGeneration_01_4.html", null ],
-          [ "Append< CStringT, Antares::Data::LocalTSGenerationBehavior >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1LocalTSGenerationBehavior_01_4.html", null ],
-          [ "Into< Antares::Data::StatisticalLaw >", "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1StatisticalLaw_01_4.html", "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1StatisticalLaw_01_4" ],
-          [ "Into< Antares::Data::CostGeneration >", "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1CostGeneration_01_4.html", "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1CostGeneration_01_4" ],
-          [ "Into< Antares::Data::LocalTSGenerationBehavior >", "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1LocalTSGenerationBehavior_01_4.html", "classYuni_1_1Extension_1_1CString_1_1Into_3_01Antares_1_1Data_1_1LocalTSGenerationBehavior_01_4" ]
-        ] ]
-      ] ]
-    ] ],
     [ "AbstractStartUpCostsGroup", "classAbstractStartUpCostsGroup.html", "classAbstractStartUpCostsGroup" ],
     [ "AdditConstrFixture", "structAdditConstrFixture.html", "structAdditConstrFixture" ],
     [ "AdequacyPatchRuntimeData", "classAdequacyPatchRuntimeData.html", "classAdequacyPatchRuntimeData" ],
@@ -1355,7 +1343,6 @@ var annotated_dup =
     [ "TRANSFER_BOUND_AND_LEVEL_FLEX_UP_EDGE", "structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html", "structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE" ],
     [ "TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE", "structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html", "structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE" ],
     [ "TSDimensions", "structTSDimensions.html", "structTSDimensions" ],
-    [ "TSNumbersPredicate", "structTSNumbersPredicate.html", "structTSNumbersPredicate" ],
     [ "TwoConstraintsCreator_OneSubPb_OneMaster", "structTwoConstraintsCreator__OneSubPb__OneMaster.html", null ],
     [ "TwoObjsCreator_OneSubPb_OneMaster", "structTwoObjsCreator__OneSubPb__OneMaster.html", null ],
     [ "TwoSubPbObjsCreator", "structTwoSubPbObjsCreator.html", null ],

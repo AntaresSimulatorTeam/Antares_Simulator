@@ -6,8 +6,8 @@ var classAntares_1_1Data_1_1RenewableCluster =
     ] ],
     [ "RenewableCluster", "classAntares_1_1Data_1_1RenewableCluster.html#a3c9a530ab8e9ec5406d23136f31c06c6", null ],
     [ "integrityCheck", "classAntares_1_1Data_1_1RenewableCluster.html#a82efd74ab839881d99f179dab4a308ef", null ],
-    [ "setTimeSeriesModeFromString", "classAntares_1_1Data_1_1RenewableCluster.html#a06252f78ea63b56b7bc2191ab62e70da", null ],
-    [ "valueAtTimeStep", "classAntares_1_1Data_1_1RenewableCluster.html#a765f7b3f2c8fe3031bf05aceea780567", null ],
+    [ "setTimeSeriesModeFromString", "classAntares_1_1Data_1_1RenewableCluster.html#ae9086aebfef2143ff5338701e514bdbd", null ],
+    [ "valueAtTimeStep", "classAntares_1_1Data_1_1RenewableCluster.html#aed88d9f062cfce1d9990614e910df4de", null ],
     [ "RenewableClusterList", "classAntares_1_1Data_1_1RenewableCluster.html#addf0cb04b60edf3f8bb3b4223eeb7806", null ],
     [ "tsMode", "classAntares_1_1Data_1_1RenewableCluster.html#ab4c1cbf12ad7f61a33ddebb3b38327fd", null ]
 ];

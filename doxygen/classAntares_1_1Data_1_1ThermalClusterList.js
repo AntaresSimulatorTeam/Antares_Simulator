@@ -15,8 +15,8 @@ var classAntares_1_1Data_1_1ThermalClusterList =
     [ "loadPreproFromFolder", "classAntares_1_1Data_1_1ThermalClusterList.html#a2989173c2d9a84cd2d5f9878234ef6c2", null ],
     [ "reserveParticipationsCount", "classAntares_1_1Data_1_1ThermalClusterList.html#a3d833f23b267ebf54877d2e0c315abcb", null ],
     [ "reverseCalculationOfSpinning", "classAntares_1_1Data_1_1ThermalClusterList.html#ad5a970a75df18a4326b3ddd7a1acd6c4", null ],
-    [ "saveEconomicCosts", "classAntares_1_1Data_1_1ThermalClusterList.html#a6571ba17ab5a261aad5c52881d544843", null ],
-    [ "savePreproToFolder", "classAntares_1_1Data_1_1ThermalClusterList.html#abdd61c6dd43e96d51073dd76a207846a", null ],
+    [ "saveEconomicCosts", "classAntares_1_1Data_1_1ThermalClusterList.html#ac50f88983ce3ac1dce96b15e8d381865", null ],
+    [ "savePreproToFolder", "classAntares_1_1Data_1_1ThermalClusterList.html#a114d9794d366616a03c1898b27d5b092", null ],
     [ "typeID", "classAntares_1_1Data_1_1ThermalClusterList.html#abe899cd1531faa599daf3944184889f4", null ],
     [ "validateClusters", "classAntares_1_1Data_1_1ThermalClusterList.html#acd54af68acdadbb9376fd242f0b009ce", null ],
     [ "validatePrepro", "classAntares_1_1Data_1_1ThermalClusterList.html#a2133137b820ad29adafeae38db15fd8b", null ]

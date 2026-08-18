@@ -133,42 +133,45 @@ $(document).ready(function(){initNavTree('libs_2antares_2study_2include_2antares
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#ifndef __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_H__</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#define __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_H__</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;../../fwd.h&quot;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;../../xcast.h&quot;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;filesystem&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">namespace </span>Antares::Data::Wind</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html">   15</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html">Prepro</a></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#afecc20d60186934746a8eaacc47c9b4b">Prepro</a>();</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#a5428dac3c08d4d7c20dee19f807db944">~Prepro</a>();</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#a4f20143250454a983818a9cbce771d1e">loadFromFolder</a>(<span class="keyword">const</span> std::filesystem::path&amp; folder);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#a8f12bdefe39b4e0fd8e6dc4146d7ac11">saveToFolder</a>(<span class="keyword">const</span> AnyString&amp; folder) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#a53dcae46ad967074ab32b41235737410">resetToDefault</a>();</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#aea3600b697dd706572d498474d0b897d">   48</a></span>&#160;    <a class="code" href="classAntares_1_1Data_1_1XCast.html">Data::XCast</a> <a class="code" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#aea3600b697dd706572d498474d0b897d">xcast</a>;</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;../../fwd.h&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;../../xcast.h&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">namespace </span>Antares::Data::Wind</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html">   18</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html">Prepro</a></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#afecc20d60186934746a8eaacc47c9b4b">Prepro</a>();</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#a5428dac3c08d4d7c20dee19f807db944">~Prepro</a>();</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#a4f20143250454a983818a9cbce771d1e">loadFromFolder</a>(<span class="keyword">const</span> std::filesystem::path&amp; folder);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#a11eddd124f337d6c65df6dccf89dec1f">saveToFolder</a>(<span class="keyword">const</span> std::string&amp; folder) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#a53dcae46ad967074ab32b41235737410">resetToDefault</a>();</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}; <span class="comment">// Prepro</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;} <span class="comment">// namespace Antares::Data::Wind</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#include &quot;prepro.hxx&quot;</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_H__</span></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Wind_1_1Prepro_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Wind_1_1Prepro.html">Antares::Data::Wind::Prepro</a></div><div class="ttdoc">Prepro Wind.</div><div class="ttdef"><b>Definition:</b> prepro.h:16</div></div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#aea3600b697dd706572d498474d0b897d">   51</a></span>&#160;    <a class="code" href="classAntares_1_1Data_1_1XCast.html">Data::XCast</a> <a class="code" href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#aea3600b697dd706572d498474d0b897d">xcast</a>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}; <span class="comment">// Prepro</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;} <span class="comment">// namespace Antares::Data::Wind</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#include &quot;prepro.hxx&quot;</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_H__</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Wind_1_1Prepro_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Wind_1_1Prepro.html">Antares::Data::Wind::Prepro</a></div><div class="ttdoc">Prepro Wind.</div><div class="ttdef"><b>Definition:</b> prepro.h:19</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Wind_1_1Prepro_html_a11eddd124f337d6c65df6dccf89dec1f"><div class="ttname"><a href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#a11eddd124f337d6c65df6dccf89dec1f">Antares::Data::Wind::Prepro::saveToFolder</a></div><div class="ttdeci">bool saveToFolder(const std::string &amp;folder) const</div><div class="ttdoc">Save data to a folder.</div><div class="ttdef"><b>Definition:</b> prepro.cpp:25</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Wind_1_1Prepro_html_a4f20143250454a983818a9cbce771d1e"><div class="ttname"><a href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#a4f20143250454a983818a9cbce771d1e">Antares::Data::Wind::Prepro::loadFromFolder</a></div><div class="ttdeci">bool loadFromFolder(const std::filesystem::path &amp;folder)</div><div class="ttdoc">Try to estimate the amount of memory required by this class for a simulation.</div><div class="ttdef"><b>Definition:</b> prepro.cpp:20</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Wind_1_1Prepro_html_a53dcae46ad967074ab32b41235737410"><div class="ttname"><a href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#a53dcae46ad967074ab32b41235737410">Antares::Data::Wind::Prepro::resetToDefault</a></div><div class="ttdeci">void resetToDefault()</div><div class="ttdoc">Reset to default all values.</div><div class="ttdef"><b>Definition:</b> prepro.hxx:10</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Wind_1_1Prepro_html_a5428dac3c08d4d7c20dee19f807db944"><div class="ttname"><a href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#a5428dac3c08d4d7c20dee19f807db944">Antares::Data::Wind::Prepro::~Prepro</a></div><div class="ttdeci">~Prepro()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition:</b> prepro.cpp:16</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Wind_1_1Prepro_html_a8f12bdefe39b4e0fd8e6dc4146d7ac11"><div class="ttname"><a href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#a8f12bdefe39b4e0fd8e6dc4146d7ac11">Antares::Data::Wind::Prepro::saveToFolder</a></div><div class="ttdeci">bool saveToFolder(const AnyString &amp;folder) const</div><div class="ttdoc">Save data to a folder.</div><div class="ttdef"><b>Definition:</b> prepro.cpp:25</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Wind_1_1Prepro_html_aea3600b697dd706572d498474d0b897d"><div class="ttname"><a href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#aea3600b697dd706572d498474d0b897d">Antares::Data::Wind::Prepro::xcast</a></div><div class="ttdeci">Data::XCast xcast</div><div class="ttdoc">XCast.</div><div class="ttdef"><b>Definition:</b> prepro.h:48</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Wind_1_1Prepro_html_aea3600b697dd706572d498474d0b897d"><div class="ttname"><a href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#aea3600b697dd706572d498474d0b897d">Antares::Data::Wind::Prepro::xcast</a></div><div class="ttdeci">Data::XCast xcast</div><div class="ttdoc">XCast.</div><div class="ttdef"><b>Definition:</b> prepro.h:51</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Wind_1_1Prepro_html_afecc20d60186934746a8eaacc47c9b4b"><div class="ttname"><a href="classAntares_1_1Data_1_1Wind_1_1Prepro.html#afecc20d60186934746a8eaacc47c9b4b">Antares::Data::Wind::Prepro::Prepro</a></div><div class="ttdeci">Prepro()</div><div class="ttdoc">Default Constructor.</div><div class="ttdef"><b>Definition:</b> prepro.cpp:11</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1XCast_html"><div class="ttname"><a href="classAntares_1_1Data_1_1XCast.html">Antares::Data::XCast</a></div><div class="ttdef"><b>Definition:</b> xcast.h:17</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1XCast_html"><div class="ttname"><a href="classAntares_1_1Data_1_1XCast.html">Antares::Data::XCast</a></div><div class="ttdef"><b>Definition:</b> xcast.h:16</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

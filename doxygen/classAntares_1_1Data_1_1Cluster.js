@@ -2,16 +2,16 @@ var classAntares_1_1Data_1_1Cluster =
 [
     [ "Cluster", "classAntares_1_1Data_1_1Cluster.html#a705f8abd19dd13377d25fe20d2e1ee7a", null ],
     [ "~Cluster", "classAntares_1_1Data_1_1Cluster.html#a49a9f9dbb0c8b93957c22557ad0a305f", null ],
-    [ "getFullName", "classAntares_1_1Data_1_1Cluster.html#a183bbf7ff5ecbc2bd4e2a76d4c1f9245", null ],
+    [ "getFullName", "classAntares_1_1Data_1_1Cluster.html#ad7df2a8e6434df358e309f9435c853de", null ],
     [ "getGroup", "classAntares_1_1Data_1_1Cluster.html#ab58fa487d2a1c18bc03eeaae699d6fa8", null ],
     [ "id", "classAntares_1_1Data_1_1Cluster.html#a4273a8541c39ba464ee7ff87c6d87b54", null ],
     [ "integrityCheck", "classAntares_1_1Data_1_1Cluster.html#acd914aeeada706fa6c666551c39930a0", null ],
     [ "isEnabled", "classAntares_1_1Data_1_1Cluster.html#ab99c2591da5313c6096ce8d8731f9f38", null ],
     [ "loadDataSeriesFromFolder", "classAntares_1_1Data_1_1Cluster.html#a73f6dd3032b764da0e310681a73b8283", null ],
     [ "name", "classAntares_1_1Data_1_1Cluster.html#abcca945059844e48edabf6d5b6ffbabe", null ],
-    [ "saveDataSeriesToFolder", "classAntares_1_1Data_1_1Cluster.html#a490bcd5d8603aa5b97da71f84392e599", null ],
+    [ "saveDataSeriesToFolder", "classAntares_1_1Data_1_1Cluster.html#abfdc7803d43aa13f2545dd2e6b84c33b", null ],
     [ "setGroup", "classAntares_1_1Data_1_1Cluster.html#a45267a688c9e15b7bf7c95da3a9ba1c8", null ],
-    [ "setName", "classAntares_1_1Data_1_1Cluster.html#a3a67a5f3829e861c899ab4ce1a2f4989", null ],
+    [ "setName", "classAntares_1_1Data_1_1Cluster.html#ad24f49e8582366a727d1f524e342695f", null ],
     [ "areaWideIndex", "classAntares_1_1Data_1_1Cluster.html#ab8bd707543005b8283ed8c4e7ab76d01", null ],
     [ "enabled", "classAntares_1_1Data_1_1Cluster.html#a0fb2326d8658ae067843c1169f225c00", null ],
     [ "enabledIndex", "classAntares_1_1Data_1_1Cluster.html#a660d834d3560213d16e76495a7bb3d01", null ],
@@ -23,5 +23,5 @@ var classAntares_1_1Data_1_1Cluster =
     [ "reserveParticipationContainer", "classAntares_1_1Data_1_1Cluster.html#a98ee920cdf0535a91594c2b6d94a7ec9", null ],
     [ "series", "classAntares_1_1Data_1_1Cluster.html#ad00ce25790a04c8ee7c473fd6d1b1a8b", null ],
     [ "tsNumbers", "classAntares_1_1Data_1_1Cluster.html#add89e71aa84e280956d2d0f463f80e37", null ],
-    [ "unitCount", "classAntares_1_1Data_1_1Cluster.html#acfb0e684f9e67dc0836a4056eda7bfda", null ]
+    [ "unitCount", "classAntares_1_1Data_1_1Cluster.html#a07604538b0583cd40c64e4c9ca6f1258", null ]
 ];

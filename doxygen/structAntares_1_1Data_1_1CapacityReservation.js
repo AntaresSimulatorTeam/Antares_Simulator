@@ -3,7 +3,7 @@ var structAntares_1_1Data_1_1CapacityReservation =
     [ "id", "structAntares_1_1Data_1_1CapacityReservation.html#a7d976fef04364a0b4fea8c3766eb44dc", null ],
     [ "loadNeedFromFile", "structAntares_1_1Data_1_1CapacityReservation.html#a05d65b9e7f99ac7ab8d22b1491afbdba", null ],
     [ "name", "structAntares_1_1Data_1_1CapacityReservation.html#ac570850e30115e262516a778045c7875", null ],
-    [ "setName", "structAntares_1_1Data_1_1CapacityReservation.html#a6e6add11295a93c6b4238f1b4255bbe1", null ],
+    [ "setName", "structAntares_1_1Data_1_1CapacityReservation.html#a18961fe90f080b970a84ef58aa26308b", null ],
     [ "energyActivationRatio", "structAntares_1_1Data_1_1CapacityReservation.html#aaec3176285147528686f5454767e4d69", null ],
     [ "need", "structAntares_1_1Data_1_1CapacityReservation.html#a739b092708f9723cd4998101d3dee400", null ],
     [ "pID", "structAntares_1_1Data_1_1CapacityReservation.html#a49761ec501f2b76e8a048f3bd7aba7c7", null ],

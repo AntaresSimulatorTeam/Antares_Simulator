@@ -1,9 +1,5 @@
 var NAVTREEINDEX18 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Links.html#a1e5bec937ca024bd075b608a8805ced5":[9,0,0,11,6,14,2],
-"classAntares_1_1Solver_1_1Variable_1_1Links.html#a373ccfc68a5e9365b7263a0cd42c5cc5":[9,0,0,11,6,14,12],
-"classAntares_1_1Solver_1_1Variable_1_1Links.html#a3f39850ff63f42cbe6b44f2487d1f2f0":[9,0,0,11,6,14,6],
-"classAntares_1_1Solver_1_1Variable_1_1Links.html#a40dec08c19d00baa7a546de796db8f5b":[9,0,0,11,6,14,26],
 "classAntares_1_1Solver_1_1Variable_1_1Links.html#a430d443c7ac383709dc4b333a71b9441":[9,0,0,11,6,14,4],
 "classAntares_1_1Solver_1_1Variable_1_1Links.html#a482a53ced7e992c051fa5513928e13b4":[9,0,0,11,6,14,1],
 "classAntares_1_1Solver_1_1Variable_1_1Links.html#a4ad5c4e4ca6babc945fdcd7fd6d4ad17":[9,0,0,11,6,14,17],
@@ -141,7 +137,6 @@ var NAVTREEINDEX18 =
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a00f639980605321217bc3d6b42815060":[9,0,0,11,6,54,9],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a0642b17a1c8d2462edb7329379647338":[9,0,0,11,6,54,24],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a18dd115b67f697f420cfc9ce999fc181":[9,0,0,11,6,54,5],
-"classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a1925bc0eaf00e4964c50a5042d376a8c":[9,0,0,11,6,54,22],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a2c83ab1737e38142b05198e4a46f14f3":[9,0,0,11,6,54,10],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a2d629c994c516b20f8d12d35effaeeec":[9,0,0,11,6,54,25],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a46077eb2d66642367b15f6f8ac272edd":[9,0,0,11,6,54,15],
@@ -154,6 +149,8 @@ var NAVTREEINDEX18 =
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a8d89c9c157cc460f83a85fcdc7375f12":[9,0,0,11,6,54,19],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a913580b9a1b0d14aab25356a93c1b334":[9,0,0,11,6,54,4],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a980f4e4ac946b0ffaa2bc27e52a0daaa":[9,0,0,11,6,54,23],
+"classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a9bd45e2de9573f75464549edd9eac0ad":[9,0,0,11,6,54,21],
+"classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#aa6fc352aeea70885004057dc21ab0c49":[9,0,0,11,6,54,22],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#ab252113fd3017368a8d092411b76fb71":[9,0,0,11,6,54,2],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#abbac96a0a2988cf3ef429662df2c6ac2":[9,0,0,11,6,54,12],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#abe195f5dea2f460b7274a6e1a9f6961c":[9,0,0,11,6,54,8],
@@ -162,7 +159,6 @@ var NAVTREEINDEX18 =
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#adf0bd240b098b189598377cb37607aac":[9,0,0,11,6,54,18],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#aec4ce1479301464f59b38f0f1e0bf3c7":[9,0,0,11,6,54,3],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#af10a870dff6c6f1d7d898be681c35599":[9,0,0,11,6,54,13],
-"classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#af18654b36d2bf430dabd73476cc53974":[9,0,0,11,6,54,21],
 "classAntares_1_1Solver_1_1Variable_1_1State.html":[9,0,0,11,6,56],
 "classAntares_1_1Solver_1_1Variable_1_1State.html#a0531f1e1a845ea1ab8ff7c248b7bf640":[9,0,0,11,6,56,12],
 "classAntares_1_1Solver_1_1Variable_1_1State.html#a16e0a881b1060114b68be90fc25f7b71":[9,0,0,11,6,56,19],
@@ -249,5 +245,9 @@ var NAVTREEINDEX18 =
 "classAntares_1_1Solver_1_1WeeklyProblemTranslationException.html":[9,0,0,11,30],
 "classAntares_1_1Solver_1_1WeeklyProblemTranslationException.html#a84b3b3a9e2491032990c1699973ec64e":[9,0,0,11,30,0],
 "classAntares_1_1Solver_1_1ZipWriteJob.html":[9,0,0,11,14],
-"classAntares_1_1Solver_1_1ZipWriteJob.html#a27257432194787f9e890fd0ea0c26b27":[9,0,0,11,14,0]
+"classAntares_1_1Solver_1_1ZipWriteJob.html#a27257432194787f9e890fd0ea0c26b27":[9,0,0,11,14,0],
+"classAntares_1_1Solver_1_1ZipWriteJob.html#a3302c4a5702b380870f36cf296160f24":[9,0,0,11,14,1],
+"classAntares_1_1Solver_1_1ZipWriteJob.html#a4dbb249d778d3520efbb55aafc99257e":[9,0,0,11,14,2],
+"classAntares_1_1Solver_1_1ZipWriter.html":[9,0,0,11,15],
+"classAntares_1_1Solver_1_1ZipWriter.html#a1aada9478675d3a460f1561be42a140e":[9,0,0,11,15,5]
 };

@@ -133,76 +133,80 @@ $(document).ready(function(){initNavTree('finder_2finder_8h_source.html',''); in
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#ifndef __ANTARES_LIB_FINDER_FINDER_H__</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#define __ANTARES_LIB_FINDER_FINDER_H__</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;mutex&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;yuni/core/string.h&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;yuni/io/directory/iterator.h&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;antares/study/study.h&quot;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;../version.h&quot;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1StudyFinder.html">   22</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Data_1_1StudyFinder.html">StudyFinder</a></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;{</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">enum</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    {</div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1StudyFinder.html#afc7e6517c297293b161bb0623f92ed47a5ecddd3432b0078388422eae6c84640a">   28</a></span>&#160;        <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#afc7e6517c297293b161bb0623f92ed47a5ecddd3432b0078388422eae6c84640a">defaultTimeout</a> = 10000, <span class="comment">// 10s</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    };</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;atomic&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;list&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;mutex&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;thread&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;antares/study/study.h&quot;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;../version.h&quot;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1StudyFinder.html">   23</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Data_1_1StudyFinder.html">StudyFinder</a></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;{</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">enum</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    {</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1StudyFinder.html#afc7e6517c297293b161bb0623f92ed47a5ecddd3432b0078388422eae6c84640a">   29</a></span>&#160;        <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#afc7e6517c297293b161bb0623f92ed47a5ecddd3432b0078388422eae6c84640a">defaultTimeout</a> = 10000, <span class="comment">// 10s</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    };</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#a54ac66bd04d56d4bb7e668c3b8a1a300">StudyFinder</a>();</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#a54ac66bd04d56d4bb7e668c3b8a1a300">StudyFinder</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html">StudyFinder</a>&amp;);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#aa56016a0ab776dda5e630ff358aabc31">~StudyFinder</a>();</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1StudyFinder.html#a16712ab92fd46f929b9f9fe37dcbf045">   52</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#a16712ab92fd46f929b9f9fe37dcbf045">lookup</a>(<span class="keyword">const</span> Yuni::String&amp; folder);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#a16712ab92fd46f929b9f9fe37dcbf045">lookup</a>(<span class="keyword">const</span> Yuni::String::Vector&amp; folders);</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#a16712ab92fd46f929b9f9fe37dcbf045">lookup</a>(<span class="keyword">const</span> Yuni::String::List&amp; folders);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#a0384eb8c570c2812bf396366a0718472">stop</a>(uint timeout = <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#afc7e6517c297293b161bb0623f92ed47a5ecddd3432b0078388422eae6c84640a">defaultTimeout</a>);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#a86759e8b5914cf5b79bbdfda41872b83">wait</a>();</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#a86759e8b5914cf5b79bbdfda41872b83">wait</a>(uint timeout);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">public</span>: <span class="comment">// Events</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1StudyFinder.html#ab3583deac750323084fcdc057545e48b">   88</a></span>&#160;<span class="comment"></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#ab3583deac750323084fcdc057545e48b">onStudyFound</a>(<span class="keyword">const</span> Yuni::String&amp; folder, <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>&amp; version) = 0;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1StudyFinder.html#a65245270e4c13c7bf7110037b1911d21">   95</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#a65245270e4c13c7bf7110037b1911d21">onLookupFinished</a>()</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    {</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    }</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1StudyFinder.html#ac0e6d4b0a19eb3fb9d5a31f61f1c52d1">  104</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#ac0e6d4b0a19eb3fb9d5a31f61f1c52d1">onLookupAborted</a>()</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    {</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    }</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    std::mutex mutex;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    Yuni::IO::Directory::IIterator&lt;true&gt;* pLycos;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;}; <span class="comment">// class StudyFinder</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIB_FINDER_FINDER_H__</span></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html">Antares::Data::StudyFinder</a></div><div class="ttdoc">Look for study folders asynchronously.</div><div class="ttdef"><b>Definition:</b> finder.h:23</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_a0384eb8c570c2812bf396366a0718472"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#a0384eb8c570c2812bf396366a0718472">Antares::Data::StudyFinder::stop</a></div><div class="ttdeci">void stop(uint timeout=defaultTimeout)</div><div class="ttdoc">Stop a lookup currently in progress.</div><div class="ttdef"><b>Definition:</b> finder.cpp:94</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_a16712ab92fd46f929b9f9fe37dcbf045"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#a16712ab92fd46f929b9f9fe37dcbf045">Antares::Data::StudyFinder::lookup</a></div><div class="ttdeci">void lookup(const Yuni::String &amp;folder)</div><div class="ttdoc">Start a new lookup from a single folder.</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_a54ac66bd04d56d4bb7e668c3b8a1a300"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#a54ac66bd04d56d4bb7e668c3b8a1a300">Antares::Data::StudyFinder::StudyFinder</a></div><div class="ttdeci">StudyFinder()</div><div class="ttdoc">Default Constructor.</div><div class="ttdef"><b>Definition:</b> finder.cpp:75</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_a65245270e4c13c7bf7110037b1911d21"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#a65245270e4c13c7bf7110037b1911d21">Antares::Data::StudyFinder::onLookupFinished</a></div><div class="ttdeci">virtual void onLookupFinished()</div><div class="ttdoc">Event triggered when a lookup has finished gracefully.</div><div class="ttdef"><b>Definition:</b> finder.h:95</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_a86759e8b5914cf5b79bbdfda41872b83"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#a86759e8b5914cf5b79bbdfda41872b83">Antares::Data::StudyFinder::wait</a></div><div class="ttdeci">void wait()</div><div class="ttdoc">Wait Indefinitely for the end of the lookup.</div><div class="ttdef"><b>Definition:</b> finder.cpp:103</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_aa56016a0ab776dda5e630ff358aabc31"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#aa56016a0ab776dda5e630ff358aabc31">Antares::Data::StudyFinder::~StudyFinder</a></div><div class="ttdeci">virtual ~StudyFinder()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition:</b> finder.cpp:85</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_ab3583deac750323084fcdc057545e48b"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#ab3583deac750323084fcdc057545e48b">Antares::Data::StudyFinder::onStudyFound</a></div><div class="ttdeci">virtual void onStudyFound(const Yuni::String &amp;folder, const StudyVersion &amp;version)=0</div><div class="ttdoc">Event triggered when a lookup has been found.</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_ac0e6d4b0a19eb3fb9d5a31f61f1c52d1"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#ac0e6d4b0a19eb3fb9d5a31f61f1c52d1">Antares::Data::StudyFinder::onLookupAborted</a></div><div class="ttdeci">virtual void onLookupAborted()</div><div class="ttdoc">Event triggered when a lookup has been aborted.</div><div class="ttdef"><b>Definition:</b> finder.h:104</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_afc7e6517c297293b161bb0623f92ed47a5ecddd3432b0078388422eae6c84640a"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#afc7e6517c297293b161bb0623f92ed47a5ecddd3432b0078388422eae6c84640a">Antares::Data::StudyFinder::defaultTimeout</a></div><div class="ttdeci">@ defaultTimeout</div><div class="ttdoc">The default value for the timeout.</div><div class="ttdef"><b>Definition:</b> finder.h:28</div></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1StudyFinder.html#a54ac66bd04d56d4bb7e668c3b8a1a300">   38</a></span>&#160;    <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#a54ac66bd04d56d4bb7e668c3b8a1a300">StudyFinder</a>();</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#a54ac66bd04d56d4bb7e668c3b8a1a300">StudyFinder</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html">StudyFinder</a>&amp;);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#aa56016a0ab776dda5e630ff358aabc31">~StudyFinder</a>();</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#abd5cefe1b899013f2cfebcae66334273">lookup</a>(<span class="keyword">const</span> std::string&amp; folder);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#abd5cefe1b899013f2cfebcae66334273">lookup</a>(<span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; folders);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#abd5cefe1b899013f2cfebcae66334273">lookup</a>(<span class="keyword">const</span> std::list&lt;std::string&gt;&amp; folders);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#acaa6906f75dd6ce2cf06e40713ba5c27">stop</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> timeout = <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#afc7e6517c297293b161bb0623f92ed47a5ecddd3432b0078388422eae6c84640a">defaultTimeout</a>);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#a86759e8b5914cf5b79bbdfda41872b83">wait</a>();</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#a86759e8b5914cf5b79bbdfda41872b83">wait</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> timeout);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keyword">public</span>: <span class="comment">// Events</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1StudyFinder.html#a627474b4e085f0d95deccef4b694b2b5">   89</a></span>&#160;<span class="comment"></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#a627474b4e085f0d95deccef4b694b2b5">onStudyFound</a>(<span class="keyword">const</span> std::string&amp; folder, <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>&amp; version) = 0;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1StudyFinder.html#a65245270e4c13c7bf7110037b1911d21">   96</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#a65245270e4c13c7bf7110037b1911d21">onLookupFinished</a>()</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    }</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1StudyFinder.html#ac0e6d4b0a19eb3fb9d5a31f61f1c52d1">  105</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1StudyFinder.html#ac0e6d4b0a19eb3fb9d5a31f61f1c52d1">onLookupAborted</a>()</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    {</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    }</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    std::mutex mutex;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordtype">void</span> startLookup(<span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; folders);</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    std::thread pThread;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    std::atomic&lt;bool&gt; pStopRequested{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;}; <span class="comment">// class StudyFinder</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIB_FINDER_FINDER_H__</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html">Antares::Data::StudyFinder</a></div><div class="ttdoc">Look for study folders asynchronously.</div><div class="ttdef"><b>Definition:</b> finder.h:24</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_a54ac66bd04d56d4bb7e668c3b8a1a300"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#a54ac66bd04d56d4bb7e668c3b8a1a300">Antares::Data::StudyFinder::StudyFinder</a></div><div class="ttdeci">StudyFinder()</div><div class="ttdoc">Default Constructor.</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_a627474b4e085f0d95deccef4b694b2b5"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#a627474b4e085f0d95deccef4b694b2b5">Antares::Data::StudyFinder::onStudyFound</a></div><div class="ttdeci">virtual void onStudyFound(const std::string &amp;folder, const StudyVersion &amp;version)=0</div><div class="ttdoc">Event triggered when a lookup has been found.</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_a65245270e4c13c7bf7110037b1911d21"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#a65245270e4c13c7bf7110037b1911d21">Antares::Data::StudyFinder::onLookupFinished</a></div><div class="ttdeci">virtual void onLookupFinished()</div><div class="ttdoc">Event triggered when a lookup has finished gracefully.</div><div class="ttdef"><b>Definition:</b> finder.h:96</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_a86759e8b5914cf5b79bbdfda41872b83"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#a86759e8b5914cf5b79bbdfda41872b83">Antares::Data::StudyFinder::wait</a></div><div class="ttdeci">void wait()</div><div class="ttdoc">Wait Indefinitely for the end of the lookup.</div><div class="ttdef"><b>Definition:</b> finder.cpp:119</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_aa56016a0ab776dda5e630ff358aabc31"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#aa56016a0ab776dda5e630ff358aabc31">Antares::Data::StudyFinder::~StudyFinder</a></div><div class="ttdeci">virtual ~StudyFinder()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition:</b> finder.cpp:100</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_abd5cefe1b899013f2cfebcae66334273"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#abd5cefe1b899013f2cfebcae66334273">Antares::Data::StudyFinder::lookup</a></div><div class="ttdeci">void lookup(const std::string &amp;folder)</div><div class="ttdoc">Start a new lookup from a single folder.</div><div class="ttdef"><b>Definition:</b> finder.cpp:161</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_ac0e6d4b0a19eb3fb9d5a31f61f1c52d1"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#ac0e6d4b0a19eb3fb9d5a31f61f1c52d1">Antares::Data::StudyFinder::onLookupAborted</a></div><div class="ttdeci">virtual void onLookupAborted()</div><div class="ttdoc">Event triggered when a lookup has been aborted.</div><div class="ttdef"><b>Definition:</b> finder.h:105</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_acaa6906f75dd6ce2cf06e40713ba5c27"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#acaa6906f75dd6ce2cf06e40713ba5c27">Antares::Data::StudyFinder::stop</a></div><div class="ttdeci">void stop(unsigned int timeout=defaultTimeout)</div><div class="ttdoc">Stop a lookup currently in progress.</div><div class="ttdef"><b>Definition:</b> finder.cpp:108</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1StudyFinder_html_afc7e6517c297293b161bb0623f92ed47a5ecddd3432b0078388422eae6c84640a"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyFinder.html#afc7e6517c297293b161bb0623f92ed47a5ecddd3432b0078388422eae6c84640a">Antares::Data::StudyFinder::defaultTimeout</a></div><div class="ttdeci">@ defaultTimeout</div><div class="ttdoc">The default value for the timeout.</div><div class="ttdef"><b>Definition:</b> finder.h:29</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1StudyVersion_html"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyVersion.html">Antares::Data::StudyVersion</a></div><div class="ttdoc">Version of a study.</div><div class="ttdef"><b>Definition:</b> version.h:18</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
