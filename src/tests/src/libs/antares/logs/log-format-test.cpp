@@ -90,8 +90,7 @@ class LogsUnderTest
 {
 public:
     LogsUnderTest():
-        workingDir_(
-          createTempDirectory(boost::unit_test::framework::current_test_case().p_name))
+        workingDir_(createTempDirectory(boost::unit_test::framework::current_test_case().p_name))
     {
         logFilePath_ = workingDir_ / "format-test.log";
         logs.applicationName("test");
