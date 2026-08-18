@@ -452,7 +452,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         }
 
         for (auto* v: {&palier.downwardRampingCost,
-                       &palier.downwardRampingCost,
+                       &palier.upwardRampingCost,
                        &palier.maxUpwardPowerRampingRate,
                        &palier.maxDownwardPowerRampingRate})
         {
