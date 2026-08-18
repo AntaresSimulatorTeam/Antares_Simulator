@@ -6,7 +6,6 @@
 #include <stdexcept>
 
 #include <antares/logs/logs.h>
-
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
 #include "antares/utils/vector-utils.h"
 
@@ -79,7 +78,8 @@ void StorageForRemixWithLevels::checkLevels()
     {
         for (size_t h = 0; h < levels_.size(); ++h)
         {
-            if (levels_[h] > ruleCurveUp_[h] + TOLERANCE || levels_[h] < ruleCurveLow_[h] - TOLERANCE)
+            if (levels_[h] > ruleCurveUp_[h] + TOLERANCE
+                || levels_[h] < ruleCurveLow_[h] - TOLERANCE)
             {
                 logs.notice().appendFormat(
                   "%s - hour %zu : level = %.17g, low rule curve = %.17g, up rule curve = %.17g, "

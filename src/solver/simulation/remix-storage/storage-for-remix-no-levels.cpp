@@ -6,7 +6,6 @@
 #include <stdexcept>
 
 #include <antares/logs/logs.h>
-
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
 #include "antares/utils/vector-utils.h"
 
