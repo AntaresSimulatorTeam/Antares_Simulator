@@ -5,8 +5,7 @@
 #define __ANTARES_LIBS_STUDY_STUDY_H__
 
 #include <memory>
-
-#include <yuni/yuni.h>
+#include <string>
 
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/correlation/correlation.h>
@@ -55,7 +54,7 @@ public:
     ** \param folder A study folder
     ** \return True if the folder is a study, false otherwise
     */
-    static bool IsRootStudy(const AnyString& folder);
+    static bool IsRootStudy(const std::string& folder);
 
     //! \name Constructor & Destructor
     //@{
@@ -98,7 +97,7 @@ public:
     **
     ** \param n A number of years
     */
-    void resizeAllTimeseriesNumbers(uint n);
+    void resizeAllTimeseriesNumbers(unsigned int n);
 
     /*!
     ** \brief Store the timeseries numbers
@@ -192,7 +191,7 @@ public:
     ** From the "Number of Cores" level (in GUI --> Advanced parameters), computes
     ** the real numbers of logical cores to be involved in the MC years parallelisation.
     */
-    void getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced);
+    void getNumberOfCores(const bool forceParallel, const unsigned int nbYearsParallelForced);
 
     //! \name
     //@{
@@ -251,7 +250,7 @@ public:
     // It is a possible reduction of the raw number of cores set by user (simulation cores level).
     // In solver, it is the max number of years (actually run, not skipped) a set of parallel
     // years can contain.
-    uint maxNbYearsInParallel = 1;
+    unsigned int maxNbYearsInParallel = 1;
 
     //! Parameters
     Parameters parameters;
@@ -332,8 +331,6 @@ public:
     //@{
     //! A buffer for temporary operations on large amount of data
     mutable Matrix<>::BufferType dataBuffer;
-    //! A buffer used when loading time-series for dealing with filenames (prepro/series only)
-    mutable YString bufferLoadingTS;
 
     //@}
 
