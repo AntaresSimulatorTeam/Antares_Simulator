@@ -351,6 +351,41 @@ def run_simulation(context):
         ST_reader_factory = make_simu_table_reader(outputPath, OutputFormat.CSV, file_pattern)
         context.simu_table = SimulationTable(ST_reader_factory())
 
+@step('the modeler outputs are read from stage "{stage}"')
+def read_modeler_outputs_from_stage(context, stage):
+    """Re-point context.simu_table at the tables of one resolution stage.
+
+    The solver writes one simulation table per stage of the weekly resolution
+    (optim-nb-1, optim-nb-2, remix-hydro, adq-patch-csr). run_simulation loads
+    optim-nb-1; this step swaps in another stage, so every
+    `the modeler outputs contain ...` step after it reads that stage instead.
+    """
+    output_path = Path(context.output_path)
+    file_pattern = f"simulation-table-*-{stage}.csv"
+    ST_reader_factory = make_simu_table_reader(output_path, OutputFormat.CSV, file_pattern)
+    context.simu_table = SimulationTable(ST_reader_factory())
+
+
+@then('the simulation tables cover exactly the stages "{stages}"')
+def check_simulation_table_stages(context, stages):
+    """Check the exact set of stage suffixes among the simulation-table files.
+
+    Stage names are part of the output contract, so this pins them; `exactly`
+    also catches a stage being emitted where it should have been skipped (an
+    empty table is not written at all).
+    """
+    expected = sorted(stage.strip() for stage in stages.split(","))
+    output_path = Path(context.output_path)
+    stage_of_file = re.compile(r"^simulation-table-\d+-(.+)\.csv$")
+    found = set()
+    for table_file in output_path.glob("simulation-table-*.csv"):
+        match = stage_of_file.match(table_file.name)
+        assert match, f"Unexpected simulation table file name: {table_file.name}"
+        found.add(match.group(1))
+    assert sorted(found) == expected, \
+        f"Expected simulation table stages {expected}, found {sorted(found)}"
+
+
 def init_simulation(context):
     sih = solver_input_handler(context.study_path)
     # read metadata
