@@ -223,7 +223,7 @@ void Logger::dispatch(const LevelInfo& level, const std::string& message)
 {
     std::lock_guard lock(pMutex);
     if (level.level > verbosityLevel)
-   {
+    {
         return;
     }
 
