@@ -1122,18 +1122,17 @@ void wireResultAddresses(PROBLEME_HEBDO& problem)
 
     solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[unsuppliedArea1]
       = &problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0];
-    solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[directFlowLink0]
-      = &problem.ValeursDeNTC[0].ValeurDuFlux[0];
-    solved.AdresseOuPlacerLaValeurDesCoutsMarginaux[balanceArea1]
-      = &problem.ResultatsHoraires[0].CoutsMarginauxHoraires[0];
+    solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[directFlowLink0] = &problem.ValeursDeNTC[0]
+                                                                               .ValeurDuFlux[0];
+    solved.AdresseOuPlacerLaValeurDesCoutsMarginaux[balanceArea1] = &problem.ResultatsHoraires[0]
+                                                                       .CoutsMarginauxHoraires[0];
 
     // Publish the solved values, as OPT_AppelDuSimplexe does right after the solve.
     problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0] = solved
-                                                                            .X[unsuppliedArea1];
+                                                                             .X[unsuppliedArea1];
     problem.ValeursDeNTC[0].ValeurDuFlux[0] = solved.X[directFlowLink0];
-    problem.ResultatsHoraires[0].CoutsMarginauxHoraires[0] = solved
-                                                               .CoutsMarginauxDesContraintes
-                                                                 [balanceArea1];
+    problem.ResultatsHoraires[0].CoutsMarginauxHoraires[0] = solved.CoutsMarginauxDesContraintes
+                                                               [balanceArea1];
 
     solved.LegacyVariablesInfo[unsuppliedArea1] = LegacyVariableInfo{.name = "UnsuppliedEnergy",
                                                                      .component = "area1_node",
