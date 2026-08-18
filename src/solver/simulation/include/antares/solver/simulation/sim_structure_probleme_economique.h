@@ -342,7 +342,7 @@ struct CAPACITY_RESERVATION
     std::map</*area_clusterId*/ int, RESERVE_PARTICIPATION_STSTORAGE>
       AllSTStorageReservesParticipation;
     std::vector<RESERVE_PARTICIPATION_HYDRO> AllHydroReservesParticipation;
-    std::vector<double> need; //!< Vector size is number of hours in year
+    std::shared_ptr<TimeSeries> need;
 
     ReserveType type{ReserveType::DOWN};
     double unsuppliedCost = 0;
@@ -354,6 +354,11 @@ struct CAPACITY_RESERVATION
     std::string reserveID;
     int globalReserveIndex;
     int areaReserveIndex;
+
+    explicit CAPACITY_RESERVATION(const std::shared_ptr<TimeSeries>& need):
+        need(need)
+    {
+    }
 };
 
 template<typename T>

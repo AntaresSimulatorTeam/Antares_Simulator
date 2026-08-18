@@ -26,7 +26,8 @@ const map<TimeSeriesType, int> ts_to_tsIndex = {{timeSeriesLoad, 0},
                                                 {timeSeriesThermal, 3},
                                                 {timeSeriesSolar, 4},
                                                 {timeSeriesRenewable, 5},
-                                                {timeSeriesTransmissionCapacities, 6}};
+                                                {timeSeriesTransmissionCapacities, 6},
+                                                {timeSeriesReservesNeed, 7}};
 
 const map<TimeSeriesType, string> ts_to_tsTitle = {{timeSeriesLoad, "load"},
                                                    {timeSeriesHydro, "hydro"},
@@ -35,7 +36,8 @@ const map<TimeSeriesType, string> ts_to_tsTitle = {{timeSeriesLoad, "load"},
                                                    {timeSeriesSolar, "solar"},
                                                    {timeSeriesRenewable, "renewable clusters"},
                                                    {timeSeriesTransmissionCapacities,
-                                                    "transmission capacities"}};
+                                                    "transmission capacities"},
+                                                   {timeSeriesReservesNeed, "reserves need"}};
 
 void addInterModalTimeSeriesToMessage(const array<bool, timeSeriesCount>& isTSintermodal,
                                       std::string& interModalTsMsg)
@@ -265,6 +267,25 @@ void drawAndStoreTSnumbers(uint year, Study& study)
               }
           }
       });
+
+    // Reserves need for capacity reservations
+    study.areas.each(
+      [&year, &study](const Antares::Data::Area& area)
+      {
+          if (area.allCapacityReservations)
+          {
+              for (const auto& reserveCapacity:
+                   area.allCapacityReservations.value().areaCapacityReservations)
+              {
+                  const auto nbTimeSeries = reserveCapacity.second.need->timeSeries.width;
+                  if (nbTimeSeries > 1)
+                  {
+                      reserveCapacity.second.need->timeseriesNumbers[year] = static_cast<uint32_t>(
+                        floor(study.runtime.random[seedTimeseriesNumbers].next() * nbTimeSeries));
+                  }
+              }
+          }
+      });
 }
 
 Data::TimeSeriesNumbers* getFirstTSnumberInterModalMatrixFoundInArea(
@@ -487,6 +508,7 @@ void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study,
     if (study.parameters.storeTimeseriesNumbers)
     {
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesLoad>(resultWriter);
+        study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesReservesNeed>(resultWriter);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesSolar>(resultWriter);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesHydro>(resultWriter);
         study.storeTimeSeriesNumbers<TimeSeriesType::timeSeriesWind>(resultWriter);

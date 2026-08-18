@@ -16,7 +16,7 @@ Makefile
 *.dir
 *.cbp
 *.layout
-src/.vs
+.vs
 
 # Config
 src/config/include/antares/config/config.h

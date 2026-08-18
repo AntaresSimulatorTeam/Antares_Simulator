@@ -39,6 +39,10 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
                     {
                         v |= timeSeriesLoad;
                     }
+                    else if (word == "reserves-need")
+                    {
+                        v |= timeSeriesReservesNeed;
+                    }
                     else if (word == "wind")
                     {
                         v |= timeSeriesWind;

@@ -57,67 +57,64 @@ class OneProblemWithoutReservesOneAreaWithLogger: public OneProblemWithoutReserv
 /*!
  * Study with one area named "A" and reserves
  */
+
+static CapacityReservation makeReservation(TimeSeriesNumbers& tsnum,
+                                           ReserveType type,
+                                           double unsuppliedCost,
+                                           int referenceActivationDuration,
+                                           double powerActivationRatio,
+                                           double energyActivationRatio)
+{
+    CapacityReservation res(tsnum);
+    res.type = type;
+    res.unsuppliedCost = unsuppliedCost;
+    res.referenceActivationDuration = referenceActivationDuration;
+    res.powerActivationRatio = powerActivationRatio;
+    res.energyActivationRatio = energyActivationRatio;
+    return res;
+}
+
 class OneProblemWithReservesOneArea
 {
-public:
-    OneProblemWithReservesOneArea()
+    void fillColumn(unsigned int idx)
     {
+        for (unsigned int i = 0; i < ts.timeSeries.height; i++)
+        {
+            ts.timeSeries[idx][i] = i;
+        }
+    }
+
+public:
+    OneProblemWithReservesOneArea():
+        tsnum(),
+        ts(tsnum)
+    {
+        tsnum.reset(1);
+        tsnum[0] = 0;
         study = std::make_unique<Study>();
         areaA = addAreaToListOfAreas(study->areas, "A");
-        CAPACITY_RESERVATION areaCapacityReservations;
         study->parameters.simulationDays.first = 0;
         study->parameters.simulationDays.end = 7;
-        tmpCapacityReservationUp.type = ReserveType::UP;
-        tmpCapacityReservationUp.unsuppliedCost = 1;
-        tmpCapacityReservationUp.referenceActivationDuration = 2;
-        tmpCapacityReservationUp.powerActivationRatio = 3;
-        tmpCapacityReservationUp.energyActivationRatio = 4;
 
-        tmpCapacityReservationUpTwo.type = ReserveType::UP;
-        tmpCapacityReservationUpTwo.unsuppliedCost = 11;
-        tmpCapacityReservationUpTwo.referenceActivationDuration = 12;
-        tmpCapacityReservationUpTwo.powerActivationRatio = 13;
-        tmpCapacityReservationUpTwo.energyActivationRatio = 14;
+        areaA->allCapacityReservations.emplace();
+        auto& reservations = areaA->allCapacityReservations.value().areaCapacityReservations;
+        reservations.emplace("reserveup", makeReservation(tsnum, ReserveType::UP, 1, 2, 3, 4));
+        reservations.emplace("reserveuptwo",
+                             makeReservation(tsnum, ReserveType::UP, 11, 12, 13, 14));
+        reservations.emplace("reserveupthree",
+                             makeReservation(tsnum, ReserveType::UP, 21, 22, 23, 24));
+        reservations.emplace("reservedown", makeReservation(tsnum, ReserveType::DOWN, 5, 6, 7, 8));
+        reservations.emplace("reservedowntwo",
+                             makeReservation(tsnum, ReserveType::DOWN, 15, 16, 17, 18));
 
-        tmpCapacityReservationUpThree.type = ReserveType::UP;
-        tmpCapacityReservationUpThree.unsuppliedCost = 21;
-        tmpCapacityReservationUpThree.referenceActivationDuration = 22;
-        tmpCapacityReservationUpThree.powerActivationRatio = 23;
-        tmpCapacityReservationUpThree.energyActivationRatio = 24;
-
-        tmpCapacityReservationDown.type = ReserveType::DOWN;
-        tmpCapacityReservationDown.unsuppliedCost = 5;
-        tmpCapacityReservationDown.referenceActivationDuration = 6;
-        tmpCapacityReservationDown.powerActivationRatio = 7;
-        tmpCapacityReservationDown.energyActivationRatio = 8;
-
-        tmpCapacityReservationDownTwo.type = ReserveType::DOWN;
-        tmpCapacityReservationDownTwo.unsuppliedCost = 15;
-        tmpCapacityReservationDownTwo.referenceActivationDuration = 16;
-        tmpCapacityReservationDownTwo.powerActivationRatio = 17;
-        tmpCapacityReservationDownTwo.energyActivationRatio = 18;
-
-        areaA->allCapacityReservations = AllCapacityReservations();
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUp);
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reserveuptwo", tmpCapacityReservationUpTwo);
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reserveupthree", tmpCapacityReservationUpThree);
-
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDown);
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reservedowntwo", tmpCapacityReservationDownTwo);
+        ts.reset(1, HOURS_PER_YEAR);
+        fillColumn(0);
     }
 
     std::unique_ptr<Study> study;
     Area* areaA;
-    CapacityReservation tmpCapacityReservationUp;
-    CapacityReservation tmpCapacityReservationUpTwo;
-    CapacityReservation tmpCapacityReservationUpThree;
-    CapacityReservation tmpCapacityReservationDown;
-    CapacityReservation tmpCapacityReservationDownTwo;
+    TimeSeriesNumbers tsnum;
+    TimeSeries ts;
 };
 
 class OneProblemWithReservesOneAreaWithLogger: public OneProblemWithReservesOneArea,
@@ -132,46 +129,32 @@ struct OneProblemWithReservesTwoAreas
 {
     OneProblemWithReservesTwoAreas()
     {
+        TimeSeriesNumbers tsnum;
         problemeHebdo = std::make_unique<PROBLEME_HEBDO>();
         study = std::make_unique<Study>();
         areaA = addAreaToListOfAreas(study->areas, "A");
         areaB = addAreaToListOfAreas(study->areas, "B");
-        CAPACITY_RESERVATION areaCapacityReservations;
         study->parameters.simulationDays.first = 0;
         study->parameters.simulationDays.end = 7;
         study->parameters.include.reserves = true;
 
-        tmpCapacityReservationUp.type = ReserveType::UP;
-        tmpCapacityReservationUp.unsuppliedCost = 1;
-        tmpCapacityReservationUp.referenceActivationDuration = 2;
-        tmpCapacityReservationUp.powerActivationRatio = 3;
-        tmpCapacityReservationUp.energyActivationRatio = 4;
+        auto tmpCapacityReservationUp = makeReservation(tsnum, ReserveType::UP, 1, 2, 3, 4);
+        auto tmpCapacityReservationDown = makeReservation(tsnum, ReserveType::DOWN, 5, 6, 7, 8);
+        auto tmpCapacityReservationUpB = makeReservation(tsnum, ReserveType::UP, 11, 12, 13, 14);
+        auto tmpCapacityReservationDownB = makeReservation(tsnum,
+                                                           ReserveType::DOWN,
+                                                           15,
+                                                           16,
+                                                           17,
+                                                           18);
 
-        tmpCapacityReservationDown.type = ReserveType::DOWN;
-        tmpCapacityReservationDown.unsuppliedCost = 5;
-        tmpCapacityReservationDown.referenceActivationDuration = 6;
-        tmpCapacityReservationDown.powerActivationRatio = 7;
-        tmpCapacityReservationDown.energyActivationRatio = 8;
-
-        tmpCapacityReservationUpB.type = ReserveType::UP;
-        tmpCapacityReservationUpB.unsuppliedCost = 11;
-        tmpCapacityReservationUpB.referenceActivationDuration = 12;
-        tmpCapacityReservationUpB.powerActivationRatio = 13;
-        tmpCapacityReservationUpB.energyActivationRatio = 14;
-
-        tmpCapacityReservationDownB.type = ReserveType::DOWN;
-        tmpCapacityReservationDownB.unsuppliedCost = 15;
-        tmpCapacityReservationDownB.referenceActivationDuration = 16;
-        tmpCapacityReservationDownB.powerActivationRatio = 17;
-        tmpCapacityReservationDownB.energyActivationRatio = 18;
-
-        areaA->allCapacityReservations = AllCapacityReservations();
+        areaA->allCapacityReservations.emplace();
         areaA->allCapacityReservations.value()
           .areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUp);
         areaA->allCapacityReservations.value()
           .areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDown);
 
-        areaB->allCapacityReservations = AllCapacityReservations();
+        areaB->allCapacityReservations.emplace();
         areaB->allCapacityReservations.value()
           .areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUpB);
         areaB->allCapacityReservations.value()
@@ -182,11 +165,6 @@ struct OneProblemWithReservesTwoAreas
     std::unique_ptr<Study> study;
     Area* areaA;
     Area* areaB;
-    CapacityReservation tmpCapacityReservationUp;
-    CapacityReservation tmpCapacityReservationDown;
-
-    CapacityReservation tmpCapacityReservationUpB;
-    CapacityReservation tmpCapacityReservationDownB;
 };
 
 BOOST_AUTO_TEST_SUITE(reserves_operations_load)
@@ -195,10 +173,11 @@ BOOST_AUTO_TEST_CASE(reserve_add)
 {
     auto study = std::make_unique<Study>();
     const auto areaA = addAreaToListOfAreas(study->areas, "A");
-    CapacityReservation tmpCapacityReservationUp;
+    TimeSeriesNumbers tsnum;
+    CapacityReservation tmpCapacityReservationUp(tsnum);
     tmpCapacityReservationUp.type = ReserveType::UP;
     tmpCapacityReservationUp.unsuppliedCost = 0;
-    areaA->allCapacityReservations = AllCapacityReservations();
+    areaA->allCapacityReservations.emplace();
     areaA->allCapacityReservations.value()
       .areaCapacityReservations.emplace("ReserveUp", tmpCapacityReservationUp);
     BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().size(), 1);
@@ -216,10 +195,11 @@ BOOST_AUTO_TEST_CASE(reserve_add_double)
 {
     auto study = std::make_unique<Study>();
     const auto areaA = addAreaToListOfAreas(study->areas, "A");
-    CapacityReservation tmpCapacityReservation;
+    TimeSeriesNumbers tsnum;
+    CapacityReservation tmpCapacityReservation(tsnum);
 
-    CapacityReservation tmpCapacityReservationTwo;
-    areaA->allCapacityReservations = AllCapacityReservations();
+    CapacityReservation tmpCapacityReservationTwo(tsnum);
+    areaA->allCapacityReservations.emplace();
     areaA->allCapacityReservations.value().areaCapacityReservations.emplace("Reserve",
                                                                             tmpCapacityReservation);
     BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().size(), 1);
@@ -1154,7 +1134,10 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_minimal, OneProblemWithoutReservesOn
     file.close();
 
     std::ofstream fileNeeds(studyPath / "reserves" / "a" / "reserveup.txt");
-    fileNeeds << "\n";
+    for (int i = 0; i < HOURS_PER_YEAR; ++i)
+    {
+        fileNeeds << "1\n";
+    }
     fileNeeds.close();
     BOOST_CHECK_EQUAL(areaA->allCapacityReservations.has_value(), false);
     Antares::Data::loadReservesParameters(studyPath, *areaA);
@@ -1188,9 +1171,7 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_minimal, OneProblemWithoutReservesOn
       areaA->allCapacityReservations.value().getReserveByID("reserveup")->unsuppliedCost,
       0);
 
-    BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reserveup")->need.size(),
-      0);
+    BOOST_CHECK_EQUAL(areaA->allCapacityReservations.value().TSNumbers.height(), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_ini, OneProblemWithoutReservesOneAreaWithLogger)
@@ -1235,7 +1216,10 @@ global-parameters:
     file.close();
 
     std::ofstream fileNeeds(studyPath / "reserves" / "a" / "reserveup.txt");
-    fileNeeds << "\n";
+    for (int i = 0; i < HOURS_PER_YEAR; ++i)
+    {
+        fileNeeds << "1\n";
+    }
     fileNeeds.close();
     Antares::Data::loadReservesParameters(studyPath, *areaA);
 
@@ -1272,10 +1256,18 @@ reserves:
 
     std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "reserveup.txt");
     fileNeedsUp << "2\n3\n";
+    for (int i = 2; i < HOURS_PER_YEAR; ++i)
+    {
+        fileNeedsUp << "0\n";
+    }
     fileNeedsUp.close();
 
     std::ofstream fileNeedsDown(studyPath / "reserves" / "a" / "reservedown.txt");
     fileNeedsDown << "4\n5\n6\n";
+    for (int i = 3; i < HOURS_PER_YEAR; ++i)
+    {
+        fileNeedsDown << "0\n";
+    }
     fileNeedsDown.close();
     Antares::Data::loadReservesParameters(studyPath, *areaA);
 
@@ -1313,20 +1305,16 @@ reserves:
       5.5);
 
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reserveup")->need.size(),
+      areaA->allCapacityReservations.value().getReserveByID("reserveup")->need->timeSeries.height,
+      HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(
+      areaA->allCapacityReservations.value().getReserveByID("reserveup")->need->timeSeries[0][0],
       2);
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reservedown")->need.size(),
-      3);
-
-    BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reserveup")->need.at(0),
-      2);
-    BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reserveup")->need.at(1),
+      areaA->allCapacityReservations.value().getReserveByID("reserveup")->need->timeSeries[0][1],
       3);
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations.value().getReserveByID("reservedown")->need.at(0),
+      areaA->allCapacityReservations.value().getReserveByID("reservedown")->need->timeSeries[0][0],
       4);
 }
 

@@ -12,6 +12,7 @@
 #include <antares/logs/logs.h>
 #include <antares/study/fwd.h>
 #include <antares/utils/utils.h>
+#include "antares/series/series.h"
 
 namespace fs = std::filesystem;
 //! ID of a reserve, obtained by transforming its name
@@ -44,30 +45,21 @@ struct CapacityReservation
     double powerActivationRatio = 0.;
     double energyActivationRatio = 1.;
     int referenceActivationDuration = 1.;
-    std::vector<double> need = {};
+    std::shared_ptr<TimeSeries> need = nullptr;
+
+    uint32_t areaWideIndex = 0;
+
+    CapacityReservation() = delete;
+
+    explicit CapacityReservation(TimeSeriesNumbers& tsNumbers):
+        need(std::make_shared<TimeSeries>(tsNumbers))
+    {
+    }
 
     void loadNeedFromFile(const fs::path& path)
     {
-        std::ifstream file(path);
-        if (!file.is_open())
-        {
-            throw std::runtime_error("Could not open " + path.string());
-        }
-        double x;
-        std::vector<double> tmp;
-
-        while (file >> x)
-        {
-            tmp.push_back(x);
-        }
-
-        if (!file.eof())
-        {
-            logs.error() << "Invalid numeric data in " << path.string();
-            throw std::runtime_error("Invalid data in " + path.string());
-        }
-
-        need = std::move(tmp);
+        Matrix<>::BufferType fileContent;
+        need->timeSeries.loadFromCSVFile(path.string(), 1, HOURS_PER_YEAR, &fileContent);
     }
 
     void setName(const AnyString& newname)
@@ -103,6 +95,8 @@ struct AllCapacityReservations
 
     std::map<ReserveID, CapacityReservation> areaCapacityReservations;
 
+    TimeSeriesNumbers TSNumbers;
+
     /// @brief Check if the capacity reservation name already exist in the reserves
     /// @param name
     /// @return true if the capacity reservation already existed
@@ -136,9 +130,9 @@ struct AllCapacityReservations
     /// @param index the index of the reserve spilled/unsupplied variable
     /// @return the capacity reservation name and type if the reserve was found throw otherwise
     std::pair<UnsuppliedSpilled, ReserveID> reserveParticipationUnsuppliedSpilledAt(
-      unsigned int index) const
+      uint32_t index) const
     {
-        unsigned int column = 0;
+        uint32_t column = 0;
         for (const auto& reserveID: areaCapacityReservations | std::views::keys)
         {
             for (int indexUnsuppliedSpilled = 0;
@@ -164,6 +158,24 @@ struct AllCapacityReservations
     {
         auto it = std::next(areaCapacityReservations.begin(), index);
         return it->first;
+    }
+
+    void rebuildIndexes()
+    {
+        uint32_t index = 0;
+        for (auto& [resID, capacityRes]: areaCapacityReservations)
+        {
+            capacityRes.areaWideIndex = index;
+            index++;
+        }
+    }
+
+    void resizeTimeseriesNumbers(uint32_t nbYears)
+    {
+        for (auto& [resID, capacityRes]: areaCapacityReservations)
+        {
+            capacityRes.need->timeseriesNumbers.reset(nbYears);
+        }
     }
 };
 } // namespace Antares::Data

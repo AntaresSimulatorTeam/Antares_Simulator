@@ -26,7 +26,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
         const std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE>& ProblemeAResoudre;
         std::vector<double>& SecondMembre;
         std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux;
-        int pdtJour = 0, pdtHebdo = 0, pdtGlobal = 0, pays = 0;
+        uint32_t pdtJour = 0, pdtHebdo = 0, pdtGlobal = 0, pays = 0;
 
         ReserveVariablesRightSidesSetter(PROBLEME_HEBDO* hebdo):
             problemeHebdo(hebdo),
@@ -37,22 +37,22 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
         {
         }
 
-        void setPdtJour(int pdt)
+        void setPdtJour(uint32_t pdt)
         {
             pdtJour = pdt;
         }
 
-        void setPdtHebdo(int pdt)
+        void setPdtHebdo(uint32_t pdt)
         {
             pdtHebdo = pdt;
         }
 
-        void setPdtGlobal(int pdt)
+        void setPdtGlobal(uint32_t pdt)
         {
             pdtGlobal = pdt;
         }
 
-        void setPays(int p)
+        void setPays(uint32_t p)
         {
             pays = p;
         }
@@ -67,7 +67,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                         .need[reserve.globalReserveIndex];
             if (cnt >= 0)
             {
-                SecondMembre[cnt] = reserve.need.at(pdtGlobal);
+                SecondMembre[cnt] = reserve.need->getCoefficient(problemeHebdo->year, pdtGlobal);
                 double* adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
                                                 .Reserves.value()[pdtHebdo]
                                                 .CoutsMarginauxHoraires[reserve.areaReserveIndex]);
