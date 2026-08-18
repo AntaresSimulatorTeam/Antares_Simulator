@@ -104,14 +104,7 @@ const LevelInfo levelInfoNotice = {Verbosity::Notice::level,
                                    nullptr,
                                    ANTARES_LOGS_WIN_COLOR(winGreen)
                                      ANTARES_LOGS_WIN_COLOR(winDefault)};
-const LevelInfo levelInfoProgress = {Verbosity::Progress::level,
-                                     "progress",
-                                     false,
-                                     true,
-                                     nullptr,
-                                     nullptr,
-                                     ANTARES_LOGS_WIN_COLOR(winDefault)
-                                       ANTARES_LOGS_WIN_COLOR(winDefault)};
+
 const LevelInfo levelInfoInfo = {Verbosity::Info::level,
                                  "infos",
                                  false,
@@ -120,14 +113,7 @@ const LevelInfo levelInfoInfo = {Verbosity::Info::level,
                                  nullptr,
                                  ANTARES_LOGS_WIN_COLOR(winDefault)
                                    ANTARES_LOGS_WIN_COLOR(winDefault)};
-const LevelInfo levelInfoCompatibility = {Verbosity::Compatibility::level,
-                                          "compatibility notice",
-                                          false,
-                                          true,
-                                          "\x1b[0;33m",
-                                          nullptr,
-                                          ANTARES_LOGS_WIN_COLOR(winYellow)
-                                            ANTARES_LOGS_WIN_COLOR(winDefault)};
+
 const LevelInfo levelInfoDebug = {Verbosity::Debug::level,
                                   "debug",
                                   false,

@@ -145,9 +145,7 @@ BOOST_FIXTURE_TEST_CASE(each_level_has_exact_tag_bytes, LogsUnderTest)
     logs.warning() << "message";
     logs.checkpoint() << "message";
     logs.notice() << "message";
-    logs.progress() << "message";
     logs.info() << "message";
-    logs.compatibility() << "message";
 
     const auto lines = readLogFile();
     BOOST_REQUIRE_EQUAL(lines.size(), 8);
@@ -156,9 +154,7 @@ BOOST_FIXTURE_TEST_CASE(each_level_has_exact_tag_bytes, LogsUnderTest)
     checkLine(lines[2], R"(\[test\]\[warns\] message)");
     checkLine(lines[3], R"(\[test\]\[check\] message)");
     checkLine(lines[4], R"(\[test\]\[notic\] message)");
-    checkLine(lines[5], R"(\[test\]\[progress\] message)");
     checkLine(lines[6], R"(\[test\]\[infos\] message)");
-    checkLine(lines[7], R"(\[test\]\[compatibility notice\] message)");
 }
 
 BOOST_FIXTURE_TEST_CASE(no_ansi_escape_bytes_in_file, LogsUnderTest)

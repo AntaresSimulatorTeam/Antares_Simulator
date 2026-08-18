@@ -56,21 +56,9 @@ struct Notice final
     static constexpr bool enabled = true;
 };
 
-struct Progress final
-{
-    static constexpr int level = 6000;
-    static constexpr bool enabled = true;
-};
-
 struct Info final
 {
     static constexpr int level = 7000;
-    static constexpr bool enabled = true;
-};
-
-struct Compatibility final
-{
-    static constexpr int level = 8000;
     static constexpr bool enabled = true;
 };
 
@@ -244,17 +232,9 @@ public:
     template<class U>
     LogBuffer notice(const U& u);
 
-    LogBuffer progress();
-    template<class U>
-    LogBuffer progress(const U& u);
-
     LogBuffer info();
     template<class U>
     LogBuffer info(const U& u);
-
-    LogBuffer compatibility();
-    template<class U>
-    LogBuffer compatibility(const U& u);
 
 #ifdef NDEBUG
     NoopLogBuffer debug()
@@ -305,9 +285,7 @@ extern const LevelInfo levelInfoError;
 extern const LevelInfo levelInfoWarning;
 extern const LevelInfo levelInfoCheckpoint;
 extern const LevelInfo levelInfoNotice;
-extern const LevelInfo levelInfoProgress;
 extern const LevelInfo levelInfoInfo;
-extern const LevelInfo levelInfoCompatibility;
 #ifndef NDEBUG
 extern const LevelInfo levelInfoDebug;
 #endif
@@ -328,9 +306,7 @@ ANTARES_LOGS_LEVEL_ACCESSOR_IMPL(error, Error)
 ANTARES_LOGS_LEVEL_ACCESSOR_IMPL(warning, Warning)
 ANTARES_LOGS_LEVEL_ACCESSOR_IMPL(checkpoint, Checkpoint)
 ANTARES_LOGS_LEVEL_ACCESSOR_IMPL(notice, Notice)
-ANTARES_LOGS_LEVEL_ACCESSOR_IMPL(progress, Progress)
 ANTARES_LOGS_LEVEL_ACCESSOR_IMPL(info, Info)
-ANTARES_LOGS_LEVEL_ACCESSOR_IMPL(compatibility, Compatibility)
 #ifndef NDEBUG
 ANTARES_LOGS_LEVEL_ACCESSOR_IMPL(debug, Debug)
 #endif
