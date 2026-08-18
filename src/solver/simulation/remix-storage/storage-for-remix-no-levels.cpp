@@ -3,7 +3,6 @@
 #include <stdexcept>
 
 #include <antares/logs/logs.h>
-
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
 
 namespace Antares::Solver::Simulation

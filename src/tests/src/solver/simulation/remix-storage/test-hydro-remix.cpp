@@ -267,7 +267,8 @@ BOOST_FIXTURE_TEST_CASE(input_leads_to_levels_over_capacity___exception_raised, 
     std::ranges::fill(HydroGen, 10); // Cause levels to decrease
     std::ranges::fill(inflows, 25);  // Cause levels to increase
     std::ranges::fill(pump, 20);     // Cause levels to increase
-    err_msg = "Remix hydro input for 'hydro' : levels computed from input don't respect reservoir bounds";
+    err_msg = "Remix hydro input for 'hydro' : levels computed from input don't respect reservoir "
+              "bounds";
     BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
@@ -278,7 +279,8 @@ BOOST_FIXTURE_TEST_CASE(input_leads_to_levels_less_than_zero___exception_raised,
     std::ranges::fill(HydroGen, 10); // Cause levels to decrease
     std::ranges::fill(inflows, 5);   // Cause levels to increase
     std::ranges::fill(pump, 10);     // Cause levels to increase
-    err_msg = "Remix hydro input for 'hydro' : levels computed from input don't respect reservoir bounds";
+    err_msg = "Remix hydro input for 'hydro' : levels computed from input don't respect reservoir "
+              "bounds";
     BOOST_CHECK_EXCEPTION(createHydroForRemix(), std::invalid_argument, checkMessage(err_msg));
 }
 
