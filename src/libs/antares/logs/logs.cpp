@@ -208,10 +208,10 @@ std::string removeColor(std::ostream& out)
 {
 #ifdef _WIN32
     setConsoleColor(out, winDefault);
-#else
-    out << "\x1b[0m";
-#endif
     return {};
+#else
+    return "\x1b[0m";
+#endif
 }
 
 void writeToConsole(const LevelInfo& level, const std::string& appliName, const std::string& msg)
@@ -235,7 +235,7 @@ void writeToFile(std::ofstream& file,
 #ifdef _WIN32
     file << "\r\n";
 #else
-    pFile << '\n';
+    file << '\n';
 #endif
     file.flush();
 }
