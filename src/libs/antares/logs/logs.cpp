@@ -213,7 +213,7 @@ void writeDecorated(std::ostream& out,
 Logger::Logger()
 {
 #ifdef NDEBUG
-    verbosityLevel = Verbosity::Compatibility::level;
+    verbosityLevel = Verbosity::Info::level;
 #else
     verbosityLevel = Verbosity::Debug::level;
 #endif
@@ -223,7 +223,7 @@ void Logger::dispatch(const LevelInfo& level, const std::string& message)
 {
     std::lock_guard lock(pMutex);
     if (level.level > verbosityLevel)
-    {
+   {
         return;
     }
 
