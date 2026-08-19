@@ -14,15 +14,15 @@
 
 struct PROBLEME_HEBDO;
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 class OptimEntityContainer;
 
-namespace LinearProblemApi
+namespace Api
 {
 class ILinearProblem;
 }
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem
 
 namespace Antares::Optimization
 {
@@ -39,8 +39,8 @@ namespace Antares::Optimization
 // survives the pass that replaced it.
 struct SolvedModelerProblem
 {
-    std::shared_ptr<const Antares::Optimisation::LinearProblemApi::ILinearProblem> problem;
-    std::shared_ptr<const Antares::Optimisation::OptimEntityContainer> entities;
+    std::shared_ptr<const Antares::LinearProblem::Api::ILinearProblem> problem;
+    std::shared_ptr<const Antares::LinearProblem::OptimEntityContainer> entities;
     double objectiveValue = 0.;
 };
 
@@ -88,7 +88,7 @@ unsigned LegacyWeeklyBlock(const PROBLEME_HEBDO& problemeHebdo);
 void DumpSimulationTableAfterPostProcess(
   Antares::IO::Outputs::SimulationTable& simulationTable,
   PROBLEME_HEBDO& problemeHebdo,
-  const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+  const Antares::LinearProblem::Api::FillContext& fillContext,
   unsigned currentBlock);
 
 // Dumps into the `stage` table of a year's tables, deriving the week's fill
