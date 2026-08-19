@@ -1,5 +1,7 @@
 var NAVTREEINDEX39 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType_3_01TraitsT_00_01s7ae8a9e1ef354901ff27fa473e8a5fe0.html":[9,0,0,11,6,5,0,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType_3_01TraitsT_00_01s7ae8a9e1ef354901ff27fa473e8a5fe0.html#ace5d9be9f19e33ff87071acc14b67e31":[9,0,0,11,6,5,0,2,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1EmptyAuxiliaryData.html":[9,0,0,11,6,5,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1Empty.html":[9,0,0,11,6,57],
 "structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html":[9,0,0,11,6,61,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX39 =
 "structCONSOMMATIONS__ABATTUES.html#ad366306eea2a5f98fca8b256db3ffd6f":[9,0,65,0],
 "structCONTRAINTES__COUPLANTES.html":[9,0,75],
 "structCONTRAINTES__COUPLANTES.html#a17c2f8e10e65a0368c874c451ed8a464":[9,0,75,8],
-"structCONTRAINTES__COUPLANTES.html#a1fc1d4a30ff4c32b41bec683132fe8da":[9,0,75,3],
-"structCONTRAINTES__COUPLANTES.html#a2f19770a600ff0c57b8a6cdf40dc8ad5":[9,0,75,10],
-"structCONTRAINTES__COUPLANTES.html#a33f9a1b3b619e8e82eb5a6f37f6a3440":[9,0,75,0]
+"structCONTRAINTES__COUPLANTES.html#a1fc1d4a30ff4c32b41bec683132fe8da":[9,0,75,3]
 };

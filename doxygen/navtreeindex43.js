@@ -1,5 +1,7 @@
 var NAVTREEINDEX43 =
 {
+"structPenaltyCostOnVariation.html#a7edad1a63c5d4c331699879d83f87c5e":[9,0,248,1],
+"structPower.html":[9,0,256],
 "structPower.html#aae6a4d23beb552e9df998c869124ae5f":[9,0,256,0],
 "structPower.html#ab93e3b3a0eaa860eac94a6cecbaba860":[9,0,256,1],
 "structPredfinedSolutionLinearProblemMock.html":[9,0,257],
@@ -230,9 +232,9 @@ var NAVTREEINDEX43 =
 "structStudyFixture.html#a79050046161e92da8d3cd1d036aeee12":[9,0,342,6],
 "structStudyFixture.html#a7bb40e5d558cca55d2e8635fb9b8741c":[9,0,342,5],
 "structStudyFixture.html#a7f9294e12e51c105bfe982bcc69ec640":[9,0,342,12],
+"structStudyFixture.html#a9833119d966e476890849b374047fd57":[9,0,342,2],
 "structStudyFixture.html#a9833119d966e476890849b374047fd57":[9,0,342,1],
 "structStudyFixture.html#a9833119d966e476890849b374047fd57":[9,0,342,0],
-"structStudyFixture.html#a9833119d966e476890849b374047fd57":[9,0,342,2],
 "structStudyFixture.html#ad030b15ed14595081f9c90fb6f7c2049":[9,0,342,8],
 "structStudyFixture.html#ae65400ddc7129fa01c5ae1ae44a6e00f":[9,0,342,10],
 "structStudyFixture.html#aebfb8a290fdbc5cc45b4fa56787601a9":[9,0,342,11],
@@ -247,7 +249,5 @@ var NAVTREEINDEX43 =
 "structStudyWithBConLink.html#ad22632738fd737c333fb15b590ad88f5":[9,0,344,1],
 "structStudyWithTwoClusters.html":[9,0,345],
 "structStudyWithTwoClusters.html#a6d0f6ea2d8894a9d3833d1e9eabfee48":[9,0,345,1],
-"structStudyWithTwoClusters.html#a8eb64c11fcf2090da2dc40441ca66b98":[9,0,345,2],
-"structStudyWithTwoClusters.html#a929db926feaa4a490fa7131648d533d2":[9,0,345,3],
-"structStudyWithTwoClusters.html#af47e3183cac2490cdcda4b4efe64bb45":[9,0,345,0]
+"structStudyWithTwoClusters.html#a8eb64c11fcf2090da2dc40441ca66b98":[9,0,345,2]
 };

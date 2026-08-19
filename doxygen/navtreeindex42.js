@@ -1,5 +1,7 @@
 var NAVTREEINDEX42 =
 {
+"structMipDetectionFixture.html#a647ac4f041996db922da67809b47f505":[9,0,199,0],
+"structMockConstraint_1_1MockExpression.html":[9,0,201,0],
 "structMockConstraint_1_1MockExpression.html#a84d2f98c7732a9412d80b18073294c8c":[9,0,201,0,1],
 "structMockConstraint_1_1MockExpression_1_1MockNode.html":[9,0,201,0,0],
 "structMockLinearProblemData.html":[9,0,203],
@@ -60,8 +62,8 @@ var NAVTREEINDEX42 =
 "structOneProblemWithReservesTwoAreas.html#a331428318e6c36868dce97f9c9cfa3e8":[9,0,233,3],
 "structOneProblemWithReservesTwoAreas.html#a7250c525c7711e1466b41d69227484d9":[9,0,233,6],
 "structOneProblemWithReservesTwoAreas.html#a7912a54705e13acd89fcee12460d3fde":[9,0,233,9],
-"structOneProblemWithReservesTwoAreas.html#a79d7790fa3ed04e726fc7d2a3ba232ab":[9,0,233,1],
 "structOneProblemWithReservesTwoAreas.html#a79d7790fa3ed04e726fc7d2a3ba232ab":[9,0,233,0],
+"structOneProblemWithReservesTwoAreas.html#a79d7790fa3ed04e726fc7d2a3ba232ab":[9,0,233,1],
 "structOneProblemWithReservesTwoAreas.html#abd29cd87b37000c5fdc63efb4fc4fe7f":[9,0,233,5],
 "structOneProblemWithReservesTwoAreas.html#ac997e0d703ca6efcf88f6cc10b50361f":[9,0,233,7],
 "structOneProblemWithReservesTwoAreas.html#ad1ddbab28d4e207587b4340dc19905bf":[9,0,233,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX42 =
 "structPathList_1_1FileInfo.html#a164d9b61a3aa75a7dca2b5d6def13cac":[9,0,245,0,0],
 "structPathList_1_1FileInfo.html#a59ae84170458e2c569f4cb223b6ae009":[9,0,245,0,1],
 "structPenaltyCostOnVariation.html":[9,0,248],
-"structPenaltyCostOnVariation.html#a206042553930f57c6b35493756d9c9fc":[9,0,248,0],
-"structPenaltyCostOnVariation.html#a7edad1a63c5d4c331699879d83f87c5e":[9,0,248,1],
-"structPower.html":[9,0,256]
+"structPenaltyCostOnVariation.html#a206042553930f57c6b35493756d9c9fc":[9,0,248,0]
 };

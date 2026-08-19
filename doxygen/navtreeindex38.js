@@ -1,5 +1,7 @@
 var NAVTREEINDEX38 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Container_1_1List_1_1Statistics.html":[9,0,0,11,6,3,0,0],
+"structAntares_1_1Solver_1_1Variable_1_1Container_1_1TupleVariableList_1_1Statistics.html":[9,0,0,11,6,3,1,0],
 "structAntares_1_1Solver_1_1Variable_1_1DummyVariable_1_1Statistics.html":[9,0,0,11,6,63,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGenTraits.html":[9,0,0,11,6,5,18],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGenTraits.html#a3c0cf99bebe4f56a06b51738115ebf8f":[9,0,0,11,6,5,18,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValueTraits.html#a3f64088e6de7cc269ab463ff687846ef":[9,0,0,11,6,5,97,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html":[9,0,0,11,6,5,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType.html":[9,0,0,11,6,5,0,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType.html#ab8ce822182052e00299c20a6042d1e5e":[9,0,0,11,6,5,0,1,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType_3_01TraitsT_00_01s7ae8a9e1ef354901ff27fa473e8a5fe0.html":[9,0,0,11,6,5,0,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType_3_01TraitsT_00_01s7ae8a9e1ef354901ff27fa473e8a5fe0.html#ace5d9be9f19e33ff87071acc14b67e31":[9,0,0,11,6,5,0,2,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType.html#ab8ce822182052e00299c20a6042d1e5e":[9,0,0,11,6,5,0,1,0]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX44 =
 {
+"structStudyWithTwoClusters.html#a929db926feaa4a490fa7131648d533d2":[9,0,345,3],
+"structStudyWithTwoClusters.html#af47e3183cac2490cdcda4b4efe64bb45":[9,0,345,0],
 "structSupplyModelForDualOperator.html":[9,0,346],
 "structSupplyModelForDualOperator.html#a6a16c6ed9c915a6e62d04e11d98949fb":[9,0,346,0],
 "structSupplyModelForFunctionalOperator.html":[9,0,347],
@@ -154,10 +156,10 @@ var NAVTREEINDEX44 =
 "structWorkDirCreationFixture.html#a234a244b24fa59c9fdc213f2267f6498":[9,0,391,0],
 "structWorkDirCreationFixture.html#a48c733b4b420936b7a5fc22dbe848787":[9,0,391,1],
 "structWorkDirCreationFixture.html#a7c141d464d4cb5450daa629aec27787e":[9,0,391,2],
-"structYAML_1_1convert_3_01Antares_1_1Solver_1_1ModelerParameters_01_4.html":[9,0,23,26],
-"structYAML_1_1convert_3_01Monster_01_4.html":[9,0,23,29],
-"structYAML_1_1convert_3_01Power_01_4.html":[9,0,23,28],
-"structYAML_1_1convert_3_01Vec3_01_4.html":[9,0,23,27],
+"structYAML_1_1convert_3_01Antares_1_1Solver_1_1ModelerParameters_01_4.html":[9,0,23,27],
+"structYAML_1_1convert_3_01Monster_01_4.html":[9,0,23,30],
+"structYAML_1_1convert_3_01Power_01_4.html":[9,0,23,29],
+"structYAML_1_1convert_3_01Vec3_01_4.html":[9,0,23,28],
 "structbuild__AST__fixture.html":[9,0,53],
 "structbuild__AST__fixture.html#a16ab02ff8c8c483c6e46d5cd77b6d5d2":[9,0,53,4],
 "structbuild__AST__fixture.html#a412a05c2caa5c4acec8dc7569db98ceb":[9,0,53,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX44 =
 "test__unfeasible__problem_8py.html#af96a734de816ee651afb418c002320d3":[8,0,40,15],
 "test__unfeasible__problem_8py.html#afd37deb9d82f989bef8189788ab8662c":[8,0,40,11],
 "tests-matrix-load_8h_source.html":[10,0,0,10,2,1,0,0,2],
-"tests-matrix-save_8h_source.html":[10,0,0,10,2,1,0,0,3],
-"tests_2src_2libs_2antares_2logs_2antares_2logs_2logs_8h_source.html":[10,0,0,10,2,1,0,1,0,0,0],
-"tests_2src_2solver_2hydro_2management_2monthly_8cpp.html#a1ccd2d520cc18d6d2121d10622dbef43":[8,0,0,14,2,1,5]
+"tests-matrix-save_8h_source.html":[10,0,0,10,2,1,0,0,3]
 };

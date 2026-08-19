@@ -794,6 +794,7 @@ var namespaces_dup =
           [ "YmlSystem", null, [
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parser" ],
             [ "Parameter", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter" ],
+            [ "Property", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Property.html", null ],
             [ "Component", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component" ],
             [ "ConnectionEntry", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry" ],
             [ "Connection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection" ],
@@ -2351,6 +2352,7 @@ var namespaces_dup =
       [ "convert< Antares::IO::Inputs::YmlSystem::AreaConnection >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1AreaConnection_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::ThermalComponent >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection_01_4.html", null ],
+      [ "convert< Antares::IO::Inputs::YmlSystem::Property >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Property_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::System >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System_01_4.html", null ],
       [ "YmlTreeDisplayer", "classYAML_1_1YmlTreeDisplayer.html", "classYAML_1_1YmlTreeDisplayer" ],
       [ "convert< Antares::Solver::ModelerParameters >", "structYAML_1_1convert_3_01Antares_1_1Solver_1_1ModelerParameters_01_4.html", null ],
