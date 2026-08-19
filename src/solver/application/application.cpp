@@ -182,6 +182,16 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             study.parameters.simuTableFormat = Writer::TableFormat::Parquet;
         }
 
+        const bool stagesWereAskedFor = !pSettings.simulationTableStagesStr.empty()
+                                        || !study.parameters.simulationTableStagesStr.empty();
+        if (stagesWereAskedFor && !study.parameters.writeSimulationTable())
+        {
+            // Choosing stages narrows the tables that get written; it never
+            // enables them. Silence here reads like the selection was applied.
+            logs.warning() << "Simulation table stages were selected, but simulation tables are "
+                              "disabled: the selection has no effect";
+        }
+
         // The command line wins over generaldata.ini; both go through the same
         // validation, so an unknown stage name in the study stops the run too.
         // The ini value is only parsed when it is the one being used, so a

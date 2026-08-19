@@ -22,6 +22,7 @@ std::set<std::string> OptimisationsSimulationTable::parseStageSelection(const st
                                                                         const std::string& source)
 {
     std::set<std::string> selection;
+    bool everyStage = false;
 
     std::istringstream stream(input);
     std::string name;
@@ -35,9 +36,12 @@ std::set<std::string> OptimisationsSimulationTable::parseStageSelection(const st
         }
         name = name.substr(first, name.find_last_not_of(" \t") - first + 1);
 
+        // Noted, not returned on: a name after it still has to be a real one,
+        // so a typo in `all,optim-nb-3` is reported rather than swallowed.
         if (name == "all")
         {
-            return {};
+            everyStage = true;
+            continue;
         }
 
         const auto& known = allStages();
@@ -55,7 +59,7 @@ std::set<std::string> OptimisationsSimulationTable::parseStageSelection(const st
         selection.insert(name);
     }
 
-    return selection;
+    return everyStage ? std::set<std::string>{} : selection;
 }
 
 void OptimisationsSimulationTable::selectStages(std::set<std::string> stages)
