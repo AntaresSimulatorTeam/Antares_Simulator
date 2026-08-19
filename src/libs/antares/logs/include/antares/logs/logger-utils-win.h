@@ -53,7 +53,7 @@ public:
 
     std::string tagColor(const LevelInfo& level);
     std::string msgColor(const LevelInfo& level);
-    std::string removeColor(std::ostream& out);
+    std::string removeColor();
 
 private:
     std::ostream& out_;
@@ -71,7 +71,7 @@ std::string ColorEnabler::msgColor(const LevelInfo& level)
     return {};
 }
 
-std::string ColorEnabler::removeColor(std::ostream& out)
+std::string ColorEnabler::removeColor()
 {
     setConsoleColor(out_, Color::none);
     return {};
