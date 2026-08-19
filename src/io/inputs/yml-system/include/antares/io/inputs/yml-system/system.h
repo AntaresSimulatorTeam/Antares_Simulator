@@ -17,6 +17,11 @@ struct Parameter
     std::string value;
 };
 
+struct Property
+{
+    // this struct is only used for compatibility if the system-for-views.yml is used as an input
+};
+
 struct Component
 {
     std::string id;
@@ -26,7 +31,7 @@ struct Component
 
     // This field isn't an input, it's an output for the view builder
     // It's only used for building the system-for-views.yml
-    std::vector<std::string> properties;
+    std::vector<Property> properties;
 };
 
 struct ConnectionEntry

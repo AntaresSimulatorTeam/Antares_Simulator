@@ -70,6 +70,13 @@ public:
 };
 
 template<>
+class convert<Antares::IO::Inputs::YmlSystem::Property>
+{
+public:
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::Property& rhs);
+};
+
+template<>
 class convert<Antares::IO::Inputs::YmlSystem::System>
 {
 public:
