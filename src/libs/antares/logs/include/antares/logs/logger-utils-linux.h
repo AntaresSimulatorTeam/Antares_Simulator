@@ -72,8 +72,9 @@ std::string ColorEnabler::removeColor()
 
 void setLocalTime(std::tm* tmBuffer, const std::time_t* now)
 {
-    localtime_r(tmBuffer, now);
+    localtime_r(now, tmBuffer);
 }
+
 
 std::string eol()
 {
