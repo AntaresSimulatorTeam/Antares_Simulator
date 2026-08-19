@@ -139,6 +139,7 @@ bool Adequacy::year(Variable::State& state,
     if (study.parameters.writeSimulationTable())
     {
         simulationTables = std::make_unique<Antares::IO::Outputs::OptimisationsSimulationTable>();
+        simulationTables->selectStages(study.parameters.simulationTableStages);
     }
 
     for (uint w = 0; w != pNbWeeks; ++w)

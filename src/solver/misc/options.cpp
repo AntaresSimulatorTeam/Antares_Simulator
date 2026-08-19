@@ -74,6 +74,11 @@ void addParameterOptions(Yuni::GetOpt::Parser& parser,
                    ' ',
                    "parquet",
                    "Parquet format for simulation tables");
+    parser.add(settings.simulationTableStagesStr,
+               ' ',
+               "simulation-table-stages",
+               "Comma-separated list of the resolution stages to write a simulation table for: "
+               "all, optim-nb-1, optim-nb-2, remix-hydro, adq-patch-csr (default: all)");
 }
 
 void addOptimizationOptions(Yuni::GetOpt::Parser& parser,
@@ -302,6 +307,7 @@ void Settings::reset()
 
     outputSelectionStr.clear();
     outputSelection = Antares::Data::OutputSelection{};
+    simulationTableStagesStr.clear();
 
     solverOptions = Antares::Optimization::CmdLineOptimOptions{};
 }

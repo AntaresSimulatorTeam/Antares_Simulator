@@ -349,6 +349,9 @@ void Parameters::reset()
 
     hydroDebug = false;
 
+    simulationTableStages.clear();
+    simulationTableStagesStr.clear();
+
     resultFormat = legacyFilesDirectories;
 
     // Adequacy patch parameters
@@ -540,6 +543,14 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
     if (key == "adequacy-patch-debug")
     {
         return value.to<bool>(d.adqPatchDebug);
+    }
+    if (key == "simulation-table-stages")
+    {
+        // Kept raw: the stage names belong to the simulation-table library,
+        // which sits above this one. Validated and resolved when the command
+        // line is applied, so that both sources go through the same check.
+        d.simulationTableStagesStr = value.to<std::string>();
+        return true;
     }
     return false;
 }

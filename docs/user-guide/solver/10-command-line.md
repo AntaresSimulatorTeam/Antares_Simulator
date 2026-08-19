@@ -40,6 +40,7 @@ hide:
 | --derated                | Force the [derated](04-parameters.md#derated) mode                                                |
 | -z, --zip-output         | Write the results into a single zip archive                                                       |
 | --parquet                | Write simulation table in format parquet instead of csv format                                    |
+| --simulation-table-stages=VALUE | Override [which resolution stages get a simulation table](04-parameters.md#simulation-table-stages): `all`, or a comma-separated list among `optim-nb-1`, `optim-nb-2`, `remix-hydro`, `adq-patch-csr`. Default: `all` |
 
 ## Optimization
 
