@@ -5,6 +5,8 @@ toc_depth: 2
 # Antares Changelog
 
 
+## Branch 10.2.x
+
 ### Unreleased
 
 #### Features
@@ -23,6 +25,12 @@ toc_depth: 2
   no `simulation-table-<year>-optim-nb-2` file at all when the second optimisation pass does not
   run, i.e. `unit-commitment-mode = milp` and Expansion mode. See the
   [migration guide](../user-guide/04-migration-guides.md)
+
+#### Known limitations
+
+* The `remix-hydro` and `adq-patch-csr` stages are only produced when `simplex-range` is `week`.
+  A daily range solves the week as seven problems, of which only the last would be readable, so
+  the stage is skipped with a one-time warning
 
 ## Branch 10.1.x
 

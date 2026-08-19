@@ -3,7 +3,7 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to
 lower the costs of changing existing interfaces, both GUI and scripts.
 
-## 10.2.0
+## v10.2.0
 
 ### Output
 
@@ -16,8 +16,8 @@ file per stage, named `simulation-table-<year>-<stage>`:
 |---|---|---|
 | `optim-nb-1` | the first optimisation pass | always |
 | `optim-nb-2` | the second pass | when that pass runs (see below) |
-| `remix-hydro` | shave-peaks / remix hydro | always |
-| `adq-patch-csr` | the whole adequacy patch CSR treatment | when the adequacy patch is enabled |
+| `remix-hydro` | shave-peaks / remix hydro | weekly `simplex-range` only (see below) |
+| `adq-patch-csr` | the whole adequacy patch CSR treatment | adequacy patch enabled, weekly `simplex-range` only |
 
 **The two pre-existing files are unchanged** — same names, same contents. `remix-hydro` and
 `adq-patch-csr` are new files that did not exist before. A script that globs
@@ -34,6 +34,15 @@ problem is solved instead of two LP problems — and in Expansion mode.
 Scripts that open the optim-nb-2 file unconditionally must handle its absence. Note that an absent
 file and a header-only file always carried the same information — that the pass did not run.
 
+#### The post-process stages need a weekly optimization range
+
+The two new stages are written once the week has been solved and post-processed. With
+[`simplex-range`](solver/04-parameters.md#simplex-range) set to `day` the week is instead solved as
+seven daily problems, and the results the stage would report are only readable for the last of them.
+Rather than write a table covering one day out of seven, the solver writes none and logs a warning
+once. `optim-nb-1` and `optim-nb-2` are unaffected — they are written per optimization pass either
+way.
+
 #### Selecting which stages are written
 
 Each stage costs memory and writing time, so the set can be restricted. In
@@ -47,8 +56,10 @@ simulation-table-stages = optim-nb-2, adq-patch-csr
 
 The command-line option `--simulation-table-stages` overrides the generaldata.ini, including
 `--simulation-table-stages=all` to restore the full set for a single run. An unrecognized stage
-name stops the simulation. This only chooses *which* tables are written — simulation tables must
-still be enabled through the `--output` option.
+name stops the simulation, wherever it sits in the list — `all` widens the selection but does not
+excuse a typo after it. This only chooses *which* tables are written — simulation tables must still
+be enabled through the `--output` option, and selecting stages without enabling them warns and does
+nothing else.
 
 Studies that do not set the property and runs that do not pass the option, get every stage.
 
