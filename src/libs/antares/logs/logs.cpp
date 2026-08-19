@@ -109,9 +109,9 @@ void writeToConsole(const LevelInfo& level, const std::string& appliName, const 
     ColorEnabler colorEnabler(console);
     console << timestamp();
     console << application(appliName);
-    console << colorEnabler.tagColor(level) << tag(level) << colorEnabler.removeColor(console);
+    console << colorEnabler.tagColor(level) << tag(level) << colorEnabler.removeColor();
     console << ' ';
-    console << colorEnabler.msgColor(level) << msg << colorEnabler.removeColor(console);
+    console << colorEnabler.msgColor(level) << msg << colorEnabler.removeColor();
     console << '\n';
     console.flush();
 }

@@ -37,7 +37,7 @@ public:
 
     std::string tagColor(const LevelInfo& level);
     std::string msgColor(const LevelInfo& level);
-    std::string removeColor(std::ostream& out);
+    std::string removeColor();
 
 private:
     std::string getLinuxColor(const Color& color);
@@ -65,14 +65,14 @@ std::string ColorEnabler::msgColor(const LevelInfo& level)
     return getLinuxColor(level.messageColor);
 }
 
-std::string ColorEnabler::removeColor(std::ostream& out)
+std::string ColorEnabler::removeColor()
 {
     return close_with_color_;
 }
 
 void setLocalTime(std::tm* tmBuffer, const std::time_t* now)
 {
-    localtime_s(tmBuffer, now);
+    localtime_r(tmBuffer, now);
 }
 
 std::string eol()
