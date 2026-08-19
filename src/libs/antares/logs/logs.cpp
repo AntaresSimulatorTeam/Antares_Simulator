@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include "antares/logs/logs.h"
+#include "antares/logs/logger-utils.h"
 
 #include <array>
 #include <charconv>
@@ -21,25 +22,6 @@ std::optional<int>& threadNumber()
     static thread_local std::optional<int> number;
     return number;
 }
-
-enum class Color
-{
-    none,
-    red,
-    yellow,
-    green,
-    white
-};
-
-struct LevelInfo
-{
-    int level;
-    const char* tag;
-    bool toStderr;
-    bool notifyCallback;
-    Color tagColor;
-    Color messageColor;
-};
 
 #ifdef _WIN32
 namespace
