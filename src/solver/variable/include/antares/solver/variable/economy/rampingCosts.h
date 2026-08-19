@@ -30,16 +30,22 @@ struct RampingCostTraits
     static constexpr uint8_t decimal = 0;
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
 
-    template<class AuxiliaryData>
-    static void setHourlyValue(IntermediateValues& values,
-                               AuxiliaryData& /*auxiliaryData*/,
-                               const State& state,
-                               unsigned int /*numSpace*/)
+    static void setHourlyValue(IntermediateValues&, const State&, unsigned int)
+    {
+    }
+
+    static void yearEndBuildForEachThermalCluster(IntermediateValues& values,
+                                                  State& state,
+                                                  uint /*year*/,
+                                                  unsigned int /*numSpace*/)
     {
         if (state.study.parameters.include.thermal_ramping)
         {
-            values[state.hourInTheYear] = state
-                                            .thermalClusterRampingCostForYear[state.hourInTheYear];
+            for (unsigned int i = 0; i < state.study.runtime.rangeLimits.hour[Data::rangeCount];
+                 ++i)
+            {
+                values[i] += state.thermalClusterRampingCostForYear[i];
+            }
         }
         else
         {
