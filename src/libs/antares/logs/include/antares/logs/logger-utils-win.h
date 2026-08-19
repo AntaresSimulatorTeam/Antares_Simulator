@@ -82,11 +82,11 @@ void setLocalTime(std::tm* tmBuffer, const std::time_t* now)
     localtime_s(tmBuffer, now);
 }
 
-}
-
 std::string eol()
 {
     return "\r\n";
+}
+
 }
 
 #endif
