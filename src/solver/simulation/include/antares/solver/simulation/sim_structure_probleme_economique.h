@@ -787,9 +787,17 @@ public:
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     Antares::Solver::ModelerData* modelerData = nullptr;
 
+    // Whether the solve must publish `lastSolvedModelerProblem` below. Set per
+    // week by OPT_OptimisationLineaire, which is the level that knows whether a
+    // post-process stage will read it back. Deliberately not tied to whether
+    // *this* pass writes a table: a run that selects only post-process stages
+    // gets no optimisation-pass table at all, and would otherwise lose every
+    // modeler row of the stages it did ask for.
+    bool retainSolvedModelerProblem = false;
+
     // Modeler side of the last optimisation pass of the current week, kept alive
     // past the solve so a post-process simulation table can re-emit the modeler
-    // component rows. Null unless simulation tables are written.
+    // component rows. Null unless `retainSolvedModelerProblem` is set.
     std::shared_ptr<const Antares::Optimization::SolvedModelerProblem> lastSolvedModelerProblem;
 };
 

@@ -275,6 +275,20 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                    problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
 
     callIfExport(options.exportBehavior, [&] { OPT_ExportStructures(problemeHebdo, writer); });
+
+    // Only a post-process dump reads the solved modeler problem back, and only
+    // to re-emit modeler component rows, so retaining it is pointless unless
+    // such a stage is selected and the study has a modeler side at all. A daily
+    // optimisation range is excluded for the same reason: the dump no-ops there
+    // (see DumpSimulationTableAfterPostProcess), so nothing would read it. This
+    // is the lowest level that still sees the whole stage selection.
+    problemeHebdo->retainSolvedModelerProblem = simulationTables
+                                                && problemeHebdo->modelerData
+                                                && problemeHebdo
+                                                     ->OptimisationAuPasHebdomadaire
+                                                && simulationTables
+                                                     ->anyPostProcessStageSelected();
+
     auto* firstOptimSimulationTable = simulationTables
                                         ? simulationTables->firstOptimSimulationTable()
                                         : nullptr;
