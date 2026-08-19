@@ -6,6 +6,7 @@
 #ifndef _WIN32
 
 #include <ctime>
+
 #include "antares/logs/logger-utils.h"
 
 namespace Antares::Logs
@@ -75,12 +76,11 @@ void setLocalTime(std::tm* tmBuffer, const std::time_t* now)
     localtime_r(now, tmBuffer);
 }
 
-
 std::string eol()
 {
     return "\n";
 }
 
-}
+} // namespace Antares::Logs
 
 #endif
