@@ -29,6 +29,7 @@ target_link_libraries(utils
         Antares::study
         Antares::result_writer
         Antares::optimization-options
+        Antares::simu-table-generator
         antares-core
 )
 

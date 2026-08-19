@@ -722,7 +722,7 @@ BOOST_AUTO_TEST_CASE(
     problem.inactiveComponents = analyzer;
     fill();
 
-    BOOST_CHECK(!FindRow(table, "balance_port.flow", "area1_hydro").has_value());
+    BOOST_CHECK(!FindRow(table, "balance_port.flow", "area1_hydro_storage").has_value());
 }
 
 BOOST_AUTO_TEST_CASE(hydro_balance_port_flow_is_kept_when_reservoir_unmanaged_but_inflow_nonzero)
@@ -733,7 +733,7 @@ BOOST_AUTO_TEST_CASE(hydro_balance_port_flow_is_kept_when_reservoir_unmanaged_bu
     problem.inactiveComponents = analyzer;
     fill();
 
-    BOOST_CHECK(FindRow(table, "balance_port.flow", "area1_hydro").has_value());
+    BOOST_CHECK(FindRow(table, "balance_port.flow", "area1_hydro_storage").has_value());
 }
 
 BOOST_AUTO_TEST_CASE(hydro_balance_port_flow_is_kept_when_reservoir_managed_even_if_inflow_all_zero)
@@ -744,7 +744,7 @@ BOOST_AUTO_TEST_CASE(hydro_balance_port_flow_is_kept_when_reservoir_managed_even
     problem.inactiveComponents = analyzer;
     fill();
 
-    BOOST_CHECK(FindRow(table, "balance_port.flow", "area1_hydro").has_value());
+    BOOST_CHECK(FindRow(table, "balance_port.flow", "area1_hydro_storage").has_value());
 }
 
 BOOST_AUTO_TEST_CASE(port_field_link_flows_are_the_signed_flow_and_its_negation)
