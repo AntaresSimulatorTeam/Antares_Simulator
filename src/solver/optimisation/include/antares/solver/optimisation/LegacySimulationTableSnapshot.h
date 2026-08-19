@@ -22,7 +22,7 @@ namespace Antares::Optimization
 void FillLegacySimulationTable(
   Antares::IO::Outputs::SimulationTable& simulationTable,
   PROBLEME_HEBDO& problemeHebdo,
-  const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+  const Antares::LinearProblem::Api::FillContext& fillContext,
   const LegacyNameMapper& nameMapper,
   unsigned currentBlock);
 

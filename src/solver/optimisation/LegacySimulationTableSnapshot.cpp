@@ -11,7 +11,7 @@
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using Antares::IO::Outputs::SimulationTable;
-using Antares::Optimisation::LinearProblemApi::FillContext;
+using Antares::LinearProblem::Api::FillContext;
 
 namespace Antares::Optimization
 {
