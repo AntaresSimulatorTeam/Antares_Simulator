@@ -303,7 +303,8 @@ Link variables files columns: *Link Hour Flow*
 
 Restricting the list saves the memory and the writing time of the tables you do not need; it does
 not change the values of the ones you keep. This parameter only chooses *which* tables are written
-— simulation tables must also be enabled, via the `--output` command-line option.
+— simulation tables must also be enabled, via the `--output` command-line option; selecting stages
+without enabling them warns and has no other effect.
 
 The command-line option `--simulation-table-stages` overrides this parameter, including
 `--simulation-table-stages=all`, which restores the full set for a single run. An unrecognised

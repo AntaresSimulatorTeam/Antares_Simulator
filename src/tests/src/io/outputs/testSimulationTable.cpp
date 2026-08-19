@@ -484,8 +484,15 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_EmptyAndAllMeanNoRestriction)
 {
     BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("").empty());
     BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("all").empty());
-    // "all" wins over its neighbours rather than being taken for a stage name.
+    // "all" wins over its neighbours rather than being taken for a stage name,
+    // wherever in the list it sits.
     BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("remix-hydro,all").empty());
+    BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("all,remix-hydro").empty());
+
+    // Widening the selection is not a licence to stop reading: a name after an
+    // "all" is still checked, so a typo is reported rather than swallowed.
+    BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("all,optim-nb-3"),
+                      std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(ParseStageSelection_TrimsSpacesAndRejectsUnknownNames)

@@ -32,10 +32,12 @@ public:
     static const std::vector<std::string>& allStages();
 
     // Parses a user-supplied stage list: comma-separated names, or "all". An
-    // empty input also means every stage. Throws std::runtime_error naming the
-    // valid stages when a name is not one of them; `source` is how that message
-    // refers to where the list came from, since it can be either the command
-    // line or generaldata.ini.
+    // empty input also means every stage, and "all" anywhere in the list widens
+    // it to every stage. Throws std::runtime_error naming the valid stages when
+    // a name is not one of them -- including names that follow an "all", so the
+    // whole list is checked whatever it ends up meaning; `source` is how that
+    // message refers to where the list came from, since it can be either the
+    // command line or generaldata.ini.
     static std::set<std::string> parseStageSelection(
       const std::string& input,
       const std::string& source = "--simulation-table-stages");
