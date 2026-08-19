@@ -7,17 +7,15 @@
 
 #include "antares/study/study.h"
 
-using namespace Yuni;
-
 namespace Antares::Data
 {
 
 bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix<double>& dailyPower,
                                        const Matrix<double>::ColumnType& nbHoursAtPmaxPerDay)
 {
-    for (uint tsNumber = 0; tsNumber < dailyPower.width; ++tsNumber)
+    for (unsigned int tsNumber = 0; tsNumber < dailyPower.width; ++tsNumber)
     {
-        for (uint day = 0; day < DAYS_PER_YEAR; ++day)
+        for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
         {
             if (dailyPower[tsNumber][day] * nbHoursAtPmaxPerDay[day] > 0.)
             {
@@ -32,7 +30,7 @@ bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix<double>& dailyPower,
 void CalculateDailyMeanPower(const Matrix<double>::ColumnType& hourlyColumn,
                              Matrix<double>::ColumnType& dailyColumn)
 {
-    for (uint day = 0; day < DAYS_PER_YEAR; ++day)
+    for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
     {
         dailyColumn[day] = std::accumulate(hourlyColumn + day * HOURS_PER_DAY,
                                            hourlyColumn + day * HOURS_PER_DAY + HOURS_PER_DAY,
@@ -48,12 +46,12 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
     // alias to the simulation mode
     auto mode = rinfos.mode;
 
-    for (uint i = 0; i != 168; ++i)
+    for (unsigned int i = 0; i != 168; ++i)
     {
         dispatchableGenerationMargin[i] = 0;
     }
 
-    for (uint h = 0; h != HOURS_PER_YEAR; ++h)
+    for (unsigned int h = 0; h != HOURS_PER_YEAR; ++h)
     {
         mustrunSum[h] = std::numeric_limits<double>::quiet_NaN();
         originalMustrunSum[h] = std::numeric_limits<double>::quiet_NaN();
@@ -62,11 +60,11 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
     // Fatal hors hydro
     {
         double sum;
-        uint w;
+        unsigned int w;
         assert(area.miscGen.height > 0);
         assert(area.miscGen.width > 0);
-        uint height = area.miscGen.height;
-        for (uint h = 0; h != height; ++h)
+        unsigned int height = area.miscGen.height;
+        for (unsigned int h = 0; h != height; ++h)
         {
             sum = 0.;
             for (w = 0; w != area.miscGen.width; ++w)
@@ -77,7 +75,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
         }
         if (mode == Data::SimulationMode::Adequacy)
         {
-            for (uint h = 0; h != area.miscGen.height; ++h)
+            for (unsigned int h = 0; h != area.miscGen.height; ++h)
             {
                 miscGenSum[h] -= area.reserves[Data::fhrPrimaryReserve][h];
             }
@@ -148,7 +146,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
         auto& colPowerOverWater = m[PreproHydro::powerOverWater];
         auto& colMaxEnergy = m[PreproHydro::maximumEnergy];
 
-        for (uint month = 0; month < MONTHS_PER_YEAR; ++month)
+        for (unsigned int month = 0; month < MONTHS_PER_YEAR; ++month)
         {
             valueCol += colMaxEnergy[month] * (1. - colPowerOverWater[month]);
         }
@@ -176,14 +174,16 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
 void AreaScratchpad::CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& hourlyMaxGenMatrix,
                                                         const Matrix<double>& hourlyMaxPumpMatrix)
 {
-    for (uint nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxGenMatrix.width; ++nbOfTimeSeries)
+    for (unsigned int nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxGenMatrix.width;
+         ++nbOfTimeSeries)
     {
         auto& hourlyMaxGenColumn = hourlyMaxGenMatrix[nbOfTimeSeries];
         auto& MeanMaxDailyGenPowerColumn = meanMaxDailyGenPower.timeSeries[nbOfTimeSeries];
         CalculateDailyMeanPower(hourlyMaxGenColumn, MeanMaxDailyGenPowerColumn);
     }
 
-    for (uint nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxPumpMatrix.width; ++nbOfTimeSeries)
+    for (unsigned int nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxPumpMatrix.width;
+         ++nbOfTimeSeries)
     {
         auto& MeanMaxDailyPumpPowerColumn = meanMaxDailyPumpPower.timeSeries[nbOfTimeSeries];
         auto& hourlyMaxPumpColumn = hourlyMaxPumpMatrix[nbOfTimeSeries];

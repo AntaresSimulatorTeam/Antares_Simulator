@@ -102,8 +102,8 @@ public:
 
     bool loadEconomicCosts(Study& s, const std::filesystem::path& folder);
 
-    bool savePreproToFolder(const AnyString& folder) const;
-    bool saveEconomicCosts(const AnyString& folder) const;
+    bool savePreproToFolder(const std::string& folder) const;
+    bool saveEconomicCosts(const std::string& folder) const;
 
     std::size_t enabledAndMustRunCount() const;
     std::size_t enabledAndNotMustRunCount() const;

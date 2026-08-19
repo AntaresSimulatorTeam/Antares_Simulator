@@ -3,22 +3,22 @@
 
 #include "antares/study/runtime/runtime.h"
 
+#include <string>
+
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include "antares/antares/fatal-error.h"
 #include "antares/study/area/scratchpad.h"
 
-using namespace Yuni;
-
 namespace Antares::Data
 {
 static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos& r)
 {
-    uint areaCount = study.areas.size();
-    uint nbYearsInParallel = study.maxNbYearsInParallel;
+    unsigned int areaCount = study.areas.size();
+    unsigned int nbYearsInParallel = study.maxNbYearsInParallel;
 
     // For each area
-    for (uint a = 0; a != areaCount; ++a)
+    for (unsigned int a = 0; a != areaCount; ++a)
     {
         // alias to the current area
         auto& area = *(study.areas.byIndex[a]);
@@ -33,7 +33,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
             auto& e = m[PreproHydro::expectation];
             auto& s = m[PreproHydro::stdDeviation];
             double nE, nS;
-            for (uint i = 0; i != 12; ++i)
+            for (unsigned int i = 0; i != 12; ++i)
             {
                 if (!Utils::isZero(e[i]))
                 {
@@ -66,7 +66,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         }
 
         area.scratchpad.reserve(nbYearsInParallel);
-        for (uint numSpace = 0; numSpace < nbYearsInParallel; numSpace++)
+        for (unsigned int numSpace = 0; numSpace < nbYearsInParallel; numSpace++)
         {
             area.scratchpad.emplace_back(r, area);
         }
@@ -95,7 +95,7 @@ static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos
 {
     r.areaLink.resize(study.areas.areaLinkCount());
 
-    uint indx = 0;
+    unsigned int indx = 0;
 
     study.areas.each(
       [&indx, &r](Data::Area& area)
@@ -117,8 +117,8 @@ static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos
 void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimits& limits)
 {
     // Hour
-    uint a = study.calendar.days[study.parameters.simulationDays.first].hours.first;
-    uint b = study.calendar.days[study.parameters.simulationDays.end - 1].hours.end - 1;
+    unsigned int a = study.calendar.days[study.parameters.simulationDays.first].hours.first;
+    unsigned int b = study.calendar.days[study.parameters.simulationDays.end - 1].hours.end - 1;
 
     if (b < a) // normalize
     {
@@ -159,16 +159,16 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     limits.hour[rangeEnd] = b;
     limits.hour[rangeCount] = b - a + 1;
     // Day
-    limits.day[rangeBegin] = (uint)ca.dayYear;
-    limits.day[rangeEnd] = (uint)cb.dayYear;
+    limits.day[rangeBegin] = (unsigned int)ca.dayYear;
+    limits.day[rangeEnd] = (unsigned int)cb.dayYear;
     limits.day[rangeCount] = limits.day[rangeEnd] - limits.day[rangeBegin] + 1;
     // week
-    limits.week[rangeBegin] = (uint)ca.week;
-    limits.week[rangeEnd] = (uint)cb.week;
+    limits.week[rangeBegin] = (unsigned int)ca.week;
+    limits.week[rangeEnd] = (unsigned int)cb.week;
     limits.week[rangeCount] = limits.week[rangeEnd] - limits.week[rangeBegin] + 1;
     // month
-    limits.month[rangeBegin] = (uint)ca.month;
-    limits.month[rangeEnd] = (uint)cb.month;
+    limits.month[rangeBegin] = (unsigned int)ca.month;
+    limits.month[rangeEnd] = (unsigned int)cb.month;
     limits.month[rangeCount] = limits.month[rangeEnd] - limits.month[rangeBegin] + 1;
     // year
     limits.year[rangeBegin] = 0;
@@ -197,14 +197,16 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
 
     // Number of simulation days per month
-    for (uint i = 0; i != 12; ++i)
+    for (unsigned int i = 0; i != 12; ++i)
     {
         simulationDaysPerMonth[i] = 0;
     }
     if (ca.month == cb.month)
     {
-        simulationDaysPerMonth[(uint)ca.month] = (uint)(cb.dayYear - ca.dayYear + 1);
-        if (simulationDaysPerMonth[(uint)ca.month] > study.calendar.months[(uint)ca.month].days)
+        simulationDaysPerMonth[(unsigned int)ca.month] = (unsigned int)(cb.dayYear - ca.dayYear
+                                                                        + 1);
+        if (simulationDaysPerMonth[(unsigned int)ca.month]
+            > study.calendar.months[(unsigned int)ca.month].days)
         {
             throw FatalError("Internal error when preparing the calendar");
         }
@@ -213,31 +215,31 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     {
         simulationDaysPerMonth[ca.month] = study.calendar.months[ca.month].days - ca.dayMonth;
         simulationDaysPerMonth[cb.month] = cb.dayMonth + 1;
-        for (uint i = ca.month + 1; i < cb.month; ++i)
+        for (unsigned int i = ca.month + 1; i < cb.month; ++i)
         {
             simulationDaysPerMonth[i] = study.calendar.months[i].days;
         }
     }
     {
-        CString<50, false> s;
-        for (uint i = 0; i != 12; ++i)
+        std::string s;
+        for (unsigned int i = 0; i != 12; ++i)
         {
             if (i)
             {
-                s << ", ";
+                s += ", ";
             }
-            s << simulationDaysPerMonth[i];
+            s += std::to_string(simulationDaysPerMonth[i]);
         }
         logs.info() << "Simulation days per month : " << s;
     }
 
     // Number of simulation days per week
-    for (uint i = 0; i != 53; ++i)
+    for (unsigned int i = 0; i != 53; ++i)
     {
         simulationDaysPerWeek[i] = 0;
     }
 
-    for (uint d = limits.day[rangeBegin]; d <= limits.day[rangeEnd]; d++)
+    for (unsigned int d = limits.day[rangeBegin]; d <= limits.day[rangeEnd]; d++)
     {
         simulationDaysPerWeek[study.calendar.days[d].week]++;
     }
@@ -277,7 +279,7 @@ void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
 void StudyRuntimeInfos::initializeRandomNumberGenerators(const Parameters& parameters)
 {
     logs.info() << "Initializing random number generators...";
-    for (uint i = 0; i != Data::seedMax; ++i)
+    for (unsigned int i = 0; i != Data::seedMax; ++i)
     {
 #ifndef NDEBUG
         logs.debug() << "  random number generator: " << Data::SeedToCString((Data::SeedIndex)i)
@@ -331,7 +333,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     checkThermalTSGeneration(study);
 
     transitMoyenInterconnexionsRecalculQuadratique.resize(interconnectionsCount());
-    for (uint i = 0; i != interconnectionsCount(); i++)
+    for (unsigned int i = 0; i != interconnectionsCount(); i++)
     {
         transitMoyenInterconnexionsRecalculQuadratique[i].assign(HOURS_PER_YEAR, 0.);
     }
@@ -362,14 +364,14 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     return true;
 }
 
-uint StudyRuntimeInfos::interconnectionsCount() const
+unsigned int StudyRuntimeInfos::interconnectionsCount() const
 {
-    return static_cast<uint>(areaLink.size());
+    return static_cast<unsigned int>(areaLink.size());
 }
 
 static void removeClusters(Study& study,
                            const char* type,
-                           std::function<uint(Area&)> eachArea,
+                           std::function<unsigned int(Area&)> eachArea,
                            bool verbose = true)
 {
     if (verbose)
@@ -377,9 +379,9 @@ static void removeClusters(Study& study,
         logs.info();
         logs.info() << "Removing disabled " << type << " clusters in from solver computations...";
     }
-    uint count = 0;
+    unsigned int count = 0;
     // each area...
-    for (uint a = 0; a != study.areas.size(); ++a)
+    for (unsigned int a = 0; a != study.areas.size(); ++a)
     {
         Area& area = *(study.areas.byIndex[a]);
         count += eachArea(area);

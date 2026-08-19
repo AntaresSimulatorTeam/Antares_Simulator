@@ -17,8 +17,8 @@
 #include "antares/solver/modeler/ModelerData.h"
 #include "antares/utils/utils.h"
 
-using namespace Antares::Optimisation;
-using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::LinearProblem;
+using namespace Antares::LinearProblem::Api;
 using namespace Antares::Expressions;
 
 namespace Antares::IO::Outputs
@@ -166,8 +166,8 @@ void addConstraintEntries(SimulationTable& simulationTable,
                           const FillContext& fillContext,
                           const ModelerStudy::SystemModel::Component& component,
                           const OptimEntityContainer& optimEntityContainer,
-                          const LinearProblemApi::ILinearProblemData* data,
-                          const LinearProblemApi::IScenario& scenario,
+                          const Api::ILinearProblemData* data,
+                          const Api::IScenario& scenario,
                           unsigned currentBlock,
                           const TimeConversionMode& timeConversionMode,
                           unsigned year,
@@ -214,10 +214,10 @@ void addConstraintEntries(SimulationTable& simulationTable,
                 // Check if we need to drop the constraint
                 if (modelConstr.outOfBoundsProcessingMode()
                       == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP
-                    && Optimisation::hasOutOfBoundsTimeShift(modelConstr.expression().RootNode(),
-                                                             *ts,
-                                                             fillContext,
-                                                             evalVisitor))
+                    && LinearProblem::hasOutOfBoundsTimeShift(modelConstr.expression().RootNode(),
+                                                              *ts,
+                                                              fillContext,
+                                                              evalVisitor))
                 {
                     activeConstraint = nullptr;
                 }
@@ -303,10 +303,10 @@ void addEntriesForNode(SimulationTable& simulationTable,
 
                 if (constraint.outOfBoundsProcessingMode()
                       == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP
-                    && Optimisation::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
-                                                             *ts,
-                                                             fillContext,
-                                                             evalVisitor))
+                    && LinearProblem::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
+                                                              *ts,
+                                                              fillContext,
+                                                              evalVisitor))
                 {
                     return;
                 }

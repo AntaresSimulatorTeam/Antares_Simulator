@@ -5,7 +5,7 @@
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
 #include <antares/solver/utils/ortools_utils.h>
 
-namespace Antares::Optimisation::LinearProblemMpsolverImpl
+namespace Antares::LinearProblem::MpsolverImpl
 {
 
 OrtoolsMipSolution::OrtoolsMipSolution(MPSolver::ResultStatus& status, MPSolver* solver):
@@ -18,27 +18,27 @@ OrtoolsMipSolution::OrtoolsMipSolution(MPSolver::ResultStatus& status, MPSolver*
     }
 }
 
-LinearProblemApi::MipStatus OrtoolsMipSolution::getStatus() const
+Api::MipStatus OrtoolsMipSolution::getStatus() const
 {
     switch (status_)
     {
     case MPSolver::ResultStatus::OPTIMAL:
-        return LinearProblemApi::MipStatus::OPTIMAL;
+        return Api::MipStatus::OPTIMAL;
     case MPSolver::ResultStatus::FEASIBLE:
-        return LinearProblemApi::MipStatus::FEASIBLE;
+        return Api::MipStatus::FEASIBLE;
     case MPSolver::ResultStatus::UNBOUNDED:
-        return LinearProblemApi::MipStatus::UNBOUNDED;
+        return Api::MipStatus::UNBOUNDED;
     case MPSolver::ResultStatus::INFEASIBLE:
-        return LinearProblemApi::MipStatus::INFEASIBLE;
+        return Api::MipStatus::INFEASIBLE;
     default:
         logs.warning() << "Solve returned an error status";
         break;
     }
-    return LinearProblemApi::MipStatus::MIP_ERROR;
+    return Api::MipStatus::MIP_ERROR;
 }
 
 double OrtoolsMipSolution::getObjectiveValue() const
 {
     return ::getObjectiveValue(mpSolver_);
 }
-} // namespace Antares::Optimisation::LinearProblemMpsolverImpl
+} // namespace Antares::LinearProblem::MpsolverImpl

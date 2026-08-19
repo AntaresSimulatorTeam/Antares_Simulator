@@ -8,9 +8,8 @@
 #include <memory>
 #include <mutex>
 #include <set>
+#include <string>
 #include <vector>
-
-#include <yuni/yuni.h>
 
 #include <antares/solver/ts-generator/law.h>
 
@@ -44,6 +43,10 @@ enum class LocalTSGenerationBehavior
     forceGen,
     forceNoGen
 };
+
+bool stringToStatisticalLaw(const std::string& text, StatisticalLaw& out);
+bool stringToCostGeneration(const std::string& text, CostGeneration& out);
+bool stringToLocalTSGenerationBehavior(const std::string& text, LocalTSGenerationBehavior& out);
 
 double computeMarketBidCost(double fuelCost,
                             double fuelEfficiency,
@@ -109,7 +112,7 @@ public:
     /*!
     ** \brief Check the validity of Min Stable Power with a new modulation value
     */
-    bool checkMinStablePowerWithNewModulation(uint idx, double value);
+    bool checkMinStablePowerWithNewModulation(unsigned int idx, double value);
     //@}
 
     bool checkModulation();
@@ -123,7 +126,7 @@ public:
     bool isActive() const;
 
     //! The index of the cluster (within a list)
-    uint index = 0;
+    unsigned int index = 0;
 
     //! The global index of the cluster across all areas (used by the solver)
     int globalIndex = -1;
@@ -162,17 +165,17 @@ public:
 
         double value;
         double border;
-        uint index;
+        unsigned int index;
         bool isCalculated;
         bool isValidated;
     } minDivModulation;
 
     //! Min. Up time (1..168)
-    uint minUpTime = 1;
+    unsigned int minUpTime = 1;
     //! Min. Down time (1..168)
-    uint minDownTime = 1;
+    unsigned int minDownTime = 1;
     //! Max entre . minUp/minDown time (1..168)
-    uint minUpDownTime;
+    unsigned int minUpDownTime;
     //@}
 
     //! Spinning (%)
@@ -294,7 +297,5 @@ private:
 
 }; // class ThermalCluster
 } // namespace Antares::Data
-
-#include "cluster.hxx"
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_THERMAL_CLUSTER_H__ */

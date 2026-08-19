@@ -82,7 +82,7 @@ jobs:
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
     - name: Set up Python
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v7
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 

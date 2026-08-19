@@ -23,31 +23,31 @@ using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
 using namespace Antares::ModelerStudy;
-using namespace Antares::Optimisation;
+using namespace Antares::LinearProblem;
 
 namespace bdata = boost::unit_test::data;
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 static std::ostream& operator<<(std::ostream& os, VariabilityType v)
 {
     switch (v)
     {
     case VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO:
-        return os << "Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO";
+        return os << "LinearProblem::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO";
     case VariabilityType::VARYING_IN_TIME_ONLY:
-        return os << "Optimisation::VariabilityType::VARYING_IN_TIME_ONLY";
+        return os << "LinearProblem::VariabilityType::VARYING_IN_TIME_ONLY";
     case VariabilityType::VARYING_IN_SCENARIO_ONLY:
-        return os << "Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY";
+        return os << "LinearProblem::VariabilityType::VARYING_IN_SCENARIO_ONLY";
     case VariabilityType::VARYING_IN_TIME_AND_SCENARIO:
-        return os << "Optimisation::VariabilityType::VARYING_IN_TIME_AND_SCENARIO";
+        return os << "LinearProblem::VariabilityType::VARYING_IN_TIME_AND_SCENARIO";
     default:
         return os << "<unknown>";
     }
 }
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem
 
-class DefaultScenario final: public LinearProblemApi::IScenario
+class DefaultScenario final: public Api::IScenario
 {
 public:
     using IScenario::IScenario;
@@ -65,8 +65,8 @@ struct TestVariabilityVisitorFixture
     ParameterNode parameterNode{"param", VariabilityType::VARYING_IN_SCENARIO_ONLY};
     VariableNode variableNode{"v1", 0, VariabilityType::VARYING_IN_TIME_ONLY};
     std::optional<VariabilityVisitor> variabilityVisitor;
-    LinearProblemDataImpl::LinearProblemData data_;
-    LinearProblemDataImpl::LinearProblemData data2_;
+    DataImpl::LinearProblemData data_;
+    DataImpl::LinearProblemData data2_;
 
     void setup()
     {
@@ -80,14 +80,13 @@ struct TestVariabilityVisitorFixture
           {build_context_parameter_with("param", "0", VariabilityType::VARYING_IN_SCENARIO_ONLY)},
           "group");
 
-        auto bounds_time_series = std::make_unique<LinearProblemDataImpl::TimeSeriesSet>("bounds",
-                                                                                         3);
-        LinearProblemApi::FillContext ctx{0, 2, 0, 2, 0};
+        auto bounds_time_series = std::make_unique<DataImpl::TimeSeriesSet>("bounds", 3);
+        Api::FillContext ctx{0, 2, 0, 2, 0};
         // setting 3 hours (including h 1 and 2)
         bounds_time_series->add({10., 11., 12.});
         data_.addDataSeries(std::move(bounds_time_series));
-        std::vector<std::unique_ptr<LinearProblemApi::IScenario>> scenarios;
-        auto scenario0 = std::make_unique<LinearProblemDataImpl::Scenario>("group");
+        std::vector<std::unique_ptr<Api::IScenario>> scenarios;
+        auto scenario0 = std::make_unique<DataImpl::Scenario>("group");
         scenario0->setTimeSerieNumber(0, 0);
         scenarios.push_back(std::move(scenario0));
 
@@ -377,9 +376,9 @@ BOOST_AUTO_TEST_CASE(test_time_index_logical_operator)
 
 BOOST_AUTO_TEST_CASE(overwrite_variability_in_model_by_variablility_in_component)
 {
-    // When Optimisation::VariabilityType in component parameter is less varying than in model,
+    // When LinearProblem::VariabilityType in component parameter is less varying than in model,
     // the
-    // component's Optimisation::VariabilityType should be returned
+    // component's LinearProblem::VariabilityType should be returned
 
     fixture.createModel("model",
                         {"param"},
@@ -391,13 +390,13 @@ BOOST_AUTO_TEST_CASE(overwrite_variability_in_model_by_variablility_in_component
       {build_context_parameter_with("param", "0", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)},
       "group");
 
-    auto bounds_time_series = std::make_unique<LinearProblemDataImpl::TimeSeriesSet>("bounds", 3);
-    LinearProblemApi::FillContext ctx{0, 2, 0, 2, 0};
+    auto bounds_time_series = std::make_unique<DataImpl::TimeSeriesSet>("bounds", 3);
+    Api::FillContext ctx{0, 2, 0, 2, 0};
     // setting 3 hours (including h 1 and 2)
     bounds_time_series->add({10., 11., 12.});
     data2_.addDataSeries(std::move(bounds_time_series));
-    std::vector<std::unique_ptr<LinearProblemApi::IScenario>> scenarios;
-    auto scenario0 = std::make_unique<LinearProblemDataImpl::Scenario>("group2");
+    std::vector<std::unique_ptr<Api::IScenario>> scenarios;
+    auto scenario0 = std::make_unique<DataImpl::Scenario>("group2");
     scenario0->setTimeSerieNumber(0, 0);
     scenarios.push_back(std::move(scenario0));
 

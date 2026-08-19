@@ -14,7 +14,6 @@
 #include "antares/study/study.h"
 
 namespace fs = std::filesystem;
-using namespace Yuni;
 
 namespace Antares::Data
 {
@@ -120,7 +119,7 @@ void ClusterList<ClusterT>::clearAll()
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n) const
+void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(unsigned int n) const
 {
     for (auto& c: allClusters_)
     {
@@ -200,7 +199,7 @@ void ClusterList<ClusterT>::buildIndexes()
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
+bool ClusterList<ClusterT>::saveDataSeriesToFolder(const std::string& folder) const
 {
     return std::ranges::all_of(allClusters_,
                                [&folder](const auto c)
@@ -223,7 +222,8 @@ bool ClusterList<ClusterT>::loadReserveParticipations(Area& area, const std::fil
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const
+void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total,
+                                                              unsigned int& unitCount) const
 {
     total = 0.;
     unitCount = 0;

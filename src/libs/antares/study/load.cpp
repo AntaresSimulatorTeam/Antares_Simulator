@@ -121,8 +121,6 @@ bool Study::internalLoadFromFolder(const fs::path& path,
 
     // Reserving enough space in buffer to avoid several calls to realloc
     this->dataBuffer.reserve(4 * 1024 * 1024); // For matrices, reserving 4Mo
-    this->bufferLoadingTS.reserve(2096);
-    assert(this->bufferLoadingTS.capacity() > 0);
 
     if (!internalLoadIni(path, options))
     {

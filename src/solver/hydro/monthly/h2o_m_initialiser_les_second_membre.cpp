@@ -4,7 +4,7 @@
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
-namespace DonneesOptimisationMensuelle
+namespace Antares::Solver::Hydro::Monthly
 {
 void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
@@ -51,4 +51,4 @@ void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES& DonneesAnnuelles)
         Cnt++;
     }
 }
-} // namespace DonneesOptimisationMensuelle
+} // namespace Antares::Solver::Hydro::Monthly

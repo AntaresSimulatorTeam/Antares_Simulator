@@ -7,7 +7,7 @@
 
 #include <boost/algorithm/string.hpp>
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 
 /** \brief Interface for scenarios in the linear problem API.
@@ -56,4 +56,4 @@ public:
         return 1; // No data available in an empty scenario
     }
 };
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace Antares::LinearProblem::Api

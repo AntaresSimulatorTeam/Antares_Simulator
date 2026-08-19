@@ -1,16 +1,17 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include <yuni/yuni.h>
+#include <string>
 
 #include <antares/inifile/inifile.h>
+#include <antares/logs/logs.h>
+#include <antares/utils/utils.h>
 #include "antares/study/cleaner.h"
 #include "antares/study/study.h"
 
-using namespace Yuni;
 using namespace Antares;
 
-#define SEP IO::Separator
+static const std::string SEP(1, '/');
 
 namespace Antares::Data
 {
@@ -26,163 +27,160 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e,
     const AreaName& id = area->id;
 
     // Load
-    buffer.clear() << "input/load/prepro/" << id;
+    buffer = "input/load/prepro/" + id;
     p.add(buffer);
-    buffer.clear() << "input/load/prepro/" << id << "/data.txt";
+    buffer = "input/load/prepro/" + id + "/data.txt";
     e.add(buffer);
-    buffer.clear() << "input/load/prepro/" << id << "/settings.ini";
+    buffer = "input/load/prepro/" + id + "/settings.ini";
     e.add(buffer);
-    buffer.clear() << "input/load/prepro/" << id << "/k.txt";
+    buffer = "input/load/prepro/" + id + "/k.txt";
     e.add(buffer);
-    buffer.clear() << "input/load/prepro/" << id << "/conversion.txt";
+    buffer = "input/load/prepro/" + id + "/conversion.txt";
     e.add(buffer);
-    buffer.clear() << "input/load/prepro/" << id << "/translation.txt";
+    buffer = "input/load/prepro/" + id + "/translation.txt";
     e.add(buffer);
-    buffer.clear() << "input/load/series/load_" << id << ".txt";
+    buffer = "input/load/series/load_" + id + ".txt";
     e.add(buffer);
 
     // Solar
-    buffer.clear() << "input/solar/prepro/" << id;
+    buffer = "input/solar/prepro/" + id;
     p.add(buffer);
-    buffer.clear() << "input/solar/prepro/" << id << "/data.txt";
+    buffer = "input/solar/prepro/" + id + "/data.txt";
     e.add(buffer);
-    buffer.clear() << "input/solar/prepro/" << id << "/settings.ini";
+    buffer = "input/solar/prepro/" + id + "/settings.ini";
     e.add(buffer);
-    buffer.clear() << "input/solar/prepro/" << id << "/k.txt";
+    buffer = "input/solar/prepro/" + id + "/k.txt";
     e.add(buffer);
-    buffer.clear() << "input/solar/prepro/" << id << "/conversion.txt";
+    buffer = "input/solar/prepro/" + id + "/conversion.txt";
     e.add(buffer);
-    buffer.clear() << "input/solar/prepro/" << id << "/translation.txt";
+    buffer = "input/solar/prepro/" + id + "/translation.txt";
     e.add(buffer);
-    buffer.clear() << "input/solar/series/solar_" << id << ".txt";
+    buffer = "input/solar/series/solar_" + id + ".txt";
     e.add(buffer);
 
     // Hydro
-    buffer.clear() << "input/hydro/common/capacity/waterValues_" << id << ".txt";
+    buffer = "input/hydro/common/capacity/waterValues_" + id + ".txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/common/capacity/creditmodulations_" << id << ".txt";
+    buffer = "input/hydro/common/capacity/creditmodulations_" + id + ".txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/common/capacity/inflowPattern_" << id << ".txt";
+    buffer = "input/hydro/common/capacity/inflowPattern_" + id + ".txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/common/capacity/maxDailyGenEnergy_" << id << ".txt";
+    buffer = "input/hydro/common/capacity/maxDailyGenEnergy_" + id + ".txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/common/capacity/maxDailyPumpEnergy_" << id << ".txt";
+    buffer = "input/hydro/common/capacity/maxDailyPumpEnergy_" + id + ".txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/common/capacity/reservoir_" << id << ".txt";
+    buffer = "input/hydro/common/capacity/reservoir_" + id + ".txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/series/" << id;
+    buffer = "input/hydro/series/" + id;
     p.add(buffer);
-    buffer.clear() << "input/hydro/series/" << id << "/ror.txt";
+    buffer = "input/hydro/series/" + id + "/ror.txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/series/" << id << "/mod.txt";
+    buffer = "input/hydro/series/" + id + "/mod.txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/series/" << id << "/mingen.txt";
+    buffer = "input/hydro/series/" + id + "/mingen.txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/series/" << id << "/maxHourlyGenPower.txt";
+    buffer = "input/hydro/series/" + id + "/maxHourlyGenPower.txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/series/" << id << "/maxHourlyPumpPower.txt";
+    buffer = "input/hydro/series/" + id + "/maxHourlyPumpPower.txt";
     e.add(buffer);
-    buffer.clear() << "input/hydro/allocation/" << id << ".ini";
+    buffer = "input/hydro/allocation/" + id + ".ini";
     p.add(buffer);
-    buffer.clear() << "input/hydro/prepro/" << id;
+    buffer = "input/hydro/prepro/" + id;
     p.add(buffer);
-    buffer.clear() << "input/hydro/prepro/" << id << "/prepro.ini";
+    buffer = "input/hydro/prepro/" + id + "/prepro.ini";
     e.add(buffer);
-    buffer.clear() << "input/hydro/prepro/" << id << "/energy.txt";
+    buffer = "input/hydro/prepro/" + id + "/energy.txt";
     e.add(buffer);
 
     // Wind
-    buffer.clear() << "input/wind/prepro/" << id;
+    buffer = "input/wind/prepro/" + id;
     p.add(buffer);
-    buffer.clear() << "input/wind/prepro/" << id << "/data.txt";
+    buffer = "input/wind/prepro/" + id + "/data.txt";
     e.add(buffer);
-    buffer.clear() << "input/wind/prepro/" << id << "/settings.ini";
+    buffer = "input/wind/prepro/" + id + "/settings.ini";
     e.add(buffer);
-    buffer.clear() << "input/wind/prepro/" << id << "/k.txt";
+    buffer = "input/wind/prepro/" + id + "/k.txt";
     e.add(buffer);
-    buffer.clear() << "input/wind/prepro/" << id << "/conversion.txt";
+    buffer = "input/wind/prepro/" + id + "/conversion.txt";
     e.add(buffer);
-    buffer.clear() << "input/wind/prepro/" << id << "/translation.txt";
+    buffer = "input/wind/prepro/" + id + "/translation.txt";
     e.add(buffer);
-    buffer.clear() << "input/wind/series/wind_" << id << ".txt";
+    buffer = "input/wind/series/wind_" + id + ".txt";
     e.add(buffer);
 
     // Thermal
     {
-        buffer.clear() << "input/thermal/series/" << id;
+        buffer = "input/thermal/series/" + id;
         p.add(buffer);
-        buffer.clear() << "input/thermal/prepro/" << id;
+        buffer = "input/thermal/prepro/" + id;
         p.add(buffer);
-        buffer.clear() << "input/thermal/clusters/" << id;
+        buffer = "input/thermal/clusters/" + id;
         p.add(buffer);
-        buffer.clear() << "input/thermal/clusters/" << id << "/list.ini";
+        buffer = "input/thermal/clusters/" + id + "/list.ini";
         e.add(buffer);
 
         for (auto& cluster: area->thermal.list.all())
         {
-            buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster->id();
+            buffer = "input/thermal/prepro/" + id + '/' + cluster->id();
             p.add(buffer);
-            buffer.clear() << "input/thermal/series/" << id << '/' << cluster->id();
+            buffer = "input/thermal/series/" + id + '/' + cluster->id();
             p.add(buffer);
 
-            buffer.clear() << "input/thermal/series/" << id << '/' << cluster->id()
-                           << "/series.txt";
+            buffer = "input/thermal/series/" + id + '/' + cluster->id() + "/series.txt";
             e.add(buffer);
 
-            buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster->id() << "/data.txt";
+            buffer = "input/thermal/prepro/" + id + '/' + cluster->id() + "/data.txt";
             e.add(buffer);
-            buffer.clear() << "input/thermal/prepro/" << id << '/' << cluster->id()
-                           << "/modulation.txt";
+            buffer = "input/thermal/prepro/" + id + '/' + cluster->id() + "/modulation.txt";
             e.add(buffer);
         }
     }
 
     // Renewable clusters
     {
-        buffer.clear() << "input/renewables/series/" << id;
+        buffer = "input/renewables/series/" + id;
         p.add(buffer);
 
-        buffer.clear() << "input/renewables/clusters/" << id;
+        buffer = "input/renewables/clusters/" + id;
         p.add(buffer);
 
-        buffer.clear() << "input/renewables/clusters/" << id << "/list.ini";
+        buffer = "input/renewables/clusters/" + id + "/list.ini";
         e.add(buffer);
 
         for (const auto& cluster: area->renewable.list.all())
         {
-            buffer.clear() << "input/renewables/series/" << id << '/' << cluster->id();
+            buffer = "input/renewables/series/" + id + '/' + cluster->id();
             p.add(buffer);
 
-            buffer.clear() << "input/renewables/series/" << id << '/' << cluster->id()
-                           << "/series.txt";
+            buffer = "input/renewables/series/" + id + '/' + cluster->id() + "/series.txt";
             e.add(buffer);
         }
     }
 
     // Misc-gen
-    buffer.clear() << "input/misc-gen/miscgen-" << id << ".txt";
+    buffer = "input/misc-gen/miscgen-" + id + ".txt";
     e.add(buffer);
 
     // Reserves
-    buffer.clear() << "input/reserves/" << id << ".txt";
+    buffer = "input/reserves/" + id + ".txt";
     e.add(buffer);
 
     // Areas
-    buffer.clear() << "input/areas/" << id;
+    buffer = "input/areas/" + id;
     p.add(buffer);
-    buffer.clear() << "input/areas/" << id << "/ui.ini";
+    buffer = "input/areas/" + id + "/ui.ini";
     e.add(buffer);
-    buffer.clear() << "input/areas/" << id << "/optimization.ini";
+    buffer = "input/areas/" + id + "/optimization.ini";
     e.add(buffer);
-    buffer.clear() << "input/areas/" << id << "/adequacy_patch.ini";
+    buffer = "input/areas/" + id + "/adequacy_patch.ini";
     e.add(buffer);
 
     // Interconnections
-    buffer.clear() << "input/links/" << id;
+    buffer = "input/links/" + id;
     p.add(buffer);
-    buffer.clear() << "input/links/" << id << "/capacities";
+    buffer = "input/links/" + id + "/capacities";
     p.add(buffer);
-    buffer.clear() << "input/links/" << id << "/properties.ini";
+    buffer = "input/links/" + id + "/properties.ini";
     e.add(buffer);
 }
 
@@ -194,17 +192,17 @@ void listOfFilesAnDirectoriesToKeepForLinks(PathList& p, const Area* area, Strin
     {
         auto& link = *(i->second);
         // Parameters
-        buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << link.with->id
-                       << "_parameters" << ".txt";
+        buffer = "input" + SEP + std::string("links") + SEP + link.from->id + SEP + link.with->id
+                 + "_parameters.txt";
         p.add(buffer);
 
         // Indirect capacities
-        buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << "capacities"
-                       << SEP << link.with->id << "_direct" << ".txt";
+        buffer = "input" + SEP + std::string("links") + SEP + link.from->id + SEP
+                 + std::string("capacities") + SEP + link.with->id + "_direct.txt";
         p.add(buffer);
         // Direct capacities
-        buffer.clear() << "input" << SEP << "links" << SEP << link.from->id << SEP << "capacities"
-                       << SEP << link.with->id << "_indirect" << ".txt";
+        buffer = "input" + SEP + std::string("links") + SEP + link.from->id + SEP
+                 + std::string("capacities") + SEP + link.with->id + "_indirect.txt";
         p.add(buffer);
     }
 }
@@ -214,7 +212,7 @@ void listOfFilesAnDirectoriesToKeepForLinks(PathList& p, const Area* area, Strin
 bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
 {
     auto* study = new Study();
-    study->relocate(infos->folder.c_str());
+    study->relocate(infos->folder);
 
     PathList& e = infos->exclude;
     PathList& p = infos->postExclude;
@@ -244,12 +242,21 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
     e.add("input/thermal/areas.ini");
 
     // Also exclude custom files/folders provided by the user
-    infos->customExclude.words(":",
-                               [&e](const AnyString& word)
-                               {
-                                   e.add(word);
-                                   return true;
-                               });
+    std::string::size_type begin = 0;
+    while (begin <= infos->customExclude.size())
+    {
+        const std::string::size_type end = infos->customExclude.find(':', begin);
+        const std::string word = infos->customExclude.substr(begin,
+                                                             end == std::string::npos
+                                                               ? std::string::npos
+                                                               : end - begin);
+        e.add(word);
+        if (end == std::string::npos)
+        {
+            break;
+        }
+        begin = end + 1;
+    }
 
     // Post
     p.add("logs");
@@ -289,18 +296,18 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
 
     // Getting all areas
     auto* arealist = new AreaList(*study);
-    String buffer;
+    std::string buffer;
     buffer.reserve(FILENAME_MAX);
-    buffer.clear() << infos->folder << "/input/areas/list.txt";
+    buffer = infos->folder + "/input/areas/list.txt";
 
     // Do not display useless messages
     logs.info() << "  :: analyzing the study data";
-    logs.verbosityLevel = Logs::Verbosity::Warning::level;
+    logs.verbosityLevel = Yuni::Logs::Verbosity::Warning::level;
 
-    if (arealist->loadListFromFile(buffer.c_str()))
+    if (arealist->loadListFromFile(buffer))
     {
         // restoring standard verbosity level
-        logs.verbosityLevel = Logs::Verbosity::Debug::level;
+        logs.verbosityLevel = Yuni::Logs::Verbosity::Debug::level;
 
         // Browse all areas
         auto end = arealist->areas.end();
@@ -311,21 +318,18 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
 
             {
                 // Do not display useless messages
-                logs.verbosityLevel = Logs::Verbosity::Warning::level;
+                logs.verbosityLevel = Yuni::Logs::Verbosity::Warning::level;
                 // Load all thermal clusters
-                buffer.clear() << infos->folder << "/input/thermal/clusters/" << area->id;
-                if (not area->thermal.list.loadFromFolder(
-                      buffer.c_str(),
-                      area,
-                      study->parameters.include.thermal_ramping))
+                buffer = infos->folder + "/input/thermal/clusters/" + area->id;
+                if (not area->thermal.list.loadFromFolder(buffer, area))
                 {
                     delete arealist;
                     delete study;
                     return false;
                 }
 
-                buffer.clear() << infos->folder << "/input/renewables/clusters/" << area->id;
-                if (not area->renewable.list.loadFromFolder(buffer.c_str(), area))
+                buffer = infos->folder + "/input/renewables/clusters/" + area->id;
+                if (not area->renewable.list.loadFromFolder(buffer, area))
                 {
                     delete arealist;
                     delete study;
@@ -333,7 +337,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
                 }
 
                 // restoring standard verbosity level
-                logs.verbosityLevel = Logs::Verbosity::Debug::level;
+                logs.verbosityLevel = Yuni::Logs::Verbosity::Debug::level;
             }
 
             // Exclude
@@ -344,17 +348,17 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
             // Interconnections
             {
                 // Do not display useless messages
-                logs.verbosityLevel = Logs::Verbosity::Warning::level;
+                logs.verbosityLevel = Yuni::Logs::Verbosity::Warning::level;
                 // load all links
-                buffer.clear() << infos->folder << "/input/links/" << area->id;
-                if (not AreaLinksLoadFromFolder(*study, arealist, area, buffer.c_str()))
+                buffer = infos->folder + "/input/links/" + area->id;
+                if (not AreaLinksLoadFromFolder(*study, arealist, area, buffer))
                 {
                     delete arealist;
                     delete study;
                     return false;
                 }
                 // restoring standard verbosity level
-                logs.verbosityLevel = Logs::Verbosity::Debug::level;
+                logs.verbosityLevel = Yuni::Logs::Verbosity::Debug::level;
             }
             listOfFilesAnDirectoriesToKeepForLinks(p, area, buffer);
             area->clearAllLinks();
@@ -368,12 +372,12 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
     }
 
     // restoring standard verbosity level
-    logs.verbosityLevel = Logs::Verbosity::Debug::level;
+    logs.verbosityLevel = Yuni::Logs::Verbosity::Debug::level;
 
     delete arealist;
 
     IniFile ini;
-    buffer.clear() << infos->folder << "/input/bindingconstraints/bindingconstraints.ini";
+    buffer = infos->folder + "/input/bindingconstraints/bindingconstraints.ini";
     if (ini.open(buffer))
     {
         ini.each(
@@ -384,11 +388,8 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
               {
                   if (property->key == "id")
                   {
-                      String v = property->value;
-                      v.toLower();
-                      String tmp;
-                      tmp << "input/bindingconstraints/" << v << ".txt";
-                      e.add(tmp);
+                      std::string v = Antares::stringToLower(std::string(property->value));
+                      e.add("input/bindingconstraints/" + v + ".txt");
                       // Go to the next binding constraint
                       break;
                   }

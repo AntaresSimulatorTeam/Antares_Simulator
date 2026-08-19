@@ -4,6 +4,9 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_TIMESERIES_H__
 
+#include <filesystem>
+#include <string>
+
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>
 #include <antares/study/parameters.h>
@@ -39,7 +42,7 @@ public:
     void reset();
 
     // This method erases data
-    void resizeTS(uint nbSeries);
+    void resizeTS(unsigned int nbSeries);
 
     /*!
     ** \brief Load all data not already loaded
@@ -69,7 +72,7 @@ public:
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
     bool saveToFolder(const AreaName& areaID,
-                      const AnyString& folder,
+                      const std::string& folder,
                       Parameters::Compatibility::HydroPmax hydroPmax) const;
     //@}
 
@@ -116,7 +119,7 @@ public:
 
     // Getters for generation (ror, storage and mingen) and
     // max power (generation and pumping) number of TS
-    uint TScount() const;
+    unsigned int TScount() const;
 
     // Setting TS's when derated mode is on
     void resizeTSinDeratedMode(bool derated,

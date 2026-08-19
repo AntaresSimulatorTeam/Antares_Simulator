@@ -185,7 +185,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(
 
           if (area.hydro.reservoirManagement)
           {
-              auto problem = DonneesOptimisationMensuelle::H2O_M_Instanciation(1);
+              auto problem = Antares::Solver::Hydro::Monthly::H2O_M_Instanciation(1);
 
               MTG = computeMonthlyTargetGenerations(area, data, areaMonthlyData);
 
@@ -214,7 +214,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(
                   problem.VolumeMax[month] = maxLvl[firstDay];
               }
 
-              DonneesOptimisationMensuelle::H2O_M_OptimiserUneAnnee(problem, 0);
+              Antares::Solver::Hydro::Monthly::H2O_M_OptimiserUneAnnee(problem, 0);
               switch (problem.ResultatsValides)
               {
               case OUI:
