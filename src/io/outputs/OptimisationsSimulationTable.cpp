@@ -75,11 +75,21 @@ SimulationTable* OptimisationsSimulationTable::secondOptimSimulationTable()
 
 SimulationTable* OptimisationsSimulationTable::tableForStage(const std::string& stage)
 {
-    if (!selectedStages_.empty() && !selectedStages_.contains(stage))
+    if (!isStageSelected(stage))
     {
         return nullptr;
     }
     return &stages_.try_emplace(stage).first->second;
+}
+
+bool OptimisationsSimulationTable::isStageSelected(const std::string& stage) const
+{
+    return selectedStages_.empty() || selectedStages_.contains(stage);
+}
+
+bool OptimisationsSimulationTable::anyPostProcessStageSelected() const
+{
+    return isStageSelected(remixHydroStage) || isStageSelected(adequacyPatchStage);
 }
 
 const std::map<std::string, SimulationTable>& OptimisationsSimulationTable::stages() const

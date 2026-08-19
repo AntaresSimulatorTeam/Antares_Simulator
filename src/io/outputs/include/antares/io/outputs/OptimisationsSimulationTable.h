@@ -54,6 +54,15 @@ public:
     // later stages are added.
     SimulationTable* tableForStage(const std::string& stage);
 
+    // Whether `stage` would get a table, without creating one.
+    [[nodiscard]] bool isStageSelected(const std::string& stage) const;
+
+    // Whether any stage dumped after a post-process is selected. The weekly
+    // solve asks this to decide whether it must keep its modeler problem alive
+    // for a later dump to re-emit: nothing reads it when only the optimisation
+    // stages are wanted.
+    [[nodiscard]] bool anyPostProcessStageSelected() const;
+
     [[nodiscard]] const std::map<std::string, SimulationTable>& stages() const;
 
     // Empties every stage's table, keeping the stages themselves: the same

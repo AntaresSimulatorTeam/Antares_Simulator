@@ -423,6 +423,30 @@ Feature: Legacy variables in simulation table
 
 
   @short
+  Scenario: A selected post-process stage keeps its modeler rows
+    # The solve keeps its modeler problem alive past the solve so the
+    # post-process dump can re-emit the modeler component rows. That retention
+    # hangs on the *post-process* stages, never on whether this optimisation
+    # pass writes a table of its own -- selecting only remix-hydro leaves both
+    # passes without one, and tying the two would quietly reduce every stage the
+    # run did ask for to its legacy half.
+    #
+    # "3_6_1" is a hybrid study: a legacy node with load and wind, plus one
+    # generator component `gen1`. It has no managed hydro, so remix hydro moves
+    # nothing and the gen1 rows are the ones optim-nb-2 carries, unchanged --
+    # which is what makes their presence, not their value, the assertion here.
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
+    When I run antares simulator with --output=simulation-tables --simulation-table-stages=remix-hydro
+    Then the simulation succeeds
+    And the simulation tables cover exactly the stages "remix-hydro"
+    And the modeler outputs are read from stage "remix-hydro"
+    And the modeler outputs contain the following entries
+      | block | component | output | timestep | scenario | value |
+      | 0     | gen1      | p      | 0        | 0        | 3878  |
+      | 0     | gen1      | p      | 1        | 0        | 3572  |
+
+
+  @short
   Scenario: The study can ask for its stages in generaldata.ini
     # simulation-table-stages in the [output] section, so a study carries its
     # own selection instead of every run having to pass the flag. Works on a

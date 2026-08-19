@@ -534,6 +534,40 @@ BOOST_AUTO_TEST_CASE(SelectStages_UnselectedStagesReturnNullptr)
     BOOST_CHECK_EQUAL(tables.stages().size(), 1u);
 }
 
+BOOST_AUTO_TEST_CASE(SelectStages_PostProcessStagesDriveTheModelerProblemRetention)
+{
+    // The weekly solve keeps its modeler problem alive only for a post-process
+    // dump to re-emit; asking the question must not depend on -- nor create --
+    // an optimisation-pass table, since a selection may well have none.
+    OptimisationsSimulationTable everything;
+    BOOST_CHECK(everything.anyPostProcessStageSelected());
+
+    for (const auto& stage: {OptimisationsSimulationTable::remixHydroStage,
+                             OptimisationsSimulationTable::adequacyPatchStage})
+    {
+        OptimisationsSimulationTable tables;
+        tables.selectStages({stage});
+        BOOST_CHECK_MESSAGE(tables.anyPostProcessStageSelected(), stage);
+        // Specifically the case that used to drop the modeler rows: no optim
+        // stage is selected, so neither pass gets a table of its own.
+        BOOST_CHECK(tables.firstOptimSimulationTable() == nullptr);
+        BOOST_CHECK(tables.secondOptimSimulationTable() == nullptr);
+    }
+
+    OptimisationsSimulationTable optimOnly;
+    optimOnly.selectStages({OptimisationsSimulationTable::firstOptimStage,
+                            OptimisationsSimulationTable::secondOptimStage});
+    BOOST_CHECK(!optimOnly.anyPostProcessStageSelected());
+
+    // Querying must not create anything.
+    OptimisationsSimulationTable untouched;
+    untouched.selectStages({OptimisationsSimulationTable::remixHydroStage});
+    BOOST_CHECK(untouched.isStageSelected(OptimisationsSimulationTable::remixHydroStage));
+    BOOST_CHECK(!untouched.isStageSelected(OptimisationsSimulationTable::firstOptimStage));
+    BOOST_CHECK(untouched.anyPostProcessStageSelected());
+    BOOST_CHECK(untouched.stages().empty());
+}
+
 BOOST_AUTO_TEST_CASE(SelectStages_EmptySelectionKeepsEveryStage)
 {
     OptimisationsSimulationTable tables;
