@@ -81,6 +81,11 @@ bool Economy::simulationBegin()
                                             simulationObserver_.get(),
                                             study.parameters.writeSimulationTable());
 
+            if (auto* tables = weeklyOptProblems_[numSpace].simulationTables())
+            {
+                tables->selectStages(study.parameters.simulationTableStages);
+            }
+
             // The tables live on the heap behind a unique_ptr member, so this
             // pointer survives the reallocations of weeklyOptProblems_ that the
             // next iterations of this loop cause. Null when the run does not

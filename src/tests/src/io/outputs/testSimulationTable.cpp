@@ -470,6 +470,109 @@ BOOST_AUTO_TEST_CASE(WriteTo_SkipsStagesWithNoRows)
     std::filesystem::remove(empty);
 }
 
+BOOST_AUTO_TEST_CASE(ParseStageSelection_AcceptsAllTheStageNames)
+{
+    for (const auto& stage: OptimisationsSimulationTable::allStages())
+    {
+        const auto selection = OptimisationsSimulationTable::parseStageSelection(stage);
+        BOOST_CHECK_EQUAL(selection.size(), 1u);
+        BOOST_CHECK(selection.contains(stage));
+    }
+}
+
+BOOST_AUTO_TEST_CASE(ParseStageSelection_EmptyAndAllMeanNoRestriction)
+{
+    BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("").empty());
+    BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("all").empty());
+    // "all" wins over its neighbours rather than being taken for a stage name.
+    BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("remix-hydro,all").empty());
+}
+
+BOOST_AUTO_TEST_CASE(ParseStageSelection_TrimsSpacesAndRejectsUnknownNames)
+{
+    const auto selection = OptimisationsSimulationTable::parseStageSelection(
+      " optim-nb-2 , adq-patch-csr ");
+    BOOST_CHECK_EQUAL(selection.size(), 2u);
+    BOOST_CHECK(selection.contains("optim-nb-2"));
+    BOOST_CHECK(selection.contains("adq-patch-csr"));
+
+    BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("optim-nb-3"),
+                      std::runtime_error);
+    // A stage name that is only a prefix of a real one is still a mistake.
+    BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("remix"),
+                      std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(ParseStageSelection_ErrorNamesWhereTheListCameFrom)
+{
+    // The same list can come from the command line or from generaldata.ini;
+    // pointing at the wrong one sends the reader to the wrong file.
+    try
+    {
+        OptimisationsSimulationTable::parseStageSelection("nope", "some-source");
+        BOOST_FAIL("an unknown stage name must throw");
+    }
+    catch (const std::runtime_error& e)
+    {
+        const std::string message = e.what();
+        BOOST_CHECK_MESSAGE(message.find("some-source") != std::string::npos, message);
+        BOOST_CHECK_MESSAGE(message.find("remix-hydro") != std::string::npos, message);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(SelectStages_UnselectedStagesReturnNullptr)
+{
+    OptimisationsSimulationTable tables;
+    tables.selectStages({"remix-hydro"});
+
+    BOOST_CHECK(tables.tableForStage("remix-hydro") != nullptr);
+    BOOST_CHECK(tables.firstOptimSimulationTable() == nullptr);
+    BOOST_CHECK(tables.secondOptimSimulationTable() == nullptr);
+    BOOST_CHECK(tables.tableForStage("adq-patch-csr") == nullptr);
+
+    // A refused stage is not even created, so the writer never sees it.
+    BOOST_CHECK_EQUAL(tables.stages().size(), 1u);
+}
+
+BOOST_AUTO_TEST_CASE(SelectStages_EmptySelectionKeepsEveryStage)
+{
+    OptimisationsSimulationTable tables;
+    tables.selectStages({});
+
+    for (const auto& stage: OptimisationsSimulationTable::allStages())
+    {
+        BOOST_CHECK_MESSAGE(tables.tableForStage(stage) != nullptr, "refused " + stage);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(SelectStages_WriterOnlyEmitsSelectedStages)
+{
+    OptimisationsSimulationTable tables;
+    tables.selectStages({"optim-nb-1"});
+
+    const SimulationTableEntry entry{.block = 1,
+                                     .component = "comp1",
+                                     .output = "var1",
+                                     .absolute_time_index = 1,
+                                     .block_time_index = 1,
+                                     .scenario_index = 0,
+                                     .value = 10.0,
+                                     .status = MipBasisStatus::BASIC};
+    tables.firstOptimSimulationTable()->addEntry(entry);
+
+    auto tempDir = std::filesystem::temp_directory_path();
+    LegacySimulationTablesWriter(tempDir, 9 /* year */, TableFormat::CSV).write(tables);
+
+    const auto selected = tempDir / "simulation-table-9-optim-nb-1.csv";
+    const auto refused = tempDir / "simulation-table-9-optim-nb-2.csv";
+    BOOST_CHECK(std::filesystem::exists(selected));
+    BOOST_CHECK_MESSAGE(!std::filesystem::exists(refused),
+                        "an unselected stage must not produce a file");
+
+    std::filesystem::remove(selected);
+    std::filesystem::remove(refused);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(VariableDictionaryTests)

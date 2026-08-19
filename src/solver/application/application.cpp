@@ -4,6 +4,8 @@
 #include "antares/application/application.h"
 
 #include <chrono>
+#include <optional>
+#include <set>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/application/ScenarioBuilderOwner.h>
@@ -11,6 +13,7 @@
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/infoCollection/StudyInfoCollector.h>
+#include <antares/io/outputs/OptimisationsSimulationTable.h>
 #include <antares/logs/hostinfo.h>
 #include <antares/resources/resources.h>
 #include <antares/study/duplicates.h>
@@ -131,6 +134,16 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     pSettings.resolveOutputSelection();
     pStudy->parameters.outputSelection = pSettings.outputSelection;
 
+    // Validated here, so an unknown stage name on the command line is reported
+    // before the study is even loaded; applied after the load (below), where it
+    // overrides what generaldata.ini asked for.
+    std::optional<std::set<std::string>> stagesFromCommandLine;
+    if (!pSettings.simulationTableStagesStr.empty())
+    {
+        stagesFromCommandLine = IO::Outputs::OptimisationsSimulationTable::parseStageSelection(
+          pSettings.simulationTableStagesStr);
+    }
+
     // Force some options
     options.ignoreConstraints = pSettings.ignoreConstraints;
 
@@ -167,6 +180,21 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         if (pSettings.parquetFmtForSimuTables)
         {
             study.parameters.simuTableFormat = Writer::TableFormat::Parquet;
+        }
+
+        // The command line wins over generaldata.ini; both go through the same
+        // validation, so an unknown stage name in the study stops the run too.
+        // The ini value is only parsed when it is the one being used, so a
+        // command-line selection is also a way past a study that has a bad one.
+        if (stagesFromCommandLine)
+        {
+            study.parameters.simulationTableStages = *stagesFromCommandLine;
+        }
+        else
+        {
+            study.parameters.simulationTableStages = IO::Outputs::OptimisationsSimulationTable::
+              parseStageSelection(study.parameters.simulationTableStagesStr,
+                                  "simulation-table-stages in generaldata.ini");
         }
 
         if (pSettings.forceZipOutput)
