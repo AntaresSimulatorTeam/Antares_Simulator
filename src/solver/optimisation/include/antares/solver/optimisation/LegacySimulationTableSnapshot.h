@@ -30,9 +30,13 @@ namespace Antares::Optimization
 // The modeler side of the last optimisation pass of a week, kept alive past the
 // solve so a post-process dump can re-emit the modeler component rows.
 //
-// Cheap to hold: OrtoolsMipVariable only wraps a raw MPVariable*, and the
-// MPSolver that owns the data is already retained for the whole week in
-// PROBLEME_ANTARES_A_RESOUDRE::ProblemesSpx.
+// Cheap to hold, but only because the lifetime is kept tight at both ends. The
+// MPSolver holding the actual problem data is also in
+// PROBLEME_ANTARES_A_RESOUDRE::ProblemesSpx for as long as this lives, so what
+// the retention adds is the wrapper objects -- and OrtoolsMipVariable only wraps
+// a raw MPVariable*. OPT_TryToCallSimplex drops the previous value before
+// building the next problem, so two are never alive at once, and neither
+// survives the pass that replaced it.
 struct SolvedModelerProblem
 {
     std::shared_ptr<const Antares::Optimisation::LinearProblemApi::ILinearProblem> problem;

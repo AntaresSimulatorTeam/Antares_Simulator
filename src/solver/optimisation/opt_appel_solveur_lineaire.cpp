@@ -174,6 +174,14 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     bool hasModelerData = modelerData != nullptr;
     const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
+    // Release the problem retained by the previous pass before building this
+    // one, so the two never coexist: this function's peak is one problem, not
+    // two. Nothing can still want the old one -- a post-process dump runs after
+    // the week's last pass, and a week whose solve fails throws out of
+    // OPT_OptimisationHebdomadaireLineaire before the post-processes run, so the
+    // value cleared here could never have been published either way.
+    problemeHebdo->lastSolvedModelerProblem.reset();
+
     auto ortoolsProblem = std::make_shared<Antares::Optimization::LegacyOrtoolsLinearProblem>(
       isMip,
       options.solverName);
