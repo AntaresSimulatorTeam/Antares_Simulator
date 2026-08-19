@@ -178,44 +178,74 @@ std::string tag(const LevelInfo& level)
     return '[' + std::string(level.tag) + ']';
 }
 
-std::string setTagColor(std::ostream& out, const LevelInfo& level)
+class ColorEnabler
+{
+public:
+    explicit ColorEnabler(std::ostream& out):
+        out_(out)
+    {
+    }
+
+    std::string tagColor(const LevelInfo& level);
+    std::string msgColor(const LevelInfo& level);
+    std::string removeColor(std::ostream& out);
+
+private:
+    std::string getLinuxColor(std::string color);
+    std::ostream& out_;
+    std::string close_with_color_;
+};
+
+std::string ColorEnabler::getLinuxColor(std::string color)
+{
+    close_with_color_ = "";
+    if (color != "\x1b[0m")
+    {
+        close_with_color_ = "\x1b[0m";
+        return color;
+    }
+    return {};
+}
+
+std::string ColorEnabler::tagColor(const LevelInfo& level)
 {
 #ifdef _WIN32
-    setConsoleColor(out, level.tagColorWin);
+    setConsoleColor(out_, level.tagColorWin);
     return {};
 #else
-        return level.tagColorAnsi;
+    return getLinuxColor(level.tagColorAnsi);
 #endif
 }
 
-std::string setMsgColor(std::ostream& out, const LevelInfo& level)
+std::string ColorEnabler::msgColor(const LevelInfo& level)
 {
 #ifdef _WIN32
-    setConsoleColor(out, level.messageColorWin);
+    setConsoleColor(out_, level.messageColorWin);
     return {};
 #else
-    return level.messageColorAnsi;
+    return getLinuxColor(level.messageColorAnsi);
 #endif
 }
 
-std::string removeColor(std::ostream& out)
+std::string ColorEnabler::removeColor(std::ostream& out)
 {
 #ifdef _WIN32
-    setConsoleColor(out, winDefault);
+    setConsoleColor(out_, winDefault);
     return {};
 #else
-    return "\x1b[0m";
+    return close_with_color_;
 #endif
 }
 
 void writeToConsole(const LevelInfo& level, const std::string& appliName, const std::string& msg)
 {
     std::ostream& console = level.toStderr ? std::cerr : std::cout;
+    ColorEnabler colorEnabler(console);
     console << timestamp();
     console << application(appliName);
-    console << setTagColor(console, level) << tag(level) << removeColor(console);
+    console << colorEnabler.tagColor(level) << tag(level) << colorEnabler.removeColor(console);
     console << ' ';
-    console << setMsgColor(console, level) << msg << removeColor(console);
+    console << colorEnabler.msgColor(level) << msg << colorEnabler.removeColor(console);
     console << '\n';
     console.flush();
 }
