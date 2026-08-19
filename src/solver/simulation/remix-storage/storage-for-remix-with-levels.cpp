@@ -78,7 +78,7 @@ void StorageForRemixWithLevels::checkLevels()
             if (levels_[h] > ruleCurveUp_[h] + TOLERANCE
                 || levels_[h] < ruleCurveLow_[h] - TOLERANCE)
             {
-                logs.notice().appendFormat(
+                logs.error().appendFormat(
                   "%s - hour %zu : level = %.17g, low rule curve = %.17g, up rule curve = %.17g, "
                   "tolerance = %.17g",
                   name().c_str(),
@@ -117,7 +117,7 @@ void StorageForRemixWithLevels::checkInput(size_t size)
 
     if (ruleCurveUp_[0] + TOLERANCE <= initLevel_)
     {
-        logs.notice().appendFormat(
+        logs.error().appendFormat(
           "%s - initial level = %.17g, up rule curve at hour 0 = %.17g, tolerance = %.17g",
           name().c_str(),
           initLevel_,

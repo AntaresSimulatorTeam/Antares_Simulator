@@ -52,7 +52,7 @@ void StorageForRemixNoLevels::checkInput(size_t size)
         {
             if (withdrawal_[h] > pmax_[h] + TOLERANCE)
             {
-                logs.notice().appendFormat(
+                logs.error().appendFormat(
                   "%s - hour %zu : withdrawal = %.17g, pmax = %.17g, tolerance = %.17g",
                   name().c_str(),
                   h,
@@ -71,7 +71,7 @@ void StorageForRemixNoLevels::checkInput(size_t size)
         {
             if (withdrawal_[h] < pmin_[h] - TOLERANCE)
             {
-                logs.notice().appendFormat(
+                logs.error().appendFormat(
                   "%s - hour %zu : withdrawal = %.17g, pmin = %.17g, tolerance = %.17g",
                   name().c_str(),
                   h,
