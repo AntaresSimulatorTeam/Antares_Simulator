@@ -4,9 +4,9 @@
 #ifndef __ANTARES_LIBS_STUDY_CLEANER_H__
 #define __ANTARES_LIBS_STUDY_CLEANER_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/bind.h>
-#include <yuni/core/string.h>
+#include <cstdint>
+#include <functional>
+#include <string>
 
 #include <antares/paths/list.h>
 
@@ -26,7 +26,7 @@ public:
     /*!
     ** \brief Constructor with a given path
     */
-    explicit StudyCleaningInfos(const AnyString& path);
+    explicit StudyCleaningInfos(const std::string& path);
     /*!
     ** \brief Destructor
     */
@@ -51,11 +51,11 @@ public:
     /*!
     ** \brief Set an additional list of excluded files or directories.
     */
-    void setCustomExcludeList(const Yuni::String& c);
+    void setCustomExcludeList(const std::string& c);
 
 public:
     /*! A study folder */
-    Yuni::String folder;
+    std::string folder;
 
     /*! Version of the study */
     StudyVersion version;
@@ -64,7 +64,7 @@ public:
     /*! List of all files/folders to prevent from the destruction */
     ::PathList exclude;
     /*! Colon-separated list of all files/folders to prevent from the destruction */
-    Yuni::String customExclude;
+    std::string customExclude;
 
     /*! List of all files/folders to exclude after analyzing the content of the folder */
     /* This list mainly ensures that a list of folders will not deleted enven if empty */
@@ -75,7 +75,7 @@ public:
     **
     ** Return false to stop the process
     */
-    std::function<bool(uint)> onProgress;
+    std::function<bool(unsigned int)> onProgress;
 
 }; // class StudyCleaningInfos
 

@@ -25,6 +25,50 @@ template<class StringT>
 void TransformNameIntoID(const AnyString& name, StringT& out);
 std::string transformNameIntoID(const std::string& name);
 
+/*!
+** \brief Convert a string into a boolean
+**
+** Replicates the legacy behavior of `Yuni::CString::to<bool>()`:
+** a single character equal to `1`, `y`, `o` or `t` (any case) or a
+** word equal to `true`, `on` or `yes` (any case) yields `true`.
+*/
+bool stringToBool(const std::string& s);
+
+/*!
+** \brief Convert a string into a numeric value
+**
+** Replicates the legacy behavior of `Yuni::CString::to<T>(out)`: an
+** empty string converts to zero, and the whole string must be a valid
+** number, otherwise `out` is left unchanged and the function returns `false`.
+*/
+bool stringToDouble(const std::string& s, double& out);
+bool stringToFloat(const std::string& s, float& out);
+bool stringToInt(const std::string& s, int& out);
+bool stringToUint(const std::string& s, unsigned int& out);
+
+/*!
+** \brief Value-returning variants of the conversions above
+**
+** An empty string converts to zero, and a string that is not a valid
+** number converts to zero as well.
+*/
+double stringToDouble(const std::string& s);
+float stringToFloat(const std::string& s);
+int stringToInt(const std::string& s);
+unsigned int stringToUint(const std::string& s);
+
+/*!
+** \brief Return a lower-cased copy of a string
+*/
+std::string stringToLower(const std::string& s);
+
+/*!
+** \brief Return a copy of a string without leading/trailing whitespaces
+**
+** Whitespaces are space, tabulation, carriage return and line feed.
+*/
+std::string stringTrim(const std::string& s);
+
 std::tm getCurrentTime();
 std::string formatTime(const std::tm& localTime, const std::string& format);
 

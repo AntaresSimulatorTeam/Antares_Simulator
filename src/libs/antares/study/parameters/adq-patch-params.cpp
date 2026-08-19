@@ -6,6 +6,7 @@
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
+#include <antares/utils/utils.h>
 
 namespace Antares::Error
 {
@@ -48,12 +49,10 @@ void CurtailmentSharing::resetThresholds()
     thresholdVarBoundsRelaxation = defaultValueThresholdVarBoundsRelaxation;
 }
 
-static bool StringToPriceTakingOrder(const AnyString& PTO_as_string,
+static bool StringToPriceTakingOrder(const std::string& PTO_as_string,
                                      AdequacyPatch::AdqPatchPTO& PTO_as_enum)
 {
-    Yuni::CString<24, false> s = PTO_as_string;
-    s.trim();
-    s.toLower();
+    const std::string s = Antares::stringToLower(Antares::stringTrim(PTO_as_string));
     if (s == "dens")
     {
         PTO_as_enum = AdequacyPatch::AdqPatchPTO::isDens;
@@ -70,7 +69,7 @@ static bool StringToPriceTakingOrder(const AnyString& PTO_as_string,
     return false;
 }
 
-bool CurtailmentSharing::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
+bool CurtailmentSharing::updateFromKeyValue(const std::string& key, const std::string& value)
 {
     // Price taking order
     if (key == "price-taking-order")
@@ -80,25 +79,27 @@ bool CurtailmentSharing::updateFromKeyValue(const Yuni::String& key, const Yuni:
     // Include Hurdle Cost
     if (key == "include-hurdle-cost-csr")
     {
-        return value.to<bool>(includeHurdleCost);
+        includeHurdleCost = Antares::stringToBool(value);
+        return true;
     }
     // Check CSR cost function prior and after CSR
     if (key == "check-csr-cost-function")
     {
-        return value.to<bool>(checkCsrCostFunction);
+        checkCsrCostFunction = Antares::stringToBool(value);
+        return true;
     }
     // Thresholds
     if (key == "threshold-initiate-curtailment-sharing-rule")
     {
-        return value.to<double>(thresholdRun);
+        return Antares::stringToDouble(value, thresholdRun);
     }
     if (key == "threshold-display-local-matching-rule-violations")
     {
-        return value.to<double>(thresholdDisplayViolations);
+        return Antares::stringToDouble(value, thresholdDisplayViolations);
     }
     if (key == "threshold-csr-variable-bounds-relaxation")
     {
-        return value.to<int>(thresholdVarBoundsRelaxation);
+        return Antares::stringToInt(value, thresholdVarBoundsRelaxation);
     }
 
     return false;
@@ -156,19 +157,22 @@ void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
     }
 }
 
-bool AdqPatchParams::updateFromKeyValue(const Yuni::String& key, const Yuni::String& value)
+bool AdqPatchParams::updateFromKeyValue(const std::string& key, const std::string& value)
 {
     if (key == "include-adq-patch")
     {
-        return value.to<bool>(enabled);
+        enabled = Antares::stringToBool(value);
+        return true;
     }
     if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
     {
-        return value.to<bool>(setToZeroOutsideInsideLinks);
+        setToZeroOutsideInsideLinks = Antares::stringToBool(value);
+        return true;
     }
     if (key == "redispatch")
     {
-        return value.to<bool>(redispatch);
+        redispatch = Antares::stringToBool(value);
+        return true;
     }
     return curtailmentSharing.updateFromKeyValue(key, value);
 }

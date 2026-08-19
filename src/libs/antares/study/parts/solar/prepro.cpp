@@ -3,11 +3,8 @@
 
 #include "antares/study/parts/solar/prepro.h"
 
-#include <yuni/yuni.h>
-
 #include "antares/study/study.h"
 
-using namespace Yuni;
 using namespace Antares;
 
 namespace Antares::Data::Solar
@@ -26,7 +23,7 @@ bool Prepro::loadFromFolder(const std::filesystem::path& folder)
     return xcast.loadFromFolder(folder);
 }
 
-bool Prepro::saveToFolder(const AnyString& folder) const
+bool Prepro::saveToFolder(const std::string& folder) const
 {
     return xcast.saveToFolder(folder);
 }

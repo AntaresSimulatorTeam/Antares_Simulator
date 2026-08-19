@@ -4,7 +4,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CONTAINER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CONTAINER_H__
 
-#include <yuni/yuni.h>
+#include <string>
 
 #include "../../fwd.h"
 #include "cluster.h"
@@ -35,7 +35,7 @@ public:
     **
     ** \param n A number of years
     */
-    void resizeAllTimeseriesNumbers(uint n);
+    void resizeAllTimeseriesNumbers(unsigned int n);
 
 public:
     //! List of all renewable clusters (enabled and disabled)

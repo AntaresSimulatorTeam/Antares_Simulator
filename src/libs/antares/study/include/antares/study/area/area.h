@@ -5,13 +5,12 @@
 #define __ANTARES_LIBS_STUDY_AREAS_H__
 
 #include <filesystem>
+#include <map>
 #include <ostream>
 #include <set>
 #include <stdlib.h>
+#include <string>
 #include <vector>
-
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
 
 #include <antares/array/matrix.h>
 #include <antares/study/area/ReserveOpt.h>
@@ -52,14 +51,14 @@ public:
     **
     ** \param name The name of the area
     */
-    explicit Area(const AnyString& name);
+    explicit Area(const std::string& name);
     /*!
     ** \brief Constructor
     **
     ** \param name Name of the area
     ** \param id id of the area
     */
-    Area(const AnyString& name, const AnyString& id);
+    Area(const std::string& name, const std::string& id);
     /*!
     ** \brief Destructor
     */
@@ -91,7 +90,7 @@ public:
     **
     ** \param n A number of years
     */
-    void resizeAllTimeseriesNumbers(uint nbYears);
+    void resizeAllTimeseriesNumbers(unsigned int nbYears);
 
     /*!
     ** \brief Check if a link with another area is already established
@@ -108,7 +107,7 @@ public:
     **
     ** \return True if the value of min stable power is a good one
     */
-    bool thermalClustersMinStablePowerValidity(std::vector<YString>& output) const;
+    bool thermalClustersMinStablePowerValidity(std::vector<std::string>& output) const;
     //@}
 
     /*!
@@ -126,8 +125,8 @@ public:
     //! Name of the area in lowercase format
     AreaName id;
     //! Index of the area  - only valid when already added to an area list
-    uint index = (uint)(-1);
-    //! Use adequacy patch for this area
+    unsigned int index = (unsigned int)(-1);
+    //! Use adequacy patch for this area    //! Use adequacy patch for this area
     AdequacyPatch::AdequacyPatchMode adequacyPatchMode = AdequacyPatch::physicalAreaOutsideAdqPatch;
     /*@}*/
 
@@ -191,7 +190,7 @@ public:
     //! \name Nodal Optimization
     //@{
     //! Nodal optimization (see AreaNodalOptimization)
-    uint nodalOptimization = anoAll;
+    unsigned int nodalOptimization = anoAll;
     //@}
 
     //! \name Spread
@@ -208,9 +207,9 @@ public:
     //! \name Output filtering
     //@{
     //! Print results for the area in the simulation synthesis
-    uint filterSynthesis = filterAll;
+    unsigned int filterSynthesis = filterAll;
     //! Print results for the area in the year-by-year mode
-    uint filterYearByYear = filterAll;
+    unsigned int filterYearByYear = filterAll;
     //@}
 
     //! \name Dynamic
@@ -389,7 +388,7 @@ public:
     **
     ** \param n A number of years
     */
-    void resizeAllTimeseriesNumbers(uint n);
+    void resizeAllTimeseriesNumbers(unsigned int n);
 
     //! Get if the container is empty
     bool empty() const;
@@ -405,7 +404,7 @@ public:
     /*!
     ** \brief Get the total number of areas
     */
-    uint size() const;
+    unsigned int size() const;
     //@}
 
     //! \name Links
@@ -421,24 +420,24 @@ public:
     /*!
     ** \brief Try to find the link from a given INI key (<area1>%<area2>)
     */
-    const AreaLink* findLinkFromINIKey(const AnyString& key) const;
+    const AreaLink* findLinkFromINIKey(const std::string& key) const;
 
     /*!
     ** \brief Try to find the cluster from a given INI key (<area>.<cluster>)
     */
-    ThermalCluster* findClusterFromINIKey(const AnyString& key);
+    ThermalCluster* findClusterFromINIKey(const std::string& key);
 
     /*!
     ** \brief Get the total number of interconnections between all areas
     */
-    uint areaLinkCount() const;
+    unsigned int areaLinkCount() const;
     //@}
 
     //! \name Tools
     //@{
 
     /// create a map with the corresponding scratchpad for each area link to this numspace
-    Area::ScratchMap buildScratchMap(uint numspace) const;
+    Area::ScratchMap buildScratchMap(unsigned int numspace) const;
 
     /*!
     ** \brief Update the name id set
@@ -451,8 +450,8 @@ public:
     /*!
     ** \brief Get an area from its index
     */
-    Area* operator[](uint i);
-    const Area* operator[](uint i) const;
+    Area* operator[](unsigned int i);
+    const Area* operator[](unsigned int i) const;
     //@}
 
     //! All areas by their index
@@ -519,7 +518,7 @@ Area* AreaListFindPtr(AreaList* l, const Area* ptr);
 ** \param name The name of the area
 ** \return A valid pointer to the area if successful, NULL otherwise
 */
-Area* addAreaToListOfAreas(AreaList& list, const AnyString& name);
+Area* addAreaToListOfAreas(AreaList& list, const std::string& name);
 
 /*!
 ** \brief Add an area in the list from a given name
@@ -529,7 +528,7 @@ Area* addAreaToListOfAreas(AreaList& list, const AnyString& name);
 ** \param lname The name of the area in lowercase
 ** \return A valid pointer to the area if successful, NULL otherwise
 */
-Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyString& lname);
+Area* AreaListAddFromNames(AreaList& list, const std::string& name, const std::string& lname);
 
 void AreaListClearAllLinks(AreaList* l);
 
@@ -576,9 +575,9 @@ void validateCapacityReservations(const Area& area);
 /*!
 ** \brief to check that Area name does not contains character *
 */
-inline bool CheckForbiddenCharacterInAreaName(const AnyString& name)
+inline bool CheckForbiddenCharacterInAreaName(const std::string& name)
 {
-    return name.contains('*');
+    return name.find('*') != std::string::npos;
 }
 
 } // namespace Antares::Data
