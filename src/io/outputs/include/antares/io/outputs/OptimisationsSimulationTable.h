@@ -22,7 +22,9 @@ public:
     static constexpr const char* firstOptimStage = "optim-nb-1";
     static constexpr const char* secondOptimStage = "optim-nb-2";
     static constexpr const char* remixHydroStage = "remix-hydro";
-    static constexpr const char* adequacyPatchStage = "adequacy-patch";
+    // The whole CSR treatment, not just the patch: curtailment sharing, DTG
+    // netting and the marginal price update.
+    static constexpr const char* adequacyPatchStage = "adq-patch-csr";
 
     SimulationTable* firstOptimSimulationTable();
     SimulationTable* secondOptimSimulationTable();
