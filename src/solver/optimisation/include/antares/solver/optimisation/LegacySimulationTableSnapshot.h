@@ -19,11 +19,10 @@ namespace Antares::Optimization
 //
 // Reads the solution through PROBLEME_ANTARES_A_RESOUDRE::X, so the caller is
 // responsible for X holding the state it wants published.
-void FillLegacySimulationTable(
-  Antares::IO::Outputs::SimulationTable& simulationTable,
-  PROBLEME_HEBDO& problemeHebdo,
-  const Antares::LinearProblem::Api::FillContext& fillContext,
-  const LegacyNameMapper& nameMapper,
-  unsigned currentBlock);
+void FillLegacySimulationTable(Antares::IO::Outputs::SimulationTable& simulationTable,
+                               PROBLEME_HEBDO& problemeHebdo,
+                               const Antares::LinearProblem::Api::FillContext& fillContext,
+                               const LegacyNameMapper& nameMapper,
+                               unsigned currentBlock);
 
 } // namespace Antares::Optimization
