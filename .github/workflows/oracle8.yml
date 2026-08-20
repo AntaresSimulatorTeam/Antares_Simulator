@@ -64,11 +64,16 @@ jobs:
       # Note: we need to use environment variables instead of workflow variables
       #       because github messes up path variables when running in container,
       #       see https://github.com/actions/runner/issues/2058
+      env:
+        # Mirror of the source archives vcpkg downloads, keyed by SHA512. Lets branches
+        # with a frozen baseline keep building after upstream mirrors purge old versions.
+        ASSET_SOURCES: "clear;x-azurl,${{ vars.VCPKG_ASSET_BASE_URL || 'https://github.com/AntaresSimulatorTeam/antares-vcpkg-registry/releases/download' }}/baseline-56bb2411609227288b70117ead2c47585ba07713/,,read"
       run: |
         git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
         echo "VCPKG_ROOT=$GITHUB_WORKSPACE/vcpkg" >> $GITHUB_ENV
         echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/vcpkg_cache" >> $GITHUB_ENV
         echo "VCPKG_BINARY_SOURCES=clear;files,$GITHUB_WORKSPACE/vcpkg_cache,readwrite" >> $GITHUB_ENV
+        echo "X_VCPKG_ASSET_SOURCES=$ASSET_SOURCES" >> $GITHUB_ENV
 
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary

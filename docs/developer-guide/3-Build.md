@@ -26,6 +26,37 @@ The first step will be to install VCPKG using its bootstrap script:
     ./bootstrap-vcpkg.sh
     ```
 
+### Asset cache (recommended, required on maintenance branches)
+
+vcpkg downloads each dependency's source archive from its original upstream URL. Those URLs rot:
+mirrors regularly purge superseded versions (MSYS2 in particular deletes old packages within
+months). A maintenance branch such as `release/9.3.x` deliberately pins an old vcpkg baseline, so
+it keeps asking for exactly those vanished files and the download step fails.
+
+To avoid this, point vcpkg at the team's asset mirror, which stores every archive we have ever
+needed keyed by its SHA512:
+
+=== "Windows"
+
+    ```
+    set X_VCPKG_ASSET_SOURCES=clear;x-azurl,https://github.com/AntaresSimulatorTeam/antares-vcpkg-registry/releases/download/baseline-56bb2411609227288b70117ead2c47585ba07713/,,read
+    ```
+
+=== "Linux"
+
+    ```
+    export X_VCPKG_ASSET_SOURCES="clear;x-azurl,https://github.com/AntaresSimulatorTeam/antares-vcpkg-registry/releases/download/baseline-56bb2411609227288b70117ead2c47585ba07713/,,read"
+    ```
+
+The `baseline-...` part of the URL is **this branch's vcpkg baseline** — the
+`default-registry.baseline` value in `vcpkg-configuration.json`. Each baseline has its own
+release, so if you are building a different branch, read its baseline and substitute it.
+
+The mirror is public and read-only, so no credentials are needed. vcpkg still falls back to the
+original URL whenever an archive is not mirrored yet. If you hit a download failure for a file the
+mirror does not have, follow the recovery procedure in the
+[antares-vcpkg-registry README](https://github.com/AntaresSimulatorTeam/antares-vcpkg-registry) to add it.
+
 ## Configure build with CMake
 
 The preferred way of building the project is to use a pre-compiled version of OR-Tools and to install

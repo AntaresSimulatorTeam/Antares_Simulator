@@ -44,6 +44,9 @@ jobs:
       triplet: x64-windows-release
       # Caching strategy of VCPKG dependencies
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
+      # Mirror of the source archives vcpkg downloads, keyed by SHA512. Lets branches
+      # with a frozen baseline keep building after upstream mirrors purge old versions.
+      X_VCPKG_ASSET_SOURCES: "clear;x-azurl,${{ vars.VCPKG_ASSET_BASE_URL || 'https://github.com/AntaresSimulatorTeam/antares-vcpkg-registry/releases/download' }}/baseline-56bb2411609227288b70117ead2c47585ba07713/,,read"
 
     runs-on: windows-2022
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
