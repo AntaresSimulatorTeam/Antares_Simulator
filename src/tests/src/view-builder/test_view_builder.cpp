@@ -536,8 +536,7 @@ BOOST_AUTO_TEST_CASE(modeler_component_properties_are_output)
     Library library = LibraryBuilder().withId("dummy_library").build();
 
     std::vector<Component> components;
-    components.emplace_back(
-      ComponentBuilder().withId("my_component").withModel(&model).build());
+    components.emplace_back(ComponentBuilder().withId("my_component").withModel(&model).build());
 
     SystemBuilder systemBuilder;
     auto system = systemBuilder.withId("test_system").withComponents(std::move(components)).build();
@@ -546,7 +545,7 @@ BOOST_AUTO_TEST_CASE(modeler_component_properties_are_output)
     modelerData->libraries = {library};
     modelerData->system = std::make_unique<System>(std::move(system));
     modelerData->componentProperties["my_component"] = {{"carrier", "electricity"},
-                                                         {"technology", "solar"}};
+                                                        {"technology", "solar"}};
 
     study->setModelerData(std::move(modelerData));
 
@@ -578,8 +577,7 @@ BOOST_AUTO_TEST_CASE(modeler_component_without_properties_has_no_properties_fiel
     Library library = LibraryBuilder().withId("dummy_library").build();
 
     std::vector<Component> components;
-    components.emplace_back(
-      ComponentBuilder().withId("bare_component").withModel(&model).build());
+    components.emplace_back(ComponentBuilder().withId("bare_component").withModel(&model).build());
 
     SystemBuilder systemBuilder;
     auto system = systemBuilder.withId("test_system").withComponents(std::move(components)).build();
