@@ -276,15 +276,13 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                    problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
 
     callIfExport(options.exportBehavior, [&] { OPT_ExportStructures(problemeHebdo, writer); });
-    auto* firstOptimSimulationTable = simulationTables
-                                        ? simulationTables->firstOptimSimulationTable()
-                                        : nullptr;
+    // The simulation table is only stored for the second optimisation.
     bool ret = runWeeklyOptimization(options.firstOptimOptions,
                                      problemeHebdo,
                                      writer,
                                      PREMIERE_OPTIMISATION,
                                      simulationObserver,
-                                     firstOptimSimulationTable);
+                                     nullptr);
 
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode

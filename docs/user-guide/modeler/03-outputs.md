@@ -15,7 +15,7 @@ under **output/problem.lp**. It is only meant to be used for debugging.
 
 Antares Simulator (hybrid and modeler modes) produces detailed optimization results for the modeler's components, 
 in the "simulation table", in CSV format:  
-- for each optimization run for hybrid mode (simulation_table--optim-nb-1.csv, simulation_table--optim-nb-2.csv)
+- for the second optimization run, for hybrid mode (simulation_table--optim-nb-2.csv)
 - unique file for pure modeler (simulation_table_*TimeStamp*.csv).
 These files provide a comprehensive view of the variables and constraints involved in the optimization, including their
 values and basis statuses.
@@ -24,7 +24,6 @@ values and basis statuses.
 
 These files are saved in the output directory of your study, typically named:
 
-    simulation_table--optim-nb-1.csv (hybrid, for the first optimization)
     simulation_table--optim-nb-2.csv (hybrid, for the second optimization, if performed)
     simulation_table--20250812-1256.csv (pure modeler)
 

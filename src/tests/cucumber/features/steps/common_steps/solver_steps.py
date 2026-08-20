@@ -271,23 +271,13 @@ def check_annual_results(context):
 
 @then("simulation tables match the references")
 def check_simulation_tables(context):
-    # Optimization 1
-    msg1 = diff_message(
-        name="Simulation table (optimization 1)",
-        ref_lines=context.sih.get_optim1_simulation_table(),
-        out_lines=context.soh.get_optim1_simulation_table(),
+    # Only the second optimization's simulation table is stored/written.
+    msg2 = diff_message(
+        name="Simulation table (optimization 2)",
+        ref_lines=context.sih.get_optim2_simulation_table(),
+        out_lines=context.soh.get_optim2_simulation_table(),
     )
-    assert msg1 is None, msg1
-
-    # Optimization 2 (if any)
-    ref_simulation_table2 = context.sih.get_optim2_simulation_table()
-    if ref_simulation_table2:
-        msg2 = diff_message(
-            name="Simulation table (optimization 2)",
-            ref_lines=ref_simulation_table2,
-            out_lines=context.soh.get_optim2_simulation_table(),
-        )
-        assert msg2 is None, msg2
+    assert msg2 is None, msg2
 
 
 def should_check(row, key):
@@ -311,7 +301,7 @@ def run_simulation(context):
     context.return_code = process.returncode
     context.soh = solver_output_handler(context.output_path, context.mode)
     # for hybrid studies:
-    simulation_table = Path(context.output_path) / "simulation_table--optim-nb-1.csv"
+    simulation_table = Path(context.output_path) / "simulation_table--optim-nb-2.csv"
     if simulation_table.exists():
         context.moh = modeler_output_handler(simulation_table)
 
