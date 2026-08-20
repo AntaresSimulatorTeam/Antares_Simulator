@@ -174,7 +174,6 @@ BOOST_AUTO_TEST_CASE(component_two_parameters)
     BOOST_CHECK_EQUAL(param2.scenario_dependent, false);
     BOOST_CHECK_EQUAL(std::stod(param2.value), 100);
 
-    
     BOOST_CHECK_EQUAL(systemObj.components[0].properties[0].id, "prop1");
     BOOST_CHECK_EQUAL(systemObj.components[0].properties[0].value, "1");
 }
@@ -209,7 +208,6 @@ BOOST_AUTO_TEST_CASE(component_properties)
     BOOST_CHECK_EQUAL(prop1.value, "1");
     BOOST_CHECK_EQUAL(prop2.value, "2");
 }
-
 
 // --------------------------------------------------------------------------
 // Decoder error-path coverage: requireMap / requireSize / System::decode
