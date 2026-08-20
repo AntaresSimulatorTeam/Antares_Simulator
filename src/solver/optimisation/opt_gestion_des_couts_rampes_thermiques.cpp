@@ -11,10 +11,13 @@ void OPT_InitialiserLesCoutsLineaireRampesThermiques(PROBLEME_HEBDO* problemeHeb
                                                      const int PremierPdtDeLIntervalle,
                                                      const int DernierPdtDeLIntervalle)
 {
+    if (!problemeHebdo->rampingEnabled)
+    {
+        return;
+    }
+    
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-
-    int pdtJour = 0;
-
+    
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {

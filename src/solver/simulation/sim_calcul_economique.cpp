@@ -308,6 +308,8 @@ void SIM_InitialisationProblemeHebdo(const Study& study,
 
     problem.OptimisationAuPasHebdomadaire = (parameters.simplexOptimizationRange == Data::sorWeek);
 
+    problem.rampingEnabled = parameters.include.thermal_ramping;
+
     switch (parameters.power.fluctuations)
     {
     case Data::lssFreeModulations:

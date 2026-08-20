@@ -12,6 +12,10 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireRampesThermiqu
   PROBLEME_HEBDO* problemeHebdo,
   bool Simulation)
 {
+    if (!problemeHebdo->rampingEnabled)
+    {
+        return;
+    }
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     int NombreDePasDeTempsPourUneOptimisation = problemeHebdo

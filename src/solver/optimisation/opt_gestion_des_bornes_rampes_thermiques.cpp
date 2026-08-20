@@ -14,6 +14,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(
   const int PremierPdtDeLIntervalle,
   const int DernierPdtDeLIntervalle)
 {
+    if (!problemeHebdo->rampingEnabled)
+    {
+        return;
+    }
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     std::vector<double>& Xmin = ProblemeAResoudre->Xmin;
     std::vector<double>& Xmax = ProblemeAResoudre->Xmax;
