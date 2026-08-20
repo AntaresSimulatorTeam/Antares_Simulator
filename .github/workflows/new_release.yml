@@ -25,6 +25,11 @@ on:
         required: true
         type: boolean
         default: false
+      seed_asset_mirror:
+        description: "Mirror this branch's vcpkg source archives?"
+        required: true
+        type: boolean
+        default: true
 jobs:
   release:
     name: Release pushed tag
@@ -120,3 +125,32 @@ jobs:
     secrets:
       SIMTEST_PAT: ${{ secrets.SIMTEST_REPO_PAT }}
 
+  seed_asset_mirror:
+    name: Seed vcpkg asset mirror
+    needs: release
+    # A release is when this branch's vcpkg baseline stops moving, so it is the
+    # moment worth capturing: the mirror keeps the branch buildable years later,
+    # after upstream has purged the source archives it pins.
+    if: ${{ github.event.inputs.seed_asset_mirror == 'true' }}
+    permissions:
+      # Not what performs the upload -- that uses VCPKG_ASSET_PAT, since this
+      # repository's token has no access to the mirror. Declared because GitHub
+      # validates a called workflow's requested permissions against the caller.
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-22.04
+            triplet: x64-linux-release
+          - runner: windows-2022
+            triplet: x64-windows-release
+    uses: AntaresSimulatorTeam/antares-vcpkg-registry/.github/workflows/seed.yml@main
+    with:
+      repository: ${{ github.repository }}
+      # The tag rather than the branch: it pins exactly the commit released.
+      ref: ${{ needs.release.outputs.tag }}
+      runner: ${{ matrix.runner }}
+      triplet: ${{ matrix.triplet }}
+    secrets:
+      MIRROR_TOKEN: ${{ secrets.VCPKG_ASSET_PAT }}
