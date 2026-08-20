@@ -1,6 +1,6 @@
 {
   "name": "antares-simulator",
-  "version-string": "9.3.9",
+  "version-string": "9.3.11",
   "dependencies": [
     {
       "name": "sirius-solver",

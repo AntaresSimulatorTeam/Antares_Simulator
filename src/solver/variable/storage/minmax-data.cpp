@@ -3,50 +3,48 @@
 
 #include "antares/solver/variable/storage/minmax-data.h"
 
+#include <algorithm>
+#include <limits>
+
 #include "antares/solver/variable/storage/intermediate.h"
 
 namespace Antares::Solver::Variable::R::AllYears
 {
-static void initArray(bool opInferior, std::vector<MinMaxData::Data>& array)
+static void initArray(bool opInferior, MinMaxData::Data& data)
 {
-    for (auto& data: array)
-    {
-        data.value = opInferior ? DBL_MAX : -DBL_MAX; // +inf or -inf
-        data.index = static_cast<uint32_t>(-1);
-    }
+    const double init = opInferior ? std::numeric_limits<double>::max()
+                                   : -std::numeric_limits<double>::max();
+    std::fill(data.values.begin(), data.values.end(), init);
+    std::fill(data.indices.begin(), data.indices.end(), std::numeric_limits<uint16_t>::max());
 }
 
-static void mergeArray(bool opInferior,
-                       unsigned year,
-                       std::vector<MinMaxData::Data>& results,
-                       const double* values)
+static void mergeArray(bool opInferior, unsigned year, MinMaxData::Data& data, const double* values)
 {
-    for (unsigned i = 0; i < results.size(); ++i)
+    const uint16_t y = year + 1; // The year is zero-based
+    for (size_t i = 0; i < data.values.size(); ++i)
     {
-        MinMaxData::Data& data = results[i];
-
         if (opInferior)
         {
-            if (values[i] < data.value)
+            if (values[i] < data.values[i])
             {
-                data.value = values[i];
-                data.index = year + 1;
+                data.values[i] = values[i];
+                data.indices[i] = y;
             }
-            else if (values[i] == data.value && data.index > year + 1)
+            else if (values[i] == data.values[i] && data.indices[i] > y)
             {
-                data.index = year + 1;
+                data.indices[i] = y;
             }
         }
         else
         {
-            if (values[i] > data.value)
+            if (values[i] > data.values[i])
             {
-                data.value = values[i];
-                data.index = year + 1; // The year is zero-based
+                data.values[i] = values[i];
+                data.indices[i] = y;
             }
-            else if (values[i] == data.value && data.index > year + 1)
+            else if (values[i] == data.values[i] && data.indices[i] > y)
             {
-                data.index = year + 1;
+                data.indices[i] = y;
             }
         }
     }
