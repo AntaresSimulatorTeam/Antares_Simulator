@@ -29,8 +29,8 @@ These files are saved in the output directory of your study, typically named:
 
 ### Structure
 
-Each line in the simulation table corresponds to a variable,
-port or an extra output for a given block, component, scenario, and
+Each line in the simulation table corresponds to a variable
+or an extra output for a given block, component, scenario, and
 time index.
 
 #### CSV Header
@@ -85,5 +85,5 @@ optimization process and their time and scenario dependencies.
 - The simulation table output is only available in hybrid and pure modeler studies.  
 - Two files may be generated if a second optimization step is performed (e.g., for feasibility or integer relaxation).  
 - If a field is not applicable for a given entry, it will be filled with None.  
-- Some outputs (parameters, ports, ...) that are marked as time/scenario-dependent in the model may be time/scenario-independent 
+- Some outputs (parameters, ...) that are marked as time/scenario-dependent in the model may be time/scenario-independent 
   given the user's input data. They will be treated as time/scenario-independent during the simulation table generation.

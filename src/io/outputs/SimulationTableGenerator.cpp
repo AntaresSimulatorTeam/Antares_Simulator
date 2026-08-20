@@ -225,58 +225,6 @@ void addEntriesForNode(ISimulationTable& simulationTable,
     handleDependingOnVariability(fillContext, scenario, idxType, handle);
 }
 
-void addPortEntries(ISimulationTable& simulationTable,
-                    const FillContext& fillContext,
-                    const ModelerStudy::SystemModel::Component& component,
-                    const OptimEntityContainer& optimEntityContainer,
-                    unsigned currentBlock,
-                    const TimeConversionMode& timeConversionMode,
-                    std::optional<unsigned> scenario,
-                    bool forceExportForScenarioIndex)
-{
-    const auto& componentId = component.Id();
-
-    for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
-    {
-        Expressions::Visitors::EvalVisitor evalVisitor(optimEntityContainer,
-                                                       fillContext,
-                                                       component);
-
-        auto portValue = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
-
-        VariabilityType idxType = Expressions::Visitors::VariabilityVisitor(optimEntityContainer,
-                                                                            component)
-                                    .dispatch(portFieldDef.Definition().RootNode());
-        idxType = updateVariabilityIfShouldForceScenario(idxType, forceExportForScenarioIndex);
-        // TODO: EvalVistior already uses a TimeIndexVisitor under the hood to know if the port
-        // is time and/or scenario dependent. It may be more efficient to enrich
-        // EvaluationResult
-        // by adding a TimeIndex to it? It would require some careful work inside EvalVisitor
-
-        auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
-        {
-            TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
-                                                                       timeConversionMode,
-                                                                       currentBlock)
-                              : TimeBlock{.block = currentBlock + 1,
-                                          .blockTimeIndex = std::nullopt,
-                                          .absoluteTimeIndex = std::nullopt};
-
-            auto value = ts.has_value() ? portValue.valuesAsVector()[ts.value()]
-                                        : portValue.valueAsDouble();
-            simulationTable.addEntry({.block = tb.block,
-                                      .component = componentId,
-                                      .output = portFieldKey.portId + "." + portFieldKey.fieldId,
-                                      .absolute_time_index = tb.absoluteTimeIndex,
-                                      .block_time_index = tb.blockTimeIndex,
-                                      .scenario_index = scenIdx,
-                                      .value = value});
-        };
-
-        handleDependingOnVariability(fillContext, scenario, idxType, handle);
-    }
-}
-
 void addExtraOutputEntries(ISimulationTable& simulationTable,
                            const FillContext& fillContext,
                            const ModelerStudy::SystemModel::Component& component,
@@ -327,15 +275,6 @@ void FillSimulationTable(ISimulationTable& simulationTable,
                            currentBlock,
                            timeConversionMode,
                            scenario);
-
-        addPortEntries(simulationTable,
-                       fillContext,
-                       component,
-                       optimEntityContainer,
-                       currentBlock,
-                       timeConversionMode,
-                       scenario,
-                       forceExportForScenarioIndex);
 
         addExtraOutputEntries(simulationTable,
                               fillContext,
