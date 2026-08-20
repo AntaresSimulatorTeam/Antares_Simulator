@@ -156,6 +156,11 @@ BOOST_AUTO_TEST_CASE(component_two_parameters)
                       time-dependent: false
                       scenario-dependent: false
                       value: 100
+                  properties:
+                    - id: prop1
+                      value: 1
+                    - id: prop2
+                      value: 2
     )"s;
     YmlSystem::System systemObj = parser.parse(system, "");
     const auto& param = systemObj.components[0].parameters[0];
@@ -168,7 +173,43 @@ BOOST_AUTO_TEST_CASE(component_two_parameters)
     BOOST_CHECK_EQUAL(param2.time_dependent, false);
     BOOST_CHECK_EQUAL(param2.scenario_dependent, false);
     BOOST_CHECK_EQUAL(std::stod(param2.value), 100);
+
+    
+    BOOST_CHECK_EQUAL(systemObj.components[0].properties[0].id, "prop1");
+    BOOST_CHECK_EQUAL(systemObj.components[0].properties[0].value, "1");
 }
+
+BOOST_AUTO_TEST_CASE(component_properties)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            description: one component with one parameter
+            components:
+                - id: N
+                  model: std.node
+                  scenario-group: group-234
+                  parameters:
+                    - id: cost
+                      time-dependent: false
+                      scenario-dependent: false
+                      value: 30
+                  properties:
+                    - id: prop1
+                      value: 1
+                    - id: prop2
+                      value: 2
+    )"s;
+    YmlSystem::System systemObj = parser.parse(system, "");
+    const auto& prop1 = systemObj.components[0].properties[0];
+    const auto& prop2 = systemObj.components[0].properties[1];
+    BOOST_CHECK_EQUAL(prop1.id, "prop1");
+    BOOST_CHECK_EQUAL(prop2.id, "prop2");
+    BOOST_CHECK_EQUAL(prop1.value, "1");
+    BOOST_CHECK_EQUAL(prop2.value, "2");
+}
+
 
 // --------------------------------------------------------------------------
 // Decoder error-path coverage: requireMap / requireSize / System::decode
