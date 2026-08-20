@@ -18,6 +18,9 @@ jobs:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       # Caching strategy of VCPKG dependencies
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
+      # Mirror of the source archives vcpkg downloads, keyed by SHA512. Lets this
+      # branch keep building after upstream mirrors purge its pinned versions.
+      X_VCPKG_ASSET_SOURCES: "clear;x-azurl,${{ vars.VCPKG_ASSET_BASE_URL || 'https://github.com/AntaresSimulatorTeam/antares-vcpkg-registry/releases/download' }}/baseline-b322364f06308bdd24823f9d8f03fe0cc86fd46f/,,read"
       BUILD_WRAPPER_OUT_DIR: ${{ github.workspace }}/_build/output # Directory where build-wrapper output will be placed
       #config in env to be accessible at each step
       CCACHE_DIR: ${{ github.workspace }}/.ccache
