@@ -5,7 +5,7 @@
 #include "ConstraintBuilder.h"
 
 /*!
- * represent 'RampingIncreaseRate' Constraint type
+ * represent 'PowerOutputVariationIncrease' Constraint type
  */
 class PowerOutputVariationIncrease: private ConstraintFactory
 {

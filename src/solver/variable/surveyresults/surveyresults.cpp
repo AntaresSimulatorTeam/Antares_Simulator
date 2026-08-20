@@ -105,7 +105,7 @@ static void ExportGridInfosAreas(const Data::Study& study,
     outThermal << "area id\tid\tname\tgroup\tunit count\tnominal capacity\t"
                   "min stable power\tmin up/down time\tspinning\tco2\t"
                   "marginal cost\tfixed cost\tstartup cost\tmarket bid cost\tspread cost\t"
-                  "power increase cost`\rpower decrease cost\t max power upward rate\t max power "
+                  "power increase cost\tpower decrease cost\t max power upward rate\t max power "
                   "downward rate\n ";
 
     study.areas.each(

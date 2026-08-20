@@ -5,7 +5,7 @@
 #include "ConstraintBuilder.h"
 
 /*!
- * represent 'RampingIncreaseRate' Constraint type
+ * represent 'RampingDecreaseRate' Constraint type
  */
 class RampingDecreaseRate: private ConstraintFactory
 {
