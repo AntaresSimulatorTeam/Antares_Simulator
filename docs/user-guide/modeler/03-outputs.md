@@ -17,8 +17,8 @@ Antares Simulator (hybrid and modeler modes) produces detailed optimization resu
 in the "simulation table", in CSV format:  
 - for the second optimization run, for hybrid mode (simulation_table--optim-nb-2.csv)
 - unique file for pure modeler (simulation_table_*TimeStamp*.csv).
-These files provide a comprehensive view of the variables and constraints involved in the optimization, including their
-values and basis statuses.
+These files provide a comprehensive view of the variables involved in the optimization, including their
+values.
 
 ### Location
 
@@ -29,7 +29,7 @@ These files are saved in the output directory of your study, typically named:
 
 ### Structure
 
-Each line in the simulation table corresponds to a variable, constraint,
+Each line in the simulation table corresponds to a variable,
 port or an extra output for a given block, component, scenario, and
 time index.
 
@@ -38,7 +38,7 @@ time index.
 The CSV files have the following header:
 Code
 
-    block,component,output,absolute_time_index,block_time_index,scenario_index,value,basis_status
+    block,component,output,absolute_time_index,block_time_index,scenario_index,value
 
 #### Column Details
 
@@ -50,10 +50,10 @@ Code
 
     component:
         The ID of the exported component.
-        Currently, all variables and constraints from all components are exported.
+        Currently, all variables from all components are exported.
     output:
         The identifier (within the component) of the exported output.
-        In this first version, you can expect to find the values of optimization variables and the basis status of both variables and constraints.
+        In this first version, you can expect to find the values of optimization variables.
         The variable ID is as it appears in the model; it does not include the component name, scenario number, or time step (these are found in other columns).
     absolute_time_index:
         The time step, starting from the beginning of the year.
@@ -68,27 +68,18 @@ Code
         The scenario index (Monte Carlo year).
         In pure Modeler mode, this is currently equal to 1 (or possibly 0).
     value:
-        The value of the output (variable). None for constraints.
-    basis_status:
-        The status in the solver basis for this variable or constraint. Possible values are:
-            Free
-            At lower bound
-            At upper bound
-            Fixed value
-            Basic
-            None (not available or not applicable)
+        The value of the output (variable).
 
 ### Example
 ~~~csv
-    block,component,output,absolute_time_index,block_time_index,scenario_index,value,basis_status
-    1,GENERATOR,max_p,1,1,1,5900,Basic
-    1,GENERATOR,constraint_1,1,1,1,,At lower bound
+    block,component,output,absolute_time_index,block_time_index,scenario_index,value
+    1,GENERATOR,max_p,1,1,1,5900
 ~~~
 
 ### Usage
 
-This output is intended for advanced users who need to analyze all variables and constraints involved in the
-optimization process, their time and scenario dependencies, and the solution status from the solver.
+This output is intended for advanced users who need to analyze all variables involved in the
+optimization process and their time and scenario dependencies.
 
 ### Notes
 - The simulation table output is only available in hybrid and pure modeler studies.  

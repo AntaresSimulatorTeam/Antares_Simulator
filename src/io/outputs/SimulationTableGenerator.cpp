@@ -12,7 +12,6 @@
 #include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/logs/logs.h"
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
-#include "antares/optimisation/linear-problem-api/mipConstraint.h"
 #include "antares/solver/modeler/ModelerData.h"
 #include "antares/utils/utils.h"
 
@@ -64,7 +63,6 @@ std::string BuildModelerConstraintName(const std::string& componentId,
 }
 
 void addVariableEntries(ISimulationTable& simulationTable,
-                        const ILinearProblem& linearProblem,
                         const FillContext& fillContext,
                         const ModelerStudy::SystemModel::Component& component,
                         const OptimEntityContainer& optimEntityContainer,
@@ -73,7 +71,6 @@ void addVariableEntries(ISimulationTable& simulationTable,
                         std::optional<unsigned> scenario)
 {
     const auto& componentId = component.Id();
-    const bool isLp = linearProblem.isLP();
     const auto& variables = component.getModel()->Variables();
     for (std::size_t varIndex = 0; varIndex < variables.size(); ++varIndex)
     {
@@ -105,8 +102,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
                .absolute_time_index = tb.absoluteTimeIndex,
                .block_time_index = tb.blockTimeIndex,
                .scenario_index = scenIdx,
-               .value = var->solutionValue(),
-               .status = isLp ? var->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE});
+               .value = var->solutionValue()});
         };
 
         if (scenDep && timeDep)
@@ -172,61 +168,6 @@ void handleDependingOnVariability(
     }
 }
 
-void addConstraintEntries(ISimulationTable& simulationTable,
-                          const ILinearProblem& linearProblem,
-                          const FillContext& fillContext,
-                          const ModelerStudy::SystemModel::Component& component,
-                          const OptimEntityContainer& optimEntityContainer,
-                          unsigned currentBlock,
-                          const TimeConversionMode& timeConversionMode,
-                          std::optional<unsigned> scenario,
-                          bool forceExportForScenarioIndex)
-{
-    const auto& componentId = component.Id();
-    const bool isLp = linearProblem.isLP();
-
-    unsigned constraintLocalIndex = 0;
-    for (const auto& modelConstr: component.getModel()->Constraints())
-    {
-        if (modelConstr.location() != Solver::Config::Location::SUBPROBLEMS)
-        {
-            continue;
-        }
-        const auto& constraintId = modelConstr.Id();
-
-        const auto [componentConstraints, timeIndex] = optimEntityContainer.getComponentConstraint(
-          component,
-          constraintLocalIndex,
-          fillContext.getLocalNumberOfTimeSteps());
-        ++constraintLocalIndex;
-
-        auto idxType = updateVariabilityIfShouldForceScenario(timeIndex,
-                                                              forceExportForScenarioIndex);
-
-        auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
-        {
-            const auto& c = componentConstraints[ts.value_or(0)];
-            TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
-                                                                       timeConversionMode,
-                                                                       currentBlock)
-                              : TimeBlock{.block = currentBlock + 1,
-                                          .blockTimeIndex = std::nullopt,
-                                          .absoluteTimeIndex = std::nullopt};
-            simulationTable.addEntry(
-              {.block = tb.block,
-               .component = componentId,
-               .output = constraintId,
-               .absolute_time_index = tb.absoluteTimeIndex,
-               .block_time_index = tb.blockTimeIndex,
-               .scenario_index = scenIdx,
-               .value = std::nullopt,
-               .status = isLp ? c->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE});
-        };
-
-        handleDependingOnVariability(fillContext, scenario, idxType, handle);
-    }
-}
-
 void addObjectiveValue(ISimulationTable& simulation,
                        double objectiveValue,
                        unsigned int currentBlock,
@@ -239,8 +180,7 @@ void addObjectiveValue(ISimulationTable& simulation,
                          .absolute_time_index = std::nullopt,
                          .block_time_index = std::nullopt,
                          .scenario_index = scenario,
-                         .value = objectiveValue,
-                         .status = MipBasisStatus::NOT_AVAILABLE});
+                         .value = objectiveValue});
 }
 
 void addEntriesForNode(ISimulationTable& simulationTable,
@@ -280,8 +220,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                                   .absolute_time_index = tb.absoluteTimeIndex,
                                   .block_time_index = tb.blockTimeIndex,
                                   .scenario_index = scenIdx,
-                                  .value = val,
-                                  .status = MipBasisStatus::NOT_AVAILABLE});
+                                  .value = val});
     };
     handleDependingOnVariability(fillContext, scenario, idxType, handle);
 }
@@ -331,8 +270,7 @@ void addPortEntries(ISimulationTable& simulationTable,
                                       .absolute_time_index = tb.absoluteTimeIndex,
                                       .block_time_index = tb.blockTimeIndex,
                                       .scenario_index = scenIdx,
-                                      .value = value,
-                                      .status = MipBasisStatus::NOT_AVAILABLE});
+                                      .value = value});
         };
 
         handleDependingOnVariability(fillContext, scenario, idxType, handle);
@@ -383,23 +321,12 @@ void FillSimulationTable(ISimulationTable& simulationTable,
     for (const auto& component: modelerData.system->Components())
     {
         addVariableEntries(simulationTable,
-                           linearProblem,
                            fillContext,
                            component,
                            optimEntityContainer,
                            currentBlock,
                            timeConversionMode,
                            scenario);
-
-        addConstraintEntries(simulationTable,
-                             linearProblem,
-                             fillContext,
-                             component,
-                             optimEntityContainer,
-                             currentBlock,
-                             timeConversionMode,
-                             scenario,
-                             forceExportForScenarioIndex);
 
         addPortEntries(simulationTable,
                        fillContext,

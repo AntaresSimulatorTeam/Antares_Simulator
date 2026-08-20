@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE(Constructor_WritesHeader)
     table.writeHeader();
     std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("block,component,output,absolute_time_index,block_time_index,scenario_"
-                            "index,value,basis_status")
+                            "index,value")
                 != std::string::npos);
 }
 
@@ -129,14 +129,13 @@ BOOST_AUTO_TEST_CASE(AddEntry_SingleEntry)
                                .absolute_time_index = 100,
                                .block_time_index = 50,
                                .scenario_index = 2,
-                               .value = 42.5,
-                               .status = MipBasisStatus::BASIC};
+                               .value = 42.5};
 
     table.addEntry(entry);
     table.write();
 
     std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("1,comp1,var1,100,50,2,42.5,Basic") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var1,100,50,2,42.5") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(AddEntry_WithNullOptionals)
@@ -148,14 +147,13 @@ BOOST_AUTO_TEST_CASE(AddEntry_WithNullOptionals)
                                .absolute_time_index = std::nullopt,
                                .block_time_index = std::nullopt,
                                .scenario_index = std::nullopt,
-                               .value = std::nullopt,
-                               .status = std::nullopt};
+                               .value = std::nullopt};
 
     table.addEntry(entry);
     table.write();
 
     std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("2,comp2,var2,None,None,None,None,None") != std::string::npos);
+    BOOST_CHECK(buffer.find("2,comp2,var2,None,None,None,None") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(Clear_RemovesAllEntries)
@@ -167,8 +165,7 @@ BOOST_AUTO_TEST_CASE(Clear_RemovesAllEntries)
                                .absolute_time_index = 100,
                                .block_time_index = 50,
                                .scenario_index = 2,
-                               .value = 42.5,
-                               .status = MipBasisStatus::BASIC};
+                               .value = 42.5};
 
     table.addEntry(entry);
     table.write();
@@ -192,8 +189,7 @@ BOOST_AUTO_TEST_CASE(MultipleEntries)
                                    .absolute_time_index = i * 10,
                                    .block_time_index = i % 168,
                                    .scenario_index = i % 10,
-                                   .value = static_cast<double>(i) * 0.1,
-                                   .status = static_cast<MipBasisStatus>(i % 6)};
+                                   .value = static_cast<double>(i) * 0.1};
         table.addEntry(entry);
     }
 
@@ -219,8 +215,7 @@ BOOST_AUTO_TEST_CASE(MultipleWriteCalls_AccumulateData)
                                 .absolute_time_index = 1,
                                 .block_time_index = 1,
                                 .scenario_index = 0,
-                                .value = 10.0,
-                                .status = MipBasisStatus::BASIC};
+                                .value = 10.0};
     tables.firstOptimSimulationTable()->addEntry(entry1);
     tables.write();
 
@@ -231,8 +226,7 @@ BOOST_AUTO_TEST_CASE(MultipleWriteCalls_AccumulateData)
                                 .absolute_time_index = 2,
                                 .block_time_index = 2,
                                 .scenario_index = 1,
-                                .value = 20.0,
-                                .status = MipBasisStatus::FREE};
+                                .value = 20.0};
     tables.firstOptimSimulationTable()->addEntry(entry2);
     tables.write();
 
@@ -259,8 +253,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
                                 .absolute_time_index = 1,
                                 .block_time_index = 1,
                                 .scenario_index = 0,
-                                .value = 10.0,
-                                .status = MipBasisStatus::BASIC};
+                                .value = 10.0};
 
     SimulationTableEntry entry2{.block = 2,
                                 .component = "comp2",
@@ -268,8 +261,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
                                 .absolute_time_index = 2,
                                 .block_time_index = 2,
                                 .scenario_index = 1,
-                                .value = 20.0,
-                                .status = MipBasisStatus::FREE};
+                                .value = 20.0};
 
     tables.firstOptimSimulationTable()->addEntry(entry1);
     tables.secondOptimSimulationTable()->addEntry(entry2);
@@ -348,8 +340,7 @@ BOOST_AUTO_TEST_CASE(ConcurrentAccess_MultipleThreads)
                                              .absolute_time_index = i,
                                              .block_time_index = i % 24,
                                              .scenario_index = t,
-                                             .value = static_cast<double>(i),
-                                             .status = MipBasisStatus::BASIC};
+                                             .value = static_cast<double>(i)};
 
                   std::lock_guard<std::mutex> lock(tableMutex);
                   table.addEntry(entry);
@@ -389,8 +380,7 @@ BOOST_AUTO_TEST_CASE(WritePerformance_LargeDataSet)
                                    .absolute_time_index = i,
                                    .block_time_index = i % 168,
                                    .scenario_index = i % 10,
-                                   .value = static_cast<double>(i) * 0.001,
-                                   .status = static_cast<MipBasisStatus>(i % 6)};
+                                   .value = static_cast<double>(i) * 0.001};
         table.addEntry(entry);
     }
     table.writeHeader();
@@ -436,8 +426,7 @@ BOOST_AUTO_TEST_CASE(DoubleValues_PrecisionBoundaries)
                                    .absolute_time_index = static_cast<unsigned>(i),
                                    .block_time_index = static_cast<unsigned>(i),
                                    .scenario_index = 0,
-                                   .value = testValues[i],
-                                   .status = MipBasisStatus::BASIC};
+                                   .value = testValues[i]};
 
         BOOST_CHECK_NO_THROW(table.addEntry(entry));
     }
@@ -636,7 +625,6 @@ BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
     const auto& component = components.front();
 
     addVariableEntries(table,
-                       linearProblem,
                        fillContext,
                        component,
                        *optimEntityContainer,
@@ -667,9 +655,9 @@ BOOST_AUTO_TEST_CASE(RoundTrip_DataIntegrity)
     SimulationTableCsv table;
 
     std::vector<SimulationTableEntry> originalEntries = {
-      {1, "comp1", "var1", 10, 5, 1, 123.456, MipBasisStatus::BASIC},
-      {2, "comp2", "var2", std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt},
-      {3, "comp3", "var3", 20, 10, 2, -456.789, MipBasisStatus::AT_UPPER_BOUND}};
+      {1, "comp1", "var1", 10, 5, 1, 123.456},
+      {2, "comp2", "var2", std::nullopt, std::nullopt, std::nullopt, std::nullopt},
+      {3, "comp3", "var3", 20, 10, 2, -456.789}};
 
     for (const auto& entry: originalEntries)
     {
@@ -744,8 +732,7 @@ BOOST_AUTO_TEST_CASE(UnicodeCharacters_InNames)
                                .absolute_time_index = 1,
                                .block_time_index = 1,
                                .scenario_index = 0,
-                               .value = 42.0,
-                               .status = MipBasisStatus::BASIC};
+                               .value = 42.0};
 
     BOOST_CHECK_NO_THROW(table.addEntry(entry));
     BOOST_CHECK_NO_THROW(table.write());
@@ -764,8 +751,7 @@ BOOST_AUTO_TEST_CASE(CSVEscaping_SpecialCharacters)
                                .absolute_time_index = 1,
                                .block_time_index = 1,
                                .scenario_index = 0,
-                               .value = 42.0,
-                               .status = MipBasisStatus::BASIC};
+                               .value = 42.0};
 
     table.addEntry(entry);
     table.write();
@@ -865,28 +851,6 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SingleBlockTimeIndexUsesLocalStep)
     BOOST_CHECK(buffer.find("1,comp1,var4,2,2") != std::string::npos);
 }
 
-BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockConstraintTimeIndexUsesLocalStep)
-{
-    SimulationTableCsv table;
-    FillContext fillContext(0, 1, 168, 169, 0); // 2 local time steps, week 2 globally
-    MockLinearProblem linearProblem(true);
-
-    build(fillContext, &linearProblem);
-    FillSimulationTable(table,
-                        linearProblem,
-                        45.0,
-                        getModelerData(),
-                        *optimEntityContainer,
-                        fillContext,
-                        1,
-                        TimeConversionMode::WeeklyBlocks);
-    table.write();
-
-    const std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("2,comp1,constraint2,169,1,0") != std::string::npos);
-    BOOST_CHECK(buffer.find("2,comp1,constraint2,170,2,0") != std::string::npos);
-}
-
 BOOST_AUTO_TEST_CASE(FillSimulationTable_ForceScenarioIndexForTimeOnlyVariables)
 {
     SimulationTableCsv table;
@@ -906,7 +870,9 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ForceScenarioIndexForTimeOnlyVariables)
     table.write();
 
     const std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("1,comp1,constraint1,None,None,0") != std::string::npos);
+    // var1 is neither time- nor scenario-dependent; forcing scenario export makes it appear
+    // as scenario-varying instead of fully constant.
+    BOOST_CHECK(buffer.find("1,comp1,var1,None,None,0") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_BlockTimeIndexAbsentForScenarioOnlyOutputs)
@@ -969,14 +935,13 @@ BOOST_AUTO_TEST_CASE(EmptyStrings_AllFields)
                                .absolute_time_index = std::nullopt,
                                .block_time_index = std::nullopt,
                                .scenario_index = std::nullopt,
-                               .value = std::nullopt,
-                               .status = std::nullopt};
+                               .value = std::nullopt};
 
     table.addEntry(entry);
     table.write();
 
     std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("0,,,None,None,None,None,None") != std::string::npos);
+    BOOST_CHECK(buffer.find("0,,,None,None,None,None") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(VeryLongStrings_ComponentNames)
@@ -991,8 +956,7 @@ BOOST_AUTO_TEST_CASE(VeryLongStrings_ComponentNames)
                                .absolute_time_index = 1,
                                .block_time_index = 1,
                                .scenario_index = 0,
-                               .value = 1.0,
-                               .status = MipBasisStatus::BASIC};
+                               .value = 1.0};
 
     BOOST_CHECK_NO_THROW(table.addEntry(entry));
     BOOST_CHECK_NO_THROW(table.write());
@@ -1017,8 +981,7 @@ BOOST_AUTO_TEST_CASE(AlternatingClear_Write_Operations)
                                        .absolute_time_index = i,
                                        .block_time_index = i,
                                        .scenario_index = cycle,
-                                       .value = static_cast<double>(i),
-                                       .status = MipBasisStatus::BASIC};
+                                       .value = static_cast<double>(i)};
             table.addEntry(entry);
         }
 
@@ -1068,8 +1031,7 @@ BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
                                    .absolute_time_index = 1,
                                    .block_time_index = 1,
                                    .scenario_index = 0,
-                                   .value = 123.45,
-                                   .status = MipBasisStatus::BASIC};
+                                   .value = 123.45};
         table.addEntry(entry);
         table.writeHeader();
         table.write();
@@ -1083,7 +1045,7 @@ BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 
     BOOST_CHECK(content.find("block,component,output") != std::string::npos);
-    BOOST_CHECK(content.find("1,test_comp,test_var,1,1,0,123.45,Basic") != std::string::npos);
+    BOOST_CHECK(content.find("1,test_comp,test_var,1,1,0,123.45") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -1153,8 +1115,7 @@ BOOST_AUTO_TEST_CASE(AddEntriesToBothTables)
                                 .absolute_time_index = 1,
                                 .block_time_index = 1,
                                 .scenario_index = 0,
-                                .value = 10.0,
-                                .status = MipBasisStatus::BASIC};
+                                .value = 10.0};
 
     SimulationTableEntry entry2{.block = 2,
                                 .component = "comp2",
@@ -1162,8 +1123,7 @@ BOOST_AUTO_TEST_CASE(AddEntriesToBothTables)
                                 .absolute_time_index = 2,
                                 .block_time_index = 2,
                                 .scenario_index = 1,
-                                .value = 20.0,
-                                .status = MipBasisStatus::FREE};
+                                .value = 20.0};
 
     tables.firstOptimSimulationTable()->addEntry(entry1);
     tables.secondOptimSimulationTable()->addEntry(entry2);
@@ -1171,8 +1131,8 @@ BOOST_AUTO_TEST_CASE(AddEntriesToBothTables)
     tables.write();
 
     auto buffers = tables.moveBuffers();
-    BOOST_CHECK(buffers.first.find("1,comp1,var1,1,1,0,10,Basic") != std::string::npos);
-    BOOST_CHECK(buffers.second.find("2,comp2,var2,2,2,1,20,Free") != std::string::npos);
+    BOOST_CHECK(buffers.first.find("1,comp1,var1,1,1,0,10") != std::string::npos);
+    BOOST_CHECK(buffers.second.find("2,comp2,var2,2,2,1,20") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(Clear_ResetsAllTables)
@@ -1185,8 +1145,7 @@ BOOST_AUTO_TEST_CASE(Clear_ResetsAllTables)
                                .absolute_time_index = 1,
                                .block_time_index = 1,
                                .scenario_index = 0,
-                               .value = 10.0,
-                               .status = MipBasisStatus::BASIC};
+                               .value = 10.0};
 
     tables.firstOptimSimulationTable()->addEntry(entry);
     tables.secondOptimSimulationTable()->addEntry(entry);
@@ -1290,8 +1249,7 @@ BOOST_FIXTURE_TEST_CASE(FullWorkflow_CreateWriteRead, TempDirFixture)
                                        .absolute_time_index = i * 10,
                                        .block_time_index = i * 5,
                                        .scenario_index = i % 3,
-                                       .value = i * 2.5,
-                                       .status = static_cast<MipBasisStatus>(i % 6)};
+                                       .value = i * 2.5};
             table.addEntry(entry);
         }
 
@@ -1328,8 +1286,7 @@ BOOST_AUTO_TEST_CASE(LargeValues_HandledCorrectly)
                                .absolute_time_index = UINT_MAX,
                                .block_time_index = UINT_MAX,
                                .scenario_index = UINT_MAX,
-                               .value = std::numeric_limits<double>::max(),
-                               .status = MipBasisStatus::BASIC};
+                               .value = std::numeric_limits<double>::max()};
 
     BOOST_CHECK_NO_THROW(table.addEntry(entry));
     BOOST_CHECK_NO_THROW(table.write());
@@ -1344,8 +1301,7 @@ BOOST_AUTO_TEST_CASE(SpecialCharacters_InComponentNames)
                                .absolute_time_index = 1,
                                .block_time_index = 1,
                                .scenario_index = 0,
-                               .value = 1.0,
-                               .status = MipBasisStatus::BASIC};
+                               .value = 1.0};
 
     table.addEntry(entry);
     table.write();
@@ -1364,15 +1320,13 @@ BOOST_AUTO_TEST_CASE(ZeroValues_HandledCorrectly)
                                .absolute_time_index = 0,
                                .block_time_index = 0,
                                .scenario_index = 0,
-                               .value = 0.0,
-                               .status = MipBasisStatus::FREE};
+                               .value = 0.0};
 
     table.addEntry(entry);
     table.write();
 
     std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("0,,") != std::string::npos);
-    BOOST_CHECK(buffer.find(",0,Free") != std::string::npos);
+    BOOST_CHECK(buffer.find("0,,,0,0,0,0") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(NegativeValues_HandledCorrectly)
@@ -1384,8 +1338,7 @@ BOOST_AUTO_TEST_CASE(NegativeValues_HandledCorrectly)
                                .absolute_time_index = 1,
                                .block_time_index = 1,
                                .scenario_index = 0,
-                               .value = -123.456,
-                               .status = MipBasisStatus::BASIC};
+                               .value = -123.456};
 
     table.addEntry(entry);
     table.write();

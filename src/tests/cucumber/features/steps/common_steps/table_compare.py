@@ -85,8 +85,6 @@ def compare_rows(r_ref: dict, r_out: dict):
     ref_cols = {k for k in r_ref.keys() if k}
     out_cols = {k for k in r_out.keys() if k}
     common = ref_cols & out_cols
-    if "basis_status" in common:
-        common.remove("basis_status")
 
     for c in sorted(common):
         a_raw = r_ref[c] if r_ref[c] is not None else ""

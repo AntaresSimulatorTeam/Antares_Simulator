@@ -5,8 +5,6 @@
 #include <optional>
 #include <string>
 
-#include "antares/optimisation/linear-problem-api/hasStatus.h"
-
 namespace Antares::IO::Outputs
 {
 struct SimulationTableEntry
@@ -18,6 +16,5 @@ struct SimulationTableEntry
     std::optional<unsigned int> block_time_index;
     std::optional<unsigned int> scenario_index;
     std::optional<double> value;
-    std::optional<Antares::Optimisation::LinearProblemApi::MipBasisStatus> status;
 };
 } // namespace Antares::IO::Outputs

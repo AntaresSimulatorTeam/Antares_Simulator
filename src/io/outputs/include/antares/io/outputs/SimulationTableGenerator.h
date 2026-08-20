@@ -67,23 +67,12 @@ std::string BuildModelerConstraintName(const std::string& componentId,
                                        const std::optional<unsigned>& ts);
 
 void addVariableEntries(ISimulationTable& simulationTable,
-                        const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
                         const Optimisation::LinearProblemApi::FillContext& fillContext,
                         const ModelerStudy::SystemModel::Component& component,
                         const Optimisation::OptimEntityContainer& optimEntityContainer,
                         unsigned currentBlock,
                         const TimeConversionMode& timeConversionMode,
                         std::optional<unsigned> scenario);
-
-void addConstraintEntries(ISimulationTable& simulationTable,
-                          const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
-                          const Optimisation::LinearProblemApi::FillContext& fillContext,
-                          const ModelerStudy::SystemModel::Component& component,
-                          const Optimisation::OptimEntityContainer& optimEntityContainer,
-                          unsigned currentBlock,
-                          const TimeConversionMode& timeConversionMode,
-                          std::optional<unsigned> scenario,
-                          bool forceExportForScenarioIndex);
 
 void addPortEntries(ISimulationTable& simulationTable,
                     const Optimisation::LinearProblemApi::FillContext& fillContext,

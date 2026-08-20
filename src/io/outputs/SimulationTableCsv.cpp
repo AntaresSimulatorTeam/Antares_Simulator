@@ -17,8 +17,6 @@ SimulationTableCsv::SimulationTableCsv()
     storage_.addOptionalColumn<unsigned int>("block_time_index");
     storage_.addOptionalColumn<unsigned int>("scenario_index");
     storage_.addOptionalColumn<double>("value");
-    storage_.addOptionalColumn<Antares::Optimisation::LinearProblemApi::MipBasisStatus>(
-      "basis_status");
 }
 
 void SimulationTableCsv::addEntry(const SimulationTableEntry& entry)
@@ -30,7 +28,6 @@ void SimulationTableCsv::addEntry(const SimulationTableEntry& entry)
     storage_.addValue("block_time_index", entry.block_time_index);
     storage_.addValue("scenario_index", entry.scenario_index);
     storage_.addValue("value", entry.value);
-    storage_.addValue("basis_status", entry.status);
 }
 
 std::string SimulationTableCsv::getHeader() const
