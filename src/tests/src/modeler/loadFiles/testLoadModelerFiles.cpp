@@ -237,8 +237,8 @@ BOOST_FIXTURE_TEST_CASE(scenario_group_is_optional, FixtureLoadFile)
     auto res = Antares::Solver::LoadFiles::loadLibraries(studyPath);
     BOOST_REQUIRE(res.has_value());
     const auto& libraries = res.value().first;
-    auto system = Antares::Solver::LoadFiles::loadSystem(studyPath, libraries);
-    const auto compoK = std::ranges::find_if(system.Components(),
+    auto loadedSystem = Antares::Solver::LoadFiles::loadSystem(studyPath, libraries);
+    const auto compoK = std::ranges::find_if(loadedSystem.system.Components(),
                                              [](const auto& comp) { return comp.Id() == "K"; });
     BOOST_CHECK_EQUAL(compoK->getScenarioGroupId(), "");
 }
