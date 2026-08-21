@@ -73,6 +73,21 @@ void appendModelerData(YAML::Node& systemYaml, const Antares::Solver::ModelerDat
         compNode["model"] = component.getModel()->LibraryId() + "." + component.getModel()->Id();
         compNode["parameters"] = YAML::Node(YAML::NodeType::Sequence);
         compNode["parameters"].SetStyle(YAML::EmitterStyle::Flow);
+
+        auto propsIt = modelerData.componentProperties.find(component.Id());
+        if (propsIt != modelerData.componentProperties.end())
+        {
+            YAML::Node props = YAML::Node(YAML::NodeType::Sequence);
+            for (const auto& [propId, propValue]: propsIt->second)
+            {
+                YAML::Node prop;
+                prop["id"] = propId;
+                prop["value"] = propValue;
+                props.push_back(prop);
+            }
+            compNode["properties"] = props;
+        }
+
         system["components"].push_back(compNode);
     }
 

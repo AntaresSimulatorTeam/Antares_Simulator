@@ -42,9 +42,14 @@ bool convert<YmlSystem::Parameter>::decode(const Node& node, YmlSystem::Paramete
     return true;
 }
 
-bool convert<YmlSystem::Property>::decode(const Node&, YmlSystem::Property&)
+bool convert<YmlSystem::Property>::decode(const Node& node, YmlSystem::Property& rhs)
 {
-    // do nothing, properties are not used for simulations
+    if (!YmlUtils::requireMap(node, "properties"))
+    {
+        return false;
+    }
+    rhs.id = node["id"].as<std::string>();
+    rhs.value = node["value"].as<std::string>();
     return true;
 }
 

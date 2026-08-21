@@ -19,7 +19,8 @@ struct Parameter
 
 struct Property
 {
-    // this struct is only used for compatibility if the system-for-views.yml is used as an input
+    std::string id;
+    std::string value;
 };
 
 struct Component
@@ -29,7 +30,7 @@ struct Component
     std::string scenarioGroup;
     std::vector<Parameter> parameters;
 
-    // This field isn't an input, it's an output for the view builder
+    // This field isn't an input for simulation, it's an output for the view builder
     // It's only used for building the system-for-views.yml
     std::vector<Property> properties;
 };
