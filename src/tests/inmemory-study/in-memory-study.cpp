@@ -336,7 +336,7 @@ StudyBuilder::StudyBuilder():
     simulation(*study)
 {
     // Make logs shrink to errors (and higher) only
-    logs.verbosityLevel = Yuni::Logs::Verbosity::Error::level;
+    logs.verbosityLevel = Antares::Logs::Verbosity::Error::level;
     study->parameters.namedProblems = true;
     initializeStudy(study.get());
 }

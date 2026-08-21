@@ -69,7 +69,7 @@ constexpr int ALLOCATION_FAILURE_EXIT_CODE = 42;
 
 void logAbortion()
 {
-    if (!logs.logfile())
+    if (logs.logfile().empty())
     {
         logs.fatal() << "Aborting now. (warning: no file log available)";
         logs.warning() << "No log file available";
