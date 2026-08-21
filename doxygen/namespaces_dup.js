@@ -794,7 +794,7 @@ var namespaces_dup =
           [ "YmlSystem", null, [
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parser" ],
             [ "Parameter", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter" ],
-            [ "Property", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Property.html", null ],
+            [ "Property", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Property.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Property" ],
             [ "Component", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component" ],
             [ "ConnectionEntry", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry" ],
             [ "Connection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection" ],
@@ -1103,6 +1103,7 @@ var namespaces_dup =
         ] ],
         [ "LoadFiles", null, [
           [ "FileLoader", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader.html", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader" ],
+          [ "LoadedSystem", "structAntares_1_1Solver_1_1LoadFiles_1_1LoadedSystem.html", "structAntares_1_1Solver_1_1LoadFiles_1_1LoadedSystem" ],
           [ "ErrorLoadingYaml", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml" ],
           [ "convertIntoSystemLibs", "readLibraries_8cpp.html#a4c4fde5299afed81da67e3ec8f8991bb", null ],
           [ "fetchModelInLibrairies", "readLibraries_8cpp.html#a897616993842a84f6267d85100dfdee3", null ],
@@ -1118,8 +1119,8 @@ var namespaces_dup =
           [ "loadParameters", "loadFiles_8h.html#aefa634dcb9ba9c6ba4ec4ac55065fe3b", null ],
           [ "loadScenarioGroupRepository", "loadFiles_8h.html#ac1de6eae42ea4dde348d2ef122d47dca", null ],
           [ "loadSingleLibrary", "readLibraries_8cpp.html#ac8aa90a4721ecdd2fc4553869e1e7576", null ],
-          [ "loadSystem", "readSystem_8cpp.html#a8babba588d7df856e9efd4ae1350c30d", null ],
-          [ "loadSystem", "loadFiles_8h.html#a33a4abfd0fc7d8e50b06ec3bc672e8d9", null ],
+          [ "loadSystem", "readSystem_8cpp.html#a6b61e095796b0529468487365c439a17", null ],
+          [ "loadSystem", "loadFiles_8h.html#a9c401d72cdb58ec72d3c1172d5c7c29e", null ],
           [ "markYamlError", "handleErrors_8cpp.html#a86648f8563a8e962d4141f6a31bb4906", null ],
           [ "parseModelerParameters", "parseModelerParameters_8h.html#aec770ce15d1ae94b5c46e6d8575f038f", null ],
           [ "parseScenarioGroupRepository", "readScenarioGroup_8cpp.html#a4e550d1b902922f25bf343fecbb3a662", null ],
@@ -1677,6 +1678,7 @@ var namespaces_dup =
         [ "WeeklyProblemTranslationException", "classAntares_1_1Solver_1_1WeeklyProblemTranslationException.html", "classAntares_1_1Solver_1_1WeeklyProblemTranslationException" ],
         [ "HebdoProblemToLpsTranslator", "classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html", "classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator" ],
         [ "Checks", "timeseries-numbers_8cpp.html#ab8fe5c54961d98704c7910fd3447eb72", null ],
+        [ "ComponentProperty", "ModelerData_8h.html#a225630154f1454775082506f46929b41", null ],
         [ "WeeklyDataByYearWeek", "LpsFromAntares_8h.html#ac4f3e9c303f92dbf1178ca6451ddeecd", null ],
         [ "Feature", "locator_8h.html#a6089452003dae328d095cb27abcf6999", [
           [ "standard", "locator_8h.html#a6089452003dae328d095cb27abcf6999a9e94394cac79f999e5dd5f68e9dd15b2", null ],

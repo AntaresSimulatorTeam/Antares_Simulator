@@ -296,7 +296,7 @@ var annotated_dup =
           [ "YmlSystem", null, [
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parser" ],
             [ "Parameter", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter" ],
-            [ "Property", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Property.html", null ],
+            [ "Property", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Property.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Property" ],
             [ "Component", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component" ],
             [ "ConnectionEntry", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry" ],
             [ "Connection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection" ],
@@ -493,6 +493,7 @@ var annotated_dup =
         ] ],
         [ "LoadFiles", null, [
           [ "FileLoader", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader.html", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader" ],
+          [ "LoadedSystem", "structAntares_1_1Solver_1_1LoadFiles_1_1LoadedSystem.html", "structAntares_1_1Solver_1_1LoadFiles_1_1LoadedSystem" ],
           [ "ErrorLoadingYaml", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml" ]
         ] ],
         [ "Simulation", null, [

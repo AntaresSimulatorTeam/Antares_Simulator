@@ -844,6 +844,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Container::List< Inner >", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1List.html", null ],
     [ "Antares::Solver::Variable::Economy::LMRViolationsTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolationsTraits.html", null ],
     [ "Antares::TSGenerator::Predicate::Load", "classAntares_1_1TSGenerator_1_1Predicate_1_1Load.html", null ],
+    [ "Antares::Solver::LoadFiles::LoadedSystem", "structAntares_1_1Solver_1_1LoadFiles_1_1LoadedSystem.html", null ],
     [ "Antares::Solver::Variable::Economy::LoadTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoadTraits.html", null ],
     [ "Antares::Solver::LocationAnalysis", "structAntares_1_1Solver_1_1LocationAnalysis.html", null ],
     [ "Antares::Logs::LogBuffer", "classAntares_1_1Logs_1_1LogBuffer.html", null ],
