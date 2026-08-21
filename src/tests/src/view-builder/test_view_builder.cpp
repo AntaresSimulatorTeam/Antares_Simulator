@@ -81,11 +81,6 @@ BOOST_AUTO_TEST_CASE(study_to_yaml_structure)
 
     auto sys = root["system"];
 
-    auto libs = sys["model-libraries"];
-    BOOST_REQUIRE(libs.IsSequence());
-    BOOST_REQUIRE_EQUAL(libs.size(), 1);
-    BOOST_CHECK_EQUAL(libs[0].as<std::string>(), "antares_legacy_models");
-
     auto components = sys["components"];
     BOOST_REQUIRE(components.IsSequence());
 
@@ -365,7 +360,6 @@ BOOST_AUTO_TEST_CASE(round_trip_yaml_parse)
     BOOST_REQUIRE(reparsed["system"].IsDefined());
 
     auto sys = reparsed["system"];
-    BOOST_REQUIRE(sys["model-libraries"].IsSequence());
     BOOST_REQUIRE(sys["components"].IsSequence());
     BOOST_CHECK_EQUAL(sys["components"].size(), 32);
     BOOST_REQUIRE(sys["connections"].IsSequence());
