@@ -112,8 +112,7 @@ bool fileSetContent(const std::string& filename, const std::string& content)
             {
                 // permission denied and friends: useless to spend more time to try
                 // to write the file, we should abort immediatly
-                logs.error() << "I/O error: cannot open " << filename << ": "
-                             << std::strerror(err);
+                logs.error() << "I/O error: cannot open " << filename << ": " << std::strerror(err);
                 return false;
             }
             continue;
@@ -156,8 +155,7 @@ bool fileSetContent(const std::string& filename, const std::string& content)
         // Yuni::String whose size type is only 32 bits: any content of 4 GB or more
         // would be silently truncated (and a 4 GB one truncated down to nothing).
         errno = 0;
-        const uint64_t written = out.write(content.data(),
-                                           static_cast<uint64_t>(content.size()));
+        const uint64_t written = out.write(content.data(), static_cast<uint64_t>(content.size()));
         if (written != content.size())
         {
             const int err = errno;
