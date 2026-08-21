@@ -63,7 +63,7 @@ jobs:
         env:
           # Mirror of the source archives vcpkg downloads, keyed by SHA512. Lets this
           # branch keep building after upstream mirrors purge its pinned versions.
-          ASSET_SOURCES: "clear;x-azurl,${{ vars.VCPKG_ASSET_BASE_URL || 'https://github.com/AntaresSimulatorTeam/antares-vcpkg-registry/releases/download' }}/baseline-b322364f06308bdd24823f9d8f03fe0cc86fd46f/,,read"
+          ASSET_SOURCES: "clear;x-azurl,${{ vars.VCPKG_ASSET_BASE_URL || 'https://github.com/AntaresSimulatorTeam/antares-vcpkg-registry/releases/download' }}/baseline-ef7dbf94b9198bc58f45951adcf1f041fcbc5ea0/,,read"
         run: |
           git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
           echo "VCPKG_ROOT=$GITHUB_WORKSPACE/vcpkg" >> $GITHUB_ENV

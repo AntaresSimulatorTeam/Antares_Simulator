@@ -126,7 +126,7 @@ jobs:
         --build-arg="BRANCH=${{ env.REF }}" \
         --build-arg="NPROC=$(nproc)" \
         --build-arg="VCPKG_CACHE_DIR=./vcpkg_cache" \
-        --build-arg="X_VCPKG_ASSET_SOURCES=clear;x-azurl,${{ vars.VCPKG_ASSET_BASE_URL || 'https://github.com/AntaresSimulatorTeam/antares-vcpkg-registry/releases/download' }}/baseline-b322364f06308bdd24823f9d8f03fe0cc86fd46f/,,read" \
+        --build-arg="X_VCPKG_ASSET_SOURCES=clear;x-azurl,${{ vars.VCPKG_ASSET_BASE_URL || 'https://github.com/AntaresSimulatorTeam/antares-vcpkg-registry/releases/download' }}/baseline-ef7dbf94b9198bc58f45951adcf1f041fcbc5ea0/,,read" \
         --build-arg CCACHE_DIR=./.ccache \
         --build-arg CCACHE_KEY=centos7-on-${{ runner.os }} \
         --build-arg RUN_TESTS=${{ env.RUN_TESTS }} \

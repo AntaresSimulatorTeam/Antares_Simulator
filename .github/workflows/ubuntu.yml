@@ -46,7 +46,7 @@ jobs:
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
       # Mirror of the source archives vcpkg downloads, keyed by SHA512. Lets this
       # branch keep building after upstream mirrors purge its pinned versions.
-      X_VCPKG_ASSET_SOURCES: "clear;x-azurl,${{ vars.VCPKG_ASSET_BASE_URL || 'https://github.com/AntaresSimulatorTeam/antares-vcpkg-registry/releases/download' }}/baseline-b322364f06308bdd24823f9d8f03fe0cc86fd46f/,,read"
+      X_VCPKG_ASSET_SOURCES: "clear;x-azurl,${{ vars.VCPKG_ASSET_BASE_URL || 'https://github.com/AntaresSimulatorTeam/antares-vcpkg-registry/releases/download' }}/baseline-ef7dbf94b9198bc58f45951adcf1f041fcbc5ea0/,,read"
 
     runs-on: ubuntu-22.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
