@@ -4,12 +4,6 @@ toc_depth: 2
 
 # Antares Changelog
 
-### 9.3.12
-
-#### Dependencies
-
-* Update vcpkg to 2025.06.13: some dependency assets were not available anymore. Versions details in [dependency updates](Dependencies/updates.md)
-
 ### 9.3.11
 
 #### Bugfixes
