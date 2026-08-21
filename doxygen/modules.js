@@ -1,4 +1,4 @@
 var modules =
 [
-    [ "Logs", "group__logs.html", "group__logs" ]
+    [ "Logs", "group__logs.html", null ]
 ];

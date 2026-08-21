@@ -262,7 +262,7 @@ $(document).ready(function(){initNavTree('solver_8hxx_source.html',''); initResi
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="comment">// 2 - Getting the numpspace and scratchMap associated to the current year</span></div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <span class="keywordtype">unsigned</span> numSpace = numspaceManager.getAvailableNumSpace();</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        Yuni::Logs::threadNumber() = numSpace;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        Antares::Logs::threadNumber() = numSpace;</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        logs.info() &lt;&lt; <span class="stringliteral">&quot;Year &quot;</span> &lt;&lt; y + 1 &lt;&lt; <span class="stringliteral">&quot; started&quot;</span>;</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        Antares::Data::Area::ScratchMap scratchmap = study.<a class="code" href="classAntares_1_1Data_1_1Study.html#ad4f8a799f2cf9214dada8b0ad8993214">areas</a>.<a class="code" href="classAntares_1_1Data_1_1AreaList.html#a5fc4266922eb4ab9bce54a323077398a">buildScratchMap</a>(numSpace);</div>

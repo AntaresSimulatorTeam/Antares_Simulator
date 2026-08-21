@@ -863,6 +863,31 @@ var namespaces_dup =
         [ "readFile", "file_8h.html#a29b940cfba7d5fda23c8d4ec4e5bffb0", null ]
       ] ],
       [ "LinearProblem", "namespaceAntares_1_1LinearProblem.html", "namespaceAntares_1_1LinearProblem" ],
+      [ "Logs", null, [
+        [ "Verbosity", null, [
+          [ "Fatal", "structAntares_1_1Logs_1_1Verbosity_1_1Fatal.html", null ],
+          [ "Error", "structAntares_1_1Logs_1_1Verbosity_1_1Error.html", null ],
+          [ "Warning", "structAntares_1_1Logs_1_1Verbosity_1_1Warning.html", null ],
+          [ "Checkpoint", "structAntares_1_1Logs_1_1Verbosity_1_1Checkpoint.html", null ],
+          [ "Notice", "structAntares_1_1Logs_1_1Verbosity_1_1Notice.html", null ],
+          [ "Info", "structAntares_1_1Logs_1_1Verbosity_1_1Info.html", null ],
+          [ "Debug", "structAntares_1_1Logs_1_1Verbosity_1_1Debug.html", null ]
+        ] ],
+        [ "LogBuffer", "classAntares_1_1Logs_1_1LogBuffer.html", "classAntares_1_1Logs_1_1LogBuffer" ],
+        [ "NoopLogBuffer", "classAntares_1_1Logs_1_1NoopLogBuffer.html", "classAntares_1_1Logs_1_1NoopLogBuffer" ],
+        [ "LogCallback", "classAntares_1_1Logs_1_1LogCallback.html", "classAntares_1_1Logs_1_1LogCallback" ],
+        [ "Logger", "classAntares_1_1Logs_1_1Logger.html", "classAntares_1_1Logs_1_1Logger" ],
+        [ "LevelInfo", "structAntares_1_1Logs_1_1LevelInfo.html", "structAntares_1_1Logs_1_1LevelInfo" ],
+        [ "threadNumber", "libs_2antares_2logs_2include_2antares_2logs_2logs_8h.html#a5b1145e59766e18ca4fb6cdd4a667cdd", null ],
+        [ "CStrSizeStringLike", "libs_2antares_2logs_2include_2antares_2logs_2logs_8h.html#a7a140f65bba9ec206de6068b46e1e39a", null ],
+        [ "levelInfoCheckpoint", "libs_2antares_2logs_2include_2antares_2logs_2logs_8h.html#aae1633376c47d27a9fdb2df7da63cdeb", null ],
+        [ "levelInfoDebug", "libs_2antares_2logs_2include_2antares_2logs_2logs_8h.html#a1fa222340c250995ec3b121bf2b35f77", null ],
+        [ "levelInfoError", "libs_2antares_2logs_2include_2antares_2logs_2logs_8h.html#a81ee2d051a0246bb70eb79f60d0a697a", null ],
+        [ "levelInfoFatal", "libs_2antares_2logs_2include_2antares_2logs_2logs_8h.html#a3f14eb8c4354c8d6b56298be4d917a63", null ],
+        [ "levelInfoInfo", "libs_2antares_2logs_2include_2antares_2logs_2logs_8h.html#ad59d0f8677afa6fc248e8133c8c29306", null ],
+        [ "levelInfoNotice", "libs_2antares_2logs_2include_2antares_2logs_2logs_8h.html#a823bc9957184ccbb80214f7e2d188f54", null ],
+        [ "levelInfoWarning", "libs_2antares_2logs_2include_2antares_2logs_2logs_8h.html#a33c3b9a874d53d97ca69b041fd08f8f5", null ]
+      ] ],
       [ "MemoryUtils", null, [
         [ "new_check_allocation", "new__check_8hxx.html#af621f5a9f76d218541543ce2a2156f9c", null ]
       ] ],
@@ -1835,8 +1860,6 @@ var namespaces_dup =
       [ "DebugData", "structAntares_1_1DebugData.html", "structAntares_1_1DebugData" ],
       [ "HYDRO_VENTILATION_RESULTS", "management_8h.html#a2329aa8a66fd92377df919c542d3ea59", null ],
       [ "HydroSpecificMap", "management_8h.html#a1dd1b36f0795c32bcb0ae5e2f8cc34da", null ],
-      [ "LoggingDecorators", "libs_2antares_2logs_2include_2antares_2logs_2logs_8h.html#a91272164e81bb8fbfa2894ac98acc3c7", null ],
-      [ "LoggingHandlers", "libs_2antares_2logs_2include_2antares_2logs_2logs_8h.html#a1240ad97ff299a56b89d87eeef792071", null ],
       [ "DayOfTheWeek", "date_8h.html#aa8104e849e0d5706a12b06eaa5fbf7a1", [
         [ "monday", "date_8h.html#aa8104e849e0d5706a12b06eaa5fbf7a1a3522fcf18c5281138453bfb773853efc", null ],
         [ "tuesday", "date_8h.html#aa8104e849e0d5706a12b06eaa5fbf7a1a796ad5a7745fe5affd8d8a3b08dc685c", null ],

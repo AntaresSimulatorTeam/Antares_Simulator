@@ -1,8 +1,9 @@
 var searchData=
 [
-  ['factoryfixture_544',['FactoryFixture',['../classFactoryFixture.html',1,'']]],
-  ['fake_5fbuffer_5ffactory_545',['fake_buffer_factory',['../classfake__buffer__factory.html',1,'']]],
-  ['fakelogger_546',['fakeLogger',['../classAntares_1_1UnitTests_1_1fakeLogger.html',1,'Antares::UnitTests']]],
+  ['factoryfixture_543',['FactoryFixture',['../classFactoryFixture.html',1,'']]],
+  ['fake_5fbuffer_5ffactory_544',['fake_buffer_factory',['../classfake__buffer__factory.html',1,'']]],
+  ['fakelogger_545',['fakeLogger',['../classAntares_1_1UnitTests_1_1fakeLogger.html',1,'Antares::UnitTests']]],
+  ['fatal_546',['Fatal',['../structAntares_1_1Logs_1_1Verbosity_1_1Fatal.html',1,'Antares::Logs::Verbosity']]],
   ['fatalerror_547',['FatalError',['../classAntares_1_1FatalError.html',1,'Antares']]],
   ['fictitiousload_548',['FictitiousLoad',['../classAntares_1_1Optimization_1_1FictitiousLoad.html',1,'Antares::Optimization::FictitiousLoad'],['../classFictitiousLoad.html',1,'FictitiousLoad']]],
   ['fictitiousloaddata_549',['FictitiousLoadData',['../structFictitiousLoadData.html',1,'']]],

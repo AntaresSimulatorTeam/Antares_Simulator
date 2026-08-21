@@ -379,6 +379,22 @@ var annotated_dup =
         [ "ReadLinearConstraintVisitor", "classAntares_1_1LinearProblem_1_1ReadLinearConstraintVisitor.html", "classAntares_1_1LinearProblem_1_1ReadLinearConstraintVisitor" ],
         [ "ReadLinearExpressionVisitor", "classAntares_1_1LinearProblem_1_1ReadLinearExpressionVisitor.html", "classAntares_1_1LinearProblem_1_1ReadLinearExpressionVisitor" ]
       ] ],
+      [ "Logs", null, [
+        [ "Verbosity", null, [
+          [ "Fatal", "structAntares_1_1Logs_1_1Verbosity_1_1Fatal.html", null ],
+          [ "Error", "structAntares_1_1Logs_1_1Verbosity_1_1Error.html", null ],
+          [ "Warning", "structAntares_1_1Logs_1_1Verbosity_1_1Warning.html", null ],
+          [ "Checkpoint", "structAntares_1_1Logs_1_1Verbosity_1_1Checkpoint.html", null ],
+          [ "Notice", "structAntares_1_1Logs_1_1Verbosity_1_1Notice.html", null ],
+          [ "Info", "structAntares_1_1Logs_1_1Verbosity_1_1Info.html", null ],
+          [ "Debug", "structAntares_1_1Logs_1_1Verbosity_1_1Debug.html", null ]
+        ] ],
+        [ "LogBuffer", "classAntares_1_1Logs_1_1LogBuffer.html", "classAntares_1_1Logs_1_1LogBuffer" ],
+        [ "NoopLogBuffer", "classAntares_1_1Logs_1_1NoopLogBuffer.html", "classAntares_1_1Logs_1_1NoopLogBuffer" ],
+        [ "LogCallback", "classAntares_1_1Logs_1_1LogCallback.html", "classAntares_1_1Logs_1_1LogCallback" ],
+        [ "Logger", "classAntares_1_1Logs_1_1Logger.html", "classAntares_1_1Logs_1_1Logger" ],
+        [ "LevelInfo", "structAntares_1_1Logs_1_1LevelInfo.html", "structAntares_1_1Logs_1_1LevelInfo" ]
+      ] ],
       [ "ModelerStudy", null, [
         [ "SystemModel", null, [
           [ "Expression", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression" ],
