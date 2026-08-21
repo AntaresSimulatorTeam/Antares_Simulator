@@ -18,7 +18,7 @@
 
 using namespace Antares;
 
-namespace
+namespace Antares::Logs
 {
 
 std::string hostName()
@@ -83,6 +83,11 @@ std::string hostName()
 #endif
 }
 
+} // namespace Antares::Logs
+
+namespace
+{
+
 const char* operatingSystemName()
 {
 #if defined(_WIN32)
@@ -108,5 +113,5 @@ void WriteHostInfoIntoLogs()
                 << operatingSystemName() << ", " << std::thread::hardware_concurrency()
                 << " cpu(s)";
 
-    logs.info() << "  :: hostname = " << hostName();
+    logs.info() << "  :: hostname = " << Logs::hostName();
 }

@@ -6,7 +6,8 @@
 #ifdef _WIN32
 
 #include <ctime>
-#include <iostream>
+#include <iosfwd>
+#include <string>
 #include <windows.h>
 
 #include "antares/logs/logger-utils.h"
@@ -21,43 +22,18 @@ constexpr WORD winGreen = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
 constexpr WORD winWhite = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE
                           | FOREGROUND_INTENSITY;
 
-WORD winColor(const Color& color)
-{
-    switch (color)
-    {
-    case Color::red:
-        return winRed;
-    case Color::yellow:
-        return winYellow;
-    case Color::green:
-        return winGreen;
-    case Color::white:
-        return winWhite;
-    default:
-        return winDefault; // reset
-    }
-}
+//! Console attribute for the given color, the default attribute for Color::none
+WORD winColor(const Color& color);
 
-std::string setConsoleColor(DWORD& out, const Color& color)
-{
-    SetConsoleTextAttribute(GetStdHandle(out), winColor(color));
-    // We need to return a string to match the Linux implementation, but on Windows we
-    // don't use ANSI escape codes.
-    return {};
-}
+std::string setConsoleColor(DWORD& out, const Color& color);
 
-DWORD winOut(const std::ostream& out)
-{
-    return (&out == &std::cerr) ? STD_ERROR_HANDLE : STD_OUTPUT_HANDLE;
-}
+//! Standard handle id matching the given stream
+DWORD winOut(const std::ostream& out);
 
 class ColorEnabler
 {
 public:
-    explicit ColorEnabler(std::ostream& out):
-        out_(winOut(out))
-    {
-    }
+    explicit ColorEnabler(std::ostream& out);
 
     std::string tagColor(const LevelInfo& level);
     std::string msgColor(const LevelInfo& level);
@@ -67,30 +43,9 @@ private:
     DWORD out_;
 };
 
-std::string ColorEnabler::tagColor(const LevelInfo& level)
-{
-    return setConsoleColor(out_, level.tagColor);
-}
+void setLocalTime(std::tm* tmBuffer, const std::time_t* now);
 
-std::string ColorEnabler::msgColor(const LevelInfo& level)
-{
-    return setConsoleColor(out_, level.messageColor);
-}
-
-std::string ColorEnabler::removeColor()
-{
-    return setConsoleColor(out_, Color::none);
-}
-
-void setLocalTime(std::tm* tmBuffer, const std::time_t* now)
-{
-    localtime_s(tmBuffer, now);
-}
-
-std::string eol()
-{
-    return "\r\n";
-}
+std::string eol();
 
 } // namespace Antares::Logs
 
