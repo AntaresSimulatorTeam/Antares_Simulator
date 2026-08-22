@@ -554,28 +554,29 @@ template<class ImplementationType>
 void ISimulation<ImplementationType>::aggregateAndWriteSimulationTables()
 {
     std::lock_guard lock(buffersMutex_);
-    std::string globalFirstBuffer;
-    std::string globalSecondBuffer;
+    const auto header = ImplementationType::getSimulationTableHeader() + "\n";
     // dans l'ordre des années
     for (uint year = 0; year < study.parameters.nbYears; ++year)
     {
         auto it = yearSimulationBuffers_.find(year);
-        if (it != yearSimulationBuffers_.end())
+        if (it == yearSimulationBuffers_.end())
         {
-            globalFirstBuffer += it->second.first;
-            globalSecondBuffer += it->second.second;
+            continue;
         }
-    }
-    const auto header = ImplementationType::getSimulationTableHeader() + "\n";
-    if (!globalFirstBuffer.empty())
-    {
-        std::string writerEntry = header + std::move(globalFirstBuffer);
-        pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-1.csv", writerEntry);
-    }
-    if (!globalSecondBuffer.empty())
-    {
-        std::string writerEntry = header + std::move(globalSecondBuffer);
-        pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-2.csv", writerEntry);
+        if (!it->second.first.empty())
+        {
+            std::string writerEntry = header + it->second.first;
+            pResultWriter.addEntryFromBuffer("simulation_table-" + std::to_string(year + 1)
+                                                + "--optim-nb-1.csv",
+                                             writerEntry);
+        }
+        if (!it->second.second.empty())
+        {
+            std::string writerEntry = header + it->second.second;
+            pResultWriter.addEntryFromBuffer("simulation_table-" + std::to_string(year + 1)
+                                                + "--optim-nb-2.csv",
+                                             writerEntry);
+        }
     }
 
     yearSimulationBuffers_.clear();

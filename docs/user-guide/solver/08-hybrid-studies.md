@@ -18,7 +18,7 @@ optimization results of the system components that were created by the legacy st
 
 The results of the modeler's components optimization is exported under the simulation table format, described in 
 the [modeler outputs page](../modeler/03-outputs.md), in the same output folder as the legacy outputs.  
-One simulation table for each optimization step (called `simulation_table--optim-nb-X`) will be generated.
+One simulation table per Monte Carlo year, for each optimization step (called `simulation_table-<year>--optim-nb-X`), will be generated.
 
 > _**Note:**_ 
 > Because every MC year is divided into multiple simplex ranges (blocks), time-independent outputs will appear once for 

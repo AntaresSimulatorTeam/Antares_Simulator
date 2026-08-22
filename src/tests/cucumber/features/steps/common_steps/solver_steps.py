@@ -271,13 +271,11 @@ def check_annual_results(context):
 
 @then("simulation tables match the references")
 def check_simulation_tables(context):
-    # Only the second optimization's simulation table is stored/written.
-    msg2 = diff_message(
-        name="Simulation table (optimization 2)",
-        ref_lines=context.sih.get_optim2_simulation_table(),
-        out_lines=context.soh.get_optim2_simulation_table(),
-    )
-    assert msg2 is None, msg2
+    reference_dir = context.sih.reference_dir()
+    output_dir = context.soh.output_dir()
+
+    dirs_match, differences = compare_folders(reference_dir, output_dir)
+    assert dirs_match, "Folders do not match:\n" + "\n".join(f"  - {diff}" for diff in differences)
 
 
 def should_check(row, key):
@@ -301,9 +299,10 @@ def run_simulation(context):
     context.return_code = process.returncode
     context.soh = solver_output_handler(context.output_path, context.mode)
     # for hybrid studies:
-    simulation_table = Path(context.output_path) / "simulation_table--optim-nb-2.csv"
-    if simulation_table.exists():
-        context.moh = modeler_output_handler(simulation_table)
+    output_dir = Path(context.output_path)
+    simulation_tables = sorted(output_dir.glob("simulation_table-*--optim-nb-2.csv"))
+    if simulation_tables:
+        context.moh = modeler_output_handler(simulation_tables)
 
 
 def init_simulation(context):
