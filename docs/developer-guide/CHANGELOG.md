@@ -4,6 +4,34 @@ toc_depth: 2
 
 # Antares Changelog
 
+
+## Branch 10.2.x
+
+### Unreleased
+
+#### Features
+
+* Write one simulation table per stage of the weekly resolution, so the effect of each
+  post-treatment is observable: `optim-nb-1`, `optim-nb-2`, `remix-hydro` (shave-peaks / remix
+  hydro) and `adq-patch-csr` (the adequacy patch CSR treatment). Each stage gets its own
+  `simulation-table-<year>-<stage>` file
+* Select which stages are written, with `simulation-table-stages` in the `[output]` section of
+  `generaldata.ini` or the `--simulation-table-stages` command-line option (default: all stages).
+  The command line overrides the study
+
+#### Breaking changes
+
+* A simulation table with no rows no longer produces a header-only file. In practice this means
+  no `simulation-table-<year>-optim-nb-2` file at all when the second optimisation pass does not
+  run, i.e. `unit-commitment-mode = milp` and Expansion mode. See the
+  [migration guide](../user-guide/04-migration-guides.md)
+
+#### Known limitations
+
+* The `remix-hydro` and `adq-patch-csr` stages are only produced when `simplex-range` is `week`.
+  A daily range solves the week as seven problems, of which only the last would be readable, so
+  the stage is skipped with a one-time warning
+
 ## Branch 10.1.x
 
 ### 10.1.1
