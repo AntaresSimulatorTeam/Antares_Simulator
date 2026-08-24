@@ -245,6 +245,20 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         throw FatalError("Internal error: insufficient memory");
     }
 
+    // Hand the modeler side to the post-process dumps. Called for both passes,
+    // so what survives is the last one actually run. Independent of
+    // `simulationTable`: the stage selection can leave this pass without a table
+    // of its own while a later post-process stage still needs these rows.
+    if (problemeHebdo->retainSolvedModelerProblem)
+    {
+        problemeHebdo->lastSolvedModelerProblem = std::make_shared<
+          const Antares::Optimization::SolvedModelerProblem>(
+          Antares::Optimization::SolvedModelerProblem{.problem = ortoolsProblem,
+                                                      .entities = optimEntityContainer,
+                                                      .objectiveValue = getObjectiveValue(
+                                                        solver.get())});
+    }
+
     if (simulationTable)
     {
         // Compute the current block index (weekly blocks if optimization is weekly,
@@ -282,15 +296,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                   fillCtx,
                                   legacyNameMapper,
                                   currentBlock);
-
-        // Hand the modeler side to the post-process dumps. Called for both
-        // passes, so what survives is the last one actually run.
-        problemeHebdo->lastSolvedModelerProblem = std::make_shared<
-          const Antares::Optimization::SolvedModelerProblem>(
-          Antares::Optimization::SolvedModelerProblem{.problem = ortoolsProblem,
-                                                      .entities = optimEntityContainer,
-                                                      .objectiveValue = getObjectiveValue(
-                                                        solver.get())});
 
         measure.tick();
         timeMeasure.simulationTableFillTime = measure.duration_ms();

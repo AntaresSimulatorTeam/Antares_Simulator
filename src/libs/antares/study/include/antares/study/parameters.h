@@ -6,6 +6,8 @@
 
 #include <cassert>
 #include <cstdlib>
+#include <set>
+#include <string>
 #include <vector>
 
 #include <yuni/yuni.h>
@@ -426,6 +428,16 @@ public:
 
     // In case we print simulation tables, do we print it in csv or parquet ?
     Writer::TableFormat simuTableFormat = Writer::TableFormat::CSV;
+
+    // Which stages of the weekly resolution get a simulation table. Empty means
+    // every stage. The names are validated against the stage list when the
+    // command line is resolved, so anything stored here is already known.
+    std::set<std::string> simulationTableStages;
+
+    // The raw `simulation-table-stages` value read from generaldata.ini, before
+    // validation. Resolved into `simulationTableStages` once the command line
+    // is applied, which overrides it when it carries a selection of its own.
+    std::string simulationTableStagesStr;
 
     bool hydroDebug;
 
