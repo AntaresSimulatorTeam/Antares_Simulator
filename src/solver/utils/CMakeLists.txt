@@ -30,6 +30,9 @@ target_link_libraries(utils
         Antares::result_writer
         Antares::optimization-options
         antares-core
+        PRIVATE
+        # mps_utils.cpp writes MPS files through IO::Outputs::MPSGenerator.
+        Antares::mps-generator
 )
 
 target_include_directories(utils
