@@ -282,12 +282,9 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     // optimisation range is excluded for the same reason: the dump no-ops there
     // (see DumpSimulationTableAfterPostProcess), so nothing would read it. This
     // is the lowest level that still sees the whole stage selection.
-    problemeHebdo->retainSolvedModelerProblem = simulationTables
-                                                && problemeHebdo->modelerData
-                                                && problemeHebdo
-                                                     ->OptimisationAuPasHebdomadaire
-                                                && simulationTables
-                                                     ->anyPostProcessStageSelected();
+    problemeHebdo->retainSolvedModelerProblem = simulationTables && problemeHebdo->modelerData
+                                                && problemeHebdo->OptimisationAuPasHebdomadaire
+                                                && simulationTables->anyPostProcessStageSelected();
 
     auto* firstOptimSimulationTable = simulationTables
                                         ? simulationTables->firstOptimSimulationTable()
