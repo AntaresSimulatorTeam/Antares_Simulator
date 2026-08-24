@@ -7,17 +7,29 @@ namespace Antares::IO::Outputs
 {
 SimulationTable* OptimisationsSimulationTable::firstOptimSimulationTable()
 {
-    return &firstOptimSimulationTable_;
+    return tableForStage(firstOptimStage);
 }
 
 SimulationTable* OptimisationsSimulationTable::secondOptimSimulationTable()
 {
-    return &secondOptimSimulationTable_;
+    return tableForStage(secondOptimStage);
+}
+
+SimulationTable* OptimisationsSimulationTable::tableForStage(const std::string& stage)
+{
+    return &stages_.try_emplace(stage).first->second;
+}
+
+const std::map<std::string, SimulationTable>& OptimisationsSimulationTable::stages() const
+{
+    return stages_;
 }
 
 void OptimisationsSimulationTable::clear()
 {
-    firstOptimSimulationTable_.clear();
-    secondOptimSimulationTable_.clear();
+    for (auto& [stage, table]: stages_)
+    {
+        table.clear();
+    }
 }
 } // namespace Antares::IO::Outputs

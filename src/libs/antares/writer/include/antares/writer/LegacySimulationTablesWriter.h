@@ -4,6 +4,7 @@
 #pragma once
 
 #include <filesystem>
+#include <string>
 
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/io/outputs/SimulationTable.h"
@@ -22,7 +23,7 @@ public:
     void write(IO::Outputs::OptimisationsSimulationTable& tables);
 
 private:
-    void writeForOptim(const IO::Outputs::SimulationTable* table, unsigned optim_number);
+    void writeForStage(const IO::Outputs::SimulationTable& table, const std::string& stage);
     unsigned year_ = 0;
     TableFormat tableFormat_;
     const std::filesystem::path folder_;
