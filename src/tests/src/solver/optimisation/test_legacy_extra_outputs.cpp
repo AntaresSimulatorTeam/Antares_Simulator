@@ -172,6 +172,13 @@ struct Fixture
         paliers.NumeroDuPalierDansLEnsembleDesPaliersThermiques = {0};
         paliers.TailleUnitaireDUnGroupeDuPalierThermique = {900.};
         paliers.PminDuPalierThermiquePendantUneHeure = {300.};
+        paliers.pminDUnGroupeDuPalierThermique = {300.};
+        // Unit-commitment costs as cluster data. A real problem carries them as
+        // the objective coefficients of the NODU / starting-units variables
+        // (100. and 5000. below); they are deliberately different here so the
+        // tests pin which of the two sources each mode reads.
+        paliers.CoutFixeDeMarcheDUnGroupeDuPalierThermique = {120.};
+        paliers.CoutDeDemarrageDUnGroupeDuPalierThermique = {6000.};
         paliers.emissionFactors.resize(1); // value-initialized: all factors 0
         paliers.emissionFactors[0][Antares::Data::Pollutant::CO2] = 0.5;
         paliers.emissionFactors[0][Antares::Data::Pollutant::NOX] = 0.01;
@@ -877,14 +884,55 @@ BOOST_AUTO_TEST_CASE(non_prop_cost_has_no_startup_term_at_the_first_hour)
     BOOST_CHECK_CLOSE(row->value, 100. * 3., 1e-9);
 }
 
-BOOST_AUTO_TEST_CASE(unit_commitment_outputs_are_skipped_in_fast_mode)
+BOOST_AUTO_TEST_CASE(fast_mode_rebuilds_num_units_on_from_generation_and_the_min_gen_bound)
 {
-    // The NODU variables only exist in "not fast" mode.
+    // The NODU variables only exist in "not fast" mode; the count is rebuilt
+    // from the dispatched power and the lower bound of the production variable:
+    // max(min(floor(min_gen / pmin_of_a_unit), ceil(available / unit_size)),
+    //     ceil(generation / unit_size))
+    // = max(min(floor(500 / 300), ceil(4000 / 900)), ceil(3600 / 900))
+    // = max(min(1, 5), 4) = 4.
     problem.OptimisationNotFastMode = false;
     fill();
 
-    BOOST_CHECK(RowsForOutput(table, "actual_num_units_on").empty());
-    BOOST_CHECK(RowsForOutput(table, "non_prop_cost").empty());
+    const auto rows = RowsForOutput(table, "actual_num_units_on");
+    BOOST_REQUIRE_EQUAL(rows.size(), 1);
+    BOOST_CHECK_EQUAL(rows[0].component, "area1_thermal_cluster1");
+    BOOST_CHECK_EQUAL(rows[0].value, 4.);
+}
+
+BOOST_AUTO_TEST_CASE(fast_mode_num_units_on_follows_the_min_gen_bound_when_it_is_the_binding_one)
+{
+    // A min-generation bound of 2700 MW keeps 9 units on, more than the 4 the
+    // generation alone requires, but the availability only carries 5.
+    problem.OptimisationNotFastMode = false;
+    problem.PaliersThermiquesDuPays[0].PuissanceDisponibleEtCout[0].PuissanceMinDuPalierThermique
+      = {2700.};
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_num_units_on", "area1_thermal_cluster1")->value, 5.);
+}
+
+BOOST_AUTO_TEST_CASE(fast_mode_num_units_on_is_zero_without_generation)
+{
+    problem.OptimisationNotFastMode = false;
+    problem.ProblemeAResoudre->X[dispatchableProduction] = 0.;
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_num_units_on", "area1_thermal_cluster1")->value, 0.);
+}
+
+BOOST_AUTO_TEST_CASE(fast_mode_non_prop_cost_uses_the_cluster_unit_commitment_costs)
+{
+    // No NODU variable to read the objective coefficients from: the fixed cost
+    // comes from the cluster data. non_prop_cost = 120 * 4 at the first hour,
+    // where the start-up term is dropped.
+    problem.OptimisationNotFastMode = false;
+    fill();
+
+    const auto row = FindRow(table, "non_prop_cost", "area1_thermal_cluster1");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_CLOSE(row->value, 120. * 4., 1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
@@ -927,4 +975,19 @@ BOOST_AUTO_TEST_CASE(non_prop_cost_adds_startup_cost_for_units_started_since_t_m
     const auto row = FindRowAt(fixture.table, "non_prop_cost", "area1_thermal_cluster1", "169");
     BOOST_REQUIRE(row.has_value());
     BOOST_CHECK_CLOSE(row->value, 5000. * 2. + 100. * 5., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(fast_mode_non_prop_cost_compares_the_rebuilt_counts_of_both_hours)
+{
+    Fixture fixture(/*nbPdt=*/2);
+    fixture.problem.OptimisationNotFastMode = false;
+    // Hour 0: ceil(3600 / 900) = 4 units on. Hour 1: ceil(4000 / 900) = 5, so
+    // one unit started at the cluster's startup cost 6000; fixed cost 120 per
+    // unit on.
+    fixture.problem.ProblemeAResoudre->X[variablesPerHour + dispatchableProduction] = 4000.;
+    fixture.fill();
+
+    const auto row = FindRowAt(fixture.table, "non_prop_cost", "area1_thermal_cluster1", "169");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_CLOSE(row->value, 6000. * 1. + 120. * 5., 1e-9);
 }
