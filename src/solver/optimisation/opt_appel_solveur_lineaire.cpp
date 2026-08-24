@@ -174,18 +174,28 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     bool hasModelerData = modelerData != nullptr;
     const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
+    // Release the problem retained by the previous pass before building this
+    // one, so the two never coexist: this function's peak is one problem, not
+    // two. Nothing can still want the old one -- a post-process dump runs after
+    // the week's last pass, and a week whose solve fails throws out of
+    // OPT_OptimisationHebdomadaireLineaire before the post-processes run, so the
+    // value cleared here could never have been published either way.
+    problemeHebdo->lastSolvedModelerProblem.reset();
+
     auto ortoolsProblem = std::make_shared<Antares::Optimization::LegacyOrtoolsLinearProblem>(
       isMip,
       options.solverName);
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
-    OptimEntityContainer optimEntityContainer(*ortoolsProblem);
+    // Heap-allocated so it can outlive this call: a post-process simulation
+    // table re-emits the modeler rows through it, long after the solve.
+    auto optimEntityContainer = std::make_shared<OptimEntityContainer>(*ortoolsProblem);
 
     BendersDecomposition* bendersDecomposition = hasModelerData ? &modelerData->bendersDecomposition
                                                                 : nullptr;
 
-    fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, bendersDecomposition);
+    fillLinearProblem(fillCtx, problemeHebdo, *optimEntityContainer, bendersDecomposition);
     auto solver = ortoolsProblem->getMpSolver();
     ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
 
@@ -259,7 +269,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                 *ortoolsProblem,
                                 getObjectiveValue(solver.get()),
                                 *modelerData,
-                                optimEntityContainer,
+                                *optimEntityContainer,
                                 fillCtx,
                                 currentBlock,
                                 timeConversionMode,
@@ -272,6 +282,15 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                   fillCtx,
                                   legacyNameMapper,
                                   currentBlock);
+
+        // Hand the modeler side to the post-process dumps. Called for both
+        // passes, so what survives is the last one actually run.
+        problemeHebdo->lastSolvedModelerProblem = std::make_shared<
+          const Antares::Optimization::SolvedModelerProblem>(
+          Antares::Optimization::SolvedModelerProblem{.problem = ortoolsProblem,
+                                                      .entities = optimEntityContainer,
+                                                      .objectiveValue = getObjectiveValue(
+                                                        solver.get())});
 
         measure.tick();
         timeMeasure.simulationTableFillTime = measure.duration_ms();

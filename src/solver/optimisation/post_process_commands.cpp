@@ -5,7 +5,10 @@
 
 #include <fmt/format.h>
 #include <sstream>
+#include <utility>
 
+#include "antares/io/outputs/OptimisationsSimulationTable.h"
+#include "antares/solver/optimisation/LegacySimulationTableSnapshot.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/common-eco-adq.h"
@@ -411,6 +414,24 @@ void WriteDebugAdequacyPatch::writeLinkData(const optRuntimeData& opt_runtime_da
 
     std::string s = stream.str();
     writer_.addEntryFromBuffer(filename, s);
+}
+
+// --------------------------------------
+//  Simulation table dump
+// --------------------------------------
+DumpSimulationTablePostProcessCmd::DumpSimulationTablePostProcessCmd(
+  PROBLEME_HEBDO* problemeHebdo,
+  std::string stage,
+  IO::Outputs::OptimisationsSimulationTable* tables):
+    basePostProcessCommand(problemeHebdo),
+    stage_(std::move(stage)),
+    tables_(tables)
+{
+}
+
+void DumpSimulationTablePostProcessCmd::execute(const optRuntimeData&)
+{
+    Antares::Optimization::DumpSimulationTableStage(tables_, stage_, *problemeHebdo_);
 }
 
 } // namespace Antares::Solver::Simulation
