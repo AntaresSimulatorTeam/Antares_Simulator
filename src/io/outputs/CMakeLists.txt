@@ -29,17 +29,48 @@ target_link_libraries(simulation-table
         fmt::fmt)
 
 
+# ===============================
+# ==== target : mps-generator ====
+# ===============================
+
+# Kept apart from simu-table-generator, which pulls in the modeler: writing an
+# MPS file only needs the linear problem API, and solverUtils writes MPS files
+# too. Bundling the two would close a link cycle
+# (solverUtils -> modeler-lib -> linear-problem-mpsolver-impl -> solverUtils).
+
+set(SRC_MPS_GENERATOR
+        MPSGenerator.cpp
+        ExportableName.cpp
+        include/antares/io/outputs/MPSGenerator.h
+        include/antares/io/outputs/ExportableName.h)
+
+add_library(mps-generator STATIC ${SRC_MPS_GENERATOR})
+add_library(Antares::mps-generator ALIAS mps-generator)
+
+set_target_properties(mps-generator PROPERTIES
+        POSITION_INDEPENDENT_CODE ON)
+
+target_include_directories(mps-generator
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+target_link_libraries(mps-generator
+        PUBLIC
+        Antares::linear-problem-api
+        fmt::fmt
+        PRIVATE
+        Antares::logs
+        Antares::exception
+)
+
 # =======================================
 # ==== target : simu-table-generator ====
 # =======================================
 
 set(SRC_SIMU_TABLE_GENERATOR
         SimulationTableGenerator.cpp
-        MPSGenerator.cpp
-        ExportableName.cpp
-        include/antares/io/outputs/SimulationTableGenerator.h
-        include/antares/io/outputs/MPSGenerator.h
-        include/antares/io/outputs/ExportableName.h)
+        include/antares/io/outputs/SimulationTableGenerator.h)
 
 # Create the library
 add_library(simu-table-generator STATIC ${SRC_SIMU_TABLE_GENERATOR})
@@ -54,6 +85,7 @@ target_include_directories(simu-table-generator
 # Link dependencies
 target_link_libraries(simu-table-generator
         PUBLIC
+        Antares::mps-generator
         Antares::linear-problem-data-impl
         Antares::optim-model-filler
         Antares::antares-study-system-model
