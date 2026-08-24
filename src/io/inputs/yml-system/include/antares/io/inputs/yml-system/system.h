@@ -17,6 +17,12 @@ struct Parameter
     std::string value;
 };
 
+struct Property
+{
+    std::string id;
+    std::string value;
+};
+
 struct Component
 {
     std::string id;
@@ -24,9 +30,9 @@ struct Component
     std::string scenarioGroup;
     std::vector<Parameter> parameters;
 
-    // This field isn't an input, it's an output for the view builder
+    // This field isn't an input for simulation, it's an output for the view builder
     // It's only used for building the system-for-views.yml
-    std::vector<std::string> properties;
+    std::vector<Property> properties;
 };
 
 struct ConnectionEntry

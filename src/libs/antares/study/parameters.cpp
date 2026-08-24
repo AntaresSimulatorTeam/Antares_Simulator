@@ -4,76 +4,81 @@
 #include "antares/study/parameters.h"
 
 #include <algorithm>
+#include <map>
 #include <sstream> // std::stringstream
 #include <string>
 
 #include <boost/algorithm/string/case_conv.hpp>
 
-#include <yuni/yuni.h>
-
 #include <antares/exception/AssertionError.hpp>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
+#include <antares/utils/utils.h>
 #include "antares/solver/variable/economy/all.h"
 #include "antares/study/load-options.h"
-
-using namespace Yuni;
 
 namespace Antares::Data
 {
 
-static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
+static bool ConvertCStrToListTimeSeries(const std::string& value, unsigned int& v)
 {
     v = 0;
-    if (!value)
+    if (value.empty())
     {
         return true;
     }
 
-    value.words(" ,;\t\r\n",
-                [&v](const AnyString& element)
-                {
-                    ShortString16 word(element);
-                    word.toLower();
-                    if (word == "load")
-                    {
-                        v |= timeSeriesLoad;
-                    }
-                    else if (word == "wind")
-                    {
-                        v |= timeSeriesWind;
-                    }
-                    else if (word == "hydro")
-                    {
-                        v |= timeSeriesHydro;
-                    }
-                    else if (word == "thermal")
-                    {
-                        v |= timeSeriesThermal;
-                    }
-                    else if (word == "solar")
-                    {
-                        v |= timeSeriesSolar;
-                    }
-                    else if (word == "renewables")
-                    {
-                        v |= timeSeriesRenewable;
-                    }
-                    else if (word == "ntc")
-                    {
-                        v |= timeSeriesTransmissionCapacities;
-                    }
-                    return true;
-                });
+    const std::string separators = " ,;\t\r\n";
+    std::size_t begin = 0;
+    while (begin <= value.size())
+    {
+        const std::size_t end = value.find_first_of(separators, begin);
+        const std::string word = value.substr(begin,
+                                              end == std::string::npos ? std::string::npos
+                                                                       : end - begin);
+        const std::string lower = Antares::stringToLower(word);
+        if (lower == "load")
+        {
+            v |= timeSeriesLoad;
+        }
+        else if (lower == "wind")
+        {
+            v |= timeSeriesWind;
+        }
+        else if (lower == "hydro")
+        {
+            v |= timeSeriesHydro;
+        }
+        else if (lower == "thermal")
+        {
+            v |= timeSeriesThermal;
+        }
+        else if (lower == "solar")
+        {
+            v |= timeSeriesSolar;
+        }
+        else if (lower == "renewables")
+        {
+            v |= timeSeriesRenewable;
+        }
+        else if (lower == "ntc")
+        {
+            v |= timeSeriesTransmissionCapacities;
+        }
+
+        if (end == std::string::npos)
+        {
+            break;
+        }
+        begin = end + 1;
+    }
     return true;
 }
 
-static bool ConvertStringToRenewableGenerationModelling(const AnyString& text,
+static bool ConvertStringToRenewableGenerationModelling(const std::string& text,
                                                         RenewableGenerationModelling& out)
 {
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
+    const std::string s = Antares::stringToLower(Antares::stringTrim(text));
     if (s == "aggregated")
     {
         out = rgAggregated;
@@ -91,11 +96,9 @@ static bool ConvertStringToRenewableGenerationModelling(const AnyString& text,
     return false;
 }
 
-static bool ConvertCStrToResultFormat(const AnyString& text, ResultFormat& out)
+static bool ConvertCStrToResultFormat(const std::string& text, ResultFormat& out)
 {
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
+    const std::string s = Antares::stringToLower(Antares::stringTrim(text));
     if (s == "txt-files")
     {
         out = legacyFilesDirectories;
@@ -118,9 +121,9 @@ static bool ConvertCStrToResultFormat(const AnyString& text, ResultFormat& out)
     return false;
 }
 
-bool StringToSimulationMode(SimulationMode& mode, CString<20, false> text)
+bool StringToSimulationMode(SimulationMode& mode, const std::string& text)
 {
-    if (!text)
+    if (text.empty())
     {
         return false;
     }
@@ -130,23 +133,23 @@ bool StringToSimulationMode(SimulationMode& mode, CString<20, false> text)
     }
 
     // Converting into lowercase
-    text.toLower();
+    const std::string lower = Antares::stringToLower(text);
 
     // Economy
-    if (text == "economy" || text == "economic")
+    if (lower == "economy" || lower == "economic")
     {
         // The term `economic` was mis-used in previous versions of antares (<3.4)
         mode = SimulationMode::Economy;
         return true;
     }
     // Adequacy
-    if (text == "adequacy")
+    if (lower == "adequacy")
     {
         mode = SimulationMode::Adequacy;
         return true;
     }
     // Expansion
-    if (text == "expansion")
+    if (lower == "expansion")
     {
         mode = SimulationMode::Expansion;
         return true;
@@ -245,13 +248,13 @@ void Parameters::resetSeeds()
 
     seed[seedTsGenWind] = s;
     // The same way for all others
-    for (auto i = (uint)seedTsGenLoad; i != seedMax; ++i)
+    for (auto i = (unsigned int)seedTsGenLoad; i != seedMax; ++i)
     {
         seed[i] = (s += increment);
     }
 }
 
-void Parameters::resetPlayedYears(uint nbOfYears)
+void Parameters::resetPlayedYears(unsigned int nbOfYears)
 {
     // Set the number of years
     nbYears = nbOfYears;
@@ -366,9 +369,9 @@ bool Parameters::isTSGeneratedByPrepro(const TimeSeriesType ts) const
 }
 
 static bool SGDIntLoadFamily_General(Parameters& d,
-                                     const String& key,
-                                     const String& value,
-                                     const String&)
+                                     const std::string& key,
+                                     const std::string& value,
+                                     const std::string&)
 {
     if (key == "active-rules-scenario")
     {
@@ -377,12 +380,14 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     }
     if (key == "custom-scenario")
     {
-        return value.to<bool>(d.useCustomScenario);
+        d.useCustomScenario = Antares::stringToBool(value);
+        return true;
     }
 
     if (key == "derated")
     {
-        return value.to<bool>(d.derated);
+        d.derated = Antares::stringToBool(value);
+        return true;
     }
 
     if (key == "first-month-in-year")
@@ -397,7 +402,8 @@ static bool SGDIntLoadFamily_General(Parameters& d,
 
     if (key == "geographic-trimming")
     {
-        return value.to<bool>(d.geographicTrimming);
+        d.geographicTrimming = Antares::stringToBool(value);
+        return true;
     }
 
     if (key == "generate")
@@ -422,7 +428,8 @@ static bool SGDIntLoadFamily_General(Parameters& d,
 
     if (key == "leapyear")
     {
-        return value.to(d.leapYear);
+        d.leapYear = Antares::stringToBool(value);
+        return true;
     }
 
     if (key == "mode")
@@ -432,8 +439,8 @@ static bool SGDIntLoadFamily_General(Parameters& d,
 
     if (key == "nbyears")
     {
-        uint y;
-        if (value.to<uint>(y))
+        unsigned int y;
+        if (Antares::stringToUint(value, y))
         {
             d.resetPlaylist(y);
             return true;
@@ -443,23 +450,23 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     }
     if (key == "nbtimeseriesload")
     {
-        return value.to<uint>(d.nbTimeSeriesLoad);
+        return Antares::stringToUint(value, d.nbTimeSeriesLoad);
     }
     if (key == "nbtimeserieshydro")
     {
-        return value.to<uint>(d.nbTimeSeriesHydro);
+        return Antares::stringToUint(value, d.nbTimeSeriesHydro);
     }
     if (key == "nbtimeserieswind")
     {
-        return value.to<uint>(d.nbTimeSeriesWind);
+        return Antares::stringToUint(value, d.nbTimeSeriesWind);
     }
     if (key == "nbtimeseriesthermal")
     {
-        return value.to<uint>(d.nbTimeSeriesThermal);
+        return Antares::stringToUint(value, d.nbTimeSeriesThermal);
     }
     if (key == "nbtimeseriessolar")
     {
-        return value.to<uint>(d.nbTimeSeriesSolar);
+        return Antares::stringToUint(value, d.nbTimeSeriesSolar);
     }
     if (key == "nbtimeserieslinks")
     {
@@ -470,35 +477,38 @@ static bool SGDIntLoadFamily_General(Parameters& d,
 
     if (key == "simulation.start")
     {
-        return value.to<uint>(d.simulationDays.first);
+        return Antares::stringToUint(value, d.simulationDays.first);
     }
     if (key == "simulation.end")
     {
-        return value.to<uint>(d.simulationDays.end);
+        return Antares::stringToUint(value, d.simulationDays.end);
     }
 
     if (key == "thematic-trimming")
     {
-        return value.to<bool>(d.thematicTrimming);
+        d.thematicTrimming = Antares::stringToBool(value);
+        return true;
     }
 
     if (key == "user-playlist")
     {
-        return value.to<bool>(d.userPlaylist);
+        d.userPlaylist = Antares::stringToBool(value);
+        return true;
     }
 
     if (key == "year-by-year")
     {
-        return value.to<bool>(d.yearByYear);
+        d.yearByYear = Antares::stringToBool(value);
+        return true;
     }
 
     return false;
 }
 
 static bool SGDIntLoadFamily_Input(Parameters& d,
-                                   const String& key,
-                                   const String& value,
-                                   const String&)
+                                   const std::string& key,
+                                   const std::string& value,
+                                   const std::string&)
 {
     if (key == "import")
     {
@@ -509,9 +519,9 @@ static bool SGDIntLoadFamily_Input(Parameters& d,
 }
 
 static bool SGDIntLoadFamily_Output(Parameters& d,
-                                    const String& key,
-                                    const String& value,
-                                    const String&)
+                                    const std::string& key,
+                                    const std::string& value,
+                                    const std::string&)
 {
     if (key == "archives")
     {
@@ -519,15 +529,18 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
     }
     if (key == "storenewset")
     {
-        return value.to<bool>(d.storeTimeseriesNumbers);
+        d.storeTimeseriesNumbers = Antares::stringToBool(value);
+        return true;
     }
     if (key == "synthesis")
     {
-        return value.to<bool>(d.synthesis);
+        d.synthesis = Antares::stringToBool(value);
+        return true;
     }
     if (key == "hydro-debug")
     {
-        return value.to<bool>(d.hydroDebug);
+        d.hydroDebug = Antares::stringToBool(value);
+        return true;
     }
     if (key == "result-format")
     {
@@ -535,27 +548,31 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
     }
     if (key == "remix-storage-debug")
     {
-        return value.to<bool>(d.remixStorageDebug);
+        d.remixStorageDebug = Antares::stringToBool(value);
+        return true;
     }
     if (key == "adequacy-patch-debug")
     {
-        return value.to<bool>(d.adqPatchDebug);
+        d.adqPatchDebug = Antares::stringToBool(value);
+        return true;
     }
     return false;
 }
 
 static bool SGDIntLoadFamily_Optimization(Parameters& d,
-                                          const String& key,
-                                          const String& value,
-                                          const String&)
+                                          const std::string& key,
+                                          const std::string& value,
+                                          const std::string&)
 {
     if (key == "include-constraints")
     {
-        return value.to<bool>(d.include.constraints);
+        d.include.constraints = Antares::stringToBool(value);
+        return true;
     }
     if (key == "include-hurdlecosts")
     {
-        return value.to<bool>(d.include.hurdleCosts);
+        d.include.hurdleCosts = Antares::stringToBool(value);
+        return true;
     }
     if (key == "include-loopflowfee") // backward compatibility
     {
@@ -563,31 +580,38 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     }
     if (key == "include-tc-minstablepower")
     {
-        return value.to<bool>(d.include.thermal.minStablePower);
+        d.include.thermal.minStablePower = Antares::stringToBool(value);
+        return true;
     }
     if (key == "include-tc-min-ud-time")
     {
-        return value.to<bool>(d.include.thermal.minUPTime);
+        d.include.thermal.minUPTime = Antares::stringToBool(value);
+        return true;
     }
     if (key == "include-dayahead")
     {
-        return value.to<bool>(d.include.reserve.dayAhead);
+        d.include.reserve.dayAhead = Antares::stringToBool(value);
+        return true;
     }
     if (key == "include-strategicreserve")
     {
-        return value.to<bool>(d.include.reserve.strategic);
+        d.include.reserve.strategic = Antares::stringToBool(value);
+        return true;
     }
     if (key == "include-spinningreserve")
     {
-        return value.to<bool>(d.include.reserve.spinning);
+        d.include.reserve.spinning = Antares::stringToBool(value);
+        return true;
     }
     if (key == "include-primaryreserve")
     {
-        return value.to<bool>(d.include.reserve.primary);
+        d.include.reserve.primary = Antares::stringToBool(value);
+        return true;
     }
     if (key == "include-reserves")
     {
-        return value.to<bool>(d.include.reserves);
+        d.include.reserves = Antares::stringToBool(value);
+        return true;
     }
 
     if (key == "include-exportmps")
@@ -604,17 +628,19 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
 
     if (key == "include-export-solutions")
     {
-        return value.to<bool>(d.include.exportSolutions);
+        d.include.exportSolutions = Antares::stringToBool(value);
+        return true;
     }
 
     if (key == "include-exportstructure")
     {
-        return value.to<bool>(d.include.exportStructure);
+        d.include.exportStructure = Antares::stringToBool(value);
+        return true;
     }
     if (key == "include-unfeasible-problem-behavior")
     {
         bool result = true;
-        const std::string& string = value.to<std::string>();
+        const std::string& string = value;
 
         try
         {
@@ -637,7 +663,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
 
     if (key == "simplex-range")
     {
-        d.simplexOptimizationRange = (!value.ifind("day")) ? sorDay : sorWeek;
+        d.simplexOptimizationRange = (value.find("day") == 0) ? sorDay : sorWeek;
         if (d.simplexOptimizationRange == sorDay)
         {
             logs.error()
@@ -653,23 +679,24 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
 
     if (key == "solver-logs")
     {
-        return value.to<bool>(d.optOptions.solverLogs);
+        d.optOptions.solverLogs = Antares::stringToBool(value);
+        return true;
     }
     return false;
 }
 
 static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
-                                      const String& key,
-                                      const String& value,
-                                      const String&)
+                                      const std::string& key,
+                                      const std::string& value,
+                                      const std::string&)
 {
     return d.adqPatchParams.updateFromKeyValue(key, value);
 }
 
 static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
-                                              const String& key,
-                                              const String& value,
-                                              const String&)
+                                              const std::string& key,
+                                              const std::string& value,
+                                              const std::string&)
 {
     if (key == "hydro-heuristic-policy")
     {
@@ -759,16 +786,17 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
 
     if (key == "accurate-shave-peaks-include-short-term-storage")
     {
-        return value.to<bool>(d.accurateShavePeaksIncludeShortTermStorage);
+        d.accurateShavePeaksIncludeShortTermStorage = Antares::stringToBool(value);
+        return true;
     }
 
     return false;
 }
 
 static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
-                                                const String& key,
-                                                const String& value,
-                                                const String&)
+                                                const std::string& key,
+                                                const std::string& value,
+                                                const std::string&)
 {
     if (key == "accuracy-on-correlation")
     {
@@ -778,23 +806,23 @@ static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
 }
 
 static bool SGDIntLoadFamily_Playlist(Parameters& d,
-                                      const String& key,
-                                      const String& value,
-                                      const String&)
+                                      const std::string& key,
+                                      const std::string& value,
+                                      const std::string&)
 {
     if (key == "playlist_reset")
     {
-        bool mode = value.to<bool>();
+        bool mode = Antares::stringToBool(value);
         if (mode)
         {
-            for (uint i = 0; i != d.nbYears; ++i)
+            for (unsigned int i = 0; i != d.nbYears; ++i)
             {
                 d.yearsFilter[i] = true;
             }
         }
         else
         {
-            for (uint i = 0; i != d.nbYears; ++i)
+            for (unsigned int i = 0; i != d.nbYears; ++i)
             {
                 d.yearsFilter[i] = false;
             }
@@ -803,8 +831,8 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
     }
     if (key == "playlist_year +")
     {
-        uint y;
-        if (value.to<uint>(y))
+        unsigned int y;
+        if (Antares::stringToUint(value, y))
         {
             if (y < d.nbYears)
             {
@@ -816,8 +844,8 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
     }
     if (key == "playlist_year -")
     {
-        uint y;
-        if (value.to<uint>(y))
+        unsigned int y;
+        if (Antares::stringToUint(value, y))
         {
             if (y < d.nbYears)
             {
@@ -834,11 +862,28 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
 
         // Use of yuni to split string
         std::vector<float> values;
-        value.split(values, ",");
+        std::size_t begin = 0;
+        while (begin < value.size())
+        {
+            const std::size_t end = value.find(',', begin);
+            const std::string segment = value.substr(begin,
+                                                     end == std::string::npos ? std::string::npos
+                                                                              : end - begin);
+            const std::string trimmed = Antares::stringTrim(segment);
+            if (!trimmed.empty())
+            {
+                values.push_back(Antares::stringToFloat(trimmed));
+            }
+            if (end == std::string::npos)
+            {
+                break;
+            }
+            begin = end + 1;
+        }
 
         if (values.size() == 2)
         {
-            uint y = (uint)(values[0]);
+            unsigned int y = (unsigned int)(values[0]);
             float weight = values[1];
 
             // Check values
@@ -895,82 +940,82 @@ static bool deprecatedVariable(std::string var)
 }
 
 static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
-                                                const String& key,
-                                                const String& value,
-                                                const String& original)
+                                                const std::string& key,
+                                                const std::string& value,
+                                                const std::string& original)
 {
     if (key == "selected_vars_reset")
     {
-        bool printAllVariables = value.to<bool>();
+        bool printAllVariables = Antares::stringToBool(value);
         d.variablesPrintInfo.setAllPrintStatusesTo(printAllVariables);
         return true;
     }
     if (key == "select_var +" || key == "select_var -")
     {
-        if (deprecatedVariable(value.to<std::string>()))
+        if (deprecatedVariable(value))
         {
             logs.warning() << "Output variable `" << original
                            << "` no longer exists and has been ignored";
             return true;
         }
         // Check if the read output variable exists
-        if (not d.variablesPrintInfo.exists(value.to<std::string>()))
+        if (not d.variablesPrintInfo.exists(value))
         {
             logs.warning() << "Output variable `" << original << "` does not exist";
             return false;
         }
 
         bool is_var_printed = (key == "select_var +");
-        d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), is_var_printed);
+        d.variablesPrintInfo.setPrintStatus(value, is_var_printed);
         return true;
     }
     return false;
 }
 
 static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
-                                                  const String& key,
-                                                  const String& value,
-                                                  const String&)
+                                                  const std::string& key,
+                                                  const std::string& value,
+                                                  const std::string&)
 {
-    if (key.startsWith("seed")) // seeds
+    if (key.rfind("seed", 0) == 0) // seeds
     {
         if (key.size() > 5 && key[4] == '_')
         {
             // This block is kept for compatibility with very old studies
             if (key == "seed_load")
             {
-                return value.to<uint>(d.seed[seedTsGenLoad]);
+                return Antares::stringToUint(value, d.seed[seedTsGenLoad]);
             }
             if (key == "seed_wind")
             {
-                return value.to<uint>(d.seed[seedTsGenWind]);
+                return Antares::stringToUint(value, d.seed[seedTsGenWind]);
             }
             if (key == "seed_hydro")
             {
-                return value.to<uint>(d.seed[seedTsGenHydro]);
+                return Antares::stringToUint(value, d.seed[seedTsGenHydro]);
             }
             if (key == "seed_thermal")
             {
-                return value.to<uint>(d.seed[seedTsGenThermal]);
+                return Antares::stringToUint(value, d.seed[seedTsGenThermal]);
             }
             if (key == "seed_solar")
             {
-                return value.to<uint>(d.seed[seedTsGenSolar]);
+                return Antares::stringToUint(value, d.seed[seedTsGenSolar]);
             }
             if (key == "seed_timeseriesnumbers")
             {
-                return value.to<uint>(d.seed[seedTimeseriesNumbers]);
+                return Antares::stringToUint(value, d.seed[seedTimeseriesNumbers]);
             }
         }
         else
         {
             // Looking for the good seed
             // TODO This algorithm should be replaced with something more efficient
-            for (uint sd = 0; sd != (uint)seedMax; ++sd)
+            for (unsigned int sd = 0; sd != (unsigned int)seedMax; ++sd)
             {
                 if (SeedToID((SeedIndex)sd) == key)
                 {
-                    return value.to<uint>(d.seed[sd]);
+                    return Antares::stringToUint(value, d.seed[sd]);
                 }
             }
             if (key == "seed-tsgen-links")
@@ -983,9 +1028,9 @@ static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
 }
 
 static bool SGDIntLoadFamily_Compatibility(Parameters& d,
-                                           const String& key,
-                                           const String& value,
-                                           const String&)
+                                           const std::string& key,
+                                           const std::string& value,
+                                           const std::string&)
 {
     if (key == "hydro-pmax")
     {
@@ -1000,7 +1045,7 @@ static bool SGDIntLoadFamily_Compatibility(Parameters& d,
     return false;
 }
 
-static void logNotSupported(const String& key, const StudyVersion& version)
+static void logNotSupported(const std::string& key, const StudyVersion& version)
 {
     logs.warning() << "In generaldata.ini, parameter `" << key
                    << "` is no longer supported since version " << version.toString()
@@ -1008,9 +1053,9 @@ static void logNotSupported(const String& key, const StudyVersion& version)
 }
 
 static bool SGDIntLoadFamily_Legacy(Parameters& d,
-                                    const String& key,
-                                    const String& value,
-                                    const String& rawvalue,
+                                    const std::string& key,
+                                    const std::string& value,
+                                    const std::string& rawvalue,
                                     const StudyVersion& version)
 {
     // Comparisons kept for compatibility reasons
@@ -1020,8 +1065,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     // "intra-modal" itself are kept here so old studies don't fail to parse
     if (key == "correlateddraws" || key == "intra-modal")
     {
-        String trimmed = rawvalue;
-        trimmed.trim();
+        std::string trimmed = Antares::stringTrim(rawvalue);
         if (!trimmed.empty())
         {
             logNotSupported(key, StudyVersion(9, 3));
@@ -1031,12 +1075,14 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     // Scenario builder
     if (key == "custom-ts-numbers")
     {
-        return value.to<bool>(d.useCustomScenario);
+        d.useCustomScenario = Antares::stringToBool(value);
+        return true;
     }
 
     if (key == "filtering" && version < StudyVersion(7, 1))
     {
-        return value.to<bool>(d.geographicTrimming);
+        d.geographicTrimming = Antares::stringToBool(value);
+        return true;
     }
 
     // Custom set
@@ -1110,8 +1156,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     // ignored since 9.3
     if (key == "refreshtimeseries")
     {
-        String trimmed = rawvalue;
-        trimmed.trim();
+        std::string trimmed = Antares::stringTrim(rawvalue);
         if (!trimmed.empty())
         {
             logNotSupported(key, StudyVersion(9, 3));
@@ -1134,9 +1179,9 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     return false;
 }
 
-bool firstKeyLetterIsValid(const String& name)
+bool firstKeyLetterIsValid(const std::string& name)
 {
-    char firstLetter = name.first();
+    char firstLetter = name.empty() ? '\0' : name[0];
     return (firstLetter >= 'a' && firstLetter <= 'z');
 }
 
@@ -1147,12 +1192,12 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
 
     // A temporary buffer, used for the values in lowercase
     using Callback = bool (*)(
-      Parameters&,    // [out] Parameter object to load the data into
-      const String&,  // [in] Key, comes left to the '=' sign in the .ini file
-      const String&,  // [in] Lowercase value, comes right to the '=' sign in the .ini file
-      const String&); // [in] Raw value as writtent right to the '=' sign in the .ini file
+      Parameters&,         // [out] Parameter object to load the data into
+      const std::string&,  // [in] Key, comes left to the '=' sign in the .ini file
+      const std::string&,  // [in] Lowercase value, comes right to the '=' sign in the .ini file
+      const std::string&); // [in] Raw value as writtent right to the '=' sign in the .ini file
 
-    static const std::map<String, Callback> sectionAssociatedToKeysProcess = {
+    static const std::map<std::string, Callback> sectionAssociatedToKeysProcess = {
       {"general", &SGDIntLoadFamily_General},
       {"input", &SGDIntLoadFamily_Input},
       {"output", &SGDIntLoadFamily_Output},
@@ -1169,8 +1214,8 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
     // Foreach section on the ini file...
     for (auto* section = ini.firstSection; section; section = section->next)
     {
-        String sectionName = section->name;
-        sectionName.toLower();
+        std::string sectionName = section->name;
+        sectionName = Antares::stringToLower(sectionName);
         try
         {
             handleAllKeysInSection = sectionAssociatedToKeysProcess.at(sectionName);
@@ -1194,8 +1239,8 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
                 continue;
             }
             // We convert the key and the value into the lower case format
-            String value = p->value;
-            value.toLower();
+            std::string value = p->value;
+            value = Antares::stringToLower(value);
 
             // Deal with the current property
             // Do not forget the variable `key` and `value` are identical to
@@ -1351,7 +1396,7 @@ float Parameters::getYearsWeightSum() const
     if (userPlaylist)
     {
         // must take into account inactive years
-        for (uint i = 0; i < nbYears; ++i)
+        for (unsigned int i = 0; i < nbYears; ++i)
         {
             if (yearsFilter[i])
             {
@@ -1374,7 +1419,7 @@ float Parameters::getYearsWeightSum() const
     return result;
 }
 
-void Parameters::setYearWeight(uint year, float weight)
+void Parameters::setYearWeight(unsigned int year, float weight)
 {
     assert(year < yearsWeight.size());
     yearsWeight[year] = weight;
@@ -1422,7 +1467,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     {
         // calculating the effective number of years
         effectiveNbYears = 0;
-        for (uint i = 0; i < nbYears; ++i)
+        for (unsigned int i = 0; i < nbYears; ++i)
         {
             if (yearsFilter[i])
             {
@@ -1445,7 +1490,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         std::vector<int> maximumWeightYearsList;
         int nbYearsDifferentFrom1 = 0;
         float maximumWeight = *std::max_element(yearsWeight.begin(), yearsWeight.end());
-        for (uint i = 0; i < yearsWeight.size(); i++)
+        for (unsigned int i = 0; i < yearsWeight.size(); i++)
         {
             float weight = yearsWeight[i];
             if (weight != 1.f)
@@ -1628,7 +1673,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     }
 }
 
-void Parameters::resetPlaylist(uint nbOfYears)
+void Parameters::resetPlaylist(unsigned int nbOfYears)
 {
     resetPlayedYears(nbOfYears);
     resetYearsWeigth();

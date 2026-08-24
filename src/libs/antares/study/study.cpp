@@ -20,14 +20,6 @@ namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
-//! Clear then shrink a string
-template<class StringT>
-static inline void ClearAndShrink(StringT& string)
-{
-    string.clear();
-    string.shrink();
-}
-
 Study::Study():
     areas(*this)
 {
@@ -43,39 +35,12 @@ Study::Study():
     preproHydroCorrelation.timeSeries = timeSeriesHydro;
 }
 
-Study::~Study()
-{
-    clear();
-}
-
-void Study::clear()
-{
-    scenarioRules.reset();
-
-    // areas
-    setsOfAreas.clear();
-
-    preproLoadCorrelation.clear();
-    preproSolarCorrelation.clear();
-    preproWindCorrelation.clear();
-    preproHydroCorrelation.clear();
-
-    bindingConstraintsGroups.clear();
-
-    // no folder
-    ClearAndShrink(header.caption);
-    ClearAndShrink(header.author);
-    ClearAndShrink(header.editor);
-    folder.clear();
-    folderInput.clear();
-    folderOutput.clear();
-    folderSettings.clear();
-}
+Study::~Study() = default;
 
 void Study::reduceMemoryUsage()
 {
-    ClearAndShrink(dataBuffer);
-    ClearAndShrink(bufferLoadingTS);
+    dataBuffer.clear();
+    dataBuffer.shrink();
 }
 
 unsigned Study::getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode)
@@ -107,7 +72,7 @@ unsigned Study::getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode)
 }
 
 /// Getting the number of parallel years based on the number of cores level
-void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced)
+void Study::getNumberOfCores(const bool forceParallel, const unsigned int nbYearsParallelForced)
 {
     auto& p = parameters;
     unsigned nbLogicalCores = std::thread::hardware_concurrency();
@@ -150,8 +115,8 @@ void Study::performTransformationsBeforeLaunchingSimulation()
           if (not parameters.geographicTrimming)
           {
               // reset filtering
-              area.filterSynthesis = (uint)filterAll;
-              area.filterYearByYear = (uint)filterAll;
+              area.filterSynthesis = (unsigned int)filterAll;
+              area.filterYearByYear = (unsigned int)filterAll;
           }
 
           // Informations about time-series for the load
@@ -159,10 +124,10 @@ void Study::performTransformationsBeforeLaunchingSimulation()
           auto& dsmvalues = area.reserves[fhrDSM];
 
           // Adding DSM values
-          for (uint timeSeries = 0; timeSeries < matrix.width; ++timeSeries)
+          for (unsigned int timeSeries = 0; timeSeries < matrix.width; ++timeSeries)
           {
               auto& perHour = matrix[timeSeries];
-              for (uint h = 0; h < matrix.height; ++h)
+              for (unsigned int h = 0; h < matrix.height; ++h)
               {
                   perHour[h] += dsmvalues[h];
                   // MBO - 13/05/2014 - #20
@@ -355,7 +320,7 @@ void Study::relocate(const fs::path& newFolder)
     folderSettings = newFolder / "settings";
 }
 
-void Study::resizeAllTimeseriesNumbers(uint n)
+void Study::resizeAllTimeseriesNumbers(unsigned int n)
 {
     logs.debug() << "  resizing timeseries numbers";
     areas.resizeAllTimeseriesNumbers(n);
@@ -393,7 +358,7 @@ bool Study::checkForFilenameLimits() const
           for (auto i = area.links.begin(); i != end; ++i)
           {
               auto& link = *(i->second);
-              uint len = link.from->id.size() + link.with->id.size();
+              unsigned int len = link.from->id.size() + link.with->id.size();
               len += 3;
               if (len > linkname.size())
               {
@@ -443,14 +408,14 @@ bool Study::checkForFilenameLimits() const
 
 void Study::computePThetaInfForThermalClusters() const
 {
-    for (uint i = 0; i != this->areas.size(); i++)
+    for (unsigned int i = 0; i != this->areas.size(); i++)
     {
         // Alias de la zone courant
         const auto& area = *(this->areas.byIndex[i]);
 
         for (auto& c: area.thermal.list.each_enabled_and_not_mustrun())
         {
-            for (uint k = 0; k < HOURS_PER_YEAR; k++)
+            for (unsigned int k = 0; k < HOURS_PER_YEAR; k++)
             {
                 c->PthetaInf[k] = c->modulation[Data::thermalMinGenModulation][k] * c->unitCount
                                   * c->nominalCapacity;

@@ -19,7 +19,7 @@ class HydroMaxTimeSeriesReader
 public:
     HydroMaxTimeSeriesReader(PartHydro& hydro, std::string areaID, std::string areaName);
 
-    bool read(const AnyString& folder);
+    bool read(const std::string& folder);
 
     enum powerDailyE
     {
@@ -43,7 +43,7 @@ private:
      *  This function provides reading from deprecated files which
      *  contains daily maximum generation/pumping power and energy data.
      */
-    bool loadDailyMaxPowersAndEnergies(const AnyString& folder);
+    bool loadDailyMaxPowersAndEnergies(const std::string& folder);
 
     /**
      * \brief Copy energy functions

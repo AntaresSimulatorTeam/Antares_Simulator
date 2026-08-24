@@ -5,11 +5,9 @@
 
 #include <memory>
 #include <set>
+#include <string>
 #include <utility>
 #include <vector>
-
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
 
 #include <antares/array/matrix.h>
 #include <antares/inifile/inifile.h>
@@ -95,7 +93,7 @@ public:
     /*!
     ** \brief Convert a string into its corresponding type
     */
-    static Type StringToType(const AnyString& text);
+    static Type StringToType(const std::string& text);
 
     /*!
     ** \brief Convert a binding constraint operator into a mere C-String
@@ -114,7 +112,7 @@ public:
     /*!
     ** \brief Converter a raw string into an operator
     */
-    static Operator StringToOperator(const AnyString& text);
+    static Operator StringToOperator(const std::string& text);
 
     //! \name Constructor & Destructor
     //@{
@@ -134,12 +132,12 @@ public:
     /*!
     ** \brief Set the name of the binding constraint
     */
-    void name(const AnyString& newname);
+    void name(const std::string& newname);
 
     /*!
     ** \brief Set the pId of the binding constraint
     */
-    void pId(const AnyString& name);
+    void pId(const std::string& name);
 
     /*!
     ** \brief Get the ID of the binding constraint
@@ -152,7 +150,7 @@ public:
     /*!
     ** \brief Get the comments
     */
-    const YString& comments() const;
+    const std::string& comments() const;
 
     //! \name Group
     //@{
@@ -165,7 +163,7 @@ public:
     /*!
     ** \brief Set the comments
     */
-    void comments(const AnyString& newcomments);
+    void comments(const std::string& newcomments);
     //@}
 
     void resetToDefaultValues();
@@ -262,12 +260,12 @@ public:
     /*!
     ** \brief Get how many links the binding constraint contains
     */
-    uint linkCount() const;
+    unsigned int linkCount() const;
 
     /*!
     ** \brief Get how many thermal clusters the binding constraint contains
     */
-    uint clusterCount() const;
+    unsigned int clusterCount() const;
     //@}
 
     //! \name Type of the binding constraint
@@ -289,8 +287,8 @@ public:
     void operatorType(Operator o);
     //@}
 
-    uint yearByYearFilter() const;
-    uint synthesisFilter() const;
+    unsigned int yearByYearFilter() const;
+    unsigned int synthesisFilter() const;
 
     //! \name Enabled / Disabled
     //@{
@@ -308,7 +306,7 @@ public:
     ** \param name Name of the binding constraint
     ** \param newType Its new type (hourly, daily...)
     */
-    void clearAndReset(const AnyString& name, Type newType, Operator op);
+    void clearAndReset(const std::string& name, Type newType, Operator op);
     //@}
 
     /*!
@@ -330,7 +328,7 @@ public:
     /*!
     ** \brief Build a human readable formula for the binding constraint
     */
-    void buildFormula(YString& s) const;
+    void buildFormula(std::string& s) const;
 
     BindingConstraintStructures initLinkArrays() const;
 
@@ -361,14 +359,14 @@ private:
     Operator pOperator;
     //! Print binding constraint's marginal prices of any year for which time step granularity ?
     // By default, print nothing
-    uint pFilterYearByYear = filterNone;
+    unsigned int pFilterYearByYear = filterNone;
     //! Print binding constraint's marginal prices synthesis for which time step granularity ?
     // By default, print nothing
-    uint pFilterSynthesis = filterNone;
+    unsigned int pFilterSynthesis = filterNone;
     //! Enabled / Disabled
     bool pEnabled = false;
     //! Comments
-    YString pComments;
+    std::string pComments;
     //! Group
     std::string group_ = "default";
 

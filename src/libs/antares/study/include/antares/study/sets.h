@@ -7,9 +7,7 @@
 #include <map>
 #include <memory>
 #include <set>
-
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
+#include <string>
 
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
@@ -24,7 +22,7 @@ class Sets final
 {
 public:
     //
-    using IDType = Yuni::ShortString128;
+    using IDType = std::string;
 
     //! A single set of areas
     // CompareAreaName : to control the order of areas in a set of areas. This order can have an
@@ -96,13 +94,13 @@ public:
         //! Caption
         IDType caption;
         //! Comments
-        Yuni::String comments;
+        std::string comments;
         //! Rules to build the group
         RuleSet rules;
         //! Enable/Disable the results in the output
         bool output;
         //! The number of items in the result set
-        uint resultSize;
+        unsigned int resultSize;
 
     }; // class Options
 
@@ -136,27 +134,27 @@ public:
     */
     void clear();
 
-    uint size() const;
+    unsigned int size() const;
 
     /*!
     ** \brief Get if the results for a given group should be written to the output
     */
-    bool hasOutput(const Yuni::ShortString128& s) const;
+    bool hasOutput(const std::string& s) const;
 
     /*!
     ** \brief Get if the results for a given group should be written to the output
     */
-    bool hasOutput(const uint index) const;
+    bool hasOutput(const unsigned int index) const;
 
     /*!
     ** \brief Get the size of a result set
     */
-    uint resultSize(const Yuni::ShortString128& s) const;
+    unsigned int resultSize(const std::string& s) const;
 
     /*!
     ** \brief Get the size of a result set
     */
-    uint resultSize(const uint index) const;
+    unsigned int resultSize(const unsigned int index) const;
 
     void dumpToLogs() const;
 
@@ -168,7 +166,7 @@ public:
     /*!
     ** \brief format the string to match the options
     */
-    YString toString();
+    std::string toString();
 
     /*!
     ** \brief Create default groups for set of areas
@@ -180,17 +178,17 @@ public:
     */
     void rebuildAllFromRules(SetHandlerAreas& handler);
 
-    const IDType& nameByIndex(const uint i) const
+    const IDType& nameByIndex(const unsigned int i) const
     {
         assert(i < pMap.size() && "Sets: operator[] index out of bounds");
         return pNameByIndex[i];
     }
 
-    IDType caption(const Yuni::ShortString128& s) const;
-    IDType caption(const uint i) const;
+    IDType caption(const std::string& s) const;
+    IDType caption(const unsigned int i) const;
 
-    SetAreasType& operator[](uint i);
-    const SetAreasType& operator[](uint i) const;
+    SetAreasType& operator[](unsigned int i);
+    const SetAreasType& operator[](unsigned int i) const;
 
     TypePtr add(const IDType& name, const TypePtr& data, Options& opts)
     {
@@ -236,7 +234,7 @@ class SetHandlerAreas final
 public:
     explicit SetHandlerAreas(AreaList& areas);
     void clear(Sets::SetAreasType& set);
-    uint size(Sets::SetAreasType& set);
+    unsigned int size(Sets::SetAreasType& set);
 
     bool add(Sets::SetAreasType& set, const std::string& value);
     void add(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet);
