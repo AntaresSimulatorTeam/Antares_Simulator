@@ -13,7 +13,6 @@ system:
       t=5: x >= 3+4+5 = 12
     x = [10, 8, 6, 9, 12], objective = 45.
 
-  model-libraries: lib_example_14_6
 
   components:
     - id: c1
