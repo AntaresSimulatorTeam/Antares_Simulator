@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['xcast_3613',['XCast',['../classAntares_1_1Data_1_1XCast.html',1,'Antares::Data::XCast'],['../classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html',1,'Antares::TSGenerator::XCast::XCast']]]
+  ['xcast_3615',['XCast',['../classAntares_1_1Data_1_1XCast.html',1,'Antares::Data::XCast'],['../classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html',1,'Antares::TSGenerator::XCast::XCast']]]
 ];
