@@ -3,6 +3,8 @@
 
 #include "antares/io/inputs/model-converter/modelConverter.h"
 
+#include <set>
+
 #include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h> // gp : why do we need this inclusion ?
 #include "antares/expressions/expression.h"
@@ -392,6 +394,64 @@ std::vector<Objective> convertObjectives(const YmlModel::Model& model,
 }
 
 /**
+ * \brief Checks that no field is both defined in a port-field-definition and used
+ * in a sum_connections in a binding constraint within the same model.
+ *
+ * A field defined in a port-field-definition has the Sender role, while sum_connections
+ * consumes fields from the Receiver side. Having both in the same model is contradictory.
+ */
+void checkPortFieldDefinitionConflictWithSumConnections(
+  const std::vector<Constraint>& constraints,
+  const std::vector<YmlModel::PortFieldDefinition>& portFieldDefs,
+  const std::string& modelId)
+{
+    if (portFieldDefs.empty())
+    {
+        return;
+    }
+
+    std::set<std::pair<std::string, std::string>> senderFields;
+    for (const auto& pfd: portFieldDefs)
+    {
+        senderFields.insert({pfd.port, pfd.field});
+    }
+
+    for (const auto& constraint: constraints)
+    {
+        if (!constraint.isBindingConstraint())
+        {
+            continue;
+        }
+        if (!constraint.expression().RootNode())
+        {
+            continue;
+        }
+
+        AST ast(constraint.expression().RootNode());
+        for (const auto& node: ast)
+        {
+            if (const auto* sumNode = dynamic_cast<const PortFieldSumNode*>(&node))
+            {
+                auto key = std::make_pair(sumNode->getPortName(), sumNode->getFieldName());
+                if (senderFields.contains(key))
+                {
+                    throw InputError(
+                      fmt::format("In model '{}', field '{}' of port '{}' is defined in a "
+                                  "port-field-definition and also used in a sum_connections "
+                                  "in binding constraint '{}'. "
+                                  "A field cannot be both a sender and a receiver in the "
+                                  "same model.",
+                                  modelId,
+                                  sumNode->getFieldName(),
+                                  sumNode->getPortName(),
+                                  constraint.Id()));
+                }
+            }
+        }
+    }
+}
+
+/**
  * \brief Converts models from YmlModel::Library to SystemModel::Model.
  *
  * \param library The YmlModel::Library object containing models.
@@ -411,6 +471,8 @@ std::vector<Model> convertModels(const YmlModel::Library& library,
         std::vector<PortFieldDefinition>
           portFieldDefinitions = convertPortFieldDefinitions(model, ports, library.filename);
         std::vector<Constraint> constraints = convertConstraints(model, library.filename);
+        checkPortFieldDefinitionConflictWithSumConnections(
+          constraints, model.port_field_definitions, model.id);
         std::vector<ExtraOutput> extraOutputs = convertExtraOutputs(model, library.filename);
         std::vector<Objective> objectives = convertObjectives(model, library.filename);
 
