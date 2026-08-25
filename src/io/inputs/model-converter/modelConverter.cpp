@@ -474,8 +474,9 @@ std::vector<Model> convertModels(const YmlModel::Library& library,
         std::vector<ExtraOutput> extraOutputs = convertExtraOutputs(model, library.filename);
         std::vector<Objective> objectives = convertObjectives(model, library.filename);
 
-        checkPortFieldDefinitionConflictWithSumConnections(
-          constraints, model.port_field_definitions, model.id);
+        checkPortFieldDefinitionConflictWithSumConnections(constraints,
+                                                           model.port_field_definitions,
+                                                           model.id);
 
         auto modelObj = modelBuilder.withId(model.id)
                           .withLibraryId(library.id)

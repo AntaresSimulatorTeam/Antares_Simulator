@@ -460,11 +460,10 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_conflicts_with_sum_connections_in_
       .ports = {{"port", "my-port-type"}},
       .port_field_definitions = {{"port", "field", ExpressionLineNumber{"0", 0}}},
       .constraints = {},
-      .binding_constraints = {
-        {"constraint1",
-         ExpressionLineNumber{"sum_connections(port.field) = 0", 0},
-         "subproblems",
-         ""}},
+      .binding_constraints = {{"constraint1",
+                               ExpressionLineNumber{"sum_connections(port.field) = 0", 0},
+                               "subproblems",
+                               ""}},
       .objectives = {},
       .extra_outputs = {},
       .filename = ""};
@@ -478,7 +477,8 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_conflicts_with_sum_connections_in_
     BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, checkMessage(err_msg));
 }
 
-BOOST_FIXTURE_TEST_CASE(port_field_definition_conflicts_with_sum_connections_different_port_names, Fixture)
+BOOST_FIXTURE_TEST_CASE(port_field_definition_conflicts_with_sum_connections_different_port_names,
+                        Fixture)
 {
     YmlModel::PortType portType{"my-port-type", "description", {"field"}, "", {}};
     library.port_types = {portType};
@@ -491,11 +491,10 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_conflicts_with_sum_connections_dif
       .ports = {{"port1", "my-port-type"}, {"port2", "my-port-type"}},
       .port_field_definitions = {{"port1", "field", ExpressionLineNumber{"0", 0}}},
       .constraints = {},
-      .binding_constraints = {
-        {"constraint1",
-         ExpressionLineNumber{"sum_connections(port1.field) = 0", 0},
-         "subproblems",
-         ""}},
+      .binding_constraints = {{"constraint1",
+                               ExpressionLineNumber{"sum_connections(port1.field) = 0", 0},
+                               "subproblems",
+                               ""}},
       .objectives = {},
       .extra_outputs = {},
       .filename = ""};
@@ -509,7 +508,8 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_conflicts_with_sum_connections_dif
     BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, checkMessage(err_msg));
 }
 
-BOOST_FIXTURE_TEST_CASE(port_field_definition_no_conflict_when_sum_connections_on_different_field, Fixture)
+BOOST_FIXTURE_TEST_CASE(port_field_definition_no_conflict_when_sum_connections_on_different_field,
+                        Fixture)
 {
     YmlModel::PortType portType{"my-port-type", "description", {"field1", "field2"}, "", {}};
     library.port_types = {portType};
@@ -522,11 +522,10 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_no_conflict_when_sum_connections_o
       .ports = {{"port", "my-port-type"}},
       .port_field_definitions = {{"port", "field1", ExpressionLineNumber{"0", 0}}},
       .constraints = {},
-      .binding_constraints = {
-        {"constraint1",
-         ExpressionLineNumber{"sum_connections(port.field2) = 0", 0},
-         "subproblems",
-         ""}},
+      .binding_constraints = {{"constraint1",
+                               ExpressionLineNumber{"sum_connections(port.field2) = 0", 0},
+                               "subproblems",
+                               ""}},
       .objectives = {},
       .extra_outputs = {},
       .filename = ""};
@@ -535,7 +534,8 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_no_conflict_when_sum_connections_o
     BOOST_CHECK_NO_THROW(ModelConverter::convert(library));
 }
 
-BOOST_FIXTURE_TEST_CASE(port_field_definition_no_conflict_when_sum_connections_on_different_port, Fixture)
+BOOST_FIXTURE_TEST_CASE(port_field_definition_no_conflict_when_sum_connections_on_different_port,
+                        Fixture)
 {
     YmlModel::PortType portType{"my-port-type", "description", {"field"}, "", {}};
     library.port_types = {portType};
@@ -548,11 +548,10 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_no_conflict_when_sum_connections_o
       .ports = {{"port1", "my-port-type"}, {"port2", "my-port-type"}},
       .port_field_definitions = {{"port1", "field", ExpressionLineNumber{"0", 0}}},
       .constraints = {},
-      .binding_constraints = {
-        {"constraint1",
-         ExpressionLineNumber{"sum_connections(port2.field) = 0", 0},
-         "subproblems",
-         ""}},
+      .binding_constraints = {{"constraint1",
+                               ExpressionLineNumber{"sum_connections(port2.field) = 0", 0},
+                               "subproblems",
+                               ""}},
       .objectives = {},
       .extra_outputs = {},
       .filename = ""};
