@@ -6,9 +6,19 @@ toc_depth: 2
 
 ### 9.3.12
 
+#### Bugfixes
+
+* Fix writing of simulation output files larger than 4 GB
+* Fix reservoir level adjustment when hydro initialization does not start in January
+
 #### Dependencies
 
 * Update vcpkg to 2025.06.13: some dependency assets were not available anymore. Versions details in [dependency updates](Dependencies/updates.md)
+
+#### CI/CD
+
+* Automatically cache vcpkg assets on release
+* Use an asset cache mirror (`X_VCPKG_ASSET_SOURCES`) in build workflows and docker image
 
 ### 9.3.11
 
