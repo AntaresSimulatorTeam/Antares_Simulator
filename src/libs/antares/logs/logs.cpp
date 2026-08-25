@@ -69,7 +69,7 @@ const LevelInfo levelInfoFatal = {Verbosity::Fatal::level,
                                   true,
                                   true,
                                   "\x1b[0;31m",
-                                  nullptr,
+                                  "\x1b[0m", // default : no color for message
                                   ANTARES_LOGS_WIN_COLOR(winRed)
                                     ANTARES_LOGS_WIN_COLOR(winDefault)};
 const LevelInfo levelInfoError = {Verbosity::Error::level,
@@ -77,7 +77,7 @@ const LevelInfo levelInfoError = {Verbosity::Error::level,
                                   true,
                                   true,
                                   "\x1b[0;31m",
-                                  nullptr,
+                                  "\x1b[0m", // default : no color for message
                                   ANTARES_LOGS_WIN_COLOR(winRed)
                                     ANTARES_LOGS_WIN_COLOR(winDefault)};
 const LevelInfo levelInfoWarning = {Verbosity::Warning::level,
@@ -85,7 +85,7 @@ const LevelInfo levelInfoWarning = {Verbosity::Warning::level,
                                     true,
                                     true,
                                     "\x1b[0;33m",
-                                    nullptr,
+                                    "\x1b[0m", // default : no color for message
                                     ANTARES_LOGS_WIN_COLOR(winYellow)
                                       ANTARES_LOGS_WIN_COLOR(winDefault)};
 const LevelInfo levelInfoCheckpoint = {Verbosity::Checkpoint::level,
@@ -101,7 +101,7 @@ const LevelInfo levelInfoNotice = {Verbosity::Notice::level,
                                    false,
                                    true,
                                    "\x1b[0;32m",
-                                   nullptr,
+                                   "\x1b[0m", // default : no color for message
                                    ANTARES_LOGS_WIN_COLOR(winGreen)
                                      ANTARES_LOGS_WIN_COLOR(winDefault)};
 
@@ -109,8 +109,8 @@ const LevelInfo levelInfoInfo = {Verbosity::Info::level,
                                  "infos",
                                  false,
                                  true,
-                                 nullptr,
-                                 nullptr,
+                                 "\x1b[0m", // default : no color for tag
+                                 "\x1b[0m", // default : no color for message
                                  ANTARES_LOGS_WIN_COLOR(winDefault)
                                    ANTARES_LOGS_WIN_COLOR(winDefault)};
 
@@ -118,8 +118,8 @@ const LevelInfo levelInfoDebug = {Verbosity::Debug::level,
                                   "debug",
                                   false,
                                   false,
-                                  nullptr,
-                                  nullptr,
+                                  "\x1b[0m", // default : no color for tag
+                                  "\x1b[0m", // default : no color for message
                                   ANTARES_LOGS_WIN_COLOR(winDefault)
                                     ANTARES_LOGS_WIN_COLOR(winDefault)};
 
@@ -136,78 +136,6 @@ void setConsoleColor(std::ostream& out, WORD color)
 }
 #endif
 
-void writeColoredTag(std::ostream& out, const LevelInfo& level, bool colorsAllowed)
-{
-    if (colorsAllowed && level.tagColorAnsi)
-    {
-#ifdef _WIN32
-        setConsoleColor(out, level.tagColorWin);
-#else
-        out << level.tagColorAnsi;
-#endif
-    }
-    out << '[' << level.tag << ']';
-    if (colorsAllowed && level.tagColorAnsi)
-    {
-#ifdef _WIN32
-        setConsoleColor(out, winDefault);
-#else
-        out << "\x1b[0m";
-#endif
-    }
-}
-
-void writeColoredMessage(std::ostream& out,
-                         const LevelInfo& level,
-                         const std::string& message,
-                         bool colorsAllowed)
-{
-    if (colorsAllowed && level.messageColorAnsi)
-    {
-#ifdef _WIN32
-        setConsoleColor(out, level.messageColorWin);
-#else
-        out << level.messageColorAnsi;
-#endif
-    }
-    out << message;
-    if (colorsAllowed && level.messageColorAnsi)
-    {
-#ifdef _WIN32
-        setConsoleColor(out, winDefault);
-#else
-        out << "\x1b[0m";
-#endif
-    }
-}
-
-void writeDecorated(std::ostream& out,
-                    const LevelInfo& level,
-                    const std::string& applicationName,
-                    const std::string& message,
-                    bool colorsAllowed)
-{
-    std::time_t now = std::time(nullptr);
-    std::tm tmBuffer{};
-#ifdef _WIN32
-    localtime_s(&tmBuffer, &now);
-#else
-    localtime_r(&now, &tmBuffer);
-#endif
-    char timestamp[20]; // "YYYY-MM-DD HH:MM:SS" + '\0'
-    std::strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", &tmBuffer);
-
-    out << '[' << timestamp << ']' << '[' << applicationName;
-    if (const auto& tnum = threadNumber(); tnum.has_value())
-    {
-        out << '-' << *tnum;
-    }
-    out << ']';
-    writeColoredTag(out, level, colorsAllowed);
-    out << ' ';
-    writeColoredMessage(out, level, message, colorsAllowed);
-}
-
 } // namespace
 
 Logger::Logger()
@@ -219,6 +147,123 @@ Logger::Logger()
 #endif
 }
 
+std::string timestamp()
+{
+    std::time_t now = std::time(nullptr);
+    std::tm tmBuffer{};
+#ifdef _WIN32
+    localtime_s(&tmBuffer, &now);
+#else
+    localtime_r(&now, &tmBuffer);
+#endif
+    char timestamp[20]; // "YYYY-MM-DD HH:MM:SS" + '\0'
+    std::strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", &tmBuffer);
+
+    return '[' + std::string(timestamp) + ']';
+}
+
+std::string application(const std::string& appliName)
+{
+    std::string result = '[' + appliName;
+    if (const auto& tnum = threadNumber(); tnum.has_value())
+    {
+        result += '-' + std::to_string(*tnum);
+    }
+    result += ']';
+    return result;
+}
+
+std::string tag(const LevelInfo& level)
+{
+    return '[' + std::string(level.tag) + ']';
+}
+
+class ColorEnabler
+{
+public:
+    explicit ColorEnabler(std::ostream& out):
+        out_(out)
+    {
+    }
+
+    std::string tagColor(const LevelInfo& level);
+    std::string msgColor(const LevelInfo& level);
+    std::string removeColor(std::ostream& out);
+
+private:
+    std::string getLinuxColor(std::string color);
+    std::ostream& out_;
+    std::string close_with_color_;
+};
+
+std::string ColorEnabler::getLinuxColor(std::string color)
+{
+    close_with_color_ = "";
+    if (color != "\x1b[0m")
+    {
+        close_with_color_ = "\x1b[0m";
+        return color;
+    }
+    return {};
+}
+
+std::string ColorEnabler::tagColor(const LevelInfo& level)
+{
+#ifdef _WIN32
+    setConsoleColor(out_, level.tagColorWin);
+    return {};
+#else
+    return getLinuxColor(level.tagColorAnsi);
+#endif
+}
+
+std::string ColorEnabler::msgColor(const LevelInfo& level)
+{
+#ifdef _WIN32
+    setConsoleColor(out_, level.messageColorWin);
+    return {};
+#else
+    return getLinuxColor(level.messageColorAnsi);
+#endif
+}
+
+std::string ColorEnabler::removeColor(std::ostream& out)
+{
+#ifdef _WIN32
+    setConsoleColor(out_, winDefault);
+    return {};
+#else
+    return close_with_color_;
+#endif
+}
+
+void writeToConsole(const LevelInfo& level, const std::string& appliName, const std::string& msg)
+{
+    std::ostream& console = level.toStderr ? std::cerr : std::cout;
+    ColorEnabler colorEnabler(console);
+    console << timestamp();
+    console << application(appliName);
+    console << colorEnabler.tagColor(level) << tag(level) << colorEnabler.removeColor(console);
+    console << ' ';
+    console << colorEnabler.msgColor(level) << msg << colorEnabler.removeColor(console);
+    console << '\n';
+    console.flush();
+}
+
+void writeToFile(std::ofstream& file,
+                 const LevelInfo& level,
+                 const std::string& appliName,
+                 const std::string& msg)
+{
+    file << timestamp() << application(appliName) << tag(level) << ' ' << msg;
+#ifdef _WIN32
+    file << "\r\n";
+#else
+    file << '\n';
+#endif
+    file.flush();
+}
+
 void Logger::dispatch(const LevelInfo& level, const std::string& message)
 {
     std::lock_guard lock(pMutex);
@@ -227,21 +272,8 @@ void Logger::dispatch(const LevelInfo& level, const std::string& message)
         return;
     }
 
-    std::ostream& consoleStream = level.toStderr ? std::cerr : std::cout;
-    writeDecorated(consoleStream, level, pApplicationName, message, /* colorsAllowed */ true);
-    consoleStream << '\n';
-    consoleStream.flush();
-
-    if (pFile.is_open())
-    {
-        writeDecorated(pFile, level, pApplicationName, message, /* colorsAllowed */ false);
-#ifdef _WIN32
-        pFile << "\r\n";
-#else
-        pFile << '\n';
-#endif
-        pFile.flush();
-    }
+    writeToConsole(level, pApplicationName, message);
+    writeToFile(pFile, level, pApplicationName, message);
 
     if (level.notifyCallback && !callback.empty() && !message.empty())
     {
