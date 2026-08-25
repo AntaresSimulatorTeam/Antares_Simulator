@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(creating_an_STS_with_unsup_having_a_wrong_size_leads_to_exc
 {
     std::vector<double> unsupE(5, 0.);
     STS_holder<4> sts_holder;
-    std::string err_msg = "Remix hydro input : arrays of different sizes";
+    std::string err_msg = "Remix hydro input for 'sts1' : arrays of different sizes";
     BOOST_CHECK_EXCEPTION(sts_holder.createSTS(unsupE, "sts1"),
                           std::invalid_argument,
                           checkMessage(err_msg));

@@ -25,6 +25,12 @@ toc_depth: 2
   incorrectly included in the CSR area-balance right-hand side, producing a small residual
   error in ENS for affected areas at scarcity hours.
   (fix/balance-correction-for-hybrid-studies)
+  
+### 9.3.12
+
+#### Dependencies
+
+* Update vcpkg to 2025.06.13: some dependency assets were not available anymore. Versions details in [dependency updates](Dependencies/updates.md)
 
 ### 9.3.11
 
