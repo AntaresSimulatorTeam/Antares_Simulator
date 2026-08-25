@@ -10,6 +10,7 @@ toc_depth: 2
 
 * Fix writing of simulation output files larger than 4 GB
 * Fix reservoir level adjustment when hydro initialization does not start in January
+* Fix units in districts aggregation
 
 #### Dependencies
 
