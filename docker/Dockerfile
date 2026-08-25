@@ -12,6 +12,10 @@ SHELL ["/bin/bash", "--login", "-c"]
 
 RUN mkdir -p /workspace/vcpkg_cache
 ARG VCPKG_CACHE_DIR
+# Mirror of the source archives vcpkg downloads, keyed by SHA512. Exported as ENV so
+# every vcpkg invocation below inherits it. Empty is valid and simply disables it.
+ARG X_VCPKG_ASSET_SOURCES=""
+ENV X_VCPKG_ASSET_SOURCES=$X_VCPKG_ASSET_SOURCES
 COPY $VCPKG_CACHE_DIR /workspace/
 
 
