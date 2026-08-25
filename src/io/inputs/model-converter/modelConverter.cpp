@@ -219,30 +219,6 @@ std::vector<Port> convertPorts(const YmlModel::Model& model, const std::vector<P
     return ports;
 }
 
-static void checkPortFieldRoles(const std::vector<Port>& ports)
-{
-    for (size_t i = 0; i < ports.size(); ++i)
-    {
-        const auto& port = ports[i];
-        for (const auto& field: port.Type().Fields())
-        {
-            const auto role = port.fieldRole(field.Id());
-
-            for (size_t j = i + 1; j < ports.size(); ++j)
-            {
-                const auto& otherPort = ports[j];
-                if (role == otherPort.fieldRole(field.Id()))
-                {
-                    std::ostringstream msg;
-                    msg << "Field '" << field.Id() << "' is " << role << " in both ports '"
-                        << port.Id() << "' and '" << otherPort.Id() << "'";
-                    throw InputError(msg.str());
-                }
-            }
-        }
-    }
-}
-
 /**
  * \brief Converts PortFieldDefinition from YmlModel::Model to SystemModel::PortFieldDefinition.
  *
@@ -312,8 +288,6 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
         // A definition for a port field means this field is a sender
         itPort->setFieldRole(itField->Id(), FieldRole::Sender);
     }
-
-    checkPortFieldRoles(ports);
 
     return portFieldDefinitions;
 }
