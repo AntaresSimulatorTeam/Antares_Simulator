@@ -240,9 +240,7 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
         if (itPort == ports.end())
         {
             throw InputError(
-              fmt::format("{}: In port-field-definitions, port not found: {}",
-                          buildFileAndLineNb(libraryFileName, pfdefinition.definition.line_number),
-                          pfdefinition.port));
+              fmt::format("In port-field-definitions, port not found: {}", pfdefinition.port));
         }
 
         // second check if the field exists in type
@@ -253,8 +251,7 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
         if (itField == portFields.end())
         {
             throw InputError(
-              fmt::format("{}: In port-field-definitions, for port: {} , field not found: {}",
-                          buildFileAndLineNb(libraryFileName, pfdefinition.definition.line_number),
+              fmt::format("In port-field-definitions, for port: {} , field not found: {}",
                           pfdefinition.port,
                           pfdefinition.field));
         }
@@ -273,9 +270,9 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
         if (it != preorder.end())
         {
             throw InputError(
-              fmt::format("{}: In port-field-definitions, for port: {} , found another port in the "
+              
+                    fmt::format("In port-field-definitions, for port: {} , found another port in the "
                           "definition: {}",
-                          buildFileAndLineNb(libraryFileName, pfdefinition.definition.line_number),
                           pfdefinition.port,
                           dynamic_cast<const PortFieldNode&>(*it).getPortName()));
         }
@@ -291,6 +288,29 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
         // A definition for a port field means this field is a sender
         itPort->setFieldRole(itField->Id(), FieldRole::Sender);
     }
+
+    for (const auto& port: ports)
+    {
+        for (const auto& field: port.Type().Fields())
+        {
+            const auto portRole = port.fieldRole(field.Id());
+            for (const auto& portToCheck: ports)
+            {
+                if (portToCheck.Id() == port.Id())
+                {
+                    continue;
+                }
+                if (portRole == portToCheck.fieldRole(field.Id()))
+                {
+                    std::ostringstream msg;
+                    msg << "Field '" << field.Id() << "' is " << portRole << " in both ports '"
+                        << port.Id() << "' and '" << portToCheck.Id() << "'";
+                    throw InputError(msg.str());
+                }
+            }
+        }
+    }
+
     return portFieldDefinitions;
 }
 
