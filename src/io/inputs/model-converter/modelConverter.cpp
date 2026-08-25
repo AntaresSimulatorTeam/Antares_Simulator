@@ -270,8 +270,8 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
         if (it != preorder.end())
         {
             throw InputError(
-              
-                    fmt::format("In port-field-definitions, for port: {} , found another port in the "
+
+              fmt::format("In port-field-definitions, for port: {} , found another port in the "
                           "definition: {}",
                           pfdefinition.port,
                           dynamic_cast<const PortFieldNode&>(*it).getPortName()));
