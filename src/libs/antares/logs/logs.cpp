@@ -22,26 +22,24 @@ std::optional<int>& threadNumber()
     return number;
 }
 
+enum class Color
+{
+    none,
+    red,
+    yellow,
+    green,
+    white
+};
+
 struct LevelInfo
 {
     int level;
     const char* tag;
     bool toStderr;
     bool notifyCallback;
-    // ANSI escape codes (unused on Windows console output, which uses SetConsoleTextAttribute)
-    const char* tagColorAnsi;
-    const char* messageColorAnsi;
-#ifdef _WIN32
-    WORD tagColorWin;
-    WORD messageColorWin;
-#endif
+    Color tagColor;
+    Color messageColor;
 };
-
-#ifdef _WIN32
-#define ANTARES_LOGS_WIN_COLOR(attr) attr,
-#else
-#define ANTARES_LOGS_WIN_COLOR(attr)
-#endif
 
 #ifdef _WIN32
 namespace
@@ -68,75 +66,46 @@ const LevelInfo levelInfoFatal = {Verbosity::Fatal::level,
                                   "fatal",
                                   true,
                                   true,
-                                  "\x1b[0;31m",
-                                  "\x1b[0m", // default : no color for message
-                                  ANTARES_LOGS_WIN_COLOR(winRed)
-                                    ANTARES_LOGS_WIN_COLOR(winDefault)};
+                                  Color::red,
+                                  Color::none};
 const LevelInfo levelInfoError = {Verbosity::Error::level,
                                   "error",
                                   true,
                                   true,
-                                  "\x1b[0;31m",
-                                  "\x1b[0m", // default : no color for message
-                                  ANTARES_LOGS_WIN_COLOR(winRed)
-                                    ANTARES_LOGS_WIN_COLOR(winDefault)};
+                                  Color::red,
+                                  Color::none};
 const LevelInfo levelInfoWarning = {Verbosity::Warning::level,
                                     "warns",
                                     true,
                                     true,
-                                    "\x1b[0;33m",
-                                    "\x1b[0m", // default : no color for message
-                                    ANTARES_LOGS_WIN_COLOR(winYellow)
-                                      ANTARES_LOGS_WIN_COLOR(winDefault)};
+                                    Color::yellow,
+                                    Color::none};
 const LevelInfo levelInfoCheckpoint = {Verbosity::Checkpoint::level,
                                        "check",
                                        false,
                                        true,
-                                       "\x1b[1;37m\x1b[1m",
-                                       "\x1b[1;37m\x1b[1m",
-                                       ANTARES_LOGS_WIN_COLOR(winWhite)
-                                         ANTARES_LOGS_WIN_COLOR(winWhite)};
+                                       Color::white,
+                                       Color::white};
 const LevelInfo levelInfoNotice = {Verbosity::Notice::level,
                                    "notic",
                                    false,
                                    true,
-                                   "\x1b[0;32m",
-                                   "\x1b[0m", // default : no color for message
-                                   ANTARES_LOGS_WIN_COLOR(winGreen)
-                                     ANTARES_LOGS_WIN_COLOR(winDefault)};
+                                   Color::green,
+                                   Color::none};
 
 const LevelInfo levelInfoInfo = {Verbosity::Info::level,
                                  "infos",
                                  false,
                                  true,
-                                 "\x1b[0m", // default : no color for tag
-                                 "\x1b[0m", // default : no color for message
-                                 ANTARES_LOGS_WIN_COLOR(winDefault)
-                                   ANTARES_LOGS_WIN_COLOR(winDefault)};
+                                 Color::none,
+                                 Color::none};
 
 const LevelInfo levelInfoDebug = {Verbosity::Debug::level,
                                   "debug",
                                   false,
                                   false,
-                                  "\x1b[0m", // default : no color for tag
-                                  "\x1b[0m", // default : no color for message
-                                  ANTARES_LOGS_WIN_COLOR(winDefault)
-                                    ANTARES_LOGS_WIN_COLOR(winDefault)};
-
-#undef ANTARES_LOGS_WIN_COLOR
-
-namespace
-{
-
-#ifdef _WIN32
-void setConsoleColor(std::ostream& out, WORD color)
-{
-    HANDLE handle = GetStdHandle((&out == &std::cerr) ? STD_ERROR_HANDLE : STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(handle, color);
-}
-#endif
-
-} // namespace
+                                  Color::none,
+                                  Color::none};
 
 Logger::Logger()
 {
@@ -178,6 +147,49 @@ std::string tag(const LevelInfo& level)
     return '[' + std::string(level.tag) + ']';
 }
 
+std::string linuxColor(const Color& color)
+{
+    switch (color)
+    {
+    case Color::red:
+        return "\x1b[0;31m";
+    case Color::yellow:
+        return "\x1b[0;33m";
+    case Color::green:
+        return "\x1b[0;32m";
+    case Color::white:
+        return "\x1b[1;37m";
+    default:
+        return "\x1b[0m"; // reset
+    }
+}
+
+#ifdef _WIN32
+
+WORD winColor(const Color& color)
+{
+    switch (color)
+    {
+    case Color::red:
+        return winRed;
+    case Color::yellow:
+        return winYellow;
+    case Color::green:
+        return winGreen;
+    case Color::white:
+        return winWhite;
+    default:
+        return winDefault; // reset
+    }
+}
+
+void setConsoleColor(std::ostream& out, const Color& color)
+{
+    HANDLE handle = GetStdHandle((&out == &std::cerr) ? STD_ERROR_HANDLE : STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(handle, winColor(color));
+}
+#endif
+
 class ColorEnabler
 {
 public:
@@ -191,18 +203,18 @@ public:
     std::string removeColor(std::ostream& out);
 
 private:
-    std::string getLinuxColor(std::string color);
+    std::string getLinuxColor(const Color& color);
     std::ostream& out_;
     std::string close_with_color_;
 };
 
-std::string ColorEnabler::getLinuxColor(std::string color)
+std::string ColorEnabler::getLinuxColor(const Color& color)
 {
     close_with_color_ = "";
-    if (color != "\x1b[0m")
+    if (color != Color::none)
     {
-        close_with_color_ = "\x1b[0m";
-        return color;
+        close_with_color_ = linuxColor(Color::none);
+        return linuxColor(color);
     }
     return {};
 }
@@ -210,27 +222,27 @@ std::string ColorEnabler::getLinuxColor(std::string color)
 std::string ColorEnabler::tagColor(const LevelInfo& level)
 {
 #ifdef _WIN32
-    setConsoleColor(out_, level.tagColorWin);
+    setConsoleColor(out_, level.tagColor);
     return {};
 #else
-    return getLinuxColor(level.tagColorAnsi);
+    return getLinuxColor(level.tagColor);
 #endif
 }
 
 std::string ColorEnabler::msgColor(const LevelInfo& level)
 {
 #ifdef _WIN32
-    setConsoleColor(out_, level.messageColorWin);
+    setConsoleColor(out_, level.messageColor);
     return {};
 #else
-    return getLinuxColor(level.messageColorAnsi);
+    return getLinuxColor(level.messageColor);
 #endif
 }
 
 std::string ColorEnabler::removeColor(std::ostream& out)
 {
 #ifdef _WIN32
-    setConsoleColor(out_, winDefault);
+    setConsoleColor(out_, Color::none);
     return {};
 #else
     return close_with_color_;
