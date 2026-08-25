@@ -146,7 +146,6 @@ bool convert<YmlSystem::System>::decode(const Node& node, YmlSystem::System& rhs
         throw InputError("Expected a YAML mapping for 'system'");
     }
     rhs.id = node["id"].as<std::string>();
-    rhs.libraries = as_fallback_default<std::vector<std::string>>(node["model-libraries"]);
     rhs.components = as_fallback_default<std::vector<YmlSystem::Component>>(node["components"]);
     rhs.connections = as_fallback_default<std::vector<YmlSystem::Connection>>(node["connections"]);
     rhs.areaConnections = as_fallback_default<std::vector<YmlSystem::AreaConnection>>(
