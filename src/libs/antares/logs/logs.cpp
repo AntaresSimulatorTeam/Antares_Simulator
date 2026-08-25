@@ -6,12 +6,11 @@
 #include <array>
 #include <charconv>
 #include <cstdio>
-#include <ctime>
 #include <iostream>
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
+#include "antares/logs/logger-utils-linux.h"
+#include "antares/logs/logger-utils-win.h"
+#include "antares/logs/logger-utils.h"
 
 namespace Antares::Logs
 {
@@ -21,46 +20,6 @@ std::optional<int>& threadNumber()
     static thread_local std::optional<int> number;
     return number;
 }
-
-enum class Color
-{
-    none,
-    red,
-    yellow,
-    green,
-    white
-};
-
-struct LevelInfo
-{
-    int level;
-    const char* tag;
-    bool toStderr;
-    bool notifyCallback;
-    Color tagColor;
-    Color messageColor;
-};
-
-#ifdef _WIN32
-namespace
-{
-constexpr WORD winDefault = 7; // FOREGROUND_RED|GREEN|BLUE, no intensity
-constexpr WORD winRed = FOREGROUND_RED | FOREGROUND_INTENSITY;
-constexpr WORD winYellow = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
-constexpr WORD winGreen = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
-constexpr WORD winWhite = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE
-                          | FOREGROUND_INTENSITY;
-} // namespace
-#else
-namespace
-{
-[[maybe_unused]] constexpr int winDefault = 0;
-[[maybe_unused]] constexpr int winRed = 0;
-[[maybe_unused]] constexpr int winYellow = 0;
-[[maybe_unused]] constexpr int winGreen = 0;
-[[maybe_unused]] constexpr int winWhite = 0;
-} // namespace
-#endif
 
 const LevelInfo levelInfoFatal = {Verbosity::Fatal::level,
                                   "fatal",
@@ -120,12 +79,9 @@ std::string timestamp()
 {
     std::time_t now = std::time(nullptr);
     std::tm tmBuffer{};
-#ifdef _WIN32
-    localtime_s(&tmBuffer, &now);
-#else
-    localtime_r(&now, &tmBuffer);
-#endif
-    char timestamp[20]; // "YYYY-MM-DD HH:MM:SS" + '\0'
+    setLocalTime(&tmBuffer, &now);
+
+    char timestamp[20];
     std::strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", &tmBuffer);
 
     return '[' + std::string(timestamp) + ']';
@@ -147,117 +103,15 @@ std::string tag(const LevelInfo& level)
     return '[' + std::string(level.tag) + ']';
 }
 
-std::string linuxColor(const Color& color)
-{
-    switch (color)
-    {
-    case Color::red:
-        return "\x1b[0;31m";
-    case Color::yellow:
-        return "\x1b[0;33m";
-    case Color::green:
-        return "\x1b[0;32m";
-    case Color::white:
-        return "\x1b[1;37m";
-    default:
-        return "\x1b[0m"; // reset
-    }
-}
-
-#ifdef _WIN32
-
-WORD winColor(const Color& color)
-{
-    switch (color)
-    {
-    case Color::red:
-        return winRed;
-    case Color::yellow:
-        return winYellow;
-    case Color::green:
-        return winGreen;
-    case Color::white:
-        return winWhite;
-    default:
-        return winDefault; // reset
-    }
-}
-
-void setConsoleColor(std::ostream& out, const Color& color)
-{
-    HANDLE handle = GetStdHandle((&out == &std::cerr) ? STD_ERROR_HANDLE : STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(handle, winColor(color));
-}
-#endif
-
-class ColorEnabler
-{
-public:
-    explicit ColorEnabler(std::ostream& out):
-        out_(out)
-    {
-    }
-
-    std::string tagColor(const LevelInfo& level);
-    std::string msgColor(const LevelInfo& level);
-    std::string removeColor(std::ostream& out);
-
-private:
-    std::string getLinuxColor(const Color& color);
-    std::ostream& out_;
-    std::string close_with_color_;
-};
-
-std::string ColorEnabler::getLinuxColor(const Color& color)
-{
-    close_with_color_ = "";
-    if (color != Color::none)
-    {
-        close_with_color_ = linuxColor(Color::none);
-        return linuxColor(color);
-    }
-    return {};
-}
-
-std::string ColorEnabler::tagColor(const LevelInfo& level)
-{
-#ifdef _WIN32
-    setConsoleColor(out_, level.tagColor);
-    return {};
-#else
-    return getLinuxColor(level.tagColor);
-#endif
-}
-
-std::string ColorEnabler::msgColor(const LevelInfo& level)
-{
-#ifdef _WIN32
-    setConsoleColor(out_, level.messageColor);
-    return {};
-#else
-    return getLinuxColor(level.messageColor);
-#endif
-}
-
-std::string ColorEnabler::removeColor(std::ostream& out)
-{
-#ifdef _WIN32
-    setConsoleColor(out_, Color::none);
-    return {};
-#else
-    return close_with_color_;
-#endif
-}
-
 void writeToConsole(const LevelInfo& level, const std::string& appliName, const std::string& msg)
 {
     std::ostream& console = level.toStderr ? std::cerr : std::cout;
     ColorEnabler colorEnabler(console);
     console << timestamp();
     console << application(appliName);
-    console << colorEnabler.tagColor(level) << tag(level) << colorEnabler.removeColor(console);
+    console << colorEnabler.tagColor(level) << tag(level) << colorEnabler.removeColor();
     console << ' ';
-    console << colorEnabler.msgColor(level) << msg << colorEnabler.removeColor(console);
+    console << colorEnabler.msgColor(level) << msg << colorEnabler.removeColor();
     console << '\n';
     console.flush();
 }
@@ -268,11 +122,7 @@ void writeToFile(std::ofstream& file,
                  const std::string& msg)
 {
     file << timestamp() << application(appliName) << tag(level) << ' ' << msg;
-#ifdef _WIN32
-    file << "\r\n";
-#else
-    file << '\n';
-#endif
+    file << eol();
     file.flush();
 }
 
