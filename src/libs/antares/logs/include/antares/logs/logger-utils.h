@@ -23,4 +23,4 @@ struct LevelInfo
     Color tagColor;
     Color messageColor;
 };
-}
+} // namespace Antares::Logs
