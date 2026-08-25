@@ -239,7 +239,10 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                            { return p.Id() == pfdefinition.port; });
         if (itPort == ports.end())
         {
-            throw InputError("In port-field-definitions, port not found: " + pfdefinition.port);
+            throw InputError(
+              fmt::format("{}: In port-field-definitions, port not found: {}",
+                          buildFileAndLineNb(libraryFileName, pfdefinition.definition.line_number),
+                          pfdefinition.port));
         }
 
         // second check if the field exists in type
@@ -249,8 +252,11 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                             { return field.Id() == pfdefinition.field; });
         if (itField == portFields.end())
         {
-            throw InputError("In port-field-definitions, for port: " + pfdefinition.port
-                             + " , field not found: " + pfdefinition.field);
+            throw InputError(
+              fmt::format("{}: In port-field-definitions, for port: {} , field not found: {}",
+                          buildFileAndLineNb(libraryFileName, pfdefinition.definition.line_number),
+                          pfdefinition.port,
+                          pfdefinition.field));
         }
 
         auto nodeRegistry = convertExpressionToNode(
@@ -266,9 +272,12 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                { return dynamic_cast<const PortFieldNode*>(&node) != nullptr; });
         if (it != preorder.end())
         {
-            throw InputError("In port-field-definitions, for port: " + pfdefinition.port
-                             + " , found another port in the definition: "
-                             + dynamic_cast<const PortFieldNode&>(*it).getPortName());
+            throw InputError(
+              fmt::format("{}: In port-field-definitions, for port: {} , found another port in the "
+                          "definition: {}",
+                          buildFileAndLineNb(libraryFileName, pfdefinition.definition.line_number),
+                          pfdefinition.port,
+                          dynamic_cast<const PortFieldNode&>(*it).getPortName()));
         }
 
         ForbiddenNodesVisitor(forbiddenInPortFieldDef, pfdefinition.definition.input_expr)
