@@ -61,7 +61,6 @@ BOOST_FIXTURE_TEST_CASE(full_model_system, LibraryObjects)
         system:
             id: base_system
             description: real application model
-            model-libraries: [std]
             components:
                 - id: N
                   model: std.node
@@ -91,7 +90,6 @@ BOOST_FIXTURE_TEST_CASE(bad_param_name_in_component, LibraryObjects)
         system:
             id: base_system
             description: real application model
-            model-libraries: [std]
             components:
                 - id: N
                   model: std.node
@@ -113,7 +111,6 @@ BOOST_FIXTURE_TEST_CASE(library_not_existing, LibraryObjects)
     const auto system = R"(
         system:
             id: base_system
-            model-libraries: [abc]
             components:
                 - id: N
                   model: abc.node
@@ -130,7 +127,6 @@ BOOST_FIXTURE_TEST_CASE(model_not_existing, LibraryObjects)
     const auto system = R"(
         system:
             id: base_system
-            model-libraries: [std]
             components:
                 - id: N
                   model: std.abc
@@ -147,7 +143,6 @@ BOOST_FIXTURE_TEST_CASE(bad_library_model_format, LibraryObjects)
     const auto system = R"(
         system:
             id: base_system
-            model-libraries: [std]
             components:
                 - id: N
                   model: std___node
@@ -236,7 +231,6 @@ static const auto systemYml = R"(
         system:
           id: system1
           description: basic description
-          model-libraries: [std, mylib]
 
           components:
             - id: N
@@ -419,7 +413,6 @@ BOOST_FIXTURE_TEST_CASE(DuplicatedCompo, PrepareYaml)
         system:
           id: system1
           description: basic description
-          model-libraries: [std, mylib]
           components:
             - id: N
               model: std.node
