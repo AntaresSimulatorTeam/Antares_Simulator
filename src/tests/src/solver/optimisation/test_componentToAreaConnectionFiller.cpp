@@ -89,8 +89,6 @@ static const auto systemYaml = R"(
 system:
   id: my_system
 
-  model-libraries: my_lib
-
   components:
   - id: component_with_vars
     model: my_lib.model_with_vars

@@ -16,7 +16,6 @@ system:
     
             Objective : 580
   
-  model-libraries: lib_example_5_1
   
   components:
     - id: node1

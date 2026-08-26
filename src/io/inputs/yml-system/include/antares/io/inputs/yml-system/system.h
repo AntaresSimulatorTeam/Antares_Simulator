@@ -70,7 +70,6 @@ struct ThermalCapacityConnection
 struct System
 {
     std::string id;
-    std::vector<std::string> libraries;
     std::vector<Component> components;
     std::vector<Connection> connections;
     std::vector<AreaConnection> areaConnections;

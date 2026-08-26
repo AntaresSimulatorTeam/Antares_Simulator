@@ -329,6 +329,7 @@ struct VariableAccessor
             if (*results.isPrinted)
             {
                 results.variableCaption = VCardType::Multiple::Caption(i);
+                results.variableUnit = VCardType::Multiple::Unit(i);
                 container[i].template buildAnnualSurveyReport<VCardType>(results,
                                                                          fileLevel,
                                                                          precision);
