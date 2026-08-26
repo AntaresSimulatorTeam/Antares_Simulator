@@ -1,5 +1,6 @@
 var NAVTREEINDEX42 =
 {
+"structMyDummyFixture.html#ada5ee1f2c1b812a0ea090117368f3148":[9,0,214,8],
 "structNbDispUnitsMinBoundSinceMinUpTimeData.html":[9,0,218],
 "structNbDispUnitsMinBoundSinceMinUpTimeData.html#a02f32d864d1d9fdf2addf08fdb2b3e5e":[9,0,218,2],
 "structNbDispUnitsMinBoundSinceMinUpTimeData.html#a7192fbd2b41e5a691cbd746431279147":[9,0,218,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX42 =
 "structRESERVES.html#a089d6e2f3ea68c4cb7e328623dee09ac":[9,0,285,1],
 "structRESERVES.html#a5a6c8d73a1b524df56b325b3300c6951":[9,0,285,2],
 "structRESERVES.html#a700adc9b5c17892200829183f2e83088":[9,0,285,0],
-"structRESERVE__JMOINS1.html":[9,0,277],
-"structRESERVE__JMOINS1.html#ab244fe69ce3846e26eab0c00f55122fe":[9,0,277,0]
+"structRESERVE__JMOINS1.html":[9,0,277]
 };

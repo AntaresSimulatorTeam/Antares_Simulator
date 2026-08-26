@@ -1,5 +1,6 @@
 var NAVTREEINDEX38 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableCard.html#a407a8cc1fc2558d326b36bcea721b181":[9,0,0,12,6,5,32,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableCard.html#a66bd8ca5145d9a9151120ebb47c7e38f":[9,0,0,12,6,5,32,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableCard.html#ad1175b7f290f04bfeb94ccd16fbc9a3f":[9,0,0,12,6,5,32,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinearAbsTraits.html":[9,0,0,12,6,5,42],
@@ -248,6 +249,5 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a0083ab79111fc45402363833f238f5d4":[9,0,0,12,6,7,0,6,1],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a15302b49989c1f3757b35d1915a69af3":[9,0,0,12,6,7,0,6,8],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a19cdebb250906744fc7b43075ad53d6b":[9,0,0,12,6,7,0,6,7],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a1ca4ca69348f8bf03d28ec1a0b4ae56a":[9,0,0,12,6,7,0,6,5],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a3584a659d9374f7b0f8e963c41e7f87a":[9,0,0,12,6,7,0,6,6]
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a1ca4ca69348f8bf03d28ec1a0b4ae56a":[9,0,0,12,6,7,0,6,5]
 };

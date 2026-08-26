@@ -1,5 +1,6 @@
 var NAVTREEINDEX37 =
 {
+"structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1CORRESPONDANCE__DES__CONTRAINTES.html#a98e4acf7231456fbf6d04ab5bdf6495c":[9,0,0,12,1,0,3,3],
 "structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1CORRESPONDANCE__DES__CONTRAINTES.html#aae4fe8e2af22f985b219d37ee55e970c":[9,0,0,12,1,0,3,1],
 "structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1CORRESPONDANCE__DES__CONTRAINTES.html#ac5e618ab0164bde074d80a170595cfa0":[9,0,0,12,1,0,3,0],
 "structAntares_1_1Solver_1_1Hydro_1_1Daily_1_1CORRESPONDANCE__DES__CONTRAINTES.html#ad7eaa5c05f3d80d36b5338ceac4f8806":[9,0,0,12,1,0,3,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableBase_1_1Statistics.html":[9,0,0,12,6,5,33,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableCard.html":[9,0,0,12,6,5,32],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableCard.html#a0118128205cf4ae55f47a0cc05c456f2":[9,0,0,12,6,5,32,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableCard.html#a2fb8f3675a77f36b83fafe73947a4cd8":[9,0,0,12,6,5,32,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableCard.html#a407a8cc1fc2558d326b36bcea721b181":[9,0,0,12,6,5,32,4]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableCard.html#a2fb8f3675a77f36b83fafe73947a4cd8":[9,0,0,12,6,5,32,1]
 };

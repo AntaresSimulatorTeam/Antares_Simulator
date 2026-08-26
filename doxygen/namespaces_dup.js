@@ -738,6 +738,7 @@ var namespaces_dup =
             [ "ConvertorVisitor", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConvertorVisitor.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConvertorVisitor" ],
             [ "AntaresErrorListener", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntaresErrorListener.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntaresErrorListener" ],
             [ "AntlrParsingError", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntlrParsingError.html", null ],
+            [ "checkPortFieldDefinitionConflictWithSumConnections", "modelConverter_8cpp.html#a68870f51eae65aee1560db648a084183", null ],
             [ "convert", "modelConverter_8h.html#a0a04dc70e79a252bba53b25a7863f2db", null ],
             [ "convert_to_system", "modelConverter_8cpp.html#a410dca443f3dda026bd659d08f9d4408", null ],
             [ "convertConstraints", "modelConverter_8cpp.html#af146e2c710ee9249e948a10a03bd2cd8", null ],
