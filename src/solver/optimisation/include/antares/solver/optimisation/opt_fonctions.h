@@ -5,6 +5,7 @@
 #define __SOLVER_OPTIMISATION_FUNCTIONS_H__
 
 #include <antares/optimization-options/options.h>
+#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/utils/opt_period_string_generator.h>
 #include <antares/writer/i_writer.h>
 #include "antares/config/config.h"

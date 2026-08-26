@@ -11,6 +11,7 @@
 #include <string>
 #include <thread>
 
+#include <antares/solver/modeler/ModelerData.h>
 #include <antares/writer/writer_factory.h>
 #include "antares/study/area/constants.h"
 #include "antares/study/scenario-builder/sets.h"
@@ -36,6 +37,16 @@ Study::Study():
 }
 
 Study::~Study() = default;
+
+Solver::ModelerData* Study::getModelerData() const
+{
+    return modelerInput_.get();
+}
+
+void Study::setModelerData(std::unique_ptr<Solver::ModelerData> modelerData)
+{
+    modelerInput_ = std::move(modelerData);
+}
 
 void Study::reduceMemoryUsage()
 {

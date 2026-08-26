@@ -17,6 +17,8 @@ target_link_libraries(modeler-lib
         # TODO FIXME don't depend on implementations
         Antares::linear-problem-mpsolver-impl
         Antares::modeler-optimisation-container
+        Antares::linear-problem-data-impl
+        Antares::simulation-table
 )
 
 target_include_directories(modeler-lib

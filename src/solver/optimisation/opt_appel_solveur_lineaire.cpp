@@ -24,6 +24,7 @@
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/LegacyVariableInfo.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"

@@ -30,6 +30,8 @@ target_link_libraries(utils
         Antares::result_writer
         Antares::optimization-options
         antares-core
+        Antares::antares-solver-simulation
+        model_antares
 )
 
 target_include_directories(utils
