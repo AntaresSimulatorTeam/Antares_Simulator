@@ -10,8 +10,6 @@
 void RampingIncreaseDecreaseRateGroup::BuildConstraints()
 {
     auto data = GetStartUpCostsDataFromProblemHebdo();
-    PMaxDispatchableGeneration pMaxDispatchableGeneration(builder_, data);
-    PMinDispatchableGeneration pMinDispatchableGeneration(builder_, data);
     for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
