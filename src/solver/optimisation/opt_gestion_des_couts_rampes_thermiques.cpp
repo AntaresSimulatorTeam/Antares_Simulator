@@ -15,9 +15,9 @@ void OPT_InitialiserLesCoutsLineaireRampesThermiques(PROBLEME_HEBDO* problemeHeb
     {
         return;
     }
-    
+
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    
+
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {

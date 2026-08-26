@@ -613,7 +613,7 @@ struct PROBLEME_HEBDO
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
     ReserveOpt<std::vector<::AREA_RESERVES_VECTOR>> allReserves;
-    
+
     bool rampingEnabled = false;
 
     uint32_t NumberOfShortTermStorages = 0;
