@@ -13,7 +13,7 @@
 #include <antares/logs/logs.h>
 #include <antares/solver/variable/dynamicAggregation/dynamicAggregation.h>
 
-#include "categories.h"
+#include <antares/study/categories.h>
 #include "info.h"
 #include "state.h"
 #include "surveyresults.h"

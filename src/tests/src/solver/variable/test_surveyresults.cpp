@@ -8,7 +8,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/antares/constants.h"
-#include "antares/solver/variable/categories.h"
+#include "antares/study/categories.h"
 #include "antares/solver/variable/surveyresults.h"
 #include "antares/writer/in_memory_writer.h"
 

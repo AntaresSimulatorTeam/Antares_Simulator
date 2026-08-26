@@ -10,7 +10,7 @@
 #include <antares/study/study.h>
 #include "antares/antares/constants.h"
 
-#include "../categories.h"
+#include <antares/study/categories.h>
 #include "../surveyresults.h"
 
 namespace Antares::Solver::Variable

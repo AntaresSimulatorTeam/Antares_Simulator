@@ -19,7 +19,6 @@ set(SRC_VARIABLE
         include/antares/solver/variable/setofareas.hxx
         include/antares/solver/variable/bindConstraints.h
         include/antares/solver/variable/bindConstraints.hxx
-        include/antares/solver/variable/categories.h
         include/antares/solver/variable/surveyresults.h
         include/antares/solver/variable/surveyresults/reportbuilder.hxx
         include/antares/solver/variable/surveyresults/surveyresults.h

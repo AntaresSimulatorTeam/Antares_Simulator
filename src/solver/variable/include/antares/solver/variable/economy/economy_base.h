@@ -11,7 +11,7 @@
 #include <type_traits>
 
 #include <antares/memory/memory.h>
-#include <antares/solver/variable/categories.h>
+#include <antares/study/categories.h>
 #include <antares/solver/variable/container.h>
 #include <antares/solver/variable/state.h>
 #include <antares/solver/variable/storage/intermediate.h>

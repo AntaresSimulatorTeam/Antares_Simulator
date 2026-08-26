@@ -12,7 +12,7 @@
 #include <antares/writer/i_writer.h>
 #include "antares/antares/constants.h"
 
-#include "../categories.h"
+#include <antares/study/categories.h>
 #include "data.h"
 
 namespace Antares::Solver::Variable

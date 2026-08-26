@@ -250,6 +250,7 @@ set(SRC_STUDY
         area/sets.cpp
 
         # variable selection
+        include/antares/study/categories.h
         include/antares/study/variable-print-info.h
         variable-print-info.cpp
 )

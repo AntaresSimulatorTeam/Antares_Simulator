@@ -7,7 +7,7 @@
 #include <cassert>
 
 #include <antares/study/study.h>
-#include "antares/solver/variable/categories.h"
+#include "antares/study/categories.h"
 
 using namespace Antares::Solver::Variable;
 

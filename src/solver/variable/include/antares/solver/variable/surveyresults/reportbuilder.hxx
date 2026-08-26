@@ -14,7 +14,7 @@
 #include <antares/logs/logs.h>
 #include <antares/study/filter.h>
 
-#include "../categories.h"
+#include <antares/study/categories.h>
 #include "../info.h"
 #include "../surveyresults.h"
 
