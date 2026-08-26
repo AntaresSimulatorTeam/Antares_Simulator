@@ -119,4 +119,9 @@ private:
     void rebuildIndex() const;
 
 }; // class ThermalClusterList
+
+bool ThermalClusterLoadFromSection(const std::string& areaName,
+                                   ThermalCluster& cluster,
+                                   const IniFile::Section& section,
+                                   bool rampingEnabledGlobal);
 } // namespace Antares::Data

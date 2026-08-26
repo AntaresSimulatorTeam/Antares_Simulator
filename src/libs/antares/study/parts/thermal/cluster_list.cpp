@@ -29,11 +29,6 @@ std::string ThermalClusterList::typeID() const
     return "thermal";
 }
 
-static bool ThermalClusterLoadFromSection(const std::string& areaName,
-                                          ThermalCluster& cluster,
-                                          const IniFile::Section& section,
-                                          bool rampingEnabledGlobal);
-
 void ThermalClusterList::rebuildIndex() const
 {
     unsigned int indx = 0;

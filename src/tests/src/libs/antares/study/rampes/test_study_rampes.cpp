@@ -12,9 +12,8 @@ using Antares::UnitTests::CaptureAntaresLogs;
 #include <boost/test/unit_test_suite.hpp>
 
 #include "antares/study/parts/thermal/cluster.h"
+#include "antares/study/parts/thermal/cluster_list.h"
 #include "antares/study/study.h"
-
-#include "../../../../../../libs/antares/study/parts/thermal/cluster_list.cpp"
 
 using namespace Antares::Data;
 
@@ -210,6 +209,47 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_load_cluster_invalid_ramp_parameters,
     BOOST_CHECK(
       getErrors().contains("Thermal cluster: A/thermal_1: The ramping power decrease cost must be "
                            "positive or null. Ramping is disabled for this thermal cluster."));
+}
+
+BOOST_FIXTURE_TEST_CASE(test_thermal_load_cluster_valid_zero_cost_ramp_parameters,
+                        OneProblemOneAreaRampingWithLogger)
+{
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    std::ofstream file(studyPath / "list.ini");
+    file << "[thermal_1]\n";
+    file << "name = thermal_1\n";
+    file << "ramping-enabled = true\n";
+    file << "max-upward-power-ramping-rate = 1.000000\n";
+    file << "max-downward-power-ramping-rate = 1.000000\n";
+    file << "power-increase-cost = 0.000000\n";
+    file << "power-decrease-cost = 0.000000\n";
+    file << "\n";
+    file.close();
+
+    Antares::IniFile ini;
+    BOOST_CHECK_EQUAL(ini.open(studyPath / "list.ini"), true);
+    auto* section = ini.firstSection;
+    BOOST_CHECK_EQUAL(section->name.empty(), false);
+
+    auto cluster = std::make_shared<ThermalCluster>(areaA);
+
+    ThermalClusterLoadFromSection(areaA->name,
+                                  *cluster,
+                                  *section,
+                                  study->parameters.include.thermal_ramping);
+
+    BOOST_CHECK_EQUAL(cluster->name(), "thermal_1");
+    BOOST_CHECK_EQUAL(cluster->ramping.has_value(), true);
+
+    BOOST_CHECK_EQUAL(cluster->ramping->checkValidity(areaA, "thermal_1"), true);
+    BOOST_CHECK_EQUAL(getErrors().size(), 0);
+    BOOST_CHECK_EQUAL(getWarnings().size(), 0);
+
+    std::ostringstream rampingStats;
+    rampingStats << *cluster->ramping;
+    BOOST_CHECK_EQUAL("powerIncreaseCost = 0\tpowerDecreaseCost = "
+                      "0\tmaxUpwardPowerRampingRate = 1\tmaxDownwardPowerRampingRate = 1",
+                      rampingStats.str());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
