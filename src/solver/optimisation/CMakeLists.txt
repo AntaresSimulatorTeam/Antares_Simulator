@@ -74,7 +74,6 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrBindingConstraintHour.h
         adequacy_patch_csr/constraints/CsrBindingConstraintHour.cpp
         opt_decompte_variables_et_contraintes_rampes_thermiques.cpp
-        opt_construction_variables_rampes_thermiques.cpp
         opt_gestion_des_bornes_rampes_thermiques.cpp
         opt_gestion_des_couts_rampes_thermiques.cpp
         include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFictitiousLoad.h
