@@ -5,11 +5,13 @@
 
 #include "in-memory-study.h"
 
+#include <antares/solver/variable/registerThematicTrimmingVariables.h>
 #include "antares/application/ScenarioBuilderOwner.h"
 #include "antares/utils/utils.h"
 
 void initializeStudy(Study* study)
 {
+    Antares::Solver::Variable::RegisterThematicTrimmingVariables();
     study->parameters.reset();
 }
 

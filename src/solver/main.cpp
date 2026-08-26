@@ -8,6 +8,7 @@
 #include <antares/locale/locale.h>
 #include <antares/logs/logs.h>
 #include <antares/memory/memory.h>
+#include <antares/solver/variable/registerThematicTrimmingVariables.h>
 #include "antares/application/application.h"
 
 using namespace Antares;
@@ -89,6 +90,8 @@ int main(int argc, const char** argv)
 {
     try
     {
+        Antares::Solver::Variable::RegisterThematicTrimmingVariables();
+
         Antares::Solver::Application application;
         auto& durationCollector = application.getDurationCollector();
 
