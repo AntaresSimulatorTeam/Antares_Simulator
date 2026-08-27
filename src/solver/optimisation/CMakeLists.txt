@@ -21,6 +21,7 @@ set(RTESOLVER_OPT
         opt_construction_variables_optimisees_quadratique.cpp
         opt_decompte_variables_et_contraintes.cpp
         opt_decompte_variables_et_contraintes.cpp
+        opt_construction_variables_rampes_thermiques.cpp
         opt_gestion_des_bornes_cas_lineaire.cpp
         opt_verification_presence_reserve_jmoins1.cpp
         opt_init_contraintes_hydrauliques.cpp
@@ -72,6 +73,9 @@ set(RTESOLVER_OPT
         adequacy_patch_csr/constraints/CsrAreaBalance.cpp
         include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrBindingConstraintHour.h
         adequacy_patch_csr/constraints/CsrBindingConstraintHour.cpp
+        opt_decompte_variables_et_contraintes_rampes_thermiques.cpp
+        opt_gestion_des_bornes_rampes_thermiques.cpp
+        opt_gestion_des_couts_rampes_thermiques.cpp
         include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFictitiousLoad.h
         adequacy_patch_csr/constraints/CsrFictitiousLoad.cpp
         include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrMaxEnsLoad.h
@@ -189,12 +193,23 @@ set(RTESOLVER_OPT
 		constraints/HydroEnergyLevelReserveParticipation.cpp
 		include/antares/solver/optimisation/constraints/HydroGlobalEnergyLevelReserveParticipation.h
 		constraints/HydroGlobalEnergyLevelReserveParticipation.cpp
+        include/antares/solver/optimisation/constraints/RampingIncreaseRate.h
+        constraints/RampingIncreaseRate.cpp
+        include/antares/solver/optimisation/constraints/RampingDecreaseRate.h
+        constraints/RampingDecreaseRate.cpp
+        include/antares/solver/optimisation/constraints/PowerOutputVariationIncrease.h
+        constraints/PowerOutputVariationIncrease.cpp
+        include/antares/solver/optimisation/constraints/PowerOutputVariationDecrease.h
+        constraints/PowerOutputVariationDecrease.cpp
+
         include/antares/solver/optimisation/ProblemMatrixEssential.h
         ProblemMatrixEssential.cpp
         include/antares/solver/optimisation/LinearProblemMatrixStartUpCosts.h
         LinearProblemMatrixStartUpCosts.cpp
-		include/antares/solver/optimisation/LinearProblemMatrixReserves.h
-		LinearProblemMatrixReserves.cpp
+        include/antares/solver/optimisation/LinearProblemMatrixReserves.h
+        LinearProblemMatrixReserves.cpp
+        include/antares/solver/optimisation/LinearProblemMatrixRamping.h
+        LinearProblemMatrixRamping.cpp
         include/antares/solver/optimisation/LinearProblemMatrix.h
         LinearProblemMatrix.cpp
         include/antares/solver/optimisation/QuadraticProblemMatrix.h
@@ -210,6 +225,10 @@ set(RTESOLVER_OPT
         constraints/HydroPowerGroup.cpp
         include/antares/solver/optimisation/constraints/HydraulicSmoothingGroup.h
         constraints/HydraulicSmoothingGroup.cpp
+        include/antares/solver/optimisation/constraints/RampingIncreaseDecreaseRateGroup.h
+        constraints/RampingIncreaseDecreaseRateGroup.cpp
+        include/antares/solver/optimisation/constraints/PowerOutputVariationGroup.h
+        constraints/PowerOutputVariationGroup.cpp
         include/antares/solver/optimisation/constraints/MinMaxHydroPowerGroup.h
         constraints/MinMaxHydroPowerGroup.cpp
         include/antares/solver/optimisation/constraints/MaxPumpingGroup.h

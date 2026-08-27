@@ -253,7 +253,7 @@ def check_prod_for_specific_year(context, area, year, prod_name, comparator_and_
     'in area "{area}", during year {year:d}, hourly production of "{prod_name}" for hour {hour:d} is equal to {expected_prod:d} MWh')
 def check_prod_for_specific_year_hour(context, area, year, prod_name, hour, expected_prod):
     actual_hourly_prod = context.soh.get_hourly_prod_mwh(area, year, prod_name)[hour]
-    assert expected_prod == actual_hourly_prod
+    assert expected_prod == actual_hourly_prod, f"Expected production was {expected_prod}, actual is {actual_hourly_prod}. "
 
 
 @then('in area "{area}", hourly production of "{prod_name}" is always {comparator_and_hourly_prod} MWh')
@@ -866,3 +866,13 @@ def check_all_nodu_against_reference(context, area, year):
                 f"  Hour {hour}: expected {int(ref_nodu.iloc[hour])}, got {int(actual_nodu.iloc[hour])}")
     assert len(mismatches) == 0, \
         f"NODU mismatches found:\n" + "\n".join(mismatches[:20])
+
+@then('in area "{area}", during year {year:d}, ramping cost of cluster "{cluster}" for hour {hour:d} is equal to {ramp_cost}')
+def check_ramp_cost_for_specific_year_hour_and_cluster(context, area, year, cluster, hour, ramp_cost):
+    actual_ramp_cost = context.soh.get_ramp_cost_cluster(area, year, cluster)[hour]
+    assert_double_close(float(ramp_cost), float(actual_ramp_cost), 1e-6)
+    
+@then('in area "{area}", during year {year:d}, ramping cost for hour {hour:d} is equal to {ramp_cost}')
+def check_ramp_cost_for_specific_year_hour_and_area(context, area, year, hour, ramp_cost):
+    actual_ramp_cost = context.soh.get_ramp_cost_area(area, year)[hour]
+    assert_double_close(float(ramp_cost), float(actual_ramp_cost), 1e-6)

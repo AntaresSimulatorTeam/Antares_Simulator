@@ -29,10 +29,6 @@ std::string ThermalClusterList::typeID() const
     return "thermal";
 }
 
-static bool ThermalClusterLoadFromSection(const std::string& areaName,
-                                          ThermalCluster& cluster,
-                                          const IniFile::Section& section);
-
 void ThermalClusterList::rebuildIndex() const
 {
     unsigned int indx = 0;
@@ -90,7 +86,9 @@ std::size_t ThermalClusterList::capacityReservationsCount() const
     return uniqueReservations.size();
 }
 
-bool ThermalClusterList::loadFromFolder(const fs::path& folder, Area* area)
+bool ThermalClusterList::loadFromFolder(const fs::path& folder,
+                                        Area* area,
+                                        bool rampingEnabledGlobal)
 {
     assert(area && "A parent area is required");
 
@@ -121,7 +119,7 @@ bool ThermalClusterList::loadFromFolder(const fs::path& folder, Area* area)
         auto cluster = std::make_shared<ThermalCluster>(area);
 
         // Load data of a thermal cluster from a ini file section
-        if (!ThermalClusterLoadFromSection(area->name, *cluster, *section))
+        if (!ThermalClusterLoadFromSection(area->name, *cluster, *section, rampingEnabledGlobal))
         {
             continue;
         }
@@ -291,6 +289,35 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
         return p->value.to<double>(cluster.startupCost);
     }
 
+    // initialize the ramping attributes only if ramping is enabled, else ignore these properties
+    if (p->key == "power-increase-cost")
+    {
+        return (cluster.ramping) ? p->value.to<double>(cluster.ramping.value().powerIncreaseCost)
+                                 : true;
+    }
+    if (p->key == "power-decrease-cost")
+    {
+        return (cluster.ramping) ? p->value.to<double>(cluster.ramping.value().powerDecreaseCost)
+                                 : true;
+    }
+    if (p->key == "max-upward-power-ramping-rate")
+    {
+        return (cluster.ramping)
+                 ? p->value.to<double>(cluster.ramping.value().maxUpwardPowerRampingRate)
+                 : true;
+    }
+    if (p->key == "max-downward-power-ramping-rate")
+    {
+        return (cluster.ramping)
+                 ? p->value.to<double>(cluster.ramping.value().maxDownwardPowerRampingRate)
+                 : true;
+    }
+    // we ignore this property as it was already handled in ThermalClusterLoadFromSection
+    if (p->key == "ramping-enabled")
+    {
+        return true;
+    }
+
     if (p->key == "unitcount")
     {
         return p->value.to<unsigned int>(cluster.unitCount);
@@ -320,7 +347,8 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
 
 bool ThermalClusterLoadFromSection(const std::string& areaName,
                                    ThermalCluster& cluster,
-                                   const IniFile::Section& section)
+                                   const IniFile::Section& section,
+                                   bool rampingEnabledGlobal)
 {
     if (section.name.empty())
     {
@@ -328,6 +356,20 @@ bool ThermalClusterLoadFromSection(const std::string& areaName,
     }
 
     cluster.setName(section.name);
+    if (rampingEnabledGlobal)
+    {
+        // initialize the ramping attributes only if ramping-enabled=true
+        auto* rampingEnabledProperty = section.find("ramping-enabled");
+        if (rampingEnabledProperty)
+        {
+            bool rampingEnabled = false;
+            bool attributeOK = rampingEnabledProperty->value.to<bool>(rampingEnabled);
+            if (rampingEnabled && attributeOK)
+            {
+                cluster.ramping = ThermalCluster::Ramping();
+            }
+        }
+    }
 
     if (section.firstProperty)
     {

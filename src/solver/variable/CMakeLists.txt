@@ -139,6 +139,8 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/dispatchable-generation-margin.h
         include/antares/solver/variable/economy/residual.h
         include/antares/solver/variable/economy/unsupliedEnergy.h
+        include/antares/solver/variable/economy/rampingCosts.h
+        include/antares/solver/variable/economy/rampingCostByDispatchablePlant.h
 
         # Reserves
         include/antares/solver/variable/economy/reserves/reserveParticipationBase.h

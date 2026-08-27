@@ -154,8 +154,9 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
               &variablesMapping.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique,
               &variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique,
               &variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique,
-              &variablesMapping
-                 .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique})
+              &variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique,
+              &variablesMapping.powerRampingIncreaseIndex,
+              &variablesMapping.powerRampingDecreaseIndex})
         {
             v->assign(thermalCount, 0);
         }
@@ -448,6 +449,14 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
                        &palier.PmaxDUnGroupeDuPalierThermique})
         {
             v->assign(nbPaliers, 0.);
+        }
+
+        for (auto* v: {&palier.downwardRampingCost,
+                       &palier.upwardRampingCost,
+                       &palier.maxUpwardPowerRampingRate,
+                       &palier.maxDownwardPowerRampingRate})
+        {
+            v->assign(nbPaliers, -1);
         }
 
         palier.NomsDesPaliersThermiques.resize(nbPaliers);

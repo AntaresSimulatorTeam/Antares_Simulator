@@ -182,6 +182,24 @@ int& VariableManager::InternalExcessReserve(unsigned int index,
     return CorrespondanceVarNativesVarOptim_[pdt].reservesIndices.value().internalExcess[index];
 }
 
+int& VariableManager::ProductionIncreaseAboveMin(unsigned int index,
+                                                 unsigned int hourInWeek,
+                                                 int offset,
+                                                 int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+    return CorrespondanceVarNativesVarOptim_[pdt].powerRampingIncreaseIndex[index];
+}
+
+int& VariableManager::ProductionDecreaseAboveMin(unsigned int index,
+                                                 unsigned int hourInWeek,
+                                                 int offset,
+                                                 int delta)
+{
+    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
+    return CorrespondanceVarNativesVarOptim_[pdt].powerRampingDecreaseIndex[index];
+}
+
 int& VariableManager::NumberOfDispatchableUnits(unsigned int index,
                                                 unsigned int hourInWeek,
                                                 int offset,

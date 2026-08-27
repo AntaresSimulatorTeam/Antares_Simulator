@@ -104,7 +104,9 @@ static void ExportGridInfosAreas(const Data::Study& study,
     outLinks << "upstream\tdownstream\n";
     outThermal << "area id\tid\tname\tgroup\tunit count\tnominal capacity\t"
                   "min stable power\tmin up/down time\tspinning\tco2\t"
-                  "marginal cost\tfixed cost\tstartup cost\tmarket bid cost\tspread cost\n";
+                  "marginal cost\tfixed cost\tstartup cost\tmarket bid cost\tspread cost\t"
+                  "power increase cost\tpower decrease cost\t max power upward rate\t max power "
+                  "downward rate\n ";
 
     study.areas.each(
       [&out, &outLinks, &outThermal](const Data::Area& area)
@@ -140,7 +142,13 @@ static void ExportGridInfosAreas(const Data::Study& study,
               outThermal << cluster->startupCost << '\t';
               outThermal << cluster->marketBidCost << '\t';
               outThermal << cluster->spreadCost << '\n';
-
+              if (cluster->ramping)
+              {
+                  outThermal << cluster->ramping.value().powerIncreaseCost << '\t';
+                  outThermal << cluster->ramping.value().powerDecreaseCost << '\t';
+                  outThermal << cluster->ramping.value().maxUpwardPowerRampingRate << '\t';
+                  outThermal << cluster->ramping.value().maxDownwardPowerRampingRate << '\n';
+              }
           } // each thermal cluster
       }); // each area
     auto add = [&writer, &originalOutput](const std::string& filename, Yuni::Clob&& buffer)

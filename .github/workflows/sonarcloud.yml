@@ -120,7 +120,8 @@ jobs:
 
     - name: Init submodule
       run: |
-        git submodule update --init --depth 1 resources/Antares_Simulator_Tests_NR
+        git clone --depth 1 --branch scalian_ramping_tests https://github.com/sylvmara/Antares_Simulator_Tests_NR.git resources/Antares_Simulator_Tests_NR
+
 
     - name: Configure
       run: |

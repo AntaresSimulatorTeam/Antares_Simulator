@@ -124,7 +124,13 @@ private:
       const std::array<uint, HOURS_PER_YEAR>& ON_opt,
       const Data::ThermalCluster* currentCluster);
 
+    void yearEndBuildCalculateRampingCosts(const uint& maxDurationON,
+                                           const std::array<uint, HOURS_PER_YEAR>& ON_min,
+                                           const std::array<uint, HOURS_PER_YEAR>& ON_opt,
+                                           const Data::ThermalCluster* currentCluster);
+
     std::array<uint, HOURS_PER_YEAR> computeEconomicallyOptimalNbClustersONforEachHour(
+
       const uint& maxDurationON,
       const std::array<uint, HOURS_PER_YEAR>& ON_min,
       const std::array<uint, HOURS_PER_YEAR>& ON_max) const;
@@ -274,6 +280,8 @@ public:
     double thermalClusterNonProportionalCostForYear[HOURS_PER_YEAR];
     //! Minimum power of the cluster for the whole year
     double thermalClusterPMinOfTheClusterForYear[HOURS_PER_YEAR];
+    //! Ramping cost of the thermal cluster for the whole year
+    double thermalClusterRampingCostForYear[HOURS_PER_YEAR];
 
     double renewableClusterProduction;
     //@}

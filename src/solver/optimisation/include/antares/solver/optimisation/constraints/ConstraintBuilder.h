@@ -158,6 +158,16 @@ public:
                                              int offset = 0,
                                              int delta = 0);
 
+    ConstraintBuilder& ProductionDecreaseAboveMin(unsigned int index,
+                                                  double coeff,
+                                                  int offset = 0,
+                                                  int delta = 0);
+
+    ConstraintBuilder& ProductionIncreaseAboveMin(unsigned int index,
+                                                  double coeff,
+                                                  int offset = 0,
+                                                  int delta = 0);
+
     ConstraintBuilder& NumberOfDispatchableUnits(unsigned int index, double coeff);
 
     ConstraintBuilder& NumberStoppingDispatchableUnits(unsigned int index, double coeff);

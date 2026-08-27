@@ -367,6 +367,18 @@ void VariableNamer::InternalExcessReserve(unsigned varIndex, const std::string& 
     SetThermalClusterReserveElementName(varIndex, "InternalExcessReserve", reserveName);
 }
 
+void VariableNamer::ProductionIncreaseAboveMin(unsigned varIndex,
+                                               const std::string& clusterName) const
+{
+    SetThermalClusterElementName(varIndex, "ProductionIncreaseAboveMin", clusterName);
+}
+
+void VariableNamer::ProductionDecreaseAboveMin(unsigned varIndex,
+                                               const std::string& clusterName) const
+{
+    SetThermalClusterElementName(varIndex, "ProductionDecreaseAboveMin", clusterName);
+}
+
 void VariableNamer::NODU(unsigned varIndex, const std::string& clusterName) const
 {
     SetThermalClusterElementName(varIndex, "NODU", clusterName);
@@ -916,6 +928,30 @@ void ConstraintNamer::PMinDispatchableGeneration(unsigned constrIndex,
                                                  const std::string& clusterName) const
 {
     SetThermalClusterElementName(constrIndex, "PMinDispatchableGeneration", clusterName);
+}
+
+void ConstraintNamer::RampingIncreaseRate(unsigned constrIndex,
+                                          const std::string& clusterName) const
+{
+    SetThermalClusterElementName(constrIndex, "RampingIncreaseRate", clusterName);
+}
+
+void ConstraintNamer::RampingDecreaseRate(unsigned constrIndex,
+                                          const std::string& clusterName) const
+{
+    SetThermalClusterElementName(constrIndex, "RampingDecreaseRate", clusterName);
+}
+
+void ConstraintNamer::ProductionOutputVariationIncrease(unsigned constrIndex,
+                                                        const std::string& clusterName) const
+{
+    SetThermalClusterElementName(constrIndex, "ProductionOutputVariationIncrease", clusterName);
+}
+
+void ConstraintNamer::ProductionOutputVariationDecrease(unsigned constrIndex,
+                                                        const std::string& clusterName) const
+{
+    SetThermalClusterElementName(constrIndex, "ProductionOutputVariationDecrease", clusterName);
 }
 
 void ConstraintNamer::ConsistenceNODU(unsigned constrIndex, const std::string& clusterName) const
