@@ -847,7 +847,8 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_Symmetries,
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_hydro_reserveParticipationsCount, OneProblemWithReservesOneAreaWithLogger)
+BOOST_FIXTURE_TEST_CASE(test_hydro_reserveParticipationsCount,
+                        OneProblemWithReservesOneAreaWithLogger)
 {
     // No reserveParticipationContainer loaded yet: the optional is empty, count is 0
     BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationsCount(), 0);
