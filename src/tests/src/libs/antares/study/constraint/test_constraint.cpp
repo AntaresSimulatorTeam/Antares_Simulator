@@ -9,6 +9,7 @@
 #define BOOST_TEST_MODULE binding_constraints
 
 #include <files-system.h>
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 
@@ -17,6 +18,7 @@
 #include <antares/study/study.h>
 #include "antares/study/area/area.h"
 #include "antares/study/constraint.h"
+#include "antares/utils/utils.h"
 
 using namespace Antares::Data;
 namespace fs = std::filesystem;
@@ -950,6 +952,572 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_clusterCount)
     BOOST_CHECK_EQUAL(addClusterCountClusters(false, true), 1);
     // disabled, not mustrun should not be counted
     BOOST_CHECK_EQUAL(addClusterCountClusters(false, false), 1);
+}
+
+// ---------------------------------------------------------------------------
+// The following tests exercise BindingConstraint's public API directly
+// (no ini loading), targeting methods a coverage run showed as never
+// executed by the rest of the test suite.
+// ---------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_StringToOperator_aliases)
+{
+    using Operator = BindingConstraint::Operator;
+    for (const std::string& s: {"both", "<>", "><", "< and >", "BOTH"})
+    {
+        BOOST_CHECK_EQUAL(BindingConstraint::StringToOperator(s), Operator::opBoth);
+    }
+    for (const std::string& s: {"less", "<", "<="})
+    {
+        BOOST_CHECK_EQUAL(BindingConstraint::StringToOperator(s), Operator::opLess);
+    }
+    for (const std::string& s: {"greater", ">", ">="})
+    {
+        BOOST_CHECK_EQUAL(BindingConstraint::StringToOperator(s), Operator::opGreater);
+    }
+    for (const std::string& s: {"equal", "=", "=="})
+    {
+        BOOST_CHECK_EQUAL(BindingConstraint::StringToOperator(s), Operator::opEquality);
+    }
+    BOOST_CHECK_EQUAL(BindingConstraint::StringToOperator("nonsense"), Operator::opUnknown);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_StringToType_aliases)
+{
+    using Type = BindingConstraint::Type;
+    for (const std::string& s: {"hourly", "hour", "h"})
+    {
+        BOOST_CHECK_EQUAL(BindingConstraint::StringToType(s), Type::typeHourly);
+    }
+    for (const std::string& s: {"daily", "day", "d"})
+    {
+        BOOST_CHECK_EQUAL(BindingConstraint::StringToType(s), Type::typeDaily);
+    }
+    for (const std::string& s: {"weekly", "week", "w"})
+    {
+        BOOST_CHECK_EQUAL(BindingConstraint::StringToType(s), Type::typeWeekly);
+    }
+    BOOST_CHECK_EQUAL(BindingConstraint::StringToType(""), Type::typeUnknown);
+    BOOST_CHECK_EQUAL(BindingConstraint::StringToType("nonsense"), Type::typeUnknown);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_TypeToCString_allValues)
+{
+    using Type = BindingConstraint::Type;
+    BOOST_CHECK_EQUAL(std::string(BindingConstraint::TypeToCString(Type::typeHourly)), "hourly");
+    BOOST_CHECK_EQUAL(std::string(BindingConstraint::TypeToCString(Type::typeDaily)), "daily");
+    BOOST_CHECK_EQUAL(std::string(BindingConstraint::TypeToCString(Type::typeWeekly)), "weekly");
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_OperatorToCString_allValues)
+{
+    using Operator = BindingConstraint::Operator;
+    BOOST_CHECK_EQUAL(std::string(BindingConstraint::OperatorToCString(Operator::opEquality)),
+                      "equal");
+    BOOST_CHECK_EQUAL(std::string(BindingConstraint::OperatorToCString(Operator::opLess)), "less");
+    BOOST_CHECK_EQUAL(std::string(BindingConstraint::OperatorToCString(Operator::opGreater)),
+                      "greater");
+    BOOST_CHECK_EQUAL(std::string(BindingConstraint::OperatorToCString(Operator::opBoth)), "both");
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_OperatorToShortCString_allValues)
+{
+    using Operator = BindingConstraint::Operator;
+    BOOST_CHECK_EQUAL(std::string(BindingConstraint::OperatorToShortCString(Operator::opEquality)),
+                      "equality");
+    BOOST_CHECK_EQUAL(std::string(BindingConstraint::OperatorToShortCString(Operator::opLess)),
+                      "bounded above");
+    BOOST_CHECK_EQUAL(std::string(BindingConstraint::OperatorToShortCString(Operator::opGreater)),
+                      "bounded below");
+    BOOST_CHECK_EQUAL(std::string(BindingConstraint::OperatorToShortCString(Operator::opBoth)),
+                      "bounded on both sides");
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_MathOperatorToCString_allValues)
+{
+    using Operator = BindingConstraint::Operator;
+    BOOST_CHECK_EQUAL(std::string(BindingConstraint::MathOperatorToCString(Operator::opEquality)),
+                      "=");
+    BOOST_CHECK_EQUAL(std::string(BindingConstraint::MathOperatorToCString(Operator::opLess)), "<");
+    BOOST_CHECK_EQUAL(std::string(BindingConstraint::MathOperatorToCString(Operator::opGreater)),
+                      ">");
+    BOOST_CHECK_EQUAL(std::string(BindingConstraint::MathOperatorToCString(Operator::opBoth)),
+                      "< and >");
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_pId_slugifiesName)
+{
+    BindingConstraint bc;
+    bc.pId("My Constraint Name!");
+    BOOST_CHECK_EQUAL(bc.id(), Antares::transformNameIntoID("My Constraint Name!"));
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_resetToDefaultValues)
+{
+    BindingConstraint bc;
+    bc.enabled(false);
+    bc.comments("some comment");
+    bc.RHSTimeSeries().resize(2, 5);
+
+    bc.resetToDefaultValues();
+
+    BOOST_CHECK_EQUAL(bc.enabled(), true);
+    BOOST_CHECK(bc.comments().empty());
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width, 0u);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height, 0u);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_clearAndReset_hourly)
+{
+    auto study = std::make_unique<Study>();
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto area2 = addAreaToListOfAreas(study->areas, "area2");
+    auto link = AreaAddLinkBetweenAreas(area1, area2);
+
+    BindingConstraint bc;
+    bc.weight(link, 3.0);
+    bc.offset(link, 2);
+
+    bc.clearAndReset("my constraint", BindingConstraint::typeHourly, BindingConstraint::opEquality);
+
+    BOOST_CHECK_EQUAL(bc.name(), "my constraint");
+    BOOST_CHECK_EQUAL(bc.id(), Antares::transformNameIntoID("my constraint"));
+    BOOST_CHECK_EQUAL(bc.type(), BindingConstraint::typeHourly);
+    BOOST_CHECK_EQUAL(bc.operatorType(), BindingConstraint::opEquality);
+    BOOST_CHECK_EQUAL(bc.weight(link), 0.);
+    BOOST_CHECK_EQUAL(bc.offset(link), 0);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width, (unsigned int)BindingConstraint::columnMax);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height, 8784u);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_clearAndReset_daily)
+{
+    BindingConstraint bc;
+    bc.clearAndReset("c", BindingConstraint::typeDaily, BindingConstraint::opLess);
+    BOOST_CHECK_EQUAL(bc.type(), BindingConstraint::typeDaily);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width, (unsigned int)BindingConstraint::columnMax);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height, 366u);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_clearAndReset_weekly)
+{
+    BindingConstraint bc;
+    bc.clearAndReset("c", BindingConstraint::typeWeekly, BindingConstraint::opGreater);
+    BOOST_CHECK_EQUAL(bc.type(), BindingConstraint::typeWeekly);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width, (unsigned int)BindingConstraint::columnMax);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height, 366u);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_iterators)
+{
+    auto study = std::make_unique<Study>();
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto area2 = addAreaToListOfAreas(study->areas, "area2");
+    auto area3 = addAreaToListOfAreas(study->areas, "area3");
+    auto link1 = AreaAddLinkBetweenAreas(area1, area2);
+    auto link2 = AreaAddLinkBetweenAreas(area1, area3);
+
+    BindingConstraint bc;
+    bc.weight(link1, 1.5);
+    bc.weight(link2, 2.5);
+
+    std::map<const AreaLink*, double> visited;
+    for (const auto& [link, weight]: bc)
+    {
+        visited[link] = weight;
+    }
+
+    BOOST_REQUIRE_EQUAL(visited.size(), 2);
+    BOOST_CHECK_CLOSE(visited[link1], 1.5, 0.0001);
+    BOOST_CHECK_CLOSE(visited[link2], 2.5, 0.0001);
+
+    const BindingConstraint& constBc = bc;
+    std::size_t constCount = 0;
+    for (auto it = constBc.begin(); it != constBc.end(); ++it)
+    {
+        ++constCount;
+    }
+    BOOST_CHECK_EQUAL(constCount, 2u);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_skipped_isActive_enabled)
+{
+    auto study = std::make_unique<Study>();
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto area2 = addAreaToListOfAreas(study->areas, "area2");
+    auto link = AreaAddLinkBetweenAreas(area1, area2);
+
+    BindingConstraint bc;
+    bc.enabled(true);
+    BOOST_CHECK_EQUAL(bc.enabled(), true);
+    BOOST_CHECK_EQUAL(bc.skipped(), true);
+    BOOST_CHECK_EQUAL(bc.isActive(), false);
+
+    bc.weight(link, 1.0);
+    BOOST_CHECK_EQUAL(bc.skipped(), false);
+    BOOST_CHECK_EQUAL(bc.isActive(), true);
+
+    bc.enabled(false);
+    BOOST_CHECK_EQUAL(bc.enabled(), false);
+    BOOST_CHECK_EQUAL(bc.isActive(), false);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_RHSTimeSeries_constOverload)
+{
+    BindingConstraint bc;
+    bc.RHSTimeSeries().resize(2, 4);
+    bc.RHSTimeSeries()[0][0] = 42.0;
+
+    const BindingConstraint& constBc = bc;
+    const Antares::Matrix<>& rhs = constBc.RHSTimeSeries();
+    BOOST_CHECK_EQUAL(rhs.width, 2u);
+    BOOST_CHECK_EQUAL(rhs.height, 4u);
+    BOOST_CHECK_CLOSE(rhs[0][0], 42.0, 0.0001);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_removeAllWeights)
+{
+    auto study = std::make_unique<Study>();
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto area2 = addAreaToListOfAreas(study->areas, "area2");
+    auto link = AreaAddLinkBetweenAreas(area1, area2);
+    auto cluster = std::make_shared<ThermalCluster>(area1);
+    area1->thermal.list.addToCompleteList(cluster);
+    area1->thermal.list.buildIndexes();
+
+    BindingConstraint bc;
+    bc.weight(link, 1.0);
+    bc.offset(link, 3);
+    bc.weight(cluster.get(), 2.0);
+
+    bc.removeAllWeights();
+
+    BOOST_CHECK_EQUAL(bc.linkCount(), 0u);
+    BOOST_CHECK_EQUAL(bc.clusterCount(), 0u);
+    // removeAllWeights() must not touch offsets
+    BOOST_CHECK_EQUAL(bc.offset(link), 3);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_offset_setters_eraseOnZero)
+{
+    auto study = std::make_unique<Study>();
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto area2 = addAreaToListOfAreas(study->areas, "area2");
+    auto link = AreaAddLinkBetweenAreas(area1, area2);
+    auto cluster = std::make_shared<ThermalCluster>(area1);
+    area1->thermal.list.addToCompleteList(cluster);
+    area1->thermal.list.buildIndexes();
+
+    BindingConstraint bc;
+
+    bc.offset(link, 5);
+    BOOST_CHECK_EQUAL(bc.offset(link), 5);
+    bc.offset(link, 0);
+    BOOST_CHECK_EQUAL(bc.offset(link), 0);
+
+    bc.offset(cluster.get(), 7);
+    BOOST_CHECK_EQUAL(bc.offset(cluster.get()), 7);
+    bc.offset(cluster.get(), 0);
+    BOOST_CHECK_EQUAL(bc.offset(cluster.get()), 0);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_contains_bindingConstraint)
+{
+    BindingConstraint bc;
+    BindingConstraint other;
+    BOOST_CHECK_EQUAL(bc.contains(&bc), true);
+    BOOST_CHECK_EQUAL(bc.contains(&other), false);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_contains_area)
+{
+    auto study = std::make_unique<Study>();
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto area2 = addAreaToListOfAreas(study->areas, "area2");
+    auto area3 = addAreaToListOfAreas(study->areas, "area3");
+    auto link = AreaAddLinkBetweenAreas(area1, area2);
+    auto cluster = std::make_shared<ThermalCluster>(area3);
+    area3->thermal.list.addToCompleteList(cluster);
+    area3->thermal.list.buildIndexes();
+
+    BindingConstraint bc;
+    bc.weight(link, 1.0);
+    bc.weight(cluster.get(), 1.0);
+
+    BOOST_CHECK_EQUAL(bc.contains(area1), true);
+    BOOST_CHECK_EQUAL(bc.contains(area2), true);
+    BOOST_CHECK_EQUAL(bc.contains(area3), true);
+
+    auto area4 = addAreaToListOfAreas(study->areas, "area4");
+    BOOST_CHECK_EQUAL(bc.contains(area4), false);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_contains_link_and_cluster)
+{
+    auto study = std::make_unique<Study>();
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto area2 = addAreaToListOfAreas(study->areas, "area2");
+    auto area3 = addAreaToListOfAreas(study->areas, "area3");
+    auto link1 = AreaAddLinkBetweenAreas(area1, area2);
+    auto link2 = AreaAddLinkBetweenAreas(area1, area3);
+    auto cluster1 = std::make_shared<ThermalCluster>(area1);
+    cluster1->setName("cluster1");
+    area1->thermal.list.addToCompleteList(cluster1);
+    auto cluster2 = std::make_shared<ThermalCluster>(area1);
+    cluster2->setName("cluster2");
+    area1->thermal.list.addToCompleteList(cluster2);
+    area1->thermal.list.buildIndexes();
+
+    BindingConstraint bc;
+    bc.weight(link1, 1.0);
+    bc.weight(cluster1.get(), 1.0);
+
+    BOOST_CHECK_EQUAL(bc.contains(link1), true);
+    BOOST_CHECK_EQUAL(bc.contains(link2), false);
+    BOOST_CHECK_EQUAL(bc.contains(cluster1.get()), true);
+    BOOST_CHECK_EQUAL(bc.contains(cluster2.get()), false);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_buildFormula_linksWithOffsets)
+{
+    auto study = std::make_unique<Study>();
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto area2 = addAreaToListOfAreas(study->areas, "area2");
+    auto area3 = addAreaToListOfAreas(study->areas, "area3");
+    auto linkPos = AreaAddLinkBetweenAreas(area1, area2);
+    auto linkNeg = AreaAddLinkBetweenAreas(area1, area3);
+
+    BindingConstraint bc;
+    bc.weight(linkPos, 2.0);
+    bc.offset(linkPos, 3);
+    bc.weight(linkNeg, 4.0);
+    bc.offset(linkNeg, -5);
+
+    std::string formula;
+    bc.buildFormula(formula);
+
+    BOOST_CHECK(formula.find(linkPos->getName() + " x (t + 3)") != std::string::npos);
+    BOOST_CHECK(formula.find(linkNeg->getName() + " x (t - 5)") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_buildFormula_clusterActiveInactive)
+{
+    auto study = std::make_unique<Study>();
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto activeCluster = std::make_shared<ThermalCluster>(area1);
+    activeCluster->setName("active_cluster");
+    activeCluster->enabled = true;
+    activeCluster->mustrun = false;
+    area1->thermal.list.addToCompleteList(activeCluster);
+
+    auto inactiveCluster = std::make_shared<ThermalCluster>(area1);
+    inactiveCluster->setName("inactive_cluster");
+    inactiveCluster->enabled = true;
+    inactiveCluster->mustrun = true;
+    area1->thermal.list.addToCompleteList(inactiveCluster);
+    area1->thermal.list.buildIndexes();
+
+    BindingConstraint bc;
+    bc.weight(activeCluster.get(), 1.0);
+    bc.weight(inactiveCluster.get(), 2.0);
+
+    std::string formula;
+    bc.buildFormula(formula);
+
+    const auto activePos = formula.find(activeCluster->getFullName());
+    const auto inactivePos = formula.find(inactiveCluster->getFullName());
+    BOOST_REQUIRE(activePos != std::string::npos);
+    BOOST_REQUIRE(inactivePos != std::string::npos);
+
+    const auto activeTerm = formula.substr(activePos, formula.find(')', activePos) - activePos);
+    const auto inactiveTerm = formula.substr(inactivePos,
+                                             formula.find(')', inactivePos) - inactivePos);
+
+    BOOST_CHECK(activeTerm.find("N/A") == std::string::npos);
+    BOOST_CHECK(inactiveTerm.find("N/A") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_initLinkArrays)
+{
+    auto study = std::make_unique<Study>();
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto area2 = addAreaToListOfAreas(study->areas, "area2");
+    auto area3 = addAreaToListOfAreas(study->areas, "area3");
+    auto link1 = AreaAddLinkBetweenAreas(area1, area2);
+    auto link2 = AreaAddLinkBetweenAreas(area1, area3);
+
+    auto activeCluster = std::make_shared<ThermalCluster>(area1);
+    activeCluster->setName("active_cluster");
+    activeCluster->enabled = true;
+    activeCluster->mustrun = false;
+    area1->thermal.list.addToCompleteList(activeCluster);
+
+    auto inactiveCluster = std::make_shared<ThermalCluster>(area1);
+    inactiveCluster->setName("inactive_cluster");
+    inactiveCluster->enabled = false;
+    area1->thermal.list.addToCompleteList(inactiveCluster);
+    area1->thermal.list.buildIndexes();
+
+    BindingConstraint bc;
+    bc.weight(link1, 1.0);
+    bc.offset(link1, 2);
+    bc.weight(link2, 3.0);
+    bc.weight(activeCluster.get(), 4.0);
+    bc.offset(activeCluster.get(), 5);
+    bc.weight(inactiveCluster.get(), 6.0);
+
+    const auto structures = bc.initLinkArrays();
+
+    BOOST_REQUIRE_EQUAL(structures.linkWeight.size(), 2u);
+    BOOST_REQUIRE_EQUAL(structures.linkOffset.size(), 2u);
+    BOOST_REQUIRE_EQUAL(structures.linkIndex.size(), 2u);
+    BOOST_CHECK(std::find(structures.linkWeight.begin(), structures.linkWeight.end(), 1.0)
+               != structures.linkWeight.end());
+    BOOST_CHECK(std::find(structures.linkWeight.begin(), structures.linkWeight.end(), 3.0)
+               != structures.linkWeight.end());
+    BOOST_CHECK(std::find(structures.linkOffset.begin(), structures.linkOffset.end(), 2)
+               != structures.linkOffset.end());
+
+    // clusterCount() only counts the active cluster: vectors are sized and filled accordingly
+    BOOST_REQUIRE_EQUAL(structures.clusterWeight.size(), 1u);
+    BOOST_REQUIRE_EQUAL(structures.clusterOffset.size(), 1u);
+    BOOST_REQUIRE_EQUAL(structures.clusterIndex.size(), 1u);
+    BOOST_REQUIRE_EQUAL(structures.clustersAreaIndex.size(), 1u);
+    BOOST_CHECK_EQUAL(structures.clusterWeight[0], 4.0);
+    BOOST_CHECK_EQUAL(structures.clusterOffset[0], 5);
+    BOOST_CHECK_EQUAL(structures.clusterIndex[0], (long)activeCluster->index);
+    BOOST_CHECK_EQUAL(structures.clustersAreaIndex[0], (long)area1->index);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_timeSeriesFileName)
+{
+    auto study = std::make_unique<Study>();
+    EnvForLoading env(study->areas, StudyVersion(8, 7));
+    env.folder = "some/folder";
+
+    BindingConstraint bc;
+    bc.pId("dummy_id");
+
+    bc.operatorType(BindingConstraint::opLess);
+    BOOST_CHECK_EQUAL(bc.timeSeriesFileName(env),
+                     (std::filesystem::path("some/folder") / "dummy_id_lt.txt").string());
+
+    bc.operatorType(BindingConstraint::opGreater);
+    BOOST_CHECK_EQUAL(bc.timeSeriesFileName(env),
+                     (std::filesystem::path("some/folder") / "dummy_id_gt.txt").string());
+
+    bc.operatorType(BindingConstraint::opEquality);
+    BOOST_CHECK_EQUAL(bc.timeSeriesFileName(env),
+                     (std::filesystem::path("some/folder") / "dummy_id_eq.txt").string());
+
+    bc.operatorType(BindingConstraint::opBoth);
+    BOOST_CHECK_EQUAL(bc.timeSeriesFileName(env), "");
+
+    bc.operatorType(BindingConstraint::opUnknown);
+    BOOST_CHECK_EQUAL(bc.timeSeriesFileName(env), "");
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_clustersAndWeights)
+{
+    auto study = std::make_unique<Study>();
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto cluster1 = std::make_shared<ThermalCluster>(area1);
+    cluster1->setName("cluster1");
+    area1->thermal.list.addToCompleteList(cluster1);
+    auto cluster2 = std::make_shared<ThermalCluster>(area1);
+    cluster2->setName("cluster2");
+    area1->thermal.list.addToCompleteList(cluster2);
+    area1->thermal.list.buildIndexes();
+
+    BindingConstraint bc;
+    bc.weight(cluster1.get(), 1.5);
+    bc.weight(cluster2.get(), 2.5);
+
+    const auto& weights = bc.clustersAndWeights();
+    BOOST_REQUIRE_EQUAL(weights.size(), 2u);
+    BOOST_CHECK_CLOSE(weights.at(cluster1.get()), 1.5, 0.0001);
+    BOOST_CHECK_CLOSE(weights.at(cluster2.get()), 2.5, 0.0001);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_copyWeights_and_copyOffsets_preserveUntouched)
+{
+    // Destination study: what we copy into
+    auto destStudy = std::make_unique<Study>();
+    auto destArea1 = addAreaToListOfAreas(destStudy->areas, "area1");
+    auto destArea2 = addAreaToListOfAreas(destStudy->areas, "area2");
+    auto destArea3 = addAreaToListOfAreas(destStudy->areas, "area3");
+    auto destLink = AreaAddLinkBetweenAreas(destArea1, destArea2);
+    auto untouchedLink = AreaAddLinkBetweenAreas(destArea1, destArea3);
+    auto destCluster = std::make_shared<ThermalCluster>(destArea1);
+    destCluster->setName("cluster1");
+    destArea1->thermal.list.addToCompleteList(destCluster);
+    destArea1->thermal.list.buildIndexes();
+
+    // Source study: describes the constraint being copied from
+    auto srcStudy = std::make_unique<Study>();
+    auto srcArea1 = addAreaToListOfAreas(srcStudy->areas, "area1");
+    auto srcArea2 = addAreaToListOfAreas(srcStudy->areas, "area2");
+    auto srcLink = AreaAddLinkBetweenAreas(srcArea1, srcArea2);
+    auto srcCluster = std::make_shared<ThermalCluster>(srcArea1);
+    srcCluster->setName("cluster1");
+    srcArea1->thermal.list.addToCompleteList(srcCluster);
+    // No counterpart in destStudy: exercises the "unresolved entries are silently skipped" path
+    auto srcOrphanArea = addAreaToListOfAreas(srcStudy->areas, "orphan_area");
+    auto srcOrphanLink = AreaAddLinkBetweenAreas(srcArea1, srcOrphanArea);
+    srcArea1->thermal.list.buildIndexes();
+
+    BindingConstraint rhs;
+    rhs.weight(srcLink, 1.5);
+    rhs.offset(srcLink, 2);
+    rhs.weight(srcCluster.get(), 3.5);
+    rhs.offset(srcCluster.get(), 4);
+    rhs.weight(srcOrphanLink, 9.0);
+
+    const auto identityTranslate = [](AreaName& out, const AreaName& in) { out = in; };
+
+    BindingConstraint bc;
+    bc.weight(destLink, 42.0);      // will be overwritten by the copy
+    bc.weight(untouchedLink, 99.0); // not referenced by rhs: must survive emptyBefore=false
+
+    bc.copyWeights(*destStudy, rhs, /*emptyBefore*/ false, identityTranslate);
+    bc.copyOffsets(*destStudy, rhs, /*emptyBefore*/ false, identityTranslate);
+
+    BOOST_CHECK_CLOSE(bc.weight(destLink), 1.5, 0.0001);
+    BOOST_CHECK_EQUAL(bc.offset(destLink), 2);
+    BOOST_CHECK_CLOSE(bc.weight(destCluster.get()), 3.5, 0.0001);
+    BOOST_CHECK_EQUAL(bc.offset(destCluster.get()), 4);
+    BOOST_CHECK_CLOSE(bc.weight(untouchedLink), 99.0, 0.0001);
+    // the unresolved orphan link must not have created any spurious entry
+    BOOST_CHECK_EQUAL(bc.linkCount(), 2u);
+}
+
+BOOST_AUTO_TEST_CASE(BindingConstraint_copyWeights_emptyBeforeClearsExisting)
+{
+    auto destStudy = std::make_unique<Study>();
+    auto destArea1 = addAreaToListOfAreas(destStudy->areas, "area1");
+    auto destArea2 = addAreaToListOfAreas(destStudy->areas, "area2");
+    auto destArea3 = addAreaToListOfAreas(destStudy->areas, "area3");
+    auto destLink = AreaAddLinkBetweenAreas(destArea1, destArea2);
+    auto staleLink = AreaAddLinkBetweenAreas(destArea1, destArea3);
+
+    auto srcStudy = std::make_unique<Study>();
+    auto srcArea1 = addAreaToListOfAreas(srcStudy->areas, "area1");
+    auto srcArea2 = addAreaToListOfAreas(srcStudy->areas, "area2");
+    auto srcLink = AreaAddLinkBetweenAreas(srcArea1, srcArea2);
+
+    BindingConstraint rhs;
+    rhs.weight(srcLink, 7.0);
+
+    const auto identityTranslate = [](AreaName& out, const AreaName& in) { out = in; };
+
+    BindingConstraint bc;
+    bc.weight(staleLink, 123.0);
+
+    bc.copyWeights(*destStudy, rhs, /*emptyBefore*/ true, identityTranslate);
+
+    BOOST_CHECK_EQUAL(bc.weight(staleLink), 0.); // cleared by emptyBefore
+    BOOST_CHECK_CLOSE(bc.weight(destLink), 7.0, 0.0001);
+    BOOST_CHECK_EQUAL(bc.linkCount(), 1u);
 }
 
 struct BindingConstraintGroupRepositoryFixture
