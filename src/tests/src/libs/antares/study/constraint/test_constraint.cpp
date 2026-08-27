@@ -8,8 +8,8 @@
 #define WIN32_LEAN_AND_MEAN
 #define BOOST_TEST_MODULE binding_constraints
 
-#include <files-system.h>
 #include <algorithm>
+#include <files-system.h>
 #include <filesystem>
 #include <fstream>
 
@@ -1372,11 +1372,11 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_initLinkArrays)
     BOOST_REQUIRE_EQUAL(structures.linkOffset.size(), 2u);
     BOOST_REQUIRE_EQUAL(structures.linkIndex.size(), 2u);
     BOOST_CHECK(std::find(structures.linkWeight.begin(), structures.linkWeight.end(), 1.0)
-               != structures.linkWeight.end());
+                != structures.linkWeight.end());
     BOOST_CHECK(std::find(structures.linkWeight.begin(), structures.linkWeight.end(), 3.0)
-               != structures.linkWeight.end());
+                != structures.linkWeight.end());
     BOOST_CHECK(std::find(structures.linkOffset.begin(), structures.linkOffset.end(), 2)
-               != structures.linkOffset.end());
+                != structures.linkOffset.end());
 
     // clusterCount() only counts the active cluster: vectors are sized and filled accordingly
     BOOST_REQUIRE_EQUAL(structures.clusterWeight.size(), 1u);
@@ -1400,15 +1400,15 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_timeSeriesFileName)
 
     bc.operatorType(BindingConstraint::opLess);
     BOOST_CHECK_EQUAL(bc.timeSeriesFileName(env),
-                     (std::filesystem::path("some/folder") / "dummy_id_lt.txt").string());
+                      (std::filesystem::path("some/folder") / "dummy_id_lt.txt").string());
 
     bc.operatorType(BindingConstraint::opGreater);
     BOOST_CHECK_EQUAL(bc.timeSeriesFileName(env),
-                     (std::filesystem::path("some/folder") / "dummy_id_gt.txt").string());
+                      (std::filesystem::path("some/folder") / "dummy_id_gt.txt").string());
 
     bc.operatorType(BindingConstraint::opEquality);
     BOOST_CHECK_EQUAL(bc.timeSeriesFileName(env),
-                     (std::filesystem::path("some/folder") / "dummy_id_eq.txt").string());
+                      (std::filesystem::path("some/folder") / "dummy_id_eq.txt").string());
 
     bc.operatorType(BindingConstraint::opBoth);
     BOOST_CHECK_EQUAL(bc.timeSeriesFileName(env), "");
