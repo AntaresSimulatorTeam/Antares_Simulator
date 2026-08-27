@@ -730,7 +730,7 @@ Then, each plant has to define their participation to the defined reserves in th
 
 - _thermal/clusters/areaName/reserve-participations.yml_ for thermal plants
 - _st-storage/clusters/areaName/reserve-participations.yml_ for short term storage plants
-- _hydro/common/areaName/reserve-participations.yml_ for long term storage plants
+- _hydro/reserves/areaName/reserve-participations.yml_ for long term storage plants
 
 with areaName, the name of the area where the plant is located
 

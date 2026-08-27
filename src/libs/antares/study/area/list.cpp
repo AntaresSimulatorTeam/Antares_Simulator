@@ -714,7 +714,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
             && study.parameters.include.reserves && studyVersion >= StudyVersion(10, 1))
         {
-            fs::path reservesHydroPath = study.folderInput / "hydro" / "common" / area.id
+            fs::path reservesHydroPath = study.folderInput / "hydro" / "reserves" / area.id
                                          / "reserve-participations.yml";
             area.hydro.loadReserveParticipations(area, reservesHydroPath);
         }
