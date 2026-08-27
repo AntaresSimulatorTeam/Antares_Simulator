@@ -84,7 +84,7 @@ class compare_mps_files(check_interface):
         if math.isinf(left):
             check(math.isinf(right), msg)
         else:
-            check(abs(left-right)< tol, msg)
+            check(math.isclose(left, right, rel_tol=tol, abs_tol=tol), msg)
 
     def compare_variables(self, pair, ref_model, out_model):
         ref_vars = extract_variables(ref_model)
