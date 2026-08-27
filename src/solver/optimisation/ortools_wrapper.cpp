@@ -163,7 +163,9 @@ static void extract_from_MPSolver(const MPSolver* solver,
     }
 }
 
-static bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverParameters& params)
+static bool solveAndManageStatus(MPSolver* solver,
+                                 int& resultStatus,
+                                 const MPSolverParameters& params)
 {
     auto status = solver->Solve(params);
     if (status == MPSolver::OPTIMAL || status == MPSolver::FEASIBLE)

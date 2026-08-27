@@ -8,8 +8,8 @@
 #include <memory>
 #include <vector>
 
-#include "antares/solver/utils/opt_constants.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/utils/opt_constants.h"
 #include "antares/solver/utils/optimization_statistics.h"
 #include "antares/study/fwd.h"
 #include "antares/study/study.h"

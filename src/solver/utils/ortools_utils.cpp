@@ -4,9 +4,10 @@
 #include <filesystem>
 #include <optional>
 #include <ortools/math_opt/cpp/parameters.h>
-#include <yuni/io/directory.h>
 
 #include <boost/algorithm/string/join.hpp>
+
+#include <yuni/io/directory.h>
 
 #include <antares/enums/Enum.hpp>
 #include <antares/logs/logs.h>
