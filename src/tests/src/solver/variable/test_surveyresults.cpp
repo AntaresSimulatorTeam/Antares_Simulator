@@ -8,8 +8,8 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/antares/constants.h"
-#include "antares/study/categories.h"
 #include "antares/solver/variable/surveyresults.h"
+#include "antares/study/categories.h"
 #include "antares/writer/in_memory_writer.h"
 
 using namespace Antares::Solver::Variable;

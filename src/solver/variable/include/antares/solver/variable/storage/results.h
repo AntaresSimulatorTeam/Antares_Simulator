@@ -8,9 +8,9 @@
 #include <type_traits>
 #include <utility>
 
+#include <antares/study/categories.h>
 #include <antares/study/study.h>
 
-#include <antares/study/categories.h>
 #include "average.h"
 #include "empty.h"
 #include "fwd.h"

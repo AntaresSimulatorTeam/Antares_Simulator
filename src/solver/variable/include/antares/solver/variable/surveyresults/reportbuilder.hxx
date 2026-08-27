@@ -12,9 +12,9 @@
 #include <yuni/io/directory.h>
 
 #include <antares/logs/logs.h>
+#include <antares/study/categories.h>
 #include <antares/study/filter.h>
 
-#include <antares/study/categories.h>
 #include "../info.h"
 #include "../surveyresults.h"
 

@@ -11,7 +11,6 @@
 #include <type_traits>
 
 #include <antares/memory/memory.h>
-#include <antares/study/categories.h>
 #include <antares/solver/variable/container.h>
 #include <antares/solver/variable/state.h>
 #include <antares/solver/variable/storage/intermediate.h>
@@ -20,6 +19,7 @@
 #include <antares/solver/variable/variable.h>
 #include <antares/study/area/area.h>
 #include <antares/study/area/links.h>
+#include <antares/study/categories.h>
 #include <antares/study/study.h>
 
 namespace Antares::Solver::Variable::Economy
