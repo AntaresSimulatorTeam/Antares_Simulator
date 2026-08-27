@@ -393,12 +393,10 @@ BOOST_FIXTURE_TEST_CASE(test_LoadDailyMaxEnergy_roundtrip, CommonFixture)
     writer.reset();
     writer.dailyNbHoursAtGenPmax.fillColumn(0, 12.5);
     writer.dailyNbHoursAtPumpPmax.fillColumn(0, 8.5);
-    BOOST_REQUIRE(
-      writer.dailyNbHoursAtGenPmax.saveToCSVFile((capacity / "maxDailyGenEnergy_area1.txt").string(),
-                                                  2));
-    BOOST_REQUIRE(writer.dailyNbHoursAtPumpPmax.saveToCSVFile(
-      (capacity / "maxDailyPumpEnergy_area1.txt").string(),
-      2));
+    BOOST_REQUIRE(writer.dailyNbHoursAtGenPmax
+                    .saveToCSVFile((capacity / "maxDailyGenEnergy_area1.txt").string(), 2));
+    BOOST_REQUIRE(writer.dailyNbHoursAtPumpPmax
+                    .saveToCSVFile((capacity / "maxDailyPumpEnergy_area1.txt").string(), 2));
 
     PartHydro reader;
     BOOST_CHECK(reader.LoadDailyMaxEnergy(folder(), "area1"));
@@ -490,7 +488,7 @@ BOOST_FIXTURE_TEST_CASE(test_validate_clamps_invalid_scalar_properties, CommonFi
     east->hydro.reservoirManagement = true;
     east->hydro.reservoirCapacity = -5.; // triggers both the "not defined" and "invalid" checks
     east->hydro.useHeuristicTarget = false;
-    east->hydro.useWaterValue = false; // invalid combination: both disabled
+    east->hydro.useWaterValue = false;      // invalid combination: both disabled
     east->hydro.intraDailyModulation = 0.5; // must be >= 1
     east->hydro.intermonthlyBreakdown = -1.;
     east->hydro.initializeReservoirLevelDate = -1;
