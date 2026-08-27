@@ -5,5 +5,5 @@ include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 # ====================================
 add_boost_test(parameters-tests
   SRC parameters-tests.cpp
-  LIBS Antares::study
-  antares-solver-variable)
+  LIBS antares-solver-variable
+  Antares::study)
