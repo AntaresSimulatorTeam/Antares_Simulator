@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
+#include <yuni/yuni.h>
+
 #include "antares/study/fwd.h"
 
 #include "ortools_utils.h"
