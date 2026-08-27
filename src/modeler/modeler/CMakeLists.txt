@@ -19,6 +19,8 @@ target_link_libraries(modeler-lib
         Antares::modeler-optimisation-container
         Antares::linear-problem-data-impl
         Antares::simulation-table
+        PRIVATE
+        Antares::simulation-table-writers
 )
 
 target_include_directories(modeler-lib

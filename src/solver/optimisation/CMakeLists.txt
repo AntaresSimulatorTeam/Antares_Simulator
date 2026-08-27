@@ -1,6 +1,10 @@
 set(RTESOLVER_OPT
         opt_optimisation_hebdo.cpp
         opt_appel_solveur_quadratique.cpp
+        include/antares/solver/optimisation/ortools_quadratic_wrapper.h
+        ortools_quadratic_wrapper.cpp
+        include/antares/solver/optimisation/ortools_wrapper.h
+        ortools_wrapper.cpp
         opt_gestion_second_membre_cas_lineaire.cpp
         opt_optimisation_lineaire.cpp
         opt_chainage_intercos.cpp
@@ -9,7 +13,6 @@ set(RTESOLVER_OPT
         opt_pilotage_optimisation_lineaire.cpp
         opt_pilotage_optimisation_quadratique.cpp
         include/antares/solver/optimisation/opt_structure_probleme_a_resoudre.h
-        include/antares/solver/optimisation/opt_constants.h
         opt_alloc_probleme_a_optimiser.cpp
         opt_gestion_des_bornes_cas_quadratique.cpp
         opt_construction_variables_optimisees_lineaire.cpp
