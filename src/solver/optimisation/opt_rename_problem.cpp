@@ -942,10 +942,16 @@ void ConstraintNamer::RampingDecreaseRate(unsigned constrIndex,
     SetThermalClusterElementName(constrIndex, "RampingDecreaseRate", clusterName);
 }
 
-void ConstraintNamer::ProductionOutputVariation(unsigned constrIndex,
-                                                const std::string& clusterName) const
+void ConstraintNamer::ProductionOutputVariationIncrease(unsigned constrIndex,
+                                                        const std::string& clusterName) const
 {
-    SetThermalClusterElementName(constrIndex, "ProductionOutputVariation", clusterName);
+    SetThermalClusterElementName(constrIndex, "ProductionOutputVariationIncrease", clusterName);
+}
+
+void ConstraintNamer::ProductionOutputVariationDecrease(unsigned constrIndex,
+                                                        const std::string& clusterName) const
+{
+    SetThermalClusterElementName(constrIndex, "ProductionOutputVariationDecrease", clusterName);
 }
 
 void ConstraintNamer::ConsistenceNODU(unsigned constrIndex, const std::string& clusterName) const

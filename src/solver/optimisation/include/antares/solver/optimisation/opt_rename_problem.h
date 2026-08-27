@@ -355,7 +355,10 @@ public:
     void PMinDispatchableGeneration(unsigned constrIndex, const std::string& clusterName) const;
     void RampingIncreaseRate(unsigned constraint, const std::string& clusterName) const;
     void RampingDecreaseRate(unsigned constraint, const std::string& clusterName) const;
-    void ProductionOutputVariation(unsigned constraint, const std::string& clusterName) const;
+    void ProductionOutputVariationIncrease(unsigned constraint,
+                                           const std::string& clusterName) const;
+    void ProductionOutputVariationDecrease(unsigned constraint,
+                                           const std::string& clusterName) const;
     void ConsistenceNODU(unsigned constrIndex, const std::string& clusterName) const;
     void ShortTermStorageLevel(unsigned constrIndex, const std::string& name) const;
     void BindingConstraintHour(unsigned constrIndex, const std::string& name) const;

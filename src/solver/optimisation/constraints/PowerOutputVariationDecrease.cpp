@@ -30,7 +30,7 @@ void PowerOutputVariationDecrease::add(int pays, int index, int pdt)
             namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
             namer.UpdateArea(builder.data.NomsDesPays[pays]);
 
-            namer.ProductionOutputVariation(
+            namer.ProductionOutputVariationDecrease(
               builder.data.nombreDeContraintes,
               data.PaliersThermiquesDuPays[pays].NomsDesPaliersThermiques[index]);
         }
