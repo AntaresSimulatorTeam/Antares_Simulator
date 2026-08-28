@@ -8,6 +8,7 @@ add_boost_test(tests-checks
         "${CMAKE_SOURCE_DIR}/src/libs/antares/include"
         LIBS
         Antares::checks
+        Antares::study
         yuni-static-core
         test_utils_unit
         Antares::enums
