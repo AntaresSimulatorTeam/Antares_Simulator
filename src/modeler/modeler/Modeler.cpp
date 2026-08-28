@@ -254,7 +254,7 @@ void Modeler::exportMps() const
         {
             continue;
         }
-        const auto name = std::to_string(scenarios_[i]) - "1";
+        const auto name = std::to_string(scenarios_[i]) + "1";
         const auto mps = IO::Outputs::MPSGenerator(*subproblem, name, true).run();
         Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / (name + ".mps"), mps);
     }
