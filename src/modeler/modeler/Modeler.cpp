@@ -254,7 +254,7 @@ void Modeler::exportMps() const
         {
             continue;
         }
-        const auto name = "1-" + std::to_string(scenarios_[i]);
+        const auto name = std::to_string(scenarios_[i]) - "1";
         const auto mps = IO::Outputs::MPSGenerator(*subproblem, name, true).run();
         Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / (name + ".mps"), mps);
     }
@@ -308,7 +308,7 @@ void Modeler::buildProblems()
     for (const unsigned year: scenarios_)
     {
         auto fillContext = createFillContext(year);
-        auto problemId = "1-" + std::to_string(year);
+        auto problemId = std::to_string(year) + "-1";
         auto entities = buildProblem(data_,
                                      Config::Location::SUBPROBLEMS,
                                      problemId,
