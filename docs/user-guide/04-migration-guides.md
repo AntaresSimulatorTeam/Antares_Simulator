@@ -5,6 +5,8 @@ lower the costs of changing existing interfaces, both GUI and scripts.
 
 ## v10.2.0
 
+### Input
+
 For hydro reserve participations, the reserve-participations.yml files were moved to input/hydro/reserves/<area-id>/
 
 New format:
@@ -12,8 +14,6 @@ New format:
 
 Old format:
 `study/input/hydro/common/<area-id>/reserve-participations.yml`
-
-### Input
 
 ## v10.1.0
 
