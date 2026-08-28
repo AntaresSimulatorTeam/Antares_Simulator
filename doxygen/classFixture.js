@@ -17,6 +17,7 @@ var classFixture =
     [ "Fixture", "classFixture.html#a7bd87f852602d02a205b4a811530dfe4", null ],
     [ "~Fixture", "classFixture.html#af2dff56606d5787ed05b3153aea927c3", null ],
     [ "Fixture", "classFixture.html#a7bd87f852602d02a205b4a811530dfe4", null ],
+    [ "Fixture", "classFixture.html#a7bd87f852602d02a205b4a811530dfe4", null ],
     [ "~Fixture", "classFixture.html#af2dff56606d5787ed05b3153aea927c3", null ],
     [ "Fixture", "classFixture.html#a7bd87f852602d02a205b4a811530dfe4", null ],
     [ "~Fixture", "classFixture.html#af2dff56606d5787ed05b3153aea927c3", null ],

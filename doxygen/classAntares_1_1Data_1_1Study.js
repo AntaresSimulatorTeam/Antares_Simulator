@@ -12,7 +12,7 @@ var classAntares_1_1Data_1_1Study =
     [ "clear", "classAntares_1_1Data_1_1Study.html#acd6521d444413475db5e715adb608ef7", null ],
     [ "computePThetaInfForThermalClusters", "classAntares_1_1Data_1_1Study.html#af7987d6c6edc71b0bf67930f5c7e7edb", null ],
     [ "destroyTSGeneratorData", "classAntares_1_1Data_1_1Study.html#aa1843bfc0ded4d958277fc78f1807e68", null ],
-    [ "getModelerData", "classAntares_1_1Data_1_1Study.html#a561fa850735a953f3fb1c555b81588a3", null ],
+    [ "getModelerData", "classAntares_1_1Data_1_1Study.html#ad7169fd5dc9d7eb58af930ba56a29b61", null ],
     [ "getNumberOfCores", "classAntares_1_1Data_1_1Study.html#acd1f84668f8f0a3c3c3f94e2d846a572", null ],
     [ "getNumberOfCoresPerMode", "classAntares_1_1Data_1_1Study.html#a3ade1389d5a8c512a7d91c1e2d4d7de9", null ],
     [ "importLogsToOutputFolder", "classAntares_1_1Data_1_1Study.html#a43e70c63ab3f91b02a55a9a24a81c4a6", null ],

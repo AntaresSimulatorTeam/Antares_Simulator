@@ -145,6 +145,7 @@ var annotated_dup =
         [ "ScenarizedCostProvider", "classAntares_1_1Data_1_1ScenarizedCostProvider.html", "classAntares_1_1Data_1_1ScenarizedCostProvider" ],
         [ "EconomicInputData", "classAntares_1_1Data_1_1EconomicInputData.html", "classAntares_1_1Data_1_1EconomicInputData" ],
         [ "Pollutant", "classAntares_1_1Data_1_1Pollutant.html", "classAntares_1_1Data_1_1Pollutant" ],
+        [ "PreproAvailability", "classAntares_1_1Data_1_1PreproAvailability.html", "classAntares_1_1Data_1_1PreproAvailability" ],
         [ "StudyRangeLimits", "structAntares_1_1Data_1_1StudyRangeLimits.html", "structAntares_1_1Data_1_1StudyRangeLimits" ],
         [ "StudyRuntimeInfos", "classAntares_1_1Data_1_1StudyRuntimeInfos.html", "classAntares_1_1Data_1_1StudyRuntimeInfos" ],
         [ "Sets", "classAntares_1_1Data_1_1Sets.html", "classAntares_1_1Data_1_1Sets" ],
@@ -152,13 +153,13 @@ var annotated_dup =
         [ "Study", "classAntares_1_1Data_1_1Study.html", "classAntares_1_1Data_1_1Study" ],
         [ "VariablePrintInfo", "classAntares_1_1Data_1_1VariablePrintInfo.html", "classAntares_1_1Data_1_1VariablePrintInfo" ],
         [ "variablePrintInfoCollector", "classAntares_1_1Data_1_1variablePrintInfoCollector.html", "classAntares_1_1Data_1_1variablePrintInfoCollector" ],
+        [ "ThematicTrimmingVariableRegistry", "classAntares_1_1Data_1_1ThematicTrimmingVariableRegistry.html", "classAntares_1_1Data_1_1ThematicTrimmingVariableRegistry" ],
         [ "AllVariablesPrintInfo", "classAntares_1_1Data_1_1AllVariablesPrintInfo.html", "classAntares_1_1Data_1_1AllVariablesPrintInfo" ],
         [ "StudyVersion", "classAntares_1_1Data_1_1StudyVersion.html", "classAntares_1_1Data_1_1StudyVersion" ],
         [ "XCast", "classAntares_1_1Data_1_1XCast.html", "classAntares_1_1Data_1_1XCast" ],
         [ "RuleCurvesLoader", "classAntares_1_1Data_1_1RuleCurvesLoader.html", "classAntares_1_1Data_1_1RuleCurvesLoader" ],
         [ "StandardRuleCurvesLoader", "classAntares_1_1Data_1_1StandardRuleCurvesLoader.html", "classAntares_1_1Data_1_1StandardRuleCurvesLoader" ],
-        [ "ScenarizedRuleCurvesLoader", "classAntares_1_1Data_1_1ScenarizedRuleCurvesLoader.html", "classAntares_1_1Data_1_1ScenarizedRuleCurvesLoader" ],
-        [ "PreproAvailability", "classAntares_1_1Data_1_1PreproAvailability.html", "classAntares_1_1Data_1_1PreproAvailability" ]
+        [ "ScenarizedRuleCurvesLoader", "classAntares_1_1Data_1_1ScenarizedRuleCurvesLoader.html", "classAntares_1_1Data_1_1ScenarizedRuleCurvesLoader" ]
       ] ],
       [ "Date", null, [
         [ "HourInterval", "structAntares_1_1Date_1_1HourInterval.html", "structAntares_1_1Date_1_1HourInterval" ],

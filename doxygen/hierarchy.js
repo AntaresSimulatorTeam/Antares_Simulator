@@ -1495,6 +1495,7 @@ var hierarchy =
     [ "TestException", "classTestException.html", null ],
     [ "TestExceptionN< N >", "classTestExceptionN.html", null ],
     [ "TestVariabilityVisitorFixture", "structTestVariabilityVisitorFixture.html", null ],
+    [ "Antares::Data::ThematicTrimmingVariableRegistry", "classAntares_1_1Data_1_1ThematicTrimmingVariableRegistry.html", null ],
     [ "Antares::Data::Parameters::IncludeOptions::Thermal", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Thermal.html", null ],
     [ "Antares::Solver::Variable::Economy::ThermalAirPollutantEmissionsTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissionsTraits.html", null ],
     [ "Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection.html", null ],

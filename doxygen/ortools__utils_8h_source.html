@@ -143,45 +143,43 @@ $(document).ready(function(){initNavTree('ortools__utils_8h_source.html',''); in
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;ortools/linear_solver/linear_solver.h&quot;</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#pragma GCC diagnostic pop</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;ortools_wrapper.h&quot;</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">namespace </span>operations_research::math_opt</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">enum class</span> SolverType;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;}</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">namespace </span>operations_research::math_opt</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">enum class</span> SolverType;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">using namespace </span>operations_research;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">using namespace </span>operations_research;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// TODO use Objective().Value() instead</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">// This is a temporary workaround for Windows</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keywordtype">double</span> getObjectiveValue(<span class="keyword">const</span> MPSolver* solver);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;std::string toString(<span class="keyword">const</span> std::list&lt;std::string&gt;&amp; solverList);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;std::list&lt;std::string&gt; availableLinearSolversList();</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;std::list&lt;std::string&gt; availableQuadraticSolversList();</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keywordtype">bool</span> isLinearSolverAvailable(<span class="keyword">const</span> std::string&amp; solverName);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;MPSolver* MPSolverFactory(<span class="keyword">const</span> <span class="keywordtype">bool</span> isMip, <span class="keyword">const</span> std::string&amp; solverName);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;std::string generateTempPath(<span class="keyword">const</span> std::string&amp; filename);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keywordtype">void</span> removeTemporaryFile(<span class="keyword">const</span> std::string&amp; tmpPath);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="classOrtoolsUtils.html">   66</a></span>&#160;<span class="keyword">class </span><a class="code" href="classOrtoolsUtils.html">OrtoolsUtils</a> final</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;{</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="structOrtoolsUtils_1_1SolverNames.html">   69</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structOrtoolsUtils_1_1SolverNames.html">SolverNames</a></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    {</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        std::optional&lt;std::string&gt; LPSolverName, MIPSolverName;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    };</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> std::map&lt;std::string, SolverNames&gt; mpSolverMap;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> std::map&lt;std::string, math_opt::SolverType&gt; mathoptSolverMap;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;};</div>
-<div class="ttc" id="aclassOrtoolsUtils_html"><div class="ttname"><a href="classOrtoolsUtils.html">OrtoolsUtils</a></div><div class="ttdef"><b>Definition:</b> ortools_utils.h:67</div></div>
-<div class="ttc" id="astructOrtoolsUtils_1_1SolverNames_html"><div class="ttname"><a href="structOrtoolsUtils_1_1SolverNames.html">OrtoolsUtils::SolverNames</a></div><div class="ttdef"><b>Definition:</b> ortools_utils.h:70</div></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">// TODO use Objective().Value() instead</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// This is a temporary workaround for Windows</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keywordtype">double</span> getObjectiveValue(<span class="keyword">const</span> MPSolver* solver);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;std::string toString(<span class="keyword">const</span> std::list&lt;std::string&gt;&amp; solverList);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;std::list&lt;std::string&gt; availableLinearSolversList();</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;std::list&lt;std::string&gt; availableQuadraticSolversList();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keywordtype">bool</span> isLinearSolverAvailable(<span class="keyword">const</span> std::string&amp; solverName);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;MPSolver* MPSolverFactory(<span class="keyword">const</span> <span class="keywordtype">bool</span> isMip, <span class="keyword">const</span> std::string&amp; solverName);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;std::string generateTempPath(<span class="keyword">const</span> std::string&amp; filename);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keywordtype">void</span> removeTemporaryFile(<span class="keyword">const</span> std::string&amp; tmpPath);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="classOrtoolsUtils.html">   64</a></span>&#160;<span class="keyword">class </span><a class="code" href="classOrtoolsUtils.html">OrtoolsUtils</a> final</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;{</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="structOrtoolsUtils_1_1SolverNames.html">   67</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structOrtoolsUtils_1_1SolverNames.html">SolverNames</a></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    {</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        std::optional&lt;std::string&gt; LPSolverName, MIPSolverName;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    };</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> std::map&lt;std::string, SolverNames&gt; mpSolverMap;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> std::map&lt;std::string, math_opt::SolverType&gt; mathoptSolverMap;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;};</div>
+<div class="ttc" id="aclassOrtoolsUtils_html"><div class="ttname"><a href="classOrtoolsUtils.html">OrtoolsUtils</a></div><div class="ttdef"><b>Definition:</b> ortools_utils.h:65</div></div>
+<div class="ttc" id="astructOrtoolsUtils_1_1SolverNames_html"><div class="ttname"><a href="structOrtoolsUtils_1_1SolverNames.html">OrtoolsUtils::SolverNames</a></div><div class="ttdef"><b>Definition:</b> ortools_utils.h:68</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

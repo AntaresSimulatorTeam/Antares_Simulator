@@ -7,5 +7,7 @@ var dir_8800966d6e2f3869a7d508cb479c4102 =
     [ "cost_provider.h", "cost__provider_8h_source.html", null ],
     [ "defines.h", "thermal_2defines_8h_source.html", null ],
     [ "ecoInput.h", "ecoInput_8h_source.html", null ],
-    [ "pollutant.h", "pollutant_8h_source.html", null ]
+    [ "law.h", "law_8h_source.html", null ],
+    [ "pollutant.h", "pollutant_8h_source.html", null ],
+    [ "prepro.h", "thermal_2prepro_8h_source.html", null ]
 ];

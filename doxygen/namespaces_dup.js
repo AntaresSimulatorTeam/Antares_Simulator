@@ -221,6 +221,7 @@ var namespaces_dup =
         [ "ScenarizedCostProvider", "classAntares_1_1Data_1_1ScenarizedCostProvider.html", "classAntares_1_1Data_1_1ScenarizedCostProvider" ],
         [ "EconomicInputData", "classAntares_1_1Data_1_1EconomicInputData.html", "classAntares_1_1Data_1_1EconomicInputData" ],
         [ "Pollutant", "classAntares_1_1Data_1_1Pollutant.html", "classAntares_1_1Data_1_1Pollutant" ],
+        [ "PreproAvailability", "classAntares_1_1Data_1_1PreproAvailability.html", "classAntares_1_1Data_1_1PreproAvailability" ],
         [ "StudyRangeLimits", "structAntares_1_1Data_1_1StudyRangeLimits.html", "structAntares_1_1Data_1_1StudyRangeLimits" ],
         [ "StudyRuntimeInfos", "classAntares_1_1Data_1_1StudyRuntimeInfos.html", "classAntares_1_1Data_1_1StudyRuntimeInfos" ],
         [ "Sets", "classAntares_1_1Data_1_1Sets.html", "classAntares_1_1Data_1_1Sets" ],
@@ -228,13 +229,13 @@ var namespaces_dup =
         [ "Study", "classAntares_1_1Data_1_1Study.html", "classAntares_1_1Data_1_1Study" ],
         [ "VariablePrintInfo", "classAntares_1_1Data_1_1VariablePrintInfo.html", "classAntares_1_1Data_1_1VariablePrintInfo" ],
         [ "variablePrintInfoCollector", "classAntares_1_1Data_1_1variablePrintInfoCollector.html", "classAntares_1_1Data_1_1variablePrintInfoCollector" ],
+        [ "ThematicTrimmingVariableRegistry", "classAntares_1_1Data_1_1ThematicTrimmingVariableRegistry.html", "classAntares_1_1Data_1_1ThematicTrimmingVariableRegistry" ],
         [ "AllVariablesPrintInfo", "classAntares_1_1Data_1_1AllVariablesPrintInfo.html", "classAntares_1_1Data_1_1AllVariablesPrintInfo" ],
         [ "StudyVersion", "classAntares_1_1Data_1_1StudyVersion.html", "classAntares_1_1Data_1_1StudyVersion" ],
         [ "XCast", "classAntares_1_1Data_1_1XCast.html", "classAntares_1_1Data_1_1XCast" ],
         [ "RuleCurvesLoader", "classAntares_1_1Data_1_1RuleCurvesLoader.html", "classAntares_1_1Data_1_1RuleCurvesLoader" ],
         [ "StandardRuleCurvesLoader", "classAntares_1_1Data_1_1StandardRuleCurvesLoader.html", "classAntares_1_1Data_1_1StandardRuleCurvesLoader" ],
         [ "ScenarizedRuleCurvesLoader", "classAntares_1_1Data_1_1ScenarizedRuleCurvesLoader.html", "classAntares_1_1Data_1_1ScenarizedRuleCurvesLoader" ],
-        [ "PreproAvailability", "classAntares_1_1Data_1_1PreproAvailability.html", "classAntares_1_1Data_1_1PreproAvailability" ],
         [ "AreaName", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a4d923326f04185f1b0e012946f617a2d", null ],
         [ "AreaNameMapping", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a757462004019be4d70a2be7300aaec69", null ],
         [ "AreaNodalOptimization", "libs_2antares_2study_2include_2antares_2study_2area_2constants_8h.html#adc8894eb1410d8f8ce36ee3b1188e83d", [
@@ -488,7 +489,7 @@ var namespaces_dup =
         [ "NumberOfCoresModeToCString", "fwd_8cpp.html#a50dcf1856d205ee26921f1db618f50f1", null ],
         [ "operator<<", "Enum_8hpp.html#a672071ed5bfdade429b61b6939d91443", null ],
         [ "PowerFluctuationsToCString", "fwd_8cpp.html#a62f522866a3ea7226515a8e6fb8d4a03", null ],
-        [ "PreproHydroLoadFromFolder", "libs_2antares_2study_2include_2antares_2study_2parts_2hydro_2prepro_8h.html#a2f4424ec130989dd2a168a01a9493950", null ],
+        [ "PreproHydroLoadFromFolder", "hydro_2prepro_8h.html#a2f4424ec130989dd2a168a01a9493950", null ],
         [ "readYamlProperties", "reservesParticipationsLoader_8h.html#a1f935a7f254269e96cbdbdc450f88609", null ],
         [ "RenewableGenerationModellingToCString", "fwd_8cpp.html#a7fc54f0a2f37f2355183a34fcdfdf9a7", null ],
         [ "SeedToCString", "fwd_8cpp.html#a7cbe18cedf5e03a92d44427aaea2e615", null ],
@@ -1644,7 +1645,8 @@ var namespaces_dup =
           [ "DummyVariable", "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html", "classAntares_1_1Solver_1_1Variable_1_1DummyVariable" ],
           [ "StandardAllYearsDecorators", "results_8h.html#ac2cafe040d6681483f93ec6ae9b7b2e1", null ],
           [ "StandardResults", "results_8h.html#a58bfbbcc27dd557111664bd2aba6a081", null ],
-          [ "computeDynamicAggregationMaxColumns", "dynamicAggregation_8h.html#a46d874edd63992243ecc6fe88f0958cb", null ]
+          [ "computeDynamicAggregationMaxColumns", "dynamicAggregation_8h.html#a46d874edd63992243ecc6fe88f0958cb", null ],
+          [ "RegisterThematicTrimmingVariables", "registerThematicTrimmingVariables_8h.html#a9e83b0e6269f9c7228ef36a43854a7f5", null ]
         ] ],
         [ "Workflow", null, [
           [ "GenerationAndResolutionConfig", "structAntares_1_1Solver_1_1Workflow_1_1GenerationAndResolutionConfig.html", "structAntares_1_1Solver_1_1Workflow_1_1GenerationAndResolutionConfig" ],
