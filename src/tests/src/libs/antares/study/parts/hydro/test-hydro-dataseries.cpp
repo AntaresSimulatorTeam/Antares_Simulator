@@ -37,9 +37,8 @@ BOOST_AUTO_TEST_CASE(saveToFolder_then_load_roundtrip_hourly)
     writer.maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
     writer.maxHourlyPumpPower.fill(7.0);
 
-    BOOST_REQUIRE(writer.saveToFolder("area1",
-                                      dir.string(),
-                                      Parameters::Compatibility::HydroPmax::Hourly));
+    BOOST_REQUIRE(
+      writer.saveToFolder("area1", dir.string(), Parameters::Compatibility::HydroPmax::Hourly));
 
     DataSeriesHydro reader;
     BOOST_CHECK(reader.loadGenerationTS("area1", dir, StudyVersion(8, 6)));
@@ -59,9 +58,8 @@ BOOST_AUTO_TEST_CASE(saveToFolder_daily_does_not_write_maxpower_files)
     DataSeriesHydro writer;
     writer.reset();
 
-    BOOST_REQUIRE(writer.saveToFolder("area1",
-                                      dir.string(),
-                                      Parameters::Compatibility::HydroPmax::Daily));
+    BOOST_REQUIRE(
+      writer.saveToFolder("area1", dir.string(), Parameters::Compatibility::HydroPmax::Daily));
 
     BOOST_CHECK(fs::exists(dir / "area1" / "ror.txt"));
     BOOST_CHECK(fs::exists(dir / "area1" / "mod.txt"));
@@ -82,9 +80,8 @@ BOOST_AUTO_TEST_CASE(loadGenerationTS_before_8_6_skips_mingen)
     writer.ror.fill(1.0);
     writer.storage.fill(2.0);
     writer.mingen.fill(9.0);
-    BOOST_REQUIRE(writer.saveToFolder("area1",
-                                      dir.string(),
-                                      Parameters::Compatibility::HydroPmax::Daily));
+    BOOST_REQUIRE(
+      writer.saveToFolder("area1", dir.string(), Parameters::Compatibility::HydroPmax::Daily));
 
     DataSeriesHydro reader;
     BOOST_CHECK(reader.loadGenerationTS("area1", dir, StudyVersion(8, 5)));
@@ -163,7 +160,9 @@ BOOST_AUTO_TEST_CASE(resizeTSinDeratedMode_not_derated_is_noop)
 {
     DataSeriesHydro d;
     d.ror.resize(3, HOURS_PER_YEAR);
-    d.resizeTSinDeratedMode(false, StudyVersion(8, 6), Parameters::Compatibility::HydroPmax::Hourly);
+    d.resizeTSinDeratedMode(false,
+                            StudyVersion(8, 6),
+                            Parameters::Compatibility::HydroPmax::Hourly);
     BOOST_CHECK_EQUAL(d.ror.numberOfColumns(), 3u);
 }
 
@@ -180,7 +179,7 @@ BOOST_AUTO_TEST_CASE(resizeTSinDeratedMode_pre_8_6_skips_mingen_and_maxpower)
 
     BOOST_CHECK_EQUAL(d.ror.numberOfColumns(), 1u);
     BOOST_CHECK_EQUAL(d.storage.numberOfColumns(), 1u);
-    BOOST_CHECK_EQUAL(d.mingen.numberOfColumns(), 2u); // untouched: below v8.6
+    BOOST_CHECK_EQUAL(d.mingen.numberOfColumns(), 2u);            // untouched: below v8.6
     BOOST_CHECK_EQUAL(d.maxHourlyGenPower.numberOfColumns(), 2u); // gated by the same check
     BOOST_CHECK_EQUAL(d.maxHourlyPumpPower.numberOfColumns(), 2u);
 }
