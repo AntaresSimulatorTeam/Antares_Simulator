@@ -7,6 +7,7 @@
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/system-model/library.h"
 

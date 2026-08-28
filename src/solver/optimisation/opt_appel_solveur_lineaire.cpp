@@ -16,6 +16,7 @@
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 #include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyExtraOutputs.h"
