@@ -13,7 +13,7 @@
 */
 #include <setjmp.h>
 
-#include "antares/solver/utils/ortools_quadratic_wrapper.h"
+#include "antares/solver/optimisation/ortools_quadratic_wrapper.h"
 
 extern "C"
 {
