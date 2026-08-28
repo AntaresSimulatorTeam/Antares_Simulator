@@ -37,7 +37,8 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchP
                                                          problemeHebdo_,
                                                          areas,
                                                          numSpace_,
-                                                         params.optOptions));
+                                                         params.optOptions,
+                                                         writer));
     post_process_list.push_back(
       std::make_unique<DTGnettingAfterCSRcmd>(problemeHebdo_, areas, numSpace));
     post_process_list.push_back(
