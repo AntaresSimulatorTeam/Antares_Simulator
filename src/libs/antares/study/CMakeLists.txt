@@ -318,7 +318,6 @@ target_link_libraries(study
         Antares::exception
         fmt::fmt
         Antares::benchmarking
-        antares-solver-variable
         Antares::additional-constraint-rhs-antlr-interface
         Antares::reserves-parsing-antlr-interface
 )

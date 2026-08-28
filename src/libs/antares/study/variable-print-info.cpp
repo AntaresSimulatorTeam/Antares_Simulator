@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cassert>
 
+#include <antares/logs/logs.h>
 #include <antares/study/study.h>
 #include "antares/study/categories.h"
 
@@ -61,6 +62,36 @@ void variablePrintInfoCollector::add(const std::string& name,
                                      unsigned int fileLevel)
 {
     allvarsinfo->add(name, VariablePrintInfo(dataLevel, fileLevel));
+}
+
+// ============================================================
+// Thematic trimming variable registry
+// ============================================================
+namespace
+{
+ThematicTrimmingVariableRegistry::Provider& thematicTrimmingProvider()
+{
+    static ThematicTrimmingVariableRegistry::Provider instance;
+    return instance;
+}
+} // namespace
+
+void ThematicTrimmingVariableRegistry::setProvider(Provider provider)
+{
+    thematicTrimmingProvider() = std::move(provider);
+}
+
+void ThematicTrimmingVariableRegistry::populate(variablePrintInfoCollector& collector)
+{
+    if (const auto& provider = thematicTrimmingProvider())
+    {
+        provider(collector);
+    }
+    else
+    {
+        logs.warning() << "No thematic trimming variable provider registered: the list of "
+                          "output variables will be empty";
+    }
 }
 
 // ============================================================

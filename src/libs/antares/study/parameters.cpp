@@ -14,7 +14,6 @@
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
-#include "antares/solver/variable/economy/all.h"
 #include "antares/study/load-options.h"
 
 namespace Antares::Data
@@ -272,7 +271,7 @@ void Parameters::reset()
     // Reset output variables print info tool
     variablesPrintInfo.clear();
     variablePrintInfoCollector collector(&variablesPrintInfo);
-    Antares::Solver::Variable::Economy::AllVariables::RetrieveVariableList(collector);
+    ThematicTrimmingVariableRegistry::populate(collector);
     thematicTrimming = false;
 
     resetPlayedYears(1);

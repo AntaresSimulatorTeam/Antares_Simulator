@@ -4,6 +4,7 @@
 #ifndef __SOLVER_VARIABLE_PRINT_POLICY_H__
 #define __SOLVER_VARIABLE_PRINT_POLICY_H__
 
+#include <functional>
 #include <map>
 #include <string>
 #include <vector>
@@ -66,6 +67,20 @@ public:
 
 private:
     AllVariablesPrintInfo* allvarsinfo;
+};
+
+// The concrete list of output variables is only known by the solver-runtime layer
+// (antares::Solver::Variable). Rather than depending on it directly, study exposes this
+// registry: the solver layer registers a provider once at startup (see
+// antares::Solver::Variable::RegisterThematicTrimmingVariables()), and study calls
+// populate() whenever it needs the list, without knowing where it comes from.
+class ThematicTrimmingVariableRegistry
+{
+public:
+    using Provider = std::function<void(variablePrintInfoCollector&)>;
+
+    static void setProvider(Provider provider);
+    static void populate(variablePrintInfoCollector& collector);
 };
 
 // Variables print info collection. Mainly a vector of pointers to print info.
