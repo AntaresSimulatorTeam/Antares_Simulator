@@ -113,7 +113,7 @@ static void ConvertVarNameToID(String& id, const String& name)
 static void AbortProgram(int code)
 {
     // Importing logs
-    if (!logs.logfile())
+    if (logs.logfile().empty())
     {
         logs.fatal() << "Aborting now. (warning: no file log available)";
         logs.warning() << "No log file available";

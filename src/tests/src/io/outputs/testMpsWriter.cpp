@@ -33,8 +33,8 @@
 #include "antares/io/outputs/MPSGenerator.h"
 #include "antares/solver/modeler/Modeler.h"
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
-using namespace Antares::Optimisation::LinearProblemApi;
-using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
+using namespace Antares::LinearProblem::Api;
+using namespace Antares::LinearProblem::MpsolverImpl;
 using namespace std;
 using namespace Antares;
 using namespace Antares::Solver;

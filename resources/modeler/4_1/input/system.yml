@@ -8,7 +8,6 @@ system:
                     node1.gen1_p[t] = 80
                     node1.gen2_p[t] = 20
                     Objective function value: 4,000
-  model-libraries: lib_example_4_1
   components:
     - id: node1
       model: lib_example_4_1.node_2gen_1load

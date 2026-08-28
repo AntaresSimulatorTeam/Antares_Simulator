@@ -237,9 +237,7 @@ BOOST_AUTO_TEST_CASE(exports_one_enabled_district)
     const auto& files = writer.getMap();
     const auto fileIt = files.find("out/areas/@ district-1/values-hourly.txt");
     BOOST_REQUIRE(fileIt != files.end());
-    BOOST_CHECK_NE(fileIt->second.find(
-                     "\tGROUP1_TH_PROD\tGROUP1_TH_PROD\tGROUP1_TH_PROD\tGROUP1_TH_PROD"),
-                   std::string::npos);
+    BOOST_CHECK_NE(fileIt->second.find("\tGROUP1\tGROUP1\tGROUP1\tGROUP1"), std::string::npos);
     BOOST_CHECK_NE(fileIt->second.find("\tEXP\tstd\tmin\tmax"), std::string::npos);
 }
 
@@ -259,14 +257,11 @@ BOOST_AUTO_TEST_CASE(exports_two_enabled_districts)
     const auto& files = writer.getMap();
     const auto firstFileIt = files.find("out/areas/@ district-1/values-hourly.txt");
     BOOST_REQUIRE(firstFileIt != files.end());
-    BOOST_CHECK_NE(firstFileIt->second.find(
-                     "\tGROUP1_TH_PROD\tGROUP1_TH_PROD\tGROUP1_TH_PROD\tGROUP1_TH_PROD"),
-                   std::string::npos);
+    BOOST_CHECK_NE(firstFileIt->second.find("\tGROUP1\tGROUP1\tGROUP1\tGROUP1"), std::string::npos);
     BOOST_CHECK_NE(firstFileIt->second.find("\tEXP\tstd\tmin\tmax"), std::string::npos);
     const auto secondFileIt = files.find("out/areas/@ district-2/values-hourly.txt");
     BOOST_REQUIRE(secondFileIt != files.end());
-    BOOST_CHECK_NE(secondFileIt->second.find(
-                     "\tGROUP1_TH_PROD\tGROUP1_TH_PROD\tGROUP1_TH_PROD\tGROUP1_TH_PROD"),
+    BOOST_CHECK_NE(secondFileIt->second.find("\tGROUP1\tGROUP1\tGROUP1\tGROUP1"),
                    std::string::npos);
     BOOST_CHECK_NE(secondFileIt->second.find("\tEXP\tstd\tmin\tmax"), std::string::npos);
 }
@@ -288,9 +283,7 @@ BOOST_AUTO_TEST_CASE(skips_disabled_district_and_exports_enabled_one)
     BOOST_CHECK(files.find("out/areas/@ district-disabled/values-hourly.txt") == files.end());
     const auto fileIt = files.find("out/areas/@ district-enabled/values-hourly.txt");
     BOOST_REQUIRE(fileIt != files.end());
-    BOOST_CHECK_NE(fileIt->second.find(
-                     "\tGROUP1_TH_PROD\tGROUP1_TH_PROD\tGROUP1_TH_PROD\tGROUP1_TH_PROD"),
-                   std::string::npos);
+    BOOST_CHECK_NE(fileIt->second.find("\tGROUP1\tGROUP1\tGROUP1\tGROUP1"), std::string::npos);
     BOOST_CHECK_NE(fileIt->second.find("\tEXP\tstd\tmin\tmax"), std::string::npos);
 }
 

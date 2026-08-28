@@ -6,12 +6,9 @@
 #include <algorithm>
 #include <functional>
 
-#include <yuni/yuni.h>
-
 #include <antares/logs/logs.h>
 #include "antares/study/study.h"
 
-using namespace Yuni;
 using namespace Antares;
 
 namespace Antares::Data
@@ -31,7 +28,7 @@ void PartThermal::reset()
     list.clearAll();
 }
 
-void PartThermal::resizeAllTimeseriesNumbers(uint n) const
+void PartThermal::resizeAllTimeseriesNumbers(unsigned int n) const
 {
     list.resizeAllTimeseriesNumbers(n);
 }

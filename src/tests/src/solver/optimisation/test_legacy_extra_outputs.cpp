@@ -9,7 +9,7 @@
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using Antares::IO::Outputs::SimulationTable;
-using Antares::Optimisation::LinearProblemApi::FillContext;
+using Antares::LinearProblem::Api::FillContext;
 using Antares::Optimization::AddLegacyExtraOutputs;
 
 namespace
@@ -89,9 +89,10 @@ std::optional<Row> FindRowAt(const SimulationTable& table,
 // does: by index.
 enum VarOffset : int
 {
-    dispatchableProduction = 0, // cluster1 (area1): X 3600, cost 35
-    unsuppliedArea1 = 1,        // X 52,  cost 10000
-    spillageArea1 = 2,          // X 7,   cost 4
+    dispatchableProduction = 0, // cluster1 (area1): X 3600, cost 35.0005
+                                // (user market bid 35 + noise)
+    unsuppliedArea1 = 1,        // X 52,  cost 10000.0005 (user cost 10000 + noise)
+    spillageArea1 = 2,          // X 7,   cost 4.0005 (user cost 4 + noise)
     unsuppliedArea2 = 3,        // X 13,  cost 20000
     spillageArea2 = 4,          // X 0,   cost 1
     nodu = 5,                   // cluster1: X 2.3, cost 100 (fixed cost)
@@ -103,7 +104,11 @@ enum VarOffset : int
     directFlowLink1 = 11,       // area2$$area3: X -30
     hydroLevelArea1 = 12,       // X 4000
     numberStarting = 13,        // cluster1: X 1, cost 5000 (startup cost)
-    variablesPerHour = 14
+    stsInjection = 14,          // battery1 (area2): X 40
+    stsWithdrawal = 15,         // battery1 (area2): X 100
+    hydProdArea1 = 16,          // X 700
+    pumpingArea1 = 17,          // X 100
+    variablesPerHour = 18
 };
 
 // Per-hour layout of the constraints, followed by one weekly
@@ -142,6 +147,12 @@ struct Fixture
         problem.CoutDeTransport[0].IntercoGereeAvecDesCouts = true;
         problem.CoutDeTransport[1].IntercoGereeAvecDesCouts = false;
 
+        // User-provided imbalance costs; the CoutLineaire entries for the
+        // unsupplied/spillage variables below are deliberately different
+        // (they carry the optimisation noise).
+        problem.CoutDeDefaillancePositiveSansBruit = {10000., 10000., 10000.};
+        problem.CoutDeDefaillanceNegativeSansBruit = {4., 4., 4.};
+
         problem.ConsommationsAbattues.resize(nbPdt);
         problem.AllMustRunGeneration.resize(nbPdt);
         problem.ValeursDeNTC.resize(nbPdt);
@@ -166,11 +177,36 @@ struct Fixture
         paliers.emissionFactors[0][Antares::Data::Pollutant::NOX] = 0.01;
         paliers.emissionFactors[0][Antares::Data::Pollutant::OP5] = 2.;
         paliers.PuissanceDisponibleEtCout.resize(1);
+        // User-provided market bid cost; the CoutLineaire entry for the
+        // production variable below is deliberately different (it carries the
+        // thermal noise).
         paliers.PuissanceDisponibleEtCout[0].PuissanceDisponibleDuPalierThermique.assign(nbPdt,
                                                                                          4000.);
         paliers.PuissanceDisponibleEtCout[0].PuissanceMinDuPalierThermique.assign(nbPdt, 500.);
+        paliers.PuissanceDisponibleEtCout[0]
+          .CoutHoraireDeProductionDuPalierThermiqueSansBruit.assign(nbPdt, 30.);
+        paliers.PuissanceDisponibleEtCout[0].CoutMarginalDeProductionDuPalierThermique.assign(nbPdt,
+                                                                                              40.);
         problem.PaliersThermiquesDuPays[1].NombreDePaliersThermiques = 0;
         problem.PaliersThermiquesDuPays[2].NombreDePaliersThermiques = 0;
+
+        // One short-term storage, "battery1" in area2.
+        problem.ShortTermStorage.resize(3);
+        auto& storage = problem.ShortTermStorage[1].emplace_back();
+        storage.name = "battery1";
+        storage.clusterGlobalIndex = 0;
+
+        // Input-only generation series for area1: aggregated wind and one
+        // misc-gen entry, as filled by SIM_RenseignementProblemeHebdo.
+        problem.InputGenerationOfArea.resize(3);
+        problem.InputGenerationOfArea[0].push_back(
+          {.componentName = "area1_wind", .availablePower = std::vector<double>(nbPdt, 320.)});
+        problem.InputGenerationOfArea[0].push_back(
+          {.componentName = "area1_combined_heat_power",
+           .availablePower = std::vector<double>(nbPdt, 12.5)});
+
+        problem.CoutDeDefaillancePositiveSansBruit = {9500., 19000., 8500.};
+        problem.CoutDeDefaillanceNegativeSansBruit = {3., 0.5, 0.5};
 
         problem.CorrespondanceVarNativesVarOptim.resize(nbPdt);
         problem.CorrespondanceCntNativesCntOptim.resize(nbPdt);
@@ -202,6 +238,10 @@ struct Fixture
             // Only area1 manages a reservoir; -1 is the "no variable" sentinel
             // written by the construction site.
             vars.NumeroDeVariablesDeNiveau = {base + hydroLevelArea1, -1, -1};
+            vars.NumeroDeVariablesDeLaProdHyd = {base + hydProdArea1, -1, -1};
+            vars.NumeroDeVariablesDePompage = {base + pumpingArea1, -1, -1};
+            vars.SIM_ShortTermStorage.InjectionVariable = {base + stsInjection};
+            vars.SIM_ShortTermStorage.WithdrawalVariable = {base + stsWithdrawal};
 
             const int cntBase = pdt * constraintsPerHour;
             auto& constraints = problem.CorrespondanceCntNativesCntOptim[pdt];
@@ -211,18 +251,61 @@ struct Fixture
             constraints.NumeroDeContrainteDeDissociationDeFlux = {cntBase + flowDissociationLink0,
                                                                   -1};
 
-            solved.X.insert(
-              solved.X.end(),
-              {3600., 52., 7., 13., 0., 2.3, 120., 120., 0., 0.2, 0., -30., 4000., 1.});
-            solved.CoutLineaire.insert(
-              solved.CoutLineaire.end(),
-              {35., 10000., 4., 20000., 1., 100., 0., 0.5, 0.7, 9000., 1., 0., 0., 5000.});
+            solved.X.insert(solved.X.end(),
+                            {3600.,
+                             52.,
+                             7.,
+                             13.,
+                             0.,
+                             2.3,
+                             120.,
+                             120.,
+                             0.,
+                             0.2,
+                             0.,
+                             -30.,
+                             4000.,
+                             1.,
+                             40.,
+                             100.,
+                             700.,
+                             100.});
+            solved.CoutLineaire.insert(solved.CoutLineaire.end(),
+                                       {35.0005,
+                                        10000.0005,
+                                        4.0005,
+                                        20000.,
+                                        1.,
+                                        100.,
+                                        0.,
+                                        0.5,
+                                        0.7,
+                                        9000.,
+                                        1.,
+                                        0.,
+                                        0.,
+                                        5000.,
+                                        0.,
+                                        0.,
+                                        0.,
+                                        0.});
             solved.CoutsMarginauxDesContraintes.insert(solved.CoutsMarginauxDesContraintes.end(),
                                                        {-10000., -50., -75., -3.});
         }
         problem.NumeroDeContrainteExpressionStockFinal = {nbPdt * constraintsPerHour, 0, 0};
         solved.CoutsMarginauxDesContraintes.push_back(42.);
-        solved.NombreDeVariables = nbPdt * variablesPerHour;
+
+        // Two weekly LayerStorage variables for area1 (accurate water value),
+        // appended after the hourly variables: X 500 / 250, cost -20 / -10
+        // (the construction site writes -WaterLayerValues as the coefficient).
+        const int firstLayerVariable = nbPdt * variablesPerHour;
+        problem.NumeroDeVariableDeTrancheDeStock = {{firstLayerVariable, firstLayerVariable + 1},
+                                                    {},
+                                                    {}};
+        solved.X.insert(solved.X.end(), {500., 250.});
+        solved.CoutLineaire.insert(solved.CoutLineaire.end(), {-20., -10.});
+
+        solved.NombreDeVariables = nbPdt * variablesPerHour + 2;
         solved.NombreDeContraintes = nbPdt * constraintsPerHour + 1;
     }
 
@@ -241,13 +324,13 @@ struct Fixture
 
 BOOST_FIXTURE_TEST_SUITE(test_legacy_extra_outputs, Fixture)
 
-BOOST_AUTO_TEST_CASE(thermal_prop_cost_is_generation_cost_times_generation_power)
+BOOST_AUTO_TEST_CASE(thermal_prop_cost_is_market_bid_cost_times_generation_power)
 {
     fill();
 
     const auto row = FindRow(table, "prop_cost", "area1_thermal_cluster1");
     BOOST_REQUIRE(row.has_value());
-    BOOST_CHECK_CLOSE(row->value, 35. * 3600., 1e-9);
+    BOOST_CHECK_CLOSE(row->value, 40. * 3600., 1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(extra_output_entries_carry_block_time_and_scenario)
@@ -270,10 +353,32 @@ BOOST_AUTO_TEST_CASE(imbalance_cost_combines_unsupplied_and_spilled_energy)
     const auto rows = RowsForOutput(table, "imbalance_cost");
     BOOST_REQUIRE_EQUAL(rows.size(), 3);
     BOOST_CHECK_EQUAL(rows[0].component, "area1_node");
-    BOOST_CHECK_CLOSE(rows[0].value, 10000. * 52. + 4. * 7., 1e-9);
+    BOOST_CHECK_CLOSE(rows[0].value, 9500. * 52. + 3. * 7., 1e-9);
 }
 
-BOOST_AUTO_TEST_CASE(is_loss_of_load_is_one_above_threshold_and_zero_below)
+BOOST_AUTO_TEST_CASE(is_significant_loss_of_load_is_one_above_threshold_and_zero_below)
+{
+    fill();
+
+    const auto rows = RowsForOutput(table, "is_significant_loss_of_load");
+    BOOST_REQUIRE_EQUAL(rows.size(), 3);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area1_node")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area2_node")->value, 1.);
+    // 0.2 MW of unsupplied energy is below the 0.5 MW threshold.
+    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area3_node")->value, 0.);
+}
+
+BOOST_AUTO_TEST_CASE(is_significant_loss_of_load_is_zero_exactly_at_threshold)
+{
+    // The threshold check is strict (> 0.5), so exactly 0.5 MW must not count
+    // as significant loss of load.
+    problem.ProblemeAResoudre->X[unsuppliedArea3] = 0.5;
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area3_node")->value, 0.);
+}
+
+BOOST_AUTO_TEST_CASE(is_loss_of_load_is_one_for_any_positive_unsupplied_energy)
 {
     fill();
 
@@ -281,15 +386,13 @@ BOOST_AUTO_TEST_CASE(is_loss_of_load_is_one_above_threshold_and_zero_below)
     BOOST_REQUIRE_EQUAL(rows.size(), 3);
     BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area1_node")->value, 1.);
     BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area2_node")->value, 1.);
-    // 0.2 MW of unsupplied energy is below the 0.5 MW threshold.
-    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3_node")->value, 0.);
+    // Strict > 0: even 0.2 MW below the significance threshold counts.
+    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3_node")->value, 1.);
 }
 
-BOOST_AUTO_TEST_CASE(is_loss_of_load_is_zero_exactly_at_threshold)
+BOOST_AUTO_TEST_CASE(is_loss_of_load_is_zero_without_unsupplied_energy)
 {
-    // The threshold check is strict (> 0.5), so exactly 0.5 MW must not count
-    // as loss of load.
-    problem.ProblemeAResoudre->X[unsuppliedArea3] = 0.5;
+    problem.ProblemeAResoudre->X[unsuppliedArea3] = 0.;
     fill();
 
     BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3_node")->value, 0.);
@@ -299,9 +402,9 @@ BOOST_AUTO_TEST_CASE(actual_load_is_the_residual_load_plus_must_run_generation)
 {
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area1_node")->value, 790. + 10.);
-    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area2_node")->value, 500. + 0.);
-    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area3_node")->value, 280. + 20.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area1_load")->value, 790. + 10.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area2_load")->value, 500. + 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area3_load")->value, 280. + 20.);
 }
 
 BOOST_AUTO_TEST_CASE(price_is_minus_the_area_balance_dual)
@@ -319,7 +422,7 @@ BOOST_AUTO_TEST_CASE(is_near_loss_of_load_compares_price_to_unsupplied_cost)
 {
     fill();
 
-    // area1: price 10000 > 10000 - 5; area2: 50 <= 20000 - 5; area3: 75 <= 9000 - 5.
+    // area1: price 10000 > 9500 - 5; area2: 50 <= 19000 - 5; area3: 75 <= 8500 - 5.
     BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area1_node")->value, 1.);
     BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area2_node")->value, 0.);
     BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area3_node")->value, 0.);
@@ -490,7 +593,7 @@ BOOST_AUTO_TEST_CASE(hydro_shadow_price_is_the_final_stock_expression_dual)
     const auto rows = RowsForOutput(table, "hydro_shadow_price");
     BOOST_REQUIRE_EQUAL(rows.size(), 1);
     BOOST_CHECK_EQUAL(rows[0].component, "area1_hydro_storage");
-    BOOST_CHECK_EQUAL(rows[0].value, 42.);
+    BOOST_CHECK_EQUAL(rows[0].value, -42.);
     // Anchored on the last hour of the interval.
     BOOST_CHECK_EQUAL(rows[0].absoluteTimeIndex, "168");
 }
@@ -501,6 +604,140 @@ BOOST_AUTO_TEST_CASE(hydro_shadow_price_is_skipped_without_accurate_water_value)
     fill();
 
     BOOST_CHECK(RowsForOutput(table, "hydro_shadow_price").empty());
+}
+
+BOOST_AUTO_TEST_CASE(bellman_value_is_the_negated_layer_costs_times_layer_storages)
+{
+    fill();
+
+    const auto rows = RowsForOutput(table, "bellman_value");
+    BOOST_REQUIRE_EQUAL(rows.size(), 1);
+    BOOST_CHECK_EQUAL(rows[0].component, "area1");
+    // -(-20 * 500 + -10 * 250) = 12500, the objective coefficients being
+    // -WaterLayerValues.
+    BOOST_CHECK_EQUAL(rows[0].value, 12500.);
+    // Anchored on the last hour of the interval, like hydro_shadow_price.
+    BOOST_CHECK_EQUAL(rows[0].absoluteTimeIndex, "168");
+}
+
+BOOST_AUTO_TEST_CASE(bellman_value_is_skipped_without_accurate_water_value)
+{
+    problem.CaracteristiquesHydrauliques[0].AccurateWaterValue = false;
+    fill();
+
+    BOOST_CHECK(RowsForOutput(table, "bellman_value").empty());
+}
+
+BOOST_AUTO_TEST_CASE(port_field_balance_price_mirrors_the_area_price)
+{
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area1_node")->value, 10000.);
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area2_node")->value, 50.);
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area3_node")->value, 75.);
+}
+
+BOOST_AUTO_TEST_CASE(port_field_load_flow_is_minus_the_raw_load)
+{
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_load")->value, -(790. + 10.));
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area2_load")->value, -(500. + 0.));
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area3_load")->value, -(280. + 20.));
+}
+
+BOOST_AUTO_TEST_CASE(port_field_hydro_flow_is_generation_minus_pumping)
+{
+    fill();
+
+    // Only area1 has hydro production variables: 700 generated, 100 pumped.
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_hydro_storage")->value, 600.);
+    BOOST_CHECK(!FindRow(table, "balance_port.flow", "area2_hydro_storage").has_value());
+    BOOST_CHECK(!FindRow(table, "balance_port.flow", "area3_hydro_storage").has_value());
+}
+
+BOOST_AUTO_TEST_CASE(port_field_hydro_flow_ignores_pumping_when_absent)
+{
+    for (auto& vars: problem.CorrespondanceVarNativesVarOptim)
+    {
+        vars.NumeroDeVariablesDePompage[0] = -1;
+    }
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_hydro_storage")->value, 700.);
+}
+
+BOOST_AUTO_TEST_CASE(port_field_link_flows_are_the_signed_flow_and_its_negation)
+{
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "out_port.flow", "area1_area2_link")->value, 120.);
+    BOOST_CHECK_EQUAL(FindRow(table, "in_port.flow", "area1_area2_link")->value, -120.);
+    BOOST_CHECK_EQUAL(FindRow(table, "out_port.flow", "area2_area3_link")->value, -30.);
+    BOOST_CHECK_EQUAL(FindRow(table, "in_port.flow", "area2_area3_link")->value, 30.);
+}
+
+BOOST_AUTO_TEST_CASE(port_field_flows_cover_thermal_storage_and_input_generation)
+{
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_thermal_cluster1")->value, 3600.);
+    BOOST_CHECK_EQUAL(
+      FindRow(table, "balance_port.flow", "area2_short_term_storage_battery1")->value,
+      100. - 40.);
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_wind")->value, 320.);
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.flow", "area1_combined_heat_power")->value,
+                      12.5);
+}
+
+BOOST_AUTO_TEST_CASE(input_generation_emits_power_and_its_negation_per_component)
+{
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "generation_power", "area1_wind")->value, 320.);
+    BOOST_CHECK_EQUAL(FindRow(table, "minus_generation", "area1_wind")->value, -320.);
+    BOOST_CHECK_EQUAL(FindRow(table, "generation_power", "area1_combined_heat_power")->value, 12.5);
+    BOOST_CHECK_EQUAL(FindRow(table, "minus_generation", "area1_combined_heat_power")->value,
+                      -12.5);
+    // Areas without input series produce no rows.
+    BOOST_CHECK_EQUAL(RowsForOutput(table, "generation_power").size(), 2);
+}
+
+BOOST_AUTO_TEST_CASE(input_generation_is_skipped_when_the_series_are_absent)
+{
+    problem.InputGenerationOfArea.clear();
+    fill();
+
+    BOOST_CHECK(RowsForOutput(table, "generation_power").empty());
+    BOOST_CHECK(RowsForOutput(table, "minus_generation").empty());
+}
+
+BOOST_AUTO_TEST_CASE(storage_profit_is_net_withdrawal_times_area_price)
+{
+    fill();
+
+    // battery1 is in area2 (price 50): floor((100 - 40) * 50 + 0.5) = 3000.
+    const auto row = FindRow(table, "profit", "area2_short_term_storage_battery1");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_EQUAL(row->value, 3000.);
+}
+
+BOOST_AUTO_TEST_CASE(storage_profit_is_rounded_to_the_nearest_integer)
+{
+    // (100.01 - 40) * 50 = 3000.5, rounded up by the floor(x + 0.5) formula.
+    problem.ProblemeAResoudre->X[stsWithdrawal] = 100.01;
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "profit", "area2_short_term_storage_battery1")->value, 3001.);
+}
+
+BOOST_AUTO_TEST_CASE(storage_profit_is_negative_when_injecting_at_positive_price)
+{
+    problem.ProblemeAResoudre->X[stsWithdrawal] = 10.;
+    fill();
+
+    // floor((10 - 40) * 50 + 0.5) = -1500.
+    BOOST_CHECK_EQUAL(FindRow(table, "profit", "area2_short_term_storage_battery1")->value, -1500.);
 }
 
 BOOST_AUTO_TEST_CASE(emissions_are_generation_power_times_each_factor)
@@ -596,14 +833,14 @@ BOOST_AUTO_TEST_CASE(cluster_availability_ignores_the_unit_floor_when_unit_size_
 
 BOOST_AUTO_TEST_CASE(profit_is_margin_price_times_generation_above_the_min_gen_floor)
 {
-    // area1 price = -(-10000) = 10000; generation_cost = 35;
+    // area1 price = -(-10000) = 10000; unperturbed market bid cost = 30;
     // generation_power = 3600; min_gen_power floor = 500.
-    // profit = (10000 - 35) * max(3600 - 500, 0) = 9965 * 3100.
+    // profit = (10000 - 30) * max(3600 - 500, 0) = 9970 * 3100.
     fill();
 
     const auto row = FindRow(table, "profit", "area1_thermal_cluster1");
     BOOST_REQUIRE(row.has_value());
-    BOOST_CHECK_CLOSE(row->value, 9965. * 3100., 1e-9);
+    BOOST_CHECK_CLOSE(row->value, 9970. * 3100., 1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(profit_is_zero_when_generation_does_not_exceed_the_floor)
@@ -654,17 +891,25 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
 {
     fill();
 
-    // Areas: 3 x (imbalance_cost, is_loss_of_load, actual_load, price,
+    // Areas: 3 x (imbalance_cost, is_significant_loss_of_load,
+    //             is_loss_of_load, actual_load, price,
     //             is_near_loss_of_load) + area1's level_percentage and
-    //             actual_inflows                                  = 17
+    //             actual_inflows                                  = 20
     // Thermal: prop_cost + 13 emissions + 4 margins + profit
     //          + actual_num_units_on + non_prop_cost              = 21
     // Links: link 0 (abs_flow, minus_flow, actual_loop_flow, 2 congestion
     //        indicators, 2 congestion fees, prop_cost,
     //        capacity_shadow_price) = 9; link 1 without the hurdle-cost
     //        outputs = 7                                          = 16
-    // Weekly: hydro_shadow_price (area1)                          = 1
-    BOOST_CHECK_EQUAL(table.rowCount(), 17 + 21 + 16 + 1);
+    // Short-term storage: battery1's profit                       = 1
+    // Input generation: 2 area1 components x (generation_power,
+    //                    minus_generation, balance_port.flow)      = 6
+    // Port fields: 3 balance_port.price + 3 {area}_load flows
+    //              + area1_hydro_storage flow + 2 links x
+    //              (out_port.flow, in_port.flow) + cluster1 and
+    //              battery1 flows                                  = 13
+    // Weekly: area1's hydro_shadow_price and bellman_value        = 2
+    BOOST_CHECK_EQUAL(table.rowCount(), 20 + 21 + 16 + 1 + 6 + 13 + 2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

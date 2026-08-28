@@ -14,6 +14,7 @@ target_include_directories(inmemory-modeler
 target_link_libraries(inmemory-modeler
         PUBLIC
         Antares::linear-problem-mpsolver-impl
+        Antares::modeler-lib
         PRIVATE
         antares-study-system-model
         Antares::optim-model-filler

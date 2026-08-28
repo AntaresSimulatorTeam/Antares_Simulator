@@ -9,12 +9,12 @@
 
 #include "MCYearAndTime.h"
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 class IMipVariable;
 }
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 
 struct IntegerInterval
@@ -73,4 +73,4 @@ std::string buildVariableName(const std::string& compoId,
                               std::optional<Optimization::MCYearAndTime::MCYear> mcyear,
                               std::optional<unsigned int> timestep);
 
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem

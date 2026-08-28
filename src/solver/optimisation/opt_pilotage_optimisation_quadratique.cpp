@@ -33,7 +33,7 @@ bool OPT_PilotageOptimisationQuadratique(const SingleOptimOptions& options,
 
             if (!result)
             {
-                logs.warning() << "Quadratic Optimisation: No solution, hour " << pdtHebdo;
+                logs.warning() << "Quadratic LinearProblem: No solution, hour " << pdtHebdo;
             }
         }
     }

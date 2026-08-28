@@ -17,8 +17,6 @@
 #include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
 #include "antares/study/study.h"
 
-#define SEP Yuni::IO::Separator
-
 namespace fs = std::filesystem;
 
 namespace Antares::Data::ShortTermStorage
@@ -98,20 +96,20 @@ static bool loadAdditionalConstraintsProperties(AdditionalConstraints* additiona
 {
     for (auto* property = section->firstProperty; property; property = property->next)
     {
-        const std::string key = property->key;
-        const auto value = property->value;
+        const std::string key = std::string(property->key);
+        const std::string value = std::string(property->value);
 
         if (key == "enabled")
         {
-            value.to<bool>(additionalConstraints->enabled);
+            additionalConstraints->enabled = Antares::stringToBool(value);
         }
         else if (key == "variable")
         {
-            value.to<std::string>(additionalConstraints->variable);
+            additionalConstraints->variable = value;
         }
         else if (key == "operator")
         {
-            value.to<std::string>(additionalConstraints->operatorType);
+            additionalConstraints->operatorType = value;
         }
         else if (key == "hours")
         {
@@ -269,7 +267,7 @@ std::size_t STStorageInput::count() const
                                  [](const STStorageCluster& st) { return st.properties.enabled; });
 }
 
-uint STStorageInput::removeDisabledClusters()
+unsigned int STStorageInput::removeDisabledClusters()
 {
     return std::erase_if(storagesByIndex, [](const auto& c) { return !c.enabled(); });
 }
@@ -357,7 +355,7 @@ size_t STStorageInput::getClusterIdx(STStorageCluster& cluster) const
     }
 }
 
-uint STStorageInput::reserveParticipationsCount() const
+unsigned int STStorageInput::reserveParticipationsCount() const
 {
     return std::accumulate(
       storagesByIndex.begin(),

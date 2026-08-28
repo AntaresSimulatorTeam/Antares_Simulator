@@ -42,13 +42,13 @@
 
 #include "UtilMocks.h"
 
-using namespace Antares::Optimisation::LinearProblemApi;
-using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
+using namespace Antares::LinearProblem::Api;
+using namespace Antares::LinearProblem::MpsolverImpl;
 
 using namespace std;
 using namespace Antares::Optimization;
-using namespace Antares::Optimisation;
-using namespace Antares::Optimisation::LinearProblemDataImpl;
+using namespace Antares::LinearProblem;
+using namespace Antares::LinearProblem::DataImpl;
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::IO::Outputs;
 using namespace Antares::Writer;
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_SUITE(SupportingMethodsTests)
 
 BOOST_AUTO_TEST_CASE(TestUpdateTimeIndexIfShouldForceScenario)
 {
-    using TI = Antares::Optimisation::VariabilityType;
+    using TI = Antares::LinearProblem::VariabilityType;
     // bool = false => no value should change
     BOOST_CHECK(updateVariabilityIfShouldForceScenario(TI::CONSTANT_IN_TIME_AND_SCENARIO, false)
                 == TI::CONSTANT_IN_TIME_AND_SCENARIO);
@@ -769,7 +769,7 @@ BOOST_FIXTURE_TEST_CASE(RoundTrip_DataIntegrity, SimulationTableFileFixture)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 
 inline std::ostream& operator<<(std::ostream& os, const MipBasisStatus& status)
@@ -777,7 +777,7 @@ inline std::ostream& operator<<(std::ostream& os, const MipBasisStatus& status)
     return os << StatusToString(status);
 }
 
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace Antares::LinearProblem::Api
 
 BOOST_AUTO_TEST_SUITE(StatusConversionComprehensiveTests)
 

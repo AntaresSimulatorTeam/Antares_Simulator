@@ -17,7 +17,7 @@
 using namespace std;
 using namespace Antares::IO::Inputs;
 using namespace Antares::IO::Inputs::DataSeriesCsvImporter;
-using namespace Antares::Optimisation::LinearProblemDataImpl;
+using namespace Antares::LinearProblem::DataImpl;
 
 struct CsvCreationFixture
 {

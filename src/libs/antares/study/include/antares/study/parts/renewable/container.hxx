@@ -6,7 +6,7 @@
 
 namespace Antares::Data
 {
-inline void PartRenewable::resizeAllTimeseriesNumbers(uint n)
+inline void PartRenewable::resizeAllTimeseriesNumbers(unsigned int n)
 {
     list.resizeAllTimeseriesNumbers(n);
 }

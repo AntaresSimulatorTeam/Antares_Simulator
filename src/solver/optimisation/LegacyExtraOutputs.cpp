@@ -14,7 +14,7 @@
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using Antares::IO::Outputs::SimulationTable;
-using Antares::Optimisation::LinearProblemApi::FillContext;
+using Antares::LinearProblem::Api::FillContext;
 
 namespace Antares::Optimization
 {
@@ -98,7 +98,9 @@ public:
     void areaOutputs(uint32_t pays, int pdt);
     void linkOutputs(uint32_t interco, int pdt);
     void thermalOutputs(uint32_t pays, int index, int pdt);
-    void weeklyHydroOutputs(uint32_t pays) const;
+    void shortTermStorageOutputs(uint32_t pays, int pdt);
+    void inputGenerationOutputs(uint32_t pays, int pdt) const;
+    void weeklyHydroOutputs(uint32_t pays);
 
 private:
     void emit(const std::string& output, const std::string& component, int pdt, double value) const;
@@ -161,27 +163,54 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
     const int unsupplied = variableManager_.UnsuppliedEnergy(pays, pdt);
     const int spillage = variableManager_.Spillage(pays, pdt);
 
+    // Use the user-provided costs, not the noised ones fed to the optimisation
     emit("imbalance_cost",
          area,
          pdt,
-         cost(spillage) * x(spillage) + cost(unsupplied) * x(unsupplied));
+         problemeHebdo_.CoutDeDefaillanceNegativeSansBruit[pays] * x(spillage)
+           + problemeHebdo_.CoutDeDefaillancePositiveSansBruit[pays] * x(unsupplied));
 
-    constexpr double lossOfLoadThreshold = 0.5;
-    emit("is_loss_of_load", area, pdt, x(unsupplied) > lossOfLoadThreshold ? 1. : 0.);
-    emit("actual_load",
+    constexpr double significantLossOfLoadThreshold = 0.5;
+    emit("is_significant_loss_of_load",
          area,
          pdt,
-         problemeHebdo_.ConsommationsAbattues[pdt].ConsommationAbattueDuPays[pays]
-           + problemeHebdo_.AllMustRunGeneration[pdt].AllMustRunGenerationOfArea[pays]);
+         x(unsupplied) > significantLossOfLoadThreshold ? 1. : 0.);
+    emit("is_loss_of_load", area, pdt, x(unsupplied) > 0. ? 1. : 0.);
+
+    const double rawLoad = problemeHebdo_.ConsommationsAbattues[pdt].ConsommationAbattueDuPays[pays]
+                           + problemeHebdo_.AllMustRunGeneration[pdt]
+                               .AllMustRunGenerationOfArea[pays];
+    emit("actual_load", fmt::format("{}_load", problemeHebdo_.NomsDesPays[pays]), pdt, rawLoad);
 
     const double price = areaPrice(pays, pdt);
     emit("price", area, pdt, price);
+    emit("balance_port.price", area, pdt, price);
 
+    // 5 MW threshold for near LoL detection
+    // Use the user-provided cost, not the noised one fed to the optimisation
     constexpr double nearLossOfLoadCutoff = 5.;
     emit("is_near_loss_of_load",
          area,
          pdt,
-         price > cost(unsupplied) - nearLossOfLoadCutoff ? 1. : 0.);
+         price > problemeHebdo_.CoutDeDefaillancePositiveSansBruit[pays] - nearLossOfLoadCutoff
+           ? 1.
+           : 0.);
+
+    // Port fields of the load and long_term_storage models, emitted on their
+    // own components ({area}_load, {area}_hydro_storage) so their
+    // balance_port.flow rows cannot collide with each other on the area name.
+    emit("balance_port.flow",
+         fmt::format("{}_load", problemeHebdo_.NomsDesPays[pays]),
+         pdt,
+         -rawLoad);
+
+    const int hydProd = variableManager_.HydProd(pays, pdt);
+    if (hydProd >= 0)
+    {
+        const int pumping = variableManager_.Pumping(pays, pdt);
+        const double netWithdrawal = x(hydProd) - (pumping >= 0 ? x(pumping) : 0.);
+        emit("balance_port.flow", hydroStorageNames_[pays], pdt, netWithdrawal);
+    }
 
     const int hydroLevel = variableManager_.HydroLevel(pays, pdt);
     if (hydroLevel < 0)
@@ -209,6 +238,8 @@ void LegacyExtraOutputEmitter::linkOutputs(uint32_t interco, int pdt)
     const double flow = x(variableManager_.DirectFlow(interco, pdt));
     emit("abs_flow", link, pdt, std::abs(flow));
     emit("minus_flow", link, pdt, -flow);
+    emit("out_port.flow", link, pdt, flow);
+    emit("in_port.flow", link, pdt, -flow);
 
     const auto& ntc = problemeHebdo_.ValeursDeNTC[pdt];
     emit("actual_loop_flow", link, pdt, ntc.ValeurDeLoopFlowOrigineVersExtremite[interco]);
@@ -253,7 +284,14 @@ void LegacyExtraOutputEmitter::thermalOutputs(uint32_t pays, int index, int pdt)
     const int production = variableManager_.DispatchableProduction(palier, pdt);
     const double generation = x(production);
 
-    emit("prop_cost", cluster, pdt, cost(production) * generation);
+    // Use the user-provided market bid cost, not the noised marginal cost
+    // fed to the optimisation
+    emit("prop_cost",
+         cluster,
+         pdt,
+         paliers.PuissanceDisponibleEtCout[index].CoutMarginalDeProductionDuPalierThermique[pdt]
+           * generation);
+    emit("balance_port.flow", cluster, pdt, generation);
 
     for (std::size_t pollutant = 0; pollutant < emissionOutputNames.size(); ++pollutant)
     {
@@ -283,7 +321,10 @@ void LegacyExtraOutputEmitter::thermalOutputs(uint32_t pays, int index, int pdt)
     emit("min_gen_power", cluster, pdt, std::min(generation, minGen));
     emit("down_margin", cluster, pdt, generation - std::min(clusterAvailability, minGen));
 
-    const double profit = (areaPrice(pays, pdt) - cost(production))
+    // Use the user-provided market bid cost, not the noised marginal cost
+    // fed to the optimisation
+    const double marketBidCost = disp.CoutHoraireDeProductionDuPalierThermiqueSansBruit[pdt];
+    const double profit = (areaPrice(pays, pdt) - marketBidCost)
                           * std::max(generation - minGen, 0.);
     emit("profit", cluster, pdt, profit);
 
@@ -307,7 +348,41 @@ void LegacyExtraOutputEmitter::thermalOutputs(uint32_t pays, int index, int pdt)
     emit("non_prop_cost", cluster, pdt, startupCost * startedUnits + cost(nodu) * unitsOn);
 }
 
-void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays) const
+void LegacyExtraOutputEmitter::shortTermStorageOutputs(uint32_t pays, int pdt)
+{
+    const double price = areaPrice(pays, pdt);
+    for (const auto& storage: problemeHebdo_.ShortTermStorage[pays])
+    {
+        const double withdrawal = x(
+          variableManager_.ShortTermStorageWithdrawal(storage.clusterGlobalIndex, pdt));
+        const double injection = x(
+          variableManager_.ShortTermStorageInjection(storage.clusterGlobalIndex, pdt));
+        const std::string component = fmt::format("{}_short_term_storage_{}",
+                                                  problemeHebdo_.NomsDesPays[pays],
+                                                  storage.name);
+        emit("profit", component, pdt, std::floor((withdrawal - injection) * price + 0.5));
+        emit("balance_port.flow", component, pdt, withdrawal - injection);
+    }
+}
+
+void LegacyExtraOutputEmitter::inputGenerationOutputs(uint32_t pays, int pdt) const
+{
+    // Sized by SIM_RenseignementProblemeHebdo; empty when the caller did not
+    // provide the input series (e.g. problems built outside the simulation).
+    if (pays >= problemeHebdo_.InputGenerationOfArea.size())
+    {
+        return;
+    }
+    for (const auto& entry: problemeHebdo_.InputGenerationOfArea[pays])
+    {
+        const double power = entry.availablePower[pdt];
+        emit("generation_power", entry.componentName, pdt, power);
+        emit("minus_generation", entry.componentName, pdt, -power);
+        emit("balance_port.flow", entry.componentName, pdt, power);
+    }
+}
+
+void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays)
 {
     if (!problemeHebdo_.CaracteristiquesHydrauliques[pays].AccurateWaterValue)
     {
@@ -317,7 +392,16 @@ void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays) const
     emit("hydro_shadow_price",
          hydroStorageNames_[pays],
          pdt,
-         dual(problemeHebdo_.NumeroDeContrainteExpressionStockFinal[pays]));
+         -dual(problemeHebdo_.NumeroDeContrainteExpressionStockFinal[pays]));
+
+    const std::size_t layerCount = problemeHebdo_.NumeroDeVariableDeTrancheDeStock[pays].size();
+    double bellmanValue = 0.;
+    for (std::size_t layer = 0; layer < layerCount; ++layer)
+    {
+        const int layerStorage = variableManager_.LayerStorage(pays, layer);
+        bellmanValue -= cost(layerStorage) * x(layerStorage);
+    }
+    emit("bellman_value", problemeHebdo_.NomsDesPays[pays], pdt, bellmanValue);
 }
 
 } // namespace
@@ -334,6 +418,8 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
         for (uint32_t pays = 0; pays < problemeHebdo.NombreDePays; ++pays)
         {
             emitter.areaOutputs(pays, pdt);
+            emitter.shortTermStorageOutputs(pays, pdt);
+            emitter.inputGenerationOutputs(pays, pdt);
 
             const PALIERS_THERMIQUES& paliers = problemeHebdo.PaliersThermiquesDuPays[pays];
             for (int index = 0; index < paliers.NombreDePaliersThermiques; ++index)

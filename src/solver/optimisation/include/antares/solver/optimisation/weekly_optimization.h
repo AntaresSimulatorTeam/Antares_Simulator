@@ -9,7 +9,7 @@
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-namespace Antares::Solver::Optimization
+namespace Antares::Optimization
 {
 
 class WeeklyOptimization final
@@ -17,8 +17,8 @@ class WeeklyOptimization final
 public:
     WeeklyOptimization(const OptimizationOptions& options,
                        PROBLEME_HEBDO* problemeHebdo,
-                       IResultWriter& writer,
-                       Simulation::ISimulationObserver& simulationObserver,
+                       Solver::IResultWriter& writer,
+                       Solver::Simulation::ISimulationObserver& simulationObserver,
                        bool writeSimuTable);
     ~WeeklyOptimization() = default;
     WeeklyOptimization(const WeeklyOptimization&) = delete;
@@ -29,10 +29,10 @@ public:
     IO::Outputs::OptimisationsSimulationTable* simulationTables();
 
 private:
-    Antares::Solver::Optimization::OptimizationOptions options_;
+    OptimizationOptions options_;
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
-    IResultWriter& writer_;
-    std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
+    Solver::IResultWriter& writer_;
+    std::reference_wrapper<Solver::Simulation::ISimulationObserver> simulationObserver_;
     std::unique_ptr<IO::Outputs::OptimisationsSimulationTable> simulationTables_;
 };
-} // namespace Antares::Solver::Optimization
+} // namespace Antares::Optimization

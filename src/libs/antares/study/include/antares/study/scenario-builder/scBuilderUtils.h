@@ -6,15 +6,12 @@
 
 #include <string>
 
-#include <yuni/yuni.h>
-#include <yuni/core/fwd.h>
-
 namespace Antares::Data::ScenarioBuilder
 {
 std::string fromHydroLevelToString(double d);
-double fromStringToHydroLevel(const Yuni::String& value, const double maxLevel);
+double fromStringToHydroLevel(const std::string& value, const double maxLevel);
 
-uint fromStringToTSnumber(const Yuni::String& value);
+unsigned int fromStringToTSnumber(const std::string& value);
 
 } // namespace Antares::Data::ScenarioBuilder
 

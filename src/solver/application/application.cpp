@@ -371,7 +371,7 @@ void Application::prepare(int argc, const char* argv[])
         // Set solver options from command line
         pStudy->parameters.optOptions.initializeWith(options.solverOptions);
 
-        using namespace Antares::Solver::Optimization;
+        using namespace Antares::Optimization;
         // TODO
         pStudy->parameters.optOptions.exportBehavior = pStudy->parameters.include.exportStructure
                                                          ? ExportBehavior::Once
@@ -385,12 +385,12 @@ void Application::onLogMessage(int level, const std::string& message)
 {
     switch (level)
     {
-    case Yuni::Logs::Verbosity::Warning::level:
+    case Antares::Logs::Verbosity::Warning::level:
         ++pWarningCount;
         messagesStack.emplace_back(LogType::Warning, message);
         break;
-    case Yuni::Logs::Verbosity::Error::level:
-    case Yuni::Logs::Verbosity::Fatal::level:
+    case Antares::Logs::Verbosity::Error::level:
+    case Antares::Logs::Verbosity::Fatal::level:
         ++pErrorCount;
         messagesStack.emplace_back(LogType::Error, message);
         break;
@@ -530,9 +530,6 @@ void writeSimulationInfos(const Data::Study& study,
 
 Application::~Application()
 {
-    // Destroy all remaining bouns (callbacks)
-    destroyBoundEvents();
-
     // Release all allocated data
     if (pStudy)
     {
@@ -550,8 +547,6 @@ Application::~Application()
             pStudy->importLogsToOutputFolder(*resultWriter);
         }
 
-        // release all reference to the current study held by this class
-        pStudy->clear();
         pStudy = nullptr;
 
         LocalPolicy::Close();

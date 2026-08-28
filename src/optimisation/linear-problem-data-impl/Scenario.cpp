@@ -7,9 +7,9 @@
 
 #include "fmt/format.h"
 
-namespace Antares::Optimisation::LinearProblemDataImpl
+namespace Antares::LinearProblem::DataImpl
 {
-LinearProblemApi::IScenario::TimeSeriesNumber Scenario::getData(Year year) const
+Api::IScenario::TimeSeriesNumber Scenario::getData(Year year) const
 {
     auto it = timeSerieData_.find(year);
     if (it == timeSerieData_.end())
@@ -31,4 +31,4 @@ void Scenario::setTimeSerieNumber(Year year, TimeSeriesNumber timeSeriesNumber)
     }
     timeSerieData_[year] = timeSeriesNumber;
 }
-} // namespace Antares::Optimisation::LinearProblemDataImpl
+} // namespace Antares::LinearProblem::DataImpl

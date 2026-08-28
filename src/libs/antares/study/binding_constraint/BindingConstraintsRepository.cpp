@@ -18,7 +18,7 @@
 
 namespace Antares::Data
 {
-std::shared_ptr<Data::BindingConstraint> BindingConstraintsRepository::find(const AnyString& id)
+std::shared_ptr<Data::BindingConstraint> BindingConstraintsRepository::find(const std::string& id)
 {
     for (const auto& i: constraints_)
     {
@@ -31,7 +31,7 @@ std::shared_ptr<Data::BindingConstraint> BindingConstraintsRepository::find(cons
 }
 
 std::shared_ptr<const Data::BindingConstraint> BindingConstraintsRepository::find(
-  const AnyString& id) const
+  const std::string& id) const
 {
     for (const auto& i: constraints_)
     {
@@ -43,7 +43,7 @@ std::shared_ptr<const Data::BindingConstraint> BindingConstraintsRepository::fin
     return nullptr;
 }
 
-BindingConstraint* BindingConstraintsRepository::findByName(const AnyString& name)
+BindingConstraint* BindingConstraintsRepository::findByName(const std::string& name)
 {
     for (const auto& i: constraints_)
     {
@@ -55,7 +55,7 @@ BindingConstraint* BindingConstraintsRepository::findByName(const AnyString& nam
     return nullptr;
 }
 
-const BindingConstraint* BindingConstraintsRepository::findByName(const AnyString& name) const
+const BindingConstraint* BindingConstraintsRepository::findByName(const std::string& name) const
 {
     for (const auto& i: constraints_)
     {
@@ -97,7 +97,7 @@ bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1,
     }
 }
 
-std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const AnyString& name)
+std::shared_ptr<BindingConstraint> BindingConstraintsRepository::add(const std::string& name)
 {
     auto bc = std::make_shared<BindingConstraint>();
     bc->name(name);

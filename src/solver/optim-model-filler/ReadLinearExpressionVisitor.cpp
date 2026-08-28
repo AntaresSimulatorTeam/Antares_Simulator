@@ -27,14 +27,14 @@
 using namespace Antares::Expressions;
 using namespace Antares::Optimization;
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   const OptimEntityContainer& optimEntityContainer,
-  const LinearProblemApi::FillContext& fillContext,
+  const Api::FillContext& fillContext,
   const ModelerStudy::SystemModel::Component& component,
-  const LinearProblemApi::ILinearProblemData* data,
+  const Api::ILinearProblemData* data,
   const ScenarioGroupRepository& scenarioGroupRepo):
     optimEntityContainer_(optimEntityContainer),
     component_(component),
@@ -411,4 +411,4 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Fu
     }
 }
 
-} // Namespace Antares::Optimisation
+} // Namespace Antares::LinearProblem

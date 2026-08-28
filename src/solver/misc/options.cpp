@@ -7,7 +7,6 @@
 
 #include <antares/exception/LoadingError.hpp>
 #include "antares/config/config.h"
-#include "antares/solver/utils/ortools_utils.h"
 #include "antares/utils/utils.h"
 
 using namespace Antares;
@@ -303,7 +302,7 @@ void Settings::reset()
     outputSelectionStr.clear();
     outputSelection = Antares::Data::OutputSelection{};
 
-    solverOptions = Antares::Solver::Optimization::CmdLineOptimOptions{};
+    solverOptions = Antares::Optimization::CmdLineOptimOptions{};
 }
 
 void Settings::resolveOutputSelection()

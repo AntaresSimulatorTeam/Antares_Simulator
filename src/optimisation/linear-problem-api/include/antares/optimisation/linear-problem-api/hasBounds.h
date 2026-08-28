@@ -3,7 +3,7 @@
 
 #pragma once
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 
 /// Used to handle bounds for IMipVariable and IMipConstraint
@@ -21,4 +21,4 @@ public:
     virtual double getUb() const = 0;
 };
 
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace Antares::LinearProblem::Api

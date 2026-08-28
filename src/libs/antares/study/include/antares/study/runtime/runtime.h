@@ -33,15 +33,15 @@ public:
     void checkIntegrity() const;
 
     //! Hours
-    uint hour[rangeMax];
+    unsigned int hour[rangeMax];
     //! Day
-    uint day[rangeMax];
+    unsigned int day[rangeMax];
     //! Week
-    uint week[rangeMax];
+    unsigned int week[rangeMax];
     //! Month
-    uint month[rangeMax];
+    unsigned int month[rangeMax];
     //! Year
-    uint year[rangeMax];
+    unsigned int year[rangeMax];
 
 }; // class StudyRangeLimits
 
@@ -73,7 +73,7 @@ public:
 
 public:
     //! The number of years to process
-    uint nbYears;
+    unsigned int nbYears;
 
     //! Range limits
     StudyRangeLimits rangeLimits;
@@ -82,7 +82,7 @@ public:
     SimulationMode mode;
 
     //! The number of interconnections
-    uint interconnectionsCount() const;
+    unsigned int interconnectionsCount() const;
     //! All interconnections
     std::vector<AreaLink*> areaLink;
 
@@ -92,13 +92,13 @@ public:
     //! Total
     struct Counts
     {
-        uint thermalPlants = 0;
-        uint thermalPlantsMustRun = 0;
-        uint reserveParticipations = 0; //! Total number of reserve participations
-        uint capacityReservations = 0;  //! Total number of capacity reservations
-        uint shortTermStorages = 0;
-        uint shortTermStorageCumulativeConstraints = 0;
-        uint hydros = 0;
+        unsigned int thermalPlants = 0;
+        unsigned int thermalPlantsMustRun = 0;
+        unsigned int reserveParticipations = 0; //! Total number of reserve participations
+        unsigned int capacityReservations = 0;  //! Total number of capacity reservations
+        unsigned int shortTermStorages = 0;
+        unsigned int shortTermStorageCumulativeConstraints = 0;
+        unsigned int hydros = 0;
     } counts;
 
     //! Override enable/disable TS generation per cluster
@@ -107,12 +107,12 @@ public:
     /*!
     ** \brief The number of simulation days per month
     */
-    uint simulationDaysPerMonth[12];
+    unsigned int simulationDaysPerMonth[12];
 
     /*!
     ** \brief The number of simulation days per week
     */
-    uint simulationDaysPerWeek[53];
+    unsigned int simulationDaysPerWeek[53];
 
     /*!
     ** \brief Flag to know if at least one error occured during the quadratic optimization

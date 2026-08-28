@@ -6,10 +6,10 @@
 
 #include <boost/algorithm/string.hpp>
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 void ScenarioGroupRepository::addScenario(const std::string& groupId,
-                                          std::unique_ptr<LinearProblemApi::IScenario>&& scenario)
+                                          std::unique_ptr<Api::IScenario>&& scenario)
 {
     std::string gId = groupId;
     boost::to_upper(gId);
@@ -20,7 +20,7 @@ void ScenarioGroupRepository::addScenario(const std::string& groupId,
     scenarioGroups_[gId] = std::move(scenario);
 }
 
-class DefaultScenario final: public Optimisation::LinearProblemApi::IScenario
+class DefaultScenario final: public LinearProblem::Api::IScenario
 {
 public:
     using IScenario::IScenario;
@@ -31,7 +31,7 @@ public:
     }
 };
 
-const LinearProblemApi::IScenario& ScenarioGroupRepository::scenario(
+const Api::IScenario& ScenarioGroupRepository::scenario(
   const std::string& groupId) const
 {
     // A component requires a group ID
@@ -49,4 +49,4 @@ const LinearProblemApi::IScenario& ScenarioGroupRepository::scenario(
     }
     return *scenarioGroups_.at(gId);
 }
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem

@@ -7,9 +7,9 @@
 
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 
-namespace Antares::Optimisation::LinearProblemDataImpl
+namespace Antares::LinearProblem::DataImpl
 {
-class Scenario final: public LinearProblemApi::IScenario
+class Scenario final: public Api::IScenario
 {
 public:
     using IScenario::IScenario;
@@ -33,4 +33,4 @@ public:
 private:
     std::map<Year, TimeSeriesNumber> timeSerieData_;
 };
-} // namespace Antares::Optimisation::LinearProblemDataImpl
+} // namespace Antares::LinearProblem::DataImpl

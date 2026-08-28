@@ -130,13 +130,6 @@ if (WIN32)
     endif (MSVC)
 endif (WIN32)
 
-# GNU ld is single-pass for static libraries: circular dependencies between
-# libraries (e.g. antares-solver-simulation <-> model_antares) cause unresolved
-# symbols. --start-group/--end-group tells ld to re-scan until all are resolved.
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    add_link_options("LINKER:--start-group")
-endif ()
-
 #
 # Beta
 #
@@ -200,7 +193,7 @@ if (${BUILD_MERSENNE_TWISTER_PYBIND11})
 endif ()
 
 #Boost header libraries
-find_package(Boost REQUIRED)
+find_package(Boost CONFIG REQUIRED)
 
 find_package(antlr4-runtime REQUIRED)
 find_package(yaml-cpp REQUIRED)
@@ -397,6 +390,3 @@ include(CPack)
 
 #Last. We need all target defined
 add_subdirectory("src/packaging")
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    add_link_options("LINKER:--end-group")
-endif()

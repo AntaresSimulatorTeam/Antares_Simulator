@@ -3,6 +3,9 @@
 
 #pragma once
 
+#include <map>
+#include <string>
+#include <utility>
 #include <vector>
 
 #include <antares/modeler-optimisation-container/scenarioGroupRepo.h>
@@ -20,14 +23,17 @@ enum class ResolutionMode : unsigned
     SEQUENTIAL_SUBPROBLEMS = 1
 };
 
+using ComponentProperty = std::pair<std::string, std::string>; // (id, value)
+
 struct ModelerData
 {
     std::vector<ModelerStudy::SystemModel::Library> libraries;
     std::unique_ptr<ModelerStudy::SystemModel::System> system;
-    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries;
-    Optimisation::ScenarioGroupRepository scenarioGroupRepository;
+    std::unique_ptr<LinearProblem::Api::ILinearProblemData> dataSeries;
+    LinearProblem::ScenarioGroupRepository scenarioGroupRepository;
     ResolutionMode resolutionMode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
-    Optimisation::BendersDecomposition bendersDecomposition;
+    LinearProblem::BendersDecomposition bendersDecomposition;
+    std::map<std::string, std::vector<ComponentProperty>> componentProperties;
 };
 
 // Operator for printing ResolutionMode in logs and tests
