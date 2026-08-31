@@ -56,7 +56,7 @@ State::State(Data::Study& s):
         reserveData.emplace(study.areas.size());
         for (const auto& area: study.areas | std::views::values)
         {
-            reserveData.value().at(area->index) = ReserveData();
+            reserveData->at(area->index) = ReserveData();
         }
     }
 }
@@ -156,9 +156,9 @@ void State::initFromShortTermStorageClusterIndex(const uint clusterAreaWideIndex
     if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast
         && study.parameters.include.reserves && STStorageCluster->reserveParticipationContainer)
     {
-        auto& resData = reserveData.value().at(area->index);
+        auto& resData = reserveData->at(area->index);
         for (const auto& [resID, resParticipation]:
-             STStorageCluster->reserveParticipationContainer.value().getReservesParticipations())
+             STStorageCluster->reserveParticipationContainer->getReservesParticipations())
         {
             double participation = hourlyResults->ShortTermStorageReserves
                                      .value()[study.reserveMaps->participationIndexMaps.at(area->id)
@@ -194,9 +194,9 @@ void State::initFromHydro()
     if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast
         && study.parameters.include.reserves && Hydro.reserveParticipationContainer)
     {
-        auto& resData = reserveData.value().at(area->index);
+        auto& resData = reserveData->at(area->index);
         for (const auto& [resID, resParticipation]:
-             Hydro.reserveParticipationContainer.value().getReservesParticipations())
+             Hydro.reserveParticipationContainer->getReservesParticipations())
         {
             double participation = hourlyResults->HydroUsage[hourInTheWeek]
                                      .reserveParticipationOfCluster
@@ -294,9 +294,9 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
     if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast
         && study.parameters.include.reserves && thermalCluster->reserveParticipationContainer)
     {
-        auto& resData = reserveData.value().at(area->index);
+        auto& resData = reserveData->at(area->index);
         for (const auto& [reserveID, reserveParticipation]:
-             thermalCluster->reserveParticipationContainer.value().getReservesParticipations())
+             thermalCluster->reserveParticipationContainer->getReservesParticipations())
         {
             int reserveParticipationIdx = study.reserveMaps->participationIndexMaps.at(area->id)
                                             .thermalClusters.left.at(
@@ -499,7 +499,7 @@ void State::calculateReserveParticipationCosts()
         uint startHourForCurrentYear = study.runtime.rangeLimits.hour[Data::rangeBegin];
         uint endHourForCurrentYear = startHourForCurrentYear
                                      + study.runtime.rangeLimits.hour[Data::rangeCount];
-        auto& resData = reserveData.value().at(area->index);
+        auto& resData = reserveData->at(area->index);
         for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
         {
             resData.reserveParticipationCostForYear[h]

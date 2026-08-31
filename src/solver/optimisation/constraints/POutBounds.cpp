@@ -31,8 +31,7 @@ void POutBounds::add(int pays, int cluster, int pdt)
             {
                 builder.DispatchableProduction(globalClusterIdx, -1).lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .reservesIndices.value()
-                  .thermalClusterPOutBoundMin[globalClusterIdx]
+                  .reservesIndices->thermalClusterPOutBoundMin[globalClusterIdx]
                   = builder.data.nombreDeContraintes;
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
@@ -58,8 +57,7 @@ void POutBounds::add(int pays, int cluster, int pdt)
             {
                 builder.DispatchableProduction(globalClusterIdx, 1).lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .reservesIndices.value()
-                  .thermalClusterPOutBoundMax[globalClusterIdx]
+                  .reservesIndices->thermalClusterPOutBoundMax[globalClusterIdx]
                   = builder.data.nombreDeContraintes;
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;

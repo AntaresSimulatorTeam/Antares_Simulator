@@ -424,9 +424,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
                                                     ? study.areas.byIndex[k]
                                                         ->hydro.reserveParticipationsCount()
                                                     : 0;
-        const uint nbReserves = resEnabled
-                                  ? study.areas.byIndex[k]->allCapacityReservations.value().size()
-                                  : 0;
+        const uint nbReserves = resEnabled ? study.areas.byIndex[k]->allCapacityReservations->size()
+                                           : 0;
 
         auto& palier = problem.PaliersThermiquesDuPays[k];
 
