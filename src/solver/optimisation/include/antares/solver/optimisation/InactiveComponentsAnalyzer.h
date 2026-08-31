@@ -50,8 +50,7 @@ private:
     std::vector<bool> rorAllZero_;
     std::vector<bool> solarAllZero_;
     std::vector<bool> windAllZero_;
-    // Inner dimension is the fixed misc-gen column count, known at compile time.
-    std::vector<std::array<bool, Data::fhhMax>> miscGenColumnAllZero_; // [pays][column]
+    std::array<std::vector<bool>, Data::fhhMax> miscGenColumnAllZero_; // [column][pays]
     std::vector<bool> hydroInflowAllZero_;
     std::vector<bool> linkAllZero_;
 };

@@ -45,11 +45,7 @@ void InactiveComponentsAnalyzer::setWindAllZero(uint32_t pays, bool value)
 void InactiveComponentsAnalyzer::setMiscGenColumnAllZero(uint32_t pays, unsigned column, bool value)
 {
     assert(column < Data::fhhMax);
-    if (pays >= miscGenColumnAllZero_.size())
-    {
-        miscGenColumnAllZero_.resize(pays + 1, {});
-    }
-    miscGenColumnAllZero_[pays][column] = value;
+    setFlag(miscGenColumnAllZero_[column], pays, value);
 }
 
 void InactiveComponentsAnalyzer::setHydroInflowAllZero(uint32_t pays, bool value)
@@ -84,8 +80,8 @@ bool InactiveComponentsAnalyzer::windIsAllZero(uint32_t pays) const
 
 bool InactiveComponentsAnalyzer::miscGenColumnIsAllZero(uint32_t pays, unsigned column) const
 {
-    return pays < miscGenColumnAllZero_.size() && column < Data::fhhMax
-           && miscGenColumnAllZero_[pays][column];
+    assert(column < Data::fhhMax);
+    return getFlag(miscGenColumnAllZero_[column], pays);
 }
 
 bool InactiveComponentsAnalyzer::hydroInflowIsAllZero(uint32_t pays) const
