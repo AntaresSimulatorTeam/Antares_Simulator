@@ -15,9 +15,7 @@ ModelerProblems::ModelerProblems(const std::filesystem::path& studyPath)
     fs::path outputPath = makeOutputPath(studyPath);
 
     modeler_ = std::make_unique<Modeler>(*loader_, outputPath, TableFormat::CSV);
-    modeler_->buildProblems();
-    modeler_->exportMps();
-    modeler_->exportStructureFile();
+    modeler_->buildProblemsAndWriteMps();
 }
 
 void logProblemSize(const LinearProblem::Api::ILinearProblem* problem, const std::string& name)

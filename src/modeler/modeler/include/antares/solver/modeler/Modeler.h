@@ -56,9 +56,9 @@ public:
 
     void buildProblems();
     void buildMasterProblem();
+    void buildProblemsAndWriteMps();
     void run();
 
-    void exportMps() const;
     void exportStructureFile() const;
 
     class ModelerError: public std::runtime_error
