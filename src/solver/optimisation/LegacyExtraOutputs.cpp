@@ -34,7 +34,7 @@ namespace
 // Misc-gen suffixes, in the same order as the column indices used by
 // InactiveComponentsAnalyzer::miscGenColumnIsAllZero (matching
 // fillInputGenerationSeries's miscGenComponents in sim_calcul_economique.cpp).
-constexpr std::array<const char*, 8> miscGenSuffixes = {"_combined_heat_power",
+constexpr std::array<const char*, Data::fhhMax> miscGenSuffixes = {"_combined_heat_power",
                                                         "_biomass",
                                                         "_biogas",
                                                         "_waste",
