@@ -3,7 +3,6 @@
 
 #include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
 
-#include <algorithm>
 #include <cassert>
 
 namespace Antares::Optimization
