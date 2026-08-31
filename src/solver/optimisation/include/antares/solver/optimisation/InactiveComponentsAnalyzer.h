@@ -3,8 +3,11 @@
 
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <vector>
+
+#include <antares/study/area/constants.h>
 
 namespace Antares::Optimization
 {
@@ -47,7 +50,8 @@ private:
     std::vector<bool> rorAllZero_;
     std::vector<bool> solarAllZero_;
     std::vector<bool> windAllZero_;
-    std::vector<std::vector<bool>> miscGenColumnAllZero_; // [pays][column]
+    // Inner dimension is the fixed misc-gen column count, known at compile time.
+    std::vector<std::array<bool, Data::fhhMax>> miscGenColumnAllZero_; // [pays][column]
     std::vector<bool> hydroInflowAllZero_;
     std::vector<bool> linkAllZero_;
 };
