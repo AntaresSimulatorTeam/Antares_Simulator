@@ -3,6 +3,8 @@
 
 #include "antares/solver/optimisation/InactiveComponentsAnalyzerBuilder.h"
 
+#include <algorithm>
+
 #include <antares/study/area/constants.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
@@ -14,15 +16,8 @@ namespace
 {
 bool columnIsAllZero(const Matrix<>& matrix, unsigned column)
 {
-    const auto& values = matrix[column];
-    for (uint y = 0; y < matrix.height; ++y)
-    {
-        if (!Utils::isZero(values[y]))
-        {
-            return false;
-        }
-    }
-    return true;
+    const auto* values = matrix[column];
+    return std::all_of(values, values + matrix.height, Utils::isZero);
 }
 
 // A component can have several chronicles (columns) in its matrix, only some
