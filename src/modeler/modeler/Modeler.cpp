@@ -245,8 +245,9 @@ SimulationTable& Modeler::fillSimulationTable(
     return simulationTable;
 }
 
-void Modeler::exportMps() const
+void Modeler::buildProblemsAndWriteMps()
 {
+    buildProblems();
     for (std::size_t i = 0; i < subproblems_.size(); ++i)
     {
         auto& subproblem = subproblems_[i];
@@ -258,12 +259,12 @@ void Modeler::exportMps() const
         const auto mps = IO::Outputs::MPSGenerator(*subproblem, name, true).run();
         Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / (name + ".mps"), mps);
     }
-    // master.mps
     if (masterProblem_)
     {
         const auto mps = IO::Outputs::MPSGenerator(*masterProblem_, "master", true).run();
         Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / "master.mps", mps);
     }
+    exportStructureFile();
 }
 
 void Modeler::exportStructureFile() const
@@ -335,25 +336,63 @@ void Modeler::buildProblems()
 
 void Modeler::run()
 {
-    buildProblems();
-    if (parameters_.exportMps)
+    if (data_.resolutionMode == ResolutionMode::BENDERS_DECOMPOSITION)
     {
-        exportMps();
-        exportStructureFile();
-    }
-    if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
-    {
-        SimulationTable simulationTable;
-        for (std::size_t i = 0; i < subproblems_.size(); ++i)
+        if (parameters_.exportMps)
         {
-            auto& subproblem = subproblems_[i];
-            if (!subproblem)
+            buildProblemsAndWriteMps();
+        }
+        else
+        {
+            buildProblems();
+        }
+    }
+    else if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
+    {
+        buildMasterProblem();
+
+        SimulationTable simulationTable;
+        bool masterMpsWritten = false;
+        for (const unsigned year: scenarios_)
+        {
+            auto fillContext = createFillContext(year);
+            auto problemId = std::to_string(year) + "-1";
+            auto entities = buildProblem(data_,
+                                         Config::Location::SUBPROBLEMS,
+                                         problemId,
+                                         &data_.bendersDecomposition,
+                                         fillContext,
+                                         data_.resolutionMode,
+                                         parameters_.solver);
+
+            if (!entities.problem)
             {
                 continue;
             }
-            logs.info() << "Solving scenario " << scenarios_[i];
-            auto fillContext = createFillContext(scenarios_[i]);
-            subProbSolution_ = solveSubproblem(*subproblem);
+
+            logs.info() << "Number of variables: " << entities.problem->variableCount();
+            logs.info() << "Number of constraints: " << entities.problem->constraintCount();
+
+            if (parameters_.exportMps)
+            {
+                const auto name = std::to_string(year) + "-1";
+                const auto mps = IO::Outputs::MPSGenerator(*entities.problem, name, true).run();
+                Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / (name + ".mps"), mps);
+
+                if (!masterMpsWritten && masterProblem_)
+                {
+                    const auto masterMps = IO::Outputs::MPSGenerator(*masterProblem_,
+                                                                     "master",
+                                                                     true)
+                                             .run();
+                    Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / "master.mps",
+                                                               masterMps);
+                    masterMpsWritten = true;
+                }
+            }
+
+            logs.info() << "Solving scenario " << year;
+            subProbSolution_ = solveSubproblem(*entities.problem);
             if (!checkSolution(subProbSolution_))
             {
                 return;
@@ -363,10 +402,18 @@ void Modeler::run()
             {
                 fillSimulationTable(simulationTable,
                                     subProbSolution_,
-                                    *subproblem,
-                                    *subproblemOptimEntityContainers_[i],
+                                    *entities.problem,
+                                    *entities.optimEntityContainer,
                                     fillContext);
             }
+
+            // Keep only the most recent subproblem in memory so that at most one
+            // subproblem is held at a time. The retained problem keeps
+            // subProbSolution_ valid after the loop.
+            subproblems_.clear();
+            subproblemOptimEntityContainers_.clear();
+            subproblems_.emplace_back(std::move(entities.problem));
+            subproblemOptimEntityContainers_.emplace_back(std::move(entities.optimEntityContainer));
         }
 
         if (!parameters_.noOutput)

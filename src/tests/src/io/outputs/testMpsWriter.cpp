@@ -158,7 +158,7 @@ void processStudy(const filesystem::path& studyDir)
     fs::create_directory(outputPath);
 
     Modeler modeler(loader, outputPath, TableFormat::CSV);
-    modeler.run();
+    modeler.buildProblemsAndWriteMps();
 
     checkMPS(modeler, outputPath);
 
