@@ -15,7 +15,7 @@ Feature: 13 - Investment problems
     And the structure file contains the following entries
       | problem | variable                             | index |
       | master  | continuous_generator_candidate.p_max | 0     |
-      | 1-1     | continuous_generator_candidate.p_max | 3     |
+      | 0-1     | continuous_generator_candidate.p_max | 3     |
 
   @short
   Scenario: 13_2: Simple generation expansion problem on one node, one timestep and one scenario with two candidates: one continuous and one discrete.
@@ -36,8 +36,8 @@ Feature: 13 - Investment problems
       | problem | variable                             | index |
       | master  | continuous_generator_candidate.p_max | 0     |
       | master  | discrete_generator_candidate.p_max   | 1     |
-      | 1-1     | continuous_generator_candidate.p_max | 3     |
-      | 1-1     | discrete_generator_candidate.p_max   | 5     |
+      | 0-1     | continuous_generator_candidate.p_max | 3     |
+      | 0-1     | discrete_generator_candidate.p_max   | 5     |
 
   @short
   Scenario: 13_1: Problem generator - simple investment
@@ -54,7 +54,7 @@ Feature: 13 - Investment problems
     And the structure file contains the following entries
       | problem | variable                             | index |
       | master  | continuous_generator_candidate.p_max | 0     |
-      | 1-1     | continuous_generator_candidate.p_max | 3     |
+      | 0-1     | continuous_generator_candidate.p_max | 3     |
 
   @short
   Scenario: 13_2: Problem generator - generation expansion
@@ -75,5 +75,5 @@ Feature: 13 - Investment problems
       | problem | variable                             | index |
       | master  | continuous_generator_candidate.p_max | 0     |
       | master  | discrete_generator_candidate.p_max   | 1     |
-      | 1-1     | continuous_generator_candidate.p_max | 3     |
-      | 1-1     | discrete_generator_candidate.p_max   | 5     |
+      | 0-1     | continuous_generator_candidate.p_max | 3     |
+      | 0-1     | discrete_generator_candidate.p_max   | 5     |
