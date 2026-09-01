@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 
+#include <antares/solver/modeler/ModelerData.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/exception/LoadingError.hpp"
 #include "antares/study/study.h"

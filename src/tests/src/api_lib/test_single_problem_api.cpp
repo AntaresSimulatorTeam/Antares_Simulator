@@ -12,6 +12,7 @@
 #include "antares/antares/constants.h"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/study/study.h"
 #include "antares/writer/in_memory_writer.h"
 

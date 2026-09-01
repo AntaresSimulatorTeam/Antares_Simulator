@@ -3,12 +3,12 @@
 
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/Modeler.h>
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
-#include "antares/solver/simulation/solver.h"
 #include "antares/writer/table_format.h"
 
 using namespace Antares;
@@ -75,18 +75,18 @@ int main(int argc, const char** argv)
 
     try
     {
-        LoadFiles::FileLoader loader(studyPath);
-        fs::path outputPath = makeOutputPath(studyPath);
-        Modeler modeler(loader, outputPath, tableFormat);
+        Antares::Solver::LoadFiles::FileLoader loader(studyPath);
+        fs::path outputPath = Antares::Solver::makeOutputPath(studyPath);
+        Antares::Solver::Modeler modeler(loader, outputPath, tableFormat);
         exportSystemForViews(studyPath, outputPath);
         modeler.run();
     }
-    catch (const LoadFiles::ErrorLoadingYaml& e)
+    catch (const Antares::Solver::LoadFiles::ErrorLoadingYaml& e)
     {
         logs.error() << "Modeler loading error: " << e.what() << "\nExiting simulation.";
         return EXIT_FAILURE;
     }
-    catch (const Modeler::ModelerError& e)
+    catch (const Antares::Solver::Modeler::ModelerError& e)
     {
         logs.error() << "Modeler error: " << e.what() << "\nExiting simulation.";
         return EXIT_FAILURE;

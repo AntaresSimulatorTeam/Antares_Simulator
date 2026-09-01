@@ -18,8 +18,9 @@ add_library(Antares::${PROJ} ALIAS ${PROJ})
 set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
 
 target_link_libraries(${PROJ}
-        PRIVATE
+        PUBLIC
         Antares::antares-study-system-model
+        PRIVATE
         Antares::linear-problem-api
         Antares::exception
 )

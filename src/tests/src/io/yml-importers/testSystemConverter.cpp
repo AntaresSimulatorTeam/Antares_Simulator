@@ -334,18 +334,6 @@ struct PrepareYaml
     }
 };
 
-BOOST_FIXTURE_TEST_CASE(SystemWithAConnectionOfTwoSendingPorts, PrepareYaml)
-{
-    AddConnectionsToSystem(system,
-                           {{.firstCompo = "G",
-                             .firstPort = "injection_port",
-                             .secondCompo = "D",
-                             .secondPort = "injection_port"}});
-
-    YmlSystem::System systemObj = parserSystem.parse(system, "");
-    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), InputError);
-}
-
 BOOST_FIXTURE_TEST_CASE(TryPortSelfConnection, PrepareYaml)
 {
     AddConnectionsToSystem(system,

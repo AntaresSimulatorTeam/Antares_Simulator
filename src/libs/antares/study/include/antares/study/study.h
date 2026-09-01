@@ -10,7 +10,6 @@
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/correlation/correlation.h>
 #include <antares/date/date.h>
-#include <antares/solver/modeler/ModelerData.h>
 #include <antares/study/runtime/runtime.h>
 #include <antares/writer/i_writer.h>
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
@@ -25,6 +24,11 @@
 namespace Antares::Solver::Simulation
 {
 struct ReserveIndexMaps;
+}
+
+namespace Antares::Solver
+{
+struct ModelerData;
 }
 
 namespace Antares::Data
@@ -334,15 +338,8 @@ public:
 
     //@}
 
-    Solver::ModelerData* getModelerData() const
-    {
-        return modelerInput_.get();
-    }
-
-    void setModelerData(std::unique_ptr<Solver::ModelerData> modelerData)
-    {
-        modelerInput_ = std::move(modelerData);
-    }
+    Solver::ModelerData* getModelerData() const;
+    void setModelerData(std::unique_ptr<Solver::ModelerData> modelerData);
 
 protected:
     //! \name Loading
