@@ -203,7 +203,7 @@ Feature: Legacy variables in simulation table
     And in input "hydro/series/area/mod.txt" the time series is emptied
     When I run antares simulator with --output=simulation-tables
     Then the simulation succeeds
-    And the modeler outputs contain no entries for component "area_hydro"
+    And the modeler outputs contain no entries for component "area_hydro_storage"
 
   @fast @short
   Scenario: derived link outputs are absent when both NTC directions are zero across the whole study
