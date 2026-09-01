@@ -213,7 +213,6 @@ void BindingConstraint::offset(const ThermalCluster* cluster, int o)
 void BindingConstraint::resetToDefaultValues()
 {
     pEnabled = true;
-    pComments.clear();
     RHSTimeSeries_.reset();
 }
 
@@ -340,8 +339,6 @@ void BindingConstraint::clear()
     // Name / ID
     this->pName.clear();
     this->pID.clear();
-    // No comments
-    this->pComments.clear();
     // The type must be `hourly` by default for studies <=3.1, which was the only
     // type of binding constraints supported.
     this->pType = typeUnknown;
@@ -350,108 +347,6 @@ void BindingConstraint::clear()
     // Enabled: True by default to automatically allow the use of bindingconstraint
     // from old studies (<= 3.1)
     this->pEnabled = true;
-}
-
-bool BindingConstraint::contains(const Area* area) const
-{
-    for (const auto& [sourceLink, _]: pLinkWeights)
-    {
-        if (sourceLink->from == area || sourceLink->with == area)
-        {
-            return true;
-        }
-    }
-
-    for (const auto& [thermalCluster, _]: pClusterWeights)
-    {
-        if (thermalCluster->parentArea == area)
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-void BindingConstraint::buildFormula(std::string& s) const
-{
-    char tmp[42];
-    for (const auto& [sourceLink, weight]: pLinkWeights)
-    {
-        if (!sourceLink)
-        {
-            s += " + ";
-        }
-        SNPRINTF(tmp, sizeof(tmp), "%.2f", weight);
-
-        s += '(' + std::string(tmp) + " x " + (sourceLink ? sourceLink->getName() : "");
-
-        if (auto at = pLinkOffsets.find(sourceLink); at != pLinkOffsets.end())
-        {
-            int o = at->second;
-            if (o > 0)
-            {
-                s += " x (t + " + std::to_string(pLinkOffsets.find(sourceLink)->second) + ')';
-            }
-            if (o < 0)
-            {
-                s += " x (t - " + std::to_string(std::abs(pLinkOffsets.find(sourceLink)->second))
-                     + ')';
-            }
-        }
-
-        s += ')';
-    }
-
-    for (const auto [thermalCluster, weight]: pClusterWeights)
-    {
-        if (!thermalCluster)
-        {
-            s += " + ";
-        }
-        SNPRINTF(tmp, sizeof(tmp), "%.2f", weight);
-
-        s += '(' + std::string(tmp) + " x " + (thermalCluster ? thermalCluster->getFullName() : "");
-
-        if (auto at = pClusterOffsets.find(thermalCluster); at != pClusterOffsets.end())
-        {
-            int o = at->second;
-            if (o > 0)
-            {
-                s += " x (t + " + std::to_string(pClusterOffsets.find(thermalCluster)->second)
-                     + ')';
-            }
-            if (o < 0)
-            {
-                s += " x (t - "
-                     + std::to_string(std::abs(pClusterOffsets.find(thermalCluster)->second)) + ')';
-            }
-        }
-
-        if (!thermalCluster->isActive())
-        {
-            s += " x N/A";
-        }
-
-        s += ')';
-    }
-}
-
-bool BindingConstraint::contains(const BindingConstraint* bc) const
-{
-    return (this == bc);
-}
-
-bool BindingConstraint::contains(const AreaLink* lnk) const
-{
-    const auto i = pLinkWeights.find(lnk);
-    return (i != pLinkWeights.end());
-}
-
-bool BindingConstraint::contains(const ThermalCluster* cluster) const
-{
-    const auto i = pClusterWeights.find(cluster);
-    return (i != pClusterWeights.end());
 }
 
 void BindingConstraint::enabled(bool v)
@@ -657,7 +552,6 @@ void BindingConstraint::copyFrom(const BindingConstraint* original)
     pFilterYearByYear = original->pFilterYearByYear;
     pFilterSynthesis = original->pFilterSynthesis;
     pEnabled = original->pEnabled;
-    pComments = original->pComments;
     group_ = original->group_;
     RHSTimeSeries_.copyFrom(original->RHSTimeSeries_);
 }

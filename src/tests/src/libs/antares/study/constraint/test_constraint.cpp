@@ -65,7 +65,6 @@ BOOST_AUTO_TEST_CASE(load_basic_attributes)
     BOOST_CHECK_EQUAL(constraint->operatorType(), BindingConstraint::Operator::opEquality);
     BOOST_CHECK_EQUAL(constraint->yearByYearFilter(), FilterFlag::filterAnnual);
     BOOST_CHECK_EQUAL(constraint->synthesisFilter(), FilterFlag::filterHourly);
-    BOOST_CHECK_EQUAL(constraint->comments(), "dummy_comment");
     BOOST_CHECK_EQUAL(constraint->group(), "dummy_group");
 }
 
