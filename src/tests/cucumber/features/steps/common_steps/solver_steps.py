@@ -76,7 +76,7 @@ def empty_input_series(context, series_file):
     # the study, never on the shared resources tree -- otherwise every later
     # scenario reusing the same study would see the emptied series.
     # 'the solver study path is a copy of "..."' sets context.tmp_workdir.
-    assert getattr(context, "tmp_workdir", None) is not None, (
+    assert hasattr(context, "tmp_workdir"), (
         'the "time series is emptied" step modifies study files; load the '
         'study with \'Given the solver study path is a copy of "..."\' so the '
         "change stays confined to a temporary copy"
