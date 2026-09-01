@@ -341,7 +341,7 @@ void Modeler::run()
         if (!parameters_.exportMps)
         {
             logs.error() << "Resolution mode is benders-decomposition but exportMps is false. No "
-                              "resolution will be performed and no problem will be exported.";
+                            "resolution will be performed and no problem will be exported.";
             return;
         }
 
