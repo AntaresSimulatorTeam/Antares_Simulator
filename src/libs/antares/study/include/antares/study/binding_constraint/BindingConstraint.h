@@ -71,10 +71,6 @@ public:
     using Set = std::set<std::shared_ptr<BindingConstraint>, CompareBindingConstraintName>;
     //! Map of weight (for links)
     using linkWeightMap = std::map<const AreaLink*, double, CompareLinkName>;
-    //! Iterator
-    using iterator = linkWeightMap::iterator;
-    //! Const iterator
-    using const_iterator = linkWeightMap::const_iterator;
 
     //! Map of weight (for thermal clusters)
     using clusterWeightMap = std::map<const ThermalCluster*, double, CompareClusterName>;

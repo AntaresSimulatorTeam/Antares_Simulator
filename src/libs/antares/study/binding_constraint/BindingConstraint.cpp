@@ -3,8 +3,6 @@
 
 #include "antares/study/binding_constraint/BindingConstraint.h"
 
-#include <algorithm>
-#include <cmath>
 #include <functional>
 #include <vector>
 
@@ -13,12 +11,6 @@
 #include "antares/utils/utils.h"
 
 using namespace Antares;
-
-#ifdef _MSC_VER
-#define SNPRINTF sprintf_s
-#else
-#define SNPRINTF snprintf
-#endif
 
 namespace Antares::Data
 {
