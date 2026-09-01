@@ -138,6 +138,10 @@ def&#160;</td><td class="memItemRight" valign="bottom"><b>__init__</b> (self, pd
 <tr class="separator:a46bfa0635f1ba8dd52fdd1e71a8cabe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad824dd40bd791dbd8c8aef2bc8813ee5"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsimulation__table_1_1SimulationTable.html#ad824dd40bd791dbd8c8aef2bc8813ee5">get_entry</a> (self, str component, str output, Optional[float] block, Optional[float] timestep, Optional[float] scenario)</td></tr>
 <tr class="separator:ad824dd40bd791dbd8c8aef2bc8813ee5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31e111ee2343ec8dfa00803d32f8f1a1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsimulation__table_1_1SimulationTable.html#a31e111ee2343ec8dfa00803d32f8f1a1">has_rows_for_component</a> (self, str component)</td></tr>
+<tr class="separator:a31e111ee2343ec8dfa00803d32f8f1a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57175e0c864e67e91124b7edebb2fe7f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsimulation__table_1_1SimulationTable.html#a57175e0c864e67e91124b7edebb2fe7f">has_no_rows_for_component_and_output</a> (self, str component, str output)</td></tr>
+<tr class="separator:a57175e0c864e67e91124b7edebb2fe7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53bf15e7fd04e4ebaa14613ef56f9300"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsimulation__table_1_1SimulationTable.html#a53bf15e7fd04e4ebaa14613ef56f9300">get_objective_value</a> (self)</td></tr>
 <tr class="separator:a53bf15e7fd04e4ebaa14613ef56f9300"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9179e3b7e1c0bae862b937a8b9acb297"><td class="memItemLeft" align="right" valign="top">dict&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsimulation__table_1_1SimulationTable.html#a9179e3b7e1c0bae862b937a8b9acb297">get_objective_values_by_block</a> (self)</td></tr>
@@ -235,6 +239,74 @@ and column information.
       </table>
 </div><div class="memdoc">
 <pre class="fragment">Returns a dictionary mapping block number to objective value.</pre> 
+</div>
+</div>
+<a id="a57175e0c864e67e91124b7edebb2fe7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57175e0c864e67e91124b7edebb2fe7f">&#9670;&nbsp;</a></span>has_no_rows_for_component_and_output()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> bool simulation_table.SimulationTable.has_no_rows_for_component_and_output </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>component</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>output</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">True if no row matches both `component` and `output`.
+
+Narrower than `not has_rows_for_component`: useful when a component
+still legitimately carries rows from an unrelated mechanism (e.g.
+raw per-variable rows) and only a specific derived output's absence
+needs checking.
+</pre> 
+</div>
+</div>
+<a id="a31e111ee2343ec8dfa00803d32f8f1a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31e111ee2343ec8dfa00803d32f8f1a1">&#9670;&nbsp;</a></span>has_rows_for_component()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> bool simulation_table.SimulationTable.has_rows_for_component </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>component</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">True if the simulation table has at least one row for `component`.</pre> 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
