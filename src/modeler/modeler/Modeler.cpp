@@ -338,14 +338,14 @@ void Modeler::run()
 {
     if (data_.resolutionMode == ResolutionMode::BENDERS_DECOMPOSITION)
     {
-        if (parameters_.exportMps)
+        if (!parameters_.exportMps)
         {
-            buildProblemsAndWriteMps();
+            logs.error() << "Resolution mode is benders-decomposition but exportMps is false. No "
+                              "resolution will be performed and no problem will be exported.";
+            return;
         }
-        else
-        {
-            buildProblems();
-        }
+
+        buildProblemsAndWriteMps();
     }
     else if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
     {
