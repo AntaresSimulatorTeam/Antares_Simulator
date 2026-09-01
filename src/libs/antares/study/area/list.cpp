@@ -716,6 +716,13 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             fs::path reservesHydroPath = study.folderInput / "hydro" / "reserves" / area.id
                                          / "reserve-participations.yml";
+
+            if (studyVersion < StudyVersion(10, 2))
+            {
+                reservesHydroPath = study.folderInput / "hydro" / "common" / area.id
+                                    / "reserve-participations.yml";
+            }
+
             area.hydro.loadReserveParticipations(area, reservesHydroPath);
         }
     }
