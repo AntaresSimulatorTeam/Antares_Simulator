@@ -160,8 +160,7 @@ void fillLinearProblem(const FillContext& fillCtx,
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
-      std::make_unique<LegacyFiller>(optimEntityContainer.Problem(),
-                                                            problemeHebdo));
+      std::make_unique<LegacyFiller>(optimEntityContainer.Problem(), problemeHebdo));
     Utils::TimeMeasurement measure;
     if (problemeHebdo->modelerData)
     {
@@ -173,12 +172,11 @@ void fillLinearProblem(const FillContext& fillCtx,
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
-        fillersCollection.push_back(
-          std::make_unique<ComponentToAreaConnectionFiller>(
-            problemeHebdo,
-            optimEntityContainer,
-            problemeHebdo->modelerData->dataSeries.get(),
-            problemeHebdo->modelerData->scenarioGroupRepository));
+        fillersCollection.push_back(std::make_unique<ComponentToAreaConnectionFiller>(
+          problemeHebdo,
+          optimEntityContainer,
+          problemeHebdo->modelerData->dataSeries.get(),
+          problemeHebdo->modelerData->scenarioGroupRepository));
 
         fillersCollection.push_back(std::make_unique<ThermalCapacityFiller>(
           problemeHebdo,
@@ -221,9 +219,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     bool hasModelerData = modelerData != nullptr;
     const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
-    auto ortoolsProblem = std::make_shared<LegacyOrtoolsLinearProblem>(
-      isMip,
-      options.solverName);
+    auto ortoolsProblem = std::make_shared<LegacyOrtoolsLinearProblem>(isMip, options.solverName);
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
@@ -399,8 +395,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
     {
         const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
-        LegacyOrtoolsLinearProblem infeasibleProblem(isMip,
-                                                                            options.solverName);
+        LegacyOrtoolsLinearProblem infeasibleProblem(isMip, options.solverName);
         FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
 
         OptimEntityContainer optimEntityContainer(infeasibleProblem);

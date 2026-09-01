@@ -60,8 +60,7 @@ bool Economy::simulationBegin()
         weeklyOptProblems_.clear();
         postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
 
-        const auto inactiveComponents = Optimization::BuildInactiveComponentsAnalyzer(
-          study);
+        const auto inactiveComponents = Optimization::BuildInactiveComponentsAnalyzer(study);
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
@@ -136,11 +135,11 @@ bool Economy::year(Variable::State& state,
         currentProblem.HeureDansLAnnee = hourInTheYear;
 
         SIM_RenseignementProblemeHebdo(study,
-                                         currentProblem,
-                                         state.weekInTheYear,
-                                         hourInTheYear,
-                                         hydroVentilationResults,
-                                         scratchmap);
+                                       currentProblem,
+                                       state.weekInTheYear,
+                                       hourInTheYear,
+                                       hydroVentilationResults,
+                                       scratchmap);
 
         BuildThermalPartOfWeeklyProblem(study,
                                         currentProblem,
@@ -232,9 +231,8 @@ bool Economy::year(Variable::State& state,
 }
 
 // Retrieve weighted average balance for each area
-static std::vector<AvgExchangeResults*> retrieveBalance(
-  const Study& study,
-  Variable::Economy::AllVariables& variables)
+static std::vector<AvgExchangeResults*> retrieveBalance(const Study& study,
+                                                        Variable::Economy::AllVariables& variables)
 {
     const uint nbAreas = study.areas.size();
     std::vector<AvgExchangeResults*> balance(nbAreas, nullptr);

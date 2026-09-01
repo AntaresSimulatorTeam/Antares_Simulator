@@ -71,15 +71,15 @@ void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 **
 ** \return True si l'operation s'est bien deroulee, false si le probleme n'a pas de solution
 */
-bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
-                         PROBLEME_HEBDO*,
-                         int,
-                         const int,
-                         const OptPeriodStringGenerator&,
-                         Solver::IResultWriter& writer,
-                         IO::Outputs::SimulationTable* simulationTable,
-                         const Optimization::InactiveComponentsAnalyzer* inactiveComponents
-                         = nullptr);
+bool OPT_AppelDuSimplexe(
+  const SingleOptimOptions& options,
+  PROBLEME_HEBDO*,
+  int,
+  const int,
+  const OptPeriodStringGenerator&,
+  Solver::IResultWriter& writer,
+  IO::Outputs::SimulationTable* simulationTable,
+  const Optimization::InactiveComponentsAnalyzer* inactiveComponents = nullptr);
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,

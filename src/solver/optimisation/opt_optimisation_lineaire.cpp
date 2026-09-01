@@ -183,8 +183,7 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
             return false;
         }
 
-        if (problemeHebdo->ExportMPS != mpsExportStatus::NO_EXPORT
-            || problemeHebdo->Expansion)
+        if (problemeHebdo->ExportMPS != mpsExportStatus::NO_EXPORT || problemeHebdo->Expansion)
         {
             double optimalSolutionCost = OPT_ObjectiveFunctionResult(problemeHebdo,
                                                                      numeroDeLIntervalle,
@@ -280,9 +279,8 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     auto* firstOptimSimulationTable = simulationTables
                                         ? simulationTables->firstOptimSimulationTable()
                                         : nullptr;
-    const auto* inactiveComponents = simulationTables
-                                       ? simulationTables->inactiveComponents.get()
-                                       : nullptr;
+    const auto* inactiveComponents = simulationTables ? simulationTables->inactiveComponents.get()
+                                                      : nullptr;
     bool ret = runWeeklyOptimization(options.firstOptimOptions,
                                      problemeHebdo,
                                      writer,

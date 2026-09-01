@@ -146,11 +146,11 @@ bool Adequacy::year(Variable::State& state,
         currentProblem.HeureDansLAnnee = hourInTheYear;
 
         SIM_RenseignementProblemeHebdo(study,
-                                         currentProblem,
-                                         state.weekInTheYear,
-                                         hourInTheYear,
-                                         hydroVentilationResults,
-                                         scratchmap);
+                                       currentProblem,
+                                       state.weekInTheYear,
+                                       hourInTheYear,
+                                       hydroVentilationResults,
+                                       scratchmap);
 
         BuildThermalPartOfWeeklyProblem(study,
                                         currentProblem,
@@ -173,8 +173,7 @@ bool Adequacy::year(Variable::State& state,
                 {
                     double& conso = currentProblem.ConsommationsAbattues[hw]
                                       .ConsommationAbattueDuPays[ar];
-                    double stratReserve = area.reserves[fhrStrategicReserve]
-                                                       [hw + hourInTheYear];
+                    double stratReserve = area.reserves[fhrStrategicReserve][hw + hourInTheYear];
                     assert(ar < state.resSpilled.width);
                     assert(hw < state.resSpilled.height);
 
@@ -361,9 +360,8 @@ bool Adequacy::year(Variable::State& state,
 }
 
 // Retrieve weighted average balance for each area
-static std::vector<AvgExchangeResults*> retrieveBalance(
-  const Study& study,
-  Variable::Adequacy::AllVariables& variables)
+static std::vector<AvgExchangeResults*> retrieveBalance(const Study& study,
+                                                        Variable::Adequacy::AllVariables& variables)
 {
     const uint nbAreas = study.areas.size();
     std::vector<AvgExchangeResults*> balance(nbAreas, nullptr);

@@ -36,13 +36,13 @@ namespace
 // InactiveComponentsAnalyzer::miscGenColumnIsAllZero (matching
 // fillInputGenerationSeries's miscGenComponents in sim_calcul_economique.cpp).
 constexpr std::array<const char*, Data::fhhMax> miscGenSuffixes = {"_combined_heat_power",
-                                                        "_biomass",
-                                                        "_biogas",
-                                                        "_waste",
-                                                        "_geothermal",
-                                                        "_other",
-                                                        "_pumped_storage_power",
-                                                        "_rest_world"};
+                                                                   "_biomass",
+                                                                   "_biogas",
+                                                                   "_waste",
+                                                                   "_geothermal",
+                                                                   "_other",
+                                                                   "_pumped_storage_power",
+                                                                   "_rest_world"};
 
 // Emission extra-output IDs, ordered to match Antares::Data::Pollutant::PollutantEnum
 // so each pollutant's factor (read by ordinal from the cluster data) maps to its row.
@@ -232,8 +232,7 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
     const double rawLoad = problemeHebdo_.ConsommationsAbattues[pdt].ConsommationAbattueDuPays[pays]
                            + problemeHebdo_.AllMustRunGeneration[pdt]
                                .AllMustRunGenerationOfArea[pays];
-    const bool loadIsSuppressed = inactiveComponents_
-                                  && inactiveComponents_->loadIsAllZero(pays);
+    const bool loadIsSuppressed = inactiveComponents_ && inactiveComponents_->loadIsAllZero(pays);
     if (!loadIsSuppressed)
     {
         emit("actual_load", fmt::format("{}_load", problemeHebdo_.NomsDesPays[pays]), pdt, rawLoad);
