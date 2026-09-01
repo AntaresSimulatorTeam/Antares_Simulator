@@ -8,9 +8,8 @@
 #include <memory>
 #include <vector>
 
-#include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
-#include "antares/solver/optimisation/opt_constants.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/utils/opt_constants.h"
 #include "antares/solver/utils/optimization_statistics.h"
 #include "antares/study/fwd.h"
 #include "antares/study/study.h"
@@ -558,12 +557,6 @@ struct PROBLEME_HEBDO
     bool OptimisationNotFastMode = false;
     bool OptimisationAvecVariablesEntieres = false;
     bool useThermalHeuristic = true;
-
-    // Study-wide, once-only precomputed activity flags used to suppress
-    // simulation-table rows for structurally inactive objects (see
-    // AddLegacyExtraOutputs). Null by default: legacy callers and hand-built
-    // test fixtures that don't set it keep emitting every row, unaffected.
-    std::shared_ptr<const Antares::Optimization::InactiveComponentsAnalyzer> inactiveComponents;
 
     uint32_t NombreDePays = 0;
     std::vector<const char*> NomsDesPays;

@@ -3,8 +3,26 @@
 
 #include "antares/study/sets.h"
 
+#include <string>
+
+#include <antares/utils/utils.h>
+
 namespace Antares::Data
 {
+namespace
+{
+std::string trim(const std::string& s)
+{
+    const auto begin = s.find_first_not_of(" \t");
+    if (begin == std::string::npos)
+    {
+        return std::string();
+    }
+    const auto end = s.find_last_not_of(" \t");
+    return s.substr(begin, end - begin + 1);
+}
+} // namespace
+
 Sets::Sets(const Sets& rhs):
     pMap(rhs.pMap),
     pOptions(rhs.pOptions)
@@ -43,13 +61,13 @@ void Sets::clear()
     pOptions.clear();
 }
 
-Sets::SetAreasType& Sets::operator[](uint i)
+Sets::SetAreasType& Sets::operator[](unsigned int i)
 {
     assert(i < pMap.size() && "Sets: operator[] index out of bounds");
     return *(pByIndex[i]);
 }
 
-const Sets::SetAreasType& Sets::operator[](uint i) const
+const Sets::SetAreasType& Sets::operator[](unsigned int i) const
 {
     assert(i < pMap.size() && "Sets: operator[] index out of bounds");
     return *(pByIndex[i]);
@@ -57,7 +75,6 @@ const Sets::SetAreasType& Sets::operator[](uint i) const
 
 void Sets::dumpToLogs() const
 {
-    using namespace Yuni;
     for (const auto& [setId, set]: pMap)
     {
         logs.info() << "   found `" << setId << "` (" << set->size() << ' '
@@ -68,7 +85,6 @@ void Sets::dumpToLogs() const
 
 void Sets::defaultForAreas()
 {
-    using namespace Yuni;
     clear();
     Options opts;
     opts.caption = "All areas";
@@ -79,39 +95,36 @@ void Sets::defaultForAreas()
     add("all areas", district, opts);
 }
 
-YString Sets::toString()
+std::string Sets::toString()
 {
-    using namespace Yuni;
-    using namespace Antares;
     static const char* cmds[ruleMax] = {"none", "+", "-", "apply-filter"};
-    YString ret = "";
+    std::string ret;
     for (const auto& [setId, options]: pOptions)
     {
         const Options& opts = options;
-        ret << '[' << setId << "]\n";
-        ret << "caption = " << opts.caption << '\n';
+        ret += '[' + setId + "]\n";
+        ret += "caption = " + opts.caption + '\n';
         if (not opts.comments.empty())
         {
-            ret << "comments = " << opts.comments << '\n';
+            ret += "comments = " + opts.comments + '\n';
         }
         if (!opts.output)
         {
-            ret << "output = false\n";
+            ret += "output = false\n";
         }
 
-        for (uint r = 0; r != opts.rules.size(); ++r)
+        for (unsigned int r = 0; r != opts.rules.size(); ++r)
         {
             const Rule& rule = opts.rules[r];
-            ret << cmds[rule.first] << " = " << rule.second << '\n';
+            ret += std::string(cmds[rule.first]) + " = " + rule.second + '\n';
         }
-        ret << '\n';
+        ret += '\n';
     }
     return ret;
 }
 
 bool Sets::loadFromFile(const std::filesystem::path& filename)
 {
-    using namespace Yuni;
     using namespace Antares;
 
     // Empty the container first
@@ -127,7 +140,7 @@ bool Sets::loadFromFile(const std::filesystem::path& filename)
     IniFile ini;
     if (ini.open(filename))
     {
-        Yuni::String value;
+        std::string value;
 
         // each section...
         for (auto* section = ini.firstSection; section != nullptr; section = section->next)
@@ -152,33 +165,33 @@ bool Sets::loadFromFile(const std::filesystem::path& filename)
                     continue;
                 }
 
-                value = p->value;
-                value.toLower();
+                value = std::string(p->value);
+                value = stringToLower(value);
 
                 if (p->key == "+")
                 {
-                    opts.rules.emplace_back(ruleAdd, value.to<std::string>());
+                    opts.rules.emplace_back(ruleAdd, value);
                     continue;
                 }
                 if (p->key == "-")
                 {
-                    opts.rules.emplace_back(ruleRemove, value.to<std::string>());
+                    opts.rules.emplace_back(ruleRemove, value);
                     continue;
                 }
                 if (p->key == "apply-filter")
                 {
-                    opts.rules.emplace_back(ruleFilter, value.to<std::string>());
+                    opts.rules.emplace_back(ruleFilter, value);
                     continue;
                 }
                 if (p->key == "output")
                 {
-                    opts.output = value.to<bool>();
+                    opts.output = stringToBool(value);
                     continue;
                 }
                 if (p->key == "comments")
                 {
-                    opts.comments = p->value;
-                    opts.comments.trim(" \t");
+                    opts.comments = std::string(p->value);
+                    opts.comments = trim(opts.comments);
                     continue;
                 }
                 if (p->key == "caption")
@@ -192,8 +205,8 @@ bool Sets::loadFromFile(const std::filesystem::path& filename)
             }
 
             // Add the new group
-            IDType newid = section->name;
-            newid.toLower();
+            IDType newid = std::string(section->name);
+            newid = stringToLower(newid);
             add(newid, district, opts);
         }
 
@@ -216,7 +229,6 @@ void Sets::rebuildAllFromRules(SetHandlerAreas& handler)
 
 void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
 {
-    using namespace Yuni;
     using namespace Antares;
 
     const auto pair = pOptions.find(id);
@@ -232,7 +244,7 @@ void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
     // Clear the result first
     handler.clear(set);
     // Apply all rules
-    for (uint i = 0; i != opts.rules.size(); ++i)
+    for (unsigned int i = 0; i != opts.rules.size(); ++i)
     {
         const Rule& rule = opts.rules[i];
         const std::string name = rule.second;
@@ -296,7 +308,7 @@ void Sets::rebuildIndexes()
     pByIndex.clear();
     pByIndex.resize(pMap.size());
 
-    uint index = 0;
+    unsigned int index = 0;
     for (const auto& [setId, set]: pMap)
     {
         pByIndex[index] = set;
@@ -305,42 +317,42 @@ void Sets::rebuildIndexes()
     }
 }
 
-bool Sets::hasOutput(const Yuni::ShortString128& s) const
+bool Sets::hasOutput(const std::string& s) const
 {
     const auto pair = pOptions.find(s);
     return (pair != pOptions.end()) ? pair->second.output : false;
 }
 
-bool Sets::hasOutput(const uint index) const
+bool Sets::hasOutput(const unsigned int index) const
 {
     return hasOutput(IDType(pNameByIndex[index]));
 }
 
-uint Sets::resultSize(const Yuni::ShortString128& s) const
+unsigned int Sets::resultSize(const std::string& s) const
 {
     const auto pair = pOptions.find(s);
     return (pair != pOptions.end()) ? pair->second.resultSize : 0;
 }
 
-Sets::IDType Sets::caption(const Yuni::ShortString128& s) const
+Sets::IDType Sets::caption(const std::string& s) const
 {
     const auto pair = pOptions.find(s);
     return (pair != pOptions.end()) ? pair->second.caption : IDType();
 }
 
-Sets::IDType Sets::caption(const uint i) const
+Sets::IDType Sets::caption(const unsigned int i) const
 {
     return caption(IDType(pNameByIndex[i]));
 }
 
-uint Sets::resultSize(const uint index) const
+unsigned int Sets::resultSize(const unsigned int index) const
 {
     return resultSize(IDType(pNameByIndex[index]));
 }
 
-uint Sets::size() const
+unsigned int Sets::size() const
 {
-    return (uint)pMap.size();
+    return (unsigned int)pMap.size();
 }
 
 SetHandlerAreas::SetHandlerAreas(AreaList& areas):
@@ -353,9 +365,9 @@ void SetHandlerAreas::clear(Sets::SetAreasType& set)
     set.clear();
 }
 
-uint SetHandlerAreas::size(Sets::SetAreasType& set)
+unsigned int SetHandlerAreas::size(Sets::SetAreasType& set)
 {
-    return (uint)set.size();
+    return (unsigned int)set.size();
 }
 
 bool SetHandlerAreas::add(Sets::SetAreasType& set, const std::string& value)

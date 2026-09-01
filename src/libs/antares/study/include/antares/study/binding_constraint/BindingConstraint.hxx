@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
+#include <filesystem>
 #include <ranges>
 
 namespace Antares::Data
@@ -16,22 +17,22 @@ inline const std::string& BindingConstraint::id() const
     return pID;
 }
 
-inline const YString& BindingConstraint::comments() const
+inline const std::string& BindingConstraint::comments() const
 {
     return pComments;
 }
 
-inline void BindingConstraint::comments(const AnyString& newcomments)
+inline void BindingConstraint::comments(const std::string& newcomments)
 {
     pComments = newcomments;
 }
 
-inline uint BindingConstraint::linkCount() const
+inline unsigned int BindingConstraint::linkCount() const
 {
-    return (uint)pLinkWeights.size();
+    return (unsigned int)pLinkWeights.size();
 }
 
-inline uint BindingConstraint::clusterCount() const
+inline unsigned int BindingConstraint::clusterCount() const
 {
     return std::ranges::count_if(pClusterWeights | std::views::keys,
                                  [](const Data::ThermalCluster* coeff)
@@ -94,17 +95,15 @@ inline BindingConstraint::const_iterator BindingConstraint::end() const
 template<class Env>
 inline std::string BindingConstraint::timeSeriesFileName(const Env& env) const
 {
+    const auto idName = id();
     switch (operatorType())
     {
     case BindingConstraint::opLess:
-        return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_lt"
-               + ".txt";
+        return (std::filesystem::path(env.folder) / (idName + "_lt.txt")).string();
     case BindingConstraint::opGreater:
-        return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_gt"
-               + ".txt";
+        return (std::filesystem::path(env.folder) / (idName + "_gt.txt")).string();
     case BindingConstraint::opEquality:
-        return std::string() + env.folder.c_str() + Yuni::IO::Separator + id().c_str() + "_eq"
-               + ".txt";
+        return (std::filesystem::path(env.folder) / (idName + "_eq.txt")).string();
     default:
         logs.error("Cannot load/save time series of type other that eq/gt/lt");
         return "";

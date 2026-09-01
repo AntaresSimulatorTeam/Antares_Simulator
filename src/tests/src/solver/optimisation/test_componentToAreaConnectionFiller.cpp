@@ -11,6 +11,7 @@
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/study/system-model/library.h"
@@ -88,8 +89,6 @@ library:
 static const auto systemYaml = R"(
 system:
   id: my_system
-
-  model-libraries: my_lib
 
   components:
   - id: component_with_vars

@@ -8,6 +8,7 @@
 #include <antares/locale/locale.h>
 #include <antares/logs/logs.h>
 #include <antares/memory/memory.h>
+#include <antares/solver/variable/registerThematicTrimmingVariables.h>
 #include "antares/application/application.h"
 
 using namespace Antares;
@@ -69,7 +70,7 @@ constexpr int ALLOCATION_FAILURE_EXIT_CODE = 42;
 
 void logAbortion()
 {
-    if (!logs.logfile())
+    if (logs.logfile().empty())
     {
         logs.fatal() << "Aborting now. (warning: no file log available)";
         logs.warning() << "No log file available";
@@ -89,6 +90,8 @@ int main(int argc, const char** argv)
 {
     try
     {
+        Antares::Solver::Variable::RegisterThematicTrimmingVariables();
+
         Antares::Solver::Application application;
         auto& durationCollector = application.getDurationCollector();
 

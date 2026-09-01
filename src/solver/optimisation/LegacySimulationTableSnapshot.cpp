@@ -20,7 +20,8 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
                                PROBLEME_HEBDO& problemeHebdo,
                                const FillContext& fillContext,
                                const LegacyNameMapper& nameMapper,
-                               unsigned currentBlock)
+                               unsigned currentBlock,
+                               const InactiveComponentsAnalyzer* inactiveComponents)
 {
     const PROBLEME_ANTARES_A_RESOUDRE& problem = *problemeHebdo.ProblemeAResoudre;
 
@@ -48,7 +49,7 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
            .status = std::nullopt});
     }
 
-    AddLegacyExtraOutputs(simulationTable, problemeHebdo, fillContext, currentBlock);
+    AddLegacyExtraOutputs(simulationTable, problemeHebdo, fillContext, currentBlock, inactiveComponents);
 }
 
 } // namespace Antares::Optimization

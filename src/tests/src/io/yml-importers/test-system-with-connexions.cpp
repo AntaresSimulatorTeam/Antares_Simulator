@@ -171,8 +171,6 @@ system:
   id: my_system
   description: some descrition for my system
 
-  model-libraries: my_lib
-
   components:
   - id: N
     model: my_lib.balance_node
@@ -320,8 +318,6 @@ static const auto thermalConnectionSystem = R"(
 system:
   id: my_system
   description: some descrition for my system
-
-  model-libraries: my_lib
 
   components:
   - id: my_thermal_invest

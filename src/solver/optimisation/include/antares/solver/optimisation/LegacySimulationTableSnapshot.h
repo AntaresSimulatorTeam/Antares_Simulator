@@ -13,6 +13,7 @@ struct PROBLEME_HEBDO;
 namespace Antares::Optimization
 {
 
+class InactiveComponentsAnalyzer;
 // Writes the legacy solver's contribution to the simulation table: one raw row
 // per named optimisation variable (value = X[i], name translated through
 // nameMapper), followed by the derived rows of AddLegacyExtraOutputs.
@@ -23,6 +24,7 @@ void FillLegacySimulationTable(Antares::IO::Outputs::SimulationTable& simulation
                                PROBLEME_HEBDO& problemeHebdo,
                                const Antares::LinearProblem::Api::FillContext& fillContext,
                                const LegacyNameMapper& nameMapper,
-                               unsigned currentBlock);
+                               unsigned currentBlock,
+                               const InactiveComponentsAnalyzer* inactiveComponents);
 
 } // namespace Antares::Optimization
