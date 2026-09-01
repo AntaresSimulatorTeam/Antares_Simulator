@@ -10,9 +10,11 @@
 #include "antares/solver/simulation/opt_time_writer.h"
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
 #include "antares/solver/variable/adequacy/all.h"
-#include "antares/solver/variable/economy/all.h"
-#include "antares/solver/variable/state.h"
-#include "antares/solver/variable/variable.h"
+
+namespace Antares::Optimization
+{
+class InactiveComponentsAnalyzer;
+}
 
 namespace Antares::Solver::Simulation
 {
@@ -25,7 +27,7 @@ public:
         return "adequacy";
     }
 
-    static constexpr Data::SimulationMode mode = Data::SimulationMode::Adequacy;
+    static constexpr auto mode = SimulationMode::Adequacy;
 
     //! \name Constructor & Destructor
     //@{
@@ -34,9 +36,9 @@ public:
     **
     ** \param study The current study
     */
-    Adequacy(Data::Study& study,
+    Adequacy(Study& study,
              IResultWriter& resultWriter,
-             Simulation::ISimulationObserver& simulationObserver);
+             ISimulationObserver& simulationObserver);
     //! Destructor
     ~Adequacy() = default;
     //@}
@@ -44,9 +46,9 @@ public:
     Benchmarking::OptimizationInfo getOptimizationInfo() const;
 
     //! Current study
-    Data::Study& study;
+    Study& study;
     //! All variables
-    Solver::Variable::Adequacy::AllVariables variables;
+    Variable::Adequacy::AllVariables variables;
     //! Prepro only
     bool preproOnly = false;
 
@@ -61,7 +63,7 @@ protected:
               const HYDRO_VENTILATION_RESULTS&,
               OptimizationStatisticsWriter& optWriter,
               Benchmarking::DurationCollector& durationCollector,
-              const Antares::Data::Area::ScratchMap& scratchmap);
+              const Area::ScratchMap& scratchmap);
 
     void simulationEnd();
 
@@ -78,7 +80,10 @@ private:
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     Matrix<> pRES;
     IResultWriter& resultWriter;
-    std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
+    std::reference_wrapper<ISimulationObserver> simulationObserver_;
+    // Study-wide activity flags, built once in simulationBegin(); consulted only
+    // while producing the legacy simulation tables.
+    std::shared_ptr<const Optimization::InactiveComponentsAnalyzer> inactiveComponents_;
 }; // class Adequacy
 
 // See economy.h: concentrate the single ISimulation<Adequacy> instantiation in

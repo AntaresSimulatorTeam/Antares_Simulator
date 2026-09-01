@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+#include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -66,13 +67,15 @@ public:
     LegacyExtraOutputEmitter(SimulationTable& simulationTable,
                              PROBLEME_HEBDO& problemeHebdo,
                              const FillContext& fillContext,
-                             unsigned currentBlock):
+                             unsigned currentBlock,
+                             const InactiveComponentsAnalyzer* inactiveComponents):
         table_(simulationTable),
         problemeHebdo_(problemeHebdo),
         problem_(*problemeHebdo.ProblemeAResoudre),
         variableManager_(VariableManagerFromProblemHebdo(&problemeHebdo)),
         fillContext_(fillContext),
-        block_(currentBlock)
+        block_(currentBlock),
+        inactiveComponents_(inactiveComponents)
     {
         // Component names are used for every time step of the week: build them
         // once instead of re-concatenating them on each hourly call.
@@ -150,6 +153,7 @@ private:
     VariableManagement::VariableManager variableManager_;
     const FillContext& fillContext_;
     unsigned block_;
+    const InactiveComponentsAnalyzer* inactiveComponents_;
 
     // Component names, precomputed once per week (see constructor).
     std::vector<std::string> areaNames_;
@@ -177,11 +181,11 @@ void LegacyExtraOutputEmitter::emit(const std::string& output,
 bool LegacyExtraOutputEmitter::inputGenerationIsSuppressed(uint32_t pays,
                                                            const std::string& componentName) const
 {
-    if (!problemeHebdo_.inactiveComponents)
+    if (!inactiveComponents_)
     {
         return false;
     }
-    const auto& analyzer = *problemeHebdo_.inactiveComponents;
+    const auto& analyzer = *inactiveComponents_;
     if (componentName.ends_with("_wind"))
     {
         return analyzer.windIsAllZero(pays);
@@ -228,8 +232,8 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
     const double rawLoad = problemeHebdo_.ConsommationsAbattues[pdt].ConsommationAbattueDuPays[pays]
                            + problemeHebdo_.AllMustRunGeneration[pdt]
                                .AllMustRunGenerationOfArea[pays];
-    const bool loadIsSuppressed = problemeHebdo_.inactiveComponents
-                                  && problemeHebdo_.inactiveComponents->loadIsAllZero(pays);
+    const bool loadIsSuppressed = inactiveComponents_
+                                  && inactiveComponents_->loadIsAllZero(pays);
     if (!loadIsSuppressed)
     {
         emit("actual_load", fmt::format("{}_load", problemeHebdo_.NomsDesPays[pays]), pdt, rawLoad);
@@ -268,9 +272,8 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
     // the HydroLevel variable's existence).
     const bool hydroBalancePortIsSuppressed = !problemeHebdo_.CaracteristiquesHydrauliques[pays]
                                                  .SuiviNiveauHoraire
-                                              && problemeHebdo_.inactiveComponents
-                                              && problemeHebdo_.inactiveComponents
-                                                   ->hydroInflowIsAllZero(pays);
+                                              && inactiveComponents_
+                                              && inactiveComponents_->hydroInflowIsAllZero(pays);
     if (hydProd >= 0 && !hydroBalancePortIsSuppressed)
     {
         const int pumping = variableManager_.Pumping(pays, pdt);
@@ -297,8 +300,7 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
 
 void LegacyExtraOutputEmitter::linkOutputs(uint32_t interco, int pdt)
 {
-    if (problemeHebdo_.inactiveComponents
-        && problemeHebdo_.inactiveComponents->linkIsAllZero(interco))
+    if (inactiveComponents_ && inactiveComponents_->linkIsAllZero(interco))
     {
         return;
     }
@@ -485,9 +487,14 @@ void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays)
 void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                            PROBLEME_HEBDO& problemeHebdo,
                            const FillContext& fillContext,
-                           unsigned currentBlock)
+                           unsigned currentBlock,
+                           const InactiveComponentsAnalyzer* inactiveComponents)
 {
-    LegacyExtraOutputEmitter emitter(simulationTable, problemeHebdo, fillContext, currentBlock);
+    LegacyExtraOutputEmitter emitter(simulationTable,
+                                     problemeHebdo,
+                                     fillContext,
+                                     currentBlock,
+                                     inactiveComponents);
 
     for (int pdt = 0; pdt < problemeHebdo.NombreDePasDeTempsPourUneOptimisation; ++pdt)
     {

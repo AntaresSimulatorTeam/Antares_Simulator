@@ -15,14 +15,14 @@
 
 using namespace Yuni;
 using namespace Antares::Writer;
-using Antares::Constants::nbHoursInAWeek;
+using Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
 
-Economy::Economy(Data::Study& study,
+Economy::Economy(Study& study,
                  IResultWriter& resultWriter,
-                 Simulation::ISimulationObserver& simulationObserver):
+                 ISimulationObserver& simulationObserver):
     study(study),
     preproOnly(false),
     resultWriter_(resultWriter),
@@ -60,7 +60,7 @@ bool Economy::simulationBegin()
         weeklyOptProblems_.clear();
         postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
 
-        const auto inactiveComponents = Antares::Optimization::BuildInactiveComponentsAnalyzer(
+        const auto inactiveComponents = Optimization::BuildInactiveComponentsAnalyzer(
           study);
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
@@ -69,7 +69,6 @@ bool Economy::simulationBegin()
                                             pProblemesHebdo[numSpace],
                                             nbHoursInAWeek,
                                             numSpace);
-            pProblemesHebdo[numSpace].inactiveComponents = inactiveComponents;
             if (study.parameters.include.reserves)
             {
                 buildReserveIndexMaps(study, pProblemesHebdo[numSpace]);
@@ -80,6 +79,13 @@ bool Economy::simulationBegin()
                                             resultWriter_,
                                             simulationObserver_.get(),
                                             study.parameters.writeSimulationTable());
+
+            // The inactive-components flags are only consulted while producing
+            // the legacy simulation tables, so they travel with those tables.
+            if (auto* tables = weeklyOptProblems_.back().simulationTables())
+            {
+                tables->inactiveComponents = inactiveComponents;
+            }
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
@@ -104,7 +110,7 @@ bool Economy::year(Variable::State& state,
                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                    OptimizationStatisticsWriter& optWriter,
                    Benchmarking::DurationCollector& durationCollector,
-                   const Antares::Data::Area::ScratchMap& scratchmap)
+                   const Area::ScratchMap& scratchmap)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -129,7 +135,7 @@ bool Economy::year(Variable::State& state,
         currentProblem.weekInTheYear = state.weekInTheYear = w;
         currentProblem.HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(study,
+        SIM_RenseignementProblemeHebdo(study,
                                          currentProblem,
                                          state.weekInTheYear,
                                          hourInTheYear,
@@ -178,7 +184,7 @@ bool Economy::year(Variable::State& state,
             optWriter.addTime(w, currentProblem.timeMeasure);
             addTimeMeasure(durationCollector, currentProblem.timeMeasure);
         }
-        catch (Data::AssertionError& ex)
+        catch (AssertionError& ex)
         {
             // Indicate failed week list (first week of the year is "week number one" for the user
             // but w=0 for the loop)
@@ -189,7 +195,7 @@ bool Economy::year(Variable::State& state,
                        + " simulation is stopped : " + ex.what());
             return false;
         }
-        catch (Data::UnfeasibleProblemError&)
+        catch (UnfeasibleProblemError&)
         {
             // need to clean next problemeHebdo
 
@@ -198,7 +204,7 @@ bool Economy::year(Variable::State& state,
             failedWeekList.push_back(w + 1);
 
             // Define if simulation must be stopped
-            if (Data::stopSimulation(study.parameters.include.unfeasibleProblemBehavior))
+            if (stopSimulation(study.parameters.include.unfeasibleProblemBehavior))
             {
                 return false;
             }
@@ -227,14 +233,14 @@ bool Economy::year(Variable::State& state,
 
 // Retrieve weighted average balance for each area
 static std::vector<AvgExchangeResults*> retrieveBalance(
-  const Data::Study& study,
-  Solver::Variable::Economy::AllVariables& variables)
+  const Study& study,
+  Variable::Economy::AllVariables& variables)
 {
     const uint nbAreas = study.areas.size();
     std::vector<AvgExchangeResults*> balance(nbAreas, nullptr);
     for (uint areaIndex = 0; areaIndex < nbAreas; ++areaIndex)
     {
-        const Data::Area* area = study.areas.byIndex[areaIndex];
+        const Area* area = study.areas.byIndex[areaIndex];
         variables.retrieveResultsForArea<Variable::Economy::VCardBalance>(&balance[areaIndex],
                                                                           area);
     }

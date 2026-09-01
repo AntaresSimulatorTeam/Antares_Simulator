@@ -31,6 +31,11 @@ class SimulationTable;
 class OptimisationsSimulationTable;
 } // namespace Antares::IO::Outputs
 
+namespace Antares::Optimization
+{
+class InactiveComponentsAnalyzer;
+}
+
 using namespace Antares;
 
 void OPT_OptimisationHebdomadaireLineaire(
@@ -71,7 +76,9 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          const int,
                          const OptPeriodStringGenerator&,
                          Solver::IResultWriter& writer,
-                         IO::Outputs::SimulationTable* simulationTable);
+                         IO::Outputs::SimulationTable* simulationTable,
+                         const Optimization::InactiveComponentsAnalyzer* inactiveComponents
+                         = nullptr);
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
