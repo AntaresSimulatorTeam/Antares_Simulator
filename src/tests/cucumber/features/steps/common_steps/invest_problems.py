@@ -29,7 +29,7 @@ def read_invest_problems(output_path: Path) -> invest_problems:
         master = None
 
     try:
-        subproblem = read_if_exists(os.path.join(output_location, "0-1.mps"), mpu.load_problem)
+        subproblem = read_if_exists(os.path.join(output_location, "0-0.mps"), mpu.load_problem)
     except Exception:
         subproblem = None
 
