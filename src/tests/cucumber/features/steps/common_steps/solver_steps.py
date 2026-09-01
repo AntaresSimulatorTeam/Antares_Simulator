@@ -71,6 +71,16 @@ def empty_input_series(context, series_file):
     # An empty series file is Antares' own convention for "no data": the
     # series loads as a single all-zero column (see e.g. the "he" area's
     # empty mod.txt/ror.txt in the "Accurate hydro pricing" fixture).
+    #
+    # This overwrites a file on disk, so it must run on a throwaway copy of
+    # the study, never on the shared resources tree -- otherwise every later
+    # scenario reusing the same study would see the emptied series.
+    # 'the solver study path is a copy of "..."' sets context.tmp_workdir.
+    assert getattr(context, "tmp_workdir", None) is not None, (
+        'the "time series is emptied" step modifies study files; load the '
+        'study with \'Given the solver study path is a copy of "..."\' so the '
+        "change stays confined to a temporary copy"
+    )
     file_path = context.study_path / "input" / Path(series_file.replace("/", os.sep))
     file_path.parent.mkdir(parents=True, exist_ok=True)
     file_path.write_text("")
