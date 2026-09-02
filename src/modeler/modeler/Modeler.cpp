@@ -323,6 +323,10 @@ void Modeler::buildProblems()
         subproblemOptimEntityContainers_.emplace_back(std::move(entities.optimEntityContainer));
     }
 
+    measure.tick();
+    logs.info();
+    logs.info() << "Modeler build took " << measure.toStringInSeconds();
+
     if (subproblems_.empty())
     {
         logs.warning()
@@ -331,14 +335,9 @@ void Modeler::buildProblems()
     else
     {
         logs.info() << "Number of subproblems built: " << subproblems_.size();
+        logs.info() << "Number of variables: " << subproblems_.back()->variableCount();
+        logs.info() << "Number of constraints: " << subproblems_.back()->constraintCount();
     }
-
-    logs.info() << "Number of variables: " << subproblems_.back()->variableCount();
-    logs.info() << "Number of constraints: " << subproblems_.back()->constraintCount();
-
-    measure.tick();
-    logs.info();
-    logs.info() << "Modeler build took " << measure.toStringInSeconds();
 }
 
 void Modeler::run()
