@@ -4,6 +4,76 @@ toc_depth: 2
 
 # Antares Changelog
 
+## Branch 10.2.x
+
+### 10.2.0
+
+#### Features
+
+* Add legacy variable in simulation table [ANT-4962] (#3676, #3704)
+* Extra-outputs: export legacy outputs in simulation table [ANT-5006] (#3715, #3717, #3727, #3739)
+* Add warning when final level is outside rule curves [ANT-3139] (#3759)
+* Export original problem for unfeasible problems [ANT-4987] (#3692)
+* Parquet support for modeler and legacy solver [ANT-4633] (#3565, #3586)
+* Export by MC year instead of global 2-file aggregation [ANT-4633] (#3640)
+
+#### GEMS / Modeler
+
+* Add round and abs operators in expressions [ANT-5110] (#3718)
+* Antares-modeler: add time in output (#3591)
+* Fix simulation week used for GEMS component in hybrid [ANT-4930] (#3627, #3651)
+* Fix modeler output path (#3624, #3711)
+* Add cucumber tests for antares-modeler + parquet simulation tables [ANT-5180] (#3752)
+
+#### Reserves
+
+* New feature to model reserves participation (#2575)
+* Change reserves input format to yaml [ANT-5117] (#3729)
+* Fix reserves participation never computed [ANT-5179] (#3742)
+* Fix reserve symmetries (#3680, #3681)
+
+#### Bugfixes
+
+* Fix libparquet_writer.so install dir [ANT-4633] (#3622, #3678)
+* Fix failing tests on simulation table [ANT-4986] (#3736)
+* Yaml files now give a warning and optim-config.yml requires system.yml (#3695, #3722)
+* Use fmt for double conversion, improving performances (#3773)
+* Fix uninitialized Parameters members found by UBSan (#3753)
+* Fix stack-use-after-scope in EvalVisitor tests (#3754)
+
+#### Documentation
+
+* Add accurate-shave-peaks-include-sts parameter documentation (#3593)
+* Document how to use CMakePresets and integration in CLion (#3052)
+* Remove PDF user guide build (#3703)
+* Update copyright headers (#3691)
+
+#### For developers
+
+* Remove Yuni dependency entirely (#3644, #3769, #3770, #3774, #3775, #3789)
+* Simplify output variable structures, series 6-11 (#3584, #3585, #3587, #3598, #3599, #3600)
+* Refactor extern template to speed up build time (#3786, #3787)
+* Refactor hydroLevelsData lambda dispatch into a class hierarchy (#3757)
+* Refactor TS Generator lifecycle: replace raw pointer cache with scoped allocation (#3746)
+* Refactor workflow resolution [ANT-4959] (#3642)
+* Refactor "sorties"/variable handling (#3702, #3710, #3747)
+* Preliminary work / improvements for MPS export [ANT-4987] (#3690)
+* Move NullResultWriter from i_write.h to null_result_writer.h (#3611)
+* Avoid column lookup for simulation tables (#3687)
+* Activate parquet for simulation tables in solver (#3698)
+* Remove unused Study members and pQueueService, remove one of Study::IsRootStudy static methods (#3743, #3744, #3745)
+* Fix build warnings (#3684, #3694, #3701, #3724, #3725, #3732, #3733, #3734, #3735, #3740, #3750, #3760)
+* Add cucumber tests for problem generator, workflow and valid-hydro [ANT-5004, ANT-5005] (#3708, #3713, #3714)
+* Enhance loading and testing for inter-monthly breakdown properties [ANT-4985] (#3665)
+* Increase timeout of case 035 (#3737)
+* Remove JIT [ANT-4954] (#3782)
+* Add build-profiling (#3785)
+
+#### CI
+
+* Replace @fast/@short legacy cucumber tags with a 3-tier time taxonomy (#3755)
+* Bump actions/cache, actions/checkout and Sonar scanner (#3721, #3741, #3771)
+
 ## Branch 10.1.x
 
 ### 10.1.1
@@ -204,6 +274,23 @@ Fix: several issues on CentOS7 (#3561)
 
 ## Branch 9.3.x
 
+### 9.3.12
+
+#### Bugfixes
+
+* Fix writing of simulation output files larger than 4 GB
+* Fix reservoir level adjustment when hydro initialization does not start in January
+* Fix units in districts aggregation
+
+#### Dependencies
+
+* Update vcpkg to 2025.06.13: some dependency assets were not available anymore. Versions details in [dependency updates](Dependencies/updates.md)
+
+#### CI/CD
+
+* Automatically cache vcpkg assets on release
+* Use an asset cache mirror (`X_VCPKG_ASSET_SOURCES`) in build workflows and docker image
+
 ### 9.3.11
 
 #### Bugfixes
@@ -218,7 +305,8 @@ Fix: several issues on CentOS7 (#3561)
 
 #### Bugfixes
 
-* Fix bounds on fictitious load and max unsupplied in adequacy patch [ANT-4906] (#3575)
+* Fix bounds on fictitious loads and max unsupplied in adequacy patch [ANT-4906] (#3575)
+
 
 ### 9.3.9
 
@@ -245,31 +333,34 @@ Fix: several issues on CentOS7 (#3561)
 
 #### For developers
 
-Add tools/antares-version.py (#3534)
-feat: allow generating results on release (#3427)
+* Add tools/antares-version.py (#3534)
+* feat: allow generating results on release (#3427)
 
 ### 9.3.8
 
+#### Features
+
+* Add sts prod to fictitious load [ANT-3739] (#3486)
+* Add constraint fictitious load to adq patch [ANT-4365] (#3487)
+
 #### Bugfixes
 
+* Fix truncated digest [ANT-4630] (#3455)
 * Fix dynamic district aggregation (#3429)
-* Fix digest [ANT-4630] (#3455)
-* 9.3 Add constraint fictitious load to adq patch [ANT-4365] (#3487)
-* 9.3 Add short-term storage prod to fictitious load [ANT-3739] (#3486)
 
 ### 9.3.7
 
 #### Feature
 
-* Problem Generator: new tool to write problems without running the simulation (#3314,#3399,#3165)
+* Problem Generator: new tool to write problems without running the simulation
 
 #### Improvements
 
 * Add a warning in the problem-generator when weeks are dependent, and cleanup (#3398)
-* Improve performance for sum operations in expressions
 
 #### Bugfixes
 
+* Improve performance for sum operations in expressions
 * Fix: remove unnecessary global time step adjustment to avoid wrong time labels (#3377)
 
 ### 9.3.6
