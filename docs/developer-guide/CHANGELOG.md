@@ -92,7 +92,7 @@ toc_depth: 2
 * Skip loading of disabled clusters, short-term storage and binding constraints [ANT-4899] (#3580, #3636)
 * Fix MPS export for integer variables [ANT-4925] (#3629)
 * Fix stale symbols when changing branch [ANT-4963] (#3631)
-* Avoid info() log spam in binding constraint loading (#3623)
+* Avoid info () log spam in binding constraint loading (#3623)
 * Fix double free on OL8 (#3621)
 * Fix thermal memory leaks (#3618)
 
@@ -109,7 +109,8 @@ toc_depth: 2
 * Add parquet as a dependency. Ground work for future support of parquet files. (#3499)
 * Add missing system deps for CentOS7 & OL8 (#3589)
 * Refactoring of yml configuration error handling (#3523, #3526, #3578, #3583)
-* Add unit tests for binding-constraints validation, timeSum bounds and YmlSystem decoder error paths (#3646, #3652, #3659)
+* Add unit tests for binding-constraints validation, timeSum bounds and YmlSystem decoder error paths (#3646, #3652,
+  #3659)
 * Run tests also on top (#3617)
 * Update tests NR submodule (#3613)
 * Improve const-correctness in EvalVisitor and output variable helper (#3570, #3637)
@@ -140,7 +141,7 @@ toc_depth: 2
 
 #### Documentation
 
-* Fix(doc): modeler doc (#3529)
+* Fix (doc): modeler doc (#3529)
 
 #### For developers
 
@@ -151,7 +152,7 @@ toc_depth: 2
 
 #### CI
 
-* chore(deps): bump SonarSource/sonarqube-scan-action from 7.0.0 to 7.1.0 (#3544)
+* chore (deps): bump SonarSource/sonarqube-scan-action from 7.0.0 to 7.1.0 (#3544)
 * Use fixed submodule for Antares_Simulator_Tests_NR instead of branch main (#3568)
 
 ## Branch 10.0.x
@@ -182,21 +183,21 @@ Fix: several issues on CentOS7 (#3561)
 * Clean up find* functions
 * Update README.md (#3517)
 * Removed updaterMode parameter because it was always false (#3516)
-* chore(deps): update vcpkg baseline (#3502)
+* chore (deps): update vcpkg baseline (#3502)
 * Use emplace_back instead of push_back where possible (#3519)
 * Add delete in AreaList desctuctor to free memory (#3524)
 * Remove unused typedefs (#3525)
 * Remove unused arguments (#3522)
-* refacto(yml-utils): add path utilities and YmlMapMarker class (#3504)
+* refacto (yml-utils): add path utilities and YmlMapMarker class (#3504)
 * Add tools/antares-version.py (#3534)
-* Remove yuni strings for alias areaname, clustername...  (#3498)
+* Remove yuni strings for alias areaname, clustername... (#3498)
 * Remove member function Study::areaAdd [ANT-4815] (#3527)
 
 #### CI/CD
 
 * Various fix for Sonar-cloud workflow (#3515, #3518)
 * Don't use package managers to install boost, use vcpkg (#3521)
-* chore(deps): Up build.os@readthedocs.yml (#3531)
+* chore (deps): Up build.os@readthedocs.yml (#3531)
 
 ### 10.0.0
 
@@ -258,7 +259,7 @@ Fix: several issues on CentOS7 (#3561)
 
 #### CI/Chore
 
-* chore(ci): update cache action to AntaresSimulatorTeam/cache to avoid deprecated action (#3390)
+* chore (ci): update cache action to AntaresSimulatorTeam/cache to avoid deprecated action (#3390)
 * CI: Bump actions/upload-artifact from 6 to 7 (#3447)
 * chore: update sonar.projectVersion & simtest.json (#3412)
 * Allow generating results on release (#3427)
@@ -284,7 +285,8 @@ Fix: several issues on CentOS7 (#3561)
 
 #### Dependencies
 
-* Update vcpkg to 2025.06.13: some dependency assets were not available anymore. Versions details in [dependency updates](Dependencies/updates.md)
+* Update vcpkg to 2025.06.13: some dependency assets were not available anymore. Versions details
+  in [dependency updates](Dependencies/updates.md)
 
 #### CI/CD
 
@@ -307,7 +309,6 @@ Fix: several issues on CentOS7 (#3561)
 
 * Fix bounds on fictitious loads and max unsupplied in adequacy patch [ANT-4906] (#3575)
 
-
 ### 9.3.9
 
 #### Features
@@ -326,9 +327,9 @@ Fix: several issues on CentOS7 (#3561)
 #### CI/CD
 
 * feat: Speed up SonarCloud job, increase cache hit rate to 100% (#3518)
-* chore(deps): Up build.os@readthedocs.yml (#3531)
-* chore(deps): bump docker/build-push-action from 6 to 7 (#3472)
-* chore(deps): bump docker/login-action from 3 to 4 (#3473)
+* chore (deps): Up build.os@readthedocs.yml (#3531)
+* chore (deps): bump docker/build-push-action from 6 to 7 (#3472)
+* chore (deps): bump docker/login-action from 3 to 4 (#3473)
 * ci: Bump actions/upload-artifact from 6 to 7 (#3447)
 
 #### For developers
@@ -352,15 +353,15 @@ Fix: several issues on CentOS7 (#3561)
 
 #### Feature
 
-* Problem Generator: new tool to write problems without running the simulation
+* Problem Generator: new tool to write problems without running the simulation (#3314,#3399,#3165)
 
 #### Improvements
 
 * Add a warning in the problem-generator when weeks are dependent, and cleanup (#3398)
+* Improve performance for sum operations in expressions
 
 #### Bugfixes
 
-* Improve performance for sum operations in expressions
 * Fix: remove unnecessary global time step adjustment to avoid wrong time labels (#3377)
 
 ### 9.3.6
@@ -373,7 +374,7 @@ Fix: several issues on CentOS7 (#3561)
 * [100% optional] Use customized mps generator in the simulator (#3346)
 * [100%] print mps in api mode (#3314)
 * Modeler: operators ceil and floor [ANT-4295] (#3316)
-* feat(api): check week independency (#3387)
+* feat (api): check week independency (#3387)
 
 #### Improvements
 
@@ -415,7 +416,7 @@ Fix: several issues on CentOS7 (#3561)
 #### CI/Chore
 
 * update simtest version (#3360)
-* chore(simtest): update version to v9.3.6b (#3386)
+* chore (simtest): update version to v9.3.6b (#3386)
 * [oracle 8] update python version to get ortools (#3379)
 
 ### 9.3.5
@@ -480,7 +481,7 @@ Fix: several issues on CentOS7 (#3561)
 
 * refactor: TimeIndex -> TimeScenarioVariability (#3261)
 * Expose studyPath instead of study (#3267)
-* Add SingleProblemGetter::getProblemIds() for problem IDs (#3268)
+* Add SingleProblemGetter::getProblemIds () for problem IDs (#3268)
 * Single problem getter - Truncate variable & constraint vectors if needed (#3272)
 * fix: build std::type\_index is not constexpr (#3277)
 * Single problem getter - Week indexing starts at 1 (#3271)
@@ -891,7 +892,7 @@ collectRemixDebugInfo (#3278)
 * Remove yuni limit on max threads (#2832)
 * [ANT-3409] Store short term time series number (#2881)
 * Remove unused members from spatial-aggregate.h (#2848)
-* Remove SparseVector, remove data()[position] (#2816)
+* Remove SparseVector, remove data ()[position] (#2816)
 * Remove verbose log (#2756)
 * Remove macro ndebug (#2720)
 * Remove unused Parameters member data (#2712)
@@ -1136,7 +1137,7 @@ collectRemixDebugInfo (#3278)
 * Using filesystem path instead of Yuni [ANT-1999] (#2435) (#2454) (#2123) (#2066)
 * Compilation warnings (#2237) (#2199) (#2183) (#2144) (#2119) (#2340)
 * Separation of loading and validation [ANT-1213] (#2173) (#2175) (#2177) (#2179)
-* Remove manually allocated memory  (#2254) (#2270) (#2273) (#2363)
+* Remove manually allocated memory (#2254) (#2270) (#2273) (#2363)
 * Mark overriden functions as such in hydroLevelsData (#2389)
 * Districts : simplifying the code (#2279)
 * Remove duplication in simulation run (#2274)
@@ -1685,7 +1686,7 @@ collectRemixDebugInfo (#3278)
 
 #### Tests
 
-* Add named MPS tests  (#1408)
+* Add named MPS tests (#1408)
 * Enforce better unit test isolation (#1486)
 * Add tests for Windows CI when job is scheduled (#1483)
 * Tests for CR20: thermal price definition (#1364), improvements (#1422)
@@ -1708,7 +1709,7 @@ collectRemixDebugInfo (#3278)
 * Objects in CMakeFiles (#1465)
 * Variables with a Ref or Ref_SV suffix (#1475, #1481, #1497, #1498, #1500, #1501, #1502)
 * Use std::vector instead of MemAlloc/MemFree, clean up (#1471)
-* Use ~class() = default (#1473)
+* Use ~class () = default (#1473)
 * Memory allocation for ProblemeAResoudre, use std::vector (#1432)
 * Improve clarity for constraints that should be used (#1452)
 * Automatically include yuni include directory in dependents (#1525)
@@ -1736,8 +1737,8 @@ collectRemixDebugInfo (#3278)
 
 #### Bugfixes
 
-* Fix formula use in output var Profit by
-  plant [ANT-1719] (https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/2097)
+* Fix formula use in output var Profit by plant [ANT-1719]
+  (https://github.com/AntaresSimulatorTeam/Antares_Simulator/pull/2097)
 
 ### 8.6.6 (03/2024)
 
@@ -1819,8 +1820,8 @@ collectRemixDebugInfo (#3278)
 
 #### For developers
 
-* Bumped OR-Tools 9.2 -> 9.5. CMake 3.18+ is required for build if building OR-Tools, and XPRESS 9.0 for execution (
-  previously 8.13).
+* Bumped OR-Tools 9.2 -> 9.5. CMake 3.18+ is required for build if building OR-Tools, and XPRESS 9.0 for execution
+  (previously 8.13).
 
 ## Branch 8.5.x
 
@@ -2062,7 +2063,7 @@ collectRemixDebugInfo (#3278)
 - Add output variable "profit by cluster". This variable represents the difference between proportional costs and
   marginal costs in the area. It provides a partial answer to the question "what is the economic profit associated to a
   thermal cluster ?", excluding non-proportional (€/h) and startup costs (€/startup). #686
-- Allow +/- infinity in binding constraint RHS, allowing the user to enable BCs only for some timesteps #631(*)
+- Allow +/- infinity in binding constraint RHS, allowing the user to enable BCs only for some timesteps #631 (*)
 - Add option to enable the splitting of exported MPS files. This feature is intended to be used by Antares Xpansion.
 - Add --list-solvers command-line argument, to list linear solvers available through OR-Tools
 - Measure the execution duration for every computation step, store the durations in a dedicated file #546
@@ -2155,7 +2156,7 @@ collectRemixDebugInfo (#3278)
 
 #### For developers
 
-- Remove calls to exit() #505. Provide consistent return values for antares-solver by fixing a segfault related to the
+- Remove calls to exit () #505. Provide consistent return values for antares-solver by fixing a segfault related to the
   log object #522
 - Remove calls to setjmp, goto's big brother #527
 - Large refactor of antares-solver's main function, hoping to make error management easier to understand #521
@@ -2295,23 +2296,19 @@ features to be used without hassle.
   Add possibility to define a weight for each MC years in the synthetis results.<br/>
   See : GUI > Configure > MC scenario playlist.<br/>
   By default, a MC year's weight is 1, but can be set by user to more or less.<br/>
-  After simulation, the MC year have a contribution to averages or standard deviations in synthesis results
-  depending on the weight it was given.
+  After simulation, the MC year have a contribution to averages or standard deviations in synthesis results depending on
+  the weight it was given.
 
 #### Bug fixes
 
 - Selecting an area and then, from the inspector, trying to select a thermal cluster or a link of this area in the
-  dependencies
-  section causes a crash. The inspector's cluster/link selection was removed.
+  dependencies section causes a crash. The inspector's cluster/link selection was removed.
 - Scenario builder :
     - It makes no sense for the user to access the scenario builder Configure menu item whereas the Building mode
-      parameter is set
-      to Automatic or Derated. In the previous cases, the Configute menu item is disabled.
+      parameter is set to Automatic or Derated. In the previous cases, the Configute menu item is disabled.
     - If a disabled thermal cluster is given a time series number in a non active rule of the scenario builder, a
-      warning should not be
-      triggered. If the disabled cluster is given a number for many MC years in the active rule, a single summary
-      warning should be raised,
-      not a warning per year.
+      warning should not be triggered. If the disabled cluster is given a number for many MC years in the active rule, a
+      single summary warning should be raised, not a warning per year.
 
 #### For developers
 
@@ -2347,43 +2344,34 @@ features to be used without hassle.
 
 #### Features
 
-- Simulation dashboard: A new  "Geographic Trimming" option
-  is now available in the "Configure" menu. This option makes
-  it possible to filter the simulation's output content so as
-  to include only results regarding Areas and Links of interest
+- Simulation dashboard: A new  "Geographic Trimming" option is now available in the "Configure" menu. This option makes
+  it possible to filter the simulation's output content so as to include only results regarding Areas and Links of
+  interest
 
 - Optimization:  a new parameter "Unfeasible Problems Behavior"
   is available in the "advanced preferences" section of the
   "Configure" menu, with four possible values:
   (Error Dry, Error Verbose, Warning Dry, Warning Verbose)
-  The first two options make the simulation stop right after
-  encountering the first mathematically unfeasible problem, if any
-  The last two options make the simulation skip all unfeasible
-  problems, if any
+  The first two options make the simulation stop right after encountering the first mathematically unfeasible problem,
+  if any The last two options make the simulation skip all unfeasible problems, if any
   "Verbose" options print faulty problems in the “mps” format
-  "Dry" options only report the time frame (MC year, week) for which
-  an unfeasible problem was detected
+  "Dry" options only report the time frame (MC year, week) for which an unfeasible problem was detected
 
 - Compilation and cmake tree :
-  Updates were made for more modern CMake use.
-  Git submodules (extern dependencies : curl, openssl, wxwidget) are no more in use.
-  These external dependencies can be retrieved :
-    - either from a library manager : vcpkg for Windows, classic package
-      repositories for Linux. With this way to proceed, an installation of external
-      dependencies is required once for all.
-    - or thanks to an automatic download : at Antares' cmake configure step,
-      all needed downloads, compilation and installation are done.
+  Updates were made for more modern CMake use. Git submodules (extern dependencies : curl, openssl, wxwidget) are no
+  more in use. These external dependencies can be retrieved :
+    - either from a library manager : vcpkg for Windows, classic package repositories for Linux. With this way to
+      proceed, an installation of external dependencies is required once for all.
+    - or thanks to an automatic download : at Antares' cmake configure step, all needed downloads, compilation and
+      installation are done.
 
 - Unit tests :
-  unit tests around class Matrix are now available.
-  They can be compiled (on demand) during Antares' cmake build step
-  and run either with ctest or in the classic way.
-  Boost.Test is required and can be priorily retrieved and installed in the
-  same way as the other external dependencies.
+  unit tests around class Matrix are now available. They can be compiled (on demand) during Antares' cmake build step
+  and run either with ctest or in the classic way. Boost.Test is required and can be priorily retrieved and installed in
+  the same way as the other external dependencies.
 
-- Continuous integration : yaml files for github actions allow the run of
-  all build chain and unit tests on several environment (Windows and Ubuntu).
-  The 2 ways of getting external dependencies are also tested.
+- Continuous integration : yaml files for github actions allow the run of all build chain and unit tests on several
+  environment (Windows and Ubuntu). The 2 ways of getting external dependencies are also tested.
 
 - Documentation: updated reference guide
 
@@ -2391,12 +2379,11 @@ features to be used without hassle.
 
 #### Bug fixes
 
-- GUI of the "Thematic trimming" option: Window size is naturally readjusted
-  to improve readability by upgrading wxwidgets (3.1.3 and above).
+- GUI of the "Thematic trimming" option: Window size is naturally readjusted to improve readability by upgrading
+  wxwidgets (3.1.3 and above).
 
-- Auxiliary "Batchrun" tool: two options previously missing in the
-  command line syntax have been introduced and now make it possible
-  to launch a sequence of simulations to run in parallel
+- Auxiliary "Batchrun" tool: two options previously missing in the command line syntax have been introduced and now make
+  it possible to launch a sequence of simulations to run in parallel
 
 ### 7.1.0 (12/2019)
 --------------------
@@ -2404,69 +2391,52 @@ features to be used without hassle.
 #### Features
 
 - Simulation Dashboard: A new option "Thematic Trimming"
-  is available in the "Output Profile" Section. This option
-  now makes it possible to define precisely the content of
+  is available in the "Output Profile" Section. This option now makes it possible to define precisely the content of
   output files so as to include only variables of interest
 
-- Optimization: a new parameter "Hydro Pricing mode" is
-  available in the "advanced parameters" section, with two
+- Optimization: a new parameter "Hydro Pricing mode" is available in the "advanced parameters" section, with two
   possible values (fast, accurate):
-  In mode "fast", water value is, in the course of optimization,
-  taken to be constant throughout the (daily or weekly)
-  optimization period, and equal to that found for the exact
-  day and level at which the optimization begins. Water values
-  are reassessed afterwards, for each hour, on the basis of
-  relevant time and level.
-  In mode "accurate", the variations of water value along with
-  the reservoir level are taken into account in the course of
-  the (weekly) optimization. Reference (level-dependent) values
-  are those attached to the end of the week. Water values
-  are reassessed afterwards, for each hour, on the basis of
-  relevant time and level.
+  In mode "fast", water value is, in the course of optimization, taken to be constant throughout the (daily or weekly)
+  optimization period, and equal to that found for the exact day and level at which the optimization begins. Water
+  values are reassessed afterwards, for each hour, on the basis of relevant time and level. In mode "accurate", the
+  variations of water value along with the reservoir level are taken into account in the course of the (weekly)
+  optimization. Reference (level-dependent) values are those attached to the end of the week. Water values are
+  reassessed afterwards, for each hour, on the basis of relevant time and level.
 
 - Documentation: updated reference guide
 
-- Documentation: updated optimization problem formulation
-  (modelling of hydro pricing options)
+- Documentation: updated optimization problem formulation (modelling of hydro pricing options)
 
 - Usage metrics: added reference key for this version
 
 #### Bug fixes
 
-- Output file "mc-all/grid/digest.txt": replaced "NaN" values
-  by zeroes, where appropriate
+- Output file "mc-all/grid/digest.txt": replaced "NaN" values by zeroes, where appropriate
 
-- Output file "mc-all/grid/digest.txt": replaced "0" values
-  by N/A, where appropriate (especially, hydro reservoir-related
-  variables, when the "reservoir management" area attribute is set
-  to "No")
+- Output file "mc-all/grid/digest.txt": replaced "0" values by N/A, where appropriate (especially, hydro
+  reservoir-related variables, when the "reservoir management" area attribute is set to "No")
 
 - Output GUI: fixed a display bug regarding missing items in the
-  "links" panel, in the case where simulation parameters are set
-  so as not to produce synthetic results
+  "links" panel, in the case where simulation parameters are set so as not to produce synthetic results
 
-- Links GUI: improved integrity control regarding hurdle costs.
-  Negative values are allowed in either direct or indirect
+- Links GUI: improved integrity control regarding hurdle costs. Negative values are allowed in either direct or indirect
   orientation, provided that the sum of both is non-negative
 
 - General GUI: removed redundant items and renamed option menu
-  "Geographic District" as "Regional District" to avoid confusion
-  with new "Trimming" options
+  "Geographic District" as "Regional District" to avoid confusion with new "Trimming" options
 
-- Output: when simulation results are trimmed so as not to produce
-  any data for given Areas or Links, avoid creation of empty folders
-  named after said Areas or Links
+- Output: when simulation results are trimmed so as not to produce any data for given Areas or Links, avoid creation of
+  empty folders named after said Areas or Links
 
 ### 7.0.1 (04/2019)
 --------------------
 
 #### Features
 
-- Time-series analysis: in "detrended mode", extended perimeter
-  to raw data including periods with no meaningful signal
+- Time-series analysis: in "detrended mode", extended perimeter to raw data including periods with no meaningful signal
   (e.g. solar production at night)
-- Hydro-storage modelling: added ability to optimize pumping along
-  with generation in mode "use heuristic target without leeway"
+- Hydro-storage modelling: added ability to optimize pumping along with generation in mode "use heuristic target without
+  leeway"
 
 ### 7.0.0 (12/2018)
 --------------------
@@ -2495,9 +2465,8 @@ features to be used without hassle.
 #### Bugs
 
 - Fixed various issues in GUI
-- Fixed RHS of constraints generated by the KCG when
-  min and max values of PST settings are strictly equal
-  and constraints are generated for the whole year
+- Fixed RHS of constraints generated by the KCG when min and max values of PST settings are strictly equal and
+  constraints are generated for the whole year
 
 ### 6.5.1 (11/2018)
 ----------------
@@ -2515,35 +2484,28 @@ features to be used without hassle.
 
 #### Features
 
-- Implementation of Kirchhoff's laws (DC approximation),
-  modeling of phase-shifters and representation of passive
-  loop flows (to account for on highly reduced gris): a
-  dedicated Kirchhoff's constraints generator is now available
-  It makes use of both classical input data (impedances)
-  and new input data. Its results are specific binding
-  constraints whose names begin by @UTO-, storable in the
-  INPUT folder after user's validation ("save")
+- Implementation of Kirchhoff's laws (DC approximation), modeling of phase-shifters and representation of passive loop
+  flows (to account for on highly reduced gris): a dedicated Kirchhoff's constraints generator is now available It makes
+  use of both classical input data (impedances)
+  and new input data. Its results are specific binding constraints whose names begin by @UTO-, storable in the INPUT
+  folder after user's validation ("save")
 
   New or modified input data for link L (8760 hourly values):
   Impedances (moved from col.3 to col.5)(Ohms at ref. voltage U)
   Loop flow (passive) (MW)
-  Min Tap of phase-shifter  (MW*Ohms/U2 along any AC cycle including L)
-  Max Tap of phase-shifter  (MW*Ohms/U2 along any AC cycle including L)
+  Min Tap of phase-shifter (MW *Ohms/U2 along any AC cycle including L)
+  Max Tap of phase-shifter (MW*Ohms/U2 along any AC cycle including L)
   New link parameters (one value)
   Asset type (AC,DC,Gas,Virtual,Other) : KCG deals only with AC links
   "account for loop flow" toggle
-  "tune PST"        toggle
-  KCG generating directives:
-  Working map to use for generation
-  Calendar to use for constraints activation (relaxation outside)
+  "tune PST"        toggle KCG generating directives:
+  Working map to use for generation Calendar to use for constraints activation (relaxation outside)
   Status of passive loop flow in constraints RHS (included or not)
-  Status or PST settings in constraints RHS      (included or not)
+  Status or PST settings in constraints RHS (included or not)
   Auto-check of nodal loop flow balance (activated or not)
-  Definition of the "infinite" to use for constraints relaxation
-  KCG results:
-  For AC Links involved in the generation process: The KCG sets the
-  values of the two input data toggles related to loop flows and
-  PST settings, in accordance with the current generation directives
+  Definition of the "infinite" to use for constraints relaxation KCG results:
+  For AC Links involved in the generation process: The KCG sets the values of the two input data toggles related to loop
+  flows and PST settings, in accordance with the current generation directives
 
         Identification of an optimal (minimum-weight) cycle basis for the
         formulation of constraints
@@ -2552,42 +2514,32 @@ features to be used without hassle.
         or without relaxation)
 
 - Reservoir-type hydro and other energy storage facilities:
-  interface, input and output data structure, functionalities,
-  have been completely redesigned. As a consequence, a number
-  of new items (variables & parameters) are introduced in both
-  input and output, while a few input variables are redefined
-  or deprecated:
+  interface, input and output data structure, functionalities, have been completely redesigned. As a consequence, a
+  number of new items (variables & parameters) are introduced in both input and output, while a few input variables are
+  redefined or deprecated:
 
   Deprecated hydro variables:
   Pmax hydro "min", Pmax hydro "max"
   Redefined hydro variables and parameters:
-  Hydro-storage time-series :    redefined at the daily scale
-  Bounds for Reservoir levels:   redefined at the daily scale
-  Res.level initialization date: redefined at the monthly scale
-  New hydro variables and parameters:
-  Input : max daily hydro generating energy
-  max daily hydro pumping energy and power
-  monthly-to-daily inflow breakdown pattern
-  water value (time, level)
+  Hydro-storage time-series :    redefined at the daily scale Bounds for Reservoir levels:   redefined at the daily
+  scale Res.level initialization date: redefined at the monthly scale New hydro variables and parameters:
+  Input : max daily hydro generating energy max daily hydro pumping energy and power monthly-to-daily inflow breakdown
+  pattern water value (time, level)
   modulation of max generating power (level)
-  modulation of max pumping power    (level)
-  pumping efficiency
-  +many "storage management options" parameters
-  Output: Reservoir level    (H.LEV)
-  Water value        (H.VAL)
-  Pumping power        (H.PUMP)
-  Natural Inflow        (H.INFL)
-  Forced Overflow        (H.OVFL)
+  modulation of max pumping power (level)
+  pumping efficiency +many "storage management options" parameters Output: Reservoir level (H.LEV)
+  Water value (H.VAL)
+  Pumping power (H.PUMP)
+  Natural Inflow (H.INFL)
+  Forced Overflow (H.OVFL)
   Cost of Gen+Pumping (H.COST)
   Optimization preferences:
   "Hot/Cold start" (year N may start or not at the final N-1 level)
 
-- GUI: Districts may now be defined from within the interface
-  (notepad tab connected to the Inspector's clipboard)
+- GUI: Districts may now be defined from within the interface (notepad tab connected to the Inspector's clipboard)
 
-- Time-series generation (solar, wind, load) : increased speed
-  when "high accuracy" option is selected, in the special case
-  where all diffusion processes produce "Normal" variables
+- Time-series generation (solar, wind, load) : increased speed when "high accuracy" option is selected, in the special
+  case where all diffusion processes produce "Normal" variables
 
 - Example library: upgraded to 6.5 (without extension)
 
@@ -2597,43 +2549,35 @@ features to be used without hassle.
   of time-series generated for thermal clusters either in the
   "disabled" or "must-run" state did not work properly
 
-- Time-series analysis: when short- and long-term levels
-  defined for auto-correlation assessment are identical, the
+- Time-series analysis: when short- and long-term levels defined for auto-correlation assessment are identical, the
   analyzer now performs a pure exponential fitting
 
-- Time-series analysis: monthly time-series containing no
-  non-zero value are no longer rejected by the analyzer
+- Time-series analysis: monthly time-series containing no non-zero value are no longer rejected by the analyzer
 
-- Output: the link-variable "MARG.COST" was rounded to an integer
-  value (changed to 2 decimal accuracy)
+- Output: the link-variable "MARG.COST" was rounded to an integer value (changed to 2 decimal accuracy)
 
 ### 6.1.3 (06/2018)
 ----------------
 
 #### Features
 
-- Output: added a new file at the root of simulation results,
-  displaying a short summary of the overall system economic
+- Output: added a new file at the root of simulation results, displaying a short summary of the overall system economic
   performance throughout all Monte-Carlo years
 
-- Log file: added new info messages on the size of optimization
-  problems
+- Log file: added new info messages on the size of optimization problems
 
-- Updater (standalone): added new options and improved
-  help messages
+- Updater (standalone): added new options and improved help messages
 
 - Expansion mode: presolve stage replaced by hot start
 
 #### Bug fixes
 
-- Simulation: In the "accurate" Unit Commitment mode, the
-  optimization preference "thermal Clusters Min Up/Down Time"
+- Simulation: In the "accurate" Unit Commitment mode, the optimization preference "thermal Clusters Min Up/Down Time"
   can now be turned to "ignore"
 
 - Simulation: removed remaining debug traces
 
-- Simulation: zero-reset on interconnection marginal costs
-  was sometimes missing in optimization final stage
+- Simulation: zero-reset on interconnection marginal costs was sometimes missing in optimization final stage
 
 - Example library : upgraded to 6.1 and extended
 
@@ -2642,8 +2586,7 @@ features to be used without hassle.
 
 #### Features
 
-- Solver, Simplexe package: Improvement of the Scaling stage
-  (Matrix, right hand side, costs)
+- Solver, Simplexe package: Improvement of the Scaling stage (Matrix, right hand side, costs)
 
 ### 6.1.1 (11/2017)
 ----------------
@@ -2657,19 +2600,17 @@ features to be used without hassle.
 
 #### Features
 
-- GUI and simulation: "binding constraints" objects may now involve
-  not only flows on interconnections but also power generated from
-  thermal clusters. Alike flows, generation from thermal clusters may
-  be handled either on an hourly, daily or weekly basis and may be
-  associated with arbitrary offsets (time-lags expressed in hours).
+- GUI and simulation: "binding constraints" objects may now involve not only flows on interconnections but also power
+  generated from thermal clusters. Alike flows, generation from thermal clusters may be handled either on an hourly,
+  daily or weekly basis and may be associated with arbitrary offsets (time-lags expressed in hours).
 
 ### 6.0.6 (07/2017)
 ----------------
 
 #### Features
 
-- GUI: Binding constraint parameters tables (weights and offsets) are trimmed
-  line-wise so as to fit exactly with the content of the selected working map
+- GUI: Binding constraint parameters tables (weights and offsets) are trimmed line-wise so as to fit exactly with the
+  content of the selected working map
 
 - Solver: strenghtening of the final admissibility check step in the "accurate"
   commitment mode
@@ -2685,118 +2626,94 @@ features to be used without hassle.
 
 - Files:  Fixed issues (detected as of 6.0.1) regarding storage of thermal time-series files
 
-- Study Cleaner: Unwarranted removal of the graphic multi-map lay-out could occur when
-  cleaning datasets  (detected as of 6.0.0)
+- Study Cleaner: Unwarranted removal of the graphic multi-map lay-out could occur when cleaning datasets (detected as of
+  6.0.0)
 
 ### 6.0.4 (06/2017)
 ----------------
 
 #### Bug fixes
 
-- GUI: The "variable per variable" view of the output files allows
-  to display the power generated by each thermal cluster
+- GUI: The "variable per variable" view of the output files allows to display the power generated by each thermal
+  cluster
 
-- Simulation: Negative "ROW Balance" is properly included in
-  unsupplied energy allowances
+- Simulation: Negative "ROW Balance" is properly included in unsupplied energy allowances
 
 ### 6.0.3 (06/2017)
 ----------------
 
 #### Features
 
-- GUI: The number of system maps that could be stored in a given study
-  was limited to 19. This number is now unbounded.
+- GUI: The number of system maps that could be stored in a given study was limited to 19. This number is now unbounded.
 
 #### Bug fixes
 
-- GUI: The list of thermal clusters displayed for a given Area in the
-  current map was sometimes wrongly initialized (Area considered
-  selected though not explicitly clicked on yet)
+- GUI: The list of thermal clusters displayed for a given Area in the current map was sometimes wrongly initialized
+  (Area considered selected though not explicitly clicked on yet)
 
 - GUI: The order in which binding constraint terms are shown in the
   "summary" Window could depend on the execution platform used
 
-- GUI: The Antares study icon could not be properly copied in some
-  circumstances
+- GUI: The Antares study icon could not be properly copied in some circumstances
 
 ### 6.0.2 (06/2017)
 ----------------
 
 #### Features
 
-- Optimization : To help discriminate between equivalent economic
-  solutions, random noises on hydro hourly prices are more regularly
-  spread out (absolute values) in the interval (5 e-4 ,1 e-3)Euros/MWh
+- Optimization : To help discriminate between equivalent economic solutions, random noises on hydro hourly prices are
+  more regularly spread out (absolute values) in the interval (5 e-4 ,1 e-3)Euros/MWh
 
 #### Bug fixes
 
-- Simulation : The identification of the Monte-Carlo year numbers
-  in which the smallest/greatest values of random variables are
-  reached could be ambiguous when identical results are found for
-  two years ore more.
+- Simulation : The identification of the Monte-Carlo year numbers in which the smallest/greatest values of random
+  variables are reached could be ambiguous when identical results are found for two years ore more.
 
 ### 6.0.1 (05/2017)
 ----------------
 
 #### Features
 
-- Thermal Time-series generation: Data regarding all thermal clusters
-  are generated and stored in the same way, regardless of their activity
-  status (unabled/disabled). This makes easier to check data consistency
+- Thermal Time-series generation: Data regarding all thermal clusters are generated and stored in the same way,
+  regardless of their activity status (unabled/disabled). This makes easier to check data consistency
 
-- Simulation: Upper bounds for spilled power and unsupplied power are
-  actually set to their maximum theoretical value(i.e. if economic
-  conditions make it justified: spill all power or shed all demand)
-  So far, spillage of power that could be absorbed by the local demand
-  was not allowed
+- Simulation: Upper bounds for spilled power and unsupplied power are actually set to their maximum theoretical value
+  (i.e. if economic conditions make it justified: spill all power or shed all demand)
+  So far, spillage of power that could be absorbed by the local demand was not allowed
 
-- Simulation: a silent "Expansion" mode has been added to the regular
-  modes "Economy/Adequacy/Draft". The three differences with the
+- Simulation: a silent "Expansion" mode has been added to the regular modes "Economy/Adequacy/Draft". The three
+  differences with the
   "Economy" mode are:
-  a) In "accurate" unit commitment, integrity constraints are relaxed
-  in the core optimization problem.
-  b) Day-ahead reserve is no more subtracted from the initial demand
-  to get back to "standard" conditions
-  c) The values of all optimal criteria are printed in ad hoc files
-  The use of this mode should be restricted to well-designed scripted
-  automatic simulation sequences taking into account the simplifications
-  listed above
+  a) In "accurate" unit commitment, integrity constraints are relaxed in the core optimization problem. b) Day-ahead
+  reserve is no more subtracted from the initial demand to get back to "standard" conditions c) The values of all
+  optimal criteria are printed in ad hoc files The use of this mode should be restricted to well-designed scripted
+  automatic simulation sequences taking into account the simplifications listed above
 
 ### 6.0.0 (04/2017)
 ----------------
 
 #### Features
 
-- GUI: A new interface makes it possible to define several views (maps) of
-  the Power System modelled in an Antares study. These maps are meant to give
-  the user the ability to set different layouts in which each Antares Area
-  or Link can be either shown or remain hidden. Accordingly, all input and
-  output data windows can now adapt the information displayed so as to match
-  exactly the content of any given map. Copy/Paste functions have been
-  extended so as to work between different maps of different studies opened
-  in multiple Antares sessions
+- GUI: A new interface makes it possible to define several views (maps) of the Power System modelled in an Antares
+  study. These maps are meant to give the user the ability to set different layouts in which each Antares Area or Link
+  can be either shown or remain hidden. Accordingly, all input and output data windows can now adapt the information
+  displayed so as to match exactly the content of any given map. Copy/Paste functions have been extended so as to work
+  between different maps of different studies opened in multiple Antares sessions
 
-- Simulation: Introduction of a flexible multi-threaded mode for the processing
-  of heavy problems: Antares "Monte-Carlo years" can be be distributed on a
-  number of CPU cores freely set by the user. This parameter appears as a new
-  tunable item of the  "advanced parameters" list attached to any Antares Study.
-  Five values are available in the [1, N] interval, N being the number of CPU
-  cores of the machine (virtual or physical) Antares is run on
+- Simulation: Introduction of a flexible multi-threaded mode for the processing of heavy problems: Antares "Monte-Carlo
+  years" can be be distributed on a number of CPU cores freely set by the user. This parameter appears as a new tunable
+  item of the  "advanced parameters" list attached to any Antares Study. Five values are available in the [1, N]
+  interval, N being the number of CPU cores of the machine (virtual or physical) Antares is run on
 
-- License control through the internet: a new system has been developed for
-  accommodating situations where users wish to operate Antares on a large
-  fleet of machines among which a limited set of commercial license tokens
-  can float freely
+- License control through the internet: a new system has been developed for accommodating situations where users wish to
+  operate Antares on a large fleet of machines among which a limited set of commercial license tokens can float freely
 
-- Data organizer: Antares studies often include a great number of files of
-  all sizes, which may take long to process when multiple copies are needed.
-  Likewise, the management of the HDD space required for regular storage of
-  all of the studies involved in a complex study workflow may turn out to be
-  a demanding and heavy task. To save both time and hardware resources, the
-  Antares Data Organizer, now provided as a companion tool to the Antares
-  Simulator, brings the ability to schedule basic data management tasks
-  such as study archiving/expansion (use of a specific compressed format),
-  copy to backup folders, registering of studies and archives in catalogues.
+- Data organizer: Antares studies often include a great number of files of all sizes, which may take long to process
+  when multiple copies are needed. Likewise, the management of the HDD space required for regular storage of all of the
+  studies involved in a complex study workflow may turn out to be a demanding and heavy task. To save both time and
+  hardware resources, the Antares Data Organizer, now provided as a companion tool to the Antares Simulator, brings the
+  ability to schedule basic data management tasks such as study archiving/expansion (use of a specific compressed
+  format), copy to backup folders, registering of studies and archives in catalogues.
 
 ### 5.0.9-SE (04/2017)
 ----------------
@@ -2804,11 +2721,10 @@ features to be used without hassle.
 #### Bug fixes
 
 - Random noises on thermal clusters costs now include the zero-cost
-  "must-run" clusters (as a consequence, noises assumptions do not vary
-  with the cluster status)
+  "must-run" clusters (as a consequence, noises assumptions do not vary with the cluster status)
 
-- Fixing an initialization issue that could sporadically affect the
-  minimum number of committed thermal units (+1 or -1 deviation,
+- Fixing an initialization issue that could sporadically affect the minimum number of committed thermal units (+1 or -1
+  deviation,
   "accurate" mode only)
 
 ### 5.0.7-SE (04/2017)
@@ -2830,51 +2746,45 @@ features to be used without hassle.
 
 #### Bug fixes
 
-- Results processing: For full "must-run" thermal clusters, the NODU variable
-  could be wrongly assessed in the "accurate" unit commitment simulation mode
+- Results processing: For full "must-run" thermal clusters, the NODU variable could be wrongly assessed in the
+  "accurate" unit commitment simulation mode
 
-- GUI: when the scenario builder feature is active, saving right after deleting
-  a thermal cluster could result in a partial dataset corruption (references to
-  the deleted object were kept alive in the scenario builder context)
+- GUI: when the scenario builder feature is active, saving right after deleting a thermal cluster could result in a
+  partial dataset corruption (references to the deleted object were kept alive in the scenario builder context)
 
 #### Features
 
-- Unsupplied energy control: if the actual economic optimization requires it, load
-  shedding is now allowed to occur in areas where the available thermal generation
-  is higher than the local demand (e.g. if local VOLL < local thermal costs)
+- Unsupplied energy control: if the actual economic optimization requires it, load shedding is now allowed to occur in
+  areas where the available thermal generation is higher than the local demand (e.g. if local VOLL < local thermal
+  costs)
 
-- Linear solver, hot starting of weekly problems: in the "fast" unit commitment
-  mode, optimal bases are flushed at the beginning of each Monte-Carlo year. This
-  comes as a pre-requirement for the next versions of Antares, which will be
+- Linear solver, hot starting of weekly problems: in the "fast" unit commitment mode, optimal bases are flushed at the
+  beginning of each Monte-Carlo year. This comes as a pre-requirement for the next versions of Antares, which will be
   fully multi-threaded
 
-- Simulation results: code segments processing all variables attached to spatial
-  aggregates, and the variable representing the number of running thermal units
-  on the first hour of the year, were re-written to be compatible with the next
-  versions of Antares, which will be fully multi-threaded
+- Simulation results: code segments processing all variables attached to spatial aggregates, and the variable
+  representing the number of running thermal units on the first hour of the year, were re-written to be compatible with
+  the next versions of Antares, which will be fully multi-threaded
 
 ### 5.0.5 (08/2016)
 ----------------
 
 #### Bug fixes
 
-- No-Load Heat costs and Start-up costs: in the "fast" unit commitment options,
-  the result was slightly below the actual optimal possible cost for some
-  datasets (i.e. datasets in which the thermal cluster coming last in alphabetic
-  order had a minimum stable power equal to zero).
+- No-Load Heat costs and Start-up costs: in the "fast" unit commitment options, the result was slightly below the actual
+  optimal possible cost for some datasets (i.e. datasets in which the thermal cluster coming last in alphabetic order
+  had a minimum stable power equal to zero).
 
-- Spilled energy control: the three parameters defining how energy in excess should
-  be split between the different possible sources when there is a choice to make
-  can work properly again (feature inhibited in previous 5.0.x versions)
+- Spilled energy control: the three parameters defining how energy in excess should be split between the different
+  possible sources when there is a choice to make can work properly again (feature inhibited in previous 5.0.x versions)
 
 #### Features
 
-- License control throughout the internet: all combinations of UTF8 characters can
-  now be used within proxy ids and passwords
+- License control throughout the internet: all combinations of UTF8 characters can now be used within proxy ids and
+  passwords
 
-- Economic optimization: in an area where the amount of available thermal power
-  exceeds that of load, the fact that the demand should necessarily be served
-  is locally expressed as a constraint of the optimization problem  (LOLE=0)
+- Economic optimization: in an area where the amount of available thermal power exceeds that of load, the fact that the
+  demand should necessarily be served is locally expressed as a constraint of the optimization problem (LOLE=0)
 
 ### 5.0.4 (05/2016)
 ----------------
@@ -2888,8 +2798,8 @@ features to be used without hassle.
 - Better estimate of the number of thermal units dispatched in "fast" unit commitment mode
 - Nodal Marginal Prices and Marginal yield on interconnections are now available in
   "accurate" unit commitment mode
-- Binding constraints including offset parameters: unbounded positive or
-  negative values can be used for all classes of constraints (hourly, daily, weekly)
+- Binding constraints including offset parameters: unbounded positive or negative values can be used for all classes of
+  constraints (hourly, daily, weekly)
 
 ### 5.0.3 (05/2016)
 ----------------
@@ -2908,47 +2818,46 @@ features to be used without hassle.
 
 #### Features
 
-- The optimization criterion used to assess the hydro energies to generate throughout
-  each month incorporates heavier penalization terms for the 12 deviations from the
-  theoretical monthly targets (formerly, only the largest deviation was penalized).
+- The optimization criterion used to assess the hydro energies to generate throughout each month incorporates heavier
+  penalization terms for the 12 deviations from the theoretical monthly targets (formerly, only the largest deviation
+  was penalized).
 
 ### 5.0.1 (04/2016)
 ----------------
 
 #### Bug fixes
 
-- Adequacy mode: fixed a memory allocation bug that forced the post-simulation
-  output files processing to be interrupted
+- Adequacy mode: fixed a memory allocation bug that forced the post-simulation output files processing to be interrupted
 
-- In the previous version, additional logs were added. That could lower the simulation
-  performances in some cases. This problem is now solved.
+- In the previous version, additional logs were added. That could lower the simulation performances in some cases. This
+  problem is now solved.
 
 ### 5.0.0 (03/2016)
 ----------------
 
 #### Bug fixes
 
-- GUI, system map:  copy /paste of binding constraints could alter the activity status or
-  the names of the duplicated binding constraints in some instances
+- GUI, system map:  copy /paste of binding constraints could alter the activity status or the names of the duplicated
+  binding constraints in some instances
 
-- GUI, system map:  some conflicts in copy/paste actions were not always properly raised
-  (e.g. attempt to copy three nodes and paste them on two other nodes)
+- GUI, system map:  some conflicts in copy/paste actions were not always properly raised (e.g. attempt to copy three
+  nodes and paste them on two other nodes)
 
-- Thermal clusters: Improved checking of time-series generation parameters (improper use of a
-  nominal capacity modulation factor lower than the minimum stable power is no longer possible)
+- Thermal clusters: Improved checking of time-series generation parameters (improper use of a nominal capacity
+  modulation factor lower than the minimum stable power is no longer possible)
 
-- Thermal clusters: Improved checking of ready-made time-series. If the user-chosen time-series
-  are not consistent with the parameters set in the GUI, warnings are issued in log files
+- Thermal clusters: Improved checking of ready-made time-series. If the user-chosen time-series are not consistent with
+  the parameters set in the GUI, warnings are issued in log files
 
 - Output , LOLD variable:  in some instances, the values assessed in "economic" simulation mode and in
-  "adequacy" simulation mode could slightly differ because of sporadic rounding side-effects.
-  rounding convention is now set uniformly to : 0 < X < 0.5 -> (X=0)
+  "adequacy" simulation mode could slightly differ because of sporadic rounding side-effects. rounding convention is now
+  set uniformly to : 0 < X < 0.5 -> (X=0)
 
 - Output, MISC.NDG and PSP variable:  values were not properly edited for the specific category
   "geographic districts, "year-by-year results"
 
-- Output, OV. COST, OP. COST, NP. COST variables: values were not properly edited for the last
-  hour of the last day of the simulation
+- Output, OV. COST, OP. COST, NP. COST variables: values were not properly edited for the last hour of the last day of
+  the simulation
 
 - Output, File comparison functions: calendar marks were not properly displayed in some views
 
@@ -2956,44 +2865,42 @@ features to be used without hassle.
 
 #### Features
 
-- Optimization: introduction of a new unit-commitment mode based on a MILP approach slower but more
-  accurate than the former one. An option lets the user choose which mode should be used (fast/accurate)
+- Optimization: introduction of a new unit-commitment mode based on a MILP approach slower but more accurate than the
+  former one. An option lets the user choose which mode should be used (fast/accurate)
 
-- Optimization: in "accurate" unit-commitment mode, incorporation of thermal start-up costs and
-  no-load heat costs within the global objective function to minimize. In "fast" unit-commitment
-  mode, start-up costs and no-load heat costs are minimized independently from the main objective
+- Optimization: in "accurate" unit-commitment mode, incorporation of thermal start-up costs and no-load heat costs
+  within the global objective function to minimize. In "fast" unit-commitment mode, start-up costs and no-load heat
+  costs are minimized independently from the main objective
 
-- Optimization: in both unit-commitment modes, improvement of the inter-weekly start-up strategies
-  (seamless reformulation of the optimization results obtained beforehand)
+- Optimization: in both unit-commitment modes, improvement of the inter-weekly start-up strategies (seamless
+  reformulation of the optimization results obtained beforehand)
 
 - Thermal clusters: definition of separate minimum up/down durations to be used for unit-commitment
 
-- Thermal clusters: definition of a minimum amount of power (hourly time-series) to be generated
-  by the units of the cluster, regardless of economic considerations (partial must-run commitment)
+- Thermal clusters: definition of a minimum amount of power (hourly time-series) to be generated by the units of the
+  cluster, regardless of economic considerations (partial must-run commitment)
 
 - Thermal clusters: start-up cost can now be set from -5000000 to 5000000 (was from -50000 to 50000)
 
-- Binding constraints: introduction of new "offset" parameters which make it possible to define
-  constraints whose terms can refer to different times (e.g. 2 X(t) - 1.5 Y(t-4) + 3 Z(t+1) <10)
+- Binding constraints: introduction of new "offset" parameters which make it possible to define constraints whose terms
+  can refer to different times (e.g. 2 X (t) - 1.5 Y (t-4) + 3 Z (t+1) <10)
 
-- Benchmarking: so as to allow transparent comparisons with other software, the user may demand
-  that all optimization problems solved by Antares be printed in a standardized "mps" format
-  along with the values of the optimized criterion.
+- Benchmarking: so as to allow transparent comparisons with other software, the user may demand that all optimization
+  problems solved by Antares be printed in a standardized "mps" format along with the values of the optimized criterion.
 
 - GUI, System map : new button available in the tool bar for centring the map on a (x,y) location
 
 - GUI, System map : new button available in the tool bar for map trimming around used space
 
-- Output: In synthetic Monte-Carlo results,year-by-year results and cluster-by-cluster results,
-  Addition of a field "Number of dispatched units" (NODU)
+- Output: In synthetic Monte-Carlo results,year-by-year results and cluster-by-cluster results, Addition of a field
+  "Number of dispatched units" (NODU)
 
 ### 4.5.4 (03/2015)
 ----------------
 
 #### Bug fixes
 
-- License checking: internet proxys for which no login and/or password have been
-  defined can now be used
+- License checking: internet proxys for which no login and/or password have been defined can now be used
 
 - Upgrade to 4.5 format of datasets edited in 4.4 format or lower, in which the "scenario builder"
   feature was activated: the conversion to 4.5 format could fail sometimes.
@@ -3003,10 +2910,9 @@ features to be used without hassle.
 
 #### Features
 
-- Start-up and fixed thermal costs: the interpretation of the unit-commitment strategy
-  (starting-up and shutting-down times of each thermal unit) includes the explicit
-  minimization of the total sum of start-up costs and fixed costs (in previous versions,
-  units were called on as late as possible and called off as soon as possible)
+- Start-up and fixed thermal costs: the interpretation of the unit-commitment strategy (starting-up and shutting-down
+  times of each thermal unit) includes the explicit minimization of the total sum of start-up costs and fixed costs (in
+  previous versions, units were called on as late as possible and called off as soon as possible)
 
 
 - Various improvements in the linear solver yielding some speed increase in hard cases
@@ -3016,28 +2922,27 @@ features to be used without hassle.
 
 #### Bug fixes
 
-- Scenario builder: indices not subject to random draws could be mixed up in areas
-  including both "must-run" units and "regular" units (bug circumscribed to the thermal
-  time-series section)
+- Scenario builder: indices not subject to random draws could be mixed up in areas including both "must-run" units and
+  "regular" units (bug circumscribed to the thermal time-series section)
 
-- Spillage management, when numerous binding constraints are active: an excessive leeway
-  could be observed regarding the level of hydro power allowed to be curtailed
+- Spillage management, when numerous binding constraints are active: an excessive leeway could be observed regarding the
+  level of hydro power allowed to be curtailed
 
 ### 4.5.2 (06/2014)
 ----------------
 
 #### Bug fixes
 
-- In the previous version, the average values of interconnection-related variables were multiplied by two
-  and this error was propagated to the standard deviation of the same variables
+- In the previous version, the average values of interconnection-related variables were multiplied by two and this error
+  was propagated to the standard deviation of the same variables
 
 ### 4.5.1 (06/2014)
 ----------------
 
 #### Features
 
-- Start-up and fixed thermal costs: the contribution of each thermal cluster to the operating
-  cost is now explicitly displayed in the results (field : "non proportional cost")
+- Start-up and fixed thermal costs: the contribution of each thermal cluster to the operating cost is now explicitly
+  displayed in the results (field : "non proportional cost")
 
 
 - Load time-series : negative values are now authorized
@@ -3057,73 +2962,69 @@ features to be used without hassle.
 
 #### Features
 
-- Simplex solver: acceleration regarding the control of the admissibility of the solution
-  in the dual stages. This brings a significant improvement of the calculation time for
-  large problems in which the relative scale of system costs is very wide
+- Simplex solver: acceleration regarding the control of the admissibility of the solution in the dual stages. This
+  brings a significant improvement of the calculation time for large problems in which the relative scale of system
+  costs is very wide
 
 
-- Identical upper and lower bounds have been set for the absolute values of all
-  non-zero system costs ( max = 5 10^4 Euros/MWh ; min = 5 10^-3 Euros/MWh)
+- Identical upper and lower bounds have been set for the absolute values of all non-zero system costs (max = 5 10^4
+  Euros/MWh ; min = 5 10^-3 Euros/MWh)
 
 #### Bug fixes
 
-- Hydro Time-series generation : the GUI did not react properly when forbidden
-  values (negative) were seized for energy expectation and/or standard deviation
+- Hydro Time-series generation : the GUI did not react properly when forbidden values (negative) were seized for energy
+  expectation and/or standard deviation
 
 
-- Unit commitment of thermal plants: the time of the first activation of a plant
-  within a week was not fully optimized
+- Unit commitment of thermal plants: the time of the first activation of a plant within a week was not fully optimized
 
 ### 4.4.1 (05/2013)
 ----------------
 
 #### Bug fixes
 
-- Creation of a new binding constraint: the operation needed to be confirmed twice
-  (double click on "create button") and the study had to be "saved as" and reloaded before
-  proceeding further.
+- Creation of a new binding constraint: the operation needed to be confirmed twice (double click on "create button") and
+  the study had to be "saved as" and reloaded before proceeding further.
 
-- Time-series analyzer : due to round-off errors, spatial correlation of 100 %
-  (perfectly identical sets of time-series in different locations) could sometimes
-  be casted to 99%. Exact 100% correlations are now properly displayed.
+- Time-series analyzer : due to round-off errors, spatial correlation of 100 % (perfectly identical sets of time-series
+  in different locations) could sometimes be casted to 99%. Exact 100% correlations are now properly displayed.
 
 ### 4.4.0 (04/2013)
 ----------------
 
 #### Features
 
-- Antares licenses can be either static or floating. Floating tokens are managed and
-  distributed by the Flexnet product, version 11.9.
+- Antares licenses can be either static or floating. Floating tokens are managed and distributed by the Flexnet product,
+  version 11.9.
 
 - Thermal plants time-series generator : availability parameters (outage rates and duration)
-  corresponding to a Mean Time Between Failure (MTBF) < 1 day are now allowed. Though unusual,
-  such sets of parameters may prove useful when it comes to modelling specific situations
+  corresponding to a Mean Time Between Failure (MTBF) < 1 day are now allowed. Though unusual, such sets of parameters
+  may prove useful when it comes to modelling specific situations
 
-- Thermal plants time-series generator : it is possible to model the duration of each kind
-  of outages as 365-day random arrays instead of 365-day constant arrays. Two parameters
-  are available for the description of the probability distribution function of each component.
-  A first parameter allows to set the variable law to either "uniform" or "geometric".
-  A second parameter allows to set the ratio of the variable standard deviation to
-  its expectation to a particular value
+- Thermal plants time-series generator : it is possible to model the duration of each kind of outages as 365-day random
+  arrays instead of 365-day constant arrays. Two parameters are available for the description of the probability
+  distribution function of each component. A first parameter allows to set the variable law to either "uniform" or
+  "geometric". A second parameter allows to set the ratio of the variable standard deviation to its expectation to a
+  particular value
 
-- Thermal plants time-series generator : The planned outage process is now committed to meet a
-  set of constraints defined by two 365-day arrays (PO Min Nb, PO Max Nb). For every day of
-  each Monte-Carlo year, the actual number of overhauls is kept within the [Min,Max] interval,
-  the exact value being determined by regular random draws based on outage rates and durations
+- Thermal plants time-series generator : The planned outage process is now committed to meet a set of constraints
+  defined by two 365-day arrays (PO Min Nb, PO Max Nb). For every day of each Monte-Carlo year, the actual number of
+  overhauls is kept within the [Min,Max] interval, the exact value being determined by regular random draws based on
+  outage rates and durations
 
-- As a consequence of the introduction of these new features, Monte-Carlo time-series
-  of available thermal power generated with Antares 4.4 may differ from those generated with
-  previous versions. Though differences may be observed draw by draw, the statistical
-  properties of the generated time-series are strictly preserved when datasets are identical.
+- As a consequence of the introduction of these new features, Monte-Carlo time-series of available thermal power
+  generated with Antares 4.4 may differ from those generated with previous versions. Though differences may be observed
+  draw by draw, the statistical properties of the generated time-series are strictly preserved when datasets are
+  identical.
 
-- Hydro storage optimization : when the maximum available power of a given day is not high
-  enough to allow the full use of the daily hydro storage energy credit, the energy in excess
-  is levelled on the other days of the month with a flatter pattern.
+- Hydro storage optimization : when the maximum available power of a given day is not high enough to allow the full use
+  of the daily hydro storage energy credit, the energy in excess is levelled on the other days of the month with a
+  flatter pattern.
 
 #### Bug fixes
 
-- On creation of a new link, the transmission capacity status parameter is set
-  to `Use transmission capacities` instead of `Set to null`.
+- On creation of a new link, the transmission capacity status parameter is set to `Use transmission capacities` instead
+  of `Set to null`.
 
 ### 4.3.7 (02/2013)
 ----------------
@@ -3134,55 +3035,49 @@ features to be used without hassle.
 
 #### Bug fixes
 
-- The binding constraint data might not be written properly in some cases
-  when the constraint was renamed.
+- The binding constraint data might not be written properly in some cases when the constraint was renamed.
 
 ### 4.3.6 (12/2012)
 ----------------
 
 #### Bug fixes
 
-- Windows only: fixed potential crash which could happen when exiting
-  a simulation in adequacy mode with import of generated time-series
+- Windows only: fixed potential crash which could happen when exiting a simulation in adequacy mode with import of
+  generated time-series
 
-- Windows only: improved free disk space assessment, which now takes into
-  consideration user- and folder-related quotas
+- Windows only: improved free disk space assessment, which now takes into consideration user- and folder-related quotas
 
 ### 4.3.5 (10/2012)
 ----------------
 
 #### Features
 
-- The calendar field "year" is now available in the simulation main screen
-  (allows not only simulations from JAN to DEC but also from OCT to SEP, etc.)
+- The calendar field "year" is now available in the simulation main screen (allows not only simulations from JAN to DEC
+  but also from OCT to SEP, etc.)
 
 - The attribute "Leap year" is now available in the simulation main screen
 
-- The attribute "Week" is now available in the main simulation screen
-  (weekly results may be defined not only from MON to SUN but also from SAT to FRI,etc.)
+- The attribute "Week" is now available in the main simulation screen (weekly results may be defined not only from MON
+  to SUN but also from SAT to FRI,etc.)
 
-- Time-series screens: a new function is available for hourly and daily time-series
-  (shift rows until #date#)
+- Time-series screens: a new function is available for hourly and daily time-series (shift rows until #date#)
 
-- Linear solver: new version slightly more accurate than the previous one.
-  Note that when a daily or weekly optimization has multiple equally optimal solutions,
-  the ultimate choice may differ from that of the previous version
+- Linear solver: new version slightly more accurate than the previous one. Note that when a daily or weekly optimization
+  has multiple equally optimal solutions, the ultimate choice may differ from that of the previous version
 
 #### Bug fixes
 
 - Reference numbers of the time-series used in the course of a simulation:
   When the simulation is based on a user-defined scenario (building mode: custom)
-  and when a printout of the reference numbers of the time-series used in the simulation
-  is asked for (MC scenarios: true), the numbers printed for thermal clusters running
-  under the "must-run" status were wrong
+  and when a printout of the reference numbers of the time-series used in the simulation is asked for (MC scenarios:
+  true), the numbers printed for thermal clusters running under the "must-run" status were wrong
 
 - Interconnection results, marginal costs:
-  For a congested interconnection whose transmission capacities are not symmetric,
-  and in presence of hurdle costs, a zero could sometimes be delivered instead of
-  the actually expected value
+  For a congested interconnection whose transmission capacities are not symmetric, and in presence of hurdle costs, a
+  zero could sometimes be delivered instead of the actually expected value
 
-- Districts: when the Monte-Carlo synthesis edition is skipped, the results regarding
-  districts were not accessible via the output viewer.
+- Districts: when the Monte-Carlo synthesis edition is skipped, the results regarding districts were not accessible via
+  the output viewer.
 
 ### 4.2.6 (07/2012)
 ----------------
@@ -3195,40 +3090,35 @@ features to be used without hassle.
 
 #### Bug fixes
 
-- Binding constraints: in the filter available for the weight matrix, removal of
-  redundant options
+- Binding constraints: in the filter available for the weight matrix, removal of redundant options
 
-- Copy/Paste nodes on the general map: "print status" parameters can now be copied like
-  any other data
+- Copy/Paste nodes on the general map: "print status" parameters can now be copied like any other data
 
 - Upgrade of studies in 3.8 format: negative hurdle costs were not correctly transposed
 
-- Thermal plants time-series generator: outages lasting N days, starting on day D, were
-  considered as outages lasting N days starting on D+1 (corrected by removal of the
-  one-day shift)
+- Thermal plants time-series generator: outages lasting N days, starting on day D, were considered as outages lasting N
+  days starting on D+1 (corrected by removal of the one-day shift)
 
 - Advanced parameters, option "shave peaks" used along with the "weekly" simplex range:
-  the maximum intra-daily hydro storage limit on power could occasionally be overcome during
-  the unsupplied energy levelling process (corrected by a slight lessening of the authorized
-  levelling)
+  the maximum intra-daily hydro storage limit on power could occasionally be overcome during the unsupplied energy
+  levelling process (corrected by a slight lessening of the authorized levelling)
 
 ### 4.1.0 (06/2012)
 ----------------
 
 #### Features
 
-- Hydro storage energy management : each nodal policy of use can be tuned so as to
-  accommodate simultaneously the net load of several nodes
+- Hydro storage energy management : each nodal policy of use can be tuned so as to accommodate simultaneously the net
+  load of several nodes
 
-- Hydro storage energy modelling : monthly time-series of inflows and reference trajectories
-  for reservoir levels can be used instead of monthly time-series of generated energies.
+- Hydro storage energy modelling : monthly time-series of inflows and reference trajectories for reservoir levels can be
+  used instead of monthly time-series of generated energies.
 
-- Load shedding strategies : when unsupplied energy is unavoidable, a choice is now possible
-  between two policies : minimize the duration of sheddings or "shave" the load curve.
+- Load shedding strategies : when unsupplied energy is unavoidable, a choice is now possible between two policies :
+  minimize the duration of sheddings or "shave" the load curve.
 
-- When multiple mathematically equivalent solutions exist a the first order for the
-  economic optimization problem, a choice can be made at the second order between three
-  ramping strategies
+- When multiple mathematically equivalent solutions exist a the first order for the economic optimization problem, a
+  choice can be made at the second order between three ramping strategies
 
 ### 3.8.0 (12/2011)
 ----------------
@@ -3237,18 +3127,17 @@ features to be used without hassle.
 
 - The simulation mode `Adequacy` is renamed `Draft`.
 
-- A new simulation mode `Adequacy` is available. In this mode, all thermal plants are
-  considered as must-run zero-cost units.
+- A new simulation mode `Adequacy` is available. In this mode, all thermal plants are considered as must-run zero-cost
+  units.
 
-- New possibilities are given regarding the filtering of simulation results (selection
-  of nodes, of interconnections, etc.)
+- New possibilities are given regarding the filtering of simulation results (selection of nodes, of interconnections,
+  etc.)
 
 - Automatic spatial aggregation of results is possible through the use of the new
   "district" object (a district is a sort of macro-node gathering several regions)
 
-- Nodal costs of unsupplied energy and of spilled energy : a small additive stochastic
-  noise around the reference values can be introduced to help discriminate between
-  theoretically equivalent solutions
+- Nodal costs of unsupplied energy and of spilled energy : a small additive stochastic noise around the reference values
+  can be introduced to help discriminate between theoretically equivalent solutions
 
 ### 3.7.4 (08/2011)
 ----------------
@@ -3257,48 +3146,44 @@ features to be used without hassle.
 
 - New version of the dual simplex engine (speed is about twice that of 3.6 version)
 
-- Economic optimizations now encompass a full week (168 hours) span. Traditional
-  day-long optimizations can still be carried out (ad hoc "preference" parameter)
+- Economic optimizations now encompass a full week (168 hours) span. Traditional day-long optimizations can still be
+  carried out (ad hoc "preference" parameter)
 
-- Binding constraints can be defined at the weekly scale in addition to the
-  daily and hourly scales
+- Binding constraints can be defined at the weekly scale in addition to the daily and hourly scales
 
-- Several other "optimization preferences" are made available to allow the quick examination
-  of variants used in sensitivity analyses
+- Several other "optimization preferences" are made available to allow the quick examination of variants used in
+  sensitivity analyses
 
-- A new graphic interface is available for the consultation of all simulation results
-  (except those obtained in draft mode)
+- A new graphic interface is available for the consultation of all simulation results (except those obtained in draft
+  mode)
 
-- Extraction of data regarding any given variable from the whole Monte-Carlo year-by-year
-  set of results is now possible
+- Extraction of data regarding any given variable from the whole Monte-Carlo year-by-year set of results is now possible
 
-- New variables are introduced in the economic output files : the overall available dispatchable
-  thermal generation (AVL DTG) and the thermal margin (DTG MRG = AVL DTG - dispatched power)
+- New variables are introduced in the economic output files : the overall available dispatchable thermal generation (AVL
+  DTG) and the thermal margin (DTG MRG = AVL DTG - dispatched power)
 
 ### 3.6.4 (04/2011)
 ----------------
 
 #### Features
 
-- The "scenario builder" is now available. With this builder it is possible to define
-  precisely the simulation context (for any given year, random numbers drawn for each
-  kind of time-series can be replaced by user-defined numbers). This feature allows
-  simulations to be carried out in a versatile "What If" mode.
+- The "scenario builder" is now available. With this builder it is possible to define precisely the simulation context
+  (for any given year, random numbers drawn for each kind of time-series can be replaced by user-defined numbers). This
+  feature allows simulations to be carried out in a versatile "What If" mode.
 
 ### 3.5.3 (03/2011)
 ----------------
 
 #### Features
 
-- Addition of the fuel category "lignite" to the regular options available
-  for the description of thermal plants.
+- Addition of the fuel category "lignite" to the regular options available for the description of thermal plants.
 
 - Improvement of the presentation of the 365-day arrays "market bid modulation"
   and "marginal cost modulation".
 
-- Automatic processing of the inter-monthly & inter-regional hydro correlation hydro
-  energy matrix to meet the feasibility constraints (the matrix has to be positive
-  semi-definite). User should check in the simulation log file that no warning such as :
+- Automatic processing of the inter-monthly & inter-regional hydro correlation hydro energy matrix to meet the
+  feasibility constraints (the matrix has to be positive semi-definite). User should check in the simulation log file
+  that no warning such as :
   "info : hydro correlation not positive semi-definite : shrink by factor x " appears.
 
 ### 3.4.4 (02/2011)
@@ -3306,8 +3191,8 @@ features to be used without hassle.
 
 #### Features
 
-- The names of nodes, thermal clusters and binding constraints can be extended to
-  128 characters. Authorized characters are : `a-z, A-Z,0-9,-,_, space`
+- The names of nodes, thermal clusters and binding constraints can be extended to 128 characters. Authorized characters
+  are : `a-z, A-Z,0-9,-,_, space`
 
 ### 3.4.3 (10/2010)
 ----------------
@@ -3316,24 +3201,18 @@ features to be used without hassle.
 
 - Two calculations modes are now available (in the "run" window):
 
-  "regular": the software tries to hold all simulation data in RAM
-  this mode is faster than the second one when datasets are small but
-  can get dramatically slow when RAM limits are close
+  "regular": the software tries to hold all simulation data in RAM this mode is faster than the second one when datasets
+  are small but can get dramatically slow when RAM limits are close
 
-  "swap" : a dedicated memory management module loads in RAM amounts
-  of data as small as possible. This mode should be prefered to the
-  other when datasets are large.
+  "swap" : a dedicated memory management module loads in RAM amounts of data as small as possible. This mode should be
+  prefered to the other when datasets are large.
 
-  Note that in "regular" mode, the maximum amount of data loaded is
-  limited by the OS to 2 Go on 32-bit machines, regardless of the
-  memory installed. The integrality of installed memory can be used
-  on 64-bit machines.
+  Note that in "regular" mode, the maximum amount of data loaded is limited by the OS to 2 Go on 32-bit machines,
+  regardless of the memory installed. The integrality of installed memory can be used on 64-bit machines.
 
-- A new module (time-series analyzer) is available to help set the
-  parameters of the stochastic time-series generators for wind power,
-  solar power and load. The analyzer determines, on sets of historical
-  8760-hour time-series the relevant parameters for different kinds of
-  random laws (uniform, normal,Weibull, Beta, Gamma), along with a
+- A new module (time-series analyzer) is available to help set the parameters of the stochastic time-series generators
+  for wind power, solar power and load. The analyzer determines, on sets of historical 8760-hour time-series the
+  relevant parameters for different kinds of random laws (uniform, normal,Weibull, Beta, Gamma), along with a
   description of the auto-correlation dynamic (two parameters)
   and a full spatial correlation matrix
 
@@ -3344,20 +3223,15 @@ features to be used without hassle.
 
 - Improvement of the wind power time-series generator (faster calculations)
 
-- Introduction of new stochastic time-series generators for
-  solar power and load
+- Introduction of new stochastic time-series generators for solar power and load
 
-- Introduction of an explicit modelling of wind-to-power curves.
-  As a consequence, wind power time-series can now be generated
-  either through a direct approach (by analysis of historical
-  time-series of power) or through an indirect (more physical)
-  approach, based on the analysis of historical time-series of
-  wind speed
+- Introduction of an explicit modelling of wind-to-power curves. As a consequence, wind power time-series can now be
+  generated either through a direct approach (by analysis of historical time-series of power) or through an indirect
+  (more physical)
+  approach, based on the analysis of historical time-series of wind speed
 
-- Introduction of a new 8760-hour power array for each node,
-  representing the day-ahead reserve that should be made available
-  (either on-site or at distance) to face last-minute incidents
-  and/or forecasts errors.
+- Introduction of a new 8760-hour power array for each node, representing the day-ahead reserve that should be made
+  available (either on-site or at distance) to face last-minute incidents and/or forecasts errors.
 
 - Introduction of so-called hurdles costs on interconnection.
 
@@ -3370,11 +3244,9 @@ features to be used without hassle.
   The pilot curve is now the net load (i.e. load - all must-run generation)
   instead of the gross load
 
-- New functionalities available for datasets management (stucy cleaner,
-  Log file wiewer)
+- New functionalities available for datasets management (stucy cleaner, Log file wiewer)
 
-- New info is given for simulation context (available & required amounts
-  of RAM & HDD space)
+- New info is given for simulation context (available & required amounts of RAM & HDD space)
 
 ### From V1 to V2 (all versions)
 ----------------------------
