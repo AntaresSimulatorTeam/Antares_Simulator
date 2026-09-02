@@ -44,7 +44,7 @@ std::set<unsigned> expandEntry(const std::string& entry)
         if (numberPart.empty()
             || std::any_of(numberPart.begin(),
                            numberPart.end(),
-                           [](char c) { return !std::isdigit(c); }))
+                           [](unsigned char c) { return !std::isdigit(c); }))
         {
             throwInvalidEntry(entry);
         }
@@ -182,6 +182,14 @@ std::vector<unsigned> resolveScenarioScopeScenarios(const ScenarioScope& scope,
             base.erase(it);
         }
     }
+
+    if (base.empty())
+    {
+        logs.warning(
+          "scenario-scope: no scenarios left after applying exclusions, defaulting to scenario 0");
+        return {0};
+    }
+
     return base;
 }
 
