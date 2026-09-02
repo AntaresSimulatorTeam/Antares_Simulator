@@ -59,6 +59,15 @@ def modeler_output_values(context):
 def modeler_output_values_with_tolerance(context, tolerance):
     check_simulation_table_content(context, tolerance)
 
+
+@then('no simulation table is expected')
+def no_simulation_table_expected(context):
+    # Benders-decomposition studies do not produce a simulation table. Make that contract
+    # explicit here instead of leaving a later step to fail with an AttributeError on
+    # context.simu_table.
+    assert getattr(context, "simu_table", None) is None, \
+        f"Expected no simulation table, but one is present: {getattr(context, 'simu_table', None)}"
+
 def check_simulation_table_content(context, tolerance):
     expected_entries = read_expected_entries(context.table)
     check_st_entries(context.simu_table, expected_entries, tolerance)
