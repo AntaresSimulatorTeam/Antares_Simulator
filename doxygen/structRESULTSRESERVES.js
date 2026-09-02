@@ -1,4 +1,4 @@
 var structRESULTSRESERVES =
 [
-    [ "reserveParticipationOfCluster", "structRESULTSRESERVES.html#a8561ac808b5d2f9ee8d08661e33fd228", null ]
+    [ "reserveParticipationOfCluster", "structRESULTSRESERVES.html#aa947d3a2351714b20c91a998343e3a6c", null ]
 ];

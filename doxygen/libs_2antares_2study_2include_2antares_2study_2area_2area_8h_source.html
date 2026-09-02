@@ -135,14 +135,14 @@ $(document).ready(function(){initNavTree('libs_2antares_2study_2include_2antares
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;filesystem&gt;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;ostream&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;set&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;antares/array/matrix.h&gt;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;antares/study/area/ReserveOpt.h&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;optional&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;ostream&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;set&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;antares/array/matrix.h&gt;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &lt;antares/study/area/capacityReservation.h&gt;</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;antares/study/parameters/adq-patch-params.h&gt;</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &quot;antares/study/filter.h&quot;</span></div>
@@ -236,7 +236,7 @@ $(document).ready(function(){initNavTree('libs_2antares_2study_2include_2antares
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classAntares_1_1Data_1_1Area.html#a2f23f3620f56a800a963cba71ed68bf5">spreadUnsuppliedEnergyCost</a> = 0.;</div>
 <div class="line"><a name="l00201"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1Area.html#af6379c374887f303a405e65b56ceb7d2">  201</a></span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classAntares_1_1Data_1_1Area.html#af6379c374887f303a405e65b56ceb7d2">spreadSpilledEnergyCost</a> = 0.;</div>
 <div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160; </div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    ReserveOpt&lt;AllCapacityReservations&gt; allCapacityReservations;</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    std::optional&lt;AllCapacityReservations&gt; allCapacityReservations;</div>
 <div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
 <div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160; </div>
 <div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classAntares_1_1Data_1_1Area.html#a675bf742a0ee518a1e7b965cd1bed3b5">filterSynthesis</a> = filterAll;</div>
@@ -454,7 +454,7 @@ $(document).ready(function(){initNavTree('libs_2antares_2study_2include_2antares
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html_afacded20cddfb40dd6a587fd63ecc395"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html#afacded20cddfb40dd6a587fd63ecc395">Antares::Data::Area::id</a></div><div class="ttdeci">AreaName id</div><div class="ttdoc">Name of the area in lowercase format.</div><div class="ttdef"><b>Definition:</b> area.h:126</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Load_1_1Container_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Load_1_1Container.html">Antares::Data::Load::Container</a></div><div class="ttdef"><b>Definition:</b> container.h:15</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Parameters_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Parameters.html">Antares::Data::Parameters</a></div><div class="ttdoc">General data for a study.</div><div class="ttdef"><b>Definition:</b> parameters.h:34</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1PartHydro_html"><div class="ttname"><a href="classAntares_1_1Data_1_1PartHydro.html">Antares::Data::PartHydro</a></div><div class="ttdoc">Hydro for a single area.</div><div class="ttdef"><b>Definition:</b> container.h:75</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1PartHydro_html"><div class="ttname"><a href="classAntares_1_1Data_1_1PartHydro.html">Antares::Data::PartHydro</a></div><div class="ttdoc">Hydro for a single area.</div><div class="ttdef"><b>Definition:</b> container.h:74</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1PartRenewable_html"><div class="ttname"><a href="classAntares_1_1Data_1_1PartRenewable.html">Antares::Data::PartRenewable</a></div><div class="ttdef"><b>Definition:</b> container.h:16</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1PartThermal_html"><div class="ttname"><a href="classAntares_1_1Data_1_1PartThermal.html">Antares::Data::PartThermal</a></div><div class="ttdef"><b>Definition:</b> container.h:12</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html">Antares::Data::ShortTermStorage::STStorageInput</a></div><div class="ttdef"><b>Definition:</b> container.h:17</div></div>
