@@ -32,18 +32,6 @@ std::optional<unsigned> LegacyBlockTimeIndex(const FillContext& fillContext, uns
 
 namespace
 {
-// Misc-gen suffixes, in the same order as the column indices used by
-// InactiveComponentsAnalyzer::miscGenColumnIsAllZero (matching
-// fillInputGenerationSeries's miscGenComponents in sim_calcul_economique.cpp).
-constexpr std::array<const char*, Data::fhhMax> miscGenSuffixes = {"_combined_heat_power",
-                                                                   "_biomass",
-                                                                   "_biogas",
-                                                                   "_waste",
-                                                                   "_geothermal",
-                                                                   "_other",
-                                                                   "_pumped_storage_power",
-                                                                   "_rest_world"};
-
 // Emission extra-output IDs, ordered to match Antares::Data::Pollutant::PollutantEnum
 // so each pollutant's factor (read by ordinal from the cluster data) maps to its row.
 constexpr std::array<const char*, Data::Pollutant::POLLUTANT_MAX> emissionOutputNames = {
@@ -198,11 +186,12 @@ bool LegacyExtraOutputEmitter::inputGenerationIsSuppressed(uint32_t pays,
     {
         return analyzer.rorIsAllZero(pays);
     }
-    for (std::size_t column = 0; column < miscGenSuffixes.size(); ++column)
+    for (unsigned column = 0; column < Data::fhhMax; ++column)
     {
-        if (componentName.ends_with(miscGenSuffixes[column]))
+        if (componentName.ends_with(
+              Data::miscGenComponentSuffix(static_cast<Data::MiscGenIndex>(column))))
         {
-            return analyzer.miscGenColumnIsAllZero(pays, static_cast<unsigned>(column));
+            return analyzer.miscGenColumnIsAllZero(pays, column);
         }
     }
     return false;
