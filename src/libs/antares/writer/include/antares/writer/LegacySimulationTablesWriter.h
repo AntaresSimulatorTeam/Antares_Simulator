@@ -20,7 +20,7 @@ public:
     LegacySimulationTablesWriter(const std::filesystem::path& folder,
                                  const unsigned year,
                                  TableFormat tableFormat = TableFormat::CSV);
-    void write(IO::Outputs::OptimisationsSimulationTable& tables) const;
+    void write(const IO::Outputs::OptimisationsSimulationTable& tables) const;
 
 private:
     void writeForStage(const IO::Outputs::SimulationTable& table, const std::string& stage) const;

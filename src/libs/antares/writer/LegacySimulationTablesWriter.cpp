@@ -40,7 +40,7 @@ LegacySimulationTablesWriter::LegacySimulationTablesWriter(const fs::path& folde
     check_is_existing_folder(folder_);
 }
 
-void LegacySimulationTablesWriter::write(OptimisationsSimulationTable& tables) const
+void LegacySimulationTablesWriter::write(const OptimisationsSimulationTable& tables) const
 {
     for (const auto& [stage, table]: tables.stages())
     {
