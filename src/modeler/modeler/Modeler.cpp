@@ -300,6 +300,8 @@ FillContext Modeler::createFillContext(unsigned year) const
 
 void Modeler::buildProblems()
 {
+    subproblems_.clear();
+    subproblemOptimEntityContainers_.clear();
     Utils::TimeMeasurement measure;
 
     logs.info() << "linear problem of System loaded";
@@ -321,13 +323,18 @@ void Modeler::buildProblems()
         subproblemOptimEntityContainers_.emplace_back(std::move(entities.optimEntityContainer));
     }
 
-    logs.info() << "Linear problem provided";
-
-    for (std::size_t i = 0; i < subproblems_.size(); ++i)
+    if (subproblems_.empty())
     {
-        logs.info() << "Number of variables: " << subproblems_[i]->variableCount();
-        logs.info() << "Number of constraints: " << subproblems_[i]->constraintCount();
+        logs.warning()
+          << "No subproblem was built. Check your scenario-scope and modeler parameters.";
     }
+    else
+    {
+        logs.info() << "Number of subproblems built: " << subproblems_.size();
+    }
+
+    logs.info() << "Number of variables: " << subproblems_.back()->variableCount();
+    logs.info() << "Number of constraints: " << subproblems_.back()->constraintCount();
 
     measure.tick();
     logs.info();
@@ -343,7 +350,6 @@ void Modeler::run()
             logs.error() << "Resolution mode is benders-decomposition but exportMps is false. No "
                             "resolution will be performed and no problem will be exported.";
             throw ModelerError("Conflicting parameters: benders-decomposition and exportMps");
-
         }
 
         buildProblemsAndWriteMps();
