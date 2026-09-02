@@ -92,15 +92,18 @@ BOOST_AUTO_TEST_SUITE(reserves_operations_import)
 BOOST_FIXTURE_TEST_CASE(test_importCapacityReservation_allGood, OneProblemWithReservesTwoAreas)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.has_value(), false);
     importCapacityReservations(study->areas, *problemeHebdo);
-    BOOST_CHECK(!problemeHebdo->allReserves.empty());
+    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.has_value(), true);
     int indexA = study->areas.find("a")->index;
     int indexB = study->areas.find("b")->index;
-    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.at(indexA).areaCapacityReservations.size(), 2);
-    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.at(indexB).areaCapacityReservations.size(), 2);
+    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.value()[indexA].areaCapacityReservations.size(),
+                      2);
+    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.value()[indexB].areaCapacityReservations.size(),
+                      2);
     bool containsUp = false;
     bool containsDown = false;
-    for (auto& reserve: problemeHebdo->allReserves.at(indexA).areaCapacityReservations)
+    for (auto& reserve: problemeHebdo->allReserves->at(indexA).areaCapacityReservations)
     {
         if (reserve.type == Antares::Data::ReserveType::UP)
         {
@@ -127,7 +130,7 @@ BOOST_FIXTURE_TEST_CASE(test_importCapacityReservation_allGood, OneProblemWithRe
     containsUp = false;
     containsDown = false;
 
-    for (auto& reserve: problemeHebdo->allReserves.at(indexB).areaCapacityReservations)
+    for (auto& reserve: problemeHebdo->allReserves->at(indexB).areaCapacityReservations)
     {
         if (reserve.type == Antares::Data::ReserveType::UP)
         {
@@ -189,17 +192,17 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
 
     int indexA = study->areas.find("a")->index;
     int indexB = study->areas.find("b")->index;
-    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.at(indexA).areaCapacityReservations.size(), 2);
-    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.at(indexB).areaCapacityReservations.size(), 2);
+    BOOST_CHECK_EQUAL(problemeHebdo->allReserves->at(indexA).areaCapacityReservations.size(), 2);
+    BOOST_CHECK_EQUAL(problemeHebdo->allReserves->at(indexB).areaCapacityReservations.size(), 2);
     int maxGlobalHydroParticipationIndex;
     bool containsUp = false;
     bool containsDown = false;
 
     BOOST_CHECK_EQUAL(
-      problemeHebdo->allReserves.at(indexA).HydroReservesParticipationSymmetries.size(),
+      problemeHebdo->allReserves->at(indexA).HydroReservesParticipationSymmetries.size(),
       1);
 
-    for (auto& reserve: problemeHebdo->allReserves.at(indexA).areaCapacityReservations)
+    for (auto& reserve: problemeHebdo->allReserves->at(indexA).areaCapacityReservations)
     {
         BOOST_CHECK_EQUAL(reserve.AllHydroReservesParticipation.size(), 1);
 
@@ -233,7 +236,7 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
     BOOST_CHECK_EQUAL(containsUp, true);
     containsUp = false;
     containsDown = false;
-    for (auto& reserve: problemeHebdo->allReserves.at(indexB).areaCapacityReservations)
+    for (auto& reserve: problemeHebdo->allReserves->at(indexB).areaCapacityReservations)
     {
         if (reserve.AllHydroReservesParticipation.size() == 1)
         {

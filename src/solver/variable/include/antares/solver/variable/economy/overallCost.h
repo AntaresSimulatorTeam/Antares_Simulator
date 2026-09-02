@@ -57,7 +57,7 @@ struct OverallCostTraits
             return 0.0;
         }
 
-        const auto& reserves = state.problemeHebdo->allReserves.at(state.area->index);
+        const auto& reserves = state.problemeHebdo->allReserves->at(state.area->index);
         const auto& hourlyReserves = state.hourlyResults->Reserves->at(state.hourInTheWeek);
 
         double totalReservesCost = 0.0;

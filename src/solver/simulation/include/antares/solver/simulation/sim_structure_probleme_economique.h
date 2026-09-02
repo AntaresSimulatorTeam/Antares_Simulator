@@ -596,7 +596,7 @@ struct PROBLEME_HEBDO
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
-    std::vector<::AREA_RESERVES_VECTOR> allReserves{};
+    std::optional<std::vector<::AREA_RESERVES_VECTOR>> allReserves;
 
     uint32_t NumberOfShortTermStorages = 0;
     std::vector<::AREA_INPUT> ShortTermStorage;

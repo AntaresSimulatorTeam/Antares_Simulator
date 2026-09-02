@@ -467,7 +467,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
           problemeHebdo,
           PremierPdtDeLIntervalle,
           DernierPdtDeLIntervalle);
-        if (!problemeHebdo->allReserves.empty())
+        if (problemeHebdo->allReserves)
         {
             OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReserves(problemeHebdo,
                                                                            PremierPdtDeLIntervalle,

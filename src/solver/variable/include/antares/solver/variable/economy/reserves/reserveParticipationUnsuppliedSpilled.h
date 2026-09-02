@@ -107,7 +107,7 @@ public:
         {
             auto& area = state.area;
             int column = 0;
-            auto reserves = state.problemeHebdo->allReserves.at(area->index);
+            auto reserves = state.problemeHebdo->allReserves->at(area->index);
             for (const auto& reserve: reserves.areaCapacityReservations)
             {
                 pValuesForTheCurrentYear[numSpace][column++].hour[state.hourInTheYear]

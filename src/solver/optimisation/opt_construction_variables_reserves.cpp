@@ -256,7 +256,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
         {
             variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
 
-            for (auto& areaReserve: problemeHebdo->allReserves.at(pays).areaCapacityReservations)
+            for (auto& areaReserve:
+                 problemeHebdo->allReserves.value()[pays].areaCapacityReservations)
             {
                 reserveVariablesInitializer.initReserve(pdt,
                                                         areaReserve.globalReserveIndex,

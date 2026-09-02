@@ -397,7 +397,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             reserveVariablesRightSidesSetter.setPays(pays);
-            const auto& areaReserves = problemeHebdo->allReserves.at(pays);
+            const auto& areaReserves = problemeHebdo->allReserves->at(pays);
 
             // Up Reserves Right Sides
             for (const auto& areaReserve: areaReserves.areaCapacityReservations)
@@ -453,7 +453,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
 
             // Hydro
             // Checks if Hydro is participating to reserves
-            if (std::ranges::any_of(problemeHebdo->allReserves.at(pays).areaCapacityReservations,
+            if (std::ranges::any_of(problemeHebdo->allReserves->at(pays).areaCapacityReservations,
                                     [](CAPACITY_RESERVATION& res)
                                     { return res.AllHydroReservesParticipation.size() > 0; }))
             {

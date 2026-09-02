@@ -171,7 +171,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReserves(
         {
             setter.setPays(pays);
 
-            const auto& areaReserves = problemeHebdo->allReserves.at(pays);
+            const auto& areaReserves = problemeHebdo->allReserves->at(pays);
 
             SetAllReservesBoundsForArea(setter, areaReserves.areaCapacityReservations);
         }
