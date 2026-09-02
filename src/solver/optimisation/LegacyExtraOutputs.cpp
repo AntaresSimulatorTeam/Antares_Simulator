@@ -11,7 +11,6 @@
 #include <vector>
 
 #include <antares/utils/utils.h>
-
 #include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/optimisation/variables/VariableManagerUtils.h"
@@ -228,8 +227,8 @@ double LegacyExtraOutputEmitter::numberOfUnitsOn(uint32_t pays, int index, int p
 }
 
 std::pair<double, double> LegacyExtraOutputEmitter::unitCommitmentCosts(uint32_t pays,
-                                                                       int index,
-                                                                       int pdt)
+                                                                        int index,
+                                                                        int pdt)
 {
     const PALIERS_THERMIQUES& paliers = problemeHebdo_.PaliersThermiquesDuPays[pays];
 
@@ -246,7 +245,7 @@ std::pair<double, double> LegacyExtraOutputEmitter::unitCommitmentCosts(uint32_t
     return {cost(variableManager_.NumberOfDispatchableUnits(palier, pdt)),
             cost(variableManager_.NumberStartingDispatchableUnits(palier, pdt))};
 }
-  
+
 bool LegacyExtraOutputEmitter::inputGenerationIsSuppressed(uint32_t pays,
                                                            const std::string& componentName) const
 {
