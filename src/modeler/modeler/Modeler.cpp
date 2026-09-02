@@ -342,7 +342,8 @@ void Modeler::run()
         {
             logs.error() << "Resolution mode is benders-decomposition but exportMps is false. No "
                             "resolution will be performed and no problem will be exported.";
-            return;
+            throw ModelerError("Conflicting parameters: benders-decomposition and exportMps");
+
         }
 
         buildProblemsAndWriteMps();
