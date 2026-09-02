@@ -40,7 +40,7 @@ LegacySimulationTablesWriter::LegacySimulationTablesWriter(const fs::path& folde
     check_is_existing_folder(folder_);
 }
 
-void LegacySimulationTablesWriter::write(OptimisationsSimulationTable& tables)
+void LegacySimulationTablesWriter::write(OptimisationsSimulationTable& tables) const
 {
     for (const auto& [stage, table]: tables.stages())
     {
@@ -49,7 +49,7 @@ void LegacySimulationTablesWriter::write(OptimisationsSimulationTable& tables)
 }
 
 void LegacySimulationTablesWriter::writeForStage(const SimulationTable& table,
-                                                 const std::string& stage)
+                                                 const std::string& stage) const
 {
     auto filepath = makeSimuTableFilePath(folder_, year_, stage);
     SimulationTableWriter writer(filepath, tableFormat_);
