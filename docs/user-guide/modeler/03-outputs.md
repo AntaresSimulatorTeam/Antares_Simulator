@@ -11,7 +11,9 @@ When the `export-mps` parameter is set to `true` in [parameters.yml](04-paramete
 the optimization model in MPS format:
 - **output/<scenario-nb>-0.mps**: The subproblem in MPS format
 - **output/master.mps**: The master problem in MPS format (if applicable, e.g., in Benders decomposition mode)
-- **output/structure.txt**: A text file describing the Benders decomposition structure (if applicable)
+
+The structure file is generated if the optim-config.yml contains **resolution-mode: benders-decomposition**
+- **output/structure.txt**: A text file describing the Benders decomposition structure
 
 These files are intended for debugging and analysis purposes.
 
