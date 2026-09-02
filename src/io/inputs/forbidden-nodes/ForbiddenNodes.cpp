@@ -28,6 +28,7 @@ void forbidVariablesInFunctionNodes(ForbiddenNodes& f)
     f.parentForbidsChild<FunctionNodeType::ceil, VariableNode>();
     f.parentForbidsChild<FunctionNodeType::round, VariableNode>();
     f.parentForbidsChild<FunctionNodeType::abs, VariableNode>();
+    f.parentForbidsChild<FunctionNodeType::pow, VariableNode>();
 }
 
 void forbidPortFieldsInFunctionNodes(ForbiddenNodes& f)
@@ -131,7 +132,7 @@ static ForbiddenNodes ForbidNonLinearNodes()
     ForbiddenNodes f;
     f.forbidGlobally<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
     forbidVariablesInFunctionNodes(f);
-    f.parentForbidsChild<FunctionNodeType::pow, VariableNode>();
+
     return f;
 }
 
