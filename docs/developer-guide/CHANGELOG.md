@@ -6,8 +6,6 @@ toc_depth: 2
 
 ## Branch 10.2.x
 
-### 10.2.0
-
 #### Features
 
 * Add legacy variable in simulation table [ANT-4962] (#3676, #3704)
