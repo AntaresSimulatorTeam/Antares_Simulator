@@ -21,11 +21,6 @@ namespace Antares::IO::Outputs
 class OptimisationsSimulationTable
 {
 public:
-    // Stage names of the two optimisation passes. They are part of the output
-    // file names, so they must not change.
-    static constexpr const char* firstOptimStage = "optim-nb-1";
-    static constexpr const char* secondOptimStage = "optim-nb-2";
-
     SimulationTable* firstOptimSimulationTable();
     SimulationTable* secondOptimSimulationTable();
 
@@ -43,6 +38,10 @@ public:
     std::shared_ptr<const Optimization::InactiveComponentsAnalyzer> inactiveComponents;
 
 private:
+    // Stage names of the two optimisation passes. They are part of the output
+    // file names, so they must not change.
+    static constexpr const char* firstOptimStage = "optim-nb-1";
+    static constexpr const char* secondOptimStage = "optim-nb-2";
     std::map<std::string, SimulationTable> stages_;
 };
 } // namespace Antares::IO::Outputs
