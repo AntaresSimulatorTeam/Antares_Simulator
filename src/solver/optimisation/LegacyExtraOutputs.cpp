@@ -12,6 +12,7 @@
 
 #include <antares/utils/utils.h>
 
+#include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -34,6 +35,18 @@ std::optional<unsigned> LegacyBlockTimeIndex(const FillContext& fillContext, uns
 
 namespace
 {
+// Misc-gen suffixes, in the same order as the column indices used by
+// InactiveComponentsAnalyzer::miscGenColumnIsAllZero (matching
+// fillInputGenerationSeries's miscGenComponents in sim_calcul_economique.cpp).
+constexpr std::array<const char*, Data::fhhMax> miscGenSuffixes = {"_combined_heat_power",
+                                                                   "_biomass",
+                                                                   "_biogas",
+                                                                   "_waste",
+                                                                   "_geothermal",
+                                                                   "_other",
+                                                                   "_pumped_storage_power",
+                                                                   "_rest_world"};
+
 // Emission extra-output IDs, ordered to match Antares::Data::Pollutant::PollutantEnum
 // so each pollutant's factor (read by ordinal from the cluster data) maps to its row.
 constexpr std::array<const char*, Data::Pollutant::POLLUTANT_MAX> emissionOutputNames = {
@@ -57,13 +70,15 @@ public:
     LegacyExtraOutputEmitter(SimulationTable& simulationTable,
                              PROBLEME_HEBDO& problemeHebdo,
                              const FillContext& fillContext,
-                             unsigned currentBlock):
+                             unsigned currentBlock,
+                             const InactiveComponentsAnalyzer* inactiveComponents):
         table_(simulationTable),
         problemeHebdo_(problemeHebdo),
         problem_(*problemeHebdo.ProblemeAResoudre),
         variableManager_(VariableManagerFromProblemHebdo(&problemeHebdo)),
         fillContext_(fillContext),
-        block_(currentBlock)
+        block_(currentBlock),
+        inactiveComponents_(inactiveComponents)
     {
         // Component names are used for every time step of the week: build them
         // once instead of re-concatenating them on each hourly call.
@@ -111,6 +126,11 @@ private:
     // Not const: the variable manager's index accessors are not const.
     [[nodiscard]] double numberOfUnitsOn(uint32_t pays, int index, int pdt);
     [[nodiscard]] std::pair<double, double> unitCommitmentCosts(uint32_t pays, int index, int pdt);
+    // True when `componentName` (an InputGenerationOfArea entry name, e.g.
+    // "{area}_wind") is flagged all-zero across the whole study by the
+    // precomputed analyzer, and its rows should therefore be suppressed.
+    [[nodiscard]] bool inputGenerationIsSuppressed(uint32_t pays,
+                                                   const std::string& componentName) const;
 
     [[nodiscard]] double x(int variableIndex) const
     {
@@ -139,6 +159,7 @@ private:
     VariableManagement::VariableManager variableManager_;
     const FillContext& fillContext_;
     unsigned block_;
+    const InactiveComponentsAnalyzer* inactiveComponents_;
 
     // Component names, precomputed once per week (see constructor).
     std::vector<std::string> areaNames_;
@@ -225,6 +246,36 @@ std::pair<double, double> LegacyExtraOutputEmitter::unitCommitmentCosts(uint32_t
     return {cost(variableManager_.NumberOfDispatchableUnits(palier, pdt)),
             cost(variableManager_.NumberStartingDispatchableUnits(palier, pdt))};
 }
+  
+bool LegacyExtraOutputEmitter::inputGenerationIsSuppressed(uint32_t pays,
+                                                           const std::string& componentName) const
+{
+    if (!inactiveComponents_)
+    {
+        return false;
+    }
+    const auto& analyzer = *inactiveComponents_;
+    if (componentName.ends_with("_wind"))
+    {
+        return analyzer.windIsAllZero(pays);
+    }
+    if (componentName.ends_with("_solar"))
+    {
+        return analyzer.solarIsAllZero(pays);
+    }
+    if (componentName.ends_with("_run_of_river"))
+    {
+        return analyzer.rorIsAllZero(pays);
+    }
+    for (std::size_t column = 0; column < miscGenSuffixes.size(); ++column)
+    {
+        if (componentName.ends_with(miscGenSuffixes[column]))
+        {
+            return analyzer.miscGenColumnIsAllZero(pays, static_cast<unsigned>(column));
+        }
+    }
+    return false;
+}
 
 void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
 {
@@ -250,7 +301,11 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
     const double rawLoad = problemeHebdo_.ConsommationsAbattues[pdt].ConsommationAbattueDuPays[pays]
                            + problemeHebdo_.AllMustRunGeneration[pdt]
                                .AllMustRunGenerationOfArea[pays];
-    emit("actual_load", fmt::format("{}_load", problemeHebdo_.NomsDesPays[pays]), pdt, rawLoad);
+    const bool loadIsSuppressed = inactiveComponents_ && inactiveComponents_->loadIsAllZero(pays);
+    if (!loadIsSuppressed)
+    {
+        emit("actual_load", fmt::format("{}_load", problemeHebdo_.NomsDesPays[pays]), pdt, rawLoad);
+    }
 
     const double price = areaPrice(pays, pdt);
     emit("price", area, pdt, price);
@@ -267,15 +322,27 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
            : 0.);
 
     // Port fields of the load and long_term_storage models, emitted on their
-    // own components ({area}_load, {area}_hydro_storage) so their
-    // balance_port.flow rows cannot collide with each other on the area name.
-    emit("balance_port.flow",
-         fmt::format("{}_load", problemeHebdo_.NomsDesPays[pays]),
-         pdt,
-         -rawLoad);
+    // own components ({area}_load, {area}_hydro_storage) so their balance_port.flow
+    // rows cannot collide with each other on the area name.
+    if (!loadIsSuppressed)
+    {
+        emit("balance_port.flow",
+             fmt::format("{}_load", problemeHebdo_.NomsDesPays[pays]),
+             pdt,
+             -rawLoad);
+    }
 
     const int hydProd = variableManager_.HydProd(pays, pdt);
-    if (hydProd >= 0)
+    // Suppressed only when BOTH the reservoir is unmanaged AND its inflow is
+    // entirely zero: an unmanaged reservoir can still have legitimate
+    // turbine generation, so reservoirManagement alone is not enough (unlike
+    // level_percentage/actual_inflows above, which are already guarded by
+    // the HydroLevel variable's existence).
+    const bool hydroBalancePortIsSuppressed = !problemeHebdo_.CaracteristiquesHydrauliques[pays]
+                                                 .SuiviNiveauHoraire
+                                              && inactiveComponents_
+                                              && inactiveComponents_->hydroInflowIsAllZero(pays);
+    if (hydProd >= 0 && !hydroBalancePortIsSuppressed)
     {
         const int pumping = variableManager_.Pumping(pays, pdt);
         const double netWithdrawal = x(hydProd) - (pumping >= 0 ? x(pumping) : 0.);
@@ -301,6 +368,11 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
 
 void LegacyExtraOutputEmitter::linkOutputs(uint32_t interco, int pdt)
 {
+    if (inactiveComponents_ && inactiveComponents_->linkIsAllZero(interco))
+    {
+        return;
+    }
+
     const uint32_t origin = problemeHebdo_.PaysOrigineDeLInterconnexion[interco];
     const uint32_t destination = problemeHebdo_.PaysExtremiteDeLInterconnexion[interco];
     const std::string& link = linkNames_[interco];
@@ -437,6 +509,10 @@ void LegacyExtraOutputEmitter::inputGenerationOutputs(uint32_t pays, int pdt) co
     }
     for (const auto& entry: problemeHebdo_.InputGenerationOfArea[pays])
     {
+        if (inputGenerationIsSuppressed(pays, entry.componentName))
+        {
+            continue;
+        }
         const double power = entry.availablePower[pdt];
         emit("generation_power", entry.componentName, pdt, power);
         emit("minus_generation", entry.componentName, pdt, -power);
@@ -471,9 +547,14 @@ void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays)
 void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                            PROBLEME_HEBDO& problemeHebdo,
                            const FillContext& fillContext,
-                           unsigned currentBlock)
+                           unsigned currentBlock,
+                           const InactiveComponentsAnalyzer* inactiveComponents)
 {
-    LegacyExtraOutputEmitter emitter(simulationTable, problemeHebdo, fillContext, currentBlock);
+    LegacyExtraOutputEmitter emitter(simulationTable,
+                                     problemeHebdo,
+                                     fillContext,
+                                     currentBlock,
+                                     inactiveComponents);
 
     for (int pdt = 0; pdt < problemeHebdo.NombreDePasDeTempsPourUneOptimisation; ++pdt)
     {

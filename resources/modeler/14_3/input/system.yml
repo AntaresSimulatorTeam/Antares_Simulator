@@ -7,7 +7,6 @@ system:
     before PR #3615. This study acts as a regression test.
     Expected: x = [3, 5, 7, 9, 6], objective = 30.
 
-  model-libraries: lib_example_14_3
 
   components:
     - id: c1

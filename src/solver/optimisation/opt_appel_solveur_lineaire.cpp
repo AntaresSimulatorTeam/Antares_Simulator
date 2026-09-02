@@ -16,6 +16,7 @@
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 #include "antares/optimization-options/options.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyExtraOutputs.h"
@@ -25,6 +26,7 @@
 #include "antares/solver/optimisation/LegacyVariableInfo.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/ortools_wrapper.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"
 #include "antares/solver/utils/mps_utils.h"
@@ -41,13 +43,13 @@ using namespace Antares::LinearProblem::MpsolverImpl;
 using namespace Antares::IO;
 using namespace Antares::IO::Outputs;
 
-using Antares::Optimization::SingleOptimOptions;
-using Antares::Solver::IResultWriter;
+using Optimization::SingleOptimOptions;
+using Solver::IResultWriter;
 
 struct SimplexResult
 {
     TIME_MEASURE timeMeasure;
-    std::shared_ptr<Antares::Optimization::LegacyOrtoolsLinearProblem> originalProblem;
+    std::shared_ptr<LegacyOrtoolsLinearProblem> originalProblem;
     double objectiveValue;
 };
 
@@ -69,7 +71,8 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
                                PROBLEME_HEBDO& problemeHebdo,
                                const FillContext& fillContext,
                                const LegacyNameMapper& nameMapper,
-                               unsigned currentBlock)
+                               unsigned currentBlock,
+                               const InactiveComponentsAnalyzer* inactiveComponents)
 {
     const PROBLEME_ANTARES_A_RESOUDRE& problem = *problemeHebdo.ProblemeAResoudre;
 
@@ -97,7 +100,11 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
            .status = std::nullopt});
     }
 
-    AddLegacyExtraOutputs(simulationTable, problemeHebdo, fillContext, currentBlock);
+    AddLegacyExtraOutputs(simulationTable,
+                          problemeHebdo,
+                          fillContext,
+                          currentBlock,
+                          inactiveComponents);
 }
 } // namespace
 
@@ -149,12 +156,11 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 void fillLinearProblem(const FillContext& fillCtx,
                        PROBLEME_HEBDO* problemeHebdo,
                        OptimEntityContainer& optimEntityContainer,
-                       LinearProblem::BendersDecomposition* bendersDecomposition)
+                       BendersDecomposition* bendersDecomposition)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
-      std::make_unique<Antares::Optimization::LegacyFiller>(optimEntityContainer.Problem(),
-                                                            problemeHebdo));
+      std::make_unique<LegacyFiller>(optimEntityContainer.Problem(), problemeHebdo));
     Utils::TimeMeasurement measure;
     if (problemeHebdo->modelerData)
     {
@@ -166,14 +172,13 @@ void fillLinearProblem(const FillContext& fillCtx,
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
-        fillersCollection.push_back(
-          std::make_unique<Antares::Optimization::ComponentToAreaConnectionFiller>(
-            problemeHebdo,
-            optimEntityContainer,
-            problemeHebdo->modelerData->dataSeries.get(),
-            problemeHebdo->modelerData->scenarioGroupRepository));
+        fillersCollection.push_back(std::make_unique<ComponentToAreaConnectionFiller>(
+          problemeHebdo,
+          optimEntityContainer,
+          problemeHebdo->modelerData->dataSeries.get(),
+          problemeHebdo->modelerData->scenarioGroupRepository));
 
-        fillersCollection.push_back(std::make_unique<Antares::Optimization::ThermalCapacityFiller>(
+        fillersCollection.push_back(std::make_unique<ThermalCapacityFiller>(
           problemeHebdo,
           optimEntityContainer,
           problemeHebdo->modelerData->dataSeries.get(),
@@ -199,7 +204,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           const int optimizationNumber,
                                           const OptPeriodStringGenerator& optPeriodStringGenerator,
                                           IResultWriter& writer,
-                                          SimulationTable* simulationTable)
+                                          SimulationTable* simulationTable,
+                                          const InactiveComponentsAnalyzer* inactiveComponents)
 {
     Utils::TimeMeasurement measure;
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
@@ -213,9 +219,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     bool hasModelerData = modelerData != nullptr;
     const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
-    auto ortoolsProblem = std::make_shared<Antares::Optimization::LegacyOrtoolsLinearProblem>(
-      isMip,
-      options.solverName);
+    auto ortoolsProblem = std::make_shared<LegacyOrtoolsLinearProblem>(isMip, options.solverName);
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
@@ -310,7 +314,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                   *problemeHebdo,
                                   fillCtx,
                                   legacyNameMapper,
-                                  currentBlock);
+                                  currentBlock,
+                                  inactiveComponents);
 
         measure.tick();
         timeMeasure.simulationTableFillTime = measure.duration_ms();
@@ -327,7 +332,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          const int optimizationNumber,
                          const OptPeriodStringGenerator& optPeriodStringGenerator,
                          IResultWriter& writer,
-                         SimulationTable* simulationTable)
+                         SimulationTable* simulationTable,
+                         const InactiveComponentsAnalyzer* inactiveComponents)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
@@ -337,7 +343,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                                                        optimizationNumber,
                                                        optPeriodStringGenerator,
                                                        writer,
-                                                       simulationTable);
+                                                       simulationTable,
+                                                       inactiveComponents);
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
     {
@@ -386,20 +393,16 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
     }
     else
     {
-        const auto& modelerData = problemeHebdo->modelerData;
-        bool hasModelerData = modelerData != nullptr;
         const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
-        Antares::Optimization::LegacyOrtoolsLinearProblem infeasibleProblem(isMip,
-                                                                            options.solverName);
+        LegacyOrtoolsLinearProblem infeasibleProblem(isMip, options.solverName);
         FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
-        const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
-                                                                     : nullptr;
+
         OptimEntityContainer optimEntityContainer(infeasibleProblem);
         fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, nullptr);
 
         auto MPproblem = infeasibleProblem.getMpSolver();
-        auto analyzer = Antares::Optimization::makeUnfeasiblePbAnalyzer();
+        auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
         analyzer->printReport();
         mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,

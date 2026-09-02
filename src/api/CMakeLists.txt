@@ -76,6 +76,8 @@ target_link_libraries(single_problem_api
         Antares::file-tree-study-loader
         PUBLIC
         Antares::study
+        Antares::optim-model-filler
+        antares-solver-variable
         Antares::lps)
 
 # TODO move
