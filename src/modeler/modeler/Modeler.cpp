@@ -409,6 +409,13 @@ void Modeler::run()
         }
 
         buildProblemsAndWriteMps();
+
+        // The CLI Benders path only exports the MPS/structure files; release the subproblems
+        // so a large scenario scope does not keep every problem in memory for the rest of the
+        // run. The public API (ModelerProblems) calls buildProblemsAndWriteMps() directly and
+        // keeps them alive via subproblems().
+        subproblems_.clear();
+        subproblemOptimEntityContainers_.clear();
     }
     else if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
     {
