@@ -214,6 +214,65 @@ BOOST_FIXTURE_TEST_CASE(wrong_value_type, Fixture)
     BOOST_CHECK_THROW(ModelConverter::convert(library), InputError);
 }
 
+// max/min operators with only parameters (and literals) as arguments are allowed in variable
+// bounds : these expressions are evaluated before the linear optimization, since parameters are
+// known at that point.
+BOOST_FIXTURE_TEST_CASE(variable_bounds__max_min_accept_parameters, Fixture)
+{
+    YmlModel::Model model1{
+      .id = "model1",
+      .description = "description",
+      .parameters = {{"pmin", true, false}, {"pmax", true, false}},
+      .variables = {{"var1",
+                     ExpressionLineNumber{"max(pmin, 10)", 0},
+                     ExpressionLineNumber{"min(pmax, 50)", 0},
+                     ValueType::CONTINUOUS,
+                     true,
+                     true,
+                     "subproblems"}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {},
+      .extra_outputs = {},
+      .filename = ""};
+    library.models = {model1};
+
+    auto lib = ModelConverter::convert(library);
+    auto& m = lib.Models().at("model1");
+    const auto& var = m.Variables().front();
+    BOOST_CHECK_EQUAL(var.LowerBound().Value(), "max(pmin, 10)");
+    BOOST_CHECK_EQUAL(var.UpperBound().Value(), "min(pmax, 50)");
+}
+
+// Variables and port fields must still be rejected in function nodes within variable bounds,
+// to keep bounds independent of the solution of the linear problem.
+BOOST_FIXTURE_TEST_CASE(variable_bounds__max_min_reject_variables, Fixture)
+{
+    YmlModel::Model model1{
+      .id = "model1",
+      .description = "description",
+      .parameters = {{"pmin", true, false}},
+      .variables = {{"var1",
+                     ExpressionLineNumber{"0", 0},
+                     ExpressionLineNumber{"max(var1, pmin)", 0},
+                     ValueType::CONTINUOUS,
+                     true,
+                     true,
+                     "subproblems"}},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {},
+      .extra_outputs = {},
+      .filename = ""};
+    library.models = {model1};
+
+    BOOST_CHECK_THROW(ModelConverter::convert(library), InputError);
+}
+
 // Test library with models and ports
 BOOST_FIXTURE_TEST_CASE(model_ports_properly_translated, Fixture)
 {
