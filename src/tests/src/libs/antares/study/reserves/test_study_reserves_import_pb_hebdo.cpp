@@ -97,10 +97,8 @@ BOOST_FIXTURE_TEST_CASE(test_importCapacityReservation_allGood, OneProblemWithRe
     BOOST_CHECK_EQUAL(problemeHebdo->allReserves.has_value(), true);
     int indexA = study->areas.find("a")->index;
     int indexB = study->areas.find("b")->index;
-    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.value()[indexA].areaCapacityReservations.size(),
-                      2);
-    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.value()[indexB].areaCapacityReservations.size(),
-                      2);
+    BOOST_CHECK_EQUAL(problemeHebdo->allReserves->at(indexA).areaCapacityReservations.size(), 2);
+    BOOST_CHECK_EQUAL(problemeHebdo->allReserves->at(indexB).areaCapacityReservations.size(), 2);
     bool containsUp = false;
     bool containsDown = false;
     for (auto& reserve: problemeHebdo->allReserves->at(indexA).areaCapacityReservations)
