@@ -44,7 +44,7 @@ void LinearProblemMatrix::Run()
     if (problemeHebdo_->OptimisationNotFastMode)
     {
         LinearProblemMatrixStartUpCosts(problemeHebdo_, false, builder_).Run();
-        if (problemeHebdo_->allReserves)
+        if (!problemeHebdo_->allReserves.empty())
         {
             LinearProblemMatrixReserves(problemeHebdo_, false, builder_).Run();
         }

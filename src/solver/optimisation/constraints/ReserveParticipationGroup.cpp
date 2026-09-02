@@ -40,7 +40,7 @@ ReserveParticipationGroup::ReserveParticipationGroup(PROBLEME_HEBDO* problemeHeb
 ReserveData ReserveParticipationGroup::GetReserveDataFromProblemHebdo()
 {
     return {.Simulation = simulation_,
-            .areaReserves = problemeHebdo_->allReserves.value(),
+            .areaReserves = problemeHebdo_->allReserves,
             .thermalClusters = problemeHebdo_->PaliersThermiquesDuPays,
             .shortTermStorageOfArea = problemeHebdo_->ShortTermStorage,
             .hydroOfArea = problemeHebdo_->CaracteristiquesHydrauliques,
@@ -266,7 +266,7 @@ void ReserveParticipationGroup::BuildConstraints()
                 // Hydro
                 // Check if the Hydro is participating to the reserves
                 if (std::ranges::any_of(
-                      problemeHebdo_->allReserves.value()[pays].areaCapacityReservations,
+                      problemeHebdo_->allReserves.at(pays).areaCapacityReservations,
                       [](CAPACITY_RESERVATION& res)
                       { return res.AllHydroReservesParticipation.size() > 0; }))
                 {

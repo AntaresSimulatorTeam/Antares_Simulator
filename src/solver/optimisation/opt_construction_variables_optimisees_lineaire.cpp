@@ -267,7 +267,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
     {
         OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
                                                                                       false);
-        if (problemeHebdo->allReserves)
+        if (!problemeHebdo->allReserves.empty())
         {
             OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(problemeHebdo,
                                                                                   false);

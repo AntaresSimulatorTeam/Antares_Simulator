@@ -415,7 +415,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
         OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
                                                                         PremierPdtDeLIntervalle,
                                                                         DernierPdtDeLIntervalle);
-        if (problemeHebdo->allReserves)
+        if (!problemeHebdo->allReserves.empty())
         {
             OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(problemeHebdo,
                                                                     PremierPdtDeLIntervalle,

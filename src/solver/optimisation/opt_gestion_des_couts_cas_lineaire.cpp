@@ -347,7 +347,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
         OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(problemeHebdo,
                                                         PremierPdtDeLIntervalle,
                                                         DernierPdtDeLIntervalle);
-        if (problemeHebdo->allReserves)
+        if (!problemeHebdo->allReserves.empty())
         {
             OPT_InitialiserLesCoutsLineaireReserves(problemeHebdo,
                                                     PremierPdtDeLIntervalle,

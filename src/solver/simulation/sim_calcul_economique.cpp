@@ -31,7 +31,7 @@ void importCapacityReservations(const AreaList& areas, PROBLEME_HEBDO& problem)
     {
         int areaReserveIndex = 0;
         const auto* area = areas[areaIndex];
-        auto& areaReserves = problem.allReserves.value()[areaIndex];
+        auto& areaReserves = problem.allReserves.at(areaIndex);
         for (auto type: {ReserveType::DOWN, ReserveType::UP})
         {
             areaReserves.referenceGlobalActivationDuration[type]
@@ -129,7 +129,7 @@ static void importShortTermStorages(const Data::Parameters parameters,
 
         if (parameters.include.reserves && area->allCapacityReservations)
         {
-            auto& areaReserves = problem.allReserves.value()[areaIndex];
+            auto& areaReserves = problem.allReserves.at(areaIndex);
 
             int areaReserveIdx = 0;
             for (const auto& [reserveID, _]:
@@ -200,7 +200,7 @@ void importHydroReserves(const AreaList& areas, PROBLEME_HEBDO& problem)
 
         if (area->allCapacityReservations && hydro.reserveParticipationContainer)
         {
-            auto& areaReserves = problem.allReserves.value()[areaIndex];
+            auto& areaReserves = problem.allReserves.at(areaIndex);
 
             int areaReserveIdx = 0;
             for (const auto& [reserveID, _]:
@@ -510,7 +510,7 @@ void SIM_InitialisationProblemeHebdo(const Study& study,
               != Antares::Data::UnitCommitmentMode::ucHeuristicFast
             && study.parameters.include.reserves && area.allCapacityReservations)
         {
-            auto& areaReserves = problem.allReserves.value()[i];
+            auto& areaReserves = problem.allReserves.at(i);
 
             int areaReserveIdx = 0;
             for (const auto& [reserveID, _]: area.allCapacityReservations->areaCapacityReservations)
