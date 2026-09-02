@@ -68,9 +68,9 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
             if (cnt >= 0)
             {
                 SecondMembre[cnt] = reserve.need.at(pdtGlobal);
-                double* adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
-                                                .Reserves.at(pdtHebdo)
-                                                .CoutsMarginauxHoraires[reserve.areaReserveIndex]);
+                double* adresseDuResultat = &problemeHebdo->ResultatsHoraires[pays]
+                                               .Reserves->at(pdtHebdo)
+                                               .CoutsMarginauxHoraires[reserve.areaReserveIndex];
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = adresseDuResultat;
             }
         }
@@ -453,10 +453,9 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
 
             // Hydro
             // Checks if Hydro is participating to reserves
-            if (std::ranges::any_of(
-                  problemeHebdo->allReserves.at(pays).areaCapacityReservations,
-                  [](CAPACITY_RESERVATION& res)
-                  { return res.AllHydroReservesParticipation.size() > 0; }))
+            if (std::ranges::any_of(problemeHebdo->allReserves.at(pays).areaCapacityReservations,
+                                    [](CAPACITY_RESERVATION& res)
+                                    { return res.AllHydroReservesParticipation.size() > 0; }))
             {
                 reserveVariablesRightSidesSetter.setHydroRightSides(areaReserves);
             }

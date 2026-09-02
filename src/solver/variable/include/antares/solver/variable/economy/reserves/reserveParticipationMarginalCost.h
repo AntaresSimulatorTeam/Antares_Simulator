@@ -109,7 +109,7 @@ public:
             for (const auto& reserve: reserves.areaCapacityReservations)
             {
                 pValuesForTheCurrentYear[numSpace][column++].hour[state.hourInTheYear]
-                  += state.hourlyResults->Reserves.at(state.hourInTheWeek)
+                  += state.hourlyResults->Reserves->at(state.hourInTheWeek)
                        .CoutsMarginauxHoraires[reserve.areaReserveIndex];
             }
         }

@@ -300,9 +300,9 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_One_No_Symmetries
     file.close();
     areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(
-      areaA->thermal.list.findInAll("cluster1")->reserveParticipationContainer != nullptr);
-    BOOST_CHECK(
-      areaA->thermal.list.findInAll("cluster2")->reserveParticipationContainer == nullptr);
+      areaA->thermal.list.findInAll("cluster1")->reserveParticipationContainer.has_value());
+    BOOST_CHECK(areaA->thermal.list.findInAll("cluster2")->reserveParticipationContainer.has_value()
+                == false);
     BOOST_CHECK(areaA->thermal.list.findInAll("cluster1")
                   ->reserveParticipationContainer->isParticipatingInReserve("reserveup"));
     BOOST_CHECK(!areaA->thermal.list.findInAll("cluster1")
@@ -386,9 +386,9 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Symmetries,
     file.close();
     areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(
-      areaA->thermal.list.findInAll("cluster1")->reserveParticipationContainer != nullptr);
-    BOOST_CHECK(
-      areaA->thermal.list.findInAll("cluster2")->reserveParticipationContainer == nullptr);
+      areaA->thermal.list.findInAll("cluster1")->reserveParticipationContainer.has_value());
+    BOOST_CHECK(areaA->thermal.list.findInAll("cluster2")->reserveParticipationContainer.has_value()
+                == false);
     BOOST_CHECK(areaA->thermal.list.findInAll("cluster1")
                   ->reserveParticipationContainer->isParticipatingInReserve("reserveup"));
     BOOST_CHECK(areaA->thermal.list.findInAll("cluster1")
@@ -826,7 +826,7 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_Symmetries,
     file.close();
     areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
 
-    BOOST_CHECK(areaA->hydro.reserveParticipationContainer != nullptr);
+    BOOST_CHECK(areaA->hydro.reserveParticipationContainer.has_value());
 
     BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer->isParticipatingInReserve(
                         "reserveup"),
@@ -976,16 +976,15 @@ BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_Symmetries,
     file.close();
 
     areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
-    auto* resContainer =
-      areaA->shortTermStorage.findInAll("cluster1")->reserveParticipationContainer;
+    auto& resContainer = areaA->shortTermStorage.findInAll("cluster1")
+                           ->reserveParticipationContainer.value();
 
-    BOOST_CHECK(resContainer != nullptr);
-    BOOST_CHECK_EQUAL(resContainer->isParticipatingInReserve("reserveup"), true);
-    BOOST_CHECK_EQUAL(resContainer->isParticipatingInReserve("reservedown"), true);
-    BOOST_CHECK_EQUAL(resContainer->getNbSymGroups(), 3);
-    BOOST_CHECK_EQUAL(resContainer->reserveCost("reserveup"), 9.9);
-    BOOST_CHECK_EQUAL(resContainer->reserveMaxStore("reserveup"), 8.8);
-    BOOST_CHECK_EQUAL(resContainer->reserveMaxRelease("reserveup"), 7.7);
+    BOOST_CHECK_EQUAL(resContainer.isParticipatingInReserve("reserveup"), true);
+    BOOST_CHECK_EQUAL(resContainer.isParticipatingInReserve("reservedown"), true);
+    BOOST_CHECK_EQUAL(resContainer.getNbSymGroups(), 3);
+    BOOST_CHECK_EQUAL(resContainer.reserveCost("reserveup"), 9.9);
+    BOOST_CHECK_EQUAL(resContainer.reserveMaxStore("reserveup"), 8.8);
+    BOOST_CHECK_EQUAL(resContainer.reserveMaxRelease("reserveup"), 7.7);
     BOOST_CHECK_EQUAL(getErrors().size(), 3);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
     BOOST_CHECK(getErrors().contains("invalid STS reserve property max-power"));
@@ -1115,9 +1114,9 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_minimal, OneProblemWithoutReservesOn
     std::ofstream fileNeeds(studyPath / "reserves" / "a" / "reserveup.txt");
     fileNeeds << "\n";
     fileNeeds.close();
-    BOOST_CHECK(areaA->allCapacityReservations == nullptr);
+    BOOST_CHECK(areaA->allCapacityReservations == std::nullopt);
     Antares::Data::loadReservesParameters(studyPath, *areaA);
-    BOOST_CHECK(areaA->allCapacityReservations != nullptr);
+    BOOST_CHECK(areaA->allCapacityReservations.has_value());
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
     BOOST_CHECK_EQUAL(areaA->allCapacityReservations->referenceGlobalActivationDuration.up, 1);

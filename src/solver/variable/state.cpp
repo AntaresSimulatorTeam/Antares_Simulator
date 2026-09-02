@@ -161,10 +161,10 @@ void State::initFromShortTermStorageClusterIndex(const uint clusterAreaWideIndex
              STStorageCluster->reserveParticipationContainer->getReservesParticipations())
         {
             double participation = hourlyResults->ShortTermStorageReserves
-                                     .at(study.reserveMaps->participationIndexMaps.at(area->id)
-                                              .STStorageClusters.left.at(
-                                                std::make_pair(resID, STStorageCluster->id)));
-                                     .reserveParticipationOfCluster.at(hourInTheWeek);
+                                     ->at(study.reserveMaps->participationIndexMaps.at(area->id)
+                                            .STStorageClusters.left.at(
+                                              std::make_pair(resID, STStorageCluster->id)))
+                                     .reserveParticipationOfCluster->at(hourInTheWeek);
             const double participationCost = participation
                                              * STStorageCluster->reserveParticipationContainer
                                                  ->reserveCost(resID);
@@ -199,9 +199,9 @@ void State::initFromHydro()
              Hydro.reserveParticipationContainer->getReservesParticipations())
         {
             double participation = hourlyResults->HydroUsage[hourInTheWeek]
-                                     .reserveParticipationOfCluster
-                                     .at(study.reserveMaps->participationIndexMaps.at(area->id)
-                                              .Hydro.left.at(resID));
+                                     .reserveParticipationOfCluster->at(
+                                       study.reserveMaps->participationIndexMaps.at(area->id)
+                                         .Hydro.left.at(resID));
             const double participationCost = participation
                                              * Hydro.reserveParticipationContainer->reserveCost(
                                                resID);
@@ -304,12 +304,12 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
             if (reserveParticipationIdx != -1)
             {
                 double participationOn = hourlyResults->ProductionThermique[hourInTheWeek]
-                                           .ParticipationReservesDuPalierOn
-                                           .at(reserveParticipationIdx);
+                                           .ParticipationReservesDuPalierOn->at(
+                                             reserveParticipationIdx);
 
                 double participationOff = hourlyResults->ProductionThermique[hourInTheWeek]
-                                            .ParticipationReservesDuPalierOff
-                                            .at(reserveParticipationIdx);
+                                            .ParticipationReservesDuPalierOff->at(
+                                              reserveParticipationIdx);
 
                 const double participationCost = participationOn
                                                    * thermalCluster->reserveParticipationContainer
