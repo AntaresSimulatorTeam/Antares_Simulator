@@ -3,6 +3,7 @@
 
 #include "antares/solver/modeler/Modeler.h"
 
+#include <algorithm>
 #include <fmt/format.h>
 #include <fstream>
 #include <stdexcept>
@@ -85,8 +86,64 @@ Modeler::Modeler(ILoader& loader, fs::path ouputPath, TableFormat tableFormat):
     data_ = std::move(*data);
 
     scenarios_ = resolveScenarioScopeScenarios(parameters_.scenarioScope, loader_.studyPath());
+    validateScenariosAgainstScenarioBuilder();
     logs.info() << fmt::format("Number of Monte-Carlo scenarios to simulate: {}",
                                scenarios_.size());
+}
+
+void Modeler::validateScenariosAgainstScenarioBuilder() const
+{
+    // Collect the distinct scenario groups used by the system components.
+    // Groups with an empty id (default scenario) are always valid, and unknown groups are
+    // reported by ScenarioGroupRepository::scenario() when the problems are built.
+    std::vector<const LinearProblem::Api::IScenario*> groups;
+    for (const auto& component: data_.system->Components())
+    {
+        const auto& groupId = component.getScenarioGroupId();
+        if (groupId.empty() || !data_.scenarioGroupRepository.contains(groupId))
+        {
+            continue;
+        }
+        const auto& scenario = data_.scenarioGroupRepository.scenario(groupId);
+        const bool alreadyIn = std::any_of(
+          groups.begin(),
+          groups.end(),
+          [&scenario](const auto* g)
+          {
+              return g == &scenario; // stable storage inside the repository
+          });
+        if (!alreadyIn)
+        {
+            groups.push_back(&scenario);
+        }
+    }
+
+    std::vector<std::string> invalidEntries;
+    for (const auto year: scenarios_)
+    {
+        for (const auto* group: groups)
+        {
+            if (!group->hasYear(year))
+            {
+                invalidEntries.push_back(
+                  fmt::format("scenario {} (no time series in scenario group '{}')",
+                              year,
+                              group->group()));
+            }
+        }
+    }
+    if (!invalidEntries.empty())
+    {
+        std::string joined = invalidEntries.front();
+        for (std::size_t i = 1; i < invalidEntries.size(); ++i)
+        {
+            joined += ", " + invalidEntries[i];
+        }
+        throw ModelerError(fmt::format(
+          "scenario-scope selection is not valid: the following scenario indices are not defined "
+          "in the scenario builder (modeler-scenariobuilder.dat): {}",
+          joined));
+    }
 }
 
 class SystemLinearProblemBuilder final

@@ -88,6 +88,7 @@ public:
 
 private:
     LinearProblem::Api::FillContext createFillContext(unsigned year) const;
+    void validateScenariosAgainstScenarioBuilder() const;
     LinearProblem::Api::IMipSolution* solveSubproblem(
       LinearProblem::Api::ILinearProblem& subproblem);
 
