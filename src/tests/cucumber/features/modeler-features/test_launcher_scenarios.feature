@@ -1,8 +1,8 @@
-Feature: 15 - Multi-scenario studies (one simulation table per scenario)
+Feature: Multi-scenario studies (one simulation table per scenario)
 
   @short
-  Scenario: 15.1: Two scenarios with a scenario-dependent load produce one simulation table per scenario
-    Given the modeler study path is "modeler/15_1"
+  Scenario: 2 simple : Two scenarios with a scenario-dependent load produce one simulation table per scenario
+    Given the modeler study path is "modeler/scenario_scope_2 "
     When I run antares modeler
     Then the simulation succeeds
     And the objective value is 25
@@ -19,7 +19,7 @@ Feature: 15 - Multi-scenario studies (one simulation table per scenario)
 
   @short
   Scenario: 15.2: Two scenarios, parquet output format, one parquet table per scenario
-    Given the modeler study path is "modeler/15_1"
+    Given the modeler study path is "modeler/scenario_scope_2 "
     When I run antares modeler with parquet
     Then the simulation succeeds
     And the objective value is 25
