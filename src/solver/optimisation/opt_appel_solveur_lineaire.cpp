@@ -223,8 +223,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
-    OptimEntityContainer optimEntityContainer(*ortoolsProblem);
-    problemeHebdo->optimEntityContainer = &optimEntityContainer;
+
+    problemeHebdo->optimEntityContainer = std::make_unique<OptimEntityContainer>(*ortoolsProblem);
+    auto& optimEntityContainer = *problemeHebdo->optimEntityContainer;
 
     BendersDecomposition* bendersDecomposition = hasModelerData ? &modelerData->bendersDecomposition
                                                                 : nullptr;
@@ -375,13 +376,13 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         // TODO remove this if..else
         if (optimizationNumber == PREMIERE_OPTIMISATION)
         {
-            problemeHebdo->coutOptimalSolution1[static_cast<unsigned int>(NumIntervalle)]
-              = optimizationCost;
+            problemeHebdo
+              ->coutOptimalSolution1[static_cast<unsigned int>(NumIntervalle)] = optimizationCost;
         }
         else
         {
-            problemeHebdo->coutOptimalSolution2[static_cast<unsigned int>(NumIntervalle)]
-              = optimizationCost;
+            problemeHebdo
+              ->coutOptimalSolution2[static_cast<unsigned int>(NumIntervalle)] = optimizationCost;
         }
         for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {

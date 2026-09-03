@@ -90,11 +90,9 @@ struct GemsContributionFixture
         scenarioGroupRepository.addScenario("SG", std::move(scenario));
         modelerData->scenarioGroupRepository = std::move(scenarioGroupRepository);
 
-        optimContainer = std::make_unique<OptimEntityContainer>(linearProblem);
-        optimContainer->addFromSystemComponents(modelerData->system->Components());
-        problemeHebdo.optimEntityContainer = optimContainer.get();
+        problemeHebdo.optimEntityContainer = std::make_unique<OptimEntityContainer>(linearProblem)
 
-        addComponentsVariablesToLP();
+          addComponentsVariablesToLP();
     }
 
     std::unique_ptr<Solver::ModelerData> buildModelerSystem()
@@ -117,7 +115,7 @@ struct GemsContributionFixture
         {
             for (const auto& variable: component.getModel()->Variables())
             {
-                optimContainer->addStartColumn();
+                problemeHebdo.optimEntityContainer->addStartColumn();
                 for (unsigned t = 0; t <= ctx.getLocalLastTimeStep(); ++t)
                 {
                     auto name = buildVariableName(component.Id(), variable.Id(), {}, t);
@@ -131,7 +129,6 @@ struct GemsContributionFixture
     std::unique_ptr<Solver::ModelerData> modelerData;
     std::vector<Library> libraries;
     MpsolverImpl::OrtoolsLinearProblem linearProblem;
-    std::unique_ptr<OptimEntityContainer> optimContainer;
     ScenarioGroupRepository scenarioGroupRepository;
 };
 
