@@ -9,6 +9,7 @@
 #include <optional>
 #include <vector>
 
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/utils/opt_constants.h"
 #include "antares/solver/utils/optimization_statistics.h"
@@ -551,11 +552,6 @@ struct VARIABLES_DUALES_INTERCONNEXIONS
     std::vector<double> VariableDualeParInterconnexion;
 };
 
-namespace Antares::LinearProblem
-{
-class OptimEntityContainer;
-}
-
 struct PROBLEME_HEBDO
 {
     uint32_t weekInTheYear = 0;
@@ -791,7 +787,7 @@ public:
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     Antares::Solver::ModelerData* modelerData = nullptr;
-    
+
     /// \brief Whether the solve must publish lastSolvedModelerProblem. Set per
     /// week by OPT_OptimisationLineaire, the level that knows a post-process
     /// stage will read it back. Not tied to whether *this* pass writes a table:
@@ -806,7 +802,7 @@ public:
     
     /// \brief Kept alive past the solve so the CSR adequacy patch post-process
     /// can evaluate GEMS port field expressions via EvalVisitor.
-    Antares::Optimisation::OptimEntityContainer* optimEntityContainer = nullptr;
+    std::shared_ptr<Antares::LinearProblem::OptimEntityContainer> optimEntityContainer;
 
 };
 
