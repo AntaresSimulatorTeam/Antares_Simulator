@@ -7,8 +7,10 @@
 #include <array>
 #include <cmath>
 #include <string>
+#include <utility>
 #include <vector>
 
+#include <antares/utils/utils.h>
 #include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/optimisation/variables/VariableManagerUtils.h"
@@ -120,6 +122,9 @@ public:
 private:
     void emit(const std::string& output, const std::string& component, int pdt, double value) const;
 
+    // Not const: the variable manager's index accessors are not const.
+    [[nodiscard]] double numberOfUnitsOn(uint32_t pays, int index, int pdt);
+    [[nodiscard]] std::pair<double, double> unitCommitmentCosts(uint32_t pays, int index, int pdt);
     // True when `componentName` (an InputGenerationOfArea entry name, e.g.
     // "{area}_wind") is flagged all-zero across the whole study by the
     // precomputed analyzer, and its rows should therefore be suppressed.
@@ -176,6 +181,69 @@ void LegacyExtraOutputEmitter::emit(const std::string& output,
                      .scenario_index = fillContext_.getYear(),
                      .value = value,
                      .status = std::nullopt});
+}
+
+double LegacyExtraOutputEmitter::numberOfUnitsOn(uint32_t pays, int index, int pdt)
+{
+    const PALIERS_THERMIQUES& paliers = problemeHebdo_.PaliersThermiquesDuPays[pays];
+    const int palier = paliers.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+
+    if (problemeHebdo_.OptimisationNotFastMode)
+    {
+        // Relaxed unless the problem is solved as a MILP, hence the rounding up
+        // of a possibly fractional count.
+        return std::ceil(x(variableManager_.NumberOfDispatchableUnits(palier, pdt)));
+    }
+
+    // Fast mode has no unit-commitment variable: rebuild the count the way the
+    // legacy year-end smoothing does (`State::yearEndBuildThermalClusterData`,
+    // `ucHeuristicFast`), from the dispatched power and the lower bound of the
+    // production variable. That bound is the min stable power of one unit times
+    // the number of units the MUT/MDT heuristic keeps running
+    // (`OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT`), so dividing it back
+    // gives that number; it is capped by the units the availability can carry,
+    // and never falls below the units the generation itself requires.
+    const double unitSize = paliers.TailleUnitaireDUnGroupeDuPalierThermique[index];
+    const double generation = x(variableManager_.DispatchableProduction(palier, pdt));
+    if (unitSize <= 0. || generation <= 0.)
+    {
+        return 0.;
+    }
+
+    const double unitsCarryingTheGeneration = Utils::ceil(generation / unitSize);
+
+    const double minPowerOfAUnit = paliers.pminDUnGroupeDuPalierThermique[index];
+    if (minPowerOfAUnit <= 0.)
+    {
+        return unitsCarryingTheGeneration;
+    }
+
+    const auto& disp = paliers.PuissanceDisponibleEtCout[index];
+    const double committedUnits = Utils::floor(disp.PuissanceMinDuPalierThermique[pdt]
+                                               / minPowerOfAUnit);
+    const double availableUnits = std::ceil(disp.PuissanceDisponibleDuPalierThermique[pdt]
+                                            / unitSize);
+    return std::max(std::min(committedUnits, availableUnits), unitsCarryingTheGeneration);
+}
+
+std::pair<double, double> LegacyExtraOutputEmitter::unitCommitmentCosts(uint32_t pays,
+                                                                        int index,
+                                                                        int pdt)
+{
+    const PALIERS_THERMIQUES& paliers = problemeHebdo_.PaliersThermiquesDuPays[pays];
+
+    // In fast mode there is no unit-commitment variable to read the objective
+    // coefficients from; they are taken from the cluster data the not-fast mode
+    // builds those coefficients from (OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage).
+    if (!problemeHebdo_.OptimisationNotFastMode)
+    {
+        return {paliers.CoutFixeDeMarcheDUnGroupeDuPalierThermique[index],
+                paliers.CoutDeDemarrageDUnGroupeDuPalierThermique[index]};
+    }
+
+    const int palier = paliers.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+    return {cost(variableManager_.NumberOfDispatchableUnits(palier, pdt)),
+            cost(variableManager_.NumberStartingDispatchableUnits(palier, pdt))};
 }
 
 bool LegacyExtraOutputEmitter::inputGenerationIsSuppressed(uint32_t pays,
@@ -401,24 +469,16 @@ void LegacyExtraOutputEmitter::thermalOutputs(uint32_t pays, int index, int pdt)
                           * std::max(generation - minGen, 0.);
     emit("profit", cluster, pdt, profit);
 
-    if (!problemeHebdo_.OptimisationNotFastMode)
-    {
-        return;
-    }
-
-    const int nodu = variableManager_.NumberOfDispatchableUnits(palier, pdt);
-    const double unitsOn = std::ceil(x(nodu));
+    const double unitsOn = numberOfUnitsOn(pays, index, pdt);
     emit("actual_num_units_on", cluster, pdt, unitsOn);
 
-    const double startupCost = cost(variableManager_.NumberStartingDispatchableUnits(palier, pdt));
     double startedUnits = 0.;
     if (pdt > 0)
     {
-        const double previousUnitsOn = std::ceil(
-          x(variableManager_.NumberOfDispatchableUnits(palier, pdt - 1)));
-        startedUnits = std::max(0., unitsOn - previousUnitsOn);
+        startedUnits = std::max(0., unitsOn - numberOfUnitsOn(pays, index, pdt - 1));
     }
-    emit("non_prop_cost", cluster, pdt, startupCost * startedUnits + cost(nodu) * unitsOn);
+    const auto [fixedCost, startupCost] = unitCommitmentCosts(pays, index, pdt);
+    emit("non_prop_cost", cluster, pdt, startupCost * startedUnits + fixedCost * unitsOn);
 }
 
 void LegacyExtraOutputEmitter::shortTermStorageOutputs(uint32_t pays, int pdt)
