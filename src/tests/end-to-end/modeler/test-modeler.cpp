@@ -3,8 +3,11 @@
 
 #define BOOST_TEST_MODULE testE2EModeler
 #include <chrono>
+#include <filesystem>
 #include <fmt/format.h>
+#include <fstream>
 #include <iostream>
+#include <string>
 
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
@@ -91,7 +94,8 @@ public:
                 .solverParameters = "DUMMY",
                 .noOutput = false,
                 .firstTimeStep = timeSteps.first,
-                .lastTimeStep = timeSteps.second};
+                .lastTimeStep = timeSteps.second,
+                .scenarioScope = scenarioScope};
     }
 
     std::optional<ModelerData> loadAll() override
@@ -178,6 +182,7 @@ public:
     ScenarioGroupRepository scenarioGroupRepository{};
     std::unordered_map<std::string, std::string> groupes;
     std::pair<unsigned int, unsigned int> timeSteps{0, 0};
+    ScenarioScope scenarioScope{};
 };
 
 struct Solution
@@ -299,7 +304,8 @@ public:
                 .solverParameters = "DUMMY",
                 .noOutput = false,
                 .firstTimeStep = 0,
-                .lastTimeStep = timeSteps_ - 1};
+                .lastTimeStep = timeSteps_ - 1,
+                .scenarioScope = {}};
     }
 
     std::optional<ModelerData> loadAll() override
@@ -369,4 +375,62 @@ BOOST_DATA_TEST_CASE(modeler_scaling_by_time_steps,
     std::cout << "Number of time steps: " << nTimeSteps << std::endl;
     std::cout << "Total wall clock time: " << total_time_ms << " ms" << std::endl;
     std::cout << "========================================\n" << std::endl;
+}
+
+// The simulation table header is:
+// block,component,output,absolute_time_index,block_time_index,scenario_index,value,basis_status
+std::vector<unsigned> readScenarioIndexes(const std::filesystem::path& csvPath)
+{
+    std::vector<unsigned> scenarioIndexes;
+    std::ifstream in(csvPath);
+    std::string line;
+    std::getline(in, line); // skip header
+    while (std::getline(in, line))
+    {
+        if (line.empty())
+        {
+            continue;
+        }
+        size_t start = 0;
+        for (int column = 0; column < 5; ++column)
+        {
+            start = line.find(',', start) + 1;
+        }
+        const auto end = line.find(',', start);
+        scenarioIndexes.push_back(std::stoul(line.substr(start, end - start)));
+    }
+    return scenarioIndexes;
+}
+
+BOOST_AUTO_TEST_CASE(multi_scenario_produces_one_table_per_scenario)
+{
+    namespace fs = std::filesystem;
+    InMemoryLoader inMemoryLoader;
+    inMemoryLoader.scenarioScope.include = {"1", "2"};
+
+    const auto outputDir = fs::temp_directory_path() / "antares-modeler-e2e-multi-scenario";
+    std::error_code ec;
+    fs::remove_all(outputDir, ec);
+    fs::create_directories(outputDir, ec);
+
+    Modeler modeler(inMemoryLoader, outputDir, TableFormat::CSV);
+    modeler.run();
+
+    BOOST_CHECK_EQUAL(modeler.subProbSolution()->getObjectiveValue(), 0);
+    BOOST_CHECK(fs::exists(outputDir / "simulation-table-1.csv"));
+    BOOST_CHECK(fs::exists(outputDir / "simulation-table-2.csv"));
+    BOOST_CHECK(!fs::exists(outputDir / "simulation-table.csv"));
+
+    for (const unsigned scenario: {1, 2})
+    {
+        const auto indices = readScenarioIndexes(
+          outputDir / ("simulation-table-" + std::to_string(scenario) + ".csv"));
+        BOOST_CHECK(!indices.empty());
+        for (const auto index: indices)
+        {
+            BOOST_CHECK_EQUAL(index, scenario);
+        }
+    }
+
+    fs::remove_all(outputDir, ec);
 }
