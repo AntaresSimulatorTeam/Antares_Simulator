@@ -19,9 +19,12 @@ class solver_output_handler:
         self.study_output_path = study_output_path
         self.mode = mode
         self.annual_system_cost = None
+        # cache for hourly result tables
         self.hourly_results = {result_type.VALUES: None,
                                result_type.DETAILS: None,
                                result_type.DETAILS_STS: None}
+        # cache for annual result tables
+        self.annual_results = {}
     def output_dir(self):
         return Path(self.study_output_path)
 
@@ -66,6 +69,20 @@ class solver_output_handler:
             self.hourly_results[rs][area][year]["datetime"] = self.hourly_results[rs][area][year][cols].apply(
                 lambda row: ' '.join(row.values.astype(str)), axis=1)
         return self.hourly_results[rs][area][year]
+
+    def __if_none_then_parse_annual(self, area: str, year: int, file_name: str) -> pd.DataFrame:
+        # parse and cache annual result tables
+        key_area = area.lower()
+        if key_area not in self.annual_results:
+            self.annual_results[key_area] = {}
+        if year not in self.annual_results[key_area]:
+            path = f"{self.mode}/mc-ind/{year:05d}/areas/{key_area}/{file_name}"
+            self.annual_results[key_area][year] = self.__read_csv(path)
+        return self.annual_results[key_area][year]
+
+    def __get_values_annual(self, area: str, year: int) -> pd.DataFrame:
+        """Internal parser for annual values, using caching"""
+        return self.__if_none_then_parse_annual(area, year, "values-annual.txt")
 
     def __get_values_hourly(self, area: str, year: int):
         return self.__if_none_then_parse(result_type.VALUES, area.lower(), year, "values-hourly.txt")
@@ -197,6 +214,42 @@ class solver_output_handler:
             return str(path)
         return None
 
+    def get_values_annual(self, area: str, year: int) -> pd.DataFrame:
+        """Retourne le DataFrame des résultats annuels provenant de values-annual.txt"""
+        return self.__get_values_annual(area, year)
+
+    # Specific getters for annual variables
+    def get_annual_margin_price(self, area: str, year: int) -> float:
+        """Return margin price for annual results"""
+        df = self.__get_values_annual(area, year)
+        # select by first-level column name and extract first scalar
+        sub = df.xs('MRG. PRICE', axis=1, level=0)
+        return float(sub.iloc[0, 0])
+
+    def get_annual_load(self, area: str, year: int) -> float:
+        """Return load for annual results"""
+        df = self.__get_values_annual(area, year)
+        sub = df.xs('LOAD', axis=1, level=0)
+        return float(sub.iloc[0, 0])
+
+    def get_annual_gas(self, area: str, year: int) -> float:
+        """Return gas energy for annual results"""
+        df = self.__get_values_annual(area, year)
+        sub = df.xs('GAS', axis=1, level=0)
+        return float(sub.iloc[0, 0])
+
+    def get_annual_hard_coal(self, area: str, year: int) -> float:
+        """Return hard coal energy (other fuel) for annual results"""
+        df = self.__get_values_annual(area, year)
+        sub = df.xs('HARD COAL', axis=1, level=0)
+        return float(sub.iloc[0, 0])
+
+    def get_annual_n_dispatched_units(self, area: str, year: int) -> int:
+        """Return number of dispatched units for annual results"""
+        df = self.__get_values_annual(area, year)
+        sub = df.xs('NODU', axis=1, level=0)
+        return int(sub.iloc[0, 0])
+      
     def get_hourly_reserve_unsp_energy(self, area: str, year: int, res: str) -> float:
         return self.__get_values_hourly(area, year)[res + "_UNSP."]["MWh"]
         
