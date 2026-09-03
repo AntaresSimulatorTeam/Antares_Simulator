@@ -66,7 +66,7 @@ inline void ReserveParticipationByDispatchableOffUnitsPlant::populateHourlyValue
 {
     if (hasIndexMapping(state.study, state.area))
     {
-        const auto& resData = state.reserveData.value().at(state.area->index);
+        const auto& resData = state.reserveData->at(state.area->index);
         for (const auto& clusterName:
              resData.reserveParticipationPerThermalClusterForYear.at(state.hourInTheYear)
                | std::views::keys)
