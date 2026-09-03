@@ -23,11 +23,10 @@ static void check_is_existing_folder(const fs::path& folder)
 
 static fs::path makeSimuTableFilePath(const fs::path& parentFolder,
                                       const unsigned year,
-                                      const unsigned optim_nb)
+                                      const std::string& stage)
 {
     // File name without extension
-    std::string filename = "simulation-table-" + std::to_string(year) + "-optim-nb-"
-                           + std::to_string(optim_nb);
+    std::string filename = "simulation-table-" + std::to_string(year) + "-" + stage;
     return parentFolder / filename;
 }
 
@@ -41,18 +40,20 @@ LegacySimulationTablesWriter::LegacySimulationTablesWriter(const fs::path& folde
     check_is_existing_folder(folder_);
 }
 
-void LegacySimulationTablesWriter::write(OptimisationsSimulationTable& tables)
+void LegacySimulationTablesWriter::write(const OptimisationsSimulationTable& tables) const
 {
-    writeForOptim(tables.firstOptimSimulationTable(), 1);
-    writeForOptim(tables.secondOptimSimulationTable(), 2);
+    for (const auto& [stage, table]: tables.stages())
+    {
+        writeForStage(table, stage);
+    }
 }
 
-void LegacySimulationTablesWriter::writeForOptim(const SimulationTable* table,
-                                                 unsigned optim_number)
+void LegacySimulationTablesWriter::writeForStage(const SimulationTable& table,
+                                                 const std::string& stage) const
 {
-    auto filepath = makeSimuTableFilePath(folder_, year_, optim_number);
+    auto filepath = makeSimuTableFilePath(folder_, year_, stage);
     SimulationTableWriter writer(filepath, tableFormat_);
-    writer.writeTable(*table);
+    writer.writeTable(table);
 }
 
 } // namespace Antares::Writer
