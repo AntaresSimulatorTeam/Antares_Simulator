@@ -18,16 +18,14 @@
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
+namespace
+{
 // =================
 // The fixture
 // =================
-struct CommonFixture
+struct HydroFixture
 {
-    std::filesystem::path path;
-    StudyLoadOptions options;
-    StudyVersion version = StudyVersion::latest();
-
-    CommonFixture():
+    HydroFixture():
         tmp(createTempDirectory(boost::unit_test::framework::current_test_case().p_name)),
         hydroIni(tmp / "hydro.ini"),
         study(std::make_unique<Study>())
@@ -38,58 +36,57 @@ struct CommonFixture
         study->areas.add(west);
     }
 
-    bool load()
+    [[nodiscard]] bool load() const
     {
         // LoadIniFile is static and iterates over all areas in the study,
         // so a single call covers both east and west.
         return PartHydro::LoadIniFile(*study, tmp);
     }
 
-    bool validate()
+    [[nodiscard]] bool validate() const
     {
         return PartHydro::validate(*study);
     }
 
-    bool loadFromFolder()
+    [[nodiscard]] bool loadFromFolder() const
     {
         return PartHydro::LoadFromFolder(*study, tmp);
     }
 
-    bool saveToFolder(Parameters::Compatibility::HydroPmax hydroPmax)
+    [[nodiscard]] bool saveToFolder(Parameters::Compatibility::HydroPmax hydroPmax) const
     {
         return PartHydro::SaveToFolder(study->areas, tmp.string(), hydroPmax);
     }
 
     // common/capacity is where credit modulations/inflow pattern/water values/max energy
     // CSV files are read from and written to; it is not created automatically.
-    fs::path capacityFolder() const
+    [[nodiscard]] fs::path capacityFolder() const
     {
         fs::path dir = tmp / "common" / "capacity";
         fs::create_directories(dir);
         return dir;
     }
 
-    Study& studyRef()
+    [[nodiscard]] Study& studyRef() const
     {
         return *study;
     }
 
-    fs::path folder() const
+    [[nodiscard]] fs::path folder() const
     {
         return tmp;
     }
 
-    ~CommonFixture()
+    ~HydroFixture()
     {
         std::error_code ec;
         fs::remove_all(tmp, ec);
     }
 
-    void writeFile(const std::string& content);
-    void writeValidFile();
-    void writeInvalidFile();
+    void writeFile(const std::string& content) const;
+    void writeValidFile() const;
+    void writeInvalidFile() const;
 
-public:
     Area* east;
     Area* west;
 
@@ -98,14 +95,15 @@ private:
     fs::path hydroIni;
     std::unique_ptr<Study> study;
 };
+} // namespace
 
-void CommonFixture::writeFile(const std::string& content)
+void HydroFixture::writeFile(const std::string& content) const
 {
     std::ofstream outfile(hydroIni);
     outfile << content;
 }
 
-void CommonFixture::writeValidFile()
+void HydroFixture::writeValidFile() const
 {
     writeFile(R"([overflow spilled cost difference]
 east = 1.00000
@@ -115,7 +113,7 @@ west = 2.31000
 east = true)");
 }
 
-void CommonFixture::writeInvalidFile()
+void HydroFixture::writeInvalidFile() const
 {
     writeFile(R"([overflow spilled cost difference]
 east = 1.00000
@@ -128,7 +126,7 @@ east = true)");
 
 BOOST_AUTO_TEST_SUITE(s)
 
-BOOST_FIXTURE_TEST_CASE(test_read_valid_file, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_read_valid_file, HydroFixture)
 {
     writeValidFile();
     BOOST_CHECK(load());
@@ -136,25 +134,25 @@ BOOST_FIXTURE_TEST_CASE(test_read_valid_file, CommonFixture)
     BOOST_CHECK_EQUAL(west->hydro.overflowSpilledCostDifference, 2.31000);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_read_invalid_file, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_read_invalid_file, HydroFixture)
 {
     writeInvalidFile();
     BOOST_CHECK(!load());
 }
 
-BOOST_FIXTURE_TEST_CASE(test_missing_file_returns_false, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_missing_file_returns_false, HydroFixture)
 {
     // No file written — ini.open() must fail
     BOOST_CHECK(!load());
 }
 
-BOOST_FIXTURE_TEST_CASE(test_empty_file_returns_true, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_empty_file_returns_true, HydroFixture)
 {
     writeFile("");
     BOOST_CHECK(load());
 }
 
-BOOST_FIXTURE_TEST_CASE(test_inter_daily_breakdown, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_inter_daily_breakdown, HydroFixture)
 {
     writeFile("[inter-daily-breakdown]\neast = 0.5\nwest = 0.75\n");
     BOOST_CHECK(load());
@@ -162,7 +160,7 @@ BOOST_FIXTURE_TEST_CASE(test_inter_daily_breakdown, CommonFixture)
     BOOST_CHECK_EQUAL(west->hydro.interDailyBreakdown, 0.75);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_intra_daily_modulation, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_intra_daily_modulation, HydroFixture)
 {
     writeFile("[intra-daily-modulation]\neast = 12.0\nwest = 6.0\n");
     BOOST_CHECK(load());
@@ -170,7 +168,7 @@ BOOST_FIXTURE_TEST_CASE(test_intra_daily_modulation, CommonFixture)
     BOOST_CHECK_EQUAL(west->hydro.intraDailyModulation, 6.0);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_inter_monthly_breakdown, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_inter_monthly_breakdown, HydroFixture)
 {
     writeFile("[inter-monthly-breakdown]\neast = 0.3\nwest = 0.9\n");
     BOOST_CHECK(load());
@@ -178,7 +176,7 @@ BOOST_FIXTURE_TEST_CASE(test_inter_monthly_breakdown, CommonFixture)
     BOOST_CHECK_EQUAL(west->hydro.intermonthlyBreakdown, 0.9);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_reservoir_management, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_reservoir_management, HydroFixture)
 {
     writeFile("[reservoir]\neast = true\n");
     BOOST_CHECK(load());
@@ -186,7 +184,7 @@ BOOST_FIXTURE_TEST_CASE(test_reservoir_management, CommonFixture)
     BOOST_CHECK_EQUAL(west->hydro.reservoirManagement, false);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_reservoir_capacity, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_reservoir_capacity, HydroFixture)
 {
     writeFile("[reservoir capacity]\neast = 1500.0\nwest = 750.5\n");
     BOOST_CHECK(load());
@@ -194,7 +192,7 @@ BOOST_FIXTURE_TEST_CASE(test_reservoir_capacity, CommonFixture)
     BOOST_CHECK_EQUAL(west->hydro.reservoirCapacity, 750.5);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_follow_load_modulations, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_follow_load_modulations, HydroFixture)
 {
     writeFile("[follow load]\neast = false\nwest = false\n");
     BOOST_CHECK(load());
@@ -202,7 +200,7 @@ BOOST_FIXTURE_TEST_CASE(test_follow_load_modulations, CommonFixture)
     BOOST_CHECK_EQUAL(west->hydro.followLoadModulations, false);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_use_water_value, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_use_water_value, HydroFixture)
 {
     writeFile("[use water]\neast = true\nwest = true\n");
     BOOST_CHECK(load());
@@ -210,7 +208,7 @@ BOOST_FIXTURE_TEST_CASE(test_use_water_value, CommonFixture)
     BOOST_CHECK_EQUAL(west->hydro.useWaterValue, true);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_hard_bounds_on_rule_curves, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_hard_bounds_on_rule_curves, HydroFixture)
 {
     writeFile("[hard bounds]\neast = true\n");
     BOOST_CHECK(load());
@@ -218,7 +216,7 @@ BOOST_FIXTURE_TEST_CASE(test_hard_bounds_on_rule_curves, CommonFixture)
     BOOST_CHECK_EQUAL(west->hydro.hardBoundsOnRuleCurves, false);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_use_heuristic_target, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_use_heuristic_target, HydroFixture)
 {
     writeFile("[use heuristic]\neast = false\nwest = false\n");
     BOOST_CHECK(load());
@@ -226,7 +224,7 @@ BOOST_FIXTURE_TEST_CASE(test_use_heuristic_target, CommonFixture)
     BOOST_CHECK_EQUAL(west->hydro.useHeuristicTarget, false);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_power_to_level, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_power_to_level, HydroFixture)
 {
     writeFile("[power to level]\neast = true\nwest = true\n");
     BOOST_CHECK(load());
@@ -234,7 +232,7 @@ BOOST_FIXTURE_TEST_CASE(test_power_to_level, CommonFixture)
     BOOST_CHECK_EQUAL(west->hydro.powerToLevel, true);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_initialize_reservoir_level_date, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_initialize_reservoir_level_date, HydroFixture)
 {
     writeFile("[initialize reservoir date]\neast = 5\nwest = 11\n");
     BOOST_CHECK(load());
@@ -242,7 +240,7 @@ BOOST_FIXTURE_TEST_CASE(test_initialize_reservoir_level_date, CommonFixture)
     BOOST_CHECK_EQUAL(west->hydro.initializeReservoirLevelDate, 11);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_use_leeway, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_use_leeway, HydroFixture)
 {
     writeFile("[use leeway]\neast = true\n");
     BOOST_CHECK(load());
@@ -250,7 +248,7 @@ BOOST_FIXTURE_TEST_CASE(test_use_leeway, CommonFixture)
     BOOST_CHECK_EQUAL(west->hydro.useLeeway, false);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_leeway_lower_bound, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_leeway_lower_bound, HydroFixture)
 {
     writeFile("[leeway low]\neast = 0.2\nwest = 0.4\n");
     BOOST_CHECK(load());
@@ -258,7 +256,7 @@ BOOST_FIXTURE_TEST_CASE(test_leeway_lower_bound, CommonFixture)
     BOOST_CHECK_EQUAL(west->hydro.leewayLowerBound, 0.4);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_leeway_upper_bound, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_leeway_upper_bound, HydroFixture)
 {
     writeFile("[leeway up]\neast = 0.8\nwest = 0.6\n");
     BOOST_CHECK(load());
@@ -266,7 +264,7 @@ BOOST_FIXTURE_TEST_CASE(test_leeway_upper_bound, CommonFixture)
     BOOST_CHECK_EQUAL(west->hydro.leewayUpperBound, 0.6);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_pumping_efficiency, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_pumping_efficiency, HydroFixture)
 {
     writeFile("[pumping efficiency]\neast = 0.85\nwest = 0.9\n");
     BOOST_CHECK(load());
@@ -274,7 +272,7 @@ BOOST_FIXTURE_TEST_CASE(test_pumping_efficiency, CommonFixture)
     BOOST_CHECK_EQUAL(west->hydro.pumpingEfficiency, 0.9);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_unknown_area_returns_false, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_unknown_area_returns_false, HydroFixture)
 {
     writeFile("[inter-daily-breakdown]\neast = 0.5\nunknown = 0.3\n");
     BOOST_CHECK(!load());
@@ -282,14 +280,14 @@ BOOST_FIXTURE_TEST_CASE(test_unknown_area_returns_false, CommonFixture)
     BOOST_CHECK_EQUAL(east->hydro.interDailyBreakdown, 0.5);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_empty_section_returns_false, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_empty_section_returns_false, HydroFixture)
 {
     // Section header present but no key=value pairs — firstProperty is null
     writeFile("[inter-daily-breakdown]\n");
     BOOST_CHECK(!load());
 }
 
-BOOST_FIXTURE_TEST_CASE(test_case_insensitive_area_name, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_case_insensitive_area_name, HydroFixture)
 {
     // Area IDs are stored as lowercase; keys from the INI file are also lowercased before lookup
     writeFile("[inter-daily-breakdown]\nEast = 0.5\nWEST = 0.75\n");
@@ -298,7 +296,7 @@ BOOST_FIXTURE_TEST_CASE(test_case_insensitive_area_name, CommonFixture)
     BOOST_CHECK_EQUAL(west->hydro.interDailyBreakdown, 0.75);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_absent_section_preserves_constructor_default, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_absent_section_preserves_constructor_default, HydroFixture)
 {
     // Only write one section; other properties must keep their PartHydro() defaults
     writeFile("[reservoir]\neast = true\n");
@@ -385,7 +383,7 @@ BOOST_AUTO_TEST_CASE(test_CheckDailyMaxEnergy_valid_and_invalid)
     BOOST_CHECK(!hydro.CheckDailyMaxEnergy("some_area"));
 }
 
-BOOST_FIXTURE_TEST_CASE(test_LoadDailyMaxEnergy_roundtrip, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_LoadDailyMaxEnergy_roundtrip, HydroFixture)
 {
     fs::path capacity = capacityFolder();
 
@@ -473,14 +471,14 @@ BOOST_AUTO_TEST_CASE(test_getWeeklyModulation_exact_and_interpolated_and_clamped
     BOOST_CHECK_CLOSE(getWeeklyModulation(100.5, creditMod, 1), 200.0, 0.0001);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_validate_all_defaults_returns_true, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_validate_all_defaults_returns_true, HydroFixture)
 {
     east->hydro.reset();
     west->hydro.reset();
     BOOST_CHECK(validate());
 }
 
-BOOST_FIXTURE_TEST_CASE(test_validate_clamps_invalid_scalar_properties, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_validate_clamps_invalid_scalar_properties, HydroFixture)
 {
     east->hydro.reset();
     west->hydro.reset();
@@ -512,7 +510,7 @@ BOOST_FIXTURE_TEST_CASE(test_validate_clamps_invalid_scalar_properties, CommonFi
     BOOST_CHECK_EQUAL(west->hydro.leewayUpperBound, 1.);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_validate_leeway_lower_greater_than_upper, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_validate_leeway_lower_greater_than_upper, HydroFixture)
 {
     east->hydro.reset();
     west->hydro.reset();
@@ -527,7 +525,7 @@ BOOST_FIXTURE_TEST_CASE(test_validate_leeway_lower_greater_than_upper, CommonFix
     BOOST_CHECK_EQUAL(east->hydro.leewayUpperBound, 0.2);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_validate_detects_invalid_inflow_and_credit_modulation, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_validate_detects_invalid_inflow_and_credit_modulation, HydroFixture)
 {
     east->hydro.reset();
     west->hydro.reset();
@@ -542,7 +540,7 @@ BOOST_FIXTURE_TEST_CASE(test_validate_detects_invalid_inflow_and_credit_modulati
     BOOST_CHECK_EQUAL(east->hydro.creditModulation[10][0], -1.0);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_SaveToFolder_then_LoadFromFolder_roundtrip, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_SaveToFolder_then_LoadFromFolder_roundtrip, HydroFixture)
 {
     east->hydro.reset();
     west->hydro.reset();
@@ -562,7 +560,7 @@ BOOST_FIXTURE_TEST_CASE(test_SaveToFolder_then_LoadFromFolder_roundtrip, CommonF
     BOOST_CHECK_CLOSE(east->hydro.dailyNbHoursAtGenPmax[0][0], 24.0, 0.0001);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_LoadFromFolder_missing_files_returns_false, CommonFixture)
+BOOST_FIXTURE_TEST_CASE(test_LoadFromFolder_missing_files_returns_false, HydroFixture)
 {
     // No hydro.ini, no CSV files written: LoadFromFolder must fail gracefully, not crash
     BOOST_CHECK(!loadFromFolder());
