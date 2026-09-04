@@ -421,7 +421,6 @@ void Modeler::run()
     {
         buildMasterProblem();
 
-        SimulationTable simulationTable;
         bool masterMpsWritten = false;
         for (const unsigned year: scenarios_)
         {
@@ -470,11 +469,18 @@ void Modeler::run()
 
             if (!parameters_.noOutput)
             {
+                SimulationTable simulationTable;
                 fillSimulationTable(simulationTable,
                                     subProbSolution_,
                                     *entities.problem,
                                     *entities.optimEntityContainer,
                                     fillContext);
+
+                auto outputFile = outputPath_ / ("simulation-table-" + std::to_string(year));
+                SimulationTableWriter writer(outputFile, tableFormat_);
+                writer.writeTable(simulationTable);
+                logs.info() << "Simulation table of scenario " << year
+                            << " is written in: " << writer.outputFile().string();
             }
 
             // Keep only the most recent subproblem in memory so that at most one
@@ -484,14 +490,6 @@ void Modeler::run()
             subproblemOptimEntityContainers_.clear();
             subproblems_.emplace_back(std::move(entities.problem));
             subproblemOptimEntityContainers_.emplace_back(std::move(entities.optimEntityContainer));
-        }
-
-        if (!parameters_.noOutput)
-        {
-            auto outputFile = outputPath_ / "simulation-table";
-            SimulationTableWriter writer(outputFile, tableFormat_);
-            writer.writeTable(simulationTable);
-            logs.info() << "Simulation table is written in: " << outputFile.string();
         }
     }
 }

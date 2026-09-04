@@ -73,6 +73,15 @@ def check_simulation_table_content(context, tolerance):
     check_st_entries(context.simu_table, expected_entries, tolerance)
 
 
+@step('the simulation tables are written for the following scenarios')
+def simulation_tables_written_per_scenario(context):
+    output_path = Path(parse_output_folder_from_logs(context.logs_out))
+    output_format = getattr(context, "outputFormat", OutputFormat.CSV)
+    for row in context.table:
+        scenario = int(row["scenario"])
+        expected = output_path / f"simulation-table-{scenario}.{output_format.value}"
+        assert expected.exists(), f"Missing simulation table for scenario {scenario}: {expected}"
+
 @step('the modeler outputs contain no entries for component "{component}"')
 def modeler_output_has_no_entries_for_component(context, component):
     assert not context.simu_table.has_rows_for_component(component), (
