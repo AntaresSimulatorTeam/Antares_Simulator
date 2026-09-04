@@ -44,7 +44,7 @@ public:
         pValuesForTheCurrentYear.resize(pNbYearsParallel);
 
         pSize = study->parameters.include.reserves
-                  ? area->allCapacityReservations.value().areaCapacityReservations.size()
+                  ? area->allCapacityReservations->areaCapacityReservations.size()
                   : 0;
         if (pSize)
         {
@@ -105,11 +105,11 @@ public:
         {
             auto& area = state.area;
             int column = 0;
-            auto reserves = state.problemeHebdo->allReserves.value()[area->index];
+            auto reserves = state.problemeHebdo->allReserves->at(area->index);
             for (const auto& reserve: reserves.areaCapacityReservations)
             {
                 pValuesForTheCurrentYear[numSpace][column++].hour[state.hourInTheYear]
-                  += state.hourlyResults->Reserves.value()[state.hourInTheWeek]
+                  += state.hourlyResults->Reserves->at(state.hourInTheWeek)
                        .CoutsMarginauxHoraires[reserve.areaReserveIndex];
             }
         }
@@ -135,7 +135,7 @@ public:
             results.variableUnit = VCardType::Unit();
             int column = 0;
             for (const auto& reserveID:
-                 results.data.area->allCapacityReservations.value().areaCapacityReservations
+                 results.data.area->allCapacityReservations->areaCapacityReservations
                    | std::views::keys)
             {
                 Yuni::String caption = results.data.study.reserveMaps->idToName.at(reserveID);
