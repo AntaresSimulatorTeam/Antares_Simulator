@@ -57,8 +57,8 @@ struct OverallCostTraits
             return 0.0;
         }
 
-        const auto& reserves = state.problemeHebdo->allReserves.value()[state.area->index];
-        const auto& hourlyReserves = state.hourlyResults->Reserves.value()[state.hourInTheWeek];
+        const auto& reserves = state.problemeHebdo->allReserves->at(state.area->index);
+        const auto& hourlyReserves = state.hourlyResults->Reserves->at(state.hourInTheWeek);
 
         double totalReservesCost = 0.0;
 
@@ -80,8 +80,7 @@ struct OverallCostTraits
 
     static double getReserveParticipationCost(const State& state)
     {
-        return state.reserveData ? state.reserveData.value()
-                                     .at(state.area->index)
+        return state.reserveData ? state.reserveData->at(state.area->index)
                                      .reserveParticipationCostForYear[state.hourInTheYear]
                                  : 0.0;
     }

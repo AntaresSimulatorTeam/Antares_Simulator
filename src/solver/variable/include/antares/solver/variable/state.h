@@ -5,6 +5,7 @@
 #define __SOLVER_VARIABLE_STATE_H__
 
 #include <array>
+#include <optional>
 #include <vector>
 
 #include <yuni/yuni.h>
@@ -262,7 +263,7 @@ public:
         }
     };
 
-    ReserveOpt<std::vector<ReserveData>> reserveData;
+    std::optional<std::vector<ReserveData>> reserveData;
 
     //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
     //! ucMILP (accurate)

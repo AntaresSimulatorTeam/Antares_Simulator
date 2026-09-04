@@ -59,6 +59,15 @@ def modeler_output_values(context):
 def modeler_output_values_with_tolerance(context, tolerance):
     check_simulation_table_content(context, tolerance)
 
+
+@then('no simulation table is expected')
+def no_simulation_table_expected(context):
+    # Benders-decomposition studies do not produce a simulation table. Make that contract
+    # explicit here instead of leaving a later step to fail with an AttributeError on
+    # context.simu_table.
+    assert getattr(context, "simu_table", None) is None, \
+        f"Expected no simulation table, but one is present: {getattr(context, 'simu_table', None)}"
+
 def check_simulation_table_content(context, tolerance):
     expected_entries = read_expected_entries(context.table)
     check_st_entries(context.simu_table, expected_entries, tolerance)
@@ -72,6 +81,26 @@ def simulation_tables_written_per_scenario(context):
         scenario = int(row["scenario"])
         expected = output_path / f"simulation-table-{scenario}.{output_format.value}"
         assert expected.exists(), f"Missing simulation table for scenario {scenario}: {expected}"
+
+@step('the modeler outputs contain no entries for component "{component}"')
+def modeler_output_has_no_entries_for_component(context, component):
+    assert not context.simu_table.has_rows_for_component(component), (
+        f"Expected no rows for component '{component}', but some were found"
+    )
+
+
+@step('the modeler outputs contain entries for component "{component}"')
+def modeler_output_has_entries_for_component(context, component):
+    assert context.simu_table.has_rows_for_component(component), (
+        f"Expected at least one row for component '{component}', but none were found"
+    )
+
+
+@step('the modeler outputs contain no "{output}" entries for component "{component}"')
+def modeler_output_has_no_entries_for_component_and_output(context, output, component):
+    assert context.simu_table.has_no_rows_for_component_and_output(component, output), (
+        f"Expected no '{output}' rows for component '{component}', but some were found"
+    )
 
 
 def read_int_range(row, key: str):

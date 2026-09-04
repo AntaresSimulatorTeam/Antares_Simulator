@@ -5,13 +5,13 @@
 #define __LIBS_ANTARES_STUDY_PARTS_COMMON_H__
 
 #include <map>
+#include <optional>
 #include <set>
 #include <string>
 #include <vector>
 
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>
-#include <antares/study/area/ReserveOpt.h>
 #include <antares/study/area/reserveParticipationContainer.h>
 
 #include "../../fwd.h"
@@ -85,7 +85,7 @@ public:
 
     //! Reserve participation container to store the participation of the cluster in the reserves
     //! and the symmetries
-    ReserveOpt<ReserveParticipationContainer<ThermalClusterReserveParticipation>>
+    std::optional<ReserveParticipationContainer<ThermalClusterReserveParticipation>>
       reserveParticipationContainer;
 
 protected:

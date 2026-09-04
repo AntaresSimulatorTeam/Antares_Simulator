@@ -263,3 +263,57 @@ BOOST_AUTO_TEST_CASE(resolve_scenario_scope_playlist_file_with_exclude)
     BOOST_CHECK_EQUAL(scenarios[1], 2);
     BOOST_CHECK_EQUAL(scenarios[2], 3);
 }
+
+BOOST_AUTO_TEST_CASE(resolve_scenario_scope_negative_index_reports_sign_message)
+{
+    // "-1" must be reported as a negative index (not a generic format error).
+    Antares::Solver::ScenarioScope scope;
+    scope.include = {"-1"};
+    bool caught = false;
+    std::string message;
+    try
+    {
+        Antares::Solver::resolveScenarioScopeScenarios(scope, {});
+    }
+    catch (const std::invalid_argument& e)
+    {
+        caught = true;
+        message = e.what();
+    }
+    BOOST_CHECK(caught);
+    BOOST_CHECK(message.find("indices must be >= 0") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(resolve_scenario_scope_plus_sign_is_rejected)
+{
+    // A leading '+' is not part of the documented grammar and must be rejected.
+    Antares::Solver::ScenarioScope scope;
+    scope.include = {"+5"};
+    BOOST_CHECK_THROW(Antares::Solver::resolveScenarioScopeScenarios(scope, {}),
+                      std::invalid_argument);
+}
+
+BOOST_AUTO_TEST_CASE(resolve_scenario_scope_playlist_broken_json_reports_path)
+{
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    std::ofstream playlistStream(studyPath / "playlist.json");
+    playlistStream << R"([0, 1,)"; // invalid JSON
+    playlistStream.close();
+
+    Antares::Solver::ScenarioScope scope;
+    scope.playlistFile = "playlist.json";
+    bool caught = false;
+    std::string message;
+    try
+    {
+        Antares::Solver::resolveScenarioScopeScenarios(scope, studyPath);
+    }
+    catch (const std::invalid_argument& e)
+    {
+        caught = true;
+        message = e.what();
+    }
+    BOOST_CHECK(caught);
+    // The file path must be part of the message so the broken playlist can be located.
+    BOOST_CHECK(message.find("playlist.json") != std::string::npos);
+}
