@@ -376,13 +376,13 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         // TODO remove this if..else
         if (optimizationNumber == PREMIERE_OPTIMISATION)
         {
-            problemeHebdo
-              ->coutOptimalSolution1[static_cast<unsigned int>(NumIntervalle)] = optimizationCost;
+            problemeHebdo->coutOptimalSolution1[static_cast<unsigned int>(NumIntervalle)]
+              = optimizationCost;
         }
         else
         {
-            problemeHebdo
-              ->coutOptimalSolution2[static_cast<unsigned int>(NumIntervalle)] = optimizationCost;
+            problemeHebdo->coutOptimalSolution2[static_cast<unsigned int>(NumIntervalle)]
+              = optimizationCost;
         }
         for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
