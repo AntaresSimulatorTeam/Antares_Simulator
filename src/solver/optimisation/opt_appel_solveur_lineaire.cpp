@@ -223,7 +223,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
-    OptimEntityContainer optimEntityContainer(*ortoolsProblem);
+
+    problemeHebdo->optimEntityContainer = std::make_unique<OptimEntityContainer>(*ortoolsProblem);
+    auto& optimEntityContainer = *problemeHebdo->optimEntityContainer;
 
     BendersDecomposition* bendersDecomposition = hasModelerData ? &modelerData->bendersDecomposition
                                                                 : nullptr;
@@ -320,7 +322,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         measure.tick();
         timeMeasure.simulationTableFillTime = measure.duration_ms();
     }
-
+    problemeHebdo->optimEntityContainer = nullptr;
     return {.timeMeasure = timeMeasure,
             .originalProblem = ortoolsProblem,
             .objectiveValue = getObjectiveValue(solver.get())};

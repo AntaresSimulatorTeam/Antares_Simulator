@@ -9,6 +9,7 @@
 #include <optional>
 #include <vector>
 
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/utils/opt_constants.h"
 #include "antares/solver/utils/optimization_statistics.h"
@@ -775,6 +776,7 @@ public:
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     Antares::Solver::ModelerData* modelerData = nullptr;
+    std::unique_ptr<Antares::LinearProblem::OptimEntityContainer> optimEntityContainer;
 };
 
 // Import functions for capacity and hydro reserves

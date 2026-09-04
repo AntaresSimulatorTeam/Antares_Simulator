@@ -142,7 +142,8 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                 }
 
                 // RHS = STt - (1-BT)*STmint + BH*Ht + BF*(Ft - Lt) + BH*STS_net_production
-                double rhs = stt - stmint + ht + bfTerm + stsNetProduction;
+                double gemsSpillageBound = gemsUnsupEnergyForArea(Area);
+                double rhs = stt - stmint + ht + bfTerm + stsNetProduction + gemsSpillageBound;
 
                 problemeAResoudre_.SecondMembre[Cnt] = rhs;
                 logs.debug() << Cnt << ": FictitiousLoad: RHS[" << Cnt
@@ -175,6 +176,7 @@ void HourlyCSRProblem::setRHSMaxEnsLoadValue()
                                                         .AllMustRunGenerationOfArea[Area]);
                 load += MaxMustRunGenOfArea;
 
+                load += gemsUnsupEnergyForArea(Area);
                 if (load >= 0.)
                 {
                     SecondMembre[Cnt] = load + 1e-5;
