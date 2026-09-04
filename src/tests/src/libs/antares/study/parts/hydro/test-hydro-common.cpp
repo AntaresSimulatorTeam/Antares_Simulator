@@ -26,8 +26,8 @@ namespace
 struct HydroFixture
 {
     HydroFixture():
-        tmp(createTempDirectory(boost::unit_test::framework::current_test_case().p_name)),
-        hydroIni(tmp / "hydro.ini"),
+        tmpFolder(createTempDirectory(boost::unit_test::framework::current_test_case().p_name)),
+        hydroIni(tmpFolder / "hydro.ini"),
         study(std::make_unique<Study>())
     {
         east = new Area("east"); // freed by ~AreaList
@@ -40,7 +40,7 @@ struct HydroFixture
     {
         // LoadIniFile is static and iterates over all areas in the study,
         // so a single call covers both east and west.
-        return PartHydro::LoadIniFile(*study, tmp);
+        return PartHydro::LoadIniFile(*study, tmpFolder);
     }
 
     [[nodiscard]] bool validate() const
@@ -50,19 +50,19 @@ struct HydroFixture
 
     [[nodiscard]] bool loadFromFolder() const
     {
-        return PartHydro::LoadFromFolder(*study, tmp);
+        return PartHydro::LoadFromFolder(*study, tmpFolder);
     }
 
     [[nodiscard]] bool saveToFolder(Parameters::Compatibility::HydroPmax hydroPmax) const
     {
-        return PartHydro::SaveToFolder(study->areas, tmp.string(), hydroPmax);
+        return PartHydro::SaveToFolder(study->areas, tmpFolder.string(), hydroPmax);
     }
 
     // common/capacity is where credit modulations/inflow pattern/water values/max energy
     // CSV files are read from and written to; it is not created automatically.
     [[nodiscard]] fs::path createCapacityFolder() const
     {
-        fs::path dir = tmp / "common" / "capacity";
+        fs::path dir = tmpFolder / "common" / "capacity";
         fs::create_directories(dir);
         return dir;
     }
@@ -74,13 +74,13 @@ struct HydroFixture
 
     [[nodiscard]] fs::path folder() const
     {
-        return tmp;
+        return tmpFolder;
     }
 
     ~HydroFixture()
     {
         std::error_code ec;
-        fs::remove_all(tmp, ec);
+        fs::remove_all(tmpFolder, ec);
     }
 
     void writeFile(const std::string& content) const;
@@ -91,7 +91,7 @@ struct HydroFixture
     Area* west;
 
 private:
-    fs::path tmp;
+    fs::path tmpFolder;
     fs::path hydroIni;
     std::unique_ptr<Study> study;
 };
