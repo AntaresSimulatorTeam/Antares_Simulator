@@ -60,7 +60,7 @@ struct HydroFixture
 
     // common/capacity is where credit modulations/inflow pattern/water values/max energy
     // CSV files are read from and written to; it is not created automatically.
-    [[nodiscard]] fs::path capacityFolder() const
+    [[nodiscard]] fs::path createCapacityFolder() const
     {
         fs::path dir = tmp / "common" / "capacity";
         fs::create_directories(dir);
@@ -385,7 +385,7 @@ BOOST_AUTO_TEST_CASE(test_CheckDailyMaxEnergy_valid_and_invalid)
 
 BOOST_FIXTURE_TEST_CASE(test_LoadDailyMaxEnergy_roundtrip, HydroFixture)
 {
-    fs::path capacity = capacityFolder();
+    fs::path capacity = createCapacityFolder();
 
     PartHydro writer;
     writer.reset();
@@ -544,7 +544,7 @@ BOOST_FIXTURE_TEST_CASE(test_SaveToFolder_then_LoadFromFolder_roundtrip, HydroFi
 {
     east->hydro.reset();
     west->hydro.reset();
-    capacityFolder(); // ensure common/capacity exists before saving
+    createCapacityFolder(); // ensure common/capacity exists before saving
     studyRef().parameters.compatibility.hydroPmax = Parameters::Compatibility::HydroPmax::Hourly;
 
     BOOST_REQUIRE(saveToFolder(Parameters::Compatibility::HydroPmax::Hourly));
