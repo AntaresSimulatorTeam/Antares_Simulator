@@ -125,11 +125,6 @@ BOOST_FIXTURE_TEST_CASE(post_prepare_mutation_requires_reprepare, AllocationFixt
     BOOST_CHECK_CLOSE(byIndex[west->index], 0.75, 1e-12);
 }
 
-// ---------------------------------------------------------------------------
-// The following tests exercise HydroAllocation members that a coverage run
-// showed were never executed by the rest of the test suite.
-// ---------------------------------------------------------------------------
-
 BOOST_FIXTURE_TEST_CASE(remove_erases_existing_coefficient, AllocationFixture)
 {
     HydroAllocation alloc;
