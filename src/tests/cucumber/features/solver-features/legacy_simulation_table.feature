@@ -150,6 +150,93 @@ Feature: Legacy variables in simulation table
       | 0     | he_hydro_storage        | actual_inflows     | 0        | 0        | 1873          |
 
   @fast @short
+  Scenario: Input-generation rows are absent for components whose series are entirely zero
+    # Study "002 Thermal fleet - Base" runs with renewable-generation-modelling
+    # = aggregated. Its "area" has real wind data (input/wind/series/wind_area.txt),
+    # but empty solar, misc-gen and run-of-river series
+    # (input/solar/series/solar_area.txt, input/misc-gen/miscgen-area.txt,
+    # input/hydro/series/area/ror.txt are all 0-line files, which Antares
+    # loads as an all-zero series) -- exactly the "no meaningful production"
+    # case this filtering targets. Before the fix these still produced
+    # generation_power/minus_generation/balance_port.flow rows valued 0;
+    # after it, the components are omitted entirely, while the (non-zero)
+    # wind component is untouched.
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/002 Thermal fleet - Base"
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation succeeds
+    And the modeler outputs contain entries for component "area_wind"
+    And the modeler outputs contain no entries for component "area_solar"
+    And the modeler outputs contain no entries for component "area_run_of_river"
+    And the modeler outputs contain no entries for component "area_combined_heat_power"
+    And the modeler outputs contain no entries for component "area_biomass"
+    And the modeler outputs contain no entries for component "area_biogas"
+    And the modeler outputs contain no entries for component "area_waste"
+    And the modeler outputs contain no entries for component "area_geothermal"
+    And the modeler outputs contain no entries for component "area_other"
+    And the modeler outputs contain no entries for component "area_pumped_storage_power"
+    And the modeler outputs contain no entries for component "area_rest_world"
+
+  @fast @short
+  Scenario: actual_load and its balance-port row are absent for an area with an all-zero load series
+    # Same base study as above, on a temporary copy with its load series
+    # emptied (the same "empty file -> all-zero series" convention). With no
+    # load at all, area_load's actual_load and balance_port.flow rows should
+    # be suppressed like any other all-zero-series component.
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/002 Thermal fleet - Base"
+    And in input "load/series/load_area.txt" the time series is emptied
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation succeeds
+    And the modeler outputs contain no entries for component "area_load"
+
+  @fast @short
+  Scenario: hydro balance_port.flow is absent when reservoir is unmanaged and inflow is entirely zero
+    # Base study "hydro/hydro-parameters" with reservoir management disabled
+    # (reservoir=false) AND its inflow series (mod.txt) emptied -- both
+    # conditions together, since reservoir=false alone (with real inflow)
+    # still produces legitimate turbine generation, as the existing
+    # hydro_parameters.feature scenario outline shows (year-2 production of
+    # 109200 MWh with reservoir=false but real inflow).
+    #
+    # Only the derived balance_port.flow row is checked: with an unmanaged
+    # reservoir the level-guarded rows (level, level_percentage,
+    # actual_inflows) are already gone, but area_hydro_storage still carries
+    # the raw per-variable rows (withdrawal_power, ...), which are out of
+    # AddLegacyExtraOutputs' scope.
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hydro/hydro-parameters"
+    And in input "hydro/hydro.ini" section "reservoir" variable "area" is set to "false"
+    And in input "hydro/series/area/mod.txt" the time series is emptied
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation succeeds
+    And the modeler outputs contain no "balance_port.flow" entries for component "area_hydro_storage"
+
+  @fast @short
+  Scenario: derived link outputs are absent when both NTC directions are zero across the whole study
+    # Same base study as the "Link extra outputs" scenario above (east-west,
+    # hurdle-cost link), on a temporary copy with both direction capacity
+    # series emptied (the "empty file -> all-zero series" convention). No
+    # explicit "disabled" flag exists on links, so a link with zero capacity
+    # in both directions across the whole study is treated as inactive.
+    #
+    # This only suppresses the *derived* extra-output rows produced by
+    # AddLegacyExtraOutputs (abs_flow, prop_cost, congestion indicators,
+    # port fields, ...) -- it does not touch the separate *raw* per-variable
+    # rows (flow, direct_flow, indirect_flow), which are out of this
+    # feature's scope and still exist as long as the link's LP variables do.
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/Hurdle-cost link"
+    And in input "links/east/capacities/west_direct.txt" the time series is emptied
+    And in input "links/east/capacities/west_indirect.txt" the time series is emptied
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation succeeds
+    And the modeler outputs contain no "abs_flow" entries for component "east_west_link"
+    And the modeler outputs contain no "minus_flow" entries for component "east_west_link"
+    And the modeler outputs contain no "out_port.flow" entries for component "east_west_link"
+    And the modeler outputs contain no "in_port.flow" entries for component "east_west_link"
+    And the modeler outputs contain no "prop_cost" entries for component "east_west_link"
+    And the modeler outputs contain no "capacity_shadow_price" entries for component "east_west_link"
+    And the modeler outputs contain no "is_directly_congested" entries for component "east_west_link"
+    And the modeler outputs contain no "is_indirectly_congested" entries for component "east_west_link"
+
+  @fast @short
   Scenario: actual_num_units_on is emitted in accurate unit-commitment mode
     # Study "008 Thermal fleet - Accurate unit commitment" is the accurate-mode
     # twin of 002 (same area, same clusters, same shortfall on absolute hour 34

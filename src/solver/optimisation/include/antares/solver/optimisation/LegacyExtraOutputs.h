@@ -13,6 +13,8 @@ struct PROBLEME_HEBDO;
 namespace Antares::Optimization
 {
 
+class InactiveComponentsAnalyzer;
+
 // Block-relative time index of an absolute hour, empty when the hour falls
 // outside the block's global time window. Shared by the raw legacy rows and
 // the derived extra outputs so both use the same row conventions.
@@ -27,9 +29,13 @@ std::optional<unsigned> LegacyBlockTimeIndex(const LinearProblem::Api::FillConte
 // problemeHebdo. problemeHebdo is non-const only because the correspondence
 // accessors (VariableManager) expose indices as mutable references; nothing
 // is written.
+//
+// `inactiveComponents` carries the study-wide activity flags used to suppress
+// rows of structurally inactive objects; null means "emit every row".
 void AddLegacyExtraOutputs(IO::Outputs::SimulationTable& simulationTable,
                            PROBLEME_HEBDO& problemeHebdo,
                            const LinearProblem::Api::FillContext& fillContext,
-                           unsigned currentBlock);
+                           unsigned currentBlock,
+                           const InactiveComponentsAnalyzer* inactiveComponents = nullptr);
 
 } // namespace Antares::Optimization
