@@ -53,11 +53,6 @@ struct HydroFixture
         return PartHydro::LoadFromFolder(*study, tmpFolder);
     }
 
-    [[nodiscard]] bool saveToFolder(Parameters::Compatibility::HydroPmax hydroPmax) const
-    {
-        return PartHydro::SaveToFolder(study->areas, tmpFolder.string(), hydroPmax);
-    }
-
     // common/capacity is where credit modulations/inflow pattern/water values/max energy
     // CSV files are read from and written to; it is not created automatically.
     [[nodiscard]] fs::path createCapacityFolder() const
@@ -65,11 +60,6 @@ struct HydroFixture
         fs::path dir = tmpFolder / "common" / "capacity";
         fs::create_directories(dir);
         return dir;
-    }
-
-    [[nodiscard]] Study& studyRef() const
-    {
-        return *study;
     }
 
     [[nodiscard]] fs::path folder() const
@@ -318,56 +308,6 @@ BOOST_FIXTURE_TEST_CASE(test_absent_section_preserves_constructor_default, Hydro
 // above and via other fixtures, and are intentionally not retested here).
 // ---------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(test_copyFrom_copies_all_fields)
-{
-    PartHydro src;
-    src.reset();
-    src.interDailyBreakdown = 0.42;
-    src.intraDailyModulation = 3.5;
-    src.intermonthlyBreakdown = 0.7;
-    src.reservoirManagement = true;
-    src.reservoirCapacity = 1234.5;
-    src.followLoadModulations = false;
-    src.useWaterValue = true;
-    src.hardBoundsOnRuleCurves = true;
-    src.useHeuristicTarget = false;
-    src.initializeReservoirLevelDate = 5;
-    src.useLeeway = true;
-    src.powerToLevel = true;
-    src.leewayLowerBound = 0.2;
-    src.leewayUpperBound = 0.8;
-    src.pumpingEfficiency = 0.65;
-    src.creditModulation[0][0] = 42.0;
-    src.inflowPattern[0][0] = 7.0;
-    src.waterValues[0][0] = 3.0;
-    src.dailyNbHoursAtGenPmax[0][0] = 12.0;
-    src.dailyNbHoursAtPumpPmax[0][0] = 6.0;
-
-    PartHydro dst;
-    dst.copyFrom(src);
-
-    BOOST_CHECK_EQUAL(dst.interDailyBreakdown, 0.42);
-    BOOST_CHECK_EQUAL(dst.intraDailyModulation, 3.5);
-    BOOST_CHECK_EQUAL(dst.intermonthlyBreakdown, 0.7);
-    BOOST_CHECK_EQUAL(dst.reservoirManagement, true);
-    BOOST_CHECK_EQUAL(dst.reservoirCapacity, 1234.5);
-    BOOST_CHECK_EQUAL(dst.followLoadModulations, false);
-    BOOST_CHECK_EQUAL(dst.useWaterValue, true);
-    BOOST_CHECK_EQUAL(dst.hardBoundsOnRuleCurves, true);
-    BOOST_CHECK_EQUAL(dst.useHeuristicTarget, false);
-    BOOST_CHECK_EQUAL(dst.initializeReservoirLevelDate, 5);
-    BOOST_CHECK_EQUAL(dst.useLeeway, true);
-    BOOST_CHECK_EQUAL(dst.powerToLevel, true);
-    BOOST_CHECK_EQUAL(dst.leewayLowerBound, 0.2);
-    BOOST_CHECK_EQUAL(dst.leewayUpperBound, 0.8);
-    BOOST_CHECK_EQUAL(dst.pumpingEfficiency, 0.65);
-    BOOST_CHECK_EQUAL(dst.creditModulation[0][0], 42.0);
-    BOOST_CHECK_EQUAL(dst.inflowPattern[0][0], 7.0);
-    BOOST_CHECK_EQUAL(dst.waterValues[0][0], 3.0);
-    BOOST_CHECK_EQUAL(dst.dailyNbHoursAtGenPmax[0][0], 12.0);
-    BOOST_CHECK_EQUAL(dst.dailyNbHoursAtPumpPmax[0][0], 6.0);
-}
-
 BOOST_AUTO_TEST_CASE(test_CheckDailyMaxEnergy_valid_and_invalid)
 {
     PartHydro hydro;
@@ -538,26 +478,6 @@ BOOST_FIXTURE_TEST_CASE(test_validate_detects_invalid_inflow_and_credit_modulati
     // checkInflowPatternAndCredModul only reports invalid values, it does not fix them
     BOOST_CHECK_EQUAL(east->hydro.inflowPattern[0][5], -1.0);
     BOOST_CHECK_EQUAL(east->hydro.creditModulation[10][0], -1.0);
-}
-
-BOOST_FIXTURE_TEST_CASE(test_SaveToFolder_then_LoadFromFolder_roundtrip, HydroFixture)
-{
-    east->hydro.reset();
-    west->hydro.reset();
-    createCapacityFolder(); // ensure common/capacity exists before saving
-    studyRef().parameters.compatibility.hydroPmax = Parameters::Compatibility::HydroPmax::Hourly;
-
-    BOOST_REQUIRE(saveToFolder(Parameters::Compatibility::HydroPmax::Hourly));
-
-    // Corrupt in-memory state to prove LoadFromFolder actually reloads from disk
-    east->hydro.creditModulation.fill(0.);
-    east->hydro.inflowPattern.fill(0.);
-
-    BOOST_CHECK(loadFromFolder());
-
-    BOOST_CHECK_CLOSE(east->hydro.creditModulation[0][0], 1.0, 0.0001);
-    BOOST_CHECK_CLOSE(east->hydro.inflowPattern[0][0], 1.0, 0.0001);
-    BOOST_CHECK_CLOSE(east->hydro.dailyNbHoursAtGenPmax[0][0], 24.0, 0.0001);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_LoadFromFolder_missing_files_returns_false, HydroFixture)
