@@ -14,13 +14,6 @@
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
-// ---------------------------------------------------------------------------
-// These tests exercise DataSeriesHydro (series.cpp), which a coverage run
-// showed was almost entirely untested: only the constructor/reset()/resizeTS()
-// (exercised indirectly through PartHydro) and a partial (success-path only)
-// LoadMaxPower() were ever executed.
-// ---------------------------------------------------------------------------
-
 BOOST_AUTO_TEST_SUITE(hydro_dataseries)
 
 BOOST_AUTO_TEST_CASE(saveToFolder_then_load_roundtrip_hourly)

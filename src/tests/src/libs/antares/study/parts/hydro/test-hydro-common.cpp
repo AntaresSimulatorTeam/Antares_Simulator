@@ -301,13 +301,6 @@ BOOST_FIXTURE_TEST_CASE(test_absent_section_preserves_constructor_default, Hydro
     BOOST_CHECK_EQUAL(east->hydro.leewayUpperBound, 1.0);
 }
 
-// ---------------------------------------------------------------------------
-// The following tests exercise PartHydro/free-function members of
-// container.cpp that a coverage run showed were never executed by the rest
-// of the test suite (LoadIniFile/loadProperties/reset are already covered
-// above and via other fixtures, and are intentionally not retested here).
-// ---------------------------------------------------------------------------
-
 BOOST_AUTO_TEST_CASE(test_CheckDailyMaxEnergy_valid_and_invalid)
 {
     PartHydro hydro;
