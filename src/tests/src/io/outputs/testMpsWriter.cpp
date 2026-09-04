@@ -146,7 +146,8 @@ void checkMPS(Modeler& modeler, fs::path outputPath)
     {
         checkProblem(*masterProblem, outputPath / "master.mps");
     }
-    checkProblem(*modeler.subproblems().at(0), outputPath / "1-1.mps");
+    // The default scenario-scope runs scenario 0, so the subproblem MPS is named "1-0".
+    checkProblem(*modeler.subproblems().at(0), outputPath / "1-0.mps");
 }
 
 void processStudy(const filesystem::path& studyDir)

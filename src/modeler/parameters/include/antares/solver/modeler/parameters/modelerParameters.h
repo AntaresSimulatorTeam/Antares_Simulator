@@ -5,6 +5,8 @@
 
 #include <string>
 
+#include "antares/solver/modeler/parameters/scenarioScope.h"
+
 namespace Antares::Solver
 {
 struct ModelerParameters
@@ -22,5 +24,7 @@ struct ModelerParameters
     // time steps
     unsigned int firstTimeStep;
     unsigned int lastTimeStep;
+    // Monte-Carlo scenarios to simulate
+    ScenarioScope scenarioScope;
 };
 } // namespace Antares::Solver

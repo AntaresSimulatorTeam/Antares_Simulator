@@ -3,6 +3,7 @@
 
 #include "antares/solver/modeler/Modeler.h"
 
+#include <fmt/format.h>
 #include <fstream>
 #include <stdexcept>
 
@@ -83,12 +84,9 @@ Modeler::Modeler(ILoader& loader, fs::path ouputPath, TableFormat tableFormat):
     // (ModelerData contains unique_ptr members and is move-only).
     data_ = std::move(*data);
 
-    timeScenarioCtx_ = std::make_unique<FillContext>(
-      parameters_.firstTimeStep,
-      parameters_.lastTimeStep,
-      parameters_.firstTimeStep, // global = local, single time block in pure modeler (for now)
-      parameters_.lastTimeStep,  // global = local
-      0);
+    scenarios_ = resolveScenarioScopeScenarios(parameters_.scenarioScope, loader_.studyPath());
+    logs.info() << fmt::format("Number of Monte-Carlo scenarios to simulate: {}",
+                               scenarios_.size());
 }
 
 class SystemLinearProblemBuilder final
@@ -213,13 +211,12 @@ ProblemEntity buildProblem(const ModelerData& data,
     return {std::move(problem), (std::move(optimEntityContainer))};
 }
 
-IMipSolution* Modeler::solveSubproblem()
+IMipSolution* Modeler::solveSubproblem(ILinearProblem& subproblem)
 {
     Utils::TimeMeasurement measure;
     logs.info() << "Launching resolution...";
     measure.reset();
-    auto& subproblem_1_1 = subproblems_[0];
-    auto* solution = subproblem_1_1->solve(parameters_.solverLogs);
+    auto* solution = subproblem.solve(parameters_.solverLogs);
     measure.tick();
     logs.info() << "Solved in " << measure.toStringInSeconds();
     return solution;
@@ -230,18 +227,15 @@ IMipSolution* Modeler::subProbSolution()
     return subProbSolution_;
 }
 
-SimulationTable Modeler::makeSimulationTable(
+SimulationTable& Modeler::fillSimulationTable(
+  SimulationTable& simulationTable,
   const IMipSolution* solution,
+  const ILinearProblem& subproblem,
   const OptimEntityContainer& subproblemOptimEntityContainer,
   const FillContext& timeScenarioCtx) const
 {
-    // gp : subproblem_1_1 is defined the same way in multiple places
-    auto& subproblem_1_1 = subproblems_[0];
-
-    SimulationTable simulationTable;
-
     FillSimulationTable(simulationTable,
-                        *subproblem_1_1,
+                        subproblem,
                         solution->getObjectiveValue(),
                         data_,
                         subproblemOptimEntityContainer,
@@ -253,11 +247,16 @@ SimulationTable Modeler::makeSimulationTable(
 
 void Modeler::exportMps() const
 {
-    // 1-1.mps
-    if (auto& subproblem_1_1 = subproblems_[0])
+    for (std::size_t i = 0; i < subproblems_.size(); ++i)
     {
-        const auto mps = IO::Outputs::MPSGenerator(*subproblem_1_1, "1-1", true).run();
-        Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / "1-1.mps", mps);
+        auto& subproblem = subproblems_[i];
+        if (!subproblem)
+        {
+            continue;
+        }
+        const auto name = std::to_string(scenarios_[i]) + "-1";
+        const auto mps = IO::Outputs::MPSGenerator(*subproblem, name, true).run();
+        Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / (name + ".mps"), mps);
     }
     // master.mps
     if (masterProblem_)
@@ -275,6 +274,29 @@ void Modeler::exportStructureFile() const
     writer.write(of);
 }
 
+void Modeler::buildMasterProblem()
+{
+    auto masterFillContext = createFillContext(0); // master is scenario-independent
+    auto masterEntities = buildProblem(data_,
+                                       Config::Location::MASTER,
+                                       "master",
+                                       &data_.bendersDecomposition,
+                                       masterFillContext,
+                                       ResolutionMode::BENDERS_DECOMPOSITION,
+                                       std::nullopt);
+    masterProblem_ = std::move(masterEntities.problem);
+}
+
+FillContext Modeler::createFillContext(unsigned year) const
+{
+    return FillContext(
+      parameters_.firstTimeStep,
+      parameters_.lastTimeStep,
+      parameters_.firstTimeStep, // global = local, single time block in pure modeler (for now)
+      parameters_.lastTimeStep,  // global = local
+      year);
+}
+
 void Modeler::buildProblems()
 {
     Utils::TimeMeasurement measure;
@@ -282,42 +304,33 @@ void Modeler::buildProblems()
     logs.info() << "linear problem of System loaded";
 
     buildMasterProblem();
-    buildSubProblem();
+
+    for (const unsigned year: scenarios_)
+    {
+        auto fillContext = createFillContext(year);
+        auto problemId = std::to_string(year) + "-1";
+        auto entities = buildProblem(data_,
+                                     Config::Location::SUBPROBLEMS,
+                                     problemId,
+                                     &data_.bendersDecomposition,
+                                     fillContext,
+                                     data_.resolutionMode,
+                                     parameters_.solver);
+        subproblems_.emplace_back(std::move(entities.problem));
+        subproblemOptimEntityContainers_.emplace_back(std::move(entities.optimEntityContainer));
+    }
 
     logs.info() << "Linear problem provided";
 
-    auto& subproblem_1_1 = subproblems_[0];
-    logs.info() << "Number of variables: " << subproblem_1_1->variableCount();
-    logs.info() << "Number of constraints: " << subproblem_1_1->constraintCount();
+    for (std::size_t i = 0; i < subproblems_.size(); ++i)
+    {
+        logs.info() << "Number of variables: " << subproblems_[i]->variableCount();
+        logs.info() << "Number of constraints: " << subproblems_[i]->constraintCount();
+    }
 
     measure.tick();
     logs.info();
     logs.info() << "Modeler build took " << measure.toStringInSeconds();
-}
-
-void Modeler::buildMasterProblem()
-{
-    auto masterEntities = buildProblem(data_,
-                                       Config::Location::MASTER,
-                                       "master",
-                                       &data_.bendersDecomposition,
-                                       *timeScenarioCtx_,
-                                       ResolutionMode::BENDERS_DECOMPOSITION,
-                                       std::nullopt);
-    masterProblem_ = std::move(masterEntities.problem);
-}
-
-void Modeler::buildSubProblem()
-{
-    auto [subproblem, subproblemOptimEntityContainer] = buildProblem(data_,
-                                                                     Config::Location::SUBPROBLEMS,
-                                                                     "1-1",
-                                                                     &data_.bendersDecomposition,
-                                                                     *timeScenarioCtx_,
-                                                                     data_.resolutionMode,
-                                                                     parameters_.solver);
-    subproblems_.emplace_back(std::move(subproblem));
-    subproblemOptimEntityContainer_ = std::move(subproblemOptimEntityContainer);
 }
 
 void Modeler::run()
@@ -330,18 +343,34 @@ void Modeler::run()
     }
     if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
     {
-        subProbSolution_ = solveSubproblem();
-        if (!checkSolution(subProbSolution_))
+        SimulationTable simulationTable;
+        for (std::size_t i = 0; i < subproblems_.size(); ++i)
         {
-            return;
+            auto& subproblem = subproblems_[i];
+            if (!subproblem)
+            {
+                continue;
+            }
+            logs.info() << "Solving scenario " << scenarios_[i];
+            auto fillContext = createFillContext(scenarios_[i]);
+            subProbSolution_ = solveSubproblem(*subproblem);
+            if (!checkSolution(subProbSolution_))
+            {
+                return;
+            }
+
+            if (!parameters_.noOutput)
+            {
+                fillSimulationTable(simulationTable,
+                                    subProbSolution_,
+                                    *subproblem,
+                                    *subproblemOptimEntityContainers_[i],
+                                    fillContext);
+            }
         }
 
         if (!parameters_.noOutput)
         {
-            auto simulationTable = makeSimulationTable(subProbSolution_,
-                                                       *subproblemOptimEntityContainer_,
-                                                       *timeScenarioCtx_);
-
             auto outputFile = outputPath_ / "simulation-table";
             SimulationTableWriter writer(outputFile, tableFormat_);
             writer.writeTable(simulationTable);

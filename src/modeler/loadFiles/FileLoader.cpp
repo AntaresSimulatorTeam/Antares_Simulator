@@ -23,4 +23,9 @@ std::optional<ModelerData> FileLoader::loadAll()
 {
     return LoadFiles::loadAll(studyPath_);
 }
+
+const std::filesystem::path& FileLoader::studyPath() const
+{
+    return studyPath_;
+}
 } // namespace Antares::Solver::LoadFiles

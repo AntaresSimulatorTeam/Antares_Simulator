@@ -56,7 +56,6 @@ public:
 
     void buildProblems();
     void buildMasterProblem();
-    void buildSubProblem();
     void run();
 
     void exportMps() const;
@@ -88,21 +87,26 @@ public:
     LinearProblem::Api::IMipSolution* subProbSolution();
 
 private:
-    LinearProblem::Api::IMipSolution* solveSubproblem();
+    LinearProblem::Api::FillContext createFillContext(unsigned year) const;
+    LinearProblem::Api::IMipSolution* solveSubproblem(
+      LinearProblem::Api::ILinearProblem& subproblem);
 
-    IO::Outputs::SimulationTable makeSimulationTable(
+    IO::Outputs::SimulationTable& fillSimulationTable(
+      IO::Outputs::SimulationTable& simulationTable,
       const LinearProblem::Api::IMipSolution* solution,
+      const LinearProblem::Api::ILinearProblem& subproblem,
       const LinearProblem::OptimEntityContainer& subproblemOptimEntityContainer,
       const LinearProblem::Api::FillContext& timeScenarioCtx) const;
 
     std::unique_ptr<LinearProblem::Api::ILinearProblem> masterProblem_ = nullptr;
     std::vector<std::unique_ptr<LinearProblem::Api::ILinearProblem>> subproblems_;
-    std::unique_ptr<LinearProblem::OptimEntityContainer> subproblemOptimEntityContainer_ = nullptr;
-    std::unique_ptr<LinearProblem::Api::FillContext> timeScenarioCtx_ = nullptr;
-    LinearProblem::Api::IMipSolution* subProbSolution_ = nullptr;
+    std::vector<std::unique_ptr<LinearProblem::OptimEntityContainer>>
+      subproblemOptimEntityContainers_;
+    std::vector<unsigned> scenarios_;
     ModelerParameters parameters_;
     ModelerData data_;
     fs::path outputPath_;
     Antares::Writer::TableFormat tableFormat_;
+    LinearProblem::Api::IMipSolution* subProbSolution_ = nullptr;
 };
 } // namespace Antares::Solver

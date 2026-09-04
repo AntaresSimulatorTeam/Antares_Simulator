@@ -8,6 +8,68 @@
 namespace YAML
 {
 template<>
+struct convert<Antares::Solver::ScenarioScope>
+{
+    static bool decode(const Node& node, Antares::Solver::ScenarioScope& rhs)
+    {
+        if (node.IsNull() || !node.IsDefined())
+        {
+            // Empty scenario-scope block -> default (scenario 0 only)
+            return true;
+        }
+        if (!node.IsMap())
+        {
+            return false;
+        }
+
+        const Node& includeNode = node["include"];
+        if (includeNode.IsDefined() && !includeNode.IsNull())
+        {
+            if (!includeNode.IsSequence())
+            {
+                return false;
+            }
+            for (const auto& entry: includeNode)
+            {
+                rhs.include.push_back(scalarsToString(entry));
+            }
+        }
+
+        const Node& excludeNode = node["exclude"];
+        if (excludeNode.IsDefined() && !excludeNode.IsNull())
+        {
+            if (!excludeNode.IsSequence())
+            {
+                return false;
+            }
+            for (const auto& entry: excludeNode)
+            {
+                rhs.exclude.push_back(scalarsToString(entry));
+            }
+        }
+
+        const Node& playlistNode = node["playlist-file"];
+        if (playlistNode.IsDefined() && !playlistNode.IsNull())
+        {
+            rhs.playlistFile = playlistNode.as<std::string>();
+        }
+
+        return true;
+    }
+
+private:
+    // Convert a scalar node to its string representation, so that both "5" and 5 become "5".
+    static std::string scalarsToString(const Node& node)
+    {
+        if (node.IsScalar())
+        {
+            return node.as<std::string>();
+        }
+        throw YAML::BadConversion(node.Mark());
+    }
+};
+
+template<>
 struct convert<Antares::Solver::ModelerParameters>
 {
     static bool decode(const Node& node, Antares::Solver::ModelerParameters& rhs)
@@ -24,6 +86,11 @@ struct convert<Antares::Solver::ModelerParameters>
         rhs.firstTimeStep = node["first-time-step"].as<unsigned int>(0);
         // TODO check this value
         rhs.lastTimeStep = node["last-time-step"].as<unsigned int>(167);
+        if (const Node& scenarioScopeNode = node["scenario-scope"];
+            scenarioScopeNode.IsDefined() && !scenarioScopeNode.IsNull())
+        {
+            rhs.scenarioScope = scenarioScopeNode.as<Antares::Solver::ScenarioScope>();
+        }
         return true;
     }
 };
