@@ -3,8 +3,6 @@
 
 #include "antares/study/parts/hydro/allocation.h"
 
-#include <fstream>
-
 #include <boost/algorithm/string/case_conv.hpp>
 
 #include <antares/utils/utils.h>
@@ -14,76 +12,6 @@ namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
-static const Area* FindMappedAreaName(const AreaName& id,
-                                      const Study& study,
-                                      const AreaNameMapping& mapping)
-{
-    auto i = mapping.find(id);
-    if (i != mapping.end())
-    {
-        return study.areas.findFromName(i->second);
-    }
-    return study.areas.findFromName(id);
-}
-
-HydroAllocation::HydroAllocation()
-{
-}
-
-HydroAllocation::~HydroAllocation()
-{
-}
-
-void HydroAllocation::remove(const AreaName& areaid)
-{
-    auto i = pValues.find(areaid);
-    if (i != pValues.end())
-    {
-        pValues.erase(i);
-    }
-}
-
-double HydroAllocation::fromArea(const Area& area) const
-{
-    return fromArea(area.id);
-}
-
-double HydroAllocation::fromArea(const Area* area) const
-{
-    return area ? fromArea(area->id) : 0.;
-}
-
-double HydroAllocation::operator[](const AreaName& areaid) const
-{
-    auto i = pValues.find(areaid);
-    return (i != pValues.end()) ? i->second : 0.;
-}
-
-double HydroAllocation::operator[](const Area& area) const
-{
-    auto i = pValues.find(area.id);
-    return (i != pValues.end()) ? i->second : 0.;
-}
-
-void HydroAllocation::fromArea(const Area& area, double value)
-{
-    fromArea(area.id, value);
-}
-
-void HydroAllocation::fromArea(const Area* area, double value)
-{
-    if (area)
-    {
-        fromArea(area->id, value);
-    }
-}
-
-double HydroAllocation::fromArea(const AreaName& areaid) const
-{
-    auto i = pValues.find(areaid);
-    return (i != pValues.end()) ? i->second : 0.;
-}
-
 void HydroAllocation::fromArea(const AreaName& areaid, double value)
 {
     if (Utils::isZero(value))
@@ -153,68 +81,6 @@ bool HydroAllocation::loadFromFile(const AreaName& referencearea, const fs::path
           }
       });
     return true;
-}
-
-bool HydroAllocation::saveToFile(const std::string& filename) const
-{
-    if (pValues.empty())
-    {
-        std::ofstream(filename).close();
-        return true;
-    }
-    else
-    {
-        IniFile ini;
-        auto* s = ini.addSection("[allocation]");
-        auto end = pValues.end();
-        std::string str;
-        for (auto i = pValues.begin(); i != end; ++i)
-        {
-            double v = i->second;
-            if (!Utils::isZero(v))
-            {
-                str = std::to_string(v);
-                if (str.find('.') != std::string::npos)
-                {
-                    str.erase(str.find_last_not_of('0') + 1);
-                    while (!str.empty() && str.back() == '.')
-                    {
-                        str.pop_back();
-                    }
-                }
-                s->add(i->first, str);
-            }
-        }
-        return ini.save(filename);
-    }
-}
-
-void HydroAllocation::copyFrom(const HydroAllocation& source,
-                               const Study& studySource,
-                               const AreaNameMapping& mapping,
-                               const Study& study)
-{
-    // clear all coefficients first
-    clear();
-
-    // copying from source
-    auto end = source.coefficients().end();
-    for (auto i = source.coefficients().begin(); i != end; ++i)
-    {
-        auto& areaid = i->first;
-        double value = i->second;
-
-        auto* areaCoeffSource = studySource.areas.findFromName(areaid);
-        if (areaCoeffSource)
-        {
-            auto* targetarea = FindMappedAreaName(areaCoeffSource->name, study, mapping);
-            if (targetarea)
-            {
-                pValues[targetarea->id] = value;
-                pValuesFromAreaID[targetarea->index] = value;
-            }
-        }
-    }
 }
 
 const HydroAllocation::Coefficients& HydroAllocation::coefficients() const
