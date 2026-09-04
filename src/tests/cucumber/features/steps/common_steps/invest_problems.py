@@ -21,7 +21,7 @@ class invest_problems:
 
 
 def read_invest_problems(output_path: Path) -> invest_problems:
-    """Read investment problem files (master.mps, 0-1.mps, structure.txt)."""
+    """Read investment problem files (master.mps, 0-0.mps, structure.txt)."""
     output_location = str(output_path)
     try:
         master = read_if_exists(os.path.join(output_location, "master.mps"), mpu.load_problem)
@@ -29,7 +29,7 @@ def read_invest_problems(output_path: Path) -> invest_problems:
         master = None
 
     try:
-        subproblem = read_if_exists(os.path.join(output_location, "0-1.mps"), mpu.load_problem)
+        subproblem = read_if_exists(os.path.join(output_location, "0-0.mps"), mpu.load_problem)
     except Exception:
         subproblem = None
 
