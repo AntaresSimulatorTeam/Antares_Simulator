@@ -23,7 +23,7 @@ namespace
 
 [[noreturn]] void throwInvalidEntry(const std::string& entry)
 {
-    throw std::invalid_argument(
+    throw ModelerError(
       fmt::format("Invalid scenario-scope entry '{}': expected an integer, a quoted integer or an "
                   "inclusive 'a-b' range of non-negative integers",
                   entry));
@@ -37,6 +37,19 @@ namespace
  */
 std::set<unsigned> expandEntry(const std::string& entry)
 {
+    // A leading sign means the entry is a single signed number, not a range. The
+    // documented grammar only allows unsigned non-negative integers, so a '-' yields a
+    // dedicated message and a '+' is a plain format error.
+    if (!entry.empty() && (entry[0] == '-' || entry[0] == '+'))
+    {
+        if (entry[0] == '-')
+        {
+            throw throwInvalidEntry(
+              fmt::format("Invalid scenario-scope entry '{}': indices must be >= 0", entry));
+        }
+        throwInvalidEntry(entry);
+    }
+
     std::set<unsigned> result;
 
     // Parse a token that must be a plain (unsigned) run of digits.
@@ -51,19 +64,6 @@ std::set<unsigned> expandEntry(const std::string& entry)
         }
         return static_cast<unsigned>(std::stoul(token));
     };
-
-    // A leading sign means the entry is a single signed number, not a range. The
-    // documented grammar only allows unsigned non-negative integers, so a '-' yields a
-    // dedicated message and a '+' is a plain format error.
-    if (!entry.empty() && (entry[0] == '-' || entry[0] == '+'))
-    {
-        if (entry[0] == '-')
-        {
-            throw std::invalid_argument(
-              fmt::format("Invalid scenario-scope entry '{}': indices must be >= 0", entry));
-        }
-        throwInvalidEntry(entry);
-    }
 
     // An entry is either a range "a-b" or a single index.
     const auto dashPos = entry.find('-');
@@ -145,7 +145,7 @@ std::vector<std::string> entriesFromJson(const std::filesystem::path& playlistFi
         }
         else
         {
-            throw std::invalid_argument(
+            throw ModelerError(
               fmt::format("Invalid playlist file '{}': each element must be an integer or string",
                           playlistFile.string()));
         }
@@ -164,12 +164,12 @@ std::vector<unsigned> resolveScenarioScopeScenarios(const ScenarioScope& scope,
 
     if (hasInclude && hasPlaylist)
     {
-        throw std::invalid_argument("scenario-scope: 'include' and 'playlist-file' are mutually "
+        throw ModelerError("scenario-scope: 'include' and 'playlist-file' are mutually "
                                     "exclusive");
     }
     if (hasExclude && !hasInclude && !hasPlaylist)
     {
-        throw std::invalid_argument("scenario-scope: 'exclude' can only be used with 'include' or "
+        throw ModelerError("scenario-scope: 'exclude' can only be used with 'include' or "
                                     "'playlist-file'");
     }
     if (!hasInclude && !hasPlaylist)
