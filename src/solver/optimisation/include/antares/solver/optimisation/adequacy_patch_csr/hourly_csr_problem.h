@@ -138,6 +138,10 @@ private:
     void setRHSfictitiousLoadValue();
     void setRHSMaxEnsLoadValue();
     void setRHSbindingConstraintsValue();
+    void setRHSfictitiousLoadValueFromLegacy();
+    void setRHSfictitiousLoadValueFromGEMS();
+    void setRHSMaxEnsLoadValueFromLegacy();
+    void setRHSMaxEnsLoadValueFromGEMS();
 
     // CoststriggeredHour
     void setQuadraticCost();
