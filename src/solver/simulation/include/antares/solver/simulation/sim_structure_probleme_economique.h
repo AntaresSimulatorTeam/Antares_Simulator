@@ -787,7 +787,7 @@ public:
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     Antares::Solver::ModelerData* modelerData = nullptr;
-
+    
     /// \brief Whether the solve must publish lastSolvedModelerProblem. Set per
     /// week by OPT_OptimisationLineaire, the level that knows a post-process
     /// stage will read it back. Not tied to whether *this* pass writes a table:
@@ -803,7 +803,6 @@ public:
     /// \brief Kept alive past the solve so the CSR adequacy patch post-process
     /// can evaluate GEMS port field expressions via EvalVisitor.
     std::shared_ptr<Antares::LinearProblem::OptimEntityContainer> optimEntityContainer;
-
 };
 
 // Import functions for capacity and hydro reserves
