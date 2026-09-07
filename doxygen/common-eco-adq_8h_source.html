@@ -203,31 +203,35 @@ $(document).ready(function(){initNavTree('common-eco-adq_8h_source.html',''); in
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="keywordtype">void</span> updatingWeeklyFinalHydroLevel(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1AreaList.html">Data::AreaList</a>&amp; areas, <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problem);</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">** \brief Compute the weighted average NTC for a link</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">** \brief Compute the MC-years weighted average NTC of a link, over a range of hours</span></div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">**</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment">** \param areas : the areas of study</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment">** \param link The link</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment">** \param Weighted average NTC for the direct direction</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment">** \param Weighted average NTC for the indirect direction</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment">*/</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="keywordtype">int</span> retrieveAverageNTC(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study,</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                       <span class="keyword">const</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;&gt;</a>&amp; capacities,</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                       <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1TimeSeriesNumbers.html">Data::TimeSeriesNumbers</a>&amp; tsNumbers,</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                       std::vector&lt;double&gt;&amp; avg);</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="keywordtype">void</span> finalizeOptimizationStatistics(<a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problem,</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                                    <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">Antares::Solver::Variable::State</a>&amp; state);</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="keywordtype">void</span> prepareClustersInMustRunMode(<a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study,</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;                                  Data::Area::ScratchMap&amp; scratchmap,</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                                  uint year,</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;                                  Data::SimulationMode mode);</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="keywordtype">void</span> buildReserveIndexMaps(<a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study, <span class="keyword">const</span> <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problem);</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;} <span class="comment">// namespace Antares::Solver::Simulation</span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __SOLVER_SIMULATION_COMMON_ECONOMY_ADEQUACY_H__</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment">** \param study The study</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment">** \param capacities NTC time series of the link, for one direction</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment">** \param tsNumbers TS numbers of the link</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment">** \param firstHour First hour of the range, in [0, HOURS_PER_YEAR[</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment">** \param hourCount Number of hours of the range</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">** \param avg Weighted average NTC, resized to hourCount. avg[h] refers to hour firstHour + h</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">*/</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keywordtype">void</span> retrieveAverageNTC(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study,</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                        <span class="keyword">const</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;&gt;</a>&amp; capacities,</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                        <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1TimeSeriesNumbers.html">Data::TimeSeriesNumbers</a>&amp; tsNumbers,</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                        uint firstHour,</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                        uint hourCount,</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                        std::vector&lt;double&gt;&amp; avg);</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="keywordtype">void</span> finalizeOptimizationStatistics(<a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problem,</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                                    <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">Antares::Solver::Variable::State</a>&amp; state);</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="keywordtype">void</span> prepareClustersInMustRunMode(<a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study,</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                                  Data::Area::ScratchMap&amp; scratchmap,</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                                  uint year,</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                                  Data::SimulationMode mode);</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="keywordtype">void</span> buildReserveIndexMaps(<a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study, <span class="keyword">const</span> <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problem);</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;} <span class="comment">// namespace Antares::Solver::Simulation</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __SOLVER_SIMULATION_COMMON_ECONOMY_ADEQUACY_H__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaList_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaList.html">Antares::Data::AreaList</a></div><div class="ttdoc">A list of areas.</div><div class="ttdef"><b>Definition:</b> area.h:258</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Parameters_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Parameters.html">Antares::Data::Parameters</a></div><div class="ttdoc">General data for a study.</div><div class="ttdef"><b>Definition:</b> parameters.h:34</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdoc">Antares Study.</div><div class="ttdef"><b>Definition:</b> study.h:41</div></div>

@@ -1201,7 +1201,7 @@ var namespaces_dup =
           [ "PrepareRandomNumbers", "common-eco-adq_8cpp.html#acf7a9024f8a18f667ceff51d36c9e74a", null ],
           [ "regenerateTimeSeries", "regenerate__timeseries_8h.html#a1ebea0829a0b311b9da682b6fd203711", null ],
           [ "RemixHydroForAllAreas", "common-hydro-remix_8cpp.html#a2c89a8b1193ad96c3c24408d6caa3625", null ],
-          [ "retrieveAverageNTC", "common-eco-adq_8cpp.html#a77ba3d4e4fb8887d4812f2b39869fa31", null ],
+          [ "retrieveAverageNTC", "common-eco-adq_8cpp.html#ae47ed34306db8f3e1401d37cce92aa5e", null ],
           [ "searchForExhange", "shave-peaks-by-remix-help_8h.html#af8d74f9a2276d5691612bc3a19099e6e", null ],
           [ "SetInitialHydroLevel", "common-eco-adq_8cpp.html#ac3dc98869aac05b3bc90b8b22d33ec32", null ],
           [ "shavePeaksByRemixingStorageGen", "shave-peaks-by-remix-storage-gen_8h.html#a4a85a74da287a9bd0410a983ea8f856c", null ],
