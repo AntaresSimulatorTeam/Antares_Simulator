@@ -1044,7 +1044,6 @@ var annotated_dup =
     [ "CAPACITY_RESERVATION", "structCAPACITY__RESERVATION.html", "structCAPACITY__RESERVATION" ],
     [ "CellColumnData", "classCellColumnData.html", "classCellColumnData" ],
     [ "CmdLineOptionsFixture", "structCmdLineOptionsFixture.html", "structCmdLineOptionsFixture" ],
-    [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "ComparisonFixture", "structComparisonFixture.html", "structComparisonFixture" ],
     [ "ComponentBuilderCreationFixture", "structComponentBuilderCreationFixture.html", "structComponentBuilderCreationFixture" ],
     [ "ComponentToAreaConnectionFillerFixture", "structComponentToAreaConnectionFillerFixture.html", "structComponentToAreaConnectionFillerFixture" ],

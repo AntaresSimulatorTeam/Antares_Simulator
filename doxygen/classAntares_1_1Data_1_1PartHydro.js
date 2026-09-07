@@ -1,6 +1,5 @@
 var classAntares_1_1Data_1_1PartHydro =
 [
-    [ "HydroReserveParticipationWithName", "structAntares_1_1Data_1_1PartHydro_1_1HydroReserveParticipationWithName.html", "structAntares_1_1Data_1_1PartHydro_1_1HydroReserveParticipationWithName" ],
     [ "weeklyHydroMod", "classAntares_1_1Data_1_1PartHydro.html#a79728c73ad10d6c7b7a93880bee019e1", [
       [ "genMod", "classAntares_1_1Data_1_1PartHydro.html#a79728c73ad10d6c7b7a93880bee019e1a144240360470d881195163d3ffb16507", null ],
       [ "pumpMod", "classAntares_1_1Data_1_1PartHydro.html#a79728c73ad10d6c7b7a93880bee019e1a46e953e6bdbeffa9e047d86c905a9d2e", null ]
@@ -8,7 +7,6 @@ var classAntares_1_1Data_1_1PartHydro =
     [ "PartHydro", "classAntares_1_1Data_1_1PartHydro.html#a04d548a70f2829cc320ea34d473f3f02", null ],
     [ "~PartHydro", "classAntares_1_1Data_1_1PartHydro.html#aea4cb3ee6e3b5739f47ed5637d43d55c", null ],
     [ "CheckDailyMaxEnergy", "classAntares_1_1Data_1_1PartHydro.html#a9fbe918eeac42368bee47cd51e247a0d", null ],
-    [ "copyFrom", "classAntares_1_1Data_1_1PartHydro.html#aea1b2083ab288f378d99f0c355337286", null ],
     [ "count", "classAntares_1_1Data_1_1PartHydro.html#a150052e679cea74072bafb6a7100a8a2", null ],
     [ "LoadDailyMaxEnergy", "classAntares_1_1Data_1_1PartHydro.html#a936d638d0cfaeec15c878f97e367b965", null ],
     [ "loadReserveParticipations", "classAntares_1_1Data_1_1PartHydro.html#a493df76dea6efb4fc8e3596c19741ca9", null ],

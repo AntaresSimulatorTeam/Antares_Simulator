@@ -2,7 +2,6 @@ var classAntares_1_1Data_1_1DataSeriesHydro =
 [
     [ "DataSeriesHydro", "classAntares_1_1Data_1_1DataSeriesHydro.html#a3abe93b1e9efea9d7b499e5c72c3f790", null ],
     [ "buildHourlyMaxPowerFromDailyTS", "classAntares_1_1Data_1_1DataSeriesHydro.html#a9059611c7cee449d1916ad462cd60536", null ],
-    [ "copyGenerationTS", "classAntares_1_1Data_1_1DataSeriesHydro.html#a13623a3a63da5fa15a050c052fa95839", null ],
     [ "getDailyMaxGenPowerFromHourlyTS", "classAntares_1_1Data_1_1DataSeriesHydro.html#a4d05de80cabc362f9a2f17f3ae929b88", null ],
     [ "getDailyMaxPumpPowerFromHourlyTS", "classAntares_1_1Data_1_1DataSeriesHydro.html#ab86670851635b2ec0fb0a6bec0833043", null ],
     [ "loadGenerationTS", "classAntares_1_1Data_1_1DataSeriesHydro.html#a046191c957df17bcd0617341ba5efff8", null ],

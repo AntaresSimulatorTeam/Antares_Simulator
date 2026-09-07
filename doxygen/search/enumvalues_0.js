@@ -1,4 +1,9 @@
 var searchData=
 [
-  ['average_4591',['average',['../classAntares_1_1Data_1_1PartHydro.html#a2077056ea5b2d1c248984b49650890fca59f74790bdeafe2587bcef043d1c3e8a',1,'Antares::Data::PartHydro']]]
+  ['categorydatalevel_4580',['categoryDataLevel',['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1VCardReserveParticipationBase.html#a41239bb9296b7deccd7216f139a675afac1b785edcaf46b9b14c521619c930453',1,'Antares::Solver::Variable::Economy::Reserves::VCardReserveParticipationBase']]],
+  ['categoryfilelevel_4581',['categoryFileLevel',['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1VCardReserveParticipationBase.html#a41239bb9296b7deccd7216f139a675afa6720a94f0fa214ef19e454f1665d10be',1,'Antares::Solver::Variable::Economy::Reserves::VCardReserveParticipationBase']]],
+  ['columncount_4582',['columnCount',['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1VCardReserveParticipationBase.html#a41239bb9296b7deccd7216f139a675afa20f886ef04957082b598c4028e306ef9',1,'Antares::Solver::Variable::Economy::Reserves::VCardReserveParticipationBase']]],
+  ['columnmax_4583',['columnMax',['../classAntares_1_1Data_1_1BindingConstraint.html#a015217d086e11b123a8ea325c80f1fa2a7ada9cb5ab762aca58b4421b08909abe',1,'Antares::Data::BindingConstraint']]],
+  ['conversionmaxpoints_4584',['conversionMaxPoints',['../classAntares_1_1Data_1_1XCast.html#aac98cb7f5d63be5741cd0dc109d94346a759b2ada85c6149fc461b1ea1b0e3782',1,'Antares::Data::XCast']]],
+  ['count_4585',['count',['../classAntares_1_1Solver_1_1Variable_1_1Areas.html#aef9a155381cd968a1af63b1ee3524d14a3c418328fcc25c876fa32679f6fa2ec3',1,'Antares::Solver::Variable::Areas::count()'],['../classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a698aa4a6985e352e1c6b14642e1c903ea0e27b4b8e2d3d01ac65df9b60d2ff604',1,'Antares::Solver::Variable::BindingConstraints::count()'],['../classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a9998756af4fbc3294cc5d41c95958b0fa8885dd3ce7bdcaf053c5852babd7359b',1,'Antares::Solver::Variable::SetsOfAreas::count()']]]
 ];

@@ -149,7 +149,6 @@ var hierarchy =
     [ "CmdLineOptionsFixture", "structCmdLineOptionsFixture.html", null ],
     [ "Antares::IO::Outputs::ColumnBasedStorage", "classAntares_1_1IO_1_1Outputs_1_1ColumnBasedStorage.html", null ],
     [ "Antares::Solver::Variable::Economy::ColumnDescriptor", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ColumnDescriptor.html", null ],
-    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Data::CompareClusterName", "structAntares_1_1Data_1_1CompareClusterName.html", null ],
@@ -462,7 +461,6 @@ var hierarchy =
     [ "Antares::HydroManagement", "classAntares_1_1HydroManagement.html", null ],
     [ "Antares::Data::HydroMaxTimeSeriesReader", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html", null ],
     [ "HydroPowerData", "structHydroPowerData.html", null ],
-    [ "Antares::Data::PartHydro::HydroReserveParticipationWithName", "structAntares_1_1Data_1_1PartHydro_1_1HydroReserveParticipationWithName.html", null ],
     [ "Antares::Solver::Variable::Economy::HydroStorageTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorageTraits.html", null ],
     [ "Antares::Solver::Variable::Economy::HydroTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroTraits.html", null ],
     [ "I_MPS_writer", "classI__MPS__writer.html", [
