@@ -19,6 +19,7 @@
 #include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
+#include "antares/solver/optimisation/LegacyExtraOutputs.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyNameMapper.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
