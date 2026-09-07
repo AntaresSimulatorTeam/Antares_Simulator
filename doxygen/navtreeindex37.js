@@ -1,5 +1,9 @@
 var NAVTREEINDEX37 =
 {
+"structAntares_1_1Optimization_1_1VariableBounds.html#a03e3cbbfabe7cc02a18535fd955b7b6e":[9,0,0,11,7,0],
+"structAntares_1_1Optimization_1_1VariableBounds.html#a2212021f92d0c5922a0e698178a2b22a":[9,0,0,11,7,3],
+"structAntares_1_1Optimization_1_1VariableBounds.html#ab585fb575c38a211d9f6a9e3a4b67a71":[9,0,0,11,7,2],
+"structAntares_1_1Optimization_1_1VariableBounds.html#acb6a350257a9655e941067a3383a4041":[9,0,0,11,7,1],
 "structAntares_1_1ScenarioGroupParser_1_1Line.html":[9,0,0,31,0],
 "structAntares_1_1ScenarioGroupParser_1_1Line.html#a6c7b44ff33b68ee45d35bb2374ec2f4f":[9,0,0,31,0,2],
 "structAntares_1_1ScenarioGroupParser_1_1Line.html#aa916761057fc5e3ee82ade8d4d354416":[9,0,0,31,0,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ColumnDescriptor.html#ab84a512dcb7bfe3f2d65722373e41d51":[9,0,0,12,6,5,28,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbsTraits.html":[9,0,0,12,6,5,38],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbsTraits.html#a2f0d66b610b5734f528f13f6182ec754":[9,0,0,12,6,5,38,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeTraits.html":[9,0,0,12,6,5,37],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeTraits.html#af5518261d05d2725eb3e66e049560d51":[9,0,0,12,6,5,37,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability_1_1Statistics.html":[9,0,0,12,6,5,40,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMarginTraits.html":[9,0,0,12,6,5,22],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMarginTraits.html#aa265e7995d11f4e5efeaa3d68cd0a91e":[9,0,0,12,6,5,22,1]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeTraits.html":[9,0,0,12,6,5,37]
 };

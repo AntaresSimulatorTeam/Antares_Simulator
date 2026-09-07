@@ -1,5 +1,9 @@
 var NAVTREEINDEX44 =
 {
+"structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE.html#a051238f88d3fae171a4c4ea4d3161d73":[9,0,374,1],
+"structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE.html#a86a23685e1cd9840fb0d2b5c94b93408":[9,0,374,0],
+"structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html":[9,0,375],
+"structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html#a1dc723cf1140523d5c38d0af69c78abe":[9,0,375,1],
 "structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html#a3841ddd787b8d011337929558cf5ac69":[9,0,375,0],
 "structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html":[9,0,376],
 "structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html#a29b87335b7701e568f0c1070ad1363c6":[9,0,376,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX44 =
 "thermal_2cluster_8h.html#a30c8ff1c9671f56da6c32cf85223ad3bafc69154d206f2d046476ccb5dca669a2":[8,0,0,4,125,4],
 "thermal_2cluster_8h.html#a3ef5a783cc45e8b6c79f7a5a9787dde7":[8,0,0,4,208],
 "thermal_2cluster_8h.html#a8f516d1e51949ecea43fb6b10376a2a5":[8,0,0,4,101],
-"thermal_2cluster_8h.html#a8f516d1e51949ecea43fb6b10376a2a5a3e6f3315e516bbd173d35bd7e04df5a4":[8,0,0,4,101,0],
-"thermal_2cluster_8h.html#a8f516d1e51949ecea43fb6b10376a2a5a8e934cf0bd3b192d0556a9c00f1c1d72":[8,0,0,4,101,1],
-"thermal_2cluster_8h.html#ac187326ca546f89c7df508851492b516":[8,0,0,4,197],
-"thermal_2cluster_8h.html#ad812eaf7aee328a84ce2392b9223a9d9":[8,0,0,4,151],
-"thermal_2cluster_8h.html#ae155111eb9e7ecab971984a68cdd2378":[8,0,0,4,108]
+"thermal_2cluster_8h.html#a8f516d1e51949ecea43fb6b10376a2a5a3e6f3315e516bbd173d35bd7e04df5a4":[8,0,0,4,101,0]
 };

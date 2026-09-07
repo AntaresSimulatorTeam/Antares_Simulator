@@ -1001,6 +1001,7 @@ var namespaces_dup =
         [ "balanceConstraintIndices", "ComponentToAreaConnectionFiller_8cpp.html#a70b02987bc0443abb2f9fba61f119869", null ],
         [ "BuildInactiveComponentsAnalyzer", "InactiveComponentsAnalyzerBuilder_8cpp.html#a5c6d6ea89e7e2c934bdebd9e3e5e24bf", null ],
         [ "fictitiousLoadConstraintIndices", "ComponentToAreaConnectionFiller_8cpp.html#a46b71a6ea25755421399d5a0ec661061", null ],
+        [ "FillLegacySimulationTable", "LegacySimulationTableSnapshot_8h.html#a392e66b082ff8c016c5907fc3f3096c8", null ],
         [ "format_as", "MCYearAndTime_8h.html#a42bbf89c2f89bc518949ad86f6818be4", null ],
         [ "greaterValue", "report_8cpp.html#afca59b8c35ac2975defa738d1098f969", null ],
         [ "hasIntegerVariables", "MipDetection_8h.html#acdb7584e1806b2d8281917fccc137257", null ],

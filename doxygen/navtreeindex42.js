@@ -1,5 +1,9 @@
 var NAVTREEINDEX42 =
 {
+"structMockLinearProblemData.html#afbc59f39030125f0658cac1c38568f50":[9,0,203,2],
+"structMockMipSolution.html":[9,0,205],
+"structMockMipSolution.html#a8d027cb0a8cbaa458600c24557d4a74e":[9,0,205,0],
+"structMockMipSolution.html#a8e14eceb9e52693bd1bb4ae4ffaf6af1":[9,0,205,1],
 "structMockSolverTraits.html":[9,0,208],
 "structMonster.html":[9,0,211],
 "structMonster.html#a2cf0e4c676ca221634781990cdba9647":[9,0,211,1],
@@ -245,9 +249,5 @@ var NAVTREEINDEX42 =
 "structPrepareYaml.html#a3132a2dfb547a7b8d2329f5d4f4c06d7":[9,0,259,3],
 "structPrepareYaml.html#a6d7a390c720141b0eb066703076f8bf1":[9,0,259,1],
 "structPrepareYaml.html#ae178284de2027aaec282020edecb88d4":[9,0,259,2],
-"structPrepareYaml.html#aee37e9fa6924aa5992087f67fcd4c957":[9,0,259,4],
-"structQpFixture.html":[9,0,271],
-"structQpFixture.html#a0b2a3325533a14b35f5f0b2f92c60860":[9,0,271,8],
-"structQpFixture.html#a0f446b1ccef69042287691d802ed02f6":[9,0,271,7],
-"structQpFixture.html#a27edf43c3a0a086947e03528083b4b74":[9,0,271,6]
+"structPrepareYaml.html#aee37e9fa6924aa5992087f67fcd4c957":[9,0,259,4]
 };

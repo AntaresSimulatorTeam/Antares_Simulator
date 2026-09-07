@@ -1,5 +1,9 @@
 var NAVTREEINDEX28 =
 {
+"classstudy__run_1_1study__run.html#a798f16321da61b6df303f37f212ff141":[9,0,20,0,2],
+"classstudy__run_1_1study__run.html#ac4fb745557a7e9850700d0fa94c43c78":[9,0,20,0,9],
+"cleaner-v20_8cpp.html#a896541127912ce5951f0212f81a8da99":[8,0,0,4,169],
+"cleaner_8h_source.html":[10,0,0,4,0,25,0,0,0,10],
 "columnToArrowAdapter_8cpp.html#a6a1d6b718262eac99dd715804a751f1d":[8,0,0,21,12],
 "columnToArrowAdapter_8cpp.html#a6bdaaf43ed2091940e93b4bbba363e9d":[8,0,0,21,13],
 "columnToArrowAdapter_8h_source.html":[10,0,0,4,0,29,2],
@@ -245,9 +249,5 @@ var NAVTREEINDEX28 =
 "dir_44f9bd718728581550ea4fab84861031.html":[10,0,0,8,8],
 "dir_45215590e5c4d98109af9f0f9921f13a.html":[10,0,0,5],
 "dir_45d8b2952d31a195976ac28b4c90ee1b.html":[10,0,0,8,6,0],
-"dir_46b36ea6fa9d77f27ee93d1bc566d14a.html":[10,0,0,8,8,0],
-"dir_4777e2a55af0e60f8679c1eaa72d3829.html":[10,0,0,10,0,0],
-"dir_49617f2a706e97d9dbc8d01ee8fbf96e.html":[10,0,0,0,1],
-"dir_4981abbc57b263386d25c950e4ab54bd.html":[10,0,0,8,3,0,0,0,0],
-"dir_49911dad5c3cc406ed532167e98a01bd.html":[10,0,0,8,7,0,0,0]
+"dir_46b36ea6fa9d77f27ee93d1bc566d14a.html":[10,0,0,8,8,0]
 };

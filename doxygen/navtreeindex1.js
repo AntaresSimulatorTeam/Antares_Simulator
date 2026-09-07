@@ -1,8 +1,10 @@
 var NAVTREEINDEX1 =
 {
+"MinGenerationScaling_8h_source.html":[10,0,0,8,1,0,0,0,0,2,4],
+"MinHydroPower_8h_source.html":[10,0,0,8,6,1,0,0,0,1,41],
 "MinMaxHydroPowerGroup_8h_source.html":[10,0,0,8,6,1,0,0,0,1,42],
-"MipDetection_8h.html#acdb7584e1806b2d8281917fccc137257":[8,0,0,13,46],
-"MipDetection_8h_source.html":[10,0,0,8,6,1,0,0,0,15],
+"MipDetection_8h.html#acdb7584e1806b2d8281917fccc137257":[8,0,0,13,47],
+"MipDetection_8h_source.html":[10,0,0,8,6,1,0,0,0,16],
 "ModelerData_8h.html#a225630154f1454775082506f46929b41":[8,0,0,15,35],
 "ModelerData_8h.html#a3807237afb7d19474c651c800a1277ea":[8,0,0,15,38],
 "ModelerData_8h.html#a3807237afb7d19474c651c800a1277eaacb392e76c12ad269c58036cd69360673":[8,0,0,15,38,0],
@@ -51,8 +53,8 @@ var NAVTREEINDEX1 =
 "PrepareInflows_8h_source.html":[10,0,0,8,1,0,0,0,0,2,5],
 "PrintVisitor_8h.html#ab5ded562bde75e4a3dd84cca95675982":[8,0,0,7,1,43],
 "PrintVisitor_8h_source.html":[10,0,0,2,1,0,0,2,8],
-"ProblemMatrixEssential_8h_source.html":[10,0,0,8,6,1,0,0,0,30],
-"QuadraticProblemMatrix_8h_source.html":[10,0,0,8,6,1,0,0,0,31],
+"ProblemMatrixEssential_8h_source.html":[10,0,0,8,6,1,0,0,0,31],
+"QuadraticProblemMatrix_8h_source.html":[10,0,0,8,6,1,0,0,0,32],
 "ReadLinearConstraintVisitor_8h_source.html":[10,0,0,8,5,0,0,0,0,7],
 "ReadLinearExpressionVisitor_8h_source.html":[10,0,0,8,5,0,0,0,0,8],
 "Registry_8hxx_source.html":[10,0,0,2,1,0,0,6],
@@ -134,7 +136,7 @@ var NAVTREEINDEX1 =
 "SymmetryReserveParticipation_8h_source.html":[10,0,0,8,6,1,0,0,0,1,69],
 "TPlusNode_8h_source.html":[10,0,0,2,1,0,0,1,24],
 "TSnumberData_8h_source.html":[10,0,0,4,0,25,0,0,0,7,19],
-"ThermalCapacityFiller_8h_source.html":[10,0,0,8,6,1,0,0,0,32],
+"ThermalCapacityFiller_8h_source.html":[10,0,0,8,6,1,0,0,0,33],
 "ThermalReserveParticipation_8h_source.html":[10,0,0,8,6,1,0,0,0,1,70],
 "ThermalTSNumberData_8h_source.html":[10,0,0,4,0,25,0,0,0,7,18],
 "TimeDependentLinearExpression_8h.html#a2ee21c86960b2d7fb5ca86724ec77fd0":[8,0,0,13,40],
@@ -247,7 +249,5 @@ var NAVTREEINDEX1 =
 "bindConstraints_8hxx_source.html":[10,0,0,8,11,0,0,0,0,10],
 "bindingConstraintsMarginalCost_8h_source.html":[10,0,0,8,11,0,0,0,0,3,0,0],
 "capacityReservation_8h.html#ab868a7ba57134afa72fd7f5559497073":[8,0,0,4,155],
-"capacityReservation_8h_source.html":[10,0,0,4,0,25,0,0,0,0,2],
-"categories_8h.html#a1e1a09f03ec729f2be9a381a481cf3b0":[8,0,0,15,8,1,0,5],
-"categories_8h.html#a278d2eadcb29f321feeeb8427eccf73a":[8,0,0,15,8,1,1,1]
+"capacityReservation_8h_source.html":[10,0,0,4,0,25,0,0,0,0,2]
 };

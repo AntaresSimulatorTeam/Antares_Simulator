@@ -1,5 +1,9 @@
 var NAVTREEINDEX36 =
 {
+"structAntares_1_1DebugData.html#a06a88317bba1a0e30fbf6cc7dca729cb":[9,0,0,40,6],
+"structAntares_1_1DebugData.html#a08326154d2f98a7b832b484b7cd9895f":[9,0,0,40,20],
+"structAntares_1_1DebugData.html#a0aaeeeb0f3406fcdb118a4687cb96b7a":[9,0,0,40,10],
+"structAntares_1_1DebugData.html#a0b7a332cee3db8569de6400ba3015c23":[9,0,0,40,9],
 "structAntares_1_1DebugData.html#a0fd1a9004b469319a93ff229e845906e":[9,0,0,40,8],
 "structAntares_1_1DebugData.html#a16dfa17140e67a83780575c2a2a5c022":[9,0,0,40,23],
 "structAntares_1_1DebugData.html#a1c1e6c515dbc1564b8612a99068dbceb":[9,0,0,40,18],
@@ -245,9 +249,5 @@ var NAVTREEINDEX36 =
 "structAntares_1_1Optimization_1_1SingleOptimOptions.html#a3e56bcee6a67d46a95748953e277e61e":[9,0,0,11,0,1],
 "structAntares_1_1Optimization_1_1SingleOptimOptions.html#a632d6b77fdd5899c52becbd4fd5458a3":[9,0,0,11,0,2],
 "structAntares_1_1Optimization_1_1SingleOptimOptions.html#ac885da742f60c2e8fca9ed4b5e550be9":[9,0,0,11,0,0],
-"structAntares_1_1Optimization_1_1VariableBounds.html":[9,0,0,11,7],
-"structAntares_1_1Optimization_1_1VariableBounds.html#a03e3cbbfabe7cc02a18535fd955b7b6e":[9,0,0,11,7,0],
-"structAntares_1_1Optimization_1_1VariableBounds.html#a2212021f92d0c5922a0e698178a2b22a":[9,0,0,11,7,3],
-"structAntares_1_1Optimization_1_1VariableBounds.html#ab585fb575c38a211d9f6a9e3a4b67a71":[9,0,0,11,7,2],
-"structAntares_1_1Optimization_1_1VariableBounds.html#acb6a350257a9655e941067a3383a4041":[9,0,0,11,7,1]
+"structAntares_1_1Optimization_1_1VariableBounds.html":[9,0,0,11,7]
 };

@@ -1,5 +1,9 @@
 var NAVTREEINDEX38 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeTraits.html#af5518261d05d2725eb3e66e049560d51":[9,0,0,12,6,5,37,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability_1_1Statistics.html":[9,0,0,12,6,5,40,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMarginTraits.html":[9,0,0,12,6,5,22],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMarginTraits.html#aa265e7995d11f4e5efeaa3d68cd0a91e":[9,0,0,12,6,5,22,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMarginTraits.html#aefa7b2108beafc0192bdddb7bbec7e77":[9,0,0,12,6,5,22,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenerationTraits.html":[9,0,0,12,6,5,23],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenerationTraits.html#aead1e4b4fb45185cecf4db1dfcf2e171":[9,0,0,12,6,5,23,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_013_01_4.html":[9,0,0,12,6,50],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_014_01_4.html":[9,0,0,12,6,51],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_015_01_4.html":[9,0,0,12,6,52],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html":[9,0,0,12,6,7,0,0],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html#a299b6bbf7ffff4280c1d2b8e570a6e84":[9,0,0,12,6,7,0,0,1],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html#a368ea53ffb17351bd0b4408d569e8bd1":[9,0,0,12,6,7,0,0,3],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html#a5452e85d34118a48bf5f92986285c4d0":[9,0,0,12,6,7,0,0,6],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html#ab1b3c709070da0fb04ab114d77b3dcd4":[9,0,0,12,6,7,0,0,7]
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html":[9,0,0,12,6,7,0,0]
 };

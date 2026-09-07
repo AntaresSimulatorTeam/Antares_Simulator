@@ -1,5 +1,7 @@
 var NAVTREEINDEX4 =
 {
+"classAntares_1_1Data_1_1CostProvider.html#ae991986fb6ad8cdd64ba913d5a25ab39":[9,0,0,3,76,1],
+"classAntares_1_1Data_1_1CustomErrorListener.html":[9,0,0,3,53],
 "classAntares_1_1Data_1_1CustomErrorListener.html#ab92a2dbf5e9850c376b93358f16d513a":[9,0,0,3,53,0],
 "classAntares_1_1Data_1_1DataSeriesHydro.html":[9,0,0,3,64],
 "classAntares_1_1Data_1_1DataSeriesHydro.html#a046191c957df17bcd0617341ba5efff8":[9,0,0,3,64,5],
@@ -247,7 +249,5 @@ var NAVTREEINDEX4 =
 "classAntares_1_1Data_1_1Pollutant.html#a8285f703dae48f508ab43bd2615df25daaa037062c31599afa14442e0a4603b9a":[9,0,0,3,80,0,2],
 "classAntares_1_1Data_1_1Pollutant.html#a8285f703dae48f508ab43bd2615df25dab5031d5784182e88525d20eef72c9ebd":[9,0,0,3,80,0,9],
 "classAntares_1_1Data_1_1Pollutant.html#a8285f703dae48f508ab43bd2615df25dac30451e24d5a0cb4ac119a325f019031":[9,0,0,3,80,0,6],
-"classAntares_1_1Data_1_1Pollutant.html#a8285f703dae48f508ab43bd2615df25dac92ce312cb70b6e1825b06291dff3cb6":[9,0,0,3,80,0,13],
-"classAntares_1_1Data_1_1Pollutant.html#a8285f703dae48f508ab43bd2615df25dad04763144ec0d24b4e226b03bf6db522":[9,0,0,3,80,0,7],
-"classAntares_1_1Data_1_1Pollutant.html#a8285f703dae48f508ab43bd2615df25dad72b70deb5db0dc2c8535843cd3293ba":[9,0,0,3,80,0,3]
+"classAntares_1_1Data_1_1Pollutant.html#a8285f703dae48f508ab43bd2615df25dac92ce312cb70b6e1825b06291dff3cb6":[9,0,0,3,80,0,13]
 };
