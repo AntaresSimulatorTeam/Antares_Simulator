@@ -4,11 +4,12 @@
 #include "antares/solver/modeler/parameters/scenarioScope.h"
 
 #include <algorithm>
+#include <boost/json.hpp>
 #include <cctype>
 #include <fmt/format.h>
-#include <nlohmann/json.hpp>
 #include <set>
 #include <stdexcept>
+#include <system_error>
 #include <string>
 
 #include <antares/io/file.h>
@@ -110,17 +111,14 @@ std::set<unsigned> expandEntries(const std::vector<std::string>& entries)
 std::vector<std::string> entriesFromJson(const std::filesystem::path& playlistFile)
 {
     const auto content = IO::readFile(playlistFile);
-    nlohmann::json json;
-    try
+    std::error_code ec;
+    const boost::json::value json = boost::json::parse(content, ec);
+    if (ec)
     {
-        json = nlohmann::json::parse(content);
-    }
-    catch (const nlohmann::json::parse_error& e)
-    {
-        // e.what() already carries the line/column position; add the file path so the
-        // broken playlist can be located (the missing-file case is reported by IO::readFile).
+        // Add the file path so the broken playlist can be located (the missing-file case
+        // is reported by IO::readFile).
         throw std::invalid_argument(
-          fmt::format("Invalid playlist file '{}': {}", playlistFile.string(), e.what()));
+          fmt::format("Invalid playlist file '{}': {}", playlistFile.string(), ec.message()));
     }
 
     if (!json.is_array())
@@ -130,16 +128,20 @@ std::vector<std::string> entriesFromJson(const std::filesystem::path& playlistFi
     }
 
     std::vector<std::string> entries;
-    entries.reserve(json.size());
-    for (const auto& item: json)
+    entries.reserve(json.as_array().size());
+    for (const auto& item: json.as_array())
     {
-        if (item.is_number_integer())
+        if (item.is_int64())
         {
-            entries.push_back(std::to_string(item.get<long long>()));
+            entries.push_back(std::to_string(item.as_int64()));
+        }
+        else if (item.is_uint64())
+        {
+            entries.push_back(std::to_string(static_cast<long long>(item.as_uint64())));
         }
         else if (item.is_string())
         {
-            entries.push_back(item.get<std::string>());
+            entries.push_back(std::string(item.as_string()));
         }
         else
         {

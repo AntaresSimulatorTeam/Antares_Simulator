@@ -192,13 +192,12 @@ if (${BUILD_MERSENNE_TWISTER_PYBIND11})
     find_package(pybind11 REQUIRED)
 endif ()
 
-#Boost header libraries
-find_package(Boost CONFIG REQUIRED)
+#Boost header libraries + compiled Json library
+find_package(Boost CONFIG REQUIRED COMPONENTS json)
 
 find_package(antlr4-runtime REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(fmt REQUIRED)
-find_package(nlohmann_json CONFIG REQUIRED)
 
 #Sirius solver
 if (POLICY CMP0074)

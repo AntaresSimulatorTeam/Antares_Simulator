@@ -13,7 +13,7 @@ target_link_libraries(modeler-parameters
         yaml-cpp::yaml-cpp
         Antares::io
         Antares::logs
-        nlohmann_json::nlohmann_json)
+        Boost::json)
 
 target_include_directories(modeler-parameters
         PUBLIC
