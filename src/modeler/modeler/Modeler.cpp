@@ -170,7 +170,7 @@ LocationAnalysis analyzeLocation(const ModelerData& data, const Config::Location
     return result;
 }
 
-std::unique_ptr<ILinearProblem> getProblem(bool isMip,
+std::shared_ptr<ILinearProblem> getProblem(bool isMip,
                                            const ResolutionMode& resolutionMode,
                                            const std::optional<std::string>& solver)
 {
@@ -181,9 +181,9 @@ std::unique_ptr<ILinearProblem> getProblem(bool isMip,
             throw std::invalid_argument(
               "Please provide a solver for sequential subproblem resolution");
         }
-        return std::make_unique<OrtoolsLinearProblem>(isMip, solver.value());
+        return std::make_shared<OrtoolsLinearProblem>(isMip, solver.value());
     }
-    return std::make_unique<StructuredLinearProblem>();
+    return std::make_shared<StructuredLinearProblem>();
 }
 
 ProblemEntity buildProblem(const ModelerData& data,
@@ -199,11 +199,10 @@ ProblemEntity buildProblem(const ModelerData& data,
     {
         return {nullptr, nullptr};
     }
-    auto problem = getProblem(isMip, resolutionMode, solver);
     // The container owns (shares) the problem's lifetime: it keeps it alive for
     // post-solve consumers that read variable solution values through it.
-    std::shared_ptr<ILinearProblem> sharedProblem(std::move(problem));
-    auto optimEntityContainer = std::make_unique<OptimEntityContainer>(sharedProblem);
+    auto problem = getProblem(isMip, resolutionMode, solver);
+    auto optimEntityContainer = std::make_unique<OptimEntityContainer>(problem);
 
     SystemLinearProblemBuilder builder(data.system.get(),
                                        data.dataSeries.get(),
@@ -213,7 +212,8 @@ ProblemEntity buildProblem(const ModelerData& data,
 
     bendersDecomposition->setCurrentProblemId(problemId);
     builder.build(timeScenarioCtx, location);
-    return {std::move(sharedProblem), (std::move(optimEntityContainer))};
+    ProblemEntity result{std::move(problem), std::move(optimEntityContainer)};
+    return result;
 }
 
 IMipSolution* Modeler::solveSubproblem()
