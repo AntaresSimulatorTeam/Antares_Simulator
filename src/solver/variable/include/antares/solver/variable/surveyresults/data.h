@@ -7,6 +7,8 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 
+#include <antares/study/categories.h>
+#include <antares/study/filter.h>
 #include <antares/study/study.h>
 #include <antares/writer/i_writer.h>
 #include "antares/antares/constants.h"
@@ -48,6 +50,12 @@ public:
     const Data::AreaLink* link;
     //! The identifier for the current set of areas
     Data::Study::SetsOfAreas::IDType setOfAreasName;
+
+    //! Mask of precisions (bitmask of Category::Precision) to write for the current
+    //! report. Only used for sets of areas (districts): a district listed in
+    //! sets-outputs.yaml only gets the selected granularities exported. Defaults to
+    //! all granularities (default behavior for areas, links and unfiltered districts).
+    unsigned int setOfAreasPrecisionFilter = Data::filterAll;
 
     //! The current study
     const Data::Study& study;
