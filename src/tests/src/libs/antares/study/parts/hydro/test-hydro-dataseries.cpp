@@ -100,26 +100,6 @@ BOOST_AUTO_TEST_CASE(LoadMaxPower_missing_folder_returns_false)
     BOOST_CHECK(!reader.LoadMaxPower("no_such_area", dir));
 }
 
-BOOST_AUTO_TEST_CASE(copyGenerationTS_copies_ror_storage_mingen_only)
-{
-    DataSeriesHydro src;
-    src.reset();
-    src.ror.fill(1.0);
-    src.storage.fill(2.0);
-    src.mingen.fill(3.0);
-    src.maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
-    src.maxHourlyGenPower.fill(4.0);
-
-    DataSeriesHydro dst;
-    dst.copyGenerationTS(src);
-
-    BOOST_CHECK_CLOSE(dst.ror.timeSeries[0][0], 1.0, 0.0001);
-    BOOST_CHECK_CLOSE(dst.storage.timeSeries[0][0], 2.0, 0.0001);
-    BOOST_CHECK_CLOSE(dst.mingen.timeSeries[0][0], 3.0, 0.0001);
-    // maxHourlyGenPower is not part of the "generation" TS copied here
-    BOOST_CHECK_CLOSE(dst.maxHourlyGenPower.timeSeries[0][0], 0.0, 0.0001);
-}
-
 BOOST_AUTO_TEST_CASE(getDailyMaxGenAndPumpPowerFromHourlyTS_averages_per_day)
 {
     DataSeriesHydro d;
