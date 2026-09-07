@@ -77,7 +77,9 @@ int main(int argc, const char** argv)
     {
         Solver::LoadFiles::FileLoader loader(studyPath);
         fs::path outputPath = Solver::makeOutputPath(studyPath);
-        Solver::Modeler modeler(loader, {.studyPath = studyPath, .outputPath = outputPath}, tableFormat);
+        Solver::Modeler modeler(loader,
+                                {.studyPath = studyPath, .outputPath = outputPath},
+                                tableFormat);
         exportSystemForViews(studyPath, outputPath);
         modeler.run();
     }

@@ -329,7 +329,7 @@ void Modeler::buildProblems()
 
     logs.info() << "Linear problem provided";
 
-    for (const auto & subproblem : subproblems_)
+    for (const auto& subproblem: subproblems_)
     {
         logs.info() << "Number of variables: " << subproblem->variableCount();
         logs.info() << "Number of constraints: " << subproblem->constraintCount();
