@@ -200,7 +200,10 @@ ProblemEntity buildProblem(const ModelerData& data,
         return {nullptr, nullptr};
     }
     auto problem = getProblem(isMip, resolutionMode, solver);
-    auto optimEntityContainer = std::make_unique<OptimEntityContainer>(*problem);
+    // The container owns (shares) the problem's lifetime: it keeps it alive for
+    // post-solve consumers that read variable solution values through it.
+    std::shared_ptr<ILinearProblem> sharedProblem(std::move(problem));
+    auto optimEntityContainer = std::make_unique<OptimEntityContainer>(sharedProblem);
 
     SystemLinearProblemBuilder builder(data.system.get(),
                                        data.dataSeries.get(),
@@ -210,7 +213,7 @@ ProblemEntity buildProblem(const ModelerData& data,
 
     bendersDecomposition->setCurrentProblemId(problemId);
     builder.build(timeScenarioCtx, location);
-    return {std::move(problem), (std::move(optimEntityContainer))};
+    return {std::move(sharedProblem), (std::move(optimEntityContainer))};
 }
 
 IMipSolution* Modeler::solveSubproblem()

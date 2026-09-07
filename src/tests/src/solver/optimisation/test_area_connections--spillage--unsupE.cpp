@@ -96,7 +96,7 @@ struct AreaConnectionFixture
     ScenarioGroupRepository scenarioGroupRepository; // Empty
 
     // ... Hybrid / Legacy linear problem
-    MpsolverImpl::OrtoolsLinearProblem linearProblem;
+    std::shared_ptr<MpsolverImpl::OrtoolsLinearProblem> linearProblem;
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
     std::unique_ptr<OptimEntityContainer> optimContainer;
 
@@ -107,7 +107,7 @@ private:
 };
 
 AreaConnectionFixture::AreaConnectionFixture():
-    linearProblem(true, "scip")
+    linearProblem(std::make_shared<MpsolverImpl::OrtoolsLinearProblem>(true, "scip"))
 {
     modelerData = buildModelerSystem();
 
@@ -149,7 +149,7 @@ void AreaConnectionFixture::addComponentsVariablesToLP()
             for (unsigned t = 0; t <= fill_ctx.getLocalLastTimeStep(); ++t)
             {
                 auto name = buildVariableName(component.Id(), variable.Id(), {}, t);
-                linearProblem.addVariable(-999, 999, false, name);
+                linearProblem->addVariable(-999, 999, false, name);
             }
         }
     }
@@ -171,7 +171,7 @@ void AreaConnectionFixture::addConstraintsToLinearProblem(std::vector<std::strin
 {
     for (const auto& name: names)
     {
-        linearProblem.addConstraint(low_bound, up_bound, name);
+        linearProblem->addConstraint(low_bound, up_bound, name);
     }
 }
 
@@ -221,20 +221,20 @@ BOOST_FIXTURE_TEST_CASE(injecting_spillage_and_unsupplied_energy_bounds, AreaCon
     // ---------
     // Checks
     // ---------
-    const auto* var1_t0 = linearProblem.lookupVariable("component_with_vars.var_1_t0");
+    const auto* var1_t0 = linearProblem->lookupVariable("component_with_vars.var_1_t0");
 
-    const auto* fictive_load_ct_t0 = linearProblem.lookupConstraint(fictiveLoadsConstrName);
+    const auto* fictive_load_ct_t0 = linearProblem->lookupConstraint(fictiveLoadsConstrName);
     BOOST_CHECK_EQUAL(fictive_load_ct_t0->getCoefficient(var1_t0), -2.);
     BOOST_CHECK_EQUAL(fictive_load_ct_t0->getLb(), 0. + 30.);
     BOOST_CHECK_EQUAL(fictive_load_ct_t0->getUb(), 50. + 30.);
 
-    const auto* max_unsupE_ct_t0 = linearProblem.lookupConstraint(maxUnsupEconstrName);
+    const auto* max_unsupE_ct_t0 = linearProblem->lookupConstraint(maxUnsupEconstrName);
     BOOST_CHECK_EQUAL(max_unsupE_ct_t0->getCoefficient(var1_t0), -0.5);
     BOOST_CHECK_EQUAL(max_unsupE_ct_t0->getLb(), 0. - 10.);
     BOOST_CHECK_EQUAL(max_unsupE_ct_t0->getUb(), 50. - 10.);
 
-    auto dummy_ct = linearProblem.lookupConstraint("dummy constaint");
-    auto other_dummy_ct = linearProblem.lookupConstraint("dummy constaint");
+    auto dummy_ct = linearProblem->lookupConstraint("dummy constaint");
+    auto other_dummy_ct = linearProblem->lookupConstraint("dummy constaint");
     BOOST_CHECK_EQUAL(dummy_ct->getCoefficient(var1_t0), 0);
     BOOST_CHECK_EQUAL(other_dummy_ct->getCoefficient(var1_t0), 0);
 }

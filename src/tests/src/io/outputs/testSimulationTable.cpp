@@ -618,9 +618,9 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture, Simulat
         }
     }
 
-    void setOptimEntityContainer(MockLinearProblem* linearProblem)
+    void setOptimEntityContainer(std::shared_ptr<MockLinearProblem> linearProblem)
     {
-        optimEntityContainer = std::make_unique<OptimEntityContainer>(*linearProblem);
+        optimEntityContainer = std::make_unique<OptimEntityContainer>(linearProblem);
     }
 
     void PrepareData()
@@ -667,7 +667,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture, Simulat
     }
 
     void build(const FillContext& fillContext = {0, 4, 0, 4, 0},
-               MockLinearProblem* linearProblem = nullptr)
+               std::shared_ptr<MockLinearProblem> linearProblem = nullptr)
     {
         if (!linearProblem)
         {
@@ -676,7 +676,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture, Simulat
 
         PrepareData();
         setOptimEntityContainer(linearProblem);
-        AddRandomVariablesAndContraints(fillContext, linearProblem);
+        AddRandomVariablesAndContraints(fillContext, linearProblem.get());
     }
 
     std::unique_ptr<OptimEntityContainer> optimEntityContainer = nullptr;
@@ -693,14 +693,14 @@ auto count_lines = [](std::string_view s)
 BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
 {
     SimulationTable table;
-    MockLinearProblem linearProblem(true);
+    auto linearProblem = std::make_shared<MockLinearProblem>(true);
     const FillContext fillContext(0, 9, 0, 9, 0); // 10 time steps
-    build(fillContext, &linearProblem);
+    build(fillContext, linearProblem);
 
     const auto& component = components.front();
 
     addVariableEntries(table,
-                       linearProblem,
+                       *linearProblem,
                        fillContext,
                        component,
                        *optimEntityContainer,
@@ -851,13 +851,13 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ModelerIntegration)
 {
     SimulationTable table;
     FillContext fillContext(0, 4, 0, 4, 0); // 5 time steps
-    MockLinearProblem linearProblem(true);
+    auto linearProblem = std::make_shared<MockLinearProblem>(true);
     LinearProblemData data;
 
-    build(fillContext, &linearProblem);
+    build(fillContext, linearProblem);
     MockMipSolution solution;
     BOOST_CHECK_NO_THROW(FillSimulationTable(table,
-                                             linearProblem,
+                                             *linearProblem,
                                              45.0,
                                              getModelerData(),
                                              *optimEntityContainer,
@@ -870,11 +870,11 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockTimeIndexUsesLocalStep)
 {
     SimulationTable table;
     FillContext fillContext(0, 1, 168, 169, 0); // 1 local time steps, week 2 globally
-    MockLinearProblem linearProblem(true);
+    auto linearProblem = std::make_shared<MockLinearProblem>(true);
 
-    build(fillContext, &linearProblem);
+    build(fillContext, linearProblem);
     FillSimulationTable(table,
-                        linearProblem,
+                        *linearProblem,
                         45.0,
                         getModelerData(),
                         *optimEntityContainer,
@@ -893,11 +893,11 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_DailyBlockTimeIndexUsesLocalStep)
 {
     SimulationTable table;
     FillContext fillContext(0, 1, 24, 25, 0); // 1 local time steps, day 2 globally
-    MockLinearProblem linearProblem(true);
+    auto linearProblem = std::make_shared<MockLinearProblem>(true);
 
-    build(fillContext, &linearProblem);
+    build(fillContext, linearProblem);
     FillSimulationTable(table,
-                        linearProblem,
+                        *linearProblem,
                         45.0,
                         getModelerData(),
                         *optimEntityContainer,
@@ -916,11 +916,11 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SingleBlockTimeIndexUsesLocalStep)
 {
     SimulationTable table;
     FillContext fillContext(0, 1, 24, 25, 0); // 2 local time steps, single block
-    MockLinearProblem linearProblem(true);
+    auto linearProblem = std::make_shared<MockLinearProblem>(true);
 
-    build(fillContext, &linearProblem);
+    build(fillContext, linearProblem);
     FillSimulationTable(table,
-                        linearProblem,
+                        *linearProblem,
                         45.0,
                         getModelerData(),
                         *optimEntityContainer,
@@ -939,11 +939,11 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockConstraintTimeIndexUsesLocal
 {
     SimulationTable table;
     FillContext fillContext(0, 1, 168, 169, 0); // 2 local time steps, week 2 globally
-    MockLinearProblem linearProblem(true);
+    auto linearProblem = std::make_shared<MockLinearProblem>(true);
 
-    build(fillContext, &linearProblem);
+    build(fillContext, linearProblem);
     FillSimulationTable(table,
-                        linearProblem,
+                        *linearProblem,
                         45.0,
                         getModelerData(),
                         *optimEntityContainer,
@@ -962,11 +962,11 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ForceScenarioIndexForTimeOnlyVariables)
 {
     SimulationTable table;
     FillContext fillContext(0, 1, 0, 1, 0); // 2 local time steps
-    MockLinearProblem linearProblem(true);
+    auto linearProblem = std::make_shared<MockLinearProblem>(true);
 
-    build(fillContext, &linearProblem);
+    build(fillContext, linearProblem);
     FillSimulationTable(table,
-                        linearProblem,
+                        *linearProblem,
                         45.0,
                         getModelerData(),
                         *optimEntityContainer,
@@ -985,11 +985,11 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_BlockTimeIndexAbsentForScenarioOnlyOutp
 {
     SimulationTable table;
     FillContext fillContext(0, 1, 0, 1, 0); // 2 local time steps
-    MockLinearProblem linearProblem(true);
+    auto linearProblem = std::make_shared<MockLinearProblem>(true);
 
-    build(fillContext, &linearProblem);
+    build(fillContext, linearProblem);
     FillSimulationTable(table,
-                        linearProblem,
+                        *linearProblem,
                         45.0,
                         getModelerData(),
                         *optimEntityContainer,
@@ -1007,11 +1007,11 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_VariabilityCombinations)
 {
     SimulationTable table;
     FillContext fillContext(0, 1, 0, 1, 0); // 2 local time steps
-    MockLinearProblem linearProblem(true);
+    auto linearProblem = std::make_shared<MockLinearProblem>(true);
 
-    build(fillContext, &linearProblem);
+    build(fillContext, linearProblem);
     FillSimulationTable(table,
-                        linearProblem,
+                        *linearProblem,
                         45.0,
                         getModelerData(),
                         *optimEntityContainer,
@@ -1048,7 +1048,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
 
     FillContext fillContext(0, 2, 0, 2, 0);
     pb = std::make_unique<OrtoolsLinearProblem>(true, "scip");
-    optimEntityContainer = std::make_unique<OptimEntityContainer>(*pb);
+    optimEntityContainer = std::make_unique<OptimEntityContainer>(pb);
     optimEntityContainer->addFromSystemComponents(components);
 
     std::vector<std::unique_ptr<LinearProblemFiller>> fillers;

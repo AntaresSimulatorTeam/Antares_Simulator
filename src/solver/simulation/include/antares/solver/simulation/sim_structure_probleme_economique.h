@@ -776,8 +776,9 @@ public:
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     Antares::Solver::ModelerData* modelerData = nullptr;
+    // Owns the weekly ILinearProblem; the problem outlives the container that references it
+    // and stays available for post-solve consumers (e.g. adequacy-patch GEMS evaluations).
     std::unique_ptr<Antares::LinearProblem::OptimEntityContainer> optimEntityContainer;
-    std::shared_ptr<Antares::LinearProblem::Api::ILinearProblem> ortoolsProblem;
 };
 
 // Import functions for capacity and hydro reserves

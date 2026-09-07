@@ -374,7 +374,11 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProbl
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
 
-    LinearProblem::OptimEntityContainer optimEntityContainer(problem);
+    // Non-owning: the caller owns the problem and it outlives this function, in which the
+    // container (and thus its reference to the problem) is destroyed.
+    std::shared_ptr<ILinearProblem> nonOwningProblem(&problem,
+                                                     [](ILinearProblem*) { /* non-owning */ });
+    LinearProblem::OptimEntityContainer optimEntityContainer(nonOwningProblem);
     if (hasModelerData)
     {
         modelerData->bendersDecomposition.setCurrentProblemId(problemName({id.year, id.week + 1}));

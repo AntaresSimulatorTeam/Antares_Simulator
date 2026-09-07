@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
+#include <memory>
 #include <span>
 #include <unordered_map>
 #include <vector>
@@ -28,7 +29,10 @@ struct OptimComponent
 class OptimEntityContainer
 {
 public:
-    OptimEntityContainer(Api::ILinearProblem& linearProblem);
+    // The container owns (shares) the lifetime of the linear problem: every variable
+    // and constraint entity it references lives inside linearProblem_, so keeping
+    // it alive here guarantees the referenced entities remain valid.
+    explicit OptimEntityContainer(std::shared_ptr<Api::ILinearProblem> linearProblem);
 
     unsigned getVariableStartColumn(const ModelerStudy::SystemModel::Component& component,
                                     unsigned index) const;
@@ -55,9 +59,9 @@ public:
         return optimComponent.modelConstraintCounts.at(index);
     }
 
-    Api::ILinearProblem& Problem()
+    Api::ILinearProblem& Problem() const
     {
-        return linearProblem_;
+        return *linearProblem_;
     }
 
     std::span<const std::unique_ptr<Api::IMipVariable>> getComponentVariable(
@@ -83,6 +87,6 @@ public:
 private:
     std::vector<unsigned int> variableStartColumn_;
     std::unordered_map<std::string, OptimComponent> optimComponents_;
-    Api::ILinearProblem& linearProblem_;
+    std::shared_ptr<Api::ILinearProblem> linearProblem_;
 };
 } // namespace Antares::LinearProblem

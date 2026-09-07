@@ -40,8 +40,8 @@ void LinearProblemBuildingFixture::buildLinearProblem(
         auto name = scenario->group();
         scenarioGroupRepo.addScenario(name, std::move(scenario));
     }
-    pb = std::make_unique<MpsolverImpl::OrtoolsLinearProblem>(false, "sirius");
-    optimEntityContainer = std::make_unique<OptimEntityContainer>(*pb);
+    pb = std::make_shared<MpsolverImpl::OrtoolsLinearProblem>(false, "sirius");
+    optimEntityContainer = std::make_unique<OptimEntityContainer>(pb);
     optimEntityContainer->addFromSystemComponents(components);
     for (auto& component: components)
     {

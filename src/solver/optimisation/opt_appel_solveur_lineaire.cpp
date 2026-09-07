@@ -49,7 +49,6 @@ using Solver::IResultWriter;
 struct SimplexResult
 {
     TIME_MEASURE timeMeasure;
-    std::shared_ptr<LegacyOrtoolsLinearProblem> originalProblem;
     double objectiveValue;
 };
 
@@ -220,12 +219,14 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
     auto ortoolsProblem = std::make_shared<LegacyOrtoolsLinearProblem>(isMip, options.solverName);
-    problemeHebdo->ortoolsProblem = ortoolsProblem;
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
 
-    problemeHebdo->optimEntityContainer = std::make_unique<OptimEntityContainer>(*ortoolsProblem);
+    // The container owns the problem's lifetime: it keeps it alive for all the post-solve
+    // consumers (e.g. the hourly adequacy-patch GEMS evaluations) that read variable
+    // solution values through the container.
+    problemeHebdo->optimEntityContainer = std::make_unique<OptimEntityContainer>(ortoolsProblem);
     auto& optimEntityContainer = *problemeHebdo->optimEntityContainer;
 
     BendersDecomposition* bendersDecomposition = hasModelerData ? &modelerData->bendersDecomposition
@@ -274,9 +275,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
             logs.info() << " Solver: resolution failed";
             logs.debug() << " solver: resetting";
 
-            return {.timeMeasure = timeMeasure,
-                    .originalProblem = ortoolsProblem,
-                    .objectiveValue = 0};
+            return {.timeMeasure = timeMeasure, .objectiveValue = 0};
         }
         throw FatalError("Internal error: insufficient memory");
     }
@@ -323,9 +322,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         measure.tick();
         timeMeasure.simulationTableFillTime = measure.duration_ms();
     }
-    return {.timeMeasure = timeMeasure,
-            .originalProblem = ortoolsProblem,
-            .objectiveValue = getObjectiveValue(solver.get())};
+    return {.timeMeasure = timeMeasure, .objectiveValue = getObjectiveValue(solver.get())};
 }
 
 bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
@@ -397,20 +394,21 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
     {
         const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
-        LegacyOrtoolsLinearProblem infeasibleProblem(isMip, options.solverName);
+        auto infeasibleProblem = std::make_shared<LegacyOrtoolsLinearProblem>(isMip,
+                                                                              options.solverName);
         FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
 
         OptimEntityContainer optimEntityContainer(infeasibleProblem);
         fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, nullptr);
 
-        auto MPproblem = infeasibleProblem.getMpSolver();
+        auto MPproblem = infeasibleProblem->getMpSolver();
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
         analyzer->printReport();
         mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                             problemeHebdo->exportMPSOnError,
                                             optimizationNumber,
-                                            *simplexResult.originalProblem);
+                                            problemeHebdo->optimEntityContainer->Problem());
 
         auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
         const std::string filename = createMPSfilename(optPeriodStringGenerator,

@@ -3,6 +3,7 @@
 
 #pragma once
 #include <filesystem>
+#include <memory>
 
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include "antares/io/outputs/SimulationTable.h"
@@ -35,7 +36,8 @@ class ILoader;
 
 struct ProblemEntity
 {
-    std::unique_ptr<LinearProblem::Api::ILinearProblem> problem;
+    // Shared with the container, which references the problem's entities.
+    std::shared_ptr<LinearProblem::Api::ILinearProblem> problem;
     std::unique_ptr<LinearProblem::OptimEntityContainer> optimEntityContainer;
 };
 
@@ -73,13 +75,13 @@ public:
 
     ILoader& loader_; // gp : make it private
 
-    [[nodiscard]] const std::unique_ptr<LinearProblem::Api::ILinearProblem>& masterProblem() const
+    [[nodiscard]] const std::shared_ptr<LinearProblem::Api::ILinearProblem>& masterProblem() const
     {
         return masterProblem_;
     }
 
-    [[nodiscard]] const std::vector<std::unique_ptr<LinearProblem::Api::ILinearProblem>>&
-    subproblems() const
+    [[nodiscard]]
+    const std::vector<std::shared_ptr<LinearProblem::Api::ILinearProblem>>& subproblems() const
     {
         return subproblems_;
     }
@@ -95,8 +97,9 @@ private:
       const LinearProblem::OptimEntityContainer& subproblemOptimEntityContainer,
       const LinearProblem::Api::FillContext& timeScenarioCtx) const;
 
-    std::unique_ptr<LinearProblem::Api::ILinearProblem> masterProblem_ = nullptr;
-    std::vector<std::unique_ptr<LinearProblem::Api::ILinearProblem>> subproblems_;
+    // Shared with the containers referencing them.
+    std::shared_ptr<LinearProblem::Api::ILinearProblem> masterProblem_ = nullptr;
+    std::vector<std::shared_ptr<LinearProblem::Api::ILinearProblem>> subproblems_;
     std::unique_ptr<LinearProblem::OptimEntityContainer> subproblemOptimEntityContainer_ = nullptr;
     std::unique_ptr<LinearProblem::Api::FillContext> timeScenarioCtx_ = nullptr;
     LinearProblem::Api::IMipSolution* subProbSolution_ = nullptr;
