@@ -538,7 +538,7 @@ void buildReserveIndexMaps(Data::Study& study, const PROBLEME_HEBDO& problem)
     for (const auto& area: study.areas | std::views::values)
     {
         participationIndexMaps.emplace(area->id, ReserveIndexMaps::AreaReserveIndexMap{});
-        for (const auto& reserve: problem.allReserves.value()[area->index].areaCapacityReservations)
+        for (const auto& reserve: problem.allReserves->at(area->index).areaCapacityReservations)
         {
             idToName.try_emplace(reserve.reserveID, reserve.reserveName);
             loadReserveParticipations(area.get(), reserve);

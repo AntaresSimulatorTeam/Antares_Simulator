@@ -6,6 +6,7 @@
 
 #include <array>
 #include <memory>
+#include <optional>
 #include <vector>
 
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
@@ -62,7 +63,7 @@ struct CORRESPONDANCES_DES_VARIABLES
         std::vector<int> internalExcess;
     };
 
-    ReserveOpt<ReservesIndices> reservesIndices;
+    std::optional<ReservesIndices> reservesIndices;
 
     struct
     {
@@ -130,7 +131,7 @@ struct CORRESPONDANCES_DES_CONTRAINTES
         std::vector<int> HydroStoreCapacityThresholds;
     };
 
-    ReserveOpt<ReservesIndices> reservesIndices;
+    std::optional<ReservesIndices> reservesIndices;
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
@@ -232,7 +233,7 @@ struct RESULTS
 struct RESULTSRESERVES
 {
     // Index is the number of the STS reserves participations in the area
-    ReserveOpt<std::vector<double>> reserveParticipationOfCluster; // MWh
+    std::optional<std::vector<double>> reserveParticipationOfCluster; // MWh
 };
 
 struct DEMAND_MARKET_POOL
@@ -467,9 +468,9 @@ struct RESERVE_JMOINS1
 struct PRODUCTION_THERMIQUE_OPTIMALE
 {
     std::vector<double> ProductionThermiqueDuPalier;
-    ReserveOpt<std::vector<double>> ParticipationReservesDuPalier;
-    ReserveOpt<std::vector<double>> ParticipationReservesDuPalierOn;
-    ReserveOpt<std::vector<double>> ParticipationReservesDuPalierOff;
+    std::optional<std::vector<double>> ParticipationReservesDuPalier;
+    std::optional<std::vector<double>> ParticipationReservesDuPalierOn;
+    std::optional<std::vector<double>> ParticipationReservesDuPalierOff;
 
     std::vector<double> NombreDeGroupesEnMarcheDuPalier;
     std::vector<double> NombreDeGroupesQuiDemarrentDuPalier;
@@ -481,7 +482,7 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
 
 struct OPTIMAL_HYDRO_USAGE
 {
-    ReserveOpt<std::vector<double>> reserveParticipationOfCluster; // MWh
+    std::optional<std::vector<double>> reserveParticipationOfCluster; // MWh
 };
 
 struct RESERVES
@@ -516,8 +517,8 @@ struct RESULTATS_HORAIRES
 
     std::vector<::RESULTS> ShortTermStorage;
 
-    ReserveOpt<std::vector<::RESULTSRESERVES>> ShortTermStorageReserves;
-    ReserveOpt<std::vector<RESERVES>> Reserves;
+    std::optional<std::vector<::RESULTSRESERVES>> ShortTermStorageReserves;
+    std::optional<std::vector<RESERVES>> Reserves;
 };
 
 struct COUTS_DE_TRANSPORT
@@ -595,7 +596,7 @@ struct PROBLEME_HEBDO
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
-    ReserveOpt<std::vector<::AREA_RESERVES_VECTOR>> allReserves;
+    std::optional<std::vector<::AREA_RESERVES_VECTOR>> allReserves;
 
     uint32_t NumberOfShortTermStorages = 0;
     std::vector<::AREA_INPUT> ShortTermStorage;

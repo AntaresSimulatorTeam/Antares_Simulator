@@ -96,7 +96,7 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_variable_decomposition, CreateInp
     // Act part
     auto res = loadLibraries(studyFolder);
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res.value().first;
+    const auto& libraries = res->first;
 
     // Assert part
     const auto& modelVariables = libraries[0].Models().at("some-model").Variables();
@@ -147,7 +147,7 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_constraint_decomposition, CreateI
     // Act part
     auto res = loadLibraries(studyFolder);
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res.value().first;
+    const auto& libraries = res->first;
 
     // Assert part
     const auto& modelConstraints = libraries[0].Models().at("some-model").Constraints();
@@ -200,7 +200,7 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_constraint_out_of_bounds_processi
 
     auto res = loadLibraries(studyFolder);
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res.value().first;
+    const auto& libraries = res->first;
 
     const auto& modelConstraints = libraries[0].Models().at("some-model").Constraints();
 
@@ -246,7 +246,7 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_objective_decomposition, CreateIn
     // Act part
     auto res = loadLibraries(studyFolder);
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res.value().first;
+    const auto& libraries = res->first;
 
     // Assert part
     const auto& modelObjectives = libraries[0].Models().at("some-model").Objectives();
@@ -448,7 +448,7 @@ models:
     // Act part
     auto res = loadLibraries(studyFolder);
     BOOST_REQUIRE(res.has_value());
-    auto resolutionMode = res.value().second;
+    auto resolutionMode = res->second;
     BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
 }
 
@@ -482,7 +482,7 @@ models:
     // Act part
     auto res = loadLibraries(studyFolder);
     BOOST_REQUIRE(res.has_value());
-    auto resolutionMode = res.value().second;
+    auto resolutionMode = res->second;
     BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::BENDERS_DECOMPOSITION);
 }
 
@@ -511,8 +511,8 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_default_resolution_mode, CreateInputFi
     // Act & Assert - default mode should be SEQUENTIAL_SUBPROBLEMS
     auto res = loadLibraries(studyFolder);
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res.value().first;
-    auto resolutionMode = res.value().second;
+    const auto& libraries = res->first;
+    auto resolutionMode = res->second;
     BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
 }
 
@@ -557,8 +557,8 @@ models:
     // Act & Assert
     auto res = loadLibraries(studyFolder);
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res.value().first;
-    auto resolutionMode = res.value().second;
+    const auto& libraries = res->first;
+    auto resolutionMode = res->second;
     BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::BENDERS_DECOMPOSITION);
     BOOST_REQUIRE_EQUAL(libraries.size(), 1);
     const auto& models = libraries[0].Models();

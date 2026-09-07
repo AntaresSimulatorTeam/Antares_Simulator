@@ -71,10 +71,6 @@ public:
     using Set = std::set<std::shared_ptr<BindingConstraint>, CompareBindingConstraintName>;
     //! Map of weight (for links)
     using linkWeightMap = std::map<const AreaLink*, double, CompareLinkName>;
-    //! Iterator
-    using iterator = linkWeightMap::iterator;
-    //! Const iterator
-    using const_iterator = linkWeightMap::const_iterator;
 
     //! Map of weight (for thermal clusters)
     using clusterWeightMap = std::map<const ThermalCluster*, double, CompareClusterName>;
@@ -145,13 +141,6 @@ public:
     const std::string& id() const;
     //@}
 
-    //! \name Comments
-    //@{
-    /*!
-    ** \brief Get the comments
-    */
-    const std::string& comments() const;
-
     //! \name Group
     //@{
     /*!
@@ -160,22 +149,7 @@ public:
     std::string group() const;
     void group(std::string group_name);
 
-    /*!
-    ** \brief Set the comments
-    */
-    void comments(const std::string& newcomments);
-    //@}
-
     void resetToDefaultValues();
-
-    //! \name iterator
-    //@{
-    iterator begin();
-    const_iterator begin() const;
-
-    iterator end();
-    const_iterator end() const;
-    //@}
 
     bool skipped() const;
     bool isActive() const;
@@ -309,27 +283,6 @@ public:
     void clearAndReset(const std::string& name, Type newType, Operator op);
     //@}
 
-    /*!
-    ** \brief Get if the given binding constraint is identical
-    */
-    bool contains(const BindingConstraint* bc) const;
-    /*!
-    ** \brief Get if the binding constraint is linked with a given area
-    */
-    bool contains(const Area* area) const;
-
-    /*!
-    ** \brief Get if the binding constraint is linked with an interconnection or thermal cluster
-    */
-    bool contains(const AreaLink* lnk) const;
-
-    bool contains(const ThermalCluster* clstr) const;
-
-    /*!
-    ** \brief Build a human readable formula for the binding constraint
-    */
-    void buildFormula(std::string& s) const;
-
     BindingConstraintStructures initLinkArrays() const;
 
     template<class Env>
@@ -365,8 +318,6 @@ private:
     unsigned int pFilterSynthesis = filterNone;
     //! Enabled / Disabled
     bool pEnabled = false;
-    //! Comments
-    std::string pComments;
     //! Group
     std::string group_ = "default";
 

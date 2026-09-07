@@ -9,7 +9,6 @@
 #include <unordered_map>
 
 #include <antares/inifile/inifile.h>
-#include <antares/study/area/ReserveOpt.h>
 #include <antares/study/area/reserveParticipationContainer.h>
 
 #include "../../fwd.h"
@@ -222,7 +221,7 @@ public:
 
     //! Reserve participation container to store the participation of the cluster in the reserves
     //! and the symmetries
-    ReserveOpt<ReserveParticipationContainer<StorageClusterReserveParticipation>>
+    std::optional<ReserveParticipationContainer<StorageClusterReserveParticipation>>
       reserveParticipationContainer;
 
     double overflowSpilledCostDifference = 1.;
