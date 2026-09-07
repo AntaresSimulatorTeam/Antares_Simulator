@@ -124,7 +124,7 @@ double HourlyCSRProblem::gemsContributionForArea(
                                                            component,
                                                            modelerData->dataSeries.get(),
                                                            scenario);
-            contribution += evalVisitor.dispatch(expressionNode).value(triggeredHour);
+            contribution += evalVisitor.dispatch(expressionNode).value(0);
         }
     }
     return contribution;

@@ -220,6 +220,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
     auto ortoolsProblem = std::make_shared<LegacyOrtoolsLinearProblem>(isMip, options.solverName);
+    problemeHebdo->ortoolsProblem = ortoolsProblem;
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
@@ -322,7 +323,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         measure.tick();
         timeMeasure.simulationTableFillTime = measure.duration_ms();
     }
-    problemeHebdo->optimEntityContainer = nullptr;
     return {.timeMeasure = timeMeasure,
             .originalProblem = ortoolsProblem,
             .objectiveValue = getObjectiveValue(solver.get())};
