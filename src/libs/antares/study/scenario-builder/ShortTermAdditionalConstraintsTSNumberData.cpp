@@ -7,7 +7,7 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-uint ShortTermAdditionalConstraintsTSNumberData::get_tsGenCount(const Study&) const
+unsigned int ShortTermAdditionalConstraintsTSNumberData::get_tsGenCount(const Study&) const
 {
     return 0;
 }
@@ -16,7 +16,7 @@ bool ShortTermAdditionalConstraintsTSNumberData::apply(Study& study)
 {
     bool ret = true;
     auto tsGenMax = get_tsGenCount(study);
-    uint errors = 0;
+    unsigned int errors = 0;
     for (auto& sts: pArea->shortTermStorage.storagesByIndex)
     {
         for (auto& ct: sts.additionalConstraints)
@@ -52,7 +52,7 @@ unsigned ShortTermAdditionalConstraintsTSNumberData::get(
 
 bool ShortTermAdditionalConstraintsTSNumberData::reset(const Study& study)
 {
-    const uint nbYears = study.parameters.nbYears;
+    const unsigned int nbYears = study.parameters.nbYears;
     for (const auto& sts: pArea->shortTermStorage.storagesByIndex)
     {
         for (const auto& c: sts.additionalConstraints)

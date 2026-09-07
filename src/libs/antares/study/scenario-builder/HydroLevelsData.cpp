@@ -10,7 +10,7 @@ namespace Antares::Data::ScenarioBuilder
 
 bool HydroLevelsData::reset(const Study& study)
 {
-    const uint nbYears = study.parameters.nbYears;
+    const unsigned int nbYears = study.parameters.nbYears;
 
     pHydroLevelsRules.reset(study.areas.size(), nbYears);
     pHydroLevelsRules.fill(std::nan(""));
@@ -18,7 +18,7 @@ bool HydroLevelsData::reset(const Study& study)
     return true;
 }
 
-void HydroLevelsData::setTSnumber(uint areaindex, uint year, double value)
+void HydroLevelsData::setTSnumber(unsigned int areaindex, unsigned int year, double value)
 {
     if (areaindex < pHydroLevelsRules.width && year < pHydroLevelsRules.height)
     {
@@ -26,22 +26,22 @@ void HydroLevelsData::setTSnumber(uint areaindex, uint year, double value)
     }
 }
 
-uint HydroLevelsData::width() const
+unsigned int HydroLevelsData::width() const
 {
     return pHydroLevelsRules.width;
 }
 
-uint HydroLevelsData::height() const
+unsigned int HydroLevelsData::height() const
 {
     return pHydroLevelsRules.height;
 }
 
-double HydroLevelsData::get_value(uint x, uint y) const
+double HydroLevelsData::get_value(unsigned int x, unsigned int y) const
 {
     return pHydroLevelsRules.entry[y][x];
 }
 
-void HydroLevelsData::set_value(uint x, uint y, double value)
+void HydroLevelsData::set_value(unsigned int x, unsigned int y, double value)
 {
     pHydroLevelsRules.entry[y][x] = value;
 }

@@ -65,7 +65,7 @@ def check_simulation_table_content(context, tolerance):
 
 @step('the modeler outputs contain no entries for component "{component}"')
 def modeler_output_has_no_entries_for_component(context, component):
-    assert context.simu_table.has_no_rows_for_component(component), (
+    assert not context.simu_table.has_rows_for_component(component), (
         f"Expected no rows for component '{component}', but some were found"
     )
 

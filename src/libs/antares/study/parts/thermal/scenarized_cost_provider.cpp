@@ -27,7 +27,7 @@ void ScenarizedCostProvider::ComputeProductionCostTS()
         auto& productionCostTS = timeSeries.productionCostTs;
         auto& marginalCostTS = timeSeries.marginalCostTS;
 
-        for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
+        for (unsigned int hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
             double hourlyModulation = cluster.modulation[Data::thermalModulationCost][hour];
             productionCostTS[hour] = marginalCostTS[hour] * hourlyModulation;
@@ -37,9 +37,9 @@ void ScenarizedCostProvider::ComputeProductionCostTS()
 
 void ScenarizedCostProvider::resizeCostTS()
 {
-    const uint fuelCostWidth = cluster.ecoInput.fuelcost.width;
-    const uint co2CostWidth = cluster.ecoInput.co2cost.width;
-    const uint tsCount = std::max(fuelCostWidth, co2CostWidth);
+    const unsigned int fuelCostWidth = cluster.ecoInput.fuelcost.width;
+    const unsigned int co2CostWidth = cluster.ecoInput.co2cost.width;
+    const unsigned int tsCount = std::max(fuelCostWidth, co2CostWidth);
 
     costsTimeSeries.resize(tsCount, CostsTimeSeries());
 }
@@ -65,16 +65,16 @@ double computeMarketBidCost(double fuelCost,
 
 void ScenarizedCostProvider::ComputeMarketBidTS()
 {
-    const uint fuelCostWidth = cluster.ecoInput.fuelcost.width;
-    const uint co2CostWidth = cluster.ecoInput.co2cost.width;
+    const unsigned int fuelCostWidth = cluster.ecoInput.fuelcost.width;
+    const unsigned int co2CostWidth = cluster.ecoInput.co2cost.width;
 
     double co2EmissionFactor = cluster.emissions.factors[Pollutant::CO2];
 
-    for (uint tsIndex = 0; tsIndex < costsTimeSeries.size(); ++tsIndex)
+    for (unsigned int tsIndex = 0; tsIndex < costsTimeSeries.size(); ++tsIndex)
     {
-        uint tsIndexFuel = std::min(fuelCostWidth - 1, tsIndex);
-        uint tsIndexCo2 = std::min(co2CostWidth - 1, tsIndex);
-        for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
+        unsigned int tsIndexFuel = std::min(fuelCostWidth - 1, tsIndex);
+        unsigned int tsIndexCo2 = std::min(co2CostWidth - 1, tsIndex);
+        for (unsigned int hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
             double fuelcost = cluster.ecoInput.fuelcost[tsIndexFuel][hour];
             double co2cost = cluster.ecoInput.co2cost[tsIndexCo2][hour];
@@ -89,24 +89,29 @@ void ScenarizedCostProvider::ComputeMarketBidTS()
     }
 }
 
-double ScenarizedCostProvider::getOperatingCost(uint serieIndex, uint hourInTheYear) const
+double ScenarizedCostProvider::getOperatingCost(unsigned int serieIndex,
+                                                unsigned int hourInTheYear) const
 {
-    const uint tsIndex = std::min(serieIndex, static_cast<uint>(costsTimeSeries.size()) - 1);
+    const unsigned int tsIndex = std::min(serieIndex,
+                                          static_cast<unsigned int>(costsTimeSeries.size()) - 1);
     return costsTimeSeries[tsIndex].productionCostTs[hourInTheYear];
 }
 
-double ScenarizedCostProvider::getMarginalCost(uint serieIndex, uint hourInTheYear) const
+double ScenarizedCostProvider::getMarginalCost(unsigned int serieIndex,
+                                               unsigned int hourInTheYear) const
 {
     const double mod = cluster.modulation[thermalModulationMarketBid][hourInTheYear];
-    const uint tsIndex = std::min(serieIndex, static_cast<uint>(costsTimeSeries.size()) - 1);
+    const unsigned int tsIndex = std::min(serieIndex,
+                                          static_cast<unsigned int>(costsTimeSeries.size()) - 1);
     return costsTimeSeries[tsIndex].marginalCostTS[hourInTheYear] * mod;
 }
 
-double ScenarizedCostProvider::getMarketBidCost(uint hourInTheYear, uint year) const
+double ScenarizedCostProvider::getMarketBidCost(unsigned int hourInTheYear, unsigned int year) const
 {
     const double mod = cluster.modulation[thermalModulationMarketBid][hourInTheYear];
-    const uint serieIndex = cluster.series.getSeriesIndex(year);
-    const uint tsIndex = std::min(serieIndex, static_cast<uint>(costsTimeSeries.size()) - 1);
+    const unsigned int serieIndex = cluster.series.getSeriesIndex(year);
+    const unsigned int tsIndex = std::min(serieIndex,
+                                          static_cast<unsigned int>(costsTimeSeries.size()) - 1);
     return costsTimeSeries[tsIndex].marketBidCostTS[hourInTheYear] * mod;
 }
 

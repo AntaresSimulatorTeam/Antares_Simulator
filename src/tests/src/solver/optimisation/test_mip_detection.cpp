@@ -9,6 +9,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optimisation/MipDetection.h"
 
 #include "inmemory-modeler.h"

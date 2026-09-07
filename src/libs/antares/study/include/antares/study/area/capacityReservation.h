@@ -70,7 +70,7 @@ struct CapacityReservation
         need = std::move(tmp);
     }
 
-    void setName(const AnyString& newname)
+    void setName(const std::string& newname)
     {
         pName = newname;
         pID.clear();

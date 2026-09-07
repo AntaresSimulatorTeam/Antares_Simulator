@@ -4,8 +4,7 @@
 #ifndef __ANTARES_LIBS_SOLVER_LOAD_OPTIONS_H__
 #define __ANTARES_LIBS_SOLVER_LOAD_OPTIONS_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
+#include <string>
 
 #include <antares/optimization-options/options.h>
 
@@ -26,7 +25,7 @@ public:
 
 public:
     //! The number of MC years (non-zero to force the value)
-    uint nbYears;
+    unsigned int nbYears;
 
     //! Force the year-by-year flag
     bool forceYearByYear;
@@ -54,13 +53,13 @@ public:
 
     //! Force a maximum number of MC years computed simultaneously
     bool forceParallel;
-    uint maxNbYearsInParallel;
+    unsigned int maxNbYearsInParallel;
 
     //! All options related to linear & quadratic optimization
     Antares::Optimization::CmdLineOptimOptions solverOptions;
 
     //! Temporary string for passing log message
-    mutable Yuni::String logMessage;
+    mutable std::string logMessage;
 
     //! Display version number and exit
     bool displayVersion = false;
@@ -73,8 +72,8 @@ public:
     bool forceEconomy = false;
     bool forceAdequacy = false;
 
-    YString studyFolder;
-    YString simulationName;
+    std::string studyFolder;
+    std::string simulationName;
 }; // class StudyLoadOptions
 
 } // namespace Antares::Data

@@ -9,6 +9,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/solver/variable/registerThematicTrimmingVariables.h>
 #include <antares/study/study.h>
 
 using namespace Antares;
@@ -126,6 +127,11 @@ IniFile invalidINI()
 
 struct Fixture
 {
+    Fixture()
+    {
+        Antares::Solver::Variable::RegisterThematicTrimmingVariables();
+    }
+
     Parameters p;
     StudyLoadOptions options;
     StudyVersion version = StudyVersion::latest();

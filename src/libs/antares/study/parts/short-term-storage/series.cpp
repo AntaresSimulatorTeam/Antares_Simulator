@@ -6,12 +6,8 @@
 #include <fstream>
 #include <iomanip>
 
-#include <yuni/io/file.h>
-
 #include <antares/logs/logs.h>
 #include "antares/antares/constants.h"
-
-#define SEP Yuni::IO::Separator
 
 namespace Antares::Data::ShortTermStorage
 {

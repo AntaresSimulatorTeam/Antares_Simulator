@@ -6,6 +6,7 @@
 
 #include <filesystem>
 #include <map>
+#include <string>
 #include <unordered_map>
 
 #include "../../fwd.h"
@@ -75,7 +76,7 @@ public:
     /*!
     ** \brief Load allocation coefficients from a file
     */
-    bool saveToFile(const AnyString& filename) const;
+    bool saveToFile(const std::string& filename) const;
 
     /*!
     ** \brief Copy correlation coefficients from another correlation grid
@@ -98,7 +99,7 @@ public:
     ** \brief Iterate through all non-null coeff
     **
     ** \code
-    ** area.hydroAllocation.eachNonNull([&] (uint areaindex, double value)
+    ** area.hydroAllocation.eachNonNull([&] (unsigned int areaindex, double value)
     ** {
     ** 	std::cout << "area: " << areaindex << " = " << value << std::endl;
     ** });
@@ -131,7 +132,7 @@ private:
     //! Coefficients for other areas
     Coefficients pValues;
     //! Coefficients for other areas, ordered by the area id
-    std::unordered_map<uint, double> pValuesFromAreaID;
+    std::unordered_map<unsigned int, double> pValuesFromAreaID;
 }; // class HydroAllocation
 
 } // namespace Antares::Data

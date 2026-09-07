@@ -3,6 +3,8 @@
 
 #include "antares/study/parts/hydro/allocation.h"
 
+#include <fstream>
+
 #include <boost/algorithm/string/case_conv.hpp>
 
 #include <antares/utils/utils.h>
@@ -144,7 +146,7 @@ bool HydroAllocation::loadFromFile(const AreaName& referencearea, const fs::path
               double coeff = p->value.to<double>();
               if (!Utils::isZero(coeff))
               {
-                  AreaName areaname = p->key;
+                  AreaName areaname = std::string(p->key);
                   boost::to_lower(areaname);
                   pValues[areaname] = coeff;
               }
@@ -153,11 +155,11 @@ bool HydroAllocation::loadFromFile(const AreaName& referencearea, const fs::path
     return true;
 }
 
-bool HydroAllocation::saveToFile(const AnyString& filename) const
+bool HydroAllocation::saveToFile(const std::string& filename) const
 {
     if (pValues.empty())
     {
-        Yuni::IO::File::CreateEmptyFile(filename);
+        std::ofstream(filename).close();
         return true;
     }
     else
@@ -165,17 +167,20 @@ bool HydroAllocation::saveToFile(const AnyString& filename) const
         IniFile ini;
         auto* s = ini.addSection("[allocation]");
         auto end = pValues.end();
-        Yuni::CString<64, false> str;
+        std::string str;
         for (auto i = pValues.begin(); i != end; ++i)
         {
             double v = i->second;
             if (!Utils::isZero(v))
             {
-                str = v;
-                if (str.contains('.'))
+                str = std::to_string(v);
+                if (str.find('.') != std::string::npos)
                 {
-                    str.trimRight('0');
-                    str.trimRight('.');
+                    str.erase(str.find_last_not_of('0') + 1);
+                    while (!str.empty() && str.back() == '.')
+                    {
+                        str.pop_back();
+                    }
                 }
                 s->add(i->first, str);
             }

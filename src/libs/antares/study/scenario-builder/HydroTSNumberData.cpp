@@ -11,7 +11,7 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-uint hydroTSNumberData::get_tsGenCount(const Study& study) const
+unsigned int hydroTSNumberData::get_tsGenCount(const Study& study) const
 {
     // General data
     auto& parameters = study.parameters;
@@ -23,16 +23,16 @@ uint hydroTSNumberData::get_tsGenCount(const Study& study) const
 bool hydroTSNumberData::apply(Study& study)
 {
     bool ret = true;
-    CString<512, false> logprefix;
+    std::string logprefix;
     // Errors
-    uint errors = 0;
+    unsigned int errors = 0;
 
     // The total number of areas;
-    const uint areaCount = study.areas.size();
+    const unsigned int areaCount = study.areas.size();
 
-    const uint tsGenCountHydro = get_tsGenCount(study);
+    const unsigned int tsGenCountHydro = get_tsGenCount(study);
 
-    for (uint areaIndex = 0; areaIndex != areaCount; ++areaIndex)
+    for (unsigned int areaIndex = 0; areaIndex != areaCount; ++areaIndex)
     {
         // Alias to the current area
         Area& area = *(study.areas.byIndex[areaIndex]);
@@ -40,7 +40,7 @@ bool hydroTSNumberData::apply(Study& study)
         assert(areaIndex < pTSNumberRules.width);
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
-        logprefix.clear() << "Hydro: area '" << area.name << "': ";
+        logprefix = "Hydro: area '" + area.name + "': ";
         ret = ApplyToMatrix(errors, logprefix, *area.hydro.series, col, tsGenCountHydro) && ret;
     }
     return ret;

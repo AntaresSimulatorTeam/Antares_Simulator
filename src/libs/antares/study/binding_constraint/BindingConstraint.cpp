@@ -3,12 +3,8 @@
 
 #include "antares/study/binding_constraint/BindingConstraint.h"
 
-#include <algorithm>
-#include <cmath>
 #include <functional>
 #include <vector>
-
-#include <yuni/yuni.h>
 
 #include "antares/study/binding_constraint/BindingConstraintLoader.h"
 #include "antares/study/study.h"
@@ -16,19 +12,12 @@
 
 using namespace Antares;
 
-#ifdef _MSC_VER
-#define SNPRINTF sprintf_s
-#else
-#define SNPRINTF snprintf
-#endif
-
 namespace Antares::Data
 {
 
-BindingConstraint::Operator BindingConstraint::StringToOperator(const AnyString& text)
+BindingConstraint::Operator BindingConstraint::StringToOperator(const std::string& text)
 {
-    Yuni::ShortString16 l(text);
-    l.toLower();
+    const std::string l = Antares::stringToLower(text);
 
     if (l == "both" || l == "<>" || l == "><" || l == "< and >")
     {
@@ -49,13 +38,12 @@ BindingConstraint::Operator BindingConstraint::StringToOperator(const AnyString&
     return opUnknown;
 }
 
-BindingConstraint::Type BindingConstraint::StringToType(const AnyString& text)
+BindingConstraint::Type BindingConstraint::StringToType(const std::string& text)
 {
     if (!text.empty())
     {
-        Yuni::ShortString16 l(text);
-        l.toLower();
-        switch (l.first())
+        const std::string l = Antares::stringToLower(text);
+        switch (l.front())
         {
         case 'h':
         {
@@ -81,22 +69,25 @@ BindingConstraint::Type BindingConstraint::StringToType(const AnyString& text)
             }
             break;
         }
+        default:
+            break;
         }
     }
+    logs.error() << "invalid type for binding constraint (got '" << text << "')";
     return typeUnknown;
 }
 
 const char* BindingConstraint::TypeToCString(const BindingConstraint::Type type)
 {
     static const char* const names[typeMax + 1] = {"", "hourly", "daily", "weekly", ""};
-    assert((uint)type < (uint)(typeMax + 1));
+    assert((unsigned int)type < (unsigned int)(typeMax + 1));
     return names[type];
 }
 
 const char* BindingConstraint::OperatorToCString(BindingConstraint::Operator o)
 {
     static const char* const names[opMax + 1] = {"", "equal", "less", "greater", "both", ""};
-    assert((uint)o < (uint)(opMax + 1));
+    assert((unsigned int)o < (unsigned int)(opMax + 1));
     return names[o];
 }
 
@@ -108,25 +99,24 @@ const char* BindingConstraint::OperatorToShortCString(BindingConstraint::Operato
                                                  "bounded below",
                                                  "bounded on both sides",
                                                  ""};
-    assert((uint)o < (uint)(opMax + 1));
+    assert((unsigned int)o < (unsigned int)(opMax + 1));
     return names[o];
 }
 
 const char* BindingConstraint::MathOperatorToCString(BindingConstraint::Operator o)
 {
     static const char* const names[opMax + 1] = {"", "=", "<", ">", "< and >", ""};
-    assert((uint)o < (uint)(opMax + 1));
+    assert((unsigned int)o < (unsigned int)(opMax + 1));
     return names[o];
 }
 
-void BindingConstraint::name(const AnyString& newname)
+void BindingConstraint::name(const std::string& newname)
 {
     pName = newname;
 }
 
-void BindingConstraint::pId(const AnyString& name)
+void BindingConstraint::pId(const std::string& name)
 {
-    pID.clear();
     pID = transformNameIntoID(name);
 }
 
@@ -215,7 +205,6 @@ void BindingConstraint::offset(const ThermalCluster* cluster, int o)
 void BindingConstraint::resetToDefaultValues()
 {
     pEnabled = true;
-    pComments.clear();
     RHSTimeSeries_.reset();
 }
 
@@ -342,8 +331,6 @@ void BindingConstraint::clear()
     // Name / ID
     this->pName.clear();
     this->pID.clear();
-    // No comments
-    this->pComments.clear();
     // The type must be `hourly` by default for studies <=3.1, which was the only
     // type of binding constraints supported.
     this->pType = typeUnknown;
@@ -352,105 +339,6 @@ void BindingConstraint::clear()
     // Enabled: True by default to automatically allow the use of bindingconstraint
     // from old studies (<= 3.1)
     this->pEnabled = true;
-}
-
-bool BindingConstraint::contains(const Area* area) const
-{
-    for (const auto& [sourceLink, _]: pLinkWeights)
-    {
-        if (sourceLink->from == area || sourceLink->with == area)
-        {
-            return true;
-        }
-    }
-
-    for (const auto& [thermalCluster, _]: pClusterWeights)
-    {
-        if (thermalCluster->parentArea == area)
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-void BindingConstraint::buildFormula(Yuni::String& s) const
-{
-    char tmp[42];
-    for (const auto& [sourceLink, weight]: pLinkWeights)
-    {
-        if (!sourceLink)
-        {
-            s << " + ";
-        }
-        SNPRINTF(tmp, sizeof(tmp), "%.2f", weight);
-
-        s << '(' << (const char*)tmp << " x " << sourceLink->getName();
-
-        if (auto at = pLinkOffsets.find(sourceLink); at != pLinkOffsets.end())
-        {
-            int o = at->second;
-            if (o > 0)
-            {
-                s << " x (t + " << pLinkOffsets.find(sourceLink)->second << ')';
-            }
-            if (o < 0)
-            {
-                s << " x (t - " << std::abs(pLinkOffsets.find(sourceLink)->second) << ')';
-            }
-        }
-
-        s << ')';
-    }
-
-    for (const auto [thermalCluster, weight]: pClusterWeights)
-    {
-        if (!thermalCluster)
-        {
-            s << " + ";
-        }
-        SNPRINTF(tmp, sizeof(tmp), "%.2f", weight);
-
-        s << '(' << (const char*)tmp << " x " << thermalCluster->getFullName();
-
-        if (auto at = pClusterOffsets.find(thermalCluster); at != pClusterOffsets.end())
-        {
-            int o = at->second;
-            if (o > 0)
-            {
-                s << " x (t + " << pClusterOffsets.find(thermalCluster)->second << ')';
-            }
-            if (o < 0)
-            {
-                s << " x (t - " << std::abs(pClusterOffsets.find(thermalCluster)->second) << ')';
-            }
-        }
-
-        if (!thermalCluster->isActive())
-        {
-            s << " x N/A";
-        }
-
-        s << ')';
-    }
-}
-
-bool BindingConstraint::contains(const BindingConstraint* bc) const
-{
-    return (this == bc);
-}
-
-bool BindingConstraint::contains(const AreaLink* lnk) const
-{
-    const auto i = pLinkWeights.find(lnk);
-    return (i != pLinkWeights.end());
-}
-
-bool BindingConstraint::contains(const ThermalCluster* cluster) const
-{
-    const auto i = pClusterWeights.find(cluster);
-    return (i != pClusterWeights.end());
 }
 
 void BindingConstraint::enabled(bool v)
@@ -463,12 +351,12 @@ void BindingConstraint::operatorType(BindingConstraint::Operator o)
     pOperator = o;
 }
 
-uint BindingConstraint::yearByYearFilter() const
+unsigned int BindingConstraint::yearByYearFilter() const
 {
     return pFilterYearByYear;
 }
 
-uint BindingConstraint::synthesisFilter() const
+unsigned int BindingConstraint::synthesisFilter() const
 {
     return pFilterSynthesis;
 }
@@ -516,7 +404,7 @@ BindingConstraintStructures BindingConstraint::initLinkArrays() const
     clusterIndex.resize(clusterCount());
     clustersAreaIndex.resize(clusterCount());
 
-    uint off = 0;
+    unsigned int off = 0;
     auto end = pLinkWeights.end();
     for (auto i = pLinkWeights.begin(); i != end; ++i, ++off)
     {
@@ -573,14 +461,13 @@ const BindingConstraint::clusterWeightMap& BindingConstraint::clustersAndWeights
     return pClusterWeights;
 }
 
-void BindingConstraint::clearAndReset(const AnyString& name,
+void BindingConstraint::clearAndReset(const std::string& name,
                                       BindingConstraint::Type newType,
                                       BindingConstraint::Operator op)
 {
     // Name / ID
     pName = name;
-    pID.clear();
-    TransformNameIntoID(name, pID);
+    pID = transformNameIntoID(name);
     // New type
     pType = newType;
     // Operator
@@ -657,7 +544,6 @@ void BindingConstraint::copyFrom(const BindingConstraint* original)
     pFilterYearByYear = original->pFilterYearByYear;
     pFilterSynthesis = original->pFilterSynthesis;
     pEnabled = original->pEnabled;
-    pComments = original->pComments;
     group_ = original->group_;
     RHSTimeSeries_.copyFrom(original->RHSTimeSeries_);
 }

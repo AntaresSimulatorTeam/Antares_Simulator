@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 
+#include <antares/solver/modeler/ModelerData.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/exception/LoadingError.hpp"
 #include "antares/study/study.h"
@@ -121,8 +122,6 @@ bool Study::internalLoadFromFolder(const fs::path& path,
 
     // Reserving enough space in buffer to avoid several calls to realloc
     this->dataBuffer.reserve(4 * 1024 * 1024); // For matrices, reserving 4Mo
-    this->bufferLoadingTS.reserve(2096);
-    assert(this->bufferLoadingTS.capacity() > 0);
 
     if (!internalLoadIni(path, options))
     {

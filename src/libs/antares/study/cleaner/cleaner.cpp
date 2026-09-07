@@ -3,15 +3,10 @@
 
 #include "antares/study/cleaner.h"
 
-#include <yuni/yuni.h>
-#include <yuni/string.h>
-
 #include <antares/logs/logs.h>
 #include <antares/study/header.h>
 #include "antares/study/cleaner/versions.h"
 #include "antares/study/version.h"
-
-using namespace Yuni;
 
 #define STUDY_CLEANER_LOG "[study cleaner] "
 
@@ -21,7 +16,7 @@ StudyCleaningInfos::StudyCleaningInfos()
 {
 }
 
-StudyCleaningInfos::StudyCleaningInfos(const AnyString& path):
+StudyCleaningInfos::StudyCleaningInfos(const std::string& path):
     folder(path)
 {
 }
@@ -99,7 +94,7 @@ uint64_t StudyCleaningInfos::totalSize() const
     return intruders.totalSizeInBytes();
 }
 
-void StudyCleaningInfos::setCustomExcludeList(const Yuni::String& c)
+void StudyCleaningInfos::setCustomExcludeList(const std::string& c)
 {
     customExclude = c;
 }

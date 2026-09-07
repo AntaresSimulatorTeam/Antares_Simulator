@@ -195,15 +195,19 @@ Feature: Legacy variables in simulation table
     # conditions together, since reservoir=false alone (with real inflow)
     # still produces legitimate turbine generation, as the existing
     # hydro_parameters.feature scenario outline shows (year-2 production of
-    # 109200 MWh with reservoir=false but real inflow). "area_hydro" only
-    # ever carries the balance_port.flow row, so its absence here is a
-    # precise check that this specific row was suppressed.
+    # 109200 MWh with reservoir=false but real inflow).
+    #
+    # Only the derived balance_port.flow row is checked: with an unmanaged
+    # reservoir the level-guarded rows (level, level_percentage,
+    # actual_inflows) are already gone, but area_hydro_storage still carries
+    # the raw per-variable rows (withdrawal_power, ...), which are out of
+    # AddLegacyExtraOutputs' scope.
     Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hydro/hydro-parameters"
     And in input "hydro/hydro.ini" section "reservoir" variable "area" is set to "false"
     And in input "hydro/series/area/mod.txt" the time series is emptied
     When I run antares simulator with --output=simulation-tables
     Then the simulation succeeds
-    And the modeler outputs contain no entries for component "area_hydro"
+    And the modeler outputs contain no "balance_port.flow" entries for component "area_hydro_storage"
 
   @fast @short
   Scenario: derived link outputs are absent when both NTC directions are zero across the whole study

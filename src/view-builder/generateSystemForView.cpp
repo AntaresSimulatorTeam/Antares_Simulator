@@ -66,11 +66,6 @@ void appendModelerData(YAML::Node& systemYaml, const Antares::Solver::ModelerDat
 {
     YAML::Node system = systemYaml["system"];
 
-    for (const auto& lib: modelerData.libraries)
-    {
-        system["model-libraries"].push_back(lib.Id());
-    }
-
     for (const auto& component: modelerData.system->Components())
     {
         YAML::Node compNode;
@@ -78,6 +73,21 @@ void appendModelerData(YAML::Node& systemYaml, const Antares::Solver::ModelerDat
         compNode["model"] = component.getModel()->LibraryId() + "." + component.getModel()->Id();
         compNode["parameters"] = YAML::Node(YAML::NodeType::Sequence);
         compNode["parameters"].SetStyle(YAML::EmitterStyle::Flow);
+
+        auto propsIt = modelerData.componentProperties.find(component.Id());
+        if (propsIt != modelerData.componentProperties.end())
+        {
+            YAML::Node props = YAML::Node(YAML::NodeType::Sequence);
+            for (const auto& [propId, propValue]: propsIt->second)
+            {
+                YAML::Node prop;
+                prop["id"] = propId;
+                prop["value"] = propValue;
+                props.push_back(prop);
+            }
+            compNode["properties"] = props;
+        }
+
         system["components"].push_back(compNode);
     }
 
@@ -141,10 +151,6 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
 {
     YAML::Node system;
     system["id"] = study.folder.string();
-
-    YAML::Node libs = YAML::Node(YAML::NodeType::Sequence);
-    libs.push_back("antares_legacy_models");
-    system["model-libraries"] = libs;
 
     YAML::Node components = YAML::Node(YAML::NodeType::Sequence);
     YAML::Node connections = YAML::Node(YAML::NodeType::Sequence);

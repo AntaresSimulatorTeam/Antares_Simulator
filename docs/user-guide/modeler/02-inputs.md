@@ -213,7 +213,7 @@ and the [port connections](05-model.md#ports-and-connections).
 Currently, Antares modeler supports importing the system from a yaml file.
 
 The header of the yml file must contain exactly one "system" key at the root level.  
-The **system** object contains one **id**, one **description**, one **model-libraries** collection, one **components**
+The **system** object contains one **id**, one **description**, one **components**
 collection.  
 Unless stated otherwise, all listed fields are mandatory.
 
@@ -225,14 +225,10 @@ Example:
 system:
   id: my_system
   description: my system is even greater!
-  model-libraries: my_library_id, my_other_library_id
 ~~~
 
 - **id**: an ID for your system. Has no effect on the simulation.
 - **description** _(optional)_: a free description of your system. Has no effect on the simulation.
-- **model-libraries** _(optional)_: a collection of model libraries needed for your system. If provided, must contain at least one element, and
-  refer to IDs of model libraries found in the **input/model-libraries** directory. Beware that the ID of the library is
-  one defined in its header, not the name of the file.
 
 ### Components
 

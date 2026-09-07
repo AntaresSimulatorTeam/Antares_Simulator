@@ -38,7 +38,7 @@ using namespace Antares::Data;
 */
 #include <string>
 
-#include "antares/solver/optimisation/opt_constants.h"
+#include "antares/solver/utils/opt_constants.h"
 
 // ---------------------------------
 // Full mps writing
