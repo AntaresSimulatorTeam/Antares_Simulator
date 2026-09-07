@@ -3,19 +3,28 @@
 
 #pragma once
 
+#include <memory>
+
 #include "antares/io/outputs/SimulationTable.h"
+
+namespace Antares::Optimization
+{
+class InactiveComponentsAnalyzer;
+}
 
 namespace Antares::IO::Outputs
 {
 class OptimisationsSimulationTable
 {
 public:
-    Antares::IO::Outputs::SimulationTable* firstOptimSimulationTable();
-    Antares::IO::Outputs::SimulationTable* secondOptimSimulationTable();
+    SimulationTable* firstOptimSimulationTable();
+    SimulationTable* secondOptimSimulationTable();
     void clear();
 
+    std::shared_ptr<const Optimization::InactiveComponentsAnalyzer> inactiveComponents;
+
 private:
-    Antares::IO::Outputs::SimulationTable firstOptimSimulationTable_;
-    Antares::IO::Outputs::SimulationTable secondOptimSimulationTable_;
+    SimulationTable firstOptimSimulationTable_;
+    SimulationTable secondOptimSimulationTable_;
 };
 } // namespace Antares::IO::Outputs

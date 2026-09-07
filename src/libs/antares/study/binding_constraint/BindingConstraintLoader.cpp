@@ -154,20 +154,10 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(
                                      Matrix<>::optFixedSize,
                                      &env.matrixBuffer))
     {
-        if (bindingConstraint->pComments.empty())
-        {
-            logs.info() << " added `" << bindingConstraint->pName << "` ("
-                        << BindingConstraint::TypeToCString(bindingConstraint->pType) << ", "
-                        << BindingConstraint::OperatorToShortCString(bindingConstraint->pOperator)
-                        << ')';
-        }
-        else
-        {
-            logs.info() << " added `" << bindingConstraint->pName << "` ("
-                        << BindingConstraint::TypeToCString(bindingConstraint->pType) << ", "
-                        << BindingConstraint::OperatorToShortCString(bindingConstraint->pOperator)
-                        << ") " << bindingConstraint->pComments;
-        }
+        logs.info() << " added `" << bindingConstraint->pName << "` ("
+                    << BindingConstraint::TypeToCString(bindingConstraint->pType) << ", "
+                    << BindingConstraint::OperatorToShortCString(bindingConstraint->pOperator)
+                    << ')';
 
         // 0 is BindingConstraint::opLess
         int columnNumber;
@@ -244,9 +234,10 @@ void BindingConstraintLoader::populateConstraint(const EnvForLoading& env,
             bc->pFilterSynthesis = stringIntoDatePrecision(std::string(p->value));
             continue;
         }
+        // Metadata, don't read
+        // Kept for compatibility with existing studies
         if (p->key == "comments")
         {
-            bc->pComments = std::string(p->value);
             continue;
         }
         if (p->key == "group")
