@@ -299,24 +299,23 @@ BOOST_AUTO_TEST_CASE(skips_disabled_district_and_exports_enabled_one)
 
 BOOST_AUTO_TEST_CASE(loader_parses_filters_per_district)
 {
-    auto study = makeStudyWithDistricts({{"district-1", "District 1", true},
-                                         {"district-2", "District 2", true}});
+    auto study = makeStudyWithDistricts(
+      {{"district-1", "District 1", true}, {"district-2", "District 2", true}});
 
-    const auto path =
-      writeTempYaml("district-1:\n"
-                    "  mc-ind:\n"
-                    "    - hourly\n"
-                    "    - daily\n"
-                    "    - bogus\n"
-                    "  mc-all:\n"
-                    "    - annual\n"
-                    "district-2:\n"
-                    "  mc-all:\n"
-                    "    - none\n"
-                    "  mc-ind: weekly, monthly\n"
-                    "unknown-district:\n"
-                    "  mc-all:\n"
-                    "    - hourly\n");
+    const auto path = writeTempYaml("district-1:\n"
+                                    "  mc-ind:\n"
+                                    "    - hourly\n"
+                                    "    - daily\n"
+                                    "    - bogus\n"
+                                    "  mc-all:\n"
+                                    "    - annual\n"
+                                    "district-2:\n"
+                                    "  mc-all:\n"
+                                    "    - none\n"
+                                    "  mc-ind: weekly, monthly\n"
+                                    "unknown-district:\n"
+                                    "  mc-all:\n"
+                                    "    - hourly\n");
 
     BOOST_CHECK(study->setsOfAreas.loadOutputPrecisionsFromFile(path));
     std::filesystem::remove(path);
@@ -336,8 +335,8 @@ BOOST_AUTO_TEST_CASE(loader_parses_filters_per_district)
 BOOST_AUTO_TEST_CASE(loader_missing_file_keeps_defaults)
 {
     auto study = makeStudyWithDistricts({{"district-1", "District 1", true}});
-    const auto path =
-      std::filesystem::temp_directory_path() / "antares-sets-outputs-does-not-exist.yaml";
+    const auto path = std::filesystem::temp_directory_path()
+                      / "antares-sets-outputs-does-not-exist.yaml";
     BOOST_CHECK(study->setsOfAreas.loadOutputPrecisionsFromFile(path));
     BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", true), filterAll);
     BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", false), filterAll);
@@ -345,8 +344,8 @@ BOOST_AUTO_TEST_CASE(loader_missing_file_keeps_defaults)
 
 BOOST_AUTO_TEST_CASE(mc_all_precision_filter_only_hourly)
 {
-    auto study = makeStudyWithDistricts({{"district-1", "District 1", true},
-                                         {"district-2", "District 2", true}});
+    auto study = makeStudyWithDistricts(
+      {{"district-1", "District 1", true}, {"district-2", "District 2", true}});
 
     const auto path = writeTempYaml("district-1:\n"
                                     "  mc-all:\n"

@@ -4,7 +4,6 @@
 #include "antares/study/sets.h"
 
 #include <string>
-
 #include <yaml-cpp/yaml.h>
 
 #include <antares/utils/utils.h>
@@ -253,7 +252,8 @@ bool Sets::loadOutputPrecisionsFromFile(const std::filesystem::path& filename)
 
     if (!root || !root.IsMap())
     {
-        logs.warning() << "sets: `" << filename << "`: the root node must be a mapping of "
+        logs.warning() << "sets: `" << filename
+                       << "`: the root node must be a mapping of "
                           "districts";
         return true;
     }
@@ -291,8 +291,9 @@ bool Sets::loadOutputPrecisionsFromFile(const std::filesystem::path& filename)
             }
             if (!node.IsSequence())
             {
-                logs.warning() << "sets: `" << filename << "`: district `" << districtKey
-                               << "`, `" << reportType << "` must be a sequence of "
+                logs.warning() << "sets: `" << filename << "`: district `" << districtKey << "`, `"
+                               << reportType
+                               << "` must be a sequence of "
                                   "granularities, ignored";
                 continue;
             }
@@ -326,19 +327,17 @@ bool Sets::loadOutputPrecisionsFromFile(const std::filesystem::path& filename)
     {
         if (pair.second.filterSynthesis != filterAll)
         {
-            logs.info() << "sets: district `" << pair.first
-                        << "`: mc-all granularities = "
+            logs.info() << "sets: district `" << pair.first << "`: mc-all granularities = "
                         << (pair.second.filterSynthesis == filterNone
-                                ? std::string("none")
-                                : datePrecisionIntoString(pair.second.filterSynthesis));
+                              ? std::string("none")
+                              : datePrecisionIntoString(pair.second.filterSynthesis));
         }
         if (pair.second.filterYearByYear != filterAll)
         {
-            logs.info() << "sets: district `" << pair.first
-                        << "`: mc-ind granularities = "
+            logs.info() << "sets: district `" << pair.first << "`: mc-ind granularities = "
                         << (pair.second.filterYearByYear == filterNone
-                                ? std::string("none")
-                                : datePrecisionIntoString(pair.second.filterYearByYear));
+                              ? std::string("none")
+                              : datePrecisionIntoString(pair.second.filterYearByYear));
         }
     }
     return true;

@@ -12,7 +12,6 @@
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/study/filter.h>
-
 #include "antares/study/area/area.h"
 
 namespace Antares::Data
