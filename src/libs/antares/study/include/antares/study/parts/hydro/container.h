@@ -73,28 +73,12 @@ struct AreaDependantHydroManagementData
 class PartHydro final
 {
 public:
-    enum
-    {
-        //! The minimum value
-        minimum = 0,
-        //! The average value
-        average,
-        //! The maximum value
-        maximum,
-    };
-
     enum weeklyHydroMod
     {
         //! Weekly generating modulation
         genMod = 0,
         //! Weekly pumping modulation
         pumpMod,
-    };
-
-    struct HydroReserveParticipationWithName
-    {
-        std::reference_wrapper<StorageClusterReserveParticipation> reserveParticipation;
-        std::string reserveID;
     };
 
     static bool LoadIniFile(Study& study, const std::filesystem::path& folder);
@@ -115,18 +99,6 @@ public:
     static bool validate(Study& study);
 
     /*!
-    ** \brief Save data from several containers to a folder (except data for the prepro and
-    *time-series)
-    **
-    ** \param l List of areas
-    ** \param folder The targer folder
-    ** \return A non-zero value if the operation succeeded, 0 otherwise
-    */
-    static bool SaveToFolder(const AreaList& areas,
-                             const std::string& folder,
-                             const Parameters::Compatibility::HydroPmax hydroPmax);
-
-    /*!
     ** \brief Default Constructor
     */
     PartHydro();
@@ -137,8 +109,6 @@ public:
     ** \brief Reset internal data
     */
     void reset();
-
-    void copyFrom(const PartHydro& rhs);
 
     /*!
     ** \brief Load daily max energy
