@@ -75,18 +75,20 @@ int main(int argc, const char** argv)
 
     try
     {
-        Antares::Solver::LoadFiles::FileLoader loader(studyPath);
-        fs::path outputPath = Antares::Solver::makeOutputPath(studyPath);
-        Antares::Solver::Modeler modeler(loader, outputPath, tableFormat);
+        Solver::LoadFiles::FileLoader loader(studyPath);
+        fs::path outputPath = Solver::makeOutputPath(studyPath);
+        Solver::Modeler modeler(loader,
+                                {.studyPath = studyPath, .outputPath = outputPath},
+                                tableFormat);
         exportSystemForViews(studyPath, outputPath);
         modeler.run();
     }
-    catch (const Antares::Solver::LoadFiles::ErrorLoadingYaml& e)
+    catch (const Solver::LoadFiles::ErrorLoadingYaml& e)
     {
         logs.error() << "Modeler loading error: " << e.what() << "\nExiting simulation.";
         return EXIT_FAILURE;
     }
-    catch (const Antares::Solver::Modeler::ModelerError& e)
+    catch (const Solver::Modeler::ModelerError& e)
     {
         logs.error() << "Modeler error: " << e.what() << "\nExiting simulation.";
         return EXIT_FAILURE;

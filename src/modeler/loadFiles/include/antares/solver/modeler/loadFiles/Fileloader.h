@@ -17,7 +17,7 @@ public:
 
     std::optional<ModelerData> loadAll() override;
 
-    const std::filesystem::path& studyPath() const override;
+    [[nodiscard]] const std::filesystem::path& studyPath() const;
 
     std::filesystem::path studyPath_;
 };

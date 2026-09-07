@@ -39,7 +39,7 @@ struct ProblemEntity
     std::unique_ptr<LinearProblem::OptimEntityContainer> optimEntityContainer;
 };
 
-ProblemEntity buildProblem(const Antares::Solver::ModelerData& data,
+ProblemEntity buildProblem(const ModelerData& data,
                            const Config::Location& location,
                            const std::string& problemId,
                            LinearProblem::BendersDecomposition* bendersDecomposition,
@@ -47,12 +47,18 @@ ProblemEntity buildProblem(const Antares::Solver::ModelerData& data,
                            const ResolutionMode& resolutionMode,
                            const std::optional<std::string>& solver);
 
-std::filesystem::path makeOutputPath(std::filesystem::path studyPath);
+std::filesystem::path makeOutputPath(const std::filesystem::path& studyPath);
 
 class Modeler final
 {
 public:
-    Modeler(ILoader& loader, fs::path outputPath, Antares::Writer::TableFormat tableFormat);
+    struct Paths
+    {
+        fs::path studyPath;
+        fs::path outputPath;
+    };
+
+    Modeler(ILoader& loader, Paths paths, TableFormat tableFormat);
 
     void buildProblems();
     void buildMasterProblem();
@@ -87,7 +93,7 @@ public:
     LinearProblem::Api::IMipSolution* subProbSolution();
 
 private:
-    LinearProblem::Api::FillContext createFillContext(unsigned year) const;
+    [[nodiscard]] LinearProblem::Api::FillContext createFillContext(unsigned year) const;
     LinearProblem::Api::IMipSolution* solveSubproblem(
       LinearProblem::Api::ILinearProblem& subproblem);
 
@@ -105,8 +111,8 @@ private:
     std::vector<unsigned> scenarios_;
     ModelerParameters parameters_;
     ModelerData data_;
-    fs::path outputPath_;
-    Antares::Writer::TableFormat tableFormat_;
+    Paths paths_;
+    TableFormat tableFormat_;
     LinearProblem::Api::IMipSolution* subProbSolution_ = nullptr;
 };
 } // namespace Antares::Solver
