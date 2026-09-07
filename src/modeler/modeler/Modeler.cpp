@@ -6,6 +6,7 @@
 #include <fmt/format.h>
 #include <fstream>
 #include <stdexcept>
+#include <utility>
 
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/StructuredLinearProblem.h>
@@ -31,6 +32,8 @@ using namespace Antares::IO::Outputs;
 namespace Antares::Solver
 {
 
+namespace
+{
 bool checkSolution(const IMipSolution* solution)
 {
     if (!solution)
@@ -48,8 +51,9 @@ bool checkSolution(const IMipSolution* solution)
     logs.error() << "Problem during linear optimization";
     return false;
 }
+} // namespace
 
-fs::path makeOutputPath(fs::path studyPath)
+fs::path makeOutputPath(const fs::path& studyPath)
 {
     const auto simulationId = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
     fs::path outputPath = studyPath / "output" / simulationId;
@@ -68,9 +72,9 @@ fs::path makeOutputPath(fs::path studyPath)
     return outputPath;
 }
 
-Modeler::Modeler(ILoader& loader, fs::path ouputPath, TableFormat tableFormat):
+Modeler::Modeler(ILoader& loader, Paths paths, const TableFormat tableFormat):
     loader_{loader},
-    outputPath_{std::move(ouputPath)},
+    paths_{std::move(paths)},
     tableFormat_(tableFormat)
 {
     parameters_ = loader_.loadParameters();
@@ -84,11 +88,13 @@ Modeler::Modeler(ILoader& loader, fs::path ouputPath, TableFormat tableFormat):
     // (ModelerData contains unique_ptr members and is move-only).
     data_ = std::move(*data);
 
-    scenarios_ = resolveScenarioScopeScenarios(parameters_.scenarioScope, loader_.studyPath());
+    scenarios_ = resolveScenarioScopeScenarios(parameters_.scenarioScope, paths_.studyPath);
     logs.info() << fmt::format("Number of Monte-Carlo scenarios to simulate: {}",
                                scenarios_.size());
 }
 
+namespace
+{
 class SystemLinearProblemBuilder final
 {
 public:
@@ -135,6 +141,7 @@ private:
     BendersDecomposition* bendersDecomposition_ = nullptr;
     OptimEntityContainer& optimEntityContainer_;
 };
+} // namespace
 
 struct LocationAnalysis
 {
@@ -241,7 +248,7 @@ SimulationTable& Modeler::fillSimulationTable(
                         subproblemOptimEntityContainer,
                         timeScenarioCtx,
                         0,
-                        IO::Outputs::TimeConversionMode::SingleBlock);
+                        TimeConversionMode::SingleBlock);
     return simulationTable;
 }
 
@@ -255,14 +262,14 @@ void Modeler::exportMps() const
             continue;
         }
         const auto name = std::to_string(scenarios_[i]) + "-1";
-        const auto mps = IO::Outputs::MPSGenerator(*subproblem, name, true).run();
-        Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / (name + ".mps"), mps);
+        const auto mps = MPSGenerator(*subproblem, name, true).run();
+        MPSFileWriter::write(paths_.outputPath / (name + ".mps"), mps);
     }
     // master.mps
     if (masterProblem_)
     {
-        const auto mps = IO::Outputs::MPSGenerator(*masterProblem_, "master", true).run();
-        Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / "master.mps", mps);
+        const auto mps = MPSGenerator(*masterProblem_, "master", true).run();
+        MPSFileWriter::write(paths_.outputPath / "master.mps", mps);
     }
 }
 
@@ -270,7 +277,7 @@ void Modeler::exportStructureFile() const
 {
     // structure.txt
     const BendersDecompositionWriter writer(data_.bendersDecomposition);
-    std::ofstream of(outputPath_ / "structure.txt");
+    std::ofstream of(paths_.outputPath / "structure.txt");
     writer.write(of);
 }
 
@@ -289,12 +296,12 @@ void Modeler::buildMasterProblem()
 
 FillContext Modeler::createFillContext(unsigned year) const
 {
-    return FillContext(
+    return {
       parameters_.firstTimeStep,
       parameters_.lastTimeStep,
       parameters_.firstTimeStep, // global = local, single time block in pure modeler (for now)
       parameters_.lastTimeStep,  // global = local
-      year);
+      year};
 }
 
 void Modeler::buildProblems()
@@ -322,10 +329,10 @@ void Modeler::buildProblems()
 
     logs.info() << "Linear problem provided";
 
-    for (std::size_t i = 0; i < subproblems_.size(); ++i)
+    for (const auto & subproblem : subproblems_)
     {
-        logs.info() << "Number of variables: " << subproblems_[i]->variableCount();
-        logs.info() << "Number of constraints: " << subproblems_[i]->constraintCount();
+        logs.info() << "Number of variables: " << subproblem->variableCount();
+        logs.info() << "Number of constraints: " << subproblem->constraintCount();
     }
 
     measure.tick();
@@ -371,7 +378,7 @@ void Modeler::run()
 
         if (!parameters_.noOutput)
         {
-            auto outputFile = outputPath_ / "simulation-table";
+            auto outputFile = paths_.outputPath / "simulation-table";
             SimulationTableWriter writer(outputFile, tableFormat_);
             writer.writeTable(simulationTable);
             logs.info() << "Simulation table is written in: " << outputFile.string();
