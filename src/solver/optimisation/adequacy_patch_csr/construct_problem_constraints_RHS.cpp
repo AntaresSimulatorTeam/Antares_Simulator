@@ -73,10 +73,7 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
     //   BF = DefaillanceNegativeUtiliserConsoAbattue
     //   STS_net_production = net withdrawals from short-term storage (from first optimization step)
     setRHSfictitiousLoadValueFromLegacy();
-    if (gemsUse_)
-    {
-        setRHSfictitiousLoadValueFromGEMS();
-    }
+    gemsPart_->setRHSfictitiousLoadValue(problemeAResoudre_, numberOfConstraintCsrFictitiousLoad);
 }
 
 void HourlyCSRProblem::setRHSfictitiousLoadValueFromLegacy()
@@ -150,30 +147,10 @@ void HourlyCSRProblem::setRHSfictitiousLoadValueFromLegacy()
     }
 }
 
-void HourlyCSRProblem::setRHSfictitiousLoadValueFromGEMS()
-{
-    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
-    {
-        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
-            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-        {
-            std::map<int, int>::iterator it = numberOfConstraintCsrFictitiousLoad.find(Area);
-            if (it != numberOfConstraintCsrFictitiousLoad.end())
-            {
-                int Cnt = it->second;
-                problemeAResoudre_.SecondMembre[Cnt] += gemsSpilledForArea(Area);
-            }
-        }
-    }
-}
-
 void HourlyCSRProblem::setRHSMaxEnsLoadValue()
 {
     setRHSMaxEnsLoadValueFromLegacy();
-    if (gemsUse_)
-    {
-        setRHSMaxEnsLoadValueFromGEMS();
-    }
+    gemsPart_->setRHSMaxEnsLoadValue(problemeAResoudre_, numberOfConstraintCsrMaxEnsLoad);
 }
 
 void HourlyCSRProblem::setRHSMaxEnsLoadValueFromLegacy()
@@ -205,25 +182,6 @@ void HourlyCSRProblem::setRHSMaxEnsLoadValueFromLegacy()
 
                 logs.debug() << Cnt << ": MaxEnsLoad: RHS[" << Cnt << "] = " << SecondMembre[Cnt]
                              << " (Area = " << Area << ")";
-            }
-        }
-    }
-}
-
-void HourlyCSRProblem::setRHSMaxEnsLoadValueFromGEMS()
-{
-    std::vector<double>& SecondMembre = problemeAResoudre_.SecondMembre;
-
-    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; ++Area)
-    {
-        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
-            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-        {
-            std::map<int, int>::iterator it = numberOfConstraintCsrMaxEnsLoad.find(Area);
-            if (it != numberOfConstraintCsrMaxEnsLoad.end())
-            {
-                int Cnt = it->second;
-                SecondMembre[Cnt] += gemsUnsupEnergyForArea(Area);
             }
         }
     }

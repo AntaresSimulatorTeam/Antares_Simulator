@@ -10,7 +10,9 @@
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/gems-part.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using namespace std::string_literals;
@@ -131,56 +133,71 @@ struct GemsContributionFixture
     std::vector<Library> libraries;
     MpsolverImpl::OrtoolsLinearProblem linearProblem;
     ScenarioGroupRepository scenarioGroupRepository;
+    VariableManagement::VariableManager variableManager_{&problemeHebdo};
 };
 
-BOOST_AUTO_TEST_SUITE(compute_gems_contribution_for_area)
+BOOST_AUTO_TEST_SUITE(gems_part_tests)
 
-// BOOST_AUTO_TEST_CASE(no_modeler_data_returns_zero)
-// {
-//     PROBLEME_HEBDO problem{};
-//     problem.modelerData = nullptr;
-//     problem.NomsDesPays.push_back("area1");
+// --- Factory tests ---
 
-//     double result = computeGemsContributionForArea(0,"unsupplied_energy_bound");
-//     BOOST_CHECK_EQUAL(result, 0.0);
-// }
+BOOST_AUTO_TEST_CASE(factory_returns_null_gems_part_when_no_modeler_data)
+{
+    PROBLEME_HEBDO problem{};
+    problem.modelerData = nullptr;
 
-// BOOST_FIXTURE_TEST_CASE(no_optimEntityContainer_returns_zero,GemsContributionFixture)
-// {
-//     problemeHebdo.optimEntityContainer = nullptr;
+    auto gemsPart = makeGemsPart(&problem);
+    // NullGemsPart — setHour does nothing, no crash
+    BOOST_CHECK_NO_THROW(gemsPart->setHour(42));
+}
 
-//     double result = computeGemsContributionForArea(0,
-//                                                    "unsupplied_energy_bound");
-//     BOOST_CHECK_EQUAL(result, 0.0);
-// }
+BOOST_AUTO_TEST_CASE(factory_returns_active_gems_part_when_modeler_data_exists)
+{
+    GemsContributionFixture f;
+    auto gemsPart = makeGemsPart(&f.problemeHebdo);
+    // ActiveGemsPart — setHour works
+    BOOST_CHECK_NO_THROW(gemsPart->setHour(0));
+}
 
-// BOOST_FIXTURE_TEST_CASE(area_not_connected_returns_zero,GemsContributionFixture)
-// {
-//     // area2 (index 1) has no GEMS component connected
-//     double result = computeGemsContributionForArea(
-//                                                    1,
-//                                                    "unsupplied_energy_bound");
-//     BOOST_CHECK_EQUAL(result, 0.0);
-// }
+BOOST_AUTO_TEST_CASE(active_gems_part_throws_when_no_optimEntityContainer)
+{
+    GemsContributionFixture f;
+    f.problemeHebdo.optimEntityContainer.reset();
 
-// BOOST_FIXTURE_TEST_CASE(unsupplied_energy_bound_returns_evaluated_value, GemsContributionFixture)
-// {
-//     // definition: var_1 / 2 - 10, var_1 starts at 0 → expected = 0/2 - 10 = -10
-//     double result = computeGemsContributionForArea(0, "unsupplied_energy_bound");
-//     BOOST_CHECK_EQUAL(result, -10.0);
-// }
+    BOOST_CHECK_THROW(ActiveGemsPart(&f.problemeHebdo), std::runtime_error);
+}
 
-// BOOST_FIXTURE_TEST_CASE(spillage_bound_returns_evaluated_value, GemsContributionFixture)
-// {
-//     // definition: 2 * var_1 + 30, var_1 starts at 0 → expected = 2*0 + 30 = 30
-//     double result = computeGemsContributionForArea( 0,  "spillage_bound");
-//     BOOST_CHECK_EQUAL(result, 30.0);
-// }
+// --- NullGemsPart does nothing ---
 
-// BOOST_FIXTURE_TEST_CASE(unknown_port_field_name_returns_zero, GemsContributionFixture)
-// {
-//     double result = computeGemsContributionForArea( 0,  "nonexistent_field");
-//     BOOST_CHECK_EQUAL(result, 0.0);
-// }
+BOOST_AUTO_TEST_CASE(null_gems_part_setBoundsOnENS_is_noop)
+{
+    NullGemsPart nullPart;
+    PROBLEME_ANTARES_A_RESOUDRE problem{};
+    problem.Xmax = {100.0, 200.0};
+
+    PROBLEME_HEBDO pb{};
+    VariableManagement::VariableManager varManager(&pb);
+
+    nullPart.setBoundsOnENS(problem, varManager);
+
+    BOOST_CHECK_EQUAL(problem.Xmax[0], 100.0);
+    BOOST_CHECK_EQUAL(problem.Xmax[1], 200.0);
+}
+
+BOOST_AUTO_TEST_CASE(null_gems_part_setRHS_is_noop)
+{
+    NullGemsPart nullPart;
+    PROBLEME_ANTARES_A_RESOUDRE problem{};
+    problem.SecondMembre = {10.0, 20.0};
+    std::map<int, int> constraintMap = {{0, 0}, {1, 1}};
+
+    nullPart.setRHSfictitiousLoadValue(problem, constraintMap);
+    nullPart.setRHSMaxEnsLoadValue(problem, constraintMap);
+
+    // Values unchanged
+    BOOST_CHECK_EQUAL(problem.SecondMembre[0], 10.0);
+    BOOST_CHECK_EQUAL(problem.SecondMembre[1], 20.0);
+}
+
+// --- ActiveGemsPart evaluates expressions ---
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -59,6 +59,7 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_post_process_list.h
         adequacy_patch_csr/adq_patch_post_process_list.cpp
         include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h
+        include/antares/solver/optimisation/adequacy_patch_csr/gems-part.h
         adequacy_patch_csr/adq_patch_curtailment_sharing.cpp
         adequacy_patch_csr/solve_problem.cpp
         adequacy_patch_csr/set_variable_boundaries.cpp
@@ -79,6 +80,7 @@ set(RTESOLVER_OPT
         adequacy_patch_csr/constraints/CsrFictitiousLoad.cpp
         include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrMaxEnsLoad.h
         adequacy_patch_csr/constraints/CsrMaxEnsLoad.cpp
+        adequacy_patch_csr/gems-part.cpp
 
         include/antares/solver/optimisation/opt_rename_problem.h
         opt_rename_problem.cpp
