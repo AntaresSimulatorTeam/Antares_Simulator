@@ -28,6 +28,7 @@ namespace Antares::Optimization
 {
 
 class InactiveComponentsAnalyzer;
+
 // The modeler side of the last optimisation pass of a week, kept alive past the
 // solve so a post-process dump can re-emit the modeler component rows.
 //
