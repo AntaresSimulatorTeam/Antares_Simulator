@@ -56,7 +56,7 @@ void LegacySimulationTablesWriter::write(const OptimisationsSimulationTable& tab
 }
 
 void LegacySimulationTablesWriter::writeForStage(const SimulationTable& table,
-                                                 const std::string& stage)
+                                                 const std::string& stage) const
 {
     auto filepath = makeSimuTableFilePath(folder_, year_, stage);
     SimulationTableWriter writer(filepath, tableFormat_);
