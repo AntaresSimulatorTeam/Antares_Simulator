@@ -33,6 +33,7 @@ var structPROBLEME__HEBDO =
     [ "IndexSuivantIntercoExtremite", "structPROBLEME__HEBDO.html#a98738ce7409d10cbf182d4bcee3a4bc2", null ],
     [ "IndexSuivantIntercoOrigine", "structPROBLEME__HEBDO.html#add9542cebc75248e272c90cede2375fb", null ],
     [ "InputGenerationOfArea", "structPROBLEME__HEBDO.html#ac2b1ba57c800b76d1772ed3578d4e269", null ],
+    [ "lastSolvedModelerProblem", "structPROBLEME__HEBDO.html#af7013ad4d730c91bf9d0d67dd7a2593f", null ],
     [ "LeProblemeADejaEteInstancie", "structPROBLEME__HEBDO.html#ad4142fb598b4e07a6b3e4ce16f526a13", null ],
     [ "MatriceDesContraintesCouplantes", "structPROBLEME__HEBDO.html#ac63bbc4fdd336961fb5cb674fc7b7dd7", null ],
     [ "modelerData", "structPROBLEME__HEBDO.html#a64d99b2be2f835fff045e788008ab599", null ],

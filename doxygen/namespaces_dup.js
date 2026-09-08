@@ -981,6 +981,7 @@ var namespaces_dup =
         [ "LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", "classAntares_1_1Optimization_1_1LegacyFiller" ],
         [ "LegacyNameMapper", "classAntares_1_1Optimization_1_1LegacyNameMapper.html", "classAntares_1_1Optimization_1_1LegacyNameMapper" ],
         [ "LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem" ],
+        [ "SolvedModelerProblem", "structAntares_1_1Optimization_1_1SolvedModelerProblem.html", "structAntares_1_1Optimization_1_1SolvedModelerProblem" ],
         [ "LegacyVariableInfo", "structAntares_1_1Optimization_1_1LegacyVariableInfo.html", "structAntares_1_1Optimization_1_1LegacyVariableInfo" ],
         [ "ThermalCapacityFiller", "classAntares_1_1Optimization_1_1ThermalCapacityFiller.html", "classAntares_1_1Optimization_1_1ThermalCapacityFiller" ],
         [ "WeeklyOptimization", "classAntares_1_1Optimization_1_1WeeklyOptimization.html", "classAntares_1_1Optimization_1_1WeeklyOptimization" ],
@@ -1000,13 +1001,16 @@ var namespaces_dup =
         [ "applyOperation", "TimeDependentLinearExpression_8h.html#a2ee21c86960b2d7fb5ca86724ec77fd0", null ],
         [ "balanceConstraintIndices", "ComponentToAreaConnectionFiller_8cpp.html#a70b02987bc0443abb2f9fba61f119869", null ],
         [ "BuildInactiveComponentsAnalyzer", "InactiveComponentsAnalyzerBuilder_8cpp.html#a5c6d6ea89e7e2c934bdebd9e3e5e24bf", null ],
+        [ "DumpSimulationTableAfterPostProcess", "LegacySimulationTableSnapshot_8h.html#a216b61071e73d495bfffbe16e072a48c", null ],
+        [ "DumpSimulationTableStage", "LegacySimulationTableSnapshot_8h.html#ae3060994d60d8f5d3e495772dc6903f7", null ],
         [ "fictitiousLoadConstraintIndices", "ComponentToAreaConnectionFiller_8cpp.html#a46b71a6ea25755421399d5a0ec661061", null ],
-        [ "FillLegacySimulationTable", "LegacySimulationTableSnapshot_8h.html#a392e66b082ff8c016c5907fc3f3096c8", null ],
+        [ "FillLegacySimulationTable", "LegacySimulationTableSnapshot_8h.html#a310bbac6c713775079cc0edf75f528eb", null ],
         [ "format_as", "MCYearAndTime_8h.html#a42bbf89c2f89bc518949ad86f6818be4", null ],
         [ "greaterValue", "report_8cpp.html#afca59b8c35ac2975defa738d1098f969", null ],
         [ "hasIntegerVariables", "MipDetection_8h.html#acdb7584e1806b2d8281917fccc137257", null ],
         [ "Helper", "watched-constraints_8cpp.html#a9957d3cc982e75341f07ae9e56c1e0e5", null ],
         [ "LegacyBlockTimeIndex", "LegacyExtraOutputs_8h.html#ae5d61f2ef325f595978de54173e653ed", null ],
+        [ "LegacyWeeklyBlock", "LegacySimulationTableSnapshot_8h.html#ad2331eb5e095ca71cca3e43a1547fed8", null ],
         [ "makeUnfeasiblePbAnalyzer", "unfeasible-pb-analyzer_8h.html#a14f36c0006d50ed493aa40606b57bb4b", null ],
         [ "maxUnsupEnergyConstraintIndices", "ComponentToAreaConnectionFiller_8cpp.html#a3a0a12194e913ae104d3e387ef0b78e8", null ],
         [ "operator<<", "MCYearAndTime_8h.html#a4acd8157dc362e4991f60f2436acc4f4", null ],
@@ -1145,6 +1149,7 @@ var namespaces_dup =
           [ "HydroLevelsFinalUpdatePostProcessCmd", "classAntares_1_1Solver_1_1Simulation_1_1HydroLevelsFinalUpdatePostProcessCmd.html", "classAntares_1_1Solver_1_1Simulation_1_1HydroLevelsFinalUpdatePostProcessCmd" ],
           [ "CurtailmentSharingPostProcessCmd", "classAntares_1_1Solver_1_1Simulation_1_1CurtailmentSharingPostProcessCmd.html", "classAntares_1_1Solver_1_1Simulation_1_1CurtailmentSharingPostProcessCmd" ],
           [ "WriteDebugAdequacyPatch", "classAntares_1_1Solver_1_1Simulation_1_1WriteDebugAdequacyPatch.html", "classAntares_1_1Solver_1_1Simulation_1_1WriteDebugAdequacyPatch" ],
+          [ "DumpSimulationTablePostProcessCmd", "classAntares_1_1Solver_1_1Simulation_1_1DumpSimulationTablePostProcessCmd.html", "classAntares_1_1Solver_1_1Simulation_1_1DumpSimulationTablePostProcessCmd" ],
           [ "Adequacy", "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html", "classAntares_1_1Solver_1_1Simulation_1_1Adequacy" ],
           [ "optRuntimeData", "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html", "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData" ],
           [ "basePostProcessCommand", "classAntares_1_1Solver_1_1Simulation_1_1basePostProcessCommand.html", "classAntares_1_1Solver_1_1Simulation_1_1basePostProcessCommand" ],
@@ -2040,6 +2045,12 @@ var namespaces_dup =
       [ "reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", "classfind__reference_1_1reference__folder__finder" ],
       [ "find_reference_folder", "find__reference_8py.html#a9a1c9809dbe51b7d00621cd03854ec6e", null ]
     ] ],
+    [ "Fixtures", null, [
+      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
+      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
+      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
+      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
+    ] ],
     [ "fixtures", null, [
       [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
       [ "antares_problem_generator", "fixtures_8py.html#a532fab1323b92d1f3eb74f5213a6b6c0", null ],
@@ -2048,12 +2059,6 @@ var namespaces_dup =
       [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
       [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
       [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
-    ] ],
-    [ "Fixtures", null, [
-      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
-      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
-      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
-      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
     ] ],
     [ "FSWalker", null, [
       [ "FileJob", "classFSWalker_1_1FileJob.html", "classFSWalker_1_1FileJob" ],
