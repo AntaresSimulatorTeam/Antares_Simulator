@@ -1,5 +1,9 @@
 var NAVTREEINDEX38 =
 {
+"structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html":[9,0,0,12,2,1],
+"structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html#a90ca6ce88174ea1af276d6258d78398c":[9,0,0,12,2,1,0],
+"structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html#aa81f2329b5cb5e936f45766faaea74a7":[9,0,0,12,2,1,1],
+"structAntares_1_1Solver_1_1LoadFiles_1_1LoadedSystem.html":[9,0,0,12,4,1],
 "structAntares_1_1Solver_1_1LoadFiles_1_1LoadedSystem.html#a2caa105f7eeb4419f60792fecaf93e4d":[9,0,0,12,4,1,1],
 "structAntares_1_1Solver_1_1LoadFiles_1_1LoadedSystem.html#ab541179b356820e55e2dca3f15d7b1ba":[9,0,0,12,4,1,0],
 "structAntares_1_1Solver_1_1LocationAnalysis.html":[9,0,0,12,21],
@@ -245,9 +249,5 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1Detail_1_1ThermalGroup.html":[9,0,0,12,6,5,1,0,5],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1Detail_1_1UnsuppliedSpilled.html":[9,0,0,12,6,5,1,0,7],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorageGroup_1_1Statistics.html":[9,0,0,12,6,5,1,7,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup_1_1Statistics.html":[9,0,0,12,6,5,1,8,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationCostTraits.html":[9,0,0,12,6,5,1,9],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationCostTraits.html#a245e504949dc35d7f3fcc52e8347d071":[9,0,0,12,6,5,1,9,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost_1_1Statistics.html":[9,0,0,12,6,5,1,10,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate_1_1Statistics.html":[9,0,0,12,6,5,1,11,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup_1_1Statistics.html":[9,0,0,12,6,5,1,8,0]
 };

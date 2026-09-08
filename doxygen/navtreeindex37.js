@@ -1,5 +1,9 @@
 var NAVTREEINDEX37 =
 {
+"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component.html#a9a2af053b55a0b31927d95e6cac4a62e":[9,0,0,7,0,5,3,0],
+"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component.html#ab349f903bc86421715408ec1d24ba5d8":[9,0,0,7,0,5,3,2],
+"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component.html#ad8e63ebfb510d564afe5c57aff463164":[9,0,0,7,0,5,3,3],
+"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component.html#ae971a87a76cfa18feb2040ef7bd54f9a":[9,0,0,7,0,5,3,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html":[9,0,0,7,0,5,5],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html#a0a43111f5db7a3477d0becee1f7304bd":[9,0,0,7,0,5,5,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html#a261816e26a02162e63ad57df2bfb3b98":[9,0,0,7,0,5,5,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html#ad26873407d9e666726a09e94b5e243b5":[9,0,0,12,2,2,2],
 "structAntares_1_1Solver_1_1Implementation_1_1Tag.html":[9,0,0,12,2,4],
 "structAntares_1_1Solver_1_1Implementation_1_1Tag.html#aec5f1683a9df9e9ef8e2f0d761f97464":[9,0,0,12,2,4,0],
-"structAntares_1_1Solver_1_1Implementation_1_1Tag.html#af5489e9c3e5c40cff840fa6c1b3f886e":[9,0,0,12,2,4,1],
-"structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html":[9,0,0,12,2,1],
-"structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html#a90ca6ce88174ea1af276d6258d78398c":[9,0,0,12,2,1,0],
-"structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html#aa81f2329b5cb5e936f45766faaea74a7":[9,0,0,12,2,1,1],
-"structAntares_1_1Solver_1_1LoadFiles_1_1LoadedSystem.html":[9,0,0,12,4,1]
+"structAntares_1_1Solver_1_1Implementation_1_1Tag.html#af5489e9c3e5c40cff840fa6c1b3f886e":[9,0,0,12,2,4,1]
 };

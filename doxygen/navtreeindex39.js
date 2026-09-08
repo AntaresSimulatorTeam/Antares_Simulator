@@ -1,5 +1,9 @@
 var NAVTREEINDEX39 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationCostTraits.html":[9,0,0,12,6,5,1,9],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationCostTraits.html#a245e504949dc35d7f3fcc52e8347d071":[9,0,0,12,6,5,1,9,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost_1_1Statistics.html":[9,0,0,12,6,5,1,10,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate_1_1Statistics.html":[9,0,0,12,6,5,1,11,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTraits.html":[9,0,0,12,6,5,1,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTraits.html#a4c7aeddeecf0d580829505e97bb7416b":[9,0,0,12,6,5,1,1,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationUnsuppliedSpilled_1_1Statistics.html":[9,0,0,12,6,5,1,12,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX39 =
 "structAntares_1_1Solver_1_1WeeklyDataFromAntares.html#a3ae07c822c04de3f07e7968b738811e6":[9,0,0,12,28,3],
 "structAntares_1_1Solver_1_1WeeklyDataFromAntares.html#a4d120988ba7440d3f6c00b013681084c":[9,0,0,12,28,1],
 "structAntares_1_1Solver_1_1WeeklyDataFromAntares.html#a95b12540aec1c32ea2bf4ed765a279be":[9,0,0,12,28,6],
-"structAntares_1_1Solver_1_1WeeklyDataFromAntares.html#aa4981d26128a553bcbba92b964719ab2":[9,0,0,12,28,2],
-"structAntares_1_1Solver_1_1WeeklyDataFromAntares.html#ac4b9218cd1f9bf5c28c43259adfbc8aa":[9,0,0,12,28,0],
-"structAntares_1_1Solver_1_1WeeklyDataFromAntares.html#af3f60338146df4c34099b27f3dd21dc3":[9,0,0,12,28,5],
-"structAntares_1_1Solver_1_1WeeklyDataFromAntares.html#affceeea15cbf8215e26e88ef18988531":[9,0,0,12,28,7],
-"structAntares_1_1Solver_1_1WeeklyProblemId.html":[9,0,0,12,26]
+"structAntares_1_1Solver_1_1WeeklyDataFromAntares.html#aa4981d26128a553bcbba92b964719ab2":[9,0,0,12,28,2]
 };
