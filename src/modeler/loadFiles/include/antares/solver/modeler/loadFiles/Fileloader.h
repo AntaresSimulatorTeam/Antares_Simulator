@@ -17,8 +17,6 @@ public:
 
     std::optional<ModelerData> loadAll() override;
 
-    const std::filesystem::path& studyPath() const override;
-
     std::filesystem::path studyPath_;
 };
 } // namespace Antares::Solver::LoadFiles

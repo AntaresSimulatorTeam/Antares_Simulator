@@ -208,10 +208,6 @@ Solver::ScenarioScope convertScenarioScope(const OptimConfig& ymlOptimConfig)
     Solver::ScenarioScope scope;
     scope.include = ymlScope.include;
     scope.exclude = ymlScope.exclude;
-    if (ymlScope.playlist_file.has_value())
-    {
-        scope.playlistFile = ymlScope.playlist_file.value();
-    }
     return scope;
 }
 } // namespace

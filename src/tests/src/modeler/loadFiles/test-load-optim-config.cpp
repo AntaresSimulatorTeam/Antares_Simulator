@@ -636,38 +636,6 @@ models:
     BOOST_REQUIRE_EQUAL(scope.exclude.size(), 2);
     BOOST_CHECK_EQUAL(scope.exclude[0], "9");
     BOOST_CHECK_EQUAL(scope.exclude[1], "14");
-    BOOST_CHECK(!scope.playlistFile.has_value());
-}
-
-BOOST_FIXTURE_TEST_CASE(load_optim_config_with_scenario_scope_playlist_file, CreateInputFileFixture)
-{
-    std::string yamlContent = R"(library:
-  id: my-lib
-  description: test-lib
-  models:
-    - id: test-model
-      variables:
-        - id: x)";
-
-    createLibraryFile(yamlContent);
-
-    yamlContent = R"(scenario-scope:
-  playlist-file: my-playlist.json
-models:
-  - id: my-lib.test-model
-    model-decomposition:
-      variables:
-        - id: x
-          location: master)";
-
-    createOptimConfigFile(yamlContent);
-
-    auto res = loadLibraries(studyFolder);
-    BOOST_REQUIRE(res.has_value());
-    const auto& scope = res->scenarioScope;
-    BOOST_REQUIRE(scope.playlistFile.has_value());
-    BOOST_CHECK_EQUAL(scope.playlistFile->string(), "my-playlist.json");
-    BOOST_CHECK(scope.include.empty());
 }
 
 BOOST_FIXTURE_TEST_CASE(load_optim_config_without_scenario_scope_is_default, CreateInputFileFixture)
@@ -696,7 +664,6 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_without_scenario_scope_is_default, Cre
     const auto& scope = res->scenarioScope;
     BOOST_CHECK(scope.include.empty());
     BOOST_CHECK(scope.exclude.empty());
-    BOOST_CHECK(!scope.playlistFile.has_value());
 }
 
 BOOST_FIXTURE_TEST_CASE(load_optim_config_with_empty_scenario_scope_is_default,
@@ -727,7 +694,6 @@ models:
     const auto& scope = res->scenarioScope;
     BOOST_CHECK(scope.include.empty());
     BOOST_CHECK(scope.exclude.empty());
-    BOOST_CHECK(!scope.playlistFile.has_value());
 }
 
 BOOST_FIXTURE_TEST_CASE(load_optim_config_with_invalid_scenario_scope_include,

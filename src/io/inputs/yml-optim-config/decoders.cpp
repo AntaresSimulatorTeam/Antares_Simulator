@@ -159,12 +159,6 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::ScenarioScope>::decode(
         }
     }
 
-    const auto& playlistNode = node["playlist-file"];
-    if (playlistNode.IsDefined() && !playlistNode.IsNull())
-    {
-        rhs.playlist_file = playlistNode.as<std::string>();
-    }
-
     return true;
 }
 

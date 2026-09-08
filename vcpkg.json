@@ -38,10 +38,6 @@
       "name": "yaml-cpp"
     },
     {
-      "name": "boost-json",
-      "version>=": "1.86.0"
-    },
-    {
       "name": "antlr4"
     },
     {

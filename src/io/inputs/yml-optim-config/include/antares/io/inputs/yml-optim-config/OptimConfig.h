@@ -51,8 +51,6 @@ struct ScenarioScope
     std::vector<std::string> include;
     // Scenarios to remove from the base set (optional).
     std::vector<std::string> exclude;
-    // A JSON file (optional): a list of integers / string integers / "a-b" range strings.
-    std::optional<std::string> playlist_file;
 };
 
 struct OptimConfig

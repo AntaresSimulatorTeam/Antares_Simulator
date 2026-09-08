@@ -445,11 +445,8 @@ The **scenario-scope** field selects which Monte-Carlo scenarios to simulate. In
 - **Required:** no
 - **Default value:** runs scenario `0` only (if the key is absent or the block is empty)
 
-The base scenario set is defined by **exactly one** of two mutually exclusive keys:
-`include` (inline) or `playlist-file` (from a JSON file). `exclude` is optional and applies to
-either form.
-
-**Inline form (`include` / `exclude`):**
+The base scenario set is given by the inline `include` list. `exclude` is optional and
+applies to that set.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -462,19 +459,13 @@ Each entry in `include` or `exclude` may be:
 - A string integer: `"5"` → scenario 5 (identical to `5`)
 - A range: `"0-9"` → scenarios 0 through 9 inclusive (10 scenarios)
 
-**Playlist-file form:**
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| `playlist-file` | string | — | Path to a JSON file whose array holds the base set of scenarios (each element being an integer, a string integer or a `"a-b"` range string) |
-
 Rules:
 
 - All indices must be ≥ 0.
 - Overlapping entries in `include` are deduplicated automatically.
 - Excludes that do not appear in the base set produce a warning and have no effect.
 - Output is always sorted in ascending order.
-- `exclude` cannot be used without `include` or `playlist-file`.
+- `exclude` cannot be used without `include`.
 
 Examples:
 
@@ -501,12 +492,6 @@ scenario-scope:
   exclude:
     - 9
     - 14
-~~~
-
-~~~yaml
-# Base set read from a JSON file (e.g. playlist.json: [0, "2", "5-9"])
-scenario-scope:
-  playlist-file: playlist.json
 ~~~
 
 ## Data series

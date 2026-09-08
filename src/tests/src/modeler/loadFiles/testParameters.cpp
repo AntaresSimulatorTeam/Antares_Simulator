@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(file_missing)
 BOOST_AUTO_TEST_CASE(resolve_scenario_scope_default_runs_scenario_0)
 {
     Antares::Solver::ScenarioScope scope; // empty block
-    auto scenarios = Antares::Solver::resolveScenarioScopeScenarios(scope, {});
+    auto scenarios = Antares::Solver::resolveScenarioScopeScenarios(scope);
     BOOST_REQUIRE_EQUAL(scenarios.size(), 1);
     BOOST_CHECK_EQUAL(scenarios[0], 0);
 }
@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE(resolve_scenario_scope_single)
 {
     Antares::Solver::ScenarioScope scope;
     scope.include = {"0"};
-    auto scenarios = Antares::Solver::resolveScenarioScopeScenarios(scope, {});
+    auto scenarios = Antares::Solver::resolveScenarioScopeScenarios(scope);
     BOOST_REQUIRE_EQUAL(scenarios.size(), 1);
     BOOST_CHECK_EQUAL(scenarios[0], 0);
 }
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(resolve_scenario_scope_range)
 {
     Antares::Solver::ScenarioScope scope;
     scope.include = {"0-99"};
-    auto scenarios = Antares::Solver::resolveScenarioScopeScenarios(scope, {});
+    auto scenarios = Antares::Solver::resolveScenarioScopeScenarios(scope);
     BOOST_REQUIRE_EQUAL(scenarios.size(), 100);
     BOOST_CHECK_EQUAL(scenarios.front(), 0);
     BOOST_CHECK_EQUAL(scenarios.back(), 99);
@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(resolve_scenario_scope_dedup_and_sort)
     Antares::Solver::ScenarioScope scope;
     scope.include = {"0-19", "49-59"};
     scope.exclude = {"9", "14"};
-    auto scenarios = Antares::Solver::resolveScenarioScopeScenarios(scope, {});
+    auto scenarios = Antares::Solver::resolveScenarioScopeScenarios(scope);
 
     // 0-19 (20) + 49-59 (11) - {9,14} (2) = 29
     BOOST_REQUIRE_EQUAL(scenarios.size(), 29);
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(resolve_scenario_scope_overlap_deduplicated)
     Antares::Solver::ScenarioScope scope;
     // overlapping ranges: 0-9 and 5-14 -> 0..14 (15 scenarios)
     scope.include = {"0-9", "5-14"};
-    auto scenarios = Antares::Solver::resolveScenarioScopeScenarios(scope, {});
+    auto scenarios = Antares::Solver::resolveScenarioScopeScenarios(scope);
     BOOST_REQUIRE_EQUAL(scenarios.size(), 15);
 }
 
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE(resolve_scenario_scope_exclude_not_in_base_warns_no_effect)
     Antares::Solver::ScenarioScope scope;
     scope.include = {"0-4"};
     scope.exclude = {"99"}; // not present -> no effect
-    auto scenarios = Antares::Solver::resolveScenarioScopeScenarios(scope, {});
+    auto scenarios = Antares::Solver::resolveScenarioScopeScenarios(scope);
     BOOST_REQUIRE_EQUAL(scenarios.size(), 5);
 }
 
@@ -141,7 +141,7 @@ BOOST_AUTO_TEST_CASE(resolve_scenario_scope_exclude_without_include_throws)
 {
     Antares::Solver::ScenarioScope scope;
     scope.exclude = {"0"};
-    BOOST_CHECK_THROW(Antares::Solver::resolveScenarioScopeScenarios(scope, {}),
+    BOOST_CHECK_THROW(Antares::Solver::resolveScenarioScopeScenarios(scope),
                       std::invalid_argument);
 }
 
@@ -149,52 +149,8 @@ BOOST_AUTO_TEST_CASE(resolve_scenario_scope_negative_index_throws)
 {
     Antares::Solver::ScenarioScope scope;
     scope.include = {"-1"};
-    BOOST_CHECK_THROW(Antares::Solver::resolveScenarioScopeScenarios(scope, {}),
+    BOOST_CHECK_THROW(Antares::Solver::resolveScenarioScopeScenarios(scope),
                       std::invalid_argument);
-}
-
-BOOST_AUTO_TEST_CASE(resolve_scenario_scope_include_and_playlist_mutually_exclusive)
-{
-    Antares::Solver::ScenarioScope scope;
-    scope.include = {"0"};
-    scope.playlistFile = "playlist.json";
-    BOOST_CHECK_THROW(Antares::Solver::resolveScenarioScopeScenarios(scope, {}),
-                      std::invalid_argument);
-}
-
-BOOST_AUTO_TEST_CASE(resolve_scenario_scope_playlist_file)
-{
-    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-    std::ofstream playlistStream(studyPath / "playlist.json");
-    playlistStream << R"([0, "1", "3-6"])";
-    playlistStream.close();
-
-    Antares::Solver::ScenarioScope scope;
-    scope.playlistFile = "playlist.json";
-    auto scenarios = Antares::Solver::resolveScenarioScopeScenarios(scope, studyPath);
-    // 0, 1, 3, 4, 5, 6
-    BOOST_REQUIRE_EQUAL(scenarios.size(), 6);
-    BOOST_CHECK_EQUAL(scenarios[0], 0);
-    BOOST_CHECK_EQUAL(scenarios[1], 1);
-    BOOST_CHECK_EQUAL(scenarios[2], 3);
-    BOOST_CHECK_EQUAL(scenarios[5], 6);
-}
-
-BOOST_AUTO_TEST_CASE(resolve_scenario_scope_playlist_file_with_exclude)
-{
-    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-    std::ofstream playlistStream(studyPath / "playlist.json");
-    playlistStream << R"([0, 1, 2, 3])";
-    playlistStream.close();
-
-    Antares::Solver::ScenarioScope scope;
-    scope.playlistFile = "playlist.json";
-    scope.exclude = {"1"};
-    auto scenarios = Antares::Solver::resolveScenarioScopeScenarios(scope, studyPath);
-    BOOST_REQUIRE_EQUAL(scenarios.size(), 3);
-    BOOST_CHECK_EQUAL(scenarios[0], 0);
-    BOOST_CHECK_EQUAL(scenarios[1], 2);
-    BOOST_CHECK_EQUAL(scenarios[2], 3);
 }
 
 BOOST_AUTO_TEST_CASE(resolve_scenario_scope_negative_index_reports_sign_message)
@@ -206,7 +162,7 @@ BOOST_AUTO_TEST_CASE(resolve_scenario_scope_negative_index_reports_sign_message)
     std::string message;
     try
     {
-        Antares::Solver::resolveScenarioScopeScenarios(scope, {});
+        Antares::Solver::resolveScenarioScopeScenarios(scope);
     }
     catch (const std::invalid_argument& e)
     {
@@ -222,31 +178,6 @@ BOOST_AUTO_TEST_CASE(resolve_scenario_scope_plus_sign_is_rejected)
     // A leading '+' is not part of the documented grammar and must be rejected.
     Antares::Solver::ScenarioScope scope;
     scope.include = {"+5"};
-    BOOST_CHECK_THROW(Antares::Solver::resolveScenarioScopeScenarios(scope, {}),
+    BOOST_CHECK_THROW(Antares::Solver::resolveScenarioScopeScenarios(scope),
                       std::invalid_argument);
-}
-
-BOOST_AUTO_TEST_CASE(resolve_scenario_scope_playlist_broken_json_reports_path)
-{
-    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-    std::ofstream playlistStream(studyPath / "playlist.json");
-    playlistStream << R"([0, 1,)"; // invalid JSON
-    playlistStream.close();
-
-    Antares::Solver::ScenarioScope scope;
-    scope.playlistFile = "playlist.json";
-    bool caught = false;
-    std::string message;
-    try
-    {
-        Antares::Solver::resolveScenarioScopeScenarios(scope, studyPath);
-    }
-    catch (const std::invalid_argument& e)
-    {
-        caught = true;
-        message = e.what();
-    }
-    BOOST_CHECK(caught);
-    // The file path must be part of the message so the broken playlist can be located.
-    BOOST_CHECK(message.find("playlist.json") != std::string::npos);
 }

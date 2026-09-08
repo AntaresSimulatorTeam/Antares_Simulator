@@ -85,7 +85,7 @@ Modeler::Modeler(ILoader& loader, fs::path ouputPath, TableFormat tableFormat):
     // (ModelerData contains unique_ptr members and is move-only).
     data_ = std::move(*data);
 
-    scenarios_ = resolveScenarioScopeScenarios(data_.scenarioScope, loader_.studyPath());
+    scenarios_ = resolveScenarioScopeScenarios(data_.scenarioScope);
     validateScenariosAgainstScenarioBuilder();
     logs.info() << fmt::format("Number of Monte-Carlo scenarios to simulate: {}",
                                scenarios_.size());

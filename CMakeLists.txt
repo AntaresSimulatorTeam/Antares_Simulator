@@ -192,8 +192,7 @@ if (${BUILD_MERSENNE_TWISTER_PYBIND11})
     find_package(pybind11 REQUIRED)
 endif ()
 
-#Boost header libraries + compiled Json library
-find_package(Boost CONFIG REQUIRED COMPONENTS json)
+find_package(Boost CONFIG REQUIRED)
 
 find_package(antlr4-runtime REQUIRED)
 find_package(yaml-cpp REQUIRED)

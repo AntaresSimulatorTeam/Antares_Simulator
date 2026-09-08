@@ -495,29 +495,6 @@ models:
     BOOST_REQUIRE_EQUAL(scope.exclude.size(), 2);
     BOOST_CHECK_EQUAL(scope.exclude[0], "9");
     BOOST_CHECK_EQUAL(scope.exclude[1], "14");
-    BOOST_CHECK(!scope.playlist_file.has_value());
-}
-
-BOOST_AUTO_TEST_CASE(parse_scenario_scope_playlist_file)
-{
-    std::string yaml_content = R"(
-scenario-scope:
-  playlist-file: my-playlist.json
-models:
-  - id: model1
-    model-decomposition:
-      variables: []
-      objective-contributions: []
-)";
-
-    Parser parser;
-    OptimConfig config = parser.parse(yaml_content);
-
-    BOOST_REQUIRE(config.scenario_scope.has_value());
-    const auto& scope = config.scenario_scope.value();
-    BOOST_REQUIRE(scope.playlist_file.has_value());
-    BOOST_CHECK_EQUAL(scope.playlist_file.value(), "my-playlist.json");
-    BOOST_CHECK(scope.include.empty());
 }
 
 BOOST_AUTO_TEST_CASE(parse_scenario_scope_absent_is_default)

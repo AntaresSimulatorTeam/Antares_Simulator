@@ -9,11 +9,7 @@
 #include <set>
 #include <stdexcept>
 #include <string>
-#include <system_error>
 
-#include <boost/json.hpp>
-
-#include <antares/io/file.h>
 #include <antares/logs/logs.h>
 
 namespace Antares::Solver
@@ -109,86 +105,24 @@ std::set<unsigned> expandEntries(const std::vector<std::string>& entries)
     return indices;
 }
 
-std::vector<std::string> entriesFromJson(const std::filesystem::path& playlistFile)
-{
-    const auto content = IO::readFile(playlistFile);
-    std::error_code ec;
-    const boost::json::value json = boost::json::parse(content, ec);
-    if (ec)
-    {
-        // Add the file path so the broken playlist can be located (the missing-file case
-        // is reported by IO::readFile).
-        throw std::invalid_argument(
-          fmt::format("Invalid playlist file '{}': {}", playlistFile.string(), ec.message()));
-    }
-
-    if (!json.is_array())
-    {
-        throw std::invalid_argument(
-          fmt::format("Invalid playlist file '{}': expected a JSON array", playlistFile.string()));
-    }
-
-    std::vector<std::string> entries;
-    entries.reserve(json.as_array().size());
-    for (const auto& item: json.as_array())
-    {
-        if (item.is_int64())
-        {
-            entries.push_back(std::to_string(item.as_int64()));
-        }
-        else if (item.is_uint64())
-        {
-            entries.push_back(std::to_string(static_cast<long long>(item.as_uint64())));
-        }
-        else if (item.is_string())
-        {
-            entries.push_back(std::string(item.as_string()));
-        }
-        else
-        {
-            throw ModelerError(
-              fmt::format("Invalid playlist file '{}': each element must be an integer or string",
-                          playlistFile.string()));
-        }
-    }
-    return entries;
-}
-
 } // namespace
 
-std::vector<unsigned> resolveScenarioScopeScenarios(const ScenarioScope& scope,
-                                                    const std::filesystem::path& studyPath)
+std::vector<unsigned> resolveScenarioScopeScenarios(const ScenarioScope& scope)
 {
     const bool hasInclude = !scope.include.empty();
-    const bool hasPlaylist = scope.playlistFile.has_value();
     const bool hasExclude = !scope.exclude.empty();
 
-    if (hasInclude && hasPlaylist)
+    if (hasExclude && !hasInclude)
     {
-        throw ModelerError("scenario-scope: 'include' and 'playlist-file' are mutually "
-                           "exclusive");
+        throw ModelerError("scenario-scope: 'exclude' can only be used with 'include'");
     }
-    if (hasExclude && !hasInclude && !hasPlaylist)
-    {
-        throw ModelerError("scenario-scope: 'exclude' can only be used with 'include' or "
-                           "'playlist-file'");
-    }
-    if (!hasInclude && !hasPlaylist)
+    if (!hasInclude)
     {
         // No scenario-scope key at all, or an empty block: run scenario 0 only.
         return {0};
     }
 
-    std::vector<std::string> include = scope.include;
-    if (hasPlaylist)
-    {
-        const auto playlistPath = scope.playlistFile->is_absolute()
-                                    ? *scope.playlistFile
-                                    : studyPath / *scope.playlistFile;
-        include = entriesFromJson(playlistPath);
-    }
-
-    auto base = expandEntries(include);
+    auto base = expandEntries(scope.include);
     const auto excludes = expandEntries(scope.exclude);
     for (const auto excluded: excludes)
     {
