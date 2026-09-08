@@ -30,7 +30,8 @@ void DumpSimulationTableStage(IO::Outputs::OptimisationsSimulationTable* tables,
     DumpSimulationTableAfterPostProcess(*table,
                                         problemeHebdo,
                                         fillContext,
-                                        LegacyWeeklyBlock(problemeHebdo));
+                                        LegacyWeeklyBlock(problemeHebdo),
+                                        tables->inactiveComponents.get());
 }
 
 } // namespace Antares::Optimization

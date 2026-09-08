@@ -14,6 +14,8 @@ struct PROBLEME_HEBDO;
 namespace Antares::Optimization
 {
 
+class InactiveComponentsAnalyzer;
+
 // Read-only view of the solver solution a legacy fill should publish: the primal
 // values (X) and the constraint duals. Passed explicitly so a post-process dump
 // can supply the post-processed values without mutating and restoring the solver

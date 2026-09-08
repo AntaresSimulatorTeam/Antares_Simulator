@@ -20,6 +20,7 @@ class AdequacyPatchRuntimeData;
 namespace Antares::Optimization
 {
 struct SolvedModelerProblem;
+class InactiveComponentsAnalyzer;
 }
 
 struct CORRESPONDANCES_DES_VARIABLES

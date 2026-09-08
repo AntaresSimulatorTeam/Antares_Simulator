@@ -563,7 +563,7 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
         // Kept raw: the stage names belong to the simulation-table library,
         // which sits above this one. Validated and resolved when the command
         // line is applied, so that both sources go through the same check.
-        d.simulationTableStagesStr = value.to<std::string>();
+        d.simulationTableStagesStr = value;
         return true;
     }
     return false;

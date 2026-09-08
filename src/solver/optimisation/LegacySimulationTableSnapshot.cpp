@@ -72,7 +72,8 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
                                const LegacySolution& solution,
                                const FillContext& fillContext,
                                const LegacyNameMapper& nameMapper,
-                               unsigned currentBlock)
+                               unsigned currentBlock,
+                               const InactiveComponentsAnalyzer* inactiveComponents)
 {
     const PROBLEME_ANTARES_A_RESOUDRE& problem = *problemeHebdo.ProblemeAResoudre;
 
@@ -100,7 +101,12 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
            .status = std::nullopt});
     }
 
-    AddLegacyExtraOutputs(simulationTable, problemeHebdo, solution, fillContext, currentBlock);
+    AddLegacyExtraOutputs(simulationTable,
+                          problemeHebdo,
+                          solution,
+                          fillContext,
+                          currentBlock,
+                          inactiveComponents);
 }
 
 unsigned LegacyWeeklyBlock(const PROBLEME_HEBDO& problemeHebdo)
@@ -111,7 +117,8 @@ unsigned LegacyWeeklyBlock(const PROBLEME_HEBDO& problemeHebdo)
 void DumpSimulationTableAfterPostProcess(SimulationTable& simulationTable,
                                          PROBLEME_HEBDO& problemeHebdo,
                                          const FillContext& fillContext,
-                                         unsigned currentBlock)
+                                         unsigned currentBlock,
+                                         const InactiveComponentsAnalyzer* inactiveComponents)
 {
     if (!problemeHebdo.OptimisationAuPasHebdomadaire)
     {
@@ -149,7 +156,8 @@ void DumpSimulationTableAfterPostProcess(SimulationTable& simulationTable,
                               {solution.primal, solution.duals},
                               fillContext,
                               nameMapper,
-                              currentBlock);
+                              currentBlock,
+                              inactiveComponents);
 }
 
 } // namespace Antares::Optimization

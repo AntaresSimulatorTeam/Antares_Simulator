@@ -499,6 +499,7 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
 {
     LegacyExtraOutputEmitter emitter(simulationTable,
                                      problemeHebdo,
+                                     solution,
                                      fillContext,
                                      currentBlock,
                                      inactiveComponents);
