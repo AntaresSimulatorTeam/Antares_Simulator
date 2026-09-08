@@ -344,8 +344,7 @@ Feature: Legacy variables in simulation table
     When I run antares simulator with --output=simulation-tables
     Then the simulation succeeds
     And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2, remix-hydro, adq-patch-csr"
-    And the modeler outputs are read from stage "optim-nb-2"
-    And the modeler outputs contain the following entries with relative tolerance 1e-4
+    And the modeler outputs from stage "optim-nb-2" contain the following entries with relative tolerance 1e-4
       | block | component              | output            | timestep | scenario | value  |
       | 0     | areain-1_node          | unsupplied_energy | 0        | 0        | 0      |
       | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 400    |
@@ -355,8 +354,7 @@ Feature: Legacy variables in simulation table
 
     # No managed hydro in this study, so shave-peaks / remix hydro has nothing
     # to move: the stage exists and reproduces optim-nb-2 exactly.
-    And the modeler outputs are read from stage "remix-hydro"
-    And the modeler outputs contain the following entries with relative tolerance 1e-4
+    And the modeler outputs from stage "remix-hydro" contain the following entries with relative tolerance 1e-4
       | block | component              | output            | timestep | scenario | value  |
       | 0     | areain-1_node          | unsupplied_energy | 0        | 0        | 0      |
       | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 400    |
@@ -370,8 +368,7 @@ Feature: Legacy variables in simulation table
     #
     # CSR is a separate LP, so the last digits are solver-dependent; hence the
     # relative tolerance on the quantities.
-    And the modeler outputs are read from stage "adq-patch-csr"
-    And the modeler outputs contain the following entries with relative tolerance 1e-4
+    And the modeler outputs from stage "adq-patch-csr" contain the following entries with relative tolerance 1e-4
       | block | component              | output            | timestep | scenario | value    |
       | 0     | areain-1_node          | unsupplied_energy | 0        | 0        | 199.9526 |
       | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 200.0474 |
@@ -385,7 +382,7 @@ Feature: Legacy variables in simulation table
     # The .0006 disappearing is the anti-degeneracy noise PrepareRandomNumbers
     # adds to the optimisation costs: the CSR price update writes the un-noised
     # study cost, so these are exact and need no tolerance.
-    And the modeler outputs contain the following entries
+    And the modeler outputs from stage "adq-patch-csr" contain the following entries
       | block | component     | output | timestep | scenario | value |
       | 0     | areain-1_node | price  | 0        | 0        | 1000  |
       | 0     | areain-2_node | price  | 0        | 0        | 800   |
