@@ -10,6 +10,7 @@
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
 
+#include "LegacyExtraOutputs.h"
 #include "LegacyNameMapper.h"
 
 struct PROBLEME_HEBDO;
@@ -45,13 +46,15 @@ struct SolvedModelerProblem
 };
 
 // Writes the legacy solver's contribution to the simulation table: one raw row
-// per named optimisation variable (value = X[i], name translated through
-// nameMapper), followed by the derived rows of AddLegacyExtraOutputs.
+// per named optimisation variable (value = solution.primal[i], name translated
+// through nameMapper), followed by the derived rows of AddLegacyExtraOutputs.
 //
-// Reads the solution through PROBLEME_ANTARES_A_RESOUDRE::X, so the caller is
-// responsible for X holding the state it wants published.
+// The solution to publish is passed in explicitly: the normal solve hands over a
+// view of PROBLEME_ANTARES_A_RESOUDRE's X / duals, a post-process dump hands over
+// the post-processed values.
 void FillLegacySimulationTable(Antares::IO::Outputs::SimulationTable& simulationTable,
                                PROBLEME_HEBDO& problemeHebdo,
+                               const LegacySolution& solution,
                                const Antares::LinearProblem::Api::FillContext& fillContext,
                                const LegacyNameMapper& nameMapper,
                                unsigned currentBlock);
@@ -74,13 +77,13 @@ unsigned LegacyWeeklyBlock(const PROBLEME_HEBDO& problemeHebdo);
 // ProblemeAResoudre::X, so a plain fill would re-emit the values the solver
 // left. AdresseOuPlacerLaValeurDesVariablesOptimisees already points at the
 // exact result slot of each variable -- OPT_AppelDuSimplexe publishes with
-// `*address = X[i]` -- so reading those addresses back into X republishes the
-// post-processed state and lets the regular fill be reused unchanged. The same
-// holds for the duals through AdresseOuPlacerLaValeurDesCoutsMarginaux, which
-// UpdateMrgPriceAfterCSRcmd overwrites in place.
-//
-// X and the duals are restored before returning, so calling this cannot change
-// anything the simulation computes afterwards.
+// `*address = X[i]` -- so reading those addresses back gives the post-processed
+// primal values; the same holds for the duals through
+// AdresseOuPlacerLaValeurDesCoutsMarginaux, which UpdateMrgPriceAfterCSRcmd
+// overwrites in place. Those refreshed vectors are built as locals and handed to
+// FillLegacySimulationTable as a LegacySolution, so the solver state on
+// ProblemeAResoudre is never touched and this is observation-only by
+// construction.
 //
 // Does nothing (with a one-time warning) when the simplex optimization range is
 // daily: the week is then solved in seven intervals that each rebuild the

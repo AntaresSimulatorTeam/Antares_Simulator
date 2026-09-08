@@ -293,6 +293,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         static constexpr LegacyNameMapper legacyNameMapper;
         FillLegacySimulationTable(*simulationTable,
                                   *problemeHebdo,
+                                  {ProblemeAResoudre->X,
+                                   ProblemeAResoudre->CoutsMarginauxDesContraintes},
                                   fillCtx,
                                   legacyNameMapper,
                                   currentBlock);
