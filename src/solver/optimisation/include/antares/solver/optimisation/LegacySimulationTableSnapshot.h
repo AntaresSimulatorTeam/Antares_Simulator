@@ -55,7 +55,8 @@ void FillLegacySimulationTable(Antares::IO::Outputs::SimulationTable& simulation
                                PROBLEME_HEBDO& problemeHebdo,
                                const Antares::LinearProblem::Api::FillContext& fillContext,
                                const LegacyNameMapper& nameMapper,
-                               unsigned currentBlock);
+                               unsigned currentBlock,
+                               const InactiveComponentsAnalyzer* inactiveComponents = nullptr);
 
 // Block index of the week problemeHebdo currently holds. Same expression as the
 // weekly branch of OPT_TryToCallSimplex, for callers that run once per week
