@@ -141,16 +141,14 @@ BOOST_AUTO_TEST_CASE(resolve_scenario_scope_exclude_without_include_throws)
 {
     Antares::Solver::ScenarioScope scope;
     scope.exclude = {"0"};
-    BOOST_CHECK_THROW(Antares::Solver::resolveScenarioScopeScenarios(scope),
-                      std::invalid_argument);
+    BOOST_CHECK_THROW(Antares::Solver::resolveScenarioScopeScenarios(scope), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(resolve_scenario_scope_negative_index_throws)
 {
     Antares::Solver::ScenarioScope scope;
     scope.include = {"-1"};
-    BOOST_CHECK_THROW(Antares::Solver::resolveScenarioScopeScenarios(scope),
-                      std::invalid_argument);
+    BOOST_CHECK_THROW(Antares::Solver::resolveScenarioScopeScenarios(scope), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(resolve_scenario_scope_negative_index_reports_sign_message)
@@ -178,6 +176,5 @@ BOOST_AUTO_TEST_CASE(resolve_scenario_scope_plus_sign_is_rejected)
     // A leading '+' is not part of the documented grammar and must be rejected.
     Antares::Solver::ScenarioScope scope;
     scope.include = {"+5"};
-    BOOST_CHECK_THROW(Antares::Solver::resolveScenarioScopeScenarios(scope),
-                      std::invalid_argument);
+    BOOST_CHECK_THROW(Antares::Solver::resolveScenarioScopeScenarios(scope), std::invalid_argument);
 }
