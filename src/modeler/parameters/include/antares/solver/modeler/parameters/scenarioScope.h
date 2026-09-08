@@ -5,11 +5,22 @@
 
 #include <filesystem>
 #include <optional>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
 namespace Antares::Solver
 {
+
+/// Error thrown by the modeler when the scenario scope selection is invalid
+class ModelerError: public std::invalid_argument
+{
+public:
+    explicit ModelerError(const std::string& s):
+        std::invalid_argument(s)
+    {
+    }
+};
 
 /** \brief Selects which Monte-Carlo scenarios to simulate.
  *

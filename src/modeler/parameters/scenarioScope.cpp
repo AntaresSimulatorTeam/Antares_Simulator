@@ -4,13 +4,14 @@
 #include "antares/solver/modeler/parameters/scenarioScope.h"
 
 #include <algorithm>
-#include <boost/json.hpp>
 #include <cctype>
 #include <fmt/format.h>
 #include <set>
 #include <stdexcept>
-#include <system_error>
 #include <string>
+#include <system_error>
+
+#include <boost/json.hpp>
 
 #include <antares/io/file.h>
 #include <antares/logs/logs.h>
@@ -44,7 +45,7 @@ std::set<unsigned> expandEntry(const std::string& entry)
     {
         if (entry[0] == '-')
         {
-            throw throwInvalidEntry(
+            throw ModelerError(
               fmt::format("Invalid scenario-scope entry '{}': indices must be >= 0", entry));
         }
         throwInvalidEntry(entry);
@@ -165,12 +166,12 @@ std::vector<unsigned> resolveScenarioScopeScenarios(const ScenarioScope& scope,
     if (hasInclude && hasPlaylist)
     {
         throw ModelerError("scenario-scope: 'include' and 'playlist-file' are mutually "
-                                    "exclusive");
+                           "exclusive");
     }
     if (hasExclude && !hasInclude && !hasPlaylist)
     {
         throw ModelerError("scenario-scope: 'exclude' can only be used with 'include' or "
-                                    "'playlist-file'");
+                           "'playlist-file'");
     }
     if (!hasInclude && !hasPlaylist)
     {

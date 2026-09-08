@@ -94,8 +94,7 @@ public:
                 .solverParameters = "DUMMY",
                 .noOutput = false,
                 .firstTimeStep = timeSteps.first,
-                .lastTimeStep = timeSteps.second,
-                .scenarioScope = scenarioScope};
+                .lastTimeStep = timeSteps.second};
     }
 
     std::optional<ModelerData> loadAll() override
@@ -139,6 +138,7 @@ public:
         md.system = std::make_unique<System>(std::move(system));
         md.dataSeries = std::move(data);
         md.scenarioGroupRepository = std::move(scenarioGroupRepository);
+        md.scenarioScope = scenarioScope;
 
         return md;
     }
@@ -304,8 +304,7 @@ public:
                 .solverParameters = "DUMMY",
                 .noOutput = false,
                 .firstTimeStep = 0,
-                .lastTimeStep = timeSteps_ - 1,
-                .scenarioScope = {}};
+                .lastTimeStep = timeSteps_ - 1};
     }
 
     std::optional<ModelerData> loadAll() override

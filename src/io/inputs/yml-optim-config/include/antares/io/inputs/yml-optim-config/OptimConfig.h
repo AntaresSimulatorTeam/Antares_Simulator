@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -44,6 +45,16 @@ struct Model
     std::vector<ConstraintOutOfBoundsProcessing> constraints_out_of_bounds_processing;
 };
 
+struct ScenarioScope
+{
+    // Inline form: individual integers, string integers, and inclusive "a-b" range strings.
+    std::vector<std::string> include;
+    // Scenarios to remove from the base set (optional).
+    std::vector<std::string> exclude;
+    // A JSON file (optional): a list of integers / string integers / "a-b" range strings.
+    std::optional<std::string> playlist_file;
+};
+
 struct OptimConfig
 {
     // Resolution mode requested in the YAML file. Default value: sequential-subproblems
@@ -51,6 +62,9 @@ struct OptimConfig
 
     // List of models defined in the optim-config.yaml file
     std::vector<Model> models;
+
+    // Monte-Carlo scenarios to simulate (optional, absent -> default scenario scope)
+    std::optional<ScenarioScope> scenario_scope;
 };
 
 } // namespace Antares::IO::Inputs::YmlOptimConfig

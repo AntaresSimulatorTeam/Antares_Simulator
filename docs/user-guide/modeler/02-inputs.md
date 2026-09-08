@@ -437,6 +437,78 @@ models:
 
 Each configured constraint `id` must reference an existing constraint of the model.
 
+### Scenario scope
+
+The **scenario-scope** field selects which Monte-Carlo scenarios to simulate. Indices are 0-based, consistent with the
+[scenario builder](#scenario-builder) file convention. This field is optional.
+
+- **Required:** no
+- **Default value:** runs scenario `0` only (if the key is absent or the block is empty)
+
+The base scenario set is defined by **exactly one** of two mutually exclusive keys:
+`include` (inline) or `playlist-file` (from a JSON file). `exclude` is optional and applies to
+either form.
+
+**Inline form (`include` / `exclude`):**
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `include` | list | — | Scenarios to run (required in inline form) |
+| `exclude` | list | — | Scenarios to remove from the base set (optional) |
+
+Each entry in `include` or `exclude` may be:
+
+- An integer: `5` → scenario 5
+- A string integer: `"5"` → scenario 5 (identical to `5`)
+- A range: `"0-9"` → scenarios 0 through 9 inclusive (10 scenarios)
+
+**Playlist-file form:**
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `playlist-file` | string | — | Path to a JSON file whose array holds the base set of scenarios (each element being an integer, a string integer or a `"a-b"` range string) |
+
+Rules:
+
+- All indices must be ≥ 0.
+- Overlapping entries in `include` are deduplicated automatically.
+- Excludes that do not appear in the base set produce a warning and have no effect.
+- Output is always sorted in ascending order.
+- `exclude` cannot be used without `include` or `playlist-file`.
+
+Examples:
+
+~~~yaml
+# Run a single scenario
+scenario-scope:
+  include:
+    - 0
+~~~
+
+~~~yaml
+# Run scenarios 0 to 99
+scenario-scope:
+  include:
+    - "0-99"
+~~~
+
+~~~yaml
+# Run scenarios 0–19 and 49–59, but skip 9 and 14
+scenario-scope:
+  include:
+    - "0-19"
+    - "49-59"
+  exclude:
+    - 9
+    - 14
+~~~
+
+~~~yaml
+# Base set read from a JSON file (e.g. playlist.json: [0, "2", "5-9"])
+scenario-scope:
+  playlist-file: playlist.json
+~~~
+
 ## Data series
 
 The **input/data-series** directory contains all data-series needed by the [system description](#system-file) to define
