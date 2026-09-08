@@ -318,7 +318,13 @@ struct Fixture
 
     void fill()
     {
-        AddLegacyExtraOutputs(table, problem, fillContext, currentBlock, inactiveComponents.get());
+        AddLegacyExtraOutputs(table,
+                              problem,
+                              problem.ProblemeAResoudre->X,
+                              problem.ProblemeAResoudre->CoutsMarginauxDesContraintes,
+                              fillContext,
+                              currentBlock,
+                              inactiveComponents.get());
     }
 
     PROBLEME_HEBDO problem;

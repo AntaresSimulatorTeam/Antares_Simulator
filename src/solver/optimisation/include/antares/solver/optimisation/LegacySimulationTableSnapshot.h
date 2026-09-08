@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/io/outputs/SimulationTable.h"
@@ -28,6 +29,7 @@ namespace Antares::Optimization
 {
 
 class InactiveComponentsAnalyzer;
+
 // The modeler side of the last optimisation pass of a week, kept alive past the
 // solve so a post-process dump can re-emit the modeler component rows.
 //
@@ -46,13 +48,16 @@ struct SolvedModelerProblem
 };
 
 // Writes the legacy solver's contribution to the simulation table: one raw row
-// per named optimisation variable (value = X[i], name translated through
+// per named optimisation variable (value = x[i], name translated through
 // nameMapper), followed by the derived rows of AddLegacyExtraOutputs.
 //
-// Reads the solution through PROBLEME_ANTARES_A_RESOUDRE::X, so the caller is
-// responsible for X holding the state it wants published.
+// Reads the solution through the x and coutsMarginaux vectors passed by the
+// caller, so the caller is responsible for them holding the state it wants
+// published (e.g. the post-processed values after a post-process dump).
 void FillLegacySimulationTable(Antares::IO::Outputs::SimulationTable& simulationTable,
                                PROBLEME_HEBDO& problemeHebdo,
+                               const std::vector<double>& x,
+                               const std::vector<double>& coutsMarginaux,
                                const Antares::LinearProblem::Api::FillContext& fillContext,
                                const LegacyNameMapper& nameMapper,
                                unsigned currentBlock,
@@ -76,13 +81,15 @@ unsigned LegacyWeeklyBlock(const PROBLEME_HEBDO& problemeHebdo);
 // ProblemeAResoudre::X, so a plain fill would re-emit the values the solver
 // left. AdresseOuPlacerLaValeurDesVariablesOptimisees already points at the
 // exact result slot of each variable -- OPT_AppelDuSimplexe publishes with
-// `*address = X[i]` -- so reading those addresses back into X republishes the
-// post-processed state and lets the regular fill be reused unchanged. The same
-// holds for the duals through AdresseOuPlacerLaValeurDesCoutsMarginaux, which
-// UpdateMrgPriceAfterCSRcmd overwrites in place.
+// `*address = X[i]` -- so reading those addresses back into a scratch vector
+// republishes the post-processed state and lets the regular fill be reused
+// unchanged. The same holds for the duals through
+// AdresseOuPlacerLaValeurDesCoutsMarginaux, which UpdateMrgPriceAfterCSRcmd
+// overwrites in place.
 //
-// X and the duals are restored before returning, so calling this cannot change
-// anything the simulation computes afterwards.
+// The scratch vectors are handed to FillLegacySimulationTable; X and the duals
+// are never touched, so calling this cannot change anything the simulation
+// computes afterwards.
 //
 // Does nothing (with a one-time warning) when the simplex optimization range is
 // daily: the week is then solved in seven intervals that each rebuild the

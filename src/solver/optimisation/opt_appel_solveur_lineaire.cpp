@@ -275,8 +275,13 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         }
 
         static constexpr LegacyNameMapper legacyNameMapper;
+        // During the solve X and the duals are the solver's own (fresh) result, so
+        // they are passed through directly; the post-process dump rebuilds them
+        // from the address table instead.
         FillLegacySimulationTable(*simulationTable,
                                   *problemeHebdo,
+                                  ProblemeAResoudre->X,
+                                  ProblemeAResoudre->CoutsMarginauxDesContraintes,
                                   fillCtx,
                                   legacyNameMapper,
                                   currentBlock,

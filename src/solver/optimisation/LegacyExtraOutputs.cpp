@@ -66,12 +66,16 @@ class LegacyExtraOutputEmitter
 public:
     LegacyExtraOutputEmitter(SimulationTable& simulationTable,
                              PROBLEME_HEBDO& problemeHebdo,
+                             const std::vector<double>& x,
+                             const std::vector<double>& coutsMarginaux,
                              const FillContext& fillContext,
                              unsigned currentBlock,
                              const InactiveComponentsAnalyzer* inactiveComponents):
         table_(simulationTable),
         problemeHebdo_(problemeHebdo),
         problem_(*problemeHebdo.ProblemeAResoudre),
+        x_(x),
+        coutsMarginaux_(coutsMarginaux),
         variableManager_(VariableManagerFromProblemHebdo(&problemeHebdo)),
         fillContext_(fillContext),
         block_(currentBlock),
@@ -128,7 +132,7 @@ private:
 
     [[nodiscard]] double x(int variableIndex) const
     {
-        return problem_.X[static_cast<std::size_t>(variableIndex)];
+        return x_[static_cast<std::size_t>(variableIndex)];
     }
 
     [[nodiscard]] double cost(int variableIndex) const
@@ -138,7 +142,7 @@ private:
 
     [[nodiscard]] double dual(int constraintIndex) const
     {
-        return problem_.CoutsMarginauxDesContraintes[static_cast<std::size_t>(constraintIndex)];
+        return coutsMarginaux_[static_cast<std::size_t>(constraintIndex)];
     }
 
     [[nodiscard]] double areaPrice(uint32_t pays, int pdt) const
@@ -150,6 +154,8 @@ private:
     SimulationTable& table_;
     PROBLEME_HEBDO& problemeHebdo_;
     const PROBLEME_ANTARES_A_RESOUDRE& problem_;
+    const std::vector<double>& x_;
+    const std::vector<double>& coutsMarginaux_;
     VariableManagement::VariableManager variableManager_;
     const FillContext& fillContext_;
     unsigned block_;
@@ -485,12 +491,16 @@ void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays)
 
 void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                            PROBLEME_HEBDO& problemeHebdo,
+                           const std::vector<double>& x,
+                           const std::vector<double>& coutsMarginaux,
                            const FillContext& fillContext,
                            unsigned currentBlock,
                            const InactiveComponentsAnalyzer* inactiveComponents)
 {
     LegacyExtraOutputEmitter emitter(simulationTable,
                                      problemeHebdo,
+                                     x,
+                                     coutsMarginaux,
                                      fillContext,
                                      currentBlock,
                                      inactiveComponents);

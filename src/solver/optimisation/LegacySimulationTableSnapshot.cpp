@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <cassert>
 #include <mutex>
-#include <utility>
 #include <vector>
 
 #include <antares/antares/constants.h>
@@ -27,56 +26,36 @@ namespace Antares::Optimization
 
 namespace
 {
-// Republishes the post-processed results into the solution vectors for the
-// duration of a fill, and puts the solver state back exactly as it was.
-class SolutionRefreshedFromResults
+// Rebuilds the solution vector as it stands *after* post-processing.
+//
+// Post-processing mutates the result structures in place (the slots the address
+// table points at) and never writes back into the solver's X / duals, so a copy
+// straight from the solver would carry the pre-post-process values. Reading those
+// addresses back into a scratch copy of the solver values recovers the
+// post-processed state. Entries without an address were never published to the
+// results, so they keep the value the optimizer left.
+std::vector<double> GatherFromAddresses(const std::vector<double>& solverValues,
+                                        const std::vector<double*>& addresses)
 {
-public:
-    explicit SolutionRefreshedFromResults(PROBLEME_ANTARES_A_RESOUDRE& problem):
-        problem_(problem),
-        savedX_(problem.X),
-        savedDuals_(problem.CoutsMarginauxDesContraintes)
+    std::vector<double> values(solverValues);
+    const std::size_t count = std::min(values.size(), addresses.size());
+    for (std::size_t i = 0; i < count; ++i)
     {
-        refresh(problem_.X, problem_.AdresseOuPlacerLaValeurDesVariablesOptimisees);
-        refresh(problem_.CoutsMarginauxDesContraintes,
-                problem_.AdresseOuPlacerLaValeurDesCoutsMarginaux);
-    }
-
-    ~SolutionRefreshedFromResults()
-    {
-        problem_.X = std::move(savedX_);
-        problem_.CoutsMarginauxDesContraintes = std::move(savedDuals_);
-    }
-
-    SolutionRefreshedFromResults(const SolutionRefreshedFromResults&) = delete;
-    SolutionRefreshedFromResults& operator=(const SolutionRefreshedFromResults&) = delete;
-
-private:
-    // Entries without an address are never published to the results, so they
-    // keep the value the optimizer left -- which is what post-processing could
-    // not have changed anyway.
-    static void refresh(std::vector<double>& values, const std::vector<double*>& addresses)
-    {
-        const std::size_t count = std::min(values.size(), addresses.size());
-        for (std::size_t i = 0; i < count; ++i)
+        if (addresses[i] != nullptr)
         {
-            if (addresses[i] != nullptr)
-            {
-                values[i] = *addresses[i];
-            }
+            values[i] = *addresses[i];
         }
     }
-
-    PROBLEME_ANTARES_A_RESOUDRE& problem_;
-    std::vector<double> savedX_;
-    std::vector<double> savedDuals_;
-};
+    return values;
+}
 
 std::once_flag dailyRangeWarningFlag;
 } // namespace
 
 void FillLegacySimulationTable(SimulationTable& simulationTable,
                                PROBLEME_HEBDO& problemeHebdo,
+                               const std::vector<double>& x,
+                               const std::vector<double>& coutsMarginaux,
                                const FillContext& fillContext,
                                const LegacyNameMapper& nameMapper,
                                unsigned currentBlock,
@@ -84,10 +63,10 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
 {
     const PROBLEME_ANTARES_A_RESOUDRE& problem = *problemeHebdo.ProblemeAResoudre;
 
-    // LegacyVariablesInfo, X and CoutLineaire are all sized to NombreDeVariables
-    // in resizeProbleme, so the index-based reads below are always in bounds.
+    // LegacyVariablesInfo and x are all sized to NombreDeVariables in
+    // resizeProbleme, so the index-based reads below are always in bounds.
     assert(problem.LegacyVariablesInfo.size() == static_cast<std::size_t>(problem.NombreDeVariables)
-           && problem.X.size() == static_cast<std::size_t>(problem.NombreDeVariables));
+           && x.size() == static_cast<std::size_t>(problem.NombreDeVariables));
     for (int index = 0; index < problem.NombreDeVariables; ++index)
     {
         const auto& info = problem.LegacyVariablesInfo[static_cast<std::size_t>(index)];
@@ -103,12 +82,14 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
            .absolute_time_index = info->timeIndex,
            .block_time_index = LegacyBlockTimeIndex(fillContext, info->timeIndex),
            .scenario_index = fillContext.getYear(),
-           .value = problem.X[static_cast<std::size_t>(index)],
+           .value = x[static_cast<std::size_t>(index)],
            .status = std::nullopt});
     }
 
     AddLegacyExtraOutputs(simulationTable,
                           problemeHebdo,
+                          x,
+                          coutsMarginaux,
                           fillContext,
                           currentBlock,
                           inactiveComponents);
@@ -154,9 +135,20 @@ void DumpSimulationTableAfterPostProcess(SimulationTable& simulationTable,
 
     static constexpr LegacyNameMapper nameMapper;
 
-    const SolutionRefreshedFromResults refreshed(*problemeHebdo.ProblemeAResoudre);
+    // Post-processing moved the results but not the solver's X / duals, so
+    // rebuild both from the address table to republish the post-processed state.
+    const PROBLEME_ANTARES_A_RESOUDRE& problem = *problemeHebdo.ProblemeAResoudre;
+    const std::vector<double> x = GatherFromAddresses(
+      problem.X,
+      problem.AdresseOuPlacerLaValeurDesVariablesOptimisees);
+    const std::vector<double> coutsMarginaux = GatherFromAddresses(
+      problem.CoutsMarginauxDesContraintes,
+      problem.AdresseOuPlacerLaValeurDesCoutsMarginaux);
+
     FillLegacySimulationTable(simulationTable,
                               problemeHebdo,
+                              x,
+                              coutsMarginaux,
                               fillContext,
                               nameMapper,
                               currentBlock);

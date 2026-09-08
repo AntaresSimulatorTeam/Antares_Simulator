@@ -4,6 +4,7 @@
 #pragma once
 
 #include <optional>
+#include <vector>
 
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
@@ -34,6 +35,8 @@ std::optional<unsigned> LegacyBlockTimeIndex(const LinearProblem::Api::FillConte
 // rows of structurally inactive objects; null means "emit every row".
 void AddLegacyExtraOutputs(IO::Outputs::SimulationTable& simulationTable,
                            PROBLEME_HEBDO& problemeHebdo,
+                           const std::vector<double>& x,
+                           const std::vector<double>& coutsMarginaux,
                            const LinearProblem::Api::FillContext& fillContext,
                            unsigned currentBlock,
                            const InactiveComponentsAnalyzer* inactiveComponents = nullptr);
