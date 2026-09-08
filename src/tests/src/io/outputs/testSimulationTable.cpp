@@ -443,6 +443,33 @@ BOOST_AUTO_TEST_CASE(WriteTo_NamesOneFilePerStage)
     }
 }
 
+BOOST_AUTO_TEST_CASE(WriteTo_SkipsStagesWithNoRows)
+{
+    OptimisationsSimulationTable tables;
+    tables.firstOptimSimulationTable()->addEntry({.block = 1,
+                                                  .component = "comp1",
+                                                  .output = "var1",
+                                                  .absolute_time_index = 1,
+                                                  .block_time_index = 1,
+                                                  .scenario_index = 0,
+                                                  .value = 10.0,
+                                                  .status = MipBasisStatus::BASIC});
+    // Asked for, but never filled -- a post-process dump that declined to run.
+    tables.tableForStage("remix-hydro");
+
+    auto tempDir = std::filesystem::temp_directory_path();
+    LegacySimulationTablesWriter(tempDir, 8 /* year */, TableFormat::CSV).write(tables);
+
+    const auto filled = tempDir / "simulation-table-8-optim-nb-1.csv";
+    const auto empty = tempDir / "simulation-table-8-remix-hydro.csv";
+    BOOST_CHECK(std::filesystem::exists(filled));
+    BOOST_CHECK_MESSAGE(!std::filesystem::exists(empty),
+                        "an empty stage must not produce a header-only file");
+
+    std::filesystem::remove(filled);
+    std::filesystem::remove(empty);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(VariableDictionaryTests)

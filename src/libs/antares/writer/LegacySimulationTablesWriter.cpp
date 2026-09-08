@@ -4,6 +4,7 @@
 #include "include/antares/writer/LegacySimulationTablesWriter.h"
 
 #include <antares/exception/RuntimeError.hpp>
+#include <antares/logs/logs.h>
 #include "antares/writer/simulation_table_writer.h"
 
 namespace fs = std::filesystem;
@@ -44,6 +45,16 @@ void LegacySimulationTablesWriter::write(const OptimisationsSimulationTable& tab
 {
     for (const auto& [stage, table]: tables.stages())
     {
+        // A stage with no rows produced nothing worth reporting -- e.g. a
+        // post-process dump that declined to run. Writing it would emit a
+        // header-only file suggesting the stage ran and found nothing.
+        if (table.rowCount() == 0)
+        {
+            Antares::logs.info() << fmt::format(
+              "No content for stage '{}', skipping writing corresponding simulation table",
+              stage);
+            continue;
+        }
         writeForStage(table, stage);
     }
 }

@@ -32,6 +32,8 @@ target_link_libraries(utils
         antares-core
         PRIVATE
         Antares::simu-table-generator
+        # mps_utils.cpp writes MPS files through IO::Outputs::MPSGenerator.
+        Antares::mps-generator
 )
 
 target_include_directories(utils

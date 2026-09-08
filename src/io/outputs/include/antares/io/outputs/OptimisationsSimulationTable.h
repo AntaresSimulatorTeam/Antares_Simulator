@@ -21,6 +21,16 @@ namespace Antares::IO::Outputs
 class OptimisationsSimulationTable
 {
 public:
+    // Stage names. They are part of the output file names, so they must not
+    // change. The first two are produced during the weekly solve, the others
+    // after a post-process has moved the results.
+    static constexpr const char* firstOptimStage = "optim-nb-1";
+    static constexpr const char* secondOptimStage = "optim-nb-2";
+    static constexpr const char* remixHydroStage = "remix-hydro";
+    // The whole CSR treatment, not just the patch: curtailment sharing, DTG
+    // netting and the marginal price update.
+    static constexpr const char* adequacyPatchStage = "adq-patch-csr";
+
     SimulationTable* firstOptimSimulationTable();
     SimulationTable* secondOptimSimulationTable();
 
@@ -38,10 +48,6 @@ public:
     std::shared_ptr<const Optimization::InactiveComponentsAnalyzer> inactiveComponents;
 
 private:
-    // Stage names of the two optimisation passes. They are part of the output
-    // file names, so they must not change.
-    static constexpr const char* firstOptimStage = "optim-nb-1";
-    static constexpr const char* secondOptimStage = "optim-nb-2";
     std::map<std::string, SimulationTable> stages_;
 };
 } // namespace Antares::IO::Outputs
