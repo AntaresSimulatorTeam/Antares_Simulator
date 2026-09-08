@@ -19,7 +19,6 @@ set(SRC_VARIABLE
         include/antares/solver/variable/setofareas.hxx
         include/antares/solver/variable/bindConstraints.h
         include/antares/solver/variable/bindConstraints.hxx
-        include/antares/solver/variable/categories.h
         include/antares/solver/variable/surveyresults.h
         include/antares/solver/variable/surveyresults/reportbuilder.hxx
         include/antares/solver/variable/surveyresults/surveyresults.h
@@ -82,6 +81,8 @@ source_group("variable\\adequacy" FILES ${SRC_VARIABLE_ADEQUACY})
 
 set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/all.h
+        include/antares/solver/variable/registerThematicTrimmingVariables.h
+        registerThematicTrimmingVariables.cpp
         include/antares/solver/variable/economy/economy_base.h
         include/antares/solver/variable/economy/links.h
 

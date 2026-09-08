@@ -3,11 +3,13 @@
 
 #include "antares/study/filter.h"
 
-using namespace Yuni;
+#include <string>
+
+#include <antares/utils/utils.h>
 
 namespace Antares::Data
 {
-std::string datePrecisionIntoString(uint datePrecisionFilter)
+std::string datePrecisionIntoString(unsigned int datePrecisionFilter)
 {
     std::string to_return;
     if (datePrecisionFilter & filterHourly)
@@ -54,53 +56,57 @@ std::string datePrecisionIntoString(uint datePrecisionFilter)
     return to_return;
 }
 
-uint stringIntoDatePrecision(const AnyString& string)
+unsigned int stringIntoDatePrecision(const std::string& string)
 {
     if (string.empty())
     {
         return filterNone;
     }
 
-    uint flag = 0;
+    unsigned int flag = 0;
 
-    string.words(",; \r\n\t",
-                 [&flag](const AnyString& word) -> bool
-                 {
-                     ShortString16 s = word;
-                     s.toLower();
-                     if (s == "hourly")
-                     {
-                         flag |= filterHourly;
-                         return true;
-                     }
-                     if (s == "daily")
-                     {
-                         flag |= filterDaily;
-                         return true;
-                     }
-                     if (s == "weekly")
-                     {
-                         flag |= filterWeekly;
-                         return true;
-                     }
-                     if (s == "monthly")
-                     {
-                         flag |= filterMonthly;
-                         return true;
-                     }
-                     if (s == "annual")
-                     {
-                         flag |= filterAnnual;
-                         return true;
-                     }
-                     return true;
-                 });
+    const std::string separators = ",; \r\n\t";
+    std::size_t begin = 0;
+    while (begin <= string.size())
+    {
+        const std::size_t end = string.find_first_of(separators, begin);
+        const std::string word = string.substr(begin,
+                                               end == std::string::npos ? std::string::npos
+                                                                        : end - begin);
+        const std::string lower = Antares::stringToLower(word);
+        if (lower == "hourly")
+        {
+            flag |= filterHourly;
+        }
+        else if (lower == "daily")
+        {
+            flag |= filterDaily;
+        }
+        else if (lower == "weekly")
+        {
+            flag |= filterWeekly;
+        }
+        else if (lower == "monthly")
+        {
+            flag |= filterMonthly;
+        }
+        else if (lower == "annual")
+        {
+            flag |= filterAnnual;
+        }
+
+        if (end == std::string::npos)
+        {
+            break;
+        }
+        begin = end + 1;
+    }
     return flag;
 }
 
-uint addTimeIntervallToDatePrecisionFilter(const uint index)
+unsigned int addTimeIntervallToDatePrecisionFilter(const unsigned int index)
 {
-    uint flag = 0;
+    unsigned int flag = 0;
     switch (index)
     {
     case 0:

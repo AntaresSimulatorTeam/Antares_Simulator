@@ -47,9 +47,6 @@ set(SRC_MPS_GENERATOR
 add_library(mps-generator STATIC ${SRC_MPS_GENERATOR})
 add_library(Antares::mps-generator ALIAS mps-generator)
 
-set_target_properties(mps-generator PROPERTIES
-        POSITION_INDEPENDENT_CODE ON)
-
 target_include_directories(mps-generator
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

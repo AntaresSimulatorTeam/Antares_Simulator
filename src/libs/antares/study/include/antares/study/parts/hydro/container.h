@@ -5,9 +5,10 @@
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
 
 #include <optional>
+#include <string>
+#include <unordered_map>
 
 #include <antares/inifile/inifile.h>
-#include <antares/study/area/ReserveOpt.h>
 #include <antares/study/area/reserveParticipationContainer.h>
 
 #include "../../fwd.h"
@@ -72,28 +73,12 @@ struct AreaDependantHydroManagementData
 class PartHydro final
 {
 public:
-    enum
-    {
-        //! The minimum value
-        minimum = 0,
-        //! The average value
-        average,
-        //! The maximum value
-        maximum,
-    };
-
     enum weeklyHydroMod
     {
         //! Weekly generating modulation
         genMod = 0,
         //! Weekly pumping modulation
         pumpMod,
-    };
-
-    struct HydroReserveParticipationWithName
-    {
-        std::reference_wrapper<StorageClusterReserveParticipation> reserveParticipation;
-        std::string reserveID;
     };
 
     static bool LoadIniFile(Study& study, const std::filesystem::path& folder);
@@ -114,18 +99,6 @@ public:
     static bool validate(Study& study);
 
     /*!
-    ** \brief Save data from several containers to a folder (except data for the prepro and
-    *time-series)
-    **
-    ** \param l List of areas
-    ** \param folder The targer folder
-    ** \return A non-zero value if the operation succeeded, 0 otherwise
-    */
-    static bool SaveToFolder(const AreaList& areas,
-                             const AnyString& folder,
-                             const Parameters::Compatibility::HydroPmax hydroPmax);
-
-    /*!
     ** \brief Default Constructor
     */
     PartHydro();
@@ -137,20 +110,18 @@ public:
     */
     void reset();
 
-    void copyFrom(const PartHydro& rhs);
-
     /*!
     ** \brief Load daily max energy
     */
     bool LoadDailyMaxEnergy(const std::filesystem::path& folder, const std::string& areaid);
 
-    bool CheckDailyMaxEnergy(const AnyString& areaName);
+    bool CheckDailyMaxEnergy(const std::string& areaName);
 
-    uint reserveParticipationsCount() const;
+    unsigned int reserveParticipationsCount() const;
 
     std::optional<ReserveID> reserveParticipationAt(const Area* area, unsigned int index) const;
 
-    uint count() const;
+    unsigned int count() const;
 
     bool loadReserveParticipations(Area& area, const std::filesystem::path& file);
 
@@ -214,13 +185,13 @@ public:
     //        which contains other time.
     Matrix<double, double> dailyNbHoursAtGenPmax;
     Matrix<double, double> dailyNbHoursAtPumpPmax;
-    std::unordered_map<uint, AreaDependantHydroManagementData> managementData;
+    std::unordered_map<unsigned int, AreaDependantHydroManagementData> managementData;
 
     std::vector<std::optional<double>> deltaBetweenFinalAndInitialLevels;
 
     //! Reserve participation container to store the participation of the cluster in the reserves
     //! and the symmetries
-    ReserveOpt<ReserveParticipationContainer<StorageClusterReserveParticipation>>
+    std::optional<ReserveParticipationContainer<StorageClusterReserveParticipation>>
       reserveParticipationContainer;
 
     double overflowSpilledCostDifference = 1.;
@@ -235,7 +206,9 @@ private:
 // As this function can be called a lot of times, we pass working variables and returned variables
 // as arguments, so that we don't have to create them locally (as in a classical function) each
 // time.
-double getWaterValue(const double& level, const Matrix<double>& waterValues, const uint day);
+double getWaterValue(const double& level,
+                     const Matrix<double>& waterValues,
+                     const unsigned int day);
 
 // Interpolates a rate from the credit modulation table according to a level
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,

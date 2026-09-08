@@ -17,8 +17,6 @@
 #include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
 #include "antares/study/study.h"
 
-#define SEP Yuni::IO::Separator
-
 namespace fs = std::filesystem;
 
 namespace Antares::Data::ShortTermStorage
@@ -98,20 +96,20 @@ static bool loadAdditionalConstraintsProperties(AdditionalConstraints* additiona
 {
     for (auto* property = section->firstProperty; property; property = property->next)
     {
-        const std::string key = property->key;
-        const auto value = property->value;
+        const std::string key = std::string(property->key);
+        const std::string value = std::string(property->value);
 
         if (key == "enabled")
         {
-            value.to<bool>(additionalConstraints->enabled);
+            additionalConstraints->enabled = Antares::stringToBool(value);
         }
         else if (key == "variable")
         {
-            value.to<std::string>(additionalConstraints->variable);
+            additionalConstraints->variable = value;
         }
         else if (key == "operator")
         {
-            value.to<std::string>(additionalConstraints->operatorType);
+            additionalConstraints->operatorType = value;
         }
         else if (key == "hours")
         {
@@ -269,7 +267,7 @@ std::size_t STStorageInput::count() const
                                  [](const STStorageCluster& st) { return st.properties.enabled; });
 }
 
-uint STStorageInput::removeDisabledClusters()
+unsigned int STStorageInput::removeDisabledClusters()
 {
     return std::erase_if(storagesByIndex, [](const auto& c) { return !c.enabled(); });
 }
@@ -281,13 +279,12 @@ std::pair<std::string, ReserveID> STStorageInput::reserveParticipationClusterAt(
     unsigned int globalReserveParticipationIdx = 0;
 
     for (const auto& reserveID:
-         area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+         area->allCapacityReservations->areaCapacityReservations | std::views::keys)
     {
         for (auto& cluster: storagesByIndex)
         {
             if (cluster.reserveParticipationContainer
-                && cluster.reserveParticipationContainer.value().isParticipatingInReserve(
-                  reserveID))
+                && cluster.reserveParticipationContainer->isParticipatingInReserve(reserveID))
             {
                 if (globalReserveParticipationIdx == index)
                 {
@@ -308,7 +305,7 @@ std::pair<std::string, ReserveID> STStorageInput::reserveParticipationGroupAt(
 {
     unsigned int column = 0;
     for (const auto& reserveID:
-         area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+         area->allCapacityReservations->areaCapacityReservations | std::views::keys)
     {
         if (area->allCapacityReservations->reserveGroupPartSTS.contains(reserveID))
         {
@@ -357,7 +354,7 @@ size_t STStorageInput::getClusterIdx(STStorageCluster& cluster) const
     }
 }
 
-uint STStorageInput::reserveParticipationsCount() const
+unsigned int STStorageInput::reserveParticipationsCount() const
 {
     return std::accumulate(
       storagesByIndex.begin(),
@@ -366,8 +363,7 @@ uint STStorageInput::reserveParticipationsCount() const
       [](int total, const STStorageCluster& cluster)
       {
           return cluster.reserveParticipationContainer
-                   ? total
-                       + cluster.reserveParticipationContainer.value().reserveParticipationsCount()
+                   ? total + cluster.reserveParticipationContainer->reserveParticipationsCount()
                    : total;
       });
 }

@@ -3,7 +3,7 @@
 
 #include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
 
-#include <algorithm>
+#include <cassert>
 
 namespace Antares::Optimization
 {
@@ -44,16 +44,8 @@ void InactiveComponentsAnalyzer::setWindAllZero(uint32_t pays, bool value)
 
 void InactiveComponentsAnalyzer::setMiscGenColumnAllZero(uint32_t pays, unsigned column, bool value)
 {
-    if (pays >= miscGenColumnAllZero_.size())
-    {
-        miscGenColumnAllZero_.resize(pays + 1);
-    }
-    auto& columns = miscGenColumnAllZero_[pays];
-    if (column >= columns.size())
-    {
-        columns.resize(column + 1, false);
-    }
-    columns[column] = value;
+    assert(column < Data::fhhMax);
+    setFlag(miscGenColumnAllZero_[column], pays, value);
 }
 
 void InactiveComponentsAnalyzer::setHydroInflowAllZero(uint32_t pays, bool value)
@@ -88,12 +80,8 @@ bool InactiveComponentsAnalyzer::windIsAllZero(uint32_t pays) const
 
 bool InactiveComponentsAnalyzer::miscGenColumnIsAllZero(uint32_t pays, unsigned column) const
 {
-    if (pays >= miscGenColumnAllZero_.size())
-    {
-        return false;
-    }
-    const auto& columns = miscGenColumnAllZero_[pays];
-    return column < columns.size() && columns[column];
+    assert(column < Data::fhhMax);
+    return getFlag(miscGenColumnAllZero_[column], pays);
 }
 
 bool InactiveComponentsAnalyzer::hydroInflowIsAllZero(uint32_t pays) const

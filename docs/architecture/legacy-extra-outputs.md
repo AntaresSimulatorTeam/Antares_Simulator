@@ -9,7 +9,7 @@ The legacy (weekly) solver exposes its results in the modeler simulation table i
 
 ## 2. Design: iterate the study structure, read by index
 
-`AddLegacyExtraOutputs(simulationTable, problemeHebdo, fillContext, currentBlock)` does not use the recorded variable info at all. The weekly problem's layout is fully known through the correspondence tables, so the function simply iterates the study structure and fetches every operand by index:
+`AddLegacyExtraOutputs(simulationTable, problemeHebdo, fillContext, currentBlock, inactiveComponents)` does not use the recorded variable info at all. The weekly problem's layout is fully known through the correspondence tables, so the function simply iterates the study structure and fetches every operand by index:
 
 ```
 for pdt in [0, NombreDePasDeTempsPourUneOptimisation):

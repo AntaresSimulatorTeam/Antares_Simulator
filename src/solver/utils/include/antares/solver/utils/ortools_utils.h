@@ -14,8 +14,6 @@
 #include "ortools/linear_solver/linear_solver.h"
 #pragma GCC diagnostic pop
 
-#include "ortools_wrapper.h"
-
 namespace operations_research::math_opt
 {
 enum class SolverType;

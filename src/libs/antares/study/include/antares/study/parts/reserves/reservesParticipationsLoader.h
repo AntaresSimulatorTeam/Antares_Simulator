@@ -120,7 +120,7 @@ public:
                                        const std::optional<std::string>& clusterName,
                                        const std::string& reserveID)
     {
-        if ((!clusterName || clusterName.value().empty())
+        if ((!clusterName || clusterName->empty())
             && !std::is_same<Derived, HydroReserveLoader>::value)
         {
             logs.error()
@@ -140,7 +140,7 @@ public:
                                        const std::optional<std::string>& clusterName,
                                        const std::string& reserveID)
     {
-        const auto* reserve = area.allCapacityReservations.value().getReserveByID(reserveID);
+        const auto* reserve = area.allCapacityReservations->getReserveByID(reserveID);
         auto* cluster = Derived::findCluster(area, clusterName.value_or(""));
 
         if (!reserve || !cluster)
@@ -264,12 +264,12 @@ protected:
     {
         if constexpr (std::is_same_v<ClusterT, ShortTermStorage::STStorageCluster>)
         {
-            area.allCapacityReservations.value().reserveGroupPartSTS[reserveID].insert(
+            area.allCapacityReservations->reserveGroupPartSTS[reserveID].insert(
               cluster->getGroup());
         }
         else if constexpr (std::is_same_v<ClusterT, ThermalCluster>)
         {
-            area.allCapacityReservations.value().reserveGroupPartThermal[reserveID].insert(
+            area.allCapacityReservations->reserveGroupPartThermal[reserveID].insert(
               cluster->getGroup());
         }
     }
@@ -471,7 +471,7 @@ public:
 
             readProperties(cert, rp);
 
-            const auto* reserve = area.allCapacityReservations.value().getReserveByID(reserveId);
+            const auto* reserve = area.allCapacityReservations->getReserveByID(reserveId);
             if (!reserve)
             {
                 logs.error() << area.name << " : missing reserve " << reserveId

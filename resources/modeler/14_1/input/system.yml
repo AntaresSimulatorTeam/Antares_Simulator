@@ -5,7 +5,6 @@ system:
     The constraint x >= sum(0 .. t+1, p) should yield x = 3, 6, 10, 15, 20
     with the current cyclic semantics on the last time step.
 
-  model-libraries: lib_example_14_1
 
   components:
     - id: c1

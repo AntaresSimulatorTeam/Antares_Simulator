@@ -42,6 +42,7 @@ void AddLegacyExtraOutputs(IO::Outputs::SimulationTable& simulationTable,
                            PROBLEME_HEBDO& problemeHebdo,
                            const LegacySolution& solution,
                            const LinearProblem::Api::FillContext& fillContext,
-                           unsigned currentBlock);
+                           unsigned currentBlock,
+                           const InactiveComponentsAnalyzer* inactiveComponents = nullptr);
 
 } // namespace Antares::Optimization

@@ -8,14 +8,10 @@
 #include <antares/inifile/inifile.h>
 #include <antares/study/area/capacityReservation.h>
 #include <antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h>
-#include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
 #include "antares/study/parts/reserves/reservesParticipationsLoader.h"
 #include "antares/study/study.h"
 
 namespace fs = std::filesystem;
-
-using namespace Yuni;
-#define SEP Yuni::IO::Separator
 
 namespace Antares::Data
 {
@@ -418,200 +414,6 @@ bool PartHydro::validate(Study& study)
     return checkProperties(study) && ret;
 }
 
-bool PartHydro::SaveToFolder(const AreaList& areas,
-                             const AnyString& folder,
-                             const Parameters::Compatibility::HydroPmax hydroPmax)
-{
-    if (!folder)
-    {
-        logs.error() << "hydro: invalid empty folder";
-        assert(false && "invalid empty folder");
-        return false;
-    }
-
-    Yuni::String buffer;
-    buffer.clear() << folder << SEP << "common" << SEP << "capacity";
-
-    struct AllSections
-    {
-        IniFile::Section* s;
-        IniFile::Section* smod;
-        IniFile::Section* sIMB;
-        IniFile::Section* sreservoir;
-        IniFile::Section* sreservoirCapacity;
-        IniFile::Section* sFollowLoad;
-        IniFile::Section* sUseWater;
-        IniFile::Section* sHardBounds;
-        IniFile::Section* sInitializeReservoirDate;
-        IniFile::Section* sUseHeuristic;
-        IniFile::Section* sUseLeeway;
-        IniFile::Section* sPowerToLevel;
-        IniFile::Section* sLeewayLow;
-        IniFile::Section* sLeewayUp;
-        IniFile::Section* spumpingEfficiency;
-        IniFile::Section* sOverflowCost;
-
-        AllSections(IniFile& ini):
-            s(ini.addSection("inter-daily-breakdown")),
-            smod(ini.addSection("intra-daily-modulation")),
-            sIMB(ini.addSection("inter-monthly-breakdown")),
-            sreservoir(ini.addSection("reservoir")),
-            sreservoirCapacity(ini.addSection("reservoir capacity")),
-            sFollowLoad(ini.addSection("follow load")),
-            sUseWater(ini.addSection("use water")),
-            sHardBounds(ini.addSection("hard bounds")),
-            sInitializeReservoirDate(ini.addSection("initialize reservoir date")),
-            sUseHeuristic(ini.addSection("use heuristic")),
-            sUseLeeway(ini.addSection("use leeway")),
-            sPowerToLevel(ini.addSection("power to level")),
-            sLeewayLow(ini.addSection("leeway low")),
-            sLeewayUp(ini.addSection("leeway up")),
-            spumpingEfficiency(ini.addSection("pumping efficiency")),
-            sOverflowCost(ini.addSection("overflow spilled cost difference"))
-        {
-        }
-    };
-
-    // Init
-    IniFile ini;
-    AllSections allSections(ini);
-
-    // return status
-    bool ret = true;
-
-    // Add all alpha values for each area
-    areas.each(
-      [&allSections, &buffer, &folder, &hydroPmax, &ret](Data::Area& area)
-      {
-          allSections.s->add(area.id, area.hydro.interDailyBreakdown);
-          allSections.smod->add(area.id, area.hydro.intraDailyModulation);
-          allSections.sIMB->add(area.id, area.hydro.intermonthlyBreakdown);
-          allSections.sInitializeReservoirDate->add(area.id,
-                                                    area.hydro.initializeReservoirLevelDate);
-          allSections.sLeewayLow->add(area.id, area.hydro.leewayLowerBound);
-          allSections.sLeewayUp->add(area.id, area.hydro.leewayUpperBound);
-          allSections.spumpingEfficiency->add(area.id, area.hydro.pumpingEfficiency);
-          if (area.hydro.reservoirCapacity > 1e-6)
-          {
-              allSections.sreservoirCapacity->add(area.id, area.hydro.reservoirCapacity);
-          }
-          if (area.hydro.reservoirManagement)
-          {
-              allSections.sreservoir->add(area.id, true);
-          }
-          if (!area.hydro.followLoadModulations)
-          {
-              allSections.sFollowLoad->add(area.id, false);
-          }
-          if (area.hydro.useWaterValue)
-          {
-              allSections.sUseWater->add(area.id, true);
-          }
-          if (area.hydro.hardBoundsOnRuleCurves)
-          {
-              allSections.sHardBounds->add(area.id, true);
-          }
-          if (!area.hydro.useHeuristicTarget)
-          {
-              allSections.sUseHeuristic->add(area.id, false);
-          }
-          if (area.hydro.useLeeway)
-          {
-              allSections.sUseLeeway->add(area.id, true);
-          }
-          if (area.hydro.powerToLevel)
-          {
-              allSections.sPowerToLevel->add(area.id, true);
-          }
-
-          allSections.sOverflowCost->add(area.id, area.hydro.overflowSpilledCostDifference);
-
-          // max hours gen
-          if (hydroPmax == Parameters::Compatibility::HydroPmax::Hourly)
-          {
-              buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                             << "maxDailyGenEnergy_" << area.id << ".txt";
-              ret = area.hydro.dailyNbHoursAtGenPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
-
-              buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                             << "maxDailyPumpEnergy_" << area.id << ".txt";
-              ret = area.hydro.dailyNbHoursAtPumpPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
-          }
-          else
-          {
-              // we convert hourly TS into daily by averaging
-              Matrix<> genMaxP = area.hydro.series->getDailyMaxGenPowerFromHourlyTS();
-              Matrix<> pumpMaxP = area.hydro.series->getDailyMaxPumpPowerFromHourlyTS();
-
-              area.hydro.dailyMaxPumpAndGen.reset(4, DAYS_PER_YEAR);
-              area.hydro.dailyMaxPumpAndGen.pasteToColumn(HydroMaxTimeSeriesReader::genMaxP,
-                                                          genMaxP[0]);
-              area.hydro.dailyMaxPumpAndGen.pasteToColumn(HydroMaxTimeSeriesReader::genMaxE,
-                                                          area.hydro.dailyNbHoursAtGenPmax[0]);
-              area.hydro.dailyMaxPumpAndGen.pasteToColumn(HydroMaxTimeSeriesReader::pumpMaxP,
-                                                          pumpMaxP[0]);
-              area.hydro.dailyMaxPumpAndGen.pasteToColumn(HydroMaxTimeSeriesReader::pumpMaxE,
-                                                          area.hydro.dailyNbHoursAtPumpPmax[0]);
-              buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxpower_"
-                             << area.id << ".txt";
-              ret = area.hydro.dailyMaxPumpAndGen.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
-
-              area.hydro.series->buildHourlyMaxPowerFromDailyTS(genMaxP[0], pumpMaxP[0]);
-          }
-
-          // credit modulations
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                         << "creditmodulations_" << area.id << ".txt";
-          ret = area.hydro.creditModulation.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
-          // inflow pattern
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                         << "inflowPattern_" << area.id << ".txt";
-          ret = area.hydro.inflowPattern.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
-          // water values
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "waterValues_"
-                         << area.id << ".txt";
-          ret = area.hydro.waterValues.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
-      });
-
-    // Write the ini file
-    buffer.clear() << folder << SEP << "hydro.ini";
-    return ini.save(buffer) && ret;
-}
-
-void PartHydro::copyFrom(const PartHydro& rhs)
-{
-    // credit modulations
-    creditModulation = rhs.creditModulation;
-    // inflow pattern
-    inflowPattern = rhs.inflowPattern;
-    // water values
-    waterValues = rhs.waterValues;
-    // values
-    {
-        interDailyBreakdown = rhs.interDailyBreakdown;
-        intraDailyModulation = rhs.intraDailyModulation;
-        intermonthlyBreakdown = rhs.intermonthlyBreakdown;
-        reservoirManagement = rhs.reservoirManagement;
-        reservoirCapacity = rhs.reservoirCapacity;
-        followLoadModulations = rhs.followLoadModulations;
-        useWaterValue = rhs.useWaterValue;
-        hardBoundsOnRuleCurves = rhs.hardBoundsOnRuleCurves;
-        useHeuristicTarget = rhs.useHeuristicTarget;
-        initializeReservoirLevelDate = rhs.initializeReservoirLevelDate;
-        useLeeway = rhs.useLeeway;
-        powerToLevel = rhs.powerToLevel;
-        leewayUpperBound = rhs.leewayUpperBound;
-        leewayLowerBound = rhs.leewayLowerBound;
-        pumpingEfficiency = rhs.pumpingEfficiency;
-    }
-
-    // max daily gen
-    dailyNbHoursAtGenPmax = rhs.dailyNbHoursAtGenPmax;
-
-    // max daily pump
-    dailyNbHoursAtPumpPmax = rhs.dailyNbHoursAtPumpPmax;
-}
-
 bool PartHydro::LoadDailyMaxEnergy(const fs::path& folder, const std::string& areaid)
 {
     Matrix<>::BufferType fileContent;
@@ -636,7 +438,7 @@ bool PartHydro::LoadDailyMaxEnergy(const fs::path& folder, const std::string& ar
     return ret;
 }
 
-bool PartHydro::CheckDailyMaxEnergy(const AnyString& areaName)
+bool PartHydro::CheckDailyMaxEnergy(const std::string& areaName)
 {
     bool ret = true;
     bool errorEnergy = false;
@@ -669,10 +471,10 @@ bool PartHydro::loadReserveParticipations(Area& area, const std::filesystem::pat
     return loader.load(area, file);
 }
 
-uint PartHydro::reserveParticipationsCount() const
+unsigned int PartHydro::reserveParticipationsCount() const
 {
     return reserveParticipationContainer
-             ? reserveParticipationContainer.value().reserveParticipationsCount()
+             ? reserveParticipationContainer->reserveParticipationsCount()
              : 0;
 }
 
@@ -682,9 +484,9 @@ std::optional<ReserveID> PartHydro::reserveParticipationAt(const Area* area,
     int globalReserveParticipationIdx = 0;
 
     for (const auto& reserveID:
-         area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+         area->allCapacityReservations->areaCapacityReservations | std::views::keys)
     {
-        if (reserveParticipationContainer.value().isParticipatingInReserve(reserveID))
+        if (reserveParticipationContainer->isParticipatingInReserve(reserveID))
         {
             if (static_cast<unsigned int>(globalReserveParticipationIdx) == index)
             {
@@ -696,7 +498,7 @@ std::optional<ReserveID> PartHydro::reserveParticipationAt(const Area* area,
     return std::nullopt;
 }
 
-uint PartHydro::count() const
+unsigned int PartHydro::count() const
 {
     // Retournez 1 si le stockage long terme est activé, 0 sinon
     return series->TScount() ? 1 : 0;
@@ -704,7 +506,7 @@ uint PartHydro::count() const
 
 double getWaterValue(const double& level /* format : in % of reservoir capacity */,
                      const Matrix<double>& waterValues,
-                     const uint day)
+                     const unsigned int day)
 {
     if (level < 0. - 1e-6 || level > 100. + 1e-6)
     {

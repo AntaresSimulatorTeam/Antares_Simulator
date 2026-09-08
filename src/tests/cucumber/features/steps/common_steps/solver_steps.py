@@ -71,6 +71,16 @@ def empty_input_series(context, series_file):
     # An empty series file is Antares' own convention for "no data": the
     # series loads as a single all-zero column (see e.g. the "he" area's
     # empty mod.txt/ror.txt in the "Accurate hydro pricing" fixture).
+    #
+    # This overwrites a file on disk, so it must run on a throwaway copy of
+    # the study, never on the shared resources tree -- otherwise every later
+    # scenario reusing the same study would see the emptied series.
+    # 'the solver study path is a copy of "..."' sets context.tmp_workdir.
+    assert hasattr(context, "tmp_workdir"), (
+        'the "time series is emptied" step modifies study files; load the '
+        'study with \'Given the solver study path is a copy of "..."\' so the '
+        "change stays confined to a temporary copy"
+    )
     file_path = context.study_path / "input" / Path(series_file.replace("/", os.sep))
     file_path.parent.mkdir(parents=True, exist_ok=True)
     file_path.write_text("")
@@ -385,6 +395,26 @@ def run_simulation(context):
         file_pattern = f"simulation-table-*-{default_stage}.csv"
         ST_reader_factory = make_simu_table_reader(outputPath, OutputFormat.CSV, file_pattern)
         context.simu_table = SimulationTable(ST_reader_factory())
+
+@then('the simulation tables cover exactly the stages "{stages}"')
+def check_simulation_table_stages(context, stages):
+    """Check the exact set of stage suffixes among the simulation-table files.
+
+    Stage names are part of the output contract, so this pins them; `exactly`
+    also catches a stage being emitted where it should have been skipped (an
+    empty table is not written at all).
+    """
+    expected = sorted(stage.strip() for stage in stages.split(","))
+    output_path = Path(context.output_path)
+    stage_of_file = re.compile(r"^simulation-table-\d+-(.+)\.csv$")
+    found = set()
+    for table_file in output_path.glob("simulation-table-*.csv"):
+        match = stage_of_file.match(table_file.name)
+        assert match, f"Unexpected simulation table file name: {table_file.name}"
+        found.add(match.group(1))
+    assert sorted(found) == expected, \
+        f"Expected simulation table stages {expected}, found {sorted(found)}"
+
 
 @step('the modeler outputs are read from stage "{stage}"')
 def read_modeler_outputs_from_stage(context, stage):

@@ -10,6 +10,11 @@
 
 #include "antares/io/outputs/SimulationTable.h"
 
+namespace Antares::Optimization
+{
+class InactiveComponentsAnalyzer;
+}
+
 namespace Antares::IO::Outputs
 {
 // The simulation tables produced for one Monte-Carlo year, one per stage of the
@@ -70,6 +75,8 @@ public:
     // Empties every stage's table, keeping the stages themselves: the same
     // stages recur at every Monte-Carlo year.
     void clear();
+
+    std::shared_ptr<const Optimization::InactiveComponentsAnalyzer> inactiveComponents;
 
 private:
     std::map<std::string, SimulationTable> stages_;

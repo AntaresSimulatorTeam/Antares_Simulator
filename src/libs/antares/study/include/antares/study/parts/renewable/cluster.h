@@ -4,7 +4,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_H__
 
-#include <yuni/yuni.h>
+#include <string>
 
 #include <antares/array/matrix.h>
 
@@ -46,12 +46,12 @@ public:
     */
     bool integrityCheck() override;
 
-    bool setTimeSeriesModeFromString(const YString& value);
+    bool setTimeSeriesModeFromString(const std::string& value);
 
     /* !
     ** Get production value at time-step ts
     */
-    double valueAtTimeStep(uint year, uint hourInYear) const;
+    double valueAtTimeStep(unsigned int year, unsigned int hourInYear) const;
 
     enum TimeSeriesMode tsMode = powerGeneration;
 

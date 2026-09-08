@@ -4,6 +4,7 @@
 #include "include/antares/writer/LegacySimulationTablesWriter.h"
 
 #include <antares/exception/RuntimeError.hpp>
+#include <antares/logs/logs.h>
 #include "antares/writer/simulation_table_writer.h"
 
 namespace fs = std::filesystem;
@@ -40,7 +41,7 @@ LegacySimulationTablesWriter::LegacySimulationTablesWriter(const fs::path& folde
     check_is_existing_folder(folder_);
 }
 
-void LegacySimulationTablesWriter::write(OptimisationsSimulationTable& tables)
+void LegacySimulationTablesWriter::write(const OptimisationsSimulationTable& tables) const
 {
     for (const auto& [stage, table]: tables.stages())
     {
@@ -49,6 +50,9 @@ void LegacySimulationTablesWriter::write(OptimisationsSimulationTable& tables)
         // header-only file suggesting the stage ran and found nothing.
         if (table.rowCount() == 0)
         {
+            Antares::logs.info() << fmt::format(
+              "No content for stage '{}', skipping writing corresponding simulation table",
+              stage);
             continue;
         }
         writeForStage(table, stage);
@@ -56,7 +60,7 @@ void LegacySimulationTablesWriter::write(OptimisationsSimulationTable& tables)
 }
 
 void LegacySimulationTablesWriter::writeForStage(const SimulationTable& table,
-                                                 const std::string& stage)
+                                                 const std::string& stage) const
 {
     auto filepath = makeSimuTableFilePath(folder_, year_, stage);
     SimulationTableWriter writer(filepath, tableFormat_);

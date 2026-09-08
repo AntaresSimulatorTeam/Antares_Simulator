@@ -12,7 +12,6 @@ system:
        node1.gen2_p[1] = 60
        Objective function value: 420
   
-  model-libraries: lib_example_4_2
   
   components:
     - id: node1
