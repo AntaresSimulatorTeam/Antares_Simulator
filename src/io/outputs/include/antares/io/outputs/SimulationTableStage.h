@@ -27,9 +27,9 @@ enum class Stage
 
 /// \brief Every stage, in the order the weekly resolution reaches them.
 inline constexpr std::array allStages = {Stage::firstOptim,
-                                                   Stage::secondOptim,
-                                                   Stage::remixHydro,
-                                                   Stage::adequacyPatchCsr};
+                                         Stage::secondOptim,
+                                         Stage::remixHydro,
+                                         Stage::adequacyPatchCsr};
 
 /// \brief Wire name of a stage: used in output file names and the
 /// `simulation-table-stages` generaldata.ini value, so these strings are stable.

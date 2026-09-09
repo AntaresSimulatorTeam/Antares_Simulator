@@ -12,10 +12,10 @@
 
 #include <antares/date/date.h>
 #include <antares/inifile/inifile.h>
+#include <antares/io/outputs/SimulationTableStage.h>
 #include <antares/optimization-options/options.h>
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 #include <antares/study/output-selection.h>
-#include <antares/io/outputs/SimulationTableStage.h>
 #include <antares/writer/result_format.h>
 #include "antares/antares/antares.h"
 #include "antares/study/fwd.h"

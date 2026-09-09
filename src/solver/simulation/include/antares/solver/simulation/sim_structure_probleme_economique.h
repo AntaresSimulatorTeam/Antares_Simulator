@@ -219,8 +219,7 @@ struct PROPERTIES
     double overflowCost{0.0};
 
     std::shared_ptr<ShortTermStorage::Series> series;
-    std::vector<std::shared_ptr<ShortTermStorage::AdditionalConstraints>>
-      additionalConstraints;
+    std::vector<std::shared_ptr<ShortTermStorage::AdditionalConstraints>> additionalConstraints;
     int clusterGlobalIndex;
     std::string name;
 };

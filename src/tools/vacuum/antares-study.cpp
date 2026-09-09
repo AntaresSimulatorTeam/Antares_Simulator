@@ -90,7 +90,8 @@ bool AntaresStudyAnalyzerJob::shouldBeDestroyed() const
         // the study has been saved recently
         if (traces)
         {
-            Antares::logs.info() << "    - study status " << folder << ": modified recently " << text;
+            Antares::logs.info() << "    - study status " << folder << ": modified recently "
+                                 << text;
         }
         return false;
     }
@@ -113,8 +114,8 @@ bool AntaresStudyAnalyzerJob::shouldBeDestroyed() const
             // There is at least one recent logfile. aborting
             if (traces)
             {
-                Antares::logs.info() << "    - study status " << folder
-                            << ": at least one recent simulation";
+                Antares::logs.info()
+                  << "    - study status " << folder << ": at least one recent simulation";
             }
             return false;
         }
@@ -132,8 +133,8 @@ bool AntaresStudyAnalyzerJob::shouldBeDestroyed() const
             // There is at least one recent logfile. aborting
             if (traces)
             {
-                Antares::logs.info() << "    - study status " << folder
-                            << ": at least one recent simulation";
+                Antares::logs.info()
+                  << "    - study status " << folder << ": at least one recent simulation";
             }
             return false;
         }

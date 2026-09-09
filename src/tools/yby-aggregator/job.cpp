@@ -139,7 +139,8 @@ bool JobFileReader::readRawData()
             }
             else
             {
-                Antares::logs.warning() << "Got an empty line at " << (pLineCount + 8) << ": " << pFilename;
+                Antares::logs.warning()
+                  << "Got an empty line at " << (pLineCount + 8) << ": " << pFilename;
             }
 
             // Another line has been found
@@ -218,7 +219,8 @@ void JobFileReader::readLine(const AnyString& line, uint y)
 
     if (y >= maxRows)
     {
-        Antares::logs.error() << "Too many rows have been found (more than " << (uint)maxRows << ')';
+        Antares::logs.error() << "Too many rows have been found (more than " << (uint)maxRows
+                              << ')';
         output->incrementError();
         return;
     }
@@ -272,8 +274,8 @@ void JobFileReader::readLine(const AnyString& line, uint y)
                 {
                     if (adapter.size() > maxSizePerCell - 1)
                     {
-                        Antares::logs.warning() << "Content too long at line " << y << " column " << column
-                                       << ": " << pFilename;
+                        Antares::logs.warning() << "Content too long at line " << y << " column "
+                                                << column << ": " << pFilename;
                         pTmpResults[mapping][y][0] = '\0';
                     }
                     else

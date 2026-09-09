@@ -178,7 +178,8 @@ static void PrepareTheWork(const String::Vector& outputs,
         info.directory() << SEP << "mc-ind";
         if (not IO::Directory::Exists(info.directory()))
         {
-            Antares::logs.warning() << "impossible to find data for individual years: " << info.directory();
+            Antares::logs.warning()
+              << "impossible to find data for individual years: " << info.directory();
             continue;
         }
 
@@ -237,8 +238,8 @@ static void PrepareTheWork(const String::Vector& outputs,
             return;
         }
         uint nbYears = maxYear - minYear + 1;
-        Antares::logs.debug() << "  " << info.directory() << " : from " << minYear << " to " << maxYear
-                     << "  (total: " << nbYears << ")";
+        Antares::logs.debug() << "  " << info.directory() << " : from " << minYear << " to "
+                              << maxYear << "  (total: " << nbYears << ")";
 
         output->minYear = minYear;
         output->maxYear = maxYear;
@@ -290,8 +291,8 @@ static void ReadCommandLineOptions(int argc, const char** argv)
         // Parser
         GetOpt::Parser options;
         //
-        options.addParagraph(Yuni::String()
-                             << "Antares output aggregator " << Antares::VersionToCString() << "\n\nData");
+        options.addParagraph(Yuni::String() << "Antares output aggregator "
+                                            << Antares::VersionToCString() << "\n\nData");
         // Input
         options.remainingArguments(optOutputs);
         // Output
@@ -343,7 +344,8 @@ static void ReadCommandLineOptions(int argc, const char** argv)
         }
         if (optAreas.empty() && optLinks.empty())
         {
-            Antares::logs.error() << "Please provide at least one area or one link for the aggregation";
+            Antares::logs.error()
+              << "Please provide at least one area or one link for the aggregation";
             LocalPolicy::Close();
             AbortProgram(1);
         }
@@ -373,7 +375,8 @@ static void ReadCommandLineOptions(int argc, const char** argv)
 
     // Starting !
     {
-        Antares::logs.checkpoint() << "Antares Study Output aggregator v" << ANTARES_VERSION_PUB_STR;
+        Antares::logs.checkpoint()
+          << "Antares Study Output aggregator v" << ANTARES_VERSION_PUB_STR;
         WriteHostInfoIntoLogs();
         Antares::logs.info();
     }
@@ -477,8 +480,8 @@ static bool WriteAggregates()
             }
             if (columnCount > 1)
             {
-                Antares::logs.info() << "  checking " << output->path << "  (" << columnCount
-                            << " variables)";
+                Antares::logs.info()
+                  << "  checking " << output->path << "  (" << columnCount << " variables)";
             }
             else
             {
@@ -605,7 +608,8 @@ static bool WriteAggregates()
                         else
                         {
                             Antares::logs.info() << "    writing " << path;
-                            Antares::logs.debug() << "    (" << matrix.width << 'x' << requiredHeight << ")";
+                            Antares::logs.debug()
+                              << "    (" << matrix.width << 'x' << requiredHeight << ")";
                             if (!matrix.saveToCSVFile(path))
                             {
                                 Antares::logs.error() << "impossible to write " << path;

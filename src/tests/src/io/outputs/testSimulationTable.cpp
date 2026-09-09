@@ -29,6 +29,7 @@
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/io/outputs/SimulationTableEntry.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
+#include "antares/io/outputs/SimulationTableStage.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
@@ -42,7 +43,6 @@
 #include "antares/writer/simulation_table_writer.h"
 
 #include "UtilMocks.h"
-#include "antares/io/outputs/SimulationTableStage.h"
 
 using namespace Antares::LinearProblem::Api;
 using namespace Antares::LinearProblem::MpsolverImpl;
