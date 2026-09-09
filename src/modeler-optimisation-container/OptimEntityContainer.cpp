@@ -11,8 +11,8 @@ using namespace Antares::LinearProblem::Api;
 namespace Antares::LinearProblem
 {
 
-OptimEntityContainer::OptimEntityContainer(Api::ILinearProblem& linearProblem):
-    linearProblem_(linearProblem)
+OptimEntityContainer::OptimEntityContainer(std::shared_ptr<Api::ILinearProblem> linearProblem):
+    linearProblem_(std::move(linearProblem))
 {
 }
 
@@ -39,7 +39,7 @@ VariabilityType OptimEntityContainer::getConstraintVariability(const Component& 
 
 void OptimEntityContainer::addStartColumn()
 {
-    variableStartColumn_.push_back(linearProblem_.variableCount());
+    variableStartColumn_.push_back(linearProblem_->variableCount());
 }
 
 std::span<const std::unique_ptr<IMipVariable>> OptimEntityContainer::getComponentVariable(
@@ -47,7 +47,7 @@ std::span<const std::unique_ptr<IMipVariable>> OptimEntityContainer::getComponen
   unsigned index,
   std::size_t nbTimeSteps) const
 {
-    const auto& variables = linearProblem_.getVariables();
+    const auto& variables = linearProblem_->getVariables();
     unsigned startColumn = getVariableStartColumn(component, index);
     return {variables.data() + startColumn, nbTimeSteps};
 }
@@ -57,7 +57,7 @@ std::span<const std::unique_ptr<IMipConstraint>> OptimEntityContainer::component
   unsigned index,
   std::size_t nbTimeSteps) const
 {
-    const auto& constraints = linearProblem_.getConstraints();
+    const auto& constraints = linearProblem_->getConstraints();
     unsigned startLine = getConstraintStartLine(component, index);
     return {constraints.data() + startLine, nbTimeSteps};
 }
@@ -104,7 +104,7 @@ void OptimEntityContainer::registerConstraint(const Component& component,
 {
     auto& optimComponent = optimComponents_.at(component.Id());
     optimComponent.modelConstraintStartLines.push_back(
-      static_cast<unsigned>(linearProblem_.constraintCount()));
+      static_cast<unsigned>(linearProblem_->constraintCount()));
     optimComponent.modelConstraintsVariability.push_back(variability);
     optimComponent.modelConstraintCounts.push_back(count);
 }

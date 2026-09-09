@@ -325,18 +325,18 @@ BOOST_AUTO_TEST_CASE(add_two_max_generation_from_capacity_constraints)
             const auto& area = areas[areaIndex];
             const auto& cluster = connectedClusterPerAreas[areaIndex];
 
-            auto maxGenConstraint = linearProblem.lookupConstraint(
+            auto maxGenConstraint = linearProblem->lookupConstraint(
               fmt::format(maxGenerationFromCapacityConstraintFormat, area, cluster, pdt));
-            const auto* dispatchableVar = linearProblem.lookupVariable(
+            const auto* dispatchableVar = linearProblem->lookupVariable(
               fmt::format(dispatchableProductionVariableFormat, area, cluster, pdt));
             BOOST_CHECK_EQUAL(maxGenConstraint->getCoefficient(dispatchableVar), 1);
 
             const auto& areaExpectedResult = expectedGemsVariableCoefPerConnection[areaIndex];
-            const auto* portVariable = linearProblem.lookupVariable(
+            const auto* portVariable = linearProblem->lookupVariable(
               fmt::format(portVariableFormat, areaExpectedResult.terms[pdt].first, pdt));
             BOOST_CHECK_EQUAL(maxGenConstraint->getCoefficient(portVariable),
                               areaExpectedResult.terms[pdt].second);
-            BOOST_CHECK_EQUAL(maxGenConstraint->getLb(), -linearProblem.infinity());
+            BOOST_CHECK_EQUAL(maxGenConstraint->getLb(), -linearProblem->infinity());
             BOOST_CHECK_EQUAL(maxGenConstraint->getUb(), areaExpectedResult.upperBounds[pdt]);
         }
     }

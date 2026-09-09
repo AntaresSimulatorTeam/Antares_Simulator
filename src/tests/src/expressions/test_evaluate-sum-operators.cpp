@@ -81,7 +81,7 @@ struct build_eval_visitor_fixture
 
 private:
     DataImpl::LinearProblemData data_;
-    MockLinearProblem linearProblem_;
+    std::shared_ptr<MockLinearProblem> linearProblem_;
     std::unique_ptr<OptimEntityContainer> optimEntityContainer_;
     Api::FillContext fillCtx_;
     Model model_;
@@ -91,7 +91,7 @@ private:
 };
 
 build_eval_visitor_fixture::build_eval_visitor_fixture():
-    linearProblem_(true),
+    linearProblem_(std::make_shared<MockLinearProblem>(true)),
     fillCtx_(0, 2, 0, 2, 0),
     model_(
       createModelWithParameters({Parameter("p", TimeDependent::YES, ScenarioDependent::NO),

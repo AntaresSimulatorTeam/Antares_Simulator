@@ -787,7 +787,7 @@ public:
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     Antares::Solver::ModelerData* modelerData = nullptr;
-    
+
     /// \brief Whether the solve must publish lastSolvedModelerProblem. Set per
     /// week by OPT_OptimisationLineaire, the level that knows a post-process
     /// stage will read it back. Not tied to whether *this* pass writes a table:

@@ -26,7 +26,7 @@ void OneConstraintFiller::addVariables([[maybe_unused]] const FillContext& ctx)
 
 void OneConstraintFiller::addConstraints([[maybe_unused]] const FillContext& ctx)
 {
-    optimEntityContainer_.Problem().addConstraint(1, 2, "constraint-by-OneConstraintFiller");
+    optimEntityContainer_.Problem()->addConstraint(1, 2, "constraint-by-OneConstraintFiller");
 }
 
 void OneConstraintFiller::addObjectives([[maybe_unused]] const FillContext& ctx)

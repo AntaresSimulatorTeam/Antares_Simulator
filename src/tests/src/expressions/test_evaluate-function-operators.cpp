@@ -77,7 +77,7 @@ struct CreateEvalVisitor
 
 private:
     DataImpl::LinearProblemData data_;
-    MockLinearProblem linearProblem_;
+    std::shared_ptr<MockLinearProblem> linearProblem_;
     std::unique_ptr<OptimEntityContainer> optimEntityContainer_;
     Api::FillContext fillCtx_;
     Model model_;
@@ -87,7 +87,7 @@ private:
 };
 
 CreateEvalVisitor::CreateEvalVisitor():
-    linearProblem_(true),
+    linearProblem_(std::make_shared<MockLinearProblem>(true)),
     fillCtx_(0, 3, 0, 3, 0),
     model_(
       createModelWithParameters({Parameter("p", TimeDependent::YES, ScenarioDependent::NO),

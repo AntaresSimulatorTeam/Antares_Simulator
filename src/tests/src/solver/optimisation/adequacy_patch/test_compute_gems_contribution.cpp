@@ -76,7 +76,7 @@ system:
 struct GemsContributionFixture
 {
     GemsContributionFixture():
-        linearProblem(true, "scip")
+        linearProblem(std::make_shared<MpsolverImpl::OrtoolsLinearProblem>(true, "scip"))
     {
         modelerData = buildModelerSystem();
 
@@ -120,7 +120,7 @@ struct GemsContributionFixture
                 for (unsigned t = 0; t <= ctx.getLocalLastTimeStep(); ++t)
                 {
                     auto name = buildVariableName(component.Id(), variable.Id(), {}, t);
-                    linearProblem.addVariable(-999, 999, false, name);
+                    linearProblem->addVariable(-999, 999, false, name);
                 }
             }
         }
@@ -129,7 +129,7 @@ struct GemsContributionFixture
     PROBLEME_HEBDO problemeHebdo{};
     std::unique_ptr<Solver::ModelerData> modelerData;
     std::vector<Library> libraries;
-    MpsolverImpl::OrtoolsLinearProblem linearProblem;
+    std::shared_ptr<MpsolverImpl::OrtoolsLinearProblem> linearProblem;
     ScenarioGroupRepository scenarioGroupRepository;
 };
 

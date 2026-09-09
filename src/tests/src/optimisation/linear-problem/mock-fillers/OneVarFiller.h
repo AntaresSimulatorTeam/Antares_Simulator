@@ -25,7 +25,7 @@ private:
 
 void OneVarFiller::addVariables([[maybe_unused]] const FillContext& ctx)
 {
-    optimEntityContainer_.Problem().addNumVariable(0, 1, added_var_name_);
+    optimEntityContainer_.Problem()->addNumVariable(0, 1, added_var_name_);
 }
 
 void OneVarFiller::addConstraints([[maybe_unused]] const FillContext& ctx)
@@ -34,8 +34,8 @@ void OneVarFiller::addConstraints([[maybe_unused]] const FillContext& ctx)
 
 void OneVarFiller::addObjectives([[maybe_unused]] const FillContext& ctx)
 {
-    auto* var = optimEntityContainer_.Problem().lookupVariable(added_var_name_);
-    optimEntityContainer_.Problem().setObjectiveCoefficient(var, 1);
+    auto* var = optimEntityContainer_.Problem()->lookupVariable(added_var_name_);
+    optimEntityContainer_.Problem()->setObjectiveCoefficient(var, 1);
 }
 
 } // namespace Antares::LinearProblem::Api

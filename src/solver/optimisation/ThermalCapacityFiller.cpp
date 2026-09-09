@@ -72,7 +72,7 @@ IMipVariable* ThermalCapacityFiller::getDispatchableProductionVariable(int therm
                                                                        unsigned pdt)
 {
     auto varIndex = variableManager_.DispatchableProduction(thermalClusterIndex, pdt);
-    return pb_.getVariable(varIndex);
+    return pb_->getVariable(varIndex);
 }
 
 void ThermalCapacityFiller::addCapacityFieldConstraint(
@@ -81,22 +81,22 @@ void ThermalCapacityFiller::addCapacityFieldConstraint(
   const int clusterIndex,
   const std::string& namePrefix)
 {
-    const auto& solverVariables = pb_.getVariables();
+    const auto& solverVariables = pb_->getVariables();
     for (auto localIndex(ctx.getLocalFirstTimeStep()); localIndex <= ctx.getLocalLastTimeStep();
          ++localIndex)
     {
         auto pdt = localIndex % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
         IMipVariable* dispatchableProduction = getDispatchableProductionVariable(clusterIndex, pdt);
-        double infinity = pb_.infinity();
+        double infinity = pb_->infinity();
         // When a thermal-capacity-connection exists, the legacy thermal capacity timeseries
         // is replaced by the capacity expression coming from the connected GEMS port.
         dispatchableProduction->setUb(infinity);
 
-        auto* ct = pb_.addConstraint(-infinity,
-                                     linearExpression[localIndex].constant(),
-                                     namePrefix
-                                       + fmt::format("::hour<{}>",
-                                                     pdt + problemeHebdo_->weekInTheYear * 168));
+        auto* ct = pb_->addConstraint(-infinity,
+                                      linearExpression[localIndex].constant(),
+                                      namePrefix
+                                        + fmt::format("::hour<{}>",
+                                                      pdt + problemeHebdo_->weekInTheYear * 168));
         ct->setCoefficient(dispatchableProduction, 1.0);
 
         for (const auto& [varIndex, coef]: linearExpression[localIndex])

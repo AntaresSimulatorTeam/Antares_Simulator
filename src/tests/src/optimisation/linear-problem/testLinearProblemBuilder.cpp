@@ -22,13 +22,13 @@ struct Fixture
 {
     Fixture()
     {
-        pb = std::make_unique<OrtoolsLinearProblem>(false, "sirius");
+        pb = std::make_shared<OrtoolsLinearProblem>(false, "sirius");
     }
 
     std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
     LinearProblemData LP_Data;
     FillContext ctx = {0, 0, 0, 0, 0}; // dummy value for other tests than context
-    std::unique_ptr<ILinearProblem> pb;
+    std::shared_ptr<ILinearProblem> pb;
 };
 
 BOOST_AUTO_TEST_SUITE(tests_on_linear_problem_builder)
@@ -44,7 +44,7 @@ BOOST_FIXTURE_TEST_CASE(no_filler_given_to_builder___nothing_built, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(one_var_filler___the_var_is_built, Fixture)
 {
-    Antares::LinearProblem::OptimEntityContainer optimEntityContainer(*pb);
+    Antares::LinearProblem::OptimEntityContainer optimEntityContainer(pb);
     fillers.push_back(std::make_unique<OneVarFiller>(optimEntityContainer));
 
     LinearProblemBuilder lpBuilder(fillers);
@@ -59,7 +59,7 @@ BOOST_FIXTURE_TEST_CASE(one_var_filler___the_var_is_built, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(one_constraint_filler___the_constraint_is_built, Fixture)
 {
-    Antares::LinearProblem::OptimEntityContainer optimEntityContainer(*pb);
+    Antares::LinearProblem::OptimEntityContainer optimEntityContainer(pb);
     fillers.push_back(std::make_unique<OneConstraintFiller>(optimEntityContainer));
 
     LinearProblemBuilder lpBuilder(fillers);
@@ -72,7 +72,7 @@ BOOST_FIXTURE_TEST_CASE(one_constraint_filler___the_constraint_is_built, Fixture
 
 BOOST_FIXTURE_TEST_CASE(two_fillers_given_to_builder___all_is_built, Fixture)
 {
-    Antares::LinearProblem::OptimEntityContainer optimEntityContainer(*pb);
+    Antares::LinearProblem::OptimEntityContainer optimEntityContainer(pb);
     fillers.push_back(std::make_unique<OneVarFiller>(optimEntityContainer));
     fillers.push_back(std::make_unique<OneConstraintFiller>(optimEntityContainer));
 
@@ -86,7 +86,7 @@ BOOST_FIXTURE_TEST_CASE(two_fillers_given_to_builder___all_is_built, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(three_fillers_given_to_builder___3_vars_3_constr_are_built, Fixture)
 {
-    Antares::LinearProblem::OptimEntityContainer optimEntityContainer(*pb);
+    Antares::LinearProblem::OptimEntityContainer optimEntityContainer(pb);
     fillers.push_back(std::make_unique<OneVarFiller>(optimEntityContainer));
     fillers.push_back(std::make_unique<OneConstraintFiller>(optimEntityContainer));
     fillers.push_back(std::make_unique<TwoVarsTwoConstraintsFiller>(optimEntityContainer));
@@ -100,7 +100,7 @@ BOOST_FIXTURE_TEST_CASE(three_fillers_given_to_builder___3_vars_3_constr_are_bui
 
 BOOST_FIXTURE_TEST_CASE(FillerWithContext, Fixture)
 {
-    Antares::LinearProblem::OptimEntityContainer optimEntityContainer(*pb);
+    Antares::LinearProblem::OptimEntityContainer optimEntityContainer(pb);
     fillers.push_back(std::make_unique<VarFillerContext>(optimEntityContainer));
 
     ctx = FillContext(0, 5, 0, 5, 0);
