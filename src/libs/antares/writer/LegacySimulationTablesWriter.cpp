@@ -52,7 +52,7 @@ void LegacySimulationTablesWriter::write(const OptimisationsSimulationTable& tab
         // header-only file suggesting the stage ran and found nothing.
         if (table.rowCount() == 0)
         {
-            Antares::logs.info() << fmt::format(
+            logs.info() << fmt::format(
               "No content for stage '{}', skipping writing corresponding simulation table",
               stageName(stage));
             continue;
@@ -61,9 +61,9 @@ void LegacySimulationTablesWriter::write(const OptimisationsSimulationTable& tab
     }
 }
 
-void LegacySimulationTablesWriter::writeForStage(const SimulationTable& table, IO::Outputs::Stage stage) const
+void LegacySimulationTablesWriter::writeForStage(const SimulationTable& table, Stage stage) const
 {
-    auto filepath = makeSimuTableFilePath(folder_, year_, IO::Outputs::stageName(stage));
+    auto filepath = makeSimuTableFilePath(folder_, year_, stageName(stage));
     SimulationTableWriter writer(filepath, tableFormat_);
     writer.writeTable(table);
 }
