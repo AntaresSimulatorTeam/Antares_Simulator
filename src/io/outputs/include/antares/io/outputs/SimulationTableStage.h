@@ -7,12 +7,6 @@
 #include <optional>
 #include <string_view>
 
-// This header is pulled in by study/parameters.h, which lands in a great many
-// translation units -- several of them legacy tools that do
-// `using namespace Yuni; using namespace Antares;` and then write a bare
-// `IO::File::...`. Those TUs must therefore never open `Antares::IO` (only
-// name it fully qualified, as parameters.h does with `Antares::IO::Outputs::Stage`),
-// or that `IO` turns ambiguous with `Yuni::IO`.
 namespace Antares::IO::Outputs
 {
 /**
