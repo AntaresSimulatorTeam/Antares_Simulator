@@ -27,15 +27,9 @@ class IGemsPart
 public:
     virtual ~IGemsPart() = default;
     virtual void setHour(int triggeredHour) = 0;
-    virtual void setBoundsOnENS(PROBLEME_ANTARES_A_RESOUDRE& problem,
-                                VariableManagement::VariableManager& varManager)
-      = 0;
-    virtual void setRHSfictitiousLoadValue(PROBLEME_ANTARES_A_RESOUDRE& problem,
-                                           std::map<int, int>& constraintMap)
-      = 0;
-    virtual void setRHSMaxEnsLoadValue(PROBLEME_ANTARES_A_RESOUDRE& problem,
-                                       std::map<int, int>& constraintMap)
-      = 0;
+    virtual void setBoundsOnENS() = 0;
+    virtual void setRHSfictitiousLoadValue() = 0;
+    virtual void setRHSMaxEnsLoadValue() = 0;
 };
 
 // Null object — pure Legacy, does nothing
@@ -46,15 +40,15 @@ public:
     {
     }
 
-    void setBoundsOnENS(PROBLEME_ANTARES_A_RESOUDRE&, VariableManagement::VariableManager&) override
+    void setBoundsOnENS() override
     {
     }
 
-    void setRHSfictitiousLoadValue(PROBLEME_ANTARES_A_RESOUDRE&, std::map<int, int>&) override
+    void setRHSfictitiousLoadValue() override
     {
     }
 
-    void setRHSMaxEnsLoadValue(PROBLEME_ANTARES_A_RESOUDRE&, std::map<int, int>&) override
+    void setRHSMaxEnsLoadValue() override
     {
     }
 };
@@ -63,15 +57,16 @@ public:
 class ActiveGemsPart final: public IGemsPart
 {
 public:
-    explicit ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo);
+    ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo,
+                   PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre,
+                   VariableManagement::VariableManager& variableManager,
+                   std::map<int, int>& constraintCsrFictitiousLoad,
+                   std::map<int, int>& constraintCsrMaxEnsLoad);
 
     void setHour(int triggeredHour) override;
-    void setBoundsOnENS(PROBLEME_ANTARES_A_RESOUDRE& problem,
-                        VariableManagement::VariableManager& varManager) override;
-    void setRHSfictitiousLoadValue(PROBLEME_ANTARES_A_RESOUDRE& problem,
-                                   std::map<int, int>& constraintMap) override;
-    void setRHSMaxEnsLoadValue(PROBLEME_ANTARES_A_RESOUDRE& problem,
-                               std::map<int, int>& constraintMap) override;
+    void setBoundsOnENS() override;
+    void setRHSfictitiousLoadValue() override;
+    void setRHSMaxEnsLoadValue() override;
 
 private:
     double gemsContributionForArea(
@@ -84,7 +79,16 @@ private:
     PROBLEME_HEBDO* problemeHebdo_;
     int triggeredHour_ = 0;
     Antares::LinearProblem::Api::FillContext fillContext_{0, 0, 0, 0, 0};
+
+    PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre_;
+    VariableManagement::VariableManager& variableManager_;
+    std::map<int, int>& constraintCsrFictitiousLoad_;
+    std::map<int, int>& constraintCsrMaxEnsLoad_;
 };
 
 // Factory
-std::unique_ptr<IGemsPart> makeGemsPart(PROBLEME_HEBDO* problemeHebdo);
+std::unique_ptr<IGemsPart> makeGemsPart(PROBLEME_HEBDO* problemeHebdo,
+                                        PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre,
+                                        VariableManagement::VariableManager& variableManager,
+                                        std::map<int, int>& constraintCsrFictitiousLoad,
+                                        std::map<int, int>& constraintCsrMaxEnsLoad);

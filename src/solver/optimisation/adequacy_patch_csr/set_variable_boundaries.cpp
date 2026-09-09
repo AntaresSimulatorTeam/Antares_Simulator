@@ -14,7 +14,7 @@ using namespace Antares::Data::AdequacyPatch;
 void HourlyCSRProblem::setBoundsOnENS()
 {
     setBoundsOnENSFromLegacy();
-    gemsPart_->setBoundsOnENS(problemeAResoudre_, variableManager_);
+    gemsPart_->setBoundsOnENS();
 }
 
 void HourlyCSRProblem::setBoundsOnENSFromLegacy()

@@ -96,6 +96,12 @@ struct GemsContributionFixture
         problemeHebdo.optimEntityContainer = std::make_unique<OptimEntityContainer>(linearProblem);
 
         addComponentsVariablesToLP();
+
+        gemsPart = makeGemsPart(&problemeHebdo,
+                                problemAResoudre,
+                                variableManager_,
+                                constraintFictitious,
+                                constraintMaxEns);
     }
 
     std::unique_ptr<Solver::ModelerData> buildModelerSystem()
@@ -134,6 +140,10 @@ struct GemsContributionFixture
     MpsolverImpl::OrtoolsLinearProblem linearProblem;
     ScenarioGroupRepository scenarioGroupRepository;
     VariableManagement::VariableManager variableManager_{&problemeHebdo};
+    std::unique_ptr<IGemsPart> gemsPart;
+    PROBLEME_ANTARES_A_RESOUDRE problemAResoudre{};
+    std::map<int, int> constraintFictitious;
+    std::map<int, int> constraintMaxEns;
 };
 
 BOOST_AUTO_TEST_SUITE(gems_part_tests)
@@ -145,7 +155,16 @@ BOOST_AUTO_TEST_CASE(factory_returns_null_gems_part_when_no_modeler_data)
     PROBLEME_HEBDO problem{};
     problem.modelerData = nullptr;
 
-    auto gemsPart = makeGemsPart(&problem);
+    PROBLEME_ANTARES_A_RESOUDRE problemAResoudre{};
+    VariableManagement::VariableManager varManager(&problem);
+    std::map<int, int> constraintFictitious;
+    std::map<int, int> constraintMaxEns;
+
+    auto gemsPart = makeGemsPart(&problem,
+                                 problemAResoudre,
+                                 varManager,
+                                 constraintFictitious,
+                                 constraintMaxEns);
 
     BOOST_CHECK(dynamic_cast<NullGemsPart*>(gemsPart.get()) != nullptr);
     BOOST_CHECK_NO_THROW(gemsPart->setHour(42));
@@ -154,7 +173,6 @@ BOOST_AUTO_TEST_CASE(factory_returns_null_gems_part_when_no_modeler_data)
 BOOST_FIXTURE_TEST_CASE(factory_returns_active_gems_part_when_modeler_data_exists,
                         GemsContributionFixture)
 {
-    auto gemsPart = makeGemsPart(&problemeHebdo);
     BOOST_CHECK(dynamic_cast<ActiveGemsPart*>(gemsPart.get()) != nullptr);
     BOOST_CHECK_NO_THROW(gemsPart->setHour(0));
 }
@@ -163,7 +181,12 @@ BOOST_FIXTURE_TEST_CASE(active_gems_part_throws_when_no_optimEntityContainer,
                         GemsContributionFixture)
 {
     problemeHebdo.optimEntityContainer.reset();
-    BOOST_CHECK_THROW(ActiveGemsPart{&problemeHebdo}, std::runtime_error);
+    BOOST_CHECK_THROW((ActiveGemsPart(&problemeHebdo,
+                                      problemAResoudre,
+                                      variableManager_,
+                                      constraintFictitious,
+                                      constraintMaxEns)),
+                      std::runtime_error);
 }
 
 // --- NullGemsPart does nothing ---
@@ -171,31 +194,16 @@ BOOST_FIXTURE_TEST_CASE(active_gems_part_throws_when_no_optimEntityContainer,
 BOOST_AUTO_TEST_CASE(null_gems_part_setBoundsOnENS_is_noop)
 {
     NullGemsPart nullPart;
-    PROBLEME_ANTARES_A_RESOUDRE problem{};
-    problem.Xmax = {100.0, 200.0};
 
-    PROBLEME_HEBDO pb{};
-    VariableManagement::VariableManager varManager(&pb);
-
-    nullPart.setBoundsOnENS(problem, varManager);
-
-    BOOST_CHECK_EQUAL(problem.Xmax[0], 100.0);
-    BOOST_CHECK_EQUAL(problem.Xmax[1], 200.0);
+    BOOST_CHECK_NO_THROW(nullPart.setBoundsOnENS());
 }
 
 BOOST_AUTO_TEST_CASE(null_gems_part_setRHS_is_noop)
 {
     NullGemsPart nullPart;
-    PROBLEME_ANTARES_A_RESOUDRE problem{};
-    problem.SecondMembre = {10.0, 20.0};
-    std::map<int, int> constraintMap = {{0, 0}, {1, 1}};
 
-    nullPart.setRHSfictitiousLoadValue(problem, constraintMap);
-    nullPart.setRHSMaxEnsLoadValue(problem, constraintMap);
-
-    // Values unchanged
-    BOOST_CHECK_EQUAL(problem.SecondMembre[0], 10.0);
-    BOOST_CHECK_EQUAL(problem.SecondMembre[1], 20.0);
+    BOOST_CHECK_NO_THROW(nullPart.setRHSfictitiousLoadValue());
+    BOOST_CHECK_NO_THROW(nullPart.setRHSMaxEnsLoadValue());
 }
 
 // --- ActiveGemsPart evaluates expressions ---

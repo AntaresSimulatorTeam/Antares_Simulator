@@ -19,8 +19,16 @@ using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Expressions;
 using namespace Antares::LinearProblem::Api;
 
-ActiveGemsPart::ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo):
-    problemeHebdo_(problemeHebdo)
+ActiveGemsPart::ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo,
+                               PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre,
+                               VariableManagement::VariableManager& variableManager,
+                               std::map<int, int>& constraintCsrFictitiousLoad,
+                               std::map<int, int>& constraintCsrMaxEnsLoad):
+    problemeHebdo_(problemeHebdo),
+    problemeAResoudre_(problemeAResoudre),
+    variableManager_(variableManager),
+    constraintCsrFictitiousLoad_(constraintCsrFictitiousLoad),
+    constraintCsrMaxEnsLoad_(constraintCsrMaxEnsLoad)
 {
     if (!problemeHebdo_->optimEntityContainer)
     {
@@ -85,48 +93,45 @@ double ActiveGemsPart::gemsUnsupEnergyForArea(uint32_t area) const
     return gemsContributionForArea(area, getUnsupEnergyBound);
 }
 
-void ActiveGemsPart::setBoundsOnENS(PROBLEME_ANTARES_A_RESOUDRE& problem,
-                                    VariableManagement::VariableManager& varManager)
+void ActiveGemsPart::setBoundsOnENS()
 {
     for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area] == physicalAreaInsideAdqPatch)
         {
-            int var = varManager.UnsuppliedEnergy(area, triggeredHour_);
-            problem.Xmax[var] += gemsUnsupEnergyForArea(area);
+            int var = variableManager_.UnsuppliedEnergy(area, triggeredHour_);
+            problemeAResoudre_.Xmax[var] += gemsUnsupEnergyForArea(area);
         }
     }
 }
 
-void ActiveGemsPart::setRHSfictitiousLoadValue(PROBLEME_ANTARES_A_RESOUDRE& problem,
-                                               std::map<int, int>& constraintMap)
+void ActiveGemsPart::setRHSfictitiousLoadValue()
 {
     for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area] == physicalAreaInsideAdqPatch)
         {
-            auto it = constraintMap.find(area);
-            if (it != constraintMap.end())
+            auto it = constraintCsrFictitiousLoad_.find(area);
+            if (it != constraintCsrFictitiousLoad_.end())
             {
                 int Cnt = it->second;
-                problem.SecondMembre[Cnt] += gemsSpilledForArea(area);
+                problemeAResoudre_.SecondMembre[Cnt] += gemsSpilledForArea(area);
             }
         }
     }
 }
 
-void ActiveGemsPart::setRHSMaxEnsLoadValue(PROBLEME_ANTARES_A_RESOUDRE& problem,
-                                           std::map<int, int>& constraintMap)
+void ActiveGemsPart::setRHSMaxEnsLoadValue()
 {
     for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area] == physicalAreaInsideAdqPatch)
         {
-            auto it = constraintMap.find(area);
-            if (it != constraintMap.end())
+            auto it = constraintCsrMaxEnsLoad_.find(area);
+            if (it != constraintCsrMaxEnsLoad_.end())
             {
                 int Cnt = it->second;
-                problem.SecondMembre[Cnt] += gemsUnsupEnergyForArea(area);
+                problemeAResoudre_.SecondMembre[Cnt] += gemsUnsupEnergyForArea(area);
             }
         }
     }
@@ -138,11 +143,19 @@ double ActiveGemsPart::gemsSpilledForArea(uint32_t area) const
 }
 
 // Factory
-std::unique_ptr<IGemsPart> makeGemsPart(PROBLEME_HEBDO* problemeHebdo)
+std::unique_ptr<IGemsPart> makeGemsPart(PROBLEME_HEBDO* problemeHebdo,
+                                        PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre,
+                                        VariableManagement::VariableManager& variableManager,
+                                        std::map<int, int>& constraintCsrFictitiousLoad,
+                                        std::map<int, int>& constraintCsrMaxEnsLoad)
 {
     if (problemeHebdo->modelerData && problemeHebdo->modelerData->system)
     {
-        return std::make_unique<ActiveGemsPart>(problemeHebdo);
+        return std::make_unique<ActiveGemsPart>(problemeHebdo,
+                                                problemeAResoudre,
+                                                variableManager,
+                                                constraintCsrFictitiousLoad,
+                                                constraintCsrMaxEnsLoad);
     }
     return std::make_unique<NullGemsPart>();
 }
