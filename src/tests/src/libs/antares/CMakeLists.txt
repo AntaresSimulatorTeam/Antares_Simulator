@@ -86,3 +86,11 @@ add_boost_test(logs-accumulation
 	Antares::logs
 	test_utils_unit
 )
+
+add_boost_test(logs-format
+        SRC
+	logs/log-format-test.cpp
+        LIBS
+	Antares::logs
+	test_utils_unit
+)

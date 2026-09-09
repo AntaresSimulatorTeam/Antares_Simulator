@@ -71,6 +71,16 @@ def empty_input_series(context, series_file):
     # An empty series file is Antares' own convention for "no data": the
     # series loads as a single all-zero column (see e.g. the "he" area's
     # empty mod.txt/ror.txt in the "Accurate hydro pricing" fixture).
+    #
+    # This overwrites a file on disk, so it must run on a throwaway copy of
+    # the study, never on the shared resources tree -- otherwise every later
+    # scenario reusing the same study would see the emptied series.
+    # 'the solver study path is a copy of "..."' sets context.tmp_workdir.
+    assert hasattr(context, "tmp_workdir"), (
+        'the "time series is emptied" step modifies study files; load the '
+        'study with \'Given the solver study path is a copy of "..."\' so the '
+        "change stays confined to a temporary copy"
+    )
     file_path = context.study_path / "input" / Path(series_file.replace("/", os.sep))
     file_path.parent.mkdir(parents=True, exist_ok=True)
     file_path.write_text("")
@@ -320,6 +330,38 @@ def should_check(row, key):
     return key in row.headings and len(row[key]) > 0
 
 
+# The stages of the weekly resolution, in the order the solver runs them.
+# `--simulation-table-stages` only ever removes stages from this list, so it
+# doubles as the order to fall back through when looking for a stage to read.
+SIMULATION_TABLE_STAGES = ["optim-nb-1", "optim-nb-2", "remix-hydro", "adq-patch-csr"]
+
+_STAGE_OF_TABLE_FILE = re.compile(r"^simulation-table-\d+-(.+)\.csv$")
+
+
+def stages_in_output(output_path: Path) -> set:
+    """The stage suffixes of the simulation-table files in `output_path`."""
+    found = set()
+    for table_file in output_path.glob("simulation-table-*.csv"):
+        match = _STAGE_OF_TABLE_FILE.match(table_file.name)
+        assert match, f"Unexpected simulation table file name: {table_file.name}"
+        found.add(match.group(1))
+    return found
+
+
+def default_simulation_table_stage(output_path: Path):
+    """The stage `the modeler outputs contain ...` reads unless told otherwise.
+
+    A full run always has optim-nb-1, but a run restricted with
+    --simulation-table-stages need not, so fall back to the earliest stage that
+    was actually produced. Returns None when the run wrote no table at all.
+    """
+    produced = stages_in_output(output_path)
+    for stage in SIMULATION_TABLE_STAGES:
+        if stage in produced:
+            return stage
+    return None
+
+
 def run_simulation(context):
     command = build_antares_solver_command(context)
     print(f"Running command: {command}")
@@ -348,10 +390,31 @@ def run_simulation(context):
     context.soh = solver_output_handler(context.output_path, context.mode)
     # For hybrid studies:
     outputPath = Path(context.output_path)
-    if any(outputPath.glob("simulation-table*.csv")):
-        file_pattern = f"simulation-table-*-optim-nb-1.csv"
+    default_stage = default_simulation_table_stage(outputPath)
+    if default_stage is not None:
+        file_pattern = f"simulation-table-*-{default_stage}.csv"
         ST_reader_factory = make_simu_table_reader(outputPath, OutputFormat.CSV, file_pattern)
         context.simu_table = SimulationTable(ST_reader_factory())
+
+@then('the simulation tables cover exactly the stages "{stages}"')
+def check_simulation_table_stages(context, stages):
+    """Check the exact set of stage suffixes among the simulation-table files.
+
+    Stage names are part of the output contract, so this pins them; `exactly`
+    also catches a stage being emitted where it should have been skipped (an
+    empty table is not written at all).
+    """
+    expected = sorted(stage.strip() for stage in stages.split(","))
+    output_path = Path(context.output_path)
+    stage_of_file = re.compile(r"^simulation-table-\d+-(.+)\.csv$")
+    found = set()
+    for table_file in output_path.glob("simulation-table-*.csv"):
+        match = stage_of_file.match(table_file.name)
+        assert match, f"Unexpected simulation table file name: {table_file.name}"
+        found.add(match.group(1))
+    assert sorted(found) == expected, \
+        f"Expected simulation table stages {expected}, found {sorted(found)}"
+
 
 @step('the modeler outputs are read from stage "{stage}"')
 def read_modeler_outputs_from_stage(context, stage):
@@ -359,7 +422,7 @@ def read_modeler_outputs_from_stage(context, stage):
 
     The solver writes one simulation table per stage of the weekly resolution
     (optim-nb-1, optim-nb-2, remix-hydro, adq-patch-csr). run_simulation loads
-    optim-nb-1; this step swaps in another stage, so every
+    the first stage the run produced; this step swaps in another stage, so every
     `the modeler outputs contain ...` step after it reads that stage instead.
     """
     output_path = Path(context.output_path)
@@ -399,13 +462,7 @@ def check_simulation_table_stages(context, stages):
     empty table is not written at all).
     """
     expected = sorted(stage.strip() for stage in stages.split(","))
-    output_path = Path(context.output_path)
-    stage_of_file = re.compile(r"^simulation-table-\d+-(.+)\.csv$")
-    found = set()
-    for table_file in output_path.glob("simulation-table-*.csv"):
-        match = stage_of_file.match(table_file.name)
-        assert match, f"Unexpected simulation table file name: {table_file.name}"
-        found.add(match.group(1))
+    found = stages_in_output(Path(context.output_path))
     assert sorted(found) == expected, \
         f"Expected simulation table stages {expected}, found {sorted(found)}"
 

@@ -5,6 +5,9 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <yuni/io/directory.h>
+#include <yuni/io/file.h>
+#include <yuni/io/filename-manipulation.h>
 
 #include <antares/logs/logs.h>
 #include "antares/config/config.h"
@@ -92,7 +95,7 @@ bool FindExampleFolder(Yuni::String& folder)
 // Other guesses, Dev mode, special folders when ran from the SVN
 // repository and from Visual Studio
 #ifdef YUNI_OS_MSVC
-    if (Yuni::Logs::Verbosity::Debug::enabled)
+    if (Antares::Logs::Verbosity::Debug::enabled)
     {
         s.clear() << RootFolder << "\\..\\Debug\\..\\..\\..\\..\\resources\\examples";
         IO::Normalize(folder, s);
@@ -150,7 +153,7 @@ void Initialize(int argc, const char** argv, bool initializeSearchPath)
         SearchPaths.push_back(p);
 
 #ifdef YUNI_OS_MSVC
-        if (Yuni::Logs::Verbosity::Debug::enabled)
+        if (Antares::Logs::Verbosity::Debug::enabled)
         {
             p.clear() << RootFolder << "\\..\\Debug\\..\\resources\\";
             SearchPaths.push_back(p);

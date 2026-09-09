@@ -6,7 +6,7 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-inline uint Rules::areaCount() const
+inline unsigned int Rules::areaCount() const
 {
     return pAreaCount;
 }

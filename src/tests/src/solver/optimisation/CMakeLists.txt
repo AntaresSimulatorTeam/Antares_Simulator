@@ -22,6 +22,7 @@ add_boost_test(unit-tests-for-solver-optimisation
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/variables/VariableManagerUtils.cpp
         LIBS
         antares-study-system-model
+        Antares::antares-solver-simulation
         Antares::simulation-table
         Antares::simu-table-generator
         Antares::linear-problem-mpsolver-impl

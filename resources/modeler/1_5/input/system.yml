@@ -1,7 +1,6 @@
 system:
   id: sys_example_1_5
   description: System supposed to raise an error since gen1_prop_cost is declared as time-dependant = false but a timeseries is given.
-  model-libraries: lib_example_1_5
 
   components:
     - id: node1

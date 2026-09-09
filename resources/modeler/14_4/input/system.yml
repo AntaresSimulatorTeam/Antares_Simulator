@@ -6,7 +6,6 @@ system:
     so x must equal c = 20 at every timestep.
     Expected: x = 20 at all timesteps, objective = 100..
 
-  model-libraries: lib_example_14_4
 
   components:
     - id: c1

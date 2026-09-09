@@ -11,7 +11,6 @@ system:
     
     Objective function : 765
 
-  model-libraries: lib_example_1_4
 
   components:
     - id: node1

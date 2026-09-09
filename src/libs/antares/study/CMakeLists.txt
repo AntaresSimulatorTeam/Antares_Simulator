@@ -44,7 +44,6 @@ set(SRC_AREAS
         include/antares/study/area/capacityReservation.h
         include/antares/study/area/reserveParticipation.h
         include/antares/study/area/reserveParticipationContainer.h
-        include/antares/study/area/ReserveOpt.h
         include/antares/study/area/area.hxx
         include/antares/study/area/scratchpad.h
 	        area/scratchpad.cpp
@@ -72,6 +71,9 @@ set(SRC_STUDY_PART_THERMAL
         include/antares/study/parts/thermal/ecoInput.h
         parts/thermal/ecoInput.cpp
         include/antares/study/parts/thermal/cluster.h
+        include/antares/study/parts/thermal/law.h
+        include/antares/study/parts/thermal/prepro.h
+        parts/thermal/prepro.cpp
         include/antares/study/parts/thermal/cost_provider.h
         include/antares/study/parts/thermal/cluster.hxx
         parts/thermal/cluster.cpp
@@ -247,6 +249,7 @@ set(SRC_STUDY
         area/sets.cpp
 
         # variable selection
+        include/antares/study/categories.h
         include/antares/study/variable-print-info.h
         variable-print-info.cpp
 )
@@ -293,18 +296,17 @@ target_link_libraries(study
         Antares::date
         Antares::inifile
         Antares::io
+        Antares::simulation-table
         Antares::study-utils
-        Antares::solverUtils
+        Antares::optimization-options
         Antares::correlation
         Antares::path
         Antares::mersenne
         Antares::result_writer
         Antares::series
         Antares::array
-        Antares::hydro
         Antares::scenario-builder-utils
         Antares::enums
-        antares-solver-simulation
         antares-core
         yaml-cpp::yaml-cpp
         PRIVATE
@@ -316,7 +318,6 @@ target_link_libraries(study
         Antares::exception
         fmt::fmt
         Antares::benchmarking
-        antares-solver-variable
         Antares::additional-constraint-rhs-antlr-interface
         Antares::reserves-parsing-antlr-interface
 )

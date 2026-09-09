@@ -447,6 +447,119 @@ BOOST_FIXTURE_TEST_CASE(port_fields_definitions_forbid_usage_of_sum_connections,
     BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, checkMessage(err_msg));
 }
 
+BOOST_FIXTURE_TEST_CASE(port_field_definition_conflicts_with_sum_connections_in_same_model, Fixture)
+{
+    YmlModel::PortType portType{"my-port-type", "description", {"field"}, "", {}};
+    library.port_types = {portType};
+
+    YmlModel::Model model{
+      .id = "my-model",
+      .description = "description",
+      .parameters = {},
+      .variables = {},
+      .ports = {{"port", "my-port-type"}},
+      .port_field_definitions = {{"port", "field", ExpressionLineNumber{"0", 0}}},
+      .constraints = {},
+      .binding_constraints = {{"constraint1",
+                               ExpressionLineNumber{"sum_connections(port.field) = 0", 0},
+                               "subproblems",
+                               ""}},
+      .objectives = {},
+      .extra_outputs = {},
+      .filename = ""};
+    library.models = {model};
+
+    std::string err_msg = "In model 'my-model', field 'field' of port 'port' is defined in a "
+                          "port-field-definition and also used in a sum_connections "
+                          "in binding constraint 'constraint1'. "
+                          "A field cannot be both a sender and a receiver in the "
+                          "same model.";
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, checkMessage(err_msg));
+}
+
+BOOST_FIXTURE_TEST_CASE(port_field_definition_conflicts_with_sum_connections_different_port_names,
+                        Fixture)
+{
+    YmlModel::PortType portType{"my-port-type", "description", {"field"}, "", {}};
+    library.port_types = {portType};
+
+    YmlModel::Model model{
+      .id = "my-model",
+      .description = "description",
+      .parameters = {},
+      .variables = {},
+      .ports = {{"port1", "my-port-type"}, {"port2", "my-port-type"}},
+      .port_field_definitions = {{"port1", "field", ExpressionLineNumber{"0", 0}}},
+      .constraints = {},
+      .binding_constraints = {{"constraint1",
+                               ExpressionLineNumber{"sum_connections(port1.field) = 0", 0},
+                               "subproblems",
+                               ""}},
+      .objectives = {},
+      .extra_outputs = {},
+      .filename = ""};
+    library.models = {model};
+
+    std::string err_msg = "In model 'my-model', field 'field' of port 'port1' is defined in a "
+                          "port-field-definition and also used in a sum_connections "
+                          "in binding constraint 'constraint1'. "
+                          "A field cannot be both a sender and a receiver in the "
+                          "same model.";
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, checkMessage(err_msg));
+}
+
+BOOST_FIXTURE_TEST_CASE(port_field_definition_no_conflict_when_sum_connections_on_different_field,
+                        Fixture)
+{
+    YmlModel::PortType portType{"my-port-type", "description", {"field1", "field2"}, "", {}};
+    library.port_types = {portType};
+
+    YmlModel::Model model{
+      .id = "my-model",
+      .description = "description",
+      .parameters = {},
+      .variables = {},
+      .ports = {{"port", "my-port-type"}},
+      .port_field_definitions = {{"port", "field1", ExpressionLineNumber{"0", 0}}},
+      .constraints = {},
+      .binding_constraints = {{"constraint1",
+                               ExpressionLineNumber{"sum_connections(port.field2) = 0", 0},
+                               "subproblems",
+                               ""}},
+      .objectives = {},
+      .extra_outputs = {},
+      .filename = ""};
+    library.models = {model};
+
+    BOOST_CHECK_NO_THROW(ModelConverter::convert(library));
+}
+
+BOOST_FIXTURE_TEST_CASE(port_field_definition_no_conflict_when_sum_connections_on_different_port,
+                        Fixture)
+{
+    YmlModel::PortType portType{"my-port-type", "description", {"field"}, "", {}};
+    library.port_types = {portType};
+
+    YmlModel::Model model{
+      .id = "my-model",
+      .description = "description",
+      .parameters = {},
+      .variables = {},
+      .ports = {{"port1", "my-port-type"}, {"port2", "my-port-type"}},
+      .port_field_definitions = {{"port1", "field", ExpressionLineNumber{"0", 0}}},
+      .constraints = {},
+      .binding_constraints = {{"constraint1",
+                               ExpressionLineNumber{"sum_connections(port2.field) = 0", 0},
+                               "subproblems",
+                               ""}},
+      .objectives = {},
+      .extra_outputs = {},
+      .filename = ""};
+    library.models = {model};
+
+    BOOST_CHECK_NO_THROW(ModelConverter::convert(library));
+}
+
 BOOST_FIXTURE_TEST_CASE(in_port_fields_definitions__min_operator_accepts_a_variable, Fixture)
 {
     YmlModel::PortType portType{"my-port-type", "description", {"field"}, "", {}};

@@ -22,7 +22,7 @@ bool Prepro::loadFromFolder(const std::filesystem::path& folder)
     return xcast.loadFromFolder(folder);
 }
 
-bool Prepro::saveToFolder(const AnyString& folder) const
+bool Prepro::saveToFolder(const std::string& folder) const
 {
     return xcast.saveToFolder(folder);
 }

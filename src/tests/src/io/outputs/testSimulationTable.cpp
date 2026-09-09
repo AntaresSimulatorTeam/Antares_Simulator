@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include <stdexcept>
 #define WIN32_LEAN_AND_MEAN
 
 #include <algorithm>
@@ -20,6 +19,8 @@
 #include <parquet/arrow/writer.h>
 #include <parquet/exception.h>
 
+#include <antares/exception/InvalidArgumentError.hpp>
+
 // Mock includes for testing - replace with actual includes
 #include <inmemory-modeler.h>
 #include <unit_test_utils.h>
@@ -28,6 +29,7 @@
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/io/outputs/SimulationTableEntry.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
+#include "antares/io/outputs/SimulationTableStage.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
@@ -62,7 +64,7 @@ BOOST_AUTO_TEST_SUITE(SupportingMethodsTests)
 
 BOOST_AUTO_TEST_CASE(TestUpdateTimeIndexIfShouldForceScenario)
 {
-    using TI = Antares::LinearProblem::VariabilityType;
+    using TI = VariabilityType;
     // bool = false => no value should change
     BOOST_CHECK(updateVariabilityIfShouldForceScenario(TI::CONSTANT_IN_TIME_AND_SCENARIO, false)
                 == TI::CONSTANT_IN_TIME_AND_SCENARIO);
@@ -383,20 +385,20 @@ BOOST_AUTO_TEST_CASE(TableForStage_CreatesOnDemandAndKeepsPointersStable)
     OptimisationsSimulationTable tables;
     BOOST_CHECK(tables.stages().empty());
 
-    SimulationTable* remix = tables.tableForStage("remix-hydro");
+    SimulationTable* remix = tables.tableForStage(Stage::remixHydro);
     BOOST_REQUIRE(remix != nullptr);
     BOOST_CHECK_EQUAL(tables.stages().size(), 1u);
 
     // Asking again for the same stage returns the same table.
-    BOOST_CHECK(tables.tableForStage("remix-hydro") == remix);
+    BOOST_CHECK(tables.tableForStage(Stage::remixHydro) == remix);
 
     // Adding stages must not invalidate pointers already handed out:
     // OPT_OptimisationLineaire grabs the optim-nb-1 table before optim-nb-2 exists.
     SimulationTable* first = tables.firstOptimSimulationTable();
     SimulationTable* second = tables.secondOptimSimulationTable();
     BOOST_CHECK(first != second);
-    BOOST_CHECK(tables.tableForStage("remix-hydro") == remix);
-    BOOST_CHECK(tables.tableForStage("optim-nb-1") == first);
+    BOOST_CHECK(tables.tableForStage(Stage::remixHydro) == remix);
+    BOOST_CHECK(tables.tableForStage(Stage::firstOptim) == first);
     BOOST_CHECK_EQUAL(tables.stages().size(), 3u);
 
     remix->addEntry({.block = 0,
@@ -428,7 +430,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_NamesOneFilePerStage)
                                      .status = MipBasisStatus::BASIC};
     tables.firstOptimSimulationTable()->addEntry(entry);
     tables.secondOptimSimulationTable()->addEntry(entry);
-    tables.tableForStage("remix-hydro")->addEntry(entry);
+    tables.tableForStage(Stage::remixHydro)->addEntry(entry);
 
     auto tempDir = std::filesystem::temp_directory_path();
     LegacySimulationTablesWriter(tempDir, 7 /* year */, TableFormat::CSV).write(tables);
@@ -455,7 +457,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_SkipsStagesWithNoRows)
                                                   .value = 10.0,
                                                   .status = MipBasisStatus::BASIC});
     // Asked for, but never filled -- a post-process dump that declined to run.
-    tables.tableForStage("remix-hydro");
+    tables.tableForStage(Stage::remixHydro);
 
     auto tempDir = std::filesystem::temp_directory_path();
     LegacySimulationTablesWriter(tempDir, 8 /* year */, TableFormat::CSV).write(tables);
@@ -472,9 +474,10 @@ BOOST_AUTO_TEST_CASE(WriteTo_SkipsStagesWithNoRows)
 
 BOOST_AUTO_TEST_CASE(ParseStageSelection_AcceptsAllTheStageNames)
 {
-    for (const auto& stage: OptimisationsSimulationTable::allStages())
+    for (const auto stage: allStages)
     {
-        const auto selection = OptimisationsSimulationTable::parseStageSelection(stage);
+        const auto selection = OptimisationsSimulationTable::parseStageSelection(
+          std::string(stageName(stage)));
         BOOST_CHECK_EQUAL(selection.size(), 1u);
         BOOST_CHECK(selection.contains(stage));
     }
@@ -492,7 +495,7 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_EmptyAndAllMeanNoRestriction)
     // Widening the selection is not a licence to stop reading: a name after an
     // "all" is still checked, so a typo is reported rather than swallowed.
     BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("all,optim-nb-3"),
-                      std::runtime_error);
+                      Antares::Error::InvalidArgumentError);
 }
 
 BOOST_AUTO_TEST_CASE(ParseStageSelection_TrimsSpacesAndRejectsUnknownNames)
@@ -500,14 +503,14 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_TrimsSpacesAndRejectsUnknownNames)
     const auto selection = OptimisationsSimulationTable::parseStageSelection(
       " optim-nb-2 , adq-patch-csr ");
     BOOST_CHECK_EQUAL(selection.size(), 2u);
-    BOOST_CHECK(selection.contains("optim-nb-2"));
-    BOOST_CHECK(selection.contains("adq-patch-csr"));
+    BOOST_CHECK(selection.contains(Stage::secondOptim));
+    BOOST_CHECK(selection.contains(Stage::adequacyPatchCsr));
 
     BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("optim-nb-3"),
-                      std::runtime_error);
+                      Antares::Error::InvalidArgumentError);
     // A stage name that is only a prefix of a real one is still a mistake.
     BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("remix"),
-                      std::runtime_error);
+                      Antares::Error::InvalidArgumentError);
 }
 
 BOOST_AUTO_TEST_CASE(ParseStageSelection_ErrorNamesWhereTheListCameFrom)
@@ -519,7 +522,7 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_ErrorNamesWhereTheListCameFrom)
         OptimisationsSimulationTable::parseStageSelection("nope", "some-source");
         BOOST_FAIL("an unknown stage name must throw");
     }
-    catch (const std::runtime_error& e)
+    catch (const Antares::Error::InvalidArgumentError& e)
     {
         const std::string message = e.what();
         BOOST_CHECK_MESSAGE(message.find("some-source") != std::string::npos, message);
@@ -530,12 +533,12 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_ErrorNamesWhereTheListCameFrom)
 BOOST_AUTO_TEST_CASE(SelectStages_UnselectedStagesReturnNullptr)
 {
     OptimisationsSimulationTable tables;
-    tables.selectStages({"remix-hydro"});
+    tables.selectStages({Stage::remixHydro});
 
-    BOOST_CHECK(tables.tableForStage("remix-hydro") != nullptr);
+    BOOST_CHECK(tables.tableForStage(Stage::remixHydro) != nullptr);
     BOOST_CHECK(tables.firstOptimSimulationTable() == nullptr);
     BOOST_CHECK(tables.secondOptimSimulationTable() == nullptr);
-    BOOST_CHECK(tables.tableForStage("adq-patch-csr") == nullptr);
+    BOOST_CHECK(tables.tableForStage(Stage::adequacyPatchCsr) == nullptr);
 
     // A refused stage is not even created, so the writer never sees it.
     BOOST_CHECK_EQUAL(tables.stages().size(), 1u);
@@ -549,12 +552,11 @@ BOOST_AUTO_TEST_CASE(SelectStages_PostProcessStagesDriveTheModelerProblemRetenti
     OptimisationsSimulationTable everything;
     BOOST_CHECK(everything.anyPostProcessStageSelected());
 
-    for (const auto& stage: {OptimisationsSimulationTable::remixHydroStage,
-                             OptimisationsSimulationTable::adequacyPatchStage})
+    for (const auto stage: {Stage::remixHydro, Stage::adequacyPatchCsr})
     {
         OptimisationsSimulationTable tables;
         tables.selectStages({stage});
-        BOOST_CHECK_MESSAGE(tables.anyPostProcessStageSelected(), stage);
+        BOOST_CHECK_MESSAGE(tables.anyPostProcessStageSelected(), stageName(stage));
         // Specifically the case that used to drop the modeler rows: no optim
         // stage is selected, so neither pass gets a table of its own.
         BOOST_CHECK(tables.firstOptimSimulationTable() == nullptr);
@@ -562,15 +564,14 @@ BOOST_AUTO_TEST_CASE(SelectStages_PostProcessStagesDriveTheModelerProblemRetenti
     }
 
     OptimisationsSimulationTable optimOnly;
-    optimOnly.selectStages({OptimisationsSimulationTable::firstOptimStage,
-                            OptimisationsSimulationTable::secondOptimStage});
+    optimOnly.selectStages({Stage::firstOptim, Stage::secondOptim});
     BOOST_CHECK(!optimOnly.anyPostProcessStageSelected());
 
     // Querying must not create anything.
     OptimisationsSimulationTable untouched;
-    untouched.selectStages({OptimisationsSimulationTable::remixHydroStage});
-    BOOST_CHECK(untouched.isStageSelected(OptimisationsSimulationTable::remixHydroStage));
-    BOOST_CHECK(!untouched.isStageSelected(OptimisationsSimulationTable::firstOptimStage));
+    untouched.selectStages({Stage::remixHydro});
+    BOOST_CHECK(untouched.isStageSelected(Stage::remixHydro));
+    BOOST_CHECK(!untouched.isStageSelected(Stage::firstOptim));
     BOOST_CHECK(untouched.anyPostProcessStageSelected());
     BOOST_CHECK(untouched.stages().empty());
 }
@@ -580,16 +581,17 @@ BOOST_AUTO_TEST_CASE(SelectStages_EmptySelectionKeepsEveryStage)
     OptimisationsSimulationTable tables;
     tables.selectStages({});
 
-    for (const auto& stage: OptimisationsSimulationTable::allStages())
+    for (const auto stage: allStages)
     {
-        BOOST_CHECK_MESSAGE(tables.tableForStage(stage) != nullptr, "refused " + stage);
+        BOOST_CHECK_MESSAGE(tables.tableForStage(stage) != nullptr,
+                            "refused " + std::string(stageName(stage)));
     }
 }
 
 BOOST_AUTO_TEST_CASE(SelectStages_WriterOnlyEmitsSelectedStages)
 {
     OptimisationsSimulationTable tables;
-    tables.selectStages({"optim-nb-1"});
+    tables.selectStages({Stage::firstOptim});
 
     const SimulationTableEntry entry{.block = 1,
                                      .component = "comp1",

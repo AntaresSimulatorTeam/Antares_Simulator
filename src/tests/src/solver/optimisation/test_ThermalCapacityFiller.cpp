@@ -135,8 +135,6 @@ system:
   id: my_system
   description: some description for my system
 
-  model-libraries: my_lib
-
   components:
   - id: crypto_invest
     model: invest_lib.bitcoin

@@ -5,6 +5,16 @@ lower the costs of changing existing interfaces, both GUI and scripts.
 
 ## v10.2.0
 
+### Input
+
+For hydro reserve participations, the reserve-participations.yml files were moved to input/hydro/reserves/<area-id>/
+
+New format:
+`study/input/hydro/reserves/<area-id>/reserve-participations.yml`
+
+Old format:
+`study/input/hydro/common/<area-id>/reserve-participations.yml`
+
 ### Output
 
 #### One simulation per optimization and post-process

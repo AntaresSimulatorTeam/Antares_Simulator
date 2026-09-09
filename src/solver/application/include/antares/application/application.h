@@ -3,9 +3,6 @@
 
 #pragma once
 
-#include <yuni/core/event/interfaces.h>
-#include <yuni/thread/policy.h>
-
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/concurrency/concurrency.h>
 #include <antares/study/study.h>
@@ -17,7 +14,7 @@
 namespace Antares::Solver
 {
 
-class Application final: public Yuni::IEventObserver<Application, Yuni::Policy::SingleThreaded>
+class Application final
 {
 public:
     //! \name Constructor & Destructor
@@ -29,7 +26,7 @@ public:
     /*!
     ** \brief Destructor
     */
-    ~Application() override;
+    ~Application();
     //@}
 
     Application(const Application&) = delete;

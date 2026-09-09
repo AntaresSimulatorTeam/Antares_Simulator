@@ -4,15 +4,15 @@
 #ifndef __ANTARES_LIBS_STUDY_LINKS_H__
 #define __ANTARES_LIBS_STUDY_LINKS_H__
 
+#include <map>
 #include <set>
-
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
+#include <string>
+#include <vector>
 
 #include <antares/array/matrix.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/series/series.h>
-#include <antares/solver/ts-generator/prepro.h>
+#include <antares/study/parts/thermal/prepro.h>
 #include <antares/study/version.h>
 #include <antares/writer/i_writer.h>
 
@@ -49,7 +49,7 @@ public:
     //! Map of links
     using Map = std::map<AreaName, AreaLink*>;
 
-    using NamePair = std::pair<Yuni::String, Yuni::String>;
+    using NamePair = std::pair<std::string, std::string>;
 
     //! \name Constructor & Destructor
     //@{
@@ -77,7 +77,7 @@ public:
 
     void resetToDefaultValues();
 
-    Yuni::String getName() const;
+    std::string getName() const;
 
     bool isLinkPhysical() const;
     void overrideTransmissionCapacityAccordingToGlobalParameter(GlobalTransmissionCapacities tc);
@@ -128,20 +128,20 @@ public:
     ** \internal This variable must only be used when runtime data are
     ** available
     */
-    uint index;
+    unsigned int index;
     /*!
     ** \brief Index of the link in the list of interconnection of the main area
     **
     ** \internal This variable must only be used when runtime data are
     ** available
     */
-    uint indexForArea;
+    unsigned int indexForArea;
     //@}
 
     //! \name Comments
     //@{
     //! Comments
-    Yuni::String comments;
+    std::string comments;
     //! Flag for displaying comments
     bool displayComments;
     //@}
@@ -149,9 +149,9 @@ public:
     //! \name Output filtering
     //@{
     //! Print results for the area in the simulation synthesis
-    uint filterSynthesis;
+    unsigned int filterSynthesis;
     //! Print results for the area in the year-by-year mode
-    uint filterYearByYear;
+    unsigned int filterYearByYear;
     //@}
 
     //! Colors

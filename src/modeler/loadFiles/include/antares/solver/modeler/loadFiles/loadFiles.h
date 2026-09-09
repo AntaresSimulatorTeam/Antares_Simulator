@@ -23,9 +23,14 @@ ModelerParameters loadParameters(const std::filesystem::path& studyPath);
 std::optional<std::pair<std::vector<ModelerStudy::SystemModel::Library>, ResolutionMode>>
 loadLibraries(const std::filesystem::path& studyPath);
 
-ModelerStudy::SystemModel::System loadSystem(
-  const std::filesystem::path& studyPath,
-  const std::vector<ModelerStudy::SystemModel::Library>& libraries);
+struct LoadedSystem
+{
+    ModelerStudy::SystemModel::System system;
+    std::map<std::string, std::vector<ComponentProperty>> componentProperties;
+};
+
+LoadedSystem loadSystem(const std::filesystem::path& studyPath,
+                        const std::vector<ModelerStudy::SystemModel::Library>& libraries);
 
 std::unique_ptr<LinearProblem::Api::ILinearProblemData> loadDataSeries(
   const std::filesystem::path& studyPath);

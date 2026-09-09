@@ -13,12 +13,9 @@
 #include "antares/study/area/area.h"
 #include "antares/utils/utils.h"
 
-using namespace Yuni;
 using namespace Antares;
 
 namespace fs = std::filesystem;
-
-#define SEP (IO::Separator)
 
 namespace Antares::Error
 {
@@ -67,7 +64,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_below_810(const fs::path& folder)
 
     // Load link's data
     Matrix<> tmpMatrix;
-    const uint matrixWidth = 8;
+    const unsigned int matrixWidth = 8;
     if (!tmpMatrix.loadFromCSVFile(path.string(),
                                    matrixWidth,
                                    HOURS_PER_YEAR,
@@ -185,7 +182,7 @@ void AreaLink::resetToDefaultValues()
     directCapacities.reset();
     indirectCapacities.reset();
 
-    for (uint i = 0; i != HOURS_PER_YEAR; ++i)
+    for (unsigned int i = 0; i != HOURS_PER_YEAR; ++i)
     {
         directCapacities[0][i] = 1.;
         indirectCapacities[0][i] = 1.;
@@ -200,11 +197,11 @@ void AreaLink::resetToDefaultValues()
     color[2] = 112;
     style = stPlain;
 
-    filterSynthesis = (uint)filterAll;
-    filterYearByYear = (uint)filterAll;
+    filterSynthesis = (unsigned int)filterAll;
+    filterYearByYear = (unsigned int)filterAll;
 
     comments.clear();
-    comments.shrink();
+    comments.shrink_to_fit();
     displayComments = true;
 }
 
@@ -272,31 +269,31 @@ bool isPropertyUsedForLinkTSgeneration(const std::string& key)
     return std::find(listKeys.begin(), listKeys.end(), key) != listKeys.end();
 }
 
-bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const String& value)
+bool AreaLinksInternalLoadFromProperty(AreaLink& link,
+                                       const std::string& key,
+                                       const std::string& value)
 {
     if (key == "hurdles-cost")
     {
-        return value.to<bool>(link.useHurdlesCost);
+        link.useHurdlesCost = Antares::stringToBool(value);
+        return true;
     }
     if (key == "loop-flow")
     {
-        return value.to<bool>(link.useLoopFlow);
+        link.useLoopFlow = Antares::stringToBool(value);
+        return true;
     }
     if (key == "use-phase-shifter")
     {
-        return value.to<bool>(link.usePST);
+        link.usePST = Antares::stringToBool(value);
+        return true;
     }
     if (key == "copper-plate")
     {
-        bool copperPlate;
-        if (value.to<bool>(copperPlate))
-        {
-            using LocalNTCtype = Data::LocalTransmissionCapacities;
-            link.transmissionCapacities = copperPlate ? LocalNTCtype::infinite
-                                                      : LocalNTCtype::enabled;
-            return true;
-        }
-        return false;
+        using LocalNTCtype = Data::LocalTransmissionCapacities;
+        link.transmissionCapacities = Antares::stringToBool(value) ? LocalNTCtype::infinite
+                                                                   : LocalNTCtype::enabled;
+        return true;
     }
     if (key == "asset-type")
     {
@@ -355,22 +352,22 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
 
     if (key == "link-width")
     {
-        link.linkWidth = std::clamp(value.to<int>(), 1, 6);
+        link.linkWidth = std::clamp(Antares::stringToInt(value), 1, 6);
         return true;
     }
     if (key == "colorr")
     {
-        link.color[0] = std::clamp(value.to<int>(), 0, 255);
+        link.color[0] = std::clamp(Antares::stringToInt(value), 0, 255);
         return true;
     }
     if (key == "colorg")
     {
-        link.color[1] = std::clamp(value.to<int>(), 0, 255);
+        link.color[1] = std::clamp(Antares::stringToInt(value), 0, 255);
         return true;
     }
     if (key == "colorb")
     {
-        link.color[2] = std::clamp(value.to<int>(), 0, 255);
+        link.color[2] = std::clamp(Antares::stringToInt(value), 0, 255);
         return true;
     }
     if (key == "transmission-capacities")
@@ -398,7 +395,8 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
 
     if (key == "display-comments")
     {
-        return value.to<bool>(link.displayComments);
+        link.displayComments = Antares::stringToBool(value);
+        return true;
     }
     if (key == "comments")
     {
@@ -417,10 +415,10 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
     }
     // Properties used by TS generator only.
     // We just skip them (otherwise : reading error)
-    return isPropertyUsedForLinkTSgeneration(key.to<std::string>());
+    return isPropertyUsedForLinkTSgeneration(key);
 }
 
-[[noreturn]] void logLinkDataCheckError(const AreaLink& link, const String& msg, int hour)
+[[noreturn]] void logLinkDataCheckError(const AreaLink& link, const std::string& msg, int hour)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Invalid values ("
                  << msg << ") for hour " << hour;
@@ -428,8 +426,8 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
 }
 
 [[noreturn]] void logLinkDataCheckErrorDirectIndirect(const AreaLink& link,
-                                                      uint direct,
-                                                      uint indirect)
+                                                      unsigned int direct,
+                                                      unsigned int indirect)
 {
     logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Found " << direct
                  << " direct TS " << " and " << indirect
@@ -440,8 +438,8 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
 
 void AreaLink::checkLoadedData()
 {
-    const uint nbDirectTS = directCapacities.timeSeries.width;
-    const uint nbIndirectTS = indirectCapacities.timeSeries.width;
+    const unsigned int nbDirectTS = directCapacities.timeSeries.width;
+    const unsigned int nbIndirectTS = indirectCapacities.timeSeries.width;
     if (nbDirectTS != nbIndirectTS)
     {
         logLinkDataCheckErrorDirectIndirect(*this, nbDirectTS, nbIndirectTS);
@@ -453,7 +451,7 @@ void AreaLink::checkLoadedData()
     auto& PShiftMinus = parameters[fhlPShiftMinus];
     auto& PShiftPlus = parameters[fhlPShiftPlus];
 
-    for (uint indexTS = 0; indexTS < nbDirectTS; ++indexTS)
+    for (unsigned int indexTS = 0; indexTS < nbDirectTS; ++indexTS)
     {
         const double* directCapacitiesPtr = directCapacities[indexTS];
         const double* indirectCapacitiesPtr = indirectCapacities[indexTS];
@@ -554,8 +552,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const
     }
 
     bool ret = true;
-    String key;
-    String value;
+    std::string key;
+    std::string value;
 
     // Browse all sections
     for (auto* s = ini.firstSection; s; s = s->next)
@@ -590,9 +588,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const
         const IniFile::Property* p = s->firstProperty;
         for (; p; p = p->next)
         {
-            key = p->key;
-            key.toLower();
-            value = p->value;
+            key = Antares::stringToLower(std::string(p->key));
+            value = std::string(p->value);
             if (!AreaLinksInternalLoadFromProperty(link, key, value))
             {
                 logs.warning() << '`' << p->key << "`: Unknown property";
@@ -605,11 +602,9 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const
     return ret;
 } // End AreaLinksLoadFromFolder(...)
 
-String AreaLink::getName() const
+std::string AreaLink::getName() const
 {
-    String s;
-    s << from->name << "/" << with->name;
-    return s;
+    return from->name + "/" + with->name;
 }
 
 AreaLink::NamePair AreaLink::getNamePair() const

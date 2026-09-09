@@ -16,13 +16,13 @@ struct CompareAreaName final
     }
 };
 
-inline Area* AreaList::operator[](uint i)
+inline Area* AreaList::operator[](unsigned int i)
 {
     assert(i < areas.size() and "Index out of bounds");
     return byIndex[i];
 }
 
-inline const Area* AreaList::operator[](uint i) const
+inline const Area* AreaList::operator[](unsigned int i) const
 {
     assert(i < areas.size() and "Index out of bounds");
     return byIndex[i];
@@ -88,9 +88,9 @@ inline void AreaList::each(const PredicateT& predicate) const
     }
 }
 
-inline uint AreaList::size() const
+inline unsigned int AreaList::size() const
 {
-    return (uint)areas.size();
+    return (unsigned int)areas.size();
 }
 
 inline AreaList::iterator AreaList::begin()

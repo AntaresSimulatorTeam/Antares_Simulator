@@ -6,7 +6,7 @@
 #include <antares/io/file.h> // For Antares::IO::fileSetContent
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/generator.h>
-#include <antares/solver/ts-generator/law.h>
+#include <antares/study/parts/thermal/law.h>
 #include <antares/study/study.h>
 
 constexpr double FAILURE_RATE_EQ_1 = 0.999;

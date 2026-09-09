@@ -9,7 +9,7 @@ namespace Antares::Optimization
 {
 
 void DumpSimulationTableStage(IO::Outputs::OptimisationsSimulationTable* tables,
-                              const std::string& stage,
+                              IO::Outputs::Stage stage,
                               PROBLEME_HEBDO& problemeHebdo)
 {
     if (tables == nullptr)
@@ -30,7 +30,8 @@ void DumpSimulationTableStage(IO::Outputs::OptimisationsSimulationTable* tables,
     DumpSimulationTableAfterPostProcess(*table,
                                         problemeHebdo,
                                         fillContext,
-                                        LegacyWeeklyBlock(problemeHebdo));
+                                        LegacyWeeklyBlock(problemeHebdo),
+                                        tables->inactiveComponents.get());
 }
 
 } // namespace Antares::Optimization

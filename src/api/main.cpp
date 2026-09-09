@@ -4,6 +4,7 @@
 #include <filesystem>
 
 #include <antares/logs/logs.h>
+#include <antares/solver/variable/registerThematicTrimmingVariables.h>
 #include "antares/api/modelerProblems.h"
 #include "antares/api/singleProblemGetter.h"
 
@@ -13,6 +14,8 @@ using namespace Antares::Solver;
 
 int main(const int argc, const char** argv)
 {
+    Antares::Solver::Variable::RegisterThematicTrimmingVariables();
+
     if (argc < 2)
     {
         Antares::logs.error() << "Please provide valid study path.";
