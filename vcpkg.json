@@ -38,9 +38,6 @@
       "name": "yaml-cpp"
     },
     {
-      "name": "nlohmann-json"
-    },
-    {
       "name": "antlr4"
     },
     {

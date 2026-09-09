@@ -11,9 +11,7 @@ add_library(Antares::modeler-parameters ALIAS modeler-parameters)
 target_link_libraries(modeler-parameters
         PRIVATE
         yaml-cpp::yaml-cpp
-        Antares::io
-        Antares::logs
-        nlohmann_json::nlohmann_json)
+        Antares::logs)
 
 target_include_directories(modeler-parameters
         PUBLIC
