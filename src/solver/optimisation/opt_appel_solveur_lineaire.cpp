@@ -174,9 +174,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     bool hasModelerData = modelerData != nullptr;
     const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
-    // Release the previous pass before building the next one so only one modeler
-    // problem is retained at a time.
-    problemeHebdo->optimEntityContainer.reset();
     auto ortoolsProblem = std::make_shared<LegacyOrtoolsLinearProblem>(isMip, options.solverName);
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
 
