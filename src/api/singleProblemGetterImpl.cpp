@@ -519,13 +519,13 @@ std::shared_ptr<ILinearProblem> SingleProblemGetter::getMasterProblem() const
     logs.info() << "Building master problem and Benders decomposition...";
 
     FillContext fillContext = {0, 167, 0, 167, 0};
-    return buildProblem(*pb_.modelerData,
-                        Config::Location::MASTER,
-                        "master",
-                        &pb_.modelerData->bendersDecomposition,
-                        fillContext,
-                        ResolutionMode::BENDERS_DECOMPOSITION,
-                        std::nullopt);
+    auto container = buildProblem(*pb_.modelerData,
+                                  Config::Location::MASTER,
+                                  "master",
+                                  fillContext,
+                                  ResolutionMode::BENDERS_DECOMPOSITION,
+                                  std::nullopt);
+    return container ? container->Problem() : nullptr;
 }
 
 void SingleProblemGetter::writeMasterAndStructure() const

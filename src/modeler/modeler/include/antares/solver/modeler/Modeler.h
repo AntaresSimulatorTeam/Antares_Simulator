@@ -34,21 +34,15 @@ namespace Antares::Solver
 {
 class ILoader;
 
-// Returns the shared problem, or nullptr if no variable is compatible with the location.
-std::shared_ptr<LinearProblem::Api::ILinearProblem> buildProblem(
-  const Antares::Solver::ModelerData& data,
+// Builds the linear problem for the given location and returns an
+// OptimEntityContainer sharing ownership of the problem, or nullptr if
+// no variable is compatible with the location.
+std::unique_ptr<LinearProblem::OptimEntityContainer> buildProblem(
+  Antares::Solver::ModelerData& data,
   const Config::Location& location,
   const std::string& problemId,
-  LinearProblem::BendersDecomposition* bendersDecomposition,
   const LinearProblem::Api::FillContext& timeScenarioCtx,
   const ResolutionMode& resolutionMode,
-  const std::optional<std::string>& solver);
-
-// Returns the optimisation entity container (which shares the problem's lifetime),
-// or nullptr if buildProblem did not build a problem for the location.
-std::unique_ptr<LinearProblem::OptimEntityContainer> buildSubProblemContainer(
-  Antares::Solver::ModelerData& data,
-  const LinearProblem::Api::FillContext& timeScenarioCtx,
   const std::optional<std::string>& solver);
 
 std::filesystem::path makeOutputPath(std::filesystem::path studyPath);
@@ -59,8 +53,6 @@ public:
     Modeler(ILoader& loader, fs::path outputPath, Antares::Writer::TableFormat tableFormat);
 
     void buildProblems();
-    void buildMasterProblem();
-    void buildSubProblem();
     void run();
 
     void exportMps() const;
