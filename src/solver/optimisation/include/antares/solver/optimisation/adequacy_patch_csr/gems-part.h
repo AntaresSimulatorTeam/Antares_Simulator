@@ -9,7 +9,7 @@
 #include <antares/study/system-model/portType.h>
 
 struct PROBLEME_HEBDO;
-struct PROBLEME_ANTARES_A_RESOUDRE;
+class PROBLEME_ANTARES_A_RESOUDRE;
 
 namespace Antares::ModelerStudy::SystemModel
 {

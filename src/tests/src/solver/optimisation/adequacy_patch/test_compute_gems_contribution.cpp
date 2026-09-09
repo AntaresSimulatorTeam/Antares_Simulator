@@ -146,24 +146,24 @@ BOOST_AUTO_TEST_CASE(factory_returns_null_gems_part_when_no_modeler_data)
     problem.modelerData = nullptr;
 
     auto gemsPart = makeGemsPart(&problem);
-    // NullGemsPart — setHour does nothing, no crash
+
+    BOOST_CHECK(dynamic_cast<NullGemsPart*>(gemsPart.get()) != nullptr);
     BOOST_CHECK_NO_THROW(gemsPart->setHour(42));
 }
 
-BOOST_AUTO_TEST_CASE(factory_returns_active_gems_part_when_modeler_data_exists)
+BOOST_FIXTURE_TEST_CASE(factory_returns_active_gems_part_when_modeler_data_exists,
+                        GemsContributionFixture)
 {
-    GemsContributionFixture f;
-    auto gemsPart = makeGemsPart(&f.problemeHebdo);
-    // ActiveGemsPart — setHour works
+    auto gemsPart = makeGemsPart(&problemeHebdo);
+    BOOST_CHECK(dynamic_cast<ActiveGemsPart*>(gemsPart.get()) != nullptr);
     BOOST_CHECK_NO_THROW(gemsPart->setHour(0));
 }
 
-BOOST_AUTO_TEST_CASE(active_gems_part_throws_when_no_optimEntityContainer)
+BOOST_FIXTURE_TEST_CASE(active_gems_part_throws_when_no_optimEntityContainer,
+                        GemsContributionFixture)
 {
-    GemsContributionFixture f;
-    f.problemeHebdo.optimEntityContainer.reset();
-
-    BOOST_CHECK_THROW(ActiveGemsPart(&f.problemeHebdo), std::runtime_error);
+    problemeHebdo.optimEntityContainer.reset();
+    BOOST_CHECK_THROW(ActiveGemsPart{&problemeHebdo}, std::runtime_error);
 }
 
 // --- NullGemsPart does nothing ---

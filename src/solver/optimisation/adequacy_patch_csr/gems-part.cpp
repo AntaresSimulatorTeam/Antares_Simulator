@@ -17,6 +17,7 @@
 using namespace Antares::Data::AdequacyPatch;
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Expressions;
+using namespace Antares::LinearProblem::Api;
 
 ActiveGemsPart::ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo):
     problemeHebdo_(problemeHebdo)
@@ -30,13 +31,11 @@ ActiveGemsPart::ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo):
 void ActiveGemsPart::setHour(int triggeredHour)
 {
     triggeredHour_ = triggeredHour;
-    fillContext_ = Antares::LinearProblem::Api::FillContext(0,
-                                                            0,
-                                                            triggeredHour_
-                                                              + problemeHebdo_->HeureDansLAnnee,
-                                                            triggeredHour_
-                                                              + problemeHebdo_->HeureDansLAnnee,
-                                                            problemeHebdo_->year);
+    fillContext_ = FillContext(0,
+                               0,
+                               triggeredHour_ + problemeHebdo_->HeureDansLAnnee,
+                               triggeredHour_ + problemeHebdo_->HeureDansLAnnee,
+                               problemeHebdo_->year);
 }
 
 double ActiveGemsPart::gemsContributionForArea(
@@ -66,17 +65,16 @@ double ActiveGemsPart::gemsContributionForArea(
                 continue;
             }
 
-            auto* expressionNode = component.nodeAtPortField(portId, fieldId);
-            auto* optimEntityContainer = problemeHebdo_->optimEntityContainer.get();
+            auto* expression = component.nodeAtPortField(portId, fieldId);
 
             const auto& scenario = modelerData->scenarioGroupRepository.scenario(
               component.getScenarioGroupId());
-            Visitors::EvalVisitor evalVisitor(*optimEntityContainer,
+            Visitors::EvalVisitor evalVisitor(*problemeHebdo_->optimEntityContainer,
                                               fillContext_,
                                               component,
                                               modelerData->dataSeries.get(),
                                               scenario);
-            contribution += evalVisitor.dispatch(expressionNode).value(0);
+            contribution += evalVisitor.dispatch(expression).value(0);
         }
     }
     return contribution;

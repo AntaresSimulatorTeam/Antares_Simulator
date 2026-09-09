@@ -127,6 +127,8 @@ void HourlyCSRProblem::allocateProblem()
     problemeAResoudre_.NombreDeVariables = countVariables(problemeHebdo_);
     problemeAResoudre_.NombreDeContraintes = countConstraints(problemeHebdo_);
     OPT_AllocateFromNumberOfVariableConstraints(&problemeAResoudre_);
+    problemeAResoudre_.CoutLineaire.assign(problemeAResoudre_.NombreDeVariables, 0.);
+    problemeAResoudre_.CoutQuadratique.assign(problemeAResoudre_.NombreDeVariables, 0.);
 }
 
 void HourlyCSRProblem::buildProblemVariables()
@@ -170,9 +172,6 @@ void HourlyCSRProblem::buildProblemConstraintsRHS()
 void HourlyCSRProblem::setProblemCost()
 {
     logs.debug() << "[CSR] cost";
-    problemeAResoudre_.CoutLineaire.assign(problemeAResoudre_.NombreDeVariables, 0.);
-    problemeAResoudre_.CoutQuadratique.assign(problemeAResoudre_.NombreDeVariables, 0.);
-
     setQuadraticCost();
     if (adqPatchParams_.curtailmentSharing.includeHurdleCost)
     {
