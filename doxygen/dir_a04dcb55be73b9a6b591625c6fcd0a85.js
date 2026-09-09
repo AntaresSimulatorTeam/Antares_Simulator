@@ -8,5 +8,6 @@ var dir_a04dcb55be73b9a6b591625c6fcd0a85 =
     [ "SimulationTable.h", "SimulationTable_8h_source.html", null ],
     [ "SimulationTableEntry.h", "SimulationTableEntry_8h_source.html", null ],
     [ "SimulationTableGenerator.h", "SimulationTableGenerator_8h_source.html", null ],
+    [ "SimulationTableStage.h", "SimulationTableStage_8h_source.html", null ],
     [ "storage.h", "storage_8h_source.html", null ]
 ];

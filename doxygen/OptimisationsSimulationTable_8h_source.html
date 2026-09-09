@@ -133,54 +133,55 @@ $(document).ready(function(){initNavTree('OptimisationsSimulationTable_8h_source
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;antares/io/outputs/SimulationTable.h&quot;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">namespace </span>Antares::Optimization</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">class </span>InactiveComponentsAnalyzer;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;}</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">namespace </span>Antares::IO::Outputs</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">// The simulation tables produced for one Monte-Carlo year, one per stage of the</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">// weekly resolution. A stage is created the first time it is asked for, and the</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">// writer emits one file per stage, named after it.</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">   21</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">OptimisationsSimulationTable</a></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;{</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="comment">// Stage names. They are part of the output file names, so they must not</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="comment">// change. The first two are produced during the weekly solve, the others</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="comment">// after a post-process has moved the results.</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">static</span> constexpr <span class="keyword">const</span> <span class="keywordtype">char</span>* firstOptimStage = <span class="stringliteral">&quot;optim-nb-1&quot;</span>;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">static</span> constexpr <span class="keyword">const</span> <span class="keywordtype">char</span>* secondOptimStage = <span class="stringliteral">&quot;optim-nb-2&quot;</span>;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">static</span> constexpr <span class="keyword">const</span> <span class="keywordtype">char</span>* remixHydroStage = <span class="stringliteral">&quot;remix-hydro&quot;</span>;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="comment">// The whole CSR treatment, not just the patch: curtailment sharing, DTG</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="comment">// netting and the marginal price update.</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">static</span> constexpr <span class="keyword">const</span> <span class="keywordtype">char</span>* adequacyPatchStage = <span class="stringliteral">&quot;adq-patch-csr&quot;</span>;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a>* firstOptimSimulationTable();</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a>* secondOptimSimulationTable();</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="comment">// The table of `stage`, created empty on first use. std::map nodes are</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="comment">// address-stable, so a pointer returned here stays valid when later stages</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="comment">// are added.</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a>* tableForStage(<span class="keyword">const</span> std::string&amp; stage);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    [[nodiscard]] <span class="keyword">const</span> std::map&lt;std::string, SimulationTable&gt;&amp; stages() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="comment">// Empties every stage&#39;s table, keeping the stages themselves: the same</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="comment">// stages recur at every Monte-Carlo year.</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">void</span> clear();</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    std::shared_ptr&lt;const Optimization::InactiveComponentsAnalyzer&gt; inactiveComponents;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    std::map&lt;std::string, SimulationTable&gt; stages_;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;};</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;} <span class="comment">// namespace Antares::IO::Outputs</span></div>
-<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">Antares::IO::Outputs::OptimisationsSimulationTable</a></div><div class="ttdef"><b>Definition:</b> OptimisationsSimulationTable.h:22</div></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;set&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;antares/io/outputs/SimulationTable.h&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;antares/io/outputs/SimulationTableStage.h&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">namespace </span>Antares::Optimization</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">class </span>InactiveComponentsAnalyzer;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;}</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">namespace </span>Antares::IO::Outputs</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">   27</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">OptimisationsSimulationTable</a></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">static</span> std::set&lt;Stage&gt; <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#ae14b946e4c7a203bae3f875e1c83b86b">parseStageSelection</a>(</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;      <span class="keyword">const</span> std::string&amp; input,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;      <span class="keyword">const</span> std::string&amp; source = <span class="stringliteral">&quot;--simulation-table-stages&quot;</span>);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#a3ed90f80c2dc7f2172f1b93ffe090731">selectStages</a>(std::set&lt;Stage&gt; stages);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a>* firstOptimSimulationTable();</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a>* secondOptimSimulationTable();</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a>* <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#a898833f7687aa84e8dcd9fecb826da6c">tableForStage</a>(Stage stage);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    [[nodiscard]] <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#aa6c71e106ea507be4ec727c574cd2bb4">isStageSelected</a>(Stage stage) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    [[nodiscard]] <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#aa4627b93eac9b61602c56f81fd2f40ff">anyPostProcessStageSelected</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    [[nodiscard]] <span class="keyword">const</span> std::map&lt;Stage, SimulationTable&gt;&amp; stages() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#ab0b4dd54ec757d7140af9ab297937190">clear</a>();</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    std::shared_ptr&lt;const Optimization::InactiveComponentsAnalyzer&gt; inactiveComponents;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    std::map&lt;Stage, SimulationTable&gt; stages_;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    std::set&lt;Stage&gt; selectedStages_;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;};</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;} <span class="comment">// namespace Antares::IO::Outputs</span></div>
+<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">Antares::IO::Outputs::OptimisationsSimulationTable</a></div><div class="ttdoc">The simulation tables of one Monte-Carlo year, one per stage of the weekly resolution.</div><div class="ttdef"><b>Definition:</b> OptimisationsSimulationTable.h:28</div></div>
+<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable_html_a3ed90f80c2dc7f2172f1b93ffe090731"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#a3ed90f80c2dc7f2172f1b93ffe090731">Antares::IO::Outputs::OptimisationsSimulationTable::selectStages</a></div><div class="ttdeci">void selectStages(std::set&lt; Stage &gt; stages)</div><div class="ttdoc">Restrict the tables to stages; an empty set lifts the restriction.</div><div class="ttdef"><b>Definition:</b> OptimisationsSimulationTable.cpp:83</div></div>
+<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable_html_a898833f7687aa84e8dcd9fecb826da6c"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#a898833f7687aa84e8dcd9fecb826da6c">Antares::IO::Outputs::OptimisationsSimulationTable::tableForStage</a></div><div class="ttdeci">SimulationTable * tableForStage(Stage stage)</div><div class="ttdoc">The table of stage, created empty on first use.</div><div class="ttdef"><b>Definition:</b> OptimisationsSimulationTable.cpp:98</div></div>
+<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable_html_aa4627b93eac9b61602c56f81fd2f40ff"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#aa4627b93eac9b61602c56f81fd2f40ff">Antares::IO::Outputs::OptimisationsSimulationTable::anyPostProcessStageSelected</a></div><div class="ttdeci">bool anyPostProcessStageSelected() const</div><div class="ttdoc">Whether any stage dumped after a post-process is selected.</div><div class="ttdef"><b>Definition:</b> OptimisationsSimulationTable.cpp:112</div></div>
+<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable_html_aa6c71e106ea507be4ec727c574cd2bb4"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#aa6c71e106ea507be4ec727c574cd2bb4">Antares::IO::Outputs::OptimisationsSimulationTable::isStageSelected</a></div><div class="ttdeci">bool isStageSelected(Stage stage) const</div><div class="ttdoc">Whether stage would get a table, without creating one.</div><div class="ttdef"><b>Definition:</b> OptimisationsSimulationTable.cpp:107</div></div>
+<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable_html_ab0b4dd54ec757d7140af9ab297937190"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#ab0b4dd54ec757d7140af9ab297937190">Antares::IO::Outputs::OptimisationsSimulationTable::clear</a></div><div class="ttdeci">void clear()</div><div class="ttdoc">Empty every stage's table, keeping the stages: they recur every Monte-Carlo year.</div><div class="ttdef"><b>Definition:</b> OptimisationsSimulationTable.cpp:122</div></div>
+<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable_html_ae14b946e4c7a203bae3f875e1c83b86b"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#ae14b946e4c7a203bae3f875e1c83b86b">Antares::IO::Outputs::OptimisationsSimulationTable::parseStageSelection</a></div><div class="ttdeci">static std::set&lt; Stage &gt; parseStageSelection(const std::string &amp;input, const std::string &amp;source=&quot;--simulation-table-stages&quot;)</div><div class="ttdoc">Parse a user-supplied stage list into a selection set.</div><div class="ttdef"><b>Definition:</b> OptimisationsSimulationTable.cpp:76</div></div>
 <div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1SimulationTable_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a></div><div class="ttdef"><b>Definition:</b> SimulationTable.h:15</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

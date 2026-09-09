@@ -125,53 +125,178 @@ $(document).ready(function(){initNavTree('classAntares_1_1IO_1_1Outputs_1_1Optim
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Antares::IO::Outputs::OptimisationsSimulationTable Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>The simulation tables of one Monte-Carlo year, one per stage of the weekly resolution.  
+ <a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="OptimisationsSimulationTable_8h_source.html">OptimisationsSimulationTable.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a3ed90f80c2dc7f2172f1b93ffe090731"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#a3ed90f80c2dc7f2172f1b93ffe090731">selectStages</a> (std::set&lt; Stage &gt; stages)</td></tr>
+<tr class="memdesc:a3ed90f80c2dc7f2172f1b93ffe090731"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restrict the tables to <code>stages</code>; an empty set lifts the restriction.  <a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#a3ed90f80c2dc7f2172f1b93ffe090731">More...</a><br /></td></tr>
+<tr class="separator:a3ed90f80c2dc7f2172f1b93ffe090731"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d17429801e0b9477f61d88398fc9c0f"><td class="memItemLeft" align="right" valign="top"><a id="a5d17429801e0b9477f61d88398fc9c0f"></a>
 <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>firstOptimSimulationTable</b> ()</td></tr>
 <tr class="separator:a5d17429801e0b9477f61d88398fc9c0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3f7cb52b02c2d24b4f4fe87ed9e0efd"><td class="memItemLeft" align="right" valign="top"><a id="ac3f7cb52b02c2d24b4f4fe87ed9e0efd"></a>
 <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>secondOptimSimulationTable</b> ()</td></tr>
 <tr class="separator:ac3f7cb52b02c2d24b4f4fe87ed9e0efd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01120fd817ea278ccdb7057c377577cf"><td class="memItemLeft" align="right" valign="top"><a id="a01120fd817ea278ccdb7057c377577cf"></a>
-<a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>tableForStage</b> (const std::string &amp;stage)</td></tr>
-<tr class="separator:a01120fd817ea278ccdb7057c377577cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa707f12645948ba3cf853b3fed3f033c"><td class="memItemLeft" align="right" valign="top"><a id="aa707f12645948ba3cf853b3fed3f033c"></a>
-const std::map&lt; std::string, <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>stages</b> () const</td></tr>
-<tr class="separator:aa707f12645948ba3cf853b3fed3f033c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a898833f7687aa84e8dcd9fecb826da6c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#a898833f7687aa84e8dcd9fecb826da6c">tableForStage</a> (Stage stage)</td></tr>
+<tr class="memdesc:a898833f7687aa84e8dcd9fecb826da6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The table of <code>stage</code>, created empty on first use.  <a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#a898833f7687aa84e8dcd9fecb826da6c">More...</a><br /></td></tr>
+<tr class="separator:a898833f7687aa84e8dcd9fecb826da6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6c71e106ea507be4ec727c574cd2bb4"><td class="memItemLeft" align="right" valign="top"><a id="aa6c71e106ea507be4ec727c574cd2bb4"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#aa6c71e106ea507be4ec727c574cd2bb4">isStageSelected</a> (Stage stage) const</td></tr>
+<tr class="memdesc:aa6c71e106ea507be4ec727c574cd2bb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether <code>stage</code> would get a table, without creating one. <br /></td></tr>
+<tr class="separator:aa6c71e106ea507be4ec727c574cd2bb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4627b93eac9b61602c56f81fd2f40ff"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#aa4627b93eac9b61602c56f81fd2f40ff">anyPostProcessStageSelected</a> () const</td></tr>
+<tr class="memdesc:aa4627b93eac9b61602c56f81fd2f40ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether any stage dumped after a post-process is selected.  <a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#aa4627b93eac9b61602c56f81fd2f40ff">More...</a><br /></td></tr>
+<tr class="separator:aa4627b93eac9b61602c56f81fd2f40ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2734e6d4c8f8e14cd96cbb12fecc0001"><td class="memItemLeft" align="right" valign="top"><a id="a2734e6d4c8f8e14cd96cbb12fecc0001"></a>
+const std::map&lt; Stage, <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>stages</b> () const</td></tr>
+<tr class="separator:a2734e6d4c8f8e14cd96cbb12fecc0001"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0b4dd54ec757d7140af9ab297937190"><td class="memItemLeft" align="right" valign="top"><a id="ab0b4dd54ec757d7140af9ab297937190"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#ab0b4dd54ec757d7140af9ab297937190">clear</a> ()</td></tr>
+<tr class="memdesc:ab0b4dd54ec757d7140af9ab297937190"><td class="mdescLeft">&#160;</td><td class="mdescRight">Empty every stage's table, keeping the stages: they recur every Monte-Carlo year. <br /></td></tr>
 <tr class="separator:ab0b4dd54ec757d7140af9ab297937190"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ae14b946e4c7a203bae3f875e1c83b86b"><td class="memItemLeft" align="right" valign="top">static std::set&lt; Stage &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#ae14b946e4c7a203bae3f875e1c83b86b">parseStageSelection</a> (const std::string &amp;input, const std::string &amp;source=&quot;--simulation-table-stages&quot;)</td></tr>
+<tr class="memdesc:ae14b946e4c7a203bae3f875e1c83b86b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a user-supplied stage list into a selection set.  <a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#ae14b946e4c7a203bae3f875e1c83b86b">More...</a><br /></td></tr>
+<tr class="separator:ae14b946e4c7a203bae3f875e1c83b86b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ac2d751067730a0e94d38a09794d51fb1"><td class="memItemLeft" align="right" valign="top"><a id="ac2d751067730a0e94d38a09794d51fb1"></a>
 std::shared_ptr&lt; const <a class="el" href="classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html">Optimization::InactiveComponentsAnalyzer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>inactiveComponents</b></td></tr>
 <tr class="separator:ac2d751067730a0e94d38a09794d51fb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:aa7a8b47694f3c7eb9ce70e1cd9661653"><td class="memItemLeft" align="right" valign="top"><a id="aa7a8b47694f3c7eb9ce70e1cd9661653"></a>
-static constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><b>firstOptimStage</b> = &quot;optim-nb-1&quot;</td></tr>
-<tr class="separator:aa7a8b47694f3c7eb9ce70e1cd9661653"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab00885ced323705089e949bf0735e2fa"><td class="memItemLeft" align="right" valign="top"><a id="ab00885ced323705089e949bf0735e2fa"></a>
-static constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><b>secondOptimStage</b> = &quot;optim-nb-2&quot;</td></tr>
-<tr class="separator:ab00885ced323705089e949bf0735e2fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4bd31b7130c39e6c735fe1f3ed2e9196"><td class="memItemLeft" align="right" valign="top"><a id="a4bd31b7130c39e6c735fe1f3ed2e9196"></a>
-static constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><b>remixHydroStage</b> = &quot;remix-hydro&quot;</td></tr>
-<tr class="separator:a4bd31b7130c39e6c735fe1f3ed2e9196"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a666727b096465b36f8773c28caedc06f"><td class="memItemLeft" align="right" valign="top"><a id="a666727b096465b36f8773c28caedc06f"></a>
-static constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><b>adequacyPatchStage</b> = &quot;adq-patch-csr&quot;</td></tr>
-<tr class="separator:a666727b096465b36f8773c28caedc06f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The simulation tables of one Monte-Carlo year, one per stage of the weekly resolution. </p>
+<p>A stage is created on first use; the writer emits one file per stage. See docs/architecture/legacy-extra-outputs.md §8. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="aa4627b93eac9b61602c56f81fd2f40ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4627b93eac9b61602c56f81fd2f40ff">&#9670;&nbsp;</a></span>anyPostProcessStageSelected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Antares::IO::Outputs::OptimisationsSimulationTable::anyPostProcessStageSelected </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Whether any stage dumped after a post-process is selected. </p>
+<p>The weekly solve asks this to decide whether to keep its modeler problem alive for a later dump to re-emit. </p>
+
+</div>
+</div>
+<a id="ae14b946e4c7a203bae3f875e1c83b86b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae14b946e4c7a203bae3f875e1c83b86b">&#9670;&nbsp;</a></span>parseStageSelection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::set&lt; Stage &gt; Antares::IO::Outputs::OptimisationsSimulationTable::parseStageSelection </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>source</em> = <code>&quot;--simulation-table-stages&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Parse a user-supplied stage list into a selection set. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>comma-separated stage names, or "all". Empty, or "all" anywhere in the list, selects every stage. </td></tr>
+    <tr><td class="paramname">source</td><td>how the error message names the origin of the list (command line or generaldata.ini). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the selected stages; an empty set means "every stage". </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classAntares_1_1Error_1_1InvalidArgumentError.html">Antares::Error::InvalidArgumentError</a>,listing</td><td>the valid names, on an unknown name &ndash; including one after an "all", as the whole list is validated. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3ed90f80c2dc7f2172f1b93ffe090731"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ed90f80c2dc7f2172f1b93ffe090731">&#9670;&nbsp;</a></span>selectStages()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Antares::IO::Outputs::OptimisationsSimulationTable::selectStages </td>
+          <td>(</td>
+          <td class="paramtype">std::set&lt; Stage &gt;&#160;</td>
+          <td class="paramname"><em>stages</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Restrict the tables to <code>stages</code>; an empty set lifts the restriction. </p>
+<p>Call before the first dump: already-created stages are not removed. </p>
+
+</div>
+</div>
+<a id="a898833f7687aa84e8dcd9fecb826da6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a898833f7687aa84e8dcd9fecb826da6c">&#9670;&nbsp;</a></span>tableForStage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a> * Antares::IO::Outputs::OptimisationsSimulationTable::tableForStage </td>
+          <td>(</td>
+          <td class="paramtype">Stage&#160;</td>
+          <td class="paramname"><em>stage</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The table of <code>stage</code>, created empty on first use. </p>
+<dl class="section return"><dt>Returns</dt><dd>nullptr when the stage is not selected &ndash; callers must then skip the dump. Returned pointers stay valid as later stages are added. </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/io/outputs/include/antares/io/outputs/<a class="el" href="OptimisationsSimulationTable_8h_source.html">OptimisationsSimulationTable.h</a></li>
 <li>src/io/outputs/OptimisationsSimulationTable.cpp</li>

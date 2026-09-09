@@ -130,20 +130,28 @@ $(document).ready(function(){initNavTree('structAntares_1_1Optimization_1_1Solve
 <div class="title">Antares::Optimization::SolvedModelerProblem Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>The modeler side of a week's last optimisation pass, kept alive past the solve so a post-process dump can re-emit the modeler component rows.  
+ <a href="structAntares_1_1Optimization_1_1SolvedModelerProblem.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="LegacySimulationTableSnapshot_8h_source.html">LegacySimulationTableSnapshot.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a80e89889e706408ca095cc10d19c4b1b"><td class="memItemLeft" align="right" valign="top"><a id="a80e89889e706408ca095cc10d19c4b1b"></a>
-std::shared_ptr&lt; const <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html">Antares::LinearProblem::Api::ILinearProblem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>problem</b></td></tr>
-<tr class="separator:a80e89889e706408ca095cc10d19c4b1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a7ed7c23dea599ea93e590949d84ad5"><td class="memItemLeft" align="right" valign="top"><a id="a1a7ed7c23dea599ea93e590949d84ad5"></a>
-std::shared_ptr&lt; const <a class="el" href="classAntares_1_1LinearProblem_1_1OptimEntityContainer.html">Antares::LinearProblem::OptimEntityContainer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>entities</b></td></tr>
-<tr class="separator:a1a7ed7c23dea599ea93e590949d84ad5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac50b1ca627f2c609a93e5abc1f227cf0"><td class="memItemLeft" align="right" valign="top"><a id="ac50b1ca627f2c609a93e5abc1f227cf0"></a>
+std::shared_ptr&lt; const <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html">LinearProblem::Api::ILinearProblem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>problem</b></td></tr>
+<tr class="separator:ac50b1ca627f2c609a93e5abc1f227cf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6884ebaa6f67450eb9c2e56cce943bcb"><td class="memItemLeft" align="right" valign="top"><a id="a6884ebaa6f67450eb9c2e56cce943bcb"></a>
+std::shared_ptr&lt; const <a class="el" href="classAntares_1_1LinearProblem_1_1OptimEntityContainer.html">LinearProblem::OptimEntityContainer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>entities</b></td></tr>
+<tr class="separator:a6884ebaa6f67450eb9c2e56cce943bcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a174cd75c36171991081bc01e95e99be3"><td class="memItemLeft" align="right" valign="top"><a id="a174cd75c36171991081bc01e95e99be3"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>objectiveValue</b> = 0.</td></tr>
 <tr class="separator:a174cd75c36171991081bc01e95e99be3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this struct was generated from the following file:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The modeler side of a week's last optimisation pass, kept alive past the solve so a post-process dump can re-emit the modeler component rows. </p>
+<p>Cheap to hold: the MPSolver owning the problem data stays in PROBLEME_ANTARES_A_RESOUDRE::ProblemesSpx meanwhile, so this only adds the wrapper objects. OPT_TryToCallSimplex drops the previous value before the next problem, so two are never alive at once. </p>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/solver/optimisation/include/antares/solver/optimisation/<a class="el" href="LegacySimulationTableSnapshot_8h_source.html">LegacySimulationTableSnapshot.h</a></li>
 </ul>
 </div><!-- contents -->

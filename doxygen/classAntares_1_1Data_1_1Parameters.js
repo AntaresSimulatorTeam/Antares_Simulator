@@ -68,6 +68,8 @@ var classAntares_1_1Data_1_1Parameters =
     [ "shedding", "classAntares_1_1Data_1_1Parameters.html#ab61df7a78c8134d20503ca48d0e29871", null ],
     [ "simplexOptimizationRange", "classAntares_1_1Data_1_1Parameters.html#a7899cb781bb7a4d36c3dc654e2105e6e", null ],
     [ "simulationDays", "classAntares_1_1Data_1_1Parameters.html#a58a48dfa34660108580b43f77f0df8c4", null ],
+    [ "simulationTableStages", "classAntares_1_1Data_1_1Parameters.html#aad4c5ba73c90c49bf91c770a6ac6e230", null ],
+    [ "simulationTableStagesStr", "classAntares_1_1Data_1_1Parameters.html#ac59acfb5ce1cf3c0b509b3be596f7e91", null ],
     [ "simuTableFormat", "classAntares_1_1Data_1_1Parameters.html#ae5c7394936508250aa619e281b0233b0", null ],
     [ "storeTimeseriesNumbers", "classAntares_1_1Data_1_1Parameters.html#ab246149362ef581bd438cf8bd5f5fcb8", null ],
     [ "synthesis", "classAntares_1_1Data_1_1Parameters.html#a58d06d92abdda6053d20b5627309ad62", null ],

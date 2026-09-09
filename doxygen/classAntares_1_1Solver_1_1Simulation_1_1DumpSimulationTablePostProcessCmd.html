@@ -130,6 +130,11 @@ $(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1Simulation_1
 <div class="title">Antares::Solver::Simulation::DumpSimulationTablePostProcessCmd Class Reference<span class="mlabels"><span class="mlabel">final</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Write the legacy results into the <code>stage</code> simulation table at this point of the post-process list.  
+ <a href="classAntares_1_1Solver_1_1Simulation_1_1DumpSimulationTablePostProcessCmd.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="post__process__commands_8h_source.html">post_process_commands.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Antares::Solver::Simulation::DumpSimulationTablePostProcessCmd:</div>
 <div class="dyncontent">
@@ -142,9 +147,9 @@ Inheritance diagram for Antares::Solver::Simulation::DumpSimulationTablePostProc
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a032631fddaa0bd059a3a4f83590f6408"><td class="memItemLeft" align="right" valign="top"><a id="a032631fddaa0bd059a3a4f83590f6408"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>DumpSimulationTablePostProcessCmd</b> (<a class="el" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a> *problemeHebdo, std::string stage, <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">IO::Outputs::OptimisationsSimulationTable</a> *tables)</td></tr>
-<tr class="separator:a032631fddaa0bd059a3a4f83590f6408"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa58f97ef13951bf7d242972d51c065af"><td class="memItemLeft" align="right" valign="top"><a id="aa58f97ef13951bf7d242972d51c065af"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>DumpSimulationTablePostProcessCmd</b> (<a class="el" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a> *problemeHebdo, IO::Outputs::Stage stage, <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">IO::Outputs::OptimisationsSimulationTable</a> *tables)</td></tr>
+<tr class="separator:aa58f97ef13951bf7d242972d51c065af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea8aa65547d3b1725fcf2ce1107d83ac"><td class="memItemLeft" align="right" valign="top"><a id="aea8aa65547d3b1725fcf2ce1107d83ac"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>execute</b> (const <a class="el" href="structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html">optRuntimeData</a> &amp;opt_runtime_data) override</td></tr>
 <tr class="separator:aea8aa65547d3b1725fcf2ce1107d83ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -160,7 +165,10 @@ Additional Inherited Members</h2></td></tr>
 <a class="el" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>problemeHebdo_</b></td></tr>
 <tr class="separator:abd6a903b531d69457e8d49130b821d65 inherit pro_attribs_classAntares_1_1Solver_1_1Simulation_1_1basePostProcessCommand"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Write the legacy results into the <code>stage</code> simulation table at this point of the post-process list. </p>
+<p>Inserted right after the command whose effect it captures, so the stage name matches that post-process. No-op when <code>tables</code> is null (run writes no simulation tables). </p>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/solver/optimisation/include/antares/solver/optimisation/<a class="el" href="post__process__commands_8h_source.html">post_process_commands.h</a></li>
 <li>src/solver/optimisation/post_process_commands.cpp</li>
 </ul>

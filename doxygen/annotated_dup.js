@@ -452,6 +452,7 @@ var annotated_dup =
         [ "CsrQuadraticProblem", "classAntares_1_1Optimization_1_1CsrQuadraticProblem.html", "classAntares_1_1Optimization_1_1CsrQuadraticProblem" ],
         [ "ComponentToAreaConnectionFiller", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller.html", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller" ],
         [ "InactiveComponentsAnalyzer", "classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html", "classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer" ],
+        [ "LegacySolution", "structAntares_1_1Optimization_1_1LegacySolution.html", "structAntares_1_1Optimization_1_1LegacySolution" ],
         [ "LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", "classAntares_1_1Optimization_1_1LegacyFiller" ],
         [ "LegacyNameMapper", "classAntares_1_1Optimization_1_1LegacyNameMapper.html", "classAntares_1_1Optimization_1_1LegacyNameMapper" ],
         [ "LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem" ],

@@ -834,6 +834,12 @@ var namespaces_dup =
           [ "MpsColumn", "MPSGenerator_8cpp.html#a4200b5dde2cfe0484f2ddb75bf19e356", null ],
           [ "OptionalColumn", "IColumnAdapterVisitor_8h.html#a309ae0d1d5351b33f6ff75da03de32a7", null ],
           [ "StringColumn", "IColumnAdapterVisitor_8h.html#a9acc7c9614b8ff4237ae46251f38ff5f", null ],
+          [ "Stage", "SimulationTableStage_8h.html#a437dadf0f7c998f551d7ad9658c08d32", [
+            [ "firstOptim", "SimulationTableStage_8h.html#a437dadf0f7c998f551d7ad9658c08d32a740210b7bdb59e68e635870e8eac5f49", null ],
+            [ "secondOptim", "SimulationTableStage_8h.html#a437dadf0f7c998f551d7ad9658c08d32a0de5e489788645840f840868392fe2ed", null ],
+            [ "remixHydro", "SimulationTableStage_8h.html#a437dadf0f7c998f551d7ad9658c08d32a00fc0561f60bae5da3c08decbc1e7a74", null ],
+            [ "adequacyPatchCsr", "SimulationTableStage_8h.html#a437dadf0f7c998f551d7ad9658c08d32a557382d8e1f24ccff14325e3e025c73a", null ]
+          ] ],
           [ "TimeConversionMode", "SimulationTableGenerator_8h.html#ad34c3f3a36ca379aa9e2e41dd2775e52", [
             [ "SingleBlock", "SimulationTableGenerator_8h.html#ad34c3f3a36ca379aa9e2e41dd2775e52a95e3727fd5f0aede28af2086f421b699", null ],
             [ "DailyBlocks", "SimulationTableGenerator_8h.html#ad34c3f3a36ca379aa9e2e41dd2775e52add38c1a30e05c3a66419dc5abed2771b", null ],
@@ -857,7 +863,10 @@ var namespaces_dup =
           [ "MakeExportableName", "ExportableName_8cpp.html#a2a6c84d1e0836ee85267606be33f30c9", null ],
           [ "MakeExportableName", "ExportableName_8h.html#a3661124bee1e43280c56732dcc9e3459", null ],
           [ "MakeMpsSafeUniqueName", "ExportableName_8cpp.html#a4fba717c6f56bbd17d0f568daad780cb", null ],
+          [ "stageFromName", "SimulationTableStage_8h.html#ab5066feb195b29a9995faeb83fa7312e", null ],
+          [ "stageName", "SimulationTableStage_8h.html#ada052a817c5083959dbb0e6e39b01bfe", null ],
           [ "updateVariabilityIfShouldForceScenario", "SimulationTableGenerator_8h.html#aad221e18a2c748339a08e23bd0c47c70", null ],
+          [ "allStages", "SimulationTableStage_8h.html#acab3857df15ef57721ede470e0ce597a", null ],
           [ "is_optional_v", "columns_8h.html#ab6897cfdf6496b395c29e90dd2d8fa2a", null ]
         ] ],
         [ "fileSetContent", "file_8cpp.html#a2d0c92d569f739fb52bbf5e0b1b4fef2", null ],
@@ -978,6 +987,7 @@ var namespaces_dup =
         [ "CsrQuadraticProblem", "classAntares_1_1Optimization_1_1CsrQuadraticProblem.html", "classAntares_1_1Optimization_1_1CsrQuadraticProblem" ],
         [ "ComponentToAreaConnectionFiller", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller.html", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller" ],
         [ "InactiveComponentsAnalyzer", "classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html", "classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer" ],
+        [ "LegacySolution", "structAntares_1_1Optimization_1_1LegacySolution.html", "structAntares_1_1Optimization_1_1LegacySolution" ],
         [ "LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", "classAntares_1_1Optimization_1_1LegacyFiller" ],
         [ "LegacyNameMapper", "classAntares_1_1Optimization_1_1LegacyNameMapper.html", "classAntares_1_1Optimization_1_1LegacyNameMapper" ],
         [ "LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem" ],
@@ -996,15 +1006,15 @@ var namespaces_dup =
           [ "Once", "libs_2antares_2optimization-options_2include_2antares_2optimization-options_2options_8h.html#a4752b5008c7d11307de6a4cea8e4c64eae1a9dc9f23534e63de9df0d540ac1611", null ],
           [ "Always", "libs_2antares_2optimization-options_2include_2antares_2optimization-options_2options_8h.html#a4752b5008c7d11307de6a4cea8e4c64ea68eec46437c384d8dad18d5464ebc35c", null ]
         ] ],
-        [ "AddLegacyExtraOutputs", "LegacyExtraOutputs_8h.html#afceb038fe5c52d04b3053d5391b3ccba", null ],
+        [ "AddLegacyExtraOutputs", "LegacyExtraOutputs_8h.html#adb9a38a539dd78dafd1f39964a56b201", null ],
         [ "applyOperation", "LinearExpression_8h.html#ae0afdb45eb93e24332629b1b32ae10c3", null ],
         [ "applyOperation", "TimeDependentLinearExpression_8h.html#a2ee21c86960b2d7fb5ca86724ec77fd0", null ],
         [ "balanceConstraintIndices", "ComponentToAreaConnectionFiller_8cpp.html#a70b02987bc0443abb2f9fba61f119869", null ],
         [ "BuildInactiveComponentsAnalyzer", "InactiveComponentsAnalyzerBuilder_8cpp.html#a5c6d6ea89e7e2c934bdebd9e3e5e24bf", null ],
-        [ "DumpSimulationTableAfterPostProcess", "LegacySimulationTableSnapshot_8h.html#a216b61071e73d495bfffbe16e072a48c", null ],
-        [ "DumpSimulationTableStage", "LegacySimulationTableSnapshot_8h.html#ae3060994d60d8f5d3e495772dc6903f7", null ],
+        [ "DumpSimulationTableAfterPostProcess", "LegacySimulationTableSnapshot_8h.html#a624c1582ea5afc0ef5b79669bfa32d68", null ],
+        [ "DumpSimulationTableStage", "LegacySimulationTableSnapshot_8h.html#a41f158f1a4578891d2f80cb14c728dbf", null ],
         [ "fictitiousLoadConstraintIndices", "ComponentToAreaConnectionFiller_8cpp.html#a46b71a6ea25755421399d5a0ec661061", null ],
-        [ "FillLegacySimulationTable", "LegacySimulationTableSnapshot_8h.html#a310bbac6c713775079cc0edf75f528eb", null ],
+        [ "FillLegacySimulationTable", "LegacySimulationTableSnapshot_8h.html#a0f4e3e4efb16d9c3fe07565be72e9cd5", null ],
         [ "format_as", "MCYearAndTime_8h.html#a42bbf89c2f89bc518949ad86f6818be4", null ],
         [ "greaterValue", "report_8cpp.html#afca59b8c35ac2975defa738d1098f969", null ],
         [ "hasIntegerVariables", "MipDetection_8h.html#acdb7584e1806b2d8281917fccc137257", null ],
@@ -2045,12 +2055,6 @@ var namespaces_dup =
       [ "reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", "classfind__reference_1_1reference__folder__finder" ],
       [ "find_reference_folder", "find__reference_8py.html#a9a1c9809dbe51b7d00621cd03854ec6e", null ]
     ] ],
-    [ "Fixtures", null, [
-      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
-      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
-      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
-      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
-    ] ],
     [ "fixtures", null, [
       [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
       [ "antares_problem_generator", "fixtures_8py.html#a532fab1323b92d1f3eb74f5213a6b6c0", null ],
@@ -2059,6 +2063,12 @@ var namespaces_dup =
       [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
       [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
       [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
+    ] ],
+    [ "Fixtures", null, [
+      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
+      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
+      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
+      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
     ] ],
     [ "FSWalker", null, [
       [ "FileJob", "classFSWalker_1_1FileJob.html", "classFSWalker_1_1FileJob" ],
@@ -2247,6 +2257,7 @@ var namespaces_dup =
       [ "ckeck_log_exists", "solver__steps_8py.html#a67663c9898d825af30daa11963437920", null ],
       [ "compare_objective_values_all_studies", "solver__steps_8py.html#a456fc9449c3a767d2eefcba9e558561b", null ],
       [ "create_temporary_copy", "solver__steps_8py.html#a4ab3e50370fefa91f351c1f9b700dccf", null ],
+      [ "default_simulation_table_stage", "solver__steps_8py.html#a9e218be7217cdc15a4096f3e5c7dfff4", null ],
       [ "empty_input_series", "solver__steps_8py.html#a247d486039168403702b5fa242528cb9", null ],
       [ "extract_hour", "solver__steps_8py.html#a2dd359757c845fc8cb42570d6baec274", null ],
       [ "extract_week_ts", "solver__steps_8py.html#aab856c02ada388cf7223cdfae48aa6ad", null ],
@@ -2257,6 +2268,7 @@ var namespaces_dup =
       [ "nth_study_path_is", "solver__steps_8py.html#aa89f5a48dc1f209824c0d34f3be1f8ba", null ],
       [ "parse_options", "solver__steps_8py.html#a24a80524348aaa8cdfd37bd82ae2daa2", null ],
       [ "parse_output_folder_from_logs", "solver__steps_8py.html#a3e4ae8358376dec656f4144e8e6e4c05", null ],
+      [ "read_modeler_outputs_from_stage", "solver__steps_8py.html#a8c158d1e1fb9af818a97f607767bde0f", null ],
       [ "replace_reserve_yml", "solver__steps_8py.html#a08234d314bdecb470a68144d38e0ced3", null ],
       [ "run_antares", "solver__steps_8py.html#ac1820b6ae387258263066b08bbae4939", null ],
       [ "run_antares_on_all_studies", "solver__steps_8py.html#a4771610880e887817f2f3cbfc90f04c7", null ],
@@ -2264,12 +2276,16 @@ var namespaces_dup =
       [ "set_input_section_variable", "solver__steps_8py.html#a321efc9cc2278577c27c5ab1c3d7b516", null ],
       [ "set_linear_solver", "solver__steps_8py.html#a9b57d898de72258c60168f75218628c4", null ],
       [ "set_quadratic_solver", "solver__steps_8py.html#afca43bd690264fd540610109a4428819", null ],
+      [ "set_simulation_table_stages_in_ini", "solver__steps_8py.html#ad0ee54ef623e0ca6bf305434f7d03c4c", null ],
       [ "should_check", "solver__steps_8py.html#a6806aab1c91a60f87fdff7e63085d6c7", null ],
       [ "simu_success", "solver__steps_8py.html#ae3273d3798a6a7ad65b8af0cf0ce32fc", null ],
       [ "solver_study_path_is", "solver__steps_8py.html#a152b6d3e3953a40aadbbb34b431c276e", null ],
+      [ "stages_in_output", "solver__steps_8py.html#a307ca44d522c26be911bd4ee8bf2109e", null ],
       [ "week_hours_from_mps_filename", "solver__steps_8py.html#a58980d7bb16992253a3663243bf092b7", null ],
+      [ "_STAGE_OF_TABLE_FILE", "solver__steps_8py.html#ac81df02b59376f3c4dfc380f18e84f45", null ],
       [ "NB_DAYS_IN_WEEK", "solver__steps_8py.html#aca0b81e7ad94db6f563ce52e4fc0ca97", null ],
-      [ "NB_HOURS_IN_WEEK", "solver__steps_8py.html#ab6a9ed43302ef8679798aa598158ca29", null ]
+      [ "NB_HOURS_IN_WEEK", "solver__steps_8py.html#ab6a9ed43302ef8679798aa598158ca29", null ],
+      [ "SIMULATION_TABLE_STAGES", "solver__steps_8py.html#af6659d2eac557679987d01e3de09ee3e", null ]
     ] ],
     [ "specific_test", null, [
       [ "check_all_unfeasible_options", "specific__test_8py.html#a338ea4e723ab552767fd155f68e84c1f", null ],

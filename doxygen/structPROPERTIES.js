@@ -1,6 +1,6 @@
 var structPROPERTIES =
 [
-    [ "additionalConstraints", "structPROPERTIES.html#a5a571f9e7dec08e752711e8cae9fbfa3", null ],
+    [ "additionalConstraints", "structPROPERTIES.html#a6891fe20cb2ec77297a69ea28900c5ab", null ],
     [ "allowOverflow", "structPROPERTIES.html#abb4184e7c7935f1525588e7b82870c21", null ],
     [ "clusterGlobalIndex", "structPROPERTIES.html#af88d2f8257dd06f8b57205d9f919c8b3", null ],
     [ "initialLevel", "structPROPERTIES.html#a4df0959161f68874087f9ce3ffa322f7", null ],
@@ -12,7 +12,7 @@ var structPROPERTIES =
     [ "penalizeVariationInjection", "structPROPERTIES.html#a4a9057b6782ed4878635d673ed023b76", null ],
     [ "penalizeVariationWithdrawal", "structPROPERTIES.html#a6c0707e0bf05f704883b9761b8dc3276", null ],
     [ "reservoirCapacity", "structPROPERTIES.html#ac048d2d94970c603d4316a5e3ff99f38", null ],
-    [ "series", "structPROPERTIES.html#ae654216a666344984e356df2f68b76d6", null ],
+    [ "series", "structPROPERTIES.html#ae0476b5db5cd1b6ebbd253140eefb22d", null ],
     [ "withdrawalEfficiency", "structPROPERTIES.html#a1591346de9b9b8d36070fef5eb44bcab", null ],
     [ "withdrawalNominalCapacity", "structPROPERTIES.html#a8eed4dc1dc17ffbeeed161924879b6eb", null ]
 ];

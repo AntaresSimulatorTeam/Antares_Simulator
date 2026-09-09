@@ -163,6 +163,10 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>OptimisationAvecVaria
 <tr class="memitem:ae5fbff5d0b9e878d2dd36b9ae658e1e4"><td class="memItemLeft" align="right" valign="top"><a id="ae5fbff5d0b9e878d2dd36b9ae658e1e4"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>useThermalHeuristic</b> = true</td></tr>
 <tr class="separator:ae5fbff5d0b9e878d2dd36b9ae658e1e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a1ca550f2ce1d7ec2b810c84da30e6e"><td class="memItemLeft" align="right" valign="top"><a id="a5a1ca550f2ce1d7ec2b810c84da30e6e"></a>
+std::shared_ptr&lt; const <a class="el" href="classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html">Antares::Optimization::InactiveComponentsAnalyzer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPROBLEME__HEBDO.html#a5a1ca550f2ce1d7ec2b810c84da30e6e">inactiveComponents</a></td></tr>
+<tr class="memdesc:a5a1ca550f2ce1d7ec2b810c84da30e6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Study-wide, precomputed activity flags used to suppress simulation-table rows for structurally inactive objects (see AddLegacyExtraOutputs). Null by default, so callers and test fixtures that leave it unset keep emitting every row. <br /></td></tr>
+<tr class="separator:a5a1ca550f2ce1d7ec2b810c84da30e6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfb90cc7816bf9fd8f6e1844eb180228"><td class="memItemLeft" align="right" valign="top"><a id="adfb90cc7816bf9fd8f6e1844eb180228"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>NombreDePays</b> = 0</td></tr>
 <tr class="separator:adfb90cc7816bf9fd8f6e1844eb180228"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,15 +233,15 @@ std::vector&lt; <a class="el" href="structPALIERS__THERMIQUES.html">PALIERS_THER
 <tr class="memitem:acb27e202eae9b83f92ef32e453667e56"><td class="memItemLeft" align="right" valign="top"><a id="acb27e202eae9b83f92ef32e453667e56"></a>
 std::vector&lt; <a class="el" href="structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html">ENERGIES_ET_PUISSANCES_HYDRAULIQUES</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CaracteristiquesHydrauliques</b></td></tr>
 <tr class="separator:acb27e202eae9b83f92ef32e453667e56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62db15ef8e018ec3878dab5af3ddb7ae"><td class="memItemLeft" align="right" valign="top"><a id="a62db15ef8e018ec3878dab5af3ddb7ae"></a>
-std::optional&lt; std::vector&lt;::<a class="el" href="structAREA__RESERVES__VECTOR.html">AREA_RESERVES_VECTOR</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>allReserves</b></td></tr>
-<tr class="separator:a62db15ef8e018ec3878dab5af3ddb7ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89f8d24abb4596a8cf3d61bd1ee28d0a"><td class="memItemLeft" align="right" valign="top"><a id="a89f8d24abb4596a8cf3d61bd1ee28d0a"></a>
+std::optional&lt; std::vector&lt; <a class="el" href="structAREA__RESERVES__VECTOR.html">AREA_RESERVES_VECTOR</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>allReserves</b></td></tr>
+<tr class="separator:a89f8d24abb4596a8cf3d61bd1ee28d0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f00cf2a5758dc6d994a99d9a7188293"><td class="memItemLeft" align="right" valign="top"><a id="a5f00cf2a5758dc6d994a99d9a7188293"></a>
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>NumberOfShortTermStorages</b> = 0</td></tr>
 <tr class="separator:a5f00cf2a5758dc6d994a99d9a7188293"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69d3592035dca4d66aa085b6b5b0e30b"><td class="memItemLeft" align="right" valign="top"><a id="a69d3592035dca4d66aa085b6b5b0e30b"></a>
-std::vector&lt;::AREA_INPUT &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ShortTermStorage</b></td></tr>
-<tr class="separator:a69d3592035dca4d66aa085b6b5b0e30b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae519eac51c5ccc9821a591c34a6fd1a"><td class="memItemLeft" align="right" valign="top"><a id="aae519eac51c5ccc9821a591c34a6fd1a"></a>
+std::vector&lt; AREA_INPUT &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ShortTermStorage</b></td></tr>
+<tr class="separator:aae519eac51c5ccc9821a591c34a6fd1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2b1ba57c800b76d1772ed3578d4e269"><td class="memItemLeft" align="right" valign="top"><a id="ac2b1ba57c800b76d1772ed3578d4e269"></a>
 std::vector&lt; std::vector&lt; <a class="el" href="structPROBLEME__HEBDO_1_1INPUT__GENERATION.html">INPUT_GENERATION</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>InputGenerationOfArea</b></td></tr>
 <tr class="separator:ac2b1ba57c800b76d1772ed3578d4e269"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -385,8 +389,13 @@ std::unique_ptr&lt; <a class="el" href="classPROBLEME__ANTARES__A__RESOUDRE.html
 <tr class="memitem:a64d99b2be2f835fff045e788008ab599"><td class="memItemLeft" align="right" valign="top"><a id="a64d99b2be2f835fff045e788008ab599"></a>
 <a class="el" href="structAntares_1_1Solver_1_1ModelerData.html">Antares::Solver::ModelerData</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>modelerData</b> = nullptr</td></tr>
 <tr class="separator:a64d99b2be2f835fff045e788008ab599"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f8b8f1e891ed9f1b1ddbfc3144cc005"><td class="memItemLeft" align="right" valign="top"><a id="a0f8b8f1e891ed9f1b1ddbfc3144cc005"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPROBLEME__HEBDO.html#a0f8b8f1e891ed9f1b1ddbfc3144cc005">retainSolvedModelerProblem</a> = false</td></tr>
+<tr class="memdesc:a0f8b8f1e891ed9f1b1ddbfc3144cc005"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the solve must publish lastSolvedModelerProblem. Set per week by OPT_OptimisationLineaire, the level that knows a post-process stage will read it back. Not tied to whether <em>this</em> pass writes a table: a run selecting only post-process stages would otherwise lose every modeler row of the stages it asked for. <br /></td></tr>
+<tr class="separator:a0f8b8f1e891ed9f1b1ddbfc3144cc005"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7013ad4d730c91bf9d0d67dd7a2593f"><td class="memItemLeft" align="right" valign="top"><a id="af7013ad4d730c91bf9d0d67dd7a2593f"></a>
-std::shared_ptr&lt; const <a class="el" href="structAntares_1_1Optimization_1_1SolvedModelerProblem.html">Antares::Optimization::SolvedModelerProblem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>lastSolvedModelerProblem</b></td></tr>
+std::shared_ptr&lt; const <a class="el" href="structAntares_1_1Optimization_1_1SolvedModelerProblem.html">Antares::Optimization::SolvedModelerProblem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPROBLEME__HEBDO.html#af7013ad4d730c91bf9d0d67dd7a2593f">lastSolvedModelerProblem</a></td></tr>
+<tr class="memdesc:af7013ad4d730c91bf9d0d67dd7a2593f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modeler side of the current week's last optimisation pass, kept alive past the solve so a post-process simulation table can re-emit the modeler component rows. Null unless retainSolvedModelerProblem is set. <br /></td></tr>
 <tr class="separator:af7013ad4d730c91bf9d0d67dd7a2593f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
