@@ -181,6 +181,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     // OPT_OptimisationHebdomadaireLineaire before the post-processes run, so the
     // value cleared here could never have been published either way.
     problemeHebdo->lastSolvedModelerProblem.reset();
+    
     auto ortoolsProblem = std::make_shared<LegacyOrtoolsLinearProblem>(isMip, options.solverName);
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
