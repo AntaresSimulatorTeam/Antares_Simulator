@@ -318,7 +318,13 @@ struct Fixture
 
     void fill()
     {
-        AddLegacyExtraOutputs(table, problem, fillContext, currentBlock, inactiveComponents.get());
+        const auto& solved = *problem.ProblemeAResoudre;
+        AddLegacyExtraOutputs(table,
+                              problem,
+                              {solved.X, solved.CoutsMarginauxDesContraintes},
+                              fillContext,
+                              currentBlock,
+                              inactiveComponents.get());
     }
 
     PROBLEME_HEBDO problem;
