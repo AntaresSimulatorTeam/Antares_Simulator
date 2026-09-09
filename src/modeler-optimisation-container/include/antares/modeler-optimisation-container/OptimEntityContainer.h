@@ -59,7 +59,7 @@ public:
         return optimComponent.modelConstraintCounts.at(index);
     }
 
-    [[nodiscard]] const std::shared_ptr<Api::ILinearProblem>& Problem() const
+    [[nodiscard]] std::shared_ptr<Api::ILinearProblem> Problem() const
     {
         return linearProblem_;
     }
