@@ -56,9 +56,9 @@ public:
 
     void buildProblems();
     void buildMasterProblem();
+    void buildProblemsAndWriteMps();
     void run();
 
-    void exportMps() const;
     void exportStructureFile() const;
 
     class ModelerError: public std::runtime_error
@@ -84,10 +84,15 @@ public:
     }
 
     // gp : defined only for unit test, which is not a good sign on design.
+    /// Returns the solution of the last solved subproblem. The solution is owned by that
+    /// subproblem (see ILinearProblem::solve), which is retained in subproblems(), so the
+    /// pointer stays valid for the lifetime of this Modeler after run() in
+    /// SEQUENTIAL_SUBPROBLEMS mode. May be null if no subproblem was solved.
     LinearProblem::Api::IMipSolution* subProbSolution();
 
 private:
     LinearProblem::Api::FillContext createFillContext(unsigned year) const;
+    void validateScenariosAgainstScenarioBuilder() const;
     LinearProblem::Api::IMipSolution* solveSubproblem(
       LinearProblem::Api::ILinearProblem& subproblem);
 

@@ -9,6 +9,7 @@
 # SPDX-License-Identifier: MPL-2.0
 #
 # This file is part of the Antares project.
+resolution-mode: benders-decomposition
 models:
   - id: lib_example_13_1.generator_with_continuous_invest
     model-decomposition:

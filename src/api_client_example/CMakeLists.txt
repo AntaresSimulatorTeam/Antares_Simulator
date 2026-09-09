@@ -15,7 +15,6 @@ find_package(antlr4-runtime REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(fmt REQUIRED)
 find_package(Boost CONFIG REQUIRED COMPONENTS iostreams)
-find_package(nlohmann_json CONFIG REQUIRED)
 
 
 add_subdirectory(src)

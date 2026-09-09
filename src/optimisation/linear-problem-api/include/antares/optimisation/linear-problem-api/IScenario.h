@@ -30,6 +30,15 @@ public:
 
     [[nodiscard]] virtual TimeSeriesNumber getData(Year year) const = 0;
 
+    /** Check whether a time series is defined for the given year, without throwing.
+     * Implementations that serve a fixed time series for any year (empty/default scenarios)
+     * keep the default behavior of returning true.
+     */
+    [[nodiscard]] virtual bool hasYear(Year year) const
+    {
+        return true;
+    }
+
     [[nodiscard]] std::string group() const
     {
         return group_;

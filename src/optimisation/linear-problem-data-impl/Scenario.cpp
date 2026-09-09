@@ -22,6 +22,11 @@ Api::IScenario::TimeSeriesNumber Scenario::getData(Year year) const
     return it->second;
 }
 
+bool Scenario::hasYear(Year year) const
+{
+    return timeSerieData_.contains(year);
+}
+
 void Scenario::setTimeSerieNumber(Year year, TimeSeriesNumber timeSeriesNumber)
 {
     if (timeSerieData_.contains(year))
