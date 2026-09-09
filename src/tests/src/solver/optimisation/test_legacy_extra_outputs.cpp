@@ -323,7 +323,8 @@ struct Fixture
                               problem,
                               {solved.X, solved.CoutsMarginauxDesContraintes},
                               fillContext,
-                              currentBlock);
+                              currentBlock,
+                              inactiveComponents.get());
     }
 
     PROBLEME_HEBDO problem;
