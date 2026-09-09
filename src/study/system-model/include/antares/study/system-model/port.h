@@ -3,7 +3,9 @@
 
 #pragma once
 
+#include <fmt/format.h>
 #include <string>
+#include <map>
 
 #include "portType.h"
 
@@ -15,11 +17,6 @@ enum class FieldRole
     Sender,
     Receiver
 };
-
-inline std::ostream& operator<<(std::ostream& os, const SystemModel::FieldRole& role)
-{
-    return role == SystemModel::FieldRole::Sender ? os << "Sender" : os << "Receiver";
-}
 
 class Port final
 {
@@ -61,3 +58,17 @@ private:
 };
 
 } // namespace Antares::ModelerStudy::SystemModel
+
+template <>
+struct fmt::formatter<Antares::ModelerStudy::SystemModel::FieldRole> : fmt::formatter<std::string_view>
+{
+    auto format(Antares::ModelerStudy::SystemModel::FieldRole role, fmt::format_context& ctx) const
+    {
+        std::string_view name =
+            role == Antares::ModelerStudy::SystemModel::FieldRole::Sender
+                ? "Sender"
+                : "Receiver";
+
+        return fmt::formatter<std::string_view>::format(name, ctx);
+    }
+};

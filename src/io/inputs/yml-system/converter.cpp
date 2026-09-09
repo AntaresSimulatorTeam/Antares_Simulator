@@ -135,11 +135,14 @@ void CheckFieldsRoleCompatibility(const Port& port_1,
 
         if (portFieldRole_1 == portFieldRole_2)
         {
-            std::ostringstream msg;
-            msg << "In connection between components '" << componentId_1 << "' and '"
-                << componentId_2 << "': Field '" << field.Id() << "' is " << portFieldRole_1
-                << " in both ports '" << port_1.Id() << "' and '" << port_2.Id() << "'";
-            throw InputError(msg.str());
+            throw InputError(fmt::format("In connection between components '{}' and '{}': Field "
+                                         "'{}' is {} in both ports '{}' and '{}'",
+                                         componentId_1,
+                                         componentId_2,
+                                         field.Id(),
+                                         portFieldRole_1,
+                                         port_1.Id(),
+                                         port_2.Id()));
         }
     }
 }
