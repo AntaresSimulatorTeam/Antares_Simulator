@@ -34,7 +34,7 @@ public:
      * Implementations that serve a fixed time series for any year (empty/default scenarios)
      * keep the default behavior of returning true.
      */
-    [[nodiscard]] virtual bool hasYear(Year year) const
+    [[nodiscard]] virtual bool hasYear(Year) const
     {
         return true;
     }

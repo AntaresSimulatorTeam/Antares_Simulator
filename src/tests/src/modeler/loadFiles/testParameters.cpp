@@ -98,9 +98,9 @@ BOOST_AUTO_TEST_CASE(resolve_scenario_scope_range)
     scope.include = {"0-99"};
     auto scenarios = Antares::Solver::resolveScenarioScopeScenarios(scope);
     BOOST_REQUIRE_EQUAL(scenarios.size(), 100);
-    BOOST_CHECK_EQUAL(scenarios.front(), 0);
-    BOOST_CHECK_EQUAL(scenarios.back(), 99);
-}
+    for (unsigned i = 0; i < 100; ++i) {
+    	BOOST_CHECK_EQUAL(scenarios[i], i);
+    }}
 
 BOOST_AUTO_TEST_CASE(resolve_scenario_scope_dedup_and_sort)
 {

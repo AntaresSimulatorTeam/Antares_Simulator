@@ -727,7 +727,9 @@ ModelerData OneParameterOneVariableOneConstraint()
       .dataSeries = std::move(linearProblemData),
       .scenarioGroupRepository = std::move(scenarioGroupRepository),
       .resolutionMode = ResolutionMode::BENDERS_DECOMPOSITION,
+      .scenarioScope = {},
       .bendersDecomposition = {},
+      .componentProperties = {},
     };
 }
 
