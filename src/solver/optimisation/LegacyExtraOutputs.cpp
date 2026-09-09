@@ -66,12 +66,15 @@ class LegacyExtraOutputEmitter
 public:
     LegacyExtraOutputEmitter(SimulationTable& simulationTable,
                              PROBLEME_HEBDO& problemeHebdo,
+                             const LegacySolution& solution,
                              const FillContext& fillContext,
                              unsigned currentBlock,
                              const InactiveComponentsAnalyzer* inactiveComponents):
         table_(simulationTable),
         problemeHebdo_(problemeHebdo),
         problem_(*problemeHebdo.ProblemeAResoudre),
+        primal_(solution.primal),
+        duals_(solution.duals),
         variableManager_(VariableManagerFromProblemHebdo(&problemeHebdo)),
         fillContext_(fillContext),
         block_(currentBlock),
@@ -128,9 +131,11 @@ private:
 
     [[nodiscard]] double x(int variableIndex) const
     {
-        return problem_.X[static_cast<std::size_t>(variableIndex)];
+        return primal_[static_cast<std::size_t>(variableIndex)];
     }
 
+    // CoutLineaire is static problem input, not part of the solution, so it is
+    // read straight from the problem rather than through the solution view.
     [[nodiscard]] double cost(int variableIndex) const
     {
         return problem_.CoutLineaire[static_cast<std::size_t>(variableIndex)];
@@ -138,7 +143,7 @@ private:
 
     [[nodiscard]] double dual(int constraintIndex) const
     {
-        return problem_.CoutsMarginauxDesContraintes[static_cast<std::size_t>(constraintIndex)];
+        return duals_[static_cast<std::size_t>(constraintIndex)];
     }
 
     [[nodiscard]] double areaPrice(uint32_t pays, int pdt) const
@@ -150,6 +155,8 @@ private:
     SimulationTable& table_;
     PROBLEME_HEBDO& problemeHebdo_;
     const PROBLEME_ANTARES_A_RESOUDRE& problem_;
+    const std::vector<double>& primal_;
+    const std::vector<double>& duals_;
     VariableManagement::VariableManager variableManager_;
     const FillContext& fillContext_;
     unsigned block_;
@@ -485,12 +492,14 @@ void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays)
 
 void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                            PROBLEME_HEBDO& problemeHebdo,
+                           const LegacySolution& solution,
                            const FillContext& fillContext,
                            unsigned currentBlock,
                            const InactiveComponentsAnalyzer* inactiveComponents)
 {
     LegacyExtraOutputEmitter emitter(simulationTable,
                                      problemeHebdo,
+                                     solution,
                                      fillContext,
                                      currentBlock,
                                      inactiveComponents);

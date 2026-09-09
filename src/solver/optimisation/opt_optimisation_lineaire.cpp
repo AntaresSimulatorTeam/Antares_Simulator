@@ -276,6 +276,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                    problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
 
     callIfExport(options.exportBehavior, [&] { OPT_ExportStructures(problemeHebdo, writer); });
+
     auto* firstOptimSimulationTable = simulationTables
                                         ? simulationTables->firstOptimSimulationTable()
                                         : nullptr;

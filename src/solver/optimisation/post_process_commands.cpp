@@ -421,10 +421,10 @@ void WriteDebugAdequacyPatch::writeLinkData(const optRuntimeData& opt_runtime_da
 // --------------------------------------
 DumpSimulationTablePostProcessCmd::DumpSimulationTablePostProcessCmd(
   PROBLEME_HEBDO* problemeHebdo,
-  std::string stage,
+  IO::Outputs::Stage stage,
   IO::Outputs::OptimisationsSimulationTable* tables):
     basePostProcessCommand(problemeHebdo),
-    stage_(std::move(stage)),
+    stage_(stage),
     tables_(tables)
 {
 }

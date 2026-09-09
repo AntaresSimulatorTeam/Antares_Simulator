@@ -18,6 +18,11 @@
 using namespace Antares::Data;
 class AdequacyPatchRuntimeData;
 
+namespace Antares::Optimization
+{
+class InactiveComponentsAnalyzer;
+} // namespace Antares::Optimization
+
 struct CORRESPONDANCES_DES_VARIABLES
 {
     // Avoid accidental copies
@@ -196,7 +201,7 @@ struct CONTRAINTES_COUPLANTES
 
     const char* NomDeLaContrainteCouplante;
 
-    std::shared_ptr<Antares::Data::BindingConstraint> bindingConstraint;
+    std::shared_ptr<BindingConstraint> bindingConstraint;
 };
 
 struct PROPERTIES
@@ -213,9 +218,8 @@ struct PROPERTIES
     bool allowOverflow{false};
     double overflowCost{0.0};
 
-    std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
-    std::vector<std::shared_ptr<Antares::Data::ShortTermStorage::AdditionalConstraints>>
-      additionalConstraints;
+    std::shared_ptr<ShortTermStorage::Series> series;
+    std::vector<std::shared_ptr<ShortTermStorage::AdditionalConstraints>> additionalConstraints;
     int clusterGlobalIndex;
     std::string name;
 };
@@ -409,7 +413,7 @@ struct PALIERS_THERMIQUES
     // the vectors above. Carried only so the legacy extra outputs can emit
     // co2_emissions ... op5_emissions = generation_power * factor; not used by
     // the optimization itself.
-    std::vector<std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX>> emissionFactors;
+    std::vector<std::array<double, Pollutant::POLLUTANT_MAX>> emissionFactors;
 };
 
 struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
@@ -516,9 +520,9 @@ struct RESULTATS_HORAIRES
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE> ProductionThermique; // index is pdtHebdo
     std::vector<OPTIMAL_HYDRO_USAGE> HydroUsage;                    // index is pdtHebdo
 
-    std::vector<::RESULTS> ShortTermStorage;
+    std::vector<RESULTS> ShortTermStorage;
 
-    std::optional<std::vector<::RESULTSRESERVES>> ShortTermStorageReserves;
+    std::optional<std::vector<RESULTSRESERVES>> ShortTermStorageReserves;
     std::optional<std::vector<RESERVES>> Reserves;
 };
 
@@ -560,6 +564,12 @@ struct PROBLEME_HEBDO
     bool OptimisationAvecVariablesEntieres = false;
     bool useThermalHeuristic = true;
 
+    /// \brief Study-wide, precomputed activity flags used to suppress
+    /// simulation-table rows for structurally inactive objects (see
+    /// AddLegacyExtraOutputs). Null by default, so callers and test fixtures
+    /// that leave it unset keep emitting every row.
+    std::shared_ptr<const Antares::Optimization::InactiveComponentsAnalyzer> inactiveComponents;
+
     uint32_t NombreDePays = 0;
     std::vector<const char*> NomsDesPays;
     uint32_t NombreDePaliersThermiques = 0;
@@ -597,10 +607,10 @@ struct PROBLEME_HEBDO
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
-    std::optional<std::vector<::AREA_RESERVES_VECTOR>> allReserves;
+    std::optional<std::vector<AREA_RESERVES_VECTOR>> allReserves;
 
     uint32_t NumberOfShortTermStorages = 0;
-    std::vector<::AREA_INPUT> ShortTermStorage;
+    std::vector<AREA_INPUT> ShortTermStorage;
 
     // Input-data generation series (renewable clusters or aggregated
     // wind/solar/ROR, misc gen entries) copied from the study each week so the
@@ -784,6 +794,6 @@ public:
 };
 
 // Import functions for capacity and hydro reserves
-void importCapacityReservations(const Antares::Data::AreaList& areas, PROBLEME_HEBDO& problem);
-void importHydroReserves(const Antares::Data::AreaList& areas, PROBLEME_HEBDO& problem);
+void importCapacityReservations(const AreaList& areas, PROBLEME_HEBDO& problem);
+void importHydroReserves(const AreaList& areas, PROBLEME_HEBDO& problem);
 #endif

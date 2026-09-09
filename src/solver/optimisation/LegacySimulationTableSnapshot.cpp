@@ -110,6 +110,7 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
 
     AddLegacyExtraOutputs(simulationTable,
                           problemeHebdo,
+                          {problem.X, problem.CoutsMarginauxDesContraintes},
                           fillContext,
                           currentBlock,
                           inactiveComponents);

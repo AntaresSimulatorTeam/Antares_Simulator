@@ -26,10 +26,10 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(
     post_process_list.push_back(
       std::make_unique<RemixHydroPostProcessCmd>(problemeHebdo_, areas, params, numSpace, writer));
 
-    post_process_list.push_back(std::make_unique<DumpSimulationTablePostProcessCmd>(
-      problemeHebdo_,
-      IO::Outputs::OptimisationsSimulationTable::remixHydroStage,
-      simulationTables));
+    post_process_list.push_back(
+      std::make_unique<DumpSimulationTablePostProcessCmd>(problemeHebdo_,
+                                                          IO::Outputs::Stage::remixHydro,
+                                                          simulationTables));
 
     if (params.adqPatchDebug)
     {
@@ -53,10 +53,10 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(
 
     // After curtailment sharing, DTG netting and the marginal price update, i.e.
     // once the whole patch has been applied.
-    post_process_list.push_back(std::make_unique<DumpSimulationTablePostProcessCmd>(
-      problemeHebdo_,
-      IO::Outputs::OptimisationsSimulationTable::adequacyPatchStage,
-      simulationTables));
+    post_process_list.push_back(
+      std::make_unique<DumpSimulationTablePostProcessCmd>(problemeHebdo_,
+                                                          IO::Outputs::Stage::adequacyPatchCsr,
+                                                          simulationTables));
 
     if (params.adqPatchDebug)
     {
