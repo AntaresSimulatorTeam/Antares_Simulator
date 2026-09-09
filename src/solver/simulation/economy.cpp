@@ -81,9 +81,10 @@ bool Economy::simulationBegin()
 
             // The inactive-components flags are only consulted while producing
             // the legacy simulation tables, so they travel with those tables.
-            if (auto* tables = weeklyOptProblems_.back().simulationTables())
+            auto* simulationTables = weeklyOptProblems_.back().simulationTables();
+            if (simulationTables)
             {
-                tables->inactiveComponents = inactiveComponents;
+                simulationTables->inactiveComponents = inactiveComponents;
             }
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
@@ -93,7 +94,8 @@ bool Economy::simulationBegin()
               study.areas,
               study.parameters,
               study.calendar,
-              resultWriter_);
+              resultWriter_,
+              simulationTables);
         }
     }
 

@@ -15,6 +15,7 @@ add_boost_test(unit-tests-for-solver-optimisation
         test_inactive_components_analyzer_builder.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/LegacyNameMapper.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/LegacyExtraOutputs.cpp
+        ${CMAKE_SOURCE_DIR}/src/solver/optimisation/LegacySimulationTableSnapshot.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/InactiveComponentsAnalyzer.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/InactiveComponentsAnalyzerBuilder.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/variables/VariableManagement.cpp
@@ -23,6 +24,7 @@ add_boost_test(unit-tests-for-solver-optimisation
         antares-study-system-model
         Antares::antares-solver-simulation
         Antares::simulation-table
+        Antares::simu-table-generator
         Antares::linear-problem-mpsolver-impl
         Antares::optim-model-filler
         Antares::linear-problem-data-impl

@@ -847,6 +847,65 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_Symmetries,
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
 }
 
+BOOST_FIXTURE_TEST_CASE(test_hydro_reserveParticipationsCount,
+                        OneProblemWithReservesOneAreaWithLogger)
+{
+    // No reserveParticipationContainer loaded yet: the optional is empty, count is 0
+    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationsCount(), 0);
+
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << R"(participations:
+  certifications:
+    - reserve: ReserveUp
+      participation-cost: 9.9
+      max-store: 8.8
+      max-release: 7.7
+    - reserve: ReserveDown
+      participation-cost: 9.9
+      max-store: 8.8
+      max-release: 7.7
+)";
+    file.close();
+    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
+
+    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationsCount(), 2);
+}
+
+BOOST_FIXTURE_TEST_CASE(test_hydro_reserveParticipationAt, OneProblemWithReservesOneAreaWithLogger)
+{
+    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << R"(participations:
+  certifications:
+    - reserve: ReserveUp
+      participation-cost: 9.9
+      max-store: 8.8
+      max-release: 7.7
+    - reserve: ReserveDown
+      participation-cost: 9.9
+      max-store: 8.8
+      max-release: 7.7
+)";
+    file.close();
+    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
+
+    // The fixture registers 5 reserves on areaA (reserveup/reserveuptwo/reserveupthree/
+    // reservedown/reservedowntwo), but only ReserveUp and ReserveDown got a hydro
+    // participation above. reserveParticipationAt walks allCapacityReservations in
+    // (sorted) key order and returns only the participating ones, so the two
+    // participating reserves surface at index 0 and 1 in alphabetical order.
+    auto at0 = areaA->hydro.reserveParticipationAt(areaA, 0);
+    BOOST_REQUIRE(at0.has_value());
+    BOOST_CHECK_EQUAL(*at0, "reservedown");
+
+    auto at1 = areaA->hydro.reserveParticipationAt(areaA, 1);
+    BOOST_REQUIRE(at1.has_value());
+    BOOST_CHECK_EQUAL(*at1, "reserveup");
+
+    BOOST_CHECK(!areaA->hydro.reserveParticipationAt(areaA, 2).has_value());
+}
+
 BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_no_reserve,
                         OneProblemWithReservesOneAreaWithLogger)
 {

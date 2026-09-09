@@ -19,11 +19,10 @@
 #include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
-#include "antares/solver/optimisation/LegacyExtraOutputs.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyNameMapper.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
-#include "antares/solver/optimisation/LegacyVariableInfo.h"
+#include "antares/solver/optimisation/LegacySimulationTableSnapshot.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/optimisation/ortools_wrapper.h"
@@ -63,49 +62,6 @@ static void logProblemSize(const MPSolver* mpSolver)
     logs.info();
     logs.info();
 }
-
-namespace
-{
-void FillLegacySimulationTable(SimulationTable& simulationTable,
-                               PROBLEME_HEBDO& problemeHebdo,
-                               const FillContext& fillContext,
-                               const LegacyNameMapper& nameMapper,
-                               unsigned currentBlock,
-                               const InactiveComponentsAnalyzer* inactiveComponents)
-{
-    const PROBLEME_ANTARES_A_RESOUDRE& problem = *problemeHebdo.ProblemeAResoudre;
-
-    // LegacyVariablesInfo, X and CoutLineaire are all sized to NombreDeVariables
-    // in resizeProbleme, so the index-based reads below are always in bounds.
-    assert(problem.LegacyVariablesInfo.size() == static_cast<std::size_t>(problem.NombreDeVariables)
-           && problem.X.size() == static_cast<std::size_t>(problem.NombreDeVariables)
-           && problem.CoutLineaire.size() == static_cast<std::size_t>(problem.NombreDeVariables));
-    for (int index = 0; index < problem.NombreDeVariables; ++index)
-    {
-        const auto& info = problem.LegacyVariablesInfo[static_cast<std::size_t>(index)];
-        if (!info)
-        {
-            continue;
-        }
-
-        simulationTable.addEntry(
-          {.block = currentBlock,
-           .component = info->component,
-           .output = nameMapper.mapOutput(info->name),
-           .absolute_time_index = info->timeIndex,
-           .block_time_index = LegacyBlockTimeIndex(fillContext, info->timeIndex),
-           .scenario_index = fillContext.getYear(),
-           .value = problem.X[static_cast<std::size_t>(index)],
-           .status = std::nullopt});
-    }
-
-    AddLegacyExtraOutputs(simulationTable,
-                          problemeHebdo,
-                          fillContext,
-                          currentBlock,
-                          inactiveComponents);
-}
-} // namespace
 
 static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
@@ -218,14 +174,14 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     bool hasModelerData = modelerData != nullptr;
     const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
+    // Release the previous pass before building the next one so only one modeler
+    // problem is retained at a time.
+    problemeHebdo->optimEntityContainer.reset();
     auto ortoolsProblem = std::make_shared<LegacyOrtoolsLinearProblem>(isMip, options.solverName);
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
-    const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
-                                                                 : nullptr;
 
-    // The container owns the problem's lifetime: it keeps it alive for all the post-solve
-    // consumers (e.g. the hourly adequacy-patch GEMS evaluations) that read variable
-    // solution values through the container.
+    // The container shares the problem lifetime and stays available after the solve
+    // for post-solve consumers (simulation-table dumps, adequacy-patch GEMS, ...).
     problemeHebdo->optimEntityContainer = std::make_unique<OptimEntityContainer>(ortoolsProblem);
     auto& optimEntityContainer = *problemeHebdo->optimEntityContainer;
 

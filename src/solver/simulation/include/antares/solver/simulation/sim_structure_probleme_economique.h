@@ -776,8 +776,10 @@ public:
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     Antares::Solver::ModelerData* modelerData = nullptr;
-    // Owns the weekly ILinearProblem; the problem outlives the container that references it
-    // and stays available for post-solve consumers (e.g. adequacy-patch GEMS evaluations).
+
+    // Owns the modeler entities of the last optimisation pass of the current week.
+    // The container shares the linear problem lifetime, so post-solve consumers can
+    // still access modeler variables and constraints through it.
     std::unique_ptr<Antares::LinearProblem::OptimEntityContainer> optimEntityContainer;
 };
 

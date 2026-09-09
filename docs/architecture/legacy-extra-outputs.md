@@ -107,9 +107,11 @@ The `price` formula negates the stored dual: with the legacy balance-constraint 
 ## 6. Testing
 
 - `src/tests/src/solver/optimisation/test_legacy_extra_outputs.cpp` — unit tests of the derived rows on a minimal hand-built `PROBLEME_HEBDO` (three areas, two links, one cluster): formulas (including the dual sign negation for `price`), row metadata conventions, and the mode guards (fast mode, hurdle costs, reservoir management, accurate water value). Runs in the `unit-tests-for-solver-optimisation` Boost target, which compiles `LegacyExtraOutputs.cpp` and the `VariableManager` sources directly.
+- `src/tests/src/solver/optimisation/test_legacy_extra_outputs.cpp` (post-process cases) — unit tests of the per-stage dump (§8) on the same fixture: that the dump reads results mutated *after* the solve, that it leaves `X` and the duals exactly as it found them, that it no-ops when the optimisation range is daily, and that the block index is derived from the hour in the year. The `X` and dual refreshes are checked to be independently exercised — disabling only the `X` refresh must break assertions that the dual refresh alone still satisfies.
+- `src/tests/src/io/outputs/testSimulationTable.cpp` — unit tests of the stage map: a stage is created on first use and its pointer stays valid once later stages are added, the writer names one file per stage, and a stage with no rows is skipped rather than written as a header-only file.
 - `src/tests/src/solver/optimisation/constraints/legacy_variable_info_namer.cpp` — unit tests of the raw-row recording (`VariableNamer` → `LegacyVariableInfo`).
 - `src/tests/src/solver/optimisation/test_inactive_components_analyzer_builder.cpp` — unit tests of `BuildInactiveComponentsAnalyzer` against an in-memory `Data::Study` (via the `StudyBuilder`/`TimeSeriesConfigurer` test helpers), confirming a component is judged inactive when only its selected chronicle is all-zero, even if the series matrix has other, non-zero, unselected columns.
-- `src/tests/cucumber/features/solver-features/legacy_simulation_table.feature` — end-to-end scenarios: "002 Thermal fleet - Base" at a loss-of-load hour (closed-form `prop_cost`, `imbalance_cost`, `is_loss_of_load`, `price`, `is_near_loss_of_load`), "008 Thermal fleet - Accurate unit commitment" (`actual_num_units_on`, emissions, margins), the `Hurdle-cost link` fixture (`abs_flow`, link `prop_cost`, `capacity_shadow_price`, congestion indicators) and the `Accurate hydro pricing` fixture (`hydro_shadow_price`, `level_percentage`). The same feature also covers §7's suppression rules (zero-series load/ROR/solar/wind/misc-gen, unmanaged+dry hydro, zero-NTC links).
+- `src/tests/cucumber/features/solver-features/legacy_simulation_table.feature` — end-to-end scenarios: "002 Thermal fleet - Base" at a loss-of-load hour (closed-form `prop_cost`, `imbalance_cost`, `is_loss_of_load`, `price`, `is_near_loss_of_load`), "008 Thermal fleet - Accurate unit commitment" (`actual_num_units_on`, emissions, margins), the `Hurdle-cost link` fixture (`abs_flow`, link `prop_cost`, `capacity_shadow_price`, congestion indicators) and the `Accurate hydro pricing` fixture (`hydro_shadow_price`, `level_percentage`). The same feature also covers §7's suppression rules (zero-series load/ROR/solar/wind/misc-gen, unmanaged+dry hydro, zero-NTC links). It also covers §8's per-stage tables on the `adq-patch-CSR-test-case-v02` fixture: the set of stage files produced (which pins the stage names), and — reading from the `adq-patch-csr` stage — the curtailment-sharing redistribution of unsupplied energy between the two *inside* areas, the matching shift of the link flow, and the post-CSR `price`, i.e. one assertion on each of the two halves of the refresh.
 
 ## 7. Suppressing Rows for Structurally Inactive Components
 
@@ -135,3 +137,44 @@ All three follow the file's existing "skip when the anchor/condition doesn't hol
 ### Scope: derived rows only, not raw rows
 
 These guards live entirely inside `AddLegacyExtraOutputs` and therefore only suppress **derived** rows (§1). The **raw** per-variable rows (`FillLegacySimulationTable`/`VariableNamer`, e.g. a link's `flow`/`direct_flow`/`indirect_flow`) are a separate mechanism, unaffected: an LP variable still exists (and still gets a raw row) as long as its construction-site condition holds, regardless of whether its value is structurally always zero. A zero-NTC link's `DirectFlow`/`IndirectFlow` variables are still built (the optimizer still needs to prove the flow is zero), so their raw rows remain; only the derived rows (`abs_flow`, `prop_cost`, port fields, congestion indicators, ...) are dropped.
+
+## 8. Per-Stage Simulation Tables
+
+A week is not resolved in one shot: two optimisation passes are followed by post-treatments that move the results without re-solving (shave-peaks / remix hydro, and — when the adequacy patch is on — curtailment sharing, DTG netting and the marginal price update). The simulation table is written **once per stage**, so the effect of each treatment is observable.
+
+| Stage | File | Written after | Produced in |
+|---|---|---|---|
+| `optim-nb-1` | `simulation-table-{year}-optim-nb-1` | the first optimisation pass | every mode |
+| `optim-nb-2` | `simulation-table-{year}-optim-nb-2` | the second pass | every mode that runs it (§ *Skipped stages* below) |
+| `remix-hydro` | `simulation-table-{year}-remix-hydro` | `RemixHydroPostProcessCmd` (shave-peaks) | economy (both post-process lists) and adequacy |
+| `adq-patch-csr` | `simulation-table-{year}-adq-patch-csr` | `UpdateMrgPriceAfterCSRcmd`, i.e. once the whole CSR treatment has been applied | economy with `include-adq-patch = true` |
+
+Stage names are the file-name suffixes, declared once as constants on `IO::Outputs::OptimisationsSimulationTable`; they are part of the public output contract. The tables of one Monte-Carlo year live in a `std::map<std::string, SimulationTable>` created on demand (`tableForStage`) — `std::map` because its nodes are address-stable, so a pointer handed to the optim-1 call site stays valid once later stages are added, and because `SimulationTable` is move-only.
+
+### Design: republish the results through the address tables
+
+Building a simulation table needs a lot of context — the modeler `ILinearProblem` and its `OptimEntityContainer`, `ModelerData`, the `FillContext`, and the whole `AddLegacyExtraOutputs` derivation. Re-deriving any of that per stage was not an option, so the dump reuses `FillLegacySimulationTable` / `AddLegacyExtraOutputs` **verbatim** and only changes what they read.
+
+The hinge is a table the solver already maintains. `PROBLEME_ANTARES_A_RESOUDRE::AdresseOuPlacerLaValeurDesVariablesOptimisees[i]` points at the exact result slot of variable `i` (`ValeursDeNTC[pdt].ValeurDuFlux[interco]`, `ResultatsHoraires[pays].TurbinageHoraire[pdt]`, ... — set in `opt_gestion_des_bornes_cas_lineaire.cpp`), and `OPT_AppelDuSimplexe` publishes the solution with `*address = X[i]`. Post-processes mutate those result structures **in place** and never write back into `X`, so a plain fill after a post-process would re-emit the values the solver left. Reading the addresses back — `X[i] = *address` — republishes the post-processed state into the solution vector, and every existing formula then reads the right numbers with no change at all. The same holds for the duals through `AdresseOuPlacerLaValeurDesCoutsMarginaux`, which `UpdateMrgPriceAfterCSRcmd` overwrites in place; that is what makes `price` a post-CSR value.
+
+`SolutionRefreshedFromResults` (`LegacySimulationTableSnapshot.cpp`) is the RAII wrapper doing this: it saves `X` and `CoutsMarginauxDesContraintes` on construction, refreshes them from the address tables, and restores both on destruction. The restore is what guarantees the feature is **observation-only** — nothing the simulation computes afterwards can see that a dump happened.
+
+### Call sites
+
+- **Economy / hybrid** — `DumpSimulationTablePostProcessCmd`, a regular post-process command inserted into `OptPostProcessList` and `AdqPatchPostProcessList` at the point whose name it carries. A nullable `IO::Outputs::OptimisationsSimulationTable*` is threaded through `interfacePostProcessList::create`; it is null when the run does not write simulation tables, and the command is then a no-op.
+- **Adequacy** — this mode calls `RemixHydroForAllAreas` inline rather than through a post-process list, so `adequacy.cpp` calls `DumpSimulationTableStage` directly. The call sits **inside** the `if (state.simplexRunNeeded)` branch: on a week that is not solved, the state to publish would be the previous week's.
+
+Both go through `Antares::Optimization::DumpSimulationTableStage(tables, stage, problemeHebdo)`, which derives the week's `FillContext` and block index and forwards to `DumpSimulationTableAfterPostProcess`. It lives in its own translation unit (`LegacySimulationTableStage.cpp`) because it needs `buildFillContext`, which pulls in the OR-Tools call chain that the `unit-tests-for-solver-optimisation` target — which compiles `LegacySimulationTableSnapshot.cpp` directly — must stay clear of.
+
+### Modeler rows in a stage table
+
+A stage table would otherwise carry only the legacy half of a hybrid study. To avoid that, the solved modeler problem is retained past the solve on `PROBLEME_HEBDO::lastSolvedModelerProblem` (a `SolvedModelerProblem`: the `ILinearProblem`, its `OptimEntityContainer`, and the objective value), and `DumpSimulationTableAfterPostProcess` re-emits the modeler component rows before the legacy ones. This is cheap — `OrtoolsMipVariable` only wraps a raw `MPVariable*`, and the `MPSolver` that owns the data is already retained for the whole week in `ProblemeAResoudre->ProblemesSpx`. It is only populated when simulation tables are enabled.
+
+**Caveat: a stage table mixes two vintages.** Post-processing mutates the legacy result structures and cannot move a modeler variable, so in a hybrid study the legacy rows are *post*-treatment while the modeler component rows are the values the solver left. A `gen1` row in `remix-hydro` must not be read as "after remix" — it is identical to its `optim-nb-2` row by construction.
+
+### Skipped stages and other limits
+
+- **Empty stages produce no file.** `LegacySimulationTablesWriter` skips a stage whose table has no rows. This is a behaviour change: before per-stage tables, a header-only `optim-nb-2` file was written even when the second pass never ran (Expansion / MIP); now no file appears at all.
+- **Weekly simplex range only.** With `simplex-range = day` the week is solved in seven intervals that each rebuild the address table, so only the last day would be readable. The dump then no-ops with a one-time warning. That setting is deprecated — `parameters.cpp` logs an error for it — but the error does not stop the load, so the path is still reachable with `--force`.
+- **CSR-only quantities are out of reach.** Values that exist only in the patch's own structures (`...CSR`, `DENS`, `DtgMrgCsr`) have no LP variable in the weekly problem and therefore no entry in the address tables; the refresh cannot see them.
+- **Rows, not schema.** Stage tables use the same fill code as the optimisation-pass tables, so their column set and row conventions (§2) are identical; only the values differ.
