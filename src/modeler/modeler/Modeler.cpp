@@ -313,21 +313,7 @@ void Modeler::buildProblemsAndWriteMps()
         logs.info() << "Master number of constraints: " << masterProblem_ ->constraintCount();
     }
 
-    if (subproblems_.empty())
-    {
-        logs.warning() << "No subproblem was built. Check your scenario-scope and modeler parameters.";
-    }
-    else
-    {
-        logs.info() << "Number of subproblems built: " << subproblems_.size();
-        logs.info() << "Number of variables: " << subproblems_[0]->variableCount();
-        logs.info() << "Number of constraints: " << subproblems_[0]->constraintCount();
-    }
-
     exportStructureFile();
-
-    subproblems_.clear();
-    subproblemOptimEntityContainers_.clear();
 }
 
 void Modeler::exportStructureFile() const
