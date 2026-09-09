@@ -149,7 +149,7 @@ A week is not resolved in one shot: two optimisation passes are followed by post
 | `remix-hydro` | `simulation-table-{year}-remix-hydro` | `RemixHydroPostProcessCmd` (shave-peaks) | economy (both post-process lists) and adequacy |
 | `adq-patch-csr` | `simulation-table-{year}-adq-patch-csr` | `UpdateMrgPriceAfterCSRcmd`, i.e. once the whole CSR treatment has been applied | economy with `include-adq-patch = true` |
 
-Stage names are the file-name suffixes, declared once as constants on `IO::Outputs::OptimisationsSimulationTable`; they are part of the public output contract. The tables of one Monte-Carlo year live in a `std::map<std::string, SimulationTable>` created on demand (`tableForStage`) — `std::map` because its nodes are address-stable, so a pointer handed to the optim-1 call site stays valid once later stages are added, and because `SimulationTable` is move-only.
+Stages are the `IO::Outputs::Stage` enum (`src/io/outputs/include/antares/io/outputs/SimulationTableStage.h`); each maps to a file-name suffix through `stageName()`, and those strings are part of the public output contract. The tables of one Monte-Carlo year live in a `std::map<IO::Outputs::Stage, SimulationTable>` created on demand (`tableForStage`) — `std::map` because its nodes are address-stable, so a pointer handed to the optim-1 call site stays valid once later stages are added, and because `SimulationTable` is move-only. The enumerators are ordered as the weekly resolution reaches them, which is the order the map iterates in.
 
 ### Design: republish the results through the address tables
 

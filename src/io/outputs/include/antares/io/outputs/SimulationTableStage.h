@@ -7,12 +7,12 @@
 #include <optional>
 #include <string_view>
 
-// Kept in Antares::Data, not Antares::IO::Outputs: this header is pulled in by
-// study/parameters.h, which lands in a great many translation units -- several
-// of them legacy tools that do `using namespace Yuni; using namespace Antares;`
-// and then write a bare `IO::File::...`. Opening Antares::IO here would make
-// that `IO` ambiguous with Yuni::IO. OptimisationsSimulationTable re-exports the
-// names below into its own namespace for the code that already expects them.
+// This header is pulled in by study/parameters.h, which lands in a great many
+// translation units -- several of them legacy tools that do
+// `using namespace Yuni; using namespace Antares;` and then write a bare
+// `IO::File::...`. Those TUs must therefore never open `Antares::IO` (only
+// name it fully qualified, as parameters.h does with `Antares::IO::Outputs::Stage`),
+// or that `IO` turns ambiguous with `Yuni::IO`.
 namespace Antares::IO::Outputs
 {
 // A stage of the weekly resolution that can get its own simulation table. The
@@ -67,4 +67,4 @@ constexpr std::optional<Stage> stageFromName(std::string_view name)
     }
     return std::nullopt;
 }
-} // namespace Antares::Data
+} // namespace Antares::IO::Outputs
