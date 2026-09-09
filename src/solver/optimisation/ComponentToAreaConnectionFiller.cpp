@@ -108,7 +108,7 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
   const FillContext& ctx,
   const std::vector<IMipConstraint*>& constraints) const
 {
-    const auto& solverVariables = pb_.getVariables();
+    const auto& solverVariables = pb_->getVariables();
 
     for (unsigned h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
@@ -130,7 +130,7 @@ std::vector<IMipConstraint*> ComponentToAreaConnectionFiller::fetchConstraints(
     std::vector<IMipConstraint*> constraints(ctx.getLocalNumberOfTimeSteps());
     for (unsigned h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
-        constraints[h] = pb_.getConstraint(constraintsIndices[h]);
+        constraints[h] = pb_->getConstraint(constraintsIndices[h]);
     }
     return constraints;
 }

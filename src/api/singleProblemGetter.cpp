@@ -28,7 +28,7 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
     return impl_->getWeeklyData(id);
 }
 
-std::unique_ptr<LinearProblem::Api::ILinearProblem> SingleProblemGetter::getWeeklyProblem(
+std::shared_ptr<LinearProblem::Api::ILinearProblem> SingleProblemGetter::getWeeklyProblem(
   WeeklyProblemId id)
 {
     return impl_->getWeeklyProblem(id);
@@ -59,7 +59,7 @@ void SingleProblemGetter::printProblems() const
     impl_->printProblems();
 }
 
-Solver::ProblemEntity SingleProblemGetter::getMasterProblem() const
+std::shared_ptr<LinearProblem::Api::ILinearProblem> SingleProblemGetter::getMasterProblem() const
 {
     return impl_->getMasterProblem();
 }

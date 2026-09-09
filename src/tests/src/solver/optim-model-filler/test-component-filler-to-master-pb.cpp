@@ -31,7 +31,7 @@ public:
         variables(VariablesCreator::Create(nodeRegistry)),
         objectives(ObjectivesCreator::Create(nodeRegistry)),
         constraints(ConstraintsCreators::Create(nodeRegistry)),
-        linear_pb(false, "sirius"),
+        linear_pb(std::make_shared<OrtoolsLinearProblem>(false, "sirius")),
         optimEntityContainer(linear_pb)
     {
         createModel();
@@ -49,7 +49,7 @@ public:
     // We define a component under the form of a smart ptr because class Component default
     // constructor is forbidden, so we can't have : Component component;
     std::unique_ptr<Component> component;
-    OrtoolsLinearProblem linear_pb;
+    std::shared_ptr<OrtoolsLinearProblem> linear_pb;
 
     LinearProblemData dummy_data;
     ScenarioGroupRepository scenario_group_repo;
@@ -120,8 +120,8 @@ BOOST_FIXTURE_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_
     componentFiller.addVariables(time_scenario_ctx);
 
     // Assert
-    BOOST_CHECK_EQUAL(linear_pb.variableCount(), 1);
-    auto* var = linear_pb.lookupVariable("my-component.var-2");
+    BOOST_CHECK_EQUAL(linear_pb->variableCount(), 1);
+    auto* var = linear_pb->lookupVariable("my-component.var-2");
     BOOST_REQUIRE(var);
 
     BOOST_CHECK(bendersDecomposition.couplings().empty());
@@ -141,8 +141,8 @@ BOOST_FIXTURE_TEST_CASE(adding_variables_to_pb_actually_adds_only_subproblem_var
     componentFiller.addVariables(time_scenario_ctx);
 
     // Assert
-    BOOST_CHECK_EQUAL(linear_pb.variableCount(), 1);
-    auto* var = linear_pb.lookupVariable("my-component.var-1");
+    BOOST_CHECK_EQUAL(linear_pb->variableCount(), 1);
+    auto* var = linear_pb->lookupVariable("my-component.var-1");
     BOOST_REQUIRE(var);
     BOOST_CHECK(bendersDecomposition.couplings().empty());
 }
@@ -162,15 +162,15 @@ BOOST_FIXTURE_TEST_CASE(adding_objectives_to_pb_actually_adds_only_subproblem_ob
     componentFiller.addObjectives(time_scenario_ctx);
 
     // Assert
-    BOOST_CHECK_EQUAL(linear_pb.variableCount(), 2);
-    auto* var1 = linear_pb.lookupVariable("my-component.var-1");
-    auto* var2 = linear_pb.lookupVariable("my-component.var-2");
+    BOOST_CHECK_EQUAL(linear_pb->variableCount(), 2);
+    auto* var1 = linear_pb->lookupVariable("my-component.var-1");
+    auto* var2 = linear_pb->lookupVariable("my-component.var-2");
     BOOST_REQUIRE(var1);
     BOOST_REQUIRE(var2);
 
-    BOOST_CHECK_EQUAL(linear_pb.getObjectiveCoefficient(var1), 1);
+    BOOST_CHECK_EQUAL(linear_pb->getObjectiveCoefficient(var1), 1);
     // No objective associated to var2 found in problem
-    BOOST_CHECK_EQUAL(linear_pb.getObjectiveCoefficient(var2), 0);
+    BOOST_CHECK_EQUAL(linear_pb->getObjectiveCoefficient(var2), 0);
     BOOST_CHECK(bendersDecomposition.couplings().empty());
 }
 
@@ -185,7 +185,7 @@ BOOST_FIXTURE_TEST_CASE(adding_objectives_to_master_pb_actually_adds_only_master
                                     &bendersDecomposition);
 
     componentFiller.addVariables(time_scenario_ctx);
-    BOOST_CHECK_EQUAL(linear_pb.variableCount(), 0);
+    BOOST_CHECK_EQUAL(linear_pb->variableCount(), 0);
     BOOST_CHECK(bendersDecomposition.couplings().empty());
 }
 
@@ -203,7 +203,7 @@ BOOST_FIXTURE_TEST_CASE(mixed_variable_listed_in_benders_decomposition,
                                  &bendersDecomposition);
 
     masterFiller.addVariables(time_scenario_ctx);
-    BOOST_CHECK_EQUAL(linear_pb.variableCount(), 1);
+    BOOST_CHECK_EQUAL(linear_pb->variableCount(), 1);
 
     BOOST_REQUIRE_EQUAL(bendersDecomposition.couplings().size(), 1);
     // couplings = {{"master", {"my-component.var-1", 0}}
@@ -230,7 +230,7 @@ BOOST_FIXTURE_TEST_CASE(adding_two_constraints_one_sub_one_master_in_sub,
 
     componentFiller.addVariables(time_scenario_ctx);
     componentFiller.addConstraints(time_scenario_ctx);
-    BOOST_CHECK_EQUAL(linear_pb.getConstraints().size(), 1);
+    BOOST_CHECK_EQUAL(linear_pb->getConstraints().size(), 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(adding_two_constraints_one_sub_one_master_in_master,
@@ -245,6 +245,6 @@ BOOST_FIXTURE_TEST_CASE(adding_two_constraints_one_sub_one_master_in_master,
 
     masterFiller.addVariables(time_scenario_ctx);
     masterFiller.addConstraints(time_scenario_ctx);
-    BOOST_CHECK_EQUAL(linear_pb.getConstraints().size(), 1);
+    BOOST_CHECK_EQUAL(linear_pb->getConstraints().size(), 1);
 }
 BOOST_AUTO_TEST_SUITE_END()

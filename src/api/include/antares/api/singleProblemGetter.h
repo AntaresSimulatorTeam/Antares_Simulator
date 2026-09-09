@@ -15,10 +15,13 @@ namespace Antares::Solver::Implementation
 class SingleProblemGetter;
 }
 
+namespace Antares::LinearProblem
+{
+class ILinearProblem;
+} // namespace Antares::LinearProblem
+
 namespace Antares::Solver
 {
-struct ProblemEntity;
-
 class SingleProblemGetter final
 {
 public:
@@ -31,14 +34,14 @@ public:
     // NOTE week indices start at 1
     // year indices start at 0
     WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id);
-    std::unique_ptr<LinearProblem::Api::ILinearProblem> getWeeklyProblem(WeeklyProblemId id);
+    std::shared_ptr<LinearProblem::Api::ILinearProblem> getWeeklyProblem(WeeklyProblemId id);
 
     // TODO[FOM] This should not be necessary
     void writeNTCTimeSeries(const std::filesystem::path& outputDir);
     void writeStudyDescriptionFiles(const std::filesystem::path& outputDir);
     bool areWeeksIndependent() const;
     void printProblems() const;
-    Solver::ProblemEntity getMasterProblem() const;
+    std::shared_ptr<LinearProblem::Api::ILinearProblem> getMasterProblem() const;
 
 private:
     std::unique_ptr<Implementation::SingleProblemGetter> impl_;

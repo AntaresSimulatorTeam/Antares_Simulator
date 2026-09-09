@@ -461,7 +461,7 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
     Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepository = makeScenarioGroupRepo(
       components.front());
 
-    MockLinearProblem linearProblem = MockLinearProblem(true);
+    std::shared_ptr<MockLinearProblem> linearProblem = std::make_shared<MockLinearProblem>(true);
     Antares::LinearProblem::Api::FillContext ctx{0, 0, 0, 0, 0};
 
     Antares::LinearProblem::OptimEntityContainer optimEntityContainer = Antares::LinearProblem::

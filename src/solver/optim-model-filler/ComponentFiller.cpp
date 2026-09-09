@@ -115,7 +115,7 @@ class AddVariableVisitor
 {
 public:
     AddVariableVisitor(const Variable& variable,
-                       Api::ILinearProblem& linear_problem,
+                       std::shared_ptr<Api::ILinearProblem> linear_problem,
                        const VariableNames& variableNames,
                        const Dimensions& dimensions);
 
@@ -131,13 +131,13 @@ public:
 
 private:
     const bool isInteger_;
-    Api::ILinearProblem& linear_problem_;
+    std::shared_ptr<Api::ILinearProblem> linear_problem_;
     const VariableNames& variableNames_;
     const Dimensions& dims_;
 };
 
 AddVariableVisitor::AddVariableVisitor(const Variable& variable,
-                                       Api::ILinearProblem& linear_problem,
+                                       std::shared_ptr<Api::ILinearProblem> linear_problem,
                                        const VariableNames& variableNames,
                                        const Dimensions& dimensions):
     isInteger_(variable.Type() != ValueType::FLOAT),
@@ -154,7 +154,7 @@ void AddVariableVisitor::operator()(double lb, double ub) const
     {
         for (std::size_t j = 0; j < dims_.getTimesteps().size(); ++j)
         {
-            linear_problem_.addVariable(lb, ub, isInteger_, variableNames_.name(index));
+            linear_problem_->addVariable(lb, ub, isInteger_, variableNames_.name(index));
             index++;
         }
     }
@@ -176,7 +176,7 @@ void AddVariableVisitor::operator()(const std::vector<double>& lb, double ub) co
     {
         for (const auto t: dims_.getTimesteps())
         {
-            linear_problem_.addVariable(lb[t], ub, isInteger_, variableNames_.name(index));
+            linear_problem_->addVariable(lb[t], ub, isInteger_, variableNames_.name(index));
             index++;
         }
     }
@@ -197,7 +197,7 @@ void AddVariableVisitor::operator()(double lb, const std::vector<double>& ub) co
     {
         for (const auto t: dims_.getTimesteps())
         {
-            linear_problem_.addVariable(lb, ub[t], isInteger_, variableNames_.name(index));
+            linear_problem_->addVariable(lb, ub[t], isInteger_, variableNames_.name(index));
             index++;
         }
     }
@@ -220,7 +220,7 @@ void AddVariableVisitor::operator()(const std::vector<double>& lb,
     {
         for (const auto t: dims_.getTimesteps())
         {
-            linear_problem_.addVariable(lb[t], ub[t], isInteger_, variableNames_.name(index));
+            linear_problem_->addVariable(lb[t], ub[t], isInteger_, variableNames_.name(index));
             index++;
         }
     }
@@ -287,9 +287,9 @@ void ComponentFiller::addVariables(const Api::FillContext& ctx)
     for (const auto& variable: variables | locationFilter())
     {
         const auto& lb = valueOrDefault(variable.LowerBound(),
-                                        variable.Type() == ValueType::BOOL ? 0 : -pb_.infinity());
+                                        variable.Type() == ValueType::BOOL ? 0 : -pb_->infinity());
         const auto& ub = valueOrDefault(variable.UpperBound(),
-                                        variable.Type() == ValueType::BOOL ? 1 : pb_.infinity());
+                                        variable.Type() == ValueType::BOOL ? 1 : pb_->infinity());
 
         optimEntityContainer_.addStartColumn();
 
@@ -313,7 +313,7 @@ void ComponentFiller::addVariables(const Api::FillContext& ctx)
         {
             bendersDecomposition_->collectCouplingVariables(variableNames.names(),
                                                             static_cast<unsigned>(
-                                                              pb_.variableCount()));
+                                                              pb_->variableCount()));
         }
     }
 }
@@ -321,11 +321,11 @@ void ComponentFiller::addVariables(const Api::FillContext& ctx)
 void ComponentFiller::addStaticConstraint(const LinearConstraint& linear_constraint,
                                           const std::string& constraint_id) const
 {
-    auto* ct = pb_.addConstraint(linear_constraint.lb[0],
-                                 linear_constraint.ub[0],
-                                 component_.Id() + "." + constraint_id);
+    auto* ct = pb_->addConstraint(linear_constraint.lb[0],
+                                  linear_constraint.ub[0],
+                                  component_.Id() + "." + constraint_id);
 
-    const auto& solverVariables = pb_.getVariables();
+    const auto& solverVariables = pb_->getVariables();
     const auto& coefsPerVar = linear_constraint.coef_per_var[0];
 
     for (const auto& [index, value]: coefsPerVar)
@@ -341,7 +341,7 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
 {
     const auto dims = getDimensions(ctx);
 
-    const auto& solverVariables = pb_.getVariables();
+    const auto& solverVariables = pb_->getVariables();
     const auto firstTimestep = dims.getTimesteps().initialTime;
 
     const bool isDrop = constraint.outOfBoundsProcessingMode() == OutOfBoundsProcessingMode::DROP;
@@ -369,10 +369,10 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
                 continue;
             }
 
-            auto* ct = pb_.addConstraint(linear_constraints.lb[localIndex],
-                                         linear_constraints.ub[localIndex],
-                                         component_.Id() + "." + constraint_id + '_'
-                                           + std::to_string(t));
+            auto* ct = pb_->addConstraint(linear_constraints.lb[localIndex],
+                                          linear_constraints.ub[localIndex],
+                                          component_.Id() + "." + constraint_id + '_'
+                                            + std::to_string(t));
 
             const auto& coefsPerVar = linear_constraints.coef_per_var[localIndex];
             for (const auto& [index, value]: coefsPerVar)
@@ -386,10 +386,10 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
         for (const auto t: dims.getTimesteps())
         {
             const auto localIndex = static_cast<std::size_t>(t - firstTimestep);
-            auto* ct = pb_.addConstraint(linear_constraints.lb[localIndex],
-                                         linear_constraints.ub[localIndex],
-                                         component_.Id() + "." + constraint_id + '_'
-                                           + std::to_string(t));
+            auto* ct = pb_->addConstraint(linear_constraints.lb[localIndex],
+                                          linear_constraints.ub[localIndex],
+                                          component_.Id() + "." + constraint_id + '_'
+                                            + std::to_string(t));
 
             const auto& coefsPerVar = linear_constraints.coef_per_var[localIndex];
             for (const auto& [index, value]: coefsPerVar)
@@ -441,11 +441,11 @@ void ComponentFiller::addConstraints(const Api::FillContext& ctx)
 
 void ComponentFiller::addStaticObjective(const Optimization::LinearExpression& expression) const
 {
-    const auto& solverVariables = pb_.getVariables();
+    const auto& solverVariables = pb_->getVariables();
 
     for (const auto& [index, value]: expression)
     {
-        pb_.setObjectiveCoefficient(solverVariables[index].get(), value);
+        pb_->setObjectiveCoefficient(solverVariables[index].get(), value);
     }
 }
 
@@ -471,7 +471,7 @@ void ComponentFiller::addObjectives(const Api::FillContext& ctx)
         addStaticObjective(linearExpression);
         objectiveOffset += linearExpression.constant();
     }
-    pb_.setObjectiveOffset(pb_.getObjectiveOffset() + objectiveOffset);
+    pb_->setObjectiveOffset(pb_->getObjectiveOffset() + objectiveOffset);
 }
 
 VariabilityType ComponentFiller::getVariability(const Node* node, const Component& component) const

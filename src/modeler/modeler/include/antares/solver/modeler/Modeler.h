@@ -3,6 +3,7 @@
 
 #pragma once
 #include <filesystem>
+#include <memory>
 
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include "antares/io/outputs/SimulationTable.h"
@@ -33,19 +34,22 @@ namespace Antares::Solver
 {
 class ILoader;
 
-struct ProblemEntity
-{
-    std::unique_ptr<LinearProblem::Api::ILinearProblem> problem;
-    std::unique_ptr<LinearProblem::OptimEntityContainer> optimEntityContainer;
-};
+// Returns the shared problem, or nullptr if no variable is compatible with the location.
+std::shared_ptr<LinearProblem::Api::ILinearProblem> buildProblem(
+  const Antares::Solver::ModelerData& data,
+  const Config::Location& location,
+  const std::string& problemId,
+  LinearProblem::BendersDecomposition* bendersDecomposition,
+  const LinearProblem::Api::FillContext& timeScenarioCtx,
+  const ResolutionMode& resolutionMode,
+  const std::optional<std::string>& solver);
 
-ProblemEntity buildProblem(const Antares::Solver::ModelerData& data,
-                           const Config::Location& location,
-                           const std::string& problemId,
-                           LinearProblem::BendersDecomposition* bendersDecomposition,
-                           const LinearProblem::Api::FillContext& timeScenarioCtx,
-                           const ResolutionMode& resolutionMode,
-                           const std::optional<std::string>& solver);
+// Returns the optimisation entity container (which shares the problem's lifetime),
+// or nullptr if buildProblem did not build a problem for the location.
+std::unique_ptr<LinearProblem::OptimEntityContainer> buildSubProblemContainer(
+  Antares::Solver::ModelerData& data,
+  const LinearProblem::Api::FillContext& timeScenarioCtx,
+  const std::optional<std::string>& solver);
 
 std::filesystem::path makeOutputPath(std::filesystem::path studyPath);
 
@@ -73,13 +77,13 @@ public:
 
     ILoader& loader_; // gp : make it private
 
-    [[nodiscard]] const std::unique_ptr<LinearProblem::Api::ILinearProblem>& masterProblem() const
+    [[nodiscard]] const std::shared_ptr<LinearProblem::Api::ILinearProblem>& masterProblem() const
     {
         return masterProblem_;
     }
 
-    [[nodiscard]] const std::vector<std::unique_ptr<LinearProblem::Api::ILinearProblem>>&
-    subproblems() const
+    [[nodiscard]]
+    const std::vector<std::shared_ptr<LinearProblem::Api::ILinearProblem>>& subproblems() const
     {
         return subproblems_;
     }
@@ -95,10 +99,11 @@ private:
       const LinearProblem::OptimEntityContainer& subproblemOptimEntityContainer,
       const LinearProblem::Api::FillContext& timeScenarioCtx) const;
 
-    std::unique_ptr<LinearProblem::Api::ILinearProblem> masterProblem_ = nullptr;
-    std::vector<std::unique_ptr<LinearProblem::Api::ILinearProblem>> subproblems_;
-    std::unique_ptr<LinearProblem::OptimEntityContainer> subproblemOptimEntityContainer_ = nullptr;
-    std::unique_ptr<LinearProblem::Api::FillContext> timeScenarioCtx_ = nullptr;
+    // Shared with the containers referencing them.
+    std::shared_ptr<LinearProblem::Api::ILinearProblem> masterProblem_;
+    std::vector<std::shared_ptr<LinearProblem::Api::ILinearProblem>> subproblems_;
+    std::unique_ptr<LinearProblem::OptimEntityContainer> subproblemOptimEntityContainer_;
+    std::unique_ptr<LinearProblem::Api::FillContext> timeScenarioCtx_;
     LinearProblem::Api::IMipSolution* subProbSolution_ = nullptr;
     ModelerParameters parameters_;
     ModelerData data_;

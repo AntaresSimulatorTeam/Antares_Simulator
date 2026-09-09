@@ -766,7 +766,7 @@ problem-2-2--optim-nb-1	component.x	1008
 
 void checkMasterProblem(const Implementation::SingleProblemGetter& getter)
 {
-    auto [masterPb, _] = getter.getMasterProblem();
+    auto masterPb = getter.getMasterProblem();
     BOOST_CHECK_EQUAL(masterPb->constraintCount(), 1);
     BOOST_CHECK_EQUAL(masterPb->variableCount(), 1);
     const auto& x = masterPb->getVariables().at(0);
