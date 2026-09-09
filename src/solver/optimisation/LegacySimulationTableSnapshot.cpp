@@ -113,12 +113,17 @@ unsigned LegacyWeeklyBlock(const PROBLEME_HEBDO& problemeHebdo)
     return static_cast<unsigned>(problemeHebdo.HeureDansLAnnee) / Constants::nbHoursInAWeek;
 }
 
-void DumpSimulationTableAfterPostProcess(SimulationTable& simulationTable,
+void DumpSimulationTableAfterPostProcess(SimulationTable* simulationTable,
                                          PROBLEME_HEBDO& problemeHebdo,
                                          const FillContext& fillContext,
                                          unsigned currentBlock,
                                          const InactiveComponentsAnalyzer* inactiveComponents)
 {
+    if (simulationTable == nullptr)
+    {
+        return;
+    }
+
     if (!problemeHebdo.OptimisationAuPasHebdomadaire)
     {
         std::call_once(dailyRangeWarningFlag,
@@ -136,9 +141,11 @@ void DumpSimulationTableAfterPostProcess(SimulationTable& simulationTable,
     if (const auto& solved = problemeHebdo.lastSolvedModelerProblem;
         solved && problemeHebdo.modelerData)
     {
+
         IO::Outputs::FillSimulationTable(simulationTable,
                                          *solved->problem,
                                          solved->objectiveValue,
+
                                          *problemeHebdo.modelerData,
                                          *solved->entities,
                                          fillContext,
