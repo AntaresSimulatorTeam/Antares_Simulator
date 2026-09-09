@@ -298,21 +298,60 @@ def check_pmin_pmax(context, area, prod_name, min_p, max_p):
             lambda n: n * min_p)).all(), f"min_p constraint not respected during year {year}"
 
 
+def check_margin_price_value(context, area, year, value):
+    actual = context.soh.get_annual_margin_price(area, year)
+    assert_double_close(value, actual, 0.001, "Margin price")
+
+
+def check_load_value(context, area, year, value):
+    actual = context.soh.get_annual_load(area, year)
+    assert_double_close(value, actual, 0.001, "Load")
+
+
+def check_gas_value(context, area, year, value):
+    actual = context.soh.get_annual_gas(area, year)
+    assert_double_close(value, actual, 0.001, "Gas production")
+
+
+def check_hard_coal_value(context, area, year, value):
+    actual = context.soh.get_annual_hard_coal(area, year)
+    assert_double_close(value, actual, 0.001, "Hard coal production")
+
+
+def check_number_of_dispatched_units_value(context, area, year, value):
+    actual = context.soh.get_annual_n_dispatched_units(area, year)
+    assert_double_close(value, actual, 0.001, "Number of dispatched units")
+
+
 @then("the annual results are")
 def check_annual_results(context):
+    # Liste des clés pour lesquelles une vérification existe
+    check_keys = {
+        "hydro production": check_hydro_production_value,
+        "hydro pumping": check_hydro_pumping_value,
+        "balance": check_balance_value,
+        "spilled energy": check_spilled_energy_value,
+        "unsupplied energy": check_unsupplied_energy_value,
+        "margin price": check_margin_price_value,
+        "load": check_load_value,
+        "Gas": check_gas_value,
+        "HARD COAL": check_hard_coal_value,
+        "number of dispatched units": check_number_of_dispatched_units_value,
+    }
     for row in context.table:
         area = row["area"]
         year = int(row["year"])
-        if should_check(row, "hydro production"):
-            check_hydro_production_value(context, area, year, float(row["hydro production"]))
-        if should_check(row, "hydro pumping"):
-            check_hydro_pumping_value(context, area, year, float(row["hydro pumping"]))
-        if should_check(row, "balance"):
-            check_balance_value(context, area, year, float(row["balance"]))
-        if should_check(row, "spilled energy"):
-            check_spilled_energy_value(context, area, year, float(row["spilled energy"]))
-        if should_check(row, "unsupplied energy"):
-            check_unsupplied_energy_value(context, area, year, float(row["unsupplied energy"]))
+        # Vérifier que toutes les clés (hors area, year) ont une vérification
+        for key in row.headings:
+            if key in ("area", "year"):
+                continue
+            if key not in check_keys:
+                raise AssertionError(
+                    f"Key '{key}' has no check implemented. Implement the corresponding check or remove the key from expectations.")
+        # Effectuer les vérifications existantes
+        for key, check_func in check_keys.items():
+            if should_check(row, key):
+                check_func(context, area, year, float(row[key]))
 
 
 @then("simulation tables match the references")
