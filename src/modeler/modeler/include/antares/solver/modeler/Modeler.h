@@ -84,6 +84,10 @@ public:
     }
 
     // gp : defined only for unit test, which is not a good sign on design.
+    /// Returns the solution of the last solved subproblem. The solution is owned by that
+    /// subproblem (see ILinearProblem::solve), which is retained in subproblems(), so the
+    /// pointer stays valid for the lifetime of this Modeler after run() in
+    /// SEQUENTIAL_SUBPROBLEMS mode. May be null if no subproblem was solved.
     LinearProblem::Api::IMipSolution* subProbSolution();
 
 private:

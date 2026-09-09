@@ -6,12 +6,10 @@
 #include <algorithm>
 #include <cctype>
 #include <fmt/format.h>
-#include <nlohmann/json.hpp>
 #include <set>
 #include <stdexcept>
 #include <string>
 
-#include <antares/io/file.h>
 #include <antares/logs/logs.h>
 
 namespace Antares::Solver
@@ -22,7 +20,7 @@ namespace
 
 [[noreturn]] void throwInvalidEntry(const std::string& entry)
 {
-    throw std::invalid_argument(
+    throw ModelerError(
       fmt::format("Invalid scenario-scope entry '{}': expected an integer, a quoted integer or an "
                   "inclusive 'a-b' range of non-negative integers",
                   entry));
@@ -36,6 +34,19 @@ namespace
  */
 std::set<unsigned> expandEntry(const std::string& entry)
 {
+    // A leading sign means the entry is a single signed number, not a range. The
+    // documented grammar only allows unsigned non-negative integers, so a '-' yields a
+    // dedicated message and a '+' is a plain format error.
+    if (!entry.empty() && (entry[0] == '-' || entry[0] == '+'))
+    {
+        if (entry[0] == '-')
+        {
+            throw ModelerError(
+              fmt::format("Invalid scenario-scope entry '{}': indices must be >= 0", entry));
+        }
+        throwInvalidEntry(entry);
+    }
+
     std::set<unsigned> result;
 
     // Parse a token that must be a plain (unsigned) run of digits.
@@ -50,19 +61,6 @@ std::set<unsigned> expandEntry(const std::string& entry)
         }
         return static_cast<unsigned>(std::stoul(token));
     };
-
-    // A leading sign means the entry is a single signed number, not a range. The
-    // documented grammar only allows unsigned non-negative integers, so a '-' yields a
-    // dedicated message and a '+' is a plain format error.
-    if (!entry.empty() && (entry[0] == '-' || entry[0] == '+'))
-    {
-        if (entry[0] == '-')
-        {
-            throw std::invalid_argument(
-              fmt::format("Invalid scenario-scope entry '{}': indices must be >= 0", entry));
-        }
-        throwInvalidEntry(entry);
-    }
 
     // An entry is either a range "a-b" or a single index.
     const auto dashPos = entry.find('-');
@@ -107,85 +105,24 @@ std::set<unsigned> expandEntries(const std::vector<std::string>& entries)
     return indices;
 }
 
-std::vector<std::string> entriesFromJson(const std::filesystem::path& playlistFile)
-{
-    const auto content = IO::readFile(playlistFile);
-    nlohmann::json json;
-    try
-    {
-        json = nlohmann::json::parse(content);
-    }
-    catch (const nlohmann::json::parse_error& e)
-    {
-        // e.what() already carries the line/column position; add the file path so the
-        // broken playlist can be located (the missing-file case is reported by IO::readFile).
-        throw std::invalid_argument(
-          fmt::format("Invalid playlist file '{}': {}", playlistFile.string(), e.what()));
-    }
-
-    if (!json.is_array())
-    {
-        throw std::invalid_argument(
-          fmt::format("Invalid playlist file '{}': expected a JSON array", playlistFile.string()));
-    }
-
-    std::vector<std::string> entries;
-    entries.reserve(json.size());
-    for (const auto& item: json)
-    {
-        if (item.is_number_integer())
-        {
-            entries.push_back(std::to_string(item.get<long long>()));
-        }
-        else if (item.is_string())
-        {
-            entries.push_back(item.get<std::string>());
-        }
-        else
-        {
-            throw std::invalid_argument(
-              fmt::format("Invalid playlist file '{}': each element must be an integer or string",
-                          playlistFile.string()));
-        }
-    }
-    return entries;
-}
-
 } // namespace
 
-std::vector<unsigned> resolveScenarioScopeScenarios(const ScenarioScope& scope,
-                                                    const std::filesystem::path& studyPath)
+std::vector<unsigned> resolveScenarioScopeScenarios(const ScenarioScope& scope)
 {
     const bool hasInclude = !scope.include.empty();
-    const bool hasPlaylist = scope.playlistFile.has_value();
     const bool hasExclude = !scope.exclude.empty();
 
-    if (hasInclude && hasPlaylist)
+    if (hasExclude && !hasInclude)
     {
-        throw std::invalid_argument("scenario-scope: 'include' and 'playlist-file' are mutually "
-                                    "exclusive");
+        throw ModelerError("scenario-scope: 'exclude' can only be used with 'include'");
     }
-    if (hasExclude && !hasInclude && !hasPlaylist)
-    {
-        throw std::invalid_argument("scenario-scope: 'exclude' can only be used with 'include' or "
-                                    "'playlist-file'");
-    }
-    if (!hasInclude && !hasPlaylist)
+    if (!hasInclude)
     {
         // No scenario-scope key at all, or an empty block: run scenario 0 only.
         return {0};
     }
 
-    std::vector<std::string> include = scope.include;
-    if (hasPlaylist)
-    {
-        const auto playlistPath = scope.playlistFile->is_absolute()
-                                    ? *scope.playlistFile
-                                    : studyPath / *scope.playlistFile;
-        include = entriesFromJson(playlistPath);
-    }
-
-    auto base = expandEntries(include);
+    auto base = expandEntries(scope.include);
     const auto excludes = expandEntries(scope.exclude);
     for (const auto excluded: excludes)
     {

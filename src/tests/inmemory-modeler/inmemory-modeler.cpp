@@ -155,14 +155,15 @@ void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
   Nodes::Node* objective)
 {
     std::vector<Variable> variables;
-    for (const auto& [id, type, lb, ub, timeDependent, scenarioDependent]: variablesData)
+    for (const auto& [id, type, lb, ub, timeDependent, scenarioDependent, location]: variablesData)
     {
         variables.emplace_back(id,
                                createExpression(lb, nodeRegistry),
                                createExpression(ub, nodeRegistry),
                                type,
                                fromBool<TimeDependent>(timeDependent),
-                               fromBool<ScenarioDependent>(scenarioDependent));
+                               fromBool<ScenarioDependent>(scenarioDependent),
+                               location);
     }
     std::vector<Constraint> constraints;
     for (const auto& [id, expression, outOfBoundsProcessingMode]: constraintsData)
@@ -195,14 +196,15 @@ void LinearProblemBuildingFixture::createModelWithMultipleObjectives(
   std::vector<Nodes::Node*> objectiveNodes)
 {
     std::vector<Variable> variables;
-    for (const auto& [id, type, lb, ub, timeDependent, scenarioDependent]: variablesData)
+    for (const auto& [id, type, lb, ub, timeDependent, scenarioDependent, location]: variablesData)
     {
         variables.emplace_back(id,
                                createExpression(lb, nodeRegistry),
                                createExpression(ub, nodeRegistry),
                                type,
                                fromBool<TimeDependent>(timeDependent),
-                               fromBool<ScenarioDependent>(scenarioDependent));
+                               fromBool<ScenarioDependent>(scenarioDependent),
+                               location);
     }
     std::vector<Constraint> constraints;
     for (const auto& [id, expression, outOfBoundsProcessingMode]: constraintsData)
