@@ -309,8 +309,8 @@ void Modeler::buildProblemsAndWriteMps()
         const auto mps = IO::Outputs::MPSGenerator(*masterProblem_, "master", true).run();
         Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / "master.mps", mps);
 
-        logs.info() << "Master number of variables: " << masterProblem_ ->variableCount();
-        logs.info() << "Master number of constraints: " << masterProblem_ ->constraintCount();
+        logs.info() << "Master number of variables: " << masterProblem_->variableCount();
+        logs.info() << "Master number of constraints: " << masterProblem_->constraintCount();
     }
 
     exportStructureFile();
