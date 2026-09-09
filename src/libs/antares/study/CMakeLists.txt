@@ -296,6 +296,7 @@ target_link_libraries(study
         Antares::date
         Antares::inifile
         Antares::io
+        Antares::simulation-table
         Antares::study-utils
         Antares::optimization-options
         Antares::correlation

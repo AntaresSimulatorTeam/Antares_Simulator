@@ -222,7 +222,7 @@ bool Adequacy::year(Variable::State& state,
                 // previous week's.
                 Antares::Optimization::DumpSimulationTableStage(
                   simulationTables.get(),
-                  Antares::IO::Outputs::OptimisationsSimulationTable::remixHydroStage,
+                  Antares::IO::Outputs::Stage::remixHydro,
                   currentProblem);
             }
             catch (AssertionError& ex)

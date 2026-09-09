@@ -137,7 +137,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Validated here, so an unknown stage name on the command line is reported
     // before the study is even loaded; applied after the load (below), where it
     // overrides what generaldata.ini asked for.
-    std::optional<std::set<std::string>> stagesFromCommandLine;
+    std::optional<std::set<IO::Outputs::Stage>> stagesFromCommandLine;
     if (!pSettings.simulationTableStagesStr.empty())
     {
         stagesFromCommandLine = IO::Outputs::OptimisationsSimulationTable::parseStageSelection(

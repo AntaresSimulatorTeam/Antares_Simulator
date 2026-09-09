@@ -3,81 +3,98 @@
 
 #include "include/antares/io/outputs/OptimisationsSimulationTable.h"
 
-#include <algorithm>
 #include <sstream>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
 namespace Antares::IO::Outputs
 {
-const std::vector<std::string>& OptimisationsSimulationTable::allStages()
+namespace
 {
-    static const std::vector<std::string> stages = {firstOptimStage,
-                                                    secondOptimStage,
-                                                    remixHydroStage,
-                                                    adequacyPatchStage};
-    return stages;
-}
-
-std::set<std::string> OptimisationsSimulationTable::parseStageSelection(const std::string& input,
-                                                                        const std::string& source)
+// Split on ',', dropping empty fields and trimming the spaces a user naturally
+// writes around each name. No business logic here: "all" and unknown names come
+// out as-is.
+std::vector<std::string> splitStageList(const std::string& input)
 {
-    std::set<std::string> selection;
-    bool everyStage = false;
-
+    std::vector<std::string> names;
     std::istringstream stream(input);
-    std::string name;
-    while (std::getline(stream, name, ','))
+    std::string field;
+    while (std::getline(stream, field, ','))
     {
-        // Tolerate the spaces a user naturally writes after a comma.
-        const auto first = name.find_first_not_of(" \t");
+        const auto first = field.find_first_not_of(" \t");
         if (first == std::string::npos)
         {
             continue;
         }
-        name = name.substr(first, name.find_last_not_of(" \t") - first + 1);
+        const auto last = field.find_last_not_of(" \t");
+        names.push_back(field.substr(first, last - first + 1));
+    }
+    return names;
+}
 
-        // Noted, not returned on: a name after it still has to be a real one,
-        // so a typo in `all,optim-nb-3` is reported rather than swallowed.
+[[noreturn]] void rejectUnknownStage(const std::string& name, const std::string& source)
+{
+    std::ostringstream message;
+    message << "Invalid value for " << source << ": '" << name << "' (expected all";
+    for (const auto stage: allStages)
+    {
+        message << ", " << stageName(stage);
+    }
+    message << ")";
+    throw std::runtime_error(message.str());
+}
+
+// Turn the raw names into stages, applying the "all" keyword. Every name still
+// has to be a real stage, so a typo in `all,optim-nb-3` is reported rather than
+// swallowed. An empty result means "every stage": that is what "all", and an
+// empty list, resolve to.
+std::vector<Stage> resolveStages(const std::vector<std::string>& names, const std::string& source)
+{
+    bool everyStage = false;
+    std::vector<Stage> stages;
+    for (const auto& name: names)
+    {
         if (name == "all")
         {
             everyStage = true;
             continue;
         }
 
-        const auto& known = allStages();
-        if (std::find(known.begin(), known.end(), name) == known.end())
+        const auto stage = stageFromName(name);
+        if (!stage)
         {
-            std::ostringstream message;
-            message << "Invalid value for " << source << ": '" << name << "' (expected all,";
-            for (const auto& stage: known)
-            {
-                message << ", " << stage;
-            }
-            message << ")";
-            throw std::runtime_error(message.str());
+            rejectUnknownStage(name, source);
         }
-        selection.insert(name);
+        stages.push_back(*stage);
     }
+    return everyStage ? std::vector<Stage>{} : stages;
+}
+} // namespace
 
-    return everyStage ? std::set<std::string>{} : selection;
+std::set<Stage> OptimisationsSimulationTable::parseStageSelection(const std::string& input,
+                                                                  const std::string& source)
+{
+    const auto stages = resolveStages(splitStageList(input), source);
+    return {stages.begin(), stages.end()};
 }
 
-void OptimisationsSimulationTable::selectStages(std::set<std::string> stages)
+void OptimisationsSimulationTable::selectStages(std::set<Stage> stages)
 {
     selectedStages_ = std::move(stages);
 }
 
 SimulationTable* OptimisationsSimulationTable::firstOptimSimulationTable()
 {
-    return tableForStage(firstOptimStage);
+    return tableForStage(Stage::firstOptim);
 }
 
 SimulationTable* OptimisationsSimulationTable::secondOptimSimulationTable()
 {
-    return tableForStage(secondOptimStage);
+    return tableForStage(Stage::secondOptim);
 }
 
-SimulationTable* OptimisationsSimulationTable::tableForStage(const std::string& stage)
+SimulationTable* OptimisationsSimulationTable::tableForStage(Stage stage)
 {
     if (!isStageSelected(stage))
     {
@@ -86,17 +103,17 @@ SimulationTable* OptimisationsSimulationTable::tableForStage(const std::string& 
     return &stages_.try_emplace(stage).first->second;
 }
 
-bool OptimisationsSimulationTable::isStageSelected(const std::string& stage) const
+bool OptimisationsSimulationTable::isStageSelected(Stage stage) const
 {
     return selectedStages_.empty() || selectedStages_.contains(stage);
 }
 
 bool OptimisationsSimulationTable::anyPostProcessStageSelected() const
 {
-    return isStageSelected(remixHydroStage) || isStageSelected(adequacyPatchStage);
+    return isStageSelected(Stage::remixHydro) || isStageSelected(Stage::adequacyPatchCsr);
 }
 
-const std::map<std::string, SimulationTable>& OptimisationsSimulationTable::stages() const
+const std::map<Stage, SimulationTable>& OptimisationsSimulationTable::stages() const
 {
     return stages_;
 }

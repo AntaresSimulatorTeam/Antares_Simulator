@@ -5,6 +5,7 @@ set(SRC_SIMU_TABLE
         SimulationTable.cpp
         OptimisationsSimulationTable.cpp
         include/antares/io/outputs/OptimisationsSimulationTable.h
+        include/antares/io/outputs/SimulationTableStage.h
         include/antares/io/outputs/SimulationTableEntry.h
         include/antares/io/outputs/SimulationTable.h
         include/antares/io/outputs/columns.h

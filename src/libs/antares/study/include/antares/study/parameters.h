@@ -15,6 +15,7 @@
 #include <antares/optimization-options/options.h>
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 #include <antares/study/output-selection.h>
+#include <antares/io/outputs/SimulationTableStage.h>
 #include <antares/writer/result_format.h>
 #include "antares/antares/antares.h"
 #include "antares/study/fwd.h"
@@ -427,9 +428,10 @@ public:
     Writer::TableFormat simuTableFormat = Writer::TableFormat::CSV;
 
     // Which stages of the weekly resolution get a simulation table. Empty means
-    // every stage. The names are validated against the stage list when the
-    // command line is resolved, so anything stored here is already known.
-    std::set<std::string> simulationTableStages;
+    // every stage. Parsed from `simulationTableStagesStr` (or the command line)
+    // when the selection is resolved, so any unknown name has already been
+    // rejected by the time this is filled.
+    std::set<IO::Outputs::Stage> simulationTableStages;
 
     // The raw `simulation-table-stages` value read from generaldata.ini, before
     // validation. Resolved into `simulationTableStages` once the command line
