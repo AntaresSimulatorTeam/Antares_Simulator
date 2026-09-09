@@ -20,7 +20,7 @@ namespace
 
 [[noreturn]] void throwInvalidEntry(const std::string& entry)
 {
-    throw ModelerError(
+    throw InvalidScenarioScopeError(
       fmt::format("Invalid scenario-scope entry '{}': expected an integer, a quoted integer or an "
                   "inclusive 'a-b' range of non-negative integers",
                   entry));
@@ -41,7 +41,7 @@ std::set<unsigned> expandEntry(const std::string& entry)
     {
         if (entry[0] == '-')
         {
-            throw ModelerError(
+            throw InvalidScenarioScopeError(
               fmt::format("Invalid scenario-scope entry '{}': indices must be >= 0", entry));
         }
         throwInvalidEntry(entry);
@@ -76,7 +76,7 @@ std::set<unsigned> expandEntry(const std::string& entry)
         const auto last = parseDigits(secondPart);
         if (first > last)
         {
-            throw std::invalid_argument(
+            throw InvalidScenarioScopeError(
               fmt::format("Invalid scenario-scope entry '{}': range start must be <= range end",
                           entry));
         }
@@ -114,7 +114,8 @@ std::vector<unsigned> resolveScenarioScopeScenarios(const ScenarioScope& scope)
 
     if (hasExclude && !hasInclude)
     {
-        throw ModelerError("scenario-scope: 'exclude' can only be used with 'include'");
+        throw InvalidScenarioScopeError(
+          "scenario-scope: 'exclude' can only be used with 'include'");
     }
     if (!hasInclude)
     {

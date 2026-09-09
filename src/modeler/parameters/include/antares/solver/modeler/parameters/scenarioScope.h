@@ -11,11 +11,11 @@ namespace Antares::Solver
 {
 
 /// Error thrown by the modeler when the scenario scope selection is invalid
-class ModelerError: public std::invalid_argument
+class InvalidScenarioScopeError: public std::runtime_error
 {
 public:
-    explicit ModelerError(const std::string& s):
-        std::invalid_argument(s)
+    explicit InvalidScenarioScopeError(const std::string& s):
+        std::runtime_error(s)
     {
     }
 };

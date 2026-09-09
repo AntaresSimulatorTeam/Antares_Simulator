@@ -213,6 +213,11 @@ LocationAnalysis analyzeLocation(const ModelerData& data, const Config::Location
     return result;
 }
 
+std::string makeProblemId(unsigned year)
+{
+    return std::to_string(year) + "-0";
+}
+
 std::unique_ptr<ILinearProblem> getProblem(bool isMip,
                                            const ResolutionMode& resolutionMode,
                                            const std::optional<std::string>& solver)
@@ -300,7 +305,7 @@ void Modeler::buildProblemsAndWriteMps()
         {
             continue;
         }
-        const auto name = std::to_string(scenarios_[i]) + "-0";
+        const auto name = makeProblemId(scenarios_[i]);
         const auto mps = IO::Outputs::MPSGenerator(*subproblem, name, true).run();
         Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / (name + ".mps"), mps);
     }
@@ -322,6 +327,17 @@ void Modeler::exportStructureFile() const
     const BendersDecompositionWriter writer(data_.bendersDecomposition);
     std::ofstream of(outputPath_ / "structure.txt");
     writer.write(of);
+}
+
+ProblemEntity Modeler::buildSubProblem(unsigned year)
+{
+    return buildProblem(data_,
+                        Config::Location::SUBPROBLEMS,
+                        makeProblemId(year),
+                        &data_.bendersDecomposition,
+                        createFillContext(year),
+                        data_.resolutionMode,
+                        parameters_.solver);
 }
 
 void Modeler::buildMasterProblem()
@@ -359,15 +375,7 @@ void Modeler::buildProblems()
 
     for (const unsigned year: scenarios_)
     {
-        auto fillContext = createFillContext(year);
-        auto problemId = std::to_string(year) + "-0";
-        auto entities = buildProblem(data_,
-                                     Config::Location::SUBPROBLEMS,
-                                     problemId,
-                                     &data_.bendersDecomposition,
-                                     fillContext,
-                                     data_.resolutionMode,
-                                     parameters_.solver);
+        auto entities = buildSubProblem(year);
         subproblems_.emplace_back(std::move(entities.problem));
         subproblemOptimEntityContainers_.emplace_back(std::move(entities.optimEntityContainer));
     }
@@ -421,17 +429,12 @@ void Modeler::run()
         for (const unsigned year: scenarios_)
         {
             auto fillContext = createFillContext(year);
-            auto problemId = std::to_string(year) + "-0";
-            auto entities = buildProblem(data_,
-                                         Config::Location::SUBPROBLEMS,
-                                         problemId,
-                                         &data_.bendersDecomposition,
-                                         fillContext,
-                                         data_.resolutionMode,
-                                         parameters_.solver);
+            auto entities = buildSubProblem(year);
 
             if (!entities.problem)
             {
+                logs.warning() << fmt::format("No subproblem was built for scenario {}: skipping",
+                                              year);
                 continue;
             }
 
@@ -440,7 +443,7 @@ void Modeler::run()
 
             if (parameters_.exportMps)
             {
-                const auto name = std::to_string(year) + "-0";
+                const auto name = makeProblemId(year);
                 const auto mps = IO::Outputs::MPSGenerator(*entities.problem, name, true).run();
                 Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / (name + ".mps"), mps);
 
