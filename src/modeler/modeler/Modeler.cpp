@@ -200,6 +200,7 @@ std::shared_ptr<ILinearProblem> buildProblem(const ModelerData& data,
         return nullptr;
     }
     auto problem = getProblem(isMip, resolutionMode, solver);
+    bendersDecomposition->setCurrentProblemId(problemId);
     OptimEntityContainer temporaryContainer(problem);
     SystemLinearProblemBuilder(data.system.get(),
                                data.dataSeries.get(),
