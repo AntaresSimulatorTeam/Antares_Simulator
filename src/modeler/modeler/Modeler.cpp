@@ -308,8 +308,26 @@ void Modeler::buildProblemsAndWriteMps()
     {
         const auto mps = IO::Outputs::MPSGenerator(*masterProblem_, "master", true).run();
         Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / "master.mps", mps);
+
+        logs.info() << "Master number of variables: " << masterProblem_ ->variableCount();
+        logs.info() << "Master number of constraints: " << masterProblem_ ->constraintCount();
     }
+
+    if (subproblems_.empty())
+    {
+        logs.warning() << "No subproblem was built. Check your scenario-scope and modeler parameters.";
+    }
+    else
+    {
+        logs.info() << "Number of subproblems built: " << subproblems_.size();
+        logs.info() << "Number of variables: " << subproblems_[0]->variableCount();
+        logs.info() << "Number of constraints: " << subproblems_[0]->constraintCount();
+    }
+
     exportStructureFile();
+
+    subproblems_.clear();
+    subproblemOptimEntityContainers_.clear();
 }
 
 void Modeler::exportStructureFile() const
@@ -408,13 +426,6 @@ void Modeler::run()
         }
 
         buildProblemsAndWriteMps();
-
-        // The CLI Benders path only exports the MPS/structure files; release the subproblems
-        // so a large scenario scope does not keep every problem in memory for the rest of the
-        // run. The public API (ModelerProblems) calls buildProblemsAndWriteMps() directly and
-        // keeps them alive via subproblems().
-        subproblems_.clear();
-        subproblemOptimEntityContainers_.clear();
     }
     else if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
     {

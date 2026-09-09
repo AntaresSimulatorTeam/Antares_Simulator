@@ -21,8 +21,6 @@ public:
     explicit ModelerProblems(const std::filesystem::path& modelerPath);
     ~ModelerProblems();
 
-    void logSize() const;
-
 private:
     std::unique_ptr<Implementation::ModelerProblems> impl_;
 };

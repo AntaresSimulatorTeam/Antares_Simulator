@@ -38,7 +38,6 @@ int main(const int argc, const char** argv)
     {
         Antares::logs.info() << "Loading Modeler study...";
         const ModelerProblems modelerProblems(studyPath);
-        modelerProblems.logSize();
     }
     else
     {
