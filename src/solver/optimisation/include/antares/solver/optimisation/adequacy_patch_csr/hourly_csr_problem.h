@@ -72,8 +72,8 @@ public:
         double temp = pow(10, -adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
         belowThisThresholdSetToZero = std::min(temp, 0.1);
 
-        gemsPart_ = makeGemsPart(problemeHebdo_);
         allocateProblem();
+        gemsPart_ = makeGemsPart(problemeHebdo_);
     }
 
     HourlyCSRProblem(const HourlyCSRProblem&) = delete;
