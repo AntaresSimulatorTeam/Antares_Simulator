@@ -9,7 +9,7 @@ namespace Antares::Optimization
 {
 
 void DumpSimulationTableStage(IO::Outputs::OptimisationsSimulationTable* tables,
-                              IO::Outputs::Stage stage,
+                              Data::Stage stage,
                               PROBLEME_HEBDO& problemeHebdo)
 {
     if (tables == nullptr)

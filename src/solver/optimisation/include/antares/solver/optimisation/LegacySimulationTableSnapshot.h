@@ -106,7 +106,7 @@ void DumpSimulationTableAfterPostProcess(
 // drags in the solver call chain; callers that already have a fill context
 // should use the overload above.
 void DumpSimulationTableStage(Antares::IO::Outputs::OptimisationsSimulationTable* tables,
-                              Antares::IO::Outputs::Stage stage,
+                              Antares::Data::Stage stage,
                               PROBLEME_HEBDO& problemeHebdo);
 
 } // namespace Antares::Optimization

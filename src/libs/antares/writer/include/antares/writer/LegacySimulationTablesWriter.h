@@ -23,7 +23,7 @@ public:
     void write(const IO::Outputs::OptimisationsSimulationTable& tables) const;
 
 private:
-    void writeForStage(const IO::Outputs::SimulationTable& table, IO::Outputs::Stage stage) const;
+    void writeForStage(const IO::Outputs::SimulationTable& table, Data::Stage stage) const;
     unsigned year_ = 0;
     TableFormat tableFormat_;
     const std::filesystem::path folder_;

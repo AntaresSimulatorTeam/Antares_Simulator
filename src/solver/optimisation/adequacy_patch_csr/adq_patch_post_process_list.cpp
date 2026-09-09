@@ -28,7 +28,7 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(
 
     post_process_list.push_back(std::make_unique<DumpSimulationTablePostProcessCmd>(
       problemeHebdo_,
-      IO::Outputs::Stage::remixHydro,
+      Data::Stage::remixHydro,
       simulationTables));
 
     if (params.adqPatchDebug)
@@ -55,7 +55,7 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(
     // once the whole patch has been applied.
     post_process_list.push_back(std::make_unique<DumpSimulationTablePostProcessCmd>(
       problemeHebdo_,
-      IO::Outputs::Stage::adequacyPatchCsr,
+      Data::Stage::adequacyPatchCsr,
       simulationTables));
 
     if (params.adqPatchDebug)

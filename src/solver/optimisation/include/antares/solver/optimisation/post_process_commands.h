@@ -144,13 +144,13 @@ class DumpSimulationTablePostProcessCmd final: public basePostProcessCommand
 {
 public:
     DumpSimulationTablePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
-                                      IO::Outputs::Stage stage,
+                                      Data::Stage stage,
                                       IO::Outputs::OptimisationsSimulationTable* tables);
 
     void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
-    const IO::Outputs::Stage stage_;
+    const Data::Stage stage_;
     IO::Outputs::OptimisationsSimulationTable* const tables_;
 };
 
