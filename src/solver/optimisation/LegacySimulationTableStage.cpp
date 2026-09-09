@@ -20,7 +20,7 @@ void DumpSimulationTableStage(IO::Outputs::OptimisationsSimulationTable* tables,
     // The whole week is one block here: post-processing runs once the week is
     // solved, not once per optimisation interval, hence NumIntervalle = 0.
     const auto fillContext = buildFillContext(&problemeHebdo, 0);
-    DumpSimulationTableAfterPostProcess(*tables->tableForStage(stage),
+    DumpSimulationTableAfterPostProcess(tables->tableForStage(stage),
                                         problemeHebdo,
                                         fillContext,
                                         LegacyWeeklyBlock(problemeHebdo));

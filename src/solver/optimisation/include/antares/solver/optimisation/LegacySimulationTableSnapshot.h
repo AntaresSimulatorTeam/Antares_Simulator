@@ -68,11 +68,13 @@ unsigned LegacyWeeklyBlock(const PROBLEME_HEBDO& problemeHebdo);
 // X and the duals are restored before returning, so calling this cannot change
 // anything the simulation computes afterwards.
 //
-// Does nothing (with a one-time warning) when the simplex optimization range is
-// daily: the week is then solved in seven intervals that each rebuild the
-// address table, so only the last day would be readable here.
+// Does nothing when `simulationTable` is null, i.e. when the run does not
+// write simulation tables. Also does nothing (with a one-time warning) when
+// the simplex optimization range is daily: the week is then solved in seven
+// intervals that each rebuild the address table, so only the last day would be
+// readable here.
 void DumpSimulationTableAfterPostProcess(
-  Antares::IO::Outputs::SimulationTable& simulationTable,
+  Antares::IO::Outputs::SimulationTable* simulationTable,
   PROBLEME_HEBDO& problemeHebdo,
   const Antares::LinearProblem::Api::FillContext& fillContext,
   unsigned currentBlock);
