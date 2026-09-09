@@ -225,6 +225,7 @@ std::unique_ptr<OptimEntityContainer> buildSubProblemContainer(
     // post-solve consumers that read variable solution values through it.
     auto problem = getProblem(isMip, data.resolutionMode, solver);
     auto optimEntityContainer = std::make_unique<OptimEntityContainer>(problem);
+    data.bendersDecomposition.setCurrentProblemId("1-1");
     SystemLinearProblemBuilder(data.system.get(),
                                data.dataSeries.get(),
                                data.scenarioGroupRepository,
