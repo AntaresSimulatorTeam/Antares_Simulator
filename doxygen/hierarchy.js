@@ -443,6 +443,9 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::FlowQuadAuxData", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuadAuxData.html", null ],
     [ "Antares::Solver::Variable::Economy::FlowQuadTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuadTraits.html", null ],
     [ "Antares::IO::Inputs::ForbidNodes::ForbiddenNodes", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes.html", null ],
+    [ "fmt::formatter", null, [
+      [ "fmt::formatter< Antares::ModelerStudy::SystemModel::FieldRole >", "structfmt_1_1formatter_3_01Antares_1_1ModelerStudy_1_1SystemModel_1_1FieldRole_01_4.html", null ]
+    ] ],
     [ "Antares::Concurrency::FutureSet", "classAntares_1_1Concurrency_1_1FutureSet.html", null ],
     [ "Antares::Solver::Workflow::GenerationAndResolutionConfig", "structAntares_1_1Solver_1_1Workflow_1_1GenerationAndResolutionConfig.html", null ],
     [ "Antares::Data::ShortTermStorage::GroupsHours", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours.html", null ],

@@ -956,7 +956,6 @@ var namespaces_dup =
           [ "fromBool", "timeAndScenarioType_8h.html#a1ec198537ff13af974a5dac7cd20ee8d", null ],
           [ "getConnectionField", "portType_8cpp.html#a5b98aaee910ac96798b010a1c3599679", null ],
           [ "isEmpty", "portType_8cpp.html#ae25c2ee4d96cf9586d5619fff8e2562b", null ],
-          [ "operator<<", "port_8h.html#a4abb4fd7c458500f26ff69554f194304", null ],
           [ "operator<<", "enum__operators_8h.html#a5b42803d363465d2075144cd54313270", null ],
           [ "operator==", "portType_8cpp.html#a5f72d81c70aac087bc14e5f150aeffb3", null ]
         ] ]
@@ -2069,6 +2068,9 @@ var namespaces_dup =
       [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
       [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
       [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
+    ] ],
+    [ "fmt", null, [
+      [ "formatter< Antares::ModelerStudy::SystemModel::FieldRole >", "structfmt_1_1formatter_3_01Antares_1_1ModelerStudy_1_1SystemModel_1_1FieldRole_01_4.html", "structfmt_1_1formatter_3_01Antares_1_1ModelerStudy_1_1SystemModel_1_1FieldRole_01_4" ]
     ] ],
     [ "FSWalker", null, [
       [ "FileJob", "classFSWalker_1_1FileJob.html", "classFSWalker_1_1FileJob" ],

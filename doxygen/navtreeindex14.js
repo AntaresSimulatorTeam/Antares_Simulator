@@ -1,5 +1,6 @@
 var NAVTREEINDEX14 =
 {
+"classAntares_1_1Optimization_1_1LegacyNameMapper.html#aad1b0076295e39ca07ee78a269f915a9":[9,0,0,11,27,0],
 "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html":[9,0,0,11,28],
 "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html#a383b6c6da620a35286ec62bfddd71d8c":[9,0,0,11,28,1],
 "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html#a693122d1ec6e7b771b5610c3a7331184":[9,0,0,11,28,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#ab6ea454102b4d3112dc568a927d8d0f9":[9,0,0,12,5,11,9],
 "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#ab6ee72bae59591d5c7dd2cd8879002fc":[9,0,0,12,5,11,10],
 "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#ab99b63d0c859922e5835a7c9562f7114":[9,0,0,12,5,11,5],
-"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#af00f10009f87c9fb7295765878535954":[9,0,0,12,5,11,0],
-"classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList.html":[9,0,0,12,5,0]
+"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#af00f10009f87c9fb7295765878535954":[9,0,0,12,5,11,0]
 };

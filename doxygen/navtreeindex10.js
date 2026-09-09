@@ -1,5 +1,6 @@
 var NAVTREEINDEX10 =
 {
+"classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes.html#a600f606a77aab25a32756688f786dba5":[9,0,0,7,0,1,0,3],
 "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes.html#a7b143da49c1ccb5a1aa5f546f92d9c7d":[9,0,0,7,0,1,0,6],
 "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes.html#a7f77e94123a49f52335036cb4c52f4dd":[9,0,0,7,0,1,0,4],
 "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes.html#a7f77e94123a49f52335036cb4c52f4dd":[9,0,0,7,0,1,0,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX10 =
 "classAntares_1_1LinearProblem_1_1Api_1_1IHasName.html#a65828addc155c1c041bec56705d82ed4":[9,0,0,8,0,1,1],
 "classAntares_1_1LinearProblem_1_1Api_1_1IHasName.html#af41f7cb6f8d8b1918920f894c5db863e":[9,0,0,8,0,1,0],
 "classAntares_1_1LinearProblem_1_1Api_1_1IHasStatus.html":[9,0,0,8,0,2],
-"classAntares_1_1LinearProblem_1_1Api_1_1IHasStatus.html#a3cf08617e3cab5c720116ff9f3bed6cc":[9,0,0,8,0,2,0],
-"classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html":[9,0,0,8,0,7]
+"classAntares_1_1LinearProblem_1_1Api_1_1IHasStatus.html#a3cf08617e3cab5c720116ff9f3bed6cc":[9,0,0,8,0,2,0]
 };

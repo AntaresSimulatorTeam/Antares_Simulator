@@ -1,5 +1,6 @@
 var NAVTREEINDEX32 =
 {
+"io_2include_2antares_2io_2statistics_8h.html#a55ed7d42e2216a241734a022adc0b565":[8,0,0,16,1],
 "io_2include_2antares_2io_2statistics_8h.html#a690048fc7a4018cf11510d4f03de54cd":[8,0,0,16,2],
 "io_2include_2antares_2io_2statistics_8h.html#a7226791c1c94bf5b6c1aa07a29edd28e":[8,0,0,16,6],
 "io_2include_2antares_2io_2statistics_8h.html#a7a7ea1ea7422f97e768d2efa7a1b5694":[8,0,0,16,13],
@@ -13,9 +14,9 @@ var NAVTREEINDEX32 =
 "io_8h_source.html":[10,0,0,11,0,1],
 "job_8hxx_source.html":[10,0,0,11,1,2],
 "join__all_8h_source.html":[10,0,0,8,11,0,0,0,0,1,5],
-"json__collector_8py.html#a0c62b73bc38896e7325ed89ea6a9346c":[8,0,16,4],
-"json__collector_8py.html#a3a9035b9088b08d576bc6e8981fdf65d":[8,0,16,5],
-"json__collector_8py.html#ab3452d8338e49d9dea1fba125b0559aa":[8,0,16,3],
+"json__collector_8py.html#a0c62b73bc38896e7325ed89ea6a9346c":[8,0,17,4],
+"json__collector_8py.html#a3a9035b9088b08d576bc6e8981fdf65d":[8,0,17,5],
+"json__collector_8py.html#ab3452d8338e49d9dea1fba125b0559aa":[8,0,17,3],
 "law_8h.html#a216163bccb431c1e85890d4b8208cda8":[8,0,0,4,122],
 "law_8h.html#a216163bccb431c1e85890d4b8208cda8a11b2fa0f579d102298e1aa388ee89ecf":[8,0,0,4,122,0],
 "law_8h.html#a216163bccb431c1e85890d4b8208cda8a5ce64ef644416cdda61c0a2bb723c82f":[8,0,0,4,122,1],
@@ -227,7 +228,7 @@ var NAVTREEINDEX32 =
 "libs_2antares_2study_2study_8cpp.html#ab5556f2ed19653e1a866b557366e16e5":[8,0,0,4,213],
 "libs_2antares_2study_2study_8cpp.html#ad9767caa4758b84659b2584ab1b419f4":[8,0,0,4,211],
 "libs_2antares_2study_2study_8cpp.html#af4e5b575b12671d2e61abec2747d29a3":[8,0,0,4,210],
-"libs_2fswalker_2job_8h.html#acd95d54a98eaf161bebab45f16e7c59c":[8,0,14,8],
+"libs_2fswalker_2job_8h.html#acd95d54a98eaf161bebab45f16e7c59c":[8,0,15,8],
 "libs_2fswalker_2job_8h_source.html":[10,0,0,4,1,2],
 "libs_2fswalker_2statistics_8h_source.html":[10,0,0,4,1,4],
 "linear-problem-api_2include_2antares_2optimisation_2linear-problem-api_2linearProblem_8h_source.html":[10,0,0,7,0,0,0,0,0,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX32 =
 "links__base_8h.html":[10,0,0,8,11,0,0,0,0,3,1,7],
 "links__base_8h_source.html":[10,0,0,8,11,0,0,0,0,3,1,7],
 "list_8h_source.html":[10,0,0,4,0,20,0,0,0,0],
-"load-options_8h_source.html":[10,0,0,4,0,25,0,0,0,17],
-"loadFiles_8h.html#a9c401d72cdb58ec72d3c1172d5c7c29e":[8,0,0,15,5,18]
+"load-options_8h_source.html":[10,0,0,4,0,25,0,0,0,17]
 };
