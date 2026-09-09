@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include <stdexcept>
 #define WIN32_LEAN_AND_MEAN
 
 #include <algorithm>
@@ -19,6 +18,8 @@
 #include <parquet/arrow/reader.h>
 #include <parquet/arrow/writer.h>
 #include <parquet/exception.h>
+
+#include <antares/exception/InvalidArgumentError.hpp>
 
 // Mock includes for testing - replace with actual includes
 #include <inmemory-modeler.h>
@@ -494,7 +495,7 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_EmptyAndAllMeanNoRestriction)
     // Widening the selection is not a licence to stop reading: a name after an
     // "all" is still checked, so a typo is reported rather than swallowed.
     BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("all,optim-nb-3"),
-                      std::runtime_error);
+                      Antares::Error::InvalidArgumentError);
 }
 
 BOOST_AUTO_TEST_CASE(ParseStageSelection_TrimsSpacesAndRejectsUnknownNames)
@@ -506,10 +507,10 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_TrimsSpacesAndRejectsUnknownNames)
     BOOST_CHECK(selection.contains(Stage::adequacyPatchCsr));
 
     BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("optim-nb-3"),
-                      std::runtime_error);
+                      Antares::Error::InvalidArgumentError);
     // A stage name that is only a prefix of a real one is still a mistake.
     BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("remix"),
-                      std::runtime_error);
+                      Antares::Error::InvalidArgumentError);
 }
 
 BOOST_AUTO_TEST_CASE(ParseStageSelection_ErrorNamesWhereTheListCameFrom)
@@ -521,7 +522,7 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_ErrorNamesWhereTheListCameFrom)
         OptimisationsSimulationTable::parseStageSelection("nope", "some-source");
         BOOST_FAIL("an unknown stage name must throw");
     }
-    catch (const std::runtime_error& e)
+    catch (const Antares::Error::InvalidArgumentError& e)
     {
         const std::string message = e.what();
         BOOST_CHECK_MESSAGE(message.find("some-source") != std::string::npos, message);

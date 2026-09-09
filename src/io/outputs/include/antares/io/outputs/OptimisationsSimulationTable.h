@@ -34,8 +34,9 @@ public:
      * \param source how the error message names the origin of the list (command
      *               line or generaldata.ini).
      * \return the selected stages; an empty set means "every stage".
-     * \throws std::runtime_error, listing the valid names, on an unknown name --
-     *         including one after an "all", as the whole list is validated.
+     * \throws Antares::Error::InvalidArgumentError, listing the valid names, on
+     *         an unknown name -- including one after an "all", as the whole list
+     *         is validated.
      */
     static std::set<Stage> parseStageSelection(
       const std::string& input,

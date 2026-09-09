@@ -27,7 +27,9 @@ target_link_libraries(simulation-table
         PUBLIC
         Antares::linear-problem-api
         Boost::headers
-        fmt::fmt)
+        fmt::fmt
+        PRIVATE
+        Antares::exception)
 
 
 # ===============================

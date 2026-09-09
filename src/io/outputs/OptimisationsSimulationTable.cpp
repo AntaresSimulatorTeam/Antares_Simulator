@@ -4,9 +4,10 @@
 #include "include/antares/io/outputs/OptimisationsSimulationTable.h"
 
 #include <sstream>
-#include <stdexcept>
 #include <string>
 #include <vector>
+
+#include <antares/exception/InvalidArgumentError.hpp>
 
 namespace Antares::IO::Outputs
 {
@@ -42,7 +43,7 @@ std::vector<std::string> splitStageList(const std::string& input)
         message << ", " << stageName(stage);
     }
     message << ")";
-    throw std::runtime_error(message.str());
+    throw Error::InvalidArgumentError(message.str());
 }
 
 // Turn the raw names into stages, applying the "all" keyword. Every name still
