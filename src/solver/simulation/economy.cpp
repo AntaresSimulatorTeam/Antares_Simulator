@@ -77,11 +77,11 @@ bool Economy::simulationBegin()
                                             &pProblemesHebdo[numSpace],
                                             resultWriter_,
                                             simulationObserver_.get(),
-                                            study.parameters.writeSimulationTable());
+                                            study.parameters.writeSimulationTable(),
+                                            inactiveComponents);
 
             if (auto* tables = weeklyOptProblems_[numSpace].simulationTables())
             {
-                tables->inactiveComponents = inactiveComponents;
                 tables->selectStages(study.parameters.simulationTableStages);
             }
 

@@ -274,7 +274,7 @@ BOOST_AUTO_TEST_SUITE(FileWriterIntegrationTests)
 
 BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
 {
-    OptimisationsSimulationTable tables;
+    OptimisationsSimulationTable tables{nullptr};
 
     // Add entries to both tables
     SimulationTableEntry entry1{.block = 1,
@@ -333,7 +333,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
 
 BOOST_AUTO_TEST_CASE(WriteTo_ParquetFormat_CreatesCorrectFiles)
 {
-    OptimisationsSimulationTable tables;
+    OptimisationsSimulationTable tables{nullptr};
     tables.firstOptimSimulationTable()->addEntry({.block = 1,
                                                   .component = "comp1",
                                                   .output = "var1",
@@ -382,7 +382,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_ParquetFormat_CreatesCorrectFiles)
 
 BOOST_AUTO_TEST_CASE(TableForStage_CreatesOnDemandAndKeepsPointersStable)
 {
-    OptimisationsSimulationTable tables;
+    OptimisationsSimulationTable tables{nullptr};
     BOOST_CHECK(tables.stages().empty());
 
     SimulationTable* remix = tables.tableForStage(Stage::remixHydro);
@@ -419,7 +419,7 @@ BOOST_AUTO_TEST_CASE(TableForStage_CreatesOnDemandAndKeepsPointersStable)
 
 BOOST_AUTO_TEST_CASE(WriteTo_NamesOneFilePerStage)
 {
-    OptimisationsSimulationTable tables;
+    OptimisationsSimulationTable tables{nullptr};
     const SimulationTableEntry entry{.block = 1,
                                      .component = "comp1",
                                      .output = "var1",
@@ -447,7 +447,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_NamesOneFilePerStage)
 
 BOOST_AUTO_TEST_CASE(WriteTo_SkipsStagesWithNoRows)
 {
-    OptimisationsSimulationTable tables;
+    OptimisationsSimulationTable tables{nullptr};
     tables.firstOptimSimulationTable()->addEntry({.block = 1,
                                                   .component = "comp1",
                                                   .output = "var1",
@@ -532,7 +532,7 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_ErrorNamesWhereTheListCameFrom)
 
 BOOST_AUTO_TEST_CASE(SelectStages_UnselectedStagesReturnNullptr)
 {
-    OptimisationsSimulationTable tables;
+    OptimisationsSimulationTable tables{nullptr};
     tables.selectStages({Stage::remixHydro});
 
     BOOST_CHECK(tables.tableForStage(Stage::remixHydro) != nullptr);
@@ -549,12 +549,12 @@ BOOST_AUTO_TEST_CASE(SelectStages_PostProcessStagesDriveTheModelerProblemRetenti
     // The weekly solve keeps its modeler problem alive only for a post-process
     // dump to re-emit; asking the question must not depend on -- nor create --
     // an optimisation-pass table, since a selection may well have none.
-    OptimisationsSimulationTable everything;
+    OptimisationsSimulationTable everything{nullptr};
     BOOST_CHECK(everything.anyPostProcessStageSelected());
 
     for (const auto stage: {Stage::remixHydro, Stage::adequacyPatchCsr})
     {
-        OptimisationsSimulationTable tables;
+        OptimisationsSimulationTable tables{nullptr};
         tables.selectStages({stage});
         BOOST_CHECK_MESSAGE(tables.anyPostProcessStageSelected(), stageName(stage));
         // Specifically the case that used to drop the modeler rows: no optim
@@ -563,12 +563,12 @@ BOOST_AUTO_TEST_CASE(SelectStages_PostProcessStagesDriveTheModelerProblemRetenti
         BOOST_CHECK(tables.secondOptimSimulationTable() == nullptr);
     }
 
-    OptimisationsSimulationTable optimOnly;
+    OptimisationsSimulationTable optimOnly{nullptr};
     optimOnly.selectStages({Stage::firstOptim, Stage::secondOptim});
     BOOST_CHECK(!optimOnly.anyPostProcessStageSelected());
 
     // Querying must not create anything.
-    OptimisationsSimulationTable untouched;
+    OptimisationsSimulationTable untouched{nullptr};
     untouched.selectStages({Stage::remixHydro});
     BOOST_CHECK(untouched.isStageSelected(Stage::remixHydro));
     BOOST_CHECK(!untouched.isStageSelected(Stage::firstOptim));
@@ -578,7 +578,7 @@ BOOST_AUTO_TEST_CASE(SelectStages_PostProcessStagesDriveTheModelerProblemRetenti
 
 BOOST_AUTO_TEST_CASE(SelectStages_EmptySelectionKeepsEveryStage)
 {
-    OptimisationsSimulationTable tables;
+    OptimisationsSimulationTable tables{nullptr};
     tables.selectStages({});
 
     for (const auto stage: allStages)
@@ -590,7 +590,7 @@ BOOST_AUTO_TEST_CASE(SelectStages_EmptySelectionKeepsEveryStage)
 
 BOOST_AUTO_TEST_CASE(SelectStages_WriterOnlyEmitsSelectedStages)
 {
-    OptimisationsSimulationTable tables;
+    OptimisationsSimulationTable tables{nullptr};
     tables.selectStages({Stage::firstOptim});
 
     const SimulationTableEntry entry{.block = 1,

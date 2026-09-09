@@ -24,10 +24,6 @@ OptPostProcessList::OptPostProcessList(PROBLEME_HEBDO* problemeHebdo,
                                                                            params,
                                                                            numSpace,
                                                                            resultWriter));
-    post_process_list.push_back(std::make_unique<DumpSimulationTablePostProcessCmd>(
-      problemeHebdo_,
-      IO::Outputs::OptimisationsSimulationTable::remixHydroStage,
-      simulationTables));
     post_process_list.push_back(
       std::make_unique<DumpSimulationTablePostProcessCmd>(problemeHebdo_,
                                                           IO::Outputs::Stage::remixHydro,

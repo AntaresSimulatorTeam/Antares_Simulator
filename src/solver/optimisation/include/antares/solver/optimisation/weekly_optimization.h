@@ -15,11 +15,13 @@ namespace Antares::Optimization
 class WeeklyOptimization final
 {
 public:
-    WeeklyOptimization(const OptimizationOptions& options,
-                       PROBLEME_HEBDO* problemeHebdo,
-                       Solver::IResultWriter& writer,
-                       Solver::Simulation::ISimulationObserver& simulationObserver,
-                       bool writeSimuTable);
+    WeeklyOptimization(
+      const OptimizationOptions& options,
+      PROBLEME_HEBDO* problemeHebdo,
+      Solver::IResultWriter& writer,
+      Solver::Simulation::ISimulationObserver& simulationObserver,
+      bool writeSimuTable,
+      std::shared_ptr<const InactiveComponentsAnalyzer> inactiveComponents = nullptr);
     ~WeeklyOptimization() = default;
     WeeklyOptimization(const WeeklyOptimization&) = delete;
     WeeklyOptimization& operator=(const WeeklyOptimization&) = delete;

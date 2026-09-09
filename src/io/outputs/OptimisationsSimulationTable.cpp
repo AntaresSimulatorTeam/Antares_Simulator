@@ -73,6 +73,12 @@ std::vector<Stage> resolveStages(const std::vector<std::string>& names, const st
 }
 } // namespace
 
+OptimisationsSimulationTable::OptimisationsSimulationTable(
+  std::shared_ptr<const Optimization::InactiveComponentsAnalyzer> inactiveComponents):
+    inactiveComponents(std::move(inactiveComponents))
+{
+}
+
 std::set<Stage> OptimisationsSimulationTable::parseStageSelection(const std::string& input,
                                                                   const std::string& source)
 {
