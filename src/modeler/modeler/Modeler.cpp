@@ -3,6 +3,7 @@
 
 #include "antares/solver/modeler/Modeler.h"
 
+#include <algorithm>
 #include <fmt/format.h>
 #include <fstream>
 #include <stdexcept>
@@ -84,9 +85,53 @@ Modeler::Modeler(ILoader& loader, fs::path ouputPath, TableFormat tableFormat):
     // (ModelerData contains unique_ptr members and is move-only).
     data_ = std::move(*data);
 
-    scenarios_ = resolveScenarioScopeScenarios(parameters_.scenarioScope, loader_.studyPath());
+    scenarios_ = resolveScenarioScopeScenarios(data_.scenarioScope);
+    validateScenariosAgainstScenarioBuilder();
     logs.info() << fmt::format("Number of Monte-Carlo scenarios to simulate: {}",
                                scenarios_.size());
+}
+
+void Modeler::validateScenariosAgainstScenarioBuilder() const
+{
+    // Validate per component: a component with an empty scenario group id uses the default
+    // scenario (always valid), and an unknown group is reported by
+    // ScenarioGroupRepository::scenario() when the problems are built. Each component is
+    // only required to have its own scenario group cover the selected years; other groups
+    // used by different components are independent.
+    std::vector<std::string> invalidEntries;
+    for (const auto& component: data_.system->Components())
+    {
+        const auto& groupId = component.getScenarioGroupId();
+        if (groupId.empty() || !data_.scenarioGroupRepository.contains(groupId))
+        {
+            continue;
+        }
+        const auto& scenario = data_.scenarioGroupRepository.scenario(groupId);
+        for (const auto year: scenarios_)
+        {
+            if (!scenario.hasYear(year))
+            {
+                invalidEntries.push_back(
+                  fmt::format("scenario {} (no time series in scenario group '{}' used by "
+                              "component '{}')",
+                              year,
+                              scenario.group(),
+                              component.Id()));
+            }
+        }
+    }
+    if (!invalidEntries.empty())
+    {
+        std::string joined = invalidEntries.front();
+        for (std::size_t i = 1; i < invalidEntries.size(); ++i)
+        {
+            joined += ", " + invalidEntries[i];
+        }
+        throw ModelerError(fmt::format(
+          "scenario-scope selection is not valid: the following scenario indices are not defined "
+          "in the scenario builder (modeler-scenariobuilder.dat): {}",
+          joined));
+    }
 }
 
 class SystemLinearProblemBuilder final
@@ -327,16 +372,27 @@ void Modeler::buildProblems()
     logs.info();
     logs.info() << "Modeler build took " << measure.toStringInSeconds();
 
-    if (subproblems_.empty())
+    // A scenario whose components expose no variable at the subproblem location yields a
+    // null problem (see buildProblem). Count only the non-null problems and read the
+    // statistics from the first one, never from an entry that may be null.
+    const auto firstNonNull = std::find_if(subproblems_.begin(),
+                                           subproblems_.end(),
+                                           [](const auto& problem) { return problem != nullptr; });
+    const std::size_t nonNullCount = std::count_if(subproblems_.begin(),
+                                                   subproblems_.end(),
+                                                   [](const auto& problem)
+                                                   { return problem != nullptr; });
+
+    if (nonNullCount == 0)
     {
         logs.warning()
           << "No subproblem was built. Check your scenario-scope and modeler parameters.";
     }
     else
     {
-        logs.info() << "Number of subproblems built: " << subproblems_.size();
-        logs.info() << "Number of variables: " << subproblems_.back()->variableCount();
-        logs.info() << "Number of constraints: " << subproblems_.back()->constraintCount();
+        logs.info() << "Number of subproblems built: " << nonNullCount;
+        logs.info() << "Number of variables: " << firstNonNull->get()->variableCount();
+        logs.info() << "Number of constraints: " << firstNonNull->get()->constraintCount();
     }
 }
 
@@ -352,12 +408,18 @@ void Modeler::run()
         }
 
         buildProblemsAndWriteMps();
+
+        // The CLI Benders path only exports the MPS/structure files; release the subproblems
+        // so a large scenario scope does not keep every problem in memory for the rest of the
+        // run. The public API (ModelerProblems) calls buildProblemsAndWriteMps() directly and
+        // keeps them alive via subproblems().
+        subproblems_.clear();
+        subproblemOptimEntityContainers_.clear();
     }
     else if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
     {
         buildMasterProblem();
 
-        SimulationTable simulationTable;
         bool masterMpsWritten = false;
         for (const unsigned year: scenarios_)
         {
@@ -399,35 +461,41 @@ void Modeler::run()
 
             logs.info() << "Solving scenario " << year;
             subProbSolution_ = solveSubproblem(*entities.problem);
+
+            // solve() returns a solution owned by the subproblem (see ILinearProblem::solve),
+            // so retain the problem right away: subProbSolution_ is only valid while its
+            // owning subproblem is alive. Keeping only the most recent subproblem in memory
+            // also guarantees the invariant on every exit path, including the early return
+            // below: subProbSolution_ is either null or points into a problem held in
+            // subproblems_.
+            subproblems_.clear();
+            subproblemOptimEntityContainers_.clear();
+            subproblems_.emplace_back(std::move(entities.problem));
+            subproblemOptimEntityContainers_.emplace_back(std::move(entities.optimEntityContainer));
+
             if (!checkSolution(subProbSolution_))
             {
                 return;
             }
 
+            auto& problem = *subproblems_.back();
+            auto& optimEntityContainer = *subproblemOptimEntityContainers_.back();
+
             if (!parameters_.noOutput)
             {
+                SimulationTable simulationTable;
                 fillSimulationTable(simulationTable,
                                     subProbSolution_,
-                                    *entities.problem,
-                                    *entities.optimEntityContainer,
+                                    problem,
+                                    optimEntityContainer,
                                     fillContext);
+
+                auto outputFile = outputPath_ / ("simulation-table-" + std::to_string(year));
+                SimulationTableWriter writer(outputFile, tableFormat_);
+                writer.writeTable(simulationTable);
+                logs.info() << "Simulation table of scenario " << year
+                            << " is written in: " << writer.outputFile().string();
             }
-
-            // Keep only the most recent subproblem in memory so that at most one
-            // subproblem is held at a time. The retained problem keeps
-            // subProbSolution_ valid after the loop.
-            subproblems_.clear();
-            subproblemOptimEntityContainers_.clear();
-            subproblems_.emplace_back(std::move(entities.problem));
-            subproblemOptimEntityContainers_.emplace_back(std::move(entities.optimEntityContainer));
-        }
-
-        if (!parameters_.noOutput)
-        {
-            auto outputFile = outputPath_ / "simulation-table";
-            SimulationTableWriter writer(outputFile, tableFormat_);
-            writer.writeTable(simulationTable);
-            logs.info() << "Simulation table is written in: " << outputFile.string();
         }
     }
 }

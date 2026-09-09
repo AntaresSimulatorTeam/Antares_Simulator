@@ -16,6 +16,8 @@ public:
 
     [[nodiscard]] TimeSeriesNumber getData(Year year) const override;
 
+    [[nodiscard]] bool hasYear(Year year) const override;
+
     void setTimeSerieNumber(Year year, TimeSeriesNumber timeSeriesNumber);
 
     class AlreadyExists final: public std::invalid_argument

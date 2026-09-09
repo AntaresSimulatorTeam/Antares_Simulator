@@ -5,6 +5,7 @@ Feature: 13 - Investment problems
     Given the modeler study path is "modeler/13_1"
     When I run antares modeler
     Then the simulation succeeds
+    And no simulation table is expected
     And the master problem contains the following variables
       | name                                 | xmin | xmax | cost |
       | continuous_generator_candidate.p_max | 0    | 1000 | 400  |
@@ -22,6 +23,7 @@ Feature: 13 - Investment problems
     Given the modeler study path is "modeler/13_2"
     When I run antares modeler
     Then the simulation succeeds
+    And no simulation table is expected
     And the master problem contains the following variables
       | name                                  | xmin | xmax | cost |
       | continuous_generator_candidate.p_max  | 0    | 1000 | 490  |
