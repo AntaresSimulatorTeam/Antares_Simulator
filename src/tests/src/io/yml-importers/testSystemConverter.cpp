@@ -423,12 +423,11 @@ BOOST_FIXTURE_TEST_CASE(TryToConnectTwoReceiverPorts, PrepareYaml)
                   "              model: std.node\n"
                   "              scenario-group: group-234\n");
 
-    AddConnectionsToSystem(
-      system,
-      {{.firstCompo = "N",
-        .firstPort = "injection_port",
-        .secondCompo = "N2",
-        .secondPort = "injection_port"}});
+    AddConnectionsToSystem(system,
+                           {{.firstCompo = "N",
+                             .firstPort = "injection_port",
+                             .secondCompo = "N2",
+                             .secondPort = "injection_port"}});
 
     YmlSystem::System systemObj = parserSystem.parse(system, "");
     BOOST_CHECK_EXCEPTION(SystemConverter::convert(systemObj, libraries),
