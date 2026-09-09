@@ -224,7 +224,7 @@ BOOST_AUTO_TEST_CASE(fmtSenderFieldRole)
 
 BOOST_AUTO_TEST_CASE(fmtReceiverFieldRole)
 {
-    BOOST_CHECK_EQUAL(fmt::format("{}", FieldRole::Receiver), "Sender");
+    BOOST_CHECK_EQUAL(fmt::format("{}", FieldRole::Receiver), "Receiver");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
