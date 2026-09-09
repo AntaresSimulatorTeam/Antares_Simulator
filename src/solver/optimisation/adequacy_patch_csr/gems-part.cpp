@@ -65,17 +65,16 @@ double ActiveGemsPart::gemsContributionForArea(
                 continue;
             }
 
-            auto* expressionNode = component.nodeAtPortField(portId, fieldId);
-            auto* optimEntityContainer = problemeHebdo_->optimEntityContainer.get();
+            auto* expression = component.nodeAtPortField(portId, fieldId);
 
             const auto& scenario = modelerData->scenarioGroupRepository.scenario(
               component.getScenarioGroupId());
-            Visitors::EvalVisitor evalVisitor(*optimEntityContainer,
+            Visitors::EvalVisitor evalVisitor(*problemeHebdo_->optimEntityContainer,
                                               fillContext_,
                                               component,
                                               modelerData->dataSeries.get(),
                                               scenario);
-            contribution += evalVisitor.dispatch(expressionNode).value(0);
+            contribution += evalVisitor.dispatch(expression).value(0);
         }
     }
     return contribution;
