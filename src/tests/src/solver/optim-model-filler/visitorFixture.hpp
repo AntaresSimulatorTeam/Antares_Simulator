@@ -52,7 +52,7 @@ struct MockLinearProblemData: Api::ILinearProblemData
 template<class Visitor>
 struct VisitorFixture: Registry<Node>
 {
-    MockLinearProblem linearProblem;
+    std::shared_ptr<MockLinearProblem> linearProblem;
     MockLinearProblemData data;
     Api::EmptyScenario empty_scenario;
     ScenarioGroupRepository scenarioGroupRepository;
@@ -63,7 +63,7 @@ struct VisitorFixture: Registry<Node>
     Api::FillContext ctx{0, 0, 0, 0, 0};
 
     VisitorFixture():
-        linearProblem(false),
+        linearProblem(std::make_shared<MockLinearProblem>(false)),
         scenarioGroupRepository(createScenario()),
         optimContainer(linearProblem),
         components(1, setupComponent())
@@ -71,11 +71,11 @@ struct VisitorFixture: Registry<Node>
         optimContainer.addFromSystemComponents(components);
         {
             optimContainer.addStartColumn();
-            linearProblem.addNumVariable(0, 1, "var1");
+            linearProblem->addNumVariable(0, 1, "var1");
             optimContainer.addStartColumn();
-            linearProblem.addNumVariable(0, 1, "var2");
+            linearProblem->addNumVariable(0, 1, "var2");
             optimContainer.addStartColumn();
-            linearProblem.addNumVariable(0, 1, "var3");
+            linearProblem->addNumVariable(0, 1, "var3");
         }
     }
 

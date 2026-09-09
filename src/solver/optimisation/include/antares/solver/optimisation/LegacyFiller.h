@@ -22,7 +22,7 @@ public:
 private:
     const PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre_;
 
-    LinearProblem::Api::ILinearProblem& linearProblem_;
+    LinearProblem::Api::ILinearProblem* linearProblem_;
     void CreateVariable(unsigned idxVar) const;
     void CopyVariables() const;
     void UpdateContraints(unsigned idxRow) const;

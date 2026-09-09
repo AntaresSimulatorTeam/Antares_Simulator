@@ -9,6 +9,7 @@
 #include <optional>
 #include <vector>
 
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/utils/opt_constants.h"
 #include "antares/solver/utils/optimization_statistics.h"
@@ -19,7 +20,6 @@ class AdequacyPatchRuntimeData;
 
 namespace Antares::Optimization
 {
-struct SolvedModelerProblem;
 class InactiveComponentsAnalyzer;
 } // namespace Antares::Optimization
 
@@ -787,17 +787,10 @@ public:
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     Antares::Solver::ModelerData* modelerData = nullptr;
 
-    /// \brief Whether the solve must publish lastSolvedModelerProblem. Set per
-    /// week by OPT_OptimisationLineaire, the level that knows a post-process
-    /// stage will read it back. Not tied to whether *this* pass writes a table:
-    /// a run selecting only post-process stages would otherwise lose every
-    /// modeler row of the stages it asked for.
-    bool retainSolvedModelerProblem = false;
-
-    /// \brief Modeler side of the current week's last optimisation pass, kept
-    /// alive past the solve so a post-process simulation table can re-emit the
-    /// modeler component rows. Null unless retainSolvedModelerProblem is set.
-    std::shared_ptr<const Antares::Optimization::SolvedModelerProblem> lastSolvedModelerProblem;
+    // Owns the modeler entities of the last optimisation pass of the current week.
+    // The container shares the linear problem lifetime, so post-solve consumers can
+    // still access modeler variables and constraints through it.
+    std::unique_ptr<Antares::LinearProblem::OptimEntityContainer> optimEntityContainer;
 };
 
 // Import functions for capacity and hydro reserves

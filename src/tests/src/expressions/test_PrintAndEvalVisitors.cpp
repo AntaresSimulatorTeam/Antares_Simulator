@@ -771,7 +771,7 @@ struct TimeDependentParameterFixture
     std::string compoName = "1245";
     std::vector<Component> components;
     Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo;
-    MockLinearProblem linearProblem = MockLinearProblem(true);
+    std::shared_ptr<MockLinearProblem> linearProblem = std::make_shared<MockLinearProblem>(true);
     OptimEntityContainer optimContainer = OptimEntityContainer(linearProblem);
 
     std::unique_ptr<Antares::Expressions::Visitors::EvalVisitor> evalVisitor;
@@ -846,7 +846,7 @@ EvaluationResult CreateAndEvaluateTimeNode(Node* p)
     const std::vector<Component> components{createComponent(model, compoName, {param})};
     Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
-    MockLinearProblem linearProblem = MockLinearProblem(true);
+    std::shared_ptr<MockLinearProblem> linearProblem = std::make_shared<MockLinearProblem>(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
     const Antares::LinearProblem::Api::FillContext fillContext{first,
@@ -903,7 +903,7 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
     const std::vector<Component> components{createComponent(model, compoName, {param})};
     Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
-    MockLinearProblem linearProblem = MockLinearProblem(true);
+    std::shared_ptr<MockLinearProblem> linearProblem = std::make_shared<MockLinearProblem>(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
@@ -976,7 +976,7 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
     const std::vector<Component> components{createComponent(model, compoName, {param})};
     Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
-    MockLinearProblem linearProblem = MockLinearProblem(true);
+    std::shared_ptr<MockLinearProblem> linearProblem = std::make_shared<MockLinearProblem>(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
@@ -1092,7 +1092,7 @@ void evaluate_time_dependent_operation()
 
     Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
-    MockLinearProblem linearProblem = MockLinearProblem(true);
+    std::shared_ptr<MockLinearProblem> linearProblem = std::make_shared<MockLinearProblem>(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
@@ -1136,7 +1136,7 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
 
     Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
-    MockLinearProblem linearProblem = MockLinearProblem(true);
+    std::shared_ptr<MockLinearProblem> linearProblem = std::make_shared<MockLinearProblem>(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
     const Antares::LinearProblem::Api::FillContext fillContext{hours.at(0),
@@ -1187,7 +1187,7 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
 
     Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
-    MockLinearProblem linearProblem = MockLinearProblem(true);
+    std::shared_ptr<MockLinearProblem> linearProblem = std::make_shared<MockLinearProblem>(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
     const Antares::LinearProblem::Api::FillContext fillContext{hours.at(0),
@@ -1751,18 +1751,18 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
 
     Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
-    PredfinedSolutionLinearProblemMock linearProblem(true);
+    auto linearProblem = std::make_shared<PredfinedSolutionLinearProblemMock>(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
     optimContainer.addStartColumn();
-    linearProblem.addVariableValue(12.5); // my_const_variable
+    linearProblem->addVariableValue(12.5); // my_const_variable
     std::vector<double> timeDepentVariableValues = {45.3, 78.9, 714.5};
 
     optimContainer.addStartColumn();
     for (const auto& value: timeDepentVariableValues)
     {
-        linearProblem.addVariableValue(value);
+        linearProblem->addVariableValue(value);
     }
 
     Node* root = create<VariableNode>("my_const_variable",

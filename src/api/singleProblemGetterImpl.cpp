@@ -337,7 +337,7 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
     return translator_.translate(pb_.ProblemeAResoudre.get(), problemName({id.year, id.week + 1}));
 }
 
-std::unique_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProblemId id)
+std::shared_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProblemId id)
 {
     setWeeklyData(id);
     auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
@@ -357,14 +357,14 @@ std::unique_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProb
                                                                id.week);
     }
 
-    std::unique_ptr<ILinearProblem>
-      linearProblem = std::make_unique<Antares::LinearProblem::Api::StructuredLinearProblem>();
-    fillProblem(*linearProblem, id);
+    auto linearProblem = std::make_shared<Antares::LinearProblem::Api::StructuredLinearProblem>();
+    fillProblem(linearProblem, id);
 
     return linearProblem;
 }
 
-void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProblemId& id)
+void SingleProblemGetter::fillProblem(std::shared_ptr<ILinearProblem> problem,
+                                      const WeeklyProblemId& id)
 {
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
@@ -496,13 +496,13 @@ bool SingleProblemGetter::areWeeksIndependent() const
                                });
 }
 
-void writeWeekMPS(const std::unique_ptr<ILinearProblem>& weekly,
+void writeWeekMPS(const ILinearProblem& weekly,
                   const WeeklyProblemId& id,
                   IResultWriter::Ptr& resultWriter)
 {
     auto name = problemName(id);
 
-    IO::Outputs::MPSGenerator mpsGenerator(*weekly, name + ".mps", true);
+    IO::Outputs::MPSGenerator mpsGenerator(weekly, name + ".mps", true);
     std::string mps = mpsGenerator.run();
 
     logs.info() << "Printing problem: " << name << '\n';
@@ -510,7 +510,7 @@ void writeWeekMPS(const std::unique_ptr<ILinearProblem>& weekly,
     resultWriter->addEntryFromBuffer(name + ".mps", mps);
 }
 
-Solver::ProblemEntity SingleProblemGetter::getMasterProblem() const
+std::shared_ptr<ILinearProblem> SingleProblemGetter::getMasterProblem() const
 {
     using namespace Antares::Solver;
     using namespace Antares::LinearProblem;
@@ -519,13 +519,13 @@ Solver::ProblemEntity SingleProblemGetter::getMasterProblem() const
     logs.info() << "Building master problem and Benders decomposition...";
 
     FillContext fillContext = {0, 167, 0, 167, 0};
-    return buildProblem(*pb_.modelerData,
-                        Config::Location::MASTER,
-                        "master",
-                        &pb_.modelerData->bendersDecomposition,
-                        fillContext,
-                        ResolutionMode::BENDERS_DECOMPOSITION,
-                        std::nullopt);
+    auto container = buildProblem(*pb_.modelerData,
+                                  Config::Location::MASTER,
+                                  "master",
+                                  fillContext,
+                                  ResolutionMode::BENDERS_DECOMPOSITION,
+                                  std::nullopt);
+    return container ? container->Problem() : nullptr;
 }
 
 void SingleProblemGetter::writeMasterAndStructure() const
@@ -538,7 +538,7 @@ void SingleProblemGetter::writeMasterAndStructure() const
 
     FillContext fillContext = {0, 167, 0, 167, 0};
 
-    auto [masterProblem, _] = getMasterProblem();
+    auto masterProblem = getMasterProblem();
 
     if (!masterProblem)
     {
@@ -578,7 +578,7 @@ void SingleProblemGetter::printProblems()
     {
         logs.info() << " year: " << id.year << ", week: " << id.week;
         auto weekly = getWeeklyProblem(id);
-        writeWeekMPS(weekly, id, resultWriter_);
+        writeWeekMPS(*weekly, id, resultWriter_);
     }
 
     if (pb_.modelerData)

@@ -51,7 +51,7 @@ private:
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
     LinearProblem::OptimEntityContainer& optimEntityContainer_;
-    LinearProblem::Api::ILinearProblem& pb_;
+    std::shared_ptr<LinearProblem::Api::ILinearProblem> pb_;
     const LinearProblem::Api::ILinearProblemData* data_;
     const LinearProblem::ScenarioGroupRepository& scenarioGroupRepo_;
 

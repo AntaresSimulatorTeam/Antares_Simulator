@@ -18,6 +18,7 @@
 #include "antares/solver/optimisation/LegacyVariableInfo.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/utils/ortools_utils.h"
 
 using Antares::IO::Outputs::SimulationTable;
 using Antares::LinearProblem::Api::FillContext;
@@ -27,48 +28,56 @@ namespace Antares::Optimization
 
 namespace
 {
-// The post-processed solution, read back from the result address tables without
-// touching the solver state. Post-processes mutate PROBLEME_HEBDO's result
-// structures in place and never write into ProblemeAResoudre's X / duals, and
-// each address points at the exact result slot the solve published with
-// `*address = X[i]`.
-struct StageSolution
+// Republishes the post-processed results into the solution vectors for the
+// duration of a fill, and puts the solver state back exactly as it was.
+class SolutionRefreshedFromResults
 {
-    std::vector<double> primal;
-    std::vector<double> duals;
-};
-
-// Entries without an address are never published to the results, so they keep
-// the value the optimizer left -- which is what post-processing could not have
-// changed anyway.
-std::vector<double> readBackFromAddresses(const std::vector<double>& values,
-                                          const std::vector<double*>& addresses)
-{
-    std::vector<double> out = values;
-    const std::size_t count = std::min(out.size(), addresses.size());
-    for (std::size_t i = 0; i < count; ++i)
+public:
+    explicit SolutionRefreshedFromResults(PROBLEME_ANTARES_A_RESOUDRE& problem):
+        problem_(problem),
+        savedX_(problem.X),
+        savedDuals_(problem.CoutsMarginauxDesContraintes)
     {
-        if (addresses[i] != nullptr)
+        refresh(problem_.X, problem_.AdresseOuPlacerLaValeurDesVariablesOptimisees);
+        refresh(problem_.CoutsMarginauxDesContraintes,
+                problem_.AdresseOuPlacerLaValeurDesCoutsMarginaux);
+    }
+
+    ~SolutionRefreshedFromResults()
+    {
+        problem_.X = std::move(savedX_);
+        problem_.CoutsMarginauxDesContraintes = std::move(savedDuals_);
+    }
+
+    SolutionRefreshedFromResults(const SolutionRefreshedFromResults&) = delete;
+    SolutionRefreshedFromResults& operator=(const SolutionRefreshedFromResults&) = delete;
+
+private:
+    // Entries without an address are never published to the results, so they
+    // keep the value the optimizer left -- which is what post-processing could
+    // not have changed anyway.
+    static void refresh(std::vector<double>& values, const std::vector<double*>& addresses)
+    {
+        const std::size_t count = std::min(values.size(), addresses.size());
+        for (std::size_t i = 0; i < count; ++i)
         {
-            out[i] = *addresses[i];
+            if (addresses[i] != nullptr)
+            {
+                values[i] = *addresses[i];
+            }
         }
     }
-    return out;
-}
 
-StageSolution stageSolution(const PROBLEME_ANTARES_A_RESOUDRE& problem)
-{
-    return {readBackFromAddresses(problem.X, problem.AdresseOuPlacerLaValeurDesVariablesOptimisees),
-            readBackFromAddresses(problem.CoutsMarginauxDesContraintes,
-                                  problem.AdresseOuPlacerLaValeurDesCoutsMarginaux)};
-}
+    PROBLEME_ANTARES_A_RESOUDRE& problem_;
+    std::vector<double> savedX_;
+    std::vector<double> savedDuals_;
+};
 
 std::once_flag dailyRangeWarningFlag;
 } // namespace
 
 void FillLegacySimulationTable(SimulationTable& simulationTable,
                                PROBLEME_HEBDO& problemeHebdo,
-                               const LegacySolution& solution,
                                const FillContext& fillContext,
                                const LegacyNameMapper& nameMapper,
                                unsigned currentBlock,
@@ -76,11 +85,10 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
 {
     const PROBLEME_ANTARES_A_RESOUDRE& problem = *problemeHebdo.ProblemeAResoudre;
 
-    // LegacyVariablesInfo and CoutLineaire are sized to NombreDeVariables in
-    // resizeProbleme, and the solution view mirrors X, so the index-based reads
-    // below are always in bounds.
+    // LegacyVariablesInfo, X and CoutLineaire are all sized to NombreDeVariables
+    // in resizeProbleme, so the index-based reads below are always in bounds.
     assert(problem.LegacyVariablesInfo.size() == static_cast<std::size_t>(problem.NombreDeVariables)
-           && solution.primal.size() == static_cast<std::size_t>(problem.NombreDeVariables));
+           && problem.X.size() == static_cast<std::size_t>(problem.NombreDeVariables));
     for (int index = 0; index < problem.NombreDeVariables; ++index)
     {
         const auto& info = problem.LegacyVariablesInfo[static_cast<std::size_t>(index)];
@@ -96,13 +104,13 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
            .absolute_time_index = info->timeIndex,
            .block_time_index = LegacyBlockTimeIndex(fillContext, info->timeIndex),
            .scenario_index = fillContext.getYear(),
-           .value = solution.primal[static_cast<std::size_t>(index)],
+           .value = problem.X[static_cast<std::size_t>(index)],
            .status = std::nullopt});
     }
 
     AddLegacyExtraOutputs(simulationTable,
                           problemeHebdo,
-                          solution,
+                          {problem.X, problem.CoutsMarginauxDesContraintes},
                           fillContext,
                           currentBlock,
                           inactiveComponents);
@@ -113,12 +121,16 @@ unsigned LegacyWeeklyBlock(const PROBLEME_HEBDO& problemeHebdo)
     return static_cast<unsigned>(problemeHebdo.HeureDansLAnnee) / Constants::nbHoursInAWeek;
 }
 
-void DumpSimulationTableAfterPostProcess(SimulationTable& simulationTable,
+void DumpSimulationTableAfterPostProcess(SimulationTable* simulationTable,
                                          PROBLEME_HEBDO& problemeHebdo,
                                          const FillContext& fillContext,
-                                         unsigned currentBlock,
-                                         const InactiveComponentsAnalyzer* inactiveComponents)
+                                         unsigned currentBlock)
 {
+    if (simulationTable == nullptr)
+    {
+        return;
+    }
+
     if (!problemeHebdo.OptimisationAuPasHebdomadaire)
     {
         std::call_once(dailyRangeWarningFlag,
@@ -133,14 +145,15 @@ void DumpSimulationTableAfterPostProcess(SimulationTable& simulationTable,
 
     // Modeler rows first, as during the solve, so a stage table has the same
     // row order as the optimisation ones.
-    if (const auto& solved = problemeHebdo.lastSolvedModelerProblem;
-        solved && problemeHebdo.modelerData)
+    if (problemeHebdo.optimEntityContainer && problemeHebdo.modelerData)
     {
-        IO::Outputs::FillSimulationTable(simulationTable,
-                                         *solved->problem,
-                                         solved->objectiveValue,
+        const auto& solver = problemeHebdo.ProblemeAResoudre->ProblemesSpx.front();
+        const double objectiveValue = solver ? getObjectiveValue(solver.get()) : 0.;
+        IO::Outputs::FillSimulationTable(*simulationTable,
+                                         *problemeHebdo.optimEntityContainer->Problem(),
+                                         objectiveValue,
                                          *problemeHebdo.modelerData,
-                                         *solved->entities,
+                                         *problemeHebdo.optimEntityContainer,
                                          fillContext,
                                          currentBlock,
                                          IO::Outputs::TimeConversionMode::WeeklyBlocks,
@@ -149,14 +162,12 @@ void DumpSimulationTableAfterPostProcess(SimulationTable& simulationTable,
 
     static constexpr LegacyNameMapper nameMapper;
 
-    const StageSolution solution = stageSolution(*problemeHebdo.ProblemeAResoudre);
-    FillLegacySimulationTable(simulationTable,
+    const SolutionRefreshedFromResults refreshed(*problemeHebdo.ProblemeAResoudre);
+    FillLegacySimulationTable(*simulationTable,
                               problemeHebdo,
-                              {solution.primal, solution.duals},
                               fillContext,
                               nameMapper,
-                              currentBlock,
-                              inactiveComponents);
+                              currentBlock);
 }
 
 } // namespace Antares::Optimization

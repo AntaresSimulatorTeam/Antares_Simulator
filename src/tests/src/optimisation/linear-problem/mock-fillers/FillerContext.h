@@ -30,10 +30,10 @@ void VarFillerContext::addVariables([[maybe_unused]] const FillContext& ctx)
     {
         for (unsigned scenario: ctx.getSelectedScenarios())
         {
-            optimEntityContainer_.Problem().addNumVariable(timeseries[timestep][scenario],
-                                                           timeseries[timestep][scenario],
-                                                           "variable-ts" + std::to_string(timestep)
-                                                             + "-sc" + std::to_string(scenario));
+            optimEntityContainer_.Problem()->addNumVariable(timeseries[timestep][scenario],
+                                                            timeseries[timestep][scenario],
+                                                            "variable-ts" + std::to_string(timestep)
+                                                              + "-sc" + std::to_string(scenario));
         }
     }
 }

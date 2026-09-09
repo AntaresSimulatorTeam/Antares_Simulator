@@ -16,7 +16,7 @@ struct FillerFixture
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
     std::unique_ptr<Antares::Solver::ModelerData> modelerData;
     std::vector<Antares::ModelerStudy::SystemModel::Library> libraries;
-    Antares::LinearProblem::MpsolverImpl::OrtoolsLinearProblem linearProblem;
+    std::shared_ptr<Antares::LinearProblem::MpsolverImpl::OrtoolsLinearProblem> linearProblem;
     Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepository;
     Antares::LinearProblem::DataImpl::LinearProblemData linearProblemData;
 

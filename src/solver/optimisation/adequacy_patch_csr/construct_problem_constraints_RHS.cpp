@@ -72,6 +72,15 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
     //   BH = DefaillanceNegativeUtiliserHydro
     //   BF = DefaillanceNegativeUtiliserConsoAbattue
     //   STS_net_production = net withdrawals from short-term storage (from first optimization step)
+    setRHSfictitiousLoadValueFromLegacy();
+    if (gemsUse_)
+    {
+        setRHSfictitiousLoadValueFromGEMS();
+    }
+}
+
+void HourlyCSRProblem::setRHSfictitiousLoadValueFromLegacy()
+{
     for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
@@ -82,9 +91,7 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
             {
                 int Cnt = it->second;
 
-                // Start with thermal dispatchable generation (STt)
                 double stt = 0.0;
-
                 const auto& paliersThermiques = problemeHebdo_->PaliersThermiquesDuPays[Area];
                 const auto& productionThermique = problemeHebdo_->ResultatsHoraires[Area]
                                                     .ProductionThermique[triggeredHour];
@@ -93,9 +100,6 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                     stt += productionThermique.ProductionThermiqueDuPalier[index];
                 }
 
-                // Subtract (1-BT)*STmint term
-                // If BT is false: subtract STmint (sum of Pmin)
-                // If BT is true: subtract 0 (i.e., use full STt)
                 double stmint = 0.0;
                 if (!problemeHebdo_->DefaillanceNegativeUtiliserPMinThermique[Area])
                 {
@@ -106,14 +110,12 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                     }
                 }
 
-                // Add BH*Ht term (hydro generation if enabled)
                 double ht = 0.0;
                 if (problemeHebdo_->DefaillanceNegativeUtiliserHydro[Area])
                 {
                     ht = problemeHebdo_->ResultatsHoraires[Area].TurbinageHoraire[triggeredHour];
                 }
 
-                // Add BF*(Ft - Lt) term
                 double bfTerm = 0.0;
                 if (problemeHebdo_->DefaillanceNegativeUtiliserConsoAbattue[Area])
                 {
@@ -122,14 +124,10 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                     double consommationAbattue = problemeHebdo_
                                                    ->ConsommationsAbattues[triggeredHour]
                                                    .ConsommationAbattueDuPays[Area];
-
-                    // Ft = max(0,must-run generation)
-                    // Lt = min(0,load) (load = ConsommationAbattueDuPays + must-run generation)
                     bfTerm = std::max(0., allMustRunGen)
                              - std::min(0., consommationAbattue + allMustRunGen);
                 }
 
-                // Add short term storage withdrawal
                 double stsNetProduction = 0.0;
                 if (problemeHebdo_->DefaillanceNegativeUtiliserHydro[Area])
                 {
@@ -141,7 +139,6 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                     }
                 }
 
-                // RHS = STt - (1-BT)*STmint + BH*Ht + BF*(Ft - Lt) + BH*STS_net_production
                 double rhs = stt - stmint + ht + bfTerm + stsNetProduction;
 
                 problemeAResoudre_.SecondMembre[Cnt] = rhs;
@@ -153,7 +150,33 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
     }
 }
 
+void HourlyCSRProblem::setRHSfictitiousLoadValueFromGEMS()
+{
+    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
+    {
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        {
+            std::map<int, int>::iterator it = numberOfConstraintCsrFictitiousLoad.find(Area);
+            if (it != numberOfConstraintCsrFictitiousLoad.end())
+            {
+                int Cnt = it->second;
+                problemeAResoudre_.SecondMembre[Cnt] += gemsSpilledForArea(Area);
+            }
+        }
+    }
+}
+
 void HourlyCSRProblem::setRHSMaxEnsLoadValue()
+{
+    setRHSMaxEnsLoadValueFromLegacy();
+    if (gemsUse_)
+    {
+        setRHSMaxEnsLoadValueFromGEMS();
+    }
+}
+
+void HourlyCSRProblem::setRHSMaxEnsLoadValueFromLegacy()
 {
     std::vector<double>& SecondMembre = problemeAResoudre_.SecondMembre;
 
@@ -182,6 +205,25 @@ void HourlyCSRProblem::setRHSMaxEnsLoadValue()
 
                 logs.debug() << Cnt << ": MaxEnsLoad: RHS[" << Cnt << "] = " << SecondMembre[Cnt]
                              << " (Area = " << Area << ")";
+            }
+        }
+    }
+}
+
+void HourlyCSRProblem::setRHSMaxEnsLoadValueFromGEMS()
+{
+    std::vector<double>& SecondMembre = problemeAResoudre_.SecondMembre;
+
+    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; ++Area)
+    {
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        {
+            std::map<int, int>::iterator it = numberOfConstraintCsrMaxEnsLoad.find(Area);
+            if (it != numberOfConstraintCsrMaxEnsLoad.end())
+            {
+                int Cnt = it->second;
+                SecondMembre[Cnt] += gemsUnsupEnergyForArea(Area);
             }
         }
     }

@@ -56,7 +56,7 @@ private:
 
     const ModelerStudy::SystemModel::Component& component_;
     OptimEntityContainer& optimEntityContainer_;
-    Api::ILinearProblem& pb_;
+    std::shared_ptr<Api::ILinearProblem> pb_;
     const LinearProblem::Api::ILinearProblemData* data_;
     const LinearProblem::ScenarioGroupRepository& scenarioGroupRepo_;
     const Solver::Config::Location targetLocation_;

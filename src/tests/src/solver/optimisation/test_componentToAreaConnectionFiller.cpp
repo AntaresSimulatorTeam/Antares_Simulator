@@ -117,12 +117,12 @@ struct ComponentToAreaConnectionFillerFixture
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
     std::unique_ptr<Solver::ModelerData> modelerData;
     std::vector<Library> libraries;
-    MpsolverImpl::OrtoolsLinearProblem linearProblem;
+    std::shared_ptr<MpsolverImpl::OrtoolsLinearProblem> linearProblem;
     ScenarioGroupRepository scenarioGroupRepository;
     std::remove_reference_t<LinearProblemData&> data;
 
     ComponentToAreaConnectionFillerFixture():
-        linearProblem(true, "scip")
+        linearProblem(std::make_shared<MpsolverImpl::OrtoolsLinearProblem>(true, "scip"))
     {
         problemeHebdo = std::make_unique<PROBLEME_HEBDO>();
         problemeHebdo->ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
@@ -173,7 +173,7 @@ struct ComponentToAreaConnectionFillerFixture
                     for (auto t = ts_start; t <= ts_end; ++t)
                     {
                         auto name = buildVariableName(component.Id(), variable.Id(), {}, t);
-                        linearProblem.addVariable(-999, 999, false, name);
+                        linearProblem->addVariable(-999, 999, false, name);
                     }
                 }
                 else
@@ -182,7 +182,7 @@ struct ComponentToAreaConnectionFillerFixture
                                                   variable.Id(),
                                                   std::nullopt,
                                                   std::nullopt);
-                    linearProblem.addVariable(-999, 999, false, name);
+                    linearProblem->addVariable(-999, 999, false, name);
                 }
             }
         }
@@ -192,7 +192,7 @@ struct ComponentToAreaConnectionFillerFixture
     {
         for (const auto& name: names)
         {
-            linearProblem.addConstraint(rhs, rhs, name);
+            linearProblem->addConstraint(rhs, rhs, name);
         }
     }
 
@@ -258,11 +258,11 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
 
     addConstraintsFromConnectionsToLP({0, 0, 0, 0, 0}, optimEntityContainer);
 
-    const auto* balance_ct = linearProblem.lookupConstraint("AreaBalance::area<area1>::hour<0>");
+    const auto* balance_ct = linearProblem->lookupConstraint("AreaBalance::area<area1>::hour<0>");
 
-    const auto* nc_var_t0 = linearProblem.lookupVariable("component_with_vars.no_connect_var_t0");
-    const auto* var1_t0 = linearProblem.lookupVariable("component_with_vars.var_1_t0");
-    const auto* var2_t0 = linearProblem.lookupVariable("component_with_vars.var_2_t0");
+    const auto* nc_var_t0 = linearProblem->lookupVariable("component_with_vars.no_connect_var_t0");
+    const auto* var1_t0 = linearProblem->lookupVariable("component_with_vars.var_1_t0");
+    const auto* var2_t0 = linearProblem->lookupVariable("component_with_vars.var_2_t0");
 
     BOOST_CHECK_EQUAL(balance_ct->getCoefficient(nc_var_t0), 0);
     BOOST_CHECK_EQUAL(balance_ct->getCoefficient(var1_t0), -5);
@@ -270,7 +270,7 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
     BOOST_CHECK_EQUAL(balance_ct->getLb(), 10 + 2 * 4 - 6);
     BOOST_CHECK_EQUAL(balance_ct->getUb(), 10 + 2 * 4 - 6);
 
-    auto other_ct = linearProblem.lookupConstraint("whatever");
+    auto other_ct = linearProblem->lookupConstraint("whatever");
     BOOST_CHECK_EQUAL(other_ct->getCoefficient(nc_var_t0), 0);
     BOOST_CHECK_EQUAL(other_ct->getCoefficient(var1_t0), 0);
     BOOST_CHECK_EQUAL(other_ct->getCoefficient(var2_t0), 0);
@@ -297,15 +297,17 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
 
     addConstraintsFromConnectionsToLP({0, 1, 10, 11, 0}, optimEntityContainer);
 
-    auto balance_ct_t10 = linearProblem.lookupConstraint("c1");
-    auto balance_ct_t11 = linearProblem.lookupConstraint("c2");
+    auto balance_ct_t10 = linearProblem->lookupConstraint("c1");
+    auto balance_ct_t11 = linearProblem->lookupConstraint("c2");
 
-    const auto* nc_var_t10 = linearProblem.lookupVariable("component_with_vars.no_connect_var_t10");
-    const auto* var1_t10 = linearProblem.lookupVariable("component_with_vars.var_1_t10");
-    const auto* var2_t10 = linearProblem.lookupVariable("component_with_vars.var_2_t10");
-    const auto* nc_var_t11 = linearProblem.lookupVariable("component_with_vars.no_connect_var_t11");
-    const auto* var1_t11 = linearProblem.lookupVariable("component_with_vars.var_1_t11");
-    const auto* var2_t11 = linearProblem.lookupVariable("component_with_vars.var_2_t11");
+    const auto* nc_var_t10 = linearProblem->lookupVariable(
+      "component_with_vars.no_connect_var_t10");
+    const auto* var1_t10 = linearProblem->lookupVariable("component_with_vars.var_1_t10");
+    const auto* var2_t10 = linearProblem->lookupVariable("component_with_vars.var_2_t10");
+    const auto* nc_var_t11 = linearProblem->lookupVariable(
+      "component_with_vars.no_connect_var_t11");
+    const auto* var1_t11 = linearProblem->lookupVariable("component_with_vars.var_1_t11");
+    const auto* var2_t11 = linearProblem->lookupVariable("component_with_vars.var_2_t11");
 
     BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(nc_var_t10), 0);
     BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(var1_t10), -5);
