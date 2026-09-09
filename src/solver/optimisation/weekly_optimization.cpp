@@ -9,11 +9,13 @@ using namespace Antares::IO::Outputs;
 
 namespace Antares::Optimization
 {
-WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
-                                       PROBLEME_HEBDO* problemeHebdo,
-                                       Solver::IResultWriter& writer,
-                                       Solver::Simulation::ISimulationObserver& simulationObserver,
-                                       bool writeSimuTable):
+WeeklyOptimization::WeeklyOptimization(
+  const OptimizationOptions& options,
+  PROBLEME_HEBDO* problemeHebdo,
+  Solver::IResultWriter& writer,
+  Solver::Simulation::ISimulationObserver& simulationObserver,
+  bool writeSimuTable,
+  std::shared_ptr<const InactiveComponentsAnalyzer> inactiveComponents):
     options_(options),
     problemeHebdo_(problemeHebdo),
     writer_(writer),
@@ -21,7 +23,8 @@ WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
 {
     if (writeSimuTable)
     {
-        simulationTables_ = std::make_unique<OptimisationsSimulationTable>();
+        simulationTables_ = std::make_unique<OptimisationsSimulationTable>(
+          std::move(inactiveComponents));
     }
 }
 

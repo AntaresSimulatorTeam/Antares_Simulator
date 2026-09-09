@@ -4,6 +4,7 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <set>
 #include <string>
 
@@ -27,6 +28,14 @@ namespace Antares::IO::Outputs
 class OptimisationsSimulationTable
 {
 public:
+    /**
+     * \brief Build the per-stage tables for one Monte-Carlo year.
+     * \param inactiveComponents when set, the writer skips the rows of
+     *        structurally inactive components; nullptr keeps every row.
+     */
+    explicit OptimisationsSimulationTable(
+      std::shared_ptr<const Optimization::InactiveComponentsAnalyzer> inactiveComponents);
+
     /**
      * \brief Parse a user-supplied stage list into a selection set.
      * \param input comma-separated stage names, or "all". Empty, or "all"
@@ -76,7 +85,7 @@ public:
     /// Monte-Carlo year.
     void clear();
 
-    std::shared_ptr<const Optimization::InactiveComponentsAnalyzer> inactiveComponents;
+    const std::shared_ptr<const Optimization::InactiveComponentsAnalyzer> inactiveComponents;
 
 private:
     std::map<Stage, SimulationTable> stages_;
