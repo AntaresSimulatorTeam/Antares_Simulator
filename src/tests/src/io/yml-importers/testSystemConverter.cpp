@@ -395,6 +395,49 @@ BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownPort, PrepareYaml)
     BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::invalid_argument);
 }
 
+BOOST_FIXTURE_TEST_CASE(TryToConnectTwoSenderPorts, PrepareYaml)
+{
+    // Both the generator (G) and the demand (D) define their 'port_name' field,
+    // so it is a Sender in both ports: connecting them must be rejected.
+    AddConnectionsToSystem(system,
+                           {{.firstCompo = "G",
+                             .firstPort = "injection_port",
+                             .secondCompo = "D",
+                             .secondPort = "injection_port"}});
+
+    YmlSystem::System systemObj = parserSystem.parse(system, "");
+    BOOST_CHECK_EXCEPTION(SystemConverter::convert(systemObj, libraries),
+                          InputError,
+                          checkMessage("In connection between components 'G' and 'D': Field "
+                                       "'port_name' is Sender in both ports 'injection_port' "
+                                       "and 'injection_port'"));
+}
+
+BOOST_FIXTURE_TEST_CASE(TryToConnectTwoReceiverPorts, PrepareYaml)
+{
+    // Add a second receiver component: the 'node' model has no port-field-definition,
+    // so its 'port_name' field is a Receiver.
+    const std::string connections_marker = "\n          connections:";
+    system.insert(system.find(connections_marker) + 1,
+                  "            - id: N2\n"
+                  "              model: std.node\n"
+                  "              scenario-group: group-234\n");
+
+    AddConnectionsToSystem(
+      system,
+      {{.firstCompo = "N",
+        .firstPort = "injection_port",
+        .secondCompo = "N2",
+        .secondPort = "injection_port"}});
+
+    YmlSystem::System systemObj = parserSystem.parse(system, "");
+    BOOST_CHECK_EXCEPTION(SystemConverter::convert(systemObj, libraries),
+                          InputError,
+                          checkMessage("In connection between components 'N' and 'N2': Field "
+                                       "'port_name' is Receiver in both ports 'injection_port' "
+                                       "and 'injection_port'"));
+}
+
 BOOST_FIXTURE_TEST_CASE(DuplicatedCompo, PrepareYaml)
 {
     const auto duplicatedCompo = R"(
