@@ -48,7 +48,7 @@ std::set<std::string> OptimisationsSimulationTable::parseStageSelection(const st
         if (std::find(known.begin(), known.end(), name) == known.end())
         {
             std::ostringstream message;
-            message << "Invalid value for " << source << ": '" << name << "' (expected all";
+            message << "Invalid value for " << source << ": '" << name << "' (expected all,";
             for (const auto& stage: known)
             {
                 message << ", " << stage;
