@@ -58,8 +58,7 @@ std::vector<double> readBackFromAddresses(const std::vector<double>& values,
 
 StageSolution stageSolution(const PROBLEME_ANTARES_A_RESOUDRE& problem)
 {
-    return {readBackFromAddresses(problem.X,
-                                  problem.AdresseOuPlacerLaValeurDesVariablesOptimisees),
+    return {readBackFromAddresses(problem.X, problem.AdresseOuPlacerLaValeurDesVariablesOptimisees),
             readBackFromAddresses(problem.CoutsMarginauxDesContraintes,
                                   problem.AdresseOuPlacerLaValeurDesCoutsMarginaux)};
 }

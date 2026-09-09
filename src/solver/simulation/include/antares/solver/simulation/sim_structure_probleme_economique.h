@@ -21,7 +21,7 @@ namespace Antares::Optimization
 {
 struct SolvedModelerProblem;
 class InactiveComponentsAnalyzer;
-}
+} // namespace Antares::Optimization
 
 struct CORRESPONDANCES_DES_VARIABLES
 {
