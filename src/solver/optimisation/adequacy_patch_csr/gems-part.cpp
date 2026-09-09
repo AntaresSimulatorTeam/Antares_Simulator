@@ -17,6 +17,7 @@
 using namespace Antares::Data::AdequacyPatch;
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Expressions;
+using namespace Antares::LinearProblem::Api;
 
 ActiveGemsPart::ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo):
     problemeHebdo_(problemeHebdo)
@@ -30,13 +31,11 @@ ActiveGemsPart::ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo):
 void ActiveGemsPart::setHour(int triggeredHour)
 {
     triggeredHour_ = triggeredHour;
-    fillContext_ = Antares::LinearProblem::Api::FillContext(0,
-                                                            0,
-                                                            triggeredHour_
-                                                              + problemeHebdo_->HeureDansLAnnee,
-                                                            triggeredHour_
-                                                              + problemeHebdo_->HeureDansLAnnee,
-                                                            problemeHebdo_->year);
+    fillContext_ = FillContext(0,
+                               0,
+                               triggeredHour_ + problemeHebdo_->HeureDansLAnnee,
+                               triggeredHour_ + problemeHebdo_->HeureDansLAnnee,
+                               problemeHebdo_->year);
 }
 
 double ActiveGemsPart::gemsContributionForArea(
