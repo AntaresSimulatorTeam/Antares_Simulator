@@ -159,7 +159,7 @@ void fillLinearProblem(const FillContext& fillCtx,
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
-      std::make_unique<LegacyFiller>(optimEntityContainer.Problem(), problemeHebdo));
+      std::make_unique<LegacyFiller>(*optimEntityContainer.Problem(), problemeHebdo));
     Utils::TimeMeasurement measure;
     if (problemeHebdo->modelerData)
     {
@@ -408,7 +408,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                             problemeHebdo->exportMPSOnError,
                                             optimizationNumber,
-                                            problemeHebdo->optimEntityContainer->Problem());
+                                            *problemeHebdo->optimEntityContainer->Problem());
 
         auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
         const std::string filename = createMPSfilename(optPeriodStringGenerator,

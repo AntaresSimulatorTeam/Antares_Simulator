@@ -50,7 +50,7 @@ public:
     int nbYears() const;
     int nbWeeks() const;
     bool areWeeksIndependent() const;
-    Solver::ProblemEntity getMasterProblem() const;
+    std::shared_ptr<LinearProblem::Api::ILinearProblem> getMasterProblem() const;
     void writeMasterAndStructure() const;
     void printProblems();
     std::set<int> playedYears() const;

@@ -59,7 +59,7 @@ void SingleProblemGetter::printProblems() const
     impl_->printProblems();
 }
 
-Solver::ProblemEntity SingleProblemGetter::getMasterProblem() const
+std::shared_ptr<LinearProblem::Api::ILinearProblem> SingleProblemGetter::getMasterProblem() const
 {
     return impl_->getMasterProblem();
 }

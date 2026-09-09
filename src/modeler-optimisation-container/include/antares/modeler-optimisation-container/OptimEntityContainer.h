@@ -59,9 +59,9 @@ public:
         return optimComponent.modelConstraintCounts.at(index);
     }
 
-    Api::ILinearProblem& Problem() const
+    [[nodiscard]] const std::shared_ptr<Api::ILinearProblem>& Problem() const
     {
-        return *linearProblem_;
+        return linearProblem_;
     }
 
     std::span<const std::unique_ptr<Api::IMipVariable>> getComponentVariable(

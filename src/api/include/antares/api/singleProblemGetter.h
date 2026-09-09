@@ -15,10 +15,13 @@ namespace Antares::Solver::Implementation
 class SingleProblemGetter;
 }
 
+namespace Antares::LinearProblem
+{
+class ILinearProblem;
+} // namespace Antares::LinearProblem
+
 namespace Antares::Solver
 {
-struct ProblemEntity;
-
 class SingleProblemGetter final
 {
 public:
@@ -38,7 +41,7 @@ public:
     void writeStudyDescriptionFiles(const std::filesystem::path& outputDir);
     bool areWeeksIndependent() const;
     void printProblems() const;
-    Solver::ProblemEntity getMasterProblem() const;
+    std::shared_ptr<LinearProblem::Api::ILinearProblem> getMasterProblem() const;
 
 private:
     std::unique_ptr<Implementation::SingleProblemGetter> impl_;

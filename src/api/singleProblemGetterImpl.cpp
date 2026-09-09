@@ -510,7 +510,7 @@ void writeWeekMPS(const ILinearProblem& weekly,
     resultWriter->addEntryFromBuffer(name + ".mps", mps);
 }
 
-Solver::ProblemEntity SingleProblemGetter::getMasterProblem() const
+std::shared_ptr<ILinearProblem> SingleProblemGetter::getMasterProblem() const
 {
     using namespace Antares::Solver;
     using namespace Antares::LinearProblem;
@@ -538,7 +538,7 @@ void SingleProblemGetter::writeMasterAndStructure() const
 
     FillContext fillContext = {0, 167, 0, 167, 0};
 
-    auto [masterProblem, _] = getMasterProblem();
+    auto masterProblem = getMasterProblem();
 
     if (!masterProblem)
     {
