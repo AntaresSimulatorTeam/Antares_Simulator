@@ -1,6 +1,8 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <fmt/format.h>
+
 #include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
@@ -24,6 +26,7 @@ void HourlyCSRProblem::constructVariableENS()
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             variableManager_.UnsuppliedEnergy(area, triggeredHour) = NumberOfVariables;
+            problemeAResoudre_.NomDesVariables[NumberOfVariables] = fmt::format("ENS_{}", area);
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             varToBeSetToZeroIfBelowThreshold.insert(NumberOfVariables);
             ensVariablesInsideAdqPatch.insert(NumberOfVariables);
@@ -48,6 +51,7 @@ void HourlyCSRProblem::constructVariableSpilledEnergy()
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             variableManager_.Spillage(area, triggeredHour) = NumberOfVariables;
+            problemeAResoudre_.NomDesVariables[NumberOfVariables] = fmt::format("SPILL_{}", area);
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
             varToBeSetToZeroIfBelowThreshold.insert(NumberOfVariables);
             logs.debug() << NumberOfVariables << " Spilled Energy[" << area << "].-["
@@ -79,6 +83,7 @@ void HourlyCSRProblem::constructVariableFlows()
             int indirectVar;
             algebraicFluxVar = variableManager_.DirectFlow(Interco, triggeredHour)
               = NumberOfVariables;
+            problemeAResoudre_.NomDesVariables[NumberOfVariables] = fmt::format("FLOW_{}", Interco);
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug()
               << NumberOfVariables << " flow[" << Interco << "]. ["
@@ -91,12 +96,16 @@ void HourlyCSRProblem::constructVariableFlows()
 
             directVar = variableManager_.PositiveDirectFlow(Interco, triggeredHour)
               = NumberOfVariables;
+            problemeAResoudre_.NomDesVariables[NumberOfVariables] = fmt::format("FLOW_DIRECT_{}",
+                                                                                Interco);
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug() << NumberOfVariables << " direct flow[" << Interco << "]. ";
             NumberOfVariables++;
 
             indirectVar = variableManager_.PositiveIndirectFlow(Interco, triggeredHour)
               = NumberOfVariables;
+            problemeAResoudre_.NomDesVariables[NumberOfVariables] = fmt::format("FLOW_INDIRECT_{}",
+                                                                                Interco);
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug() << NumberOfVariables << " indirect flow[" << Interco << "]. ";
             NumberOfVariables++;
