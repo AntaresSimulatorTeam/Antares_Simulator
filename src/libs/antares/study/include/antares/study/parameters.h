@@ -431,7 +431,7 @@ public:
     // every stage. Parsed from `simulationTableStagesStr` (or the command line)
     // when the selection is resolved, so any unknown name has already been
     // rejected by the time this is filled.
-    std::set<Stage> simulationTableStages;
+    std::set<Antares::IO::Outputs::Stage> simulationTableStages;
 
     // The raw `simulation-table-stages` value read from generaldata.ini, before
     // validation. Resolved into `simulationTableStages` once the command line

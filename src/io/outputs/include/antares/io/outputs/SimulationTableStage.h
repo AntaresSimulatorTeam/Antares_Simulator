@@ -13,7 +13,7 @@
 // and then write a bare `IO::File::...`. Opening Antares::IO here would make
 // that `IO` ambiguous with Yuni::IO. OptimisationsSimulationTable re-exports the
 // names below into its own namespace for the code that already expects them.
-namespace Antares::Data
+namespace Antares::IO::Outputs
 {
 // A stage of the weekly resolution that can get its own simulation table. The
 // first two are produced during the weekly solve, the others once a

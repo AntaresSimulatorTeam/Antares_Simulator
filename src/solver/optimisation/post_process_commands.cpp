@@ -421,7 +421,7 @@ void WriteDebugAdequacyPatch::writeLinkData(const optRuntimeData& opt_runtime_da
 // --------------------------------------
 DumpSimulationTablePostProcessCmd::DumpSimulationTablePostProcessCmd(
   PROBLEME_HEBDO* problemeHebdo,
-  Data::Stage stage,
+  IO::Outputs::Stage stage,
   IO::Outputs::OptimisationsSimulationTable* tables):
     basePostProcessCommand(problemeHebdo),
     stage_(stage),

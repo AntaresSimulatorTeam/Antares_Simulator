@@ -32,14 +32,14 @@ public:
     // command line or generaldata.ini.
     //
     // An empty result means "every stage".
-    static std::set<Data::Stage> parseStageSelection(
+    static std::set<IO::Outputs::Stage> parseStageSelection(
       const std::string& input,
       const std::string& source = "--simulation-table-stages");
 
     // Restricts the tables to `stages`. An empty set means no restriction, so
     // the default is to produce every stage. Call before the first dump: stages
     // already created are not removed.
-    void selectStages(std::set<Data::Stage> stages);
+    void selectStages(std::set<IO::Outputs::Stage> stages);
 
     SimulationTable* firstOptimSimulationTable();
     SimulationTable* secondOptimSimulationTable();
@@ -48,10 +48,10 @@ public:
     // stage is not selected — callers must skip the dump on nullptr. std::map
     // nodes are address-stable, so a pointer returned here stays valid when
     // later stages are added.
-    SimulationTable* tableForStage(Data::Stage stage);
+    SimulationTable* tableForStage(IO::Outputs::Stage stage);
 
     // Whether `stage` would get a table, without creating one.
-    [[nodiscard]] bool isStageSelected(Data::Stage stage) const;
+    [[nodiscard]] bool isStageSelected(IO::Outputs::Stage stage) const;
 
     // Whether any stage dumped after a post-process is selected. The weekly
     // solve asks this to decide whether it must keep its modeler problem alive
@@ -59,7 +59,7 @@ public:
     // stages are wanted.
     [[nodiscard]] bool anyPostProcessStageSelected() const;
 
-    [[nodiscard]] const std::map<Data::Stage, SimulationTable>& stages() const;
+    [[nodiscard]] const std::map<IO::Outputs::Stage, SimulationTable>& stages() const;
 
     // Empties every stage's table, keeping the stages themselves: the same
     // stages recur at every Monte-Carlo year.
@@ -68,8 +68,8 @@ public:
     std::shared_ptr<const Optimization::InactiveComponentsAnalyzer> inactiveComponents;
 
 private:
-    std::map<Data::Stage, SimulationTable> stages_;
+    std::map<IO::Outputs::Stage, SimulationTable> stages_;
     // Empty means "every stage", which is what an unrestricted run wants.
-    std::set<Data::Stage> selectedStages_;
+    std::set<IO::Outputs::Stage> selectedStages_;
 };
 } // namespace Antares::IO::Outputs

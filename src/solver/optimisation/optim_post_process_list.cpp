@@ -26,7 +26,7 @@ OptPostProcessList::OptPostProcessList(PROBLEME_HEBDO* problemeHebdo,
                                                                            resultWriter));
     post_process_list.push_back(std::make_unique<DumpSimulationTablePostProcessCmd>(
       problemeHebdo_,
-      Data::Stage::remixHydro,
+      IO::Outputs::Stage::remixHydro,
       simulationTables));
     post_process_list.push_back(
       std::make_unique<InterpolateWaterValuePostProcessCmd>(problemeHebdo_, areas, calendar));

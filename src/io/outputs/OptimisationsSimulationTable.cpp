@@ -37,7 +37,7 @@ std::vector<std::string> splitStageList(const std::string& input)
 {
     std::ostringstream message;
     message << "Invalid value for " << source << ": '" << name << "' (expected all";
-    for (const auto stage: Data::allStages)
+    for (const auto stage: IO::Outputs::allStages)
     {
         message << ", " << stageName(stage);
     }
@@ -49,10 +49,10 @@ std::vector<std::string> splitStageList(const std::string& input)
 // has to be a real stage, so a typo in `all,optim-nb-3` is reported rather than
 // swallowed. An empty result means "every stage": that is what "all", and an
 // empty list, resolve to.
-std::vector<Data::Stage> resolveStages(const std::vector<std::string>& names, const std::string& source)
+std::vector<IO::Outputs::Stage> resolveStages(const std::vector<std::string>& names, const std::string& source)
 {
     bool everyStage = false;
-    std::vector<Data::Stage> stages;
+    std::vector<IO::Outputs::Stage> stages;
     for (const auto& name: names)
     {
         if (name == "all")
@@ -61,40 +61,40 @@ std::vector<Data::Stage> resolveStages(const std::vector<std::string>& names, co
             continue;
         }
 
-        const auto stage = Data::stageFromName(name);
+        const auto stage = IO::Outputs::stageFromName(name);
         if (!stage)
         {
             rejectUnknownStage(name, source);
         }
         stages.push_back(*stage);
     }
-    return everyStage ? std::vector<Data::Stage>{} : stages;
+    return everyStage ? std::vector<IO::Outputs::Stage>{} : stages;
 }
 } // namespace
 
-std::set<Data::Stage> OptimisationsSimulationTable::parseStageSelection(const std::string& input,
+std::set<IO::Outputs::Stage> OptimisationsSimulationTable::parseStageSelection(const std::string& input,
                                                                   const std::string& source)
 {
     const auto stages = resolveStages(splitStageList(input), source);
     return {stages.begin(), stages.end()};
 }
 
-void OptimisationsSimulationTable::selectStages(std::set<Data::Stage> stages)
+void OptimisationsSimulationTable::selectStages(std::set<IO::Outputs::Stage> stages)
 {
     selectedStages_ = std::move(stages);
 }
 
 SimulationTable* OptimisationsSimulationTable::firstOptimSimulationTable()
 {
-    return tableForStage(Data::Stage::firstOptim);
+    return tableForStage(IO::Outputs::Stage::firstOptim);
 }
 
 SimulationTable* OptimisationsSimulationTable::secondOptimSimulationTable()
 {
-    return tableForStage(Data::Stage::secondOptim);
+    return tableForStage(IO::Outputs::Stage::secondOptim);
 }
 
-SimulationTable* OptimisationsSimulationTable::tableForStage(Data::Stage stage)
+SimulationTable* OptimisationsSimulationTable::tableForStage(IO::Outputs::Stage stage)
 {
     if (!isStageSelected(stage))
     {
@@ -103,17 +103,17 @@ SimulationTable* OptimisationsSimulationTable::tableForStage(Data::Stage stage)
     return &stages_.try_emplace(stage).first->second;
 }
 
-bool OptimisationsSimulationTable::isStageSelected(Data::Stage stage) const
+bool OptimisationsSimulationTable::isStageSelected(IO::Outputs::Stage stage) const
 {
     return selectedStages_.empty() || selectedStages_.contains(stage);
 }
 
 bool OptimisationsSimulationTable::anyPostProcessStageSelected() const
 {
-    return isStageSelected(Data::Stage::remixHydro) || isStageSelected(Data::Stage::adequacyPatchCsr);
+    return isStageSelected(IO::Outputs::Stage::remixHydro) || isStageSelected(IO::Outputs::Stage::adequacyPatchCsr);
 }
 
-const std::map<Data::Stage, SimulationTable>& OptimisationsSimulationTable::stages() const
+const std::map<IO::Outputs::Stage, SimulationTable>& OptimisationsSimulationTable::stages() const
 {
     return stages_;
 }
