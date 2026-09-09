@@ -64,6 +64,11 @@ jobs:
     - name: Install VCPKG
       run: git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
 
+    - name: Configure vcpkg asset cache
+      uses: ./.github/workflows/vcpkg-asset-cache
+      with:
+        base-url: ${{ vars.VCPKG_ASSET_BASE_URL }}
+
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary
       uses: actions/cache/restore@v6
