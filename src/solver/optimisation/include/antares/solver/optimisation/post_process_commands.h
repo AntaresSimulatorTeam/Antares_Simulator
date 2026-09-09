@@ -133,13 +133,14 @@ private:
     const std::string fileLabel_;
 };
 
-// Writes the state of the legacy results into the simulation table stage named
-// `stage`, at the point of the post-process list where it is inserted. Placed
-// right after the command whose effect it is meant to capture, so the stage
-// name matches that post-process.
-//
-// Does nothing when `tables` is null, i.e. when the run does not write
-// simulation tables at all.
+/**
+ * \brief Write the legacy results into the `stage` simulation table at this
+ * point of the post-process list.
+ *
+ * Inserted right after the command whose effect it captures, so the stage name
+ * matches that post-process. No-op when `tables` is null (run writes no
+ * simulation tables).
+ */
 class DumpSimulationTablePostProcessCmd final: public basePostProcessCommand
 {
 public:

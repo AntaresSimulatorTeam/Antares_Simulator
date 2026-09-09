@@ -201,7 +201,7 @@ struct CONTRAINTES_COUPLANTES
 
     const char* NomDeLaContrainteCouplante;
 
-    std::shared_ptr<Antares::Data::BindingConstraint> bindingConstraint;
+    std::shared_ptr<BindingConstraint> bindingConstraint;
 };
 
 struct PROPERTIES
@@ -218,8 +218,8 @@ struct PROPERTIES
     bool allowOverflow{false};
     double overflowCost{0.0};
 
-    std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
-    std::vector<std::shared_ptr<Antares::Data::ShortTermStorage::AdditionalConstraints>>
+    std::shared_ptr<ShortTermStorage::Series> series;
+    std::vector<std::shared_ptr<ShortTermStorage::AdditionalConstraints>>
       additionalConstraints;
     int clusterGlobalIndex;
     std::string name;
@@ -414,7 +414,7 @@ struct PALIERS_THERMIQUES
     // the vectors above. Carried only so the legacy extra outputs can emit
     // co2_emissions ... op5_emissions = generation_power * factor; not used by
     // the optimization itself.
-    std::vector<std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX>> emissionFactors;
+    std::vector<std::array<double, Pollutant::POLLUTANT_MAX>> emissionFactors;
 };
 
 struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
@@ -521,9 +521,9 @@ struct RESULTATS_HORAIRES
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE> ProductionThermique; // index is pdtHebdo
     std::vector<OPTIMAL_HYDRO_USAGE> HydroUsage;                    // index is pdtHebdo
 
-    std::vector<::RESULTS> ShortTermStorage;
+    std::vector<RESULTS> ShortTermStorage;
 
-    std::optional<std::vector<::RESULTSRESERVES>> ShortTermStorageReserves;
+    std::optional<std::vector<RESULTSRESERVES>> ShortTermStorageReserves;
     std::optional<std::vector<RESERVES>> Reserves;
 };
 
@@ -565,10 +565,10 @@ struct PROBLEME_HEBDO
     bool OptimisationAvecVariablesEntieres = false;
     bool useThermalHeuristic = true;
 
-    // Study-wide, once-only precomputed activity flags used to suppress
-    // simulation-table rows for structurally inactive objects (see
-    // AddLegacyExtraOutputs). Null by default: legacy callers and hand-built
-    // test fixtures that don't set it keep emitting every row, unaffected.
+    /// \brief Study-wide, precomputed activity flags used to suppress
+    /// simulation-table rows for structurally inactive objects (see
+    /// AddLegacyExtraOutputs). Null by default, so callers and test fixtures
+    /// that leave it unset keep emitting every row.
     std::shared_ptr<const Antares::Optimization::InactiveComponentsAnalyzer> inactiveComponents;
 
     uint32_t NombreDePays = 0;
@@ -608,10 +608,10 @@ struct PROBLEME_HEBDO
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
-    std::optional<std::vector<::AREA_RESERVES_VECTOR>> allReserves;
+    std::optional<std::vector<AREA_RESERVES_VECTOR>> allReserves;
 
     uint32_t NumberOfShortTermStorages = 0;
-    std::vector<::AREA_INPUT> ShortTermStorage;
+    std::vector<AREA_INPUT> ShortTermStorage;
 
     // Input-data generation series (renewable clusters or aggregated
     // wind/solar/ROR, misc gen entries) copied from the study each week so the
@@ -788,21 +788,20 @@ public:
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     Antares::Solver::ModelerData* modelerData = nullptr;
 
-    // Whether the solve must publish `lastSolvedModelerProblem` below. Set per
-    // week by OPT_OptimisationLineaire, which is the level that knows whether a
-    // post-process stage will read it back. Deliberately not tied to whether
-    // *this* pass writes a table: a run that selects only post-process stages
-    // gets no optimisation-pass table at all, and would otherwise lose every
-    // modeler row of the stages it did ask for.
+    /// \brief Whether the solve must publish lastSolvedModelerProblem. Set per
+    /// week by OPT_OptimisationLineaire, the level that knows a post-process
+    /// stage will read it back. Not tied to whether *this* pass writes a table:
+    /// a run selecting only post-process stages would otherwise lose every
+    /// modeler row of the stages it asked for.
     bool retainSolvedModelerProblem = false;
 
-    // Modeler side of the last optimisation pass of the current week, kept alive
-    // past the solve so a post-process simulation table can re-emit the modeler
-    // component rows. Null unless `retainSolvedModelerProblem` is set.
+    /// \brief Modeler side of the current week's last optimisation pass, kept
+    /// alive past the solve so a post-process simulation table can re-emit the
+    /// modeler component rows. Null unless retainSolvedModelerProblem is set.
     std::shared_ptr<const Antares::Optimization::SolvedModelerProblem> lastSolvedModelerProblem;
 };
 
 // Import functions for capacity and hydro reserves
-void importCapacityReservations(const Antares::Data::AreaList& areas, PROBLEME_HEBDO& problem);
-void importHydroReserves(const Antares::Data::AreaList& areas, PROBLEME_HEBDO& problem);
+void importCapacityReservations(const AreaList& areas, PROBLEME_HEBDO& problem);
+void importHydroReserves(const AreaList& areas, PROBLEME_HEBDO& problem);
 #endif

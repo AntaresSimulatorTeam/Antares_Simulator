@@ -427,15 +427,14 @@ public:
     // In case we print simulation tables, do we print it in csv or parquet ?
     Writer::TableFormat simuTableFormat = Writer::TableFormat::CSV;
 
-    // Which stages of the weekly resolution get a simulation table. Empty means
-    // every stage. Parsed from `simulationTableStagesStr` (or the command line)
-    // when the selection is resolved, so any unknown name has already been
-    // rejected by the time this is filled.
+    /// \brief Which stages of the weekly resolution get a simulation table;
+    /// empty means every stage. Resolved from simulationTableStagesStr (or the
+    /// command line), so unknown names are already rejected when this is filled.
     std::set<Antares::IO::Outputs::Stage> simulationTableStages;
 
-    // The raw `simulation-table-stages` value read from generaldata.ini, before
-    // validation. Resolved into `simulationTableStages` once the command line
-    // is applied, which overrides it when it carries a selection of its own.
+    /// \brief Raw `simulation-table-stages` value from generaldata.ini, before
+    /// validation. Resolved into simulationTableStages once the command line is
+    /// applied, which overrides it when it carries a selection of its own.
     std::string simulationTableStagesStr;
 
     bool hydroDebug;

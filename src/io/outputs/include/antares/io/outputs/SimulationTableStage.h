@@ -15,30 +15,30 @@
 // or that `IO` turns ambiguous with `Yuni::IO`.
 namespace Antares::IO::Outputs
 {
-// A stage of the weekly resolution that can get its own simulation table. The
-// first two are produced during the weekly solve, the others once a
-// post-process has moved the results. The enumerators are ordered as the weekly
-// resolution reaches them, which is also the order a std::map keyed by Stage
-// iterates in.
+/**
+ * \brief A stage of the weekly resolution that can get its own simulation table.
+ *
+ * Enumerators are ordered as the weekly resolution reaches them, which is also
+ * the iteration order of a std::map keyed by Stage.
+ */
 enum class Stage
 {
     firstOptim,
     secondOptim,
     remixHydro,
-    // The whole CSR treatment, not just the patch: curtailment sharing, DTG
-    // netting and the marginal price update.
+    /// The whole CSR treatment: curtailment sharing, DTG netting and the
+    /// marginal price update.
     adequacyPatchCsr,
 };
 
-// Every stage, in the order the weekly resolution reaches them.
+/// \brief Every stage, in the order the weekly resolution reaches them.
 inline constexpr std::array allStages = {Stage::firstOptim,
                                                    Stage::secondOptim,
                                                    Stage::remixHydro,
                                                    Stage::adequacyPatchCsr};
 
-// The wire name of a stage: it is part of the output file names and of the
-// `simulation-table-stages` generaldata.ini value, so these strings must not
-// change.
+/// \brief Wire name of a stage: used in output file names and the
+/// `simulation-table-stages` generaldata.ini value, so these strings are stable.
 constexpr std::string_view stageName(Stage stage)
 {
     switch (stage)
@@ -55,7 +55,7 @@ constexpr std::string_view stageName(Stage stage)
     return {};
 }
 
-// The stage that goes by `name`, or std::nullopt when no stage does.
+/// \brief The stage that goes by `name`, or std::nullopt when none does.
 constexpr std::optional<Stage> stageFromName(std::string_view name)
 {
     for (const auto stage: allStages)
