@@ -1155,7 +1155,7 @@ BOOST_AUTO_TEST_CASE(post_process_dump_reads_results_mutated_after_the_solve)
     // The adequacy patch reprices the hour at the area's unsupplied energy cost.
     problem.ResultatsHoraires[0].CoutsMarginauxHoraires[0] = -9500.;
 
-    DumpSimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
+    DumpSimulationTableAfterPostProcess(&table, problem, fillContext, currentBlock);
 
     // Raw row: the recorded variable now carries the post-processed value, not X.
     const auto raw = FindRow(table, "unsupplied_energy", "area1_node");
@@ -1184,7 +1184,7 @@ BOOST_AUTO_TEST_CASE(post_process_dump_leaves_the_solver_state_untouched)
     problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0] = 20.;
     problem.ResultatsHoraires[0].CoutsMarginauxHoraires[0] = -9500.;
 
-    DumpSimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
+    DumpSimulationTableAfterPostProcess(&table, problem, fillContext, currentBlock);
 
     BOOST_CHECK(solved.X == xBefore);
     BOOST_CHECK(solved.CoutsMarginauxDesContraintes == dualsBefore);
@@ -1199,7 +1199,7 @@ BOOST_AUTO_TEST_CASE(post_process_dump_is_skipped_when_the_optimization_range_is
     problem.OptimisationAuPasHebdomadaire = false;
     problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0] = 20.;
 
-    DumpSimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
+    DumpSimulationTableAfterPostProcess(&table, problem, fillContext, currentBlock);
 
     BOOST_CHECK_EQUAL(table.rowCount(), 0u);
 }
