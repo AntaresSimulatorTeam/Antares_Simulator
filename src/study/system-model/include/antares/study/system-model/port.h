@@ -4,8 +4,8 @@
 #pragma once
 
 #include <fmt/format.h>
-#include <string>
 #include <map>
+#include <string>
 
 #include "portType.h"
 
@@ -59,15 +59,15 @@ private:
 
 } // namespace Antares::ModelerStudy::SystemModel
 
-template <>
-struct fmt::formatter<Antares::ModelerStudy::SystemModel::FieldRole> : fmt::formatter<std::string_view>
+template<>
+struct fmt::formatter<Antares::ModelerStudy::SystemModel::FieldRole>
+    : fmt::formatter<std::string_view>
 {
     auto format(Antares::ModelerStudy::SystemModel::FieldRole role, fmt::format_context& ctx) const
     {
-        std::string_view name =
-            role == Antares::ModelerStudy::SystemModel::FieldRole::Sender
-                ? "Sender"
-                : "Receiver";
+        std::string_view name = role == Antares::ModelerStudy::SystemModel::FieldRole::Sender
+                                  ? "Sender"
+                                  : "Receiver";
 
         return fmt::formatter<std::string_view>::format(name, ctx);
     }
