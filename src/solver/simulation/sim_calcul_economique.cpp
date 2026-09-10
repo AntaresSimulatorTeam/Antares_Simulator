@@ -10,7 +10,7 @@
 #include <antares/study/area/scratchpad.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
-#include "antares/solver/optimisation/MipDetection.h"
+#include "antares/solver/optimisation/opt_rename_problem.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_binding_constraints_rhs.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -579,11 +579,11 @@ void SIM_InitialisationProblemeHebdo(const Study& study,
 // Copies the week's input-only generation series (components that are not LP
 // variables) into the problem, one entry per simulation-table component. The
 // component naming follows the ST convention: `{area}_wind`, `{area}_solar`,
-// `{area}_run_of_river`, the misc-gen table below (aggregated data), or the
-// cluster name (renewable clusters mode).
-static void fillInputGenerationSeries(const Study& study,
-                                      PROBLEME_HEBDO& problem,
-                                      const int PasDeTempsDebut)
+// `{area}_run_of_river`, the misc-gen table below (aggregated data), or
+// `{area}_renewable_{cluster}` (renewable clusters mode).
+void fillInputGenerationSeries(const Study& study,
+                               PROBLEME_HEBDO& problem,
+                               const int PasDeTempsDebut)
 {
     constexpr std::array<std::pair<const char*, Data::MiscGenIndex>, Data::fhhMax>
       miscGenComponents = {{{"_combined_heat_power", Data::fhhCHP},
@@ -628,7 +628,7 @@ static void fillInputGenerationSeries(const Study& study,
         {
             for (const auto& cluster: area.renewable.list.each_enabled())
             {
-                addEntry(cluster->name(),
+                addEntry(BuildRenewableClusterComponentId(areaId, cluster->id()),
                          [&](int hour) { return cluster->valueAtTimeStep(year, hour); });
             }
         }
