@@ -127,6 +127,7 @@ public:
 
 inline std::string problemName(const WeeklyProblemId& id)
 {
-    return fmt::format("problem-{}-{}--optim-nb-1", id.year + 1, id.week);
+    // WeeklyProblemId uses simulator's zero-based year and week indices here.
+    return fmt::format("problem-{}-{}--optim-nb-1", id.year, id.week);
 }
 } // namespace Antares::Solver
