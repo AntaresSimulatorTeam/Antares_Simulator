@@ -35,9 +35,6 @@ struct ScenarioScope
     std::vector<std::string> include;
     // Scenarios to remove from the base set (optional).
     std::vector<std::string> exclude;
-
-    bool operator==(const ScenarioScope& other) const = default;
-    bool operator!=(const ScenarioScope& other) const = default;
 };
 
 /** \brief Resolve a scenario scope into the concrete, sorted, deduplicated list of scenario
