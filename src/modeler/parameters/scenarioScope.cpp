@@ -6,8 +6,8 @@
 #include <algorithm>
 #include <cctype>
 #include <fmt/format.h>
+#include <regex>
 #include <set>
-#include <stdexcept>
 #include <string>
 
 #include <antares/logs/logs.h>
@@ -32,20 +32,23 @@ namespace
  * non-negative integers ("0-9"). A leading sign is not part of the grammar: a '-' is
  * reported as "indices must be >= 0" and a '+' is reported as a format error.
  */
-std::set<unsigned> expandEntry(const std::string& entry)
+std::set<unsigned> expandEntry(const std::string& baseEntry)
 {
     // A leading sign means the entry is a single signed number, not a range. The
     // documented grammar only allows unsigned non-negative integers, so a '-' yields a
     // dedicated message and a '+' is a plain format error.
-    if (!entry.empty() && (entry[0] == '-' || entry[0] == '+'))
+    if (!baseEntry.empty() && (baseEntry[0] == '-' || baseEntry[0] == '+'))
     {
-        if (entry[0] == '-')
+        if (baseEntry[0] == '-')
         {
             throw InvalidScenarioScopeError(
-              fmt::format("Invalid scenario-scope entry '{}': indices must be >= 0", entry));
+              fmt::format("Invalid scenario-scope entry '{}': indices must be >= 0", baseEntry));
         }
-        throwInvalidEntry(entry);
+        throwInvalidEntry(baseEntry);
     }
+
+    // remove spaces to be more permissive
+    auto entry = regex_replace(baseEntry, std::regex(" "), "");
 
     std::set<unsigned> result;
 
