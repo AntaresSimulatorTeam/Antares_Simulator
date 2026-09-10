@@ -29,10 +29,6 @@ OptPostProcessList::OptPostProcessList(PROBLEME_HEBDO* problemeHebdo,
                                                           IO::Outputs::Stage::remixHydro,
                                                           simulationTables));
     post_process_list.push_back(
-      std::make_unique<DumpSimulationTablePostProcessCmd>(problemeHebdo_,
-                                                          IO::Outputs::Stage::remixHydro,
-                                                          simulationTables));
-    post_process_list.push_back(
       std::make_unique<InterpolateWaterValuePostProcessCmd>(problemeHebdo_, areas, calendar));
     post_process_list.push_back(
       std::make_unique<HydroLevelsFinalUpdatePostProcessCmd>(problemeHebdo_, areas));

@@ -446,7 +446,7 @@ def check_simulation_table_stages(context, stages):
     found = stages_in_output(Path(context.output_path))
     assert sorted(found) == expected, \
         f"Expected simulation table stages {expected}, found {sorted(found)}"
-    
+
 
 def init_simulation(context):
     sih = solver_input_handler(context.study_path)
