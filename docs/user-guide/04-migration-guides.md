@@ -26,11 +26,11 @@ file per stage, named `simulation-table-<year>-<stage>`:
 |---|---|---|
 | `optim-nb-1` | the first optimisation pass | always |
 | `optim-nb-2` | the second pass | when that pass runs (see below) |
-| `remix-hydro` | shave-peaks / remix hydro | weekly `simplex-range` only (see below) |
-| `adq-patch-csr` | the whole adequacy patch CSR treatment | adequacy patch enabled, weekly `simplex-range` only |
+| `shave-peaks` | shave-peaks / remix hydro | weekly `simplex-range` only (see below) |
+| `adq-patch` | the whole adequacy patch CSR treatment | adequacy patch enabled, weekly `simplex-range` only |
 
-**The two pre-existing files are unchanged** — same names, same contents. `remix-hydro` and
-`adq-patch-csr` are new files that did not exist before. A script that globs
+**The two pre-existing files are unchanged** — same names, same contents. `shave-peaks` and
+`adq-patch` are new files that did not exist before. A script that globs
 `simulation-table-*` will therefore pick up more files than it used to, and should filter on the
 stage suffix if it only wants the optimization passes.
 
@@ -61,7 +61,7 @@ takes `all` (the default) or a comma-separated list of stage names:
 
 ```ini
 [output]
-simulation-table-stages = optim-nb-2, adq-patch-csr
+simulation-table-stages = optim-nb-2, adq-patch
 ```
 
 The command-line option `--simulation-table-stages` overrides the generaldata.ini, including

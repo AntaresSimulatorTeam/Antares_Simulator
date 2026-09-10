@@ -78,7 +78,7 @@ def read_stage_simulation_table(context, stage) -> SimulationTable:
     """Load the simulation table the solver wrote for one resolution stage.
 
     The solver writes one simulation table per stage of the weekly resolution
-    (optim-nb-1, optim-nb-2, remix-hydro, adq-patch-csr), each file suffixed
+    (optim-nb-1, optim-nb-2, shave-peaks, adq-patch), each file suffixed
     with the stage name. Reading the stage where it is needed keeps the choice
     local to the step instead of leaving it on context.simu_table for whatever
     step runs next.
