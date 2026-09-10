@@ -448,57 +448,6 @@ def check_simulation_table_stages(context, stages):
         f"Expected simulation table stages {expected}, found {sorted(found)}"
 
 
-@step('the modeler outputs are read from stage "{stage}"')
-def read_modeler_outputs_from_stage(context, stage):
-    """Re-point context.simu_table at the tables of one resolution stage.
-
-    The solver writes one simulation table per stage of the weekly resolution
-    (optim-nb-1, optim-nb-2, remix-hydro, adq-patch-csr). run_simulation loads
-    the first stage the run produced; this step swaps in another stage, so every
-    `the modeler outputs contain ...` step after it reads that stage instead.
-    """
-    output_path = Path(context.output_path)
-    file_pattern = f"simulation-table-*-{stage}.csv"
-    ST_reader_factory = make_simu_table_reader(output_path, OutputFormat.CSV, file_pattern)
-    context.simu_table = SimulationTable(ST_reader_factory())
-
-
-@given('the study asks for the simulation table stages "{stages}"')
-def set_simulation_table_stages_in_ini(context, stages):
-    """Set `simulation-table-stages` in the [output] section of generaldata.ini.
-
-    Unlike solver_input_handler.set_value this inserts the key when it is
-    absent, which it is in every fixture. Use it on a *copy* of a study, since
-    it edits the study in place.
-    """
-    ini_path = Path(context.study_path) / "settings" / "generaldata.ini"
-    lines = ini_path.read_text().splitlines()
-    out, done = [], False
-    for line in lines:
-        if line.strip().startswith("simulation-table-stages"):
-            continue
-        out.append(line)
-        if line.strip() == "[output]":
-            out.append(f"simulation-table-stages = {stages}")
-            done = True
-    assert done, f"No [output] section in {ini_path}"
-    ini_path.write_text("\n".join(out) + "\n")
-
-
-@then('the simulation tables cover exactly the stages "{stages}"')
-def check_simulation_table_stages(context, stages):
-    """Check the exact set of stage suffixes among the simulation-table files.
-
-    Stage names are part of the output contract, so this pins them; `exactly`
-    also catches a stage being emitted where it should have been skipped (an
-    empty table is not written at all).
-    """
-    expected = sorted(stage.strip() for stage in stages.split(","))
-    found = stages_in_output(Path(context.output_path))
-    assert sorted(found) == expected, \
-        f"Expected simulation table stages {expected}, found {sorted(found)}"
-
-
 def init_simulation(context):
     sih = solver_input_handler(context.study_path)
     # read metadata
