@@ -448,21 +448,6 @@ def check_simulation_table_stages(context, stages):
         f"Expected simulation table stages {expected}, found {sorted(found)}"
 
 
-@step('the modeler outputs are read from stage "{stage}"')
-def read_modeler_outputs_from_stage(context, stage):
-    """Re-point context.simu_table at the tables of one resolution stage.
-
-    The solver writes one simulation table per stage of the weekly resolution
-    (optim-nb-1, optim-nb-2, remix-hydro, adq-patch-csr). run_simulation loads
-    the first stage the run produced; this step swaps in another stage, so every
-    `the modeler outputs contain ...` step after it reads that stage instead.
-    """
-    output_path = Path(context.output_path)
-    file_pattern = f"simulation-table-*-{stage}.csv"
-    ST_reader_factory = make_simu_table_reader(output_path, OutputFormat.CSV, file_pattern)
-    context.simu_table = SimulationTable(ST_reader_factory())
-
-
 @given('the study asks for the simulation table stages "{stages}"')
 def set_simulation_table_stages_in_ini(context, stages):
     """Set `simulation-table-stages` in the [output] section of generaldata.ini.
