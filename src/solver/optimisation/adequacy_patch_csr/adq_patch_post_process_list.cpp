@@ -28,7 +28,7 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(
 
     post_process_list.push_back(
       std::make_unique<DumpSimulationTablePostProcessCmd>(problemeHebdo_,
-                                                          IO::Outputs::Stage::remixHydro,
+                                                          IO::Outputs::Stage::peakShaving,
                                                           simulationTables));
 
     if (params.adqPatchDebug)

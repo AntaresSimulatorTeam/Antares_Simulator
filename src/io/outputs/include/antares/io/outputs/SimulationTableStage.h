@@ -19,7 +19,7 @@ enum class Stage
 {
     firstOptim,
     secondOptim,
-    remixHydro,
+    peakShaving,
     /// The whole CSR treatment: curtailment sharing, DTG netting and the
     /// marginal price update.
     adequacyPatch,
@@ -28,7 +28,7 @@ enum class Stage
 /// \brief Every stage, in the order the weekly resolution reaches them.
 inline constexpr std::array allStages = {Stage::firstOptim,
                                          Stage::secondOptim,
-                                         Stage::remixHydro,
+                                         Stage::peakShaving,
                                          Stage::adequacyPatch};
 
 /// \brief Wire name of a stage: used in output file names and the
@@ -41,7 +41,7 @@ constexpr std::string_view stageName(Stage stage)
         return "optim-nb-1";
     case Stage::secondOptim:
         return "optim-nb-2";
-    case Stage::remixHydro:
+    case Stage::peakShaving:
         return "shave-peaks";
     case Stage::adequacyPatch:
         return "adq-patch";

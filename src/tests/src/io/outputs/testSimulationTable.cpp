@@ -385,19 +385,19 @@ BOOST_AUTO_TEST_CASE(TableForStage_CreatesOnDemandAndKeepsPointersStable)
     OptimisationsSimulationTable tables{nullptr};
     BOOST_CHECK(tables.stages().empty());
 
-    SimulationTable* remix = tables.tableForStage(Stage::remixHydro);
+    SimulationTable* remix = tables.tableForStage(Stage::peakShaving);
     BOOST_REQUIRE(remix != nullptr);
     BOOST_CHECK_EQUAL(tables.stages().size(), 1u);
 
     // Asking again for the same stage returns the same table.
-    BOOST_CHECK(tables.tableForStage(Stage::remixHydro) == remix);
+    BOOST_CHECK(tables.tableForStage(Stage::peakShaving) == remix);
 
     // Adding stages must not invalidate pointers already handed out:
     // OPT_OptimisationLineaire grabs the optim-nb-1 table before optim-nb-2 exists.
     SimulationTable* first = tables.firstOptimSimulationTable();
     SimulationTable* second = tables.secondOptimSimulationTable();
     BOOST_CHECK(first != second);
-    BOOST_CHECK(tables.tableForStage(Stage::remixHydro) == remix);
+    BOOST_CHECK(tables.tableForStage(Stage::peakShaving) == remix);
     BOOST_CHECK(tables.tableForStage(Stage::firstOptim) == first);
     BOOST_CHECK_EQUAL(tables.stages().size(), 3u);
 
@@ -430,7 +430,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_NamesOneFilePerStage)
                                      .status = MipBasisStatus::BASIC};
     tables.firstOptimSimulationTable()->addEntry(entry);
     tables.secondOptimSimulationTable()->addEntry(entry);
-    tables.tableForStage(Stage::remixHydro)->addEntry(entry);
+    tables.tableForStage(Stage::peakShaving)->addEntry(entry);
 
     auto tempDir = std::filesystem::temp_directory_path();
     LegacySimulationTablesWriter(tempDir, 7 /* year */, TableFormat::CSV).write(tables);
@@ -457,7 +457,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_SkipsStagesWithNoRows)
                                                   .value = 10.0,
                                                   .status = MipBasisStatus::BASIC});
     // Asked for, but never filled -- a post-process dump that declined to run.
-    tables.tableForStage(Stage::remixHydro);
+    tables.tableForStage(Stage::peakShaving);
 
     auto tempDir = std::filesystem::temp_directory_path();
     LegacySimulationTablesWriter(tempDir, 8 /* year */, TableFormat::CSV).write(tables);
@@ -533,9 +533,9 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_ErrorNamesWhereTheListCameFrom)
 BOOST_AUTO_TEST_CASE(SelectStages_UnselectedStagesReturnNullptr)
 {
     OptimisationsSimulationTable tables{nullptr};
-    tables.selectStages({Stage::remixHydro});
+    tables.selectStages({Stage::peakShaving});
 
-    BOOST_CHECK(tables.tableForStage(Stage::remixHydro) != nullptr);
+    BOOST_CHECK(tables.tableForStage(Stage::peakShaving) != nullptr);
     BOOST_CHECK(tables.firstOptimSimulationTable() == nullptr);
     BOOST_CHECK(tables.secondOptimSimulationTable() == nullptr);
     BOOST_CHECK(tables.tableForStage(Stage::adequacyPatch) == nullptr);
@@ -552,7 +552,7 @@ BOOST_AUTO_TEST_CASE(SelectStages_PostProcessStagesDriveTheModelerProblemRetenti
     OptimisationsSimulationTable everything{nullptr};
     BOOST_CHECK(everything.anyPostProcessStageSelected());
 
-    for (const auto stage: {Stage::remixHydro, Stage::adequacyPatch})
+    for (const auto stage: {Stage::peakShaving, Stage::adequacyPatch})
     {
         OptimisationsSimulationTable tables{nullptr};
         tables.selectStages({stage});
@@ -569,8 +569,8 @@ BOOST_AUTO_TEST_CASE(SelectStages_PostProcessStagesDriveTheModelerProblemRetenti
 
     // Querying must not create anything.
     OptimisationsSimulationTable untouched{nullptr};
-    untouched.selectStages({Stage::remixHydro});
-    BOOST_CHECK(untouched.isStageSelected(Stage::remixHydro));
+    untouched.selectStages({Stage::peakShaving});
+    BOOST_CHECK(untouched.isStageSelected(Stage::peakShaving));
     BOOST_CHECK(!untouched.isStageSelected(Stage::firstOptim));
     BOOST_CHECK(untouched.anyPostProcessStageSelected());
     BOOST_CHECK(untouched.stages().empty());
