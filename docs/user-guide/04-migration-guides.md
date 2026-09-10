@@ -17,7 +17,7 @@ Old format:
 
 ### Output
 
-#### One simulation per optimization and post-process
+#### One simulation table per optimization and post-process
 
 A simulation table is now written after **each** stage (optimization or post-process), one
 file per stage, named `simulation-table-<year>-<stage>`:
@@ -39,7 +39,7 @@ stage suffix if it only wants the optimization passes.
 Previously `simulation-table-<year>-optim-nb-2` was always written, even as a header-only file when
 the second optimization pass never ran. It is now omitted entirely in that case, which happens when
 [`unit-commitment-mode`](solver/04-parameters.md#unit-commitment-mode) is `milp` — a single MILP
-problem is solved instead of two LP problems — and in Expansion mode.
+problem is solved instead of two LP problems — or in Expansion mode.
 
 Scripts that open the optim-nb-2 file unconditionally must handle its absence. Note that an absent
 file and a header-only file always carried the same information — that the pass did not run.
@@ -71,7 +71,7 @@ excuse a typo after it. This only chooses *which* tables are written — simulat
 be enabled through the `--output` option, and selecting stages without enabling them warns and does
 nothing else.
 
-Studies that do not set the property and runs that do not pass the option, get every stage.
+Studies that do not set the property and runs that do not pass the option get every stage.
 
 ## v10.1.0
 
