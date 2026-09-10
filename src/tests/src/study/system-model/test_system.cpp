@@ -217,18 +217,14 @@ BOOST_AUTO_TEST_CASE(PortFieldeEqualityOperator)
     BOOST_CHECK(PortField("A") == PortField("A"));
 }
 
-BOOST_AUTO_TEST_CASE(PrintSenderFieldRole)
+BOOST_AUTO_TEST_CASE(fmtSenderFieldRole)
 {
-    std::ostringstream os;
-    os << FieldRole::Sender;
-    BOOST_CHECK_EQUAL(os.str(), "Sender");
+    BOOST_CHECK_EQUAL(fmt::format("{}", FieldRole::Sender), "Sender");
 }
 
-BOOST_AUTO_TEST_CASE(PrintReceiverFieldRole)
+BOOST_AUTO_TEST_CASE(fmtReceiverFieldRole)
 {
-    std::ostringstream os;
-    os << FieldRole::Receiver;
-    BOOST_CHECK_EQUAL(os.str(), "Receiver");
+    BOOST_CHECK_EQUAL(fmt::format("{}", FieldRole::Receiver), "Receiver");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

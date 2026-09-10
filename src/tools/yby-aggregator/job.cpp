@@ -9,13 +9,10 @@
 
 #include "progress.h"
 
-using namespace Yuni;
-using namespace Antares;
-
 /*extern*/ Job::QueueService queueService;
 static std::atomic<int> gNbJobs = 0;
 
-#define SEP IO::Separator
+#define SEP Yuni::IO::Separator
 
 std::mutex gResultsMutex;
 
@@ -68,7 +65,7 @@ void JobFileReader::onExecute()
     }
     if (pDataOffset == (uint)-1)
     {
-        logs.error() << "invalid data offset";
+        Antares::logs.error() << "invalid data offset";
         return;
     }
     if (!readRawData())
@@ -142,7 +139,8 @@ bool JobFileReader::readRawData()
             }
             else
             {
-                logs.warning() << "Got an empty line at " << (pLineCount + 8) << ": " << pFilename;
+                Antares::logs.warning()
+                  << "Got an empty line at " << (pLineCount + 8) << ": " << pFilename;
             }
 
             // Another line has been found
@@ -193,7 +191,7 @@ bool JobFileReader::readRawData()
                 }
                 else
                 {
-                    logs.warning()
+                    Antares::logs.warning()
                       << "Got an empty line at " << (pLineCount + 8) << "*: " << pFilename;
                 }
 
@@ -221,7 +219,8 @@ void JobFileReader::readLine(const AnyString& line, uint y)
 
     if (y >= maxRows)
     {
-        logs.error() << "Too many rows have been found (more than " << (uint)maxRows << ')';
+        Antares::logs.error() << "Too many rows have been found (more than " << (uint)maxRows
+                              << ')';
         output->incrementError();
         return;
     }
@@ -244,7 +243,7 @@ void JobFileReader::readLine(const AnyString& line, uint y)
         // Dynamic Bound checking
         if (column >= jumpTableSize)
         {
-            logs.warning() << "Too many columns line " << y << " in " << pFilename;
+            Antares::logs.warning() << "Too many columns line " << y << " in " << pFilename;
             break;
         }
 
@@ -275,8 +274,8 @@ void JobFileReader::readLine(const AnyString& line, uint y)
                 {
                     if (adapter.size() > maxSizePerCell - 1)
                     {
-                        logs.warning() << "Content too long at line " << y << " column " << column
-                                       << ": " << pFilename;
+                        Antares::logs.warning() << "Content too long at line " << y << " column "
+                                                << column << ": " << pFilename;
                         pTmpResults[mapping][y][0] = '\0';
                     }
                     else
@@ -291,7 +290,7 @@ void JobFileReader::readLine(const AnyString& line, uint y)
             }
             else
             {
-                logs.error() << "invalid column mapping";
+                Antares::logs.error() << "invalid column mapping";
             }
         }
 
@@ -317,7 +316,7 @@ bool JobFileReader::storeResults()
     DataFile::Ptr& data = datafile;
     if (!data)
     {
-        logs.error() << "invalid data";
+        Antares::logs.error() << "invalid data";
         output->incrementError();
         return false;
     }
@@ -335,7 +334,7 @@ bool JobFileReader::storeResults()
         ResultMatrix& var = allvars[v];
         if (year >= var.width)
         {
-            logs.error() << "invalid year (got " << year << ", max: " << var.width << ")";
+            Antares::logs.error() << "invalid year (got " << year << ", max: " << var.width << ")";
             output->incrementError();
             return false;
         }
@@ -343,21 +342,21 @@ bool JobFileReader::storeResults()
         const TemporaryColumnData& ref = pTmpResults[v];
 
         // Allocate the memory for the result data
-        if (Memory::Null(store.rows))
+        if (Antares::Memory::Null(store.rows))
         {
-            Memory::Allocate(store.rows, pLineCount);
+            Antares::Memory::Allocate(store.rows, pLineCount);
         }
         else
         {
-            logs.error() << "internal error";
+            Antares::logs.error() << "internal error";
         }
 
         // Copy
         store.height = pLineCount;
-        assert(!Memory::StrictNull(store.rows));
+        assert(!Antares::Memory::StrictNull(store.rows));
         for (uint y = 0; y != pLineCount; ++y)
         {
-            assert(!Memory::StrictNull(store.rows));
+            assert(!Antares::Memory::StrictNull(store.rows));
             memcpy(store.rows[y], ref[y], maxSizePerCell);
         }
     }
@@ -379,7 +378,7 @@ bool JobFileReader::prepareJumpTable()
         const String::Size pos = buffer.find('\n', offset);
         if (pos == String::npos)
         {
-            logs.error() << "invalid header in " << pFilename;
+            Antares::logs.error() << "invalid header in " << pFilename;
             output->incrementError();
             return false;
         }
@@ -389,7 +388,7 @@ bool JobFileReader::prepareJumpTable()
     String::Size pos = buffer.find('\n', offset);
     if (pos == String::npos)
     {
-        logs.error() << "invalid header in " << pFilename;
+        Antares::logs.error() << "invalid header in " << pFilename;
         output->incrementError();
         return false;
     }
@@ -398,7 +397,7 @@ bool JobFileReader::prepareJumpTable()
     adapter.split(list, "\t", true, false);
     if (list.size() < 3)
     {
-        logs.error() << "invalid header in " << pFilename << " (not enough fields)";
+        Antares::logs.error() << "invalid header in " << pFilename << " (not enough fields)";
         output->incrementError();
         return false;
     }
@@ -417,7 +416,7 @@ bool JobFileReader::prepareJumpTable()
     }
     if (startIndex >= list.size())
     {
-        logs.error() << "invalid header in " << pFilename << " (invalid time level)";
+        Antares::logs.error() << "invalid header in " << pFilename << " (invalid time level)";
         output->incrementError();
         return false;
     }

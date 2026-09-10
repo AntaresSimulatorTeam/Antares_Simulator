@@ -11,10 +11,7 @@
 
 #include "io.h"
 
-using namespace Yuni;
-using namespace Antares;
-
-#define SEP IO::Separator
+#define SEP Yuni::IO::Separator
 
 enum
 {
@@ -38,7 +35,7 @@ public:
     int64_t dateLimit;
     FSWalker::DispatchJobEvent queue;
 
-    Mutex mutex;
+    Yuni::Mutex mutex;
     uint64_t bytesDeleted;
     uint64_t filesDeleted;
     uint64_t foldersDeleted;
@@ -47,7 +44,7 @@ public:
 class AntaresStudyAnalyzerJob: public FSWalker::IJob
 {
 public:
-    AntaresStudyAnalyzerJob(const String& folder):
+    AntaresStudyAnalyzerJob(const Yuni::String& folder):
         folder(folder),
         userdata(nullptr)
     {
@@ -58,7 +55,7 @@ public:
     }
 
 public:
-    String folder;
+    Yuni::String folder;
     int64_t dateLimit;
     UserData* userdata;
 
@@ -70,54 +67,55 @@ protected:
 
 bool AntaresStudyAnalyzerJob::shouldBeDestroyed() const
 {
-    String filename;
-    String text;
+    Yuni::String filename;
+    Yuni::String text;
     filename << folder << SEP << "study.antares";
 
     // We will check the date of the last save, if recent enough,
     // there is no need to perform additional tests on the logs
     // or on the outputs
-    Data::StudyHeader header;
+    Antares::Data::StudyHeader header;
     if (not header.loadFromFile(filename.c_str(), false))
     {
-        logs.info() << " delete study " << folder << " [invalid header]";
+        Antares::logs.info() << " delete study " << folder << " [invalid header]";
         return true;
     }
 
     if (traces)
     {
-        DateTime::TimestampToString(text, "%a, %d %b %Y", header.dateLastSave);
+        Yuni::DateTime::TimestampToString(text, "%a, %d %b %Y", header.dateLastSave);
     }
     if (header.dateLastSave > dateLimit)
     {
         // the study has been saved recently
         if (traces)
         {
-            logs.info() << "    - study status " << folder << ": modified recently " << text;
+            Antares::logs.info() << "    - study status " << folder << ": modified recently "
+                                 << text;
         }
         return false;
     }
     if (traces)
     {
-        logs.info() << "    - study status " << folder << ": last save too old " << text;
+        Antares::logs.info() << "    - study status " << folder << ": last save too old " << text;
     }
 
     // The study has been modified a long time ago, we have to check
     // if it has been used recently. First of all, we will check the logs
-    IO::Directory::Info info;
+    Yuni::IO::Directory::Info info;
 
     info.directory().clear() << folder << SEP << "logs";
     for (auto i = info.file_begin(); i != info.file_end(); ++i)
     {
         // DateTime::TimestampToString(text, "%a, %d %b %Y", i.modified());
-        // logs.info() << "  :: >> " << i.filename() << " : " << text;
+        // Antares::logs.info() << "  :: >> " << i.filename() << " : " << text;
         if (i.modified() > dateLimit)
         {
             // There is at least one recent logfile. aborting
             if (traces)
             {
-                logs.info() << "    - study status " << folder
-                            << ": at least one recent simulation";
+                Antares::logs.info()
+                  << "    - study status " << folder << ": at least one recent simulation";
             }
             return false;
         }
@@ -129,14 +127,14 @@ bool AntaresStudyAnalyzerJob::shouldBeDestroyed() const
     for (auto i = info.folder_begin(); i != info.folder_end(); ++i)
     {
         // DateTime::TimestampToString(text, "%a, %d %b %Y", i.modified());
-        // logs.info() << "  :: >> " << i.filename() << " : " << text;
+        // Antares::logs.info() << "  :: >> " << i.filename() << " : " << text;
         if (i.modified() > dateLimit)
         {
             // There is at least one recent logfile. aborting
             if (traces)
             {
-                logs.info() << "    - study status " << folder
-                            << ": at least one recent simulation";
+                Antares::logs.info()
+                  << "    - study status " << folder << ": at least one recent simulation";
             }
             return false;
         }
@@ -152,7 +150,7 @@ public:
     using Ptr = Yuni::Job::IJob::Ptr::Promote<FolderRemover>::Ptr;
 
 public:
-    FolderRemover(const String& folder):
+    FolderRemover(const Yuni::String& folder):
         folder(folder),
         userdata(nullptr),
         timeout(100)
@@ -165,7 +163,7 @@ public:
 
 public:
     //! Folder to remove
-    String folder;
+    Yuni::String folder;
     //! userdata
     UserData* userdata;
     //! Dependencies
@@ -186,7 +184,7 @@ protected:
     {
         if (!userdata)
         {
-            logs.error() << "internal error: userdata is null";
+            Antares::logs.error() << "internal error: userdata is null";
             return;
         }
 
@@ -210,14 +208,14 @@ protected:
         // ok delete !
         if (traces)
         {
-            logs.info() << "  :: starting removal of " << folder;
+            Antares::logs.info() << "  :: starting removal of " << folder;
         }
 
-        String::Vector foldersToDelete;
+        Yuni::String::Vector foldersToDelete;
         uint64_t bytesDeleted = 0;
         uint64_t filesDeleted = 0;
 
-        IO::Directory::Info info(folder);
+        Yuni::IO::Directory::Info info(folder);
         auto end = info.recursive_end();
         for (auto i = info.recursive_begin(); i != end; ++i)
         {
@@ -228,7 +226,7 @@ protected:
                 ++filesDeleted;
                 if (not RemoveFile(i.filename(), i.size()))
                 {
-                    logs.error() << "impossible to delete " << i.filename();
+                    Antares::logs.error() << "impossible to delete " << i.filename();
                 }
             }
             else
@@ -248,14 +246,14 @@ protected:
         {
             if (not RemoveDirectoryIfEmpty(*i))
             {
-                logs.error() << "impossible to delete directory " << *i;
+                Antares::logs.error() << "impossible to delete directory " << *i;
             }
         }
 
         // deletion of the root folder
         if (not RemoveDirectoryIfEmpty(folder))
         {
-            logs.error() << "impossible to delete directory " << folder;
+            Antares::logs.error() << "impossible to delete directory " << folder;
         }
     }
 
@@ -265,19 +263,19 @@ void AntaresStudyAnalyzerJob::onExecute()
 {
     if (traces)
     {
-        logs.info() << "  :: analyzing study " << folder;
+        Antares::logs.info() << "  :: analyzing study " << folder;
     }
     if (shouldBeDestroyed())
     {
-        logs.info() << "study delete " << folder;
-        String path = folder;
+        Antares::logs.info() << "study delete " << folder;
+        Yuni::String path = folder;
 
         auto* folderRemovalJob = new FolderRemover(path);
         folderRemovalJob->userdata = userdata;
 
         // removing each output first
-        IO::Directory::Info info;
-        IO::Directory::Info subinfo;
+        Yuni::IO::Directory::Info info;
+        Yuni::IO::Directory::Info subinfo;
 
         // OUTPUT folders
         info.directory().clear() << path << SEP << "output";
@@ -340,7 +338,7 @@ void AntaresStudyAnalyzerJob::onExecute()
     }
 }
 
-static FSWalker::Flow OnDirectoryEvent(const String& path, bool empty, void* user)
+static FSWalker::Flow OnDirectoryEvent(const Yuni::String& path, bool empty, void* user)
 {
     if (not empty)
     {

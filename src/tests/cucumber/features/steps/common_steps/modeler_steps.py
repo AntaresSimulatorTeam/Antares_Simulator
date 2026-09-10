@@ -52,12 +52,12 @@ def modeler_obj_value(context, lb, ub):
 
 @step('the modeler outputs contain the following entries')
 def modeler_output_values(context):
-    check_simulation_table_content(context, 1e-6)
+    check_simulation_table_content(context, context.simu_table, 1e-6)
 
 
 @step('the modeler outputs contain the following entries with relative tolerance {tolerance:g}')
 def modeler_output_values_with_tolerance(context, tolerance):
-    check_simulation_table_content(context, tolerance)
+    check_simulation_table_content(context, context.simu_table, tolerance)
 
 
 @then('no simulation table is expected')
@@ -68,9 +68,34 @@ def no_simulation_table_expected(context):
     assert getattr(context, "simu_table", None) is None, \
         f"Expected no simulation table, but one is present: {getattr(context, 'simu_table', None)}"
 
-def check_simulation_table_content(context, tolerance):
+@step('the modeler outputs from stage "{stage}" contain the following entries')
+def modeler_output_values_for_stage(context, stage):
+    check_simulation_table_content(context, read_stage_simulation_table(context, stage), 1e-6)
+
+
+@step('the modeler outputs from stage "{stage}" contain the following entries with relative tolerance {tolerance:g}')
+def modeler_output_values_for_stage_with_tolerance(context, stage, tolerance):
+    check_simulation_table_content(context, read_stage_simulation_table(context, stage), tolerance)
+
+
+def check_simulation_table_content(context, simulation_table, tolerance):
     expected_entries = read_expected_entries(context.table)
-    check_st_entries(context.simu_table, expected_entries, tolerance)
+    check_st_entries(simulation_table, expected_entries, tolerance)
+
+
+def read_stage_simulation_table(context, stage) -> SimulationTable:
+    """Load the simulation table the solver wrote for one resolution stage.
+
+    The solver writes one simulation table per stage of the weekly resolution
+    (optim-nb-1, optim-nb-2, remix-hydro, adq-patch-csr), each file suffixed
+    with the stage name. Reading the stage where it is needed keeps the choice
+    local to the step instead of leaving it on context.simu_table for whatever
+    step runs next.
+    """
+    output_path = Path(context.output_path)
+    file_pattern = f"simulation-table-*-{stage}.csv"
+    reader_factory = make_simu_table_reader(output_path, OutputFormat.CSV, file_pattern)
+    return SimulationTable(reader_factory())
 
 
 @step('the simulation tables are written for the following scenarios')

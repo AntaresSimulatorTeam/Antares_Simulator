@@ -459,4 +459,159 @@ BOOST_AUTO_TEST_CASE(binding_constraint_with_sum_connections_op_is_non_linear___
                           checkMessage(err_msg));
 }
 
+// Unlike the dual() case above, a max() taking only parameters and literals as arguments
+// evaluates to a constant before the linear optimization : it does not make the binding
+// constraint non-linear, and is therefore allowed to be conveyed through a port field.
+BOOST_AUTO_TEST_CASE(
+  binding_constraint_with_max_op_on_parameters_only_is_linear___no_exception_raised)
+{
+    const auto yml_lib = R"(
+      library:
+        id: my_lib
+        description: whatever
+
+        port-types:
+          - id: transfering_expression
+            description: A port to transfer a linear expression
+            fields:
+              - id: my_field
+
+        models:
+          - id: area
+            parameters:
+              - id: p1
+              - id: p2
+            ports:
+              - id: convey_expression
+                type: transfering_expression
+            port-field-definitions:
+              - port: convey_expression
+                field: my_field
+                definition: max(p1, p2)
+
+          - id: some_model
+            ports:
+              - id: convey_expression
+                type: transfering_expression
+            binding-constraints:
+              - id: my_other_constraint
+                expression: sum_connections(convey_expression.my_field)
+    )";
+
+    const auto yml_system = R"(
+      system:
+        id: some system
+        description: whatever
+        components:
+          - id: my_area
+            model: my_lib.area
+            parameters:
+              - id: p1
+                time-dependent: false
+                scenario-dependent: false
+                value: 1
+              - id: p2
+                time-dependent: false
+                scenario-dependent: false
+                value: 2
+
+          - id: model_instance
+            model: my_lib.some_model
+
+        connections:
+          - component1: my_area
+            port1: convey_expression
+            component2: model_instance
+            port2: convey_expression
+    )";
+
+    YmlModel::Parser parserModel;
+    std::vector<SystemModel::Library> libraries;
+    libraries.push_back(ModelConverter::convert(parserModel.parse(yml_lib)));
+
+    YmlSystem::Parser parserSystem;
+    YmlSystem::System system = parserSystem.parse(yml_system, "");
+
+    BOOST_CHECK_NO_THROW(SystemConverter::convert(system, libraries));
+}
+
+// As soon as max() involves a variable, the binding constraint is non-linear and is
+// rejected, even when the variable is not a direct operand of max().
+BOOST_AUTO_TEST_CASE(binding_constraint_with_max_op_on_a_variable_is_non_linear___exception_raised)
+{
+    const auto yml_lib = R"(
+      library:
+        id: my_lib
+        description: whatever
+
+        port-types:
+          - id: transfering_expression
+            description: A port to transfer a non linear expression
+            fields:
+              - id: my_field
+
+        models:
+          - id: area
+            parameters:
+              - id: p1
+            variables:
+              - id: var_1
+                lower-bound: 0
+                upper-bound: 1
+                variable-type: continuous
+            ports:
+              - id: convey_expression
+                type: transfering_expression
+            port-field-definitions:
+              - port: convey_expression
+                field: my_field
+                # var_1 is not a direct operand of max() but the expression is still non linear
+                definition: max(var_1 + p1, 2)
+
+          - id: some_model
+            ports:
+              - id: convey_expression
+                type: transfering_expression
+            binding-constraints:
+              - id: my_other_constraint
+                expression: sum_connections(convey_expression.my_field)
+    )";
+
+    const auto yml_system = R"(
+      system:
+        id: some system
+        description: whatever
+        components:
+          - id: my_area
+            model: my_lib.area
+            parameters:
+              - id: p1
+                time-dependent: false
+                scenario-dependent: false
+                value: 1
+
+          - id: model_instance
+            model: my_lib.some_model
+
+        connections:
+          - component1: my_area
+            port1: convey_expression
+            component2: model_instance
+            port2: convey_expression
+    )";
+
+    YmlModel::Parser parserModel;
+    std::vector<SystemModel::Library> libraries;
+    libraries.push_back(ModelConverter::convert(parserModel.parse(yml_lib)));
+
+    YmlSystem::Parser parserSystem;
+    YmlSystem::System system = parserSystem.parse(yml_system, "");
+
+    std::string err_msg = "'FunctionNode::max' is not allowed to contain 'VariableNode' in "
+                          "expression 'max(var_1 + p1, 2)'";
+    BOOST_CHECK_EXCEPTION(SystemConverter::convert(system, libraries),
+                          InputError,
+                          checkMessage(err_msg));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

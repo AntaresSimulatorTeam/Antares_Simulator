@@ -4,9 +4,11 @@
 #pragma once
 
 #include <map>
+#include <set>
 #include <string>
 
 #include "antares/io/outputs/SimulationTable.h"
+#include "antares/io/outputs/SimulationTableStage.h"
 
 namespace Antares::Optimization
 {
@@ -15,33 +17,70 @@ class InactiveComponentsAnalyzer;
 
 namespace Antares::IO::Outputs
 {
-// The simulation tables produced for one Monte-Carlo year, one per stage of the
-// weekly resolution. A stage is created the first time it is asked for, and the
-// writer emits one file per stage, named after it.
+/**
+ * \brief The simulation tables of one Monte-Carlo year, one per stage of the
+ * weekly resolution.
+ *
+ * A stage is created on first use; the writer emits one file per stage. See
+ * docs/architecture/legacy-extra-outputs.md §8.
+ */
 class OptimisationsSimulationTable
 {
 public:
+    /**
+     * \brief Parse a user-supplied stage list into a selection set.
+     * \param input comma-separated stage names, or "all". Empty, or "all"
+     *              anywhere in the list, selects every stage.
+     * \param source how the error message names the origin of the list (command
+     *               line or generaldata.ini).
+     * \return the selected stages; an empty set means "every stage".
+     * \throws Antares::Error::InvalidArgumentError, listing the valid names, on
+     *         an unknown name -- including one after an "all", as the whole list
+     *         is validated.
+     */
+    static std::set<Stage> parseStageSelection(
+      const std::string& input,
+      const std::string& source = "--simulation-table-stages");
+
+    /**
+     * \brief Restrict the tables to `stages`; an empty set lifts the restriction.
+     *
+     * Call before the first dump: already-created stages are not removed.
+     */
+    void selectStages(std::set<Stage> stages);
+
     SimulationTable* firstOptimSimulationTable();
     SimulationTable* secondOptimSimulationTable();
 
-    // The table of `stage`, created empty on first use. std::map nodes are
-    // address-stable, so a pointer returned here stays valid when later stages
-    // are added.
-    SimulationTable* tableForStage(const std::string& stage);
+    /**
+     * \brief The table of `stage`, created empty on first use.
+     * \return nullptr when the stage is not selected -- callers must then skip
+     *         the dump. Returned pointers stay valid as later stages are added.
+     */
+    SimulationTable* tableForStage(Stage stage);
 
-    [[nodiscard]] const std::map<std::string, SimulationTable>& stages() const;
+    /// \brief Whether `stage` would get a table, without creating one.
+    [[nodiscard]] bool isStageSelected(Stage stage) const;
 
-    // Empties every stage's table, keeping the stages themselves: the same
-    // stages recur at every Monte-Carlo year.
+    /**
+     * \brief Whether any stage dumped after a post-process is selected.
+     *
+     * The weekly solve asks this to decide whether to keep its modeler problem
+     * alive for a later dump to re-emit.
+     */
+    [[nodiscard]] bool anyPostProcessStageSelected() const;
+
+    [[nodiscard]] const std::map<Stage, SimulationTable>& stages() const;
+
+    /// \brief Empty every stage's table, keeping the stages: they recur every
+    /// Monte-Carlo year.
     void clear();
 
     std::shared_ptr<const Optimization::InactiveComponentsAnalyzer> inactiveComponents;
 
 private:
-    // Stage names of the two optimisation passes. They are part of the output
-    // file names, so they must not change.
-    static constexpr const char* firstOptimStage = "optim-nb-1";
-    static constexpr const char* secondOptimStage = "optim-nb-2";
-    std::map<std::string, SimulationTable> stages_;
+    std::map<Stage, SimulationTable> stages_;
+    /// Empty means "every stage".
+    std::set<Stage> selectedStages_;
 };
 } // namespace Antares::IO::Outputs

@@ -133,4 +133,26 @@ private:
     const std::string fileLabel_;
 };
 
+/**
+ * \brief Write the legacy results into the `stage` simulation table at this
+ * point of the post-process list.
+ *
+ * Inserted right after the command whose effect it captures, so the stage name
+ * matches that post-process. No-op when `tables` is null (run writes no
+ * simulation tables).
+ */
+class DumpSimulationTablePostProcessCmd final: public basePostProcessCommand
+{
+public:
+    DumpSimulationTablePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
+                                      IO::Outputs::Stage stage,
+                                      IO::Outputs::OptimisationsSimulationTable* tables);
+
+    void execute(const optRuntimeData& opt_runtime_data) override;
+
+private:
+    const IO::Outputs::Stage stage_;
+    IO::Outputs::OptimisationsSimulationTable* const tables_;
+};
+
 } // namespace Antares::Solver::Simulation
