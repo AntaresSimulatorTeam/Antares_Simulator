@@ -77,7 +77,7 @@ void addParameterOptions(Yuni::GetOpt::Parser& parser,
                ' ',
                "simulation-table-stages",
                "Comma-separated list of the resolution stages to write a simulation table for: "
-               "all, optim-nb-1, optim-nb-2, shave-peaks, adq-patch (default: all)");
+               "all, optim-nb-1, optim-nb-2, peak-shaving, adq-patch (default: all)");
 }
 
 void addOptimizationOptions(Yuni::GetOpt::Parser& parser,

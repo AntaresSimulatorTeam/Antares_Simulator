@@ -333,7 +333,7 @@ def should_check(row, key):
 # The stages of the weekly resolution, in the order the solver runs them.
 # `--simulation-table-stages` only ever removes stages from this list, so it
 # doubles as the order to fall back through when looking for a stage to read.
-SIMULATION_TABLE_STAGES = ["optim-nb-1", "optim-nb-2", "shave-peaks", "adq-patch"]
+SIMULATION_TABLE_STAGES = ["optim-nb-1", "optim-nb-2", "peak-shaving", "adq-patch"]
 
 _STAGE_OF_TABLE_FILE = re.compile(r"^simulation-table-\d+-(.+)\.csv$")
 
@@ -402,7 +402,7 @@ def read_modeler_outputs_from_stage(context, stage):
     """Re-point context.simu_table at the tables of one resolution stage.
 
     The solver writes one simulation table per stage of the weekly resolution
-    (optim-nb-1, optim-nb-2, shave-peaks, adq-patch). run_simulation loads
+    (optim-nb-1, optim-nb-2, peak-shaving, adq-patch). run_simulation loads
     the first stage the run produced; this step swaps in another stage, so every
     `the modeler outputs contain ...` step after it reads that stage instead.
     """

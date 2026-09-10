@@ -12,7 +12,7 @@ toc_depth: 2
 #### Features
 
 * Write one simulation table per stage of the weekly resolution, so the effect of each
-  post-treatment is observable: `optim-nb-1`, `optim-nb-2`, `shave-peaks` (the shave-peaks /
+  post-treatment is observable: `optim-nb-1`, `optim-nb-2`, `peak-shaving` (the peak-shaving /
   remix-hydro post-process) and `adq-patch` (the adequacy patch CSR treatment). Each stage gets its own
   `simulation-table-<year>-<stage>` file
 * Select which stages are written, with `simulation-table-stages` in the `[output]` section of
@@ -28,7 +28,7 @@ toc_depth: 2
 
 #### Known limitations
 
-* The `shave-peaks` and `adq-patch` stages are only produced when `simplex-range` is `week`.
+* The `peak-shaving` and `adq-patch` stages are only produced when `simplex-range` is `week`.
   A daily range solves the week as seven problems, of which only the last would be readable, so
   the stage is skipped with a one-time warning
 

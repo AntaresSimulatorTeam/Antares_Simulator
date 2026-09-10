@@ -56,24 +56,24 @@ Feature: hybrid (simulator+modeler) studies
   Scenario: An unrestricted hybrid run also writes the post-process stages
     # Counterpart to the scenario above: with no --simulation-table-stages the
     # run produces every stage it reaches. 3_6_1 has no adequacy patch, so
-    # adq-patch is not among them -- shave-peaks is the one post-process
+    # adq-patch is not among them -- peak-shaving is the one post-process
     # stage this study runs.
     #
     # The two optimisation stages are the ones the reference pins, so they are
     # checked here only for being the same tables, unchanged by the extra stage
-    # being written alongside them. shave-peaks is checked on its own values:
+    # being written alongside them. peak-shaving is checked on its own values:
     # the study has no managed hydro, so remix moves nothing and the stage
     # carries optim-nb-2's solution forward.
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
     When I run antares simulator with --output=all
     Then the simulation succeeds
-    And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2, shave-peaks"
+    And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2, peak-shaving"
     And the modeler outputs are read from stage "optim-nb-2"
     And the modeler outputs contain the following entries
       | block | component | output | timestep | scenario | value |
       | 0     | gen1      | p      | 0        | 0        | 3878  |
       | 0     | gen1      | p      | 1        | 0        | 3572  |
-    And the modeler outputs are read from stage "shave-peaks"
+    And the modeler outputs are read from stage "peak-shaving"
     And the modeler outputs contain the following entries
       | block | component | output | timestep | scenario | value |
       | 0     | gen1      | p      | 0        | 0        | 3878  |

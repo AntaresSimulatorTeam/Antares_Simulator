@@ -42,7 +42,7 @@ constexpr std::string_view stageName(Stage stage)
     case Stage::secondOptim:
         return "optim-nb-2";
     case Stage::peakShaving:
-        return "shave-peaks";
+        return "peak-shaving";
     case Stage::adequacyPatch:
         return "adq-patch";
     }

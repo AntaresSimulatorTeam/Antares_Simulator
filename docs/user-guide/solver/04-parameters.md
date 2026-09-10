@@ -289,7 +289,7 @@ Link variables files columns: *Link Hour Flow*
 ---
 #### simulation-table-stages
 - **Expected value:** `all`, or a comma-separated list of 1 to N elements among the following:
-  `optim-nb-1`, `optim-nb-2`, `shave-peaks`, `adq-patch`
+  `optim-nb-1`, `optim-nb-2`, `peak-shaving`, `adq-patch`
 - **Required:** no
 - **Default value:** `all`
 - **Usage:** selects which stages of the weekly resolution get a simulation table. One file is
@@ -297,7 +297,7 @@ Link variables files columns: *Link Hour Flow*
 
     - `optim-nb-1`: after the first optimisation pass
     - `optim-nb-2`: after the second pass
-    - `shave-peaks`: after the shave-peaks / remix-hydro post-process
+    - `peak-shaving`: after the peak-shaving / remix-hydro post-process
     - `adq-patch`: after the whole adequacy patch CSR treatment (curtailment sharing, DTG
       netting and the marginal price update). Only produced when the adequacy patch is enabled.
 

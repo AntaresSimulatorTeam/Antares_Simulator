@@ -437,7 +437,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_NamesOneFilePerStage)
 
     for (const auto* name: {"simulation-table-7-optim-nb-1.csv",
                             "simulation-table-7-optim-nb-2.csv",
-                            "simulation-table-7-shave-peaks.csv"})
+                            "simulation-table-7-peak-shaving.csv"})
     {
         const auto file = tempDir / name;
         BOOST_CHECK_MESSAGE(std::filesystem::exists(file), "missing " + std::string(name));
@@ -463,7 +463,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_SkipsStagesWithNoRows)
     LegacySimulationTablesWriter(tempDir, 8 /* year */, TableFormat::CSV).write(tables);
 
     const auto filled = tempDir / "simulation-table-8-optim-nb-1.csv";
-    const auto empty = tempDir / "simulation-table-8-shave-peaks.csv";
+    const auto empty = tempDir / "simulation-table-8-peak-shaving.csv";
     BOOST_CHECK(std::filesystem::exists(filled));
     BOOST_CHECK_MESSAGE(!std::filesystem::exists(empty),
                         "an empty stage must not produce a header-only file");
@@ -489,8 +489,8 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_EmptyAndAllMeanNoRestriction)
     BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("all").empty());
     // "all" wins over its neighbours rather than being taken for a stage name,
     // wherever in the list it sits.
-    BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("shave-peaks,all").empty());
-    BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("all,shave-peaks").empty());
+    BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("peak-shaving,all").empty());
+    BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("all,peak-shaving").empty());
 
     // Widening the selection is not a licence to stop reading: a name after an
     // "all" is still checked, so a typo is reported rather than swallowed.
@@ -509,7 +509,7 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_TrimsSpacesAndRejectsUnknownNames)
     BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("optim-nb-3"),
                       Antares::Error::InvalidArgumentError);
     // A stage name that is only a prefix of a real one is still a mistake.
-    BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("shave"),
+    BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("peak"),
                       Antares::Error::InvalidArgumentError);
 }
 
@@ -526,7 +526,7 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_ErrorNamesWhereTheListCameFrom)
     {
         const std::string message = e.what();
         BOOST_CHECK_MESSAGE(message.find("some-source") != std::string::npos, message);
-        BOOST_CHECK_MESSAGE(message.find("shave-peaks") != std::string::npos, message);
+        BOOST_CHECK_MESSAGE(message.find("peak-shaving") != std::string::npos, message);
     }
 }
 

@@ -26,10 +26,10 @@ file per stage, named `simulation-table-<year>-<stage>`:
 |---|---|---|
 | `optim-nb-1` | the first optimisation pass | always |
 | `optim-nb-2` | the second pass | when that pass runs (see below) |
-| `shave-peaks` | shave-peaks / remix hydro | weekly `simplex-range` only (see below) |
+| `peak-shaving` | peak-shaving / remix hydro | weekly `simplex-range` only (see below) |
 | `adq-patch` | the whole adequacy patch CSR treatment | adequacy patch enabled, weekly `simplex-range` only |
 
-**The two pre-existing files are unchanged** — same names, same contents. `shave-peaks` and
+**The two pre-existing files are unchanged** — same names, same contents. `peak-shaving` and
 `adq-patch` are new files that did not exist before. A script that globs
 `simulation-table-*` will therefore pick up more files than it used to, and should filter on the
 stage suffix if it only wants the optimization passes.

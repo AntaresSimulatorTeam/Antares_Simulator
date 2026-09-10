@@ -334,7 +334,7 @@ Feature: Legacy variables in simulation table
     # "adq-patch-CSR-test-case-v02" is an Economy study with
     # include-adq-patch = true, four areas: areain-1 / areain-2 are *inside*
     # the patch, areaout-1 / areaout-2 outside. It has no managed hydro, so
-    # remix hydro changes nothing and the shave-peaks stage is a faithful copy
+    # remix hydro changes nothing and the peak-shaving stage is a faithful copy
     # of optim-nb-2 -- which is exactly what makes it a check of the dump
     # itself rather than of what a post-process did. The CSR treatment, on the
     # other hand, moves 389 values in year 0 alone.
@@ -347,7 +347,7 @@ Feature: Legacy variables in simulation table
     Given the solver study path is "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
     When I run antares simulator with --output=simulation-tables
     Then the simulation succeeds
-    And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2, shave-peaks, adq-patch"
+    And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2, peak-shaving, adq-patch"
     And the modeler outputs from stage "optim-nb-2" contain the following entries with relative tolerance 1e-4
       | block | component              | output            | timestep | scenario | value  |
       | 0     | areain-1_node          | unsupplied_energy | 0        | 0        | 0      |
@@ -356,9 +356,9 @@ Feature: Legacy variables in simulation table
       | 0     | areain-1_node          | price             | 0        | 0        | 800    |
       | 0     | areain-2_node          | price             | 0        | 0        | 800    |
 
-    # No managed hydro in this study, so shave-peaks / remix hydro has nothing
+    # No managed hydro in this study, so peak-shaving / remix hydro has nothing
     # to move: the stage exists and reproduces optim-nb-2 exactly.
-    And the modeler outputs from stage "shave-peaks" contain the following entries with relative tolerance 1e-4
+    And the modeler outputs from stage "peak-shaving" contain the following entries with relative tolerance 1e-4
       | block | component              | output            | timestep | scenario | value  |
       | 0     | areain-1_node          | unsupplied_energy | 0        | 0        | 0      |
       | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 400    |
@@ -417,9 +417,9 @@ Feature: Legacy variables in simulation table
   @short
   Scenario: A single stage can be selected on its own
     Given the solver study path is "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
-    When I run antares simulator with --output=simulation-tables --simulation-table-stages=shave-peaks
+    When I run antares simulator with --output=simulation-tables --simulation-table-stages=peak-shaving
     Then the simulation succeeds
-    And the simulation tables cover exactly the stages "shave-peaks"
+    And the simulation tables cover exactly the stages "peak-shaving"
 
 
   @short
@@ -427,7 +427,7 @@ Feature: Legacy variables in simulation table
     # The solve keeps its modeler problem alive past the solve so the
     # post-process dump can re-emit the modeler component rows. That retention
     # hangs on the *post-process* stages, never on whether this optimisation
-    # pass writes a table of its own -- selecting only shave-peaks leaves both
+    # pass writes a table of its own -- selecting only peak-shaving leaves both
     # passes without one, and tying the two would quietly reduce every stage the
     # run did ask for to its legacy half.
     #
@@ -436,10 +436,10 @@ Feature: Legacy variables in simulation table
     # nothing and the gen1 rows are the ones optim-nb-2 carries, unchanged --
     # which is what makes their presence, not their value, the assertion here.
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
-    When I run antares simulator with --output=simulation-tables --simulation-table-stages=shave-peaks
+    When I run antares simulator with --output=simulation-tables --simulation-table-stages=peak-shaving
     Then the simulation succeeds
-    And the simulation tables cover exactly the stages "shave-peaks"
-    And the modeler outputs are read from stage "shave-peaks"
+    And the simulation tables cover exactly the stages "peak-shaving"
+    And the modeler outputs are read from stage "peak-shaving"
     And the modeler outputs contain the following entries
       | block | component | output | timestep | scenario | value |
       | 0     | gen1      | p      | 0        | 0        | 3878  |
@@ -452,10 +452,10 @@ Feature: Legacy variables in simulation table
     # own selection instead of every run having to pass the flag. Works on a
     # copy: the step edits generaldata.ini in place.
     Given the solver study path is a copy of "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
-    And the study asks for the simulation table stages "optim-nb-1, shave-peaks"
+    And the study asks for the simulation table stages "optim-nb-1, peak-shaving"
     When I run antares simulator with --output=simulation-tables
     Then the simulation succeeds
-    And the simulation tables cover exactly the stages "optim-nb-1, shave-peaks"
+    And the simulation tables cover exactly the stages "optim-nb-1, peak-shaving"
 
 
   @short
@@ -466,4 +466,4 @@ Feature: Legacy variables in simulation table
     And the study asks for the simulation table stages "optim-nb-1"
     When I run antares simulator with --output=simulation-tables --simulation-table-stages=all
     Then the simulation succeeds
-    And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2, shave-peaks, adq-patch"
+    And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2, peak-shaving, adq-patch"
