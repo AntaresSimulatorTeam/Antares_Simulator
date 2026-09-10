@@ -289,7 +289,7 @@ Link variables files columns: *Link Hour Flow*
 ---
 #### simulation-table-stages
 - **Expected value:** `all`, or a comma-separated list of 1 to N elements among the following:
-  `optim-nb-1`, `optim-nb-2`, `remix-hydro`, `adq-patch-csr`
+  `optim-nb-1`, `optim-nb-2`, `remix-hydro`, `adq-patch-csr`, `last`
 - **Required:** no
 - **Default value:** `all`
 - **Usage:** selects which stages of the weekly resolution get a simulation table. One file is
@@ -300,11 +300,17 @@ Link variables files columns: *Link Hour Flow*
     - `remix-hydro`: after shave-peaks / remix hydro
     - `adq-patch-csr`: after the whole adequacy patch CSR treatment (curtailment sharing, DTG
       netting and the marginal price update). Only produced when the adequacy patch is enabled.
+    - `last`: shorthand for the last stage the run actually reaches — `adq-patch-csr` when the
+      adequacy patch is enabled, `remix-hydro` otherwise. Resolves to a real stage name in the
+      output file, never a file literally named `last`.
 
 Restricting the list saves the memory and the writing time of the tables you do not need; it does
 not change the values of the ones you keep. This parameter only chooses *which* tables are written
 — simulation tables must also be enabled, via the `--output` command-line option; selecting stages
 without enabling them warns and has no other effect.
+
+The value must not be empty: leaving `simulation-table-stages =` blank stops the simulation rather
+than being taken for `all` (which is what leaving the key out means). Use `all` to be explicit.
 
 The command-line option `--simulation-table-stages` overrides this parameter, including
 `--simulation-table-stages=all`, which restores the full set for a single run. An unrecognised

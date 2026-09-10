@@ -17,7 +17,9 @@ toc_depth: 2
   `simulation-table-<year>-<stage>` file
 * Select which stages are written, with `simulation-table-stages` in the `[output]` section of
   `generaldata.ini` or the `--simulation-table-stages` command-line option (default: all stages).
-  The command line overrides the study
+  The command line overrides the study. The keyword `last` stands for the final stage the run
+  reaches (`adq-patch-csr` with the adequacy patch, else `remix-hydro`). An empty value is
+  rejected rather than taken for `all`
 
 #### Breaking changes
 

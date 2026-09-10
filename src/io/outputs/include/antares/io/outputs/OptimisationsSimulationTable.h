@@ -38,18 +38,22 @@ public:
 
     /**
      * \brief Parse a user-supplied stage list into a selection set.
-     * \param input comma-separated stage names, or "all". Empty, or "all"
-     *              anywhere in the list, selects every stage.
+     * \param input comma-separated stage names, "all" and/or "last". "all"
+     *              anywhere in the list selects every stage; "last" adds
+     *              `lastStage`.
      * \param source how the error message names the origin of the list (command
      *               line or generaldata.ini).
+     * \param lastStage the stage the "last" keyword stands for -- the final
+     *                  stage the caller's run actually reaches.
      * \return the selected stages; an empty set means "every stage".
      * \throws Antares::Error::InvalidArgumentError, listing the valid names, on
      *         an unknown name -- including one after an "all", as the whole list
-     *         is validated.
+     *         is validated -- or on a list with no usable name at all.
      */
-    static std::set<Stage> parseStageSelection(
+    [[nodiscard]] static std::set<Stage> parseStageSelection(
       const std::string& input,
-      const std::string& source = "--simulation-table-stages");
+      const std::string& source = "--simulation-table-stages",
+      Stage lastStage = Stage::adequacyPatchCsr);
 
     /**
      * \brief Restrict the tables to `stages`; an empty set lifts the restriction.

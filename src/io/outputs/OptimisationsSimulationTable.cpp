@@ -34,10 +34,10 @@ std::vector<std::string> splitStageList(const std::string& input)
     return names;
 }
 
-[[noreturn]] void rejectUnknownStage(const std::string& name, const std::string& source)
+[[noreturn]] void rejectValue(const std::string& what, const std::string& source)
 {
     std::ostringstream message;
-    message << "Invalid value for " << source << ": '" << name << "' (expected all";
+    message << "Invalid value for " << source << ": " << what << " (expected all, last";
     for (const auto stage: allStages)
     {
         message << ", " << stageName(stage);
@@ -46,12 +46,21 @@ std::vector<std::string> splitStageList(const std::string& input)
     throw Error::InvalidArgumentError(message.str());
 }
 
-// Turn the raw names into stages, applying the "all" keyword. Every name still
-// has to be a real stage, so a typo in `all,optim-nb-3` is reported rather than
-// swallowed. An empty result means "every stage": that is what "all", and an
-// empty list, resolve to.
-std::vector<Stage> resolveStages(const std::vector<std::string>& names, const std::string& source)
+// Turn the raw names into stages, applying the "all" and "last" keywords. Every
+// other name still has to be a real stage, so a typo in `all,optim-nb-3` is
+// reported rather than swallowed. An empty result means "every stage": that is
+// what "all" resolves to. A list with no usable name at all is rejected: unlike
+// an absent selection, an empty one reads like a deliberate "no stage", which
+// this option cannot express.
+std::vector<Stage> resolveStages(const std::vector<std::string>& names,
+                                 const std::string& source,
+                                 Stage lastStage)
 {
+    if (names.empty())
+    {
+        rejectValue("empty", source);
+    }
+
     bool everyStage = false;
     std::vector<Stage> stages;
     for (const auto& name: names)
@@ -62,10 +71,16 @@ std::vector<Stage> resolveStages(const std::vector<std::string>& names, const st
             continue;
         }
 
+        if (name == "last")
+        {
+            stages.push_back(lastStage);
+            continue;
+        }
+
         const auto stage = stageFromName(name);
         if (!stage)
         {
-            rejectUnknownStage(name, source);
+            rejectValue("'" + name + "'", source);
         }
         stages.push_back(*stage);
     }
@@ -80,9 +95,10 @@ OptimisationsSimulationTable::OptimisationsSimulationTable(
 }
 
 std::set<Stage> OptimisationsSimulationTable::parseStageSelection(const std::string& input,
-                                                                  const std::string& source)
+                                                                  const std::string& source,
+                                                                  Stage lastStage)
 {
-    const auto stages = resolveStages(splitStageList(input), source);
+    const auto stages = resolveStages(splitStageList(input), source, lastStage);
     return {stages.begin(), stages.end()};
 }
 

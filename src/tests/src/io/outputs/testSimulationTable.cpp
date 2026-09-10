@@ -483,9 +483,8 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_AcceptsAllTheStageNames)
     }
 }
 
-BOOST_AUTO_TEST_CASE(ParseStageSelection_EmptyAndAllMeanNoRestriction)
+BOOST_AUTO_TEST_CASE(ParseStageSelection_AllMeansNoRestriction)
 {
-    BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("").empty());
     BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("all").empty());
     // "all" wins over its neighbours rather than being taken for a stage name,
     // wherever in the list it sits.
@@ -494,8 +493,40 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_EmptyAndAllMeanNoRestriction)
 
     // Widening the selection is not a licence to stop reading: a name after an
     // "all" is still checked, so a typo is reported rather than swallowed.
-    BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("all,optim-nb-3"),
+    BOOST_CHECK_THROW((void) OptimisationsSimulationTable::parseStageSelection("all,optim-nb-3"),
                       Antares::Error::InvalidArgumentError);
+}
+
+BOOST_AUTO_TEST_CASE(ParseStageSelection_RejectsAListWithNoUsableName)
+{
+    // Unlike an absent selection (which the caller never brings here), an empty
+    // one reads like a deliberate "no stage" -- which this option cannot mean.
+    BOOST_CHECK_THROW((void) OptimisationsSimulationTable::parseStageSelection(""),
+                      Antares::Error::InvalidArgumentError);
+    BOOST_CHECK_THROW((void) OptimisationsSimulationTable::parseStageSelection("   "),
+                      Antares::Error::InvalidArgumentError);
+    BOOST_CHECK_THROW((void) OptimisationsSimulationTable::parseStageSelection(" , , "),
+                      Antares::Error::InvalidArgumentError);
+}
+
+BOOST_AUTO_TEST_CASE(ParseStageSelection_LastStandsForTheGivenStage)
+{
+    const auto remix = OptimisationsSimulationTable::parseStageSelection(
+      "last", "--simulation-table-stages", Stage::remixHydro);
+    BOOST_CHECK_EQUAL(remix.size(), 1u);
+    BOOST_CHECK(remix.contains(Stage::remixHydro));
+
+    const auto csr = OptimisationsSimulationTable::parseStageSelection(
+      "last", "--simulation-table-stages", Stage::adequacyPatchCsr);
+    BOOST_CHECK_EQUAL(csr.size(), 1u);
+    BOOST_CHECK(csr.contains(Stage::adequacyPatchCsr));
+
+    // "last" combines with explicit stage names like any other token.
+    const auto mixed = OptimisationsSimulationTable::parseStageSelection(
+      "optim-nb-1, last", "--simulation-table-stages", Stage::remixHydro);
+    BOOST_CHECK_EQUAL(mixed.size(), 2u);
+    BOOST_CHECK(mixed.contains(Stage::firstOptim));
+    BOOST_CHECK(mixed.contains(Stage::remixHydro));
 }
 
 BOOST_AUTO_TEST_CASE(ParseStageSelection_TrimsSpacesAndRejectsUnknownNames)
@@ -506,10 +537,10 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_TrimsSpacesAndRejectsUnknownNames)
     BOOST_CHECK(selection.contains(Stage::secondOptim));
     BOOST_CHECK(selection.contains(Stage::adequacyPatchCsr));
 
-    BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("optim-nb-3"),
+    BOOST_CHECK_THROW((void) OptimisationsSimulationTable::parseStageSelection("optim-nb-3"),
                       Antares::Error::InvalidArgumentError);
     // A stage name that is only a prefix of a real one is still a mistake.
-    BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("remix"),
+    BOOST_CHECK_THROW((void) OptimisationsSimulationTable::parseStageSelection("remix"),
                       Antares::Error::InvalidArgumentError);
 }
 
@@ -519,7 +550,7 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_ErrorNamesWhereTheListCameFrom)
     // pointing at the wrong one sends the reader to the wrong file.
     try
     {
-        OptimisationsSimulationTable::parseStageSelection("nope", "some-source");
+        (void) OptimisationsSimulationTable::parseStageSelection("nope", "some-source");
         BOOST_FAIL("an unknown stage name must throw");
     }
     catch (const Antares::Error::InvalidArgumentError& e)

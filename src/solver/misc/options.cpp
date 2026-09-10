@@ -77,7 +77,9 @@ void addParameterOptions(Yuni::GetOpt::Parser& parser,
                ' ',
                "simulation-table-stages",
                "Comma-separated list of the resolution stages to write a simulation table for: "
-               "all, optim-nb-1, optim-nb-2, remix-hydro, adq-patch-csr (default: all)");
+               "all, last, optim-nb-1, optim-nb-2, remix-hydro, adq-patch-csr. 'last' is the last "
+               "stage the run reaches (adq-patch-csr with the adequacy patch, else remix-hydro). "
+               "Must not be empty (default: all)");
 }
 
 void addOptimizationOptions(Yuni::GetOpt::Parser& parser,

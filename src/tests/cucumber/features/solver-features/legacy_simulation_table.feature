@@ -467,3 +467,35 @@ Feature: Legacy variables in simulation table
     When I run antares simulator with --output=simulation-tables --simulation-table-stages=all
     Then the simulation succeeds
     And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2, remix-hydro, adq-patch-csr"
+
+
+  @short
+  Scenario: "last" selects the final stage the run reaches, adequacy patch on
+    # This fixture enables the adequacy patch, so the last stage the weekly
+    # resolution reaches is the CSR one -- "last" must resolve to it, and to a
+    # file named adq-patch-csr, never one named "last".
+    Given the solver study path is "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
+    When I run antares simulator with --output=simulation-tables --simulation-table-stages=last
+    Then the simulation succeeds
+    And the simulation tables cover exactly the stages "adq-patch-csr"
+
+
+  @short
+  Scenario: "last" selects the final stage the run reaches, adequacy patch off
+    # "3_6_1" has no adequacy patch, so the remix-hydro post-process -- which
+    # every run reaches -- is the last stage, and "last" resolves there.
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
+    When I run antares simulator with --output=simulation-tables --simulation-table-stages=last
+    Then the simulation succeeds
+    And the simulation tables cover exactly the stages "remix-hydro"
+
+
+  @short
+  Scenario: An empty simulation-table-stages value stops the run
+    # An absent key means "every stage"; a key left explicitly blank looks like
+    # a deliberate "no stage", which the option cannot express, so it is
+    # rejected rather than silently taken for "every stage".
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
+    And the study asks for the simulation table stages ""
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation fails

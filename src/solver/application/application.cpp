@@ -135,12 +135,12 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     pStudy->parameters.outputSelection = pSettings.outputSelection;
 
     // Validated here, so an unknown stage name on the command line is reported
-    // before the study is even loaded; applied after the load (below), where it
-    // overrides what generaldata.ini asked for.
-    std::optional<std::set<IO::Outputs::Stage>> stagesFromCommandLine;
+    // before the study is even loaded. Parsed again after the load (below),
+    // where it overrides what generaldata.ini asked for and where "last" can be
+    // resolved to the final stage the run actually reaches.
     if (!pSettings.simulationTableStagesStr.empty())
     {
-        stagesFromCommandLine = IO::Outputs::OptimisationsSimulationTable::parseStageSelection(
+        (void) IO::Outputs::OptimisationsSimulationTable::parseStageSelection(
           pSettings.simulationTableStagesStr);
     }
 
@@ -182,9 +182,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             study.parameters.simuTableFormat = Writer::TableFormat::Parquet;
         }
 
-        const bool stagesWereAskedFor = !pSettings.simulationTableStagesStr.empty()
-                                        || !study.parameters.simulationTableStagesStr.empty();
-        if (stagesWereAskedFor && !study.parameters.writeSimulationTable())
+        const bool stagesFromCommandLine = !pSettings.simulationTableStagesStr.empty();
+        const bool stagesFromStudy = !study.parameters.simulationTableStagesStr.empty();
+        if ((stagesFromCommandLine || stagesFromStudy) && !study.parameters.writeSimulationTable())
         {
             // Choosing stages narrows the tables that get written; it never
             // enables them. Silence here reads like the selection was applied.
@@ -192,19 +192,32 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
                               "disabled: the selection has no effect";
         }
 
+        // "last" stands for the final stage the weekly resolution reaches: the
+        // CSR stage when the adequacy patch runs, otherwise the remix-hydro
+        // post-process, which every run reaches.
+        const auto lastStage = study.parameters.adqPatchParams.enabled
+                                 ? IO::Outputs::Stage::adequacyPatchCsr
+                                 : IO::Outputs::Stage::remixHydro;
+
         // The command line wins over generaldata.ini; both go through the same
         // validation, so an unknown stage name in the study stops the run too.
         // The ini value is only parsed when it is the one being used, so a
         // command-line selection is also a way past a study that has a bad one.
+        // An absent selection (empty string, no parse) keeps the default: every
+        // stage. An empty value, on the other hand, is rejected at load time.
         if (stagesFromCommandLine)
         {
-            study.parameters.simulationTableStages = *stagesFromCommandLine;
+            study.parameters.simulationTableStages = IO::Outputs::OptimisationsSimulationTable::
+              parseStageSelection(pSettings.simulationTableStagesStr,
+                                  "--simulation-table-stages",
+                                  lastStage);
         }
-        else
+        else if (stagesFromStudy)
         {
             study.parameters.simulationTableStages = IO::Outputs::OptimisationsSimulationTable::
               parseStageSelection(study.parameters.simulationTableStagesStr,
-                                  "simulation-table-stages in generaldata.ini");
+                                  "simulation-table-stages in generaldata.ini",
+                                  lastStage);
         }
 
         if (pSettings.forceZipOutput)
