@@ -22,14 +22,14 @@ enum class Stage
     remixHydro,
     /// The whole CSR treatment: curtailment sharing, DTG netting and the
     /// marginal price update.
-    adequacyPatchCsr,
+    adequacyPatch,
 };
 
 /// \brief Every stage, in the order the weekly resolution reaches them.
 inline constexpr std::array allStages = {Stage::firstOptim,
                                          Stage::secondOptim,
                                          Stage::remixHydro,
-                                         Stage::adequacyPatchCsr};
+                                         Stage::adequacyPatch};
 
 /// \brief Wire name of a stage: used in output file names and the
 /// `simulation-table-stages` generaldata.ini value, so these strings are stable.
@@ -43,7 +43,7 @@ constexpr std::string_view stageName(Stage stage)
         return "optim-nb-2";
     case Stage::remixHydro:
         return "shave-peaks";
-    case Stage::adequacyPatchCsr:
+    case Stage::adequacyPatch:
         return "adq-patch";
     }
     return {};

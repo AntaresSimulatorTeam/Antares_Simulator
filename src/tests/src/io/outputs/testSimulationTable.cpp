@@ -504,7 +504,7 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_TrimsSpacesAndRejectsUnknownNames)
       " optim-nb-2 , adq-patch ");
     BOOST_CHECK_EQUAL(selection.size(), 2u);
     BOOST_CHECK(selection.contains(Stage::secondOptim));
-    BOOST_CHECK(selection.contains(Stage::adequacyPatchCsr));
+    BOOST_CHECK(selection.contains(Stage::adequacyPatch));
 
     BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("optim-nb-3"),
                       Antares::Error::InvalidArgumentError);
@@ -538,7 +538,7 @@ BOOST_AUTO_TEST_CASE(SelectStages_UnselectedStagesReturnNullptr)
     BOOST_CHECK(tables.tableForStage(Stage::remixHydro) != nullptr);
     BOOST_CHECK(tables.firstOptimSimulationTable() == nullptr);
     BOOST_CHECK(tables.secondOptimSimulationTable() == nullptr);
-    BOOST_CHECK(tables.tableForStage(Stage::adequacyPatchCsr) == nullptr);
+    BOOST_CHECK(tables.tableForStage(Stage::adequacyPatch) == nullptr);
 
     // A refused stage is not even created, so the writer never sees it.
     BOOST_CHECK_EQUAL(tables.stages().size(), 1u);
@@ -552,7 +552,7 @@ BOOST_AUTO_TEST_CASE(SelectStages_PostProcessStagesDriveTheModelerProblemRetenti
     OptimisationsSimulationTable everything{nullptr};
     BOOST_CHECK(everything.anyPostProcessStageSelected());
 
-    for (const auto stage: {Stage::remixHydro, Stage::adequacyPatchCsr})
+    for (const auto stage: {Stage::remixHydro, Stage::adequacyPatch})
     {
         OptimisationsSimulationTable tables{nullptr};
         tables.selectStages({stage});

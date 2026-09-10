@@ -117,7 +117,7 @@ bool OptimisationsSimulationTable::isStageSelected(Stage stage) const
 
 bool OptimisationsSimulationTable::anyPostProcessStageSelected() const
 {
-    return isStageSelected(Stage::remixHydro) || isStageSelected(Stage::adequacyPatchCsr);
+    return isStageSelected(Stage::remixHydro) || isStageSelected(Stage::adequacyPatch);
 }
 
 const std::map<Stage, SimulationTable>& OptimisationsSimulationTable::stages() const

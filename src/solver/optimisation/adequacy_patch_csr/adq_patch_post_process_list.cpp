@@ -55,7 +55,7 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(
     // once the whole patch has been applied.
     post_process_list.push_back(
       std::make_unique<DumpSimulationTablePostProcessCmd>(problemeHebdo_,
-                                                          IO::Outputs::Stage::adequacyPatchCsr,
+                                                          IO::Outputs::Stage::adequacyPatch,
                                                           simulationTables));
 
     if (params.adqPatchDebug)
