@@ -165,10 +165,13 @@ void HourlyCSRProblem::buildProblemConstraintsRHS()
     logs.debug() << "[CSR] RHS: ";
     setRHSvalueOnFlows();
     setRHSnodeBalanceValue();
+
     setRHSfictitiousLoadValue();
     gemsPart_->setRHSfictitiousLoadValue();
+
     setRHSMaxEnsLoadValue();
     gemsPart_->setRHSMaxEnsLoadValue();
+
     setRHSbindingConstraintsValue();
 }
 

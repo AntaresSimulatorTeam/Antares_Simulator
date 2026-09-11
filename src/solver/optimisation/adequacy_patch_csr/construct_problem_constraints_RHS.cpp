@@ -139,8 +139,6 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
             }
         }
     }
-
-    gemsPart_->setRHSfictitiousLoadValue();
 }
 
 void HourlyCSRProblem::setRHSMaxEnsLoadValue()
