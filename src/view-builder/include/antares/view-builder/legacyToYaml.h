@@ -11,7 +11,6 @@ namespace Antares::ViewBuilder
 {
 
 std::string areaLocation(const std::string& areaId);
-std::string miscGenTypeName(int index);
 
 YAML::Node areaToYaml(const Data::Area& area);
 YAML::Node loadToYaml(const Data::Area& area);
