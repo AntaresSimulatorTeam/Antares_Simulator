@@ -155,6 +155,7 @@ void HourlyCSRProblem::setVariableBounds()
 
     logs.debug() << "[CSR] bounds";
     setBoundsOnENS();
+    gemsPart_->setBoundsOnENS();
     setBoundsOnSpilledEnergy();
     setBoundsOnFlows();
 }
@@ -165,7 +166,9 @@ void HourlyCSRProblem::buildProblemConstraintsRHS()
     setRHSvalueOnFlows();
     setRHSnodeBalanceValue();
     setRHSfictitiousLoadValue();
+    gemsPart_->setRHSfictitiousLoadValue();
     setRHSMaxEnsLoadValue();
+    gemsPart_->setRHSMaxEnsLoadValue();
     setRHSbindingConstraintsValue();
 }
 
