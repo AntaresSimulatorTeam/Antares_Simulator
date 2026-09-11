@@ -38,7 +38,10 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
         }
 
         // Init variables for a reserve
-        void initReserve(int pdt, const int reserveIndex, const std::string& reserveName)
+        void initReserve(int pdt,
+                         const int reserveIndex,
+                         const std::string& reserveName,
+                         const std::string& reserveId)
         {
             if (Simulation)
             {
@@ -50,14 +53,14 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                 variableManager.InternalUnsatisfiedReserve(reserveIndex, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.InternalUnsatisfiedReserve(NombreDeVariables, reserveName);
+                variableNamer.InternalUnsatisfiedReserve(NombreDeVariables, reserveName, reserveId);
                 NombreDeVariables++;
 
                 // For Excess Reserves
                 variableManager.InternalExcessReserve(reserveIndex, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.InternalExcessReserve(NombreDeVariables, reserveName);
+                variableNamer.InternalExcessReserve(NombreDeVariables, reserveName, reserveId);
                 NombreDeVariables++;
             }
         }
@@ -67,7 +70,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
           ReserveType type,
           int pdt,
           const RESERVE_PARTICIPATION_THERMAL& clusterReserveParticipation,
-          const std::string& reserveName)
+          const std::string& reserveName,
+          const std::string& reserveId)
         {
             const auto& clusterName = clusterReserveParticipation.clusterName;
             if (Simulation)
@@ -86,7 +90,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ParticipationOfRunningUnitsToReserve(NombreDeVariables,
                                                                    clusterName,
-                                                                   reserveName);
+                                                                   reserveName,
+                                                                   reserveId);
                 NombreDeVariables++;
 
                 if (type == ReserveType::UP) // For off units in cluster (off units can not
@@ -100,7 +105,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                       = VARIABLE_BORNEE_DES_DEUX_COTES;
                     variableNamer.ParticipationOfOffUnitsToReserve(NombreDeVariables,
                                                                    clusterName,
-                                                                   reserveName);
+                                                                   reserveName,
+                                                                   reserveId);
                     NombreDeVariables++;
 
                     variableManager.OffThermalClusterReserveParticipation(
@@ -113,7 +119,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                       = problemeHebdo->OptimisationAvecVariablesEntieres;
                     variableNamer.ParticipationOfOffUnitsToReserve(NombreDeVariables,
                                                                    clusterName,
-                                                                   reserveName);
+                                                                   reserveName,
+                                                                   reserveId);
                     NombreDeVariables++;
                 }
 
@@ -126,7 +133,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ThermalClusterReserveParticipation(NombreDeVariables,
                                                                  clusterName,
-                                                                 reserveName);
+                                                                 reserveName,
+                                                                 reserveId);
                 NombreDeVariables++;
             }
         }
@@ -136,7 +144,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
           ReserveType type,
           int pdt,
           const RESERVE_PARTICIPATION_STSTORAGE& clusterReserveParticipation,
-          const std::string& reserveName)
+          const std::string& reserveName,
+          const std::string& reserveId)
         {
             const auto& clusterName = clusterReserveParticipation.clusterName;
             if (Simulation)
@@ -154,7 +163,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ParticipationOfSTStorageReleaseToReserve(NombreDeVariables,
                                                                        clusterName,
-                                                                       reserveName);
+                                                                       reserveName,
+                                                                       reserveId);
                 NombreDeVariables++;
 
                 // For Store participation to the reserves
@@ -166,7 +176,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ParticipationOfSTStorageStoreToReserve(NombreDeVariables,
                                                                      clusterName,
-                                                                     reserveName);
+                                                                     reserveName,
+                                                                     reserveId);
                 NombreDeVariables++;
 
                 // For Short Term Storage participation to the up reserves
@@ -179,7 +190,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                 variableNamer.ParticipationOfSTStorageToReserve(type,
                                                                 NombreDeVariables,
                                                                 clusterName,
-                                                                reserveName);
+                                                                reserveName,
+                                                                reserveId);
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 NombreDeVariables++;
@@ -191,7 +203,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
           ReserveType type,
           int pdt,
           const RESERVE_PARTICIPATION_HYDRO& clusterReserveParticipation,
-          const std::string& reserveName)
+          const std::string& reserveName,
+          const std::string& reserveId)
         {
             const auto& clusterName = clusterReserveParticipation.clusterName;
             if (Simulation)
@@ -209,7 +222,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ParticipationOfHydroReleaseToReserve(NombreDeVariables,
                                                                    clusterName,
-                                                                   reserveName);
+                                                                   reserveName,
+                                                                   reserveId);
                 NombreDeVariables++;
 
                 // For Store participation to the reserves
@@ -221,7 +235,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ParticipationOfHydroStoreToReserve(NombreDeVariables,
                                                                  clusterName,
-                                                                 reserveName);
+                                                                 reserveName,
+                                                                 reserveId);
                 NombreDeVariables++;
 
                 // For Hydro participation to the reserves
@@ -236,7 +251,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                 variableNamer.ParticipationOfHydroToReserve(type,
                                                             NombreDeVariables,
                                                             clusterName,
-                                                            reserveName);
+                                                            reserveName,
+                                                            reserveId);
 
                 NombreDeVariables++;
             }
@@ -260,7 +276,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
             {
                 reserveVariablesInitializer.initReserve(pdt,
                                                         areaReserve.globalReserveIndex,
-                                                        areaReserve.reserveName);
+                                                        areaReserve.reserveName,
+                                                        areaReserve.reserveID);
 
                 // Thermal Clusters
                 for (auto& [clusterId, clusterReserveParticipation]:
@@ -268,9 +285,10 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                 {
                     reserveVariablesInitializer.initThermalReserveParticipation(
                       areaReserve.type,
-                      pdt,
-                      clusterReserveParticipation,
-                      areaReserve.reserveName);
+                       pdt,
+                       clusterReserveParticipation,
+                       areaReserve.reserveName,
+                       areaReserve.reserveID);
                 }
 
                 // Short Term Storage Clusters
@@ -279,9 +297,10 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                 {
                     reserveVariablesInitializer.initSTStorageReserveParticipation(
                       areaReserve.type,
-                      pdt,
-                      clusterReserveParticipation,
-                      areaReserve.reserveName);
+                       pdt,
+                       clusterReserveParticipation,
+                       areaReserve.reserveName,
+                       areaReserve.reserveID);
                 }
 
                 // Hydro
@@ -289,9 +308,10 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                 {
                     reserveVariablesInitializer.initHydroReserveParticipation(
                       areaReserve.type,
-                      pdt,
-                      clusterReserveParticipation,
-                      areaReserve.reserveName);
+                       pdt,
+                       clusterReserveParticipation,
+                       areaReserve.reserveName,
+                       areaReserve.reserveID);
                 }
             }
         }
