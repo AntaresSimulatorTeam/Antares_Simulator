@@ -345,7 +345,10 @@ public:
         return hydro->reserveParticipationContainer;
     }
 
-    static void reportMissing(const Area& area, const std::string& resserveID, bool reserveOK, bool);
+    static void reportMissing(const Area& area,
+                              const std::string& resserveID,
+                              bool reserveOK,
+                              bool);
 };
 
 } // namespace Antares::Data

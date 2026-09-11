@@ -155,15 +155,13 @@ void STStorageReserveLoader::reportMissing(const Area& area,
     }
     if (!clusterOK)
     {
-        logs.error() << area.name
-                     << " : missing STStorage when loading STS reserve participation";
+        logs.error() << area.name << " : missing STStorage when loading STS reserve participation";
     }
 }
 
 void STStorageReserveLoader::reportMissingCluster(const Area& area, const std::string& clusterName)
 {
-    logs.error() << "Short term storage " << clusterName << " does not exist in area "
-                 << area.name;
+    logs.error() << "Short term storage " << clusterName << " does not exist in area " << area.name;
 }
 
 // HydroReserveLoader
@@ -230,9 +228,8 @@ void HydroReserveLoader::parseParticipations(Area& area, const YAML::Node& root)
         }
         else
         {
-            logs.error()
-              << "Area " << area.name
-              << ", hydro : trying to add symmetries without any reserve participation";
+            logs.error() << "Area " << area.name
+                         << ", hydro : trying to add symmetries without any reserve participation";
         }
     }
 }
