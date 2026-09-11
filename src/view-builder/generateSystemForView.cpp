@@ -184,7 +184,8 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
           {
               components.push_back(miscGenToYaml(area, i));
               connections.push_back(
-                makeConnection(BuildMiscGenComponentId(area.id, miscGenTypeName(i)),
+                makeConnection(BuildMiscGenComponentId(area.id,
+                                                       std::string(miscGenComponentNames[i])),
                                "balance_port",
                                areaLoc,
                                "balance_port"));

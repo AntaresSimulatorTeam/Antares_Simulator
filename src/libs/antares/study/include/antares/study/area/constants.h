@@ -4,6 +4,11 @@
 #ifndef __ANTARES_LIBS_STUDY_AREAS_CONSTANTS_H__
 #define __ANTARES_LIBS_STUDY_AREAS_CONSTANTS_H__
 
+#include <array>
+#include <cassert>
+#include <string>
+#include <string_view>
+
 namespace Antares::Data
 {
 struct CompareAreaName;
@@ -50,6 +55,42 @@ enum MiscGenIndex
     //! Maximum number of items
     fhhMax
 };
+
+//! Legacy component name of each misc-gen column, indexed by MiscGenIndex.
+//! Single source of truth for the simulation-table component ids
+//! `"{area}_{name}"`.
+inline constexpr std::array<std::string_view, fhhMax> miscGenComponentNames = {
+  "combined_heat_power",  // fhhCHP
+  "biomass",              // fhhBioMass
+  "biogas",               // fhhBioGaz
+  "waste",                // fhhWaste
+  "geothermal",           // fhhGeoThermal
+  "other",                // fhhOther
+  "pumped_storage_power", // fhhPSP
+  "rest_world"            // fhhRowBalance
+};
+
+//! Suffix to append to an area id to get a misc-gen component id: `"_{name}"`.
+[[nodiscard]] inline const std::string& miscGenComponentSuffix(MiscGenIndex index)
+{
+    static const std::array<std::string, fhhMax> suffixes = []
+    {
+        std::array<std::string, fhhMax> s;
+        for (std::size_t i = 0; i < s.size(); ++i)
+        {
+            s[i] = "_" + std::string(miscGenComponentNames[i]);
+        }
+        return s;
+    }();
+    assert(index >= fhhCHP && index < fhhMax);
+    return suffixes[static_cast<std::size_t>(index)];
+}
+
+//! Full simulation-table component id of a misc-gen column: `"{area}_{name}"`.
+[[nodiscard]] inline std::string miscGenComponentId(const std::string& areaId, MiscGenIndex index)
+{
+    return areaId + miscGenComponentSuffix(index);
+}
 
 enum ReservesIndex
 {

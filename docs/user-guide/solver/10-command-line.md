@@ -28,18 +28,19 @@ hide:
 
 ## Parameters
 
-| command                  | usage                                                                                             |
-|:-------------------------|:--------------------------------------------------------------------------------------------------|
-| -n, --name=VALUE         | Set the name of the new simulation                                                                |
-| -g, --generators-only    | Run the time-series generators only                                                               |
-| -c, --comment-file=VALUE | Specify the file to copy as comments of the simulation                                            |
-| -f, --force              | Ignore all warnings at loading                                                                    |
-| --output=VALUE           | Select which output families to write: `all`, `none`, `monte-carlo`, `simulation-tables`. Default: `monte-carlo` |
-| -y, --year=VALUE         | Override the [number of MC years](04-parameters.md#nbyears)                                       |
-| --year-by-year           | Force the [writing the result output for each year](04-parameters.md#year-by-year) (economy only) |
-| --derated                | Force the [derated](04-parameters.md#derated) mode                                                |
-| -z, --zip-output         | Write the results into a single zip archive                                                       |
-| --parquet                | Write simulation table in format parquet instead of csv format                                    |
+| command                         | usage                                                                                                                                                                                                                                                              |
+|:--------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -n, --name=VALUE                | Set the name of the new simulation                                                                                                                                                                                                                                 |
+| -g, --generators-only           | Run the time-series generators only                                                                                                                                                                                                                                |
+| -c, --comment-file=VALUE        | Specify the file to copy as comments of the simulation                                                                                                                                                                                                             |
+| -f, --force                     | Ignore all warnings at loading                                                                                                                                                                                                                                     |
+| --output=VALUE                  | Select which output families to write: `all`, `none`, `monte-carlo`, `simulation-tables`. Default: `monte-carlo`                                                                                                                                                   |
+| -y, --year=VALUE                | Override the [number of MC years](04-parameters.md#nbyears)                                                                                                                                                                                                        |
+| --year-by-year                  | Force the [writing the result output for each year](04-parameters.md#year-by-year) (economy only)                                                                                                                                                                  |
+| --derated                       | Force the [derated](04-parameters.md#derated) mode                                                                                                                                                                                                                 |
+| -z, --zip-output                | Write the results into a single zip archive                                                                                                                                                                                                                        |
+| --parquet                       | Write simulation table in format parquet instead of csv format                                                                                                                                                                                                     |
+| --simulation-table-stages=VALUE | Override [which resolution stages get a simulation table](04-parameters.md#simulation-table-stages): `all`, or a comma-separated list among `optim-nb-1`, `optim-nb-2`, `remix-hydro`, `adq-patch-csr`. Default: `all`. Only chooses which tables are written; simulation tables must also be enabled via `--output` (`all` or `simulation-tables`), otherwise the selection warns and has no effect |
 
 ## Optimization
 

@@ -32,8 +32,6 @@ public:
     DataSeriesHydro();
     //@}
 
-    void copyGenerationTS(const DataSeriesHydro& source);
-
     //! \name Data
     //@{
     /*!

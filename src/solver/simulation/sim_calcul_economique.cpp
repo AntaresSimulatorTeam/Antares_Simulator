@@ -585,16 +585,6 @@ static void fillInputGenerationSeries(const Study& study,
                                       PROBLEME_HEBDO& problem,
                                       const int PasDeTempsDebut)
 {
-    constexpr std::array<std::pair<const char*, Data::MiscGenIndex>, Data::fhhMax>
-      miscGenComponents = {{{"_combined_heat_power", Data::fhhCHP},
-                            {"_biomass", Data::fhhBioMass},
-                            {"_biogas", Data::fhhBioGaz},
-                            {"_waste", Data::fhhWaste},
-                            {"_geothermal", Data::fhhGeoThermal},
-                            {"_other", Data::fhhOther},
-                            {"_pumped_storage_power", Data::fhhPSP},
-                            {"_rest_world", Data::fhhRowBalance}}};
-
     const unsigned year = problem.year;
     const unsigned nbPdt = problem.NombreDePasDeTemps;
     problem.InputGenerationOfArea.assign(study.areas.size(), {});
@@ -635,10 +625,10 @@ static void fillInputGenerationSeries(const Study& study,
         addEntry(areaId + "_run_of_river",
                  [&](int hour) { return area.hydro.series->ror.getCoefficient(year, hour); });
 
-        for (const auto& [suffix, miscGenIndex]: miscGenComponents)
+        for (int index = 0; index < Data::fhhMax; ++index)
         {
-            addEntry(areaId + suffix,
-                     [&, index = miscGenIndex](int hour) { return area.miscGen[index][hour]; });
+            addEntry(Data::miscGenComponentId(areaId, static_cast<Data::MiscGenIndex>(index)),
+                     [&, index](int hour) { return area.miscGen[index][hour]; });
         }
     }
 }

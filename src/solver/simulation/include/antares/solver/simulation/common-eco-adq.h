@@ -100,17 +100,21 @@ void interpolateWaterValue(const Data::AreaList& areas,
 void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem);
 
 /*
-** \brief Compute the weighted average NTC for a link
+** \brief Compute the MC-years weighted average NTC of a link, over a range of hours
 **
-** \param areas : the areas of study
-** \param link The link
-** \param Weighted average NTC for the direct direction
-** \param Weighted average NTC for the indirect direction
+** \param study The study
+** \param capacities NTC time series of the link, for one direction
+** \param tsNumbers TS numbers of the link
+** \param firstHour First hour of the range, in [0, HOURS_PER_YEAR[
+** \param hourCount Number of hours of the range
+** \param avg Weighted average NTC, resized to hourCount. avg[h] refers to hour firstHour + h
 */
-int retrieveAverageNTC(const Data::Study& study,
-                       const Matrix<>& capacities,
-                       const Data::TimeSeriesNumbers& tsNumbers,
-                       std::vector<double>& avg);
+void retrieveAverageNTC(const Data::Study& study,
+                        const Matrix<>& capacities,
+                        const Data::TimeSeriesNumbers& tsNumbers,
+                        uint firstHour,
+                        uint hourCount,
+                        std::vector<double>& avg);
 
 void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
                                     Antares::Solver::Variable::State& state);

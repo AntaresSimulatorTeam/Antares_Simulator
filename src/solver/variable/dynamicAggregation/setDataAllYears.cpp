@@ -211,10 +211,10 @@ void SetDataAllYears::appendToSurvey(SurveyResults& survey, Category::Precision 
                   "_WITHDRAWAL",
                   survey);
 
-    processGroups(averageStsWithdrawal_,
-                  stdDevStsWithdrawal_,
-                  minStsWithdrawal_,
-                  maxStsWithdrawal_,
+    processGroups(averageStsLevel_,
+                  stdDevStsLevel_,
+                  minStsLevel_,
+                  maxStsLevel_,
                   stsGroupNames_,
                   precision,
                   "_LEVEL",

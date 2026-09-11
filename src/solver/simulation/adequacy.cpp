@@ -7,6 +7,7 @@
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/solver/optimisation/InactiveComponentsAnalyzerBuilder.h"
+#include "antares/solver/optimisation/LegacySimulationTableSnapshot.h"
 #include "antares/solver/simulation/solver_utils.h"
 #include "antares/writer/LegacySimulationTablesWriter.h"
 
@@ -137,6 +138,7 @@ bool Adequacy::year(Variable::State& state,
     {
         simulationTables = std::make_unique<IO::Outputs::OptimisationsSimulationTable>();
         simulationTables->inactiveComponents = inactiveComponents_;
+        simulationTables->selectStages(study.parameters.simulationTableStages);
     }
 
     for (uint w = 0; w != pNbWeeks; ++w)
@@ -211,6 +213,17 @@ bool Adequacy::year(Variable::State& state,
                                       numSpace,
                                       hourInTheYear,
                                       resultWriter);
+
+                // Adequacy runs its post-treatment inline instead of through a
+                // post-process command list, so the stage dump that
+                // DumpSimulationTablePostProcessCmd performs in economy mode is
+                // done here. Inside the simplexRunNeeded branch on purpose: with
+                // no solve this week, the solution to publish would be the
+                // previous week's.
+                Antares::Optimization::DumpSimulationTableStage(
+                  simulationTables.get(),
+                  Antares::IO::Outputs::Stage::remixHydro,
+                  currentProblem);
             }
             catch (AssertionError& ex)
             {
