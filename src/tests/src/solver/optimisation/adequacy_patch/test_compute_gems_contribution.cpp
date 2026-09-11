@@ -10,7 +10,9 @@
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/gems-part.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
+#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using namespace std::string_literals;
@@ -94,6 +96,12 @@ struct GemsContributionFixture
         problemeHebdo.optimEntityContainer = std::make_unique<OptimEntityContainer>(linearProblem);
 
         addComponentsVariablesToLP();
+
+        gemsPart = makeGemsPart(&problemeHebdo,
+                                problemAResoudre,
+                                variableManager_,
+                                constraintFictitious,
+                                constraintMaxEns);
     }
 
     std::unique_ptr<Solver::ModelerData> buildModelerSystem()
@@ -131,56 +139,73 @@ struct GemsContributionFixture
     std::vector<Library> libraries;
     std::shared_ptr<MpsolverImpl::OrtoolsLinearProblem> linearProblem;
     ScenarioGroupRepository scenarioGroupRepository;
+    VariableManagement::VariableManager variableManager_{&problemeHebdo};
+    std::unique_ptr<IGemsPart> gemsPart;
+    PROBLEME_ANTARES_A_RESOUDRE problemAResoudre{};
+    std::map<int, int> constraintFictitious;
+    std::map<int, int> constraintMaxEns;
 };
 
-BOOST_AUTO_TEST_SUITE(compute_gems_contribution_for_area)
+BOOST_AUTO_TEST_SUITE(gems_part_tests)
 
-// BOOST_AUTO_TEST_CASE(no_modeler_data_returns_zero)
-// {
-//     PROBLEME_HEBDO problem{};
-//     problem.modelerData = nullptr;
-//     problem.NomsDesPays.push_back("area1");
+// --- Factory tests ---
 
-//     double result = computeGemsContributionForArea(0,"unsupplied_energy_bound");
-//     BOOST_CHECK_EQUAL(result, 0.0);
-// }
+BOOST_AUTO_TEST_CASE(factory_returns_null_gems_part_when_no_modeler_data)
+{
+    PROBLEME_HEBDO problem{};
+    problem.modelerData = nullptr;
 
-// BOOST_FIXTURE_TEST_CASE(no_optimEntityContainer_returns_zero,GemsContributionFixture)
-// {
-//     problemeHebdo.optimEntityContainer = nullptr;
+    PROBLEME_ANTARES_A_RESOUDRE problemAResoudre{};
+    VariableManagement::VariableManager varManager(&problem);
+    std::map<int, int> constraintFictitious;
+    std::map<int, int> constraintMaxEns;
 
-//     double result = computeGemsContributionForArea(0,
-//                                                    "unsupplied_energy_bound");
-//     BOOST_CHECK_EQUAL(result, 0.0);
-// }
+    auto gemsPart = makeGemsPart(&problem,
+                                 problemAResoudre,
+                                 varManager,
+                                 constraintFictitious,
+                                 constraintMaxEns);
 
-// BOOST_FIXTURE_TEST_CASE(area_not_connected_returns_zero,GemsContributionFixture)
-// {
-//     // area2 (index 1) has no GEMS component connected
-//     double result = computeGemsContributionForArea(
-//                                                    1,
-//                                                    "unsupplied_energy_bound");
-//     BOOST_CHECK_EQUAL(result, 0.0);
-// }
+    BOOST_CHECK(dynamic_cast<NullGemsPart*>(gemsPart.get()) != nullptr);
+    BOOST_CHECK_NO_THROW(gemsPart->setHour(42));
+}
 
-// BOOST_FIXTURE_TEST_CASE(unsupplied_energy_bound_returns_evaluated_value, GemsContributionFixture)
-// {
-//     // definition: var_1 / 2 - 10, var_1 starts at 0 → expected = 0/2 - 10 = -10
-//     double result = computeGemsContributionForArea(0, "unsupplied_energy_bound");
-//     BOOST_CHECK_EQUAL(result, -10.0);
-// }
+BOOST_FIXTURE_TEST_CASE(factory_returns_active_gems_part_when_modeler_data_exists,
+                        GemsContributionFixture)
+{
+    BOOST_CHECK(dynamic_cast<ActiveGemsPart*>(gemsPart.get()) != nullptr);
+    BOOST_CHECK_NO_THROW(gemsPart->setHour(0));
+}
 
-// BOOST_FIXTURE_TEST_CASE(spillage_bound_returns_evaluated_value, GemsContributionFixture)
-// {
-//     // definition: 2 * var_1 + 30, var_1 starts at 0 → expected = 2*0 + 30 = 30
-//     double result = computeGemsContributionForArea( 0,  "spillage_bound");
-//     BOOST_CHECK_EQUAL(result, 30.0);
-// }
+BOOST_FIXTURE_TEST_CASE(active_gems_part_throws_when_no_optimEntityContainer,
+                        GemsContributionFixture)
+{
+    problemeHebdo.optimEntityContainer.reset();
+    BOOST_CHECK_THROW((ActiveGemsPart(&problemeHebdo,
+                                      problemAResoudre,
+                                      variableManager_,
+                                      constraintFictitious,
+                                      constraintMaxEns)),
+                      std::runtime_error);
+}
 
-// BOOST_FIXTURE_TEST_CASE(unknown_port_field_name_returns_zero, GemsContributionFixture)
-// {
-//     double result = computeGemsContributionForArea( 0,  "nonexistent_field");
-//     BOOST_CHECK_EQUAL(result, 0.0);
-// }
+// --- NullGemsPart does nothing ---
+
+BOOST_AUTO_TEST_CASE(null_gems_part_setBoundsOnENS_is_noop)
+{
+    NullGemsPart nullPart;
+
+    BOOST_CHECK_NO_THROW(nullPart.setBoundsOnENS());
+}
+
+BOOST_AUTO_TEST_CASE(null_gems_part_setRHS_is_noop)
+{
+    NullGemsPart nullPart;
+
+    BOOST_CHECK_NO_THROW(nullPart.setRHSfictitiousLoadValue());
+    BOOST_CHECK_NO_THROW(nullPart.setRHSMaxEnsLoadValue());
+}
+
+// --- ActiveGemsPart evaluates expressions ---
 
 BOOST_AUTO_TEST_SUITE_END()

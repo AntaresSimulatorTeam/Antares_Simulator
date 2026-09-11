@@ -59,27 +59,18 @@ void HourlyCSRProblem::setRHSnodeBalanceValue()
 }
 
 void HourlyCSRProblem::setRHSfictitiousLoadValue()
-{
-    // constraint: FictitiousLoad for all areas inside adequacy patch
-    // Formula: spillage <= STt - (1-BT)*STmint + BH*Ht + BF*(Ft - Lt) + BH*STS_net_production
-    // where:
-    //   STt = sum of thermal dispatchable generation (from first optimization step)
-    //   STmint = sum of Pmin of thermal units
-    //   Ht = hydro generation (from first optimization step)
-    //   Ft = max(0,must-run generation)
-    //   Lt = min(0,load) (load = ConsommationAbattueDuPays + must-run generation)
-    //   BT = DefaillanceNegativeUtiliserPMinThermique
-    //   BH = DefaillanceNegativeUtiliserHydro
-    //   BF = DefaillanceNegativeUtiliserConsoAbattue
-    //   STS_net_production = net withdrawals from short-term storage (from first optimization step)
-    setRHSfictitiousLoadValueFromLegacy();
-    if (gemsUse_)
-    {
-        setRHSfictitiousLoadValueFromGEMS();
-    }
-}
-
-void HourlyCSRProblem::setRHSfictitiousLoadValueFromLegacy()
+// constraint: FictitiousLoad for all areas inside adequacy patch
+// Formula: spillage <= STt - (1-BT)*STmint + BH*Ht + BF*(Ft - Lt) + BH*STS_net_production
+// where:
+//   STt = sum of thermal dispatchable generation (from first optimization step)
+//   STmint = sum of Pmin of thermal units
+//   Ht = hydro generation (from first optimization step)
+//   Ft = max(0,must-run generation)
+//   Lt = min(0,load) (load = ConsommationAbattueDuPays + must-run generation)
+//   BT = DefaillanceNegativeUtiliserPMinThermique
+//   BH = DefaillanceNegativeUtiliserHydro
+//   BF = DefaillanceNegativeUtiliserConsoAbattue
+//   STS_net_production = net withdrawals from short-term storage (from first optimization step)
 {
     for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
@@ -150,33 +141,7 @@ void HourlyCSRProblem::setRHSfictitiousLoadValueFromLegacy()
     }
 }
 
-void HourlyCSRProblem::setRHSfictitiousLoadValueFromGEMS()
-{
-    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
-    {
-        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
-            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-        {
-            std::map<int, int>::iterator it = numberOfConstraintCsrFictitiousLoad.find(Area);
-            if (it != numberOfConstraintCsrFictitiousLoad.end())
-            {
-                int Cnt = it->second;
-                problemeAResoudre_.SecondMembre[Cnt] += gemsSpilledForArea(Area);
-            }
-        }
-    }
-}
-
 void HourlyCSRProblem::setRHSMaxEnsLoadValue()
-{
-    setRHSMaxEnsLoadValueFromLegacy();
-    if (gemsUse_)
-    {
-        setRHSMaxEnsLoadValueFromGEMS();
-    }
-}
-
-void HourlyCSRProblem::setRHSMaxEnsLoadValueFromLegacy()
 {
     std::vector<double>& SecondMembre = problemeAResoudre_.SecondMembre;
 
@@ -205,25 +170,6 @@ void HourlyCSRProblem::setRHSMaxEnsLoadValueFromLegacy()
 
                 logs.debug() << Cnt << ": MaxEnsLoad: RHS[" << Cnt << "] = " << SecondMembre[Cnt]
                              << " (Area = " << Area << ")";
-            }
-        }
-    }
-}
-
-void HourlyCSRProblem::setRHSMaxEnsLoadValueFromGEMS()
-{
-    std::vector<double>& SecondMembre = problemeAResoudre_.SecondMembre;
-
-    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; ++Area)
-    {
-        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
-            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-        {
-            std::map<int, int>::iterator it = numberOfConstraintCsrMaxEnsLoad.find(Area);
-            if (it != numberOfConstraintCsrMaxEnsLoad.end())
-            {
-                int Cnt = it->second;
-                SecondMembre[Cnt] += gemsUnsupEnergyForArea(Area);
             }
         }
     }
