@@ -1,5 +1,6 @@
 var NAVTREEINDEX41 =
 {
+"structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#ad425e36b62ba42367a4027e60488c2e8":[9,0,76,6],
 "structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#ae65ab890a83c22c63317641cc9d9b86b":[9,0,76,5],
 "structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#af45632a6e506b396e03a8ed0d062dc76":[9,0,76,2],
 "structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#aff53c62edba248fe08988c61ed6931e2":[9,0,76,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX41 =
 "structFixtureFull.html#a74321944deed38a2ecb4a6899dbbdbc4":[9,0,132,8],
 "structFixtureFull.html#a8107743d49e199f20455e49bb11fef2b":[9,0,132,0],
 "structFixtureFull.html#a9855e9af1d2b4a41cc5730d65e6920f1":[9,0,132,5],
-"structFixtureFull.html#adec029b275d68058be9657a90d370b91":[9,0,132,2],
-"structFixtureInfeasibleProblem.html":[9,0,133]
+"structFixtureFull.html#adec029b275d68058be9657a90d370b91":[9,0,132,2]
 };

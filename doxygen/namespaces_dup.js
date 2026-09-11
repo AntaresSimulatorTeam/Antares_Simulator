@@ -469,6 +469,7 @@ var namespaces_dup =
         [ "computeMaxColumnsForDynamicDistricts", "variable-print-info_8cpp.html#a3fcd5412df71f86e19d48d5a763bdbb6", null ],
         [ "datePrecisionIntoString", "filter_8cpp.html#a25266ee4cc5e2dcce04be970a2793eed", null ],
         [ "doWeHaveOnePositiveMaxDailyEnergy", "scratchpad_8cpp.html#a7a4274db1bda7528094a7dac6540c116", null ],
+        [ "errorIfNegativeValue", "reservesParticipationsLoader_8h.html#ada14be3831d78e0898188a4455068664", null ],
         [ "errorIfNegativeValue", "capacityReservation_8h.html#ab868a7ba57134afa72fd7f5559497073", null ],
         [ "exportMPS", "UnfeasibleProblemBehavior_8hpp.html#aa554b9964ae6a4b6f097a865bb5aa2f8", null ],
         [ "filter", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a608cbd93ab025822a51abddbd6591777", null ],

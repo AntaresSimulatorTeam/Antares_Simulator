@@ -1,5 +1,6 @@
 var NAVTREEINDEX36 =
 {
+"structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#aa7be674b4ad148105a640a78cecb82cf":[9,0,0,3,58,2],
 "structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#aac1c472f1c5822ed2673146d73fa1fb3":[9,0,0,3,58,6],
 "structAntares_1_1Data_1_1BindingConstraintStructures.html":[9,0,0,3,34],
 "structAntares_1_1Data_1_1BindingConstraintStructures.html#a21b500116da97136cb4ea52bea54620d":[9,0,0,3,34,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX36 =
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#afd9f103f162ee41071ef3cd3f6f1dfb0":[9,0,0,7,0,3,2,2],
 "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint.html":[9,0,0,7,0,4,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint.html#a2590fcd6ba1d69468b7b0f26ca2bfb9b":[9,0,0,7,0,4,1,0],
-"structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint.html#aead3e451f0d40ab7ed7f38c764ec259a":[9,0,0,7,0,4,1,1],
-"structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ConstraintOutOfBoundsProcessing.html":[9,0,0,7,0,4,2]
+"structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint.html#aead3e451f0d40ab7ed7f38c764ec259a":[9,0,0,7,0,4,1,1]
 };
