@@ -11,6 +11,7 @@
 
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
+#include <antares/study/filter.h>
 #include "antares/study/area/area.h"
 
 namespace Antares::Data
@@ -58,7 +59,9 @@ public:
     public:
         Options():
             output(true),
-            resultSize(0)
+            resultSize(0),
+            filterSynthesis(filterAll),
+            filterYearByYear(filterAll)
         {
         }
 
@@ -67,7 +70,9 @@ public:
             comments(rhs.comments),
             rules(rhs.rules),
             output(rhs.output),
-            resultSize(rhs.resultSize)
+            resultSize(rhs.resultSize),
+            filterSynthesis(rhs.filterSynthesis),
+            filterYearByYear(rhs.filterYearByYear)
         {
         }
 
@@ -78,6 +83,8 @@ public:
             rules.clear();
             output = false;
             resultSize = 0;
+            filterSynthesis = filterAll;
+            filterYearByYear = filterAll;
         }
 
         Options& operator=(const Options& rhs)
@@ -87,6 +94,8 @@ public:
             rules = rhs.rules;
             output = rhs.output;
             resultSize = rhs.resultSize;
+            filterSynthesis = rhs.filterSynthesis;
+            filterYearByYear = rhs.filterYearByYear;
             return *this;
         }
 
@@ -101,6 +110,12 @@ public:
         bool output;
         //! The number of items in the result set
         unsigned int resultSize;
+        //! Filter (bitmask of FilterFlag) of the granularities exported for the synthesis
+        //! report (mc-all). filterAll by default (no restriction).
+        unsigned int filterSynthesis;
+        //! Filter (bitmask of FilterFlag) of the granularities exported for the
+        //! year-by-year report (mc-ind). filterAll by default (no restriction).
+        unsigned int filterYearByYear;
 
     }; // class Options
 
@@ -162,6 +177,23 @@ public:
     ** \brief Load a rule set from an INI File
     */
     bool loadFromFile(const std::filesystem::path& filename);
+
+    //!\n
+    //! \brief Load per-district output precisions from a YAML file
+    //!
+    //! The file is optional: if it does not exist, the default behavior is kept
+    //! (all precisions are exported for every district).
+    bool loadOutputPrecisionsFromFile(const std::filesystem::path& filename);
+
+    //!\n
+    //! \brief Retrieve the output filter of a district for a given report type
+    //!
+    //! \param id The district id
+    //! \param synthesis true for the synthesis report (mc-all), false for the
+    //! year-by-year report (mc-ind)
+    //! \return The bitmask of FilterFlag of the granularities to export.
+    //! filterAll means no restriction (all granularities are exported).
+    unsigned int outputFilter(const IDType& id, bool synthesis) const;
 
     /*!
     ** \brief format the string to match the options

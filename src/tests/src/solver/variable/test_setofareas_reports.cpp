@@ -5,6 +5,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <filesystem>
+#include <fstream>
 #include <memory>
 #include <string>
 #include <vector>
@@ -22,6 +24,7 @@
 #include "antares/study/variable-print-info.h"
 #include "antares/writer/in_memory_writer.h"
 
+using namespace Antares::Data;
 using namespace Antares::Solver::Variable;
 
 namespace
@@ -218,6 +221,13 @@ void feedDynamicAggregation(TestVariableTree& variables, Antares::Data::Study& s
     variables.computeSpatialAggregatesSummary(variables, 0, 0);
 }
 
+std::filesystem::path writeTempYaml(const std::string& content)
+{
+    const auto path = std::filesystem::temp_directory_path() / "antares-sets-outputs-test.yaml";
+    std::ofstream(path) << content;
+    return path;
+}
+
 } // namespace
 
 BOOST_AUTO_TEST_SUITE(setofareas_reports)
@@ -285,6 +295,137 @@ BOOST_AUTO_TEST_CASE(skips_disabled_district_and_exports_enabled_one)
     BOOST_REQUIRE(fileIt != files.end());
     BOOST_CHECK_NE(fileIt->second.find("\tGROUP1\tGROUP1\tGROUP1\tGROUP1"), std::string::npos);
     BOOST_CHECK_NE(fileIt->second.find("\tEXP\tstd\tmin\tmax"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(loader_parses_filters_per_district)
+{
+    auto study = makeStudyWithDistricts(
+      {{"district-1", "District 1", true}, {"district-2", "District 2", true}});
+
+    const auto path = writeTempYaml("district-1:\n"
+                                    "  mc-ind:\n"
+                                    "    - hourly\n"
+                                    "    - daily\n"
+                                    "    - bogus\n"
+                                    "  mc-all:\n"
+                                    "    - annual\n"
+                                    "district-2:\n"
+                                    "  mc-all:\n"
+                                    "    - none\n"
+                                    "  mc-ind: weekly, monthly\n"
+                                    "unknown-district:\n"
+                                    "  mc-all:\n"
+                                    "    - hourly\n");
+
+    BOOST_CHECK(study->setsOfAreas.loadOutputPrecisionsFromFile(path));
+    std::filesystem::remove(path);
+
+    // unknown token ignored
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", false),
+                      filterHourly | filterDaily);
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", true), filterAnnual);
+    // none => empty filter (no granularity exported)
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-2", true), 0);
+    // scalar value is rejected (sequences only) => no restriction
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-2", false), filterAll);
+    // district not listed in the yaml => no restriction
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("no-such-district", true), filterAll);
+}
+
+BOOST_AUTO_TEST_CASE(loader_missing_file_keeps_defaults)
+{
+    auto study = makeStudyWithDistricts({{"district-1", "District 1", true}});
+    const auto path = std::filesystem::temp_directory_path()
+                      / "antares-sets-outputs-does-not-exist.yaml";
+    BOOST_CHECK(study->setsOfAreas.loadOutputPrecisionsFromFile(path));
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", true), filterAll);
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", false), filterAll);
+}
+
+BOOST_AUTO_TEST_CASE(mc_all_precision_filter_only_hourly)
+{
+    auto study = makeStudyWithDistricts(
+      {{"district-1", "District 1", true}, {"district-2", "District 2", true}});
+
+    const auto path = writeTempYaml("district-1:\n"
+                                    "  mc-all:\n"
+                                    "    - hourly\n");
+    BOOST_CHECK(study->setsOfAreas.loadOutputPrecisionsFromFile(path));
+    std::filesystem::remove(path);
+
+    Benchmarking::DurationCollector durationCollector;
+    Antares::Solver::InMemoryWriter writer(durationCollector);
+    TestVariableTree variables;
+
+    variables.initializeFromStudy(*study);
+    feedDynamicAggregation(variables, *study);
+    variables.exportSurveyResults(true, "out", 0, writer);
+
+    const auto& files = writer.getMap();
+    // Filtered district: only the hourly file is exported
+    BOOST_REQUIRE(files.find("out/areas/@ district-1/values-hourly.txt") != files.end());
+    BOOST_CHECK(files.find("out/areas/@ district-1/values-daily.txt") == files.end());
+    BOOST_CHECK(files.find("out/areas/@ district-1/values-weekly.txt") == files.end());
+    BOOST_CHECK(files.find("out/areas/@ district-1/values-monthly.txt") == files.end());
+    BOOST_CHECK(files.find("out/areas/@ district-1/values-annual.txt") == files.end());
+    // Unfiltered district: all precisions are still exported
+    for (const char* precision: {"hourly", "daily", "weekly", "monthly", "annual"})
+    {
+        const std::string path = std::string("out/areas/@ district-2/values-") + precision + ".txt";
+        BOOST_CHECK_MESSAGE(files.find(path) != files.end(), path + " is missing");
+    }
+}
+
+BOOST_AUTO_TEST_CASE(mc_all_precision_none_exports_nothing)
+{
+    auto study = makeStudyWithDistricts({{"district-1", "District 1", true}});
+
+    const auto path = writeTempYaml("district-1:\n"
+                                    "  mc-all:\n"
+                                    "    - none\n");
+    BOOST_CHECK(study->setsOfAreas.loadOutputPrecisionsFromFile(path));
+    std::filesystem::remove(path);
+
+    Benchmarking::DurationCollector durationCollector;
+    Antares::Solver::InMemoryWriter writer(durationCollector);
+    TestVariableTree variables;
+
+    variables.initializeFromStudy(*study);
+    feedDynamicAggregation(variables, *study);
+    variables.exportSurveyResults(true, "out", 0, writer);
+
+    const auto& files = writer.getMap();
+    for (const char* precision: {"hourly", "daily", "weekly", "monthly", "annual"})
+    {
+        const std::string path = std::string("out/areas/@ district-1/values-") + precision + ".txt";
+        BOOST_CHECK_MESSAGE(files.find(path) == files.end(), path + " should not exist");
+    }
+}
+
+BOOST_AUTO_TEST_CASE(mc_ind_precision_filter_only_annual)
+{
+    auto study = makeStudyWithDistricts({{"district-1", "District 1", true}});
+
+    const auto path = writeTempYaml("district-1:\n"
+                                    "  mc-ind:\n"
+                                    "    - annual\n");
+    BOOST_CHECK(study->setsOfAreas.loadOutputPrecisionsFromFile(path));
+    std::filesystem::remove(path);
+
+    Benchmarking::DurationCollector durationCollector;
+    Antares::Solver::InMemoryWriter writer(durationCollector);
+    TestVariableTree variables;
+
+    variables.initializeFromStudy(*study);
+    feedDynamicAggregation(variables, *study);
+    variables.exportSurveyResults(false, "out", 0, writer);
+
+    const auto& files = writer.getMap();
+    BOOST_REQUIRE(files.find("out/areas/@ district-1/values-annual.txt") != files.end());
+    BOOST_CHECK(files.find("out/areas/@ district-1/values-hourly.txt") == files.end());
+    BOOST_CHECK(files.find("out/areas/@ district-1/values-daily.txt") == files.end());
+    BOOST_CHECK(files.find("out/areas/@ district-1/values-weekly.txt") == files.end());
+    BOOST_CHECK(files.find("out/areas/@ district-1/values-monthly.txt") == files.end());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

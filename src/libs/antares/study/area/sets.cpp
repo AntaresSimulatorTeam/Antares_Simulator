@@ -4,6 +4,7 @@
 #include "antares/study/sets.h"
 
 #include <string>
+#include <yaml-cpp/yaml.h>
 
 #include <antares/utils/utils.h>
 
@@ -21,6 +22,7 @@ std::string trim(const std::string& s)
     const auto end = s.find_last_not_of(" \t");
     return s.substr(begin, end - begin + 1);
 }
+
 } // namespace
 
 Sets::Sets(const Sets& rhs):
@@ -225,6 +227,130 @@ void Sets::rebuildAllFromRules(SetHandlerAreas& handler)
     {
         rebuildFromRules(setId, handler);
     }
+}
+
+bool Sets::loadOutputPrecisionsFromFile(const std::filesystem::path& filename)
+{
+    if (!std::filesystem::exists(filename))
+    {
+        // Optional file: default behavior is kept (all precisions exported)
+        return true;
+    }
+
+    logs.info() << "sets: loading the district output granularities from `" << filename << "`";
+
+    YAML::Node root;
+    try
+    {
+        root = YAML::LoadFile(filename.string());
+    }
+    catch (const YAML::Exception& e)
+    {
+        logs.error() << "sets: impossible to parse `" << filename << "`: " << e.what();
+        return false;
+    }
+
+    if (!root || !root.IsMap())
+    {
+        logs.warning() << "sets: `" << filename
+                       << "`: the root node must be a mapping of "
+                          "districts";
+        return true;
+    }
+
+    for (const auto& entry: root)
+    {
+        if (!entry.first.IsScalar())
+        {
+            logs.warning() << "sets: `" << filename << "`: invalid district key, ignored";
+            continue;
+        }
+        const std::string districtKey = entry.first.as<std::string>();
+        const IDType districtId = stringToLower(districtKey);
+        const auto pair = pOptions.find(districtId);
+        if (pair == pOptions.end())
+        {
+            logs.warning() << "sets: `" << filename << "`: unknown district `" << districtKey
+                           << "`, ignored";
+            continue;
+        }
+        if (!entry.second.IsMap())
+        {
+            logs.warning() << "sets: `" << filename << "`: district `" << districtKey
+                           << "` must be a mapping with `mc-all` and/or `mc-ind` keys, ignored";
+            continue;
+        }
+
+        const YAML::Node& options = entry.second;
+        for (const char* reportType: {"mc-all", "mc-ind"})
+        {
+            const YAML::Node node = options[reportType];
+            if (!node.IsDefined())
+            {
+                continue;
+            }
+            if (!node.IsSequence())
+            {
+                logs.warning() << "sets: `" << filename << "`: district `" << districtKey << "`, `"
+                               << reportType
+                               << "` must be a sequence of "
+                                  "granularities, ignored";
+                continue;
+            }
+            std::string value;
+            for (const auto& item: node)
+            {
+                if (!item.IsScalar())
+                {
+                    continue;
+                }
+                if (!value.empty())
+                {
+                    value += ", ";
+                }
+                value += item.as<std::string>();
+            }
+            const unsigned int mask = stringIntoDatePrecision(value);
+            if (reportType == std::string("mc-all"))
+            {
+                pair->second.filterSynthesis = mask;
+            }
+            else
+            {
+                pair->second.filterYearByYear = mask;
+            }
+        }
+    }
+
+    // Summary of the applied filters
+    for (const auto& pair: pOptions)
+    {
+        if (pair.second.filterSynthesis != filterAll)
+        {
+            logs.info() << "sets: district `" << pair.first << "`: mc-all granularities = "
+                        << (pair.second.filterSynthesis == filterNone
+                              ? std::string("none")
+                              : datePrecisionIntoString(pair.second.filterSynthesis));
+        }
+        if (pair.second.filterYearByYear != filterAll)
+        {
+            logs.info() << "sets: district `" << pair.first << "`: mc-ind granularities = "
+                        << (pair.second.filterYearByYear == filterNone
+                              ? std::string("none")
+                              : datePrecisionIntoString(pair.second.filterYearByYear));
+        }
+    }
+    return true;
+}
+
+unsigned int Sets::outputFilter(const IDType& id, bool synthesis) const
+{
+    const auto pair = pOptions.find(id);
+    if (pair == pOptions.end())
+    {
+        return filterAll;
+    }
+    return synthesis ? pair->second.filterSynthesis : pair->second.filterYearByYear;
 }
 
 void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
