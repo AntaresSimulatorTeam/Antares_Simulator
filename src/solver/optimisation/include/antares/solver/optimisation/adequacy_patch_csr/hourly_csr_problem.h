@@ -111,7 +111,6 @@ private:
 
     // variable bounds
     void setBoundsOnENS();
-    void setBoundsOnENSFromLegacy();
     void setBoundsOnSpilledEnergy();
     void setBoundsOnFlows();
 
@@ -121,7 +120,6 @@ private:
     void setRHSMaxEnsLoadValue();
     void setRHSbindingConstraintsValue();
     void setRHSfictitiousLoadValue();
-    void setRHSMaxEnsLoadValueFromLegacy();
 
     // CoststriggeredHour
     void setQuadraticCost();

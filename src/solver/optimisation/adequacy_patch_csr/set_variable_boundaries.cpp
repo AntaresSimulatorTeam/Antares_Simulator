@@ -13,12 +13,6 @@ using namespace Antares::Data::AdequacyPatch;
 
 void HourlyCSRProblem::setBoundsOnENS()
 {
-    setBoundsOnENSFromLegacy();
-    gemsPart_->setBoundsOnENS();
-}
-
-void HourlyCSRProblem::setBoundsOnENSFromLegacy()
-{
     double* AdresseDuResultat;
     for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {

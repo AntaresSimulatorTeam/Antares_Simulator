@@ -143,12 +143,6 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
 
 void HourlyCSRProblem::setRHSMaxEnsLoadValue()
 {
-    setRHSMaxEnsLoadValueFromLegacy();
-    gemsPart_->setRHSMaxEnsLoadValue();
-}
-
-void HourlyCSRProblem::setRHSMaxEnsLoadValueFromLegacy()
-{
     std::vector<double>& SecondMembre = problemeAResoudre_.SecondMembre;
 
     for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; ++Area)
