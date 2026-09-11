@@ -150,12 +150,18 @@ BOOST_AUTO_TEST_CASE(reserve_variables_use_requested_legacy_output_ids)
     namer.ThermalClusterReserveParticipation(2, "gas", "Display reserve", "reserve_id");
     namer.ParticipationOfSTStorageStoreToReserve(3, "battery", "Display reserve", "reserve_id");
     namer.ParticipationOfSTStorageReleaseToReserve(4, "battery", "Display reserve", "reserve_id");
-    namer.ParticipationOfSTStorageToReserve(
-      ReserveType::UP, 5, "battery", "Display reserve", "reserve_id");
+    namer.ParticipationOfSTStorageToReserve(ReserveType::UP,
+                                            5,
+                                            "battery",
+                                            "Display reserve",
+                                            "reserve_id");
     namer.ParticipationOfHydroStoreToReserve(6, "hydro", "Display reserve", "reserve_id");
     namer.ParticipationOfHydroReleaseToReserve(7, "hydro", "Display reserve", "reserve_id");
-    namer.ParticipationOfHydroToReserve(
-      ReserveType::DOWN, 8, "hydro", "Display reserve", "reserve_id");
+    namer.ParticipationOfHydroToReserve(ReserveType::DOWN,
+                                        8,
+                                        "hydro",
+                                        "Display reserve",
+                                        "reserve_id");
     namer.InternalUnsatisfiedReserve(9, "Display reserve", "reserve_id");
     namer.InternalExcessReserve(10, "Display reserve", "reserve_id");
 

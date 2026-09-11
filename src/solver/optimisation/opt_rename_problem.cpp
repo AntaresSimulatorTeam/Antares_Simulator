@@ -241,15 +241,17 @@ void Namer::SetHydroAndReserveElementName(unsigned varIndex,
 }
 
 void Namer::SetThermalClusterReserveElementName(unsigned varIndex,
-                                                 const std::string& elementType,
-                                                 const std::string& reserveName,
-                                                 const std::string& legacyOutput) const
+                                                const std::string& elementType,
+                                                const std::string& reserveName,
+                                                const std::string& legacyOutput) const
 {
     std::string location = areaLocation() + SEP + "Reserve" + "<" + reserveName + ">";
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
-    RecordLegacyVariableInfo(varIndex, legacyOutput.empty() ? elementType : legacyOutput, reserveName);
+    RecordLegacyVariableInfo(varIndex,
+                             legacyOutput.empty() ? elementType : legacyOutput,
+                             reserveName);
 }
 
 void VariableNamer::DispatchableProduction(unsigned varIndex, const std::string& clusterName) const
@@ -270,21 +272,21 @@ void VariableNamer::ThermalClusterReserveParticipation(unsigned varIndex,
 }
 
 void VariableNamer::ParticipationOfSTStorageReleaseToReserve(unsigned varIndex,
-                                                              const std::string& clusterName,
-                                                              const std::string& reserveName,
-                                                              const std::string& reserveId) const
+                                                             const std::string& clusterName,
+                                                             const std::string& reserveName,
+                                                             const std::string& reserveId) const
 {
     SetSTStorageClusterAndReserveElementName(varIndex,
                                              "ParticipationOfSTStorageReleaseToReserve",
                                              clusterName,
-                                              reserveName,
-                                              "reserve_released_power_" + reserveId);
+                                             reserveName,
+                                             "reserve_released_power_" + reserveId);
 }
 
 void VariableNamer::ParticipationOfSTStorageStoreToReserve(unsigned varIndex,
-                                                            const std::string& clusterName,
-                                                            const std::string& reserveName,
-                                                            const std::string& reserveId) const
+                                                           const std::string& clusterName,
+                                                           const std::string& reserveName,
+                                                           const std::string& reserveId) const
 {
     SetSTStorageClusterAndReserveElementName(varIndex,
                                              "ParticipationOfSTStorageStoreToReserve",
@@ -294,10 +296,10 @@ void VariableNamer::ParticipationOfSTStorageStoreToReserve(unsigned varIndex,
 }
 
 void VariableNamer::ParticipationOfSTStorageToReserve(ReserveType type,
-                                                       unsigned varIndex,
-                                                       const std::string& clusterName,
-                                                       const std::string& reserveName,
-                                                       const std::string& reserveId) const
+                                                      unsigned varIndex,
+                                                      const std::string& clusterName,
+                                                      const std::string& reserveName,
+                                                      const std::string& reserveId) const
 {
     SetSTStorageClusterAndReserveElementName(varIndex,
                                              type == ReserveType::UP
@@ -309,27 +311,27 @@ void VariableNamer::ParticipationOfSTStorageToReserve(ReserveType type,
 }
 
 void VariableNamer::ParticipationOfHydroReleaseToReserve(unsigned varIndex,
-                                                          const std::string& clusterName,
-                                                          const std::string& reserveName,
-                                                          const std::string& reserveId) const
+                                                         const std::string& clusterName,
+                                                         const std::string& reserveName,
+                                                         const std::string& reserveId) const
 {
     SetHydroAndReserveElementName(varIndex,
                                   "ParticipationOfHydroReleaseToReserve",
                                   clusterName,
-                                   reserveName,
-                                   "reserve_released_power_" + reserveId);
+                                  reserveName,
+                                  "reserve_released_power_" + reserveId);
 }
 
 void VariableNamer::ParticipationOfHydroStoreToReserve(unsigned varIndex,
-                                                        const std::string& clusterName,
-                                                        const std::string& reserveName,
-                                                        const std::string& reserveId) const
+                                                       const std::string& clusterName,
+                                                       const std::string& reserveName,
+                                                       const std::string& reserveId) const
 {
     SetHydroAndReserveElementName(varIndex,
                                   "ParticipationOfHydroStoreToReserve",
                                   clusterName,
-                                   reserveName,
-                                   "reserve_stored_power_" + reserveId);
+                                  reserveName,
+                                  "reserve_stored_power_" + reserveId);
 }
 
 void VariableNamer::ParticipationOfHydroToReserve(ReserveType type,
@@ -350,35 +352,35 @@ void VariableNamer::ParticipationOfHydroToReserve(ReserveType type,
     else
     {
         SetHydroAndReserveElementName(varIndex,
-                                       "ParticipationOfHydroToDownReserve",
-                                       clusterName,
-                                       reserveName,
-                                       "reserve_power_" + reserveId);
+                                      "ParticipationOfHydroToDownReserve",
+                                      clusterName,
+                                      reserveName,
+                                      "reserve_power_" + reserveId);
     }
 }
 
 void VariableNamer::ParticipationOfRunningUnitsToReserve(unsigned varIndex,
-                                                          const std::string& clusterName,
-                                                          const std::string& reserveName,
-                                                          const std::string& reserveId) const
+                                                         const std::string& clusterName,
+                                                         const std::string& reserveName,
+                                                         const std::string& reserveId) const
 {
     SetThermalClusterAndReserveElementName(varIndex,
                                            "ParticipationOfRunningUnitsToReserve",
                                            clusterName,
-                                            reserveName,
-                                            "units_on_reserve_power_" + reserveId);
+                                           reserveName,
+                                           "units_on_reserve_power_" + reserveId);
 }
 
 void VariableNamer::ParticipationOfOffUnitsToReserve(unsigned varIndex,
-                                                      const std::string& clusterName,
-                                                      const std::string& reserveName,
-                                                      const std::string& reserveId) const
+                                                     const std::string& clusterName,
+                                                     const std::string& reserveName,
+                                                     const std::string& reserveId) const
 {
     SetThermalClusterAndReserveElementName(varIndex,
                                            "ParticipationOfOffUnitsToReserve",
                                            clusterName,
-                                            reserveName,
-                                            "units_off_reserve_power_" + reserveId);
+                                           reserveName,
+                                           "units_off_reserve_power_" + reserveId);
 }
 
 void VariableNamer::InternalUnsatisfiedReserve(unsigned varIndex,
@@ -392,8 +394,8 @@ void VariableNamer::InternalUnsatisfiedReserve(unsigned varIndex,
 }
 
 void VariableNamer::InternalExcessReserve(unsigned varIndex,
-                                           const std::string& reserveName,
-                                           const std::string& reserveId) const
+                                          const std::string& reserveName,
+                                          const std::string& reserveId) const
 {
     SetThermalClusterReserveElementName(varIndex,
                                         "InternalExcessReserve",

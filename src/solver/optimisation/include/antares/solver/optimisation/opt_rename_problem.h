@@ -126,10 +126,10 @@ protected:
                                       const std::string& variableType,
                                       const std::string& clusterName) const;
     void SetThermalClusterAndReserveElementName(unsigned varIndex,
-                                                 const std::string& elementType,
-                                                 const std::string& clusterName,
-                                                 const std::string& reserveName,
-                                                 const std::string& legacyOutput = {}) const;
+                                                const std::string& elementType,
+                                                const std::string& clusterName,
+                                                const std::string& reserveName,
+                                                const std::string& legacyOutput = {}) const;
     void SetThermalClusterAndReservesElementName(unsigned varIndex,
                                                  const std::string& elementType,
                                                  const std::string& clusterName,

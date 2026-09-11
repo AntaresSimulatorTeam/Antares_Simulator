@@ -285,10 +285,10 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                 {
                     reserveVariablesInitializer.initThermalReserveParticipation(
                       areaReserve.type,
-                       pdt,
-                       clusterReserveParticipation,
-                       areaReserve.reserveName,
-                       areaReserve.reserveID);
+                      pdt,
+                      clusterReserveParticipation,
+                      areaReserve.reserveName,
+                      areaReserve.reserveID);
                 }
 
                 // Short Term Storage Clusters
@@ -297,10 +297,10 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                 {
                     reserveVariablesInitializer.initSTStorageReserveParticipation(
                       areaReserve.type,
-                       pdt,
-                       clusterReserveParticipation,
-                       areaReserve.reserveName,
-                       areaReserve.reserveID);
+                      pdt,
+                      clusterReserveParticipation,
+                      areaReserve.reserveName,
+                      areaReserve.reserveID);
                 }
 
                 // Hydro
@@ -308,10 +308,10 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                 {
                     reserveVariablesInitializer.initHydroReserveParticipation(
                       areaReserve.type,
-                       pdt,
-                       clusterReserveParticipation,
-                       areaReserve.reserveName,
-                       areaReserve.reserveID);
+                      pdt,
+                      clusterReserveParticipation,
+                      areaReserve.reserveName,
+                      areaReserve.reserveID);
                 }
             }
         }
