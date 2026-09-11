@@ -64,6 +64,8 @@ Emitters skip outputs whose anchor does not exist, mirroring the construction si
 | `hydro_shadow_price` | area | `-dual(FinalStockExpression)` | weekly, accurate water value mode only |
 | `bellman_value` | area | `−Σ_layer CoutLineaire[il] × X[il]` | `il = vm.LayerStorage(pays, layer)`; weekly, accurate water value mode only |
 | `profit` | storage | `floor((X[iw] − X[ii]) × price + 0.5)` | `iw/ii = vm.ShortTermStorageWithdrawal/Injection(clusterGlobalIndex)`; price = balance dual of the storage's area |
+| `reserve_imbalance_cost_<reserveId>` | area | `spillageCost × J⁻ + unsuppliedCost × J⁺` | `reserve.spillageCost` / `unsuppliedCost` (user costs, un-noised); `J⁻/J⁺ = vm.InternalExcessReserve / InternalUnsatisfiedReserve(globalReserveIndex)` |
+| `reserve_participation_cost_<reserveId>` | cluster / storage / hydro | thermal: `participationCost × P_on + [UP] participationCostOff × P_off`; STS & hydro: `participationCost × (P_store + P_release)` | one row per participating entity, on the entity's component; `P_* = vm.RunningThermalClusterReserveParticipation / OffThermalClusterReserveParticipation / STStorageStore|ReleaseClusterReserveParticipation / HydroStore|ReleaseReserveParticipation(globalIndexClusterParticipation)`; costs from the `RESERVE_PARTICIPATION_*` structs |
 | `generation_power` | renewable / misc gen | `availablePower[pdt]` | `InputGenerationOfArea[pays]`, filled from study series by `SIM_RenseignementProblemeHebdo` (not an LP variable) |
 | `minus_generation` | renewable / misc gen | `−availablePower[pdt]` | as above |
 
@@ -87,6 +89,8 @@ area-level `balance_port.flow` rows from colliding on the area name.
 | `capacity_shadow_price` | link | `abs(dual(FlowDissociation))` | hurdle-cost links only |
 
 The `price` formula negates the stored dual: with the legacy balance-constraint sign convention, `CoutsMarginauxDesContraintes` holds the **negative** of the marginal price (the legacy outputs print `-CoutsMarginauxHoraires`).
+
+The reserve rows follow the same conventions as their area-level counterparts: `reserve_imbalance_cost_<reserveId>` anchors on `{area}_node`, and each `reserve_participation_cost_<reserveId>` row anchors on the participating entity (thermal cluster, short-term storage, or the area's hydro storage), so a reserve served by several technologies yields one row per technology. The costs come from the study's `CAPACITY_RESERVATION` / `RESERVE_PARTICIPATION_*` structs (the un-noised user values), matching the `imbalance_cost` / `prop_cost` style. Both reserve outputs are guarded on `allReserves` being present **and** `OptimisationNotFastMode`, the exact condition under which the reserve variables are constructed (`opt_construction_variables_optimisees_lineaire.cpp`); in fast mode, or when reserves are not configured, no reserve row is emitted and the `OffThermalClusterReserveParticipation` term is dropped for DOWN reserves (off units cannot participate in down reserves).
 
 ## 4. How to Add a New Extra Output
 

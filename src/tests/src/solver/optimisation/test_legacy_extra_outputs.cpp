@@ -115,7 +115,23 @@ enum VarOffset : int
     stsWithdrawal = 15,         // battery1 (area2): X 100
     hydProdArea1 = 16,          // X 700
     pumpingArea1 = 17,          // X 100
-    variablesPerHour = 18
+
+    // Reserve variables, constructed only in not-fast mode (they follow the
+    // optim-variable construction site opt_construction_variables_optimisees_lineaire.cpp).
+    // area1 reserves "Res_1" (UP) with one thermal cluster ("cluster1") and one
+    // hydro participation; area2 reserve "Res_Down" (DOWN) with one short-term
+    // storage ("battery1") participation.
+    reserveExcessArea1 = 18,      // X 15,  cost 200 (reserve.spillageCost)
+    reserveUnsatisfiedArea1 = 19, // X 5,   cost 8000 (reserve.unsuppliedCost)
+    reserveThermalOn = 20,        // X 20,  cost 10 (running units, participationCost)
+    reserveThermalOff = 21,       // X 10,  cost 15 (off units, participationCostOff)
+    reserveHydroStore = 22,       // X 3,   cost 5 (hydro store participation)
+    reserveHydroRelease = 23,     // X 4,   cost 5 (hydro release participation)
+    reserveExcessArea2 = 24,      // X 2,   cost 150 (reserve.spillageCost)
+    reserveUnsatisfiedArea2 = 25, // X 6,   cost 9000 (reserve.unsuppliedCost)
+    reserveSTSStore = 26,         // X 5,   cost 25 (battery1 store participation)
+    reserveSTSRelease = 27,       // X 8,   cost 25 (battery1 release participation)
+    variablesPerHour = 28
 };
 
 // Per-hour layout of the constraints, followed by one weekly
@@ -203,6 +219,47 @@ struct Fixture
         storage.name = "battery1";
         storage.clusterGlobalIndex = 0;
 
+        // Reserves: area1 has an UP reserve served by cluster1 and the hydro
+        // reservoir; area2 has a DOWN reserve served by battery1. The structs
+        // carry the un-noised user costs (as importCapacityReservations fills
+        // them in sim_calcul_economique.cpp); the reserve variable indices are
+        // wired below into CorrespondanceVarNativesVarOptim.reservesIndices.
+        problem.allReserves = std::vector<AREA_RESERVES_VECTOR>(3);
+        {
+            auto& area1Reserve = problem.allReserves->at(0).areaCapacityReservations.emplace_back();
+            area1Reserve.reserveName = "Res_1";
+            area1Reserve.reserveID = "Res_1";
+            area1Reserve.globalReserveIndex = 0;
+            area1Reserve.type = ReserveType::UP;
+            area1Reserve.spillageCost = 200.;
+            area1Reserve.unsuppliedCost = 8000.;
+
+            auto& thermalPart = area1Reserve.AllThermalReservesParticipation[0];
+            thermalPart.participationCost = 10.;
+            thermalPart.participationCostOff = 15.;
+            thermalPart.globalIndexClusterParticipation = 0;
+            thermalPart.clusterName = "cluster1";
+
+            auto& hydroPart = area1Reserve.AllHydroReservesParticipation.emplace_back();
+            hydroPart.participationCost = 5.;
+            hydroPart.globalIndexClusterParticipation = 0;
+            hydroPart.clusterName = "Hydro";
+        }
+        {
+            auto& area2Reserve = problem.allReserves->at(1).areaCapacityReservations.emplace_back();
+            area2Reserve.reserveName = "Res_Down";
+            area2Reserve.reserveID = "Res_Down";
+            area2Reserve.globalReserveIndex = 1;
+            area2Reserve.type = ReserveType::DOWN;
+            area2Reserve.spillageCost = 150.;
+            area2Reserve.unsuppliedCost = 9000.;
+
+            auto& stsPart = area2Reserve.AllSTStorageReservesParticipation[0];
+            stsPart.participationCost = 25.;
+            stsPart.globalIndexClusterParticipation = 0;
+            stsPart.clusterName = "battery1";
+        }
+
         // Input-only generation series for area1: aggregated wind and one
         // misc-gen entry, as filled by SIM_RenseignementProblemeHebdo.
         problem.InputGenerationOfArea.resize(3);
@@ -250,6 +307,17 @@ struct Fixture
             vars.SIM_ShortTermStorage.InjectionVariable = {base + stsInjection};
             vars.SIM_ShortTermStorage.WithdrawalVariable = {base + stsWithdrawal};
 
+            auto& reserves = vars.reservesIndices.emplace();
+            reserves.internalUnsatisfied = {base + reserveUnsatisfiedArea1,
+                                            base + reserveUnsatisfiedArea2};
+            reserves.internalExcess = {base + reserveExcessArea1, base + reserveExcessArea2};
+            reserves.runningThermalClusterParticipation = {base + reserveThermalOn};
+            reserves.offThermalClusterParticipation = {base + reserveThermalOff};
+            reserves.STStorageStoreClusterParticipation = {base + reserveSTSStore};
+            reserves.STStorageReleaseClusterParticipation = {base + reserveSTSRelease};
+            reserves.HydroStoreParticipation = {base + reserveHydroStore};
+            reserves.HydroReleaseParticipation = {base + reserveHydroRelease};
+
             const int cntBase = pdt * constraintsPerHour;
             auto& constraints = problem.CorrespondanceCntNativesCntOptim[pdt];
             constraints.NumeroDeContrainteDesBilansPays = {cntBase + balanceArea1,
@@ -259,43 +327,14 @@ struct Fixture
                                                                   -1};
 
             solved.X.insert(solved.X.end(),
-                            {3600.,
-                             52.,
-                             7.,
-                             13.,
-                             0.,
-                             2.3,
-                             120.,
-                             120.,
-                             0.,
-                             0.2,
-                             0.,
-                             -30.,
-                             4000.,
-                             1.,
-                             40.,
-                             100.,
-                             700.,
-                             100.});
+                            {3600., 52.,  7.,    13., 0.,  2.3,  120., 120., 0.,  0.2,
+                             0.,    -30., 4000., 1.,  40., 100., 700., 100., 15., 5.,
+                             20.,   10.,  3.,    4.,  2.,  6.,   5.,   8.});
             solved.CoutLineaire.insert(solved.CoutLineaire.end(),
-                                       {35.0005,
-                                        10000.0005,
-                                        4.0005,
-                                        20000.,
-                                        1.,
-                                        100.,
-                                        0.,
-                                        0.5,
-                                        0.7,
-                                        9000.,
-                                        1.,
-                                        0.,
-                                        0.,
-                                        5000.,
-                                        0.,
-                                        0.,
-                                        0.,
-                                        0.});
+                                       {35.0005, 10000.0005, 4.0005, 20000., 1.,    100.,  0.,
+                                        0.5,     0.7,        9000.,  1.,     0.,    0.,    5000.,
+                                        0.,      0.,         0.,     0.,     200.,  8000., 10.,
+                                        15.,     0.,         0.,     150.,   9000., 0.,    0.});
             solved.CoutsMarginauxDesContraintes.insert(solved.CoutsMarginauxDesContraintes.end(),
                                                        {-10000., -50., -75., -3.});
         }
@@ -1079,6 +1118,64 @@ BOOST_AUTO_TEST_CASE(unit_commitment_outputs_are_skipped_in_fast_mode)
 
     BOOST_CHECK(RowsForOutput(table, "actual_num_units_on").empty());
     BOOST_CHECK(RowsForOutput(table, "non_prop_cost").empty());
+    // The reserve variables are constructed under the same guard
+    // (opt_construction_variables_optimisees_lineaire.cpp), so the reserve
+    // extra outputs are skipped too.
+    BOOST_CHECK(RowsForOutput(table, "reserve_imbalance_cost_Res_1").empty());
+    BOOST_CHECK(RowsForOutput(table, "reserve_participation_cost_Res_1").empty());
+    BOOST_CHECK(RowsForOutput(table, "reserve_participation_cost_Res_Down").empty());
+}
+
+BOOST_AUTO_TEST_CASE(reserve_imbalance_cost_is_emitted)
+{
+    // area1 "Res_1": spillageCost(200) * excess(15) + unsuppliedCost(8000)
+    // * unsatisfied(5) = 3000 + 40000.
+    fill();
+
+    const auto area1 = FindRow(table, "reserve_imbalance_cost_Res_1", "area1_node");
+    BOOST_REQUIRE(area1.has_value());
+    BOOST_CHECK_CLOSE(area1->value, 200. * 15. + 8000. * 5., 1e-9);
+
+    // area2 "Res_Down": spillageCost(150) * excess(2) + unsuppliedCost(9000)
+    // * unsatisfied(6) = 300 + 54000.
+    const auto area2 = FindRow(table, "reserve_imbalance_cost_Res_Down", "area2_node");
+    BOOST_REQUIRE(area2.has_value());
+    BOOST_CHECK_CLOSE(area2->value, 150. * 2. + 9000. * 6., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(reserve_participation_cost_thermal_up_includes_the_off_term)
+{
+    // "Res_1" is an UP reserve so the off-units term applies: participationCost
+    // (10) * running(20) + participationCostOff(15) * off(10) = 350.
+    fill();
+
+    const auto row = FindRow(table, "reserve_participation_cost_Res_1", "area1_thermal_cluster1");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_CLOSE(row->value, 10. * 20. + 15. * 10., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(reserve_participation_cost_hydro_is_emitted_on_the_hydro_storage)
+{
+    // "Res_1" hydro participation: participationCost(5) * (store(3)
+    // + release(4)) = 35.
+    fill();
+
+    const auto row = FindRow(table, "reserve_participation_cost_Res_1", "area1_hydro_storage");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_CLOSE(row->value, 5. * (3. + 4.), 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(reserve_participation_cost_storage_down_drops_the_off_term)
+{
+    // "Res_Down" is a DOWN reserve served by battery1: participationCost(25)
+    // * (store(5) + release(8)) = 325. Down reserves have no off-units term.
+    fill();
+
+    const auto row = FindRow(table,
+                             "reserve_participation_cost_Res_Down",
+                             "area2_short_term_storage_battery1");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_CLOSE(row->value, 25. * (5. + 8.), 1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
@@ -1103,7 +1200,10 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
     //              (out_port.flow, in_port.flow) + cluster1 and
     //              battery1 flows                                  = 13
     // Weekly: area1's hydro_shadow_price and bellman_value        = 2
-    BOOST_CHECK_EQUAL(table.rowCount(), 20 + 21 + 16 + 1 + 6 + 13 + 2);
+    // Reserves: area1 "Res_1" (imbalance_cost + thermal participation
+    //           + hydro participation) and area2 "Res_Down"
+    //           (imbalance_cost + battery1 participation)         = 5
+    BOOST_CHECK_EQUAL(table.rowCount(), 20 + 21 + 16 + 1 + 6 + 13 + 2 + 5);
 }
 
 // Wires the result addresses the way OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire
