@@ -127,6 +127,8 @@ void HourlyCSRProblem::allocateProblem()
     problemeAResoudre_.NombreDeVariables = countVariables(problemeHebdo_);
     problemeAResoudre_.NombreDeContraintes = countConstraints(problemeHebdo_);
     OPT_AllocateFromNumberOfVariableConstraints(&problemeAResoudre_);
+    problemeAResoudre_.CoutLineaire.assign(problemeAResoudre_.NombreDeVariables, 0.);
+    problemeAResoudre_.CoutQuadratique.assign(problemeAResoudre_.NombreDeVariables, 0.);
 }
 
 void HourlyCSRProblem::buildProblemVariables()
@@ -153,6 +155,7 @@ void HourlyCSRProblem::setVariableBounds()
 
     logs.debug() << "[CSR] bounds";
     setBoundsOnENS();
+    gemsPart_->setBoundsOnENS();
     setBoundsOnSpilledEnergy();
     setBoundsOnFlows();
 }
@@ -162,17 +165,19 @@ void HourlyCSRProblem::buildProblemConstraintsRHS()
     logs.debug() << "[CSR] RHS: ";
     setRHSvalueOnFlows();
     setRHSnodeBalanceValue();
+
     setRHSfictitiousLoadValue();
+    gemsPart_->setRHSfictitiousLoadValue();
+
     setRHSMaxEnsLoadValue();
+    gemsPart_->setRHSMaxEnsLoadValue();
+
     setRHSbindingConstraintsValue();
 }
 
 void HourlyCSRProblem::setProblemCost()
 {
     logs.debug() << "[CSR] cost";
-    problemeAResoudre_.CoutLineaire.assign(problemeAResoudre_.NombreDeVariables, 0.);
-    problemeAResoudre_.CoutQuadratique.assign(problemeAResoudre_.NombreDeVariables, 0.);
-
     setQuadraticCost();
     if (adqPatchParams_.curtailmentSharing.includeHurdleCost)
     {
