@@ -41,8 +41,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 ** component (aggregated wind/solar or renewable clusters, run-of-river and
 ** misc-gen). Exposed for unit testing of the component naming.
 */
-void fillInputGenerationSeries(const Study& study,
-                               PROBLEME_HEBDO& problem,
-                               int PasDeTempsDebut);
+void fillInputGenerationSeries(const Study& study, PROBLEME_HEBDO& problem, int PasDeTempsDebut);
 
 #endif /* __SOLVER_SIMULATION_H__ */
