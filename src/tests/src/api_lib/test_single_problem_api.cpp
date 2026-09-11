@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
     BOOST_CHECK_EQUAL(constantData.ConstraintsMatrixCoeff[1], -1);
 
     const WeeklyDataFromAntares firstWeekData = getter.getWeeklyData({0, 1});
-    BOOST_CHECK_EQUAL(firstWeekData.name, "problem-1-1--optim-nb-1");
+    BOOST_CHECK_EQUAL(firstWeekData.name, "problem-0-0--optim-nb-1");
 
     // COST
     BOOST_CHECK_CLOSE(firstWeekData.LinearCost[dispatchableVariable],
@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
                       3048.5130614352684,
                       EPSILON); // random initial level
 
-    BOOST_CHECK_EQUAL(secondWeekData.name, "problem-1-2--optim-nb-1");
+    BOOST_CHECK_EQUAL(secondWeekData.name, "problem-0-1--optim-nb-1");
 }
 BOOST_AUTO_TEST_SUITE_END()
 
@@ -224,11 +224,11 @@ BOOST_AUTO_TEST_CASE(three_years_two_weeks)
     auto problem_ids = getter.getProblemIds();
     BOOST_REQUIRE_EQUAL(problem_ids.size(), 3 * 2); // (3 years) x (2 weeks)
 
-    // First problem is (year, week) = (0, 0)
+    // First problem is (year, week) = (0, 1) in the public API.
     BOOST_CHECK_EQUAL(problem_ids[0].year, 0);
     BOOST_CHECK_EQUAL(problem_ids[0].week, 1);
 
-    // Last problem is (year, week) = (2, 1)
+    // Last problem is (year, week) = (2, 2) in the public API.
     BOOST_CHECK_EQUAL(problem_ids[5].year, 2);
     BOOST_CHECK_EQUAL(problem_ids[5].week, 2);
 }
@@ -249,11 +249,11 @@ BOOST_AUTO_TEST_CASE(three_years_two_weeks_one_disabled_year)
     auto problem_ids = getter.getProblemIds();
     BOOST_REQUIRE_EQUAL(problem_ids.size(), 2 * 2); // (2 years) x (2 weeks), one year is disabled
 
-    // First problem is (year, week) = (0, 0)
+    // First problem is (year, week) = (0, 1) in the public API.
     BOOST_CHECK_EQUAL(problem_ids[0].year, 0);
     BOOST_CHECK_EQUAL(problem_ids[0].week, 1);
 
-    // Last problem is (year, week) = (2, 1)
+    // Last problem is (year, week) = (2, 2) in the public API.
     BOOST_CHECK_EQUAL(problem_ids[3].year, 2);
     BOOST_CHECK_EQUAL(problem_ids[3].week, 2);
 }
@@ -274,11 +274,11 @@ BOOST_AUTO_TEST_CASE(three_years_two_weeks_one_disabled_year_partial_year)
     auto problem_ids = getter.getProblemIds();
     BOOST_REQUIRE_EQUAL(problem_ids.size(), 2 * 1); // (2 years) x (1 week), one year is disabled
 
-    // First problem is (year, week) = (0, 0)
+    // First problem is (year, week) = (0, 1) in the public API.
     BOOST_CHECK_EQUAL(problem_ids[0].year, 0);
     BOOST_CHECK_EQUAL(problem_ids[0].week, 1);
 
-    // Last problem is (year, week) = (2, 1)
+    // Last problem is (year, week) = (2, 1) in the public API.
     BOOST_CHECK_EQUAL(problem_ids[1].year, 2);
     BOOST_CHECK_EQUAL(problem_ids[1].week, 1);
 }
@@ -756,10 +756,10 @@ ENDATA
     BOOST_CHECK_EQUAL(outputs.at("master.mps"), master);
 
     static constexpr std::string_view structure = R"(master	component.x	0
+problem-0-0--optim-nb-1	component.x	1008
+problem-0-1--optim-nb-1	component.x	1008
+problem-1-0--optim-nb-1	component.x	1008
 problem-1-1--optim-nb-1	component.x	1008
-problem-1-2--optim-nb-1	component.x	1008
-problem-2-1--optim-nb-1	component.x	1008
-problem-2-2--optim-nb-1	component.x	1008
 )";
     BOOST_CHECK_EQUAL(outputs.at("structure.txt"), structure);
 }

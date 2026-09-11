@@ -299,12 +299,12 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
     tables.secondOptimSimulationTable()->addEntry(entry2);
 
     auto tempDir = std::filesystem::temp_directory_path();
-    LegacySimulationTablesWriter legacyWriter(tempDir, 1 /* year */, TableFormat::CSV);
+    LegacySimulationTablesWriter legacyWriter(tempDir, 0 /* year */, TableFormat::CSV);
     legacyWriter.write(tables);
 
     // Check that both CSV files were created
-    auto file1 = tempDir / "simulation-table-1-optim-nb-1.csv";
-    auto file2 = tempDir / "simulation-table-1-optim-nb-2.csv";
+    auto file1 = tempDir / "simulation-table-0-optim-nb-1.csv";
+    auto file2 = tempDir / "simulation-table-0-optim-nb-2.csv";
 
     BOOST_CHECK(std::filesystem::exists(file1));
     BOOST_CHECK(std::filesystem::exists(file2));
@@ -352,10 +352,10 @@ BOOST_AUTO_TEST_CASE(WriteTo_ParquetFormat_CreatesCorrectFiles)
                                                    .status = MipBasisStatus::FREE});
 
     auto tempDir = std::filesystem::temp_directory_path();
-    LegacySimulationTablesWriter(tempDir, 1, TableFormat::Parquet).write(tables);
+    LegacySimulationTablesWriter(tempDir, 0, TableFormat::Parquet).write(tables);
 
-    const auto file1 = tempDir / "simulation-table-1-optim-nb-1.parquet";
-    const auto file2 = tempDir / "simulation-table-1-optim-nb-2.parquet";
+    const auto file1 = tempDir / "simulation-table-0-optim-nb-1.parquet";
+    const auto file2 = tempDir / "simulation-table-0-optim-nb-2.parquet";
 
     // Helper to verify file content
     auto verifyParquet = [](const std::filesystem::path& path)
