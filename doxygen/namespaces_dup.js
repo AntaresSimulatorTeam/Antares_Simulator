@@ -794,6 +794,7 @@ var namespaces_dup =
             [ "ConstraintOutOfBoundsProcessing", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ConstraintOutOfBoundsProcessing.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ConstraintOutOfBoundsProcessing" ],
             [ "Objective", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective" ],
             [ "Model", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model" ],
+            [ "ScenarioScope", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ScenarioScope.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ScenarioScope" ],
             [ "OptimConfig", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1OptimConfig.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1OptimConfig" ],
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Parser" ]
           ] ],
@@ -1113,7 +1114,6 @@ var namespaces_dup =
           [ "applyTimeOffset", "singleProblemGetterImpl_8cpp.html#aebf5a59bcdfc9b83bc37307b9c7bbe27", null ],
           [ "buildMemo", "singleProblemGetterImpl_8cpp.html#ae3127a02ee96b5741ca4ee9dfe73b0a7", null ],
           [ "fillLinksProperties", "singleProblemGetterImpl_8cpp.html#aada1fdb1eb77a1728c77c4d39240dcaa", null ],
-          [ "logProblemSize", "modelerProblemsImpl_8cpp.html#a3d88d3b03664344a9c68036d3a883343", null ],
           [ "updateWeekId", "singleProblemGetterImpl_8cpp.html#a82c11a08d823fab6631bb50c211c1ca5", null ],
           [ "writeWeekMPS", "singleProblemGetterImpl_8cpp.html#a0e15df5fb4ccae2d5a629c40cc789ccd", null ],
           [ "tags", "singleProblemGetterImpl_8cpp.html#a1e92fd112582108e456dee0757bbc61b", null ]
@@ -1125,6 +1125,7 @@ var namespaces_dup =
         ] ],
         [ "LoadFiles", null, [
           [ "FileLoader", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader.html", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader" ],
+          [ "LoadedLibraries", "structAntares_1_1Solver_1_1LoadFiles_1_1LoadedLibraries.html", "structAntares_1_1Solver_1_1LoadFiles_1_1LoadedLibraries" ],
           [ "LoadedSystem", "structAntares_1_1Solver_1_1LoadFiles_1_1LoadedSystem.html", "structAntares_1_1Solver_1_1LoadFiles_1_1LoadedSystem" ],
           [ "ErrorLoadingYaml", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml" ],
           [ "convertIntoSystemLibs", "readLibraries_8cpp.html#a4c4fde5299afed81da67e3ec8f8991bb", null ],
@@ -1132,8 +1133,8 @@ var namespaces_dup =
           [ "handleYamlError", "handleErrors_8cpp.html#a3931b46cb45d08d279deff1b66f27d16", null ],
           [ "loadAll", "loadFiles_8h.html#ac700c1dfcefe4544446c5fabebd7fb9b", null ],
           [ "loadDataSeries", "loadFiles_8h.html#aee47b90032e29baa24843ea6ffdde1ca", null ],
-          [ "loadLibraries", "readLibraries_8cpp.html#ae7e28d92fa02f64aeba000b1b2cf029b", null ],
-          [ "loadLibraries", "loadFiles_8h.html#ad1df848a07eddd3761d82a8eef3914ff", null ],
+          [ "loadLibraries", "readLibraries_8cpp.html#a370ccf70a3888fb93b2b79af4a8c11a8", null ],
+          [ "loadLibraries", "loadFiles_8h.html#a9963aea847293b086b68378d64a22c77", null ],
           [ "loadLibrariesFromYaml", "readLibraries_8cpp.html#afb9dd2a20bcb124442f030f86c061128", null ],
           [ "loadOptimConfigFromYaml", "readOptimConfig_8cpp.html#a61af7bf09ec480b49487d047bd348887", null ],
           [ "loadOptimConfigFromYaml", "readOptimConfig_8h.html#afc2f325f75ef454d4e5f6d4dcd8ad65b", null ],
@@ -1692,6 +1693,8 @@ var namespaces_dup =
         [ "SystemLinearProblemBuilder", "classAntares_1_1Solver_1_1SystemLinearProblemBuilder.html", "classAntares_1_1Solver_1_1SystemLinearProblemBuilder" ],
         [ "LocationAnalysis", "structAntares_1_1Solver_1_1LocationAnalysis.html", "structAntares_1_1Solver_1_1LocationAnalysis" ],
         [ "ModelerParameters", "structAntares_1_1Solver_1_1ModelerParameters.html", "structAntares_1_1Solver_1_1ModelerParameters" ],
+        [ "InvalidScenarioScopeError", "classAntares_1_1Solver_1_1InvalidScenarioScopeError.html", "classAntares_1_1Solver_1_1InvalidScenarioScopeError" ],
+        [ "ScenarioScope", "structAntares_1_1Solver_1_1ScenarioScope.html", "structAntares_1_1Solver_1_1ScenarioScope" ],
         [ "Application", "classAntares_1_1Solver_1_1Application.html", "classAntares_1_1Solver_1_1Application" ],
         [ "ScenarioBuilderOwner", "classAntares_1_1Solver_1_1ScenarioBuilderOwner.html", "classAntares_1_1Solver_1_1ScenarioBuilderOwner" ],
         [ "FinalLevelValidator", "classAntares_1_1Solver_1_1FinalLevelValidator.html", "classAntares_1_1Solver_1_1FinalLevelValidator" ],
@@ -1735,11 +1738,13 @@ var namespaces_dup =
         [ "initializeSignalHandlers", "public_8h.html#a208e1702f166ec879b512d049a6fd610", null ],
         [ "makeOutputPath", "Modeler_8cpp.html#a28ef57806cb789809ded21bb1d7d72d8", null ],
         [ "makeOutputPath", "Modeler_8h.html#abfa68ae6faacc4e6e985baab8f38e3db", null ],
+        [ "makeProblemId", "Modeler_8cpp.html#ac8ca103cdcacfb12319807aa0cc74e38", null ],
         [ "MatrixDPMake", "matrix-dp-make_8hxx.html#a0ba3dc459a637b4d4c17d0b7867fe889", null ],
         [ "MatrixDPMake", "matrix-dp-make_8h.html#a974a844fb3ae602605d9249096df967b", null ],
         [ "operator<<", "ModelerData_8h.html#ae589ebe159662ac9534f60b58140872a", null ],
         [ "problemName", "LpsFromAntares_8h.html#a4d52985d43d59ef854f3a608e0ab4032", null ],
         [ "randomReservoirLevel", "management_8h.html#a61fe8e29c1c9060a07d6e3a496d50908", null ],
+        [ "resolveScenarioScopeScenarios", "scenarioScope_8h.html#aa57bc40f71fbee9cbd937e02c114e285", null ],
         [ "resultWriterFactory", "writer__factory_8h.html#ac6d8ad5f1e9a7808f0a899e2a05ef561", null ],
         [ "runSimulation", "simulation-run_8cpp.html#a2b9f17dd0707f6fb3abf8b7d80660842", null ],
         [ "setApplicationResultWriter", "common_8cpp.html#ae2fed9f7d2e4e0ab70cbc200785b5a36", null ],
@@ -2057,6 +2062,12 @@ var namespaces_dup =
       [ "reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", "classfind__reference_1_1reference__folder__finder" ],
       [ "find_reference_folder", "find__reference_8py.html#a9a1c9809dbe51b7d00621cd03854ec6e", null ]
     ] ],
+    [ "Fixtures", null, [
+      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
+      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
+      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
+      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
+    ] ],
     [ "fixtures", null, [
       [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
       [ "antares_problem_generator", "fixtures_8py.html#a532fab1323b92d1f3eb74f5213a6b6c0", null ],
@@ -2065,12 +2076,6 @@ var namespaces_dup =
       [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
       [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
       [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
-    ] ],
-    [ "Fixtures", null, [
-      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
-      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
-      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
-      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
     ] ],
     [ "fmt", null, [
       [ "formatter< Antares::ModelerStudy::SystemModel::FieldRole >", "structfmt_1_1formatter_3_01Antares_1_1ModelerStudy_1_1SystemModel_1_1FieldRole_01_4.html", "structfmt_1_1formatter_3_01Antares_1_1ModelerStudy_1_1SystemModel_1_1FieldRole_01_4" ]
@@ -2124,6 +2129,8 @@ var namespaces_dup =
       [ "skip_study", "look__for__studies_8py.html#a8fab7a88147d6a934d8b18955945f4f7", null ]
     ] ],
     [ "modeler_steps", null, [
+      [ "_read_resolution_mode", "modeler__steps_8py.html#a9ec469a9cb3233a595d9e66785dd91a4", null ],
+      [ "_uses_benders_decomposition", "modeler__steps_8py.html#aa5b7059652036adac5d4a6acb3dd9fb7", null ],
       [ "build_antares_modeler_command", "modeler__steps_8py.html#a41ab8fa06f009156a60e170d983cb11e", null ],
       [ "build_antares_problem_generator_command", "modeler__steps_8py.html#afd79907cf9c997c47c408d999f77dee9", null ],
       [ "check_master_variables", "modeler__steps_8py.html#aa1f528fb6b4a05599be6b74ab77ba255", null ],
@@ -2143,6 +2150,7 @@ var namespaces_dup =
       [ "modeler_output_values_for_stage_with_tolerance", "modeler__steps_8py.html#aad65828f0edc327dc87aa2103e60e8e3", null ],
       [ "modeler_output_values_with_tolerance", "modeler__steps_8py.html#a6ed26c20408e24a22b302afc049132bd", null ],
       [ "modeler_study_path_is", "modeler__steps_8py.html#a4b60789db78871ca85f1563bc7f0070b", null ],
+      [ "no_simulation_table_expected", "modeler__steps_8py.html#a74bed9e2b9ed623f1cbb8656a2232954", null ],
       [ "parse_output_folder_from_logs", "modeler__steps_8py.html#aa20861b4b7d40db3245b78f9a82c75dc", null ],
       [ "parse_structure", "modeler__steps_8py.html#a0815c3fcfca57b7fa239710b481bf026", null ],
       [ "read_expected_entries", "modeler__steps_8py.html#a0fae7433b0215ec466dff0b86faed874", null ],
@@ -2153,7 +2161,8 @@ var namespaces_dup =
       [ "run_antares_problem_generator", "modeler__steps_8py.html#a60b259476f84a7366c00fc4fe970c8a0", null ],
       [ "run_executable", "modeler__steps_8py.html#a1c13c3b74baad6b18a2548885c0e2867", null ],
       [ "run_modeler", "modeler__steps_8py.html#a9d99e3e1985a65e970317fcf0a7d30b2", null ],
-      [ "run_problem_generator", "modeler__steps_8py.html#acb66c572b61c942fbb9d2972ad285a7f", null ]
+      [ "run_problem_generator", "modeler__steps_8py.html#acb66c572b61c942fbb9d2972ad285a7f", null ],
+      [ "simulation_tables_written_per_scenario", "modeler__steps_8py.html#a165650f6a00da45a06fa736b8e8f6026", null ]
     ] ],
     [ "modified_inode", null, [
       [ "UserData", "classmodified__inode_1_1UserData.html", "classmodified__inode_1_1UserData" ]
@@ -2410,6 +2419,7 @@ var namespaces_dup =
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcessing >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ConstraintOutOfBoundsProcessing_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::Objective >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::Model >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model_01_4.html", null ],
+      [ "convert< Antares::IO::Inputs::YmlOptimConfig::ScenarioScope >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ScenarioScope_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::OptimConfig >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1OptimConfig_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::Parameter >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::Component >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component_01_4.html", null ],

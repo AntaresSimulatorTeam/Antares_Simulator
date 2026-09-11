@@ -149,15 +149,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>buildProblems</b> ()<
 <tr class="memitem:a14bafc5bb5fc13497a28f5081fe2c1e8"><td class="memItemLeft" align="right" valign="top"><a id="a14bafc5bb5fc13497a28f5081fe2c1e8"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>buildMasterProblem</b> ()</td></tr>
 <tr class="separator:a14bafc5bb5fc13497a28f5081fe2c1e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb5d9765ec49107081a71bddbc4d60f5"><td class="memItemLeft" align="right" valign="top"><a id="aeb5d9765ec49107081a71bddbc4d60f5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>buildSubProblem</b> ()</td></tr>
-<tr class="separator:aeb5d9765ec49107081a71bddbc4d60f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac793cbf9ec4e71ff071805311c60e72e"><td class="memItemLeft" align="right" valign="top"><a id="ac793cbf9ec4e71ff071805311c60e72e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>buildProblemsAndWriteMps</b> ()</td></tr>
+<tr class="separator:ac793cbf9ec4e71ff071805311c60e72e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7554792cab9dd9ea077e535e3a4ad693"><td class="memItemLeft" align="right" valign="top"><a id="a7554792cab9dd9ea077e535e3a4ad693"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>run</b> ()</td></tr>
 <tr class="separator:a7554792cab9dd9ea077e535e3a4ad693"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a390d45aa19c2949ee322feed2f308920"><td class="memItemLeft" align="right" valign="top"><a id="a390d45aa19c2949ee322feed2f308920"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>exportMps</b> () const</td></tr>
-<tr class="separator:a390d45aa19c2949ee322feed2f308920"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5abe5ef5eeb2d9d51f7c2b6b3891469"><td class="memItemLeft" align="right" valign="top"><a id="af5abe5ef5eeb2d9d51f7c2b6b3891469"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>exportStructureFile</b> () const</td></tr>
 <tr class="separator:af5abe5ef5eeb2d9d51f7c2b6b3891469"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -167,8 +164,7 @@ const std::unique_ptr&lt; <a class="el" href="classAntares_1_1LinearProblem_1_1A
 <tr class="memitem:aca5ce4d1706710f9312e7cc33fbc3732"><td class="memItemLeft" align="right" valign="top"><a id="aca5ce4d1706710f9312e7cc33fbc3732"></a>
 const std::vector&lt; std::unique_ptr&lt; <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html">LinearProblem::Api::ILinearProblem</a> &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>subproblems</b> () const</td></tr>
 <tr class="separator:aca5ce4d1706710f9312e7cc33fbc3732"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42e1bf7256c0ef04bbe1ab69f381c186"><td class="memItemLeft" align="right" valign="top"><a id="a42e1bf7256c0ef04bbe1ab69f381c186"></a>
-<a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html">LinearProblem::Api::IMipSolution</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>subProbSolution</b> ()</td></tr>
+<tr class="memitem:a42e1bf7256c0ef04bbe1ab69f381c186"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html">LinearProblem::Api::IMipSolution</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Modeler.html#a42e1bf7256c0ef04bbe1ab69f381c186">subProbSolution</a> ()</td></tr>
 <tr class="separator:a42e1bf7256c0ef04bbe1ab69f381c186"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -177,6 +173,25 @@ Public Attributes</h2></td></tr>
 <a class="el" href="classAntares_1_1Solver_1_1ILoader.html">ILoader</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>loader_</b></td></tr>
 <tr class="separator:abceffa65983f1f9279a542f48d1abd9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a42e1bf7256c0ef04bbe1ab69f381c186"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42e1bf7256c0ef04bbe1ab69f381c186">&#9670;&nbsp;</a></span>subProbSolution()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html">IMipSolution</a> * Antares::Solver::Modeler::subProbSolution </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the solution of the last solved subproblem. The solution is owned by that subproblem (see ILinearProblem::solve), which is retained in subproblems(), so the pointer stays valid for the lifetime of this <a class="el" href="classAntares_1_1Solver_1_1Modeler.html">Modeler</a> after run() in SEQUENTIAL_SUBPROBLEMS mode. May be null if no subproblem was solved. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/modeler/modeler/include/antares/solver/modeler/<a class="el" href="Modeler_8h_source.html">Modeler.h</a></li>
 <li>src/modeler/modeler/Modeler.cpp</li>

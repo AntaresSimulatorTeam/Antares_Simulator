@@ -1,5 +1,6 @@
 var NAVTREEINDEX7 =
 {
+"classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#aac1dd8a3674752fa6f30fde4c224fa63":[9,0,0,3,3,4,7],
 "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#abbe239ac6401e131e120989be2d84c9b":[9,0,0,3,3,4,16],
 "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#abbf2e70d2d2eec0e40d650d31da94045":[9,0,0,3,3,4,3],
 "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#abfe60d1284734f0fc911cf8a853ba464":[9,0,0,3,3,4,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX7 =
 "classAntares_1_1Data_1_1ThermalCluster.html#ac7c7525e7554ae818a5758aa71c802f0":[9,0,0,3,73,7],
 "classAntares_1_1Data_1_1ThermalCluster.html#ac9f23b033cb71940d6e5268f6a0a771a":[9,0,0,3,73,19],
 "classAntares_1_1Data_1_1ThermalCluster.html#acd394f35808a3f2204acc2cebbe66bf7":[9,0,0,3,73,38],
-"classAntares_1_1Data_1_1ThermalCluster.html#adbae5e0bff6e2a24eb11d6064d0ea213":[9,0,0,3,73,1],
-"classAntares_1_1Data_1_1ThermalCluster.html#afc29cf272b33f1dad1e6b5ff37ea6125":[9,0,0,3,73,23]
+"classAntares_1_1Data_1_1ThermalCluster.html#adbae5e0bff6e2a24eb11d6064d0ea213":[9,0,0,3,73,1]
 };

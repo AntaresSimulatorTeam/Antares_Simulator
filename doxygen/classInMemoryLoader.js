@@ -12,10 +12,13 @@ var classInMemoryLoader =
     [ "fixture", "classInMemoryLoader.html#a4fe34e86e4502e536d69db56604478e1", null ],
     [ "groupes", "classInMemoryLoader.html#a3b2af70cb1c8bd618be35d1f95701d66", null ],
     [ "lower_bound", "classInMemoryLoader.html#a4f101c69b56e8de27425fad23f20520a", null ],
+    [ "masterOnly", "classInMemoryLoader.html#a342493fc9e7aef864278071f8162a59a", null ],
     [ "models", "classInMemoryLoader.html#a6eebc1d70232f173c6a7f6536e137637", null ],
     [ "parameterIds", "classInMemoryLoader.html#a729ccd1e3762fa30513c24126f2cd7dc", null ],
     [ "parameters", "classInMemoryLoader.html#ad890bbfa58e5f067bd02ea7cbd08eee8", null ],
+    [ "pendingScenarios_", "classInMemoryLoader.html#a829a10c43b6f1765e8f80898d1c3774e", null ],
     [ "scenarioGroupRepository", "classInMemoryLoader.html#ae3461ba29ffb878622070d9c8e536904", null ],
+    [ "scenarioScope", "classInMemoryLoader.html#a05baa0efb9f0fa8b783ec5b240121543", null ],
     [ "timeDependent", "classInMemoryLoader.html#ae0db2294aac20a9bb7874bb13a7ac6d2", null ],
     [ "timeSteps", "classInMemoryLoader.html#aa5ec1d3e23b578db3b5f89da5b280c53", null ]
 ];

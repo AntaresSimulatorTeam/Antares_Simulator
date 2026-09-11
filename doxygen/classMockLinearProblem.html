@@ -166,9 +166,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isLP</b> () const ove
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#a949991bc766c525f9b5b5daaaf87abd4">setObjectiveCoefficient</a> (<a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IMipVariable.html">Antares::LinearProblem::Api::IMipVariable</a> *, double) override</td></tr>
 <tr class="memdesc:a949991bc766c525f9b5b5daaaf87abd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the objective coefficient for a given variable. <br /></td></tr>
 <tr class="separator:a949991bc766c525f9b5b5daaaf87abd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a3094bea47c530ea400ae04b742031d"><td class="memItemLeft" align="right" valign="top"><a id="a3a3094bea47c530ea400ae04b742031d"></a>
-<a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html">Antares::LinearProblem::Api::IMipSolution</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#a3a3094bea47c530ea400ae04b742031d">solve</a> (bool) override</td></tr>
-<tr class="memdesc:a3a3094bea47c530ea400ae04b742031d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the problem, returns a IMipSolution. <br /></td></tr>
+<tr class="memitem:a3a3094bea47c530ea400ae04b742031d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html">Antares::LinearProblem::Api::IMipSolution</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMockLinearProblem.html#a3a3094bea47c530ea400ae04b742031d">solve</a> (bool) override</td></tr>
 <tr class="separator:a3a3094bea47c530ea400ae04b742031d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76d75747090e5286e43be590d0eb05ba"><td class="memItemLeft" align="right" valign="top"><a id="a76d75747090e5286e43be590d0eb05ba"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>infinity</b> () const override</td></tr>
@@ -256,6 +254,37 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>variableCount_</b> = 0
 int&#160;</td><td class="memItemRight" valign="bottom"><b>constraintCount_</b> = 0</td></tr>
 <tr class="separator:a1e5e030f206d269b7b082157c9a8a81e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a3a3094bea47c530ea400ae04b742031d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a3094bea47c530ea400ae04b742031d">&#9670;&nbsp;</a></span>solve()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html">Antares::LinearProblem::Api::IMipSolution</a>* MockLinearProblem::solve </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>verboseSolver</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Solve the problem, returns the resulting IMipSolution.</p>
+<p>Ownership: the returned pointer is NOT owned by the caller. It points to solution state owned by this ILinearProblem and is only valid for as long as the problem (and its internal solver state) outlives all uses of the solution. Callers that need to keep the solution alive must keep the problem alive as well. </p>
+
+<p>Implements <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html#a4794c19b577ceeb7f64988217ae9b766">Antares::LinearProblem::Api::ILinearProblem</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/tests/src/modeler/<a class="el" href="UtilMocks_8h_source.html">UtilMocks.h</a></li>
 </ul>

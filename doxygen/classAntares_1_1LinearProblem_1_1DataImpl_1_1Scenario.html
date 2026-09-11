@@ -153,6 +153,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5b4ddd135a42ccb90ff0b57decef196f"><td class="memItemLeft" align="right" valign="top"><a id="a5b4ddd135a42ccb90ff0b57decef196f"></a>
 TimeSeriesNumber&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> (Year year) const override</td></tr>
 <tr class="separator:a5b4ddd135a42ccb90ff0b57decef196f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab73c9ec10e4bbe00a08ef2add634ef03"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1LinearProblem_1_1DataImpl_1_1Scenario.html#ab73c9ec10e4bbe00a08ef2add634ef03">hasYear</a> (Year year) const override</td></tr>
+<tr class="separator:ab73c9ec10e4bbe00a08ef2add634ef03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a381de9f1cad9c3b88498b0045e4a612c"><td class="memItemLeft" align="right" valign="top"><a id="a381de9f1cad9c3b88498b0045e4a612c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setTimeSerieNumber</b> (Year year, TimeSeriesNumber timeSeriesNumber)</td></tr>
 <tr class="separator:a381de9f1cad9c3b88498b0045e4a612c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -174,6 +176,36 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>Year</b> = unsigned<
 using&#160;</td><td class="memItemRight" valign="bottom"><b>TimeSeriesNumber</b> = unsigned</td></tr>
 <tr class="separator:a923c1826e5e797e9829c8961e7f8eb60 inherit pub_types_classAntares_1_1LinearProblem_1_1Api_1_1IScenario"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ab73c9ec10e4bbe00a08ef2add634ef03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab73c9ec10e4bbe00a08ef2add634ef03">&#9670;&nbsp;</a></span>hasYear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Antares::LinearProblem::DataImpl::Scenario::hasYear </td>
+          <td>(</td>
+          <td class="paramtype">Year&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Check whether a time series is defined for the given year, without throwing. Implementations that serve a fixed time series for any year (empty/default scenarios) keep the default behavior of returning true. </p>
+
+<p>Reimplemented from <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html#aec446006ca0d1b4315334baef4738273">Antares::LinearProblem::Api::IScenario</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/optimisation/linear-problem-data-impl/include/antares/optimisation/linear-problem-data-impl/<a class="el" href="Scenario_8h_source.html">Scenario.h</a></li>
 <li>src/optimisation/linear-problem-data-impl/Scenario.cpp</li>

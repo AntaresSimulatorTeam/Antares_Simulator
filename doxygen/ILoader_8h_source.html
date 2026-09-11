@@ -131,22 +131,24 @@ $(document).ready(function(){initNavTree('ILoader_8h_source.html',''); initResiz
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;antares/solver/modeler/parameters/modelerParameters.h&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;antares/solver/modeler/ModelerData.h&quot;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>Antares::Solver</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
-<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1ILoader.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1ILoader.html">ILoader</a></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;optional&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;antares/solver/modeler/parameters/modelerParameters.h&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;antares/solver/modeler/ModelerData.h&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">namespace </span>Antares::Solver</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classAntares_1_1Solver_1_1ILoader.html">ILoader</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="structAntares_1_1Solver_1_1ModelerParameters.html">ModelerParameters</a> loadParameters() = 0;</div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1ILoader.html">   12</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1ILoader.html">ILoader</a></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classAntares_1_1Solver_1_1ILoader.html">ILoader</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">virtual</span> std::optional&lt;ModelerData&gt; loadAll() = 0;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;};</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;} <span class="comment">// namespace Antares::Solver</span></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1ILoader_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1ILoader.html">Antares::Solver::ILoader</a></div><div class="ttdef"><b>Definition:</b> ILoader.h:11</div></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="structAntares_1_1Solver_1_1ModelerParameters.html">ModelerParameters</a> loadParameters() = 0;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">virtual</span> std::optional&lt;ModelerData&gt; loadAll() = 0;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;};</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;} <span class="comment">// namespace Antares::Solver</span></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1ILoader_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1ILoader.html">Antares::Solver::ILoader</a></div><div class="ttdef"><b>Definition:</b> ILoader.h:13</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1ModelerParameters_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1ModelerParameters.html">Antares::Solver::ModelerParameters</a></div><div class="ttdef"><b>Definition:</b> modelerParameters.h:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

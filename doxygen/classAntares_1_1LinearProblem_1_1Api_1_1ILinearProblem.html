@@ -215,9 +215,7 @@ virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>isMinimizatio
 <tr class="memitem:a4af4b2af7f37cb6739a36641f462077f"><td class="memItemLeft" align="right" valign="top"><a id="a4af4b2af7f37cb6739a36641f462077f"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>isMaximization</b> () const =0</td></tr>
 <tr class="separator:a4af4b2af7f37cb6739a36641f462077f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4794c19b577ceeb7f64988217ae9b766"><td class="memItemLeft" align="right" valign="top"><a id="a4794c19b577ceeb7f64988217ae9b766"></a>
-virtual <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html">IMipSolution</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html#a4794c19b577ceeb7f64988217ae9b766">solve</a> (bool verboseSolver)=0</td></tr>
-<tr class="memdesc:a4794c19b577ceeb7f64988217ae9b766"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the problem, returns a <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html">IMipSolution</a>. <br /></td></tr>
+<tr class="memitem:a4794c19b577ceeb7f64988217ae9b766"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html">IMipSolution</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html#a4794c19b577ceeb7f64988217ae9b766">solve</a> (bool verboseSolver)=0</td></tr>
 <tr class="separator:a4794c19b577ceeb7f64988217ae9b766"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a406c81eec7c695121d4853c13b55b7f4"><td class="memItemLeft" align="right" valign="top"><a id="a406c81eec7c695121d4853c13b55b7f4"></a>
 virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>infinity</b> () const =0</td></tr>
@@ -231,7 +229,38 @@ virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>objectiveVa
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Linear Problem This class is aimed at creating and manipulating variables/constraints Also used to control the objective, maximization or minimization, and to solve the problem </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a4794c19b577ceeb7f64988217ae9b766"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4794c19b577ceeb7f64988217ae9b766">&#9670;&nbsp;</a></span>solve()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html">IMipSolution</a>* Antares::LinearProblem::Api::ILinearProblem::solve </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>verboseSolver</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Solve the problem, returns the resulting <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html">IMipSolution</a>.</p>
+<p>Ownership: the returned pointer is NOT owned by the caller. It points to solution state owned by this <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html">ILinearProblem</a> and is only valid for as long as the problem (and its internal solver state) outlives all uses of the solution. Callers that need to keep the solution alive must keep the problem alive as well. </p>
+
+<p>Implemented in <a class="el" href="classMockLinearProblem.html#a3a3094bea47c530ea400ae04b742031d">MockLinearProblem</a>, <a class="el" href="classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#aa7f4513c8ba806787fc3c3ae3a508ea6">Antares::LinearProblem::MpsolverImpl::OrtoolsLinearProblem</a>, and <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1StructuredLinearProblem.html#a1e597af95423c6c18ab10cb7a4dbfd44">Antares::LinearProblem::Api::StructuredLinearProblem</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/optimisation/linear-problem-api/include/antares/optimisation/linear-problem-api/<a class="el" href="linear-problem-api_2include_2antares_2optimisation_2linear-problem-api_2linearProblem_8h_source.html">linearProblem.h</a></li>
 </ul>
 </div><!-- contents -->

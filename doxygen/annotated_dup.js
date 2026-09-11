@@ -291,6 +291,7 @@ var annotated_dup =
             [ "ConstraintOutOfBoundsProcessing", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ConstraintOutOfBoundsProcessing.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ConstraintOutOfBoundsProcessing" ],
             [ "Objective", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective" ],
             [ "Model", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model" ],
+            [ "ScenarioScope", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ScenarioScope.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ScenarioScope" ],
             [ "OptimConfig", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1OptimConfig.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1OptimConfig" ],
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Parser" ]
           ] ],
@@ -497,6 +498,7 @@ var annotated_dup =
         ] ],
         [ "LoadFiles", null, [
           [ "FileLoader", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader.html", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader" ],
+          [ "LoadedLibraries", "structAntares_1_1Solver_1_1LoadFiles_1_1LoadedLibraries.html", "structAntares_1_1Solver_1_1LoadFiles_1_1LoadedLibraries" ],
           [ "LoadedSystem", "structAntares_1_1Solver_1_1LoadFiles_1_1LoadedSystem.html", "structAntares_1_1Solver_1_1LoadFiles_1_1LoadedSystem" ],
           [ "ErrorLoadingYaml", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml" ]
         ] ],
@@ -787,6 +789,8 @@ var annotated_dup =
         [ "SystemLinearProblemBuilder", "classAntares_1_1Solver_1_1SystemLinearProblemBuilder.html", "classAntares_1_1Solver_1_1SystemLinearProblemBuilder" ],
         [ "LocationAnalysis", "structAntares_1_1Solver_1_1LocationAnalysis.html", "structAntares_1_1Solver_1_1LocationAnalysis" ],
         [ "ModelerParameters", "structAntares_1_1Solver_1_1ModelerParameters.html", "structAntares_1_1Solver_1_1ModelerParameters" ],
+        [ "InvalidScenarioScopeError", "classAntares_1_1Solver_1_1InvalidScenarioScopeError.html", "classAntares_1_1Solver_1_1InvalidScenarioScopeError" ],
+        [ "ScenarioScope", "structAntares_1_1Solver_1_1ScenarioScope.html", "structAntares_1_1Solver_1_1ScenarioScope" ],
         [ "Application", "classAntares_1_1Solver_1_1Application.html", "classAntares_1_1Solver_1_1Application" ],
         [ "ScenarioBuilderOwner", "classAntares_1_1Solver_1_1ScenarioBuilderOwner.html", "classAntares_1_1Solver_1_1ScenarioBuilderOwner" ],
         [ "FinalLevelValidator", "classAntares_1_1Solver_1_1FinalLevelValidator.html", "classAntares_1_1Solver_1_1FinalLevelValidator" ],
@@ -1001,6 +1005,7 @@ var annotated_dup =
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcessing >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ConstraintOutOfBoundsProcessing_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::Objective >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::Model >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model_01_4.html", null ],
+      [ "convert< Antares::IO::Inputs::YmlOptimConfig::ScenarioScope >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ScenarioScope_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::OptimConfig >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1OptimConfig_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::Parameter >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::Component >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component_01_4.html", null ],

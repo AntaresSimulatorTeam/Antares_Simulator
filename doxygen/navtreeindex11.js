@@ -1,5 +1,6 @@
 var NAVTREEINDEX11 =
 {
+"classAntares_1_1LinearProblem_1_1Api_1_1IHasStatus.html#a3cf08617e3cab5c720116ff9f3bed6cc":[9,0,0,8,0,2,0],
 "classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html":[9,0,0,8,0,7],
 "classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html#a29423772f5bdc4a7c1c60e6c8eef8a71":[9,0,0,8,0,7,18],
 "classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html#a2c11f92af323c695b210a7fccda85864":[9,0,0,8,0,7,0],
@@ -50,6 +51,7 @@ var NAVTREEINDEX11 =
 "classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html#a923c1826e5e797e9829c8961e7f8eb60":[9,0,0,8,0,5,0],
 "classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html#aadfebdc7de2f8acd5ac38e1de96ced36":[9,0,0,8,0,5,4],
 "classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html#ae4e2e6124e083edecd517411d1b2447a":[9,0,0,8,0,5,5],
+"classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html#aec446006ca0d1b4315334baef4738273":[9,0,0,8,0,5,6],
 "classAntares_1_1LinearProblem_1_1Api_1_1LinearProblemBuilder.html":[9,0,0,8,0,8],
 "classAntares_1_1LinearProblem_1_1Api_1_1LinearProblemBuilder.html#ac0d2bdb1758b02ac6c98e2449012626b":[9,0,0,8,0,8,1],
 "classAntares_1_1LinearProblem_1_1Api_1_1LinearProblemBuilder.html#af063ef64fb591185a9302ea891b563e6":[9,0,0,8,0,8,0],
@@ -181,8 +183,9 @@ var NAVTREEINDEX11 =
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1LinearProblemData.html#af7393c50d2a6f5d6dc235d67facb8292":[9,0,0,8,1,2,3],
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1LinearProblemData.html#afbc47edcf85a1711228a8c6608a2b1e1":[9,0,0,8,1,2,1],
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1Scenario.html":[9,0,0,8,1,3],
-"classAntares_1_1LinearProblem_1_1DataImpl_1_1Scenario.html#a381de9f1cad9c3b88498b0045e4a612c":[9,0,0,8,1,3,3],
+"classAntares_1_1LinearProblem_1_1DataImpl_1_1Scenario.html#a381de9f1cad9c3b88498b0045e4a612c":[9,0,0,8,1,3,4],
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1Scenario.html#a5b4ddd135a42ccb90ff0b57decef196f":[9,0,0,8,1,3,2],
+"classAntares_1_1LinearProblem_1_1DataImpl_1_1Scenario.html#ab73c9ec10e4bbe00a08ef2add634ef03":[9,0,0,8,1,3,3],
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1Scenario_1_1AlreadyExists.html":[9,0,0,8,1,3,0],
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1Scenario_1_1AlreadyExists.html#a6fa38601ca856f00aedff3e5e06442a9":[9,0,0,8,1,3,0,0],
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1Scenario_1_1ScenarioNotExist.html":[9,0,0,8,1,3,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX11 =
 "classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#a84829d1ecf377cca1025f45c05a99f14":[9,0,0,8,2,0,8],
 "classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#a85f1273bd84280ab3a3a4ef9652af080":[9,0,0,8,2,0,11],
 "classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#a9515495f229536118a6eada9a20c0a0f":[9,0,0,8,2,0,23],
-"classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#a953b155ca649c40cb82ba506731825a1":[9,0,0,8,2,0,4],
-"classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#a9ac9211083b9c33ae860d9b49ec467f3":[9,0,0,8,2,0,16],
-"classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#a9db47665a04ee43cdec4ad64f78a2d37":[9,0,0,8,2,0,9],
-"classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#aa4e96020b30b1db0a64aeaf72071de36":[9,0,0,8,2,0,14]
+"classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#a953b155ca649c40cb82ba506731825a1":[9,0,0,8,2,0,4]
 };

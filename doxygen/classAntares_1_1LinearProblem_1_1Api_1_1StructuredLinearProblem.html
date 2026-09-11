@@ -209,9 +209,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isMinimization</b> ()
 <tr class="memitem:acaa7403b98baf1f99fe757a3ee378f6f"><td class="memItemLeft" align="right" valign="top"><a id="acaa7403b98baf1f99fe757a3ee378f6f"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isMaximization</b> () const override</td></tr>
 <tr class="separator:acaa7403b98baf1f99fe757a3ee378f6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e597af95423c6c18ab10cb7a4dbfd44"><td class="memItemLeft" align="right" valign="top"><a id="a1e597af95423c6c18ab10cb7a4dbfd44"></a>
-<a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html">IMipSolution</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1StructuredLinearProblem.html#a1e597af95423c6c18ab10cb7a4dbfd44">solve</a> (bool verboseSolver) override</td></tr>
-<tr class="memdesc:a1e597af95423c6c18ab10cb7a4dbfd44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the problem, returns a <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html">IMipSolution</a>. <br /></td></tr>
+<tr class="memitem:a1e597af95423c6c18ab10cb7a4dbfd44"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html">IMipSolution</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1StructuredLinearProblem.html#a1e597af95423c6c18ab10cb7a4dbfd44">solve</a> (bool verboseSolver) override</td></tr>
 <tr class="separator:a1e597af95423c6c18ab10cb7a4dbfd44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add147e5c38a7c634e1a4bfd730339f87"><td class="memItemLeft" align="right" valign="top"><a id="add147e5c38a7c634e1a4bfd730339f87"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>infinity</b> () const override</td></tr>
@@ -223,6 +221,37 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isLP</b> () const ove
 double&#160;</td><td class="memItemRight" valign="bottom"><b>objectiveValue</b> () const override</td></tr>
 <tr class="separator:a696c430f5415e71578668bd306aaa594"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a1e597af95423c6c18ab10cb7a4dbfd44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e597af95423c6c18ab10cb7a4dbfd44">&#9670;&nbsp;</a></span>solve()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html">IMipSolution</a> * Antares::LinearProblem::Api::StructuredLinearProblem::solve </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>verboseSolver</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Solve the problem, returns the resulting <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html">IMipSolution</a>.</p>
+<p>Ownership: the returned pointer is NOT owned by the caller. It points to solution state owned by this <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html">ILinearProblem</a> and is only valid for as long as the problem (and its internal solver state) outlives all uses of the solution. Callers that need to keep the solution alive must keep the problem alive as well. </p>
+
+<p>Implements <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html#a4794c19b577ceeb7f64988217ae9b766">Antares::LinearProblem::Api::ILinearProblem</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/optimisation/linear-problem-api/include/antares/optimisation/linear-problem-api/<a class="el" href="StructuredLinearProblem_8h_source.html">StructuredLinearProblem.h</a></li>
 <li>src/optimisation/linear-problem-api/StructuredLinearProblem.cpp</li>

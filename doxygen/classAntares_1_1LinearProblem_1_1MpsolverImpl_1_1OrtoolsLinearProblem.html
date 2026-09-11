@@ -214,9 +214,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isMinimization</b> ()
 <tr class="memitem:a091cf22fa2d3790b9d9777e8fc6cad91"><td class="memItemLeft" align="right" valign="top"><a id="a091cf22fa2d3790b9d9777e8fc6cad91"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isMaximization</b> () const override</td></tr>
 <tr class="separator:a091cf22fa2d3790b9d9777e8fc6cad91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7f4513c8ba806787fc3c3ae3a508ea6"><td class="memItemLeft" align="right" valign="top"><a id="aa7f4513c8ba806787fc3c3ae3a508ea6"></a>
-<a class="el" href="classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsMipSolution.html">OrtoolsMipSolution</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#aa7f4513c8ba806787fc3c3ae3a508ea6">solve</a> (bool verboseSolver) override</td></tr>
-<tr class="memdesc:aa7f4513c8ba806787fc3c3ae3a508ea6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the problem, returns a IMipSolution. <br /></td></tr>
+<tr class="memitem:aa7f4513c8ba806787fc3c3ae3a508ea6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsMipSolution.html">OrtoolsMipSolution</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#aa7f4513c8ba806787fc3c3ae3a508ea6">solve</a> (bool verboseSolver) override</td></tr>
 <tr class="separator:aa7f4513c8ba806787fc3c3ae3a508ea6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afaca49c7b689770b43189ef7fee3f883"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsMipSolution.html">OrtoolsMipSolution</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#afaca49c7b689770b43189ef7fee3f883">solution</a> (bool verboseSolver)</td></tr>
 <tr class="separator:afaca49c7b689770b43189ef7fee3f883"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -327,6 +325,36 @@ std::shared_ptr&lt; operations_research::MPSolver &gt;&#160;</td><td class="memI
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The solution </dd></dl>
+
+</div>
+</div>
+<a id="aa7f4513c8ba806787fc3c3ae3a508ea6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7f4513c8ba806787fc3c3ae3a508ea6">&#9670;&nbsp;</a></span>solve()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsMipSolution.html">OrtoolsMipSolution</a> * Antares::LinearProblem::MpsolverImpl::OrtoolsLinearProblem::solve </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>verboseSolver</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Solve the problem, returns the resulting IMipSolution.</p>
+<p>Ownership: the returned pointer is NOT owned by the caller. It points to solution state owned by this ILinearProblem and is only valid for as long as the problem (and its internal solver state) outlives all uses of the solution. Callers that need to keep the solution alive must keep the problem alive as well. </p>
+
+<p>Implements <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html#a4794c19b577ceeb7f64988217ae9b766">Antares::LinearProblem::Api::ILinearProblem</a>.</p>
 
 </div>
 </div>

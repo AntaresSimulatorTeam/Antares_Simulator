@@ -185,6 +185,9 @@ std::unique_ptr&lt; <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1
 <tr class="memitem:ae0db2294aac20a9bb7874bb13a7ac6d2"><td class="memItemLeft" align="right" valign="top"><a id="ae0db2294aac20a9bb7874bb13a7ac6d2"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>timeDependent</b> {false}</td></tr>
 <tr class="separator:ae0db2294aac20a9bb7874bb13a7ac6d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a342493fc9e7aef864278071f8162a59a"><td class="memItemLeft" align="right" valign="top"><a id="a342493fc9e7aef864278071f8162a59a"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>masterOnly</b> {false}</td></tr>
+<tr class="separator:a342493fc9e7aef864278071f8162a59a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad890bbfa58e5f067bd02ea7cbd08eee8"><td class="memItemLeft" align="right" valign="top"><a id="ad890bbfa58e5f067bd02ea7cbd08eee8"></a>
 std::map&lt; std::string, <a class="el" href="structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue.html">PTV</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>parameters</b> {}</td></tr>
 <tr class="separator:ad890bbfa58e5f067bd02ea7cbd08eee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -194,12 +197,18 @@ std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bott
 <tr class="memitem:ae3461ba29ffb878622070d9c8e536904"><td class="memItemLeft" align="right" valign="top"><a id="ae3461ba29ffb878622070d9c8e536904"></a>
 <a class="el" href="classAntares_1_1LinearProblem_1_1ScenarioGroupRepository.html">ScenarioGroupRepository</a>&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioGroupRepository</b> {}</td></tr>
 <tr class="separator:ae3461ba29ffb878622070d9c8e536904"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a829a10c43b6f1765e8f80898d1c3774e"><td class="memItemLeft" align="right" valign="top"><a id="a829a10c43b6f1765e8f80898d1c3774e"></a>
+std::map&lt; std::string, std::unique_ptr&lt; <a class="el" href="classAntares_1_1LinearProblem_1_1DataImpl_1_1Scenario.html">DataImpl::Scenario</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pendingScenarios_</b></td></tr>
+<tr class="separator:a829a10c43b6f1765e8f80898d1c3774e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b2af70cb1c8bd618be35d1f95701d66"><td class="memItemLeft" align="right" valign="top"><a id="a3b2af70cb1c8bd618be35d1f95701d66"></a>
 std::unordered_map&lt; std::string, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>groupes</b></td></tr>
 <tr class="separator:a3b2af70cb1c8bd618be35d1f95701d66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5ec1d3e23b578db3b5f89da5b280c53"><td class="memItemLeft" align="right" valign="top"><a id="aa5ec1d3e23b578db3b5f89da5b280c53"></a>
 std::pair&lt; unsigned int, unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>timeSteps</b> {0, 0}</td></tr>
 <tr class="separator:aa5ec1d3e23b578db3b5f89da5b280c53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05baa0efb9f0fa8b783ec5b240121543"><td class="memItemLeft" align="right" valign="top"><a id="a05baa0efb9f0fa8b783ec5b240121543"></a>
+<a class="el" href="structAntares_1_1Solver_1_1ScenarioScope.html">ScenarioScope</a>&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioScope</b> {}</td></tr>
+<tr class="separator:a05baa0efb9f0fa8b783ec5b240121543"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/tests/end-to-end/modeler/test-modeler.cpp</li>

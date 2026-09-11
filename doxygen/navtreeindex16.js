@@ -1,5 +1,8 @@
 var NAVTREEINDEX16 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Areas.html#afc10ecdd18fda546bf1ec16d58b7c640":[9,0,0,12,6,9,31],
+"classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html":[9,0,0,12,6,11],
+"classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a01a411d5387a228f6f225a8c46011f13":[9,0,0,12,6,11,22],
 "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a0f51290593806b27a159e3ee414bce91":[9,0,0,12,6,11,10],
 "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a1152c97961f8bdda528e3d0277e8722b":[9,0,0,12,6,11,5],
 "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a123a92b4b2ca4abfb82fe5750e1dbdfb":[9,0,0,12,6,11,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX16 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCSRdataFactory.html#a0e7bb04bcfa4339d1b2fea455cf815dd":[9,0,0,12,6,5,63,0],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html":[9,0,0,12,6,5,61],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html#a060214714bbba898fad16b9b71442308":[9,0,0,12,6,5,61,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html#a3cc51f2287d46ba5fec169871266f246":[9,0,0,12,6,5,61,0],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html#a5fde6026e5fb0b415425c4627e04cfe2":[9,0,0,12,6,5,61,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html#a82d28aa599b00aeb52b305432a68b933":[9,0,0,12,6,5,61,5],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html#ac37a84b2a0f736ff35b548d418e556dc":[9,0,0,12,6,5,61,3]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html#a3cc51f2287d46ba5fec169871266f246":[9,0,0,12,6,5,61,0]
 };

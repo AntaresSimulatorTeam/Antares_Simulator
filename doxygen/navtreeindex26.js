@@ -1,5 +1,12 @@
 var NAVTREEINDEX26 =
 {
+"classShortTermStorageCostVariationInjectionBackward.html#ad78ff39de3681bfc803018581b30a936":[9,0,304,4],
+"classShortTermStorageCostVariationInjectionForward.html":[9,0,305],
+"classShortTermStorageCostVariationInjectionForward.html#a127beb0407257b8a0741428d5e807747":[9,0,305,0],
+"classShortTermStorageCostVariationInjectionForward.html#a397e0346039efe2d754dae7113b8fac2":[9,0,305,2],
+"classShortTermStorageCostVariationInjectionForward.html#a92810f50be4340f16068480970655ae2":[9,0,305,1],
+"classShortTermStorageCostVariationInjectionForward.html#ac8bce40b2ac003404af2f0e6366e8e29":[9,0,305,3],
+"classShortTermStorageCostVariationInjectionForward.html#af936b682e59df97c58c18d9ddd7fc530":[9,0,305,4],
 "classShortTermStorageCostVariationWithdrawalBackward.html":[9,0,306],
 "classShortTermStorageCostVariationWithdrawalBackward.html#a5f8ca74c18741368185217c12d362bb5":[9,0,306,1],
 "classShortTermStorageCostVariationWithdrawalBackward.html#a64452a3fb729542b9755ec033eefde99":[9,0,306,4],
@@ -242,12 +249,5 @@ var NAVTREEINDEX26 =
 "classVariableNamer.html#a0ab2e2b356789758ec79a53a4e1522cb":[9,0,386,34],
 "classVariableNamer.html#a0f89d6290ac20ba742c5d472e0a0d218":[9,0,386,14],
 "classVariableNamer.html#a14e4d43dd881fd640e9577370409eb3b":[9,0,386,7],
-"classVariableNamer.html#a176c637187a7e7588ca9a9cf85d5817f":[9,0,386,9],
-"classVariableNamer.html#a22ce47614e6b1208cf8a3a2bab7e90c5":[9,0,386,29],
-"classVariableNamer.html#a23a6f2a11b2e9490d5c3cdd7edf301bf":[9,0,386,6],
-"classVariableNamer.html#a23e8be2f16b63939969a7a975689a5e7":[9,0,386,19],
-"classVariableNamer.html#a40ca6a60d20af026229aa0d61c6d6e8c":[9,0,386,25],
-"classVariableNamer.html#a522d211fa98e3a191dccb90075d9b193":[9,0,386,30],
-"classVariableNamer.html#a68c0baf339cfbdeea0156f1430ff8a51":[9,0,386,3],
-"classVariableNamer.html#a712382011932201e9f6fe9b7d6843994":[9,0,386,8]
+"classVariableNamer.html#a176c637187a7e7588ca9a9cf85d5817f":[9,0,386,9]
 };

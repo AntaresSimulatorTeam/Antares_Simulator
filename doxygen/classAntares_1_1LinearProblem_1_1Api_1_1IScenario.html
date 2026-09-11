@@ -167,13 +167,45 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aadfebdc7de2f8acd5ac38e1de96ced36"><td class="memItemLeft" align="right" valign="top"><a id="aadfebdc7de2f8acd5ac38e1de96ced36"></a>
 virtual TimeSeriesNumber&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> (Year year) const =0</td></tr>
 <tr class="separator:aadfebdc7de2f8acd5ac38e1de96ced36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec446006ca0d1b4315334baef4738273"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html#aec446006ca0d1b4315334baef4738273">hasYear</a> (Year) const</td></tr>
+<tr class="separator:aec446006ca0d1b4315334baef4738273"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4e2e6124e083edecd517411d1b2447a"><td class="memItemLeft" align="right" valign="top"><a id="ae4e2e6124e083edecd517411d1b2447a"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>group</b> () const</td></tr>
 <tr class="separator:ae4e2e6124e083edecd517411d1b2447a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interface for scenarios in the linear problem API. A scenario is an association of years to their respective time series numbers for a given group name. </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="aec446006ca0d1b4315334baef4738273"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec446006ca0d1b4315334baef4738273">&#9670;&nbsp;</a></span>hasYear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool Antares::LinearProblem::Api::IScenario::hasYear </td>
+          <td>(</td>
+          <td class="paramtype">Year&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Check whether a time series is defined for the given year, without throwing. Implementations that serve a fixed time series for any year (empty/default scenarios) keep the default behavior of returning true. </p>
+
+<p>Reimplemented in <a class="el" href="classAntares_1_1LinearProblem_1_1DataImpl_1_1Scenario.html#ab73c9ec10e4bbe00a08ef2add634ef03">Antares::LinearProblem::DataImpl::Scenario</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/optimisation/linear-problem-api/include/antares/optimisation/linear-problem-api/<a class="el" href="IScenario_8h_source.html">IScenario.h</a></li>
 </ul>
 </div><!-- contents -->
