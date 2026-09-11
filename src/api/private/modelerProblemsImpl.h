@@ -17,8 +17,6 @@ class ModelerProblems final
 public:
     explicit ModelerProblems(const std::filesystem::path& modelerPath);
 
-    void logSize() const;
-
 private:
     std::unique_ptr<Modeler> modeler_;
     std::unique_ptr<LoadFiles::FileLoader> loader_;

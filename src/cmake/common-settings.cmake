@@ -12,6 +12,7 @@ if (NOT WIN32)
 endif ()
 set(COMMON_MSVC_FLAGS "/W3 /MP4")
 set(COMMON_MSVC_FLAGS "${COMMON_MSVC_FLAGS} /we4715 /we4716") #adding no return or no return for all code paths as errors
+set(COMMON_MSVC_FLAGS "${COMMON_MSVC_FLAGS} /utf-8") #fmt requires compiling with /utf-8 for Unicode support on MSVC
 set(ADDITIONAL_C_FLAGS " -Wconversion -Wmissing-prototypes -Wstrict-prototypes")
 set(ADDITIONAL_C_FLAGS "${ADDITIONAL_C_FLAGS} -Wmissing-noreturn -Wpacked -Wredundant-decls -Wbad-function-cast -W -Wcast-align -Wcast-qual -Wsign-compare -fno-exceptions -Wdeclaration-after-statement")
 

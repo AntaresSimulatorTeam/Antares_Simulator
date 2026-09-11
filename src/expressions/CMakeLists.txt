@@ -98,11 +98,6 @@ target_link_libraries(expressions
         Antares::exception
 )
 
-if (MSVC)
-    target_compile_options(expressions PRIVATE /utf-8)
-endif ()
-
-
 add_library(expressions-iterators
             iterators/pre-order.cpp
             include/antares/expressions/iterators/pre-order.h

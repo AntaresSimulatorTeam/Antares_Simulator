@@ -26,7 +26,9 @@ std::optional<ModelerData> loadAll(const std::filesystem::path& studyPath)
     {
         return {};
     }
-    std::tie(data.libraries, data.resolutionMode) = res.value();
+    data.libraries = std::move(res->libraries);
+    data.resolutionMode = res->resolutionMode;
+    data.scenarioScope = std::move(res->scenarioScope);
     logs.info() << "Libraries loaded";
 
     auto loadedSystem = loadSystem(studyPath, data.libraries);

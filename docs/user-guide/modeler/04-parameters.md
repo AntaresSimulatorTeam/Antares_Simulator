@@ -50,6 +50,11 @@ This file is only used in pure modeler mode (`antares-modeler`).
 - **Usage:** last timestamp to include in the simulation horizon. Must be included in the definition of 
   [data-series](02-inputs.md#data-series) that are time-dependent.
 
+## Scenarios
+
+The Monte-Carlo scenarios to simulate are selected with the **scenario-scope** field of the
+[optim-config.yml](02-inputs.md#optim-config-file) file.
+
 ## Outputs
 
 ### no-output

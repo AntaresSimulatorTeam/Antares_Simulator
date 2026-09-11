@@ -112,6 +112,56 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::Model>::decode(
     return true;
 }
 
+bool convert<Antares::IO::Inputs::YmlOptimConfig::ScenarioScope>::decode(
+  const Node& node,
+  Antares::IO::Inputs::YmlOptimConfig::ScenarioScope& rhs)
+{
+    if (!requireMap(node, "scenario-scope"))
+    {
+        return false;
+    }
+
+    const auto& includeNode = node["include"];
+    if (includeNode.IsDefined() && !includeNode.IsNull())
+    {
+        if (!includeNode.IsSequence())
+        {
+            throw Antares::IO::Inputs::InputError(
+              "Expected a YAML sequence for 'scenario-scope.include'");
+        }
+        for (const auto& entry: includeNode)
+        {
+            if (!entry.IsScalar())
+            {
+                throw Antares::IO::Inputs::InputError(
+                  "Expected a scalar in 'scenario-scope.include'");
+            }
+            rhs.include.push_back(entry.as<std::string>());
+        }
+    }
+
+    const auto& excludeNode = node["exclude"];
+    if (excludeNode.IsDefined() && !excludeNode.IsNull())
+    {
+        if (!excludeNode.IsSequence())
+        {
+            throw Antares::IO::Inputs::InputError(
+              "Expected a YAML sequence for 'scenario-scope.exclude'");
+        }
+        for (const auto& entry: excludeNode)
+        {
+            if (!entry.IsScalar())
+            {
+                throw Antares::IO::Inputs::InputError(
+                  "Expected a scalar in 'scenario-scope.exclude'");
+            }
+            rhs.exclude.push_back(entry.as<std::string>());
+        }
+    }
+
+    return true;
+}
+
 bool convert<Antares::IO::Inputs::YmlOptimConfig::OptimConfig>::decode(
   const Node& node,
   Antares::IO::Inputs::YmlOptimConfig::OptimConfig& rhs)
@@ -129,6 +179,13 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::OptimConfig>::decode(
 
     // Parse models list
     rhs.models = node["models"].as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Model>>();
+
+    // Parse scenario-scope (optional, absent -> default scenario scope)
+    if (node["scenario-scope"].IsDefined() && !node["scenario-scope"].IsNull())
+    {
+        rhs.scenario_scope = node["scenario-scope"]
+                               .as<Antares::IO::Inputs::YmlOptimConfig::ScenarioScope>();
+    }
 
     return true;
 }
