@@ -251,7 +251,7 @@ void Namer::SetThermalClusterReserveElementName(unsigned varIndex,
     names_[varIndex] = name;
     RecordLegacyVariableInfo(varIndex,
                              legacyOutput.empty() ? elementType : legacyOutput,
-                             reserveName);
+                             BuildAreaNodeComponentId(area_.value()));
 }
 
 void VariableNamer::DispatchableProduction(unsigned varIndex, const std::string& clusterName) const

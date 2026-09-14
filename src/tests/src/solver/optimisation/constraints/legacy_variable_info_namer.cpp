@@ -176,6 +176,11 @@ BOOST_AUTO_TEST_CASE(reserve_variables_use_requested_legacy_output_ids)
     BOOST_CHECK_EQUAL(info[8]->name, "reserve_power_reserve_id");
     BOOST_CHECK_EQUAL(info[9]->name, "unsupplied_energy_reserve_reserve_id");
     BOOST_CHECK_EQUAL(info[10]->name, "spilled_energy_reserve_reserve_id");
+    BOOST_CHECK_EQUAL(info[0]->component, "fr_thermal_gas");
+    BOOST_CHECK_EQUAL(info[3]->component, "fr_short_term_storage_battery");
+    BOOST_CHECK_EQUAL(info[6]->component, "fr_hydro_storage");
+    BOOST_CHECK_EQUAL(info[9]->component, "fr_node");
+    BOOST_CHECK_EQUAL(info[10]->component, "fr_node");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

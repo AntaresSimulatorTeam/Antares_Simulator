@@ -1231,7 +1231,8 @@ void wireResultAddresses(PROBLEME_HEBDO& problem)
     problem.ResultatsHoraires[0].HydroUsage.resize(1);
     problem.ResultatsHoraires[0].HydroUsage[0].reserveParticipationOfCluster = {0.};
     problem.ResultatsHoraires[1].ShortTermStorageReserves = std::vector<RESULTSRESERVES>(1);
-    problem.ResultatsHoraires[1].ShortTermStorageReserves->at(0).reserveParticipationOfCluster = {0.};
+    problem.ResultatsHoraires[1].ShortTermStorageReserves->at(0).reserveParticipationOfCluster = {
+      0.};
     problem.ValeursDeNTC[0].ValeurDuFlux.assign(problem.NombreDInterconnexions, 0.);
 
     solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[unsuppliedArea1]
@@ -1239,7 +1240,8 @@ void wireResultAddresses(PROBLEME_HEBDO& problem)
     solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[reserveHydroStore]
       = &problem.ResultatsHoraires[0].HydroUsage[0].reserveParticipationOfCluster->at(0);
     solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[reserveSTSStore]
-      = &problem.ResultatsHoraires[1].ShortTermStorageReserves->at(0)
+      = &problem.ResultatsHoraires[1]
+           .ShortTermStorageReserves->at(0)
            .reserveParticipationOfCluster->at(0);
     solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[directFlowLink0] = &problem.ValeursDeNTC[0]
                                                                                .ValeurDuFlux[0];
@@ -1291,8 +1293,9 @@ BOOST_AUTO_TEST_CASE(post_process_dump_uses_published_reserve_participation)
     wireResultAddresses(problem);
 
     problem.ResultatsHoraires[0].HydroUsage[0].reserveParticipationOfCluster->at(0) = 11.;
-    problem.ResultatsHoraires[1].ShortTermStorageReserves->at(0)
-      .reserveParticipationOfCluster->at(0) = 13.;
+    problem.ResultatsHoraires[1].ShortTermStorageReserves->at(0).reserveParticipationOfCluster->at(
+      0)
+      = 13.;
 
     DumpSimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
 
