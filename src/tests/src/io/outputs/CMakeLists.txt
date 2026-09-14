@@ -14,6 +14,7 @@ add_boost_test(testOutputs
         LIBS
         test_utils_unit
         mock-modeler-objects
+        Antares::exception
         Antares::simu-table-generator
         Antares::tests::inmemory-modeler
         Antares::modeler-lib

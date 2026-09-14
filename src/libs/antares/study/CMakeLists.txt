@@ -102,6 +102,7 @@ set(SRC_STUDY_PART_RESERVES
         include/antares/study/parts/reserves/SymmetryCollectorVisitor.h
         include/antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h
         parts/reserves/makeGroupsofSymmetriesFromString.cpp
+        parts/reserves/reservesParticipationsLoader.cpp
 )
 source_group("study\\part\\reserves" FILES ${SRC_STUDY_PART_RESERVES})
 
@@ -296,6 +297,7 @@ target_link_libraries(study
         Antares::date
         Antares::inifile
         Antares::io
+        Antares::simulation-table
         Antares::study-utils
         Antares::optimization-options
         Antares::correlation

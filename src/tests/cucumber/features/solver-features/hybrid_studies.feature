@@ -34,14 +34,50 @@ Feature: hybrid (simulator+modeler) studies
   @short
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=6200) (168h simplex)
     # copy of short test 002, with no legacy thermal cluster, replaced by one component
+    #
+    # The reference folder holds the two optimisation stages only, which is
+    # every table the solver wrote before the post-process stages existed. The
+    # run is restricted to those two so the comparison stays a comparison of
+    # contents: adding a stage would otherwise silently go unchecked here
+    # (compare_folders walks the reference side), and the reference would have
+    # to be regenerated for every stage the solver learns to emit. The full set
+    # is covered by the scenario below.
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
-    When I run antares simulator with --output=all
+    When I run antares simulator with --output=all --simulation-table-stages=optim-nb-1,optim-nb-2
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
     # for now, modeler costs does not figure in system cost txt
     And the annual system cost is 0
     And in area "AREA", during year 1, loss of load lasts 0 hours
+    And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2"
     And simulation tables match the references
+
+  @short
+  Scenario: An unrestricted hybrid run also writes the post-process stages
+    # Counterpart to the scenario above: with no --simulation-table-stages the
+    # run produces every stage it reaches. 3_6_1 has no adequacy patch, so
+    # adq-patch-csr is not among them -- remix-hydro is the one post-process
+    # stage this study runs.
+    #
+    # The two optimisation stages are the ones the reference pins, so they are
+    # checked here only for being the same tables, unchanged by the extra stage
+    # being written alongside them. remix-hydro is checked on its own values:
+    # the study has no managed hydro, so remix moves nothing and the stage
+    # carries optim-nb-2's solution forward.
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
+    When I run antares simulator with --output=all
+    Then the simulation succeeds
+    And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2, remix-hydro"
+    And the modeler outputs are read from stage "optim-nb-2"
+    And the modeler outputs contain the following entries
+      | block | component | output | timestep | scenario | value |
+      | 0     | gen1      | p      | 0        | 0        | 3878  |
+      | 0     | gen1      | p      | 1        | 0        | 3572  |
+    And the modeler outputs are read from stage "remix-hydro"
+    And the modeler outputs contain the following entries
+      | block | component | output | timestep | scenario | value |
+      | 0     | gen1      | p      | 0        | 0        | 3878  |
+      | 0     | gen1      | p      | 1        | 0        | 3572  |
 
   @short
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=5900) (168h simplex)
