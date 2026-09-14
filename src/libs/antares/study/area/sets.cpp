@@ -4,6 +4,7 @@
 #include "antares/study/sets.h"
 
 #include <string>
+#include <string_view>
 
 #include <antares/utils/utils.h>
 
@@ -222,22 +223,20 @@ bool Sets::loadFromFile(const std::filesystem::path& filename)
         }
 
         // Summary of the applied per-district output filters
-        for (const auto& pair: pOptions)
+        auto logFilter = [](const IDType& name, std::string_view report, unsigned int filter)
         {
-            if (pair.second.filterSynthesis != filterAll)
+            if (filter == filterAll)
             {
-                logs.info() << "sets: district `" << pair.first << "`: mc-all granularities = "
-                            << (pair.second.filterSynthesis == filterNone
-                                  ? std::string("none")
-                                  : datePrecisionIntoString(pair.second.filterSynthesis));
+                return;
             }
-            if (pair.second.filterYearByYear != filterAll)
-            {
-                logs.info() << "sets: district `" << pair.first << "`: mc-ind granularities = "
-                            << (pair.second.filterYearByYear == filterNone
-                                  ? std::string("none")
-                                  : datePrecisionIntoString(pair.second.filterYearByYear));
-            }
+            logs.info() << "sets: district `" << name << "`: " << report << " granularities = "
+                        << (filter == filterNone ? std::string("none")
+                                                 : datePrecisionIntoString(filter));
+        };
+        for (const auto& [name, options]: pOptions)
+        {
+            logFilter(name, "mc-all", options.filterSynthesis);
+            logFilter(name, "mc-ind", options.filterYearByYear);
         }
 
         // Not modified anymore
