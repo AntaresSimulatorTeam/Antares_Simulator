@@ -317,6 +317,10 @@ struct Fixture
             reserves.STStorageReleaseClusterParticipation = {base + reserveSTSRelease};
             reserves.HydroStoreParticipation = {base + reserveHydroStore};
             reserves.HydroReleaseParticipation = {base + reserveHydroRelease};
+            // The directional reserve variables are the published result
+            // addresses consumed by derived reserve-cost outputs.
+            reserves.STStorageClusterParticipation.down = {base + reserveSTSStore};
+            reserves.HydroParticipation.up = {base + reserveHydroStore};
 
             const int cntBase = pdt * constraintsPerHour;
             auto& constraints = problem.CorrespondanceCntNativesCntOptim[pdt];
@@ -1156,26 +1160,25 @@ BOOST_AUTO_TEST_CASE(reserve_participation_cost_thermal_up_includes_the_off_term
 
 BOOST_AUTO_TEST_CASE(reserve_participation_cost_hydro_is_emitted_on_the_hydro_storage)
 {
-    // "Res_1" hydro participation: participationCost(5) * (store(3)
-    // + release(4)) = 35.
+    // "Res_1" hydro participation uses the published directional quantity.
     fill();
 
     const auto row = FindRow(table, "reserve_participation_cost_Res_1", "area1_hydro_storage");
     BOOST_REQUIRE(row.has_value());
-    BOOST_CHECK_CLOSE(row->value, 5. * (3. + 4.), 1e-9);
+    BOOST_CHECK_CLOSE(row->value, 5. * 3., 1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(reserve_participation_cost_storage_down_drops_the_off_term)
 {
-    // "Res_Down" is a DOWN reserve served by battery1: participationCost(25)
-    // * (store(5) + release(8)) = 325. Down reserves have no off-units term.
+    // "Res_Down" is a DOWN reserve served by battery1. The directional
+    // published quantity is used, and DOWN reserves have no off-units term.
     fill();
 
     const auto row = FindRow(table,
                              "reserve_participation_cost_Res_Down",
                              "area2_short_term_storage_battery1");
     BOOST_REQUIRE(row.has_value());
-    BOOST_CHECK_CLOSE(row->value, 25. * (5. + 8.), 1e-9);
+    BOOST_CHECK_CLOSE(row->value, 25. * 5., 1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
@@ -1225,10 +1228,19 @@ void wireResultAddresses(PROBLEME_HEBDO& problem)
         hourlyResults.ValeursHorairesDeDefaillancePositive.assign(1, 0.);
         hourlyResults.CoutsMarginauxHoraires.assign(1, 0.);
     }
+    problem.ResultatsHoraires[0].HydroUsage.resize(1);
+    problem.ResultatsHoraires[0].HydroUsage[0].reserveParticipationOfCluster = {0.};
+    problem.ResultatsHoraires[1].ShortTermStorageReserves = std::vector<RESULTSRESERVES>(1);
+    problem.ResultatsHoraires[1].ShortTermStorageReserves->at(0).reserveParticipationOfCluster = {0.};
     problem.ValeursDeNTC[0].ValeurDuFlux.assign(problem.NombreDInterconnexions, 0.);
 
     solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[unsuppliedArea1]
       = &problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0];
+    solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[reserveHydroStore]
+      = &problem.ResultatsHoraires[0].HydroUsage[0].reserveParticipationOfCluster->at(0);
+    solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[reserveSTSStore]
+      = &problem.ResultatsHoraires[1].ShortTermStorageReserves->at(0)
+           .reserveParticipationOfCluster->at(0);
     solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[directFlowLink0] = &problem.ValeursDeNTC[0]
                                                                                .ValeurDuFlux[0];
     solved.AdresseOuPlacerLaValeurDesCoutsMarginaux[balanceArea1] = &problem.ResultatsHoraires[0]
@@ -1272,6 +1284,27 @@ BOOST_AUTO_TEST_CASE(post_process_dump_reads_results_mutated_after_the_solve)
     const auto price = FindRow(table, "price", "area1_node");
     BOOST_REQUIRE(price.has_value());
     BOOST_CHECK_CLOSE(price->value, 9500., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(post_process_dump_uses_published_reserve_participation)
+{
+    wireResultAddresses(problem);
+
+    problem.ResultatsHoraires[0].HydroUsage[0].reserveParticipationOfCluster->at(0) = 11.;
+    problem.ResultatsHoraires[1].ShortTermStorageReserves->at(0)
+      .reserveParticipationOfCluster->at(0) = 13.;
+
+    DumpSimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
+
+    const auto hydro = FindRow(table, "reserve_participation_cost_Res_1", "area1_hydro_storage");
+    BOOST_REQUIRE(hydro.has_value());
+    BOOST_CHECK_CLOSE(hydro->value, 5. * 11., 1e-9);
+
+    const auto storage = FindRow(table,
+                                 "reserve_participation_cost_Res_Down",
+                                 "area2_short_term_storage_battery1");
+    BOOST_REQUIRE(storage.has_value());
+    BOOST_CHECK_CLOSE(storage->value, 25. * 13., 1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(post_process_dump_leaves_the_solver_state_untouched)

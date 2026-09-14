@@ -526,30 +526,26 @@ void LegacyExtraOutputEmitter::reserveOutputs(uint32_t pays, int pdt)
 
         for (const auto& [clusterId, stsPart]: reserve.AllSTStorageReservesParticipation)
         {
-            const int storeVar = variableManager_.STStorageStoreClusterReserveParticipation(
-              stsPart.globalIndexClusterParticipation,
-              pdt);
-            const int releaseVar = variableManager_.STStorageReleaseClusterReserveParticipation(
+            const int participationVar = variableManager_.STStorageClusterReserveParticipation(
+              reserve.type,
               stsPart.globalIndexClusterParticipation,
               pdt);
             emit(reserveParticipationOutput,
                  area + "_short_term_storage_" + stsPart.clusterName,
                  pdt,
-                 stsPart.participationCost * (x(storeVar) + x(releaseVar)));
+                 stsPart.participationCost * x(participationVar));
         }
 
         for (const auto& hydroPart: reserve.AllHydroReservesParticipation)
         {
-            const int storeVar = variableManager_.HydroStoreReserveParticipation(
-              hydroPart.globalIndexClusterParticipation,
-              pdt);
-            const int releaseVar = variableManager_.HydroReleaseReserveParticipation(
+            const int participationVar = variableManager_.HydroReserveParticipation(
+              reserve.type,
               hydroPart.globalIndexClusterParticipation,
               pdt);
             emit(reserveParticipationOutput,
                  hydroStorageNames_[pays],
                  pdt,
-                 hydroPart.participationCost * (x(storeVar) + x(releaseVar)));
+                 hydroPart.participationCost * x(participationVar));
         }
     }
 }
