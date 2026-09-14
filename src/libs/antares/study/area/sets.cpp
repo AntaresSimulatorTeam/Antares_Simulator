@@ -229,9 +229,8 @@ bool Sets::loadFromFile(const std::filesystem::path& filename)
             {
                 return;
             }
-            logs.info() << "sets: district `" << name << "`: " << report << " granularities = "
-                        << (filter == filterNone ? std::string("none")
-                                                 : datePrecisionIntoString(filter));
+            logs.info() << "sets: district `" << name << "`: " << report
+                        << " granularities = " << datePrecisionIntoString(filter);
         };
         for (const auto& [name, options]: pOptions)
         {
