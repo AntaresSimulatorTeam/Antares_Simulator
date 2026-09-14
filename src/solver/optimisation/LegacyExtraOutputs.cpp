@@ -504,7 +504,7 @@ void LegacyExtraOutputEmitter::reserveOutputs(uint32_t pays, int pdt)
              pdt,
              reserve.spillageCost * x(excess) + reserve.unsuppliedCost * x(unsatisfied));
 
-        for (const auto& [clusterId, thermalPart]: reserve.AllThermalReservesParticipation)
+        for (const auto& [_, thermalPart]: reserve.AllThermalReservesParticipation)
         {
             const int runningVar = variableManager_.RunningThermalClusterReserveParticipation(
               thermalPart.globalIndexClusterParticipation,
@@ -524,7 +524,7 @@ void LegacyExtraOutputEmitter::reserveOutputs(uint32_t pays, int pdt)
                  val);
         }
 
-        for (const auto& [clusterId, stsPart]: reserve.AllSTStorageReservesParticipation)
+        for (const auto& [_, stsPart]: reserve.AllSTStorageReservesParticipation)
         {
             const int participationVar = variableManager_.STStorageClusterReserveParticipation(
               reserve.type,
