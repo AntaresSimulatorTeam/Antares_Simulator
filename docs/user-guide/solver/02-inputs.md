@@ -131,6 +131,16 @@ c) A special "output" parameter that defines whether the results for the distric
 (this latter option allows inactivating parts of the sets.ini without altering the file).  
 The syntax is: `output=false` or `output= true`.
 
+d) Two optional parameters, `filter-synthesis` and `filter-year-by-year`, that restrict the **time granularities** exported for the district, separately for the synthesis report (`mc-all`) and the year-by-year report (`mc-ind`). Each value is a list (separated by commas and/or spaces) of granularities:
+
+- `hourly`
+- `daily`
+- `weekly`
+- `monthly`
+- `annual`
+
+Only the listed granularities are written for the district (e.g. `values-hourly.txt`, `values-daily.txt`, …). Unknown tokens are ignored. If a key is missing, the default behavior is kept: all granularities are exported. Writing the key with no valid token (e.g. `filter-synthesis = none`) means that the district output is skipped entirely for that report. These keys use the same syntax and semantics as the `filter-synthesis` / `filter-year-by-year` keys of areas and links.
+
 **EXAMPLES OF SETS.INI FILES**
 
 a) File defining a single district named "set1" involving three areas named "area1, area3, area42":
@@ -169,39 +179,14 @@ apply-filter = add-all
 output=false
 ```
 
-### Optional file: sets-outputs.yaml (district output granularities)
+d) File restricting the exported granularities of a district: only the annual synthesis results are exported for the "all system" district, while its year-by-year results are restricted to hourly and daily. All other districts keep the default (all granularities):
 
-The `sets.ini` file defines which districts are computed. An optional `sets-outputs.yaml` file goes further: it allows restricting the **time granularities** exported for each district, separately for the synthesis report (`mc-all`) and the year-by-year report (`mc-ind`).
-
-**WHERE TO FIND / STORE THE FILE** : INPUT/areas/sets-outputs.yaml
-
-If the file is missing, or if a district (or one of its two report types) is not listed in it, the default behavior is kept: all granularities are exported.
-
-**PRINCIPLE:**
-
-The file is a YAML mapping. Each top-level key is a district id (case-insensitive, as in sets.ini). Each district entry takes two optional keys, `mc-all` and `mc-ind`, whose value is a YAML sequence of granularities:
-
-- `hourly`
-- `daily`
-- `weekly`
-- `monthly`
-- `annual`
-
-Only the listed granularities are written for the district (e.g. `values-hourly.txt`, `values-daily.txt`, …). Unknown tokens are ignored. Note that, as with the area/link filters, omitting the key (or the file) means "all granularities" — writing no token at all means "no granularity".
-
-**EXAMPLE:**
-
-```yaml
-# Only annual results for the "all system" district in the synthesis report
-all-system:
-  mc-all:
-    - annual
-
-# Year-by-year results restricted to hourly and daily
-region-1:
-  mc-ind:
-    - hourly
-    - daily
+```ini
+[all system]
+apply-filter = add-all
+output = true
+filter-synthesis = annual
+filter-year-by-year = hourly, daily
 ```
 
 ## Load

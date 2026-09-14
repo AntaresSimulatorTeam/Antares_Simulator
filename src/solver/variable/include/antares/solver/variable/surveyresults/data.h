@@ -52,9 +52,10 @@ public:
     Data::Study::SetsOfAreas::IDType setOfAreasName;
 
     //! Mask of precisions (bitmask of Category::Precision) to write for the current
-    //! report. Only used for sets of areas (districts): a district listed in
-    //! sets-outputs.yaml only gets the selected granularities exported. Defaults to
-    //! all granularities (default behavior for areas, links and unfiltered districts).
+    //! report. Only used for sets of areas (districts): a district with the
+    //! `filter-synthesis` / `filter-year-by-year` keys in sets.ini only gets the
+    //! selected granularities exported. Defaults to all granularities (default
+    //! behavior for areas, links and unfiltered districts).
     unsigned int setOfAreasPrecisionFilter = Data::filterAll;
 
     //! The current study

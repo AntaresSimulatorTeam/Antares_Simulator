@@ -179,13 +179,6 @@ public:
     bool loadFromFile(const std::filesystem::path& filename);
 
     //!\n
-    //! \brief Load per-district output precisions from a YAML file
-    //!
-    //! The file is optional: if it does not exist, the default behavior is kept
-    //! (all precisions are exported for every district).
-    bool loadOutputPrecisionsFromFile(const std::filesystem::path& filename);
-
-    //!\n
     //! \brief Retrieve the output filter of a district for a given report type
     //!
     //! \param id The district id

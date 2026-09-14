@@ -291,13 +291,6 @@ bool Study::internalLoadSets()
         SetHandlerAreas handler(areas);
         setsOfAreas.rebuildAllFromRules(handler);
 
-        // Load the optional per-district output precisions
-        // (granularities to export per district and per report type)
-        if (!setsOfAreas.loadOutputPrecisionsFromFile(setPath.parent_path() / "sets-outputs.yaml"))
-        {
-            logs.warning() << "Impossible to load the sets of areas output precisions";
-        }
-
         // Write the results into the logs
         setsOfAreas.dumpToLogs();
         return true;

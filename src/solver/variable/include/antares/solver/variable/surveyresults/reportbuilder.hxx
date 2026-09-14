@@ -470,9 +470,9 @@ private:
             results.data.output = path.string();
             results.data.setOfAreasName = setName;
 
-            // Per-district granularity filter (sets-outputs.yaml): if no granularity is
-            // selected for the current report type, skip the district directory (same
-            // behavior as for areas).
+            // Per-district granularity filter (filter-synthesis / filter-year-by-year keys of
+            // sets.ini): if no granularity is selected for the current report type, skip the
+            // district directory (same behavior as for areas).
             const unsigned int filter = sets.outputFilter(setName, GlobalT);
             if (filter == Data::filterNone)
             {
