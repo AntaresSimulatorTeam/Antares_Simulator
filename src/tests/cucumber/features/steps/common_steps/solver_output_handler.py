@@ -51,6 +51,29 @@ class solver_output_handler:
         assert absolute_path.exists(), f"Path %s does not exist." % absolute_path
         return pd.read_csv(absolute_path, header=[0, 1], skiprows=ignore_rows, sep='\t', low_memory=False)
 
+    # --- generic mc-ind hourly accessors -------------------------------------
+    # These expose whole mc-ind hourly files (2-level column header, one row per
+    # hour, row i == absolute_time_index i) so callers can pull an arbitrary
+    # column without a dedicated getter. Used by the legacy <-> simulation-table
+    # equivalence checks (simulation_table_equivalence.py).
+
+    def area_values_hourly(self, area: str, year: int) -> pd.DataFrame:
+        return self.__read_csv(f"{self.mode}/mc-ind/{year:05d}/areas/{area.lower()}/values-hourly.txt")
+
+    def area_details_hourly(self, area: str, year: int) -> pd.DataFrame:
+        return self.__read_csv(f"{self.mode}/mc-ind/{year:05d}/areas/{area.lower()}/details-hourly.txt")
+
+    def area_sts_details_hourly(self, area: str, year: int) -> pd.DataFrame:
+        return self.__read_csv(
+            f"{self.mode}/mc-ind/{year:05d}/areas/{area.lower()}/details-STstorage-hourly.txt")
+
+    def link_values_hourly(self, link_dir: str, year: int) -> pd.DataFrame:
+        # link_dir is the on-disk folder name, e.g. "east - west"
+        return self.__read_csv(f"{self.mode}/mc-ind/{year:05d}/links/{link_dir}/values-hourly.txt")
+
+    def has_mc_ind_year(self, year: int) -> bool:
+        return (Path(self.study_output_path) / self.mode / "mc-ind" / f"{year:05d}").is_dir()
+
 
     def __if_none_then_parse(self, rs: result_type, area, year, file_name: str):
         if self.hourly_results[rs] is None:
