@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <sstream>
+#include <string_view>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/io/inputs/InputError.h"
@@ -122,6 +123,30 @@ void CheckPortsType(const Port& firstPort, const Port& secondPort)
     }
 }
 
+void CheckFieldsRoleCompatibility(const Port& port_1,
+                                  const Port& port_2,
+                                  std::string_view componentId_1,
+                                  std::string_view componentId_2)
+{
+    for (const auto& field: port_1.Type().Fields())
+    {
+        const auto portFieldRole_1 = port_1.fieldRole(field.Id());
+        const auto portFieldRole_2 = port_2.fieldRole(field.Id());
+
+        if (portFieldRole_1 == portFieldRole_2)
+        {
+            throw InputError(fmt::format("In connection between components '{}' and '{}': Field "
+                                         "'{}' is {} in both ports '{}' and '{}'",
+                                         componentId_1,
+                                         componentId_2,
+                                         field.Id(),
+                                         portFieldRole_1,
+                                         port_1.Id(),
+                                         port_2.Id()));
+        }
+    }
+}
+
 /**
  * @brief Uses a YmlSystem::Connection to connect component via ports
  *
@@ -156,6 +181,8 @@ void connectComponents(const YmlSystem::Connection& connection, std::vector<Comp
     auto& component_2 = findComponent(componentId_2, components);
     const auto& port_2 = component_2.findPort(portId_2, "");
     CheckPortsType(port_1, port_2);
+
+    CheckFieldsRoleCompatibility(port_1, port_2, componentId_1, componentId_2);
 
     // TODO : Do we need to connect both components to one another ?
     // TODO : Or should we rather consider the field role and only connect receiver to the sender ?

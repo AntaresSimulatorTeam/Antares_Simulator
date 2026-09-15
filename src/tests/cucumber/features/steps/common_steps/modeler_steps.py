@@ -7,6 +7,7 @@ import math
 import os
 import subprocess
 
+import yaml
 from behave import *
 from common_steps.assertions import *
 from common_steps.invest_problems import read_invest_problems
@@ -59,6 +60,14 @@ def modeler_output_values_with_tolerance(context, tolerance):
     check_simulation_table_content(context, context.simu_table, tolerance)
 
 
+@then('no simulation table is expected')
+def no_simulation_table_expected(context):
+    # Benders-decomposition studies do not produce a simulation table. Make that contract
+    # explicit here instead of leaving a later step to fail with an AttributeError on
+    # context.simu_table.
+    assert getattr(context, "simu_table", None) is None, \
+        f"Expected no simulation table, but one is present: {getattr(context, 'simu_table', None)}"
+
 @step('the modeler outputs from stage "{stage}" contain the following entries')
 def modeler_output_values_for_stage(context, stage):
     check_simulation_table_content(context, read_stage_simulation_table(context, stage), 1e-6)
@@ -88,6 +97,15 @@ def read_stage_simulation_table(context, stage) -> SimulationTable:
     reader_factory = make_simu_table_reader(output_path, OutputFormat.CSV, file_pattern)
     return SimulationTable(reader_factory())
 
+
+@step('the simulation tables are written for the following scenarios')
+def simulation_tables_written_per_scenario(context):
+    output_path = Path(parse_output_folder_from_logs(context.logs_out))
+    output_format = getattr(context, "outputFormat", OutputFormat.CSV)
+    for row in context.table:
+        scenario = int(row["scenario"])
+        expected = output_path / f"simulation-table-{scenario}.{output_format.value}"
+        assert expected.exists(), f"Missing simulation table for scenario {scenario}: {expected}"
 
 @step('the modeler outputs contain no entries for component "{component}"')
 def modeler_output_has_no_entries_for_component(context, component):
@@ -190,18 +208,40 @@ def run_executable(context, command) -> bool:
         return False
     return True
 
+def _read_resolution_mode(context):
+    """Read the resolution-mode from the study's optim-config.yml (None if absent)."""
+    optim_config_path = Path(context.study_path) / "input" / "optim-config.yml"
+    if not optim_config_path.exists():
+        return None
+    with open(optim_config_path, "r") as f:
+        config = yaml.safe_load(f)
+    if not isinstance(config, dict):
+        return None
+    return config.get("resolution-mode")
+
+
+def _uses_benders_decomposition(context):
+    return _read_resolution_mode(context) == "benders-decomposition"
+
+
 def run_modeler(context):
     modeler_cmd = build_antares_modeler_command(context)
     if not run_executable(context, modeler_cmd):
         return
 
-    output_format = getattr(context, "outputFormat", OutputFormat.CSV)
-    file_pattern = f"simulation-table*.{output_format.value}"
     output_path = Path(parse_output_folder_from_logs(context.logs_out))
-    reader_factory = make_simu_table_reader(output_path, output_format, file_pattern)
-    context.simu_table = SimulationTable(reader_factory())
 
-    context.invest_pb = read_invest_problems(Path(parse_output_folder_from_logs(context.logs_out)))
+    # Benders decomposition studies do not generate a simulation table, so
+    # skip reading it to avoid a FileNotFoundError.
+    if _uses_benders_decomposition(context):
+        context.simu_table = None
+    else:
+        output_format = getattr(context, "outputFormat", OutputFormat.CSV)
+        file_pattern = f"simulation-table*.{output_format.value}"
+        reader_factory = make_simu_table_reader(output_path, output_format, file_pattern)
+        context.simu_table = SimulationTable(reader_factory())
+
+    context.invest_pb = read_invest_problems(output_path)
 
 
 def run_problem_generator(context):
