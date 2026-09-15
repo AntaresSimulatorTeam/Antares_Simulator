@@ -339,16 +339,20 @@ BOOST_AUTO_TEST_CASE(loader_parses_filters_per_district)
                                                "filter-year-by-year = weekly, monthly\n");
 
     // unknown token ignored
-    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", false),
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", Sets::ReportType::yearByYear),
                       filterHourly | filterDaily);
-    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", true), filterAnnual);
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", Sets::ReportType::synthesis),
+                      filterAnnual);
     // none => empty filter (no granularity exported)
-    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-2", true), 0);
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-2", Sets::ReportType::synthesis),
+                      0);
     // valid INI value is parsed into the corresponding mask
-    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-2", false),
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-2", Sets::ReportType::yearByYear),
                       filterWeekly | filterMonthly);
     // district not defined in the sets.ini => no restriction
-    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("no-such-district", true), filterAll);
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("no-such-district",
+                                                      Sets::ReportType::synthesis),
+                      filterAll);
 }
 
 BOOST_AUTO_TEST_CASE(districts_without_filter_keys_keep_defaults)
@@ -357,8 +361,10 @@ BOOST_AUTO_TEST_CASE(districts_without_filter_keys_keep_defaults)
                                                "+ = area1\n"
                                                "output = true\n");
 
-    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", true), filterAll);
-    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", false), filterAll);
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", Sets::ReportType::synthesis),
+                      filterAll);
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", Sets::ReportType::yearByYear),
+                      filterAll);
 }
 
 BOOST_AUTO_TEST_CASE(mc_all_precision_filter_only_hourly)

@@ -255,14 +255,15 @@ void Sets::rebuildAllFromRules(SetHandlerAreas& handler)
     }
 }
 
-unsigned int Sets::outputFilter(const IDType& id, bool synthesis) const
+unsigned int Sets::outputFilter(const IDType& id, ReportType report) const
 {
     const auto pair = pOptions.find(id);
     if (pair == pOptions.end())
     {
         return filterAll;
     }
-    return synthesis ? pair->second.filterSynthesis : pair->second.filterYearByYear;
+    return report == ReportType::synthesis ? pair->second.filterSynthesis
+                                           : pair->second.filterYearByYear;
 }
 
 void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)

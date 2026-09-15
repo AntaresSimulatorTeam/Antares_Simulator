@@ -473,7 +473,9 @@ private:
             // Per-district granularity filter (filter-synthesis / filter-year-by-year keys of
             // sets.ini): if no granularity is selected for the current report type, skip the
             // district directory (same behavior as for areas).
-            const unsigned int filter = sets.outputFilter(setName, GlobalT);
+            const auto reportType = GlobalT ? Data::Sets::ReportType::synthesis
+                                            : Data::Sets::ReportType::yearByYear;
+            const unsigned int filter = sets.outputFilter(setName, reportType);
             if (filter == Data::filterNone)
             {
                 continue;

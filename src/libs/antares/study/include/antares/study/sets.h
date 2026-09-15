@@ -49,6 +49,13 @@ public:
         ruleMax,
     };
 
+    //! The type of output report for which a district granularity filter applies
+    enum class ReportType
+    {
+        synthesis,  //!< Synthesis report (mc-all)
+        yearByYear, //!< Year-by-year report (mc-ind)
+    };
+
     //! Definition of a single rule
     using Rule = std::pair<RuleType, std::string>;
     //! Rule Set
@@ -182,11 +189,10 @@ public:
     //! \brief Retrieve the output filter of a district for a given report type
     //!
     //! \param id The district id
-    //! \param synthesis true for the synthesis report (mc-all), false for the
-    //! year-by-year report (mc-ind)
+    //! \param report The report type (synthesis or year-by-year)
     //! \return The bitmask of FilterFlag of the granularities to export.
     //! filterAll means no restriction (all granularities are exported).
-    unsigned int outputFilter(const IDType& id, bool synthesis) const;
+    unsigned int outputFilter(const IDType& id, ReportType report) const;
 
     /*!
     ** \brief format the string to match the options
