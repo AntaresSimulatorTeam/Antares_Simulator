@@ -19,7 +19,9 @@ void ScenarioGroupRepository::addScenario(const std::string& groupId,
     scenarioGroups_[gId] = std::move(scenario);
 }
 
-class DefaultScenario final: public LinearProblem::Api::IScenario
+namespace
+{
+class DefaultScenario final: public Api::IScenario
 {
 public:
     using IScenario::IScenario;
@@ -28,7 +30,13 @@ public:
     {
         return 1; // Default rank for empty groupId
     }
+
+    [[nodiscard]] bool hasYear(Year) const override
+    {
+        return true;
+    };
 };
+} // namespace
 
 const Api::IScenario& ScenarioGroupRepository::scenario(const std::string& groupId) const
 {
