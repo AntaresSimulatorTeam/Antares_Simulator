@@ -12,7 +12,10 @@ class check_mps_existence(check_interface):
     def run(self):
         for item in self.checks_on_weeks:
             for week in item.weeks:
-                mps_file_to_find = "problem-"+ str(item.year) + "-" + str(week)+ "--optim-nb-1.mps"
+                # Study checks use one-based year/week labels; MPS names use
+                # the simulator's zero-based indices.
+                mps_file_to_find = "problem-" + str(item.year - 1) + "-" + str(week - 1) \
+                    + "--optim-nb-1.mps"
                 if len(list(self.output_path.rglob(mps_file_to_find))) != 1:
                     raise_assertion("'" + mps_file_to_find + "'" + " not found in output directory")
 
