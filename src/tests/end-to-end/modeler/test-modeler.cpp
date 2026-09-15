@@ -180,9 +180,9 @@ public:
 
     void addScenario(const std::string& str, int year, int timeSeriesNumber)
     {
-        auto [it,
-              inserted] = pendingScenarios_.try_emplace(str,
-                                                        std::make_unique<DataImpl::Scenario>(str));
+        auto [it, inserted] = pendingScenarios_.try_emplace(str,
+                                                            std::make_unique<DataImpl::Scenario>(
+                                                              str));
         it->second->setTimeSerieNumber(year, timeSeriesNumber);
     }
 
