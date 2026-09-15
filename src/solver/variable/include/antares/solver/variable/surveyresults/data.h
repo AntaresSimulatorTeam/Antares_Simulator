@@ -51,13 +51,6 @@ public:
     //! The identifier for the current set of areas
     Data::Study::SetsOfAreas::IDType setOfAreasName;
 
-    //! Mask of precisions (bitmask of Category::Precision) to write for the current
-    //! report. Only used for sets of areas (districts): a district with the
-    //! `filter-synthesis` / `filter-year-by-year` keys in sets.ini only gets the
-    //! selected granularities exported. Defaults to all granularities (default
-    //! behavior for areas, links and unfiltered districts).
-    unsigned int setOfAreasPrecisionFilter = Data::filterAll;
-
     //! The current study
     const Data::Study& study;
     //! The number of MC years
