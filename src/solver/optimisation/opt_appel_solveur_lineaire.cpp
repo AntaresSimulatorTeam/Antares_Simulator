@@ -188,7 +188,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                                                  : nullptr;
     // Heap-allocated so it can outlive this call: a post-process simulation
     // table re-emits the modeler rows through it, long after the solve.
-        problemeHebdo->ortoolsProblem_ = ortoolsProblem;
+    problemeHebdo->ortoolsProblem_ = ortoolsProblem;
     problemeHebdo->optimEntityContainer = std::make_shared<OptimEntityContainer>(*ortoolsProblem);
     auto& optimEntityContainer = *problemeHebdo->optimEntityContainer;
 
@@ -253,10 +253,10 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     {
         problemeHebdo->lastSolvedModelerProblem = std::make_shared<
           const Antares::Optimization::SolvedModelerProblem>(
-          Antares::Optimization::SolvedModelerProblem{.problem = ortoolsProblem,
-                                                      .entities = problemeHebdo->optimEntityContainer,
-                                                      .objectiveValue = getObjectiveValue(
-                                                        solver.get())});
+          Antares::Optimization::SolvedModelerProblem{
+            .problem = ortoolsProblem,
+            .entities = problemeHebdo->optimEntityContainer,
+            .objectiveValue = getObjectiveValue(solver.get())});
     }
 
     if (simulationTable)
@@ -304,10 +304,10 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         // passes, so what survives is the last one actually run.
         problemeHebdo->lastSolvedModelerProblem = std::make_shared<
           const Antares::Optimization::SolvedModelerProblem>(
-          Antares::Optimization::SolvedModelerProblem{.problem = ortoolsProblem,
-                                                      .entities = problemeHebdo->optimEntityContainer,
-                                                      .objectiveValue = getObjectiveValue(
-                                                        solver.get())});
+          Antares::Optimization::SolvedModelerProblem{
+            .problem = ortoolsProblem,
+            .entities = problemeHebdo->optimEntityContainer,
+            .objectiveValue = getObjectiveValue(solver.get())});
 
         measure.tick();
         timeMeasure.simulationTableFillTime = measure.duration_ms();
