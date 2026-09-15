@@ -3,6 +3,8 @@
 
 #include "antares/solver/modeler/Modeler.h"
 
+#include <algorithm>
+#include <fmt/format.h>
 #include <fstream>
 #include <stdexcept>
 
@@ -83,12 +85,53 @@ Modeler::Modeler(ILoader& loader, fs::path ouputPath, TableFormat tableFormat):
     // (ModelerData contains unique_ptr members and is move-only).
     data_ = std::move(*data);
 
-    timeScenarioCtx_ = std::make_unique<FillContext>(
-      parameters_.firstTimeStep,
-      parameters_.lastTimeStep,
-      parameters_.firstTimeStep, // global = local, single time block in pure modeler (for now)
-      parameters_.lastTimeStep,  // global = local
-      0);
+    scenarios_ = resolveScenarioScopeScenarios(data_.scenarioScope);
+    validateScenariosAgainstScenarioBuilder();
+    logs.info() << fmt::format("Number of Monte-Carlo scenarios to simulate: {}",
+                               scenarios_.size());
+}
+
+void Modeler::validateScenariosAgainstScenarioBuilder() const
+{
+    // Validate per component: a component with an empty scenario group id uses the default
+    // scenario (always valid), and an unknown group is reported by
+    // ScenarioGroupRepository::scenario() when the problems are built. Each component is
+    // only required to have its own scenario group cover the selected years; other groups
+    // used by different components are independent.
+    std::vector<std::string> invalidEntries;
+    for (const auto& component: data_.system->Components())
+    {
+        const auto& groupId = component.getScenarioGroupId();
+        if (groupId.empty() || !data_.scenarioGroupRepository.contains(groupId))
+        {
+            continue;
+        }
+        const auto& scenario = data_.scenarioGroupRepository.scenario(groupId);
+        for (const auto year: scenarios_)
+        {
+            if (!scenario.hasYear(year))
+            {
+                invalidEntries.push_back(
+                  fmt::format("scenario {} (no time series in scenario group '{}' used by "
+                              "component '{}')",
+                              year,
+                              scenario.group(),
+                              component.Id()));
+            }
+        }
+    }
+    if (!invalidEntries.empty())
+    {
+        std::string joined = invalidEntries.front();
+        for (std::size_t i = 1; i < invalidEntries.size(); ++i)
+        {
+            joined += ", " + invalidEntries[i];
+        }
+        throw ModelerError(fmt::format(
+          "scenario-scope selection is not valid: the following scenario indices are not defined "
+          "in the scenario builder (modeler-scenariobuilder.dat): {}",
+          joined));
+    }
 }
 
 class SystemLinearProblemBuilder final
@@ -170,6 +213,11 @@ LocationAnalysis analyzeLocation(const ModelerData& data, const Config::Location
     return result;
 }
 
+std::string makeProblemId(unsigned year)
+{
+    return std::to_string(year) + "-0";
+}
+
 std::unique_ptr<ILinearProblem> getProblem(bool isMip,
                                            const ResolutionMode& resolutionMode,
                                            const std::optional<std::string>& solver)
@@ -213,13 +261,12 @@ ProblemEntity buildProblem(const ModelerData& data,
     return {std::move(problem), (std::move(optimEntityContainer))};
 }
 
-IMipSolution* Modeler::solveSubproblem()
+IMipSolution* Modeler::solveSubproblem(ILinearProblem& subproblem)
 {
     Utils::TimeMeasurement measure;
     logs.info() << "Launching resolution...";
     measure.reset();
-    auto& subproblem_1_1 = subproblems_[0];
-    auto* solution = subproblem_1_1->solve(parameters_.solverLogs);
+    auto* solution = subproblem.solve(parameters_.solverLogs);
     measure.tick();
     logs.info() << "Solved in " << measure.toStringInSeconds();
     return solution;
@@ -230,18 +277,15 @@ IMipSolution* Modeler::subProbSolution()
     return subProbSolution_;
 }
 
-SimulationTable Modeler::makeSimulationTable(
+SimulationTable& Modeler::fillSimulationTable(
+  SimulationTable& simulationTable,
   const IMipSolution* solution,
+  const ILinearProblem& subproblem,
   const OptimEntityContainer& subproblemOptimEntityContainer,
   const FillContext& timeScenarioCtx) const
 {
-    // gp : subproblem_1_1 is defined the same way in multiple places
-    auto& subproblem_1_1 = subproblems_[0];
-
-    SimulationTable simulationTable;
-
     FillSimulationTable(simulationTable,
-                        *subproblem_1_1,
+                        subproblem,
                         solution->getObjectiveValue(),
                         data_,
                         subproblemOptimEntityContainer,
@@ -251,20 +295,30 @@ SimulationTable Modeler::makeSimulationTable(
     return simulationTable;
 }
 
-void Modeler::exportMps() const
+void Modeler::buildProblemsAndWriteMps()
 {
-    // 1-1.mps
-    if (auto& subproblem_1_1 = subproblems_[0])
+    buildProblems();
+    for (std::size_t i = 0; i < subproblems_.size(); ++i)
     {
-        const auto mps = IO::Outputs::MPSGenerator(*subproblem_1_1, "1-1", true).run();
-        Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / "1-1.mps", mps);
+        auto& subproblem = subproblems_[i];
+        if (!subproblem)
+        {
+            continue;
+        }
+        const auto name = makeProblemId(scenarios_[i]);
+        const auto mps = IO::Outputs::MPSGenerator(*subproblem, name, true).run();
+        Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / (name + ".mps"), mps);
     }
-    // master.mps
     if (masterProblem_)
     {
         const auto mps = IO::Outputs::MPSGenerator(*masterProblem_, "master", true).run();
         Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / "master.mps", mps);
+
+        logs.info() << "Master number of variables: " << masterProblem_->variableCount();
+        logs.info() << "Master number of constraints: " << masterProblem_->constraintCount();
     }
+
+    exportStructureFile();
 }
 
 void Modeler::exportStructureFile() const
@@ -275,77 +329,173 @@ void Modeler::exportStructureFile() const
     writer.write(of);
 }
 
-void Modeler::buildProblems()
+ProblemEntity Modeler::buildSubProblem(unsigned year)
 {
-    Utils::TimeMeasurement measure;
-
-    logs.info() << "linear problem of System loaded";
-
-    buildMasterProblem();
-    buildSubProblem();
-
-    logs.info() << "Linear problem provided";
-
-    auto& subproblem_1_1 = subproblems_[0];
-    logs.info() << "Number of variables: " << subproblem_1_1->variableCount();
-    logs.info() << "Number of constraints: " << subproblem_1_1->constraintCount();
-
-    measure.tick();
-    logs.info();
-    logs.info() << "Modeler build took " << measure.toStringInSeconds();
+    return buildProblem(data_,
+                        Config::Location::SUBPROBLEMS,
+                        makeProblemId(year),
+                        &data_.bendersDecomposition,
+                        createFillContext(year),
+                        data_.resolutionMode,
+                        parameters_.solver);
 }
 
 void Modeler::buildMasterProblem()
 {
+    auto masterFillContext = createFillContext(0); // master is scenario-independent
     auto masterEntities = buildProblem(data_,
                                        Config::Location::MASTER,
                                        "master",
                                        &data_.bendersDecomposition,
-                                       *timeScenarioCtx_,
+                                       masterFillContext,
                                        ResolutionMode::BENDERS_DECOMPOSITION,
                                        std::nullopt);
     masterProblem_ = std::move(masterEntities.problem);
 }
 
-void Modeler::buildSubProblem()
+FillContext Modeler::createFillContext(unsigned year) const
 {
-    auto [subproblem, subproblemOptimEntityContainer] = buildProblem(data_,
-                                                                     Config::Location::SUBPROBLEMS,
-                                                                     "1-1",
-                                                                     &data_.bendersDecomposition,
-                                                                     *timeScenarioCtx_,
-                                                                     data_.resolutionMode,
-                                                                     parameters_.solver);
-    subproblems_.emplace_back(std::move(subproblem));
-    subproblemOptimEntityContainer_ = std::move(subproblemOptimEntityContainer);
+    return FillContext(
+      parameters_.firstTimeStep,
+      parameters_.lastTimeStep,
+      parameters_.firstTimeStep, // global = local, single time block in pure modeler (for now)
+      parameters_.lastTimeStep,  // global = local
+      year);
+}
+
+void Modeler::buildProblems()
+{
+    subproblems_.clear();
+    subproblemOptimEntityContainers_.clear();
+    Utils::TimeMeasurement measure;
+
+    logs.info() << "linear problem of System loaded";
+
+    buildMasterProblem();
+
+    for (const unsigned year: scenarios_)
+    {
+        auto entities = buildSubProblem(year);
+        subproblems_.emplace_back(std::move(entities.problem));
+        subproblemOptimEntityContainers_.emplace_back(std::move(entities.optimEntityContainer));
+    }
+
+    measure.tick();
+    logs.info();
+    logs.info() << "Modeler build took " << measure.toStringInSeconds();
+
+    // A scenario whose components expose no variable at the subproblem location yields a
+    // null problem (see buildProblem). Count only the non-null problems and read the
+    // statistics from the first one, never from an entry that may be null.
+    const auto firstNonNull = std::find_if(subproblems_.begin(),
+                                           subproblems_.end(),
+                                           [](const auto& problem) { return problem != nullptr; });
+    const std::size_t nonNullCount = std::count_if(subproblems_.begin(),
+                                                   subproblems_.end(),
+                                                   [](const auto& problem)
+                                                   { return problem != nullptr; });
+
+    if (nonNullCount == 0)
+    {
+        logs.warning()
+          << "No subproblem was built. Check your scenario-scope and modeler parameters.";
+    }
+    else
+    {
+        logs.info() << "Number of subproblems built: " << nonNullCount;
+        logs.info() << "Number of variables: " << firstNonNull->get()->variableCount();
+        logs.info() << "Number of constraints: " << firstNonNull->get()->constraintCount();
+    }
 }
 
 void Modeler::run()
 {
-    buildProblems();
-    if (parameters_.exportMps)
+    if (data_.resolutionMode == ResolutionMode::BENDERS_DECOMPOSITION)
     {
-        exportMps();
-        exportStructureFile();
-    }
-    if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
-    {
-        subProbSolution_ = solveSubproblem();
-        if (!checkSolution(subProbSolution_))
+        if (!parameters_.exportMps)
         {
-            return;
+            logs.error() << "Resolution mode is benders-decomposition but exportMps is false. No "
+                            "resolution will be performed and no problem will be exported.";
+            throw ModelerError("Conflicting parameters: benders-decomposition and exportMps");
         }
 
-        if (!parameters_.noOutput)
-        {
-            auto simulationTable = makeSimulationTable(subProbSolution_,
-                                                       *subproblemOptimEntityContainer_,
-                                                       *timeScenarioCtx_);
+        buildProblemsAndWriteMps();
+    }
+    else if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
+    {
+        buildMasterProblem();
 
-            auto outputFile = outputPath_ / "simulation-table";
-            SimulationTableWriter writer(outputFile, tableFormat_);
-            writer.writeTable(simulationTable);
-            logs.info() << "Simulation table is written in: " << outputFile.string();
+        bool masterMpsWritten = false;
+        for (const unsigned year: scenarios_)
+        {
+            auto fillContext = createFillContext(year);
+            auto entities = buildSubProblem(year);
+
+            if (!entities.problem)
+            {
+                logs.warning() << fmt::format("No subproblem was built for scenario {}: skipping",
+                                              year);
+                continue;
+            }
+
+            logs.info() << "Number of variables: " << entities.problem->variableCount();
+            logs.info() << "Number of constraints: " << entities.problem->constraintCount();
+
+            if (parameters_.exportMps)
+            {
+                const auto name = makeProblemId(year);
+                const auto mps = IO::Outputs::MPSGenerator(*entities.problem, name, true).run();
+                Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / (name + ".mps"), mps);
+
+                if (!masterMpsWritten && masterProblem_)
+                {
+                    const auto masterMps = IO::Outputs::MPSGenerator(*masterProblem_,
+                                                                     "master",
+                                                                     true)
+                                             .run();
+                    Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / "master.mps",
+                                                               masterMps);
+                    masterMpsWritten = true;
+                }
+            }
+
+            logs.info() << "Solving scenario " << year;
+            subProbSolution_ = solveSubproblem(*entities.problem);
+
+            // solve() returns a solution owned by the subproblem (see ILinearProblem::solve),
+            // so retain the problem right away: subProbSolution_ is only valid while its
+            // owning subproblem is alive. Keeping only the most recent subproblem in memory
+            // also guarantees the invariant on every exit path, including the early return
+            // below: subProbSolution_ is either null or points into a problem held in
+            // subproblems_.
+            subproblems_.clear();
+            subproblemOptimEntityContainers_.clear();
+            subproblems_.emplace_back(std::move(entities.problem));
+            subproblemOptimEntityContainers_.emplace_back(std::move(entities.optimEntityContainer));
+
+            if (!checkSolution(subProbSolution_))
+            {
+                return;
+            }
+
+            auto& problem = *subproblems_.back();
+            auto& optimEntityContainer = *subproblemOptimEntityContainers_.back();
+
+            if (!parameters_.noOutput)
+            {
+                SimulationTable simulationTable;
+                fillSimulationTable(simulationTable,
+                                    subProbSolution_,
+                                    problem,
+                                    optimEntityContainer,
+                                    fillContext);
+
+                auto outputFile = outputPath_ / ("simulation-table-" + std::to_string(year));
+                SimulationTableWriter writer(outputFile, tableFormat_);
+                writer.writeTable(simulationTable);
+                logs.info() << "Simulation table of scenario " << year
+                            << " is written in: " << writer.outputFile().string();
+            }
         }
     }
 }

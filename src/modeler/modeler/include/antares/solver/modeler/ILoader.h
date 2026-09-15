@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
+#include <optional>
+
 #include <antares/solver/modeler/parameters/modelerParameters.h>
 #include "antares/solver/modeler/ModelerData.h"
 

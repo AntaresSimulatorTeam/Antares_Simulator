@@ -20,78 +20,20 @@ public:
     using Coefficients = std::map<AreaName, double>;
 
 public:
-    //! \id Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Default constructor
-    */
-    HydroAllocation();
-    //! Destructor
-    ~HydroAllocation();
-    //@}
-
     /*!
     ** \brief Clear all coefficients
     */
     void clear();
 
     /*!
-    ** \brief Remove coefficients related to a given area index
-    */
-    void remove(const AreaName& areaid);
-
-    /*!
-    ** \brief Get the coefficient for a specific area
-    */
-    double fromArea(const Area& area) const;
-    /*!
-    ** \brief Get the coefficient for a specific area
-    */
-    double fromArea(const Area* area) const;
-    /*!
-    ** \brief Get the coefficient for a specific area index
-    */
-    double fromArea(const AreaName& areaid) const;
-
-    /*!
-    ** \brief Set the coefficient for a specific area (reference)
-    */
-    void fromArea(const Area& area, double value);
-    /*!
-    ** \brief Set the coefficient for a specific area (weak pointer)
-    */
-    void fromArea(const Area* area, double value);
-    /*!
     ** \brief Set the coefficient for a specific area index
     */
     void fromArea(const AreaName& areaid, double value);
 
-    //! \name Load / Save
-    //@{
     /*!
     ** \brief Load allocation coefficients from a file
     */
     bool loadFromFile(const AreaName& referencearea, const std::filesystem::path& filename);
-
-    /*!
-    ** \brief Load allocation coefficients from a file
-    */
-    bool saveToFile(const std::string& filename) const;
-
-    /*!
-    ** \brief Copy correlation coefficients from another correlation grid
-    **
-    ** \param source The correlation matrix source
-    ** \param studySource The associated study for the given correlation grid
-    ** \param areaSource Name of the area to import
-    ** \param mapping Area's name Mapping from the source to the target
-    ** \param study Study for the local correlation grid
-    */
-    void copyFrom(const HydroAllocation& source,
-                  const Study& studySource,
-                  const AreaNameMapping& mapping,
-                  const Study& study);
-    //@}
 
     //! \name Solver
     //@{
@@ -117,16 +59,8 @@ public:
     void prepareForSolver(const AreaList& list);
     //@}
 
-    //! \name Operators
-    //@{
-    //! \see fromArea()
-    double operator[](const AreaName& areaid) const;
-    //! \see fromArea()
-    double operator[](const Area& area) const;
-
     //! Get all coefficients
     const Coefficients& coefficients() const;
-    //@}
 
 private:
     //! Coefficients for other areas
