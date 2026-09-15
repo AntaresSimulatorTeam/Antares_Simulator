@@ -2,6 +2,7 @@
 
 #include "antares/solver/optimisation/adequacy_patch_csr/gems-part.h"
 
+#include <cstdint>
 #include <ranges>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
@@ -32,7 +33,8 @@ ActiveGemsPart::ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo,
 {
     if (!problemeHebdo_->optimEntityContainer)
     {
-        throw std::runtime_error("optimEntityContainer is null but GEMS data is present");
+        throw MissingOptimEntityContainerError(
+          "optimEntityContainer is null but GEMS data is present");
     }
 }
 
@@ -53,7 +55,7 @@ double ActiveGemsPart::gemsContributionForArea(
     auto* modelerData = problemeHebdo_->modelerData;
     double contribution = 0.0;
     const std::string areaName = problemeHebdo_->NomsDesPays[area];
-    const auto isConnectedToArea = [&](const auto& p) { return p.second == areaName; };
+    const auto isConnectedToArea = [areaName](const auto& p) { return p.second == areaName; };
     const auto filterPort = std::views::filter(isConnectedToArea) | std::views::keys;
 
     for (const auto& component: modelerData->system->Components())

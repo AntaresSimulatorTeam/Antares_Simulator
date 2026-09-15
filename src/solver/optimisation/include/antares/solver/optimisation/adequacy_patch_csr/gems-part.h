@@ -4,6 +4,7 @@
 #include <map>
 #include <memory>
 #include <optional>
+#include <stdexcept>
 
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/study/system-model/portType.h>
@@ -38,18 +39,22 @@ class NullGemsPart final: public IGemsPart
 public:
     void setHour(int) override
     {
+        // Intentionally empty: the null implementation has no GEMS state to update.
     }
 
     void setBoundsOnENS() override
     {
+        // Intentionally empty: there are no GEMS bounds to apply in the null case.
     }
 
     void setRHSfictitiousLoadValue() override
     {
+        // Intentionally empty: there is no fictitious-load contribution to inject.
     }
 
     void setRHSMaxEnsLoadValue() override
     {
+        // Intentionally empty: there is no max-ENS contribution to inject.
     }
 };
 
@@ -57,6 +62,15 @@ public:
 class ActiveGemsPart final: public IGemsPart
 {
 public:
+    class MissingOptimEntityContainerError final: public std::runtime_error
+    {
+    public:
+        explicit MissingOptimEntityContainerError(const std::string& message):
+            std::runtime_error(message)
+        {
+        }
+    };
+
     ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo,
                    PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre,
                    VariableManagement::VariableManager& variableManager,
