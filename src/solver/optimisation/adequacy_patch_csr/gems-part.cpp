@@ -82,6 +82,9 @@ double ActiveGemsPart::gemsContributionForArea(
                                               component,
                                               modelerData->dataSeries.get(),
                                               scenario);
+            // The FillContext is set up for a single local timestep (index 0),
+            // positioned at the correct global hour via triggeredHour_.
+            // So value(0) evaluates the expression at triggeredHour_, not at hour 0.
             contribution += evalVisitor.dispatch(expression).value(0);
         }
     }
@@ -111,8 +114,8 @@ void ActiveGemsPart::setRHSfictitiousLoadValue()
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area] == physicalAreaInsideAdqPatch)
         {
-            auto it = constraintCsrFictitiousLoad_.find(area);
-            if (it != constraintCsrFictitiousLoad_.end())
+            if (auto it = constraintCsrFictitiousLoad_.find(area);
+                it != constraintCsrFictitiousLoad_.end())
             {
                 int Cnt = it->second;
                 problemeAResoudre_.SecondMembre[Cnt] += gemsSpilledForArea(area);
@@ -127,8 +130,7 @@ void ActiveGemsPart::setRHSMaxEnsLoadValue()
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area] == physicalAreaInsideAdqPatch)
         {
-            auto it = constraintCsrMaxEnsLoad_.find(area);
-            if (it != constraintCsrMaxEnsLoad_.end())
+            if (auto it = constraintCsrMaxEnsLoad_.find(area); it != constraintCsrMaxEnsLoad_.end())
             {
                 int Cnt = it->second;
                 problemeAResoudre_.SecondMembre[Cnt] += gemsUnsupEnergyForArea(area);

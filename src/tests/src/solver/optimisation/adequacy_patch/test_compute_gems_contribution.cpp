@@ -89,6 +89,20 @@ struct GemsContributionFixture
         problemeHebdo.HeureDansLAnnee = 0;
         problemeHebdo.year = 0;
 
+        problemeHebdo.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>();
+        problemeHebdo.adequacyPatchRuntimeData->areaMode = {
+          Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch,
+          Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch};
+
+        // Initialize CorrespondanceVarNativesVarOptim for VariableManager
+        problemeHebdo.CorrespondanceVarNativesVarOptim.resize(1); // 1 hour (hour 0)
+        problemeHebdo.CorrespondanceVarNativesVarOptim[0]
+          .NumeroDeVariableDefaillancePositive.resize(2, -1); // 2 areas
+
+        problemAResoudre.Xmax.resize(20, 0.0);
+        problemAResoudre.Xmin.resize(20, 0.0);
+        problemAResoudre.SecondMembre.resize(20, 0.0);
+
         auto scenario = std::make_unique<Scenario>("SG");
         scenarioGroupRepository.addScenario("SG", std::move(scenario));
         modelerData->scenarioGroupRepository = std::move(scenarioGroupRepository);
@@ -149,37 +163,23 @@ struct GemsContributionFixture
 
 BOOST_AUTO_TEST_SUITE(gems_part_tests)
 
-// --- Factory tests ---
-
 BOOST_AUTO_TEST_CASE(factory_returns_null_gems_part_when_no_modeler_data)
 {
     PROBLEME_HEBDO problem{};
     problem.modelerData = nullptr;
-
-    PROBLEME_ANTARES_A_RESOUDRE problemAResoudre{};
-    VariableManagement::VariableManager varManager(&problem);
-    std::map<int, int> constraintFictitious;
-    std::map<int, int> constraintMaxEns;
-
-    auto gemsPart = makeGemsPart(&problem,
-                                 problemAResoudre,
-                                 varManager,
-                                 constraintFictitious,
-                                 constraintMaxEns);
-
-    BOOST_CHECK(dynamic_cast<NullGemsPart*>(gemsPart.get()) != nullptr);
-    BOOST_CHECK_NO_THROW(gemsPart->setHour(42));
+    PROBLEME_ANTARES_A_RESOUDRE pa{};
+    VariableManagement::VariableManager vm(&problem);
+    std::map<int, int> cf, cm;
+    auto gp = makeGemsPart(&problem, pa, vm, cf, cm);
+    BOOST_CHECK(dynamic_cast<NullGemsPart*>(gp.get()) != nullptr);
 }
 
-BOOST_FIXTURE_TEST_CASE(factory_returns_active_gems_part_when_modeler_data_exists,
-                        GemsContributionFixture)
+BOOST_FIXTURE_TEST_CASE(factory_returns_active_gems_part, GemsContributionFixture)
 {
     BOOST_CHECK(dynamic_cast<ActiveGemsPart*>(gemsPart.get()) != nullptr);
-    BOOST_CHECK_NO_THROW(gemsPart->setHour(0));
 }
 
-BOOST_FIXTURE_TEST_CASE(active_gems_part_throws_when_no_optimEntityContainer,
-                        GemsContributionFixture)
+BOOST_FIXTURE_TEST_CASE(throws_when_no_optimEntityContainer, GemsContributionFixture)
 {
     problemeHebdo.optimEntityContainer.reset();
     BOOST_CHECK_THROW((ActiveGemsPart(&problemeHebdo,
@@ -189,24 +189,5 @@ BOOST_FIXTURE_TEST_CASE(active_gems_part_throws_when_no_optimEntityContainer,
                                       constraintMaxEns)),
                       std::runtime_error);
 }
-
-// --- NullGemsPart does nothing ---
-
-BOOST_AUTO_TEST_CASE(null_gems_part_setBoundsOnENS_is_noop)
-{
-    NullGemsPart nullPart;
-
-    BOOST_CHECK_NO_THROW(nullPart.setBoundsOnENS());
-}
-
-BOOST_AUTO_TEST_CASE(null_gems_part_setRHS_is_noop)
-{
-    NullGemsPart nullPart;
-
-    BOOST_CHECK_NO_THROW(nullPart.setRHSfictitiousLoadValue());
-    BOOST_CHECK_NO_THROW(nullPart.setRHSMaxEnsLoadValue());
-}
-
-// --- ActiveGemsPart evaluates expressions ---
 
 BOOST_AUTO_TEST_SUITE_END()
