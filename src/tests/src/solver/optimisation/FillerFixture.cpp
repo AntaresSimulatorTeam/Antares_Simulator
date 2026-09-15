@@ -21,8 +21,7 @@ using namespace Api;
 using namespace DataImpl;
 
 FillerFixture::FillerFixture():
-    linearProblem(
-      std::make_shared<Antares::LinearProblem::MpsolverImpl::OrtoolsLinearProblem>(true, "scip")),
+    linearProblem(true, "scip"),
     linearProblemData((DataSeriesRepository()))
 {
 }
@@ -64,7 +63,7 @@ void FillerFixture::addLegacyVariables(const std::vector<std::string>& variableN
 {
     for (const auto& variable: variableNames)
     {
-        linearProblem->addVariable(-999, 999, false, variable);
+        linearProblem.addVariable(-999, 999, false, variable);
     }
 }
 
@@ -83,7 +82,7 @@ void FillerFixture::addModelerVariables(unsigned int ts_start,
                 for (auto t = ts_start; t <= ts_end; ++t)
                 {
                     auto name = buildVariableName(component.Id(), variable.Id(), {}, t);
-                    linearProblem->addVariable(-999, 999, false, name);
+                    linearProblem.addVariable(-999, 999, false, name);
                 }
             }
             else
@@ -92,7 +91,7 @@ void FillerFixture::addModelerVariables(unsigned int ts_start,
                                               variable.Id(),
                                               std::nullopt,
                                               std::nullopt);
-                linearProblem->addVariable(-999, 999, false, name);
+                linearProblem.addVariable(-999, 999, false, name);
             }
         }
     }
@@ -102,7 +101,7 @@ void FillerFixture::addEmptyConstraintsToLinearProblem(std::vector<std::string>&
 {
     for (const auto& name: names)
     {
-        linearProblem->addConstraint(rhs, rhs, name);
+        linearProblem.addConstraint(rhs, rhs, name);
     }
 }
 

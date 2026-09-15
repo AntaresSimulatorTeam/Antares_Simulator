@@ -803,6 +803,9 @@ public:
     /// \brief Kept alive past the solve so the CSR adequacy patch post-process
     /// can evaluate GEMS port field expressions via EvalVisitor.
     std::shared_ptr<Antares::LinearProblem::OptimEntityContainer> optimEntityContainer;
+
+    /// \brief Keeps the LP alive so optimEntityContainer's reference remains valid
+    std::shared_ptr<Antares::LinearProblem::Api::ILinearProblem> ortoolsProblem_;
 };
 
 // Import functions for capacity and hydro reserves

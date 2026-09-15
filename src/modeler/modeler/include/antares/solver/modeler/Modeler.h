@@ -3,7 +3,6 @@
 
 #pragma once
 #include <filesystem>
-#include <memory>
 
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include "antares/io/outputs/SimulationTable.h"
@@ -34,16 +33,19 @@ namespace Antares::Solver
 {
 class ILoader;
 
-// Builds the linear problem for the given location and returns an
-// OptimEntityContainer sharing ownership of the problem, or nullptr if
-// no variable is compatible with the location.
-std::unique_ptr<LinearProblem::OptimEntityContainer> buildProblem(
-  Antares::Solver::ModelerData& data,
-  const Config::Location& location,
-  const std::string& problemId,
-  const LinearProblem::Api::FillContext& timeScenarioCtx,
-  const ResolutionMode& resolutionMode,
-  const std::optional<std::string>& solver);
+struct ProblemEntity
+{
+    std::unique_ptr<LinearProblem::Api::ILinearProblem> problem;
+    std::unique_ptr<LinearProblem::OptimEntityContainer> optimEntityContainer;
+};
+
+ProblemEntity buildProblem(const Antares::Solver::ModelerData& data,
+                           const Config::Location& location,
+                           const std::string& problemId,
+                           LinearProblem::BendersDecomposition* bendersDecomposition,
+                           const LinearProblem::Api::FillContext& timeScenarioCtx,
+                           const ResolutionMode& resolutionMode,
+                           const std::optional<std::string>& solver);
 
 std::filesystem::path makeOutputPath(std::filesystem::path studyPath);
 
@@ -55,7 +57,6 @@ public:
     void buildProblems();
     void buildMasterProblem();
     void buildProblemsAndWriteMps();
-
     void run();
 
     void exportStructureFile() const;
@@ -71,13 +72,13 @@ public:
 
     ILoader& loader_; // gp : make it private
 
-    [[nodiscard]] const std::shared_ptr<LinearProblem::Api::ILinearProblem>& masterProblem() const
+    [[nodiscard]] const std::unique_ptr<LinearProblem::Api::ILinearProblem>& masterProblem() const
     {
         return masterProblem_;
     }
 
-    [[nodiscard]]
-    const std::vector<std::shared_ptr<LinearProblem::Api::ILinearProblem>>& subproblems() const
+    [[nodiscard]] const std::vector<std::unique_ptr<LinearProblem::Api::ILinearProblem>>&
+    subproblems() const
     {
         return subproblems_;
     }
@@ -108,7 +109,6 @@ private:
     std::vector<std::unique_ptr<LinearProblem::OptimEntityContainer>>
       subproblemOptimEntityContainers_;
     std::vector<unsigned> scenarios_;
-
     ModelerParameters parameters_;
     ModelerData data_;
     fs::path outputPath_;

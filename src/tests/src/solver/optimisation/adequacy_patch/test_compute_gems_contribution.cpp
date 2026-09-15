@@ -93,7 +93,8 @@ struct GemsContributionFixture
         scenarioGroupRepository.addScenario("SG", std::move(scenario));
         modelerData->scenarioGroupRepository = std::move(scenarioGroupRepository);
 
-        problemeHebdo.optimEntityContainer = std::make_unique<OptimEntityContainer>(linearProblem);
+        problemeHebdo.ortoolsProblem_ = linearProblem;
+        problemeHebdo.optimEntityContainer = std::make_shared<OptimEntityContainer>(*linearProblem);
 
         addComponentsVariablesToLP();
 
