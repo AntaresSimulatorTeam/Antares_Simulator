@@ -292,21 +292,25 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     // initialize the ramping attributes only if ramping is enabled, else ignore these properties
     if (p->key == "power-increase-cost")
     {
-        return (cluster.ramping) ? p->value.to<double>(cluster.ramping->powerIncreaseCost) : true;
+        return (cluster.ramping) ? p->value.to<double>(cluster.ramping.value().powerIncreaseCost)
+                                 : true;
     }
     if (p->key == "power-decrease-cost")
     {
-        return (cluster.ramping) ? p->value.to<double>(cluster.ramping->powerDecreaseCost) : true;
+        return (cluster.ramping) ? p->value.to<double>(cluster.ramping.value().powerDecreaseCost)
+                                 : true;
     }
     if (p->key == "max-upward-power-ramping-rate")
     {
-        return (cluster.ramping) ? p->value.to<double>(cluster.ramping->maxUpwardPowerRampingRate)
-                                 : true;
+        return (cluster.ramping)
+                 ? p->value.to<double>(cluster.ramping.value().maxUpwardPowerRampingRate)
+                 : true;
     }
     if (p->key == "max-downward-power-ramping-rate")
     {
-        return (cluster.ramping) ? p->value.to<double>(cluster.ramping->maxDownwardPowerRampingRate)
-                                 : true;
+        return (cluster.ramping)
+                 ? p->value.to<double>(cluster.ramping.value().maxDownwardPowerRampingRate)
+                 : true;
     }
     // we ignore this property as it was already handled in ThermalClusterLoadFromSection
     if (p->key == "ramping-enabled")
