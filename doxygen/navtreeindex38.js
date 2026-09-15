@@ -1,5 +1,6 @@
 var NAVTREEINDEX38 =
 {
+"structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1CORRESPONDANCE__DES__VARIABLES.html#a630974a5857834375d82c3e56fd5f59e":[9,0,0,12,1,1,2,3],
 "structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1CORRESPONDANCE__DES__VARIABLES.html#a8ab4e6a2262345d0fe7d9b5e290c3ac8":[9,0,0,12,1,1,2,0],
 "structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1CORRESPONDANCE__DES__VARIABLES.html#a92a53d34bc192ced57695f3ab553d536":[9,0,0,12,1,1,2,2],
 "structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1CORRESPONDANCE__DES__VARIABLES.html#ab20ffba1233d7edbbbf4bb00548eec42":[9,0,0,12,1,1,2,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a360313c3f187df389a34559151ed9c61":[9,0,0,12,6,5,60,8],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a42f54f01275968f5b0f5b4496c1d2f8c":[9,0,0,12,6,5,60,5],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a4c6cb14ff1f07d0b06d987210fdc75d3":[9,0,0,12,6,5,60,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a551d92112c850f3183b2fabbc9ddb38e":[9,0,0,12,6,5,60,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a7cc891e880cdf8c45ffcb9717d96fe6d":[9,0,0,12,6,5,60,3]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a551d92112c850f3183b2fabbc9ddb38e":[9,0,0,12,6,5,60,1]
 };

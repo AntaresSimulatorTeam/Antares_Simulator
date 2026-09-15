@@ -1,5 +1,6 @@
 var NAVTREEINDEX34 =
 {
+"namespacemembers_enum.html":[8,1,3],
 "namespacemembers_func.html":[8,1,1],
 "namespacemembers_type.html":[8,1,2],
 "namespaces.html":[8,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX34 =
 "scenarioScope_8h_source.html":[10,0,0,5,3,0,0,0,0,0,2],
 "scratchpad_8cpp.html#a7a4274db1bda7528094a7dac6540c116":[8,0,0,4,154],
 "scratchpad_8cpp.html#a8e4ce560b4f8012b2242f2cacc9b687c":[8,0,0,4,147],
-"scratchpad_8h_source.html":[10,0,0,4,0,25,0,0,0,0,7],
-"series_2include_2antares_2series_2series_8h_source.html":[10,0,0,4,0,24,0,0,0,0]
+"scratchpad_8h_source.html":[10,0,0,4,0,25,0,0,0,0,7]
 };

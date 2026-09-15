@@ -140,6 +140,9 @@ $(document).ready(function(){initNavTree('classAntares_1_1IO_1_1Outputs_1_1Optim
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a5cff74e8d1497f8e5441f84eddd9d715"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#a5cff74e8d1497f8e5441f84eddd9d715">OptimisationsSimulationTable</a> (std::shared_ptr&lt; const <a class="el" href="classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html">Optimization::InactiveComponentsAnalyzer</a> &gt; inactiveComponents)</td></tr>
+<tr class="memdesc:a5cff74e8d1497f8e5441f84eddd9d715"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the per-stage tables for one Monte-Carlo year.  <a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#a5cff74e8d1497f8e5441f84eddd9d715">More...</a><br /></td></tr>
+<tr class="separator:a5cff74e8d1497f8e5441f84eddd9d715"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ed90f80c2dc7f2172f1b93ffe090731"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#a3ed90f80c2dc7f2172f1b93ffe090731">selectStages</a> (std::set&lt; Stage &gt; stages)</td></tr>
 <tr class="memdesc:a3ed90f80c2dc7f2172f1b93ffe090731"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restrict the tables to <code>stages</code>; an empty set lifts the restriction.  <a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#a3ed90f80c2dc7f2172f1b93ffe090731">More...</a><br /></td></tr>
 <tr class="separator:a3ed90f80c2dc7f2172f1b93ffe090731"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,14 +178,49 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ac2d751067730a0e94d38a09794d51fb1"><td class="memItemLeft" align="right" valign="top"><a id="ac2d751067730a0e94d38a09794d51fb1"></a>
-std::shared_ptr&lt; const <a class="el" href="classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html">Optimization::InactiveComponentsAnalyzer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>inactiveComponents</b></td></tr>
-<tr class="separator:ac2d751067730a0e94d38a09794d51fb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e1cf132142c35aeaba7786a8d15aa3a"><td class="memItemLeft" align="right" valign="top"><a id="a4e1cf132142c35aeaba7786a8d15aa3a"></a>
+const std::shared_ptr&lt; const <a class="el" href="classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html">Optimization::InactiveComponentsAnalyzer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>inactiveComponents</b></td></tr>
+<tr class="separator:a4e1cf132142c35aeaba7786a8d15aa3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The simulation tables of one Monte-Carlo year, one per stage of the weekly resolution. </p>
 <p>A stage is created on first use; the writer emits one file per stage. See docs/architecture/legacy-extra-outputs.md §8. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a5cff74e8d1497f8e5441f84eddd9d715"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5cff74e8d1497f8e5441f84eddd9d715">&#9670;&nbsp;</a></span>OptimisationsSimulationTable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Antares::IO::Outputs::OptimisationsSimulationTable::OptimisationsSimulationTable </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; const <a class="el" href="classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html">Optimization::InactiveComponentsAnalyzer</a> &gt;&#160;</td>
+          <td class="paramname"><em>inactiveComponents</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Build the per-stage tables for one Monte-Carlo year. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inactiveComponents</td><td>when set, the writer skips the rows of structurally inactive components; nullptr keeps every row. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="aa4627b93eac9b61602c56f81fd2f40ff"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa4627b93eac9b61602c56f81fd2f40ff">&#9670;&nbsp;</a></span>anyPostProcessStageSelected()</h2>
 

@@ -1,5 +1,6 @@
 var NAVTREEINDEX43 =
 {
+"structPALIERS__THERMIQUES.html#ad221b16977ab028540efd9d91c3813a0":[9,0,244,9],
 "structPDISP__ET__COUTS__HORAIRES__PAR__PALIER.html":[9,0,247],
 "structPDISP__ET__COUTS__HORAIRES__PAR__PALIER.html#a34a8c214f77c2974fc82d5a57e6b997a":[9,0,247,8],
 "structPDISP__ET__COUTS__HORAIRES__PAR__PALIER.html#a3b4ef94759bf3615e4c32f5de39f3ebb":[9,0,247,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX43 =
 "structRawConnection.html#a7e8ed61894f9e8b8f7b0111aedeff458":[9,0,273,1],
 "structRawConnection.html#a99c1de3a977350523a38bab1e65091cf":[9,0,273,0],
 "structReadFromStreamFixture.html":[9,0,274],
-"structReadFromStreamFixture.html#a0c6e320678f93675fdeb0b4742f6a65b":[9,0,274,1],
-"structReadFromStreamFixture.html#a174881c735483f79d4815a6ee9ca71f9":[9,0,274,0]
+"structReadFromStreamFixture.html#a0c6e320678f93675fdeb0b4742f6a65b":[9,0,274,1]
 };

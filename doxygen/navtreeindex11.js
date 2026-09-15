@@ -1,5 +1,6 @@
 var NAVTREEINDEX11 =
 {
+"classAntares_1_1LinearProblem_1_1Api_1_1IHasStatus.html":[9,0,0,8,0,2],
 "classAntares_1_1LinearProblem_1_1Api_1_1IHasStatus.html#a3cf08617e3cab5c720116ff9f3bed6cc":[9,0,0,8,0,2,0],
 "classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html":[9,0,0,8,0,7],
 "classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html#a29423772f5bdc4a7c1c60e6c8eef8a71":[9,0,0,8,0,7,18],
@@ -248,6 +249,5 @@ var NAVTREEINDEX11 =
 "classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#a73dafa92b3be6470a6acd72a285f008b":[9,0,0,8,2,0,21],
 "classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#a84829d1ecf377cca1025f45c05a99f14":[9,0,0,8,2,0,8],
 "classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#a85f1273bd84280ab3a3a4ef9652af080":[9,0,0,8,2,0,11],
-"classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#a9515495f229536118a6eada9a20c0a0f":[9,0,0,8,2,0,23],
-"classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#a953b155ca649c40cb82ba506731825a1":[9,0,0,8,2,0,4]
+"classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#a9515495f229536118a6eada9a20c0a0f":[9,0,0,8,2,0,23]
 };

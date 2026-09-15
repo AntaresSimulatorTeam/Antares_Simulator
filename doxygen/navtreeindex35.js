@@ -1,5 +1,6 @@
 var NAVTREEINDEX35 =
 {
+"series_2include_2antares_2series_2series_8h_source.html":[10,0,0,4,0,24,0,0,0,0],
 "setData_8h_source.html":[10,0,0,8,11,0,0,0,0,2,1],
 "setofareas_8h_source.html":[10,0,0,8,11,0,0,0,0,17],
 "setofareas_8hxx_source.html":[10,0,0,8,11,0,0,0,0,18],
@@ -248,6 +249,5 @@ var NAVTREEINDEX35 =
 "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#afd5e5c9b27ebca21863963a6fac44732":[9,0,0,3,0,1,10],
 "structAntares_1_1Data_1_1AllCapacityReservations.html":[9,0,0,3,16],
 "structAntares_1_1Data_1_1AllCapacityReservations.html#a0256cc66e13b9564ae9f658231c9342f":[9,0,0,3,16,2],
-"structAntares_1_1Data_1_1AllCapacityReservations.html#a258e68b3526855a803d7448acfab250f":[9,0,0,3,16,6],
-"structAntares_1_1Data_1_1AllCapacityReservations.html#a38dc47b4e11f08540bfa479be454430a":[9,0,0,3,16,3]
+"structAntares_1_1Data_1_1AllCapacityReservations.html#a258e68b3526855a803d7448acfab250f":[9,0,0,3,16,6]
 };

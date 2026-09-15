@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"classAntares_1_1Memory.html":[9,0,0,29],
 "classAntares_1_1Memory.html#a1e460bed8929aa271443f1127267089f":[9,0,0,29,1],
 "classAntares_1_1Memory.html#a818c69050b5d3c4c3998b66eb3053e93":[9,0,0,29,3],
 "classAntares_1_1Memory.html#a818e1363c749575340d34d6f3d5d07ed":[9,0,0,29,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html#a1629a1f8daeb7c6fa3d554690e5ca68a":[9,0,0,11,4,1],
 "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html#a274200299d24f3b315e64d11889a9fa3":[9,0,0,11,4,4],
 "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html#ac6f530525ccca32d03d7fe69efc9474b":[9,0,0,11,4,0],
-"classAntares_1_1Optimization_1_1LegacyFiller.html":[9,0,0,11,26],
-"classAntares_1_1Optimization_1_1LegacyFiller.html#a11d79d39cc8b1d5aa0cc7bd399b1460f":[9,0,0,11,26,1]
+"classAntares_1_1Optimization_1_1LegacyFiller.html":[9,0,0,11,26]
 };

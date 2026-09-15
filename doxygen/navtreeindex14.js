@@ -1,5 +1,6 @@
 var NAVTREEINDEX14 =
 {
+"classAntares_1_1Optimization_1_1LegacyFiller.html#a11d79d39cc8b1d5aa0cc7bd399b1460f":[9,0,0,11,26,1],
 "classAntares_1_1Optimization_1_1LegacyFiller.html#a3633ce1552dbbe69f5b47fd89ce1f5f6":[9,0,0,11,26,0],
 "classAntares_1_1Optimization_1_1LegacyFiller.html#aa0ffc8e59c42c498e05344c7f9a09749":[9,0,0,11,26,3],
 "classAntares_1_1Optimization_1_1LegacyFiller.html#af6ff0d945cab73ff36ad94b75ee162d0":[9,0,0,11,26,2],
@@ -110,10 +111,10 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Optimization_1_1WeeklyBC.html#aee16782543cb2e446309306a8582fa6d":[9,0,0,11,12,2],
 "classAntares_1_1Optimization_1_1WeeklyOptimization.html":[9,0,0,11,32],
 "classAntares_1_1Optimization_1_1WeeklyOptimization.html#a18a7a2a87ab1bdfdd71af8688d78370a":[9,0,0,11,32,3],
+"classAntares_1_1Optimization_1_1WeeklyOptimization.html#a6e63691b48c8fc56f5615f26bc691424":[9,0,0,11,32,0],
 "classAntares_1_1Optimization_1_1WeeklyOptimization.html#a845019da93dc4b5465e07715855764a2":[9,0,0,11,32,7],
 "classAntares_1_1Optimization_1_1WeeklyOptimization.html#a87e77d5b0ef297b90ce1ee8e5103b380":[9,0,0,11,32,6],
 "classAntares_1_1Optimization_1_1WeeklyOptimization.html#a88c033a67d5ba8840f2527655027135a":[9,0,0,11,32,2],
-"classAntares_1_1Optimization_1_1WeeklyOptimization.html#a88cd66782f240e363045f63a95c8ca44":[9,0,0,11,32,0],
 "classAntares_1_1Optimization_1_1WeeklyOptimization.html#aa1d8c838c6ee51981bfa91ba28b701a4":[9,0,0,11,32,4],
 "classAntares_1_1Optimization_1_1WeeklyOptimization.html#ac023296fde62ca5818077e06ec688c20":[9,0,0,11,32,1],
 "classAntares_1_1Optimization_1_1WeeklyOptimization.html#aeb7152e7dc28bd4e1f5c1c38d0dcbaec":[9,0,0,11,32,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a29e714ce3e5f065b2a5f17d2a452818d":[9,0,0,12,5,11,1],
 "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a30965044bc4794f44ef789769c311ab3":[9,0,0,12,5,11,3],
 "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a9cd1b34a95fa35817100794ce25d48f8":[9,0,0,12,5,11,4],
-"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#aa2610ad198fe8b749e943d2ad1762513":[9,0,0,12,5,11,8],
-"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#ab6ea454102b4d3112dc568a927d8d0f9":[9,0,0,12,5,11,9]
+"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#aa2610ad198fe8b749e943d2ad1762513":[9,0,0,12,5,11,8]
 };

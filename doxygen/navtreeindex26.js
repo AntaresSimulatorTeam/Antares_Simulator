@@ -1,5 +1,6 @@
 var NAVTREEINDEX26 =
 {
+"classShortTermStorageCostVariationInjectionBackward.html#ad2da1805d5d5b1329cbbe3f83c7f76c9":[9,0,304,2],
 "classShortTermStorageCostVariationInjectionBackward.html#ad78ff39de3681bfc803018581b30a936":[9,0,304,4],
 "classShortTermStorageCostVariationInjectionForward.html":[9,0,305],
 "classShortTermStorageCostVariationInjectionForward.html#a127beb0407257b8a0741428d5e807747":[9,0,305,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX26 =
 "classVariableNamer.html#a0a1265ba707c9b0037f045b2c1bd2e61":[9,0,386,23],
 "classVariableNamer.html#a0ab2e2b356789758ec79a53a4e1522cb":[9,0,386,34],
 "classVariableNamer.html#a0f89d6290ac20ba742c5d472e0a0d218":[9,0,386,14],
-"classVariableNamer.html#a14e4d43dd881fd640e9577370409eb3b":[9,0,386,7],
-"classVariableNamer.html#a176c637187a7e7588ca9a9cf85d5817f":[9,0,386,9]
+"classVariableNamer.html#a14e4d43dd881fd640e9577370409eb3b":[9,0,386,7]
 };

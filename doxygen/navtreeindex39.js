@@ -1,5 +1,6 @@
 var NAVTREEINDEX39 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a7cc891e880cdf8c45ffcb9717d96fe6d":[9,0,0,12,6,5,60,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#a8f7b1f94685c6940dad0dda2fd215502":[9,0,0,12,6,5,60,6],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#ab8853553b1b5bdb4cb97f6ccced04623":[9,0,0,12,6,5,60,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMRGinput.html#ae313f8f83d7716ec7c195b28c41972f9":[9,0,0,12,6,5,60,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX39 =
 "structAntares_1_1Solver_1_1Variable_1_1State_1_1ReserveData.html#ad091bf65e6c20181ed151ca1a35bdced":[9,0,0,12,6,56,0,4],
 "structAntares_1_1Solver_1_1Variable_1_1State_1_1ReserveData.html#ad948e388eb8b7d3cde76e4f1c3151c8e":[9,0,0,12,6,56,0,9],
 "structAntares_1_1Solver_1_1Variable_1_1State_1_1ReserveData_1_1DetailledParticipation.html":[9,0,0,12,6,56,0,0],
-"structAntares_1_1Solver_1_1Variable_1_1State_1_1ReserveData_1_1DetailledParticipation.html#a01831ab33c595bf1b31bd7e9f699a9e7":[9,0,0,12,6,56,0,0,3],
-"structAntares_1_1Solver_1_1Variable_1_1State_1_1ReserveData_1_1DetailledParticipation.html#a030df2b44a67cb744e21df1546004351":[9,0,0,12,6,56,0,0,2]
+"structAntares_1_1Solver_1_1Variable_1_1State_1_1ReserveData_1_1DetailledParticipation.html#a01831ab33c595bf1b31bd7e9f699a9e7":[9,0,0,12,6,56,0,0,3]
 };

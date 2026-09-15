@@ -1,5 +1,6 @@
 var NAVTREEINDEX23 =
 {
+"classFixture.html#afec6b047cc6e8e3f115306596cc00512":[9,0,129,33],
 "classFixtureMultipleTS.html":[9,0,135],
 "classFixtureMultipleTS.html#a2041f6405e28e304aadb40e5a7c92348":[9,0,135,1],
 "classFixtureMultipleTS.html#ac77e1c89065a9b53758d9c784552be75":[9,0,135,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX23 =
 "classMaxUnsuppliedEnergy.html#a11248171e958468a46c1161d87ff5d09":[9,0,192,0],
 "classMaxUnsuppliedEnergy.html#a49c2e233add8b4501059e2c97080fc81":[9,0,192,1],
 "classMinDownTime.html":[9,0,193],
-"classMinDownTime.html#a66932b16927a7343f291b2cd4056d9c4":[9,0,193,0],
-"classMinDownTime.html#afe857bfb3d11b980e0f053d00e7ee66f":[9,0,193,1]
+"classMinDownTime.html#a66932b16927a7343f291b2cd4056d9c4":[9,0,193,0]
 };
