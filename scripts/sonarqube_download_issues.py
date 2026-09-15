@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""Télécharge les issues SonarCloud (Antares_Simulator, OPEN/CONFIRMED) et les exporte en CSV.
+"""Download SonarCloud issues (Antares_Simulator, OPEN/CONFIRMED) and export them to CSV.
 
-Le 1er argument (obligatoire) est soit un numéro de PR (chiffres), soit un nom de branche :
-  python3 sq_download_issues.py 3853               # issues de la PR 3853 (mode pullRequest)
-  python3 sq_download_issues.py develop            # issues de la branche develop
+The 1st argument (required) is a PR number (digits):
+  python3 sonarqube_download_issues.py 3853        # issues of PR 3853 (pullRequest mode)
 
-Colonnes : FILE | LINE NUMBER | SEVERITY | DESCRIPTION
-Tri par sévérité décroissante (BLOCKER -> INFO).
+The SONARCLOUD_TOKEN environment variable must be set with a valid SonarCloud
+access token. Get your token here: https://sonarcloud.io/account/access-tokens?tab=personal_tokens
+
+Columns: FILE | LINE NUMBER | SEVERITY | DESCRIPTION
+Sorted by descending severity (BLOCKER -> INFO).
 """
 
 import csv
@@ -37,20 +39,17 @@ def fetch_page(params: dict, page: int, page_size: int = 500) -> dict:
 
 def main() -> None:
     if len(sys.argv) < 2:
-        print(f"Usage : python3 {sys.argv[0]} <PR_NUMBER | BRANCH_NAME>", file=sys.stderr)
+        print(f"Usage: python3 {sys.argv[0]} <PR_NUMBER>", file=sys.stderr)
         sys.exit(1)
     arg = sys.argv[1]
+    if not arg.isdigit():
+        print(f"Error: argument must be a PR number (digits): {arg}", file=sys.stderr)
+        sys.exit(1)
     base_params = {"organization": ORGANIZATION, "projects": PROJECT, "issueStatuses": "OPEN,CONFIRMED"}
-    if arg.isdigit():
-        # Mode PR : le numéro est interprété par SonarCloud comme l'id de pull request
-        params = {**base_params, "pullRequest": arg}
-        output = f"sonarcloud_issues_pr{arg}.csv"
-        label = f"PR {arg}"
-    else:
-        # Mode branche
-        params = {**base_params, "branch": arg}
-        output = f"sonarcloud_issues_{arg.replace('/', '_')}.csv"
-        label = f"branche {arg}"
+    # The number is interpreted by SonarCloud as the pull request id
+    params = {**base_params, "pullRequest": arg}
+    output = f"sonarcloud_issues_pr{arg}.csv"
+    label = f"PR {arg}"
 
     issues = []
     page = 1
@@ -91,7 +90,7 @@ def main() -> None:
     for row in rows:
         by_severity[row["SEVERITY"]] = by_severity.get(row["SEVERITY"], 0) + 1
     summary = ", ".join(f"{by_severity[s]} {s}" for s in SEVERITY_ORDER if s in by_severity)
-    print(f"{label} : {len(rows)} issues ({summary}) écrites dans {output}")
+    print(f"{label}: {len(rows)} issues ({summary}) written to {output}")
 
 
 if __name__ == "__main__":
