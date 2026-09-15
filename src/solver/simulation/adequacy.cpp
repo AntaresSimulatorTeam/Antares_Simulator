@@ -136,8 +136,8 @@ bool Adequacy::year(Variable::State& state,
     std::unique_ptr<IO::Outputs::OptimisationsSimulationTable> simulationTables;
     if (study.parameters.writeSimulationTable())
     {
-        simulationTables = std::make_unique<IO::Outputs::OptimisationsSimulationTable>();
-        simulationTables->inactiveComponents = inactiveComponents_;
+        simulationTables = std::make_unique<IO::Outputs::OptimisationsSimulationTable>(
+          inactiveComponents_);
         simulationTables->selectStages(study.parameters.simulationTableStages);
     }
 
