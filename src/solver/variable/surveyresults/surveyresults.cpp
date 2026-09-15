@@ -144,10 +144,10 @@ static void ExportGridInfosAreas(const Data::Study& study,
               outThermal << cluster->spreadCost << '\n';
               if (cluster->ramping)
               {
-                  outThermal << cluster->ramping.value().powerIncreaseCost << '\t';
-                  outThermal << cluster->ramping.value().powerDecreaseCost << '\t';
-                  outThermal << cluster->ramping.value().maxUpwardPowerRampingRate << '\t';
-                  outThermal << cluster->ramping.value().maxDownwardPowerRampingRate << '\n';
+                  outThermal << cluster->ramping->powerIncreaseCost << '\t';
+                  outThermal << cluster->ramping->powerDecreaseCost << '\t';
+                  outThermal << cluster->ramping->maxUpwardPowerRampingRate << '\t';
+                  outThermal << cluster->ramping->maxDownwardPowerRampingRate << '\n';
               }
           } // each thermal cluster
       }); // each area
