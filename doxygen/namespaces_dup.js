@@ -842,8 +842,8 @@ var namespaces_dup =
           [ "Stage", "SimulationTableStage_8h.html#a437dadf0f7c998f551d7ad9658c08d32", [
             [ "firstOptim", "SimulationTableStage_8h.html#a437dadf0f7c998f551d7ad9658c08d32a740210b7bdb59e68e635870e8eac5f49", null ],
             [ "secondOptim", "SimulationTableStage_8h.html#a437dadf0f7c998f551d7ad9658c08d32a0de5e489788645840f840868392fe2ed", null ],
-            [ "remixHydro", "SimulationTableStage_8h.html#a437dadf0f7c998f551d7ad9658c08d32a00fc0561f60bae5da3c08decbc1e7a74", null ],
-            [ "adequacyPatchCsr", "SimulationTableStage_8h.html#a437dadf0f7c998f551d7ad9658c08d32a557382d8e1f24ccff14325e3e025c73a", null ]
+            [ "peakShaving", "SimulationTableStage_8h.html#a437dadf0f7c998f551d7ad9658c08d32aabc7ae18e788f148ded839741563a30d", null ],
+            [ "adequacyPatch", "SimulationTableStage_8h.html#a437dadf0f7c998f551d7ad9658c08d32a4590be44cace10c4a637b178ca063afd", null ]
           ] ],
           [ "TimeConversionMode", "SimulationTableGenerator_8h.html#ad34c3f3a36ca379aa9e2e41dd2775e52", [
             [ "SingleBlock", "SimulationTableGenerator_8h.html#ad34c3f3a36ca379aa9e2e41dd2775e52a95e3727fd5f0aede28af2086f421b699", null ],

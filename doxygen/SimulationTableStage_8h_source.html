@@ -142,14 +142,14 @@ $(document).ready(function(){initNavTree('SimulationTableStage_8h_source.html','
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    firstOptim,</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    secondOptim,</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    remixHydro,</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    adequacyPatchCsr,</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    peakShaving,</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    adequacyPatch,</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;};</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">inline</span> constexpr std::array allStages = {Stage::firstOptim,</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;                                         Stage::secondOptim,</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;                                         Stage::remixHydro,</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                                         Stage::adequacyPatchCsr};</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;                                         Stage::peakShaving,</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                                         Stage::adequacyPatch};</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;constexpr std::string_view stageName(Stage stage)</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
@@ -159,10 +159,10 @@ $(document).ready(function(){initNavTree('SimulationTableStage_8h_source.html','
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&quot;optim-nb-1&quot;</span>;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">case</span> Stage::secondOptim:</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&quot;optim-nb-2&quot;</span>;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordflow">case</span> Stage::remixHydro:</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&quot;remix-hydro&quot;</span>;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">case</span> Stage::adequacyPatchCsr:</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&quot;adq-patch-csr&quot;</span>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordflow">case</span> Stage::peakShaving:</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&quot;peak-shaving&quot;</span>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">case</span> Stage::adequacyPatch:</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&quot;adq-patch&quot;</span>;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    }</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">return</span> {};</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
