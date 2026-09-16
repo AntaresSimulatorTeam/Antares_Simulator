@@ -14,10 +14,11 @@ namespace Antares::LinearProblem
 class ScenarioGroupRepository final
 {
 public:
-    void addScenario(const std::string& groupId,
-                     std::unique_ptr<Api::IScenario>&& scenario);
+    void addScenario(const std::string& groupId, std::unique_ptr<Api::IScenario>&& scenario);
 
     [[nodiscard]] const Api::IScenario& scenario(const std::string& groupId) const;
+
+    [[nodiscard]] bool contains(const std::string& groupId) const;
 
 private:
     std::map<std::string, std::unique_ptr<Api::IScenario>> scenarioGroups_;

@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-
 #include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 
 #include <boost/algorithm/string.hpp>
@@ -31,8 +30,7 @@ public:
     }
 };
 
-const Api::IScenario& ScenarioGroupRepository::scenario(
-  const std::string& groupId) const
+const Api::IScenario& ScenarioGroupRepository::scenario(const std::string& groupId) const
 {
     // A component requires a group ID
     if (groupId.empty())
@@ -48,5 +46,16 @@ const Api::IScenario& ScenarioGroupRepository::scenario(
         throw DoesNotExist(gId);
     }
     return *scenarioGroups_.at(gId);
+}
+
+bool ScenarioGroupRepository::contains(const std::string& groupId) const
+{
+    if (groupId.empty())
+    {
+        return false;
+    }
+    std::string gId = groupId;
+    boost::to_upper(gId);
+    return scenarioGroups_.contains(gId);
 }
 } // namespace Antares::LinearProblem

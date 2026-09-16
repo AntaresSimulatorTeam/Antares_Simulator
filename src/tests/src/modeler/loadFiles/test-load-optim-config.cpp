@@ -7,6 +7,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
+#include <antares/solver/modeler/parameters/scenarioScope.h>
 #include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/study/system-model/optimConfig.h"
 
@@ -96,7 +97,7 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_variable_decomposition, CreateInp
     // Act part
     auto res = loadLibraries(studyFolder);
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res->first;
+    const auto& libraries = res->libraries;
 
     // Assert part
     const auto& modelVariables = libraries[0].Models().at("some-model").Variables();
@@ -147,7 +148,7 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_constraint_decomposition, CreateI
     // Act part
     auto res = loadLibraries(studyFolder);
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res->first;
+    const auto& libraries = res->libraries;
 
     // Assert part
     const auto& modelConstraints = libraries[0].Models().at("some-model").Constraints();
@@ -200,7 +201,7 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_constraint_out_of_bounds_processi
 
     auto res = loadLibraries(studyFolder);
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res->first;
+    const auto& libraries = res->libraries;
 
     const auto& modelConstraints = libraries[0].Models().at("some-model").Constraints();
 
@@ -246,7 +247,7 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_objective_decomposition, CreateIn
     // Act part
     auto res = loadLibraries(studyFolder);
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res->first;
+    const auto& libraries = res->libraries;
 
     // Assert part
     const auto& modelObjectives = libraries[0].Models().at("some-model").Objectives();
@@ -448,7 +449,7 @@ models:
     // Act part
     auto res = loadLibraries(studyFolder);
     BOOST_REQUIRE(res.has_value());
-    auto resolutionMode = res->second;
+    auto resolutionMode = res->resolutionMode;
     BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
 }
 
@@ -482,7 +483,7 @@ models:
     // Act part
     auto res = loadLibraries(studyFolder);
     BOOST_REQUIRE(res.has_value());
-    auto resolutionMode = res->second;
+    auto resolutionMode = res->resolutionMode;
     BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::BENDERS_DECOMPOSITION);
 }
 
@@ -511,8 +512,8 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_default_resolution_mode, CreateInputFi
     // Act & Assert - default mode should be SEQUENTIAL_SUBPROBLEMS
     auto res = loadLibraries(studyFolder);
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res->first;
-    auto resolutionMode = res->second;
+    const auto& libraries = res->libraries;
+    auto resolutionMode = res->resolutionMode;
     BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
 }
 
@@ -557,8 +558,8 @@ models:
     // Act & Assert
     auto res = loadLibraries(studyFolder);
     BOOST_REQUIRE(res.has_value());
-    const auto& libraries = res->first;
-    auto resolutionMode = res->second;
+    const auto& libraries = res->libraries;
+    auto resolutionMode = res->resolutionMode;
     BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::BENDERS_DECOMPOSITION);
     BOOST_REQUIRE_EQUAL(libraries.size(), 1);
     const auto& models = libraries[0].Models();
@@ -593,6 +594,133 @@ models:
 
     // Act & Assert - invalid resolution mode should throw an exception
     BOOST_CHECK_THROW(loadLibraries(studyFolder), Antares::Error::InvalidArgumentError);
+}
+
+// Tests for scenario-scope field
+BOOST_FIXTURE_TEST_CASE(load_optim_config_with_scenario_scope_inline, CreateInputFileFixture)
+{
+    std::string yamlContent = R"(library:
+  id: my-lib
+  description: test-lib
+  models:
+    - id: test-model
+      variables:
+        - id: x)";
+
+    createLibraryFile(yamlContent);
+
+    yamlContent = R"(scenario-scope:
+  include:
+    - 5
+    - "3"
+    - "0-9"
+  exclude:
+    - 9
+    - 14
+models:
+  - id: my-lib.test-model
+    model-decomposition:
+      variables:
+        - id: x
+          location: master)";
+
+    createOptimConfigFile(yamlContent);
+
+    auto res = loadLibraries(studyFolder);
+    BOOST_REQUIRE(res.has_value());
+    const auto& scope = res->scenarioScope;
+    BOOST_REQUIRE_EQUAL(scope.include.size(), 3);
+    BOOST_CHECK_EQUAL(scope.include[0], "5");
+    BOOST_CHECK_EQUAL(scope.include[1], "3");
+    BOOST_CHECK_EQUAL(scope.include[2], "0-9");
+    BOOST_REQUIRE_EQUAL(scope.exclude.size(), 2);
+    BOOST_CHECK_EQUAL(scope.exclude[0], "9");
+    BOOST_CHECK_EQUAL(scope.exclude[1], "14");
+}
+
+BOOST_FIXTURE_TEST_CASE(load_optim_config_without_scenario_scope_is_default, CreateInputFileFixture)
+{
+    std::string yamlContent = R"(library:
+  id: my-lib
+  description: test-lib
+  models:
+    - id: test-model
+      variables:
+        - id: x)";
+
+    createLibraryFile(yamlContent);
+
+    yamlContent = R"(models:
+  - id: my-lib.test-model
+    model-decomposition:
+      variables:
+        - id: x
+          location: master)";
+
+    createOptimConfigFile(yamlContent);
+
+    auto res = loadLibraries(studyFolder);
+    BOOST_REQUIRE(res.has_value());
+    const auto& scope = res->scenarioScope;
+    BOOST_CHECK(scope.include.empty());
+    BOOST_CHECK(scope.exclude.empty());
+}
+
+BOOST_FIXTURE_TEST_CASE(load_optim_config_with_empty_scenario_scope_is_default,
+                        CreateInputFileFixture)
+{
+    std::string yamlContent = R"(library:
+  id: my-lib
+  description: test-lib
+  models:
+    - id: test-model
+      variables:
+        - id: x)";
+
+    createLibraryFile(yamlContent);
+
+    yamlContent = R"(scenario-scope:
+models:
+  - id: my-lib.test-model
+    model-decomposition:
+      variables:
+        - id: x
+          location: master)";
+
+    createOptimConfigFile(yamlContent);
+
+    auto res = loadLibraries(studyFolder);
+    BOOST_REQUIRE(res.has_value());
+    const auto& scope = res->scenarioScope;
+    BOOST_CHECK(scope.include.empty());
+    BOOST_CHECK(scope.exclude.empty());
+}
+
+BOOST_FIXTURE_TEST_CASE(load_optim_config_with_invalid_scenario_scope_include,
+                        CreateInputFileFixture)
+{
+    std::string yamlContent = R"(library:
+  id: my-lib
+  description: test-lib
+  models:
+    - id: test-model
+      variables:
+        - id: x)";
+
+    createLibraryFile(yamlContent);
+
+    yamlContent = R"(scenario-scope:
+  include: not-a-sequence
+models:
+  - id: my-lib.test-model
+    model-decomposition:
+      variables:
+        - id: x
+          location: master)";
+
+    createOptimConfigFile(yamlContent);
+
+    BOOST_CHECK_THROW(loadLibraries(studyFolder), std::runtime_error);
 }
 
 BOOST_FIXTURE_TEST_CASE(load_libraries_returns_empty_optional_when_no_model_libraries_dir,

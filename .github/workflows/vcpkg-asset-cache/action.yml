@@ -1,0 +1,38 @@
+name: "Configure vcpkg asset cache"
+description: >-
+  Point vcpkg at the mirror of the source archives this ref's baseline resolves,
+  so builds keep working after upstream purges those versions.
+inputs:
+  base-url:
+    description: >-
+      Base URL of the mirror; the per-baseline path is appended to it. Left to the
+      default unless the mirror moves, in which case setting the repository
+      variable VCPKG_ASSET_BASE_URL redirects every workflow at once.
+    required: false
+    default: ''
+runs:
+  using: "composite"
+  steps:
+  - shell: bash
+    run: |
+      set -euo pipefail
+      # The baseline decides which port versions -- and therefore which source
+      # URLs -- this ref resolves, so it is what the mirror keys its assets by.
+      # Read rather than hardcoded: unlike a release branch, whose baseline is
+      # frozen, develop's moves every time the vcpkg submodule is bumped.
+      # `|| true` so a no-match grep does not trip pipefail before the check
+      # below can report something more useful than a bare exit code.
+      baseline=$(sed -n '/"default-registry"/,/}/p' vcpkg-configuration.json \
+                   | grep -oE '\b[0-9a-f]{40}\b' | head -n1 || true)
+      if [ -z "$baseline" ]; then
+        echo "::error::no 40-hex default-registry baseline in vcpkg-configuration.json"
+        exit 1
+      fi
+      echo "vcpkg baseline: $baseline"
+      base_url=${BASE_URL:-https://github.com/AntaresSimulatorTeam/antares-vcpkg-registry/releases/download}
+      # Read-only, and deliberately without x-block-origin: a miss has to fall
+      # through to the origin URL, both so a not-yet-mirrored archive still
+      # builds and so a seeding run can discover it.
+      echo "X_VCPKG_ASSET_SOURCES=clear;x-azurl,${base_url%/}/baseline-$baseline/,,read" >> "$GITHUB_ENV"
+    env:
+      BASE_URL: ${{ inputs.base-url }}
