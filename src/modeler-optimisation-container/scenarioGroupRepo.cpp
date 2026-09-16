@@ -34,7 +34,7 @@ public:
     [[nodiscard]] bool hasYear(Year) const override
     {
         return true;
-    };
+    }
 };
 } // namespace
 
