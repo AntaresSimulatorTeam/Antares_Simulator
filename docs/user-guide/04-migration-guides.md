@@ -17,7 +17,7 @@ Old format:
 
 ### Output
 
-#### One simulation per optimization and post-process
+#### One simulation table per optimization and post-process
 
 A simulation table is now written after **each** stage (optimization or post-process), one
 file per stage, named `simulation-table-<year>-<stage>`:
@@ -26,11 +26,11 @@ file per stage, named `simulation-table-<year>-<stage>`:
 |---|---|---|
 | `optim-nb-1` | the first optimisation pass | always |
 | `optim-nb-2` | the second pass | when that pass runs (see below) |
-| `remix-hydro` | shave-peaks / remix hydro | weekly `simplex-range` only (see below) |
-| `adq-patch-csr` | the whole adequacy patch CSR treatment | adequacy patch enabled, weekly `simplex-range` only |
+| `peak-shaving` | peak-shaving / remix hydro | weekly `simplex-range` only (see below) |
+| `adq-patch` | the whole adequacy patch CSR treatment | adequacy patch enabled, weekly `simplex-range` only |
 
-**The two pre-existing files are unchanged** — same names, same contents. `remix-hydro` and
-`adq-patch-csr` are new files that did not exist before. A script that globs
+**The two pre-existing files are unchanged** — same names, same contents. `peak-shaving` and
+`adq-patch` are new files that did not exist before. A script that globs
 `simulation-table-*` will therefore pick up more files than it used to, and should filter on the
 stage suffix if it only wants the optimization passes.
 
@@ -39,7 +39,7 @@ stage suffix if it only wants the optimization passes.
 Previously `simulation-table-<year>-optim-nb-2` was always written, even as a header-only file when
 the second optimization pass never ran. It is now omitted entirely in that case, which happens when
 [`unit-commitment-mode`](solver/04-parameters.md#unit-commitment-mode) is `milp` — a single MILP
-problem is solved instead of two LP problems — and in Expansion mode.
+problem is solved instead of two LP problems — or in Expansion mode.
 
 Scripts that open the optim-nb-2 file unconditionally must handle its absence. Note that an absent
 file and a header-only file always carried the same information — that the pass did not run.
@@ -57,17 +57,18 @@ way.
 
 Each stage costs memory and writing time, so the set can be restricted. In
 **settings/generaldata.ini**, section `output`, the new optional property `simulation-table-stages`
-takes `all` (the default), `last`, or a comma-separated list of stage names:
+takes `all` (the default) or a comma-separated list of stage names:
 
 ```ini
 [output]
-simulation-table-stages = optim-nb-2, adq-patch-csr
+simulation-table-stages = optim-nb-2, adq-patch
 ```
 
 `last` is shorthand for the final stage the run actually reaches — `adq-patch-csr` when the
 adequacy patch is enabled, `remix-hydro` otherwise — and produces a file named for that stage, not
 one named `last`. The value must not be left blank: `simulation-table-stages =` with nothing after
 it stops the simulation rather than being read as `all` (which is what omitting the key means).
+
 
 The command-line option `--simulation-table-stages` overrides the generaldata.ini, including
 `--simulation-table-stages=all` to restore the full set for a single run. An unrecognized stage
