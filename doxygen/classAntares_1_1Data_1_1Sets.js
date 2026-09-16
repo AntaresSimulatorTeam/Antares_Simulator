@@ -10,6 +10,10 @@ var classAntares_1_1Data_1_1Sets =
     [ "RuleSet", "classAntares_1_1Data_1_1Sets.html#abb64cdeb7145bfaf447a9293bb4d35f0", null ],
     [ "SetAreasType", "classAntares_1_1Data_1_1Sets.html#a23f6aae164b511c18fc8de56150db14c", null ],
     [ "TypePtr", "classAntares_1_1Data_1_1Sets.html#a9af89c550e05d8be2d2332bf7246556f", null ],
+    [ "ReportType", "classAntares_1_1Data_1_1Sets.html#acde2763c2b61920e38e478972698350d", [
+      [ "synthesis", "classAntares_1_1Data_1_1Sets.html#acde2763c2b61920e38e478972698350da82c92855160867376ed0610fb163d2e4", null ],
+      [ "yearByYear", "classAntares_1_1Data_1_1Sets.html#acde2763c2b61920e38e478972698350da73f904e3786dc21d8e217ace5bf806fe", null ]
+    ] ],
     [ "RuleType", "classAntares_1_1Data_1_1Sets.html#ac65c51c62f76ee7fc938612620382a89", [
       [ "ruleNone", "classAntares_1_1Data_1_1Sets.html#ac65c51c62f76ee7fc938612620382a89a623fb3f7cdf4386b19705a76040bab70", null ],
       [ "ruleAdd", "classAntares_1_1Data_1_1Sets.html#ac65c51c62f76ee7fc938612620382a89a8f72fbb2df81e32151fcfcb94d2ae92a", null ],
@@ -36,6 +40,7 @@ var classAntares_1_1Data_1_1Sets =
     [ "nameByIndex", "classAntares_1_1Data_1_1Sets.html#a7ee34bf9017a69639e491978957d68b4", null ],
     [ "operator[]", "classAntares_1_1Data_1_1Sets.html#a8230b764fc0c39aeb6efc45b0f126cca", null ],
     [ "operator[]", "classAntares_1_1Data_1_1Sets.html#af71a485c8f65823a0f6c7273d04fb6bb", null ],
+    [ "outputFilter", "classAntares_1_1Data_1_1Sets.html#af2216f119f0f4b0027a70c5e0327c5cd", null ],
     [ "rebuildAllFromRules", "classAntares_1_1Data_1_1Sets.html#a443ccf7f2c98943a09f30302328c70b9", null ],
     [ "rebuildIndexes", "classAntares_1_1Data_1_1Sets.html#ae9ba19d77a5b2fc3d9a289689a215011", null ],
     [ "resultSize", "classAntares_1_1Data_1_1Sets.html#a9b078b31d9a02f2f718ce7a641b0602b", null ],

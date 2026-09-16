@@ -6,6 +6,8 @@ var classAntares_1_1Data_1_1Sets_1_1Options =
     [ "reset", "classAntares_1_1Data_1_1Sets_1_1Options.html#a5410e22c6e4b88440653c4702996b476", null ],
     [ "caption", "classAntares_1_1Data_1_1Sets_1_1Options.html#af065194b111aedca371d9268ce726dc2", null ],
     [ "comments", "classAntares_1_1Data_1_1Sets_1_1Options.html#a1e4723729507b97cafbc3dee861f9773", null ],
+    [ "filterSynthesis", "classAntares_1_1Data_1_1Sets_1_1Options.html#aa8b7f60291f7f48ef077bd5fb61ebe63", null ],
+    [ "filterYearByYear", "classAntares_1_1Data_1_1Sets_1_1Options.html#af7e2d7792899b654c4a88c64e76168a7", null ],
     [ "output", "classAntares_1_1Data_1_1Sets_1_1Options.html#a660b437b056a9ee0577a85e9019de330", null ],
     [ "resultSize", "classAntares_1_1Data_1_1Sets_1_1Options.html#a6f3e45142cff36da11226183d4da5466", null ],
     [ "rules", "classAntares_1_1Data_1_1Sets_1_1Options.html#ae582f1a37318544e7273f303c366b2b6", null ]

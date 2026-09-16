@@ -149,6 +149,11 @@ Public Types</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:ac65c51c62f76ee7fc938612620382a89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acde2763c2b61920e38e478972698350d"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Sets.html#acde2763c2b61920e38e478972698350d">ReportType</a> { <a class="el" href="classAntares_1_1Data_1_1Sets.html#acde2763c2b61920e38e478972698350da82c92855160867376ed0610fb163d2e4">synthesis</a>
+, <a class="el" href="classAntares_1_1Data_1_1Sets.html#acde2763c2b61920e38e478972698350da73f904e3786dc21d8e217ace5bf806fe">yearByYear</a>
+ }</td></tr>
+<tr class="memdesc:acde2763c2b61920e38e478972698350d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of output report for which a district granularity filter applies.  <a href="classAntares_1_1Data_1_1Sets.html#acde2763c2b61920e38e478972698350d">More...</a><br /></td></tr>
+<tr class="separator:acde2763c2b61920e38e478972698350d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0ad0b1c9b5bc9a08083b1ca840edb52"><td class="memItemLeft" align="right" valign="top"><a id="ad0ad0b1c9b5bc9a08083b1ca840edb52"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>IDType</b> = std::string</td></tr>
 <tr class="separator:ad0ad0b1c9b5bc9a08083b1ca840edb52"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -243,6 +248,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>dumpToLogs</b> () con
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Sets.html#a3dda49c6b3ac5db21ece63b420495280">loadFromFile</a> (const std::filesystem::path &amp;filename)</td></tr>
 <tr class="memdesc:a3dda49c6b3ac5db21ece63b420495280"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a rule set from an INI File. <br /></td></tr>
 <tr class="separator:a3dda49c6b3ac5db21ece63b420495280"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2216f119f0f4b0027a70c5e0327c5cd"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Sets.html#af2216f119f0f4b0027a70c5e0327c5cd">outputFilter</a> (const IDType &amp;id, <a class="el" href="classAntares_1_1Data_1_1Sets.html#acde2763c2b61920e38e478972698350d">ReportType</a> report) const</td></tr>
+<tr class="memdesc:af2216f119f0f4b0027a70c5e0327c5cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the output filter of a district for a given report type.  <a href="classAntares_1_1Data_1_1Sets.html#af2216f119f0f4b0027a70c5e0327c5cd">More...</a><br /></td></tr>
+<tr class="separator:af2216f119f0f4b0027a70c5e0327c5cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9dba3582751eee4e98cc8b08ff7e62e4"><td class="memItemLeft" align="right" valign="top"><a id="a9dba3582751eee4e98cc8b08ff7e62e4"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Sets.html#a9dba3582751eee4e98cc8b08ff7e62e4">toString</a> ()</td></tr>
 <tr class="memdesc:a9dba3582751eee4e98cc8b08ff7e62e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">format the string to match the options <br /></td></tr>
@@ -277,6 +285,78 @@ const <a class="el" href="classAntares_1_1Data_1_1Sets.html#a23f6aae164b511c18fc
 void&#160;</td><td class="memItemRight" valign="bottom"><b>rebuildIndexes</b> ()</td></tr>
 <tr class="separator:ae9ba19d77a5b2fc3d9a289689a215011"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="acde2763c2b61920e38e478972698350d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acde2763c2b61920e38e478972698350d">&#9670;&nbsp;</a></span>ReportType</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="classAntares_1_1Data_1_1Sets.html#acde2763c2b61920e38e478972698350d">Antares::Data::Sets::ReportType</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The type of output report for which a district granularity filter applies. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="acde2763c2b61920e38e478972698350da82c92855160867376ed0610fb163d2e4"></a>synthesis&#160;</td><td class="fielddoc"><p>Synthesis report (mc-all) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="acde2763c2b61920e38e478972698350da73f904e3786dc21d8e217ace5bf806fe"></a>yearByYear&#160;</td><td class="fielddoc"><p>Year-by-year report (mc-ind) </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="af2216f119f0f4b0027a70c5e0327c5cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2216f119f0f4b0027a70c5e0327c5cd">&#9670;&nbsp;</a></span>outputFilter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int Antares::Data::Sets::outputFilter </td>
+          <td>(</td>
+          <td class="paramtype">const IDType &amp;&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classAntares_1_1Data_1_1Sets.html#acde2763c2b61920e38e478972698350d">ReportType</a>&#160;</td>
+          <td class="paramname"><em>report</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the output filter of a district for a given report type. </p>
+<p><br  />
+</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>The district id </td></tr>
+    <tr><td class="paramname">report</td><td>The report type (synthesis or year-by-year) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The bitmask of FilterFlag of the granularities to export. filterAll means no restriction (all granularities are exported). </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/libs/antares/study/include/antares/study/<a class="el" href="sets_8h_source.html">sets.h</a></li>
 <li>src/libs/antares/study/area/sets.cpp</li>
