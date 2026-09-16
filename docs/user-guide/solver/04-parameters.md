@@ -300,8 +300,8 @@ Link variables files columns: *Link Hour Flow*
     - `peak-shaving`: after the peak-shaving / remix-hydro post-process
     - `adq-patch`: after the whole adequacy patch CSR treatment (curtailment sharing, DTG
       netting and the marginal price update). Only produced when the adequacy patch is enabled.
-    - `last`: shorthand for the last stage the run actually reaches — `adq-patch-csr` when the
-      adequacy patch is enabled, `remix-hydro` otherwise. Resolves to a real stage name in the
+    - `last`: shorthand for the last stage the run actually reaches — `adq-patch` when the
+      adequacy patch is enabled, `peak-shaving` otherwise. Resolves to a real stage name in the
       output file, never a file literally named `last`.
 
 Restricting the list saves the memory and the writing time of the tables you do not need; it does

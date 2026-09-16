@@ -64,8 +64,8 @@ takes `all` (the default) or a comma-separated list of stage names:
 simulation-table-stages = optim-nb-2, adq-patch
 ```
 
-`last` is shorthand for the final stage the run actually reaches — `adq-patch-csr` when the
-adequacy patch is enabled, `remix-hydro` otherwise — and produces a file named for that stage, not
+`last` is shorthand for the final stage the run actually reaches — `adq-patch` when the
+adequacy patch is enabled, `peak-shaving` otherwise — and produces a file named for that stage, not
 one named `last`. The value must not be left blank: `simulation-table-stages =` with nothing after
 it stops the simulation rather than being read as `all` (which is what omitting the key means).
 

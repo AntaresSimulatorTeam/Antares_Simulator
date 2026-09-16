@@ -193,8 +193,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         }
 
         // "last" stands for the final stage the weekly resolution reaches: the
-        // CSR stage when the adequacy patch runs, otherwise the remix-hydro
-        // post-process, which every run reaches.
+        // CSR stage when the adequacy patch runs, otherwise the peak-shaving
+        // stage, which every run reaches.
         const auto lastStage = study.parameters.adqPatchParams.enabled
                                  ? IO::Outputs::Stage::adequacyPatch
                                  : IO::Outputs::Stage::peakShaving;

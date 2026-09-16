@@ -178,7 +178,7 @@ That condition is deliberately **not** "this optimisation pass writes a table". 
 
 Every stage costs a full table's worth of memory for the whole Monte-Carlo year and the time to write it, and a run that only wants to inspect one treatment has no use for the other three. The selection is a comma-separated list of stage names, `all` (the default) meaning every stage, and it can be set in either place:
 
-The list also accepts `last`, which stands for whichever stage the run actually reaches last — `adq-patch-csr` when the adequacy patch is enabled, `remix-hydro` otherwise (that post-process always runs). It is resolved to a concrete `Stage` in `Application::readDataForTheStudy`, *after* the study is loaded so the adequacy-patch flag is known, and the resolved stage is what `parseStageSelection` receives as its `lastStage` argument; the output file is named for that stage, never `last`.
+The list also accepts `last`, which stands for whichever stage the run actually reaches last — `adq-patch` when the adequacy patch is enabled, `peak-shaving` otherwise (that post-process always runs). It is resolved to a concrete `Stage` in `Application::readDataForTheStudy`, *after* the study is loaded so the adequacy-patch flag is known, and the resolved stage is what `parseStageSelection` receives as its `lastStage` argument; the output file is named for that stage, never `last`.
 
 ```ini
 # settings/generaldata.ini

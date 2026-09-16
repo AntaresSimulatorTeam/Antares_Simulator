@@ -472,21 +472,21 @@ Feature: Legacy variables in simulation table
   Scenario: "last" selects the final stage the run reaches, adequacy patch on
     # This fixture enables the adequacy patch, so the last stage the weekly
     # resolution reaches is the CSR one -- "last" must resolve to it, and to a
-    # file named adq-patch-csr, never one named "last".
+    # file named adq-patch, never one named "last".
     Given the solver study path is "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
     When I run antares simulator with --output=simulation-tables --simulation-table-stages=last
     Then the simulation succeeds
-    And the simulation tables cover exactly the stages "adq-patch-csr"
+    And the simulation tables cover exactly the stages "adq-patch"
 
 
   @short
   Scenario: "last" selects the final stage the run reaches, adequacy patch off
-    # "3_6_1" has no adequacy patch, so the remix-hydro post-process -- which
-    # every run reaches -- is the last stage, and "last" resolves there.
+    # "3_6_1" has no adequacy patch, so the peak-shaving stage -- which every
+    # run reaches -- is the last stage, and "last" resolves there.
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
     When I run antares simulator with --output=simulation-tables --simulation-table-stages=last
     Then the simulation succeeds
-    And the simulation tables cover exactly the stages "remix-hydro"
+    And the simulation tables cover exactly the stages "peak-shaving"
 
 
   @short
