@@ -34,7 +34,7 @@ file per stage, named `simulation-table-<year>-<stage>`:
 |---|---|---|
 | `optim-nb-1` | the first optimisation pass | always |
 | `optim-nb-2` | the second pass | when that pass runs (see below) |
-| `peak-shaving` | shave-peaks / remix hydro | weekly `simplex-range` only (see below) |
+| `peak-shaving` | peak-shaving / remix hydro | weekly `simplex-range` only (see below) |
 | `adq-patch` | the whole adequacy patch CSR treatment | adequacy patch enabled, weekly `simplex-range` only |
 
 **The two pre-existing files are unchanged** — same names, same contents. `peak-shaving` and
@@ -71,14 +71,6 @@ takes `all` (the default) or a comma-separated list of stage names:
 [output]
 simulation-table-stages = optim-nb-2, adq-patch
 ```
-
-The command-line option `--simulation-table-stages` overrides the generaldata.ini, including
-`--simulation-table-stages=all` to restore the full set for a single run. An unrecognized stage
-name stops the simulation, wherever it sits in the list — `all` widens the selection but does not
-excuse a typo after it. This only chooses *which* tables are written — simulation tables must still
-be enabled through the `--output` option, and selecting stages without enabling them warns and does
-nothing else.
-
 If no CLI flag is given and no `output/simulation-table-stages` is provided in generaldata.ini, a simulation table gets written to disk for every stage. Remember that simulation tables are not written by default, use `--output all|simulation-tables` to enable them.
 
 #### Behavior

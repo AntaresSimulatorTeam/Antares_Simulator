@@ -290,6 +290,7 @@ bool Study::internalLoadSets()
         // Apply the rules
         SetHandlerAreas handler(areas);
         setsOfAreas.rebuildAllFromRules(handler);
+
         // Write the results into the logs
         setsOfAreas.dumpToLogs();
         return true;
