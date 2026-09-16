@@ -140,7 +140,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // resolved to the final stage the run actually reaches.
     if (!pSettings.simulationTableStagesStr.empty())
     {
-        (void) IO::Outputs::OptimisationsSimulationTable::parseStageSelection(
+        (void)IO::Outputs::OptimisationsSimulationTable::parseStageSelection(
           pSettings.simulationTableStagesStr);
     }
 
