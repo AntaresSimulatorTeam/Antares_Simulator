@@ -196,8 +196,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         // CSR stage when the adequacy patch runs, otherwise the remix-hydro
         // post-process, which every run reaches.
         const auto lastStage = study.parameters.adqPatchParams.enabled
-                                 ? IO::Outputs::Stage::adequacyPatchCsr
-                                 : IO::Outputs::Stage::remixHydro;
+                                 ? IO::Outputs::Stage::adequacyPatch
+                                 : IO::Outputs::Stage::peakShaving;
 
         // The command line wins over generaldata.ini; both go through the same
         // validation, so an unknown stage name in the study stops the run too.

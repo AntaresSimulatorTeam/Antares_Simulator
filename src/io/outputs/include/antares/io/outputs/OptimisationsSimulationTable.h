@@ -53,7 +53,7 @@ public:
     [[nodiscard]] static std::set<Stage> parseStageSelection(
       const std::string& input,
       const std::string& source = "--simulation-table-stages",
-      Stage lastStage = Stage::adequacyPatchCsr);
+      Stage lastStage = Stage::adequacyPatch);
 
     /**
      * \brief Restrict the tables to `stages`; an empty set lifts the restriction.
