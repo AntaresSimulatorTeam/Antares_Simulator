@@ -1051,19 +1051,6 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_pId_slugifiesName)
     BOOST_CHECK_EQUAL(bc.id(), Antares::transformNameIntoID("My Constraint Name!"));
 }
 
-BOOST_AUTO_TEST_CASE(BindingConstraint_resetToDefaultValues)
-{
-    BindingConstraint bc;
-    bc.enabled(false);
-    bc.RHSTimeSeries().resize(2, 5);
-
-    bc.resetToDefaultValues();
-
-    BOOST_CHECK_EQUAL(bc.enabled(), true);
-    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width, 0u);
-    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height, 0u);
-}
-
 BOOST_AUTO_TEST_CASE(BindingConstraint_clearAndReset_hourly)
 {
     auto study = std::make_unique<Study>();

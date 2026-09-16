@@ -17,6 +17,9 @@ Area::Area():
     reserves(fhrMax, HOURS_PER_YEAR),
     miscGen(fhhMax, HOURS_PER_YEAR)
 {
+    // Matrix(width, height) allocates without zero-filling; reserves/miscGen must start at 0.
+    reserves.zero();
+    miscGen.zero();
 }
 
 Area::Area(const std::string& name):
@@ -91,6 +94,13 @@ void Area::createMissingData()
 {
     createMissingTimeSeries();
     createMissingPrepros();
+
+    // Ensure hydro, load, solar and wind matrices are sized to valid defaults
+    hydro.reset();
+    hydro.allocation.fromArea(id, 1.);
+    load.series.reset();
+    solar.series.reset();
+    wind.series.reset();
 }
 
 void Area::createMissingTimeSeries()
@@ -120,38 +130,6 @@ void Area::createMissingPrepros()
         hydro.prepro = std::make_unique<PreproHydro>();
     }
     thermal.list.ensureDataPrepro();
-}
-
-void Area::resetToDefaultValues()
-{
-    // Nodal optimization
-    nodalOptimization = anoAll;
-
-    // Spread
-    spreadUnsuppliedEnergyCost = 0.;
-    spreadSpilledEnergyCost = 0.;
-
-    // Filtering
-    filterSynthesis = (unsigned int)filterAll;
-    filterYearByYear = (unsigned int)filterAll;
-
-    // Load
-    load.resetToDefault();
-    // Solar
-    solar.resetToDefault();
-    // Wind
-    wind.resetToDefault();
-    // Hydro
-    hydro.reset();
-    hydro.allocation.fromArea(id, 1.);
-    // Thermal
-    thermal.reset();
-    // Renewable
-    renewable.reset();
-    // Fatal hors hydro
-    miscGen.reset(fhhMax, HOURS_PER_YEAR);
-    // reserves
-    reserves.reset(fhrMax, HOURS_PER_YEAR);
 }
 
 void Area::resizeAllTimeseriesNumbers(unsigned int nbYears)

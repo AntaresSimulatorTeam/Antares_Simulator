@@ -176,35 +176,6 @@ void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
     writer.addEntryFromBuffer(path, buffer);
 }
 
-void AreaLink::resetToDefaultValues()
-{
-    parameters.reset(fhlMax, HOURS_PER_YEAR);
-    directCapacities.reset();
-    indirectCapacities.reset();
-
-    for (unsigned int i = 0; i != HOURS_PER_YEAR; ++i)
-    {
-        directCapacities[0][i] = 1.;
-        indirectCapacities[0][i] = 1.;
-    }
-    useLoopFlow = false;
-    usePST = false;
-    useHurdlesCost = false;
-    transmissionCapacities = LocalTransmissionCapacities::enabled;
-    assetType = Data::atAC;
-    color[0] = 112;
-    color[1] = 112;
-    color[2] = 112;
-    style = stPlain;
-
-    filterSynthesis = (unsigned int)filterAll;
-    filterYearByYear = (unsigned int)filterAll;
-
-    comments.clear();
-    comments.shrink_to_fit();
-    displayComments = true;
-}
-
 void AreaLink::reverse()
 {
     // Logs
