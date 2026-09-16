@@ -51,33 +51,32 @@ Exchange searchForExhange(const std::set<unsigned>& validHours,
                           const std::vector<double>& UnsupE,
                           const IStorageForRemix& storage)
 {
-    auto totalGenProjection = [&](int h) { return TotalGen[h]; };
+    auto unsupEProjection = [&](int h) { return UnsupE[h]; };
 
-    std::set<unsigned> validHoursForMin(validHours);
-    std::erase_if(validHoursForMin, [&](int h) { return UnsupE[h] <= eps; });
+    std::set<unsigned> validHoursForMax(validHours);
 
-    while (!validHoursForMin.empty())
+    while (!validHoursForMax.empty())
     {
-        auto hourOfMinGen = std::ranges::min_element(validHoursForMin, {}, totalGenProjection);
+        auto hourOfMaxUnsup = std::ranges::max_element(validHoursForMax, {}, unsupEProjection);
 
-        std::set<unsigned> validHoursForMax(validHours);
-        double totalGenMin = TotalGen[*hourOfMinGen];
-        std::erase_if(validHoursForMax, [&](int h) { return TotalGen[h] < totalGenMin + eps; });
+        std::set<unsigned> validHoursForMin(validHours);
+        double unsupEMax = UnsupE[*hourOfMaxUnsup];
+        std::erase_if(validHoursForMin, [&](int h) { return UnsupE[h] > unsupEMax - eps; });
 
-        while (!validHoursForMax.empty())
+        while (!validHoursForMin.empty())
         {
-            auto hourOfMaxGen = std::ranges::max_element(validHoursForMax, {}, totalGenProjection);
+            auto hourOfMinUnsup = std::ranges::min_element(validHoursForMin, {}, unsupEProjection);
 
-            double maxVariationGen = TotalGen[*hourOfMaxGen] - totalGenMin;
-            auto exchange = computeExchange(*hourOfMinGen, *hourOfMaxGen, maxVariationGen, storage);
+            double maxVariationGen = unsupEMax - UnsupE[*hourOfMinUnsup];
+            auto exchange = computeExchange(*hourOfMaxUnsup, *hourOfMinUnsup, maxVariationGen, storage);
 
             if (exchange > eps)
             {
-                return {*hourOfMinGen, *hourOfMaxGen, exchange};
+                return {*hourOfMaxUnsup, *hourOfMinUnsup, exchange};
             }
-            validHoursForMax.erase(hourOfMaxGen);
+            validHoursForMin.erase(hourOfMinUnsup);
         }
-        validHoursForMin.erase(hourOfMinGen);
+        validHoursForMax.erase(hourOfMaxUnsup);
     }
     return {};
 }
