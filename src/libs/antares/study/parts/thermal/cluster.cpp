@@ -9,7 +9,7 @@
 
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include <antares/solver/ts-generator/law.h>
+#include <antares/study/parts/thermal/law.h>
 #include <antares/utils/utils.h>
 #include "antares/array/matrix.h"
 #include "antares/study/parts/thermal/cluster.h"

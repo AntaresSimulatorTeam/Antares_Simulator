@@ -10,12 +10,12 @@ namespace Antares::Data
 {
 void Study::importLogsToOutputFolder(Solver::IResultWriter& resultWriter) const
 {
-    if (!logs.logfile())
+    if (logs.logfile().empty())
     {
         return;
     }
 
-    std::filesystem::path from = logs.logfile().c_str();
+    std::filesystem::path from = logs.logfile();
     from = from.lexically_normal();
 
 #ifdef _WIN32

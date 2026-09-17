@@ -208,12 +208,10 @@ These dynamic aggregation columns appear in:
 #### Column Naming Convention
 
 For each thermal group, renewable group, or short-term storage group, the columns follow this pattern:
-- **Single-year reports** (`mc-ind`): `<group>_TH_PROD`, `<group>_RES_PROD`, `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL`
-- **Synthesis reports** (`mc-all`): `<group>_TH_PROD`, `<group>_RES_PROD`, `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL`
+- **Single-year reports** (`mc-ind`): `<group>`, `<group>`, `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL`
+- **Synthesis reports** (`mc-all`): `<group>`, `<group>`, `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL`
 
 The suffixes indicate:
-- `_TH_PROD`: Thermal production (total)
-- `_RES_PROD`: Renewable production (total)
 - `_INJECTION`: Short-term storage injection (total)
 - `_WITHDRAWAL`: Short-term storage withdrawal (total)
 - `_LEVEL`: Short-term storage level (average)
@@ -224,7 +222,7 @@ The following group types can be used for dynamic aggregation:
 
 | Variable type | Description | Column pattern (per group) |
 |--------------|-------------|------------------------|
-| Thermal clusters | Production | `<group>_TH_PROD`, `<group>_RES_PROD`, `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL` |
+| Thermal clusters | Production | `<group>`, `<group>`, `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL` |
 | Renewable clusters | Injection | `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL` |
 | Short-term storage | Injection | `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL` |
 

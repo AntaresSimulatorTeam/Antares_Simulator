@@ -5,9 +5,9 @@
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_H__
 
 #include <antares/array/matrix.h>
-#include <antares/solver/ts-generator/law.h>
 #include <antares/study/fwd.h>
 #include <antares/study/parts/thermal/defines.h>
+#include <antares/study/parts/thermal/law.h>
 
 namespace Antares::Data
 {

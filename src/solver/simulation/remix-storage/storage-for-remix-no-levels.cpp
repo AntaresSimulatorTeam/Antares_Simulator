@@ -5,6 +5,7 @@
 
 #include <stdexcept>
 
+#include <antares/logs/logs.h>
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
 #include "antares/utils/vector-utils.h"
 
@@ -23,7 +24,8 @@ StorageForRemixNoLevels::StorageForRemixNoLevels(std::vector<double>& withdrawal
     initWithdrawal_(withdrawal),
     unsupE_(unsupE),
     pmax_(Pmax),
-    pmin_(Pmin)
+    pmin_(Pmin),
+    error_msg_start_hydro_remix("Remix hydro input for '" + name + "' : ")
 {
     checkInput(unsupE_.size());
 }
@@ -52,12 +54,38 @@ void StorageForRemixNoLevels::checkInput(size_t size)
 
     if (!(withdrawal_ <= pmax_ + TOLERANCE))
     {
+        for (size_t h = 0; h < withdrawal_.size(); ++h)
+        {
+            if (withdrawal_[h] > pmax_[h] + TOLERANCE)
+            {
+                logs.error().appendFormat(
+                  "%s - hour %zu : withdrawal = %.17g, pmax = %.17g, tolerance = %.17g",
+                  name().c_str(),
+                  h,
+                  withdrawal_[h],
+                  pmax_[h],
+                  TOLERANCE);
+            }
+        }
         throw std::invalid_argument(error_msg_start_hydro_remix
                                     + "Storage withdrawal not smaller than Pmax everywhere");
     }
 
     if (!(pmin_ - TOLERANCE <= withdrawal_))
     {
+        for (size_t h = 0; h < withdrawal_.size(); ++h)
+        {
+            if (withdrawal_[h] < pmin_[h] - TOLERANCE)
+            {
+                logs.error().appendFormat(
+                  "%s - hour %zu : withdrawal = %.17g, pmin = %.17g, tolerance = %.17g",
+                  name().c_str(),
+                  h,
+                  withdrawal_[h],
+                  pmin_[h],
+                  TOLERANCE);
+            }
+        }
         throw std::invalid_argument(error_msg_start_hydro_remix
                                     + "Storage withdrawal not greater than Pmin everywhere");
     }

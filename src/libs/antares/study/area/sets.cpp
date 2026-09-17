@@ -4,6 +4,7 @@
 #include "antares/study/sets.h"
 
 #include <string>
+#include <string_view>
 
 #include <antares/utils/utils.h>
 
@@ -21,6 +22,7 @@ std::string trim(const std::string& s)
     const auto end = s.find_last_not_of(" \t");
     return s.substr(begin, end - begin + 1);
 }
+
 } // namespace
 
 Sets::Sets(const Sets& rhs):
@@ -199,6 +201,16 @@ bool Sets::loadFromFile(const std::filesystem::path& filename)
                     opts.caption = p->value;
                     continue;
                 }
+                if (p->key == "filter-synthesis")
+                {
+                    opts.filterSynthesis = stringIntoDatePrecision(value);
+                    continue;
+                }
+                if (p->key == "filter-year-by-year")
+                {
+                    opts.filterYearByYear = stringIntoDatePrecision(value);
+                    continue;
+                }
 
                 logs.warning() << "sets: `" << filename << "`: Invalid property `" << p->key
                                << '\'';
@@ -208,6 +220,22 @@ bool Sets::loadFromFile(const std::filesystem::path& filename)
             IDType newid = std::string(section->name);
             newid = stringToLower(newid);
             add(newid, district, opts);
+        }
+
+        // Summary of the applied per-district output filters
+        auto logFilter = [](const IDType& name, std::string_view report, unsigned int filter)
+        {
+            if (filter == filterAll)
+            {
+                return;
+            }
+            logs.info() << "sets: district `" << name << "`: " << report
+                        << " granularities = " << datePrecisionIntoString(filter);
+        };
+        for (const auto& [name, options]: pOptions)
+        {
+            logFilter(name, "mc-all", options.filterSynthesis);
+            logFilter(name, "mc-ind", options.filterYearByYear);
         }
 
         // Not modified anymore
@@ -225,6 +253,17 @@ void Sets::rebuildAllFromRules(SetHandlerAreas& handler)
     {
         rebuildFromRules(setId, handler);
     }
+}
+
+unsigned int Sets::outputFilter(const IDType& id, ReportType report) const
+{
+    const auto pair = pOptions.find(id);
+    if (pair == pOptions.end())
+    {
+        return filterAll;
+    }
+    return report == ReportType::synthesis ? pair->second.filterSynthesis
+                                           : pair->second.filterYearByYear;
 }
 
 void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)

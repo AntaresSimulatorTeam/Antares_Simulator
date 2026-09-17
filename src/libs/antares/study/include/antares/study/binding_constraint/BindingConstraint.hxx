@@ -17,16 +17,6 @@ inline const std::string& BindingConstraint::id() const
     return pID;
 }
 
-inline const std::string& BindingConstraint::comments() const
-{
-    return pComments;
-}
-
-inline void BindingConstraint::comments(const std::string& newcomments)
-{
-    pComments = newcomments;
-}
-
 inline unsigned int BindingConstraint::linkCount() const
 {
     return (unsigned int)pLinkWeights.size();
@@ -70,26 +60,6 @@ inline bool BindingConstraint::skipped() const
 inline bool BindingConstraint::isActive() const
 {
     return enabled() && !skipped();
-}
-
-inline BindingConstraint::iterator BindingConstraint::begin()
-{
-    return pLinkWeights.begin();
-}
-
-inline BindingConstraint::iterator BindingConstraint::end()
-{
-    return pLinkWeights.end();
-}
-
-inline BindingConstraint::const_iterator BindingConstraint::begin() const
-{
-    return pLinkWeights.begin();
-}
-
-inline BindingConstraint::const_iterator BindingConstraint::end() const
-{
-    return pLinkWeights.end();
 }
 
 template<class Env>

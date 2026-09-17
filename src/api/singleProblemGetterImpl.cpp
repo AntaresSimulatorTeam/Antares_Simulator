@@ -14,6 +14,7 @@
 #include "antares/io/outputs/MPSGenerator.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"

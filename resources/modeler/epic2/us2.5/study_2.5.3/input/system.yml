@@ -6,7 +6,6 @@ system:
     expensive (min_p=500, cost=20 €/MWh). Thus gen2 must be used at its minimum power (500) and gen1 should complete
     (500). Objective = 500 * 10 + 500 * 20 = 15000 for node2.
     Total objective = 15600 for both nodes.
-  model-libraries: lib_example1, lib_example2
 
   components:
     - id: node1

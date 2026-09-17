@@ -3,7 +3,10 @@
 
 #include "include/antares/writer/LegacySimulationTablesWriter.h"
 
+#include <string_view>
+
 #include <antares/exception/RuntimeError.hpp>
+#include <antares/logs/logs.h>
 #include "antares/writer/simulation_table_writer.h"
 
 namespace fs = std::filesystem;
@@ -23,11 +26,10 @@ static void check_is_existing_folder(const fs::path& folder)
 
 static fs::path makeSimuTableFilePath(const fs::path& parentFolder,
                                       const unsigned year,
-                                      const unsigned optim_nb)
+                                      const std::string_view stage)
 {
     // File name without extension
-    std::string filename = "simulation-table-" + std::to_string(year) + "-optim-nb-"
-                           + std::to_string(optim_nb);
+    std::string filename = "simulation-table-" + std::to_string(year) + "-" + std::string(stage);
     return parentFolder / filename;
 }
 
@@ -41,18 +43,29 @@ LegacySimulationTablesWriter::LegacySimulationTablesWriter(const fs::path& folde
     check_is_existing_folder(folder_);
 }
 
-void LegacySimulationTablesWriter::write(OptimisationsSimulationTable& tables)
+void LegacySimulationTablesWriter::write(const OptimisationsSimulationTable& tables) const
 {
-    writeForOptim(tables.firstOptimSimulationTable(), 1);
-    writeForOptim(tables.secondOptimSimulationTable(), 2);
+    for (const auto& [stage, table]: tables.stages())
+    {
+        // A stage with no rows produced nothing worth reporting -- e.g. a
+        // post-process dump that declined to run. Writing it would emit a
+        // header-only file suggesting the stage ran and found nothing.
+        if (table.rowCount() == 0)
+        {
+            logs.info() << fmt::format(
+              "No content for stage '{}', skipping writing corresponding simulation table",
+              stageName(stage));
+            continue;
+        }
+        writeForStage(table, stage);
+    }
 }
 
-void LegacySimulationTablesWriter::writeForOptim(const SimulationTable* table,
-                                                 unsigned optim_number)
+void LegacySimulationTablesWriter::writeForStage(const SimulationTable& table, Stage stage) const
 {
-    auto filepath = makeSimuTableFilePath(folder_, year_, optim_number);
+    auto filepath = makeSimuTableFilePath(folder_, year_, stageName(stage));
     SimulationTableWriter writer(filepath, tableFormat_);
-    writer.writeTable(*table);
+    writer.writeTable(table);
 }
 
 } // namespace Antares::Writer

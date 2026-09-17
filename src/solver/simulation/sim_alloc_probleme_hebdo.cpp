@@ -425,9 +425,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
                                                     ? study.areas.byIndex[k]
                                                         ->hydro.reserveParticipationsCount()
                                                     : 0;
-        const uint nbReserves = resEnabled
-                                  ? study.areas.byIndex[k]->allCapacityReservations.value().size()
-                                  : 0;
+        const uint nbReserves = resEnabled ? study.areas.byIndex[k]->allCapacityReservations->size()
+                                           : 0;
 
         auto& palier = problem.PaliersThermiquesDuPays[k];
 
@@ -562,7 +561,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
                 production.ParticipationReservesDuPalierOff.emplace(nbThermalReserveParticipations,
                                                                     0.);
 
-                auto& res = resultats.Reserves.value()[j];
+                auto& res = resultats.Reserves->at(j);
                 res.ValeursHorairesInternalUnsatisfied.assign(nbReserves, 0.);
                 res.ValeursHorairesInternalExcessReserve.assign(nbReserves, 0.);
                 res.CoutsMarginauxHoraires.assign(nbReserves, 0.);
@@ -590,7 +589,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             resultats.ShortTermStorageReserves.emplace(nbSTStorageReserveParticipations);
             for (uint stsRes = 0; stsRes < nbSTStorageReserveParticipations; stsRes++)
             {
-                resultats.ShortTermStorageReserves.value()[stsRes]
+                resultats.ShortTermStorageReserves->at(stsRes)
                   .reserveParticipationOfCluster.emplace(NombreDePasDeTemps, 0.);
             }
         }

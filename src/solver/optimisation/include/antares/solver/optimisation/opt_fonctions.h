@@ -4,6 +4,7 @@
 #ifndef __SOLVER_OPTIMISATION_FUNCTIONS_H__
 #define __SOLVER_OPTIMISATION_FUNCTIONS_H__
 
+#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/optimization-options/options.h>
 #include <antares/solver/utils/opt_period_string_generator.h>
 #include <antares/writer/i_writer.h>
@@ -30,6 +31,11 @@ namespace Antares::IO::Outputs
 class SimulationTable;
 class OptimisationsSimulationTable;
 } // namespace Antares::IO::Outputs
+
+namespace Antares::Optimization
+{
+class InactiveComponentsAnalyzer;
+}
 
 using namespace Antares;
 
@@ -65,13 +71,15 @@ void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 **
 ** \return True si l'operation s'est bien deroulee, false si le probleme n'a pas de solution
 */
-bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
-                         PROBLEME_HEBDO*,
-                         int,
-                         const int,
-                         const OptPeriodStringGenerator&,
-                         Solver::IResultWriter& writer,
-                         IO::Outputs::SimulationTable* simulationTable);
+bool OPT_AppelDuSimplexe(
+  const SingleOptimOptions& options,
+  PROBLEME_HEBDO*,
+  int,
+  const int,
+  const OptPeriodStringGenerator&,
+  Solver::IResultWriter& writer,
+  IO::Outputs::SimulationTable* simulationTable,
+  const Optimization::InactiveComponentsAnalyzer* inactiveComponents = nullptr);
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,

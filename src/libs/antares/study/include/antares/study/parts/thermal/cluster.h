@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-#include <antares/solver/ts-generator/law.h>
+#include <antares/study/parts/thermal/law.h>
 
 #include "../../fwd.h"
 #include "../common/cluster.h"

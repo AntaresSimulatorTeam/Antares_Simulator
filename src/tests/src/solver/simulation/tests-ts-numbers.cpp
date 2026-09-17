@@ -10,6 +10,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/simulation/timeseries-numbers.h>
+#include <antares/solver/variable/registerThematicTrimmingVariables.h>
 #include <antares/utils/utils.h>
 #include "antares/solver/ts-generator/generator.h"
 
@@ -20,6 +21,7 @@ using namespace Antares::Solver::TimeSeriesNumbers;
 
 void initializeStudy(Study::Ptr study, unsigned int nbYears = 1)
 {
+    Antares::Solver::Variable::RegisterThematicTrimmingVariables();
     study->parameters.reset();
 
     study->runtime.rangeLimits.year[rangeBegin] = 0;

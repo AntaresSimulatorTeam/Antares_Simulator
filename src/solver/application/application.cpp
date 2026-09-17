@@ -4,6 +4,8 @@
 #include "antares/application/application.h"
 
 #include <chrono>
+#include <optional>
+#include <set>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/application/ScenarioBuilderOwner.h>
@@ -11,6 +13,7 @@
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/infoCollection/StudyInfoCollector.h>
+#include <antares/io/outputs/OptimisationsSimulationTable.h>
 #include <antares/logs/hostinfo.h>
 #include <antares/resources/resources.h>
 #include <antares/study/duplicates.h>
@@ -131,6 +134,16 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     pSettings.resolveOutputSelection();
     pStudy->parameters.outputSelection = pSettings.outputSelection;
 
+    // Validated here, so an unknown stage name on the command line is reported
+    // before the study is even loaded; applied after the load (below), where it
+    // overrides what generaldata.ini asked for.
+    std::optional<std::set<IO::Outputs::Stage>> stagesFromCommandLine;
+    if (!pSettings.simulationTableStagesStr.empty())
+    {
+        stagesFromCommandLine = IO::Outputs::OptimisationsSimulationTable::parseStageSelection(
+          pSettings.simulationTableStagesStr);
+    }
+
     // Force some options
     options.ignoreConstraints = pSettings.ignoreConstraints;
 
@@ -167,6 +180,31 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         if (pSettings.parquetFmtForSimuTables)
         {
             study.parameters.simuTableFormat = Writer::TableFormat::Parquet;
+        }
+
+        const bool stagesWereAskedFor = !pSettings.simulationTableStagesStr.empty()
+                                        || !study.parameters.simulationTableStagesStr.empty();
+        if (stagesWereAskedFor && !study.parameters.writeSimulationTable())
+        {
+            // Choosing stages narrows the tables that get written; it never
+            // enables them. Silence here reads like the selection was applied.
+            logs.warning() << "Simulation table stages were selected, but simulation tables are "
+                              "disabled: the selection has no effect";
+        }
+
+        // The command line wins over generaldata.ini; both go through the same
+        // validation, so an unknown stage name in the study stops the run too.
+        // The ini value is only parsed when it is the one being used, so a
+        // command-line selection is also a way past a study that has a bad one.
+        if (stagesFromCommandLine)
+        {
+            study.parameters.simulationTableStages = *stagesFromCommandLine;
+        }
+        else
+        {
+            study.parameters.simulationTableStages = IO::Outputs::OptimisationsSimulationTable::
+              parseStageSelection(study.parameters.simulationTableStagesStr,
+                                  "simulation-table-stages in generaldata.ini");
         }
 
         if (pSettings.forceZipOutput)
@@ -385,12 +423,12 @@ void Application::onLogMessage(int level, const std::string& message)
 {
     switch (level)
     {
-    case Yuni::Logs::Verbosity::Warning::level:
+    case Antares::Logs::Verbosity::Warning::level:
         ++pWarningCount;
         messagesStack.emplace_back(LogType::Warning, message);
         break;
-    case Yuni::Logs::Verbosity::Error::level:
-    case Yuni::Logs::Verbosity::Fatal::level:
+    case Antares::Logs::Verbosity::Error::level:
+    case Antares::Logs::Verbosity::Fatal::level:
         ++pErrorCount;
         messagesStack.emplace_back(LogType::Error, message);
         break;
@@ -530,9 +568,6 @@ void writeSimulationInfos(const Data::Study& study,
 
 Application::~Application()
 {
-    // Destroy all remaining bouns (callbacks)
-    destroyBoundEvents();
-
     // Release all allocated data
     if (pStudy)
     {
