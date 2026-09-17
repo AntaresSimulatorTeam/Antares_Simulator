@@ -25,7 +25,8 @@ EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
                          const Api::FillContext& fillContext,
                          const ModelerStudy::SystemModel::Component& component,
                          const Api::ILinearProblemData* data,
-                         const Api::IScenario& scenario):
+                         const Api::IScenario& scenario,
+                         const Api::IAreaPriceProvider* areaPriceProvider):
     // TODO put component or its id inside context, it is already component-bound.
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
@@ -34,7 +35,8 @@ EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
     data_(data),
     scenario_(scenario),
     evalContext_(&component, data, &scenario),
-    fillContext_(fillContext)
+    fillContext_(fillContext),
+    areaPriceProvider_(areaPriceProvider)
 {
 }
 
@@ -160,12 +162,49 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
     {
         auto* component = connectionEnd.component();
         auto* port = connectionEnd.port();
-        EvalVisitor visitor(optimContainer_, fillContext_, *component, data_, scenario_);
+        EvalVisitor visitor(optimContainer_,
+                            fillContext_,
+                            *component,
+                            data_,
+                            scenario_,
+                            areaPriceProvider_);
         const auto* nodeToVisit = component->nodeAtPortField(port->Id(), fieldId);
         auto dispatchResult = visitor.dispatch(nodeToVisit);
         result += dispatchResult;
     }
+
+    // A port is either connected to GEMS peers (componentConnectionsViaPort, looped above) or
+    // to a single legacy area (portToAreaConnections_), never both: the two maps backing these
+    // accessors are mutually exclusive per port. So in practice only one of the two additions to
+    // `result` is ever non-zero for a given port; this just completes sum_connections' semantics
+    // for the area-connected case, where the "connection" is a legacy area rather than a GEMS
+    // component and the only field that can be summed this way is the area's dual price.
+    if (const auto areaId = component_.areaConnectedToPort(portId))
+    {
+        const auto& areaConnection = component_.areaConnectionAtPort(portId);
+        if (areaConnection && !fieldId.empty() && areaConnection->price == fieldId)
+        {
+            result += areaPrice(*areaId);
+        }
+    }
+
     return result;
+}
+
+EvaluationResult EvalVisitor::areaPrice(const std::string& areaId) const
+{
+    if (!areaPriceProvider_)
+    {
+        return EvaluationResult(0.);
+    }
+
+    const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
+    std::vector prices(nbTimeStep, 0.0);
+    for (unsigned t = 0; t < nbTimeStep; ++t)
+    {
+        prices[t] = areaPriceProvider_->getAreaPrice(areaId, fillContext_.getLocalFirstTimeStep() + t);
+    }
+    return EvaluationResult{prices};
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::TimeShiftNode* node)
