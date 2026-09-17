@@ -35,7 +35,9 @@ void checkMandatoryIdField(const Node& node, const std::string& nodeName);
 /// Returns the string value of a field from a YAML node, or empty string if absent/null.
 std::string getFieldFromNode(const Node& node, const std::string& fieldName);
 
-void checkFields(const Node& node, const std::unordered_set<std::string>& allowedFields);
+void checkFields(const Node& node,
+                 const std::unordered_set<std::string>& mandatoryFields,
+                 const std::unordered_set<std::string>& optionalFields = {});
 
 template<>
 class convert<Antares::IO::Inputs::YmlModel::PortType>

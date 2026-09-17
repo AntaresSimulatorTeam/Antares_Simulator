@@ -47,14 +47,6 @@ std::vector<std::string> diffSet(const std::unordered_set<std::string>& setA,
     return diff;
 }
 
-auto compare_sets(const std::unordered_set<std::string>& setA,
-                  const std::unordered_set<std::string>& setB)
-{
-    const auto unexpected = diffSet(setA, setB);
-    const auto missing = diffSet(setB, setA);
-    return std::make_tuple(unexpected, missing);
-}
-
 std::string build_error_message(const size_t& nbFieldsAllowed,
                                 const YmlTreeDisplayer& displayer,
                                 const std::vector<std::string>& unexpected,
@@ -82,7 +74,9 @@ std::string build_error_message(const size_t& nbFieldsAllowed,
     return message;
 }
 
-void checkFields(const Node& node, const std::unordered_set<std::string>& allowedFields)
+void checkFields(const Node& node,
+                 const std::unordered_set<std::string>& mandatoryFields,
+                 const std::unordered_set<std::string>& optionalFields)
 {
     if (!node.IsMap())
     {
@@ -98,14 +92,19 @@ void checkFields(const Node& node, const std::unordered_set<std::string>& allowe
                                               : std::string("<unknown>"));
     }
 
-    if (actualKeys == allowedFields)
+    std::unordered_set<std::string> allowedFields = mandatoryFields;
+    allowedFields.insert(optionalFields.begin(), optionalFields.end());
+
+    const auto unexpected = diffSet(actualKeys, allowedFields);
+    const auto missing = diffSet(mandatoryFields, actualKeys);
+
+    if (unexpected.empty() && missing.empty())
     {
         return; // valid
     }
 
     // Invalid map: now build the displayer for error reporting
     YmlTreeDisplayer displayer(node);
-    const auto [unexpected, missing] = compare_sets(actualKeys, allowedFields);
 
     const std::string message = build_error_message(allowedFields.size(),
                                                     displayer,
@@ -143,12 +142,14 @@ bool convert<YmlModel::PortType>::convertAreaConnectionFields(const Node& node,
     }
 
     checkFields(areaConnNode,
-                {"injection-to-balance", "spillage-bound", "unsupplied-energy-bound"});
+                {"injection-to-balance", "spillage-bound", "unsupplied-energy-bound"},
+                {"price"});
 
     rhs.area_connection.inject_to_balance = getFieldFromNode(areaConnNode, "injection-to-balance");
     rhs.area_connection.spillage_bound = getFieldFromNode(areaConnNode, "spillage-bound");
     rhs.area_connection.unsupplied_energy_bound = getFieldFromNode(areaConnNode,
                                                                    "unsupplied-energy-bound");
+    rhs.area_connection.price = getFieldFromNode(areaConnNode, "price");
     return true;
 }
 
