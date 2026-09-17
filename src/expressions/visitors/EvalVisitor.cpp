@@ -202,7 +202,8 @@ EvaluationResult EvalVisitor::areaPrice(const std::string& areaId) const
     std::vector prices(nbTimeStep, 0.0);
     for (unsigned t = 0; t < nbTimeStep; ++t)
     {
-        prices[t] = areaPriceProvider_->getAreaPrice(areaId, fillContext_.getLocalFirstTimeStep() + t);
+        prices[t] = areaPriceProvider_->getAreaPrice(areaId,
+                                                     fillContext_.getLocalFirstTimeStep() + t);
     }
     return EvaluationResult{prices};
 }

@@ -665,7 +665,10 @@ public:
 
 BOOST_FIXTURE_TEST_CASE(evaluate_sum_connections_on_area_connection_price_field, MyDummyFixture)
 {
-    AreaConnection areaConnection{.inject_to_balance = "flow", .spillage_bound = "", .unsupplied_energy_bound = "", .price = "price"};
+    AreaConnection areaConnection{.inject_to_balance = "flow",
+                                  .spillage_bound = "",
+                                  .unsupplied_energy_bound = "",
+                                  .price = "price"};
     PortType portType("flow_port", {PortField("flow"), PortField("price")}, areaConnection);
     Port port("generation", portType);
 
@@ -688,7 +691,10 @@ BOOST_FIXTURE_TEST_CASE(evaluate_sum_connections_on_area_connection_price_field,
 BOOST_FIXTURE_TEST_CASE(evaluate_sum_connections_on_area_connection_price_without_provider,
                         MyDummyFixture)
 {
-    AreaConnection areaConnection{.inject_to_balance = "flow", .spillage_bound = "", .unsupplied_energy_bound = "", .price = "price"};
+    AreaConnection areaConnection{.inject_to_balance = "flow",
+                                  .spillage_bound = "",
+                                  .unsupplied_energy_bound = "",
+                                  .price = "price"};
     PortType portType("flow_port", {PortField("flow"), PortField("price")}, areaConnection);
     Port port("generation", portType);
 

@@ -432,11 +432,11 @@ void FillSimulationTable(SimulationTable& simulationTable,
           component.getScenarioGroupId());
 
         Visitors::EvalVisitor evalVisitor(optimContainer,
-                                         fillContext,
-                                         component,
-                                         data,
-                                         scenario,
-                                         areaPriceProvider);
+                                          fillContext,
+                                          component,
+                                          data,
+                                          scenario,
+                                          areaPriceProvider);
         Visitors::VariabilityVisitor variabilityVisitor(optimContainer, component);
 
         addVariableEntries(simulationTable,

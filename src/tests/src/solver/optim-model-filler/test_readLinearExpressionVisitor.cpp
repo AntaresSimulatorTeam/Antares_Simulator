@@ -600,10 +600,10 @@ BOOST_AUTO_TEST_CASE(area_connection_price_field_forbidden_in_linear_expression)
                                                .spillage_bound = "",
                                                .unsupplied_energy_bound = "",
                                                .price = "price"};
-    SystemModel::PortType portType(
-      "flow_port",
-      {SystemModel::PortField("flow"), SystemModel::PortField("price")},
-      areaConnection);
+    SystemModel::PortType portType("flow_port",
+                                   {SystemModel::PortField("flow"),
+                                    SystemModel::PortField("price")},
+                                   areaConnection);
     SystemModel::Port port("generation", portType);
 
     SystemModel::Model model = SystemModel::ModelBuilder()

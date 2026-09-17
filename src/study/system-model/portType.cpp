@@ -28,8 +28,7 @@ bool operator==(const std::optional<AreaConnection>& a, const std::optional<Area
     {
         return a->inject_to_balance == b->inject_to_balance
                && a->spillage_bound == b->spillage_bound
-               && a->unsupplied_energy_bound == b->unsupplied_energy_bound
-               && a->price == b->price;
+               && a->unsupplied_energy_bound == b->unsupplied_energy_bound && a->price == b->price;
     }
 
     return true; // both are std::nullopt

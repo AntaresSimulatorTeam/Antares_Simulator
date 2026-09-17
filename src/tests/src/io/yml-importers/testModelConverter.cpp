@@ -619,8 +619,9 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_no_conflict_when_sum_connections_o
     BOOST_CHECK_NO_THROW(ModelConverter::convert(library));
 }
 
-BOOST_FIXTURE_TEST_CASE(area_connection_price_field_forbidden_in_sum_connections_in_binding_constraint,
-                        Fixture)
+BOOST_FIXTURE_TEST_CASE(
+  area_connection_price_field_forbidden_in_sum_connections_in_binding_constraint,
+  Fixture)
 {
     YmlModel::PortType portType{"my-port-type",
                                 "description",
