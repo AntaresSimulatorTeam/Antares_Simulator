@@ -304,14 +304,15 @@ BOOST_FIXTURE_TEST_CASE(test_absent_section_preserves_constructor_default, Hydro
 BOOST_AUTO_TEST_CASE(test_CheckDailyMaxEnergy_valid_and_invalid)
 {
     PartHydro hydro;
-    hydro.reset(); // sizes and fills dailyNbHoursAt{Gen,Pump}Pmax with valid 24h values
-
     BOOST_CHECK(hydro.CheckDailyMaxEnergy("some_area"));
 
+    hydro.dailyNbHoursAtGenPmax.reset(1, DAYS_PER_YEAR);
+    hydro.dailyNbHoursAtGenPmax.fillColumn(0, 24.);
     hydro.dailyNbHoursAtGenPmax[0][10] = 25.0; // > 24 : invalid
     BOOST_CHECK(!hydro.CheckDailyMaxEnergy("some_area"));
 
-    hydro.reset();
+    hydro.dailyNbHoursAtPumpPmax.reset(1, DAYS_PER_YEAR);
+    hydro.dailyNbHoursAtPumpPmax.fillColumn(0, 24.);
     hydro.dailyNbHoursAtPumpPmax[0][20] = -1.0; // < 0 : invalid
     BOOST_CHECK(!hydro.CheckDailyMaxEnergy("some_area"));
 }
@@ -321,7 +322,8 @@ BOOST_FIXTURE_TEST_CASE(test_LoadDailyMaxEnergy_roundtrip, HydroFixture)
     fs::path capacity = createCapacityFolder();
 
     PartHydro writer;
-    writer.reset();
+    writer.dailyNbHoursAtGenPmax.reset(1, DAYS_PER_YEAR);
+    writer.dailyNbHoursAtPumpPmax.reset(1, DAYS_PER_YEAR);
     writer.dailyNbHoursAtGenPmax.fillColumn(0, 12.5);
     writer.dailyNbHoursAtPumpPmax.fillColumn(0, 8.5);
     BOOST_REQUIRE(writer.dailyNbHoursAtGenPmax
@@ -406,16 +408,11 @@ BOOST_AUTO_TEST_CASE(test_getWeeklyModulation_exact_and_interpolated_and_clamped
 
 BOOST_FIXTURE_TEST_CASE(test_validate_all_defaults_returns_true, HydroFixture)
 {
-    east->hydro.reset();
-    west->hydro.reset();
     BOOST_CHECK(validate());
 }
 
 BOOST_FIXTURE_TEST_CASE(test_validate_clamps_invalid_scalar_properties, HydroFixture)
 {
-    east->hydro.reset();
-    west->hydro.reset();
-
     east->hydro.reservoirManagement = true;
     east->hydro.reservoirCapacity = -5.; // triggers both the "not defined" and "invalid" checks
     east->hydro.useHeuristicTarget = false;
@@ -437,17 +434,14 @@ BOOST_FIXTURE_TEST_CASE(test_validate_clamps_invalid_scalar_properties, HydroFix
     BOOST_CHECK_EQUAL(east->hydro.leewayUpperBound, 0.);
     BOOST_CHECK_EQUAL(east->hydro.pumpingEfficiency, 0.);
 
-    // west is untouched: still holds reset() defaults
-    BOOST_CHECK_EQUAL(west->hydro.intraDailyModulation, 24.);
+    // west is untouched: still holds constructor defaults
+    BOOST_CHECK_EQUAL(west->hydro.intraDailyModulation, 2.);
     BOOST_CHECK_EQUAL(west->hydro.leewayLowerBound, 1.);
     BOOST_CHECK_EQUAL(west->hydro.leewayUpperBound, 1.);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_validate_leeway_lower_greater_than_upper, HydroFixture)
 {
-    east->hydro.reset();
-    west->hydro.reset();
-
     east->hydro.leewayLowerBound = 0.8;
     east->hydro.leewayUpperBound = 0.2;
 
@@ -460,9 +454,6 @@ BOOST_FIXTURE_TEST_CASE(test_validate_leeway_lower_greater_than_upper, HydroFixt
 
 BOOST_FIXTURE_TEST_CASE(test_validate_detects_invalid_inflow_and_credit_modulation, HydroFixture)
 {
-    east->hydro.reset();
-    west->hydro.reset();
-
     east->hydro.inflowPattern[0][5] = -1.0;
     east->hydro.creditModulation[10][0] = -1.0;
 
