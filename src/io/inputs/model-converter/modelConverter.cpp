@@ -54,7 +54,7 @@ static OutOfBoundsProcessingMode convertOutOfBoundsProcessingMode(const std::str
 
 AreaConnection convert_to_system(const YmlModel::AreaConnection& ac)
 {
-    return {ac.inject_to_balance, ac.spillage_bound, ac.unsupplied_energy_bound};
+    return {ac.inject_to_balance, ac.spillage_bound, ac.unsupplied_energy_bound, ac.price};
 }
 
 std::vector<PortType> convertPortTypes(const YmlModel::Library& library)

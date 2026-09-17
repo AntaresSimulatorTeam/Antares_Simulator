@@ -14,7 +14,7 @@ namespace Antares::ModelerStudy::SystemModel
 bool isEmpty(const AreaConnection& ac)
 {
     return ac.inject_to_balance.empty() && ac.spillage_bound.empty()
-           && ac.unsupplied_energy_bound.empty();
+           && ac.unsupplied_energy_bound.empty() && ac.price.empty();
 }
 
 bool operator==(const std::optional<AreaConnection>& a, const std::optional<AreaConnection>& b)
@@ -28,7 +28,8 @@ bool operator==(const std::optional<AreaConnection>& a, const std::optional<Area
     {
         return a->inject_to_balance == b->inject_to_balance
                && a->spillage_bound == b->spillage_bound
-               && a->unsupplied_energy_bound == b->unsupplied_energy_bound;
+               && a->unsupplied_energy_bound == b->unsupplied_energy_bound
+               && a->price == b->price;
     }
 
     return true; // both are std::nullopt
