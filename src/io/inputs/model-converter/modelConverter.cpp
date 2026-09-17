@@ -452,6 +452,86 @@ void checkPortFieldDefinitionConflictWithSumConnections(
 }
 
 /**
+ * \brief Checks that no port field holding a legacy area's dual price (declared via the
+ * 'price' entry of a port-type's area-connection) is referenced from a constraint or an
+ * objective, whether directly or through sum_connections.
+ *
+ * The price field only holds a meaningful value once the optimization problem has been
+ * solved (it is the dual value of the legacy area's balance equation), so it can only be
+ * used in extra-outputs, exactly like the 'dual' and 'reduced_cost' functions.
+ */
+void checkPriceFieldNotUsedInConstraintsOrObjectives(const std::vector<Port>& ports,
+                                                     const std::vector<Constraint>& constraints,
+                                                     const std::vector<Objective>& objectives,
+                                                     const std::string& modelId)
+{
+    std::set<std::pair<std::string, std::string>> priceFields;
+    for (const auto& port: ports)
+    {
+        const auto& areaConnection = port.Type().areaConnection();
+        if (areaConnection.has_value() && !areaConnection->price.empty())
+        {
+            priceFields.insert({port.Id(), areaConnection->price});
+        }
+    }
+
+    if (priceFields.empty())
+    {
+        return;
+    }
+
+    auto checkExpression =
+      [&priceFields, &modelId](const Expression& expression, const std::string& usageId)
+    {
+        if (!expression.RootNode())
+        {
+            return;
+        }
+
+        AST ast(expression.RootNode());
+        for (const auto& node: ast)
+        {
+            std::string portName;
+            std::string fieldName;
+            if (const auto* sumNode = dynamic_cast<const PortFieldSumNode*>(&node))
+            {
+                portName = sumNode->getPortName();
+                fieldName = sumNode->getFieldName();
+            }
+            else if (const auto* fieldNode = dynamic_cast<const PortFieldNode*>(&node))
+            {
+                portName = fieldNode->getPortName();
+                fieldName = fieldNode->getFieldName();
+            }
+            else
+            {
+                continue;
+            }
+
+            if (priceFields.contains({portName, fieldName}))
+            {
+                throw InputError(fmt::format(
+                  "In model '{}', field '{}' of port '{}' holds the dual value of a legacy "
+                  "area's balance equation and can only be used in extra-outputs, not in '{}'.",
+                  modelId,
+                  fieldName,
+                  portName,
+                  usageId));
+            }
+        }
+    };
+
+    for (const auto& constraint: constraints)
+    {
+        checkExpression(constraint.expression(), constraint.Id());
+    }
+    for (const auto& objective: objectives)
+    {
+        checkExpression(objective.expression(), objective.Id());
+    }
+}
+
+/**
  * \brief Converts models from YmlModel::Library to SystemModel::Model.
  *
  * \param library The YmlModel::Library object containing models.
@@ -477,6 +557,7 @@ std::vector<Model> convertModels(const YmlModel::Library& library,
         checkPortFieldDefinitionConflictWithSumConnections(constraints,
                                                            model.port_field_definitions,
                                                            model.id);
+        checkPriceFieldNotUsedInConstraintsOrObjectives(ports, constraints, objectives, model.id);
 
         auto modelObj = modelBuilder.withId(model.id)
                           .withLibraryId(library.id)
