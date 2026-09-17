@@ -26,11 +26,6 @@ public:
     void clear();
 
     /*!
-    ** \brief Set the coefficient for a specific area index
-    */
-    void fromArea(const AreaName& areaid, double value);
-
-    /*!
     ** \brief Load allocation coefficients from a file
     */
     bool loadFromFile(const AreaName& referencearea, const std::filesystem::path& filename);

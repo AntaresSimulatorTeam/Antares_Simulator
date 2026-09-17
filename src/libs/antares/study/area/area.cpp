@@ -143,7 +143,6 @@ void Area::resetToDefaultValues()
     wind.resetToDefault();
     // Hydro
     hydro.reset();
-    hydro.allocation.fromArea(id, 1.);
     // Thermal
     thermal.reset();
     // Renewable

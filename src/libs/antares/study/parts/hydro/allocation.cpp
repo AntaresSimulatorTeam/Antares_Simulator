@@ -12,22 +12,6 @@ namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
-void HydroAllocation::fromArea(const AreaName& areaid, double value)
-{
-    if (Utils::isZero(value))
-    {
-        auto i = pValues.find(areaid);
-        if (i != pValues.end())
-        {
-            pValues.erase(i);
-        }
-    }
-    else
-    {
-        pValues[areaid] = value;
-    }
-}
-
 void HydroAllocation::prepareForSolver(const AreaList& list)
 {
     pValuesFromAreaID.clear();

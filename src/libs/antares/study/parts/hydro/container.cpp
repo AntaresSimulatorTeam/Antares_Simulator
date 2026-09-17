@@ -64,11 +64,7 @@ void PartHydro::reset()
     dailyNbHoursAtPumpPmax.fillColumn(0, 24.);
     creditModulation.reset(101, 2);
     creditModulation.fill(1);
-    // reset of the hydro allocation - however we don't have any information
-    // about the current area, which should be by default 1.
-    // This work is done in Area::reset()
     allocation.clear();
-    // allocation.fromArea(<current area>, 1.); // Area::reset()
 
     if (prepro)
     {
