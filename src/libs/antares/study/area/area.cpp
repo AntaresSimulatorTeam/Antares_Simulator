@@ -122,37 +122,6 @@ void Area::createMissingPrepros()
     thermal.list.ensureDataPrepro();
 }
 
-void Area::resetToDefaultValues()
-{
-    // Nodal optimization
-    nodalOptimization = anoAll;
-
-    // Spread
-    spreadUnsuppliedEnergyCost = 0.;
-    spreadSpilledEnergyCost = 0.;
-
-    // Filtering
-    filterSynthesis = (unsigned int)filterAll;
-    filterYearByYear = (unsigned int)filterAll;
-
-    // Load
-    load.resetToDefault();
-    // Solar
-    solar.resetToDefault();
-    // Wind
-    wind.resetToDefault();
-    // Hydro
-    hydro.reset();
-    // Thermal
-    thermal.reset();
-    // Renewable
-    renewable.reset();
-    // Fatal hors hydro
-    miscGen.reset(fhhMax, HOURS_PER_YEAR);
-    // reserves
-    reserves.reset(fhrMax, HOURS_PER_YEAR);
-}
-
 void Area::resizeAllTimeseriesNumbers(unsigned int nbYears)
 {
     assert(hydro.series and "series must not be nullptr !");
