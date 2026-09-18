@@ -83,7 +83,6 @@ public:
     bool checkCsrCostFunction;
 
     bool updateFromKeyValue(const std::string& key, const std::string& value);
-    void addProperties(IniFile::Section* section) const;
 
     void reset();
 
