@@ -145,25 +145,19 @@ BOOST_AUTO_TEST_CASE(reserve_variables_use_requested_legacy_output_ids)
     namer.UpdateArea("fr");
     namer.UpdateTimeStep(42);
 
-    namer.ParticipationOfRunningUnitsToReserve(0, "gas", "Display reserve", "reserve_id");
-    namer.ParticipationOfOffUnitsToReserve(1, "gas", "Display reserve", "reserve_id");
-    namer.ThermalClusterReserveParticipation(2, "gas", "Display reserve", "reserve_id");
-    namer.ParticipationOfSTStorageStoreToReserve(3, "battery", "Display reserve", "reserve_id");
-    namer.ParticipationOfSTStorageReleaseToReserve(4, "battery", "Display reserve", "reserve_id");
-    namer.ParticipationOfSTStorageToReserve(ReserveType::UP,
-                                            5,
-                                            "battery",
-                                            "Display reserve",
-                                            "reserve_id");
-    namer.ParticipationOfHydroStoreToReserve(6, "hydro", "Display reserve", "reserve_id");
-    namer.ParticipationOfHydroReleaseToReserve(7, "hydro", "Display reserve", "reserve_id");
-    namer.ParticipationOfHydroToReserve(ReserveType::DOWN,
-                                        8,
-                                        "hydro",
-                                        "Display reserve",
-                                        "reserve_id");
-    namer.InternalUnsatisfiedReserve(9, "Display reserve", "reserve_id");
-    namer.InternalExcessReserve(10, "Display reserve", "reserve_id");
+    const ReserveIdentity reserve{"Display reserve", "reserve_id"};
+
+    namer.ParticipationOfRunningUnitsToReserve(0, "gas", reserve);
+    namer.ParticipationOfOffUnitsToReserve(1, "gas", reserve);
+    namer.ThermalClusterReserveParticipation(2, "gas", reserve);
+    namer.ParticipationOfSTStorageStoreToReserve(3, "battery", reserve);
+    namer.ParticipationOfSTStorageReleaseToReserve(4, "battery", reserve);
+    namer.ParticipationOfSTStorageToReserve(ReserveType::UP, 5, "battery", reserve);
+    namer.ParticipationOfHydroStoreToReserve(6, "hydro", reserve);
+    namer.ParticipationOfHydroReleaseToReserve(7, "hydro", reserve);
+    namer.ParticipationOfHydroToReserve(ReserveType::DOWN, 8, "hydro", reserve);
+    namer.InternalUnsatisfiedReserve(9, reserve);
+    namer.InternalExcessReserve(10, reserve);
 
     BOOST_CHECK_EQUAL(info[0]->name, "units_on_reserve_power_reserve_id");
     BOOST_CHECK_EQUAL(info[1]->name, "units_off_reserve_power_reserve_id");
