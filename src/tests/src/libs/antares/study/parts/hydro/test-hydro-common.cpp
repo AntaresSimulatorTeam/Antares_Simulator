@@ -407,7 +407,6 @@ BOOST_FIXTURE_TEST_CASE(test_validate_all_defaults_returns_true, HydroFixture)
 
 BOOST_FIXTURE_TEST_CASE(test_validate_clamps_invalid_scalar_properties, HydroFixture)
 {
-
     east->hydro.reservoirManagement = true;
     east->hydro.reservoirCapacity = -5.; // triggers both the "not defined" and "invalid" checks
     east->hydro.useHeuristicTarget = false;
@@ -437,7 +436,6 @@ BOOST_FIXTURE_TEST_CASE(test_validate_clamps_invalid_scalar_properties, HydroFix
 
 BOOST_FIXTURE_TEST_CASE(test_validate_leeway_lower_greater_than_upper, HydroFixture)
 {
-
     east->hydro.leewayLowerBound = 0.8;
     east->hydro.leewayUpperBound = 0.2;
 
@@ -450,7 +448,6 @@ BOOST_FIXTURE_TEST_CASE(test_validate_leeway_lower_greater_than_upper, HydroFixt
 
 BOOST_FIXTURE_TEST_CASE(test_validate_detects_invalid_inflow_and_credit_modulation, HydroFixture)
 {
-
     east->hydro.inflowPattern[0][5] = -1.0;
     east->hydro.creditModulation[10][0] = -1.0;
 
