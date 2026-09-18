@@ -397,6 +397,14 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="stru
 std::shared_ptr&lt; const <a class="el" href="structAntares_1_1Optimization_1_1SolvedModelerProblem.html">Antares::Optimization::SolvedModelerProblem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPROBLEME__HEBDO.html#af7013ad4d730c91bf9d0d67dd7a2593f">lastSolvedModelerProblem</a></td></tr>
 <tr class="memdesc:af7013ad4d730c91bf9d0d67dd7a2593f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modeler side of the current week's last optimisation pass, kept alive past the solve so a post-process simulation table can re-emit the modeler component rows. Null unless retainSolvedModelerProblem is set. <br /></td></tr>
 <tr class="separator:af7013ad4d730c91bf9d0d67dd7a2593f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4b497f59a3a03f52289dc4efb5624a8"><td class="memItemLeft" align="right" valign="top"><a id="ad4b497f59a3a03f52289dc4efb5624a8"></a>
+std::shared_ptr&lt; <a class="el" href="classAntares_1_1LinearProblem_1_1OptimEntityContainer.html">Antares::LinearProblem::OptimEntityContainer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPROBLEME__HEBDO.html#ad4b497f59a3a03f52289dc4efb5624a8">optimEntityContainer</a></td></tr>
+<tr class="memdesc:ad4b497f59a3a03f52289dc4efb5624a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kept alive past the solve so the CSR adequacy patch post-process can evaluate GEMS port field expressions via EvalVisitor. <br /></td></tr>
+<tr class="separator:ad4b497f59a3a03f52289dc4efb5624a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4755c69f335ebff029b34bbfec7a06a8"><td class="memItemLeft" align="right" valign="top"><a id="a4755c69f335ebff029b34bbfec7a06a8"></a>
+std::shared_ptr&lt; <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblem.html">Antares::LinearProblem::Api::ILinearProblem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPROBLEME__HEBDO.html#a4755c69f335ebff029b34bbfec7a06a8">ortoolsProblem_</a></td></tr>
+<tr class="memdesc:a4755c69f335ebff029b34bbfec7a06a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Keeps the LP alive so optimEntityContainer's reference remains valid. <br /></td></tr>
+<tr class="separator:a4755c69f335ebff029b34bbfec7a06a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/solver/simulation/include/antares/solver/simulation/<a class="el" href="sim__structure__probleme__economique_8h_source.html">sim_structure_probleme_economique.h</a></li>

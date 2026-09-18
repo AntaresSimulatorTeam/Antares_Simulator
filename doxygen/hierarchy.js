@@ -447,6 +447,7 @@ var hierarchy =
       [ "fmt::formatter< Antares::ModelerStudy::SystemModel::FieldRole >", "structfmt_1_1formatter_3_01Antares_1_1ModelerStudy_1_1SystemModel_1_1FieldRole_01_4.html", null ]
     ] ],
     [ "Antares::Concurrency::FutureSet", "classAntares_1_1Concurrency_1_1FutureSet.html", null ],
+    [ "GemsContributionFixture", "structGemsContributionFixture.html", null ],
     [ "Antares::Solver::Workflow::GenerationAndResolutionConfig", "structAntares_1_1Solver_1_1Workflow_1_1GenerationAndResolutionConfig.html", null ],
     [ "Antares::Data::ShortTermStorage::GroupsHours", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours.html", null ],
     [ "Antares::Data::Symmetries::GroupsSymmetries", "classAntares_1_1Data_1_1Symmetries_1_1GroupsSymmetries.html", null ],
@@ -503,6 +504,10 @@ var hierarchy =
     [ "FSWalker::IExtension", "classFSWalker_1_1IExtension.html", [
       [ "AntaresStudy", "classAntaresStudy.html", null ],
       [ "ModifiedINode", "classModifiedINode.html", null ]
+    ] ],
+    [ "IGemsPart", "classIGemsPart.html", [
+      [ "ActiveGemsPart", "classActiveGemsPart.html", null ],
+      [ "NullGemsPart", "classNullGemsPart.html", null ]
     ] ],
     [ "Antares::LinearProblem::Api::IHasBounds", "classAntares_1_1LinearProblem_1_1Api_1_1IHasBounds.html", [
       [ "Antares::LinearProblem::Api::IMipConstraint", "classAntares_1_1LinearProblem_1_1Api_1_1IMipConstraint.html", [
@@ -1230,6 +1235,7 @@ var hierarchy =
     [ "Antares::Data::RuleCurvesLoaderService", "classAntares_1_1Data_1_1RuleCurvesLoaderService.html", null ],
     [ "Antares::Data::ScenarioBuilder::Rules", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html", null ],
     [ "std::runtime_error", null, [
+      [ "ActiveGemsPart::MissingOptimEntityContainerError", "classActiveGemsPart_1_1MissingOptimEntityContainerError.html", null ],
       [ "Antares::Data::AssertionError", "classAntares_1_1Data_1_1AssertionError.html", null ],
       [ "Antares::Data::UnfeasibleProblemError", "classAntares_1_1Data_1_1UnfeasibleProblemError.html", null ],
       [ "Antares::Error::LoadingError", "classAntares_1_1Error_1_1LoadingError.html", [
@@ -1246,6 +1252,7 @@ var hierarchy =
         [ "Antares::Error::IncompatibleOptRangeUCMode", "classAntares_1_1Error_1_1IncompatibleOptRangeUCMode.html", null ],
         [ "Antares::Error::IncompatibleOutputOptions", "classAntares_1_1Error_1_1IncompatibleOutputOptions.html", null ],
         [ "Antares::Error::IncompatibleParallelOptions", "classAntares_1_1Error_1_1IncompatibleParallelOptions.html", null ],
+        [ "Antares::Error::IncompatiblePriceTakingOrderForHybrid", "classAntares_1_1Error_1_1IncompatiblePriceTakingOrderForHybrid.html", null ],
         [ "Antares::Error::IncompatibleSimulationModeForAdqPatch", "classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html", null ],
         [ "Antares::Error::InvalidFileName", "classAntares_1_1Error_1_1InvalidFileName.html", null ],
         [ "Antares::Error::InvalidOptimizationRange", "classAntares_1_1Error_1_1InvalidOptimizationRange.html", null ],

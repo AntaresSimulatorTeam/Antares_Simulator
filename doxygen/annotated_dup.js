@@ -197,7 +197,8 @@ var annotated_dup =
         [ "ReadingStudy", "classAntares_1_1Error_1_1ReadingStudy.html", "classAntares_1_1Error_1_1ReadingStudy" ],
         [ "NoAreaInsideAdqPatchMode", "classAntares_1_1Error_1_1NoAreaInsideAdqPatchMode.html", "classAntares_1_1Error_1_1NoAreaInsideAdqPatchMode" ],
         [ "IncompatibleHurdleCostCSR", "classAntares_1_1Error_1_1IncompatibleHurdleCostCSR.html", "classAntares_1_1Error_1_1IncompatibleHurdleCostCSR" ],
-        [ "IncompatibleSimulationModeForAdqPatch", "classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html", "classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch" ]
+        [ "IncompatibleSimulationModeForAdqPatch", "classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html", "classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch" ],
+        [ "IncompatiblePriceTakingOrderForHybrid", "classAntares_1_1Error_1_1IncompatiblePriceTakingOrderForHybrid.html", "classAntares_1_1Error_1_1IncompatiblePriceTakingOrderForHybrid" ]
       ] ],
       [ "Expressions", null, [
         [ "Nodes", null, [
@@ -1021,6 +1022,7 @@ var annotated_dup =
       [ "convert< Monster >", "structYAML_1_1convert_3_01Monster_01_4.html", null ]
     ] ],
     [ "AbstractStartUpCostsGroup", "classAbstractStartUpCostsGroup.html", "classAbstractStartUpCostsGroup" ],
+    [ "ActiveGemsPart", "classActiveGemsPart.html", "classActiveGemsPart" ],
     [ "AdditConstrFixture", "structAdditConstrFixture.html", "structAdditConstrFixture" ],
     [ "AdequacyPatchRuntimeData", "classAdequacyPatchRuntimeData.html", "classAdequacyPatchRuntimeData" ],
     [ "ALL_MUST_RUN_GENERATION", "structALL__MUST__RUN__GENERATION.html", "structALL__MUST__RUN__GENERATION" ],
@@ -1134,6 +1136,7 @@ var annotated_dup =
     [ "FlowDissociation", "classFlowDissociation.html", "classFlowDissociation" ],
     [ "FlowDissociationData", "structFlowDissociationData.html", "structFlowDissociationData" ],
     [ "FolderRemover", "classFolderRemover.html", "classFolderRemover" ],
+    [ "GemsContributionFixture", "structGemsContributionFixture.html", "structGemsContributionFixture" ],
     [ "Group1", "classGroup1.html", "classGroup1" ],
     [ "HourlyCSRProblem", "classHourlyCSRProblem.html", "classHourlyCSRProblem" ],
     [ "HoursFieldBaseVisitor", "classHoursFieldBaseVisitor.html", "classHoursFieldBaseVisitor" ],
@@ -1159,6 +1162,7 @@ var annotated_dup =
     [ "HydroStoreCapacityThresholds", "classHydroStoreCapacityThresholds.html", "classHydroStoreCapacityThresholds" ],
     [ "HydroStoreMaxReserve", "classHydroStoreMaxReserve.html", "classHydroStoreMaxReserve" ],
     [ "I_MPS_writer", "classI__MPS__writer.html", "classI__MPS__writer" ],
+    [ "IGemsPart", "classIGemsPart.html", "classIGemsPart" ],
     [ "ImportPreproFixture", "structImportPreproFixture.html", "structImportPreproFixture" ],
     [ "IniConstraint", "structIniConstraint.html", "structIniConstraint" ],
     [ "InMemoryStudyLoader", "classInMemoryStudyLoader.html", "classInMemoryStudyLoader" ],
@@ -1219,6 +1223,7 @@ var annotated_dup =
     [ "NoConstraintCreator", "structNoConstraintCreator.html", null ],
     [ "NonCopyableFunctionObject", "structNonCopyableFunctionObject.html", "structNonCopyableFunctionObject" ],
     [ "NoObjectiveCreator", "structNoObjectiveCreator.html", null ],
+    [ "NullGemsPart", "classNullGemsPart.html", "classNullGemsPart" ],
     [ "nullMPSwriter", "classnullMPSwriter.html", "classnullMPSwriter" ],
     [ "OffUnitsThermalParticipatingToReserves", "classOffUnitsThermalParticipatingToReserves.html", "classOffUnitsThermalParticipatingToReserves" ],
     [ "OneAreaStudy", "structOneAreaStudy.html", "structOneAreaStudy" ],

@@ -602,7 +602,8 @@ var namespaces_dup =
         [ "ReadingStudy", "classAntares_1_1Error_1_1ReadingStudy.html", "classAntares_1_1Error_1_1ReadingStudy" ],
         [ "NoAreaInsideAdqPatchMode", "classAntares_1_1Error_1_1NoAreaInsideAdqPatchMode.html", "classAntares_1_1Error_1_1NoAreaInsideAdqPatchMode" ],
         [ "IncompatibleHurdleCostCSR", "classAntares_1_1Error_1_1IncompatibleHurdleCostCSR.html", "classAntares_1_1Error_1_1IncompatibleHurdleCostCSR" ],
-        [ "IncompatibleSimulationModeForAdqPatch", "classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html", "classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch" ]
+        [ "IncompatibleSimulationModeForAdqPatch", "classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html", "classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch" ],
+        [ "IncompatiblePriceTakingOrderForHybrid", "classAntares_1_1Error_1_1IncompatiblePriceTakingOrderForHybrid.html", "classAntares_1_1Error_1_1IncompatiblePriceTakingOrderForHybrid" ]
       ] ],
       [ "Expressions", null, [
         [ "Nodes", null, [
@@ -960,6 +961,8 @@ var namespaces_dup =
           [ "fromBool", "timeAndScenarioType_8h.html#acb58641e2e58b26c41533b310a8b6e53", null ],
           [ "fromBool", "timeAndScenarioType_8h.html#a1ec198537ff13af974a5dac7cd20ee8d", null ],
           [ "getConnectionField", "portType_8cpp.html#a5b98aaee910ac96798b010a1c3599679", null ],
+          [ "getSpilledBound", "portType_8h.html#a97585c7cb2fc2d36d70e8528d3dc6b14", null ],
+          [ "getUnsupEnergyBound", "portType_8h.html#a17618896f6aa6c6d27bb30925cffb816", null ],
           [ "isEmpty", "portType_8cpp.html#ae25c2ee4d96cf9586d5619fff8e2562b", null ],
           [ "operator<<", "enum__operators_8h.html#a5b42803d363465d2075144cd54313270", null ],
           [ "operator==", "portType_8cpp.html#a5f72d81c70aac087bc14e5f150aeffb3", null ]
@@ -2062,6 +2065,12 @@ var namespaces_dup =
       [ "reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", "classfind__reference_1_1reference__folder__finder" ],
       [ "find_reference_folder", "find__reference_8py.html#a9a1c9809dbe51b7d00621cd03854ec6e", null ]
     ] ],
+    [ "Fixtures", null, [
+      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
+      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
+      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
+      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
+    ] ],
     [ "fixtures", null, [
       [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
       [ "antares_problem_generator", "fixtures_8py.html#a532fab1323b92d1f3eb74f5213a6b6c0", null ],
@@ -2070,12 +2079,6 @@ var namespaces_dup =
       [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
       [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
       [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
-    ] ],
-    [ "Fixtures", null, [
-      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
-      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
-      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
-      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
     ] ],
     [ "fmt", null, [
       [ "formatter< Antares::ModelerStudy::SystemModel::FieldRole >", "structfmt_1_1formatter_3_01Antares_1_1ModelerStudy_1_1SystemModel_1_1FieldRole_01_4.html", "structfmt_1_1formatter_3_01Antares_1_1ModelerStudy_1_1SystemModel_1_1FieldRole_01_4" ]
