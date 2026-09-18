@@ -96,8 +96,6 @@ void Area::createMissingData()
     createMissingPrepros();
 
     // Ensure hydro, load, solar and wind matrices are sized to valid defaults
-    hydro.reset();
-    hydro.allocation.fromArea(id, 1.);
     load.series.reset();
     solar.series.reset();
     wind.series.reset();
