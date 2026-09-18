@@ -114,11 +114,8 @@ struct GemsContributionFixture
     {
         modelerData = buildModelerData();
 
-        makeWeeklyProblem(problemeHebdo);
-        makeProblemToSolve(problemAResoudre);
-
-        modelerData->dataSeries = std::make_unique<LinearProblemData>();
-
+        makeWeeklyProblem();
+        makeProblemToSolve();
 
         constraintFictitious = {{0, fictitiousLoadArea1}, {1, fictitiousLoadArea2}};
         constraintMaxEns = {{0, maxEnsLoadArea1}, {1, maxEnsLoadArea2}};
@@ -182,36 +179,37 @@ struct GemsContributionFixture
         auto data = std::make_unique<Solver::ModelerData>();
         data->system = createSystemFromYml();
         data->scenarioGroupRepository = createScenarioGroupRepo();
+        data->dataSeries = std::make_unique<LinearProblemData>();
 
         return data;
     }
 
-    void makeWeeklyProblem(PROBLEME_HEBDO& pHebdo)
+    void makeWeeklyProblem()
     {
-        pHebdo.modelerData = modelerData.get();
-        pHebdo.NomsDesPays.push_back("area1");
-        pHebdo.NomsDesPays.push_back("area2");
-        pHebdo.NombreDePays = 2;
-        pHebdo.HeureDansLAnnee = 0;
-        pHebdo.year = 0;
+        problemeHebdo.modelerData = modelerData.get();
+        problemeHebdo.NomsDesPays.push_back("area1");
+        problemeHebdo.NomsDesPays.push_back("area2");
+        problemeHebdo.NombreDePays = 2;
+        problemeHebdo.HeureDansLAnnee = 0;
+        problemeHebdo.year = 0;
 
-        pHebdo.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>();
-        pHebdo.adequacyPatchRuntimeData->areaMode = {
+        problemeHebdo.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>();
+        problemeHebdo.adequacyPatchRuntimeData->areaMode = {
           Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch,
           Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch};
 
         // Initialize CorrespondanceVarNativesVarOptim for VariableManager.
-        pHebdo.CorrespondanceVarNativesVarOptim.resize(2); // hours 0 and 1
-        pHebdo.CorrespondanceVarNativesVarOptim[0].NumeroDeVariableDefaillancePositive = {
+        problemeHebdo.CorrespondanceVarNativesVarOptim.resize(2); // hours 0 and 1
+        problemeHebdo.CorrespondanceVarNativesVarOptim[0].NumeroDeVariableDefaillancePositive = {
           ensVarArea1Hour0,
           ensVarArea2};
-        pHebdo.CorrespondanceVarNativesVarOptim[1].NumeroDeVariableDefaillancePositive = {
+        problemeHebdo.CorrespondanceVarNativesVarOptim[1].NumeroDeVariableDefaillancePositive = {
           ensVarArea1Hour1,
           ensVarArea2};
 
         // The linear problem and OptimEntityContainer are intentionally empty.
         // Our GEMS expressions (spillage_bound, unsupplied_energy_bound) are based
-        // on component *parameters* (time series), not on optimization *variables*.
+        // on component parameters (time series), not on optimization variables.
         // Parameters are evaluated directly from dataSeries by EvalVisitor,
         // without needing a solved LP or a populated OptimEntityContainer.
         // If expressions depended on component variables (LP solution values),
@@ -221,7 +219,7 @@ struct GemsContributionFixture
           *emptyLinearProblem);
     }
 
-    void makeProblemToSolve(PROBLEME_ANTARES_A_RESOUDRE& pAResoudre)
+    void makeProblemToSolve()
     {
         problemAResoudre.Xmax.resize(20, 0.0);
         problemAResoudre.Xmin.resize(20, 0.0);
