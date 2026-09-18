@@ -647,6 +647,69 @@ BOOST_FIXTURE_TEST_CASE(print_port_field_sum_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(printed, "august.2024");
 }
 
+namespace
+{
+class MockAreaPriceProvider: public Antares::LinearProblem::Api::IAreaPriceProvider
+{
+public:
+    [[nodiscard]] double getAreaPrice(const std::string& areaId, unsigned hour) const override
+    {
+        if (areaId != "area1")
+        {
+            return 0.;
+        }
+        return 42. + hour;
+    }
+};
+} // namespace
+
+BOOST_FIXTURE_TEST_CASE(evaluate_sum_connections_on_area_connection_price_field, MyDummyFixture)
+{
+    AreaConnection areaConnection{.inject_to_balance = "flow",
+                                  .spillage_bound = "",
+                                  .unsupplied_energy_bound = "",
+                                  .price = "price"};
+    PortType portType("flow_port", {PortField("flow"), PortField("price")}, areaConnection);
+    Port port("generation", portType);
+
+    Model model = ModelBuilder().withId("gen_model").withPorts({port}).build();
+    Component component = ComponentBuilder().withId("gen1").withModel(&model).build();
+    component.addAreaConnection("generation", "area1");
+
+    Antares::LinearProblem::Api::EmptyScenario scenario;
+    MockAreaPriceProvider areaPriceProvider;
+    EvalVisitor visitor(optimEntityContainer, ctx, component, &data, scenario, &areaPriceProvider);
+
+    Nodes::PortFieldSumNode priceSum("generation", "price");
+    BOOST_CHECK_EQUAL(visitor.dispatch(&priceSum).value(0), 42.);
+
+    // A field that isn't the port's price field must not pick up the area price.
+    Nodes::PortFieldSumNode otherFieldSum("generation", "flow");
+    BOOST_CHECK_EQUAL(visitor.dispatch(&otherFieldSum).value(0), 0.);
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_sum_connections_on_area_connection_price_without_provider,
+                        MyDummyFixture)
+{
+    AreaConnection areaConnection{.inject_to_balance = "flow",
+                                  .spillage_bound = "",
+                                  .unsupplied_energy_bound = "",
+                                  .price = "price"};
+    PortType portType("flow_port", {PortField("flow"), PortField("price")}, areaConnection);
+    Port port("generation", portType);
+
+    Model model = ModelBuilder().withId("gen_model").withPorts({port}).build();
+    Component component = ComponentBuilder().withId("gen1").withModel(&model).build();
+    component.addAreaConnection("generation", "area1");
+
+    Antares::LinearProblem::Api::EmptyScenario scenario;
+    // No area price provider supplied: must default to 0 (matches full-GEMS/MILP behavior).
+    EvalVisitor visitor(optimEntityContainer, ctx, component, &data, scenario);
+
+    Nodes::PortFieldSumNode priceSum("generation", "price");
+    BOOST_CHECK_EQUAL(visitor.dispatch(&priceSum).value(0), 0.);
+}
+
 BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
 {
     ParameterNode root("my-param", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);

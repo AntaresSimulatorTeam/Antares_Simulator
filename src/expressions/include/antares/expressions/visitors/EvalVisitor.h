@@ -7,6 +7,7 @@
 #include <sstream>
 #include <variant>
 
+#include <antares/optimisation/linear-problem-api/IAreaPriceProvider.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/expressions/visitors/NodeVisitor.h"
 #include "antares/modeler-optimisation-container/EvaluationContext.h"
@@ -314,7 +315,8 @@ public:
                          const LinearProblem::Api::FillContext& fillContext,
                          const ModelerStudy::SystemModel::Component& component,
                          const LinearProblem::Api::ILinearProblemData* data,
-                         const LinearProblem::Api::IScenario& scenario);
+                         const LinearProblem::Api::IScenario& scenario,
+                         const LinearProblem::Api::IAreaPriceProvider* areaPriceProvider = nullptr);
 
     std::string name() const override;
 
@@ -325,6 +327,7 @@ private:
     const LinearProblem::Api::IScenario& scenario_;
     const LinearProblem::EvaluationContext evalContext_;
     const LinearProblem::Api::FillContext& fillContext_;
+    const LinearProblem::Api::IAreaPriceProvider* areaPriceProvider_;
 
     EvaluationResult visit(const Nodes::SumNode* node) override;
     EvaluationResult visit(const Nodes::SubtractionNode* node) override;
@@ -353,5 +356,9 @@ private:
     EvaluationResult visitCeil(const Nodes::FunctionNode* node);
     EvaluationResult visitRound(const Nodes::FunctionNode* node);
     EvaluationResult visitAbs(const Nodes::FunctionNode* node);
+
+    /// Dual value of a legacy area's balance equation, over the fill context's local
+    /// time steps. Returns 0 when no area price provider was supplied (full GEMS, MILP).
+    EvaluationResult areaPrice(const std::string& areaId) const;
 };
 } // namespace Antares::Expressions::Visitors

@@ -32,6 +32,28 @@ Feature: hybrid (simulator+modeler) studies
       | 0-51  | load1     | consumption.flow_field |           | 0-4      | -100  |
 
   @short
+  Scenario: Hybrid area-connection price field lets a GEMS component compute the legacy area's marginal price
+    # gen1 (max_p=60, prop_cost=0.3) is cheaper than gen2 (max_p=100, prop_cost=5.0); together
+    # they cover load1's constant 100 MW demand. gen1 is pinned at its 60 MW cap, so gen2 (at
+    # 40 MW, strictly inside its bound) sets the area's marginal price: 5.0.
+    # gen1's "profit" extra-output -- (sum_connections(generation.price) - prop_cost) * p --
+    # is therefore (5.0 - 0.3) * 60 = 282, not 0: its own cost no longer determines the price it
+    # sees. If the area-connection 'price' field were broken (e.g. always 0), profit would be
+    # -18 instead (-0.3 * 60). gen2, being the marginal unit, earns 0 profit, same as gen1 did
+    # in the simpler single-generator case.
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/hybrid_price_connnection"
+    When I run antares simulator with --output=all
+    Then the simulation succeeds
+    And the modeler outputs contain the following entries with relative tolerance 0.001
+      | block | component | output | timestep  | scenario | value |
+      |       | gen1      | profit | 0-23      | 0-4      | 282   |
+      |       | gen1      | profit | 8712-8735 | 0-4      | 282   |
+    And the modeler outputs contain the following entries with relative tolerance 10
+      | block | component | output | timestep  | scenario | value |
+      |       | gen2      | profit | 0-23      | 0-4      | 0     |
+      |       | gen2      | profit | 8712-8735 | 0-4      | 0     |
+
+  @short
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=6200) (168h simplex)
     # copy of short test 002, with no legacy thermal cluster, replaced by one component
     #

@@ -175,6 +175,16 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
     auto& portId = node->getPortName();
     auto& fieldId = node->getFieldName();
 
+    if (const auto& areaConnection = component_.areaConnectionAtPort(portId);
+        areaConnection && !fieldId.empty() && areaConnection->price == fieldId)
+    {
+        throw Error::InvalidArgumentError(fmt::format(
+          "Field '{}' of port '{}' holds the dual value of a legacy area's balance equation "
+          "and can only be used in extra-outputs, not in a linear expression.",
+          fieldId,
+          portId));
+    }
+
     TimeDependentLinearExpression to_return(nbtimeSteps_);
 
     for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
