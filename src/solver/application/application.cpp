@@ -336,9 +336,11 @@ void Application::postParametersChecks() const
 
     if (pParameters->adqPatchParams.enabled)
     {
+        bool isHybrid = pStudy->getModelerData() && pStudy->getModelerData()->system;
         pParameters->adqPatchParams.checkAdqPatchParams(pParameters->mode,
                                                         pStudy->areas,
-                                                        pParameters->include.hurdleCosts);
+                                                        pParameters->include.hurdleCosts,
+                                                        isHybrid);
     }
 
     bool tsGenThermal = (0
