@@ -33,6 +33,15 @@ PartHydro::PartHydro():
     pumpingEfficiency(1.),
     series(nullptr)
 {
+    inflowPattern.reset(1, DAYS_PER_YEAR);
+    inflowPattern.fillColumn(0, 1.0);
+    waterValues.reset(101, DAYS_PER_YEAR);
+    dailyNbHoursAtGenPmax.reset(1, DAYS_PER_YEAR);
+    dailyNbHoursAtGenPmax.fillColumn(0, 24.);
+    dailyNbHoursAtPumpPmax.reset(1, DAYS_PER_YEAR);
+    dailyNbHoursAtPumpPmax.fillColumn(0, 24.);
+    creditModulation.reset(101, 2);
+    creditModulation.fill(1);
 }
 
 template<class T>
