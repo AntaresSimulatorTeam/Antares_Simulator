@@ -8,6 +8,7 @@ import tempfile
 from pathlib import Path
 
 import numpy as np
+import parse
 from behave import *
 from common_steps.solver_input_handler import solver_input_handler
 from common_steps.solver_output_handler import solver_output_handler
@@ -412,7 +413,15 @@ def read_modeler_outputs_from_stage(context, stage):
     context.simu_table = SimulationTable(ST_reader_factory())
 
 
-@given('the study asks for the simulation table stages "{stages}"')
+@parse.with_pattern(r".*")
+def parse_maybe_empty(text):
+    return text
+
+
+register_type(MaybeEmpty=parse_maybe_empty)
+
+
+@given('the study asks for the simulation table stages "{stages:MaybeEmpty}"')
 def set_simulation_table_stages_in_ini(context, stages):
     """Set `simulation-table-stages` in the [output] section of generaldata.ini.
 
