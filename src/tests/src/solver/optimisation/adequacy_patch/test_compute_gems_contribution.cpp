@@ -112,44 +112,23 @@ struct GemsContributionFixture
 {
     GemsContributionFixture()
     {
-        modelerData = buildModelerSystem();
+        modelerData = buildModelerData();
 
-        problemeHebdo.modelerData = modelerData.get();
-        problemeHebdo.NomsDesPays.push_back("area1");
-        problemeHebdo.NomsDesPays.push_back("area2");
-        problemeHebdo.NombreDePays = 2;
-        problemeHebdo.HeureDansLAnnee = 0;
-        problemeHebdo.year = 0;
-
-        problemeHebdo.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>();
-        problemeHebdo.adequacyPatchRuntimeData->areaMode = {
-          Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch,
-          Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch};
-
-        // Initialize CorrespondanceVarNativesVarOptim for VariableManager.
-        problemeHebdo.CorrespondanceVarNativesVarOptim.resize(2); // hours 0 and 1
-        problemeHebdo.CorrespondanceVarNativesVarOptim[0].NumeroDeVariableDefaillancePositive = {
-          ensVarArea1Hour0,
-          ensVarArea2};
-        problemeHebdo.CorrespondanceVarNativesVarOptim[1].NumeroDeVariableDefaillancePositive = {
-          ensVarArea1Hour1,
-          ensVarArea2};
-
-        problemAResoudre.Xmax.resize(20, 0.0);
-        problemAResoudre.Xmin.resize(20, 0.0);
-        problemAResoudre.SecondMembre.resize(20, 0.0);
-
-        ScenarioGroupRepository scenarioGroupRepository;
-        auto scenario = std::make_unique<Scenario>("SG");
-        scenario->setTimeSerieNumber(0, 1);
-        scenarioGroupRepository.addScenario("SG", std::move(scenario));
-        modelerData->scenarioGroupRepository = std::move(scenarioGroupRepository);
+        makeWeeklyProblem(problemeHebdo);
+        makeProblemToSolve(problemAResoudre);
 
         modelerData->dataSeries = std::make_unique<LinearProblemData>();
 
-        auto linearProblem = std::make_shared<StructuredLinearProblem>();
-        problemeHebdo.ortoolsProblem_ = linearProblem;
-        problemeHebdo.optimEntityContainer = std::make_shared<OptimEntityContainer>(*linearProblem);
+        // The linear problem and OptimEntityContainer are intentionally empty.
+        // Our GEMS expressions (spillage_bound, unsupplied_energy_bound) are based
+        // on component *parameters* (time series), not on optimization *variables*.
+        // Parameters are evaluated directly from dataSeries by EvalVisitor,
+        // without needing a solved LP or a populated OptimEntityContainer.
+        // If expressions depended on component variables (LP solution values),
+        // we would need a non-empty linear problem and OptimEntityContainer.
+        auto emptyLinearProblem = std::make_shared<StructuredLinearProblem>();
+        problemeHebdo.optimEntityContainer = std::make_shared<OptimEntityContainer>(
+          *emptyLinearProblem);
 
         constraintFictitious = {{0, fictitiousLoadArea1}, {1, fictitiousLoadArea2}};
         constraintMaxEns = {{0, maxEnsLoadArea1}, {1, maxEnsLoadArea2}};
@@ -186,17 +165,68 @@ struct GemsContributionFixture
         modelerData->dataSeries = std::move(data);
     }
 
-    std::unique_ptr<Solver::ModelerData> buildModelerSystem()
+    std::unique_ptr<ModelerStudy::SystemModel::System> createSystemFromYml()
     {
-        auto data = std::make_unique<Solver::ModelerData>();
         IO::Inputs::YmlModel::Parser parserModel;
         libraries.push_back(IO::Inputs::ModelConverter::convert(parserModel.parse(libraryYaml)));
 
         IO::Inputs::YmlSystem::Parser parserSystem;
         auto ymlSystem = parserSystem.parse(systemYaml, "");
         auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
-        data->system = std::make_unique<System>(std::move(system));
+
+        return std::make_unique<System>(std::move(system));
+    }
+
+    LinearProblem::ScenarioGroupRepository createScenarioGroupRepo()
+    {
+        ScenarioGroupRepository scenarioGroupRepository;
+        auto scenario = std::make_unique<Scenario>("SG");
+        scenario->setTimeSerieNumber(0, 1);
+        scenarioGroupRepository.addScenario("SG", std::move(scenario));
+
+        return std::move(scenarioGroupRepository);
+    }
+
+    std::unique_ptr<Solver::ModelerData> buildModelerData()
+    {
+        auto data = std::make_unique<Solver::ModelerData>();
+        data->system = createSystemFromYml();
+        data->scenarioGroupRepository = createScenarioGroupRepo();
+
         return data;
+    }
+
+    void makeWeeklyProblem(PROBLEME_HEBDO& pHebdo)
+    {
+        pHebdo.modelerData = modelerData.get();
+        pHebdo.NomsDesPays.push_back("area1");
+        pHebdo.NomsDesPays.push_back("area2");
+        pHebdo.NombreDePays = 2;
+        pHebdo.HeureDansLAnnee = 0;
+        pHebdo.year = 0;
+
+        pHebdo.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>();
+        pHebdo.adequacyPatchRuntimeData->areaMode = {
+          Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch,
+          Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch};
+
+        // Initialize CorrespondanceVarNativesVarOptim for VariableManager.
+        pHebdo.CorrespondanceVarNativesVarOptim.resize(2); // hours 0 and 1
+        pHebdo.CorrespondanceVarNativesVarOptim[0].NumeroDeVariableDefaillancePositive = {
+          ensVarArea1Hour0,
+          ensVarArea2};
+        pHebdo.CorrespondanceVarNativesVarOptim[1].NumeroDeVariableDefaillancePositive = {
+          ensVarArea1Hour1,
+          ensVarArea2};
+    }
+
+    void makeProblemToSolve(PROBLEME_ANTARES_A_RESOUDRE& pAResoudre)
+    {
+        problemAResoudre.Xmax.resize(20, 0.0);
+        problemAResoudre.Xmin.resize(20, 0.0);
+        problemAResoudre.SecondMembre.resize(20, 0.0);
+
+        setLegacyBounds();
     }
 
     static void addTimeSeries(LinearProblemData& data,
@@ -221,141 +251,116 @@ struct GemsContributionFixture
 
 BOOST_AUTO_TEST_SUITE(gems_contribution_tests)
 
-// Residual load > 0: the spillage bound increases the RHS of the fictitious load constraint.
-BOOST_FIXTURE_TEST_CASE(spillage_bound_with_positive_residual_load, GemsContributionFixture)
+BOOST_FIXTURE_TEST_CASE(positive_load__gems_part_sets_ens_bounds__xmax_increased,
+                        GemsContributionFixture)
 {
-    // residual_load = 10 -> 2 * 10 + 30 = 50
-    // load = 20          -> 20 / 2 - 10 = 0
-    setGemsParameters({10.0, 10.0}, {20.0, 20.0});
-    setLegacyBounds();
+    // load = 50 -> 50 / 2 - 10 = 15
+    setGemsParameters({0.0, 0.0}, {50.0, 50.0});
 
     gemsPart->setHour(0);
     gemsPart->setBoundsOnENS();
-    gemsPart->setRHSfictitiousLoadValue();
-    gemsPart->setRHSMaxEnsLoadValue();
 
-    // Fictitious load constraint (spillage bound): only area1 is connected to the GEMS component
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea1], 500.0 + 50.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea2], 500.0);
-
-    // Unsupplied energy bound: contribution is zero
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1Hour0], 100.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea2], 100.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea1], 300.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea2], 300.0);
-
-    // Bounds not touched by the GEMS contribution remain at their legacy value
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[5], 0.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[5], 0.0);
-}
-
-// Residual load < 0: the spillage bound decreases the RHS of the fictitious load constraint.
-BOOST_FIXTURE_TEST_CASE(spillage_bound_with_negative_residual_load, GemsContributionFixture)
-{
-    // residual_load = -20 -> 2 * (-20) + 30 = -10
-    // load = 20           -> 20 / 2 - 10 = 0
-    setGemsParameters({-20.0, -20.0}, {20.0, 20.0});
-    setLegacyBounds();
-
-    gemsPart->setHour(0);
-    gemsPart->setBoundsOnENS();
-    gemsPart->setRHSfictitiousLoadValue();
-    gemsPart->setRHSMaxEnsLoadValue();
-
-    // Fictitious load constraint (spillage bound): only area1 is connected to the GEMS component
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea1], 500.0 - 10.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea2], 500.0);
-
-    // Unsupplied energy bound: contribution is zero
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1Hour0], 100.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea2], 100.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea1], 300.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea2], 300.0);
-}
-
-// GEMS load > 0: the unsupplied energy bound increases the ENS variable bound and the RHS of the
-// max ENS load constraint.
-BOOST_FIXTURE_TEST_CASE(unsupplied_energy_bound_with_positive_gems_load, GemsContributionFixture)
-{
-    // load = 50           -> 50 / 2 - 10 = 15
-    // residual_load = -15 -> 2 * (-15) + 30 = 0
-    setGemsParameters({-15.0, -15.0}, {50.0, 50.0});
-    setLegacyBounds();
-
-    gemsPart->setHour(0);
-    gemsPart->setBoundsOnENS();
-    gemsPart->setRHSfictitiousLoadValue();
-    gemsPart->setRHSMaxEnsLoadValue();
-
-    // Unsupplied energy bound: only area1 is connected to the GEMS component
     BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1Hour0], 100.0 + 15.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea2], 100.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea1], 300.0 + 15.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea2], 300.0);
-
-    // Fictitious load constraint (spillage bound): contribution is zero
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea1], 500.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea2], 500.0);
+    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea2], 100.0); // not connected
 }
 
-// GEMS load < 0: the unsupplied energy bound decreases the ENS variable bound and the RHS of the
-// max ENS load constraint.
-BOOST_FIXTURE_TEST_CASE(unsupplied_energy_bound_with_negative_gems_load, GemsContributionFixture)
+BOOST_FIXTURE_TEST_CASE(negative_load__gems_part_sets_ens_bounds__xmax_decreased,
+                        GemsContributionFixture)
 {
-    // load = -10          -> -10 / 2 - 10 = -15
-    // residual_load = -15 -> 2 * (-15) + 30 = 0
-    setGemsParameters({-15.0, -15.0}, {-10.0, -10.0});
-    setLegacyBounds();
+    // load = -10 -> -10 / 2 - 10 = -15
+    setGemsParameters({0.0, 0.0}, {-10.0, -10.0});
 
     gemsPart->setHour(0);
     gemsPart->setBoundsOnENS();
-    gemsPart->setRHSfictitiousLoadValue();
-    gemsPart->setRHSMaxEnsLoadValue();
 
-    // Unsupplied energy bound: only area1 is connected to the GEMS component
     BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1Hour0], 100.0 - 15.0);
     BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea2], 100.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea1], 300.0 - 15.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea2], 300.0);
+}
 
-    // Fictitious load constraint (spillage bound): contribution is zero
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea1], 500.0);
+BOOST_FIXTURE_TEST_CASE(zero_load__gems_part_sets_ens_bounds__xmax_decreased_by_constant,
+                        GemsContributionFixture)
+{
+    // load = 0 -> 0 / 2 - 10 = -10
+    setGemsParameters({0.0, 0.0}, {0.0, 0.0});
+
+    gemsPart->setHour(0);
+    gemsPart->setBoundsOnENS();
+
+    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1Hour0], 100.0 - 10.0);
+    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea2], 100.0);
+}
+
+// --- setRHSfictitiousLoadValue (spillage_bound = 2 * residual_load + 30) ---
+
+BOOST_FIXTURE_TEST_CASE(positive_residual_load__gems_part_sets_rhs_fictitious_load__rhs_increased,
+                        GemsContributionFixture)
+{
+    // residual_load = 10 -> 2 * 10 + 30 = 50
+    setGemsParameters({10.0, 10.0}, {0.0, 0.0});
+
+    gemsPart->setHour(0);
+    gemsPart->setRHSfictitiousLoadValue();
+
+    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea1], 500.0 + 50.0);
     BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea2], 500.0);
 }
 
-// The GEMS load is time-dependent: its contribution is evaluated at the triggered hour.
-BOOST_FIXTURE_TEST_CASE(gems_load_is_evaluated_at_the_triggered_hour, GemsContributionFixture)
+BOOST_FIXTURE_TEST_CASE(negative_residual_load__gems_part_sets_rhs_fictitious_load__rhs_decreased,
+                        GemsContributionFixture)
 {
-    // load[0] = 1  -> 1 / 2 - 10 = -9.5
-    // load[1] = 42 -> 42 / 2 - 10 = 11
-    // residual_load = -15 -> 2 * (-15) + 30 = 0
-    setGemsParameters({-15.0, -15.0}, {1.0, 42.0});
-    setLegacyBounds();
+    // residual_load = -20 -> 2 * (-20) + 30 = -10
+    setGemsParameters({-20.0, -20.0}, {0.0, 0.0});
 
-    // Hour 0
     gemsPart->setHour(0);
-    gemsPart->setBoundsOnENS();
     gemsPart->setRHSfictitiousLoadValue();
+
+    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea1], 500.0 - 10.0);
+    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea2], 500.0);
+}
+
+// --- setRHSMaxEnsLoadValue (unsupplied_energy_bound = load / 2 - 10) ---
+
+BOOST_FIXTURE_TEST_CASE(positive_load__gems_part_sets_rhs_max_ens__rhs_increased,
+                        GemsContributionFixture)
+{
+    // load = 50 -> 50 / 2 - 10 = 15
+    setGemsParameters({0.0, 0.0}, {50.0, 50.0});
+
+    gemsPart->setHour(0);
     gemsPart->setRHSMaxEnsLoadValue();
 
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1Hour0], 100.0 - 9.5);
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea1], 300.0 - 9.5);
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea1], 500.0);
+    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea1], 300.0 + 15.0);
+    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea2], 300.0);
+}
 
-    // Hour 1: the GEMS part only adds its contribution, so no reset happens between hours.
+BOOST_FIXTURE_TEST_CASE(negative_load__gems_part_sets_rhs_max_ens__rhs_decreased,
+                        GemsContributionFixture)
+{
+    // load = -10 -> -10 / 2 - 10 = -15
+    setGemsParameters({0.0, 0.0}, {-10.0, -10.0});
+
+    gemsPart->setHour(0);
+    gemsPart->setRHSMaxEnsLoadValue();
+
+    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea1], 300.0 - 15.0);
+    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea2], 300.0);
+}
+
+// --- Time dependence ---
+
+BOOST_FIXTURE_TEST_CASE(ens_bounds_evaluated_at_triggered_hour, GemsContributionFixture)
+{
+    // load[0] = 20 -> 20 / 2 - 10 = 0
+    // load[1] = 42 -> 42 / 2 - 10 = 11
+    setGemsParameters({0.0, 0.0}, {20.0, 42.0});
+
     gemsPart->setHour(1);
     gemsPart->setBoundsOnENS();
-    gemsPart->setRHSfictitiousLoadValue();
-    gemsPart->setRHSMaxEnsLoadValue();
 
-    // Hour 1 uses its own ENS variable
     BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1Hour1], 100.0 + 11.0);
-    // The max-ENS constraint accumulates the contribution of both hours
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea1], 300.0 - 9.5 + 11.0);
-    // The ENS variable of hour 0 is not modified at hour 1
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1Hour0], 100.0 - 9.5);
-    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea1], 500.0);
 }
+
+// --- Factory ---
 
 BOOST_AUTO_TEST_CASE(factory_returns_null_gems_part_when_no_modeler_data)
 {

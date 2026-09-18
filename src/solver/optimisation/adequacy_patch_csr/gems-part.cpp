@@ -143,7 +143,7 @@ void ActiveGemsPart::setRHSMaxEnsLoadValue()
 
 double ActiveGemsPart::gemsSpilledForArea(uint32_t area) const
 {
-    return gemsContributionForArea(area, Antares::ModelerStudy::SystemModel::getSpilledBound);
+    return gemsContributionForArea(area, getSpilledBound);
 }
 
 // Factory
