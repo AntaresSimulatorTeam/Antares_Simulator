@@ -109,11 +109,47 @@ const int maxEnsLoadArea1 = 12;
 const int maxEnsLoadArea2 = 13;
 } // namespace
 
+std::vector<Library> makeLibrary()
+{
+    IO::Inputs::YmlModel::Parser parserModel;
+    std::vector<Library> libraries;
+    libraries.push_back(IO::Inputs::ModelConverter::convert(parserModel.parse(libraryYaml)));
+    return libraries;
+}
+
+std::unique_ptr<System> createSystemFromYml(std::vector<Library>& libraries)
+{
+    IO::Inputs::YmlSystem::Parser parserSystem;
+    auto ymlSystem = parserSystem.parse(systemYaml, "");
+    auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
+    return std::make_unique<System>(std::move(system));
+}
+
+LinearProblem::ScenarioGroupRepository createScenarioGroupRepo()
+{
+    auto scenario = std::make_unique<Scenario>("SG");
+    scenario->setTimeSerieNumber(0, 1);
+
+    ScenarioGroupRepository scenarioGroupRepository;
+    scenarioGroupRepository.addScenario("SG", std::move(scenario));
+    return scenarioGroupRepository;
+}
+
+std::unique_ptr<Solver::ModelerData> buildModelerData(std::vector<Library>& libraries)
+{
+    auto data = std::make_unique<Solver::ModelerData>();
+    data->system = createSystemFromYml(libraries);
+    data->scenarioGroupRepository = createScenarioGroupRepo();
+    data->dataSeries = std::make_unique<LinearProblemData>();
+    return data;
+}
+
 struct GemsContributionFixture
 {
     GemsContributionFixture()
     {
-        modelerData = buildModelerData();
+        libraries_ = makeLibrary();
+        modelerData = buildModelerData(libraries_);
 
         makeWeeklyProblem();
         makeProblemToSolve();
@@ -160,37 +196,6 @@ struct GemsContributionFixture
         addTimeSeries(*data, "residual_load", residualLoad);
         addTimeSeries(*data, "load", load);
         modelerData->dataSeries = std::move(data);
-    }
-
-    std::unique_ptr<ModelerStudy::SystemModel::System> createSystemFromYml()
-    {
-        IO::Inputs::YmlModel::Parser parserModel;
-        libraries.push_back(IO::Inputs::ModelConverter::convert(parserModel.parse(libraryYaml)));
-
-        IO::Inputs::YmlSystem::Parser parserSystem;
-        auto ymlSystem = parserSystem.parse(systemYaml, "");
-        auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
-
-        return std::make_unique<System>(std::move(system));
-    }
-
-    LinearProblem::ScenarioGroupRepository createScenarioGroupRepo()
-    {
-        auto scenario = std::make_unique<Scenario>("SG");
-        scenario->setTimeSerieNumber(0, 1);
-
-        ScenarioGroupRepository scenarioGroupRepository;
-        scenarioGroupRepository.addScenario("SG", std::move(scenario));
-        return scenarioGroupRepository;
-    }
-
-    std::unique_ptr<Solver::ModelerData> buildModelerData()
-    {
-        auto data = std::make_unique<Solver::ModelerData>();
-        data->system = createSystemFromYml();
-        data->scenarioGroupRepository = createScenarioGroupRepo();
-        data->dataSeries = std::make_unique<LinearProblemData>();
-        return data;
     }
 
     void makeWeeklyProblem()
@@ -245,12 +250,14 @@ struct GemsContributionFixture
     PROBLEME_HEBDO problemeHebdo{};
     std::unique_ptr<Solver::ModelerData> modelerData;
     // Keeps the model definitions alive: the system components hold raw pointers into them.
-    std::vector<Library> libraries;
     VariableManagement::VariableManager variableManager_{&problemeHebdo};
     std::unique_ptr<IGemsPart> gemsPart;
     PROBLEME_ANTARES_A_RESOUDRE problemAResoudre{};
     std::map<int, int> constraintFictitious;
     std::map<int, int> constraintMaxEns;
+
+private:
+    std::vector<Library> libraries_; // Has to stay alive during tests
 };
 
 BOOST_AUTO_TEST_SUITE(gems_contribution_tests)
