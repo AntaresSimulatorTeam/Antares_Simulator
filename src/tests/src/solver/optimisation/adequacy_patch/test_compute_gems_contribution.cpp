@@ -179,8 +179,6 @@ struct GemsContributionFixture
         auto data = std::make_unique<Solver::ModelerData>();
         data->system = createSystemFromYml();
         data->scenarioGroupRepository = createScenarioGroupRepo();
-        data->dataSeries = std::make_unique<LinearProblemData>();
-
         return data;
     }
 
