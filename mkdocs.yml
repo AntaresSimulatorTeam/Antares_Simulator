@@ -88,6 +88,7 @@ nav:
       - 'ANTLR4 code generation': 'developer-guide/7-antlr4.md'
       - 'Tests (user)': 'developer-guide/4-Tests-user.md'
       - 'Tests (developer)': 'developer-guide/4-Tests-dev.md'
+      - 'Simulation table e2e coverage': 'developer-guide/simulation-table-e2e-coverage.md'
       - 'Installer creation': 'developer-guide/5-Installer-creation.md'
       - 'Contributing': 'developer-guide/6-Contributing.md'
       - 'Continuous Integration': 'developer-guide/continuous-integration.md'
