@@ -20,6 +20,7 @@
 
 using namespace std::string_literals;
 using namespace Antares;
+using namespace Antares::Data::AdequacyPatch;
 using namespace Antares::Optimization;
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::LinearProblem;
@@ -129,19 +130,28 @@ struct GemsContributionFixture
 
     // Resets the bounds to the values set by the legacy adequacy patch, right before the GEMS
     // contribution is applied.
-    void setLegacyBounds()
+    void setProblemToSolveBounds()
     {
+        problemAResoudre.Xmax.resize(20, 0.0);
+        problemAResoudre.Xmin.resize(20, 0.0);
         std::fill(problemAResoudre.Xmax.begin(), problemAResoudre.Xmax.end(), 0.0);
-        std::fill(problemAResoudre.SecondMembre.begin(), problemAResoudre.SecondMembre.end(), 0.0);
 
         problemAResoudre.Xmax[ensVarArea1Hour0] = 100.0;
         problemAResoudre.Xmax[ensVarArea2] = 100.0;
         problemAResoudre.Xmax[ensVarArea1Hour1] = 100.0;
+    }
+
+    void setProblemToSolveRHS()
+    {
+        problemAResoudre.SecondMembre.resize(20, 0.0);
+        std::fill(problemAResoudre.SecondMembre.begin(), problemAResoudre.SecondMembre.end(), 0.0);
+
         problemAResoudre.SecondMembre[fictitiousLoadArea1] = 500.0;
         problemAResoudre.SecondMembre[fictitiousLoadArea2] = 500.0;
         problemAResoudre.SecondMembre[maxEnsLoadArea1] = 300.0;
         problemAResoudre.SecondMembre[maxEnsLoadArea2] = 300.0;
     }
+
 
     // Sets the values of the GEMS parameters (one time series per parameter, one value per hour).
     void setGemsParameters(const std::vector<double>& residualLoad, const std::vector<double>& load)
@@ -166,12 +176,12 @@ struct GemsContributionFixture
 
     LinearProblem::ScenarioGroupRepository createScenarioGroupRepo()
     {
-        ScenarioGroupRepository scenarioGroupRepository;
         auto scenario = std::make_unique<Scenario>("SG");
         scenario->setTimeSerieNumber(0, 1);
-        scenarioGroupRepository.addScenario("SG", std::move(scenario));
 
-        return std::move(scenarioGroupRepository);
+        ScenarioGroupRepository scenarioGroupRepository;
+        scenarioGroupRepository.addScenario("SG", std::move(scenario));
+        return scenarioGroupRepository;
     }
 
     std::unique_ptr<Solver::ModelerData> buildModelerData()
@@ -179,6 +189,7 @@ struct GemsContributionFixture
         auto data = std::make_unique<Solver::ModelerData>();
         data->system = createSystemFromYml();
         data->scenarioGroupRepository = createScenarioGroupRepo();
+        data->dataSeries = std::make_unique<LinearProblemData>();
         return data;
     }
 
@@ -192,9 +203,8 @@ struct GemsContributionFixture
         problemeHebdo.year = 0;
 
         problemeHebdo.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>();
-        problemeHebdo.adequacyPatchRuntimeData->areaMode = {
-          Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch,
-          Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch};
+        problemeHebdo.adequacyPatchRuntimeData->areaMode = {physicalAreaInsideAdqPatch,
+                                                            physicalAreaInsideAdqPatch};
 
         // Initialize CorrespondanceVarNativesVarOptim for VariableManager.
         problemeHebdo.CorrespondanceVarNativesVarOptim.resize(2); // hours 0 and 1
@@ -219,11 +229,8 @@ struct GemsContributionFixture
 
     void makeProblemToSolve()
     {
-        problemAResoudre.Xmax.resize(20, 0.0);
-        problemAResoudre.Xmin.resize(20, 0.0);
-        problemAResoudre.SecondMembre.resize(20, 0.0);
-
-        setLegacyBounds();
+        setProblemToSolveBounds();
+        setProblemToSolveRHS();
     }
 
     static void addTimeSeries(LinearProblemData& data,
