@@ -149,7 +149,7 @@ struct GemsContributionFixture
     GemsContributionFixture()
     {
         libraries_ = makeLibrary();
-        modelerData = buildModelerData(libraries_);
+        modelerData_ = buildModelerData(libraries_);
 
         makeWeeklyProblem();
         makeProblemToSolve();
@@ -195,12 +195,12 @@ struct GemsContributionFixture
         auto data = std::make_unique<LinearProblemData>();
         addTimeSeries(*data, "residual_load", residualLoad);
         addTimeSeries(*data, "load", load);
-        modelerData->dataSeries = std::move(data);
+        modelerData_->dataSeries = std::move(data);
     }
 
     void makeWeeklyProblem()
     {
-        problemeHebdo.modelerData = modelerData.get();
+        problemeHebdo.modelerData = modelerData_.get();
         problemeHebdo.NomsDesPays.push_back("area1");
         problemeHebdo.NomsDesPays.push_back("area2");
         problemeHebdo.NombreDePays = 2;
@@ -248,7 +248,6 @@ struct GemsContributionFixture
     }
 
     PROBLEME_HEBDO problemeHebdo{};
-    std::unique_ptr<Solver::ModelerData> modelerData;
     // Keeps the model definitions alive: the system components hold raw pointers into them.
     VariableManagement::VariableManager variableManager_{&problemeHebdo};
     std::unique_ptr<IGemsPart> gemsPart;
@@ -258,6 +257,7 @@ struct GemsContributionFixture
 
 private:
     std::vector<Library> libraries_; // Has to stay alive during tests
+    std::unique_ptr<Solver::ModelerData> modelerData_;
 };
 
 BOOST_AUTO_TEST_SUITE(gems_contribution_tests)
