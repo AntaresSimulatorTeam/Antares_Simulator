@@ -304,14 +304,11 @@ BOOST_FIXTURE_TEST_CASE(test_absent_section_preserves_constructor_default, Hydro
 BOOST_AUTO_TEST_CASE(test_CheckDailyMaxEnergy_valid_and_invalid)
 {
     PartHydro hydro;
-    hydro.reset(); // sizes and fills dailyNbHoursAt{Gen,Pump}Pmax with valid 24h values
-
     BOOST_CHECK(hydro.CheckDailyMaxEnergy("some_area"));
 
     hydro.dailyNbHoursAtGenPmax[0][10] = 25.0; // > 24 : invalid
     BOOST_CHECK(!hydro.CheckDailyMaxEnergy("some_area"));
 
-    hydro.reset();
     hydro.dailyNbHoursAtPumpPmax[0][20] = -1.0; // < 0 : invalid
     BOOST_CHECK(!hydro.CheckDailyMaxEnergy("some_area"));
 }
@@ -321,7 +318,6 @@ BOOST_FIXTURE_TEST_CASE(test_LoadDailyMaxEnergy_roundtrip, HydroFixture)
     fs::path capacity = createCapacityFolder();
 
     PartHydro writer;
-    writer.reset();
     writer.dailyNbHoursAtGenPmax.fillColumn(0, 12.5);
     writer.dailyNbHoursAtPumpPmax.fillColumn(0, 8.5);
     BOOST_REQUIRE(writer.dailyNbHoursAtGenPmax
@@ -406,16 +402,11 @@ BOOST_AUTO_TEST_CASE(test_getWeeklyModulation_exact_and_interpolated_and_clamped
 
 BOOST_FIXTURE_TEST_CASE(test_validate_all_defaults_returns_true, HydroFixture)
 {
-    east->hydro.reset();
-    west->hydro.reset();
     BOOST_CHECK(validate());
 }
 
 BOOST_FIXTURE_TEST_CASE(test_validate_clamps_invalid_scalar_properties, HydroFixture)
 {
-    east->hydro.reset();
-    west->hydro.reset();
-
     east->hydro.reservoirManagement = true;
     east->hydro.reservoirCapacity = -5.; // triggers both the "not defined" and "invalid" checks
     east->hydro.useHeuristicTarget = false;
@@ -445,9 +436,6 @@ BOOST_FIXTURE_TEST_CASE(test_validate_clamps_invalid_scalar_properties, HydroFix
 
 BOOST_FIXTURE_TEST_CASE(test_validate_leeway_lower_greater_than_upper, HydroFixture)
 {
-    east->hydro.reset();
-    west->hydro.reset();
-
     east->hydro.leewayLowerBound = 0.8;
     east->hydro.leewayUpperBound = 0.2;
 
@@ -460,9 +448,6 @@ BOOST_FIXTURE_TEST_CASE(test_validate_leeway_lower_greater_than_upper, HydroFixt
 
 BOOST_FIXTURE_TEST_CASE(test_validate_detects_invalid_inflow_and_credit_modulation, HydroFixture)
 {
-    east->hydro.reset();
-    west->hydro.reset();
-
     east->hydro.inflowPattern[0][5] = -1.0;
     east->hydro.creditModulation[10][0] = -1.0;
 

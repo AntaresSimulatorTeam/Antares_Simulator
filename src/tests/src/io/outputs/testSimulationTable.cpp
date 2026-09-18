@@ -274,7 +274,7 @@ BOOST_AUTO_TEST_SUITE(FileWriterIntegrationTests)
 
 BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
 {
-    OptimisationsSimulationTable tables;
+    OptimisationsSimulationTable tables{nullptr};
 
     // Add entries to both tables
     SimulationTableEntry entry1{.block = 1,
@@ -333,7 +333,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
 
 BOOST_AUTO_TEST_CASE(WriteTo_ParquetFormat_CreatesCorrectFiles)
 {
-    OptimisationsSimulationTable tables;
+    OptimisationsSimulationTable tables{nullptr};
     tables.firstOptimSimulationTable()->addEntry({.block = 1,
                                                   .component = "comp1",
                                                   .output = "var1",
@@ -382,22 +382,22 @@ BOOST_AUTO_TEST_CASE(WriteTo_ParquetFormat_CreatesCorrectFiles)
 
 BOOST_AUTO_TEST_CASE(TableForStage_CreatesOnDemandAndKeepsPointersStable)
 {
-    OptimisationsSimulationTable tables;
+    OptimisationsSimulationTable tables{nullptr};
     BOOST_CHECK(tables.stages().empty());
 
-    SimulationTable* remix = tables.tableForStage(Stage::remixHydro);
+    SimulationTable* remix = tables.tableForStage(Stage::peakShaving);
     BOOST_REQUIRE(remix != nullptr);
     BOOST_CHECK_EQUAL(tables.stages().size(), 1u);
 
     // Asking again for the same stage returns the same table.
-    BOOST_CHECK(tables.tableForStage(Stage::remixHydro) == remix);
+    BOOST_CHECK(tables.tableForStage(Stage::peakShaving) == remix);
 
     // Adding stages must not invalidate pointers already handed out:
     // OPT_OptimisationLineaire grabs the optim-nb-1 table before optim-nb-2 exists.
     SimulationTable* first = tables.firstOptimSimulationTable();
     SimulationTable* second = tables.secondOptimSimulationTable();
     BOOST_CHECK(first != second);
-    BOOST_CHECK(tables.tableForStage(Stage::remixHydro) == remix);
+    BOOST_CHECK(tables.tableForStage(Stage::peakShaving) == remix);
     BOOST_CHECK(tables.tableForStage(Stage::firstOptim) == first);
     BOOST_CHECK_EQUAL(tables.stages().size(), 3u);
 
@@ -419,7 +419,7 @@ BOOST_AUTO_TEST_CASE(TableForStage_CreatesOnDemandAndKeepsPointersStable)
 
 BOOST_AUTO_TEST_CASE(WriteTo_NamesOneFilePerStage)
 {
-    OptimisationsSimulationTable tables;
+    OptimisationsSimulationTable tables{nullptr};
     const SimulationTableEntry entry{.block = 1,
                                      .component = "comp1",
                                      .output = "var1",
@@ -430,14 +430,14 @@ BOOST_AUTO_TEST_CASE(WriteTo_NamesOneFilePerStage)
                                      .status = MipBasisStatus::BASIC};
     tables.firstOptimSimulationTable()->addEntry(entry);
     tables.secondOptimSimulationTable()->addEntry(entry);
-    tables.tableForStage(Stage::remixHydro)->addEntry(entry);
+    tables.tableForStage(Stage::peakShaving)->addEntry(entry);
 
     auto tempDir = std::filesystem::temp_directory_path();
     LegacySimulationTablesWriter(tempDir, 7 /* year */, TableFormat::CSV).write(tables);
 
     for (const auto* name: {"simulation-table-7-optim-nb-1.csv",
                             "simulation-table-7-optim-nb-2.csv",
-                            "simulation-table-7-remix-hydro.csv"})
+                            "simulation-table-7-peak-shaving.csv"})
     {
         const auto file = tempDir / name;
         BOOST_CHECK_MESSAGE(std::filesystem::exists(file), "missing " + std::string(name));
@@ -447,7 +447,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_NamesOneFilePerStage)
 
 BOOST_AUTO_TEST_CASE(WriteTo_SkipsStagesWithNoRows)
 {
-    OptimisationsSimulationTable tables;
+    OptimisationsSimulationTable tables{nullptr};
     tables.firstOptimSimulationTable()->addEntry({.block = 1,
                                                   .component = "comp1",
                                                   .output = "var1",
@@ -457,13 +457,13 @@ BOOST_AUTO_TEST_CASE(WriteTo_SkipsStagesWithNoRows)
                                                   .value = 10.0,
                                                   .status = MipBasisStatus::BASIC});
     // Asked for, but never filled -- a post-process dump that declined to run.
-    tables.tableForStage(Stage::remixHydro);
+    tables.tableForStage(Stage::peakShaving);
 
     auto tempDir = std::filesystem::temp_directory_path();
     LegacySimulationTablesWriter(tempDir, 8 /* year */, TableFormat::CSV).write(tables);
 
     const auto filled = tempDir / "simulation-table-8-optim-nb-1.csv";
-    const auto empty = tempDir / "simulation-table-8-remix-hydro.csv";
+    const auto empty = tempDir / "simulation-table-8-peak-shaving.csv";
     BOOST_CHECK(std::filesystem::exists(filled));
     BOOST_CHECK_MESSAGE(!std::filesystem::exists(empty),
                         "an empty stage must not produce a header-only file");
@@ -489,8 +489,8 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_EmptyAndAllMeanNoRestriction)
     BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("all").empty());
     // "all" wins over its neighbours rather than being taken for a stage name,
     // wherever in the list it sits.
-    BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("remix-hydro,all").empty());
-    BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("all,remix-hydro").empty());
+    BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("peak-shaving,all").empty());
+    BOOST_CHECK(OptimisationsSimulationTable::parseStageSelection("all,peak-shaving").empty());
 
     // Widening the selection is not a licence to stop reading: a name after an
     // "all" is still checked, so a typo is reported rather than swallowed.
@@ -501,15 +501,15 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_EmptyAndAllMeanNoRestriction)
 BOOST_AUTO_TEST_CASE(ParseStageSelection_TrimsSpacesAndRejectsUnknownNames)
 {
     const auto selection = OptimisationsSimulationTable::parseStageSelection(
-      " optim-nb-2 , adq-patch-csr ");
+      " optim-nb-2 , adq-patch ");
     BOOST_CHECK_EQUAL(selection.size(), 2u);
     BOOST_CHECK(selection.contains(Stage::secondOptim));
-    BOOST_CHECK(selection.contains(Stage::adequacyPatchCsr));
+    BOOST_CHECK(selection.contains(Stage::adequacyPatch));
 
     BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("optim-nb-3"),
                       Antares::Error::InvalidArgumentError);
     // A stage name that is only a prefix of a real one is still a mistake.
-    BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("remix"),
+    BOOST_CHECK_THROW(OptimisationsSimulationTable::parseStageSelection("peak"),
                       Antares::Error::InvalidArgumentError);
 }
 
@@ -526,19 +526,19 @@ BOOST_AUTO_TEST_CASE(ParseStageSelection_ErrorNamesWhereTheListCameFrom)
     {
         const std::string message = e.what();
         BOOST_CHECK_MESSAGE(message.find("some-source") != std::string::npos, message);
-        BOOST_CHECK_MESSAGE(message.find("remix-hydro") != std::string::npos, message);
+        BOOST_CHECK_MESSAGE(message.find("peak-shaving") != std::string::npos, message);
     }
 }
 
 BOOST_AUTO_TEST_CASE(SelectStages_UnselectedStagesReturnNullptr)
 {
-    OptimisationsSimulationTable tables;
-    tables.selectStages({Stage::remixHydro});
+    OptimisationsSimulationTable tables{nullptr};
+    tables.selectStages({Stage::peakShaving});
 
-    BOOST_CHECK(tables.tableForStage(Stage::remixHydro) != nullptr);
+    BOOST_CHECK(tables.tableForStage(Stage::peakShaving) != nullptr);
     BOOST_CHECK(tables.firstOptimSimulationTable() == nullptr);
     BOOST_CHECK(tables.secondOptimSimulationTable() == nullptr);
-    BOOST_CHECK(tables.tableForStage(Stage::adequacyPatchCsr) == nullptr);
+    BOOST_CHECK(tables.tableForStage(Stage::adequacyPatch) == nullptr);
 
     // A refused stage is not even created, so the writer never sees it.
     BOOST_CHECK_EQUAL(tables.stages().size(), 1u);
@@ -549,12 +549,12 @@ BOOST_AUTO_TEST_CASE(SelectStages_PostProcessStagesDriveTheModelerProblemRetenti
     // The weekly solve keeps its modeler problem alive only for a post-process
     // dump to re-emit; asking the question must not depend on -- nor create --
     // an optimisation-pass table, since a selection may well have none.
-    OptimisationsSimulationTable everything;
+    OptimisationsSimulationTable everything{nullptr};
     BOOST_CHECK(everything.anyPostProcessStageSelected());
 
-    for (const auto stage: {Stage::remixHydro, Stage::adequacyPatchCsr})
+    for (const auto stage: {Stage::peakShaving, Stage::adequacyPatch})
     {
-        OptimisationsSimulationTable tables;
+        OptimisationsSimulationTable tables{nullptr};
         tables.selectStages({stage});
         BOOST_CHECK_MESSAGE(tables.anyPostProcessStageSelected(), stageName(stage));
         // Specifically the case that used to drop the modeler rows: no optim
@@ -563,14 +563,14 @@ BOOST_AUTO_TEST_CASE(SelectStages_PostProcessStagesDriveTheModelerProblemRetenti
         BOOST_CHECK(tables.secondOptimSimulationTable() == nullptr);
     }
 
-    OptimisationsSimulationTable optimOnly;
+    OptimisationsSimulationTable optimOnly{nullptr};
     optimOnly.selectStages({Stage::firstOptim, Stage::secondOptim});
     BOOST_CHECK(!optimOnly.anyPostProcessStageSelected());
 
     // Querying must not create anything.
-    OptimisationsSimulationTable untouched;
-    untouched.selectStages({Stage::remixHydro});
-    BOOST_CHECK(untouched.isStageSelected(Stage::remixHydro));
+    OptimisationsSimulationTable untouched{nullptr};
+    untouched.selectStages({Stage::peakShaving});
+    BOOST_CHECK(untouched.isStageSelected(Stage::peakShaving));
     BOOST_CHECK(!untouched.isStageSelected(Stage::firstOptim));
     BOOST_CHECK(untouched.anyPostProcessStageSelected());
     BOOST_CHECK(untouched.stages().empty());
@@ -578,7 +578,7 @@ BOOST_AUTO_TEST_CASE(SelectStages_PostProcessStagesDriveTheModelerProblemRetenti
 
 BOOST_AUTO_TEST_CASE(SelectStages_EmptySelectionKeepsEveryStage)
 {
-    OptimisationsSimulationTable tables;
+    OptimisationsSimulationTable tables{nullptr};
     tables.selectStages({});
 
     for (const auto stage: allStages)
@@ -590,7 +590,7 @@ BOOST_AUTO_TEST_CASE(SelectStages_EmptySelectionKeepsEveryStage)
 
 BOOST_AUTO_TEST_CASE(SelectStages_WriterOnlyEmitsSelectedStages)
 {
-    OptimisationsSimulationTable tables;
+    OptimisationsSimulationTable tables{nullptr};
     tables.selectStages({Stage::firstOptim});
 
     const SimulationTableEntry entry{.block = 1,

@@ -107,11 +107,6 @@ public:
     //@}
 
     /*!
-    ** \brief Reset to default values
-    */
-    void resetToDefaultValues();
-
-    /*!
     ** \brief Copy settings from another XCast struct
     */
     void copyFrom(const XCast& rhs);

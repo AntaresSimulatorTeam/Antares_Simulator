@@ -73,6 +73,12 @@ std::vector<Stage> resolveStages(const std::vector<std::string>& names, const st
 }
 } // namespace
 
+OptimisationsSimulationTable::OptimisationsSimulationTable(
+  std::shared_ptr<const Optimization::InactiveComponentsAnalyzer> inactiveComponents):
+    inactiveComponents(std::move(inactiveComponents))
+{
+}
+
 std::set<Stage> OptimisationsSimulationTable::parseStageSelection(const std::string& input,
                                                                   const std::string& source)
 {
@@ -111,7 +117,7 @@ bool OptimisationsSimulationTable::isStageSelected(Stage stage) const
 
 bool OptimisationsSimulationTable::anyPostProcessStageSelected() const
 {
-    return isStageSelected(Stage::remixHydro) || isStageSelected(Stage::adequacyPatchCsr);
+    return isStageSelected(Stage::peakShaving) || isStageSelected(Stage::adequacyPatch);
 }
 
 const std::map<Stage, SimulationTable>& OptimisationsSimulationTable::stages() const
