@@ -218,7 +218,7 @@ double LegacyExtraOutputEmitter::numberOfUnitsOn(uint32_t pays, int index, int p
                                                / minPowerOfAUnit);
     const double availableUnits = std::ceil(disp.PuissanceDisponibleDuPalierThermique[pdt]
                                             / unitSize);
-    return std::max(std::min(committedUnits, availableUnits), unitsCarryingTheGeneration);
+    return std::clamp(committedUnits, unitsCarryingTheGeneration, availableUnits);
 }
 
 std::pair<double, double> LegacyExtraOutputEmitter::unitCommitmentCosts(uint32_t pays,
