@@ -17,7 +17,7 @@ namespace Antares::Data
 {
 PartHydro::PartHydro():
     interDailyBreakdown(0.),
-    intraDailyModulation(2.),
+    intraDailyModulation(24.),
     intermonthlyBreakdown(0),
     reservoirManagement(false),
     followLoadModulations(true),

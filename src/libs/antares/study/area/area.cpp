@@ -96,6 +96,20 @@ void Area::createMissingData()
     createMissingPrepros();
 
     // Ensure hydro, load, solar and wind matrices are sized to valid defaults
+    hydro.interDailyBreakdown = 1.;
+    hydro.intraDailyModulation = 24.;
+    hydro.intermonthlyBreakdown = 1.;
+    hydro.allocation.clear();
+    hydro.allocation.setDefaultForArea(id);
+    hydro.inflowPattern.reset(1, DAYS_PER_YEAR);
+    hydro.inflowPattern.fillColumn(0, 1.0);
+    hydro.waterValues.reset(101, DAYS_PER_YEAR);
+    hydro.dailyNbHoursAtGenPmax.reset(1, DAYS_PER_YEAR);
+    hydro.dailyNbHoursAtGenPmax.fillColumn(0, 24.);
+    hydro.dailyNbHoursAtPumpPmax.reset(1, DAYS_PER_YEAR);
+    hydro.dailyNbHoursAtPumpPmax.fillColumn(0, 24.);
+    hydro.creditModulation.reset(101, 2);
+    hydro.creditModulation.fill(1);
     load.series.reset();
     solar.series.reset();
     wind.series.reset();
@@ -107,6 +121,7 @@ void Area::createMissingTimeSeries()
     {
         hydro.series = std::make_unique<DataSeriesHydro>();
     }
+    hydro.series->reset();
 }
 
 void Area::createMissingPrepros()

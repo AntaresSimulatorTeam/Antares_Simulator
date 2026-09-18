@@ -11,6 +11,11 @@ namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
+void HydroAllocation::setDefaultForArea(const AreaName& areaid)
+{
+    pValues[areaid] = 1.;
+}
+
 void HydroAllocation::prepareForSolver(const AreaList& list)
 {
     pValuesFromAreaID.clear();

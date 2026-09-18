@@ -29,9 +29,9 @@ bool columnIsAllZero(const Matrix<>& matrix, unsigned column)
 bool selectedColumnsAreAllZero(const Data::TimeSeries& ts)
 {
     const uint32_t nbYears = ts.timeseriesNumbers.height();
-    if (nbYears == 0)
+    if (nbYears == 0 || ts.numberOfColumns() <= 1)
     {
-        return ts.timeSeries.containsOnlyZero();
+        return ts.numberOfColumns() == 0 || ts.timeSeries.containsOnlyZero();
     }
     for (uint32_t year = 0; year < nbYears; ++year)
     {
