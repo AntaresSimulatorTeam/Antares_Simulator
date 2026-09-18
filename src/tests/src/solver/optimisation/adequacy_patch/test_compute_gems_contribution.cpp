@@ -159,7 +159,7 @@ struct GemsContributionFixture
 
         gemsPart = makeGemsPart(&problemeHebdo,
                                 problemAResoudre,
-                                variableManager_,
+                                variableManager,
                                 constraintFictitious,
                                 constraintMaxEns);
     }
@@ -248,14 +248,14 @@ struct GemsContributionFixture
     }
 
     PROBLEME_HEBDO problemeHebdo{};
-    // Keeps the model definitions alive: the system components hold raw pointers into them.
-    VariableManagement::VariableManager variableManager_{&problemeHebdo};
+    VariableManagement::VariableManager variableManager{&problemeHebdo};
     std::unique_ptr<IGemsPart> gemsPart;
     PROBLEME_ANTARES_A_RESOUDRE problemAResoudre{};
     std::map<int, int> constraintFictitious;
     std::map<int, int> constraintMaxEns;
 
 private:
+    // Both have to stay alive during tests : the system components hold raw pointers into them.
     std::vector<Library> libraries_; // Has to stay alive during tests
     std::unique_ptr<Solver::ModelerData> modelerData_;
 };
@@ -397,7 +397,7 @@ BOOST_FIXTURE_TEST_CASE(throws_when_no_optimEntityContainer, GemsContributionFix
     problemeHebdo.optimEntityContainer.reset();
     BOOST_CHECK_THROW((ActiveGemsPart(&problemeHebdo,
                                       problemAResoudre,
-                                      variableManager_,
+                                      variableManager,
                                       constraintFictitious,
                                       constraintMaxEns)),
                       std::runtime_error);
