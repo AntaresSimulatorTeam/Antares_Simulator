@@ -81,11 +81,6 @@ public:
     void createMissingData();
 
     /*!
-    ** \brief Reset all values to their default one
-    */
-    void resetToDefaultValues();
-
-    /*!
     ** \brief Resize all matrices dedicated to the sampled timeseries numbers
     **
     ** \param n A number of years

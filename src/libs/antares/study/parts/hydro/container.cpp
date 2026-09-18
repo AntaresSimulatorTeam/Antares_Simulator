@@ -17,7 +17,7 @@ namespace Antares::Data
 {
 PartHydro::PartHydro():
     interDailyBreakdown(0.),
-    intraDailyModulation(2.),
+    intraDailyModulation(24.),
     intermonthlyBreakdown(0),
     reservoirManagement(false),
     followLoadModulations(true),
@@ -33,28 +33,6 @@ PartHydro::PartHydro():
     pumpingEfficiency(1.),
     series(nullptr)
 {
-}
-
-void PartHydro::reset()
-{
-    intraDailyModulation = 24;
-    interDailyBreakdown = 1.;
-    intermonthlyBreakdown = 1.;
-
-    reservoirManagement = false;
-    reservoirCapacity = 0.;
-
-    followLoadModulations = true;
-    useWaterValue = false;
-    hardBoundsOnRuleCurves = false;
-    useHeuristicTarget = true;
-    initializeReservoirLevelDate = 0;
-    useLeeway = false;
-    powerToLevel = false;
-    leewayLowerBound = 1.;
-    leewayUpperBound = 1.;
-    overflowSpilledCostDifference = 1.;
-
     inflowPattern.reset(1, DAYS_PER_YEAR);
     inflowPattern.fillColumn(0, 1.0);
     waterValues.reset(101, DAYS_PER_YEAR);
@@ -64,20 +42,6 @@ void PartHydro::reset()
     dailyNbHoursAtPumpPmax.fillColumn(0, 24.);
     creditModulation.reset(101, 2);
     creditModulation.fill(1);
-    // reset of the hydro allocation - however we don't have any information
-    // about the current area, which should be by default 1.
-    // This work is done in Area::reset()
-    allocation.clear();
-    // allocation.fromArea(<current area>, 1.); // Area::reset()
-
-    if (prepro)
-    {
-        prepro->reset();
-    }
-    if (series)
-    {
-        series->reset();
-    }
 }
 
 template<class T>
