@@ -19,7 +19,6 @@ var namespaceAntares_1_1LinearProblem =
     [ "OptimComponent", "structAntares_1_1LinearProblem_1_1OptimComponent.html", "structAntares_1_1LinearProblem_1_1OptimComponent" ],
     [ "OptimEntityContainer", "classAntares_1_1LinearProblem_1_1OptimEntityContainer.html", "classAntares_1_1LinearProblem_1_1OptimEntityContainer" ],
     [ "ScenarioGroupRepository", "classAntares_1_1LinearProblem_1_1ScenarioGroupRepository.html", "classAntares_1_1LinearProblem_1_1ScenarioGroupRepository" ],
-    [ "DefaultScenario", "classAntares_1_1LinearProblem_1_1DefaultScenario.html", "classAntares_1_1LinearProblem_1_1DefaultScenario" ],
     [ "VariableNames", "classAntares_1_1LinearProblem_1_1VariableNames.html", "classAntares_1_1LinearProblem_1_1VariableNames" ],
     [ "AddVariableVisitor", "classAntares_1_1LinearProblem_1_1AddVariableVisitor.html", "classAntares_1_1LinearProblem_1_1AddVariableVisitor" ],
     [ "CouplingVariable", "structAntares_1_1LinearProblem_1_1CouplingVariable.html", "structAntares_1_1LinearProblem_1_1CouplingVariable" ],

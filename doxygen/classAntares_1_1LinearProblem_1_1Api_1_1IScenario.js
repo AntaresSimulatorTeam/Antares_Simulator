@@ -6,5 +6,5 @@ var classAntares_1_1LinearProblem_1_1Api_1_1IScenario =
     [ "IScenario", "classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html#a00ab2c6120a677fd164e4c6bf78b8d5b", null ],
     [ "getData", "classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html#aadfebdc7de2f8acd5ac38e1de96ced36", null ],
     [ "group", "classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html#ae4e2e6124e083edecd517411d1b2447a", null ],
-    [ "hasYear", "classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html#aec446006ca0d1b4315334baef4738273", null ]
+    [ "hasYear", "classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html#a356b00b6d13ed50046512967bc507aaa", null ]
 ];

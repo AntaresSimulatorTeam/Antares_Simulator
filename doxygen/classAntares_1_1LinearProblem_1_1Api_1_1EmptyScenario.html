@@ -150,12 +150,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa7769644bbefc73c438c4d32e6fbe9b2"><td class="memItemLeft" align="right" valign="top"><a id="aa7769644bbefc73c438c4d32e6fbe9b2"></a>
 TimeSeriesNumber&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> (Year) const override</td></tr>
 <tr class="separator:aa7769644bbefc73c438c4d32e6fbe9b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af93dc4def7e28e134b7da339d00d10ec"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1EmptyScenario.html#af93dc4def7e28e134b7da339d00d10ec">hasYear</a> (Year) const override</td></tr>
+<tr class="separator:af93dc4def7e28e134b7da339d00d10ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classAntares_1_1LinearProblem_1_1Api_1_1IScenario"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1LinearProblem_1_1Api_1_1IScenario')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html">Antares::LinearProblem::Api::IScenario</a></td></tr>
 <tr class="memitem:a00ab2c6120a677fd164e4c6bf78b8d5b inherit pub_methods_classAntares_1_1LinearProblem_1_1Api_1_1IScenario"><td class="memItemLeft" align="right" valign="top"><a id="a00ab2c6120a677fd164e4c6bf78b8d5b"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>IScenario</b> (std::string group)</td></tr>
 <tr class="separator:a00ab2c6120a677fd164e4c6bf78b8d5b inherit pub_methods_classAntares_1_1LinearProblem_1_1Api_1_1IScenario"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec446006ca0d1b4315334baef4738273 inherit pub_methods_classAntares_1_1LinearProblem_1_1Api_1_1IScenario"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html#aec446006ca0d1b4315334baef4738273">hasYear</a> (Year) const</td></tr>
-<tr class="separator:aec446006ca0d1b4315334baef4738273 inherit pub_methods_classAntares_1_1LinearProblem_1_1Api_1_1IScenario"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4e2e6124e083edecd517411d1b2447a inherit pub_methods_classAntares_1_1LinearProblem_1_1Api_1_1IScenario"><td class="memItemLeft" align="right" valign="top"><a id="ae4e2e6124e083edecd517411d1b2447a"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>group</b> () const</td></tr>
 <tr class="separator:ae4e2e6124e083edecd517411d1b2447a inherit pub_methods_classAntares_1_1LinearProblem_1_1Api_1_1IScenario"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -172,7 +172,37 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>TimeSeriesNumber</b>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Empty scenario implementation of <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html" title="Interface for scenarios in the linear problem API. A scenario is an association of years to their res...">IScenario</a>. Provide a default implementation of <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html" title="Interface for scenarios in the linear problem API. A scenario is an association of years to their res...">IScenario</a> that returns 0 for any year for a group named "empty". </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="af93dc4def7e28e134b7da339d00d10ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af93dc4def7e28e134b7da339d00d10ec">&#9670;&nbsp;</a></span>hasYear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Antares::LinearProblem::Api::EmptyScenario::hasYear </td>
+          <td>(</td>
+          <td class="paramtype">Year&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Check whether a time series is defined for the given year, without throwing. Implementations that serve a fixed time series for any year (empty/default scenarios) keep the default behavior of returning true. </p>
+
+<p>Implements <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html#a356b00b6d13ed50046512967bc507aaa">Antares::LinearProblem::Api::IScenario</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/optimisation/linear-problem-api/include/antares/optimisation/linear-problem-api/<a class="el" href="IScenario_8h_source.html">IScenario.h</a></li>
 </ul>
 </div><!-- contents -->

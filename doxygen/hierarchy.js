@@ -553,7 +553,6 @@ var hierarchy =
     ] ],
     [ "Antares::Solver::ILoader", "classAntares_1_1Solver_1_1ILoader.html", [
       [ "Antares::Solver::LoadFiles::FileLoader", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader.html", null ],
-      [ "InMemoryLoader", "classInMemoryLoader.html", null ],
       [ "ScalingLoader", "classScalingLoader.html", null ]
     ] ],
     [ "Antares::LinearProblem::Api::IMipSolution", "classAntares_1_1LinearProblem_1_1Api_1_1IMipSolution.html", [
@@ -679,8 +678,6 @@ var hierarchy =
     [ "Antares::LinearProblem::Api::IScenario", "classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html", [
       [ "Antares::LinearProblem::Api::EmptyScenario", "classAntares_1_1LinearProblem_1_1Api_1_1EmptyScenario.html", null ],
       [ "Antares::LinearProblem::DataImpl::Scenario", "classAntares_1_1LinearProblem_1_1DataImpl_1_1Scenario.html", null ],
-      [ "Antares::LinearProblem::DefaultScenario", "classAntares_1_1LinearProblem_1_1DefaultScenario.html", null ],
-      [ "DefaultScenario", "classDefaultScenario.html", null ],
       [ "DefaultScenario", "classDefaultScenario.html", null ]
     ] ],
     [ "Antares::Solver::Simulation::ISimulationObserver", "classAntares_1_1Solver_1_1Simulation_1_1ISimulationObserver.html", [
