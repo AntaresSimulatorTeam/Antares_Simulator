@@ -119,16 +119,6 @@ struct GemsContributionFixture
 
         modelerData->dataSeries = std::make_unique<LinearProblemData>();
 
-        // The linear problem and OptimEntityContainer are intentionally empty.
-        // Our GEMS expressions (spillage_bound, unsupplied_energy_bound) are based
-        // on component *parameters* (time series), not on optimization *variables*.
-        // Parameters are evaluated directly from dataSeries by EvalVisitor,
-        // without needing a solved LP or a populated OptimEntityContainer.
-        // If expressions depended on component variables (LP solution values),
-        // we would need a non-empty linear problem and OptimEntityContainer.
-        auto emptyLinearProblem = std::make_shared<StructuredLinearProblem>();
-        problemeHebdo.optimEntityContainer = std::make_shared<OptimEntityContainer>(
-          *emptyLinearProblem);
 
         constraintFictitious = {{0, fictitiousLoadArea1}, {1, fictitiousLoadArea2}};
         constraintMaxEns = {{0, maxEnsLoadArea1}, {1, maxEnsLoadArea2}};
@@ -218,6 +208,17 @@ struct GemsContributionFixture
         pHebdo.CorrespondanceVarNativesVarOptim[1].NumeroDeVariableDefaillancePositive = {
           ensVarArea1Hour1,
           ensVarArea2};
+
+        // The linear problem and OptimEntityContainer are intentionally empty.
+        // Our GEMS expressions (spillage_bound, unsupplied_energy_bound) are based
+        // on component *parameters* (time series), not on optimization *variables*.
+        // Parameters are evaluated directly from dataSeries by EvalVisitor,
+        // without needing a solved LP or a populated OptimEntityContainer.
+        // If expressions depended on component variables (LP solution values),
+        // we would need a non-empty linear problem and OptimEntityContainer.
+        auto emptyLinearProblem = std::make_shared<StructuredLinearProblem>();
+        problemeHebdo.optimEntityContainer = std::make_shared<OptimEntityContainer>(
+          *emptyLinearProblem);
     }
 
     void makeProblemToSolve(PROBLEME_ANTARES_A_RESOUDRE& pAResoudre)

@@ -188,7 +188,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                                                  : nullptr;
     // Heap-allocated so it can outlive this call: a post-process simulation
     // table re-emits the modeler rows through it, long after the solve.
-    problemeHebdo->ortoolsProblem_ = ortoolsProblem;
     problemeHebdo->optimEntityContainer = std::make_shared<OptimEntityContainer>(*ortoolsProblem);
     auto& optimEntityContainer = *problemeHebdo->optimEntityContainer;
 
