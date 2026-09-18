@@ -726,14 +726,14 @@ def week_hours_from_mps_filename(file_name):
     Extract week number from MPS file name and generate 168 time steps.
 
     Args:
-        file_name: MPS file name like 'problem-1-1--optim-nb-1.mps' or full path
+        file_name: MPS file name like 'problem-0-0--optim-nb-1.mps' or full path
 
     Returns:
-        List of 168 time steps for the week: [(week-1)*168 + hour for hour in 0..167]
+        List of 168 time steps for the week: [week*168 + hour for hour in 0..167]
 
     Example:
-        'problem-1-1-optim-nb-1.mps' -> week=1 -> [0, 1, 2, ..., 167]
-        'problem-1-2-optim-nb-1.mps' -> week=2 -> [168, 169, 170, ..., 335]
+        'problem-0-0-optim-nb-1.mps' -> week=0 -> [0, 1, 2, ..., 167]
+        'problem-0-1-optim-nb-1.mps' -> week=1 -> [168, 169, 170, ..., 335]
     """
     # Extract just the filename if a path was provided
     file_name = Path(file_name).name
@@ -751,7 +751,7 @@ def week_hours_from_mps_filename(file_name):
     optim_nb = int(match.group(3))
 
     # Generate 168 time steps for the week
-    week_hours = [(week - 1) * 168 + hour for hour in range(168)]
+    week_hours = [week * 168 + hour for hour in range(168)]
 
     return week_hours
 
@@ -781,8 +781,8 @@ def check_area_balance_rhs(context, area, values_str, constant_str):
     list_values = make_values_from_string(values_str)
     constant = float(constant_str)
 
-    mps_file_path = context.soh.get_output_file_with_name("problem-1-1--optim-nb-1.mps")
-    assert mps_file_path, f"No output file named problem-1-1--optim-nb-1.mps"
+    mps_file_path = context.soh.get_output_file_with_name("problem-0-0--optim-nb-1.mps")
+    assert mps_file_path, f"No output file named problem-0-0--optim-nb-1.mps"
 
     mps_problem = mpu.load_problem(mps_file_path)
     balanced_constraints = [c for c in mps_problem.get_linear_constraints() if c.name.startswith(f"AreaBalance::area<{area}>")]
