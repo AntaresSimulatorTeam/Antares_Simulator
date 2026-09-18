@@ -254,12 +254,15 @@ BOOST_AUTO_TEST_SUITE(gems_contribution_tests)
 BOOST_FIXTURE_TEST_CASE(positive_load__gems_part_sets_ens_bounds__xmax_increased,
                         GemsContributionFixture)
 {
+    // Arrange
     // load = 50 -> 50 / 2 - 10 = 15
     setGemsParameters({0.0, 0.0}, {50.0, 50.0});
-
     gemsPart->setHour(0);
+
+    // Act
     gemsPart->setBoundsOnENS();
 
+    // Assert
     BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1Hour0], 100.0 + 15.0);
     BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea2], 100.0); // not connected
 }
@@ -269,8 +272,8 @@ BOOST_FIXTURE_TEST_CASE(negative_load__gems_part_sets_ens_bounds__xmax_decreased
 {
     // load = -10 -> -10 / 2 - 10 = -15
     setGemsParameters({0.0, 0.0}, {-10.0, -10.0});
-
     gemsPart->setHour(0);
+
     gemsPart->setBoundsOnENS();
 
     BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1Hour0], 100.0 - 15.0);
@@ -282,8 +285,8 @@ BOOST_FIXTURE_TEST_CASE(zero_load__gems_part_sets_ens_bounds__xmax_decreased_by_
 {
     // load = 0 -> 0 / 2 - 10 = -10
     setGemsParameters({0.0, 0.0}, {0.0, 0.0});
-
     gemsPart->setHour(0);
+
     gemsPart->setBoundsOnENS();
 
     BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1Hour0], 100.0 - 10.0);
@@ -297,8 +300,8 @@ BOOST_FIXTURE_TEST_CASE(positive_residual_load__gems_part_sets_rhs_fictitious_lo
 {
     // residual_load = 10 -> 2 * 10 + 30 = 50
     setGemsParameters({10.0, 10.0}, {0.0, 0.0});
-
     gemsPart->setHour(0);
+
     gemsPart->setRHSfictitiousLoadValue();
 
     BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea1], 500.0 + 50.0);
@@ -310,8 +313,8 @@ BOOST_FIXTURE_TEST_CASE(negative_residual_load__gems_part_sets_rhs_fictitious_lo
 {
     // residual_load = -20 -> 2 * (-20) + 30 = -10
     setGemsParameters({-20.0, -20.0}, {0.0, 0.0});
-
     gemsPart->setHour(0);
+
     gemsPart->setRHSfictitiousLoadValue();
 
     BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea1], 500.0 - 10.0);
@@ -325,8 +328,8 @@ BOOST_FIXTURE_TEST_CASE(positive_load__gems_part_sets_rhs_max_ens__rhs_increased
 {
     // load = 50 -> 50 / 2 - 10 = 15
     setGemsParameters({0.0, 0.0}, {50.0, 50.0});
-
     gemsPart->setHour(0);
+
     gemsPart->setRHSMaxEnsLoadValue();
 
     BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea1], 300.0 + 15.0);
@@ -338,8 +341,8 @@ BOOST_FIXTURE_TEST_CASE(negative_load__gems_part_sets_rhs_max_ens__rhs_decreased
 {
     // load = -10 -> -10 / 2 - 10 = -15
     setGemsParameters({0.0, 0.0}, {-10.0, -10.0});
-
     gemsPart->setHour(0);
+
     gemsPart->setRHSMaxEnsLoadValue();
 
     BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea1], 300.0 - 15.0);
@@ -353,8 +356,8 @@ BOOST_FIXTURE_TEST_CASE(ens_bounds_evaluated_at_triggered_hour, GemsContribution
     // load[0] = 20 -> 20 / 2 - 10 = 0
     // load[1] = 42 -> 42 / 2 - 10 = 11
     setGemsParameters({0.0, 0.0}, {20.0, 42.0});
-
     gemsPart->setHour(1);
+
     gemsPart->setBoundsOnENS();
 
     BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1Hour1], 100.0 + 11.0);
