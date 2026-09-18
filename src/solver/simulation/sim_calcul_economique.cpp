@@ -302,6 +302,8 @@ void SIM_InitialisationProblemeHebdo(const Study& study,
 
     problem.OptimisationAuPasHebdomadaire = (parameters.simplexOptimizationRange == Data::sorWeek);
 
+    problem.rampingEnabled = parameters.include.thermal_ramping;
+
     switch (parameters.power.fluctuations)
     {
     case Data::lssFreeModulations:
@@ -495,6 +497,17 @@ void SIM_InitialisationProblemeHebdo(const Study& study,
               = cluster->minUpTime;
             pbPalier.DureeMinimaleDArretDUnGroupeDuPalierThermique[cluster->index]
               = cluster->minDownTime;
+
+            // ramping (if enabled)
+            if (cluster->ramping)
+            {
+                pbPalier.upwardRampingCost[cluster->index] = cluster->ramping->powerIncreaseCost;
+                pbPalier.downwardRampingCost[cluster->index] = cluster->ramping->powerDecreaseCost;
+                pbPalier.maxDownwardPowerRampingRate[cluster->index]
+                  = cluster->ramping->maxDownwardPowerRampingRate;
+                pbPalier.maxUpwardPowerRampingRate[cluster->index] = cluster->ramping
+                                                                       ->maxUpwardPowerRampingRate;
+            }
 
             pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index]
               = cluster->nominalCapacityWithSpinning;

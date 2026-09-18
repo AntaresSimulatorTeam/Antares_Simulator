@@ -20,6 +20,9 @@ inline void State::startANewYear()
            0,
            sizeof(thermalClusterDispatchedUnitsCountForYear));
 
+    // if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate)
+    memset(thermalClusterRampingCostForYear, 0, sizeof(thermalClusterRampingCostForYear));
+
     if (study.parameters.include.reserves)
     {
         study.areas.each([this](const auto& area) { reserveData->at(area.index) = ReserveData(); });
@@ -45,6 +48,7 @@ inline void State::yearEndResetThermal()
     memset(thermalClusterDispatchedUnitsCountForYear,
            0,
            sizeof(thermalClusterDispatchedUnitsCountForYear));
+    memset(thermalClusterRampingCostForYear, 0, sizeof(thermalClusterRampingCostForYear));
 }
 
 inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace)

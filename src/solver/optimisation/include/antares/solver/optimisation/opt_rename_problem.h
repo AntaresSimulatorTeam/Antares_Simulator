@@ -218,6 +218,8 @@ public:
     void NumberStartingDispatchableUnits(unsigned varIndex, const std::string& clusterName) const;
     void NumberBreakingDownDispatchableUnits(unsigned varIndex,
                                              const std::string& clusterName) const;
+    void ProductionIncreaseAboveMin(unsigned varIndex, const std::string& clusterName) const;
+    void ProductionDecreaseAboveMin(unsigned varIndex, const std::string& clusterName) const;
     void DirectFlow(unsigned varIndex) const;
     void PositiveDirectFlow(unsigned varIndex) const;
     void PositiveIndirectFlow(unsigned varIndex) const;
@@ -351,6 +353,12 @@ public:
     void ReserveSatisfaction(unsigned constrIndex, const std::string& reserveName) const;
     void PMaxDispatchableGeneration(unsigned constrIndex, const std::string& clusterName) const;
     void PMinDispatchableGeneration(unsigned constrIndex, const std::string& clusterName) const;
+    void RampingIncreaseRate(unsigned constraint, const std::string& clusterName) const;
+    void RampingDecreaseRate(unsigned constraint, const std::string& clusterName) const;
+    void ProductionOutputVariationIncrease(unsigned constraint,
+                                           const std::string& clusterName) const;
+    void ProductionOutputVariationDecrease(unsigned constraint,
+                                           const std::string& clusterName) const;
     void ConsistenceNODU(unsigned constrIndex, const std::string& clusterName) const;
     void ShortTermStorageLevel(unsigned constrIndex, const std::string& name) const;
     void BindingConstraintHour(unsigned constrIndex, const std::string& name) const;

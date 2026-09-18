@@ -1,0 +1,43 @@
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
+#include "antares/solver/optimisation/constraints/PowerOutputVariationIncrease.h"
+
+void PowerOutputVariationIncrease::add(int pays, int index, int pdt)
+{
+    if (!data.Simulation)
+    {
+        auto cluster = data.PaliersThermiquesDuPays[pays]
+                         .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+        double pmaxDUnGroupeDuPalierThermique = data.PaliersThermiquesDuPays[pays]
+                                                  .PmaxDUnGroupeDuPalierThermique[index];
+        // Constraint :
+        // P(t) - P(t-1) - u * M^+(t) - P^+ <= 0
+        builder.updateHourWithinWeek(pdt)
+          .DispatchableProduction(cluster, 1.0)
+          .DispatchableProduction(cluster,
+                                  -1.0,
+                                  -1,
+                                  builder.data.NombreDePasDeTempsPourUneOptimisation)
+          .NumberStartingDispatchableUnits(cluster, -pmaxDUnGroupeDuPalierThermique)
+          .ProductionIncreaseAboveMin(cluster, -1.0)
+          .lessThan();
+
+        if (builder.NumberOfVariables() > 0)
+        {
+            ConstraintNamer namer(builder.data.NomDesContraintes);
+
+            namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
+            namer.UpdateArea(builder.data.NomsDesPays[pays]);
+
+            namer.ProductionOutputVariationIncrease(
+              builder.data.nombreDeContraintes,
+              data.PaliersThermiquesDuPays[pays].NomsDesPaliersThermiques[index]);
+        }
+        builder.build();
+    }
+    else
+    {
+        builder.data.nombreDeContraintes++;
+    }
+}
