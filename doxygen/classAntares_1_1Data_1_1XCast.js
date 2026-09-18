@@ -20,7 +20,6 @@ var classAntares_1_1Data_1_1XCast =
     [ "copyFrom", "classAntares_1_1Data_1_1XCast.html#a72657dea94cc3ff99b4647d2ac685f33", null ],
     [ "loadFromFolder", "classAntares_1_1Data_1_1XCast.html#a88f5f10e297e1b50ca8304c3fbb5a5a1", null ],
     [ "operator=", "classAntares_1_1Data_1_1XCast.html#a082b6d3d18612338bedb2e4d394734a0", null ],
-    [ "resetToDefaultValues", "classAntares_1_1Data_1_1XCast.html#aefcf3b9d0a2c9c3f7db4afac00db2016", null ],
     [ "resetTransferFunction", "classAntares_1_1Data_1_1XCast.html#a68774e025c65ce0d45c354f47dac5310", null ],
     [ "saveToFolder", "classAntares_1_1Data_1_1XCast.html#abecd945f31a4e16c5d258a427e2a54ea", null ],
     [ "capacity", "classAntares_1_1Data_1_1XCast.html#a45cf83d40b900b21cdc7184a8c503e69", null ],

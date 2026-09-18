@@ -42,7 +42,6 @@ var hierarchy =
     [ "Antares::Data::AdequacyPatch::AdqPatchParams", "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html", null ],
     [ "ALL_MUST_RUN_GENERATION", "structALL__MUST__RUN__GENERATION.html", null ],
     [ "Antares::Data::AllCapacityReservations", "structAntares_1_1Data_1_1AllCapacityReservations.html", null ],
-    [ "AllocationFixture", "structAllocationFixture.html", null ],
     [ "Antares::Data::AllVariablesPrintInfo", "classAntares_1_1Data_1_1AllVariablesPrintInfo.html", null ],
     [ "Antares::Solver::Simulation::annualCostsStatistics", "classAntares_1_1Solver_1_1Simulation_1_1annualCostsStatistics.html", null ],
     [ "antares_problem_generator.AntaresProblemGeneratorRun", "classantares__problem__generator_1_1AntaresProblemGeneratorRun.html", null ],

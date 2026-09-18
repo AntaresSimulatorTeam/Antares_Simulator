@@ -14,7 +14,6 @@ var classAntares_1_1Data_1_1Area =
     [ "createMissingData", "classAntares_1_1Data_1_1Area.html#a5533e5051e281fc5bc4d94c65f915c7f", null ],
     [ "findExistingLinkWith", "classAntares_1_1Data_1_1Area.html#a1868a4e5143c0fa1fb5dcec8afae1887", null ],
     [ "operator=", "classAntares_1_1Data_1_1Area.html#afd75204ffc2c4d327a773945d290d86d", null ],
-    [ "resetToDefaultValues", "classAntares_1_1Data_1_1Area.html#aa8299689caa40aa2c62aa5e2eda700dd", null ],
     [ "resizeAllTimeseriesNumbers", "classAntares_1_1Data_1_1Area.html#ae0805dca9c1ba3e3489f00c5f5bca569", null ],
     [ "thermalClustersMinStablePowerValidity", "classAntares_1_1Data_1_1Area.html#ac9b149ff0d71d0073867b2fefc41d898", null ],
     [ "xcastData", "classAntares_1_1Data_1_1Area.html#af108605e74425402ffa0c5cf30b77633", null ],

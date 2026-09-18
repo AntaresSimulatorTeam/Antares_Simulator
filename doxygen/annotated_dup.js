@@ -1024,7 +1024,6 @@ var annotated_dup =
     [ "AdditConstrFixture", "structAdditConstrFixture.html", "structAdditConstrFixture" ],
     [ "AdequacyPatchRuntimeData", "classAdequacyPatchRuntimeData.html", "classAdequacyPatchRuntimeData" ],
     [ "ALL_MUST_RUN_GENERATION", "structALL__MUST__RUN__GENERATION.html", "structALL__MUST__RUN__GENERATION" ],
-    [ "AllocationFixture", "structAllocationFixture.html", "structAllocationFixture" ],
     [ "AnalysisMock", "classAnalysisMock.html", "classAnalysisMock" ],
     [ "AntaresStudy", "classAntaresStudy.html", "classAntaresStudy" ],
     [ "AntaresStudyAnalyzerJob", "classAntaresStudyAnalyzerJob.html", "classAntaresStudyAnalyzerJob" ],

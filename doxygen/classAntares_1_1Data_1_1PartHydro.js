@@ -12,7 +12,6 @@ var classAntares_1_1Data_1_1PartHydro =
     [ "loadReserveParticipations", "classAntares_1_1Data_1_1PartHydro.html#a493df76dea6efb4fc8e3596c19741ca9", null ],
     [ "reserveParticipationAt", "classAntares_1_1Data_1_1PartHydro.html#a9b8c00b6dc9b64efae8ea322766f3fbc", null ],
     [ "reserveParticipationsCount", "classAntares_1_1Data_1_1PartHydro.html#a589071b2fce865de291a84f933e87c26", null ],
-    [ "reset", "classAntares_1_1Data_1_1PartHydro.html#a62e9b91214feb6cded4b8340a77ec4de", null ],
     [ "allocation", "classAntares_1_1Data_1_1PartHydro.html#abef4d91c29b2032f5a1a00e8a05265c3", null ],
     [ "creditModulation", "classAntares_1_1Data_1_1PartHydro.html#a60e0880e27ad840a15123f0b07a7cd40", null ],
     [ "dailyMaxPumpAndGen", "classAntares_1_1Data_1_1PartHydro.html#a027739891684b9cf423aadc83da1c9ae", null ],
