@@ -127,7 +127,6 @@ set(SRC_STUDY_PART_WIND
         include/antares/study/parts/wind/container.h
         parts/wind/container.cpp
         include/antares/study/parts/wind/prepro.h
-        include/antares/study/parts/wind/prepro.hxx
         parts/wind/prepro.cpp
 )
 source_group("study\\part\\wind" FILES ${SRC_STUDY_PART_WIND})
@@ -206,14 +205,12 @@ set(SRC_STUDY
         parts/load/container.cpp
         parts/load/prepro.cpp
         include/antares/study/parts/load/prepro.h
-        include/antares/study/parts/load/prepro.hxx
 
         # Solar
         include/antares/study/parts/solar/container.h
         parts/solar/container.cpp
         parts/solar/prepro.cpp
         include/antares/study/parts/solar/prepro.h
-        include/antares/study/parts/solar/prepro.hxx
 
         # Study
         include/antares/study/header.h

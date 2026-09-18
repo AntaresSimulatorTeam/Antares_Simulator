@@ -30,6 +30,12 @@ public:
     IncompatibleSimulationModeForAdqPatch();
 };
 
+class IncompatiblePriceTakingOrderForHybrid final: public LoadingError
+{
+public:
+    IncompatiblePriceTakingOrderForHybrid();
+};
+
 } // namespace Antares::Error
 
 namespace Antares::Data::AdequacyPatch
@@ -110,11 +116,13 @@ struct AdqPatchParams
     bool updateFromKeyValue(const std::string& key, const std::string& value);
     bool checkAdqPatchParams(const SimulationMode simulationMode,
                              const AreaList& areas,
-                             const bool includeHurdleCostParameters) const;
+                             const bool includeHurdleCostParameters,
+                             const bool isHybridMode = false) const;
 
     void checkAdqPatchSimulationModeEconomyOnly(const SimulationMode simulationMode) const;
     void checkAdqPatchContainsAdqPatchArea(const Antares::Data::AreaList& areas) const;
     void checkAdqPatchIncludeHurdleCost(const bool includeHurdleCost) const;
+    void checkAdqPatchPriceTakingOrderForHybrid(bool isHybridMode) const;
 };
 
 } // namespace Antares::Data::AdequacyPatch
