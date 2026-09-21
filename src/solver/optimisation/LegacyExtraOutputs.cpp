@@ -109,6 +109,22 @@ public:
     void shortTermStorageOutputs(uint32_t pays, int pdt);
     void inputGenerationOutputs(uint32_t pays, int pdt) const;
     void weeklyHydroOutputs(uint32_t pays);
+    void emitReserveHydroParticipations(uint32_t pays,
+                                        int pdt,
+                                        const CAPACITY_RESERVATION& reserve,
+                                        std::string reserveParticipationOutput);
+    void emitReserveSTSParticipation(int pdt,
+                                     const std::string& area,
+                                     const CAPACITY_RESERVATION& reserve,
+                                     std::string reserveParticipationOutput);
+    void emitReserveThermalParticipation(int pdt,
+                                         const std::string& area,
+                                         const CAPACITY_RESERVATION& reserve,
+                                         std::string reserveParticipationOutput);
+    void emitReserveImbalance(int pdt,
+                              const std::string& node,
+                              const CAPACITY_RESERVATION& reserve);
+    void reserveOutputs(uint32_t pays, int pdt);
 
 private:
     void emit(const std::string& output, const std::string& component, int pdt, double value) const;
@@ -537,6 +553,109 @@ void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays)
     emit("bellman_value", problemeHebdo_.NomsDesPays[pays], pdt, bellmanValue);
 }
 
+void LegacyExtraOutputEmitter::emitReserveHydroParticipations(
+  uint32_t pays,
+  int pdt,
+  const CAPACITY_RESERVATION& reserve,
+  const std::string reserveParticipationOutput)
+{
+    for (const auto& hydroPart: reserve.AllHydroReservesParticipation)
+    {
+        const int participationVar = variableManager_.HydroReserveParticipation(
+          reserve.type,
+          hydroPart.globalIndexClusterParticipation,
+          pdt);
+        emit(reserveParticipationOutput,
+             hydroStorageNames_[pays],
+             pdt,
+             hydroPart.participationCost * x(participationVar));
+    }
+}
+
+void LegacyExtraOutputEmitter::emitReserveSTSParticipation(
+  int pdt,
+  const std::string& area,
+  const CAPACITY_RESERVATION& reserve,
+  const std::string reserveParticipationOutput)
+{
+    for (const auto& stsPart: reserve.AllSTStorageReservesParticipation | std::views::values)
+    {
+        const int participationVar = variableManager_.STStorageClusterReserveParticipation(
+          reserve.type,
+          stsPart.globalIndexClusterParticipation,
+          pdt);
+        emit(reserveParticipationOutput,
+             area + "_short_term_storage_" + stsPart.clusterName,
+             pdt,
+             stsPart.participationCost * x(participationVar));
+    }
+}
+
+void LegacyExtraOutputEmitter::emitReserveThermalParticipation(
+  int pdt,
+  const std::string& area,
+  const CAPACITY_RESERVATION& reserve,
+  const std::string reserveParticipationOutput)
+{
+    for (const auto& thermalPart: reserve.AllThermalReservesParticipation | std::views::values)
+    {
+        const int runningVar = variableManager_.RunningThermalClusterReserveParticipation(
+          thermalPart.globalIndexClusterParticipation,
+          pdt);
+        double val = thermalPart.participationCost * x(runningVar);
+
+        if (reserve.type == ReserveType::UP)
+        {
+            const int offVar = variableManager_.OffThermalClusterReserveParticipation(
+              thermalPart.globalIndexClusterParticipation,
+              pdt);
+            val += thermalPart.participationCostOff * x(offVar);
+        }
+        emit(reserveParticipationOutput, area + "_thermal_" + thermalPart.clusterName, pdt, val);
+    }
+}
+
+void LegacyExtraOutputEmitter::emitReserveImbalance(int pdt,
+                                                    const std::string& node,
+                                                    const CAPACITY_RESERVATION& reserve)
+{
+    const std::string reserveImbalanceOutput = fmt::format("reserve_imbalance_cost_{}",
+                                                           reserve.reserveID);
+    const int excess = variableManager_.InternalExcessReserve(reserve.globalReserveIndex, pdt);
+    const int unsatisfied = variableManager_.InternalUnsatisfiedReserve(reserve.globalReserveIndex,
+                                                                        pdt);
+    emit(reserveImbalanceOutput,
+         node,
+         pdt,
+         reserve.spillageCost * x(excess) + reserve.unsuppliedCost * x(unsatisfied));
+}
+
+void LegacyExtraOutputEmitter::reserveOutputs(uint32_t pays, int pdt)
+{
+    if (!problemeHebdo_.allReserves || !problemeHebdo_.OptimisationNotFastMode)
+    {
+        return;
+    }
+
+    const std::string& node = areaNames_[pays];
+    const std::string& area = problemeHebdo_.NomsDesPays[pays];
+    const auto& areaReserves = problemeHebdo_.allReserves->at(pays).areaCapacityReservations;
+
+    for (const auto& reserve: areaReserves)
+    {
+        const std::string reserveParticipationOutput = fmt::format("reserve_participation_cost_{}",
+                                                                   reserve.reserveID);
+
+        emitReserveImbalance(pdt, node, reserve);
+
+        emitReserveThermalParticipation(pdt, area, reserve, reserveParticipationOutput);
+
+        emitReserveSTSParticipation(pdt, area, reserve, reserveParticipationOutput);
+
+        emitReserveHydroParticipations(pays, pdt, reserve, reserveParticipationOutput);
+    }
+}
+
 } // namespace
 
 void AddLegacyExtraOutputs(SimulationTable& simulationTable,
@@ -560,6 +679,7 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
             emitter.areaOutputs(pays, pdt);
             emitter.shortTermStorageOutputs(pays, pdt);
             emitter.inputGenerationOutputs(pays, pdt);
+            emitter.reserveOutputs(pays, pdt);
 
             const PALIERS_THERMIQUES& paliers = problemeHebdo.PaliersThermiquesDuPays[pays];
             for (int index = 0; index < paliers.NombreDePaliersThermiques; ++index)
