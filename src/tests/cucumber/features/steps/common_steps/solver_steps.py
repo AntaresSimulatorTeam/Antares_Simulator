@@ -386,16 +386,21 @@ def run_simulation(context):
             context.logs_err = err.decode('cp1252')
         else:
             context.logs_err = ""
-    context.output_path = parse_output_folder_from_logs(out)
     context.return_code = process.returncode
-    context.soh = solver_output_handler(context.output_path, context.mode)
-    # For hybrid studies:
-    outputPath = Path(context.output_path)
-    default_stage = default_simulation_table_stage(outputPath)
-    if default_stage is not None:
-        file_pattern = f"simulation-table-*-{default_stage}.csv"
-        ST_reader_factory = make_simu_table_reader(outputPath, OutputFormat.CSV, file_pattern)
-        context.simu_table = SimulationTable(ST_reader_factory())
+    try:
+        context.output_path = parse_output_folder_from_logs(out)
+    except LookupError:
+        context.output_path = None
+
+    if context.output_path is not None:
+        context.soh = solver_output_handler(context.output_path, context.mode)
+        # For hybrid studies:
+        outputPath = Path(context.output_path)
+        default_stage = default_simulation_table_stage(outputPath)
+        if default_stage is not None:
+            file_pattern = f"simulation-table-*-{default_stage}.csv"
+            ST_reader_factory = make_simu_table_reader(outputPath, OutputFormat.CSV, file_pattern)
+            context.simu_table = SimulationTable(ST_reader_factory())
 
 
 @step('the modeler outputs are read from stage "{stage}"')
