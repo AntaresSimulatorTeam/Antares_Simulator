@@ -8,6 +8,7 @@ import tempfile
 from pathlib import Path
 
 import numpy as np
+import parse
 from behave import *
 from common_steps.solver_input_handler import solver_input_handler
 from common_steps.solver_output_handler import solver_output_handler
@@ -385,16 +386,21 @@ def run_simulation(context):
             context.logs_err = err.decode('cp1252')
         else:
             context.logs_err = ""
-    context.output_path = parse_output_folder_from_logs(out)
     context.return_code = process.returncode
-    context.soh = solver_output_handler(context.output_path, context.mode)
-    # For hybrid studies:
-    outputPath = Path(context.output_path)
-    default_stage = default_simulation_table_stage(outputPath)
-    if default_stage is not None:
-        file_pattern = f"simulation-table-*-{default_stage}.csv"
-        ST_reader_factory = make_simu_table_reader(outputPath, OutputFormat.CSV, file_pattern)
-        context.simu_table = SimulationTable(ST_reader_factory())
+    try:
+        context.output_path = parse_output_folder_from_logs(out)
+    except LookupError:
+        context.output_path = None
+
+    if context.output_path is not None:
+        context.soh = solver_output_handler(context.output_path, context.mode)
+        # For hybrid studies:
+        outputPath = Path(context.output_path)
+        default_stage = default_simulation_table_stage(outputPath)
+        if default_stage is not None:
+            file_pattern = f"simulation-table-*-{default_stage}.csv"
+            ST_reader_factory = make_simu_table_reader(outputPath, OutputFormat.CSV, file_pattern)
+            context.simu_table = SimulationTable(ST_reader_factory())
 
 
 @step('the modeler outputs are read from stage "{stage}"')
@@ -412,7 +418,15 @@ def read_modeler_outputs_from_stage(context, stage):
     context.simu_table = SimulationTable(ST_reader_factory())
 
 
-@given('the study asks for the simulation table stages "{stages}"')
+@parse.with_pattern(r".*")
+def parse_maybe_empty(text):
+    return text
+
+
+register_type(MaybeEmpty=parse_maybe_empty)
+
+
+@given('the study asks for the simulation table stages "{stages:MaybeEmpty}"')
 def set_simulation_table_stages_in_ini(context, stages):
     """Set `simulation-table-stages` in the [output] section of generaldata.ini.
 

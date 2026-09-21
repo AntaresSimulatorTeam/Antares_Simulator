@@ -110,31 +110,6 @@ bool CurtailmentSharing::updateFromKeyValue(const std::string& key, const std::s
     return false;
 }
 
-const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
-{
-    switch (pto)
-    {
-    case AdequacyPatch::AdqPatchPTO::isDens:
-        return "DENS";
-    case AdequacyPatch::AdqPatchPTO::isLoad:
-        return "Load";
-    default:
-        return "";
-    }
-}
-
-void CurtailmentSharing::addProperties(IniFile::Section* section) const
-{
-    section->add("price-taking-order", PriceTakingOrderToString(priceTakingOrder));
-    section->add("include-hurdle-cost-csr", includeHurdleCost);
-    section->add("check-csr-cost-function", checkCsrCostFunction);
-
-    // Thresholds
-    section->add("threshold-initiate-curtailment-sharing-rule", thresholdRun);
-    section->add("threshold-display-local-matching-rule-violations", thresholdDisplayViolations);
-    section->add("threshold-csr-variable-bounds-relaxation", thresholdVarBoundsRelaxation);
-}
-
 // ------------------------
 // Adq patch parameters
 // ------------------------

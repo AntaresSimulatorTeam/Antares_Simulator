@@ -6,14 +6,22 @@ lower the costs of changing existing interfaces, both GUI and scripts.
 ## v10.2.0
 
 ### Input
+#### Reserves files
 
-For hydro reserve participations, the reserve-participations.yml files were moved to input/hydro/reserves/<area-id>/
+In file settings/generaldata.ini, in section `optimization`, new property `include-reserves` is added (bool, default value `false`).
 
-New format:
-`study/input/hydro/reserves/<area-id>/reserve-participations.yml`
+If `include-reserves = true`, the new reserve input files in **input/reserves** are read. See [reserve files](solver/optional-features/reserves.md) for more details.
 
-Old format:
-`study/input/hydro/common/<area-id>/reserve-participations.yml`
+#### Deprecated properties
+
+The following properties of the `general` section in file settings/generaldata.ini are now ignored. They are
+still accepted for compatibility, but should be removed from the study:
+
+- `intra-modal` and `correlateddraws`: intra-modal correlation no longer exists (load/wind/solar time-series
+  generation was removed). If set to a non-empty value, a warning asking to remove the property is logged.
+- `horizon`: was never used (metadata only).
+- `readonly`: ignored since the desktop GUI was removed.
+
 
 ### Output
 
@@ -63,15 +71,15 @@ takes `all` (the default) or a comma-separated list of stage names:
 [output]
 simulation-table-stages = optim-nb-2, adq-patch
 ```
+If no CLI flag is given and no `output/simulation-table-stages` is provided in generaldata.ini, a simulation table gets written to disk for every stage. Remember that simulation tables are not written by default, use `--output all|simulation-tables` to enable them.
 
-The command-line option `--simulation-table-stages` overrides the generaldata.ini, including
-`--simulation-table-stages=all` to restore the full set for a single run. An unrecognized stage
-name stops the simulation, wherever it sits in the list — `all` widens the selection but does not
-excuse a typo after it. This only chooses *which* tables are written — simulation tables must still
-be enabled through the `--output` option, and selecting stages without enabling them warns and does
-nothing else.
+`last` is shorthand for the final stage the run actually reaches — `adq-patch` when the
+adequacy patch is enabled, `peak-shaving` otherwise — and produces a file named for that stage, not
+one named `last`. The value must not be left blank: `simulation-table-stages =` with nothing after
+it stops the simulation rather than being read as `all` (which is what omitting the key means).
 
-Studies that do not set the property and runs that do not pass the option, get every stage.
+- Disabled binding constraints no longer load their time-series.
+- Disabled short-term storage clusters skip their time-series loading.
 
 ## v10.1.0
 
@@ -94,6 +102,33 @@ Antares-Simulator will read hydro reservoir levels from mentioned files, data fr
 
 The number of time series for the reservoir levels must match the number of time series used for the other hydro components (run of river, minimum generation etc.), ensuring that scenarized reservoir level data is fully integrated within the same Scenario Builder framework as the rest of the hydro time series. However, number of hydro reservoir levels times series can indeed be 1 for each type, min, avg and max.
 
+## v10.0.0
+
+### Input
+
+#### New output debug flags
+
+In file settings/generaldata.ini, in section `output`, the following properties are added:
+
+- `remix-storage-debug` (bool, default value `false`)
+- `adequacy-patch-debug` (bool, default value `false`)
+
+#### Deprecated property
+
+The value `day` of property `optimization/simplex-range` is deprecated. It is still accepted for compatibility,
+but an error asking to use another value is logged.
+
+#### Files no longer read
+
+- **input/areas/&lt;area&gt;/ui.ini** (per-area UI configuration) is no longer read.
+- **layers/layers.ini** is no longer read.
+
+Existing files can be kept or removed; they are ignored by the simulation.
+
+### Behavior
+
+The solver is now read-only with respect to the study: it no longer rewrites input files (areas, binding
+constraints, hydro, short-term storages, `settings/generaldata.ini`, ...) when a study is loaded or saved.
 
 ## v9.3.0
 
