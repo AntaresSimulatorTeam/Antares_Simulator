@@ -1187,6 +1187,7 @@ BOOST_AUTO_TEST_CASE(reserve_participation_cost_storage_down_drops_the_off_term)
                              "area2_short_term_storage_battery1");
     BOOST_REQUIRE(row.has_value());
     BOOST_CHECK_CLOSE(row->value, 25. * 5., 1e-9);
+}
 
 BOOST_AUTO_TEST_CASE(fast_mode_num_units_on_follows_the_min_gen_bound_when_it_is_the_binding_one)
 {
