@@ -48,7 +48,6 @@ struct ViewBuilderFixture
         for (auto* area: {fr, de})
         {
             area->createMissingData();
-            area->resetToDefaultValues();
         }
         study->areas.rebuildIndexes();
 

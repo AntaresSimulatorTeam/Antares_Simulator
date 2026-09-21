@@ -136,8 +136,8 @@ bool Adequacy::year(Variable::State& state,
     std::unique_ptr<IO::Outputs::OptimisationsSimulationTable> simulationTables;
     if (study.parameters.writeSimulationTable())
     {
-        simulationTables = std::make_unique<IO::Outputs::OptimisationsSimulationTable>();
-        simulationTables->inactiveComponents = inactiveComponents_;
+        simulationTables = std::make_unique<IO::Outputs::OptimisationsSimulationTable>(
+          inactiveComponents_);
         simulationTables->selectStages(study.parameters.simulationTableStages);
     }
 
@@ -222,7 +222,7 @@ bool Adequacy::year(Variable::State& state,
                 // previous week's.
                 Antares::Optimization::DumpSimulationTableStage(
                   simulationTables.get(),
-                  Antares::IO::Outputs::Stage::remixHydro,
+                  Antares::IO::Outputs::Stage::peakShaving,
                   currentProblem);
             }
             catch (AssertionError& ex)

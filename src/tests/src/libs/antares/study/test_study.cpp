@@ -26,7 +26,6 @@ struct OneAreaStudy
         if (areaA)
         {
             areaA->createMissingData();
-            areaA->resetToDefaultValues();
         }
         study->parameters.simulationDays.first = 0;
         study->parameters.simulationDays.end = 7;

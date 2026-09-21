@@ -22,11 +22,6 @@ public:
     //@}
 
     /*!
-    ** \brief Reset internal data
-    */
-    void reset();
-
-    /*!
     ** \brief Resize all matrices dedicated to the sampled timeseries numbers
     **
     ** \param n A number of years
