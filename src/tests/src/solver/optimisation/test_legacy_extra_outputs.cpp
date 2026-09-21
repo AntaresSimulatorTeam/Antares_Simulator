@@ -1187,252 +1187,241 @@ BOOST_AUTO_TEST_CASE(reserve_participation_cost_storage_down_drops_the_off_term)
                              "area2_short_term_storage_battery1");
     BOOST_REQUIRE(row.has_value());
     BOOST_CHECK_CLOSE(row->value, 25. * 5., 1e-9);
+}
 
-    BOOST_AUTO_TEST_CASE(
-      fast_mode_num_units_on_follows_the_min_gen_bound_when_it_is_the_binding_one)
+BOOST_AUTO_TEST_CASE(fast_mode_num_units_on_follows_the_min_gen_bound_when_it_is_the_binding_one)
+{
+    // A min-generation bound of 2700 MW keeps 9 units on, more than the 4 the
+    // generation alone requires, but the availability only carries 5.
+    problem.OptimisationNotFastMode = false;
+    problem.PaliersThermiquesDuPays[0].PuissanceDisponibleEtCout[0].PuissanceMinDuPalierThermique
+      = {2700.};
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_num_units_on", "area1_thermal_cluster1")->value, 5.);
+}
+
+BOOST_AUTO_TEST_CASE(fast_mode_num_units_on_is_zero_without_generation)
+{
+    problem.OptimisationNotFastMode = false;
+    problem.ProblemeAResoudre->X[dispatchableProduction] = 0.;
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_num_units_on", "area1_thermal_cluster1")->value, 0.);
+}
+
+BOOST_AUTO_TEST_CASE(fast_mode_non_prop_cost_uses_the_cluster_unit_commitment_costs)
+{
+    // No NODU variable to read the objective coefficients from: the fixed cost
+    // comes from the cluster data. non_prop_cost = 120 * 4 at the first hour,
+    // where the start-up term is dropped.
+    problem.OptimisationNotFastMode = false;
+    fill();
+
+    const auto row = FindRow(table, "non_prop_cost", "area1_thermal_cluster1");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_CLOSE(row->value, 120. * 4., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
+{
+    fill();
+
+    // Areas: 3 x (imbalance_cost, is_significant_loss_of_load,
+    //             is_loss_of_load, actual_load, price,
+    //             is_near_loss_of_load) + area1's level_percentage and
+    //             actual_inflows                                  = 20
+    // Thermal: prop_cost + 13 emissions + 4 margins + profit
+    //          + actual_num_units_on + non_prop_cost              = 21
+    // Links: link 0 (abs_flow, minus_flow, actual_loop_flow, 2 congestion
+    //        indicators, 2 congestion fees, prop_cost,
+    //        capacity_shadow_price) = 9; link 1 without the hurdle-cost
+    //        outputs = 7                                          = 16
+    // Short-term storage: battery1's profit                       = 1
+    // Input generation: 2 area1 components x (generation_power,
+    //                    minus_generation, balance_port.flow)      = 6
+    // Port fields: 3 balance_port.price + 3 {area}_load flows
+    //              + area1_hydro_storage flow + 2 links x
+    //              (out_port.flow, in_port.flow) + cluster1 and
+    //              battery1 flows                                  = 13
+    // Weekly: area1's hydro_shadow_price and bellman_value        = 2
+    // Reserves: area1 "Res_1" (imbalance_cost + thermal participation
+    //           + hydro participation) and area2 "Res_Down"
+    //           (imbalance_cost + battery1 participation)         = 5
+    BOOST_CHECK_EQUAL(table.rowCount(), 20 + 21 + 16 + 1 + 6 + 13 + 2 + 5);
+}
+
+// Wires the result addresses the way OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire
+// does for the quantities post-processing moves, so the fixture can be mutated
+// the way remix hydro / the adequacy patch mutate a solved week.
+void wireResultAddresses(PROBLEME_HEBDO& problem)
+{
+    problem.OptimisationAuPasHebdomadaire = true;
+    problem.HeureDansLAnnee = 168;
+
+    auto& solved = *problem.ProblemeAResoudre;
+    solved.LegacyVariablesInfo.assign(solved.NombreDeVariables, std::nullopt);
+    solved.AdresseOuPlacerLaValeurDesVariablesOptimisees.assign(solved.NombreDeVariables, nullptr);
+    solved.AdresseOuPlacerLaValeurDesCoutsMarginaux.assign(solved.NombreDeContraintes, nullptr);
+
+    problem.ResultatsHoraires.resize(problem.NombreDePays);
+    for (auto& hourlyResults: problem.ResultatsHoraires)
     {
-        // A min-generation bound of 2700 MW keeps 9 units on, more than the 4 the
-        // generation alone requires, but the availability only carries 5.
-        problem.OptimisationNotFastMode = false;
-        problem.PaliersThermiquesDuPays[0]
-          .PuissanceDisponibleEtCout[0]
-          .PuissanceMinDuPalierThermique
-          = {2700.};
-        fill();
-
-        BOOST_CHECK_EQUAL(FindRow(table, "actual_num_units_on", "area1_thermal_cluster1")->value,
-                          5.);
+        hourlyResults.ValeursHorairesDeDefaillancePositive.assign(1, 0.);
+        hourlyResults.CoutsMarginauxHoraires.assign(1, 0.);
     }
+    problem.ResultatsHoraires[0].HydroUsage.resize(1);
+    problem.ResultatsHoraires[0].HydroUsage[0].reserveParticipationOfCluster = {0.};
+    problem.ResultatsHoraires[1].ShortTermStorageReserves = std::vector<RESULTSRESERVES>(1);
+    problem.ResultatsHoraires[1].ShortTermStorageReserves->at(0).reserveParticipationOfCluster = {
+      0.};
+    problem.ValeursDeNTC[0].ValeurDuFlux.assign(problem.NombreDInterconnexions, 0.);
 
-    BOOST_AUTO_TEST_CASE(fast_mode_num_units_on_is_zero_without_generation)
-    {
-        problem.OptimisationNotFastMode = false;
-        problem.ProblemeAResoudre->X[dispatchableProduction] = 0.;
-        fill();
+    solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[unsuppliedArea1]
+      = &problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0];
+    solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[reserveHydroStore]
+      = &problem.ResultatsHoraires[0].HydroUsage[0].reserveParticipationOfCluster->at(0);
+    solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[reserveSTSStore]
+      = &problem.ResultatsHoraires[1]
+           .ShortTermStorageReserves->at(0)
+           .reserveParticipationOfCluster->at(0);
+    solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[directFlowLink0] = &problem.ValeursDeNTC[0]
+                                                                               .ValeurDuFlux[0];
+    solved.AdresseOuPlacerLaValeurDesCoutsMarginaux[balanceArea1] = &problem.ResultatsHoraires[0]
+                                                                       .CoutsMarginauxHoraires[0];
 
-        BOOST_CHECK_EQUAL(FindRow(table, "actual_num_units_on", "area1_thermal_cluster1")->value,
-                          0.);
-    }
+    // Publish the solved values, as OPT_AppelDuSimplexe does right after the solve.
+    problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0] = solved
+                                                                             .X[unsuppliedArea1];
+    problem.ValeursDeNTC[0].ValeurDuFlux[0] = solved.X[directFlowLink0];
+    problem.ResultatsHoraires[0].CoutsMarginauxHoraires[0] = solved.CoutsMarginauxDesContraintes
+                                                               [balanceArea1];
 
-    BOOST_AUTO_TEST_CASE(fast_mode_non_prop_cost_uses_the_cluster_unit_commitment_costs)
-    {
-        // No NODU variable to read the objective coefficients from: the fixed cost
-        // comes from the cluster data. non_prop_cost = 120 * 4 at the first hour,
-        // where the start-up term is dropped.
-        problem.OptimisationNotFastMode = false;
-        fill();
+    solved.LegacyVariablesInfo[unsuppliedArea1] = LegacyVariableInfo{.name = "UnsuppliedEnergy",
+                                                                     .component = "area1_node",
+                                                                     .timeIndex = 168};
+}
 
-        const auto row = FindRow(table, "non_prop_cost", "area1_thermal_cluster1");
-        BOOST_REQUIRE(row.has_value());
-        BOOST_CHECK_CLOSE(row->value, 120. * 4., 1e-9);
-    }
+BOOST_AUTO_TEST_CASE(post_process_dump_reads_results_mutated_after_the_solve)
+{
+    wireResultAddresses(problem);
 
-    BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
-    {
-        fill();
+    // Remix hydro shaves the peak: 32 MW of the shortfall are served by storage.
+    problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0] = 20.;
+    // The adequacy patch reprices the hour at the area's unsupplied energy cost.
+    problem.ResultatsHoraires[0].CoutsMarginauxHoraires[0] = -9500.;
 
-        // Areas: 3 x (imbalance_cost, is_significant_loss_of_load,
-        //             is_loss_of_load, actual_load, price,
-        //             is_near_loss_of_load) + area1's level_percentage and
-        //             actual_inflows                                  = 20
-        // Thermal: prop_cost + 13 emissions + 4 margins + profit
-        //          + actual_num_units_on + non_prop_cost              = 21
-        // Links: link 0 (abs_flow, minus_flow, actual_loop_flow, 2 congestion
-        //        indicators, 2 congestion fees, prop_cost,
-        //        capacity_shadow_price) = 9; link 1 without the hurdle-cost
-        //        outputs = 7                                          = 16
-        // Short-term storage: battery1's profit                       = 1
-        // Input generation: 2 area1 components x (generation_power,
-        //                    minus_generation, balance_port.flow)      = 6
-        // Port fields: 3 balance_port.price + 3 {area}_load flows
-        //              + area1_hydro_storage flow + 2 links x
-        //              (out_port.flow, in_port.flow) + cluster1 and
-        //              battery1 flows                                  = 13
-        // Weekly: area1's hydro_shadow_price and bellman_value        = 2
-        // Reserves: area1 "Res_1" (imbalance_cost + thermal participation
-        //           + hydro participation) and area2 "Res_Down"
-        //           (imbalance_cost + battery1 participation)         = 5
-        BOOST_CHECK_EQUAL(table.rowCount(), 20 + 21 + 16 + 1 + 6 + 13 + 2 + 5);
-    }
+    DumpSimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
 
-    // Wires the result addresses the way OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire
-    // does for the quantities post-processing moves, so the fixture can be mutated
-    // the way remix hydro / the adequacy patch mutate a solved week.
-    void wireResultAddresses(PROBLEME_HEBDO & problem)
-    {
-        problem.OptimisationAuPasHebdomadaire = true;
-        problem.HeureDansLAnnee = 168;
+    // Raw row: the recorded variable now carries the post-processed value, not X.
+    const auto raw = FindRow(table, "unsupplied_energy", "area1_node");
+    BOOST_REQUIRE(raw.has_value());
+    BOOST_CHECK_CLOSE(raw->value, 20., 1e-9);
 
-        auto& solved = *problem.ProblemeAResoudre;
-        solved.LegacyVariablesInfo.assign(solved.NombreDeVariables, std::nullopt);
-        solved.AdresseOuPlacerLaValeurDesVariablesOptimisees.assign(solved.NombreDeVariables,
-                                                                    nullptr);
-        solved.AdresseOuPlacerLaValeurDesCoutsMarginaux.assign(solved.NombreDeContraintes, nullptr);
+    // Derived rows are recomputed from the refreshed solution: imbalance_cost is
+    // spillCost * spilled + unsuppliedCost * unsupplied.
+    const auto imbalance = FindRow(table, "imbalance_cost", "area1_node");
+    BOOST_REQUIRE(imbalance.has_value());
+    BOOST_CHECK_CLOSE(imbalance->value, 3. * 7. + 9500. * 20., 1e-9);
 
-        problem.ResultatsHoraires.resize(problem.NombreDePays);
-        for (auto& hourlyResults: problem.ResultatsHoraires)
-        {
-            hourlyResults.ValeursHorairesDeDefaillancePositive.assign(1, 0.);
-            hourlyResults.CoutsMarginauxHoraires.assign(1, 0.);
-        }
-        problem.ResultatsHoraires[0].HydroUsage.resize(1);
-        problem.ResultatsHoraires[0].HydroUsage[0].reserveParticipationOfCluster = {0.};
-        problem.ResultatsHoraires[1].ShortTermStorageReserves = std::vector<RESULTSRESERVES>(1);
-        problem.ResultatsHoraires[1].ShortTermStorageReserves->at(0).reserveParticipationOfCluster
-          = {0.};
-        problem.ValeursDeNTC[0].ValeurDuFlux.assign(problem.NombreDInterconnexions, 0.);
+    // ... and price follows the repriced dual, negated.
+    const auto price = FindRow(table, "price", "area1_node");
+    BOOST_REQUIRE(price.has_value());
+    BOOST_CHECK_CLOSE(price->value, 9500., 1e-9);
+}
 
-        solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[unsuppliedArea1]
-          = &problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0];
-        solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[reserveHydroStore]
-          = &problem.ResultatsHoraires[0].HydroUsage[0].reserveParticipationOfCluster->at(0);
-        solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[reserveSTSStore]
-          = &problem.ResultatsHoraires[1]
-               .ShortTermStorageReserves->at(0)
-               .reserveParticipationOfCluster->at(0);
-        solved.AdresseOuPlacerLaValeurDesVariablesOptimisees[directFlowLink0] = &problem
-                                                                                   .ValeursDeNTC[0]
-                                                                                   .ValeurDuFlux[0];
-        solved.AdresseOuPlacerLaValeurDesCoutsMarginaux[balanceArea1] = &problem
-                                                                           .ResultatsHoraires[0]
-                                                                           .CoutsMarginauxHoraires
-                                                                             [0];
+BOOST_AUTO_TEST_CASE(post_process_dump_uses_published_reserve_participation)
+{
+    wireResultAddresses(problem);
 
-        // Publish the solved values, as OPT_AppelDuSimplexe does right after the solve.
-        problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0] = solved.X
-                                                                                 [unsuppliedArea1];
-        problem.ValeursDeNTC[0].ValeurDuFlux[0] = solved.X[directFlowLink0];
-        problem.ResultatsHoraires[0].CoutsMarginauxHoraires[0] = solved.CoutsMarginauxDesContraintes
-                                                                   [balanceArea1];
+    problem.ResultatsHoraires[0].HydroUsage[0].reserveParticipationOfCluster->at(0) = 11.;
+    problem.ResultatsHoraires[1].ShortTermStorageReserves->at(0).reserveParticipationOfCluster->at(
+      0)
+      = 13.;
 
-        solved.LegacyVariablesInfo[unsuppliedArea1] = LegacyVariableInfo{.name = "UnsuppliedEnergy",
-                                                                         .component = "area1_node",
-                                                                         .timeIndex = 168};
-    }
+    DumpSimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
 
-    BOOST_AUTO_TEST_CASE(post_process_dump_reads_results_mutated_after_the_solve)
-    {
-        wireResultAddresses(problem);
+    const auto hydro = FindRow(table, "reserve_participation_cost_Res_1", "area1_hydro_storage");
+    BOOST_REQUIRE(hydro.has_value());
+    BOOST_CHECK_CLOSE(hydro->value, 5. * 11., 1e-9);
 
-        // Remix hydro shaves the peak: 32 MW of the shortfall are served by storage.
-        problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0] = 20.;
-        // The adequacy patch reprices the hour at the area's unsupplied energy cost.
-        problem.ResultatsHoraires[0].CoutsMarginauxHoraires[0] = -9500.;
+    const auto storage = FindRow(table,
+                                 "reserve_participation_cost_Res_Down",
+                                 "area2_short_term_storage_battery1");
+    BOOST_REQUIRE(storage.has_value());
+    BOOST_CHECK_CLOSE(storage->value, 25. * 13., 1e-9);
+}
 
-        DumpSimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
+BOOST_AUTO_TEST_CASE(post_process_dump_leaves_the_solver_state_untouched)
+{
+    wireResultAddresses(problem);
+    const auto& solved = *problem.ProblemeAResoudre;
+    const std::vector<double> xBefore = solved.X;
+    const std::vector<double> dualsBefore = solved.CoutsMarginauxDesContraintes;
 
-        // Raw row: the recorded variable now carries the post-processed value, not X.
-        const auto raw = FindRow(table, "unsupplied_energy", "area1_node");
-        BOOST_REQUIRE(raw.has_value());
-        BOOST_CHECK_CLOSE(raw->value, 20., 1e-9);
+    problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0] = 20.;
+    problem.ResultatsHoraires[0].CoutsMarginauxHoraires[0] = -9500.;
 
-        // Derived rows are recomputed from the refreshed solution: imbalance_cost is
-        // spillCost * spilled + unsuppliedCost * unsupplied.
-        const auto imbalance = FindRow(table, "imbalance_cost", "area1_node");
-        BOOST_REQUIRE(imbalance.has_value());
-        BOOST_CHECK_CLOSE(imbalance->value, 3. * 7. + 9500. * 20., 1e-9);
+    DumpSimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
 
-        // ... and price follows the repriced dual, negated.
-        const auto price = FindRow(table, "price", "area1_node");
-        BOOST_REQUIRE(price.has_value());
-        BOOST_CHECK_CLOSE(price->value, 9500., 1e-9);
-    }
+    BOOST_CHECK(solved.X == xBefore);
+    BOOST_CHECK(solved.CoutsMarginauxDesContraintes == dualsBefore);
+    // Specifically, the refreshed entries are back to what the optimizer left.
+    BOOST_CHECK_CLOSE(solved.X[unsuppliedArea1], 52., 1e-9);
+    BOOST_CHECK_CLOSE(solved.CoutsMarginauxDesContraintes[balanceArea1], -10000., 1e-9);
+}
 
-    BOOST_AUTO_TEST_CASE(post_process_dump_uses_published_reserve_participation)
-    {
-        wireResultAddresses(problem);
+BOOST_AUTO_TEST_CASE(post_process_dump_is_skipped_when_the_optimization_range_is_daily)
+{
+    wireResultAddresses(problem);
+    problem.OptimisationAuPasHebdomadaire = false;
+    problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0] = 20.;
 
-        problem.ResultatsHoraires[0].HydroUsage[0].reserveParticipationOfCluster->at(0) = 11.;
-        problem.ResultatsHoraires[1]
-          .ShortTermStorageReserves->at(0)
-          .reserveParticipationOfCluster->at(0)
-          = 13.;
+    DumpSimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
 
-        DumpSimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
+    BOOST_CHECK_EQUAL(table.rowCount(), 0u);
+}
 
-        const auto hydro = FindRow(table,
-                                   "reserve_participation_cost_Res_1",
-                                   "area1_hydro_storage");
-        BOOST_REQUIRE(hydro.has_value());
-        BOOST_CHECK_CLOSE(hydro->value, 5. * 11., 1e-9);
+BOOST_AUTO_TEST_CASE(weekly_block_is_derived_from_the_hour_in_the_year)
+{
+    problem.HeureDansLAnnee = 168;
+    BOOST_CHECK_EQUAL(LegacyWeeklyBlock(problem), 1u);
 
-        const auto storage = FindRow(table,
-                                     "reserve_participation_cost_Res_Down",
-                                     "area2_short_term_storage_battery1");
-        BOOST_REQUIRE(storage.has_value());
-        BOOST_CHECK_CLOSE(storage->value, 25. * 13., 1e-9);
-    }
+    problem.HeureDansLAnnee = 0;
+    BOOST_CHECK_EQUAL(LegacyWeeklyBlock(problem), 0u);
 
-    BOOST_AUTO_TEST_CASE(post_process_dump_leaves_the_solver_state_untouched)
-    {
-        wireResultAddresses(problem);
-        const auto& solved = *problem.ProblemeAResoudre;
-        const std::vector<double> xBefore = solved.X;
-        const std::vector<double> dualsBefore = solved.CoutsMarginauxDesContraintes;
+    problem.HeureDansLAnnee = 3 * 168 + 5;
+    BOOST_CHECK_EQUAL(LegacyWeeklyBlock(problem), 3u);
+}
 
-        problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0] = 20.;
-        problem.ResultatsHoraires[0].CoutsMarginauxHoraires[0] = -9500.;
+BOOST_AUTO_TEST_SUITE_END()
 
-        DumpSimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
+// Two-hour problem: the second hour exercises the cross-hour startup term of
+// non_prop_cost.
+BOOST_AUTO_TEST_CASE(non_prop_cost_adds_startup_cost_for_units_started_since_t_minus_one)
+{
+    Fixture fixture(/*nbPdt=*/2);
+    // Hour 0: ceil(2.3) = 3 units on. Hour 1: ceil(4.2) = 5 units on, so 2
+    // units started, each at startup cost 5000; fixed cost 100 per unit on.
+    fixture.problem.ProblemeAResoudre->X[variablesPerHour + nodu] = 4.2;
+    fixture.fill();
 
-        BOOST_CHECK(solved.X == xBefore);
-        BOOST_CHECK(solved.CoutsMarginauxDesContraintes == dualsBefore);
-        // Specifically, the refreshed entries are back to what the optimizer left.
-        BOOST_CHECK_CLOSE(solved.X[unsuppliedArea1], 52., 1e-9);
-        BOOST_CHECK_CLOSE(solved.CoutsMarginauxDesContraintes[balanceArea1], -10000., 1e-9);
-    }
+    const auto row = FindRowAt(fixture.table, "non_prop_cost", "area1_thermal_cluster1", "169");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_CLOSE(row->value, 5000. * 2. + 100. * 5., 1e-9);
+}
 
-    BOOST_AUTO_TEST_CASE(post_process_dump_is_skipped_when_the_optimization_range_is_daily)
-    {
-        wireResultAddresses(problem);
-        problem.OptimisationAuPasHebdomadaire = false;
-        problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0] = 20.;
+BOOST_AUTO_TEST_CASE(fast_mode_non_prop_cost_compares_the_rebuilt_counts_of_both_hours)
+{
+    Fixture fixture(/*nbPdt=*/2);
+    fixture.problem.OptimisationNotFastMode = false;
+    // Hour 0: ceil(3600 / 900) = 4 units on. Hour 1: ceil(4000 / 900) = 5, so
+    // one unit started at the cluster's startup cost 6000; fixed cost 120 per
+    // unit on.
+    fixture.problem.ProblemeAResoudre->X[variablesPerHour + dispatchableProduction] = 4000.;
+    fixture.fill();
 
-        DumpSimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
-
-        BOOST_CHECK_EQUAL(table.rowCount(), 0u);
-    }
-
-    BOOST_AUTO_TEST_CASE(weekly_block_is_derived_from_the_hour_in_the_year)
-    {
-        problem.HeureDansLAnnee = 168;
-        BOOST_CHECK_EQUAL(LegacyWeeklyBlock(problem), 1u);
-
-        problem.HeureDansLAnnee = 0;
-        BOOST_CHECK_EQUAL(LegacyWeeklyBlock(problem), 0u);
-
-        problem.HeureDansLAnnee = 3 * 168 + 5;
-        BOOST_CHECK_EQUAL(LegacyWeeklyBlock(problem), 3u);
-    }
-
-    BOOST_AUTO_TEST_SUITE_END()
-
-    // Two-hour problem: the second hour exercises the cross-hour startup term of
-    // non_prop_cost.
-    BOOST_AUTO_TEST_CASE(non_prop_cost_adds_startup_cost_for_units_started_since_t_minus_one)
-    {
-        Fixture fixture(/*nbPdt=*/2);
-        // Hour 0: ceil(2.3) = 3 units on. Hour 1: ceil(4.2) = 5 units on, so 2
-        // units started, each at startup cost 5000; fixed cost 100 per unit on.
-        fixture.problem.ProblemeAResoudre->X[variablesPerHour + nodu] = 4.2;
-        fixture.fill();
-
-        const auto row = FindRowAt(fixture.table, "non_prop_cost", "area1_thermal_cluster1", "169");
-        BOOST_REQUIRE(row.has_value());
-        BOOST_CHECK_CLOSE(row->value, 5000. * 2. + 100. * 5., 1e-9);
-    }
-
-    BOOST_AUTO_TEST_CASE(fast_mode_non_prop_cost_compares_the_rebuilt_counts_of_both_hours)
-    {
-        Fixture fixture(/*nbPdt=*/2);
-        fixture.problem.OptimisationNotFastMode = false;
-        // Hour 0: ceil(3600 / 900) = 4 units on. Hour 1: ceil(4000 / 900) = 5, so
-        // one unit started at the cluster's startup cost 6000; fixed cost 120 per
-        // unit on.
-        fixture.problem.ProblemeAResoudre->X[variablesPerHour + dispatchableProduction] = 4000.;
-        fixture.fill();
-
-        const auto row = FindRowAt(fixture.table, "non_prop_cost", "area1_thermal_cluster1", "169");
-        BOOST_REQUIRE(row.has_value());
-        BOOST_CHECK_CLOSE(row->value, 6000. * 1. + 120. * 5., 1e-9);
-    }
+    const auto row = FindRowAt(fixture.table, "non_prop_cost", "area1_thermal_cluster1", "169");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_CLOSE(row->value, 6000. * 1. + 120. * 5., 1e-9);
+}
