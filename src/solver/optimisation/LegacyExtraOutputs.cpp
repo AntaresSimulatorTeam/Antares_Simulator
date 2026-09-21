@@ -109,6 +109,7 @@ public:
     void shortTermStorageOutputs(uint32_t pays, int pdt);
     void inputGenerationOutputs(uint32_t pays, int pdt) const;
     void weeklyHydroOutputs(uint32_t pays);
+    void reserveOutputs(uint32_t pays, int pdt);
 
 private:
     void emit(const std::string& output, const std::string& component, int pdt, double value) const;
@@ -537,6 +538,78 @@ void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays)
     emit("bellman_value", problemeHebdo_.NomsDesPays[pays], pdt, bellmanValue);
 }
 
+void LegacyExtraOutputEmitter::reserveOutputs(uint32_t pays, int pdt)
+{
+    if (!problemeHebdo_.allReserves || !problemeHebdo_.OptimisationNotFastMode)
+    {
+        return;
+    }
+
+    const std::string& node = areaNames_[pays];
+    const std::string& area = problemeHebdo_.NomsDesPays[pays];
+    const auto& areaReserves = problemeHebdo_.allReserves->at(pays).areaCapacityReservations;
+
+    for (const auto& reserve: areaReserves)
+    {
+        const std::string reserveImbalanceOutput = fmt::format("reserve_imbalance_cost_{}",
+                                                               reserve.reserveID);
+        const std::string reserveParticipationOutput = fmt::format("reserve_participation_cost_{}",
+                                                                   reserve.reserveID);
+
+        const int excess = variableManager_.InternalExcessReserve(reserve.globalReserveIndex, pdt);
+        const int unsatisfied = variableManager_
+                                  .InternalUnsatisfiedReserve(reserve.globalReserveIndex, pdt);
+        emit(reserveImbalanceOutput,
+             node,
+             pdt,
+             reserve.spillageCost * x(excess) + reserve.unsuppliedCost * x(unsatisfied));
+
+        for (const auto& [_, thermalPart]: reserve.AllThermalReservesParticipation)
+        {
+            const int runningVar = variableManager_.RunningThermalClusterReserveParticipation(
+              thermalPart.globalIndexClusterParticipation,
+              pdt);
+            double val = thermalPart.participationCost * x(runningVar);
+
+            if (reserve.type == ReserveType::UP)
+            {
+                const int offVar = variableManager_.OffThermalClusterReserveParticipation(
+                  thermalPart.globalIndexClusterParticipation,
+                  pdt);
+                val += thermalPart.participationCostOff * x(offVar);
+            }
+            emit(reserveParticipationOutput,
+                 area + "_thermal_" + thermalPart.clusterName,
+                 pdt,
+                 val);
+        }
+
+        for (const auto& [_, stsPart]: reserve.AllSTStorageReservesParticipation)
+        {
+            const int participationVar = variableManager_.STStorageClusterReserveParticipation(
+              reserve.type,
+              stsPart.globalIndexClusterParticipation,
+              pdt);
+            emit(reserveParticipationOutput,
+                 area + "_short_term_storage_" + stsPart.clusterName,
+                 pdt,
+                 stsPart.participationCost * x(participationVar));
+        }
+
+        for (const auto& hydroPart: reserve.AllHydroReservesParticipation)
+        {
+            const int participationVar = variableManager_.HydroReserveParticipation(
+              reserve.type,
+              hydroPart.globalIndexClusterParticipation,
+              pdt);
+            emit(reserveParticipationOutput,
+                 hydroStorageNames_[pays],
+                 pdt,
+                 hydroPart.participationCost * x(participationVar));
+        }
+    }
+}
+
 } // namespace
 
 void AddLegacyExtraOutputs(SimulationTable& simulationTable,
@@ -560,6 +633,7 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
             emitter.areaOutputs(pays, pdt);
             emitter.shortTermStorageOutputs(pays, pdt);
             emitter.inputGenerationOutputs(pays, pdt);
+            emitter.reserveOutputs(pays, pdt);
 
             const PALIERS_THERMIQUES& paliers = problemeHebdo.PaliersThermiquesDuPays[pays];
             for (int index = 0; index < paliers.NombreDePaliersThermiques; ++index)
