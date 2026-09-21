@@ -30,6 +30,12 @@ public:
 
     [[nodiscard]] virtual TimeSeriesNumber getData(Year year) const = 0;
 
+    /** Check whether a time series is defined for the given year, without throwing.
+     * Implementations that serve a fixed time series for any year (empty/default scenarios)
+     * keep the default behavior of returning true.
+     */
+    [[nodiscard]] virtual bool hasYear(Year) const = 0;
+
     [[nodiscard]] std::string group() const
     {
         return group_;
@@ -54,6 +60,11 @@ public:
     [[nodiscard]] TimeSeriesNumber getData(Year) const override
     {
         return 1; // No data available in an empty scenario
+    }
+
+    [[nodiscard]] bool hasYear(Year) const override
+    {
+        return true;
     }
 };
 } // namespace Antares::LinearProblem::Api
