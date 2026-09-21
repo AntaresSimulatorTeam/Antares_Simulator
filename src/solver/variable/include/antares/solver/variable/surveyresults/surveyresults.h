@@ -7,12 +7,12 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 
+#include <antares/study/categories.h>
 #include <antares/study/study.h>
 #include <antares/study/variable-print-info.h>
 #include <antares/writer/i_writer.h>
 #include "antares/antares/constants.h"
 
-#include "../categories.h"
 #include "data.h"
 
 namespace Antares::Solver::Variable
@@ -135,11 +135,10 @@ public:
     IResultWriter& pResultWriter;
 
 private:
-    template<class StringT, class ConvertT, class PrecisionT>
+    template<class StringT, class PrecisionT>
     void AppendDoubleValue(uint& error,
                            const double v,
                            StringT& buffer,
-                           ConvertT& conversionBuffer,
                            const PrecisionT& precision,
                            const bool isNotApplicable);
 

@@ -6,13 +6,13 @@
 
 #include <cassert>
 #include <cstdlib>
+#include <set>
+#include <string>
 #include <vector>
-
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
 
 #include <antares/date/date.h>
 #include <antares/inifile/inifile.h>
+#include <antares/io/outputs/SimulationTableStage.h>
 #include <antares/optimization-options/options.h>
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 #include <antares/study/output-selection.h>
@@ -56,7 +56,7 @@ public:
     /*!
     ** \brief Reset the playlist (played years and associated years)
     */
-    void resetPlaylist(uint nbOfYears);
+    void resetPlaylist(unsigned int nbOfYears);
 
     /*!
     ** \brief Load data from a file
@@ -145,7 +145,7 @@ public:
     ** \param year MC year index
     ** \param weight MC year weight
     */
-    void setYearWeight(uint year, float weight);
+    void setYearWeight(unsigned int year, float weight);
 
     // Do we create files in the input folder ?
     bool haveToImport(int tsKind) const;
@@ -163,13 +163,13 @@ public:
     //! \name Horizon
     //@{
     //! Horizon year, not used by the solver
-    Yuni::String horizon;
+    std::string horizon;
     //@}
 
     //! \name Calendar
     //@{
     //! Number of years to study
-    uint nbYears{1};
+    unsigned int nbYears{1};
     //! Simulation days interval
     Date::DayInterval simulationDays;
     //! Day of the 1st january
@@ -202,7 +202,7 @@ public:
 
     //! The number of years that will be really performed
     // Computed automatically from the number of MC years and the playlist
-    uint effectiveNbYears;
+    unsigned int effectiveNbYears;
     //! Enable/Disable filtering by files :
     //!		for an area or a link, print (or not) a file associated to :
     //!		- a time division (hourly results, daily results, weekly results, ...),
@@ -213,15 +213,15 @@ public:
     //! \name TimeSeries
     //@{
     //! Nb of timeSeries : Load
-    uint nbTimeSeriesLoad;
+    unsigned int nbTimeSeriesLoad;
     //! Nb of timeSeries : Hydro
-    uint nbTimeSeriesHydro;
+    unsigned int nbTimeSeriesHydro;
     //! Nb of timeSeries : Wind
-    uint nbTimeSeriesWind;
+    unsigned int nbTimeSeriesWind;
     //! Nb of timeSeries : Thermal
-    uint nbTimeSeriesThermal;
+    unsigned int nbTimeSeriesThermal;
     //! Nb of timeSeries : Solar
-    uint nbTimeSeriesSolar;
+    unsigned int nbTimeSeriesSolar;
     //@}
 
     //! \name Archives
@@ -233,7 +233,7 @@ public:
     ** This value is a mask bits for timeSeries.
     ** \see TimeSeries
     */
-    uint timeSeriesToArchive;
+    unsigned int timeSeriesToArchive;
     //@}
 
     //! \name Pre-Processor
@@ -244,7 +244,7 @@ public:
     ** This value is a mask bits for timeSeries.
     ** \see TimeSeries
     */
-    uint timeSeriesToGenerate;
+    unsigned int timeSeriesToGenerate;
     //@}
 
     //! \name Import Time-Series to HardDrive
@@ -256,7 +256,7 @@ public:
     ** All generated timeseries will be re-written into the input
     ** \see TimeSeries
     */
-    uint exportTimeSeriesInInput;
+    unsigned int exportTimeSeriesInInput;
     //@}
 
     //! \name Correlated draws
@@ -264,7 +264,7 @@ public:
     /*!
     ** \brief Inter-modal
     */
-    uint interModal;
+    unsigned int interModal;
     //@}
 
     //! \name Timeseries numbers
@@ -284,7 +284,7 @@ public:
     bool synthesis;
 
     //! Accuracy on correlation
-    uint timeSeriesAccuracyOnCorrelation;
+    unsigned int timeSeriesAccuracyOnCorrelation;
 
     //@}
 
@@ -427,6 +427,16 @@ public:
     // In case we print simulation tables, do we print it in csv or parquet ?
     Writer::TableFormat simuTableFormat = Writer::TableFormat::CSV;
 
+    /// \brief Which stages of the weekly resolution get a simulation table;
+    /// empty means every stage. Resolved from simulationTableStagesStr (or the
+    /// command line), so unknown names are already rejected when this is filled.
+    std::set<Antares::IO::Outputs::Stage> simulationTableStages;
+
+    /// \brief Raw `simulation-table-stages` value from generaldata.ini, before
+    /// validation. Resolved into simulationTableStages once the command line is
+    /// applied, which overrides it when it carries a selection of its own.
+    std::string simulationTableStagesStr;
+
     bool hydroDebug;
 
     /// Used to create debug informations for both hydro and short term storages
@@ -438,7 +448,7 @@ public:
     //! \name Seeds
     //@{
     //! Seeds
-    uint seed[seedMax];
+    unsigned int seed[seedMax];
     //@}
 
     // Format of results. Currently, only single files or zip archive are supported
@@ -448,10 +458,10 @@ public:
     bool namedProblems;
 
     // All options related to linear & quadratic optimization
-    Solver::Optimization::OptimizationOptions optOptions;
+    Optimization::OptimizationOptions optOptions;
 
 private:
-    void resetPlayedYears(uint nbOfYears);
+    void resetPlayedYears(unsigned int nbOfYears);
 
     //! MC year weight for MC synthesis
     std::vector<float> yearsWeight;
@@ -470,7 +480,7 @@ const char* SimulationModeToCString(SimulationMode mode);
 ** \param Text An arbitrary Text (case insensitive)
 ** \return True if the conversion succeeded, false otherwise
 */
-bool StringToSimulationMode(SimulationMode& mode, Yuni::CString<20, false> text);
+bool StringToSimulationMode(SimulationMode& mode, const std::string& text);
 
 const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::HydroPmax);
 bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax&, const std::string& text);

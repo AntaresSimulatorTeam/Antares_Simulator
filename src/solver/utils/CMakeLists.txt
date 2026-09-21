@@ -1,8 +1,8 @@
 set(SRC
         include/antares/solver/utils/ortools_utils.h
         ortools_utils.cpp
-        include/antares/solver/utils/ortools_quadratic_wrapper.h
-        ortools_quadratic_wrapper.cpp
+        include/antares/solver/utils/opt_constants.h
+        include/antares/solver/utils/sim_constants.h
         include/antares/solver/utils/filename.h
         filename.cpp
         include/antares/solver/utils/mps_utils.h
@@ -29,7 +29,12 @@ target_link_libraries(utils
         Antares::study
         Antares::result_writer
         Antares::optimization-options
+        Antares::simu-table-generator
         antares-core
+        PRIVATE
+        Antares::simu-table-generator
+        # mps_utils.cpp writes MPS files through IO::Outputs::MPSGenerator.
+        Antares::mps-generator
 )
 
 target_include_directories(utils

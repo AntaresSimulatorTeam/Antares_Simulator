@@ -6,12 +6,9 @@
 #include <algorithm>
 #include <functional>
 
-#include <yuni/yuni.h>
-
 #include <antares/logs/logs.h>
 #include "antares/study/study.h"
 
-using namespace Yuni;
 using namespace Antares;
 
 namespace Antares::Data
@@ -23,15 +20,7 @@ PartThermal::PartThermal():
 {
 }
 
-void PartThermal::reset()
-{
-    unsuppliedEnergyCost = 0.;
-    spilledEnergyCost = 0.;
-
-    list.clearAll();
-}
-
-void PartThermal::resizeAllTimeseriesNumbers(uint n) const
+void PartThermal::resizeAllTimeseriesNumbers(unsigned int n) const
 {
     list.resizeAllTimeseriesNumbers(n);
 }

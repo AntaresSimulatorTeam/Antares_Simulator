@@ -5,7 +5,7 @@
 #include <antares/solver/hydro/monthly/h2o_m_fonctions.h>
 #include <antares/solver/hydro/probleme_spx_wrapper.h>
 
-namespace DonneesOptimisationMensuelle
+namespace Antares::Solver::Hydro::Monthly
 {
 
 BOOST_AUTO_TEST_CASE(TestInitialization)
@@ -49,4 +49,4 @@ BOOST_AUTO_TEST_CASE(Test_optimiser_une_annee)
     BOOST_CHECK(data.ProblemeHydraulique.ProblemeSpx[0] != nullptr);
 }
 
-} // namespace DonneesOptimisationMensuelle
+} // namespace Antares::Solver::Hydro::Monthly

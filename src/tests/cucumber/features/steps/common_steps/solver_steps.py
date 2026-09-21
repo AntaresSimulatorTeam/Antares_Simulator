@@ -8,6 +8,7 @@ import tempfile
 from pathlib import Path
 
 import numpy as np
+import parse
 from behave import *
 from common_steps.solver_input_handler import solver_input_handler
 from common_steps.solver_output_handler import solver_output_handler
@@ -65,6 +66,26 @@ def set_input_section_variable(context, input_file, section, variable, value):
     context.sih.set_input(input_file=input_file, section=section,
                           variable=variable, value=value)
 
+
+@given('in input "{series_file}" the time series is emptied')
+def empty_input_series(context, series_file):
+    # An empty series file is Antares' own convention for "no data": the
+    # series loads as a single all-zero column (see e.g. the "he" area's
+    # empty mod.txt/ror.txt in the "Accurate hydro pricing" fixture).
+    #
+    # This overwrites a file on disk, so it must run on a throwaway copy of
+    # the study, never on the shared resources tree -- otherwise every later
+    # scenario reusing the same study would see the emptied series.
+    # 'the solver study path is a copy of "..."' sets context.tmp_workdir.
+    assert hasattr(context, "tmp_workdir"), (
+        'the "time series is emptied" step modifies study files; load the '
+        'study with \'Given the solver study path is a copy of "..."\' so the '
+        "change stays confined to a temporary copy"
+    )
+    file_path = context.study_path / "input" / Path(series_file.replace("/", os.sep))
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+    file_path.write_text("")
+
 @given('the linear solver is {solver_name}')
 def set_linear_solver(context, solver_name):
     context.config.userdata["linear-solver"] = solver_name
@@ -87,6 +108,8 @@ def parse_options(context, options):
         for opt in options.split():
             if opt.startswith("--output="):
                 context.output_selection = opt.split("=", 1)[1]
+            if opt.startswith("--simulation-table-stages="):
+                context.simulation_table_stages = opt.split("=", 1)[1]
 
 @when('I run antares simulator')
 @when('I run antares simulator with {options}')
@@ -308,6 +331,38 @@ def should_check(row, key):
     return key in row.headings and len(row[key]) > 0
 
 
+# The stages of the weekly resolution, in the order the solver runs them.
+# `--simulation-table-stages` only ever removes stages from this list, so it
+# doubles as the order to fall back through when looking for a stage to read.
+SIMULATION_TABLE_STAGES = ["optim-nb-1", "optim-nb-2", "peak-shaving", "adq-patch"]
+
+_STAGE_OF_TABLE_FILE = re.compile(r"^simulation-table-\d+-(.+)\.csv$")
+
+
+def stages_in_output(output_path: Path) -> set:
+    """The stage suffixes of the simulation-table files in `output_path`."""
+    found = set()
+    for table_file in output_path.glob("simulation-table-*.csv"):
+        match = _STAGE_OF_TABLE_FILE.match(table_file.name)
+        assert match, f"Unexpected simulation table file name: {table_file.name}"
+        found.add(match.group(1))
+    return found
+
+
+def default_simulation_table_stage(output_path: Path):
+    """The stage `the modeler outputs contain ...` reads unless told otherwise.
+
+    A full run always has optim-nb-1, but a run restricted with
+    --simulation-table-stages need not, so fall back to the earliest stage that
+    was actually produced. Returns None when the run wrote no table at all.
+    """
+    produced = stages_in_output(output_path)
+    for stage in SIMULATION_TABLE_STAGES:
+        if stage in produced:
+            return stage
+    return None
+
+
 def run_simulation(context):
     command = build_antares_solver_command(context)
     print(f"Running command: {command}")
@@ -331,15 +386,81 @@ def run_simulation(context):
             context.logs_err = err.decode('cp1252')
         else:
             context.logs_err = ""
-    context.output_path = parse_output_folder_from_logs(out)
     context.return_code = process.returncode
-    context.soh = solver_output_handler(context.output_path, context.mode)
-    # For hybrid studies:
-    outputPath = Path(context.output_path)
-    if any(outputPath.glob("simulation-table*.csv")):
-        file_pattern = f"simulation-table-*-optim-nb-1.csv"
-        ST_reader_factory = make_simu_table_reader(outputPath, OutputFormat.CSV, file_pattern)
-        context.simu_table = SimulationTable(ST_reader_factory())
+    try:
+        context.output_path = parse_output_folder_from_logs(out)
+    except LookupError:
+        context.output_path = None
+
+    if context.output_path is not None:
+        context.soh = solver_output_handler(context.output_path, context.mode)
+        # For hybrid studies:
+        outputPath = Path(context.output_path)
+        default_stage = default_simulation_table_stage(outputPath)
+        if default_stage is not None:
+            file_pattern = f"simulation-table-*-{default_stage}.csv"
+            ST_reader_factory = make_simu_table_reader(outputPath, OutputFormat.CSV, file_pattern)
+            context.simu_table = SimulationTable(ST_reader_factory())
+
+
+@step('the modeler outputs are read from stage "{stage}"')
+def read_modeler_outputs_from_stage(context, stage):
+    """Re-point context.simu_table at the tables of one resolution stage.
+
+    The solver writes one simulation table per stage of the weekly resolution
+    (optim-nb-1, optim-nb-2, peak-shaving, adq-patch). run_simulation loads
+    the first stage the run produced; this step swaps in another stage, so every
+    `the modeler outputs contain ...` step after it reads that stage instead.
+    """
+    output_path = Path(context.output_path)
+    file_pattern = f"simulation-table-*-{stage}.csv"
+    ST_reader_factory = make_simu_table_reader(output_path, OutputFormat.CSV, file_pattern)
+    context.simu_table = SimulationTable(ST_reader_factory())
+
+
+@parse.with_pattern(r".*")
+def parse_maybe_empty(text):
+    return text
+
+
+register_type(MaybeEmpty=parse_maybe_empty)
+
+
+@given('the study asks for the simulation table stages "{stages:MaybeEmpty}"')
+def set_simulation_table_stages_in_ini(context, stages):
+    """Set `simulation-table-stages` in the [output] section of generaldata.ini.
+
+    Unlike solver_input_handler.set_value this inserts the key when it is
+    absent, which it is in every fixture. Use it on a *copy* of a study, since
+    it edits the study in place.
+    """
+    ini_path = Path(context.study_path) / "settings" / "generaldata.ini"
+    lines = ini_path.read_text().splitlines()
+    out, done = [], False
+    for line in lines:
+        if line.strip().startswith("simulation-table-stages"):
+            continue
+        out.append(line)
+        if line.strip() == "[output]":
+            out.append(f"simulation-table-stages = {stages}")
+            done = True
+    assert done, f"No [output] section in {ini_path}"
+    ini_path.write_text("\n".join(out) + "\n")
+
+
+@then('the simulation tables cover exactly the stages "{stages}"')
+def check_simulation_table_stages(context, stages):
+    """Check the exact set of stage suffixes among the simulation-table files.
+
+    Stage names are part of the output contract, so this pins them; `exactly`
+    also catches a stage being emitted where it should have been skipped (an
+    empty table is not written at all).
+    """
+    expected = sorted(stage.strip() for stage in stages.split(","))
+    found = stages_in_output(Path(context.output_path))
+    assert sorted(found) == expected, \
+        f"Expected simulation table stages {expected}, found {sorted(found)}"
+
 
 def init_simulation(context):
     sih = solver_input_handler(context.study_path)
@@ -363,6 +484,8 @@ def build_antares_solver_command(context):
         command.append('--force-parallel=4')
     if hasattr(context, "output_selection"):
         command.append(f'--output={context.output_selection}')
+    if hasattr(context, "simulation_table_stages"):
+        command.append(f'--simulation-table-stages={context.simulation_table_stages}')
     return command
 
 

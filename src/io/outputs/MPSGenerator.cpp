@@ -10,7 +10,7 @@
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/io/outputs/ExportableName.h"
 
-using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::LinearProblem::Api;
 static constexpr std::string_view pad = "    ";
 static constexpr double EPS = 1e-12;
 

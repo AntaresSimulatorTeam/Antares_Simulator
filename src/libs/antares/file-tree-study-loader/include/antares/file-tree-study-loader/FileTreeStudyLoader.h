@@ -7,13 +7,13 @@
 
 #include "antares/study-loader/IStudyLoader.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 class Study;
 }
 
+namespace Antares
+{
 /**
  * @class FileTreeStudyLoader
  * @brief A class to load studies from the file tree.

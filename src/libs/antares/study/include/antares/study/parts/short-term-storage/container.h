@@ -32,7 +32,7 @@ public:
     bool loadAdditionalConstraints(const std::filesystem::path& filePath);
 
     /// erase disabled cluster from the vector
-    uint removeDisabledClusters();
+    unsigned int removeDisabledClusters();
 
     /// Get the names of the cluster and reserve of the participation
     std::pair<std::string, ReserveID> reserveParticipationClusterAt(const Area* area,
@@ -51,7 +51,7 @@ public:
     size_t getClusterIdx(STStorageCluster& cluster) const;
 
     // returns the number of reserve participations of all clusters
-    uint reserveParticipationsCount() const;
+    unsigned int reserveParticipationsCount() const;
 
     std::vector<STStorageCluster> storagesByIndex;
     void resizeTimeseriesNumbers(unsigned int nbYears);

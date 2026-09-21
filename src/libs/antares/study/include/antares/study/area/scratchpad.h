@@ -4,12 +4,10 @@
 #ifndef __ANTARES_LIBS_STUDY_AREA_SCRATCHPAD_H__
 #define __ANTARES_LIBS_STUDY_AREA_SCRATCHPAD_H__
 
+#include <array>
 #include <numeric>
 #include <set>
 #include <vector>
-
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
 
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>

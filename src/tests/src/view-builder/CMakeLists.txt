@@ -5,4 +5,5 @@ add_boost_test(test-view-builder
     LIBS
     Antares::view-builder
     Antares::antares-core
+    Antares::modeler-lib
     yaml-cpp::yaml-cpp)

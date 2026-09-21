@@ -18,7 +18,7 @@ namespace Antares::TSGenerator::XCast
 {
 double XCast::GammaEuler(double z)
 {
-    if (Yuni::Logs::Verbosity::Debug::enabled)
+    if (Antares::Logs::Verbosity::Debug::enabled)
     {
         assert((z > 0. && z <= 100.) && "error in the Gamma function (invalid parameter)");
     }

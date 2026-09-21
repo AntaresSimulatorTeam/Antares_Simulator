@@ -5,7 +5,6 @@
 
 #include <filesystem>
 
-#include "simulation-table-writers_export.h"
 #include "table_format.h"
 
 namespace Antares::IO::Outputs
@@ -16,11 +15,16 @@ class SimulationTable;
 namespace Antares::Writer
 {
 
-class SIMULATION_TABLE_WRITERS_EXPORT SimulationTableWriter final
+class SimulationTableWriter final
 {
 public:
     SimulationTableWriter(const std::filesystem::path& filePath, TableFormat tableFormat);
     void writeTable(const IO::Outputs::SimulationTable& simuTable) const;
+
+    [[nodiscard]] const std::filesystem::path& outputFile() const
+    {
+        return output_file_;
+    }
 
 private:
     void writeParquet(const std::filesystem::path& file_path,

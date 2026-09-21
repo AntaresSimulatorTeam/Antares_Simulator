@@ -42,8 +42,7 @@ public:
       std::pair<std::unique_ptr<Data::Study>, Solver::IResultWriter::Ptr>&& loadedPair);
     ConstantDataFromAntares getConstantData() const;
     WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id);
-    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> getWeeklyProblem(
-      WeeklyProblemId id);
+    std::unique_ptr<LinearProblem::Api::ILinearProblem> getWeeklyProblem(WeeklyProblemId id);
     std::vector<WeeklyProblemId> getProblemIds() const;
 
     void writeNTCTimeSeries(const std::filesystem::path& outputDir);
@@ -62,8 +61,7 @@ private:
     const YearlyData& getYearlyData(unsigned year);
     YearlyData computeHydroLevels(unsigned year, const std::vector<double>& initialLevel);
     void initializeRandomNumbers();
-    void fillProblem(Optimisation::LinearProblemApi::ILinearProblem& problem,
-                     const WeeklyProblemId& id);
+    void fillProblem(LinearProblem::Api::ILinearProblem& problem, const WeeklyProblemId& id);
     void setWeeklyData(WeeklyProblemId& id);
     Antares::Data::Area::ScratchMap scratchmap_;
     HebdoProblemToLpsTranslator translator_;

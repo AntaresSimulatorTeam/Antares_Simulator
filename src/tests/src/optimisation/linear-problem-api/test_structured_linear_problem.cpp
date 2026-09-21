@@ -12,7 +12,7 @@
 #include <antares/optimisation/linear-problem-api/StructuredLinearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 
-using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::LinearProblem::Api;
 using Antares::Error::RuntimeError;
 
 BOOST_AUTO_TEST_SUITE(StructuredLinearProblemTests)

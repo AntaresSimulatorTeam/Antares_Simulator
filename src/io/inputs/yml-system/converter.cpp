@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <sstream>
+#include <string_view>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/io/inputs/InputError.h"
@@ -72,8 +73,8 @@ Component createComponent(const YmlSystem::Component& c, const std::vector<Libra
         parameters.try_emplace(
           id,
           ParameterTypeAndValue{.id = id,
-                                .type = Optimisation::variability(time_dependent,
-                                                                  scenario_dependent),
+                                .type = LinearProblem::variability(time_dependent,
+                                                                   scenario_dependent),
                                 .value = value});
     }
 
@@ -122,7 +123,10 @@ void CheckPortsType(const Port& firstPort, const Port& secondPort)
     }
 }
 
-void CheckFieldsRoleCompatibility(const Port& port_1, const Port& port_2)
+void CheckFieldsRoleCompatibility(const Port& port_1,
+                                  const Port& port_2,
+                                  std::string_view componentId_1,
+                                  std::string_view componentId_2)
 {
     for (const auto& field: port_1.Type().Fields())
     {
@@ -131,10 +135,14 @@ void CheckFieldsRoleCompatibility(const Port& port_1, const Port& port_2)
 
         if (portFieldRole_1 == portFieldRole_2)
         {
-            std::ostringstream msg;
-            msg << "Field '" << field.Id() << "' is " << portFieldRole_1 << " in both ports '"
-                << port_1.Id() << "' and '" << port_2.Id() << "'";
-            throw InputError(msg.str());
+            throw InputError(fmt::format("In connection between components '{}' and '{}': Field "
+                                         "'{}' is {} in both ports '{}' and '{}'",
+                                         componentId_1,
+                                         componentId_2,
+                                         field.Id(),
+                                         portFieldRole_1,
+                                         port_1.Id(),
+                                         port_2.Id()));
         }
     }
 }
@@ -174,7 +182,7 @@ void connectComponents(const YmlSystem::Connection& connection, std::vector<Comp
     const auto& port_2 = component_2.findPort(portId_2, "");
     CheckPortsType(port_1, port_2);
 
-    CheckFieldsRoleCompatibility(port_1, port_2);
+    CheckFieldsRoleCompatibility(port_1, port_2, componentId_1, componentId_2);
 
     // TODO : Do we need to connect both components to one another ?
     // TODO : Or should we rather consider the field role and only connect receiver to the sender ?

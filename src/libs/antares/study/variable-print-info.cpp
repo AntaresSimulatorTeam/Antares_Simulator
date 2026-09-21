@@ -6,8 +6,9 @@
 #include <algorithm>
 #include <cassert>
 
+#include <antares/logs/logs.h>
 #include <antares/study/study.h>
-#include "antares/solver/variable/categories.h"
+#include "antares/study/categories.h"
 
 using namespace Antares::Solver::Variable;
 
@@ -16,7 +17,7 @@ namespace Antares::Data
 // ============================================================
 // One variable print information
 // ============================================================
-VariablePrintInfo::VariablePrintInfo(uint dataLvl, uint fileLvl):
+VariablePrintInfo::VariablePrintInfo(unsigned int dataLvl, unsigned int fileLvl):
     to_be_printed_(true),
     dataLevel_(dataLvl),
     fileLevel_(fileLvl)
@@ -38,12 +39,12 @@ void VariablePrintInfo::reverse()
     to_be_printed_ = !to_be_printed_;
 }
 
-uint VariablePrintInfo::getMaxColumnsCount()
+unsigned int VariablePrintInfo::getMaxColumnsCount()
 {
     return maxNumberColumns_;
 }
 
-void VariablePrintInfo::setMaxColumns(uint maxColumnsNumber)
+void VariablePrintInfo::setMaxColumns(unsigned int maxColumnsNumber)
 {
     maxNumberColumns_ = std::max(maxColumnsNumber, maxNumberColumns_);
 }
@@ -56,9 +57,41 @@ variablePrintInfoCollector::variablePrintInfoCollector(AllVariablesPrintInfo* al
 {
 }
 
-void variablePrintInfoCollector::add(const AnyString& name, uint dataLevel, uint fileLevel)
+void variablePrintInfoCollector::add(const std::string& name,
+                                     unsigned int dataLevel,
+                                     unsigned int fileLevel)
 {
-    allvarsinfo->add(name.to<std::string>(), VariablePrintInfo(dataLevel, fileLevel));
+    allvarsinfo->add(name, VariablePrintInfo(dataLevel, fileLevel));
+}
+
+// ============================================================
+// Thematic trimming variable registry
+// ============================================================
+namespace
+{
+ThematicTrimmingVariableRegistry::Provider& thematicTrimmingProvider()
+{
+    static ThematicTrimmingVariableRegistry::Provider instance;
+    return instance;
+}
+} // namespace
+
+void ThematicTrimmingVariableRegistry::setProvider(Provider provider)
+{
+    thematicTrimmingProvider() = std::move(provider);
+}
+
+void ThematicTrimmingVariableRegistry::populate(variablePrintInfoCollector& collector)
+{
+    if (const auto& provider = thematicTrimmingProvider())
+    {
+        provider(collector);
+    }
+    else
+    {
+        logs.warning() << "No thematic trimming variable provider registered: the list of "
+                          "output variables will be empty";
+    }
 }
 
 // ============================================================
@@ -87,7 +120,7 @@ void AllVariablesPrintInfo::clear()
     index_to_name.clear();
 }
 
-VariablePrintInfo& AllVariablesPrintInfo::operator[](uint i)
+VariablePrintInfo& AllVariablesPrintInfo::operator[](unsigned int i)
 {
     std::string name = index_to_name[i];
     return allVarsPrintInfo.at(name);
@@ -114,7 +147,7 @@ void AllVariablesPrintInfo::setPrintStatus(unsigned int index, bool printStatus)
     setPrintStatus(name, printStatus);
 }
 
-void AllVariablesPrintInfo::setMaxColumns(std::string varname, uint maxColumnsNumber)
+void AllVariablesPrintInfo::setMaxColumns(std::string varname, unsigned int maxColumnsNumber)
 {
     allVarsPrintInfo.at(to_uppercase(varname)).setMaxColumns(maxColumnsNumber);
 }
@@ -245,11 +278,13 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports(const Sets& setsOfAr
     // it contains, and incrementing a counter with as many columns as the current variable can take
     // up at most in a report.
 
-    for (uint CDataLevel = 1; CDataLevel <= Category::DataLevel::maxDataLevel; CDataLevel *= 2)
+    for (unsigned int CDataLevel = 1; CDataLevel <= Category::DataLevel::maxDataLevel;
+         CDataLevel *= 2)
     {
-        for (uint CFileLevel = 1; CFileLevel <= Category::FileLevel::maxFileLevel; CFileLevel *= 2)
+        for (unsigned int CFileLevel = 1; CFileLevel <= Category::FileLevel::maxFileLevel;
+             CFileLevel *= 2)
         {
-            uint currentColumnsCount = 0;
+            unsigned int currentColumnsCount = 0;
             for (auto& [name, variable]: allVarsPrintInfo)
             {
                 if (variable.isPrinted() && variable.isPrintedOnFileLevel(CFileLevel)
