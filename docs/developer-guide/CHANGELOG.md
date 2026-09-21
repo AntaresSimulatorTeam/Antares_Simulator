@@ -6,8 +6,13 @@ toc_depth: 2
 
 ## Branch 10.2.x
 
-### 10.2.0
+#### Breaking changes
 
+* A simulation table with no rows no longer produces a header-only file. In practice this means
+  no `simulation-table-<year>-optim-nb-2` file at all when the second optimisation pass does not
+  run, i.e. when `unit-commitment-mode = milp` or in Expansion mode. See the
+  [migration guide](../user-guide/04-migration-guides.md)
+  
 #### Features
 
 * Write one simulation table per stage of the weekly resolution, so the effect of each
@@ -16,20 +21,15 @@ toc_depth: 2
   `simulation-table-<year>-<stage>` file
 * Select which stages are written, with `simulation-table-stages` in the `[output]` section of
   `generaldata.ini` or the `--simulation-table-stages` command-line option (default: all stages).
-  The command line overrides the study
+* Add `--simulation-table-stages-last` to write only the last-produced stage (#3939)
 * Add legacy variable in simulation table [ANT-4962] (#3676, #3704)
 * Extra-outputs: export legacy outputs in simulation table [ANT-5006] (#3715, #3717, #3727, #3739)
 * Add warning when final level is outside rule curves [ANT-3139] (#3759)
 * Export original problem for unfeasible problems [ANT-4987] (#3692)
 * Parquet support for modeler and legacy solver [ANT-4633] (#3565, #3586)
 * Export by MC year instead of global 2-file aggregation [ANT-4633] (#3640)
-
-#### Breaking changes
-
-* A simulation table with no rows no longer produces a header-only file. In practice this means
-  no `simulation-table-<year>-optim-nb-2` file at all when the second optimisation pass does not
-  run, i.e. `unit-commitment-mode = milp` or Expansion mode. See the
-  [migration guide](../user-guide/04-migration-guides.md)
+* Add filtering for district output granularities with `sets.ini` (#3926)
+* Improve unit commitment calculations for legacy outputs [ANT-5334] (#3888)
 
 #### Known limitations
 
@@ -44,6 +44,8 @@ toc_depth: 2
 * Fix simulation week used for GEMS component in hybrid [ANT-4930] (#3627, #3651)
 * Fix modeler output path (#3624, #3711)
 * Add cucumber tests for antares-modeler + parquet simulation tables [ANT-5180] (#3752)
+* Add GEMS contribution to adequacy patch CSR bounds [ANT-5264] (#3853)
+* Modeler: allow several years [ANT-5144] (#3907)
 
 #### Reserves
 
@@ -60,6 +62,9 @@ toc_depth: 2
 * Use fmt for double conversion, improving performances (#3773)
 * Fix uninitialized Parameters members found by UBSan (#3753)
 * Fix stack-use-after-scope in EvalVisitor tests (#3754)
+* Fix missing inactiveComponents in some simulation table stages (#3933)
+* Rename adq-patch and shave-peak simulation table stages for consistency (#3936)
+* Fix incorrect renewable cluster name in short-term storage output (#3938)
 
 #### Documentation
 
@@ -67,6 +72,7 @@ toc_depth: 2
 * Document how to use CMakePresets and integration in CLion (#3052)
 * Remove PDF user guide build (#3703)
 * Update copyright headers (#3691)
+* Improve migration guide, add reserves documentation (#3943)
 
 #### For developers
 
@@ -88,11 +94,21 @@ toc_depth: 2
 * Increase timeout of case 035 (#3737)
 * Remove JIT [ANT-4954] (#3782)
 * Add build-profiling (#3785)
+* Keep IScenario as pure as possible (#3934)
+* Deduplicate code related to misc gen names (#3917)
+* Move reserves code from header to cpp file (#3940)
+* Remove unused resetToDefaultValues method (#3944)
+* Use std::clamp (#3945)
+* Remove dead code for adq patch I/O, unused since the GUI was removed (#3948)
+* Remove unused code from matrix class (#3953)
+* Add python script to save SonarQube issues to CSV (#3942)
+* Cache vcpkg assets during release to prevent URL rot (#3885)
 
 #### CI
 
 * Replace @fast/@short legacy cucumber tags with a 3-tier time taxonomy (#3755)
 * Bump actions/cache, actions/checkout and Sonar scanner (#3721, #3741, #3771)
+* Bump SonarSource/sonarqube-scan-action (#3952)
 
 ## Branch 10.1.x
 
@@ -294,6 +310,23 @@ Fix: several issues on CentOS7 (#3561)
 
 ## Branch 9.3.x
 
+### 9.3.12
+
+#### Bugfixes
+
+* Fix writing of simulation output files larger than 4 GB
+* Fix reservoir level adjustment when hydro initialization does not start in January
+* Fix units in districts aggregation
+
+#### Dependencies
+
+* Update vcpkg to 2025.06.13: some dependency assets were not available anymore. Versions details in [dependency updates](Dependencies/updates.md)
+
+#### CI/CD
+
+* Automatically cache vcpkg assets on release
+* Use an asset cache mirror (`X_VCPKG_ASSET_SOURCES`) in build workflows and docker image
+
 ### 9.3.11
 
 #### Bugfixes
@@ -308,7 +341,8 @@ Fix: several issues on CentOS7 (#3561)
 
 #### Bugfixes
 
-* Fix bounds on fictitious load and max unsupplied in adequacy patch [ANT-4906] (#3575)
+* Fix bounds on fictitious loads and max unsupplied in adequacy patch [ANT-4906] (#3575)
+
 
 ### 9.3.9
 
@@ -335,31 +369,34 @@ Fix: several issues on CentOS7 (#3561)
 
 #### For developers
 
-Add tools/antares-version.py (#3534)
-feat: allow generating results on release (#3427)
+* Add tools/antares-version.py (#3534)
+* feat: allow generating results on release (#3427)
 
 ### 9.3.8
 
+#### Features
+
+* Add sts prod to fictitious load [ANT-3739] (#3486)
+* Add constraint fictitious load to adq patch [ANT-4365] (#3487)
+
 #### Bugfixes
 
+* Fix truncated digest [ANT-4630] (#3455)
 * Fix dynamic district aggregation (#3429)
-* Fix digest [ANT-4630] (#3455)
-* 9.3 Add constraint fictitious load to adq patch [ANT-4365] (#3487)
-* 9.3 Add short-term storage prod to fictitious load [ANT-3739] (#3486)
 
 ### 9.3.7
 
 #### Feature
 
-* Problem Generator: new tool to write problems without running the simulation (#3314,#3399,#3165)
+* Problem Generator: new tool to write problems without running the simulation
 
 #### Improvements
 
 * Add a warning in the problem-generator when weeks are dependent, and cleanup (#3398)
-* Improve performance for sum operations in expressions
 
 #### Bugfixes
 
+* Improve performance for sum operations in expressions
 * Fix: remove unnecessary global time step adjustment to avoid wrong time labels (#3377)
 
 ### 9.3.6
