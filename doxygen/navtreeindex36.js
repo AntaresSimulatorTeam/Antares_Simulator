@@ -1,7 +1,5 @@
 var NAVTREEINDEX36 =
 {
-"structAntares_1_1Date_1_1Calendar_1_1Settings.html#a7fab86c6a9e2d7cd718e66af498fa662":[9,0,0,4,2,0,0],
-"structAntares_1_1Date_1_1DayInterval.html":[9,0,0,4,1],
 "structAntares_1_1Date_1_1DayInterval.html#a0dc9599f70b43803e74b1dca42748d03":[9,0,0,4,1,1],
 "structAntares_1_1Date_1_1DayInterval.html#a2d4af235f35e11feb8121cd64c6de06b":[9,0,0,4,1,3],
 "structAntares_1_1Date_1_1DayInterval.html#ab4108dc01e14e419434bf62dfaf98fb4":[9,0,0,4,1,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX36 =
 "structAntares_1_1Optimization_1_1CmdLineOptimOptions.html#a718ec98aee78184f2161ce73465a4d0a":[9,0,0,11,1,8],
 "structAntares_1_1Optimization_1_1CmdLineOptimOptions.html#a8c0b967f1ae451646ebca471ca472e03":[9,0,0,11,1,1],
 "structAntares_1_1Optimization_1_1CmdLineOptimOptions.html#a99c849fe747b9179a0507d495f9129a9":[9,0,0,11,1,0],
-"structAntares_1_1Optimization_1_1CmdLineOptimOptions.html#aa4a5418a699ea7b073483ad18ce29d29":[9,0,0,11,1,3]
+"structAntares_1_1Optimization_1_1CmdLineOptimOptions.html#aa4a5418a699ea7b073483ad18ce29d29":[9,0,0,11,1,3],
+"structAntares_1_1Optimization_1_1CmdLineOptimOptions.html#aae0af03a0f1d485656e89b9567c83880":[9,0,0,11,1,7],
+"structAntares_1_1Optimization_1_1LegacySolution.html":[9,0,0,11,25]
 };

@@ -56,7 +56,6 @@ var namespaces_dup =
           [ "countConstraints", "count__constraints__variables_8cpp.html#a73231cf648a7dbd542916155b00170bb", null ],
           [ "countVariables", "count__constraints__variables_8cpp.html#acb322e57fa09d805700c663b863e7b43", null ],
           [ "LmrViolationAreaHour", "adq__patch__curtailment__sharing_8cpp.html#a5431342610fa8e1214a1c0a12554511b", null ],
-          [ "PriceTakingOrderToString", "adq-patch-params_8cpp.html#a6e8d51c98799f13c023c9e838eb643fb", null ],
           [ "defaultThresholdDisplayLocalMatchingRuleViolations", "adq-patch-params_8h.html#aa031aa3c44aa798dfbd437f06ad323c2", null ],
           [ "defaultThresholdToRunCurtailmentSharing", "adq-patch-params_8h.html#a0200971409ab686c759b13aa3f4d3d5d", null ],
           [ "defaultValueThresholdVarBoundsRelaxation", "adq-patch-params_8h.html#a8f932219473a96ebf993109b2a671d0d", null ]

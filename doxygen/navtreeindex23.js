@@ -1,7 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"classHydroStoreCapacityThresholds.html#a8fcccf92d9af45d61be9340e1aae2b61":[9,0,163,1],
-"classHydroStoreCapacityThresholds.html#abb72ff7f318542bcc226a5ff4cadc800":[9,0,163,0],
 "classHydroStoreMaxReserve.html":[9,0,164],
 "classHydroStoreMaxReserve.html#a0164892a60262cc895aba32b8c6e29f5":[9,0,164,1],
 "classHydroStoreMaxReserve.html#a7208cced4ce36cf4610164080d20ef5b":[9,0,164,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX23 =
 "classOneProblemWithReservesOneAreaWithLogger.html":[9,0,234],
 "classOneProblemWithoutReservesOneArea.html":[9,0,231],
 "classOneProblemWithoutReservesOneArea.html#a36b375ce3b34fcc0f7c3790fb284e9bc":[9,0,231,0],
-"classOneProblemWithoutReservesOneArea.html#aa15abc2e9ac0edad13d57ad23683b1ef":[9,0,231,2]
+"classOneProblemWithoutReservesOneArea.html#aa15abc2e9ac0edad13d57ad23683b1ef":[9,0,231,2],
+"classOneProblemWithoutReservesOneArea.html#aeebe7aec4f851417898477d6ae6edbd6":[9,0,231,1],
+"classOneProblemWithoutReservesOneAreaWithLogger.html":[9,0,232]
 };

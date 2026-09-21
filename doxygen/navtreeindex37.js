@@ -1,7 +1,5 @@
 var NAVTREEINDEX37 =
 {
-"structAntares_1_1Optimization_1_1CmdLineOptimOptions.html#aae0af03a0f1d485656e89b9567c83880":[9,0,0,11,1,7],
-"structAntares_1_1Optimization_1_1LegacySolution.html":[9,0,0,11,25],
 "structAntares_1_1Optimization_1_1LegacySolution.html#a97d88772a95dea036be0adb2b870111a":[9,0,0,11,25,1],
 "structAntares_1_1Optimization_1_1LegacySolution.html#aa601c2195c5117848be315a6053fae44":[9,0,0,11,25,0],
 "structAntares_1_1Optimization_1_1LegacyVariableInfo.html":[9,0,0,11,30],
@@ -249,5 +247,7 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#a70d69ceb941a8f90fb487b631f60134c":[9,0,0,12,6,2,7,2],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#ab978c0f6d4af01ec9449180f86ce184e":[9,0,0,12,6,2,7,1],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#acb325c8a2b5905eb7e17feeaedba9a12":[9,0,0,12,6,2,7,6],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy_1_1Multiple.html":[9,0,0,12,6,2,7,0]
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy_1_1Multiple.html":[9,0,0,12,6,2,7,0],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html":[9,0,0,12,6,15],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#a0866bd54ac1b61fef63100596ca5ac25":[9,0,0,12,6,15,1]
 };

@@ -1,7 +1,5 @@
 var NAVTREEINDEX6 =
 {
-"classAntares_1_1Data_1_1Sets.html#a23f6aae164b511c18fc8de56150db14c":[9,0,0,3,84,8],
-"classAntares_1_1Data_1_1Sets.html#a39657482c0aeef93cde7965133eaa8a2":[9,0,0,3,84,1],
 "classAntares_1_1Data_1_1Sets.html#a3dda49c6b3ac5db21ece63b420495280":[9,0,0,3,84,27],
 "classAntares_1_1Data_1_1Sets.html#a443ccf7f2c98943a09f30302328c70b9":[9,0,0,3,84,32],
 "classAntares_1_1Data_1_1Sets.html#a44f42c13cff732cd40c4f328d4fadc9a":[9,0,0,3,84,21],
@@ -249,5 +247,7 @@ var NAVTREEINDEX6 =
 "classAntares_1_1Data_1_1StudyFinder.html#a54ac66bd04d56d4bb7e668c3b8a1a300":[9,0,0,3,37,0],
 "classAntares_1_1Data_1_1StudyFinder.html#a627474b4e085f0d95deccef4b694b2b5":[9,0,0,3,37,8],
 "classAntares_1_1Data_1_1StudyFinder.html#a65245270e4c13c7bf7110037b1911d21":[9,0,0,3,37,7],
-"classAntares_1_1Data_1_1StudyFinder.html#a6fbc7a5439d9078545978eab44961a48":[9,0,0,3,37,12]
+"classAntares_1_1Data_1_1StudyFinder.html#a6fbc7a5439d9078545978eab44961a48":[9,0,0,3,37,12],
+"classAntares_1_1Data_1_1StudyFinder.html#a86759e8b5914cf5b79bbdfda41872b83":[9,0,0,3,37,10],
+"classAntares_1_1Data_1_1StudyFinder.html#a89ce5c6739373666b0000b0307297441":[9,0,0,3,37,1]
 };

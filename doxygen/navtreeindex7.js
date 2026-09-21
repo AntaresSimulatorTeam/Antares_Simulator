@@ -1,7 +1,5 @@
 var NAVTREEINDEX7 =
 {
-"classAntares_1_1Data_1_1StudyFinder.html#a86759e8b5914cf5b79bbdfda41872b83":[9,0,0,3,37,10],
-"classAntares_1_1Data_1_1StudyFinder.html#a89ce5c6739373666b0000b0307297441":[9,0,0,3,37,1],
 "classAntares_1_1Data_1_1StudyFinder.html#aa56016a0ab776dda5e630ff358aabc31":[9,0,0,3,37,2],
 "classAntares_1_1Data_1_1StudyFinder.html#abd5cefe1b899013f2cfebcae66334273":[9,0,0,3,37,4],
 "classAntares_1_1Data_1_1StudyFinder.html#ac0e6d4b0a19eb3fb9d5a31f61f1c52d1":[9,0,0,3,37,6],
@@ -249,5 +247,7 @@ var NAVTREEINDEX7 =
 "classAntares_1_1Date_1_1Calendar.html#a8b221ce735b7c3dc680d94bdbb4397fe":[9,0,0,4,2,17],
 "classAntares_1_1Date_1_1Calendar.html#a8fd344ca5e6146854a44c1c629dc1247":[9,0,0,4,2,7],
 "classAntares_1_1Date_1_1Calendar.html#a91116e5130a664049f85bcbc839fabfe":[9,0,0,4,2,22],
-"classAntares_1_1Date_1_1Calendar.html#a98c969a6fbaf25e707622172255ed487":[9,0,0,4,2,31]
+"classAntares_1_1Date_1_1Calendar.html#a98c969a6fbaf25e707622172255ed487":[9,0,0,4,2,31],
+"classAntares_1_1Date_1_1Calendar.html#aa85f43354b75aa5e5d9c48ca5c7d9e6a":[9,0,0,4,2,33],
+"classAntares_1_1Date_1_1Calendar.html#abb29155df7340e4b1e3e795bc444c434":[9,0,0,4,2,26]
 };

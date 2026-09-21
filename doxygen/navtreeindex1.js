@@ -195,8 +195,7 @@ var NAVTREEINDEX1 =
 "adequacy_2spilledEnergy_8h_source.html":[10,0,0,8,11,0,0,0,0,0,3],
 "adequacy_8h_source.html":[10,0,0,8,8,0,0,0,0,1],
 "adequacy__patch__runtime__data_8h_source.html":[10,0,0,8,8,0,0,0,0,2],
-"adq-patch-params_8cpp.html#a6e8d51c98799f13c023c9e838eb643fb":[8,0,0,4,0,9],
-"adq-patch-params_8h.html#a0200971409ab686c759b13aa3f4d3d5d":[8,0,0,4,0,11],
+"adq-patch-params_8h.html#a0200971409ab686c759b13aa3f4d3d5d":[8,0,0,4,0,10],
 "adq-patch-params_8h.html#a6eb931add6f618a6322faadb0c3ef338":[8,0,0,4,0,3],
 "adq-patch-params_8h.html#a6eb931add6f618a6322faadb0c3ef338a045bc6c54f8ce6fd7bdfd938125bf370":[8,0,0,4,0,3,1],
 "adq-patch-params_8h.html#a6eb931add6f618a6322faadb0c3ef338a3cb5671f7d151ec60b4e94ee67595702":[8,0,0,4,0,3,0],
@@ -204,8 +203,8 @@ var NAVTREEINDEX1 =
 "adq-patch-params_8h.html#a6fc6e7b547617d748ee338c3a58bf36fa6eee1833fb70f83f628247ed74925fb4":[8,0,0,4,0,2,2],
 "adq-patch-params_8h.html#a6fc6e7b547617d748ee338c3a58bf36fa8272b1904359540de8c50c758f779e97":[8,0,0,4,0,2,0],
 "adq-patch-params_8h.html#a6fc6e7b547617d748ee338c3a58bf36faec1dfec941cda4f1ec8b413723bc7b8a":[8,0,0,4,0,2,1],
-"adq-patch-params_8h.html#a8f932219473a96ebf993109b2a671d0d":[8,0,0,4,0,12],
-"adq-patch-params_8h.html#aa031aa3c44aa798dfbd437f06ad323c2":[8,0,0,4,0,10],
+"adq-patch-params_8h.html#a8f932219473a96ebf993109b2a671d0d":[8,0,0,4,0,11],
+"adq-patch-params_8h.html#aa031aa3c44aa798dfbd437f06ad323c2":[8,0,0,4,0,9],
 "adq-patch-params_8h_source.html":[10,0,0,4,0,25,0,0,0,4,0],
 "adq__patch__curtailment__sharing_8cpp.html#a5431342610fa8e1214a1c0a12554511b":[8,0,0,4,0,8],
 "adq__patch__curtailment__sharing_8cpp.html#aebe691622e244dab1b6e77b49243ee9c":[8,0,0,4,0,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "balance_8h_source.html":[10,0,0,8,11,0,0,0,0,3,5],
 "base__post__process_8h_source.html":[10,0,0,8,8,0,0,0,0,4],
 "basis__status_8h_source.html":[10,0,0,8,10,0,0,0,0,0],
-"basis__status__impl_8h_source.html":[10,0,0,8,10,1]
+"basis__status__impl_8h_source.html":[10,0,0,8,10,1],
+"benchmark_8py.html#a5437021f07f9d861acba11ee77503b7d":[8,0,3,2]
 };

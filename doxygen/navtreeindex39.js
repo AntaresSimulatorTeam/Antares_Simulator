@@ -1,7 +1,5 @@
 var NAVTREEINDEX39 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#a04ad5e4066b38c1b2c80ed10d6a8325d":[9,0,0,12,6,5,16,5],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#a6c61d2d66aadcd9af843930955991f0f":[9,0,0,12,6,5,16,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#a8c8731d903a46c3f7167745f92b71ad7":[9,0,0,12,6,5,16,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#adc3a2a4924ad5f146ea08c238e25d9e6":[9,0,0,12,6,5,16,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#ae3490cf14380addc26f51773888d0b49":[9,0,0,12,6,5,16,4],
@@ -249,5 +247,7 @@ var NAVTREEINDEX39 =
 "structCAPACITY__RESERVATION.html":[9,0,56],
 "structCAPACITY__RESERVATION.html#a17e1e6f450f2e3876bbe0f76c2d35761":[9,0,56,0],
 "structCAPACITY__RESERVATION.html#a2acd40524bee36f35d86febf271c8c6d":[9,0,56,10],
-"structCAPACITY__RESERVATION.html#a2d8975d98da04e2c8982d0625a43c25b":[9,0,56,11]
+"structCAPACITY__RESERVATION.html#a2d8975d98da04e2c8982d0625a43c25b":[9,0,56,11],
+"structCAPACITY__RESERVATION.html#a4268a5b2e75c3e16aa7c1c7245d1a123":[9,0,56,12],
+"structCAPACITY__RESERVATION.html#a4a3114b855c75a098f519276215957f1":[9,0,56,6]
 };

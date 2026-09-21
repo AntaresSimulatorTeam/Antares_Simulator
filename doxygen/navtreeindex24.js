@@ -1,7 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"classOneProblemWithoutReservesOneArea.html#aeebe7aec4f851417898477d6ae6edbd6":[9,0,231,1],
-"classOneProblemWithoutReservesOneAreaWithLogger.html":[9,0,232],
 "classOptDailyStringGenerator.html":[9,0,236],
 "classOptDailyStringGenerator.html#a458792094d2d8b424b3d604e682d604f":[9,0,236,1],
 "classOptDailyStringGenerator.html#a9e2a4f732f54605881e52aed4bd4630f":[9,0,236,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX24 =
 "classScenarioBuilderParser.html#a8bfbebd8593408c72745564fb50ef572":[9,0,299,7],
 "classScenarioBuilderParser.html#ab9a1a564b5e529454c5aaa55b7d92971":[9,0,299,9],
 "classScenarioBuilderParser.html#ac314e1b0490e3ce3c9a6f8fb776a89d8":[9,0,299,5],
-"classScenarioBuilderParser.html#af434135d1857c78184f0bf2805e90972":[9,0,299,16]
+"classScenarioBuilderParser.html#af434135d1857c78184f0bf2805e90972":[9,0,299,16],
+"classScenarioBuilderParser.html#af6158871fb6a580a2f8279d8358af1d8":[9,0,299,10],
+"classScenarioBuilderParser.html#af8b97a05d130aca0bcab71f86af43bb2":[9,0,299,14]
 };

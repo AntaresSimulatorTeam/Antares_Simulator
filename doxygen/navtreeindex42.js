@@ -1,7 +1,5 @@
 var NAVTREEINDEX42 =
 {
-"structLinkVariable.html#aacafd5f774750e8957c2735fa251f8e9":[9,0,182,2],
-"structLinkVariable.html#ae91154f3a2da66102c38da390c69d06e":[9,0,182,4],
 "structLocalFixture.html":[9,0,183],
 "structMaxHydroPowerData.html":[9,0,188],
 "structMaxHydroPowerData.html#a3bc628ff211aeed2cccc799a6848645a":[9,0,188,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX42 =
 "structPRODUCTION__THERMIQUE__OPTIMALE.html":[9,0,269],
 "structPRODUCTION__THERMIQUE__OPTIMALE.html#a037b05fe77c7807cc029ed7e3bfb78f3":[9,0,269,5],
 "structPRODUCTION__THERMIQUE__OPTIMALE.html#a29f652fcbb30d5f9161ba978f146111d":[9,0,269,2],
-"structPRODUCTION__THERMIQUE__OPTIMALE.html#a4d608cd7ee6333ee686343aef5a69d9f":[9,0,269,1]
+"structPRODUCTION__THERMIQUE__OPTIMALE.html#a4d608cd7ee6333ee686343aef5a69d9f":[9,0,269,1],
+"structPRODUCTION__THERMIQUE__OPTIMALE.html#a50f511fdfd022e5bd517840c243d6590":[9,0,269,0],
+"structPRODUCTION__THERMIQUE__OPTIMALE.html#a57b5d2a641a6a01c098d3a08935540ba":[9,0,269,3]
 };

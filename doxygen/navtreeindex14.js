@@ -1,7 +1,5 @@
 var NAVTREEINDEX14 =
 {
-"classAntares_1_1Solver_1_1Application.html#a439ee57fe487abe8b53730b6dfe45e8b":[9,0,0,12,25,3],
-"classAntares_1_1Solver_1_1Application.html#a50e97730ee6d7a2907fa20fc497f180a":[9,0,0,12,25,1],
 "classAntares_1_1Solver_1_1Application.html#a52bc7a8b6218e4a6f8da5f858dfa2717":[9,0,0,12,25,6],
 "classAntares_1_1Solver_1_1Application.html#a717ddcf81267379bce00aecf165dd263":[9,0,0,12,25,7],
 "classAntares_1_1Solver_1_1Application.html#a99c7b5b2841bce24943af7050e0e265c":[9,0,0,12,25,5],
@@ -249,5 +247,7 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#a63ef03668fe64dfa59d9bf2ab1fb2d4b":[9,0,0,12,5,33,3],
 "classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#a96ad7644213ae6e061f6ac1060128f80":[9,0,0,12,5,33,2],
 "classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#a9a22ad906029e28ed985d02525b7d2c5":[9,0,0,12,5,33,0],
-"classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#acede9ee07eb1b94787ae67129696e6e9":[9,0,0,12,5,33,4]
+"classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#acede9ee07eb1b94787ae67129696e6e9":[9,0,0,12,5,33,4],
+"classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#acff4e5a5f12327bdf0aac5feb5b4b669":[9,0,0,12,5,33,1],
+"classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#ad3044341a566ea98f66b67d2f604cfce":[9,0,0,12,5,33,5]
 };

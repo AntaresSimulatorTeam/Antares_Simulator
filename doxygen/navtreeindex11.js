@@ -1,7 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"classAntares_1_1LinearProblem_1_1Api_1_1TwoVarsTwoConstraintsFiller.html#ac3aad66f4c10cbc412768af26cbaa1d7":[9,0,0,8,0,19,3],
-"classAntares_1_1LinearProblem_1_1Api_1_1TwoVarsTwoConstraintsFiller.html#af6e053dc00ba36e049aaab5531a8e662":[9,0,0,8,0,19,2],
 "classAntares_1_1LinearProblem_1_1Api_1_1VarFillerContext.html":[9,0,0,8,0,16],
 "classAntares_1_1LinearProblem_1_1Api_1_1VarFillerContext.html#a511e7e0e56bd71dafecbab95b480eda5":[9,0,0,8,0,16,4],
 "classAntares_1_1LinearProblem_1_1Api_1_1VarFillerContext.html#a6732061bb29661e0a3ae47e3fd317858":[9,0,0,8,0,16,5],
@@ -249,5 +247,7 @@ var NAVTREEINDEX11 =
 "classAntares_1_1Logs_1_1LogCallback.html#a6ebb926392744039dbeb17d86631e059":[9,0,0,9,3,9],
 "classAntares_1_1Logs_1_1LogCallback.html#a954abfec3b7da3a362e6aa01089fc50f":[9,0,0,9,3,5],
 "classAntares_1_1Logs_1_1LogCallback.html#a9bd1c376a8fc0ff2148a7e254be73d49":[9,0,0,9,3,4],
-"classAntares_1_1Logs_1_1LogCallback.html#a9cd325f5d8cb8f4343e6ffbd0511d930":[9,0,0,9,3,6]
+"classAntares_1_1Logs_1_1LogCallback.html#a9cd325f5d8cb8f4343e6ffbd0511d930":[9,0,0,9,3,6],
+"classAntares_1_1Logs_1_1LogCallback.html#ae36726d62d479680631210928d542c45":[9,0,0,9,3,0],
+"classAntares_1_1Logs_1_1Logger.html":[9,0,0,9,4]
 };

@@ -1,7 +1,5 @@
 var NAVTREEINDEX8 =
 {
-"classAntares_1_1Date_1_1Calendar.html#aa85f43354b75aa5e5d9c48ca5c7d9e6a":[9,0,0,4,2,33],
-"classAntares_1_1Date_1_1Calendar.html#abb29155df7340e4b1e3e795bc444c434":[9,0,0,4,2,26],
 "classAntares_1_1Date_1_1Calendar.html#ac53070c5fb6e499cc5a02740c3596fd3":[9,0,0,4,2,28],
 "classAntares_1_1Date_1_1Calendar.html#ac5a5114efa84c965f7f1004dc918d639":[9,0,0,4,2,5],
 "classAntares_1_1Date_1_1Calendar.html#ad004f6790e57f71e0c1453859cc45c1d":[9,0,0,4,2,35],
@@ -249,5 +247,7 @@ var NAVTREEINDEX8 =
 "classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html#ac4881dd681991661048aca1ccbc34c7a":[9,0,0,6,1,2,10],
 "classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html#ac9ab99d5e0a554ff4e726250e48390e9":[9,0,0,6,1,2,13],
 "classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html#ada3e95c4ad5b6cdb4aa6ec969529fd40":[9,0,0,6,1,2,3],
-"classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html#ae848541466cf97a8efe3183385549897":[9,0,0,6,1,2,16]
+"classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html#ae848541466cf97a8efe3183385549897":[9,0,0,6,1,2,16],
+"classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html#afb677fdc3486399f705f92397d5be64d":[9,0,0,6,1,2,18],
+"classAntares_1_1Expressions_1_1Visitors_1_1CompareVisitor.html":[9,0,0,6,1,3]
 };
