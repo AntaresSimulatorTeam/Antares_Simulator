@@ -1282,6 +1282,7 @@ var annotated_dup =
     [ "RESERVE_PARTICIPATION_THERMAL", "structRESERVE__PARTICIPATION__THERMAL.html", "structRESERVE__PARTICIPATION__THERMAL" ],
     [ "RESERVE_PARTICIPATION_WITH_RESERVE_NAME", "structRESERVE__PARTICIPATION__WITH__RESERVE__NAME.html", "structRESERVE__PARTICIPATION__WITH__RESERVE__NAME" ],
     [ "ReserveData", "structReserveData.html", "structReserveData" ],
+    [ "ReserveIdentity", "structReserveIdentity.html", "structReserveIdentity" ],
     [ "ReserveParticipationGroup", "classReserveParticipationGroup.html", "classReserveParticipationGroup" ],
     [ "RESERVES", "structRESERVES.html", "structRESERVES" ],
     [ "ReserveSatisfaction", "classReserveSatisfaction.html", "classReserveSatisfaction" ],

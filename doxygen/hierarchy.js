@@ -1182,6 +1182,7 @@ var hierarchy =
     [ "RESERVE_PARTICIPATION_WITH_RESERVE_NAME< T >", "structRESERVE__PARTICIPATION__WITH__RESERVE__NAME.html", null ],
     [ "Antares::Solver::Variable::State::ReserveData", "structAntares_1_1Solver_1_1Variable_1_1State_1_1ReserveData.html", null ],
     [ "ReserveData", "structReserveData.html", null ],
+    [ "ReserveIdentity", "structReserveIdentity.html", null ],
     [ "Antares::Solver::Simulation::ReserveIndexMaps", "structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps.html", null ],
     [ "Antares::Data::ReserveParticipationBase", "structAntares_1_1Data_1_1ReserveParticipationBase.html", [
       [ "Antares::Data::StorageClusterReserveParticipation", "structAntares_1_1Data_1_1StorageClusterReserveParticipation.html", null ],
