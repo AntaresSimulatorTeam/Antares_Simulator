@@ -90,6 +90,12 @@ inline std::string BuildLinkComponentId(const std::string& origin, const std::st
 // Structured legacy descriptions, parallel to the names vector.
 using LegacyInfoVec = std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>;
 
+struct ReserveIdentity
+{
+    std::string name;
+    std::string id;
+};
+
 class Namer
 {
 public:
@@ -188,48 +194,35 @@ public:
     void DispatchableProduction(unsigned varIndex, const std::string& clusterName) const;
     void ThermalClusterReserveParticipation(unsigned varIndex,
                                             const std::string& clusterName,
-                                            const std::string& reserveName,
-                                            const std::string& reserveId) const;
+                                            const ReserveIdentity& reserve) const;
     void ParticipationOfSTStorageReleaseToReserve(unsigned varIndex,
                                                   const std::string& clusterName,
-                                                  const std::string& reserveName,
-                                                  const std::string& reserveId) const;
+                                                  const ReserveIdentity& reserve) const;
     void ParticipationOfSTStorageStoreToReserve(unsigned varIndex,
                                                 const std::string& clusterName,
-                                                const std::string& reserveName,
-                                                const std::string& reserveId) const;
+                                                const ReserveIdentity& reserve) const;
     void ParticipationOfSTStorageToReserve(ReserveType type,
                                            unsigned varIndex,
                                            const std::string& clusterName,
-                                           const std::string& reserveName,
-                                           const std::string& reserveId) const;
+                                           const ReserveIdentity& reserve) const;
     void ParticipationOfHydroReleaseToReserve(unsigned varIndex,
                                               const std::string& clusterName,
-                                              const std::string& reserveName,
-                                              const std::string& reserveId) const;
+                                              const ReserveIdentity& reserve) const;
     void ParticipationOfHydroStoreToReserve(unsigned varIndex,
                                             const std::string& clusterName,
-                                            const std::string& reserveName,
-                                            const std::string& reserveId) const;
+                                            const ReserveIdentity& reserve) const;
     void ParticipationOfHydroToReserve(ReserveType type,
                                        unsigned varIndex,
                                        const std::string& clusterName,
-                                       const std::string& reserveName,
-                                       const std::string& reserveId) const;
+                                       const ReserveIdentity& reserve) const;
     void ParticipationOfRunningUnitsToReserve(unsigned varIndex,
                                               const std::string& clusterName,
-                                              const std::string& reserveName,
-                                              const std::string& reserveId) const;
+                                              const ReserveIdentity& reserve) const;
     void ParticipationOfOffUnitsToReserve(unsigned varIndex,
                                           const std::string& clusterName,
-                                          const std::string& reserveName,
-                                          const std::string& reserveId) const;
-    void InternalUnsatisfiedReserve(unsigned varIndex,
-                                    const std::string& reserveName,
-                                    const std::string& reserveId) const;
-    void InternalExcessReserve(unsigned varIndex,
-                               const std::string& reserveName,
-                               const std::string& reserveId) const;
+                                          const ReserveIdentity& reserve) const;
+    void InternalUnsatisfiedReserve(unsigned varIndex, const ReserveIdentity& reserve) const;
+    void InternalExcessReserve(unsigned varIndex, const ReserveIdentity& reserve) const;
     void NODU(unsigned varIndex, const std::string& clusterName) const;
     void NumberStoppingDispatchableUnits(unsigned varIndex, const std::string& clusterName) const;
     void NumberStartingDispatchableUnits(unsigned varIndex, const std::string& clusterName) const;
