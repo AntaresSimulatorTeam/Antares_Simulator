@@ -73,7 +73,10 @@ simulation-table-stages = optim-nb-2, adq-patch
 ```
 If no CLI flag is given and no `output/simulation-table-stages` is provided in generaldata.ini, a simulation table gets written to disk for every stage. Remember that simulation tables are not written by default, use `--output all|simulation-tables` to enable them.
 
-#### Behavior
+`last` is shorthand for the final stage the run actually reaches — `adq-patch` when the
+adequacy patch is enabled, `peak-shaving` otherwise — and produces a file named for that stage, not
+one named `last`. The value must not be left blank: `simulation-table-stages =` with nothing after
+it stops the simulation rather than being read as `all` (which is what omitting the key means).
 
 - Disabled binding constraints no longer load their time-series.
 - Disabled short-term storage clusters skip their time-series loading.
