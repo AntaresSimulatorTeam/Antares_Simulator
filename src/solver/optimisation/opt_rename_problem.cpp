@@ -383,8 +383,7 @@ void VariableNamer::InternalUnsatisfiedReserve(unsigned varIndex,
                                         "unsupplied_energy_reserve_" + reserve.id);
 }
 
-void VariableNamer::InternalExcessReserve(unsigned varIndex,
-                                          const ReserveIdentity& reserve) const
+void VariableNamer::InternalExcessReserve(unsigned varIndex, const ReserveIdentity& reserve) const
 {
     SetThermalClusterReserveElementName(varIndex,
                                         "InternalExcessReserve",
