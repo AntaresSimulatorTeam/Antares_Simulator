@@ -172,9 +172,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ae14b946e4c7a203bae3f875e1c83b86b"><td class="memItemLeft" align="right" valign="top">static std::set&lt; Stage &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#ae14b946e4c7a203bae3f875e1c83b86b">parseStageSelection</a> (const std::string &amp;input, const std::string &amp;source=&quot;--simulation-table-stages&quot;)</td></tr>
-<tr class="memdesc:ae14b946e4c7a203bae3f875e1c83b86b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a user-supplied stage list into a selection set.  <a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#ae14b946e4c7a203bae3f875e1c83b86b">More...</a><br /></td></tr>
-<tr class="separator:ae14b946e4c7a203bae3f875e1c83b86b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09f2fdfa4715ee96cb5cee895170adc5"><td class="memItemLeft" align="right" valign="top">static std::set&lt; Stage &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#a09f2fdfa4715ee96cb5cee895170adc5">parseStageSelection</a> (const std::string &amp;input, const std::string &amp;source=&quot;--simulation-table-stages&quot;, Stage lastStage=Stage::adequacyPatch)</td></tr>
+<tr class="memdesc:a09f2fdfa4715ee96cb5cee895170adc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a user-supplied stage list into a selection set.  <a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html#a09f2fdfa4715ee96cb5cee895170adc5">More...</a><br /></td></tr>
+<tr class="separator:a09f2fdfa4715ee96cb5cee895170adc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -241,8 +241,8 @@ const std::shared_ptr&lt; const <a class="el" href="classAntares_1_1Optimization
 
 </div>
 </div>
-<a id="ae14b946e4c7a203bae3f875e1c83b86b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae14b946e4c7a203bae3f875e1c83b86b">&#9670;&nbsp;</a></span>parseStageSelection()</h2>
+<a id="a09f2fdfa4715ee96cb5cee895170adc5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09f2fdfa4715ee96cb5cee895170adc5">&#9670;&nbsp;</a></span>parseStageSelection()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -260,7 +260,13 @@ const std::shared_ptr&lt; const <a class="el" href="classAntares_1_1Optimization
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>source</em> = <code>&quot;--simulation-table-stages&quot;</code>&#160;</td>
+          <td class="paramname"><em>source</em> = <code>&quot;--simulation-table-stages&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Stage&#160;</td>
+          <td class="paramname"><em>lastStage</em> = <code>Stage::adequacyPatch</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -278,15 +284,16 @@ const std::shared_ptr&lt; const <a class="el" href="classAntares_1_1Optimization
 <p>Parse a user-supplied stage list into a selection set. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">input</td><td>comma-separated stage names, or "all". Empty, or "all" anywhere in the list, selects every stage. </td></tr>
+    <tr><td class="paramname">input</td><td>comma-separated stage names, "all" and/or "last". "all" anywhere in the list selects every stage; "last" adds <code>lastStage</code>. </td></tr>
     <tr><td class="paramname">source</td><td>how the error message names the origin of the list (command line or generaldata.ini). </td></tr>
+    <tr><td class="paramname">lastStage</td><td>the stage the "last" keyword stands for &ndash; the final stage the caller's run actually reaches. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the selected stages; an empty set means "every stage". </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname"><a class="el" href="classAntares_1_1Error_1_1InvalidArgumentError.html">Antares::Error::InvalidArgumentError</a>,listing</td><td>the valid names, on an unknown name &ndash; including one after an "all", as the whole list is validated. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classAntares_1_1Error_1_1InvalidArgumentError.html">Antares::Error::InvalidArgumentError</a>,listing</td><td>the valid names, on an unknown name &ndash; including one after an "all", as the whole list is validated &ndash; or on a list with no usable name at all. </td></tr>
   </table>
   </dd>
 </dl>
