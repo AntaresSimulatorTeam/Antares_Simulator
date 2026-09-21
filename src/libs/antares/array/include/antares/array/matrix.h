@@ -262,7 +262,6 @@ public:
     template<class U>
     void multiplyAllEntriesBy(const U& c);
 
-
     /*!
     ** \brief Compute the average of all timeseries (derated mode)
     */
