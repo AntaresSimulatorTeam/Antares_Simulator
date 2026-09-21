@@ -644,7 +644,7 @@ void LegacyExtraOutputEmitter::reserveOutputs(uint32_t pays, int pdt)
     for (const auto& reserve: areaReserves)
     {
         const std::string reserveParticipationOutput = fmt::format("reserve_participation_cost_{}",
-                                                           reserve.reserveID);
+                                                                   reserve.reserveID);
 
         emitReserveImbalance(pdt, node, reserve);
 
