@@ -1,13 +1,5 @@
 var NAVTREEINDEX42 =
 {
-"structLocalFixture.html":[9,0,183],
-"structMaxHydroPowerData.html":[9,0,188],
-"structMaxHydroPowerData.html#a3bc628ff211aeed2cccc799a6848645a":[9,0,188,2],
-"structMaxHydroPowerData.html#a57a9210a5c1484c39d03612d025296a6":[9,0,188,1],
-"structMaxHydroPowerData.html#a9937e11e27e4f9d41b1052320f8008cc":[9,0,188,0],
-"structMaxPumpingData.html":[9,0,190],
-"structMaxPumpingData.html#aa377de6e25e2ccfee9400d0f233df7a1":[9,0,190,0],
-"structMaxPumpingData.html#aecf11efd0d07851c4e7b7422855b36b0":[9,0,190,1],
 "structMaxUnsupEnergyData.html":[9,0,192],
 "structMaxUnsupEnergyData.html#affa35adf6cf7fd9dab4ec5156edae35e":[9,0,192,0],
 "structMinDownTimeData.html":[9,0,195],
@@ -249,5 +241,13 @@ var NAVTREEINDEX42 =
 "structPRODUCTION__THERMIQUE__OPTIMALE.html#a29f652fcbb30d5f9161ba978f146111d":[9,0,269,2],
 "structPRODUCTION__THERMIQUE__OPTIMALE.html#a4d608cd7ee6333ee686343aef5a69d9f":[9,0,269,1],
 "structPRODUCTION__THERMIQUE__OPTIMALE.html#a50f511fdfd022e5bd517840c243d6590":[9,0,269,0],
-"structPRODUCTION__THERMIQUE__OPTIMALE.html#a57b5d2a641a6a01c098d3a08935540ba":[9,0,269,3]
+"structPRODUCTION__THERMIQUE__OPTIMALE.html#a57b5d2a641a6a01c098d3a08935540ba":[9,0,269,3],
+"structPRODUCTION__THERMIQUE__OPTIMALE.html#a7189feac1a3d236d258c255b940b5b3c":[9,0,269,4],
+"structPRODUCTION__THERMIQUE__OPTIMALE.html#a7aa5642fe7d707379100694db564fd01":[9,0,269,6],
+"structPRODUCTION__THERMIQUE__OPTIMALE.html#ae8203031f9963b1ca409daeaca22f96d":[9,0,269,7],
+"structPROPERTIES.html":[9,0,271],
+"structPROPERTIES.html#a1591346de9b9b8d36070fef5eb44bcab":[9,0,271,13],
+"structPROPERTIES.html#a4a9057b6782ed4878635d673ed023b76":[9,0,271,9],
+"structPROPERTIES.html#a4df0959161f68874087f9ce3ffa322f7":[9,0,271,3],
+"structPROPERTIES.html#a6891fe20cb2ec77297a69ea28900c5ab":[9,0,271,0]
 };

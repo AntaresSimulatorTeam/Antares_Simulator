@@ -1,13 +1,5 @@
 var NAVTREEINDEX15 =
 {
-"classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html":[9,0,0,12,5,35],
-"classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html#a0094da4202ac66454f3edfe7d10639b0":[9,0,0,12,5,35,4],
-"classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html#a212c999ea53dd23f4e478991eefb4272":[9,0,0,12,5,35,2],
-"classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html#a683d6520f0fe8bcce849f86dceb6b116":[9,0,0,12,5,35,0],
-"classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html#a78d05f3f1f221f1c70e47149ae191b90":[9,0,0,12,5,35,1],
-"classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html#ade62e34848aa8f0abf30f95e0095bcfa":[9,0,0,12,5,35,3],
-"classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html":[9,0,0,12,5,14],
-"classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html#a0181a4f599de46863ed8a85739dbe876":[9,0,0,12,5,14,2],
 "classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html#a16ecc83d30382641689de3ca9ce35e14":[9,0,0,12,5,14,3],
 "classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html#a19b88e8ecef5634ff071cd9d0ac266d1":[9,0,0,12,5,14,0],
 "classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html#a41f0a6f23409346c06cae0c0c054f0b3":[9,0,0,12,5,14,4],
@@ -249,5 +241,13 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html":[9,0,0,12,6,17],
 "classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html#a46e13e695fc16926367850bb069e5dfc":[9,0,0,12,6,17,0],
 "classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html#a596a0805c0a29cb5659116f0535b50ed":[9,0,0,12,6,17,2],
-"classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html#a82345ff90d6a20342117f684b3b8aa9d":[9,0,0,12,6,17,1]
+"classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html#a82345ff90d6a20342117f684b3b8aa9d":[9,0,0,12,6,17,1],
+"classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationSingleYear.html":[9,0,0,12,6,16],
+"classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationSingleYear.html#a0981a5e2be246ff251d02e68931a9a40":[9,0,0,12,6,16,1],
+"classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationSingleYear.html#a51757f6435383df1f7c7ff648dd7e78d":[9,0,0,12,6,16,4],
+"classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationSingleYear.html#a9295347e949407c7f430c584fc807a92":[9,0,0,12,6,16,2],
+"classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationSingleYear.html#ac06a74074231264c40cd0e366fdd5f7b":[9,0,0,12,6,16,3],
+"classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationSingleYear.html#ae27802c0f7cbddf8f9e2a457de913c34":[9,0,0,12,6,16,0],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html":[9,0,0,12,6,5,21],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost.html#a0c898d2e12a9396bc829d71cda6df702":[9,0,0,12,6,5,21,13]
 };

@@ -1,13 +1,5 @@
 var NAVTREEINDEX39 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#a8c8731d903a46c3f7167745f92b71ad7":[9,0,0,12,6,5,16,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#adc3a2a4924ad5f146ea08c238e25d9e6":[9,0,0,12,6,5,16,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#ae3490cf14380addc26f51773888d0b49":[9,0,0,12,6,5,16,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#af80b4409d947fcae2fdd48f15ed194b9":[9,0,0,12,6,5,16,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html":[9,0,0,12,6,5,46],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html#a25b284596ff490dd490e43c722699a9e":[9,0,0,12,6,5,46,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html#a84d6c68a0d100e854ab07e6651f01296":[9,0,0,12,6,5,46,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html#a87eb157830a2a2028d3bcf9199d73bd5":[9,0,0,12,6,5,46,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html#af6278104b4fb66ab8c0ec9d3bc9e1d84":[9,0,0,12,6,5,46,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValueTraits.html":[9,0,0,12,6,5,97],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValueTraits.html#a3f64088e6de7cc269ab463ff687846ef":[9,0,0,12,6,5,97,0],
@@ -249,5 +241,13 @@ var NAVTREEINDEX39 =
 "structCAPACITY__RESERVATION.html#a2acd40524bee36f35d86febf271c8c6d":[9,0,56,10],
 "structCAPACITY__RESERVATION.html#a2d8975d98da04e2c8982d0625a43c25b":[9,0,56,11],
 "structCAPACITY__RESERVATION.html#a4268a5b2e75c3e16aa7c1c7245d1a123":[9,0,56,12],
-"structCAPACITY__RESERVATION.html#a4a3114b855c75a098f519276215957f1":[9,0,56,6]
+"structCAPACITY__RESERVATION.html#a4a3114b855c75a098f519276215957f1":[9,0,56,6],
+"structCAPACITY__RESERVATION.html#a6393ae822e8163501a350e46bdc6a3bc":[9,0,56,13],
+"structCAPACITY__RESERVATION.html#a795b9e4594ed209991413b293d36031c":[9,0,56,7],
+"structCAPACITY__RESERVATION.html#a87cf2bea02861a82b9497c7b2ada5bf5":[9,0,56,3],
+"structCAPACITY__RESERVATION.html#a8dabc5b986b688003ac69d29c1a4a6a9":[9,0,56,5],
+"structCAPACITY__RESERVATION.html#ab45dc1b2a7ec420e249765a319b03376":[9,0,56,2],
+"structCAPACITY__RESERVATION.html#ab9a09257f84e93b55a3816d77d8919bb":[9,0,56,4],
+"structCAPACITY__RESERVATION.html#aba8ec1d668654bcbd311639efb87c9b5":[9,0,56,8],
+"structCAPACITY__RESERVATION.html#ad5ddf7f9eb70e107d5879c14f628f7aa":[9,0,56,9]
 };

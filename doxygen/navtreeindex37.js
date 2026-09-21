@@ -1,13 +1,5 @@
 var NAVTREEINDEX37 =
 {
-"structAntares_1_1Optimization_1_1LegacySolution.html#a97d88772a95dea036be0adb2b870111a":[9,0,0,11,25,1],
-"structAntares_1_1Optimization_1_1LegacySolution.html#aa601c2195c5117848be315a6053fae44":[9,0,0,11,25,0],
-"structAntares_1_1Optimization_1_1LegacyVariableInfo.html":[9,0,0,11,30],
-"structAntares_1_1Optimization_1_1LegacyVariableInfo.html#a4ad2494aadb94b87d4c13ef02bb6453e":[9,0,0,11,30,0],
-"structAntares_1_1Optimization_1_1LegacyVariableInfo.html#ae2808fc8cf18bf3e85495fcaeb02bee3":[9,0,0,11,30,1],
-"structAntares_1_1Optimization_1_1LegacyVariableInfo.html#ae47cb152ff265ff007d6febf687b1483":[9,0,0,11,30,2],
-"structAntares_1_1Optimization_1_1MCYearAndTime.html":[9,0,0,11,20],
-"structAntares_1_1Optimization_1_1MCYearAndTime.html#aa4fbd59a9b4d362139518c774ad64a78":[9,0,0,11,20,1],
 "structAntares_1_1Optimization_1_1MCYearAndTime.html#ae2dbeb09dbdf7b87750797ae394ca7e6":[9,0,0,11,20,2],
 "structAntares_1_1Optimization_1_1MCYearAndTime.html#af523489c66678cdf6721b3c0775c1952":[9,0,0,11,20,0],
 "structAntares_1_1Optimization_1_1SingleOptimOptions.html":[9,0,0,11,0],
@@ -249,5 +241,13 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#acb325c8a2b5905eb7e17feeaedba9a12":[9,0,0,12,6,2,7,6],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy_1_1Multiple.html":[9,0,0,12,6,2,7,0],
 "structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html":[9,0,0,12,6,15],
-"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#a0866bd54ac1b61fef63100596ca5ac25":[9,0,0,12,6,15,1]
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#a0866bd54ac1b61fef63100596ca5ac25":[9,0,0,12,6,15,1],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#a09a3440e3c1e83695d5862b33ff6dee8":[9,0,0,12,6,15,13],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#a44c6612ba6a4b747f618e917be7a1af7":[9,0,0,12,6,15,5],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#a61f3ab4a0d72dba3e9bc71a8d2347b71":[9,0,0,12,6,15,8],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#a79bbe59a9bb6a9c25d713190e1b00fe9":[9,0,0,12,6,15,10],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#a9adb870a3cb9d10032b21a8b81628053":[9,0,0,12,6,15,11],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#aa3e72a2d0b8475f23aea8bec5991fa8b":[9,0,0,12,6,15,12],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#aa498bc069891dc13de9263ffd552a5f6":[9,0,0,12,6,15,6],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#aa666fd85a3bd29a811f5090b3869c86b":[9,0,0,12,6,15,2]
 };

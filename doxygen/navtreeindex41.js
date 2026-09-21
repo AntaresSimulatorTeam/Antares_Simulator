@@ -1,13 +1,5 @@
 var NAVTREEINDEX41 =
 {
-"structDONNEES__ANNUELLES.html#acdedf1d3ddb0e700fb9c86ac27fad336":[9,0,104,10],
-"structDONNEES__ANNUELLES.html#af9a33e07de5b24237150705d3ca101d4":[9,0,104,1],
-"structDONNEES__ANNUELLES.html#afa8601dbed579161a7c57c2d23b16af9":[9,0,104,13],
-"structDONNEES__MENSUELLES__ETENDUES.html":[9,0,105],
-"structDONNEES__MENSUELLES__ETENDUES.html#a015a263c8551f028381b8dc0fb84d41e":[9,0,105,6],
-"structDONNEES__MENSUELLES__ETENDUES.html#a08b98a3beb7497d3616f69f6d42b28a0":[9,0,105,3],
-"structDONNEES__MENSUELLES__ETENDUES.html#a269f3f4a3e09218b52b2d1aba9b7baaa":[9,0,105,19],
-"structDONNEES__MENSUELLES__ETENDUES.html#a34195b37a14cf135f511eeba59ee49c3":[9,0,105,2],
 "structDONNEES__MENSUELLES__ETENDUES.html#a37ac6fb3f9d376ba53e38e1bc6d1fdf2":[9,0,105,9],
 "structDONNEES__MENSUELLES__ETENDUES.html#a381a99ab1600c5bc921539e1bb538425":[9,0,105,5],
 "structDONNEES__MENSUELLES__ETENDUES.html#a54205b8089ec40b69b5f17011f73a49b":[9,0,105,7],
@@ -249,5 +241,13 @@ var NAVTREEINDEX41 =
 "structLinkVariable.html#a5d7f6e53048a351c148e66793ce1b740":[9,0,182,3],
 "structLinkVariable.html#a945661bfedc896693b452659cf77bf5f":[9,0,182,1],
 "structLinkVariable.html#aacafd5f774750e8957c2735fa251f8e9":[9,0,182,2],
-"structLinkVariable.html#ae91154f3a2da66102c38da390c69d06e":[9,0,182,4]
+"structLinkVariable.html#ae91154f3a2da66102c38da390c69d06e":[9,0,182,4],
+"structLocalFixture.html":[9,0,183],
+"structMaxHydroPowerData.html":[9,0,188],
+"structMaxHydroPowerData.html#a3bc628ff211aeed2cccc799a6848645a":[9,0,188,2],
+"structMaxHydroPowerData.html#a57a9210a5c1484c39d03612d025296a6":[9,0,188,1],
+"structMaxHydroPowerData.html#a9937e11e27e4f9d41b1052320f8008cc":[9,0,188,0],
+"structMaxPumpingData.html":[9,0,190],
+"structMaxPumpingData.html#aa377de6e25e2ccfee9400d0f233df7a1":[9,0,190,0],
+"structMaxPumpingData.html#aecf11efd0d07851c4e7b7422855b36b0":[9,0,190,1]
 };

@@ -1,13 +1,5 @@
 var NAVTREEINDEX14 =
 {
-"classAntares_1_1Solver_1_1Application.html#a52bc7a8b6218e4a6f8da5f858dfa2717":[9,0,0,12,25,6],
-"classAntares_1_1Solver_1_1Application.html#a717ddcf81267379bce00aecf165dd263":[9,0,0,12,25,7],
-"classAntares_1_1Solver_1_1Application.html#a99c7b5b2841bce24943af7050e0e265c":[9,0,0,12,25,5],
-"classAntares_1_1Solver_1_1Application.html#ac941ab441ad1379f58b0187287431a96":[9,0,0,12,25,4],
-"classAntares_1_1Solver_1_1Application.html#af9da5fd27e22389c58240eeac26bc9cb":[9,0,0,12,25,9],
-"classAntares_1_1Solver_1_1Checks_1_1LocationError.html":[9,0,0,12,0,0],
-"classAntares_1_1Solver_1_1FinalLevelValidator.html":[9,0,0,12,27],
-"classAntares_1_1Solver_1_1FinalLevelValidator.html#a76f0011fa0bb745f5df20a78ba0d8a12":[9,0,0,12,27,0],
 "classAntares_1_1Solver_1_1FinalLevelValidator.html#a7e99ccea568a24c431e0458ec2d04e91":[9,0,0,12,27,1],
 "classAntares_1_1Solver_1_1FinalLevelValidator.html#adefbe05f68272afae2d01efc5b608105":[9,0,0,12,27,2],
 "classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html":[9,0,0,12,33],
@@ -249,5 +241,13 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#a9a22ad906029e28ed985d02525b7d2c5":[9,0,0,12,5,33,0],
 "classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#acede9ee07eb1b94787ae67129696e6e9":[9,0,0,12,5,33,4],
 "classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#acff4e5a5f12327bdf0aac5feb5b4b669":[9,0,0,12,5,33,1],
-"classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#ad3044341a566ea98f66b67d2f604cfce":[9,0,0,12,5,33,5]
+"classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#ad3044341a566ea98f66b67d2f604cfce":[9,0,0,12,5,33,5],
+"classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html":[9,0,0,12,5,35],
+"classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html#a0094da4202ac66454f3edfe7d10639b0":[9,0,0,12,5,35,4],
+"classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html#a212c999ea53dd23f4e478991eefb4272":[9,0,0,12,5,35,2],
+"classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html#a683d6520f0fe8bcce849f86dceb6b116":[9,0,0,12,5,35,0],
+"classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html#a78d05f3f1f221f1c70e47149ae191b90":[9,0,0,12,5,35,1],
+"classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html#ade62e34848aa8f0abf30f95e0095bcfa":[9,0,0,12,5,35,3],
+"classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html":[9,0,0,12,5,14],
+"classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html#a0181a4f599de46863ed8a85739dbe876":[9,0,0,12,5,14,2]
 };

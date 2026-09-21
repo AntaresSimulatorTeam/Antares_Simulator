@@ -1,13 +1,5 @@
 var NAVTREEINDEX36 =
 {
-"structAntares_1_1Date_1_1DayInterval.html#a0dc9599f70b43803e74b1dca42748d03":[9,0,0,4,1,1],
-"structAntares_1_1Date_1_1DayInterval.html#a2d4af235f35e11feb8121cd64c6de06b":[9,0,0,4,1,3],
-"structAntares_1_1Date_1_1DayInterval.html#ab4108dc01e14e419434bf62dfaf98fb4":[9,0,0,4,1,0],
-"structAntares_1_1Date_1_1DayInterval.html#ad6dd27f028962beaa2f8f1ce1065f6bd":[9,0,0,4,1,2],
-"structAntares_1_1Date_1_1HourInterval.html":[9,0,0,4,0],
-"structAntares_1_1Date_1_1HourInterval.html#a53e86b3732adfe8635cab8d74fa5779d":[9,0,0,4,0,2],
-"structAntares_1_1Date_1_1HourInterval.html#a8e699af7f35137c818d5a00934f38a53":[9,0,0,4,0,1],
-"structAntares_1_1Date_1_1HourInterval.html#af683944cd6ecd18ffb9f977e8b7fb790":[9,0,0,4,0,0],
 "structAntares_1_1DebugData.html":[9,0,0,40],
 "structAntares_1_1DebugData.html#a02bc55683169d012e89e0b3f61adb3e7":[9,0,0,40,19],
 "structAntares_1_1DebugData.html#a06a88317bba1a0e30fbf6cc7dca729cb":[9,0,0,40,6],
@@ -249,5 +241,13 @@ var NAVTREEINDEX36 =
 "structAntares_1_1Optimization_1_1CmdLineOptimOptions.html#a99c849fe747b9179a0507d495f9129a9":[9,0,0,11,1,0],
 "structAntares_1_1Optimization_1_1CmdLineOptimOptions.html#aa4a5418a699ea7b073483ad18ce29d29":[9,0,0,11,1,3],
 "structAntares_1_1Optimization_1_1CmdLineOptimOptions.html#aae0af03a0f1d485656e89b9567c83880":[9,0,0,11,1,7],
-"structAntares_1_1Optimization_1_1LegacySolution.html":[9,0,0,11,25]
+"structAntares_1_1Optimization_1_1LegacySolution.html":[9,0,0,11,25],
+"structAntares_1_1Optimization_1_1LegacySolution.html#a97d88772a95dea036be0adb2b870111a":[9,0,0,11,25,1],
+"structAntares_1_1Optimization_1_1LegacySolution.html#aa601c2195c5117848be315a6053fae44":[9,0,0,11,25,0],
+"structAntares_1_1Optimization_1_1LegacyVariableInfo.html":[9,0,0,11,30],
+"structAntares_1_1Optimization_1_1LegacyVariableInfo.html#a4ad2494aadb94b87d4c13ef02bb6453e":[9,0,0,11,30,0],
+"structAntares_1_1Optimization_1_1LegacyVariableInfo.html#ae2808fc8cf18bf3e85495fcaeb02bee3":[9,0,0,11,30,1],
+"structAntares_1_1Optimization_1_1LegacyVariableInfo.html#ae47cb152ff265ff007d6febf687b1483":[9,0,0,11,30,2],
+"structAntares_1_1Optimization_1_1MCYearAndTime.html":[9,0,0,11,20],
+"structAntares_1_1Optimization_1_1MCYearAndTime.html#aa4fbd59a9b4d362139518c774ad64a78":[9,0,0,11,20,1]
 };
