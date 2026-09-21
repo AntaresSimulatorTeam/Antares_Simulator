@@ -112,6 +112,16 @@ VariabilityType VariabilityVisitor::visit(const Nodes::PortFieldSumNode* node)
         const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return = to_return | visitor.dispatch(node);
     }
+
+    if (const auto areaId = component_.areaConnectedToPort(portId))
+    {
+        const auto& areaConnection = component_.areaConnectionAtPort(portId);
+        if (areaConnection && !fieldId.empty() && areaConnection->price == fieldId)
+        {
+            to_return = to_return | VariabilityType::VARYING_IN_TIME_ONLY;
+        }
+    }
+
     return to_return;
 }
 
