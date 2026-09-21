@@ -25,6 +25,11 @@ IncompatibleSimulationModeForAdqPatch::IncompatibleSimulationModeForAdqPatch():
 {
 }
 
+IncompatiblePriceTakingOrderForHybrid::IncompatiblePriceTakingOrderForHybrid():
+    LoadingError("price-taking-order 'isLoad' is not supported in hybrid (GEMS) mode")
+{
+}
+
 } // namespace Antares::Error
 
 namespace Antares::Data::AdequacyPatch
@@ -105,31 +110,6 @@ bool CurtailmentSharing::updateFromKeyValue(const std::string& key, const std::s
     return false;
 }
 
-const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
-{
-    switch (pto)
-    {
-    case AdequacyPatch::AdqPatchPTO::isDens:
-        return "DENS";
-    case AdequacyPatch::AdqPatchPTO::isLoad:
-        return "Load";
-    default:
-        return "";
-    }
-}
-
-void CurtailmentSharing::addProperties(IniFile::Section* section) const
-{
-    section->add("price-taking-order", PriceTakingOrderToString(priceTakingOrder));
-    section->add("include-hurdle-cost-csr", includeHurdleCost);
-    section->add("check-csr-cost-function", checkCsrCostFunction);
-
-    // Thresholds
-    section->add("threshold-initiate-curtailment-sharing-rule", thresholdRun);
-    section->add("threshold-display-local-matching-rule-violations", thresholdDisplayViolations);
-    section->add("threshold-csr-variable-bounds-relaxation", thresholdVarBoundsRelaxation);
-}
-
 // ------------------------
 // Adq patch parameters
 // ------------------------
@@ -179,11 +159,13 @@ bool AdqPatchParams::updateFromKeyValue(const std::string& key, const std::strin
 
 bool AdqPatchParams::checkAdqPatchParams(const SimulationMode simulationMode,
                                          const AreaList& areas,
-                                         const bool includeHurdleCostParameters) const
+                                         const bool includeHurdleCostParameters,
+                                         const bool isHybridMode) const
 {
     checkAdqPatchSimulationModeEconomyOnly(simulationMode);
     checkAdqPatchContainsAdqPatchArea(areas);
     checkAdqPatchIncludeHurdleCost(includeHurdleCostParameters);
+    checkAdqPatchPriceTakingOrderForHybrid(isHybridMode);
 
     return true;
 }
@@ -219,6 +201,14 @@ void AdqPatchParams::checkAdqPatchIncludeHurdleCost(const bool includeHurdleCost
     if (curtailmentSharing.includeHurdleCost && !includeHurdleCostParameters)
     {
         throw Error::IncompatibleHurdleCostCSR();
+    }
+}
+
+void AdqPatchParams::checkAdqPatchPriceTakingOrderForHybrid(bool isHybridMode) const
+{
+    if (isHybridMode && curtailmentSharing.priceTakingOrder == AdqPatchPTO::isLoad)
+    {
+        throw Error::IncompatiblePriceTakingOrderForHybrid();
     }
 }
 } // namespace Antares::Data::AdequacyPatch

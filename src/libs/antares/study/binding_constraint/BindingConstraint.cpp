@@ -202,12 +202,6 @@ void BindingConstraint::offset(const ThermalCluster* cluster, int o)
     }
 }
 
-void BindingConstraint::resetToDefaultValues()
-{
-    pEnabled = true;
-    RHSTimeSeries_.reset();
-}
-
 void BindingConstraint::copyWeights(
   const Study& study,
   const BindingConstraint& rhs,

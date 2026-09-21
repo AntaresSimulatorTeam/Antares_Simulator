@@ -5,6 +5,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <filesystem>
+#include <fstream>
 #include <memory>
 #include <string>
 #include <vector>
@@ -22,6 +24,7 @@
 #include "antares/study/variable-print-info.h"
 #include "antares/writer/in_memory_writer.h"
 
+using namespace Antares::Data;
 using namespace Antares::Solver::Variable;
 
 namespace
@@ -121,8 +124,16 @@ struct DistrictDefinition
     bool output = true;
 };
 
-std::unique_ptr<Antares::Data::Study> makeStudyWithDistricts(
-  const std::vector<DistrictDefinition>& districts)
+std::filesystem::path writeTempIni(const std::string& content)
+{
+    const auto path = std::filesystem::temp_directory_path() / "antares-sets.ini-test";
+    std::ofstream(path) << content;
+    return path;
+}
+
+// Builds a minimal study with a single area ("area1") and the variable print
+// information needed to export set-of-areas reports. No district is defined yet.
+std::unique_ptr<Antares::Data::Study> makeStudyWithArea()
 {
     auto study = std::make_unique<Antares::Data::Study>();
     study->parameters.simulationDays.first = 0;
@@ -142,20 +153,6 @@ std::unique_ptr<Antares::Data::Study> makeStudyWithDistricts(
     cluster->enabled = true;
     area->thermal.list.addToCompleteList(cluster);
     area->thermal.list.buildIndexes();
-
-    for (const auto& district: districts)
-    {
-        auto set = std::make_shared<Antares::Data::Sets::SetAreasType>();
-        set->insert(area);
-
-        Antares::Data::Sets::Options options;
-        options.caption = district.caption;
-        options.output = district.output;
-        options.resultSize = 1;
-
-        study->setsOfAreas.add(district.id, set, options);
-    }
-    study->setsOfAreas.rebuildIndexes();
 
     Antares::Data::VariablePrintInfo variableInfo(Category::FileLevel::va,
                                                   Category::DataLevel::area);
@@ -181,8 +178,48 @@ std::unique_ptr<Antares::Data::Study> makeStudyWithDistricts(
     study->parameters.variablesPrintInfo.prepareForSimulation(false);
     study->parameters.variablesPrintInfo.setPrintStatus("FLOW LIN.", false);
     study->parameters.variablesPrintInfo.setPrintStatus("FLOW QUAD.", false);
-    study->parameters.variablesPrintInfo.computeMaxColumnsCountInReports(study->setsOfAreas);
 
+    return study;
+}
+
+std::unique_ptr<Antares::Data::Study> makeStudyWithDistricts(
+  const std::vector<DistrictDefinition>& districts)
+{
+    auto study = makeStudyWithArea();
+    Area* area = Antares::Data::AreaListLFind(&study->areas, "area1");
+
+    for (const auto& district: districts)
+    {
+        auto set = std::make_shared<Antares::Data::Sets::SetAreasType>();
+        set->insert(area);
+
+        Antares::Data::Sets::Options options;
+        options.caption = district.caption;
+        options.output = district.output;
+        options.resultSize = 1;
+
+        study->setsOfAreas.add(district.id, set, options);
+    }
+    study->setsOfAreas.rebuildIndexes();
+    study->parameters.variablesPrintInfo.computeMaxColumnsCountInReports(study->setsOfAreas);
+    return study;
+}
+
+// Builds a study whose districts are read from a sets.ini file, including the
+// optional filter-synthesis / filter-year-by-year keys.
+std::unique_ptr<Antares::Data::Study> makeStudyWithDistrictsFromIni(const std::string& iniContent)
+{
+    auto study = makeStudyWithArea();
+    const auto path = writeTempIni(iniContent);
+    if (!study->setsOfAreas.loadFromFile(path))
+    {
+        std::filesystem::remove(path);
+        BOOST_FAIL("Impossible to load the sets of areas from " + path.string());
+    }
+    Antares::Data::SetHandlerAreas handler(study->areas);
+    study->setsOfAreas.rebuildAllFromRules(handler);
+    std::filesystem::remove(path);
+    study->parameters.variablesPrintInfo.computeMaxColumnsCountInReports(study->setsOfAreas);
     return study;
 }
 
@@ -285,6 +322,129 @@ BOOST_AUTO_TEST_CASE(skips_disabled_district_and_exports_enabled_one)
     BOOST_REQUIRE(fileIt != files.end());
     BOOST_CHECK_NE(fileIt->second.find("\tGROUP1\tGROUP1\tGROUP1\tGROUP1"), std::string::npos);
     BOOST_CHECK_NE(fileIt->second.find("\tEXP\tstd\tmin\tmax"), std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(loader_parses_filters_per_district)
+{
+    auto study = makeStudyWithDistrictsFromIni("[district-1]\n"
+                                               "+ = area1\n"
+                                               "output = true\n"
+                                               "filter-synthesis = annual\n"
+                                               "filter-year-by-year = hourly, daily, bogus\n"
+                                               "\n"
+                                               "[district-2]\n"
+                                               "+ = area1\n"
+                                               "output = true\n"
+                                               "filter-synthesis = none\n"
+                                               "filter-year-by-year = weekly, monthly\n");
+
+    // unknown token ignored
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", Sets::ReportType::yearByYear),
+                      filterHourly | filterDaily);
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", Sets::ReportType::synthesis),
+                      filterAnnual);
+    // none => empty filter (no granularity exported)
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-2", Sets::ReportType::synthesis),
+                      0);
+    // valid INI value is parsed into the corresponding mask
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-2", Sets::ReportType::yearByYear),
+                      filterWeekly | filterMonthly);
+    // district not defined in the sets.ini => no restriction
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("no-such-district",
+                                                      Sets::ReportType::synthesis),
+                      filterAll);
+}
+
+BOOST_AUTO_TEST_CASE(districts_without_filter_keys_keep_defaults)
+{
+    auto study = makeStudyWithDistrictsFromIni("[district-1]\n"
+                                               "+ = area1\n"
+                                               "output = true\n");
+
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", Sets::ReportType::synthesis),
+                      filterAll);
+    BOOST_CHECK_EQUAL(study->setsOfAreas.outputFilter("district-1", Sets::ReportType::yearByYear),
+                      filterAll);
+}
+
+BOOST_AUTO_TEST_CASE(mc_all_precision_filter_only_hourly)
+{
+    auto study = makeStudyWithDistrictsFromIni("[district-1]\n"
+                                               "+ = area1\n"
+                                               "output = true\n"
+                                               "filter-synthesis = hourly\n"
+                                               "\n"
+                                               "[district-2]\n"
+                                               "+ = area1\n"
+                                               "output = true\n");
+
+    Benchmarking::DurationCollector durationCollector;
+    Antares::Solver::InMemoryWriter writer(durationCollector);
+    TestVariableTree variables;
+
+    variables.initializeFromStudy(*study);
+    feedDynamicAggregation(variables, *study);
+    variables.exportSurveyResults(true, "out", 0, writer);
+
+    const auto& files = writer.getMap();
+    // Filtered district: only the hourly file is exported
+    BOOST_REQUIRE(files.find("out/areas/@ district-1/values-hourly.txt") != files.end());
+    BOOST_CHECK(files.find("out/areas/@ district-1/values-daily.txt") == files.end());
+    BOOST_CHECK(files.find("out/areas/@ district-1/values-weekly.txt") == files.end());
+    BOOST_CHECK(files.find("out/areas/@ district-1/values-monthly.txt") == files.end());
+    BOOST_CHECK(files.find("out/areas/@ district-1/values-annual.txt") == files.end());
+    // Unfiltered district: all precisions are still exported
+    for (const char* precision: {"hourly", "daily", "weekly", "monthly", "annual"})
+    {
+        const std::string path = std::string("out/areas/@ district-2/values-") + precision + ".txt";
+        BOOST_CHECK_MESSAGE(files.find(path) != files.end(), path + " is missing");
+    }
+}
+
+BOOST_AUTO_TEST_CASE(mc_all_precision_none_exports_nothing)
+{
+    auto study = makeStudyWithDistrictsFromIni("[district-1]\n"
+                                               "+ = area1\n"
+                                               "output = true\n"
+                                               "filter-synthesis = none\n");
+
+    Benchmarking::DurationCollector durationCollector;
+    Antares::Solver::InMemoryWriter writer(durationCollector);
+    TestVariableTree variables;
+
+    variables.initializeFromStudy(*study);
+    feedDynamicAggregation(variables, *study);
+    variables.exportSurveyResults(true, "out", 0, writer);
+
+    const auto& files = writer.getMap();
+    for (const char* precision: {"hourly", "daily", "weekly", "monthly", "annual"})
+    {
+        const std::string path = std::string("out/areas/@ district-1/values-") + precision + ".txt";
+        BOOST_CHECK_MESSAGE(files.find(path) == files.end(), path + " should not exist");
+    }
+}
+
+BOOST_AUTO_TEST_CASE(mc_ind_precision_filter_only_annual)
+{
+    auto study = makeStudyWithDistrictsFromIni("[district-1]\n"
+                                               "+ = area1\n"
+                                               "output = true\n"
+                                               "filter-year-by-year = annual\n");
+
+    Benchmarking::DurationCollector durationCollector;
+    Antares::Solver::InMemoryWriter writer(durationCollector);
+    TestVariableTree variables;
+
+    variables.initializeFromStudy(*study);
+    feedDynamicAggregation(variables, *study);
+    variables.exportSurveyResults(false, "out", 0, writer);
+
+    const auto& files = writer.getMap();
+    BOOST_REQUIRE(files.find("out/areas/@ district-1/values-annual.txt") != files.end());
+    BOOST_CHECK(files.find("out/areas/@ district-1/values-hourly.txt") == files.end());
+    BOOST_CHECK(files.find("out/areas/@ district-1/values-daily.txt") == files.end());
+    BOOST_CHECK(files.find("out/areas/@ district-1/values-weekly.txt") == files.end());
+    BOOST_CHECK(files.find("out/areas/@ district-1/values-monthly.txt") == files.end());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -5,27 +5,15 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 
-#include <antares/utils/utils.h>
 #include "antares/study/study.h"
 
 namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
-void HydroAllocation::fromArea(const AreaName& areaid, double value)
+void HydroAllocation::setDefaultForArea(const AreaName& areaid)
 {
-    if (Utils::isZero(value))
-    {
-        auto i = pValues.find(areaid);
-        if (i != pValues.end())
-        {
-            pValues.erase(i);
-        }
-    }
-    else
-    {
-        pValues[areaid] = value;
-    }
+    pValues[areaid] = 1.;
 }
 
 void HydroAllocation::prepareForSolver(const AreaList& list)

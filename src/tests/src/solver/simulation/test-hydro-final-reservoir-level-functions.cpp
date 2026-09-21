@@ -38,7 +38,6 @@ struct Fixture
             if (area)
             {
                 area->createMissingData();
-                area->resetToDefaultValues();
             }
         }
 

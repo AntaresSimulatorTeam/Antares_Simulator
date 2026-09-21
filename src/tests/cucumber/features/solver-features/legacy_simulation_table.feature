@@ -334,7 +334,7 @@ Feature: Legacy variables in simulation table
     # "adq-patch-CSR-test-case-v02" is an Economy study with
     # include-adq-patch = true, four areas: areain-1 / areain-2 are *inside*
     # the patch, areaout-1 / areaout-2 outside. It has no managed hydro, so
-    # remix hydro changes nothing and the remix-hydro stage is a faithful copy
+    # remix hydro changes nothing and the peak-shaving stage is a faithful copy
     # of optim-nb-2 -- which is exactly what makes it a check of the dump
     # itself rather than of what a post-process did. The CSR treatment, on the
     # other hand, moves 389 values in year 0 alone.
@@ -347,7 +347,7 @@ Feature: Legacy variables in simulation table
     Given the solver study path is "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
     When I run antares simulator with --output=simulation-tables
     Then the simulation succeeds
-    And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2, remix-hydro, adq-patch-csr"
+    And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2, peak-shaving, adq-patch"
     And the modeler outputs from stage "optim-nb-2" contain the following entries with relative tolerance 1e-4
       | block | component              | output            | timestep | scenario | value  |
       | 0     | areain-1_node          | unsupplied_energy | 0        | 0        | 0      |
@@ -356,9 +356,9 @@ Feature: Legacy variables in simulation table
       | 0     | areain-1_node          | price             | 0        | 0        | 800    |
       | 0     | areain-2_node          | price             | 0        | 0        | 800    |
 
-    # No managed hydro in this study, so shave-peaks / remix hydro has nothing
+    # No managed hydro in this study, so peak-shaving / remix hydro has nothing
     # to move: the stage exists and reproduces optim-nb-2 exactly.
-    And the modeler outputs from stage "remix-hydro" contain the following entries with relative tolerance 1e-4
+    And the modeler outputs from stage "peak-shaving" contain the following entries with relative tolerance 1e-4
       | block | component              | output            | timestep | scenario | value  |
       | 0     | areain-1_node          | unsupplied_energy | 0        | 0        | 0      |
       | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 400    |
@@ -372,7 +372,7 @@ Feature: Legacy variables in simulation table
     #
     # CSR is a separate LP, so the last digits are solver-dependent; hence the
     # relative tolerance on the quantities.
-    And the modeler outputs from stage "adq-patch-csr" contain the following entries with relative tolerance 1e-4
+    And the modeler outputs from stage "adq-patch" contain the following entries with relative tolerance 1e-4
       | block | component              | output            | timestep | scenario | value    |
       | 0     | areain-1_node          | unsupplied_energy | 0        | 0        | 199.9526 |
       | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 200.0474 |
@@ -386,7 +386,7 @@ Feature: Legacy variables in simulation table
     # The .0006 disappearing is the anti-degeneracy noise PrepareRandomNumbers
     # adds to the optimisation costs: the CSR price update writes the un-noised
     # study cost, so these are exact and need no tolerance.
-    And the modeler outputs from stage "adq-patch-csr" contain the following entries
+    And the modeler outputs from stage "adq-patch" contain the following entries
       | block | component     | output | timestep | scenario | value |
       | 0     | areain-1_node | price  | 0        | 0        | 1000  |
       | 0     | areain-2_node | price  | 0        | 0        | 800   |
@@ -399,15 +399,15 @@ Feature: Legacy variables in simulation table
     # filled exactly as it would have been in a full run -- the values below are
     # the same ones the previous scenario measures on the complete set.
     Given the solver study path is "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
-    When I run antares simulator with --output=simulation-tables --simulation-table-stages=optim-nb-2,adq-patch-csr
+    When I run antares simulator with --output=simulation-tables --simulation-table-stages=optim-nb-2,adq-patch
     Then the simulation succeeds
-    And the simulation tables cover exactly the stages "optim-nb-2, adq-patch-csr"
+    And the simulation tables cover exactly the stages "optim-nb-2, adq-patch"
     And the modeler outputs are read from stage "optim-nb-2"
     And the modeler outputs contain the following entries with relative tolerance 1e-4
       | block | component              | output            | timestep | scenario | value |
       | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 400   |
       | 0     | areain-1_areain-2_link | flow              | 0        | 0        | -101  |
-    And the modeler outputs are read from stage "adq-patch-csr"
+    And the modeler outputs are read from stage "adq-patch"
     And the modeler outputs contain the following entries with relative tolerance 1e-4
       | block | component              | output            | timestep | scenario | value    |
       | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 200.0474 |
@@ -417,9 +417,9 @@ Feature: Legacy variables in simulation table
   @short
   Scenario: A single stage can be selected on its own
     Given the solver study path is "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
-    When I run antares simulator with --output=simulation-tables --simulation-table-stages=remix-hydro
+    When I run antares simulator with --output=simulation-tables --simulation-table-stages=peak-shaving
     Then the simulation succeeds
-    And the simulation tables cover exactly the stages "remix-hydro"
+    And the simulation tables cover exactly the stages "peak-shaving"
 
 
   @short
@@ -427,7 +427,7 @@ Feature: Legacy variables in simulation table
     # The solve keeps its modeler problem alive past the solve so the
     # post-process dump can re-emit the modeler component rows. That retention
     # hangs on the *post-process* stages, never on whether this optimisation
-    # pass writes a table of its own -- selecting only remix-hydro leaves both
+    # pass writes a table of its own -- selecting only peak-shaving leaves both
     # passes without one, and tying the two would quietly reduce every stage the
     # run did ask for to its legacy half.
     #
@@ -436,10 +436,10 @@ Feature: Legacy variables in simulation table
     # nothing and the gen1 rows are the ones optim-nb-2 carries, unchanged --
     # which is what makes their presence, not their value, the assertion here.
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
-    When I run antares simulator with --output=simulation-tables --simulation-table-stages=remix-hydro
+    When I run antares simulator with --output=simulation-tables --simulation-table-stages=peak-shaving
     Then the simulation succeeds
-    And the simulation tables cover exactly the stages "remix-hydro"
-    And the modeler outputs are read from stage "remix-hydro"
+    And the simulation tables cover exactly the stages "peak-shaving"
+    And the modeler outputs are read from stage "peak-shaving"
     And the modeler outputs contain the following entries
       | block | component | output | timestep | scenario | value |
       | 0     | gen1      | p      | 0        | 0        | 3878  |
@@ -452,10 +452,10 @@ Feature: Legacy variables in simulation table
     # own selection instead of every run having to pass the flag. Works on a
     # copy: the step edits generaldata.ini in place.
     Given the solver study path is a copy of "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
-    And the study asks for the simulation table stages "optim-nb-1, remix-hydro"
+    And the study asks for the simulation table stages "optim-nb-1, peak-shaving"
     When I run antares simulator with --output=simulation-tables
     Then the simulation succeeds
-    And the simulation tables cover exactly the stages "optim-nb-1, remix-hydro"
+    And the simulation tables cover exactly the stages "optim-nb-1, peak-shaving"
 
 
   @short
@@ -466,4 +466,35 @@ Feature: Legacy variables in simulation table
     And the study asks for the simulation table stages "optim-nb-1"
     When I run antares simulator with --output=simulation-tables --simulation-table-stages=all
     Then the simulation succeeds
-    And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2, remix-hydro, adq-patch-csr"
+    And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2, peak-shaving, adq-patch"
+
+  @short
+  Scenario: "last" selects the final stage the run reaches, adequacy patch on
+    # This fixture enables the adequacy patch, so the last stage the weekly
+    # resolution reaches is the CSR one -- "last" must resolve to it, and to a
+    # file named adq-patch, never one named "last".
+    Given the solver study path is "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
+    When I run antares simulator with --output=simulation-tables --simulation-table-stages=last
+    Then the simulation succeeds
+    And the simulation tables cover exactly the stages "adq-patch"
+
+
+  @short
+  Scenario: "last" selects the final stage the run reaches, adequacy patch off
+    # "3_6_1" has no adequacy patch, so the peak-shaving stage -- which every
+    # run reaches -- is the last stage, and "last" resolves there.
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
+    When I run antares simulator with --output=simulation-tables --simulation-table-stages=last
+    Then the simulation succeeds
+    And the simulation tables cover exactly the stages "peak-shaving"
+
+
+  @short
+  Scenario: An empty simulation-table-stages value stops the run
+    # An absent key means "every stage"; a key left explicitly blank looks like
+    # a deliberate "no stage", which the option cannot express, so it is
+    # rejected rather than silently taken for "every stage".
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
+    And the study asks for the simulation table stages ""
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation fails
