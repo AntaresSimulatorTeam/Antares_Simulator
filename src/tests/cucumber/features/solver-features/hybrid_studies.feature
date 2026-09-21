@@ -41,7 +41,7 @@ Feature: hybrid (simulator+modeler) studies
     # sees. If the area-connection 'price' field were broken (e.g. always 0), profit would be
     # -18 instead (-0.3 * 60). gen2, being the marginal unit, earns 0 profit, same as gen1 did
     # in the simpler single-generator case.
-    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/hybrid_price_connnection"
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/hybrid_price_connection"
     When I run antares simulator with --output=all
     Then the simulation succeeds
     And the modeler outputs contain the following entries with relative tolerance 0.001
