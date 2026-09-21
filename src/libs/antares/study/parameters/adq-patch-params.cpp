@@ -105,19 +105,6 @@ bool CurtailmentSharing::updateFromKeyValue(const std::string& key, const std::s
     return false;
 }
 
-const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
-{
-    switch (pto)
-    {
-    case AdequacyPatch::AdqPatchPTO::isDens:
-        return "DENS";
-    case AdequacyPatch::AdqPatchPTO::isLoad:
-        return "Load";
-    default:
-        return "";
-    }
-}
-
 // ------------------------
 // Adq patch parameters
 // ------------------------
