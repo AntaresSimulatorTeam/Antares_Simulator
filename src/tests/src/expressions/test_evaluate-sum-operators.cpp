@@ -19,8 +19,8 @@
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
-using namespace Antares::Optimisation;
-using namespace Antares::Optimisation::LinearProblemDataImpl;
+using namespace Antares::LinearProblem;
+using namespace Antares::LinearProblem::DataImpl;
 using namespace Antares::ModelerStudy::SystemModel;
 
 // =================================
@@ -80,10 +80,10 @@ struct build_eval_visitor_fixture
     std::unique_ptr<Visitors::EvalVisitor> evalVisitor;
 
 private:
-    LinearProblemDataImpl::LinearProblemData data_;
+    DataImpl::LinearProblemData data_;
     MockLinearProblem linearProblem_;
     std::unique_ptr<OptimEntityContainer> optimEntityContainer_;
-    LinearProblemApi::FillContext fillCtx_;
+    Api::FillContext fillCtx_;
     Model model_;
     Component component_;
     std::vector<Component> components_;

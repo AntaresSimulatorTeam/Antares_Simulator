@@ -7,7 +7,6 @@
 
 #include <antares/exception/LoadingError.hpp>
 #include "antares/config/config.h"
-#include "antares/solver/utils/ortools_utils.h"
 #include "antares/utils/utils.h"
 
 using namespace Antares;
@@ -74,6 +73,15 @@ void addParameterOptions(Yuni::GetOpt::Parser& parser,
                    ' ',
                    "parquet",
                    "Parquet format for simulation tables");
+    parser.add(settings.simulationTableStagesStr,
+               ' ',
+               "simulation-table-stages",
+               "Comma-separated list of the resolution stages to write a simulation table for: "
+               "all, last, optim-nb-1, optim-nb-2, peak-shaving, adq-patch. "
+               "'last' is the last stage the run reaches (adq-patch with the adequacy patch, "
+               "else peak-shaving). "
+               "Must not be empty. "
+               "(default: all)");
 }
 
 void addOptimizationOptions(Yuni::GetOpt::Parser& parser,
@@ -302,8 +310,9 @@ void Settings::reset()
 
     outputSelectionStr.clear();
     outputSelection = Antares::Data::OutputSelection{};
+    simulationTableStagesStr.clear();
 
-    solverOptions = Antares::Solver::Optimization::CmdLineOptimOptions{};
+    solverOptions = Antares::Optimization::CmdLineOptimOptions{};
 }
 
 void Settings::resolveOutputSelection()

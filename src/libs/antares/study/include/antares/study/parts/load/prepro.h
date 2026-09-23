@@ -3,6 +3,9 @@
 
 #pragma once
 
+#include <filesystem>
+#include <string>
+
 #include "../../fwd.h"
 #include "../../xcast.h"
 
@@ -36,22 +39,15 @@ public:
     /*!
     ** \brief Save data to a folder
     */
-    bool saveToFolder(const AnyString& folder) const;
-
-    /*!
-    ** \brief Reset to default all values
-    */
-    void resetToDefault();
+    bool saveToFolder(const std::string& folder) const;
 
 public:
     //! XCast
     Data::XCast xcast;
 
 private:
-    bool internalLoadFromFolder(Study& study, const char* folder, uint length);
+    bool internalLoadFromFolder(Study& study, const char* folder, unsigned int length);
 
 }; // Prepro
 
 } // namespace Antares::Data::Load
-
-#include "prepro.hxx"

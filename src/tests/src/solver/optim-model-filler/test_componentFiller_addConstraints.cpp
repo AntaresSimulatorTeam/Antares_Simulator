@@ -21,9 +21,9 @@
 #include "inmemory-modeler.h"
 #include "unit_test_utils.h"
 
-using namespace Antares::Optimisation::LinearProblemApi;
-using namespace Antares::Optimisation::LinearProblemDataImpl;
-using namespace Antares::Optimisation;
+using namespace Antares::LinearProblem::Api;
+using namespace Antares::LinearProblem::DataImpl;
+using namespace Antares::LinearProblem;
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Optimization;
 using namespace Antares::Expressions;

@@ -8,18 +8,16 @@
 #include "antares/study/scenario-builder/scBuilderUtils.h"
 #include "antares/study/study.h"
 
-using namespace Yuni;
-
 namespace
 {
 template<class T>
 static void reset(T& v, Antares::Data::Study& study)
 {
-    const uint areaCount = study.areas.size();
+    const unsigned int areaCount = study.areas.size();
 
     v.clear();
     v.resize(areaCount);
-    for (uint i = 0; i != areaCount; ++i)
+    for (unsigned int i = 0; i != areaCount; ++i)
     {
         v[i].attachArea(study.areas.byIndex[i]);
         v[i].reset(study);
@@ -76,10 +74,10 @@ Data::Area* Rules::getArea(const AreaName& areaname)
     return area;
 }
 
-bool Rules::readThermalCluster(const std::vector<std::string>& splitKey, const String& value)
+bool Rules::readThermalCluster(const std::vector<std::string>& splitKey, const std::string& value)
 {
     const AreaName& areaname = splitKey[1];
-    const uint year = std::stoul(splitKey[2]);
+    const unsigned int year = std::stoul(splitKey[2]);
     const std::string& clustername = splitKey[3];
 
     if (clustername.empty())
@@ -95,7 +93,7 @@ bool Rules::readThermalCluster(const std::vector<std::string>& splitKey, const S
 
     if (const ThermalCluster* cluster = area->thermal.list.findInAll(clustername); cluster)
     {
-        uint val = fromStringToTSnumber(value);
+        unsigned int val = fromStringToTSnumber(value);
         thermal[area->index].setTSnumber(cluster, year, val);
     }
     else
@@ -112,10 +110,10 @@ bool Rules::readThermalCluster(const std::vector<std::string>& splitKey, const S
     return true;
 }
 
-bool Rules::readRenewableCluster(const std::vector<std::string>& splitKey, const String& value)
+bool Rules::readRenewableCluster(const std::vector<std::string>& splitKey, const std::string& value)
 {
     const AreaName& areaname = splitKey[1];
-    const uint year = std::stoul(splitKey[2]);
+    const unsigned int year = std::stoul(splitKey[2]);
     const std::string& clustername = splitKey[3];
 
     if (!study_.parameters.renewableGeneration.isClusters())
@@ -138,7 +136,7 @@ bool Rules::readRenewableCluster(const std::vector<std::string>& splitKey, const
 
     if (cluster)
     {
-        uint val = fromStringToTSnumber(value);
+        unsigned int val = fromStringToTSnumber(value);
         renewable[area->index].setTSnumber(cluster, year, val);
     }
     else
@@ -155,10 +153,10 @@ bool Rules::readRenewableCluster(const std::vector<std::string>& splitKey, const
     return true;
 }
 
-bool Rules::readLoad(const std::vector<std::string>& splitKey, const String& value)
+bool Rules::readLoad(const std::vector<std::string>& splitKey, const std::string& value)
 {
     const AreaName& areaname = splitKey[1];
-    const uint year = std::stoul(splitKey[2]);
+    const unsigned int year = std::stoul(splitKey[2]);
 
     const Data::Area* area = getArea(areaname);
     if (!area)
@@ -166,14 +164,14 @@ bool Rules::readLoad(const std::vector<std::string>& splitKey, const String& val
         return false;
     }
 
-    uint val = fromStringToTSnumber(value);
+    unsigned int val = fromStringToTSnumber(value);
     load.setTSnumber(area->index, year, val);
     return true;
 }
 
-bool Rules::readWind(const std::vector<std::string>& splitKey, const String& value)
+bool Rules::readWind(const std::vector<std::string>& splitKey, const std::string& value)
 {
-    const uint year = std::stoul(splitKey[2]);
+    const unsigned int year = std::stoul(splitKey[2]);
     const AreaName& areaname = splitKey[1];
 
     const Data::Area* area = getArea(areaname);
@@ -182,14 +180,14 @@ bool Rules::readWind(const std::vector<std::string>& splitKey, const String& val
         return false;
     }
 
-    uint val = fromStringToTSnumber(value);
+    unsigned int val = fromStringToTSnumber(value);
     wind.setTSnumber(area->index, year, val);
     return true;
 }
 
-bool Rules::readHydro(const std::vector<std::string>& splitKey, const String& value)
+bool Rules::readHydro(const std::vector<std::string>& splitKey, const std::string& value)
 {
-    const uint year = std::stoul(splitKey[2]);
+    const unsigned int year = std::stoul(splitKey[2]);
     const AreaName& areaname = splitKey[1];
 
     const Data::Area* area = getArea(areaname);
@@ -198,14 +196,14 @@ bool Rules::readHydro(const std::vector<std::string>& splitKey, const String& va
         return false;
     }
 
-    uint val = fromStringToTSnumber(value);
+    unsigned int val = fromStringToTSnumber(value);
     hydro.setTSnumber(area->index, year, val);
     return true;
 }
 
-bool Rules::readSolar(const std::vector<std::string>& splitKey, const String& value)
+bool Rules::readSolar(const std::vector<std::string>& splitKey, const std::string& value)
 {
-    const uint year = std::stoul(splitKey[2]);
+    const unsigned int year = std::stoul(splitKey[2]);
     const AreaName& areaname = splitKey[1];
 
     const Data::Area* area = getArea(areaname);
@@ -214,14 +212,15 @@ bool Rules::readSolar(const std::vector<std::string>& splitKey, const String& va
         return false;
     }
 
-    uint val = fromStringToTSnumber(value);
+    unsigned int val = fromStringToTSnumber(value);
     solar.setTSnumber(area->index, year, val);
     return true;
 }
 
-bool Rules::readInitialHydroLevels(const std::vector<std::string>& splitKey, const String& value)
+bool Rules::readInitialHydroLevels(const std::vector<std::string>& splitKey,
+                                   const std::string& value)
 {
-    const uint year = std::stoul(splitKey[2]);
+    const unsigned int year = std::stoul(splitKey[2]);
     const AreaName& areaname = splitKey[1];
 
     const Data::Area* area = getArea(areaname);
@@ -235,9 +234,9 @@ bool Rules::readInitialHydroLevels(const std::vector<std::string>& splitKey, con
     return true;
 }
 
-bool Rules::readFinalHydroLevels(const std::vector<std::string>& splitKey, const String& value)
+bool Rules::readFinalHydroLevels(const std::vector<std::string>& splitKey, const std::string& value)
 {
-    const uint year = std::stoul(splitKey[2]);
+    const unsigned int year = std::stoul(splitKey[2]);
     const AreaName& areaname = splitKey[1];
 
     const Data::Area* area = getArea(areaname);
@@ -263,11 +262,11 @@ const Data::AreaLink* Rules::getLink(const AreaName& fromAreaName, const AreaNam
     return link;
 }
 
-bool Rules::readLink(const std::vector<std::string>& splitKey, const String& value)
+bool Rules::readLink(const std::vector<std::string>& splitKey, const std::string& value)
 {
     const AreaName& fromAreaName = splitKey[1];
     const AreaName& toAreaName = splitKey[2];
-    const uint year = std::stoul(splitKey[3]);
+    const unsigned int year = std::stoul(splitKey[3]);
 
     Data::Area* fromArea = getArea(fromAreaName);
     if (!fromArea)
@@ -287,7 +286,7 @@ bool Rules::readLink(const std::vector<std::string>& splitKey, const String& val
         return false;
     }
 
-    uint val = fromStringToTSnumber(value);
+    unsigned int val = fromStringToTSnumber(value);
     fromArea = link->from;
     linksNTC[fromArea->index].setTSnumber(link, year, val);
     return true;
@@ -305,7 +304,8 @@ bool Rules::checkGroupExists(const std::string& groupName) const
     return true;
 }
 
-bool Rules::readBindingConstraints(const std::vector<std::string>& splitKey, const String& value)
+bool Rules::readBindingConstraints(const std::vector<std::string>& splitKey,
+                                   const std::string& value)
 {
     std::string group_name = splitKey[1].c_str();
     auto year = std::stoi(splitKey[2].c_str());
@@ -362,7 +362,7 @@ ShortTermStorage::AdditionalConstraints* getShortTermStorageAdditionalConstraint
 }
 
 bool Rules::readShortTermStorageInflows(const std::vector<std::string>& splitKey,
-                                        const String& value)
+                                        const std::string& value)
 {
     const AreaName& areaName = splitKey[1];
 
@@ -371,7 +371,7 @@ bool Rules::readShortTermStorageInflows(const std::vector<std::string>& splitKey
     {
         return false;
     }
-    const uint year = std::stoul(splitKey[2]);
+    const unsigned int year = std::stoul(splitKey[2]);
 
     const std::string stStorageClusterName = splitKey[3];
     if (auto* sts = getShortTermStorage(area, stStorageClusterName))
@@ -383,7 +383,7 @@ bool Rules::readShortTermStorageInflows(const std::vector<std::string>& splitKey
 }
 
 bool Rules::readShortTermStorageAdditionalConstraints(const std::vector<std::string>& splitKey,
-                                                      const String& value)
+                                                      const std::string& value)
 {
     const AreaName& areaName = splitKey[1];
 
@@ -392,7 +392,7 @@ bool Rules::readShortTermStorageAdditionalConstraints(const std::vector<std::str
     {
         return false;
     }
-    const uint year = std::stoul(splitKey[2]);
+    const unsigned int year = std::stoul(splitKey[2]);
 
     const std::string stStorageClusterName = splitKey[3];
     if (auto* sts = getShortTermStorage(area, stStorageClusterName))
@@ -408,7 +408,7 @@ bool Rules::readShortTermStorageAdditionalConstraints(const std::vector<std::str
     return false;
 }
 
-bool Rules::readLine(const std::vector<std::string>& splitKey, const String& value)
+bool Rules::readLine(const std::vector<std::string>& splitKey, const std::string& value)
 {
     if (splitKey.size() <= 2)
     {
@@ -482,7 +482,7 @@ bool Rules::apply()
         returned_status = solar.apply(study_) && returned_status;
         returned_status = hydro.apply(study_) && returned_status;
         returned_status = wind.apply(study_) && returned_status;
-        for (uint i = 0; i != pAreaCount; ++i)
+        for (unsigned int i = 0; i != pAreaCount; ++i)
         {
             returned_status = thermal[i].apply(study_) && returned_status;
             returned_status = renewable[i].apply(study_) && returned_status;
@@ -507,9 +507,9 @@ void Rules::sendWarningsForDisabledClusters()
     for (auto it = disabledClustersOnRuleActive.begin(); it != disabledClustersOnRuleActive.end();
          it++)
     {
-        std::vector<uint>& scenariiForCurrentCluster = it->second;
+        std::vector<unsigned int>& scenariiForCurrentCluster = it->second;
         int nbScenariiForCluster = (int)scenariiForCurrentCluster.size();
-        std::vector<uint>::iterator itv = scenariiForCurrentCluster.begin();
+        std::vector<unsigned int>::iterator itv = scenariiForCurrentCluster.begin();
 
         // Listing the 10 first years for which the current cluster was given a specific TS
         // number in the scenario builder. Note that this list of years size could be less then

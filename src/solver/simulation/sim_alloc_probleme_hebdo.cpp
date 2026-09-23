@@ -66,6 +66,11 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
 
     problem.CoutDeDefaillancePositive.assign(nbPays, 0);
     problem.CoutDeDefaillanceNegative.assign(nbPays, 0);
+    problem.CoutDeDefaillancePositiveSansBruit.assign(nbPays, 0);
+    problem.CoutDeDefaillanceNegativeSansBruit.assign(nbPays, 0);
+
+    problem.CoutDeDefaillancePositiveSansBruit.assign(nbPays, 0);
+    problem.CoutDeDefaillanceNegativeSansBruit.assign(nbPays, 0);
 
     problem.CoutDeDebordement.assign(nbPays, 0);
 
@@ -419,9 +424,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
                                                     ? study.areas.byIndex[k]
                                                         ->hydro.reserveParticipationsCount()
                                                     : 0;
-        const uint nbReserves = resEnabled
-                                  ? study.areas.byIndex[k]->allCapacityReservations.value().size()
-                                  : 0;
+        const uint nbReserves = resEnabled ? study.areas.byIndex[k]->allCapacityReservations->size()
+                                           : 0;
 
         auto& palier = problem.PaliersThermiquesDuPays[k];
 
@@ -511,6 +515,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             auto& puissance = palier.PuissanceDisponibleEtCout[j];
 
             for (auto* v: {&puissance.CoutHoraireDeProductionDuPalierThermique,
+                           &puissance.CoutHoraireDeProductionDuPalierThermiqueSansBruit,
+                           &puissance.CoutMarginalDeProductionDuPalierThermique,
                            &puissance.PuissanceDisponibleDuPalierThermique,
                            &puissance.PuissanceDisponibleDuPalierThermiqueRef,
                            &puissance.PuissanceMinDuPalierThermique,
@@ -546,7 +552,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
                 production.ParticipationReservesDuPalierOff.emplace(nbThermalReserveParticipations,
                                                                     0.);
 
-                auto& res = resultats.Reserves.value()[j];
+                auto& res = resultats.Reserves->at(j);
                 res.ValeursHorairesInternalUnsatisfied.assign(nbReserves, 0.);
                 res.ValeursHorairesInternalExcessReserve.assign(nbReserves, 0.);
                 res.CoutsMarginauxHoraires.assign(nbReserves, 0.);
@@ -574,7 +580,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             resultats.ShortTermStorageReserves.emplace(nbSTStorageReserveParticipations);
             for (uint stsRes = 0; stsRes < nbSTStorageReserveParticipations; stsRes++)
             {
-                resultats.ShortTermStorageReserves.value()[stsRes]
+                resultats.ShortTermStorageReserves->at(stsRes)
                   .reserveParticipationOfCluster.emplace(NombreDePasDeTemps, 0.);
             }
         }

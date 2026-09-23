@@ -35,8 +35,8 @@ Feature: Legacy variables in simulation table
     #       peak:      80 * (8 * 100) =  64000
     #   - imbalance_cost = unsupplied_energy_cost * unsupplied_energy
     #     + spilled_energy_cost * spilled_energy = 10000 * 52 + 0 * 0 = 520000
-    #   - is_loss_of_load = 1 since unsupplied energy (52) exceeds the 0.5 MW
-    #     threshold
+    #   - is_loss_of_load = 1 since unsupplied energy (52) is positive, and
+    #     is_significant_loss_of_load = 1 since it exceeds the 0.5 MW threshold
     #   - price = -dual(balance) = 10000: with unsupplied energy strictly
     #     between its bounds, the marginal MW is served at the unsupplied
     #     energy cost
@@ -67,9 +67,10 @@ Feature: Legacy variables in simulation table
       | 0     | area_thermal_peak      | prop_cost      | 33       | 0        | 64000  |
       | 0     | area_node      | imbalance_cost | 33       | 0        | 520000 |
       | 0     | area_node      | is_loss_of_load | 33      | 0        | 1      |
+      | 0     | area_node      | is_significant_loss_of_load | 33 | 0  | 1      |
       | 0     | area_node      | price          | 33       | 0        | 10000  |
       | 0     | area_node      | is_near_loss_of_load | 33  | 0        | 1      |
-      | 0     | area_node      | actual_load    | 33       | 0        | 6111   |
+      | 0     | area_load      | actual_load    | 33       | 0        | 6111   |
 
   @fast @short
   Scenario: Link extra outputs are derived from the legacy flow variables and duals
@@ -137,7 +138,7 @@ Feature: Legacy variables in simulation table
     Then the simulation succeeds
     And the modeler outputs contain the following entries
       | block | component | output             | timestep | scenario | value |
-      | 0     | he_hydro_storage        | hydro_shadow_price | 167      | 0        | -56   |
+      | 0     | he_hydro_storage        | hydro_shadow_price | 167      | 0        | 56   |
       # level_percentage = HydroLevel / reservoir_capacity * 100. The "he" area has a
       # 10 000 000 MWh reservoir and the initial level for hour 1 of week 1 is
       # 5 110 638.139 MWh => 51.10638138.
@@ -147,6 +148,93 @@ Feature: Legacy variables in simulation table
       # seed-tsgen-hydro = 5489), so the inflow used is the generated series,
       # not the empty input files: 1873 MWh at hour 1 of MC year 0.
       | 0     | he_hydro_storage        | actual_inflows     | 0        | 0        | 1873          |
+
+  @fast @short
+  Scenario: Input-generation rows are absent for components whose series are entirely zero
+    # Study "002 Thermal fleet - Base" runs with renewable-generation-modelling
+    # = aggregated. Its "area" has real wind data (input/wind/series/wind_area.txt),
+    # but empty solar, misc-gen and run-of-river series
+    # (input/solar/series/solar_area.txt, input/misc-gen/miscgen-area.txt,
+    # input/hydro/series/area/ror.txt are all 0-line files, which Antares
+    # loads as an all-zero series) -- exactly the "no meaningful production"
+    # case this filtering targets. Before the fix these still produced
+    # generation_power/minus_generation/balance_port.flow rows valued 0;
+    # after it, the components are omitted entirely, while the (non-zero)
+    # wind component is untouched.
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/002 Thermal fleet - Base"
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation succeeds
+    And the modeler outputs contain entries for component "area_wind"
+    And the modeler outputs contain no entries for component "area_solar"
+    And the modeler outputs contain no entries for component "area_run_of_river"
+    And the modeler outputs contain no entries for component "area_combined_heat_power"
+    And the modeler outputs contain no entries for component "area_biomass"
+    And the modeler outputs contain no entries for component "area_biogas"
+    And the modeler outputs contain no entries for component "area_waste"
+    And the modeler outputs contain no entries for component "area_geothermal"
+    And the modeler outputs contain no entries for component "area_other"
+    And the modeler outputs contain no entries for component "area_pumped_storage_power"
+    And the modeler outputs contain no entries for component "area_rest_world"
+
+  @fast @short
+  Scenario: actual_load and its balance-port row are absent for an area with an all-zero load series
+    # Same base study as above, on a temporary copy with its load series
+    # emptied (the same "empty file -> all-zero series" convention). With no
+    # load at all, area_load's actual_load and balance_port.flow rows should
+    # be suppressed like any other all-zero-series component.
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/002 Thermal fleet - Base"
+    And in input "load/series/load_area.txt" the time series is emptied
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation succeeds
+    And the modeler outputs contain no entries for component "area_load"
+
+  @fast @short
+  Scenario: hydro balance_port.flow is absent when reservoir is unmanaged and inflow is entirely zero
+    # Base study "hydro/hydro-parameters" with reservoir management disabled
+    # (reservoir=false) AND its inflow series (mod.txt) emptied -- both
+    # conditions together, since reservoir=false alone (with real inflow)
+    # still produces legitimate turbine generation, as the existing
+    # hydro_parameters.feature scenario outline shows (year-2 production of
+    # 109200 MWh with reservoir=false but real inflow).
+    #
+    # Only the derived balance_port.flow row is checked: with an unmanaged
+    # reservoir the level-guarded rows (level, level_percentage,
+    # actual_inflows) are already gone, but area_hydro_storage still carries
+    # the raw per-variable rows (withdrawal_power, ...), which are out of
+    # AddLegacyExtraOutputs' scope.
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hydro/hydro-parameters"
+    And in input "hydro/hydro.ini" section "reservoir" variable "area" is set to "false"
+    And in input "hydro/series/area/mod.txt" the time series is emptied
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation succeeds
+    And the modeler outputs contain no "balance_port.flow" entries for component "area_hydro_storage"
+
+  @fast @short
+  Scenario: derived link outputs are absent when both NTC directions are zero across the whole study
+    # Same base study as the "Link extra outputs" scenario above (east-west,
+    # hurdle-cost link), on a temporary copy with both direction capacity
+    # series emptied (the "empty file -> all-zero series" convention). No
+    # explicit "disabled" flag exists on links, so a link with zero capacity
+    # in both directions across the whole study is treated as inactive.
+    #
+    # This only suppresses the *derived* extra-output rows produced by
+    # AddLegacyExtraOutputs (abs_flow, prop_cost, congestion indicators,
+    # port fields, ...) -- it does not touch the separate *raw* per-variable
+    # rows (flow, direct_flow, indirect_flow), which are out of this
+    # feature's scope and still exist as long as the link's LP variables do.
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/Hurdle-cost link"
+    And in input "links/east/capacities/west_direct.txt" the time series is emptied
+    And in input "links/east/capacities/west_indirect.txt" the time series is emptied
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation succeeds
+    And the modeler outputs contain no "abs_flow" entries for component "east_west_link"
+    And the modeler outputs contain no "minus_flow" entries for component "east_west_link"
+    And the modeler outputs contain no "out_port.flow" entries for component "east_west_link"
+    And the modeler outputs contain no "in_port.flow" entries for component "east_west_link"
+    And the modeler outputs contain no "prop_cost" entries for component "east_west_link"
+    And the modeler outputs contain no "capacity_shadow_price" entries for component "east_west_link"
+    And the modeler outputs contain no "is_directly_congested" entries for component "east_west_link"
+    And the modeler outputs contain no "is_indirectly_congested" entries for component "east_west_link"
 
   @fast @short
   Scenario: actual_num_units_on is emitted in accurate unit-commitment mode
@@ -211,6 +299,7 @@ Feature: Legacy variables in simulation table
       | 0     | area_thermal_semi base | actual_num_units_on | 33       | 0        | 5     |
       | 0     | area_thermal_peak      | actual_num_units_on | 33       | 0        | 8     |
       | 0     | area_node      | is_loss_of_load     | 33       | 0        | 1     |
+      | 0     | area_node      | is_significant_loss_of_load | 33 | 0     | 1     |
       | 0     | area_thermal_base      | co2_emissions        | 33       | 0        | 4320  |
       | 0     | area_thermal_semi base | co2_emissions        | 33       | 0        | 900   |
       | 0     | area_thermal_peak      | co2_emissions        | 33       | 0        | 560   |
@@ -234,3 +323,178 @@ Feature: Legacy variables in simulation table
       | 0     | area_thermal_base      | non_prop_cost | 33       | 0        | 6800  |
       | 0     | area_node      | imbalance_cost | 33       | 0        | 1040000 |
 
+
+  @short
+  Scenario: Per-stage simulation tables show what the adequacy patch moved
+    # A week is not resolved in one shot: the two optimisation passes are
+    # followed by post-treatments that mutate PROBLEME_HEBDO's result
+    # structures without re-solving. One simulation table is written per stage,
+    # named after it (see docs/architecture/legacy-extra-outputs.md §8).
+    #
+    # "adq-patch-CSR-test-case-v02" is an Economy study with
+    # include-adq-patch = true, four areas: areain-1 / areain-2 are *inside*
+    # the patch, areaout-1 / areaout-2 outside. It has no managed hydro, so
+    # remix hydro changes nothing and the peak-shaving stage is a faithful copy
+    # of optim-nb-2 -- which is exactly what makes it a check of the dump
+    # itself rather than of what a post-process did. The CSR treatment, on the
+    # other hand, moves 389 values in year 0 alone.
+    #
+    # Everything below is at block 0, absolute hour 0, scenario (year) 0.
+    #
+    # After optim 2 the whole 400 MW shortfall sits on areain-2, because its
+    # unsupplied energy cost (800) is the cheaper of the two; the link carries
+    # 101 MW from areain-2 to areain-1 (negative = indirect).
+    Given the solver study path is "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation succeeds
+    And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2, peak-shaving, adq-patch"
+    And the modeler outputs from stage "optim-nb-2" contain the following entries with relative tolerance 1e-4
+      | block | component              | output            | timestep | scenario | value  |
+      | 0     | areain-1_node          | unsupplied_energy | 0        | 0        | 0      |
+      | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 400    |
+      | 0     | areain-1_areain-2_link | flow              | 0        | 0        | -101   |
+      | 0     | areain-1_node          | price             | 0        | 0        | 800    |
+      | 0     | areain-2_node          | price             | 0        | 0        | 800    |
+
+    # No managed hydro in this study, so peak-shaving / remix hydro has nothing
+    # to move: the stage exists and reproduces optim-nb-2 exactly.
+    And the modeler outputs from stage "peak-shaving" contain the following entries with relative tolerance 1e-4
+      | block | component              | output            | timestep | scenario | value  |
+      | 0     | areain-1_node          | unsupplied_energy | 0        | 0        | 0      |
+      | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 400    |
+      | 0     | areain-1_areain-2_link | flow              | 0        | 0        | -101   |
+
+    # Curtailment sharing redistributes the shortfall between the two inside
+    # areas, conserving the total: 199.9526 + 200.0474 = 400.0000. The link
+    # flow moves by exactly the energy areain-1 now leaves unsupplied:
+    # -101 + 199.9526 = 98.9526. These are quantities, i.e. they come from the
+    # X refresh (X[i] = *AdresseOuPlacerLaValeurDesVariablesOptimisees[i]).
+    #
+    # CSR is a separate LP, so the last digits are solver-dependent; hence the
+    # relative tolerance on the quantities.
+    And the modeler outputs from stage "adq-patch" contain the following entries with relative tolerance 1e-4
+      | block | component              | output            | timestep | scenario | value    |
+      | 0     | areain-1_node          | unsupplied_energy | 0        | 0        | 199.9526 |
+      | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 200.0474 |
+      | 0     | areain-1_areain-2_link | flow              | 0        | 0        | 98.9526  |
+
+    # price exercises the *other* half of the refresh: the duals, read back
+    # through AdresseOuPlacerLaValeurDesCoutsMarginaux, which
+    # UpdateMrgPriceAfterCSRcmd overwrites in place. Each area's price becomes
+    # its own unserverdenergycost from input/thermal/areas.ini (areain-1 = 1000,
+    # areain-2 = 800) instead of the single 800.0006 both carried after optim 2.
+    # The .0006 disappearing is the anti-degeneracy noise PrepareRandomNumbers
+    # adds to the optimisation costs: the CSR price update writes the un-noised
+    # study cost, so these are exact and need no tolerance.
+    And the modeler outputs from stage "adq-patch" contain the following entries
+      | block | component     | output | timestep | scenario | value |
+      | 0     | areain-1_node | price  | 0        | 0        | 1000  |
+      | 0     | areain-2_node | price  | 0        | 0        | 800   |
+
+  @short
+  Scenario: Only the selected stages get a simulation table
+    # Producing every stage costs memory and time for tables nobody reads, so
+    # --simulation-table-stages restricts the run to the stages asked for.
+    # The selection is purely subtractive: a stage that is still asked for is
+    # filled exactly as it would have been in a full run -- the values below are
+    # the same ones the previous scenario measures on the complete set.
+    Given the solver study path is "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
+    When I run antares simulator with --output=simulation-tables --simulation-table-stages=optim-nb-2,adq-patch
+    Then the simulation succeeds
+    And the simulation tables cover exactly the stages "optim-nb-2, adq-patch"
+    And the modeler outputs are read from stage "optim-nb-2"
+    And the modeler outputs contain the following entries with relative tolerance 1e-4
+      | block | component              | output            | timestep | scenario | value |
+      | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 400   |
+      | 0     | areain-1_areain-2_link | flow              | 0        | 0        | -101  |
+    And the modeler outputs are read from stage "adq-patch"
+    And the modeler outputs contain the following entries with relative tolerance 1e-4
+      | block | component              | output            | timestep | scenario | value    |
+      | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 200.0474 |
+      | 0     | areain-1_areain-2_link | flow              | 0        | 0        | 98.9526  |
+
+
+  @short
+  Scenario: A single stage can be selected on its own
+    Given the solver study path is "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
+    When I run antares simulator with --output=simulation-tables --simulation-table-stages=peak-shaving
+    Then the simulation succeeds
+    And the simulation tables cover exactly the stages "peak-shaving"
+
+
+  @short
+  Scenario: A selected post-process stage keeps its modeler rows
+    # The solve keeps its modeler problem alive past the solve so the
+    # post-process dump can re-emit the modeler component rows. That retention
+    # hangs on the *post-process* stages, never on whether this optimisation
+    # pass writes a table of its own -- selecting only peak-shaving leaves both
+    # passes without one, and tying the two would quietly reduce every stage the
+    # run did ask for to its legacy half.
+    #
+    # "3_6_1" is a hybrid study: a legacy node with load and wind, plus one
+    # generator component `gen1`. It has no managed hydro, so remix hydro moves
+    # nothing and the gen1 rows are the ones optim-nb-2 carries, unchanged --
+    # which is what makes their presence, not their value, the assertion here.
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
+    When I run antares simulator with --output=simulation-tables --simulation-table-stages=peak-shaving
+    Then the simulation succeeds
+    And the simulation tables cover exactly the stages "peak-shaving"
+    And the modeler outputs are read from stage "peak-shaving"
+    And the modeler outputs contain the following entries
+      | block | component | output | timestep | scenario | value |
+      | 0     | gen1      | p      | 0        | 0        | 3878  |
+      | 0     | gen1      | p      | 1        | 0        | 3572  |
+
+
+  @short
+  Scenario: The study can ask for its stages in generaldata.ini
+    # simulation-table-stages in the [output] section, so a study carries its
+    # own selection instead of every run having to pass the flag. Works on a
+    # copy: the step edits generaldata.ini in place.
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
+    And the study asks for the simulation table stages "optim-nb-1, peak-shaving"
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation succeeds
+    And the simulation tables cover exactly the stages "optim-nb-1, peak-shaving"
+
+
+  @short
+  Scenario: The command line overrides the stages the study asks for
+    # Including --simulation-table-stages=all, which is how a study that
+    # restricts the stages is put back to the full set for a single run.
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
+    And the study asks for the simulation table stages "optim-nb-1"
+    When I run antares simulator with --output=simulation-tables --simulation-table-stages=all
+    Then the simulation succeeds
+    And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2, peak-shaving, adq-patch"
+
+  @short
+  Scenario: "last" selects the final stage the run reaches, adequacy patch on
+    # This fixture enables the adequacy patch, so the last stage the weekly
+    # resolution reaches is the CSR one -- "last" must resolve to it, and to a
+    # file named adq-patch, never one named "last".
+    Given the solver study path is "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
+    When I run antares simulator with --output=simulation-tables --simulation-table-stages=last
+    Then the simulation succeeds
+    And the simulation tables cover exactly the stages "adq-patch"
+
+
+  @short
+  Scenario: "last" selects the final stage the run reaches, adequacy patch off
+    # "3_6_1" has no adequacy patch, so the peak-shaving stage -- which every
+    # run reaches -- is the last stage, and "last" resolves there.
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
+    When I run antares simulator with --output=simulation-tables --simulation-table-stages=last
+    Then the simulation succeeds
+    And the simulation tables cover exactly the stages "peak-shaving"
+
+
+  @short
+  Scenario: An empty simulation-table-stages value stops the run
+    # An absent key means "every stage"; a key left explicitly blank looks like
+    # a deliberate "no stage", which the option cannot express, so it is
+    # rejected rather than silently taken for "every stage".
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
+    And the study asks for the simulation table stages ""
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation fails

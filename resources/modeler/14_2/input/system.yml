@@ -7,7 +7,6 @@ system:
     p[1]+p[2]+p[3] = 4+6+8 = 18 at every timestep.
     Expected: x = 18 at all 5 timesteps, objective = 90.
 
-  model-libraries: lib_example_14_2
 
   components:
     - id: c1

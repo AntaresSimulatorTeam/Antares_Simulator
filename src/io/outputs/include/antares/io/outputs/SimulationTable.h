@@ -16,10 +16,10 @@ class SimulationTable
 public:
     SimulationTable();
     SimulationTable(SimulationTable&& other) noexcept;
-    void addEntry(const SimulationTableEntry& entry);
+    void addEntry(const SimulationTableEntry& entry) const;
     const std::vector<std::shared_ptr<IColumn>>& columns() const;
     size_t rowCount() const;
-    void clear();
+    void clear() const;
 
 private:
     ColumnBasedStorage storage_;

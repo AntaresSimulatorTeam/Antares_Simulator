@@ -12,11 +12,11 @@ hide:
 | command                             | usage                                                                                                                                                                                               |
 |:------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | -i, --input                         | Study folder                                                                                                                                                                                        |
-| --expansion                         | Force the simulation in [expansion](./parameters.md#mode) mode                                                                                                                                     |
-| --economy                           | Force the simulation in [economy](./parameters.md#mode) mode                                                                                                                                       |
-| --adequacy                          | Force the simulation in [adequacy](./parameters.md#mode) mode                                                                                                                                      |
-| --parallel                          | Enable [parallel](https://antares-doc.readthedocs.io/en/latest/reference/config-advanced-parameters/#simulation-cores) computation of MC years                                                                                                                     |
-| --force-parallel=VALUE              | Override the max number of years computed [simultaneously](https://antares-doc.readthedocs.io/en/latest/reference/config-advanced-parameters/#simulation-cores)                                                                                                    |
+| --expansion                         | Force the simulation in [expansion](parameters.md#mode) mode                                                                                                                                     |
+| --economy                           | Force the simulation in [economy](parameters.md#mode) mode                                                                                                                                       |
+| --adequacy                          | Force the simulation in [adequacy](parameters.md#mode) mode                                                                                                                                      |
+| --parallel                          | Enable [parallel](optional-features/multi-threading.md) computation of MC years                                                                                                                     |
+| --force-parallel=VALUE              | Override the max number of years computed [simultaneously](optional-features/multi-threading.md)                                                                                                    |
 | --linear-solver=VALUE               | The optimization solver to use for linear problems. Possible values are: `sirius` (default, LP only), `coin`, `xpress`, `scip` (MIP only), `glpk` (Linux only), `highs`, `pdlp` (LP only), `gurobi` |
 | --linear-solver-param=VALUE         | Linear solver-specific parameters. Syntax is solver-dependent, and only supported for `scip` and `xpress`                                                                                           |
 | --linear-solver-param-optim-1=VALUE | Linear solver-specific parameters for first optimization. Only supported for `scip` and `xpress`.                                                                                                   |
@@ -40,6 +40,7 @@ hide:
 | --derated                | Force the [derated](parameters.md#derated) mode                                                |
 | -z, --zip-output         | Write the results into a single zip archive                                                       |
 | --parquet                | Write simulation table in format parquet instead of csv format                                    |
+| --simulation-table-stages=VALUE | Override [which resolution stages get a simulation table](parameters.md#simulation-table-stages): `all`, `last`, or a comma-separated list among `optim-nb-1`, `optim-nb-2`, `peak-shaving`, `adq-patch`. `last` is the final stage the run reaches. Must not be empty. Default: `all`. Requires --output [all\|simulation-tables] |
 
 ## Optimization
 

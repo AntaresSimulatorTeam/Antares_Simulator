@@ -12,7 +12,8 @@
 #include <yuni/yuni.h>
 #include <yuni/core/static/if.h>
 
-#include "categories.h"
+#include <antares/study/categories.h>
+
 #include "container.h"
 #include "info.h"
 #include "storage/intermediate.h"

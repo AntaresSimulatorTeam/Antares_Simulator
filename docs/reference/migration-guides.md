@@ -3,6 +3,84 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to
 lower the costs of changing existing interfaces, both GUI and scripts.
 
+## v10.2.0
+
+### Input
+#### Reserves files
+
+In file settings/generaldata.ini, in section `optimization`, new property `include-reserves` is added (bool, default value `false`).
+
+If `include-reserves = true`, the new reserve input files in **input/reserves** are read. See [reserve files](solver/optional-features/reserves.md) for more details.
+
+#### Deprecated properties
+
+The following properties of the `general` section in file settings/generaldata.ini are now ignored. They are
+still accepted for compatibility, but should be removed from the study:
+
+- `intra-modal` and `correlateddraws`: intra-modal correlation no longer exists (load/wind/solar time-series
+  generation was removed). If set to a non-empty value, a warning asking to remove the property is logged.
+- `horizon`: was never used (metadata only).
+- `readonly`: ignored since the desktop GUI was removed.
+
+
+### Output
+
+#### One simulation table per optimization and post-process
+
+A simulation table is now written after **each** stage (optimization or post-process), one
+file per stage, named `simulation-table-<year>-<stage>`:
+
+| Stage | Written after | Produced |
+|---|---|---|
+| `optim-nb-1` | the first optimisation pass | always |
+| `optim-nb-2` | the second pass | when that pass runs (see below) |
+| `peak-shaving` | peak-shaving / remix hydro | weekly `simplex-range` only (see below) |
+| `adq-patch` | the whole adequacy patch CSR treatment | adequacy patch enabled, weekly `simplex-range` only |
+
+**The two pre-existing files are unchanged** — same names, same contents. `peak-shaving` and
+`adq-patch` are new files that did not exist before. A script that globs
+`simulation-table-*` will therefore pick up more files than it used to, and should filter on the
+stage suffix if it only wants the optimization passes.
+
+#### A simulation table with no rows no longer produces a file
+
+Previously `simulation-table-<year>-optim-nb-2` was always written, even as a header-only file when
+the second optimization pass never ran. It is now omitted entirely in that case, which happens when
+[`unit-commitment-mode`](solver/04-parameters.md#unit-commitment-mode) is `milp` — a single MILP
+problem is solved instead of two LP problems — or in Expansion mode.
+
+Scripts that open the optim-nb-2 file unconditionally must handle its absence. Note that an absent
+file and a header-only file always carried the same information — that the pass did not run.
+
+#### The post-process stages need a weekly optimization range
+
+The two new stages are written once the week has been solved and post-processed. With
+[`simplex-range`](solver/04-parameters.md#simplex-range) set to `day` the week is instead solved as
+seven daily problems, and the results the stage would report are only readable for the last of them.
+Rather than write a table covering one day out of seven, the solver writes none and logs a warning
+once. `optim-nb-1` and `optim-nb-2` are unaffected — they are written per optimization pass either
+way.
+
+#### Selecting which stages are written
+
+Each stage costs memory and writing time, so the set can be restricted. In
+**settings/generaldata.ini**, section `output`, the new optional property `simulation-table-stages`
+takes `all` (the default) or a comma-separated list of stage names:
+
+```ini
+[output]
+simulation-table-stages = optim-nb-2, adq-patch
+```
+If no CLI flag is given and no `output/simulation-table-stages` is provided in generaldata.ini, a simulation table gets written to disk for every stage. Remember that simulation tables are not written by default, use `--output all|simulation-tables` to enable them.
+
+`last` is shorthand for the final stage the run actually reaches — `adq-patch` when the
+adequacy patch is enabled, `peak-shaving` otherwise — and produces a file named for that stage, not
+one named `last`. The value must not be left blank: `simulation-table-stages =` with nothing after
+it stops the simulation rather than being read as `all` (which is what omitting the key means).
+
+- Disabled binding constraints no longer load their time-series.
+- Disabled short-term storage clusters skip their time-series loading.
+
 ## v10.1.0
 
 ### Input
@@ -24,6 +102,33 @@ Antares-Simulator will read hydro reservoir levels from mentioned files, data fr
 
 The number of time series for the reservoir levels must match the number of time series used for the other hydro components (run of river, minimum generation etc.), ensuring that scenarized reservoir level data is fully integrated within the same Scenario Builder framework as the rest of the hydro time series. However, number of hydro reservoir levels times series can indeed be 1 for each type, min, avg and max.
 
+## v10.0.0
+
+### Input
+
+#### New output debug flags
+
+In file settings/generaldata.ini, in section `output`, the following properties are added:
+
+- `remix-storage-debug` (bool, default value `false`)
+- `adequacy-patch-debug` (bool, default value `false`)
+
+#### Deprecated property
+
+The value `day` of property `optimization/simplex-range` is deprecated. It is still accepted for compatibility,
+but an error asking to use another value is logged.
+
+#### Files no longer read
+
+- **input/areas/&lt;area&gt;/ui.ini** (per-area UI configuration) is no longer read.
+- **layers/layers.ini** is no longer read.
+
+Existing files can be kept or removed; they are ignored by the simulation.
+
+### Behavior
+
+The solver is now read-only with respect to the study: it no longer rewrites input files (areas, binding
+constraints, hydro, short-term storages, `settings/generaldata.ini`, ...) when a study is loaded or saved.
 
 ## v9.3.0
 

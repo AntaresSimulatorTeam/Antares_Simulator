@@ -7,9 +7,9 @@
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 
-using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::LinearProblem::Api;
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 EvaluationContext::EvaluationContext(const ModelerStudy::SystemModel::Component* component,
                                      const ILinearProblemData* data,
@@ -78,7 +78,7 @@ std::span<const double> EvaluationContext::getParameterValue(const std::string& 
                           lastHour);
 }
 
-Optimisation::VariabilityType EvaluationContext::getParameterType(const std::string& key) const
+LinearProblem::VariabilityType EvaluationContext::getParameterType(const std::string& key) const
 {
     const auto& parameters_types_and_values = component_->getParameterValues();
     return parameters_types_and_values.at(key).type;
@@ -100,7 +100,7 @@ const ILinearProblemData& EvaluationContext::data() const
     return *data_;
 }
 
-const Optimisation::LinearProblemApi::IScenario& EvaluationContext::scenario() const
+const LinearProblem::Api::IScenario& EvaluationContext::scenario() const
 {
     if (!scenario_)
     {
@@ -108,4 +108,4 @@ const Optimisation::LinearProblemApi::IScenario& EvaluationContext::scenario() c
     }
     return *scenario_;
 }
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem

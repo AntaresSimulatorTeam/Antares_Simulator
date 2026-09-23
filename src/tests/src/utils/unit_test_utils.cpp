@@ -35,14 +35,13 @@ CaptureAntaresLogs::CaptureAntaresLogs()
 CaptureAntaresLogs::~CaptureAntaresLogs()
 {
     logs.callback.clear();
-    destroyBoundEvents();
 }
 
 void CaptureAntaresLogs::onLogMessage(int level, const std::string& message)
 {
     switch (level)
     {
-        using namespace Yuni::Logs::Verbosity;
+        using namespace Antares::Logs::Verbosity;
     case Warning::level:
         warnings_.insert(message);
         break;

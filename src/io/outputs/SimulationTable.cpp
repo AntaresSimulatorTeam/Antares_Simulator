@@ -24,7 +24,7 @@ SimulationTable::SimulationTable()
 
 SimulationTable::SimulationTable(SimulationTable&& other) noexcept = default;
 
-void SimulationTable::addEntry(const SimulationTableEntry& entry)
+void SimulationTable::addEntry(const SimulationTableEntry& entry) const
 {
     block_->add(entry.block);
     component_->add(entry.component);
@@ -47,7 +47,7 @@ size_t SimulationTable::rowCount() const
     return storage_.rowCount();
 }
 
-void SimulationTable::clear()
+void SimulationTable::clear() const
 {
     storage_.clear();
 }

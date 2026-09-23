@@ -28,14 +28,12 @@ const std::string& Cluster::id() const
     return pID;
 }
 
-Yuni::String Cluster::getFullName() const
+std::string Cluster::getFullName() const
 {
-    Yuni::String s;
-    s << parentArea->name << "." << pID;
-    return s;
+    return parentArea->name + "." + pID;
 }
 
-void Cluster::setName(const AnyString& newname)
+void Cluster::setName(const std::string& newname)
 {
     pName = newname;
     pID.clear();
@@ -55,21 +53,20 @@ std::string Cluster::getGroup() const
 
 #define SEP Yuni::IO::Separator
 
-bool Cluster::saveDataSeriesToFolder(const AnyString& folder) const
+bool Cluster::saveDataSeriesToFolder(const std::string& folder) const
 {
     if (folder.empty())
     {
         return true;
     }
 
-    Yuni::Clob buffer;
-    buffer.clear() << folder << SEP << parentArea->id << SEP << id();
+    std::string buffer = folder + SEP + parentArea->id + SEP + id();
     if (!Yuni::IO::Directory::Create(buffer))
     {
         return true;
     }
 
-    buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series.txt";
+    buffer = folder + SEP + parentArea->id + SEP + id() + SEP + "series.txt";
     return series.timeSeries.saveToCSVFile(buffer, precision());
 }
 
@@ -86,8 +83,6 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
         logs.info() << "Skipping time series loading for disabled cluster: " << id();
         return true;
     }
-
-    auto& buffer = s.bufferLoadingTS;
 
     bool ret = true;
     fs::path seriesPath = folder / parentArea->id / id() / "series.txt";

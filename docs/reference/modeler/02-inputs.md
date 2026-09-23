@@ -213,7 +213,7 @@ and the [port connections](05-model.md#ports-and-connections).
 Currently, Antares modeler supports importing the system from a yaml file.
 
 The header of the yml file must contain exactly one "system" key at the root level.  
-The **system** object contains one **id**, one **description**, one **model-libraries** collection, one **components**
+The **system** object contains one **id**, one **description**, one **components**
 collection.  
 Unless stated otherwise, all listed fields are mandatory.
 
@@ -225,14 +225,10 @@ Example:
 system:
   id: my_system
   description: my system is even greater!
-  model-libraries: my_library_id, my_other_library_id
 ~~~
 
 - **id**: an ID for your system. Has no effect on the simulation.
 - **description** _(optional)_: a free description of your system. Has no effect on the simulation.
-- **model-libraries** _(optional)_: a collection of model libraries needed for your system. If provided, must contain at least one element, and
-  refer to IDs of model libraries found in the **input/model-libraries** directory. Beware that the ID of the library is
-  one defined in its header, not the name of the file.
 
 ### Components
 
@@ -440,6 +436,63 @@ models:
   block
 
 Each configured constraint `id` must reference an existing constraint of the model.
+
+### Scenario scope
+
+The **scenario-scope** field selects which Monte-Carlo scenarios to simulate. Indices are 0-based, consistent with the
+[scenario builder](#scenario-builder) file convention. This field is optional.
+
+- **Required:** no
+- **Default value:** runs scenario `0` only (if the key is absent or the block is empty)
+
+The base scenario set is given by the inline `include` list. `exclude` is optional and
+applies to that set.
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `include` | list | — | Scenarios to run (required in inline form) |
+| `exclude` | list | — | Scenarios to remove from the base set (optional) |
+
+Each entry in `include` or `exclude` may be:
+
+- An integer: `5` → scenario 5
+- A string integer: `"5"` → scenario 5 (identical to `5`)
+- A range: `"0-9"` → scenarios 0 through 9 inclusive (10 scenarios)
+
+Rules:
+
+- All indices must be ≥ 0.
+- Overlapping entries in `include` are deduplicated automatically.
+- Excludes that do not appear in the base set produce a warning and have no effect.
+- Output is always sorted in ascending order.
+- `exclude` cannot be used without `include`.
+
+Examples:
+
+~~~yaml
+# Run a single scenario
+scenario-scope:
+  include:
+    - 0
+~~~
+
+~~~yaml
+# Run scenarios 0 to 99
+scenario-scope:
+  include:
+    - "0-99"
+~~~
+
+~~~yaml
+# Run scenarios 0–19 and 49–59, but skip 9 and 14
+scenario-scope:
+  include:
+    - "0-19"
+    - "49-59"
+  exclude:
+    - 9
+    - 14
+~~~
 
 ## Data series
 

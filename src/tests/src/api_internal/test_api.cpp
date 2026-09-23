@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(result_with_ortools_coin)
 {
     API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
-    const Solver::Optimization::OptimizationOptions opt;
+    const Optimization::OptimizationOptions opt;
 
     auto results = api.run(*study_loader, {}, opt);
 
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE(invalid_ortools_linear_solver)
 {
     API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
-    Solver::Optimization::OptimizationOptions opt;
+    Optimization::OptimizationOptions opt;
     opt.firstOptimOptions.solverName = "this-solver-does-not-exist";
 
     auto shouldThrow = [&api, &study_loader, &opt] { return api.run(*study_loader, {}, opt); };

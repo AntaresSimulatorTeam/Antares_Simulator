@@ -1,7 +1,7 @@
 #include "objectives-creators.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::Optimisation;
+using namespace Antares::LinearProblem;
 using namespace Antares::Expressions;
 using namespace Antares::Solver;
 

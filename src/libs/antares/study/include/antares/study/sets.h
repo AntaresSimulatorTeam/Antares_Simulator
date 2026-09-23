@@ -7,12 +7,11 @@
 #include <map>
 #include <memory>
 #include <set>
-
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
+#include <string>
 
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
+#include <antares/study/filter.h>
 #include "antares/study/area/area.h"
 
 namespace Antares::Data
@@ -24,7 +23,7 @@ class Sets final
 {
 public:
     //
-    using IDType = Yuni::ShortString128;
+    using IDType = std::string;
 
     //! A single set of areas
     // CompareAreaName : to control the order of areas in a set of areas. This order can have an
@@ -50,6 +49,13 @@ public:
         ruleMax,
     };
 
+    //! The type of output report for which a district granularity filter applies
+    enum class ReportType
+    {
+        synthesis,  //!< Synthesis report (mc-all)
+        yearByYear, //!< Year-by-year report (mc-ind)
+    };
+
     //! Definition of a single rule
     using Rule = std::pair<RuleType, std::string>;
     //! Rule Set
@@ -60,7 +66,9 @@ public:
     public:
         Options():
             output(true),
-            resultSize(0)
+            resultSize(0),
+            filterSynthesis(filterAll),
+            filterYearByYear(filterAll)
         {
         }
 
@@ -69,7 +77,9 @@ public:
             comments(rhs.comments),
             rules(rhs.rules),
             output(rhs.output),
-            resultSize(rhs.resultSize)
+            resultSize(rhs.resultSize),
+            filterSynthesis(rhs.filterSynthesis),
+            filterYearByYear(rhs.filterYearByYear)
         {
         }
 
@@ -80,6 +90,8 @@ public:
             rules.clear();
             output = false;
             resultSize = 0;
+            filterSynthesis = filterAll;
+            filterYearByYear = filterAll;
         }
 
         Options& operator=(const Options& rhs)
@@ -89,6 +101,8 @@ public:
             rules = rhs.rules;
             output = rhs.output;
             resultSize = rhs.resultSize;
+            filterSynthesis = rhs.filterSynthesis;
+            filterYearByYear = rhs.filterYearByYear;
             return *this;
         }
 
@@ -96,13 +110,19 @@ public:
         //! Caption
         IDType caption;
         //! Comments
-        Yuni::String comments;
+        std::string comments;
         //! Rules to build the group
         RuleSet rules;
         //! Enable/Disable the results in the output
         bool output;
         //! The number of items in the result set
-        uint resultSize;
+        unsigned int resultSize;
+        //! Filter (bitmask of FilterFlag) of the granularities exported for the synthesis
+        //! report (mc-all). filterAll by default (no restriction).
+        unsigned int filterSynthesis;
+        //! Filter (bitmask of FilterFlag) of the granularities exported for the
+        //! year-by-year report (mc-ind). filterAll by default (no restriction).
+        unsigned int filterYearByYear;
 
     }; // class Options
 
@@ -136,27 +156,27 @@ public:
     */
     void clear();
 
-    uint size() const;
+    unsigned int size() const;
 
     /*!
     ** \brief Get if the results for a given group should be written to the output
     */
-    bool hasOutput(const Yuni::ShortString128& s) const;
+    bool hasOutput(const std::string& s) const;
 
     /*!
     ** \brief Get if the results for a given group should be written to the output
     */
-    bool hasOutput(const uint index) const;
+    bool hasOutput(const unsigned int index) const;
 
     /*!
     ** \brief Get the size of a result set
     */
-    uint resultSize(const Yuni::ShortString128& s) const;
+    unsigned int resultSize(const std::string& s) const;
 
     /*!
     ** \brief Get the size of a result set
     */
-    uint resultSize(const uint index) const;
+    unsigned int resultSize(const unsigned int index) const;
 
     void dumpToLogs() const;
 
@@ -165,10 +185,19 @@ public:
     */
     bool loadFromFile(const std::filesystem::path& filename);
 
+    //!\n
+    //! \brief Retrieve the output filter of a district for a given report type
+    //!
+    //! \param id The district id
+    //! \param report The report type (synthesis or year-by-year)
+    //! \return The bitmask of FilterFlag of the granularities to export.
+    //! filterAll means no restriction (all granularities are exported).
+    unsigned int outputFilter(const IDType& id, ReportType report) const;
+
     /*!
     ** \brief format the string to match the options
     */
-    YString toString();
+    std::string toString();
 
     /*!
     ** \brief Create default groups for set of areas
@@ -180,17 +209,17 @@ public:
     */
     void rebuildAllFromRules(SetHandlerAreas& handler);
 
-    const IDType& nameByIndex(const uint i) const
+    const IDType& nameByIndex(const unsigned int i) const
     {
         assert(i < pMap.size() && "Sets: operator[] index out of bounds");
         return pNameByIndex[i];
     }
 
-    IDType caption(const Yuni::ShortString128& s) const;
-    IDType caption(const uint i) const;
+    IDType caption(const std::string& s) const;
+    IDType caption(const unsigned int i) const;
 
-    SetAreasType& operator[](uint i);
-    const SetAreasType& operator[](uint i) const;
+    SetAreasType& operator[](unsigned int i);
+    const SetAreasType& operator[](unsigned int i) const;
 
     TypePtr add(const IDType& name, const TypePtr& data, Options& opts)
     {
@@ -236,7 +265,7 @@ class SetHandlerAreas final
 public:
     explicit SetHandlerAreas(AreaList& areas);
     void clear(Sets::SetAreasType& set);
-    uint size(Sets::SetAreasType& set);
+    unsigned int size(Sets::SetAreasType& set);
 
     bool add(Sets::SetAreasType& set, const std::string& value);
     void add(Sets::SetAreasType& set, const Sets::SetAreasType& otherSet);

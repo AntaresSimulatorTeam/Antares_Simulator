@@ -9,17 +9,15 @@
 #include <ranges>
 #include <string>
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-
 #include "antares/antares/constants.h"
 #include "antares/enums/Enum.hpp"
 
 namespace Antares
 {
 class IniFile;
+} // namespace Antares
 
-namespace Data
+namespace Antares::Data
 {
 // Forward declarations
 class Study;
@@ -117,7 +115,7 @@ std::string GlobalTransmissionCapacitiesToString(
   GlobalTransmissionCapacities transmissionCapacities);
 std::string GlobalTransmissionCapacitiesToString_Display(
   GlobalTransmissionCapacities transmissionCapacities);
-bool stringToGlobalTransmissionCapacities(const AnyString& value,
+bool stringToGlobalTransmissionCapacities(const std::string& value,
                                           GlobalTransmissionCapacities& out);
 
 /*!
@@ -324,7 +322,7 @@ enum HydroHeuristicPolicy
     hhpUnknown,
 };
 
-HydroHeuristicPolicy StringToHydroHeuristicPolicy(const AnyString& text);
+HydroHeuristicPolicy StringToHydroHeuristicPolicy(const std::string& text);
 
 const char* HydroHeuristicPolicyToCString(HydroHeuristicPolicy hhPolicy);
 
@@ -344,7 +342,7 @@ const char* HydroPricingModeToCString(HydroPricingMode hpm);
 /*!
 ** \brief Convert a text into a hydro pricing mode
 */
-HydroPricingMode StringToHydroPricingMode(const AnyString& text);
+HydroPricingMode StringToHydroPricingMode(const std::string& text);
 
 // ... Power fluctuations ...
 enum PowerFluctuations
@@ -363,7 +361,7 @@ const char* PowerFluctuationsToCString(PowerFluctuations fluctuations);
 /*!
 ** \brief Convert a text into a local shedding strategy
 */
-PowerFluctuations StringToPowerFluctuations(const AnyString& text);
+PowerFluctuations StringToPowerFluctuations(const std::string& text);
 
 enum SheddingPolicy
 {
@@ -381,7 +379,7 @@ const char* SheddingPolicyToCString(SheddingPolicy strategy);
 /*!
 ** \brief Convert a text into a global shedding policy
 */
-SheddingPolicy StringToSheddingPolicy(const AnyString& text);
+SheddingPolicy StringToSheddingPolicy(const std::string& text);
 
 enum UnitCommitmentMode
 {
@@ -406,7 +404,7 @@ const char* UnitCommitmentModeToCString(UnitCommitmentMode ucommitment);
 /*!
 ** \brief Convert a text into a unit commitment mode
 */
-UnitCommitmentMode StringToUnitCommitmentMode(const AnyString& text);
+UnitCommitmentMode StringToUnitCommitmentMode(const std::string& text);
 
 enum NumberOfCoresMode
 {
@@ -426,7 +424,7 @@ const char* NumberOfCoresModeToCString(NumberOfCoresMode ncores);
 /*!
 ** \brief Convert a text into a nb of cores mode
 */
-NumberOfCoresMode StringToNumberOfCoresMode(const AnyString& text);
+NumberOfCoresMode StringToNumberOfCoresMode(const std::string& text);
 
 /*
  * Renewable generation modelling
@@ -446,7 +444,7 @@ const char* RenewableGenerationModellingToCString(RenewableGenerationModelling r
 /*!
 ** \brief Convert a text into a renewable generation modelling
 */
-RenewableGenerationModelling StringToRenewableGenerationModelling(const AnyString& text);
+RenewableGenerationModelling StringToRenewableGenerationModelling(const std::string& text);
 
 // ------------------------
 // MPS export status
@@ -461,9 +459,8 @@ enum class mpsExportStatus : int
 };
 
 std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status);
-mpsExportStatus stringToMPSexportStatus(const AnyString& value);
-} // namespace Data
-} // namespace Antares
+mpsExportStatus stringToMPSexportStatus(const std::string& value);
+} // namespace Antares::Data
 
 namespace Antares::Data::ScenarioBuilder
 {

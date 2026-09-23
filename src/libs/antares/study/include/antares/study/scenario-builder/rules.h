@@ -6,10 +6,8 @@
 
 #include <map>
 #include <memory>
+#include <string>
 #include <vector>
-
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
 
 #include "../fwd.h"
 #include "BindingConstraintsTSNumbersData.h"
@@ -64,10 +62,10 @@ public:
     /*!
     ** \brief Load information from a single line (extracted from an INI file)
     */
-    bool readLine(const std::vector<std::string>& splitKey, const String& value);
+    bool readLine(const std::vector<std::string>& splitKey, const std::string& value);
 
     //! Get the number of areas
-    uint areaCount() const;
+    unsigned int areaCount() const;
 
     //! Name of the rules set
     const std::string& name() const;
@@ -112,21 +110,22 @@ public:
 
 private:
     // Member methods
-    bool readThermalCluster(const std::vector<std::string>& instrs, const String& value);
-    bool readRenewableCluster(const std::vector<std::string>& instrs, const String& value);
-    bool readLoad(const std::vector<std::string>& instrs, const String& value);
-    bool readWind(const std::vector<std::string>& instrs, const String& value);
-    bool readHydro(const std::vector<std::string>& instrs, const String& value);
-    bool readSolar(const std::vector<std::string>& instrs, const String& value);
-    bool readInitialHydroLevels(const std::vector<std::string>& instrs, const String& value);
-    bool readFinalHydroLevels(const std::vector<std::string>& instrs, const String& value);
-    bool readLink(const std::vector<std::string>& instrs, const String& value);
-    bool readBindingConstraints(const std::vector<std::string>& splitKey, const String& value);
+    bool readThermalCluster(const std::vector<std::string>& instrs, const std::string& value);
+    bool readRenewableCluster(const std::vector<std::string>& instrs, const std::string& value);
+    bool readLoad(const std::vector<std::string>& instrs, const std::string& value);
+    bool readWind(const std::vector<std::string>& instrs, const std::string& value);
+    bool readHydro(const std::vector<std::string>& instrs, const std::string& value);
+    bool readSolar(const std::vector<std::string>& instrs, const std::string& value);
+    bool readInitialHydroLevels(const std::vector<std::string>& instrs, const std::string& value);
+    bool readFinalHydroLevels(const std::vector<std::string>& instrs, const std::string& value);
+    bool readLink(const std::vector<std::string>& instrs, const std::string& value);
+    bool readBindingConstraints(const std::vector<std::string>& splitKey, const std::string& value);
 
-    bool readShortTermStorageInflows(const std::vector<std::string>& splitKey, const String& value);
+    bool readShortTermStorageInflows(const std::vector<std::string>& splitKey,
+                                     const std::string& value);
 
     bool readShortTermStorageAdditionalConstraints(const std::vector<std::string>& splitKey,
-                                                   const String& value);
+                                                   const std::string& value);
 
     Data::Area* getArea(const AreaName& areaname);
     const Data::AreaLink* getLink(const AreaName& fromAreaName, const AreaName& toAreaName) const;
@@ -135,11 +134,11 @@ private:
     // Member data
     Study& study_;
     //! Total number of areas
-    uint pAreaCount;
+    unsigned int pAreaCount;
     //! Name of the rules
     std::string pName;
     // Disabled clusters when current rule is active (useful for sending warnings)
-    std::map<std::string, std::vector<uint>> disabledClustersOnRuleActive;
+    std::map<std::string, std::vector<unsigned int>> disabledClustersOnRuleActive;
 
 }; // class Rules
 
