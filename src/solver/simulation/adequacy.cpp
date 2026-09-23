@@ -6,20 +6,22 @@
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
+#include "antares/solver/optimisation/InactiveComponentsAnalyzerBuilder.h"
+#include "antares/solver/optimisation/LegacySimulationTableSnapshot.h"
 #include "antares/solver/simulation/solver_utils.h"
 #include "antares/writer/LegacySimulationTablesWriter.h"
 
 using namespace Yuni;
-using Antares::Constants::nbHoursInAWeek;
+using Constants::nbHoursInAWeek;
 using namespace Antares::Writer;
 using namespace Antares::IO::Outputs;
 
 namespace Antares::Solver::Simulation
 {
 
-Adequacy::Adequacy(Data::Study& study,
+Adequacy::Adequacy(Study& study,
                    IResultWriter& resultWriter,
-                   Simulation::ISimulationObserver& simulationObserver):
+                   ISimulationObserver& simulationObserver):
     study(study),
     resultWriter(resultWriter),
     simulationObserver_(simulationObserver)
@@ -55,6 +57,9 @@ bool Adequacy::simulationBegin()
     if (!preproOnly)
     {
         pProblemesHebdo.resize(pNbMaxPerformedYearsInParallel);
+
+        inactiveComponents_ = Antares::Optimization::BuildInactiveComponentsAnalyzer(study);
+
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             SIM_InitialisationProblemeHebdo(study,
@@ -110,7 +115,7 @@ bool Adequacy::year(Variable::State& state,
                     const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                     OptimizationStatisticsWriter& optWriter,
                     Benchmarking::DurationCollector& durationCollector,
-                    const Antares::Data::Area::ScratchMap& scratchmap)
+                    const Area::ScratchMap& scratchmap)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -128,10 +133,12 @@ bool Adequacy::year(Variable::State& state,
     // of each year
     currentProblem.ProblemeAResoudre->clearBasis();
 
-    std::unique_ptr<Antares::IO::Outputs::OptimisationsSimulationTable> simulationTables;
+    std::unique_ptr<IO::Outputs::OptimisationsSimulationTable> simulationTables;
     if (study.parameters.writeSimulationTable())
     {
-        simulationTables = std::make_unique<Antares::IO::Outputs::OptimisationsSimulationTable>();
+        simulationTables = std::make_unique<IO::Outputs::OptimisationsSimulationTable>(
+          inactiveComponents_);
+        simulationTables->selectStages(study.parameters.simulationTableStages);
     }
 
     for (uint w = 0; w != pNbWeeks; ++w)
@@ -140,12 +147,12 @@ bool Adequacy::year(Variable::State& state,
         currentProblem.weekInTheYear = state.weekInTheYear = w;
         currentProblem.HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(study,
-                                         currentProblem,
-                                         state.weekInTheYear,
-                                         hourInTheYear,
-                                         hydroVentilationResults,
-                                         scratchmap);
+        SIM_RenseignementProblemeHebdo(study,
+                                       currentProblem,
+                                       state.weekInTheYear,
+                                       hourInTheYear,
+                                       hydroVentilationResults,
+                                       scratchmap);
 
         BuildThermalPartOfWeeklyProblem(study,
                                         currentProblem,
@@ -168,8 +175,7 @@ bool Adequacy::year(Variable::State& state,
                 {
                     double& conso = currentProblem.ConsommationsAbattues[hw]
                                       .ConsommationAbattueDuPays[ar];
-                    double stratReserve = area.reserves[Data::fhrStrategicReserve]
-                                                       [hw + hourInTheYear];
+                    double stratReserve = area.reserves[fhrStrategicReserve][hw + hourInTheYear];
                     assert(ar < state.resSpilled.width);
                     assert(hw < state.resSpilled.height);
 
@@ -207,8 +213,19 @@ bool Adequacy::year(Variable::State& state,
                                       numSpace,
                                       hourInTheYear,
                                       resultWriter);
+
+                // Adequacy runs its post-treatment inline instead of through a
+                // post-process command list, so the stage dump that
+                // DumpSimulationTablePostProcessCmd performs in economy mode is
+                // done here. Inside the simplexRunNeeded branch on purpose: with
+                // no solve this week, the solution to publish would be the
+                // previous week's.
+                Antares::Optimization::DumpSimulationTableStage(
+                  simulationTables.get(),
+                  Antares::IO::Outputs::Stage::peakShaving,
+                  currentProblem);
             }
-            catch (Data::AssertionError& ex)
+            catch (AssertionError& ex)
             {
                 // Indicate failed week list (first week of the year is "week number one" for the
                 // user but w=0 for the loop)
@@ -219,14 +236,14 @@ bool Adequacy::year(Variable::State& state,
                            + " simulation is stopped : " + ex.what());
                 return false;
             }
-            catch (Data::UnfeasibleProblemError&)
+            catch (UnfeasibleProblemError&)
             {
                 // Indicate failed week list (first week of the year is "week number one" for the
                 // user but w=0 for the loop)
                 failedWeekList.push_back(w + 1);
 
                 // Define if simulation must be stopped
-                if (Data::stopSimulation(study.parameters.include.unfeasibleProblemBehavior))
+                if (stopSimulation(study.parameters.include.unfeasibleProblemBehavior))
                 {
                     return false;
                 }
@@ -356,15 +373,14 @@ bool Adequacy::year(Variable::State& state,
 }
 
 // Retrieve weighted average balance for each area
-static std::vector<AvgExchangeResults*> retrieveBalance(
-  const Data::Study& study,
-  Solver::Variable::Adequacy::AllVariables& variables)
+static std::vector<AvgExchangeResults*> retrieveBalance(const Study& study,
+                                                        Variable::Adequacy::AllVariables& variables)
 {
     const uint nbAreas = study.areas.size();
     std::vector<AvgExchangeResults*> balance(nbAreas, nullptr);
     for (uint areaIndex = 0; areaIndex < nbAreas; ++areaIndex)
     {
-        const Data::Area* area = study.areas.byIndex[areaIndex];
+        const Area* area = study.areas.byIndex[areaIndex];
         variables.retrieveResultsForArea<Variable::Economy::VCardBalance>(&balance[areaIndex],
                                                                           area);
     }

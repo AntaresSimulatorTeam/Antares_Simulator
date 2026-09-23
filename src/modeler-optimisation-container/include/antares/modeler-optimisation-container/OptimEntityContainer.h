@@ -15,7 +15,7 @@
 #include "EvaluationContext.h"
 #include "scenarioGroupRepo.h"
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 struct OptimComponent
 {
@@ -28,7 +28,7 @@ struct OptimComponent
 class OptimEntityContainer
 {
 public:
-    OptimEntityContainer(LinearProblemApi::ILinearProblem& linearProblem);
+    OptimEntityContainer(Api::ILinearProblem& linearProblem);
 
     unsigned getVariableStartColumn(const ModelerStudy::SystemModel::Component& component,
                                     unsigned index) const;
@@ -55,17 +55,17 @@ public:
         return optimComponent.modelConstraintCounts.at(index);
     }
 
-    LinearProblemApi::ILinearProblem& Problem()
+    Api::ILinearProblem& Problem()
     {
         return linearProblem_;
     }
 
-    std::span<const std::unique_ptr<LinearProblemApi::IMipVariable>> getComponentVariable(
+    std::span<const std::unique_ptr<Api::IMipVariable>> getComponentVariable(
       const ModelerStudy::SystemModel::Component& component,
       unsigned index,
       std::size_t nbTimeSteps) const;
 
-    std::span<const std::unique_ptr<LinearProblemApi::IMipConstraint>> componentConstraints(
+    std::span<const std::unique_ptr<Api::IMipConstraint>> componentConstraints(
       const ModelerStudy::SystemModel::Component& component,
       unsigned index,
       std::size_t nbTimeSteps) const;
@@ -83,6 +83,6 @@ public:
 private:
     std::vector<unsigned int> variableStartColumn_;
     std::unordered_map<std::string, OptimComponent> optimComponents_;
-    LinearProblemApi::ILinearProblem& linearProblem_;
+    Api::ILinearProblem& linearProblem_;
 };
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem

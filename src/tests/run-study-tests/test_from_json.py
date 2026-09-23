@@ -4,7 +4,7 @@ from parse_studies.json_collector import jsonCollector
 from check_on_results.create_checks import create_checks
 from parse_studies.cucumber_collector import cucumberCollector
 
-ROOT_FOLDER = Path('../resources/batches').resolve()
+ROOT_FOLDER = Path('../../../resources/batches').resolve()
 
 # Collect names of tests that were migrated to cucumber
 cucumber_collector = cucumberCollector(Path('../cucumber').resolve())

@@ -11,6 +11,6 @@
 
 namespace Antares::Check
 {
-void checkSolverOptions(const Solver::Optimization::CmdLineOptimOptions& solverOptions,
+void checkSolverOptions(const Optimization::CmdLineOptimOptions& solverOptions,
                         bool milpRequired = false);
 } // namespace Antares::Check

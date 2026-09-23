@@ -20,7 +20,7 @@
 
 namespace fs = std::filesystem;
 using namespace Antares::IO::Outputs;
-using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::LinearProblem::Api;
 
 // =======================================================
 // Reading a Parquet file into an Arrow table

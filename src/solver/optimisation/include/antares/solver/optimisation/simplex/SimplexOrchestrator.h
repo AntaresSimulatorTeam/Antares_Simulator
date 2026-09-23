@@ -19,6 +19,11 @@
 #include "antares/solver/utils/opt_period_string_generator.h"
 #include "antares/writer/i_writer.h"
 
+namespace Antares::Optimization
+{
+class InactiveComponentsAnalyzer;
+}
+
 namespace Antares::Solver::Optimization::Simplex
 {
 
@@ -39,13 +44,15 @@ namespace Antares::Solver::Optimization::Simplex
 class SimplexOrchestrator final
 {
 public:
-    SimplexOrchestrator(SingleOptimOptions options,
+    SimplexOrchestrator(Antares::Optimization::SingleOptimOptions options,
                         PROBLEME_HEBDO& problemeHebdo,
                         int NumIntervalle,
                         int optimizationNumber,
                         const OptPeriodStringGenerator& periodString,
                         Solver::IResultWriter& writer,
-                        IO::Outputs::SimulationTable* simulationTable);
+                        IO::Outputs::SimulationTable* simulationTable,
+                        const Antares::Optimization::InactiveComponentsAnalyzer* inactiveComponents
+                        = nullptr);
 
     /**
      * @brief Execute the full solve flow.
@@ -72,18 +79,19 @@ private:
     void createAndFillLp();
 
     // Configuration
-    SingleOptimOptions options_;
+    Antares::Optimization::SingleOptimOptions options_;
     PROBLEME_HEBDO& problemeHebdo_;
     int NumIntervalle_;
     int optimizationNumber_;
     const OptPeriodStringGenerator& periodString_;
     Solver::IResultWriter& writer_;
     IO::Outputs::SimulationTable* simulationTable_;
+    const Antares::Optimization::InactiveComponentsAnalyzer* inactiveComponents_;
 
     // Problem state
     std::shared_ptr<Antares::Optimization::LegacyOrtoolsLinearProblem> ortoolsProblem_;
-    std::optional<Optimisation::LinearProblemApi::FillContext> fillCtx_;
-    std::unique_ptr<Optimisation::OptimEntityContainer> optimEntityContainer_;
+    std::optional<LinearProblem::Api::FillContext> fillCtx_;
+    std::shared_ptr<LinearProblem::OptimEntityContainer> optimEntityContainer_;
     std::shared_ptr<operations_research::MPSolver> solver_;
 
     // Timing

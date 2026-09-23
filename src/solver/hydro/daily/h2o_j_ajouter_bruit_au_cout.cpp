@@ -6,7 +6,7 @@
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
-namespace DoneesOptimisationJournaliere
+namespace Antares::Solver::Hydro::Daily
 {
 void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES& donnesMensuelles)
 {
@@ -42,4 +42,4 @@ void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES& donnesMensuelles)
           += noiseGenerator() * Antares::Constants::noiseAmplitude;
     }
 }
-} // namespace DoneesOptimisationJournaliere
+} // namespace Antares::Solver::Hydro::Daily

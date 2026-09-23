@@ -45,8 +45,7 @@ void HydroLevelReserveParticipation::add(int pays, int cluster, int pdt)
                 builder.HydroLevel(globalClusterIdx, type == ReserveType::DOWN ? 1. : -1.);
                 builder.lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .reservesIndices.value()
-                  .HydroLevelParticipation[type][globalClusterIdx]
+                  .reservesIndices->HydroLevelParticipation[type][globalClusterIdx]
                   = builder.data.nombreDeContraintes;
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;

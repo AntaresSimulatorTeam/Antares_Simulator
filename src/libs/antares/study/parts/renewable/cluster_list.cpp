@@ -8,14 +8,10 @@
 #include <antares/utils/utils.h>
 #include "antares/study/study.h"
 
-using namespace Yuni;
-
 namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
-
-#define SEP IO::Separator
 
 std::string RenewableClusterList::typeID() const
 {
@@ -47,7 +43,7 @@ static bool ClusterLoadFromProperty(RenewableCluster& cluster, const IniFile::Pr
 
     if (p->key == "unitcount")
     {
-        return p->value.to<uint>(cluster.unitCount);
+        return p->value.to<unsigned int>(cluster.unitCount);
     }
 
     if (p->key == "nominalcapacity")
@@ -150,7 +146,5 @@ bool RenewableClusterList::validateClusters() const
 
     return ret;
 }
-
-#undef SEP
 
 } // namespace Antares::Data

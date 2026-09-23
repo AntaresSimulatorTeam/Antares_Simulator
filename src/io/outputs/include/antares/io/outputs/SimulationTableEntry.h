@@ -18,6 +18,6 @@ struct SimulationTableEntry
     std::optional<unsigned> block_time_index;
     unsigned scenario_index;
     std::optional<double> value;
-    std::optional<Antares::Optimisation::LinearProblemApi::MipBasisStatus> status;
+    std::optional<Antares::LinearProblem::Api::MipBasisStatus> status;
 };
 } // namespace Antares::IO::Outputs

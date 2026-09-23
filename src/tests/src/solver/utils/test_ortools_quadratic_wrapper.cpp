@@ -9,7 +9,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/solver/utils/ortools_quadratic_wrapper.h>
+#include <antares/solver/optimisation/ortools_quadratic_wrapper.h>
 
 #include "spx_constantes_externes.h"
 static double tolerance = 1e-5;
@@ -32,7 +32,7 @@ struct QpFixture
     std::vector<double> primals;
     std::vector<double> duals;
     std::vector<double> reducedCosts;
-    Antares::Solver::Optimization::SingleOptimOptions options;
+    Antares::Optimization::SingleOptimOptions options;
 
     void solve()
     {

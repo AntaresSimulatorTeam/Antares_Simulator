@@ -33,8 +33,8 @@
 #include "antares/io/outputs/MPSGenerator.h"
 #include "antares/solver/modeler/Modeler.h"
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
-using namespace Antares::Optimisation::LinearProblemApi;
-using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
+using namespace Antares::LinearProblem::Api;
+using namespace Antares::LinearProblem::MpsolverImpl;
 using namespace std;
 using namespace Antares;
 using namespace Antares::Solver;
@@ -146,7 +146,8 @@ void checkMPS(Modeler& modeler, fs::path outputPath)
     {
         checkProblem(*masterProblem, outputPath / "master.mps");
     }
-    checkProblem(*modeler.subproblems().at(0), outputPath / "1-1.mps");
+    // The default scenario-scope runs scenario 0, so the subproblem MPS is named "0-0".
+    checkProblem(*modeler.subproblems().at(0), outputPath / "0-0.mps");
 }
 
 void processStudy(const filesystem::path& studyDir)
@@ -157,7 +158,7 @@ void processStudy(const filesystem::path& studyDir)
     fs::create_directory(outputPath);
 
     Modeler modeler(loader, outputPath, TableFormat::CSV);
-    modeler.run();
+    modeler.buildProblemsAndWriteMps();
 
     checkMPS(modeler, outputPath);
 

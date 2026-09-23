@@ -4,21 +4,18 @@
 
 #pragma once
 
-namespace Antares
-{
-
-namespace Data
+namespace Antares::Data
 {
 class Study;
-
 }
 
-namespace Solver
+namespace Antares::Solver
 {
 class IResultWriter;
+} // namespace Antares::Solver
 
-} // namespace Solver
-
+namespace Antares
+{
 /**
  * @class IStudyLoader
  * @brief The IStudyLoader class is an interface for loading studies.

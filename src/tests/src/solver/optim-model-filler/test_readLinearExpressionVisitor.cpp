@@ -342,7 +342,7 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum, VisitorFixture<ReadLinearExpressionVisito
     Node* sum = create<SumNode>(create<LiteralNode>(5.),
                                 create<TimeSumNode>(from, to, create<ParameterNode>("param_ts")));
 
-    ctx = LinearProblemApi::FillContext(0, 2, 0, 2, 0);
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
 
     auto linear_expression = visitor().dispatch(sum);
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 3 /* timesteps */);
@@ -366,7 +366,7 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_mixed_bounds,
     Node* sum = create<SumNode>(create<LiteralNode>(5.),
                                 create<TimeSumNode>(from, to, create<ParameterNode>("param_ts")));
 
-    ctx = LinearProblemApi::FillContext(0, 2, 0, 2, 0);
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
 
     auto linear_expression = visitor().dispatch(sum);
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 3);
@@ -412,7 +412,7 @@ BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, VisitorFixture<ReadLinearExpressionVis
     Node* sum = create<SumNode>(create<LiteralNode>(5.),
                                 create<AllTimeSumNode>(create<ParameterNode>("param_ts")));
 
-    ctx = LinearProblemApi::FillContext(0, 2, 0, 2, 0);
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
     auto linear_expression = visitor().dispatch(sum);
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 3 /* timesteps */);
 
@@ -430,7 +430,7 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_time_dependent_variable_coefficients,
     // 0..3, 1..3, 2..3, 3..3 -> 4, 3, 2, 1 coefficients.
     Node* var = create<VariableNode>("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
 
-    ctx = LinearProblemApi::FillContext(0, 3, 0, 3, 0);
+    ctx = Api::FillContext(0, 3, 0, 3, 0);
 
     auto sum = create<TimeSumNode>(create<LiteralNode>(1.),
                                    create<TPlusNode>(create<LiteralNode>(0)),
@@ -457,7 +457,7 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var,
 
     unsigned hour_0 = 0;
     unsigned hour_1 = 1;
-    ctx = LinearProblemApi::FillContext(hour_0, hour_1, hour_0, hour_1, 0);
+    ctx = Api::FillContext(hour_0, hour_1, hour_0, hour_1, 0);
     auto linear_expression = visitor().dispatch(sum);
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 2 /* timesteps */);
     // Constants
@@ -599,7 +599,7 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_inverted_bounds_returns_zero,
     Node* to = create<TPlusNode>(create<LiteralNode>(1.));
     Node* sum = create<TimeSumNode>(from, to, create<ParameterNode>("param_ts"));
 
-    ctx = LinearProblemApi::FillContext(0, 2, 0, 2, 0);
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
     auto linear_expression = visitor().dispatch(sum);
 
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 3);

@@ -6,11 +6,13 @@ include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 add_boost_test(test_study_reserves_load
   SRC test_study_reserves_load.cpp
   LIBS Antares::study
+  Antares::antares-solver-simulation
   test_utils_unit)
 
 add_boost_test(test_study_reserves_import_pb_hebdo
   SRC test_study_reserves_import_pb_hebdo.cpp
   LIBS Antares::study
+  Antares::antares-solver-simulation
   test_utils_unit)
 
 add_boost_test(test_symmetries

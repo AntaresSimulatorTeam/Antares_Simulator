@@ -4,6 +4,7 @@
 #ifndef __SOLVER_OPTIMISATION_FUNCTIONS_H__
 #define __SOLVER_OPTIMISATION_FUNCTIONS_H__
 
+#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/optimization-options/options.h>
 #include <antares/solver/utils/opt_period_string_generator.h>
 #include <antares/writer/i_writer.h>
@@ -16,20 +17,25 @@
 
 #include "adequacy_patch_csr/hourly_csr_problem.h"
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 class OptimEntityContainer;
 }
 
-using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
-using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
-using SingleOptimOptions = Antares::Solver::Optimization::SingleOptimOptions;
+using AdqPatchParams = AdequacyPatch::AdqPatchParams;
+using OptimizationOptions = Antares::Optimization::OptimizationOptions;
+using SingleOptimOptions = Antares::Optimization::SingleOptimOptions;
 
 namespace Antares::IO::Outputs
 {
 class SimulationTable;
 class OptimisationsSimulationTable;
 } // namespace Antares::IO::Outputs
+
+namespace Antares::Optimization
+{
+class InactiveComponentsAnalyzer;
+}
 
 using namespace Antares;
 
@@ -73,7 +79,9 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          int,
                          const OptPeriodStringGenerator&,
                          Solver::IResultWriter& writer,
-                         IO::Outputs::SimulationTable* simulationTable);
+                         IO::Outputs::SimulationTable* simulationTable,
+                         const Antares::Optimization::InactiveComponentsAnalyzer* inactiveComponents
+                         = nullptr);
 } // namespace Antares::Solver::Optimization
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,

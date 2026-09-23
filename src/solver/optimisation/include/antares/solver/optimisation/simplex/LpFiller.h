@@ -34,9 +34,8 @@ public:
      * @param NumIntervalle The interval number within the week.
      * @return FillContext with local/global time step ranges.
      */
-    static Optimisation::LinearProblemApi::FillContext buildFillContext(
-      PROBLEME_HEBDO& problemeHebdo,
-      int NumIntervalle);
+    static LinearProblem::Api::FillContext buildFillContext(PROBLEME_HEBDO& problemeHebdo,
+                                                             int NumIntervalle);
 
     /**
      * @brief Fill the linear problem using the given context and entity container.
@@ -50,22 +49,21 @@ public:
      * @param optimEntityContainer Container holding the LP problem and entities.
      * @param bendersDecomposition Optional Benders decomposition data.
      */
-    static void fillLinearProblem(
-      const Optimisation::LinearProblemApi::FillContext& fillCtx,
-      PROBLEME_HEBDO& problemeHebdo,
-      Optimisation::OptimEntityContainer& optimEntityContainer,
-      Optimisation::BendersDecomposition* bendersDecomposition = nullptr);
+    static void fillLinearProblem(const LinearProblem::Api::FillContext& fillCtx,
+                                  PROBLEME_HEBDO& problemeHebdo,
+                                  LinearProblem::OptimEntityContainer& optimEntityContainer,
+                                  LinearProblem::BendersDecomposition* bendersDecomposition
+                                  = nullptr);
 
 private:
     /**
      * @brief Add modeler components (system components + compatibility fillers).
      */
     static void fillModelerComponents(
-      std::vector<std::unique_ptr<Optimisation::LinearProblemApi::LinearProblemFiller>>&
-        fillersCollection,
+      std::vector<std::unique_ptr<LinearProblem::Api::LinearProblemFiller>>& fillersCollection,
       const ModelerData& modelerData,
-      Optimisation::OptimEntityContainer& optimEntityContainer,
-      Optimisation::BendersDecomposition* bendersDecomposition);
+      LinearProblem::OptimEntityContainer& optimEntityContainer,
+      LinearProblem::BendersDecomposition* bendersDecomposition);
 };
 
 } // namespace Antares::Solver::Optimization::Simplex

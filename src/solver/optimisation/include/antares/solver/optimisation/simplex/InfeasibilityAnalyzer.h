@@ -46,7 +46,7 @@ public:
     static bool analyze(
       PROBLEME_HEBDO& problemeHebdo,
       const std::shared_ptr<Antares::Optimization::LegacyOrtoolsLinearProblem>& originalProblem,
-      const SingleOptimOptions& options,
+      const Antares::Optimization::SingleOptimOptions& options,
       int NumIntervalle,
       const OptPeriodStringGenerator& periodString,
       Solver::IResultWriter& writer,

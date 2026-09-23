@@ -6,7 +6,7 @@
 #include "mipVariable.h"
 #include "vector"
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 
 class IMipConstraint: public IHasBounds, public IHasName, public IHasStatus
@@ -20,4 +20,4 @@ public:
     [[nodiscard]] virtual double dual() const = 0;
 };
 
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace Antares::LinearProblem::Api

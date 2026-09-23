@@ -13,9 +13,10 @@
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
-#include "antares/solver/optimisation/LegacyExtraOutputs.h"
 #include "antares/solver/optimisation/LegacyNameMapper.h"
+#include "antares/solver/optimisation/LegacySimulationTableSnapshot.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/ortools_wrapper.h"
 #include "antares/solver/optimisation/simplex/InfeasibilityAnalyzer.h"
 #include "antares/solver/optimisation/simplex/LpFiller.h"
 #include "antares/solver/optimisation/simplex/SimplexResult.h"
@@ -23,14 +24,14 @@
 #include "antares/solver/utils/mps_utils.h"
 
 using Antares::Constants::nbHoursInAWeek;
-using Antares::Optimisation::BendersDecomposition;
-using Antares::Optimisation::OptimEntityContainer;
-using Antares::Optimisation::LinearProblemApi::FillContext;
+using Antares::LinearProblem::BendersDecomposition;
+using Antares::LinearProblem::OptimEntityContainer;
+using Antares::LinearProblem::Api::FillContext;
 using Antares::Optimization::LegacyNameMapper;
 using Antares::Optimization::LegacyOrtoolsLinearProblem;
 
 using Antares::Solver::IResultWriter;
-using Antares::Solver::Optimization::SingleOptimOptions;
+using Antares::Optimization::SingleOptimOptions;
 using MPSolver = operations_research::MPSolver;
 using SimulationTable = IO::Outputs::SimulationTable;
 
@@ -47,45 +48,6 @@ static void logProblemSizeOnce(const MPSolver* mpSolver)
     logs.info();
     logs.info();
 }
-
-void fillLegacySimulationTable(SimulationTable& simulationTable,
-                               PROBLEME_HEBDO& problemeHebdo,
-                               const FillContext& fillContext,
-                               const LegacyNameMapper& nameMapper,
-                               unsigned currentBlock)
-{
-    const PROBLEME_ANTARES_A_RESOUDRE& problem = *problemeHebdo.ProblemeAResoudre;
-
-    // LegacyVariablesInfo, X and CoutLineaire are all sized to NombreDeVariables
-    // in resizeProbleme, so the index-based reads below are always in bounds.
-    assert(problem.LegacyVariablesInfo.size() == static_cast<std::size_t>(problem.NombreDeVariables)
-           && problem.X.size() == static_cast<std::size_t>(problem.NombreDeVariables)
-           && problem.CoutLineaire.size() == static_cast<std::size_t>(problem.NombreDeVariables));
-    for (int index = 0; index < problem.NombreDeVariables; ++index)
-    {
-        const auto& info = problem.LegacyVariablesInfo[static_cast<std::size_t>(index)];
-        if (!info)
-        {
-            continue;
-        }
-
-        simulationTable.addEntry(
-          {.block = currentBlock,
-           .component = info->component,
-           .output = nameMapper.mapOutput(info->name),
-           .absolute_time_index = info->timeIndex,
-           .block_time_index = Antares::Optimization::LegacyBlockTimeIndex(fillContext,
-                                                                           info->timeIndex),
-           .scenario_index = fillContext.getYear(),
-           .value = problem.X[static_cast<std::size_t>(index)],
-           .status = std::nullopt});
-    }
-
-    Antares::Optimization::AddLegacyExtraOutputs(simulationTable,
-                                                 problemeHebdo,
-                                                 fillContext,
-                                                 currentBlock);
-}
 } // namespace
 
 namespace Antares::Solver::Optimization::Simplex
@@ -97,14 +59,17 @@ SimplexOrchestrator::SimplexOrchestrator(SingleOptimOptions options,
                                          int optimizationNumber,
                                          const OptPeriodStringGenerator& periodString,
                                          Solver::IResultWriter& writer,
-                                         IO::Outputs::SimulationTable* simulationTable):
+                                         IO::Outputs::SimulationTable* simulationTable,
+                                         const Antares::Optimization::InactiveComponentsAnalyzer*
+                                           inactiveComponents):
     options_(std::move(options)),
     problemeHebdo_(problemeHebdo),
     NumIntervalle_(NumIntervalle),
     optimizationNumber_(optimizationNumber),
     periodString_(periodString),
     writer_(writer),
-    simulationTable_(simulationTable)
+    simulationTable_(simulationTable),
+    inactiveComponents_(inactiveComponents)
 {
 }
 
@@ -116,11 +81,21 @@ SimplexResult SimplexOrchestrator::solve()
     assert(opt >= 0 && opt < 2);
     OptimizationStatistics& optimizationStatistics = problemeHebdo_.optimizationStatistics[opt];
 
-    const auto& modelerData = problemeHebdo_.modelerData;
     const bool isMip = problemeHebdo_.OptimisationAvecVariablesEntieres;
+
+    // Release the problem retained by the previous pass before building this
+    // one, so the two never coexist: this function's peak is one problem, not
+    // two. Nothing can still want the old one -- a post-process dump runs after
+    // the week's last pass, and a week whose solve fails throws out of
+    // OPT_OptimisationHebdomadaireLineaire before the post-processes run, so the
+    // value cleared here could never have been published either way.
+    problemeHebdo_.lastSolvedModelerProblem.reset();
 
     // Step 1: Create LP problem
     ortoolsProblem_ = std::make_shared<LegacyOrtoolsLinearProblem>(isMip, options_.solverName);
+    // Heap-allocated so it can outlive this call: a post-process simulation
+    // table re-emits the modeler rows through it, long after the solve.
+    problemeHebdo_.ortoolsProblem_ = ortoolsProblem_;
 
     // Step 2: Fill LP
     createAndFillLp();
@@ -155,6 +130,20 @@ SimplexResult SimplexOrchestrator::solve()
                 .originalProblem = ortoolsProblem_,
                 .objectiveValue = 0,
                 .success = false};
+    }
+
+    // Hand the modeler side to the post-process dumps. Called for both passes,
+    // so what survives is the last one actually run. Independent of
+    // `simulationTable`: the stage selection can leave this pass without a table
+    // of its own while a later post-process stage still needs these rows.
+    if (problemeHebdo_.retainSolvedModelerProblem)
+    {
+        problemeHebdo_.lastSolvedModelerProblem = std::make_shared<
+          const Antares::Optimization::SolvedModelerProblem>(
+          Antares::Optimization::SolvedModelerProblem{
+            .problem = ortoolsProblem_,
+            .entities = problemeHebdo_.optimEntityContainer,
+            .objectiveValue = ::getObjectiveValue(solver_.get())});
     }
 
     // Success path: fill simulation table
@@ -195,7 +184,10 @@ void SimplexOrchestrator::createAndFillLp()
     fillCtx_ = LpFiller::buildFillContext(problemeHebdo_, NumIntervalle_);
     const auto& modelerData = problemeHebdo_.modelerData;
     bool hasModelerData = modelerData != nullptr;
-    optimEntityContainer_ = std::make_unique<OptimEntityContainer>(*ortoolsProblem_);
+    // Kept alive on problemeHebdo_ past this call: a post-process simulation
+    // table re-emits the modeler rows through it, long after the solve.
+    problemeHebdo_.optimEntityContainer = std::make_shared<OptimEntityContainer>(*ortoolsProblem_);
+    optimEntityContainer_ = problemeHebdo_.optimEntityContainer;
 
     BendersDecomposition* bendersDecomposition = hasModelerData ? &modelerData->bendersDecomposition
                                                                 : nullptr;
@@ -254,11 +246,24 @@ void SimplexOrchestrator::fillSimulationTable()
     }
 
     static constexpr LegacyNameMapper legacyNameMapper;
-    fillLegacySimulationTable(*simulationTable_,
-                              problemeHebdo_,
-                              *fillCtx_,
-                              legacyNameMapper,
-                              currentBlock);
+    const auto& ProblemeAResoudre = problemeHebdo_.ProblemeAResoudre;
+    Antares::Optimization::FillLegacySimulationTable(
+      *simulationTable_,
+      problemeHebdo_,
+      {ProblemeAResoudre->X, ProblemeAResoudre->CoutsMarginauxDesContraintes},
+      *fillCtx_,
+      legacyNameMapper,
+      currentBlock,
+      inactiveComponents_);
+
+    // Hand the modeler side to the post-process dumps. Called for both
+    // passes, so what survives is the last one actually run.
+    problemeHebdo_.lastSolvedModelerProblem = std::make_shared<
+      const Antares::Optimization::SolvedModelerProblem>(
+      Antares::Optimization::SolvedModelerProblem{
+        .problem = ortoolsProblem_,
+        .entities = problemeHebdo_.optimEntityContainer,
+        .objectiveValue = ::getObjectiveValue(solver_.get())});
 
     measure_.tick();
     timeMeasure_.simulationTableFillTime = measure_.duration_ms();

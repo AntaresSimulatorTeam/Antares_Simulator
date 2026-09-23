@@ -4,7 +4,7 @@
 #include <yuni/yuni.h>
 
 #include <antares/logs/logs.h>
-#include <antares/solver/ts-generator/prepro.h>
+#include <antares/study/parts/thermal/prepro.h>
 #include "antares/study/study.h"
 
 namespace Antares::Data
@@ -117,20 +117,6 @@ bool PreproAvailability::validate() const
         }
     }
     return errors == 0;
-}
-
-void PreproAvailability::reset()
-{
-    data.reset(preproAvailabilityMax, DAYS_PER_YEAR);
-
-    auto& colFoDuration = data[foDuration];
-    auto& colPoDuration = data[poDuration];
-
-    for (uint i = 0; i != DAYS_PER_YEAR; ++i)
-    {
-        colFoDuration[i] = 1.;
-        colPoDuration[i] = 1.;
-    }
 }
 
 bool PreproAvailability::normalizeAndCheckNPO()

@@ -12,8 +12,8 @@
 #include "antares/solver/utils/filename.h"
 #include "antares/solver/utils/mps_utils.h"
 
-using Antares::Optimisation::OptimEntityContainer;
-using Antares::Optimisation::LinearProblemApi::FillContext;
+using Antares::LinearProblem::OptimEntityContainer;
+using Antares::LinearProblem::Api::FillContext;
 using Antares::Optimization::LegacyOrtoolsLinearProblem;
 using Antares::Solver::IResultWriter;
 
@@ -23,7 +23,7 @@ namespace Antares::Solver::Optimization::Simplex
 bool InfeasibilityAnalyzer::analyze(
   PROBLEME_HEBDO& problemeHebdo,
   const std::shared_ptr<Antares::Optimization::LegacyOrtoolsLinearProblem>& originalProblem,
-  const SingleOptimOptions& options,
+  const Antares::Optimization::SingleOptimOptions& options,
   int NumIntervalle,
   const OptPeriodStringGenerator& periodString,
   IResultWriter& writer,

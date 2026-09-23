@@ -47,8 +47,7 @@ void STStorageLevelReserveParticipation::add(int pays, int cluster, int pdt)
                                               type == ReserveType::DOWN ? 1. : -1.);
                 builder.lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .reservesIndices.value()
-                  .STStorageLevelParticipation[type][globalClusterIdx]
+                  .reservesIndices->STStorageLevelParticipation[type][globalClusterIdx]
                   = builder.data.nombreDeContraintes;
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;

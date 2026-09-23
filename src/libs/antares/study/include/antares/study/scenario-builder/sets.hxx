@@ -6,9 +6,9 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-inline uint Sets::size() const
+inline unsigned int Sets::size() const
 {
-    return (uint)pMap.size();
+    return (unsigned int)pMap.size();
 }
 
 inline bool Sets::empty() const
@@ -43,7 +43,6 @@ inline bool Sets::exists(const std::string& lname) const
 
 inline Rules::Ptr Sets::find(const std::string& lname) const
 {
-    using namespace Yuni;
     const_iterator i = pMap.find(lname);
     if (i != pMap.end())
     {
@@ -56,7 +55,7 @@ template<class StringT>
 bool Sets::loadFromINIFile(const StringT& filename)
 {
     // If the source code below is changed, please change it in loadFromStudy too
-    const AnyString adapter(filename);
+    const std::string adapter(filename);
     bool r = internalLoadFromINIFile(adapter);
     if (!r)
     {

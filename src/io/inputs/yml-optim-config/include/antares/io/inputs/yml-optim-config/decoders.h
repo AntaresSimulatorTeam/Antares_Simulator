@@ -54,6 +54,13 @@ public:
 };
 
 template<>
+class convert<Antares::IO::Inputs::YmlOptimConfig::ScenarioScope>
+{
+public:
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::ScenarioScope& rhs);
+};
+
+template<>
 class convert<Antares::IO::Inputs::YmlOptimConfig::OptimConfig>
 {
 public:

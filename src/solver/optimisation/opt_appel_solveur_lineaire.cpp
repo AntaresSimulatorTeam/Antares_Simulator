@@ -7,6 +7,7 @@
 #include <antares/logs/logs.h>
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/optimization-options/options.h"
+#include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/optimisation/simplex/InfeasibilityAnalyzer.h"
@@ -23,13 +24,15 @@ using Antares::Solver::Optimization::Simplex::SimplexOrchestrator;
 namespace Antares::Solver::Optimization
 {
 
-bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
+bool OPT_AppelDuSimplexe(const Antares::Optimization::SingleOptimOptions& options,
                          PROBLEME_HEBDO& problemeHebdo,
                          int NumIntervalle,
                          int optimizationNumber,
                          const OptPeriodStringGenerator& optPeriodStringGenerator,
                          IResultWriter& writer,
-                         IO::Outputs::SimulationTable* simulationTable)
+                         IO::Outputs::SimulationTable* simulationTable,
+                         const Antares::Optimization::InactiveComponentsAnalyzer*
+                           inactiveComponents)
 {
     SimplexOrchestrator orchestrator(options,
                                      problemeHebdo,
@@ -37,7 +40,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                                      optimizationNumber,
                                      optPeriodStringGenerator,
                                      writer,
-                                     simulationTable);
+                                     simulationTable,
+                                     inactiveComponents);
     auto result = orchestrator.solve();
 
     if (result.success)

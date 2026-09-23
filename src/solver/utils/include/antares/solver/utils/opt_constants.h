@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "antares/solver/simulation/sim_constants.h"
+#include "antares/solver/utils/sim_constants.h"
 
 constexpr char PREMIERE_OPTIMISATION = 1;
 constexpr char DEUXIEME_OPTIMISATION = 2;

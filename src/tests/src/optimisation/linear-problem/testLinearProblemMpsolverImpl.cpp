@@ -7,16 +7,16 @@
 
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
 
-using namespace Antares::Optimisation;
+using namespace Antares::LinearProblem;
 
 struct FixtureEmptyProblem
 {
     FixtureEmptyProblem()
     {
-        pb = std::make_unique<LinearProblemMpsolverImpl::OrtoolsLinearProblem>(false, "sirius");
+        pb = std::make_unique<MpsolverImpl::OrtoolsLinearProblem>(false, "sirius");
     }
 
-    std::unique_ptr<LinearProblemMpsolverImpl::OrtoolsLinearProblem> pb;
+    std::unique_ptr<MpsolverImpl::OrtoolsLinearProblem> pb;
 };
 
 struct FixtureInfeasibleProblem: public FixtureEmptyProblem
@@ -201,7 +201,7 @@ BOOST_FIXTURE_TEST_CASE(give_cost_to_null_variable_leads_to_bad_cast, FixtureEmp
 BOOST_FIXTURE_TEST_CASE(solve_infeasible_problem_leads_to_error_status, FixtureInfeasibleProblem)
 {
     auto* solution = pb->solve(true);
-    BOOST_CHECK(solution->getStatus() == LinearProblemApi::MipStatus::INFEASIBLE);
+    BOOST_CHECK(solution->getStatus() == Api::MipStatus::INFEASIBLE);
 }
 
 BOOST_FIXTURE_TEST_CASE(solve_infeasible_problem_leads_to_null_objective_value,
@@ -223,7 +223,7 @@ BOOST_FIXTURE_TEST_CASE(solve_infeasible_problem___check_any_var_is_zero, Fixtur
 BOOST_FIXTURE_TEST_CASE(solve_feasible_problem___check_status_is_optimal, FixtureFeasibleProblem)
 {
     auto* solution = pb->solve(false);
-    BOOST_CHECK(solution->getStatus() == LinearProblemApi::MipStatus::OPTIMAL);
+    BOOST_CHECK(solution->getStatus() == Api::MipStatus::OPTIMAL);
 }
 
 BOOST_FIXTURE_TEST_CASE(solve_feasible_problem___check_objective_has_expected_value,

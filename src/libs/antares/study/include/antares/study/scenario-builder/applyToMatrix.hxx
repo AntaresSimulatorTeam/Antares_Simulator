@@ -20,25 +20,25 @@ namespace Antares::Data::ScenarioBuilder
 static constexpr unsigned maxErrors = 20;
 
 template<class D>
-static inline bool CheckValidity(uint value, const D& data, uint tsGenMax)
+static inline bool CheckValidity(unsigned int value, const D& data, unsigned int tsGenMax)
 {
     // When the TS-Generators are not used
     return (!tsGenMax) ? (value < data.timeSeries.width) : (value < tsGenMax);
 }
 
 template<>
-inline bool CheckValidity<Data::DataSeriesHydro>(uint value,
+inline bool CheckValidity<Data::DataSeriesHydro>(unsigned int value,
                                                  const Data::DataSeriesHydro& data,
-                                                 uint tsGenMax)
+                                                 unsigned int tsGenMax)
 {
     // When the TS-Generators are not used
     return (!tsGenMax) ? (value < data.TScount()) : (value < tsGenMax);
 }
 
 template<>
-inline bool CheckValidity<Data::AreaLink>(uint value,
+inline bool CheckValidity<Data::AreaLink>(unsigned int value,
                                           const Data::AreaLink& data,
-                                          uint /* tsGenMax */)
+                                          unsigned int /* tsGenMax */)
 {
     // Value = index of time series
     // Direct Capacities = all time series
@@ -47,28 +47,28 @@ inline bool CheckValidity<Data::AreaLink>(uint value,
 }
 
 template<>
-inline bool CheckValidity<BindingConstraintGroup>(uint value,
+inline bool CheckValidity<BindingConstraintGroup>(unsigned int value,
                                                   const BindingConstraintGroup& group,
-                                                  uint)
+                                                  unsigned int)
 {
     return value < group.numberOfTimeseries();
 }
 
 template<class StringT, class D>
-bool ApplyToMatrix(uint& errors,
+bool ApplyToMatrix(unsigned int& errors,
                    StringT& logprefix,
                    D& data,
                    const TSNumberData::MatrixType::ColumnType& years,
-                   uint tsGenMax)
+                   unsigned int tsGenMax)
 {
     bool ret = true;
 
     // In this case, m.height represents the total number of years
-    const uint nbYears = data.timeseriesNumbers.height();
+    const unsigned int nbYears = data.timeseriesNumbers.height();
     // The matrix m has only one column
     auto& target = data.timeseriesNumbers;
 
-    for (uint y = 0; y != nbYears; ++y)
+    for (unsigned int y = 0; y != nbYears; ++y)
     {
         if (years[y] != 0)
         {

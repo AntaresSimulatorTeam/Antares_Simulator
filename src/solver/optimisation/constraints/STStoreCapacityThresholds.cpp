@@ -67,8 +67,7 @@ void STStoreCapacityThresholds::add(int pays, int cluster, int pdt)
             {
                 builder.ShortTermStorageInjection(globalClusterIdx, 1).lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .reservesIndices.value()
-                  .STStorageClusterStoreCapacityThresholds[globalClusterIdx]
+                  .reservesIndices->STStorageClusterStoreCapacityThresholds[globalClusterIdx]
                   = builder.data.nombreDeContraintes;
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
