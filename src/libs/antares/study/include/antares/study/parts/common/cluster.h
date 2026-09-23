@@ -5,14 +5,13 @@
 #define __LIBS_ANTARES_STUDY_PARTS_COMMON_H__
 
 #include <map>
+#include <optional>
 #include <set>
+#include <string>
 #include <vector>
-
-#include <yuni/yuni.h>
 
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>
-#include <antares/study/area/ReserveOpt.h>
 #include <antares/study/area/reserveParticipationContainer.h>
 
 #include "../../fwd.h"
@@ -35,8 +34,8 @@ public:
 
     const std::string& id() const;
     const std::string& name() const;
-    void setName(const AnyString& newname);
-    Yuni::String getFullName() const;
+    void setName(const std::string& newname);
+    std::string getFullName() const;
 
     void setGroup(const std::string& group);
     std::string getGroup() const;
@@ -48,10 +47,10 @@ public:
     */
     virtual bool integrityCheck() = 0;
 
-    bool saveDataSeriesToFolder(const AnyString& folder) const;
+    bool saveDataSeriesToFolder(const std::string& folder) const;
     bool loadDataSeriesFromFolder(Study& s, const std::filesystem::path& folder);
 
-    uint unitCount = 0;
+    unsigned int unitCount = 0;
 
     bool isEnabled() const
     {
@@ -67,8 +66,8 @@ public:
     double nominalCapacity = 0.;
 
     //! The index of the cluster from the area's point of view
-    unsigned int areaWideIndex = (uint)-1;
-    unsigned int enabledIndex = (uint)-1;
+    unsigned int areaWideIndex = (unsigned int)-1;
+    unsigned int enabledIndex = (unsigned int)-1;
 
     //! tsNumbers must be constructed before series
     TimeSeriesNumbers tsNumbers;
@@ -86,7 +85,7 @@ public:
 
     //! Reserve participation container to store the participation of the cluster in the reserves
     //! and the symmetries
-    ReserveOpt<ReserveParticipationContainer<ThermalClusterReserveParticipation>>
+    std::optional<ReserveParticipationContainer<ThermalClusterReserveParticipation>>
       reserveParticipationContainer;
 
 protected:

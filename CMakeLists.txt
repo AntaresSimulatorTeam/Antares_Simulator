@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
 set(ANTARES_VERSION_HI 10)
-set(ANTARES_VERSION_LO 1)
+set(ANTARES_VERSION_LO 2)
 set(ANTARES_VERSION_REVISION 1)
 
 # Beta release
@@ -130,13 +130,6 @@ if (WIN32)
     endif (MSVC)
 endif (WIN32)
 
-# GNU ld is single-pass for static libraries: circular dependencies between
-# libraries (e.g. antares-solver-simulation <-> model_antares) cause unresolved
-# symbols. --start-group/--end-group tells ld to re-scan until all are resolved.
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    add_link_options("LINKER:--start-group")
-endif ()
-
 #
 # Beta
 #
@@ -199,8 +192,7 @@ if (${BUILD_MERSENNE_TWISTER_PYBIND11})
     find_package(pybind11 REQUIRED)
 endif ()
 
-#Boost header libraries
-find_package(Boost REQUIRED)
+find_package(Boost CONFIG REQUIRED)
 
 find_package(antlr4-runtime REQUIRED)
 find_package(yaml-cpp REQUIRED)
@@ -329,6 +321,10 @@ endif ()
 # TODO : review Standard Settings
 include(src/cmake/common-settings.cmake)
 
+# Opt-in build/link time profiling (-DANTARES_TIME_TRACE=ON). Must be included
+# before any add_subdirectory() so the flags reach every target.
+include(src/cmake/build-profiling.cmake)
+
 add_subdirectory("src/config")
 
 # Configure config.h with current ANTARES version
@@ -351,6 +347,7 @@ add_subdirectory("src/study")         #antares study model
 add_subdirectory("src/solver")     #antares solver and all associated libs
 add_subdirectory("src/modeler")       #antares modeler
 add_subdirectory("src/modeler-optimisation-container")       #antares modeler
+add_subdirectory("src/view-builder")                         #legacy study to YAML converter
 
 # Tools
 if (BUILD_TOOLS)
@@ -392,6 +389,3 @@ include(CPack)
 
 #Last. We need all target defined
 add_subdirectory("src/packaging")
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    add_link_options("LINKER:--end-group")
-endif()

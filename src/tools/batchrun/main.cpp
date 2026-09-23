@@ -11,8 +11,6 @@
 #include <antares/locale/locale.h>
 #include <antares/logs/logs.h>
 #include <antares/resources/resources.h>
-#include <antares/solver/simulation/solver.h>
-#include <antares/solver/utils/ortools_utils.h>
 #include <antares/study/finder/finder.h>
 #include "antares/antares/antares.h"
 #include "antares/locator/locator.h"
@@ -30,7 +28,7 @@ namespace // anonymous
 class MyStudyFinder final: public Data::StudyFinder
 {
 public:
-    void onStudyFound(const Yuni::String& folder, const Data::StudyVersion&) override
+    void onStudyFound(const std::string& folder, const Data::StudyVersion&) override
     {
         logs.info() << "Found: " << folder;
         list.push_back(folder);

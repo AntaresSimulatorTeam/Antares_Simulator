@@ -9,6 +9,8 @@
 #include <antares/io/inputs/InputError.h>
 #include <antares/io/inputs/yml-utils/YmlTreeDisplayer.h>
 
+#include "include/antares/io/inputs/yml-model/Library.h"
+
 using namespace Antares::IO::Inputs;
 
 namespace YAML
@@ -111,6 +113,18 @@ void checkFields(const Node& node, const std::unordered_set<std::string>& allowe
                                                     missing);
 
     throw Exception(node.Mark(), message);
+}
+
+bool convert<YmlModel::ExpressionLineNumber>::decode(const Node& node,
+                                                     YmlModel::ExpressionLineNumber& rhs)
+{
+    rhs.line_number = 0;
+    if (node.IsDefined() && !node.IsNull())
+    {
+        rhs.line_number = node.Mark().line + 1;
+    }
+    rhs.input_expr = node.as<std::string>("");
+    return true;
 }
 
 bool convert<YmlModel::PortType>::convertAreaConnectionFields(const Node& node,
@@ -234,8 +248,12 @@ bool convert<YmlModel::Variable>::decode(const Node& node, YmlModel::Variable& r
 
     checkMandatoryIdField(node, "variable");
     rhs.id = node["id"].as<std::string>();
-    rhs.lower_bound = node["lower-bound"].as<std::string>("");
-    rhs.upper_bound = node["upper-bound"].as<std::string>("");
+    rhs.lower_bound = node["lower-bound"].as<YmlModel::ExpressionLineNumber>(
+      YmlModel::ExpressionLineNumber{});
+    // optional key
+    rhs.upper_bound = node["upper-bound"].as<YmlModel::ExpressionLineNumber>(
+      YmlModel::ExpressionLineNumber{});
+    // optional key
     rhs.variable_type = node["variable-type"].as<YmlModel::ValueType>(
       YmlModel::ValueType::CONTINUOUS);
     rhs.time_dependent = node["time-dependent"].as<bool>(true);
@@ -266,7 +284,7 @@ bool convert<YmlModel::PortFieldDefinition>::decode(const Node& node,
     }
     rhs.port = node["port"].as<std::string>();
     rhs.field = node["field"].as<std::string>();
-    rhs.definition = node["definition"].as<std::string>();
+    rhs.definition = node["definition"].as<YmlModel::ExpressionLineNumber>();
     return true;
 }
 
@@ -278,7 +296,7 @@ bool convert<YmlModel::Constraint>::decode(const Node& node, YmlModel::Constrain
     }
 
     rhs.id = node["id"].as<std::string>("");
-    rhs.expression = node["expression"].as<std::string>();
+    rhs.expression = node["expression"].as<YmlModel::ExpressionLineNumber>();
     rhs.location = node["location"].as<std::string>("subproblems");
     return true;
 }
@@ -291,7 +309,7 @@ bool convert<YmlModel::ExtraOutput>::decode(const Node& node, YmlModel::ExtraOut
     }
 
     rhs.id = node["id"].as<std::string>("");
-    rhs.expression = node["expression"].as<std::string>();
+    rhs.expression = node["expression"].as<YmlModel::ExpressionLineNumber>();
     return true;
 }
 
@@ -303,7 +321,7 @@ bool convert<YmlModel::Objective>::decode(const Node& node, YmlModel::Objective&
     }
 
     rhs.id = node["id"].as<std::string>("");
-    rhs.expression = node["expression"].as<std::string>();
+    rhs.expression = node["expression"].as<YmlModel::ExpressionLineNumber>();
     rhs.location = node["location"].as<std::string>("subproblems");
     return true;
 }

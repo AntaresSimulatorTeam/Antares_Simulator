@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 
 struct CouplingVariable
@@ -45,4 +45,4 @@ private:
     const BendersDecomposition& bd_;
 };
 
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem

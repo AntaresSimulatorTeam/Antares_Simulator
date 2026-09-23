@@ -33,24 +33,24 @@ struct container_of_helpful_data_for_unit_tests
     }
 
     Registry<Node> registry;
-    Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
-    Antares::Optimisation::LinearProblemApi::EmptyScenario empty_scenario;
+    Antares::LinearProblem::DataImpl::LinearProblemData data;
+    Antares::LinearProblem::Api::EmptyScenario empty_scenario;
     ModelBuilder modelBuilder;
     ComponentBuilder componentBuilder;
-    Antares::Optimisation::LinearProblemApi::FillContext fillContext{0, 0, 0, 0, 0};
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository;
-    Antares::Optimisation::EvaluationContextProvider contextProvider;
+    Antares::LinearProblem::Api::FillContext fillContext{0, 0, 0, 0, 0};
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepository;
+    Antares::LinearProblem::EvaluationContextProvider contextProvider;
 
     container_of_helpful_data_for_unit_tests():
         contextProvider(data, scenarioGroupRepository)
     {
-        auto scenarioPtr = std::make_unique<Antares::Optimisation::LinearProblemDataImpl::Scenario>(
+        auto scenarioPtr = std::make_unique<Antares::LinearProblem::DataImpl::Scenario>(
           "scenario_GROUP");
         scenarioPtr->setTimeSerieNumber(0, 1);
         scenarioGroupRepository.addScenario("scenario_GROUP", std::move(scenarioPtr));
     }
 
-    const Antares::Optimisation::EvaluationContextProvider& evaluationContextProvider() const
+    const Antares::LinearProblem::EvaluationContextProvider& evaluationContextProvider() const
     {
         return contextProvider;
     }
@@ -232,7 +232,7 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
     auto demandComponent = componentBuilder.withId("D")
                              .withModel(&demandModel)
                              .withParameterValues(
-                               {{"demand", {"demand", Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "5"}}})
+                               {{"demand", {"demand", LinearProblem::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "5"}}})
                              .withScenarioGroupId("scenario_group")
                              .build();
     // Section connexions

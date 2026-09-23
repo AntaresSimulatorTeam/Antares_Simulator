@@ -4,15 +4,12 @@
 #include "antares/study/area/area.h"
 
 #include <cassert>
-
-#include <yuni/yuni.h>
+#include <string>
 
 #include "antares/study/area/scratchpad.h"
 #include "antares/study/parts/load/prepro.h"
 #include "antares/study/study.h"
 #include "antares/utils/utils.h"
-
-using namespace Yuni;
 
 namespace Antares::Data
 {
@@ -20,16 +17,19 @@ Area::Area():
     reserves(fhrMax, HOURS_PER_YEAR),
     miscGen(fhhMax, HOURS_PER_YEAR)
 {
+    // Matrix(width, height) allocates without zero-filling; reserves/miscGen must start at 0.
+    reserves.zero();
+    miscGen.zero();
 }
 
-Area::Area(const AnyString& name):
+Area::Area(const std::string& name):
     Area()
 {
     this->name = name;
     this->id = Antares::transformNameIntoID(this->name);
 }
 
-Area::Area(const AnyString& name, const AnyString& id):
+Area::Area(const std::string& name, const std::string& id):
     Area()
 {
     this->name = name;
@@ -94,6 +94,25 @@ void Area::createMissingData()
 {
     createMissingTimeSeries();
     createMissingPrepros();
+
+    // Ensure hydro, load, solar and wind matrices are sized to valid defaults
+    hydro.interDailyBreakdown = 1.;
+    hydro.intraDailyModulation = 24.;
+    hydro.intermonthlyBreakdown = 1.;
+    hydro.allocation.clear();
+    hydro.allocation.setDefaultForArea(id);
+    hydro.inflowPattern.reset(1, DAYS_PER_YEAR);
+    hydro.inflowPattern.fillColumn(0, 1.0);
+    hydro.waterValues.reset(101, DAYS_PER_YEAR);
+    hydro.dailyNbHoursAtGenPmax.reset(1, DAYS_PER_YEAR);
+    hydro.dailyNbHoursAtGenPmax.fillColumn(0, 24.);
+    hydro.dailyNbHoursAtPumpPmax.reset(1, DAYS_PER_YEAR);
+    hydro.dailyNbHoursAtPumpPmax.fillColumn(0, 24.);
+    hydro.creditModulation.reset(101, 2);
+    hydro.creditModulation.fill(1);
+    load.series.reset();
+    solar.series.reset();
+    wind.series.reset();
 }
 
 void Area::createMissingTimeSeries()
@@ -102,6 +121,7 @@ void Area::createMissingTimeSeries()
     {
         hydro.series = std::make_unique<DataSeriesHydro>();
     }
+    hydro.series->reset();
 }
 
 void Area::createMissingPrepros()
@@ -125,39 +145,7 @@ void Area::createMissingPrepros()
     thermal.list.ensureDataPrepro();
 }
 
-void Area::resetToDefaultValues()
-{
-    // Nodal optimization
-    nodalOptimization = anoAll;
-
-    // Spread
-    spreadUnsuppliedEnergyCost = 0.;
-    spreadSpilledEnergyCost = 0.;
-
-    // Filtering
-    filterSynthesis = (uint)filterAll;
-    filterYearByYear = (uint)filterAll;
-
-    // Load
-    load.resetToDefault();
-    // Solar
-    solar.resetToDefault();
-    // Wind
-    wind.resetToDefault();
-    // Hydro
-    hydro.reset();
-    hydro.allocation.fromArea(id, 1.);
-    // Thermal
-    thermal.reset();
-    // Renewable
-    renewable.reset();
-    // Fatal hors hydro
-    miscGen.reset(fhhMax, HOURS_PER_YEAR);
-    // reserves
-    reserves.reset(fhrMax, HOURS_PER_YEAR);
-}
-
-void Area::resizeAllTimeseriesNumbers(uint nbYears)
+void Area::resizeAllTimeseriesNumbers(unsigned int nbYears)
 {
     assert(hydro.series and "series must not be nullptr !");
 
@@ -175,7 +163,7 @@ void Area::resizeAllTimeseriesNumbers(uint nbYears)
     shortTermStorage.resizeTimeseriesNumbers(nbYears);
 }
 
-bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) const
+bool Area::thermalClustersMinStablePowerValidity(std::vector<std::string>& output) const
 {
     bool noErrorMinStabPow = true;
     for (auto& cluster: thermal.list.each_enabled())
@@ -194,7 +182,7 @@ bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) c
 
 void Area::buildLinksIndexes()
 {
-    uint areaIndx = 0;
+    unsigned int areaIndx = 0;
 
     auto end = links.end();
     for (auto i = links.begin(); i != end; ++i)

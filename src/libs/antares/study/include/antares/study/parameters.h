@@ -6,15 +6,16 @@
 
 #include <cassert>
 #include <cstdlib>
+#include <set>
+#include <string>
 #include <vector>
-
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
 
 #include <antares/date/date.h>
 #include <antares/inifile/inifile.h>
+#include <antares/io/outputs/SimulationTableStage.h>
 #include <antares/optimization-options/options.h>
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
+#include <antares/study/output-selection.h>
 #include <antares/writer/result_format.h>
 #include "antares/antares/antares.h"
 #include "antares/study/fwd.h"
@@ -42,10 +43,20 @@ public:
     bool adequacy() const;
     //@}
 
+    //! \name Output selection
+    //@{
+    //! Get if the Monte-Carlo result files (mc-all, mc-ind) must be written
+    bool writeMonteCarloResults() const;
+    //! Get if the simulation table(s) must be written
+    bool writeSimulationTable() const;
+    //! Output selection (Monte-Carlo results, simulation tables, etc.)
+    OutputSelection outputSelection;
+    //@}
+
     /*!
     ** \brief Reset the playlist (played years and associated years)
     */
-    void resetPlaylist(uint nbOfYears);
+    void resetPlaylist(unsigned int nbOfYears);
 
     /*!
     ** \brief Load data from a file
@@ -134,7 +145,7 @@ public:
     ** \param year MC year index
     ** \param weight MC year weight
     */
-    void setYearWeight(uint year, float weight);
+    void setYearWeight(unsigned int year, float weight);
 
     // Do we create files in the input folder ?
     bool haveToImport(int tsKind) const;
@@ -152,13 +163,13 @@ public:
     //! \name Horizon
     //@{
     //! Horizon year, not used by the solver
-    Yuni::String horizon;
+    std::string horizon;
     //@}
 
     //! \name Calendar
     //@{
     //! Number of years to study
-    uint nbYears{1};
+    unsigned int nbYears{1};
     //! Simulation days interval
     Date::DayInterval simulationDays;
     //! Day of the 1st january
@@ -191,7 +202,7 @@ public:
 
     //! The number of years that will be really performed
     // Computed automatically from the number of MC years and the playlist
-    uint effectiveNbYears = 0;
+    unsigned int effectiveNbYears = 0;
     //! Enable/Disable filtering by files :
     //!		for an area or a link, print (or not) a file associated to :
     //!		- a time division (hourly results, daily results, weekly results, ...),
@@ -202,15 +213,15 @@ public:
     //! \name TimeSeries
     //@{
     //! Nb of timeSeries : Load
-    uint nbTimeSeriesLoad = 1;
+    unsigned int nbTimeSeriesLoad = 1;
     //! Nb of timeSeries : Hydro
-    uint nbTimeSeriesHydro = 1;
+    unsigned int nbTimeSeriesHydro = 1;
     //! Nb of timeSeries : Wind
-    uint nbTimeSeriesWind = 1;
+    unsigned int nbTimeSeriesWind = 1;
     //! Nb of timeSeries : Thermal
-    uint nbTimeSeriesThermal = 1;
+    unsigned int nbTimeSeriesThermal = 1;
     //! Nb of timeSeries : Solar
-    uint nbTimeSeriesSolar = 1;
+    unsigned int nbTimeSeriesSolar = 1;
     //@}
 
     //! \name Archives
@@ -222,7 +233,7 @@ public:
     ** This value is a mask bits for timeSeries.
     ** \see TimeSeries
     */
-    uint timeSeriesToArchive = 0;
+    unsigned int timeSeriesToArchive = 0;
     //@}
 
     //! \name Pre-Processor
@@ -233,7 +244,7 @@ public:
     ** This value is a mask bits for timeSeries.
     ** \see TimeSeries
     */
-    uint timeSeriesToGenerate = 0;
+    unsigned int timeSeriesToGenerate = 0;
     //@}
 
     //! \name Import Time-Series to HardDrive
@@ -245,24 +256,15 @@ public:
     ** All generated timeseries will be re-written into the input
     ** \see TimeSeries
     */
-    uint exportTimeSeriesInInput = 0;
+    unsigned int exportTimeSeriesInInput = 0;
     //@}
 
     //! \name Correlated draws
     //@{
     /*!
-    ** \brief TimeSeries where the draws are correlated
-    **
-    ** This value is a mask bits for timeSeries.
-    ** \see TimeSeries
-    ** This is the historical correlation mode
-    */
-    uint intraModal = 0;
-
-    /*!
     ** \brief Inter-modal
     */
-    uint interModal = 0;
+    unsigned int interModal  = 0;
     //@}
 
     //! \name Timeseries numbers
@@ -282,7 +284,7 @@ public:
     bool synthesis = true;
 
     //! Accuracy on correlation
-    uint timeSeriesAccuracyOnCorrelation = 0;
+    unsigned int timeSeriesAccuracyOnCorrelation = 0;
 
     //@}
 
@@ -423,15 +425,18 @@ public:
     std::string activeRulesScenario;
     //@}
 
-    //! \name Output
-    //@{
-    //! No output
-    // This variable is not stored within the study but only used by the solver
-    bool noOutput = false;
-    //@}
-
     // In case we print simulation tables, do we print it in csv or parquet ?
     Writer::TableFormat simuTableFormat = Writer::TableFormat::CSV;
+
+    /// \brief Which stages of the weekly resolution get a simulation table;
+    /// empty means every stage. Resolved from simulationTableStagesStr (or the
+    /// command line), so unknown names are already rejected when this is filled.
+    std::set<Antares::IO::Outputs::Stage> simulationTableStages;
+
+    /// \brief Raw `simulation-table-stages` value from generaldata.ini, before
+    /// validation. Resolved into simulationTableStages once the command line is
+    /// applied, which overrides it when it carries a selection of its own.
+    std::string simulationTableStagesStr;
 
     bool hydroDebug = false;
 
@@ -444,7 +449,7 @@ public:
     //! \name Seeds
     //@{
     //! Seeds
-    uint seed[seedMax] = {};
+    unsigned int seed[seedMax] = {};
     //@}
 
     // Format of results. Currently, only single files or zip archive are supported
@@ -454,10 +459,10 @@ public:
     bool namedProblems = false;
 
     // All options related to linear & quadratic optimization
-    Solver::Optimization::OptimizationOptions optOptions;
+    Optimization::OptimizationOptions optOptions;
 
 private:
-    void resetPlayedYears(uint nbOfYears);
+    void resetPlayedYears(unsigned int nbOfYears);
 
     //! MC year weight for MC synthesis
     std::vector<float> yearsWeight;
@@ -476,7 +481,7 @@ const char* SimulationModeToCString(SimulationMode mode);
 ** \param Text An arbitrary Text (case insensitive)
 ** \return True if the conversion succeeded, false otherwise
 */
-bool StringToSimulationMode(SimulationMode& mode, Yuni::CString<20, false> text);
+bool StringToSimulationMode(SimulationMode& mode, const std::string& text);
 
 const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::HydroPmax);
 bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax&, const std::string& text);

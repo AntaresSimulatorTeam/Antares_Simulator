@@ -18,7 +18,7 @@
 
 using namespace Antares::IO::Outputs;
 using namespace Antares::Error;
-using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::LinearProblem::Api;
 
 namespace Antares::Writer
 {
@@ -37,25 +37,6 @@ void addOptionalsToBuilder(const std::vector<std::optional<T>>& in, B& builder)
     std::transform(in.begin(), in.end(), valid.begin(), [](auto& e) { return e.has_value(); });
 
     throwOnStatusKO(builder.AppendValues(values, valid));
-}
-
-std::vector<std::optional<unsigned>> to_optional_int(
-  const std::vector<std::optional<MipBasisStatus>>& v)
-{
-    std::vector<std::optional<unsigned>> to_return;
-    to_return.reserve(v.size());
-    for (const auto& e: v)
-    {
-        if (e.has_value())
-        {
-            to_return.push_back(static_cast<unsigned>(*e));
-        }
-        else
-        {
-            to_return.push_back(std::nullopt);
-        }
-    }
-    return to_return;
 }
 
 // ==========================
@@ -115,6 +96,39 @@ std::shared_ptr<arrow::Array> IntColumnAdapter::makeArray() const
 {
     arrow::UInt32Builder builder;
     throwOnStatusKO(builder.AppendValues(column_->data()));
+    return throwOnResultKO(builder.Finish());
+}
+
+// ================================
+// Class InternedStringColumnAdapter
+// ================================
+InternedStringColumnAdapter::InternedStringColumnAdapter(const InternedStringColumn* column):
+    column_(column)
+{
+}
+
+std::shared_ptr<arrow::Field> InternedStringColumnAdapter::makeField() const
+{
+    return arrow::field(column_->name(), arrow::utf8());
+}
+
+std::shared_ptr<arrow::Array> InternedStringColumnAdapter::makeArray() const
+{
+    arrow::StringBuilder builder;
+    const auto& dictionary = column_->dictionary();
+
+    for (const uint32_t index: column_->indices())
+    {
+        if (index == InternedStringColumn::nullIndex)
+        {
+            throwOnStatusKO(builder.AppendNull());
+        }
+        else
+        {
+            throwOnStatusKO(builder.Append(dictionary[index]));
+        }
+    }
+
     return throwOnResultKO(builder.Finish());
 }
 
@@ -190,27 +204,6 @@ std::shared_ptr<arrow::Array> OptIntColumnAdapter::makeArray() const
     return throwOnResultKO(builder.Finish());
 }
 
-// ========================================
-// Class OptMipBasisStatusColumnAdapter
-// ========================================
-OptMipBasisStatusColumnAdapter::OptMipBasisStatusColumnAdapter(
-  const OptionalColumn<MipBasisStatus>* column):
-    column_(column)
-{
-}
-
-std::shared_ptr<arrow::Field> OptMipBasisStatusColumnAdapter::makeField() const
-{
-    return arrow::field(column_->name(), arrow::uint32());
-}
-
-std::shared_ptr<arrow::Array> OptMipBasisStatusColumnAdapter::makeArray() const
-{
-    arrow::UInt32Builder builder;
-    addOptionalsToBuilder(to_optional_int(column_->data()), builder);
-    return throwOnResultKO(builder.Finish());
-}
-
 // ===============================
 // Column adapter factory
 // ===============================
@@ -237,6 +230,11 @@ public:
         return std::make_shared<OptStringColumnAdapter>(&col);
     }
 
+    std::shared_ptr<IColumnAdapter> visit(const InternedStringColumn& col) override
+    {
+        return std::make_shared<InternedStringColumnAdapter>(&col);
+    }
+
     std::shared_ptr<IColumnAdapter> visit(const OptionalColumn<double>& col) override
     {
         return std::make_shared<OptDoubleColumnAdapter>(&col);
@@ -245,11 +243,6 @@ public:
     std::shared_ptr<IColumnAdapter> visit(const OptionalColumn<unsigned>& col) override
     {
         return std::make_shared<OptIntColumnAdapter>(&col);
-    }
-
-    std::shared_ptr<IColumnAdapter> visit(const OptionalColumn<MipBasisStatus>& col) override
-    {
-        return std::make_shared<OptMipBasisStatusColumnAdapter>(&col);
     }
 };
 

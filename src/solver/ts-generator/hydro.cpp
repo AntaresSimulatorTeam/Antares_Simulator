@@ -249,26 +249,23 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
 
     if (0 != (study.parameters.timeSeriesToArchive & Data::timeSeriesHydro))
     {
-        if (!study.parameters.noOutput)
-        {
-            logs.info() << "Archiving the hydro time-series";
-            study.areas.each(
-              [&writer](const Data::Area& area)
-              {
-                  const int precision = 0;
-                  const std::string mcYear = "mc-0";
-                  fs::path outputFolder = fs::path("ts-generator") / "hydro" / mcYear / area.id;
+        logs.info() << "Archiving the hydro time-series";
+        study.areas.each(
+          [&writer](const Data::Area& area)
+          {
+              const int precision = 0;
+              const std::string mcYear = "mc-0";
+              fs::path outputFolder = fs::path("ts-generator") / "hydro" / mcYear / area.id;
 
-                  std::string buffer;
-                  area.hydro.series->ror.timeSeries.saveToBuffer(buffer, precision);
-                  fs::path outputFile = outputFolder / "ror.txt";
-                  writer.addEntryFromBuffer(outputFile, buffer);
+              std::string buffer;
+              area.hydro.series->ror.timeSeries.saveToBuffer(buffer, precision);
+              fs::path outputFile = outputFolder / "ror.txt";
+              writer.addEntryFromBuffer(outputFile, buffer);
 
-                  area.hydro.series->storage.timeSeries.saveToBuffer(buffer, precision);
-                  outputFile = outputFolder / "storage.txt";
-                  writer.addEntryFromBuffer(outputFile, buffer);
-              });
-        }
+              area.hydro.series->storage.timeSeries.saveToBuffer(buffer, precision);
+              outputFile = outputFolder / "storage.txt";
+              writer.addEntryFromBuffer(outputFile, buffer);
+          });
     }
 
     return true;

@@ -4,6 +4,9 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_H__
 #define __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_H__
 
+#include <filesystem>
+#include <string>
+
 #include "../../xcast.h"
 
 namespace Antares::Data::Solar
@@ -36,25 +39,18 @@ public:
     /*!
     ** \brief Save data to a folder
     */
-    bool saveToFolder(const AnyString& folder) const;
-
-    /*!
-    ** \brief Reset to default all values
-    */
-    void resetToDefault();
+    bool saveToFolder(const std::string& folder) const;
 
 public:
     //! XCast
     Data::XCast xcast;
 
 private:
-    bool internalSolarFromFolder(Study& study, const char* folder, uint length);
-    bool internalSolarFormatBefore33(Study& study, const YString& folder);
+    bool internalSolarFromFolder(Study& study, const char* folder, unsigned int length);
+    bool internalSolarFormatBefore33(Study& study, const std::string& folder);
 
 }; // Prepro
 
 } // namespace Antares::Data::Solar
-
-#include "prepro.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_H__

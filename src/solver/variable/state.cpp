@@ -5,6 +5,7 @@
 
 #include <cmath>
 
+#include <antares/solver/simulation/reserve-index-maps.h>
 #include <antares/study/study.h>
 #include "antares/solver/variable/variable.h"
 
@@ -55,7 +56,7 @@ State::State(Data::Study& s):
         reserveData.emplace(study.areas.size());
         for (const auto& area: study.areas | std::views::values)
         {
-            reserveData.value().at(area->index) = ReserveData();
+            reserveData->at(area->index) = ReserveData();
         }
     }
 }
@@ -155,19 +156,22 @@ void State::initFromShortTermStorageClusterIndex(const uint clusterAreaWideIndex
     if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast
         && study.parameters.include.reserves && STStorageCluster->reserveParticipationContainer)
     {
-        auto& resData = reserveData.value().at(area->index);
+        auto& resData = reserveData->at(area->index);
         for (const auto& [resID, resParticipation]:
-             STStorageCluster->reserveParticipationContainer.value().getReservesParticipations())
+             STStorageCluster->reserveParticipationContainer->getReservesParticipations())
         {
             double participation = hourlyResults->ShortTermStorageReserves
-                                     .value()[study.runtime.reserveParticipationIndexMaps.value()
-                                                .at(area->id)
-                                                .STStorageClusters.left.at(
-                                                  std::make_pair(resID, STStorageCluster->id))]
-                                     .reserveParticipationOfCluster.value()[hourInTheWeek];
+                                     ->at(study.reserveMaps->participationIndexMaps.at(area->id)
+                                            .STStorageClusters.left.at(
+                                              std::make_pair(resID, STStorageCluster->id)))
+                                     .reserveParticipationOfCluster->at(hourInTheWeek);
+            const double participationCost = participation
+                                             * STStorageCluster->reserveParticipationContainer
+                                                 ->reserveCost(resID);
+
             resData.STStorageClusterReserveParticipationCostForYear[hourInTheYear]
-              += participation
-                 * STStorageCluster->reserveParticipationContainer.value().reserveCost(resID);
+              += participationCost;
+            resData.reserveParticipationCostForYear[hourInTheYear] += participationCost;
 
             resData.reserveParticipationPerGroupForYear[hourInTheYear]
               .shortTermStorageGroupsReserveParticipation[STStorageCluster->getGroup()][resID]
@@ -190,20 +194,22 @@ void State::initFromHydro()
     if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast
         && study.parameters.include.reserves && Hydro.reserveParticipationContainer)
     {
-        auto& resData = reserveData.value().at(area->index);
+        auto& resData = reserveData->at(area->index);
         for (const auto& [resID, resParticipation]:
-             Hydro.reserveParticipationContainer.value().getReservesParticipations())
+             Hydro.reserveParticipationContainer->getReservesParticipations())
         {
             double participation = hourlyResults->HydroUsage[hourInTheWeek]
-                                     .reserveParticipationOfCluster
-                                     .value()[study.runtime.reserveParticipationIndexMaps.value()
-                                                .at(area->id)
-                                                .Hydro.left.at(resID)];
-            resData.HydroReserveParticipationCostForYear[hourInTheYear]
-              += participation * Hydro.reserveParticipationContainer.value().reserveCost(resID);
+                                     .reserveParticipationOfCluster->at(
+                                       study.reserveMaps->participationIndexMaps.at(area->id)
+                                         .Hydro.left.at(resID));
+            const double participationCost = participation
+                                             * Hydro.reserveParticipationContainer->reserveCost(
+                                               resID);
 
-            resData.reserveParticipationPerHydroForYear[hourInTheYear]["Hydro"][resID]
-              += participation;
+            resData.HydroReserveParticipationCostForYear[hourInTheYear] += participationCost;
+            resData.reserveParticipationCostForYear[hourInTheYear] += participationCost;
+
+            resData.reserveParticipationPerHydroForYear[hourInTheYear][resID] += participation;
         }
     }
 }
@@ -288,39 +294,36 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
     if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast
         && study.parameters.include.reserves && thermalCluster->reserveParticipationContainer)
     {
-        auto& resData = reserveData.value().at(area->index);
+        auto& resData = reserveData->at(area->index);
         for (const auto& [reserveID, reserveParticipation]:
-             thermalCluster->reserveParticipationContainer.value().getReservesParticipations())
+             thermalCluster->reserveParticipationContainer->getReservesParticipations())
         {
-            int reserveParticipationIdx = study.runtime.reserveParticipationIndexMaps.value()
-                                            .at(area->id)
+            int reserveParticipationIdx = study.reserveMaps->participationIndexMaps.at(area->id)
                                             .thermalClusters.left.at(
                                               std::make_pair(reserveID, thermalCluster->id()));
             if (reserveParticipationIdx != -1)
             {
                 double participationOn = hourlyResults->ProductionThermique[hourInTheWeek]
-                                           .ParticipationReservesDuPalierOn
-                                           .value()[reserveParticipationIdx];
+                                           .ParticipationReservesDuPalierOn->at(
+                                             reserveParticipationIdx);
 
                 double participationOff = hourlyResults->ProductionThermique[hourInTheWeek]
-                                            .ParticipationReservesDuPalierOff
-                                            .value()[reserveParticipationIdx];
+                                            .ParticipationReservesDuPalierOff->at(
+                                              reserveParticipationIdx);
+
+                const double participationCost = participationOn
+                                                   * thermalCluster->reserveParticipationContainer
+                                                       ->reserveCost(reserveID)
+                                                 + participationOff
+                                                     * thermalCluster->reserveParticipationContainer
+                                                         ->reserveCostOff(reserveID);
 
                 thermal[area->index].thermalClustersOperatingCost[clusterEnabledIndex]
-                  += participationOn
-                       * thermalCluster->reserveParticipationContainer.value().reserveCost(
-                         reserveID)
-                     + participationOff
-                         * thermalCluster->reserveParticipationContainer.value().reserveCostOff(
-                           reserveID);
+                  += participationCost;
 
                 resData.thermalClusterReserveParticipationCostForYear[hourInTheYear]
-                  += participationOn
-                       * thermalCluster->reserveParticipationContainer.value().reserveCost(
-                         reserveID)
-                     + participationOff
-                         * thermalCluster->reserveParticipationContainer.value().reserveCostOff(
-                           reserveID);
+                  += participationCost;
+                resData.reserveParticipationCostForYear[hourInTheYear] += participationCost;
 
                 resData.reserveParticipationPerGroupForYear[hourInTheYear]
                   .thermalGroupsReserveParticipation[thermalCluster->getGroup()][reserveID]
@@ -496,13 +499,13 @@ void State::calculateReserveParticipationCosts()
         uint startHourForCurrentYear = study.runtime.rangeLimits.hour[Data::rangeBegin];
         uint endHourForCurrentYear = startHourForCurrentYear
                                      + study.runtime.rangeLimits.hour[Data::rangeCount];
-        auto& resData = reserveData.value().at(area->index);
+        auto& resData = reserveData->at(area->index);
         for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
         {
             resData.reserveParticipationCostForYear[h]
-              += resData.thermalClusterReserveParticipationCostForYear[h]
-                 + resData.STStorageClusterReserveParticipationCostForYear[h]
-                 + resData.HydroReserveParticipationCostForYear[h];
+              = resData.thermalClusterReserveParticipationCostForYear[h]
+                + resData.STStorageClusterReserveParticipationCostForYear[h]
+                + resData.HydroReserveParticipationCostForYear[h];
         }
     }
 }

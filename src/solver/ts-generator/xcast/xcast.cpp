@@ -43,25 +43,22 @@ std::string mcyear(uint year)
 template<class PredicateT>
 void XCast::exportTimeSeriesToTheOutput(PredicateT& predicate)
 {
-    if (!study.parameters.noOutput)
-    {
-        logs.info() << "Exporting " << predicate.timeSeriesName()
-                    << " time-series into the output (year:" << year << ')';
+    logs.info() << "Exporting " << predicate.timeSeriesName()
+                << " time-series into the output (year:" << year << ')';
 
-        fs::path output = "ts-generator";
-        output /= fs::path(predicate.timeSeriesName()) / mcyear(year);
+    fs::path output = "ts-generator";
+    output /= fs::path(predicate.timeSeriesName()) / mcyear(year);
 
-        study.areas.each(
-          [this, &predicate, &output](Data::Area& area)
-          {
-              std::string areaId = area.id + "txt";
-              fs::path filename = output / areaId;
-              std::string buffer;
-              predicate.matrix(area).saveToBuffer(buffer);
+    study.areas.each(
+      [this, &predicate, &output](Data::Area& area)
+      {
+          std::string areaId = area.id + "txt";
+          fs::path filename = output / areaId;
+          std::string buffer;
+          predicate.matrix(area).saveToBuffer(buffer);
 
-              pWriter.addEntryFromBuffer(filename, buffer);
-          });
-    }
+          pWriter.addEntryFromBuffer(filename, buffer);
+      });
 }
 
 template<class PredicateT>

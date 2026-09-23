@@ -9,7 +9,6 @@ set(SRC_SIMULATION
         include/antares/solver/simulation/apply-scenario.h
         include/antares/solver/simulation/sim_alloc_probleme_hebdo.h
         include/antares/solver/simulation/sim_binding_constraints_rhs.h
-        include/antares/solver/simulation/sim_constants.h
         include/antares/solver/simulation/sim_structure_donnees.h
         include/antares/solver/simulation/sim_structure_probleme_economique.h
         include/antares/solver/simulation/simulation.h
@@ -17,8 +16,7 @@ set(SRC_SIMULATION
         include/antares/solver/simulation/solver.hxx
         include/antares/solver/simulation/numspace_manager.h
         include/antares/solver/simulation/random.h
-		include/antares/solver/simulation/forTestsOnlySimCalculEco.h
-        numspace_manager.cpp
+	        numspace_manager.cpp
         include/antares/solver/simulation/timeseries-numbers.h
         sim_alloc_probleme_hebdo.cpp
         sim_binding_constraints_rhs.cpp
@@ -35,6 +33,7 @@ set(SRC_SIMULATION
         simulation-run.cpp
         include/antares/solver/simulation/common-eco-adq.h
         common-eco-adq.cpp
+        include/antares/solver/simulation/reserve-index-maps.h
 	    include/antares/solver/simulation/common-hydro-remix.h
         common-hydro-remix.cpp
         common-hydro-levels.cpp

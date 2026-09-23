@@ -96,16 +96,18 @@ BOOST_FIXTURE_TEST_CASE(port_type_error_cases, Fixture)
 // Test library with models
 BOOST_FIXTURE_TEST_CASE(model_with_one_objective_properly_translated, Fixture)
 {
-    YmlModel::Model model1{.id = "model1",
-                           .description = "description",
-                           .parameters = {{"param1", true, false}},
-                           .variables = {},
-                           .ports = {},
-                           .port_field_definitions = {},
-                           .constraints = {},
-                           .binding_constraints = {},
-                           .objectives = {{"objective-id", "param1", "subproblems"}},
-                           .extra_outputs = {}};
+    YmlModel::Model model1{
+      .id = "model1",
+      .description = "description",
+      .parameters = {{"param1", true, false}},
+      .variables = {},
+      .ports = {},
+      .port_field_definitions = {},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", ExpressionLineNumber{"param1", 0}, "subproblems"}},
+      .extra_outputs = {},
+      .filename = ""};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     BOOST_REQUIRE_EQUAL(lib.Models().size(), 1);
@@ -125,7 +127,8 @@ BOOST_FIXTURE_TEST_CASE(model_parameters_properly_translated, Fixture)
                            .constraints{},
                            .binding_constraints = {},
                            .objectives = {},
-                           .extra_outputs = {}};
+                           .extra_outputs = {},
+                           .filename = ""};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
@@ -147,14 +150,27 @@ BOOST_FIXTURE_TEST_CASE(model_variables_properly_translated, Fixture)
       .id = "model1",
       .description = "description",
       .parameters = {{"pmax", true, false}},
-      .variables = {{"var1", "7", "pmax", ValueType::BOOL, true, true, "master"},
-                    {"var2", "999.99", "var1", ValueType::INTEGER, true, true, "subproblems"}},
+      .variables = {{"var1",
+                     ExpressionLineNumber{"7", 0},
+                     ExpressionLineNumber{"pmax", 0},
+                     ValueType::BOOL,
+                     true,
+                     true,
+                     "master"},
+                    {"var2",
+                     ExpressionLineNumber{"999.99", 0},
+                     ExpressionLineNumber{"var1", 0},
+                     ValueType::INTEGER,
+                     true,
+                     true,
+                     "subproblems"}},
       .ports = {},
       .port_field_definitions = {},
       .constraints = {},
       .binding_constraints = {},
-      .objectives = {{"objective-id", "var1", "subproblems"}},
-      .extra_outputs = {}};
+      .objectives = {{"objective-id", ExpressionLineNumber{"var1", 0}, "subproblems"}},
+      .extra_outputs = {},
+      .filename = ""};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
@@ -177,19 +193,84 @@ BOOST_FIXTURE_TEST_CASE(model_variables_properly_translated, Fixture)
 // wrong variable ValueType
 BOOST_FIXTURE_TEST_CASE(wrong_value_type, Fixture)
 {
-    YmlModel::Model model1{
-      .id = "model1",
-      .description = "description",
-      .parameters = {{"param1", true, false}, {"param2", false, false}},
-      .variables = {{"varP", "7", "param2", static_cast<ValueType>(5), true, true, "master"}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {},
-      .extra_outputs = {}};
+    YmlModel::Model model1{.id = "model1",
+                           .description = "description",
+                           .parameters = {{"param1", true, false}, {"param2", false, false}},
+                           .variables = {{"varP",
+                                          ExpressionLineNumber{"7", 0},
+                                          ExpressionLineNumber{"param2", 0},
+                                          static_cast<ValueType>(5),
+                                          true,
+                                          true,
+                                          "master"}},
+                           .ports = {},
+                           .port_field_definitions = {},
+                           .constraints = {},
+                           .binding_constraints = {},
+                           .objectives = {},
+                           .extra_outputs = {},
+                           .filename = ""};
     library.models = {model1};
     BOOST_CHECK_THROW(ModelConverter::convert(library), InputError);
+}
+
+// max/min operators with only parameters (and literals) as arguments are allowed in variable
+// bounds : these expressions are evaluated before the linear optimization, since parameters are
+// known at that point.
+BOOST_FIXTURE_TEST_CASE(variable_bound_with_max_min_on_parameters_is_accepted, Fixture)
+{
+    YmlModel::Model model1{.id = "model1",
+                           .description = "description",
+                           .parameters = {{"pmin", true, false}, {"pmax", true, false}},
+                           .variables = {{"var1",
+                                          ExpressionLineNumber{"max(pmin, 10)", 0},
+                                          ExpressionLineNumber{"min(pmax, 50)", 0},
+                                          ValueType::CONTINUOUS,
+                                          true,
+                                          true,
+                                          "subproblems"}},
+                           .ports = {},
+                           .port_field_definitions = {},
+                           .constraints = {},
+                           .binding_constraints = {},
+                           .objectives = {},
+                           .extra_outputs = {},
+                           .filename = ""};
+    library.models = {model1};
+
+    auto lib = ModelConverter::convert(library);
+    auto& m = lib.Models().at("model1");
+    const auto& var = m.Variables().front();
+    BOOST_CHECK_EQUAL(var.LowerBound().Value(), "max(pmin, 10)");
+    BOOST_CHECK_EQUAL(var.UpperBound().Value(), "min(pmax, 50)");
+}
+
+// Variables must still be rejected in function nodes within variable bounds, to keep bounds
+// independent of the solution of the linear problem.
+BOOST_FIXTURE_TEST_CASE(variable_bound_with_max_min_on_a_variable_is_rejected, Fixture)
+{
+    YmlModel::Model model1{.id = "model1",
+                           .description = "description",
+                           .parameters = {{"pmin", true, false}},
+                           .variables = {{"var1",
+                                          ExpressionLineNumber{"0", 0},
+                                          ExpressionLineNumber{"max(var1, pmin)", 0},
+                                          ValueType::CONTINUOUS,
+                                          true,
+                                          true,
+                                          "subproblems"}},
+                           .ports = {},
+                           .port_field_definitions = {},
+                           .constraints = {},
+                           .binding_constraints = {},
+                           .objectives = {},
+                           .extra_outputs = {},
+                           .filename = ""};
+    library.models = {model1};
+
+    std::string err_msg = "'FunctionNode::max' is not allowed to contain 'VariableNode' in "
+                          "expression 'max(var1, pmin)'";
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, checkMessage(err_msg));
 }
 
 // Test library with models and ports
@@ -207,7 +288,8 @@ BOOST_FIXTURE_TEST_CASE(model_ports_properly_translated, Fixture)
                            .constraints = {},
                            .binding_constraints = {},
                            .objectives = {},
-                           .extra_outputs = {}};
+                           .extra_outputs = {},
+                           .filename = ""};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     [[maybe_unused]] auto& model = lib.Models().at("model1");
@@ -248,7 +330,8 @@ BOOST_FIXTURE_TEST_CASE(ports_errors_cases, Fixture)
                           .constraints = {},
                           .binding_constraints = {},
                           .objectives = {},
-                          .extra_outputs = {}};
+                          .extra_outputs = {},
+                          .filename = ""};
     library.models = {model};
     BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, typeNotFound);
 }
@@ -265,11 +348,18 @@ BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)
       .variables = {},
       .ports = {},
       .port_field_definitions = {},
-      .constraints = {{"constraint1", "expression1", "subproblems", ""},
-                      {"constraint2", "expression2", "master-and-subproblems", ""}},
-      .binding_constraints = {{"constraint3", "expression3", "master", ""}},
+      .constraints = {{"constraint1", ExpressionLineNumber{"expression1", 0}, "subproblems", ""},
+                      {"constraint2",
+                       ExpressionLineNumber{"expression2", 0},
+                       "master-and-subproblems",
+                       ""}},
+      .binding_constraints = {{"constraint3",
+                               ExpressionLineNumber{"expression3", 0},
+                               "master",
+                               ""}},
       .objectives = {},
-      .extra_outputs = {}};
+      .extra_outputs = {},
+      .filename = ""};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
@@ -301,8 +391,8 @@ BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
                                .description = "description",
                                .parameters = {{"param1", true, false}, {"param2", false, false}},
                                .variables = {{"varP",
-                                              "7",
-                                              "param2",
+                                              ExpressionLineNumber{"7", 0},
+                                              ExpressionLineNumber{"param2", 0},
                                               ValueType::CONTINUOUS,
                                               true,
                                               true,
@@ -312,20 +402,33 @@ BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
                                .constraints = {},
                                .binding_constraints = {},
                                .objectives = {},
-                               .extra_outputs = {}};
+                               .extra_outputs = {},
+                               .filename = ""};
 
-    YmlModel::Model ymlModel_2{
-      .id = "model2",
-      .description = "description",
-      .parameters = {},
-      .variables = {{"var1", "7", "8", ValueType::BOOL, true, true, "master"},
-                    {"var2", "9999.9", "var1", ValueType::INTEGER, true, true, "subproblems"}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {},
-      .extra_outputs = {}};
+    YmlModel::Model ymlModel_2{.id = "model2",
+                               .description = "description",
+                               .parameters = {},
+                               .variables = {{"var1",
+                                              ExpressionLineNumber{"7", 0},
+                                              ExpressionLineNumber{"8", 0},
+                                              ValueType::BOOL,
+                                              true,
+                                              true,
+                                              "master"},
+                                             {"var2",
+                                              ExpressionLineNumber{"9999.9", 0},
+                                              ExpressionLineNumber{"var1", 0},
+                                              ValueType::INTEGER,
+                                              true,
+                                              true,
+                                              "subproblems"}},
+                               .ports = {},
+                               .port_field_definitions = {},
+                               .constraints = {},
+                               .binding_constraints = {},
+                               .objectives = {},
+                               .extra_outputs = {},
+                               .filename = ""};
 
     library.models = {ymlModel_1, ymlModel_2};
 
@@ -355,16 +458,18 @@ BOOST_FIXTURE_TEST_CASE(model_port_field_definitions_properly_translated, Fixtur
     YmlModel::PortType portType1{"flow", "description", {"field1"}, "", {}};
     library.port_types = {portType1};
 
-    YmlModel::Model model1{.id = "model1",
-                           .description = "description",
-                           .parameters = {{"param1", true, false}},
-                           .variables = {},
-                           .ports = {{"port1", "flow"}},
-                           .port_field_definitions = {{"port1", "field1", "param1"}},
-                           .constraints = {},
-                           .binding_constraints = {},
-                           .objectives = {},
-                           .extra_outputs = {}};
+    YmlModel::Model model1{
+      .id = "model1",
+      .description = "description",
+      .parameters = {{"param1", true, false}},
+      .variables = {},
+      .ports = {{"port1", "flow"}},
+      .port_field_definitions = {{"port1", "field1", ExpressionLineNumber{"param1", 0}}},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {},
+      .extra_outputs = {},
+      .filename = ""};
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);
     auto& model = lib.Models().at("model1");
@@ -386,16 +491,132 @@ BOOST_FIXTURE_TEST_CASE(port_fields_definitions_forbid_usage_of_sum_connections,
       .parameters = {},
       .variables = {},
       .ports = {{"port", "my-port-type"}},
-      .port_field_definitions = {{"port", "field", "sum_connections(port.field)"}},
+      .port_field_definitions = {{"port",
+                                  "field",
+                                  ExpressionLineNumber{"sum_connections(port.field)", 0}}},
       .constraints = {},
       .binding_constraints = {},
       .objectives = {},
-      .extra_outputs = {}};
+      .extra_outputs = {},
+      .filename = ""};
     library.models = {model};
 
     std::string err_msg = "'PortFieldSumNode' is not allowed in expression "
                           "'sum_connections(port.field)'";
     BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, checkMessage(err_msg));
+}
+
+BOOST_FIXTURE_TEST_CASE(port_field_definition_conflicts_with_sum_connections_in_same_model, Fixture)
+{
+    YmlModel::PortType portType{"my-port-type", "description", {"field"}, "", {}};
+    library.port_types = {portType};
+
+    YmlModel::Model model{
+      .id = "my-model",
+      .description = "description",
+      .parameters = {},
+      .variables = {},
+      .ports = {{"port", "my-port-type"}},
+      .port_field_definitions = {{"port", "field", ExpressionLineNumber{"0", 0}}},
+      .constraints = {},
+      .binding_constraints = {{"constraint1",
+                               ExpressionLineNumber{"sum_connections(port.field) = 0", 0},
+                               "subproblems",
+                               ""}},
+      .objectives = {},
+      .extra_outputs = {},
+      .filename = ""};
+    library.models = {model};
+
+    std::string err_msg = "In model 'my-model', field 'field' of port 'port' is defined in a "
+                          "port-field-definition and also used in a sum_connections "
+                          "in binding constraint 'constraint1'. "
+                          "A field cannot be both a sender and a receiver in the "
+                          "same model.";
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, checkMessage(err_msg));
+}
+
+BOOST_FIXTURE_TEST_CASE(port_field_definition_conflicts_with_sum_connections_different_port_names,
+                        Fixture)
+{
+    YmlModel::PortType portType{"my-port-type", "description", {"field"}, "", {}};
+    library.port_types = {portType};
+
+    YmlModel::Model model{
+      .id = "my-model",
+      .description = "description",
+      .parameters = {},
+      .variables = {},
+      .ports = {{"port1", "my-port-type"}, {"port2", "my-port-type"}},
+      .port_field_definitions = {{"port1", "field", ExpressionLineNumber{"0", 0}}},
+      .constraints = {},
+      .binding_constraints = {{"constraint1",
+                               ExpressionLineNumber{"sum_connections(port1.field) = 0", 0},
+                               "subproblems",
+                               ""}},
+      .objectives = {},
+      .extra_outputs = {},
+      .filename = ""};
+    library.models = {model};
+
+    std::string err_msg = "In model 'my-model', field 'field' of port 'port1' is defined in a "
+                          "port-field-definition and also used in a sum_connections "
+                          "in binding constraint 'constraint1'. "
+                          "A field cannot be both a sender and a receiver in the "
+                          "same model.";
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, checkMessage(err_msg));
+}
+
+BOOST_FIXTURE_TEST_CASE(port_field_definition_no_conflict_when_sum_connections_on_different_field,
+                        Fixture)
+{
+    YmlModel::PortType portType{"my-port-type", "description", {"field1", "field2"}, "", {}};
+    library.port_types = {portType};
+
+    YmlModel::Model model{
+      .id = "my-model",
+      .description = "description",
+      .parameters = {},
+      .variables = {},
+      .ports = {{"port", "my-port-type"}},
+      .port_field_definitions = {{"port", "field1", ExpressionLineNumber{"0", 0}}},
+      .constraints = {},
+      .binding_constraints = {{"constraint1",
+                               ExpressionLineNumber{"sum_connections(port.field2) = 0", 0},
+                               "subproblems",
+                               ""}},
+      .objectives = {},
+      .extra_outputs = {},
+      .filename = ""};
+    library.models = {model};
+
+    BOOST_CHECK_NO_THROW(ModelConverter::convert(library));
+}
+
+BOOST_FIXTURE_TEST_CASE(port_field_definition_no_conflict_when_sum_connections_on_different_port,
+                        Fixture)
+{
+    YmlModel::PortType portType{"my-port-type", "description", {"field"}, "", {}};
+    library.port_types = {portType};
+
+    YmlModel::Model model{
+      .id = "my-model",
+      .description = "description",
+      .parameters = {},
+      .variables = {},
+      .ports = {{"port1", "my-port-type"}, {"port2", "my-port-type"}},
+      .port_field_definitions = {{"port1", "field", ExpressionLineNumber{"0", 0}}},
+      .constraints = {},
+      .binding_constraints = {{"constraint1",
+                               ExpressionLineNumber{"sum_connections(port2.field) = 0", 0},
+                               "subproblems",
+                               ""}},
+      .objectives = {},
+      .extra_outputs = {},
+      .filename = ""};
+    library.models = {model};
+
+    BOOST_CHECK_NO_THROW(ModelConverter::convert(library));
 }
 
 BOOST_FIXTURE_TEST_CASE(in_port_fields_definitions__min_operator_accepts_a_variable, Fixture)
@@ -405,19 +626,33 @@ BOOST_FIXTURE_TEST_CASE(in_port_fields_definitions__min_operator_accepts_a_varia
 
     std::string location = "master-and-subproblems";
 
-    Variable spillage = {"spillage", "0", "100", ValueType::CONTINUOUS, true, true, location};
-    Variable ens = {"ens", "0", "100", ValueType::CONTINUOUS, true, true, location};
+    Variable spillage = {"spillage",
+                         ExpressionLineNumber{"0", 0},
+                         ExpressionLineNumber{"100", 0},
+                         ValueType::CONTINUOUS,
+                         true,
+                         true,
+                         location};
+    Variable ens = {"ens",
+                    ExpressionLineNumber{"0", 0},
+                    ExpressionLineNumber{"100", 0},
+                    ValueType::CONTINUOUS,
+                    true,
+                    true,
+                    location};
 
-    YmlModel::Model model{.id = "my-model",
-                          .description = "description",
-                          .parameters = {},
-                          .variables = {spillage, ens},
-                          .ports = {{"port", "my-port-type"}},
-                          .port_field_definitions = {{"port", "field", "min(spillage, ens)"}},
-                          .constraints = {},
-                          .binding_constraints = {},
-                          .objectives = {},
-                          .extra_outputs = {}};
+    YmlModel::Model model{
+      .id = "my-model",
+      .description = "description",
+      .parameters = {},
+      .variables = {spillage, ens},
+      .ports = {{"port", "my-port-type"}},
+      .port_field_definitions = {{"port", "field", ExpressionLineNumber{"min(spillage, ens)", 0}}},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {},
+      .extra_outputs = {},
+      .filename = ""};
     library.models = {model};
 
     BOOST_CHECK_NO_THROW(ModelConverter::convert(library));
@@ -450,43 +685,49 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_error_cases, Fixture)
     YmlModel::PortType portType1{"flow", "description", {"field1"}, "", {}};
     library.port_types = {portType1};
 
-    YmlModel::Model model1{.id = "model1",
-                           .description = "description",
-                           .parameters = {{"param1", true, false}},
-                           .variables = {},
-                           .ports = {{"port1", "flow"}},
-                           .port_field_definitions = {{"port2", "field1", "param1"}},
-                           .constraints = {},
-                           .binding_constraints = {},
-                           .objectives = {},
-                           .extra_outputs = {}};
+    YmlModel::Model model1{
+      .id = "model1",
+      .description = "description",
+      .parameters = {{"param1", true, false}},
+      .variables = {},
+      .ports = {{"port1", "flow"}},
+      .port_field_definitions = {{"port2", "field1", ExpressionLineNumber{"param1", 0}}},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {},
+      .extra_outputs = {},
+      .filename = ""};
     library.models = {model1};
     BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, portNotFoundForDef);
 
-    YmlModel::Model model2{.id = "model2",
-                           .description = "description",
-                           .parameters = {{"param2", true, false}},
-                           .variables = {},
-                           .ports = {{"port2", "flow"}},
-                           .port_field_definitions = {{"port2", "field2", "param2"}},
-                           .constraints = {},
-                           .binding_constraints = {},
-                           .objectives = {},
-                           .extra_outputs = {}};
+    YmlModel::Model model2{
+      .id = "model2",
+      .description = "description",
+      .parameters = {{"param2", true, false}},
+      .variables = {},
+      .ports = {{"port2", "flow"}},
+      .port_field_definitions = {{"port2", "field2", ExpressionLineNumber{"param2", 0}}},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {},
+      .extra_outputs = {},
+      .filename = ""};
     library.models = {model2};
     BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, fieldNotFoundForDef);
 
-    YmlModel::Model model3{.id = "model3",
-                           .description = "description",
-                           .parameters = {{"param3", true, false}},
-                           .variables = {},
-                           .ports = {{"port3", "flow"}, {"port4", "flow"}},
-                           .port_field_definitions = {{"port4", "field1", "port3.field1"},
-                                                      {"port3", "field1", ""}},
-                           .constraints = {},
-                           .binding_constraints = {},
-                           .objectives = {},
-                           .extra_outputs = {}};
+    YmlModel::Model model3{
+      .id = "model3",
+      .description = "description",
+      .parameters = {{"param3", true, false}},
+      .variables = {},
+      .ports = {{"port3", "flow"}, {"port4", "flow"}},
+      .port_field_definitions = {{"port4", "field1", ExpressionLineNumber{"port3.field1", 0}},
+                                 {"port3", "field1", ExpressionLineNumber{"", 0}}},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {},
+      .extra_outputs = {},
+      .filename = ""};
     library.models = {model3};
     BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, portInDef);
 }
@@ -494,17 +735,25 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_error_cases, Fixture)
 // Test one model with extra outputs
 BOOST_FIXTURE_TEST_CASE(model_extra_outputs_properly_translated, Fixture)
 {
-    YmlModel::Model model1{
-      .id = "model1",
-      .description = "description",
-      .parameters = {{"param1", true, false}},
-      .variables = {{"var1", "7", "8", ValueType::CONTINUOUS, true, true, "subproblems"}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {},
-      .extra_outputs = {{"output1", "5 * param1"}, {"output2", "param1 / var1 * 95.4"}}};
+    YmlModel::Model model1{.id = "model1",
+                           .description = "description",
+                           .parameters = {{"param1", true, false}},
+                           .variables = {{"var1",
+                                          ExpressionLineNumber{"7", 0},
+                                          ExpressionLineNumber{"8", 0},
+                                          ValueType::CONTINUOUS,
+                                          true,
+                                          true,
+                                          "subproblems"}},
+                           .ports = {},
+                           .port_field_definitions = {},
+                           .constraints = {},
+                           .binding_constraints = {},
+                           .objectives = {},
+                           .extra_outputs = {{"output1", ExpressionLineNumber{"5 * param1", 0}},
+                                             {"output2",
+                                              ExpressionLineNumber{"param1 / var1 * 95.4", 0}}},
+                           .filename = ""};
 
     library.models = {model1};
     SystemModel::Library lib = ModelConverter::convert(library);

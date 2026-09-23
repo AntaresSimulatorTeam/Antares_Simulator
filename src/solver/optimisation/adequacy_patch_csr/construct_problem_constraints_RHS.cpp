@@ -59,19 +59,19 @@ void HourlyCSRProblem::setRHSnodeBalanceValue()
 }
 
 void HourlyCSRProblem::setRHSfictitiousLoadValue()
+// constraint: FictitiousLoad for all areas inside adequacy patch
+// Formula: spillage <= STt - (1-BT)*STmint + BH*Ht + BF*(Ft - Lt) + BH*STS_net_production
+// where:
+//   STt = sum of thermal dispatchable generation (from first optimization step)
+//   STmint = sum of Pmin of thermal units
+//   Ht = hydro generation (from first optimization step)
+//   Ft = max(0,must-run generation)
+//   Lt = min(0,load) (load = ConsommationAbattueDuPays + must-run generation)
+//   BT = DefaillanceNegativeUtiliserPMinThermique
+//   BH = DefaillanceNegativeUtiliserHydro
+//   BF = DefaillanceNegativeUtiliserConsoAbattue
+//   STS_net_production = net withdrawals from short-term storage (from first optimization step)
 {
-    // constraint: FictitiousLoad for all areas inside adequacy patch
-    // Formula: spillage <= STt - (1-BT)*STmint + BH*Ht + BF*(Ft - Lt) + BH*STS_net_production
-    // where:
-    //   STt = sum of thermal dispatchable generation (from first optimization step)
-    //   STmint = sum of Pmin of thermal units
-    //   Ht = hydro generation (from first optimization step)
-    //   Ft = max(0,must-run generation)
-    //   Lt = min(0,load) (load = ConsommationAbattueDuPays + must-run generation)
-    //   BT = DefaillanceNegativeUtiliserPMinThermique
-    //   BH = DefaillanceNegativeUtiliserHydro
-    //   BF = DefaillanceNegativeUtiliserConsoAbattue
-    //   STS_net_production = net withdrawals from short-term storage (from first optimization step)
     for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
@@ -82,9 +82,7 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
             {
                 int Cnt = it->second;
 
-                // Start with thermal dispatchable generation (STt)
                 double stt = 0.0;
-
                 const auto& paliersThermiques = problemeHebdo_->PaliersThermiquesDuPays[Area];
                 const auto& productionThermique = problemeHebdo_->ResultatsHoraires[Area]
                                                     .ProductionThermique[triggeredHour];
@@ -93,9 +91,6 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                     stt += productionThermique.ProductionThermiqueDuPalier[index];
                 }
 
-                // Subtract (1-BT)*STmint term
-                // If BT is false: subtract STmint (sum of Pmin)
-                // If BT is true: subtract 0 (i.e., use full STt)
                 double stmint = 0.0;
                 if (!problemeHebdo_->DefaillanceNegativeUtiliserPMinThermique[Area])
                 {
@@ -106,14 +101,12 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                     }
                 }
 
-                // Add BH*Ht term (hydro generation if enabled)
                 double ht = 0.0;
                 if (problemeHebdo_->DefaillanceNegativeUtiliserHydro[Area])
                 {
                     ht = problemeHebdo_->ResultatsHoraires[Area].TurbinageHoraire[triggeredHour];
                 }
 
-                // Add BF*(Ft - Lt) term
                 double bfTerm = 0.0;
                 if (problemeHebdo_->DefaillanceNegativeUtiliserConsoAbattue[Area])
                 {
@@ -122,14 +115,10 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                     double consommationAbattue = problemeHebdo_
                                                    ->ConsommationsAbattues[triggeredHour]
                                                    .ConsommationAbattueDuPays[Area];
-
-                    // Ft = max(0,must-run generation)
-                    // Lt = min(0,load) (load = ConsommationAbattueDuPays + must-run generation)
                     bfTerm = std::max(0., allMustRunGen)
                              - std::min(0., consommationAbattue + allMustRunGen);
                 }
 
-                // Add short term storage withdrawal
                 double stsNetProduction = 0.0;
                 if (problemeHebdo_->DefaillanceNegativeUtiliserHydro[Area])
                 {
@@ -141,7 +130,6 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                     }
                 }
 
-                // RHS = STt - (1-BT)*STmint + BH*Ht + BF*(Ft - Lt) + BH*STS_net_production
                 double rhs = stt - stmint + ht + bfTerm + stsNetProduction;
 
                 problemeAResoudre_.SecondMembre[Cnt] = rhs;

@@ -3,6 +3,8 @@
 
 #include "antares/io/inputs/model-converter/modelConverter.h"
 
+#include <set>
+
 #include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h> // gp : why do we need this inclusion ?
 #include "antares/expressions/expression.h"
@@ -20,6 +22,20 @@ using namespace Antares::Expressions::Nodes;
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::IO::Inputs;
 using namespace Antares::IO::Inputs::ForbidNodes;
+
+namespace
+{
+
+/// used for error reporting
+std::string buildFileAndLineNb(const std::string& filename, size_t lineNb)
+{
+    if (lineNb == 0)
+    {
+        return {};
+    }
+    return fmt::format("'{}', line {}", filename, lineNb);
+}
+} // anonymous namespace
 
 namespace Antares::IO::Inputs::ModelConverter
 {
@@ -141,23 +157,32 @@ ValueType convertType(YmlModel::ValueType type)
  * \param model The YmlModel::Model object containing variables.
  * \return A vector of SystemModel::Variable objects.
  */
-std::vector<Variable> convertVariables(const YmlModel::Model& model)
+std::vector<Variable> convertVariables(const YmlModel::Model& model,
+                                       const std::string& libraryFileName)
 {
     std::vector<Variable> variables;
     variables.reserve(model.variables.size());
 
     for (const auto& variable: model.variables)
     {
-        Expression lb(variable.lower_bound, convertExpressionToNode(variable.lower_bound, model));
+        Expression lb(variable.lower_bound.input_expr,
+                      convertExpressionToNode(
+                        variable.lower_bound.input_expr,
+                        model,
+                        buildFileAndLineNb(libraryFileName, variable.lower_bound.line_number)));
         if (lb.RootNode())
         {
-            ForbiddenNodesVisitor(forbiddenInVariableBounds, variable.lower_bound)
+            ForbiddenNodesVisitor(forbiddenInVariableBounds, variable.lower_bound.input_expr)
               .dispatch(lb.RootNode());
         }
-        Expression ub(variable.upper_bound, convertExpressionToNode(variable.upper_bound, model));
+        Expression ub(variable.upper_bound.input_expr,
+                      convertExpressionToNode(
+                        variable.upper_bound.input_expr,
+                        model,
+                        buildFileAndLineNb(libraryFileName, variable.upper_bound.line_number)));
         if (ub.RootNode())
         {
-            ForbiddenNodesVisitor(forbiddenInVariableBounds, variable.upper_bound)
+            ForbiddenNodesVisitor(forbiddenInVariableBounds, variable.upper_bound.input_expr)
               .dispatch(ub.RootNode());
         }
         variables.emplace_back(variable.id,
@@ -203,7 +228,8 @@ std::vector<Port> convertPorts(const YmlModel::Model& model, const std::vector<P
  * \return A vector of SystemModel::PortFieldDefinition objects.
  */
 std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Model& model,
-                                                             std::vector<Port>& ports)
+                                                             std::vector<Port>& ports,
+                                                             const std::string& libraryFileName)
 {
     std::vector<PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.reserve(model.port_field_definitions.size());
@@ -215,7 +241,8 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                            { return p.Id() == pfdefinition.port; });
         if (itPort == ports.end())
         {
-            throw InputError("In port-field-definitions, port not found: " + pfdefinition.port);
+            throw InputError(
+              fmt::format("In port-field-definitions, port not found: {}", pfdefinition.port));
         }
 
         // second check if the field exists in type
@@ -225,11 +252,16 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                             { return field.Id() == pfdefinition.field; });
         if (itField == portFields.end())
         {
-            throw InputError("In port-field-definitions, for port: " + pfdefinition.port
-                             + " , field not found: " + pfdefinition.field);
+            throw InputError(
+              fmt::format("In port-field-definitions, for port: {} , field not found: {}",
+                          pfdefinition.port,
+                          pfdefinition.field));
         }
 
-        auto nodeRegistry = convertExpressionToNode(pfdefinition.definition, model);
+        auto nodeRegistry = convertExpressionToNode(
+          pfdefinition.definition.input_expr,
+          model,
+          buildFileAndLineNb(libraryFileName, pfdefinition.definition.line_number));
 
         using namespace Antares::Expressions::Nodes;
         AST preorder(nodeRegistry.node);
@@ -239,34 +271,43 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                { return dynamic_cast<const PortFieldNode*>(&node) != nullptr; });
         if (it != preorder.end())
         {
-            throw InputError("In port-field-definitions, for port: " + pfdefinition.port
-                             + " , found another port in the definition: "
-                             + dynamic_cast<const PortFieldNode&>(*it).getPortName());
+            throw InputError(
+
+              fmt::format("In port-field-definitions, for port: {} , found another port in the "
+                          "definition: {}",
+                          pfdefinition.port,
+                          dynamic_cast<const PortFieldNode&>(*it).getPortName()));
         }
 
-        ForbiddenNodesVisitor(forbiddenInPortFieldDef, pfdefinition.definition)
+        ForbiddenNodesVisitor(forbiddenInPortFieldDef, pfdefinition.definition.input_expr)
           .dispatch(nodeRegistry.node);
 
         portFieldDefinitions.emplace_back(*itPort,
                                           *itField,
-                                          Expression(pfdefinition.definition,
+                                          Expression(pfdefinition.definition.input_expr,
                                                      std::move(nodeRegistry)));
 
         // A definition for a port field means this field is a sender
         itPort->setFieldRole(itField->Id(), FieldRole::Sender);
     }
+
     return portFieldDefinitions;
 }
 
 static Constraint createConstraint(const YmlModel::Constraint& constraint,
                                    const YmlModel::Model& model,
                                    const ForbiddenNodes& forbiddenNodes,
+                                   const std::string& libraryFileName,
                                    bool isBindingConstraint = false)
 {
-    auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
-    ForbiddenNodesVisitor(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
+    auto nodeRegistry = convertExpressionToNode(
+      constraint.expression.input_expr,
+      model,
+      buildFileAndLineNb(libraryFileName, constraint.expression.line_number));
+    ForbiddenNodesVisitor(forbiddenNodes, constraint.expression.input_expr)
+      .dispatch(nodeRegistry.node);
     return {constraint.id,
-            Expression{constraint.expression, std::move(nodeRegistry)},
+            Expression{constraint.expression.input_expr, std::move(nodeRegistry)},
             convertLocation(constraint.location),
             convertOutOfBoundsProcessingMode(constraint.out_of_bounds_processing_mode),
             isBindingConstraint};
@@ -278,20 +319,22 @@ static Constraint createConstraint(const YmlModel::Constraint& constraint,
  * \param model The YmlModel::Model object containing constraints.
  * \return A vector of SystemModel::Constraint objects.
  */
-std::vector<Constraint> convertConstraints(const YmlModel::Model& model)
+std::vector<Constraint> convertConstraints(const YmlModel::Model& model,
+                                           const std::string& libraryFileName)
 {
     std::vector<Constraint> constraints;
     constraints.reserve(model.constraints.size());
 
     for (const auto& constraint: model.constraints)
     {
-        constraints.push_back(createConstraint(constraint, model, forbiddenInConstraint));
+        constraints.push_back(
+          createConstraint(constraint, model, forbiddenInConstraint, libraryFileName));
     }
 
     for (const auto& constraint: model.binding_constraints)
     {
         constraints.push_back(
-          createConstraint(constraint, model, forbiddenInBindingConstraint, true));
+          createConstraint(constraint, model, forbiddenInBindingConstraint, libraryFileName, true));
     }
     return constraints;
 }
@@ -302,18 +345,23 @@ std::vector<Constraint> convertConstraints(const YmlModel::Model& model)
  * \param model The YmlModel::Model object containing extra outputs.
  * \return A vector of SystemModel::ExtraOutput objects.
  */
-std::vector<ExtraOutput> convertExtraOutputs(const YmlModel::Model& model)
+std::vector<ExtraOutput> convertExtraOutputs(const YmlModel::Model& model,
+                                             const std::string& libraryFileName)
 {
     std::vector<ExtraOutput> extraOutputs;
     extraOutputs.reserve(model.extra_outputs.size());
 
     for (const auto& extraOutput: model.extra_outputs)
     {
-        auto nodeRegistry = convertExpressionToNode(extraOutput.expression, model);
-        ForbiddenNodesVisitor(forbiddenInExtraOutput, extraOutput.expression)
+        auto nodeRegistry = convertExpressionToNode(
+          extraOutput.expression.input_expr,
+          model,
+          buildFileAndLineNb(libraryFileName, extraOutput.expression.line_number));
+        ForbiddenNodesVisitor(forbiddenInExtraOutput, extraOutput.expression.input_expr)
           .dispatch(nodeRegistry.node);
         extraOutputs.emplace_back(extraOutput.id,
-                                  Expression{extraOutput.expression, std::move(nodeRegistry)});
+                                  Expression{extraOutput.expression.input_expr,
+                                             std::move(nodeRegistry)});
     }
     return extraOutputs;
 }
@@ -324,20 +372,83 @@ std::vector<ExtraOutput> convertExtraOutputs(const YmlModel::Model& model)
  * \param model The YmlModel::Model object containing objectives.
  * \return A vector of SystemModel::Expression objects.
  */
-std::vector<Objective> convertObjectives(const YmlModel::Model& model)
+std::vector<Objective> convertObjectives(const YmlModel::Model& model,
+                                         const std::string& libraryFileName)
 {
     std::vector<Objective> objectives;
     objectives.reserve(model.objectives.size());
     for (const auto& objective: model.objectives)
     {
-        auto nodeRegistry = convertExpressionToNode(objective.expression, model);
-        ForbiddenNodesVisitor(forbiddenInObjective, objective.expression)
+        auto nodeRegistry = convertExpressionToNode(
+          objective.expression.input_expr,
+          model,
+          buildFileAndLineNb(libraryFileName, objective.expression.line_number));
+        ForbiddenNodesVisitor(forbiddenInObjective, objective.expression.input_expr)
           .dispatch(nodeRegistry.node);
         objectives.emplace_back(objective.id,
-                                Expression{objective.expression, std::move(nodeRegistry)},
+                                Expression{objective.expression.input_expr,
+                                           std::move(nodeRegistry)},
                                 convertLocation(objective.location));
     }
     return objectives;
+}
+
+/**
+ * \brief Checks that no field is both defined in a port-field-definition and used
+ * in a sum_connections in a binding constraint within the same model.
+ *
+ * A field defined in a port-field-definition has the Sender role, while sum_connections
+ * consumes fields from the Receiver side. Having both in the same model is contradictory.
+ */
+void checkPortFieldDefinitionConflictWithSumConnections(
+  const std::vector<Constraint>& constraints,
+  const std::vector<YmlModel::PortFieldDefinition>& portFieldDefs,
+  const std::string& modelId)
+{
+    if (portFieldDefs.empty())
+    {
+        return;
+    }
+
+    std::set<std::pair<std::string, std::string>> senderFields;
+    for (const auto& pfd: portFieldDefs)
+    {
+        senderFields.insert({pfd.port, pfd.field});
+    }
+
+    for (const auto& constraint: constraints)
+    {
+        if (!constraint.isBindingConstraint())
+        {
+            continue;
+        }
+        if (!constraint.expression().RootNode())
+        {
+            continue;
+        }
+
+        AST ast(constraint.expression().RootNode());
+        for (const auto& node: ast)
+        {
+            if (const auto* sumNode = dynamic_cast<const PortFieldSumNode*>(&node))
+            {
+                auto key = std::make_pair(sumNode->getPortName(), sumNode->getFieldName());
+                if (senderFields.contains(key))
+                {
+                    throw InputError(
+                      fmt::format("In model '{}', field '{}' of port '{}' is defined in a "
+                                  "port-field-definition and also used in a sum_connections "
+                                  "in binding constraint '{}'. "
+                                  "A field cannot be both a sender and a receiver in the "
+                                  "same model.",
+                                  modelId,
+                                  sumNode->getFieldName(),
+                                  sumNode->getPortName(),
+                                  constraint.Id()));
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -355,15 +466,20 @@ std::vector<Model> convertModels(const YmlModel::Library& library,
     {
         ModelBuilder modelBuilder;
         std::vector<Parameter> parameters = convertParameters(model);
-        std::vector<Variable> variables = convertVariables(model);
+        std::vector<Variable> variables = convertVariables(model, library.filename);
         std::vector<Port> ports = convertPorts(model, portTypes);
-        std::vector<PortFieldDefinition> portFieldDefinitions = convertPortFieldDefinitions(model,
-                                                                                            ports);
-        std::vector<Constraint> constraints = convertConstraints(model);
-        std::vector<ExtraOutput> extraOutputs = convertExtraOutputs(model);
-        std::vector<Objective> objectives = convertObjectives(model);
+        std::vector<PortFieldDefinition>
+          portFieldDefinitions = convertPortFieldDefinitions(model, ports, library.filename);
+        std::vector<Constraint> constraints = convertConstraints(model, library.filename);
+        std::vector<ExtraOutput> extraOutputs = convertExtraOutputs(model, library.filename);
+        std::vector<Objective> objectives = convertObjectives(model, library.filename);
+
+        checkPortFieldDefinitionConflictWithSumConnections(constraints,
+                                                           model.port_field_definitions,
+                                                           model.id);
 
         auto modelObj = modelBuilder.withId(model.id)
+                          .withLibraryId(library.id)
                           .withObjectives(std::move(objectives))
                           .withParameters(std::move(parameters))
                           .withVariables(std::move(variables))

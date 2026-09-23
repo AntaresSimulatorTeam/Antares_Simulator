@@ -9,6 +9,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/solver/variable/registerThematicTrimmingVariables.h>
 #include <antares/study/study.h>
 
 using namespace Antares;
@@ -126,6 +127,11 @@ IniFile invalidINI()
 
 struct Fixture
 {
+    Fixture()
+    {
+        Antares::Solver::Variable::RegisterThematicTrimmingVariables();
+    }
+
     Parameters p;
     StudyLoadOptions options;
     StudyVersion version = StudyVersion::latest();
@@ -146,6 +152,15 @@ BOOST_FIXTURE_TEST_CASE(reset, Fixture)
     BOOST_CHECK_EQUAL(p.optOptions.firstOptimOptions.solverName, "sirius");
     BOOST_CHECK_EQUAL(p.optOptions.secondOptimOptions.solverName, "sirius");
     BOOST_CHECK_EQUAL(p.optOptions.quadraticOptimOptions.solverName, "sirius");
+}
+
+BOOST_FIXTURE_TEST_CASE(output_selection_defaults_to_monte_carlo_results_only, Fixture)
+{
+    p.reset();
+
+    BOOST_CHECK_EQUAL(p.outputSelection.value(), OutputSelection::MonteCarlo);
+    BOOST_CHECK_EQUAL(p.writeMonteCarloResults(), true);
+    BOOST_CHECK_EQUAL(p.writeSimulationTable(), false);
 }
 
 BOOST_FIXTURE_TEST_CASE(initializing_solvers_options_with_cmd_line_options, Fixture)

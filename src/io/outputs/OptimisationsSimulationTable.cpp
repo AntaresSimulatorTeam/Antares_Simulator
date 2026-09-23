@@ -3,21 +3,149 @@
 
 #include "include/antares/io/outputs/OptimisationsSimulationTable.h"
 
+#include <sstream>
+#include <string>
+#include <vector>
+
+#include <antares/exception/InvalidArgumentError.hpp>
+
 namespace Antares::IO::Outputs
 {
+namespace
+{
+// Split on ',', dropping empty fields and trimming the spaces a user naturally
+// writes around each name. No business logic here: "all" and unknown names come
+// out as-is.
+std::vector<std::string> splitStageList(const std::string& input)
+{
+    std::vector<std::string> names;
+    std::istringstream stream(input);
+    std::string field;
+    while (std::getline(stream, field, ','))
+    {
+        const auto first = field.find_first_not_of(" \t");
+        if (first == std::string::npos)
+        {
+            continue;
+        }
+        const auto last = field.find_last_not_of(" \t");
+        names.push_back(field.substr(first, last - first + 1));
+    }
+    return names;
+}
+
+[[noreturn]] void rejectValue(const std::string& what, const std::string& source)
+{
+    std::ostringstream message;
+    message << "Invalid value for " << source << ": " << what << " (expected all, last";
+    for (const auto stage: allStages)
+    {
+        message << ", " << stageName(stage);
+    }
+    message << ")";
+    throw Error::InvalidArgumentError(message.str());
+}
+
+// Turn the raw names into stages, applying the "all" and "last" keywords. Every
+// other name still has to be a real stage, so a typo in `all,optim-nb-3` is
+// reported rather than swallowed. An empty result means "every stage": that is
+// what "all" resolves to. A list with no usable name at all is rejected: unlike
+// an absent selection, an empty one reads like a deliberate "no stage", which
+// this option cannot express.
+std::vector<Stage> resolveStages(const std::vector<std::string>& names,
+                                 const std::string& source,
+                                 Stage lastStage)
+{
+    if (names.empty())
+    {
+        rejectValue("empty", source);
+    }
+
+    bool everyStage = false;
+    std::vector<Stage> stages;
+    for (const auto& name: names)
+    {
+        if (name == "all")
+        {
+            everyStage = true;
+            continue;
+        }
+
+        if (name == "last")
+        {
+            stages.push_back(lastStage);
+            continue;
+        }
+
+        const auto stage = stageFromName(name);
+        if (!stage)
+        {
+            rejectValue("'" + name + "'", source);
+        }
+        stages.push_back(*stage);
+    }
+    return everyStage ? std::vector<Stage>{} : stages;
+}
+} // namespace
+
+OptimisationsSimulationTable::OptimisationsSimulationTable(
+  std::shared_ptr<const Optimization::InactiveComponentsAnalyzer> inactiveComponents):
+    inactiveComponents(std::move(inactiveComponents))
+{
+}
+
+std::set<Stage> OptimisationsSimulationTable::parseStageSelection(const std::string& input,
+                                                                  const std::string& source,
+                                                                  Stage lastStage)
+{
+    const auto stages = resolveStages(splitStageList(input), source, lastStage);
+    return {stages.begin(), stages.end()};
+}
+
+void OptimisationsSimulationTable::selectStages(std::set<Stage> stages)
+{
+    selectedStages_ = std::move(stages);
+}
+
 SimulationTable* OptimisationsSimulationTable::firstOptimSimulationTable()
 {
-    return &firstOptimSimulationTable_;
+    return tableForStage(Stage::firstOptim);
 }
 
 SimulationTable* OptimisationsSimulationTable::secondOptimSimulationTable()
 {
-    return &secondOptimSimulationTable_;
+    return tableForStage(Stage::secondOptim);
+}
+
+SimulationTable* OptimisationsSimulationTable::tableForStage(Stage stage)
+{
+    if (!isStageSelected(stage))
+    {
+        return nullptr;
+    }
+    return &stages_.try_emplace(stage).first->second;
+}
+
+bool OptimisationsSimulationTable::isStageSelected(Stage stage) const
+{
+    return selectedStages_.empty() || selectedStages_.contains(stage);
+}
+
+bool OptimisationsSimulationTable::anyPostProcessStageSelected() const
+{
+    return isStageSelected(Stage::peakShaving) || isStageSelected(Stage::adequacyPatch);
+}
+
+const std::map<Stage, SimulationTable>& OptimisationsSimulationTable::stages() const
+{
+    return stages_;
 }
 
 void OptimisationsSimulationTable::clear()
 {
-    firstOptimSimulationTable_.clear();
-    secondOptimSimulationTable_.clear();
+    for (auto& [stage, table]: stages_)
+    {
+        table.clear();
+    }
 }
 } // namespace Antares::IO::Outputs

@@ -11,14 +11,14 @@ namespace Antares::Data::ScenarioBuilder
 
 bool TSNumberData::reset(const Study& study)
 {
-    const uint nbYears = study.parameters.nbYears;
+    const unsigned int nbYears = study.parameters.nbYears;
 
     // Standard timeseries (load, wind, ...)
     pTSNumberRules.reset(study.areas.size(), nbYears);
     return true;
 }
 
-void TSNumberData::setTSnumber(uint areaindex, uint year, uint value)
+void TSNumberData::setTSnumber(unsigned int areaindex, unsigned int year, unsigned int value)
 {
     assert(areaindex < pTSNumberRules.width);
     if (year < pTSNumberRules.height)
@@ -27,7 +27,7 @@ void TSNumberData::setTSnumber(uint areaindex, uint year, uint value)
     }
 }
 
-void TSNumberData::set_value(uint x, uint y, uint value) const
+void TSNumberData::set_value(unsigned int x, unsigned int y, unsigned int value) const
 {
     pTSNumberRules.entry[y][x] = value;
 }

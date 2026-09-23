@@ -15,19 +15,19 @@
 
 namespace fs = std::filesystem;
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 class BendersDecomposition;
 
-namespace LinearProblemApi
+namespace Api
 {
 /** \brief Context for filling linear problem data.
  * Contains temporal information
  */
 class FillContext;
 class IMipSolution;
-} // namespace LinearProblemApi
-} // namespace Antares::Optimisation
+} // namespace Api
+} // namespace Antares::LinearProblem
 
 namespace Antares::Solver
 {
@@ -35,15 +35,15 @@ class ILoader;
 
 struct ProblemEntity
 {
-    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> problem;
-    std::unique_ptr<Optimisation::OptimEntityContainer> optimEntityContainer;
+    std::unique_ptr<LinearProblem::Api::ILinearProblem> problem;
+    std::unique_ptr<LinearProblem::OptimEntityContainer> optimEntityContainer;
 };
 
 ProblemEntity buildProblem(const Antares::Solver::ModelerData& data,
                            const Config::Location& location,
                            const std::string& problemId,
-                           Optimisation::BendersDecomposition* bendersDecomposition,
-                           const Optimisation::LinearProblemApi::FillContext& timeScenarioCtx,
+                           LinearProblem::BendersDecomposition* bendersDecomposition,
+                           const LinearProblem::Api::FillContext& timeScenarioCtx,
                            const ResolutionMode& resolutionMode,
                            const std::optional<std::string>& solver);
 
@@ -56,10 +56,9 @@ public:
 
     void buildProblems();
     void buildMasterProblem();
-    void buildSubProblem();
+    void buildProblemsAndWriteMps();
     void run();
 
-    void exportMps() const;
     void exportStructureFile() const;
 
     class ModelerError: public std::runtime_error
@@ -73,38 +72,47 @@ public:
 
     ILoader& loader_; // gp : make it private
 
-    [[nodiscard]] const std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>&
-    masterProblem() const
+    [[nodiscard]] const std::unique_ptr<LinearProblem::Api::ILinearProblem>& masterProblem() const
     {
         return masterProblem_;
     }
 
-    [[nodiscard]] const std::vector<
-      std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>>&
+    [[nodiscard]] const std::vector<std::unique_ptr<LinearProblem::Api::ILinearProblem>>&
     subproblems() const
     {
         return subproblems_;
     }
 
     // gp : defined only for unit test, which is not a good sign on design.
-    Optimisation::LinearProblemApi::IMipSolution* subProbSolution();
+    /// Returns the solution of the last solved subproblem. The solution is owned by that
+    /// subproblem (see ILinearProblem::solve), which is retained in subproblems(), so the
+    /// pointer stays valid for the lifetime of this Modeler after run() in
+    /// SEQUENTIAL_SUBPROBLEMS mode. May be null if no subproblem was solved.
+    LinearProblem::Api::IMipSolution* subProbSolution();
 
 private:
-    Optimisation::LinearProblemApi::IMipSolution* solveSubproblem();
+    LinearProblem::Api::FillContext createFillContext(unsigned year) const;
+    ProblemEntity buildSubProblem(unsigned year);
+    void validateScenariosAgainstScenarioBuilder() const;
+    LinearProblem::Api::IMipSolution* solveSubproblem(
+      LinearProblem::Api::ILinearProblem& subproblem);
 
-    IO::Outputs::SimulationTable makeSimulationTable(
-      const Optimisation::LinearProblemApi::IMipSolution* solution,
-      const Optimisation::OptimEntityContainer& subproblemOptimEntityContainer,
-      const Optimisation::LinearProblemApi::FillContext& timeScenarioCtx) const;
+    IO::Outputs::SimulationTable& fillSimulationTable(
+      IO::Outputs::SimulationTable& simulationTable,
+      const LinearProblem::Api::IMipSolution* solution,
+      const LinearProblem::Api::ILinearProblem& subproblem,
+      const LinearProblem::OptimEntityContainer& subproblemOptimEntityContainer,
+      const LinearProblem::Api::FillContext& timeScenarioCtx) const;
 
-    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> masterProblem_ = nullptr;
-    std::vector<std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>> subproblems_;
-    std::unique_ptr<Optimisation::OptimEntityContainer> subproblemOptimEntityContainer_ = nullptr;
-    std::unique_ptr<Optimisation::LinearProblemApi::FillContext> timeScenarioCtx_ = nullptr;
-    Optimisation::LinearProblemApi::IMipSolution* subProbSolution_ = nullptr;
+    std::unique_ptr<LinearProblem::Api::ILinearProblem> masterProblem_ = nullptr;
+    std::vector<std::unique_ptr<LinearProblem::Api::ILinearProblem>> subproblems_;
+    std::vector<std::unique_ptr<LinearProblem::OptimEntityContainer>>
+      subproblemOptimEntityContainers_;
+    std::vector<unsigned> scenarios_;
     ModelerParameters parameters_;
     ModelerData data_;
     fs::path outputPath_;
     Antares::Writer::TableFormat tableFormat_;
+    LinearProblem::Api::IMipSolution* subProbSolution_ = nullptr;
 };
 } // namespace Antares::Solver

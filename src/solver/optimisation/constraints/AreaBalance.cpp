@@ -19,9 +19,7 @@ void AreaBalance::add(int pdt, int pays)
     data.CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays[pays]
       = builder.data.nombreDeContraintes;
 
-    // The recording constructor: the balance duals feed the `price` and
-    // `is_near_loss_of_load` extra outputs of the simulation table.
-    ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.LegacyConstraintsInfo);
+    ConstraintNamer namer(builder.data.NomDesContraintes);
     namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);
     namer.UpdateArea(builder.data.NomsDesPays[pays]);
     namer.AreaBalance(builder.data.nombreDeContraintes);

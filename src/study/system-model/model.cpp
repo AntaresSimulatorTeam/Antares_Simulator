@@ -107,6 +107,12 @@ ModelBuilder& ModelBuilder::withId(std::string_view id)
     return *this;
 }
 
+ModelBuilder& ModelBuilder::withLibraryId(std::string_view id)
+{
+    model_.library_id_ = id;
+    return *this;
+}
+
 /**
  * \brief Sets the objectives of the model.
  *

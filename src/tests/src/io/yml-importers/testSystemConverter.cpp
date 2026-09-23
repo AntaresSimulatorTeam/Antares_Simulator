@@ -26,10 +26,14 @@ struct LibraryObjects
                            .variables = {},
                            .ports = {},
                            .port_field_definitions = {},
-                           .constraints = {{"constraint1", "cost", "subproblems", ""}},
+                           .constraints = {{"constraint1",
+                                            YmlModel::ExpressionLineNumber{"cost", 0},
+                                            "subproblems",
+                                            ""}},
                            .binding_constraints = {},
                            .objectives = {},
-                           .extra_outputs = {}};
+                           .extra_outputs = {},
+                           .filename = ""};
 
     YmlSystem::Parser parser;
     YmlModel::Library library;
@@ -57,7 +61,6 @@ BOOST_FIXTURE_TEST_CASE(full_model_system, LibraryObjects)
         system:
             id: base_system
             description: real application model
-            model-libraries: [std]
             components:
                 - id: N
                   model: std.node
@@ -87,7 +90,6 @@ BOOST_FIXTURE_TEST_CASE(bad_param_name_in_component, LibraryObjects)
         system:
             id: base_system
             description: real application model
-            model-libraries: [std]
             components:
                 - id: N
                   model: std.node
@@ -109,7 +111,6 @@ BOOST_FIXTURE_TEST_CASE(library_not_existing, LibraryObjects)
     const auto system = R"(
         system:
             id: base_system
-            model-libraries: [abc]
             components:
                 - id: N
                   model: abc.node
@@ -126,7 +127,6 @@ BOOST_FIXTURE_TEST_CASE(model_not_existing, LibraryObjects)
     const auto system = R"(
         system:
             id: base_system
-            model-libraries: [std]
             components:
                 - id: N
                   model: std.abc
@@ -143,7 +143,6 @@ BOOST_FIXTURE_TEST_CASE(bad_library_model_format, LibraryObjects)
     const auto system = R"(
         system:
             id: base_system
-            model-libraries: [std]
             components:
                 - id: N
                   model: std___node
@@ -232,7 +231,6 @@ static const auto systemYml = R"(
         system:
           id: system1
           description: basic description
-          model-libraries: [std, mylib]
 
           components:
             - id: N
@@ -336,18 +334,6 @@ struct PrepareYaml
     }
 };
 
-BOOST_FIXTURE_TEST_CASE(SystemWithAConnectionOfTwoSendingPorts, PrepareYaml)
-{
-    AddConnectionsToSystem(system,
-                           {{.firstCompo = "G",
-                             .firstPort = "injection_port",
-                             .secondCompo = "D",
-                             .secondPort = "injection_port"}});
-
-    YmlSystem::System systemObj = parserSystem.parse(system, "");
-    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), InputError);
-}
-
 BOOST_FIXTURE_TEST_CASE(TryPortSelfConnection, PrepareYaml)
 {
     AddConnectionsToSystem(system,
@@ -409,13 +395,54 @@ BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownPort, PrepareYaml)
     BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::invalid_argument);
 }
 
+BOOST_FIXTURE_TEST_CASE(TryToConnectTwoSenderPorts, PrepareYaml)
+{
+    // Both the generator (G) and the demand (D) define their 'port_name' field,
+    // so it is a Sender in both ports: connecting them must be rejected.
+    AddConnectionsToSystem(system,
+                           {{.firstCompo = "G",
+                             .firstPort = "injection_port",
+                             .secondCompo = "D",
+                             .secondPort = "injection_port"}});
+
+    YmlSystem::System systemObj = parserSystem.parse(system, "");
+    BOOST_CHECK_EXCEPTION(SystemConverter::convert(systemObj, libraries),
+                          InputError,
+                          checkMessage("In connection between components 'G' and 'D': Field "
+                                       "'port_name' is Sender in both ports 'injection_port' "
+                                       "and 'injection_port'"));
+}
+
+BOOST_FIXTURE_TEST_CASE(TryToConnectTwoReceiverPorts, PrepareYaml)
+{
+    // Add a second receiver component: the 'node' model has no port-field-definition,
+    // so its 'port_name' field is a Receiver.
+    const std::string connections_marker = "\n          connections:";
+    system.insert(system.find(connections_marker) + 1,
+                  "            - id: N2\n"
+                  "              model: std.node\n"
+                  "              scenario-group: group-234\n");
+
+    AddConnectionsToSystem(system,
+                           {{.firstCompo = "N",
+                             .firstPort = "injection_port",
+                             .secondCompo = "N2",
+                             .secondPort = "injection_port"}});
+
+    YmlSystem::System systemObj = parserSystem.parse(system, "");
+    BOOST_CHECK_EXCEPTION(SystemConverter::convert(systemObj, libraries),
+                          InputError,
+                          checkMessage("In connection between components 'N' and 'N2': Field "
+                                       "'port_name' is Receiver in both ports 'injection_port' "
+                                       "and 'injection_port'"));
+}
+
 BOOST_FIXTURE_TEST_CASE(DuplicatedCompo, PrepareYaml)
 {
     const auto duplicatedCompo = R"(
         system:
           id: system1
           description: basic description
-          model-libraries: [std, mylib]
           components:
             - id: N
               model: std.node

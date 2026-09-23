@@ -3,17 +3,23 @@
 
 #include "antares/application/application.h"
 
+#include <chrono>
+#include <optional>
+#include <set>
+
 #include <antares/antares/fatal-error.h>
 #include <antares/application/ScenarioBuilderOwner.h>
 #include <antares/benchmarking/timer.h>
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/infoCollection/StudyInfoCollector.h>
+#include <antares/io/outputs/OptimisationsSimulationTable.h>
 #include <antares/logs/hostinfo.h>
 #include <antares/resources/resources.h>
 #include <antares/study/duplicates.h>
 #include <antares/study/header.h>
 #include <antares/sys/policy.h>
+#include <antares/view-builder/viewBuilder.h>
 #include <antares/writer/writer_factory.h>
 #include "antares/antares/version.h"
 #include "antares/checks/checksOnLPsolver.h"
@@ -124,12 +130,22 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         study.simulationName = pSettings.simulationName;
     }
 
-    // Force some options
-    options.prepareOutput = !pSettings.noOutput;
-    options.ignoreConstraints = pSettings.ignoreConstraints;
+    // Resolve the command-line output selection and apply to study parameters
+    pSettings.resolveOutputSelection();
+    pStudy->parameters.outputSelection = pSettings.outputSelection;
 
-    // Load the study from a folder
-    Benchmarking::Timer timer;
+    // Validated here, so an unknown stage name on the command line is reported
+    // before the study is even loaded. Parsed again after the load (below),
+    // where it overrides what generaldata.ini asked for and where "last" can be
+    // resolved to the final stage the run actually reaches.
+    if (!pSettings.simulationTableStagesStr.empty())
+    {
+        (void)IO::Outputs::OptimisationsSimulationTable::parseStageSelection(
+          pSettings.simulationTableStagesStr);
+    }
+
+    // Force some options
+    options.ignoreConstraints = pSettings.ignoreConstraints;
 
     std::exception_ptr loadingException;
     try
@@ -149,12 +165,59 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             throw Error::Duplicates();
         }
 
-        // no output ?
-        study.parameters.noOutput = pSettings.noOutput;
+        if (!study.parameters.writeMonteCarloResults() && !study.parameters.writeSimulationTable())
+        {
+            logs.warning() << "Both Monte-Carlo results and simulation tables are disabled: no "
+                              "simulation results will be written";
+        }
+
+        if (study.getModelerData() && !study.parameters.writeSimulationTable())
+        {
+            logs.warning() << "Simulation tables are disabled: the results of the modeler "
+                              "components will not be written";
+        }
 
         if (pSettings.parquetFmtForSimuTables)
         {
             study.parameters.simuTableFormat = Writer::TableFormat::Parquet;
+        }
+
+        const bool stagesFromCommandLine = !pSettings.simulationTableStagesStr.empty();
+        const bool stagesFromStudy = !study.parameters.simulationTableStagesStr.empty();
+        if ((stagesFromCommandLine || stagesFromStudy) && !study.parameters.writeSimulationTable())
+        {
+            // Choosing stages narrows the tables that get written; it never
+            // enables them. Silence here reads like the selection was applied.
+            logs.warning() << "Simulation table stages were selected, but simulation tables are "
+                              "disabled: the selection has no effect";
+        }
+
+        // "last" stands for the final stage the weekly resolution reaches: the
+        // CSR stage when the adequacy patch runs, otherwise the peak-shaving
+        // stage, which every run reaches.
+        const auto lastStage = study.parameters.adqPatchParams.enabled
+                                 ? IO::Outputs::Stage::adequacyPatch
+                                 : IO::Outputs::Stage::peakShaving;
+
+        // The command line wins over generaldata.ini; both go through the same
+        // validation, so an unknown stage name in the study stops the run too.
+        // The ini value is only parsed when it is the one being used, so a
+        // command-line selection is also a way past a study that has a bad one.
+        // An absent selection (empty string, no parse) keeps the default: every
+        // stage. An empty value, on the other hand, is rejected at load time.
+        if (stagesFromCommandLine)
+        {
+            study.parameters.simulationTableStages = IO::Outputs::OptimisationsSimulationTable::
+              parseStageSelection(pSettings.simulationTableStagesStr,
+                                  "--simulation-table-stages",
+                                  lastStage);
+        }
+        else if (stagesFromStudy)
+        {
+            study.parameters.simulationTableStages = IO::Outputs::OptimisationsSimulationTable::
+              parseStageSelection(study.parameters.simulationTableStagesStr,
+                                  "simulation-table-stages in generaldata.ini",
+                                  lastStage);
         }
 
         if (pSettings.forceZipOutput)
@@ -188,9 +251,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     logs.info();
 
-    if (pSettings.noOutput)
+    if (pSettings.outputSelection == Antares::Data::OutputSelection::None)
     {
-        logs.info() << "The output has been disabled.";
+        logs.info() << "Monte-Carlo results and simulation tables are disabled.";
         logs.info();
     }
 
@@ -217,25 +280,19 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             // Actually importing the log file is useless here.
             // However, since we have warnings/errors, it allows to have a piece of
             // log when the unexpected happens.
-            if (!study.parameters.noOutput)
-            {
-                study.importLogsToOutputFolder(*resultWriter);
-            }
+            study.importLogsToOutputFolder(*resultWriter);
             // empty line
             logs.info();
         }
     }
 
     // Checking for filename length limits
-    if (!pSettings.noOutput)
+    if (!study.checkForFilenameLimits())
     {
-        if (!study.checkForFilenameLimits())
-        {
-            throw Error::InvalidFileName();
-        }
-
-        writeComment();
+        throw Error::InvalidFileName();
     }
+
+    writeComment();
 
     if (!study.initializeRuntimeInfos())
     {
@@ -292,9 +349,11 @@ void Application::postParametersChecks() const
 
     if (pParameters->adqPatchParams.enabled)
     {
+        bool isHybrid = pStudy->getModelerData() && pStudy->getModelerData()->system;
         pParameters->adqPatchParams.checkAdqPatchParams(pParameters->mode,
                                                         pStudy->areas,
-                                                        pParameters->include.hurdleCosts);
+                                                        pParameters->include.hurdleCosts,
+                                                        isHybrid);
     }
 
     bool tsGenThermal = (0
@@ -365,7 +424,7 @@ void Application::prepare(int argc, const char* argv[])
         // Set solver options from command line
         pStudy->parameters.optOptions.initializeWith(options.solverOptions);
 
-        using namespace Antares::Solver::Optimization;
+        using namespace Antares::Optimization;
         // TODO
         pStudy->parameters.optOptions.exportBehavior = pStudy->parameters.include.exportStructure
                                                          ? ExportBehavior::Once
@@ -379,12 +438,12 @@ void Application::onLogMessage(int level, const std::string& message)
 {
     switch (level)
     {
-    case Yuni::Logs::Verbosity::Warning::level:
+    case Antares::Logs::Verbosity::Warning::level:
         ++pWarningCount;
         messagesStack.emplace_back(LogType::Warning, message);
         break;
-    case Yuni::Logs::Verbosity::Error::level:
-    case Yuni::Logs::Verbosity::Fatal::level:
+    case Antares::Logs::Verbosity::Error::level:
+    case Antares::Logs::Verbosity::Fatal::level:
         ++pErrorCount;
         messagesStack.emplace_back(LogType::Error, message);
         break;
@@ -403,6 +462,10 @@ void Application::execute()
 
     // Save about-the-study files (comments, notes, etc.)
     pStudy->saveAboutTheStudy(*resultWriter);
+
+    ViewBuilder::exportSystemForView(*pStudy, resultWriter.get());
+    logs.info() << "system-for-views.yml has been generated in the output folder.";
+
     SystemMemoryLogger memoryReport;
     memoryReport.interval(1000 * 60 * 5); // 5 minutes
     memoryReport.start();
@@ -520,9 +583,6 @@ void writeSimulationInfos(const Data::Study& study,
 
 Application::~Application()
 {
-    // Destroy all remaining bouns (callbacks)
-    destroyBoundEvents();
-
     // Release all allocated data
     if (pStudy)
     {
@@ -535,13 +595,11 @@ Application::~Application()
         }; // Catching log exception
 
         // Copy the log file if a result writer is available
-        if (!pStudy->parameters.noOutput && resultWriter)
+        if (resultWriter)
         {
             pStudy->importLogsToOutputFolder(*resultWriter);
         }
 
-        // release all reference to the current study held by this class
-        pStudy->clear();
         pStudy = nullptr;
 
         LocalPolicy::Close();

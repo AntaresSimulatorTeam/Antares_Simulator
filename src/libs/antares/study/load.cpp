@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 
+#include <antares/solver/modeler/ModelerData.h>
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/exception/LoadingError.hpp"
 #include "antares/study/study.h"
@@ -74,17 +75,8 @@ bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& option
     return true;
 }
 
-void Study::parameterFiller(const StudyLoadOptions& options)
+void Study::parameterFiller()
 {
-    if (!options.prepareOutput)
-    {
-        parameters.noOutput = true;
-        parameters.yearByYear = false;
-        parameters.timeSeriesToArchive = 0;
-        parameters.storeTimeseriesNumbers = false;
-        parameters.synthesis = false;
-    }
-
     // We can not run the simulation if the study folder is not in the latest
     // version and that we would like to re-importe the generated timeseries
     // We have time-series to import
@@ -130,8 +122,6 @@ bool Study::internalLoadFromFolder(const fs::path& path,
 
     // Reserving enough space in buffer to avoid several calls to realloc
     this->dataBuffer.reserve(4 * 1024 * 1024); // For matrices, reserving 4Mo
-    this->bufferLoadingTS.reserve(2096);
-    assert(this->bufferLoadingTS.capacity() > 0);
 
     if (!internalLoadIni(path, options))
     {
@@ -168,7 +158,7 @@ bool Study::internalLoadFromFolder(const fs::path& path,
         // Sets of areas & links
         ret = internalLoadSets() && ret;
 
-        parameterFiller(options);
+        parameterFiller();
     };
 
     // Modeler components for hybrid studies
@@ -300,6 +290,7 @@ bool Study::internalLoadSets()
         // Apply the rules
         SetHandlerAreas handler(areas);
         setsOfAreas.rebuildAllFromRules(handler);
+
         // Write the results into the logs
         setsOfAreas.dumpToLogs();
         return true;

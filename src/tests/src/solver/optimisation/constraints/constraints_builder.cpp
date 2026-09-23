@@ -22,6 +22,7 @@
  */
 
 using namespace Antares::Data::ShortTermStorage;
+using namespace Antares::Optimization;
 
 struct STScumulativeConstaintFixture
 {
@@ -106,70 +107,40 @@ struct STScumulativeConstaintFixture
 
 struct ConstraintBuilderDataFixture
 {
-    // Const data in ConstraintBuilderData
-    int32_t nbTimeStepsOptim = 50;
-    uint32_t NombreDePasDeTemps = 168;
-    std::vector<const char*> NomsDesPays = {"CountryA", "CountryB", "CountryC"};
-    uint32_t weekInTheYear = 1;
-
-    std::vector<double> Pi = std::vector(2 * nbTimeStepsOptim, 0.0);
-    std::vector<int> Colonne = std::vector(2 * nbTimeStepsOptim, 0);
-    int nombreDeContraintes = 0;
-    int nombreDeTermesDansLaMatriceDeContrainte = 0;
-    std::vector<int> IndicesDebutDeLigne = std::vector(4, 0);
-    std::vector<double> CoefficientsDeLaMatriceDesContraintes;
-    std::vector<int> IndicesColonnes;
-    std::vector<int> NombreDeTermesDesLignes = std::vector<int>(4, 0);
-    std::string Sens = std::string(4, '=');
-    int IncrementDAllocationMatriceDesContraintes = 10;
-    std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
-
-    std::vector<int> NumeroDeVariableStockFinal = std::vector<int>(10, -1);
-    std::vector<std::vector<int>> NumeroDeVariableDeTrancheDeStock = std::vector<std::vector<int>>(
-      10,
-      std::vector<int>(5, -1));
-    std::vector<std::string> NomDesContraintes = std::vector<std::string>(100, "");
-    std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>
-      LegacyConstraintsInfo = std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>(
-        100);
-
-    void set_correspondances_des_variables()
+    ConstraintBuilderDataFixture()
     {
-        CorrespondanceVarNativesVarOptim.resize(nbTimeStepsOptim);
+        pb_hebdo.ProblemeAResoudre->Pi = std::vector(2 * nbTimeStepsOptim, 0.0);
+        pb_hebdo.ProblemeAResoudre->Colonne = std::vector(2 * nbTimeStepsOptim, 0);
+        pb_hebdo.ProblemeAResoudre->NombreDeContraintes = 0;
+        pb_hebdo.ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
+        pb_hebdo.ProblemeAResoudre->IndicesDebutDeLigne = std::vector(4, 0);
+        pb_hebdo.ProblemeAResoudre->NombreDeTermesDesLignes = std::vector<int>(4, 0);
+        pb_hebdo.ProblemeAResoudre->Sens = std::string(4, '=');
+        pb_hebdo.ProblemeAResoudre->IncrementDAllocationMatriceDesContraintes = 10;
+        pb_hebdo.ProblemeAResoudre->NomDesContraintes = std::vector<std::string>(100, "");
+        pb_hebdo.NombreDePasDeTempsPourUneOptimisation = nbTimeStepsOptim;
+        pb_hebdo.NumeroDeVariableStockFinal = std::vector<int>(10, -1);
+        pb_hebdo.NumeroDeVariableDeTrancheDeStock = std::vector<std::vector<int>>(
+          10,
+          std::vector<int>(5, -1));
+        pb_hebdo.NomsDesPays = {"CountryA", "CountryB", "CountryC"};
+        pb_hebdo.weekInTheYear = 1;
+        pb_hebdo.NombreDePasDeTemps = 168;
+
+        pb_hebdo.CorrespondanceVarNativesVarOptim.resize(pb_hebdo.NombreDePasDeTemps);
         for (auto i = 0; i < nbTimeStepsOptim; i++)
         {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-            CorrespondanceVarNativesVarOptim[i].SIM_ShortTermStorage = {
+            pb_hebdo.CorrespondanceVarNativesVarOptim[i].SIM_ShortTermStorage = {
               .InjectionVariable = {0, 1, 4},
               .WithdrawalVariable = {2, 3, 5}};
 #pragma GCC diagnostic pop
         }
     }
 
-    ConstraintBuilderData makeConstraintBuilderData()
-    {
-        set_correspondances_des_variables();
-        return {Pi,
-                Colonne,
-                nombreDeContraintes,
-                nombreDeTermesDansLaMatriceDeContrainte,
-                IndicesDebutDeLigne,
-                CoefficientsDeLaMatriceDesContraintes,
-                IndicesColonnes,
-                NombreDeTermesDesLignes,
-                Sens,
-                IncrementDAllocationMatriceDesContraintes,
-                CorrespondanceVarNativesVarOptim,
-                nbTimeStepsOptim,
-                NumeroDeVariableStockFinal,
-                NumeroDeVariableDeTrancheDeStock,
-                NomDesContraintes,
-                NomsDesPays,
-                weekInTheYear,
-                NombreDePasDeTemps,
-                LegacyConstraintsInfo};
-    }
+    int32_t nbTimeStepsOptim = 50;
+    PROBLEME_HEBDO pb_hebdo;
 };
 
 struct ConstraintBuilderFixture: public STScumulativeConstaintFixture,
@@ -181,8 +152,7 @@ BOOST_AUTO_TEST_SUITE(_constraint_builder_test_suite_)
 
 BOOST_FIXTURE_TEST_CASE(AddWithdrawalConstraint, ConstraintBuilderFixture)
 {
-    ConstraintBuilderData constraint_builder_data = makeConstraintBuilderData();
-    ConstraintBuilder builder(constraint_builder_data);
+    ConstraintBuilder builder(&pb_hebdo);
     ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
     // Call the add method for "CountryA" (index 0)
@@ -231,8 +201,7 @@ BOOST_FIXTURE_TEST_CASE(AddWithdrawalConstraint, ConstraintBuilderFixture)
 
 BOOST_FIXTURE_TEST_CASE(AddInjectionConstraint, ConstraintBuilderFixture)
 {
-    ConstraintBuilderData constraint_builder_data = makeConstraintBuilderData();
-    ConstraintBuilder builder(constraint_builder_data);
+    ConstraintBuilder builder(&pb_hebdo);
     ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
     // Call the add method for "CountryB" (index 1)
@@ -281,8 +250,7 @@ BOOST_FIXTURE_TEST_CASE(AddInjectionConstraint, ConstraintBuilderFixture)
 
 BOOST_FIXTURE_TEST_CASE(AddNettingConstraint, ConstraintBuilderFixture)
 {
-    ConstraintBuilderData constraint_builder_data = makeConstraintBuilderData();
-    ConstraintBuilder builder(constraint_builder_data);
+    ConstraintBuilder builder(&pb_hebdo);
     ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
     // Call the add method for "CountryC" (index 2)
@@ -330,8 +298,7 @@ BOOST_FIXTURE_TEST_CASE(AddNettingConstraint, ConstraintBuilderFixture)
 
 BOOST_FIXTURE_TEST_CASE(MultipleAreasTest, ConstraintBuilderFixture)
 {
-    ConstraintBuilderData constraint_builder_data = makeConstraintBuilderData();
-    ConstraintBuilder builder(constraint_builder_data);
+    ConstraintBuilder builder(&pb_hebdo);
     ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
     // Add constraints for multiple areas
@@ -365,9 +332,8 @@ BOOST_FIXTURE_TEST_CASE(MultipleAreasTest, ConstraintBuilderFixture)
 BOOST_FIXTURE_TEST_CASE(week_is_set_to_12___all_constraints_receive_correct_names,
                         ConstraintBuilderFixture)
 {
-    weekInTheYear = 12;
-    ConstraintBuilderData constraint_builder_data = makeConstraintBuilderData();
-    ConstraintBuilder builder(constraint_builder_data);
+    pb_hebdo.weekInTheYear = 12;
+    ConstraintBuilder builder(&pb_hebdo);
     ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
     // Add constraints for multiple areas

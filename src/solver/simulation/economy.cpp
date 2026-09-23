@@ -5,6 +5,7 @@
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
+#include "antares/solver/optimisation/InactiveComponentsAnalyzerBuilder.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/common-eco-adq.h"
@@ -14,14 +15,14 @@
 
 using namespace Yuni;
 using namespace Antares::Writer;
-using Antares::Constants::nbHoursInAWeek;
+using Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
 
-Economy::Economy(Data::Study& study,
+Economy::Economy(Study& study,
                  IResultWriter& resultWriter,
-                 Simulation::ISimulationObserver& simulationObserver):
+                 ISimulationObserver& simulationObserver):
     study(study),
     preproOnly(false),
     resultWriter_(resultWriter),
@@ -59,6 +60,9 @@ bool Economy::simulationBegin()
         weeklyOptProblems_.clear();
         postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
 
+        const auto inactiveComponents = Antares::Optimization::BuildInactiveComponentsAnalyzer(
+          study);
+
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             SIM_InitialisationProblemeHebdo(study,
@@ -67,14 +71,20 @@ bool Economy::simulationBegin()
                                             numSpace);
             if (study.parameters.include.reserves)
             {
-                study.runtime.initializeReservesIndexMaps(study, pProblemesHebdo[numSpace]);
+                buildReserveIndexMaps(study, pProblemesHebdo[numSpace]);
             }
 
             weeklyOptProblems_.emplace_back(study.parameters.optOptions,
                                             &pProblemesHebdo[numSpace],
                                             resultWriter_,
                                             simulationObserver_.get(),
-                                            !study.parameters.noOutput);
+                                            study.parameters.writeSimulationTable(),
+                                            inactiveComponents);
+
+            if (auto* tables = weeklyOptProblems_[numSpace].simulationTables())
+            {
+                tables->selectStages(study.parameters.simulationTableStages);
+            }
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
@@ -83,7 +93,8 @@ bool Economy::simulationBegin()
               study.areas,
               study.parameters,
               study.calendar,
-              resultWriter_);
+              resultWriter_,
+              weeklyOptProblems_[numSpace].simulationTables());
         }
     }
 
@@ -99,7 +110,7 @@ bool Economy::year(Variable::State& state,
                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                    OptimizationStatisticsWriter& optWriter,
                    Benchmarking::DurationCollector& durationCollector,
-                   const Antares::Data::Area::ScratchMap& scratchmap)
+                   const Area::ScratchMap& scratchmap)
 {
     // No failed week at year start
     failedWeekList.clear();
@@ -124,12 +135,12 @@ bool Economy::year(Variable::State& state,
         currentProblem.weekInTheYear = state.weekInTheYear = w;
         currentProblem.HeureDansLAnnee = hourInTheYear;
 
-        ::SIM_RenseignementProblemeHebdo(study,
-                                         currentProblem,
-                                         state.weekInTheYear,
-                                         hourInTheYear,
-                                         hydroVentilationResults,
-                                         scratchmap);
+        SIM_RenseignementProblemeHebdo(study,
+                                       currentProblem,
+                                       state.weekInTheYear,
+                                       hourInTheYear,
+                                       hydroVentilationResults,
+                                       scratchmap);
 
         BuildThermalPartOfWeeklyProblem(study,
                                         currentProblem,
@@ -173,7 +184,7 @@ bool Economy::year(Variable::State& state,
             optWriter.addTime(w, currentProblem.timeMeasure);
             addTimeMeasure(durationCollector, currentProblem.timeMeasure);
         }
-        catch (Data::AssertionError& ex)
+        catch (AssertionError& ex)
         {
             // Indicate failed week list (first week of the year is "week number one" for the user
             // but w=0 for the loop)
@@ -184,7 +195,7 @@ bool Economy::year(Variable::State& state,
                        + " simulation is stopped : " + ex.what());
             return false;
         }
-        catch (Data::UnfeasibleProblemError&)
+        catch (UnfeasibleProblemError&)
         {
             // need to clean next problemeHebdo
 
@@ -193,7 +204,7 @@ bool Economy::year(Variable::State& state,
             failedWeekList.push_back(w + 1);
 
             // Define if simulation must be stopped
-            if (Data::stopSimulation(study.parameters.include.unfeasibleProblemBehavior))
+            if (stopSimulation(study.parameters.include.unfeasibleProblemBehavior))
             {
                 return false;
             }
@@ -202,14 +213,17 @@ bool Economy::year(Variable::State& state,
         hourInTheYear += nbHoursInAWeek;
     }
 
-    if (simulationTables && !study.folderOutput.empty())
+    durationCollector("simulation_table_export") << [this, &state, &simulationTables]()
     {
-        LegacySimulationTablesWriter legacyWriter(study.folderOutput,
-                                                  state.year,
-                                                  study.parameters.simuTableFormat);
-        legacyWriter.write(*simulationTables);
-        simulationTables->clear();
-    }
+        if (simulationTables && !study.folderOutput.empty())
+        {
+            LegacySimulationTablesWriter legacyWriter(study.folderOutput,
+                                                      state.year,
+                                                      study.parameters.simuTableFormat);
+            legacyWriter.write(*simulationTables);
+            simulationTables->clear();
+        }
+    };
 
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);
@@ -218,15 +232,14 @@ bool Economy::year(Variable::State& state,
 }
 
 // Retrieve weighted average balance for each area
-static std::vector<AvgExchangeResults*> retrieveBalance(
-  const Data::Study& study,
-  Solver::Variable::Economy::AllVariables& variables)
+static std::vector<AvgExchangeResults*> retrieveBalance(const Study& study,
+                                                        Variable::Economy::AllVariables& variables)
 {
     const uint nbAreas = study.areas.size();
     std::vector<AvgExchangeResults*> balance(nbAreas, nullptr);
     for (uint areaIndex = 0; areaIndex < nbAreas; ++areaIndex)
     {
-        const Data::Area* area = study.areas.byIndex[areaIndex];
+        const Area* area = study.areas.byIndex[areaIndex];
         variables.retrieveResultsForArea<Variable::Economy::VCardBalance>(&balance[areaIndex],
                                                                           area);
     }

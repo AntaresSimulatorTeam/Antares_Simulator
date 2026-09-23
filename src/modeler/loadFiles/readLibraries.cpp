@@ -38,7 +38,9 @@ YmlModel::Library loadSingleLibrary(const fs::path& filePath)
 
     try
     {
-        return YmlModel::Parser::parse(libraryStr);
+        auto lib = YmlModel::Parser::parse(libraryStr);
+        lib.filename = filePath.string();
+        return lib;
     }
     catch (const YAML::Exception& e)
     {
@@ -195,6 +197,19 @@ Solver::ResolutionMode convertResolutionMode(std::string ymlMode)
     throw Error::InvalidArgumentError(
       fmt::format("Invalid resolution mode in optim-config.yaml: {}", ymlMode));
 }
+
+Solver::ScenarioScope convertScenarioScope(const OptimConfig& ymlOptimConfig)
+{
+    if (!ymlOptimConfig.scenario_scope.has_value())
+    {
+        return {};
+    }
+    const auto& ymlScope = ymlOptimConfig.scenario_scope.value();
+    Solver::ScenarioScope scope;
+    scope.include = ymlScope.include;
+    scope.exclude = ymlScope.exclude;
+    return scope;
+}
 } // namespace
 
 void updateLibrariesWithOptimConfig(std::vector<YmlModel::Library>& ymlLibs,
@@ -208,17 +223,18 @@ void updateLibrariesWithOptimConfig(std::vector<YmlModel::Library>& ymlLibs,
     }
 }
 
-std::optional<std::pair<std::vector<SystemModel::Library>, ResolutionMode>> loadLibraries(
-  const fs::path& studyPath)
+std::optional<LoadedLibraries> loadLibraries(const fs::path& studyPath)
 {
     auto ymlLibraries = loadLibrariesFromYaml(studyPath);
     if (ymlLibraries.has_value())
     {
         const auto ymlOptimConfig = loadOptimConfigFromYaml(studyPath);
         updateLibrariesWithOptimConfig(ymlLibraries.value(), ymlOptimConfig);
-        return std::make_optional<std::pair<std::vector<SystemModel::Library>, ResolutionMode>>(
-          convertIntoSystemLibs(ymlLibraries.value()),
-          convertResolutionMode(ymlOptimConfig.resolution_mode));
+        LoadedLibraries loadedLibraries;
+        loadedLibraries.libraries = convertIntoSystemLibs(ymlLibraries.value());
+        loadedLibraries.resolutionMode = convertResolutionMode(ymlOptimConfig.resolution_mode);
+        loadedLibraries.scenarioScope = convertScenarioScope(ymlOptimConfig);
+        return loadedLibraries;
     }
     return {};
 }

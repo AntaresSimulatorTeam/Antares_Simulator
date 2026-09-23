@@ -7,7 +7,7 @@
 
 #include <boost/algorithm/string.hpp>
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 
 /** \brief Interface for scenarios in the linear problem API.
@@ -29,6 +29,12 @@ public:
     }
 
     [[nodiscard]] virtual TimeSeriesNumber getData(Year year) const = 0;
+
+    /** Check whether a time series is defined for the given year, without throwing.
+     * Implementations that serve a fixed time series for any year (empty/default scenarios)
+     * keep the default behavior of returning true.
+     */
+    [[nodiscard]] virtual bool hasYear(Year) const = 0;
 
     [[nodiscard]] std::string group() const
     {
@@ -55,5 +61,10 @@ public:
     {
         return 1; // No data available in an empty scenario
     }
+
+    [[nodiscard]] bool hasYear(Year) const override
+    {
+        return true;
+    }
 };
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace Antares::LinearProblem::Api

@@ -5,10 +5,14 @@
 
 // TODO[FOM] Remove this, it is only required for PROBLEME_HEBDO
 // but this problem has nothing to do with PROBLEME_HEBDO
+#include <optional>
 #include <set>
 
 #include <antares/logs/logs.h>
+#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+#include <antares/solver/optimisation/adequacy_patch_csr/gems-part.h>
 #include <antares/study/parameters/adq-patch-params.h>
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
 #include "../variables/VariableManagerUtils.h"
@@ -47,15 +51,16 @@ struct LinkVariable
 
 struct PROBLEME_HEBDO;
 
+// GEMS contribution for hybrid studies
+
 class HourlyCSRProblem final
 {
-    using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+    using AdqPatchParams = AdequacyPatch::AdqPatchParams;
 
 public:
-    explicit HourlyCSRProblem(
-      const AdqPatchParams& adqPatchParams,
-      PROBLEME_HEBDO* p,
-      const Antares::Solver::Optimization::OptimizationOptions& solverOptions):
+    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams,
+                              PROBLEME_HEBDO* p,
+                              const Antares::Optimization::OptimizationOptions& solverOptions):
         solverOptions_(solverOptions),
         adqPatchParams_(adqPatchParams),
         variableManager_(p->CorrespondanceVarNativesVarOptim,
@@ -68,6 +73,11 @@ public:
         belowThisThresholdSetToZero = std::min(temp, 0.1);
 
         allocateProblem();
+        gemsPart_ = makeGemsPart(problemeHebdo_,
+                                 problemeAResoudre_,
+                                 variableManager_,
+                                 numberOfConstraintCsrFictitiousLoad,
+                                 numberOfConstraintCsrMaxEnsLoad);
     }
 
     HourlyCSRProblem(const HourlyCSRProblem&) = delete;
@@ -76,6 +86,7 @@ public:
     inline void setHour(int hour)
     {
         triggeredHour = hour;
+        gemsPart_->setHour(hour);
     }
 
     void run(unsigned int week, unsigned int year);
@@ -90,7 +101,7 @@ private:
     void setProblemCost();
     void solveProblem(unsigned int week,
                       int year,
-                      const Antares::Solver::Optimization::OptimizationOptions& options);
+                      const Antares::Optimization::OptimizationOptions& options);
     void allocateProblem();
 
     // variable construction
@@ -106,29 +117,27 @@ private:
     // Constraints
     void setRHSvalueOnFlows();
     void setRHSnodeBalanceValue();
-    void setRHSfictitiousLoadValue();
     void setRHSMaxEnsLoadValue();
     void setRHSbindingConstraintsValue();
+    void setRHSfictitiousLoadValue();
 
-    // Costs
+    // CoststriggeredHour
     void setQuadraticCost();
     void setLinearCost();
 
-    const Antares::Solver::Optimization::OptimizationOptions& solverOptions_;
+    const Antares::Optimization::OptimizationOptions& solverOptions_;
+    std::unique_ptr<IGemsPart> gemsPart_;
 
 public:
-    // TODO [gp] : try to make these members private
     double belowThisThresholdSetToZero;
-    std::map<int, int> numberOfConstraintCsrAreaBalance;
+
     std::set<int> ensVariablesInsideAdqPatch;       // place inside only ENS inside adq-patch
     std::set<int> varToBeSetToZeroIfBelowThreshold; // place inside only ENS and Spillage variable
     int triggeredHour;
+    // links between two areas inside the adq-patch domain
 
-    const AdqPatchParams& adqPatchParams_;
-    VariableManagement::VariableManager variableManager_;
-
-    PROBLEME_HEBDO* problemeHebdo_;
-    PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;
+    std::map<int, LinkVariable> linkInsideAdqPatch;
+    std::map<int, int> numberOfConstraintCsrAreaBalance;
 
     std::map<int, int> numberOfConstraintCsrEns;
     std::map<int, int> numberOfConstraintCsrFlowDissociation;
@@ -139,6 +148,10 @@ public:
 
     std::map<int, double> rhsAreaBalanceValues;
 
-    // links between two areas inside the adq-patch domain
-    std::map<int, LinkVariable> linkInsideAdqPatch;
+private:
+    const AdqPatchParams& adqPatchParams_;
+    VariableManagement::VariableManager variableManager_;
+
+    PROBLEME_HEBDO* problemeHebdo_;
+    PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;
 };

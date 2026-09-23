@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 #pragma once
 
+#include <antares/solver/simulation/reserve-index-maps.h>
 #include "antares/solver/variable/variable.h"
 
 #include "vCardReserveParticipationByThermalGroup.h"
@@ -110,7 +111,7 @@ public:
             auto& area = state.area;
             int column = 0;
             for (const auto& reserveID:
-                 area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+                 area->allCapacityReservations->areaCapacityReservations | std::views::keys)
             {
                 if (area->allCapacityReservations->reserveGroupPartThermal.contains(reserveID))
                 {
@@ -118,8 +119,7 @@ public:
                          area->allCapacityReservations->reserveGroupPartThermal.at(reserveID))
                     {
                         pValuesForTheCurrentYear[numSpace][column].hour[state.hourInTheYear]
-                          += state.reserveData.value()
-                               .at(area->index)
+                          += state.reserveData->at(area->index)
                                .reserveParticipationPerGroupForYear[state.hourInTheYear]
                                .thermalGroupsReserveParticipation[group][reserveID];
                         column++;
@@ -148,7 +148,7 @@ public:
             assert(results.data.area != nullptr);
             int column = 0;
             for (const auto& reserveID:
-                 results.data.area->allCapacityReservations.value().areaCapacityReservations
+                 results.data.area->allCapacityReservations->areaCapacityReservations
                    | std::views::keys)
             {
                 if (results.data.area->allCapacityReservations->reserveGroupPartThermal.contains(
@@ -158,8 +158,8 @@ public:
                          results.data.area->allCapacityReservations->reserveGroupPartThermal.at(
                            reserveID))
                     {
-                        Yuni::String caption = results.data.study.runtime.reserveIDToName.value()
-                                                 .at(reserveID);
+                        Yuni::String caption = results.data.study.reserveMaps->idToName.at(
+                          reserveID);
                         caption << "_" << group;
                         results.variableCaption = caption;
                         results.variableUnit = VCardType::Unit();

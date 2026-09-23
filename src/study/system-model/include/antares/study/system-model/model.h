@@ -56,6 +56,11 @@ public:
         return id_;
     }
 
+    const std::string& LibraryId() const
+    {
+        return library_id_;
+    }
+
     const std::vector<Objective>& Objectives() const
     {
         return objectives_;
@@ -94,6 +99,7 @@ public:
 private:
     friend class ModelBuilder;
     std::string id_;
+    std::string library_id_;
 
     std::map<std::string, Parameter> parameters_;
     std::vector<Variable> variables_;
@@ -121,6 +127,7 @@ class ModelBuilder final
 {
 public:
     ModelBuilder& withId(std::string_view id);
+    ModelBuilder& withLibraryId(std::string_view id);
     ModelBuilder& withObjectives(std::vector<Objective>&& objectives);
     ModelBuilder& withParameters(std::vector<Parameter>&& parameters);
     ModelBuilder& withVariables(std::vector<Variable>&& variables);

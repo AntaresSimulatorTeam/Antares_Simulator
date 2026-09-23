@@ -44,7 +44,7 @@ The compilation of *Antares Simulator* requires C++17 support.
     #### Ubuntu 23.04 / Debian 12
     The installation requires the following build and test dependencies:
     ```
-    sudo apt install git unzip build-essentials
+    sudo apt install git unzip build-essential
     ```
 
 ## CMake version

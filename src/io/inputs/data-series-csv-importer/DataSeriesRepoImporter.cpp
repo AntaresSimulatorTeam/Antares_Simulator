@@ -17,7 +17,7 @@ namespace fs = std::filesystem;
 
 namespace Antares::IO::Inputs::DataSeriesCsvImporter
 {
-using namespace Optimisation::LinearProblemDataImpl;
+using namespace LinearProblem::DataImpl;
 
 inline const char* ParseOneDouble(const char* ptr,
                                   const char* end,

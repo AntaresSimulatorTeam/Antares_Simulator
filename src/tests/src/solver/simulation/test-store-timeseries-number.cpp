@@ -34,7 +34,6 @@ void initializeStudy(Study& study)
 
     study.parameters.renewableGeneration.toAggregated(); // Default
 
-    study.parameters.intraModal = 0;
     study.parameters.interModal = 0;
 }
 
@@ -137,7 +136,6 @@ BOOST_AUTO_TEST_CASE(sts_area_cluster_inflows_timeseries_numbers_store_values)
     if (area)
     {
         area->createMissingData();
-        area->resetToDefaultValues();
     }
     auto& clusters = area->shortTermStorage.storagesByIndex;
 
@@ -190,7 +188,6 @@ BOOST_AUTO_TEST_CASE(sts_area_cluster_additional_constraints_timeseries_numbers_
     if (area)
     {
         area->createMissingData();
-        area->resetToDefaultValues();
     }
     auto& clusters = area->shortTermStorage.storagesByIndex;
 

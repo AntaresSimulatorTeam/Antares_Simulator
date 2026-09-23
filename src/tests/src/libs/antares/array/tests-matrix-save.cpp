@@ -113,14 +113,6 @@ BOOST_AUTO_TEST_CASE(any_whole_number_is_printed_without_decimal_point)
     BOOST_REQUIRE_EQUAL(mtx.data, "10\t500\n0\t3\n");
 }
 
-BOOST_AUTO_TEST_CASE(add_predicate__print_dim___each_coeff_is_one_incremented)
-{
-    Matrix_easy_to_fill<int, double> mtx(2, 3, {1, 2, 3, 4, 5, 6});
-    TSNumbersPredicate predicate;
-    mtx.saveToCSVFile("path/to/an/output/file", 2, true, predicate);
-    BOOST_REQUIRE_EQUAL(mtx.data, "size:3x2\n2\t3\t4\n5\t6\t7\n");
-}
-
 BOOST_AUTO_TEST_CASE(negative_int___printed_correctly)
 {
     Matrix_easy_to_fill<int, double> mtx(2, 3, {1, -2, 3, -4, -5, 6});
@@ -163,14 +155,6 @@ BOOST_AUTO_TEST_CASE(first_matrix___int_to_int)
     Matrix_easy_to_fill<int, int> mtx(2, 2, {1000, -5000, 0, 3000});
     mtx.saveToCSVFile("path/to/an/output/file");
     BOOST_REQUIRE_EQUAL(mtx.data, "1000\t-5000\n0\t3000\n");
-}
-
-BOOST_AUTO_TEST_CASE(add_predicate__print_dim__negative_int___each_coeff_is_one_incremented)
-{
-    Matrix_easy_to_fill<int, int> mtx(2, 3, {-1, 2, -3, 4, -5, 6});
-    TSNumbersPredicate predicate;
-    mtx.saveToCSVFile("path/to/an/output/file", 2, true, predicate);
-    BOOST_REQUIRE_EQUAL(mtx.data, "size:3x2\n0\t3\t-2\n5\t-4\t7\n");
 }
 
 BOOST_AUTO_TEST_CASE(precision_has_no_effect_on_int_coeffs)

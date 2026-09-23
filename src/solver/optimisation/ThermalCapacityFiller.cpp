@@ -5,12 +5,13 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/exception/RuntimeError.hpp"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
 #include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-using namespace Antares::Optimisation;
-using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::LinearProblem;
+using namespace Antares::LinearProblem::Api;
 using namespace Antares::ModelerStudy::SystemModel;
 
 namespace Antares::Optimization

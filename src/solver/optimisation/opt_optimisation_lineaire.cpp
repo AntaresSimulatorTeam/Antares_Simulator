@@ -7,7 +7,7 @@
 #include <antares/logs/logs.h>
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
-#include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
+#include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
@@ -16,8 +16,8 @@
 
 using namespace Antares::Solver;
 using namespace IO::Outputs;
-using Antares::Solver::Optimization::ExportBehavior;
-using Antares::Solver::Optimization::OptimizationOptions;
+using Antares::Optimization::ExportBehavior;
+using Antares::Optimization::OptimizationOptions;
 
 namespace
 {
@@ -60,7 +60,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
   double optimalSolutionCost,
   const OptPeriodStringGenerator& optPeriodStringGenerator,
   int optimizationNumber,
-  Solver::IResultWriter& writer)
+  IResultWriter& writer)
 {
     Yuni::Clob buffer;
     auto filename = createCriterionFilename(optPeriodStringGenerator, optimizationNumber);
@@ -75,7 +75,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
 void OPT_WriteSolution(const PROBLEME_ANTARES_A_RESOUDRE& pb,
                        const OptPeriodStringGenerator& optPeriodStringGenerator,
                        int optimizationNumber,
-                       Solver::IResultWriter& writer)
+                       IResultWriter& writer)
 {
     auto s = [](int x) { return static_cast<size_t>(x); };
 
@@ -115,7 +115,7 @@ namespace
 {
 void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
                         int optimizationNumber,
-                        Solver::Simulation::ISimulationObserver& simulationObserver,
+                        Simulation::ISimulationObserver& simulationObserver,
                         const OptPeriodStringGenerator* optPeriodStringGenerator)
 {
     simulationObserver.notifyHebdoProblem(*problemeHebdo,
@@ -125,12 +125,14 @@ void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
 }
 } // namespace
 
-bool runWeeklyOptimization(const SingleOptimOptions& options,
-                           PROBLEME_HEBDO* problemeHebdo,
-                           Solver::IResultWriter& writer,
-                           int optimizationNumber,
-                           Solver::Simulation::ISimulationObserver& simulationObserver,
-                           Antares::IO::Outputs::SimulationTable* simulationTable)
+bool runWeeklyOptimization(
+  const SingleOptimOptions& options,
+  PROBLEME_HEBDO* problemeHebdo,
+  IResultWriter& writer,
+  int optimizationNumber,
+  Simulation::ISimulationObserver& simulationObserver,
+  SimulationTable* simulationTable,
+  const Antares::Optimization::InactiveComponentsAnalyzer* inactiveComponents)
 {
     const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                         ->NombreDePasDeTempsPourUneOptimisation;
@@ -170,19 +172,19 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
                            simulationObserver,
                            optPeriodStringGenerator.get());
 
-        if (!OPT_AppelDuSimplexe(options,
-                                 problemeHebdo,
-                                 numeroDeLIntervalle,
-                                 optimizationNumber,
-                                 *optPeriodStringGenerator,
-                                 writer,
-                                 simulationTable))
+        if (!Antares::Solver::Optimization::OPT_AppelDuSimplexe(options,
+                                                                *problemeHebdo,
+                                                                numeroDeLIntervalle,
+                                                                optimizationNumber,
+                                                                *optPeriodStringGenerator,
+                                                                writer,
+                                                                simulationTable,
+                                                                inactiveComponents))
         {
             return false;
         }
 
-        if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT
-            || problemeHebdo->Expansion)
+        if (problemeHebdo->ExportMPS != mpsExportStatus::NO_EXPORT || problemeHebdo->Expansion)
         {
             double optimalSolutionCost = OPT_ObjectiveFunctionResult(problemeHebdo,
                                                                      numeroDeLIntervalle,
@@ -240,14 +242,13 @@ void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     ProblemeAResoudre->CoutsMarginauxDesContraintes.resize(nombreDeContraintes);
     ProblemeAResoudre->ComplementDeLaBase.resize(nombreDeContraintes);
     ProblemeAResoudre->NomDesContraintes.resize(nombreDeContraintes);
-    ProblemeAResoudre->LegacyConstraintsInfo.resize(nombreDeContraintes);
 }
 } // namespace
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
-                              Solver::IResultWriter& writer,
-                              Solver::Simulation::ISimulationObserver& simulationObserver,
+                              IResultWriter& writer,
+                              Simulation::ISimulationObserver& simulationObserver,
                               OptimisationsSimulationTable* simulationTables)
 {
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
@@ -268,8 +269,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(problemeHebdo);
 
-    auto builder_data = NewGetConstraintBuilderFromProblemHebdo(problemeHebdo);
-    ConstraintBuilder builder(builder_data);
+    ConstraintBuilder builder(problemeHebdo);
     LinearProblemMatrix linearProblemMatrix(problemeHebdo, builder);
     linearProblemMatrix.Run();
     resizeProbleme(problemeHebdo->ProblemeAResoudre.get(),
@@ -277,15 +277,29 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                    problemeHebdo->ProblemeAResoudre->NombreDeContraintes);
 
     callIfExport(options.exportBehavior, [&] { OPT_ExportStructures(problemeHebdo, writer); });
+
+    // Only a post-process dump reads the solved modeler problem back, and only
+    // to re-emit modeler component rows, so retaining it is pointless unless
+    // such a stage is selected and the study has a modeler side at all. A daily
+    // optimisation range is excluded for the same reason: the dump no-ops there
+    // (see DumpSimulationTableAfterPostProcess), so nothing would read it. This
+    // is the lowest level that still sees the whole stage selection.
+    problemeHebdo->retainSolvedModelerProblem = simulationTables && problemeHebdo->modelerData
+                                                && problemeHebdo->OptimisationAuPasHebdomadaire
+                                                && simulationTables->anyPostProcessStageSelected();
+
     auto* firstOptimSimulationTable = simulationTables
                                         ? simulationTables->firstOptimSimulationTable()
                                         : nullptr;
+    const auto* inactiveComponents = simulationTables ? simulationTables->inactiveComponents.get()
+                                                      : nullptr;
     bool ret = runWeeklyOptimization(options.firstOptimOptions,
                                      problemeHebdo,
                                      writer,
                                      PREMIERE_OPTIMISATION,
                                      simulationObserver,
-                                     firstOptimSimulationTable);
+                                     firstOptimSimulationTable,
+                                     inactiveComponents);
 
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode
@@ -302,7 +316,8 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                                      writer,
                                      DEUXIEME_OPTIMISATION,
                                      simulationObserver,
-                                     secondOptimSimulationTable);
+                                     secondOptimSimulationTable,
+                                     inactiveComponents);
     }
     return ret;
 }

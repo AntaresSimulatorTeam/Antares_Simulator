@@ -5,6 +5,8 @@
 
 #include "antares/solver/simulation/base_post_process.h"
 
+// Kept in Antares::Solver::Simulation (not the optim subtree): these are simulation
+// post-processing commands, not optimization-model code.
 namespace Antares::Solver::Simulation
 {
 class DispatchableMarginPostProcessCmd final: public basePostProcessCommand
@@ -25,7 +27,7 @@ class RemixHydroPostProcessCmd final: public basePostProcessCommand
 public:
     RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
                              AreaList& areas,
-                             const Data::Parameters& params,
+                             const Parameters& params,
                              unsigned int numSpace,
                              IResultWriter& resultWriter);
     void execute(const optRuntimeData& opt_runtime_data) override;
@@ -33,7 +35,7 @@ public:
 private:
     const AreaList& area_list_;
     unsigned int numSpace_ = 0;
-    const Data::Parameters& params_;
+    const Parameters& params_;
     IResultWriter& resultWriter_;
 };
 
@@ -66,13 +68,13 @@ class InterpolateWaterValuePostProcessCmd final: public basePostProcessCommand
 public:
     InterpolateWaterValuePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
                                         AreaList& areas,
-                                        const Date::Calendar& calendar);
+                                        const Calendar& calendar);
 
     void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
     const AreaList& area_list_;
-    const Date::Calendar& calendar_;
+    const Calendar& calendar_;
 };
 
 class HydroLevelsFinalUpdatePostProcessCmd final: public basePostProcessCommand
@@ -103,7 +105,7 @@ private:
     std::set<int> identifyHoursForCurtailmentSharing(const std::vector<double>& sumENS) const;
     std::set<int> getHoursRequiringCurtailmentSharing() const;
 
-    using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+    using AdqPatchParams = AdequacyPatch::AdqPatchParams;
     const AreaList& area_list_;
     const AdqPatchParams& adqPatchParams_;
     unsigned int numSpace_ = 0;
@@ -129,6 +131,28 @@ private:
     unsigned int numSpace_ = 0;
     IResultWriter& writer_;
     const std::string fileLabel_;
+};
+
+/**
+ * \brief Write the legacy results into the `stage` simulation table at this
+ * point of the post-process list.
+ *
+ * Inserted right after the command whose effect it captures, so the stage name
+ * matches that post-process. No-op when `tables` is null (run writes no
+ * simulation tables).
+ */
+class DumpSimulationTablePostProcessCmd final: public basePostProcessCommand
+{
+public:
+    DumpSimulationTablePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
+                                      IO::Outputs::Stage stage,
+                                      IO::Outputs::OptimisationsSimulationTable* tables);
+
+    void execute(const optRuntimeData& opt_runtime_data) override;
+
+private:
+    const IO::Outputs::Stage stage_;
+    IO::Outputs::OptimisationsSimulationTable* const tables_;
 };
 
 } // namespace Antares::Solver::Simulation

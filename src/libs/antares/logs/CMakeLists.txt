@@ -7,6 +7,7 @@ set(HEADERS
 set(SRC_LOGS
         ${HEADERS}
         logs.cpp
+        logs-instance.cpp
         hostinfo.cpp
 )
 source_group("misc\\logs" FILES ${SRC_LOGS})
@@ -19,10 +20,6 @@ if (WIN32)
     find_library(WS2_32_LIBRARY ws2_32)
     target_link_libraries(${PROJ} PUBLIC wsock32 ws2_32)
 endif ()
-target_link_libraries(${PROJ}
-        PUBLIC
-        yuni-static-core
-)
 
 target_include_directories(${PROJ}
         PUBLIC

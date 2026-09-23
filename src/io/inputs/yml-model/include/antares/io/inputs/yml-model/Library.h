@@ -41,11 +41,19 @@ inline std::string toString(const ValueType& value_type)
     }
 }
 
+struct ExpressionLineNumber
+{
+    std::string input_expr;
+
+    /// used for error reporting only
+    size_t line_number;
+};
+
 struct Variable
 {
     std::string id;
-    std::string lower_bound;
-    std::string upper_bound;
+    ExpressionLineNumber lower_bound;
+    ExpressionLineNumber upper_bound;
     ValueType variable_type;
     bool time_dependent;
     bool scenario_dependent;
@@ -62,13 +70,13 @@ struct PortFieldDefinition
 {
     std::string port;
     std::string field;
-    std::string definition;
+    ExpressionLineNumber definition;
 };
 
 struct Constraint
 {
     std::string id;
-    std::string expression;
+    ExpressionLineNumber expression;
     std::string location;
     std::string out_of_bounds_processing_mode;
 };
@@ -76,13 +84,13 @@ struct Constraint
 struct ExtraOutput
 {
     std::string id;
-    std::string expression;
+    ExpressionLineNumber expression;
 };
 
 struct Objective
 {
     std::string id;
-    std::string expression;
+    ExpressionLineNumber expression;
     std::string location;
 };
 
@@ -98,6 +106,9 @@ struct Model
     std::vector<Constraint> binding_constraints;
     std::vector<Objective> objectives;
     std::vector<ExtraOutput> extra_outputs;
+
+    /// used for error reporting only
+    std::string filename;
 };
 
 struct AreaConnection
@@ -122,5 +133,8 @@ struct Library
     std::string description;
     std::vector<PortType> port_types;
     std::vector<Model> models;
+
+    /// used for error reporting only
+    std::string filename;
 };
 } // namespace Antares::IO::Inputs::YmlModel

@@ -6,9 +6,13 @@
 #include <cassert>
 #include <cmath>
 #include <map>
+#include <memory>
+#include <ranges>
 
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include <antares/logs/logs.h>
+#include <antares/solver/simulation/reserve-index-maps.h>
+#include <antares/solver/simulation/sim_structure_probleme_economique.h>
 #include <antares/study/study.h>
 
 namespace Antares::Solver::Simulation
@@ -18,7 +22,31 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
                                       const std::vector<AvgExchangeResults*>& balance,
                                       int PasDeTempsDebut)
 {
-    for (uint i = 0; i < (uint)problem.NombreDePasDeTemps; i++)
+    const uint linkCount = study.runtime.interconnectionsCount();
+    const uint hourCount = static_cast<uint>(problem.NombreDePasDeTemps);
+
+    // The average NTC only depends on the link and on the hour, not on the time step being filled
+    // in : compute it once per link for the whole week.
+    std::vector<std::vector<double>> avgDirect(linkCount);
+    std::vector<std::vector<double>> avgIndirect(linkCount);
+    for (uint j = 0; j < linkCount; ++j)
+    {
+        const auto* link = study.runtime.areaLink[j];
+        retrieveAverageNTC(study,
+                           link->directCapacities.timeSeries,
+                           link->timeseriesNumbers,
+                           PasDeTempsDebut,
+                           hourCount,
+                           avgDirect[j]);
+        retrieveAverageNTC(study,
+                           link->indirectCapacities.timeSeries,
+                           link->timeseriesNumbers,
+                           PasDeTempsDebut,
+                           hourCount,
+                           avgIndirect[j]);
+    }
+
+    for (uint i = 0; i < hourCount; i++)
     {
         auto& ntcValues = problem.ValeursDeNTC[i];
         uint decalPasDeTemps = PasDeTempsDebut + i;
@@ -39,32 +67,12 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
             }
         }
 
-        std::vector<double> avgDirect;
-        std::vector<double> avgIndirect;
-        for (uint j = 0; j < study.runtime.interconnectionsCount(); ++j)
+        for (uint j = 0; j < linkCount; ++j)
         {
-            auto* link = study.runtime.areaLink[j];
-            int ret = retrieveAverageNTC(study,
-                                         link->directCapacities.timeSeries,
-                                         link->timeseriesNumbers,
-                                         avgDirect);
+            ntcValues.ValeurDeNTCOrigineVersExtremite[j] = avgDirect[j][i];
+            ntcValues.ValeurDeNTCExtremiteVersOrigine[j] = avgIndirect[j][i];
 
-            ret = retrieveAverageNTC(study,
-                                     link->indirectCapacities.timeSeries,
-                                     link->timeseriesNumbers,
-                                     avgIndirect)
-                  && ret;
-            if (!ret)
-            {
-                ntcValues.ValeurDeNTCOrigineVersExtremite[j] = avgDirect[decalPasDeTemps];
-                ntcValues.ValeurDeNTCExtremiteVersOrigine[j] = avgIndirect[decalPasDeTemps];
-            }
-            else
-            {
-                assert(false && "invalid NTC");
-            }
-
-            auto& mtxParamaters = link->parameters;
+            const auto& mtxParamaters = study.runtime.areaLink[j]->parameters;
             ntcValues.ResistanceApparente[j] = mtxParamaters[Data::fhlImpedances][decalPasDeTemps];
         }
     }
@@ -357,8 +365,17 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                 auto& Pt = problem.PaliersThermiquesDuPays[areaIdx]
                              .PuissanceDisponibleEtCout[cluster->index];
 
+                Pt.CoutMarginalDeProductionDuPalierThermique[hourInWeek] = cluster
+                                                                             ->getCostProvider()
+                                                                             .getMarginalCost(
+                                                                               hourInYear,
+                                                                               year);
+
+                Pt.CoutHoraireDeProductionDuPalierThermiqueSansBruit[hourInWeek]
+                  = cluster->getCostProvider().getMarketBidCost(hourInYear, year);
+
                 Pt.CoutHoraireDeProductionDuPalierThermique[hourInWeek]
-                  = cluster->getCostProvider().getMarketBidCost(hourInYear, year)
+                  = Pt.CoutHoraireDeProductionDuPalierThermiqueSansBruit[hourInWeek]
                     + thermalNoises[areaIdx][cluster->areaWideIndex];
 
                 Pt.PuissanceDisponibleDuPalierThermique[hourInWeek] = cluster->series
@@ -390,49 +407,50 @@ void BuildThermalPartOfWeeklyProblem(Data::Study& study,
     }
 }
 
-int retrieveAverageNTC(const Data::Study& study,
-                       const Matrix<>& capacities,
-                       const Data::TimeSeriesNumbers& tsNumbers,
-                       std::vector<double>& avg)
+void retrieveAverageNTC(const Data::Study& study,
+                        const Matrix<>& capacities,
+                        const Data::TimeSeriesNumbers& tsNumbers,
+                        uint firstHour,
+                        uint hourCount,
+                        std::vector<double>& avg)
 {
     const auto& parameters = study.parameters;
 
     const auto& yearsWeight = parameters.getYearsWeight();
-    const auto& yearsWeightSum = parameters.getYearsWeightSum();
+    const auto yearsWeightSum = parameters.getYearsWeightSum();
     const auto& yearsFilter = parameters.yearsFilter;
-    const auto width = capacities.width;
-    avg.assign(HOURS_PER_YEAR, 0);
+    const bool singleTS = (capacities.width == 1);
+
+    avg.assign(hourCount, 0.);
 
     std::map<uint32_t, double> weightOfTS;
 
-    for (uint y = 0; y < study.parameters.nbYears; y++)
+    for (uint y = 0; y < parameters.nbYears; y++)
     {
         if (!yearsFilter[y])
         {
             continue;
         }
 
-        uint32_t tsIndex = (width == 1) ? 0 : tsNumbers[y];
+        uint32_t tsIndex = singleTS ? 0 : tsNumbers[y];
         weightOfTS[tsIndex] += yearsWeight[y];
     }
 
     // No need for the year number, only the TS index is required
-    for (const auto& it: weightOfTS)
+    for (const auto& [tsIndex, weight]: weightOfTS)
     {
-        const uint32_t tsIndex = it.first;
-        const double weight = it.second;
+        const auto* column = capacities[tsIndex];
 
-        for (uint h = 0; h < HOURS_PER_YEAR; h++)
+        for (uint h = 0; h < hourCount; h++)
         {
-            avg[h] += capacities[tsIndex][h] * weight;
+            avg[h] += column[firstHour + h] * weight;
         }
     }
 
-    for (uint h = 0; h < HOURS_PER_YEAR; h++)
+    for (auto& value: avg)
     {
-        avg[h] /= yearsWeightSum;
+        value /= yearsWeightSum;
     }
-    return 0;
 }
 
 void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
@@ -487,6 +505,52 @@ void prepareClustersInMustRunMode(Data::Study& study,
             }
         }
     }
+}
+
+void buildReserveIndexMaps(Data::Study& study, const PROBLEME_HEBDO& problem)
+{
+    auto maps = std::make_shared<ReserveIndexMaps>();
+    auto& participationIndexMaps = maps->participationIndexMaps;
+    auto& idToName = maps->idToName;
+
+    auto loadReserveParticipations =
+      [&](const Data::Area* area, const CAPACITY_RESERVATION& reserve)
+    {
+        // Thermal clusters
+        for (auto& [clusterId, reserveParticipation]: reserve.AllThermalReservesParticipation)
+        {
+            participationIndexMaps.at(area->id).thermalClusters.insert(
+              {{reserve.reserveID, reserveParticipation.clusterName},
+               reserveParticipation.areaIndexClusterParticipation});
+        }
+
+        // Short Term Storage
+        for (auto& [clusterId, reserveParticipation]: reserve.AllSTStorageReservesParticipation)
+        {
+            participationIndexMaps.at(area->id).STStorageClusters.insert(
+              {{reserve.reserveID, reserveParticipation.clusterName},
+               reserveParticipation.areaIndexClusterParticipation});
+        }
+
+        // Hydro
+        for (auto& reserveParticipation: reserve.AllHydroReservesParticipation)
+        {
+            participationIndexMaps.at(area->id).Hydro.insert(
+              {reserve.reserveID, reserveParticipation.areaIndexClusterParticipation});
+        }
+    };
+
+    for (const auto& area: study.areas | std::views::values)
+    {
+        participationIndexMaps.emplace(area->id, ReserveIndexMaps::AreaReserveIndexMap{});
+        for (const auto& reserve: problem.allReserves->at(area->index).areaCapacityReservations)
+        {
+            idToName.try_emplace(reserve.reserveID, reserve.reserveName);
+            loadReserveParticipations(area.get(), reserve);
+        }
+    }
+
+    study.reserveMaps = std::move(maps);
 }
 
 } // namespace Antares::Solver::Simulation

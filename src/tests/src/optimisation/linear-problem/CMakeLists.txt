@@ -11,5 +11,6 @@ add_boost_test(unit-tests-for-modeler-api
         mock-fillers/TwoVarsTwoConstraintsFiller.h
         LIBS
         Antares::linear-problem-mpsolver-impl
-        Antares::linear-problem-data-impl)
+        Antares::linear-problem-data-impl
+        Antares::modeler-optimisation-container)
 

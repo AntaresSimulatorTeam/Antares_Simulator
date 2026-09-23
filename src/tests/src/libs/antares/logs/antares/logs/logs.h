@@ -8,9 +8,7 @@
 
 #include <yuni/core/string/string.h>
 
-namespace Antares
-{
-namespace UnitTests
+namespace Antares::UnitTests
 {
 
 class fakeLogger;
@@ -84,10 +82,11 @@ private:
     Buffer warning_buffer_;
 };
 
-} // namespace UnitTests
+} // namespace Antares::UnitTests
 
+namespace Antares
+{
 extern UnitTests::fakeLogger logs;
-
 } // namespace Antares
 
 #endif // __TESTS_ANTARES_LIBS_LOGS_FAKE_H__

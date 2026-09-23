@@ -8,17 +8,17 @@
 #include "ReadLinearExpressionVisitor.h"
 #include "TimeDependentLinearExpression.h"
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 class OptimEntityContainer;
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem
 
 /**
  * Read Linear Constraint Visitor
  * Visits a Node and produces a Linear Constraint (defined by its Linear Expression and bounds).
  * The root node is expected to be a comparison node.
  */
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 
 /**
@@ -40,11 +40,11 @@ class ReadLinearConstraintVisitor final: public Expressions::Visitors::NodeVisit
 public:
     ReadLinearConstraintVisitor() = delete;
     explicit ReadLinearConstraintVisitor(
-      const Optimisation::OptimEntityContainer& optimEntityContainer,
-      const Optimisation::LinearProblemApi::FillContext& fillContext,
+      const LinearProblem::OptimEntityContainer& optimEntityContainer,
+      const LinearProblem::Api::FillContext& fillContext,
       const ModelerStudy::SystemModel::Component& component,
-      const Optimisation::LinearProblemApi::ILinearProblemData* data,
-      const Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
+      const LinearProblem::Api::ILinearProblemData* data,
+      const LinearProblem::ScenarioGroupRepository& scenarioGroupRepository);
 
     std::string name() const override;
 
@@ -71,4 +71,4 @@ private:
 
     ReadLinearExpressionVisitor linear_expression_visitor_;
 };
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem
