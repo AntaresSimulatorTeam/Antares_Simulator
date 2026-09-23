@@ -419,7 +419,8 @@ void FillSimulationTable(SimulationTable& simulationTable,
                          const FillContext& fillContext,
                          unsigned currentBlock,
                          const TimeConversionMode& timeConversionMode,
-                         bool forceExportForScenarioIndex)
+                         bool forceExportForScenarioIndex,
+                         const Api::IAreaPriceProvider* areaPriceProvider)
 {
     Utils::TimeMeasurement measure;
     unsigned year = fillContext.getYear();
@@ -430,7 +431,12 @@ void FillSimulationTable(SimulationTable& simulationTable,
         const auto& scenario = modelerData.scenarioGroupRepository.scenario(
           component.getScenarioGroupId());
 
-        Visitors::EvalVisitor evalVisitor(optimContainer, fillContext, component, data, scenario);
+        Visitors::EvalVisitor evalVisitor(optimContainer,
+                                          fillContext,
+                                          component,
+                                          data,
+                                          scenario,
+                                          areaPriceProvider);
         Visitors::VariabilityVisitor variabilityVisitor(optimContainer, component);
 
         addVariableEntries(simulationTable,

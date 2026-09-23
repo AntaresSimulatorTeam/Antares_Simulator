@@ -19,6 +19,7 @@
 #include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
+#include "antares/solver/optimisation/HebdoAreaPriceProvider.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyNameMapper.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
@@ -279,6 +280,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         measure.reset();
         if (modelerData)
         {
+            const HebdoAreaPriceProvider areaPriceProvider(*problemeHebdo, *ortoolsProblem);
             FillSimulationTable(*simulationTable,
                                 *ortoolsProblem,
                                 getObjectiveValue(solver.get()),
@@ -287,7 +289,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                 fillCtx,
                                 currentBlock,
                                 timeConversionMode,
-                                true);
+                                true,
+                                &areaPriceProvider);
         }
 
         static constexpr LegacyNameMapper legacyNameMapper;

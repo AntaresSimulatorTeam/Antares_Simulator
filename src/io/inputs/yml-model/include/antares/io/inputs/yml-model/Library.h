@@ -116,6 +116,7 @@ struct AreaConnection
     std::string inject_to_balance;
     std::string spillage_bound;
     std::string unsupplied_energy_bound;
+    std::string price;
 };
 
 struct PortType

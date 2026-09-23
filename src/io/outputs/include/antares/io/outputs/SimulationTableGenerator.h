@@ -5,6 +5,7 @@
 #include <string>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/optimisation/linear-problem-api/IAreaPriceProvider.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/study/system-model/component.h>
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
@@ -89,6 +90,9 @@ void addVariableEntries(SimulationTable& simulationTable,
  * @param timeConversionMode the block to absolute time conversion mode
  * @param forceExportForScenarioIndex set to true if you want to force the scenario index to be
  * exported for scenario-independent outputs (useful for hybrid mode)
+ * @param areaPriceProvider dual value of legacy areas' balance equations, used to evaluate
+ * GEMS extra-outputs referencing a hybrid area-connection's 'price' field. Null when no legacy
+ * area is involved (full GEMS), in which case such a field always evaluates to 0.
  */
 void FillSimulationTable(SimulationTable& simulationTable,
                          const LinearProblem::Api::ILinearProblem& linearProblem,
@@ -98,5 +102,6 @@ void FillSimulationTable(SimulationTable& simulationTable,
                          const LinearProblem::Api::FillContext& fillContext,
                          unsigned currentBlock,
                          const TimeConversionMode& timeConversionMode,
-                         bool forceExportForScenarioIndex = false);
+                         bool forceExportForScenarioIndex = false,
+                         const LinearProblem::Api::IAreaPriceProvider* areaPriceProvider = nullptr);
 } // namespace Antares::IO::Outputs

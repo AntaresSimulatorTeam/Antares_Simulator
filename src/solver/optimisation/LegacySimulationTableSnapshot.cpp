@@ -14,6 +14,7 @@
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/modeler/ModelerData.h"
+#include "antares/solver/optimisation/HebdoAreaPriceProvider.h"
 #include "antares/solver/optimisation/LegacyExtraOutputs.h"
 #include "antares/solver/optimisation/LegacyVariableInfo.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
@@ -136,6 +137,7 @@ void DumpSimulationTableAfterPostProcess(SimulationTable& simulationTable,
     if (const auto& solved = problemeHebdo.lastSolvedModelerProblem;
         solved && problemeHebdo.modelerData)
     {
+        const HebdoAreaPriceProvider areaPriceProvider(problemeHebdo, *solved->problem);
         IO::Outputs::FillSimulationTable(simulationTable,
                                          *solved->problem,
                                          solved->objectiveValue,
@@ -144,7 +146,8 @@ void DumpSimulationTableAfterPostProcess(SimulationTable& simulationTable,
                                          fillContext,
                                          currentBlock,
                                          IO::Outputs::TimeConversionMode::WeeklyBlocks,
-                                         true);
+                                         true,
+                                         &areaPriceProvider);
     }
 
     static constexpr LegacyNameMapper nameMapper;
