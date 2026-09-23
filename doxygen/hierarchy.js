@@ -635,6 +635,7 @@ var hierarchy =
       [ "Antares::Expressions::Visitors::NodeVisitor< R, Args >", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html", null ]
     ] ],
     [ "Antares::Data::Parameters::IncludeOptions", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html", null ],
+    [ "Antares::Solver::Optimization::Simplex::InfeasibilityAnalyzer", "classAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1InfeasibilityAnalyzer.html", null ],
     [ "Antares::Optimization::InfeasibleProblemReport", "classAntares_1_1Optimization_1_1InfeasibleProblemReport.html", null ],
     [ "Antares::Solver::Variable::Economy::InflowsTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1InflowsTraits.html", null ],
     [ "Antares::Logs::Verbosity::Info", "structAntares_1_1Logs_1_1Verbosity_1_1Info.html", null ],
@@ -866,6 +867,7 @@ var hierarchy =
       [ "Antares::Solver::Variable::Economy::LOLP_CSRTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__CSRTraits.html", null ]
     ] ],
     [ "Antares::Solver::Variable::Economy::LoopFlowTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlowTraits.html", null ],
+    [ "Antares::Solver::Optimization::Simplex::LpFiller", "classAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1LpFiller.html", null ],
     [ "Antares::Solver::LpsFromAntares", "classAntares_1_1Solver_1_1LpsFromAntares.html", null ],
     [ "Antares::Solver::Variable::Economy::Reserves::Detail::MarginalCost", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1Detail_1_1MarginalCost.html", null ],
     [ "Antares::Solver::Variable::Economy::MarginalCostTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCostTraits.html", null ],
@@ -1314,7 +1316,8 @@ var hierarchy =
     [ "ShortTermStorageData", "structShortTermStorageData.html", [
       [ "ShortTermStorageCumulativeConstraintData", "structShortTermStorageCumulativeConstraintData.html", null ]
     ] ],
-    [ "SimplexResult", "structSimplexResult.html", null ],
+    [ "Antares::Solver::Optimization::Simplex::SimplexOrchestrator", "classAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexOrchestrator.html", null ],
+    [ "Antares::Solver::Optimization::Simplex::SimplexResult", "structAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexResult.html", null ],
     [ "SimulationHandler", "classSimulationHandler.html", null ],
     [ "Benchmarking::SimulationInfoCollector", "classBenchmarking_1_1SimulationInfoCollector.html", null ],
     [ "Antares::API::SimulationResults", "structAntares_1_1API_1_1SimulationResults.html", null ],

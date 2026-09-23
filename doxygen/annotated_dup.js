@@ -502,6 +502,14 @@ var annotated_dup =
           [ "LoadedSystem", "structAntares_1_1Solver_1_1LoadFiles_1_1LoadedSystem.html", "structAntares_1_1Solver_1_1LoadFiles_1_1LoadedSystem" ],
           [ "ErrorLoadingYaml", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml" ]
         ] ],
+        [ "Optimization", null, [
+          [ "Simplex", null, [
+            [ "InfeasibilityAnalyzer", "classAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1InfeasibilityAnalyzer.html", null ],
+            [ "LpFiller", "classAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1LpFiller.html", null ],
+            [ "SimplexOrchestrator", "classAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexOrchestrator.html", "classAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexOrchestrator" ],
+            [ "SimplexResult", "structAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexResult.html", "structAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexResult" ]
+          ] ]
+        ] ],
         [ "Simulation", null, [
           [ "AdqPatchPostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList.html", "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList" ],
           [ "OptPostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList.html", "classAntares_1_1Solver_1_1Simulation_1_1OptPostProcessList" ],
@@ -1311,7 +1319,6 @@ var annotated_dup =
     [ "ShortTermStorageCumulativeConstraintData", "structShortTermStorageCumulativeConstraintData.html", "structShortTermStorageCumulativeConstraintData" ],
     [ "ShortTermStorageData", "structShortTermStorageData.html", "structShortTermStorageData" ],
     [ "ShortTermStorageLevel", "classShortTermStorageLevel.html", "classShortTermStorageLevel" ],
-    [ "SimplexResult", "structSimplexResult.html", "structSimplexResult" ],
     [ "SimulationHandler", "classSimulationHandler.html", "classSimulationHandler" ],
     [ "SimulationTableFileFixture", "structSimulationTableFileFixture.html", "structSimulationTableFileFixture" ],
     [ "SimuTableFixture", "structSimuTableFixture.html", "structSimuTableFixture" ],

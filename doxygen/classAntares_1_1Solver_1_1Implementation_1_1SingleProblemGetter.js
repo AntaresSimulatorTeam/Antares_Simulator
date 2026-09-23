@@ -7,7 +7,7 @@ var classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter =
     [ "getMasterProblem", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#acb4a5cca89621b3bd7f4ccd273a7ee8e", null ],
     [ "getProblemIds", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#a57e614ec25c94cf43622437ba1e163a2", null ],
     [ "getWeeklyData", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#a1eb140845344d0eca8786f1af22d87ba", null ],
-    [ "getWeeklyProblem", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#a8fbb19ce62bea314e64799592f4762f1", null ],
+    [ "getWeeklyProblem", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#a84b0b7bdf2b2dd6ec4456b333764b07d", null ],
     [ "nbWeeks", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#ab74a63ccf14af598667171e29c41cdb8", null ],
     [ "nbYears", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#a7972c72806991c1b022abbcb36d0bb1a", null ],
     [ "playedYears", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#a72c79e0afdeb10ca51efba02b426a82f", null ],

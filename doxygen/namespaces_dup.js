@@ -1117,7 +1117,7 @@ var namespaces_dup =
           [ "buildMemo", "singleProblemGetterImpl_8cpp.html#ae3127a02ee96b5741ca4ee9dfe73b0a7", null ],
           [ "fillLinksProperties", "singleProblemGetterImpl_8cpp.html#aada1fdb1eb77a1728c77c4d39240dcaa", null ],
           [ "updateWeekId", "singleProblemGetterImpl_8cpp.html#a82c11a08d823fab6631bb50c211c1ca5", null ],
-          [ "writeWeekMPS", "singleProblemGetterImpl_8cpp.html#a0e15df5fb4ccae2d5a629c40cc789ccd", null ],
+          [ "writeWeekMPS", "singleProblemGetterImpl_8cpp.html#a66462bf5e3fd86c253b96bcc1a213e84", null ],
           [ "tags", "singleProblemGetterImpl_8cpp.html#a1e92fd112582108e456dee0757bbc61b", null ]
         ] ],
         [ "Initialization", null, [
@@ -1153,6 +1153,16 @@ var namespaces_dup =
           [ "update", "readLibraries_8cpp.html#af6f4c5ffb877f45090311d523454e265", null ],
           [ "updateLibrariesWithOptimConfig", "readLibraries_8cpp.html#adaaa59ce67d6f10a17e7aab9d8dcf9bb", null ],
           [ "updateSystemModel", "readLibraries_8cpp.html#a8e65a6668c403771ca293e14eb913365", null ]
+        ] ],
+        [ "Optimization", null, [
+          [ "Simplex", null, [
+            [ "InfeasibilityAnalyzer", "classAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1InfeasibilityAnalyzer.html", null ],
+            [ "LpFiller", "classAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1LpFiller.html", null ],
+            [ "SimplexOrchestrator", "classAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexOrchestrator.html", "classAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexOrchestrator" ],
+            [ "SimplexResult", "structAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexResult.html", "structAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexResult" ],
+            [ "applyResults", "SimplexResult_8h.html#a003ebd3c1fe23226d8cca5e01cdb02de", null ]
+          ] ],
+          [ "OPT_AppelDuSimplexe", "opt__fonctions_8h.html#a106e76b15e8a9c7da5cd2981a24ff9dd", null ]
         ] ],
         [ "Simulation", null, [
           [ "AdqPatchPostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList.html", "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList" ],
@@ -2064,12 +2074,6 @@ var namespaces_dup =
       [ "reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", "classfind__reference_1_1reference__folder__finder" ],
       [ "find_reference_folder", "find__reference_8py.html#a9a1c9809dbe51b7d00621cd03854ec6e", null ]
     ] ],
-    [ "Fixtures", null, [
-      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
-      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
-      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
-      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
-    ] ],
     [ "fixtures", null, [
       [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
       [ "antares_problem_generator", "fixtures_8py.html#a532fab1323b92d1f3eb74f5213a6b6c0", null ],
@@ -2078,6 +2082,12 @@ var namespaces_dup =
       [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
       [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
       [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
+    ] ],
+    [ "Fixtures", null, [
+      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
+      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
+      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
+      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
     ] ],
     [ "fmt", null, [
       [ "formatter< Antares::ModelerStudy::SystemModel::FieldRole >", "structfmt_1_1formatter_3_01Antares_1_1ModelerStudy_1_1SystemModel_1_1FieldRole_01_4.html", "structfmt_1_1formatter_3_01Antares_1_1ModelerStudy_1_1SystemModel_1_1FieldRole_01_4" ]
