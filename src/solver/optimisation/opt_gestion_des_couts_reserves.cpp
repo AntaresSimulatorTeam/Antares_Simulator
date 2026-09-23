@@ -98,7 +98,7 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
         reserveCostsInitializer.setPdtHebdo(pdtHebdo);
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            auto areaReserves = problemeHebdo->allReserves.value()[pays];
+            auto areaReserves = problemeHebdo->allReserves->at(pays);
 
             for (auto& areaReserve: areaReserves.areaCapacityReservations)
             {

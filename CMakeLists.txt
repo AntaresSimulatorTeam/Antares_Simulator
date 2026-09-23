@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
 set(ANTARES_VERSION_HI 10)
-set(ANTARES_VERSION_LO 1)
+set(ANTARES_VERSION_LO 2)
 set(ANTARES_VERSION_REVISION 1)
 
 # Beta release
@@ -192,8 +192,7 @@ if (${BUILD_MERSENNE_TWISTER_PYBIND11})
     find_package(pybind11 REQUIRED)
 endif ()
 
-#Boost header libraries
-find_package(Boost REQUIRED)
+find_package(Boost CONFIG REQUIRED)
 
 find_package(antlr4-runtime REQUIRED)
 find_package(yaml-cpp REQUIRED)

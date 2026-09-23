@@ -5,11 +5,13 @@
 
 #include "in-memory-study.h"
 
+#include <antares/solver/variable/registerThematicTrimmingVariables.h>
 #include "antares/application/ScenarioBuilderOwner.h"
 #include "antares/utils/utils.h"
 
 void initializeStudy(Study* study)
 {
+    Antares::Solver::Variable::RegisterThematicTrimmingVariables();
     study->parameters.reset();
 }
 
@@ -336,7 +338,7 @@ StudyBuilder::StudyBuilder():
     simulation(*study)
 {
     // Make logs shrink to errors (and higher) only
-    logs.verbosityLevel = Logs::Verbosity::Error::level;
+    logs.verbosityLevel = Antares::Logs::Verbosity::Error::level;
     study->parameters.namedProblems = true;
     initializeStudy(study.get());
 }
@@ -378,7 +380,6 @@ Area* StudyBuilder::addAreaToStudy(const std::string& areaName)
 
     // Default values for the area
     area->createMissingData();
-    area->resetToDefaultValues();
 
     // Temporary : we want to give a high unsupplied or spilled energy costs.
     // Which cost should we give ?

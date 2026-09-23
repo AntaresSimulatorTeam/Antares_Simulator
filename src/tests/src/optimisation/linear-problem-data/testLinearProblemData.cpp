@@ -10,7 +10,7 @@
 #include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
 #include <antares/optimisation/linear-problem-data-impl/timeSeriesSet.h>
 
-using namespace Antares::Optimisation::LinearProblemDataImpl;
+using namespace Antares::LinearProblem::DataImpl;
 
 BOOST_AUTO_TEST_CASE(PbData_is_empty_asking_it_a_value_leads_to_exception)
 {

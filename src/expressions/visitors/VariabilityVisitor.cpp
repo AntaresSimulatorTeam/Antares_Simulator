@@ -10,7 +10,7 @@
 #include "antares/expressions/visitors/PrintVisitor.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::Optimisation;
+using namespace Antares::LinearProblem;
 
 namespace Antares::Expressions::Visitors
 {

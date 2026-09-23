@@ -13,7 +13,7 @@
 #include <boost/test/unit_test.hpp>
 
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::Optimisation;
+using namespace Antares::LinearProblem;
 
 struct ComponentBuilderCreationFixture
 {

@@ -1,0 +1,48 @@
+# This Dockerfile is a reproducibility recipe: it builds libjemalloc.so.2 on
+# Oracle Linux 8, documenting exactly how the shared library used by the
+# Antares Solver on that platform was produced, so it can be rebuilt in the
+# same way if the original build environment is no longer available.
+#
+# Builds jemalloc from the GitHub source tarball.
+#
+# Build with the default version (5.3.1):
+#   docker build -t jemalloc:5.3.1 .
+#
+# Or override the version:
+#   docker build --build-arg JEMALLOC_VERSION=5.2.1 -t jemalloc:5.2.1 .
+
+FROM oraclelinux:8
+
+# Version of jemalloc to download and build (configurable)
+ARG JEMALLOC_VERSION=5.3.1
+
+# jemalloc's GitHub tarball does not ship a generated `configure` script,
+# so autotools are needed to generate it via autogen.sh.
+RUN yum install -y \
+        autoconf \
+        automake \
+        ca-certificates \
+        gcc \
+        make \
+        wget \
+    && yum clean all \
+    && rm -rf /var/cache/yum
+
+WORKDIR /usr/local/src
+
+RUN wget -q -O jemalloc-${JEMALLOC_VERSION}.tar.gz \
+        "https://github.com/jemalloc/jemalloc/archive/refs/tags/${JEMALLOC_VERSION}.tar.gz" \
+    && tar xzf jemalloc-${JEMALLOC_VERSION}.tar.gz \
+    && cd "jemalloc-${JEMALLOC_VERSION}" \
+    && ./autogen.sh \
+    && ./configure --prefix=/usr/local \
+        --with-version="${JEMALLOC_VERSION}-0-g000000" \
+    && make -j"$(nproc)" \
+    && make install \
+    && echo /usr/local/lib > /etc/ld.so.conf.d/jemalloc.conf \
+    && ldconfig \
+    && cd / \
+    && rm -rf /usr/local/src/jemalloc-${JEMALLOC_VERSION} /usr/local/src/jemalloc-${JEMALLOC_VERSION}.tar.gz
+
+# Sanity check: the shared library must be visible to the linker
+RUN ldconfig -p | grep -q libjemalloc

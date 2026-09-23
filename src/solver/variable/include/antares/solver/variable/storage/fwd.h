@@ -4,7 +4,7 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_FORWARD_H__
 #define __SOLVER_VARIABLE_STORAGE_FORWARD_H__
 
-#include "../categories.h"
+#include <antares/study/categories.h>
 
 namespace Antares::Solver::Variable
 {

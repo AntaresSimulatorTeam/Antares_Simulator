@@ -12,7 +12,7 @@
 
 /*************************************************************************************************/
 /*                    Structure contenant les champs a renseigner par l'appelant */
-namespace DoneesOptimisationJournaliere
+namespace Antares::Solver::Hydro::Daily
 {
 struct DONNEES_MENSUELLES
 {
@@ -36,6 +36,6 @@ struct DONNEES_MENSUELLES
     /* Problemes internes (utilise uniquement par l'optimisation) */
     PROBLEME_HYDRAULIQUE ProblemeHydraulique{};
 };
-} // namespace DoneesOptimisationJournaliere
+} // namespace Antares::Solver::Hydro::Daily
 
 #endif

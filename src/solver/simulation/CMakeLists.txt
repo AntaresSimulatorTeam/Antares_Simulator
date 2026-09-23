@@ -9,7 +9,6 @@ set(SRC_SIMULATION
         include/antares/solver/simulation/apply-scenario.h
         include/antares/solver/simulation/sim_alloc_probleme_hebdo.h
         include/antares/solver/simulation/sim_binding_constraints_rhs.h
-        include/antares/solver/simulation/sim_constants.h
         include/antares/solver/simulation/sim_structure_donnees.h
         include/antares/solver/simulation/sim_structure_probleme_economique.h
         include/antares/solver/simulation/simulation.h

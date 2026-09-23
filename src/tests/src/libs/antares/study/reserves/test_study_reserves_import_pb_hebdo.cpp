@@ -60,22 +60,20 @@ struct OneProblemWithReservesTwoAreas
         tmpCapacityReservationDownB.setName("ReserveDownB");
 
         areaA->allCapacityReservations = AllCapacityReservations();
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUp);
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDown);
+        areaA->allCapacityReservations->areaCapacityReservations.emplace("reserveup",
+                                                                         tmpCapacityReservationUp);
+        areaA->allCapacityReservations->areaCapacityReservations
+          .emplace("reservedown", tmpCapacityReservationDown);
 
         areaB->allCapacityReservations = AllCapacityReservations();
-        areaB->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUpB);
-        areaB->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDownB);
+        areaB->allCapacityReservations->areaCapacityReservations.emplace("reserveup",
+                                                                         tmpCapacityReservationUpB);
+        areaB->allCapacityReservations->areaCapacityReservations
+          .emplace("reservedown", tmpCapacityReservationDownB);
 
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.at("reserveup")
-          .need.resize(2);
-        areaA->allCapacityReservations.value().areaCapacityReservations.at("reserveup").need[0] = 2;
-        areaA->allCapacityReservations.value().areaCapacityReservations.at("reserveup").need[1] = 3;
+        areaA->allCapacityReservations->areaCapacityReservations.at("reserveup").need.resize(2);
+        areaA->allCapacityReservations->areaCapacityReservations.at("reserveup").need[0] = 2;
+        areaA->allCapacityReservations->areaCapacityReservations.at("reserveup").need[1] = 3;
     }
 
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
@@ -99,13 +97,11 @@ BOOST_FIXTURE_TEST_CASE(test_importCapacityReservation_allGood, OneProblemWithRe
     BOOST_CHECK_EQUAL(problemeHebdo->allReserves.has_value(), true);
     int indexA = study->areas.find("a")->index;
     int indexB = study->areas.find("b")->index;
-    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.value()[indexA].areaCapacityReservations.size(),
-                      2);
-    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.value()[indexB].areaCapacityReservations.size(),
-                      2);
+    BOOST_CHECK_EQUAL(problemeHebdo->allReserves->at(indexA).areaCapacityReservations.size(), 2);
+    BOOST_CHECK_EQUAL(problemeHebdo->allReserves->at(indexB).areaCapacityReservations.size(), 2);
     bool containsUp = false;
     bool containsDown = false;
-    for (auto& reserve: problemeHebdo->allReserves.value()[indexA].areaCapacityReservations)
+    for (auto& reserve: problemeHebdo->allReserves->at(indexA).areaCapacityReservations)
     {
         if (reserve.type == Antares::Data::ReserveType::UP)
         {
@@ -132,7 +128,7 @@ BOOST_FIXTURE_TEST_CASE(test_importCapacityReservation_allGood, OneProblemWithRe
     containsUp = false;
     containsDown = false;
 
-    for (auto& reserve: problemeHebdo->allReserves.value()[indexB].areaCapacityReservations)
+    for (auto& reserve: problemeHebdo->allReserves->at(indexB).areaCapacityReservations)
     {
         if (reserve.type == Antares::Data::ReserveType::UP)
         {
@@ -186,7 +182,7 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
     areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserveA.yml");
     areaA->hydro.loadReserveParticipations(*areaB, studyPath / "myreserveB.yml");
 
-    areaA->hydro.reserveParticipationContainer.value().addReserveParticipationSymmetry(
+    areaA->hydro.reserveParticipationContainer->addReserveParticipationSymmetry(
       {"reserveup", "reservedown"});
 
     importCapacityReservations(study->areas, *problemeHebdo);
@@ -194,19 +190,17 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
 
     int indexA = study->areas.find("a")->index;
     int indexB = study->areas.find("b")->index;
-    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.value()[indexA].areaCapacityReservations.size(),
-                      2);
-    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.value()[indexB].areaCapacityReservations.size(),
-                      2);
+    BOOST_CHECK_EQUAL(problemeHebdo->allReserves->at(indexA).areaCapacityReservations.size(), 2);
+    BOOST_CHECK_EQUAL(problemeHebdo->allReserves->at(indexB).areaCapacityReservations.size(), 2);
     int maxGlobalHydroParticipationIndex;
     bool containsUp = false;
     bool containsDown = false;
 
     BOOST_CHECK_EQUAL(
-      problemeHebdo->allReserves.value()[indexA].HydroReservesParticipationSymmetries.size(),
+      problemeHebdo->allReserves->at(indexA).HydroReservesParticipationSymmetries.size(),
       1);
 
-    for (auto& reserve: problemeHebdo->allReserves.value()[indexA].areaCapacityReservations)
+    for (auto& reserve: problemeHebdo->allReserves->at(indexA).areaCapacityReservations)
     {
         BOOST_CHECK_EQUAL(reserve.AllHydroReservesParticipation.size(), 1);
 
@@ -240,7 +234,7 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
     BOOST_CHECK_EQUAL(containsUp, true);
     containsUp = false;
     containsDown = false;
-    for (auto& reserve: problemeHebdo->allReserves.value()[indexB].areaCapacityReservations)
+    for (auto& reserve: problemeHebdo->allReserves->at(indexB).areaCapacityReservations)
     {
         if (reserve.AllHydroReservesParticipation.size() == 1)
         {

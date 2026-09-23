@@ -63,27 +63,27 @@ public:
     /*!
     ** \brief Add a new binding constraint
     */
-    std::shared_ptr<BindingConstraint> add(const AnyString& name);
+    std::shared_ptr<BindingConstraint> add(const std::string& name);
 
     /*!
     ** Try to find a constraint from its id
     */
-    std::shared_ptr<Data::BindingConstraint> find(const AnyString& id);
+    std::shared_ptr<Data::BindingConstraint> find(const std::string& id);
 
     /*!
     ** \brief Try to find a constraint from its id (const)
     */
-    [[nodiscard]] std::shared_ptr<const Data::BindingConstraint> find(const AnyString& id) const;
+    [[nodiscard]] std::shared_ptr<const Data::BindingConstraint> find(const std::string& id) const;
 
     /*!
      ** \brief Try to find a constraint from its name
      */
-    [[nodiscard]] Data::BindingConstraint* findByName(const AnyString& name);
+    [[nodiscard]] Data::BindingConstraint* findByName(const std::string& name);
 
     /*!
     ** \brief Try to find a constraint from its name (const)
     */
-    [[nodiscard]] const Data::BindingConstraint* findByName(const AnyString& name) const;
+    [[nodiscard]] const Data::BindingConstraint* findByName(const std::string& name) const;
 
     /*!
     ** \brief Load all binding constraints from a folder
@@ -93,7 +93,7 @@ public:
                                       const std::filesystem::path& folder);
 
     //! Get the number of binding constraints
-    [[nodiscard]] uint size() const;
+    [[nodiscard]] unsigned int size() const;
 
     /*!
     ** \brief Convert all weekly constraints into daily ones
@@ -116,7 +116,7 @@ private:
 struct WhoseNameContains final
 {
 public:
-    explicit WhoseNameContains(AnyString filter):
+    explicit WhoseNameContains(std::string filter):
         pFilter(std::move(filter))
     {
     }
@@ -132,7 +132,7 @@ public:
     }
 
 private:
-    AnyString pFilter;
+    std::string pFilter;
 };
 } // namespace Antares::Data
 

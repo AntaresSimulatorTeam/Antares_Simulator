@@ -16,13 +16,13 @@ namespace Antares::IO::Outputs
 class MPSGenerator
 {
 public:
-    explicit MPSGenerator(const Antares::Optimisation::LinearProblemApi::ILinearProblem& lp,
+    explicit MPSGenerator(const Antares::LinearProblem::Api::ILinearProblem& lp,
                           const std::string& name,
                           bool keepNames);
     std::string run() const;
 
 private:
-    const Optimisation::LinearProblemApi::ILinearProblem& linearProblem_;
+    const LinearProblem::Api::ILinearProblem& linearProblem_;
     std::string name_;
     std::vector<std::string> exportableConstraintsNames_;
     std::vector<std::string> exportableVariablesNames_;

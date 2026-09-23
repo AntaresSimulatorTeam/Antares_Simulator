@@ -7,7 +7,7 @@
 
 namespace Antares::Check
 {
-void checkStudyVersion(const Data::StudyVersion& version, const AnyString& StudyFolder);
+void checkStudyVersion(const Data::StudyVersion& version, const std::string& StudyFolder);
 
 void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
                                    Antares::Data::HydroPricingMode hpMode);

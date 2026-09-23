@@ -6,7 +6,7 @@
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 
 class LinearProblemFiller
@@ -20,4 +20,4 @@ public:
     virtual ~LinearProblemFiller() = default;
 };
 
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace Antares::LinearProblem::Api

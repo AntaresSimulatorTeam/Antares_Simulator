@@ -14,7 +14,6 @@ system:
        node1.gen2_p[1] = 80
        Objective function value: 880 (80 * 5 + 80 * 6)
   
-  model-libraries: lib_example_4_4
   
   components:
     - id: node1

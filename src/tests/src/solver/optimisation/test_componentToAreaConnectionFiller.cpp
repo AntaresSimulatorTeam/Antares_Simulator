@@ -11,6 +11,7 @@
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/study/system-model/library.h"
@@ -22,9 +23,9 @@ using namespace std::string_literals;
 using namespace Antares;
 using namespace Antares::Optimization;
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::Optimisation;
-using namespace LinearProblemApi;
-using namespace LinearProblemDataImpl;
+using namespace Antares::LinearProblem;
+using namespace Api;
+using namespace DataImpl;
 
 static const auto libraryYaml = R"(
 library:
@@ -89,8 +90,6 @@ static const auto systemYaml = R"(
 system:
   id: my_system
 
-  model-libraries: my_lib
-
   components:
   - id: component_with_vars
     model: my_lib.model_with_vars
@@ -118,7 +117,7 @@ struct ComponentToAreaConnectionFillerFixture
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
     std::unique_ptr<Solver::ModelerData> modelerData;
     std::vector<Library> libraries;
-    LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem;
+    MpsolverImpl::OrtoolsLinearProblem linearProblem;
     ScenarioGroupRepository scenarioGroupRepository;
     std::remove_reference_t<LinearProblemData&> data;
 

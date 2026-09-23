@@ -11,7 +11,7 @@
 
 #define LINFINI 1.e+80
 
-namespace DonneesOptimisationMensuelle
+namespace Antares::Solver::Hydro::Monthly
 {
 /*--------------------------------------------------------------------------------------*/
 /* Matrice des contraintes: il y aura une seule instance pour tous les reservoirs */
@@ -98,4 +98,4 @@ struct PROBLEME_HYDRAULIQUE
     double CoutDeLaSolution{0.};
     double CoutDeLaSolutionBruite{0.};
 };
-} // namespace DonneesOptimisationMensuelle
+} // namespace Antares::Solver::Hydro::Monthly

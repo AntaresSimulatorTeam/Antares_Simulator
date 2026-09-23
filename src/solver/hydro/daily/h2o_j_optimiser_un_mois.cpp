@@ -4,7 +4,7 @@
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
-namespace DoneesOptimisationJournaliere
+namespace Antares::Solver::Hydro::Daily
 {
 void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES* DonneesMensuelles, const std::string& areaName)
 {
@@ -33,4 +33,4 @@ void H2O_J_OptimiserUnMois(DONNEES_MENSUELLES* DonneesMensuelles, const std::str
 
     return;
 }
-} // namespace DoneesOptimisationJournaliere
+} // namespace Antares::Solver::Hydro::Daily
