@@ -264,7 +264,7 @@ public:
     /*!
     ** \brief Inter-modal
     */
-    unsigned int interModal  = 0;
+    unsigned int interModal = 0;
     //@}
 
     //! \name Timeseries numbers
