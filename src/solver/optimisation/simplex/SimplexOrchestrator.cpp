@@ -30,8 +30,8 @@ using Antares::LinearProblem::Api::FillContext;
 using Antares::Optimization::LegacyNameMapper;
 using Antares::Optimization::LegacyOrtoolsLinearProblem;
 
-using Antares::Solver::IResultWriter;
 using Antares::Optimization::SingleOptimOptions;
+using Antares::Solver::IResultWriter;
 using MPSolver = operations_research::MPSolver;
 using SimulationTable = IO::Outputs::SimulationTable;
 
@@ -53,15 +53,15 @@ static void logProblemSizeOnce(const MPSolver* mpSolver)
 namespace Antares::Solver::Optimization::Simplex
 {
 
-SimplexOrchestrator::SimplexOrchestrator(SingleOptimOptions options,
-                                         PROBLEME_HEBDO& problemeHebdo,
-                                         int NumIntervalle,
-                                         int optimizationNumber,
-                                         const OptPeriodStringGenerator& periodString,
-                                         Solver::IResultWriter& writer,
-                                         IO::Outputs::SimulationTable* simulationTable,
-                                         const Antares::Optimization::InactiveComponentsAnalyzer*
-                                           inactiveComponents):
+SimplexOrchestrator::SimplexOrchestrator(
+  SingleOptimOptions options,
+  PROBLEME_HEBDO& problemeHebdo,
+  int NumIntervalle,
+  int optimizationNumber,
+  const OptPeriodStringGenerator& periodString,
+  Solver::IResultWriter& writer,
+  IO::Outputs::SimulationTable* simulationTable,
+  const Antares::Optimization::InactiveComponentsAnalyzer* inactiveComponents):
     options_(std::move(options)),
     problemeHebdo_(problemeHebdo),
     NumIntervalle_(NumIntervalle),
@@ -260,10 +260,10 @@ void SimplexOrchestrator::fillSimulationTable()
     // passes, so what survives is the last one actually run.
     problemeHebdo_.lastSolvedModelerProblem = std::make_shared<
       const Antares::Optimization::SolvedModelerProblem>(
-      Antares::Optimization::SolvedModelerProblem{
-        .problem = ortoolsProblem_,
-        .entities = problemeHebdo_.optimEntityContainer,
-        .objectiveValue = ::getObjectiveValue(solver_.get())});
+      Antares::Optimization::SolvedModelerProblem{.problem = ortoolsProblem_,
+                                                  .entities = problemeHebdo_.optimEntityContainer,
+                                                  .objectiveValue = ::getObjectiveValue(
+                                                    solver_.get())});
 
     measure_.tick();
     timeMeasure_.simulationTableFillTime = measure_.duration_ms();

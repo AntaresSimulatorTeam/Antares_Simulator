@@ -35,7 +35,7 @@ public:
      * @return FillContext with local/global time step ranges.
      */
     static LinearProblem::Api::FillContext buildFillContext(PROBLEME_HEBDO& problemeHebdo,
-                                                             int NumIntervalle);
+                                                            int NumIntervalle);
 
     /**
      * @brief Fill the linear problem using the given context and entity container.
@@ -49,11 +49,11 @@ public:
      * @param optimEntityContainer Container holding the LP problem and entities.
      * @param bendersDecomposition Optional Benders decomposition data.
      */
-    static void fillLinearProblem(const LinearProblem::Api::FillContext& fillCtx,
-                                  PROBLEME_HEBDO& problemeHebdo,
-                                  LinearProblem::OptimEntityContainer& optimEntityContainer,
-                                  LinearProblem::BendersDecomposition* bendersDecomposition
-                                  = nullptr);
+    static void fillLinearProblem(
+      const LinearProblem::Api::FillContext& fillCtx,
+      PROBLEME_HEBDO& problemeHebdo,
+      LinearProblem::OptimEntityContainer& optimEntityContainer,
+      LinearProblem::BendersDecomposition* bendersDecomposition = nullptr);
 
 private:
     /**

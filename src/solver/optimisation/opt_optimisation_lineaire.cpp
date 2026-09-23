@@ -125,14 +125,14 @@ void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
 }
 } // namespace
 
-bool runWeeklyOptimization(const SingleOptimOptions& options,
-                           PROBLEME_HEBDO* problemeHebdo,
-                           IResultWriter& writer,
-                           int optimizationNumber,
-                           Simulation::ISimulationObserver& simulationObserver,
-                           SimulationTable* simulationTable,
-                           const Antares::Optimization::InactiveComponentsAnalyzer*
-                             inactiveComponents)
+bool runWeeklyOptimization(
+  const SingleOptimOptions& options,
+  PROBLEME_HEBDO* problemeHebdo,
+  IResultWriter& writer,
+  int optimizationNumber,
+  Simulation::ISimulationObserver& simulationObserver,
+  SimulationTable* simulationTable,
+  const Antares::Optimization::InactiveComponentsAnalyzer* inactiveComponents)
 {
     const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                         ->NombreDePasDeTempsPourUneOptimisation;
@@ -173,13 +173,13 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
                            optPeriodStringGenerator.get());
 
         if (!Antares::Solver::Optimization::OPT_AppelDuSimplexe(options,
-                                 *problemeHebdo,
-                                 numeroDeLIntervalle,
-                                 optimizationNumber,
-                                 *optPeriodStringGenerator,
-                                 writer,
-                                 simulationTable,
-                                 inactiveComponents))
+                                                                *problemeHebdo,
+                                                                numeroDeLIntervalle,
+                                                                optimizationNumber,
+                                                                *optPeriodStringGenerator,
+                                                                writer,
+                                                                simulationTable,
+                                                                inactiveComponents))
         {
             return false;
         }

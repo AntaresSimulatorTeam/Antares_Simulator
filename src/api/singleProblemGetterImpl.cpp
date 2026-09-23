@@ -338,8 +338,8 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
     return translator_.translate(pb_.ProblemeAResoudre.get(), problemName({id.year, id.week + 1}));
 }
 
-std::unique_ptr<LinearProblem::Api::ILinearProblem>
-SingleProblemGetter::getWeeklyProblem(WeeklyProblemId id)
+std::unique_ptr<LinearProblem::Api::ILinearProblem> SingleProblemGetter::getWeeklyProblem(
+  WeeklyProblemId id)
 {
     setWeeklyData(id);
     auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
@@ -376,10 +376,9 @@ void SingleProblemGetter::fillProblem(LinearProblem::Api::ILinearProblem& proble
     const auto modelerData = pb_.modelerData;
     bool hasModelerData = modelerData != nullptr;
     const LinearProblem::Api::ILinearProblemData* modelerDataSeries = hasModelerData
-                                                                                    ? modelerData
-                                                                                        ->dataSeries
-                                                                                        .get()
-                                                                                    : nullptr;
+                                                                        ? modelerData->dataSeries
+                                                                            .get()
+                                                                        : nullptr;
 
     LinearProblem::OptimEntityContainer optimEntityContainer(problem);
     if (hasModelerData)

@@ -5,11 +5,11 @@
 
 #include <antares/logs/logs.h>
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
-#include "antares/solver/modeler/ModelerData.h"
 #include "antares/study/system-model/system.h"
 
 using Antares::LinearProblem::BendersDecomposition;
@@ -46,7 +46,7 @@ void LpFiller::fillModelerComponents(
 }
 
 LinearProblem::Api::FillContext LpFiller::buildFillContext(PROBLEME_HEBDO& problemeHebdo,
-                                                            int NumIntervalle)
+                                                           int NumIntervalle)
 {
     unsigned globalFirst, globalLast;
     unsigned localFirst = 0, localLast;

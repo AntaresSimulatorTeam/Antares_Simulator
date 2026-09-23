@@ -44,15 +44,15 @@ namespace Antares::Solver::Optimization::Simplex
 class SimplexOrchestrator final
 {
 public:
-    SimplexOrchestrator(Antares::Optimization::SingleOptimOptions options,
-                        PROBLEME_HEBDO& problemeHebdo,
-                        int NumIntervalle,
-                        int optimizationNumber,
-                        const OptPeriodStringGenerator& periodString,
-                        Solver::IResultWriter& writer,
-                        IO::Outputs::SimulationTable* simulationTable,
-                        const Antares::Optimization::InactiveComponentsAnalyzer* inactiveComponents
-                        = nullptr);
+    SimplexOrchestrator(
+      Antares::Optimization::SingleOptimOptions options,
+      PROBLEME_HEBDO& problemeHebdo,
+      int NumIntervalle,
+      int optimizationNumber,
+      const OptPeriodStringGenerator& periodString,
+      Solver::IResultWriter& writer,
+      IO::Outputs::SimulationTable* simulationTable,
+      const Antares::Optimization::InactiveComponentsAnalyzer* inactiveComponents = nullptr);
 
     /**
      * @brief Execute the full solve flow.
