@@ -31,6 +31,26 @@ ConstraintBuilder& ConstraintBuilder::DispatchableProduction(unsigned int index,
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::ProductionDecreaseAboveMin(unsigned int index,
+                                                                 double coeff,
+                                                                 int offset,
+                                                                 int delta)
+{
+    AddVariable(variableManager_.ProductionDecreaseAboveMin(index, hourInWeek_, offset, delta),
+                coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::ProductionIncreaseAboveMin(unsigned int index,
+                                                                 double coeff,
+                                                                 int offset,
+                                                                 int delta)
+{
+    AddVariable(variableManager_.ProductionIncreaseAboveMin(index, hourInWeek_, offset, delta),
+                coeff);
+    return *this;
+}
+
 ConstraintBuilder& ConstraintBuilder::RunningThermalClusterReserveParticipation(unsigned int index,
                                                                                 double coeff,
                                                                                 int offset,

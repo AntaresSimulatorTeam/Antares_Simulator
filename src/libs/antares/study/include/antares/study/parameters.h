@@ -313,6 +313,8 @@ public:
         //! New implemention of reserves, not related to the primary/spinning/strategic reserves
         bool reserves;
 
+        bool thermal_ramping;
+
         struct Thermal
         {
             // Thermal cluster min stable power
@@ -342,6 +344,7 @@ public:
             Hourly
         };
         HydroPmax hydroPmax = HydroPmax::Daily;
+
         enum class HydroRuleCurves
         {
             Single,
