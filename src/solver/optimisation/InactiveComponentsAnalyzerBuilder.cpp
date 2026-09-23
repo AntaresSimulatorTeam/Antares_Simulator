@@ -78,7 +78,7 @@ std::shared_ptr<const InactiveComponentsAnalyzer> BuildInactiveComponentsAnalyze
                                                && selectedColumnsAreAllZero(
                                                  link->indirectCapacities);
             const bool ignored = link->transmissionCapacities
-                                  == Data::LocalTransmissionCapacities::null;
+                                 == Data::LocalTransmissionCapacities::null;
             analyzer->setLinkAllZero(interco, bothDirectionsAllZero || ignored);
             ++interco;
         }
