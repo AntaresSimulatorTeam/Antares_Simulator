@@ -5,14 +5,6 @@ Feature: Legacy mc-ind <-> simulation table equivalence
   # LegacyNameMapper, derived values via LegacyExtraOutputs) the two outputs
   # must carry the same numbers.
   #
-  # The step below walks a declarative mapping (see
-  # features/steps/common_steps/simulation_table_equivalence.py) over every
-  # area / thermal cluster / short-term-storage cluster / link of the study and
-  # compares the simulation table value against its mc-ind counterpart at every
-  # timestep, within a per-quantity tolerance. It reads the final optimisation
-  # pass (optim-nb-2 when present, else optim-nb-1) and never compares against a
-  # frozen reference file, so it keeps working while the table format evolves.
-  #
   # Quantities currently cross-checked: unsupplied_energy, spilled_energy,
   # price, actual_load, thermal generation_power, thermal actual_num_units_on,
   # short-term-storage injection/withdrawal/level, link flow / abs_flow /
