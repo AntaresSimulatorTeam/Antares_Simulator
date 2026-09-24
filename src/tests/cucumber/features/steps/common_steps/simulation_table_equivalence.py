@@ -105,6 +105,10 @@ LEGACY_TO_ST = [
             "{origin}_{dest}_link", mc_sub="MWh", transform=lambda s: -s),
     Mapping("actual_loop_flow", LINK_VALUES, "LOOP FLOW", "actual_loop_flow",
             "{origin}_{dest}_link", mc_sub="MWh"),
+    Mapping("abs_congestion_fee", LINK_VALUES, "CONG. FEE (ABS.)", "abs_congestion_fee",
+            "{origin}_{dest}_link", mc_sub="Euro", atol=0.5, rtol=1e-3, dual_derived=True),
+    Mapping("alg_congestion_fee", LINK_VALUES, "CONG. FEE (ALG.)", "alg_congestion_fee",
+            "{origin}_{dest}_link", mc_sub="Euro", atol=0.5, rtol=1e-3, dual_derived=True),
 ]
 
 MAPPING_BY_KEY = {m.key: m for m in LEGACY_TO_ST}

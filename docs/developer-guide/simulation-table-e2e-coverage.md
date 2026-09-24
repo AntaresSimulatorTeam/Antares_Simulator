@@ -58,7 +58,7 @@ Design points:
 | Derived costs (`prop_cost`, `non_prop_cost`, `imbalance_cost`, …) | — | — | worked-example only (`legacy_simulation_table.feature`); carry anti-degeneracy noise |
 | Emissions (`co2_emissions`, …) | `*_emissions` | area `values-hourly` `CO2 EMIS.` (area total only) | worked-example only; no per-cluster mc-ind column |
 | Hydro `level_percentage`, `actual_inflows`, `hydro_shadow_price`, `bellman_value` | — | `H. LEV` is absolute, not a direct match | worked-example only |
-| Congestion fees (`abs_congestion_fee`, `alg_congestion_fee`) | — | link `CONG. FEE (ABS./ALG.)` | candidate — validate sign/precision then add to `LEGACY_TO_ST` |
+| Congestion fees (`abs_congestion_fee`, `alg_congestion_fee`) | `abs_congestion_fee` / `alg_congestion_fee` | link `values-hourly` `CONG. FEE (ABS./ALG.)` | ✅ equivalence — dual-derived, see gaps |
 
 ## Known gaps
 

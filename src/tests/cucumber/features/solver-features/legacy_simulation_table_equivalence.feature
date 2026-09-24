@@ -8,8 +8,8 @@ Feature: Legacy mc-ind <-> simulation table equivalence
   # Quantities currently cross-checked: unsupplied_energy, spilled_energy,
   # price, actual_load, thermal generation_power, thermal actual_num_units_on,
   # short-term-storage injection/withdrawal/level, link flow / abs_flow /
-  # minus_flow / actual_loop_flow. Gaps (hydro level, MIP-week duals,
-  # adequacy-patch rows) are listed in
+  # minus_flow / actual_loop_flow, link abs_congestion_fee / alg_congestion_fee.
+  # Gaps (hydro level, MIP-week duals, adequacy-patch rows) are listed in
   # docs/developer-guide/simulation-table-e2e-coverage.md
 
   @short
