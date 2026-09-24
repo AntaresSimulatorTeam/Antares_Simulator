@@ -12,7 +12,8 @@ Feature: Legacy mc-ind <-> simulation table equivalence
   # area reserve spilled/unsupplied energy, thermal reserve on/off unit
   # participation. Gaps (hydro level, MIP-week duals, adequacy-patch rows,
   # STS/hydro reserve participation) are listed in
-  # docs/developer-guide/simulation-table-e2e-coverage.md
+  # docs/developer-guide/simulation-table-e2e-coverage.md, which also notes a
+  # latent STS id-vs-name caveat in the mapping itself.
 
   @short
   Scenario: Single legacy area with a thermal fleet (fast UC)
@@ -72,3 +73,13 @@ Feature: Legacy mc-ind <-> simulation table equivalence
     And the simulation table matches the legacy mc-ind output for "unsupplied_energy_reserve" in year 1
     And the simulation table matches the legacy mc-ind output for "units_on_reserve_power" in year 1
     And the simulation table matches the legacy mc-ind output for "units_off_reserve_power" in year 1
+
+  @short
+  Scenario: Short-term storage with withdrawal efficiency (injection/withdrawal/level)
+    # Withdrawal efficiency < 1 on several storages means injection and
+    # withdrawal power genuinely differ (not just sign), which is the case the
+    # STS mapping needs to be exercised against.
+    Given the solver study path is "Antares_Simulator_Tests_NR/valid-v920/st-storage-withdrawal-efficiency"
+    When I run antares simulator with --output=all
+    Then the simulation succeeds
+    And the simulation table matches the legacy mc-ind output for year 1

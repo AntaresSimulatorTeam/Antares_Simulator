@@ -179,7 +179,9 @@ def _links(study_path: Path, area: str) -> list:
 
 
 def _unit_commitment_mode(study_path: Path) -> str:
-    cp = configparser.ConfigParser()
+    # strict=False: generaldata.ini repeats `select_var +` for thematic trimming,
+    # which trips the default duplicate-option check.
+    cp = configparser.ConfigParser(strict=False)
     cp.optionxform = str
     cp.read(study_path / "settings" / "generaldata.ini", encoding="utf-8")
     return cp.get("other preferences", "unit-commitment-mode", fallback="fast").strip().lower()
