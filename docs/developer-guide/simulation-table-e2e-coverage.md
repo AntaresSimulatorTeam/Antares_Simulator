@@ -59,6 +59,11 @@ Design points:
 | Emissions (`co2_emissions`, …) | `*_emissions` | area `values-hourly` `CO2 EMIS.` (area total only) | worked-example only; no per-cluster mc-ind column |
 | Hydro `level_percentage`, `actual_inflows`, `hydro_shadow_price`, `bellman_value` | — | `H. LEV` is absolute, not a direct match | worked-example only |
 | Congestion fees (`abs_congestion_fee`, `alg_congestion_fee`) | `abs_congestion_fee` / `alg_congestion_fee` | link `values-hourly` `CONG. FEE (ABS./ALG.)` | ✅ equivalence — dual-derived, see gaps |
+| Reserve area spilled/unsupplied energy | `spilled_energy_reserve_<id>` / `unsupplied_energy_reserve_<id>` | area `values-hourly` `<reserve>_SPIL.` / `<reserve>_UNSP.` | ✅ equivalence |
+| Reserve thermal participation (on/off units) | `units_on_reserve_power_<id>` / `units_off_reserve_power_<id>` | area `details-hourly` `<reserve>_<cluster>` / `<reserve>_<cluster>_off` | ✅ equivalence |
+| Reserve costs (`reserve_imbalance_cost_<id>`, `reserve_participation_cost_<id>`) | — | — | worked-example only; un-noised user cost values, same category as `prop_cost` |
+| Reserve total participation (`reserve_power_<id>`) | — | — | not compared (= `units_on_reserve_power` + `units_off_reserve_power`, both already checked individually) |
+| STS/hydro reserve participation (`reserve_released_power_<id>`, `reserve_stored_power_<id>`) | — | area `details-STstorage-hourly` `<reserve>_<sts>` (mc-ind class exists) | candidate — no study with STS/hydro reserve participation exercises it yet |
 
 ## Known gaps
 

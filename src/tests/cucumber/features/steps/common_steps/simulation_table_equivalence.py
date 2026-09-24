@@ -35,6 +35,7 @@ from typing import Callable, Optional
 
 import numpy as np
 import pandas as pd
+import yaml
 from behave import then
 
 from common_steps.simulation_table_reader import (
@@ -52,14 +53,18 @@ AREA_VALUES = "area_values"      # mc-ind/<y>/areas/<area>/values-hourly.txt
 AREA_DETAILS = "area_details"    # mc-ind/<y>/areas/<area>/details-hourly.txt  (per thermal cluster)
 AREA_STS = "area_sts"            # mc-ind/<y>/areas/<area>/details-STstorage-hourly.txt (per sts cluster)
 LINK_VALUES = "link_values"      # mc-ind/<y>/links/<a> - <b>/values-hourly.txt
+AREA_RESERVE_VALUES = "area_reserve_values"    # values-hourly.txt, per area reserve
+AREA_RESERVE_THERMAL = "area_reserve_thermal"  # details-hourly.txt, per (thermal cluster, reserve)
 
 
 @dataclass(frozen=True)
 class Mapping:
     key: str                       # short id, also the selector for the "<key>" step variant
     source: str
-    mc_col: str                    # level-0 column name in the mc-ind file
-    st_output: str                 # `output` value in the simulation table
+    mc_col: str                    # level-0 column name in the mc-ind file; may contain
+                                    # {reserve_name} / {cluster} placeholders (AREA_RESERVE_* )
+    st_output: str                 # `output` value in the simulation table; may contain a
+                                    # {reserve_id} placeholder (AREA_RESERVE_* sources)
     st_component: str              # format string: {area} {cluster} {sts} {origin} {dest}
     mc_sub: Optional[str] = None   # level-1 column name; None -> first sub-column
     atol: float = 0.5
@@ -109,6 +114,21 @@ LEGACY_TO_ST = [
             "{origin}_{dest}_link", mc_sub="Euro", atol=0.5, rtol=1e-3, dual_derived=True),
     Mapping("alg_congestion_fee", LINK_VALUES, "CONG. FEE (ALG.)", "alg_congestion_fee",
             "{origin}_{dest}_link", mc_sub="Euro", atol=0.5, rtol=1e-3, dual_derived=True),
+
+    # ---- reserves ------------------------------------------------------------#
+    # {reserve_name} is the reserve's display name (input/reserves/<area>/reserves.yml
+    # "name" field), used in mc-ind captions. {reserve_id} is its lower-cased id, used
+    # in the simulation table `output` names (LegacyNameMapper / opt_rename_problem).
+    Mapping("spilled_energy_reserve", AREA_RESERVE_VALUES, "{reserve_name}_SPIL.",
+            "spilled_energy_reserve_{reserve_id}", "{area}_node", mc_sub="MWh"),
+    Mapping("unsupplied_energy_reserve", AREA_RESERVE_VALUES, "{reserve_name}_UNSP.",
+            "unsupplied_energy_reserve_{reserve_id}", "{area}_node", mc_sub="MWh"),
+    Mapping("units_on_reserve_power", AREA_RESERVE_THERMAL, "{reserve_name}_{cluster}",
+            "units_on_reserve_power_{reserve_id}", "{area}_thermal_{cluster}",
+            mc_sub="Reserve Participation Power - MWh"),
+    Mapping("units_off_reserve_power", AREA_RESERVE_THERMAL, "{reserve_name}_{cluster}_off",
+            "units_off_reserve_power_{reserve_id}", "{area}_thermal_{cluster}",
+            mc_sub="Reserve Participation Power - MWh"),
 ]
 
 MAPPING_BY_KEY = {m.key: m for m in LEGACY_TO_ST}
@@ -149,6 +169,23 @@ def _sts_clusters(study_path: Path, area: str) -> list:
 def _links(study_path: Path, area: str) -> list:
     # input/links/<area>/properties.ini : one section per destination area
     return _ini_sections(study_path / "input" / "links" / area / "properties.ini")
+
+
+def _reserves(study_path: Path, area: str) -> list:
+    """(display_name, id) pairs from input/reserves/<area>/reserves.yml.
+
+    The id mirrors transformNameIntoID() (lower-cased name); good enough for the
+    simple alnum/underscore reserve names used in the test studies.
+    """
+    f = study_path / "input" / "reserves" / area / "reserves.yml"
+    if not f.is_file():
+        return []
+    try:
+        data = yaml.safe_load(f.read_text(encoding="utf-8")) or {}
+    except yaml.YAMLError:
+        return []
+    return [(r["name"], r["name"].strip().lower())
+            for r in data.get("reserves", []) if r.get("name")]
 
 
 # --------------------------------------------------------------------------- #
@@ -206,7 +243,7 @@ class _Result:
 
 
 def _check_one(res: _Result, m: Mapping, component: str, mc: Optional[pd.Series],
-               st: Optional[pd.Series]):
+               st: Optional[pd.Series], output: Optional[str] = None):
     if mc is None or st is None or len(st) == 0:
         return
     if m.transform is not None:
@@ -225,7 +262,7 @@ def _check_one(res: _Result, m: Mapping, component: str, mc: Optional[pd.Series]
         f"t={idx[i]}: ST={a[i]:.6g} mc-ind={b[i]:.6g} (Δ={abs(a[i] - b[i]):.3g})"
         for i in bad[:5])
     res.failures.append(
-        f"[{m.key}] component '{component}' output '{m.st_output}': "
+        f"[{m.key}] component '{component}' output '{output or m.st_output}': "
         f"{len(bad)}/{len(idx)} timesteps differ (atol={m.atol}, rtol={m.rtol}). {sample}")
 
 
@@ -302,6 +339,44 @@ def _run_equivalence(context, year: int, only_key: Optional[str]):
                     _check_one(res, m, comp,
                                _mc_series(df, m.mc_col, m.mc_sub),
                                _st_series(st, comp, m.st_output, year_index))
+
+        elif m.source == AREA_RESERVE_VALUES:
+            for area in areas:
+                reserves = _reserves(study_path, area)
+                if not reserves:
+                    continue
+                try:
+                    df = context.soh.area_values_hourly(area, year)
+                except AssertionError:
+                    continue
+                comp = m.st_component.format(area=area)
+                for reserve_name, reserve_id in reserves:
+                    mc_col = m.mc_col.format(reserve_name=reserve_name)
+                    st_output = m.st_output.format(reserve_id=reserve_id)
+                    _check_one(res, m, comp,
+                               _mc_series(df, mc_col, m.mc_sub),
+                               _st_series(st, comp, st_output, year_index),
+                               output=st_output)
+
+        elif m.source == AREA_RESERVE_THERMAL:
+            for area in areas:
+                reserves = _reserves(study_path, area)
+                clusters = _thermal_clusters(study_path, area)
+                if not reserves or not clusters:
+                    continue
+                try:
+                    df = context.soh.area_details_hourly(area, year)
+                except AssertionError:
+                    continue
+                for cluster in clusters:
+                    comp = m.st_component.format(area=area, cluster=cluster)
+                    for reserve_name, reserve_id in reserves:
+                        mc_col = m.mc_col.format(reserve_name=reserve_name, cluster=cluster)
+                        st_output = m.st_output.format(reserve_id=reserve_id)
+                        _check_one(res, m, comp,
+                                   _mc_series(df, mc_col, m.mc_sub),
+                                   _st_series(st, comp, st_output, year_index),
+                                   output=st_output)
 
     assert res.checked, (
         "legacy<->simulation-table equivalence check was vacuous: no mapped "

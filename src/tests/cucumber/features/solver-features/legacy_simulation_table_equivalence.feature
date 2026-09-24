@@ -8,8 +8,10 @@ Feature: Legacy mc-ind <-> simulation table equivalence
   # Quantities currently cross-checked: unsupplied_energy, spilled_energy,
   # price, actual_load, thermal generation_power, thermal actual_num_units_on,
   # short-term-storage injection/withdrawal/level, link flow / abs_flow /
-  # minus_flow / actual_loop_flow, link abs_congestion_fee / alg_congestion_fee.
-  # Gaps (hydro level, MIP-week duals, adequacy-patch rows) are listed in
+  # minus_flow / actual_loop_flow, link abs_congestion_fee / alg_congestion_fee,
+  # area reserve spilled/unsupplied energy, thermal reserve on/off unit
+  # participation. Gaps (hydro level, MIP-week duals, adequacy-patch rows,
+  # STS/hydro reserve participation) are listed in
   # docs/developer-guide/simulation-table-e2e-coverage.md
 
   @short
@@ -57,3 +59,16 @@ Feature: Legacy mc-ind <-> simulation table equivalence
     When I run antares simulator with --output=all
     Then the simulation succeeds
     And the simulation table matches the legacy mc-ind output for year 1
+
+  @short
+  Scenario: Thermal cluster reserve participation and area reserve imbalance
+    # This study's accurate-UC actual_num_units_on does not yet line up with
+    # mc-ind on optim-nb-1 (unlike the accurate-UC scenario above, which reads
+    # optim-nb-2); scope the check to the reserve-specific mappings only.
+    Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/lot_1_simple_up"
+    When I run antares simulator with --output=all
+    Then the simulation succeeds
+    And the simulation table matches the legacy mc-ind output for "spilled_energy_reserve" in year 1
+    And the simulation table matches the legacy mc-ind output for "unsupplied_energy_reserve" in year 1
+    And the simulation table matches the legacy mc-ind output for "units_on_reserve_power" in year 1
+    And the simulation table matches the legacy mc-ind output for "units_off_reserve_power" in year 1
