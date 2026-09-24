@@ -24,7 +24,7 @@ coverage that has to be in place before it can be.
 ## The equivalence check
 
 `the simulation table matches the legacy mc-ind output for year N` walks a
-declarative mapping (`LEGACY_TO_ST` in `simulation_table_equivalence.py`) over
+declarative mapping over
 every area / thermal cluster / short-term-storage cluster / link of the study
 and asserts, for each timestep the table covers, that the table value equals its
 `mc-ind` counterpart within a per-quantity tolerance.
@@ -46,24 +46,24 @@ Design points:
 
 | Quantity | Table `output` | mc-ind source | Status |
 |---|---|---|---|
-| Unsupplied energy | `unsupplied_energy` | area `values-hourly` `UNSP. ENRG` | ✅ equivalence |
-| Spilled energy | `spilled_energy` | area `values-hourly` `SPIL. ENRG` | ✅ equivalence |
-| Area marginal price | `price` | area `values-hourly` `MRG. PRICE` | ✅ equivalence — dual-derived, see gaps |
-| Actual load | `actual_load` | area `values-hourly` `LOAD` | ✅ equivalence |
-| Thermal generation | `generation_power` | area `details-hourly` `<cluster>` / `MWh` | ✅ equivalence (optim-nb-2) |
-| Units on (ceil) | `actual_num_units_on` | area `details-hourly` `<cluster>` / `NODU` | ✅ equivalence — skipped when `[other preferences] unit-commitment-mode` is `fast` (`Mapping.requires_accurate_uc`); the ST value is `ceil(x(NumberOfDispatchableUnits))` while mc-ind's NODU is the fast-UC heuristic's own unit count, two independently-computed integers that can differ by 1 on borderline hours |
-| STS injection / withdrawal / level | `injection_power` / `withdrawal_power` / `level` | area `details-STstorage-hourly` | ✅ mapping in place (no study with STS clusters exercises it yet) |
-| Link flow / abs / minus / loop | `flow` / `abs_flow` / `minus_flow` / `actual_loop_flow` | link `values-hourly` `FLOW LIN.` / `LOOP FLOW` | ✅ equivalence |
-| Raw `num_units_on` (LP value) | `num_units_on` | — | not compared (fractional; `actual_num_units_on` is the mc-ind match) |
-| Derived costs (`prop_cost`, `non_prop_cost`, `imbalance_cost`, …) | — | — | worked-example only (`legacy_simulation_table.feature`); carry anti-degeneracy noise |
-| Emissions (`co2_emissions`, …) | `*_emissions` | area `values-hourly` `CO2 EMIS.` (area total only) | worked-example only; no per-cluster mc-ind column |
-| Hydro `level_percentage`, `actual_inflows`, `hydro_shadow_price`, `bellman_value` | — | `H. LEV` is absolute, not a direct match | worked-example only |
-| Congestion fees (`abs_congestion_fee`, `alg_congestion_fee`) | `abs_congestion_fee` / `alg_congestion_fee` | link `values-hourly` `CONG. FEE (ABS./ALG.)` | ✅ equivalence — dual-derived, see gaps |
-| Reserve area spilled/unsupplied energy | `spilled_energy_reserve_<id>` / `unsupplied_energy_reserve_<id>` | area `values-hourly` `<reserve>_SPIL.` / `<reserve>_UNSP.` | ✅ equivalence |
-| Reserve thermal participation (on/off units) | `units_on_reserve_power_<id>` / `units_off_reserve_power_<id>` | area `details-hourly` `<reserve>_<cluster>` / `<reserve>_<cluster>_off` | ✅ equivalence |
-| Reserve costs (`reserve_imbalance_cost_<id>`, `reserve_participation_cost_<id>`) | — | — | worked-example only; un-noised user cost values, same category as `prop_cost` |
-| Reserve total participation (`reserve_power_<id>`) | — | — | not compared (= `units_on_reserve_power` + `units_off_reserve_power`, both already checked individually) |
-| STS/hydro reserve participation (`reserve_released_power_<id>`, `reserve_stored_power_<id>`) | — | area `details-STstorage-hourly` `<reserve>_<sts>` (mc-ind class exists) | candidate — no study with STS/hydro reserve participation exercises it yet |
+| Unsupplied energy | `unsupplied_energy` | area `values-hourly` `UNSP. ENRG` | ✅ equivalence-checked |
+| Spilled energy | `spilled_energy` | area `values-hourly` `SPIL. ENRG` | ✅ equivalence-checked |
+| Area marginal price | `price` | area `values-hourly` `MRG. PRICE` | ✅ equivalence-checked — dual-derived, see gaps |
+| Actual load | `actual_load` | area `values-hourly` `LOAD` | ✅ equivalence-checked |
+| Thermal generation | `generation_power` | area `details-hourly` `<cluster>` / `MWh` | ✅ equivalence-checked (optim-nb-2) |
+| Units on (ceil) | `actual_num_units_on` | area `details-hourly` `<cluster>` / `NODU` | ✅ equivalence-checked — skipped when `[other preferences] unit-commitment-mode` is `fast` (`Mapping.requires_accurate_uc`); the ST value is `ceil(x(NumberOfDispatchableUnits))` while mc-ind's NODU is the fast-UC heuristic's own unit count, two independently-computed integers that can differ by 1 on borderline hours |
+| STS injection / withdrawal / level | `injection_power` / `withdrawal_power` / `level` | area `details-STstorage-hourly` | ⏳ mapping in place, not yet exercised — not a limitation: no test study has STS clusters on a scenario that runs this check yet |
+| Link flow / abs / minus / loop | `flow` / `abs_flow` / `minus_flow` / `actual_loop_flow` | link `values-hourly` `FLOW LIN.` / `LOOP FLOW` | ✅ equivalence-checked |
+| Raw `num_units_on` (LP value) | `num_units_on` | — | ⛔ not equivalence-checked — limitation: fractional LP value, no integer mc-ind column to compare to (`actual_num_units_on` is the checked, rounded counterpart) |
+| Derived costs (`prop_cost`, `non_prop_cost`, `imbalance_cost`, …) | — | — | ⛔ not equivalence-checked — limitation: no mc-ind column at all (mc-ind never printed these); values also carry anti-degeneracy noise. Tested instead as hand-derived worked examples in `legacy_simulation_table.feature` |
+| Emissions (`co2_emissions`, …) | `*_emissions` | area `values-hourly` `CO2 EMIS.` (area total only) | ⛔ not equivalence-checked — limitation: mc-ind only prints an area-level total, not per-cluster, so per-cluster ST rows have nothing to diff against. Tested instead as a worked example in `legacy_simulation_table.feature` |
+| Hydro `level_percentage`, `actual_inflows`, `hydro_shadow_price`, `bellman_value` | — | `H. LEV` is absolute, not a direct match | ⛔ not equivalence-checked — limitation: `H. LEV` is a different (absolute, not percentage) quantity. Tested instead as a worked example in `legacy_simulation_table.feature` |
+| Congestion fees (`abs_congestion_fee`, `alg_congestion_fee`) | `abs_congestion_fee` / `alg_congestion_fee` | link `values-hourly` `CONG. FEE (ABS./ALG.)` | ✅ equivalence-checked — dual-derived, see gaps |
+| Reserve area spilled/unsupplied energy | `spilled_energy_reserve_<id>` / `unsupplied_energy_reserve_<id>` | area `values-hourly` `<reserve>_SPIL.` / `<reserve>_UNSP.` | ✅ equivalence-checked |
+| Reserve thermal participation (on/off units) | `units_on_reserve_power_<id>` / `units_off_reserve_power_<id>` | area `details-hourly` `<reserve>_<cluster>` / `<reserve>_<cluster>_off` | ✅ equivalence-checked |
+| Reserve costs (`reserve_imbalance_cost_<id>`, `reserve_participation_cost_<id>`) | — | — | ⛔ not equivalence-checked — limitation: no mc-ind column (same reason as the derived costs above) |
+| Reserve total participation (`reserve_power_<id>`) | — | — | ⛔ not equivalence-checked — redundant, not a limitation: always equals `units_on_reserve_power` + `units_off_reserve_power`, both of which are already checked individually |
+| STS/hydro reserve participation (`reserve_released_power_<id>`, `reserve_stored_power_<id>`) | — | area `details-STstorage-hourly` `<reserve>_<sts>` (mc-ind class exists) | ⏳ not equivalence-checked yet — not a limitation: an mc-ind counterpart exists, but no test study currently has STS/hydro reserve participation to exercise it. Good candidate for the next addition |
 
 ## Known gaps
 
