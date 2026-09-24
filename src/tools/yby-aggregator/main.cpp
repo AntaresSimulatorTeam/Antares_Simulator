@@ -25,10 +25,7 @@
 #include "output.h"
 #include "progress.h"
 
-using namespace Yuni;
-using namespace Antares;
-
-#define SEP IO::Separator
+#define SEP Yuni::IO::Separator
 
 //! References to all outputs to aggregate
 static Output::Vector AllOutputs;
@@ -113,14 +110,14 @@ static void ConvertVarNameToID(String& id, const String& name)
 static void AbortProgram(int code)
 {
     // Importing logs
-    if (logs.logfile().empty())
+    if (Antares::logs.logfile().empty())
     {
-        logs.fatal() << "Aborting now. (warning: no file log available)";
-        logs.warning() << "No log file available";
+        Antares::logs.fatal() << "Aborting now. (warning: no file log available)";
+        Antares::logs.warning() << "No log file available";
     }
     else
     {
-        logs.error() << "Aborting now. See logs for more details";
+        Antares::logs.error() << "Aborting now. See logs for more details";
     }
 
     exit(code);
@@ -131,7 +128,7 @@ static void PrepareTheWork(const String::Vector& outputs,
                            const StudyData::Vector& studydata,
                            const String::Vector& columns)
 {
-    logs.checkpoint() << "Preparing the aggregation";
+    Antares::logs.checkpoint() << "Preparing the aggregation";
     progressBar.interval(1500 /*ms*/);
     progressBar.message("Reading the directory structure");
     progressBar.start();
@@ -146,24 +143,24 @@ static void PrepareTheWork(const String::Vector& outputs,
         // The current study output
         IO::MakeAbsolute(abspath, outputs[indx]);
         IO::Normalize(info.directory(), abspath);
-        logs.info() << "  reading " << info.directory();
+        Antares::logs.info() << "  reading " << info.directory();
 
         if (not info.exists())
         {
-            logs.warning() << "The folder '" << info.directory() << "' does not exists";
+            Antares::logs.warning() << "The folder '" << info.directory() << "' does not exists";
             continue;
         }
 
         path.clear() << info.directory() << SEP << "info.antares-output";
         if (!IO::File::Exists(path))
         {
-            logs.warning() << "Does not seem a valid study output: " << info.directory();
+            Antares::logs.warning() << "Does not seem a valid study output: " << info.directory();
             continue;
         }
         path.clear() << info.directory() << SEP << "about-the-study";
         if (!IO::Directory::Exists(path))
         {
-            logs.warning() << "Does not seem a valid study output: " << info.directory();
+            Antares::logs.warning() << "Does not seem a valid study output: " << info.directory();
             continue;
         }
 
@@ -181,7 +178,8 @@ static void PrepareTheWork(const String::Vector& outputs,
         info.directory() << SEP << "mc-ind";
         if (not IO::Directory::Exists(info.directory()))
         {
-            logs.warning() << "impossible to find data for individual years: " << info.directory();
+            Antares::logs.warning()
+              << "impossible to find data for individual years: " << info.directory();
             continue;
         }
 
@@ -204,7 +202,7 @@ static void PrepareTheWork(const String::Vector& outputs,
             uint year;
             if (!folderName.to(year))
             {
-                logs.warning() << "invalid MC year: " << i.filename();
+                Antares::logs.warning() << "invalid MC year: " << i.filename();
                 continue;
             }
             if (minYear > year)
@@ -236,12 +234,12 @@ static void PrepareTheWork(const String::Vector& outputs,
         }
         if (minYear > maxYear)
         {
-            logs.warning() << info.directory() << ": invalid range for MC years";
+            Antares::logs.warning() << info.directory() << ": invalid range for MC years";
             return;
         }
         uint nbYears = maxYear - minYear + 1;
-        logs.debug() << "  " << info.directory() << " : from " << minYear << " to " << maxYear
-                     << "  (total: " << nbYears << ")";
+        Antares::logs.debug() << "  " << info.directory() << " : from " << minYear << " to "
+                              << maxYear << "  (total: " << nbYears << ")";
 
         output->minYear = minYear;
         output->maxYear = maxYear;
@@ -251,7 +249,7 @@ static void PrepareTheWork(const String::Vector& outputs,
         AllOutputs.push_back(output);
 
         // Allocating the resources for the output
-        logs.info() << "  allocating resources for " << info.directory();
+        Antares::logs.info() << "  allocating resources for " << info.directory();
         ResultsForAllStudyItems& results = output->results;
         for (uint s = 0; s != studydata.size(); ++s)
         {
@@ -273,7 +271,7 @@ static void PrepareTheWork(const String::Vector& outputs,
         }
     } // each output
 
-    logs.info() << "  added " << nbJobs << " jobs for " << info.directory();
+    Antares::logs.info() << "  added " << nbJobs << " jobs for " << info.directory();
     Progress::Total = nbJobs;
 }
 
@@ -293,8 +291,8 @@ static void ReadCommandLineOptions(int argc, const char** argv)
         // Parser
         GetOpt::Parser options;
         //
-        options.addParagraph(Yuni::String()
-                             << "Antares output aggregator " << VersionToCString() << "\n\nData");
+        options.addParagraph(Yuni::String() << "Antares output aggregator "
+                                            << Antares::VersionToCString() << "\n\nData");
         // Input
         options.remainingArguments(optOutputs);
         // Output
@@ -334,25 +332,26 @@ static void ReadCommandLineOptions(int argc, const char** argv)
 
         if (optVersion)
         {
-            PrintVersionToStdCout();
+            Antares::PrintVersionToStdCout();
             LocalPolicy::Close();
             exit(0);
         }
         if (optOutputs.empty())
         {
-            logs.error() << "Please provide at least one study output";
+            Antares::logs.error() << "Please provide at least one study output";
             LocalPolicy::Close();
             AbortProgram(1);
         }
         if (optAreas.empty() && optLinks.empty())
         {
-            logs.error() << "Please provide at least one area or one link for the aggregation";
+            Antares::logs.error()
+              << "Please provide at least one area or one link for the aggregation";
             LocalPolicy::Close();
             AbortProgram(1);
         }
         if (optColumns.empty())
         {
-            logs.error() << "Please provide at least one column to find out";
+            Antares::logs.error() << "Please provide at least one column to find out";
             LocalPolicy::Close();
             AbortProgram(1);
         }
@@ -376,9 +375,10 @@ static void ReadCommandLineOptions(int argc, const char** argv)
 
     // Starting !
     {
-        logs.checkpoint() << "Antares Study Output aggregator v" << ANTARES_VERSION_PUB_STR;
+        Antares::logs.checkpoint()
+          << "Antares Study Output aggregator v" << ANTARES_VERSION_PUB_STR;
         WriteHostInfoIntoLogs();
-        logs.info();
+        Antares::logs.info();
     }
 
     // Building the study data
@@ -405,7 +405,7 @@ static void ReadCommandLineOptions(int argc, const char** argv)
                 newname.clear() << "areas/" << areaname;
             }
 
-            logs.info() << "registered " << newname;
+            Antares::logs.info() << "registered " << newname;
             studydata.push_back(std::make_shared<StudyData>(newname, index));
             index++;
         }
@@ -422,12 +422,12 @@ static void ReadCommandLineOptions(int argc, const char** argv)
                 linkfullname.split(split, ",");
                 if (split.size() != 2)
                 {
-                    logs.error() << "invalid link name: " << linkfullname;
+                    Antares::logs.error() << "invalid link name: " << linkfullname;
                     continue;
                 }
                 newname.clear() << "links" << SEP;
                 newname << split[0] << " - " << split[1];
-                logs.info() << "registered " << newname;
+                Antares::logs.info() << "registered " << newname;
                 studydata.push_back(std::make_shared<StudyData>(newname, index));
                 index++;
             }
@@ -480,19 +480,19 @@ static bool WriteAggregates()
             }
             if (columnCount > 1)
             {
-                logs.info() << "  checking " << output->path << "  (" << columnCount
-                            << " variables)";
+                Antares::logs.info()
+                  << "  checking " << output->path << "  (" << columnCount << " variables)";
             }
             else
             {
-                logs.info() << "  checking " << output->path << "  (1 variable)";
+                Antares::logs.info() << "  checking " << output->path << "  (1 variable)";
             }
         }
 
         String mcvarfolder;
         if (!DetermineOutputType(mcvarfolder, output->path))
         {
-            logs.error() << "impossible to find output folder in " << output->path;
+            Antares::logs.error() << "impossible to find output folder in " << output->path;
             continue;
         }
         mcvarfolder << SEP << "mc-var";
@@ -533,7 +533,7 @@ static bool WriteAggregates()
 
                     if (output->columns.size() != allvars.size())
                     {
-                        logs.error() << "array size does not match";
+                        Antares::logs.error() << "array size does not match";
                         continue;
                     }
 
@@ -565,7 +565,7 @@ static bool WriteAggregates()
                                 {
                                     if (column.height != requiredHeight)
                                     {
-                                        logs.error()
+                                        Antares::logs.error()
                                           << "All columns must have the same number of rows ("
                                           << column.height << " found, " << requiredHeight
                                           << " expected): " << output->path;
@@ -584,7 +584,7 @@ static bool WriteAggregates()
 
                         if (!IO::Directory::Create(path))
                         {
-                            logs.error() << "impossible to create the directory " << path;
+                            Antares::logs.error() << "impossible to create the directory " << path;
                             continue;
                         }
                         path << SEP;
@@ -596,25 +596,26 @@ static bool WriteAggregates()
                         // Writing DATA
                         if (!requiredHeight)
                         {
-                            logs.info()
+                            Antares::logs.info()
                               << " No data for the variable " << studyItemName << '/'
                               << dataLevelName << '/' << timeLevelName << '/' << output->columns[v];
                             path << ".nodata";
                             if (!IO::File::CreateEmptyFile(path))
                             {
-                                logs.error() << "I/O error: impossible to write " << path;
+                                Antares::logs.error() << "I/O error: impossible to write " << path;
                             }
                         }
                         else
                         {
-                            logs.info() << "    writing " << path;
-                            logs.debug() << "    (" << matrix.width << 'x' << requiredHeight << ")";
+                            Antares::logs.info() << "    writing " << path;
+                            Antares::logs.debug()
+                              << "    (" << matrix.width << 'x' << requiredHeight << ")";
                             if (!matrix.saveToCSVFile(path))
                             {
-                                logs.error() << "impossible to write " << path;
+                                Antares::logs.error() << "impossible to write " << path;
                             }
                             // empty log entry
-                            logs.info();
+                            Antares::logs.info();
                         }
                     }
                 }
@@ -627,12 +628,12 @@ static bool WriteAggregates()
 int main(int argc, const char* argv[])
 {
     // locale
-    InitializeDefaultLocale();
+    Antares::InitializeDefaultLocale();
 
     // logs
-    logs.applicationName("yby-aggregator");
+    Antares::logs.applicationName("yby-aggregator");
 
-    if (not memory.initializeTemporaryFolder())
+    if (not Antares::memory.initializeTemporaryFolder())
     {
         return EXIT_FAILURE;
     }
@@ -649,10 +650,10 @@ int main(int argc, const char* argv[])
     {
         // Run all jobs
         progressBar.stop();
-        logs.info();
-        logs.checkpoint() << "Performing the aggregation";
-        logs.info() << "Running...";
-        logs.info() << "  using " << queueService.maximumThreadCount() << " worker(s)";
+        Antares::logs.info();
+        Antares::logs.checkpoint() << "Performing the aggregation";
+        Antares::logs.info() << "Running...";
+        Antares::logs.info() << "  using " << queueService.maximumThreadCount() << " worker(s)";
         progressBar.state = Progress::stJobs;
         queueService.start();
         progressBar.start();
@@ -667,17 +668,17 @@ int main(int argc, const char* argv[])
 
         if (progressBar.completed())
         {
-            logs.info();
-            logs.checkpoint() << "Writing the results...";
+            Antares::logs.info();
+            Antares::logs.checkpoint() << "Writing the results...";
             progressBar.state = Progress::stWrite;
             progressBar.start();
             WriteAggregates();
             progressBar.stop();
 
-            logs.info();
-            logs.checkpoint() << "Aggregation";
-            logs.info() << "The aggregation is complete";
-            logs.debug() << "done.";
+            Antares::logs.info();
+            Antares::logs.checkpoint() << "Aggregation";
+            Antares::logs.info() << "The aggregation is complete";
+            Antares::logs.debug() << "done.";
         }
 
         // early Release !

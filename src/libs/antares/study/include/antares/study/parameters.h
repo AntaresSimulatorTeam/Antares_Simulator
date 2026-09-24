@@ -6,11 +6,13 @@
 
 #include <cassert>
 #include <cstdlib>
+#include <set>
 #include <string>
 #include <vector>
 
 #include <antares/date/date.h>
 #include <antares/inifile/inifile.h>
+#include <antares/io/outputs/SimulationTableStage.h>
 #include <antares/optimization-options/options.h>
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 #include <antares/study/output-selection.h>
@@ -424,6 +426,16 @@ public:
 
     // In case we print simulation tables, do we print it in csv or parquet ?
     Writer::TableFormat simuTableFormat = Writer::TableFormat::CSV;
+
+    /// \brief Which stages of the weekly resolution get a simulation table;
+    /// empty means every stage. Resolved from simulationTableStagesStr (or the
+    /// command line), so unknown names are already rejected when this is filled.
+    std::set<Antares::IO::Outputs::Stage> simulationTableStages;
+
+    /// \brief Raw `simulation-table-stages` value from generaldata.ini, before
+    /// validation. Resolved into simulationTableStages once the command line is
+    /// applied, which overrides it when it carries a selection of its own.
+    std::string simulationTableStagesStr;
 
     bool hydroDebug;
 

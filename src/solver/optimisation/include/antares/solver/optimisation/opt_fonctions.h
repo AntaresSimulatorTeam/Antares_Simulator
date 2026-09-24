@@ -32,6 +32,11 @@ class SimulationTable;
 class OptimisationsSimulationTable;
 } // namespace Antares::IO::Outputs
 
+namespace Antares::Optimization
+{
+class InactiveComponentsAnalyzer;
+}
+
 using namespace Antares;
 
 void OPT_OptimisationHebdomadaireLineaire(
@@ -61,18 +66,23 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
 
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 
+namespace Antares::Solver::Optimization
+{
 /*!
 ** \brief Appel du solver
 **
 ** \return True si l'operation s'est bien deroulee, false si le probleme n'a pas de solution
 */
-bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
-                         PROBLEME_HEBDO*,
-                         int,
-                         const int,
-                         const OptPeriodStringGenerator&,
-                         Solver::IResultWriter& writer,
-                         IO::Outputs::SimulationTable* simulationTable);
+bool OPT_AppelDuSimplexe(
+  const SingleOptimOptions& options,
+  PROBLEME_HEBDO&,
+  int,
+  int,
+  const OptPeriodStringGenerator&,
+  Solver::IResultWriter& writer,
+  IO::Outputs::SimulationTable* simulationTable,
+  const Antares::Optimization::InactiveComponentsAnalyzer* inactiveComponents = nullptr);
+} // namespace Antares::Solver::Optimization
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
@@ -105,10 +115,4 @@ void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
-LinearProblem::Api::FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo,
-                                                 int NumIntervalle);
-void fillLinearProblem(const LinearProblem::Api::FillContext& fillCtx,
-                       PROBLEME_HEBDO* problemeHebdo,
-                       LinearProblem::OptimEntityContainer& optimEntityContainer,
-                       LinearProblem::BendersDecomposition* bendersDecomposition = nullptr);
 #endif /* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */

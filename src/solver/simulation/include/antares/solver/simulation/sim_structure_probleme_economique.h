@@ -6,8 +6,10 @@
 
 #include <array>
 #include <memory>
+#include <optional>
 #include <vector>
 
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/utils/opt_constants.h"
 #include "antares/solver/utils/optimization_statistics.h"
@@ -15,6 +17,12 @@
 #include "antares/study/study.h"
 using namespace Antares::Data;
 class AdequacyPatchRuntimeData;
+
+namespace Antares::Optimization
+{
+struct SolvedModelerProblem;
+class InactiveComponentsAnalyzer;
+} // namespace Antares::Optimization
 
 struct CORRESPONDANCES_DES_VARIABLES
 {
@@ -62,7 +70,7 @@ struct CORRESPONDANCES_DES_VARIABLES
         std::vector<int> internalExcess;
     };
 
-    ReserveOpt<ReservesIndices> reservesIndices;
+    std::optional<ReservesIndices> reservesIndices;
 
     struct
     {
@@ -130,7 +138,7 @@ struct CORRESPONDANCES_DES_CONTRAINTES
         std::vector<int> HydroStoreCapacityThresholds;
     };
 
-    ReserveOpt<ReservesIndices> reservesIndices;
+    std::optional<ReservesIndices> reservesIndices;
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
@@ -194,7 +202,7 @@ struct CONTRAINTES_COUPLANTES
 
     const char* NomDeLaContrainteCouplante;
 
-    std::shared_ptr<Antares::Data::BindingConstraint> bindingConstraint;
+    std::shared_ptr<BindingConstraint> bindingConstraint;
 };
 
 struct PROPERTIES
@@ -211,9 +219,8 @@ struct PROPERTIES
     bool allowOverflow{false};
     double overflowCost{0.0};
 
-    std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
-    std::vector<std::shared_ptr<Antares::Data::ShortTermStorage::AdditionalConstraints>>
-      additionalConstraints;
+    std::shared_ptr<ShortTermStorage::Series> series;
+    std::vector<std::shared_ptr<ShortTermStorage::AdditionalConstraints>> additionalConstraints;
     int clusterGlobalIndex;
     std::string name;
 };
@@ -232,7 +239,7 @@ struct RESULTS
 struct RESULTSRESERVES
 {
     // Index is the number of the STS reserves participations in the area
-    ReserveOpt<std::vector<double>> reserveParticipationOfCluster; // MWh
+    std::optional<std::vector<double>> reserveParticipationOfCluster; // MWh
 };
 
 struct DEMAND_MARKET_POOL
@@ -407,7 +414,7 @@ struct PALIERS_THERMIQUES
     // the vectors above. Carried only so the legacy extra outputs can emit
     // co2_emissions ... op5_emissions = generation_power * factor; not used by
     // the optimization itself.
-    std::vector<std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX>> emissionFactors;
+    std::vector<std::array<double, Pollutant::POLLUTANT_MAX>> emissionFactors;
 };
 
 struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
@@ -467,9 +474,9 @@ struct RESERVE_JMOINS1
 struct PRODUCTION_THERMIQUE_OPTIMALE
 {
     std::vector<double> ProductionThermiqueDuPalier;
-    ReserveOpt<std::vector<double>> ParticipationReservesDuPalier;
-    ReserveOpt<std::vector<double>> ParticipationReservesDuPalierOn;
-    ReserveOpt<std::vector<double>> ParticipationReservesDuPalierOff;
+    std::optional<std::vector<double>> ParticipationReservesDuPalier;
+    std::optional<std::vector<double>> ParticipationReservesDuPalierOn;
+    std::optional<std::vector<double>> ParticipationReservesDuPalierOff;
 
     std::vector<double> NombreDeGroupesEnMarcheDuPalier;
     std::vector<double> NombreDeGroupesQuiDemarrentDuPalier;
@@ -481,7 +488,7 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
 
 struct OPTIMAL_HYDRO_USAGE
 {
-    ReserveOpt<std::vector<double>> reserveParticipationOfCluster; // MWh
+    std::optional<std::vector<double>> reserveParticipationOfCluster; // MWh
 };
 
 struct RESERVES
@@ -514,10 +521,10 @@ struct RESULTATS_HORAIRES
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE> ProductionThermique; // index is pdtHebdo
     std::vector<OPTIMAL_HYDRO_USAGE> HydroUsage;                    // index is pdtHebdo
 
-    std::vector<::RESULTS> ShortTermStorage;
+    std::vector<RESULTS> ShortTermStorage;
 
-    ReserveOpt<std::vector<::RESULTSRESERVES>> ShortTermStorageReserves;
-    ReserveOpt<std::vector<RESERVES>> Reserves;
+    std::optional<std::vector<RESULTSRESERVES>> ShortTermStorageReserves;
+    std::optional<std::vector<RESERVES>> Reserves;
 };
 
 struct COUTS_DE_TRANSPORT
@@ -558,6 +565,12 @@ struct PROBLEME_HEBDO
     bool OptimisationAvecVariablesEntieres = false;
     bool useThermalHeuristic = true;
 
+    /// \brief Study-wide, precomputed activity flags used to suppress
+    /// simulation-table rows for structurally inactive objects (see
+    /// AddLegacyExtraOutputs). Null by default, so callers and test fixtures
+    /// that leave it unset keep emitting every row.
+    std::shared_ptr<const Antares::Optimization::InactiveComponentsAnalyzer> inactiveComponents;
+
     uint32_t NombreDePays = 0;
     std::vector<const char*> NomsDesPays;
     uint32_t NombreDePaliersThermiques = 0;
@@ -595,10 +608,10 @@ struct PROBLEME_HEBDO
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
-    ReserveOpt<std::vector<::AREA_RESERVES_VECTOR>> allReserves;
+    std::optional<std::vector<AREA_RESERVES_VECTOR>> allReserves;
 
     uint32_t NumberOfShortTermStorages = 0;
-    std::vector<::AREA_INPUT> ShortTermStorage;
+    std::vector<AREA_INPUT> ShortTermStorage;
 
     // Input-data generation series (renewable clusters or aggregated
     // wind/solar/ROR, misc gen entries) copied from the study each week so the
@@ -774,9 +787,28 @@ public:
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     Antares::Solver::ModelerData* modelerData = nullptr;
+
+    /// \brief Whether the solve must publish lastSolvedModelerProblem. Set per
+    /// week by OPT_OptimisationLineaire, the level that knows a post-process
+    /// stage will read it back. Not tied to whether *this* pass writes a table:
+    /// a run selecting only post-process stages would otherwise lose every
+    /// modeler row of the stages it asked for.
+    bool retainSolvedModelerProblem = false;
+
+    /// \brief Modeler side of the current week's last optimisation pass, kept
+    /// alive past the solve so a post-process simulation table can re-emit the
+    /// modeler component rows. Null unless retainSolvedModelerProblem is set.
+    std::shared_ptr<const Antares::Optimization::SolvedModelerProblem> lastSolvedModelerProblem;
+
+    /// \brief Kept alive past the solve so the CSR adequacy patch post-process
+    /// can evaluate GEMS port field expressions via EvalVisitor.
+    std::shared_ptr<Antares::LinearProblem::OptimEntityContainer> optimEntityContainer;
+
+    /// \brief Keeps the LP alive so optimEntityContainer's reference remains valid
+    std::shared_ptr<Antares::LinearProblem::Api::ILinearProblem> ortoolsProblem_;
 };
 
 // Import functions for capacity and hydro reserves
-void importCapacityReservations(const Antares::Data::AreaList& areas, PROBLEME_HEBDO& problem);
-void importHydroReserves(const Antares::Data::AreaList& areas, PROBLEME_HEBDO& problem);
+void importCapacityReservations(const AreaList& areas, PROBLEME_HEBDO& problem);
+void importHydroReserves(const AreaList& areas, PROBLEME_HEBDO& problem);
 #endif

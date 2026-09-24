@@ -33,6 +33,11 @@ jobs:
     - name: Install VCPKG
       run: git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
 
+    - name: Configure vcpkg asset cache
+      uses: ./.github/workflows/vcpkg-asset-cache
+      with:
+        base-url: ${{ vars.VCPKG_ASSET_BASE_URL }}
+
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary
       uses: actions/cache/restore@v6
@@ -71,7 +76,7 @@ jobs:
       shell: bash
 
     - name: Install Build Wrapper
-      uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v8.2.1
+      uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v8.2.2
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
@@ -213,11 +218,17 @@ jobs:
         os: ${{ env.os }}
         variant: "named-mps"
 
-    - name: Run fast cucumber
+    - name: Run short cucumber
       if: ${{ !cancelled() }}
       uses: ./.github/workflows/cucumber-tests
       with:
-        tags: "fast"
+        tags: "@short"
+
+    - name: Run medium cucumber
+      if: ${{ !cancelled() }}
+      uses: ./.github/workflows/cucumber-tests
+      with:
+        tags: "@medium"
 
     - name: Run cucumber on hybrid studies
       if: ${{ !cancelled() }}
@@ -236,7 +247,7 @@ jobs:
 
     - name: SonarQube Scan
       if: ${{ !cancelled() }}
-      uses: SonarSource/sonarqube-scan-action@v8.2.1
+      uses: SonarSource/sonarqube-scan-action@v8.2.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

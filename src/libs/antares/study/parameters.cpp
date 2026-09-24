@@ -11,6 +11,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
 
 #include <antares/exception/AssertionError.hpp>
+#include <antares/exception/InvalidArgumentError.hpp>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
@@ -351,6 +352,9 @@ void Parameters::reset()
 
     hydroDebug = false;
 
+    simulationTableStages.clear();
+    simulationTableStagesStr.clear();
+
     resultFormat = legacyFilesDirectories;
 
     // Adequacy patch parameters
@@ -553,6 +557,24 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
     if (key == "adequacy-patch-debug")
     {
         d.adqPatchDebug = Antares::stringToBool(value);
+        return true;
+    }
+    if (key == "simulation-table-stages")
+    {
+        if (value.find_first_not_of(" \t") == std::string::npos)
+        {
+            // An empty value reads like "write no simulation table", but the
+            // selection only ever removes stages from the full set -- there is
+            // no way to spell "none" here. Reject it rather than let it be
+            // taken for "every stage", which is what an absent key means.
+            throw Error::InvalidArgumentError(
+              "Invalid value for simulation-table-stages in generaldata.ini: empty "
+              "(expected all, last, or a comma-separated list of stage names)");
+        }
+        // Kept raw: the stage names belong to the simulation-table library,
+        // which sits above this one. Validated and resolved when the command
+        // line is applied, so that both sources go through the same check.
+        d.simulationTableStagesStr = value;
         return true;
     }
     return false;

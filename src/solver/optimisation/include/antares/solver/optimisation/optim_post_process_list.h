@@ -17,7 +17,8 @@ public:
                        AreaList& areas,
                        const Parameters& params,
                        Calendar& calendar,
-                       IResultWriter& resultWriter);
+                       IResultWriter& resultWriter,
+                       IO::Outputs::OptimisationsSimulationTable* simulationTables);
 
     ~OptPostProcessList() override = default;
 };

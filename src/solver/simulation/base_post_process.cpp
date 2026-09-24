@@ -29,7 +29,8 @@ std::unique_ptr<interfacePostProcessList> interfacePostProcessList::create(
   AreaList& areas,
   const Data::Parameters& params,
   Calendar& calendar,
-  IResultWriter& resultWriter)
+  IResultWriter& resultWriter,
+  IO::Outputs::OptimisationsSimulationTable* simulationTables)
 {
     if (adqPatchParams.enabled)
     {
@@ -39,7 +40,8 @@ std::unique_ptr<interfacePostProcessList> interfacePostProcessList::create(
                                                          areas,
                                                          params,
                                                          calendar,
-                                                         resultWriter);
+                                                         resultWriter,
+                                                         simulationTables);
     }
     else
     {
@@ -48,7 +50,8 @@ std::unique_ptr<interfacePostProcessList> interfacePostProcessList::create(
                                                     areas,
                                                     params,
                                                     calendar,
-                                                    resultWriter);
+                                                    resultWriter,
+                                                    simulationTables);
     }
 }
 

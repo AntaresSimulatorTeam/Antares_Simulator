@@ -120,8 +120,8 @@ struct vcard_caption_traits<Economy::Reserves::VCardReserveParticipationUnsuppli
 {
     static bool apply(SurveyResults& results, uint i)
     {
-        auto [unsuppliedOrSpilled, reserveID] = results.data.area->allCapacityReservations.value()
-                                                  .reserveParticipationUnsuppliedSpilledAt(i);
+        auto [unsuppliedOrSpilled, reserveID] = results.data.area->allCapacityReservations
+                                                  ->reserveParticipationUnsuppliedSpilledAt(i);
         auto reserveName = results.data.study.reserveMaps->idToName.at(reserveID);
         results.variableCaption = reserveName + "_"
                                   + std::string(Economy::Reserves::unsuppliedSpilledToString(
@@ -135,8 +135,7 @@ struct vcard_caption_traits<Economy::Reserves::VCardReserveParticipationMarginal
 {
     static bool apply(SurveyResults& results, uint i)
     {
-        const auto& reserveID = results.data.area->allCapacityReservations.value()
-                                  .getReserveAtIndex(i);
+        const auto& reserveID = results.data.area->allCapacityReservations->getReserveAtIndex(i);
         auto reserveName = results.data.study.reserveMaps->idToName.at(reserveID);
         results.variableCaption = reserveName + "_MRG.COST";
         return true;

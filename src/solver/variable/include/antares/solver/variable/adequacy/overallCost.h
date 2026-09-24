@@ -65,14 +65,12 @@ struct OverallCostTraits
                                              * hourlyResults.PompageHoraire[hourInWeek]);
 
         const double storageReserveCost = state.reserveData
-                                            ? state.reserveData.value()
-                                                .at(state.area->index)
+                                            ? state.reserveData->at(state.area->index)
                                                 .STStorageClusterReserveParticipationCostForYear
                                                   [state.hourInTheYear]
                                             : 0.0;
 
-        const double hydroReserveCost = state.reserveData ? state.reserveData.value()
-                                                              .at(state.area->index)
+        const double hydroReserveCost = state.reserveData ? state.reserveData->at(state.area->index)
                                                               .HydroReserveParticipationCostForYear
                                                                 [state.hourInTheYear]
                                                           : 0.0;

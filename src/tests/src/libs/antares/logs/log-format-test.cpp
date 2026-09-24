@@ -255,6 +255,24 @@ BOOST_FIXTURE_TEST_CASE(std_string_and_literals_append_verbatim, LogsUnderTest)
     checkLine(lines[0], R"(\[test\]\[infos\] literal std::string part)");
 }
 
+BOOST_FIXTURE_TEST_CASE(string_view_appends_verbatim, LogsUnderTest)
+{
+    const std::string_view part = "std::string_view part";
+    logs.info() << "literal " << part;
+    const auto lines = readLogFile();
+    BOOST_REQUIRE_EQUAL(lines.size(), 1);
+    checkLine(lines[0], R"(\[test\]\[infos\] literal std::string_view part)");
+}
+
+BOOST_FIXTURE_TEST_CASE(raw_pointer_is_hex_address_with_0x_prefix, LogsUnderTest)
+{
+    int dummy = 0;
+    logs.info() << &dummy;
+    const auto lines = readLogFile();
+    BOOST_REQUIRE_EQUAL(lines.size(), 1);
+    checkLine(lines[0], R"(\[test\]\[infos\] 0x[0-9a-fA-F]+)");
+}
+
 BOOST_FIXTURE_TEST_CASE(append_format_uses_printf_semantics, LogsUnderTest)
 {
     logs.info().appendFormat("%s: %02luh%02lum%02lus", "Total", 1ul, 2ul, 3ul);
@@ -263,6 +281,17 @@ BOOST_FIXTURE_TEST_CASE(append_format_uses_printf_semantics, LogsUnderTest)
     BOOST_REQUIRE_EQUAL(lines.size(), 2);
     checkLine(lines[0], R"(\[test\]\[infos\] Total: 01h02m03s)");
     checkLine(lines[1], R"(\[test\]\[infos\] value = 1\.234500e\+03)");
+}
+
+BOOST_FIXTURE_TEST_CASE(append_format_with_empty_format_string_appends_nothing, LogsUnderTest)
+{
+    // An empty format string makes vsnprintf report a needed length of 0: this must be a
+    // silent no-op rather than appending anything to the buffer.
+    logs.info().appendFormat("");
+    const auto lines = readLogFile();
+    BOOST_REQUIRE_EQUAL(lines.size(), 1);
+    checkLine(lines[0], R"(\[test\]\[infos\] )");
+    BOOST_CHECK_EQUAL(lines[0].back(), ' ');
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -461,6 +490,41 @@ BOOST_FIXTURE_TEST_CASE(logfile_getter_returns_path_and_reopening_appends, LogsU
     BOOST_REQUIRE_EQUAL(lines.size(), 2);
     checkLine(lines[0], R"(\[test\]\[infos\] first)");
     checkLine(lines[1], R"(\[test\]\[infos\] second)");
+}
+
+BOOST_FIXTURE_TEST_CASE(reopening_without_closing_first_closes_previous_file, LogsUnderTest)
+{
+    BOOST_REQUIRE(logs.logfileIsOpened());
+    logs.info() << "first file content";
+
+    const auto secondDir = createTempDirectory("logfile_reopen_without_closing");
+    const auto secondPath = secondDir / "second.log";
+    // Switch to a new file directly, without calling closeLogfile() first: exercises the
+    // "close the previously-open file before opening the new one" branch.
+    BOOST_REQUIRE(logs.logfile(secondPath.string()));
+    BOOST_CHECK_EQUAL(std::string(logs.logfile().c_str()), secondPath.string());
+
+    logs.info() << "second file content";
+    logs.closeLogfile();
+
+    const auto firstFileLines = readLogFile();
+    BOOST_REQUIRE_EQUAL(firstFileLines.size(), 1);
+    checkLine(firstFileLines[0], R"(\[test\]\[infos\] first file content)");
+
+    const auto secondFileLines = readLines(secondPath);
+    BOOST_REQUIRE_EQUAL(secondFileLines.size(), 1);
+    checkLine(secondFileLines[0], R"(\[test\]\[infos\] second file content)");
+
+    std::error_code ec;
+    std::filesystem::remove_all(secondDir, ec);
+}
+
+BOOST_FIXTURE_TEST_CASE(empty_filename_closes_current_file_and_returns_true, LogsUnderTest)
+{
+    BOOST_REQUIRE(logs.logfileIsOpened());
+    BOOST_CHECK(logs.logfile(""));
+    BOOST_CHECK(!logs.logfileIsOpened());
+    BOOST_CHECK(logs.logfile().empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

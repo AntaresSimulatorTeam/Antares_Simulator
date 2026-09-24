@@ -6,6 +6,7 @@
 
 #include <filesystem>
 #include <map>
+#include <optional>
 #include <ostream>
 #include <set>
 #include <stdlib.h>
@@ -13,7 +14,6 @@
 #include <vector>
 
 #include <antares/array/matrix.h>
-#include <antares/study/area/ReserveOpt.h>
 #include <antares/study/area/capacityReservation.h>
 #include <antares/study/parameters/adq-patch-params.h>
 #include "antares/study/filter.h"
@@ -79,11 +79,6 @@ public:
     ** \brief Ensure all data are created
     */
     void createMissingData();
-
-    /*!
-    ** \brief Reset all values to their default one
-    */
-    void resetToDefaultValues();
 
     /*!
     ** \brief Resize all matrices dedicated to the sampled timeseries numbers
@@ -202,7 +197,7 @@ public:
     //@}
 
     /// \name AllCapacityReservations structure to keep track of the added capacity reservations
-    ReserveOpt<AllCapacityReservations> allCapacityReservations;
+    std::optional<AllCapacityReservations> allCapacityReservations;
 
     //! \name Output filtering
     //@{

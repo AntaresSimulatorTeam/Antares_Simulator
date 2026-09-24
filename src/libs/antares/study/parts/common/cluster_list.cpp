@@ -41,13 +41,12 @@ std::pair<std::string, ReserveID> ClusterList<ClusterT>::reserveParticipationClu
     int globalReserveParticipationIdx = 0;
 
     for (const auto& reserveID:
-         area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+         area->allCapacityReservations->areaCapacityReservations | std::views::keys)
     {
         for (auto& cluster: allClusters_)
         {
             if (cluster->reserveParticipationContainer
-                && cluster->reserveParticipationContainer.value().isParticipatingInReserve(
-                  reserveID))
+                && cluster->reserveParticipationContainer->isParticipatingInReserve(reserveID))
             {
                 if (static_cast<unsigned int>(globalReserveParticipationIdx) == index)
                 {
@@ -69,7 +68,7 @@ std::pair<std::string, ReserveID> ClusterList<ClusterT>::reserveParticipationGro
 {
     unsigned int column = 0;
     for (const auto& reserveID:
-         area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+         area->allCapacityReservations->areaCapacityReservations | std::views::keys)
     {
         if (area->allCapacityReservations->reserveGroupPartThermal.contains(reserveID))
         {

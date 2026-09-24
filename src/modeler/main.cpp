@@ -86,6 +86,11 @@ int main(int argc, const char** argv)
         logs.error() << "Modeler loading error: " << e.what() << "\nExiting simulation.";
         return EXIT_FAILURE;
     }
+    catch (const Antares::Solver::InvalidScenarioScopeError& e)
+    {
+        logs.error() << "Modeler error: " << e.what() << "\nExiting simulation.";
+        return EXIT_FAILURE;
+    }
     catch (const Antares::Solver::Modeler::ModelerError& e)
     {
         logs.error() << "Modeler error: " << e.what() << "\nExiting simulation.";
