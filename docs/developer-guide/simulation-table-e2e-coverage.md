@@ -51,7 +51,7 @@ Design points:
 | Area marginal price | `price` | area `values-hourly` `MRG. PRICE` | ✅ equivalence — dual-derived, see gaps |
 | Actual load | `actual_load` | area `values-hourly` `LOAD` | ✅ equivalence |
 | Thermal generation | `generation_power` | area `details-hourly` `<cluster>` / `MWh` | ✅ equivalence (optim-nb-2) |
-| Units on (ceil) | `actual_num_units_on` | area `details-hourly` `<cluster>` / `NODU` | ✅ equivalence (non-fast UC only) |
+| Units on (ceil) | `actual_num_units_on` | area `details-hourly` `<cluster>` / `NODU` | ✅ equivalence — skipped when `[other preferences] unit-commitment-mode` is `fast` (`Mapping.requires_accurate_uc`); the ST value is `ceil(x(NumberOfDispatchableUnits))` while mc-ind's NODU is the fast-UC heuristic's own unit count, two independently-computed integers that can differ by 1 on borderline hours |
 | STS injection / withdrawal / level | `injection_power` / `withdrawal_power` / `level` | area `details-STstorage-hourly` | ✅ mapping in place (no study with STS clusters exercises it yet) |
 | Link flow / abs / minus / loop | `flow` / `abs_flow` / `minus_flow` / `actual_loop_flow` | link `values-hourly` `FLOW LIN.` / `LOOP FLOW` | ✅ equivalence |
 | Raw `num_units_on` (LP value) | `num_units_on` | — | not compared (fractional; `actual_num_units_on` is the mc-ind match) |

@@ -74,6 +74,12 @@ class Mapping:
     # extracted there). Kept as metadata / for the coverage doc; see
     # docs/developer-guide/simulation-table-e2e-coverage.md
     dual_derived: bool = False
+    # True => only meaningful when [other preferences] unit-commitment-mode is
+    # "accurate": in "fast" mode actual_num_units_on is `ceil(x(NumberOfDispatchableUnits))`
+    # on the ST side vs. the fast-UC heuristic's own unit count on the mc-ind side, two
+    # independently-computed integers that can legitimately differ by a unit on borderline
+    # hours. See docs/developer-guide/simulation-table-e2e-coverage.md.
+    requires_accurate_uc: bool = False
 
 
 LEGACY_TO_ST = [
@@ -91,7 +97,8 @@ LEGACY_TO_ST = [
     Mapping("generation_power", AREA_DETAILS, "{cluster}", "generation_power",
             "{area}_thermal_{cluster}", mc_sub="MWh"),
     Mapping("actual_num_units_on", AREA_DETAILS, "{cluster}", "actual_num_units_on",
-            "{area}_thermal_{cluster}", mc_sub="NODU", atol=0.5, rtol=0.0),
+            "{area}_thermal_{cluster}", mc_sub="NODU", atol=0.5, rtol=0.0,
+            requires_accurate_uc=True),
 
     # ---- short term storage ---------------------------------------------------#
     Mapping("sts_injection", AREA_STS, "{sts}", "injection_power",
@@ -169,6 +176,13 @@ def _sts_clusters(study_path: Path, area: str) -> list:
 def _links(study_path: Path, area: str) -> list:
     # input/links/<area>/properties.ini : one section per destination area
     return _ini_sections(study_path / "input" / "links" / area / "properties.ini")
+
+
+def _unit_commitment_mode(study_path: Path) -> str:
+    cp = configparser.ConfigParser()
+    cp.optionxform = str
+    cp.read(study_path / "settings" / "generaldata.ini", encoding="utf-8")
+    return cp.get("other preferences", "unit-commitment-mode", fallback="fast").strip().lower()
 
 
 def _reserves(study_path: Path, area: str) -> list:
@@ -284,8 +298,12 @@ def _run_equivalence(context, year: int, only_key: Optional[str]):
 
     res = _Result()
     areas = _areas(study_path)
+    accurate_uc = _unit_commitment_mode(study_path) == "accurate"
 
     for m in mappings:
+        if m.requires_accurate_uc and not accurate_uc:
+            continue
+
         if m.source == AREA_VALUES:
             for area in areas:
                 try:
