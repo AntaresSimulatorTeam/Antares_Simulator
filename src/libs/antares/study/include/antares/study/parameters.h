@@ -185,43 +185,43 @@ public:
     //! \name Additional
     //@{
     //! Export results each year
-    bool yearByYear;
+    bool yearByYear = false;
     //! Derated
     bool derated = false;
     //! Custom scenario
     bool useCustomScenario = false;
     //! Custom playlist (each year will be manually selected by the user)
-    bool userPlaylist;
+    bool userPlaylist = false;
     //! Flag to perform the calculations or not from the solver
     std::vector<bool> yearsFilter;
 
     //! Custom variable selection (each variable will be manually selected for print by the user)
-    bool thematicTrimming;
+    bool thematicTrimming = false;
     //! List of all output variables print info
     mutable AllVariablesPrintInfo variablesPrintInfo;
 
     //! The number of years that will be really performed
     // Computed automatically from the number of MC years and the playlist
-    unsigned int effectiveNbYears;
+    unsigned int effectiveNbYears = 0;
     //! Enable/Disable filtering by files :
     //!		for an area or a link, print (or not) a file associated to :
     //!		- a time division (hourly results, daily results, weekly results, ...),
     //!		- a kind of result (year by year result or a synthesis result).
-    bool geographicTrimming;
+    bool geographicTrimming = false;
     //@}
 
     //! \name TimeSeries
     //@{
     //! Nb of timeSeries : Load
-    unsigned int nbTimeSeriesLoad;
+    unsigned int nbTimeSeriesLoad = 1;
     //! Nb of timeSeries : Hydro
-    unsigned int nbTimeSeriesHydro;
+    unsigned int nbTimeSeriesHydro = 1;
     //! Nb of timeSeries : Wind
-    unsigned int nbTimeSeriesWind;
+    unsigned int nbTimeSeriesWind = 1;
     //! Nb of timeSeries : Thermal
-    unsigned int nbTimeSeriesThermal;
+    unsigned int nbTimeSeriesThermal = 1;
     //! Nb of timeSeries : Solar
-    unsigned int nbTimeSeriesSolar;
+    unsigned int nbTimeSeriesSolar = 1;
     //@}
 
     //! \name Archives
@@ -233,7 +233,7 @@ public:
     ** This value is a mask bits for timeSeries.
     ** \see TimeSeries
     */
-    unsigned int timeSeriesToArchive;
+    unsigned int timeSeriesToArchive = 0;
     //@}
 
     //! \name Pre-Processor
@@ -244,7 +244,7 @@ public:
     ** This value is a mask bits for timeSeries.
     ** \see TimeSeries
     */
-    unsigned int timeSeriesToGenerate;
+    unsigned int timeSeriesToGenerate = 0;
     //@}
 
     //! \name Import Time-Series to HardDrive
@@ -256,7 +256,7 @@ public:
     ** All generated timeseries will be re-written into the input
     ** \see TimeSeries
     */
-    unsigned int exportTimeSeriesInInput;
+    unsigned int exportTimeSeriesInInput = 0;
     //@}
 
     //! \name Correlated draws
@@ -264,13 +264,13 @@ public:
     /*!
     ** \brief Inter-modal
     */
-    unsigned int interModal;
+    unsigned int interModal = 0;
     //@}
 
     //! \name Timeseries numbers
     //@{
     //! Store the sampled timeseries numbers
-    bool storeTimeseriesNumbers;
+    bool storeTimeseriesNumbers = false;
     //@}
 
     /*!
@@ -279,12 +279,12 @@ public:
     ** This value can only be set by the property `read-only` in the
     ** generaldata.ini. The default value is `false`.
     */
-    bool readonly;
+    bool readonly = false;
     //! Write the simulation synthesis into the output
-    bool synthesis;
+    bool synthesis = true;
 
     //! Accuracy on correlation
-    unsigned int timeSeriesAccuracyOnCorrelation;
+    unsigned int timeSeriesAccuracyOnCorrelation = 0;
 
     //@}
 
@@ -295,43 +295,43 @@ public:
         //! Include binding constraints
         bool constraints = true;
         //! Hurdle costs
-        bool hurdleCosts;
+        bool hurdleCosts = true;
 
         struct Reserve
         {
             //! Day ahead reserve
-            bool dayAhead;
+            bool dayAhead = true;
             //! Strategic reserve
-            bool strategic;
+            bool strategic = true;
             //! Spinning reserve
-            bool spinning;
+            bool spinning = true;
             //! Primary reserve
-            bool primary;
+            bool primary = true;
 
         } reserve;
 
         //! New implemention of reserves, not related to the primary/spinning/strategic reserves
-        bool reserves;
+        bool reserves = false;
 
         struct Thermal
         {
             // Thermal cluster min stable power
-            bool minStablePower;
+            bool minStablePower = true;
 
             //! Thermal cluster Min U/D Time
-            bool minUPTime;
+            bool minUPTime = true;
         } thermal;
 
         //! Flag to export mps files
-        mpsExportStatus exportMPS;
+        mpsExportStatus exportMPS = mpsExportStatus::NO_EXPORT;
 
         //! a flag to export structure needed for Antares XPansion
-        bool exportStructure;
+        bool exportStructure = false;
 
         //! Enum to define unfeasible problem behavior \see UnfeasibleProblemBehavior
-        UnfeasibleProblemBehavior unfeasibleProblemBehavior;
+        UnfeasibleProblemBehavior unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
 
-        bool exportSolutions;
+        bool exportSolutions = false;
     } include;
 
     struct Compatibility
@@ -356,19 +356,19 @@ public:
     struct
     {
         //! Shedding policy
-        SheddingPolicy policy;
+        SheddingPolicy policy = shpShavePeaks;
     } shedding;
 
     struct
     {
         //! Power fluctuations
-        PowerFluctuations fluctuations;
+        PowerFluctuations fluctuations = lssFreeModulations;
     } power;
 
     struct UCMode
     {
         //! Unit Commitment Mode
-        UnitCommitmentMode ucMode;
+        UnitCommitmentMode ucMode = ucHeuristicFast;
 
         //! Some variables rely on dual values & marginal costs
         void addExcludedVariables(std::vector<std::string>&) const;
@@ -379,13 +379,13 @@ public:
     struct
     {
         //! Number of Cores Mode
-        NumberOfCoresMode ncMode;
+        NumberOfCoresMode ncMode = ncAvg;
     } nbCores;
 
     struct RenewableGeneration
     {
         //! Renewable generation mode
-        RenewableGenerationModelling rgModelling;
+        RenewableGenerationModelling rgModelling = rgAggregated;
         void addExcludedVariables(std::vector<std::string>&) const;
         RenewableGenerationModelling operator()() const;
         void toAggregated();
@@ -399,19 +399,20 @@ public:
     struct
     {
         //! Hydro heuristic policy
-        HydroHeuristicPolicy hhPolicy;
+        HydroHeuristicPolicy hhPolicy = hhpAccommodateRuleCurves;
     } hydroHeuristicPolicy;
 
     struct
     {
         //! Hydro Pricing Mode
-        HydroPricingMode hpMode;
+        HydroPricingMode hpMode = hpHeuristic;
     } hydroPricing;
 
     bool accurateShavePeaksIncludeShortTermStorage = false;
 
     //! Transmission capacities
-    GlobalTransmissionCapacities transmissionCapacities;
+    GlobalTransmissionCapacities transmissionCapacities = GlobalTransmissionCapacities::
+      localValuesForAllLinks;
     //! Simplex optimization range (day/week)
     SimplexOptimization simplexOptimizationRange = sorWeek;
     //@}
@@ -437,7 +438,7 @@ public:
     /// applied, which overrides it when it carries a selection of its own.
     std::string simulationTableStagesStr;
 
-    bool hydroDebug;
+    bool hydroDebug = false;
 
     /// Used to create debug informations for both hydro and short term storages
     bool remixStorageDebug = false;
@@ -448,14 +449,14 @@ public:
     //! \name Seeds
     //@{
     //! Seeds
-    unsigned int seed[seedMax];
+    unsigned int seed[seedMax] = {};
     //@}
 
     // Format of results. Currently, only single files or zip archive are supported
     ResultFormat resultFormat = legacyFilesDirectories;
 
     // Naming constraints and variables in problems
-    bool namedProblems;
+    bool namedProblems = false;
 
     // All options related to linear & quadratic optimization
     Optimization::OptimizationOptions optOptions;

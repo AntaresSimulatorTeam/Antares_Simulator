@@ -36,6 +36,9 @@ BOOST_AUTO_TEST_CASE(test_adq_patch_areas)
     Antares::Solver::InMemoryWriter writer(gDurationCollector);
 
     PROBLEME_HEBDO pb;
+    // Populates each area's scratchpad (indexed by numSpace below); without it
+    // area.scratchpad[gNumSpace] would be an out-of-bounds access on an empty vector.
+    builder.study->initializeRuntimeInfos();
     SIM_AllocationProblemeHebdo(*builder.study, pb, gNumberTimeSteps);
 
     WriteDebugAdequacyPatch cmd(&pb, builder.study->areas, gNumSpace, writer, fileLabel);

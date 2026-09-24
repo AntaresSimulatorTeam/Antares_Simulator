@@ -97,17 +97,19 @@ namespace
 {
 // Indices of the unsupplied energy variables in problemAResoudre (Xmax/Xmin).
 // area1 -> variable 0 at hour 0, variable 2 at hour 1; area2 -> variable 1.
-const int ensVarArea1Hour0 = 0;
-const int ensVarArea2 = 1;
-const int ensVarArea1Hour1 = 2;
+constexpr int ensVarArea1Hour0 = 0;
+constexpr int ensVarArea2 = 1;
+constexpr int ensVarArea1Hour1 = 2;
 
 // Indices of the constraints in problemAResoudre (SecondMembre).
-const int fictitiousLoadArea1 = 10;
-const int fictitiousLoadArea2 = 11;
-const int maxEnsLoadArea1 = 12;
-const int maxEnsLoadArea2 = 13;
+constexpr int fictitiousLoadArea1 = 10;
+constexpr int fictitiousLoadArea2 = 11;
+constexpr int maxEnsLoadArea1 = 12;
+constexpr int maxEnsLoadArea2 = 13;
 } // namespace
 
+namespace
+{
 struct GemsContributionFixture
 {
     GemsContributionFixture()
@@ -144,8 +146,8 @@ struct GemsContributionFixture
     // contribution is applied.
     void setLegacyBounds()
     {
-        std::fill(problemAResoudre.Xmax.begin(), problemAResoudre.Xmax.end(), 0.0);
-        std::fill(problemAResoudre.SecondMembre.begin(), problemAResoudre.SecondMembre.end(), 0.0);
+        std::ranges::fill(problemAResoudre.Xmax, 0.0);
+        std::ranges::fill(problemAResoudre.SecondMembre, 0.0);
 
         problemAResoudre.Xmax[ensVarArea1Hour0] = 100.0;
         problemAResoudre.Xmax[ensVarArea2] = 100.0;
@@ -157,7 +159,8 @@ struct GemsContributionFixture
     }
 
     // Sets the values of the GEMS parameters (one time series per parameter, one value per hour).
-    void setGemsParameters(const std::vector<double>& residualLoad, const std::vector<double>& load)
+    void setGemsParameters(const std::vector<double>& residualLoad,
+                           const std::vector<double>& load) const
     {
         auto data = std::make_unique<LinearProblemData>();
         addTimeSeries(*data, "residual_load", residualLoad);
@@ -165,10 +168,10 @@ struct GemsContributionFixture
         modelerData->dataSeries = std::move(data);
     }
 
-    std::unique_ptr<ModelerStudy::SystemModel::System> createSystemFromYml()
+    std::unique_ptr<System> createSystemFromYml()
     {
-        IO::Inputs::YmlModel::Parser parserModel;
-        libraries.push_back(IO::Inputs::ModelConverter::convert(parserModel.parse(libraryYaml)));
+        libraries.push_back(
+          IO::Inputs::ModelConverter::convert(IO::Inputs::YmlModel::Parser::parse(libraryYaml)));
 
         IO::Inputs::YmlSystem::Parser parserSystem;
         auto ymlSystem = parserSystem.parse(systemYaml, "");
@@ -177,14 +180,14 @@ struct GemsContributionFixture
         return std::make_unique<System>(std::move(system));
     }
 
-    LinearProblem::ScenarioGroupRepository createScenarioGroupRepo()
+    static ScenarioGroupRepository createScenarioGroupRepo()
     {
         ScenarioGroupRepository scenarioGroupRepository;
         auto scenario = std::make_unique<Scenario>("SG");
         scenario->setTimeSerieNumber(0, 1);
         scenarioGroupRepository.addScenario("SG", std::move(scenario));
 
-        return std::move(scenarioGroupRepository);
+        return scenarioGroupRepository;
     }
 
     std::unique_ptr<Solver::ModelerData> buildModelerData()
@@ -196,7 +199,7 @@ struct GemsContributionFixture
         return data;
     }
 
-    void makeWeeklyProblem(PROBLEME_HEBDO& pHebdo)
+    void makeWeeklyProblem(PROBLEME_HEBDO& pHebdo) const
     {
         pHebdo.modelerData = modelerData.get();
         pHebdo.NomsDesPays.push_back("area1");
@@ -206,21 +209,18 @@ struct GemsContributionFixture
         pHebdo.year = 0;
 
         pHebdo.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>();
-        pHebdo.adequacyPatchRuntimeData->areaMode = {
-          Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch,
-          Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch};
+        pHebdo.adequacyPatchRuntimeData->areaMode = {AdequacyPatch::physicalAreaInsideAdqPatch,
+                                                     AdequacyPatch::physicalAreaInsideAdqPatch};
 
         // Initialize CorrespondanceVarNativesVarOptim for VariableManager.
         pHebdo.CorrespondanceVarNativesVarOptim.resize(2); // hours 0 and 1
-        pHebdo.CorrespondanceVarNativesVarOptim[0].NumeroDeVariableDefaillancePositive = {
-          ensVarArea1Hour0,
-          ensVarArea2};
-        pHebdo.CorrespondanceVarNativesVarOptim[1].NumeroDeVariableDefaillancePositive = {
-          ensVarArea1Hour1,
-          ensVarArea2};
+        pHebdo.CorrespondanceVarNativesVarOptim[0]
+          .NumeroDeVariableDefaillancePositive = {ensVarArea1Hour0, ensVarArea2};
+        pHebdo.CorrespondanceVarNativesVarOptim[1]
+          .NumeroDeVariableDefaillancePositive = {ensVarArea1Hour1, ensVarArea2};
     }
 
-    void makeProblemToSolve(PROBLEME_ANTARES_A_RESOUDRE& pAResoudre)
+    void makeProblemToSolve(PROBLEME_ANTARES_A_RESOUDRE&)
     {
         problemAResoudre.Xmax.resize(20, 0.0);
         problemAResoudre.Xmin.resize(20, 0.0);
@@ -248,6 +248,7 @@ struct GemsContributionFixture
     std::map<int, int> constraintFictitious;
     std::map<int, int> constraintMaxEns;
 };
+} // namespace
 
 BOOST_AUTO_TEST_SUITE(gems_contribution_tests)
 
