@@ -157,6 +157,26 @@ def _ini_sections(path: Path) -> list:
     return list(cp.sections())
 
 
+def _ini_cluster_id_names(path: Path) -> list:
+    """(id, display name) pairs from a cluster list.ini.
+
+    The section header is the cluster id, used everywhere in the simulation
+    table (component names). mc-ind, on the other hand, captions columns with
+    the cluster's `name` property (see e.g. DispatchablePlantByCluster_base.h
+    `variableCaption = cluster->name()`), which can differ from the id in
+    spacing/case. Fall back to the id when `name` is missing.
+    """
+    if not path.is_file():
+        return []
+    cp = configparser.ConfigParser()
+    cp.optionxform = str
+    try:
+        cp.read(path, encoding="utf-8")
+    except Exception:
+        return []
+    return [(section, cp.get(section, "name", fallback=section)) for section in cp.sections()]
+
+
 def _areas(study_path: Path) -> list:
     f = study_path / "input" / "areas" / "list.txt"
     if not f.is_file():
@@ -165,12 +185,13 @@ def _areas(study_path: Path) -> list:
 
 
 def _thermal_clusters(study_path: Path, area: str) -> list:
-    # section name is the cluster id as it appears in mc-ind details columns
-    return _ini_sections(study_path / "input" / "thermal" / "clusters" / area / "list.ini")
+    """(id, display name) pairs; see _ini_cluster_id_names."""
+    return _ini_cluster_id_names(study_path / "input" / "thermal" / "clusters" / area / "list.ini")
 
 
 def _sts_clusters(study_path: Path, area: str) -> list:
-    return _ini_sections(study_path / "input" / "st-storage" / "clusters" / area / "list.ini")
+    """(id, display name) pairs; see _ini_cluster_id_names."""
+    return _ini_cluster_id_names(study_path / "input" / "st-storage" / "clusters" / area / "list.ini")
 
 
 def _links(study_path: Path, area: str) -> list:
@@ -326,10 +347,10 @@ def _run_equivalence(context, year: int, only_key: Optional[str]):
                     df = context.soh.area_details_hourly(area, year)
                 except AssertionError:
                     continue
-                for cluster in clusters:
-                    comp = m.st_component.format(area=area, cluster=cluster)
+                for cluster_id, cluster_name in clusters:
+                    comp = m.st_component.format(area=area, cluster=cluster_id)
                     _check_one(res, m, comp,
-                               _mc_series(df, m.mc_col.format(cluster=cluster), m.mc_sub),
+                               _mc_series(df, m.mc_col.format(cluster=cluster_name), m.mc_sub),
                                _st_series(st, comp, m.st_output, year_index))
 
         elif m.source == AREA_STS:
@@ -341,10 +362,10 @@ def _run_equivalence(context, year: int, only_key: Optional[str]):
                     df = context.soh.area_sts_details_hourly(area, year)
                 except AssertionError:
                     continue
-                for sts in clusters:
-                    comp = m.st_component.format(area=area, sts=sts)
+                for sts_id, sts_name in clusters:
+                    comp = m.st_component.format(area=area, sts=sts_id)
                     _check_one(res, m, comp,
-                               _mc_series(df, m.mc_col.format(sts=sts), m.mc_sub),
+                               _mc_series(df, m.mc_col.format(sts=sts_name), m.mc_sub),
                                _st_series(st, comp, m.st_output, year_index))
 
         elif m.source == LINK_VALUES:
@@ -388,10 +409,10 @@ def _run_equivalence(context, year: int, only_key: Optional[str]):
                     df = context.soh.area_details_hourly(area, year)
                 except AssertionError:
                     continue
-                for cluster in clusters:
-                    comp = m.st_component.format(area=area, cluster=cluster)
+                for cluster_id, cluster_name in clusters:
+                    comp = m.st_component.format(area=area, cluster=cluster_id)
                     for reserve_name, reserve_id in reserves:
-                        mc_col = m.mc_col.format(reserve_name=reserve_name, cluster=cluster)
+                        mc_col = m.mc_col.format(reserve_name=reserve_name, cluster=cluster_name)
                         st_output = m.st_output.format(reserve_id=reserve_id)
                         _check_one(res, m, comp,
                                    _mc_series(df, mc_col, m.mc_sub),

@@ -52,7 +52,7 @@ Design points:
 | Actual load | `actual_load` | area `values-hourly` `LOAD` | ✅ equivalence-checked |
 | Thermal generation | `generation_power` | area `details-hourly` `<cluster>` / `MWh` | ✅ equivalence-checked (optim-nb-2) |
 | Units on (ceil) | `actual_num_units_on` | area `details-hourly` `<cluster>` / `NODU` | ✅ equivalence-checked — skipped when `[other preferences] unit-commitment-mode` is `fast` (`Mapping.requires_accurate_uc`); the ST value is `ceil(x(NumberOfDispatchableUnits))` while mc-ind's NODU is the fast-UC heuristic's own unit count, two independently-computed integers that can differ by 1 on borderline hours |
-| STS injection / withdrawal / level | `injection_power` / `withdrawal_power` / `level` | area `details-STstorage-hourly` | ✅ equivalence-checked — needs the STS cluster's `list.ini` section id to equal its `name` (mc-ind captions the display name, the ST component uses the id); true in all current fixtures but not enforced, see gaps |
+| STS injection / withdrawal / level | `injection_power` / `withdrawal_power` / `level` | area `details-STstorage-hourly` | ✅ equivalence-checked, including studies where the cluster's id and display name differ |
 | Link flow / abs / minus / loop | `flow` / `abs_flow` / `minus_flow` / `actual_loop_flow` | link `values-hourly` `FLOW LIN.` / `LOOP FLOW` | ✅ equivalence-checked |
 | Raw `num_units_on` (LP value) | `num_units_on` | — | ⛔ not equivalence-checked — limitation: fractional LP value, no integer mc-ind column to compare to (`actual_num_units_on` is the checked, rounded counterpart) |
 | Derived costs (`prop_cost`, `non_prop_cost`, `imbalance_cost`, …) | — | — | ⛔ not equivalence-checked — limitation: no mc-ind column at all (mc-ind never printed these); values also carry anti-degeneracy noise. Tested instead as hand-derived worked examples in `legacy_simulation_table.feature` |
@@ -79,16 +79,6 @@ Design points:
 * **No frozen-reference regression** in `src/tests/run-study-tests/` — deferred
   until the table file layout (`feature/st_stage_selection`: per-MC-year files,
   per-stage tables) stabilises.
-* **STS mc-ind caption vs. ST component id.** `_sts_clusters()` in
-  `simulation_table_equivalence.py` uses the cluster's `list.ini` section
-  (its id) both to look up the mc-ind `details-STstorage-hourly` column and to
-  build the ST component name. mc-ind actually captions the column with the
-  cluster's `name` field, not its id, so the mapping silently produces zero
-  comparisons on any study where a storage's id and name differ (e.g.
-  `hybrid-legacy-equivalent/8_3`'s `battery ev` id / `Battery EV` name). All
-  STS fixtures used by the equivalence suite today keep id == name, so this
-  hasn't caused a false pass, but it should be fixed (resolve the display name
-  for the mc-ind lookup) before relying on a study where they diverge.
 
 ## Adding coverage
 

@@ -12,8 +12,7 @@ Feature: Legacy mc-ind <-> simulation table equivalence
   # area reserve spilled/unsupplied energy, thermal reserve on/off unit
   # participation. Gaps (hydro level, MIP-week duals, adequacy-patch rows,
   # STS/hydro reserve participation) are listed in
-  # docs/developer-guide/simulation-table-e2e-coverage.md, which also notes a
-  # latent STS id-vs-name caveat in the mapping itself.
+  # docs/developer-guide/simulation-table-e2e-coverage.md
 
   @short
   Scenario: Single legacy area with a thermal fleet (fast UC)
