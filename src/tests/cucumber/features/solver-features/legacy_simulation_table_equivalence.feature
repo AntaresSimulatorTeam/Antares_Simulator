@@ -9,10 +9,9 @@ Feature: Legacy mc-ind <-> simulation table equivalence
   # price, actual_load, thermal generation_power, thermal actual_num_units_on,
   # short-term-storage injection/withdrawal/level, link flow / abs_flow /
   # minus_flow / actual_loop_flow, link abs_congestion_fee / alg_congestion_fee,
-  # area reserve spilled/unsupplied energy, thermal reserve on/off unit
-  # participation. Gaps (hydro level, MIP-week duals, adequacy-patch rows,
-  # STS/hydro reserve participation) are listed in
-  # docs/developer-guide/simulation-table-e2e-coverage.md
+  # area reserve spilled/unsupplied energy, thermal/STS/hydro reserve
+  # participation. Gaps (hydro level, MIP-week duals, adequacy-patch rows) are
+  # listed in docs/developer-guide/simulation-table-e2e-coverage.md
 
   @short
   Scenario: Single legacy area with a thermal fleet (fast UC)
@@ -79,6 +78,20 @@ Feature: Legacy mc-ind <-> simulation table equivalence
     # withdrawal power genuinely differ (not just sign), which is the case the
     # STS mapping needs to be exercised against.
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-v920/st-storage-withdrawal-efficiency"
+    When I run antares simulator with --output=all
+    Then the simulation succeeds
+    And the simulation table matches the legacy mc-ind output for year 1
+
+  @short
+  Scenario: Short-term storage reserve participation
+    Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
+    When I run antares simulator with --output=all
+    Then the simulation succeeds
+    And the simulation table matches the legacy mc-ind output for year 1
+
+  @short
+  Scenario: Hydro reserve participation
+    Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/LT_1_reserves"
     When I run antares simulator with --output=all
     Then the simulation succeeds
     And the simulation table matches the legacy mc-ind output for year 1

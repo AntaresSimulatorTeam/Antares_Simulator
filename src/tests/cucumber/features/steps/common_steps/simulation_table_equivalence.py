@@ -55,6 +55,8 @@ AREA_STS = "area_sts"            # mc-ind/<y>/areas/<area>/details-STstorage-hou
 LINK_VALUES = "link_values"      # mc-ind/<y>/links/<a> - <b>/values-hourly.txt
 AREA_RESERVE_VALUES = "area_reserve_values"    # values-hourly.txt, per area reserve
 AREA_RESERVE_THERMAL = "area_reserve_thermal"  # details-hourly.txt, per (thermal cluster, reserve)
+AREA_RESERVE_STS = "area_reserve_sts"          # details-hourly.txt, per (sts cluster, reserve) — net participation
+AREA_RESERVE_HYDRO = "area_reserve_hydro"      # details-hourly.txt, per area reserve — net participation
 
 
 @dataclass(frozen=True)
@@ -135,6 +137,16 @@ LEGACY_TO_ST = [
             mc_sub="Reserve Participation Power - MWh"),
     Mapping("units_off_reserve_power", AREA_RESERVE_THERMAL, "{reserve_name}_{cluster}_off",
             "units_off_reserve_power_{reserve_id}", "{area}_thermal_{cluster}",
+            mc_sub="Reserve Participation Power - MWh"),
+    # STS/hydro only expose the net (signed release-minus-store) LP variable to
+    # mc-ind — no separate release/store split like thermal's on/off units, so
+    # this is the one comparable quantity (matches `reserve_power_<id>`, not
+    # `reserve_released_power_<id>` / `reserve_stored_power_<id>`).
+    Mapping("sts_reserve_power", AREA_RESERVE_STS, "{reserve_name}_{cluster}",
+            "reserve_power_{reserve_id}", "{area}_short_term_storage_{cluster}",
+            mc_sub="Reserve Participation Power - MWh"),
+    Mapping("hydro_reserve_power", AREA_RESERVE_HYDRO, "{reserve_name}_Hydro",
+            "reserve_power_{reserve_id}", "{area}_hydro_storage",
             mc_sub="Reserve Participation Power - MWh"),
 ]
 
@@ -418,6 +430,44 @@ def _run_equivalence(context, year: int, only_key: Optional[str]):
                                    _mc_series(df, mc_col, m.mc_sub),
                                    _st_series(st, comp, st_output, year_index),
                                    output=st_output)
+
+        elif m.source == AREA_RESERVE_STS:
+            for area in areas:
+                reserves = _reserves(study_path, area)
+                clusters = _sts_clusters(study_path, area)
+                if not reserves or not clusters:
+                    continue
+                try:
+                    df = context.soh.area_details_hourly(area, year)
+                except AssertionError:
+                    continue
+                for cluster_id, cluster_name in clusters:
+                    comp = m.st_component.format(area=area, cluster=cluster_id)
+                    for reserve_name, reserve_id in reserves:
+                        mc_col = m.mc_col.format(reserve_name=reserve_name, cluster=cluster_name)
+                        st_output = m.st_output.format(reserve_id=reserve_id)
+                        _check_one(res, m, comp,
+                                   _mc_series(df, mc_col, m.mc_sub),
+                                   _st_series(st, comp, st_output, year_index),
+                                   output=st_output)
+
+        elif m.source == AREA_RESERVE_HYDRO:
+            for area in areas:
+                reserves = _reserves(study_path, area)
+                if not reserves:
+                    continue
+                try:
+                    df = context.soh.area_details_hourly(area, year)
+                except AssertionError:
+                    continue
+                comp = m.st_component.format(area=area)
+                for reserve_name, reserve_id in reserves:
+                    mc_col = m.mc_col.format(reserve_name=reserve_name)
+                    st_output = m.st_output.format(reserve_id=reserve_id)
+                    _check_one(res, m, comp,
+                               _mc_series(df, mc_col, m.mc_sub),
+                               _st_series(st, comp, st_output, year_index),
+                               output=st_output)
 
     assert res.checked, (
         "legacy<->simulation-table equivalence check was vacuous: no mapped "

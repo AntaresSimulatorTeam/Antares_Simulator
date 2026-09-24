@@ -62,8 +62,10 @@ Design points:
 | Reserve area spilled/unsupplied energy | `spilled_energy_reserve_<id>` / `unsupplied_energy_reserve_<id>` | area `values-hourly` `<reserve>_SPIL.` / `<reserve>_UNSP.` | ✅ equivalence-checked |
 | Reserve thermal participation (on/off units) | `units_on_reserve_power_<id>` / `units_off_reserve_power_<id>` | area `details-hourly` `<reserve>_<cluster>` / `<reserve>_<cluster>_off` | ✅ equivalence-checked |
 | Reserve costs (`reserve_imbalance_cost_<id>`, `reserve_participation_cost_<id>`) | — | — | ⛔ not equivalence-checked — limitation: no mc-ind column (same reason as the derived costs above) |
-| Reserve total participation (`reserve_power_<id>`) | — | — | ⛔ not equivalence-checked — redundant, not a limitation: always equals `units_on_reserve_power` + `units_off_reserve_power`, both of which are already checked individually |
-| STS/hydro reserve participation (`reserve_released_power_<id>`, `reserve_stored_power_<id>`) | — | area `details-STstorage-hourly` `<reserve>_<sts>` (mc-ind class exists) | ⏳ not equivalence-checked yet — not a limitation: an mc-ind counterpart exists, but no test study currently has STS/hydro reserve participation to exercise it. Good candidate for the next addition |
+| Thermal reserve total participation (`reserve_power_<id>` on a thermal component) | — | — | ⛔ not equivalence-checked — redundant, not a limitation: always equals `units_on_reserve_power` + `units_off_reserve_power`, both of which are already checked individually |
+| STS reserve participation (net) | `reserve_power_<id>` on `..._short_term_storage_<cluster>` | area `details-hourly` `<reserve>_<cluster>` | ✅ equivalence-checked — unlike thermal, mc-ind only exposes the net (signed release-minus-store) value for STS, so there's nothing to check `reserve_released_power_<id>` / `reserve_stored_power_<id>` against individually (see below) |
+| Hydro reserve participation (net) | `reserve_power_<id>` on `..._hydro_storage` | area `details-hourly` `<reserve>_Hydro` | ✅ equivalence-checked — same net-only caveat as STS above |
+| STS/hydro reserve released/stored power (`reserve_released_power_<id>`, `reserve_stored_power_<id>`) | — | — | ⛔ not equivalence-checked — limitation: no mc-ind column; mc-ind only ever exposes the net participation (see `reserve_power_<id>` rows above) |
 
 ## Known gaps
 
