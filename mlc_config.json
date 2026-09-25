@@ -38,6 +38,10 @@
     {
       "comment": "scipopt.org rate-limits (Cloudflare 429) automated requests regardless of retries; not a real dead link",
       "pattern": "^https://www\\.scipopt\\.org"
+    },
+    {
+      "comment": "gnu.org blocks non-browser requests (403) for this page; not a real dead link",
+      "pattern": "^https://www\\.gnu\\.org/software/glpk"
     }
   ],
   "retryOn429": true,
