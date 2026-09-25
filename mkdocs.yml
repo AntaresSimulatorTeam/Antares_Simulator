@@ -38,6 +38,7 @@ nav:
           - Command-line: reference/solver/command-line.md
           - Hybrid studies: reference/solver/hybrid-studies.md
           - Appendix: reference/solver/appendix.md
+          - Reserves: reference/solver/optional-features/reserves.md
           - Optimization engine support:
               - FICO® Xpress Optimizer: reference/solver/optional-features/xpress.md
       - Modeler:
@@ -60,7 +61,6 @@ nav:
       - Other features:
           - Batch Runner: reference/other-features/batchrun.md
           - Config Checker: reference/other-features/config.md
-          - Kirchhoff's constraint generator: reference/other-features/kirchhoff-constraints-builder.md
           - Study Cleaner: reference/other-features/study-cleaner.md
           - Study Finder: reference/other-features/study-finder.md
           - Study Updater: reference/other-features/study-updater.md

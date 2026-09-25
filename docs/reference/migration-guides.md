@@ -46,7 +46,7 @@ stage suffix if it only wants the optimization passes.
 
 Previously `simulation-table-<year>-optim-nb-2` was always written, even as a header-only file when
 the second optimization pass never ran. It is now omitted entirely in that case, which happens when
-[`unit-commitment-mode`](solver/04-parameters.md#unit-commitment-mode) is `milp` — a single MILP
+[`unit-commitment-mode`](solver/parameters.md#unit-commitment-mode) is `milp` — a single MILP
 problem is solved instead of two LP problems — or in Expansion mode.
 
 Scripts that open the optim-nb-2 file unconditionally must handle its absence. Note that an absent
@@ -55,7 +55,7 @@ file and a header-only file always carried the same information — that the pas
 #### The post-process stages need a weekly optimization range
 
 The two new stages are written once the week has been solved and post-processed. With
-[`simplex-range`](solver/04-parameters.md#simplex-range) set to `day` the week is instead solved as
+[`simplex-range`](solver/parameters.md#simplex-range) set to `day` the week is instead solved as
 seven daily problems, and the results the stage would report are only readable for the last of them.
 Rather than write a table covering one day out of seven, the solver writes none and logs a warning
 once. `optim-nb-1` and `optim-nb-2` are unaffected — they are written per optimization pass either
