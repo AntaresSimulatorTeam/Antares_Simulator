@@ -1,0 +1,47 @@
+{
+  "ignorePatterns": [
+    {
+      "comment": "GFM auto-linkifies bare word@word.tld text (dependency version bumps in the changelog) as mailto: links; these were never meant to be links",
+      "pattern": "^mailto:"
+    },
+    {
+      "comment": "src/ext/yuni/license.md is a vendored third-party file (libyuni's license); its root-relative GitHub links and stale asset URLs are not ours to maintain",
+      "pattern": "^/"
+    },
+    {
+      "pattern": "^https://assets-cdn\\.github\\.com"
+    },
+    {
+      "pattern": "^https://github-cloud\\.s3\\.amazonaws\\.com"
+    },
+    {
+      "pattern": "^https://user-images\\.githubusercontent\\.com/"
+    },
+    {
+      "comment": "Anchors referenced by the vendored license.md that don't exist in the (truncated) vendored copy",
+      "pattern": "^#mozilla-public-license-version-20$"
+    },
+    {
+      "pattern": "^#exhibit-a---source-code-form-license-notice$"
+    },
+    {
+      "pattern": "^#exhibit-b---incompatible-with-secondary-licenses-notice$"
+    },
+    {
+      "comment": "AntaresWeb's readthedocs site no longer hosts these per-area pages; not part of this repo's docs to fix",
+      "pattern": "^https://antares-web\\.readthedocs\\.io/en/latest/user-guide/study/areas/"
+    },
+    {
+      "comment": "Docker Hub blocks automated link checkers; not a real dead link",
+      "pattern": "^https://hub\\.docker\\.com/repository/docker/antaresrte/rte-antares"
+    },
+    {
+      "comment": "scipopt.org rate-limits (Cloudflare 429) automated requests regardless of retries; not a real dead link",
+      "pattern": "^https://www\\.scipopt\\.org"
+    }
+  ],
+  "retryOn429": true,
+  "retryCount": 5,
+  "fallbackRetryDelay": "30s",
+  "aliveStatusCodes": [200, 206]
+}
