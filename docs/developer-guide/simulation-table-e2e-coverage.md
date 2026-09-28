@@ -34,6 +34,13 @@ Design points:
 * reads the **final optimisation pass** — `optim-nb-2` when present, else
   `optim-nb-1`. `optim-nb-1` is the LP relaxation and diverges from `mc-ind` on
   unit-commitment studies;
+* on a study where a later resolution stage (`peak-shaving`, `adq-patch`)
+  changes the numbers mc-ind actually prints, the `optim-nb-*` default is
+  wrong — `the simulation table for stage "<stage>" matches the legacy
+  mc-ind output for year N` reads a named stage's table instead. Two
+  scenarios exercise this: "Hydro remix (peak-shaving)" (`RemixHydroPostProcessCmd`
+  reshuffling hydro generation moves `unsupplied_energy` / `spilled_energy` /
+  `price`) and "Adequacy patch (CSR)" (see below);
 * `mc-ind` folders are 1-based, the table's `scenario_index` is 0-based
   (`year N` ⇒ `mc-ind/0000N` ⇔ `simulation-table-(N-1)-...`);
 * no frozen reference file — it compares two live outputs, so it keeps working
@@ -74,7 +81,11 @@ Design points:
   extracted there. See `docs/architecture/legacy-extra-outputs-spec-checklist.md`.
 * **Adequacy patch** — `domestic_unsupplied_energy` (DENS),
   `is_local_matching_rule_violated` (LMR.VIOL) blocked on ANT-5240; CSR outputs
-  out of scope.
+  out of scope. The rest of `LEGACY_TO_ST` (`unsupplied_energy`, `price`,
+  `flow`, …) *is* equivalence-checked on a CSR study, scoped to the
+  `adq-patch` stage table — see "Adequacy patch (CSR)" in
+  `legacy_simulation_table_equivalence.feature`, which reads that stage
+  because mc-ind prints the post-CSR numbers, not `optim-nb-2`'s.
 * **Coverage is hybrid-only.** Pure-classic studies produce a sparse table
   (`SimulationTableWriter` throws on an empty table); pure-modeler has only the
   Parquet round-trip test.

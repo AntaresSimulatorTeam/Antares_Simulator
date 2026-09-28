@@ -10,8 +10,15 @@ Feature: Legacy mc-ind <-> simulation table equivalence
   # short-term-storage injection/withdrawal/level, link flow / abs_flow /
   # minus_flow / actual_loop_flow, link abs_congestion_fee / alg_congestion_fee,
   # area reserve spilled/unsupplied energy, thermal/STS/hydro reserve
-  # participation. Gaps (hydro level, MIP-week duals, adequacy-patch rows) are
-  # listed in docs/developer-guide/simulation-table-e2e-coverage.md
+  # participation. Gaps (hydro level, MIP-week duals, adequacy-patch DENS /
+  # LMR.VIOL rows) are listed in
+  # docs/developer-guide/simulation-table-e2e-coverage.md
+  #
+  # By default the check reads whichever simulation-table stage
+  # (optim-nb-1/optim-nb-2) mc-ind's own numbers come from; on a study where a
+  # later stage (peak-shaving, adq-patch) changes the published numbers, use
+  # "the simulation table for stage "<stage>" matches ..." to point the check
+  # at that stage instead (see the adequacy-patch scenario below).
 
   @short
   Scenario: Single legacy area with a thermal fleet (fast UC)
@@ -95,3 +102,35 @@ Feature: Legacy mc-ind <-> simulation table equivalence
     When I run antares simulator with --output=all
     Then the simulation succeeds
     And the simulation table matches the legacy mc-ind output for year 1
+
+  @short
+  Scenario: Hydro remix (peak-shaving) - mc-ind reflects the post-remix stage, not optim-nb-2
+    # "hydro preference 1" is a single-area, no-thermal, managed-hydro study
+    # where the weekly LP alone cannot avoid unsupplied energy on some hours
+    # while running short of hydro on others; RemixHydroPostProcessCmd then
+    # reshuffles hydro generation across the week to shave the peaks, moving
+    # unsupplied_energy, spilled_energy and price on many hours (e.g. hour 961
+    # goes from 5000 MWh unsupplied after optim-nb-2 down to 3586 MWh after
+    # remix). mc-ind prints the post-remix numbers, so the plain "for year N"
+    # step (which reads optim-nb-2) would compare mc-ind against the wrong
+    # stage here.
+    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/hydro preference 1"
+    When I run antares simulator with --output=all
+    Then the simulation succeeds
+    And the simulation table for stage "peak-shaving" matches the legacy mc-ind output for year 1
+
+  @short
+  Scenario: Adequacy patch (CSR) - mc-ind reflects the adq-patch stage, not optim-nb-2
+    # include-adq-patch = true here, so the CSR post-treatment is the last
+    # thing to touch this week's results (see the worked example in
+    # legacy_simulation_table.feature, "Per-stage simulation tables show what
+    # the adequacy patch moved"): mc-ind prints the post-CSR numbers, which
+    # differ from optim-nb-2's on the areas inside the patch (unsupplied
+    # energy is redistributed, price loses its anti-degeneracy noise and is
+    # overwritten with the un-noised unserverdenergycost). The plain "for year
+    # N" step reads optim-nb-2 and would compare mc-ind against the wrong
+    # stage on this study, so use the stage-scoped step instead.
+    Given the solver study path is "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
+    When I run antares simulator with --output=all
+    Then the simulation succeeds
+    And the simulation table for stage "adq-patch" matches the legacy mc-ind output for year 1

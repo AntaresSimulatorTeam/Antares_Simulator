@@ -241,8 +241,26 @@ def _reserves(study_path: Path, area: str) -> list:
 # Simulation table loading (final optimisation pass)
 # --------------------------------------------------------------------------- #
 
-def _load_final_pass_table(output_path: Path, year_index: int) -> pd.DataFrame:
-    """Load the simulation table for one MC year, preferring optim-nb-2."""
+def _load_final_pass_table(output_path: Path, year_index: int, stage: Optional[str] = None) -> pd.DataFrame:
+    """Load the simulation table for one MC year.
+
+    With no `stage`, prefer optim-nb-2 (heuristic / integer-fixing pass) and
+    fall back to optim-nb-1 for single-pass studies: mc-ind reflects the
+    solver's last-resolved-and-kept stage, and on a study that stops after the
+    weekly LP (no adequacy patch, no peak-shaving carried over) that's
+    optim-nb-2 or optim-nb-1.
+    On a study where the adequacy patch or peak-shaving run and change the
+    published numbers (e.g. a CSR study), mc-ind reflects *that* stage
+    instead, so the caller must pass the stage explicitly
+    (see `SIMULATION_TABLE_STAGES` in solver_steps.py).
+    """
+    if stage is not None:
+        pattern = f"simulation-table-{year_index}-{stage}.csv"
+        if any(output_path.glob(pattern)):
+            reader = make_simu_table_reader(output_path, OutputFormat.CSV, pattern)
+            return reader()
+        raise FileNotFoundError(f"No {pattern} in {output_path}")
+
     for optim in (2, 1):
         pattern = f"simulation-table-{year_index}-optim-nb-{optim}.csv"
         if any(output_path.glob(pattern)):
@@ -315,7 +333,7 @@ def _check_one(res: _Result, m: Mapping, component: str, mc: Optional[pd.Series]
         f"{len(bad)}/{len(idx)} timesteps differ (atol={m.atol}, rtol={m.rtol}). {sample}")
 
 
-def _run_equivalence(context, year: int, only_key: Optional[str]):
+def _run_equivalence(context, year: int, only_key: Optional[str], stage: Optional[str] = None):
     assert getattr(context, "soh", None) is not None, "no solver output handler on context"
     study_path = Path(context.study_path)
     output_path = Path(context.output_path)
@@ -324,7 +342,7 @@ def _run_equivalence(context, year: int, only_key: Optional[str]):
     assert context.soh.has_mc_ind_year(year), \
         f"mc-ind/{year:05d} not produced - run the solver with --output=all and year-by-year results"
 
-    st = _load_final_pass_table(output_path, year_index)
+    st = _load_final_pass_table(output_path, year_index, stage=stage)
 
     mappings = LEGACY_TO_ST if only_key is None else [MAPPING_BY_KEY[only_key]]
     if only_key is not None:
@@ -493,3 +511,22 @@ def step_st_matches_legacy(context, year):
 @then('the simulation table matches the legacy mc-ind output for "{key}" in year {year:d}')
 def step_st_matches_legacy_one(context, key, year):
     _run_equivalence(context, year, only_key=key)
+
+
+@then('the simulation table for stage "{stage}" matches the legacy mc-ind output for year {year:d}')
+def step_st_matches_legacy_stage(context, stage, year):
+    """Like the "for year N" step, but reads a specific resolution stage's
+    table (optim-nb-1, optim-nb-2, peak-shaving, adq-patch) instead of the
+    final-pass default.
+
+    Needed on studies where a later stage than optim-nb-2 changes the
+    published numbers (adequacy patch / CSR, peak-shaving): mc-ind reflects
+    that stage's result, not optim-nb-2's, so comparing against optim-nb-2
+    there would be comparing pre- and post-stage values.
+    """
+    _run_equivalence(context, year, only_key=None, stage=stage)
+
+
+@then('the simulation table for stage "{stage}" matches the legacy mc-ind output for "{key}" in year {year:d}')
+def step_st_matches_legacy_stage_one(context, stage, key, year):
+    _run_equivalence(context, year, only_key=key, stage=stage)
