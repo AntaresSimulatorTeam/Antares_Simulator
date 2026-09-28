@@ -13,7 +13,7 @@ namespace Antares::Data
 bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix<double>& dailyPower,
                                        const Matrix<double>::ColumnType& nbHoursAtPmaxPerDay)
 {
-    for (unsigned int tsNumber = 0; tsNumber < dailyPower.width; ++tsNumber)
+    for (unsigned int tsNumber = 0; tsNumber < dailyPower.width(); ++tsNumber)
     {
         for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
         {
@@ -32,8 +32,8 @@ void CalculateDailyMeanPower(const Matrix<double>::ColumnType& hourlyColumn,
 {
     for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
     {
-        dailyColumn[day] = std::accumulate(hourlyColumn + day * HOURS_PER_DAY,
-                                           hourlyColumn + day * HOURS_PER_DAY + HOURS_PER_DAY,
+        dailyColumn[day] = std::accumulate(hourlyColumn.begin() + day * HOURS_PER_DAY,
+                                           hourlyColumn.begin() + day * HOURS_PER_DAY + HOURS_PER_DAY,
                                            0.)
                            / 24;
     }
@@ -61,13 +61,13 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
     {
         double sum;
         unsigned int w;
-        assert(area.miscGen.height > 0);
-        assert(area.miscGen.width > 0);
-        unsigned int height = area.miscGen.height;
+        assert(area.miscGen.height() > 0);
+        assert(area.miscGen.width() > 0);
+        unsigned int height = area.miscGen.height();
         for (unsigned int h = 0; h != height; ++h)
         {
             sum = 0.;
-            for (w = 0; w != area.miscGen.width; ++w)
+            for (w = 0; w != area.miscGen.width(); ++w)
             {
                 sum += area.miscGen[w][h];
             }
@@ -75,7 +75,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
         }
         if (mode == Data::SimulationMode::Adequacy)
         {
-            for (unsigned int h = 0; h != area.miscGen.height; ++h)
+            for (unsigned int h = 0; h != area.miscGen.height(); ++h)
             {
                 miscGenSum[h] -= area.reserves[Data::fhrPrimaryReserve][h];
             }
@@ -107,8 +107,8 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
     const auto& maxHourlyPumpPower = area.hydro.series->maxHourlyPumpPower.timeSeries;
 
     //  Setting width and height of daily mean maximum generation/pumping power matrices
-    meanMaxDailyGenPower.timeSeries.reset(maxHourlyGenPower.width, DAYS_PER_YEAR);
-    meanMaxDailyPumpPower.timeSeries.reset(maxHourlyPumpPower.width, DAYS_PER_YEAR);
+    meanMaxDailyGenPower.timeSeries.reset(maxHourlyGenPower.width(), DAYS_PER_YEAR);
+    meanMaxDailyPumpPower.timeSeries.reset(maxHourlyPumpPower.width(), DAYS_PER_YEAR);
 
     // Instantiate daily mean maximum generation/pumping power matrices
     CalculateMeanDailyMaxPowerMatrices(maxHourlyGenPower, maxHourlyPumpPower);
@@ -174,7 +174,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
 void AreaScratchpad::CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& hourlyMaxGenMatrix,
                                                         const Matrix<double>& hourlyMaxPumpMatrix)
 {
-    for (unsigned int nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxGenMatrix.width;
+    for (unsigned int nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxGenMatrix.width();
          ++nbOfTimeSeries)
     {
         auto& hourlyMaxGenColumn = hourlyMaxGenMatrix[nbOfTimeSeries];
@@ -182,7 +182,7 @@ void AreaScratchpad::CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& ho
         CalculateDailyMeanPower(hourlyMaxGenColumn, MeanMaxDailyGenPowerColumn);
     }
 
-    for (unsigned int nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxPumpMatrix.width;
+    for (unsigned int nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxPumpMatrix.width();
          ++nbOfTimeSeries)
     {
         auto& MeanMaxDailyPumpPowerColumn = meanMaxDailyPumpPower.timeSeries[nbOfTimeSeries];

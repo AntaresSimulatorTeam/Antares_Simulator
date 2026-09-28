@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(disabled_thermal_cluster_skips_series_loading)
 
     bool ret = cluster->loadDataSeriesFromFolder(*study, working_tmp_dir);
     BOOST_CHECK_EQUAL(ret, true);
-    BOOST_CHECK_EQUAL(cluster->series.timeSeries.width, 0);
+    BOOST_CHECK_EQUAL(cluster->series.timeSeries.width(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(enabled_thermal_cluster_loads_series)
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(enabled_thermal_cluster_loads_series)
 
     bool ret = cluster->loadDataSeriesFromFolder(*study, working_tmp_dir);
     BOOST_CHECK_EQUAL(ret, true);
-    BOOST_CHECK_EQUAL(cluster->series.timeSeries.width, 1);
-    BOOST_CHECK_EQUAL(cluster->series.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(cluster->series.timeSeries.width(), 1);
+    BOOST_CHECK_EQUAL(cluster->series.timeSeries.height(), HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(cluster->series.timeSeries[0][0], 100);
 }

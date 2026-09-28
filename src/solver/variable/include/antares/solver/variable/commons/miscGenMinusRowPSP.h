@@ -115,16 +115,16 @@ public:
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
             // Memcpy for the first value
-            (void)::memcpy(pValuesForTheCurrentYear[numSpace].hour,
-                           area->miscGen.entry[0],
-                           sizeof(double) * area->miscGen.height);
+            (void)::memcpy(pValuesForTheCurrentYear[numSpace].hour.data(),
+                           area->miscGen[0].data(),
+                           sizeof(double) * area->miscGen.height());
 
             {
                 // We must not include the CHP and the Solar. So we have to start from `2`
                 for (unsigned int x = 1; x != (unsigned int)Data::fhhPSP; ++x)
                 {
-                    const Matrix<>::ColumnType& col = area->miscGen.entry[x];
-                    for (unsigned int y = 0; y != area->miscGen.height; ++y)
+                    const Matrix<>::ColumnType& col = area->miscGen[x];
+                    for (unsigned int y = 0; y != area->miscGen.height(); ++y)
                     {
                         pValuesForTheCurrentYear[numSpace].hour[y] += col[y];
                     }
@@ -155,7 +155,7 @@ public:
       unsigned int,
       unsigned int numSpace) const
     {
-        return pValuesForTheCurrentYear[numSpace].hour;
+        return pValuesForTheCurrentYear[numSpace].hour.data();
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,

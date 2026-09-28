@@ -20,10 +20,10 @@ namespace fs = std::filesystem;
 
 void fillTimeSeriesWithSpecialEnds(Matrix<double>& timeSeries, double start, double end)
 {
-    for (uint ts = 0; ts < timeSeries.width; ts++)
+    for (uint ts = 0; ts < timeSeries.width(); ts++)
     {
         timeSeries[ts][0] = start;
-        timeSeries[ts][timeSeries.height - 1] = end;
+        timeSeries[ts][timeSeries.height() - 1] = end;
     }
 }
 

@@ -419,7 +419,7 @@ void retrieveAverageNTC(const Data::Study& study,
     const auto& yearsWeight = parameters.getYearsWeight();
     const auto yearsWeightSum = parameters.getYearsWeightSum();
     const auto& yearsFilter = parameters.yearsFilter;
-    const bool singleTS = (capacities.width == 1);
+    const bool singleTS = (capacities.width() == 1);
 
     avg.assign(hourCount, 0.);
 
@@ -439,7 +439,7 @@ void retrieveAverageNTC(const Data::Study& study,
     // No need for the year number, only the TS index is required
     for (const auto& [tsIndex, weight]: weightOfTS)
     {
-        const auto* column = capacities[tsIndex];
+        const auto& column = capacities[tsIndex];
 
         for (uint h = 0; h < hourCount; h++)
         {
@@ -491,13 +491,13 @@ void prepareClustersInMustRunMode(Data::Study& study,
         for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
         {
             const auto& availableProduction = cluster->series.getColumn(year);
-            for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+            for (uint h = 0; h != cluster->series.timeSeries.height(); ++h)
             {
                 mrs[h] += availableProduction[h];
             }
             if (cluster->mustrunOrigin && mode == Data::SimulationMode::Adequacy)
             {
-                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+                for (uint h = 0; h != cluster->series.timeSeries.height(); ++h)
                 {
                     adq[h] += 2 * availableProduction[h]; // Why do we add the available production
                                                           // twice ?

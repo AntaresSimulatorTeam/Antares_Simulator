@@ -50,7 +50,7 @@ void BindingConstraintsTSNumberData::setTSnumber(const std::string& group_name,
                                                  unsigned int value)
 {
     auto& group_ts_numbers = rules_[group_name];
-    if (year < group_ts_numbers.height)
+    if (year < group_ts_numbers.height())
     {
         group_ts_numbers[0][year] = value;
     }

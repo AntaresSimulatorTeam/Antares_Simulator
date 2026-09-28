@@ -50,10 +50,10 @@ struct FlowLinearTraits
             if (digestLevel & Category::digestFlowLinear)
             {
                 results.data.matrix
-                  .entry[results.data.link->from->index][results.data.link->with->index]
+                  [results.data.link->from->index][results.data.link->with->index]
                   = pResults.avgdata().year;
                 results.data.matrix
-                  .entry[results.data.link->with->index][results.data.link->from->index]
+                  [results.data.link->with->index][results.data.link->from->index]
                   = -pResults.avgdata().year;
             }
         }

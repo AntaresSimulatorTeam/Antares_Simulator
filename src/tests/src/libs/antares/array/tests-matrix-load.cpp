@@ -79,14 +79,14 @@ BOOST_AUTO_TEST_CASE(fake_file_with_banner__target_mtx_empty___mtx_gets_file_dim
 
     delete fake_buffer;
 
-    BOOST_REQUIRE_EQUAL(mtx.height, 2);
-    BOOST_REQUIRE_EQUAL(mtx.width, 3);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 1.5);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][0], -2.4);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][0], 3.7);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][1], 0);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][1], 8.6);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][1], -5.6);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 2);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 3);
+    BOOST_REQUIRE_EQUAL(mtx[0][0], 1.5);
+    BOOST_REQUIRE_EQUAL(mtx[1][0], -2.4);
+    BOOST_REQUIRE_EQUAL(mtx[2][0], 3.7);
+    BOOST_REQUIRE_EQUAL(mtx[0][1], 0);
+    BOOST_REQUIRE_EQUAL(mtx[1][1], 8.6);
+    BOOST_REQUIRE_EQUAL(mtx[2][1], -5.6);
 }
 
 // 1.c.
@@ -105,11 +105,11 @@ BOOST_AUTO_TEST_CASE(fake_file_precision_is_4___matrix_precision_gets_4)
 
     delete fake_buffer;
 
-    BOOST_REQUIRE_EQUAL(mtx.width, 1);
-    BOOST_REQUIRE_EQUAL(mtx.height, 3);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 1.5554);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][1], -2.4444);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][2], 3.6667);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 1);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 3);
+    BOOST_REQUIRE_EQUAL(mtx[0][0], 1.5554);
+    BOOST_REQUIRE_EQUAL(mtx[0][1], -2.4444);
+    BOOST_REQUIRE_EQUAL(mtx[0][2], 3.6667);
 }
 
 // 1.c.
@@ -129,12 +129,12 @@ BOOST_AUTO_TEST_CASE(fake_file_contains_int___matrix_precision_is_0)
 
     delete fake_buffer;
 
-    BOOST_REQUIRE_EQUAL(mtx.height, 1);
-    BOOST_REQUIRE_EQUAL(mtx.width, 4);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 1.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][0], -2.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][0], 3.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[3][0], -4.);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 1);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 4);
+    BOOST_REQUIRE_EQUAL(mtx[0][0], 1.);
+    BOOST_REQUIRE_EQUAL(mtx[1][0], -2.);
+    BOOST_REQUIRE_EQUAL(mtx[2][0], 3.);
+    BOOST_REQUIRE_EQUAL(mtx[3][0], -4.);
 }
 
 // 1.d.
@@ -174,14 +174,14 @@ BOOST_AUTO_TEST_CASE(fake_file_not_empty__target_mtx_empty___mtx_gets_file_dimen
 
     delete fake_buffer;
 
-    BOOST_REQUIRE_EQUAL(mtx.height, 2);
-    BOOST_REQUIRE_EQUAL(mtx.width, 3);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 1.5);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][0], -2.44);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][0], 3.67);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][1], 0);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][1], 8.56);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][1], -5.56);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 2);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 3);
+    BOOST_REQUIRE_EQUAL(mtx[0][0], 1.5);
+    BOOST_REQUIRE_EQUAL(mtx[1][0], -2.44);
+    BOOST_REQUIRE_EQUAL(mtx[2][0], 3.67);
+    BOOST_REQUIRE_EQUAL(mtx[0][1], 0);
+    BOOST_REQUIRE_EQUAL(mtx[1][1], 8.56);
+    BOOST_REQUIRE_EQUAL(mtx[2][1], -5.56);
 }
 
 // Specific tests for renewable TS
@@ -205,14 +205,14 @@ BOOST_AUTO_TEST_CASE(fake_file_double_renewable)
 
     delete fake_buffer;
 
-    BOOST_REQUIRE_EQUAL(mtx.height, 2);
-    BOOST_REQUIRE_EQUAL(mtx.width, 3);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 100.5111);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][0], -2.4444);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][0], 3.6667);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][1], 0);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][1], 8.559);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][1], -5.5555);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 2);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 3);
+    BOOST_REQUIRE_EQUAL(mtx[0][0], 100.5111);
+    BOOST_REQUIRE_EQUAL(mtx[1][0], -2.4444);
+    BOOST_REQUIRE_EQUAL(mtx[2][0], 3.6667);
+    BOOST_REQUIRE_EQUAL(mtx[0][1], 0);
+    BOOST_REQUIRE_EQUAL(mtx[1][1], 8.559);
+    BOOST_REQUIRE_EQUAL(mtx[2][1], -5.5555);
 }
 
 // Specific tests for thermal TS
@@ -236,14 +236,14 @@ BOOST_AUTO_TEST_CASE(fake_file_double_thermal)
 
     delete fake_buffer;
 
-    BOOST_REQUIRE_EQUAL(mtx.height, 2);
-    BOOST_REQUIRE_EQUAL(mtx.width, 3);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 2);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][0], -2);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][0], 4);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][1], 0);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][1], 9);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][1], -6);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 2);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 3);
+    BOOST_REQUIRE_EQUAL(mtx[0][0], 2);
+    BOOST_REQUIRE_EQUAL(mtx[1][0], -2);
+    BOOST_REQUIRE_EQUAL(mtx[2][0], 4);
+    BOOST_REQUIRE_EQUAL(mtx[0][1], 0);
+    BOOST_REQUIRE_EQUAL(mtx[1][1], 9);
+    BOOST_REQUIRE_EQUAL(mtx[2][1], -6);
 }
 
 // 1.f.
@@ -339,16 +339,16 @@ BOOST_AUTO_TEST_CASE(
 
     BOOST_CHECK(logs.warning().content() == "path/to/a/file: not enough rows (expected 2, got 1)");
 
-    BOOST_REQUIRE_EQUAL(mtx.width, 4);
-    BOOST_REQUIRE_EQUAL(mtx.height, 2);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 1.1);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][0], 2.2);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][0], 3.3);
-    BOOST_REQUIRE_EQUAL(mtx.entry[3][0], 4.4);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][1], 0.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][1], 0.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][1], 0.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[3][1], 0.);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 4);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 2);
+    BOOST_REQUIRE_EQUAL(mtx[0][0], 1.1);
+    BOOST_REQUIRE_EQUAL(mtx[1][0], 2.2);
+    BOOST_REQUIRE_EQUAL(mtx[2][0], 3.3);
+    BOOST_REQUIRE_EQUAL(mtx[3][0], 4.4);
+    BOOST_REQUIRE_EQUAL(mtx[0][1], 0.);
+    BOOST_REQUIRE_EQUAL(mtx[1][1], 0.);
+    BOOST_REQUIRE_EQUAL(mtx[2][1], 0.);
+    BOOST_REQUIRE_EQUAL(mtx[3][1], 0.);
 }
 
 // 1.f.
@@ -365,14 +365,14 @@ BOOST_AUTO_TEST_CASE(
 
     delete fake_buffer;
 
-    BOOST_REQUIRE_EQUAL(mtx.width, 3);
-    BOOST_REQUIRE_EQUAL(mtx.height, 2);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 5.2);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][0], 6.1);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][0], 0.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][1], 1.3);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][1], 4.5);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][1], 9.7);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 3);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 2);
+    BOOST_REQUIRE_EQUAL(mtx[0][0], 5.2);
+    BOOST_REQUIRE_EQUAL(mtx[1][0], 6.1);
+    BOOST_REQUIRE_EQUAL(mtx[2][0], 0.);
+    BOOST_REQUIRE_EQUAL(mtx[0][1], 1.3);
+    BOOST_REQUIRE_EQUAL(mtx[1][1], 4.5);
+    BOOST_REQUIRE_EQUAL(mtx[2][1], 9.7);
 }
 
 // 1.f.
@@ -389,14 +389,14 @@ BOOST_AUTO_TEST_CASE(file_with_columns_of_different_size___load_succeeds__row_no
 
     delete fake_buffer;
 
-    BOOST_REQUIRE_EQUAL(mtx.width, 2);
-    BOOST_REQUIRE_EQUAL(mtx.height, 2);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 2);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 2);
 
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 5.2);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][0], 6.1);
+    BOOST_REQUIRE_EQUAL(mtx[0][0], 5.2);
+    BOOST_REQUIRE_EQUAL(mtx[1][0], 6.1);
 
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][1], 1.3);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][1], 4.5);
+    BOOST_REQUIRE_EQUAL(mtx[0][1], 1.3);
+    BOOST_REQUIRE_EQUAL(mtx[1][1], 4.5);
 }
 
 // 1.f.
@@ -414,8 +414,8 @@ BOOST_AUTO_TEST_CASE(
 
     BOOST_CHECK(logs.warning().contains("Invalid header"));
 
-    BOOST_REQUIRE_EQUAL(mtx.width, 1);
-    BOOST_REQUIRE_EQUAL(mtx.height, 5);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 1);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 5);
     BOOST_CHECK(mtx.containsOnlyZero());
 }
 
@@ -452,8 +452,8 @@ BOOST_AUTO_TEST_CASE(
 
     delete fake_buffer;
 
-    BOOST_REQUIRE_EQUAL(mtx.width, 5);
-    BOOST_REQUIRE_EQUAL(mtx.height, 7);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 5);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 7);
     BOOST_CHECK(mtx.containsOnlyZero());
 }
 
@@ -472,14 +472,14 @@ BOOST_AUTO_TEST_CASE(file_size_3x3__mtx_resized_to_1x2___mtx_column_resized_to_3
 
     delete fake_buffer;
 
-    BOOST_REQUIRE_EQUAL(mtx.width, 3);
-    BOOST_REQUIRE_EQUAL(mtx.height, 2);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 1.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][1], 0.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][0], -2.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][1], 8.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][0], 3.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][1], -5);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 3);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 2);
+    BOOST_REQUIRE_EQUAL(mtx[0][0], 1.);
+    BOOST_REQUIRE_EQUAL(mtx[0][1], 0.);
+    BOOST_REQUIRE_EQUAL(mtx[1][0], -2.);
+    BOOST_REQUIRE_EQUAL(mtx[1][1], 8.);
+    BOOST_REQUIRE_EQUAL(mtx[2][0], 3.);
+    BOOST_REQUIRE_EQUAL(mtx[2][1], -5);
 }
 
 // 3.a. // 3.b.
@@ -505,8 +505,8 @@ BOOST_AUTO_TEST_CASE(
 
     BOOST_CHECK(logs.warning().contains("Invalid format: Too many entry for the row"));
 
-    BOOST_REQUIRE_EQUAL(mtx.width, 3);
-    BOOST_REQUIRE_EQUAL(mtx.height, 3);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 3);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 3);
     BOOST_CHECK(mtx.containsOnlyZero());
 }
 
@@ -530,14 +530,14 @@ BOOST_AUTO_TEST_CASE(
 
     delete fake_buffer;
 
-    BOOST_REQUIRE_EQUAL(mtx.width, 3);
-    BOOST_REQUIRE_EQUAL(mtx.height, 2);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 1.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][1], 8.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][0], -2.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][1], -5.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][0], 3.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][1], 6.);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 3);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 2);
+    BOOST_REQUIRE_EQUAL(mtx[0][0], 1.);
+    BOOST_REQUIRE_EQUAL(mtx[0][1], 8.);
+    BOOST_REQUIRE_EQUAL(mtx[1][0], -2.);
+    BOOST_REQUIRE_EQUAL(mtx[1][1], -5.);
+    BOOST_REQUIRE_EQUAL(mtx[2][0], 3.);
+    BOOST_REQUIRE_EQUAL(mtx[2][1], 6.);
 }
 
 // 4.
@@ -578,8 +578,8 @@ BOOST_AUTO_TEST_CASE(err_memory_limit_when_loading___log_is_ok)
                          + to_string(filesizeHardLimit / 1024 / 1024) + "Mo)";
     BOOST_REQUIRE_EQUAL(logs.error().content(), logs_to_get);
 
-    BOOST_REQUIRE_EQUAL(mtx.width, 3);
-    BOOST_REQUIRE_EQUAL(mtx.height, 7);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 3);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 7);
     BOOST_CHECK(mtx.containsOnlyZero());
 
     // option : quiet
@@ -587,8 +587,8 @@ BOOST_AUTO_TEST_CASE(err_memory_limit_when_loading___log_is_ok)
     BOOST_CHECK(not mtx.loadFromCSVFile("path/to/a/file", 3, 1, Matrix<>::optQuiet, fake_buffer));
     BOOST_REQUIRE_EQUAL(logs.error().content(), "");
 
-    BOOST_REQUIRE_EQUAL(mtx.width, 3);
-    BOOST_REQUIRE_EQUAL(mtx.height, 1);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 3);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 1);
     BOOST_CHECK(mtx.containsOnlyZero());
 
     delete fake_buffer;
@@ -641,10 +641,10 @@ BOOST_AUTO_TEST_CASE(file_contains_digits___loading_to_target_matrix_rounds_each
 
     delete fake_buffer;
 
-    BOOST_REQUIRE_EQUAL(mtx.width, 1);
-    BOOST_REQUIRE_EQUAL(mtx.height, 2);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 1);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][1], -2);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 1);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 2);
+    BOOST_REQUIRE_EQUAL(mtx[0][0], 1);
+    BOOST_REQUIRE_EQUAL(mtx[0][1], -2);
 }
 
 BOOST_AUTO_TEST_CASE(file_contains_int___loaded_coefs_are_int)
@@ -664,10 +664,10 @@ BOOST_AUTO_TEST_CASE(file_contains_int___loaded_coefs_are_int)
 
     delete fake_buffer;
 
-    BOOST_REQUIRE_EQUAL(mtx.width, 1);
-    BOOST_REQUIRE_EQUAL(mtx.height, 2);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 102);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][1], -54);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 1);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 2);
+    BOOST_REQUIRE_EQUAL(mtx[0][0], 102);
+    BOOST_REQUIRE_EQUAL(mtx[0][1], -54);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -695,10 +695,10 @@ BOOST_AUTO_TEST_CASE(file_contains_digits___loading_to_target_matrix_rounds_each
 
     delete fake_buffer;
 
-    BOOST_REQUIRE_EQUAL(mtx.width, 1);
-    BOOST_REQUIRE_EQUAL(mtx.height, 2);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 1);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][1], -2);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 1);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 2);
+    BOOST_REQUIRE_EQUAL(mtx[0][0], 1);
+    BOOST_REQUIRE_EQUAL(mtx[0][1], -2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -726,10 +726,10 @@ BOOST_AUTO_TEST_CASE(file_contains_digits___loaded_coefs_are_rounded_to_floor_bu
 
     delete fake_buffer;
 
-    BOOST_REQUIRE_EQUAL(mtx.width, 1);
-    BOOST_REQUIRE_EQUAL(mtx.height, 2);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 12.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][1], -23.);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 1);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 2);
+    BOOST_REQUIRE_EQUAL(mtx[0][0], 12.);
+    BOOST_REQUIRE_EQUAL(mtx[0][1], -23.);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

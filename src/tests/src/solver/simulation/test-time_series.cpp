@@ -45,12 +45,12 @@ public:
 template<class Ta, class Tb>
 void CheckEqual(const Matrix<Ta>& a, const Matrix<Tb>& b)
 {
-    BOOST_CHECK_EQUAL(a.width, b.width);
-    BOOST_CHECK_EQUAL(a.height, b.height);
-    if (a.height > 0 && a.width > 0)
+    BOOST_CHECK_EQUAL(a.width(), b.width());
+    BOOST_CHECK_EQUAL(a.height(), b.height());
+    if (a.height() > 0 && a.width() > 0)
     {
         BOOST_CHECK_EQUAL(a[0][0], b[0][0]);
-        BOOST_CHECK_EQUAL(a[a.width - 1][a.height - 1], b[b.width - 1][b.height - 1]);
+        BOOST_CHECK_EQUAL(a[a.width() - 1][a.height() - 1], b[b.width() - 1][b.height() - 1]);
     }
 }
 
@@ -205,8 +205,8 @@ BOOST_FIXTURE_TEST_CASE(BC_disabled_skips_timeseries_loading, Fixture)
 
     auto bc = study->bindingConstraints.find("dummy_name");
     BOOST_CHECK_EQUAL(bc->enabled(), false);
-    BOOST_CHECK_EQUAL(bc->RHSTimeSeries().width, 0);
-    BOOST_CHECK_EQUAL(bc->RHSTimeSeries().height, 0);
+    BOOST_CHECK_EQUAL(bc->RHSTimeSeries().width(), 0);
+    BOOST_CHECK_EQUAL(bc->RHSTimeSeries().height(), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(

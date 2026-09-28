@@ -48,7 +48,7 @@ struct HurdleCostsTraits
                 {
                     const double hurdleCostDirect = (flowLinear - loopFlow)
                                                     * state.link->parameters
-                                                        .entry[Data::fhlHurdlesCostDirect]
+                                                        [Data::fhlHurdlesCostDirect]
                                                               [state.hourInTheYear];
                     iv.hour[state.hourInTheYear] += hurdleCostDirect;
                     state.annualSystemCost += hurdleCostDirect;
@@ -57,7 +57,7 @@ struct HurdleCostsTraits
                 {
                     const double hurdleCostIndirect = -(flowLinear - loopFlow)
                                                       * state.link->parameters
-                                                          .entry[Data::fhlHurdlesCostIndirect]
+                                                          [Data::fhlHurdlesCostIndirect]
                                                                 [state.hourInTheYear];
                     iv.hour[state.hourInTheYear] += hurdleCostIndirect;
                     state.annualSystemCost += hurdleCostIndirect;
@@ -69,7 +69,7 @@ struct HurdleCostsTraits
                 {
                     const double hurdleCostDirect = flowLinear
                                                     * state.link->parameters
-                                                        .entry[Data::fhlHurdlesCostDirect]
+                                                        [Data::fhlHurdlesCostDirect]
                                                               [state.hourInTheYear];
                     iv.hour[state.hourInTheYear] += hurdleCostDirect;
                     state.annualSystemCost += hurdleCostDirect;
@@ -78,7 +78,7 @@ struct HurdleCostsTraits
                 {
                     const double hurdleCostIndirect = -flowLinear
                                                       * state.link->parameters
-                                                          .entry[Data::fhlHurdlesCostIndirect]
+                                                          [Data::fhlHurdlesCostIndirect]
                                                                 [state.hourInTheYear];
                     iv.hour[state.hourInTheYear] += hurdleCostIndirect;
                     state.annualSystemCost += hurdleCostIndirect;

@@ -108,7 +108,7 @@ matrix_to_buffer_dumper_factory::get_dumper(const Matrix<T, ReadWriteT>* mtx,
                                             std::string& data,
                                             PredicateT& predicate)
 {
-    if (mtx->width == 1)
+    if (mtx->width() == 1)
     {
         return std::make_unique<one_column__dumper<T, ReadWriteT, PredicateT>>(mtx,
                                                                                data,
@@ -158,10 +158,10 @@ void I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::set_print_format(bool is
 template<class T, class ReadWriteT, class PredicateT>
 void one_column__dumper<T, ReadWriteT, PredicateT>::run()
 {
-    for (uint y = 0; y != (this->mtx_)->height; ++y)
+    for (uint y = 0; y != (this->mtx_)->height(); ++y)
     {
         MatrixScalar<ReadWriteT>::Append(this->buffer_,
-                                         (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]),
+                                         (ReadWriteT)this->predicate_((*(this->mtx_))[0][y]),
                                          this->format_.c_str());
         this->buffer_ += '\n';
     }
@@ -170,17 +170,17 @@ void one_column__dumper<T, ReadWriteT, PredicateT>::run()
 template<class T, class ReadWriteT, class PredicateT>
 void multiple_columns__dumper<T, ReadWriteT, PredicateT>::run()
 {
-    for (uint y = 0; y < (this->mtx_)->height; ++y)
+    for (uint y = 0; y < (this->mtx_)->height(); ++y)
     {
         MatrixScalar<ReadWriteT>::Append(this->buffer_,
-                                         (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]),
+                                         (ReadWriteT)this->predicate_((*(this->mtx_))[0][y]),
                                          this->format_.c_str());
-        for (uint x = 1; x < (this->mtx_)->width; ++x)
+        for (uint x = 1; x < (this->mtx_)->width(); ++x)
         {
             this->buffer_ += '\t';
             MatrixScalar<ReadWriteT>::Append(this->buffer_,
                                              (ReadWriteT)this->predicate_(
-                                               (this->mtx_)->entry[x][y]),
+                                                (*(this->mtx_))[x][y]),
                                              this->format_.c_str());
         }
         this->buffer_ += '\n';

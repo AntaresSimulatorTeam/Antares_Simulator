@@ -58,17 +58,17 @@ protected:
 
 inline unsigned int TSNumberData::width() const
 {
-    return pTSNumberRules.width;
+    return pTSNumberRules.width();
 }
 
 inline unsigned int TSNumberData::height() const
 {
-    return pTSNumberRules.height;
+    return pTSNumberRules.height();
 }
 
 inline double TSNumberData::get_value(unsigned int x, unsigned int y) const
 {
-    return pTSNumberRules.entry[y][x];
+    return pTSNumberRules[y][x];
 }
 
 } // namespace Antares::Data::ScenarioBuilder

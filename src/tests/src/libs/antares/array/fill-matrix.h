@@ -37,7 +37,7 @@ public:
         {
             for (uint i = 0; i < width; i++)
             {
-                this->entry[i][j] = vec[count];
+                (*this)[i][j] = vec[count];
                 count++;
             }
         }

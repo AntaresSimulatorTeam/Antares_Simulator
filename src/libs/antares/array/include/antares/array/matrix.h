@@ -5,12 +5,12 @@
 #define __ANTARES_LIBS_ARRAY_MATRIX_H__
 
 #include <cassert>
+#include <span>
 #include <set>
+#include <vector>
 
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
-
-#include <antares/memory/memory.h>
 
 namespace Antares
 {
@@ -39,7 +39,9 @@ public:
     using MatrixPtr = Matrix<T>*;
 
     //! Column type
-    using ColumnType = typename Antares::Memory::Stored<T>::Type;
+    using ColumnType = std::vector<T>;
+    using ColumnView = std::span<T>;
+    using ConstColumnView = std::span<const T>;
 
     //! A buffer, for large amount of data
     using BufferType = Yuni::Clob;
@@ -95,7 +97,7 @@ public:
     */
     Matrix(uint w, uint h);
     //! Destructor
-    virtual ~Matrix();
+    ~Matrix() = default;
     //@}
 
     //! \name Copy / Paste
@@ -117,7 +119,8 @@ public:
     void swap(MatrixType& rhs) noexcept;
     //@}
 
-    //! \name File manipulation
+    //! \name Legacy file manipulation implementation
+    //! Prefer the free functions in <antares/array/matrix-io.h>.
     //@{
     /*!
     ** \brief Load entries from a CSV file
@@ -133,7 +136,7 @@ public:
     ** \param buffer An optional buffer for reading the file
     ** \return True if the operation succeeded
     */
-    virtual bool loadFromCSVFile(const AnyString& filename,
+    bool loadFromCSVFile(const AnyString& filename,
                                  uint minWidth,
                                  uint maxHeight,
                                  uint options = optNone,
@@ -153,9 +156,9 @@ public:
     ** \param filename The full path of the file we try to open
     ** \return True if file could be opened, False otherwise (no enough permission or wrong path)
     */
-    virtual bool openFile(Yuni::IO::File::Stream& file, const AnyString& filename) const;
+    bool openFile(Yuni::IO::File::Stream& file, const AnyString& filename) const;
 
-    virtual void saveBufferToFile(std::string& buffer, Yuni::IO::File::Stream& f) const;
+    void saveBufferToFile(std::string& buffer, Yuni::IO::File::Stream& f) const;
 
     /*!
     ** \brief Write the content of a matrix into a single file
@@ -186,7 +189,7 @@ public:
 
     //@}
 
-    virtual Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer,
+    Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer,
                                                  const AnyString& filename) const
     {
         return Yuni::IO::File::LoadFromFile(buffer, filename, filesizeHardLimit);
@@ -281,6 +284,13 @@ public:
     template<class U>
     void pasteToColumn(uint x, const U* data);
 
+    template<class U>
+    void pasteToColumn(uint x, const std::vector<U>& data)
+    {
+        assert(data.size() == height_);
+        pasteToColumn(x, data.data());
+    }
+
     /*!
     ** \brief Set a entire column with a given value
     **
@@ -322,6 +332,9 @@ public:
     */
     bool empty() const;
 
+    uint width() const noexcept;
+    uint height() const noexcept;
+
     //! \name Operators
     //@{
     //! Assignement
@@ -340,11 +353,7 @@ public:
 
 public:
     //! Width of the matrix
-    mutable uint width;
-    //! Height of the matrix
-    mutable uint height;
-    //! All entries of the matrix (bidimensional array)
-    mutable ColumnType* entry;
+    ColumnType& mutableColumn(uint column) const;
 
     struct PredicateIdentity
     {
@@ -364,7 +373,10 @@ public:
                       PredicateT& predicate,
                       bool saveEvenIfAllZero) const;
 
-private:
+ private:
+    uint width_ = 0;
+    uint height_ = 0;
+    mutable std::vector<ColumnType> columns_;
     /*!
     ** \brief Load data from a CSV file
     */
@@ -392,39 +404,6 @@ private:
                         uint options);
 
 }; // class Matrix
-
-template<class T>
-class MatrixSubColumn
-{
-    // using Type = <sub column> ;
-    // using Type = const <sub column> ;
-};
-
-template<class U>
-class MatrixSubColumn<U**>
-{
-public:
-    using Type = U*;
-    using ConstType = const U*;
-};
-
-template<>
-class MatrixSubColumn<Matrix<double>::ColumnType*>
-{
-public:
-    using MatrixType = Matrix<double>;
-    using Type = MatrixType::ColumnType&;
-    using ConstType = const MatrixType::ColumnType&;
-};
-
-template<>
-class MatrixSubColumn<Matrix<float>::ColumnType*>
-{
-public:
-    using MatrixType = Matrix<float>;
-    using Type = MatrixType::ColumnType&;
-    using ConstType = const MatrixType::ColumnType&;
-};
 
 /*!
 ** \brief Test if there is at least one positive value

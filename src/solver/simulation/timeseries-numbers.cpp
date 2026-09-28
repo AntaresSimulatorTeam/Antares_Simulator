@@ -84,7 +84,7 @@ bool checkInterModalConsistencyForArea(const Area& area,
     int indexTS = ts_to_tsIndex.at(timeSeriesLoad);
     if (isTSintermodal[indexTS])
     {
-        listNumberTsOverArea.emplace_back(area.load.series.timeSeries.width,
+        listNumberTsOverArea.emplace_back(area.load.series.timeSeries.width(),
                                           "Area: " + area.name + " load");
     }
 
@@ -92,7 +92,7 @@ bool checkInterModalConsistencyForArea(const Area& area,
     indexTS = ts_to_tsIndex.at(timeSeriesSolar);
     if (isTSintermodal[indexTS])
     {
-        listNumberTsOverArea.emplace_back(area.solar.series.timeSeries.width,
+        listNumberTsOverArea.emplace_back(area.solar.series.timeSeries.width(),
                                           "Area: " + area.name + " solar");
     }
 
@@ -100,7 +100,7 @@ bool checkInterModalConsistencyForArea(const Area& area,
     indexTS = ts_to_tsIndex.at(timeSeriesWind);
     if (isTSintermodal[indexTS])
     {
-        listNumberTsOverArea.emplace_back(area.wind.series.timeSeries.width,
+        listNumberTsOverArea.emplace_back(area.wind.series.timeSeries.width(),
                                           "Area: " + area.name + " wind");
     }
 
@@ -119,7 +119,7 @@ bool checkInterModalConsistencyForArea(const Area& area,
         for (auto& cluster: area.thermal.list.each_enabled())
         {
             std::string msg = "Area: " + area.name + " thermal cluster " + cluster->id();
-            listNumberTsOverArea.emplace_back(cluster->series.timeSeries.width, msg);
+            listNumberTsOverArea.emplace_back(cluster->series.timeSeries.width(), msg);
         }
     }
 
@@ -130,7 +130,7 @@ bool checkInterModalConsistencyForArea(const Area& area,
         for (const auto& cluster: area.renewable.list.each_enabled())
         {
             std::string msg = "Area: " + area.name + " renew cluster " + cluster->id();
-            listNumberTsOverArea.emplace_back(cluster->series.timeSeries.width, msg);
+            listNumberTsOverArea.emplace_back(cluster->series.timeSeries.width(), msg);
         }
     }
 
@@ -157,21 +157,21 @@ void drawAndStoreTSnumbers(uint year, Study& study)
           // -------------
           area.load.series.timeseriesNumbers[year] = (uint32_t)(floor(
             study.runtime.random[seedTimeseriesNumbers].next()
-            * area.load.series.timeSeries.width));
+            * area.load.series.timeSeries.width()));
 
           // -------------
           // Solar ...
           // -------------
           area.solar.series.timeseriesNumbers[year] = (uint32_t)(floor(
             study.runtime.random[seedTimeseriesNumbers].next()
-            * area.solar.series.timeSeries.width));
+            * area.solar.series.timeSeries.width()));
 
           // -------------
           // Wind ...
           // -------------
           area.wind.series.timeseriesNumbers[year] = (uint32_t)(floor(
             study.runtime.random[seedTimeseriesNumbers].next()
-            * area.wind.series.timeSeries.width));
+            * area.wind.series.timeSeries.width()));
 
           // -------------
           // Hydro ...
@@ -192,7 +192,7 @@ void drawAndStoreTSnumbers(uint year, Study& study)
               {
                   cluster->series.timeseriesNumbers[year] = (uint32_t)(floor(
                     study.runtime.random[seedTimeseriesNumbers].next()
-                    * cluster->series.timeSeries.width));
+                    * cluster->series.timeSeries.width()));
               }
           }
 
@@ -202,7 +202,7 @@ void drawAndStoreTSnumbers(uint year, Study& study)
           for (auto& cluster: area.renewable.list.each_enabled())
           {
               // There is no TS generation for renewable clusters
-              uint nbTimeSeries = cluster->series.timeSeries.width;
+              uint nbTimeSeries = cluster->series.timeSeries.width();
               cluster->series.timeseriesNumbers[year] = (uint32_t)(floor(
                 study.runtime.random[seedTimeseriesNumbers].next() * nbTimeSeries));
           }
@@ -213,7 +213,7 @@ void drawAndStoreTSnumbers(uint year, Study& study)
           for (auto it = area.links.begin(); it != area.links.end(); ++it)
           {
               auto& link = *(it->second);
-              const uint nbTimeSeries = link.directCapacities.timeSeries.width;
+              const uint nbTimeSeries = link.directCapacities.timeSeries.width();
               if (nbTimeSeries > 1)
               {
                   link.timeseriesNumbers[year] = (uint32_t)(floor(

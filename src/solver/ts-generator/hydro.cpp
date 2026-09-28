@@ -60,9 +60,9 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
     double x, y, z, u;
     double** nullmatrx = nullptr;
 
-    if (1. > Solver::MatrixDPMake<double>(CHSKY.entry,
-                                          study.preproHydroCorrelation.annual.entry,
-                                          B.entry,
+    if (1. > Solver::MatrixDPMake<double>(CHSKY,
+                                          study.preproHydroCorrelation.annual,
+                                          B,
                                           nullmatrx,
                                           study.areas.size(),
                                           QCHOLTemp.data(),
@@ -98,9 +98,9 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
     }
 
     {
-        double r = Solver::MatrixDPMake<double>(CHSKY.entry,
-                                                CORRE.entry,
-                                                B.entry,
+        double r = Solver::MatrixDPMake<double>(CHSKY,
+                                                CORRE,
+                                                B,
                                                 nullmatrx,
                                                 DIM,
                                                 QCHOLTemp.data(),
@@ -115,7 +115,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
         }
     }
 
-    Solver::Cholesky<double>(CHSKY.entry, B.entry, DIM, QCHOLTemp.data());
+    Solver::Cholesky<double>(CHSKY, B, DIM, QCHOLTemp.data());
 
     B.clear();
     CORRE.clear();
@@ -160,7 +160,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
             uint month = i % MONTHS_PER_YEAR;
             uint realmonth = calendar.months[month].realmonth;
 
-            assert(l < series.ror.timeSeries.width);
+            assert(l < series.ror.timeSeries.width());
             assert(not std::isnan(colPOW[realmonth]));
 
             double EnergieHydrauliqueTotaleMensuelle = 0;

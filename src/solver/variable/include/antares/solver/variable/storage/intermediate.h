@@ -6,9 +6,11 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <vector>
 
 #include <antares/study/categories.h>
 #include <antares/study/study.h>
+#include <antares/memory/memory.h>
 #include "antares/antares/constants.h"
 
 #include "../surveyresults.h"
@@ -112,7 +114,7 @@ public:
     //! Values for each day in the year
     Type day[DAYS_PER_YEAR];
     //! Values for each hour in the year
-    mutable Antares::Memory::Stored<Type>::Type hour;
+    mutable std::vector<Type> hour;
     //! Year
     Type year;
 

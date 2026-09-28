@@ -544,12 +544,12 @@ static void readAdqPatchMode(Study& study, Area& area)
 static bool checkMatrixPositive(const Matrix<>& m, const std::string& buffer, unsigned limit)
 {
     logs.debug() << "Checking : " << buffer;
-    if (m.width and m.height and limit)
+    if (m.width() and m.height() and limit)
     {
         for (unsigned x = 0; x < limit; ++x)
         {
-            auto& column = m.entry[x];
-            for (unsigned y = 0; y < m.height; ++y)
+            auto& column = m[x];
+            for (unsigned y = 0; y < m.height(); ++y)
             {
                 if (column[y] < 0.)
                 {

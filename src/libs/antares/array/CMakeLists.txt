@@ -1,6 +1,7 @@
 set(SRC_MATRIX
         include/antares/array/matrix.h
         include/antares/array/matrix.hxx
+        include/antares/array/matrix-io.h
         matrix.cpp
 )
 source_group("array" FILES ${SRC_MATRIX})

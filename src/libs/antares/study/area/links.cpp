@@ -409,8 +409,8 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link,
 
 void AreaLink::checkLoadedData()
 {
-    const unsigned int nbDirectTS = directCapacities.timeSeries.width;
-    const unsigned int nbIndirectTS = indirectCapacities.timeSeries.width;
+    const unsigned int nbDirectTS = directCapacities.timeSeries.width();
+    const unsigned int nbIndirectTS = indirectCapacities.timeSeries.width();
     if (nbDirectTS != nbIndirectTS)
     {
         logLinkDataCheckErrorDirectIndirect(*this, nbDirectTS, nbIndirectTS);

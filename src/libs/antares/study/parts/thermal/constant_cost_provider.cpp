@@ -13,7 +13,7 @@ ConstantCostProvider::ConstantCostProvider(const ThermalCluster& cluster):
 double ConstantCostProvider::getOperatingCost(unsigned int /*serieIndex*/,
                                               unsigned int hourInTheYear) const
 {
-    const auto* modCost = cluster.modulation[thermalModulationCost];
+    const auto& modCost = cluster.modulation[thermalModulationCost];
     return cluster.marginalCost * modCost[hourInTheYear];
 }
 

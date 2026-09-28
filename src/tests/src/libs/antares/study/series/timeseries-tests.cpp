@@ -45,7 +45,7 @@ struct Fixture
 
 void Fixture::fillColumn(unsigned int idx)
 {
-    for (unsigned int i = 0; i < ts.timeSeries.height; i++)
+    for (unsigned int i = 0; i < ts.timeSeries.height(); i++)
     {
         ts.timeSeries[idx][i] = i;
     }
@@ -53,7 +53,7 @@ void Fixture::fillColumn(unsigned int idx)
 
 void Fixture::fillColumnReverse(unsigned int idx)
 {
-    for (unsigned int i = 0; i < ts.timeSeries.height; i++)
+    for (unsigned int i = 0; i < ts.timeSeries.height(); i++)
     {
         ts.timeSeries[idx][i] = HOURS_PER_YEAR - i;
     }
@@ -61,8 +61,8 @@ void Fixture::fillColumnReverse(unsigned int idx)
 
 void Fixture::fillTsnum()
 {
-    tsnum.reset(ts.timeSeries.width);
-    for (unsigned int i = 0; i < ts.timeSeries.width; i++)
+    tsnum.reset(ts.timeSeries.width());
+    for (unsigned int i = 0; i < ts.timeSeries.width(); i++)
     {
         tsnum[i] = i;
     }

@@ -131,7 +131,7 @@ bool PreproAvailability::normalizeAndCheckNPO()
     // Flag to determine whether the column NPO max has been normalized or not
     bool normalized = false;
 
-    for (uint y = 0; y != data.height; ++y)
+    for (uint y = 0; y != data.height(); ++y)
     {
         if (columnNPOMax[y] > unitCount)
         {

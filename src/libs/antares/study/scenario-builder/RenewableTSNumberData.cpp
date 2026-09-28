@@ -16,7 +16,7 @@ void renewableTSNumberData::setTSnumber(const Antares::Data::RenewableCluster* c
                                         unsigned int value)
 {
     assert(cluster != nullptr);
-    if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
+    if (year < pTSNumberRules.height() && cluster->areaWideIndex < pTSNumberRules.width())
     {
         pTSNumberRules[cluster->areaWideIndex][year] = value;
     }
@@ -41,7 +41,7 @@ bool renewableTSNumberData::apply(Study& study)
     for (const auto& cluster: area.renewable.list.each_enabled())
     {
         // alias to the current column
-        assert(cluster->areaWideIndex < pTSNumberRules.width);
+        assert(cluster->areaWideIndex < pTSNumberRules.width());
         const auto& col = pTSNumberRules[cluster->areaWideIndex];
 
         logprefix = "Renewable: area '" + area.name + "', cluster: '" + cluster->name() + "': ";

@@ -662,11 +662,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
         {
             COUTS_DE_TRANSPORT& couts = problem.CoutDeTransport[k];
             couts.IntercoGereeAvecDesCouts = true;
-            const double* direct = ((const double*)((void*)lnk->parameters[fhlHurdlesCostDirect]))
-                                   + PasDeTempsDebut;
-            const double* indirect = ((const double*)((void*)
-                                                        lnk->parameters[fhlHurdlesCostIndirect]))
-                                     + PasDeTempsDebut;
+            const double* direct = lnk->parameters[fhlHurdlesCostDirect].data() + PasDeTempsDebut;
+            const double* indirect =
+              lnk->parameters[fhlHurdlesCostIndirect].data() + PasDeTempsDebut;
             memcpy(&couts.CoutDeTransportOrigineVersExtremite[0], direct, pasDeTempsSizeDouble);
             memcpy(&couts.CoutDeTransportOrigineVersExtremiteRef[0], direct, pasDeTempsSizeDouble);
             memcpy(&couts.CoutDeTransportExtremiteVersOrigine[0], indirect, pasDeTempsSizeDouble);

@@ -80,7 +80,7 @@ void State::initFromThermalClusterIndex(const uint clusterEnabledIndex)
         // When the cluster is in must-run mode, the production value
         // directly comes from the time-series
         // it doen't exist from the solver perspective
-        assert(hourInTheYear < thermalCluster->series.timeSeries.height);
+        assert(hourInTheYear < thermalCluster->series.timeSeries.height());
 
         thermal[area->index].thermalClustersProductions[clusterEnabledIndex]
           = thermalClusterAvailableProduction;
@@ -370,7 +370,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterEnabledIndex)
                                              .get();
 
     assert(endHourForCurrentYear <= HOURS_PER_YEAR);
-    assert(endHourForCurrentYear <= currentCluster->series.timeSeries.height);
+    assert(endHourForCurrentYear <= currentCluster->series.timeSeries.height());
     assert(currentCluster);
 
     if (currentCluster->fixedCost > 0.)
