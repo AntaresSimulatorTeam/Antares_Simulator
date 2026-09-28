@@ -173,7 +173,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_matrix_equal_width_and_d
 {
     bool ret = true;
     study->parameters.derated = true;
-    StudyVersion studyVersion(9, 1);
+    StudyVersion _(9, 1);
 
     auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower.timeSeries;
     auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower.timeSeries;

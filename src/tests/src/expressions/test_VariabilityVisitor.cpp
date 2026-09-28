@@ -47,17 +47,8 @@ static std::ostream& operator<<(std::ostream& os, VariabilityType v)
 }
 } // namespace Antares::LinearProblem
 
-class DefaultScenario final: public Api::IScenario
+namespace
 {
-public:
-    using IScenario::IScenario;
-
-    [[nodiscard]] TimeSeriesNumber getData(Year) const override
-    {
-        return 1; // Default rank for empty groupId
-    }
-};
-
 struct TestVariabilityVisitorFixture
 {
     Test::Modeler::LinearProblemBuildingFixture fixture;
@@ -94,6 +85,7 @@ struct TestVariabilityVisitorFixture
         variabilityVisitor.emplace(*fixture.optimEntityContainer, fixture.components[0]);
     }
 };
+} // namespace
 
 BOOST_FIXTURE_TEST_SUITE(TestVariabilityVisitor, TestVariabilityVisitorFixture)
 

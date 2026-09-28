@@ -287,7 +287,8 @@ public:
             std::string shortName;
             //! Short name (3 letters) and uppercase (JAN..DEC)
             std::string shortUpperName;
-        } months[12];
+        } months[12 + 1]; // mirrors the data `months[12 + 1]`: a shifted-start
+                          // calendar (firstMonth != january) spans 13 month segments
 
         //! Caption for each hour
         std::string hours[maxHoursInYear];
