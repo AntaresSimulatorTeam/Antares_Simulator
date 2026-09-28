@@ -130,6 +130,20 @@ Feature: Legacy mc-ind <-> simulation table equivalence
     # overwritten with the un-noised unserverdenergycost). The plain "for year
     # N" step reads optim-nb-2 and would compare mc-ind against the wrong
     # stage on this study, so use the stage-scoped step instead.
+    #
+    # This scenario originally had to exclude abs_flow / minus_flow /
+    # abs_congestion_fee / alg_congestion_fee: LegacyExtraOutputs' linkOutputs()
+    # derives them from x(variableManager_.DirectFlow(interco, pdt)), and the CSR
+    # post-process (HourlyCSRProblem::constructVariableFlows,
+    # adequacy_patch_csr/construct_problem_variables.cpp) repointed that hour's
+    # CorrespondanceVarNativesVarOptim entry at its own short-lived per-hour
+    # problem's numbering and never put it back, so once CSR was done, reading
+    # that entry for the congested link resolved against the wrong problem on
+    # most hours. Fixed at the source in HourlyCSRProblem::run()
+    # (adequacy_patch_csr/adq_patch_curtailment_sharing.cpp): it now saves the
+    # entry's original indices before building its own per-hour problem and
+    # restores them once that problem is solved and published, so nothing
+    # outside CSR's own solve ever sees the repointed numbering.
     Given the solver study path is "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
     When I run antares simulator with --output=all
     Then the simulation succeeds

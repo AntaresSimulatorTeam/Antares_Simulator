@@ -86,6 +86,30 @@ Design points:
   `adq-patch` stage table — see "Adequacy patch (CSR)" in
   `legacy_simulation_table_equivalence.feature`, which reads that stage
   because mc-ind prints the post-CSR numbers, not `optim-nb-2`'s.
+* ~~`abs_flow` / `minus_flow` / `abs_congestion_fee` / `alg_congestion_fee` on
+  the `adq-patch` stage~~ — **fixed.** These were wrong on the congested link
+  inside a CSR patch, found by the "Adequacy patch (CSR)" scenario.
+  `LegacyExtraOutputEmitter::linkOutputs()` computes them from
+  `x(variableManager_.DirectFlow(interco, pdt))`. The adequacy patch's CSR
+  post-process (`HourlyCSRProblem::constructVariableFlows`,
+  `adequacy_patch_csr/construct_problem_variables.cpp`) repoints that hour's
+  `CorrespondanceVarNativesVarOptim` entry at an index in its own short-lived
+  per-hour LP while building it, and nothing put it back once CSR moved on,
+  so by dump time most CSR-touched hours resolved that index against the
+  *original* weekly problem's variable table — unrelated to CSR's flow.
+  (Reading `ValeursDeNTC[pdt].ValeurDuFlux[interco]` instead, mirroring how
+  `actual_loop_flow` is read two lines below, looked like a tempting
+  one-line fix and *is* what both the ordinary weekly solve and CSR publish
+  their `DirectFlow` result to — but it broke the ordinary, non-post-process
+  dump path: that dump runs before this week's own publish-to-address step
+  catches up, so `ValeurDuFlux` there is one dump cycle stale while
+  `x(DirectFlow)` is fresh. Do not reintroduce that swap.) Fixed instead at
+  the source, in `HourlyCSRProblem::run()`
+  (`adequacy_patch_csr/adq_patch_curtailment_sharing.cpp`): it now saves the
+  hour's original `CorrespondanceVarNativesVarOptim` indices (still valid,
+  still correctly published) before building its own per-hour problem and
+  restores them once that problem is solved and its result published, so
+  nothing outside CSR's own solve ever resolves against its numbering.
 * **Coverage is hybrid-only.** Pure-classic studies produce a sparse table
   (`SimulationTableWriter` throws on an empty table); pure-modeler has only the
   Parquet round-trip test.
