@@ -54,6 +54,24 @@ Feature: hybrid (simulator+modeler) studies
       |       | gen2      | profit | 8712-8735 | 0-4      | 0     |
 
   @short
+  Scenario: Hybrid area-connection price field is 0 on a MILP resolution
+    # Same study as the scenario above, with unit-commitment-mode = milp. OR-Tools does not
+    # provide dual values on a MIP problem (MPConstraint::dual_value() fails), so the legacy
+    # area's price seen by the components is 0, as for legacy marginal costs in MILP.
+    # gen1 profit is therefore (0 - 0.3) * 60 = -18 and gen2's is (0 - 5.0) * 40 = -200.
+    # The run must not fail on the unavailable duals.
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/hybrid_price_connection_milp"
+    And the linear solver is highs
+    When I run antares simulator with --output=all
+    Then the simulation succeeds
+    And the modeler outputs contain the following entries with relative tolerance 0.001
+      | block | component | output | timestep  | scenario | value |
+      |       | gen1      | profit | 0-23      | 0-4      | -18   |
+      |       | gen1      | profit | 8712-8735 | 0-4      | -18   |
+      |       | gen2      | profit | 0-23      | 0-4      | -200  |
+      |       | gen2      | profit | 8712-8735 | 0-4      | -200  |
+
+  @short
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=6200) (168h simplex)
     # copy of short test 002, with no legacy thermal cluster, replaced by one component
     #
