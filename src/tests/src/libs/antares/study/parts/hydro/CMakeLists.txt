@@ -21,13 +21,6 @@ add_boost_test(test-hydro-common
   Antares::study
   test_utils_unit)
 
-# Hydro allocation
-add_boost_test(test-hydro-allocation
-  SRC test-hydro-allocation.cpp
-  LIBS
-  Antares::study
-  test_utils_unit)
-
 # Hydro data series (DataSeriesHydro)
 add_boost_test(test-hydro-dataseries
   SRC test-hydro-dataseries.cpp

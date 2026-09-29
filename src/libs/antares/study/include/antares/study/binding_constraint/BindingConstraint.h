@@ -149,8 +149,6 @@ public:
     std::string group() const;
     void group(std::string group_name);
 
-    void resetToDefaultValues();
-
     bool skipped() const;
     bool isActive() const;
 

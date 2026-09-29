@@ -58,7 +58,7 @@ bool Adequacy::simulationBegin()
     {
         pProblemesHebdo.resize(pNbMaxPerformedYearsInParallel);
 
-        inactiveComponents_ = Optimization::BuildInactiveComponentsAnalyzer(study);
+        inactiveComponents_ = Antares::Optimization::BuildInactiveComponentsAnalyzer(study);
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {

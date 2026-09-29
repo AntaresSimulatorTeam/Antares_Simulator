@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <sstream>
 #include <string_view>
+#include <utility>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/io/inputs/InputError.h"

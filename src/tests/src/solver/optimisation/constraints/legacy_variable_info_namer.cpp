@@ -23,9 +23,9 @@ namespace
 {
 struct VarFixture
 {
-    std::vector<std::string> names = std::vector<std::string>(8);
+    std::vector<std::string> names = std::vector<std::string>(12);
     std::vector<std::optional<LegacyVariableInfo>>
-      info = std::vector<std::optional<LegacyVariableInfo>>(8);
+      info = std::vector<std::optional<LegacyVariableInfo>>(12);
     VariableNamer namer{names, info};
 };
 } // namespace
@@ -138,6 +138,43 @@ BOOST_AUTO_TEST_CASE(constraint_namer_records_nothing)
     constraintNamer.AreaBalance(0);
 
     BOOST_CHECK(!names[0].empty());
+}
+
+BOOST_AUTO_TEST_CASE(reserve_variables_use_requested_legacy_output_ids)
+{
+    namer.UpdateArea("fr");
+    namer.UpdateTimeStep(42);
+
+    const ReserveIdentity reserve{"Display reserve", "reserve_id"};
+
+    namer.ParticipationOfRunningUnitsToReserve(0, "gas", reserve);
+    namer.ParticipationOfOffUnitsToReserve(1, "gas", reserve);
+    namer.ThermalClusterReserveParticipation(2, "gas", reserve);
+    namer.ParticipationOfSTStorageStoreToReserve(3, "battery", reserve);
+    namer.ParticipationOfSTStorageReleaseToReserve(4, "battery", reserve);
+    namer.ParticipationOfSTStorageToReserve(ReserveType::UP, 5, "battery", reserve);
+    namer.ParticipationOfHydroStoreToReserve(6, "hydro", reserve);
+    namer.ParticipationOfHydroReleaseToReserve(7, "hydro", reserve);
+    namer.ParticipationOfHydroToReserve(ReserveType::DOWN, 8, "hydro", reserve);
+    namer.InternalUnsatisfiedReserve(9, reserve);
+    namer.InternalExcessReserve(10, reserve);
+
+    BOOST_CHECK_EQUAL(info[0]->name, "units_on_reserve_power_reserve_id");
+    BOOST_CHECK_EQUAL(info[1]->name, "units_off_reserve_power_reserve_id");
+    BOOST_CHECK_EQUAL(info[2]->name, "reserve_power_reserve_id");
+    BOOST_CHECK_EQUAL(info[3]->name, "reserve_stored_power_reserve_id");
+    BOOST_CHECK_EQUAL(info[4]->name, "reserve_released_power_reserve_id");
+    BOOST_CHECK_EQUAL(info[5]->name, "reserve_power_reserve_id");
+    BOOST_CHECK_EQUAL(info[6]->name, "reserve_stored_power_reserve_id");
+    BOOST_CHECK_EQUAL(info[7]->name, "reserve_released_power_reserve_id");
+    BOOST_CHECK_EQUAL(info[8]->name, "reserve_power_reserve_id");
+    BOOST_CHECK_EQUAL(info[9]->name, "unsupplied_energy_reserve_reserve_id");
+    BOOST_CHECK_EQUAL(info[10]->name, "spilled_energy_reserve_reserve_id");
+    BOOST_CHECK_EQUAL(info[0]->component, "fr_thermal_gas");
+    BOOST_CHECK_EQUAL(info[3]->component, "fr_short_term_storage_battery");
+    BOOST_CHECK_EQUAL(info[6]->component, "fr_hydro_storage");
+    BOOST_CHECK_EQUAL(info[9]->component, "fr_node");
+    BOOST_CHECK_EQUAL(info[10]->component, "fr_node");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

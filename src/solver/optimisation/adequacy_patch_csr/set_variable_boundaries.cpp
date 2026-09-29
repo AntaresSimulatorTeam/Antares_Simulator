@@ -3,29 +3,28 @@
 
 #include <pi_constantes_externes.h>
 
-#include "antares/solver/optimisation/opt_fonctions.h"
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include <antares/logs/logs.h>
+#include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/study/parameters/adq-patch-params.h"
 
-using namespace Yuni;
+using namespace Antares;
+using namespace Antares::Data::AdequacyPatch;
 
 void HourlyCSRProblem::setBoundsOnENS()
 {
     double* AdresseDuResultat;
-
-    // variables: ENS for each area inside adq patch
     for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
-            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area] == physicalAreaInsideAdqPatch)
         {
             int var = variableManager_.UnsuppliedEnergy(area, triggeredHour);
 
+            double ensLegacy = problemeHebdo_->ResultatsHoraires[area]
+                                 .ValeursHorairesDENS[triggeredHour];
+
             problemeAResoudre_.Xmin[var] = -belowThisThresholdSetToZero;
-            problemeAResoudre_.Xmax[var] = problemeHebdo_->ResultatsHoraires[area]
-                                             .ValeursHorairesDENS[triggeredHour]
-                                           + belowThisThresholdSetToZero;
+            problemeAResoudre_.Xmax[var] = ensLegacy + belowThisThresholdSetToZero;
 
             problemeAResoudre_.X[var] = problemeHebdo_->ResultatsHoraires[area]
                                           .ValeursHorairesDeDefaillancePositive[triggeredHour];
@@ -47,8 +46,7 @@ void HourlyCSRProblem::setBoundsOnSpilledEnergy()
     // variables: Spilled Energy for each area inside adq patch
     for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
-            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area] == physicalAreaInsideAdqPatch)
         {
             int var = variableManager_.Spillage(area, triggeredHour);
 

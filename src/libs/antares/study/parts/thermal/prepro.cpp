@@ -119,20 +119,6 @@ bool PreproAvailability::validate() const
     return errors == 0;
 }
 
-void PreproAvailability::reset()
-{
-    data.reset(preproAvailabilityMax, DAYS_PER_YEAR);
-
-    auto& colFoDuration = data[foDuration];
-    auto& colPoDuration = data[poDuration];
-
-    for (uint i = 0; i != DAYS_PER_YEAR; ++i)
-    {
-        colFoDuration[i] = 1.;
-        colPoDuration[i] = 1.;
-    }
-}
-
 bool PreproAvailability::normalizeAndCheckNPO()
 {
     // alias to our data columns

@@ -29,9 +29,9 @@ bool columnIsAllZero(const Matrix<>& matrix, unsigned column)
 bool selectedColumnsAreAllZero(const Data::TimeSeries& ts)
 {
     const uint32_t nbYears = ts.timeseriesNumbers.height();
-    if (nbYears == 0)
+    if (nbYears == 0 || ts.numberOfColumns() <= 1)
     {
-        return ts.timeSeries.containsOnlyZero();
+        return ts.numberOfColumns() == 0 || ts.timeSeries.containsOnlyZero();
     }
     for (uint32_t year = 0; year < nbYears; ++year)
     {
@@ -77,7 +77,9 @@ std::shared_ptr<const InactiveComponentsAnalyzer> BuildInactiveComponentsAnalyze
             const bool bothDirectionsAllZero = selectedColumnsAreAllZero(link->directCapacities)
                                                && selectedColumnsAreAllZero(
                                                  link->indirectCapacities);
-            analyzer->setLinkAllZero(interco, bothDirectionsAllZero);
+            const bool ignored = link->transmissionCapacities
+                                 == Data::LocalTransmissionCapacities::null;
+            analyzer->setLinkAllZero(interco, bothDirectionsAllZero || ignored);
             ++interco;
         }
     }

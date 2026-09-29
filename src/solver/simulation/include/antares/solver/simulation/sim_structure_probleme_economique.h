@@ -9,6 +9,7 @@
 #include <optional>
 #include <vector>
 
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/utils/opt_constants.h"
 #include "antares/solver/utils/optimization_statistics.h"
@@ -798,6 +799,13 @@ public:
     /// alive past the solve so a post-process simulation table can re-emit the
     /// modeler component rows. Null unless retainSolvedModelerProblem is set.
     std::shared_ptr<const Antares::Optimization::SolvedModelerProblem> lastSolvedModelerProblem;
+
+    /// \brief Kept alive past the solve so the CSR adequacy patch post-process
+    /// can evaluate GEMS port field expressions via EvalVisitor.
+    std::shared_ptr<Antares::LinearProblem::OptimEntityContainer> optimEntityContainer;
+
+    /// \brief Keeps the LP alive so optimEntityContainer's reference remains valid
+    std::shared_ptr<Antares::LinearProblem::Api::ILinearProblem> ortoolsProblem_;
 };
 
 // Import functions for capacity and hydro reserves

@@ -106,11 +106,6 @@ public:
     ~PartHydro() = default;
 
     /*!
-    ** \brief Reset internal data
-    */
-    void reset();
-
-    /*!
     ** \brief Load daily max energy
     */
     bool LoadDailyMaxEnergy(const std::filesystem::path& folder, const std::string& areaid);
