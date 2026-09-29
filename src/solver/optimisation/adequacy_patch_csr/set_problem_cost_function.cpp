@@ -55,7 +55,7 @@ void HourlyCSRProblem::setQuadraticCost()
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            int var = variableManager_.UnsuppliedEnergy(area, triggeredHour);
+            int var = variableIndices_.unsuppliedEnergy[area];
             if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
             {
                 problemeAResoudre_.CoutQuadratique[var] = calculateQuadraticCost(
@@ -95,14 +95,14 @@ void HourlyCSRProblem::setLinearCost()
 
         const COUTS_DE_TRANSPORT& TransportCost = problemeHebdo_->CoutDeTransport[Interco];
         // flow
-        var = variableManager_.DirectFlow(Interco, triggeredHour);
+        var = variableIndices_.directFlow[Interco];
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
             problemeAResoudre_.CoutLineaire[var] = 0.0;
             logs.debug() << var << ". Linear C = " << problemeAResoudre_.CoutLineaire[var];
         }
         // direct / indirect flow
-        var = variableManager_.PositiveDirectFlow(Interco, triggeredHour);
+        var = variableIndices_.positiveDirectFlow[Interco];
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
             if (!TransportCost.IntercoGereeAvecDesCouts)
@@ -119,7 +119,7 @@ void HourlyCSRProblem::setLinearCost()
             logs.debug() << var << ". Linear C = " << problemeAResoudre_.CoutLineaire[var];
         }
 
-        var = variableManager_.PositiveIndirectFlow(Interco, triggeredHour);
+        var = variableIndices_.positiveIndirectFlow[Interco];
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
             if (!TransportCost.IntercoGereeAvecDesCouts)

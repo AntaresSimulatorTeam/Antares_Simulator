@@ -10,7 +10,11 @@
 
 void OPT_DecompteDesVariablesEtDesContraintesReserves(PROBLEME_HEBDO* problemeHebdo)
 {
-    ConstraintBuilder builder(problemeHebdo);
+    ConstraintBuilder builder(problemeHebdo,
+                              *problemeHebdo->ProblemeAResoudre,
+                              problemeHebdo->CorrespondanceVarNativesVarOptim,
+                              problemeHebdo->NumeroDeVariableStockFinal,
+                              problemeHebdo->NumeroDeVariableDeTrancheDeStock);
     LinearProblemMatrixReserves(problemeHebdo, true, builder).Run();
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(problemeHebdo, true);

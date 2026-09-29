@@ -18,7 +18,7 @@ void HourlyCSRProblem::setBoundsOnENS()
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area] == physicalAreaInsideAdqPatch)
         {
-            int var = variableManager_.UnsuppliedEnergy(area, triggeredHour);
+            int var = variableIndices_.unsuppliedEnergy[area];
 
             double ensLegacy = problemeHebdo_->ResultatsHoraires[area]
                                  .ValeursHorairesDENS[triggeredHour];
@@ -48,7 +48,7 @@ void HourlyCSRProblem::setBoundsOnSpilledEnergy()
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area] == physicalAreaInsideAdqPatch)
         {
-            int var = variableManager_.Spillage(area, triggeredHour);
+            int var = variableIndices_.spillage[area];
 
             problemeAResoudre_.Xmin[var] = -belowThisThresholdSetToZero;
             problemeAResoudre_.Xmax[var] = LINFINI_ANTARES;
@@ -89,7 +89,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
         }
 
         // flow
-        int var = variableManager_.DirectFlow(Interco, triggeredHour);
+        int var = variableIndices_.directFlow[Interco];
         Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco]
                     + belowThisThresholdSetToZero;
         Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco])
@@ -126,7 +126,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
                      << problemeAResoudre_.Xmax[var];
 
         // direct / indirect flow
-        var = variableManager_.PositiveDirectFlow(Interco, triggeredHour);
+        var = variableIndices_.positiveDirectFlow[Interco];
 
         Xmin[var] = -belowThisThresholdSetToZero;
         Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco]
@@ -140,7 +140,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
         logs.debug() << var << ": " << problemeAResoudre_.Xmin[var] << ", "
                      << problemeAResoudre_.Xmax[var];
 
-        var = variableManager_.PositiveIndirectFlow(Interco, triggeredHour);
+        var = variableIndices_.positiveIndirectFlow[Interco];
 
         Xmin[var] = -belowThisThresholdSetToZero;
         Xmax[var] = ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco]

@@ -10,12 +10,11 @@
 
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+#include <antares/solver/optimisation/adequacy_patch_csr/csr_variable_indices.h>
 #include <antares/solver/optimisation/adequacy_patch_csr/gems-part.h>
 #include <antares/study/parameters/adq-patch-params.h>
 #include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
-#include "../variables/VariableManagerUtils.h"
 
 struct LinkVariable
 {
@@ -50,12 +49,13 @@ struct LinkVariable
 };
 
 struct PROBLEME_HEBDO;
+class ConstraintBuilder;
 
 // GEMS contribution for hybrid studies
 
 class HourlyCSRProblem final
 {
-    using AdqPatchParams = AdequacyPatch::AdqPatchParams;
+    using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 
 public:
     explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams,
@@ -63,19 +63,28 @@ public:
                               const Antares::Optimization::OptimizationOptions& solverOptions):
         solverOptions_(solverOptions),
         adqPatchParams_(adqPatchParams),
-        variableManager_(p->CorrespondanceVarNativesVarOptim,
-                         p->NumeroDeVariableStockFinal,
-                         p->NumeroDeVariableDeTrancheDeStock,
-                         p->NombreDePasDeTempsPourUneOptimisation),
         problemeHebdo_(p)
     {
+        // This problem numbers its own variables (see constructVariableENS & co): keep the
+        // indices in its own small table instead of
+        // problemeHebdo->CorrespondanceVarNativesVarOptim. The weekly problem's correspondence
+        // table is then never overwritten by the CSR machinery, so later readers (e.g. the
+        // simulation table dump) still resolve the weekly variables against the weekly
+        // problem's own numbering.
+        constexpr int noVariable = -1; // skipped by ConstraintBuilder::AddVariable
+        variableIndices_.unsuppliedEnergy.assign(p->NombreDePays, noVariable);
+        variableIndices_.spillage.assign(p->NombreDePays, noVariable);
+        variableIndices_.directFlow.assign(p->NombreDInterconnexions, noVariable);
+        variableIndices_.positiveDirectFlow.assign(p->NombreDInterconnexions, noVariable);
+        variableIndices_.positiveIndirectFlow.assign(p->NombreDInterconnexions, noVariable);
+
         double temp = pow(10, -adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
         belowThisThresholdSetToZero = std::min(temp, 0.1);
 
         allocateProblem();
         gemsPart_ = makeGemsPart(problemeHebdo_,
                                  problemeAResoudre_,
-                                 variableManager_,
+                                 variableIndices_,
                                  numberOfConstraintCsrFictitiousLoad,
                                  numberOfConstraintCsrMaxEnsLoad);
     }
@@ -90,6 +99,13 @@ public:
     }
 
     void run(unsigned int week, unsigned int year);
+
+    /// \brief A ConstraintBuilder resolving variables against this problem's own variableIndices_
+    ///
+    /// Constraint building must agree with the indices assigned by constructVariableENS /
+    /// constructVariableSpilledEnergy / constructVariableFlows, without reading nor writing
+    /// problemeHebdo_->CorrespondanceVarNativesVarOptim.
+    ConstraintBuilder makeConstraintBuilder();
 
 private:
     void calculateCsrParameters();
@@ -150,7 +166,11 @@ public:
 
 private:
     const AdqPatchParams& adqPatchParams_;
-    VariableManagement::VariableManager variableManager_;
+
+    // This problem's own variable indices, see the constructor body. Re-written for every
+    // triggered hour by constructVariableENS & co, read-only for everyone else (constraint
+    // building, bounds, costs, GEMS part).
+    CsrVariableIndices variableIndices_;
 
     PROBLEME_HEBDO* problemeHebdo_;
     PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;

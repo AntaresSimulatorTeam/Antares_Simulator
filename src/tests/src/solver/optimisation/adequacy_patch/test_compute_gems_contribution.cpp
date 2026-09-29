@@ -13,8 +13,8 @@
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 #include "antares/solver/modeler/ModelerData.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/csr_variable_indices.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/gems-part.h"
-#include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
@@ -133,9 +133,13 @@ struct GemsContributionFixture
         constraintFictitious = {{0, fictitiousLoadArea1}, {1, fictitiousLoadArea2}};
         constraintMaxEns = {{0, maxEnsLoadArea1}, {1, maxEnsLoadArea2}};
 
+        // The CSR problem's own variable indices, at hour 0. In the real flow they are
+        // re-written by constructVariableENS for every triggered hour.
+        csrVariableIndices_.unsuppliedEnergy = {ensVarArea1Hour0, ensVarArea2};
+
         gemsPart = makeGemsPart(&problemeHebdo,
                                 problemAResoudre,
-                                variableManager_,
+                                csrVariableIndices_,
                                 constraintFictitious,
                                 constraintMaxEns);
     }
@@ -209,15 +213,6 @@ struct GemsContributionFixture
         pHebdo.adequacyPatchRuntimeData->areaMode = {
           Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch,
           Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch};
-
-        // Initialize CorrespondanceVarNativesVarOptim for VariableManager.
-        pHebdo.CorrespondanceVarNativesVarOptim.resize(2); // hours 0 and 1
-        pHebdo.CorrespondanceVarNativesVarOptim[0].NumeroDeVariableDefaillancePositive = {
-          ensVarArea1Hour0,
-          ensVarArea2};
-        pHebdo.CorrespondanceVarNativesVarOptim[1].NumeroDeVariableDefaillancePositive = {
-          ensVarArea1Hour1,
-          ensVarArea2};
     }
 
     void makeProblemToSolve(PROBLEME_ANTARES_A_RESOUDRE& pAResoudre)
@@ -242,7 +237,7 @@ struct GemsContributionFixture
     std::unique_ptr<Solver::ModelerData> modelerData;
     // Keeps the model definitions alive: the system components hold raw pointers into them.
     std::vector<Library> libraries;
-    VariableManagement::VariableManager variableManager_{&problemeHebdo};
+    CsrVariableIndices csrVariableIndices_;
     std::unique_ptr<IGemsPart> gemsPart;
     PROBLEME_ANTARES_A_RESOUDRE problemAResoudre{};
     std::map<int, int> constraintFictitious;
@@ -354,6 +349,9 @@ BOOST_FIXTURE_TEST_CASE(ens_bounds_evaluated_at_triggered_hour, GemsContribution
     // load[1] = 42 -> 42 / 2 - 10 = 11
     setGemsParameters({0.0, 0.0}, {20.0, 42.0});
 
+    // constructVariableENS would have re-written the indices for hour 1
+    csrVariableIndices_.unsuppliedEnergy = {ensVarArea1Hour1, ensVarArea2};
+
     gemsPart->setHour(1);
     gemsPart->setBoundsOnENS();
 
@@ -367,9 +365,9 @@ BOOST_AUTO_TEST_CASE(factory_returns_null_gems_part_when_no_modeler_data)
     PROBLEME_HEBDO problem{};
     problem.modelerData = nullptr;
     PROBLEME_ANTARES_A_RESOUDRE pa{};
-    VariableManagement::VariableManager vm(&problem);
+    CsrVariableIndices variableIndices;
     std::map<int, int> cf, cm;
-    auto gp = makeGemsPart(&problem, pa, vm, cf, cm);
+    auto gp = makeGemsPart(&problem, pa, variableIndices, cf, cm);
     BOOST_CHECK(dynamic_cast<NullGemsPart*>(gp.get()) != nullptr);
 }
 
@@ -383,7 +381,7 @@ BOOST_FIXTURE_TEST_CASE(throws_when_no_optimEntityContainer, GemsContributionFix
     problemeHebdo.optimEntityContainer.reset();
     BOOST_CHECK_THROW((ActiveGemsPart(&problemeHebdo,
                                       problemAResoudre,
-                                      variableManager_,
+                                      csrVariableIndices_,
                                       constraintFictitious,
                                       constraintMaxEns)),
                       std::runtime_error);

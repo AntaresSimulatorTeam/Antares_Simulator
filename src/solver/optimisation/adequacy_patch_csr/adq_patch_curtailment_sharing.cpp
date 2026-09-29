@@ -7,6 +7,7 @@
 
 #include "antares/solver/optimisation/adequacy_patch_csr/count_constraints_variables.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/csr_quadratic_problem.h"
+#include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
 #include "solve_problem.h"
@@ -204,4 +205,11 @@ void HourlyCSRProblem::run(uint week, uint year)
     buildProblemConstraintsRHS();
     setProblemCost();
     solveProblem(week, year, solverOptions_);
+}
+
+ConstraintBuilder HourlyCSRProblem::makeConstraintBuilder()
+{
+    // Resolve variables against this problem's own variableIndices_, never against
+    // problemeHebdo_->CorrespondanceVarNativesVarOptim (see the constructor's comment).
+    return ConstraintBuilder(problemeHebdo_, problemeAResoudre_, variableIndices_);
 }

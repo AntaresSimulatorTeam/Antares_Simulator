@@ -3,6 +3,53 @@
 
 #include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
 
+#include "antares/solver/optimisation/adequacy_patch_csr/csr_variable_indices.h"
+
+ConstraintBuilder::ConstraintBuilder(
+  PROBLEME_HEBDO* problemeHebdo,
+  PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
+  std::vector<CORRESPONDANCES_DES_VARIABLES>& correspondanceVarNativesVarOptim,
+  std::vector<int>& numeroDeVariableStockFinal,
+  std::vector<std::vector<int>>& numeroDeVariableDeTrancheDeStock):
+    data({ProblemeAResoudre.Pi,
+          ProblemeAResoudre.Colonne,
+          ProblemeAResoudre.NombreDeContraintes,
+          ProblemeAResoudre.NombreDeTermesDansLaMatriceDesContraintes,
+          ProblemeAResoudre.IndicesDebutDeLigne,
+          ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes,
+          ProblemeAResoudre.IndicesColonnes,
+          ProblemeAResoudre.NombreDeTermesDesLignes,
+          ProblemeAResoudre.Sens,
+          ProblemeAResoudre.IncrementDAllocationMatriceDesContraintes,
+          correspondanceVarNativesVarOptim,
+          problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
+          numeroDeVariableStockFinal,
+          numeroDeVariableDeTrancheDeStock,
+          ProblemeAResoudre.NomDesContraintes,
+          problemeHebdo->NomsDesPays,
+          problemeHebdo->weekInTheYear,
+          problemeHebdo->NombreDePasDeTemps}),
+    variableManager_(data.CorrespondanceVarNativesVarOptim,
+                     data.NumeroDeVariableStockFinal,
+                     data.NumeroDeVariableDeTrancheDeStock,
+                     data.NombreDePasDeTempsPourUneOptimisation)
+{
+}
+
+ConstraintBuilder::ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo,
+                                     PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
+                                     const CsrVariableIndices& csrVariableIndices):
+    // The weekly correspondence is still bound (ConstraintBuilderData's references require it)
+    // but never queried: CSR constraints only use the five rerouted variable kinds.
+    ConstraintBuilder(problemeHebdo,
+                      ProblemeAResoudre,
+                      problemeHebdo->CorrespondanceVarNativesVarOptim,
+                      problemeHebdo->NumeroDeVariableStockFinal,
+                      problemeHebdo->NumeroDeVariableDeTrancheDeStock)
+{
+    csrVariableIndices_ = &csrVariableIndices;
+}
+
 void ConstraintBuilder::build()
 {
     if (nombreDeTermes_ > 0)
@@ -184,19 +231,27 @@ ConstraintBuilder& ConstraintBuilder::DirectFlow(unsigned int index,
                                                  int offset,
                                                  int delta)
 {
-    AddVariable(variableManager_.DirectFlow(index, hourInWeek_, offset, delta), coeff);
+    const int var = csrVariableIndices_
+                      ? csrVariableIndices_->directFlow[index]
+                      : variableManager_.DirectFlow(index, hourInWeek_, offset, delta);
+    AddVariable(var, coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::PositiveDirectFlow(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.PositiveDirectFlow(index, hourInWeek_), coeff);
+    const int var = csrVariableIndices_ ? csrVariableIndices_->positiveDirectFlow[index]
+                                        : variableManager_.PositiveDirectFlow(index, hourInWeek_);
+    AddVariable(var, coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::PositiveIndirectFlow(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.PositiveIndirectFlow(index, hourInWeek_), coeff);
+    const int var = csrVariableIndices_
+                      ? csrVariableIndices_->positiveIndirectFlow[index]
+                      : variableManager_.PositiveIndirectFlow(index, hourInWeek_);
+    AddVariable(var, coeff);
     return *this;
 }
 
@@ -305,13 +360,17 @@ ConstraintBuilder& ConstraintBuilder::FinalStorage(unsigned int index, double co
 
 ConstraintBuilder& ConstraintBuilder::UnsuppliedEnergy(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.UnsuppliedEnergy(index, hourInWeek_), coeff);
+    const int var = csrVariableIndices_ ? csrVariableIndices_->unsuppliedEnergy[index]
+                                        : variableManager_.UnsuppliedEnergy(index, hourInWeek_);
+    AddVariable(var, coeff);
     return *this;
 }
 
 ConstraintBuilder& ConstraintBuilder::Spillage(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.Spillage(index, hourInWeek_), coeff);
+    const int var = csrVariableIndices_ ? csrVariableIndices_->spillage[index]
+                                        : variableManager_.Spillage(index, hourInWeek_);
+    AddVariable(var, coeff);
     return *this;
 }
 

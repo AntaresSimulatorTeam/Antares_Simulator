@@ -152,7 +152,11 @@ BOOST_AUTO_TEST_SUITE(_constraint_builder_test_suite_)
 
 BOOST_FIXTURE_TEST_CASE(AddWithdrawalConstraint, ConstraintBuilderFixture)
 {
-    ConstraintBuilder builder(&pb_hebdo);
+    ConstraintBuilder builder(&pb_hebdo,
+                          *pb_hebdo.ProblemeAResoudre,
+                          pb_hebdo.CorrespondanceVarNativesVarOptim,
+                          pb_hebdo.NumeroDeVariableStockFinal,
+                          pb_hebdo.NumeroDeVariableDeTrancheDeStock);
     ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
     // Call the add method for "CountryA" (index 0)
@@ -201,7 +205,11 @@ BOOST_FIXTURE_TEST_CASE(AddWithdrawalConstraint, ConstraintBuilderFixture)
 
 BOOST_FIXTURE_TEST_CASE(AddInjectionConstraint, ConstraintBuilderFixture)
 {
-    ConstraintBuilder builder(&pb_hebdo);
+    ConstraintBuilder builder(&pb_hebdo,
+                          *pb_hebdo.ProblemeAResoudre,
+                          pb_hebdo.CorrespondanceVarNativesVarOptim,
+                          pb_hebdo.NumeroDeVariableStockFinal,
+                          pb_hebdo.NumeroDeVariableDeTrancheDeStock);
     ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
     // Call the add method for "CountryB" (index 1)
@@ -250,7 +258,11 @@ BOOST_FIXTURE_TEST_CASE(AddInjectionConstraint, ConstraintBuilderFixture)
 
 BOOST_FIXTURE_TEST_CASE(AddNettingConstraint, ConstraintBuilderFixture)
 {
-    ConstraintBuilder builder(&pb_hebdo);
+    ConstraintBuilder builder(&pb_hebdo,
+                          *pb_hebdo.ProblemeAResoudre,
+                          pb_hebdo.CorrespondanceVarNativesVarOptim,
+                          pb_hebdo.NumeroDeVariableStockFinal,
+                          pb_hebdo.NumeroDeVariableDeTrancheDeStock);
     ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
     // Call the add method for "CountryC" (index 2)
@@ -298,7 +310,11 @@ BOOST_FIXTURE_TEST_CASE(AddNettingConstraint, ConstraintBuilderFixture)
 
 BOOST_FIXTURE_TEST_CASE(MultipleAreasTest, ConstraintBuilderFixture)
 {
-    ConstraintBuilder builder(&pb_hebdo);
+    ConstraintBuilder builder(&pb_hebdo,
+                          *pb_hebdo.ProblemeAResoudre,
+                          pb_hebdo.CorrespondanceVarNativesVarOptim,
+                          pb_hebdo.NumeroDeVariableStockFinal,
+                          pb_hebdo.NumeroDeVariableDeTrancheDeStock);
     ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
     // Add constraints for multiple areas
@@ -333,7 +349,11 @@ BOOST_FIXTURE_TEST_CASE(week_is_set_to_12___all_constraints_receive_correct_name
                         ConstraintBuilderFixture)
 {
     pb_hebdo.weekInTheYear = 12;
-    ConstraintBuilder builder(&pb_hebdo);
+    ConstraintBuilder builder(&pb_hebdo,
+                          *pb_hebdo.ProblemeAResoudre,
+                          pb_hebdo.CorrespondanceVarNativesVarOptim,
+                          pb_hebdo.NumeroDeVariableStockFinal,
+                          pb_hebdo.NumeroDeVariableDeTrancheDeStock);
     ShortTermStorageCumulation cumulation(builder, STScumulativeConstraintData);
 
     // Add constraints for multiple areas

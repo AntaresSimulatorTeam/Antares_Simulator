@@ -9,6 +9,8 @@
 #include "../opt_fonctions.h"
 #include "../opt_rename_problem.h"
 
+struct CsrVariableIndices;
+
 // TODO God struct should be decomposed
 class ConstraintBuilderData final
 {
@@ -50,37 +52,29 @@ class ConstraintBuilder final
 public:
     ConstraintBuilder() = delete;
 
-    explicit ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo,
-                               PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre):
-        data({ProblemeAResoudre.Pi,
-              ProblemeAResoudre.Colonne,
-              ProblemeAResoudre.NombreDeContraintes,
-              ProblemeAResoudre.NombreDeTermesDansLaMatriceDesContraintes,
-              ProblemeAResoudre.IndicesDebutDeLigne,
-              ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes,
-              ProblemeAResoudre.IndicesColonnes,
-              ProblemeAResoudre.NombreDeTermesDesLignes,
-              ProblemeAResoudre.Sens,
-              ProblemeAResoudre.IncrementDAllocationMatriceDesContraintes,
-              problemeHebdo->CorrespondanceVarNativesVarOptim,
-              problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
-              problemeHebdo->NumeroDeVariableStockFinal,
-              problemeHebdo->NumeroDeVariableDeTrancheDeStock,
-              ProblemeAResoudre.NomDesContraintes,
-              problemeHebdo->NomsDesPays,
-              problemeHebdo->weekInTheYear,
-              problemeHebdo->NombreDePasDeTemps}),
-        variableManager_(data.CorrespondanceVarNativesVarOptim,
-                         data.NumeroDeVariableStockFinal,
-                         data.NumeroDeVariableDeTrancheDeStock,
-                         data.NombreDePasDeTempsPourUneOptimisation)
-    {
-    }
+    /*! \brief Variables resolve against the given correspondence tables -- typically
+     *         problemeHebdo's own for the weekly problem.
+     *
+     *  The correspondence tables are explicit parameters so that every caller states which
+     *  variable numbering the built constraints refer to.
+     */
+    ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo,
+                      PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
+                      std::vector<CORRESPONDANCES_DES_VARIABLES>& correspondanceVarNativesVarOptim,
+                      std::vector<int>& numeroDeVariableStockFinal,
+                      std::vector<std::vector<int>>& numeroDeVariableDeTrancheDeStock);
 
-    explicit ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo):
-        ConstraintBuilder(problemeHebdo, *problemeHebdo->ProblemeAResoudre)
-    {
-    }
+    /*! \brief Same as above, but unsupplied energy / spillage / flow variables resolve against
+     *         the given indices instead of a weekly correspondence table.
+     *
+     *  For a solve that reuses problemeHebdo's static data (areas, links, ...) but numbers its
+     *  own variables and must leave the weekly problem's correspondence table untouched -- the
+     *  adequacy patch's hourly CSR problem. Only the five variable kinds held by
+     *  CsrVariableIndices are rerouted; they are always queried without time offset.
+     */
+    ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo,
+                      PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
+                      const CsrVariableIndices& csrVariableIndices);
 
     ConstraintBuilder& updateHourWithinWeek(unsigned hour)
     {
@@ -301,6 +295,10 @@ private:
 
     char operator_ = '=';
     int nombreDeTermes_ = 0;
+
+    // When set, ENS / spillage / flow variable lookups resolve against these indices instead
+    // of the weekly problem's correspondence table (see the dedicated constructor).
+    const CsrVariableIndices* csrVariableIndices_ = nullptr;
 
     void AddVariable(int index, double coeff);
 

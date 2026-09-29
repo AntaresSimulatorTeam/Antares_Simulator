@@ -23,7 +23,7 @@ void HourlyCSRProblem::constructVariableENS()
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            variableManager_.UnsuppliedEnergy(area, triggeredHour) = NumberOfVariables;
+            variableIndices_.unsuppliedEnergy[area] = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             varToBeSetToZeroIfBelowThreshold.insert(NumberOfVariables);
             ensVariablesInsideAdqPatch.insert(NumberOfVariables);
@@ -47,7 +47,7 @@ void HourlyCSRProblem::constructVariableSpilledEnergy()
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            variableManager_.Spillage(area, triggeredHour) = NumberOfVariables;
+            variableIndices_.spillage[area] = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
             varToBeSetToZeroIfBelowThreshold.insert(NumberOfVariables);
             logs.debug() << NumberOfVariables << " Spilled Energy[" << area << "].-["
@@ -77,8 +77,7 @@ void HourlyCSRProblem::constructVariableFlows()
             int algebraicFluxVar;
             int directVar;
             int indirectVar;
-            algebraicFluxVar = variableManager_.DirectFlow(Interco, triggeredHour)
-              = NumberOfVariables;
+            algebraicFluxVar = variableIndices_.directFlow[Interco] = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug()
               << NumberOfVariables << " flow[" << Interco << "]. ["
@@ -89,14 +88,12 @@ void HourlyCSRProblem::constructVariableFlows()
               << "].";
             NumberOfVariables++;
 
-            directVar = variableManager_.PositiveDirectFlow(Interco, triggeredHour)
-              = NumberOfVariables;
+            directVar = variableIndices_.positiveDirectFlow[Interco] = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug() << NumberOfVariables << " direct flow[" << Interco << "]. ";
             NumberOfVariables++;
 
-            indirectVar = variableManager_.PositiveIndirectFlow(Interco, triggeredHour)
-              = NumberOfVariables;
+            indirectVar = variableIndices_.positiveIndirectFlow[Interco] = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug() << NumberOfVariables << " indirect flow[" << Interco << "]. ";
             NumberOfVariables++;

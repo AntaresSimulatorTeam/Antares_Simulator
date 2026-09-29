@@ -9,17 +9,14 @@
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/study/system-model/portType.h>
 
+#include "antares/solver/optimisation/adequacy_patch_csr/csr_variable_indices.h"
+
 struct PROBLEME_HEBDO;
 class PROBLEME_ANTARES_A_RESOUDRE;
 
 namespace Antares::ModelerStudy::SystemModel
 {
 struct AreaConnection;
-}
-
-namespace VariableManagement
-{
-class VariableManager;
 }
 
 // Interface
@@ -73,7 +70,7 @@ public:
 
     ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo,
                    PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre,
-                   VariableManagement::VariableManager& variableManager,
+                   const CsrVariableIndices& variableIndices,
                    std::map<int, int>& constraintCsrFictitiousLoad,
                    std::map<int, int>& constraintCsrMaxEnsLoad);
 
@@ -95,7 +92,7 @@ private:
     Antares::LinearProblem::Api::FillContext fillContext_{0, 0, 0, 0, 0};
 
     PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre_;
-    VariableManagement::VariableManager& variableManager_;
+    const CsrVariableIndices& variableIndices_;
     std::map<int, int>& constraintCsrFictitiousLoad_;
     std::map<int, int>& constraintCsrMaxEnsLoad_;
 };
@@ -103,6 +100,6 @@ private:
 // Factory
 std::unique_ptr<IGemsPart> makeGemsPart(PROBLEME_HEBDO* problemeHebdo,
                                         PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre,
-                                        VariableManagement::VariableManager& variableManager,
+                                        const CsrVariableIndices& variableIndices,
                                         std::map<int, int>& constraintCsrFictitiousLoad,
                                         std::map<int, int>& constraintCsrMaxEnsLoad);

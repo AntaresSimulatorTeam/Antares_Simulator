@@ -11,7 +11,6 @@
 #include <antares/study/system-model/component.h>
 #include <antares/study/system-model/system.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
@@ -22,12 +21,12 @@ using namespace Antares::LinearProblem::Api;
 
 ActiveGemsPart::ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo,
                                PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre,
-                               VariableManagement::VariableManager& variableManager,
+                               const CsrVariableIndices& variableIndices,
                                std::map<int, int>& constraintCsrFictitiousLoad,
                                std::map<int, int>& constraintCsrMaxEnsLoad):
     problemeHebdo_(problemeHebdo),
     problemeAResoudre_(problemeAResoudre),
-    variableManager_(variableManager),
+    variableIndices_(variableIndices),
     constraintCsrFictitiousLoad_(constraintCsrFictitiousLoad),
     constraintCsrMaxEnsLoad_(constraintCsrMaxEnsLoad)
 {
@@ -104,7 +103,7 @@ void ActiveGemsPart::setBoundsOnENS()
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area] == physicalAreaInsideAdqPatch)
         {
-            int var = variableManager_.UnsuppliedEnergy(area, triggeredHour_);
+            int var = variableIndices_.unsuppliedEnergy[area];
             problemeAResoudre_.Xmax[var] += gemsUnsupEnergyForArea(area);
         }
     }
@@ -149,7 +148,7 @@ double ActiveGemsPart::gemsSpilledForArea(uint32_t area) const
 // Factory
 std::unique_ptr<IGemsPart> makeGemsPart(PROBLEME_HEBDO* problemeHebdo,
                                         PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre,
-                                        VariableManagement::VariableManager& variableManager,
+                                        const CsrVariableIndices& variableIndices,
                                         std::map<int, int>& constraintCsrFictitiousLoad,
                                         std::map<int, int>& constraintCsrMaxEnsLoad)
 {
@@ -157,7 +156,7 @@ std::unique_ptr<IGemsPart> makeGemsPart(PROBLEME_HEBDO* problemeHebdo,
     {
         return std::make_unique<ActiveGemsPart>(problemeHebdo,
                                                 problemeAResoudre,
-                                                variableManager,
+                                                variableIndices,
                                                 constraintCsrFictitiousLoad,
                                                 constraintCsrMaxEnsLoad);
     }
