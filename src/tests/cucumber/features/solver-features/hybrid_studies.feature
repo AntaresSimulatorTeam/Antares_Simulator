@@ -55,12 +55,13 @@ Feature: hybrid (simulator+modeler) studies
 
   @short
   Scenario: Hybrid area-connection price field is 0 on a MILP resolution
-    # Same study as the scenario above, with unit-commitment-mode = milp. OR-Tools does not
+    # Same study as the scenario above, run with unit-commitment-mode = milp. OR-Tools does not
     # provide dual values on a MIP problem (MPConstraint::dual_value() fails), so the legacy
     # area's price seen by the components is 0, as for legacy marginal costs in MILP.
     # gen1 profit is therefore (0 - 0.3) * 60 = -18 and gen2's is (0 - 5.0) * 40 = -200.
     # The run must not fail on the unavailable duals.
-    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/hybrid_price_connection_milp"
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/hybrid_price_connection"
+    And the unit commitment mode is "milp"
     And the linear solver is highs
     When I run antares simulator with --output=all
     Then the simulation succeeds
