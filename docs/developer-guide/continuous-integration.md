@@ -36,20 +36,20 @@ Here is a description of workflows with their associated status.
 
 [oraclelinux_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/oracle8.yml/badge.svg?branch=develop
 
-[ubuntu_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Ubuntu%20CI%20(push%20and/or%20release)"
+[ubuntu_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/ubuntu.yml
 
-[windows_ci_only_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(pre-compiled%20only)"
+[windows_ci_only_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/windows-vcpkg.yml
 
-[windows_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(VCPKG%20and%20pre-compiled)"
+[windows_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/windows-vcpkg.yml
 
 
-[oraclelinux_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Oracle%208%20CI%20(push%20and/or%20release)"
+[oraclelinux_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/oracle8.yml
 
 [sonarcloud_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/SonarCloud/badge.svg
 [sonarcloud_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/sonarcloud.yml
 
-[userguide_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Build%20Userguide%20pdf/badge.svg
-[userguide_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Build%20Userguide%20pdf"
+[userguide_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Docs%20Build%20Check/badge.svg
+[userguide_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/docs_build.yml
 
 [new_release_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Create%20new%20release/badge.svg
-[new_release_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Create%20new%20release"
+[new_release_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/new_release.yml

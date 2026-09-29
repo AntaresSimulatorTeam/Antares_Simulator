@@ -57,8 +57,8 @@ starting with the 9.0 version of Antares Simulator.
 
 [windows_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/windows-vcpkg.yml/badge.svg?branch=develop
 
-[windows_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Windows%20CI%20(VCPKG%20and%20pre-compiled)"
+[windows_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/windows-vcpkg.yml
 
 [oraclelinux_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/oracle8.yml/badge.svg?branch=develop
 
-[oraclelinux_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Oracle%208%20CI%20(push%20and/or%20release)"
+[oraclelinux_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/oracle8.yml
