@@ -7,6 +7,7 @@
 // but this problem has nothing to do with PROBLEME_HEBDO
 #include <optional>
 #include <set>
+#include <vector>
 
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
@@ -50,6 +51,7 @@ struct LinkVariable
 };
 
 struct PROBLEME_HEBDO;
+class ConstraintBuilder;
 
 // GEMS contribution for hybrid studies
 
@@ -63,12 +65,32 @@ public:
                               const Antares::Optimization::OptimizationOptions& solverOptions):
         solverOptions_(solverOptions),
         adqPatchParams_(adqPatchParams),
-        variableManager_(p->CorrespondanceVarNativesVarOptim,
-                         p->NumeroDeVariableStockFinal,
-                         p->NumeroDeVariableDeTrancheDeStock,
+        correspondence_(p->NombreDePasDeTempsPourUneOptimisation),
+        variableManager_(correspondence_,
+                         unusedStockFinal_,
+                         unusedStockTranche_,
                          p->NombreDePasDeTempsPourUneOptimisation),
         problemeHebdo_(p)
     {
+        // This HourlyCSRProblem's own correspondence table, entirely separate from
+        // problemeHebdo_->CorrespondanceVarNativesVarOptim: it repoints UnsuppliedEnergy /
+        // Spillage / DirectFlow / PositiveDirectFlow / PositiveIndirectFlow (the only
+        // accessors it ever calls) at indices in its own short-lived per-hour problem, and
+        // sharing the main correspondence table for that would leave every hour it touches
+        // permanently pointing at this problem's numbering instead of the main weekly
+        // problem's once this HourlyCSRProblem is done with it -- which is what any later
+        // reader (e.g. the simulation table dump) would then resolve against. Sized for
+        // every hour up front since HourlyCSRProblem is constructed once per week and reused
+        // across every triggered hour.
+        for (auto& entry: correspondence_)
+        {
+            entry.NumeroDeVariableDefaillancePositive.assign(p->NombreDePays, -1);
+            entry.NumeroDeVariableDefaillanceNegative.assign(p->NombreDePays, -1);
+            entry.NumeroDeVariableDuFluxDirect.assign(p->NombreDInterconnexions, -1);
+            entry.NumeroDeVariableDuFluxDirectPositif.assign(p->NombreDInterconnexions, -1);
+            entry.NumeroDeVariableDuFluxIndirectPositif.assign(p->NombreDInterconnexions, -1);
+        }
+
         double temp = pow(10, -adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
         belowThisThresholdSetToZero = std::min(temp, 0.1);
 
@@ -90,6 +112,12 @@ public:
     }
 
     void run(unsigned int week, unsigned int year);
+
+    // A ConstraintBuilder that resolves variables against this problem's own
+    // correspondence_, not problemeHebdo_->CorrespondanceVarNativesVarOptim -- so
+    // constraint-building agrees with the indices constructVariableENS/SpilledEnergy/Flows
+    // assigned. See the constructor's comment on correspondence_.
+    ConstraintBuilder makeConstraintBuilder();
 
 private:
     void calculateCsrParameters();
@@ -150,6 +178,14 @@ public:
 
 private:
     const AdqPatchParams& adqPatchParams_;
+
+    // See the constructor body for why this exists instead of reusing
+    // problemeHebdo_->CorrespondanceVarNativesVarOptim. unusedStockFinal_ /
+    // unusedStockTranche_ back VariableManager accessors (hydro layer storage) this
+    // problem never calls; they only need to exist for the reference to bind to.
+    std::vector<CORRESPONDANCES_DES_VARIABLES> correspondence_;
+    std::vector<int> unusedStockFinal_;
+    std::vector<std::vector<int>> unusedStockTranche_;
     VariableManagement::VariableManager variableManager_;
 
     PROBLEME_HEBDO* problemeHebdo_;

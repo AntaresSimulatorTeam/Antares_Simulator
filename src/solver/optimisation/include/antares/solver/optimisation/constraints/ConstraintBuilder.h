@@ -82,6 +82,43 @@ public:
     {
     }
 
+    // Same as above, but resolves variables against a caller-supplied correspondence table
+    // instead of problemeHebdo->CorrespondanceVarNativesVarOptim. For a solve that reuses
+    // problemeHebdo's static data (areas, links, week length, ...) but must not read or write
+    // the *main* weekly problem's variable numbering -- e.g. the adequacy patch's CSR, which
+    // repoints these entries to its own short-lived per-hour problem and would otherwise
+    // desync from whichever caller resolves variables through problemeHebdo directly.
+    explicit ConstraintBuilder(
+      PROBLEME_HEBDO* problemeHebdo,
+      PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
+      std::vector<CORRESPONDANCES_DES_VARIABLES>& correspondanceVarNativesVarOptim,
+      std::vector<int>& numeroDeVariableStockFinal,
+      std::vector<std::vector<int>>& numeroDeVariableDeTrancheDeStock):
+        data({ProblemeAResoudre.Pi,
+              ProblemeAResoudre.Colonne,
+              ProblemeAResoudre.NombreDeContraintes,
+              ProblemeAResoudre.NombreDeTermesDansLaMatriceDesContraintes,
+              ProblemeAResoudre.IndicesDebutDeLigne,
+              ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes,
+              ProblemeAResoudre.IndicesColonnes,
+              ProblemeAResoudre.NombreDeTermesDesLignes,
+              ProblemeAResoudre.Sens,
+              ProblemeAResoudre.IncrementDAllocationMatriceDesContraintes,
+              correspondanceVarNativesVarOptim,
+              problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
+              numeroDeVariableStockFinal,
+              numeroDeVariableDeTrancheDeStock,
+              ProblemeAResoudre.NomDesContraintes,
+              problemeHebdo->NomsDesPays,
+              problemeHebdo->weekInTheYear,
+              problemeHebdo->NombreDePasDeTemps}),
+        variableManager_(data.CorrespondanceVarNativesVarOptim,
+                         data.NumeroDeVariableStockFinal,
+                         data.NumeroDeVariableDeTrancheDeStock,
+                         data.NombreDePasDeTempsPourUneOptimisation)
+    {
+    }
+
     ConstraintBuilder& updateHourWithinWeek(unsigned hour)
     {
         hourInWeek_ = hour;

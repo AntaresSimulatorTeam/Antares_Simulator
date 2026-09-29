@@ -4,7 +4,6 @@
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
 #include <cmath>
-#include <vector>
 
 #include "antares/solver/optimisation/adequacy_patch_csr/count_constraints_variables.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/csr_quadratic_problem.h"
@@ -196,73 +195,8 @@ void HourlyCSRProblem::solveProblem(uint week, int year, const OptimizationOptio
                   year);
 }
 
-namespace
-{
-// constructVariableENS/SpilledEnergy/Flows (construct_problem_variables.cpp) repoint
-// this hour's UnsuppliedEnergy/Spillage/DirectFlow/PositiveDirectFlow/PositiveIndirectFlow
-// entries in the *shared* problemeHebdo->CorrespondanceVarNativesVarOptim[hour] at indices
-// of this HourlyCSRProblem's own short-lived local problem, and nothing ever puts the
-// original indices back. Any later reader going through the same accessors (e.g. the
-// simulation table dump, once this whole post-process is done) would then resolve those
-// indices against the *original* weekly problem -- which has nothing to do with this
-// HourlyCSRProblem's numbering -- instead of the flow/ENS/spillage they meant to read.
-//
-// The original indices are still valid and still correctly published (both the ordinary
-// weekly solve and this CSR solve publish their result to the same address, see
-// set_variable_boundaries.cpp / opt_gestion_des_bornes_cas_lineaire.cpp), so save them
-// before HourlyCSRProblem::run() overwrites them and put them back once its solve -- and
-// the result publishing that comes with it -- is done.
-class CsrVariableIndexGuard
-{
-public:
-    CsrVariableIndexGuard(PROBLEME_HEBDO* problemeHebdo, int hour):
-        problemeHebdo_(problemeHebdo),
-        hour_(hour),
-        saved_{problemeHebdo_->CorrespondanceVarNativesVarOptim[hour_]
-                 .NumeroDeVariableDefaillancePositive,
-               problemeHebdo_->CorrespondanceVarNativesVarOptim[hour_]
-                 .NumeroDeVariableDefaillanceNegative,
-               problemeHebdo_->CorrespondanceVarNativesVarOptim[hour_].NumeroDeVariableDuFluxDirect,
-               problemeHebdo_->CorrespondanceVarNativesVarOptim[hour_]
-                 .NumeroDeVariableDuFluxDirectPositif,
-               problemeHebdo_->CorrespondanceVarNativesVarOptim[hour_]
-                 .NumeroDeVariableDuFluxIndirectPositif}
-    {
-    }
-
-    ~CsrVariableIndexGuard()
-    {
-        auto& entry = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour_];
-        entry.NumeroDeVariableDefaillancePositive = saved_.unsuppliedEnergy;
-        entry.NumeroDeVariableDefaillanceNegative = saved_.spillage;
-        entry.NumeroDeVariableDuFluxDirect = saved_.directFlow;
-        entry.NumeroDeVariableDuFluxDirectPositif = saved_.positiveDirectFlow;
-        entry.NumeroDeVariableDuFluxIndirectPositif = saved_.positiveIndirectFlow;
-    }
-
-    CsrVariableIndexGuard(const CsrVariableIndexGuard&) = delete;
-    CsrVariableIndexGuard& operator=(const CsrVariableIndexGuard&) = delete;
-
-private:
-    struct Saved
-    {
-        std::vector<int> unsuppliedEnergy;
-        std::vector<int> spillage;
-        std::vector<int> directFlow;
-        std::vector<int> positiveDirectFlow;
-        std::vector<int> positiveIndirectFlow;
-    };
-
-    PROBLEME_HEBDO* problemeHebdo_;
-    int hour_;
-    Saved saved_;
-};
-} // namespace
-
 void HourlyCSRProblem::run(uint week, uint year)
 {
-    CsrVariableIndexGuard indexGuard(problemeHebdo_, triggeredHour);
-
     calculateCsrParameters();
     buildProblemVariables();
     buildProblemConstraintsLHS();
@@ -270,4 +204,13 @@ void HourlyCSRProblem::run(uint week, uint year)
     buildProblemConstraintsRHS();
     setProblemCost();
     solveProblem(week, year, solverOptions_);
+}
+
+ConstraintBuilder HourlyCSRProblem::makeConstraintBuilder()
+{
+    return ConstraintBuilder(problemeHebdo_,
+                             problemeAResoudre_,
+                             correspondence_,
+                             unusedStockFinal_,
+                             unusedStockTranche_);
 }
