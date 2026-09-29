@@ -55,7 +55,7 @@ From a practical standpoint, assessments of $Y^-, Y^+$ should be derived from kn
 
 The kirchhoff constraint generator is a standalone tool used to automatically create kirchhoff constraints. For more details about this process read:
 
-[7-kirchhoffs_constraint_generator.md](https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/reference-guide/07-kirchhoffs_constraint_generator.md)
+[Kirchhoff's constraint generator](kirchhoff-constraints-builder.md)
 
 The binary is located in Antares_Simulator/bin/
 

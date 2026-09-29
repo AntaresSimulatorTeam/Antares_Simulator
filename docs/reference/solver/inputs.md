@@ -192,7 +192,7 @@ filter-year-by-year = hourly, daily
 
 ## Load
 
-_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/02-load/)_
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/)_
 
 This window is used to handle all input data regarding load. In Antares load should include transmission losses. It should preferably not include the power absorbed by pumped storage power plants. If it does, the user should neither use the "PSP" array (see window "Misc. Gen") nor the explicit modeling of PSP plants
 
@@ -242,7 +242,7 @@ The user may pick any area appearing in the list and is then given access to dif
 
 ## Thermal
 
-_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/03-thermals/)_
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/)_
 
 This window is used to handle all input data regarding thermal dispatchable power.
 
@@ -347,7 +347,7 @@ a choice can be made between different tabs:
 
 ## Short-term storages
 
-_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/08-st-storages/)_
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/)_
 
 This window is used to create and edit short-term storage objects. An individual short-term storage component is defined as an object with the following characteristics:
 
@@ -378,7 +378,7 @@ The user may pick any area appearing in the area list and is then given access t
 
 ## Hydro
 
-_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/05-hydro/)_
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/)_
 
 This section of the AntaresWeb interface for this section is meant to handle all input data regarding hydro power,
 as well as any other kind of energy storage system of any size (from a small battery to a large
@@ -545,7 +545,7 @@ It includes 15 parameters (out of which 7 are booleans) presented hereafter:
 
 ## Wind
 
-_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/06-wind/)_
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/)_
 
 This window is used to handle all input data regarding Wind power.
 This window is only accessible when the advanced parameter Renewable Generation modeling is set to "Aggregated".
@@ -587,7 +587,7 @@ The user may pick any area appearing in the list and is then given access to dif
 
 ## Solar
 
-_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/07-solar/)_
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/)_
 
 This window is used to handle all input data regarding Solar power. Both thermal solar generation and PV solar generation are assumed to be bundled in this data section.
 _This window is only accessible when the advanced parameter Renewable Generation modeling is set to "aggregated”._
@@ -630,7 +630,7 @@ The user may pick any area appearing in the list and is then given access to dif
 
 ## Renewable
 
-_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/04-renewables/)_
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/)_
 
 This window is used to handle all input data regarding renewable generation.
 _This window is only accessible when the advanced parameter Renewable Generation modeling is set to "cluster” (default value)._
@@ -679,7 +679,7 @@ The user may pick any area appearing in the area list and is then given access t
 
 ## Misc. Gen.
 
-_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/10-misc-gen/)_
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/)_
 
 This window is used to handle all input data regarding miscellaneous non dispatchable generation.
 
@@ -814,7 +814,7 @@ participations:
 
 ## Reserves / DSM (old)
 
-_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/09-reserves/)_
+_[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/)_
 
 This window is used to handle all input data regarding reserves and the potential of "smart" load management (when not modeled using "fake" thermal dispatchable plants). On picking any area in the primary list, the user gets direct access to all data regarding the area, which amount to **four** ready-made 8760-hour time-series (expressed in MW). Those reserves are available in either "adequacy" or "economy" simulations:
 

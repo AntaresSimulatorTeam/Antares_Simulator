@@ -46,7 +46,7 @@ Here is a description of workflows with their associated status.
 [oraclelinux_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Oracle%208%20CI%20(push%20and/or%20release)"
 
 [sonarcloud_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/SonarCloud/badge.svg
-[sonarcloud_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"SonarCloud"
+[sonarcloud_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/sonarcloud.yml
 
 [userguide_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/workflows/Build%20Userguide%20pdf/badge.svg
 [userguide_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Build%20Userguide%20pdf"
