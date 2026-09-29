@@ -1,0 +1,27 @@
+# Lychee link checker configuration.
+# https://lychee.cli.rs/#/configuration/file
+
+no_progress = true
+
+max_retries = 5
+retry_wait_time = 30
+
+# Check anchor fragments in relative markdown links (e.g. parameters.md#some-anchor).
+include_fragments = "anchor-only"
+
+# Third-party vendored code (libyuni) is out of our control and not maintained by us.
+exclude_path = [
+    "^src/ext/",
+]
+
+exclude = [
+    # AntaresWeb's readthedocs site no longer hosts these per-area pages; not part of this repo's docs to fix.
+    '^https://antares-web\.readthedocs\.io/en/latest/user-guide/study/areas/',
+    # Docker Hub, scipopt.org and gnu.org block automated/non-browser requests (403/429) regardless of retries.
+    '^https://hub\.docker\.com/repository/docker/antaresrte/rte-antares',
+    '^https://www\.scipopt\.org',
+    '^https://www\.gnu\.org/software/glpk',
+    # GitHub repo pages render the "#readme" section client-side; it isn't present in the
+    # static HTML lychee fetches, so anchor-checking always reports a false positive here.
+    '^https://github\.com/AntaresSimulatorTeam/antares-vcpkg-registry#readme$',
+]
