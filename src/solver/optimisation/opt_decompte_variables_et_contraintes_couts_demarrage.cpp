@@ -11,7 +11,7 @@ void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO* pr
         return;
     }
 
-        ConstraintBuilder builder(problemeHebdo);
+    ConstraintBuilder builder(problemeHebdo);
     LinearProblemMatrixStartUpCosts(problemeHebdo, true, builder).Run();
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
