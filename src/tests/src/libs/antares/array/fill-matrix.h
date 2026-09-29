@@ -43,18 +43,6 @@ public:
         }
     }
 
-    bool openFile(Yuni::IO::File::Stream& /* file */,
-                  const AnyString& /* filename */) const override
-    {
-        return true;
-    }
-
-    void saveBufferToFile(std::string& buffer, Yuni::IO::File::Stream& /* f */) const override
-    {
-        data = buffer;
-    }
-
-public:
     mutable std::string data;
 };
 

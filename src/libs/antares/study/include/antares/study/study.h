@@ -9,6 +9,7 @@
 
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/correlation/correlation.h>
+#include <antares/array/matrix-io.h>
 #include <antares/date/date.h>
 #include <antares/study/runtime/runtime.h>
 #include <antares/writer/i_writer.h>
@@ -334,7 +335,7 @@ public:
     */
     //@{
     //! A buffer for temporary operations on large amount of data
-    mutable Matrix<>::BufferType dataBuffer;
+    mutable MatrixIO::BufferType dataBuffer;
 
     //@}
 

@@ -10,7 +10,7 @@
 #include <vector>
 
 #include <yuni/yuni.h>
-#include <yuni/io/file.h>
+#include <string>
 
 namespace Antares
 {
@@ -43,9 +43,6 @@ public:
     using ColumnView = std::span<T>;
     using ConstColumnView = std::span<const T>;
 
-    //! A buffer, for large amount of data
-    using BufferType = Yuni::Clob;
-
     /*!
     ** \brief Options when loading a file
     */
@@ -61,12 +58,6 @@ public:
         optNoWarnIfEmpty = 16,
         //! The loading never fails
         optNeverFails = 32,
-    };
-
-    enum
-    {
-        //! A Hard-coded maximum filesize
-        filesizeHardLimit = 1536 * 1024 * 1024, // 1.5Go
     };
 
 public:
@@ -118,91 +109,6 @@ public:
     */
     void swap(MatrixType& rhs) noexcept;
     //@}
-
-    //! \name Legacy file manipulation implementation
-    //! Prefer the free functions in <antares/array/matrix-io.h>.
-    //@{
-    /*!
-    ** \brief Load entries from a CSV file
-    **
-    ** If the param `fixedSize` is false, the number of columns will be
-    ** automatically detected from the first row in the CSV file.
-    **
-    ** \param filename A filename to a CSV file
-    ** \param minWidth The minimum allowed width
-    ** \param maxHeight The new height
-    ** \param fixedSize True to not automatically determine the width of the matrix
-    ** \param warning True to produce warnings when an error occurs
-    ** \param buffer An optional buffer for reading the file
-    ** \return True if the operation succeeded
-    */
-    bool loadFromCSVFile(const AnyString& filename,
-                                 uint minWidth,
-                                 uint maxHeight,
-                                 uint options = optNone,
-                                 BufferType* buffer = NULL);
-
-    bool loadFromCSVFile(const AnyString& filename,
-                         uint minWidth,
-                         uint maxHeight,
-                         BufferType* buffer);
-
-    bool loadFromCSVFile(const AnyString& filename);
-
-    /*!
-    ** \brief Trying to open a file
-    **
-    ** \param file The file object
-    ** \param filename The full path of the file we try to open
-    ** \return True if file could be opened, False otherwise (no enough permission or wrong path)
-    */
-    bool openFile(Yuni::IO::File::Stream& file, const AnyString& filename) const;
-
-    void saveBufferToFile(std::string& buffer, Yuni::IO::File::Stream& f) const;
-
-    /*!
-    ** \brief Write the content of a matrix into a single file
-    **
-    ** \param m The matrix
-    ** \param filename The file where to write data
-    ** \return A non-zero value if the operation succeeded, 0 otherwise
-    */
-    bool saveToCSVFile(const AnyString& filename,
-                       uint precision = 6,
-                       bool print_dimensions = false,
-                       bool saveEvenIfAllZero = false) const;
-
-    /*!
-    ** \brief Write the content of a matrix into a single file
-    **
-    ** \param m         The matrix
-    ** \param filename  The file where to write data
-    ** \param predicate A predicate for modyfing values on the fly
-    ** \return A non-zero value if the operation succeeded, 0 otherwise
-    */
-    template<class PredicateT>
-    bool saveToCSVFile(const AnyString& filename,
-                       uint precision,
-                       bool print_dimensions,
-                       PredicateT& predicate,
-                       bool saveEvenIfAllZero = false) const;
-
-    //@}
-
-    Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer,
-                                                 const AnyString& filename) const
-    {
-        return Yuni::IO::File::LoadFromFile(buffer, filename, filesizeHardLimit);
-    }
-
-    template<class PredicateT>
-    void saveToFileDescriptor(std::string& data,
-                              uint precision,
-                              bool print_dimensions,
-                              PredicateT& predicate) const
-    {
-        saveToBuffer(data, precision, print_dimensions, predicate, false);
-    }
 
     //! \name Operations on columns and rows
     //@{
@@ -364,15 +270,6 @@ public:
         }
     };
 
-    void saveToBuffer(std::string& data, uint precision = 6) const;
-
-    template<class PredicateT>
-    void saveToBuffer(std::string& data,
-                      uint precision,
-                      bool print_dimensions,
-                      PredicateT& predicate,
-                      bool saveEvenIfAllZero) const;
-
  private:
     uint width_ = 0;
     uint height_ = 0;
@@ -380,29 +277,6 @@ public:
     /*!
     ** \brief Load data from a CSV file
     */
-    bool internalLoadCSVFile(const AnyString& filename,
-                             uint minWidth,
-                             uint maxHeight,
-                             uint options,
-                             BufferType* buffer = NULL);
-
-    /*!
-    ** \brief Save data to a CSV file
-    */
-    template<class PredicateT>
-    bool internalSaveCSVFile(const AnyString& filename,
-                             uint precision,
-                             bool print_dimensions,
-                             PredicateT& predicate,
-                             bool saveEvenIfAllZero) const;
-
-    bool loadFromBuffer(const AnyString& filename,
-                        BufferType& data,
-                        uint minWidth,
-                        uint maxHeight,
-                        const int fixedSize,
-                        uint options);
-
 }; // class Matrix
 
 /*!

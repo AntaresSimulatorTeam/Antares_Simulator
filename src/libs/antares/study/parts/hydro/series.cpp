@@ -6,6 +6,7 @@
 #include <algorithm>
 
 #include <antares/inifile/inifile.h>
+#include <antares/array/matrix-io.h>
 #include <antares/logs/logs.h>
 #include <antares/study/parts/hydro/series.h>
 
@@ -23,8 +24,7 @@ static bool loadTSfromFile(Matrix<double>& ts,
                            unsigned int height)
 {
     fs::path filePath = folder / areaID / filename;
-    Matrix<>::BufferType fileContent;
-    return ts.loadFromCSVFile(filePath.string(), 1, height, &fileContent);
+    return MatrixIO::load(ts, filePath.string(), 1, height, 0);
 }
 
 static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,
@@ -112,20 +112,18 @@ bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
 bool DataSeriesHydro::LoadMaxPower(const std::string& areaID, const fs::path& folder)
 {
     bool ret = true;
-    Matrix<>::BufferType fileContent;
-
     fs::path filePath = folder / areaID / "maxHourlyGenPower.txt";
-    ret = maxHourlyGenPower.timeSeries.loadFromCSVFile(filePath.string(),
+    ret = MatrixIO::load(maxHourlyGenPower.timeSeries, filePath.string(),
                                                        1,
                                                        HOURS_PER_YEAR,
-                                                       &fileContent)
+                                                       0)
           && ret;
 
     filePath = folder / areaID / "maxHourlyPumpPower.txt";
-    ret = maxHourlyPumpPower.timeSeries.loadFromCSVFile(filePath.string(),
+    ret = MatrixIO::load(maxHourlyPumpPower.timeSeries, filePath.string(),
                                                         1,
                                                         HOURS_PER_YEAR,
-                                                        &fileContent)
+                                                         0)
           && ret;
 
     return ret;
@@ -169,19 +167,17 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID,
         bool ret = true;
 
         // Saving data
-        ret = ror.timeSeries.saveToCSVFile(folder + SEP + areaID + SEP + "ror.txt", 0) && ret;
-        ret = storage.timeSeries.saveToCSVFile(folder + SEP + areaID + SEP + "mod.txt", 0) && ret;
-        ret = mingen.timeSeries.saveToCSVFile(folder + SEP + areaID + SEP + "mingen.txt", 0) && ret;
+        ret = MatrixIO::save(ror.timeSeries, folder + SEP + areaID + SEP + "ror.txt", 0) && ret;
+        ret = MatrixIO::save(storage.timeSeries, folder + SEP + areaID + SEP + "mod.txt", 0) && ret;
+        ret = MatrixIO::save(mingen.timeSeries, folder + SEP + areaID + SEP + "mingen.txt", 0) && ret;
 
         if (hydroPmax == Parameters::Compatibility::HydroPmax::Hourly)
         {
-            ret = maxHourlyGenPower.timeSeries.saveToCSVFile(folder + SEP + areaID + SEP
-                                                               + "maxHourlyGenPower.txt",
-                                                             0)
+            ret = MatrixIO::save(maxHourlyGenPower.timeSeries,
+                                 folder + SEP + areaID + SEP + "maxHourlyGenPower.txt", 0)
                   && ret;
-            ret = maxHourlyPumpPower.timeSeries.saveToCSVFile(folder + SEP + areaID + SEP
-                                                                + "maxHourlyPumpPower.txt",
-                                                              0)
+            ret = MatrixIO::save(maxHourlyPumpPower.timeSeries,
+                                 folder + SEP + areaID + SEP + "maxHourlyPumpPower.txt", 0)
                   && ret;
         }
 

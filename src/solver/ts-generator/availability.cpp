@@ -575,7 +575,7 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& are
 void writeTStoDisk(const Matrix<>& series, const std::filesystem::path savePath)
 {
     std::string buffer;
-    series.saveToBuffer(buffer, 0);
+    MatrixIO::saveToBuffer(series, buffer, 0);
 
     std::filesystem::path parentDir = savePath.parent_path();
     if (!std::filesystem::exists(parentDir))

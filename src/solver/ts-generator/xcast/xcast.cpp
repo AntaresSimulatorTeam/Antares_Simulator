@@ -9,6 +9,7 @@
 #include <string>
 
 #include <antares/antares/fatal-error.h>
+#include <antares/array/matrix-io.h>
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
 #include "antares/solver/ts-generator/xcast/predicate.hxx"
@@ -55,7 +56,7 @@ void XCast::exportTimeSeriesToTheOutput(PredicateT& predicate)
           std::string areaId = area.id + "txt";
           fs::path filename = output / areaId;
           std::string buffer;
-          predicate.matrix(area).saveToBuffer(buffer);
+           MatrixIO::saveToBuffer(predicate.matrix(area), buffer);
 
           pWriter.addEntryFromBuffer(filename, buffer);
       });

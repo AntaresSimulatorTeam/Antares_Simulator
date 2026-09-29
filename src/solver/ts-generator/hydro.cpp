@@ -258,11 +258,11 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
               fs::path outputFolder = fs::path("ts-generator") / "hydro" / mcYear / area.id;
 
               std::string buffer;
-              area.hydro.series->ror.timeSeries.saveToBuffer(buffer, precision);
+              MatrixIO::saveToBuffer(area.hydro.series->ror.timeSeries, buffer, precision);
               fs::path outputFile = outputFolder / "ror.txt";
               writer.addEntryFromBuffer(outputFile, buffer);
 
-              area.hydro.series->storage.timeSeries.saveToBuffer(buffer, precision);
+              MatrixIO::saveToBuffer(area.hydro.series->storage.timeSeries, buffer, precision);
               outputFile = outputFolder / "storage.txt";
               writer.addEntryFromBuffer(outputFile, buffer);
           });

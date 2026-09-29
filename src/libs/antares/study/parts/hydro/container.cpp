@@ -6,6 +6,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
 
 #include <antares/inifile/inifile.h>
+#include <antares/array/matrix-io.h>
 #include <antares/study/area/capacityReservation.h>
 #include <antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h>
 #include "antares/study/parts/reserves/reservesParticipationsLoader.h"
@@ -231,7 +232,7 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
 
           std::string creditId = "creditmodulations_" + area.id + ".txt";
           fs::path creditPath = capacityPath / creditId;
-          ret = area.hydro.creditModulation.loadFromCSVFile(creditPath.string(),
+          ret = MatrixIO::load(area.hydro.creditModulation, creditPath.string(),
                                                             101,
                                                             2,
                                                             Matrix<>::optFixedSize,
@@ -240,7 +241,7 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
 
           std::string waterValueId = "waterValues_" + area.id + ".txt";
           fs::path waterValuePath = capacityPath / waterValueId;
-          ret = area.hydro.waterValues.loadFromCSVFile(waterValuePath.string(),
+          ret = MatrixIO::load(area.hydro.waterValues, waterValuePath.string(),
                                                        101,
                                                        DAYS_PER_YEAR,
                                                        Matrix<>::optFixedSize,
@@ -249,7 +250,7 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
 
           std::string inflowId = "inflowPattern_" + area.id + ".txt";
           fs::path inflowPath = capacityPath / inflowId;
-          ret = area.hydro.inflowPattern.loadFromCSVFile(inflowPath.string(),
+          ret = MatrixIO::load(area.hydro.inflowPattern, inflowPath.string(),
                                                          1,
                                                          DAYS_PER_YEAR,
                                                          Matrix<>::optFixedSize,
@@ -380,23 +381,22 @@ bool PartHydro::validate(Study& study)
 
 bool PartHydro::LoadDailyMaxEnergy(const fs::path& folder, const std::string& areaid)
 {
-    Matrix<>::BufferType fileContent;
     bool ret = true;
 
     fs::path genPath = folder / "common" / "capacity" / ("maxDailyGenEnergy_" + areaid + ".txt");
-    ret = dailyNbHoursAtGenPmax.loadFromCSVFile(genPath.string(),
-                                                1,
-                                                DAYS_PER_YEAR,
-                                                Matrix<>::optFixedSize,
-                                                &fileContent)
+    ret = MatrixIO::load(dailyNbHoursAtGenPmax,
+                         genPath.string(),
+                         1,
+                         DAYS_PER_YEAR,
+                         Matrix<>::optFixedSize)
           && ret;
 
     fs::path pumpPath = folder / "common" / "capacity" / ("maxDailyPumpEnergy_" + areaid + ".txt");
-    ret = dailyNbHoursAtPumpPmax.loadFromCSVFile(pumpPath.string(),
-                                                 1,
-                                                 DAYS_PER_YEAR,
-                                                 Matrix<>::optFixedSize,
-                                                 &fileContent)
+    ret = MatrixIO::load(dailyNbHoursAtPumpPmax,
+                         pumpPath.string(),
+                         1,
+                         DAYS_PER_YEAR,
+                         Matrix<>::optFixedSize)
           && ret;
 
     return ret;

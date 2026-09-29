@@ -6,6 +6,7 @@
 #include <limits>
 
 #include <antares/inifile/inifile.h>
+#include <antares/array/matrix-io.h>
 #include <antares/io/file.h>
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
@@ -158,7 +159,6 @@ bool XCast::loadFromFolder(const fs::path& folder)
     useConversion = false;
 
     // A temporary buffer for reading matrices
-    Matrix<>::BufferType readBuffer;
     // Return value
     bool ret = true;
     // Settings
@@ -233,23 +233,22 @@ bool XCast::loadFromFolder(const fs::path& folder)
     fs::path p = folder / "data.txt";
 
     // Performing normal loading
-    ret = data.loadFromCSVFile(p.string(),
+    ret = MatrixIO::load(data, p.string(),
                                (unsigned int)dataMax,
                                12,
-                               Matrix<>::optFixedSize,
-                               &readBuffer)
+                               Matrix<>::optFixedSize)
           && ret;
 
     // K
     p = folder / "k.txt";
-    ret = K.loadFromCSVFile(p.string(), 12, 24, Matrix<>::optFixedSize, &readBuffer) && ret;
+    ret = MatrixIO::load(K, p.string(), 12, 24, Matrix<>::optFixedSize) && ret;
 
     unsigned int opts = Matrix<>::optNone;
 
     // Time-series translation
     p = folder / "translation.txt";
 
-    ret = translation.loadFromCSVFile(p.string(), 1, HOURS_PER_YEAR, opts, &readBuffer) && ret;
+    ret = MatrixIO::load(translation, p.string(), 1, HOURS_PER_YEAR, opts) && ret;
 
     if (translation.empty())
     {
@@ -272,7 +271,7 @@ bool XCast::loadFromFolder(const fs::path& folder)
     // Transfer function
     p = folder / "conversion.txt";
 
-    ret = conversion.loadFromCSVFile(p.string(), 3, 2, opts, &readBuffer) && ret;
+    ret = MatrixIO::load(conversion, p.string(), 3, 2, opts) && ret;
     if (conversion.width() >= 3 && conversion.width() <= conversionMaxPoints)
     {
         // We will overwrite the left and the right value
@@ -326,16 +325,16 @@ bool XCast::saveToFolder(const std::string& folder) const
     bool ret = true;
 
     // Coefficients
-    ret = data.saveToCSVFile(folder + SEP + "data.txt") && ret;
+    ret = MatrixIO::save(data, folder + SEP + "data.txt") && ret;
 
     // K
-    ret = K.saveToCSVFile(folder + SEP + "k.txt") && ret;
+    ret = MatrixIO::save(K, folder + SEP + "k.txt") && ret;
 
     // TimeSeriesAverage
-    ret = translation.saveToCSVFile(folder + SEP + "translation.txt") && ret;
+    ret = MatrixIO::save(translation, folder + SEP + "translation.txt") && ret;
 
     // Transfer function
-    ret = conversion.saveToCSVFile(folder + SEP + "conversion.txt") && ret;
+    ret = MatrixIO::save(conversion, folder + SEP + "conversion.txt") && ret;
 
     // Settings
     IniFile ini;

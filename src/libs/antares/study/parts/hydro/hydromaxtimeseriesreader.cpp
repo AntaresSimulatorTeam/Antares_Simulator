@@ -4,6 +4,7 @@
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
 
 #include <antares/inifile/inifile.h>
+#include <antares/array/matrix-io.h>
 #include "antares/study/study.h"
 
 namespace Antares::Data
@@ -40,7 +41,6 @@ static bool checkPower(const Matrix<>& dailyMaxPumpAndGen, const std::string& ar
 bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const std::string& folder)
 {
     std::filesystem::path filePath;
-    Matrix<>::BufferType fileContent;
     bool ret = true;
 
     std::string filename = "maxpower_" + std::string(areaID_) + ".txt";
@@ -48,11 +48,10 @@ bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const std::string& 
 
     //  It is necessary to load maxpower_ txt file.
 
-    ret = hydro_.dailyMaxPumpAndGen.loadFromCSVFile(filePath.string(),
+    ret = MatrixIO::load(hydro_.dailyMaxPumpAndGen, filePath.string(),
                                                     4U,
                                                     DAYS_PER_YEAR,
-                                                    Matrix<>::optFixedSize,
-                                                    &fileContent)
+                                                     Matrix<>::optFixedSize)
           && ret;
     return ret;
 }

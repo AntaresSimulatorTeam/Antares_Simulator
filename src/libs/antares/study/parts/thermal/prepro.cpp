@@ -28,7 +28,7 @@ bool PreproAvailability::saveToFolder(const AnyString& folder) const
     {
         Yuni::String buffer;
         buffer.clear() << folder << Yuni::IO::Separator << "data.txt";
-        return data.saveToCSVFile(buffer, /*decimal*/ 6);
+        return MatrixIO::save(data, buffer, /*decimal*/ 6);
     }
     return false;
 }
@@ -37,11 +37,10 @@ bool PreproAvailability::loadFromFolder(Study& study, const std::filesystem::pat
 {
     auto filePath = folder / "data.txt";
     // standard loading
-    return data.loadFromCSVFile(filePath.string(),
+    return MatrixIO::load(data, filePath.string(),
                                 preproAvailabilityMax,
                                 DAYS_PER_YEAR,
-                                Matrix<>::optFixedSize,
-                                &study.dataBuffer);
+                                 Matrix<>::optFixedSize);
 }
 
 bool PreproAvailability::validate() const

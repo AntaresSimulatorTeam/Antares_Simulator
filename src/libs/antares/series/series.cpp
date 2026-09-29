@@ -67,7 +67,7 @@ void TimeSeriesNumbers::clear()
 void TimeSeriesNumbers::saveToBuffer(std::string& data) const
 {
     const auto add1 = [](uint32_t x) { return x + 1; };
-    tsNumbers.saveToBuffer(data, 0, true, add1, true);
+    MatrixIO::saveToBuffer(tsNumbers, data, 0, true, add1, true);
 }
 
 std::optional<std::string> TimeSeriesNumbers::checkSeriesNumberOfColumnsConsistency() const
@@ -95,8 +95,7 @@ bool TimeSeries::loadFromFile(const std::filesystem::path& path,
                               unsigned options)
 {
     bool ret = true;
-    Matrix<>::BufferType dataBuffer;
-    ret = MatrixIO::load(timeSeries, path, 1, HOURS_PER_YEAR, options, &dataBuffer) && ret;
+    ret = MatrixIO::load(timeSeries, path.string(), 1, HOURS_PER_YEAR, options) && ret;
 
     if (average)
     {

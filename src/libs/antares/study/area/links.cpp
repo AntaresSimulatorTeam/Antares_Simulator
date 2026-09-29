@@ -65,7 +65,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_below_810(const fs::path& folder)
     // Load link's data
     Matrix<> tmpMatrix;
     const unsigned int matrixWidth = 8;
-    if (!tmpMatrix.loadFromCSVFile(path.string(),
+    if (!MatrixIO::load(tmpMatrix, path.string(),
                                    matrixWidth,
                                    HOURS_PER_YEAR,
                                    Matrix<>::optFixedSize))
@@ -96,7 +96,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const fs::path& fold
     // Read link's parameters times series
     std::string paramId = with->id + "_parameters.txt";
     fs::path path = folder / paramId;
-    success = parameters.loadFromCSVFile(path.string(),
+    success = MatrixIO::load(parameters, path.string(),
                                          fhlMax,
                                          HOURS_PER_YEAR,
                                          Matrix<>::optFixedSize)

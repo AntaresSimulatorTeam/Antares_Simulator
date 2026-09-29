@@ -67,7 +67,7 @@ bool Cluster::saveDataSeriesToFolder(const std::string& folder) const
     }
 
     buffer = folder + SEP + parentArea->id + SEP + id() + SEP + "series.txt";
-    return series.timeSeries.saveToCSVFile(buffer, precision());
+    return MatrixIO::save(series.timeSeries, buffer, precision());
 }
 
 bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
@@ -87,8 +87,7 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
     bool ret = true;
     fs::path seriesPath = folder / parentArea->id / id() / "series.txt";
 
-    ret = series.timeSeries.loadFromCSVFile(seriesPath.string(), 1, HOURS_PER_YEAR, &s.dataBuffer)
-          && ret;
+    ret = MatrixIO::load(series.timeSeries, seriesPath.string(), 1, HOURS_PER_YEAR, 0) && ret;
 
     if (s.parameters.derated)
     {

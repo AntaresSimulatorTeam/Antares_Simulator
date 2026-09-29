@@ -582,10 +582,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // DSM, Reserves, D-1
     fs::path reservesPath = (study.folderInput / "reserves" / area.id).replace_extension("txt");
-    ret = area.reserves.loadFromCSVFile(reservesPath.string(),
+    ret = MatrixIO::load(area.reserves, reservesPath.string(),
                                         fhrMax,
                                         HOURS_PER_YEAR,
-                                        Matrix<>::optFixedSize)
+                                         Matrix<>::optFixedSize)
           && ret;
 
     // Optimzation preferences
@@ -606,7 +606,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     std::string miscgenName = "miscgen-" + area.id + ".txt";
     fs::path miscgenPath = study.folderInput / "misc-gen" / miscgenName;
 
-    ret = area.miscGen.loadFromCSVFile(miscgenPath.string(),
+    ret = MatrixIO::load(area.miscGen, miscgenPath.string(),
                                        fhhMax,
                                        HOURS_PER_YEAR,
                                        Matrix<>::optFixedSize)

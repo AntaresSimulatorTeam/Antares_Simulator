@@ -6,6 +6,7 @@
 #include <filesystem>
 
 #include <antares/logs/logs.h>
+#include <antares/array/matrix-io.h>
 #include "antares/study/study.h"
 
 namespace fs = std::filesystem;
@@ -20,16 +21,13 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
 
     if (study.header.version >= StudyVersion(8, 7))
     {
-        Matrix<>::BufferType dataBuffer;
-
         fs::path filename = folder / "fuelCost.txt";
         if (fs::exists(filename))
         {
-            ret = fuelcost.loadFromCSVFile(filename.string(),
+            ret = MatrixIO::load(fuelcost, filename.string(),
                                            1,
                                            HOURS_PER_YEAR,
-                                           Matrix<>::optNone,
-                                           &dataBuffer)
+                                            Matrix<>::optNone)
                   && ret;
             if (study.parameters.derated)
             {
@@ -40,11 +38,10 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
         filename = folder / "CO2Cost.txt";
         if (fs::exists(filename))
         {
-            ret = co2cost.loadFromCSVFile(filename.string(),
+            ret = MatrixIO::load(co2cost, filename.string(),
                                           1,
                                           HOURS_PER_YEAR,
-                                          Matrix<>::optNone,
-                                          &dataBuffer)
+                                          Matrix<>::optNone)
                   && ret;
             if (study.parameters.derated)
             {
