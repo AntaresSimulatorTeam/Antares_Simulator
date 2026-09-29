@@ -5,47 +5,13 @@
 
 #include "antares/solver/optimisation/adequacy_patch_csr/csr_variable_indices.h"
 
-ConstraintBuilder::ConstraintBuilder(
-  PROBLEME_HEBDO* problemeHebdo,
-  PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
-  std::vector<CORRESPONDANCES_DES_VARIABLES>& correspondanceVarNativesVarOptim,
-  std::vector<int>& numeroDeVariableStockFinal,
-  std::vector<std::vector<int>>& numeroDeVariableDeTrancheDeStock):
-    data({ProblemeAResoudre.Pi,
-          ProblemeAResoudre.Colonne,
-          ProblemeAResoudre.NombreDeContraintes,
-          ProblemeAResoudre.NombreDeTermesDansLaMatriceDesContraintes,
-          ProblemeAResoudre.IndicesDebutDeLigne,
-          ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes,
-          ProblemeAResoudre.IndicesColonnes,
-          ProblemeAResoudre.NombreDeTermesDesLignes,
-          ProblemeAResoudre.Sens,
-          ProblemeAResoudre.IncrementDAllocationMatriceDesContraintes,
-          correspondanceVarNativesVarOptim,
-          problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
-          numeroDeVariableStockFinal,
-          numeroDeVariableDeTrancheDeStock,
-          ProblemeAResoudre.NomDesContraintes,
-          problemeHebdo->NomsDesPays,
-          problemeHebdo->weekInTheYear,
-          problemeHebdo->NombreDePasDeTemps}),
-    variableManager_(data.CorrespondanceVarNativesVarOptim,
-                     data.NumeroDeVariableStockFinal,
-                     data.NumeroDeVariableDeTrancheDeStock,
-                     data.NombreDePasDeTempsPourUneOptimisation)
-{
-}
-
 ConstraintBuilder::ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo,
                                      PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                                      const CsrVariableIndices& csrVariableIndices):
-    // The weekly correspondence is still bound (ConstraintBuilderData's references require it)
-    // but never queried: CSR constraints only use the five rerouted variable kinds.
-    ConstraintBuilder(problemeHebdo,
-                      ProblemeAResoudre,
-                      problemeHebdo->CorrespondanceVarNativesVarOptim,
-                      problemeHebdo->NumeroDeVariableStockFinal,
-                      problemeHebdo->NumeroDeVariableDeTrancheDeStock)
+    // Delegate to the weekly constructor to initialize data + variableManager_ from
+    // problemeHebdo's tables. The CSR constraints only use the five rerouted variable
+    // kinds (via csrVariableIndices_), so the weekly table is never queried for them.
+    ConstraintBuilder(problemeHebdo)
 {
     csrVariableIndices_ = &csrVariableIndices;
 }

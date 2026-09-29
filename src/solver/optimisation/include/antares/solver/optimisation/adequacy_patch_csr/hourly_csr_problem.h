@@ -10,11 +10,13 @@
 
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+#include <antares/optimization-options/options.h>
 #include <antares/solver/optimisation/adequacy_patch_csr/csr_variable_indices.h>
 #include <antares/solver/optimisation/adequacy_patch_csr/gems-part.h>
 #include <antares/study/parameters/adq-patch-params.h>
 #include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 struct LinkVariable
 {

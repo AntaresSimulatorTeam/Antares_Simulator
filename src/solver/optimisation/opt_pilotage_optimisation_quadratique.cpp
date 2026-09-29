@@ -11,11 +11,7 @@ bool OPT_PilotageOptimisationQuadratique(const SingleOptimOptions& options,
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
         OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(problemeHebdo);
-        ConstraintBuilder builder(problemeHebdo,
-                                  *problemeHebdo->ProblemeAResoudre,
-                                  problemeHebdo->CorrespondanceVarNativesVarOptim,
-                                  problemeHebdo->NumeroDeVariableStockFinal,
-                                  problemeHebdo->NumeroDeVariableDeTrancheDeStock);
+                ConstraintBuilder builder(problemeHebdo);
         QuadraticProblemMatrix(problemeHebdo, builder).Run();
 
         problemeHebdo->LeProblemeADejaEteInstancie = true;

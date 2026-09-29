@@ -269,11 +269,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(problemeHebdo);
 
-    ConstraintBuilder builder(problemeHebdo,
-                              *problemeHebdo->ProblemeAResoudre,
-                              problemeHebdo->CorrespondanceVarNativesVarOptim,
-                              problemeHebdo->NumeroDeVariableStockFinal,
-                              problemeHebdo->NumeroDeVariableDeTrancheDeStock);
+        ConstraintBuilder builder(problemeHebdo);
     LinearProblemMatrix linearProblemMatrix(problemeHebdo, builder);
     linearProblemMatrix.Run();
     resizeProbleme(problemeHebdo->ProblemeAResoudre.get(),

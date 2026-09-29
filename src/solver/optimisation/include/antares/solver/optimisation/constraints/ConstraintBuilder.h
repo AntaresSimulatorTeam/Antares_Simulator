@@ -52,25 +52,41 @@ class ConstraintBuilder final
 public:
     ConstraintBuilder() = delete;
 
-    /*! \brief Variables resolve against the given correspondence tables -- typically
-     *         problemeHebdo's own for the weekly problem.
-     *
-     *  The correspondence tables are explicit parameters so that every caller states which
-     *  variable numbering the built constraints refer to.
+    /*! \brief Primary constructor for the weekly problem. Variables resolve against
+     *         problemeHebdo's own correspondence tables.
      */
-    ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo,
-                      PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
-                      std::vector<CORRESPONDANCES_DES_VARIABLES>& correspondanceVarNativesVarOptim,
-                      std::vector<int>& numeroDeVariableStockFinal,
-                      std::vector<std::vector<int>>& numeroDeVariableDeTrancheDeStock);
+    explicit ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo):
+        data({problemeHebdo->ProblemeAResoudre->Pi,
+              problemeHebdo->ProblemeAResoudre->Colonne,
+              problemeHebdo->ProblemeAResoudre->NombreDeContraintes,
+              problemeHebdo->ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes,
+              problemeHebdo->ProblemeAResoudre->IndicesDebutDeLigne,
+              problemeHebdo->ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes,
+              problemeHebdo->ProblemeAResoudre->IndicesColonnes,
+              problemeHebdo->ProblemeAResoudre->NombreDeTermesDesLignes,
+              problemeHebdo->ProblemeAResoudre->Sens,
+              problemeHebdo->ProblemeAResoudre->IncrementDAllocationMatriceDesContraintes,
+              problemeHebdo->CorrespondanceVarNativesVarOptim,
+              problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
+              problemeHebdo->NumeroDeVariableStockFinal,
+              problemeHebdo->NumeroDeVariableDeTrancheDeStock,
+              problemeHebdo->ProblemeAResoudre->NomDesContraintes,
+              problemeHebdo->NomsDesPays,
+              problemeHebdo->weekInTheYear,
+              problemeHebdo->NombreDePasDeTemps}),
+        variableManager_(data.CorrespondanceVarNativesVarOptim,
+                         data.NumeroDeVariableStockFinal,
+                         data.NumeroDeVariableDeTrancheDeStock,
+                         data.NombreDePasDeTempsPourUneOptimisation)
+    {
+    }
 
-    /*! \brief Same as above, but unsupplied energy / spillage / flow variables resolve against
-     *         the given indices instead of a weekly correspondence table.
+    /*! \brief For the adequacy patch's hourly CSR problem, which numbers its own variables
+     *         and must leave the weekly problem's correspondence table untouched.
      *
-     *  For a solve that reuses problemeHebdo's static data (areas, links, ...) but numbers its
-     *  own variables and must leave the weekly problem's correspondence table untouched -- the
-     *  adequacy patch's hourly CSR problem. Only the five variable kinds held by
-     *  CsrVariableIndices are rerouted; they are always queried without time offset.
+     *  Unsupplied energy / spillage / flow variables resolve against the given indices instead
+     *  of a weekly correspondence table. Only the five variable kinds held by CsrVariableIndices
+     *  are rerouted; they are always queried without time offset.
      */
     ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo,
                       PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
