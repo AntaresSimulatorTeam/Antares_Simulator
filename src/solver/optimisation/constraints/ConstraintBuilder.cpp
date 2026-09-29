@@ -214,9 +214,8 @@ ConstraintBuilder& ConstraintBuilder::PositiveDirectFlow(unsigned int index, dou
 
 ConstraintBuilder& ConstraintBuilder::PositiveIndirectFlow(unsigned int index, double coeff)
 {
-    const int var = csrVariableIndices_
-                      ? csrVariableIndices_->positiveIndirectFlow[index]
-                      : variableManager_.PositiveIndirectFlow(index, hourInWeek_);
+    const int var = csrVariableIndices_ ? csrVariableIndices_->positiveIndirectFlow[index]
+                                        : variableManager_.PositiveIndirectFlow(index, hourInWeek_);
     AddVariable(var, coeff);
     return *this;
 }

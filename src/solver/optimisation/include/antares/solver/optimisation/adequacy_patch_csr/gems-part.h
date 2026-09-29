@@ -8,7 +8,6 @@
 
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/study/system-model/portType.h>
-
 #include "antares/solver/optimisation/adequacy_patch_csr/csr_variable_indices.h"
 
 struct PROBLEME_HEBDO;
