@@ -24,6 +24,16 @@ std::map<std::string, unsigned> buildAreaIndices(const PROBLEME_HEBDO& problemeH
 }
 } // namespace
 
+double legacyAreaPrice(const PROBLEME_HEBDO& problemeHebdo,
+                       unsigned area,
+                       unsigned hour,
+                       const std::function<double(int)>& dualOf)
+{
+    const int constraintIndex = problemeHebdo.CorrespondanceCntNativesCntOptim[hour]
+                                  .NumeroDeContrainteDesBilansPays[area];
+    return -dualOf(constraintIndex);
+}
+
 HebdoAreaPriceProvider::HebdoAreaPriceProvider(const PROBLEME_HEBDO& problemeHebdo,
                                                const LinearProblem::Api::ILinearProblem& problem):
     problemeHebdo_(problemeHebdo),
@@ -34,16 +44,24 @@ HebdoAreaPriceProvider::HebdoAreaPriceProvider(const PROBLEME_HEBDO& problemeHeb
 
 double HebdoAreaPriceProvider::getAreaPrice(const std::string& areaId, unsigned hour) const
 {
+    // Dual values are not available on MIP problems (OR-Tools' MPConstraint::dual_value() fails).
+    // Same behavior as the legacy extraction, where marginal costs are 0 for MIP.
+    if (!problem_.isLP())
+    {
+        return 0.0;
+    }
+
     const auto it = areaIndices_.find(areaId);
     if (it == areaIndices_.end())
     {
         return 0.0;
     }
 
-    const unsigned constraintIndex = problemeHebdo_.CorrespondanceCntNativesCntOptim[hour]
-                                       .NumeroDeContrainteDesBilansPays[it->second];
-    // Same sign convention as the legacy extra-outputs' area price.
-    return -problem_.getConstraint(constraintIndex)->dual();
+    return legacyAreaPrice(problemeHebdo_,
+                           it->second,
+                           hour,
+                           [this](int constraintIndex)
+                           { return problem_.getConstraint(constraintIndex)->dual(); });
 }
 
 } // namespace Antares::Optimization

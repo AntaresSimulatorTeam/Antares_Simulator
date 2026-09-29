@@ -11,6 +11,7 @@
 #include <vector>
 
 #include <antares/utils/utils.h>
+#include "antares/solver/optimisation/HebdoAreaPriceProvider.h"
 #include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/optimisation/variables/VariableManagerUtils.h"
@@ -157,8 +158,10 @@ private:
 
     [[nodiscard]] double areaPrice(uint32_t pays, int pdt) const
     {
-        return -dual(problemeHebdo_.CorrespondanceCntNativesCntOptim[pdt]
-                       .NumeroDeContrainteDesBilansPays[pays]);
+        return legacyAreaPrice(problemeHebdo_,
+                               pays,
+                               static_cast<unsigned>(pdt),
+                               [this](int constraintIndex) { return dual(constraintIndex); });
     }
 
     SimulationTable& table_;
