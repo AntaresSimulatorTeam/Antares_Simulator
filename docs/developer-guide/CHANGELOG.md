@@ -46,6 +46,10 @@ toc_depth: 2
 * Add cucumber tests for antares-modeler + parquet simulation tables [ANT-5180] (#3752)
 * Add GEMS contribution to adequacy patch CSR bounds [ANT-5264] (#3853)
 * Modeler: allow several years [ANT-5144] (#3907)
+* Add an optional `price` field to the `area-connection` section of a port type: a GEMS component
+  can read the legacy area's marginal price with `sum_connections(<port>.<price-field>)`, e.g. to
+  compute a profit output. The price is 0 when the problem is solved as a MILP. The field must be one
+  of the port type's fields
 
 #### Reserves
 

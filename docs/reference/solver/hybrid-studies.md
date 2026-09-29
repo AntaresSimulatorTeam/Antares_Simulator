@@ -116,8 +116,14 @@ The nature of this contribution depends on the field :
     that depend on the legacy area's price, such as a profit output. The area's marginal price is a per-timestep
     value, so any expression referencing it is time-varying, even across scenarios where the price happens to be
     constant.
+    The value is the same as the price exported by the legacy [extra-outputs](../../architecture/legacy-extra-outputs.md)
+    for the area (the opposite of the dual value of the area's balance constraint, so a positive price means
+    that one more MW of demand costs money). **Duals are not available when the problem is solved as a MILP**
+    (`unit-commitment-mode = milp`): in that case the price is 0, as are the legacy marginal costs.
 
-These first three fields are independent : you don't have to define all of them at the same time, you can define only one (as long as its value is an existing port in the same port type). The same holds for **price**, which can be defined independently of the others.
+These first three fields are independent : you don't have to define all of them at the same time, you can define only one (as long as its value is an existing port in the same port type). The same holds for **price**, which can be defined independently of the others. Contrary to the three other
+fields, **price** is not read from the component's model: it only has to be one of the fields of the port type.
+Connecting an area to a port whose port type declares a **price** that is not among its `fields` is an error.
 
 **injection-to-balance**, **spillage-bound** and **unsupplied-energy-bound** must be present in the **area-connection** section of a port type, even if they are not defined (= corresponding value is empty). **price** is fully optional and may be omitted from the section entirely.
 
