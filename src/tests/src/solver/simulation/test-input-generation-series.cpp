@@ -36,7 +36,6 @@ struct Fixture
 
         area = addAreaToListOfAreas(study->areas, "france");
         area->createMissingData();
-        area->resetToDefaultValues();
         study->areas.rebuildIndexes();
 
         problem.year = 0;

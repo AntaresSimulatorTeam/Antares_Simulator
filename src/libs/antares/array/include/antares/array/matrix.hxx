@@ -1234,31 +1234,6 @@ void Matrix<T, ReadWriteT>::multiplyAllEntriesBy(const U& c)
 }
 
 template<class T, class ReadWriteT>
-template<class U>
-void Matrix<T, ReadWriteT>::multiplyColumnBy(uint x, const U& c)
-{
-    assert(x < width and "Invalid column index (bigger than `this->width`)");
-    ColumnType& column = entry[x];
-    for (uint y = 0; y != height; ++y)
-    {
-        column[y] *= (T)c;
-    }
-}
-
-template<class T, class ReadWriteT>
-template<class U>
-void Matrix<T, ReadWriteT>::divideColumnBy(uint x, const U& c)
-{
-    assert(x < width and "Invalid column index (bigger than `this->width`)");
-    assert(c != (T)0 && "Dividing by zero");
-    ColumnType& column = entry[x];
-    for (uint y = 0; y != height; ++y)
-    {
-        column[y] /= (T)c;
-    }
-}
-
-template<class T, class ReadWriteT>
 void Matrix<T, ReadWriteT>::roundAllEntries()
 {
     for (uint x = 0; x != width; ++x)
@@ -1269,55 +1244,6 @@ void Matrix<T, ReadWriteT>::roundAllEntries()
             col[y] = (T)std::round(col[y]);
         }
     }
-}
-
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::makeAllEntriesAbsolute()
-{
-    for (uint x = 0; x != width; ++x)
-    {
-        ColumnType& col = entry[x];
-        for (uint y = 0; y != height; ++y)
-        {
-            col[y] = std::abs(col[y]);
-        }
-    }
-}
-
-template<class T, class ReadWriteT>
-T Matrix<T, ReadWriteT>::findLowerBound() const
-{
-    double r = +1e30;
-    for (uint x = 0; x != width; ++x)
-    {
-        ColumnType& col = entry[x];
-        for (uint y = 0; y != height; ++y)
-        {
-            if (col[y] < r)
-            {
-                r = col[y];
-            }
-        }
-    }
-    return (T)r;
-}
-
-template<class T, class ReadWriteT>
-T Matrix<T, ReadWriteT>::findUpperBound() const
-{
-    double r = -1e30;
-    for (uint x = 0; x != width; ++x)
-    {
-        ColumnType& col = entry[x];
-        for (uint y = 0; y != height; ++y)
-        {
-            if (col[y] > r)
-            {
-                r = col[y];
-            }
-        }
-    }
-    return (T)r;
 }
 
 template<class T, class ReadWriteT>
@@ -1425,34 +1351,6 @@ inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(const Matrix<U>& 
     return *this;
 }
 
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::print() const
-{
-    std::cout << "DUMP:\n";
-    if (empty())
-    {
-        std::cout << "\tempty\n";
-        return;
-    }
-    for (uint y = 0; y != height; ++y)
-    {
-        std::cout << "\t[";
-        for (uint x = 0; x != width; ++x)
-        {
-            if (x)
-            {
-                std::cout << ",\t";
-            }
-            else
-            {
-                std::cout << '\t';
-            }
-            std::cout << entry[x][y];
-        }
-        std::cout << "]\n";
-    }
-}
-
 template<class T1, class T2>
 bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T1, T2>& m)
 {
@@ -1472,60 +1370,6 @@ bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T1, T2>& m)
         }
     }
     return false;
-}
-
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::circularShiftRows(uint count)
-{
-    if (count != 0)
-    {
-        for (uint column = 0; column != width; ++column)
-        {
-            circularShiftRows(column, count);
-        }
-    }
-}
-
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::reverseRows(uint column, uint start, uint end)
-{
-    if (height <= 1 or !(column < width) or !(start < end))
-    {
-        return;
-    }
-
-    // The values of the selected column
-    auto& values = entry[column];
-    // temporary value
-    T swap;
-    for (uint y = start; y < --end; ++y)
-    {
-        swap = values[y];
-        values[y] = values[end];
-        values[end] = swap;
-    }
-}
-
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::circularShiftRows(uint column, uint count)
-{
-    assert(column < width and "Column out of bounds");
-    if (height <= 1 or !(column < width) or !count)
-    {
-        return;
-    }
-
-    // fits \p count into [0..height[
-    count = (count % height + height) % height;
-    if (count == 0 or (uint) count == height)
-    {
-        return;
-    }
-
-    // Algorithm in O(N)
-    reverseRows(column, 0, count);
-    reverseRows(column, count, height);
-    reverseRows(column, 0, height);
 }
 
 template<class T, class ReadWriteT>

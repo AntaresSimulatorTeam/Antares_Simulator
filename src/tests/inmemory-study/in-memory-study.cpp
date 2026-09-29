@@ -380,7 +380,6 @@ Area* StudyBuilder::addAreaToStudy(const std::string& areaName)
 
     // Default values for the area
     area->createMissingData();
-    area->resetToDefaultValues();
 
     // Temporary : we want to give a high unsupplied or spilled energy costs.
     // Which cost should we give ?

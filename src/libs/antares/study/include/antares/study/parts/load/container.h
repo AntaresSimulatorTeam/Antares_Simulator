@@ -27,11 +27,6 @@ public:
     ~Container() = default;
     //@}
 
-    /*!
-    ** \brief Reset to default values
-    */
-    void resetToDefault();
-
     //! Data for the pre-processor
     std::unique_ptr<Data::Load::Prepro> prepro;
 

@@ -67,7 +67,6 @@ struct Fixture
             if (area)
             {
                 area->createMissingData();
-                area->resetToDefaultValues();
             }
         }
         study->areas.rebuildIndexes();

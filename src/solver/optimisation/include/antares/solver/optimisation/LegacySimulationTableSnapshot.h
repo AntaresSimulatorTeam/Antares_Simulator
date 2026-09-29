@@ -85,6 +85,7 @@ unsigned LegacyWeeklyBlock(const PROBLEME_HEBDO& problemeHebdo);
  */
 void DumpSimulationTableAfterPostProcess(
   IO::Outputs::SimulationTable& simulationTable,
+
   PROBLEME_HEBDO& problemeHebdo,
   const LinearProblem::Api::FillContext& fillContext,
   unsigned currentBlock,

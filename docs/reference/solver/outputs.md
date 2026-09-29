@@ -1,0 +1,344 @@
+# Output files
+
+[//]: # (TODO: update this page, list all output files)
+_**This section is under construction**_
+
+The general file organization is the same for Economy and Adequacy simulations.  
+**\<Simulation type\>\<simulation tag\>**
+
+**Economy:**
+
+| OUTPUT/Simu id/economy/mc-all/ |                      |                 |                                          |
+|--------------------------------|----------------------|-----------------|------------------------------------------|
+|                                | /grid/...            |                 | contains a summary file "digest.txt"     |
+|                                | /areas/name/...      |                 | contains area-related results            |
+|                                | /links / name/...    |                 | contains interconnection-related results |
+|                                | /mc-ind /year_number |                 |                                          |
+|                                |                      | /areas/name/... | contains area-related results            |
+|                                |                      | /links/name/... | contains interconnection-related results |
+
+_("mc-all" files contain synthetic results over all years, "year-number" files contain results for a single year)_
+_The variables present in each file are detailed in the following sections._
+_In "Economy" simulations, all variables have a techno-economic meaning._
+
+**Adequacy:**
+
+| OUTPUT/Simu id/adequacy/mc-all/ |                      |                 |                                          |
+|---------------------------------|----------------------|-----------------|------------------------------------------|
+|                                 | /grid/...            |                 | contains a summary file "digest.txt"     |
+|                                 | /areas/name/...      |                 | contains area-related results            |
+|                                 | /links / name/...    |                 | contains interconnection-related results |
+|                                 | /mc-ind /year_number |                 |                                          |
+|                                 |                      | /areas/name/... | contains area-related results            |
+|                                 |                      | /links/name/... | contains interconnection-related results |
+
+_("mc-all" files contain synthetic results over all years, "year-number" files contain results for a single year)_
+_The variables present in each file bear exactly the same name as in Economy simulations but do not have the same values._
+_The only variables that have a techno-economic meaning are the "Adequacy" indicators (unsupplied energy,LOLD,LOLP)_
+
+**IMPORTANT** Adequacy and Economy files look the same but their content are specific
+
+In "Economy" and "Adequacy" simulations, the optimization ignores the "primary" and "strategic" reserves (however, it may include the [other] spinning and day-ahead reserves, depending on the settings made in "optimization preferences").
+
+In "Adequacy" simulations, all dispatchable thermal units are given the "must-run" status (hence, they will generate at Pmax, regardless of the demand). As a consequence the only variables that are actually meaningful are the adequacy indicators (unsupplied energy, LOLD,LOLP), that may depend on assumptions made regarding the economic values of Unsupplied and spilled energies, and on hurdle costs on interconnections.
+In the specific case where binding constraints are present in the study, **all thermal clusters will consequently be de-activated from the binding constraints**. This can lead to incorrect adequacy indicators in Antares studies containing binding constraints in "Adequacy" simulations.
+
+As a consequence, both "Adequacy" and "Economy" simulations yield the same values for the adequacy indicators under the following conditions: if hurdle costs on interconnections are higher than the difference between the maximum VOLL and the minimum VOLL assigned to the different areas of the system, and if no binding constraint is altered due to the fact that they contain clusters in must-run.
+
+The files and their content are hereafter described.
+
+## Economy and Adequacy, area results [^11]
+
+**25** files resulting from the combination of the following attributes:
+**[values | id | details | details-res | details-STstorage] X [hourly | daily | weekly | monthly | annual]**
+
+- The second attribute defines the time span over which the results are assessed: hourly detail, daily bundle, weekly bundle, monthly bundle, annual bundle.
+
+- The first attribute defines the nature of the results presented in the file :
+
+**Values** Values of different variables (price, load, overall generation issued from coal, etc.), the list of which is common to all areas of the interconnected system. Files of type "values" have therefore the same size for all areas.
+These results appear under the label "general values" in the output GUI.
+
+**details** Values regarding the different dispatchable thermal generating plants of each area (e.g. "older 300 MW coal from the south coast"). The sizes of these files differ from one area to another.
+These results appear under the label "thermal plants" in the output GUI.
+
+**details-res** Values regarding the different renewable clusters of each area. The sizes of these files differ from one area to another.
+These results appear under the label "Ren. clusters" in the output GUI.
+
+**details-STstorage** Values regarding the different short-term storages of each area. The sizes of these files differ from one area to another.
+These results appear under the label "ST storages" in the output GUI.
+
+**id** Identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files
+These results appear under the label "record years" in the output GUI
+
+The area files that belong to the "values" class display fields corresponding to the expectation, standard deviation, minimal and maximal values of the variables whose list is given hereafter.
+
+| variables                              | description                                                                                                                                                                               |
+|----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| OV.COST                                | Overall cost = operating cost + unsupplied cost + spilled cost + hydro cost                                                                                                                 |
+| OV. COST CSR                           | Same as above, but with CSR (adq patch's **C**urtailment **S**ha**R**ing) unsupplied cost version[^adqp]|
+| OP.COST                                | Operating cost = Proportional costs + Non- proportional costs                                                                                                                             |
+| MRG. PRICE                             | LMP : overall economic effect of a local 1MW load increase                                                                                                                                |
+| MRG. PRICE CSR                         | **IF** : CSR (**C**urtailment **S**ha**R**ing) unsupplied cost version (see above) == 0, then equals **MRG. PRICE**, **ELSE** : equals **UNSP. ENRG** [^adqp]|
+| DTG by plant                           | For any active thermal cluster, its production |
+| MIN DTG by plant                       | For any active thermal cluster, minimum between : - the cluster production - quantity : min gen modulation **x** unit count **x** nominal capacity associated to the cluster |
+| RES generation by plant                | For any active renewable cluster, its production (necessarily must-run).  Only when using clustered Renewable generation modeling. |
+| CO2, NH3, SO2, ... EMIS.               | Amount emitted by all dispatchable thermal plants for the following types of pollutants: CO2, SO2, NH3, NOX, PM2\_5, PM5, PM10, NMVOC, OP1, OP2, OP3, OP4, OP5 EMIS.                      |
+| BALANCE                                | Overall Import/export balance of the area (positive value : export)                                                                                                                       |
+| ROW BAL                                | Import/export with areas outside the modeled system (positive value: import) [^12]                                                                                                        |
+| PSP                                    | User-defined settings for pumping and subsequent generating                                                                                                                               |
+| MISC. NDG                              | Miscellaneous non dispatchable generation                                                                                                                                                 |
+| LOAD                                   | Demand (including DSM potential if relevant)                                                                                                                                              |
+| RES LOAD                               | Residual load, formula:  **load - allMustRunGeneration** with *allMustRunGeneration = wind + solar + miscGen + ROR + mustRunSum* and *mustRunSum = total production of thermal clusters must-run and enabled*    |
+| H.ROR                                  | Hydro generation, Run-of-river share                                                                                                                                                      |
+| WIND                                   | Wind generation (only when using aggregated _Renewable generation modeling_)                                                                                                              |
+| SOLAR                                  | Solar generation (thermal and PV) (only when using aggregated _Renewable generation modeling_)                                                                                            |
+| WIND OFFSHORE                          | Wind Offshore generation (only when using clustered _Renewable generation modeling_)                                                                                                      |
+| DISPATCH. GEN.                         | Dispatchable generation for thermal clusters                                                                                                                                              | 
+| RENEWABLE GEN.                         | Renewable generation (only when using clustered _Renewable generation modeling_)                                                                                                          | 
+| H.STOR                                 | Power generated from energy storage units (typically: Hydro reservoir)                                                                                                                    |
+| H.PUMP                                 | Power absorbed by energy storage units (typically: PSP pumps consumption)                                                                                                                 |
+| H.LEV                                  | Energy level remaining in storage units (percentage of reservoir size)                                                                                                                    |
+| H.INFL                                 | External input to the energy storage units (typically: natural inflows)                                                                                                                   |
+| H.OVFL                                 | Wasted natural inflow overflowing from an already full energy storage unit                                                                                                                |
+| H.VAL                                  | Marginal value of stored energy (typically: shadow water value)                                                                                                                           |
+| H.COST                                 | Expenses /Income brought by energy storage actions (H.STOR,H.PUMP)                                                                                                                        |
+| <STS **group**\>_injection             | Injection of energy from the area into each short-term storage group                                                                                                                      |
+| <STS **group**\>_withdrawal            | Withdrawal of energy from each short-term storage group into the area                                                                                                                     |
+| <STS **group**\>_level                 | Average level  of each short-term storage group                                                                                                                                           |
+| <STS\>,P-injection                     | Injection of energy from the area into the short-term storage                                                                                                                             |
+| <STS\>,P-withdrawal                    | Withdrawal of energy the short-term storage into the area                                                                                                                                 |
+| <STS\>,Levels                          | Level  of the short-term storage                                                                                                                                                          |
+| UNSP. ENRG                             | Unsupplied energy: adequacy indicator (Expected Energy Not Served–EENS)                                                                                                                   |
+| UNSP. ENRG. CSR                        | Unsupplied enery after CSR (demand that cannot be satisfied)[^adqp]                                                                                                        |
+| DENS                                   | Domestic Energy Not Supplied: the difference between the local production capabilities of an area and its local load[^adqp]                                                               |
+| LMR. VIOL                              | Local Matching Rule Violation after the Antares Simulation as defined by the adequacy patch[^adqp]                                                                                        |
+| SPIL. ENRG                             | Spilled energy (energy produced that cannot be used and has to be wasted)                                                                                                                 |
+| LOLD                                   | Loss of load duration: adequacy indicator (length of shortfalls)                                                                                                                          |
+| LOLD CSR                               | Loss of load duration, CSR (**C**urtailment **S**ha**R**ing) version : same as above, but based on unsupplied energy CSR (see **UNSP. ENRG. CSR**) rather than **UNSP. ENRG**[^adqp] |
+| LOLP                                   | Loss of Load probability: adequacy indicator (probability of at least one hour of shortfall within the considered period, without normalization by the duration of the considered period) |
+| LOLP CSR                               | Loss of Load probability, CSR (**C**urtailment **S**ha**R**ing) version : same as above, but based on unsupplied energy CSR (see **UNSP. ENRG. CSR**) rather than **UNSP. ENRG**[^adqp] |
+| AVL DTG                                | Available dispatchable thermal generation (sum of av. power over all plants)                                                                                                              |
+| DTG MRG                                | Disp. Ther. Gen. (AVL DTG – sum of all dispatched thermal generation)                                                                                                                     |
+| MAX. MRG                               | Maximum margin: operational margin obtained if the hydro storage energy of the week were used to maximise margins instead of minimizing costs                                             |
+| DTG MRG CSR                            | DTG MRG after CSR[^adqp]                                                                                                        |
+| NP COST                                | Non-proportional costs of the dispatchable plants (start-up and fixed costs)                                                                                                              |
+| NP Cost by plant                       | Same as above, but by dispatchable plant |
+| NODU                                   | Number of Dispatched Units [^13]                                                                                                                                                          |
+| Profit                                 | Net profit of the cluster in euros ((MRG. PRICE - marginal cost of the cluster) * (dispatchable production of the cluster)[^15]                                                           |
+
+_Note: The net profit is computed on full precision values for MRG. PRICE. The user may obtain slightly different results applying the given formula because MRG. PRICE values are rounded to 10^-2._
+
+## Economy and Adequacy, interconnection results [^14]
+**10** files resulting from the combination of the following attributes:
+**[values | id] X [hourly | daily | weekly | monthly | annual]**
+
+- The second attribute defines the period of time over which the results are assessed: hourly detail, daily bundle, weekly bundle, monthly bundle, annual bundle.
+- The first attribute defines the nature of the results presented in the file.
+
+
+**values** values of different variables (flow, congestion rent) the list of which is common to all interconnections. The files of type "values" have therefore the same size everywhere
+These results appear under the label "general values" in the output GUI.
+
+**id** identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files.
+These results appear under the label "record years" in the output GUI.
+
+
+The area files that belong to the « values » class display  **28**  fields corresponding to the expectation, standard deviation, minimal and maximal values of the variables whose list is given hereafter.
+
+| variables     | description                                                                                                                                                                                                                                                                                                                                                                   |
+|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| FLOW LIN.     | Flow (signed + from upstream to downstream) assessed by the linear optimization. These flows follow Kirchhoff's law only if these laws have been explicitly enforced by the means of suitable binding constraints                                                                                                                                                             |
+| UCAP          | Used capacity: absolute value of FLOW LIN. This indicator may be of interest to differentiate the behavior of interconnectors showing low average flows: in some cases this may indicate that the line is little used, while in others this may be the outcome of high symmetric flows                                                                                        |
+| LOOP FLOW     | Flow circulating through the grid when all areas have a zero import/export balance. This flow, to be put down to the simplification of the real grid, is not subject to hurdle costs in the course of the optimization                                                                                                                                                        |
+| FLOW QUAD.    | Flow computed anew, starting from the linear optimum, by minimizing a quadratic function equivalent to an amount of Joule losses, while staying within the transmission capacity limits. This calculation uses for this purpose the impedances found in the "Links" Input data. If congestions occur on the grid, these results are not equivalent to those of a DC load flow |
+| CONG. FEE ALG | Algebraic congestion rent = linear flow \* (downstream price – upstream price)                                                                                                                                                                                                                                                                                                |
+| CONG. FEE ABS | Absolute congestion rent = linear flow\* abs(downstream price–upstream price)                                                                                                                                                                                                                                                                                                 |
+| MARG. COST    | Decrease of the system's overall cost that would be brought by the optimal use of an additional 1 MW transmission capacity (in both directions)                                                                                                                                                                                                                               |
+| CONG PROB +   | Up&gt;Dwn Congestion probability = (NC+) / (total number of MC years) with: <br/> NC+ = number of years during which the interconnection was congested in the Up&gt;Dwn way for **any** length of time within the time frame relevant with the file                                                                                                                           |
+| CONG PROB -   | Dwn&gt;Up Congestion probability = (NC-) / (total number of MC years) with: <br/> NC- = number of years during which the interconnection was congested in the Dwn&gt;Up way for **any** length of time within the time frame relevant with the file                                                                                                                           |
+| HURD. COST    | Contribution of the flows to the overall economic function through the "hurdles costs" component. For each hour: <br/>`if (FLOW.LIN –LOOP FLOW) > 0 ` <br/> `HURD. COST = (hourly direct hurdle cost) * (FLOW LIN.)`, `else HURD.COST = (hourly indirect hurdle cost) * (-1) * (FLOW LIN.)`                                                                              |
+
+## Economy and Adequacy, other results
+
+Depending on the options chosen in the main simulation window, the output folders may also include either, both or none of the following sections:
+
+| OUTPUT/Simu id/ts-numbers/ |                   |                  |
+|----------------------------|-------------------|------------------|
+|                            | /Load             | /area names/...  |
+|                            | /Thermal          | /area names/...  |
+|                            | /Hydro            | /area names/...  |
+|                            | /Wind[^agg]       | /area names/...  |
+|                            | /Solar[^agg]      | /area names/...  |
+|                            | /Renewables[^ren] | /area names/...  |
+|                            | /NTC              | /area names/...  |
+
+These files contain, for each kind of time-series, the number drawn (randomly or not) in each Monte-Carlo year (files are present if "output profile / MC scenarios" was set to "true").
+
+| OUTPUT/Simu id/ts-generator/ |              |                              |
+|------------------------------|--------------|------------------------------|
+|                              | /Load        | /batch number/area names/... |
+|                              | /Hydro       | /batch number/area names/... |
+|                              | /Wind[^agg]  | /batch number/area names/... |
+|                              | /Solar[^agg] | /batch number/area names/... |
+
+
+These files contain, for each kind of Antares-generated time-series, copies of the whole set of time-series generated.
+
+## Miscellaneous
+
+Alike Input data, output results can be filtered so as to include only items that are associated with Areas and Links defined as "visible" in the current map. In addition, the output filtering dialog box makes it possible to filter according to two special categories (**Districts** and **Unknown**) that are not related to standard maps:
+
+- **Districts** displays only results obtained for spatial aggregates
+- **Unknown** displays only results attached to Areas or Links that no longer exist in the Input dataset (i.e. study has changed since the last simulation)
+
+### Dynamic Aggregation for Sets of Areas (Districts)
+#### Overview
+
+- **Thermal groups**: dispatchable production of the group
+- **Renewable groups**: production of the group
+- **Short-term storage groups**: level, injection and withdrawal of the group
+
+#### Where these columns appear
+
+These dynamic aggregation columns appear in:
+- `areas/name/values-*.txt` (hourly, daily, etc.) files in mc-all synthesis reports (Data Level: `setOfAreas`)
+- `areas/name/values-*.txt` (hourly, daily, etc.) files in mc-ind/year_number year-by-year reports (Data Level: `setOfAreas`)
+
+#### Column Naming Convention
+
+For each thermal group, renewable group, or short-term storage group, the columns follow this pattern:
+- **Single-year reports** (`mc-ind`): `<group>`, `<group>`, `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL`
+- **Synthesis reports** (`mc-all`): `<group>`, `<group>`, `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL`
+
+The suffixes indicate:
+- `_INJECTION`: Short-term storage injection (total)
+- `_WITHDRAWAL`: Short-term storage withdrawal (total)
+- `_LEVEL`: Short-term storage level (average)
+
+#### Available Variables
+
+The following group types can be used for dynamic aggregation:
+
+| Variable type | Description | Column pattern (per group) |
+|--------------|-------------|------------------------|
+| Thermal clusters | Production | `<group>`, `<group>`, `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL` |
+| Renewable clusters | Injection | `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL` |
+| Short-term storage | Injection | `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL` |
+
+#### Dynamic vs Static Groups
+
+| Aspect | Static Groups | Dynamic Groups |
+|--------|-----------------------------|-----------------------|
+| Definition | Defined once in study input | Defined dynamically based on plant `group` attribute |
+| Column count | Limited to available groups | Can scale with number of districts |
+
+#### Notes
+
+- Dynamic district variables are handled differently from other variables for technical reasons
+  - They cannot be enabled/disabled with thematic trimming
+  - They cannot be enabled/disabled with geographic trimming
+
+- For short-term storage `LEVEL` columns, values represent **averages** (not hourly values) computed over the period of time (day, week, month or year)
+- The number of columns generated scales with the number of districts and groups defined in your study
+- To enable dynamic aggregation, define [sets of areas](inputs.md) in your study input
+
+[^11]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
+
+[^12]: Value identical to that defined under the same name in the "Misc Gen" input section.
+
+[^13]: NODU and NP Cost do not appear in "Adequacy" results since these variables are irrelevant in that context
+
+[^adqp]: Please note that this output variable is only available in the economy mode, if adequacy patch is activated and the area the output variable belongs to is inside the adequacy patch domain (see [Adequacy Patch](https://antares-doc.readthedocs.io/en/latest/reference/adequacy-patch/))
+
+[^14]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
+
+[^agg]: This output is only available if the parameter "renewable generation modelling" is set to "cluster" in the input of the simulation
+
+[^ren]: This output is only available if the parameter "renewable generation modelling" is set to "aggregated" in the input of the simulation
+
+[^15]: dispatchable production = power generation above min gen = (power generation) - (min gen modulation)*units*capacity
+
+### The Annual System Cost Output file
+
+In addition to the general files introduced in [Output Files](outputs.md#output-files), the Output folder of each economic or adequacy simulation includes, at its root, a file "Annual\_System\_Cost.txt" It presents the metrics of a global Monte-Carlo variable further denoted ASC.
+
+The value of ASC for any given simulated year is defined as the sum, over all areas and links, of the annual values of the area-variable "OV.COST" and of the link-variable "HURD. COST".
+
+The metrics displayed in the "Annual system cost" file take the form of four values:
+
+- Expectation EASC
+
+- Standard deviation SASC
+
+- Minimum LASC
+
+- Maximum UASC
+
+As with all other random variables displayed in the Antares Output section, the computed standard deviation of the variable can be used to give a measure of the confidence interval attached to the estimate of the expectation. For a number of Monte-Carlo years N, the law of large numbers states for instance that there is a 95 % probability for the actual expectation of ASC to lie within the interval:
+
+<center>**EASC +/- 1.96 (SASC / sqrt(N))**</center>
+
+There is also a 99.8 % probability that it lies within the interval:
+
+<center>**EASC +/- 3 (SASC / sqrt(N))**</center>
+
+### Changelog
+The following table contains a list of new output variables in recent versions.
+
+
+
+| Version | Variable(s) introduced | Files                     | Enabled by default |
+|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------|--------------------|
+| 8.0     | none                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                           |                    |
+| 8.1     | WIND OFFSHORE, WIND ONSHORE, SOLAR CONCRT., SOLAR PV, SOLAR ROOFT, RENW. 1, RENW. 2, RENW. 3, RENW. 4                                                                                                                                                                                                                                                                                                                                                                                             | values-*.txt              | yes                |
+| 8.1     | MISC. DTG 2, MISC. DTG 3, MISC. DTG 4                                                                                                                                                                                                                                                                                                                                                                                                                                                             | values-*.txt              | yes                |
+| 8.2     | none                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                           |                    |
+| 8.3     | DENS                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | values-*.txt              | no                 |
+| 8.3     | Profit by plant                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | details-*.txt             | yes                |
+| 8.4     | BC. MARG. COST                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | binding-constraints-*.txt | no                 |
+| 8.5     | LMR VIOL., SPIL. ENRG. CSR, DTG MRG CSR                                                                                                                                                                                                                                                                                                                                                                                                                                                           | values-*.txt              | no                 |
+| 8.6     | PSP_open_injection, PSP_open_withdrawal, PSP_open_level, PSP_closed_injection, PSP_closed_withdrawal, PSP_closed_level, Pondage_injection, Pondage_withdrawal, Pondage_level, Battery_injection, Battery_withdrawal, Battery_level, Other1_injection, Other1_withdrawal, Other1_level, Other2_injection, Other2_withdrawal, Other2_level, Other3_injection, Other3_withdrawal, Other3_level, Other4_injection, Other4_withdrawal, Other4_level, Other5_injection, Other5_withdrawal, Other5_level | values-*.txt              | yes                |
+| 8.6     | STS inj by plant, STS withdrawal by plant, STS lvl by plant                                                                                                                                                                                                                                                                                                                                                                                                                                       | details-STstorage-*.txt   | yes                |
+| 8.6     | CO2 EMIS., NH3 EMIS., SO2 EMIS., NOX EMIS., PM2_5 EMIS., PM5 EMIS., PM10 EMIS., NMVOC EMIS., OP1 EMIS., OP2 EMIS., OP3 EMIS., OP4 EMIS., OP5 EMIS.                                                                                                                                                                                                                                                                                                                                                | values-*.txt              | yes                |
+| 8.8 | PriceCSR[^16] | values-*.txt | yes |
+| 8.8 | UNSP. ENRG CSR[^16] | values-*.txt | yes |
+| 8.8 | LOLD_CSR, LOLP_CSR[^16] | values-*.txt | yes |
+| 8.8 | MAX MRG CSR[^16] | values-*.txt | yes |
+| 8.8 | OV. COST CSR[^16] | values-*.txt | yes |
+| 9.1 | **Short-term storage** - dynamic groups instead of static groups. For any group :<br>\<STS group\>_injection <br> \<STS group\>_withdrawal <br> \<STS group\>_level| values-*.txt | yes |
+| 9.2.0 | MIN DTG by plant | details-\*.txt | yes |
+| 9.2.1, 9.3.0 | NPCAP HOURS | values-\*.txt | yes |
+| 9.3 | Use dynamic groups for thermal dispatchable generation and renewable generation, instead of static groups. 
+
+
+
+### execution\_info.ini
+
+Each simulation produces a file "execution\_info.ini" at the root of the output folder. This file contains information about the execution of the simulation, such as version of Antares used, options selected in generaldata.ini, information about the study (nb of areas...) and different steps duration.
+
+The section [duration] contains the same fields as [duration\_ms] with values in hours, minutes and seconds for longer studies.
+
+The section [duration\_ms] contains the following fields:
+
+- **full_exec**: total duration
+  - **loading**: loading of all files
+    - **study_loading**: loading of legacy solver files
+    - **modeler_loading**: loading and parsing of files related to modeler: models, system, optim-config
+  - **simulation**:
+    - **tsgen_thermal, tsgen_wind, tsgen_solar, tsgen_load, tsgen_hydro**: if we need to generate time series for a type
+    - **mc_years**: all monte-carlo years
+      - **hydro_ventilation**: running hydro heuristics
+      - **problem_build_time**: building of the optimization problem (legacy + modeler)
+      - **solve_time**: solver resolution
+      - **export_simulation_tables**: modeler related, creation and writing of simulation tables
+      - **post_processing**: balance and flow quad
+      - **yby_export**: export and writing of results for a year (year-by-year parameter)
+      - **synthesis_compute**: results aggregation for mc-all
+    - **synthesis_export**: export and writing of mc-all results
+
+
+**problem_build_time** and **solve_time** are totals for each week of each year, more detailed values can be found in output folder: optimization/week-by-week/year\_**n**.txt
+
+
+[^16] : this output variable was introduced both in **8.8** and **9.2**, meaning that **9.0** and **9.1** don't have it.

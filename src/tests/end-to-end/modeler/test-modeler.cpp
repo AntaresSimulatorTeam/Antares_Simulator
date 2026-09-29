@@ -72,19 +72,10 @@ Component copyComponent(const Component& c)
       .build();
 }
 
-class DefaultScenario final: public Api::IScenario
-{
-public:
-    using IScenario::IScenario;
-
-    [[nodiscard]] TimeSeriesNumber getData(Year) const override
-    {
-        return 1; // Default rank for empty groupId
-    }
-};
-
 using Models = std::unordered_map<std::string, Model>;
 
+namespace
+{
 class InMemoryLoader final: public ILoader
 {
 public:
@@ -210,6 +201,7 @@ public:
     std::pair<unsigned int, unsigned int> timeSteps{0, 0};
     ScenarioScope scenarioScope{};
 };
+} // namespace
 
 struct Solution
 {
