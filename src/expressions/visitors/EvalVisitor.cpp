@@ -435,6 +435,11 @@ EvaluationResult::EvaluationResult(const std::vector<double>& values):
 {
 }
 
+EvaluationResult::EvaluationResult(std::vector<double>&& values)
+{
+    value_ = std::move(values);
+}
+
 size_t EvaluationResult::size() const
 {
     if (std::holds_alternative<std::vector<double>>(value_))
