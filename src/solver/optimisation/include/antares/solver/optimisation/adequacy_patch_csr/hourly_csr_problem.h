@@ -65,7 +65,7 @@ public:
                               const Antares::Optimization::OptimizationOptions& solverOptions):
         solverOptions_(solverOptions),
         adqPatchParams_(adqPatchParams),
-        correspondence_(p->NombreDePasDeTempsPourUneOptimisation),
+        correspondence_(1),
         variableManager_(correspondence_,
                          unusedStockFinal_,
                          unusedStockTranche_,

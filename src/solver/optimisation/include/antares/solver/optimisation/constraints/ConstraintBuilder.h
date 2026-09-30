@@ -115,7 +115,7 @@ public:
         variableManager_(data.CorrespondanceVarNativesVarOptim,
                          data.NumeroDeVariableStockFinal,
                          data.NumeroDeVariableDeTrancheDeStock,
-                         data.NombreDePasDeTempsPourUneOptimisation)
+                         1)
     {
     }
 

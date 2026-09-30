@@ -40,11 +40,10 @@ ActiveGemsPart::ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo,
 
 void ActiveGemsPart::setHour(int triggeredHour)
 {
-    triggeredHour_ = triggeredHour;
     fillContext_ = FillContext(0,
                                0,
-                               triggeredHour_ + problemeHebdo_->HeureDansLAnnee,
-                               triggeredHour_ + problemeHebdo_->HeureDansLAnnee,
+                               triggeredHour + problemeHebdo_->HeureDansLAnnee,
+                               triggeredHour + problemeHebdo_->HeureDansLAnnee,
                                problemeHebdo_->year);
 }
 
@@ -104,7 +103,9 @@ void ActiveGemsPart::setBoundsOnENS()
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area] == physicalAreaInsideAdqPatch)
         {
-            int var = variableManager_.UnsuppliedEnergy(area, triggeredHour_);
+            int var = variableManager_.UnsuppliedEnergy(
+              area,
+              0); // hour = 0 since we only store 1 correspondance table
             problemeAResoudre_.Xmax[var] += gemsUnsupEnergyForArea(area);
         }
     }
