@@ -122,6 +122,18 @@ def simu_success(context):
     assert context.return_code == 0, f"Process failed with return code {context.return_code}: \nSTDOUT: \n{context.logs_out} \n STDERR: \n{context.logs_err}"
 
 
+@then('the output file "{file_path}" exists')
+def output_file_exists(context, file_path):
+    output_file = context.soh.output_dir() / Path(file_path.replace("/", os.sep))
+    assert output_file.is_file(), f"Output file does not exist: {file_path}"
+
+
+@then('the output file "{file_path}" does not exist')
+def output_file_does_not_exist(context, file_path):
+    output_file = context.soh.output_dir() / Path(file_path.replace("/", os.sep))
+    assert not output_file.exists(), f"Output file unexpectedly exists: {file_path}"
+
+
 @then('the simulation fails')
 def simu_success(context):
     assert context.return_code != 0, f"Process ended with return code {context.return_code}: \nSTDOUT: \n{context.logs_out} \n STDERR: \n{context.logs_err}"
