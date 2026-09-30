@@ -8,12 +8,39 @@
 ConstraintBuilder::ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo,
                                      PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                                      const CsrVariableIndices& csrVariableIndices):
-    // Delegate to the weekly constructor to initialize data + variableManager_ from
-    // problemeHebdo's tables. The CSR constraints only use the five rerouted variable
-    // kinds (via csrVariableIndices_), so the weekly table is never queried for them.
-    ConstraintBuilder(problemeHebdo)
+    // Bind the constraint data to the standalone hourly CSR problem.  Delegating to
+    // ConstraintBuilder(PROBLEME_HEBDO*) would bind data to the weekly problem; in
+    // particular, nombreDeContraintes would start at the weekly offset (e.g. 3360)
+    // and RHS/LHS construction would write past the CSR vectors.
+    data({ProblemeAResoudre.Pi,
+          ProblemeAResoudre.Colonne,
+          ProblemeAResoudre.NombreDeContraintes,
+          ProblemeAResoudre.NombreDeTermesDansLaMatriceDesContraintes,
+          ProblemeAResoudre.IndicesDebutDeLigne,
+          ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes,
+          ProblemeAResoudre.IndicesColonnes,
+          ProblemeAResoudre.NombreDeTermesDesLignes,
+          ProblemeAResoudre.Sens,
+          ProblemeAResoudre.IncrementDAllocationMatriceDesContraintes,
+          problemeHebdo->CorrespondanceVarNativesVarOptim,
+          problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
+          problemeHebdo->NumeroDeVariableStockFinal,
+          problemeHebdo->NumeroDeVariableDeTrancheDeStock,
+          ProblemeAResoudre.NomDesContraintes,
+          problemeHebdo->NomsDesPays,
+          problemeHebdo->weekInTheYear,
+          problemeHebdo->NombreDePasDeTemps}),
+    csrVariableIndices_(&csrVariableIndices),
+    variableManager_(data.CorrespondanceVarNativesVarOptim,
+                     data.NumeroDeVariableStockFinal,
+                     data.NumeroDeVariableDeTrancheDeStock,
+                     data.NombreDePasDeTempsPourUneOptimisation)
 {
-    csrVariableIndices_ = &csrVariableIndices;
+    // OPT_AllocateFromNumberOfVariableConstraints allocates the CSR vectors but
+    // leaves the requested number of rows in NombreDeContraintes.  Constraint
+    // construction must fill them from row zero.
+    data.nombreDeContraintes = 0;
+    data.nombreDeTermesDansLaMatriceDeContrainte = 0;
 }
 
 void ConstraintBuilder::build()
