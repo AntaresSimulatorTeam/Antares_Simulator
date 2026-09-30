@@ -208,9 +208,5 @@ void HourlyCSRProblem::run(uint week, uint year)
 
 ConstraintBuilder HourlyCSRProblem::makeConstraintBuilder()
 {
-    return ConstraintBuilder(problemeHebdo_,
-                             problemeAResoudre_,
-                             correspondence_,
-                             unusedStockFinal_,
-                             unusedStockTranche_);
+    return ConstraintBuilder(problemeHebdo_, problemeAResoudre_, variableManager_);
 }

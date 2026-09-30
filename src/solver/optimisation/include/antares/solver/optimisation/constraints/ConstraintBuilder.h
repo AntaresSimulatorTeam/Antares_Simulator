@@ -23,10 +23,7 @@ public:
     std::vector<int>& NombreDeTermesDesLignes;
     std::string& Sens;
     int& IncrementDAllocationMatriceDesContraintes;
-    std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim;
     const int32_t& NombreDePasDeTempsPourUneOptimisation;
-    std::vector<int>& NumeroDeVariableStockFinal;
-    std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
     std::vector<std::string>& NomDesContraintes;
     const std::vector<const char*>& NomsDesPays;
     const uint32_t& weekInTheYear;
@@ -50,8 +47,14 @@ class ConstraintBuilder final
 public:
     ConstraintBuilder() = delete;
 
+    // Resolves variables through an existing VariableManager (copied: it only holds references)
+    // instead of building a new one from problemeHebdo's correspondence tables. For a solve that
+    // reuses problemeHebdo's static data (areas, links, week length, ...) but must not read or
+    // write the *main* weekly problem's variable numbering -- e.g. the adequacy patch's CSR, which
+    // owns a VariableManager over its own short-lived per-hour correspondence table.
     explicit ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo,
-                               PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre):
+                               PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
+                               const VariableManagement::VariableManager& variableManager):
         data({ProblemeAResoudre.Pi,
               ProblemeAResoudre.Colonne,
               ProblemeAResoudre.NombreDeContraintes,
@@ -62,60 +65,25 @@ public:
               ProblemeAResoudre.NombreDeTermesDesLignes,
               ProblemeAResoudre.Sens,
               ProblemeAResoudre.IncrementDAllocationMatriceDesContraintes,
-              problemeHebdo->CorrespondanceVarNativesVarOptim,
               problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
-              problemeHebdo->NumeroDeVariableStockFinal,
-              problemeHebdo->NumeroDeVariableDeTrancheDeStock,
               ProblemeAResoudre.NomDesContraintes,
               problemeHebdo->NomsDesPays,
               problemeHebdo->weekInTheYear,
               problemeHebdo->NombreDePasDeTemps}),
-        variableManager_(data.CorrespondanceVarNativesVarOptim,
-                         data.NumeroDeVariableStockFinal,
-                         data.NumeroDeVariableDeTrancheDeStock,
-                         data.NombreDePasDeTempsPourUneOptimisation)
+        variableManager_(variableManager)
+    {
+    }
+
+    explicit ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo,
+                               PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre):
+        ConstraintBuilder(problemeHebdo,
+                          ProblemeAResoudre,
+                          VariableManagement::VariableManager(problemeHebdo))
     {
     }
 
     explicit ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo):
         ConstraintBuilder(problemeHebdo, *problemeHebdo->ProblemeAResoudre)
-    {
-    }
-
-    // Same as above, but resolves variables against a caller-supplied correspondence table
-    // instead of problemeHebdo->CorrespondanceVarNativesVarOptim. For a solve that reuses
-    // problemeHebdo's static data (areas, links, week length, ...) but must not read or write
-    // the *main* weekly problem's variable numbering -- e.g. the adequacy patch's CSR, which
-    // repoints these entries to its own short-lived per-hour problem and would otherwise
-    // desync from whichever caller resolves variables through problemeHebdo directly.
-    explicit ConstraintBuilder(
-      PROBLEME_HEBDO* problemeHebdo,
-      PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
-      std::vector<CORRESPONDANCES_DES_VARIABLES>& correspondanceVarNativesVarOptim,
-      std::vector<int>& numeroDeVariableStockFinal,
-      std::vector<std::vector<int>>& numeroDeVariableDeTrancheDeStock):
-        data({ProblemeAResoudre.Pi,
-              ProblemeAResoudre.Colonne,
-              ProblemeAResoudre.NombreDeContraintes,
-              ProblemeAResoudre.NombreDeTermesDansLaMatriceDesContraintes,
-              ProblemeAResoudre.IndicesDebutDeLigne,
-              ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes,
-              ProblemeAResoudre.IndicesColonnes,
-              ProblemeAResoudre.NombreDeTermesDesLignes,
-              ProblemeAResoudre.Sens,
-              ProblemeAResoudre.IncrementDAllocationMatriceDesContraintes,
-              correspondanceVarNativesVarOptim,
-              problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
-              numeroDeVariableStockFinal,
-              numeroDeVariableDeTrancheDeStock,
-              ProblemeAResoudre.NomDesContraintes,
-              problemeHebdo->NomsDesPays,
-              problemeHebdo->weekInTheYear,
-              problemeHebdo->NombreDePasDeTemps}),
-        variableManager_(data.CorrespondanceVarNativesVarOptim,
-                         data.NumeroDeVariableStockFinal,
-                         data.NumeroDeVariableDeTrancheDeStock,
-                         1)
     {
     }
 

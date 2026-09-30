@@ -65,11 +65,13 @@ public:
                               const Antares::Optimization::OptimizationOptions& solverOptions):
         solverOptions_(solverOptions),
         adqPatchParams_(adqPatchParams),
+        // The adq patch problem only covers a single hour. So we store variable mapping for this
+        // hour
         correspondence_(1),
         variableManager_(correspondence_,
                          unusedStockFinal_,
                          unusedStockTranche_,
-                         p->NombreDePasDeTempsPourUneOptimisation),
+                         1), // only one hour in the correspondance table
         problemeHebdo_(p)
     {
         // This HourlyCSRProblem's own correspondence table, entirely separate from
@@ -82,8 +84,9 @@ public:
         // reader (e.g. the simulation table dump) would then resolve against. Sized for
         // every hour up front since HourlyCSRProblem is constructed once per week and reused
         // across every triggered hour.
-        for (auto& entry: correspondence_)
+
         {
+            auto& entry = correspondence_.back();
             entry.NumeroDeVariableDefaillancePositive.assign(p->NombreDePays, -1);
             entry.NumeroDeVariableDefaillanceNegative.assign(p->NombreDePays, -1);
             entry.NumeroDeVariableDuFluxDirect.assign(p->NombreDInterconnexions, -1);
