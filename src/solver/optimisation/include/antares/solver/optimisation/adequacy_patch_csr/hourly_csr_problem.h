@@ -67,11 +67,8 @@ public:
         adqPatchParams_(adqPatchParams),
         // The adq patch problem only covers a single hour. So we store variable mapping for this
         // hour
-        correspondence_(1),
-        variableManager_(correspondence_,
-                         unusedStockFinal_,
-                         unusedStockTranche_,
-                         1), // only one hour in the correspondance table
+        correspondence_(csrTimeSteps_),
+        variableManager_(correspondence_, unusedStockFinal_, unusedStockTranche_, csrTimeSteps_),
         problemeHebdo_(p)
     {
         // This HourlyCSRProblem's own correspondence table, entirely separate from
@@ -189,8 +186,9 @@ private:
     std::vector<CORRESPONDANCES_DES_VARIABLES> correspondence_;
     std::vector<int> unusedStockFinal_;
     std::vector<std::vector<int>> unusedStockTranche_;
+    // only one hour in the correspondance table
+    static constexpr int32_t csrTimeSteps_ = 1;
     VariableManagement::VariableManager variableManager_;
-
     PROBLEME_HEBDO* problemeHebdo_;
     PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;
 };

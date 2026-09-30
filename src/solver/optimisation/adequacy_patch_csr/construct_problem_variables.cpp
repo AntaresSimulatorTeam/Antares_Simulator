@@ -23,8 +23,10 @@ void HourlyCSRProblem::constructVariableENS()
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            variableManager_
-              .UnsuppliedEnergy(area, 0); // hour = 0 since we only store 1 correspondance table
+            variableManager_.UnsuppliedEnergy(
+              area,
+              0) // hour = 0 since we only store 1 correspondance table
+              = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             varToBeSetToZeroIfBelowThreshold.insert(NumberOfVariables);
             ensVariablesInsideAdqPatch.insert(NumberOfVariables);
@@ -48,8 +50,10 @@ void HourlyCSRProblem::constructVariableSpilledEnergy()
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            variableManager_.Spillage(area,
-                                      0); // hour = 0 since we only store 1 correspondance table
+            variableManager_.Spillage(
+              area,
+              0) // hour = 0 since we only store 1 correspondance table
+              = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
             varToBeSetToZeroIfBelowThreshold.insert(NumberOfVariables);
             logs.debug() << NumberOfVariables << " Spilled Energy[" << area << "].-["
