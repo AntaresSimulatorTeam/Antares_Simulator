@@ -12,8 +12,6 @@
 
 namespace fs = std::filesystem;
 
-#define SEP Yuni::IO::Separator
-
 namespace Antares::Data
 {
 
@@ -154,26 +152,26 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID,
                                    const std::string& folder,
                                    Parameters::Compatibility::HydroPmax hydroPmax) const
 {
-    const std::string buffer = folder + SEP + areaID;
+    const auto buffer = fs::path(folder) / areaID;
     /* Make sure the folder is created */
-    if (Yuni::IO::Directory::Create(buffer))
+    if (std::filesystem::create_directories(buffer) || std::filesystem::is_directory(buffer))
     {
         bool ret = true;
 
         // Saving data
-        ret = MatrixIO::save(ror.timeSeries, folder + SEP + areaID + SEP + "ror.txt", 0) && ret;
-        ret = MatrixIO::save(storage.timeSeries, folder + SEP + areaID + SEP + "mod.txt", 0) && ret;
-        ret = MatrixIO::save(mingen.timeSeries, folder + SEP + areaID + SEP + "mingen.txt", 0)
+        ret = MatrixIO::save(ror.timeSeries, (buffer / "ror.txt").string(), 0) && ret;
+        ret = MatrixIO::save(storage.timeSeries, (buffer / "mod.txt").string(), 0) && ret;
+        ret = MatrixIO::save(mingen.timeSeries, (buffer / "mingen.txt").string(), 0)
               && ret;
 
         if (hydroPmax == Parameters::Compatibility::HydroPmax::Hourly)
         {
             ret = MatrixIO::save(maxHourlyGenPower.timeSeries,
-                                 folder + SEP + areaID + SEP + "maxHourlyGenPower.txt",
+                                  (buffer / "maxHourlyGenPower.txt").string(),
                                  0)
                   && ret;
             ret = MatrixIO::save(maxHourlyPumpPower.timeSeries,
-                                 folder + SEP + areaID + SEP + "maxHourlyPumpPower.txt",
+                                  (buffer / "maxHourlyPumpPower.txt").string(),
                                  0)
                   && ret;
         }

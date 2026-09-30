@@ -10,8 +10,6 @@
 #include <string>
 #include <vector>
 
-#include <yuni/yuni.h>
-
 namespace Antares
 {
 /*!
@@ -86,7 +84,7 @@ public:
     /*!
     ** \brief Constructor with a initial size
     */
-    Matrix(uint w, uint h);
+    Matrix(unsigned int w, unsigned int h);
     //! Destructor
     ~Matrix() = default;
     //@}
@@ -119,12 +117,12 @@ public:
     ** \param w The new width
     ** \param h The new height
     */
-    void resize(uint w, uint h);
+    void resize(unsigned int w, unsigned int h);
 
     /*!
     ** \brief Resize the matrix without destroying its content
     */
-    void resizeWithoutDataLost(uint x, uint y, const T& defVal = T());
+    void resizeWithoutDataLost(unsigned int x, unsigned int y, const T& defVal = T());
 
     /*!
     ** \brief Empty the matrix
@@ -143,12 +141,12 @@ public:
     ** \see resize()
     ** \see zero()
     */
-    void reset(uint w, uint h);
+    void reset(unsigned int w, unsigned int h);
 
     //! Get the Nth column
-    ColumnType& column(uint n);
+    ColumnType& column(unsigned int n);
     //! Get the Nth column (const)
-    const ColumnType& column(uint n) const;
+    const ColumnType& column(unsigned int n) const;
 
     /*!
     ** \brief Make the matrix a zero matrix
@@ -188,10 +186,10 @@ public:
     ** \param data The data to copy
     */
     template<class U>
-    void pasteToColumn(uint x, const U* data);
+    void pasteToColumn(unsigned int x, const U* data);
 
     template<class U>
-    void pasteToColumn(uint x, const std::vector<U>& data)
+    void pasteToColumn(unsigned int x, const std::vector<U>& data)
     {
         assert(data.size() == height_);
         pasteToColumn(x, data.data());
@@ -203,14 +201,14 @@ public:
     ** \param x The column index (zero-based)
     ** \param data The data to copy
     */
-    void fillColumn(uint x, const T& value);
+    void fillColumn(unsigned int x, const T& value);
 
     /*!
     ** \brief Set to zero a entire column
     **
     ** \param x The column index (zero-based)
     */
-    void columnToZero(uint x);
+    void columnToZero(unsigned int x);
 
     /*!
     ** \brief Get if the matrix only contains zero
@@ -238,8 +236,8 @@ public:
     */
     bool empty() const;
 
-    uint width() const noexcept;
-    uint height() const noexcept;
+    unsigned int width() const noexcept;
+    unsigned int height() const noexcept;
 
     //! \name Operators
     //@{
@@ -253,13 +251,13 @@ public:
     Matrix& operator=(const Matrix<U>& rhs);
 
     //! operator []
-    ColumnType& operator[](uint column);
-    const ColumnType& operator[](uint column) const;
+    ColumnType& operator[](unsigned int column);
+    const ColumnType& operator[](unsigned int column) const;
     //@}
 
 public:
     //! Width of the matrix
-    ColumnType& mutableColumn(uint column) const;
+    ColumnType& mutableColumn(unsigned int column) const;
 
     struct PredicateIdentity
     {
@@ -271,8 +269,8 @@ public:
     };
 
 private:
-    uint width_ = 0;
-    uint height_ = 0;
+    unsigned int width_ = 0;
+    unsigned int height_ = 0;
     mutable std::vector<ColumnType> columns_;
     /*!
     ** \brief Load data from a CSV file

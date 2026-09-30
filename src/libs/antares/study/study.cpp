@@ -51,7 +51,7 @@ void Study::setModelerData(std::unique_ptr<Solver::ModelerData> modelerData)
 void Study::reduceMemoryUsage()
 {
     dataBuffer.clear();
-    dataBuffer.shrink();
+    dataBuffer.shrink_to_fit();
 }
 
 unsigned Study::getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode)

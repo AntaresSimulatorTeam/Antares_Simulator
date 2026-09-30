@@ -8,8 +8,6 @@
 
 #include "fill-matrix.h"
 
-using namespace Yuni;
-
 namespace Antares::UnitTests
 {
 struct PredicateIdentity
@@ -33,12 +31,14 @@ public:
     {
     }
 
-    Matrix_load_bypass(uint height, uint width):
+    Matrix_load_bypass(unsigned int height, unsigned int width):
         Matrix_easy_to_fill<T, ReadWriteT>(height, width)
     {
     }
 
-    Matrix_load_bypass(uint height, uint width, const vector<T>& vec):
+    Matrix_load_bypass(unsigned int height,
+                       unsigned int width,
+                       const std::vector<T>& vec):
         Matrix_easy_to_fill<T, ReadWriteT>(height, width, vec)
     {
     }
@@ -63,7 +63,7 @@ public:
         mtx_to_build_buffer_with_ = mtx;
     }
 
-    void set_precision(uint precision)
+    void set_precision(unsigned int precision)
     {
         buffer_precision_ = precision;
     }
@@ -73,9 +73,9 @@ public:
         buffer_print_dimensions_ = print_dims;
     }
 
-    Clob* build_buffer()
+    MatrixIO::BufferType* build_buffer()
     {
-        Clob* buffer_to_return = new Clob;
+        auto* buffer_to_return = new MatrixIO::BufferType;
         std::string buffer;
         Antares::UnitTests::PredicateIdentity predicate;
 
@@ -91,7 +91,7 @@ public:
     }
 
 private:
-    uint buffer_precision_;
+    unsigned int buffer_precision_;
     bool buffer_print_dimensions_;
     Matrix_easy_to_fill<T, ReadWriteT>* mtx_to_build_buffer_with_;
 };
@@ -101,30 +101,22 @@ class Matrix_mock_load_to_buffer: public Matrix<T, ReadWriteT>
 {
 public:
     Matrix_mock_load_to_buffer():
-        Matrix<T, ReadWriteT>(),
-        fake_mtx_error_when_loading_(IO::errNone)
+        Matrix<T, ReadWriteT>()
     {
     }
 
-    Matrix_mock_load_to_buffer(uint height, uint width):
-        Matrix<T, ReadWriteT>(height, width),
-        fake_mtx_error_when_loading_(IO::errNone)
+    Matrix_mock_load_to_buffer(unsigned int height, unsigned int width):
+        Matrix<T, ReadWriteT>(height, width)
     {
     }
 
-    Matrix_mock_load_to_buffer(uint height, uint width, const vector<T>& vec):
-        Matrix<T, ReadWriteT>(height, width, vec),
-        fake_mtx_error_when_loading_(IO::errNone)
+    Matrix_mock_load_to_buffer(unsigned int height,
+                               unsigned int width,
+                               const std::vector<T>& vec):
+        Matrix<T, ReadWriteT>(height, width, vec)
     {
     }
 
-    void error_when_loading_from_file(IO::Error err)
-    {
-        fake_mtx_error_when_loading_ = err;
-    }
-
-private:
-    IO::Error fake_mtx_error_when_loading_;
 };
 
 #endif // __ANTARES_LIBS_ARRAY_MATRIX_BYPASS_LOAD_H__

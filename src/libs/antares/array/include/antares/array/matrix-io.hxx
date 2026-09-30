@@ -12,12 +12,13 @@
 #include <cstdlib>
 #include <filesystem>
 #include <functional>
+#include <fstream>
+#include <iterator>
 #include <memory>
+#include <sstream>
 #include <string>
+#include <type_traits>
 #include <utility>
-
-#include <yuni/core/static/types.h>
-#include <yuni/io/file.h>
 
 #include <antares/io/statistics.h>
 #include <antares/logs/logs.h>
@@ -27,16 +28,22 @@
 
 namespace Antares::MatrixIO
 {
-using BufferType = Yuni::Clob;
-using FileLoader = std::function<Yuni::IO::Error(BufferType&, const AnyString&)>;
+using BufferType = std::string;
+
+enum class FileLoadError
+{
+    none,
+    notFound,
+    failed,
+};
+
+using FileLoader = std::function<FileLoadError(BufferType&, const std::string&)>;
 
 template<class T, class ReadWriteT = T>
 using MatrixType = Matrix<T, ReadWriteT>;
 
 namespace // anonymous
 {
-constexpr uint64_t matrixFilesizeHardLimit = 1536ULL * 1024ULL * 1024ULL;
-
 template<class T>
 class MatrixData final
 {
@@ -52,26 +59,24 @@ public:
         data = static_cast<T>(value);
     }
 
-    static void Copy(T&, const AnyString&)
+    static void Copy(T&, const std::string&)
     {
         // This overload prevents an accidental numeric cast on the direct path.
         logs.error() << "internal error: matrix data conversion";
     }
 };
 
-template<uint ChunkSizeT, bool ExpandableT>
-class MatrixData<Yuni::CString<ChunkSizeT, ExpandableT>> final
+template<>
+class MatrixData<std::string> final
 {
 public:
-    using StringType = Yuni::CString<ChunkSizeT, ExpandableT>;
-
-    static void Init(StringType& data)
+    static void Init(std::string& data)
     {
         data.clear();
     }
 
     template<class U>
-    static void Copy(StringType& data, const U& value)
+    static void Copy(std::string& data, const U& value)
     {
         data = value;
     }
@@ -86,9 +91,12 @@ public:
         direct = 0
     };
 
-    static bool Do(const AnyString& str, ReadWriteT& out)
+    static bool Do(const std::string& str, ReadWriteT& out)
     {
-        return str.to(out);
+        std::istringstream stream(str);
+        stream >> out;
+        stream >> std::ws;
+        return !stream.fail() && stream.eof();
     }
 };
 
@@ -101,7 +109,7 @@ public:
         direct = 0
     };
 
-    static bool Do(const AnyString& str, double& out)
+    static bool Do(const std::string& str, double& out)
     {
         char* end = nullptr;
         out = ::strtod(str.c_str(), &end);
@@ -118,7 +126,7 @@ public:
         direct = 0
     };
 
-    static bool Do(const AnyString& str, float& out)
+    static bool Do(const std::string& str, float& out)
     {
         char* end = nullptr;
         out = static_cast<float>(::strtod(str.c_str(), &end));
@@ -126,8 +134,8 @@ public:
     }
 };
 
-template<uint ChunkSizeT, bool ExpandableT>
-class MatrixStringConverter<Yuni::CString<ChunkSizeT, ExpandableT>> final
+template<>
+class MatrixStringConverter<std::string> final
 {
 public:
     enum
@@ -135,20 +143,12 @@ public:
         direct = 1
     };
 
-    using StringType = Yuni::CString<ChunkSizeT, ExpandableT>;
-
-    static bool Do(const AnyString& str, StringType& out)
+    static bool Do(const std::string& str, std::string& out)
     {
         out.assign(str);
         return true;
     }
 };
-
-template<unsigned A, bool B>
-Yuni::CString<A, B> trunc(Yuni::CString<A, B>& str)
-{
-    return str;
-}
 
 template<class T>
 static T trunc(T& in)
@@ -186,7 +186,7 @@ public:
     }
 };
 
-bool detectEncoding(const AnyString& filename, const std::string& data, size_t& offset)
+bool detectEncoding(const std::string& filename, const std::string& data, size_t& offset)
 {
     if (data.size() > 1)
     {
@@ -235,12 +235,12 @@ bool detectEncoding(const AnyString& filename, const std::string& data, size_t& 
 
 template<class T, class ReadWriteT>
 bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
-                    const AnyString& filename,
+                    const std::string& filename,
                     std::string data,
-                    uint minWidth,
-                    uint maxHeight,
+                    unsigned int minWidth,
+                    unsigned int maxHeight,
                     bool fixedSize,
-                    uint options)
+                    unsigned int options)
 {
     logs.debug() << "  :: loading `" << filename << "`";
 
@@ -251,8 +251,8 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
         return false;
     }
 
-    uint offset = static_cast<uint>(bom);
-    uint x = 0;
+    unsigned int offset = static_cast<unsigned int>(bom);
+    unsigned int x = 0;
 
     if (fixedSize)
     {
@@ -262,7 +262,7 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
     {
         if (!maxHeight)
         {
-            maxHeight = static_cast<uint>(std::count(data.begin(), data.end(), '\n'));
+            maxHeight = static_cast<unsigned int>(std::count(data.begin(), data.end(), '\n'));
             if (data.back() == '\n')
             {
                 --maxHeight;
@@ -281,7 +281,7 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
             return false;
         }
 
-        offset = static_cast<uint>(max + 1);
+        offset = static_cast<unsigned int>(max + 1);
         if (max > 0)
         {
             do
@@ -306,7 +306,7 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
             std::string header = data.substr(0, max);
             int headerWidth = 0;
             int headerHeight = 0;
-#ifdef YUNI_OS_MSVC
+#ifdef _MSC_VER
             const int parsed = sscanf_s(header.c_str(), "size:%dx%d", &headerWidth, &headerHeight);
 #else
             const int parsed = sscanf(header.c_str(), "size:%dx%d", &headerWidth, &headerHeight);
@@ -333,8 +333,8 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
                 }
                 headerHeight = static_cast<int>(maxHeight);
             }
-            maxHeight = static_cast<uint>(headerHeight);
-            matrix.resize(static_cast<uint>(headerWidth), static_cast<uint>(headerHeight));
+            maxHeight = static_cast<unsigned int>(headerHeight);
+            matrix.resize(static_cast<unsigned int>(headerWidth), static_cast<unsigned int>(headerHeight));
         }
         else
         {
@@ -343,7 +343,7 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
 
             if (max > 0)
             {
-                while ((offset = static_cast<uint>(data.find_first_of("\t;,", offset))) < max)
+                while ((offset = static_cast<unsigned int>(data.find_first_of("\t;,", offset))) < max)
                 {
                     ++offset;
                     ++x;
@@ -362,15 +362,15 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
                 return false;
             }
 
-            offset = static_cast<uint>(bom);
+            offset = static_cast<unsigned int>(bom);
         }
     }
 
-    uint y = 0;
-    uint pos = 0;
+    unsigned int y = 0;
+    unsigned int pos = 0;
     int errorCount = 6;
     char separator = '\0';
-    AnyString converter;
+    std::string converter;
     ReadWriteT cellValue{};
     bool result = true;
 
@@ -378,14 +378,13 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
     {
         x = 0;
         pos = offset;
-        const uint lineOffset = offset;
+        const unsigned int lineOffset = offset;
 
-        while ((offset = static_cast<uint>(data.find_first_of("\t\r\n;,", offset)))
-               != static_cast<uint>(std::string::npos))
+        while ((offset = static_cast<unsigned int>(data.find_first_of("\t\r\n;,", offset)))
+               != static_cast<unsigned int>(std::string::npos))
         {
             separator = data[offset];
-            data[offset] = '\0';
-            converter = data.c_str() + pos;
+            converter.assign(data, pos, offset - pos);
 
             if (!converter.empty())
             {
@@ -399,11 +398,11 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
                         }
                         else
                         {
-                            uint newOffset = offset;
-                            uint newWidth = matrix.width() + 1;
-                            while ((newOffset = static_cast<uint>(
+                            unsigned int newOffset = offset;
+                            unsigned int newWidth = matrix.width() + 1;
+                            while ((newOffset = static_cast<unsigned int>(
                                       data.find_first_of("\t\r\n;,", newOffset)))
-                                   != static_cast<uint>(std::string::npos))
+                                   != static_cast<unsigned int>(std::string::npos))
                             {
                                 if (data[newOffset] == '\n')
                                 {
@@ -546,9 +545,9 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
 template<class T, class ReadWriteT, class Predicate>
 bool containsOnlyZero(const Matrix<T, ReadWriteT>& matrix, Predicate& predicate)
 {
-    for (uint x = 0; x < matrix.width(); ++x)
+    for (unsigned int x = 0; x < matrix.width(); ++x)
     {
-        for (uint y = 0; y < matrix.height(); ++y)
+        for (unsigned int y = 0; y < matrix.height(); ++y)
         {
             if (!Utils::isZero(static_cast<T>(predicate(matrix[x][y]))))
             {
@@ -562,10 +561,10 @@ bool containsOnlyZero(const Matrix<T, ReadWriteT>& matrix, Predicate& predicate)
 
 template<class T, class ReadWriteT>
 bool load(MatrixType<T, ReadWriteT>& matrix,
-          const AnyString& filename,
-          uint minWidth = 1,
-          uint maxHeight = 0,
-          uint options = MatrixType<T, ReadWriteT>::optNone,
+          const std::string& filename,
+          unsigned int minWidth = 1,
+          unsigned int maxHeight = 0,
+          unsigned int options = MatrixType<T, ReadWriteT>::optNone,
           BufferType* buffer = nullptr,
           const FileLoader& fileLoader = {})
 {
@@ -578,21 +577,24 @@ bool load(MatrixType<T, ReadWriteT>& matrix,
     if (readFromDisk)
     {
         const auto error = fileLoader ? fileLoader(*input, filename)
-                                      : Yuni::IO::File::LoadFromFile(*input,
-                                                                     filename,
-                                                                     matrixFilesizeHardLimit);
-        if (error != Yuni::IO::errNone)
+                                       : [&input, &filename]
+        {
+            std::ifstream file(filename, std::ios::binary);
+            if (!file)
+            {
+                return FileLoadError::notFound;
+            }
+
+            input->assign(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
+            return file.eof() ? FileLoadError::none : FileLoadError::failed;
+        }();
+        if (error != FileLoadError::none)
         {
             if (!(options & MatrixType<T, ReadWriteT>::optQuiet))
             {
-                if (error == Yuni::IO::errNotFound)
+                if (error == FileLoadError::notFound)
                 {
                     logs.error() << "I/O Error: not found: '" << filename << "'";
-                }
-                else if (error == Yuni::IO::errMemoryLimit)
-                {
-                    logs.error() << filename << ": The file is too large (>"
-                                 << (matrixFilesizeHardLimit / 1024 / 1024) << "Mo)";
                 }
                 else
                 {
@@ -622,7 +624,7 @@ bool load(MatrixType<T, ReadWriteT>& matrix,
         Statistics::HasReadFromDisk(input->size());
     }
 
-    std::string data(input->c_str(), input->size());
+    std::string data = *input;
     data += '\n';
     const bool result = loadFromBuffer(matrix,
                                        filename,
@@ -641,14 +643,14 @@ bool load(MatrixType<T, ReadWriteT>& matrix,
 template<class T, class ReadWriteT>
 bool load(MatrixType<T, ReadWriteT>& matrix,
           const std::filesystem::path& filename,
-          uint minWidth = 1,
-          uint maxHeight = 0,
-          uint options = MatrixType<T, ReadWriteT>::optNone,
+          unsigned int minWidth = 1,
+          unsigned int maxHeight = 0,
+          unsigned int options = MatrixType<T, ReadWriteT>::optNone,
           BufferType* buffer = nullptr,
           const FileLoader& fileLoader = {})
 {
     return load(matrix,
-                AnyString(filename.string()),
+                filename.string(),
                 minWidth,
                 maxHeight,
                 options,
@@ -658,32 +660,20 @@ bool load(MatrixType<T, ReadWriteT>& matrix,
 
 template<class T, class ReadWriteT>
 bool load(MatrixType<T, ReadWriteT>& matrix,
-          const std::string& filename,
-          uint minWidth = 1,
-          uint maxHeight = 0,
-          uint options = MatrixType<T, ReadWriteT>::optNone,
-          BufferType* buffer = nullptr,
-          const FileLoader& fileLoader = {})
-{
-    return load(matrix, AnyString(filename), minWidth, maxHeight, options, buffer, fileLoader);
-}
-
-template<class T, class ReadWriteT>
-bool load(MatrixType<T, ReadWriteT>& matrix,
           const char* filename,
-          uint minWidth = 1,
-          uint maxHeight = 0,
-          uint options = MatrixType<T, ReadWriteT>::optNone,
+          unsigned int minWidth = 1,
+          unsigned int maxHeight = 0,
+          unsigned int options = MatrixType<T, ReadWriteT>::optNone,
           BufferType* buffer = nullptr,
           const FileLoader& fileLoader = {})
 {
-    return load(matrix, AnyString(filename), minWidth, maxHeight, options, buffer, fileLoader);
+    return load(matrix, std::string(filename), minWidth, maxHeight, options, buffer, fileLoader);
 }
 
 template<class T, class ReadWriteT = T, class Predicate = std::identity>
 void saveToBuffer(const MatrixType<T, ReadWriteT>& matrix,
                   std::string& data,
-                  uint precision = 6,
+                  unsigned int precision = 6,
                   bool printDimensions = false,
                   Predicate predicate = {},
                   bool saveEvenIfAllZero = false)
@@ -695,7 +685,7 @@ void saveToBuffer(const MatrixType<T, ReadWriteT>& matrix,
 
     matrix_to_buffer_dumper_factory factory;
     auto dumper = factory.get_dumper<T, ReadWriteT, Predicate>(&matrix, data, predicate);
-    dumper->set_print_format(Yuni::Static::Type::IsDecimal<ReadWriteT>::Yes, precision);
+    dumper->set_print_format(std::is_floating_point_v<ReadWriteT>, precision);
 
     data.reserve(matrix.width() * matrix.height() * 6);
     if (printDimensions)
@@ -708,8 +698,8 @@ void saveToBuffer(const MatrixType<T, ReadWriteT>& matrix,
 
 template<class T, class ReadWriteT = T, class Predicate = std::identity>
 bool save(const MatrixType<T, ReadWriteT>& matrix,
-          const AnyString& filename,
-          uint precision = 6,
+          const std::string& filename,
+          unsigned int precision = 6,
           bool printDimensions = false,
           Predicate predicate = {},
           bool saveEvenIfAllZero = false)
@@ -717,8 +707,8 @@ bool save(const MatrixType<T, ReadWriteT>& matrix,
     logs.debug() << "  :: writing `" << filename << "' (" << matrix.width() << 'x'
                  << matrix.height() << ')';
 
-    Yuni::IO::File::Stream file;
-    if (!file.openRW(filename))
+    std::ofstream file(filename, std::ios::binary | std::ios::trunc);
+    if (!file)
     {
         logs.error() << "I/O error: " << filename
                      << ": Impossible to write the file (not enough permission ?)";
@@ -731,6 +721,11 @@ bool save(const MatrixType<T, ReadWriteT>& matrix,
         saveToBuffer(matrix, data, precision, printDimensions, predicate, saveEvenIfAllZero);
         Statistics::HasWrittenToDisk(data.size());
         file << data;
+        if (!file)
+        {
+            logs.error() << "I/O error: " << filename << ": Failed to write the file";
+            return false;
+        }
     }
 
     logs.debug() << "  :: [end] writing `" << filename << "' (" << matrix.width() << 'x'
@@ -740,8 +735,8 @@ bool save(const MatrixType<T, ReadWriteT>& matrix,
 
 template<class T, class ReadWriteT = T>
 bool saveToCSVFile(const MatrixType<T, ReadWriteT>& matrix,
-                   const AnyString& filename,
-                   uint precision = 6,
+                   const std::string& filename,
+                   unsigned int precision = 6,
                    bool printDimensions = false,
                    bool saveEvenIfAllZero = false)
 {

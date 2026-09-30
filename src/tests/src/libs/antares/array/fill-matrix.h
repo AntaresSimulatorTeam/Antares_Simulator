@@ -22,20 +22,22 @@ public:
     {
     }
 
-    Matrix_easy_to_fill(uint height, uint width):
+    Matrix_easy_to_fill(unsigned int height, unsigned int width):
         Matrix<T, ReadWriteT>(height, width)
     {
     }
 
-    Matrix_easy_to_fill(uint height, uint width, const vector<T>& vec):
+    Matrix_easy_to_fill(unsigned int height,
+                        unsigned int width,
+                        const std::vector<T>& vec):
         Matrix<T, ReadWriteT>()
     {
         BOOST_REQUIRE_EQUAL(height * width, vec.size());
         this->reset(width, height);
-        uint count = 0;
-        for (uint j = 0; j < height; j++)
+        unsigned int count = 0;
+        for (unsigned int j = 0; j < height; j++)
         {
-            for (uint i = 0; i < width; i++)
+            for (unsigned int i = 0; i < width; i++)
             {
                 (*this)[i][j] = vec[count];
                 count++;

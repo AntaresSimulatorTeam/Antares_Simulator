@@ -51,7 +51,6 @@ std::string Cluster::getGroup() const
     return group_;
 }
 
-#define SEP Yuni::IO::Separator
 
 bool Cluster::saveDataSeriesToFolder(const std::string& folder) const
 {
@@ -60,14 +59,13 @@ bool Cluster::saveDataSeriesToFolder(const std::string& folder) const
         return true;
     }
 
-    std::string buffer = folder + SEP + parentArea->id + SEP + id();
-    if (!Yuni::IO::Directory::Create(buffer))
+    const auto folderPath = fs::path(folder) / parentArea->id / id();
+    if (!std::filesystem::create_directories(folderPath) && !std::filesystem::is_directory(folderPath))
     {
         return true;
     }
 
-    buffer = folder + SEP + parentArea->id + SEP + id() + SEP + "series.txt";
-    return MatrixIO::save(series.timeSeries, buffer, precision());
+    return MatrixIO::save(series.timeSeries, (folderPath / "series.txt").string(), precision());
 }
 
 bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
@@ -98,8 +96,6 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
 
     return ret;
 }
-
-#undef SEP
 
 bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const
 {

@@ -4,7 +4,7 @@
 #ifndef __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_HXX__
 #define __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_HXX__
 
-#ifdef YUNI_OS_MSVC
+#ifdef _MSC_VER
 #define ANTARES_MATRIX_SNPRINTF sprintf_s
 #else
 #define ANTARES_MATRIX_SNPRINTF snprintf
@@ -124,7 +124,7 @@ matrix_to_buffer_dumper_factory::get_dumper(const Matrix<T, ReadWriteT>* mtx,
 
 template<class T, class ReadWriteT, class PredicateT>
 void I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::set_print_format(bool isDecimal,
-                                                                         uint precision)
+                                                                         unsigned int precision)
 {
     // Determining the string format to use according the given precision
     format_ = "%.0f";
@@ -158,7 +158,7 @@ void I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::set_print_format(bool is
 template<class T, class ReadWriteT, class PredicateT>
 void one_column__dumper<T, ReadWriteT, PredicateT>::run()
 {
-    for (uint y = 0; y != (this->mtx_)->height(); ++y)
+    for (unsigned int y = 0; y != (this->mtx_)->height(); ++y)
     {
         MatrixScalar<ReadWriteT>::Append(this->buffer_,
                                          (ReadWriteT)this->predicate_((*(this->mtx_))[0][y]),
@@ -170,12 +170,12 @@ void one_column__dumper<T, ReadWriteT, PredicateT>::run()
 template<class T, class ReadWriteT, class PredicateT>
 void multiple_columns__dumper<T, ReadWriteT, PredicateT>::run()
 {
-    for (uint y = 0; y < (this->mtx_)->height(); ++y)
+    for (unsigned int y = 0; y < (this->mtx_)->height(); ++y)
     {
         MatrixScalar<ReadWriteT>::Append(this->buffer_,
                                          (ReadWriteT)this->predicate_((*(this->mtx_))[0][y]),
                                          this->format_.c_str());
-        for (uint x = 1; x < (this->mtx_)->width(); ++x)
+        for (unsigned int x = 1; x < (this->mtx_)->width(); ++x)
         {
             this->buffer_ += '\t';
             MatrixScalar<ReadWriteT>::Append(this->buffer_,

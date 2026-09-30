@@ -3,12 +3,9 @@
 
 #include "antares/series/series.h"
 
+#include <filesystem>
 #include <sstream>
 #include <vector>
-
-#include <yuni/yuni.h>
-#include <yuni/io/directory.h>
-#include <yuni/io/file.h>
 
 #include <antares/antares/constants.h>
 #include <antares/array/matrix-io.h>
@@ -108,9 +105,8 @@ int TimeSeries::saveToFolder(const std::string& areaID,
                              const std::string& folder,
                              const std::string& prefix) const
 {
-    Yuni::Clob buffer;
-    buffer.clear() << folder << Yuni::IO::Separator << prefix << areaID << ".txt";
-    return MatrixIO::save(timeSeries, buffer, 0);
+    const std::filesystem::path path = std::filesystem::path(folder) / (prefix + areaID + ".txt");
+    return MatrixIO::save(timeSeries, path.string(), 0);
 }
 
 double TimeSeries::getCoefficient(uint32_t year, uint32_t timestep) const

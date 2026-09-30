@@ -1,8 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include <yuni/yuni.h>
-
 #include <antares/logs/logs.h>
 #include <antares/study/parts/thermal/prepro.h>
 #include "antares/study/study.h"
@@ -24,11 +22,12 @@ void PreproAvailability::copyFrom(const PreproAvailability& rhs)
 
 bool PreproAvailability::saveToFolder(const AnyString& folder) const
 {
-    if (Yuni::IO::Directory::Create(folder))
+    const auto folderPath = std::filesystem::path(folder.c_str());
+    if (std::filesystem::create_directories(folderPath)
+        || std::filesystem::is_directory(folderPath))
     {
-        Yuni::String buffer;
-        buffer.clear() << folder << Yuni::IO::Separator << "data.txt";
-        return MatrixIO::save(data, buffer, /*decimal*/ 6);
+        const auto buffer = folderPath / "data.txt";
+        return MatrixIO::save(data, buffer.string(), /*decimal*/ 6);
     }
     return false;
 }

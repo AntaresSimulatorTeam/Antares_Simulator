@@ -4,7 +4,8 @@
 #ifndef __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_H__
 #define __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_H__
 
-#include <yuni/core/string.h>
+#include <memory>
+#include <string>
 
 namespace Antares
 {
@@ -15,7 +16,7 @@ class Matrix;
 namespace Antares
 {
 // Forward declarations
-const char* get_format(bool isDecimal, uint precision);
+const char* get_format(bool isDecimal, unsigned int precision);
 template<class T, class ReadWriteT, class PredicateT>
 class I_mtx_to_buffer_dumper;
 
@@ -50,7 +51,7 @@ public:
 
     virtual ~I_mtx_to_buffer_dumper() = default;
 
-    void set_print_format(bool isDecimal, uint precision);
+    void set_print_format(bool isDecimal, unsigned int precision);
     virtual void run() = 0;
 
 protected:
