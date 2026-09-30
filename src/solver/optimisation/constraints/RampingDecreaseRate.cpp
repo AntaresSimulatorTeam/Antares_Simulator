@@ -15,7 +15,7 @@ void RampingDecreaseRate::add(int pays, int index, int pdt)
                                                   .PmaxDUnGroupeDuPalierThermique[index];
         double pminDUnGroupeDuPalierThermique = data.PaliersThermiquesDuPays[pays]
                                                   .pminDUnGroupeDuPalierThermique[index];
-        // Equation (18ter): P(t) >= P(t-1) - ((R^-) * (M(t) - M^+(t))) - (u * M^-(t)) + (l * M^+(t))
+        // Equation (18ter): P(t) >= P(t-1) - (R^-) * (M(t) - M^+(t)) - u * M^-(t) + l * M^+(t)
         // P(t) : Power output of the cluster at timestep t
         // R^- : Max ramping down for cluster
         // M(t) : number of running units
@@ -23,7 +23,7 @@ void RampingDecreaseRate::add(int pays, int index, int pdt)
         // l : minimum unit power output when running
         // M^+(t) : number of starting units this timestep
         // M^-(t) : number of stopping units this timestep
-        // constraint : P(t) - P(t-1) + ((R^-) * M(t)) + u * M^-(t) - (((R^-) + l) * M^+(t)) >= 0
+        // constraint : P(t) - P(t-1) + (R^-) * M(t) + u * M^-(t) - ((R^-) + l) * M^+(t) >= 0
 
         builder.updateHourWithinWeek(pdt)
           .DispatchableProduction(cluster, 1.0) // P(t)
@@ -31,7 +31,7 @@ void RampingDecreaseRate::add(int pays, int index, int pdt)
                                   -1.0,
                                   -1,
                                   builder.data.NombreDePasDeTempsPourUneOptimisation) // - P(t-1)
-          .NumberOfDispatchableUnits(cluster, maxDownwardPowerRampingRate) // ((R^-) * M(t))
+          .NumberOfDispatchableUnits(cluster, maxDownwardPowerRampingRate)          // (R^-) * M(t)
           .NumberStoppingDispatchableUnits(cluster, pmaxDUnGroupeDuPalierThermique) //  u * M^-(t)
           .NumberStartingDispatchableUnits(
             cluster,
