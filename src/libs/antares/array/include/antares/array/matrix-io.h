@@ -9,8 +9,4 @@
 #include "matrix-io.hxx"
 #include "matrix.h"
 
-namespace Antares::MatrixIO
-{
-} // namespace Antares::MatrixIO
-
 #endif

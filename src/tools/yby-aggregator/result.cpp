@@ -3,9 +3,9 @@
 
 #include "result.h"
 
-#include "progress.h"
-
 #include <yuni/io/file.h>
+
+#include "progress.h"
 
 namespace // anonymous
 {

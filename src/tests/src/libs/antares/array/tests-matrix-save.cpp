@@ -7,6 +7,8 @@
 
 #include "tests-matrix-save.h"
 
+#include <cstdlib>
+
 #include <boost/test/unit_test.hpp>
 
 namespace utf = boost::unit_test;
@@ -81,6 +83,56 @@ BOOST_AUTO_TEST_CASE(one_column__3_rows_renw)
     Matrix_easy_to_fill<double> mtx(3, 1, {1.3333, -3.66666, 2.});
     MatrixIO::saveToBuffer(mtx, mtx.data, 4, true);
     BOOST_REQUIRE_EQUAL(mtx.data, "size:1x3\n1.3333\n-3.6667\n2\n");
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(matrix_operations)
+
+BOOST_AUTO_TEST_CASE(fill_unit_handles_rectangular_matrices)
+{
+    Matrix<int> matrix(3, 1);
+    matrix.fillUnit();
+
+    BOOST_CHECK_EQUAL(matrix[0][0], 1);
+    BOOST_CHECK_EQUAL(matrix[1][0], 0);
+    BOOST_CHECK_EQUAL(matrix[2][0], 0);
+}
+
+BOOST_AUTO_TEST_CASE(fill_unit_handles_tall_matrices)
+{
+    Matrix<int> matrix(1, 3);
+    matrix.fillUnit();
+
+    BOOST_CHECK_EQUAL(matrix[0][0], 1);
+    BOOST_CHECK_EQUAL(matrix[0][1], 0);
+    BOOST_CHECK_EQUAL(matrix[0][2], 0);
+}
+
+BOOST_AUTO_TEST_CASE(contains_only_zero_accepts_a_predicate)
+{
+    Matrix<int> matrix(2, 1);
+    matrix[0][0] = 1;
+    matrix[1][0] = -1;
+    auto absoluteValue = [](int value) { return std::abs(value); };
+
+    BOOST_CHECK(matrix.containsOnlyZero(absoluteValue) == false);
+
+    matrix.zero();
+    BOOST_CHECK(matrix.containsOnlyZero(absoluteValue));
+}
+
+BOOST_AUTO_TEST_CASE(resize_without_data_lost_fills_new_values)
+{
+    Matrix<int> matrix(1, 1);
+    matrix[0][0] = 7;
+
+    matrix.resizeWithoutDataLost(2, 2, 3);
+
+    BOOST_CHECK_EQUAL(matrix[0][0], 7);
+    BOOST_CHECK_EQUAL(matrix[0][1], 3);
+    BOOST_CHECK_EQUAL(matrix[1][0], 3);
+    BOOST_CHECK_EQUAL(matrix[1][1], 3);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

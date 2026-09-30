@@ -545,21 +545,6 @@ bool loadFromBuffer(Matrix<T>& matrix,
     return (options & Matrix<T>::optNeverFails) ? true : result;
 }
 
-template<class T, class Predicate>
-bool containsOnlyZero(const Matrix<T>& matrix, Predicate& predicate)
-{
-    for (unsigned int x = 0; x < matrix.width(); ++x)
-    {
-        for (unsigned int y = 0; y < matrix.height(); ++y)
-        {
-            if (!Utils::isZero(static_cast<T>(predicate(matrix[x][y]))))
-            {
-                return false;
-            }
-        }
-    }
-    return true;
-}
 } // anonymous namespace
 
 template<class T>
@@ -692,7 +677,7 @@ void saveToBuffer(const MatrixType<T>& matrix,
                   Predicate predicate = {},
                   bool saveEvenIfAllZero = false)
 {
-    if (!printDimensions && !saveEvenIfAllZero && containsOnlyZero(matrix, predicate))
+    if (!printDimensions && !saveEvenIfAllZero && matrix.containsOnlyZero(predicate))
     {
         return;
     }

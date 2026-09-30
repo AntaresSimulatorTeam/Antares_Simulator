@@ -32,17 +32,16 @@ public:
     }
 
     template<class T, class PredicateT>
-    std::unique_ptr<I_mtx_to_buffer_dumper<T, PredicateT>>
-    get_dumper(const Matrix<T>* mtx, std::string& data, PredicateT& predicate);
+    std::unique_ptr<I_mtx_to_buffer_dumper<T, PredicateT>> get_dumper(const Matrix<T>* mtx,
+                                                                      std::string& data,
+                                                                      PredicateT& predicate);
 };
 
 template<class T, class PredicateT>
 class I_mtx_to_buffer_dumper
 {
 public:
-    I_mtx_to_buffer_dumper(const Matrix<T>* mtx,
-                           std::string& data,
-                           PredicateT& predicate):
+    I_mtx_to_buffer_dumper(const Matrix<T>* mtx, std::string& data, PredicateT& predicate):
         mtx_(mtx),
         buffer_(data),
         predicate_(predicate)
@@ -77,9 +76,7 @@ template<class T, class PredicateT>
 class multiple_columns__dumper: public I_mtx_to_buffer_dumper<T, PredicateT>
 {
 public:
-    multiple_columns__dumper(const Matrix<T>* mtx,
-                             std::string& data,
-                             PredicateT& predicate):
+    multiple_columns__dumper(const Matrix<T>* mtx, std::string& data, PredicateT& predicate):
         I_mtx_to_buffer_dumper<T, PredicateT>(mtx, data, predicate)
     {
     }

@@ -103,10 +103,10 @@ struct MatrixScalar<float>
 } // anonymous namespace
 
 template<class T, class PredicateT>
-std::unique_ptr<I_mtx_to_buffer_dumper<T, PredicateT>>
-matrix_to_buffer_dumper_factory::get_dumper(const Matrix<T>* mtx,
-                                            std::string& data,
-                                            PredicateT& predicate)
+std::unique_ptr<I_mtx_to_buffer_dumper<T, PredicateT>> matrix_to_buffer_dumper_factory::get_dumper(
+  const Matrix<T>* mtx,
+  std::string& data,
+  PredicateT& predicate)
 {
     if (mtx->width() == 1)
     {
@@ -119,8 +119,7 @@ matrix_to_buffer_dumper_factory::get_dumper(const Matrix<T>* mtx,
 }
 
 template<class T, class PredicateT>
-void I_mtx_to_buffer_dumper<T, PredicateT>::set_print_format(bool isDecimal,
-                                                                         unsigned int precision)
+void I_mtx_to_buffer_dumper<T, PredicateT>::set_print_format(bool isDecimal, unsigned int precision)
 {
     // Determining the string format to use according the given precision
     format_ = "%.0f";
@@ -158,7 +157,7 @@ void one_column__dumper<T, PredicateT>::run()
     {
         MatrixScalar<T>::Append(this->buffer_,
                                 (T)this->predicate_((*(this->mtx_))[0][y]),
-                                         this->format_.c_str());
+                                this->format_.c_str());
         this->buffer_ += '\n';
     }
 }
@@ -170,13 +169,13 @@ void multiple_columns__dumper<T, PredicateT>::run()
     {
         MatrixScalar<T>::Append(this->buffer_,
                                 (T)this->predicate_((*(this->mtx_))[0][y]),
-                                         this->format_.c_str());
+                                this->format_.c_str());
         for (unsigned int x = 1; x < (this->mtx_)->width(); ++x)
         {
             this->buffer_ += '\t';
             MatrixScalar<T>::Append(this->buffer_,
                                     (T)this->predicate_((*(this->mtx_))[x][y]),
-                                             this->format_.c_str());
+                                    this->format_.c_str());
         }
         this->buffer_ += '\n';
     }

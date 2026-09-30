@@ -4,6 +4,7 @@
 #ifndef __ANTARES_LIBS_ARRAY_MATRIX_HXX__
 #define __ANTARES_LIBS_ARRAY_MATRIX_HXX__
 
+#include <algorithm>
 #include <cmath>
 #include <type_traits>
 #include <utility>
@@ -50,8 +51,7 @@ unsigned int Matrix<T>::height() const noexcept
 }
 
 template<class T>
-typename Matrix<T>::ColumnType& Matrix<T>::mutableColumn(
-  unsigned int column) const
+typename Matrix<T>::ColumnType& Matrix<T>::mutableColumn(unsigned int column) const
 {
     assert(column < width_);
     return columns_[column];
@@ -148,15 +148,17 @@ void Matrix<T>::fill(const T& v)
 }
 
 template<class T>
-inline void Matrix<T>::fillUnit()
+void Matrix<T>::fillUnit()
 {
-    for (unsigned int i = 0; i != width_; ++i)
+    for (auto& column: columns_)
     {
-        ColumnType& column = columns_[i];
-
         std::fill(column.begin(), column.end(), T{});
+    }
 
-        column[i] = T(1);
+    const auto diagonalSize = std::min(width_, height_);
+    for (unsigned int i = 0; i != diagonalSize; ++i)
+    {
+        columns_[i][i] = T(1);
     }
 }
 
@@ -283,8 +285,8 @@ void Matrix<T>::resizeWithoutDataLost(unsigned int x, unsigned int y, const T& d
             const Matrix<T> copy(*this);
             resize(x, y);
             // Copy values
-            unsigned int minW = (x < copy.width_) ? x : copy.width_;
-            unsigned int minH = (y < copy.height_) ? y : copy.height_;
+            const unsigned int minW = std::min(x, copy.width_);
+            const unsigned int minH = std::min(y, copy.height_);
 
             for (unsigned int i = 0; i < minW; ++i)
             {
@@ -298,19 +300,9 @@ void Matrix<T>::resizeWithoutDataLost(unsigned int x, unsigned int y, const T& d
                 }
             }
 
-            if (defVal == T())
+            for (unsigned int i = minW; i < x; ++i)
             {
-                for (unsigned int i = minW; i < x; ++i)
-                {
-                    std::fill(columns_[i].begin(), columns_[i].end(), T{});
-                }
-            }
-            else
-            {
-                for (unsigned int i = minW; i < x; ++i)
-                {
-                    std::fill(columns_[i].begin(), columns_[i].end(), defVal);
-                }
+                std::fill(columns_[i].begin(), columns_[i].end(), defVal);
             }
         }
     }
@@ -360,11 +352,19 @@ void Matrix<T>::roundAllEntries()
 template<class T>
 bool Matrix<T>::containsOnlyZero() const
 {
+    PredicateIdentity predicate;
+    return containsOnlyZero(predicate);
+}
+
+template<class T>
+template<class PredicateT>
+bool Matrix<T>::containsOnlyZero(PredicateT& predicate) const
+{
     for (const auto& column: columns_)
     {
         for (const auto& value: column)
         {
-            if (!Utils::isZero(static_cast<T>(value)))
+            if (!Utils::isZero(static_cast<T>(predicate(value))))
             {
                 return false;
             }
@@ -480,24 +480,21 @@ bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T>& m)
 }
 
 template<class T>
-inline const typename Matrix<T>::ColumnType& Matrix<T>::operator[](
-  unsigned int column) const
+inline const typename Matrix<T>::ColumnType& Matrix<T>::operator[](unsigned int column) const
 {
     assert(column < width_);
     return columns_[column];
 }
 
 template<class T>
-inline typename Matrix<T>::ColumnType& Matrix<T>::operator[](
-  unsigned int column)
+inline typename Matrix<T>::ColumnType& Matrix<T>::operator[](unsigned int column)
 {
     assert(column < width_);
     return columns_[column];
 }
 
 template<class T>
-inline const typename Matrix<T>::ColumnType& Matrix<T>::column(
-  unsigned int n) const
+inline const typename Matrix<T>::ColumnType& Matrix<T>::column(unsigned int n) const
 {
     assert(n < width_);
     return columns_[n];
