@@ -39,8 +39,8 @@ enum class FileLoadError
 
 using FileLoader = std::function<FileLoadError(BufferType&, const std::string&)>;
 
-template<class T, class ReadWriteT = T>
-using MatrixType = Matrix<T, ReadWriteT>;
+template<class T>
+using MatrixType = Matrix<T>;
 
 namespace // anonymous
 {
@@ -82,7 +82,7 @@ public:
     }
 };
 
-template<class ReadWriteT>
+template<class T>
 class MatrixStringConverter final
 {
 public:
@@ -91,7 +91,7 @@ public:
         direct = 0
     };
 
-    static bool Do(const std::string& str, ReadWriteT& out)
+    static bool Do(const std::string& str, T& out)
     {
         std::istringstream stream(str);
         stream >> out;
@@ -233,8 +233,8 @@ bool detectEncoding(const std::string& filename, const std::string& data, size_t
     return true;
 }
 
-template<class T, class ReadWriteT>
-bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
+template<class T>
+bool loadFromBuffer(Matrix<T>& matrix,
                     const std::string& filename,
                     std::string data,
                     unsigned int minWidth,
@@ -319,7 +319,7 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
 
             if (headerWidth < 1)
             {
-                if (!(options & Matrix<T, ReadWriteT>::optQuiet))
+                if (!(options & Matrix<T>::optQuiet))
                 {
                     logs.warning() << '`' << filename << "`: Invalid header";
                 }
@@ -327,7 +327,7 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
             }
             if (headerHeight < 1)
             {
-                if (!(options & Matrix<T, ReadWriteT>::optQuiet))
+                if (!(options & Matrix<T>::optQuiet))
                 {
                     logs.warning() << '`' << filename << "`: Invalid header";
                 }
@@ -355,8 +355,8 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
             matrix.resize(x < minWidth ? minWidth : x, maxHeight);
             if (!x)
             {
-                if (!(options & Matrix<T, ReadWriteT>::optQuiet)
-                    && !(options & Matrix<T, ReadWriteT>::optNoWarnIfEmpty))
+                if (!(options & Matrix<T>::optQuiet)
+                    && !(options & Matrix<T>::optNoWarnIfEmpty))
                 {
                     logs.warning() << '`' << filename << "`: Invalid format: The file seems empty";
                 }
@@ -373,7 +373,7 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
     int errorCount = 6;
     char separator = '\0';
     std::string converter;
-    ReadWriteT cellValue{};
+    T cellValue{};
     bool result = true;
 
     while (y < maxHeight && offset < data.size())
@@ -392,7 +392,7 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
             {
                 if (x >= matrix.width())
                 {
-                    if (options & Matrix<T, ReadWriteT>::optNeverFails)
+                    if (options & Matrix<T>::optNeverFails)
                     {
                         if (separator == '\n')
                         {
@@ -423,7 +423,7 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
                     else
                     {
                         result = false;
-                        if (!(options & Matrix<T, ReadWriteT>::optQuiet) && errorCount > 0)
+                        if (!(options & Matrix<T>::optQuiet) && errorCount > 0)
                         {
                             logs.warning() << '`' << filename
                                            << "`: Invalid format: Too many columns_ for the row "
@@ -437,17 +437,17 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
                     }
                 }
 
-                if (MatrixStringConverter<ReadWriteT>::direct)
+                if (MatrixStringConverter<T>::direct)
                 {
                     MatrixData<T>::Copy(matrix[x][y], converter);
                 }
-                else if (!MatrixStringConverter<ReadWriteT>::Do(converter, cellValue))
+                else if (!MatrixStringConverter<T>::Do(converter, cellValue))
                 {
                     double fallback = 0;
                     if (!MatrixStringConverter<double>::Do(converter, fallback))
                     {
                         result = false;
-                        if (!(options & Matrix<T, ReadWriteT>::optQuiet) && errorCount)
+                        if (!(options & Matrix<T>::optQuiet) && errorCount)
                         {
                             logs.warning() << '`' << filename << "`: Invalid numeric value (x:" << x
                                            << ",y:" << y << ", offset: " << pos << "byte), text: `"
@@ -461,8 +461,7 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
                     }
                     else
                     {
-                        matrix[x][y] = MatrixRound<T, ReadWriteT>::Value(
-                          static_cast<ReadWriteT>(fallback));
+                        matrix[x][y] = MatrixRound<T, T>::Value(static_cast<T>(fallback));
                     }
                 }
                 else
@@ -473,7 +472,7 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
             else if (x < matrix.width())
             {
                 MatrixData<T>::Init(matrix[x][y]);
-                if (!(options & Matrix<T, ReadWriteT>::optQuiet))
+                if (!(options & Matrix<T>::optQuiet))
                 {
                     logs.debug() << "  empty value at " << (x + 1) << 'x' << (y + 1)
                                  << " (line offset: " << (offset - lineOffset) << ")";
@@ -499,10 +498,10 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
 
         if (x < matrix.width())
         {
-            if (!(options & Matrix<T, ReadWriteT>::optNeverFails))
+            if (!(options & Matrix<T>::optNeverFails))
             {
                 result = false;
-                if (!(options & Matrix<T, ReadWriteT>::optQuiet) && errorCount)
+                if (!(options & Matrix<T>::optQuiet) && errorCount)
                 {
                     logs.warning()
                       << filename << ": at line " << (y + 1) << ", not enough columns (expected "
@@ -526,7 +525,7 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
     if (y < matrix.height())
     {
         result = false;
-        if (!(options & Matrix<T, ReadWriteT>::optQuiet))
+        if (!(options & Matrix<T>::optQuiet))
         {
             logs.warning() << filename << ": not enough rows (expected " << matrix.height()
                            << ", got " << y << ')';
@@ -541,11 +540,11 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
         }
     }
 
-    return (options & Matrix<T, ReadWriteT>::optNeverFails) ? true : result;
+    return (options & Matrix<T>::optNeverFails) ? true : result;
 }
 
-template<class T, class ReadWriteT, class Predicate>
-bool containsOnlyZero(const Matrix<T, ReadWriteT>& matrix, Predicate& predicate)
+template<class T, class Predicate>
+bool containsOnlyZero(const Matrix<T>& matrix, Predicate& predicate)
 {
     for (unsigned int x = 0; x < matrix.width(); ++x)
     {
@@ -561,12 +560,12 @@ bool containsOnlyZero(const Matrix<T, ReadWriteT>& matrix, Predicate& predicate)
 }
 } // anonymous namespace
 
-template<class T, class ReadWriteT>
-bool load(MatrixType<T, ReadWriteT>& matrix,
+template<class T>
+bool load(MatrixType<T>& matrix,
           const std::string& filename,
           unsigned int minWidth = 1,
           unsigned int maxHeight = 0,
-          unsigned int options = MatrixType<T, ReadWriteT>::optNone,
+          unsigned int options = MatrixType<T>::optNone,
           BufferType* buffer = nullptr,
           const FileLoader& fileLoader = {})
 {
@@ -591,7 +590,7 @@ bool load(MatrixType<T, ReadWriteT>& matrix,
         }();
         if (error != FileLoadError::none)
         {
-            if (!(options & MatrixType<T, ReadWriteT>::optQuiet))
+            if (!(options & MatrixType<T>::optQuiet))
             {
                 if (error == FileLoadError::notFound)
                 {
@@ -632,7 +631,7 @@ bool load(MatrixType<T, ReadWriteT>& matrix,
                                        std::move(data),
                                        minWidth,
                                        maxHeight,
-                                       (options & MatrixType<T, ReadWriteT>::optFixedSize) != 0,
+                                       (options & MatrixType<T>::optFixedSize) != 0,
                                        options);
     if (!result)
     {
@@ -641,32 +640,32 @@ bool load(MatrixType<T, ReadWriteT>& matrix,
     return result;
 }
 
-template<class T, class ReadWriteT>
-bool load(MatrixType<T, ReadWriteT>& matrix,
+template<class T>
+bool load(MatrixType<T>& matrix,
           const std::filesystem::path& filename,
           unsigned int minWidth = 1,
           unsigned int maxHeight = 0,
-          unsigned int options = MatrixType<T, ReadWriteT>::optNone,
+          unsigned int options = MatrixType<T>::optNone,
           BufferType* buffer = nullptr,
           const FileLoader& fileLoader = {})
 {
     return load(matrix, filename.string(), minWidth, maxHeight, options, buffer, fileLoader);
 }
 
-template<class T, class ReadWriteT>
-bool load(MatrixType<T, ReadWriteT>& matrix,
+template<class T>
+bool load(MatrixType<T>& matrix,
           const char* filename,
           unsigned int minWidth = 1,
           unsigned int maxHeight = 0,
-          unsigned int options = MatrixType<T, ReadWriteT>::optNone,
+          unsigned int options = MatrixType<T>::optNone,
           BufferType* buffer = nullptr,
           const FileLoader& fileLoader = {})
 {
     return load(matrix, std::string(filename), minWidth, maxHeight, options, buffer, fileLoader);
 }
 
-template<class T, class ReadWriteT = T, class Predicate = std::identity>
-void saveToBuffer(const MatrixType<T, ReadWriteT>& matrix,
+template<class T, class Predicate = std::identity>
+void saveToBuffer(const MatrixType<T>& matrix,
                   std::string& data,
                   unsigned int precision = 6,
                   bool printDimensions = false,
@@ -679,8 +678,8 @@ void saveToBuffer(const MatrixType<T, ReadWriteT>& matrix,
     }
 
     matrix_to_buffer_dumper_factory factory;
-    auto dumper = factory.get_dumper<T, ReadWriteT, Predicate>(&matrix, data, predicate);
-    dumper->set_print_format(std::is_floating_point_v<ReadWriteT>, precision);
+    auto dumper = factory.get_dumper<T, Predicate>(&matrix, data, predicate);
+    dumper->set_print_format(std::is_floating_point_v<T>, precision);
 
     data.reserve(matrix.width() * matrix.height() * 6);
     if (printDimensions)
@@ -691,8 +690,8 @@ void saveToBuffer(const MatrixType<T, ReadWriteT>& matrix,
     dumper->run();
 }
 
-template<class T, class ReadWriteT = T, class Predicate = std::identity>
-bool save(const MatrixType<T, ReadWriteT>& matrix,
+template<class T, class Predicate = std::identity>
+bool save(const MatrixType<T>& matrix,
           const std::string& filename,
           unsigned int precision = 6,
           bool printDimensions = false,
@@ -728,8 +727,8 @@ bool save(const MatrixType<T, ReadWriteT>& matrix,
     return true;
 }
 
-template<class T, class ReadWriteT = T>
-bool saveToCSVFile(const MatrixType<T, ReadWriteT>& matrix,
+template<class T>
+bool saveToCSVFile(const MatrixType<T>& matrix,
                    const std::string& filename,
                    unsigned int precision = 6,
                    bool printDimensions = false,

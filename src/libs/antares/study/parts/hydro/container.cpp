@@ -493,7 +493,7 @@ double getWaterValue(const double& level /* format : in % of reservoir capacity 
 }
 
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,
-                           Matrix<double, double>& creditMod,
+                           Matrix<double>& creditMod,
                            int modType)
 {
     if (level < 0. - 1e-6 || level > 100. + 1e-6)

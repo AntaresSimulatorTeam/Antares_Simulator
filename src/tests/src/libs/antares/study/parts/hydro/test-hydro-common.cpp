@@ -380,7 +380,7 @@ BOOST_AUTO_TEST_CASE(test_getWaterValue_normal_and_clamped_levels)
 
 BOOST_AUTO_TEST_CASE(test_getWeeklyModulation_exact_and_interpolated_and_clamped)
 {
-    Antares::Matrix<double, double> creditMod;
+    Antares::Matrix<double> creditMod;
     creditMod.reset(101, 2);
     for (unsigned int level = 0; level < 101; ++level)
     {

@@ -44,7 +44,7 @@ modified
 */
 
 // ================================
-// ===  Matrix<double, double>  ===
+// ===  Matrix<double>  ===
 // ================================
 BOOST_AUTO_TEST_SUITE(coeffs_are_double__load_from_double)
 
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(fake_file_is_empty___target_matrix_has_only_0s)
     BufferType* fake_buffer = new BufferType; // Empty buffer
 
     // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx(2, 2);
+    Matrix_mock_load_to_buffer<double> mtx(2, 2);
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 2, 2, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
@@ -67,8 +67,8 @@ BOOST_AUTO_TEST_CASE(fake_file_is_empty___target_matrix_has_only_0s)
 BOOST_AUTO_TEST_CASE(fake_file_with_banner__target_mtx_empty___mtx_gets_file_dimensions)
 {
     // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double, double> mtx_0(2, 3, {1.5, -2.4444, 3.66666, 0, 8.559, -5.5555});
-    fake_buffer_factory<double, double> buffer_factory_dd;
+    Matrix_easy_to_fill<double> mtx_0(2, 3, {1.5, -2.4444, 3.66666, 0, 8.559, -5.5555});
+    fake_buffer_factory<double> buffer_factory_dd;
     buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
     buffer_factory_dd.set_precision(1);
     buffer_factory_dd.print_dimensions(true);
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(fake_file_with_banner__target_mtx_empty___mtx_gets_file_dim
     BufferType* fake_buffer = buffer_factory_dd.build_buffer();
 
     // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 0, 0, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
@@ -95,14 +95,14 @@ BOOST_AUTO_TEST_CASE(fake_file_with_banner__target_mtx_empty___mtx_gets_file_dim
 BOOST_AUTO_TEST_CASE(fake_file_precision_is_4___matrix_precision_gets_4)
 {
     // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double, double> mtx_0(3, 1, {1.5554, -2.4444, 3.66666});
-    fake_buffer_factory<double, double> buffer_factory_dd;
+    Matrix_easy_to_fill<double> mtx_0(3, 1, {1.5554, -2.4444, 3.66666});
+    fake_buffer_factory<double> buffer_factory_dd;
     buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
     buffer_factory_dd.set_precision(4);
     BufferType* fake_buffer = buffer_factory_dd.build_buffer();
 
     // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 1, 3, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
@@ -118,15 +118,15 @@ BOOST_AUTO_TEST_CASE(fake_file_precision_is_4___matrix_precision_gets_4)
 BOOST_AUTO_TEST_CASE(fake_file_contains_int___matrix_precision_is_0)
 {
     // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<int, int> mtx_0(1, 4, {1, -2, 3, -4});
-    fake_buffer_factory<int, int> buffer_factory_ii;
+    Matrix_easy_to_fill<int> mtx_0(1, 4, {1, -2, 3, -4});
+    fake_buffer_factory<int> buffer_factory_ii;
     buffer_factory_ii.matrix_to_build_buffer_with(&mtx_0);
     buffer_factory_ii.print_dimensions(true);
 
     BufferType* fake_buffer = buffer_factory_ii.build_buffer();
 
     // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 4, 1, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
@@ -143,14 +143,14 @@ BOOST_AUTO_TEST_CASE(fake_file_contains_int___matrix_precision_is_0)
 BOOST_AUTO_TEST_CASE(fake_file_full_0s__load_mtx___mtx_contains_only_0s)
 {
     // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double, double> mtx_0(2, 3, {0, 0, 0, 0, 0, 0});
-    fake_buffer_factory<double, double> buffer_factory_dd;
+    Matrix_easy_to_fill<double> mtx_0(2, 3, {0, 0, 0, 0, 0, 0});
+    fake_buffer_factory<double> buffer_factory_dd;
     buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
 
     BufferType* fake_buffer = buffer_factory_dd.build_buffer();
 
     // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 3, 2, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
@@ -162,8 +162,8 @@ BOOST_AUTO_TEST_CASE(fake_file_full_0s__load_mtx___mtx_contains_only_0s)
 BOOST_AUTO_TEST_CASE(fake_file_not_empty__target_mtx_empty___mtx_gets_file_dimensions)
 {
     // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double, double> mtx_0(2, 3, {1.5, -2.44444, 3.66666, 0, 8.559, -5.5555});
-    fake_buffer_factory<double, double> buffer_factory_dd;
+    Matrix_easy_to_fill<double> mtx_0(2, 3, {1.5, -2.44444, 3.66666, 0, 8.559, -5.5555});
+    fake_buffer_factory<double> buffer_factory_dd;
     buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
     buffer_factory_dd.set_precision(2);
     buffer_factory_dd.print_dimensions(false);
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_CASE(fake_file_not_empty__target_mtx_empty___mtx_gets_file_dimen
     BufferType* fake_buffer = buffer_factory_dd.build_buffer();
 
     // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 0, 0, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
@@ -191,10 +191,10 @@ BOOST_AUTO_TEST_CASE(fake_file_not_empty__target_mtx_empty___mtx_gets_file_dimen
 BOOST_AUTO_TEST_CASE(fake_file_double_renewable)
 {
     // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double, double> mtx_0(2,
+    Matrix_easy_to_fill<double> mtx_0(2,
                                               3,
                                               {100.5111, -2.44444, 3.66666, 0, 8.559, -5.5555});
-    fake_buffer_factory<double, double> buffer_factory_dd;
+    fake_buffer_factory<double> buffer_factory_dd;
     buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
     buffer_factory_dd.set_precision(4);
     buffer_factory_dd.print_dimensions(false);
@@ -202,7 +202,7 @@ BOOST_AUTO_TEST_CASE(fake_file_double_renewable)
     BufferType* fake_buffer = buffer_factory_dd.build_buffer();
 
     // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 0, 0, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
@@ -222,10 +222,10 @@ BOOST_AUTO_TEST_CASE(fake_file_double_renewable)
 BOOST_AUTO_TEST_CASE(fake_file_double_thermal)
 {
     // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double, double> mtx_0(2,
+    Matrix_easy_to_fill<double> mtx_0(2,
                                               3,
                                               {1.50001, -2.44444, 3.66666, 0, 8.559, -5.55555});
-    fake_buffer_factory<double, double> buffer_factory_dd;
+    fake_buffer_factory<double> buffer_factory_dd;
     buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
     buffer_factory_dd.set_precision(0); // default precision is 0
     buffer_factory_dd.print_dimensions(false);
@@ -233,7 +233,7 @@ BOOST_AUTO_TEST_CASE(fake_file_double_thermal)
     BufferType* fake_buffer = buffer_factory_dd.build_buffer();
 
     // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 0, 0, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
@@ -254,7 +254,7 @@ BOOST_AUTO_TEST_CASE(file_with_alphabetic_char___load_fails_with_warning)
     BufferType* fake_buffer = new BufferType;
     fake_buffer->append("1.3\tHello\n");
 
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     logs.warning().clear();
     BOOST_CHECK(not MatrixIO::load(mtx, "path/to/a/file", 2, 1, Matrix<>::optNone, fake_buffer));
 
@@ -286,7 +286,7 @@ BOOST_AUTO_TEST_CASE(
 
     BufferType* fake_buffer = new BufferType;
 
-    Matrix<double, double> mtx;
+    Matrix<double> mtx;
     BOOST_CHECK(not MatrixIO::load(mtx, "text.txt", 2, 2, Matrix<>::optNone));
 
     delete fake_buffer;
@@ -300,7 +300,7 @@ BOOST_AUTO_TEST_CASE(file_with_only_charriot_return__load_fails_with_warning)
     BufferType* fake_buffer = new BufferType;
     fake_buffer->append("\n\n");
 
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     logs.warning().clear();
     BOOST_CHECK(not MatrixIO::load(mtx, "path/to/a/file", 2, 1, Matrix<>::optNone, fake_buffer));
 
@@ -315,7 +315,7 @@ BOOST_AUTO_TEST_CASE(file_with_only_tabs__option_no_failure___load_fails_with_wa
     BufferType* fake_buffer = new BufferType;
     fake_buffer->append("\t\t\t\t");
 
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     logs.warning().clear();
     BOOST_CHECK(
       not MatrixIO::load(mtx, "path/to/a/file", 2, 1, Matrix<>::optNeverFails, fake_buffer));
@@ -332,7 +332,7 @@ BOOST_AUTO_TEST_CASE(
     BufferType* fake_buffer = new BufferType;
     fake_buffer->append("1.1\t2.2\t3.3\t4.4\t");
 
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     logs.warning().clear();
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 2, 2, Matrix<>::optNeverFails, fake_buffer));
 
@@ -361,7 +361,7 @@ BOOST_AUTO_TEST_CASE(
     // 1.3  4.5  9.7
     fake_buffer->append("5.2\t6.1\n1.3\t4.5\t9.7\n");
 
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 2, 2, Matrix<>::optNeverFails, fake_buffer));
 
     delete fake_buffer;
@@ -385,7 +385,7 @@ BOOST_AUTO_TEST_CASE(file_with_columns_of_different_size___load_succeeds__row_no
     // 9.7   -
     fake_buffer->append("5.2\t6.1\n1.3\t4.5\n9.7\n");
 
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 2, 2, Matrix<>::optNeverFails, fake_buffer));
 
     delete fake_buffer;
@@ -407,7 +407,7 @@ BOOST_AUTO_TEST_CASE(
     BufferType* fake_buffer = new BufferType;
     fake_buffer->append("size:0x0");
 
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     logs.warning().clear();
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 2, 5, Matrix<>::optNeverFails, fake_buffer));
 
@@ -429,7 +429,7 @@ BOOST_AUTO_TEST_CASE(fake_file_empty__mtx_resized_to_0x2___mtx_cleared)
     BufferType* fake_buffer = new BufferType; // Empty buffer
 
     // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 0, 2, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
@@ -442,13 +442,13 @@ BOOST_AUTO_TEST_CASE(
   file_size_3x2__mtx_resized_to_5x7___mtx_still_5x7_but_contains_only_0s__load_fails)
 {
     // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double, double> mtx_0(2, 3, {1.5, -2.44444, 3.66666, 0.9, 8.559, -5.5555});
-    fake_buffer_factory<double, double> buffer_factory_dd;
+    Matrix_easy_to_fill<double> mtx_0(2, 3, {1.5, -2.44444, 3.66666, 0.9, 8.559, -5.5555});
+    fake_buffer_factory<double> buffer_factory_dd;
     buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
     BufferType* fake_buffer = buffer_factory_dd.build_buffer();
 
     // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     BOOST_CHECK(not MatrixIO::load(mtx, "path/to/a/file", 5, 7, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
@@ -462,13 +462,13 @@ BOOST_AUTO_TEST_CASE(
 BOOST_AUTO_TEST_CASE(file_size_3x3__mtx_resized_to_1x2___mtx_column_resized_to_3__coefs_preserved)
 {
     // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double, double> mtx_0(3, 3, {1., -2., 3., 0., 8., -5., 6., -7., 12.});
-    fake_buffer_factory<double, double> buffer_factory_dd;
+    Matrix_easy_to_fill<double> mtx_0(3, 3, {1., -2., 3., 0., 8., -5., 6., -7., 12.});
+    fake_buffer_factory<double> buffer_factory_dd;
     buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
     BufferType* fake_buffer = buffer_factory_dd.build_buffer();
 
     // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 1, 2, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
@@ -488,16 +488,16 @@ BOOST_AUTO_TEST_CASE(
   file_bigger_than_mtx__mtx_has_a_fixed_size___mtx_keeps_size_but_is_filled_with_0s__load_fails)
 {
     // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double, double> mtx_0(
+    Matrix_easy_to_fill<double> mtx_0(
       4,
       4,
       {1., -2., 3., -15., 8., -5., 6., -7., 12., 10., -20., 30., -150., 80., -50., 60.});
-    fake_buffer_factory<double, double> buffer_factory_dd;
+    fake_buffer_factory<double> buffer_factory_dd;
     buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
     BufferType* fake_buffer = buffer_factory_dd.build_buffer();
 
     // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     logs.warning().clear();
     BOOST_CHECK(
       not MatrixIO::load(mtx, "path/to/a/file", 3, 3, Matrix<>::optFixedSize, fake_buffer));
@@ -516,13 +516,13 @@ BOOST_AUTO_TEST_CASE(
   file_bigger_than_mtx__mtx_fixed_size__load_should_never_fail___load_succeeds__column_resized)
 {
     // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double, double> mtx_0(3, 3, {1., -2., 3., 8., -5., 6., 12., 10., -20.});
-    fake_buffer_factory<double, double> buffer_factory_dd;
+    Matrix_easy_to_fill<double> mtx_0(3, 3, {1., -2., 3., 8., -5., 6., 12., 10., -20.});
+    fake_buffer_factory<double> buffer_factory_dd;
     buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
     BufferType* fake_buffer = buffer_factory_dd.build_buffer();
 
     // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     BOOST_CHECK(MatrixIO::load(mtx,
                                "path/to/a/file",
                                2,
@@ -548,7 +548,7 @@ BOOST_AUTO_TEST_CASE(err_not_found_when_loading___log_is_ok)
     BufferType* fake_buffer = new BufferType;
 
     // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     const MatrixIO::FileLoader fileLoader = [](MatrixIO::BufferType&, const std::string&)
     { return MatrixIO::FileLoadError::notFound; };
 
@@ -573,7 +573,7 @@ BOOST_AUTO_TEST_CASE(err_memory_limit_when_loading___log_is_ok)
     BufferType* fake_buffer = new BufferType;
 
     // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     const MatrixIO::FileLoader fileLoader = [](MatrixIO::BufferType&, const std::string&)
     { return MatrixIO::FileLoadError::failed; };
 
@@ -606,7 +606,7 @@ BOOST_AUTO_TEST_CASE(err_unknown_when_loading___log_is_ok)
     BufferType* fake_buffer = new BufferType;
 
     // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     const MatrixIO::FileLoader fileLoader = [](MatrixIO::BufferType&, const std::string&)
     { return MatrixIO::FileLoadError::failed; };
 
@@ -628,7 +628,7 @@ BOOST_AUTO_TEST_CASE(err_unknown_when_loading___log_is_ok)
 BOOST_AUTO_TEST_SUITE_END()
 
 // ============================
-// ====  Matrix<int, int>  ====
+// ====  Matrix<int>  ====
 // ============================
 BOOST_AUTO_TEST_SUITE(coeffs_are_int__load_from_int)
 
@@ -636,8 +636,8 @@ BOOST_AUTO_TEST_SUITE(coeffs_are_int__load_from_int)
 BOOST_AUTO_TEST_CASE(file_contains_digits___loading_to_target_matrix_rounds_each_coef_to_floor)
 {
     // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double, double> mtx_0(2, 1, {1.5252, -2.1111});
-    fake_buffer_factory<double, double> buffer_factory_dd;
+    Matrix_easy_to_fill<double> mtx_0(2, 1, {1.5252, -2.1111});
+    fake_buffer_factory<double> buffer_factory_dd;
     buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
     buffer_factory_dd.set_precision(4);
     buffer_factory_dd.print_dimensions(true);
@@ -645,7 +645,7 @@ BOOST_AUTO_TEST_CASE(file_contains_digits___loading_to_target_matrix_rounds_each
     BufferType* fake_buffer = buffer_factory_dd.build_buffer();
 
     // Testing load
-    Matrix_mock_load_to_buffer<int, int> mtx;
+    Matrix_mock_load_to_buffer<int> mtx;
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 1, 2, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
@@ -659,8 +659,8 @@ BOOST_AUTO_TEST_CASE(file_contains_digits___loading_to_target_matrix_rounds_each
 BOOST_AUTO_TEST_CASE(file_contains_int___loaded_coefs_are_int)
 {
     // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<int, int> mtx_0(2, 1, {102, -54});
-    fake_buffer_factory<int, int> buffer_factory_dd;
+    Matrix_easy_to_fill<int> mtx_0(2, 1, {102, -54});
+    fake_buffer_factory<int> buffer_factory_dd;
     buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
     buffer_factory_dd.set_precision(4);
     buffer_factory_dd.print_dimensions(true);
@@ -668,7 +668,7 @@ BOOST_AUTO_TEST_CASE(file_contains_int___loaded_coefs_are_int)
     BufferType* fake_buffer = buffer_factory_dd.build_buffer();
 
     // Testing load
-    Matrix_mock_load_to_buffer<int, int> mtx;
+    Matrix_mock_load_to_buffer<int> mtx;
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 1, 2, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
@@ -682,7 +682,7 @@ BOOST_AUTO_TEST_CASE(file_contains_int___loaded_coefs_are_int)
 BOOST_AUTO_TEST_SUITE_END()
 
 // ===============================
-// ====  Matrix<int, double>  ====
+// ====  Matrix<int>  ====
 // ===============================
 BOOST_AUTO_TEST_SUITE(coeffs_are_int__load_from_digits)
 
@@ -690,8 +690,8 @@ BOOST_AUTO_TEST_SUITE(coeffs_are_int__load_from_digits)
 BOOST_AUTO_TEST_CASE(file_contains_digits___loading_to_target_matrix_rounds_each_coef_to_floor)
 {
     // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double, double> mtx_0(2, 1, {1.5252, -2.1111});
-    fake_buffer_factory<double, double> buffer_factory_dd;
+    Matrix_easy_to_fill<double> mtx_0(2, 1, {1.5252, -2.1111});
+    fake_buffer_factory<double> buffer_factory_dd;
     buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
     buffer_factory_dd.set_precision(4);
     buffer_factory_dd.print_dimensions(true);
@@ -699,7 +699,7 @@ BOOST_AUTO_TEST_CASE(file_contains_digits___loading_to_target_matrix_rounds_each
     BufferType* fake_buffer = buffer_factory_dd.build_buffer();
 
     // Testing load
-    Matrix_mock_load_to_buffer<int, double> mtx;
+    Matrix_mock_load_to_buffer<int> mtx;
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 1, 2, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
@@ -713,16 +713,16 @@ BOOST_AUTO_TEST_CASE(file_contains_digits___loading_to_target_matrix_rounds_each
 BOOST_AUTO_TEST_SUITE_END()
 
 // ===============================
-// ====  Matrix<double, int>  ====
+// ====  Matrix<double>  ====
 // ===============================
-BOOST_AUTO_TEST_SUITE(coeffs_are_digits__load_from_int)
+BOOST_AUTO_TEST_SUITE(coeffs_are_digits__load_as_double)
 
 // 1.c.
-BOOST_AUTO_TEST_CASE(file_contains_digits___loaded_coefs_are_rounded_to_floor_but_stored_as_digits)
+BOOST_AUTO_TEST_CASE(file_contains_digits___loaded_coefs_are_stored_as_digits)
 {
     // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double, double> mtx_0(2, 1, {12.9, -23.2});
-    fake_buffer_factory<double, double> buffer_factory_dd;
+    Matrix_easy_to_fill<double> mtx_0(2, 1, {12.9, -23.2});
+    fake_buffer_factory<double> buffer_factory_dd;
     buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
     buffer_factory_dd.set_precision(4);
     buffer_factory_dd.print_dimensions(true);
@@ -730,15 +730,15 @@ BOOST_AUTO_TEST_CASE(file_contains_digits___loaded_coefs_are_rounded_to_floor_bu
     BufferType* fake_buffer = buffer_factory_dd.build_buffer();
 
     // Testing load
-    Matrix_mock_load_to_buffer<int, double> mtx;
+    Matrix_mock_load_to_buffer<double> mtx;
     BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 1, 2, Matrix<>::optNone, fake_buffer));
 
     delete fake_buffer;
 
     BOOST_REQUIRE_EQUAL(mtx.width(), 1);
     BOOST_REQUIRE_EQUAL(mtx.height(), 2);
-    BOOST_REQUIRE_EQUAL(mtx[0][0], 12.);
-    BOOST_REQUIRE_EQUAL(mtx[0][1], -23.);
+    BOOST_REQUIRE_EQUAL(mtx[0][0], 12.9);
+    BOOST_REQUIRE_EQUAL(mtx[0][1], -23.2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

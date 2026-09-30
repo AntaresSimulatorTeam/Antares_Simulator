@@ -102,28 +102,24 @@ struct MatrixScalar<float>
 
 } // anonymous namespace
 
-template<class T, class ReadWriteT, class PredicateT>
-std::unique_ptr<I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>>
-matrix_to_buffer_dumper_factory::get_dumper(const Matrix<T, ReadWriteT>* mtx,
+template<class T, class PredicateT>
+std::unique_ptr<I_mtx_to_buffer_dumper<T, PredicateT>>
+matrix_to_buffer_dumper_factory::get_dumper(const Matrix<T>* mtx,
                                             std::string& data,
                                             PredicateT& predicate)
 {
     if (mtx->width() == 1)
     {
-        return std::make_unique<one_column__dumper<T, ReadWriteT, PredicateT>>(mtx,
-                                                                               data,
-                                                                               predicate);
+        return std::make_unique<one_column__dumper<T, PredicateT>>(mtx, data, predicate);
     }
     else
     {
-        return std::make_unique<multiple_columns__dumper<T, ReadWriteT, PredicateT>>(mtx,
-                                                                                     data,
-                                                                                     predicate);
+        return std::make_unique<multiple_columns__dumper<T, PredicateT>>(mtx, data, predicate);
     }
 }
 
-template<class T, class ReadWriteT, class PredicateT>
-void I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::set_print_format(bool isDecimal,
+template<class T, class PredicateT>
+void I_mtx_to_buffer_dumper<T, PredicateT>::set_print_format(bool isDecimal,
                                                                          unsigned int precision)
 {
     // Determining the string format to use according the given precision
@@ -155,31 +151,31 @@ void I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::set_print_format(bool is
     }
 }
 
-template<class T, class ReadWriteT, class PredicateT>
-void one_column__dumper<T, ReadWriteT, PredicateT>::run()
+template<class T, class PredicateT>
+void one_column__dumper<T, PredicateT>::run()
 {
     for (unsigned int y = 0; y != (this->mtx_)->height(); ++y)
     {
-        MatrixScalar<ReadWriteT>::Append(this->buffer_,
-                                         (ReadWriteT)this->predicate_((*(this->mtx_))[0][y]),
+        MatrixScalar<T>::Append(this->buffer_,
+                                (T)this->predicate_((*(this->mtx_))[0][y]),
                                          this->format_.c_str());
         this->buffer_ += '\n';
     }
 }
 
-template<class T, class ReadWriteT, class PredicateT>
-void multiple_columns__dumper<T, ReadWriteT, PredicateT>::run()
+template<class T, class PredicateT>
+void multiple_columns__dumper<T, PredicateT>::run()
 {
     for (unsigned int y = 0; y < (this->mtx_)->height(); ++y)
     {
-        MatrixScalar<ReadWriteT>::Append(this->buffer_,
-                                         (ReadWriteT)this->predicate_((*(this->mtx_))[0][y]),
+        MatrixScalar<T>::Append(this->buffer_,
+                                (T)this->predicate_((*(this->mtx_))[0][y]),
                                          this->format_.c_str());
         for (unsigned int x = 1; x < (this->mtx_)->width(); ++x)
         {
             this->buffer_ += '\t';
-            MatrixScalar<ReadWriteT>::Append(this->buffer_,
-                                             (ReadWriteT)this->predicate_((*(this->mtx_))[x][y]),
+            MatrixScalar<T>::Append(this->buffer_,
+                                    (T)this->predicate_((*(this->mtx_))[x][y]),
                                              this->format_.c_str());
         }
         this->buffer_ += '\n';

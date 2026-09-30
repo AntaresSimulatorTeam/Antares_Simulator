@@ -52,7 +52,7 @@ enum
 
 struct DebugData
 {
-    using MaxPowerType = Matrix<double, double>::ColumnType;
+    using MaxPowerType = Matrix<double>::ColumnType;
     using ReservoirLevelType = Matrix<double>::ColumnType;
 
     std::array<double, 366> OPP{0};

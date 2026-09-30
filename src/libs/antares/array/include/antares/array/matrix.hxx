@@ -13,52 +13,52 @@
 
 namespace Antares
 {
-template<class T, class ReadWriteT>
-inline Matrix<T, ReadWriteT>::Matrix():
+template<class T>
+inline Matrix<T>::Matrix():
     width_(0),
     height_(0),
     columns_()
 {
 }
 
-template<class T, class ReadWriteT>
-Matrix<T, ReadWriteT>::Matrix(unsigned int w, unsigned int h):
+template<class T>
+Matrix<T>::Matrix(unsigned int w, unsigned int h):
     width_(w),
     height_(h)
 {
     columns_.assign(w, ColumnType(h));
 }
 
-template<class T, class ReadWriteT>
-Matrix<T, ReadWriteT>::Matrix(const Matrix<T, ReadWriteT>& rhs):
+template<class T>
+Matrix<T>::Matrix(const Matrix<T>& rhs):
     width_(rhs.width_),
     height_(rhs.height_),
     columns_(rhs.columns_)
 {
 }
 
-template<class T, class ReadWriteT>
-unsigned int Matrix<T, ReadWriteT>::width() const noexcept
+template<class T>
+unsigned int Matrix<T>::width() const noexcept
 {
     return width_;
 }
 
-template<class T, class ReadWriteT>
-unsigned int Matrix<T, ReadWriteT>::height() const noexcept
+template<class T>
+unsigned int Matrix<T>::height() const noexcept
 {
     return height_;
 }
 
-template<class T, class ReadWriteT>
-typename Matrix<T, ReadWriteT>::ColumnType& Matrix<T, ReadWriteT>::mutableColumn(
+template<class T>
+typename Matrix<T>::ColumnType& Matrix<T>::mutableColumn(
   unsigned int column) const
 {
     assert(column < width_);
     return columns_[column];
 }
 
-template<class T, class ReadWriteT>
-Matrix<T, ReadWriteT>::Matrix(Matrix<T, ReadWriteT>&& rhs) noexcept:
+template<class T>
+Matrix<T>::Matrix(Matrix<T>&& rhs) noexcept:
     width_(rhs.width_),
     height_(rhs.height_),
     columns_(std::move(rhs.columns_))
@@ -67,9 +67,9 @@ Matrix<T, ReadWriteT>::Matrix(Matrix<T, ReadWriteT>&& rhs) noexcept:
     rhs.height_ = 0;
 }
 
-template<class T, class ReadWriteT>
-template<class U, class V>
-Matrix<T, ReadWriteT>::Matrix(const Matrix<U, V>& rhs):
+template<class T>
+template<class U>
+Matrix<T>::Matrix(const Matrix<U>& rhs):
     width_(0),
     height_(0),
     columns_()
@@ -77,8 +77,8 @@ Matrix<T, ReadWriteT>::Matrix(const Matrix<U, V>& rhs):
     copyFrom(rhs);
 }
 
-template<class T, class ReadWriteT>
-inline void Matrix<T, ReadWriteT>::zero()
+template<class T>
+inline void Matrix<T>::zero()
 {
     for (unsigned int i = 0; i != width_; ++i)
     {
@@ -87,8 +87,8 @@ inline void Matrix<T, ReadWriteT>::zero()
     }
 }
 
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::averageTimeseries(bool roundValues)
+template<class T>
+void Matrix<T>::averageTimeseries(bool roundValues)
 {
     if (width_ > 1)
     {
@@ -133,8 +133,8 @@ void Matrix<T, ReadWriteT>::averageTimeseries(bool roundValues)
     }
 }
 
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::fill(const T& v)
+template<class T>
+void Matrix<T>::fill(const T& v)
 {
     for (unsigned int i = 0; i != width_; ++i)
     {
@@ -147,8 +147,8 @@ void Matrix<T, ReadWriteT>::fill(const T& v)
     }
 }
 
-template<class T, class ReadWriteT>
-inline void Matrix<T, ReadWriteT>::fillUnit()
+template<class T>
+inline void Matrix<T>::fillUnit()
 {
     for (unsigned int i = 0; i != width_; ++i)
     {
@@ -160,16 +160,16 @@ inline void Matrix<T, ReadWriteT>::fillUnit()
     }
 }
 
-template<class T, class ReadWriteT>
-inline void Matrix<T, ReadWriteT>::reset(unsigned int w, unsigned int h)
+template<class T>
+inline void Matrix<T>::reset(unsigned int w, unsigned int h)
 {
     resize(w, h);
     zero();
 }
 
-template<class T, class ReadWriteT>
+template<class T>
 template<class U>
-void Matrix<T, ReadWriteT>::pasteToColumn(unsigned int x, const U* data)
+void Matrix<T>::pasteToColumn(unsigned int x, const U* data)
 {
     assert(x < width_ and "Invalid column index (bigger than `this->width_`)");
     ColumnType& column = columns_[x];
@@ -190,8 +190,8 @@ void Matrix<T, ReadWriteT>::pasteToColumn(unsigned int x, const U* data)
     }
 }
 
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::fillColumn(unsigned int x, const T& value)
+template<class T>
+void Matrix<T>::fillColumn(unsigned int x, const T& value)
 {
     assert(x < width_ and "Invalid column index (bigger than `this->width_`)");
     ColumnType& column = columns_[x];
@@ -202,8 +202,8 @@ void Matrix<T, ReadWriteT>::fillColumn(unsigned int x, const T& value)
     }
 }
 
-template<class T, class ReadWriteT>
-inline void Matrix<T, ReadWriteT>::columnToZero(unsigned int x)
+template<class T>
+inline void Matrix<T>::columnToZero(unsigned int x)
 {
     assert(x < width_ and "Invalid column index (bigger than `this->width_`)");
     ColumnType& column = columns_[x];
@@ -211,28 +211,28 @@ inline void Matrix<T, ReadWriteT>::columnToZero(unsigned int x)
     std::fill(column.begin(), column.end(), T{});
 }
 
-template<class T, class ReadWriteT>
-inline bool Matrix<T, ReadWriteT>::empty() const
+template<class T>
+inline bool Matrix<T>::empty() const
 {
     return (!width_) or (!height_);
 }
 
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::clear()
+template<class T>
+void Matrix<T>::clear()
 {
     columns_.clear();
     width_ = 0;
     height_ = 0;
 }
 
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::reset()
+template<class T>
+void Matrix<T>::reset()
 {
     clear();
 }
 
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::resize(unsigned int w, unsigned int h)
+template<class T>
+void Matrix<T>::resize(unsigned int w, unsigned int h)
 {
     // Asserts
     // This limit is correlated with the maximal amount of years
@@ -259,8 +259,8 @@ void Matrix<T, ReadWriteT>::resize(unsigned int w, unsigned int h)
     }
 }
 
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::resizeWithoutDataLost(unsigned int x, unsigned int y, const T& defVal)
+template<class T>
+void Matrix<T>::resizeWithoutDataLost(unsigned int x, unsigned int y, const T& defVal)
 {
     if (!x or !y)
     {
@@ -280,7 +280,7 @@ void Matrix<T, ReadWriteT>::resizeWithoutDataLost(unsigned int x, unsigned int y
         }
         else
         {
-            const Matrix<T, ReadWriteT> copy(*this);
+            const Matrix<T> copy(*this);
             resize(x, y);
             // Copy values
             unsigned int minW = (x < copy.width_) ? x : copy.width_;
@@ -317,9 +317,9 @@ void Matrix<T, ReadWriteT>::resizeWithoutDataLost(unsigned int x, unsigned int y
     logs.debug() << "  :: end resizeWithoutDataLost";
 }
 
-template<class T, class ReadWriteT>
+template<class T>
 template<class U>
-void Matrix<T, ReadWriteT>::multiplyAllEntriesBy(const U& c)
+void Matrix<T>::multiplyAllEntriesBy(const U& c)
 {
     if (columns_.empty())
     {
@@ -344,8 +344,8 @@ void Matrix<T, ReadWriteT>::multiplyAllEntriesBy(const U& c)
     }
 }
 
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::roundAllEntries()
+template<class T>
+void Matrix<T>::roundAllEntries()
 {
     for (unsigned int x = 0; x != width_; ++x)
     {
@@ -357,8 +357,8 @@ void Matrix<T, ReadWriteT>::roundAllEntries()
     }
 }
 
-template<class T, class ReadWriteT>
-bool Matrix<T, ReadWriteT>::containsOnlyZero() const
+template<class T>
+bool Matrix<T>::containsOnlyZero() const
 {
     for (const auto& column: columns_)
     {
@@ -373,9 +373,9 @@ bool Matrix<T, ReadWriteT>::containsOnlyZero() const
     return true;
 }
 
-template<class T, class ReadWriteT>
-template<class U, class V>
-void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>& rhs)
+template<class T>
+template<class U>
+void Matrix<T>::copyFrom(const Matrix<U>& rhs)
 {
     assert((void*)(&rhs) != (void*)this and "Undefined behavior");
 
@@ -411,9 +411,9 @@ void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>& rhs)
     }
 }
 
-template<class T, class ReadWriteT>
-template<class U, class V>
-inline void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>* rhs)
+template<class T>
+template<class U>
+inline void Matrix<T>::copyFrom(const Matrix<U>* rhs)
 {
     if (rhs)
     {
@@ -421,8 +421,8 @@ inline void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>* rhs)
     }
 }
 
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::swap(Matrix<T, ReadWriteT>& rhs) noexcept
+template<class T>
+void Matrix<T>::swap(Matrix<T>& rhs) noexcept
 {
     // argument deduction lookup (ADL)
     using std::swap;
@@ -431,15 +431,15 @@ void Matrix<T, ReadWriteT>::swap(Matrix<T, ReadWriteT>& rhs) noexcept
     swap(this->columns_, rhs.columns_);
 }
 
-template<class T, class ReadWriteT>
-inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(const Matrix<T, ReadWriteT>& rhs)
+template<class T>
+inline Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs)
 {
     copyFrom(rhs);
     return *this;
 }
 
-template<class T, class ReadWriteT>
-inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(Matrix<T, ReadWriteT>&& rhs) noexcept
+template<class T>
+inline Matrix<T>& Matrix<T>::operator=(Matrix<T>&& rhs) noexcept
 {
     // Free existing resources before taking new ones
     width_ = rhs.width_;
@@ -450,16 +450,16 @@ inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(Matrix<T, ReadWri
     return *this;
 }
 
-template<class T, class ReadWriteT>
+template<class T>
 template<class U>
-inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(const Matrix<U>& rhs)
+inline Matrix<T>& Matrix<T>::operator=(const Matrix<U>& rhs)
 {
     copyFrom(rhs);
     return *this;
 }
 
-template<class T1, class T2>
-bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T1, T2>& m)
+template<class T>
+bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T>& m)
 {
     if (m.width() and m.height())
     {
@@ -469,7 +469,7 @@ bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T1, T2>& m)
             const auto& col = m[x];
             for (y = 0; y < m.height(); ++y)
             {
-                if (col[y] > T1(0))
+                if (col[y] > T(0))
                 {
                     return true;
                 }
@@ -479,32 +479,32 @@ bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T1, T2>& m)
     return false;
 }
 
-template<class T, class ReadWriteT>
-inline const typename Matrix<T, ReadWriteT>::ColumnType& Matrix<T, ReadWriteT>::operator[](
+template<class T>
+inline const typename Matrix<T>::ColumnType& Matrix<T>::operator[](
   unsigned int column) const
 {
     assert(column < width_);
     return columns_[column];
 }
 
-template<class T, class ReadWriteT>
-inline typename Matrix<T, ReadWriteT>::ColumnType& Matrix<T, ReadWriteT>::operator[](
+template<class T>
+inline typename Matrix<T>::ColumnType& Matrix<T>::operator[](
   unsigned int column)
 {
     assert(column < width_);
     return columns_[column];
 }
 
-template<class T, class ReadWriteT>
-inline const typename Matrix<T, ReadWriteT>::ColumnType& Matrix<T, ReadWriteT>::column(
+template<class T>
+inline const typename Matrix<T>::ColumnType& Matrix<T>::column(
   unsigned int n) const
 {
     assert(n < width_);
     return columns_[n];
 }
 
-template<class T, class ReadWriteT>
-inline typename Matrix<T, ReadWriteT>::ColumnType& Matrix<T, ReadWriteT>::column(unsigned int n)
+template<class T>
+inline typename Matrix<T>::ColumnType& Matrix<T>::column(unsigned int n)
 {
     assert(n < width_);
     return columns_[n];

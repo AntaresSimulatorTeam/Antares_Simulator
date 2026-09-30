@@ -20,31 +20,31 @@ struct PredicateIdentity
 };
 } // namespace Antares::UnitTests
 
-template<class T = double, class ReadWriteT = T>
-class Matrix_load_bypass: public Matrix_easy_to_fill<T, ReadWriteT>
+template<class T = double>
+class Matrix_load_bypass: public Matrix_easy_to_fill<T>
 {
     using BufferType = MatrixIO::BufferType;
 
 public:
     Matrix_load_bypass():
-        Matrix_easy_to_fill<T, ReadWriteT>()
+        Matrix_easy_to_fill<T>()
     {
     }
 
     Matrix_load_bypass(unsigned int height, unsigned int width):
-        Matrix_easy_to_fill<T, ReadWriteT>(height, width)
+        Matrix_easy_to_fill<T>(height, width)
     {
     }
 
     Matrix_load_bypass(unsigned int height, unsigned int width, const std::vector<T>& vec):
-        Matrix_easy_to_fill<T, ReadWriteT>(height, width, vec)
+        Matrix_easy_to_fill<T>(height, width, vec)
     {
     }
 
 public:
 };
 
-template<class T = double, class ReadWriteT = T>
+template<class T = double>
 class fake_buffer_factory
 {
 public:
@@ -56,7 +56,7 @@ public:
 
     ~fake_buffer_factory() = default;
 
-    void matrix_to_build_buffer_with(Matrix_easy_to_fill<T, ReadWriteT>* mtx)
+    void matrix_to_build_buffer_with(Matrix_easy_to_fill<T>* mtx)
     {
         mtx_to_build_buffer_with_ = mtx;
     }
@@ -91,26 +91,35 @@ public:
 private:
     unsigned int buffer_precision_;
     bool buffer_print_dimensions_;
-    Matrix_easy_to_fill<T, ReadWriteT>* mtx_to_build_buffer_with_;
+    Matrix_easy_to_fill<T>* mtx_to_build_buffer_with_;
 };
 
-template<class T = double, class ReadWriteT = T>
-class Matrix_mock_load_to_buffer: public Matrix<T, ReadWriteT>
+template<class T = double>
+class Matrix_mock_load_to_buffer: public Matrix<T>
 {
 public:
     Matrix_mock_load_to_buffer():
-        Matrix<T, ReadWriteT>()
+        Matrix<T>()
     {
     }
 
     Matrix_mock_load_to_buffer(unsigned int height, unsigned int width):
-        Matrix<T, ReadWriteT>(height, width)
+        Matrix<T>(height, width)
     {
     }
 
     Matrix_mock_load_to_buffer(unsigned int height, unsigned int width, const std::vector<T>& vec):
-        Matrix<T, ReadWriteT>(height, width, vec)
+        Matrix<T>(width, height)
     {
+        BOOST_REQUIRE_EQUAL(height * width, vec.size());
+        unsigned int count = 0;
+        for (unsigned int j = 0; j < height; ++j)
+        {
+            for (unsigned int i = 0; i < width; ++i)
+            {
+                (*this)[i][j] = vec[count++];
+            }
+        }
     }
 };
 

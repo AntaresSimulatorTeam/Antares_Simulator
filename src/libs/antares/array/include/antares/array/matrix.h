@@ -16,10 +16,9 @@ namespace Antares
 ** \brief A n-by-n matrix
 **
 ** \ingroup matrix
-** \tparam T          A pod type for each cell of the matrix
-** \tparam ReadWriteT The type to use when reading/saving the matrix
+** \tparam T A pod type for each cell of the matrix
 */
-template<class T = double, class ReadWriteT = T>
+template<class T = double>
 class Matrix
 {
 public:
@@ -28,10 +27,7 @@ public:
     //! Pointer
     using TypePtr = T*;
     //! Matrix type
-    using MatrixType = Matrix<T, ReadWriteT>;
-
-    //! Read / Write type
-    using ReadWriteType = ReadWriteT;
+    using MatrixType = Matrix<T>;
 
     //! Pointer
     using MatrixPtr = Matrix<T>*;
@@ -78,8 +74,8 @@ public:
     /*!
     ** \brief Copy constructor
     */
-    template<class U, class V>
-    Matrix(const Matrix<U, V>& rhs);
+    template<class U>
+    Matrix(const Matrix<U>& rhs);
 
     /*!
     ** \brief Constructor with a initial size
@@ -94,11 +90,11 @@ public:
     /*!
     ** \brief Copy values from another matrix
     */
-    template<class U, class V>
-    void copyFrom(const Matrix<U, V>& rhs);
+    template<class U>
+    void copyFrom(const Matrix<U>& rhs);
 
-    template<class U, class V>
-    void copyFrom(const Matrix<U, V>* rhs);
+    template<class U>
+    void copyFrom(const Matrix<U>* rhs);
     //@}
 
     //@{
@@ -283,8 +279,8 @@ private:
 ** \param m The matrix
 ** \return true if the test succeeded, false otherwise
 */
-template<class T1, class T2>
-bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T1, T2>& m);
+template<class T>
+bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T>& m);
 
 } // namespace Antares
 
