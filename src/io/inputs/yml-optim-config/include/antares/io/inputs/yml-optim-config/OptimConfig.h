@@ -35,6 +35,89 @@ struct Objective
     std::string location;
 };
 
+enum class HeuristicType
+{
+    Accurate,
+    Fast
+};
+
+enum class HeuristicElement
+{
+    NumUnitsOnOpt,
+    NumUnitsMax,
+    MinUpDuration,
+    MinDownDuration,
+
+    GenerationPower,
+    ClusterMaxGeneration,
+    MinPowerPerUnit,
+    MaxPowerPerUnit,
+
+    MinimumNumUnitsOn,
+    MinimumGenerationPower
+};
+
+inline bool isValidHeuristicElement(HeuristicType heuristic, HeuristicElement element)
+{
+    switch (heuristic)
+    {
+    case HeuristicType::Accurate:
+        return element == HeuristicElement::NumUnitsOnOpt
+               || element == HeuristicElement::NumUnitsMax
+               || element == HeuristicElement::MinUpDuration
+               || element == HeuristicElement::MinDownDuration
+               || element == HeuristicElement::MinimumNumUnitsOn;
+
+    case HeuristicType::Fast:
+        return element == HeuristicElement::GenerationPower
+               || element == HeuristicElement::ClusterMaxGeneration
+               || element == HeuristicElement::MinPowerPerUnit
+               || element == HeuristicElement::MaxPowerPerUnit
+               || element == HeuristicElement::MinUpDuration
+               || element == HeuristicElement::MinDownDuration
+               || element == HeuristicElement::MinimumGenerationPower;
+    }
+
+    return false;
+}
+
+enum class HeuristicInputType
+{
+    VariableSolution,
+    VariableUpperBound,
+    VariableLowerBound,
+    Parameter
+};
+
+enum class HeuristicOutputType
+{
+    VariableUpperBound,
+    VariableLowerBound
+};
+
+struct HeuristicInput
+{
+    HeuristicElement heuristic_element;
+    std::string id;
+    HeuristicInputType type = HeuristicInputType::Parameter;
+};
+
+struct HeuristicOutput
+{
+    HeuristicElement heuristic_element;
+    std::string id;
+    HeuristicOutputType type;
+};
+
+struct Heuristic
+{
+    HeuristicType type;
+    std::string id;
+
+    std::vector<HeuristicInput> inputs;
+    std::vector<HeuristicOutput> outputs;
+};
+
 struct Model
 {
     std::string id;
@@ -43,6 +126,8 @@ struct Model
     std::vector<Constraint> constraints;
     std::vector<Objective> objectives;
     std::vector<ConstraintOutOfBoundsProcessing> constraints_out_of_bounds_processing;
+    bool isHeuristic = false;
+    std::vector<Heuristic> heuristics;
 };
 
 struct ScenarioScope

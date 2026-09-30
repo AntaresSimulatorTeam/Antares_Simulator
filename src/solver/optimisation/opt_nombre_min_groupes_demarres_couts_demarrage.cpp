@@ -3,6 +3,7 @@
 
 #include <spx_fonctions.h>
 
+#include "antares/solver/modeler/modelerData.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*,
@@ -21,6 +22,14 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
     double Eps = 1.e-3;
     double eps_prodTherm = 1.0;
     double eps_nbGroupes = 1.0;
+
+    /*for (auto component: problemeHebdo->modelerData->system->Components())
+    {
+        if (component.getParameterValue("integer_strategy") ==)
+        {
+
+        }
+    }*/
 
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
     {

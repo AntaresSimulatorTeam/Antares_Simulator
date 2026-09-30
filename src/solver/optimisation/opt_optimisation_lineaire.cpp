@@ -206,6 +206,17 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
 
 void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
 {
+    /*
+    Sinon, on est dependant de optimisation fast mode pour tout
+    if (vectorHeuristicCompenentsFast not empty)
+    {
+        OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDTComponents(problemeHebdo)
+    }
+    if (vectorHeuristicCompenentsAccurate not empty)
+    {
+        OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrageComponents(problemeHebdo)
+    }
+    */
     if (problemeHebdo->OptimisationNotFastMode)
     {
         OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(problemeHebdo);
