@@ -161,7 +161,7 @@ BOOST_FIXTURE_TEST_CASE(operatorArray, Fixture)
 {
     ts.resize(4, HOURS_PER_YEAR);
     fillTsnum();
-    auto* col = ts[2];
+    auto& col = ts[2];
     col[27] = 12;
     BOOST_CHECK_EQUAL(ts.getCoefficient(2, 27), 12);
 }
