@@ -138,13 +138,9 @@ uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
     return timeseriesNumbers[year];
 }
 
-double* TimeSeries::operator[](uint32_t index)
+Matrix<double>::ColumnType& TimeSeries::operator[](uint32_t index)
 {
-    if (timeSeries.width() <= index)
-    {
-        return nullptr;
-    }
-    return timeSeries[index].data();
+    return timeSeries[index];
 }
 
 void TimeSeries::reset()

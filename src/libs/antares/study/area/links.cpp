@@ -426,8 +426,8 @@ void AreaLink::checkLoadedData()
 
     for (unsigned int indexTS = 0; indexTS < nbDirectTS; ++indexTS)
     {
-        const double* directCapacitiesPtr = directCapacities[indexTS];
-        const double* indirectCapacitiesPtr = indirectCapacities[indexTS];
+        const auto& directCapacitiesPtr = directCapacities[indexTS];
+        const auto& indirectCapacitiesPtr = indirectCapacities[indexTS];
 
         // Checks on direct capacities
         for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
