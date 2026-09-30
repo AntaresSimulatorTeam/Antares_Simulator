@@ -51,7 +51,6 @@ std::string Cluster::getGroup() const
     return group_;
 }
 
-
 bool Cluster::saveDataSeriesToFolder(const std::string& folder) const
 {
     if (folder.empty())
@@ -60,7 +59,8 @@ bool Cluster::saveDataSeriesToFolder(const std::string& folder) const
     }
 
     const auto folderPath = fs::path(folder) / parentArea->id / id();
-    if (!std::filesystem::create_directories(folderPath) && !std::filesystem::is_directory(folderPath))
+    if (!std::filesystem::create_directories(folderPath)
+        && !std::filesystem::is_directory(folderPath))
     {
         return true;
     }

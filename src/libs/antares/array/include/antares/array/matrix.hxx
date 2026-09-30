@@ -260,9 +260,7 @@ void Matrix<T, ReadWriteT>::resize(unsigned int w, unsigned int h)
 }
 
 template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::resizeWithoutDataLost(unsigned int x,
-                                                  unsigned int y,
-                                                  const T& defVal)
+void Matrix<T, ReadWriteT>::resizeWithoutDataLost(unsigned int x, unsigned int y, const T& defVal)
 {
     if (!x or !y)
     {

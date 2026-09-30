@@ -36,9 +36,7 @@ public:
     {
     }
 
-    Matrix_load_bypass(unsigned int height,
-                       unsigned int width,
-                       const std::vector<T>& vec):
+    Matrix_load_bypass(unsigned int height, unsigned int width, const std::vector<T>& vec):
         Matrix_easy_to_fill<T, ReadWriteT>(height, width, vec)
     {
     }
@@ -110,13 +108,10 @@ public:
     {
     }
 
-    Matrix_mock_load_to_buffer(unsigned int height,
-                               unsigned int width,
-                               const std::vector<T>& vec):
+    Matrix_mock_load_to_buffer(unsigned int height, unsigned int width, const std::vector<T>& vec):
         Matrix<T, ReadWriteT>(height, width, vec)
     {
     }
-
 };
 
 #endif // __ANTARES_LIBS_ARRAY_MATRIX_BYPASS_LOAD_H__

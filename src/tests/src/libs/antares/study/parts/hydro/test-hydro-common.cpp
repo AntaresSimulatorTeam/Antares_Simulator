@@ -478,15 +478,18 @@ BOOST_FIXTURE_TEST_CASE(test_LoadFromFolder_reads_capacity_matrices, HydroFixtur
     writer.inflowPattern.fillColumn(0, 4.5);
     for (const std::string area: {"east", "west"})
     {
-        BOOST_REQUIRE(Antares::MatrixIO::save(
-          writer.creditModulation,
-          (capacity / ("creditmodulations_" + area + ".txt")).string(),
-          2));
-        BOOST_REQUIRE(Antares::MatrixIO::save(writer.waterValues,
-                                              (capacity / ("waterValues_" + area + ".txt")).string(),
-                                              2));
-        BOOST_REQUIRE(Antares::MatrixIO::save(
-          writer.inflowPattern, (capacity / ("inflowPattern_" + area + ".txt")).string(), 2));
+        BOOST_REQUIRE(
+          Antares::MatrixIO::save(writer.creditModulation,
+                                  (capacity / ("creditmodulations_" + area + ".txt")).string(),
+                                  2));
+        BOOST_REQUIRE(
+          Antares::MatrixIO::save(writer.waterValues,
+                                  (capacity / ("waterValues_" + area + ".txt")).string(),
+                                  2));
+        BOOST_REQUIRE(
+          Antares::MatrixIO::save(writer.inflowPattern,
+                                  (capacity / ("inflowPattern_" + area + ".txt")).string(),
+                                  2));
     }
 
     BOOST_REQUIRE(loadFromFolder());

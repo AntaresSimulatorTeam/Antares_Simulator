@@ -161,17 +161,16 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID,
         // Saving data
         ret = MatrixIO::save(ror.timeSeries, (buffer / "ror.txt").string(), 0) && ret;
         ret = MatrixIO::save(storage.timeSeries, (buffer / "mod.txt").string(), 0) && ret;
-        ret = MatrixIO::save(mingen.timeSeries, (buffer / "mingen.txt").string(), 0)
-              && ret;
+        ret = MatrixIO::save(mingen.timeSeries, (buffer / "mingen.txt").string(), 0) && ret;
 
         if (hydroPmax == Parameters::Compatibility::HydroPmax::Hourly)
         {
             ret = MatrixIO::save(maxHourlyGenPower.timeSeries,
-                                  (buffer / "maxHourlyGenPower.txt").string(),
+                                 (buffer / "maxHourlyGenPower.txt").string(),
                                  0)
                   && ret;
             ret = MatrixIO::save(maxHourlyPumpPower.timeSeries,
-                                  (buffer / "maxHourlyPumpPower.txt").string(),
+                                 (buffer / "maxHourlyPumpPower.txt").string(),
                                  0)
                   && ret;
         }

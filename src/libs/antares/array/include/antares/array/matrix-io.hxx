@@ -11,8 +11,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <filesystem>
-#include <functional>
 #include <fstream>
+#include <functional>
 #include <iterator>
 #include <memory>
 #include <sstream>
@@ -334,7 +334,8 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
                 headerHeight = static_cast<int>(maxHeight);
             }
             maxHeight = static_cast<unsigned int>(headerHeight);
-            matrix.resize(static_cast<unsigned int>(headerWidth), static_cast<unsigned int>(headerHeight));
+            matrix.resize(static_cast<unsigned int>(headerWidth),
+                          static_cast<unsigned int>(headerHeight));
         }
         else
         {
@@ -343,7 +344,8 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
 
             if (max > 0)
             {
-                while ((offset = static_cast<unsigned int>(data.find_first_of("\t;,", offset))) < max)
+                while ((offset = static_cast<unsigned int>(data.find_first_of("\t;,", offset)))
+                       < max)
                 {
                     ++offset;
                     ++x;
@@ -576,8 +578,7 @@ bool load(MatrixType<T, ReadWriteT>& matrix,
 
     if (readFromDisk)
     {
-        const auto error = fileLoader ? fileLoader(*input, filename)
-                                       : [&input, &filename]
+        const auto error = fileLoader ? fileLoader(*input, filename) : [&input, &filename]
         {
             std::ifstream file(filename, std::ios::binary);
             if (!file)
@@ -649,13 +650,7 @@ bool load(MatrixType<T, ReadWriteT>& matrix,
           BufferType* buffer = nullptr,
           const FileLoader& fileLoader = {})
 {
-    return load(matrix,
-                filename.string(),
-                minWidth,
-                maxHeight,
-                options,
-                buffer,
-                fileLoader);
+    return load(matrix, filename.string(), minWidth, maxHeight, options, buffer, fileLoader);
 }
 
 template<class T, class ReadWriteT>

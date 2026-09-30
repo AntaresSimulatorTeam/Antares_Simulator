@@ -27,9 +27,7 @@ public:
     {
     }
 
-    Matrix_easy_to_fill(unsigned int height,
-                        unsigned int width,
-                        const std::vector<T>& vec):
+    Matrix_easy_to_fill(unsigned int height, unsigned int width, const std::vector<T>& vec):
         Matrix<T, ReadWriteT>()
     {
         BOOST_REQUIRE_EQUAL(height * width, vec.size());
