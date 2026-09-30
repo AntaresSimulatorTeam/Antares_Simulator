@@ -521,12 +521,12 @@ BOOST_AUTO_TEST_CASE(
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-     BOOST_CHECK(MatrixIO::load(mtx,
-                                "path/to/a/file",
-                                2,
-                                2,
-                                Matrix<>::optFixedSize | Matrix<>::optNeverFails,
-                                fake_buffer));
+    BOOST_CHECK(MatrixIO::load(mtx,
+                               "path/to/a/file",
+                               2,
+                               2,
+                               Matrix<>::optFixedSize | Matrix<>::optNeverFails,
+                               fake_buffer));
 
     delete fake_buffer;
 
@@ -547,30 +547,19 @@ BOOST_AUTO_TEST_CASE(err_not_found_when_loading___log_is_ok)
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-    const MatrixIO::FileLoader fileLoader = [](MatrixIO::BufferType&, const AnyString&) {
-        return IO::errNotFound;
-    };
+    const MatrixIO::FileLoader fileLoader = [](MatrixIO::BufferType&, const AnyString&)
+    { return IO::errNotFound; };
 
     // option : none
     logs.error().clear();
-    BOOST_CHECK(not MatrixIO::load(mtx,
-                                   "path/to/a/file",
-                                   0,
-                                   0,
-                                   Matrix<>::optNone,
-                                   fake_buffer,
-                                   fileLoader));
+    BOOST_CHECK(
+      not MatrixIO::load(mtx, "path/to/a/file", 0, 0, Matrix<>::optNone, fake_buffer, fileLoader));
     BOOST_REQUIRE_EQUAL(logs.error().content(), "I/O Error: not found: 'path/to/a/file'");
 
     // option : quiet
     logs.error().clear();
-    BOOST_CHECK(not MatrixIO::load(mtx,
-                                   "path/to/a/file",
-                                   2,
-                                   5,
-                                   Matrix<>::optQuiet,
-                                   fake_buffer,
-                                   fileLoader));
+    BOOST_CHECK(
+      not MatrixIO::load(mtx, "path/to/a/file", 2, 5, Matrix<>::optQuiet, fake_buffer, fileLoader));
     BOOST_REQUIRE_EQUAL(logs.error().content(), "");
 
     delete fake_buffer;
@@ -583,19 +572,13 @@ BOOST_AUTO_TEST_CASE(err_memory_limit_when_loading___log_is_ok)
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-    const MatrixIO::FileLoader fileLoader = [](MatrixIO::BufferType&, const AnyString&) {
-        return IO::errMemoryLimit;
-    };
+    const MatrixIO::FileLoader fileLoader = [](MatrixIO::BufferType&, const AnyString&)
+    { return IO::errMemoryLimit; };
 
     // option : none
     logs.error().clear();
-    BOOST_CHECK(not MatrixIO::load(mtx,
-                                   "path/to/a/file",
-                                   3,
-                                   7,
-                                   Matrix<>::optNone,
-                                   fake_buffer,
-                                   fileLoader));
+    BOOST_CHECK(
+      not MatrixIO::load(mtx, "path/to/a/file", 3, 7, Matrix<>::optNone, fake_buffer, fileLoader));
     string logs_to_get = "path/to/a/file: The file is too large (>"
                          + to_string(filesizeHardLimit / 1024 / 1024) + "Mo)";
     BOOST_REQUIRE_EQUAL(logs.error().content(), logs_to_get);
@@ -606,13 +589,8 @@ BOOST_AUTO_TEST_CASE(err_memory_limit_when_loading___log_is_ok)
 
     // option : quiet
     logs.error().clear();
-    BOOST_CHECK(not MatrixIO::load(mtx,
-                                   "path/to/a/file",
-                                   3,
-                                   1,
-                                   Matrix<>::optQuiet,
-                                   fake_buffer,
-                                   fileLoader));
+    BOOST_CHECK(
+      not MatrixIO::load(mtx, "path/to/a/file", 3, 1, Matrix<>::optQuiet, fake_buffer, fileLoader));
     BOOST_REQUIRE_EQUAL(logs.error().content(), "");
 
     BOOST_REQUIRE_EQUAL(mtx.width(), 3);
@@ -629,30 +607,19 @@ BOOST_AUTO_TEST_CASE(err_unknown_when_loading___log_is_ok)
 
     // Testing load
     Matrix_mock_load_to_buffer<double, double> mtx;
-    const MatrixIO::FileLoader fileLoader = [](MatrixIO::BufferType&, const AnyString&) {
-        return IO::errUnknown;
-    };
+    const MatrixIO::FileLoader fileLoader = [](MatrixIO::BufferType&, const AnyString&)
+    { return IO::errUnknown; };
 
     // option : none
     logs.error().clear();
-    BOOST_CHECK(not MatrixIO::load(mtx,
-                                   "path/to/a/file",
-                                   3,
-                                   7,
-                                   Matrix<>::optNone,
-                                   fake_buffer,
-                                   fileLoader));
+    BOOST_CHECK(
+      not MatrixIO::load(mtx, "path/to/a/file", 3, 7, Matrix<>::optNone, fake_buffer, fileLoader));
     BOOST_REQUIRE_EQUAL(logs.error().content(), "I/O Error: failed to load 'path/to/a/file'");
 
     // option : quiet
     logs.error().clear();
-    BOOST_CHECK(not MatrixIO::load(mtx,
-                                   "path/to/a/file",
-                                   3,
-                                   1,
-                                   Matrix<>::optQuiet,
-                                   fake_buffer,
-                                   fileLoader));
+    BOOST_CHECK(
+      not MatrixIO::load(mtx, "path/to/a/file", 3, 1, Matrix<>::optQuiet, fake_buffer, fileLoader));
     BOOST_REQUIRE_EQUAL(logs.error().content(), "");
 
     delete fake_buffer;

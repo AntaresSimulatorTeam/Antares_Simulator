@@ -126,8 +126,7 @@ public:
         {
             for (unsigned int h = 0; h != height; ++h)
             {
-                pValuesForTheCurrentYear.hour[h] -= area->reserves
-                                                      [Data::fhrPrimaryReserve][h];
+                pValuesForTheCurrentYear.hour[h] -= area->reserves[Data::fhrPrimaryReserve][h];
             }
         }
         // Compute all statistics for the current year (daily,weekly,monthly)

@@ -120,10 +120,12 @@ bool BindingConstraintLoader::loadTimeSeries(EnvForLoading& env,
 {
     env.buffer = bindingConstraint->timeSeriesFileName(env);
     bool load_ok = MatrixIO::load(bindingConstraint->RHSTimeSeries_,
-      env.buffer,
-      1,
-      (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8784 : 366,
-       Matrix<>::optNone);
+                                  env.buffer,
+                                  1,
+                                  (bindingConstraint->type() == BindingConstraint::typeHourly)
+                                    ? 8784
+                                    : 366,
+                                  Matrix<>::optNone);
     if (load_ok)
     {
         logs.info() << " loaded time series for `" << bindingConstraint->name() << "` ("
@@ -147,10 +149,11 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(
     std::filesystem::path path = env.folder / (bindingConstraint->pID + ".txt");
     Matrix<> intermediate;
     const int height = (bindingConstraint->pType == BindingConstraint::typeHourly) ? 8784 : 366;
-    if (MatrixIO::load(intermediate, path.string(),
-                                     BindingConstraint::columnMax,
-                                     height,
-                                      Matrix<>::optFixedSize))
+    if (MatrixIO::load(intermediate,
+                       path.string(),
+                       BindingConstraint::columnMax,
+                       height,
+                       Matrix<>::optFixedSize))
     {
         logs.info() << " added `" << bindingConstraint->pName << "` ("
                     << BindingConstraint::TypeToCString(bindingConstraint->pType) << ", "

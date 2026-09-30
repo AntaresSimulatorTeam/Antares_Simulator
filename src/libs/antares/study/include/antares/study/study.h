@@ -7,9 +7,9 @@
 #include <memory>
 #include <string>
 
+#include <antares/array/matrix-io.h>
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/correlation/correlation.h>
-#include <antares/array/matrix-io.h>
 #include <antares/date/date.h>
 #include <antares/study/runtime/runtime.h>
 #include <antares/writer/i_writer.h>

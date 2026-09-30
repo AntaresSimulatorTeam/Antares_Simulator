@@ -5,8 +5,8 @@
 
 #include <limits>
 
-#include <antares/inifile/inifile.h>
 #include <antares/array/matrix-io.h>
+#include <antares/inifile/inifile.h>
 #include <antares/io/file.h>
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
@@ -233,10 +233,7 @@ bool XCast::loadFromFolder(const fs::path& folder)
     fs::path p = folder / "data.txt";
 
     // Performing normal loading
-    ret = MatrixIO::load(data, p.string(),
-                               (unsigned int)dataMax,
-                               12,
-                               Matrix<>::optFixedSize)
+    ret = MatrixIO::load(data, p.string(), (unsigned int)dataMax, 12, Matrix<>::optFixedSize)
           && ret;
 
     // K
@@ -286,8 +283,9 @@ bool XCast::loadFromFolder(const fs::path& folder)
                 logs.error() << "TS-Generator: Conversion: Invalid range: " << p;
             }
         }
-        conversion[conversion.width() - 1][0] = (float)1.0e+19; // +
-                                                              // std::numeric_limits<float>::max();
+        conversion[conversion.width() - 1][0]
+          = (float)1.0e+19; // +
+                            // std::numeric_limits<float>::max();
         conversion[conversion.width() - 1][1] = conversion[conversion.width() - 2][1];
     }
     else

@@ -78,11 +78,9 @@ struct FlowQuadTraits
         {
             if (digestLevel & Category::digestFlowQuad)
             {
-                results.data.matrix
-                  [results.data.link->from->index][results.data.link->with->index]
+                results.data.matrix[results.data.link->from->index][results.data.link->with->index]
                   = pResults.rawdata().allYears;
-                results.data.matrix
-                  [results.data.link->with->index][results.data.link->from->index]
+                results.data.matrix[results.data.link->with->index][results.data.link->from->index]
                   = -pResults.rawdata().allYears;
             }
         }

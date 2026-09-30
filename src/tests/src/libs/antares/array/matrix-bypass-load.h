@@ -4,8 +4,9 @@
 #ifndef __ANTARES_LIBS_ARRAY_MATRIX_BYPASS_LOAD_H__
 #define __ANTARES_LIBS_ARRAY_MATRIX_BYPASS_LOAD_H__
 
-#include "fill-matrix.h"
 #include <antares/array/matrix-io.h>
+
+#include "fill-matrix.h"
 
 using namespace Yuni;
 

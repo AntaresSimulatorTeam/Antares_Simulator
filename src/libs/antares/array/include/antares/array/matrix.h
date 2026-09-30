@@ -5,12 +5,12 @@
 #define __ANTARES_LIBS_ARRAY_MATRIX_H__
 
 #include <cassert>
-#include <span>
 #include <set>
+#include <span>
+#include <string>
 #include <vector>
 
 #include <yuni/yuni.h>
-#include <string>
 
 namespace Antares
 {
@@ -270,7 +270,7 @@ public:
         }
     };
 
- private:
+private:
     uint width_ = 0;
     uint height_ = 0;
     mutable std::vector<ColumnType> columns_;

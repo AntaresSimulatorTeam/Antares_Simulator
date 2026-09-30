@@ -5,8 +5,8 @@
 
 #include <algorithm>
 
-#include <antares/inifile/inifile.h>
 #include <antares/array/matrix-io.h>
+#include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/study/parts/hydro/series.h>
 
@@ -113,17 +113,11 @@ bool DataSeriesHydro::LoadMaxPower(const std::string& areaID, const fs::path& fo
 {
     bool ret = true;
     fs::path filePath = folder / areaID / "maxHourlyGenPower.txt";
-    ret = MatrixIO::load(maxHourlyGenPower.timeSeries, filePath.string(),
-                                                       1,
-                                                       HOURS_PER_YEAR,
-                                                       0)
+    ret = MatrixIO::load(maxHourlyGenPower.timeSeries, filePath.string(), 1, HOURS_PER_YEAR, 0)
           && ret;
 
     filePath = folder / areaID / "maxHourlyPumpPower.txt";
-    ret = MatrixIO::load(maxHourlyPumpPower.timeSeries, filePath.string(),
-                                                        1,
-                                                        HOURS_PER_YEAR,
-                                                         0)
+    ret = MatrixIO::load(maxHourlyPumpPower.timeSeries, filePath.string(), 1, HOURS_PER_YEAR, 0)
           && ret;
 
     return ret;
@@ -169,15 +163,18 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID,
         // Saving data
         ret = MatrixIO::save(ror.timeSeries, folder + SEP + areaID + SEP + "ror.txt", 0) && ret;
         ret = MatrixIO::save(storage.timeSeries, folder + SEP + areaID + SEP + "mod.txt", 0) && ret;
-        ret = MatrixIO::save(mingen.timeSeries, folder + SEP + areaID + SEP + "mingen.txt", 0) && ret;
+        ret = MatrixIO::save(mingen.timeSeries, folder + SEP + areaID + SEP + "mingen.txt", 0)
+              && ret;
 
         if (hydroPmax == Parameters::Compatibility::HydroPmax::Hourly)
         {
             ret = MatrixIO::save(maxHourlyGenPower.timeSeries,
-                                 folder + SEP + areaID + SEP + "maxHourlyGenPower.txt", 0)
+                                 folder + SEP + areaID + SEP + "maxHourlyGenPower.txt",
+                                 0)
                   && ret;
             ret = MatrixIO::save(maxHourlyPumpPower.timeSeries,
-                                 folder + SEP + areaID + SEP + "maxHourlyPumpPower.txt", 0)
+                                 folder + SEP + areaID + SEP + "maxHourlyPumpPower.txt",
+                                 0)
                   && ret;
         }
 

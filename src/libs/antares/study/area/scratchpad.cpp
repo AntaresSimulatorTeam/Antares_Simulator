@@ -33,7 +33,8 @@ void CalculateDailyMeanPower(const Matrix<double>::ColumnType& hourlyColumn,
     for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
     {
         dailyColumn[day] = std::accumulate(hourlyColumn.begin() + day * HOURS_PER_DAY,
-                                           hourlyColumn.begin() + day * HOURS_PER_DAY + HOURS_PER_DAY,
+                                           hourlyColumn.begin() + day * HOURS_PER_DAY
+                                             + HOURS_PER_DAY,
                                            0.)
                            / 24;
     }

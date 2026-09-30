@@ -3,8 +3,6 @@
 
 #include "antares/series/series.h"
 
-#include <antares/array/matrix-io.h>
-
 #include <sstream>
 #include <vector>
 
@@ -13,6 +11,7 @@
 #include <yuni/io/file.h>
 
 #include <antares/antares/constants.h>
+#include <antares/array/matrix-io.h>
 #include <antares/utils/utils.h>
 
 namespace Antares::Data

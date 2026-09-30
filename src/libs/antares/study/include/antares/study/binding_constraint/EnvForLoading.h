@@ -5,8 +5,8 @@
 
 #include <string>
 
-#include <antares/array/matrix.h>
 #include <antares/array/matrix-io.h>
+#include <antares/array/matrix.h>
 #include <antares/inifile/inifile.h>
 #include <antares/study/version.h>
 

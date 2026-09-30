@@ -8,8 +8,8 @@
 #include <cassert>
 #include <cmath>
 #include <cstdint>
-#include <cstdlib>
 #include <cstdio>
+#include <cstdlib>
 #include <filesystem>
 #include <functional>
 #include <memory>
@@ -356,8 +356,7 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
                 if (!(options & Matrix<T, ReadWriteT>::optQuiet)
                     && !(options & Matrix<T, ReadWriteT>::optNoWarnIfEmpty))
                 {
-                    logs.warning() << '`' << filename
-                                   << "`: Invalid format: The file seems empty";
+                    logs.warning() << '`' << filename << "`: Invalid format: The file seems empty";
                 }
                 matrix.zero();
                 return false;
@@ -426,8 +425,8 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
                         if (!(options & Matrix<T, ReadWriteT>::optQuiet) && errorCount > 0)
                         {
                             logs.warning() << '`' << filename
-                                           << "`: Invalid format: Too many columns_ for the row " << y
-                                           << " (offset: " << pos << "byte)";
+                                           << "`: Invalid format: Too many columns_ for the row "
+                                           << y << " (offset: " << pos << "byte)";
                             if (!(--errorCount))
                             {
                                 logs.warning() << " ... (skipped)";
@@ -449,10 +448,9 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
                         result = false;
                         if (!(options & Matrix<T, ReadWriteT>::optQuiet) && errorCount)
                         {
-                            logs.warning() << '`' << filename
-                                           << "`: Invalid numeric value (x:" << x << ",y:" << y
-                                           << ", offset: " << pos << "byte), text: `" << converter
-                                           << " read:" << matrix[x][y] << '`';
+                            logs.warning() << '`' << filename << "`: Invalid numeric value (x:" << x
+                                           << ",y:" << y << ", offset: " << pos << "byte), text: `"
+                                           << converter << " read:" << matrix[x][y] << '`';
                             if (!(--errorCount))
                             {
                                 logs.warning() << " ... (skipped)";
@@ -505,9 +503,9 @@ bool loadFromBuffer(Matrix<T, ReadWriteT>& matrix,
                 result = false;
                 if (!(options & Matrix<T, ReadWriteT>::optQuiet) && errorCount)
                 {
-                    logs.warning() << filename << ": at line " << (y + 1)
-                                   << ", not enough columns (expected " << matrix.width() << ", got "
-                                   << x << ')';
+                    logs.warning()
+                      << filename << ": at line " << (y + 1) << ", not enough columns (expected "
+                      << matrix.width() << ", got " << x << ')';
                     if (!(--errorCount))
                     {
                         logs.warning() << " ... (skipped)";
@@ -581,8 +579,8 @@ bool load(MatrixType<T, ReadWriteT>& matrix,
     {
         const auto error = fileLoader ? fileLoader(*input, filename)
                                       : Yuni::IO::File::LoadFromFile(*input,
-                                                                       filename,
-                                                                       matrixFilesizeHardLimit);
+                                                                     filename,
+                                                                     matrixFilesizeHardLimit);
         if (error != Yuni::IO::errNone)
         {
             if (!(options & MatrixType<T, ReadWriteT>::optQuiet))
@@ -649,7 +647,13 @@ bool load(MatrixType<T, ReadWriteT>& matrix,
           BufferType* buffer = nullptr,
           const FileLoader& fileLoader = {})
 {
-    return load(matrix, AnyString(filename.string()), minWidth, maxHeight, options, buffer, fileLoader);
+    return load(matrix,
+                AnyString(filename.string()),
+                minWidth,
+                maxHeight,
+                options,
+                buffer,
+                fileLoader);
 }
 
 template<class T, class ReadWriteT>

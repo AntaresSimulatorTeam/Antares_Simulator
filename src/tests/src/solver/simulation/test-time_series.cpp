@@ -14,7 +14,6 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/array/matrix-io.h>
-#include <antares/array/matrix-io.h>
 #include <antares/study/study.h>
 
 using namespace Antares;
@@ -219,7 +218,8 @@ BOOST_FIXTURE_TEST_CASE(
     Matrix values;
     values.resize(5, 8784);
     values.fill(0.42);
-    MatrixIO::save(values, (working_tmp_dir / "bindingconstraints" / "dummy_name_2_eq.txt").string());
+    MatrixIO::save(values,
+                   (working_tmp_dir / "bindingconstraints" / "dummy_name_2_eq.txt").string());
     auto loading_ok = study->internalLoadBindingConstraints(options);
     BOOST_CHECK_EQUAL(loading_ok, false);
 }
@@ -233,7 +233,8 @@ BOOST_FIXTURE_TEST_CASE(
     Matrix values;
     values.resize(3, 8784);
     values.fill(0.42);
-    MatrixIO::save(values, (working_tmp_dir / "bindingconstraints" / "dummy_name_2_eq.txt").string());
+    MatrixIO::save(values,
+                   (working_tmp_dir / "bindingconstraints" / "dummy_name_2_eq.txt").string());
     auto loading_ok = study->internalLoadBindingConstraints(options);
     BOOST_CHECK_EQUAL(loading_ok, true);
 }

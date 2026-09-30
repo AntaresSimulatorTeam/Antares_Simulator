@@ -151,8 +151,8 @@ public:
         // Extract the hydro generation value for the current hour
         // Uses the time series pointer cached during yearBeginImpl
         const auto& ror = BaseType::areaPtr->hydro.series->ror;
-        BaseType::yearlyValues[space][state.hourInTheYear] =
-          ror.timeSeries[fatalValues[space]][state.hourInTheYear];
+        BaseType::yearlyValues[space][state.hourInTheYear] = ror.timeSeries[fatalValues[space]]
+                                                                           [state.hourInTheYear];
     }
 
 private:

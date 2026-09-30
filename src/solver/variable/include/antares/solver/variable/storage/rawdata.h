@@ -4,8 +4,9 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_RAWDATA_H__
 #define __SOLVER_VARIABLE_STORAGE_RAWDATA_H__
 
-#include <yuni/yuni.h>
 #include <vector>
+
+#include <yuni/yuni.h>
 
 #include <antares/study/study.h>
 

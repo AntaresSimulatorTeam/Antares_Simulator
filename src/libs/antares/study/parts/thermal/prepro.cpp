@@ -37,10 +37,11 @@ bool PreproAvailability::loadFromFolder(Study& study, const std::filesystem::pat
 {
     auto filePath = folder / "data.txt";
     // standard loading
-    return MatrixIO::load(data, filePath.string(),
-                                preproAvailabilityMax,
-                                DAYS_PER_YEAR,
-                                 Matrix<>::optFixedSize);
+    return MatrixIO::load(data,
+                          filePath.string(),
+                          preproAvailabilityMax,
+                          DAYS_PER_YEAR,
+                          Matrix<>::optFixedSize);
 }
 
 bool PreproAvailability::validate() const

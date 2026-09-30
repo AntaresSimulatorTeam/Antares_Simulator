@@ -179,8 +179,7 @@ void multiple_columns__dumper<T, ReadWriteT, PredicateT>::run()
         {
             this->buffer_ += '\t';
             MatrixScalar<ReadWriteT>::Append(this->buffer_,
-                                             (ReadWriteT)this->predicate_(
-                                                (*(this->mtx_))[x][y]),
+                                             (ReadWriteT)this->predicate_((*(this->mtx_))[x][y]),
                                              this->format_.c_str());
         }
         this->buffer_ += '\n';

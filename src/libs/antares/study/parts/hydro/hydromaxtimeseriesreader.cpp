@@ -3,8 +3,8 @@
 
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
 
-#include <antares/inifile/inifile.h>
 #include <antares/array/matrix-io.h>
+#include <antares/inifile/inifile.h>
 #include "antares/study/study.h"
 
 namespace Antares::Data
@@ -48,10 +48,11 @@ bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const std::string& 
 
     //  It is necessary to load maxpower_ txt file.
 
-    ret = MatrixIO::load(hydro_.dailyMaxPumpAndGen, filePath.string(),
-                                                    4U,
-                                                    DAYS_PER_YEAR,
-                                                     Matrix<>::optFixedSize)
+    ret = MatrixIO::load(hydro_.dailyMaxPumpAndGen,
+                         filePath.string(),
+                         4U,
+                         DAYS_PER_YEAR,
+                         Matrix<>::optFixedSize)
           && ret;
     return ret;
 }

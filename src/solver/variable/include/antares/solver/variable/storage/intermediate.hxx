@@ -79,11 +79,17 @@ void IntermediateValues::internalExportAnnualValues(SurveyResults& report,
     {
         const double* source;
         if constexpr (std::is_pointer_v<A>)
+        {
             source = array;
+        }
         else if constexpr (std::is_array_v<A>)
+        {
             source = &array[0];
+        }
         else
+        {
             source = array.data();
+        }
         (void)::memcpy(report.values[report.data.columnIndex], source, sizeof(double) * Size);
     }
     else

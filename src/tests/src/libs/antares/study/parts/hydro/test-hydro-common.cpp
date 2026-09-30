@@ -11,7 +11,6 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/array/matrix-io.h>
-#include <antares/array/matrix-io.h>
 #include <antares/study/parts/hydro/series.h>
 #include <antares/study/study.h>
 
@@ -323,11 +322,11 @@ BOOST_FIXTURE_TEST_CASE(test_LoadDailyMaxEnergy_roundtrip, HydroFixture)
     writer.dailyNbHoursAtGenPmax.fillColumn(0, 12.5);
     writer.dailyNbHoursAtPumpPmax.fillColumn(0, 8.5);
     BOOST_REQUIRE(Antares::MatrixIO::save(writer.dailyNbHoursAtGenPmax,
-                                 (capacity / "maxDailyGenEnergy_area1.txt").string(),
-                                 2));
+                                          (capacity / "maxDailyGenEnergy_area1.txt").string(),
+                                          2));
     BOOST_REQUIRE(Antares::MatrixIO::save(writer.dailyNbHoursAtPumpPmax,
-                                 (capacity / "maxDailyPumpEnergy_area1.txt").string(),
-                                 2));
+                                          (capacity / "maxDailyPumpEnergy_area1.txt").string(),
+                                          2));
 
     PartHydro reader;
     BOOST_CHECK(reader.LoadDailyMaxEnergy(folder(), "area1"));

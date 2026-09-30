@@ -36,7 +36,8 @@ Matrix<T, ReadWriteT>::Matrix(const Matrix<T, ReadWriteT>& rhs):
     width_(rhs.width_),
     height_(rhs.height_),
     columns_(rhs.columns_)
-{}
+{
+}
 
 template<class T, class ReadWriteT>
 uint Matrix<T, ReadWriteT>::width() const noexcept
@@ -59,7 +60,9 @@ typename Matrix<T, ReadWriteT>::ColumnType& Matrix<T, ReadWriteT>::mutableColumn
 
 template<class T, class ReadWriteT>
 Matrix<T, ReadWriteT>::Matrix(Matrix<T, ReadWriteT>&& rhs) noexcept:
-    width_(rhs.width_), height_(rhs.height_), columns_(std::move(rhs.columns_))
+    width_(rhs.width_),
+    height_(rhs.height_),
+    columns_(std::move(rhs.columns_))
 {
     rhs.width_ = 0;
     rhs.height_ = 0;
@@ -123,7 +126,7 @@ void Matrix<T, ReadWriteT>::averageTimeseries(bool roundValues)
         // Release all timeseries no longer needed
         for (uint i = 1; i != width_; ++i)
         {
-        columns_[i].clear();
+            columns_[i].clear();
         }
         columns_.resize(1);
         // reset the width_ to 1
@@ -270,7 +273,9 @@ void Matrix<T, ReadWriteT>::resizeWithoutDataLost(uint x, uint y, const T& defVa
         {
             columns_.resize(x);
             for (auto& column: columns_)
+            {
                 column.resize(y);
+            }
             width_ = x;
             height_ = y;
         }
@@ -357,8 +362,15 @@ template<class T, class ReadWriteT>
 bool Matrix<T, ReadWriteT>::containsOnlyZero() const
 {
     for (const auto& column: columns_)
+    {
         for (const auto& value: column)
-            if (!Utils::isZero(static_cast<T>(value))) return false;
+        {
+            if (!Utils::isZero(static_cast<T>(value)))
+            {
+                return false;
+            }
+        }
+    }
     return true;
 }
 
