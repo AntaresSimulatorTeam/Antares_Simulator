@@ -467,4 +467,32 @@ BOOST_FIXTURE_TEST_CASE(test_LoadFromFolder_missing_files_returns_false, HydroFi
     BOOST_CHECK(!loadFromFolder());
 }
 
+BOOST_FIXTURE_TEST_CASE(test_LoadFromFolder_reads_capacity_matrices, HydroFixture)
+{
+    const fs::path capacity = createCapacityFolder();
+    writeValidFile();
+
+    PartHydro writer;
+    writer.creditModulation.fill(2.5);
+    writer.waterValues.fill(3.5);
+    writer.inflowPattern.fillColumn(0, 4.5);
+    for (const std::string area: {"east", "west"})
+    {
+        BOOST_REQUIRE(Antares::MatrixIO::save(
+          writer.creditModulation,
+          (capacity / ("creditmodulations_" + area + ".txt")).string(),
+          2));
+        BOOST_REQUIRE(Antares::MatrixIO::save(writer.waterValues,
+                                              (capacity / ("waterValues_" + area + ".txt")).string(),
+                                              2));
+        BOOST_REQUIRE(Antares::MatrixIO::save(
+          writer.inflowPattern, (capacity / ("inflowPattern_" + area + ".txt")).string(), 2));
+    }
+
+    BOOST_REQUIRE(loadFromFolder());
+    BOOST_CHECK_CLOSE(east->hydro.creditModulation[0][0], 2.5, 0.0001);
+    BOOST_CHECK_CLOSE(east->hydro.waterValues[0][0], 3.5, 0.0001);
+    BOOST_CHECK_CLOSE(east->hydro.inflowPattern[0][0], 4.5, 0.0001);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

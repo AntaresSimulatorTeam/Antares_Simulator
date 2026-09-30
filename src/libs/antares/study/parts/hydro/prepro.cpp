@@ -79,7 +79,7 @@ void PreproHydro::copyFrom(const PreproHydro& rhs)
     data = rhs.data;
 }
 
-bool PreproHydro::loadFromFolder(Study& s, const std::string& areaID, const fs::path& folder)
+bool PreproHydro::loadFromFolder(Study&, const std::string& areaID, const fs::path& folder)
 {
     enum
     {
@@ -97,8 +97,7 @@ bool PreproHydro::loadFromFolder(Study& s, const std::string& areaID, const fs::
                          energyPath.string(),
                          hydroPreproMax,
                          maxNbOfLineToLoad,
-                         mtrxOption,
-                         &s.dataBuffer)
+                         mtrxOption)
           && ret;
 
     return ret;

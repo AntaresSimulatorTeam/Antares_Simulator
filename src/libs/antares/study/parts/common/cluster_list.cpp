@@ -138,7 +138,7 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer
                         / std::string(cluster->id() + ".txt");
 
         ts_content.clear(); // We must clear ts_content here, since saveToBuffer does not do it.
-        MatrixIO::saveToBuffer(cluster->series.timeSeries, ts_content);
+        cluster->series.timeseriesNumbers.saveToBuffer(ts_content);
         writer.addEntryFromBuffer(path, ts_content);
     }
 }

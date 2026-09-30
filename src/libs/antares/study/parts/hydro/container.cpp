@@ -236,8 +236,7 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
                                creditPath.string(),
                                101,
                                2,
-                               Matrix<>::optFixedSize,
-                               &study.dataBuffer)
+                               Matrix<>::optFixedSize)
                 && ret;
 
           std::string waterValueId = "waterValues_" + area.id + ".txt";
@@ -246,8 +245,7 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
                                waterValuePath.string(),
                                101,
                                DAYS_PER_YEAR,
-                               Matrix<>::optFixedSize,
-                               &study.dataBuffer)
+                               Matrix<>::optFixedSize)
                 && ret;
 
           std::string inflowId = "inflowPattern_" + area.id + ".txt";
@@ -256,8 +254,7 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
                                inflowPath.string(),
                                1,
                                DAYS_PER_YEAR,
-                               Matrix<>::optFixedSize,
-                               &study.dataBuffer)
+                               Matrix<>::optFixedSize)
                 && ret;
       });
     ret = PartHydro::LoadIniFile(study, folder) && ret;

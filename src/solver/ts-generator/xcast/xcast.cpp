@@ -56,7 +56,7 @@ void XCast::exportTimeSeriesToTheOutput(PredicateT& predicate)
           std::string areaId = area.id + "txt";
           fs::path filename = output / areaId;
           std::string buffer;
-          MatrixIO::saveToBuffer(predicate.matrix(area), buffer);
+          MatrixIO::saveToBuffer(predicate.matrix(area), buffer, 6, false, std::identity{}, true);
 
           pWriter.addEntryFromBuffer(filename, buffer);
       });
