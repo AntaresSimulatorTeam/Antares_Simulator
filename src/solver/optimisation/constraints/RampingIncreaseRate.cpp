@@ -15,8 +15,7 @@ void RampingIncreaseRate::add(int pays, int index, int pdt)
                                                   .PmaxDUnGroupeDuPalierThermique[index];
         double pminDUnGroupeDuPalierThermique = data.PaliersThermiquesDuPays[pays]
                                                   .pminDUnGroupeDuPalierThermique[index];
-        // 18 (bis)
-        // Equation : P(t) <= P(t-1) - ((R^+) * (M(t) - M^+(t))) + (u * M^+(t)) - (l * M^-(t))
+        // Equation (18bis): P(t) <= P(t-1) + (R^+) * (M(t) - M^+(t)) + u * M^+(t) - l * M^-(t)
         // P(t) : Power output of the cluster at timestep t
         // R^+ : Max ramping up for cluster
         // M(t) : number of running units
@@ -24,7 +23,7 @@ void RampingIncreaseRate::add(int pays, int index, int pdt)
         // l : minimum unit power output when running
         // M^+(t) : number of starting units this timestep
         // M^-(t) : number of stopping units this timestep
-        // constraint : P(t) - P(t-1) - ((R^+) * M(t)) - ((u - R^+) * M^+(t)) + (l * M^-(t)) < 0
+        // constraint : P(t) - P(t-1) - (R^+) * M(t) - (u - R^+) * M^+(t) + l * M^-(t) <= 0
 
         builder.updateHourWithinWeek(pdt)
           .DispatchableProduction(cluster, 1.0) // P(t)
@@ -32,13 +31,13 @@ void RampingIncreaseRate::add(int pays, int index, int pdt)
                                   -1.0,
                                   -1,
                                   builder.data.NombreDePasDeTempsPourUneOptimisation) // - P(t-1)
-          .NumberOfDispatchableUnits(cluster, -maxUpwardPowerRampingRate) // - ((R^+) * M(t))
+          .NumberOfDispatchableUnits(cluster, -maxUpwardPowerRampingRate) // - (R^+) * M(t)
           .NumberStartingDispatchableUnits(
             cluster,
-            maxUpwardPowerRampingRate - pmaxDUnGroupeDuPalierThermique) // ((u - R^+) * M^+(t))
+            maxUpwardPowerRampingRate - pmaxDUnGroupeDuPalierThermique) // ((R^+) - u) * M^+(t)
           .NumberStoppingDispatchableUnits(cluster,
-                                           pminDUnGroupeDuPalierThermique) // + (l * M^-(t))
-          .lessThan();                                                     // < 0
+                                           pminDUnGroupeDuPalierThermique) // + l * M^-(t)
+          .lessThan();                                                     // <= 0
 
         if (builder.NumberOfVariables() > 0)
         {
