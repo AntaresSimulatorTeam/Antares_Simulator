@@ -34,6 +34,7 @@ enum class FileLoadError
 {
     none,
     notFound,
+    tooLarge,
     failed,
 };
 
@@ -44,6 +45,8 @@ using MatrixType = Matrix<T>;
 
 namespace // anonymous
 {
+constexpr std::uintmax_t matrixFileSizeLimit = 1536ULL * 1024ULL * 1024ULL;
+
 template<class T>
 class MatrixData final
 {
@@ -236,7 +239,7 @@ bool detectEncoding(const std::string& filename, const std::string& data, size_t
 template<class T>
 bool loadFromBuffer(Matrix<T>& matrix,
                     const std::string& filename,
-                    std::string data,
+                    std::string& data,
                     unsigned int minWidth,
                     unsigned int maxHeight,
                     bool fixedSize,
@@ -355,8 +358,7 @@ bool loadFromBuffer(Matrix<T>& matrix,
             matrix.resize(x < minWidth ? minWidth : x, maxHeight);
             if (!x)
             {
-                if (!(options & Matrix<T>::optQuiet)
-                    && !(options & Matrix<T>::optNoWarnIfEmpty))
+                if (!(options & Matrix<T>::optQuiet) && !(options & Matrix<T>::optNoWarnIfEmpty))
                 {
                     logs.warning() << '`' << filename << "`: Invalid format: The file seems empty";
                 }
@@ -585,8 +587,21 @@ bool load(MatrixType<T>& matrix,
                 return FileLoadError::notFound;
             }
 
-            input->assign(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
-            return file.bad() ? FileLoadError::failed : FileLoadError::none;
+            std::error_code ec;
+            const auto size = std::filesystem::file_size(filename, ec);
+            if (ec)
+            {
+                return FileLoadError::failed;
+            }
+
+            if (size > matrixFileSizeLimit)
+            {
+                return FileLoadError::tooLarge;
+            }
+
+            input->resize(static_cast<std::size_t>(size));
+            file.read(input->data(), static_cast<std::streamsize>(size));
+            return file ? FileLoadError::none : FileLoadError::failed;
         }();
         if (error != FileLoadError::none)
         {
@@ -595,6 +610,11 @@ bool load(MatrixType<T>& matrix,
                 if (error == FileLoadError::notFound)
                 {
                     logs.error() << "I/O Error: not found: '" << filename << "'";
+                }
+                else if (error == FileLoadError::tooLarge)
+                {
+                    logs.error() << filename << ": The file is too large (>"
+                                 << (matrixFileSizeLimit / 1024 / 1024) << "Mo)";
                 }
                 else
                 {
@@ -624,15 +644,15 @@ bool load(MatrixType<T>& matrix,
         Statistics::HasReadFromDisk(input->size());
     }
 
-    std::string data = *input;
-    data += '\n';
+    input->push_back('\n');
     const bool result = loadFromBuffer(matrix,
                                        filename,
-                                       std::move(data),
+                                       *input,
                                        minWidth,
                                        maxHeight,
                                        (options & MatrixType<T>::optFixedSize) != 0,
                                        options);
+    input->pop_back();
     if (!result)
     {
         matrix.reset(minWidth, maxHeight);

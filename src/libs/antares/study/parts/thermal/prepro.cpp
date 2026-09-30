@@ -23,8 +23,11 @@ void PreproAvailability::copyFrom(const PreproAvailability& rhs)
 bool PreproAvailability::saveToFolder(const AnyString& folder) const
 {
     const auto folderPath = std::filesystem::path(folder.c_str());
-    if (std::filesystem::create_directories(folderPath)
-        || std::filesystem::is_directory(folderPath))
+    std::error_code ec;
+    const bool created = std::filesystem::create_directories(folderPath, ec);
+    std::error_code directoryEc;
+    const bool isDirectory = std::filesystem::is_directory(folderPath, directoryEc);
+    if (created || isDirectory)
     {
         const auto buffer = folderPath / "data.txt";
         return MatrixIO::save(data, buffer.string(), /*decimal*/ 6);

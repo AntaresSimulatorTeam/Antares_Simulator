@@ -59,10 +59,18 @@ bool Cluster::saveDataSeriesToFolder(const std::string& folder) const
     }
 
     const auto folderPath = fs::path(folder) / parentArea->id / id();
-    if (!std::filesystem::create_directories(folderPath)
-        && !std::filesystem::is_directory(folderPath))
+    std::error_code ec;
+    const bool created = std::filesystem::create_directories(folderPath, ec);
+    std::error_code directoryEc;
+    const bool isDirectory = std::filesystem::is_directory(folderPath, directoryEc);
+    if (!created && !isDirectory)
     {
-        return true;
+        if (!ec)
+        {
+            ec = directoryEc;
+        }
+        logs.error() << "Unable to create directory '" << folderPath << "': " << ec.message();
+        return false;
     }
 
     return MatrixIO::save(series.timeSeries, (folderPath / "series.txt").string(), precision());

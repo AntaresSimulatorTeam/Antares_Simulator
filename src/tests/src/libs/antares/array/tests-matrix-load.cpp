@@ -7,6 +7,7 @@
 
 #include "tests-matrix-load.h"
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <stdio.h>
@@ -17,7 +18,6 @@ namespace utf = boost::unit_test;
 
 using BufferType = MatrixIO::BufferType;
 using std::string;
-using std::to_string;
 
 /*
 All loadFromCSVFile(...) entries (some directions to test this big method):
@@ -191,9 +191,7 @@ BOOST_AUTO_TEST_CASE(fake_file_not_empty__target_mtx_empty___mtx_gets_file_dimen
 BOOST_AUTO_TEST_CASE(fake_file_double_renewable)
 {
     // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double> mtx_0(2,
-                                              3,
-                                              {100.5111, -2.44444, 3.66666, 0, 8.559, -5.5555});
+    Matrix_easy_to_fill<double> mtx_0(2, 3, {100.5111, -2.44444, 3.66666, 0, 8.559, -5.5555});
     fake_buffer_factory<double> buffer_factory_dd;
     buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
     buffer_factory_dd.set_precision(4);
@@ -222,9 +220,7 @@ BOOST_AUTO_TEST_CASE(fake_file_double_renewable)
 BOOST_AUTO_TEST_CASE(fake_file_double_thermal)
 {
     // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double> mtx_0(2,
-                                              3,
-                                              {1.50001, -2.44444, 3.66666, 0, 8.559, -5.55555});
+    Matrix_easy_to_fill<double> mtx_0(2, 3, {1.50001, -2.44444, 3.66666, 0, 8.559, -5.55555});
     fake_buffer_factory<double> buffer_factory_dd;
     buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
     buffer_factory_dd.set_precision(0); // default precision is 0
@@ -568,61 +564,60 @@ BOOST_AUTO_TEST_CASE(err_not_found_when_loading___log_is_ok)
 }
 
 // 4.
-BOOST_AUTO_TEST_CASE(err_memory_limit_when_loading___log_is_ok)
+BOOST_AUTO_TEST_CASE(err_too_large_when_loading___log_is_ok)
 {
-    BufferType* fake_buffer = new BufferType;
+    const auto filename = std::filesystem::path("matrix-too-large.txt");
+    std::ofstream file(filename);
+    BOOST_REQUIRE(file);
+    file.close();
 
-    // Testing load
+    std::error_code ec;
+    std::filesystem::resize_file(filename, 1536ULL * 1024ULL * 1024ULL + 1, ec);
+    BOOST_REQUIRE(!ec);
+
     Matrix_mock_load_to_buffer<double> mtx;
-    const MatrixIO::FileLoader fileLoader = [](MatrixIO::BufferType&, const std::string&)
-    { return MatrixIO::FileLoadError::failed; };
 
-    // option : none
     logs.error().clear();
-    BOOST_CHECK(
-      not MatrixIO::load(mtx, "path/to/a/file", 3, 7, Matrix<>::optNone, fake_buffer, fileLoader));
-    BOOST_REQUIRE_EQUAL(logs.error().content(), "I/O Error: failed to load 'path/to/a/file'");
+    BOOST_CHECK(not MatrixIO::load(mtx, filename.string(), 3, 7));
+    BOOST_REQUIRE_EQUAL(logs.error().content(),
+                        "matrix-too-large.txt: The file is too large (>1536Mo)");
 
     BOOST_REQUIRE_EQUAL(mtx.width(), 3);
     BOOST_REQUIRE_EQUAL(mtx.height(), 7);
     BOOST_CHECK(mtx.containsOnlyZero());
 
-    // option : quiet
     logs.error().clear();
-    BOOST_CHECK(
-      not MatrixIO::load(mtx, "path/to/a/file", 3, 1, Matrix<>::optQuiet, fake_buffer, fileLoader));
+    BOOST_CHECK(not MatrixIO::load(mtx, filename.string(), 3, 1, Matrix<>::optQuiet));
     BOOST_REQUIRE_EQUAL(logs.error().content(), "");
 
     BOOST_REQUIRE_EQUAL(mtx.width(), 3);
     BOOST_REQUIRE_EQUAL(mtx.height(), 1);
     BOOST_CHECK(mtx.containsOnlyZero());
 
-    delete fake_buffer;
+    std::filesystem::remove(filename);
 }
 
 // 4.
-BOOST_AUTO_TEST_CASE(err_unknown_when_loading___log_is_ok)
+BOOST_AUTO_TEST_CASE(file_loader_successfully_replaces_input_buffer)
 {
-    BufferType* fake_buffer = new BufferType;
-
-    // Testing load
+    BufferType buffer = "ignored";
     Matrix_mock_load_to_buffer<double> mtx;
-    const MatrixIO::FileLoader fileLoader = [](MatrixIO::BufferType&, const std::string&)
-    { return MatrixIO::FileLoadError::failed; };
+    bool loaderCalled = false;
+    const MatrixIO::FileLoader fileLoader =
+      [&loaderCalled](MatrixIO::BufferType& input, const std::string& filename)
+    {
+        loaderCalled = filename == "path/to/a/file";
+        input = "1.5\n2.5\n";
+        return MatrixIO::FileLoadError::none;
+    };
 
-    // option : none
-    logs.error().clear();
     BOOST_CHECK(
-      not MatrixIO::load(mtx, "path/to/a/file", 3, 7, Matrix<>::optNone, fake_buffer, fileLoader));
-    BOOST_REQUIRE_EQUAL(logs.error().content(), "I/O Error: failed to load 'path/to/a/file'");
-
-    // option : quiet
-    logs.error().clear();
-    BOOST_CHECK(
-      not MatrixIO::load(mtx, "path/to/a/file", 3, 1, Matrix<>::optQuiet, fake_buffer, fileLoader));
-    BOOST_REQUIRE_EQUAL(logs.error().content(), "");
-
-    delete fake_buffer;
+      MatrixIO::load(mtx, "path/to/a/file", 1, 2, Matrix<>::optNone, &buffer, fileLoader));
+    BOOST_CHECK(loaderCalled);
+    BOOST_REQUIRE_EQUAL(mtx.width(), 1);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 2);
+    BOOST_REQUIRE_EQUAL(mtx[0][0], 1.5);
+    BOOST_REQUIRE_EQUAL(mtx[0][1], 2.5);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

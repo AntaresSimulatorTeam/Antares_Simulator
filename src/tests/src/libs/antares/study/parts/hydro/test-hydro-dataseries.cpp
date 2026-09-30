@@ -100,6 +100,22 @@ BOOST_AUTO_TEST_CASE(LoadMaxPower_missing_folder_returns_false)
     BOOST_CHECK(!reader.LoadMaxPower("no_such_area", dir));
 }
 
+BOOST_AUTO_TEST_CASE(saveToFolder_returns_false_when_target_is_not_a_directory)
+{
+    auto dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    const auto blockingPath = dir / "not-a-directory";
+    std::ofstream blockingFile(blockingPath);
+    blockingFile << "blocking path";
+    blockingFile.close();
+
+    DataSeriesHydro writer;
+    writer.reset();
+
+    BOOST_CHECK(!writer.saveToFolder("area1",
+                                     blockingPath.string(),
+                                     Parameters::Compatibility::HydroPmax::Daily));
+}
+
 BOOST_AUTO_TEST_CASE(getDailyMaxGenAndPumpPowerFromHourlyTS_averages_per_day)
 {
     DataSeriesHydro d;

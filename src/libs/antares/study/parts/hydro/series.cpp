@@ -154,7 +154,11 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID,
 {
     const auto buffer = fs::path(folder) / areaID;
     /* Make sure the folder is created */
-    if (std::filesystem::create_directories(buffer) || std::filesystem::is_directory(buffer))
+    std::error_code ec;
+    const bool created = std::filesystem::create_directories(buffer, ec);
+    std::error_code directoryEc;
+    const bool isDirectory = std::filesystem::is_directory(buffer, directoryEc);
+    if (created || isDirectory)
     {
         bool ret = true;
 
