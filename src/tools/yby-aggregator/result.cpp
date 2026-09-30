@@ -5,6 +5,8 @@
 
 #include "progress.h"
 
+#include <yuni/io/file.h>
+
 namespace // anonymous
 {
 template<class StringT>

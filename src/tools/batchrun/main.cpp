@@ -6,6 +6,7 @@
 
 #include <yuni/core/getopt.h>
 #include <yuni/core/string.h>
+#include <yuni/io/filename-manipulation.h>
 
 #include <antares/args/args_to_utf8.h>
 #include <antares/locale/locale.h>

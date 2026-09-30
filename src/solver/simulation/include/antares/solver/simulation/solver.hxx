@@ -5,7 +5,7 @@
 #define __SOLVER_SIMULATION_SOLVER_HXX__
 #include <memory>
 
-#include <yuni/file.h>
+#include <yuni/io/file.h>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/date/date.h>

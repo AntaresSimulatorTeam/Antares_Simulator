@@ -587,7 +587,7 @@ bool load(MatrixType<T, ReadWriteT>& matrix,
             }
 
             input->assign(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
-            return file.eof() ? FileLoadError::none : FileLoadError::failed;
+            return file.bad() ? FileLoadError::failed : FileLoadError::none;
         }();
         if (error != FileLoadError::none)
         {
