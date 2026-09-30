@@ -24,11 +24,10 @@ void RampingDecreaseRate::add(int pays, int index, int pdt)
         // l : minimum unit power output when running
         // M^+(t) : number of starting units this timestep
         // M^-(t) : number of stopping units this timestep
-        // constraint : P(t) - P(t-1) + ((R^-) * M(t)) + u * M^-(t) + (((R^-) - l) * M^+(t)) > 0
+        // constraint : P(t) - P(t-1) + ((R^-) * M(t)) + u * M^-(t) - (((R^-) + l) * M^+(t)) >= 0
 
-        builder
-          .updateHourWithinWeek(pdt) // P(t)
-          .DispatchableProduction(cluster, 1.0)
+        builder.updateHourWithinWeek(pdt)
+          .DispatchableProduction(cluster, 1.0) // P(t)
           .DispatchableProduction(cluster,
                                   -1.0,
                                   -1,
@@ -37,8 +36,8 @@ void RampingDecreaseRate::add(int pays, int index, int pdt)
           .NumberStoppingDispatchableUnits(cluster, pmaxDUnGroupeDuPalierThermique) //  u * M^-(t)
           .NumberStartingDispatchableUnits(
             cluster,
-            maxDownwardPowerRampingRate - pminDUnGroupeDuPalierThermique) // (((R^-) - l) * M^+(t))
-          .greaterThan();                                                 // > 0
+            -maxDownwardPowerRampingRate - pminDUnGroupeDuPalierThermique) // - ((R^-) + l) * M^+(t)
+          .greaterThan();                                                  // >= 0
 
         if (builder.NumberOfVariables() > 0)
         {
