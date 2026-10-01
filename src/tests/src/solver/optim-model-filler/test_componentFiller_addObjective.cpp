@@ -276,7 +276,9 @@ BOOST_AUTO_TEST_CASE(
     createComponent(
       "model",
       "componentA",
-      {build_context_parameter_with("param", "bounds", VariabilityType::VARYING_IN_TIME_ONLY)},
+      {build_context_parameter_with("param",
+                                    "bounds",
+                                    VariabilityType::VARYING_IN_TIME_AND_SCENARIO)},
       "scenario_group");
 
     FillContext ctx{0, 2, 0, 2, 0}; // 3 time steps

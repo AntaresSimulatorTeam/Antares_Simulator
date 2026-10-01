@@ -165,6 +165,14 @@ Feature: hybrid (simulator+modeler) studies
 	Then for first week, area balance RHS (for area unique) is first -12, -13, -14, -15, -16, then equals constant -11
 
   @short
+  Scenario: Scenario-independent GEMS time-series ignores scenario builder
+
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/parameter-scenario-independent/"
+    When I run antares simulator with --named-mps-problems --output=simulation-tables
+    Then the simulation succeeds
+    And the simulation takes less than 10 seconds
+
+  @short
   Scenario: Use simulation week properly for GEMS components
 
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/hybrid_week_2/"

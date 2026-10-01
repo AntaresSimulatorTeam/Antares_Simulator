@@ -47,8 +47,6 @@ public:
      * @return The value of the parameter.
      * @throws std::out_of_range If the parameter is not found.
      */
-    [[nodiscard]] double getSystemParameterValueAsDouble(const std::string& key) const;
-
     [[nodiscard]] std::string getSystemParameterValue(const std::string& key) const;
 
     [[nodiscard]] double getParameterValue(const std::string& key,
@@ -79,4 +77,6 @@ private:
     const LinearProblem::Api::ILinearProblemData* data_;
     const LinearProblem::Api::IScenario* scenario_;
 };
+double convertToDouble(const std::string& key, const std::string& value);
+
 } // namespace Antares::LinearProblem
