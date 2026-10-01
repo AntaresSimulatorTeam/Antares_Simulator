@@ -207,7 +207,8 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
                                "balance_port"));
           }
 
-          for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
+          // Must-run thermal clusters are included in simulation tables.
+          for (const auto& cluster: area.thermal.list.each_enabled())
           {
               components.push_back(thermalClusterToYaml(*cluster));
               connections.push_back(
@@ -249,9 +250,10 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
                                                    "balance_port"));
           }
 
+          uint32_t interco = 0;
           for (const auto& [_, link]: area.links)
           {
-              if (inactiveComponents->linkIsAllZero(link->index))
+              if (inactiveComponents->linkIsAllZero(interco++))
                   continue;
               components.push_back(linkToYaml(*link));
 
