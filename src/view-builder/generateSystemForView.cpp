@@ -3,12 +3,9 @@
 
 #include <yaml-cpp/yaml.h>
 
-#include <algorithm>
-#include <cmath>
-#include <ranges>
-
 #include <antares/io/inputs/InputError.h>
 #include <antares/solver/modeler/ModelerData.h>
+#include <antares/study/InactiveComponentsAnalyzerBuilder.h>
 #include <antares/solver/optimisation/opt_rename_problem.h>
 #include <antares/study/area/constants.h>
 #include <antares/study/system-model/component.h>
@@ -64,41 +61,6 @@ void checkForDuplicatesBetweenLegacyAndModeler(YAML::Node& systemYaml,
                       "legacy component(s), please rename it",
                       boost::join(duplicates, ", ")));
     }
-}
-
-constexpr double zeroTolerance = 1e-12;
-
-bool hasNonZeroValues(const TimeSeries& series)
-{
-    return std::ranges::any_of(std::views::iota(uint32_t{0}, series.timeSeries.width),
-                               [&series](const auto column)
-                               {
-                                   return std::ranges::any_of(
-                                     std::views::iota(uint32_t{0}, series.timeSeries.height),
-                                     [&series, column](const auto row)
-                                     { return std::abs(series.timeSeries[column][row]) > zeroTolerance; });
-                               });
-}
-
-bool hasHydroInflows(const Area& area)
-{
-    return std::any_of(area.hydro.managementData.begin(),
-                       area.hydro.managementData.end(),
-                       [](const auto& entry)
-                       {
-                           const auto& inflows = entry.second.inflows;
-                           return std::any_of(inflows.begin(),
-                                              inflows.end(),
-                                              [](const auto inflow)
-                                              { return std::abs(inflow) > zeroTolerance; });
-                       });
-}
-
-bool hasNonZeroMiscGeneration(const Area& area, const int index)
-{
-    return std::any_of(area.miscGen[index],
-                       area.miscGen[index] + area.miscGen.height,
-                       [](const auto value) { return std::abs(value) > zeroTolerance; });
 }
 
 void appendModelerData(YAML::Node& systemYaml, const Antares::Solver::ModelerData& modelerData)
@@ -188,6 +150,7 @@ YAML::Node generateSystemForView(const Antares::Data::Study& study)
 
 YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
 {
+    const auto inactiveComponents = Antares::Optimization::BuildInactiveComponentsAnalyzer(study);
     YAML::Node system;
     system["id"] = study.folder.string();
 
@@ -195,27 +158,27 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
     YAML::Node connections = YAML::Node(YAML::NodeType::Sequence);
 
     study.areas.each(
-      [&components, &connections, &study](const Area& area)
+      [&components, &connections, &study, &inactiveComponents](const Area& area)
       {
           std::string areaLoc = BuildAreaNodeComponentId(area.id);
 
           components.push_back(areaToYaml(area));
 
-          if (hasNonZeroValues(area.load.series))
+          if (!inactiveComponents->loadIsAllZero(area.index))
           {
               components.push_back(loadToYaml(area));
               connections.push_back(
                 makeConnection(BuildLoadComponentId(area.id), "balance_port", areaLoc, "balance_port"));
           }
 
-          if (hasNonZeroValues(area.wind.series))
+          if (!inactiveComponents->windIsAllZero(area.index))
           {
               components.push_back(windToYaml(area));
               connections.push_back(
                 makeConnection(BuildWindComponentId(area.id), "balance_port", areaLoc, "balance_port"));
           }
 
-          if (hasNonZeroValues(area.solar.series))
+          if (!inactiveComponents->solarIsAllZero(area.index))
           {
               components.push_back(solarToYaml(area));
               connections.push_back(makeConnection(BuildSolarComponentId(area.id),
@@ -224,7 +187,7 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
                                                    "balance_port"));
           }
 
-          if (area.hydro.series && hasNonZeroValues(area.hydro.series->ror))
+          if (area.hydro.series && !inactiveComponents->rorIsAllZero(area.index))
           {
               components.push_back(rorToYaml(area));
               connections.push_back(
@@ -233,7 +196,7 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
 
           for (int i = 0; i < MiscGenIndex::fhhMax; ++i)
           {
-              if (!hasNonZeroMiscGeneration(area, i))
+              if (inactiveComponents->miscGenColumnIsAllZero(area.index, i))
                   continue;
               components.push_back(miscGenToYaml(area, i));
               connections.push_back(
@@ -244,10 +207,8 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
                                "balance_port"));
           }
 
-          for (const auto& cluster: area.thermal.list.all())
+          for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
           {
-              if (!cluster->isEnabled())
-                  continue;
               components.push_back(thermalClusterToYaml(*cluster));
               connections.push_back(
                 makeConnection(BuildThermalClusterComponentId(area.id, cluster->id()),
@@ -258,7 +219,7 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
 
           for (const auto& cluster: area.renewable.list.all())
           {
-              if (!cluster->isEnabled() || study.parameters.renewableGeneration() != rgClusters)
+              if (!cluster->enabled || study.parameters.renewableGeneration() != rgClusters)
                   continue;
               components.push_back(renewableClusterToYaml(*cluster));
               connections.push_back(
@@ -270,6 +231,8 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
 
           for (const auto& st: area.shortTermStorage.storagesByIndex)
           {
+              if (!st.enabled())
+                  continue;
               components.push_back(shortTermStorageToYaml(area, st));
               connections.push_back(makeConnection(BuildSTStorageClusterComponentId(area.id, st.id),
                                                    "balance_port",
@@ -277,7 +240,7 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
                                                    "balance_port"));
           }
 
-          if (area.hydro.reservoirManagement || hasHydroInflows(area))
+          if (area.hydro.reservoirManagement || !inactiveComponents->hydroInflowIsAllZero(area.index))
           {
               components.push_back(longTermStorageToYaml(area));
               connections.push_back(makeConnection(BuildHydroStorageComponentId(area.id),
@@ -288,7 +251,7 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
 
           for (const auto& [_, link]: area.links)
           {
-              if (link->transmissionCapacities == LocalTransmissionCapacities::null)
+              if (inactiveComponents->linkIsAllZero(link->index))
                   continue;
               components.push_back(linkToYaml(*link));
 
