@@ -210,20 +210,48 @@ void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
     Sinon, on est dependant de optimisation fast mode pour tout
     if (vectorHeuristicCompenentsFast not empty)
     {
-        OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDTComponents(problemeHebdo)
+        OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDTComponents(problemeHebdo ou component)
     }
     if (vectorHeuristicCompenentsAccurate not empty)
     {
         OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrageComponents(problemeHebdo)
     }
     */
-    if (problemeHebdo->OptimisationNotFastMode)
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
     {
-        OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(problemeHebdo);
-    }
-    else
-    {
-        OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(problemeHebdo);
+        RESULTATS_HORAIRES& ResultatsHoraires = problemeHebdo->ResultatsHoraires[pays];
+        bool OptimisationAvecVariablesEntieres = problemeHebdo->OptimisationAvecVariablesEntieres;
+        bool Expansion = problemeHebdo->Expansion;
+        PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+        int NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTemps;
+
+        std::vector<int>& NbGrpCourbeGuide = problemeHebdo->NbGrpCourbeGuide;
+        std::vector<int>& NbGrpOpt = problemeHebdo->NbGrpOpt;
+        int NombreDePays = problemeHebdo->NombreDePays;
+        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
+        {
+            if (problemeHebdo->OptimisationNotFastMode)
+            {
+                OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
+                  NombreDePasDeTempsProblemeHebdo,
+                  PaliersThermiquesDuPays,
+                  ResultatsHoraires,
+                  pays,
+                  Expansion,
+                  index,
+                  OptimisationAvecVariablesEntieres);
+            }
+            else
+            {
+                OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(NombreDePasDeTempsProblemeHebdo,
+                                                                  NombreDePays,
+                                                                  NbGrpCourbeGuide,
+                                                                  NbGrpOpt,
+                                                                  ResultatsHoraires,
+                                                                  PaliersThermiquesDuPays,
+                                                                  index);
+            }
+        }
     }
 }
 

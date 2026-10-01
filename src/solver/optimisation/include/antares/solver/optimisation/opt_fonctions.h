@@ -90,7 +90,14 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
 void OPT_RestaurerLesDonnees(PROBLEME_HEBDO*);
 /*------------------------------*/
 
-void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO*);
+void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(int NombreDePasDeTemps,
+                                                       int NombreDePays,
+                                                       std::vector<int>& NbGrpCourbeGuide,
+                                                       std::vector<int>& NbGrpOpt,
+                                                       RESULTATS_HORAIRES& ResultatsHoraires,
+                                                       PALIERS_THERMIQUES& PaliersThermiquesDuPays,
+                                                       int indexPalier);
+
 double OPT_CalculerAireMaxPminJour(int, int, int, int, std::vector<int>&, std::vector<int>&);
 
 void OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO*);
@@ -110,7 +117,15 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, const int,
 void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, int, int);
 void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO*);
-void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);
+void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
+  int NombreDePasDeTempsProblemeHebdo,
+  PALIERS_THERMIQUES& PaliersThermiquesDuPays,
+  RESULTATS_HORAIRES& ResultatsHoraires,
+  bool expansion,
+  int index,
+  bool OptimisationAvecVariablesEntieres,
+  int pays);
+
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
 LinearProblem::Api::FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo,
                                                  int NumIntervalle);
