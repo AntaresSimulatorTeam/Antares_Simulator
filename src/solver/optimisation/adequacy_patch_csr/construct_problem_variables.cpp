@@ -50,9 +50,8 @@ void HourlyCSRProblem::constructVariableSpilledEnergy()
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            variableManager_.Spillage(
-              area,
-              0) // hour = 0 since we only store 1 correspondance table
+            variableManager_.Spillage(area,
+                                      0) // hour = 0 since we only store 1 correspondance table
               = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
             varToBeSetToZeroIfBelowThreshold.insert(NumberOfVariables);
