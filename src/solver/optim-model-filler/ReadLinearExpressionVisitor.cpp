@@ -139,7 +139,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Pa
     const auto systemParameter = evalContext_.getParameter(node->value());
     if (systemParameter.type == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
     {
-        double value = evalContext_.getSystemParameterValueAsDouble(node->value());
+        double value = convertToDouble(node->value(),
+                                       evalContext_.getSystemParameterValue(node->value()));
 
         return TimeDependentLinearExpression({}, value);
     }

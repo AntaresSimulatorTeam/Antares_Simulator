@@ -11,16 +11,7 @@ using namespace Antares::LinearProblem::Api;
 
 namespace Antares::LinearProblem
 {
-EvaluationContext::EvaluationContext(const ModelerStudy::SystemModel::Component* component,
-                                     const ILinearProblemData* data,
-                                     const IScenario* scenario):
-    component_(component),
-    data_(data),
-    scenario_(scenario)
-{
-}
-
-static double convertToDouble(const std::string& key, const std::string& value)
+double convertToDouble(const std::string& key, const std::string& value)
 {
     try
     {
@@ -38,16 +29,21 @@ static double convertToDouble(const std::string& key, const std::string& value)
     }
 }
 
-double EvaluationContext::getSystemParameterValueAsDouble(const std::string& key) const
+static IScenario::TimeSeriesNumber getTimeSeriesNumber(
+  const ModelerStudy::SystemModel::ParameterTypeAndValue& parameter,
+  const IScenario& scenario,
+  unsigned int year)
 {
-    const auto& parameters_types_and_values = component_->getParameterValues();
-    const auto it = parameters_types_and_values.find(key);
-    if (it == parameters_types_and_values.end())
-    {
-        throw CouldNotEvaluateConstantParameter<std::out_of_range>(
-          "Parameter '" + key + "' not found in system parameters.");
-    }
-    return convertToDouble(key, it->second.value);
+    return isScenarioDependent(parameter.type) ? scenario.getData(year) : 1;
+}
+
+EvaluationContext::EvaluationContext(const ModelerStudy::SystemModel::Component* component,
+                                     const ILinearProblemData* data,
+                                     const IScenario* scenario):
+    component_(component),
+    data_(data),
+    scenario_(scenario)
+{
 }
 
 std::string EvaluationContext::getSystemParameterValue(const std::string& key) const
@@ -60,9 +56,9 @@ double EvaluationContext::getParameterValue(const std::string& key,
                                             unsigned int year,
                                             unsigned int hour) const
 {
-    IScenario::TimeSeriesNumber time_series_number = scenario_->getData(year);
-    const auto& parameters_types_and_values = component_->getParameterValues();
-    return data_->getData(parameters_types_and_values.at(key).value, time_series_number, hour);
+    const auto parameter = getParameter(key);
+    const auto time_series_number = getTimeSeriesNumber(parameter, *scenario_, year);
+    return data_->getData(parameter.value, time_series_number, hour);
 }
 
 std::span<const double> EvaluationContext::getParameterValue(const std::string& key,
@@ -70,12 +66,9 @@ std::span<const double> EvaluationContext::getParameterValue(const std::string& 
                                                              unsigned int firstHour,
                                                              unsigned int lastHour) const
 {
-    IScenario::TimeSeriesNumber time_series_number = scenario_->getData(year);
-    const auto& parameters_types_and_values = component_->getParameterValues();
-    return data_->getData(parameters_types_and_values.at(key).value,
-                          time_series_number,
-                          firstHour,
-                          lastHour);
+    const auto parameter = getParameter(key);
+    const auto time_series_number = getTimeSeriesNumber(parameter, *scenario_, year);
+    return data_->getData(parameter.value, time_series_number, firstHour, lastHour);
 }
 
 LinearProblem::VariabilityType EvaluationContext::getParameterType(const std::string& key) const
