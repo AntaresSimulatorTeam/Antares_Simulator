@@ -7,10 +7,10 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
 #include "antares/solver/optimisation/LegacyExtraOutputs.h"
 #include "antares/solver/optimisation/LegacySimulationTableSnapshot.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/study/InactiveComponentsAnalyzer.h"
 
 using Antares::IO::Outputs::SimulationTable;
 using Antares::LinearProblem::Api::FillContext;

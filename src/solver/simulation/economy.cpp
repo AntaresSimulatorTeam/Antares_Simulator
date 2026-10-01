@@ -5,12 +5,12 @@
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
-#include "antares/solver/optimisation/InactiveComponentsAnalyzerBuilder.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/solver_utils.h"
+#include "antares/study/InactiveComponentsAnalyzerBuilder.h"
 #include "antares/writer/LegacySimulationTablesWriter.h"
 
 using namespace Yuni;

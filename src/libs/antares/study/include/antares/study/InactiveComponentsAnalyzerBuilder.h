@@ -5,7 +5,7 @@
 
 #include <memory>
 
-#include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
+#include "antares/study/InactiveComponentsAnalyzer.h"
 #include "antares/study/fwd.h"
 
 namespace Antares::Optimization

@@ -1,7 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "antares/solver/optimisation/InactiveComponentsAnalyzerBuilder.h"
+#include "antares/study/InactiveComponentsAnalyzerBuilder.h"
 
 #include <algorithm>
 
@@ -59,11 +59,19 @@ std::shared_ptr<const InactiveComponentsAnalyzer> BuildInactiveComponentsAnalyze
         const auto& area = *(study.areas[pays]);
 
         analyzer->setLoadAllZero(pays, selectedColumnsAreAllZero(area.load.series));
-        analyzer->setRorAllZero(pays, selectedColumnsAreAllZero(area.hydro.series->ror));
+        if (area.hydro.series)
+        {
+            analyzer->setRorAllZero(pays, selectedColumnsAreAllZero(area.hydro.series->ror));
+            analyzer->setHydroInflowAllZero(pays,
+                                            selectedColumnsAreAllZero(area.hydro.series->storage));
+        }
+        else
+        {
+            analyzer->setRorAllZero(pays, true);
+            analyzer->setHydroInflowAllZero(pays, true);
+        }
         analyzer->setSolarAllZero(pays, selectedColumnsAreAllZero(area.solar.series));
         analyzer->setWindAllZero(pays, selectedColumnsAreAllZero(area.wind.series));
-        analyzer->setHydroInflowAllZero(pays,
-                                        selectedColumnsAreAllZero(area.hydro.series->storage));
         for (unsigned column = 0; column < Data::fhhMax; ++column)
         {
             analyzer->setMiscGenColumnAllZero(pays, column, columnIsAllZero(area.miscGen, column));
