@@ -65,11 +65,10 @@ public:
                               const Antares::Optimization::OptimizationOptions& solverOptions):
         solverOptions_(solverOptions),
         adqPatchParams_(adqPatchParams),
-        correspondence_(p->NombreDePasDeTempsPourUneOptimisation),
-        variableManager_(correspondence_,
-                         unusedStockFinal_,
-                         unusedStockTranche_,
-                         p->NombreDePasDeTempsPourUneOptimisation),
+        // The adq patch problem only covers a single hour. So we store variable mapping for this
+        // hour
+        correspondence_(csrTimeSteps_),
+        variableManager_(correspondence_, unusedStockFinal_, unusedStockTranche_, csrTimeSteps_),
         problemeHebdo_(p)
     {
         // This HourlyCSRProblem's own correspondence table, entirely separate from
@@ -82,8 +81,9 @@ public:
         // reader (e.g. the simulation table dump) would then resolve against. Sized for
         // every hour up front since HourlyCSRProblem is constructed once per week and reused
         // across every triggered hour.
-        for (auto& entry: correspondence_)
+
         {
+            auto& entry = correspondence_.back();
             entry.NumeroDeVariableDefaillancePositive.assign(p->NombreDePays, -1);
             entry.NumeroDeVariableDefaillanceNegative.assign(p->NombreDePays, -1);
             entry.NumeroDeVariableDuFluxDirect.assign(p->NombreDInterconnexions, -1);
@@ -186,8 +186,9 @@ private:
     std::vector<CORRESPONDANCES_DES_VARIABLES> correspondence_;
     std::vector<int> unusedStockFinal_;
     std::vector<std::vector<int>> unusedStockTranche_;
+    // only one hour in the correspondance table
+    static constexpr int32_t csrTimeSteps_ = 1;
     VariableManagement::VariableManager variableManager_;
-
     PROBLEME_HEBDO* problemeHebdo_;
     PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;
 };

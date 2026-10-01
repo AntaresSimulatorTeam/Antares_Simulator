@@ -18,7 +18,9 @@ void HourlyCSRProblem::setBoundsOnENS()
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area] == physicalAreaInsideAdqPatch)
         {
-            int var = variableManager_.UnsuppliedEnergy(area, triggeredHour);
+            int var = variableManager_.UnsuppliedEnergy(
+              area,
+              0); // hour = 0 since we only store 1 correspondance table
 
             double ensLegacy = problemeHebdo_->ResultatsHoraires[area]
                                  .ValeursHorairesDENS[triggeredHour];
@@ -48,7 +50,8 @@ void HourlyCSRProblem::setBoundsOnSpilledEnergy()
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area] == physicalAreaInsideAdqPatch)
         {
-            int var = variableManager_.Spillage(area, triggeredHour);
+            int var = variableManager_
+                        .Spillage(area, 0); // hour = 0 since we only store 1 correspondance table
 
             problemeAResoudre_.Xmin[var] = -belowThisThresholdSetToZero;
             problemeAResoudre_.Xmax[var] = LINFINI_ANTARES;
@@ -89,7 +92,8 @@ void HourlyCSRProblem::setBoundsOnFlows()
         }
 
         // flow
-        int var = variableManager_.DirectFlow(Interco, triggeredHour);
+        int var = variableManager_
+                    .DirectFlow(Interco, 0); // hour = 0 since we only store 1 correspondance table
         Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco]
                     + belowThisThresholdSetToZero;
         Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco])
@@ -126,7 +130,9 @@ void HourlyCSRProblem::setBoundsOnFlows()
                      << problemeAResoudre_.Xmax[var];
 
         // direct / indirect flow
-        var = variableManager_.PositiveDirectFlow(Interco, triggeredHour);
+        var = variableManager_.PositiveDirectFlow(
+          Interco,
+          0); // hour = 0 since we only store 1 correspondance table
 
         Xmin[var] = -belowThisThresholdSetToZero;
         Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco]
@@ -140,7 +146,9 @@ void HourlyCSRProblem::setBoundsOnFlows()
         logs.debug() << var << ": " << problemeAResoudre_.Xmin[var] << ", "
                      << problemeAResoudre_.Xmax[var];
 
-        var = variableManager_.PositiveIndirectFlow(Interco, triggeredHour);
+        var = variableManager_.PositiveIndirectFlow(
+          Interco,
+          0); // hour = 0 since we only store 1 correspondance table
 
         Xmin[var] = -belowThisThresholdSetToZero;
         Xmax[var] = ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco]
