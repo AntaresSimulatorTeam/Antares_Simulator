@@ -364,8 +364,9 @@ void SIM_InitialisationProblemeHebdo(const Study& study,
                                                                   && !area.hydro.useHeuristicTarget;
 
         problem.CaracteristiquesHydrauliques[i].TurbinageEntreBornes = area.hydro
-                                                                          .reservoirManagement
-                                                                        && !area.hydro.useHeuristicTarget;
+                                                                         .reservoirManagement
+                                                                       && !area.hydro
+                                                                             .useHeuristicTarget;
 
         problem.CaracteristiquesHydrauliques[i].SuiviNiveauHoraire = area.hydro.reservoirManagement;
 
