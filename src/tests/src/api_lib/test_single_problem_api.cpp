@@ -487,30 +487,16 @@ BOOST_AUTO_TEST_CASE(weeks_independent_no_reservoir_management)
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), true);
 }
 
-BOOST_AUTO_TEST_CASE(weeks_independent_with_heuristic_and_no_leeway)
+BOOST_AUTO_TEST_CASE(weeks_independent_with_heuristic_target)
 {
-    // Test case: All reservoir-managed areas have useHeuristicTarget=true and useLeeway=false
+    // Test case: All reservoir-managed areas use the heuristic target.
     // Expected: weeks are independent (returns true)
     auto study = buildStudy(false, true);
     auto* area = study->areas.byIndex[0];
     area->hydro.useHeuristicTarget = true;
-    area->hydro.useLeeway = false;
 
     Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), true);
-}
-
-BOOST_AUTO_TEST_CASE(weeks_not_independent_with_leeway)
-{
-    // Test case: Reservoir-managed area has useLeeway=true
-    // Expected: weeks are NOT independent (returns false)
-    auto study = buildStudy(false, true);
-    auto* area = study->areas.byIndex[0];
-    area->hydro.useHeuristicTarget = true;
-    area->hydro.useLeeway = true;
-
-    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
-    BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), false);
 }
 
 BOOST_AUTO_TEST_CASE(weeks_not_independent_without_heuristic_target)
@@ -520,20 +506,6 @@ BOOST_AUTO_TEST_CASE(weeks_not_independent_without_heuristic_target)
     auto study = buildStudy(false, true);
     auto* area = study->areas.byIndex[0];
     area->hydro.useHeuristicTarget = false;
-    area->hydro.useLeeway = false;
-
-    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
-    BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), false);
-}
-
-BOOST_AUTO_TEST_CASE(weeks_not_independent_with_both_conditions_false)
-{
-    // Test case: Reservoir-managed area has both useHeuristicTarget=false and useLeeway=true
-    // Expected: weeks are NOT independent (returns false)
-    auto study = buildStudy(false, true);
-    auto* area = study->areas.byIndex[0];
-    area->hydro.useHeuristicTarget = false;
-    area->hydro.useLeeway = true;
 
     Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), false);
@@ -585,9 +557,7 @@ BOOST_AUTO_TEST_CASE(weeks_independent_multiple_areas_all_compliant)
 
     // Set both areas with compliant settings
     area1->hydro.useHeuristicTarget = true;
-    area1->hydro.useLeeway = false;
     area2->hydro.useHeuristicTarget = true;
-    area2->hydro.useLeeway = false;
 
     Implementation::SingleProblemGetter getter({std::move(builder.study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), true);
@@ -637,13 +607,11 @@ BOOST_AUTO_TEST_CASE(weeks_not_independent_multiple_areas_one_non_compliant)
     area1->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
     area2->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
 
-    // Set area 1 with compliant settings
+    // Set area 1 with heuristic target enabled.
     area1->hydro.useHeuristicTarget = true;
-    area1->hydro.useLeeway = false;
 
-    // Set area 2 with NON-compliant settings (useLeeway=true)
-    area2->hydro.useHeuristicTarget = true;
-    area2->hydro.useLeeway = true;
+    // Set area 2 with heuristic target disabled.
+    area2->hydro.useHeuristicTarget = false;
 
     Implementation::SingleProblemGetter getter({std::move(builder.study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), false);

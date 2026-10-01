@@ -2,7 +2,7 @@ Feature: valid hydro
 
   # Non-regression tests for the "valid-hydro" study set (H700-xx / H701-xx).
   # These studies exercise the hydro module: inflow generation & breakdown,
-  # reservoir management, heuristic target (UHT), water values, leeway (LW),
+  # reservoir management, heuristic target (UHT), and water values,
   # hard bounds on rule curves (HB), pumping and pumped-storage plants.
   #
   # See resources/.../valid-hydro/HYDRO_TESTS_OVERVIEW.md for a description of
@@ -164,13 +164,6 @@ Feature: valid hydro
     And the expected value of the annual system cost is 24960000000
 
   @short @valid-hydro
-  Scenario: H700-16 Leeway 1:1 lifts the intra-daily constraint
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-16"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 24960000000
-
-  @short @valid-hydro
   Scenario: H700-17 Load following, shedding policy = shave peaks
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-17"
     When I run antares simulator
@@ -205,42 +198,6 @@ Feature: valid hydro
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 57200000
-
-  @short @valid-hydro
-  Scenario: H700-22 Water value with leeway 1:1
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-22"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 57200000
-
-  @short @valid-hydro
-  Scenario: H700-23 Leeway 1:1.2 -> generation 60 GWh, level decreases
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-23"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 31200000
-    And in area "Zone 01", during year 1, total hydro production is 3120000 MWh
-
-  @short @valid-hydro
-  Scenario: H700-24 Leeway 1:1.2 with hard bounds on rule curves
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-24"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 42866700
-
-  @short @valid-hydro
-  Scenario: H700-26 Expensive water + leeway 0.2:1.2
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-26"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 161200000
-
-  @short @valid-hydro
-  Scenario: H700-27 Expensive water + leeway 4:5 (with spillage)
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-27"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 30800000
 
   # H700-28 has a pumping efficiency of 1.5 (a physical free-energy loop):
   # the objective is degenerate and the annual system cost comes out as
@@ -292,7 +249,7 @@ Feature: valid hydro
     Then the simulation succeeds
 
   @short @valid-hydro
-  Scenario: H700-33 UHT/leeway off, no hard bounds, simplex 168
+  Scenario: H700-33 UHT off, no hard bounds, simplex 168
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-33"
     When I run antares simulator
     Then the simulation succeeds
@@ -302,7 +259,7 @@ Feature: valid hydro
   # CI runner (numerically degenerate, like H700-32). Quarantined; only checks
   # that the solver completes without aborting.
   @flaky @valid-hydro
-  Scenario: H700-34 UHT/leeway off, hard bounds 70/30%, large thermal unit
+  Scenario: H700-34 UHT off, hard bounds 70/30%, large thermal unit
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-34"
     When I run antares simulator
     Then the simulation succeeds
@@ -322,7 +279,7 @@ Feature: valid hydro
     And the expected value of the annual system cost is 184575000
 
   @short @valid-hydro
-  Scenario: H700-46 UHT/leeway off, hard bounds active, simplex 168
+  Scenario: H700-46 UHT off, hard bounds active, simplex 168
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-46"
     When I run antares simulator
     Then the simulation succeeds
@@ -409,7 +366,7 @@ Feature: valid hydro
   # ---------------------------------------------------------------------------
 
   @short @valid-hydro
-  Scenario: H700-47 Near-infinite reservoir, leeway 1:1
+  Scenario: H700-47 Near-infinite reservoir
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-47"
     When I run antares simulator
     Then the simulation succeeds
@@ -423,7 +380,7 @@ Feature: valid hydro
     And the expected value of the annual system cost is 9477860000000
 
   @short @valid-hydro
-  Scenario: H700-49 Reservoir variant, leeway 1:1
+  Scenario: H700-49 Reservoir variant
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-49"
     When I run antares simulator
     Then the simulation succeeds
@@ -440,10 +397,10 @@ Feature: valid hydro
   # Family H - settings combination / pumped-storage plants
   # ---------------------------------------------------------------------------
 
-  # H700-51 (six areas combining UHT x HB x LW) currently aborts with the sirius
+  # H700-51 (six areas combining UHT and HB) currently aborts with the sirius
   # solver ("Year 4 failed at week 1"). Quarantined like H700-38 / H700-40.
   @flaky @valid-hydro
-  Scenario: H700-51 Six areas combining UHT/HB/LW settings (infeasible with sirius)
+  Scenario: H700-51 Six areas combining UHT/HB settings (infeasible with sirius)
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-51"
     When I run antares simulator
     Then the simulation fails
