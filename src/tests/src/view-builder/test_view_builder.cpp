@@ -41,6 +41,7 @@ struct ViewBuilderFixture
     {
         study = std::make_unique<Study>();
         study->parameters.reset();
+        study->parameters.renewableGeneration.toClusters();
 
         fr = addAreaToListOfAreas(study->areas, "france");
         de = addAreaToListOfAreas(study->areas, "germany");
@@ -48,6 +49,12 @@ struct ViewBuilderFixture
         for (auto* area: {fr, de})
         {
             area->createMissingData();
+            area->load.series.fill(1.0);
+            area->wind.series.fill(1.0);
+            area->solar.series.fill(1.0);
+            area->miscGen.fill(1.0);
+            area->hydro.reservoirManagement = true;
+            area->hydro.series->ror.fill(1.0);
         }
         study->areas.rebuildIndexes();
 

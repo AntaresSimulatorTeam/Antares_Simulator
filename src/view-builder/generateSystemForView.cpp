@@ -3,6 +3,10 @@
 
 #include <yaml-cpp/yaml.h>
 
+#include <algorithm>
+#include <cmath>
+#include <ranges>
+
 #include <antares/io/inputs/InputError.h>
 #include <antares/solver/modeler/ModelerData.h>
 #include <antares/solver/optimisation/opt_rename_problem.h>
@@ -60,6 +64,41 @@ void checkForDuplicatesBetweenLegacyAndModeler(YAML::Node& systemYaml,
                       "legacy component(s), please rename it",
                       boost::join(duplicates, ", ")));
     }
+}
+
+constexpr double zeroTolerance = 1e-12;
+
+bool hasNonZeroValues(const TimeSeries& series)
+{
+    return std::ranges::any_of(std::views::iota(uint32_t{0}, series.timeSeries.width),
+                               [&series](const auto column)
+                               {
+                                   return std::ranges::any_of(
+                                     std::views::iota(uint32_t{0}, series.timeSeries.height),
+                                     [&series, column](const auto row)
+                                     { return std::abs(series.timeSeries[column][row]) > zeroTolerance; });
+                               });
+}
+
+bool hasHydroInflows(const Area& area)
+{
+    return std::any_of(area.hydro.managementData.begin(),
+                       area.hydro.managementData.end(),
+                       [](const auto& entry)
+                       {
+                           const auto& inflows = entry.second.inflows;
+                           return std::any_of(inflows.begin(),
+                                              inflows.end(),
+                                              [](const auto inflow)
+                                              { return std::abs(inflow) > zeroTolerance; });
+                       });
+}
+
+bool hasNonZeroMiscGeneration(const Area& area, const int index)
+{
+    return std::any_of(area.miscGen[index],
+                       area.miscGen[index] + area.miscGen.height,
+                       [](const auto value) { return std::abs(value) > zeroTolerance; });
 }
 
 void appendModelerData(YAML::Node& systemYaml, const Antares::Solver::ModelerData& modelerData)
@@ -156,32 +195,46 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
     YAML::Node connections = YAML::Node(YAML::NodeType::Sequence);
 
     study.areas.each(
-      [&components, &connections](const Area& area)
+      [&components, &connections, &study](const Area& area)
       {
           std::string areaLoc = BuildAreaNodeComponentId(area.id);
 
           components.push_back(areaToYaml(area));
 
-          components.push_back(loadToYaml(area));
-          connections.push_back(
-            makeConnection(BuildLoadComponentId(area.id), "balance_port", areaLoc, "balance_port"));
+          if (hasNonZeroValues(area.load.series))
+          {
+              components.push_back(loadToYaml(area));
+              connections.push_back(
+                makeConnection(BuildLoadComponentId(area.id), "balance_port", areaLoc, "balance_port"));
+          }
 
-          components.push_back(windToYaml(area));
-          connections.push_back(
-            makeConnection(BuildWindComponentId(area.id), "balance_port", areaLoc, "balance_port"));
+          if (hasNonZeroValues(area.wind.series))
+          {
+              components.push_back(windToYaml(area));
+              connections.push_back(
+                makeConnection(BuildWindComponentId(area.id), "balance_port", areaLoc, "balance_port"));
+          }
 
-          components.push_back(solarToYaml(area));
-          connections.push_back(makeConnection(BuildSolarComponentId(area.id),
-                                               "balance_port",
-                                               areaLoc,
-                                               "balance_port"));
+          if (hasNonZeroValues(area.solar.series))
+          {
+              components.push_back(solarToYaml(area));
+              connections.push_back(makeConnection(BuildSolarComponentId(area.id),
+                                                   "balance_port",
+                                                   areaLoc,
+                                                   "balance_port"));
+          }
 
-          components.push_back(rorToYaml(area));
-          connections.push_back(
-            makeConnection(BuildRorComponentId(area.id), "balance_port", areaLoc, "balance_port"));
+          if (area.hydro.series && hasNonZeroValues(area.hydro.series->ror))
+          {
+              components.push_back(rorToYaml(area));
+              connections.push_back(
+                makeConnection(BuildRorComponentId(area.id), "balance_port", areaLoc, "balance_port"));
+          }
 
           for (int i = 0; i < MiscGenIndex::fhhMax; ++i)
           {
+              if (!hasNonZeroMiscGeneration(area, i))
+                  continue;
               components.push_back(miscGenToYaml(area, i));
               connections.push_back(
                 makeConnection(BuildMiscGenComponentId(area.id,
@@ -193,6 +246,8 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
 
           for (const auto& cluster: area.thermal.list.all())
           {
+              if (!cluster->isEnabled())
+                  continue;
               components.push_back(thermalClusterToYaml(*cluster));
               connections.push_back(
                 makeConnection(BuildThermalClusterComponentId(area.id, cluster->id()),
@@ -203,6 +258,8 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
 
           for (const auto& cluster: area.renewable.list.all())
           {
+              if (!cluster->isEnabled() || study.parameters.renewableGeneration() != rgClusters)
+                  continue;
               components.push_back(renewableClusterToYaml(*cluster));
               connections.push_back(
                 makeConnection(BuildRenewableClusterComponentId(area.id, cluster->id()),
@@ -220,14 +277,19 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
                                                    "balance_port"));
           }
 
-          components.push_back(longTermStorageToYaml(area));
-          connections.push_back(makeConnection(BuildHydroStorageComponentId(area.id),
-                                               "balance_port",
-                                               areaLoc,
-                                               "balance_port"));
+          if (area.hydro.reservoirManagement || hasHydroInflows(area))
+          {
+              components.push_back(longTermStorageToYaml(area));
+              connections.push_back(makeConnection(BuildHydroStorageComponentId(area.id),
+                                                   "balance_port",
+                                                   areaLoc,
+                                                   "balance_port"));
+          }
 
           for (const auto& [_, link]: area.links)
           {
+              if (link->transmissionCapacities == LocalTransmissionCapacities::null)
+                  continue;
               components.push_back(linkToYaml(*link));
 
               std::string linkId = BuildLinkComponentId(link->from->id, link->with->id);
