@@ -7,7 +7,12 @@
 
 #include "tests-matrix-save.h"
 
+#include <chrono>
 #include <cstdlib>
+#include <filesystem>
+#include <fstream>
+#include <iterator>
+#include <stdexcept>
 
 #include <boost/test/unit_test.hpp>
 
@@ -24,6 +29,94 @@ BOOST_AUTO_TEST_CASE(matrix_only_0s_and__no_print_dim___result_is_empty)
     mtx.reset(2, 2);
     MatrixIO::saveToBuffer(mtx, mtx.data);
     BOOST_REQUIRE_EQUAL(mtx.data, "");
+}
+
+BOOST_AUTO_TEST_CASE(save_to_buffer_clears_stale_output_for_zero_matrix)
+{
+    Matrix_easy_to_fill<double> mtx;
+    mtx.reset(2, 2);
+    mtx.data = "old data";
+
+    MatrixIO::saveToBuffer(mtx, mtx.data);
+
+    BOOST_REQUIRE_EQUAL(mtx.data, "");
+}
+
+struct ThrowOnSerialization
+{
+    double operator()(double) const
+    {
+        throw std::runtime_error("serialization failed");
+    }
+};
+
+std::filesystem::path temporaryMatrixPath()
+{
+    const auto timestamp = std::chrono::steady_clock::now().time_since_epoch().count();
+    return std::filesystem::temp_directory_path()
+           / ("antares-matrix-save-test-" + std::to_string(timestamp) + ".txt");
+}
+
+BOOST_AUTO_TEST_CASE(save_preserves_existing_file_when_serialization_throws)
+{
+    const auto filename = temporaryMatrixPath();
+    {
+        std::ofstream file(filename, std::ios::binary | std::ios::trunc);
+        BOOST_REQUIRE(file);
+        file << "old data";
+    }
+
+    Matrix<double> mtx(1, 1);
+    mtx[0][0] = 1.0;
+
+    BOOST_CHECK_THROW(
+      MatrixIO::save(mtx, filename.string(), 6, false, ThrowOnSerialization{}, true),
+      std::runtime_error);
+
+    {
+        std::ifstream file(filename, std::ios::binary);
+        BOOST_REQUIRE(file);
+        const std::string contents((std::istreambuf_iterator<char>(file)),
+                                   std::istreambuf_iterator<char>());
+        BOOST_CHECK_EQUAL(contents, "old data");
+    }
+    std::filesystem::remove(filename);
+    std::filesystem::remove(filename.string() + ".tmp");
+}
+
+BOOST_AUTO_TEST_CASE(save_to_buffer_preserves_output_when_serialization_throws)
+{
+    Matrix_easy_to_fill<double> mtx(1, 1, {1.0});
+    std::string output = "old data";
+
+    BOOST_CHECK_THROW(MatrixIO::saveToBuffer(mtx, output, 6, false, ThrowOnSerialization{}, true),
+                      std::runtime_error);
+    BOOST_CHECK_EQUAL(output, "old data");
+}
+
+BOOST_AUTO_TEST_CASE(save_replaces_existing_file_and_removes_temporary_file)
+{
+    const auto filename = temporaryMatrixPath();
+    {
+        std::ofstream file(filename, std::ios::binary | std::ios::trunc);
+        BOOST_REQUIRE(file);
+        file << "old data";
+    }
+
+    Matrix<double> mtx(1, 1);
+    mtx[0][0] = 2.5;
+
+    BOOST_REQUIRE(MatrixIO::save(mtx, filename.string()));
+
+    {
+        std::ifstream file(filename, std::ios::binary);
+        BOOST_REQUIRE(file);
+        const std::string contents((std::istreambuf_iterator<char>(file)),
+                                   std::istreambuf_iterator<char>());
+        BOOST_CHECK_EQUAL(contents, "2.500000\n");
+    }
+    BOOST_CHECK(!std::filesystem::exists(filename.string() + ".tmp"));
+    std::filesystem::remove(filename);
 }
 
 BOOST_AUTO_TEST_CASE(matrix_only_0s__print_dim___get_only_a_title_and_the_0s)

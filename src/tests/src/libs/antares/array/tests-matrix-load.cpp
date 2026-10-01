@@ -620,6 +620,16 @@ BOOST_AUTO_TEST_CASE(file_loader_successfully_replaces_input_buffer)
     BOOST_REQUIRE_EQUAL(mtx[0][1], 2.5);
 }
 
+BOOST_AUTO_TEST_CASE(input_buffer_is_preserved_when_loading_fails)
+{
+    BufferType buffer("\xFF\xFE", 2);
+    const BufferType original = buffer;
+    Matrix_mock_load_to_buffer<double> mtx;
+
+    BOOST_CHECK(!MatrixIO::load(mtx, "path/to/a/file", 1, 1, Matrix<>::optNone, &buffer));
+    BOOST_CHECK_EQUAL(buffer, original);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 // ============================
@@ -649,6 +659,19 @@ BOOST_AUTO_TEST_CASE(file_contains_digits___loading_to_target_matrix_rounds_each
     BOOST_REQUIRE_EQUAL(mtx.height(), 2);
     BOOST_REQUIRE_EQUAL(mtx[0][0], 1);
     BOOST_REQUIRE_EQUAL(mtx[0][1], -2);
+}
+
+BOOST_AUTO_TEST_CASE(out_of_range_and_non_finite_fallback_values_are_initialized)
+{
+    BufferType buffer = "1e100\t-1e100\tnan\n";
+    Matrix_mock_load_to_buffer<int> mtx;
+
+    BOOST_CHECK(MatrixIO::load(mtx, "path/to/a/file", 3, 1, Matrix<>::optNeverFails, &buffer));
+    BOOST_REQUIRE_EQUAL(mtx.width(), 3);
+    BOOST_REQUIRE_EQUAL(mtx.height(), 1);
+    BOOST_CHECK_EQUAL(mtx[0][0], 0);
+    BOOST_CHECK_EQUAL(mtx[1][0], 0);
+    BOOST_CHECK_EQUAL(mtx[2][0], 0);
 }
 
 BOOST_AUTO_TEST_CASE(file_contains_int___loaded_coefs_are_int)

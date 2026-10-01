@@ -5,7 +5,9 @@
 #define ANTARES_ARRAY_MATRIX_IO_HXX
 
 #include <algorithm>
+#include <atomic>
 #include <cassert>
+#include <chrono>
 #include <cmath>
 #include <cstdint>
 #include <cstdio>
@@ -14,11 +16,17 @@
 #include <fstream>
 #include <functional>
 #include <iterator>
+#include <limits>
 #include <memory>
 #include <sstream>
 #include <string>
+#include <system_error>
 #include <type_traits>
 #include <utility>
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 #include <antares/io/statistics.h>
 #include <antares/logs/logs.h>
@@ -46,6 +54,16 @@ using MatrixType = Matrix<T>;
 namespace // anonymous
 {
 constexpr std::uintmax_t matrixFileSizeLimit = 1536ULL * 1024ULL * 1024ULL;
+
+struct PopBackGuard final
+{
+    std::string& value;
+
+    ~PopBackGuard()
+    {
+        value.pop_back();
+    }
+};
 
 template<class T>
 class MatrixData final
@@ -236,10 +254,71 @@ bool detectEncoding(const std::string& filename, const std::string& data, size_t
     return true;
 }
 
+bool replaceFile(const std::filesystem::path& temporary,
+                 const std::filesystem::path& filename,
+                 std::error_code& error)
+{
+#ifdef _WIN32
+    const bool targetExists = std::filesystem::exists(filename, error);
+    if (error)
+    {
+        return false;
+    }
+
+    const bool replaced = targetExists ? ReplaceFileW(filename.c_str(),
+                                                      temporary.c_str(),
+                                                      nullptr,
+                                                      REPLACEFILE_WRITE_THROUGH,
+                                                      nullptr,
+                                                      nullptr)
+                                       : MoveFileExW(temporary.c_str(),
+                                                     filename.c_str(),
+                                                     MOVEFILE_WRITE_THROUGH);
+    if (!replaced)
+    {
+        error = std::error_code(static_cast<int>(GetLastError()), std::system_category());
+        return false;
+    }
+
+    error.clear();
+    return true;
+#else
+    std::filesystem::rename(temporary, filename, error);
+    return !error;
+#endif
+}
+
+std::filesystem::path createTemporaryDirectory(const std::filesystem::path& target,
+                                               std::error_code& error)
+{
+    static std::atomic_uint64_t sequence = 0;
+    const auto parent = target.parent_path().empty() ? std::filesystem::path(".")
+                                                     : target.parent_path();
+    const auto timestamp = std::chrono::steady_clock::now().time_since_epoch().count();
+    const auto prefix = target.filename().string() + ".tmp-" + std::to_string(timestamp) + '-';
+
+    for (unsigned int attempt = 0; attempt != 100; ++attempt)
+    {
+        const auto directory = parent / (prefix + std::to_string(sequence.fetch_add(1)));
+        error.clear();
+        if (std::filesystem::create_directory(directory, error))
+        {
+            return directory;
+        }
+        if (error != std::errc::file_exists)
+        {
+            return {};
+        }
+    }
+
+    error = std::make_error_code(std::errc::file_exists);
+    return {};
+}
+
 template<class T>
 bool loadFromBuffer(Matrix<T>& matrix,
                     const std::string& filename,
-                    std::string& data,
+                    const std::string& data,
                     unsigned int minWidth,
                     unsigned int maxHeight,
                     bool fixedSize,
@@ -378,6 +457,23 @@ bool loadFromBuffer(Matrix<T>& matrix,
     T cellValue{};
     bool result = true;
 
+    const auto handleInvalidNumericValue =
+      [&](unsigned int cellX, unsigned int cellY, unsigned int cellOffset)
+    {
+        result = false;
+        if (!(options & Matrix<T>::optQuiet) && errorCount)
+        {
+            logs.warning() << '`' << filename << "`: Invalid numeric value (x:" << cellX
+                           << ",y:" << cellY << ", offset: " << cellOffset << "byte), text: `"
+                           << converter << " read:" << matrix[cellX][cellY] << '`';
+            if (!(--errorCount))
+            {
+                logs.warning() << " ... (skipped)";
+            }
+        }
+        MatrixData<T>::Init(matrix[cellX][cellY]);
+    };
+
     while (y < maxHeight && offset < data.size())
     {
         x = 0;
@@ -448,22 +544,32 @@ bool loadFromBuffer(Matrix<T>& matrix,
                     double fallback = 0;
                     if (!MatrixStringConverter<double>::Do(converter, fallback))
                     {
-                        result = false;
-                        if (!(options & Matrix<T>::optQuiet) && errorCount)
-                        {
-                            logs.warning() << '`' << filename << "`: Invalid numeric value (x:" << x
-                                           << ",y:" << y << ", offset: " << pos << "byte), text: `"
-                                           << converter << " read:" << matrix[x][y] << '`';
-                            if (!(--errorCount))
-                            {
-                                logs.warning() << " ... (skipped)";
-                            }
-                        }
-                        MatrixData<T>::Init(matrix[x][y]);
+                        handleInvalidNumericValue(x, y, pos);
                     }
                     else
                     {
-                        matrix[x][y] = MatrixRound<T, T>::Value(static_cast<T>(fallback));
+                        if constexpr (std::is_integral_v<T>)
+                        {
+                            if (!std::isfinite(fallback)
+                                || fallback < static_cast<double>(std::numeric_limits<T>::min())
+                                || (std::numeric_limits<T>::digits
+                                        > std::numeric_limits<double>::digits
+                                      ? fallback
+                                          >= static_cast<double>(std::numeric_limits<T>::max())
+                                      : fallback
+                                          > static_cast<double>(std::numeric_limits<T>::max())))
+                            {
+                                handleInvalidNumericValue(x, y, pos);
+                            }
+                            else
+                            {
+                                matrix[x][y] = static_cast<T>(std::trunc(fallback));
+                            }
+                        }
+                        else
+                        {
+                            matrix[x][y] = MatrixRound<T, double>::Value(fallback);
+                        }
                     }
                 }
                 else
@@ -609,6 +715,17 @@ bool load(MatrixType<T>& matrix,
             matrix.reset(minWidth, maxHeight);
             return false;
         }
+
+        if (input->size() > matrixFileSizeLimit)
+        {
+            if (!(options & MatrixType<T>::optQuiet))
+            {
+                logs.error() << filename << ": The file is too large (>"
+                             << (matrixFileSizeLimit / 1024 / 1024) << "Mo)";
+            }
+            matrix.reset(minWidth, maxHeight);
+            return false;
+        }
     }
 
     if (input->empty())
@@ -630,6 +747,7 @@ bool load(MatrixType<T>& matrix,
     }
 
     input->push_back('\n');
+    PopBackGuard guard{*input};
     const bool result = loadFromBuffer(matrix,
                                        filename,
                                        *input,
@@ -637,7 +755,6 @@ bool load(MatrixType<T>& matrix,
                                        maxHeight,
                                        (options & MatrixType<T>::optFixedSize) != 0,
                                        options);
-    input->pop_back();
     if (!result)
     {
         matrix.reset(minWidth, maxHeight);
@@ -679,20 +796,23 @@ void saveToBuffer(const MatrixType<T>& matrix,
 {
     if (!printDimensions && !saveEvenIfAllZero && matrix.containsOnlyZero(predicate))
     {
+        data.clear();
         return;
     }
 
+    std::string serialized;
     matrix_to_buffer_dumper_factory factory;
-    auto dumper = factory.get_dumper<T, Predicate>(&matrix, data, predicate);
+    auto dumper = factory.get_dumper<T, Predicate>(&matrix, serialized, predicate);
     dumper->set_print_format(std::is_floating_point_v<T>, precision);
 
-    data.reserve(matrix.width() * matrix.height() * 6);
+    serialized.reserve(matrix.width() * matrix.height() * 6);
     if (printDimensions)
     {
-        data += "size:" + std::to_string(matrix.width()) + 'x' + std::to_string(matrix.height())
-                + '\n';
+        serialized += "size:" + std::to_string(matrix.width()) + 'x'
+                      + std::to_string(matrix.height()) + '\n';
     }
     dumper->run();
+    data = std::move(serialized);
 }
 
 template<class T, class Predicate = std::identity>
@@ -706,27 +826,66 @@ bool save(const MatrixType<T>& matrix,
     logs.debug() << "  :: writing `" << filename << "' (" << matrix.width() << 'x'
                  << matrix.height() << ')';
 
-    std::ofstream file(filename, std::ios::binary | std::ios::trunc);
-    if (!file)
+    const std::filesystem::path target(filename);
+    if (target.empty())
     {
         logs.error() << "I/O error: " << filename
                      << ": Impossible to write the file (not enough permission ?)";
         return false;
     }
 
+    std::string data;
     if (matrix.width() && matrix.height())
     {
-        std::string data;
         saveToBuffer(matrix, data, precision, printDimensions, predicate, saveEvenIfAllZero);
-        Statistics::HasWrittenToDisk(data.size());
-        file << data;
-        if (!file)
+    }
+
+    if (data.size() > static_cast<std::size_t>(std::numeric_limits<std::streamsize>::max()))
+    {
+        logs.error() << "I/O error: " << filename << ": Failed to write the file";
+        return false;
+    }
+
+    std::error_code temporaryError;
+    const auto temporaryDirectory = createTemporaryDirectory(target, temporaryError);
+    if (temporaryError || temporaryDirectory.empty())
+    {
+        logs.error() << "I/O error: " << filename << ": Failed to create a temporary file";
+        return false;
+    }
+    const auto temporary = temporaryDirectory / "data";
+
+    bool writeSucceeded = false;
+    {
+        std::ofstream file(temporary, std::ios::binary | std::ios::trunc);
+        if (file)
         {
-            logs.error() << "I/O error: " << filename << ": Failed to write the file";
-            return false;
+            file.write(data.data(), static_cast<std::streamsize>(data.size()));
+            file.close();
+            writeSucceeded = static_cast<bool>(file);
         }
     }
 
+    if (!writeSucceeded)
+    {
+        std::error_code cleanupError;
+        std::filesystem::remove_all(temporaryDirectory, cleanupError);
+        logs.error() << "I/O error: " << filename << ": Failed to write the file";
+        return false;
+    }
+
+    std::error_code renameError;
+    if (!replaceFile(temporary, target, renameError))
+    {
+        std::error_code cleanupError;
+        std::filesystem::remove_all(temporaryDirectory, cleanupError);
+        logs.error() << "I/O error: " << filename << ": Failed to replace the file";
+        return false;
+    }
+
+    std::error_code cleanupError;
+    std::filesystem::remove(temporaryDirectory, cleanupError);
+    Statistics::HasWrittenToDisk(data.size());
     logs.debug() << "  :: [end] writing `" << filename << "' (" << matrix.width() << 'x'
                  << matrix.height() << ')';
     return true;
