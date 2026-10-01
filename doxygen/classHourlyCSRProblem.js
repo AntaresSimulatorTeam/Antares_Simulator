@@ -2,6 +2,7 @@ var classHourlyCSRProblem =
 [
     [ "HourlyCSRProblem", "classHourlyCSRProblem.html#a9ebeb4a2dad9c45058a4773d4f9f3a6b", null ],
     [ "HourlyCSRProblem", "classHourlyCSRProblem.html#afa523f3b628a7b39da9842dc53038bde", null ],
+    [ "makeConstraintBuilder", "classHourlyCSRProblem.html#aa1e80fc360e8ce65144b3fb66c34237a", null ],
     [ "operator=", "classHourlyCSRProblem.html#ab3bd53f11f7d145239d4fb00263c9cc9", null ],
     [ "run", "classHourlyCSRProblem.html#a66ec7819122565c6d9ce634b42dd4317", null ],
     [ "setHour", "classHourlyCSRProblem.html#ad09005c2c3e4f81d604409938f8e2574", null ],

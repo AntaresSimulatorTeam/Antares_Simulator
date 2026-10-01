@@ -220,21 +220,20 @@ $(document).ready(function(){initNavTree('gems-part_8h_source.html',''); initRes
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordtype">double</span> gemsSpilledForArea(uint32_t area) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>* problemeHebdo_;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordtype">int</span> triggeredHour_ = 0;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <a class="code" href="classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html">Antares::LinearProblem::Api::FillContext</a> fillContext_{0, 0, 0, 0, 0};</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <a class="code" href="classPROBLEME__ANTARES__A__RESOUDRE.html">PROBLEME_ANTARES_A_RESOUDRE</a>&amp; problemeAResoudre_;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <a class="code" href="classVariableManagement_1_1VariableManager.html">VariableManagement::VariableManager</a>&amp; variableManager_;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    std::map&lt;int, int&gt;&amp; constraintCsrFictitiousLoad_;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    std::map&lt;int, int&gt;&amp; constraintCsrMaxEnsLoad_;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;};</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">// Factory</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;std::unique_ptr&lt;IGemsPart&gt; makeGemsPart(<a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>* problemeHebdo,</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                                        <a class="code" href="classPROBLEME__ANTARES__A__RESOUDRE.html">PROBLEME_ANTARES_A_RESOUDRE</a>&amp; problemeAResoudre,</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                                        <a class="code" href="classVariableManagement_1_1VariableManager.html">VariableManagement::VariableManager</a>&amp; variableManager,</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                                        std::map&lt;int, int&gt;&amp; constraintCsrFictitiousLoad,</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                                        std::map&lt;int, int&gt;&amp; constraintCsrMaxEnsLoad);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html">Antares::LinearProblem::Api::FillContext</a> fillContext_{0, 0, 0, 0, 0};</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <a class="code" href="classPROBLEME__ANTARES__A__RESOUDRE.html">PROBLEME_ANTARES_A_RESOUDRE</a>&amp; problemeAResoudre_;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <a class="code" href="classVariableManagement_1_1VariableManager.html">VariableManagement::VariableManager</a>&amp; variableManager_;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    std::map&lt;int, int&gt;&amp; constraintCsrFictitiousLoad_;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    std::map&lt;int, int&gt;&amp; constraintCsrMaxEnsLoad_;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;};</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment">// Factory</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;std::unique_ptr&lt;IGemsPart&gt; makeGemsPart(<a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>* problemeHebdo,</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                                        <a class="code" href="classPROBLEME__ANTARES__A__RESOUDRE.html">PROBLEME_ANTARES_A_RESOUDRE</a>&amp; problemeAResoudre,</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                                        <a class="code" href="classVariableManagement_1_1VariableManager.html">VariableManagement::VariableManager</a>&amp; variableManager,</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                                        std::map&lt;int, int&gt;&amp; constraintCsrFictitiousLoad,</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                                        std::map&lt;int, int&gt;&amp; constraintCsrMaxEnsLoad);</div>
 <div class="ttc" id="aclassActiveGemsPart_1_1MissingOptimEntityContainerError_html"><div class="ttname"><a href="classActiveGemsPart_1_1MissingOptimEntityContainerError.html">ActiveGemsPart::MissingOptimEntityContainerError</a></div><div class="ttdef"><b>Definition:</b> gems-part.h:66</div></div>
 <div class="ttc" id="aclassActiveGemsPart_html"><div class="ttname"><a href="classActiveGemsPart.html">ActiveGemsPart</a></div><div class="ttdef"><b>Definition:</b> gems-part.h:63</div></div>
 <div class="ttc" id="aclassAntares_1_1LinearProblem_1_1Api_1_1FillContext_html"><div class="ttname"><a href="classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html">Antares::LinearProblem::Api::FillContext</a></div><div class="ttdoc">Context for filling linear problem data. Contains temporal information.</div><div class="ttdef"><b>Definition:</b> ILinearProblemData.h:17</div></div>
