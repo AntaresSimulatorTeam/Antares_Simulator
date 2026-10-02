@@ -678,14 +678,25 @@ BOOST_FIXTURE_TEST_CASE(evaluate_sum_connections_on_area_connection_price_field,
 
     Antares::LinearProblem::Api::EmptyScenario scenario;
     MockAreaPriceProvider areaPriceProvider;
-    EvalVisitor visitor(optimEntityContainer, ctx, component, &data, scenario, &areaPriceProvider);
+    // 2 local time steps (hours 0 and 1), so the price's per-timestep nature can be checked.
+    Antares::LinearProblem::Api::FillContext twoStepCtx{0, 1, 0, 1, 0};
+    EvalVisitor visitor(optimEntityContainer,
+                        twoStepCtx,
+                        component,
+                        &data,
+                        scenario,
+                        &areaPriceProvider);
 
     Nodes::PortFieldSumNode priceSum("generation", "price");
-    BOOST_CHECK_EQUAL(visitor.dispatch(&priceSum).value(0), 42.);
+    const auto priceResult = visitor.dispatch(&priceSum);
+    BOOST_CHECK_EQUAL(priceResult.value(0), 42.);
+    BOOST_CHECK_EQUAL(priceResult.value(1), 43.);
 
     // A field that isn't the port's price field must not pick up the area price.
     Nodes::PortFieldSumNode otherFieldSum("generation", "flow");
-    BOOST_CHECK_EQUAL(visitor.dispatch(&otherFieldSum).value(0), 0.);
+    const auto otherResult = visitor.dispatch(&otherFieldSum);
+    BOOST_CHECK_EQUAL(otherResult.value(0), 0.);
+    BOOST_CHECK_EQUAL(otherResult.value(1), 0.);
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_sum_connections_on_area_connection_price_without_provider,
@@ -707,7 +718,9 @@ BOOST_FIXTURE_TEST_CASE(evaluate_sum_connections_on_area_connection_price_withou
     EvalVisitor visitor(optimEntityContainer, ctx, component, &data, scenario);
 
     Nodes::PortFieldSumNode priceSum("generation", "price");
-    BOOST_CHECK_EQUAL(visitor.dispatch(&priceSum).value(0), 0.);
+    const auto result = visitor.dispatch(&priceSum);
+    BOOST_CHECK_EQUAL(result.value(0), 0.);
+    BOOST_CHECK_EQUAL(result.value(1), 0.);
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
