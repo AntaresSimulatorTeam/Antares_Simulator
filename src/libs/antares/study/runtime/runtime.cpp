@@ -438,6 +438,8 @@ void StudyRangeLimits::checkIntegrity() const
 
 void StudyRuntimeInfos::disableAllFilters(Study& study)
 {
+    study.setsOfAreas.disableOutputFilters();
+
     study.areas.each(
       [](Data::Area& area)
       {
