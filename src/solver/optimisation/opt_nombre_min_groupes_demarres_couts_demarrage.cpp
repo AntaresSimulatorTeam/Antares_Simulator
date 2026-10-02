@@ -148,8 +148,6 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
                       pays,
                       index);
 
-                    const double ramp = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index];
-
                     for (int pdtHebdo = 0; pdtHebdo < NombreDePasDeTempsProblemeHebdo; pdtHebdo++)
                     {
                         // When using the ramping model, we must ensure that the NODU don't change
