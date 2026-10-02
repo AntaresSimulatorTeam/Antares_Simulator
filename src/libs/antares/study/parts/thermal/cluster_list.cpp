@@ -291,25 +291,21 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     // initialize the ramping attributes only if ramping is enabled, else ignore these properties
     if (p->key == "power-increase-cost")
     {
-        return (cluster.ramping) ? p->value.to<double>(cluster.ramping.value().powerIncreaseCost)
-                                 : true;
+        return cluster.ramping ? p->value.to<double>(cluster.ramping->powerIncreaseCost) : true;
     }
     if (p->key == "power-decrease-cost")
     {
-        return (cluster.ramping) ? p->value.to<double>(cluster.ramping.value().powerDecreaseCost)
-                                 : true;
+        return cluster.ramping ? p->value.to<double>(cluster.ramping->powerDecreaseCost) : true;
     }
     if (p->key == "max-upward-power-ramping-rate")
     {
-        return (cluster.ramping)
-                 ? p->value.to<double>(cluster.ramping.value().maxUpwardPowerRampingRate)
-                 : true;
+        return cluster.ramping ? p->value.to<double>(cluster.ramping->maxUpwardPowerRampingRate)
+                               : true;
     }
     if (p->key == "max-downward-power-ramping-rate")
     {
-        return (cluster.ramping)
-                 ? p->value.to<double>(cluster.ramping.value().maxDownwardPowerRampingRate)
-                 : true;
+        return cluster.ramping ? p->value.to<double>(cluster.ramping->maxDownwardPowerRampingRate)
+                               : true;
     }
     // we ignore this property as it was already handled in ThermalClusterLoadFromSection
     if (p->key == "ramping-enabled")
@@ -355,17 +351,23 @@ bool ThermalClusterLoadFromSection(const std::string& areaName,
     }
 
     cluster.setName(section.name);
+
     if (rampingEnabledGlobal)
     {
-        // initialize the ramping attributes only if ramping-enabled=true
-        auto* rampingEnabledProperty = section.find("ramping-enabled");
-        if (rampingEnabledProperty)
+        const auto* rampingEnabledProperty = section.find("ramping-enabled");
+        if (rampingEnabledProperty != nullptr)
         {
             bool rampingEnabled = false;
-            bool attributeOK = rampingEnabledProperty->value.to<bool>(rampingEnabled);
-            if (rampingEnabled && attributeOK)
+            const bool attributeOK = rampingEnabledProperty->value.to<bool>(rampingEnabled);
+
+            if (!attributeOK)
             {
-                cluster.ramping = ThermalCluster::Ramping();
+                logs.warning() << '`' << areaName << "`: thermal cluster: `" << section.name
+                               << "`: Invalid key/value";
+            }
+            else if (rampingEnabled)
+            {
+                cluster.ramping.emplace();
             }
         }
     }

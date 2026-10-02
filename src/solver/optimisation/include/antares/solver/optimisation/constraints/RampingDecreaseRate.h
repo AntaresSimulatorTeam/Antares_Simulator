@@ -19,7 +19,7 @@ public:
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area
-     * @param cluster : global index of the cluster
+     * @param index : local thermal-cluster index within the area
      * @param pdt : timestep
      * @param Simulation : ---
      */

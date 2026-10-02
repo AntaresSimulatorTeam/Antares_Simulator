@@ -424,6 +424,8 @@ struct PALIERS_THERMIQUES
     // the optimization itself.
     std::vector<std::array<double, Pollutant::POLLUTANT_MAX>> emissionFactors;
 
+    //! Whether local ramping data is enabled for each thermal cluster.
+    std::vector<bool> rampingEnabled;
     //! maximum hourly upward power ramping rate for a thermal unit (MW/hour)
     std::vector<double> maxUpwardPowerRampingRate;
     //! maximum hourly downward power ramping rate for a thermal unit (MW/hour)

@@ -501,6 +501,7 @@ void SIM_InitialisationProblemeHebdo(const Study& study,
             // ramping (if enabled)
             if (cluster->ramping)
             {
+                pbPalier.rampingEnabled[cluster->index] = true;
                 pbPalier.upwardRampingCost[cluster->index] = cluster->ramping->powerIncreaseCost;
                 pbPalier.downwardRampingCost[cluster->index] = cluster->ramping->powerDecreaseCost;
                 pbPalier.maxDownwardPowerRampingRate[cluster->index]

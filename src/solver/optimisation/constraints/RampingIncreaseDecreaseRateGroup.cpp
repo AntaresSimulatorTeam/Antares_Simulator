@@ -16,17 +16,18 @@ void RampingIncreaseDecreaseRateGroup::BuildConstraints()
                                                               ->PaliersThermiquesDuPays[pays];
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index] >= 0)
+            if (!PaliersThermiquesDuPays.rampingEnabled[index])
             {
-                RampingIncreaseRate rampingIncreaseRate(builder_, data);
-                RampingDecreaseRate rampingDecreaseRate(builder_, data);
+                continue;
+            }
 
-                for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
-                     pdt++)
-                {
-                    rampingIncreaseRate.add(pays, index, pdt);
-                    rampingDecreaseRate.add(pays, index, pdt);
-                }
+            RampingIncreaseRate rampingIncreaseRate(builder_, data);
+            RampingDecreaseRate rampingDecreaseRate(builder_, data);
+
+            for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
+            {
+                rampingIncreaseRate.add(pays, index, pdt);
+                rampingDecreaseRate.add(pays, index, pdt);
             }
         }
     }

@@ -7,7 +7,7 @@ void NbDispUnitsMinBoundSinceMinUpTime::add(int pays, int index, int pdt)
 {
     auto cluster = data.PaliersThermiquesDuPays[pays]
                      .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-    const uint DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
+    const int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
       = data.PaliersThermiquesDuPays[pays].DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index];
 
     data.CorrespondanceCntNativesCntOptim[pdt]

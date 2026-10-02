@@ -8,6 +8,11 @@
 
 void OPT_DecompteDesVariablesEtDesContraintesRampesThermiques(PROBLEME_HEBDO* problemeHebdo)
 {
+    if (!problemeHebdo->rampingEnabled)
+    {
+        return;
+    }
+
     ConstraintBuilder builder(problemeHebdo);
     LinearProblemMatrixRamping(problemeHebdo, true, builder).Run();
 

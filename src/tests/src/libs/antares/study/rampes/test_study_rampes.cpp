@@ -52,12 +52,17 @@ class OneProblemOneAreaRampingWithLogger: public OneProblemOneAreaRamping, publi
 {
 };
 
-static void addThermalCluster(Area* area, const std::string& name)
+namespace Antares::Data
 {
-    auto c = std::make_shared<ThermalCluster>(area);
-    c->setName(name);
-    area->thermal.list.addToCompleteList(c);
+std::ostream& operator<<(std::ostream& os, const ThermalCluster::Ramping& r)
+{
+    return os << "powerIncreaseCost = " << r.powerIncreaseCost
+              << "\tpowerDecreaseCost = " << r.powerDecreaseCost
+              << "\tmaxUpwardPowerRampingRate = " << r.maxUpwardPowerRampingRate
+              << "\tmaxDownwardPowerRampingRate = " << r.maxDownwardPowerRampingRate;
 }
+} // namespace Antares::Data
+
 BOOST_AUTO_TEST_SUITE(ramping_load)
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_load_cluster_ramp_parameters, OneProblemOneAreaRamping)
@@ -199,16 +204,16 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_load_cluster_invalid_ramp_parameters,
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
     BOOST_CHECK(getErrors().contains(
       "Thermal cluster: A/thermal_1: The maximum upward power ramping rate "
-      "must be greater than zero. Ramping is disabled for this thermal cluster."));
+      "must be non-negative. "));
     BOOST_CHECK(getErrors().contains(
       "Thermal cluster: A/thermal_1: The maximum downward power ramping rate "
-      "must be greater than zero. Ramping is disabled for this thermal cluster."));
+      "must be non-negative. "));
     BOOST_CHECK(
       getErrors().contains("Thermal cluster: A/thermal_1: The ramping power increase cost must be "
-                           "positive or null. Ramping is disabled for this thermal cluster."));
+                           "positive or null. "));
     BOOST_CHECK(
       getErrors().contains("Thermal cluster: A/thermal_1: The ramping power decrease cost must be "
-                           "positive or null. Ramping is disabled for this thermal cluster."));
+                           "positive or null. "));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_load_cluster_valid_zero_cost_ramp_parameters,

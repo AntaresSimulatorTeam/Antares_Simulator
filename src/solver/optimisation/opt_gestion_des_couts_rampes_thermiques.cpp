@@ -32,7 +32,7 @@ void OPT_InitialiserLesCoutsLineaireRampesThermiques(PROBLEME_HEBDO* problemeHeb
 
             for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
             {
-                if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index] >= 0)
+                if (PaliersThermiquesDuPays.rampingEnabled[index])
                 {
                     int palier = PaliersThermiquesDuPays
                                    .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];

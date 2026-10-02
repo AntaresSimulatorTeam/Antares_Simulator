@@ -43,7 +43,8 @@ public:
     {
         if (state.study.parameters.include.thermal_ramping)
         {
-            for (unsigned int i = 0; i < state.study.runtime.rangeLimits.hour[Data::rangeCount];
+            for (unsigned int i = state.study.runtime.rangeLimits.hour[Data::rangeBegin];
+                 i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd];
                  ++i)
             {
                 values[i] += state.thermalClusterRampingCostForYear[i];

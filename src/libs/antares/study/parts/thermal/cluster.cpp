@@ -243,27 +243,10 @@ bool Data::ThermalCluster::integrityCheck()
     // Modulation
     ret = checkModulation() && ret;
 
-    // la valeur minStablePower should not be modified
-    /*
-    if (minStablePower > nominalCapacity)
-    {
-            logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                    << ": failed min stable power < nominal capacity (with min power = "
-                    << minStablePower << ", nominal power = " << nominalCapacity;
-            minStablePower = nominalCapacity;
-            ret = false;
-    }*/
-
     // ramping
     if (ramping)
     {
-        // if the ramping model is ill defined, then we disable the ramping model for this cluster
-        bool ramping_ret = ramping.value().checkValidity(parentArea, pName);
-        if (!ramping_ret)
-        {
-            ramping.reset();
-        }
-        ret = ramping_ret && ret;
+        ret = ramping->checkValidity(parentArea, pName) && ret;
     }
 
     return ret;
@@ -448,47 +431,35 @@ void ThermalCluster::Ramping::reset()
     maxDownwardPowerRampingRate = 0;
 }
 
-bool ThermalCluster::Ramping::checkValidity(Area* area, std::string clusterName)
+bool ThermalCluster::Ramping::checkValidity(const Area* area, const std::string& clusterName) const
 {
     bool ret = true;
 
-    if (maxUpwardPowerRampingRate <= 0)
+    if (maxUpwardPowerRampingRate < 0)
     {
         logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
-                     << ": The maximum upward power ramping rate must be greater than zero. "
-                     << "Ramping is disabled for this thermal cluster.";
+                     << ": The maximum upward power ramping rate must be non-negative. ";
         ret = false;
     }
-    if (maxDownwardPowerRampingRate <= 0)
+    if (maxDownwardPowerRampingRate < 0)
     {
         logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
-                     << ": The maximum downward power ramping rate must be greater than zero. "
-                     << "Ramping is disabled for this thermal cluster.";
+                     << ": The maximum downward power ramping rate must be non-negative. ";
         ret = false;
     }
     if (powerIncreaseCost < 0)
     {
         logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
-                     << ": The ramping power increase cost must be positive or null. "
-                     << "Ramping is disabled for this thermal cluster.";
+                     << ": The ramping power increase cost must be positive or null. ";
         ret = false;
     }
     if (powerDecreaseCost < 0)
     {
         logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
-                     << ": The ramping power decrease cost must be positive or null. "
-                     << "Ramping is disabled for this thermal cluster.";
+                     << ": The ramping power decrease cost must be positive or null. ";
         ret = false;
     }
     return ret;
-}
-
-std::ostream& operator<<(std::ostream& os, const ThermalCluster::Ramping& r)
-{
-    return os << "powerIncreaseCost = " << r.powerIncreaseCost
-              << "\tpowerDecreaseCost = " << r.powerDecreaseCost
-              << "\tmaxUpwardPowerRampingRate = " << r.maxUpwardPowerRampingRate
-              << "\tmaxDownwardPowerRampingRate = " << r.maxDownwardPowerRampingRate;
 }
 
 } // namespace Antares::Data

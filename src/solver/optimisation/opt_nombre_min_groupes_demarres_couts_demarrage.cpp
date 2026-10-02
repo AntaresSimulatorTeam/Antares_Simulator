@@ -148,7 +148,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
                       pays,
                       index);
 
-                    int ramp = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index];
+                    const double ramp = PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index];
 
                     for (int pdtHebdo = 0; pdtHebdo < NombreDePasDeTempsProblemeHebdo; pdtHebdo++)
                     {
@@ -157,7 +157,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
                         // ramping constraints by partially starting/stopping units.
                         if (NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
                               < NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
-                            || ramp >= 0)
+                            || PaliersThermiquesDuPays.rampingEnabled[index])
                         {
                             NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
                               = NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo];

@@ -36,7 +36,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(
 
             for (int index = 0; index < maxThermalPlant; index++)
             {
-                if (PaliersThermiquesDuPays.maxUpwardPowerRampingRate[index] >= 0)
+                if (PaliersThermiquesDuPays.rampingEnabled[index])
                 {
                     const int palier = PaliersThermiquesDuPays
                                          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];

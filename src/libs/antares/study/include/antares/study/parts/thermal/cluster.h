@@ -254,7 +254,7 @@ public:
         double maxDownwardPowerRampingRate = 0.;
 
         void reset();
-        bool checkValidity(Area* area, std::string clusterName);
+        bool checkValidity(const Area* area, const std::string& clusterName) const;
         friend std::ostream& operator<<(std::ostream&, const Ramping& ramping);
     };
 

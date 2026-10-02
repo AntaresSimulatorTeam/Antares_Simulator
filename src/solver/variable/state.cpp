@@ -223,18 +223,18 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
         // alias to the production of the current thermal cluster
         double p = thermal[area->index].thermalClustersProductions[clusterEnabledIndex];
         // alias to the previous number of started units
-        uint previousUnitCount = thermal[area->index].unitCountLastHour[clusterEnabledIndex];
+        int previousUnitCount = thermal[area->index].unitCountLastHour[clusterEnabledIndex];
 
         // Looking for the new number of units which have been started
-        uint newUnitCount;
+        int newUnitCount;
 
         if (p > thermal[area->index].productionLastHour[clusterEnabledIndex])
         {
-            newUnitCount = static_cast<uint>(
+            newUnitCount = static_cast<int>(
               std::ceil(p / thermalCluster->nominalCapacityWithSpinning));
-            if (newUnitCount > thermalCluster->unitCount)
+            if (newUnitCount > static_cast<int>(thermalCluster->unitCount))
             {
-                newUnitCount = thermalCluster->unitCount;
+                newUnitCount = static_cast<int>(thermalCluster->unitCount);
             }
             if (newUnitCount < previousUnitCount)
             {
@@ -245,11 +245,11 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
         {
             if (thermalCluster->minStablePower > 0.)
             {
-                newUnitCount = static_cast<uint>(
+                newUnitCount = static_cast<int>(
                   std::ceil(p / thermalCluster->nominalCapacityWithSpinning));
-                if (newUnitCount > thermalCluster->unitCount)
+                if (newUnitCount > static_cast<int>(thermalCluster->unitCount))
                 {
-                    newUnitCount = thermalCluster->unitCount;
+                    newUnitCount = static_cast<int>(thermalCluster->unitCount);
                 }
             }
             else
@@ -311,7 +311,7 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
     else
     {
         thermal[area->index].thermalClustersOperatingCost[clusterEnabledIndex] = 0.;
-        thermal[area->index].unitCountLastHour[clusterEnabledIndex] = 0u;
+        thermal[area->index].unitCountLastHour[clusterEnabledIndex] = 0;
         thermal[area->index].productionLastHour[clusterEnabledIndex] = 0.;
     }
 
@@ -376,7 +376,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterEnabledIndex)
 {
     uint maxDurationON; // nombre d'heures de fonctionnement d'un groupe au delà duquel un
     // arrêt/redémarrage est préférable
-    uint maxUnitNeeded = 0;
+    int maxUnitNeeded = 0;
     uint startHourForCurrentYear = study.runtime.rangeLimits.hour[Data::rangeBegin];
     uint endHourForCurrentYear = startHourForCurrentYear
                                  + study.runtime.rangeLimits.hour[Data::rangeCount];
@@ -384,11 +384,11 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterEnabledIndex)
     assert(endHourForCurrentYear <= HOURS_PER_YEAR);
 
     // Nombre minimal de groupes en fonctionnement à l'heure h (determiné par Peff  et Pnom)
-    std::array<uint, HOURS_PER_YEAR> ON_min;
+    std::array<int, HOURS_PER_YEAR> ON_min;
     // Nombre maximal de groupes en fonctionnement à l'heure h  (determine par Peff et Pmin)
-    std::array<uint, HOURS_PER_YEAR> ON_max;
+    std::array<int, HOURS_PER_YEAR> ON_max;
     // Nombre de groupes économiquement optimal en fonctionnement à l'heure h
-    std::array<uint, HOURS_PER_YEAR> ON_opt{};
+    std::array<int, HOURS_PER_YEAR> ON_opt{};
 
     // Get cluster properties
     Data::ThermalCluster* currentCluster = area->thermal.list.enabledClusterAt(clusterEnabledIndex)
@@ -416,9 +416,9 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterEnabledIndex)
     const auto& availableProduction = currentCluster->series.getColumn(this->year);
     for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
     {
-        maxUnitNeeded = 0u;
-        ON_min[h] = 0u;
-        ON_max[h] = 0u;
+        maxUnitNeeded = 0;
+        ON_min[h] = 0;
+        ON_max[h] = 0;
 
         // Getting available production from cluster data
         double thermalClusterAvailableProduction = availableProduction[h];
@@ -520,8 +520,8 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterEnabledIndex)
 }
 
 void State::yearEndBuildCalculateRampingCosts(const uint& maxDurationON,
-                                              const std::array<uint, HOURS_PER_YEAR>& ON_min,
-                                              const std::array<uint, HOURS_PER_YEAR>& ON_opt,
+                                              const std::array<int, HOURS_PER_YEAR>& ON_min,
+                                              const std::array<int, HOURS_PER_YEAR>& ON_opt,
                                               const Data::ThermalCluster* currentCluster)
 {
     if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate
@@ -608,8 +608,8 @@ void State::calculateReserveParticipationCosts()
 
 void State::yearEndBuildThermalClusterCalculateStartupCosts(
   const uint& maxDurationON,
-  const std::array<uint, HOURS_PER_YEAR>& ON_min,
-  const std::array<uint, HOURS_PER_YEAR>& ON_opt,
+  const std::array<int, HOURS_PER_YEAR>& ON_min,
+  const std::array<int, HOURS_PER_YEAR>& ON_opt,
   const Data::ThermalCluster* currentCluster)
 {
     uint startHourForCurrentYear = study.runtime.rangeLimits.hour[Data::rangeBegin];
@@ -623,12 +623,12 @@ void State::yearEndBuildThermalClusterCalculateStartupCosts(
 
         // based on duration, if maxDurationON==0 we choose the mininum of ON clusters, otherwise,
         // the optimal number.
-        uint optimalCount = (maxDurationON == 0) ? ON_min[hour] : ON_opt[hour];
+        int optimalCount = (maxDurationON == 0) ? ON_min[hour] : ON_opt[hour];
 
         // NODU cannot be > unit count
-        if (optimalCount > currentCluster->unitCount)
+        if (optimalCount > static_cast<int>(currentCluster->unitCount))
         {
-            optimalCount = currentCluster->unitCount;
+            optimalCount = static_cast<int>(currentCluster->unitCount);
         }
 
         thermalClusterFixedCostForYear = currentCluster->fixedCost * optimalCount;
@@ -657,20 +657,20 @@ void State::yearEndBuildThermalClusterCalculateStartupCosts(
     }
 }
 
-std::array<uint, HOURS_PER_YEAR> State::computeEconomicallyOptimalNbClustersONforEachHour(
+std::array<int, HOURS_PER_YEAR> State::computeEconomicallyOptimalNbClustersONforEachHour(
   const uint& maxDurationON,
-  const std::array<uint, HOURS_PER_YEAR>& ON_min,
-  const std::array<uint, HOURS_PER_YEAR>& ON_max) const
+  const std::array<int, HOURS_PER_YEAR>& ON_min,
+  const std::array<int, HOURS_PER_YEAR>& ON_max) const
 {
     uint startHourForCurrentYear = study.runtime.rangeLimits.hour[Data::rangeBegin];
     uint endHourForCurrentYear = startHourForCurrentYear
                                  + study.runtime.rangeLimits.hour[Data::rangeCount];
 
     // Nombre de groupes économiquement optimal en fonctionnement à l'heure h
-    std::array<uint, HOURS_PER_YEAR> ON_opt;
+    std::array<int, HOURS_PER_YEAR> ON_opt;
 
-    uint nivmax; // valeur maximale de ON_opt[h] , progressivement réactualisée à la baisse
-    uint nivmin; // valeur minimale de ON_opt[h] , progressivement réactualisée à la hausse
+    int nivmax; // valeur maximale de ON_opt[h] , progressivement réactualisée à la baisse
+    int nivmin; // valeur minimale de ON_opt[h] , progressivement réactualisée à la hausse
 
     ON_opt[startHourForCurrentYear] = ON_min[startHourForCurrentYear];
 

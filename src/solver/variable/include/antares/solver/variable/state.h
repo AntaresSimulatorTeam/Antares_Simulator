@@ -40,7 +40,7 @@ public:
         //! Minimum power of all clusters for the current hour in the year
         std::vector<double> PMinOfClusters;
 
-        std::vector<unsigned int> unitCountLastHour;
+        std::vector<int> unitCountLastHour;
         std::vector<double> productionLastHour;
         std::vector<double> pminOfAGroup;
     };
@@ -121,20 +121,20 @@ private:
 
     void yearEndBuildThermalClusterCalculateStartupCosts(
       const uint& maxDurationON,
-      const std::array<uint, HOURS_PER_YEAR>& ON_min,
-      const std::array<uint, HOURS_PER_YEAR>& ON_opt,
+      const std::array<int, HOURS_PER_YEAR>& ON_min,
+      const std::array<int, HOURS_PER_YEAR>& ON_opt,
       const Data::ThermalCluster* currentCluster);
 
     void yearEndBuildCalculateRampingCosts(const uint& maxDurationON,
-                                           const std::array<uint, HOURS_PER_YEAR>& ON_min,
-                                           const std::array<uint, HOURS_PER_YEAR>& ON_opt,
+                                           const std::array<int, HOURS_PER_YEAR>& ON_min,
+                                           const std::array<int, HOURS_PER_YEAR>& ON_opt,
                                            const Data::ThermalCluster* currentCluster);
 
-    std::array<uint, HOURS_PER_YEAR> computeEconomicallyOptimalNbClustersONforEachHour(
+    std::array<int, HOURS_PER_YEAR> computeEconomicallyOptimalNbClustersONforEachHour(
 
       const uint& maxDurationON,
-      const std::array<uint, HOURS_PER_YEAR>& ON_min,
-      const std::array<uint, HOURS_PER_YEAR>& ON_max) const;
+      const std::array<int, HOURS_PER_YEAR>& ON_min,
+      const std::array<int, HOURS_PER_YEAR>& ON_max) const;
 
     /*!
     ** \brief Smooth the thermal units run after resolutions

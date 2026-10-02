@@ -45,7 +45,10 @@ void LinearProblemMatrix::Run()
     if (problemeHebdo_->OptimisationNotFastMode)
     {
         LinearProblemMatrixStartUpCosts(problemeHebdo_, false, builder_).Run();
-        LinearProblemMatrixRamping(problemeHebdo_, false, builder_).Run();
+        if (problemeHebdo_->rampingEnabled)
+        {
+            LinearProblemMatrixRamping(problemeHebdo_, false, builder_).Run();
+        }
         if (problemeHebdo_->allReserves)
         {
             LinearProblemMatrixReserves(problemeHebdo_, false, builder_).Run();
