@@ -85,10 +85,12 @@ port-types:
         - id: angle
 	    - id: to-area-bound
         - id: from-area-bound
+        - id: marginal_price_field
      area-connection:
         injection-to-balance: field_to_balance
 	    spillage-bound: to-area-bound
         unsupplied-energy-bound: from-area-bound
+        price: marginal_price_field
 ~~~
 
 **area-connection** is the name of the optional section to use. It is mandatory if you want to use such a port type to 
@@ -108,9 +110,22 @@ The nature of this contribution depends on the field :
 	
   - **unsupplied-energy-bound** : the linear expression is added to any linear expression already used to bound the unsupplied energy.
 
-These fields are independent : you don't have to define the 3 of them at the same time, you can define only one (as long as its value is an existing port in the same port type).
+  - **price** _(optional)_: unlike the other three fields, this one is not a linear expression contributed by the
+    component — it exposes, to the component, the area's marginal (dual) price for use in the component's own
+    expressions (e.g. via `sum_connections(<port>.<price-field>)`). This lets a GEMS component compute quantities
+    that depend on the legacy area's price, such as a profit output. The area's marginal price is a per-timestep
+    value, so any expression referencing it is time-varying, even across scenarios where the price happens to be
+    constant.
+    The value is the same as the price exported by the legacy [extra-outputs](../../architecture/legacy-extra-outputs.md)
+    for the area (the opposite of the dual value of the area's balance constraint, so a positive price means
+    that one more MW of demand costs money). **Duals are not available when the problem is solved as a MILP**
+    (`unit-commitment-mode = milp`): in that case the price is 0, as are the legacy marginal costs.
 
-These fields must be present in the **area-connection** section of a port type, even if they are not defined (= corresponding value is empty). 
+These first three fields are independent : you don't have to define all of them at the same time, you can define only one (as long as its value is an existing port in the same port type). The same holds for **price**, which can be defined independently of the others. Contrary to the three other
+fields, **price** is not read from the component's model: it only has to be one of the fields of the port type.
+Connecting an area to a port whose port type declares a **price** that is not among its `fields` is an error.
+
+**injection-to-balance**, **spillage-bound** and **unsupplied-energy-bound** must be present in the **area-connection** section of a port type, even if they are not defined (= corresponding value is empty). **price** is fully optional and may be omitted from the section entirely.
 
 #### Migrating existing YAML files (version 9.3.x -> 10.x)
 If you already have hybrid-study model libraries written with the previous syntax, update the `area-connection` and `thermal-capacity-connection` sections as follows. The format was changed in version 10.0.0 of Antares_Simulator.

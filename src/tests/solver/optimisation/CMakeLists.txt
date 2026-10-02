@@ -5,3 +5,9 @@ add_boost_test(tests-post-process
         LIBS
         Antares::tests::in-memory-study
         model_antares)
+
+add_boost_test(test-hebdo-area-price-provider
+        SRC test-hebdo-area-price-provider.cpp
+        LIBS
+        model_antares
+        Antares::linear-problem-mpsolver-impl)

@@ -1,6 +1,7 @@
 set(PROJ linear-problem-api)
 
 set(SRC_API
+        include/antares/optimisation/linear-problem-api/IAreaPriceProvider.h
         include/antares/optimisation/linear-problem-api/ILinearProblemData.h
         include/antares/optimisation/linear-problem-api/IScenario.h
         include/antares/optimisation/linear-problem-api/hasBounds.h
