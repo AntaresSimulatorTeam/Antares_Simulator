@@ -148,9 +148,9 @@ Inheritance diagram for Antares::Expressions::Visitors::EvalVisitor:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3f3ab30501a50771424c9fae1a4dad6a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitor.html#a3f3ab30501a50771424c9fae1a4dad6a">EvalVisitor</a> (const <a class="el" href="classAntares_1_1LinearProblem_1_1OptimEntityContainer.html">LinearProblem::OptimEntityContainer</a> &amp;optimContainer, const <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html">LinearProblem::Api::FillContext</a> &amp;fillContext, const <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a> &amp;component, const <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblemData.html">LinearProblem::Api::ILinearProblemData</a> *data, const <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html">LinearProblem::Api::IScenario</a> &amp;scenario)</td></tr>
-<tr class="memdesc:a3f3ab30501a50771424c9fae1a4dad6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an evaluation visitor with the specified context.  <a href="classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitor.html#a3f3ab30501a50771424c9fae1a4dad6a">More...</a><br /></td></tr>
-<tr class="separator:a3f3ab30501a50771424c9fae1a4dad6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0bf626c916846449a2e1d2fffb3924b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitor.html#aa0bf626c916846449a2e1d2fffb3924b">EvalVisitor</a> (const <a class="el" href="classAntares_1_1LinearProblem_1_1OptimEntityContainer.html">LinearProblem::OptimEntityContainer</a> &amp;optimContainer, const <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html">LinearProblem::Api::FillContext</a> &amp;fillContext, const <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a> &amp;component, const <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblemData.html">LinearProblem::Api::ILinearProblemData</a> *data, const <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html">LinearProblem::Api::IScenario</a> &amp;scenario, const <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IAreaPriceProvider.html">LinearProblem::Api::IAreaPriceProvider</a> *areaPriceProvider=nullptr)</td></tr>
+<tr class="memdesc:aa0bf626c916846449a2e1d2fffb3924b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an evaluation visitor with the specified context.  <a href="classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitor.html#aa0bf626c916846449a2e1d2fffb3924b">More...</a><br /></td></tr>
+<tr class="separator:aa0bf626c916846449a2e1d2fffb3924b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5d5e66923473c4a0797e502057c7dba"><td class="memItemLeft" align="right" valign="top"><a id="aa5d5e66923473c4a0797e502057c7dba"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const override</td></tr>
 <tr class="separator:aa5d5e66923473c4a0797e502057c7dba"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,8 +229,8 @@ std::vector&lt; <a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1E
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a visitor for evaluating expressions within a given context. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a3f3ab30501a50771424c9fae1a4dad6a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f3ab30501a50771424c9fae1a4dad6a">&#9670;&nbsp;</a></span>EvalVisitor()</h2>
+<a id="aa0bf626c916846449a2e1d2fffb3924b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0bf626c916846449a2e1d2fffb3924b">&#9670;&nbsp;</a></span>EvalVisitor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -266,7 +266,13 @@ std::vector&lt; <a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1E
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html">LinearProblem::Api::IScenario</a> &amp;&#160;</td>
-          <td class="paramname"><em>scenario</em>&#160;</td>
+          <td class="paramname"><em>scenario</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classAntares_1_1LinearProblem_1_1Api_1_1IAreaPriceProvider.html">LinearProblem::Api::IAreaPriceProvider</a> *&#160;</td>
+          <td class="paramname"><em>areaPriceProvider</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>

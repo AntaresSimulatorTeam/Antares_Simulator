@@ -3,6 +3,7 @@ var namespaceAntares_1_1LinearProblem_1_1Api =
     [ "IHasBounds", "classAntares_1_1LinearProblem_1_1Api_1_1IHasBounds.html", "classAntares_1_1LinearProblem_1_1Api_1_1IHasBounds" ],
     [ "IHasName", "classAntares_1_1LinearProblem_1_1Api_1_1IHasName.html", "classAntares_1_1LinearProblem_1_1Api_1_1IHasName" ],
     [ "IHasStatus", "classAntares_1_1LinearProblem_1_1Api_1_1IHasStatus.html", "classAntares_1_1LinearProblem_1_1Api_1_1IHasStatus" ],
+    [ "IAreaPriceProvider", "classAntares_1_1LinearProblem_1_1Api_1_1IAreaPriceProvider.html", "classAntares_1_1LinearProblem_1_1Api_1_1IAreaPriceProvider" ],
     [ "FillContext", "classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html", "classAntares_1_1LinearProblem_1_1Api_1_1FillContext" ],
     [ "ILinearProblemData", "classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblemData.html", "classAntares_1_1LinearProblem_1_1Api_1_1ILinearProblemData" ],
     [ "IScenario", "classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html", "classAntares_1_1LinearProblem_1_1Api_1_1IScenario" ],

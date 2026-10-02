@@ -2,6 +2,7 @@ var classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult =
 [
     [ "EvaluationResult", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#aa16e7bc2542a2262c79abe9b67cdd9ea", null ],
     [ "EvaluationResult", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a72d6614909093cab385e2d6f2c73f2d8", null ],
+    [ "EvaluationResult", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#aca5198cda8a8ad6be23b2126c1f5f96d", null ],
     [ "alltimeSum", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a5ecbfa28369edec7e3595356666fa0b0", null ],
     [ "evaluateBinaryOperation", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a79dc705acc09f05f7bdea74a285a2fdc", null ],
     [ "evaluateUnaryOperation", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#aace982e14e563322466d7f743ffd3b66", null ],

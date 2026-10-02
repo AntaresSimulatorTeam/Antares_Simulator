@@ -1,5 +1,15 @@
 var NAVTREEINDEX23 =
 {
+"classHydroReleaseCapacityThresholds.html#a4c9515a7d710a763b9bbda0449aac4a2":[9,0,160,0],
+"classHydroReleaseCapacityThresholds.html#ab912c9d9dc27c0f38623502e24f90edb":[9,0,160,1],
+"classHydroReleaseMaxReserve.html":[9,0,161],
+"classHydroReleaseMaxReserve.html#a8d9e98d6f3d2a34bf31fc4ce4ce0a26a":[9,0,161,1],
+"classHydroReleaseMaxReserve.html#aef373dec75187dac84110ea7b5536a04":[9,0,161,0],
+"classHydroReserveParticipation.html":[9,0,162],
+"classHydroReserveParticipation.html#a2329d79f8ec37f926b5b964ada29562b":[9,0,162,1],
+"classHydroReserveParticipation.html#a4c92bd879fe576fb2c790fa760c4ecc2":[9,0,162,0],
+"classHydroStoreCapacityThresholds.html":[9,0,163],
+"classHydroStoreCapacityThresholds.html#a8fcccf92d9af45d61be9340e1aae2b61":[9,0,163,1],
 "classHydroStoreCapacityThresholds.html#abb72ff7f318542bcc226a5ff4cadc800":[9,0,163,0],
 "classHydroStoreMaxReserve.html":[9,0,164],
 "classHydroStoreMaxReserve.html#a0164892a60262cc895aba32b8c6e29f5":[9,0,164,1],
@@ -239,15 +249,5 @@ var NAVTREEINDEX23 =
 "classOneProblemWithReservesOneArea.html":[9,0,233],
 "classOneProblemWithReservesOneArea.html#a31b42b5ddf43fdce9972743ac4a82c2c":[9,0,233,4],
 "classOneProblemWithReservesOneArea.html#a3f65f2dbbad0a2966f4e7274993b7280":[9,0,233,0],
-"classOneProblemWithReservesOneArea.html#a542fb63676da3433f1c786a203b51305":[9,0,233,5],
-"classOneProblemWithReservesOneArea.html#a7f42ee286a12bb8f64114b0ca4329a16":[9,0,233,6],
-"classOneProblemWithReservesOneArea.html#a8fef32a02e2f50d2ca33d50d65c5089a":[9,0,233,7],
-"classOneProblemWithReservesOneArea.html#a95bcf6397108fc450dde089abe88623e":[9,0,233,3],
-"classOneProblemWithReservesOneArea.html#af13acb46f49e1fca9e87cf06ff128183":[9,0,233,1],
-"classOneProblemWithReservesOneArea.html#af439f0dc0aae74f091930521eae8d4cf":[9,0,233,2],
-"classOneProblemWithReservesOneAreaWithLogger.html":[9,0,234],
-"classOneProblemWithoutReservesOneArea.html":[9,0,231],
-"classOneProblemWithoutReservesOneArea.html#a36b375ce3b34fcc0f7c3790fb284e9bc":[9,0,231,0],
-"classOneProblemWithoutReservesOneArea.html#aa15abc2e9ac0edad13d57ad23683b1ef":[9,0,231,2],
-"classOneProblemWithoutReservesOneArea.html#aeebe7aec4f851417898477d6ae6edbd6":[9,0,231,1]
+"classOneProblemWithReservesOneArea.html#a542fb63676da3433f1c786a203b51305":[9,0,233,5]
 };

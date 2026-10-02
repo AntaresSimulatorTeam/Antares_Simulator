@@ -476,6 +476,9 @@ var hierarchy =
       [ "Antares::multiple_columns__dumper< T, ReadWriteT, PredicateT >", "classAntares_1_1multiple__columns____dumper.html", null ],
       [ "Antares::one_column__dumper< T, ReadWriteT, PredicateT >", "classAntares_1_1one__column____dumper.html", null ]
     ] ],
+    [ "Antares::LinearProblem::Api::IAreaPriceProvider", "classAntares_1_1LinearProblem_1_1Api_1_1IAreaPriceProvider.html", [
+      [ "Antares::Optimization::HebdoAreaPriceProvider", "classAntares_1_1Optimization_1_1HebdoAreaPriceProvider.html", null ]
+    ] ],
     [ "Antares::IO::Outputs::IColumn", "classAntares_1_1IO_1_1Outputs_1_1IColumn.html", [
       [ "Antares::IO::Outputs::TypedColumn< double >", "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html", null ],
       [ "Antares::IO::Outputs::TypedColumn< std::string >", "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html", null ],

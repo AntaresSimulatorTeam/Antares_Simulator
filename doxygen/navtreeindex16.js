@@ -1,5 +1,15 @@
 var NAVTREEINDEX16 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#a7d90f4cba9fc95957b4c653680f47117":[9,0,0,12,7,63,16],
+"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#ac1e014d2de9184db2ce2e3d45aa2fafc":[9,0,0,12,7,63,8],
+"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#ac329dec2d970a8f203be47f5e3b65885":[9,0,0,12,7,63,5],
+"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#acbebd86d74e68ef469742e63385ade7c":[9,0,0,12,7,63,3],
+"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#ad603fc24d59c893ba4e90ef930cce96f":[9,0,0,12,7,63,13],
+"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#ae2aca29028eb0f59a5fd80df96b92f32":[9,0,0,12,7,63,11],
+"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#aec0c82b48d9670836c7dd4531baec482":[9,0,0,12,7,63,12],
+"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#aed8679ca377ada4fb55d8fa98f440c46":[9,0,0,12,7,63,1],
+"classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html":[9,0,0,12,7,17],
+"classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html#a46e13e695fc16926367850bb069e5dfc":[9,0,0,12,7,17,0],
 "classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html#a596a0805c0a29cb5659116f0535b50ed":[9,0,0,12,7,17,2],
 "classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html#a82345ff90d6a20342117f684b3b8aa9d":[9,0,0,12,7,17,1],
 "classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationSingleYear.html":[9,0,0,12,7,16],
@@ -239,15 +249,5 @@ var NAVTREEINDEX16 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost.html#aab13fc9a6198e3ab02a4a25bc894fcc1":[9,0,0,12,7,5,1,10,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost.html#ac20164456e47f1d256a3d226a0972784":[9,0,0,12,7,5,1,10,7],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost.html#ac25531788156920bce214fc926cf4d01":[9,0,0,12,7,5,1,10,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost.html#acbcda948c8858253261c08cdbf6b8b95":[9,0,0,12,7,5,1,10,9],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost.html#ae21857bce03bf397997cd18b70179f16":[9,0,0,12,7,5,1,10,11],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost.html#aed28f7e34297d008dc32c71d57671764":[9,0,0,12,7,5,1,10,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost.html#af269068ce88206f8364e896312298e2a":[9,0,0,12,7,5,1,10,12],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html":[9,0,0,12,7,5,1,11],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html#a1022ad86cb25c5bc56040983def39213":[9,0,0,12,7,5,1,11,9],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html#a18e3de917a20e9503ff842a5f142ceae":[9,0,0,12,7,5,1,11,15],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html#a1d9cf931bec465f79c428f62f2042061":[9,0,0,12,7,5,1,11,12],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html#a20409efd0e3cc5cdcade26ef2f969016":[9,0,0,12,7,5,1,11,8],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html#a307f8905a2b263e448085fd4599ddd23":[9,0,0,12,7,5,1,11,16],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html#a45776ceef751766c65ae08fc0ec02316":[9,0,0,12,7,5,1,11,4]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost.html#acbcda948c8858253261c08cdbf6b8b95":[9,0,0,12,7,5,1,10,9]
 };
