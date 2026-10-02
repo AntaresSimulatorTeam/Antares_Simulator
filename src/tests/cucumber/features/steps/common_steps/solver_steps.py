@@ -368,24 +368,10 @@ def run_simulation(context):
     print(f"Running command: {command}")
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
-    try:
-        if out:
-            context.logs_out = out.decode('utf-8')
-        else:
-            context.logs_out = ""
-        if err:
-            context.logs_err = err.decode('utf-8')
-        else:
-            context.logs_err = ""
-    except UnicodeDecodeError: # On windows, process communication can return another format
-        if out:
-            context.logs_out = out.decode('cp1252')
-        else:
-            context.logs_out = ""
-        if err:
-            context.logs_err = err.decode('cp1252')
-        else:
-            context.logs_err = ""
+    # Solver warnings can contain bytes from a platform-specific encoding.
+    # Keep the logs usable without making the scenario fail during decoding.
+    context.logs_out = out.decode("utf-8", errors="replace") if out else ""
+    context.logs_err = err.decode("utf-8", errors="replace") if err else ""
     context.return_code = process.returncode
     try:
         context.output_path = parse_output_folder_from_logs(out)

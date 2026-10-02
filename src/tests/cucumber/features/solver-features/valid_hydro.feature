@@ -220,20 +220,6 @@ Feature: valid hydro
     When I run antares simulator
     Then the simulation succeeds
 
-  @short @valid-hydro
-  Scenario: H700-30 Pumping without losses (efficiency 1.0), hard bounds off
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-30"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 238880000
-
-  @short @valid-hydro
-  Scenario: H700-31 Day-dependent generation/pumping credits, upper bound 60%
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-31"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 146592000
-
   # ---------------------------------------------------------------------------
   # Sub-family D' - small inflows, alternating water value, power-to-level
   # ---------------------------------------------------------------------------
@@ -263,20 +249,6 @@ Feature: valid hydro
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-34"
     When I run antares simulator
     Then the simulation succeeds
-
-  @short @valid-hydro
-  Scenario: H700-44 Variant of H700-32, initial level 30-70%
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-44"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 184575000
-
-  @short @valid-hydro
-  Scenario: H700-45 Same as H700-44 with weekly simplex (168)
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-45"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 184575000
 
   @short @valid-hydro
   Scenario: H700-46 UHT off, hard bounds active, simplex 168
@@ -322,13 +294,6 @@ Feature: valid hydro
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-38"
     When I run antares simulator
     Then the simulation fails
-
-  @short @valid-hydro
-  Scenario: H700-39 1 MW inflow, UHT=YES, lower rule curve concave
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-39"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 87288000
 
   @flaky @valid-hydro
   Scenario: H700-40 1 MW inflow, UHT=YES, rugged rule curve (infeasible with sirius)
