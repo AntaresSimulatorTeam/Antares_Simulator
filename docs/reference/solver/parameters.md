@@ -585,13 +585,15 @@ These parameters are listed under the `[adequacy patch]` section in the `.ini` f
 
 ---
 #### price-taking-order
-[//]: # (TODO: document this parameter)
-_**This section is under construction**_  
 
-- **Expected value:**
+- **Expected value:** `DENS` or `Load`
 - **Required:** **yes**
-- **Default value:**
-- **Usage:** Price taking order (DENS / Load)
+- **Default value:** `DENS`
+- **Usage:** Defines the Price Taking Orders (PTO) used in the CSR quadratic objective function.
+  - `DENS`: PTOs are the Domestic Energy Not Served of each area.
+  - `Load`: PTOs are the load of each area.
+
+> **Note:** In hybrid mode (when GEMS components are present), only `DENS` is supported. Using `Load` in hybrid mode will result in an error at startup.
 
 ---
 #### include-hurdle-cost-csr
