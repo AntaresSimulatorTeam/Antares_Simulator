@@ -16,8 +16,7 @@ void PowerOutputVariationGroup::BuildConstraints()
                                                               ->PaliersThermiquesDuPays[pays];
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
-            if (problemeHebdo_->rampingEnabled
-                && PaliersThermiquesDuPays.rampingEnabled[index])
+            if (problemeHebdo_->rampingEnabled && PaliersThermiquesDuPays.rampingEnabled[index])
             {
                 PowerOutputVariationIncrease powerOutputVariationIncrease(builder_, data);
                 PowerOutputVariationDecrease powerOutputVariationDecrease(builder_, data);

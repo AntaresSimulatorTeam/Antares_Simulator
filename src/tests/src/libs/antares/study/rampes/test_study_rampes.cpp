@@ -202,12 +202,12 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_load_cluster_invalid_ramp_parameters,
     BOOST_CHECK_EQUAL(cluster->ramping->checkValidity(areaA, "thermal_1"), false);
     BOOST_CHECK_EQUAL(getErrors().size(), 4);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
-    BOOST_CHECK(getErrors().contains(
-      "Thermal cluster: A/thermal_1: The maximum upward power ramping rate "
-      "must be non-negative. "));
-    BOOST_CHECK(getErrors().contains(
-      "Thermal cluster: A/thermal_1: The maximum downward power ramping rate "
-      "must be non-negative. "));
+    BOOST_CHECK(
+      getErrors().contains("Thermal cluster: A/thermal_1: The maximum upward power ramping rate "
+                           "must be non-negative. "));
+    BOOST_CHECK(
+      getErrors().contains("Thermal cluster: A/thermal_1: The maximum downward power ramping rate "
+                           "must be non-negative. "));
     BOOST_CHECK(
       getErrors().contains("Thermal cluster: A/thermal_1: The ramping power increase cost must be "
                            "positive or null. "));
