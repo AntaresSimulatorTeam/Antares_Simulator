@@ -1,6 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <antares/array/matrix-io.h>
 #include <antares/study/parts/hydro/hydrorulecurves.h>
 
 namespace fs = std::filesystem;
@@ -48,13 +49,11 @@ private:
         Matrix<double> standardRuleCurves;
         standardRuleCurves.reset(3L, DAYS_PER_YEAR);
 
-        Matrix<>::BufferType fileContent;
-
-        bool ret = standardRuleCurves.loadFromCSVFile(filePath.string(),
-                                                      3,
-                                                      DAYS_PER_YEAR,
-                                                      Matrix<>::optFixedSize,
-                                                      &fileContent);
+        bool ret = MatrixIO::load(standardRuleCurves,
+                                  filePath.string(),
+                                  3,
+                                  DAYS_PER_YEAR,
+                                  Matrix<>::optFixedSize);
 
         min_.timeSeries.reset(1U, DAYS_PER_YEAR);
         min_.timeSeries.pasteToColumn(0, standardRuleCurves[RuleCurves::minimum]);
@@ -76,19 +75,14 @@ private:
     bool load() final
     {
         const fs::path path = baseFolder_ / "series" / areaID_;
-        Matrix<>::BufferType fileContent;
-
         bool ret = true;
 
         fs::path filePath = path / "maxDailyReservoirLevels.txt";
-        ret = max_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent)
-              && ret;
+        ret = MatrixIO::load(max_.timeSeries, filePath.string(), 1, DAYS_PER_YEAR, 0) && ret;
         filePath = path / "minDailyReservoirLevels.txt";
-        ret = min_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent)
-              && ret;
+        ret = MatrixIO::load(min_.timeSeries, filePath.string(), 1, DAYS_PER_YEAR, 0) && ret;
         filePath = path / "avgDailyReservoirLevels.txt";
-        ret = avg_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent)
-              && ret;
+        ret = MatrixIO::load(avg_.timeSeries, filePath.string(), 1, DAYS_PER_YEAR, 0) && ret;
 
         return ret;
     }

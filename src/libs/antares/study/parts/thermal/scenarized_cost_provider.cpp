@@ -17,7 +17,7 @@ ScenarizedCostProvider::ScenarizedCostProvider(const ThermalCluster& cluster):
 
 void ScenarizedCostProvider::ComputeProductionCostTS()
 {
-    if (cluster.modulation.width == 0)
+    if (cluster.modulation.width() == 0)
     {
         return;
     }
@@ -37,8 +37,8 @@ void ScenarizedCostProvider::ComputeProductionCostTS()
 
 void ScenarizedCostProvider::resizeCostTS()
 {
-    const unsigned int fuelCostWidth = cluster.ecoInput.fuelcost.width;
-    const unsigned int co2CostWidth = cluster.ecoInput.co2cost.width;
+    const unsigned int fuelCostWidth = cluster.ecoInput.fuelcost.width();
+    const unsigned int co2CostWidth = cluster.ecoInput.co2cost.width();
     const unsigned int tsCount = std::max(fuelCostWidth, co2CostWidth);
 
     costsTimeSeries.resize(tsCount, CostsTimeSeries());
@@ -65,8 +65,8 @@ double computeMarketBidCost(double fuelCost,
 
 void ScenarizedCostProvider::ComputeMarketBidTS()
 {
-    const unsigned int fuelCostWidth = cluster.ecoInput.fuelcost.width;
-    const unsigned int co2CostWidth = cluster.ecoInput.co2cost.width;
+    const unsigned int fuelCostWidth = cluster.ecoInput.fuelcost.width();
+    const unsigned int co2CostWidth = cluster.ecoInput.co2cost.width();
 
     double co2EmissionFactor = cluster.emissions.factors[Pollutant::CO2];
 

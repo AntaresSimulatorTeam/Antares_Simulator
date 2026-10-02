@@ -10,19 +10,15 @@ using namespace Yuni;
 namespace Antares::Solver::Variable::R::AllYears
 {
 RawData::RawData():
-    hourly(nullptr),
     allYears(0.)
 {
 }
 
-RawData::~RawData()
-{
-    Antares::Memory::Release(hourly);
-}
+RawData::~RawData() = default;
 
 void RawData::initializeFromStudy(const Data::Study& study)
 {
-    Antares::Memory::Allocate<double>(hourly, HOURS_PER_YEAR);
+    hourly.resize(HOURS_PER_YEAR);
     nbYearsCapacity = study.runtime.rangeLimits.year[Data::rangeEnd] + 1;
     year.resize(nbYearsCapacity);
 }
@@ -30,7 +26,7 @@ void RawData::initializeFromStudy(const Data::Study& study)
 void RawData::reset()
 {
     // Reset
-    Antares::Memory::Zero(HOURS_PER_YEAR, hourly);
+    std::fill(hourly.begin(), hourly.end(), 0.);
     (void)::memset(monthly, 0, sizeof(double) * MONTHS_PER_YEAR);
     (void)::memset(weekly, 0, sizeof(double) * WEEKS_PER_YEAR);
     (void)::memset(daily, 0, sizeof(double) * DAYS_PER_YEAR);

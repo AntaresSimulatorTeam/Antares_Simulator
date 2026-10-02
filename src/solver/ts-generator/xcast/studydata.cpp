@@ -22,7 +22,7 @@ void StudyData::prepareMatrix(Matrix<float>& m, const Matrix<float>& source) con
     m.resize(areaCount, areaCount);
     m.fillUnit();
 
-    for (uint x = 1; x < m.width; ++x)
+    for (uint x = 1; x < m.width(); ++x)
     {
         uint areaXindx = localareas[x]->index;
         auto& sourceX = source[areaXindx];

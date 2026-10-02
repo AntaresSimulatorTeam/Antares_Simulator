@@ -4,297 +4,101 @@
 #ifndef __ANTARES_LIBS_ARRAY_MATRIX_HXX__
 #define __ANTARES_LIBS_ARRAY_MATRIX_HXX__
 
+#include <algorithm>
 #include <cmath>
-#include <cstdlib>
+#include <type_traits>
 #include <utility>
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-
-#include <antares/io/statistics.h>
 #include <antares/logs/logs.h>
-
-#include "matrix-to-buffer.h"
-
-#define ANTARES_MATRIX_CSV_COMMA "\t;,"
-#define ANTARES_MATRIX_CSV_SEPARATORS "\t\r\n;,"
+#include <antares/utils/utils.h>
 
 namespace Antares
 {
-namespace // anonymous
-{
 template<class T>
-class MatrixData final
+Matrix<T>::Matrix() = default;
+
+template<class T>
+Matrix<T>::Matrix(const Matrix<T>&) = default;
+
+template<class T>
+Matrix<T>::Matrix(unsigned int w, unsigned int h):
+    width_(0),
+    height_(0)
 {
-public:
-    inline static void Init(T& data)
-    {
-        data = T();
-    }
-
-    template<class U>
-    inline static void Copy(T& data, const U& value)
-    {
-        data = static_cast<T>(value);
-    }
-
-    inline static void Copy(T&, const AnyString&)
-    {
-        // to avoid gcc warnings
-        // must never be called
-        logs.error() << "internal error: matrix data conversion";
-    }
-};
-
-template<uint ChunkSizeT, bool ExpandableT>
-class MatrixData<Yuni::CString<ChunkSizeT, ExpandableT>> final
-{
-public:
-    using StringT = Yuni::CString<ChunkSizeT, ExpandableT>;
-
-public:
-    inline static void Init(StringT& data)
-    {
-        data.clear();
-    }
-
-    template<class U>
-    inline static void Copy(StringT& data, const U& value)
-    {
-        // we must avoid stupid static cast (stupid in this case)
-        data = value;
-    }
-};
-
-template<class ReadWriteType>
-class MatrixStringConverter final
-{
-public:
-    enum
-    {
-        direct = 0
-    };
-
-public:
-    inline static bool Do(const AnyString& str, ReadWriteType& out)
-    {
-        return str.to(out);
-    }
-};
-
-template<>
-class MatrixStringConverter<double> final
-{
-public:
-    enum
-    {
-        direct = 0
-    };
-
-public:
-    inline static bool Do(const AnyString& str, double& out)
-    {
-        char* pend;
-        out = ::strtod(str.c_str(), &pend);
-        return (NULL != pend and '\0' == *pend);
-    }
-};
-
-template<>
-class MatrixStringConverter<float> final
-{
-public:
-    enum
-    {
-        direct = 0
-    };
-
-public:
-    inline static bool Do(const AnyString& str, float& out)
-    {
-        char* pend;
-        out = static_cast<float>(::strtod(str.c_str(), &pend));
-        return (NULL != pend and '\0' == *pend);
-    }
-};
-
-template<uint ChunkSizeT, bool ExpandableT>
-class MatrixStringConverter<Yuni::CString<ChunkSizeT, ExpandableT>> final
-{
-public:
-    enum
-    {
-        direct = 1,
-    };
-
-    using StringT = Yuni::CString<ChunkSizeT, ExpandableT>;
-
-public:
-    inline static bool Do(const AnyString& str, StringT& out)
-    {
-        out.assign(str);
-        return true;
-    }
-};
-
-template<unsigned A, bool B>
-Yuni::CString<A, B> trunc(Yuni::CString<A, B>& str)
-{
-    return str;
+    resize(w, h);
 }
 
 template<class T>
-static T trunc(T& in)
+unsigned int Matrix<T>::width() const noexcept
 {
-    return static_cast<T>(std::trunc(in));
+    return width_;
 }
-
-template<class T, class P>
-class MatrixRound final
-{
-public:
-    static T Value(P value)
-    {
-        return static_cast<T>(trunc(value));
-    }
-};
 
 template<class T>
-class MatrixRound<T, double> final
+unsigned int Matrix<T>::height() const noexcept
 {
-public:
-    static T Value(double value)
-    {
-        return static_cast<T>(value);
-    }
-};
+    return height_;
+}
 
 template<class T>
-class MatrixRound<T, float> final
+typename Matrix<T>::ColumnType& Matrix<T>::mutableColumn(unsigned int column) const
 {
-public:
-    static T Value(float value)
-    {
-        return static_cast<T>(value);
-    }
-};
-} // anonymous namespace
-
-template<class T, class ReadWriteT>
-inline Matrix<T, ReadWriteT>::Matrix():
-    width(0),
-    height(0),
-    entry(nullptr)
-{
+    assert(column < width_);
+    return columns_[column];
 }
 
-template<class T, class ReadWriteT>
-Matrix<T, ReadWriteT>::Matrix(uint w, uint h):
-    width(w),
-    height(h)
+template<class T>
+Matrix<T>::Matrix(Matrix<T>&& rhs) noexcept:
+    width_(rhs.width_),
+    height_(rhs.height_),
+    columns_(std::move(rhs.columns_))
 {
-    if (0 == width or 0 == height)
-    {
-        entry = nullptr;
-    }
-    else
-    {
-        entry = new typename Antares::Memory::Stored<T>::Type[w + 1];
-        entry[w] = nullptr;
-
-        for (uint i = 0; i != w; ++i)
-        {
-            Antares::Memory::Allocate<T>(entry[i], h);
-        }
-    }
+    rhs.width_ = 0;
+    rhs.height_ = 0;
 }
 
-template<class T, class ReadWriteT>
-Matrix<T, ReadWriteT>::Matrix(const Matrix<T, ReadWriteT>& rhs):
-    width(rhs.width),
-    height(rhs.height)
-{
-    if (0 == width or 0 == height)
-    {
-        entry = nullptr;
-        width = 0;
-        height = 0;
-    }
-    else
-    {
-        entry = new typename Antares::Memory::Stored<T>::Type[width + 1];
-        entry[width] = nullptr;
-
-        for (uint i = 0; i != rhs.width; ++i)
-        {
-            Antares::Memory::Allocate<T>(entry[i], height);
-            memcpy(entry[i], rhs.entry[i], sizeof(T) * height);
-        }
-    }
-}
-
-template<class T, class ReadWriteT>
-Matrix<T, ReadWriteT>::Matrix(Matrix<T, ReadWriteT>&& rhs) noexcept
-{
-    // use Matrix::operator=(Matrix&& rhs)
-    *this = std::move(rhs);
-}
-
-template<class T, class ReadWriteT>
-template<class U, class V>
-Matrix<T, ReadWriteT>::Matrix(const Matrix<U, V>& rhs):
-    width(0),
-    height(0),
-    entry(nullptr)
+template<class T>
+template<class U>
+Matrix<T>::Matrix(const Matrix<U>& rhs):
+    width_(0),
+    height_(0),
+    columns_()
 {
     copyFrom(rhs);
 }
 
-template<class T, class ReadWriteT>
-Matrix<T, ReadWriteT>::~Matrix()
+template<class T>
+inline void Matrix<T>::zero()
 {
-    if (entry)
+    for (unsigned int i = 0; i != width_; ++i)
     {
-        for (uint i = 0; i != width; ++i)
-        {
-            Antares::Memory::Release(entry[i]);
-        }
-        delete[] entry;
+        ColumnType& column = columns_[i];
+        std::fill(column.begin(), column.end(), T{});
     }
 }
 
-template<class T, class ReadWriteT>
-inline void Matrix<T, ReadWriteT>::zero()
+template<class T>
+void Matrix<T>::averageTimeseries(bool roundValues)
 {
-    for (uint i = 0; i != width; ++i)
+    if (width_ > 1)
     {
-        ColumnType& column = entry[i];
-        (void)::memset((void*)column, 0, sizeof(T) * height);
-    }
-}
-
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::averageTimeseries(bool roundValues)
-{
-    if (width > 1)
-    {
-        ColumnType& first = entry[0];
+        ColumnType& first = columns_[0];
 
         // add the values of each timeseries to the first one
-        for (uint i = 1; i != width; ++i)
+        for (unsigned int i = 1; i != width_; ++i)
         {
-            ColumnType& column = entry[i];
-            for (uint j = 0; j != height; ++j)
+            ColumnType& column = columns_[i];
+            for (unsigned int j = 0; j != height_; ++j)
             {
                 first[j] += column[j];
             }
         }
 
         // average
-        double coeff = 1. / width;
+        double coeff = 1. / width_;
         if (roundValues)
         {
-            for (uint j = 0; j != height; ++j)
+            for (unsigned int j = 0; j != height_; ++j)
             {
                 const double d = first[j] * coeff;
                 first[j] = std::round(d);
@@ -302,186 +106,126 @@ void Matrix<T, ReadWriteT>::averageTimeseries(bool roundValues)
         }
         else
         {
-            for (uint j = 0; j != height; ++j)
+            for (unsigned int j = 0; j != height_; ++j)
             {
                 first[j] *= coeff;
             }
         }
 
         // Release all timeseries no longer needed
-        for (uint i = 1; i != width; ++i)
+        for (unsigned int i = 1; i != width_; ++i)
         {
-            Antares::Memory::Release(entry[i]);
+            columns_[i].clear();
         }
-        // reset the width to 1
-        width = 1;
+        columns_.resize(1);
+        // reset the width_ to 1
+        width_ = 1;
     }
 }
 
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::fill(const T& v)
+template<class T>
+void Matrix<T>::fill(const T& v)
 {
-    for (uint i = 0; i != width; ++i)
+    for (auto& column: columns_)
     {
-        ColumnType& column = entry[i];
-
-        for (uint j = 0; j != height; ++j)
-        {
-            column[j] = v;
-        }
+        std::fill(column.begin(), column.end(), v);
     }
 }
 
-template<class T, class ReadWriteT>
-inline void Matrix<T, ReadWriteT>::fillUnit()
+template<class T>
+void Matrix<T>::fillUnit()
 {
-    for (uint i = 0; i != width; ++i)
+    for (auto& column: columns_)
     {
-        ColumnType& column = entry[i];
+        std::fill(column.begin(), column.end(), T{});
+    }
 
-        (void)::memset((void*)column, 0, sizeof(T) * height);
-
-        column[i] = T(1);
+    const auto diagonalSize = std::min(width_, height_);
+    for (unsigned int i = 0; i != diagonalSize; ++i)
+    {
+        columns_[i][i] = T(1);
     }
 }
 
-template<class T, class ReadWriteT>
-inline void Matrix<T, ReadWriteT>::reset(uint w, uint h)
+template<class T>
+inline void Matrix<T>::reset(unsigned int w, unsigned int h)
 {
     resize(w, h);
     zero();
 }
 
-template<class T, class ReadWriteT>
-inline bool Matrix<T, ReadWriteT>::loadFromCSVFile(const AnyString& filename)
-{
-    return loadFromCSVFile(filename, 1, 0, optNoWarnIfEmpty | optNeverFails | optQuiet);
-}
-
-template<class T, class ReadWriteT>
-inline bool Matrix<T, ReadWriteT>::loadFromCSVFile(const AnyString& filename,
-                                                   uint minWidth,
-                                                   uint maxHeight,
-                                                   BufferType* buffer)
-{
-    return loadFromCSVFile(filename, minWidth, maxHeight, optNone, buffer);
-}
-
-template<class T, class ReadWriteT>
-bool Matrix<T, ReadWriteT>::loadFromCSVFile(const AnyString& filename,
-                                            uint minWidth,
-                                            uint maxHeight,
-                                            uint options,
-                                            BufferType* buffer)
-{
-    assert(not filename.empty() and "Matrix<>:: loadFromCSVFile: empty filename");
-    return internalLoadCSVFile(filename, minWidth, maxHeight, options, buffer);
-}
-
-template<class T, class ReadWriteT>
-bool Matrix<T, ReadWriteT>::saveToCSVFile(const AnyString& filename,
-                                          uint precision,
-                                          bool print_dimensions,
-                                          bool saveEvenIfAllZero) const
-{
-    PredicateIdentity predicate;
-    return internalSaveCSVFile(filename, precision, print_dimensions, predicate, saveEvenIfAllZero);
-}
-
-template<class T, class ReadWriteT>
-template<class PredicateT>
-bool Matrix<T, ReadWriteT>::saveToCSVFile(const AnyString& filename,
-                                          uint precision,
-                                          bool print_dimensions,
-                                          PredicateT& predicate,
-                                          bool saveEvenIfAllZero) const
-{
-    return internalSaveCSVFile(filename, precision, print_dimensions, predicate, saveEvenIfAllZero);
-}
-
-template<class T, class ReadWriteT>
+template<class T>
 template<class U>
-void Matrix<T, ReadWriteT>::pasteToColumn(uint x, const U* data)
+void Matrix<T>::pasteToColumn(unsigned int x, const U* data)
 {
-    assert(x < width and "Invalid column index (bigger than `this->width`)");
-    ColumnType& column = entry[x];
+    assert(x < width_ and "Invalid column index (bigger than `this->width_`)");
+    ColumnType& column = columns_[x];
 
     // if the two types are strictly equal, we can perform some major
     // optimisations
-    if (Yuni::Static::Type::StrictlyEqual<T, U>::Yes)
+    if (std::is_same_v<T, U>)
     {
-        (void)::memcpy(column, data, sizeof(T) * height);
+        std::copy(data, data + height_, column.begin());
     }
     else
     {
         // ...otherwise we have to copy each item by hand in any cases
-        for (uint y = 0; y != height; ++y)
+        for (unsigned int y = 0; y != height_; ++y)
         {
             column[y] = (T)data[y];
         }
     }
 }
 
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::fillColumn(uint x, const T& value)
+template<class T>
+void Matrix<T>::fillColumn(unsigned int x, const T& value)
 {
-    assert(x < width and "Invalid column index (bigger than `this->width`)");
-    ColumnType& column = entry[x];
+    assert(x < width_ and "Invalid column index (bigger than `this->width_`)");
+    ColumnType& column = columns_[x];
 
-    for (uint y = 0; y != height; ++y)
-    {
-        column[y] = value;
-    }
+    std::fill(column.begin(), column.end(), value);
 }
 
-template<class T, class ReadWriteT>
-inline void Matrix<T, ReadWriteT>::columnToZero(uint x)
+template<class T>
+inline void Matrix<T>::columnToZero(unsigned int x)
 {
-    assert(x < width and "Invalid column index (bigger than `this->width`)");
-    ColumnType& column = entry[x];
+    assert(x < width_ and "Invalid column index (bigger than `this->width_`)");
+    ColumnType& column = columns_[x];
 
-    (void)::memset((void*)column, 0, sizeof(T) * height);
+    std::fill(column.begin(), column.end(), T{});
 }
 
-template<class T, class ReadWriteT>
-inline bool Matrix<T, ReadWriteT>::empty() const
+template<class T>
+inline bool Matrix<T>::empty() const
 {
-    return (!width) or (!height);
+    return (!width_) or (!height_);
 }
 
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::clear()
+template<class T>
+void Matrix<T>::clear()
 {
-    if (entry)
-    {
-        for (uint i = 0; i != width; ++i)
-        {
-            Antares::Memory::Release(entry[i]);
-        }
-        delete[] entry;
-        entry = nullptr;
-    }
-    width = 0;
-    height = 0;
+    columns_.clear();
+    width_ = 0;
+    height_ = 0;
 }
 
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::reset()
+template<class T>
+void Matrix<T>::reset()
 {
     clear();
 }
 
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::resize(uint w, uint h)
+template<class T>
+void Matrix<T>::resize(unsigned int w, unsigned int h)
 {
     // Asserts
     // This limit is correlated with the maximal amount of years
     // See the routine GeneralData::fixBadValues() if some changes are needed
-    assert(w <= 50000 and "The new width seems a bit excessive");
-    assert(h <= 50000 and "The new height seems a bit excessive");
+    assert(w <= 50000 and "The new width_ seems a bit excessive");
+    assert(h <= 50000 and "The new height_ seems a bit excessive");
 
     // Checking if the matrix really needs to be resized
-    if (w != width or h != height)
+    if (w != width_ or h != height_)
     {
         if (!w or !h)
         {
@@ -489,666 +233,18 @@ void Matrix<T, ReadWriteT>::resize(uint w, uint h)
         }
         else
         {
-            if (entry)
-            {
-                for (uint i = 0; i != width; ++i)
-                {
-                    Antares::Memory::Release(entry[i]);
-                }
-                delete[] entry;
-            }
-
             // Assigning the new size
-            width = w;
-            height = h;
+            width_ = w;
+            height_ = h;
 
-            // Allocating the entry for the matrix
-            entry = new typename Antares::Memory::Stored<T>::Type[width + 1];
-            entry[width] = nullptr;
-
-            for (uint i = 0; i != w; ++i)
-            {
-                Antares::Memory::Allocate<T>(entry[i], height);
-            }
+            // Allocating the columns_ for the matrix
+            columns_.assign(w, ColumnType(h));
         }
     }
 }
 
-namespace // anonymous
-{
-static inline bool DetectEncoding(const AnyString& filename, const AnyString& data, size_t& offset)
-{
-    if (data.size() > 1)
-    {
-        // UTF-16 Big endian
-        if ((unsigned char)data[0] == 0xFE and ((unsigned char)data[1]) == 0xFF)
-        {
-            if (data.size() > 3 and !data[2] and !data[3])
-            {
-                logs.error() << '`' << filename
-                             << "`: UTF-32 Little Endian encoding detected. ASCII/UTF-8 required.";
-            }
-            else
-            {
-                logs.error() << '`' << filename
-                             << "`: UTF-16 Big Endian encoding detected. ASCII/UTF-8 required.";
-            }
-            return false;
-        }
-        // UTF-16 Little endian
-        if ((unsigned char)data[0] == 0xFF and ((unsigned char)data[1]) == 0xFE)
-        {
-            logs.error() << '`' << filename
-                         << "`: UTF-16 Little Endian encoding detected. ASCII/UTF-8 required.";
-            return false;
-        }
-        // UTF-8 Little endian
-        if ((unsigned char)data[0] == 0xEF and ((unsigned char)data[1]) == 0xBB and data.size() > 2
-            and ((unsigned char)data[2]) == 0xBF)
-        {
-            // Slipping the byte-order mark
-            offset = 3;
-        }
-        if (data.size() > 3)
-        {
-            if (!data[0] and !data[1] and ((unsigned char)data[2]) == 0xFE
-                and ((unsigned char)data[3]) == 0xFF)
-            {
-                logs.error() << '`' << filename
-                             << "`: UTF-32 Big Endian encoding detected. ASCII/UTF-8 required.";
-                return false;
-            }
-        }
-    }
-    return true;
-}
-} // anonymous namespace
-
-template<class T, class ReadWriteT>
-bool Matrix<T, ReadWriteT>::loadFromBuffer(const AnyString& filename,
-                                           BufferType& data,
-                                           uint minWidth,
-                                           uint maxHeight,
-                                           const int fixedSize,
-                                           uint options)
-{
-    using namespace Yuni;
-
-    logs.debug() << "  :: loading `" << filename << "`";
-
-    // Detecting BOM
-    // Antares currently only accepts ASCII and/or UTF-8 encodings.
-    size_t bom = 0;
-    if (not DetectEncoding(filename, data, bom))
-    {
-        // gp : dead code - can never be reached
-        reset((minWidth > 0 ? minWidth : 1), maxHeight);
-        return false;
-    }
-
-    uint offset = (uint)bom;
-    uint x = 0;
-
-    // Properly resizing the matrix
-    // Directly resizing the matrix when its size is well-known
-    if (fixedSize)
-    {
-        reset(minWidth, maxHeight);
-    }
-    else
-    {
-        // Autodetection of the number of lines
-        if (!maxHeight)
-        {
-            assert(not data.empty());
-            maxHeight = data.countChar('\n');
-            if (data.last() == '\n')
-            {
-                --maxHeight;
-            }
-            else
-            {
-                ++maxHeight;
-            }
-        }
-        // gp : dead code - can never be reached
-        // The first occurence of the carriage return
-        YString::Size max = data.find('\n');
-        if (max == BufferType::npos)
-        {
-            logs.error() << filename << ": At least one line-return must be available";
-            reset(minWidth, maxHeight);
-            return false;
-        }
-        offset = max + 1;
-        // remove all final trailing whitespaces
-        if (max > 0)
-        {
-            do
-            {
-                char c = data[max - 1];
-                if (c == '\r' or c == '\t' or c == ' ')
-                {
-                    if (!(--max))
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    break;
-                }
-            } while (true);
-        }
-
-        if (max > 7 /* ex: size:0x0 */ and data.startsWith("size:"))
-        {
-            CString<64, false> buffer;
-            buffer.assign(data.c_str(), max);
-            int x, y;
-#ifdef YUNI_OS_MSVC
-            sscanf_s(buffer.c_str(), "size:%dx%d", &x, &y);
-#else
-            sscanf(buffer.c_str(), "size:%dx%d", &x, &y);
-#endif
-            if (x < 1)
-            {
-                if (!(options & optQuiet))
-                {
-                    logs.warning() << '`' << filename << "`: Invalid header";
-                }
-                x = 1;
-            }
-            if (y < 1)
-            {
-                if (!(options & optQuiet))
-                {
-                    logs.warning() << '`' << filename << "`: Invalid header";
-                }
-                y = maxHeight;
-            }
-            maxHeight = y;
-            resize((uint)x, (uint)y);
-        }
-        else
-        {
-            offset = 0;
-            x = ((max > 0) ? 1 : 0);
-
-            if (max > 0)
-            {
-                while ((offset = (uint)data.find_first_of(ANTARES_MATRIX_CSV_COMMA, offset)) < max)
-                {
-                    ++offset;
-                    ++x;
-                }
-            }
-            resize(((x < minWidth) ? minWidth : x), maxHeight);
-            if (!x)
-            {
-                if (not(options & optQuiet) and not(options & optNoWarnIfEmpty))
-                {
-                    logs.warning() << "`" << filename << "`: Invalid format: The file seems empty";
-                }
-                zero();
-                return false;
-            }
-
-            offset = (uint)bom;
-        }
-    }
-
-    uint y = 0;
-    uint pos;
-    int errorCount = 6;
-    char separator = '\0';
-    AnyString converter;
-    ReadWriteType cellValue;
-    bool result = true;
-
-    while (y < maxHeight and offset < (uint)data.size())
-    {
-        // Starting the reading of the begining of the line
-        x = 0;
-        pos = offset;
-        uint lineOffset = (uint)offset;
-
-        while ((offset = data.find_first_of(ANTARES_MATRIX_CSV_SEPARATORS, offset))
-               != BufferType::npos)
-        {
-            assert(offset != BufferType::npos);
-
-            separator = data[offset];
-            // the final zero is mandatory for string-to-double convertions
-            data[offset] = '\0';
-            // Adding the value
-            converter = (const char*)((const char*)data.c_str() + pos);
-
-            // Convert string into double or something else
-            if (not converter.empty())
-            {
-                if (x >= width) // Out of bounds
-                {
-                    if ((options & optNeverFails))
-                    {
-                        if (separator == '\n')
-                        {
-                            resizeWithoutDataLost(x + 1, height);
-                        }
-                        else
-                        {
-                            // gp : dead code - can never be reached
-                            // Looking for the new matrix width
-                            uint newOffset = offset;
-                            uint newWidth = width + 1;
-
-                            while ((newOffset = data.find_first_of(ANTARES_MATRIX_CSV_SEPARATORS,
-                                                                   (String::Size)newOffset))
-                                   != BufferType::npos)
-                            {
-                                if (data[newOffset] == '\n')
-                                {
-                                    ++newWidth;
-                                    break;
-                                }
-                                if (data[newOffset] != '\r')
-                                {
-                                    ++newWidth;
-                                }
-                                ++newOffset;
-                            }
-                            resizeWithoutDataLost(newWidth, height);
-                        }
-                        // logs.debug() << "  :: dynamic resize (" << width << 'x' << height << ')';
-                    }
-                    else
-                    {
-                        result = false;
-                        if (not(options & optQuiet) and errorCount > 0)
-                        {
-                            logs.warning()
-                              << '`' << filename << "`: Invalid format: Too many entry for the row "
-                              << y << " (offset: " << (uint)pos << "byte)";
-                            if (!(--errorCount))
-                            {
-                                logs.warning() << " ... (skipped)";
-                            }
-                        }
-                        break;
-                    }
-                }
-
-                if (MatrixStringConverter<ReadWriteType>::direct)
-                {
-                    // We can perform a direct copy, instead of using a temporary buffer
-                    // for complex conversions
-                    // This should considerably reduced the loading time
-                    MatrixData<T>::Copy(entry[x][y], converter);
-                }
-                else
-                {
-                    // We will try to convert the string value into the corresponding
-                    // type.
-                    if (not MatrixStringConverter<ReadWriteType>::Do(converter, cellValue))
-                    {
-                        // We may fail in some special cases, like when using old studies
-                        // where decimal values can be found instead of integer
-                        double fallback;
-                        if (not MatrixStringConverter<double>::Do(converter, fallback))
-                        {
-                            result = false;
-                            if (not(options & optQuiet) and errorCount)
-                            {
-                                logs.warning()
-                                  << '`' << filename << "`: Invalid numeric value (x:" << x
-                                  << ",y:" << y << ", offset: " << (uint)pos << "byte), text: `"
-                                  << converter << " read:" << entry[x][y] << '`';
-                                if (not(--errorCount))
-                                {
-                                    logs.warning() << " ... (skipped)";
-                                }
-                            }
-                            MatrixData<T>::Init(entry[x][y]);
-                        }
-                        else
-                        {
-                            entry[x][y] = MatrixRound<T, ReadWriteType>::Value(
-                              static_cast<ReadWriteType>(fallback));
-                        }
-                    }
-                    else
-                    {
-                        // Ok, the conversion succeeded
-                        MatrixData<T>::Copy(entry[x][y], cellValue);
-                    }
-                }
-            }
-            else
-            {
-                // We may encounter final tabs, which must not be managed as an error
-                if (x < width)
-                {
-                    MatrixData<T>::Init(entry[x][y]);
-                    if (not(options & optQuiet))
-                    {
-                        logs.debug() << "  empty value at " << (x + 1) << 'x' << (y + 1)
-                                     << " (line offset: " << (offset - lineOffset) << ")";
-                    }
-                }
-            }
-
-            // Offset for the next token
-            pos = ++offset;
-
-            // new column
-            ++x;
-
-            // next column
-            if (separator == '\r')
-            {
-                if (data[offset] == '\n')
-                {
-                    pos = ++offset;
-                    break;
-                }
-            }
-            else
-            {
-                if (separator == '\n')
-                {
-                    break;
-                }
-            }
-        }
-
-        // Not enough columns to describe the row of the matrix
-        if (x < width)
-        {
-            if (not(options & optNeverFails))
-            {
-                result = false;
-                if (not(options & optQuiet) and errorCount)
-                {
-                    logs.warning()
-                      << filename << ": at line " << (y + 1) << ", not enough columns (expected "
-                      << width << ", got " << x << ')';
-                    if (not(--errorCount))
-                    {
-                        logs.warning() << " ... (skipped)";
-                    }
-                }
-            }
-            while (x < width) // Init for missing entry
-            {
-                MatrixData<T>::Init(entry[x][y]);
-                ++x;
-            }
-        }
-
-        // Go to the next line
-        ++y;
-    } // while (y ...)
-
-    // Not enough lines to describe our matrix
-    if (y < height)
-    {
-        result = false;
-        if (!(options & optQuiet))
-        {
-            logs.warning() << filename << ": not enough rows (expected " << height << ", got " << y
-                           << ')';
-        }
-        // Initialize missing entry
-        while (y < height)
-        {
-            for (x = 0; x < width; ++x)
-            {
-                MatrixData<T>::Init(entry[x][y]);
-            }
-            ++y;
-        }
-    }
-
-    return ((0 != (options & optNeverFails)) ? true : result);
-}
-
-template<class T, class ReadWriteT>
-bool Matrix<T, ReadWriteT>::internalLoadCSVFile(const AnyString& filename,
-                                                uint minWidth,
-                                                uint maxHeight,
-                                                uint options,
-                                                BufferType* buffer)
-{
-    // Status
-    bool result = false;
-
-    const bool hasOwnership = (NULL == buffer);
-    if (not buffer)
-    {
-        buffer = new BufferType();
-    }
-
-    switch (loadFromFileToBuffer(*buffer, filename))
-    {
-    case Yuni::IO::errNone:
-    {
-        // Empty files
-        if (buffer->empty())
-        {
-            if (maxHeight and minWidth)
-            {
-                reset((minWidth != 0 ? minWidth : 1),
-                      maxHeight); // gp : minWidth always != 0 here ==> Refactoring
-            }
-            else
-            {
-                clear();
-            }
-            result = true;
-            break;
-        }
-
-        // IO statistics
-        Statistics::HasReadFromDisk(buffer->size());
-
-        // Adding a final \n to make sure we have a line return at the end of the file
-        *buffer += '\n';
-        // Load the data
-        result = loadFromBuffer(filename,
-                                *buffer,
-                                minWidth,
-                                maxHeight,
-                                (options & optFixedSize),
-                                options);
-        break;
-    }
-    case Yuni::IO::errNotFound:
-    {
-        if (not(options & optQuiet))
-        {
-            logs.error() << "I/O Error: not found: '" << filename << "'";
-        }
-        break;
-    }
-    case Yuni::IO::errMemoryLimit:
-    {
-        if (not(options & optQuiet))
-        {
-            logs.error() << filename << ": The file is too large (>"
-                         << (filesizeHardLimit / 1024 / 1024) << "Mo)";
-        }
-        break;
-    }
-    default:
-    {
-        if (not(options & optQuiet))
-        {
-            logs.error() << "I/O Error: failed to load '" << filename << "'";
-        }
-    }
-    }
-
-    if (hasOwnership)
-    {
-        delete buffer;
-    }
-
-    // The matrix may not be loaded but we have to initialize it to avoid
-    // further SegV if the application decides to continue anyway.
-    if (not result)
-    {
-        reset(minWidth, maxHeight);
-    }
-
-    // We return `true` in any cases to not stop the execution of the solver, since
-    // it may not be a fatal error
-    return result;
-}
-
-template<class T, class ReadWriteT>
-bool Matrix<T, ReadWriteT>::containsOnlyZero() const
-{
-    if (width and height)
-    {
-        for (uint x = 0; x != width; ++x)
-        {
-            auto& column = entry[x];
-            for (uint y = 0; y != height; ++y)
-            {
-                if (!Utils::isZero((T)column[y]))
-                {
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
-}
-
-template<class T, class ReadWriteT>
-template<class PredicateT>
-bool Matrix<T, ReadWriteT>::containsOnlyZero(PredicateT& predicate) const
-{
-    if (width and height)
-    {
-        for (uint x = 0; x != width; ++x)
-        {
-            auto& column = entry[x];
-            for (uint y = 0; y != height; ++y)
-            {
-                if (!Utils::isZero((T)predicate(column[y])))
-                {
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
-}
-
-template<class T, class ReadWriteT>
-template<class PredicateT>
-void Matrix<T, ReadWriteT>::saveToBuffer(std::string& data,
-                                         uint precision,
-                                         bool print_dimensions,
-                                         PredicateT& predicate,
-                                         bool saveEvenIfAllZero) const
-{
-    using namespace Yuni;
-
-    enum
-    {
-        // Get if the read/write type is a decimal type (e.g. double/float/long double)
-        isDecimal = Static::Type::IsDecimal<ReadWriteType>::Yes,
-    };
-
-    if (not print_dimensions and (containsOnlyZero(predicate) and not saveEvenIfAllZero))
-    {
-        // Does nothing if the matrix only contains zero
-        return;
-    }
-
-    matrix_to_buffer_dumper_factory mtx_to_buffer_dumper_factory;
-
-    auto mtx_to_buffer_dpr = mtx_to_buffer_dumper_factory
-                               .get_dumper<T, ReadWriteT, PredicateT>(this, data, predicate);
-
-    // Determining the string format to use according the given precision
-    mtx_to_buffer_dpr->set_print_format(isDecimal, precision);
-
-    // Pre-allocate memory in the buffer. It should be enough in nearly all cases.
-    data.reserve(width * height * 6);
-
-    if (print_dimensions)
-    {
-        data += "size:" + std::to_string(width) + 'x' + std::to_string(height) + '\n';
-    }
-
-    mtx_to_buffer_dpr->run();
-}
-
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::saveToBuffer(std::string& data, uint precision) const
-{
-    PredicateIdentity identity;
-    this->saveToBuffer(data, precision, false, identity, true);
-}
-
-template<class T, class ReadWriteT>
-bool Matrix<T, ReadWriteT>::openFile(Yuni::IO::File::Stream& file, const AnyString& filename) const
-{
-    if (not file.openRW(filename))
-    {
-        logs.error() << "I/O error: " << filename
-                     << ": Impossible to write the file (not enough permission ?)";
-        return false;
-    }
-    return true;
-}
-
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::saveBufferToFile(std::string& buffer, Yuni::IO::File::Stream& f) const
-{
-    f << buffer;
-}
-
-template<class T, class ReadWriteT>
-template<class PredicateT>
-bool Matrix<T, ReadWriteT>::internalSaveCSVFile(const AnyString& filename,
-                                                uint precision,
-                                                bool print_dimensions,
-                                                PredicateT& predicate,
-                                                bool saveEvenIfAllZero) const
-{
-    // Attempt to open the file, and to write data
-    // We have write access to the file
-    logs.debug() << "  :: writing `" << filename << "' (" << width << 'x' << height << ')';
-
-    Yuni::IO::File::Stream file;
-    if (not openFile(file, filename))
-    {
-        return false;
-    }
-
-    if (height and width)
-    {
-        std::string buffer;
-
-        saveToBuffer(buffer, precision, print_dimensions, predicate, saveEvenIfAllZero);
-        Statistics::HasWrittenToDisk(buffer.size());
-
-        saveBufferToFile(buffer, file);
-    }
-
-    // Attempt to open the file, and to write data
-    // We have write access to the file
-    logs.debug() << "  :: [end] writing `" << filename << "' (" << width << 'x' << height << ')';
-
-    return true;
-}
-
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::resizeWithoutDataLost(uint x, uint y, const T& defVal)
+template<class T>
+void Matrix<T>::resizeWithoutDataLost(unsigned int x, unsigned int y, const T& defVal)
 {
     if (!x or !y)
     {
@@ -1156,72 +252,61 @@ void Matrix<T, ReadWriteT>::resizeWithoutDataLost(uint x, uint y, const T& defVa
     }
     else
     {
-        if (x <= width and y <= height) // shrinking
+        if (x <= width_ and y <= height_) // shrinking
         {
-            for (uint i = x; i < width; ++i)
+            columns_.resize(x);
+            for (auto& column: columns_)
             {
-                Antares::Memory::Release(entry[i]);
+                column.resize(y);
             }
-
-            // Update the matrix size
-            width = x;
-            height = y;
+            width_ = x;
+            height_ = y;
         }
         else
         {
-            const Matrix<T, ReadWriteT> copy(*this);
+            const Matrix<T> copy(*this);
             resize(x, y);
             // Copy values
-            uint minW = (x < copy.width) ? x : copy.width;
-            uint minH = (y < copy.height) ? y : copy.height;
+            const unsigned int minW = std::min(x, copy.width_);
+            const unsigned int minH = std::min(y, copy.height_);
 
-            for (uint i = 0; i < minW; ++i)
+            for (unsigned int i = 0; i < minW; ++i)
             {
-                ColumnType& column = entry[i];
+                ColumnType& column = columns_[i];
 
-                (void)::memcpy(column, copy.entry[i], sizeof(T) * minH);
+                std::copy_n(copy.columns_[i].begin(), minH, column.begin());
 
-                for (uint j = minH; j < y; ++j)
+                for (unsigned int j = minH; j < y; ++j)
                 {
                     column[j] = defVal;
                 }
             }
 
-            if (defVal == T())
+            for (unsigned int i = minW; i < x; ++i)
             {
-                for (uint i = minW; i < x; ++i)
-                {
-                    Memory::Zero(y, entry[i]);
-                }
-            }
-            else
-            {
-                for (uint i = minW; i < x; ++i)
-                {
-                    Memory::Assign(y, entry[i], defVal);
-                }
+                std::fill(columns_[i].begin(), columns_[i].end(), defVal);
             }
         }
     }
     logs.debug() << "  :: end resizeWithoutDataLost";
 }
 
-template<class T, class ReadWriteT>
+template<class T>
 template<class U>
-void Matrix<T, ReadWriteT>::multiplyAllEntriesBy(const U& c)
+void Matrix<T>::multiplyAllEntriesBy(const U& c)
 {
-    if (!entry)
+    if (columns_.empty())
     {
         return;
     }
 
     if (!Utils::isZero(c))
     {
-        for (uint x = 0; x != width; ++x)
+        for (unsigned int x = 0; x != width_; ++x)
         {
-            ColumnType& column = entry[x];
+            ColumnType& column = columns_[x];
 
-            for (uint y = 0; y != height; ++y)
+            for (unsigned int y = 0; y != height_; ++y)
             {
                 column[y] *= (T)c;
             }
@@ -1233,22 +318,46 @@ void Matrix<T, ReadWriteT>::multiplyAllEntriesBy(const U& c)
     }
 }
 
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::roundAllEntries()
+template<class T>
+void Matrix<T>::roundAllEntries()
 {
-    for (uint x = 0; x != width; ++x)
+    for (unsigned int x = 0; x != width_; ++x)
     {
-        ColumnType& col = entry[x];
-        for (uint y = 0; y != height; ++y)
+        ColumnType& col = columns_[x];
+        for (unsigned int y = 0; y != height_; ++y)
         {
             col[y] = (T)std::round(col[y]);
         }
     }
 }
 
-template<class T, class ReadWriteT>
-template<class U, class V>
-void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>& rhs)
+template<class T>
+bool Matrix<T>::containsOnlyZero() const
+{
+    PredicateIdentity predicate;
+    return containsOnlyZero(predicate);
+}
+
+template<class T>
+template<class PredicateT>
+bool Matrix<T>::containsOnlyZero(PredicateT& predicate) const
+{
+    for (const auto& column: columns_)
+    {
+        for (const auto& value: column)
+        {
+            if (!Utils::isZero(static_cast<T>(predicate(value))))
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+template<class T>
+template<class U>
+void Matrix<T>::copyFrom(const Matrix<U>& rhs)
 {
     assert((void*)(&rhs) != (void*)this and "Undefined behavior");
 
@@ -1259,23 +368,23 @@ void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>& rhs)
     else
     {
         // resize the matrix
-        resize(rhs.width, rhs.height);
+        resize(rhs.width(), rhs.height());
         // copy raw values
-        for (uint x = 0; x != rhs.width; ++x)
+        for (unsigned int x = 0; x != rhs.width(); ++x)
         {
-            auto& column = entry[x];
-            const auto& src = rhs.entry[x];
+            auto& column = columns_[x];
+            const auto& src = rhs[x];
 
             // if the two types are strictly equal, we can perform some major
             // optimisations
-            if (Yuni::Static::Type::StrictlyEqual<T, U>::Yes)
+            if (std::is_same_v<T, U>)
             {
-                (void)::memcpy((void*)column, (void*)src, sizeof(T) * height);
+                std::copy(src.begin(), src.end(), column.begin());
             }
             else
             {
                 // ...otherwise we have to copy each item by hand in any cases
-                for (uint y = 0; y != height; ++y)
+                for (unsigned int y = 0; y != height_; ++y)
                 {
                     column[y] = (T)src[y];
                 }
@@ -1284,9 +393,9 @@ void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>& rhs)
     }
 }
 
-template<class T, class ReadWriteT>
-template<class U, class V>
-inline void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>* rhs)
+template<class T>
+template<class U>
+inline void Matrix<T>::copyFrom(const Matrix<U>* rhs)
 {
     if (rhs)
     {
@@ -1294,75 +403,55 @@ inline void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>* rhs)
     }
 }
 
-template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::swap(Matrix<T, ReadWriteT>& rhs) noexcept
+template<class T>
+void Matrix<T>::swap(Matrix<T>& rhs) noexcept
 {
     // argument deduction lookup (ADL)
     using std::swap;
-    swap(this->width, rhs.width);
-    swap(this->height, rhs.height);
-    swap(this->entry, rhs.entry);
+    swap(this->width_, rhs.width_);
+    swap(this->height_, rhs.height_);
+    swap(this->columns_, rhs.columns_);
 }
 
-template<class T, class ReadWriteT>
-inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(const Matrix<T, ReadWriteT>& rhs)
+template<class T>
+inline Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs)
 {
     copyFrom(rhs);
     return *this;
 }
 
-template<class T, class ReadWriteT>
-inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(Matrix<T, ReadWriteT>&& rhs) noexcept
+template<class T>
+inline Matrix<T>& Matrix<T>::operator=(Matrix<T>&& rhs) noexcept
 {
     // Free existing resources before taking new ones
-    if (entry && entry != rhs.entry)
-    {
-        for (uint i = 0; i != width; ++i)
-        {
-            Antares::Memory::Release(entry[i]);
-        }
-        delete[] entry;
-    }
-
-    width = rhs.width;
-    height = rhs.height;
-    if (0 == width || 0 == height)
-    {
-        entry = nullptr;
-        width = 0;
-        height = 0;
-    }
-    else
-    {
-        entry = rhs.entry;
-    }
-    // Prevent spurious de-allocation from rhs's destructor
-    rhs.entry = nullptr;
-    rhs.width = 0;
-    rhs.height = 0;
+    width_ = rhs.width_;
+    height_ = rhs.height_;
+    columns_ = std::move(rhs.columns_);
+    rhs.width_ = 0;
+    rhs.height_ = 0;
     return *this;
 }
 
-template<class T, class ReadWriteT>
+template<class T>
 template<class U>
-inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(const Matrix<U>& rhs)
+inline Matrix<T>& Matrix<T>::operator=(const Matrix<U>& rhs)
 {
     copyFrom(rhs);
     return *this;
 }
 
-template<class T1, class T2>
-bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T1, T2>& m)
+template<class T>
+bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T>& m)
 {
-    if (m.width and m.height)
+    if (m.width() and m.height())
     {
-        uint y;
-        for (uint x = 0; x < m.width; ++x)
+        unsigned int y;
+        for (unsigned int x = 0; x < m.width(); ++x)
         {
-            auto& col = m.entry[x];
-            for (y = 0; y < m.height; ++y)
+            const auto& col = m[x];
+            for (y = 0; y < m.height(); ++y)
             {
-                if (col[y] > T1(0))
+                if (col[y] > T(0))
                 {
                     return true;
                 }
@@ -1372,37 +461,32 @@ bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T1, T2>& m)
     return false;
 }
 
-template<class T, class ReadWriteT>
-inline const typename Matrix<T, ReadWriteT>::ColumnType& Matrix<T, ReadWriteT>::operator[](
-  uint column) const
+template<class T>
+inline const typename Matrix<T>::ColumnType& Matrix<T>::operator[](unsigned int column) const
 {
-    assert(column < width);
-    assert(Memory::RawPointer(entry[column]));
-    return entry[column];
+    assert(column < width_);
+    return columns_[column];
 }
 
-template<class T, class ReadWriteT>
-inline typename Matrix<T, ReadWriteT>::ColumnType& Matrix<T, ReadWriteT>::operator[](uint column)
+template<class T>
+inline typename Matrix<T>::ColumnType& Matrix<T>::operator[](unsigned int column)
 {
-    assert(column < width);
-    assert(Memory::RawPointer(entry[column]));
-    return entry[column];
+    assert(column < width_);
+    return columns_[column];
 }
 
-template<class T, class ReadWriteT>
-inline const typename Matrix<T, ReadWriteT>::ColumnType& Matrix<T, ReadWriteT>::column(uint n) const
+template<class T>
+inline const typename Matrix<T>::ColumnType& Matrix<T>::column(unsigned int n) const
 {
-    assert(n < width);
-    assert(Memory::RawPointer(entry[n]));
-    return entry[n];
+    assert(n < width_);
+    return columns_[n];
 }
 
-template<class T, class ReadWriteT>
-inline typename Matrix<T, ReadWriteT>::ColumnType& Matrix<T, ReadWriteT>::column(uint n)
+template<class T>
+inline typename Matrix<T>::ColumnType& Matrix<T>::column(unsigned int n)
 {
-    assert(n < width);
-    assert(Memory::RawPointer(entry[n]));
-    return entry[n];
+    assert(n < width_);
+    return columns_[n];
 }
 } // namespace Antares
 

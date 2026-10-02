@@ -41,7 +41,7 @@ inline unsigned int thermalTSNumberData::get(const Antares::Data::ThermalCluster
                                              const unsigned int year) const
 {
     assert(cluster != nullptr);
-    if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
+    if (year < pTSNumberRules.height() && cluster->areaWideIndex < pTSNumberRules.width())
     {
         const unsigned int index = cluster->areaWideIndex;
         return pTSNumberRules[index][year];

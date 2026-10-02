@@ -5,6 +5,7 @@
 
 #include <limits>
 
+#include <antares/array/matrix-io.h>
 #include <antares/inifile/inifile.h>
 #include <antares/io/file.h>
 #include <antares/logs/logs.h>
@@ -158,7 +159,6 @@ bool XCast::loadFromFolder(const fs::path& folder)
     useConversion = false;
 
     // A temporary buffer for reading matrices
-    Matrix<>::BufferType readBuffer;
     // Return value
     bool ret = true;
     // Settings
@@ -233,23 +233,19 @@ bool XCast::loadFromFolder(const fs::path& folder)
     fs::path p = folder / "data.txt";
 
     // Performing normal loading
-    ret = data.loadFromCSVFile(p.string(),
-                               (unsigned int)dataMax,
-                               12,
-                               Matrix<>::optFixedSize,
-                               &readBuffer)
+    ret = MatrixIO::load(data, p.string(), (unsigned int)dataMax, 12, Matrix<>::optFixedSize)
           && ret;
 
     // K
     p = folder / "k.txt";
-    ret = K.loadFromCSVFile(p.string(), 12, 24, Matrix<>::optFixedSize, &readBuffer) && ret;
+    ret = MatrixIO::load(K, p.string(), 12, 24, Matrix<>::optFixedSize) && ret;
 
     unsigned int opts = Matrix<>::optNone;
 
     // Time-series translation
     p = folder / "translation.txt";
 
-    ret = translation.loadFromCSVFile(p.string(), 1, HOURS_PER_YEAR, opts, &readBuffer) && ret;
+    ret = MatrixIO::load(translation, p.string(), 1, HOURS_PER_YEAR, opts) && ret;
 
     if (translation.empty())
     {
@@ -259,7 +255,7 @@ bool XCast::loadFromFolder(const fs::path& folder)
     }
     else
     {
-        if (translation.width != 1 || translation.height != HOURS_PER_YEAR)
+        if (translation.width() != 1 || translation.height() != HOURS_PER_YEAR)
         {
             logs.warning() << folder << ": invalid size for the time-series translation.";
             translation.resizeWithoutDataLost(1, HOURS_PER_YEAR);
@@ -272,24 +268,25 @@ bool XCast::loadFromFolder(const fs::path& folder)
     // Transfer function
     p = folder / "conversion.txt";
 
-    ret = conversion.loadFromCSVFile(p.string(), 3, 2, opts, &readBuffer) && ret;
-    if (conversion.width >= 3 && conversion.width <= conversionMaxPoints)
+    ret = MatrixIO::load(conversion, p.string(), 3, 2, opts) && ret;
+    if (conversion.width() >= 3 && conversion.width() <= conversionMaxPoints)
     {
         // We will overwrite the left and the right value
         // Warning !!! std::numeric_limits must not be used
         //  it produces unwanted behavior on Linux
         conversion[0][0] = (float)(-1.0e+19); // - std::numeric_limits<float>::max();
         conversion[0][1] = conversion[1][1];
-        for (unsigned int x = 1; x < conversion.width - 1; ++x)
+        for (unsigned int x = 1; x < conversion.width() - 1; ++x)
         {
             if (conversion[x][0] <= -1.0e+19 || conversion[x][0] >= +1.0e+19)
             {
                 logs.error() << "TS-Generator: Conversion: Invalid range: " << p;
             }
         }
-        conversion[conversion.width - 1][0] = (float)1.0e+19; // +
-                                                              // std::numeric_limits<float>::max();
-        conversion[conversion.width - 1][1] = conversion[conversion.width - 2][1];
+        conversion[conversion.width() - 1][0]
+          = (float)1.0e+19; // +
+                            // std::numeric_limits<float>::max();
+        conversion[conversion.width() - 1][1] = conversion[conversion.width() - 2][1];
     }
     else
     {
@@ -326,16 +323,16 @@ bool XCast::saveToFolder(const std::string& folder) const
     bool ret = true;
 
     // Coefficients
-    ret = data.saveToCSVFile(folder + SEP + "data.txt") && ret;
+    ret = MatrixIO::save(data, folder + SEP + "data.txt") && ret;
 
     // K
-    ret = K.saveToCSVFile(folder + SEP + "k.txt") && ret;
+    ret = MatrixIO::save(K, folder + SEP + "k.txt") && ret;
 
     // TimeSeriesAverage
-    ret = translation.saveToCSVFile(folder + SEP + "translation.txt") && ret;
+    ret = MatrixIO::save(translation, folder + SEP + "translation.txt") && ret;
 
     // Transfer function
-    ret = conversion.saveToCSVFile(folder + SEP + "conversion.txt") && ret;
+    ret = MatrixIO::save(conversion, folder + SEP + "conversion.txt") && ret;
 
     // Settings
     IniFile ini;

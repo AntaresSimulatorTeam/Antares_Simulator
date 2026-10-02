@@ -183,9 +183,9 @@ BOOST_FIXTURE_TEST_CASE(WithForceNoGenOptionTimeSeriesNotGeneratedForReverseSpin
     ts.fill(100);
     cluster->reverseCalculationOfSpinning();
 
-    for (unsigned i = 0; i < ts.width; ++i)
+    for (unsigned i = 0; i < ts.width(); ++i)
     {
-        for (unsigned j = 0; j < ts.height; ++j)
+        for (unsigned j = 0; j < ts.height(); ++j)
         {
             BOOST_CHECK_EQUAL_MESSAGE(ts[i][j],
                                       100,

@@ -346,8 +346,8 @@ BOOST_AUTO_TEST_CASE(BC_disabled_returns_constraint_without_timeseries)
 
     auto constraint = *bindingConstraints.begin();
     BOOST_CHECK_EQUAL(constraint->enabled(), false);
-    BOOST_CHECK_EQUAL(constraint->RHSTimeSeries().width, 0);
-    BOOST_CHECK_EQUAL(constraint->RHSTimeSeries().height, 0);
+    BOOST_CHECK_EQUAL(constraint->RHSTimeSeries().width(), 0);
+    BOOST_CHECK_EQUAL(constraint->RHSTimeSeries().height(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(BC_disabled_both_operator_returns_single_constraint)
@@ -505,7 +505,7 @@ BOOST_AUTO_TEST_CASE(BC_enabled_without_any_weight_becomes_disabled)
     BOOST_CHECK_EQUAL(bcs.size(), 1);
     auto constraint = *bcs.begin();
     BOOST_CHECK_EQUAL(constraint->enabled(), false);
-    BOOST_CHECK_EQUAL(constraint->RHSTimeSeries().width, 0);
+    BOOST_CHECK_EQUAL(constraint->RHSTimeSeries().width(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(BC_link_not_found_weight_is_ignored)
@@ -1070,8 +1070,8 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_clearAndReset_hourly)
     BOOST_CHECK_EQUAL(bc.operatorType(), BindingConstraint::opEquality);
     BOOST_CHECK_EQUAL(bc.weight(link), 0.);
     BOOST_CHECK_EQUAL(bc.offset(link), 0);
-    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width, (unsigned int)BindingConstraint::columnMax);
-    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height, 8784u);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width(), (unsigned int)BindingConstraint::columnMax);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height(), 8784u);
 }
 
 BOOST_AUTO_TEST_CASE(BindingConstraint_clearAndReset_daily)
@@ -1079,8 +1079,8 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_clearAndReset_daily)
     BindingConstraint bc;
     bc.clearAndReset("c", BindingConstraint::typeDaily, BindingConstraint::opLess);
     BOOST_CHECK_EQUAL(bc.type(), BindingConstraint::typeDaily);
-    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width, (unsigned int)BindingConstraint::columnMax);
-    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height, 366u);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width(), (unsigned int)BindingConstraint::columnMax);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height(), 366u);
 }
 
 BOOST_AUTO_TEST_CASE(BindingConstraint_clearAndReset_weekly)
@@ -1088,8 +1088,8 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_clearAndReset_weekly)
     BindingConstraint bc;
     bc.clearAndReset("c", BindingConstraint::typeWeekly, BindingConstraint::opGreater);
     BOOST_CHECK_EQUAL(bc.type(), BindingConstraint::typeWeekly);
-    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width, (unsigned int)BindingConstraint::columnMax);
-    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height, 366u);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width(), (unsigned int)BindingConstraint::columnMax);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height(), 366u);
 }
 
 BOOST_AUTO_TEST_CASE(BindingConstraint_skipped_isActive_enabled)
@@ -1122,8 +1122,8 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_RHSTimeSeries_constOverload)
 
     const BindingConstraint& constBc = bc;
     const Antares::Matrix<>& rhs = constBc.RHSTimeSeries();
-    BOOST_CHECK_EQUAL(rhs.width, 2u);
-    BOOST_CHECK_EQUAL(rhs.height, 4u);
+    BOOST_CHECK_EQUAL(rhs.width(), 2u);
+    BOOST_CHECK_EQUAL(rhs.height(), 4u);
     BOOST_CHECK_CLOSE(rhs[0][0], 42.0, 0.0001);
 }
 

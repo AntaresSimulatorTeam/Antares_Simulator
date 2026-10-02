@@ -16,8 +16,8 @@ namespace
 {
 bool columnIsAllZero(const Matrix<>& matrix, unsigned column)
 {
-    const auto* values = matrix[column];
-    return std::all_of(values, values + matrix.height, Utils::isZero);
+    const auto& values = matrix[column];
+    return std::all_of(values.begin(), values.end(), Utils::isZero);
 }
 
 // A component can have several chronicles (columns) in its matrix, only some
@@ -36,7 +36,7 @@ bool selectedColumnsAreAllZero(const Data::TimeSeries& ts)
     for (uint32_t year = 0; year < nbYears; ++year)
     {
         const double* values = ts.getColumn(year);
-        for (uint32_t h = 0; h < ts.timeSeries.height; ++h)
+        for (uint32_t h = 0; h < ts.timeSeries.height(); ++h)
         {
             if (!Utils::isZero(values[h]))
             {

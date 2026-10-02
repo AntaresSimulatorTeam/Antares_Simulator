@@ -474,7 +474,6 @@ void Correlation::copyFrom(const Correlation& source,
     }
 
     // copying the annual correlation matrix
-    std::cout << "ANNUAL\n";
     CopyFromSingleMatrix(source.annual,
                          annual,
                          studySource,
@@ -483,7 +482,6 @@ void Correlation::copyFrom(const Correlation& source,
                          mapping,
                          study);
 
-    std::cout << "MONTHLY\n";
     // copying monthly correlation matrix
     for (uint i = 0; i != 12; ++i)
     {

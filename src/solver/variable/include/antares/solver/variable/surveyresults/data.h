@@ -69,7 +69,7 @@ public:
     Yuni::String::Vector rowCaptions;
 
     //! A multi-purposes matrix (mainly used for the digest)
-    Matrix<double, double> matrix;
+    Matrix<double> matrix;
 
     unsigned int rowIndex;
 

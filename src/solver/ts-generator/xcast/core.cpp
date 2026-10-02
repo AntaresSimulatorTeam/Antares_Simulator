@@ -76,7 +76,7 @@ bool XCast::generateValuesForTheCurrentDay()
     // si les parametres ont change on reinitialise certaines variables intermediaires
     if (pNewMonth)
     {
-        if (Cholesky<float>(Triangle_courant, pCorrMonth->entry, processCount, pQCHOLTotal.data()))
+        if (Cholesky<float>(Triangle_courant, *pCorrMonth, processCount, pQCHOLTotal.data()))
         {
             // C n'est pas sdp, mais peut-etre proche de sdp
             // on tente un abattement de 0.999
@@ -86,14 +86,11 @@ bool XCast::generateValuesForTheCurrentDay()
                 // partout)
                 for (uint j = 0; j < i; ++j)
                 {
-                    pCorrMonth->entry[i][j] *= 0.999f;
+                    pCorrMonth->mutableColumn(i)[j] *= 0.999f;
                 }
             }
 
-            if (Cholesky<float>(Triangle_courant,
-                                pCorrMonth->entry,
-                                processCount,
-                                pQCHOLTotal.data()))
+            if (Cholesky<float>(Triangle_courant, *pCorrMonth, processCount, pQCHOLTotal.data()))
             {
                 // la matrice C n'est pas admissible, on abandonne
                 logs.error() << "TS " << pTSName << " generator: invalid correlation matrix";
@@ -211,7 +208,7 @@ bool XCast::generateValuesForTheCurrentDay()
         shrink = MatrixDPMake<float>(Triangle_courant,
                                      CORR,
                                      Carre_reference,
-                                     pCorrMonth->entry,
+                                     *pCorrMonth,
                                      processCount,
                                      pQCHOLTotal.data());
         if (shrink == -1.f)

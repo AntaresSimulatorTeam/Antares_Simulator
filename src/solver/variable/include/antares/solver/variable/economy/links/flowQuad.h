@@ -63,7 +63,7 @@ struct FlowQuadTraits
     static void loadDataForSimulationEnd(IntermediateValues& iv, const FlowQuadAuxData& aux)
     {
         assert(aux.link && "invalid interconnection");
-        (void)::memcpy(iv.hour,
+        (void)::memcpy(iv.hour.data(),
                        (*aux.transitMoyenInterco)[aux.link->index].data(),
                        sizeof(double) * aux.nbHours);
     }
@@ -78,11 +78,9 @@ struct FlowQuadTraits
         {
             if (digestLevel & Category::digestFlowQuad)
             {
-                results.data.matrix
-                  .entry[results.data.link->from->index][results.data.link->with->index]
+                results.data.matrix[results.data.link->from->index][results.data.link->with->index]
                   = pResults.rawdata().allYears;
-                results.data.matrix
-                  .entry[results.data.link->with->index][results.data.link->from->index]
+                results.data.matrix[results.data.link->with->index][results.data.link->from->index]
                   = -pResults.rawdata().allYears;
             }
         }
