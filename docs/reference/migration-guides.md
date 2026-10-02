@@ -25,6 +25,8 @@ Add the following optional keys to any district section in `sets.ini`:
 
 Each value is a comma- and/or space-separated list of granularities: `hourly`, `daily`, `weekly`, `monthly`, `annual`.
 
+**Default values:** If the keys are omitted or set to an unknown token, the default is `all` (all granularities are exported).
+
 **Example:**
 
 ```ini
