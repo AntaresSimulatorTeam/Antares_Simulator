@@ -3,6 +3,7 @@
 
 #include <spx_constantes_externes.h>
 
+#include <antares/solver/optimisation/opt_fonctions.h>
 #include "antares/solver/optimisation/opt_construction_variables_reserves.h"
 #include "antares/solver/optimisation/opt_rename_problem.h"
 #include "antares/solver/optimisation/variables/VariableManagerUtils.h"
@@ -64,9 +65,11 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 const int palier = PaliersThermiquesDuPays
                                      .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
                 const auto& clusterName = PaliersThermiquesDuPays.NomsDesPaliersThermiques[index];
+
                 variableManager.DispatchableProduction(palier, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
+
                 variableNamer.DispatchableProduction(NombreDeVariables, clusterName);
                 NombreDeVariables++;
             }
@@ -266,6 +269,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
     if (problemeHebdo->OptimisationNotFastMode)
     {
         OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
+                                                                                      false);
+        OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireRampesThermiques(problemeHebdo,
                                                                                       false);
         if (problemeHebdo->allReserves)
         {

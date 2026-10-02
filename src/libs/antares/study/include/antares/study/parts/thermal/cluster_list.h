@@ -24,7 +24,9 @@ public:
     ** \brief Get the size (bytes) occupied in memory by a `ThermalClusterList` structure
     ** \return A size (in bytes)
     */
-    bool loadFromFolder(const std::filesystem::path& folder, Area* area);
+    bool loadFromFolder(const std::filesystem::path& folder,
+                        Area* area,
+                        bool rampingEnabledGlobal = false);
 
     //! \name Constructor & Destructor
     //@{
@@ -117,4 +119,9 @@ private:
     void rebuildIndex() const;
 
 }; // class ThermalClusterList
+
+bool ThermalClusterLoadFromSection(const std::string& areaName,
+                                   ThermalCluster& cluster,
+                                   const IniFile::Section& section,
+                                   bool rampingEnabledGlobal);
 } // namespace Antares::Data

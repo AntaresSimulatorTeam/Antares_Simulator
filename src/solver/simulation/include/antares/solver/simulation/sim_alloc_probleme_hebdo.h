@@ -22,6 +22,7 @@ void SIM_AllocationLinks(PROBLEME_HEBDO& problem,
 void SIM_AllocationConstraints(PROBLEME_HEBDO& problem,
                                const Antares::Data::Study& study,
                                unsigned NombreDePasDeTemps);
+
 void SIM_AllocationShortermStorageCumulation(PROBLEME_HEBDO& problem,
                                              const Antares::Data::Study& study);
 
