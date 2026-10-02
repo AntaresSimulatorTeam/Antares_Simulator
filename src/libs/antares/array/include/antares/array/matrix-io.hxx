@@ -66,52 +66,9 @@ struct PopBackGuard final
 };
 
 template<class T>
-class MatrixData final
-{
-public:
-    static void Init(T& data)
-    {
-        data = T();
-    }
-
-    template<class U>
-    static void Copy(T& data, const U& value)
-    {
-        data = static_cast<T>(value);
-    }
-
-    static void Copy(T&, const std::string&)
-    {
-        // This overload prevents an accidental numeric cast on the direct path.
-        logs.error() << "internal error: matrix data conversion";
-    }
-};
-
-template<>
-class MatrixData<std::string> final
-{
-public:
-    static void Init(std::string& data)
-    {
-        data.clear();
-    }
-
-    template<class U>
-    static void Copy(std::string& data, const U& value)
-    {
-        data = value;
-    }
-};
-
-template<class T>
 class MatrixStringConverter final
 {
 public:
-    enum
-    {
-        direct = 0
-    };
-
     static bool Do(const std::string& str, T& out)
     {
         std::istringstream stream(str);
@@ -125,11 +82,6 @@ template<>
 class MatrixStringConverter<double> final
 {
 public:
-    enum
-    {
-        direct = 0
-    };
-
     static bool Do(const std::string& str, double& out)
     {
         char* end = nullptr;
@@ -142,11 +94,6 @@ template<>
 class MatrixStringConverter<float> final
 {
 public:
-    enum
-    {
-        direct = 0
-    };
-
     static bool Do(const std::string& str, float& out)
     {
         char* end = nullptr;
@@ -159,51 +106,10 @@ template<>
 class MatrixStringConverter<std::string> final
 {
 public:
-    enum
-    {
-        direct = 1
-    };
-
     static bool Do(const std::string& str, std::string& out)
     {
         out.assign(str);
         return true;
-    }
-};
-
-template<class T>
-static T trunc(T& in)
-{
-    return static_cast<T>(std::trunc(in));
-}
-
-template<class T, class P>
-class MatrixRound final
-{
-public:
-    static T Value(P value)
-    {
-        return static_cast<T>(trunc(value));
-    }
-};
-
-template<class T>
-class MatrixRound<T, double> final
-{
-public:
-    static T Value(double value)
-    {
-        return static_cast<T>(value);
-    }
-};
-
-template<class T>
-class MatrixRound<T, float> final
-{
-public:
-    static T Value(float value)
-    {
-        return static_cast<T>(value);
     }
 };
 
@@ -471,7 +377,7 @@ bool loadFromBuffer(Matrix<T>& matrix,
                 logs.warning() << " ... (skipped)";
             }
         }
-        MatrixData<T>::Init(matrix[cellX][cellY]);
+        matrix[cellX][cellY] = T{};
     };
 
     while (y < maxHeight && offset < data.size())
@@ -535,9 +441,9 @@ bool loadFromBuffer(Matrix<T>& matrix,
                     }
                 }
 
-                if (MatrixStringConverter<T>::direct)
+                if constexpr (std::is_same_v<T, std::string>)
                 {
-                    MatrixData<T>::Copy(matrix[x][y], converter);
+                    matrix[x][y] = converter;
                 }
                 else if (!MatrixStringConverter<T>::Do(converter, cellValue))
                 {
@@ -568,18 +474,18 @@ bool loadFromBuffer(Matrix<T>& matrix,
                         }
                         else
                         {
-                            matrix[x][y] = MatrixRound<T, double>::Value(fallback);
+                            matrix[x][y] = static_cast<T>(fallback);
                         }
                     }
                 }
                 else
                 {
-                    MatrixData<T>::Copy(matrix[x][y], cellValue);
+                    matrix[x][y] = cellValue;
                 }
             }
             else if (x < matrix.width())
             {
-                MatrixData<T>::Init(matrix[x][y]);
+                matrix[x][y] = T{};
                 if (!(options & Matrix<T>::optQuiet))
                 {
                     logs.debug() << "  empty value at " << (x + 1) << 'x' << (y + 1)
@@ -622,7 +528,7 @@ bool loadFromBuffer(Matrix<T>& matrix,
             }
             while (x < matrix.width())
             {
-                MatrixData<T>::Init(matrix[x][y]);
+                matrix[x][y] = T{};
                 ++x;
             }
         }
@@ -642,7 +548,7 @@ bool loadFromBuffer(Matrix<T>& matrix,
         {
             for (x = 0; x < matrix.width(); ++x)
             {
-                MatrixData<T>::Init(matrix[x][y]);
+                matrix[x][y] = T{};
             }
             ++y;
         }

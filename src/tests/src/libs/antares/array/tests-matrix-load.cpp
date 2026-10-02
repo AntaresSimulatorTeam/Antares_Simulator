@@ -632,6 +632,28 @@ BOOST_AUTO_TEST_CASE(input_buffer_is_preserved_when_loading_fails)
 
 BOOST_AUTO_TEST_SUITE_END()
 
+// ===============================
+// ====  Matrix<std::string>  ====
+// ===============================
+BOOST_AUTO_TEST_SUITE(strings_are_loaded_without_numeric_conversion)
+
+BOOST_AUTO_TEST_CASE(file_contains_text___loaded_text_is_preserved)
+{
+    Matrix<std::string> matrix;
+    BufferType buffer = "alpha\tbeta gamma\n42\t-7\n";
+
+    BOOST_REQUIRE(MatrixIO::load(matrix, "path/to/a/file", 0, 0, Matrix<>::optNone, &buffer));
+
+    BOOST_REQUIRE_EQUAL(matrix.width(), 2);
+    BOOST_REQUIRE_EQUAL(matrix.height(), 2);
+    BOOST_CHECK_EQUAL(matrix[0][0], "alpha");
+    BOOST_CHECK_EQUAL(matrix[1][0], "beta gamma");
+    BOOST_CHECK_EQUAL(matrix[0][1], "42");
+    BOOST_CHECK_EQUAL(matrix[1][1], "-7");
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
 // ============================
 // ====  Matrix<int>  ====
 // ============================
