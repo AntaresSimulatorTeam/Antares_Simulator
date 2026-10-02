@@ -437,7 +437,9 @@ void FillSimulationTable(SimulationTable& simulationTable,
                                           data,
                                           scenario,
                                           areaPriceProvider);
-        Visitors::VariabilityVisitor variabilityVisitor(optimContainer, component);
+        Visitors::VariabilityVisitor variabilityVisitor(optimContainer,
+                                                        component,
+                                                        linearProblem.isLP());
 
         addVariableEntries(simulationTable,
                            linearProblem,

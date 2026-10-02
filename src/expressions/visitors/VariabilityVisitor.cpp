@@ -108,12 +108,15 @@ VariabilityType VariabilityVisitor::visit(const Nodes::PortFieldSumNode* node)
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        VariabilityVisitor visitor(optimEntityContainer_, *component);
+        VariabilityVisitor visitor(optimEntityContainer_, *component, isLP_);
         const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return = to_return | visitor.dispatch(node);
     }
 
-    if (const auto areaId = component_.areaConnectedToPort(portId))
+    // Mirrors HebdoAreaPriceProvider::getAreaPrice: dual values (hence legacy area prices) are
+    // only available on LP problems; on a MIP they are forced to a constant 0, so the price
+    // field must not be reported as time-varying there.
+    if (isLP_ && component_.areaConnectedToPort(portId))
     {
         const auto& areaConnection = component_.areaConnectionAtPort(portId);
         if (areaConnection && !fieldId.empty() && areaConnection->price == fieldId)
@@ -199,9 +202,11 @@ VariabilityType VariabilityVisitor::visit(const Nodes::FunctionNode* node)
 }
 
 VariabilityVisitor::VariabilityVisitor(const OptimEntityContainer& optimEntityContainer,
-                                       const ModelerStudy::SystemModel::Component& component):
+                                       const ModelerStudy::SystemModel::Component& component,
+                                       bool isLP):
     optimEntityContainer_(optimEntityContainer),
-    component_(component)
+    component_(component),
+    isLP_(isLP)
 {
 }
 
