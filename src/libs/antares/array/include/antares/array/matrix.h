@@ -5,9 +5,7 @@
 #define __ANTARES_LIBS_ARRAY_MATRIX_H__
 
 #include <cassert>
-#include <set>
 #include <span>
-#include <string>
 #include <vector>
 
 namespace Antares

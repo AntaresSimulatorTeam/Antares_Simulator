@@ -141,6 +141,15 @@ BOOST_AUTO_TEST_CASE(precision_is_3___get_3_nbs_after_decimal_point)
     BOOST_REQUIRE_EQUAL(mtx.data, "1.500\t-2.444\n3.667\t0\n");
 }
 
+BOOST_AUTO_TEST_CASE(precision_above_supported_range_is_clamped)
+{
+    Matrix_easy_to_fill<double> mtx(1, 1, {1.1234567890123456});
+
+    MatrixIO::saveToBuffer(mtx, mtx.data, 17);
+
+    BOOST_REQUIRE_EQUAL(mtx.data, "1.1234567890123457\n");
+}
+
 BOOST_AUTO_TEST_CASE(precision_has_no_effect_on_integer_values)
 {
     // Any whole number is printed without decimal point
@@ -226,6 +235,15 @@ BOOST_AUTO_TEST_CASE(resize_without_data_lost_fills_new_values)
     BOOST_CHECK_EQUAL(matrix[0][1], 3);
     BOOST_CHECK_EQUAL(matrix[1][0], 3);
     BOOST_CHECK_EQUAL(matrix[1][1], 3);
+}
+
+BOOST_AUTO_TEST_CASE(zero_sized_constructor_keeps_matrix_empty)
+{
+    Matrix<int> matrix(0, 3);
+
+    BOOST_CHECK(matrix.empty());
+    BOOST_CHECK_EQUAL(matrix.width(), 0);
+    BOOST_CHECK_EQUAL(matrix.height(), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

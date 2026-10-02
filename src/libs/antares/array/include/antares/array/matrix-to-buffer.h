@@ -4,7 +4,6 @@
 #ifndef __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_H__
 #define __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_H__
 
-#include <memory>
 #include <string>
 
 namespace Antares
@@ -15,74 +14,12 @@ class Matrix;
 
 namespace Antares
 {
-// Forward declarations
-const char* get_format(bool isDecimal, unsigned int precision);
 template<class T, class PredicateT>
-class I_mtx_to_buffer_dumper;
-
-class matrix_to_buffer_dumper_factory
-{
-public:
-    matrix_to_buffer_dumper_factory()
-    {
-    }
-
-    ~matrix_to_buffer_dumper_factory()
-    {
-    }
-
-    template<class T, class PredicateT>
-    std::unique_ptr<I_mtx_to_buffer_dumper<T, PredicateT>> get_dumper(const Matrix<T>* mtx,
-                                                                      std::string& data,
-                                                                      PredicateT& predicate);
-};
-
-template<class T, class PredicateT>
-class I_mtx_to_buffer_dumper
-{
-public:
-    I_mtx_to_buffer_dumper(const Matrix<T>* mtx, std::string& data, PredicateT& predicate):
-        mtx_(mtx),
-        buffer_(data),
-        predicate_(predicate)
-    {
-    }
-
-    virtual ~I_mtx_to_buffer_dumper() = default;
-
-    void set_print_format(bool isDecimal, unsigned int precision);
-    virtual void run() = 0;
-
-protected:
-    const Matrix<T>* mtx_;
-    std::string& buffer_;
-    PredicateT& predicate_;
-    std::string format_;
-};
-
-template<class T, class PredicateT>
-class one_column__dumper: public I_mtx_to_buffer_dumper<T, PredicateT>
-{
-public:
-    one_column__dumper(const Matrix<T>* mtx, std::string& data, PredicateT& predicate):
-        I_mtx_to_buffer_dumper<T, PredicateT>(mtx, data, predicate)
-    {
-    }
-
-    void run() override;
-};
-
-template<class T, class PredicateT>
-class multiple_columns__dumper: public I_mtx_to_buffer_dumper<T, PredicateT>
-{
-public:
-    multiple_columns__dumper(const Matrix<T>* mtx, std::string& data, PredicateT& predicate):
-        I_mtx_to_buffer_dumper<T, PredicateT>(mtx, data, predicate)
-    {
-    }
-
-    void run() override;
-};
+void matrixToBuffer(const Matrix<T>& matrix,
+                    std::string& data,
+                    PredicateT& predicate,
+                    bool isDecimal,
+                    unsigned int precision);
 
 } // namespace Antares
 

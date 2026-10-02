@@ -15,27 +15,17 @@
 namespace Antares
 {
 template<class T>
-inline Matrix<T>::Matrix():
-    width_(0),
-    height_(0),
-    columns_()
-{
-}
+Matrix<T>::Matrix() = default;
+
+template<class T>
+Matrix<T>::Matrix(const Matrix<T>&) = default;
 
 template<class T>
 Matrix<T>::Matrix(unsigned int w, unsigned int h):
-    width_(w),
-    height_(h)
+    width_(0),
+    height_(0)
 {
-    columns_.assign(w, ColumnType(h));
-}
-
-template<class T>
-Matrix<T>::Matrix(const Matrix<T>& rhs):
-    width_(rhs.width_),
-    height_(rhs.height_),
-    columns_(rhs.columns_)
-{
+    resize(w, h);
 }
 
 template<class T>
@@ -136,14 +126,9 @@ void Matrix<T>::averageTimeseries(bool roundValues)
 template<class T>
 void Matrix<T>::fill(const T& v)
 {
-    for (unsigned int i = 0; i != width_; ++i)
+    for (auto& column: columns_)
     {
-        ColumnType& column = columns_[i];
-
-        for (unsigned int j = 0; j != height_; ++j)
-        {
-            column[j] = v;
-        }
+        std::fill(column.begin(), column.end(), v);
     }
 }
 
@@ -198,10 +183,7 @@ void Matrix<T>::fillColumn(unsigned int x, const T& value)
     assert(x < width_ and "Invalid column index (bigger than `this->width_`)");
     ColumnType& column = columns_[x];
 
-    for (unsigned int y = 0; y != height_; ++y)
-    {
-        column[y] = value;
-    }
+    std::fill(column.begin(), column.end(), value);
 }
 
 template<class T>

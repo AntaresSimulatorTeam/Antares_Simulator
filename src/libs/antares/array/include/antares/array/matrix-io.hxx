@@ -622,16 +622,16 @@ bool load(MatrixType<T>& matrix,
             return false;
         }
 
-        if (input->size() > matrixFileSizeLimit)
+    }
+    if (input->size() > matrixFileSizeLimit)
+    {
+        if (!(options & MatrixType<T>::optQuiet))
         {
-            if (!(options & MatrixType<T>::optQuiet))
-            {
-                logs.error() << filename << ": The file is too large (>"
-                             << (matrixFileSizeLimit / 1024 / 1024) << "Mo)";
-            }
-            matrix.reset(minWidth, maxHeight);
-            return false;
+            logs.error() << filename << ": The file is too large (>"
+                         << (matrixFileSizeLimit / 1024 / 1024) << "Mo)";
         }
+        matrix.reset(minWidth, maxHeight);
+        return false;
     }
 
     if (input->empty())
@@ -689,6 +689,15 @@ bool load(MatrixType<T>& matrix,
           BufferType* buffer = nullptr,
           const FileLoader& fileLoader = {})
 {
+    if (!filename)
+    {
+        if (!(options & MatrixType<T>::optQuiet))
+        {
+            logs.error() << "I/O Error: null filename";
+        }
+        matrix.reset(minWidth, maxHeight);
+        return false;
+    }
     return load(matrix, std::string(filename), minWidth, maxHeight, options, buffer, fileLoader);
 }
 
@@ -707,9 +716,7 @@ void saveToBuffer(const MatrixType<T>& matrix,
     }
 
     std::string serialized;
-    matrix_to_buffer_dumper_factory factory;
-    auto dumper = factory.get_dumper<T, Predicate>(&matrix, serialized, predicate);
-    dumper->set_print_format(std::is_floating_point_v<T>, precision);
+    const bool isDecimal = std::is_floating_point_v<T>;
 
     serialized.reserve(matrix.width() * matrix.height() * 6);
     if (printDimensions)
@@ -717,7 +724,7 @@ void saveToBuffer(const MatrixType<T>& matrix,
         serialized += "size:" + std::to_string(matrix.width()) + 'x'
                       + std::to_string(matrix.height()) + '\n';
     }
-    dumper->run();
+    matrixToBuffer(matrix, serialized, predicate, isDecimal, precision);
     data = std::move(serialized);
 }
 

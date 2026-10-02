@@ -630,6 +630,14 @@ BOOST_AUTO_TEST_CASE(input_buffer_is_preserved_when_loading_fails)
     BOOST_CHECK_EQUAL(buffer, original);
 }
 
+BOOST_AUTO_TEST_CASE(null_filename_is_rejected)
+{
+    Matrix_mock_load_to_buffer<double> matrix;
+
+    BOOST_CHECK(!MatrixIO::load(matrix, static_cast<const char*>(nullptr)));
+    BOOST_CHECK(matrix.empty());
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 // ===============================
