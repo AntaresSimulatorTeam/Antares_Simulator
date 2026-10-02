@@ -18,7 +18,7 @@ toc_depth: 2
 * Write one simulation table per stage of the weekly resolution, so the effect of each
   post-treatment is observable: `optim-nb-1`, `optim-nb-2`, `peak-shaving` (the peak-shaving /
   remix-hydro post-process) and `adq-patch` (the adequacy patch CSR treatment). Each stage gets its own
-  `simulation-table-<year>-<stage>` file
+  `simulation-table-<year>-<stage>` file (#3933, #3936, #3959)
 * Select which stages are written, with `simulation-table-stages` in the `[output]` section of
   `generaldata.ini` or the `--simulation-table-stages` command-line option (default: all stages).
 * Add `--simulation-table-stages-last` to write only the last-produced stage (#3939)
@@ -26,7 +26,7 @@ toc_depth: 2
 * Extra-outputs: export legacy outputs in simulation table [ANT-5006] (#3715, #3717, #3727, #3739)
 * Add warning when final level is outside rule curves [ANT-3139] (#3759)
 * Export original problem for unfeasible problems [ANT-4987] (#3692)
-* Parquet support for modeler and legacy solver [ANT-4633] (#3565, #3586)
+* Parquet support for modeler and legacy solver [ANT-4633] (#3565, #3586, #3622, #3678)
 * Export by MC year instead of global 2-file aggregation [ANT-4633] (#3640)
 * Add filtering for district output granularities with `sets.ini` (#3926)
 * Improve unit commitment calculations for legacy outputs [ANT-5334] (#3888)
@@ -60,14 +60,10 @@ toc_depth: 2
 
 #### Bugfixes
 
-* Fix libparquet_writer.so install dir [ANT-4633] (#3622, #3678)
-* Fix failing tests on simulation table [ANT-4986] (#3736)
 * Yaml files now give a warning and optim-config.yml requires system.yml (#3695, #3722)
 * Use fmt for double conversion, improving performances (#3773)
 * Fix uninitialized Parameters members found by UBSan (#3753)
 * Fix stack-use-after-scope in EvalVisitor tests (#3754)
-* Fix missing inactiveComponents in some simulation table stages (#3933)
-* Rename adq-patch and shave-peak simulation table stages for consistency (#3936)
 * Fix incorrect renewable cluster name in short-term storage output (#3938)
 
 #### Documentation
@@ -94,6 +90,7 @@ toc_depth: 2
 * Remove unused Study members and pQueueService, remove one of Study::IsRootStudy static methods (#3743, #3744, #3745)
 * Fix build warnings (#3684, #3694, #3701, #3724, #3725, #3732, #3733, #3734, #3735, #3740, #3750, #3760)
 * Add cucumber tests for problem generator, workflow and valid-hydro [ANT-5004, ANT-5005] (#3708, #3713, #3714)
+* Fix failing tests on simulation table [ANT-4986] (#3736)
 * Enhance loading and testing for inter-monthly breakdown properties [ANT-4985] (#3665)
 * Increase timeout of case 035 (#3737)
 * Remove JIT [ANT-4954] (#3782)
