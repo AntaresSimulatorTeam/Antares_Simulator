@@ -365,9 +365,8 @@ void SIM_InitialisationProblemeHebdo(const Study& study,
 
         problem.CaracteristiquesHydrauliques[i].TurbinageEntreBornes = area.hydro
                                                                          .reservoirManagement
-                                                                       && (!area.hydro
-                                                                              .useHeuristicTarget
-                                                                           || area.hydro.useLeeway);
+                                                                       && !area.hydro
+                                                                             .useHeuristicTarget;
 
         problem.CaracteristiquesHydrauliques[i].SuiviNiveauHoraire = area.hydro.reservoirManagement;
 
@@ -932,9 +931,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                     }
 
                     if (area.hydro.useHeuristicTarget
-                        && (area.hydro.useLeeway
-                            || (problem.CaracteristiquesHydrauliques[k].PresenceDePompageModulable
-                                && !problem.OptimisationAuPasHebdomadaire)))
+                        && problem.CaracteristiquesHydrauliques[k].PresenceDePompageModulable
+                        && !problem.OptimisationAuPasHebdomadaire)
                     {
                         std::vector<double>& DGU = problem.CaracteristiquesHydrauliques[k]
                                                      .MaxEnergieHydrauParIntervalleOptimise;
@@ -947,16 +945,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
 
                         double WSL = problem.CaracteristiquesHydrauliques[k].NiveauInitialReservoir;
 
-                        double LUB = area.hydro.leewayUpperBound;
-                        if (!area.hydro.useLeeway)
-                        {
-                            LUB = 1;
-                        }
-                        double LLB = area.hydro.leewayLowerBound;
-                        if (!area.hydro.useLeeway)
-                        {
-                            LLB = 1;
-                        }
                         double DGM = problem.CaracteristiquesHydrauliques[k]
                                        .WeeklyGeneratingModulation;
 
@@ -981,8 +969,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                             double DGC = dailyMeanMaxGenPower[day]
                                          * area.hydro.dailyNbHoursAtGenPmax[0][day];
 
-                            DGU_tmp[j] = DNT[day] * LUB;
-                            DGL_tmp[j] = DNT[day] * LLB;
+                            DGU_tmp[j] = DNT[day];
+                            DGL_tmp[j] = DNT[day];
                             double DGCxDGM = DGC * DGM;
 
                             if (DGCxDGM < DGL_tmp[j])
