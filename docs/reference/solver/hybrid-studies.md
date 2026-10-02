@@ -325,7 +325,7 @@ The convention is to make the loads positive and don't prefix it with a - sign.
 ~~~
 
 
-For more details why we adpot these conventions, please read [this article](https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/Architecture_Decision_Records/from-GEMS-to-legacy-linear-preblem.md)
+For more details why we adpot these conventions, please read [this article](https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/architecture-decision-record/from-GEMS-to-legacy-linear-problem.md)
 
 ## Limitations
 

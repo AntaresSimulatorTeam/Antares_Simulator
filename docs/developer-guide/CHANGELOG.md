@@ -11,7 +11,7 @@ toc_depth: 2
 * A simulation table with no rows no longer produces a header-only file. In practice this means
   no `simulation-table-<year>-optim-nb-2` file at all when the second optimisation pass does not
   run, i.e. when `unit-commitment-mode = milp` or in Expansion mode. See the
-  [migration guide](../user-guide/04-migration-guides.md)
+  [migration guide](../reference/migration-guides.md)
   
 #### Features
 
@@ -320,7 +320,7 @@ Fix: several issues on CentOS7 (#3561)
 
 #### Dependencies
 
-* Update vcpkg to 2025.06.13: some dependency assets were not available anymore. Versions details in [dependency updates](Dependencies/updates.md)
+* Update vcpkg to 2025.06.13: some dependency assets were not available anymore.
 
 #### CI/CD
 
