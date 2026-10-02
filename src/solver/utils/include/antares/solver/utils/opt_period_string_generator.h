@@ -13,7 +13,8 @@
     - problem-<year>-<week>-<day>--optim-nb-<n>.mps
 
     The following class hierarchy intend to represent these time interval sequences (weekly or
-   daily), and it turns them into a string when building the names of the previous files. This
+    daily), and it turns them into a string when building the names of the previous files. The
+    indices are zero-based, like the simulator's internal time indices. This
    hierarchy is designed for polymorphism : whetever the time interval an object of that hierarchy
    represents, it is passed as a base class argument, and the right 'to_string()' function is
    called.
