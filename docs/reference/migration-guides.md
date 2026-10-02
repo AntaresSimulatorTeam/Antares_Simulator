@@ -12,6 +12,27 @@ In file settings/generaldata.ini, in section `optimization`, new property `inclu
 
 If `include-reserves = true`, the new reserve input files in **input/reserves** are read. See [reserve files](solver/optional-features/reserves.md) for more details.
 
+#### Filtering district output granularities
+
+In file **input/areas/sets.ini**, two new optional properties, `filter-synthesis` and
+`filter-year-by-year`, restrict the time granularities exported for a district (set of areas),
+separately for the synthesis report (`mc-all`) and the year-by-year report (`mc-ind`). Each value
+is a list (comma and/or space separated) of `hourly`, `daily`, `weekly`, `monthly`, `annual`.
+
+```ini
+[all system]
+apply-filter = add-all
+output = true
+filter-synthesis = annual
+filter-year-by-year = hourly, daily
+```
+
+If a key is missing, the default behavior is kept: all granularities are exported for that
+district. Writing the key with no valid token (e.g. `filter-synthesis = none`) skips the
+district's output entirely for that report. These keys use the same syntax and semantics as the
+existing `filter-synthesis` / `filter-year-by-year` keys of areas and links. See
+[Definition of regional districts](solver/inputs.md#definition-of-regional-districts) for details.
+
 #### Deprecated properties
 
 The following properties of the `general` section in file settings/generaldata.ini are now ignored. They are
