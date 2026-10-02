@@ -17,6 +17,7 @@ public:
     explicit LinearProblemMatrixRamping(PROBLEME_HEBDO* problemeHebdo,
                                         bool Simulation,
                                         ConstraintBuilder& builder);
+    ~LinearProblemMatrixRamping() override = default;
 
 private:
     bool simulation_ = false;

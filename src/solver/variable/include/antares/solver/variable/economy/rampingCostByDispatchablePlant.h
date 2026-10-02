@@ -7,8 +7,9 @@
 
 namespace Antares::Solver::Variable::Economy
 {
-struct RampingCostByDispatchablePlantTraits
+class RampingCostByDispatchablePlantTraits
 {
+public:
     static std::string Caption()
     {
         return "RAMP COST BY PLANT";

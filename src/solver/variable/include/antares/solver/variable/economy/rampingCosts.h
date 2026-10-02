@@ -7,8 +7,9 @@
 
 namespace Antares::Solver::Variable::Economy
 {
-struct RampingCostTraits
+class RampingCostTraits
 {
+public:
     static std::string Caption()
     {
         return "RAMP COST";
@@ -30,6 +31,7 @@ struct RampingCostTraits
     static constexpr uint8_t decimal = 0;
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
 
+    // This aggregate is populated at year end; hourly values are intentionally unused.
     static void setHourlyValue(IntermediateValues&, const State&, unsigned int)
     {
     }

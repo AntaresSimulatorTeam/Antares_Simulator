@@ -20,7 +20,6 @@ inline void State::startANewYear()
            0,
            sizeof(thermalClusterDispatchedUnitsCountForYear));
 
-    // if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate)
     memset(thermalClusterRampingCostForYear, 0, sizeof(thermalClusterRampingCostForYear));
 
     if (study.parameters.include.reserves)

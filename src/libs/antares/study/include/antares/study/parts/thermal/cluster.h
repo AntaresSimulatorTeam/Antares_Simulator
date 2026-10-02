@@ -241,8 +241,9 @@ public:
     //! Variable O&M cost (euros/MWh)
     double variableomcost = 0;
 
-    struct Ramping
+    class Ramping
     {
+    public:
         //! Cost of power increase (euros/MW)
         double powerIncreaseCost = 0.;
         //! Cost of power decrease (euros/MW)
