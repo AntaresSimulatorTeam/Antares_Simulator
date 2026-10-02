@@ -266,6 +266,15 @@ unsigned int Sets::outputFilter(const IDType& id, ReportType report) const
                                            : pair->second.filterYearByYear;
 }
 
+void Sets::disableOutputFilters()
+{
+    for (auto& [_, options]: pOptions)
+    {
+        options.filterSynthesis = filterAll;
+        options.filterYearByYear = filterAll;
+    }
+}
+
 void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
 {
     using namespace Antares;
