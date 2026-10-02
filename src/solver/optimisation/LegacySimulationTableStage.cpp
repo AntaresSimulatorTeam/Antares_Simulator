@@ -3,6 +3,7 @@
 
 #include "antares/solver/optimisation/LegacySimulationTableSnapshot.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/simplex/LpFiller.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 namespace Antares::Optimization
@@ -26,7 +27,9 @@ void DumpSimulationTableStage(IO::Outputs::OptimisationsSimulationTable* tables,
 
     // The whole week is one block here: post-processing runs once the week is
     // solved, not once per optimisation interval, hence NumIntervalle = 0.
-    const auto fillContext = buildFillContext(&problemeHebdo, 0);
+    const auto fillContext = Antares::Solver::Optimization::Simplex::LpFiller::buildFillContext(
+      problemeHebdo,
+      0);
 
     DumpSimulationTableAfterPostProcess(*table,
                                         problemeHebdo,

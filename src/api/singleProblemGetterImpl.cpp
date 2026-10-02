@@ -18,6 +18,7 @@
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
+#include "antares/solver/optimisation/simplex/LpFiller.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/regenerate_timeseries.h"
 #include "antares/solver/simulation/simulation.h"
@@ -337,7 +338,8 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
     return translator_.translate(pb_.ProblemeAResoudre.get(), problemName({id.year, id.week + 1}));
 }
 
-std::unique_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProblemId id)
+std::unique_ptr<LinearProblem::Api::ILinearProblem> SingleProblemGetter::getWeeklyProblem(
+  WeeklyProblemId id)
 {
     setWeeklyData(id);
     auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
@@ -364,15 +366,19 @@ std::unique_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProb
     return linearProblem;
 }
 
-void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProblemId& id)
+void SingleProblemGetter::fillProblem(LinearProblem::Api::ILinearProblem& problem,
+                                      const WeeklyProblemId& id)
 {
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
-    LinearProblem::Api::FillContext fillCtx = buildFillContext(&pb_, numeroDeLIntervalle);
+    LinearProblem::Api::FillContext fillCtx = Solver::Optimization::Simplex::LpFiller::
+      buildFillContext(pb_, numeroDeLIntervalle);
     const auto modelerData = pb_.modelerData;
     bool hasModelerData = modelerData != nullptr;
-    const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
-                                                                 : nullptr;
+    const LinearProblem::Api::ILinearProblemData* modelerDataSeries = hasModelerData
+                                                                        ? modelerData->dataSeries
+                                                                            .get()
+                                                                        : nullptr;
 
     LinearProblem::OptimEntityContainer optimEntityContainer(problem);
     if (hasModelerData)
@@ -380,7 +386,10 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProbl
         modelerData->bendersDecomposition.setCurrentProblemId(problemName({id.year, id.week + 1}));
     }
 
-    fillLinearProblem(fillCtx, &pb_, optimEntityContainer, &modelerData->bendersDecomposition);
+    Solver::Optimization::Simplex::LpFiller::fillLinearProblem(fillCtx,
+                                                               pb_,
+                                                               optimEntityContainer,
+                                                               &modelerData->bendersDecomposition);
 }
 
 const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
@@ -496,7 +505,7 @@ bool SingleProblemGetter::areWeeksIndependent() const
                                });
 }
 
-void writeWeekMPS(const std::unique_ptr<ILinearProblem>& weekly,
+void writeWeekMPS(const std::unique_ptr<LinearProblem::Api::ILinearProblem>& weekly,
                   const WeeklyProblemId& id,
                   IResultWriter::Ptr& resultWriter)
 {
