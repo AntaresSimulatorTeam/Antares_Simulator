@@ -58,7 +58,10 @@ file per stage, named `simulation-table-<year>-<stage>`:
 | `peak-shaving` | peak-shaving / remix hydro | weekly `simplex-range` only (see below) |
 | `adq-patch` | the whole adequacy patch CSR treatment | adequacy patch enabled, weekly `simplex-range` only |
 
-**The two pre-existing files are unchanged** — same names, same contents. `peak-shaving` and
+**The two pre-existing files are themselves renamed and re-scoped**, relative to v10.1.0:
+`simulation_table--optim-nb-1.csv` / `simulation_table--optim-nb-2.csv` (one file aggregating every
+MC year) become `simulation-table-<year>-optim-nb-1` / `simulation-table-<year>-optim-nb-2` (hyphenated,
+one file per MC year). Their per-stage content is otherwise the same. `peak-shaving` and
 `adq-patch` are new files that did not exist before. A script that globs
 `simulation-table-*` will therefore pick up more files than it used to, and should filter on the
 stage suffix if it only wants the optimization passes.
@@ -101,6 +104,12 @@ it stops the simulation rather than being read as `all` (which is what omitting 
 
 - Disabled binding constraints no longer load their time-series.
 - Disabled short-term storage clusters skip their time-series loading.
+
+#### Parquet simulation tables
+
+The new `--parquet` CLI flag writes simulation tables (`simulation-table-<year>-<stage>`) in
+Parquet format instead of CSV. Scripts that parse these files as CSV must check which format was
+requested before reading them.
 
 ## v10.1.0
 
@@ -146,6 +155,21 @@ but an error asking to use another value is logged.
 
 Existing files can be kept or removed; they are ignored by the simulation.
 
+### Output
+
+#### Named MPS variable renames
+
+When exporting named MPS problems (`--named-mps-problems`), several optimization variable names
+changed:
+
+- `NTCDirect` → `DirectFlow`
+- `IntercoDirectCost` → `PositiveDirectFlow`
+- `IntercoIndirectCost` → `PositiveIndirectFlow`
+- `PositiveUnsuppliedEnergy` → `UnsuppliedEnergy`
+- `NegativeUnsuppliedEnergy` → `Spillage`
+
+Tooling that parses MPS variable names (notably the Xpansion workflow) must be updated.
+
 ### Behavior
 
 The solver is now read-only with respect to the study: it no longer rewrites input files (areas, binding
@@ -166,6 +190,13 @@ The following properties were removed from **settings/generaldata.ini**.
 
 If the user provides a value for key refreshtimeseries the simulation will fail with a warning.
 Values for the refresh intervals will be ignored.
+
+#### Deprecated solver CLI options
+
+The command-line options `--solver` and `--solver-parameters` are deprecated in favor of
+`--linear-solver` and `--linear-solver-param` (plus the new `--linear-solver-param-optim-1` /
+`--linear-solver-param-optim-2`, to set parameters separately for each optimization pass). The old
+flags are still accepted for compatibility.
 
 #### Thermal and renewable clusters groups
 
@@ -347,6 +378,7 @@ hydro pmax time-series. For reference, this format consists of a single file wit
 
 - Remove column SPIL ENRG CSR (adequacy patch)
 - Add DTG MRG CSR and UNSP ENRG CSR variables
+- Add NPCAP HOURS variable (near price-cap hours)
 
 ## v9.1.0
 
