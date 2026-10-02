@@ -3,6 +3,7 @@
 
 #include "antares/study/sets.h"
 
+#include <ranges>
 #include <string>
 #include <string_view>
 
@@ -268,7 +269,7 @@ unsigned int Sets::outputFilter(const IDType& id, ReportType report) const
 
 void Sets::disableOutputFilters()
 {
-    for (auto& [_, options]: pOptions)
+    for (auto& options: pOptions | std::views::values)
     {
         options.filterSynthesis = filterAll;
         options.filterYearByYear = filterAll;
