@@ -148,9 +148,7 @@ void matrixToBuffer(const Matrix<T>& matrix,
             {
                 data += '\t';
             }
-            MatrixScalar<T>::Append(data,
-                                    static_cast<T>(predicate(matrix[x][y])),
-                                    format);
+            MatrixScalar<T>::Append(data, static_cast<T>(predicate(matrix[x][y])), format);
         }
         data += '\n';
     }

@@ -553,7 +553,6 @@ bool load(MatrixType<T>& matrix,
             matrix.reset(minWidth, maxHeight);
             return false;
         }
-
     }
     if (input->size() > matrixFileSizeLimit)
     {
