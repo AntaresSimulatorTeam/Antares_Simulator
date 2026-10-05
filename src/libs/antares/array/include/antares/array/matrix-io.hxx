@@ -5,9 +5,7 @@
 #define ANTARES_ARRAY_MATRIX_IO_HXX
 
 #include <algorithm>
-#include <atomic>
 #include <cassert>
-#include <chrono>
 #include <cmath>
 #include <cstdint>
 #include <cstdio>
@@ -20,13 +18,8 @@
 #include <memory>
 #include <sstream>
 #include <string>
-#include <system_error>
 #include <type_traits>
 #include <utility>
-
-#ifdef _WIN32
-#include <windows.h>
-#endif
 
 #include <antares/io/statistics.h>
 #include <antares/logs/logs.h>
@@ -158,67 +151,6 @@ bool detectEncoding(const std::string& filename, const std::string& data, size_t
         }
     }
     return true;
-}
-
-bool replaceFile(const std::filesystem::path& temporary,
-                 const std::filesystem::path& filename,
-                 std::error_code& error)
-{
-#ifdef _WIN32
-    const bool targetExists = std::filesystem::exists(filename, error);
-    if (error)
-    {
-        return false;
-    }
-
-    const bool replaced = targetExists ? ReplaceFileW(filename.c_str(),
-                                                      temporary.c_str(),
-                                                      nullptr,
-                                                      REPLACEFILE_WRITE_THROUGH,
-                                                      nullptr,
-                                                      nullptr)
-                                       : MoveFileExW(temporary.c_str(),
-                                                     filename.c_str(),
-                                                     MOVEFILE_WRITE_THROUGH);
-    if (!replaced)
-    {
-        error = std::error_code(static_cast<int>(GetLastError()), std::system_category());
-        return false;
-    }
-
-    error.clear();
-    return true;
-#else
-    std::filesystem::rename(temporary, filename, error);
-    return !error;
-#endif
-}
-
-std::filesystem::path createTemporaryDirectory(const std::filesystem::path& target,
-                                               std::error_code& error)
-{
-    static std::atomic_uint64_t sequence = 0;
-    const auto parent = target.parent_path().empty() ? std::filesystem::path(".")
-                                                     : target.parent_path();
-    const auto timestamp = std::chrono::steady_clock::now().time_since_epoch().count();
-    const auto prefix = target.filename().string() + ".tmp-" + std::to_string(timestamp) + '-';
-
-    for (unsigned int attempt = 0; attempt != 100; ++attempt)
-    {
-        const auto directory = parent / (prefix + std::to_string(sequence.fetch_add(1)));
-        error.clear();
-        if (std::filesystem::create_directory(directory, error))
-        {
-            return directory;
-        }
-        if (error != std::errc::file_exists)
-        {
-            return {};
-        }
-    }
-
-    error = std::make_error_code(std::errc::file_exists);
-    return {};
 }
 
 template<class T>
@@ -739,14 +671,6 @@ bool save(const MatrixType<T>& matrix,
     logs.debug() << "  :: writing `" << filename << "' (" << matrix.width() << 'x'
                  << matrix.height() << ')';
 
-    const std::filesystem::path target(filename);
-    if (target.empty())
-    {
-        logs.error() << "I/O error: " << filename
-                     << ": Impossible to write the file (not enough permission ?)";
-        return false;
-    }
-
     std::string data;
     if (matrix.width() && matrix.height())
     {
@@ -759,45 +683,22 @@ bool save(const MatrixType<T>& matrix,
         return false;
     }
 
-    std::error_code temporaryError;
-    const auto temporaryDirectory = createTemporaryDirectory(target, temporaryError);
-    if (temporaryError || temporaryDirectory.empty())
+    std::ofstream file(filename, std::ios::binary | std::ios::trunc);
+    if (!file)
     {
-        logs.error() << "I/O error: " << filename << ": Failed to create a temporary file";
+        logs.error() << "I/O error: " << filename
+                     << ": Impossible to write the file (not enough permission ?)";
         return false;
     }
-    const auto temporary = temporaryDirectory / "data";
 
-    bool writeSucceeded = false;
+    file.write(data.data(), static_cast<std::streamsize>(data.size()));
+    file.close();
+    if (!file)
     {
-        std::ofstream file(temporary, std::ios::binary | std::ios::trunc);
-        if (file)
-        {
-            file.write(data.data(), static_cast<std::streamsize>(data.size()));
-            file.close();
-            writeSucceeded = static_cast<bool>(file);
-        }
-    }
-
-    if (!writeSucceeded)
-    {
-        std::error_code cleanupError;
-        std::filesystem::remove_all(temporaryDirectory, cleanupError);
         logs.error() << "I/O error: " << filename << ": Failed to write the file";
         return false;
     }
 
-    std::error_code renameError;
-    if (!replaceFile(temporary, target, renameError))
-    {
-        std::error_code cleanupError;
-        std::filesystem::remove_all(temporaryDirectory, cleanupError);
-        logs.error() << "I/O error: " << filename << ": Failed to replace the file";
-        return false;
-    }
-
-    std::error_code cleanupError;
-    std::filesystem::remove(temporaryDirectory, cleanupError);
     Statistics::HasWrittenToDisk(data.size());
     logs.debug() << "  :: [end] writing `" << filename << "' (" << matrix.width() << 'x'
                  << matrix.height() << ')';

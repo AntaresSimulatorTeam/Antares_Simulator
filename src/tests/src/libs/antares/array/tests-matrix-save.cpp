@@ -57,7 +57,7 @@ std::filesystem::path temporaryMatrixPath()
            / ("antares-matrix-save-test-" + std::to_string(timestamp) + ".txt");
 }
 
-BOOST_AUTO_TEST_CASE(save_preserves_existing_file_when_serialization_throws)
+BOOST_AUTO_TEST_CASE(save_does_not_open_file_when_serialization_throws)
 {
     const auto filename = temporaryMatrixPath();
     {
@@ -81,7 +81,6 @@ BOOST_AUTO_TEST_CASE(save_preserves_existing_file_when_serialization_throws)
         BOOST_CHECK_EQUAL(contents, "old data");
     }
     std::filesystem::remove(filename);
-    std::filesystem::remove(filename.string() + ".tmp");
 }
 
 BOOST_AUTO_TEST_CASE(save_to_buffer_preserves_output_when_serialization_throws)
@@ -94,7 +93,7 @@ BOOST_AUTO_TEST_CASE(save_to_buffer_preserves_output_when_serialization_throws)
     BOOST_CHECK_EQUAL(output, "old data");
 }
 
-BOOST_AUTO_TEST_CASE(save_replaces_existing_file_and_removes_temporary_file)
+BOOST_AUTO_TEST_CASE(save_replaces_existing_file)
 {
     const auto filename = temporaryMatrixPath();
     {
@@ -115,7 +114,6 @@ BOOST_AUTO_TEST_CASE(save_replaces_existing_file_and_removes_temporary_file)
                                    std::istreambuf_iterator<char>());
         BOOST_CHECK_EQUAL(contents, "2.500000\n");
     }
-    BOOST_CHECK(!std::filesystem::exists(filename.string() + ".tmp"));
     std::filesystem::remove(filename);
 }
 
