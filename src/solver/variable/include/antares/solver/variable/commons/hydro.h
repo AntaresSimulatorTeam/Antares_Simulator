@@ -131,8 +131,7 @@ public:
         // Determine which time series to use for this simulation year
         // This allows different hydrological scenarios across Monte Carlo years
         const unsigned int nbchro = ror.getSeriesIndex(year);
-        // Cache pointer to the selected time series for efficient hourly access
-        // This avoids repeated index calculations during hourly processing
+        // Cache index to the selected time series for efficient hourly access
         fatalValues[space] = nbchro;
     }
 
