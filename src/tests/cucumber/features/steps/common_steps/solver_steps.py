@@ -53,6 +53,13 @@ def change_transmission_capacities(context, link, value):
     file_path = context.study_path / "input" / "links" / link / "properties.ini"
     context.sih.set_value(variable="transmission-capacities", value=value, file_path=file_path)
 
+@given('the unit commitment mode is "{mode}"')
+def set_unit_commitment_mode(context, mode):
+    """Set `unit-commitment-mode` in generaldata.ini. Use it on a *copy* of a study."""
+    context.sih.set_parameter_value(variable="unit-commitment-mode", value=mode,
+                                    file_nick_name="general")
+
+
 @when('I replace the "{destinationPath}" file with "{originPath}"')
 def replace_reserve_yml(context, destinationPath, originPath):
     destination = destinationPath.split("/")
