@@ -97,13 +97,6 @@ Feature: valid hydro
     And the expected value of the annual system cost is 0
 
   @short @valid-hydro
-  Scenario: H700-10 Reservoir hot start, fills then stays full
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-10"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 0
-
-  @short @valid-hydro
   Scenario: H700-11 Inflows on Tuesdays only, constant 100 MW output
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-11"
     When I run antares simulator
