@@ -564,7 +564,11 @@ _**This section is under construction**_
 ## Adequacy-patch parameters
 Defines a set of options related to the [adequacy patch](https://antares-doc.readthedocs.io/en/latest/reference/adequacy-patch/).
 The set of preferences is study-specific; it can be changed at any time and saved along with study data.  
+These parameters are listed under the `[adequacy patch]` section in the `.ini` file.
+
 These parameters are listed under the `[adequacy patch]` section in the `.ini` file.  
+
+> **Warning:** In hybrid mode (when GEMS components are present), GEMS areas and GEMS links are not part of the adequacy patch domain. GEMS areas are implicitly considered as **outside** the adequacy patch domain, and GEMS links are treated as connecting no zone inside the domain (or at least one virtual zone). Only Legacy areas can be declared as "physical inside" the adequacy patch.
 
 ---
 #### include-adq-patch

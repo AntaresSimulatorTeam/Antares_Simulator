@@ -83,3 +83,10 @@ in the CSR quadratic objective function (Σ ENS²/PTO).
 
 This restriction is enforced at startup in `AdqPatchParams::checkAdqPatchPriceTakingOrderForHybrid()`.
 Using `Load` in hybrid mode throws `IncompatiblePriceTakingOrderForHybrid`
+
+Additionally, GEMS areas and links are implicitly considered as outside the adequacy
+patch domain. Only Legacy areas can be classified as "physical inside" the patch.
+GEMS links are treated as connecting no zone inside the domain, or at least one
+virtual zone. The GEMS contribution to the CSR problem is limited to port field
+expressions (`unsupplied_energy_bound`, `spillage_bound`) evaluated on Legacy areas
+connected to GEMS components via port-to-area connections.
