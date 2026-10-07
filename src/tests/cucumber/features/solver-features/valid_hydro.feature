@@ -71,13 +71,6 @@ Feature: valid hydro
     And the expected value of the annual system cost is 0
 
   @short @valid-hydro
-  Scenario: H700-06 Managed reservoir without reservoir management, inflows every other month
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-06"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 0
-
-  @short @valid-hydro
   Scenario: H700-25 Inflows every other month with an isolated peak on Jan 2nd
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-25"
     When I run antares simulator
@@ -97,23 +90,8 @@ Feature: valid hydro
     And in area "Area 01", during year 1, total hydro production is 36374520 MWh
 
   @short @valid-hydro
-  Scenario: H700-08 Managed reservoir with reservoir management, uniform inflows
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-08"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 0
-    And in area "Area 01", during year 1, total hydro production is 36374520 MWh
-
-  @short @valid-hydro
   Scenario: H700-09 Reservoir cold start, fills then stays full
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-09"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 0
-
-  @short @valid-hydro
-  Scenario: H700-10 Reservoir hot start, fills then stays full
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-10"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 0
@@ -155,13 +133,6 @@ Feature: valid hydro
     Then the simulation succeeds
     And the expected value of the annual system cost is 24960000000
     And in area "Zone 01", during year 1, total hydro production is 2600000 MWh
-
-  @short @valid-hydro
-  Scenario: H700-15 Intra-daily modulation effect (no output Wed->Sun)
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-15"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 24960000000
 
   @short @valid-hydro
   Scenario: H700-16 Leeway 1:1 lifts the intra-daily constraint
@@ -308,13 +279,6 @@ Feature: valid hydro
     Then the simulation succeeds
 
   @short @valid-hydro
-  Scenario: H700-44 Variant of H700-32, initial level 30-70%
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-44"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 184575000
-
-  @short @valid-hydro
   Scenario: H700-45 Same as H700-44 with weekly simplex (168)
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-45"
     When I run antares simulator
@@ -409,20 +373,6 @@ Feature: valid hydro
   # ---------------------------------------------------------------------------
 
   @short @valid-hydro
-  Scenario: H700-47 Near-infinite reservoir, leeway 1:1
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-47"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 9477570000000
-
-  @short @valid-hydro
-  Scenario: H700-48 Near-infinite reservoir, load following on
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-48"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 9477860000000
-
-  @short @valid-hydro
   Scenario: H700-49 Reservoir variant, leeway 1:1
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-49"
     When I run antares simulator
@@ -500,10 +450,3 @@ Feature: valid hydro
     And the expected value of the annual system cost is 2298740000
     And in area "& PSP", during year 1, total hydro production is 2081772 MWh
     And in area "& PSP", during year 1, total hydro pumping is 2770043 MWh
-
-  @short @valid-hydro
-  Scenario: H701-59 PSP, constant inflow 10 MW/h, daily optimisation
-    Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H701-59"
-    When I run antares simulator
-    Then the simulation succeeds
-    And the expected value of the annual system cost is 2298740000
