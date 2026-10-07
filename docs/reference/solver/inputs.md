@@ -529,14 +529,6 @@ It includes 15 parameters (out of which 7 are booleans) presented hereafter:
 
 - "Hard bounds on rule curves (y|n)": states whether, beyond the preliminary heuristic stage (if any), lower and upper reservoir rule curves should still be taken into account as constraints in the hydro-thermal unit commitment and dispatch problems.
 
-- "Use leeway (y|n)", lower bound L, upper bound U: states whether the heuristic hydro ideal target (**HIT**) should be followed exactly or not.
-
-  Choosing "No" implies that, in optimization problems, the hydro energy generated throughout the time interval will be subject to an equality constraint, which may include short-term pumping cycles independent of water value: sum{ 1,t,T} (hydro(t)) – sum{1,t,T} (r. pump(t))= **HIT*
-
-  Choosing "Yes", with bounds L and U, implies that, in optimization problems, the hydro energy generated throughout the time span will be subject to inequality constraints: L_*__HIT__ _&lt;=sum{1,t,T} (hydro(t)) &lt;= U\*_**HIT*
-
-  Independently, short- or long-term pumping may also take place if deemed profitable in the light of water values.
-
   - "Use Water Value (y|n)": states whether the energy taken from / stored into the reservoir should be given the reference value defined in the ad hoc table OR should be given a zero value.
 
   - "Pumping Efficiency Ratio": setting the value to r means that, for the purpose of storing 1 gravitational MWh, pumps will have to use (1/r) electrical MWh.
