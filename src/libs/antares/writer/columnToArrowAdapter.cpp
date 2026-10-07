@@ -109,14 +109,33 @@ InternedStringColumnAdapter::InternedStringColumnAdapter(const InternedStringCol
 
 std::shared_ptr<arrow::Field> InternedStringColumnAdapter::makeField() const
 {
-    return arrow::field(column_->name(), arrow::utf8());
+    return arrow::field(column_->name(),
+                        column_->name() == "component" ? arrow::large_utf8() : arrow::utf8());
 }
 
 std::shared_ptr<arrow::Array> InternedStringColumnAdapter::makeArray() const
 {
-    arrow::StringBuilder builder;
     const auto& dictionary = column_->dictionary();
 
+    if (column_->name() == "component")
+    {
+        arrow::LargeStringBuilder builder;
+        for (const uint32_t index: column_->indices())
+        {
+            if (index == InternedStringColumn::nullIndex)
+            {
+                throwOnStatusKO(builder.AppendNull());
+            }
+            else
+            {
+                throwOnStatusKO(builder.Append(dictionary[index]));
+            }
+        }
+
+        return throwOnResultKO(builder.Finish());
+    }
+
+    arrow::StringBuilder builder;
     for (const uint32_t index: column_->indices())
     {
         if (index == InternedStringColumn::nullIndex)
