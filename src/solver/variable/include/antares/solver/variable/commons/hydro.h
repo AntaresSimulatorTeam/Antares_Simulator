@@ -86,7 +86,7 @@ public:
     {
         // Initialize the vector for fatal values (modern C++ approach)
         // This replaces the previous manual memory management with RAII
-        fatalValues.resize(BaseType::nbYearsParallel, nullptr);
+        fatalValues.resize(BaseType::nbYearsParallel);
     }
 
     /**
@@ -131,9 +131,8 @@ public:
         // Determine which time series to use for this simulation year
         // This allows different hydrological scenarios across Monte Carlo years
         const unsigned int nbchro = ror.getSeriesIndex(year);
-        // Cache pointer to the selected time series for efficient hourly access
-        // This avoids repeated index calculations during hourly processing
-        fatalValues[space] = &(ror.timeSeries.entry[nbchro]);
+        // Cache index to the selected time series for efficient hourly access
+        fatalValues[space] = nbchro;
     }
 
     /**
@@ -150,8 +149,9 @@ public:
     {
         // Extract the hydro generation value for the current hour
         // Uses the time series pointer cached during yearBeginImpl
-        BaseType::yearlyValues[space][state.hourInTheYear] = (*fatalValues[space])
-          [state.hourInTheYear];
+        const auto& ror = BaseType::areaPtr->hydro.series->ror;
+        BaseType::yearlyValues[space][state.hourInTheYear] = ror.timeSeries[fatalValues[space]]
+                                                                           [state.hourInTheYear];
     }
 
 private:
@@ -161,7 +161,7 @@ private:
      * @brief Cached pointers to time series data for each parallel space
      * Stores pointers to the selected time series for each parallel execution
      */
-    std::vector<Matrix<>::ColumnType*> fatalValues;
+    std::vector<unsigned int> fatalValues;
 
     /// @}
 };

@@ -8,14 +8,11 @@
 
 namespace Antares::Solver::Variable
 {
-inline IntermediateValues::~IntermediateValues()
-{
-    Antares::Memory::Release(hour);
-}
+inline IntermediateValues::~IntermediateValues() = default;
 
 inline void IntermediateValues::reset()
 {
-    Antares::Memory::Zero(HOURS_PER_YEAR, hour);
+    hour.assign(HOURS_PER_YEAR, Type{});
     memset(month, 0, sizeof(month));
     memset(week, 0, sizeof(week));
     memset(day, 0, sizeof(day));
@@ -80,7 +77,20 @@ void IntermediateValues::internalExportAnnualValues(SurveyResults& report,
     // Values
     if (not annual)
     {
-        (void)::memcpy(report.values[report.data.columnIndex], array, sizeof(double) * Size);
+        const double* source;
+        if constexpr (std::is_pointer_v<A>)
+        {
+            source = array;
+        }
+        else if constexpr (std::is_array_v<A>)
+        {
+            source = &array[0];
+        }
+        else
+        {
+            source = array.data();
+        }
+        (void)::memcpy(report.values[report.data.columnIndex], source, sizeof(double) * Size);
     }
     else
     {

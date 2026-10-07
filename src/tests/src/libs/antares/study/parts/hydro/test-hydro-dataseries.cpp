@@ -100,6 +100,22 @@ BOOST_AUTO_TEST_CASE(LoadMaxPower_missing_folder_returns_false)
     BOOST_CHECK(!reader.LoadMaxPower("no_such_area", dir));
 }
 
+BOOST_AUTO_TEST_CASE(saveToFolder_returns_false_when_target_is_not_a_directory)
+{
+    auto dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    const auto blockingPath = dir / "not-a-directory";
+    std::ofstream blockingFile(blockingPath);
+    blockingFile << "blocking path";
+    blockingFile.close();
+
+    DataSeriesHydro writer;
+    writer.reset();
+
+    BOOST_CHECK(!writer.saveToFolder("area1",
+                                     blockingPath.string(),
+                                     Parameters::Compatibility::HydroPmax::Daily));
+}
+
 BOOST_AUTO_TEST_CASE(getDailyMaxGenAndPumpPowerFromHourlyTS_averages_per_day)
 {
     DataSeriesHydro d;
@@ -111,13 +127,13 @@ BOOST_AUTO_TEST_CASE(getDailyMaxGenAndPumpPowerFromHourlyTS_averages_per_day)
     Antares::Matrix<> dailyGen = d.getDailyMaxGenPowerFromHourlyTS();
     Antares::Matrix<> dailyPump = d.getDailyMaxPumpPowerFromHourlyTS();
 
-    BOOST_REQUIRE_EQUAL(dailyGen.width, 1u);
-    BOOST_REQUIRE_EQUAL(dailyGen.height, DAYS_PER_YEAR);
+    BOOST_REQUIRE_EQUAL(dailyGen.width(), 1u);
+    BOOST_REQUIRE_EQUAL(dailyGen.height(), DAYS_PER_YEAR);
     BOOST_CHECK_CLOSE(dailyGen[0][0], 10.0, 0.0001);
     BOOST_CHECK_CLOSE(dailyGen[0][DAYS_PER_YEAR - 1], 10.0, 0.0001);
 
-    BOOST_REQUIRE_EQUAL(dailyPump.width, 1u);
-    BOOST_REQUIRE_EQUAL(dailyPump.height, DAYS_PER_YEAR);
+    BOOST_REQUIRE_EQUAL(dailyPump.width(), 1u);
+    BOOST_REQUIRE_EQUAL(dailyPump.height(), DAYS_PER_YEAR);
     BOOST_CHECK_CLOSE(dailyPump[0][0], 20.0, 0.0001);
 }
 

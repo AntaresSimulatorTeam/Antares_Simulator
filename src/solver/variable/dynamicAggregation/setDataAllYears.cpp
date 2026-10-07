@@ -75,7 +75,7 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
     {
         for (size_t i = 0; i < sourceResults.size(); ++i)
         {
-            std::ranges::copy(sourceResults[i], values.hour);
+            std::ranges::copy(sourceResults[i], values.hour.begin());
             computeFunc(values);
             minResults[i].merge(year, values);
             maxResults[i].merge(year, values);

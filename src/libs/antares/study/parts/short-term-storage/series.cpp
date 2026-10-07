@@ -186,11 +186,11 @@ static bool checkSize(const std::string& seriesFilename,
 
 static bool checkSize(const std::string& seriesFilename, const std::string& id, const TimeSeries& v)
 {
-    if (v.timeSeries.height != HOURS_PER_YEAR)
+    if (v.timeSeries.height() != HOURS_PER_YEAR)
     {
         logs.warning() << "Short-term storage " << id
                        << " Invalid size for file: " << seriesFilename << ". Got "
-                       << v.timeSeries.height << " lines, expected " << HOURS_PER_YEAR;
+                       << v.timeSeries.height() << " lines, expected " << HOURS_PER_YEAR;
         return false;
     }
 

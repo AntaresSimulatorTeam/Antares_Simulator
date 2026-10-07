@@ -23,7 +23,7 @@ template<class D>
 static inline bool CheckValidity(unsigned int value, const D& data, unsigned int tsGenMax)
 {
     // When the TS-Generators are not used
-    return (!tsGenMax) ? (value < data.timeSeries.width) : (value < tsGenMax);
+    return (!tsGenMax) ? (value < data.timeSeries.width()) : (value < tsGenMax);
 }
 
 template<>
@@ -42,8 +42,8 @@ inline bool CheckValidity<Data::AreaLink>(unsigned int value,
 {
     // Value = index of time series
     // Direct Capacities = all time series
-    // directCapacities.timeSeries.width = Number of time series
-    return value < data.directCapacities.timeSeries.width;
+    // directCapacities.timeSeries.width() = Number of time series
+    return value < data.directCapacities.timeSeries.width();
 }
 
 template<>
@@ -63,7 +63,7 @@ bool ApplyToMatrix(unsigned int& errors,
 {
     bool ret = true;
 
-    // In this case, m.height represents the total number of years
+    // In this case, m.height() represents the total number of years
     const unsigned int nbYears = data.timeseriesNumbers.height();
     // The matrix m has only one column
     auto& target = data.timeseriesNumbers;

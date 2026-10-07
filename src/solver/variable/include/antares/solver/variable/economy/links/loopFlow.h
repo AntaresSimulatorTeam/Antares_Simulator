@@ -40,8 +40,10 @@ struct LoopFlowTraits
     {
         if (link->useLoopFlow)
         {
-            unsigned int height = link->parameters.height;
-            (void)::memcpy(iv.hour, link->parameters[Data::fhlLoopFlow], sizeof(double) * height);
+            unsigned int height = link->parameters.height();
+            (void)::memcpy(iv.hour.data(),
+                           link->parameters[Data::fhlLoopFlow].data(),
+                           sizeof(double) * height);
         }
     }
 };

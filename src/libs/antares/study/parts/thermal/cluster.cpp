@@ -260,11 +260,11 @@ bool Data::ThermalCluster::integrityCheck()
 bool ThermalCluster::checkModulation()
 {
     std::string buffer = "Thermal cluster: " + parentArea->name + '/' + pName + ": Modulation";
-    if (modulation.width and modulation.height)
+    if (modulation.width() and modulation.height())
     {
-        for (unsigned x = 0; x < modulation.width; ++x)
+        for (unsigned x = 0; x < modulation.width(); ++x)
         {
-            for (unsigned y = 0; y < modulation.height; ++y)
+            for (unsigned y = 0; y < modulation.height(); ++y)
             {
                 if (modulation[x][y] < 0.)
                 {
@@ -284,7 +284,7 @@ void ThermalCluster::calculatMinDivModulation()
                               / std::ceil(modulation[thermalModulationCapacity][0]));
     minDivModulation.index = 0;
 
-    for (unsigned int t = 1; t < modulation.height; t++)
+    for (unsigned int t = 1; t < modulation.height(); t++)
     {
         double div = modulation[thermalModulationCapacity][t]
                      / ceil(modulation[thermalModulationCapacity][t]);
@@ -401,16 +401,16 @@ void ThermalCluster::checkAndCorrectAvailability()
     bool condition = false;
     bool report = false;
 
-    for (unsigned int y = 0; y != series.timeSeries.height; ++y)
+    for (unsigned int y = 0; y != series.timeSeries.height(); ++y)
     {
-        for (unsigned int x = 0; x != series.timeSeries.width; ++x)
+        for (unsigned int x = 0; x != series.timeSeries.width(); ++x)
         {
             auto rightpart = PminDUnGroupeDuPalierThermique
-                             * ceil(series.timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
-            condition = rightpart > series.timeSeries.entry[x][y];
+                             * ceil(series.timeSeries[x][y] / PmaxDUnGroupeDuPalierThermique);
+            condition = rightpart > series.timeSeries[x][y];
             if (condition)
             {
-                series.timeSeries.entry[x][y] = rightpart;
+                series.timeSeries[x][y] = rightpart;
                 report = true;
             }
         }

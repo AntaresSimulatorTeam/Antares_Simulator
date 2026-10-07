@@ -78,7 +78,7 @@ public:
 
     /// \brief overload operator to return a column
     /// Unlike getColumn() it uses direct indexing and not timeseriesNumbers
-    double* operator[](uint32_t index);
+    Matrix<double>::ColumnType& operator[](uint32_t index);
 
     void reset();
     void reset(uint32_t width, uint32_t height);

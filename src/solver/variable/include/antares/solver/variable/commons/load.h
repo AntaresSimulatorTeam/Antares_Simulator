@@ -113,9 +113,9 @@ public:
         // see performTransformationsBeforeLaunchingSimulation()
         // L* = L + DSM
         //
-        std::memcpy(BaseType::yearlyValues[space].hour,
+        std::memcpy(BaseType::yearlyValues[space].hour.data(),
                     BaseType::areaPtr->load.series.getColumn(year),
-                    sizeof(double) * BaseType::areaPtr->load.series.timeSeries.height);
+                    sizeof(double) * BaseType::areaPtr->load.series.timeSeries.height());
     }
 
     /**
