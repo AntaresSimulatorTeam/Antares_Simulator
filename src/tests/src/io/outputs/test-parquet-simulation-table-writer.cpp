@@ -112,8 +112,9 @@ BOOST_FIXTURE_TEST_CASE(write_SimuTable_then_read_it_back___reading_fits, LocalF
     BOOST_CHECK_EQUAL(block->Value(0), entry.block);
 
     // entry : component
-    auto component = getColumn<arrow::StringArray>(read_table, 1);
+    auto component = getColumn<arrow::LargeStringArray>(read_table, 1);
     BOOST_CHECK_EQUAL(component->Value(0), entry.component.value());
+    BOOST_CHECK_EQUAL(read_table->schema()->field(1)->type()->id(), arrow::Type::LARGE_STRING);
 
     // entry : output
     auto output = getColumn<arrow::StringArray>(read_table, 2);
@@ -172,7 +173,7 @@ BOOST_FIXTURE_TEST_CASE(write_table_with_many_empty_entries_then_read_it_back___
     BOOST_CHECK_EQUAL(block->Value(0), entry.block);
 
     // entry : component
-    auto component = getColumn<arrow::StringArray>(read_table, 1);
+    auto component = getColumn<arrow::LargeStringArray>(read_table, 1);
     BOOST_CHECK(!component->IsValid(0));
 
     // entry : output
@@ -231,7 +232,7 @@ BOOST_FIXTURE_TEST_CASE(write_3_lines_table_then_read_it_back___read_fits, Local
     BOOST_CHECK_EQUAL(col_0->Value(2), line_2.block);
 
     // column 1 (component):
-    auto col_1 = getColumn<arrow::StringArray>(read_table, 1);
+    auto col_1 = getColumn<arrow::LargeStringArray>(read_table, 1);
     BOOST_CHECK_EQUAL(col_1->Value(0), line_0.component.value());
     BOOST_CHECK(!col_1->IsValid(1));
     BOOST_CHECK_EQUAL(col_1->Value(2), line_2.component.value());
