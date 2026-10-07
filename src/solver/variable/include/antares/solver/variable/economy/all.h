@@ -57,6 +57,8 @@
 #include "productionByRenewablePlant.h"
 #include "profitByPlant.h"
 #include "pumping.h"
+#include "rampingCostByDispatchablePlant.h"
+#include "rampingCosts.h"
 #include "renewableGeneration.h"
 #include "reserves/reserveParticipationByDispatchableOffUnitsPlant.h"
 #include "reserves/reserveParticipationByDispatchableOnUnitsPlant.h"
@@ -132,6 +134,8 @@ using VariablesPerArea = Common::ComposeAll<
   NbOfDispatchedUnits,
   NbOfDispatchedUnitsByPlant,
   ProfitByPlant,
+  RampingCost,
+  RampingCostByDispatchablePlant,
   ResidualLoad,
   Reserves::ReserveParticipationCost,
   Reserves::ReserveParticipationMarginalCost,
@@ -178,6 +182,7 @@ using VariablesPerSetOfAreas = Common::SpatialAggregateAll<OverallCost,
                                                            Marge,
                                                            NonProportionalCost,
                                                            ResidualLoad,
+                                                           RampingCost,
                                                            NbOfDispatchedUnits>::type;
 
 using VariablesPerBindingConstraints = BindingConstMarginCost;

@@ -150,8 +150,12 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
 
                     for (int pdtHebdo = 0; pdtHebdo < NombreDePasDeTempsProblemeHebdo; pdtHebdo++)
                     {
+                        // When using the ramping model, we must ensure that the NODU don't change
+                        // during the 2nd optimization. Without this, the solver may bypass the
+                        // ramping constraints by partially starting/stopping units.
                         if (NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
-                            < NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo])
+                              < NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
+                            || PaliersThermiquesDuPays.rampingEnabled[index])
                         {
                             NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
                               = NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo];
@@ -193,9 +197,9 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
       = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index]
           .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-    const int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
+    const auto DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
       = PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index];
-    const int DureeMinimaleDArretDUnGroupeDuPalierThermique
+    const auto DureeMinimaleDArretDUnGroupeDuPalierThermique
       = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
 
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE>& ProductionThermique = problemeHebdo
@@ -257,7 +261,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
         if (DureeMinimaleDeMarcheDUnGroupeDuPalierThermique > 0)
         {
             double SMarche = 0;
-            int t1;
+            int t1 = 0;
             for (int k = pdt - DureeMinimaleDeMarcheDUnGroupeDuPalierThermique + 1; k <= pdt; k++)
             {
                 t1 = k;
