@@ -7,6 +7,7 @@
 
 #include <antares/io/inputs/InputError.h>
 #include <antares/io/inputs/yml-utils/YmlTreeDisplayer.h>
+#include <antares/io/inputs/yml-utils/checkFields.h>
 
 #include "include/antares/io/inputs/yml-system/system.h"
 
@@ -15,26 +16,13 @@ using namespace Antares::IO::Inputs;
 namespace YAML
 {
 
-namespace
-{
-
-/// Throws InputError if the map does not have the expected number of fields.
-void requireSize(const Node& node, std::size_t expected, const char* typeName)
-{
-    if (node.size() != expected)
-    {
-        throw InputError(std::string("Expected ") + std::to_string(expected) + " field(s) for '"
-                         + typeName + "', got " + std::to_string(node.size()));
-    }
-}
-} // namespace
-
 bool convert<YmlSystem::Parameter>::decode(const Node& node, YmlSystem::Parameter& rhs)
 {
     if (!YmlUtils::requireMap(node, "parameter"))
     {
         return false;
     }
+    checkFields(node, {"id", "time-dependent", "scenario-dependent", "value"});
     rhs.id = node["id"].as<std::string>();
     rhs.time_dependent = node["time-dependent"].as<bool>();
     rhs.scenario_dependent = node["scenario-dependent"].as<bool>();
@@ -48,6 +36,7 @@ bool convert<YmlSystem::Property>::decode(const Node& node, YmlSystem::Property&
     {
         return false;
     }
+    checkFields(node, {"id", "value"});
     rhs.id = node["id"].as<std::string>();
     rhs.value = node["value"].as<std::string>();
     return true;
@@ -59,6 +48,7 @@ bool convert<YmlSystem::Component>::decode(const Node& node, YmlSystem::Componen
     {
         return false;
     }
+    checkFields(node, {"id", "model"}, {"scenario-group", "parameters", "properties"});
     rhs.id = node["id"].as<std::string>();
     rhs.model = node["model"].as<std::string>();
     rhs.scenarioGroup = node["scenario-group"].as<std::string>("");
@@ -73,7 +63,7 @@ bool convert<YmlSystem::Connection>::decode(const Node& node, YmlSystem::Connect
     {
         return false;
     }
-    requireSize(node, 4, "connection (component1, port1, component2, port2)");
+    checkFields(node, {"component1", "port1", "component2", "port2"});
     rhs.firstEntry.componentId = node["component1"].as<std::string>();
     rhs.firstEntry.portId = node["port1"].as<std::string>();
 
@@ -88,7 +78,7 @@ bool convert<YmlSystem::AreaConnection>::decode(const Node& node, YmlSystem::Are
     {
         return false;
     }
-    requireSize(node, 3, "area-connection (component, port, area)");
+    checkFields(node, {"component", "port", "area"});
     rhs.componentId = node["component"].as<std::string>();
     rhs.portId = node["port"].as<std::string>();
     rhs.areaId = node["area"].as<std::string>();
@@ -102,7 +92,7 @@ bool convert<YmlSystem::ThermalComponent>::decode(const Node& node,
     {
         return false;
     }
-    requireSize(node, 2, "thermal-component (area, cluster-id)");
+    checkFields(node, {"area", "cluster-id"});
     rhs.areaId = node["area"].as<std::string>();
     rhs.clusterId = node["cluster-id"].as<std::string>();
     return true;
@@ -116,7 +106,7 @@ bool convert<YmlSystem::ThermalCapacityConnection>::decode(
     {
         return false;
     }
-    requireSize(node, 3, "thermal-capacity-connection (component, port, thermal-component)");
+    checkFields(node, {"component", "port", "thermal-component"});
     rhs.componentId = node["component"].as<std::string>();
     rhs.portId = node["port"].as<std::string>();
     const Node thermalComponentNode = node["thermal-component"];
@@ -145,6 +135,14 @@ bool convert<YmlSystem::System>::decode(const Node& node, YmlSystem::System& rhs
     {
         throw InputError("Expected a YAML mapping for 'system'");
     }
+    checkFields(node,
+                {"id"},
+                {"description",
+                 "model-libraries",
+                 "components",
+                 "connections",
+                 "area-connections",
+                 "thermal-capacity-connections"});
     rhs.id = node["id"].as<std::string>();
     rhs.components = as_fallback_default<std::vector<YmlSystem::Component>>(node["components"]);
     rhs.connections = as_fallback_default<std::vector<YmlSystem::Connection>>(node["connections"]);

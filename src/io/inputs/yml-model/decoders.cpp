@@ -4,7 +4,6 @@
 #include "antares/io/inputs/yml-model/decoders.h"
 
 #include <span>
-#include <unordered_set>
 
 #include <antares/io/inputs/InputError.h>
 #include <antares/io/inputs/yml-utils/YmlTreeDisplayer.h>
@@ -35,83 +34,6 @@ std::string getFieldFromNode(const Node& node, const std::string& fieldName)
         return {};
     }
     return node[fieldName].as<std::string>("");
-}
-
-std::vector<std::string> diffSet(const std::unordered_set<std::string>& setA,
-                                 const std::unordered_set<std::string>& setB)
-{
-    std::vector<std::string> diff;
-    std::ranges::copy_if(setA,
-                         std::back_inserter(diff),
-                         [&setB](const auto& item) { return !setB.contains(item); });
-    return diff;
-}
-
-std::string build_error_message(const size_t& nbFieldsAllowed,
-                                const YmlTreeDisplayer& displayer,
-                                const std::vector<std::string>& unexpected,
-                                const std::vector<std::string>& missing)
-{
-    // Build a readable list of errors (one per line), then append the tree
-    std::string errors_list;
-    for (const auto& f: unexpected)
-    {
-        errors_list += fmt::format("- Unexpected field: {}\n", f);
-    }
-    for (const auto& f: missing)
-    {
-        errors_list += fmt::format("- Missing field: {}\n", f);
-    }
-
-    // Final message: brief header, individual errors, then the tree
-    const std::string message = fmt::format(
-      "Unexpected or missing field(s) (expected {} field(s)).\n{}\n{}{}",
-      nbFieldsAllowed,
-      errors_list,
-      displayer.baseTree(),
-      displayer.buildMarkedTree(unexpected, missing));
-
-    return message;
-}
-
-void checkFields(const Node& node,
-                 const std::unordered_set<std::string>& mandatoryFields,
-                 const std::unordered_set<std::string>& optionalFields)
-{
-    if (!node.IsMap())
-    {
-        return;
-    }
-
-    // Extract actual key names (cheap, no line-number tracking yet)
-    std::unordered_set<std::string> actualKeys;
-    for (const auto& entry: node)
-    {
-        const Node keyNode = entry.first;
-        actualKeys.insert(keyNode.IsDefined() ? keyNode.as<std::string>()
-                                              : std::string("<unknown>"));
-    }
-
-    std::unordered_set<std::string> allowedFields = mandatoryFields;
-    allowedFields.insert(optionalFields.begin(), optionalFields.end());
-
-    const auto unexpected = diffSet(actualKeys, allowedFields);
-    const auto missing = diffSet(mandatoryFields, actualKeys);
-
-    if (unexpected.empty() && missing.empty())
-    {
-        return; // valid
-    }
-
-    // Invalid map: now build the displayer for error reporting
-    YmlTreeDisplayer displayer(node);
-
-    const std::string message = build_error_message(allowedFields.size(),
-                                                    displayer,
-                                                    unexpected,
-                                                    missing);
-
-    throw Exception(node.Mark(), message);
 }
 
 bool convert<YmlModel::ExpressionLineNumber>::decode(const Node& node,
@@ -181,10 +103,14 @@ bool convert<YmlModel::PortType>::decode(const Node& node, YmlModel::PortType& r
     }
 
     checkMandatoryIdField(node, "port-type");
+    checkFields(node,
+                {"id"},
+                {"description", "fields", "area-connection", "thermal-capacity-connection"});
     rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
     for (const auto& field: node["fields"])
     {
+        checkFields(field, {"id"});
         rhs.fields.push_back(field["id"].as<std::string>());
     }
 
@@ -203,6 +129,7 @@ bool convert<YmlModel::Parameter>::decode(const Node& node, YmlModel::Parameter&
     }
 
     checkMandatoryIdField(node, "parameter");
+    checkFields(node, {"id"}, {"time-dependent", "scenario-dependent"});
     rhs.id = node["id"].as<std::string>();
     rhs.time_dependent = node["time-dependent"].as<bool>(true);
     rhs.scenario_dependent = node["scenario-dependent"].as<bool>(true);
@@ -248,6 +175,14 @@ bool convert<YmlModel::Variable>::decode(const Node& node, YmlModel::Variable& r
     }
 
     checkMandatoryIdField(node, "variable");
+    checkFields(node,
+                {"id"},
+                {"lower-bound",
+                 "upper-bound",
+                 "variable-type",
+                 "time-dependent",
+                 "scenario-dependent",
+                 "location"});
     rhs.id = node["id"].as<std::string>();
     rhs.lower_bound = node["lower-bound"].as<YmlModel::ExpressionLineNumber>(
       YmlModel::ExpressionLineNumber{});
@@ -271,6 +206,7 @@ bool convert<YmlModel::Port>::decode(const Node& node, YmlModel::Port& rhs)
     }
 
     checkMandatoryIdField(node, "port");
+    checkFields(node, {"id", "type"}, {});
     rhs.id = node["id"].as<std::string>();
     rhs.type = node["type"].as<std::string>();
     return true;
@@ -283,6 +219,7 @@ bool convert<YmlModel::PortFieldDefinition>::decode(const Node& node,
     {
         return false;
     }
+    checkFields(node, {"port", "field", "definition"}, {});
     rhs.port = node["port"].as<std::string>();
     rhs.field = node["field"].as<std::string>();
     rhs.definition = node["definition"].as<YmlModel::ExpressionLineNumber>();
@@ -295,6 +232,8 @@ bool convert<YmlModel::Constraint>::decode(const Node& node, YmlModel::Constrain
     {
         return false;
     }
+
+    checkFields(node, {"expression"}, {"id", "location"});
 
     rhs.id = node["id"].as<std::string>("");
     rhs.expression = node["expression"].as<YmlModel::ExpressionLineNumber>();
@@ -309,6 +248,8 @@ bool convert<YmlModel::ExtraOutput>::decode(const Node& node, YmlModel::ExtraOut
         return false;
     }
 
+    checkFields(node, {"expression"}, {"id"});
+
     rhs.id = node["id"].as<std::string>("");
     rhs.expression = node["expression"].as<YmlModel::ExpressionLineNumber>();
     return true;
@@ -320,6 +261,8 @@ bool convert<YmlModel::Objective>::decode(const Node& node, YmlModel::Objective&
     {
         return false;
     }
+
+    checkFields(node, {"expression"}, {"id", "location"});
 
     rhs.id = node["id"].as<std::string>("");
     rhs.expression = node["expression"].as<YmlModel::ExpressionLineNumber>();
@@ -365,6 +308,7 @@ bool convert<YmlModel::Model>::decode(const Node& node, YmlModel::Model& rhs)
 
 bool convert<YmlModel::Library>::decode(const Node& node, YmlModel::Library& rhs)
 {
+    checkFields(node, {"id", "models"}, {"description", "port-types"});
     rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
     rhs.port_types = as_fallback_default<std::vector<YmlModel::PortType>>(node["port-types"]);
