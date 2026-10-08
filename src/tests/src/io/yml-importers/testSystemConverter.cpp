@@ -190,9 +190,9 @@ static const auto libraryYaml_1 = R"(
                 - port: injection_port
                   field: port_name
                   definition: generation
-              objective:
+              objective-contributions:
                 - id: objective
-                - expression: cost * generation
+                  expression: cost * generation
 
             - id: node
               description: A basic balancing node model

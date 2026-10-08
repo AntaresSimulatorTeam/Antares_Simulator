@@ -36,7 +36,6 @@ system:
           time-dependent: true
           scenario-dependent: true
           value: gen1_prop_cost_4_4
-          scenario-group: generators
         - id: gen2_max_p
           time-dependent: true
           scenario-dependent: false

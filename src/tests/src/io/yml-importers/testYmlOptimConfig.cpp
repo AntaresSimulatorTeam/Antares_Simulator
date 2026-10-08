@@ -577,4 +577,26 @@ models:
     BOOST_CHECK_THROW(parser.parse(yaml_content), std::runtime_error);
 }
 
+BOOST_AUTO_TEST_CASE(misspelled_model_field_throws)
+{
+    const auto yaml_content = R"(
+models:
+  - id: lib.model
+    out-of-bound-processing:
+      constraints: []
+)"s;
+    Parser parser;
+    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+}
+
+BOOST_AUTO_TEST_CASE(misspelled_top_level_field_throws)
+{
+    const auto yaml_content = R"(
+resolution-modes: benders-decomposition
+models: []
+)"s;
+    Parser parser;
+    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

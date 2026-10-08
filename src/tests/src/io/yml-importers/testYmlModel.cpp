@@ -1103,3 +1103,33 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_extra_outputs)
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].id, "output_name2");
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].expression.input_expr, "expression2");
 }
+
+BOOST_AUTO_TEST_CASE(misspelled_model_field_throws)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            models:
+                - id: "model_id"
+                  extra-output:
+                    - id: "profit"
+                      expression: "p"
+        )"s;
+    BOOST_CHECK_THROW(parser.parse(library), YAML::Exception);
+}
+
+BOOST_AUTO_TEST_CASE(misspelled_variable_field_throws)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            models:
+                - id: "model_id"
+                  variables:
+                    - id: "p"
+                      lower_bound: 0
+        )"s;
+    BOOST_CHECK_THROW(parser.parse(library), YAML::Exception);
+}

@@ -21,6 +21,7 @@ target_link_libraries(yml-optim-config
         yaml-cpp::yaml-cpp
         PUBLIC
         Antares::input-error
+        Antares::yml-utils
         Antares::antares-study-system-model
 )
 
