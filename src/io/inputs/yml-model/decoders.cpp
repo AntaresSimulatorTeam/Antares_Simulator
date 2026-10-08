@@ -335,6 +335,17 @@ bool convert<YmlModel::Model>::decode(const Node& node, YmlModel::Model& rhs)
     }
 
     checkMandatoryIdField(node, "model");
+    checkFields(node,
+                {"id"},
+                {"description",
+                 "parameters",
+                 "variables",
+                 "ports",
+                 "port-field-definitions",
+                 "constraints",
+                 "binding-constraints",
+                 "objective-contributions",
+                 "extra-outputs"});
     rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
     rhs.parameters = as_fallback_default<std::vector<YmlModel::Parameter>>(node["parameters"]);
