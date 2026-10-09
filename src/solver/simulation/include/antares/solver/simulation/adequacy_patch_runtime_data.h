@@ -27,4 +27,5 @@ public:
 
     bool wasCSRTriggeredAtAreaHour(int area, int hour) const;
     void addCSRTriggeredAtAreaHour(int area, int hour);
+    void resetCSRTriggeredHours();
 };
