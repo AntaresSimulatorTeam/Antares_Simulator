@@ -3,6 +3,8 @@
 
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
+#include <antares/antares/constants.h>
+
 namespace
 {
 constexpr double thresholdForCostCoefficient = 1.e-12;
@@ -36,11 +38,57 @@ void AdequacyPatchRuntimeData::resetCSRTriggeredHours()
     }
 }
 
+bool AdequacyPatchRuntimeData::wasENSZeroedByThresholdAtAreaHour(int area, int hour) const
+{
+    return ensZeroedByThresholdPerArea_[area].count(hour) > 0;
+}
+
+void AdequacyPatchRuntimeData::addENSZeroedByThresholdAtAreaHour(int area, int hour)
+{
+    ensZeroedByThresholdPerArea_[area].insert(hour);
+}
+
+void AdequacyPatchRuntimeData::resetENSZeroedByThreshold()
+{
+    for (auto& zeroedHours: ensZeroedByThresholdPerArea_)
+    {
+        zeroedHours.clear();
+    }
+}
+
+void AdequacyPatchRuntimeData::setMarginalCostBeforeAdqPatch(int area,
+                                                             int hour,
+                                                             double marginalCost)
+{
+    if (area >= static_cast<int>(marginalCostsBeforeAdqPatch_.size()))
+    {
+        marginalCostsBeforeAdqPatch_.resize(area + 1);
+    }
+    if (hour >= static_cast<int>(marginalCostsBeforeAdqPatch_[area].size()))
+    {
+        marginalCostsBeforeAdqPatch_[area].resize(hour + 1, 0.);
+    }
+    marginalCostsBeforeAdqPatch_[area][hour] = marginalCost;
+}
+
+double AdequacyPatchRuntimeData::marginalCostBeforeAdqPatch(int area, int hour) const
+{
+    if (area < 0 || area >= static_cast<int>(marginalCostsBeforeAdqPatch_.size()) || hour < 0
+        || hour >= static_cast<int>(marginalCostsBeforeAdqPatch_[area].size()))
+    {
+        return 0.;
+    }
+    return marginalCostsBeforeAdqPatch_[area][hour];
+}
+
 AdequacyPatchRuntimeData::AdequacyPatchRuntimeData(
   const Antares::Data::AreaList& areas,
   const std::vector<Antares::Data::AreaLink*>& links)
 {
     csrTriggeredHoursPerArea_.resize(areas.size());
+    ensZeroedByThresholdPerArea_.resize(areas.size());
+    marginalCostsBeforeAdqPatch_.resize(
+      areas.size(), std::vector<double>(Antares::Constants::nbHoursInAWeek, 0.));
     areaMode.resize(areas.size());
     for (uint i = 0; i != areas.size(); ++i)
     {

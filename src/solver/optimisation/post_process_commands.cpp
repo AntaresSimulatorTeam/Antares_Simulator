@@ -103,14 +103,26 @@ void UpdateMrgPriceAfterCSRcmd::execute(const optRuntimeData&)
     for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
         auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
-        const auto& scratchpad = area_list_[Area]->scratchpad[numSpace_];
         const double unsuppliedEnergyCost = area_list_[Area]->thermal.unsuppliedEnergyCost;
         const bool areaInside = problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
                                 == physicalAreaInsideAdqPatch;
         for (uint hour = 0; hour < nbHoursInWeek; hour++)
         {
+            const bool ensWasZeroedByThreshold = problemeHebdo_->adequacyPatchRuntimeData
+                                                   ->wasENSZeroedByThresholdAtAreaHour(Area,
+                                                                                        hour);
             const bool isHourTriggeredByCsr = problemeHebdo_->adequacyPatchRuntimeData
                                                 ->wasCSRTriggeredAtAreaHour(Area, hour);
+
+            if (ensWasZeroedByThreshold && areaInside)
+            {
+                const double marginalCostBeforeAdqPatch = problemeHebdo_->adequacyPatchRuntimeData
+                                                            ->marginalCostBeforeAdqPatch(Area,
+                                                                                         hour);
+                hourlyResults.CoutsMarginauxHoraires[hour] = marginalCostBeforeAdqPatch;
+                hourlyResults.CoutsMarginauxHorairesCSR[hour] = marginalCostBeforeAdqPatch;
+                continue;
+            }
 
             // IF UNSP. ENR CSR == 0, MRG. PRICE CSR = MRG. PRICE
             // ELSE, MRG. PRICE CSR = “Unsupplied Energy Cost”
@@ -167,6 +179,8 @@ void DTGnettingAfterCSRcmd::execute(const optRuntimeData&)
                 if (ens < adqPatchParams_.curtailmentSharing.thresholdRun)
                 {
                     ens = 0.0;
+                    problemeHebdo_->adequacyPatchRuntimeData
+                      ->addENSZeroedByThresholdAtAreaHour(Area, hour);
                 }
 
                 const double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
@@ -243,6 +257,17 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
 {
     unsigned int year = opt_runtime_data.year;
     unsigned int week = opt_runtime_data.week;
+
+    for (uint32_t area = 0; area < problemeHebdo_->NombreDePays; ++area)
+    {
+        auto& hourlyResults = problemeHebdo_->ResultatsHoraires[area];
+        for (uint hour = 0; hour < nbHoursInWeek; ++hour)
+        {
+            problemeHebdo_->adequacyPatchRuntimeData->setMarginalCostBeforeAdqPatch(
+              area, hour, hourlyResults.CoutsMarginauxHoraires[hour]);
+        }
+    }
+    problemeHebdo_->adequacyPatchRuntimeData->resetENSZeroedByThreshold();
 
     double totalLmrViolation = calculateDensNewAndTotalLmrViolation();
     logs.info() << "[adq-patch] Year:" << year + 1 << " Week:" << week + 1
