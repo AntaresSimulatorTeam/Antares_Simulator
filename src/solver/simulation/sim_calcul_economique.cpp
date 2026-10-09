@@ -24,6 +24,7 @@ void resetAdequacyPatchResultsForNewWeek(PROBLEME_HEBDO& problem)
     if (problem.adequacyPatchRuntimeData)
     {
         problem.adequacyPatchRuntimeData->resetCSRTriggeredHours();
+        problem.adequacyPatchRuntimeData->resetENSZeroedByThreshold();
     }
 
     for (auto& hourlyResults: problem.ResultatsHoraires)

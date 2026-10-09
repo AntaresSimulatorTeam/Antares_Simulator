@@ -33,7 +33,7 @@ struct UnsuppliedEnergyTrait
           R::AllYears::Max<               // The maximum values throughout all years
             >>>>>
       ResultsType;
-    static constexpr uint8_t decimal = 0;
+    static constexpr uint8_t decimal = 4;
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
 
     static void yearBeginLogic(unsigned, IntermediateValues& iv, Data::Area*, unsigned)
