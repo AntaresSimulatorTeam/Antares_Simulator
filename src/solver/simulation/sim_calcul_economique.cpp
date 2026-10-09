@@ -23,6 +23,33 @@ using namespace Antares::Data;
 
 constexpr double LEVEL_TOLERANCE_MWH = 1.e-6;
 
+void resetAdequacyPatchResultsForNewWeek(PROBLEME_HEBDO& problem)
+{
+    if (problem.adequacyPatchRuntimeData)
+    {
+        problem.adequacyPatchRuntimeData->resetCSRTriggeredHours();
+    }
+
+    for (auto& hourlyResults: problem.ResultatsHoraires)
+    {
+        std::fill(hourlyResults.ValeursHorairesDeDefaillancePositiveCSR.begin(),
+                  hourlyResults.ValeursHorairesDeDefaillancePositiveCSR.end(),
+                  0.);
+        std::fill(hourlyResults.ValeursHorairesDENS.begin(),
+                  hourlyResults.ValeursHorairesDENS.end(),
+                  0.);
+        std::fill(hourlyResults.ValeursHorairesLmrViolations.begin(),
+                  hourlyResults.ValeursHorairesLmrViolations.end(),
+                  0);
+        std::fill(hourlyResults.ValeursHorairesDtgMrgCsr.begin(),
+                  hourlyResults.ValeursHorairesDtgMrgCsr.end(),
+                  0.);
+        std::fill(hourlyResults.CoutsMarginauxHorairesCSR.begin(),
+                  hourlyResults.CoutsMarginauxHorairesCSR.end(),
+                  0.);
+    }
+}
+
 void importCapacityReservations(const AreaList& areas, PROBLEME_HEBDO& problem)
 {
     int globalReserveIndex = 0;
@@ -640,6 +667,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                     const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                                     const Antares::Data::Area::ScratchMap& scratchmap)
 {
+    resetAdequacyPatchResultsForNewWeek(problem);
+
     const auto& parameters = study.parameters;
     auto& studyruntime = study.runtime;
     const uint nbPays = study.areas.size();

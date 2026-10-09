@@ -28,6 +28,14 @@ void AdequacyPatchRuntimeData::addCSRTriggeredAtAreaHour(int area, int hour)
     csrTriggeredHoursPerArea_[area].insert(hour);
 }
 
+void AdequacyPatchRuntimeData::resetCSRTriggeredHours()
+{
+    for (auto& triggeredHours: csrTriggeredHoursPerArea_)
+    {
+        triggeredHours.clear();
+    }
+}
+
 AdequacyPatchRuntimeData::AdequacyPatchRuntimeData(
   const Antares::Data::AreaList& areas,
   const std::vector<Antares::Data::AreaLink*>& links)
