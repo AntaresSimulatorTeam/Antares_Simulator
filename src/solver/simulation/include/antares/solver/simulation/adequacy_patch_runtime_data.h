@@ -14,6 +14,8 @@ class AdequacyPatchRuntimeData
 {
 private:
     std::vector<std::set<int>> csrTriggeredHoursPerArea_;
+    std::vector<std::set<int>> ensZeroedByThresholdPerArea_;
+    std::vector<std::vector<double>> marginalCostsBeforeAdqPatch_;
 
 public:
     explicit AdequacyPatchRuntimeData() = default;
@@ -27,4 +29,12 @@ public:
 
     bool wasCSRTriggeredAtAreaHour(int area, int hour) const;
     void addCSRTriggeredAtAreaHour(int area, int hour);
+    void resetCSRTriggeredHours();
+
+    bool wasENSZeroedByThresholdAtAreaHour(int area, int hour) const;
+    void addENSZeroedByThresholdAtAreaHour(int area, int hour);
+    void resetENSZeroedByThreshold();
+
+    void setMarginalCostBeforeAdqPatch(int area, int hour, double marginalCost);
+    double marginalCostBeforeAdqPatch(int area, int hour) const;
 };
