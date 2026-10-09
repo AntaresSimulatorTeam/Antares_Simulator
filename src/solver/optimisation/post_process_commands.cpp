@@ -136,10 +136,12 @@ void UpdateMrgPriceAfterCSRcmd::execute(const optRuntimeData&)
 // -----------------------------
 //  DTG margin for adq patch
 // -----------------------------
-DTGnettingAfterCSRcmd::DTGnettingAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo,
+DTGnettingAfterCSRcmd::DTGnettingAfterCSRcmd(const AdqPatchParams& adqPatchParams,
+                                             PROBLEME_HEBDO* problemeHebdo,
                                              AreaList& areas,
                                              unsigned int numSpace):
     basePostProcessCommand(problemeHebdo),
+    adqPatchParams_(adqPatchParams),
     area_list_(areas),
     numSpace_(numSpace)
 {
@@ -157,12 +159,17 @@ void DTGnettingAfterCSRcmd::execute(const optRuntimeData&)
             const bool isHourTriggeredByCsr = problemeHebdo_->adequacyPatchRuntimeData
                                                 ->wasCSRTriggeredAtAreaHour(Area, hour);
 
-            const double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
-            const double ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
             const bool areaInside = problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
                                     == physicalAreaInsideAdqPatch;
             if (isHourTriggeredByCsr && areaInside)
             {
+                double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
+                if (ens < adqPatchParams_.curtailmentSharing.thresholdRun)
+                {
+                    ens = 0.0;
+                }
+
+                const double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
                 hourlyResults.ValeursHorairesDtgMrgCsr[hour] = std::max(0.0, dtgMrg - ens);
                 hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = std::max(0.0,
                                                                                        ens
@@ -171,6 +178,8 @@ void DTGnettingAfterCSRcmd::execute(const optRuntimeData&)
             else
             {
                 // Default value (when the hour is not triggered by CSR)
+                const double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
+                const double ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
                 hourlyResults.ValeursHorairesDtgMrgCsr[hour] = dtgMrg;
                 hourlyResults.ValeursHorairesDeDefaillancePositiveCSR[hour] = ens;
             }
