@@ -873,7 +873,9 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture, Simulat
         for (const auto& constraint: model->Constraints())
         {
             const auto& constraintId = constraint.Id();
-            const auto ctVariability = VariabilityVisitor(*optimEntityContainer, compo)
+            const auto ctVariability = VariabilityVisitor(*optimEntityContainer,
+                                                          compo,
+                                                          linearProblem->isLP())
                                          .dispatch(constraint.expression().RootNode());
             unsigned ctCount = 1;
             if (isTimeDependent(ctVariability))

@@ -91,7 +91,7 @@ struct TestVariabilityVisitorFixture
         scenarios.push_back(std::move(scenario0));
 
         fixture.buildLinearProblem(ctx, data_, scenarios);
-        variabilityVisitor.emplace(*fixture.optimEntityContainer, fixture.components[0]);
+        variabilityVisitor.emplace(*fixture.optimEntityContainer, fixture.components[0], true);
     }
 };
 

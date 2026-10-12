@@ -19,7 +19,7 @@ Below are our specific (but not all!) exceptions to the Google's coding standard
 Naming and formatting
 
 - We ALWAYS use 4 spaces indent and don't use tabs.
-- We don't have strict limits on line width, but keep it reasonable to fit on the screen. The advised width is that written in the [src/.clang-format](https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/src/.clang-format) file (currently 100).
+- We don't have strict limits on line width, but keep it reasonable to fit on the screen. The advised width is that written in the [src/.clang-format](https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/.clang-format) file (currently 100).
 - Doxygen-style comments can be used.
 - Use left-to-right order for variables/params: `const string& s` (reference to the const string).
 - In one line `if`, `for`, `while` we use brackets.
