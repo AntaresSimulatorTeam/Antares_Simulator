@@ -11,7 +11,7 @@ toc_depth: 2
 * A simulation table with no rows no longer produces a header-only file. In practice this means
   no `simulation-table-<year>-optim-nb-2` file at all when the second optimisation pass does not
   run, i.e. when `unit-commitment-mode = milp` or in Expansion mode. See the
-  [migration guide](../user-guide/04-migration-guides.md)
+  [migration guide](../reference/migration-guides.md)
   
 #### Features
 
@@ -46,6 +46,10 @@ toc_depth: 2
 * Add cucumber tests for antares-modeler + parquet simulation tables [ANT-5180] (#3752)
 * Add GEMS contribution to adequacy patch CSR bounds [ANT-5264] (#3853)
 * Modeler: allow several years [ANT-5144] (#3907)
+* Add an optional `price` field to the `area-connection` section of a port type: a GEMS component
+  can read the legacy area's marginal price with `sum_connections(<port>.<price-field>)`, e.g. to
+  compute a profit output. The price is 0 when the problem is solved as a MILP. The field must be one
+  of the port type's fields
 
 #### Reserves
 
@@ -320,7 +324,7 @@ Fix: several issues on CentOS7 (#3561)
 
 #### Dependencies
 
-* Update vcpkg to 2025.06.13: some dependency assets were not available anymore. Versions details in [dependency updates](Dependencies/updates.md)
+* Update vcpkg to 2025.06.13: some dependency assets were not available anymore.
 
 #### CI/CD
 

@@ -91,7 +91,6 @@ private:
     double gemsSpilledForArea(uint32_t area) const;
 
     PROBLEME_HEBDO* problemeHebdo_;
-    int triggeredHour_ = 0;
     Antares::LinearProblem::Api::FillContext fillContext_{0, 0, 0, 0, 0};
 
     PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre_;

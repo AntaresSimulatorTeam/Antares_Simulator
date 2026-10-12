@@ -205,3 +205,8 @@ void HourlyCSRProblem::run(uint week, uint year)
     setProblemCost();
     solveProblem(week, year, solverOptions_);
 }
+
+ConstraintBuilder HourlyCSRProblem::makeConstraintBuilder()
+{
+    return ConstraintBuilder(problemeHebdo_, problemeAResoudre_, variableManager_);
+}

@@ -95,11 +95,10 @@ system:
 
 namespace
 {
-// Indices of the unsupplied energy variables in problemAResoudre (Xmax/Xmin).
-// area1 -> variable 0 at hour 0, variable 2 at hour 1; area2 -> variable 1.
-const int ensVarArea1Hour0 = 0;
+// Indices of the unsupplied energy variables in the single-hour CSR problem
+// (Xmax/Xmin).
+const int ensVarArea1 = 0;
 const int ensVarArea2 = 1;
-const int ensVarArea1Hour1 = 2;
 
 // Indices of the constraints in problemAResoudre (SecondMembre).
 const int fictitiousLoadArea1 = 10;
@@ -147,9 +146,8 @@ struct GemsContributionFixture
         std::fill(problemAResoudre.Xmax.begin(), problemAResoudre.Xmax.end(), 0.0);
         std::fill(problemAResoudre.SecondMembre.begin(), problemAResoudre.SecondMembre.end(), 0.0);
 
-        problemAResoudre.Xmax[ensVarArea1Hour0] = 100.0;
+        problemAResoudre.Xmax[ensVarArea1] = 100.0;
         problemAResoudre.Xmax[ensVarArea2] = 100.0;
-        problemAResoudre.Xmax[ensVarArea1Hour1] = 100.0;
         problemAResoudre.SecondMembre[fictitiousLoadArea1] = 500.0;
         problemAResoudre.SecondMembre[fictitiousLoadArea2] = 500.0;
         problemAResoudre.SecondMembre[maxEnsLoadArea1] = 300.0;
@@ -210,13 +208,11 @@ struct GemsContributionFixture
           Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch,
           Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch};
 
-        // Initialize CorrespondanceVarNativesVarOptim for VariableManager.
-        pHebdo.CorrespondanceVarNativesVarOptim.resize(2); // hours 0 and 1
+        // CSR has one local time step: setHour selects the GEMS data time step,
+        // while the variables are always resolved through local hour 0.
+        pHebdo.CorrespondanceVarNativesVarOptim.resize(1);
         pHebdo.CorrespondanceVarNativesVarOptim[0].NumeroDeVariableDefaillancePositive = {
-          ensVarArea1Hour0,
-          ensVarArea2};
-        pHebdo.CorrespondanceVarNativesVarOptim[1].NumeroDeVariableDefaillancePositive = {
-          ensVarArea1Hour1,
+          ensVarArea1,
           ensVarArea2};
     }
 
@@ -260,7 +256,7 @@ BOOST_FIXTURE_TEST_CASE(positive_load__gems_part_sets_ens_bounds__xmax_increased
     gemsPart->setHour(0);
     gemsPart->setBoundsOnENS();
 
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1Hour0], 100.0 + 15.0);
+    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1], 100.0 + 15.0);
     BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea2], 100.0); // not connected
 }
 
@@ -273,7 +269,7 @@ BOOST_FIXTURE_TEST_CASE(negative_load__gems_part_sets_ens_bounds__xmax_decreased
     gemsPart->setHour(0);
     gemsPart->setBoundsOnENS();
 
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1Hour0], 100.0 - 15.0);
+    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1], 100.0 - 15.0);
     BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea2], 100.0);
 }
 
@@ -286,7 +282,7 @@ BOOST_FIXTURE_TEST_CASE(zero_load__gems_part_sets_ens_bounds__xmax_decreased_by_
     gemsPart->setHour(0);
     gemsPart->setBoundsOnENS();
 
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1Hour0], 100.0 - 10.0);
+    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1], 100.0 - 10.0);
     BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea2], 100.0);
 }
 
@@ -357,7 +353,7 @@ BOOST_FIXTURE_TEST_CASE(ens_bounds_evaluated_at_triggered_hour, GemsContribution
     gemsPart->setHour(1);
     gemsPart->setBoundsOnENS();
 
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1Hour1], 100.0 + 11.0);
+    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1], 100.0 + 11.0);
 }
 
 // --- Factory ---
