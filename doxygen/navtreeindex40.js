@@ -1,5 +1,7 @@
 var NAVTREEINDEX40 =
 {
+"structBenchmarking_1_1OptimizationInfo.html#a7e561afa84d4526d96888694b024ad0a":[9,0,3,4,1],
+"structBenchmarking_1_1OptimizationInfo.html#ab015293c71a92d90e2df2e31cab5d3df":[9,0,3,4,0],
 "structBindingConstraintDayData.html":[9,0,44],
 "structBindingConstraintDayData.html#a1a3ae4aab40166a7f90466ad04835476":[9,0,44,1],
 "structBindingConstraintDayData.html#a224a13daef5725eae8c74110d1f9cfc7":[9,0,44,4],
@@ -247,7 +249,5 @@ var NAVTREEINDEX40 =
 "structCsrMaxEnsLoadData.html#a2ebe483460df965696c3f46eca50e5b0":[9,0,95,2],
 "structCsrMaxEnsLoadData.html#a507d6c65689d7f66d26f7f30a7f20cdc":[9,0,95,1],
 "structCsrMaxEnsLoadData.html#aea255f637a38513aa9d04cf1ebbb62bf":[9,0,95,0],
-"structCsvCreationFixture.html":[9,0,96],
-"structCsvCreationFixture.html#a511c24c7f011d1bec6f8da48aaf77474":[9,0,96,1],
-"structCsvCreationFixture.html#a9a4f917679a071414c3b32074e2f6330":[9,0,96,0]
+"structCsvCreationFixture.html":[9,0,96]
 };

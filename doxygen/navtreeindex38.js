@@ -1,5 +1,7 @@
 var NAVTREEINDEX38 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Areas_1_1Statistics.html":[9,0,0,12,7,9,0],
+"structAntares_1_1Solver_1_1Variable_1_1BindingConstraints_1_1Statistics.html":[9,0,0,12,7,11,0],
 "structAntares_1_1Solver_1_1Variable_1_1Category_1_1NextLevel.html":[9,0,0,12,7,1,0],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll.html":[9,0,0,12,7,2,0],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll.html#a780f3951c18a23414a049641780497bd":[9,0,0,12,7,2,0,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn.html#a51615e680f1e83f82dd70aae7389489f":[9,0,0,12,7,5,66,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn.html#a82387b2593b3a6ee2fa0fb2df8de9c3d":[9,0,0,12,7,5,66,5],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn.html#a8c42bd8c48da038320c34fac3fc01833":[9,0,0,12,7,5,66,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn.html#aa46f9b663a62b8292c8ec6c1f25e94aa":[9,0,0,12,7,5,66,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn_1_1Multiple.html":[9,0,0,12,7,5,66,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html":[9,0,0,12,7,5,11]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn.html#aa46f9b663a62b8292c8ec6c1f25e94aa":[9,0,0,12,7,5,66,4]
 };
