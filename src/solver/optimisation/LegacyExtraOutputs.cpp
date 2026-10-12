@@ -335,6 +335,16 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
            ? 1.
            : 0.);
 
+    emit("domestic_unsupplied_energy",
+         area,
+         pdt,
+         problemeHebdo_.ResultatsHoraires[pays].ValeursHorairesDENS[pdt]);
+    emit("is_local_matching_rule_violated",
+         area,
+         pdt,
+         static_cast<double>(
+           problemeHebdo_.ResultatsHoraires[pays].ValeursHorairesLmrViolations[pdt]));
+
     // Port fields of the load and long_term_storage models, emitted on their
     // own components ({area}_load, {area}_hydro_storage) so their balance_port.flow
     // rows cannot collide with each other on the area name.
