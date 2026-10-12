@@ -9,7 +9,7 @@
 
 #include "in-memory-study.h"
 
-using Antares::Optimization::BuildInactiveComponentsAnalyzer;
+using Antares::Data::BuildInactiveComponentsAnalyzer;
 
 namespace
 {

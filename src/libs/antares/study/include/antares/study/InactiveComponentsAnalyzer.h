@@ -9,7 +9,7 @@
 
 #include <antares/study/area/constants.h>
 
-namespace Antares::Optimization
+namespace Antares::Data
 {
 
 // Precomputed, once per study (not per week, not per MC year), flags telling
@@ -50,9 +50,9 @@ private:
     std::vector<bool> rorAllZero_;
     std::vector<bool> solarAllZero_;
     std::vector<bool> windAllZero_;
-    std::array<std::vector<bool>, Data::fhhMax> miscGenColumnAllZero_; // [pays][column]
+    std::array<std::vector<bool>, fhhMax> miscGenColumnAllZero_; // [pays][column]
     std::vector<bool> hydroInflowAllZero_;
     std::vector<bool> linkAllZero_;
 };
 
-} // namespace Antares::Optimization
+} // namespace Antares::Data

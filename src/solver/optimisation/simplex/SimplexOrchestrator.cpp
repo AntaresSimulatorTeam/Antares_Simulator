@@ -61,7 +61,7 @@ SimplexOrchestrator::SimplexOrchestrator(
   const OptPeriodStringGenerator& periodString,
   Solver::IResultWriter& writer,
   IO::Outputs::SimulationTable* simulationTable,
-  const Antares::Optimization::InactiveComponentsAnalyzer* inactiveComponents):
+  const Antares::Data::InactiveComponentsAnalyzer* inactiveComponents):
     options_(std::move(options)),
     problemeHebdo_(problemeHebdo),
     NumIntervalle_(NumIntervalle),

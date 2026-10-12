@@ -22,6 +22,8 @@ using Antares::LinearProblem::Api::FillContext;
 namespace Antares::Optimization
 {
 
+using Data::InactiveComponentsAnalyzer;
+
 std::optional<unsigned> LegacyBlockTimeIndex(const FillContext& fillContext, unsigned timeIndex)
 {
     if (timeIndex >= fillContext.getGlobalFirstTimeStep()

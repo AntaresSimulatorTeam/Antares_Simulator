@@ -8,7 +8,7 @@
 #include "antares/study/InactiveComponentsAnalyzer.h"
 #include "antares/study/fwd.h"
 
-namespace Antares::Optimization
+namespace Antares::Data
 {
 
 // Builds a study-wide InactiveComponentsAnalyzer by inspecting, once, the
@@ -18,6 +18,6 @@ namespace Antares::Optimization
 // Areas are visited in `study.areas`' index order, matching
 // SIM_InitialisationProblemeHebdo's `pays` numbering.
 std::shared_ptr<const InactiveComponentsAnalyzer> BuildInactiveComponentsAnalyzer(
-  const Data::Study& study);
+  const Study& study);
 
-} // namespace Antares::Optimization
+} // namespace Antares::Data

@@ -9,6 +9,8 @@ using namespace Antares::IO::Outputs;
 
 namespace Antares::Optimization
 {
+using Data::InactiveComponentsAnalyzer;
+
 WeeklyOptimization::WeeklyOptimization(
   const OptimizationOptions& options,
   PROBLEME_HEBDO* problemeHebdo,

@@ -1,12 +1,13 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <ranges>
 #include <yaml-cpp/yaml.h>
 
 #include <antares/io/inputs/InputError.h>
 #include <antares/solver/modeler/ModelerData.h>
-#include <antares/study/InactiveComponentsAnalyzerBuilder.h>
 #include <antares/solver/optimisation/opt_rename_problem.h>
+#include <antares/study/InactiveComponentsAnalyzerBuilder.h>
 #include <antares/study/area/constants.h>
 #include <antares/study/system-model/component.h>
 #include <antares/study/system-model/system.h>
@@ -150,15 +151,18 @@ YAML::Node generateSystemForView(const Antares::Data::Study& study)
 
 YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
 {
-    const auto inactiveComponents = Antares::Optimization::BuildInactiveComponentsAnalyzer(study);
+    const auto inactiveComponents = Antares::Data::BuildInactiveComponentsAnalyzer(study);
     YAML::Node system;
     system["id"] = study.folder.string();
 
     YAML::Node components = YAML::Node(YAML::NodeType::Sequence);
     YAML::Node connections = YAML::Node(YAML::NodeType::Sequence);
 
+    // Link indices are global across areas. Keep this traversal in sync with
+    // BuildInactiveComponentsAnalyzer's area/link traversal.
+    uint32_t interco = 0;
     study.areas.each(
-      [&components, &connections, &study, &inactiveComponents](const Area& area)
+      [&components, &connections, &study, &inactiveComponents, &interco](const Area& area)
       {
           std::string areaLoc = BuildAreaNodeComponentId(area.id);
 
@@ -167,15 +171,19 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
           if (!inactiveComponents->loadIsAllZero(area.index))
           {
               components.push_back(loadToYaml(area));
-              connections.push_back(
-                makeConnection(BuildLoadComponentId(area.id), "balance_port", areaLoc, "balance_port"));
+              connections.push_back(makeConnection(BuildLoadComponentId(area.id),
+                                                   "balance_port",
+                                                   areaLoc,
+                                                   "balance_port"));
           }
 
           if (!inactiveComponents->windIsAllZero(area.index))
           {
               components.push_back(windToYaml(area));
-              connections.push_back(
-                makeConnection(BuildWindComponentId(area.id), "balance_port", areaLoc, "balance_port"));
+              connections.push_back(makeConnection(BuildWindComponentId(area.id),
+                                                   "balance_port",
+                                                   areaLoc,
+                                                   "balance_port"));
           }
 
           if (!inactiveComponents->solarIsAllZero(area.index))
@@ -190,14 +198,18 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
           if (area.hydro.series && !inactiveComponents->rorIsAllZero(area.index))
           {
               components.push_back(rorToYaml(area));
-              connections.push_back(
-                makeConnection(BuildRorComponentId(area.id), "balance_port", areaLoc, "balance_port"));
+              connections.push_back(makeConnection(BuildRorComponentId(area.id),
+                                                   "balance_port",
+                                                   areaLoc,
+                                                   "balance_port"));
           }
 
           for (int i = 0; i < MiscGenIndex::fhhMax; ++i)
           {
               if (inactiveComponents->miscGenColumnIsAllZero(area.index, i))
+              {
                   continue;
+              }
               components.push_back(miscGenToYaml(area, i));
               connections.push_back(
                 makeConnection(BuildMiscGenComponentId(area.id,
@@ -221,7 +233,9 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
           for (const auto& cluster: area.renewable.list.all())
           {
               if (!cluster->enabled || study.parameters.renewableGeneration() != rgClusters)
+              {
                   continue;
+              }
               components.push_back(renewableClusterToYaml(*cluster));
               connections.push_back(
                 makeConnection(BuildRenewableClusterComponentId(area.id, cluster->id()),
@@ -233,7 +247,9 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
           for (const auto& st: area.shortTermStorage.storagesByIndex)
           {
               if (!st.enabled())
+              {
                   continue;
+              }
               components.push_back(shortTermStorageToYaml(area, st));
               connections.push_back(makeConnection(BuildSTStorageClusterComponentId(area.id, st.id),
                                                    "balance_port",
@@ -241,7 +257,8 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
                                                    "balance_port"));
           }
 
-          if (area.hydro.reservoirManagement || !inactiveComponents->hydroInflowIsAllZero(area.index))
+          if (area.hydro.reservoirManagement
+              || !inactiveComponents->hydroInflowIsAllZero(area.index))
           {
               components.push_back(longTermStorageToYaml(area));
               connections.push_back(makeConnection(BuildHydroStorageComponentId(area.id),
@@ -250,11 +267,14 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
                                                    "balance_port"));
           }
 
-          uint32_t interco = 0;
-          for (const auto& [_, link]: area.links)
+          for (const auto& link: area.links | std::views::values)
           {
-              if (inactiveComponents->linkIsAllZero(interco++))
+              const bool linkIsInactive = inactiveComponents->linkIsAllZero(interco);
+              ++interco;
+              if (linkIsInactive)
+              {
                   continue;
+              }
               components.push_back(linkToYaml(*link));
 
               std::string linkId = BuildLinkComponentId(link->from->id, link->with->id);

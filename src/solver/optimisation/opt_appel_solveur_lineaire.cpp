@@ -24,15 +24,14 @@ using Antares::Solver::Optimization::Simplex::SimplexOrchestrator;
 namespace Antares::Solver::Optimization
 {
 
-bool OPT_AppelDuSimplexe(
-  const Antares::Optimization::SingleOptimOptions& options,
-  PROBLEME_HEBDO& problemeHebdo,
-  int NumIntervalle,
-  int optimizationNumber,
-  const OptPeriodStringGenerator& optPeriodStringGenerator,
-  IResultWriter& writer,
-  IO::Outputs::SimulationTable* simulationTable,
-  const Antares::Optimization::InactiveComponentsAnalyzer* inactiveComponents)
+bool OPT_AppelDuSimplexe(const Antares::Optimization::SingleOptimOptions& options,
+                         PROBLEME_HEBDO& problemeHebdo,
+                         int NumIntervalle,
+                         int optimizationNumber,
+                         const OptPeriodStringGenerator& optPeriodStringGenerator,
+                         IResultWriter& writer,
+                         IO::Outputs::SimulationTable* simulationTable,
+                         const Antares::Data::InactiveComponentsAnalyzer* inactiveComponents)
 {
     SimplexOrchestrator orchestrator(options,
                                      problemeHebdo,

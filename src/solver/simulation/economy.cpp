@@ -60,8 +60,7 @@ bool Economy::simulationBegin()
         weeklyOptProblems_.clear();
         postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
 
-        const auto inactiveComponents = Antares::Optimization::BuildInactiveComponentsAnalyzer(
-          study);
+        const auto inactiveComponents = Antares::Data::BuildInactiveComponentsAnalyzer(study);
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
