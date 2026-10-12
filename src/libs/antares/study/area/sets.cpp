@@ -3,6 +3,7 @@
 
 #include "antares/study/sets.h"
 
+#include <ranges>
 #include <string>
 #include <string_view>
 
@@ -264,6 +265,15 @@ unsigned int Sets::outputFilter(const IDType& id, ReportType report) const
     }
     return report == ReportType::synthesis ? pair->second.filterSynthesis
                                            : pair->second.filterYearByYear;
+}
+
+void Sets::disableOutputFilters()
+{
+    for (auto& options: pOptions | std::views::values)
+    {
+        options.filterSynthesis = filterAll;
+        options.filterYearByYear = filterAll;
+    }
 }
 
 void Sets::rebuildFromRules(const IDType& id, SetHandlerAreas& handler)
