@@ -8,13 +8,10 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      # Exclude github.com from link checking: GitHub returns 503 "Service Unavailable"
-      # (DDoS protection / rate limiting) for automated bulk requests, causing false-positive
-      # failures in CI.
       - name: Check external link validity
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
-          args: --no-progress --exclude 'github\.com' './**/*.md'
+          args: --no-progress './**/*.md'
 
       - name: Set up Python
         uses: actions/setup-python@v7
