@@ -17,7 +17,8 @@ class VariabilityVisitor: public NodeVisitor<LinearProblem::VariabilityType>
 {
 public:
     explicit VariabilityVisitor(const LinearProblem::OptimEntityContainer& optimEntityContainer,
-                                const ModelerStudy::SystemModel::Component& component);
+                                const ModelerStudy::SystemModel::Component& component,
+                                bool isLP = true);
 
     std::string name() const override;
 
@@ -49,5 +50,6 @@ private:
 
     const LinearProblem::OptimEntityContainer& optimEntityContainer_;
     const ModelerStudy::SystemModel::Component& component_;
+    bool isLP_;
 };
 } // namespace Antares::Expressions::Visitors

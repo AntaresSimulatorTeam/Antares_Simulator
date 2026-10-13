@@ -13,6 +13,7 @@
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
+#include "antares/solver/optimisation/HebdoAreaPriceProvider.h"
 #include "antares/solver/optimisation/LegacyNameMapper.h"
 #include "antares/solver/optimisation/LegacySimulationTableSnapshot.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
@@ -27,6 +28,7 @@ using Antares::Constants::nbHoursInAWeek;
 using Antares::LinearProblem::BendersDecomposition;
 using Antares::LinearProblem::OptimEntityContainer;
 using Antares::LinearProblem::Api::FillContext;
+using Antares::Optimization::HebdoAreaPriceProvider;
 using Antares::Optimization::LegacyNameMapper;
 using Antares::Optimization::LegacyOrtoolsLinearProblem;
 
@@ -234,6 +236,7 @@ void SimplexOrchestrator::fillSimulationTable()
 
     if (problemeHebdo_.modelerData)
     {
+        const HebdoAreaPriceProvider areaPriceProvider(problemeHebdo_, *ortoolsProblem_);
         IO::Outputs::FillSimulationTable(*simulationTable_,
                                          *ortoolsProblem_,
                                          ::getObjectiveValue(solver_.get()),
@@ -242,7 +245,8 @@ void SimplexOrchestrator::fillSimulationTable()
                                          *fillCtx_,
                                          currentBlock,
                                          timeConversionMode,
-                                         true);
+                                         true,
+                                         &areaPriceProvider);
     }
 
     static constexpr LegacyNameMapper legacyNameMapper;

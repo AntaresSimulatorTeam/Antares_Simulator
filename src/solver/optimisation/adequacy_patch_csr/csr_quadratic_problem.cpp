@@ -132,7 +132,7 @@ void CsrQuadraticProblem::buildConstraintMatrix()
     problemeAResoudre_.NombreDeContraintes = 0;
     problemeAResoudre_.NombreDeTermesDansLaMatriceDesContraintes = 0;
 
-    ConstraintBuilder builder(problemeHebdo_, problemeAResoudre_);
+    ConstraintBuilder builder = hourlyCsrProblem_.makeConstraintBuilder();
     setConstraintsOnFlows(builder);
     setNodeBalanceConstraints(builder);
     setFictitiousLoadConstraints(builder);

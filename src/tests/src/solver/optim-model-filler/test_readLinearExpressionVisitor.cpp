@@ -591,6 +591,57 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown,
       checkMessage("A linear expression can't contain extra output operator reduced_cost."));
 }
 
+BOOST_AUTO_TEST_CASE(area_connection_price_field_forbidden_in_linear_expression)
+{
+    // Defense in depth: ModelConverter already rejects this at parse time
+    // (see checkPriceFieldNotUsedInConstraintsOrObjectives), this test exercises the
+    // ReadLinearExpressionVisitor-level guard directly, bypassing that earlier check.
+    SystemModel::AreaConnection areaConnection{.inject_to_balance = "flow",
+                                               .spillage_bound = "",
+                                               .unsupplied_energy_bound = "",
+                                               .price = "price"};
+    SystemModel::PortType portType("flow_port",
+                                   {SystemModel::PortField("flow"),
+                                    SystemModel::PortField("price")},
+                                   areaConnection);
+    SystemModel::Port port("generation", portType);
+
+    SystemModel::Model model = SystemModel::ModelBuilder()
+                                 .withId("gen_model")
+                                 .withPorts({port})
+                                 .build();
+    SystemModel::Component component = SystemModel::ComponentBuilder()
+                                         .withId("gen1")
+                                         .withModel(&model)
+                                         .withScenarioGroupId("GROUP")
+                                         .build();
+    component.addAreaConnection("generation", "area1");
+
+    MockLinearProblem linearProblem(false);
+    OptimEntityContainer optimContainer(linearProblem);
+    std::vector<SystemModel::Component> components;
+    components.push_back(std::move(component));
+    optimContainer.addFromSystemComponents(components);
+
+    MockLinearProblemData data;
+    ScenarioGroupRepository scenarioGroupRepository = createScenario();
+    Api::FillContext ctx{0, 0, 0, 0, 0};
+
+    ReadLinearExpressionVisitor visitor(optimContainer,
+                                        ctx,
+                                        components[0],
+                                        &data,
+                                        scenarioGroupRepository);
+
+    PortFieldSumNode priceSum("generation", "price");
+    BOOST_CHECK_EXCEPTION(
+      visitor.dispatch(&priceSum),
+      Antares::Error::InvalidArgumentError,
+      checkMessage("Field 'price' of port 'generation' holds the dual value of a legacy area's "
+                   "balance equation and can only be used in extra-outputs, not in a linear "
+                   "expression."));
+}
+
 BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_inverted_bounds_returns_zero,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {
