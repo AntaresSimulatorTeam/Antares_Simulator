@@ -12,6 +12,49 @@ In file settings/generaldata.ini, in section `optimization`, new property `inclu
 
 If `include-reserves = true`, the new reserve input files in **input/reserves** are read. See [reserve files](solver/optional-features/reserves.md) for more details.
 
+#### Filter district output granularities with `sets.ini`
+
+Districts (sets of areas) now support geographic trimming for their exported time-series, controlled via the
+existing **`input/areas/sets.ini`** file. This allows restricting which granularities are exported per district and
+per report type, avoiding unnecessary output on large studies.
+
+Add the following optional keys to any district section in `sets.ini`:
+
+- **`filter-synthesis`** (applies to the synthesis report, `mc-all`)
+- **`filter-year-by-year`** (applies to the year-by-year reports, `mc-ind`)
+
+Each value is a comma- and/or space-separated list of granularities: `hourly`, `daily`, `weekly`, `monthly`, `annual`.
+
+**Default values:** If the keys are omitted or set to an unknown token, the default is `all` (all granularities are exported).
+
+**Example:**
+
+```ini
+[all system]
+apply-filter = add-all
+output = true
+filter-synthesis = annual
+filter-year-by-year = hourly, daily
+```
+
+| Input | Behavior |
+|---|---|
+| Key missing (or district not defined) | default behavior: all granularities exported |
+| `filter-synthesis = annual` | only `values-annual.txt` for that district in `mc-all` |
+| `filter-year-by-year = hourly, daily` | only `values-hourly.txt` and `values-daily.txt` in `mc-ind` |
+| key with no valid token (e.g. `filter-synthesis = none`) | the district output is skipped entirely for that report |
+| empty value (e.g. `filter-synthesis = `) | same as `none`: the district output is skipped entirely for that report |
+| unknown token (e.g. `bogus`) | ignored |
+
+> **Note:** Output **variables** (columns) per district are handled globally by the variables inspector and are not
+> affected by these filters. Granularity filtering for areas, links and binding constraints already existed via their
+> respective INI keys. This extends the same concept to districts.
+>
+> An unknown granularity token (e.g. `filter-synthesis = bogus`) is ignored, meaning the filter stays at its default
+> of all granularities. The key is not rejected with an error.
+
+See [sets.ini documentation](solver/inputs.md) for more details.
+
 #### Deprecated properties
 
 The following properties of the `general` section in file settings/generaldata.ini are now ignored. They are
@@ -46,7 +89,7 @@ stage suffix if it only wants the optimization passes.
 
 Previously `simulation-table-<year>-optim-nb-2` was always written, even as a header-only file when
 the second optimization pass never ran. It is now omitted entirely in that case, which happens when
-[`unit-commitment-mode`](solver/04-parameters.md#unit-commitment-mode) is `milp` — a single MILP
+[`unit-commitment-mode`](solver/parameters.md#unit-commitment-mode) is `milp` — a single MILP
 problem is solved instead of two LP problems — or in Expansion mode.
 
 Scripts that open the optim-nb-2 file unconditionally must handle its absence. Note that an absent
@@ -55,7 +98,7 @@ file and a header-only file always carried the same information — that the pas
 #### The post-process stages need a weekly optimization range
 
 The two new stages are written once the week has been solved and post-processed. With
-[`simplex-range`](solver/04-parameters.md#simplex-range) set to `day` the week is instead solved as
+[`simplex-range`](solver/parameters.md#simplex-range) set to `day` the week is instead solved as
 seven daily problems, and the results the stage would report are only readable for the last of them.
 Rather than write a table covering one day out of seven, the solver writes none and logs a warning
 once. `optim-nb-1` and `optim-nb-2` are unaffected — they are written per optimization pass either

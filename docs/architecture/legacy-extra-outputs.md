@@ -5,7 +5,7 @@
 The legacy (weekly) solver exposes its results in the modeler simulation table in two categories:
 
 - **Raw rows** — one per named optimisation variable, `value = X[i]`. `VariableNamer` records, at problem-naming time, a `LegacyVariableInfo{name, component, timeIndex}` parallel to the variable name (`PROBLEME_ANTARES_A_RESOUDRE::LegacyVariablesInfo`); after each solve `FillLegacySimulationTable` writes one row per recorded variable, translating the legacy name to its public output name through `LegacyNameMapper` (e.g. `UnsuppliedEnergy` → `unsupplied_energy`).
-- **Derived rows** — quantities computed from the solution rather than variables of the problem: a thermal cluster's `prop_cost = generation_cost × generation_power`, an area's `price = -dual(balance constraint)`, congestion indicators, emissions, margins, `profit`, ... These are produced by `AddLegacyExtraOutputs` (`src/solver/optimisation/LegacyExtraOutputs.cpp`), the single entry point for all extra outputs.
+- **Derived rows** — quantities computed from the solution rather than variables of the problem: a thermal cluster's `prop_cost = generation_cost × generation_power`, an area's `price = -dual(balance constraint)` (computed by `legacyAreaPrice`, shared with the GEMS area-connection `price` field, see `HebdoAreaPriceProvider.h`), congestion indicators, emissions, margins, `profit`, ... These are produced by `AddLegacyExtraOutputs` (`src/solver/optimisation/LegacyExtraOutputs.cpp`), the single entry point for all extra outputs.
 
 ## 2. Design: iterate the study structure, read by index
 
