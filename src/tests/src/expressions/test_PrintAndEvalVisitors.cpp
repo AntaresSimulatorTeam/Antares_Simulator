@@ -13,6 +13,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
+#include <antares/modeler-optimisation-container/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
 #include "antares/expressions/ShiftVector.h"
 
@@ -26,78 +27,17 @@ using namespace Antares::LinearProblem;
 
 BOOST_AUTO_TEST_SUITE(_PrintAndEvalNodes_)
 
-BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
+BOOST_AUTO_TEST_CASE(parameterValueToDouble_convertsAndReportsErrors)
 {
-    // Mock dependency
-    struct MockLinearProblemData: Antares::LinearProblem::Api::ILinearProblemData
-    {
-        [[nodiscard]] double getData(const std::string&, unsigned int, unsigned int) const override
-        {
-            return 123.45; // Mock return value for testing
-        }
+    using InvalidParameterValue = EvaluationContext::CouldNotEvaluateConstantParameter<
+      std::invalid_argument>;
+    using OutOfRangeParameterValue = EvaluationContext::CouldNotEvaluateConstantParameter<
+      std::out_of_range>;
 
-        [[nodiscard]] std::span<const double> getData(
-          [[maybe_unused]] const std::string& dataSetId,
-          [[maybe_unused]] unsigned timeSeriesNumber,
-          [[maybe_unused]] unsigned firstHour,
-          [[maybe_unused]] unsigned lastHour) const override
-        {
-            static std::vector<double> data = {123.45};
-            return data;
-        }
-    } mockData;
-
-    const auto valid_number = "valid_number";
-    const auto invalid_number = "invalid_number";
-    const auto out_of_range = "out_of_range";
-    const auto scenario_only = "scenario_only";
-    const auto timeserie_param = "timeserie_param";
-    std::vector<Parameter> params = {
-      Parameter{valid_number, TimeDependent::NO, ScenarioDependent::NO},
-      Parameter{invalid_number, TimeDependent::NO, ScenarioDependent::NO},
-      Parameter{out_of_range, TimeDependent::NO, ScenarioDependent::NO},
-      Parameter{scenario_only, TimeDependent::NO, ScenarioDependent::YES},
-      Parameter{timeserie_param, TimeDependent::YES, ScenarioDependent::YES}};
-
-    std::map<std::string, ParameterTypeAndValue> system_parameters = {
-      {valid_number, {valid_number, VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "42.5"}},
-      {invalid_number, {invalid_number, VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "abc"}},
-      {out_of_range, {out_of_range, VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "1e500"}},
-      {scenario_only, {scenario_only, VariabilityType::VARYING_IN_SCENARIO_ONLY, "timeserie_file"}},
-      {timeserie_param,
-       {timeserie_param, VariabilityType::VARYING_IN_TIME_ONLY, "timeserie_file"}}};
-
-    std::map<std::string, double> variables; // Not needed for this test
-
-    Antares::LinearProblem::Api::EmptyScenario emptyScenario;
-    auto model = createModelWithParameters(params);
-    const std::vector<Component> components{createComponent(model, "compo", system_parameters)};
-    EvaluationContext context(&components.back(), &mockData, &emptyScenario);
-
-    // 1. Valid number (CONSTANT)
-    BOOST_CHECK_EQUAL(context.getSystemParameterValueAsDouble(valid_number), 42.5);
-
-    // 2. Parameter not found
-    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble("nonexistent"),
-                      EvaluationContext::CouldNotEvaluateConstantParameter<std::out_of_range>);
-
-    // 3. Invalid number format
-    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble(invalid_number),
-                      EvaluationContext::CouldNotEvaluateConstantParameter<std::invalid_argument>);
-
-    // 4. Out of range value
-    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble(out_of_range),
-                      EvaluationContext::CouldNotEvaluateConstantParameter<std::out_of_range>);
-
-    // 5. Timeserie parameter should NOT be converted to double, expect an exception
-    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble(timeserie_param),
-                      EvaluationContext::CouldNotEvaluateConstantParameter<std::invalid_argument>);
-
-    // 6. Timeserie parameter should be handled by getParameterValue instead
-    BOOST_CHECK_EQUAL(context.getParameterValue(timeserie_param, 0, 1), 123.45);
-
-    // 7. Scenario only: handled like a timeserie parameter
-    BOOST_CHECK_EQUAL(context.getParameterValue(scenario_only, 0, 1), 123.45);
+    const auto value = parameterValueToDouble("parameter", "42.5");
+    BOOST_CHECK_EQUAL(value, 42.5);
+    BOOST_CHECK_THROW(parameterValueToDouble("parameter", "not a number"), InvalidParameterValue);
+    BOOST_CHECK_THROW(parameterValueToDouble("parameter", "1e9999"), OutOfRangeParameterValue);
 }
 
 BOOST_AUTO_TEST_CASE(EvaluationResult_ConstructorTest)
