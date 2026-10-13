@@ -10,6 +10,7 @@
 #include <antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h>
 #include "antares/study/parts/reserves/reservesParticipationsLoader.h"
 #include "antares/study/study.h"
+#include <antares/utils/utils.h>
 
 namespace fs = std::filesystem;
 
@@ -138,6 +139,18 @@ bool PartHydro::LoadIniFile(Study& study, const std::filesystem::path& folder)
     {
         ret = loadProperties(study, section->firstProperty, path, &PartHydro::useHeuristicTarget)
               && ret;
+    }
+
+    if (IniFile::Section* section = ini.find("use leeway"))
+    {
+        for (auto* property = section->firstProperty; property; property = property->next)
+        {
+            if (Antares::stringToBool(property->value))
+            {
+                logs.warning() << path << ": use leeway = yes is no longer supported and will be ignored";
+                break;
+            }
+        }
     }
 
     if (IniFile::Section* section = ini.find("power to level"))

@@ -10,6 +10,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "unit_test_utils.h"
 #include <antares/study/parts/hydro/series.h>
 #include <antares/study/study.h>
 
@@ -212,6 +213,27 @@ BOOST_FIXTURE_TEST_CASE(test_use_heuristic_target, HydroFixture)
     BOOST_CHECK(load());
     BOOST_CHECK_EQUAL(east->hydro.useHeuristicTarget, false);
     BOOST_CHECK_EQUAL(west->hydro.useHeuristicTarget, false);
+}
+
+BOOST_FIXTURE_TEST_CASE(test_use_leeway_yes_warns, HydroFixture)
+{
+    Antares::UnitTests::CaptureAntaresLogs logs;
+    writeToHydroIniFile("[use leeway]\neast = yes\n");
+
+    BOOST_CHECK(load());
+    BOOST_CHECK_EQUAL(logs.getWarnings().size(), 1);
+    BOOST_CHECK(logs.getWarnings().begin()->find(
+                  "use leeway = yes is no longer supported and will be ignored")
+                != std::string::npos);
+}
+
+BOOST_FIXTURE_TEST_CASE(test_use_leeway_no_does_not_warn, HydroFixture)
+{
+    Antares::UnitTests::CaptureAntaresLogs logs;
+    writeToHydroIniFile("[use leeway]\neast = no\n");
+
+    BOOST_CHECK(load());
+    BOOST_CHECK(logs.getWarnings().empty());
 }
 
 BOOST_FIXTURE_TEST_CASE(test_power_to_level, HydroFixture)
