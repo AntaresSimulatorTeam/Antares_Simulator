@@ -279,6 +279,17 @@ struct Fixture
         problem.CoutDeDefaillancePositiveSansBruit = {9500., 19000., 8500.};
         problem.CoutDeDefaillanceNegativeSansBruit = {3., 0.5, 0.5};
 
+        // ResultatsHoraires: the new adequacy-patch emit() calls in
+        // areaOutputs() access ValeursHorairesDENS and
+        // ValeursHorairesLmrViolations for every area; initialise them to 0
+        // so the basic fill() tests don't segfault.
+        problem.ResultatsHoraires.resize(3);
+        for (auto& hr: problem.ResultatsHoraires)
+        {
+            hr.ValeursHorairesDENS.assign(nbPdt, 0.);
+            hr.ValeursHorairesLmrViolations.assign(nbPdt, 0);
+        }
+
         problem.CorrespondanceVarNativesVarOptim.resize(nbPdt);
         problem.CorrespondanceCntNativesCntOptim.resize(nbPdt);
         auto& solved = *problem.ProblemeAResoudre;
@@ -1229,8 +1240,9 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
 
     // Areas: 3 x (imbalance_cost, is_significant_loss_of_load,
     //             is_loss_of_load, actual_load, price,
-    //             is_near_loss_of_load) + area1's level_percentage and
-    //             actual_inflows                                  = 20
+    //             is_near_loss_of_load, domestic_unsupplied_energy,
+    //             is_local_matching_rule_violated) + area1's
+    //             level_percentage and actual_inflows              = 26
     // Thermal: prop_cost + 13 emissions + 4 margins + profit
     //          + actual_num_units_on + non_prop_cost              = 21
     // Links: link 0 (abs_flow, minus_flow, actual_loop_flow, 2 congestion
@@ -1248,7 +1260,7 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
     // Reserves: area1 "Res_1" (imbalance_cost + thermal participation
     //           + hydro participation) and area2 "Res_Down"
     //           (imbalance_cost + battery1 participation)         = 5
-    BOOST_CHECK_EQUAL(table.rowCount(), 20 + 21 + 16 + 1 + 6 + 13 + 2 + 5);
+    BOOST_CHECK_EQUAL(table.rowCount(), 26 + 21 + 16 + 1 + 6 + 13 + 2 + 5);
 }
 
 // Wires the result addresses the way OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire
@@ -1270,6 +1282,15 @@ void wireResultAddresses(PROBLEME_HEBDO& problem)
         hourlyResults.ValeursHorairesDeDefaillancePositive.assign(1, 0.);
         hourlyResults.CoutsMarginauxHoraires.assign(1, 0.);
     }
+
+    for (auto& hourlyResults: problem.ResultatsHoraires)
+    {
+        hourlyResults.ValeursHorairesDeDefaillancePositive.assign(1, 0.);
+        hourlyResults.CoutsMarginauxHoraires.assign(1, 0.);
+        hourlyResults.ValeursHorairesDENS.assign(1, 0.);
+        hourlyResults.ValeursHorairesLmrViolations.assign(1, 0);
+    }
+
     problem.ResultatsHoraires[0].HydroUsage.resize(1);
     problem.ResultatsHoraires[0].HydroUsage[0].reserveParticipationOfCluster = {0.};
     problem.ResultatsHoraires[1].ShortTermStorageReserves = std::vector<RESULTSRESERVES>(1);
@@ -1350,6 +1371,52 @@ BOOST_AUTO_TEST_CASE(post_process_dump_uses_published_reserve_participation)
                                  "area2_short_term_storage_battery1");
     BOOST_REQUIRE(storage.has_value());
     BOOST_CHECK_CLOSE(storage->value, 25. * 13., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(adequacy_patch_domestic_unsupplied_energy_emits_zero_by_default)
+{
+    fill();
+
+    const auto rows = RowsForOutput(table, "domestic_unsupplied_energy");
+    BOOST_REQUIRE_EQUAL(rows.size(), 3u); // one per area
+    for (const auto& row: rows)
+    {
+        BOOST_CHECK_CLOSE(row.value, 0., 1e-9);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(adequacy_patch_lmr_violation_emits_zero_by_default)
+{
+    fill();
+
+    const auto rows = RowsForOutput(table, "is_local_matching_rule_violated");
+    BOOST_REQUIRE_EQUAL(rows.size(), 3u); // one per area
+    for (const auto& row: rows)
+    {
+        BOOST_CHECK_CLOSE(row.value, 0., 1e-9);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(adequacy_patch_outputs_reflect_nonzero_values)
+{
+    // Set non-zero values for area1 (index 0)
+    problem.ResultatsHoraires[0].ValeursHorairesDENS[0] = 42.5;
+    problem.ResultatsHoraires[0].ValeursHorairesLmrViolations[0] = 1;
+
+    fill();
+
+    const auto dens = FindRow(table, "domestic_unsupplied_energy", "area1_node");
+    BOOST_REQUIRE(dens.has_value());
+    BOOST_CHECK_CLOSE(dens->value, 42.5, 1e-9);
+
+    const auto lmr = FindRow(table, "is_local_matching_rule_violated", "area1_node");
+    BOOST_REQUIRE(lmr.has_value());
+    BOOST_CHECK_CLOSE(lmr->value, 1., 1e-9);
+
+    // area2 remains zero
+    const auto dens2 = FindRow(table, "domestic_unsupplied_energy", "area2_node");
+    BOOST_REQUIRE(dens2.has_value());
+    BOOST_CHECK_CLOSE(dens2->value, 0., 1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(post_process_dump_leaves_the_solver_state_untouched)
