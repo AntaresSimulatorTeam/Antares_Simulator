@@ -75,6 +75,9 @@ static bool ConvertCStrToListTimeSeries(const std::string& value, unsigned int& 
     return true;
 }
 
+/*!
+** \brief Convert a text into a renewable generation modelling
+*/
 static bool ConvertStringToRenewableGenerationModelling(const std::string& text,
                                                         RenewableGenerationModelling& out)
 {

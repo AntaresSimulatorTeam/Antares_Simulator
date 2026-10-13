@@ -333,9 +333,6 @@ enum HydroPricingMode
 };
 
 /*!
-** \brief Convert a hyfro pricing mode into a text
-*/
-/*!
 ** \brief Convert a text into a hydro pricing mode
 */
 HydroPricingMode StringToHydroPricingMode(const std::string& text);
@@ -416,8 +413,6 @@ enum RenewableGenerationModelling
     rgClusters,       // Using renewable clusters
     rgUnknown,
 };
-
-
 
 // ------------------------
 // MPS export status
