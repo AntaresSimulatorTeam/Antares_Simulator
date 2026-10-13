@@ -26,6 +26,8 @@ using Antares::LinearProblem::Api::FillContext;
 namespace Antares::Optimization
 {
 
+using Data::InactiveComponentsAnalyzer;
+
 namespace
 {
 // The post-processed solution, read back from the result address tables without

@@ -1,3 +1,9 @@
+set(SRC_INACTIVE_COMPONENTS
+        include/antares/study/InactiveComponentsAnalyzer.h
+        InactiveComponentsAnalyzer.cpp
+        include/antares/study/InactiveComponentsAnalyzerBuilder.h
+        InactiveComponentsAnalyzerBuilder.cpp
+)
 set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/scBuilderDataInterface.h
         include/antares/study/scenario-builder/TSnumberData.h
@@ -255,6 +261,7 @@ set(SRC_STUDY
 source_group("study\\study" FILES ${SRC_STUDY})
 
 set(SRC_ALL
+        ${SRC_INACTIVE_COMPONENTS}
         ${SRC_STDCXX}
         ${SRC_AREAS}
         ${SRC_XCAST}

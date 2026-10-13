@@ -32,7 +32,7 @@ class SimulationTable;
 class OptimisationsSimulationTable;
 } // namespace Antares::IO::Outputs
 
-namespace Antares::Optimization
+namespace Antares::Data
 {
 class InactiveComponentsAnalyzer;
 }
@@ -81,7 +81,7 @@ bool OPT_AppelDuSimplexe(
   const OptPeriodStringGenerator&,
   Solver::IResultWriter& writer,
   IO::Outputs::SimulationTable* simulationTable,
-  const Antares::Optimization::InactiveComponentsAnalyzer* inactiveComponents = nullptr);
+  const Antares::Data::InactiveComponentsAnalyzer* inactiveComponents = nullptr);
 } // namespace Antares::Solver::Optimization
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,

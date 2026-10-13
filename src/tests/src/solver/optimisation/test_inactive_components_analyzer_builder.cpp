@@ -5,11 +5,11 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/optimisation/InactiveComponentsAnalyzerBuilder.h"
+#include "antares/study/InactiveComponentsAnalyzerBuilder.h"
 
 #include "in-memory-study.h"
 
-using Antares::Optimization::BuildInactiveComponentsAnalyzer;
+using Antares::Data::BuildInactiveComponentsAnalyzer;
 
 namespace
 {

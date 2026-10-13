@@ -7,10 +7,10 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
 #include "antares/solver/optimisation/LegacyExtraOutputs.h"
 #include "antares/solver/optimisation/LegacySimulationTableSnapshot.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/study/InactiveComponentsAnalyzer.h"
 
 using Antares::IO::Outputs::SimulationTable;
 using Antares::LinearProblem::Api::FillContext;
@@ -393,7 +393,7 @@ struct Fixture
     FillContext fillContext{0, 167, 168, 335, 2};
     unsigned currentBlock = 1;
     SimulationTable table;
-    std::shared_ptr<const Antares::Optimization::InactiveComponentsAnalyzer> inactiveComponents;
+    std::shared_ptr<const Antares::Data::InactiveComponentsAnalyzer> inactiveComponents;
 };
 } // namespace
 
@@ -667,7 +667,7 @@ BOOST_AUTO_TEST_CASE(hurdle_cost_outputs_are_skipped_for_links_without_hurdle_co
 
 BOOST_AUTO_TEST_CASE(link_outputs_are_entirely_suppressed_when_flagged_all_zero)
 {
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setLinkAllZero(0, true); // area1_area2_link
     inactiveComponents = analyzer;
     fill();
@@ -684,7 +684,7 @@ BOOST_AUTO_TEST_CASE(link_outputs_are_entirely_suppressed_when_flagged_all_zero)
 
 BOOST_AUTO_TEST_CASE(link_outputs_are_kept_when_the_all_zero_flag_is_false)
 {
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setLinkAllZero(0, false);
     inactiveComponents = analyzer;
     fill();
@@ -785,7 +785,7 @@ BOOST_AUTO_TEST_CASE(
   hydro_balance_port_flow_is_suppressed_when_reservoir_unmanaged_and_inflow_all_zero)
 {
     problem.CaracteristiquesHydrauliques[0].SuiviNiveauHoraire = false;
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setHydroInflowAllZero(0, true);
     inactiveComponents = analyzer;
     fill();
@@ -796,7 +796,7 @@ BOOST_AUTO_TEST_CASE(
 BOOST_AUTO_TEST_CASE(hydro_balance_port_flow_is_kept_when_reservoir_unmanaged_but_inflow_nonzero)
 {
     problem.CaracteristiquesHydrauliques[0].SuiviNiveauHoraire = false;
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setHydroInflowAllZero(0, false);
     inactiveComponents = analyzer;
     fill();
@@ -807,7 +807,7 @@ BOOST_AUTO_TEST_CASE(hydro_balance_port_flow_is_kept_when_reservoir_unmanaged_bu
 BOOST_AUTO_TEST_CASE(hydro_balance_port_flow_is_kept_when_reservoir_managed_even_if_inflow_all_zero)
 {
     problem.CaracteristiquesHydrauliques[0].SuiviNiveauHoraire = true;
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setHydroInflowAllZero(0, true);
     inactiveComponents = analyzer;
     fill();
@@ -869,7 +869,7 @@ BOOST_AUTO_TEST_CASE(input_generation_is_skipped_when_the_series_are_absent)
 
 BOOST_AUTO_TEST_CASE(actual_load_and_load_balance_port_are_skipped_when_load_series_is_all_zero)
 {
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setLoadAllZero(0, true); // area1
     inactiveComponents = analyzer;
     fill();
@@ -883,7 +883,7 @@ BOOST_AUTO_TEST_CASE(actual_load_and_load_balance_port_are_skipped_when_load_ser
 
 BOOST_AUTO_TEST_CASE(actual_load_is_kept_when_the_all_zero_flag_is_false)
 {
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setLoadAllZero(0, false); // explicit, same as the default
     inactiveComponents = analyzer;
     fill();
@@ -896,7 +896,7 @@ BOOST_AUTO_TEST_CASE(ror_generation_rows_are_skipped_when_ror_series_is_all_zero
 {
     problem.InputGenerationOfArea[0].push_back(
       {.componentName = "area1_run_of_river", .availablePower = {0.}});
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setRorAllZero(0, true);
     inactiveComponents = analyzer;
     fill();
@@ -912,7 +912,7 @@ BOOST_AUTO_TEST_CASE(solar_generation_rows_are_skipped_when_solar_series_is_all_
 {
     problem.InputGenerationOfArea[0].push_back(
       {.componentName = "area1_solar", .availablePower = {0.}});
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setSolarAllZero(0, true);
     inactiveComponents = analyzer;
     fill();
@@ -925,7 +925,7 @@ BOOST_AUTO_TEST_CASE(solar_generation_rows_are_skipped_when_solar_series_is_all_
 BOOST_AUTO_TEST_CASE(wind_generation_rows_are_skipped_when_wind_series_is_all_zero)
 {
     // The fixture already carries an "area1_wind" input-generation entry.
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setWindAllZero(0, true);
     inactiveComponents = analyzer;
     fill();
@@ -941,7 +941,7 @@ BOOST_AUTO_TEST_CASE(misc_gen_component_is_skipped_when_its_own_column_series_is
 {
     // The fixture already carries one misc-gen entry, "area1_combined_heat_power",
     // conventionally column 0.
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setMiscGenColumnAllZero(0, 0, true);
     inactiveComponents = analyzer;
     fill();
@@ -958,7 +958,7 @@ BOOST_AUTO_TEST_CASE(misc_gen_columns_are_suppressed_independently_of_each_other
     // misc-gen sub-components is suppressed independently.
     problem.InputGenerationOfArea[0].push_back(
       {.componentName = "area1_biomass", .availablePower = {42.}});
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setMiscGenColumnAllZero(0, 0, true); // combined_heat_power only
     inactiveComponents = analyzer;
     fill();

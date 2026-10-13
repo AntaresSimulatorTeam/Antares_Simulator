@@ -12,16 +12,18 @@
 
 #include <antares/utils/utils.h>
 #include "antares/solver/optimisation/HebdoAreaPriceProvider.h"
-#include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/study/InactiveComponentsAnalyzer.h"
 
 using Antares::IO::Outputs::SimulationTable;
 using Antares::LinearProblem::Api::FillContext;
 
 namespace Antares::Optimization
 {
+
+using Data::InactiveComponentsAnalyzer;
 
 std::optional<unsigned> LegacyBlockTimeIndex(const FillContext& fillContext, unsigned timeIndex)
 {
