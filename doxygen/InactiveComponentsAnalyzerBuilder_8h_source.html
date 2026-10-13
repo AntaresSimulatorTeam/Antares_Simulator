@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/optimisation/include/antares/solver/optimisation/InactiveComponentsAnalyzerBuilder.h Source File</title>
+<title>Antares Simulator: src/libs/antares/study/include/antares/study/InactiveComponentsAnalyzerBuilder.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -134,10 +134,10 @@ $(document).ready(function(){initNavTree('InactiveComponentsAnalyzerBuilder_8h_s
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;antares/solver/optimisation/InactiveComponentsAnalyzer.h&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;antares/study/InactiveComponentsAnalyzer.h&quot;</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;antares/study/fwd.h&quot;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">namespace </span>Antares::Optimization</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">// Builds a study-wide InactiveComponentsAnalyzer by inspecting, once, the</span></div>
@@ -147,15 +147,15 @@ $(document).ready(function(){initNavTree('InactiveComponentsAnalyzerBuilder_8h_s
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">// Areas are visited in `study.areas`&#39; index order, matching</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">// SIM_InitialisationProblemeHebdo&#39;s `pays` numbering.</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;std::shared_ptr&lt;const InactiveComponentsAnalyzer&gt; BuildInactiveComponentsAnalyzer(</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="keyword">const</span> Data::Study&amp; study);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="keyword">const</span> Study&amp; study);</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;} <span class="comment">// namespace Antares::Optimization</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_58214dbee968e8ac661492141d050741.html">optimisation</a></li><li class="navelem"><a class="el" href="dir_7f9265255be167d9fc7d889839beddde.html">include</a></li><li class="navelem"><a class="el" href="dir_4f3aa64cbfddff7c3784c9e1340ff9b3.html">antares</a></li><li class="navelem"><a class="el" href="dir_e3cb1c1c156f8a1a0f5e657d39af19ce.html">solver</a></li><li class="navelem"><a class="el" href="dir_703a08c8b9d2f88ac5fb64946c0e4ddb.html">optimisation</a></li><li class="navelem"><b>InactiveComponentsAnalyzerBuilder.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_87a455bccb09a92130c26a11a880c98a.html">libs</a></li><li class="navelem"><a class="el" href="dir_f35d736e29d8243b24d0b8688c8560d6.html">antares</a></li><li class="navelem"><a class="el" href="dir_ce980317fbc69b3f740ff45def79f52e.html">study</a></li><li class="navelem"><a class="el" href="dir_ade70c9ce0816f814aedf32407cf483d.html">include</a></li><li class="navelem"><a class="el" href="dir_79a3e724839bc9216a240bf576933a1b.html">antares</a></li><li class="navelem"><a class="el" href="dir_5e4647cf74155fd57847988678b744d8.html">study</a></li><li class="navelem"><b>InactiveComponentsAnalyzerBuilder.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

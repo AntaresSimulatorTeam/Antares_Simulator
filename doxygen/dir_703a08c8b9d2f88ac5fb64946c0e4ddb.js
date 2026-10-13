@@ -7,8 +7,6 @@ var dir_703a08c8b9d2f88ac5fb64946c0e4ddb =
     [ "ComponentToAreaConnectionFiller.h", "ComponentToAreaConnectionFiller_8h_source.html", null ],
     [ "HebdoAreaPriceProvider.h", "HebdoAreaPriceProvider_8h_source.html", null ],
     [ "HebdoProblemToLpsTranslator.h", "HebdoProblemToLpsTranslator_8h_source.html", null ],
-    [ "InactiveComponentsAnalyzer.h", "InactiveComponentsAnalyzer_8h_source.html", null ],
-    [ "InactiveComponentsAnalyzerBuilder.h", "InactiveComponentsAnalyzerBuilder_8h_source.html", null ],
     [ "LegacyExtraOutputs.h", "LegacyExtraOutputs_8h_source.html", null ],
     [ "LegacyFiller.h", "LegacyFiller_8h_source.html", null ],
     [ "LegacyNameMapper.h", "LegacyNameMapper_8h_source.html", null ],

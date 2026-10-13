@@ -1,6 +1,6 @@
 var classAntares_1_1Optimization_1_1WeeklyOptimization =
 [
-    [ "WeeklyOptimization", "classAntares_1_1Optimization_1_1WeeklyOptimization.html#a6e63691b48c8fc56f5615f26bc691424", null ],
+    [ "WeeklyOptimization", "classAntares_1_1Optimization_1_1WeeklyOptimization.html#a866c8922587375c267254ab9d1280874", null ],
     [ "~WeeklyOptimization", "classAntares_1_1Optimization_1_1WeeklyOptimization.html#ac023296fde62ca5818077e06ec688c20", null ],
     [ "WeeklyOptimization", "classAntares_1_1Optimization_1_1WeeklyOptimization.html#a88c033a67d5ba8840f2527655027135a", null ],
     [ "WeeklyOptimization", "classAntares_1_1Optimization_1_1WeeklyOptimization.html#a18a7a2a87ab1bdfdd71af8688d78370a", null ],

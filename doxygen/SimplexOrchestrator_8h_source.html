@@ -148,9 +148,9 @@ $(document).ready(function(){initNavTree('SimplexOrchestrator_8h_source.html',''
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &quot;antares/solver/utils/opt_period_string_generator.h&quot;</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &quot;antares/writer/i_writer.h&quot;</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">namespace </span>Antares::Optimization</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;{</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">class </span>InactiveComponentsAnalyzer;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Data_1_1InactiveComponentsAnalyzer.html">InactiveComponentsAnalyzer</a>;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Optimization::Simplex</div>
@@ -167,7 +167,7 @@ $(document).ready(function(){initNavTree('SimplexOrchestrator_8h_source.html',''
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      <span class="keyword">const</span> <a class="code" href="classOptPeriodStringGenerator.html">OptPeriodStringGenerator</a>&amp; periodString,</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer,</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">IO::Outputs::SimulationTable</a>* simulationTable,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;      <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html">Antares::Optimization::InactiveComponentsAnalyzer</a>* inactiveComponents = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;      <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1InactiveComponentsAnalyzer.html">Antares::Data::InactiveComponentsAnalyzer</a>* inactiveComponents = <span class="keyword">nullptr</span>);</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexResult.html">SimplexResult</a> <a class="code" href="classAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexOrchestrator.html#ad2674a4831ff20d114d511fcc9320c5e">solve</a>();</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
@@ -187,7 +187,7 @@ $(document).ready(function(){initNavTree('SimplexOrchestrator_8h_source.html',''
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">const</span> <a class="code" href="classOptPeriodStringGenerator.html">OptPeriodStringGenerator</a>&amp; periodString_;</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer_;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">IO::Outputs::SimulationTable</a>* simulationTable_;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html">Antares::Optimization::InactiveComponentsAnalyzer</a>* inactiveComponents_;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1InactiveComponentsAnalyzer.html">Antares::Data::InactiveComponentsAnalyzer</a>* inactiveComponents_;</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="comment">// Problem state</span></div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    std::shared_ptr&lt;Antares::Optimization::LegacyOrtoolsLinearProblem&gt; ortoolsProblem_;</div>
@@ -203,8 +203,8 @@ $(document).ready(function(){initNavTree('SimplexOrchestrator_8h_source.html',''
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;} <span class="comment">// namespace Antares::Solver::Optimization::Simplex</span></div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// ANTARES_SOLVER_OPTIMISATION_SIMPLEX_SIMPLEX_ORCHESTRATOR_H</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1InactiveComponentsAnalyzer_html"><div class="ttname"><a href="classAntares_1_1Data_1_1InactiveComponentsAnalyzer.html">Antares::Data::InactiveComponentsAnalyzer</a></div><div class="ttdef"><b>Definition:</b> InactiveComponentsAnalyzer.h:25</div></div>
 <div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1SimulationTable_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a></div><div class="ttdef"><b>Definition:</b> SimulationTable.h:15</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimization_1_1InactiveComponentsAnalyzer_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html">Antares::Optimization::InactiveComponentsAnalyzer</a></div><div class="ttdef"><b>Definition:</b> InactiveComponentsAnalyzer.h:25</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:15</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexOrchestrator_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexOrchestrator.html">Antares::Solver::Optimization::Simplex::SimplexOrchestrator</a></div><div class="ttdoc">Orchestrates the full simplex solve flow for a single subproblem.</div><div class="ttdef"><b>Definition:</b> SimplexOrchestrator.h:45</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexOrchestrator_html_ad2674a4831ff20d114d511fcc9320c5e"><div class="ttname"><a href="classAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexOrchestrator.html#ad2674a4831ff20d114d511fcc9320c5e">Antares::Solver::Optimization::Simplex::SimplexOrchestrator::solve</a></div><div class="ttdeci">SimplexResult solve()</div><div class="ttdoc">Execute the full solve flow.</div><div class="ttdef"><b>Definition:</b> SimplexOrchestrator.cpp:78</div></div>
@@ -212,8 +212,8 @@ $(document).ready(function(){initNavTree('SimplexOrchestrator_8h_source.html',''
 <div class="ttc" id="aclassOptPeriodStringGenerator_html"><div class="ttname"><a href="classOptPeriodStringGenerator.html">OptPeriodStringGenerator</a></div><div class="ttdef"><b>Definition:</b> opt_period_string_generator.h:23</div></div>
 <div class="ttc" id="astructAntares_1_1Optimization_1_1SingleOptimOptions_html"><div class="ttname"><a href="structAntares_1_1Optimization_1_1SingleOptimOptions.html">Antares::Optimization::SingleOptimOptions</a></div><div class="ttdef"><b>Definition:</b> options.h:10</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexResult_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexResult.html">Antares::Solver::Optimization::Simplex::SimplexResult</a></div><div class="ttdoc">Holds the result of a simplex solver invocation.</div><div class="ttdef"><b>Definition:</b> SimplexResult.h:23</div></div>
-<div class="ttc" id="astructPROBLEME__HEBDO_html"><div class="ttname"><a href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a></div><div class="ttdef"><b>Definition:</b> sim_structure_probleme_economique.h:556</div></div>
-<div class="ttc" id="astructTIME__MEASURE_html"><div class="ttname"><a href="structTIME__MEASURE.html">TIME_MEASURE</a></div><div class="ttdef"><b>Definition:</b> sim_structure_probleme_economique.h:542</div></div>
+<div class="ttc" id="astructPROBLEME__HEBDO_html"><div class="ttname"><a href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a></div><div class="ttdef"><b>Definition:</b> sim_structure_probleme_economique.h:560</div></div>
+<div class="ttc" id="astructTIME__MEASURE_html"><div class="ttname"><a href="structTIME__MEASURE.html">TIME_MEASURE</a></div><div class="ttdef"><b>Definition:</b> sim_structure_probleme_economique.h:546</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/optimisation/include/antares/solver/optimisation/InactiveComponentsAnalyzer.h Source File</title>
+<title>Antares Simulator: src/libs/antares/study/include/antares/study/InactiveComponentsAnalyzer.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -138,7 +138,7 @@ $(document).ready(function(){initNavTree('InactiveComponentsAnalyzer_8h_source.h
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;antares/study/area/constants.h&gt;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">namespace </span>Antares::Optimization</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">// Precomputed, once per study (not per week, not per MC year), flags telling</span></div>
@@ -150,10 +150,10 @@ $(document).ready(function(){initNavTree('InactiveComponentsAnalyzer_8h_source.h
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">// A freshly constructed analyzer reports every component as active (all</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">// `*IsAllZero` accessors return false), so it is safe to query before any</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">// `set*` call has been made for a given index.</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html">   24</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html">InactiveComponentsAnalyzer</a></div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1InactiveComponentsAnalyzer.html">   24</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Data_1_1InactiveComponentsAnalyzer.html">InactiveComponentsAnalyzer</a></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;{</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html">InactiveComponentsAnalyzer</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1InactiveComponentsAnalyzer.html">InactiveComponentsAnalyzer</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">void</span> setLoadAllZero(uint32_t pays, <span class="keywordtype">bool</span> value);</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> setRorAllZero(uint32_t pays, <span class="keywordtype">bool</span> value);</div>
@@ -179,19 +179,19 @@ $(document).ready(function(){initNavTree('InactiveComponentsAnalyzer_8h_source.h
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    std::vector&lt;bool&gt; rorAllZero_;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    std::vector&lt;bool&gt; solarAllZero_;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    std::vector&lt;bool&gt; windAllZero_;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    std::array&lt;std::vector&lt;bool&gt;, Data::fhhMax&gt; miscGenColumnAllZero_; <span class="comment">// [pays][column]</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    std::array&lt;std::vector&lt;bool&gt;, fhhMax&gt; miscGenColumnAllZero_; <span class="comment">// [pays][column]</span></div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    std::vector&lt;bool&gt; hydroInflowAllZero_;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    std::vector&lt;bool&gt; linkAllZero_;</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;};</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;} <span class="comment">// namespace Antares::Optimization</span></div>
-<div class="ttc" id="aclassAntares_1_1Optimization_1_1InactiveComponentsAnalyzer_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html">Antares::Optimization::InactiveComponentsAnalyzer</a></div><div class="ttdef"><b>Definition:</b> InactiveComponentsAnalyzer.h:25</div></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1InactiveComponentsAnalyzer_html"><div class="ttname"><a href="classAntares_1_1Data_1_1InactiveComponentsAnalyzer.html">Antares::Data::InactiveComponentsAnalyzer</a></div><div class="ttdef"><b>Definition:</b> InactiveComponentsAnalyzer.h:25</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_58214dbee968e8ac661492141d050741.html">optimisation</a></li><li class="navelem"><a class="el" href="dir_7f9265255be167d9fc7d889839beddde.html">include</a></li><li class="navelem"><a class="el" href="dir_4f3aa64cbfddff7c3784c9e1340ff9b3.html">antares</a></li><li class="navelem"><a class="el" href="dir_e3cb1c1c156f8a1a0f5e657d39af19ce.html">solver</a></li><li class="navelem"><a class="el" href="dir_703a08c8b9d2f88ac5fb64946c0e4ddb.html">optimisation</a></li><li class="navelem"><b>InactiveComponentsAnalyzer.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_87a455bccb09a92130c26a11a880c98a.html">libs</a></li><li class="navelem"><a class="el" href="dir_f35d736e29d8243b24d0b8688c8560d6.html">antares</a></li><li class="navelem"><a class="el" href="dir_ce980317fbc69b3f740ff45def79f52e.html">study</a></li><li class="navelem"><a class="el" href="dir_ade70c9ce0816f814aedf32407cf483d.html">include</a></li><li class="navelem"><a class="el" href="dir_79a3e724839bc9216a240bf576933a1b.html">antares</a></li><li class="navelem"><a class="el" href="dir_5e4647cf74155fd57847988678b744d8.html">study</a></li><li class="navelem"><b>InactiveComponentsAnalyzer.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

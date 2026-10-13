@@ -140,9 +140,9 @@ $(document).ready(function(){initNavTree('adequacy_8h_source.html',''); initResi
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;antares/solver/simulation/solver.h&quot;</span> <span class="comment">// for definition of type yearRandomNumbers</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/adequacy/all.h&quot;</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>Antares::Optimization</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">class </span>InactiveComponentsAnalyzer;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Data_1_1InactiveComponentsAnalyzer.html">InactiveComponentsAnalyzer</a>;</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;}</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Simulation</div>
@@ -199,7 +199,7 @@ $(document).ready(function(){initNavTree('adequacy_8h_source.html',''); initResi
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    std::reference_wrapper&lt;ISimulationObserver&gt; simulationObserver_;</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// Study-wide activity flags, built once in simulationBegin(); consulted only</span></div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="comment">// while producing the legacy simulation tables.</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    std::shared_ptr&lt;const Antares::Optimization::InactiveComponentsAnalyzer&gt; inactiveComponents_;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    std::shared_ptr&lt;const Antares::Data::InactiveComponentsAnalyzer&gt; inactiveComponents_;</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;}; <span class="comment">// class Adequacy</span></div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">// See economy.h: concentrate the single ISimulation&lt;Adequacy&gt; instantiation in</span></div>
@@ -209,6 +209,7 @@ $(document).ready(function(){initNavTree('adequacy_8h_source.html',''); initResi
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;} <span class="comment">// namespace Antares::Solver::Simulation</span></div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __SOLVER_SIMULATION_ADEQUACY_H__</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1InactiveComponentsAnalyzer_html"><div class="ttname"><a href="classAntares_1_1Data_1_1InactiveComponentsAnalyzer.html">Antares::Data::InactiveComponentsAnalyzer</a></div><div class="ttdef"><b>Definition:</b> InactiveComponentsAnalyzer.h:25</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdoc">Antares Study.</div><div class="ttdef"><b>Definition:</b> study.h:41</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html"><div class="ttname"><a href="classAntares_1_1Matrix.html">Antares::Matrix</a></div><div class="ttdoc">A n-by-n matrix.</div><div class="ttdef"><b>Definition:</b> matrix.h:26</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:15</div></div>

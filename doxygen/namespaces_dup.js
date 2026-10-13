@@ -186,6 +186,7 @@ var namespaces_dup =
         [ "TimeSeriesToCStr< 32 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_0132_01_4.html", null ],
         [ "ReserveTypeData", "structAntares_1_1Data_1_1ReserveTypeData.html", "structAntares_1_1Data_1_1ReserveTypeData" ],
         [ "StudyHeader", "classAntares_1_1Data_1_1StudyHeader.html", "classAntares_1_1Data_1_1StudyHeader" ],
+        [ "InactiveComponentsAnalyzer", "classAntares_1_1Data_1_1InactiveComponentsAnalyzer.html", "classAntares_1_1Data_1_1InactiveComponentsAnalyzer" ],
         [ "StudyLoadOptions", "classAntares_1_1Data_1_1StudyLoadOptions.html", "classAntares_1_1Data_1_1StudyLoadOptions" ],
         [ "OutputSelection", "classAntares_1_1Data_1_1OutputSelection.html", "classAntares_1_1Data_1_1OutputSelection" ],
         [ "Parameters", "classAntares_1_1Data_1_1Parameters.html", "classAntares_1_1Data_1_1Parameters" ],
@@ -460,6 +461,7 @@ var namespaces_dup =
         [ "AreaListFindPtr", "study_2area_2list_8cpp.html#a54ae43bdd456a3689a5861bc156a8ba7", null ],
         [ "AreaListLFind", "study_2area_2list_8cpp.html#ac6a64341a03c54081c8abf92fc885115", null ],
         [ "assetTypeToString", "fwd_8cpp.html#aea31d389985fcbd717805328b7d4fe5d", null ],
+        [ "BuildInactiveComponentsAnalyzer", "InactiveComponentsAnalyzerBuilder_8cpp.html#aadee93366902ea6edc7d473efa009885", null ],
         [ "CalculateDailyMeanPower", "scratchpad_8cpp.html#a8e4ce560b4f8012b2242f2cacc9b687c", null ],
         [ "CheckForbiddenCharacterInAreaName", "libs_2antares_2study_2include_2antares_2study_2area_2area_8h.html#aef1c7acffba3de7f97dbfe832abec72d", null ],
         [ "compareConstraints", "BindingConstraintsRepository_8cpp.html#a3f7c7cd2f1817cae857257c6719ad505", null ],
@@ -994,7 +996,6 @@ var namespaces_dup =
         [ "CsrQuadraticProblem", "classAntares_1_1Optimization_1_1CsrQuadraticProblem.html", "classAntares_1_1Optimization_1_1CsrQuadraticProblem" ],
         [ "ComponentToAreaConnectionFiller", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller.html", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller" ],
         [ "HebdoAreaPriceProvider", "classAntares_1_1Optimization_1_1HebdoAreaPriceProvider.html", "classAntares_1_1Optimization_1_1HebdoAreaPriceProvider" ],
-        [ "InactiveComponentsAnalyzer", "classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html", "classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer" ],
         [ "LegacySolution", "structAntares_1_1Optimization_1_1LegacySolution.html", "structAntares_1_1Optimization_1_1LegacySolution" ],
         [ "LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", "classAntares_1_1Optimization_1_1LegacyFiller" ],
         [ "LegacyNameMapper", "classAntares_1_1Optimization_1_1LegacyNameMapper.html", "classAntares_1_1Optimization_1_1LegacyNameMapper" ],
@@ -1014,15 +1015,14 @@ var namespaces_dup =
           [ "Once", "libs_2antares_2optimization-options_2include_2antares_2optimization-options_2options_8h.html#a4752b5008c7d11307de6a4cea8e4c64eae1a9dc9f23534e63de9df0d540ac1611", null ],
           [ "Always", "libs_2antares_2optimization-options_2include_2antares_2optimization-options_2options_8h.html#a4752b5008c7d11307de6a4cea8e4c64ea68eec46437c384d8dad18d5464ebc35c", null ]
         ] ],
-        [ "AddLegacyExtraOutputs", "LegacyExtraOutputs_8h.html#adb9a38a539dd78dafd1f39964a56b201", null ],
+        [ "AddLegacyExtraOutputs", "LegacyExtraOutputs_8h.html#a5310d1b9f2d7a1ab18e3b64d8e4054b7", null ],
         [ "applyOperation", "LinearExpression_8h.html#ae0afdb45eb93e24332629b1b32ae10c3", null ],
         [ "applyOperation", "TimeDependentLinearExpression_8h.html#a2ee21c86960b2d7fb5ca86724ec77fd0", null ],
         [ "balanceConstraintIndices", "ComponentToAreaConnectionFiller_8cpp.html#a70b02987bc0443abb2f9fba61f119869", null ],
-        [ "BuildInactiveComponentsAnalyzer", "InactiveComponentsAnalyzerBuilder_8cpp.html#a5c6d6ea89e7e2c934bdebd9e3e5e24bf", null ],
-        [ "DumpSimulationTableAfterPostProcess", "LegacySimulationTableSnapshot_8h.html#a624c1582ea5afc0ef5b79669bfa32d68", null ],
+        [ "DumpSimulationTableAfterPostProcess", "LegacySimulationTableSnapshot_8h.html#a8fafacb31d5107ee4907f4caecb2e367", null ],
         [ "DumpSimulationTableStage", "LegacySimulationTableSnapshot_8h.html#a41f158f1a4578891d2f80cb14c728dbf", null ],
         [ "fictitiousLoadConstraintIndices", "ComponentToAreaConnectionFiller_8cpp.html#a46b71a6ea25755421399d5a0ec661061", null ],
-        [ "FillLegacySimulationTable", "LegacySimulationTableSnapshot_8h.html#a0f4e3e4efb16d9c3fe07565be72e9cd5", null ],
+        [ "FillLegacySimulationTable", "LegacySimulationTableSnapshot_8h.html#a2cba08875b2348965392cca756cd6ae5", null ],
         [ "format_as", "MCYearAndTime_8h.html#a42bbf89c2f89bc518949ad86f6818be4", null ],
         [ "greaterValue", "report_8cpp.html#afca59b8c35ac2975defa738d1098f969", null ],
         [ "hasIntegerVariables", "MipDetection_8h.html#acdb7584e1806b2d8281917fccc137257", null ],
@@ -1165,7 +1165,7 @@ var namespaces_dup =
             [ "SimplexResult", "structAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexResult.html", "structAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexResult" ],
             [ "applyResults", "SimplexResult_8h.html#a003ebd3c1fe23226d8cca5e01cdb02de", null ]
           ] ],
-          [ "OPT_AppelDuSimplexe", "opt__fonctions_8h.html#a106e76b15e8a9c7da5cd2981a24ff9dd", null ]
+          [ "OPT_AppelDuSimplexe", "opt__fonctions_8h.html#a9eacf379055ec4d0ab838fc826429347", null ]
         ] ],
         [ "Simulation", null, [
           [ "AdqPatchPostProcessList", "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList.html", "classAntares_1_1Solver_1_1Simulation_1_1AdqPatchPostProcessList" ],

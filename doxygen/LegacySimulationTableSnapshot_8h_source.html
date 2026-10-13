@@ -154,50 +154,54 @@ $(document).ready(function(){initNavTree('LegacySimulationTableSnapshot_8h_sourc
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;} <span class="comment">// namespace Antares::LinearProblem</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">namespace </span>Antares::Optimization</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;{</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">class </span>InactiveComponentsAnalyzer;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">class </span>InactiveComponentsAnalyzer;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="structAntares_1_1Optimization_1_1SolvedModelerProblem.html">   42</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Optimization_1_1SolvedModelerProblem.html">SolvedModelerProblem</a></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    std::shared_ptr&lt;const LinearProblem::Api::ILinearProblem&gt; problem;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    std::shared_ptr&lt;const LinearProblem::OptimEntityContainer&gt; entities;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">double</span> objectiveValue = 0.;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;};</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keywordtype">void</span> FillLegacySimulationTable(<a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">IO::Outputs::SimulationTable</a>&amp; simulationTable,</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                               <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problemeHebdo,</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                               <span class="keyword">const</span> <a class="code" href="structAntares_1_1Optimization_1_1LegacySolution.html">LegacySolution</a>&amp; solution,</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                               <span class="keyword">const</span> <a class="code" href="classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html">LinearProblem::Api::FillContext</a>&amp; fillContext,</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                               <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1LegacyNameMapper.html">LegacyNameMapper</a>&amp; nameMapper,</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                               <span class="keywordtype">unsigned</span> currentBlock,</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                               <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html">InactiveComponentsAnalyzer</a>* inactiveComponents = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keywordtype">unsigned</span> LegacyWeeklyBlock(<span class="keyword">const</span> <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problemeHebdo);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keywordtype">void</span> DumpSimulationTableAfterPostProcess(</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">IO::Outputs::SimulationTable</a>&amp; simulationTable,</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problemeHebdo,</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <span class="keyword">const</span> <a class="code" href="classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html">LinearProblem::Api::FillContext</a>&amp; fillContext,</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <span class="keywordtype">unsigned</span> currentBlock,</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html">InactiveComponentsAnalyzer</a>* inactiveComponents = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="keywordtype">void</span> DumpSimulationTableStage(<a class="code" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">IO::Outputs::OptimisationsSimulationTable</a>* tables,</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                              IO::Outputs::Stage stage,</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                              <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problemeHebdo);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;} <span class="comment">// namespace Antares::Optimization</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span>Antares::Optimization</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="structAntares_1_1Optimization_1_1SolvedModelerProblem.html">   45</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Optimization_1_1SolvedModelerProblem.html">SolvedModelerProblem</a></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    std::shared_ptr&lt;const LinearProblem::Api::ILinearProblem&gt; problem;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    std::shared_ptr&lt;const LinearProblem::OptimEntityContainer&gt; entities;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">double</span> objectiveValue = 0.;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;};</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keywordtype">void</span> FillLegacySimulationTable(</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">IO::Outputs::SimulationTable</a>&amp; simulationTable,</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problemeHebdo,</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keyword">const</span> <a class="code" href="structAntares_1_1Optimization_1_1LegacySolution.html">LegacySolution</a>&amp; solution,</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keyword">const</span> <a class="code" href="classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html">LinearProblem::Api::FillContext</a>&amp; fillContext,</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimization_1_1LegacyNameMapper.html">LegacyNameMapper</a>&amp; nameMapper,</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keywordtype">unsigned</span> currentBlock,</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1InactiveComponentsAnalyzer.html">Data::InactiveComponentsAnalyzer</a>* inactiveComponents = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keywordtype">unsigned</span> LegacyWeeklyBlock(<span class="keyword">const</span> <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problemeHebdo);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keywordtype">void</span> DumpSimulationTableAfterPostProcess(</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">IO::Outputs::SimulationTable</a>&amp; simulationTable,</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problemeHebdo,</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  <span class="keyword">const</span> <a class="code" href="classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html">LinearProblem::Api::FillContext</a>&amp; fillContext,</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  <span class="keywordtype">unsigned</span> currentBlock,</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1InactiveComponentsAnalyzer.html">Data::InactiveComponentsAnalyzer</a>* inactiveComponents = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="keywordtype">void</span> DumpSimulationTableStage(<a class="code" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">IO::Outputs::OptimisationsSimulationTable</a>* tables,</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                              IO::Outputs::Stage stage,</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                              <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problemeHebdo);</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;} <span class="comment">// namespace Antares::Optimization</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1InactiveComponentsAnalyzer_html"><div class="ttname"><a href="classAntares_1_1Data_1_1InactiveComponentsAnalyzer.html">Antares::Data::InactiveComponentsAnalyzer</a></div><div class="ttdef"><b>Definition:</b> InactiveComponentsAnalyzer.h:25</div></div>
 <div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">Antares::IO::Outputs::OptimisationsSimulationTable</a></div><div class="ttdoc">The simulation tables of one Monte-Carlo year, one per stage of the weekly resolution.</div><div class="ttdef"><b>Definition:</b> OptimisationsSimulationTable.h:29</div></div>
 <div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1SimulationTable_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a></div><div class="ttdef"><b>Definition:</b> SimulationTable.h:15</div></div>
 <div class="ttc" id="aclassAntares_1_1LinearProblem_1_1Api_1_1FillContext_html"><div class="ttname"><a href="classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html">Antares::LinearProblem::Api::FillContext</a></div><div class="ttdoc">Context for filling linear problem data. Contains temporal information.</div><div class="ttdef"><b>Definition:</b> ILinearProblemData.h:17</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimization_1_1InactiveComponentsAnalyzer_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1InactiveComponentsAnalyzer.html">Antares::Optimization::InactiveComponentsAnalyzer</a></div><div class="ttdef"><b>Definition:</b> InactiveComponentsAnalyzer.h:25</div></div>
 <div class="ttc" id="aclassAntares_1_1Optimization_1_1LegacyNameMapper_html"><div class="ttname"><a href="classAntares_1_1Optimization_1_1LegacyNameMapper.html">Antares::Optimization::LegacyNameMapper</a></div><div class="ttdef"><b>Definition:</b> LegacyNameMapper.h:13</div></div>
 <div class="ttc" id="anamespaceAntares_1_1LinearProblem_html"><div class="ttname"><a href="namespaceAntares_1_1LinearProblem.html">Antares::LinearProblem</a></div><div class="ttdef"><b>Definition:</b> VariableNode.h:12</div></div>
-<div class="ttc" id="astructAntares_1_1Optimization_1_1LegacySolution_html"><div class="ttname"><a href="structAntares_1_1Optimization_1_1LegacySolution.html">Antares::Optimization::LegacySolution</a></div><div class="ttdoc">Read-only view of the solution a legacy fill should publish: primal values (X) and constraint duals.</div><div class="ttdef"><b>Definition:</b> LegacyExtraOutputs.h:27</div></div>
-<div class="ttc" id="astructAntares_1_1Optimization_1_1SolvedModelerProblem_html"><div class="ttname"><a href="structAntares_1_1Optimization_1_1SolvedModelerProblem.html">Antares::Optimization::SolvedModelerProblem</a></div><div class="ttdoc">The modeler side of a week's last optimisation pass, kept alive past the solve so a post-process dump...</div><div class="ttdef"><b>Definition:</b> LegacySimulationTableSnapshot.h:43</div></div>
-<div class="ttc" id="astructPROBLEME__HEBDO_html"><div class="ttname"><a href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a></div><div class="ttdef"><b>Definition:</b> sim_structure_probleme_economique.h:556</div></div>
+<div class="ttc" id="astructAntares_1_1Optimization_1_1LegacySolution_html"><div class="ttname"><a href="structAntares_1_1Optimization_1_1LegacySolution.html">Antares::Optimization::LegacySolution</a></div><div class="ttdoc">Read-only view of the solution a legacy fill should publish: primal values (X) and constraint duals.</div><div class="ttdef"><b>Definition:</b> LegacyExtraOutputs.h:30</div></div>
+<div class="ttc" id="astructAntares_1_1Optimization_1_1SolvedModelerProblem_html"><div class="ttname"><a href="structAntares_1_1Optimization_1_1SolvedModelerProblem.html">Antares::Optimization::SolvedModelerProblem</a></div><div class="ttdoc">The modeler side of a week's last optimisation pass, kept alive past the solve so a post-process dump...</div><div class="ttdef"><b>Definition:</b> LegacySimulationTableSnapshot.h:46</div></div>
+<div class="ttc" id="astructPROBLEME__HEBDO_html"><div class="ttname"><a href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a></div><div class="ttdef"><b>Definition:</b> sim_structure_probleme_economique.h:560</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
