@@ -53,7 +53,7 @@ filter-year-by-year = hourly, daily
 > An unknown granularity token (e.g. `filter-synthesis = bogus`) is ignored, meaning the filter stays at its default
 > of all granularities. The key is not rejected with an error.
 
-See [sets.ini documentation](solver/02-inputs.md) for more details.
+See [sets.ini documentation](solver/inputs.md) for more details.
 
 #### Deprecated properties
 
