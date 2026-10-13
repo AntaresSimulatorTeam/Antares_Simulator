@@ -11,7 +11,7 @@ using namespace Antares::LinearProblem::Api;
 
 namespace Antares::LinearProblem
 {
-double convertToDouble(const std::string& key, const std::string& value)
+double parameterValueToDouble(const std::string& key, const std::string& value)
 {
     try
     {

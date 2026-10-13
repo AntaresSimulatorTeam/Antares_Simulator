@@ -77,6 +77,6 @@ private:
     const LinearProblem::Api::ILinearProblemData* data_;
     const LinearProblem::Api::IScenario* scenario_;
 };
-double convertToDouble(const std::string& key, const std::string& value);
+double parameterValueToDouble(const std::string& key, const std::string& value);
 
 } // namespace Antares::LinearProblem

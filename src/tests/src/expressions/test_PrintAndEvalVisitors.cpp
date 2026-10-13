@@ -13,6 +13,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
+#include <antares/modeler-optimisation-container/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
 #include "antares/expressions/ShiftVector.h"
 
@@ -25,6 +26,19 @@ using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::LinearProblem;
 
 BOOST_AUTO_TEST_SUITE(_PrintAndEvalNodes_)
+
+BOOST_AUTO_TEST_CASE(parameterValueToDouble_convertsAndReportsErrors)
+{
+    using InvalidParameterValue = EvaluationContext::CouldNotEvaluateConstantParameter<
+      std::invalid_argument>;
+    using OutOfRangeParameterValue = EvaluationContext::CouldNotEvaluateConstantParameter<
+      std::out_of_range>;
+
+    const auto value = parameterValueToDouble("parameter", "42.5");
+    BOOST_CHECK_EQUAL(value, 42.5);
+    BOOST_CHECK_THROW(parameterValueToDouble("parameter", "not a number"), InvalidParameterValue);
+    BOOST_CHECK_THROW(parameterValueToDouble("parameter", "1e9999"), OutOfRangeParameterValue);
+}
 
 BOOST_AUTO_TEST_CASE(EvaluationResult_ConstructorTest)
 {

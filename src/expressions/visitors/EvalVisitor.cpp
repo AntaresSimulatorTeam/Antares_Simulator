@@ -109,7 +109,8 @@ EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
     if (isConstant(systemParameter.type))
     {
         return EvaluationResult{
-          convertToDouble(node->value(), evalContext_.getSystemParameterValue(node->value()))};
+          parameterValueToDouble(node->value(),
+                                 evalContext_.getSystemParameterValue(node->value()))};
     }
 
     unsigned year = fillContext_.getYear();
