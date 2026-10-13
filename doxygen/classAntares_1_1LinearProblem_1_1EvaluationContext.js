@@ -8,6 +8,5 @@ var classAntares_1_1LinearProblem_1_1EvaluationContext =
     [ "getParameterValue", "classAntares_1_1LinearProblem_1_1EvaluationContext.html#aa4484660c081e9d160e4085c9f723d0d", null ],
     [ "getParameterValue", "classAntares_1_1LinearProblem_1_1EvaluationContext.html#a48f641645f2015fdf4ec7650b7baa60c", null ],
     [ "getSystemParameterValue", "classAntares_1_1LinearProblem_1_1EvaluationContext.html#ab05bcb590b551af3380623747d6a06ee", null ],
-    [ "getSystemParameterValueAsDouble", "classAntares_1_1LinearProblem_1_1EvaluationContext.html#aa7727fcf1f6b311a70354f529479bb88", null ],
     [ "scenario", "classAntares_1_1LinearProblem_1_1EvaluationContext.html#a402fa5bb9333138a176da24b690fcfb6", null ]
 ];
