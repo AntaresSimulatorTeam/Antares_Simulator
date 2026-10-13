@@ -324,8 +324,6 @@ enum HydroHeuristicPolicy
 
 HydroHeuristicPolicy StringToHydroHeuristicPolicy(const std::string& text);
 
-const char* HydroHeuristicPolicyToCString(HydroHeuristicPolicy hhPolicy);
-
 // ... Hydro Pricing ...
 enum HydroPricingMode
 {
@@ -337,8 +335,6 @@ enum HydroPricingMode
 /*!
 ** \brief Convert a hyfro pricing mode into a text
 */
-const char* HydroPricingModeToCString(HydroPricingMode hpm);
-
 /*!
 ** \brief Convert a text into a hydro pricing mode
 */
@@ -354,11 +350,6 @@ enum PowerFluctuations
 };
 
 /*!
-** \brief Convert a local shedding strategy into a text
-*/
-const char* PowerFluctuationsToCString(PowerFluctuations fluctuations);
-
-/*!
 ** \brief Convert a text into a local shedding strategy
 */
 PowerFluctuations StringToPowerFluctuations(const std::string& text);
@@ -370,11 +361,6 @@ enum SheddingPolicy
     shpMinimizeDuration,
     shpUnknown,
 };
-
-/*!
-** \brief Convert a global shedding policy into a text
-*/
-const char* SheddingPolicyToCString(SheddingPolicy strategy);
 
 /*!
 ** \brief Convert a text into a global shedding policy
@@ -417,11 +403,6 @@ enum NumberOfCoresMode
 };
 
 /*!
-** \brief Convert a numbers of cores mode into a text
-*/
-const char* NumberOfCoresModeToCString(NumberOfCoresMode ncores);
-
-/*!
 ** \brief Convert a text into a nb of cores mode
 */
 NumberOfCoresMode StringToNumberOfCoresMode(const std::string& text);
@@ -436,15 +417,7 @@ enum RenewableGenerationModelling
     rgUnknown,
 };
 
-/*!
-** \brief Convert a renewable generation modelling into a text
-*/
-const char* RenewableGenerationModellingToCString(RenewableGenerationModelling rgModelling);
 
-/*!
-** \brief Convert a text into a renewable generation modelling
-*/
-RenewableGenerationModelling StringToRenewableGenerationModelling(const std::string& text);
 
 // ------------------------
 // MPS export status

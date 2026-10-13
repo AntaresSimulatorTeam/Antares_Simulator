@@ -172,19 +172,6 @@ const char* SimulationModeToCString(SimulationMode mode)
     }
 }
 
-const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::HydroPmax mode)
-{
-    switch (mode)
-    {
-    case Parameters::Compatibility::HydroPmax::Daily:
-        return "daily";
-    case Parameters::Compatibility::HydroPmax::Hourly:
-        return "hourly";
-    default:
-        return "Unknown";
-    }
-}
-
 bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax& mode,
                                     const std::string& text)
 {
