@@ -34,6 +34,8 @@ In `settings/generaldata.ini`, under `[optimization]`, set
 include-thermal-cluster-ramping = true
 ```
 
+Please note that ramping has no effect if `unit-commitment-mode = fast`. Only `unit-commitment-mode = accurate` and `unit-commitment-mode = milp` allow ramping. This limitation is related to the formulation of the optimization problems.
+
 ### Per-cluster settings
 
 In each thermal-cluster section of `list.ini`, set `ramping-enabled` to `true` and provide the
