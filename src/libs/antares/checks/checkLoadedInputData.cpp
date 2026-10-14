@@ -187,4 +187,20 @@ InvalidParametersForThermalClusters::InvalidParametersForThermalClusters(
     LoadingError(buildMessage(clusterNames))
 {
 }
+
+void checkThermalRampingWithFastMode(const Antares::Data::Parameters& params)
+{
+    using namespace Antares::Data;
+
+    // Ramping constraints, variables, and costs are only active when ucMode != fast.
+    // If the user has enabled thermal ramping but is using fast mode, warn them
+    // that the setting will be silently ignored.
+    if (params.include.thermal_ramping && params.unitCommitment.ucMode == ucHeuristicFast)
+    {
+        logs.warning()
+          << "Thermal cluster ramping is enabled but 'unit-commitment-mode' is set to 'fast'. "
+          << "Ramping constraints, ramping costs, and ramping variables are ignored in fast mode. "
+          << "To enforce ramping, set 'unit-commitment-mode' to 'accurate' or 'milp'.";
+    }
+}
 } // namespace Antares::Check
