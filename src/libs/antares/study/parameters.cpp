@@ -1570,6 +1570,16 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     renewableGeneration.addExcludedVariables(excluded_vars);
     adqPatchParams.addExcludedVariables(excluded_vars);
     unitCommitment.addExcludedVariables(excluded_vars);
+    if (!include.thermal_ramping)
+    {
+        for (const auto* rampingVariable: {"RAMP COST", "RAMP COST BY PLANT"})
+        {
+            if (variablesPrintInfo.exists(rampingVariable))
+            {
+                excluded_vars.emplace_back(rampingVariable);
+            }
+        }
+    }
 
     variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
 

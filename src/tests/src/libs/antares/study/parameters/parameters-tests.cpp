@@ -175,6 +175,25 @@ BOOST_FIXTURE_TEST_CASE(initializing_solvers_options_with_cmd_line_options, Fixt
     BOOST_CHECK_EQUAL(p.optOptions.quadraticOptimOptions.solverName, "scip");
 }
 
+BOOST_FIXTURE_TEST_CASE(ramping_outputs_follow_global_flag, Fixture)
+{
+    p.reset();
+    p.variablesPrintInfo.setPrintStatus("RAMP COST", true);
+    p.variablesPrintInfo.setPrintStatus("RAMP COST BY PLANT", true);
+
+    p.validateOptions(options);
+
+    BOOST_CHECK_EQUAL(p.include.thermal_ramping, false);
+    BOOST_CHECK_EQUAL(p.variablesPrintInfo.isPrinted("RAMP COST"), false);
+    BOOST_CHECK_EQUAL(p.variablesPrintInfo.isPrinted("RAMP COST BY PLANT"), false);
+
+    p.include.thermal_ramping = true;
+    p.validateOptions(options);
+
+    BOOST_CHECK_EQUAL(p.variablesPrintInfo.isPrinted("RAMP COST"), true);
+    BOOST_CHECK_EQUAL(p.variablesPrintInfo.isPrinted("RAMP COST BY PLANT"), true);
+}
+
 BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
 {
     p.loadFromINI(validINI(), version);
