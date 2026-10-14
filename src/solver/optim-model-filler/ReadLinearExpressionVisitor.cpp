@@ -139,7 +139,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Pa
     const auto systemParameter = evalContext_.getParameter(node->value());
     if (systemParameter.type == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
     {
-        double value = evalContext_.getSystemParameterValueAsDouble(node->value());
+        double value = parameterValueToDouble(node->value(),
+                                              evalContext_.getSystemParameterValue(node->value()));
 
         return TimeDependentLinearExpression({}, value);
     }
@@ -174,6 +175,16 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
 {
     auto& portId = node->getPortName();
     auto& fieldId = node->getFieldName();
+
+    if (const auto& areaConnection = component_.areaConnectionAtPort(portId);
+        areaConnection && !fieldId.empty() && areaConnection->price == fieldId)
+    {
+        throw Error::InvalidArgumentError(fmt::format(
+          "Field '{}' of port '{}' holds the dual value of a legacy area's balance equation "
+          "and can only be used in extra-outputs, not in a linear expression.",
+          fieldId,
+          portId));
+    }
 
     TimeDependentLinearExpression to_return(nbtimeSteps_);
 

@@ -25,10 +25,13 @@ class ILinearProblem;
 }
 } // namespace Antares::LinearProblem
 
+namespace Antares::Data
+{
+class InactiveComponentsAnalyzer;
+}
+
 namespace Antares::Optimization
 {
-
-class InactiveComponentsAnalyzer;
 
 /**
  * \brief The modeler side of a week's last optimisation pass, kept alive past
@@ -54,13 +57,14 @@ struct SolvedModelerProblem
  * solve passes a view of PROBLEME_ANTARES_A_RESOUDRE's X / duals; a post-process
  * dump passes the post-processed values.
  */
-void FillLegacySimulationTable(IO::Outputs::SimulationTable& simulationTable,
-                               PROBLEME_HEBDO& problemeHebdo,
-                               const LegacySolution& solution,
-                               const LinearProblem::Api::FillContext& fillContext,
-                               const LegacyNameMapper& nameMapper,
-                               unsigned currentBlock,
-                               const InactiveComponentsAnalyzer* inactiveComponents = nullptr);
+void FillLegacySimulationTable(
+  IO::Outputs::SimulationTable& simulationTable,
+  PROBLEME_HEBDO& problemeHebdo,
+  const LegacySolution& solution,
+  const LinearProblem::Api::FillContext& fillContext,
+  const LegacyNameMapper& nameMapper,
+  unsigned currentBlock,
+  const Data::InactiveComponentsAnalyzer* inactiveComponents = nullptr);
 
 /// \brief Block index of the week problemeHebdo currently holds. Same expression
 /// as the weekly branch of OPT_TryToCallSimplex, for callers that run once per
@@ -89,7 +93,7 @@ void DumpSimulationTableAfterPostProcess(
   PROBLEME_HEBDO& problemeHebdo,
   const LinearProblem::Api::FillContext& fillContext,
   unsigned currentBlock,
-  const InactiveComponentsAnalyzer* inactiveComponents = nullptr);
+  const Data::InactiveComponentsAnalyzer* inactiveComponents = nullptr);
 
 /**
  * \brief Dump into the `stage` table of a year's tables, deriving the week's

@@ -1,7 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "antares/solver/optimisation/InactiveComponentsAnalyzerBuilder.h"
+#include "antares/study/InactiveComponentsAnalyzerBuilder.h"
 
 #include <algorithm>
 
@@ -9,7 +9,7 @@
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 
-namespace Antares::Optimization
+namespace Antares::Data
 {
 
 namespace
@@ -26,7 +26,7 @@ bool columnIsAllZero(const Matrix<>& matrix, unsigned column)
 // the simulation loop, in TimeSeriesNumbers::Generate). A chronicle that
 // exists in the file but is never selected for any year should not keep the
 // component "active": only the selected chronicles matter.
-bool selectedColumnsAreAllZero(const Data::TimeSeries& ts)
+bool selectedColumnsAreAllZero(const TimeSeries& ts)
 {
     const uint32_t nbYears = ts.timeseriesNumbers.height();
     if (nbYears == 0 || ts.numberOfColumns() <= 1)
@@ -49,7 +49,7 @@ bool selectedColumnsAreAllZero(const Data::TimeSeries& ts)
 } // namespace
 
 std::shared_ptr<const InactiveComponentsAnalyzer> BuildInactiveComponentsAnalyzer(
-  const Data::Study& study)
+  const Study& study)
 {
     auto analyzer = std::make_shared<InactiveComponentsAnalyzer>();
 
@@ -59,26 +59,33 @@ std::shared_ptr<const InactiveComponentsAnalyzer> BuildInactiveComponentsAnalyze
         const auto& area = *(study.areas[pays]);
 
         analyzer->setLoadAllZero(pays, selectedColumnsAreAllZero(area.load.series));
-        analyzer->setRorAllZero(pays, selectedColumnsAreAllZero(area.hydro.series->ror));
+        if (area.hydro.series)
+        {
+            analyzer->setRorAllZero(pays, selectedColumnsAreAllZero(area.hydro.series->ror));
+            analyzer->setHydroInflowAllZero(pays,
+                                            selectedColumnsAreAllZero(area.hydro.series->storage));
+        }
+        else
+        {
+            analyzer->setRorAllZero(pays, true);
+            analyzer->setHydroInflowAllZero(pays, true);
+        }
         analyzer->setSolarAllZero(pays, selectedColumnsAreAllZero(area.solar.series));
         analyzer->setWindAllZero(pays, selectedColumnsAreAllZero(area.wind.series));
-        analyzer->setHydroInflowAllZero(pays,
-                                        selectedColumnsAreAllZero(area.hydro.series->storage));
-        for (unsigned column = 0; column < Data::fhhMax; ++column)
+        for (unsigned column = 0; column < fhhMax; ++column)
         {
             analyzer->setMiscGenColumnAllZero(pays, column, columnIsAllZero(area.miscGen, column));
         }
 
-        // Links are numbered by walking areas then, per area, their `links`
-        // map, matching StudyRuntimeInfosInitializeAreaLinks's nested order
-        // (both alphabetical), so `interco` lines up with PROBLEME_HEBDO's.
+        // Link indices are global across areas. Keep this area/link traversal in
+        // sync with generateSystemLegacyComponents: both follow study.areas order
+        // and each area's ordered `links` map, matching runtime's link indexing.
         for (const auto& [linkName, link]: area.links)
         {
             const bool bothDirectionsAllZero = selectedColumnsAreAllZero(link->directCapacities)
                                                && selectedColumnsAreAllZero(
                                                  link->indirectCapacities);
-            const bool ignored = link->transmissionCapacities
-                                 == Data::LocalTransmissionCapacities::null;
+            const bool ignored = link->transmissionCapacities == LocalTransmissionCapacities::null;
             analyzer->setLinkAllZero(interco, bothDirectionsAllZero || ignored);
             ++interco;
         }
@@ -87,4 +94,4 @@ std::shared_ptr<const InactiveComponentsAnalyzer> BuildInactiveComponentsAnalyze
     return analyzer;
 }
 
-} // namespace Antares::Optimization
+} // namespace Antares::Data

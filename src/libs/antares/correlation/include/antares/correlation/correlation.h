@@ -26,11 +26,6 @@ public:
 
 public:
     /*!
-    ** \brief Convert a correlation mode into its string representation
-    */
-    static const char* ModeToCString(Mode mode);
-
-    /*!
     ** \brief Convert a string into the corresponding mode
     */
     static Mode CStringToMode(const std::string& str);

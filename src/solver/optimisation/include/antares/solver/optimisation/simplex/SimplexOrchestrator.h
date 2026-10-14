@@ -19,7 +19,7 @@
 #include "antares/solver/utils/opt_period_string_generator.h"
 #include "antares/writer/i_writer.h"
 
-namespace Antares::Optimization
+namespace Antares::Data
 {
 class InactiveComponentsAnalyzer;
 }
@@ -52,7 +52,7 @@ public:
       const OptPeriodStringGenerator& periodString,
       Solver::IResultWriter& writer,
       IO::Outputs::SimulationTable* simulationTable,
-      const Antares::Optimization::InactiveComponentsAnalyzer* inactiveComponents = nullptr);
+      const Antares::Data::InactiveComponentsAnalyzer* inactiveComponents = nullptr);
 
     /**
      * @brief Execute the full solve flow.
@@ -86,7 +86,7 @@ private:
     const OptPeriodStringGenerator& periodString_;
     Solver::IResultWriter& writer_;
     IO::Outputs::SimulationTable* simulationTable_;
-    const Antares::Optimization::InactiveComponentsAnalyzer* inactiveComponents_;
+    const Antares::Data::InactiveComponentsAnalyzer* inactiveComponents_;
 
     // Problem state
     std::shared_ptr<Antares::Optimization::LegacyOrtoolsLinearProblem> ortoolsProblem_;

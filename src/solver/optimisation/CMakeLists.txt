@@ -264,16 +264,14 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/LegacySimulationTableSnapshot.h
         LegacySimulationTableSnapshot.cpp
         LegacySimulationTableStage.cpp
-        include/antares/solver/optimisation/InactiveComponentsAnalyzer.h
-        InactiveComponentsAnalyzer.cpp
-        include/antares/solver/optimisation/InactiveComponentsAnalyzerBuilder.h
-        InactiveComponentsAnalyzerBuilder.cpp
         include/antares/solver/optimisation/LegacyNameMapper.h
         LegacyNameMapper.cpp
         include/antares/solver/optimisation/ComponentToAreaConnectionFiller.h
         ComponentToAreaConnectionFiller.cpp
         include/antares/solver/optimisation/ThermalCapacityFiller.h
         ThermalCapacityFiller.cpp
+        include/antares/solver/optimisation/HebdoAreaPriceProvider.h
+        HebdoAreaPriceProvider.cpp
 )
 
 

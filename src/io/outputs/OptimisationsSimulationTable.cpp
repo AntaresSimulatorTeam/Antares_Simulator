@@ -89,7 +89,7 @@ std::vector<Stage> resolveStages(const std::vector<std::string>& names,
 } // namespace
 
 OptimisationsSimulationTable::OptimisationsSimulationTable(
-  std::shared_ptr<const Optimization::InactiveComponentsAnalyzer> inactiveComponents):
+  std::shared_ptr<const Data::InactiveComponentsAnalyzer> inactiveComponents):
     inactiveComponents(std::move(inactiveComponents))
 {
 }

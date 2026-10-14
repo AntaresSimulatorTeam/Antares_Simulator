@@ -92,10 +92,6 @@ public:
     static Type StringToType(const std::string& text);
 
     /*!
-    ** \brief Convert a binding constraint operator into a mere C-String
-    */
-    static const char* OperatorToCString(Operator o);
-    /*!
     ** \brief Convert a binding constraint operator into a short C-String
     */
     static const char* OperatorToShortCString(Operator o);

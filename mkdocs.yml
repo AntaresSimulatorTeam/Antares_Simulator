@@ -38,6 +38,7 @@ nav:
           - Command-line: reference/solver/command-line.md
           - Hybrid studies: reference/solver/hybrid-studies.md
           - Appendix: reference/solver/appendix.md
+          - Reserves: reference/solver/optional-features/reserves.md
           - Optimization engine support:
               - FICO® Xpress Optimizer: reference/solver/optional-features/xpress.md
       - Modeler:
@@ -60,7 +61,6 @@ nav:
       - Other features:
           - Batch Runner: reference/other-features/batchrun.md
           - Config Checker: reference/other-features/config.md
-          - Kirchhoff's constraint generator: reference/other-features/kirchhoff-constraints-builder.md
           - Study Cleaner: reference/other-features/study-cleaner.md
           - Study Finder: reference/other-features/study-finder.md
           - Study Updater: reference/other-features/study-updater.md
@@ -77,6 +77,7 @@ nav:
       - Tests (user): developer-guide/4-Tests-user.md
       - Tests (developer): developer-guide/4-Tests-dev.md
       - Installer creation: developer-guide/5-Installer-creation.md
+      - 'Simulation table e2e coverage': 'developer-guide/simulation-table-e2e-coverage.md'
       - Contributing: developer-guide/6-Contributing.md
       - Continuous Integration: developer-guide/continuous-integration.md
       - vcpkg asset caching: developer-guide/vcpkg-asset-caching.md
@@ -125,7 +126,7 @@ exclude_docs: |
 
 validation:
   omitted_files: warn
-  absolute_links: warn  
+  absolute_links: warn
   unrecognized_links: warn
   anchors: warn
 

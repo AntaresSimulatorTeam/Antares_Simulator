@@ -5,7 +5,7 @@
 The legacy (weekly) solver exposes its results in the modeler simulation table in two categories:
 
 - **Raw rows** — one per named optimisation variable, `value = X[i]`. `VariableNamer` records, at problem-naming time, a `LegacyVariableInfo{name, component, timeIndex}` parallel to the variable name (`PROBLEME_ANTARES_A_RESOUDRE::LegacyVariablesInfo`); after each solve `FillLegacySimulationTable` writes one row per recorded variable, translating the legacy name to its public output name through `LegacyNameMapper` (e.g. `UnsuppliedEnergy` → `unsupplied_energy`).
-- **Derived rows** — quantities computed from the solution rather than variables of the problem: a thermal cluster's `prop_cost = generation_cost × generation_power`, an area's `price = -dual(balance constraint)`, congestion indicators, emissions, margins, `profit`, ... These are produced by `AddLegacyExtraOutputs` (`src/solver/optimisation/LegacyExtraOutputs.cpp`), the single entry point for all extra outputs.
+- **Derived rows** — quantities computed from the solution rather than variables of the problem: a thermal cluster's `prop_cost = generation_cost × generation_power`, an area's `price = -dual(balance constraint)` (computed by `legacyAreaPrice`, shared with the GEMS area-connection `price` field, see `HebdoAreaPriceProvider.h`), congestion indicators, emissions, margins, `profit`, ... These are produced by `AddLegacyExtraOutputs` (`src/solver/optimisation/LegacyExtraOutputs.cpp`), the single entry point for all extra outputs.
 
 ## 2. Design: iterate the study structure, read by index
 
@@ -70,6 +70,8 @@ between equal display names in different areas.
 | `actual_load` | `{area}_load` | `ConsommationAbattueDuPays + AllMustRunGenerationOfArea` | residual load plus must-run (raw input load) |
 | `price` | area | `−dual(AreaBalance)` | see sign note below |
 | `is_near_loss_of_load` | area | `price > unsCost − 5 ? 1 : 0` | `unsCost = CoutLineaire[iu]` |
+| `domestic_unsupplied_energy` | area | `ValeursHorairesDENS[pdt]` | `ResultatsHoraires[pays]`; zero-initialised, populated by CSR post-processing |
+| `is_local_matching_rule_violated` | area | `double(ValeursHorairesLmrViolations[pdt])` | `ResultatsHoraires[pays]`; 0 or 1 after CSR |
 | `level_percentage` | area | `X[ih] / TailleReservoir × 100` | skipped when the capacity is non-positive |
 | `actual_inflows` | area | `round(ApportNaturelHoraire[pdt])` | only areas with a managed reservoir |
 | `hydro_shadow_price` | area | `-dual(FinalStockExpression)` | weekly, accurate water value mode only |
@@ -223,5 +225,5 @@ The one thing the selection must not reach is what the solve *keeps*: the modele
 
 - **Empty stages produce no file.** `LegacySimulationTablesWriter` skips a stage whose table has no rows. This is a behaviour change: before per-stage tables, a header-only `optim-nb-2` file was written even when the second pass never ran (Expansion / MIP); now no file appears at all.
 - **Weekly simplex range only.** With `simplex-range = day` the week is solved in seven intervals that each rebuild the address table, so only the last day would be readable. The dump then no-ops with a one-time warning. That setting is deprecated — `parameters.cpp` logs an error for it — but the error does not stop the load, so the path is still reachable with `--force`.
-- **CSR-only quantities are out of reach.** Values that exist only in the patch's own structures (`...CSR`, `DENS`, `DtgMrgCsr`) have no LP variable in the weekly problem and therefore no entry in the address tables; the refresh cannot see them.
+- **CSR-only quantities are out of reach.** Values that exist only in the patch's own structures (`...CSR`,`DtgMrgCsr`) have no LP variable in the weekly problem and therefore no entry in the address tables; the refresh cannot see them.`DENS` and `LmrViolations` are now emitted directly from `ResultatsHoraires` (ANT-5240).
 - **Rows, not schema.** Stage tables use the same fill code as the optimisation-pass tables, so their column set and row conventions (§2) are identical; only the values differ.
