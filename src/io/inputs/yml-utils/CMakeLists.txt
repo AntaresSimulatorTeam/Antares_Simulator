@@ -20,6 +20,7 @@ target_link_libraries(yml-utils
         Antares::input-error
         fmt::fmt
         PRIVATE
+        logs
         yaml-cpp::yaml-cpp
 )
 

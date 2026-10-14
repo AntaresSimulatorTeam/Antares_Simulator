@@ -11,8 +11,8 @@
 namespace YAML
 {
 
-/// Throws YAML::Exception if \p node is a map with keys outside
-/// mandatoryFields + optionalFields, or lacking a mandatory key.
+/// Throws YAML::Exception if \p node is a map lacking a mandatory key.
+/// Logs a warning if it contains keys outside mandatoryFields + optionalFields.
 /// Non-map nodes are ignored.
 void checkFields(const Node& node,
                  const std::unordered_set<std::string>& mandatoryFields,

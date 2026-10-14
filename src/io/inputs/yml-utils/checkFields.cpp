@@ -8,6 +8,8 @@
 #include <iterator>
 #include <vector>
 
+#include <antares/logs/logs.h>
+
 #include "antares/io/inputs/yml-utils/YmlTreeDisplayer.h"
 
 namespace YAML
@@ -25,31 +27,26 @@ std::vector<std::string> diffSet(const std::unordered_set<std::string>& setA,
     return diff;
 }
 
-std::string build_error_message(const size_t& nbFieldsAllowed,
-                                const YmlTreeDisplayer& displayer,
-                                const std::vector<std::string>& unexpected,
-                                const std::vector<std::string>& missing)
+std::string build_message(const std::string& header,
+                          const YmlTreeDisplayer& displayer,
+                          const std::vector<std::string>& unexpected,
+                          const std::vector<std::string>& missing)
 {
-    // Build a readable list of errors (one per line), then append the tree
-    std::string errors_list;
+    std::string fieldsList;
     for (const auto& f: unexpected)
     {
-        errors_list += fmt::format("- Unexpected field: {}\n", f);
+        fieldsList += fmt::format("- Unrecognised field: {}\n", f);
     }
     for (const auto& f: missing)
     {
-        errors_list += fmt::format("- Missing field: {}\n", f);
+        fieldsList += fmt::format("- Missing field: {}\n", f);
     }
 
-    // Final message: brief header, individual errors, then the tree
-    const std::string message = fmt::format(
-      "Unexpected or missing field(s) (expected {} field(s)).\n{}\n{}{}",
-      nbFieldsAllowed,
-      errors_list,
-      displayer.baseTree(),
-      displayer.buildMarkedTree(unexpected, missing));
-
-    return message;
+    return fmt::format("{}\n{}\n{}{}",
+                       header,
+                       fieldsList,
+                       displayer.baseTree(),
+                       displayer.buildMarkedTree(unexpected, missing));
 }
 
 } // namespace
@@ -83,15 +80,22 @@ void checkFields(const Node& node,
         return; // valid
     }
 
-    // Invalid map: now build the displayer for error reporting
+    // Invalid map: now build the displayer for reporting
     YmlTreeDisplayer displayer(node);
 
-    const std::string message = build_error_message(allowedFields.size(),
-                                                    displayer,
-                                                    unexpected,
-                                                    missing);
+    // Unrecognised fields are ignored (warning only); missing mandatory fields are fatal
+    if (!missing.empty())
+    {
+        throw Exception(node.Mark(),
+                        build_message(fmt::format("Missing mandatory field(s) (expected {} field(s)).",
+                                                  allowedFields.size()),
+                                      displayer,
+                                      unexpected,
+                                      missing));
+    }
 
-    throw Exception(node.Mark(), message);
+    Antares::logs.warning()
+      << build_message("Unrecognised field(s) will be ignored.", displayer, unexpected, missing);
 }
 
 } // namespace YAML

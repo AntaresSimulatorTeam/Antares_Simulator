@@ -399,7 +399,7 @@ BOOST_AUTO_TEST_CASE(port_types_without_price_field__in_area_connection_still_va
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.price, "");
 }
 
-BOOST_AUTO_TEST_CASE(area_connection_rejects_unknown_field)
+BOOST_AUTO_TEST_CASE(area_connection_ignores_unknown_field)
 {
     YmlModel::Parser parser;
     const auto library = R"(
@@ -417,7 +417,7 @@ BOOST_AUTO_TEST_CASE(area_connection_rejects_unknown_field)
                    not-a-field:
             models: []
     )"s;
-    BOOST_REQUIRE_THROW((void)parser.parse(library), YAML::Exception);
+    BOOST_REQUIRE_NO_THROW((void)parser.parse(library));
 }
 
 BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)
@@ -1104,7 +1104,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_extra_outputs)
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].expression.input_expr, "expression2");
 }
 
-BOOST_AUTO_TEST_CASE(misspelled_model_field_throws)
+BOOST_AUTO_TEST_CASE(misspelled_model_field_is_ignored)
 {
     YmlModel::Parser parser;
     const auto library = R"(
@@ -1116,10 +1116,10 @@ BOOST_AUTO_TEST_CASE(misspelled_model_field_throws)
                     - id: "profit"
                       expression: "p"
         )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YAML::Exception);
+    BOOST_CHECK_NO_THROW(parser.parse(library));
 }
 
-BOOST_AUTO_TEST_CASE(misspelled_variable_field_throws)
+BOOST_AUTO_TEST_CASE(misspelled_variable_field_is_ignored)
 {
     YmlModel::Parser parser;
     const auto library = R"(
@@ -1131,5 +1131,5 @@ BOOST_AUTO_TEST_CASE(misspelled_variable_field_throws)
                     - id: "p"
                       lower_bound: 0
         )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YAML::Exception);
+    BOOST_CHECK_NO_THROW(parser.parse(library));
 }

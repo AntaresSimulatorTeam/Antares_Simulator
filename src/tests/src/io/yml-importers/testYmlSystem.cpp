@@ -268,7 +268,7 @@ BOOST_AUTO_TEST_CASE(connection_with_missing_field_throws_input_error)
     BOOST_CHECK_THROW(parser.parse(system, ""), YAML::Exception);
 }
 
-BOOST_AUTO_TEST_CASE(connection_with_extra_field_throws_input_error)
+BOOST_AUTO_TEST_CASE(connection_with_extra_field_is_ignored)
 {
     YmlSystem::Parser parser;
     const auto system = R"(
@@ -281,7 +281,7 @@ BOOST_AUTO_TEST_CASE(connection_with_extra_field_throws_input_error)
                   port2: p2
                   extra: bad
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), YAML::Exception);
+    BOOST_CHECK_NO_THROW(parser.parse(system, ""));
 }
 
 BOOST_AUTO_TEST_CASE(area_connection_with_wrong_field_count_throws_input_error)
@@ -418,7 +418,7 @@ BOOST_AUTO_TEST_CASE(decoder_throws_for_defined_non_map_nodes)
     }
 }
 
-BOOST_AUTO_TEST_CASE(misspelled_component_field_throws)
+BOOST_AUTO_TEST_CASE(misspelled_component_field_is_ignored)
 {
     YmlSystem::Parser parser;
     const auto system = R"(
@@ -429,5 +429,5 @@ BOOST_AUTO_TEST_CASE(misspelled_component_field_throws)
                   model: lib.model
                   scenario-groups: g
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), YAML::Exception);
+    BOOST_CHECK_NO_THROW(parser.parse(system, ""));
 }
