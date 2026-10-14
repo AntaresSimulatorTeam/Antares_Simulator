@@ -1,5 +1,6 @@
 system:
   id: simple_battery
+  model_libraries: simple_models
   components:
   - id: generator_generator
     model: simple_models.generator
