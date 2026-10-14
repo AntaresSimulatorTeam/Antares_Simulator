@@ -270,7 +270,7 @@ BOOST_AUTO_TEST_CASE(connection_with_missing_field_throws_input_error)
     BOOST_CHECK_THROW(parser.parse(system, ""), YAML::Exception);
 }
 
-BOOST_AUTO_TEST_CASE(connection_with_extra_field_is_ignored)
+BOOST_AUTO_TEST_CASE(connection_with_extra_field_throws_input_error)
 {
     YmlSystem::Parser parser;
     const auto system = R"(
@@ -283,7 +283,7 @@ BOOST_AUTO_TEST_CASE(connection_with_extra_field_is_ignored)
                   port2: p2
                   extra: bad
     )"s;
-    BOOST_CHECK_NO_THROW(parser.parse(system, ""));
+    BOOST_CHECK_THROW(parser.parse(system, ""), YAML::Exception);
 }
 
 BOOST_AUTO_TEST_CASE(area_connection_with_wrong_field_count_throws_input_error)

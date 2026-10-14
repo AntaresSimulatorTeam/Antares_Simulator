@@ -63,7 +63,7 @@ bool convert<YmlSystem::Connection>::decode(const Node& node, YmlSystem::Connect
     {
         return false;
     }
-    checkFields(node, {"component1", "port1", "component2", "port2"});
+    checkFields(node, {"component1", "port1", "component2", "port2"}, {}, UnexpectedFields::Throw);
     rhs.firstEntry.componentId = node["component1"].as<std::string>();
     rhs.firstEntry.portId = node["port1"].as<std::string>();
 
@@ -78,7 +78,7 @@ bool convert<YmlSystem::AreaConnection>::decode(const Node& node, YmlSystem::Are
     {
         return false;
     }
-    checkFields(node, {"component", "port", "area"});
+    checkFields(node, {"component", "port", "area"}, {}, UnexpectedFields::Throw);
     rhs.componentId = node["component"].as<std::string>();
     rhs.portId = node["port"].as<std::string>();
     rhs.areaId = node["area"].as<std::string>();
@@ -92,7 +92,7 @@ bool convert<YmlSystem::ThermalComponent>::decode(const Node& node,
     {
         return false;
     }
-    checkFields(node, {"area", "cluster-id"});
+    checkFields(node, {"area", "cluster-id"}, {}, UnexpectedFields::Throw);
     rhs.areaId = node["area"].as<std::string>();
     rhs.clusterId = node["cluster-id"].as<std::string>();
     return true;
@@ -106,7 +106,7 @@ bool convert<YmlSystem::ThermalCapacityConnection>::decode(
     {
         return false;
     }
-    checkFields(node, {"component", "port", "thermal-component"});
+    checkFields(node, {"component", "port", "thermal-component"}, {}, UnexpectedFields::Throw);
     rhs.componentId = node["component"].as<std::string>();
     rhs.portId = node["port"].as<std::string>();
     const Node thermalComponentNode = node["thermal-component"];

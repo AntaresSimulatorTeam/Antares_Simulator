@@ -53,7 +53,8 @@ std::string build_message(const std::string& header,
 
 void checkFields(const Node& node,
                  const std::unordered_set<std::string>& mandatoryFields,
-                 const std::unordered_set<std::string>& optionalFields)
+                 const std::unordered_set<std::string>& optionalFields,
+                 UnexpectedFields unexpectedPolicy)
 {
     if (!node.IsDefined() || !node.IsMap())
     {
@@ -83,11 +84,12 @@ void checkFields(const Node& node,
     // Invalid map: now build the displayer for reporting
     YmlTreeDisplayer displayer(node);
 
-    // Unrecognised fields are ignored (warning only); missing mandatory fields are fatal
-    if (!missing.empty())
+    // Missing mandatory fields are always fatal; unrecognised ones depend on the policy
+    if (!missing.empty() || unexpectedPolicy == UnexpectedFields::Throw)
     {
         throw Exception(node.Mark(),
-                        build_message(fmt::format("Missing mandatory field(s) (expected {} field(s)).",
+                        build_message(fmt::format("Unexpected or missing field(s) (expected {} "
+                                                  "field(s)).",
                                                   allowedFields.size()),
                                       displayer,
                                       unexpected,
