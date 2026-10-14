@@ -137,7 +137,7 @@ BOOST_AUTO_TEST_CASE(checkFields_reports_unexpected_and_missing_keys)
         c: 3
     )");
     BOOST_CHECK_THROW((YAML::checkFields(node, std::unordered_set<std::string>{"a", "b"})),
-                      YAML::Exception);
+                      Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(printPathTree_formats_nested_paths)
@@ -417,7 +417,7 @@ BOOST_AUTO_TEST_CASE(area_connection_rejects_unknown_field)
                    not-a-field:
             models: []
     )"s;
-    BOOST_REQUIRE_THROW((void)parser.parse(library), YAML::Exception);
+    BOOST_REQUIRE_THROW((void)parser.parse(library), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)

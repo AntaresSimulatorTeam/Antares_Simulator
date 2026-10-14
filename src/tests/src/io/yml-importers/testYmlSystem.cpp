@@ -267,7 +267,7 @@ BOOST_AUTO_TEST_CASE(connection_with_missing_field_throws_input_error)
                   port1: p1
                   component2: M
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(connection_with_extra_field_throws_input_error)
@@ -283,7 +283,7 @@ BOOST_AUTO_TEST_CASE(connection_with_extra_field_throws_input_error)
                   port2: p2
                   extra: bad
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(area_connection_with_wrong_field_count_throws_input_error)
@@ -296,7 +296,7 @@ BOOST_AUTO_TEST_CASE(area_connection_with_wrong_field_count_throws_input_error)
                 - component: c1
                   port: p1
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(thermal_capacity_connection_with_wrong_field_count_throws_input_error)
@@ -309,7 +309,7 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connection_with_wrong_field_count_throws_i
                 - component: c1
                   port: p1
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(thermal_component_with_wrong_field_count_throws_input_error)
@@ -324,7 +324,7 @@ BOOST_AUTO_TEST_CASE(thermal_component_with_wrong_field_count_throws_input_error
                   thermal-component:
                     area: fr
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(thermal_component_null_throws_input_error)

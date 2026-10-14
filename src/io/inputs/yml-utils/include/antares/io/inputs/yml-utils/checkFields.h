@@ -15,10 +15,10 @@ namespace YAML
 enum class UnexpectedFields
 {
     Warn,  ///< log a warning and ignore them
-    Throw, ///< throw YAML::Exception
+    Throw, ///< throw InputError
 };
 
-/// Throws YAML::Exception if \p node is a map lacking a mandatory key.
+/// Throws InputError if \p node is a map lacking a mandatory key.
 /// Unexpected keys (outside mandatoryFields + optionalFields) are handled according to
 /// \p unexpectedPolicy.
 /// Non-map nodes are ignored.

@@ -8,6 +8,7 @@
 #include <iterator>
 #include <vector>
 
+#include <antares/io/inputs/InputError.h>
 #include <antares/logs/logs.h>
 
 #include "antares/io/inputs/yml-utils/YmlTreeDisplayer.h"
@@ -87,13 +88,17 @@ void checkFields(const Node& node,
     // Missing mandatory fields are always fatal; unrecognised ones depend on the policy
     if (!missing.empty() || unexpectedPolicy == UnexpectedFields::Throw)
     {
-        throw Exception(node.Mark(),
-                        build_message(fmt::format("Unexpected or missing field(s) (expected {} "
+            const auto mark = node.Mark();
+        throw Antares::IO::Inputs::InputError(
+          fmt::format("Line {} column {}\n{}",
+                      mark.line + 1,
+                      mark.column + 1,
+                      build_message(fmt::format("Unexpected or missing field(s) (expected {} "
                                                   "field(s)).",
                                                   allowedFields.size()),
-                                      displayer,
-                                      unexpected,
-                                      missing));
+                                    displayer,
+                                    unexpected,
+                                    missing)));
     }
 
     Antares::logs.warning()

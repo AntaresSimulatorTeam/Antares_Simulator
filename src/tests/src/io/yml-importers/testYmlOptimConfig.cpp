@@ -3,9 +3,12 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+
 #include <yaml-cpp/exceptions.h>
 
 #include <boost/test/unit_test.hpp>
+
+#include <antares/io/inputs/InputError.h>
 
 #include "antares/io/inputs/yml-optim-config/parser.h"
 using namespace Antares::IO::Inputs::YmlOptimConfig;
@@ -245,7 +248,7 @@ other_key:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_id_throws)
@@ -259,7 +262,7 @@ models:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_model_decomposition_throws)
@@ -285,7 +288,7 @@ models:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_variable_location_throws)
@@ -300,7 +303,7 @@ models:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_objective_id_throws)
@@ -315,7 +318,7 @@ models:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_objective_location_throws)
@@ -330,7 +333,7 @@ models:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parse_invalid_yaml_syntax_throws)
