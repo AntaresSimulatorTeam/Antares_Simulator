@@ -40,15 +40,15 @@ void OPT_InitialiserLesCoutsLineaireRampesThermiques(PROBLEME_HEBDO* problemeHeb
                     var = CorrespondanceVarNativesVarOptim.powerRampingDecreaseIndex[palier];
                     if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                     {
-                        ProblemeAResoudre->CoutLineaire[var] = PaliersThermiquesDuPays
-                                                                 .downwardRampingCost[index];
+                        ProblemeAResoudre->CoutLineaire[var] = PaliersThermiquesDuPays.rampingCosts
+                                                                 .downward[index];
                     }
 
                     var = CorrespondanceVarNativesVarOptim.powerRampingIncreaseIndex[palier];
                     if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                     {
-                        ProblemeAResoudre->CoutLineaire[var] = PaliersThermiquesDuPays
-                                                                 .upwardRampingCost[index];
+                        ProblemeAResoudre->CoutLineaire[var] = PaliersThermiquesDuPays.rampingCosts
+                                                                 .upward[index];
                     }
                 }
             }

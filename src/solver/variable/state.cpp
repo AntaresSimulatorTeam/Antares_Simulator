@@ -416,7 +416,6 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterEnabledIndex)
     const auto& availableProduction = currentCluster->series.getColumn(this->year);
     for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
     {
-        maxUnitNeeded = 0;
         ON_min[h] = 0;
         ON_max[h] = 0;
 
@@ -657,6 +656,70 @@ void State::yearEndBuildThermalClusterCalculateStartupCosts(
     }
 }
 
+namespace
+{
+struct OptimalDecreasingLevel
+{
+    int unitCount;
+    uint holdDuration;
+};
+
+OptimalDecreasingLevel findOptimalDecreasingLevel(uint hour,
+                                                  uint endHourForCurrentYear,
+                                                  uint maxDurationON,
+                                                  const std::array<int, HOURS_PER_YEAR>& ON_min,
+                                                  const std::array<int, HOURS_PER_YEAR>& ON_max,
+                                                  int previousOptimalCount)
+{
+    int maximumUnitCount = std::min(ON_max[hour], previousOptimalCount);
+    int minimumUnitCount = ON_min[hour];
+    uint holdDuration = 0;
+
+    if (maximumUnitCount > minimumUnitCount)
+    {
+        for (uint k = 1; k <= maxDurationON; ++k)
+        {
+            if (hour + k >= endHourForCurrentYear)
+            {
+                break;
+            }
+
+            if (ON_max[hour + k] <= ON_min[hour])
+            {
+                maximumUnitCount = ON_min[hour];
+                break;
+            }
+
+            if (ON_max[hour + k] < maximumUnitCount)
+            {
+                maximumUnitCount = ON_max[hour + k];
+                if (maximumUnitCount < minimumUnitCount)
+                {
+                    break;
+                }
+            }
+
+            if (ON_min[hour + k] > ON_min[hour])
+            {
+                if (ON_min[hour + k] >= maximumUnitCount)
+                {
+                    minimumUnitCount = maximumUnitCount;
+                    holdDuration = k;
+                    break;
+                }
+                if (ON_min[hour + k] >= minimumUnitCount)
+                {
+                    holdDuration = k;
+                    minimumUnitCount = ON_min[hour + k];
+                }
+            }
+        }
+    }
+
+    return {minimumUnitCount, holdDuration};
+}
+} // namespace
+
 std::array<int, HOURS_PER_YEAR> State::computeEconomicallyOptimalNbClustersONforEachHour(
   const uint& maxDurationON,
   const std::array<int, HOURS_PER_YEAR>& ON_min,
@@ -669,9 +732,6 @@ std::array<int, HOURS_PER_YEAR> State::computeEconomicallyOptimalNbClustersONfor
     // Nombre de groupes économiquement optimal en fonctionnement à l'heure h
     std::array<int, HOURS_PER_YEAR> ON_opt;
 
-    int nivmax; // valeur maximale de ON_opt[h] , progressivement réactualisée à la baisse
-    int nivmin; // valeur minimale de ON_opt[h] , progressivement réactualisée à la hausse
-
     ON_opt[startHourForCurrentYear] = ON_min[startHourForCurrentYear];
 
     uint h = startHourForCurrentYear + 1;
@@ -679,75 +739,30 @@ std::array<int, HOURS_PER_YEAR> State::computeEconomicallyOptimalNbClustersONfor
     {
         if (ON_min[h] >= ON_opt[h - 1])
         {
-            ON_opt[h] = ON_min[h]; // à la montée le nombre de groupe démarré est le plus
-            // petit possible
-            ++h; // à la montée on ne peut progresser que d'une heure
+            ON_opt[h] = ON_min[h];
+            ++h;
+            continue;
         }
-        else // on amorce une descente : ON_opt[h] peut être supérieur à  ON_min[h]
+
+        const auto [optimalUnitCount, holdDuration] = findOptimalDecreasingLevel(
+          h,
+          endHourForCurrentYear,
+          maxDurationON,
+          ON_min,
+          ON_max,
+          ON_opt[h - 1]);
+        if (holdDuration == 0)
         {
-            // nombre de pas de temps sur lesquel la valeur de ON_opt[h] est maintenue
-            uint portee = 0;
-            nivmin = ON_min[h];
-
-            (ON_max[h] < ON_opt[h - 1]) ? nivmax = ON_max[h] : nivmax = ON_opt[h - 1];
-
-            if (nivmax > nivmin)
-            {
-                for (uint k = 1; k <= maxDurationON; ++k)
-                {
-                    if (h + k >= endHourForCurrentYear)
-                    {
-                        break; // fin de l'année dépassée
-                    }
-                    if (ON_max[h + k] <= ON_min[h])
-                    {
-                        nivmax = ON_min[h];
-                        break;
-                    } // point très  bas rencontré sur ON_max : il vaut mieux arrêter les
-                    // groupes dès l'heure h
-                    if (ON_max[h + k]
-                        < nivmax) // point moins bas rencontré sur ON_max : la borne sup du
-                    // nombre optimal de groupes à conserver en h diminue
-                    {
-                        nivmax = ON_max[h + k];
-                        if (nivmax < nivmin)
-                        {
-                            break;
-                        }
-                    }
-                    if (ON_min[h + k] > ON_min[h]) // on est sûr que ON_opt[h] > ON_min[h]
-                    {
-                        if (ON_min[h + k] >= nivmax)
-                        {
-                            nivmin = nivmax;
-                            portee = k;
-                            break;
-                        } // la remontée de ON_min justifie de conserver exactement
-                        // nivmin=nivmax groupes de h à h+k-1 = h+portee-1
-                        else if (ON_min[h + k] >= nivmin)
-                        {
-                            portee = k;             // durée  provisoire qui pourra être allongée
-                            nivmin = ON_min[h + k]; // niveau provisoire qui pourra être augmenté
-                        }
-                    }
-                }
-            }
-
-            if (portee == 0)
-            {
-                ON_opt[h] = ON_min[h]; // la puissance appelée après h ne justifie pas de
-                // maintenir des groupes appelés au-delà du minimum
-                ++h; // on progresse d'exactement une heure
-            }
-            else
-            {
-                for (uint k = 0; k < portee; ++k)
-                {
-                    ON_opt[h + k] = nivmin;
-                }
-                h += portee; // on progresse d'au moins une heure
-            }
+            ON_opt[h] = ON_min[h];
+            ++h;
+            continue;
         }
+
+        for (uint k = 0; k < holdDuration; ++k)
+        {
+            ON_opt[h + k] = optimalUnitCount;
+        }
+        h += holdDuration;
     }
     return ON_opt;
 }

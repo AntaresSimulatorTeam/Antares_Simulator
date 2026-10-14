@@ -434,10 +434,16 @@ struct PALIERS_THERMIQUES
     std::vector<double> maxUpwardPowerRampingRate;
     //! maximum hourly downward power ramping rate for a thermal unit (MW/hour)
     std::vector<double> maxDownwardPowerRampingRate;
-    //! cost of 1 MW power increase for the thermal cluster (above minimum stable level)
-    std::vector<double> upwardRampingCost;
-    //! cost of 1 MW power decrease for the thermal cluster
-    std::vector<double> downwardRampingCost;
+
+    struct RampingCosts
+    {
+        //! cost of 1 MW power increase for the thermal cluster (above minimum stable level)
+        std::vector<double> upward;
+        //! cost of 1 MW power decrease for the thermal cluster
+        std::vector<double> downward;
+    };
+
+    RampingCosts rampingCosts;
 };
 
 struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES

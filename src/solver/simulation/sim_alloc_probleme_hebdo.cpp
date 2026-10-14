@@ -452,8 +452,8 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
 
         palier.rampingEnabled.assign(nbPaliers, false);
 
-        for (auto* v: {&palier.downwardRampingCost,
-                       &palier.upwardRampingCost,
+        for (auto* v: {&palier.rampingCosts.downward,
+                       &palier.rampingCosts.upward,
                        &palier.maxUpwardPowerRampingRate,
                        &palier.maxDownwardPowerRampingRate})
         {

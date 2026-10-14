@@ -34,6 +34,7 @@ public:
     // This aggregate is populated at year end; hourly values are intentionally unused.
     static void setHourlyValue(IntermediateValues&, const State&, unsigned int)
     {
+        // Ramping costs are accumulated by yearEndBuildForEachThermalCluster instead.
     }
 
     static void yearEndBuildForEachThermalCluster(IntermediateValues& values,
