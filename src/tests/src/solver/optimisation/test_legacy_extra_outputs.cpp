@@ -7,10 +7,10 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
 #include "antares/solver/optimisation/LegacyExtraOutputs.h"
 #include "antares/solver/optimisation/LegacySimulationTableSnapshot.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/study/InactiveComponentsAnalyzer.h"
 
 using Antares::IO::Outputs::SimulationTable;
 using Antares::LinearProblem::Api::FillContext;
@@ -279,6 +279,17 @@ struct Fixture
         problem.CoutDeDefaillancePositiveSansBruit = {9500., 19000., 8500.};
         problem.CoutDeDefaillanceNegativeSansBruit = {3., 0.5, 0.5};
 
+        // ResultatsHoraires: the new adequacy-patch emit() calls in
+        // areaOutputs() access ValeursHorairesDENS and
+        // ValeursHorairesLmrViolations for every area; initialise them to 0
+        // so the basic fill() tests don't segfault.
+        problem.ResultatsHoraires.resize(3);
+        for (auto& hr: problem.ResultatsHoraires)
+        {
+            hr.ValeursHorairesDENS.assign(nbPdt, 0.);
+            hr.ValeursHorairesLmrViolations.assign(nbPdt, 0);
+        }
+
         problem.CorrespondanceVarNativesVarOptim.resize(nbPdt);
         problem.CorrespondanceCntNativesCntOptim.resize(nbPdt);
         auto& solved = *problem.ProblemeAResoudre;
@@ -382,7 +393,7 @@ struct Fixture
     FillContext fillContext{0, 167, 168, 335, 2};
     unsigned currentBlock = 1;
     SimulationTable table;
-    std::shared_ptr<const Antares::Optimization::InactiveComponentsAnalyzer> inactiveComponents;
+    std::shared_ptr<const Antares::Data::InactiveComponentsAnalyzer> inactiveComponents;
 };
 } // namespace
 
@@ -656,7 +667,7 @@ BOOST_AUTO_TEST_CASE(hurdle_cost_outputs_are_skipped_for_links_without_hurdle_co
 
 BOOST_AUTO_TEST_CASE(link_outputs_are_entirely_suppressed_when_flagged_all_zero)
 {
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setLinkAllZero(0, true); // area1_area2_link
     inactiveComponents = analyzer;
     fill();
@@ -673,7 +684,7 @@ BOOST_AUTO_TEST_CASE(link_outputs_are_entirely_suppressed_when_flagged_all_zero)
 
 BOOST_AUTO_TEST_CASE(link_outputs_are_kept_when_the_all_zero_flag_is_false)
 {
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setLinkAllZero(0, false);
     inactiveComponents = analyzer;
     fill();
@@ -774,7 +785,7 @@ BOOST_AUTO_TEST_CASE(
   hydro_balance_port_flow_is_suppressed_when_reservoir_unmanaged_and_inflow_all_zero)
 {
     problem.CaracteristiquesHydrauliques[0].SuiviNiveauHoraire = false;
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setHydroInflowAllZero(0, true);
     inactiveComponents = analyzer;
     fill();
@@ -785,7 +796,7 @@ BOOST_AUTO_TEST_CASE(
 BOOST_AUTO_TEST_CASE(hydro_balance_port_flow_is_kept_when_reservoir_unmanaged_but_inflow_nonzero)
 {
     problem.CaracteristiquesHydrauliques[0].SuiviNiveauHoraire = false;
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setHydroInflowAllZero(0, false);
     inactiveComponents = analyzer;
     fill();
@@ -796,7 +807,7 @@ BOOST_AUTO_TEST_CASE(hydro_balance_port_flow_is_kept_when_reservoir_unmanaged_bu
 BOOST_AUTO_TEST_CASE(hydro_balance_port_flow_is_kept_when_reservoir_managed_even_if_inflow_all_zero)
 {
     problem.CaracteristiquesHydrauliques[0].SuiviNiveauHoraire = true;
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setHydroInflowAllZero(0, true);
     inactiveComponents = analyzer;
     fill();
@@ -858,7 +869,7 @@ BOOST_AUTO_TEST_CASE(input_generation_is_skipped_when_the_series_are_absent)
 
 BOOST_AUTO_TEST_CASE(actual_load_and_load_balance_port_are_skipped_when_load_series_is_all_zero)
 {
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setLoadAllZero(0, true); // area1
     inactiveComponents = analyzer;
     fill();
@@ -872,7 +883,7 @@ BOOST_AUTO_TEST_CASE(actual_load_and_load_balance_port_are_skipped_when_load_ser
 
 BOOST_AUTO_TEST_CASE(actual_load_is_kept_when_the_all_zero_flag_is_false)
 {
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setLoadAllZero(0, false); // explicit, same as the default
     inactiveComponents = analyzer;
     fill();
@@ -885,7 +896,7 @@ BOOST_AUTO_TEST_CASE(ror_generation_rows_are_skipped_when_ror_series_is_all_zero
 {
     problem.InputGenerationOfArea[0].push_back(
       {.componentName = "area1_run_of_river", .availablePower = {0.}});
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setRorAllZero(0, true);
     inactiveComponents = analyzer;
     fill();
@@ -901,7 +912,7 @@ BOOST_AUTO_TEST_CASE(solar_generation_rows_are_skipped_when_solar_series_is_all_
 {
     problem.InputGenerationOfArea[0].push_back(
       {.componentName = "area1_solar", .availablePower = {0.}});
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setSolarAllZero(0, true);
     inactiveComponents = analyzer;
     fill();
@@ -914,7 +925,7 @@ BOOST_AUTO_TEST_CASE(solar_generation_rows_are_skipped_when_solar_series_is_all_
 BOOST_AUTO_TEST_CASE(wind_generation_rows_are_skipped_when_wind_series_is_all_zero)
 {
     // The fixture already carries an "area1_wind" input-generation entry.
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setWindAllZero(0, true);
     inactiveComponents = analyzer;
     fill();
@@ -930,7 +941,7 @@ BOOST_AUTO_TEST_CASE(misc_gen_component_is_skipped_when_its_own_column_series_is
 {
     // The fixture already carries one misc-gen entry, "area1_combined_heat_power",
     // conventionally column 0.
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setMiscGenColumnAllZero(0, 0, true);
     inactiveComponents = analyzer;
     fill();
@@ -947,7 +958,7 @@ BOOST_AUTO_TEST_CASE(misc_gen_columns_are_suppressed_independently_of_each_other
     // misc-gen sub-components is suppressed independently.
     problem.InputGenerationOfArea[0].push_back(
       {.componentName = "area1_biomass", .availablePower = {42.}});
-    auto analyzer = std::make_shared<Antares::Optimization::InactiveComponentsAnalyzer>();
+    auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
     analyzer->setMiscGenColumnAllZero(0, 0, true); // combined_heat_power only
     inactiveComponents = analyzer;
     fill();
@@ -1229,8 +1240,9 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
 
     // Areas: 3 x (imbalance_cost, is_significant_loss_of_load,
     //             is_loss_of_load, actual_load, price,
-    //             is_near_loss_of_load) + area1's level_percentage and
-    //             actual_inflows                                  = 20
+    //             is_near_loss_of_load, domestic_unsupplied_energy,
+    //             is_local_matching_rule_violated) + area1's
+    //             level_percentage and actual_inflows              = 26
     // Thermal: prop_cost + 13 emissions + 4 margins + profit
     //          + actual_num_units_on + non_prop_cost              = 21
     // Links: link 0 (abs_flow, minus_flow, actual_loop_flow, 2 congestion
@@ -1248,7 +1260,7 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
     // Reserves: area1 "Res_1" (imbalance_cost + thermal participation
     //           + hydro participation) and area2 "Res_Down"
     //           (imbalance_cost + battery1 participation)         = 5
-    BOOST_CHECK_EQUAL(table.rowCount(), 20 + 21 + 16 + 1 + 6 + 13 + 2 + 5);
+    BOOST_CHECK_EQUAL(table.rowCount(), 26 + 21 + 16 + 1 + 6 + 13 + 2 + 5);
 }
 
 // Wires the result addresses the way OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire
@@ -1270,6 +1282,15 @@ void wireResultAddresses(PROBLEME_HEBDO& problem)
         hourlyResults.ValeursHorairesDeDefaillancePositive.assign(1, 0.);
         hourlyResults.CoutsMarginauxHoraires.assign(1, 0.);
     }
+
+    for (auto& hourlyResults: problem.ResultatsHoraires)
+    {
+        hourlyResults.ValeursHorairesDeDefaillancePositive.assign(1, 0.);
+        hourlyResults.CoutsMarginauxHoraires.assign(1, 0.);
+        hourlyResults.ValeursHorairesDENS.assign(1, 0.);
+        hourlyResults.ValeursHorairesLmrViolations.assign(1, 0);
+    }
+
     problem.ResultatsHoraires[0].HydroUsage.resize(1);
     problem.ResultatsHoraires[0].HydroUsage[0].reserveParticipationOfCluster = {0.};
     problem.ResultatsHoraires[1].ShortTermStorageReserves = std::vector<RESULTSRESERVES>(1);
@@ -1350,6 +1371,52 @@ BOOST_AUTO_TEST_CASE(post_process_dump_uses_published_reserve_participation)
                                  "area2_short_term_storage_battery1");
     BOOST_REQUIRE(storage.has_value());
     BOOST_CHECK_CLOSE(storage->value, 25. * 13., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(adequacy_patch_domestic_unsupplied_energy_emits_zero_by_default)
+{
+    fill();
+
+    const auto rows = RowsForOutput(table, "domestic_unsupplied_energy");
+    BOOST_REQUIRE_EQUAL(rows.size(), 3u); // one per area
+    for (const auto& row: rows)
+    {
+        BOOST_CHECK_CLOSE(row.value, 0., 1e-9);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(adequacy_patch_lmr_violation_emits_zero_by_default)
+{
+    fill();
+
+    const auto rows = RowsForOutput(table, "is_local_matching_rule_violated");
+    BOOST_REQUIRE_EQUAL(rows.size(), 3u); // one per area
+    for (const auto& row: rows)
+    {
+        BOOST_CHECK_CLOSE(row.value, 0., 1e-9);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(adequacy_patch_outputs_reflect_nonzero_values)
+{
+    // Set non-zero values for area1 (index 0)
+    problem.ResultatsHoraires[0].ValeursHorairesDENS[0] = 42.5;
+    problem.ResultatsHoraires[0].ValeursHorairesLmrViolations[0] = 1;
+
+    fill();
+
+    const auto dens = FindRow(table, "domestic_unsupplied_energy", "area1_node");
+    BOOST_REQUIRE(dens.has_value());
+    BOOST_CHECK_CLOSE(dens->value, 42.5, 1e-9);
+
+    const auto lmr = FindRow(table, "is_local_matching_rule_violated", "area1_node");
+    BOOST_REQUIRE(lmr.has_value());
+    BOOST_CHECK_CLOSE(lmr->value, 1., 1e-9);
+
+    // area2 remains zero
+    const auto dens2 = FindRow(table, "domestic_unsupplied_energy", "area2_node");
+    BOOST_REQUIRE(dens2.has_value());
+    BOOST_CHECK_CLOSE(dens2->value, 0., 1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(post_process_dump_leaves_the_solver_state_untouched)

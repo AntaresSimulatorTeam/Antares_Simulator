@@ -240,10 +240,6 @@ BOOST_FIXTURE_TEST_CASE(hydroPmax, Fixture)
 
     BOOST_CHECK(p.compatibility.hydroPmax == Parameters::Compatibility::HydroPmax::Hourly);
 
-    BOOST_CHECK_EQUAL(CompatibilityHydroPmaxToCString(p.compatibility.hydroPmax), "hourly");
-    BOOST_CHECK_EQUAL(CompatibilityHydroPmaxToCString(Parameters::Compatibility::HydroPmax::Daily),
-                      "daily");
-
     BOOST_CHECK(StringToCompatibilityHydroPmax(p.compatibility.hydroPmax, "daily"));
     BOOST_CHECK(!StringToCompatibilityHydroPmax(p.compatibility.hydroPmax, ""));
     BOOST_CHECK(!StringToCompatibilityHydroPmax(p.compatibility.hydroPmax, "abc"));

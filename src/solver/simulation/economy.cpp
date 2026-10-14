@@ -5,12 +5,12 @@
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
-#include "antares/solver/optimisation/InactiveComponentsAnalyzerBuilder.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/solver_utils.h"
+#include "antares/study/InactiveComponentsAnalyzerBuilder.h"
 #include "antares/writer/LegacySimulationTablesWriter.h"
 
 using namespace Yuni;
@@ -60,8 +60,7 @@ bool Economy::simulationBegin()
         weeklyOptProblems_.clear();
         postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
 
-        const auto inactiveComponents = Antares::Optimization::BuildInactiveComponentsAnalyzer(
-          study);
+        const auto inactiveComponents = Antares::Data::BuildInactiveComponentsAnalyzer(study);
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {

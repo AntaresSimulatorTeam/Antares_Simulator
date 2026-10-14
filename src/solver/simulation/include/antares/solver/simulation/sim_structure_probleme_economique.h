@@ -21,8 +21,12 @@ class AdequacyPatchRuntimeData;
 namespace Antares::Optimization
 {
 struct SolvedModelerProblem;
-class InactiveComponentsAnalyzer;
 } // namespace Antares::Optimization
+
+namespace Antares::Data
+{
+class InactiveComponentsAnalyzer;
+} // namespace Antares::Data
 
 struct CORRESPONDANCES_DES_VARIABLES
 {
@@ -588,7 +592,7 @@ struct PROBLEME_HEBDO
     /// simulation-table rows for structurally inactive objects (see
     /// AddLegacyExtraOutputs). Null by default, so callers and test fixtures
     /// that leave it unset keep emitting every row.
-    std::shared_ptr<const Antares::Optimization::InactiveComponentsAnalyzer> inactiveComponents;
+    std::shared_ptr<const Antares::Data::InactiveComponentsAnalyzer> inactiveComponents;
 
     uint32_t NombreDePays = 0;
     std::vector<const char*> NomsDesPays;

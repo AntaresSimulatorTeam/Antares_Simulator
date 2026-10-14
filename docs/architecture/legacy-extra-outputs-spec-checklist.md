@@ -1,4 +1,4 @@
-# Legacy Extra-Outputs — Spec Checklist (ANT-5006 §2.4 / §2.5)
+  # Legacy Extra-Outputs — Spec Checklist (ANT-5006 §2.4 / §2.5)
 
 Status of every extra-output (and port field) the GEMS views need from the legacy
 solver's simulation table. See `legacy-extra-outputs.md` for the design of the
@@ -26,9 +26,10 @@ supplies the row's component and time index.
 | [x] | `is_significant_loss_of_load` | `unsupplied_energy > 0.5` | `UnsuppliedEnergy` |
 | [x] | `is_near_loss_of_load` | `dual(balance) > unsupplied_energy_cost - 5` | `AreaBalance` constraint |
 
-Adequacy-patch outputs (`domestic_unsupplied_energy` / DENS,
-`is_local_matching_rule_violated` / LMR.VIOL) are **blocked on ANT-5240** (spec
-still being written); CSR outputs are explicitly out of scope per the spec.
+| [x] | `domestic_unsupplied_energy` | `DENS` (domestic energy not supplied, from `ResultatsHoraires`) | `ResultatsHoraires[pays].ValeursHorairesDENS` |
+| [x] | `is_local_matching_rule_violated` | `LMR violation flag` (from `ResultatsHoraires`) | `ResultatsHoraires[pays].ValeursHorairesLmrViolations` |
+
+CSR outputs are explicitly out of scope per the spec.
 
 ---
 
@@ -180,7 +181,7 @@ its extra-outputs (area, cluster, storage `{area}_short_term_storage_{name}`,
 
 | Model | Implemented | Remaining |
 |-------|-------------|-----------|
-| area | 5 / 5 | — (adequacy-patch rows blocked on ANT-5240) |
+| area | 7 / 7 | — |
 | renewable | 2 / 2 | — |
 | misc_gen | 2 / 2 | — |
 | thermal | 23 / 23 | — |
