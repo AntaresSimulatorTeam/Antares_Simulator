@@ -1,13 +1,5 @@
 var NAVTREEINDEX39 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn_1_1Multiple.html":[9,0,0,12,7,5,66,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html":[9,0,0,12,7,5,11],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#a5d35abffe71d683f42699ee7842f3e85":[9,0,0,12,7,5,11,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#a5f575b5a2f6bfda59418cca7a4e4da10":[9,0,0,12,7,5,11,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#a8f191a16115a23507ffc4fae82ab40b5":[9,0,0,12,7,5,11,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#adbca1497b750785315490d938a62d0f2":[9,0,0,12,7,5,11,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#af4cd701d715ee387b2835baaf27ec320":[9,0,0,12,7,5,11,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html":[9,0,0,12,7,5,13],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#a416f29be80a14c3363740d25a38fa852":[9,0,0,12,7,5,13,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#a434025b2227226e722e1db0ce5631e5c":[9,0,0,12,7,5,13,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#a4a48ad39e7ee06c5dc4ed6e5204b25af":[9,0,0,12,7,5,13,3],
@@ -249,5 +241,13 @@ var NAVTREEINDEX39 =
 "structBenchmarking_1_1DurationCollector_1_1OperationTimer.html#a82a7dc82b25e72f523d0f56298ad0078":[9,0,3,0,0,2],
 "structBenchmarking_1_1DurationCollector_1_1OperationTimer.html#a946f5f2b178260061876172143ca1569":[9,0,3,0,0,1],
 "structBenchmarking_1_1DurationCollector_1_1OperationTimer.html#abd4f288e9df1ca66ab70994eb4fa61db":[9,0,3,0,0,0],
-"structBenchmarking_1_1OptimizationInfo.html":[9,0,3,4]
+"structBenchmarking_1_1OptimizationInfo.html":[9,0,3,4],
+"structBenchmarking_1_1OptimizationInfo.html#a7e561afa84d4526d96888694b024ad0a":[9,0,3,4,1],
+"structBenchmarking_1_1OptimizationInfo.html#ab015293c71a92d90e2df2e31cab5d3df":[9,0,3,4,0],
+"structBindingConstraintDayData.html":[9,0,44],
+"structBindingConstraintDayData.html#a1a3ae4aab40166a7f90466ad04835476":[9,0,44,1],
+"structBindingConstraintDayData.html#a224a13daef5725eae8c74110d1f9cfc7":[9,0,44,4],
+"structBindingConstraintDayData.html#a536bbe6c4c54d0f8cb781ab0e25444b1":[9,0,44,0],
+"structBindingConstraintDayData.html#a7b73f821a71c7b3e81572bcc296929ae":[9,0,44,3],
+"structBindingConstraintDayData.html#af214d428ca3586d3b9c605957f6f2607":[9,0,44,2]
 };

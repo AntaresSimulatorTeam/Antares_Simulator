@@ -1,13 +1,5 @@
 var NAVTREEINDEX38 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Areas_1_1Statistics.html":[9,0,0,12,7,9,0],
-"structAntares_1_1Solver_1_1Variable_1_1BindingConstraints_1_1Statistics.html":[9,0,0,12,7,11,0],
-"structAntares_1_1Solver_1_1Variable_1_1Category_1_1NextLevel.html":[9,0,0,12,7,1,0],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll.html":[9,0,0,12,7,2,0],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll.html#a780f3951c18a23414a049641780497bd":[9,0,0,12,7,2,0,0],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy.html":[9,0,0,12,7,2,3],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_010_00_01VCardT_01_4.html":[9,0,0,12,7,2,4],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_011_00_01VCardT_01_4.html":[9,0,0,12,7,2,5],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_01Category_1_1dynamicColumns_00_01VCardT_01_4.html":[9,0,0,12,7,2,6],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll.html":[9,0,0,12,7,2,9],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll.html#ae75eb504f7339281868e558faee8d4f6":[9,0,0,12,7,2,9,0],
@@ -249,5 +241,13 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn.html#a51615e680f1e83f82dd70aae7389489f":[9,0,0,12,7,5,66,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn.html#a82387b2593b3a6ee2fa0fb2df8de9c3d":[9,0,0,12,7,5,66,5],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn.html#a8c42bd8c48da038320c34fac3fc01833":[9,0,0,12,7,5,66,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn.html#aa46f9b663a62b8292c8ec6c1f25e94aa":[9,0,0,12,7,5,66,4]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn.html#aa46f9b663a62b8292c8ec6c1f25e94aa":[9,0,0,12,7,5,66,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn_1_1Multiple.html":[9,0,0,12,7,5,66,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html":[9,0,0,12,7,5,11],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#a5d35abffe71d683f42699ee7842f3e85":[9,0,0,12,7,5,11,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#a5f575b5a2f6bfda59418cca7a4e4da10":[9,0,0,12,7,5,11,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#a8f191a16115a23507ffc4fae82ab40b5":[9,0,0,12,7,5,11,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#adbca1497b750785315490d938a62d0f2":[9,0,0,12,7,5,11,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#af4cd701d715ee387b2835baaf27ec320":[9,0,0,12,7,5,11,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html":[9,0,0,12,7,5,13]
 };

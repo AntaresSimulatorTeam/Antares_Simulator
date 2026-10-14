@@ -18,7 +18,7 @@ var NAVTREEINDEX2 =
 "bindConstraints_8h_source.html":[10,0,0,8,11,0,0,0,0,9],
 "bindConstraints_8hxx_source.html":[10,0,0,8,11,0,0,0,0,10],
 "bindingConstraintsMarginalCost_8h_source.html":[10,0,0,8,11,0,0,0,0,3,0,0],
-"capacityReservation_8h.html#ab868a7ba57134afa72fd7f5559497073":[8,0,0,4,158],
+"capacityReservation_8h.html#ab868a7ba57134afa72fd7f5559497073":[8,0,0,4,157],
 "capacityReservation_8h_source.html":[10,0,0,4,0,25,0,0,0,0,2],
 "categories_8h.html#a1e1a09f03ec729f2be9a381a481cf3b0":[8,0,0,15,9,1,0,5],
 "categories_8h.html#a278d2eadcb29f321feeeb8427eccf73a":[8,0,0,15,9,1,1,1],

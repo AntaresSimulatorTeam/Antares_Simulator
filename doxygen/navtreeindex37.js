@@ -1,13 +1,5 @@
 var NAVTREEINDEX37 =
 {
-"structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue.html#a49cf4e1f69bc886e050abdac57f16d11":[9,0,0,10,0,1,0],
-"structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue.html#a697a3ba54409902bf366afe0edea22a6":[9,0,0,10,0,1,1],
-"structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue.html#a9681dbde797e049a7b8f6666bbc4f421":[9,0,0,10,0,1,2],
-"structAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKey.html":[9,0,0,10,0,11],
-"structAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKey.html#a6d4689edbbe468e7c7b79838d28375c7":[9,0,0,10,0,11,2],
-"structAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKey.html#a7c54fe9d6c83ab46f5a3436f2d4a55ea":[9,0,0,10,0,11,0],
-"structAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKey.html#a8a4bcf4a34d0612e1a86fba31e58b5e9":[9,0,0,10,0,11,1],
-"structAntares_1_1ModelerStudy_1_1SystemModel_1_1ThermalComponent.html":[9,0,0,10,0,3],
 "structAntares_1_1ModelerStudy_1_1SystemModel_1_1ThermalComponent.html#af368d850ad3e6ac9b90f5bc715f85774":[9,0,0,10,0,3,0],
 "structAntares_1_1ModelerStudy_1_1SystemModel_1_1ThermalComponent.html#afefa6e3d672d8ce56c8f599db5c1200b":[9,0,0,10,0,3,1],
 "structAntares_1_1Optimization_1_1CmdLineOptimOptions.html":[9,0,0,11,1],
@@ -249,5 +241,13 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a47951ee27d02a39845987763346baa54":[9,0,0,12,7,0,1,3],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a8cd0653f9b095636f0e5217a394d3762":[9,0,0,12,7,0,1,1],
 "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a92399f65baa263b4d2a01a75ff21c3b0":[9,0,0,12,7,0,1,4],
-"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a992390dd588e93253efbda96291fe50e":[9,0,0,12,7,0,1,2]
+"structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html#a992390dd588e93253efbda96291fe50e":[9,0,0,12,7,0,1,2],
+"structAntares_1_1Solver_1_1Variable_1_1Areas_1_1Statistics.html":[9,0,0,12,7,9,0],
+"structAntares_1_1Solver_1_1Variable_1_1BindingConstraints_1_1Statistics.html":[9,0,0,12,7,11,0],
+"structAntares_1_1Solver_1_1Variable_1_1Category_1_1NextLevel.html":[9,0,0,12,7,1,0],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll.html":[9,0,0,12,7,2,0],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll.html#a780f3951c18a23414a049641780497bd":[9,0,0,12,7,2,0,0],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy.html":[9,0,0,12,7,2,3],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_010_00_01VCardT_01_4.html":[9,0,0,12,7,2,4],
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1MultipleCaptionProxy_3_011_00_01VCardT_01_4.html":[9,0,0,12,7,2,5]
 };
