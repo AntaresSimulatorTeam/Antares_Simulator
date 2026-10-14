@@ -75,6 +75,9 @@ static bool ConvertCStrToListTimeSeries(const std::string& value, unsigned int& 
     return true;
 }
 
+/*!
+** \brief Convert a text into a renewable generation modelling
+*/
 static bool ConvertStringToRenewableGenerationModelling(const std::string& text,
                                                         RenewableGenerationModelling& out)
 {
@@ -167,19 +170,6 @@ const char* SimulationModeToCString(SimulationMode mode)
         return "Adequacy";
     case SimulationMode::Expansion:
         return "Expansion";
-    default:
-        return "Unknown";
-    }
-}
-
-const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::HydroPmax mode)
-{
-    switch (mode)
-    {
-    case Parameters::Compatibility::HydroPmax::Daily:
-        return "daily";
-    case Parameters::Compatibility::HydroPmax::Hourly:
-        return "hourly";
     default:
         return "Unknown";
     }
