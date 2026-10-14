@@ -97,8 +97,8 @@ namespace
 {
 // Indices of the unsupplied energy variables in the single-hour CSR problem
 // (Xmax/Xmin).
+constexpr int ensVarArea1 = 0;
 constexpr int ensVarArea2 = 1;
-constexpr int ensVarArea1Hour1 = 2;
 
 // Indices of the constraints in problemAResoudre (SecondMembre).
 constexpr int fictitiousLoadArea1 = 10;
