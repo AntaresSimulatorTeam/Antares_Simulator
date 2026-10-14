@@ -203,7 +203,8 @@ BOOST_AUTO_TEST_CASE(checkMinStablePower_tsGenThermal_true_and_valid___no_except
     auto area = addAreaToListOfAreas(study->areas, "area1");
     addValidMinStablePowerCluster(area, "cluster1");
 
-    BOOST_CHECK_NO_THROW(checkMinStablePower(true, study->areas));
+    study->parameters.timeSeriesToGenerate = timeSeriesThermal;
+    BOOST_CHECK_NO_THROW(checkMinStablePower(&study->parameters, study->areas));
 }
 
 BOOST_AUTO_TEST_CASE(checkMinStablePower_tsGenThermal_true_and_invalid___exception_raised)
@@ -212,8 +213,9 @@ BOOST_AUTO_TEST_CASE(checkMinStablePower_tsGenThermal_true_and_invalid___excepti
     auto area = addAreaToListOfAreas(study->areas, "area1");
     addInvalidMinStablePowerCluster(area, "cluster1");
 
+    study->parameters.timeSeriesToGenerate = timeSeriesThermal;
     std::string err_msg = "Conflict between Min Stable Power";
-    BOOST_CHECK_EXCEPTION(checkMinStablePower(true, study->areas),
+    BOOST_CHECK_EXCEPTION(checkMinStablePower(&study->parameters, study->areas),
                           std::runtime_error,
                           containsMessage(err_msg));
 }
@@ -223,8 +225,8 @@ BOOST_AUTO_TEST_CASE(checkMinStablePower_tsGenThermal_false___no_exception_raise
     auto study = std::make_shared<Study>();
     addAreaToListOfAreas(study->areas, "area1");
 
-    // tsGenThermal == false takes the checkAndCorrectAvailability() path instead
-    BOOST_CHECK_NO_THROW(checkMinStablePower(false, study->areas));
+    // No thermal time series generation takes the checkAndCorrectAvailability() path instead.
+    BOOST_CHECK_NO_THROW(checkMinStablePower(&study->parameters, study->areas));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

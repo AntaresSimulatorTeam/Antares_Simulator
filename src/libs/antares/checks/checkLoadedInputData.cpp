@@ -5,6 +5,7 @@
 #include <antares/exception/LoadingError.hpp>
 #include <antares/series/series.h>
 #include <antares/study/area/area.h>
+#include <antares/study/parameters.h>
 
 namespace Antares::Check
 {
@@ -92,8 +93,11 @@ bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& a
     return resultat;
 }
 
-void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas)
+void checkMinStablePower(const Antares::Data::Parameters* parameters,
+                         const Antares::Data::AreaList& areas)
 {
+    const bool tsGenThermal =
+      (parameters->timeSeriesToGenerate & Antares::Data::TimeSeriesType::timeSeriesThermal) != 0;
     if (tsGenThermal)
     {
         std::map<int, std::string> areaClusterNames;
