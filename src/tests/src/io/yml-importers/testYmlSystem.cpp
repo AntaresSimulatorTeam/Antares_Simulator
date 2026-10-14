@@ -9,6 +9,8 @@
 #include <antares/io/inputs/yml-system/decoders.h>
 #include <antares/io/inputs/yml-system/parser.h>
 
+#include <unit_test_utils.h>
+
 using namespace std::string_literals;
 using namespace Antares::IO::Inputs;
 
@@ -418,7 +420,8 @@ BOOST_AUTO_TEST_CASE(decoder_throws_for_defined_non_map_nodes)
     }
 }
 
-BOOST_AUTO_TEST_CASE(misspelled_component_field_is_ignored)
+BOOST_FIXTURE_TEST_CASE(misspelled_component_field_is_ignored,
+                        Antares::UnitTests::CaptureAntaresLogs)
 {
     YmlSystem::Parser parser;
     const auto system = R"(
@@ -430,4 +433,7 @@ BOOST_AUTO_TEST_CASE(misspelled_component_field_is_ignored)
                   scenario-groups: g
     )"s;
     BOOST_CHECK_NO_THROW(parser.parse(system, ""));
+    BOOST_REQUIRE_EQUAL(getWarnings().size(), 1);
+    BOOST_CHECK_NE(getWarnings().begin()->find("Unrecognised field: scenario-groups"),
+                   std::string::npos);
 }
