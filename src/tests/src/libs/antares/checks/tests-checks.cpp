@@ -229,6 +229,48 @@ BOOST_AUTO_TEST_CASE(checkMinStablePower_tsGenThermal_false___no_exception_raise
 
 BOOST_AUTO_TEST_SUITE_END()
 
+BOOST_AUTO_TEST_SUITE(check_thermal_ramping_fast_mode)
+
+BOOST_FIXTURE_TEST_CASE(thermal_ramping_enabled_with_fast_mode___warning_logged,
+                        Antares::UnitTests::CaptureAntaresLogs)
+{
+    Study study;
+    study.parameters.include.thermal_ramping = true;
+    study.parameters.unitCommitment.ucMode = ucHeuristicFast;
+
+    checkThermalRampingWithFastMode(study.parameters);
+
+    BOOST_REQUIRE_EQUAL(getWarnings().size(), 1u);
+    BOOST_CHECK(getWarnings().begin()->find("Thermal cluster ramping is enabled")
+                != std::string::npos);
+}
+
+BOOST_FIXTURE_TEST_CASE(thermal_ramping_disabled_with_fast_mode___no_warning_logged,
+                        Antares::UnitTests::CaptureAntaresLogs)
+{
+    Study study;
+    study.parameters.include.thermal_ramping = false;
+    study.parameters.unitCommitment.ucMode = ucHeuristicFast;
+
+    checkThermalRampingWithFastMode(study.parameters);
+
+    BOOST_CHECK(getWarnings().empty());
+}
+
+BOOST_FIXTURE_TEST_CASE(thermal_ramping_enabled_with_accurate_mode___no_warning_logged,
+                        Antares::UnitTests::CaptureAntaresLogs)
+{
+    Study study;
+    study.parameters.include.thermal_ramping = true;
+    study.parameters.unitCommitment.ucMode = ucHeuristicAccurate;
+
+    checkThermalRampingWithFastMode(study.parameters);
+
+    BOOST_CHECK(getWarnings().empty());
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
 BOOST_AUTO_TEST_SUITE(check_thermal_column_number)
 
 namespace
