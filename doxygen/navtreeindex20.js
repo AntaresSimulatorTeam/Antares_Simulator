@@ -1,5 +1,6 @@
 var NAVTREEINDEX20 =
 {
+"classAntares_1_1Writer_1_1OptStringColumnAdapter.html#a1672d58c3df82226dcea89375152da3f":[9,0,0,16,6,2],
 "classAntares_1_1Writer_1_1OptStringColumnAdapter.html#ade6d83886d3bcaf22adc410328f0bd6b":[9,0,0,16,6,0],
 "classAntares_1_1Writer_1_1SimulationTableWriter.html":[9,0,0,16,10],
 "classAntares_1_1Writer_1_1SimulationTableWriter.html#a7ee99a3dc990c7955a77b036d0c87a8c":[9,0,0,16,10,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX20 =
 "classCsrAreaBalance.html#adc9b6c39ac2c1ab26fd25267b011e850":[9,0,87,0],
 "classCsrBindingConstraintHour.html":[9,0,89],
 "classCsrBindingConstraintHour.html#a792d159c0c24327da6f5266e671b1db0":[9,0,89,1],
-"classCsrBindingConstraintHour.html#ab44699639744fc4e8fb9a1531b517039":[9,0,89,0],
-"classCsrFictitiousLoad.html":[9,0,91]
+"classCsrBindingConstraintHour.html#ab44699639744fc4e8fb9a1531b517039":[9,0,89,0]
 };

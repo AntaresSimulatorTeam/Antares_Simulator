@@ -1,5 +1,6 @@
 var NAVTREEINDEX36 =
 {
+"solver__steps_8py.html#adb8a70401fdd48c99f691e59710097d6":[8,0,32,72],
 "solver__steps_8py.html#adcd0c95ef89acdffaf13726ef9f0931b":[8,0,32,56],
 "solver__steps_8py.html#ae1d5f24c503db441e4490191255ff0f1":[8,0,32,34],
 "solver__steps_8py.html#ae231c37dfceed3396e32346c1db9e0af":[8,0,32,55],
@@ -248,6 +249,5 @@ var NAVTREEINDEX36 =
 "structAntares_1_1Data_1_1WhoseNameContains.html#a64eaec18d55afc5b2df9b71fd23019f7":[9,0,0,3,33,4],
 "structAntares_1_1Data_1_1WhoseNameContains.html#a95f8344bdeb4a7b6fa39352f8569f26c":[9,0,0,3,33,1],
 "structAntares_1_1Data_1_1WhoseNameContains.html#aa0c2a1891676ea02d814d053115b32d0":[9,0,0,3,33,3],
-"structAntares_1_1Date_1_1Calendar_1_1Settings.html":[9,0,0,4,2,0],
-"structAntares_1_1Date_1_1Calendar_1_1Settings.html#a23f160f379ccae1da99a369db0959dc6":[9,0,0,4,2,0,2]
+"structAntares_1_1Date_1_1Calendar_1_1Settings.html":[9,0,0,4,2,0]
 };

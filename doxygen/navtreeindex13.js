@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"classAntares_1_1Matrix.html#a75a491b82aa1d1d01d491b7e2c4c19c6":[9,0,0,17,43],
 "classAntares_1_1Matrix.html#a7f67780b1384de0d1c57b158abdeb00c":[9,0,0,17,42],
 "classAntares_1_1Matrix.html#a7fd2c50178f14bce0fba369fa5a09b0f":[9,0,0,17,20],
 "classAntares_1_1Matrix.html#a80e0939138dcfbdae3a7deb8c7473afd":[9,0,0,17,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Optimization_1_1CsrQuadraticProblem.html#a21b8ad45a469341589c08f607748d3a3":[9,0,0,11,22,1],
 "classAntares_1_1Optimization_1_1DailyBC.html":[9,0,0,11,11],
 "classAntares_1_1Optimization_1_1DailyBC.html#a17755dfe113f941912290f56695daf47":[9,0,0,11,11,2],
-"classAntares_1_1Optimization_1_1DailyBC.html#a44bbe0ca68969efec893b8dbd9e6ac0c":[9,0,0,11,11,1],
-"classAntares_1_1Optimization_1_1DailyBC.html#a848166557b88b34243f5c678369f08fc":[9,0,0,11,11,0]
+"classAntares_1_1Optimization_1_1DailyBC.html#a44bbe0ca68969efec893b8dbd9e6ac0c":[9,0,0,11,11,1]
 };

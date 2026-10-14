@@ -1,5 +1,6 @@
 var NAVTREEINDEX26 =
 {
+"classScenarioBuilderVisitor.html#ae9faa777bff1027993cea447259905aa":[9,0,313,2],
 "classScenarioBuilderVisitor.html#aec113e3d092f2aafb08085e8ebc44b93":[9,0,313,4],
 "classSettings.html":[9,0,314],
 "classSettings.html#a0861603bba644d21d26807e06aa75450":[9,0,314,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX26 =
 "classTimeSeriesConfigurer.html#ad9676e891021049bf0838df96cf9a345":[9,0,385,2],
 "classTimeSeriesConfigurer.html#adb20a03277de3d723aee72bb0df2913a":[9,0,385,0],
 "classUserData.html":[9,0,396],
-"classUserData.html#a1d4f7b61ec5dd67bbd4e03efd4f85ce8":[9,0,396,1],
-"classUserData.html#a6b17ba387711a3ed61deb73eaf6e946e":[9,0,396,4]
+"classUserData.html#a1d4f7b61ec5dd67bbd4e03efd4f85ce8":[9,0,396,1]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX14 =
 {
+"classAntares_1_1Optimization_1_1DailyBC.html#a848166557b88b34243f5c678369f08fc":[9,0,0,11,11,0],
 "classAntares_1_1Optimization_1_1FictitiousLoad.html":[9,0,0,11,13],
 "classAntares_1_1Optimization_1_1FictitiousLoad.html#a3df8f1a76f1361f5d0f0d3d4f950f2e0":[9,0,0,11,13,0],
 "classAntares_1_1Optimization_1_1FictitiousLoad.html#a8b0d5b42c6fd4a8aae21d9d959c07283":[9,0,0,11,13,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Solver_1_1Modeler.html#a5a7f83c58ed3f416d49af8d72911f392":[9,0,0,12,19,6],
 "classAntares_1_1Solver_1_1Modeler.html#a7554792cab9dd9ea077e535e3a4ad693":[9,0,0,12,19,7],
 "classAntares_1_1Solver_1_1Modeler.html#a7c1a1d68ee845182e86a9e2b4b3c58b8":[9,0,0,12,19,3],
-"classAntares_1_1Solver_1_1Modeler.html#a8d49c3e6dcadb1c6bcf7346ba4577927":[9,0,0,12,19,1],
-"classAntares_1_1Solver_1_1Modeler.html#abceffa65983f1f9279a542f48d1abd9c":[9,0,0,12,19,10]
+"classAntares_1_1Solver_1_1Modeler.html#a8d49c3e6dcadb1c6bcf7346ba4577927":[9,0,0,12,19,1]
 };

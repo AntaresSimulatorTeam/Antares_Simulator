@@ -11,16 +11,17 @@ var namespaces_dup =
       [ "Check", null, [
         [ "IncompatibleDailyOptHeuristicForArea", "classAntares_1_1Check_1_1IncompatibleDailyOptHeuristicForArea.html", "classAntares_1_1Check_1_1IncompatibleDailyOptHeuristicForArea" ],
         [ "InvalidParametersForThermalClusters", "classAntares_1_1Check_1_1InvalidParametersForThermalClusters.html", "classAntares_1_1Check_1_1InvalidParametersForThermalClusters" ],
-        [ "areasThermalClustersMinStablePowerValidity", "checkLoadedInputData_8cpp.html#aff6885051ebd1f4afe613f0eb60b4a14", null ],
-        [ "checkCO2CostColumnNumber", "checkLoadedInputData_8cpp.html#a1d5c56b73279371c45c529ca04ba25aa", null ],
+        [ "areasThermalClustersMinStablePowerValidity", "checkLoadedInputData_8cpp.html#afb7ef64dac4fdadc397a0d152da51420", null ],
+        [ "checkCO2CostColumnNumber", "checkLoadedInputData_8cpp.html#ab15d813808d9983505b361d5882a5c84", null ],
         [ "checkForDuplicates", "duplicates_8cpp.html#ab6937710a3bff3b3b2d555d27459d50b", null ],
-        [ "checkFuelCostColumnNumber", "checkLoadedInputData_8cpp.html#a051c2e1e23688c46aca86a8327de74a5", null ],
-        [ "checkMinStablePower", "checkLoadedInputData_8cpp.html#aa478092ad4319232f5b40a80bf66ef1e", null ],
-        [ "checkSimplexRangeHydroHeuristic", "checkLoadedInputData_8cpp.html#a77358a218c8ac39380b4a633ffac4130", null ],
-        [ "checkSimplexRangeHydroPricing", "checkLoadedInputData_8cpp.html#a24d8049dbc552aa79f64a3beb4c3aaa1", null ],
-        [ "checkSimplexRangeUnitCommitmentMode", "checkLoadedInputData_8cpp.html#a978a237353f03f703f28d5344cf24898", null ],
+        [ "checkFuelCostColumnNumber", "checkLoadedInputData_8cpp.html#a8183b9a83d9defa169bec06a5f1a7ce0", null ],
+        [ "checkMinStablePower", "checkLoadedInputData_8cpp.html#a2cd93092aff626ea278cca897f3fb21c", null ],
+        [ "checkSimplexRangeHydroHeuristic", "checkLoadedInputData_8cpp.html#a6681ead9409c90f4191fb0bcf528acd5", null ],
+        [ "checkSimplexRangeHydroPricing", "checkLoadedInputData_8cpp.html#ab5ef19a100456813c5f3745c71044c46", null ],
+        [ "checkSimplexRangeUnitCommitmentMode", "checkLoadedInputData_8cpp.html#afda32d78952ecbc2917972f4107b9a26", null ],
         [ "checkSolverOptions", "checksOnLPsolver_8cpp.html#add0f44755ecd1bdff04f4c3ba9b2ac30", null ],
-        [ "checkStudyVersion", "checkLoadedInputData_8cpp.html#a721b1a054b6793fcfa35da55e5c638d3", null ]
+        [ "checkStudyVersion", "checkLoadedInputData_8cpp.html#ad9b74f9bd165ca5a4ea0158eefe1aeae", null ],
+        [ "checkThermalRampingWithFastMode", "checkLoadedInputData_8cpp.html#ada09f39140455253dd3fda31139f155c", null ]
       ] ],
       [ "Concurrency", null, [
         [ "Detail", null, [

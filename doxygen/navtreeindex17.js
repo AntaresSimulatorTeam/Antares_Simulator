@@ -1,5 +1,6 @@
 var NAVTREEINDEX17 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyLink__Base.html#a1bc0686644e77085824afbd39c0eaef2":[9,0,0,12,7,5,47,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyLink__Base.html#a41ba5af849cf1b3425ae60e4552a4474":[9,0,0,12,7,5,47,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyLink__Base.html#a62301de8d43578d8ddd8a745c3e04d93":[9,0,0,12,7,5,47,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyLink__Base.html#a87c3dad3afb688db75a935d1f145681f":[9,0,0,12,7,5,47,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX17 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html#a91269871d4b424c9a30dfb8253bee5d6":[9,0,0,12,7,5,4,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html#ae3270005e84e7d5a5ec7e39877517c65":[9,0,0,12,7,5,4,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html#af05cda0d01120e880237b88215a8dd61":[9,0,0,12,7,5,4,0],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html#af4eec4d8d593f665e98d4aabd736de9f":[9,0,0,12,7,5,4,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html":[9,0,0,12,7,5,6]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html#af4eec4d8d593f665e98d4aabd736de9f":[9,0,0,12,7,5,4,3]
 };

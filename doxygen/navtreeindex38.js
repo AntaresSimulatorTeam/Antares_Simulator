@@ -1,5 +1,6 @@
 var NAVTREEINDEX38 =
 {
+"structAntares_1_1Optimization_1_1CmdLineOptimOptions.html#a60b78fba6630188ff01eabbdc7db6125":[9,0,0,11,1,4],
 "structAntares_1_1Optimization_1_1CmdLineOptimOptions.html#a718ec98aee78184f2161ce73465a4d0a":[9,0,0,11,1,8],
 "structAntares_1_1Optimization_1_1CmdLineOptimOptions.html#a8c0b967f1ae451646ebca471ca472e03":[9,0,0,11,1,1],
 "structAntares_1_1Optimization_1_1CmdLineOptimOptions.html#a99c849fe747b9179a0507d495f9129a9":[9,0,0,11,1,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregateAll.html#ae75eb504f7339281868e558faee8d4f6":[9,0,0,12,7,2,9,0],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate_1_1Statistics.html":[9,0,0,12,7,2,8,0],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardForSpatialAggregateSelector.html":[9,0,0,12,7,2,1],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardForSpatialAggregateSelector.html#a305b06b52673c85394435dd7e94910fb":[9,0,0,12,7,2,1,0],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardForSpatialAggregateSelector_3_01VCardOrigi75743097dadd4d69c0beae6e290af5cc.html":[9,0,0,12,7,2,2]
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardForSpatialAggregateSelector.html#a305b06b52673c85394435dd7e94910fb":[9,0,0,12,7,2,1,0]
 };

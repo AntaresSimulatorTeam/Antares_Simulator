@@ -1,5 +1,6 @@
 var NAVTREEINDEX19 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1SetDataBase.html#a507bfc79ea45aff48a6588b31cd9b020":[9,0,0,12,7,18,4],
 "classAntares_1_1Solver_1_1Variable_1_1SetDataBase.html#ac78ec87a985482460999e7e8098f94c2":[9,0,0,12,7,18,7],
 "classAntares_1_1Solver_1_1Variable_1_1SetDataBase.html#ae1c03ef1be2096b616be7e22e2e8a3a2":[9,0,0,12,7,18,3],
 "classAntares_1_1Solver_1_1Variable_1_1SetDataBase.html#ae22c63be966f3a6d5cea24c55551c758":[9,0,0,12,7,18,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX19 =
 "classAntares_1_1Writer_1_1OptIntColumnAdapter.html#a6c40c1cf01a89a62a224e53f0a743e9f":[9,0,0,16,8,0],
 "classAntares_1_1Writer_1_1OptIntColumnAdapter.html#abd0d966ab95d29eb04693ec9488e0a1f":[9,0,0,16,8,2],
 "classAntares_1_1Writer_1_1OptStringColumnAdapter.html":[9,0,0,16,6],
-"classAntares_1_1Writer_1_1OptStringColumnAdapter.html#a11adb9bf91b5b8f384b36a8ff3ea16ff":[9,0,0,16,6,1],
-"classAntares_1_1Writer_1_1OptStringColumnAdapter.html#a1672d58c3df82226dcea89375152da3f":[9,0,0,16,6,2]
+"classAntares_1_1Writer_1_1OptStringColumnAdapter.html#a11adb9bf91b5b8f384b36a8ff3ea16ff":[9,0,0,16,6,1]
 };

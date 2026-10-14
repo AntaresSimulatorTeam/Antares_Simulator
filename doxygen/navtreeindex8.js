@@ -1,5 +1,6 @@
 var NAVTREEINDEX8 =
 {
+"classAntares_1_1Data_1_1ThermalCluster.html#a2cf5263b4635734c52ed11a9cd086ac5":[9,0,0,3,74,16],
 "classAntares_1_1Data_1_1ThermalCluster.html#a2d18c5ed4472fc3110f4dba2b21b3a6d":[9,0,0,3,74,41],
 "classAntares_1_1Data_1_1ThermalCluster.html#a32219634ccd1b991718da33f53e8f21c":[9,0,0,3,74,26],
 "classAntares_1_1Data_1_1ThermalCluster.html#a34cf70e585c4682be1890fd108ed90f1":[9,0,0,3,74,6],
@@ -248,6 +249,5 @@ var NAVTREEINDEX8 =
 "classAntares_1_1Error_1_1StudyFolderContainsNonASCIIchars.html":[9,0,0,5,3],
 "classAntares_1_1Error_1_1StudyFolderContainsNonASCIIchars.html#abca8b7eddf9d5cd6252eb2ddef711746":[9,0,0,5,3,0],
 "classAntares_1_1Error_1_1StudyFolderDoesNotExist.html":[9,0,0,5,2],
-"classAntares_1_1Error_1_1StudyFolderDoesNotExist.html#a236b8feb023c6e712f59ce7c661d17bb":[9,0,0,5,2,0],
-"classAntares_1_1Error_1_1UseMILPsolverWithWrongOptions.html":[9,0,0,5,11]
+"classAntares_1_1Error_1_1StudyFolderDoesNotExist.html#a236b8feb023c6e712f59ce7c661d17bb":[9,0,0,5,2,0]
 };
