@@ -1,6 +1,9 @@
 var classsolver__output__handler_1_1solver__output__handler =
 [
     [ "__init__", "classsolver__output__handler_1_1solver__output__handler.html#a25c8cd845e2d48d5ef77feb13917a1b7", null ],
+    [ "area_details_hourly", "classsolver__output__handler_1_1solver__output__handler.html#a268719554c3c63ce7d7e51b7ec76f2a7", null ],
+    [ "area_sts_details_hourly", "classsolver__output__handler_1_1solver__output__handler.html#a1a203fe6cbd8e8c5cb13bbc15294d09b", null ],
+    [ "area_values_hourly", "classsolver__output__handler_1_1solver__output__handler.html#adf51524ec5de7c2497c1cf3d77960f69", null ],
     [ "details_hourly_for_cluster", "classsolver__output__handler_1_1solver__output__handler.html#a31881648801b8bcccf052246b9487ddd", null ],
     [ "details_hourly_for_sts", "classsolver__output__handler_1_1solver__output__handler.html#af7f6e4920963f6a6eb859331c4a3a88c", null ],
     [ "get_annual_system_cost", "classsolver__output__handler_1_1solver__output__handler.html#aba0b10896eb169c8210385dc0b518ef9", null ],
@@ -33,8 +36,10 @@ var classsolver__output__handler_1_1solver__output__handler =
     [ "get_values_for_st_storage_cluster_for_specific_hour_mw", "classsolver__output__handler_1_1solver__output__handler.html#a0624b1ed2fe6487e74fddac2fc0888e6", null ],
     [ "get_values_hydro_for_specific_hour_mwh", "classsolver__output__handler_1_1solver__output__handler.html#aad0294b19494cf11a7c4eb68dc63fd6d", null ],
     [ "get_weekly_overall_cost_eur", "classsolver__output__handler_1_1solver__output__handler.html#a59d35c56e621a8c8897a070c4de7c2c1", null ],
+    [ "has_mc_ind_year", "classsolver__output__handler_1_1solver__output__handler.html#ada2c98665589b9309171753042800bb9", null ],
     [ "injection_for_sts", "classsolver__output__handler_1_1solver__output__handler.html#a6e379f5cb5935cc99b85f63c5226f72e", null ],
     [ "level_for_sts", "classsolver__output__handler_1_1solver__output__handler.html#a2a26afa28b40137471c46906942bf33f", null ],
+    [ "link_values_hourly", "classsolver__output__handler_1_1solver__output__handler.html#a1bd454b804928321fbabe28be5bbe5fe", null ],
     [ "min_gen_for_thermal_cluster", "classsolver__output__handler_1_1solver__output__handler.html#a349ff8172a994daafe120ce33b5b0350", null ],
     [ "min_gen_for_thermal_cluster_at_hour", "classsolver__output__handler_1_1solver__output__handler.html#a71097eaf14a2dc95385eec9131f3a6dc", null ],
     [ "output_dir", "classsolver__output__handler_1_1solver__output__handler.html#abadedfd053808b36a47372a38e4d0f7b", null ],

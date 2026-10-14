@@ -967,6 +967,10 @@ var annotated_dup =
     [ "simulation_table", null, [
       [ "SimulationTable", "classsimulation__table_1_1SimulationTable.html", "classsimulation__table_1_1SimulationTable" ]
     ] ],
+    [ "simulation_table_equivalence", null, [
+      [ "Mapping", "classsimulation__table__equivalence_1_1Mapping.html", null ],
+      [ "_Result", "classsimulation__table__equivalence_1_1__Result.html", null ]
+    ] ],
     [ "simulation_table_reader", null, [
       [ "OutputFormat", "classsimulation__table__reader_1_1OutputFormat.html", null ]
     ] ],

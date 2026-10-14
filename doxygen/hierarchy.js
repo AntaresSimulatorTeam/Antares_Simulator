@@ -1,5 +1,6 @@
 var hierarchy =
 [
+    [ "simulation_table_equivalence._Result", "classsimulation__table__equivalence_1_1__Result.html", null ],
     [ "abc.ABCMeta", null, [
       [ "check_on_results.check_general.check_interface", "classcheck__on__results_1_1check__general_1_1check__interface.html", [
         [ "check_on_results.check_hydro_level.check_hydro_level", "classcheck__on__results_1_1check__hydro__level_1_1check__hydro__level.html", null ],
@@ -872,6 +873,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::LoopFlowTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlowTraits.html", null ],
     [ "Antares::Solver::Optimization::Simplex::LpFiller", "classAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1LpFiller.html", null ],
     [ "Antares::Solver::LpsFromAntares", "classAntares_1_1Solver_1_1LpsFromAntares.html", null ],
+    [ "simulation_table_equivalence.Mapping", "classsimulation__table__equivalence_1_1Mapping.html", null ],
     [ "Antares::Solver::Variable::Economy::Reserves::Detail::MarginalCost", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1Detail_1_1MarginalCost.html", null ],
     [ "Antares::Solver::Variable::Economy::MarginalCostTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCostTraits.html", null ],
     [ "Antares::Matrix< T, ReadWriteT >", "classAntares_1_1Matrix.html", null ],

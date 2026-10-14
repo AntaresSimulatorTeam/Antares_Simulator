@@ -2069,6 +2069,12 @@ var namespaces_dup =
       [ "reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", "classfind__reference_1_1reference__folder__finder" ],
       [ "find_reference_folder", "find__reference_8py.html#a9a1c9809dbe51b7d00621cd03854ec6e", null ]
     ] ],
+    [ "Fixtures", null, [
+      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
+      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
+      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
+      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
+    ] ],
     [ "fixtures", null, [
       [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
       [ "antares_problem_generator", "fixtures_8py.html#a532fab1323b92d1f3eb74f5213a6b6c0", null ],
@@ -2077,12 +2083,6 @@ var namespaces_dup =
       [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
       [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
       [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
-    ] ],
-    [ "Fixtures", null, [
-      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
-      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
-      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
-      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
     ] ],
     [ "fmt", null, [
       [ "formatter< Antares::ModelerStudy::SystemModel::FieldRole >", "structfmt_1_1formatter_3_01Antares_1_1ModelerStudy_1_1SystemModel_1_1FieldRole_01_4.html", "structfmt_1_1formatter_3_01Antares_1_1ModelerStudy_1_1SystemModel_1_1FieldRole_01_4" ]
@@ -2200,6 +2200,37 @@ var namespaces_dup =
     [ "simulation_table", null, [
       [ "SimulationTable", "classsimulation__table_1_1SimulationTable.html", "classsimulation__table_1_1SimulationTable" ],
       [ "_build_lookup_error_msg", "simulation__table_8py.html#aa2ad0605ab52dd4259c1c8ce2e61109b", null ]
+    ] ],
+    [ "simulation_table_equivalence", null, [
+      [ "Mapping", "classsimulation__table__equivalence_1_1Mapping.html", null ],
+      [ "_Result", "classsimulation__table__equivalence_1_1__Result.html", null ],
+      [ "_areas", "simulation__table__equivalence_8py.html#ad7c3a55a7eeb0fdce46a757f10f73895", null ],
+      [ "_check_one", "simulation__table__equivalence_8py.html#a21d5b6d9e6845695c40bc409d5d131a0", null ],
+      [ "_ini_cluster_id_names", "simulation__table__equivalence_8py.html#a74894cd7222355d228cfabec146756e0", null ],
+      [ "_ini_sections", "simulation__table__equivalence_8py.html#a79d55227f4f8c6777f359da8f5d2019c", null ],
+      [ "_links", "simulation__table__equivalence_8py.html#aa7f28ce0b68fd25843728c5e1729ecd3", null ],
+      [ "_load_final_pass_table", "simulation__table__equivalence_8py.html#a0c0b41b6f0bb2ffc53afbd1b0c59b59d", null ],
+      [ "_mc_series", "simulation__table__equivalence_8py.html#afaaa96ce7d04edad3571994c41946612", null ],
+      [ "_reserves", "simulation__table__equivalence_8py.html#ac667262866c8073f0b0bacfcd59e464a", null ],
+      [ "_run_equivalence", "simulation__table__equivalence_8py.html#a040adffecb733872e47605ef93cf25ee", null ],
+      [ "_st_series", "simulation__table__equivalence_8py.html#a2b992ca6b91ccacf0af4c36fc659d0fd", null ],
+      [ "_sts_clusters", "simulation__table__equivalence_8py.html#ae6022df226cf4328b66e276db3947b03", null ],
+      [ "_thermal_clusters", "simulation__table__equivalence_8py.html#a97df8473f2b80462caa69e5b5ce72dc2", null ],
+      [ "_unit_commitment_mode", "simulation__table__equivalence_8py.html#a304b57f657076eb2fd53dae0c6b813ed", null ],
+      [ "step_st_matches_legacy", "simulation__table__equivalence_8py.html#a6e935919f9a3ce51e2ed7a04838fc452", null ],
+      [ "step_st_matches_legacy_one", "simulation__table__equivalence_8py.html#a20746cbb572d2e390e10836f68603bdf", null ],
+      [ "step_st_matches_legacy_stage", "simulation__table__equivalence_8py.html#a5341660d0602a2ab8a03236ce6e3b12d", null ],
+      [ "step_st_matches_legacy_stage_one", "simulation__table__equivalence_8py.html#a4c2f2e055f08cf387f87974656742942", null ],
+      [ "AREA_DETAILS", "simulation__table__equivalence_8py.html#a64e01626b6ad4f0bfd5b15b863aa9a70", null ],
+      [ "AREA_RESERVE_HYDRO", "simulation__table__equivalence_8py.html#a05053f2a30a041a2c9a854da47ca9c52", null ],
+      [ "AREA_RESERVE_STS", "simulation__table__equivalence_8py.html#a33615591b1d1f0263fc0df9758b9ce01", null ],
+      [ "AREA_RESERVE_THERMAL", "simulation__table__equivalence_8py.html#acad62428a1a2f20351cb2a5e8775f67e", null ],
+      [ "AREA_RESERVE_VALUES", "simulation__table__equivalence_8py.html#acb8bf35f9d2b0c2dcea9ab5835e5f120", null ],
+      [ "AREA_STS", "simulation__table__equivalence_8py.html#a0c08acbf0873ce5c13991443e365c536", null ],
+      [ "AREA_VALUES", "simulation__table__equivalence_8py.html#a9cbab5f69b48ed88359be058bfd3b8b7", null ],
+      [ "LEGACY_TO_ST", "simulation__table__equivalence_8py.html#a990a0b6cde93109a089356eafa654088", null ],
+      [ "LINK_VALUES", "simulation__table__equivalence_8py.html#a67547adaa1f1bf159d08273f2fccc92b", null ],
+      [ "MAPPING_BY_KEY", "simulation__table__equivalence_8py.html#aebef91733db5ef39dc4304865ec7fa68", null ]
     ] ],
     [ "simulation_table_reader", null, [
       [ "OutputFormat", "classsimulation__table__reader_1_1OutputFormat.html", null ],

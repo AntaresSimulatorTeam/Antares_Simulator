@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['k_918',['K',['../classAntares_1_1Data_1_1XCast.html#a7163f4cd43e003cc1bd703071f158a49',1,'Antares::Data::XCast']]],
-  ['kcaption_919',['kCaption',['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroTraits.html#a6916a4c41fdaff4ad511844735a8e752',1,'Antares::Solver::Variable::Economy::HydroTraits::kCaption()'],['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoadTraits.html#aafc6c513940fa3a3a9975df29e9ef4da',1,'Antares::Solver::Variable::Economy::LoadTraits::kCaption()'],['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#a68ae68bc3e6e47d9721ea48746332a07',1,'Antares::Solver::Variable::Economy::VCardTimeSeriesBase::kCaption()']]],
-  ['kdescription_920',['kDescription',['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroTraits.html#a409be76948542a323ba8c4dac75b5f4e',1,'Antares::Solver::Variable::Economy::HydroTraits::kDescription()'],['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoadTraits.html#a08596aa25d0e35798b78661e749746dd',1,'Antares::Solver::Variable::Economy::LoadTraits::kDescription()']]],
-  ['key_921',['key',['../classAntares_1_1IniFile_1_1Property.html#a9640168232fb037d3ed7b3c0ffc7e81b',1,'Antares::IniFile::Property']]],
-  ['kunit_922',['kUnit',['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html#aea9559a560a11aaa0861e3bd057fa2d2',1,'Antares::Solver::Variable::Economy::TimeSeriesTraits']]]
+  ['jobfilereader_917',['JobFileReader',['../classJobFileReader.html',1,'JobFileReader'],['../classJobFileReader.html#a35f76210b50cd6c8a86c8d0ac72f517c',1,'JobFileReader::JobFileReader()']]],
+  ['join_918',['join',['../classAntares_1_1Concurrency_1_1FutureSet.html#a8cf68f6c1a66e76acaec9ce67cb20e5f',1,'Antares::Concurrency::FutureSet']]],
+  ['joinall_919',['JoinAll',['../classAntares_1_1Solver_1_1Variable_1_1JoinAll.html',1,'Antares::Solver::Variable']]],
+  ['jsoncollector_920',['jsonCollector',['../classjson__collector_1_1jsonCollector.html',1,'json_collector']]]
 ];
