@@ -129,6 +129,22 @@ The area files that belong to the "values" class display fields corresponding to
 
 _Note: The net profit is computed on full precision values for MRG. PRICE. The user may obtain slightly different results applying the given formula because MRG. PRICE values are rounded to 10^-2._
 
+### Ramping costs
+
+When thermal-cluster ramping is enabled, Economy area results can include these variables (in
+euros):
+
+| Variable | Description |
+|---|---|
+| `RAMP COST` | Total ramping cost for the area's thermal clusters with ramping enabled. |
+| `RAMP COST BY PLANT` | Ramping cost for each dispatchable thermal cluster. |
+
+Ramping costs are calculated from the hourly increase or decrease in production beyond the
+production change attributable to starting or stopping units, multiplied by the cluster's
+corresponding increase or decrease cost. The global `include-thermal-cluster-ramping` option
+controls whether these variables are available; see [optimization parameters](parameters.md#include-thermal-cluster-ramping)
+and the [thermal-cluster input format](inputs.md#thermal-cluster-ramping).
+
 ## Economy and Adequacy, interconnection results [^14]
 **10** files resulting from the combination of the following attributes:
 **[values | id] X [hourly | daily | weekly | monthly | annual]**
