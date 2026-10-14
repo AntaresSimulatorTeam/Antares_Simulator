@@ -438,6 +438,17 @@ _**This section is under construction**_
 - **Usage:** set this parameter to `true` if you want to activate, for thermal units, the constraint of minimum start-up time
 
 ---
+#### include-thermal-cluster-ramping
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `false`
+- **Usage:** enables thermal-cluster ramp constraints and ramping costs for clusters whose
+  `ramping-enabled` property is `true`. The rates and costs are configured in each cluster's
+  thermal `list.ini`; see [Thermal cluster ramping](inputs.md#thermal-cluster-ramping) for the
+  input format. When disabled, per-cluster ramping properties are ignored and ramping output
+  variables are not printed.
+
+---
 #### include-dayahead
 [//]: # (TODO: add details + link to contraints doc)
 - **Expected value:** `true` or `false`
