@@ -96,8 +96,9 @@ bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& a
 void checkMinStablePower(const Antares::Data::Parameters* parameters,
                          const Antares::Data::AreaList& areas)
 {
-    const bool tsGenThermal =
-      (parameters->timeSeriesToGenerate & Antares::Data::TimeSeriesType::timeSeriesThermal) != 0;
+    const bool tsGenThermal = (parameters->timeSeriesToGenerate
+                               & Antares::Data::TimeSeriesType::timeSeriesThermal)
+                              != 0;
     if (tsGenThermal)
     {
         std::map<int, std::string> areaClusterNames;
