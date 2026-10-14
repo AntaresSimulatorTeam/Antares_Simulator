@@ -5,11 +5,10 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <unit_test_utils.h>
 #include <yaml-cpp/exceptions.h>
 
 #include <boost/test/unit_test.hpp>
-
-#include <unit_test_utils.h>
 
 #include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/yml-model/decoders.h"
@@ -1120,10 +1119,12 @@ BOOST_FIXTURE_TEST_CASE(misspelled_model_field_is_ignored, Antares::UnitTests::C
         )"s;
     BOOST_CHECK_NO_THROW(parser.parse(library));
     BOOST_REQUIRE_EQUAL(getWarnings().size(), 1);
-    BOOST_CHECK_NE(getWarnings().begin()->find("Unrecognised field: extra-output"), std::string::npos);
+    BOOST_CHECK_NE(getWarnings().begin()->find("Unrecognised field: extra-output"),
+                   std::string::npos);
 }
 
-BOOST_FIXTURE_TEST_CASE(misspelled_variable_field_is_ignored, Antares::UnitTests::CaptureAntaresLogs)
+BOOST_FIXTURE_TEST_CASE(misspelled_variable_field_is_ignored,
+                        Antares::UnitTests::CaptureAntaresLogs)
 {
     YmlModel::Parser parser;
     const auto library = R"(
@@ -1137,5 +1138,6 @@ BOOST_FIXTURE_TEST_CASE(misspelled_variable_field_is_ignored, Antares::UnitTests
         )"s;
     BOOST_CHECK_NO_THROW(parser.parse(library));
     BOOST_REQUIRE_EQUAL(getWarnings().size(), 1);
-    BOOST_CHECK_NE(getWarnings().begin()->find("Unrecognised field: lower_bound"), std::string::npos);
+    BOOST_CHECK_NE(getWarnings().begin()->find("Unrecognised field: lower_bound"),
+                   std::string::npos);
 }

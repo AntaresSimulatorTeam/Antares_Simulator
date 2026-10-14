@@ -10,7 +10,6 @@
 
 #include <antares/io/inputs/InputError.h>
 #include <antares/logs/logs.h>
-
 #include "antares/io/inputs/yml-utils/YmlTreeDisplayer.h"
 
 namespace YAML
@@ -88,21 +87,23 @@ void checkFields(const Node& node,
     // Missing mandatory fields are always fatal; unrecognised ones depend on the policy
     if (!missing.empty() || unexpectedPolicy == UnexpectedFields::Throw)
     {
-            const auto mark = node.Mark();
+        const auto mark = node.Mark();
         throw Antares::IO::Inputs::InputError(
           fmt::format("Line {} column {}\n{}",
                       mark.line + 1,
                       mark.column + 1,
                       build_message(fmt::format("Unexpected or missing field(s) (expected {} "
-                                                  "field(s)).",
-                                                  allowedFields.size()),
+                                                "field(s)).",
+                                                allowedFields.size()),
                                     displayer,
                                     unexpected,
                                     missing)));
     }
 
-    Antares::logs.warning()
-      << build_message("Unrecognised field(s) will be ignored.", displayer, unexpected, missing);
+    Antares::logs.warning() << build_message("Unrecognised field(s) will be ignored.",
+                                             displayer,
+                                             unexpected,
+                                             missing);
 }
 
 } // namespace YAML

@@ -3,13 +3,13 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <unit_test_utils.h>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/io/inputs/InputError.h>
 #include <antares/io/inputs/yml-system/decoders.h>
 #include <antares/io/inputs/yml-system/parser.h>
-
-#include <unit_test_utils.h>
 
 using namespace std::string_literals;
 using namespace Antares::IO::Inputs;

@@ -3,15 +3,12 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-
+#include <unit_test_utils.h>
 #include <yaml-cpp/exceptions.h>
 
 #include <boost/test/unit_test.hpp>
 
-#include <unit_test_utils.h>
-
 #include <antares/io/inputs/InputError.h>
-
 #include "antares/io/inputs/yml-optim-config/parser.h"
 using namespace Antares::IO::Inputs::YmlOptimConfig;
 using namespace std::string_literals;
@@ -595,10 +592,12 @@ models:
     Parser parser;
     BOOST_CHECK_NO_THROW(parser.parse(yaml_content));
     BOOST_REQUIRE_EQUAL(getWarnings().size(), 1);
-    BOOST_CHECK_NE(getWarnings().begin()->find("Unrecognised field: out-of-bound-processing"), std::string::npos);
+    BOOST_CHECK_NE(getWarnings().begin()->find("Unrecognised field: out-of-bound-processing"),
+                   std::string::npos);
 }
 
-BOOST_FIXTURE_TEST_CASE(misspelled_top_level_field_is_ignored, Antares::UnitTests::CaptureAntaresLogs)
+BOOST_FIXTURE_TEST_CASE(misspelled_top_level_field_is_ignored,
+                        Antares::UnitTests::CaptureAntaresLogs)
 {
     const auto yaml_content = R"(
 resolution-modes: benders-decomposition
@@ -607,7 +606,8 @@ models: []
     Parser parser;
     BOOST_CHECK_NO_THROW(parser.parse(yaml_content));
     BOOST_REQUIRE_EQUAL(getWarnings().size(), 1);
-    BOOST_CHECK_NE(getWarnings().begin()->find("Unrecognised field: resolution-modes"), std::string::npos);
+    BOOST_CHECK_NE(getWarnings().begin()->find("Unrecognised field: resolution-modes"),
+                   std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
