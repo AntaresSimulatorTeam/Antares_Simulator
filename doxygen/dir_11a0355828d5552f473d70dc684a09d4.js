@@ -59,6 +59,8 @@ var dir_11a0355828d5552f473d70dc684a09d4 =
     [ "productionByRenewablePlant.h", "productionByRenewablePlant_8h_source.html", null ],
     [ "profitByPlant.h", "profitByPlant_8h_source.html", null ],
     [ "pumping.h", "pumping_8h_source.html", null ],
+    [ "rampingCostByDispatchablePlant.h", "rampingCostByDispatchablePlant_8h_source.html", null ],
+    [ "rampingCosts.h", "rampingCosts_8h_source.html", null ],
     [ "renewableGeneration.h", "renewableGeneration_8h_source.html", null ],
     [ "reservoirlevel.h", "reservoirlevel_8h_source.html", null ],
     [ "residual.h", "residual_8h_source.html", null ],

@@ -1,6 +1,7 @@
 var classAntares_1_1Data_1_1ThermalCluster =
 [
     [ "DivModulation", "structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html", "structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation" ],
+    [ "Ramping", "classAntares_1_1Data_1_1ThermalCluster_1_1Ramping.html", "classAntares_1_1Data_1_1ThermalCluster_1_1Ramping" ],
     [ "ThermalCluster", "classAntares_1_1Data_1_1ThermalCluster.html#adbae5e0bff6e2a24eb11d6064d0ea213", null ],
     [ "ThermalCluster", "classAntares_1_1Data_1_1ThermalCluster.html#a8f60c0a7c1e1003310c551337e86688a", null ],
     [ "~ThermalCluster", "classAntares_1_1Data_1_1ThermalCluster.html#a1c86a68b0da51ad118513f3fc109ee70", null ],
@@ -41,6 +42,7 @@ var classAntares_1_1Data_1_1ThermalCluster =
     [ "plannedVolatility", "classAntares_1_1Data_1_1ThermalCluster.html#acd394f35808a3f2204acc2cebbe66bf7", null ],
     [ "prepro", "classAntares_1_1Data_1_1ThermalCluster.html#a971542651c66faf621b940dc840f9b19", null ],
     [ "PthetaInf", "classAntares_1_1Data_1_1ThermalCluster.html#a2d18c5ed4472fc3110f4dba2b21b3a6d", null ],
+    [ "ramping", "classAntares_1_1Data_1_1ThermalCluster.html#a023176dc8d86c6814003ac58e58d9b07", null ],
     [ "spinning", "classAntares_1_1Data_1_1ThermalCluster.html#a031033b42dcb2147f11970ddfb3f135b", null ],
     [ "spreadCost", "classAntares_1_1Data_1_1ThermalCluster.html#a7c751f7e0b479ff5fc82ae771c90e8f8", null ],
     [ "startupCost", "classAntares_1_1Data_1_1ThermalCluster.html#a8136262d4ef1f69ce5f83fff7edf7089", null ],

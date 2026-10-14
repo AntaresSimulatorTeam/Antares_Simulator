@@ -23,6 +23,8 @@ var classVariableManagement_1_1VariableManager =
     [ "Overflow", "classVariableManagement_1_1VariableManager.html#a9af0557fd0c30fd4dc8ad2056cd6d64a", null ],
     [ "PositiveDirectFlow", "classVariableManagement_1_1VariableManager.html#a8683dd5fdbde8e429144724814d9b3d1", null ],
     [ "PositiveIndirectFlow", "classVariableManagement_1_1VariableManager.html#a729a19cdf580c24504ccce272f30d862", null ],
+    [ "ProductionDecreaseAboveMin", "classVariableManagement_1_1VariableManager.html#a3e49665cce0a42a270a8278c51d81965", null ],
+    [ "ProductionIncreaseAboveMin", "classVariableManagement_1_1VariableManager.html#a7e4bde2ecdc4ee523e8d7594a4f2f55b", null ],
     [ "Pumping", "classVariableManagement_1_1VariableManager.html#a42d783d986b711e8df630b3abc2d144b", null ],
     [ "RunningThermalClusterReserveParticipation", "classVariableManagement_1_1VariableManager.html#a8f4b5e9d8c8f07016fddd57e53fdeb28", null ],
     [ "ShortTermStorageCostVariationInjection", "classVariableManagement_1_1VariableManager.html#a3b8fd62c71c7458085f89e3ac8ce4770", null ],

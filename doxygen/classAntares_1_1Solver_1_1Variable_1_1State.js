@@ -42,6 +42,7 @@ var classAntares_1_1Solver_1_1Variable_1_1State =
     [ "thermalClusterOperatingCostForYear", "classAntares_1_1Solver_1_1Variable_1_1State.html#a384a68199de6a99033de7ccf1bbd3d70", null ],
     [ "thermalClusterPMinOfTheClusterForYear", "classAntares_1_1Solver_1_1Variable_1_1State.html#a2d765733ba5642c43460e3261cda8748", null ],
     [ "thermalClusterProductionForYear", "classAntares_1_1Solver_1_1Variable_1_1State.html#a6f2cdd0e18673bacd7f3b4fb6cabf713", null ],
+    [ "thermalClusterRampingCostForYear", "classAntares_1_1Solver_1_1Variable_1_1State.html#a29a169c8bea5499bc45813e14477d0a3", null ],
     [ "unitCommitmentMode", "classAntares_1_1Solver_1_1Variable_1_1State.html#a59c1e34f17e362fc6e8793489d5a21fd", null ],
     [ "weekInTheYear", "classAntares_1_1Solver_1_1Variable_1_1State.html#ab923ce202f9511e42a0902dd85b34c03", null ],
     [ "year", "classAntares_1_1Solver_1_1Variable_1_1State.html#a9f14e17920dde5520eb3c0ff7785a3f4", null ]

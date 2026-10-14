@@ -27,6 +27,8 @@ var classVariableNamer =
     [ "ParticipationOfSTStorageToReserve", "classVariableNamer.html#a1fd44be44eea9345a60b21c74b514937", null ],
     [ "PositiveDirectFlow", "classVariableNamer.html#a40ca6a60d20af026229aa0d61c6d6e8c", null ],
     [ "PositiveIndirectFlow", "classVariableNamer.html#af38794cd0c2d45f486513c2fb29ef688", null ],
+    [ "ProductionDecreaseAboveMin", "classVariableNamer.html#a2d8044bd03be86c8e4da03700fbd6708", null ],
+    [ "ProductionIncreaseAboveMin", "classVariableNamer.html#a8b7d3a3d08e5ed3186328ccb7c909e0d", null ],
     [ "Pumping", "classVariableNamer.html#a016f6f8d81b2b98da0e646e2b8ae3be8", null ],
     [ "ShortTermStorageCostVariationInjection", "classVariableNamer.html#af7ba7dc37e278ccf865b718a7bb4d70a", null ],
     [ "ShortTermStorageCostVariationWithdrawal", "classVariableNamer.html#a22ce47614e6b1208cf8a3a2bab7e90c5", null ],

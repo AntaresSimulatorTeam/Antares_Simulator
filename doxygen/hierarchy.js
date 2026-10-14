@@ -127,6 +127,7 @@ var hierarchy =
     [ "Antares::Data::CapacityReservation", "structAntares_1_1Data_1_1CapacityReservation.html", null ],
     [ "Antares::UnitTests::CaptureAntaresLogs", "classAntares_1_1UnitTests_1_1CaptureAntaresLogs.html", [
       [ "DuplicateFixture", "structDuplicateFixture.html", null ],
+      [ "OneProblemOneAreaRampingWithLogger", "classOneProblemOneAreaRampingWithLogger.html", null ],
       [ "OneProblemWithReservesOneAreaWithLogger", "classOneProblemWithReservesOneAreaWithLogger.html", null ],
       [ "OneProblemWithoutReservesOneAreaWithLogger", "classOneProblemWithoutReservesOneAreaWithLogger.html", null ]
     ] ],
@@ -227,6 +228,10 @@ var hierarchy =
       [ "POffUnits", "classPOffUnits.html", null ],
       [ "POutBounds", "classPOutBounds.html", null ],
       [ "POutCapacityThresholds", "classPOutCapacityThresholds.html", null ],
+      [ "PowerOutputVariationDecrease", "classPowerOutputVariationDecrease.html", null ],
+      [ "PowerOutputVariationIncrease", "classPowerOutputVariationIncrease.html", null ],
+      [ "RampingDecreaseRate", "classRampingDecreaseRate.html", null ],
+      [ "RampingIncreaseRate", "classRampingIncreaseRate.html", null ],
       [ "ReserveSatisfaction", "classReserveSatisfaction.html", null ],
       [ "STReleaseCapacityThresholds", "classSTReleaseCapacityThresholds.html", null ],
       [ "STReleaseMaxReserve", "classSTReleaseMaxReserve.html", null ],
@@ -254,7 +259,9 @@ var hierarchy =
         [ "MinDownTimeGroup", "classMinDownTimeGroup.html", null ],
         [ "NbDispUnitsMinBoundSinceMinUpTimeGroup", "classNbDispUnitsMinBoundSinceMinUpTimeGroup.html", null ],
         [ "NbUnitsOutageLessThanNbUnitsStopGroup", "classNbUnitsOutageLessThanNbUnitsStopGroup.html", null ],
-        [ "PMinMaxDispatchableGenerationGroup", "classPMinMaxDispatchableGenerationGroup.html", null ]
+        [ "PMinMaxDispatchableGenerationGroup", "classPMinMaxDispatchableGenerationGroup.html", null ],
+        [ "PowerOutputVariationGroup", "classPowerOutputVariationGroup.html", null ],
+        [ "RampingIncreaseDecreaseRateGroup", "classRampingIncreaseDecreaseRateGroup.html", null ]
       ] ],
       [ "AreaHydroLevelGroup", "classAreaHydroLevelGroup.html", null ],
       [ "BindingConstraintDayGroup", "classBindingConstraintDayGroup.html", null ],
@@ -984,6 +991,10 @@ var hierarchy =
       [ "RenewableClusterStudy", "structRenewableClusterStudy.html", null ],
       [ "ThermalClusterStudy", "structThermalClusterStudy.html", null ]
     ] ],
+    [ "OneProblemOneAreaNotRamping", "classOneProblemOneAreaNotRamping.html", null ],
+    [ "OneProblemOneAreaRamping", "classOneProblemOneAreaRamping.html", [
+      [ "OneProblemOneAreaRampingWithLogger", "classOneProblemOneAreaRampingWithLogger.html", null ]
+    ] ],
     [ "OneProblemWithoutReservesOneArea", "classOneProblemWithoutReservesOneArea.html", [
       [ "OneProblemWithoutReservesOneAreaWithLogger", "classOneProblemWithoutReservesOneAreaWithLogger.html", null ]
     ] ],
@@ -1147,6 +1158,7 @@ var hierarchy =
     [ "Antares::Solver::ProblemEntity", "structAntares_1_1Solver_1_1ProblemEntity.html", null ],
     [ "ProblemMatrixEssential", "classProblemMatrixEssential.html", [
       [ "LinearProblemMatrix", "classLinearProblemMatrix.html", null ],
+      [ "LinearProblemMatrixRamping", "classLinearProblemMatrixRamping.html", null ],
       [ "LinearProblemMatrixReserves", "classLinearProblemMatrixReserves.html", null ],
       [ "LinearProblemMatrixStartUpCosts", "classLinearProblemMatrixStartUpCosts.html", null ],
       [ "QuadraticProblemMatrix", "classQuadraticProblemMatrix.html", null ]
@@ -1162,6 +1174,10 @@ var hierarchy =
     [ "Antares::IO::Inputs::YmlSystem::Property", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Property.html", null ],
     [ "Antares::Solver::Variable::Economy::PumpingTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PumpingTraits.html", null ],
     [ "QpFixture", "structQpFixture.html", null ],
+    [ "Antares::Data::ThermalCluster::Ramping", "classAntares_1_1Data_1_1ThermalCluster_1_1Ramping.html", null ],
+    [ "Antares::Solver::Variable::Economy::RampingCostByDispatchablePlantTraits", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RampingCostByDispatchablePlantTraits.html", null ],
+    [ "PALIERS_THERMIQUES::RampingCosts", "structPALIERS__THERMIQUES_1_1RampingCosts.html", null ],
+    [ "Antares::Solver::Variable::Economy::RampingCostTraits", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RampingCostTraits.html", null ],
     [ "Antares::Solver::Simulation::randomNumbers", "classAntares_1_1Solver_1_1Simulation_1_1randomNumbers.html", null ],
     [ "Antares::Solver::Variable::R::AllYears::Raw", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html", null ],
     [ "RawConnection", "structRawConnection.html", null ],

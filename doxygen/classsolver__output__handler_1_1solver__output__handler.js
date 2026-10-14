@@ -25,6 +25,8 @@ var classsolver__output__handler_1_1solver__output__handler =
     [ "get_npcap_hours_for_hour", "classsolver__output__handler_1_1solver__output__handler.html#a81e2f5a6d746f93b71481f404c588352", null ],
     [ "get_output_file_with_name", "classsolver__output__handler_1_1solver__output__handler.html#a3a3b6989827cf8502c0b859e084851b9", null ],
     [ "get_overall_cost_eur", "classsolver__output__handler_1_1solver__output__handler.html#ae3a46760d4b7ce23726fb9fea9ee70e2", null ],
+    [ "get_ramp_cost_area", "classsolver__output__handler_1_1solver__output__handler.html#a345ad324cc806f2b3fb161ff46e1157f", null ],
+    [ "get_ramp_cost_cluster", "classsolver__output__handler_1_1solver__output__handler.html#a57498ad673d0e64fcead1ea6ef7abb7b", null ],
     [ "get_reference_nodu", "classsolver__output__handler_1_1solver__output__handler.html#a289f3ebc24a88608376ece0c1082f2dd", null ],
     [ "get_res_part_for_date_mwh", "classsolver__output__handler_1_1solver__output__handler.html#abe36343b4c69b296b297810412320fb4", null ],
     [ "get_reserve_participation_cost", "classsolver__output__handler_1_1solver__output__handler.html#a2ff6c50dd52e7dccc37921586b3bf47f", null ],

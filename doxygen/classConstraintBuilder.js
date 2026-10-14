@@ -31,6 +31,8 @@ var classConstraintBuilder =
     [ "Overflow", "classConstraintBuilder.html#a66ce76f0b22930bfc5160d430fc7f496", null ],
     [ "PositiveDirectFlow", "classConstraintBuilder.html#a1683bef5b4806a766cdb875170a4d976", null ],
     [ "PositiveIndirectFlow", "classConstraintBuilder.html#a5dca3e7ccbeee667dcfce894f71bb05d", null ],
+    [ "ProductionDecreaseAboveMin", "classConstraintBuilder.html#a669d55412be1bcbbab3d89d196425670", null ],
+    [ "ProductionIncreaseAboveMin", "classConstraintBuilder.html#a8cfd6bffb712cbceb5ccbef21d54b4f7", null ],
     [ "Pumping", "classConstraintBuilder.html#a3dc9eaf843b193b133e932b6cfff8799", null ],
     [ "RunningThermalClusterReserveParticipation", "classConstraintBuilder.html#a987484274aa15d382db4cd7e2ece78ca", null ],
     [ "SetOperator", "classConstraintBuilder.html#ac42236b48615e4247c80791169218dba", null ],

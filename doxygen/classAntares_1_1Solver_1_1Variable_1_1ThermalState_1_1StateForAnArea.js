@@ -7,5 +7,5 @@ var classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea =
     [ "productionLastHour", "classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html#a23b4c6c601aac2134b963301166518bf", null ],
     [ "thermalClustersOperatingCost", "classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html#a0e7f417a8ed9da6465a5733a1f6364ff", null ],
     [ "thermalClustersProductions", "classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html#a69e64f3ddf551f791ca1cc8e5fe850a1", null ],
-    [ "unitCountLastHour", "classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html#ade96f8079819c6bc76dd6163acf11f3d", null ]
+    [ "unitCountLastHour", "classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html#ab340e17e8073a2472d6be1fefd2d3bfa", null ]
 ];

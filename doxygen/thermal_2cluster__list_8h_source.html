@@ -145,76 +145,85 @@ $(document).ready(function(){initNavTree('thermal_2cluster__list_8h_source.html'
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    std::string typeID() <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1ThermalClusterList.html#af659f34fe1d554de37ed89adefadbc7a">loadFromFolder</a>(<span class="keyword">const</span> std::filesystem::path&amp; folder, <a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1ThermalClusterList.html#a4015bbc5dbbd0201f747ff3580954ce9">loadFromFolder</a>(<span class="keyword">const</span> std::filesystem::path&amp; folder,</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                        <a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area,</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;                        <span class="keywordtype">bool</span> rampingEnabledGlobal = <span class="keyword">false</span>);</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1ThermalClusterList.html#aded1a1df179433768818f42aa7af210b">ThermalClusterList</a>();</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1ThermalClusterList.html#a25d13adafe0463048942794744d8b57b">~ThermalClusterList</a>();</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1ThermalClusterList.html#aded1a1df179433768818f42aa7af210b">ThermalClusterList</a>();</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1ThermalClusterList.html#a25d13adafe0463048942794744d8b57b">~ThermalClusterList</a>();</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ThermalClusterList.html#af7797eca6b2dbb4c687517e505f07766">calculationOfSpinning</a>();</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ThermalClusterList.html#ad5a970a75df18a4326b3ddd7a1acd6c4">reverseCalculationOfSpinning</a>();</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ThermalClusterList.html#af7797eca6b2dbb4c687517e505f07766">calculationOfSpinning</a>();</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ThermalClusterList.html#ad5a970a75df18a4326b3ddd7a1acd6c4">reverseCalculationOfSpinning</a>();</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ThermalClusterList.html#acfdbe09e497ffc9ce817c903638529e6">enableMustrunForEveryone</a>();</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ThermalClusterList.html#acfdbe09e497ffc9ce817c903638529e6">enableMustrunForEveryone</a>();</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">auto</span> each_mustrun_and_enabled()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordflow">return</span> allClusters_ | std::views::filter(&amp;ThermalCluster::isMustRun)</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;               | std::views::filter(&amp;ThermalCluster::isEnabled);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    }</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">auto</span> each_enabled_and_not_mustrun()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordflow">return</span> allClusters_ | std::views::filter(&amp;ThermalCluster::isEnabled)</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;               | std::views::filter(std::not_fn(&amp;ThermalCluster::isMustRun));</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    }</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ThermalClusterList.html#adfa5186bb19b5913bb535053cfde9269">ensureDataPrepro</a>();</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1ThermalClusterList.html#a2989173c2d9a84cd2d5f9878234ef6c2">loadPreproFromFolder</a>(<a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; s, <span class="keyword">const</span> std::filesystem::path&amp; folder);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">bool</span> validatePrepro(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordtype">bool</span> validateClusters(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Parameters.html">Parameters</a>&amp; param) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">auto</span> each_mustrun_and_enabled()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordflow">return</span> allClusters_ | std::views::filter(&amp;ThermalCluster::isMustRun)</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;               | std::views::filter(&amp;ThermalCluster::isEnabled);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    }</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">auto</span> each_enabled_and_not_mustrun()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keywordflow">return</span> allClusters_ | std::views::filter(&amp;ThermalCluster::isEnabled)</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;               | std::views::filter(std::not_fn(&amp;ThermalCluster::isMustRun));</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ThermalClusterList.html#adfa5186bb19b5913bb535053cfde9269">ensureDataPrepro</a>();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1ThermalClusterList.html#a2989173c2d9a84cd2d5f9878234ef6c2">loadPreproFromFolder</a>(<a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; s, <span class="keyword">const</span> std::filesystem::path&amp; folder);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordtype">bool</span> validatePrepro(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study);</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordtype">bool</span> loadEconomicCosts(<a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; s, <span class="keyword">const</span> std::filesystem::path&amp; folder);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordtype">bool</span> validateClusters(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Parameters.html">Parameters</a>&amp; param) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">bool</span> savePreproToFolder(<span class="keyword">const</span> std::string&amp; folder) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">bool</span> saveEconomicCosts(<span class="keyword">const</span> std::string&amp; folder) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    std::size_t enabledAndMustRunCount() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    std::size_t enabledAndNotMustRunCount() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="comment">// returns the number of reserve participations of all clusters</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    std::size_t reserveParticipationsCount() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="comment">// returns the number of capacity reserves that all the clusters are participating to</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="comment">// (count only capacity resarvations once)</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    std::size_t capacityReservationsCount() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="comment">// Give a special index to enbled and not must-run THERMAL clusters</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">void</span> rebuildIndex() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;}; <span class="comment">// class ThermalClusterList</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">bool</span> loadEconomicCosts(<a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; s, <span class="keyword">const</span> std::filesystem::path&amp; folder);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">bool</span> savePreproToFolder(<span class="keyword">const</span> std::string&amp; folder) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordtype">bool</span> saveEconomicCosts(<span class="keyword">const</span> std::string&amp; folder) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    std::size_t enabledAndMustRunCount() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    std::size_t enabledAndNotMustRunCount() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="comment">// returns the number of reserve participations of all clusters</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    std::size_t reserveParticipationsCount() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="comment">// returns the number of capacity reserves that all the clusters are participating to</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="comment">// (count only capacity resarvations once)</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    std::size_t capacityReservationsCount() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="comment">// Give a special index to enbled and not must-run THERMAL clusters</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordtype">void</span> rebuildIndex() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;}; <span class="comment">// class ThermalClusterList</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="keywordtype">bool</span> ThermalClusterLoadFromSection(<span class="keyword">const</span> std::string&amp; areaName,</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                                   <a class="code" href="classAntares_1_1Data_1_1ThermalCluster.html">ThermalCluster</a>&amp; cluster,</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                                   <span class="keyword">const</span> <a class="code" href="classAntares_1_1IniFile_1_1Section.html">IniFile::Section</a>&amp; section,</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;                                   <span class="keywordtype">bool</span> rampingEnabledGlobal);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:33</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ClusterList_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ClusterList.html">Antares::Data::ClusterList</a></div><div class="ttdoc">Generic list of clustersThis class implements the base functions for a list of cluster It's used for ...</div><div class="ttdef"><b>Definition:</b> cluster_list.h:34</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Parameters_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Parameters.html">Antares::Data::Parameters</a></div><div class="ttdoc">General data for a study.</div><div class="ttdef"><b>Definition:</b> parameters.h:36</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdoc">Antares Study.</div><div class="ttdef"><b>Definition:</b> study.h:41</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ThermalClusterList_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalClusterList.html">Antares::Data::ThermalClusterList</a></div><div class="ttdoc">List of clusters.</div><div class="ttdef"><b>Definition:</b> cluster_list.h:19</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ThermalClusterList_html_a25d13adafe0463048942794744d8b57b"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalClusterList.html#a25d13adafe0463048942794744d8b57b">Antares::Data::ThermalClusterList::~ThermalClusterList</a></div><div class="ttdeci">~ThermalClusterList()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:22</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1ThermalClusterList_html_a2989173c2d9a84cd2d5f9878234ef6c2"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalClusterList.html#a2989173c2d9a84cd2d5f9878234ef6c2">Antares::Data::ThermalClusterList::loadPreproFromFolder</a></div><div class="ttdeci">bool loadPreproFromFolder(Study &amp;s, const std::filesystem::path &amp;folder)</div><div class="ttdoc">Load data related to the preprocessor from a list of thermal clusters from a folder.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:388</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1ThermalClusterList_html_acfdbe09e497ffc9ce817c903638529e6"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalClusterList.html#acfdbe09e497ffc9ce817c903638529e6">Antares::Data::ThermalClusterList::enableMustrunForEveryone</a></div><div class="ttdeci">void enableMustrunForEveryone()</div><div class="ttdoc">Enable the 'mustrun' mode for every cluster.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:369</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1ThermalClusterList_html_ad5a970a75df18a4326b3ddd7a1acd6c4"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalClusterList.html#ad5a970a75df18a4326b3ddd7a1acd6c4">Antares::Data::ThermalClusterList::reverseCalculationOfSpinning</a></div><div class="ttdeci">void reverseCalculationOfSpinning()</div><div class="ttdoc">Calculation of Spinning for all thermal clusters (reverse)</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:361</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1ThermalClusterList_html_a2989173c2d9a84cd2d5f9878234ef6c2"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalClusterList.html#a2989173c2d9a84cd2d5f9878234ef6c2">Antares::Data::ThermalClusterList::loadPreproFromFolder</a></div><div class="ttdeci">bool loadPreproFromFolder(Study &amp;s, const std::filesystem::path &amp;folder)</div><div class="ttdoc">Load data related to the preprocessor from a list of thermal clusters from a folder.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:432</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1ThermalClusterList_html_a4015bbc5dbbd0201f747ff3580954ce9"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalClusterList.html#a4015bbc5dbbd0201f747ff3580954ce9">Antares::Data::ThermalClusterList::loadFromFolder</a></div><div class="ttdeci">bool loadFromFolder(const std::filesystem::path &amp;folder, Area *area, bool rampingEnabledGlobal=false)</div><div class="ttdoc">Get the size (bytes) occupied in memory by a ThermalClusterList structure.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:88</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1ThermalClusterList_html_acfdbe09e497ffc9ce817c903638529e6"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalClusterList.html#acfdbe09e497ffc9ce817c903638529e6">Antares::Data::ThermalClusterList::enableMustrunForEveryone</a></div><div class="ttdeci">void enableMustrunForEveryone()</div><div class="ttdoc">Enable the 'mustrun' mode for every cluster.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:413</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1ThermalClusterList_html_ad5a970a75df18a4326b3ddd7a1acd6c4"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalClusterList.html#ad5a970a75df18a4326b3ddd7a1acd6c4">Antares::Data::ThermalClusterList::reverseCalculationOfSpinning</a></div><div class="ttdeci">void reverseCalculationOfSpinning()</div><div class="ttdoc">Calculation of Spinning for all thermal clusters (reverse)</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:405</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ThermalClusterList_html_aded1a1df179433768818f42aa7af210b"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalClusterList.html#aded1a1df179433768818f42aa7af210b">Antares::Data::ThermalClusterList::ThermalClusterList</a></div><div class="ttdeci">ThermalClusterList()</div><div class="ttdoc">Default constructor.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:18</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1ThermalClusterList_html_adfa5186bb19b5913bb535053cfde9269"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalClusterList.html#adfa5186bb19b5913bb535053cfde9269">Antares::Data::ThermalClusterList::ensureDataPrepro</a></div><div class="ttdeci">void ensureDataPrepro()</div><div class="ttdoc">Ensure data for the prepro are initialized.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:377</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1ThermalClusterList_html_af659f34fe1d554de37ed89adefadbc7a"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalClusterList.html#af659f34fe1d554de37ed89adefadbc7a">Antares::Data::ThermalClusterList::loadFromFolder</a></div><div class="ttdeci">bool loadFromFolder(const std::filesystem::path &amp;folder, Area *area)</div><div class="ttdoc">Get the size (bytes) occupied in memory by a ThermalClusterList structure.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:92</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1ThermalClusterList_html_af7797eca6b2dbb4c687517e505f07766"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalClusterList.html#af7797eca6b2dbb4c687517e505f07766">Antares::Data::ThermalClusterList::calculationOfSpinning</a></div><div class="ttdeci">void calculationOfSpinning()</div><div class="ttdoc">Calculation of Spinning for all thermal clusters.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:353</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1ThermalClusterList_html_adfa5186bb19b5913bb535053cfde9269"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalClusterList.html#adfa5186bb19b5913bb535053cfde9269">Antares::Data::ThermalClusterList::ensureDataPrepro</a></div><div class="ttdeci">void ensureDataPrepro()</div><div class="ttdoc">Ensure data for the prepro are initialized.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:421</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1ThermalClusterList_html_af7797eca6b2dbb4c687517e505f07766"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalClusterList.html#af7797eca6b2dbb4c687517e505f07766">Antares::Data::ThermalClusterList::calculationOfSpinning</a></div><div class="ttdeci">void calculationOfSpinning()</div><div class="ttdoc">Calculation of Spinning for all thermal clusters.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:397</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1ThermalCluster_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ThermalCluster.html">Antares::Data::ThermalCluster</a></div><div class="ttdoc">A single thermal cluster.</div><div class="ttdef"><b>Definition:</b> cluster.h:61</div></div>
+<div class="ttc" id="aclassAntares_1_1IniFile_1_1Section_html"><div class="ttname"><a href="classAntares_1_1IniFile_1_1Section.html">Antares::IniFile::Section</a></div><div class="ttdoc">A single section, with all its keys.</div><div class="ttdef"><b>Definition:</b> inifile.h:50</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -1,11 +1,14 @@
 var structPALIERS__THERMIQUES =
 [
+    [ "RampingCosts", "structPALIERS__THERMIQUES_1_1RampingCosts.html", "structPALIERS__THERMIQUES_1_1RampingCosts" ],
     [ "CoutDArretDUnGroupeDuPalierThermique", "structPALIERS__THERMIQUES.html#a93b3ae5be8ecf3b7b43d37c6d5340f7f", null ],
     [ "CoutDeDemarrageDUnGroupeDuPalierThermique", "structPALIERS__THERMIQUES.html#a4b9526874d2dccdef4a751d5ba3a39d4", null ],
     [ "CoutFixeDeMarcheDUnGroupeDuPalierThermique", "structPALIERS__THERMIQUES.html#a4ee9f15511ecee5b3f6c5cac62081d54", null ],
     [ "DureeMinimaleDArretDUnGroupeDuPalierThermique", "structPALIERS__THERMIQUES.html#a149cc50e87d77f26a520c88717e21afb", null ],
     [ "DureeMinimaleDeMarcheDUnGroupeDuPalierThermique", "structPALIERS__THERMIQUES.html#a807a030ce0e639cee68677214702f7dc", null ],
     [ "emissionFactors", "structPALIERS__THERMIQUES.html#a41e3492b2ae23c5baccf92c0a30a557d", null ],
+    [ "maxDownwardPowerRampingRate", "structPALIERS__THERMIQUES.html#a62e3685d91f7fc55daf4c9e3e61f0731", null ],
+    [ "maxUpwardPowerRampingRate", "structPALIERS__THERMIQUES.html#a5ad89d0d8cdc7c59f99427fe19e0c690", null ],
     [ "minUpDownTime", "structPALIERS__THERMIQUES.html#a68951178376642797781f14f997ff926", null ],
     [ "NombreDePaliersThermiques", "structPALIERS__THERMIQUES.html#aab069a4e3eff9a4f05a829d3f118a49e", null ],
     [ "NomsDesPaliersThermiques", "structPALIERS__THERMIQUES.html#a316762f6b1a65b009ef87293486c7243", null ],
@@ -15,5 +18,7 @@ var structPALIERS__THERMIQUES =
     [ "PminDuPalierThermiquePendantUneHeure", "structPALIERS__THERMIQUES.html#a6c0725c1a0cfec33c8fcc74e76f79661", null ],
     [ "PminDuPalierThermiquePendantUnJour", "structPALIERS__THERMIQUES.html#a08777e4bfe0491bcc801aa0314f7215a", null ],
     [ "PuissanceDisponibleEtCout", "structPALIERS__THERMIQUES.html#a037ce3d06e541fcbf0ac16beb7ca17c2", null ],
+    [ "rampingCosts", "structPALIERS__THERMIQUES.html#ab9e7e8a260807b145dac734f5eee0008", null ],
+    [ "rampingEnabled", "structPALIERS__THERMIQUES.html#ad46aee9655e900f72ab98de5a72cc283", null ],
     [ "TailleUnitaireDUnGroupeDuPalierThermique", "structPALIERS__THERMIQUES.html#a6b858a249789930218754f1743cef987", null ]
 ];

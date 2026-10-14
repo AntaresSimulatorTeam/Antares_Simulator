@@ -10,5 +10,6 @@ var structAntares_1_1Data_1_1Parameters_1_1IncludeOptions =
     [ "reserve", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#ab5aa63814d65c5f62b928000cfff24b6", null ],
     [ "reserves", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#a51ad3fe03c8b7b660200d136154505e9", null ],
     [ "thermal", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#ad43f4298444777e29348787f870449e8", null ],
+    [ "thermal_ramping", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#ab8b547183e144a5ecaaa34c965041dde", null ],
     [ "unfeasibleProblemBehavior", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#a8ab817b5425154ce88b258042b37522f", null ]
 ];

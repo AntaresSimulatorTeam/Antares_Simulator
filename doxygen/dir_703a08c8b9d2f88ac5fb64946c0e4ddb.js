@@ -14,6 +14,7 @@ var dir_703a08c8b9d2f88ac5fb64946c0e4ddb =
     [ "LegacySimulationTableSnapshot.h", "LegacySimulationTableSnapshot_8h_source.html", null ],
     [ "LegacyVariableInfo.h", "LegacyVariableInfo_8h_source.html", null ],
     [ "LinearProblemMatrix.h", "LinearProblemMatrix_8h_source.html", null ],
+    [ "LinearProblemMatrixRamping.h", "LinearProblemMatrixRamping_8h_source.html", null ],
     [ "LinearProblemMatrixReserves.h", "LinearProblemMatrixReserves_8h_source.html", null ],
     [ "LinearProblemMatrixStartUpCosts.h", "LinearProblemMatrixStartUpCosts_8h_source.html", null ],
     [ "MipDetection.h", "MipDetection_8h_source.html", null ],
