@@ -8,6 +8,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <unit_test_utils.h>
+
 #include <antares/io/inputs/InputError.h>
 
 #include "antares/io/inputs/yml-optim-config/parser.h"
@@ -580,7 +582,7 @@ models:
     BOOST_CHECK_THROW(parser.parse(yaml_content), std::runtime_error);
 }
 
-BOOST_AUTO_TEST_CASE(misspelled_model_field_is_ignored)
+BOOST_FIXTURE_TEST_CASE(misspelled_model_field_is_ignored, Antares::UnitTests::CaptureAntaresLogs)
 {
     const auto yaml_content = R"(
 models:
@@ -592,9 +594,11 @@ models:
 )"s;
     Parser parser;
     BOOST_CHECK_NO_THROW(parser.parse(yaml_content));
+    BOOST_REQUIRE_EQUAL(getWarnings().size(), 1);
+    BOOST_CHECK_NE(getWarnings().begin()->find("Unrecognised field: out-of-bound-processing"), std::string::npos);
 }
 
-BOOST_AUTO_TEST_CASE(misspelled_top_level_field_is_ignored)
+BOOST_FIXTURE_TEST_CASE(misspelled_top_level_field_is_ignored, Antares::UnitTests::CaptureAntaresLogs)
 {
     const auto yaml_content = R"(
 resolution-modes: benders-decomposition
@@ -602,6 +606,8 @@ models: []
 )"s;
     Parser parser;
     BOOST_CHECK_NO_THROW(parser.parse(yaml_content));
+    BOOST_REQUIRE_EQUAL(getWarnings().size(), 1);
+    BOOST_CHECK_NE(getWarnings().begin()->find("Unrecognised field: resolution-modes"), std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

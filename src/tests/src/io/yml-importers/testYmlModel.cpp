@@ -9,6 +9,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <unit_test_utils.h>
+
 #include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/yml-model/decoders.h"
 #include "antares/io/inputs/yml-model/parser.h"
@@ -1104,7 +1106,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_extra_outputs)
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].expression.input_expr, "expression2");
 }
 
-BOOST_AUTO_TEST_CASE(misspelled_model_field_is_ignored)
+BOOST_FIXTURE_TEST_CASE(misspelled_model_field_is_ignored, Antares::UnitTests::CaptureAntaresLogs)
 {
     YmlModel::Parser parser;
     const auto library = R"(
@@ -1117,9 +1119,11 @@ BOOST_AUTO_TEST_CASE(misspelled_model_field_is_ignored)
                       expression: "p"
         )"s;
     BOOST_CHECK_NO_THROW(parser.parse(library));
+    BOOST_REQUIRE_EQUAL(getWarnings().size(), 1);
+    BOOST_CHECK_NE(getWarnings().begin()->find("Unrecognised field: extra-output"), std::string::npos);
 }
 
-BOOST_AUTO_TEST_CASE(misspelled_variable_field_is_ignored)
+BOOST_FIXTURE_TEST_CASE(misspelled_variable_field_is_ignored, Antares::UnitTests::CaptureAntaresLogs)
 {
     YmlModel::Parser parser;
     const auto library = R"(
@@ -1132,4 +1136,6 @@ BOOST_AUTO_TEST_CASE(misspelled_variable_field_is_ignored)
                       lower_bound: 0
         )"s;
     BOOST_CHECK_NO_THROW(parser.parse(library));
+    BOOST_REQUIRE_EQUAL(getWarnings().size(), 1);
+    BOOST_CHECK_NE(getWarnings().begin()->find("Unrecognised field: lower_bound"), std::string::npos);
 }
