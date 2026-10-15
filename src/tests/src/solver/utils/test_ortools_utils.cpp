@@ -59,7 +59,8 @@ BOOST_AUTO_TEST_CASE(test_sirius_support)
     BOOST_CHECK_EXCEPTION(
       MPSolverFactory(true, "sirius"),
       std::invalid_argument,
-      containsMessage("Solver sirius is not supported by Antares or does not support MIP problems."));
+      containsMessage(
+        "Solver sirius is not supported by Antares or does not support MIP problems."));
 }
 
 // PDLP only supports LP

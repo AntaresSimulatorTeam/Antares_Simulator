@@ -108,7 +108,8 @@ BOOST_AUTO_TEST_CASE(divide_scalar_by_linear_expression__exception_raised)
 
     BOOST_CHECK_EXCEPTION(someScalar / linearExpression,
                           std::invalid_argument,
-                          containsMessage("A linear expression can't have a variable as a dividend."));
+                          containsMessage(
+                            "A linear expression can't have a variable as a dividend."));
 }
 
 BOOST_AUTO_TEST_CASE(negate_linear_expression)

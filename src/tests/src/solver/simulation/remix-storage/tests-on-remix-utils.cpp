@@ -124,7 +124,9 @@ BOOST_AUTO_TEST_CASE(min_on_subrange_exclude_last_element_of_range)
 BOOST_AUTO_TEST_CASE(vector_is_empty___exception_raised)
 {
     std::string err_msg = "call min_on_subrange on an empty vector";
-    BOOST_CHECK_EXCEPTION(min_on_subrange({}, 2, 7), std::invalid_argument, containsMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(min_on_subrange({}, 2, 7),
+                          std::invalid_argument,
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(hours_h_and_H_are_equals___vector_min_is_not_defined)

@@ -53,8 +53,8 @@ BOOST_FIXTURE_TEST_CASE(one_var_good_one_var_throw, Fixture)
       checkExpression(root, Location::SUBPROBLEMS, model, system, "var1 + var2"),
       LocationError,
       containsMessage("Model 'base model': In expression 'var1 + var2': Error for variable "
-                   "'var2': Location doesn't match the expression location (variable "
-                   "location: master, expression location: subproblems)"));
+                      "'var2': Location doesn't match the expression location (variable "
+                      "location: master, expression location: subproblems)"));
 }
 
 BOOST_FIXTURE_TEST_CASE(reduced_cost_throw, Fixture)
@@ -77,7 +77,7 @@ BOOST_FIXTURE_TEST_CASE(reduced_cost_throw, Fixture)
       checkExpression(root, Location::SUBPROBLEMS, model, system, "reduced_cost(var)"),
       LocationError,
       containsMessage("Model 'base model': In expression 'reduced_cost(var)': Error for variable "
-                   "'var': reduced_cost can only be used on variables located in subproblems"));
+                      "'var': reduced_cost can only be used on variables located in subproblems"));
 }
 
 BOOST_FIXTURE_TEST_CASE(dual_throw, Fixture)
@@ -99,7 +99,7 @@ BOOST_FIXTURE_TEST_CASE(dual_throw, Fixture)
       checkExpression(root, Location::SUBPROBLEMS, model, system, "dual(constraint)"),
       LocationError,
       containsMessage("Model 'base model': In expression 'dual(constraint)': Error for constraint "
-                   "'constraint': dual can only be used on constraints located in subproblems"));
+                      "'constraint': dual can only be used on constraints located in subproblems"));
 }
 
 BOOST_FIXTURE_TEST_CASE(portfield_throw, Fixture)
@@ -183,8 +183,8 @@ BOOST_FIXTURE_TEST_CASE(portfield_ok_var_throw, Fixture)
       checkExpression(root, Location::MASTER_AND_SUBPROBLEMS, model, system, "port.field + var2"),
       LocationError,
       containsMessage("Model 'base model': In expression 'port.field + var2': Error for variable "
-                   "'var2': Location doesn't match the expression location (variable "
-                   "location: master, expression location: master-and-subproblems)"));
+                      "'var2': Location doesn't match the expression location (variable "
+                      "location: master, expression location: master-and-subproblems)"));
 }
 
 BOOST_FIXTURE_TEST_CASE(porfieldsum_throw, Fixture)

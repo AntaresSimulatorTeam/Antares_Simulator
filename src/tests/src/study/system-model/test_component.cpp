@@ -76,7 +76,8 @@ BOOST_AUTO_TEST_CASE(nominal_build_without_parameters1)
     BOOST_CHECK_EQUAL(component.getModel(), &model);
     BOOST_CHECK_EXCEPTION(component.getParameterValue("param1"),
                           std::invalid_argument,
-                          containsMessage("Parameter 'param1' not found in component 'component2'"));
+                          containsMessage(
+                            "Parameter 'param1' not found in component 'component2'"));
     BOOST_CHECK_EQUAL(component.getScenarioGroupId(), "scenario_group2");
 }
 
@@ -230,8 +231,9 @@ BOOST_AUTO_TEST_CASE(param_variability_scenario_mismatch)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          containsMessage("Model 'model': Component 'component': Parameter 'param1': "
-                                       "Scenario dependance mismatch between model and system"));
+                          containsMessage(
+                            "Model 'model': Component 'component': Parameter 'param1': "
+                            "Scenario dependance mismatch between model and system"));
 }
 
 BOOST_AUTO_TEST_CASE(param_variability_time_mismatch)
@@ -247,8 +249,9 @@ BOOST_AUTO_TEST_CASE(param_variability_time_mismatch)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          containsMessage("Model 'model': Component 'component': Parameter 'param2': "
-                                       "Time dependance mismatch between model and system"));
+                          containsMessage(
+                            "Model 'model': Component 'component': Parameter 'param2': "
+                            "Time dependance mismatch between model and system"));
 }
 
 BOOST_AUTO_TEST_CASE(param_variability_time_and_scenario_mismatch)
@@ -303,9 +306,10 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_thermal_capacity_to_unexisting_port)
     BOOST_CHECK_EXCEPTION(
       component.addThermalCapacityConnection("wrongPort", "area1", "cluster265"),
       std::invalid_argument,
-      containsMessage("Cannot connect thermal capacity '(area = area1, "
-                   "clusterId = cluster265)' to port 'wrongPort' of component 'myComponent': Port "
-                   "with id 'wrongPort' not found in component 'myComponent'."));
+      containsMessage(
+        "Cannot connect thermal capacity '(area = area1, "
+        "clusterId = cluster265)' to port 'wrongPort' of component 'myComponent': Port "
+        "with id 'wrongPort' not found in component 'myComponent'."));
     BOOST_CHECK(component.portToAreaConnections().empty());
 }
 
@@ -355,8 +359,8 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_port_with_no_thermal_capacity_
       component.addThermalCapacityConnection("portNoAC", "area1", "cluster236"),
       std::invalid_argument,
       containsMessage("Cannot connect thermal capacity '(area = area1, "
-                   "clusterId = cluster236)' to port 'portNoAC' of component 'myComponent': "
-                   "port type 'portType1' has no thermal-capacity-connection field ID defined"));
+                      "clusterId = cluster236)' to port 'portNoAC' of component 'myComponent': "
+                      "port type 'portType1' has no thermal-capacity-connection field ID defined"));
     BOOST_CHECK_EQUAL(component.thermalCapacityConnectedToPort("portNoAC").has_value(), false);
     BOOST_CHECK(component.portToAreaConnections().empty());
 }
@@ -408,8 +412,8 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_thermal_capacity_to_undefined_field)
       component.addThermalCapacityConnection("portACNoDef", "area1", "cluster989"),
       std::invalid_argument,
       containsMessage("Cannot connect thermal capacity '(area = area1, "
-                   "clusterId = cluster989)' to port 'portACNoDef' of component 'myComponent': "
-                   "port field 'field2' is not defined in the component's model 'myModel'"));
+                      "clusterId = cluster989)' to port 'portACNoDef' of component 'myComponent': "
+                      "port field 'field2' is not defined in the component's model 'myModel'"));
     BOOST_CHECK_EQUAL(component.thermalCapacityConnectedToPort("portACNoDef").has_value(), false);
     BOOST_CHECK(component.portToThermalCapacityConnections().empty());
 }
@@ -448,8 +452,8 @@ BOOST_AUTO_TEST_CASE(connect_area_to_port_with_price_field_not_in_port_type__exc
     BOOST_CHECK_EXCEPTION(component.addAreaConnection("port", "area1"),
                           std::invalid_argument,
                           containsMessage("Cannot connect area 'area1' to port 'port' of component "
-                                       "'myComponent': price field 'price' is not a field of "
-                                       "port type 'port-type-id'"));
+                                          "'myComponent': price field 'price' is not a field of "
+                                          "port type 'port-type-id'"));
     BOOST_CHECK(!component.areaConnectedToPort("port").has_value());
 }
 

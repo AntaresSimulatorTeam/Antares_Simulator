@@ -104,7 +104,8 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
     std::string expression = "abc"; // not a param or var
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          containsMessage("No parameter or variable found for this identifier: abc"));
+                          containsMessage(
+                            "No parameter or variable found for this identifier: abc"));
 }
 
 BOOST_AUTO_TEST_CASE(addTwoLiterals)

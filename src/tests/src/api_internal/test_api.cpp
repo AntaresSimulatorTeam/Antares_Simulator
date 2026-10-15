@@ -98,5 +98,5 @@ BOOST_AUTO_TEST_CASE(invalid_ortools_linear_solver)
     BOOST_CHECK_EXCEPTION((void)shouldThrow(),
                           std::invalid_argument,
                           containsMessage("Solver this-solver-does-not-exist is not supported by "
-                                       "Antares or does not support LP problems."));
+                                          "Antares or does not support LP problems."));
 }

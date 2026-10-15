@@ -574,7 +574,8 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown,
     Node* node = create<PortFieldNode>("port", "field");
     BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
                           Antares::Error::InvalidArgumentError,
-                          containsMessage("ReadLinearExpressionVisitor cannot visit PortFieldNodes"));
+                          containsMessage(
+                            "ReadLinearExpressionVisitor cannot visit PortFieldNodes"));
 
     node = create<FunctionNode>(FunctionNodeType::dual,
                                 create<ParameterNode>("constraint1"),
@@ -638,8 +639,8 @@ BOOST_AUTO_TEST_CASE(area_connection_price_field_forbidden_in_linear_expression)
       visitor.dispatch(&priceSum),
       Antares::Error::InvalidArgumentError,
       containsMessage("Field 'price' of port 'generation' holds the dual value of a legacy area's "
-                   "balance equation and can only be used in extra-outputs, not in a linear "
-                   "expression."));
+                      "balance equation and can only be used in extra-outputs, not in a linear "
+                      "expression."));
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_inverted_bounds_returns_zero,

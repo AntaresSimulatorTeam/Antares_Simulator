@@ -306,7 +306,8 @@ BOOST_AUTO_TEST_CASE(invalid_constraint_sense)
     problemeAResoudre.Sens = "+";
     BOOST_CHECK_EXCEPTION(solve(),
                           std::invalid_argument,
-                          containsMessage("Expected constraint sense to be =, <, or >, but was: +"));
+                          containsMessage(
+                            "Expected constraint sense to be =, <, or >, but was: +"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

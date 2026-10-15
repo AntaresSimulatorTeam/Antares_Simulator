@@ -1154,10 +1154,11 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_file_missing_needs,
   - name: ReserveUp
 )";
     file.close();
-    BOOST_CHECK_EXCEPTION(
-      Antares::Data::loadReservesParameters(studyPath, *areaA),
-      std::runtime_error,
-      containsMessage("Could not open " + (studyPath / "reserves" / "a" / "reserveup.txt").string()));
+    BOOST_CHECK_EXCEPTION(Antares::Data::loadReservesParameters(studyPath, *areaA),
+                          std::runtime_error,
+                          containsMessage(
+                            "Could not open "
+                            + (studyPath / "reserves" / "a" / "reserveup.txt").string()));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_minimal, OneProblemWithoutReservesOneAreaWithLogger)
