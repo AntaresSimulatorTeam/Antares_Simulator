@@ -14,12 +14,6 @@
 namespace Antares::Logs
 {
 
-void printWithColor(std::ostream& out, const std::string& message, Color color);
-
-void setLocalTime(std::tm* tmBuffer, const std::time_t* now);
-
-std::string eol();
-
 } // namespace Antares::Logs
 
 #endif

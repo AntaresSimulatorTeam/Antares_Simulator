@@ -8,8 +8,8 @@
 #include <cstdio>
 #include <iostream>
 
-#include "antares/logs/logger-utils-linux.h"
-#include "antares/logs/logger-utils-win.h"
+// #include "antares/logs/logger-utils-linux.h"
+// #include "antares/logs/logger-utils-win.h"
 #include "antares/logs/logger-utils.h"
 
 namespace Antares::Logs
@@ -120,6 +120,11 @@ void writeToFile(std::ofstream& file,
                  const std::string& appliName,
                  const std::string& msg)
 {
+    if (!file.is_open())
+    {
+        return;
+    }
+
     file << timestamp() << application(appliName) << tag(level) << ' ' << msg;
     file << eol();
     file.flush();

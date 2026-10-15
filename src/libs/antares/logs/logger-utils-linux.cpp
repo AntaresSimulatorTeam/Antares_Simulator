@@ -1,7 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "antares/logs/logger-utils-linux.h"
+#include "antares/logs/logger-utils.h"
 
 #ifndef _WIN32
 
@@ -10,8 +10,6 @@
 namespace Antares::Logs
 {
 
-namespace
-{
 std::string linuxColor(const Color& color)
 {
     switch (color)
@@ -28,7 +26,6 @@ std::string linuxColor(const Color& color)
         return "\x1b[0m"; // reset
     }
 }
-} // namespace
 
 void printWithColor(std::ostream& out, const std::string& message, Color color)
 {

@@ -3,6 +3,10 @@
 
 #pragma once
 
+#include <ctime>
+#include <iosfwd>
+#include <string>
+
 namespace Antares::Logs
 {
 enum class Color
@@ -23,4 +27,11 @@ struct LevelInfo
     Color tagColor;
     Color messageColor;
 };
+
+void printWithColor(std::ostream& out, const std::string& message, Color color);
+
+void setLocalTime(std::tm* tmBuffer, const std::time_t* now);
+
+std::string eol();
+
 } // namespace Antares::Logs
