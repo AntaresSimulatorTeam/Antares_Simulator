@@ -21,8 +21,12 @@ class AdequacyPatchRuntimeData;
 namespace Antares::Optimization
 {
 struct SolvedModelerProblem;
-class InactiveComponentsAnalyzer;
 } // namespace Antares::Optimization
+
+namespace Antares::Data
+{
+class InactiveComponentsAnalyzer;
+} // namespace Antares::Data
 
 struct CORRESPONDANCES_DES_VARIABLES
 {
@@ -36,6 +40,14 @@ struct CORRESPONDANCES_DES_VARIABLES
     std::vector<int> NumeroDeVariableDuFluxIndirectPositif;
 
     std::vector<int> NumeroDeVariableDuPalierThermique;
+    //! index of the variables for the power output hourly increases (MW above P_min,between t and
+    //! t+1)
+    // for the thermal clusters
+    std::vector<int> powerRampingIncreaseIndex;
+    //! index of the variables for the power output hourly dereases (MW above P_min,between t and
+    //! t+1)
+    // for the thermal clusters
+    std::vector<int> powerRampingDecreaseIndex;
 
     std::vector<int> NumeroDeVariablesDeLaProdHyd;
 
@@ -415,6 +427,23 @@ struct PALIERS_THERMIQUES
     // co2_emissions ... op5_emissions = generation_power * factor; not used by
     // the optimization itself.
     std::vector<std::array<double, Pollutant::POLLUTANT_MAX>> emissionFactors;
+
+    //! Whether local ramping data is enabled for each thermal cluster.
+    std::vector<bool> rampingEnabled;
+    //! maximum hourly upward power ramping rate for a thermal unit (MW/hour)
+    std::vector<double> maxUpwardPowerRampingRate;
+    //! maximum hourly downward power ramping rate for a thermal unit (MW/hour)
+    std::vector<double> maxDownwardPowerRampingRate;
+
+    struct RampingCosts
+    {
+        //! cost of 1 MW power increase for the thermal cluster (above minimum stable level)
+        std::vector<double> upward;
+        //! cost of 1 MW power decrease for the thermal cluster
+        std::vector<double> downward;
+    };
+
+    RampingCosts rampingCosts;
 };
 
 struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
@@ -569,7 +598,7 @@ struct PROBLEME_HEBDO
     /// simulation-table rows for structurally inactive objects (see
     /// AddLegacyExtraOutputs). Null by default, so callers and test fixtures
     /// that leave it unset keep emitting every row.
-    std::shared_ptr<const Antares::Optimization::InactiveComponentsAnalyzer> inactiveComponents;
+    std::shared_ptr<const Antares::Data::InactiveComponentsAnalyzer> inactiveComponents;
 
     uint32_t NombreDePays = 0;
     std::vector<const char*> NomsDesPays;
@@ -609,6 +638,8 @@ struct PROBLEME_HEBDO
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
     std::optional<std::vector<AREA_RESERVES_VECTOR>> allReserves;
+
+    bool rampingEnabled = false;
 
     uint32_t NumberOfShortTermStorages = 0;
     std::vector<AREA_INPUT> ShortTermStorage;

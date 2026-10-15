@@ -243,16 +243,11 @@ bool Data::ThermalCluster::integrityCheck()
     // Modulation
     ret = checkModulation() && ret;
 
-    // la valeur minStablePower should not be modified
-    /*
-    if (minStablePower > nominalCapacity)
+    // ramping
+    if (ramping)
     {
-            logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                    << ": failed min stable power < nominal capacity (with min power = "
-                    << minStablePower << ", nominal power = " << nominalCapacity;
-            minStablePower = nominalCapacity;
-            ret = false;
-    }*/
+        ret = ramping->checkValidity(parentArea, pName) && ret;
+    }
 
     return ret;
 }
@@ -426,6 +421,45 @@ void ThermalCluster::checkAndCorrectAvailability()
 bool ThermalCluster::isActive() const
 {
     return enabled && !mustrun;
+}
+
+void ThermalCluster::Ramping::reset()
+{
+    powerIncreaseCost = 0;
+    powerDecreaseCost = 0;
+    maxUpwardPowerRampingRate = 0;
+    maxDownwardPowerRampingRate = 0;
+}
+
+bool ThermalCluster::Ramping::checkValidity(const Area* area, const std::string& clusterName) const
+{
+    bool ret = true;
+
+    if (maxUpwardPowerRampingRate < 0)
+    {
+        logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
+                     << ": The maximum upward power ramping rate must be non-negative. ";
+        ret = false;
+    }
+    if (maxDownwardPowerRampingRate < 0)
+    {
+        logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
+                     << ": The maximum downward power ramping rate must be non-negative. ";
+        ret = false;
+    }
+    if (powerIncreaseCost < 0)
+    {
+        logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
+                     << ": The ramping power increase cost must be positive or null. ";
+        ret = false;
+    }
+    if (powerDecreaseCost < 0)
+    {
+        logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
+                     << ": The ramping power decrease cost must be positive or null. ";
+        ret = false;
+    }
+    return ret;
 }
 
 } // namespace Antares::Data

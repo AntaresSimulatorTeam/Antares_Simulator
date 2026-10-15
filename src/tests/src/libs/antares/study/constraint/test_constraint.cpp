@@ -1008,17 +1008,6 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_TypeToCString_allValues)
     BOOST_CHECK_EQUAL(std::string(BindingConstraint::TypeToCString(Type::typeWeekly)), "weekly");
 }
 
-BOOST_AUTO_TEST_CASE(BindingConstraint_OperatorToCString_allValues)
-{
-    using Operator = BindingConstraint::Operator;
-    BOOST_CHECK_EQUAL(std::string(BindingConstraint::OperatorToCString(Operator::opEquality)),
-                      "equal");
-    BOOST_CHECK_EQUAL(std::string(BindingConstraint::OperatorToCString(Operator::opLess)), "less");
-    BOOST_CHECK_EQUAL(std::string(BindingConstraint::OperatorToCString(Operator::opGreater)),
-                      "greater");
-    BOOST_CHECK_EQUAL(std::string(BindingConstraint::OperatorToCString(Operator::opBoth)), "both");
-}
-
 BOOST_AUTO_TEST_CASE(BindingConstraint_OperatorToShortCString_allValues)
 {
     using Operator = BindingConstraint::Operator;

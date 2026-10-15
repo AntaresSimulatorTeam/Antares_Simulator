@@ -75,6 +75,9 @@ static bool ConvertCStrToListTimeSeries(const std::string& value, unsigned int& 
     return true;
 }
 
+/*!
+** \brief Convert a text into a renewable generation modelling
+*/
 static bool ConvertStringToRenewableGenerationModelling(const std::string& text,
                                                         RenewableGenerationModelling& out)
 {
@@ -167,19 +170,6 @@ const char* SimulationModeToCString(SimulationMode mode)
         return "Adequacy";
     case SimulationMode::Expansion:
         return "Expansion";
-    default:
-        return "Unknown";
-    }
-}
-
-const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::HydroPmax mode)
-{
-    switch (mode)
-    {
-    case Parameters::Compatibility::HydroPmax::Daily:
-        return "daily";
-    case Parameters::Compatibility::HydroPmax::Hourly:
-        return "hourly";
     default:
         return "Unknown";
     }
@@ -338,6 +328,8 @@ void Parameters::reset()
     simplexOptimizationRange = sorWeek;
 
     include.reserves = false;
+
+    include.thermal_ramping = false;
 
     include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.exportStructure = false;
@@ -632,6 +624,11 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     if (key == "include-reserves")
     {
         d.include.reserves = Antares::stringToBool(value);
+        return true;
+    }
+    if (key == "include-thermal-cluster-ramping")
+    {
+        d.include.thermal_ramping = Antares::stringToBool(value);
         return true;
     }
 
@@ -1058,7 +1055,7 @@ static bool SGDIntLoadFamily_Compatibility(Parameters& d,
         return StringToCompatibilityHydroPmax(d.compatibility.hydroPmax, value);
     }
 
-    if (key == "hydro-rule-curves")
+    else if (key == "hydro-rule-curves")
     {
         return StringToCompatibilityHydroRuleCurves(d.compatibility.hydroRuleCurves, value);
     }
@@ -1563,6 +1560,16 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     renewableGeneration.addExcludedVariables(excluded_vars);
     adqPatchParams.addExcludedVariables(excluded_vars);
     unitCommitment.addExcludedVariables(excluded_vars);
+    if (!include.thermal_ramping)
+    {
+        for (const auto* rampingVariable: {"RAMP COST", "RAMP COST BY PLANT"})
+        {
+            if (variablesPrintInfo.exists(rampingVariable))
+            {
+                excluded_vars.emplace_back(rampingVariable);
+            }
+        }
+    }
 
     variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
 

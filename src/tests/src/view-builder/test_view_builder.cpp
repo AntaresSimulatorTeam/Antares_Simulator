@@ -4,6 +4,7 @@
 #define BOOST_TEST_MODULE view_builder_tests
 #define WIN32_LEAN_AND_MEAN
 
+#include <algorithm>
 #include <unordered_set>
 #include <yaml-cpp/yaml.h>
 
@@ -41,6 +42,7 @@ struct ViewBuilderFixture
     {
         study = std::make_unique<Study>();
         study->parameters.reset();
+        study->parameters.renewableGeneration.toClusters();
 
         fr = addAreaToListOfAreas(study->areas, "france");
         de = addAreaToListOfAreas(study->areas, "germany");
@@ -48,6 +50,17 @@ struct ViewBuilderFixture
         for (auto* area: {fr, de})
         {
             area->createMissingData();
+            area->load.series.fill(1.0);
+            area->wind.series.fill(1.0);
+            area->solar.series.fill(1.0);
+            area->miscGen.zero();
+            for (unsigned column = 0; column < MiscGenIndex::fhhMax; ++column)
+            {
+                auto* values = area->miscGen[column];
+                std::fill(values, values + area->miscGen.height, 1.0);
+            }
+            area->hydro.reservoirManagement = true;
+            area->hydro.series->ror.fill(1.0);
         }
         study->areas.rebuildIndexes();
 
@@ -67,6 +80,9 @@ struct ViewBuilderFixture
         }
 
         AreaAddLinkBetweenAreas(fr, de);
+        fr->links.begin()->second->transmissionCapacities = LocalTransmissionCapacities::enabled;
+        fr->links.begin()->second->directCapacities.fill(1.0);
+        fr->links.begin()->second->indirectCapacities.fill(1.0);
     }
 };
 
@@ -99,6 +115,61 @@ BOOST_AUTO_TEST_CASE(study_to_yaml_structure)
     // link: in_port + out_port = 2
     // total: 31
     BOOST_CHECK_EQUAL(connections.size(), 31);
+}
+
+BOOST_FIXTURE_TEST_CASE(disabled_components_are_omitted, ViewBuilderFixture)
+{
+    thermalCluster->enabled = false;
+    renewableCluster->enabled = false;
+    fr->shortTermStorage.storagesByIndex.front().properties.enabled = false;
+
+    // Keep the load active to ensure the test also preserves enabled components.
+    fr->wind.series.fill(0.0);
+    fr->solar.series.fill(0.0);
+    fr->hydro.series->ror.fill(0.0);
+    fr->hydro.series->storage.fill(0.0);
+    fr->hydro.reservoirManagement = false;
+    fr->miscGen.zero();
+    fr->links.begin()->second->transmissionCapacities = LocalTransmissionCapacities::null;
+
+    const YAML::Node root = generateSystemForView(*study);
+    const auto components = root["system"]["components"];
+    BOOST_REQUIRE(components.IsSequence());
+
+    const std::vector<std::string> omittedIds = {
+      "france_wind",
+      "france_solar",
+      "france_combined_heat_power",
+      "france_biomass",
+      "france_biogas",
+      "france_waste",
+      "france_geothermal",
+      "france_other",
+      "france_pumped_storage_power",
+      "france_rest_world",
+      "france_ror",
+      "france_thermal_nuc_fr",
+      "france_renewable_wind_fr",
+      "france_short_term_storage_battery_fr",
+      "france_hydro_storage",
+      "france_germany_link",
+    };
+
+    const auto componentIsPresent = [&components](const auto& id)
+    {
+        return std::any_of(components.begin(),
+                           components.end(),
+                           [&id](const YAML::Node& component)
+                           { return component["id"].as<std::string>() == id; });
+    };
+
+    // Load = 1 for area `france`
+    BOOST_CHECK(componentIsPresent("france_load"));
+    for (const auto& id: omittedIds)
+    {
+        BOOST_CHECK_MESSAGE(!componentIsPresent(id),
+                            "Disabled component unexpectedly present: " << id);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(area_component)

@@ -12,16 +12,18 @@
 
 #include <antares/utils/utils.h>
 #include "antares/solver/optimisation/HebdoAreaPriceProvider.h"
-#include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/study/InactiveComponentsAnalyzer.h"
 
 using Antares::IO::Outputs::SimulationTable;
 using Antares::LinearProblem::Api::FillContext;
 
 namespace Antares::Optimization
 {
+
+using Data::InactiveComponentsAnalyzer;
 
 std::optional<unsigned> LegacyBlockTimeIndex(const FillContext& fillContext, unsigned timeIndex)
 {
@@ -334,6 +336,16 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
          price > problemeHebdo_.CoutDeDefaillancePositiveSansBruit[pays] - nearLossOfLoadCutoff
            ? 1.
            : 0.);
+
+    emit("domestic_unsupplied_energy",
+         area,
+         pdt,
+         problemeHebdo_.ResultatsHoraires[pays].ValeursHorairesDENS[pdt]);
+    emit("is_local_matching_rule_violated",
+         area,
+         pdt,
+         static_cast<double>(
+           problemeHebdo_.ResultatsHoraires[pays].ValeursHorairesLmrViolations[pdt]));
 
     // Port fields of the load and long_term_storage models, emitted on their
     // own components ({area}_load, {area}_hydro_storage) so their balance_port.flow

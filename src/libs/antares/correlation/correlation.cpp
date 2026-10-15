@@ -232,20 +232,6 @@ bool Correlation::loadFromFile(Study& study, const AnyString& filename, bool war
     return (ini.open(filename)) ? internalLoadFromINI(study, ini, warnings) : false;
 }
 
-const char* Correlation::ModeToCString(Mode mode)
-{
-    switch (mode)
-    {
-    case modeAnnual:
-        return "annual";
-    case modeMonthly:
-        return "monthly";
-    case modeNone:
-        return "unknown";
-    }
-    return "unknown";
-}
-
 Correlation::Mode Correlation::CStringToMode(const std::string& str)
 {
     std::string s = str;

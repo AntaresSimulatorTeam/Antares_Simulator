@@ -438,6 +438,17 @@ _**This section is under construction**_
 - **Usage:** set this parameter to `true` if you want to activate, for thermal units, the constraint of minimum start-up time
 
 ---
+#### include-thermal-cluster-ramping
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `false`
+- **Usage:** enables thermal-cluster ramp constraints and ramping costs for clusters whose
+  `ramping-enabled` property is `true`. The rates and costs are configured in each cluster's
+  thermal `list.ini`; see [Thermal cluster ramping](inputs.md#thermal-cluster-ramping) for the
+  input format. When disabled, per-cluster ramping properties are ignored and ramping output
+  variables are not printed.
+
+---
 #### include-dayahead
 [//]: # (TODO: add details + link to contraints doc)
 - **Expected value:** `true` or `false`
@@ -564,7 +575,9 @@ _**This section is under construction**_
 ## Adequacy-patch parameters
 Defines a set of options related to the [adequacy patch](https://antares-doc.readthedocs.io/en/latest/reference/adequacy-patch/).
 The set of preferences is study-specific; it can be changed at any time and saved along with study data.  
-These parameters are listed under the `[adequacy patch]` section in the `.ini` file.  
+These parameters are listed under the `[adequacy patch]` section in the `.ini` file.
+
+> **Warning:** In hybrid mode (when GEMS components are present), GEMS areas and GEMS links are not part of the adequacy patch domain. GEMS areas are implicitly considered as **outside** the adequacy patch domain, and GEMS links are treated as connecting no zone inside the domain (or at least one virtual zone). Only Legacy areas can be declared as "physical inside" the adequacy patch.
 
 ---
 #### include-adq-patch
@@ -585,13 +598,15 @@ These parameters are listed under the `[adequacy patch]` section in the `.ini` f
 
 ---
 #### price-taking-order
-[//]: # (TODO: document this parameter)
-_**This section is under construction**_  
 
-- **Expected value:**
+- **Expected value:** `DENS` or `Load`
 - **Required:** **yes**
-- **Default value:**
-- **Usage:** Price taking order (DENS / Load)
+- **Default value:** `DENS`
+- **Usage:** Defines the Price Taking Orders (PTO) used in the CSR quadratic objective function.
+  - `DENS`: PTOs are the Domestic Energy Not Served of each area.
+  - `Load`: PTOs are the load of each area.
+
+> **Note:** In hybrid mode (when GEMS components are present), only `DENS` is supported. Using `Load` in hybrid mode will result in an error at startup.
 
 ---
 #### include-hurdle-cost-csr

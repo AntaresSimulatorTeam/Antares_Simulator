@@ -367,6 +367,22 @@ Feature: short tests
       | west  | 2    |                  |               | -101739 | 430418         | 0                 |
     # Hydro production in "& psp" is actually spilled but it's ok because water value is set to 0
 
+  @short @district-output-filter
+  Scenario: District output filtering
+    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/058 Four areas - Grid outages  02 - district output filtering"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the output file "economy/mc-ind/00001/areas/@ all areas/values-hourly.txt" exists
+    And the output file "economy/mc-ind/00001/areas/@ all areas/values-daily.txt" exists
+    And the output file "economy/mc-ind/00001/areas/@ all areas/values-weekly.txt" does not exist
+    And the output file "economy/mc-ind/00001/areas/@ core areas/values-annual.txt" exists
+    And the output file "economy/mc-ind/00001/areas/@ core areas/values-hourly.txt" does not exist
+    And the output file "economy/mc-all/areas/@ all areas/values-annual.txt" exists
+    And the output file "economy/mc-all/areas/@ all areas/values-hourly.txt" does not exist
+    And the output file "economy/mc-all/areas/@ core areas/values-hourly.txt" exists
+    And the output file "economy/mc-all/areas/@ core areas/values-daily.txt" exists
+    And the output file "economy/mc-all/areas/@ core areas/values-annual.txt" does not exist
+
   @short @hydro @storage
   Scenario: 066 Pumped storage plant -explicit model-02
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/066 Pumped storage plant -explicit model-02"

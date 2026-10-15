@@ -49,13 +49,6 @@ XCast::TSTranslationUse XCast::CStringToTSTranslationUse(const std::string& str)
     return tsTranslationNone;
 }
 
-const char* XCast::DistributionToCString(XCast::Distribution d)
-{
-    assert((int)d < dtMax);
-    static const char* const names[dtMax] = {"", "Uniform", "Beta", "Normal", "Weibull", "Gamma"};
-    return names[d];
-}
-
 const char* XCast::DistributionToNameID(XCast::Distribution d)
 {
     static const char* const names[dtMax] = {
