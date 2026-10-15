@@ -393,11 +393,11 @@ var annotated_dup =
           [ "Info", "structAntares_1_1Logs_1_1Verbosity_1_1Info.html", null ],
           [ "Debug", "structAntares_1_1Logs_1_1Verbosity_1_1Debug.html", null ]
         ] ],
+        [ "LevelInfo", "structAntares_1_1Logs_1_1LevelInfo.html", "structAntares_1_1Logs_1_1LevelInfo" ],
         [ "LogBuffer", "classAntares_1_1Logs_1_1LogBuffer.html", "classAntares_1_1Logs_1_1LogBuffer" ],
         [ "NoopLogBuffer", "classAntares_1_1Logs_1_1NoopLogBuffer.html", "classAntares_1_1Logs_1_1NoopLogBuffer" ],
         [ "LogCallback", "classAntares_1_1Logs_1_1LogCallback.html", "classAntares_1_1Logs_1_1LogCallback" ],
-        [ "Logger", "classAntares_1_1Logs_1_1Logger.html", "classAntares_1_1Logs_1_1Logger" ],
-        [ "LevelInfo", "structAntares_1_1Logs_1_1LevelInfo.html", "structAntares_1_1Logs_1_1LevelInfo" ]
+        [ "Logger", "classAntares_1_1Logs_1_1Logger.html", "classAntares_1_1Logs_1_1Logger" ]
       ] ],
       [ "ModelerStudy", null, [
         [ "SystemModel", null, [
