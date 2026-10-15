@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection)
     PortField field1("firstField");
     PortField field2("secondField");
     std::vector fields = {field1, field2};
-    PortType portType("portTypeId", std::move(fields), {"secondField", "", ""});
+    PortType portType("portTypeId", std::move(fields), {"secondField", "", "", ""});
     BOOST_CHECK_EQUAL(portType.Id(), "portTypeId");
     BOOST_REQUIRE_EQUAL(portType.Fields().size(), 2);
     BOOST_CHECK_EQUAL(portType.Fields()[0].Id(), "firstField");
@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection_error)
     {
         PortField field1("firstField");
         std::vector fields = {field1};
-        return PortType("portTypeId", std::move(fields), {"secondField", "", ""});
+        return PortType("portTypeId", std::move(fields), {"secondField", "", "", ""});
     };
 
     BOOST_CHECK_NO_THROW(shouldNotThrow());

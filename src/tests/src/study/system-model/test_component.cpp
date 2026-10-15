@@ -365,7 +365,7 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_undefined_field)
 {
     PortField field2("field2");
     std::vector portFields2 = {field2};
-    PortType portTypeWithAreaConnection("portType2", std::move(portFields2), {"field2", "", ""});
+    PortType portTypeWithAreaConnection("portType2", std::move(portFields2), {"field2", "", "", ""});
 
     Port portACNoDef("portACNoDef", portTypeWithAreaConnection);
     ModelBuilder model_builder;
@@ -455,7 +455,7 @@ BOOST_AUTO_TEST_CASE(successfully_connect_area_to_port)
 {
     PortField field_flow("flow");
     std::vector portFields = {field_flow};
-    PortType portTypeWithAreaConnection("port-type-id", std::move(portFields), {"flow", "", ""});
+    PortType portTypeWithAreaConnection("port-type-id", std::move(portFields), {"flow", "", "", ""});
 
     Port portACDef("portACDef", portTypeWithAreaConnection);
     std::vector<PortFieldDefinition> portFieldDefs;
