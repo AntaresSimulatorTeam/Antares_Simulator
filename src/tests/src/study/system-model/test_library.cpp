@@ -191,7 +191,7 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection_having_last_field_undefined_
     auto shouldNotThrow = []
     {
         std::vector fields = {PortField("field-1"), PortField("field-2")};
-        return PortType("portTypeId", std::move(fields), {"field-1", "field-2", "field-3"});
+        return PortType("portTypeId", std::move(fields), {"field-1", "field-2", "field-3", ""});
     };
     BOOST_CHECK_NO_THROW(shouldNotThrow());
 }
@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection_having_last_field_undefined_
 BOOST_AUTO_TEST_CASE(port_type_with_area_connection_having_all_fields_defined)
 {
     std::vector fields = {PortField("field-1"), PortField("field-2"), PortField("field-3")};
-    PortType portType("portTypeId", std::move(fields), {"field-3", "field-2", "field-1"});
+    PortType portType("portTypeId", std::move(fields), {"field-3", "field-2", "field-1", ""});
 
     BOOST_CHECK(portType.areaConnection().has_value());
 
