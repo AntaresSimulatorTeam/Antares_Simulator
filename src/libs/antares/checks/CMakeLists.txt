@@ -26,6 +26,7 @@ target_link_libraries(checks
         Antares::study # cpp -> area
         antares-core
         Antares::enums
+        Antares::solverUtils
 )
 
 install(DIRECTORY include/antares

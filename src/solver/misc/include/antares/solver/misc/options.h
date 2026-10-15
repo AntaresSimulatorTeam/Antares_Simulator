@@ -52,6 +52,9 @@ public:
     // In case we print simulation tables, do we print it in csv or parquet ?
     bool parquetFmtForSimuTables = false;
 
+    //! Raw stage list from CLI, validated and converted once the study is known
+    std::string simulationTableStagesStr;
+
     Yuni::String PID;
     bool forceZipOutput = false;
     Antares::Optimization::CmdLineOptimOptions solverOptions;

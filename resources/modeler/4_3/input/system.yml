@@ -10,7 +10,6 @@ system:
                node1.gen2_p = 20
               Valeur fonction objectif : 160
   
-  model-libraries: lib_example_4_3
 
   components:
     - id: node1

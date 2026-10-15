@@ -80,8 +80,8 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
             r.counts.reserveParticipations += area.thermal.list.reserveParticipationsCount();
             r.counts.reserveParticipations += area.shortTermStorage.reserveParticipationsCount();
             r.counts.reserveParticipations += area.hydro.reserveParticipationsCount();
-            r.counts.capacityReservations += area.allCapacityReservations.value()
-                                               .areaCapacityReservations.size();
+            r.counts.capacityReservations += area.allCapacityReservations->areaCapacityReservations
+                                               .size();
         }
 
         r.counts.shortTermStorages += area.shortTermStorage.count();
@@ -438,6 +438,8 @@ void StudyRangeLimits::checkIntegrity() const
 
 void StudyRuntimeInfos::disableAllFilters(Study& study)
 {
+    study.setsOfAreas.disableOutputFilters();
+
     study.areas.each(
       [](Data::Area& area)
       {

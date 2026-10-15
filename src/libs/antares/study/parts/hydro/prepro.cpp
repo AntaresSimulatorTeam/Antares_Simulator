@@ -57,6 +57,7 @@ static bool PreproHydroLoadSettings(PreproHydro* h, const fs::path& filename)
 
 PreproHydro::PreproHydro()
 {
+    reset();
 }
 
 void PreproHydro::reset()

@@ -9,6 +9,7 @@
 
 #include <antares/solver/modeler/ModelerData.h>
 #include <antares/solver/modeler/parameters/modelerParameters.h>
+#include <antares/solver/modeler/parameters/scenarioScope.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
 
@@ -20,12 +21,24 @@ std::optional<ModelerData> loadAll(const std::filesystem::path& studyPath);
 
 ModelerParameters loadParameters(const std::filesystem::path& studyPath);
 
-std::optional<std::pair<std::vector<ModelerStudy::SystemModel::Library>, ResolutionMode>>
-loadLibraries(const std::filesystem::path& studyPath);
+/// Result of loading the model libraries together with the settings taken from optim-config.yml
+struct LoadedLibraries
+{
+    std::vector<ModelerStudy::SystemModel::Library> libraries;
+    ResolutionMode resolutionMode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
+    ScenarioScope scenarioScope;
+};
 
-ModelerStudy::SystemModel::System loadSystem(
-  const std::filesystem::path& studyPath,
-  const std::vector<ModelerStudy::SystemModel::Library>& libraries);
+std::optional<LoadedLibraries> loadLibraries(const std::filesystem::path& studyPath);
+
+struct LoadedSystem
+{
+    ModelerStudy::SystemModel::System system;
+    std::map<std::string, std::vector<ComponentProperty>> componentProperties;
+};
+
+LoadedSystem loadSystem(const std::filesystem::path& studyPath,
+                        const std::vector<ModelerStudy::SystemModel::Library>& libraries);
 
 std::unique_ptr<LinearProblem::Api::ILinearProblemData> loadDataSeries(
   const std::filesystem::path& studyPath);

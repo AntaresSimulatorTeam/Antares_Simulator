@@ -4,6 +4,7 @@
 #ifndef __SOLVER_OPTIMISATION_FUNCTIONS_H__
 #define __SOLVER_OPTIMISATION_FUNCTIONS_H__
 
+#include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/optimization-options/options.h>
 #include <antares/solver/utils/opt_period_string_generator.h>
 #include <antares/writer/i_writer.h>
@@ -30,6 +31,11 @@ namespace Antares::IO::Outputs
 class SimulationTable;
 class OptimisationsSimulationTable;
 } // namespace Antares::IO::Outputs
+
+namespace Antares::Data
+{
+class InactiveComponentsAnalyzer;
+}
 
 using namespace Antares;
 
@@ -60,18 +66,23 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
 
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 
+namespace Antares::Solver::Optimization
+{
 /*!
 ** \brief Appel du solver
 **
 ** \return True si l'operation s'est bien deroulee, false si le probleme n'a pas de solution
 */
-bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
-                         PROBLEME_HEBDO*,
-                         int,
-                         const int,
-                         const OptPeriodStringGenerator&,
-                         Solver::IResultWriter& writer,
-                         IO::Outputs::SimulationTable* simulationTable);
+bool OPT_AppelDuSimplexe(
+  const SingleOptimOptions& options,
+  PROBLEME_HEBDO&,
+  int,
+  int,
+  const OptPeriodStringGenerator&,
+  Solver::IResultWriter& writer,
+  IO::Outputs::SimulationTable* simulationTable,
+  const Antares::Data::InactiveComponentsAnalyzer* inactiveComponents = nullptr);
+} // namespace Antares::Solver::Optimization
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
@@ -103,11 +114,14 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
 void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);
+
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireRampesThermiques(
+  PROBLEME_HEBDO* problemeHebdo,
+  bool Simulation);
+void OPT_DecompteDesVariablesEtDesContraintesRampesThermiques(PROBLEME_HEBDO* problemeHebdo);
+void OPT_InitialiserLesCoutsLineaireRampesThermiques(PROBLEME_HEBDO* problemeHebdo,
+                                                     const int PremierPdtDeLIntervalle,
+                                                     const int DernierPdtDeLIntervalle);
+
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
-LinearProblem::Api::FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo,
-                                                 int NumIntervalle);
-void fillLinearProblem(const LinearProblem::Api::FillContext& fillCtx,
-                       PROBLEME_HEBDO* problemeHebdo,
-                       LinearProblem::OptimEntityContainer& optimEntityContainer,
-                       LinearProblem::BendersDecomposition* bendersDecomposition = nullptr);
 #endif /* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */

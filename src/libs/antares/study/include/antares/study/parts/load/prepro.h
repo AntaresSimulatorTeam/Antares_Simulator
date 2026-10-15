@@ -41,11 +41,6 @@ public:
     */
     bool saveToFolder(const std::string& folder) const;
 
-    /*!
-    ** \brief Reset to default all values
-    */
-    void resetToDefault();
-
 public:
     //! XCast
     Data::XCast xcast;
@@ -56,5 +51,3 @@ private:
 }; // Prepro
 
 } // namespace Antares::Data::Load
-
-#include "prepro.hxx"

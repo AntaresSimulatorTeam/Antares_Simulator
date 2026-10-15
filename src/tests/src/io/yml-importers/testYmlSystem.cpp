@@ -19,12 +19,10 @@ BOOST_AUTO_TEST_CASE(empty_system)
         system:
             id: ""
             description: ""
-            model-libraries: []
             components: []
     )"s;
     YmlSystem::System systemObj = parser.parse(system, "");
     BOOST_CHECK(systemObj.id.empty());
-    BOOST_CHECK(systemObj.libraries.empty());
     BOOST_CHECK(systemObj.components.empty());
 }
 
@@ -38,35 +36,6 @@ BOOST_AUTO_TEST_CASE(simple_id)
     )"s;
     YmlSystem::System systemObj = parser.parse(system, "");
     BOOST_CHECK_EQUAL(systemObj.id, "base_system");
-}
-
-BOOST_AUTO_TEST_CASE(libraries_one_model)
-{
-    YmlSystem::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            model-libraries: [abc]
-    )"s;
-    YmlSystem::System systemObj = parser.parse(system, "");
-    BOOST_CHECK_EQUAL(systemObj.libraries[0], "abc");
-}
-
-BOOST_AUTO_TEST_CASE(libraries_list_of_models)
-{
-    YmlSystem::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            description: 3 model libraries
-            model-libraries: [abc, def, 123]
-            components: []
-    )"s;
-    YmlSystem::System systemObj = parser.parse(system, "");
-    BOOST_CHECK_EQUAL(systemObj.libraries[0], "abc");
-    BOOST_CHECK_EQUAL(systemObj.libraries[1], "def");
-    BOOST_CHECK_EQUAL(systemObj.libraries[2], "123");
-    BOOST_CHECK(systemObj.components.empty());
 }
 
 BOOST_AUTO_TEST_CASE(one_component)
@@ -156,6 +125,11 @@ BOOST_AUTO_TEST_CASE(component_two_parameters)
                       time-dependent: false
                       scenario-dependent: false
                       value: 100
+                  properties:
+                    - id: prop1
+                      value: 1
+                    - id: prop2
+                      value: 2
     )"s;
     YmlSystem::System systemObj = parser.parse(system, "");
     const auto& param = systemObj.components[0].parameters[0];
@@ -168,6 +142,40 @@ BOOST_AUTO_TEST_CASE(component_two_parameters)
     BOOST_CHECK_EQUAL(param2.time_dependent, false);
     BOOST_CHECK_EQUAL(param2.scenario_dependent, false);
     BOOST_CHECK_EQUAL(std::stod(param2.value), 100);
+
+    BOOST_CHECK_EQUAL(systemObj.components[0].properties[0].id, "prop1");
+    BOOST_CHECK_EQUAL(systemObj.components[0].properties[0].value, "1");
+}
+
+BOOST_AUTO_TEST_CASE(component_properties)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            description: one component with one parameter
+            components:
+                - id: N
+                  model: std.node
+                  scenario-group: group-234
+                  parameters:
+                    - id: cost
+                      time-dependent: false
+                      scenario-dependent: false
+                      value: 30
+                  properties:
+                    - id: prop1
+                      value: 1
+                    - id: prop2
+                      value: 2
+    )"s;
+    YmlSystem::System systemObj = parser.parse(system, "");
+    const auto& prop1 = systemObj.components[0].properties[0];
+    const auto& prop2 = systemObj.components[0].properties[1];
+    BOOST_CHECK_EQUAL(prop1.id, "prop1");
+    BOOST_CHECK_EQUAL(prop2.id, "prop2");
+    BOOST_CHECK_EQUAL(prop1.value, "1");
+    BOOST_CHECK_EQUAL(prop2.value, "2");
 }
 
 // --------------------------------------------------------------------------

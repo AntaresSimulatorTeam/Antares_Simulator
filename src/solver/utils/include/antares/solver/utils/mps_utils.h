@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include <yuni/yuni.h>
+
 #include "antares/study/fwd.h"
 
 #include "ortools_utils.h"
@@ -64,7 +65,7 @@ class mpsWriterFactory
 {
 public:
     virtual ~mpsWriterFactory() = default;
-    mpsWriterFactory(mpsExportStatus exportMPS,
+    mpsWriterFactory(Antares::Data::mpsExportStatus exportMPS,
                      bool exportMPSOnError,
                      int current_optim_number,
                      const Antares::LinearProblem::Api::ILinearProblem& linearProblem);
@@ -78,7 +79,7 @@ private:
     bool doWeExportMPS();
 
     // Member data...
-    mpsExportStatus export_mps_;
+    Antares::Data::mpsExportStatus export_mps_;
     bool export_mps_on_error_;
     const Antares::LinearProblem::Api::ILinearProblem& linearProblem_;
     uint current_optim_number_;

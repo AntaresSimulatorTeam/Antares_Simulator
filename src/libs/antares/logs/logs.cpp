@@ -74,6 +74,7 @@ Logger::Logger()
     verbosityLevel = Verbosity::Debug::level;
 #endif
 }
+#endif
 
 std::string timestamp()
 {

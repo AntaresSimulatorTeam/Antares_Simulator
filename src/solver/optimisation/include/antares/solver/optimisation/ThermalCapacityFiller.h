@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
 #include "antares/solver/optim-model-filler/TimeDependentLinearExpression.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"

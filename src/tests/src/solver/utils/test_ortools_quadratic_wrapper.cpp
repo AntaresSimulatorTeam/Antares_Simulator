@@ -9,7 +9,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/solver/utils/ortools_quadratic_wrapper.h>
+#include <antares/solver/optimisation/ortools_quadratic_wrapper.h>
 
 #include "spx_constantes_externes.h"
 static double tolerance = 1e-5;

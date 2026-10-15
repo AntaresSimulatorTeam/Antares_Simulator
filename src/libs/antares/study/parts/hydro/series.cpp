@@ -82,13 +82,6 @@ DataSeriesHydro::DataSeriesHydro():
     maxHourlyPumpPower.reset();
 }
 
-void DataSeriesHydro::copyGenerationTS(const DataSeriesHydro& source)
-{
-    ror.timeSeries = source.ror.timeSeries;
-    storage.timeSeries = source.storage.timeSeries;
-    mingen.timeSeries = source.mingen.timeSeries;
-}
-
 void DataSeriesHydro::reset()
 {
     resizeTS(1);

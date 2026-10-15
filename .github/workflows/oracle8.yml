@@ -70,6 +70,11 @@ jobs:
         echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/vcpkg_cache" >> $GITHUB_ENV
         echo "VCPKG_BINARY_SOURCES=clear;files,$GITHUB_WORKSPACE/vcpkg_cache,readwrite" >> $GITHUB_ENV
 
+    - name: Configure vcpkg asset cache
+      uses: ./.github/workflows/vcpkg-asset-cache
+      with:
+        base-url: ${{ vars.VCPKG_ASSET_BASE_URL }}
+
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary
       uses: actions/cache/restore@v6

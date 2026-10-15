@@ -59,8 +59,7 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt)
               .InternalExcessReserve(capacityReservation.globalReserveIndex, -1)
               .equalTo();
             data.CorrespondanceCntNativesCntOptim[pdt]
-              .reservesIndices.value()
-              .need[capacityReservation.globalReserveIndex]
+              .reservesIndices->need[capacityReservation.globalReserveIndex]
               = builder.data.nombreDeContraintes;
             ConstraintNamer namer(builder.data.NomDesContraintes);
             const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;

@@ -72,11 +72,6 @@ public:
 
 public:
     /*!
-    ** \brief Convert a distribution into its human readable representation
-    */
-    static const char* DistributionToCString(Distribution d);
-
-    /*!
     ** \brief Convert a CString into a probability distribution
     */
     static Distribution StringToDistribution(const std::string& str);
@@ -105,11 +100,6 @@ public:
     */
     ~XCast();
     //@}
-
-    /*!
-    ** \brief Reset to default values
-    */
-    void resetToDefaultValues();
 
     /*!
     ** \brief Copy settings from another XCast struct

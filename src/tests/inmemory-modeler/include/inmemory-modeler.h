@@ -16,6 +16,7 @@
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/model.h"
+#include "antares/study/system-model/optimConfig.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::LinearProblem;
@@ -36,6 +37,7 @@ struct VariableData
     Antares::Expressions::Nodes::Node* ub;
     bool timeDependent = true;
     bool scenarioDependent = true;
+    Antares::Solver::Config::Location location = Antares::Solver::Config::Location::SUBPROBLEMS;
 };
 
 struct ConstraintData

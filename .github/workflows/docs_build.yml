@@ -1,0 +1,26 @@
+name: Docs Build Check
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check external link validity
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: --no-progress './**/*.md'
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.11' 
+
+      - name: Install dependencies with pip
+        run: pip install -r requirements-doc.txt
+
+      # Fail notably if an internal link is incorrect
+      - name: Build MkDocs
+        run: mkdocs build --strict

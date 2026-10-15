@@ -42,18 +42,11 @@ public:
     */
     bool saveToFolder(const std::string& folder) const;
 
-    /*!
-    ** \brief Reset to default all values
-    */
-    void resetToDefault();
-
     //! XCast
     Data::XCast xcast;
 
 }; // Prepro
 
 } // namespace Antares::Data::Wind
-
-#include "prepro.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_H__

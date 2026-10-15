@@ -8,6 +8,7 @@
 #include "antares/io/inputs/yml-system/converter.h"
 #include "antares/io/inputs/yml-system/parser.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"

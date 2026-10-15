@@ -365,7 +365,9 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_undefined_field)
 {
     PortField field2("field2");
     std::vector portFields2 = {field2};
-    PortType portTypeWithAreaConnection("portType2", std::move(portFields2), {"field2", "", ""});
+    PortType portTypeWithAreaConnection("portType2",
+                                        std::move(portFields2),
+                                        {"field2", "", "", ""});
 
     Port portACNoDef("portACNoDef", portTypeWithAreaConnection);
     ModelBuilder model_builder;
@@ -412,11 +414,52 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_thermal_capacity_to_undefined_field)
     BOOST_CHECK(component.portToThermalCapacityConnections().empty());
 }
 
+BOOST_AUTO_TEST_CASE(connect_area_to_port_with_price_field_of_the_port_type)
+{
+    PortField field_flow("flow");
+    PortField field_price("price");
+    PortType portType("port-type-id", {field_flow, field_price}, {"flow", "", "", "price"});
+
+    Port port("port", portType);
+    ModelBuilder model_builder;
+    auto model = model_builder.withId("myModel").withPorts({port}).build();
+    auto component = component_builder.withId("myComponent")
+                       .withModel(&model)
+                       .withScenarioGroupId("sg")
+                       .build();
+
+    BOOST_CHECK_NO_THROW(component.addAreaConnection("port", "area1"));
+    BOOST_CHECK_EQUAL(component.areaConnectedToPort("port").value(), "area1");
+}
+
+BOOST_AUTO_TEST_CASE(connect_area_to_port_with_price_field_not_in_port_type__exception_raised)
+{
+    PortField field_flow("flow");
+    PortType portType("port-type-id", {field_flow}, {"flow", "", "", "price"});
+
+    Port port("port", portType);
+    ModelBuilder model_builder;
+    auto model = model_builder.withId("myModel").withPorts({port}).build();
+    auto component = component_builder.withId("myComponent")
+                       .withModel(&model)
+                       .withScenarioGroupId("sg")
+                       .build();
+
+    BOOST_CHECK_EXCEPTION(component.addAreaConnection("port", "area1"),
+                          std::invalid_argument,
+                          checkMessage("Cannot connect area 'area1' to port 'port' of component "
+                                       "'myComponent': price field 'price' is not a field of "
+                                       "port type 'port-type-id'"));
+    BOOST_CHECK(!component.areaConnectedToPort("port").has_value());
+}
+
 BOOST_AUTO_TEST_CASE(successfully_connect_area_to_port)
 {
     PortField field_flow("flow");
     std::vector portFields = {field_flow};
-    PortType portTypeWithAreaConnection("port-type-id", std::move(portFields), {"flow", "", ""});
+    PortType portTypeWithAreaConnection("port-type-id",
+                                        std::move(portFields),
+                                        {"flow", "", "", ""});
 
     Port portACDef("portACDef", portTypeWithAreaConnection);
     std::vector<PortFieldDefinition> portFieldDefs;
@@ -495,7 +538,7 @@ BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_fails_because_port_
     PortField from_area_bound("from-area-bound");
     std::vector portFields = {flow, to_area_bound, from_area_bound};
     //  area-connection:
-    AreaConnection area_connection = {"flow", "to-area-bound", "from-area-bound"};
+    AreaConnection area_connection = {"flow", "to-area-bound", "from-area-bound", ""};
     //  Finally : the port type
     PortType portTypeWithAreaConnection("port-type-id", std::move(portFields), area_connection);
 
@@ -538,7 +581,7 @@ BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_is_successful)
     PortField from_area_bound("from-area-bound");
     std::vector portFields = {flow, to_area_bound, from_area_bound};
     //  area-connection:
-    AreaConnection area_connection = {"flow", "to-area-bound", "from-area-bound"};
+    AreaConnection area_connection = {"flow", "to-area-bound", "from-area-bound", ""};
     //  Finally : the port type
     PortType portTypeWithAreaConnection("port-type-id", std::move(portFields), area_connection);
 

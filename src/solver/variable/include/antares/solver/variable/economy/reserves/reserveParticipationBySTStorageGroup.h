@@ -111,7 +111,7 @@ public:
             auto& area = state.area;
             int column = 0;
             for (const auto& reserveID:
-                 area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+                 area->allCapacityReservations->areaCapacityReservations | std::views::keys)
             {
                 if (area->allCapacityReservations->reserveGroupPartSTS.contains(reserveID))
                 {
@@ -119,8 +119,7 @@ public:
                          area->allCapacityReservations->reserveGroupPartSTS.at(reserveID))
                     {
                         pValuesForTheCurrentYear[numSpace][column].hour[state.hourInTheYear]
-                          += state.reserveData.value()
-                               .at(area->index)
+                          += state.reserveData->at(area->index)
                                .reserveParticipationPerGroupForYear[state.hourInTheYear]
                                .shortTermStorageGroupsReserveParticipation[group][reserveID];
                         column++;
@@ -149,7 +148,7 @@ public:
             assert(results.data.area != nullptr);
             int column = 0;
             for (const auto& reserveID:
-                 results.data.area->allCapacityReservations.value().areaCapacityReservations
+                 results.data.area->allCapacityReservations->areaCapacityReservations
                    | std::views::keys)
             {
                 if (results.data.area->allCapacityReservations->reserveGroupPartSTS.contains(

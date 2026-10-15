@@ -17,6 +17,9 @@ Area::Area():
     reserves(fhrMax, HOURS_PER_YEAR),
     miscGen(fhhMax, HOURS_PER_YEAR)
 {
+    // Matrix(width, height) allocates without zero-filling; reserves/miscGen must start at 0.
+    reserves.zero();
+    miscGen.zero();
 }
 
 Area::Area(const std::string& name):
@@ -91,6 +94,25 @@ void Area::createMissingData()
 {
     createMissingTimeSeries();
     createMissingPrepros();
+
+    // Ensure hydro, load, solar and wind matrices are sized to valid defaults
+    hydro.interDailyBreakdown = 1.;
+    hydro.intraDailyModulation = 24.;
+    hydro.intermonthlyBreakdown = 1.;
+    hydro.allocation.clear();
+    hydro.allocation.setDefaultForArea(id);
+    hydro.inflowPattern.reset(1, DAYS_PER_YEAR);
+    hydro.inflowPattern.fillColumn(0, 1.0);
+    hydro.waterValues.reset(101, DAYS_PER_YEAR);
+    hydro.dailyNbHoursAtGenPmax.reset(1, DAYS_PER_YEAR);
+    hydro.dailyNbHoursAtGenPmax.fillColumn(0, 24.);
+    hydro.dailyNbHoursAtPumpPmax.reset(1, DAYS_PER_YEAR);
+    hydro.dailyNbHoursAtPumpPmax.fillColumn(0, 24.);
+    hydro.creditModulation.reset(101, 2);
+    hydro.creditModulation.fill(1);
+    load.series.reset();
+    solar.series.reset();
+    wind.series.reset();
 }
 
 void Area::createMissingTimeSeries()
@@ -99,6 +121,7 @@ void Area::createMissingTimeSeries()
     {
         hydro.series = std::make_unique<DataSeriesHydro>();
     }
+    hydro.series->reset();
 }
 
 void Area::createMissingPrepros()
@@ -120,38 +143,6 @@ void Area::createMissingPrepros()
         hydro.prepro = std::make_unique<PreproHydro>();
     }
     thermal.list.ensureDataPrepro();
-}
-
-void Area::resetToDefaultValues()
-{
-    // Nodal optimization
-    nodalOptimization = anoAll;
-
-    // Spread
-    spreadUnsuppliedEnergyCost = 0.;
-    spreadSpilledEnergyCost = 0.;
-
-    // Filtering
-    filterSynthesis = (unsigned int)filterAll;
-    filterYearByYear = (unsigned int)filterAll;
-
-    // Load
-    load.resetToDefault();
-    // Solar
-    solar.resetToDefault();
-    // Wind
-    wind.resetToDefault();
-    // Hydro
-    hydro.reset();
-    hydro.allocation.fromArea(id, 1.);
-    // Thermal
-    thermal.reset();
-    // Renewable
-    renewable.reset();
-    // Fatal hors hydro
-    miscGen.reset(fhhMax, HOURS_PER_YEAR);
-    // reserves
-    reserves.reset(fhrMax, HOURS_PER_YEAR);
 }
 
 void Area::resizeAllTimeseriesNumbers(unsigned int nbYears)

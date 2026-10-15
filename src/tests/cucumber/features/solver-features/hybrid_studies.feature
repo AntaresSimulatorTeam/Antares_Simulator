@@ -32,16 +32,93 @@ Feature: hybrid (simulator+modeler) studies
       | 0-51  | load1     | consumption.flow_field |           | 0-4      | -100  |
 
   @short
+  Scenario: Hybrid area-connection price field lets a GEMS component compute the legacy area's marginal price
+    # gen1 (max_p=60, prop_cost=0.3) is cheaper than gen2 (max_p=100, prop_cost=5.0); together
+    # they cover load1's constant 100 MW demand. gen1 is pinned at its 60 MW cap, so gen2 (at
+    # 40 MW, strictly inside its bound) sets the area's marginal price: 5.0.
+    # gen1's "profit" extra-output -- (sum_connections(generation.price) - prop_cost) * p --
+    # is therefore (5.0 - 0.3) * 60 = 282, not 0: its own cost no longer determines the price it
+    # sees. If the area-connection 'price' field were broken (e.g. always 0), profit would be
+    # -18 instead (-0.3 * 60). gen2, being the marginal unit, earns 0 profit, same as gen1 did
+    # in the simpler single-generator case.
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/hybrid_price_connection"
+    When I run antares simulator with --output=all
+    Then the simulation succeeds
+    And the modeler outputs contain the following entries with relative tolerance 0.001
+      | block | component | output | timestep  | scenario | value |
+      |       | gen1      | profit | 0-23      | 0-4      | 282   |
+      |       | gen1      | profit | 8712-8735 | 0-4      | 282   |
+    And the modeler outputs contain the following entries with relative tolerance 10
+      | block | component | output | timestep  | scenario | value |
+      |       | gen2      | profit | 0-23      | 0-4      | 0     |
+      |       | gen2      | profit | 8712-8735 | 0-4      | 0     |
+
+  @short
+  Scenario: Hybrid area-connection price field is 0 on a MILP resolution
+    # Same study as the scenario above, run with unit-commitment-mode = milp. OR-Tools does not
+    # provide dual values on a MIP problem (MPConstraint::dual_value() fails), so the legacy
+    # area's price seen by the components is 0, as for legacy marginal costs in MILP.
+    # gen1 profit is therefore (0 - 0.3) * 60 = -18 and gen2's is (0 - 5.0) * 40 = -200.
+    # The run must not fail on the unavailable duals.
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/hybrid_price_connection"
+    And the unit commitment mode is "milp"
+    And the linear solver is highs
+    When I run antares simulator with --output=all
+    Then the simulation succeeds
+    And the modeler outputs contain the following entries with relative tolerance 0.001
+      | block | component | output | timestep  | scenario | value |
+      |       | gen1      | profit | 0-23      | 0-4      | -18   |
+      |       | gen1      | profit | 8712-8735 | 0-4      | -18   |
+      |       | gen2      | profit | 0-23      | 0-4      | -200  |
+      |       | gen2      | profit | 8712-8735 | 0-4      | -200  |
+
+  @short
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=6200) (168h simplex)
     # copy of short test 002, with no legacy thermal cluster, replaced by one component
+    #
+    # The reference folder holds the two optimisation stages only, which is
+    # every table the solver wrote before the post-process stages existed. The
+    # run is restricted to those two so the comparison stays a comparison of
+    # contents: adding a stage would otherwise silently go unchecked here
+    # (compare_folders walks the reference side), and the reference would have
+    # to be regenerated for every stage the solver learns to emit. The full set
+    # is covered by the scenario below.
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
-    When I run antares simulator with --output=all
+    When I run antares simulator with --output=all --simulation-table-stages=optim-nb-1,optim-nb-2
     Then the simulation succeeds
     And the simulation takes less than 5 seconds
     # for now, modeler costs does not figure in system cost txt
     And the annual system cost is 0
     And in area "AREA", during year 1, loss of load lasts 0 hours
+    And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2"
     And simulation tables match the references
+
+  @short
+  Scenario: An unrestricted hybrid run also writes the post-process stages
+    # Counterpart to the scenario above: with no --simulation-table-stages the
+    # run produces every stage it reaches. 3_6_1 has no adequacy patch, so
+    # adq-patch is not among them -- peak-shaving is the one post-process
+    # stage this study runs.
+    #
+    # The two optimisation stages are the ones the reference pins, so they are
+    # checked here only for being the same tables, unchanged by the extra stage
+    # being written alongside them. peak-shaving is checked on its own values:
+    # the study has no managed hydro, so remix moves nothing and the stage
+    # carries optim-nb-2's solution forward.
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
+    When I run antares simulator with --output=all
+    Then the simulation succeeds
+    And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2, peak-shaving"
+    And the modeler outputs are read from stage "optim-nb-2"
+    And the modeler outputs contain the following entries
+      | block | component | output | timestep | scenario | value |
+      | 0     | gen1      | p      | 0        | 0        | 3878  |
+      | 0     | gen1      | p      | 1        | 0        | 3572  |
+    And the modeler outputs are read from stage "peak-shaving"
+    And the modeler outputs contain the following entries
+      | block | component | output | timestep | scenario | value |
+      | 0     | gen1      | p      | 0        | 0        | 3878  |
+      | 0     | gen1      | p      | 1        | 0        | 3572  |
 
   @short
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=5900) (168h simplex)
@@ -127,6 +204,14 @@ Feature: hybrid (simulator+modeler) studies
     And the simulation takes less than 10 seconds
 	And the objective value is 186360
 	Then for first week, area balance RHS (for area unique) is first -12, -13, -14, -15, -16, then equals constant -11
+
+  @short
+  Scenario: Scenario-independent GEMS time-series ignores scenario builder
+
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/parameter-scenario-independent/"
+    When I run antares simulator with --named-mps-problems --output=simulation-tables
+    Then the simulation succeeds
+    And the simulation takes less than 10 seconds
 
   @short
   Scenario: Use simulation week properly for GEMS components

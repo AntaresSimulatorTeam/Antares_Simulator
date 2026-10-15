@@ -62,7 +62,7 @@ inline void ReserveParticipationBySTStorage::populateHourlyValues(State& state,
 {
     if (hasIndexMapping(state.study, state.area))
     {
-        const auto& resData = state.reserveData.value().at(state.area->index);
+        const auto& resData = state.reserveData->at(state.area->index);
         const auto& hourlyData = resData.reserveParticipationPerSTStorageClusterForYear.at(
           state.hourInTheYear);
         for (const auto& [clusterName, reserveMap]: hourlyData)

@@ -41,11 +41,6 @@ public:
     */
     bool saveToFolder(const std::string& folder) const;
 
-    /*!
-    ** \brief Reset to default all values
-    */
-    void resetToDefault();
-
 public:
     //! XCast
     Data::XCast xcast;
@@ -57,7 +52,5 @@ private:
 }; // Prepro
 
 } // namespace Antares::Data::Solar
-
-#include "prepro.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_SOLAR_PREPRO_H__

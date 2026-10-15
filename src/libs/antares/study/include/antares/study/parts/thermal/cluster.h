@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-#include <antares/solver/ts-generator/law.h>
+#include <antares/study/parts/thermal/law.h>
 
 #include "../../fwd.h"
 #include "../common/cluster.h"
@@ -240,6 +240,26 @@ public:
     double marketBidCost = 0;
     //! Variable O&M cost (euros/MWh)
     double variableomcost = 0;
+
+    class Ramping
+    {
+    public:
+        //! Cost of power increase (euros/MW)
+        double powerIncreaseCost = 0.;
+        //! Cost of power decrease (euros/MW)
+        double powerDecreaseCost = 0.;
+        //! Maximum hourly upward power ramping rate (MW/hour)
+        double maxUpwardPowerRampingRate = 0.;
+        //! Maximum hourly downward power ramping rate (MW/hour)
+        double maxDownwardPowerRampingRate = 0.;
+
+        void reset();
+        bool checkValidity(const Area* area, const std::string& clusterName) const;
+        friend std::ostream& operator<<(std::ostream&, const Ramping& ramping);
+    };
+
+    std::optional<Ramping> ramping;
+
     //@}
 
     /*!

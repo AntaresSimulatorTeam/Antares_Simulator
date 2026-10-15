@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-
 #include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 
 #include <boost/algorithm/string.hpp>
@@ -20,7 +19,9 @@ void ScenarioGroupRepository::addScenario(const std::string& groupId,
     scenarioGroups_[gId] = std::move(scenario);
 }
 
-class DefaultScenario final: public LinearProblem::Api::IScenario
+namespace
+{
+class DefaultScenario final: public Api::IScenario
 {
 public:
     using IScenario::IScenario;
@@ -29,10 +30,15 @@ public:
     {
         return 1; // Default rank for empty groupId
     }
-};
 
-const Api::IScenario& ScenarioGroupRepository::scenario(
-  const std::string& groupId) const
+    [[nodiscard]] bool hasYear(Year) const override
+    {
+        return true;
+    }
+};
+} // namespace
+
+const Api::IScenario& ScenarioGroupRepository::scenario(const std::string& groupId) const
 {
     // A component requires a group ID
     if (groupId.empty())
@@ -48,5 +54,16 @@ const Api::IScenario& ScenarioGroupRepository::scenario(
         throw DoesNotExist(gId);
     }
     return *scenarioGroups_.at(gId);
+}
+
+bool ScenarioGroupRepository::contains(const std::string& groupId) const
+{
+    if (groupId.empty())
+    {
+        return false;
+    }
+    std::string gId = groupId;
+    boost::to_upper(gId);
+    return scenarioGroups_.contains(gId);
 }
 } // namespace Antares::LinearProblem

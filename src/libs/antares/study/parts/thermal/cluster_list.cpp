@@ -29,10 +29,6 @@ std::string ThermalClusterList::typeID() const
     return "thermal";
 }
 
-static bool ThermalClusterLoadFromSection(const std::string& areaName,
-                                          ThermalCluster& cluster,
-                                          const IniFile::Section& section);
-
 void ThermalClusterList::rebuildIndex() const
 {
     unsigned int indx = 0;
@@ -64,8 +60,7 @@ std::size_t ThermalClusterList::reserveParticipationsCount() const
       {
           if (cluster->reserveParticipationContainer.has_value() && cluster->isEnabled())
           {
-              return total
-                     + cluster->reserveParticipationContainer.value().reserveParticipationsCount();
+              return total + cluster->reserveParticipationContainer->reserveParticipationsCount();
           }
           else
           {
@@ -80,7 +75,7 @@ std::size_t ThermalClusterList::capacityReservationsCount() const
     for (auto& cluster: allClusters_)
     {
         for (const auto& [_, reserveParticipation]:
-             cluster->reserveParticipationContainer.value().getReservesParticipations())
+             cluster->reserveParticipationContainer->getReservesParticipations())
         {
             const CapacityReservation* reservationPtr = reserveParticipation.capacityReservation;
             uniqueReservations.insert(reservationPtr);
@@ -90,7 +85,9 @@ std::size_t ThermalClusterList::capacityReservationsCount() const
     return uniqueReservations.size();
 }
 
-bool ThermalClusterList::loadFromFolder(const fs::path& folder, Area* area)
+bool ThermalClusterList::loadFromFolder(const fs::path& folder,
+                                        Area* area,
+                                        bool rampingEnabledGlobal)
 {
     assert(area && "A parent area is required");
 
@@ -121,7 +118,7 @@ bool ThermalClusterList::loadFromFolder(const fs::path& folder, Area* area)
         auto cluster = std::make_shared<ThermalCluster>(area);
 
         // Load data of a thermal cluster from a ini file section
-        if (!ThermalClusterLoadFromSection(area->name, *cluster, *section))
+        if (!ThermalClusterLoadFromSection(area->name, *cluster, *section, rampingEnabledGlobal))
         {
             continue;
         }
@@ -291,6 +288,31 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
         return p->value.to<double>(cluster.startupCost);
     }
 
+    // initialize the ramping attributes only if ramping is enabled, else ignore these properties
+    if (p->key == "power-increase-cost")
+    {
+        return cluster.ramping ? p->value.to<double>(cluster.ramping->powerIncreaseCost) : true;
+    }
+    if (p->key == "power-decrease-cost")
+    {
+        return cluster.ramping ? p->value.to<double>(cluster.ramping->powerDecreaseCost) : true;
+    }
+    if (p->key == "max-upward-power-ramping-rate")
+    {
+        return cluster.ramping ? p->value.to<double>(cluster.ramping->maxUpwardPowerRampingRate)
+                               : true;
+    }
+    if (p->key == "max-downward-power-ramping-rate")
+    {
+        return cluster.ramping ? p->value.to<double>(cluster.ramping->maxDownwardPowerRampingRate)
+                               : true;
+    }
+    // we ignore this property as it was already handled in ThermalClusterLoadFromSection
+    if (p->key == "ramping-enabled")
+    {
+        return true;
+    }
+
     if (p->key == "unitcount")
     {
         return p->value.to<unsigned int>(cluster.unitCount);
@@ -320,7 +342,8 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
 
 bool ThermalClusterLoadFromSection(const std::string& areaName,
                                    ThermalCluster& cluster,
-                                   const IniFile::Section& section)
+                                   const IniFile::Section& section,
+                                   bool rampingEnabledGlobal)
 {
     if (section.name.empty())
     {
@@ -328,6 +351,26 @@ bool ThermalClusterLoadFromSection(const std::string& areaName,
     }
 
     cluster.setName(section.name);
+
+    if (rampingEnabledGlobal)
+    {
+        const auto* rampingEnabledProperty = section.find("ramping-enabled");
+        if (rampingEnabledProperty != nullptr)
+        {
+            bool rampingEnabled = false;
+            const bool attributeOK = rampingEnabledProperty->value.to<bool>(rampingEnabled);
+
+            if (!attributeOK)
+            {
+                logs.warning() << '`' << areaName << "`: thermal cluster: `" << section.name
+                               << "`: Invalid key/value";
+            }
+            else if (rampingEnabled)
+            {
+                cluster.ramping.emplace();
+            }
+        }
+    }
 
     if (section.firstProperty)
     {
