@@ -15,7 +15,7 @@ var namespaces_dup =
         [ "checkCO2CostColumnNumber", "checkLoadedInputData_8cpp.html#ab15d813808d9983505b361d5882a5c84", null ],
         [ "checkForDuplicates", "duplicates_8cpp.html#ab6937710a3bff3b3b2d555d27459d50b", null ],
         [ "checkFuelCostColumnNumber", "checkLoadedInputData_8cpp.html#a8183b9a83d9defa169bec06a5f1a7ce0", null ],
-        [ "checkMinStablePower", "checkLoadedInputData_8cpp.html#a2cd93092aff626ea278cca897f3fb21c", null ],
+        [ "checkMinStablePower", "checkLoadedInputData_8cpp.html#ae181dd7d8c310f73f5cfc54f8a4d44a3", null ],
         [ "checkSimplexRangeHydroHeuristic", "checkLoadedInputData_8cpp.html#a6681ead9409c90f4191fb0bcf528acd5", null ],
         [ "checkSimplexRangeHydroPricing", "checkLoadedInputData_8cpp.html#ab5ef19a100456813c5f3745c71044c46", null ],
         [ "checkSimplexRangeUnitCommitmentMode", "checkLoadedInputData_8cpp.html#afda32d78952ecbc2917972f4107b9a26", null ],
