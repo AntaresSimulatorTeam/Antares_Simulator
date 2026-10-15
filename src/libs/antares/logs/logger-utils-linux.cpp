@@ -31,10 +31,8 @@ ColorEnabler::ColorEnabler([[maybe_unused]] std::ostream& out)
 
 std::string ColorEnabler::getLinuxColor(const Color& color)
 {
-    close_with_color_ = "";
     if (color != Color::none)
     {
-        close_with_color_ = linuxColor(Color::none);
         return linuxColor(color);
     }
     return {};
@@ -52,7 +50,7 @@ std::string ColorEnabler::msgColor(const LevelInfo& level)
 
 std::string ColorEnabler::removeColor()
 {
-    return close_with_color_;
+    return linuxColor(Color::none);
 }
 
 void setLocalTime(std::tm* tmBuffer, const std::time_t* now)

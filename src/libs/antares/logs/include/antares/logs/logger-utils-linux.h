@@ -28,7 +28,6 @@ public:
 
 private:
     std::string getLinuxColor(const Color& color);
-    std::string close_with_color_;
 };
 
 void setLocalTime(std::tm* tmBuffer, const std::time_t* now);
