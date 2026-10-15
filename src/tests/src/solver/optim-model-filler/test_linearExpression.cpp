@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(multiply_two_linear_expressions_containing_variables__excep
 
     BOOST_CHECK_EXCEPTION(linearExpression1 *= linearExpression2,
                           std::invalid_argument,
-                          checkMessage("A linear expression can't have quadratic terms."));
+                          containsMessage("A linear expression can't have quadratic terms."));
 }
 
 BOOST_AUTO_TEST_CASE(divide_linear_expression_by_scalar)
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE(divide_scalar_by_linear_expression__exception_raised)
 
     BOOST_CHECK_EXCEPTION(someScalar / linearExpression,
                           std::invalid_argument,
-                          checkMessage("A linear expression can't have a variable as a dividend."));
+                          containsMessage("A linear expression can't have a variable as a dividend."));
 }
 
 BOOST_AUTO_TEST_CASE(negate_linear_expression)

@@ -408,7 +408,7 @@ BOOST_FIXTURE_TEST_CASE(TryToConnectTwoSenderPorts, PrepareYaml)
     YmlSystem::System systemObj = parserSystem.parse(system, "");
     BOOST_CHECK_EXCEPTION(SystemConverter::convert(systemObj, libraries),
                           InputError,
-                          checkMessage("In connection between components 'G' and 'D': Field "
+                          containsMessage("In connection between components 'G' and 'D': Field "
                                        "'port_name' is Sender in both ports 'injection_port' "
                                        "and 'injection_port'"));
 }
@@ -432,7 +432,7 @@ BOOST_FIXTURE_TEST_CASE(TryToConnectTwoReceiverPorts, PrepareYaml)
     YmlSystem::System systemObj = parserSystem.parse(system, "");
     BOOST_CHECK_EXCEPTION(SystemConverter::convert(systemObj, libraries),
                           InputError,
-                          checkMessage("In connection between components 'N' and 'N2': Field "
+                          containsMessage("In connection between components 'N' and 'N2': Field "
                                        "'port_name' is Receiver in both ports 'injection_port' "
                                        "and 'injection_port'"));
 }
@@ -457,6 +457,6 @@ BOOST_FIXTURE_TEST_CASE(DuplicatedCompo, PrepareYaml)
                                                    {ModelConverter::convert(
                                                      YmlModel::Parser().parse(libraryYaml_1))}),
                           InputError,
-                          checkMessage("System has at least two components with the same id "
+                          containsMessage("System has at least two components with the same id "
                                        "('N'), this is not supported"));
 }

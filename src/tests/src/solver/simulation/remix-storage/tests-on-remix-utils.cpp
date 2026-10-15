@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(min_on_subrange_exclude_last_element_of_range)
 BOOST_AUTO_TEST_CASE(vector_is_empty___exception_raised)
 {
     std::string err_msg = "call min_on_subrange on an empty vector";
-    BOOST_CHECK_EXCEPTION(min_on_subrange({}, 2, 7), std::invalid_argument, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(min_on_subrange({}, 2, 7), std::invalid_argument, containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(hours_h_and_H_are_equals___vector_min_is_not_defined)
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE(hours_h_and_H_are_equals___vector_min_is_not_defined)
     std::string err_msg = "call min_on_subrange with inconsistant hours";
     BOOST_CHECK_EXCEPTION(min_on_subrange({1, 2, 3}, 2, 2),
                           std::invalid_argument,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(hour_h_greater_than_H___exception_raised)
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE(hour_h_greater_than_H___exception_raised)
     std::string err_msg = "call min_on_subrange with inconsistant hours";
     BOOST_CHECK_EXCEPTION(min_on_subrange({1, 2}, 1, 0),
                           std::invalid_argument,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(hour_h_negative___exception_raised)
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE(hour_h_negative___exception_raised)
     std::string err_msg = "call of min_on_subrange : hour out of bound";
     BOOST_CHECK_EXCEPTION(min_on_subrange({1, 2}, -1, 1),
                           std::invalid_argument,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(hour_H_too_large___exception_raised)
@@ -156,7 +156,7 @@ BOOST_AUTO_TEST_CASE(hour_H_too_large___exception_raised)
     std::string err_msg = "call of min_on_subrange : hour out of bound";
     BOOST_CHECK_EXCEPTION(min_on_subrange({1, 2}, -1, 2),
                           std::invalid_argument,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
