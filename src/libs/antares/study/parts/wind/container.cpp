@@ -3,11 +3,7 @@
 
 #include "antares/study/parts/wind/container.h"
 
-#include <yuni/yuni.h>
-
 #include "antares/study/study.h"
-
-using namespace Yuni;
 
 namespace Antares::Data::Wind
 {

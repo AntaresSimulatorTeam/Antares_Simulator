@@ -8,10 +8,6 @@
 #include <string>
 #include <vector>
 
-#include <yuni/yuni.h>
-#include <yuni/core/fwd.h>
-#include <yuni/core/string.h>
-
 namespace Antares::Data
 {
 class Sets;
@@ -21,7 +17,7 @@ class Sets;
 class VariablePrintInfo final
 {
 public:
-    VariablePrintInfo(uint dataLvl, uint fileLvl);
+    VariablePrintInfo(unsigned int dataLvl, unsigned int fileLvl);
     ~VariablePrintInfo() = default;
 
     // Do we enable or disable variable's print in output reports ?
@@ -29,15 +25,15 @@ public:
     bool isPrinted() const;
     void reverse();
 
-    uint getMaxColumnsCount();
-    void setMaxColumns(uint maxColumnsNumber);
+    unsigned int getMaxColumnsCount();
+    void setMaxColumns(unsigned int maxColumnsNumber);
 
-    bool isPrintedOnDataLevel(uint dataLevel) const
+    bool isPrintedOnDataLevel(unsigned int dataLevel) const
     {
         return dataLevel_ & dataLevel;
     }
 
-    bool isPrintedOnFileLevel(uint fileLevel) const
+    bool isPrintedOnFileLevel(unsigned int fileLevel) const
     {
         return fileLevel_ & fileLevel;
     }
@@ -49,15 +45,15 @@ private:
     // The number of columns the output variable takes in a SYNTHESIS report.
     // Recall that synthesis reports always contain more columns than
     // any other reports (for instance year-by-year reports)
-    uint maxNumberColumns_ = 0;
+    unsigned int maxNumberColumns_ = 0;
 
     // Which reports the output variable has columns in ?
     // Example : areas/values-<time-interval>.txt
     // dataLevel can be : areas, links, bindingConstraint
     // fileLevel can be : values-<time-interval>.txt, details-<time-interval>.txt,
     // id-<time-interval>.txt, ...
-    uint dataLevel_ = 0;
-    uint fileLevel_ = 0;
+    unsigned int dataLevel_ = 0;
+    unsigned int fileLevel_ = 0;
 };
 
 class AllVariablesPrintInfo;
@@ -66,7 +62,7 @@ class variablePrintInfoCollector final
 {
 public:
     variablePrintInfoCollector(AllVariablesPrintInfo* allvarsprintinfo);
-    void add(const AnyString& name, uint dataLevel, uint fileLevel);
+    void add(const std::string& name, unsigned int dataLevel, unsigned int fileLevel);
 
 private:
     AllVariablesPrintInfo* allvarsinfo;
@@ -84,14 +80,14 @@ public:
 
     void add(std::string name, VariablePrintInfo v);
     void clear();
-    VariablePrintInfo& operator[](uint i);
+    VariablePrintInfo& operator[](unsigned int i);
     size_t size() const;
     bool exists(std::string name);
 
     void setPrintStatus(std::string varname, bool printStatus);
     void setPrintStatus(unsigned int index, bool printStatus);
 
-    void setMaxColumns(std::string varname, uint maxColumnsNumber);
+    void setMaxColumns(std::string varname, unsigned int maxColumnsNumber);
     std::string name_of(unsigned int index) const;
 
     void prepareForSimulation(bool isThematicTrimmingEnabled,
@@ -100,17 +96,17 @@ public:
     // Classic search, then get the print status
     bool isPrinted(std::string var_name) const;
 
-    uint getTotalMaxColumnsCount() const
+    unsigned int getTotalMaxColumnsCount() const
     {
         return totalMaxColumnsCount_;
     }
 
-    uint getNbSelectedZonalVars() const
+    unsigned int getNbSelectedZonalVars() const
     {
         return numberSelectedAreaVariables;
     }
 
-    uint getNbSelectedLinkVars() const
+    unsigned int getNbSelectedLinkVars() const
     {
         return numberSelectedLinkVariables;
     }
@@ -135,12 +131,12 @@ private:
 
     // Max columns count a report of any kind can contain, depending on the number of selected
     // variables. The less variables are selected, the smallest this count is.
-    uint totalMaxColumnsCount_ = 0;
+    unsigned int totalMaxColumnsCount_ = 0;
 
     // Number of selected zonal variables
-    uint numberSelectedAreaVariables = 0;
+    unsigned int numberSelectedAreaVariables = 0;
     // Number of selected link variables
-    uint numberSelectedLinkVariables = 0;
+    unsigned int numberSelectedLinkVariables = 0;
 };
 
 } // namespace Antares::Data

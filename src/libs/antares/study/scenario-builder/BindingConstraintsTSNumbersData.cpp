@@ -26,16 +26,16 @@ bool BindingConstraintsTSNumberData::apply(Study& study)
           {
               logs.error("Group with name '" + groupName + "' does not exists");
           }
-          uint errors = 0;
-          CString<512, false> logprefix;
-          logprefix.clear() << "Binding constraints: group '" << groupName << "': ";
+          unsigned int errors = 0;
+          std::string logprefix;
+          logprefix = "Binding constraints: group '" + groupName + "': ";
           return ApplyToMatrix(errors, logprefix, *group, tsNumbers[0], get_tsGenCount(study));
       });
 }
 
 bool BindingConstraintsTSNumberData::reset(const Study& study)
 {
-    const uint nbYears = study.parameters.nbYears;
+    const unsigned int nbYears = study.parameters.nbYears;
     std::ranges::for_each(study.bindingConstraintsGroups,
                           [this, &nbYears](const auto& group)
                           {
@@ -46,8 +46,8 @@ bool BindingConstraintsTSNumberData::reset(const Study& study)
 }
 
 void BindingConstraintsTSNumberData::setTSnumber(const std::string& group_name,
-                                                 const uint year,
-                                                 uint value)
+                                                 const unsigned int year,
+                                                 unsigned int value)
 {
     auto& group_ts_numbers = rules_[group_name];
     if (year < group_ts_numbers.height)

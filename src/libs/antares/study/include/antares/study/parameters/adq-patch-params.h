@@ -6,8 +6,6 @@
 #include <string>
 #include <vector>
 
-#include <yuni/core/string.h>
-
 #include <antares/inifile/inifile.h>
 #include <antares/study/fwd.h>
 #include "antares/exception/LoadingError.hpp"
@@ -84,7 +82,7 @@ public:
     //! Check CSR cost function prior & after CSR optimization
     bool checkCsrCostFunction;
 
-    bool updateFromKeyValue(const Yuni::String& key, const Yuni::String& value);
+    bool updateFromKeyValue(const std::string& key, const std::string& value);
     void addProperties(IniFile::Section* section) const;
 
     void reset();
@@ -109,7 +107,7 @@ struct AdqPatchParams
 
     void reset();
     void addExcludedVariables(std::vector<std::string>&) const;
-    bool updateFromKeyValue(const Yuni::String& key, const Yuni::String& value);
+    bool updateFromKeyValue(const std::string& key, const std::string& value);
     bool checkAdqPatchParams(const SimulationMode simulationMode,
                              const AreaList& areas,
                              const bool includeHurdleCostParameters) const;

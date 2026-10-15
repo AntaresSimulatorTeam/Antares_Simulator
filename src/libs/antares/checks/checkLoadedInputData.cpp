@@ -9,7 +9,7 @@
 namespace Antares::Check
 {
 
-void checkStudyVersion(const Data::StudyVersion& version, const AnyString& StudyFolder)
+void checkStudyVersion(const Data::StudyVersion& version, const std::string& StudyFolder)
 {
     using namespace Antares::Data;
     if (version == StudyVersion::unknown())
@@ -68,7 +68,7 @@ void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange
 bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& areas,
                                                 std::map<int, std::string>& areaClusterNames)
 {
-    YString areaname = "";
+    std::string areaname;
     bool resultat = true;
     int count = 0;
     for (const auto& [_, area]: areas)
@@ -76,14 +76,14 @@ bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& a
         areaname = area->name;
         logs.debug() << "areaname : " << areaname;
 
-        std::vector<YString> clusternames;
+        std::vector<std::string> clusternames;
 
         if (!area->thermalClustersMinStablePowerValidity(clusternames))
         {
-            for (auto it = clusternames.begin(); it != clusternames.end(); it++)
+            for (const auto& clusterName: clusternames)
             {
-                logs.debug() << "areaname : " << areaname << " ; clustername : " << (*it);
-                YString res = "Area : " + areaname + " cluster name : " + (*it).c_str();
+                logs.debug() << "areaname : " << areaname << " ; clustername : " << clusterName;
+                std::string res = "Area : " + areaname + " cluster name : " + clusterName;
                 areaClusterNames.try_emplace(count++, res);
             }
             resultat = false;

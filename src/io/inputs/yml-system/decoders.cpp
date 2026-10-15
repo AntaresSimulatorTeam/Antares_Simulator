@@ -8,6 +8,8 @@
 #include <antares/io/inputs/InputError.h>
 #include <antares/io/inputs/yml-utils/YmlTreeDisplayer.h>
 
+#include "include/antares/io/inputs/yml-system/system.h"
+
 using namespace Antares::IO::Inputs;
 
 namespace YAML
@@ -40,6 +42,12 @@ bool convert<YmlSystem::Parameter>::decode(const Node& node, YmlSystem::Paramete
     return true;
 }
 
+bool convert<YmlSystem::Property>::decode(const Node&, YmlSystem::Property&)
+{
+    // do nothing, properties are not used for simulations
+    return true;
+}
+
 bool convert<YmlSystem::Component>::decode(const Node& node, YmlSystem::Component& rhs)
 {
     if (!YmlUtils::requireMap(node, "component"))
@@ -50,7 +58,7 @@ bool convert<YmlSystem::Component>::decode(const Node& node, YmlSystem::Componen
     rhs.model = node["model"].as<std::string>();
     rhs.scenarioGroup = node["scenario-group"].as<std::string>("");
     rhs.parameters = as_fallback_default<std::vector<YmlSystem::Parameter>>(node["parameters"]);
-    rhs.properties = as_fallback_default<std::vector<std::string>>(node["properties"]);
+    rhs.properties = as_fallback_default<std::vector<YmlSystem::Property>>(node["properties"]);
     return true;
 }
 

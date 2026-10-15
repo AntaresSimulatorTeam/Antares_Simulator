@@ -3,12 +3,8 @@
 
 #include "antares/study/parts/solar/container.h"
 
-#include <yuni/yuni.h>
-
 #include "antares/study/parts/parts.h"
 #include "antares/study/study.h"
-
-using namespace Yuni;
 
 namespace Antares::Data::Solar
 {

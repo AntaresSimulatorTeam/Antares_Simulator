@@ -4,8 +4,6 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_CONTAINER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_CONTAINER_H__
 
-#include <yuni/yuni.h>
-
 #include "cluster_list.h"
 
 namespace Antares::Data
@@ -33,7 +31,7 @@ public:
     **
     ** \param n A number of years
     */
-    void resizeAllTimeseriesNumbers(uint n) const;
+    void resizeAllTimeseriesNumbers(unsigned int n) const;
 
     /*!
     ** \brief Some clusters force the generation of timeseries,

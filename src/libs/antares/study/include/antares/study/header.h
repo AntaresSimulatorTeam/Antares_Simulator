@@ -6,9 +6,7 @@
 
 #include <ctime>
 #include <filesystem>
-
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
+#include <string>
 
 #include <antares/inifile/inifile.h>
 
@@ -75,7 +73,7 @@ public:
     ** \param filename The target filename
     ** \return True if the operation succeeded, false otherwise
     */
-    bool saveToFile(const AnyString& filename, bool upgradeVersion = true);
+    bool saveToFile(const std::string& filename, bool upgradeVersion = true);
 
     //! Copy the internal settings into an INI structure
     void CopySettingsToIni(IniFile& ini, bool upgradeVersion);
@@ -92,7 +90,7 @@ public:
     bool validateVersion();
 
     //! Caption of the study
-    Yuni::String caption;
+    std::string caption;
 
     //! Format version
     StudyVersion version;
@@ -103,8 +101,8 @@ public:
     time_t dateLastSave;
 
     //! Author
-    Yuni::String author;
-    Yuni::String editor;
+    std::string author;
+    std::string editor;
 
 private:
     //! Load settings from an INI file

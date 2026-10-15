@@ -692,7 +692,7 @@ On picking any area in the primary list, the user gets direct access to all data
     - Adjust the values associated with the current first day of the year (function name: shift rows)
 
 ## Reserves
-Reserves can be enabled in the "settings/generaldata.ini" file by setting the "reserves" parameter to "enabled" in the "[general]" section.
+Reserves can be enabled in the "settings/generaldata.ini" file by setting the "include-reserves" parameter to "enabled" in the "[general]" section.
 
 If reserves are enabled, the following files are required:
 

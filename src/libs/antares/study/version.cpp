@@ -6,7 +6,6 @@
 #include <antares/config/config.h>
 #include "antares/study/study.h"
 
-using namespace Yuni;
 using namespace Antares::Data;
 
 namespace

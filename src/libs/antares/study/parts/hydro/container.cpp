@@ -14,7 +14,6 @@
 
 namespace fs = std::filesystem;
 
-using namespace Yuni;
 #define SEP Yuni::IO::Separator
 
 namespace Antares::Data
@@ -419,18 +418,17 @@ bool PartHydro::validate(Study& study)
 }
 
 bool PartHydro::SaveToFolder(const AreaList& areas,
-                             const AnyString& folder,
+                             const std::string& folder,
                              const Parameters::Compatibility::HydroPmax hydroPmax)
 {
-    if (!folder)
+    if (folder.empty())
     {
         logs.error() << "hydro: invalid empty folder";
         assert(false && "invalid empty folder");
         return false;
     }
 
-    Yuni::String buffer;
-    buffer.clear() << folder << SEP << "common" << SEP << "capacity";
+    std::string buffer = folder + SEP + "common" + SEP + "capacity";
 
     struct AllSections
     {
@@ -529,12 +527,12 @@ bool PartHydro::SaveToFolder(const AreaList& areas,
           // max hours gen
           if (hydroPmax == Parameters::Compatibility::HydroPmax::Hourly)
           {
-              buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                             << "maxDailyGenEnergy_" << area.id << ".txt";
+              buffer = folder + SEP + "common" + SEP + "capacity" + SEP + "maxDailyGenEnergy_"
+                       + area.id + ".txt";
               ret = area.hydro.dailyNbHoursAtGenPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
 
-              buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                             << "maxDailyPumpEnergy_" << area.id << ".txt";
+              buffer = folder + SEP + "common" + SEP + "capacity" + SEP + "maxDailyPumpEnergy_"
+                       + area.id + ".txt";
               ret = area.hydro.dailyNbHoursAtPumpPmax.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
           }
           else
@@ -552,29 +550,29 @@ bool PartHydro::SaveToFolder(const AreaList& areas,
                                                           pumpMaxP[0]);
               area.hydro.dailyMaxPumpAndGen.pasteToColumn(HydroMaxTimeSeriesReader::pumpMaxE,
                                                           area.hydro.dailyNbHoursAtPumpPmax[0]);
-              buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxpower_"
-                             << area.id << ".txt";
+              buffer = folder + SEP + "common" + SEP + "capacity" + SEP + "maxpower_" + area.id
+                       + ".txt";
               ret = area.hydro.dailyMaxPumpAndGen.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
 
               area.hydro.series->buildHourlyMaxPowerFromDailyTS(genMaxP[0], pumpMaxP[0]);
           }
 
           // credit modulations
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                         << "creditmodulations_" << area.id << ".txt";
+          buffer = folder + SEP + "common" + SEP + "capacity" + SEP + "creditmodulations_" + area.id
+                   + ".txt";
           ret = area.hydro.creditModulation.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
           // inflow pattern
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                         << "inflowPattern_" << area.id << ".txt";
+          buffer = folder + SEP + "common" + SEP + "capacity" + SEP + "inflowPattern_" + area.id
+                   + ".txt";
           ret = area.hydro.inflowPattern.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
           // water values
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "waterValues_"
-                         << area.id << ".txt";
+          buffer = folder + SEP + "common" + SEP + "capacity" + SEP + "waterValues_" + area.id
+                   + ".txt";
           ret = area.hydro.waterValues.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
       });
 
     // Write the ini file
-    buffer.clear() << folder << SEP << "hydro.ini";
+    buffer = folder + SEP + "hydro.ini";
     return ini.save(buffer) && ret;
 }
 
@@ -636,7 +634,7 @@ bool PartHydro::LoadDailyMaxEnergy(const fs::path& folder, const std::string& ar
     return ret;
 }
 
-bool PartHydro::CheckDailyMaxEnergy(const AnyString& areaName)
+bool PartHydro::CheckDailyMaxEnergy(const std::string& areaName)
 {
     bool ret = true;
     bool errorEnergy = false;
@@ -669,7 +667,7 @@ bool PartHydro::loadReserveParticipations(Area& area, const std::filesystem::pat
     return loader.load(area, file);
 }
 
-uint PartHydro::reserveParticipationsCount() const
+unsigned int PartHydro::reserveParticipationsCount() const
 {
     return reserveParticipationContainer
              ? reserveParticipationContainer.value().reserveParticipationsCount()
@@ -696,7 +694,7 @@ std::optional<ReserveID> PartHydro::reserveParticipationAt(const Area* area,
     return std::nullopt;
 }
 
-uint PartHydro::count() const
+unsigned int PartHydro::count() const
 {
     // Retournez 1 si le stockage long terme est activé, 0 sinon
     return series->TScount() ? 1 : 0;
@@ -704,7 +702,7 @@ uint PartHydro::count() const
 
 double getWaterValue(const double& level /* format : in % of reservoir capacity */,
                      const Matrix<double>& waterValues,
-                     const uint day)
+                     const unsigned int day)
 {
     if (level < 0. - 1e-6 || level > 100. + 1e-6)
     {

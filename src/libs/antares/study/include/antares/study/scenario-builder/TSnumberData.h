@@ -34,19 +34,19 @@ public:
     ** \param year  A year
     ** \param value The new TS number
     */
-    void setTSnumber(uint index, uint year, uint value);
+    void setTSnumber(unsigned int index, unsigned int year, unsigned int value);
     //@}
 
-    uint width() const override;
-    uint height() const override;
+    unsigned int width() const override;
+    unsigned int height() const override;
 
-    double get_value(uint x, uint y) const;
-    void set_value(uint x, uint y, uint value) const;
+    double get_value(unsigned int x, unsigned int y) const;
+    void set_value(unsigned int x, unsigned int y, unsigned int value) const;
 
 protected:
-    virtual CString<512, false> get_prefix() const = 0;
+    virtual std::string get_prefix() const = 0;
 
-    virtual uint get_tsGenCount(const Study& study) const = 0;
+    virtual unsigned int get_tsGenCount(const Study& study) const = 0;
 
 protected:
     //! All TS number overlay (0 if auto)
@@ -56,17 +56,17 @@ protected:
 
 // class TSNumberData : inline functions
 
-inline uint TSNumberData::width() const
+inline unsigned int TSNumberData::width() const
 {
     return pTSNumberRules.width;
 }
 
-inline uint TSNumberData::height() const
+inline unsigned int TSNumberData::height() const
 {
     return pTSNumberRules.height;
 }
 
-inline double TSNumberData::get_value(uint x, uint y) const
+inline double TSNumberData::get_value(unsigned int x, unsigned int y) const
 {
     return pTSNumberRules.entry[y][x];
 }

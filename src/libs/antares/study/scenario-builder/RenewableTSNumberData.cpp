@@ -12,8 +12,8 @@
 namespace Antares::Data::ScenarioBuilder
 {
 void renewableTSNumberData::setTSnumber(const Antares::Data::RenewableCluster* cluster,
-                                        const uint year,
-                                        uint value)
+                                        const unsigned int year,
+                                        unsigned int value)
 {
     assert(cluster != nullptr);
     if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
@@ -25,9 +25,9 @@ void renewableTSNumberData::setTSnumber(const Antares::Data::RenewableCluster* c
 bool renewableTSNumberData::apply(Study& study)
 {
     bool ret = true;
-    CString<512, false> logprefix;
+    std::string logprefix;
     // Errors
-    uint errors = 0;
+    unsigned int errors = 0;
 
     // Alias to the current area
     assert(pArea != nullptr);
@@ -36,7 +36,7 @@ bool renewableTSNumberData::apply(Study& study)
     // The total number of clusters for the area
     // WARNING: We may have some renewable clusters with the `mustrun` option
 
-    const uint tsGenCountRenewable = get_tsGenCount(study);
+    const unsigned int tsGenCountRenewable = get_tsGenCount(study);
 
     for (const auto& cluster: area.renewable.list.each_enabled())
     {
@@ -44,14 +44,13 @@ bool renewableTSNumberData::apply(Study& study)
         assert(cluster->areaWideIndex < pTSNumberRules.width);
         const auto& col = pTSNumberRules[cluster->areaWideIndex];
 
-        logprefix.clear() << "Renewable: area '" << area.name << "', cluster: '" << cluster->name()
-                          << "': ";
+        logprefix = "Renewable: area '" + area.name + "', cluster: '" + cluster->name() + "': ";
         ret = ApplyToMatrix(errors, logprefix, cluster->series, col, tsGenCountRenewable) && ret;
     }
     return ret;
 }
 
-uint renewableTSNumberData::get_tsGenCount(const Study& study) const
+unsigned int renewableTSNumberData::get_tsGenCount(const Study& study) const
 {
     // General data
     auto& parameters = study.parameters;
@@ -62,7 +61,7 @@ uint renewableTSNumberData::get_tsGenCount(const Study& study) const
 
 bool renewableTSNumberData::reset(const Study& study)
 {
-    const uint nbYears = study.parameters.nbYears;
+    const unsigned int nbYears = study.parameters.nbYears;
     assert(pArea != nullptr);
 
     // If an area is available, it can only be an overlay for renewable timeseries
@@ -70,7 +69,7 @@ bool renewableTSNumberData::reset(const Study& study)
     //   solver or not.
     // WARNING: At this point in time, the variable pArea->renewable.clusterCount()
     //   might not be valid (because not really initialized yet)
-    const uint clusterCount = pArea->renewable.list.allClustersCount();
+    const unsigned int clusterCount = pArea->renewable.list.allClustersCount();
     // Resize
     pTSNumberRules.reset(clusterCount, nbYears);
     return true;

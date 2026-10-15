@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <memory>
 #include <ranges>
+#include <string>
 #include <vector>
 
 #include <antares/inifile/inifile.h>
@@ -97,7 +98,7 @@ public:
     **
     ** \param n A number of years
     */
-    void resizeAllTimeseriesNumbers(uint n) const;
+    void resizeAllTimeseriesNumbers(unsigned int n) const;
 
     void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 
@@ -116,7 +117,7 @@ public:
     /// @return false if the file opening failed, true otherwise
     bool loadReserveParticipations(Area& area, const std::filesystem::path& file);
 
-    bool saveDataSeriesToFolder(const AnyString& folder) const;
+    bool saveDataSeriesToFolder(const std::string& folder) const;
     ///@}
 
     /*!
@@ -129,7 +130,7 @@ public:
     **	unit  += clusters{unit count}
     ** \endcode
     */
-    void retrieveTotalCapacityAndUnitCount(double& total, uint& unitCount) const;
+    void retrieveTotalCapacityAndUnitCount(double& total, unsigned int& unitCount) const;
 
     unsigned int enabledCount() const;
     unsigned int allClustersCount() const;

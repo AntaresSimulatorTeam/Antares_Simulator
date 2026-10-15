@@ -5,18 +5,13 @@
 
 #include <algorithm>
 
-#include <yuni/yuni.h>
-#include <yuni/io/file.h>
-
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/study/parts/hydro/series.h>
 
-using namespace Yuni;
-
 namespace fs = std::filesystem;
 
-#define SEP IO::Separator
+#define SEP Yuni::IO::Separator
 
 namespace Antares::Data
 {
@@ -35,12 +30,12 @@ static bool loadTSfromFile(Matrix<double>& ts,
 static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,
                                        Matrix<double>::ColumnType& hourlyColumn)
 {
-    uint hour = 0;
-    uint day = 0;
+    unsigned int hour = 0;
+    unsigned int day = 0;
 
     while (hour < HOURS_PER_YEAR && day < DAYS_PER_YEAR)
     {
-        for (uint i = 0; i < HOURS_PER_DAY; ++i)
+        for (unsigned int i = 0; i < HOURS_PER_DAY; ++i)
         {
             hourlyColumn[hour] = dailyColumn[day];
             ++hour;
@@ -99,7 +94,7 @@ void DataSeriesHydro::reset()
     resizeTS(1);
 }
 
-void DataSeriesHydro::resizeTS(uint nbSeries)
+void DataSeriesHydro::resizeTS(unsigned int nbSeries)
 {
     storage.reset(nbSeries, DAYS_PER_YEAR);
     ror.reset(nbSeries, HOURS_PER_YEAR);
@@ -147,7 +142,7 @@ void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(
   const Matrix<double>::ColumnType& DailyMaxGenPower,
   const Matrix<double>::ColumnType& DailyMaxPumpPower)
 {
-    const uint count = 1;
+    const unsigned int count = 1;
 
     maxHourlyGenPower.reset(count, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(count, HOURS_PER_YEAR);
@@ -171,30 +166,30 @@ Matrix<> DataSeriesHydro::getDailyMaxPumpPowerFromHourlyTS()
 }
 
 bool DataSeriesHydro::saveToFolder(const AreaName& areaID,
-                                   const AnyString& folder,
+                                   const std::string& folder,
                                    Parameters::Compatibility::HydroPmax hydroPmax) const
 {
-    String buffer;
-    buffer.clear() << folder << SEP << areaID;
+    const std::string buffer = folder + SEP + areaID;
     /* Make sure the folder is created */
-    if (IO::Directory::Create(buffer))
+    if (Yuni::IO::Directory::Create(buffer))
     {
         bool ret = true;
 
         // Saving data
-        buffer.clear() << folder << SEP << areaID << SEP << "ror.txt";
-        ret = ror.timeSeries.saveToCSVFile(buffer, 0) && ret;
-        buffer.clear() << folder << SEP << areaID << SEP << "mod.txt";
-        ret = storage.timeSeries.saveToCSVFile(buffer, 0) && ret;
-        buffer.clear() << folder << SEP << areaID << SEP << "mingen.txt";
-        ret = mingen.timeSeries.saveToCSVFile(buffer, 0) && ret;
+        ret = ror.timeSeries.saveToCSVFile(folder + SEP + areaID + SEP + "ror.txt", 0) && ret;
+        ret = storage.timeSeries.saveToCSVFile(folder + SEP + areaID + SEP + "mod.txt", 0) && ret;
+        ret = mingen.timeSeries.saveToCSVFile(folder + SEP + areaID + SEP + "mingen.txt", 0) && ret;
 
         if (hydroPmax == Parameters::Compatibility::HydroPmax::Hourly)
         {
-            buffer.clear() << folder << SEP << areaID << SEP << "maxHourlyGenPower.txt";
-            ret = maxHourlyGenPower.timeSeries.saveToCSVFile(buffer, 0) && ret;
-            buffer.clear() << folder << SEP << areaID << SEP << "maxHourlyPumpPower.txt";
-            ret = maxHourlyPumpPower.timeSeries.saveToCSVFile(buffer, 0) && ret;
+            ret = maxHourlyGenPower.timeSeries.saveToCSVFile(folder + SEP + areaID + SEP
+                                                               + "maxHourlyGenPower.txt",
+                                                             0)
+                  && ret;
+            ret = maxHourlyPumpPower.timeSeries.saveToCSVFile(folder + SEP + areaID + SEP
+                                                                + "maxHourlyPumpPower.txt",
+                                                              0)
+                  && ret;
         }
 
         return ret;
@@ -202,7 +197,7 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID,
     return false;
 }
 
-uint DataSeriesHydro::TScount() const
+unsigned int DataSeriesHydro::TScount() const
 {
     const std::vector<uint32_t> nbColumns({storage.numberOfColumns(),
                                            ror.numberOfColumns(),

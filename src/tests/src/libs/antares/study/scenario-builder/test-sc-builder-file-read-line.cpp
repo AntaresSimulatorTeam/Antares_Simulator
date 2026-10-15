@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_SUITE(s)
 BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_18__load_TS_number_11_is_chosen__reading_OK, Fixture)
 {
     AreaName yearNumber = "18";
-    String tsNumber = "11";
+    std::string tsNumber = "11";
     std::vector<std::string> splitKey = {"l", "area 2", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
@@ -231,7 +231,7 @@ BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_18__load_TS_number_11_is_chosen__re
 BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_7__wind_TS_number_5_is_chosen__reading_OK, Fixture)
 {
     AreaName yearNumber = "7";
-    String tsNumber = "5";
+    std::string tsNumber = "5";
     std::vector<std::string> splitKey = {"w", "area 3", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
@@ -249,7 +249,7 @@ BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_7__wind_TS_number_5_is_chosen__read
 BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_4__solar_TS_number_8_is_chosen__reading_OK, Fixture)
 {
     AreaName yearNumber = "4";
-    String tsNumber = "8";
+    std::string tsNumber = "8";
     std::vector<std::string> splitKey = {"s", "area 1", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
@@ -267,7 +267,7 @@ BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_4__solar_TS_number_8_is_chosen__rea
 BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_15__solar_TS_number_3_is_chosen__reading_OK, Fixture)
 {
     AreaName yearNumber = "15";
-    String tsNumber = "3";
+    std::string tsNumber = "3";
     std::vector<std::string> splitKey = {"h", "area 2", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
@@ -287,7 +287,7 @@ BOOST_FIXTURE_TEST_CASE(
   Fixture)
 {
     AreaName yearNumber = "6";
-    String tsNumber = "3";
+    std::string tsNumber = "3";
     std::vector<std::string> splitKey = {"t", "area 1", yearNumber, "th-cluster-11"};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
@@ -305,7 +305,7 @@ BOOST_FIXTURE_TEST_CASE(
   Fixture)
 {
     AreaName yearNumber = "13";
-    String tsNumber = "5";
+    std::string tsNumber = "5";
     std::vector<std::string> splitKey = {"t", "area 1", yearNumber, "th-cluster-12"};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
@@ -323,7 +323,7 @@ BOOST_FIXTURE_TEST_CASE(
   Fixture)
 {
     AreaName yearNumber = "10";
-    String tsNumber = "7";
+    std::string tsNumber = "7";
     std::vector<std::string> splitKey = {"t", "area 3", yearNumber, "th-cluster-31"};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
@@ -346,7 +346,7 @@ BOOST_FIXTURE_TEST_CASE(
     study->parameters.renewableGeneration.toClusters();
 
     AreaName yearNumber = "16";
-    String tsNumber = "8";
+    std::string tsNumber = "8";
     std::vector<std::string> splitKey = {"r", "area 2", yearNumber, "rn-cluster-21"};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
@@ -366,7 +366,7 @@ BOOST_FIXTURE_TEST_CASE(
     study->parameters.renewableGeneration.toClusters();
 
     AreaName yearNumber = "2";
-    String tsNumber = "4";
+    std::string tsNumber = "4";
     std::vector<std::string> splitKey = {"r", "area 3", yearNumber, "rn-cluster-32"};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
@@ -385,7 +385,7 @@ BOOST_FIXTURE_TEST_CASE(
 BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_17__hydro_level_0_123_is_chosen__reading_OK, Fixture)
 {
     AreaName yearNumber = "17";
-    String level = "0.123";
+    std::string level = "0.123";
     std::vector<std::string> splitKey = {"hl", "area 1", yearNumber};
     my_rule.readLine(splitKey, level);
 
@@ -402,7 +402,7 @@ BOOST_FIXTURE_TEST_CASE(
   Fixture)
 {
     AreaName yearNumber = "9";
-    String level = "1.5";
+    std::string level = "1.5";
     std::vector<std::string> splitKey = {"hl", "area 2", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, level));
 
@@ -418,7 +418,7 @@ BOOST_FIXTURE_TEST_CASE(
   Fixture)
 {
     AreaName yearNumber = "5";
-    String level = "-3.5";
+    std::string level = "-3.5";
     std::vector<std::string> splitKey = {"hl", "area 3", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, level));
 
@@ -435,7 +435,7 @@ BOOST_FIXTURE_TEST_CASE(
 BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_8__hydro_level_0_342_is_chosen__reading_OK, Fixture)
 {
     AreaName yearNumber = "8";
-    String level = "0.342";
+    std::string level = "0.342";
     std::vector<std::string> splitKey = {"hfl", "area 1", yearNumber};
     my_rule.readLine(splitKey, level);
 
@@ -452,7 +452,7 @@ BOOST_FIXTURE_TEST_CASE(
   Fixture)
 {
     AreaName yearNumber = "1";
-    String level = "2.4";
+    std::string level = "2.4";
     std::vector<std::string> splitKey = {"hfl", "area 2", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, level));
 
@@ -468,7 +468,7 @@ BOOST_FIXTURE_TEST_CASE(
   Fixture)
 {
     AreaName yearNumber = "3";
-    String level = "-5.2";
+    std::string level = "-5.2";
     std::vector<std::string> splitKey = {"hfl", "area 3", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, level));
 
@@ -486,7 +486,7 @@ BOOST_FIXTURE_TEST_CASE(on_link_area1_area2_and_on_year_0__ntc_TS_number_10_is_c
                         Fixture)
 {
     AreaName yearNumber = "0";
-    String tsNumber = "10";
+    std::string tsNumber = "10";
     std::vector<std::string> splitKey = {"ntc", "area 1", "area 2", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
@@ -501,7 +501,7 @@ BOOST_FIXTURE_TEST_CASE(on_link_area1_area3_and_on_year_15__ntc_TS_number_7_is_c
                         Fixture)
 {
     AreaName yearNumber = "15";
-    String tsNumber = "7";
+    std::string tsNumber = "7";
     std::vector<std::string> splitKey = {"ntc", "area 1", "area 3", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
@@ -516,7 +516,7 @@ BOOST_FIXTURE_TEST_CASE(on_link_area2_area3_and_on_year_19__ntc_TS_number_6_is_c
                         Fixture)
 {
     AreaName yearNumber = "19";
-    String tsNumber = "6";
+    std::string tsNumber = "6";
     std::vector<std::string> splitKey = {"ntc", "area 2", "area 3", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
@@ -573,7 +573,7 @@ BOOST_FIXTURE_TEST_CASE(thermalTSNumberData, Fixture)
 BOOST_FIXTURE_TEST_CASE(short_term_storage_valid_cluster_and_year__reading_OK, Fixture)
 {
     AreaName yearNumber = "5";
-    String tsNumber = "3";
+    std::string tsNumber = "3";
     std::vector<std::string> splitKey = {"sts", "area 1", yearNumber, "st-cluster-1"};
 
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
@@ -598,7 +598,7 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_valid_cluster_and_year__reading_OK, F
 BOOST_FIXTURE_TEST_CASE(short_term_storage_nonexistent_cluster, Fixture)
 {
     AreaName yearNumber = "3";
-    String tsNumber = "2";
+    std::string tsNumber = "2";
     std::vector<std::string> splitKey = {"sts", "area 2", yearNumber, "nonexistent-cluster"};
     BOOST_CHECK(!my_rule.readLine(splitKey, tsNumber));
 }
@@ -606,7 +606,7 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_nonexistent_cluster, Fixture)
 BOOST_FIXTURE_TEST_CASE(short_term_storage_nonexistent_area, Fixture)
 {
     AreaName yearNumber = "7";
-    String tsNumber = "1";
+    std::string tsNumber = "1";
     std::vector<std::string> splitKey = {"sts", "nonexistent area", yearNumber, "any-cluster"};
     BOOST_CHECK(!my_rule.readLine(splitKey, tsNumber));
 }
@@ -616,7 +616,7 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_large_ts_number__handled_gracefully, 
     // Add a short-term storage cluster to area 3
 
     AreaName yearNumber = "10";
-    String veryLarge = "100000000"; // take maxTSnumber := 10'000
+    std::string veryLarge = "100000000"; // take maxTSnumber := 10'000
     std::vector<std::string> splitKey = {"sts", "area 1", yearNumber, "st-cluster-1"};
 
     BOOST_CHECK(my_rule.readLine(splitKey, veryLarge));

@@ -22,7 +22,7 @@ public:
     void setTSnumber(const std::string& group_name, unsigned year, unsigned value);
     unsigned get(const std::string& group_name, unsigned year) const;
     bool apply(Study& study) override;
-    CString<512, false> get_prefix() const override;
+    std::string get_prefix() const override;
     unsigned get_tsGenCount(const Study& study) const override;
 
 private:
@@ -40,7 +40,7 @@ inline unsigned BindingConstraintsTSNumberData::get(const std::string& group_nam
     return it->second[0][year];
 }
 
-inline CString<512, false> BindingConstraintsTSNumberData::get_prefix() const
+inline std::string BindingConstraintsTSNumberData::get_prefix() const
 {
     return "bc,";
 }

@@ -191,4 +191,177 @@ BOOST_AUTO_TEST_CASE(on_Win_path_containing_non_ascii_chars_not_valid__path_vali
 #endif
 }
 
+BOOST_AUTO_TEST_CASE(test_stringToBool_true_single_chars)
+{
+    BOOST_CHECK(stringToBool("1"));
+    BOOST_CHECK(stringToBool("y"));
+    BOOST_CHECK(stringToBool("Y"));
+    BOOST_CHECK(stringToBool("o"));
+    BOOST_CHECK(stringToBool("O"));
+    BOOST_CHECK(stringToBool("t"));
+    BOOST_CHECK(stringToBool("T"));
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToBool_true_words)
+{
+    BOOST_CHECK(stringToBool("true"));
+    BOOST_CHECK(stringToBool("True"));
+    BOOST_CHECK(stringToBool("TRUE"));
+    BOOST_CHECK(stringToBool("on"));
+    BOOST_CHECK(stringToBool("On"));
+    BOOST_CHECK(stringToBool("ON"));
+    BOOST_CHECK(stringToBool("yes"));
+    BOOST_CHECK(stringToBool("Yes"));
+    BOOST_CHECK(stringToBool("YES"));
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToBool_false)
+{
+    BOOST_CHECK(!stringToBool(""));
+    BOOST_CHECK(!stringToBool("0"));
+    BOOST_CHECK(!stringToBool("n"));
+    BOOST_CHECK(!stringToBool("f"));
+    BOOST_CHECK(!stringToBool("no"));
+    BOOST_CHECK(!stringToBool("false"));
+    BOOST_CHECK(!stringToBool("off"));
+    BOOST_CHECK(!stringToBool("anything"));
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToBool_long_string_is_false)
+{
+    BOOST_CHECK(!stringToBool("12345"));
+    BOOST_CHECK(!stringToBool("abcde"));
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToDouble_ref_valid)
+{
+    double out = -1.0;
+    BOOST_CHECK(stringToDouble("3.14", out));
+    BOOST_TEST(out == 3.14, tt::tolerance(1e-9));
+
+    BOOST_CHECK(stringToDouble("0", out));
+    BOOST_TEST(out == 0.0, tt::tolerance(1e-9));
+
+    BOOST_CHECK(stringToDouble("-42.5", out));
+    BOOST_TEST(out == -42.5, tt::tolerance(1e-9));
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToDouble_ref_empty)
+{
+    double out = -1.0;
+    BOOST_CHECK(stringToDouble("", out));
+    BOOST_TEST(out == 0.0, tt::tolerance(1e-9));
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToDouble_ref_invalid)
+{
+    double out = -1.0;
+    BOOST_CHECK(!stringToDouble("abc", out));
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToDouble_value)
+{
+    BOOST_TEST(stringToDouble("3.14") == 3.14, tt::tolerance(1e-9));
+    BOOST_TEST(stringToDouble("") == 0.0, tt::tolerance(1e-9));
+    BOOST_TEST(stringToDouble("abc") == 0.0, tt::tolerance(1e-9));
+    BOOST_TEST(stringToDouble("-42.5") == -42.5, tt::tolerance(1e-9));
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToFloat_ref_valid)
+{
+    float out = -1.f;
+    BOOST_CHECK(stringToFloat("2.5", out));
+    BOOST_TEST(out == 2.5f, tt::tolerance(1e-6f));
+
+    BOOST_CHECK(stringToFloat("0", out));
+    BOOST_TEST(out == 0.f, tt::tolerance(1e-6f));
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToFloat_ref_empty)
+{
+    float out = -1.f;
+    BOOST_CHECK(stringToFloat("", out));
+    BOOST_TEST(out == 0.f, tt::tolerance(1e-6f));
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToFloat_ref_invalid)
+{
+    float out = -1.f;
+    BOOST_CHECK(!stringToFloat("abc", out));
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToFloat_value)
+{
+    BOOST_TEST(stringToFloat("2.5") == 2.5f, tt::tolerance(1e-6f));
+    BOOST_TEST(stringToFloat("") == 0.f, tt::tolerance(1e-6f));
+    BOOST_TEST(stringToFloat("abc") == 0.f, tt::tolerance(1e-6f));
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToInt_ref_valid)
+{
+    int out = -1;
+    BOOST_CHECK(stringToInt("42", out));
+    BOOST_CHECK_EQUAL(out, 42);
+
+    BOOST_CHECK(stringToInt("-7", out));
+    BOOST_CHECK_EQUAL(out, -7);
+
+    BOOST_CHECK(stringToInt("0", out));
+    BOOST_CHECK_EQUAL(out, 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToInt_ref_empty)
+{
+    int out = -1;
+    BOOST_CHECK(stringToInt("", out));
+    BOOST_CHECK_EQUAL(out, 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToInt_ref_invalid)
+{
+    int out = -1;
+    BOOST_CHECK(!stringToInt("abc", out));
+    BOOST_CHECK(!stringToInt("3.14", out));
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToInt_value)
+{
+    BOOST_CHECK_EQUAL(stringToInt("42"), 42);
+    BOOST_CHECK_EQUAL(stringToInt("-7"), -7);
+    BOOST_CHECK_EQUAL(stringToInt(""), 0);
+    BOOST_CHECK_EQUAL(stringToInt("abc"), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToUint_ref_valid)
+{
+    unsigned int out = 99;
+    BOOST_CHECK(stringToUint("42", out));
+    BOOST_CHECK_EQUAL(out, 42u);
+
+    BOOST_CHECK(stringToUint("0", out));
+    BOOST_CHECK_EQUAL(out, 0u);
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToUint_ref_empty)
+{
+    unsigned int out = 99;
+    BOOST_CHECK(stringToUint("", out));
+    BOOST_CHECK_EQUAL(out, 0u);
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToUint_ref_invalid)
+{
+    unsigned int out = 99;
+    BOOST_CHECK(!stringToUint("abc", out));
+    BOOST_CHECK(!stringToUint("3.14", out));
+}
+
+BOOST_AUTO_TEST_CASE(test_stringToUint_value)
+{
+    BOOST_CHECK_EQUAL(stringToUint("42"), 42u);
+    BOOST_CHECK_EQUAL(stringToUint("0"), 0u);
+    BOOST_CHECK_EQUAL(stringToUint(""), 0u);
+    BOOST_CHECK_EQUAL(stringToUint("abc"), 0u);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
