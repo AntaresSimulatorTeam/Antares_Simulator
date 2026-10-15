@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['gammaeuler_638',['GammaEuler',['../classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html#aa90f195e299484fe2994b515923a4ea9',1,'Antares::TSGenerator::XCast::XCast']]],
-  ['gammainc_639',['GammaInc',['../classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html#a1f24848a4361d9c2d68fdaedaf9ba244',1,'Antares::TSGenerator::XCast::XCast']]],
-  ['gemscontributionfixture_640',['GemsContributionFixture',['../structGemsContributionFixture.html',1,'']]],
+  ['gammaeuler_639',['GammaEuler',['../classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html#aa90f195e299484fe2994b515923a4ea9',1,'Antares::TSGenerator::XCast::XCast']]],
+  ['gammainc_640',['GammaInc',['../classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html#a1f24848a4361d9c2d68fdaedaf9ba244',1,'Antares::TSGenerator::XCast::XCast']]],
   ['generationandresolutionconfig_641',['GenerationAndResolutionConfig',['../structAntares_1_1Solver_1_1Workflow_1_1GenerationAndResolutionConfig.html',1,'Antares::Solver::Workflow']]],
   ['genmaxe_642',['genMaxE',['../classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html#ab549c3a4826ca7160b6f30f4752ee47bab8690231241b1ae3736d9f5b564329c6',1,'Antares::Data::HydroMaxTimeSeriesReader']]],
   ['genmaxp_643',['genMaxP',['../classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html#ab549c3a4826ca7160b6f30f4752ee47ba385204e11dcae93341145965fa002089',1,'Antares::Data::HydroMaxTimeSeriesReader']]],
@@ -11,7 +10,7 @@ var searchData=
   ['get_5fentry_646',['get_entry',['../classsimulation__table_1_1SimulationTable.html#ad824dd40bd791dbd8c8aef2bc8813ee5',1,'simulation_table::SimulationTable']]],
   ['get_5fobjective_5fvalue_647',['get_objective_value',['../classsimulation__table_1_1SimulationTable.html#a53bf15e7fd04e4ebaa14613ef56f9300',1,'simulation_table::SimulationTable']]],
   ['get_5fobjective_5fvalues_5fby_5fblock_648',['get_objective_values_by_block',['../classsimulation__table_1_1SimulationTable.html#a9179e3b7e1c0bae862b937a8b9acb297',1,'simulation_table::SimulationTable']]],
-  ['getareaprice_649',['getAreaPrice',['../classAntares_1_1Optimization_1_1HebdoAreaPriceProvider.html#a5f923f69233ca5b3db43b2e66a9b00bf',1,'Antares::Optimization::HebdoAreaPriceProvider::getAreaPrice()'],['../classAntares_1_1LinearProblem_1_1Api_1_1IAreaPriceProvider.html#a0972a57cf80c19702a324b567440ac5c',1,'Antares::LinearProblem::Api::IAreaPriceProvider::getAreaPrice()']]],
+  ['getareaprice_649',['getAreaPrice',['../classAntares_1_1LinearProblem_1_1Api_1_1IAreaPriceProvider.html#a0972a57cf80c19702a324b567440ac5c',1,'Antares::LinearProblem::Api::IAreaPriceProvider::getAreaPrice()'],['../classAntares_1_1Optimization_1_1HebdoAreaPriceProvider.html#a5f923f69233ca5b3db43b2e66a9b00bf',1,'Antares::Optimization::HebdoAreaPriceProvider::getAreaPrice()']]],
   ['getfieldname_650',['getFieldName',['../classAntares_1_1Expressions_1_1Nodes_1_1PortFieldNode.html#ac1406e69add19423680de0082f26a931',1,'Antares::Expressions::Nodes::PortFieldNode::getFieldName()'],['../classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html#a336691de165b906485655b35fb185933',1,'Antares::Expressions::Nodes::PortFieldSumNode::getFieldName()']]],
   ['getgroup_651',['getGroup',['../classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html#abaa8f2c6ebd1b25af0a564c3afe22a75',1,'Antares::Data::ShortTermStorage::STStorageCluster']]],
   ['getnbsymgroups_652',['getNbSymGroups',['../classAntares_1_1Data_1_1ReserveParticipationContainerBase.html#a8d477aec135a2003605c0bda543e5caf',1,'Antares::Data::ReserveParticipationContainerBase']]],
@@ -19,7 +18,7 @@ var searchData=
   ['getnumberofcorespermode_654',['getNumberOfCoresPerMode',['../classAntares_1_1Data_1_1Study.html#a3ade1389d5a8c512a7d91c1e2d4d7de9',1,'Antares::Data::Study']]],
   ['getobjectiveoffset_655',['getObjectiveOffset',['../classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsLinearProblem.html#ae552a73e9545daebfc1986265466d540',1,'Antares::LinearProblem::MpsolverImpl::OrtoolsLinearProblem']]],
   ['getoperands_656',['getOperands',['../classAntares_1_1Expressions_1_1Nodes_1_1ParentNode.html#a1a483a734b5fcf9a0d7748b7a2f0f267',1,'Antares::Expressions::Nodes::ParentNode']]],
-  ['getportname_657',['getPortName',['../classAntares_1_1Expressions_1_1Nodes_1_1PortFieldNode.html#a6fe3cd67d180be37f2f8001e5a6aa39d',1,'Antares::Expressions::Nodes::PortFieldNode::getPortName()'],['../classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html#ac3831b1df5be5e32a42c24f4f35652dc',1,'Antares::Expressions::Nodes::PortFieldSumNode::getPortName()']]],
+  ['getportname_657',['getPortName',['../classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html#ac3831b1df5be5e32a42c24f4f35652dc',1,'Antares::Expressions::Nodes::PortFieldSumNode::getPortName()'],['../classAntares_1_1Expressions_1_1Nodes_1_1PortFieldNode.html#a6fe3cd67d180be37f2f8001e5a6aa39d',1,'Antares::Expressions::Nodes::PortFieldNode::getPortName()']]],
   ['getreserveatindex_658',['getReserveAtIndex',['../structAntares_1_1Data_1_1AllCapacityReservations.html#aacce42a29d766fe6a92a791eded3eec4',1,'Antares::Data::AllCapacityReservations']]],
   ['getreservebyid_659',['getReserveByID',['../structAntares_1_1Data_1_1AllCapacityReservations.html#a0256cc66e13b9564ae9f658231c9342f',1,'Antares::Data::AllCapacityReservations']]],
   ['getsystemparametervalue_660',['getSystemParameterValue',['../classAntares_1_1LinearProblem_1_1EvaluationContext.html#ab05bcb590b551af3380623747d6a06ee',1,'Antares::LinearProblem::EvaluationContext']]],

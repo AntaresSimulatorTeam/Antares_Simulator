@@ -1,7 +1,5 @@
 var NAVTREEINDEX30 =
 {
-"dir_59d430bf67133b0059b1310204a5c2d3.html":[10,0,0,3,1,7,0,0,0],
-"dir_59ec79b6e0a705e9404735d4800549b3.html":[10,0,0,5,0,0,0],
 "dir_5a112161cdd368098316fb1abaae287b.html":[10,0,0,3,2,0],
 "dir_5c48aca1b4872c5bb5de33b758f95e7e.html":[10,0,0,4,0,25,0,0,0,6],
 "dir_5cc9eb891ea775673602553e7b03c43f.html":[10,0,0,8,1,0,0,0,0,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX30 =
 "dispatchable-generation-margin_8h.html#a78e45bdf54b0b42af3806c3fb6166d61":[8,0,0,15,9,5,165],
 "dispatchable-generation-margin_8h.html#a9021c2be47b8be9bafe1b24750e4aa31":[8,0,0,15,9,5,107],
 "dispatchable-generation-margin_8h_source.html":[10,0,0,8,11,0,0,0,0,3,6],
-"dispatchableGeneration_8h.html#a98e2a84d135141c8fbda061865d0a913":[8,0,0,15,9,5,106]
+"dispatchableGeneration_8h.html#a98e2a84d135141c8fbda061865d0a913":[8,0,0,15,9,5,106],
+"dispatchableGeneration_8h_source.html":[10,0,0,8,11,0,0,0,0,3,7],
+"domesticUnsuppliedEnergy_8h.html#a7c6ee8da1bd23ed2ac2011c2cc1c7761":[8,0,0,15,9,5,108]
 };

@@ -1,7 +1,5 @@
 var NAVTREEINDEX31 =
 {
-"dispatchableGeneration_8h_source.html":[10,0,0,8,11,0,0,0,0,3,7],
-"domesticUnsuppliedEnergy_8h.html#a7c6ee8da1bd23ed2ac2011c2cc1c7761":[8,0,0,15,9,5,108],
 "domesticUnsuppliedEnergy_8h_source.html":[10,0,0,8,11,0,0,0,0,3,9],
 "dtgMarginAfterCsr_8h.html#a930a441c99eecd6eaa383ece5d980b77":[8,0,0,15,9,5,109],
 "dtgMarginAfterCsr_8h_source.html":[10,0,0,8,11,0,0,0,0,3,10],
@@ -29,8 +27,8 @@ var NAVTREEINDEX31 =
 "economy__base_8h.html":[10,0,0,8,11,0,0,0,0,3,12],
 "economy__base_8h.html#a1ff24302b60c012adc506e134541fe3c":[10,0,0,8,11,0,0,0,0,3,12,9],
 "economy__base_8h.html#a1ff24302b60c012adc506e134541fe3c":[8,0,0,15,9,5,0,6],
-"economy__base_8h.html#a7a7cfa4089231f95fc1260b23b411051":[10,0,0,8,11,0,0,0,0,3,12,6],
 "economy__base_8h.html#a7a7cfa4089231f95fc1260b23b411051":[8,0,0,15,9,5,0,3],
+"economy__base_8h.html#a7a7cfa4089231f95fc1260b23b411051":[10,0,0,8,11,0,0,0,0,3,12,6],
 "economy__base_8h.html#a7b56f4c32db0de5a63f7f145387712eb":[8,0,0,15,9,5,0,7],
 "economy__base_8h.html#a7b56f4c32db0de5a63f7f145387712eb":[10,0,0,8,11,0,0,0,0,3,12,10],
 "economy__base_8h.html#aa63e43876383a9e98c1811bd70d12ede":[10,0,0,8,11,0,0,0,0,3,12,8],
@@ -105,8 +103,8 @@ var NAVTREEINDEX31 =
 "fswalker_8h.html#ab777e309f17298e4978a2bab94bc79d6":[8,0,15,7],
 "fswalker_8h.html#ac5aaabb740cba264f88d690c605f84ad":[8,0,15,10],
 "fswalker_8h_source.html":[10,0,0,4,1,1],
-"functions.html":[9,3,0,0],
 "functions.html":[9,3,0],
+"functions.html":[9,3,0,0],
 "functions_b.html":[9,3,0,1],
 "functions_c.html":[9,3,0,2],
 "functions_d.html":[9,3,0,3],
@@ -157,8 +155,8 @@ var NAVTREEINDEX31 =
 "functions_type.html":[9,3,3],
 "functions_u.html":[9,3,0,20],
 "functions_v.html":[9,3,0,21],
-"functions_vars.html":[9,3,2],
 "functions_vars.html":[9,3,2,0],
+"functions_vars.html":[9,3,2],
 "functions_vars_b.html":[9,3,2,1],
 "functions_vars_c.html":[9,3,2,2],
 "functions_vars_d.html":[9,3,2,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX31 =
 "h2o__j__instanciation_8cpp.html#a1799af6094be5d844b7be6ec74cfad29":[8,0,0,15,2,0,13],
 "h2o__j__optimiser__un__mois_8cpp.html#a2692919214ec6c7257f7de19858d71f3":[8,0,0,15,2,0,15],
 "h2o__j__resoudre__le__probleme__lineaire_8cpp.html#ad09ae0468cbf0d0a127c8ac630071ee1":[8,0,0,15,2,0,16],
-"h2o__m__donnees__annuelles_8h_source.html":[10,0,0,8,1,0,0,0,0,3,0]
+"h2o__m__donnees__annuelles_8h_source.html":[10,0,0,8,1,0,0,0,0,3,0],
+"h2o__m__donnees__optimisation_8h_source.html":[10,0,0,8,1,0,0,0,0,3,1],
+"h2o__m__fonctions_8h.html#a371c732d544dd83f556296b57091a353":[8,0,0,15,2,1,7]
 };

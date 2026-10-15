@@ -1,7 +1,5 @@
 var NAVTREEINDEX40 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html#a146cf8321618c610c84f2c5f43d92a81":[9,0,0,12,7,5,90,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html#a82e0a9e2310482ede5528aa9c3b19d1d":[9,0,0,12,7,5,90,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html#a8a705f33b1735cf8ffa2b3c563356f88":[9,0,0,12,7,5,90,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html#ac36e5150842762abe1110826c959657b":[9,0,0,12,7,5,90,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html#adf8974bb8c4251568ad30ab242a93cf3":[9,0,0,12,7,5,90,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX40 =
 "structBindingConstraintGroupRepositoryFixture.html#ad87fe88135bfe1e58b6961268d1e77e8":[9,0,47,0],
 "structBindingConstraintGroupRepositoryFixture.html#ae62b159350d5a30183b861e9cc04220b":[9,0,47,2],
 "structBindingConstraintHourData.html":[9,0,49],
-"structBindingConstraintHourData.html#a27bb87e1a9e47ed53a15f453b4145616":[9,0,49,1]
+"structBindingConstraintHourData.html#a27bb87e1a9e47ed53a15f453b4145616":[9,0,49,1],
+"structBindingConstraintHourData.html#aa6d2ee09d5ee5b276ba157c2d38ee5ae":[9,0,49,2],
+"structBindingConstraintHourData.html#ae2d31d694a5b2ab4b1e800ccd06fedbf":[9,0,49,0]
 };

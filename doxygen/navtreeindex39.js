@@ -1,7 +1,5 @@
 var NAVTREEINDEX39 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardForSpatialAggregateSelector_3_01VCardOrigi75743097dadd4d69c0beae6e290af5cc.html":[9,0,0,12,7,2,2],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardForSpatialAggregateSelector_3_01VCardOrigi75743097dadd4d69c0beae6e290af5cc.html#a8ae4684ebb915d519966fc844b128cd7":[9,0,0,12,7,2,2,0],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html":[9,0,0,12,7,2,7],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#a32c1c5444e58201fc070103e9b9929a3":[9,0,0,12,7,2,7,5],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#a673a99772e1d89bf3dab49608d5ed58d":[9,0,0,12,7,2,7,4],
@@ -249,5 +247,7 @@ var NAVTREEINDEX39 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#a4a48ad39e7ee06c5dc4ed6e5204b25af":[9,0,0,12,7,5,13,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#aadfb87da0cbdf847bd5c14a18ee0b06e":[9,0,0,12,7,5,13,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#abf30e7cc5168d6d23d47f54809e786d3":[9,0,0,12,7,5,13,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html":[9,0,0,12,7,5,90]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html":[9,0,0,12,7,5,90],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html#a146cf8321618c610c84f2c5f43d92a81":[9,0,0,12,7,5,90,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html#a82e0a9e2310482ede5528aa9c3b19d1d":[9,0,0,12,7,5,90,4]
 };

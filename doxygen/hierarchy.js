@@ -455,7 +455,6 @@ var hierarchy =
       [ "fmt::formatter< Antares::ModelerStudy::SystemModel::FieldRole >", "structfmt_1_1formatter_3_01Antares_1_1ModelerStudy_1_1SystemModel_1_1FieldRole_01_4.html", null ]
     ] ],
     [ "Antares::Concurrency::FutureSet", "classAntares_1_1Concurrency_1_1FutureSet.html", null ],
-    [ "GemsContributionFixture", "structGemsContributionFixture.html", null ],
     [ "Antares::Solver::Workflow::GenerationAndResolutionConfig", "structAntares_1_1Solver_1_1Workflow_1_1GenerationAndResolutionConfig.html", null ],
     [ "Antares::Data::ShortTermStorage::GroupsHours", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours.html", null ],
     [ "Antares::Data::Symmetries::GroupsSymmetries", "classAntares_1_1Data_1_1Symmetries_1_1GroupsSymmetries.html", null ],
@@ -693,8 +692,7 @@ var hierarchy =
     ] ],
     [ "Antares::LinearProblem::Api::IScenario", "classAntares_1_1LinearProblem_1_1Api_1_1IScenario.html", [
       [ "Antares::LinearProblem::Api::EmptyScenario", "classAntares_1_1LinearProblem_1_1Api_1_1EmptyScenario.html", null ],
-      [ "Antares::LinearProblem::DataImpl::Scenario", "classAntares_1_1LinearProblem_1_1DataImpl_1_1Scenario.html", null ],
-      [ "DefaultScenario", "classDefaultScenario.html", null ]
+      [ "Antares::LinearProblem::DataImpl::Scenario", "classAntares_1_1LinearProblem_1_1DataImpl_1_1Scenario.html", null ]
     ] ],
     [ "Antares::Solver::Simulation::ISimulationObserver", "classAntares_1_1Solver_1_1Simulation_1_1ISimulationObserver.html", [
       [ "Antares::API::SimulationObserver", "classAntares_1_1API_1_1SimulationObserver.html", null ],
@@ -1532,7 +1530,6 @@ var hierarchy =
     [ "TestContext", "structTestContext.html", null ],
     [ "TestException", "classTestException.html", null ],
     [ "TestExceptionN< N >", "classTestExceptionN.html", null ],
-    [ "TestVariabilityVisitorFixture", "structTestVariabilityVisitorFixture.html", null ],
     [ "Antares::Data::ThematicTrimmingVariableRegistry", "classAntares_1_1Data_1_1ThematicTrimmingVariableRegistry.html", null ],
     [ "Antares::Data::Parameters::IncludeOptions::Thermal", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Thermal.html", null ],
     [ "Antares::Solver::Variable::Economy::ThermalAirPollutantEmissionsTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissionsTraits.html", null ],
