@@ -24,6 +24,8 @@ void checkMinStablePower(const Antares::Data::Parameters* parameters,
 void checkFuelCostColumnNumber(const Antares::Data::AreaList& areas);
 void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas);
 
+void checkThermalRampingWithFastMode(const Antares::Data::Parameters& params);
+
 class IncompatibleDailyOptHeuristicForArea final: public Error::LoadingError
 {
 public:
