@@ -106,12 +106,11 @@ std::string tag(const LevelInfo& level)
 void writeToConsole(const LevelInfo& level, const std::string& appliName, const std::string& msg)
 {
     std::ostream& console = level.toStderr ? std::cerr : std::cout;
-    ColorEnabler colorEnabler(console);
     console << timestamp();
     console << application(appliName);
-    console << colorEnabler.tagColor(level) << tag(level) << colorEnabler.removeColor();
+    printWithColor(console, tag(level), level.tagColor);
     console << ' ';
-    console << colorEnabler.msgColor(level) << msg << colorEnabler.removeColor();
+    printWithColor(console, msg, level.messageColor);
     console << '\n';
     console.flush();
 }

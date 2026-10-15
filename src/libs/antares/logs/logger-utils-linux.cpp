@@ -5,9 +5,13 @@
 
 #ifndef _WIN32
 
+#include <ostream>
+
 namespace Antares::Logs
 {
 
+namespace
+{
 std::string linuxColor(const Color& color)
 {
     switch (color)
@@ -24,35 +28,16 @@ std::string linuxColor(const Color& color)
         return "\x1b[0m"; // reset
     }
 }
+} // namespace
 
-ColorEnabler::ColorEnabler([[maybe_unused]] std::ostream& out)
+void printWithColor(std::ostream& out, const std::string& message, Color color)
 {
-}
-
-std::string ColorEnabler::getLinuxColor(const Color& color)
-{
-    close_with_color_ = "";
     if (color != Color::none)
     {
-        close_with_color_ = linuxColor(Color::none);
-        return linuxColor(color);
+        out << linuxColor(color) << message << linuxColor(Color::none);
+        return;
     }
-    return {};
-}
-
-std::string ColorEnabler::tagColor(const LevelInfo& level)
-{
-    return getLinuxColor(level.tagColor);
-}
-
-std::string ColorEnabler::msgColor(const LevelInfo& level)
-{
-    return getLinuxColor(level.messageColor);
-}
-
-std::string ColorEnabler::removeColor()
-{
-    return close_with_color_;
+    out << message;
 }
 
 void setLocalTime(std::tm* tmBuffer, const std::time_t* now)
