@@ -14,21 +14,7 @@
 namespace Antares::Logs
 {
 
-//! ANSI escape sequence for the given color, the reset sequence for Color::none
-std::string linuxColor(const Color& color);
-
-class ColorEnabler
-{
-public:
-    explicit ColorEnabler(std::ostream& out /* unused */);
-
-    std::string tagColor(const LevelInfo& level);
-    std::string msgColor(const LevelInfo& level);
-    std::string removeColor();
-
-private:
-    std::string getLinuxColor(const Color& color);
-};
+void printWithColor(std::ostream& out, const std::string& message, Color color);
 
 void setLocalTime(std::tm* tmBuffer, const std::time_t* now);
 

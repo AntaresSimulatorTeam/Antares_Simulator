@@ -15,33 +15,7 @@
 namespace Antares::Logs
 {
 
-constexpr WORD winDefault = 7; // FOREGROUND_RED|GREEN|BLUE, no intensity
-constexpr WORD winRed = FOREGROUND_RED | FOREGROUND_INTENSITY;
-constexpr WORD winYellow = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
-constexpr WORD winGreen = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
-constexpr WORD winWhite = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE
-                          | FOREGROUND_INTENSITY;
-
-//! Console attribute for the given color, the default attribute for Color::none
-WORD winColor(const Color& color);
-
-std::string setConsoleColor(DWORD& out, const Color& color);
-
-//! Standard handle id matching the given stream
-DWORD winOut(const std::ostream& out);
-
-class ColorEnabler
-{
-public:
-    explicit ColorEnabler(std::ostream& out);
-
-    std::string tagColor(const LevelInfo& level);
-    std::string msgColor(const LevelInfo& level);
-    std::string removeColor();
-
-private:
-    DWORD out_;
-};
+void printWithColor(std::ostream& out, const std::string& message, Color color);
 
 void setLocalTime(std::tm* tmBuffer, const std::time_t* now);
 
