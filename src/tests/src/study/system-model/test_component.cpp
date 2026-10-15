@@ -365,7 +365,9 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_undefined_field)
 {
     PortField field2("field2");
     std::vector portFields2 = {field2};
-    PortType portTypeWithAreaConnection("portType2", std::move(portFields2), {"field2", "", ""});
+    PortType portTypeWithAreaConnection("portType2",
+                                        std::move(portFields2),
+                                        {"field2", "", "", ""});
 
     Port portACNoDef("portACNoDef", portTypeWithAreaConnection);
     ModelBuilder model_builder;
@@ -455,7 +457,9 @@ BOOST_AUTO_TEST_CASE(successfully_connect_area_to_port)
 {
     PortField field_flow("flow");
     std::vector portFields = {field_flow};
-    PortType portTypeWithAreaConnection("port-type-id", std::move(portFields), {"flow", "", ""});
+    PortType portTypeWithAreaConnection("port-type-id",
+                                        std::move(portFields),
+                                        {"flow", "", "", ""});
 
     Port portACDef("portACDef", portTypeWithAreaConnection);
     std::vector<PortFieldDefinition> portFieldDefs;
@@ -534,7 +538,7 @@ BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_fails_because_port_
     PortField from_area_bound("from-area-bound");
     std::vector portFields = {flow, to_area_bound, from_area_bound};
     //  area-connection:
-    AreaConnection area_connection = {"flow", "to-area-bound", "from-area-bound"};
+    AreaConnection area_connection = {"flow", "to-area-bound", "from-area-bound", ""};
     //  Finally : the port type
     PortType portTypeWithAreaConnection("port-type-id", std::move(portFields), area_connection);
 
@@ -577,7 +581,7 @@ BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_is_successful)
     PortField from_area_bound("from-area-bound");
     std::vector portFields = {flow, to_area_bound, from_area_bound};
     //  area-connection:
-    AreaConnection area_connection = {"flow", "to-area-bound", "from-area-bound"};
+    AreaConnection area_connection = {"flow", "to-area-bound", "from-area-bound", ""};
     //  Finally : the port type
     PortType portTypeWithAreaConnection("port-type-id", std::move(portFields), area_connection);
 

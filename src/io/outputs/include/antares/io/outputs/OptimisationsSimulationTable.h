@@ -11,7 +11,7 @@
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/io/outputs/SimulationTableStage.h"
 
-namespace Antares::Optimization
+namespace Antares::Data
 {
 class InactiveComponentsAnalyzer;
 }
@@ -34,7 +34,7 @@ public:
      *        structurally inactive components; nullptr keeps every row.
      */
     explicit OptimisationsSimulationTable(
-      std::shared_ptr<const Optimization::InactiveComponentsAnalyzer> inactiveComponents);
+      std::shared_ptr<const Antares::Data::InactiveComponentsAnalyzer> inactiveComponents);
 
     /**
      * \brief Parse a user-supplied stage list into a selection set.
@@ -89,7 +89,7 @@ public:
     /// Monte-Carlo year.
     void clear();
 
-    const std::shared_ptr<const Optimization::InactiveComponentsAnalyzer> inactiveComponents;
+    const std::shared_ptr<const Antares::Data::InactiveComponentsAnalyzer> inactiveComponents;
 
 private:
     std::map<Stage, SimulationTable> stages_;
