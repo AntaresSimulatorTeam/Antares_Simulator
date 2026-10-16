@@ -105,7 +105,7 @@ std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
         {
             for (unsigned week = 0; week < p.simulationDays.numberOfWeeks(); ++week)
             {
-                // by convention, weeks start at 1
+                // Weeks are one-based in the public API.
                 ret.emplace_back(year, week + 1);
             }
         }
@@ -249,8 +249,8 @@ std::vector<std::string> applyTimeOffset(const std::vector<std::string>& in,
 
 void updateWeekId(WeeklyProblemId& id)
 {
-    auto& [year, week] = id;
-    // by convention, weeks start at 1 from the caller's POV, but at 0 in Simulator
+    auto& week = id.week;
+    // The public API uses one-based weeks, while the simulator is zero-based.
     if (week == 0)
     {
         throw std::out_of_range("Invalid week number 0 detected, week number must be >=1");
@@ -334,8 +334,7 @@ void SingleProblemGetter::setWeeklyData(WeeklyProblemId& id)
 WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
 {
     setWeeklyData(id);
-    // by convention, weeks start at 1 from the caller's POV, but at 0 in Simulator
-    return translator_.translate(pb_.ProblemeAResoudre.get(), problemName({id.year, id.week + 1}));
+    return translator_.translate(pb_.ProblemeAResoudre.get(), problemName(id));
 }
 
 std::unique_ptr<LinearProblem::Api::ILinearProblem> SingleProblemGetter::getWeeklyProblem(
@@ -383,7 +382,7 @@ void SingleProblemGetter::fillProblem(LinearProblem::Api::ILinearProblem& proble
     LinearProblem::OptimEntityContainer optimEntityContainer(problem);
     if (hasModelerData)
     {
-        modelerData->bendersDecomposition.setCurrentProblemId(problemName({id.year, id.week + 1}));
+        modelerData->bendersDecomposition.setCurrentProblemId(problemName(id));
     }
 
     Solver::Optimization::Simplex::LpFiller::fillLinearProblem(fillCtx,
@@ -509,7 +508,8 @@ void writeWeekMPS(const std::unique_ptr<LinearProblem::Api::ILinearProblem>& wee
                   const WeeklyProblemId& id,
                   IResultWriter::Ptr& resultWriter)
 {
-    auto name = problemName(id);
+    // The public API uses one-based weeks; MPS names use simulator indices.
+    auto name = problemName({id.year, id.week - 1});
 
     IO::Outputs::MPSGenerator mpsGenerator(*weekly, name + ".mps", true);
     std::string mps = mpsGenerator.run();

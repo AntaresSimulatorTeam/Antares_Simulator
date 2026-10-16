@@ -24,12 +24,10 @@ class SingleProblemGetter final
 public:
     explicit SingleProblemGetter(const std::filesystem::path& studyPath);
     ~SingleProblemGetter();
-    // NOTE week indices start at 1
-    // year indices start at 0
+    // Year indices start at 0, week indices start at 1.
     std::vector<WeeklyProblemId> getProblemIds() const;
     ConstantDataFromAntares getConstantData();
-    // NOTE week indices start at 1
-    // year indices start at 0
+    // Year indices start at 0, week indices start at 1.
     WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id);
     std::unique_ptr<LinearProblem::Api::ILinearProblem> getWeeklyProblem(WeeklyProblemId id);
 

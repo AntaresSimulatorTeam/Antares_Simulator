@@ -472,8 +472,8 @@ BOOST_FIXTURE_TEST_CASE(STS_efficiency_for_injection_and_withdrawal, StudyFixtur
 
     const auto& observer = simulation.getObserver();
     BOOST_REQUIRE_EQUAL(observer.problems.size(), 2);
-    BOOST_REQUIRE(observer.problems.contains({2, "problem-1-1--optim-nb-2.mps"}));
-    const auto& problem = observer.problems.at({2, "problem-1-1--optim-nb-2.mps"});
+    BOOST_REQUIRE(observer.problems.contains({2, "problem-0-0--optim-nb-2.mps"}));
+    const auto& problem = observer.problems.at({2, "problem-0-0--optim-nb-2.mps"});
 
     // Withdrawal variable
     const std::string withdrawalKey = "Withdrawal::area<some*area>::ShortTermStorage<my-sts>::hour<"
@@ -531,8 +531,8 @@ BOOST_FIXTURE_TEST_CASE(overflow_exists_and_has_right_coeff, StudyFixture)
 
     const auto& observer = simulation.getObserver();
     BOOST_REQUIRE_EQUAL(observer.problems.size(), 2);
-    BOOST_REQUIRE(observer.problems.contains({2, "problem-1-1--optim-nb-2.mps"}));
-    const auto& problem = observer.problems.at({2, "problem-1-1--optim-nb-2.mps"});
+    BOOST_REQUIRE(observer.problems.contains({2, "problem-0-0--optim-nb-2.mps"}));
+    const auto& problem = observer.problems.at({2, "problem-0-0--optim-nb-2.mps"});
 
     const std::string levelKey
       = "Level::area<some*area>::ShortTermStorage<my-sts>::hour<38>"; // Level constraint
