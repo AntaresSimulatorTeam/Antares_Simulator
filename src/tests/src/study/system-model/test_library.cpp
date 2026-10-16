@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(model_with_same_objects_of_same_id)
                                   Parameter("param1", TimeDependent::NO, ScenarioDependent::NO)});
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage(
+                          containsMessage(
                             "Model \"model\" contains multiple objects with ID \"param1\"."));
 
     // Two variables with same ID
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(model_with_same_objects_of_same_id)
     model_builder.withVariables(std::move(variables));
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage(
+                          containsMessage(
                             "Model \"model\" contains multiple objects with ID \"var1\"."));
 
     // Two constraints with same ID
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(model_with_same_objects_of_same_id)
     model_builder.withConstraints(std::move(constraints));
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage(
+                          containsMessage(
                             "Model \"model32\" contains multiple objects with ID \"ctt\"."));
 
     // Two ports with same ID
@@ -67,7 +67,8 @@ BOOST_AUTO_TEST_CASE(model_with_same_objects_of_same_id)
     model_builder.withPorts({port1, port2});
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage("Model \"model\" contains multiple objects with ID \"p\"."));
+                          containsMessage(
+                            "Model \"model\" contains multiple objects with ID \"p\"."));
 
     // Two extra outputs with same ID
     model_builder.withId("model312");
@@ -80,7 +81,7 @@ BOOST_AUTO_TEST_CASE(model_with_same_objects_of_same_id)
     model_builder.withExtraOutputs(std::move(outputs));
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage(
+                          containsMessage(
                             "Model \"model312\" contains multiple objects with ID \"output\"."));
 }
 
@@ -96,7 +97,8 @@ BOOST_AUTO_TEST_CASE(model_with_different_objects_of_same_id)
     model_builder.withVariables(std::move(variables));
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage("Model \"model\" contains multiple objects with ID \"z\"."));
+                          containsMessage(
+                            "Model \"model\" contains multiple objects with ID \"z\"."));
 
     // Constraint with same id as parameter
     model_builder.withId("model32");
@@ -107,7 +109,7 @@ BOOST_AUTO_TEST_CASE(model_with_different_objects_of_same_id)
     model_builder.withConstraints(std::move(constraints));
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage(
+                          containsMessage(
                             "Model \"model32\" contains multiple objects with ID \"x\"."));
 }
 
@@ -130,7 +132,8 @@ BOOST_AUTO_TEST_CASE(model_with_port_ct_same_id)
 
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage("Model \"model\" contains multiple objects with ID \"x\"."));
+                          containsMessage(
+                            "Model \"model\" contains multiple objects with ID \"x\"."));
 
     // Extra output with same ID as variable
     model_builder.withId("model__");
@@ -143,7 +146,7 @@ BOOST_AUTO_TEST_CASE(model_with_port_ct_same_id)
     model_builder.withExtraOutputs(std::move(extraOutputs));
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage(
+                          containsMessage(
                             "Model \"model__\" contains multiple objects with ID \"y\"."));
 }
 

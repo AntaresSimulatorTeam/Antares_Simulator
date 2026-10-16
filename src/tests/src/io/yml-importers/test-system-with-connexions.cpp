@@ -496,7 +496,7 @@ BOOST_AUTO_TEST_CASE(binding_constraint_with_sum_connections_op_is_non_linear___
     std::string err_msg = "'FunctionNode::dual' is not allowed in expression 'dual(my_constraint)'";
     BOOST_CHECK_EXCEPTION(SystemConverter::convert(system, libraries),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 // Unlike the dual() case above, a max() taking only parameters and literals as arguments
@@ -651,7 +651,7 @@ BOOST_AUTO_TEST_CASE(binding_constraint_with_max_op_on_a_variable_is_non_linear_
                           "expression 'max(var_1 + p1, 2)'";
     BOOST_CHECK_EXCEPTION(SystemConverter::convert(system, libraries),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

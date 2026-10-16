@@ -270,7 +270,7 @@ BOOST_FIXTURE_TEST_CASE(variable_bound_with_max_min_on_a_variable_is_rejected, F
 
     std::string err_msg = "'FunctionNode::max' is not allowed to contain 'VariableNode' in "
                           "expression 'max(var1, pmin)'";
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, containsMessage(err_msg));
 }
 
 // Test library with models and ports
@@ -503,7 +503,7 @@ BOOST_FIXTURE_TEST_CASE(port_fields_definitions_forbid_usage_of_sum_connections,
 
     std::string err_msg = "'PortFieldSumNode' is not allowed in expression "
                           "'sum_connections(port.field)'";
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(port_field_definition_conflicts_with_sum_connections_in_same_model, Fixture)
@@ -533,7 +533,7 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_conflicts_with_sum_connections_in_
                           "in binding constraint 'constraint1'. "
                           "A field cannot be both a sender and a receiver in the "
                           "same model.";
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(port_field_definition_conflicts_with_sum_connections_different_port_names,
@@ -564,7 +564,7 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_conflicts_with_sum_connections_dif
                           "in binding constraint 'constraint1'. "
                           "A field cannot be both a sender and a receiver in the "
                           "same model.";
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(port_field_definition_no_conflict_when_sum_connections_on_different_field,
@@ -653,7 +653,7 @@ BOOST_FIXTURE_TEST_CASE(
     std::string err_msg = "In model 'my-model', field 'price' of port 'port' holds the dual "
                           "value of a legacy area's balance equation and can only be used in "
                           "extra-outputs, not in 'constraint1'.";
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(area_connection_price_field_allowed_in_extra_output, Fixture)

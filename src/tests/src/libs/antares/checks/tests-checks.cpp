@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(splx_optim_range_and_hydro_pricing_are_incompatible___excep
                           "compatible ";
     BOOST_CHECK_EXCEPTION(checkSimplexRangeHydroPricing(splxOptimRange, hydroPricingMode),
                           std::runtime_error,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(splx_optim_range_and_hydro_pricing_are_compatible___no_exception_raised)
@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(splx_optim_range_and_unit_commitment_are_incompatible___exc
                           "compatible";
     BOOST_CHECK_EXCEPTION(checkSimplexRangeUnitCommitmentMode(splxOptimRange, ucMode),
                           std::runtime_error,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(splx_optim_range_and_unit_commitment_are_compatible___no_exception_raised)
