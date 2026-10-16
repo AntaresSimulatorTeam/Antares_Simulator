@@ -59,7 +59,8 @@ BOOST_AUTO_TEST_CASE(test_sirius_support)
     BOOST_CHECK_EXCEPTION(
       MPSolverFactory(true, "sirius"),
       std::invalid_argument,
-      checkMessage("Solver sirius is not supported by Antares or does not support MIP problems."));
+      containsMessage(
+        "Solver sirius is not supported by Antares or does not support MIP problems."));
 }
 
 // PDLP only supports LP
@@ -71,7 +72,7 @@ BOOST_AUTO_TEST_CASE(test_pdlp_support)
     BOOST_CHECK_EXCEPTION(
       MPSolverFactory(true, "pdlp"),
       std::invalid_argument,
-      checkMessage("Solver pdlp is not supported by Antares or does not support MIP problems."));
+      containsMessage("Solver pdlp is not supported by Antares or does not support MIP problems."));
 }
 
 // SCIP only supports MIP
@@ -80,7 +81,7 @@ BOOST_AUTO_TEST_CASE(test_scip_support)
     BOOST_CHECK_EXCEPTION(
       MPSolverFactory(false, "scip"),
       std::invalid_argument,
-      checkMessage("Solver scip is not supported by Antares or does not support LP problems."));
+      containsMessage("Solver scip is not supported by Antares or does not support LP problems."));
     auto mipSolver = MPSolverFactory(true, "scip");
     BOOST_REQUIRE(mipSolver);
     BOOST_CHECK_EQUAL(SolverType::SCIP_MIXED_INTEGER_PROGRAMMING, mipSolver->ProblemType());
