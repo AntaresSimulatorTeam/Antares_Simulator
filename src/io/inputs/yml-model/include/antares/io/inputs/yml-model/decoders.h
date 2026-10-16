@@ -9,7 +9,6 @@
 
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/io/inputs/yml-utils/YmlTreeDisplayer.h"
-#include "antares/io/inputs/yml-utils/checkFields.h"
 
 // Implement convert specializations
 namespace YAML

@@ -7,6 +7,7 @@
 
 #include <antares/io/inputs/InputError.h>
 #include <antares/io/inputs/yml-utils/YmlTreeDisplayer.h>
+#include <antares/io/inputs/yml-utils/checkFields.h>
 
 #include "include/antares/io/inputs/yml-model/Library.h"
 

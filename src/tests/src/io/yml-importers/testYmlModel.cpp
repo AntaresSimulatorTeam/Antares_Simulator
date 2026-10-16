@@ -13,6 +13,7 @@
 #include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/yml-model/decoders.h"
 #include "antares/io/inputs/yml-model/parser.h"
+#include "antares/io/inputs/yml-utils/checkFields.h"
 
 #include "enum_operators.h"
 
