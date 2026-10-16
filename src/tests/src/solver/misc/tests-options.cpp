@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE(study_folder_is_empty___exception_raised)
     std::string err_msg = "A study folder is required. Use '--help' for more information";
     BOOST_CHECK_EXCEPTION(checkStudyFolder(studyFolder.string()),
                           std::runtime_error,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 #if defined(_WIN32)
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE(parallel_optione_incompatible)
     std::string err_msg = "Options --parallel and --force-parallel are incompatible";
     BOOST_CHECK_EXCEPTION(checkAndCorrectSettingsAndOptions(settings, options),
                           std::runtime_error,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(optimization_range_set_to_unknown___exception_raised)
@@ -157,7 +157,7 @@ BOOST_AUTO_TEST_CASE(optimization_range_set_to_unknown___exception_raised)
                           "expected)";
     BOOST_CHECK_EXCEPTION(checkAndCorrectSettingsAndOptions(settings, options),
                           std::runtime_error,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(optimization_range_set_to_day)
@@ -182,7 +182,7 @@ BOOST_AUTO_TEST_CASE(output_settings_are_incompatible___exception_raised)
     std::string err_msg = "no-output and zip-output options are incompatible";
     BOOST_CHECK_EXCEPTION(checkAndCorrectSettingsAndOptions(settings, options),
                           Antares::Error::IncompatibleOutputOptions,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

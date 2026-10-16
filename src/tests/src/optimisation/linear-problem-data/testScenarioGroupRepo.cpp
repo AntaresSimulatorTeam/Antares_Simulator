@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(add_to_repo_a_group_it_already_contains_exception_raised)
     BOOST_CHECK_EXCEPTION(scenarioGroupRepo.addScenario("some group",
                                                         std::move(anotherScenarioPtr)),
                           ScenarioGroupRepository::AlreadyExists,
-                          checkMessage(expectedErrMsg));
+                          containsMessage(expectedErrMsg));
 }
 
 BOOST_AUTO_TEST_CASE(ask_an_empty_repo_a_rank_exception_raised)
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(ask_an_empty_repo_a_rank_exception_raised)
     std::string expectedErrMsg = "Scenario group 'SOME GROUP' does not exist in group repo.";
     BOOST_CHECK_EXCEPTION((void)scenarioGroupRepo.scenario("some group"),
                           ScenarioGroupRepository::DoesNotExist,
-                          checkMessage(expectedErrMsg));
+                          containsMessage(expectedErrMsg));
 }
 
 BOOST_AUTO_TEST_CASE(ask_a_repo_a_rank_it_cannot_find_exception_raised)
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE(ask_a_repo_a_rank_it_cannot_find_exception_raised)
                                  "exist.";
     BOOST_CHECK_EXCEPTION((void)scenarioGroupRepo.scenario("some group").getData(0),
                           Antares::Error::RuntimeError,
-                          checkMessage(expectedErrMsg));
+                          containsMessage(expectedErrMsg));
 }
 
 BOOST_AUTO_TEST_CASE(empty_group_id_returns_default_rank)
@@ -85,5 +85,5 @@ BOOST_AUTO_TEST_CASE(set_should_fail_if_timeserie_exists)
     scenarioPtr->setTimeSerieNumber(scenario, dataRank);
     BOOST_CHECK_EXCEPTION(scenarioPtr->setTimeSerieNumber(scenario, dataRank),
                           Antares::Error::RuntimeError,
-                          checkMessage("Time serie number for year 10 already exists."));
+                          containsMessage("Time serie number for year 10 already exists."));
 }
