@@ -590,7 +590,9 @@ models:
       constraints: []
 )"s;
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
+    BOOST_CHECK_EXCEPTION(parser.parse(yaml_content),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("Unrecognised field: out-of-bound-processing"));
 }
 
 BOOST_AUTO_TEST_CASE(misspelled_top_level_field_is_rejected)
@@ -600,7 +602,9 @@ resolution-modes: benders-decomposition
 models: []
 )"s;
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
+    BOOST_CHECK_EXCEPTION(parser.parse(yaml_content),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("Unrecognised field: resolution-modes"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

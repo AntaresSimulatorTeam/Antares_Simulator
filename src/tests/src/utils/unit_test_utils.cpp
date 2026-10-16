@@ -10,7 +10,10 @@ std::function<bool(const std::exception&)> checkMessage(std::string expected_mes
     return [expected_message](const std::exception& e)
     {
         std::string raised_msg = e.what();
-        BOOST_CHECK(raised_msg.find(expected_message) != std::string::npos);
+        BOOST_CHECK_MESSAGE(raised_msg.find(expected_message) != std::string::npos,
+                            "expected message to contain \"" << expected_message
+                                                             << "\" but got:\n"
+                                                             << raised_msg);
         return true;
     };
 }
@@ -20,7 +23,10 @@ std::function<bool(const std::exception&)> containsMessage(std::string expected_
     return [expected_message](const std::exception& e)
     {
         std::string raised_msg = e.what();
-        BOOST_CHECK(raised_msg.find(expected_message) != std::string::npos);
+        BOOST_CHECK_MESSAGE(raised_msg.find(expected_message) != std::string::npos,
+                            "expected message to contain \"" << expected_message
+                                                             << "\" but got:\n"
+                                                             << raised_msg);
         return true;
     };
 }

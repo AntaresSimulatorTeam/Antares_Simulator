@@ -1128,7 +1128,9 @@ BOOST_AUTO_TEST_CASE(misspelled_model_field_is_rejected)
                     - id: "profit"
                       expression: "p"
         )"s;
-    BOOST_CHECK_THROW(parser.parse(library), Antares::IO::Inputs::InputError);
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("Unrecognised field: extra-output"));
 }
 
 BOOST_AUTO_TEST_CASE(misspelled_variable_field_is_rejected)
@@ -1143,5 +1145,7 @@ BOOST_AUTO_TEST_CASE(misspelled_variable_field_is_rejected)
                     - id: "p"
                       lower_bound: 0
         )"s;
-    BOOST_CHECK_THROW(parser.parse(library), Antares::IO::Inputs::InputError);
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("Unrecognised field: lower_bound"));
 }

@@ -431,5 +431,7 @@ BOOST_AUTO_TEST_CASE(misspelled_component_field_is_rejected)
                   model: lib.model
                   scenario-groups: g
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), Antares::IO::Inputs::InputError);
+    BOOST_CHECK_EXCEPTION(parser.parse(system, ""),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("Unrecognised field: scenario-groups"));
 }
