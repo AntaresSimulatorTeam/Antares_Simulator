@@ -97,17 +97,17 @@ void checkFields(const Node& node,
     YmlTreeDisplayer displayer(node);
 
     const auto mark = node.Mark();
-    throw Antares::IO::Inputs::InputError(
-      fmt::format("Line {} column {}\n{}",
-                  mark.line + 1,
-                  mark.column + 1,
-                  build_message(fmt::format("Unexpected, duplicated or missing field(s) (expected {} "
-                                            "field(s)).",
-                                            allowedFields.size()),
-                                displayer,
-                                unexpected,
-                                missing,
-                                duplicated)));
+    throw Antares::IO::Inputs::InputError(fmt::format(
+      "Line {} column {}\n{}",
+      mark.line + 1,
+      mark.column + 1,
+      build_message(fmt::format("Unexpected, duplicated or missing field(s) (expected {} "
+                                "field(s)).",
+                                allowedFields.size()),
+                    displayer,
+                    unexpected,
+                    missing,
+                    duplicated)));
 }
 
 } // namespace YAML
