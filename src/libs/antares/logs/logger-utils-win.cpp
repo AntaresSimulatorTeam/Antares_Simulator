@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <windows.h>
+
 #include "antares/logs/logger-utils.h"
 
 #ifdef _WIN32

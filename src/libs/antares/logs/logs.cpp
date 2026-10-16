@@ -8,8 +8,6 @@
 #include <cstdio>
 #include <iostream>
 
-// #include "antares/logs/logger-utils-linux.h"
-// #include "antares/logs/logger-utils-win.h"
 #include "antares/logs/logger-utils.h"
 
 namespace Antares::Logs
