@@ -142,6 +142,16 @@ BOOST_AUTO_TEST_CASE(checkFields_reports_unexpected_and_missing_keys)
                       Antares::IO::Inputs::InputError);
 }
 
+BOOST_AUTO_TEST_CASE(checkFields_rejects_duplicated_keys)
+{
+    const auto node = YAML::Load(R"(
+        id: supply
+        id: demand
+    )");
+    BOOST_CHECK_THROW((YAML::checkFields(node, std::unordered_set<std::string>{"id"})),
+                      Antares::IO::Inputs::InputError);
+}
+
 BOOST_AUTO_TEST_CASE(printPathTree_formats_nested_paths)
 {
     BOOST_CHECK_EQUAL(YmlUtils::printPathTree(std::filesystem::path("lib/model/port")),
@@ -1106,7 +1116,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_extra_outputs)
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].expression.input_expr, "expression2");
 }
 
-BOOST_FIXTURE_TEST_CASE(misspelled_model_field_is_ignored, Antares::UnitTests::CaptureAntaresLogs)
+BOOST_AUTO_TEST_CASE(misspelled_model_field_is_rejected)
 {
     YmlModel::Parser parser;
     const auto library = R"(
@@ -1118,14 +1128,10 @@ BOOST_FIXTURE_TEST_CASE(misspelled_model_field_is_ignored, Antares::UnitTests::C
                     - id: "profit"
                       expression: "p"
         )"s;
-    BOOST_CHECK_NO_THROW(parser.parse(library));
-    BOOST_REQUIRE_EQUAL(getWarnings().size(), 1);
-    BOOST_CHECK_NE(getWarnings().begin()->find("Unrecognised field: extra-output"),
-                   std::string::npos);
+    BOOST_CHECK_THROW(parser.parse(library), Antares::IO::Inputs::InputError);
 }
 
-BOOST_FIXTURE_TEST_CASE(misspelled_variable_field_is_ignored,
-                        Antares::UnitTests::CaptureAntaresLogs)
+BOOST_AUTO_TEST_CASE(misspelled_variable_field_is_rejected)
 {
     YmlModel::Parser parser;
     const auto library = R"(
@@ -1137,8 +1143,5 @@ BOOST_FIXTURE_TEST_CASE(misspelled_variable_field_is_ignored,
                     - id: "p"
                       lower_bound: 0
         )"s;
-    BOOST_CHECK_NO_THROW(parser.parse(library));
-    BOOST_REQUIRE_EQUAL(getWarnings().size(), 1);
-    BOOST_CHECK_NE(getWarnings().begin()->find("Unrecognised field: lower_bound"),
-                   std::string::npos);
+    BOOST_CHECK_THROW(parser.parse(library), Antares::IO::Inputs::InputError);
 }

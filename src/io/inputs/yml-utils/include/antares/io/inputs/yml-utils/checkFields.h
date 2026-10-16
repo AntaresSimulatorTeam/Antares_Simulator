@@ -11,7 +11,7 @@
 namespace YAML
 {
 
-/// Throws InputError if \p node is a map lacking a mandatory key or containing a key outside
+/// Throws InputError if \p node is a map lacking a mandatory key, containing a duplicated key, or containing a key outside
 /// mandatoryFields + optionalFields. Absent optional fields are not an error.
 /// Non-map nodes are ignored.
 void checkFields(const Node& node,

@@ -420,8 +420,7 @@ BOOST_AUTO_TEST_CASE(decoder_throws_for_defined_non_map_nodes)
     }
 }
 
-BOOST_FIXTURE_TEST_CASE(misspelled_component_field_is_ignored,
-                        Antares::UnitTests::CaptureAntaresLogs)
+BOOST_AUTO_TEST_CASE(misspelled_component_field_is_rejected)
 {
     YmlSystem::Parser parser;
     const auto system = R"(
@@ -432,8 +431,5 @@ BOOST_FIXTURE_TEST_CASE(misspelled_component_field_is_ignored,
                   model: lib.model
                   scenario-groups: g
     )"s;
-    BOOST_CHECK_NO_THROW(parser.parse(system, ""));
-    BOOST_REQUIRE_EQUAL(getWarnings().size(), 1);
-    BOOST_CHECK_NE(getWarnings().begin()->find("Unrecognised field: scenario-groups"),
-                   std::string::npos);
+    BOOST_CHECK_THROW(parser.parse(system, ""), Antares::IO::Inputs::InputError);
 }

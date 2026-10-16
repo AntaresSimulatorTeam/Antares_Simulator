@@ -29,8 +29,13 @@ std::vector<std::string> diffSet(const std::unordered_set<std::string>& setA,
 std::string build_message(const std::string& header,
                           const YmlTreeDisplayer& displayer,
                           const std::vector<std::string>& unexpected,
-                          const std::vector<std::string>& missing)
+                          const std::vector<std::string>& missing,
+                          const std::vector<std::string>& duplicated)
 {
+    // Duplicated keys are highlighted like unexpected ones
+    auto markedUnexpected = unexpected;
+    markedUnexpected.insert(markedUnexpected.end(), duplicated.begin(), duplicated.end());
+
     std::string fieldsList;
     for (const auto& f: unexpected)
     {
@@ -41,11 +46,16 @@ std::string build_message(const std::string& header,
         fieldsList += fmt::format("- Missing field: {}\n", f);
     }
 
+    for (const auto& f: duplicated)
+    {
+        fieldsList += fmt::format("- Duplicated field: {}\n", f);
+    }
+
     return fmt::format("{}\n{}\n{}{}",
                        header,
                        fieldsList,
                        displayer.baseTree(),
-                       displayer.buildMarkedTree(unexpected, missing));
+                       displayer.buildMarkedTree(markedUnexpected, missing));
 }
 
 } // namespace
@@ -61,11 +71,15 @@ void checkFields(const Node& node,
 
     // Extract actual key names (cheap, no line-number tracking yet)
     std::unordered_set<std::string> actualKeys;
+    std::vector<std::string> duplicated;
     for (const auto& entry: node)
     {
         const Node keyNode = entry.first;
-        actualKeys.insert(keyNode.IsDefined() ? keyNode.as<std::string>()
-                                              : std::string("<unknown>"));
+        auto key = keyNode.IsDefined() ? keyNode.as<std::string>() : std::string("<unknown>");
+        if (!actualKeys.insert(key).second)
+        {
+            duplicated.push_back(std::move(key));
+        }
     }
 
     std::unordered_set<std::string> allowedFields = mandatoryFields;
@@ -74,7 +88,7 @@ void checkFields(const Node& node,
     const auto unexpected = diffSet(actualKeys, allowedFields);
     const auto missing = diffSet(mandatoryFields, actualKeys);
 
-    if (unexpected.empty() && missing.empty())
+    if (unexpected.empty() && missing.empty() && duplicated.empty())
     {
         return; // valid
     }
@@ -87,12 +101,13 @@ void checkFields(const Node& node,
       fmt::format("Line {} column {}\n{}",
                   mark.line + 1,
                   mark.column + 1,
-                  build_message(fmt::format("Unexpected or missing field(s) (expected {} "
+                  build_message(fmt::format("Unexpected, duplicated or missing field(s) (expected {} "
                                             "field(s)).",
                                             allowedFields.size()),
                                 displayer,
                                 unexpected,
-                                missing)));
+                                missing,
+                                duplicated)));
 }
 
 } // namespace YAML
