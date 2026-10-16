@@ -1,7 +1,5 @@
 var NAVTREEINDEX36 =
 {
-"solver__steps_8py.html#ab2dde1f1dea0fb35c42f79d1b100a659":[8,0,32,45],
-"solver__steps_8py.html#ab4cdeb5e1e574e43bda28935f7c04115":[8,0,32,59],
 "solver__steps_8py.html#ab6a9ed43302ef8679798aa598158ca29":[8,0,32,94],
 "solver__steps_8py.html#ab8b411558d94bc450b7b4e597139d88d":[8,0,32,12],
 "solver__steps_8py.html#ac1820b6ae387258263066b08bbae4939":[8,0,32,79],
@@ -249,5 +247,7 @@ var NAVTREEINDEX36 =
 "structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html#ac5de8b05124179e8ea30be55d6e0db8e":[9,0,0,3,74,0,4],
 "structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html#ac7c66da2ff39379b4567f3bdd2f3ad3c":[9,0,0,3,74,0,2],
 "structAntares_1_1Data_1_1TimeDependantHydroManagementData.html":[9,0,0,3,58],
-"structAntares_1_1Data_1_1TimeDependantHydroManagementData.html#aab62d388222707f978e9680529d98c6c":[9,0,0,3,58,0]
+"structAntares_1_1Data_1_1TimeDependantHydroManagementData.html#aab62d388222707f978e9680529d98c6c":[9,0,0,3,58,0],
+"structAntares_1_1Data_1_1TimeDependantHydroManagementData.html#ad5c7884b30e88094fb3e10fdda37875f":[9,0,0,3,58,1],
+"structAntares_1_1Data_1_1TimeSeriesToCStr.html":[9,0,0,3,38]
 };

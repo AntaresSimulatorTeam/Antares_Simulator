@@ -1,7 +1,5 @@
 var NAVTREEINDEX43 =
 {
-"structLibraryObjects.html":[9,0,177],
-"structLibraryObjects.html#a1155e5ed272e63eafa3d39c75d90e400":[9,0,177,3],
 "structLibraryObjects.html#a74880fc76846c403dea19cd76bebafca":[9,0,177,2],
 "structLibraryObjects.html#a96e5b0162c73283464e9eaf99795eef0":[9,0,177,1],
 "structLibraryObjects.html#a9fcf420a76c93ce5acb7976f5845f55e":[9,0,177,0],
@@ -94,8 +92,8 @@ var NAVTREEINDEX43 =
 "structOneProblemWithReservesTwoAreas.html#a331428318e6c36868dce97f9c9cfa3e8":[9,0,238,3],
 "structOneProblemWithReservesTwoAreas.html#a7250c525c7711e1466b41d69227484d9":[9,0,238,6],
 "structOneProblemWithReservesTwoAreas.html#a7912a54705e13acd89fcee12460d3fde":[9,0,238,9],
-"structOneProblemWithReservesTwoAreas.html#a79d7790fa3ed04e726fc7d2a3ba232ab":[9,0,238,1],
 "structOneProblemWithReservesTwoAreas.html#a79d7790fa3ed04e726fc7d2a3ba232ab":[9,0,238,0],
+"structOneProblemWithReservesTwoAreas.html#a79d7790fa3ed04e726fc7d2a3ba232ab":[9,0,238,1],
 "structOneProblemWithReservesTwoAreas.html#abd29cd87b37000c5fdc63efb4fc4fe7f":[9,0,238,5],
 "structOneProblemWithReservesTwoAreas.html#ac997e0d703ca6efcf88f6cc10b50361f":[9,0,238,7],
 "structOneProblemWithReservesTwoAreas.html#ad1ddbab28d4e207587b4340dc19905bf":[9,0,238,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX43 =
 "structPROBLEME__LINEAIRE__ETENDU__PARTIE__FIXE.html#a763bba5d3bac78b496e922908dde3685":[9,0,271,7],
 "structPROBLEME__LINEAIRE__ETENDU__PARTIE__FIXE.html#a92238004f974a167fc940bed74be291b":[9,0,271,1],
 "structPROBLEME__LINEAIRE__ETENDU__PARTIE__FIXE.html#aa3d19ff779e35309e20f8971bc5e3e3c":[9,0,271,8],
-"structPROBLEME__LINEAIRE__ETENDU__PARTIE__FIXE.html#aa95c93d5f310f2c447256200c9b50f2a":[9,0,271,4]
+"structPROBLEME__LINEAIRE__ETENDU__PARTIE__FIXE.html#aa95c93d5f310f2c447256200c9b50f2a":[9,0,271,4],
+"structPROBLEME__LINEAIRE__ETENDU__PARTIE__FIXE.html#ad6efcd798adbc881363ac1a19053c81f":[9,0,271,2],
+"structPROBLEME__LINEAIRE__ETENDU__PARTIE__FIXE.html#ae962e89a51211c8f611cd8ea35758f49":[9,0,271,9]
 };

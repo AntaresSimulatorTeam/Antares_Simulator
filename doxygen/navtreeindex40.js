@@ -1,7 +1,5 @@
 var NAVTREEINDEX40 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn.html#a8c42bd8c48da038320c34fac3fc01833":[9,0,0,12,7,5,66,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn.html#aa46f9b663a62b8292c8ec6c1f25e94aa":[9,0,0,12,7,5,66,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn_1_1Multiple.html":[9,0,0,12,7,5,66,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html":[9,0,0,12,7,5,11],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html#a5d35abffe71d683f42699ee7842f3e85":[9,0,0,12,7,5,11,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX40 =
 "structBenchmarking_1_1DurationCollector_1_1OperationTimer.html":[9,0,3,0,0],
 "structBenchmarking_1_1DurationCollector_1_1OperationTimer.html#a15f19480e305dd073f543190a4704065":[9,0,3,0,0,3],
 "structBenchmarking_1_1DurationCollector_1_1OperationTimer.html#a82a7dc82b25e72f523d0f56298ad0078":[9,0,3,0,0,2],
-"structBenchmarking_1_1DurationCollector_1_1OperationTimer.html#a946f5f2b178260061876172143ca1569":[9,0,3,0,0,1]
+"structBenchmarking_1_1DurationCollector_1_1OperationTimer.html#a946f5f2b178260061876172143ca1569":[9,0,3,0,0,1],
+"structBenchmarking_1_1DurationCollector_1_1OperationTimer.html#abd4f288e9df1ca66ab70994eb4fa61db":[9,0,3,0,0,0],
+"structBenchmarking_1_1OptimizationInfo.html":[9,0,3,4]
 };

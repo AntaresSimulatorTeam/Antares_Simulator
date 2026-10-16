@@ -1,7 +1,5 @@
 var NAVTREEINDEX41 =
 {
-"structBenchmarking_1_1DurationCollector_1_1OperationTimer.html#abd4f288e9df1ca66ab70994eb4fa61db":[9,0,3,0,0,0],
-"structBenchmarking_1_1OptimizationInfo.html":[9,0,3,4],
 "structBenchmarking_1_1OptimizationInfo.html#a7e561afa84d4526d96888694b024ad0a":[9,0,3,4,1],
 "structBenchmarking_1_1OptimizationInfo.html#ab015293c71a92d90e2df2e31cab5d3df":[9,0,3,4,0],
 "structBindingConstraintDayData.html":[9,0,45],
@@ -249,5 +247,7 @@ var NAVTREEINDEX41 =
 "structCsrFlowDissociationData.html#acf0b85ed962447402e8701eb8c06526e":[9,0,94,5],
 "structCsrFlowDissociationData.html#af590589d8a533f78817f12f230616736":[9,0,94,4],
 "structCsrMaxEnsLoadData.html":[9,0,96],
-"structCsrMaxEnsLoadData.html#a17e84a4b2224330b65709bbbc98fc09e":[9,0,96,3]
+"structCsrMaxEnsLoadData.html#a17e84a4b2224330b65709bbbc98fc09e":[9,0,96,3],
+"structCsrMaxEnsLoadData.html#a2ebe483460df965696c3f46eca50e5b0":[9,0,96,2],
+"structCsrMaxEnsLoadData.html#a507d6c65689d7f66d26f7f30a7f20cdc":[9,0,96,1]
 };

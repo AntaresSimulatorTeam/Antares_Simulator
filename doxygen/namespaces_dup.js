@@ -900,10 +900,10 @@ var namespaces_dup =
           [ "white", "logger-utils_8h.html#a249add8801d4bbffeffbf28f5448d098ad508fe45cecaf653904a0e774084bb5c", null ]
         ] ],
         [ "application", "libs_2antares_2logs_2logs_8cpp.html#a5a49983d5aba8c4bd4d593f52aec8510", null ],
-        [ "eol", "logger-utils-linux_8h.html#a59d2a2c2b1c21650936c7d7e3d643d3c", null ],
+        [ "eol", "logger-utils_8h.html#a59d2a2c2b1c21650936c7d7e3d643d3c", null ],
         [ "hostName", "hostinfo_8cpp.html#a6ebd715245826263704bc9c681b0a85b", null ],
-        [ "printWithColor", "logger-utils-linux_8h.html#a7869ae4378173becfe3f7eab76fceee7", null ],
-        [ "setLocalTime", "logger-utils-linux_8h.html#a3e3225d935a7b0d1c98857a6a903effb", null ],
+        [ "printWithColor", "logger-utils_8h.html#a7869ae4378173becfe3f7eab76fceee7", null ],
+        [ "setLocalTime", "logger-utils_8h.html#a3e3225d935a7b0d1c98857a6a903effb", null ],
         [ "tag", "libs_2antares_2logs_2logs_8cpp.html#aa841993ba71ec05d6553861dc0f8282c", null ],
         [ "threadNumber", "libs_2antares_2logs_2include_2antares_2logs_2logs_8h.html#a5b1145e59766e18ca4fb6cdd4a667cdd", null ],
         [ "timestamp", "libs_2antares_2logs_2logs_8cpp.html#a12f54c599bea4374503efb3f1148367b", null ],
