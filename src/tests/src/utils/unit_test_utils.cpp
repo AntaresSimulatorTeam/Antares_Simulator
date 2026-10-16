@@ -11,8 +11,7 @@ std::function<bool(const std::exception&)> containsMessage(std::string expected_
     {
         std::string raised_msg = e.what();
         BOOST_CHECK_MESSAGE(raised_msg.find(expected_message) != std::string::npos,
-                            "expected message to contain \"" << expected_message
-                                                             << "\" but got:\n"
+                            "expected message to contain \"" << expected_message << "\" but got:\n"
                                                              << raised_msg);
         return true;
     };
