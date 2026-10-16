@@ -1,17 +1,17 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#ifdef _WIN32
+
+#include <iostream>
 #include <windows.h>
 
 #include "antares/logs/logger-utils.h"
 
-#ifdef _WIN32
-
-#include <iostream>
-
 namespace Antares::Logs
 {
-
+namespace
+{
 constexpr WORD winDefault = 7; // FOREGROUND_RED|GREEN|BLUE, no intensity
 constexpr WORD winRed = FOREGROUND_RED | FOREGROUND_INTENSITY;
 constexpr WORD winYellow = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
@@ -40,6 +40,7 @@ DWORD winOut(const std::ostream& out)
 {
     return (&out == &std::cerr) ? STD_ERROR_HANDLE : STD_OUTPUT_HANDLE;
 }
+} // namespace
 
 void printWithColor(std::ostream& out, const std::string& message, Color color)
 {

@@ -10,7 +10,7 @@
 namespace Antares::Logs
 {
 
-std::string linuxColor(const Color& color)
+static std::string linuxColor(const Color& color)
 {
     switch (color)
     {
