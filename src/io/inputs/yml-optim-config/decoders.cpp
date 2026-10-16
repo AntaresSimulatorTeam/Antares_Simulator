@@ -4,6 +4,7 @@
 #include "antares/io/inputs/yml-optim-config/decoders.h"
 
 #include <antares/io/inputs/InputError.h>
+#include <antares/io/inputs/yml-utils/checkFields.h>
 
 namespace YAML
 {
@@ -35,6 +36,7 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::Variable>::decode(
     {
         return false;
     }
+    checkFields(node, {"id", "location"});
     rhs.id = node["id"].as<std::string>();
     rhs.location = node["location"].as<std::string>();
     return true;
@@ -48,6 +50,7 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::Constraint>::decode(
     {
         return false;
     }
+    checkFields(node, {"id", "location"});
     rhs.id = node["id"].as<std::string>();
     rhs.location = node["location"].as<std::string>();
     return true;
@@ -61,6 +64,7 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcessin
     {
         return false;
     }
+    checkFields(node, {"id"}, {"mode"});
     rhs.id = node["id"].as<std::string>();
     rhs.mode = node["mode"].as<std::string>("cyclic");
     return true;
@@ -74,6 +78,7 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::Objective>::decode(
     {
         return false;
     }
+    checkFields(node, {"id", "location"});
     rhs.id = node["id"].as<std::string>();
     rhs.location = node["location"].as<std::string>();
 
@@ -88,6 +93,11 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::Model>::decode(
     {
         throw Antares::IO::Inputs::InputError("Expected a YAML mapping for 'model'");
     }
+    checkFields(node, {"id"}, {"model-decomposition", "out-of-bounds-processing"});
+    checkFields(node["model-decomposition"],
+                {},
+                {"variables", "constraints", "objective-contributions"});
+    checkFields(node["out-of-bounds-processing"], {}, {"constraints"});
     rhs.id = node["id"].as<std::string>();
     const auto& modelDecompositionNode = node["model-decomposition"];
     rhs.variables = as_fallback_default<std::vector<Antares::IO::Inputs::YmlOptimConfig::Variable>>(
@@ -120,6 +130,8 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::ScenarioScope>::decode(
     {
         return false;
     }
+
+    checkFields(node, {}, {"include", "exclude"});
 
     const auto& includeNode = node["include"];
     if (includeNode.IsDefined() && !includeNode.IsNull())
@@ -170,6 +182,7 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::OptimConfig>::decode(
     {
         throw Antares::IO::Inputs::InputError("Expected a YAML mapping for 'optim-config'");
     }
+    checkFields(node, {"models"}, {"resolution-mode", "scenario-scope"});
 
     // Parse resolution-mode (optional, defaults to sequential-subproblems)
     if (node["resolution-mode"])

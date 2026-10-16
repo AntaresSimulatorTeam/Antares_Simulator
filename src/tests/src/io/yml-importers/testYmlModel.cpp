@@ -5,6 +5,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <unit_test_utils.h>
 #include <yaml-cpp/exceptions.h>
 
 #include <boost/test/unit_test.hpp>
@@ -12,6 +13,7 @@
 #include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/yml-model/decoders.h"
 #include "antares/io/inputs/yml-model/parser.h"
+#include "antares/io/inputs/yml-utils/checkFields.h"
 
 #include "enum_operators.h"
 
@@ -137,7 +139,17 @@ BOOST_AUTO_TEST_CASE(checkFields_reports_unexpected_and_missing_keys)
         c: 3
     )");
     BOOST_CHECK_THROW((YAML::checkFields(node, std::unordered_set<std::string>{"a", "b"})),
-                      YAML::Exception);
+                      Antares::IO::Inputs::InputError);
+}
+
+BOOST_AUTO_TEST_CASE(checkFields_rejects_duplicated_keys)
+{
+    const auto node = YAML::Load(R"(
+        id: supply
+        id: demand
+    )");
+    BOOST_CHECK_THROW((YAML::checkFields(node, std::unordered_set<std::string>{"id"})),
+                      Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(printPathTree_formats_nested_paths)
@@ -417,7 +429,7 @@ BOOST_AUTO_TEST_CASE(area_connection_rejects_unknown_field)
                    not-a-field:
             models: []
     )"s;
-    BOOST_REQUIRE_THROW((void)parser.parse(library), YAML::Exception);
+    BOOST_REQUIRE_THROW((void)parser.parse(library), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)
@@ -1102,4 +1114,38 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_extra_outputs)
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[0].expression.input_expr, "expression1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].id, "output_name2");
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].expression.input_expr, "expression2");
+}
+
+BOOST_AUTO_TEST_CASE(misspelled_model_field_is_rejected)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            models:
+                - id: "model_id"
+                  extra-output:
+                    - id: "profit"
+                      expression: "p"
+        )"s;
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("Unrecognised field: extra-output"));
+}
+
+BOOST_AUTO_TEST_CASE(misspelled_variable_field_is_rejected)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            models:
+                - id: "model_id"
+                  variables:
+                    - id: "p"
+                      lower_bound: 0
+        )"s;
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("Unrecognised field: lower_bound"));
 }

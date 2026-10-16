@@ -3,6 +3,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <unit_test_utils.h>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/io/inputs/InputError.h>
@@ -416,4 +418,20 @@ BOOST_AUTO_TEST_CASE(decoder_throws_for_defined_non_map_nodes)
         YmlSystem::System s;
         BOOST_CHECK_THROW(YAML::convert<YmlSystem::System>::decode(scalar, s), InputError);
     }
+}
+
+BOOST_AUTO_TEST_CASE(misspelled_component_field_is_rejected)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            components:
+                - id: N
+                  model: lib.model
+                  scenario-groups: g
+    )"s;
+    BOOST_CHECK_EXCEPTION(parser.parse(system, ""),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("Unrecognised field: scenario-groups"));
 }

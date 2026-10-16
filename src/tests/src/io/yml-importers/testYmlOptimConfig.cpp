@@ -3,10 +3,12 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <unit_test_utils.h>
 #include <yaml-cpp/exceptions.h>
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/io/inputs/InputError.h>
 #include "antares/io/inputs/yml-optim-config/parser.h"
 using namespace Antares::IO::Inputs::YmlOptimConfig;
 using namespace std::string_literals;
@@ -245,7 +247,7 @@ other_key:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_id_throws)
@@ -259,7 +261,7 @@ models:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_model_decomposition_throws)
@@ -285,7 +287,7 @@ models:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_variable_location_throws)
@@ -300,7 +302,7 @@ models:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_objective_id_throws)
@@ -315,7 +317,7 @@ models:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_objective_location_throws)
@@ -330,7 +332,7 @@ models:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parse_invalid_yaml_syntax_throws)
@@ -575,6 +577,34 @@ models:
 
     Parser parser;
     BOOST_CHECK_THROW(parser.parse(yaml_content), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(misspelled_model_field_is_rejected)
+{
+    const auto yaml_content = R"(
+models:
+  - id: lib.model
+    model-decomposition:
+      variables: []
+    out-of-bound-processing:
+      constraints: []
+)"s;
+    Parser parser;
+    BOOST_CHECK_EXCEPTION(parser.parse(yaml_content),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("Unrecognised field: out-of-bound-processing"));
+}
+
+BOOST_AUTO_TEST_CASE(misspelled_top_level_field_is_rejected)
+{
+    const auto yaml_content = R"(
+resolution-modes: benders-decomposition
+models: []
+)"s;
+    Parser parser;
+    BOOST_CHECK_EXCEPTION(parser.parse(yaml_content),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("Unrecognised field: resolution-modes"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
