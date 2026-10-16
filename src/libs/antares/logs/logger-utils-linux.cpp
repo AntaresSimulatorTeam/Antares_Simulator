@@ -4,6 +4,7 @@
 #ifndef _WIN32
 
 #include <ostream>
+
 #include "antares/logs/logger-utils.h"
 
 namespace Antares::Logs
