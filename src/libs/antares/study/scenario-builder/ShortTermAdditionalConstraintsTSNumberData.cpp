@@ -37,7 +37,7 @@ void ShortTermAdditionalConstraintsTSNumberData::setTSnumber(
   unsigned value)
 {
     auto& ts_numbers = rules_[sts];
-    if (year < ts_numbers.height)
+    if (year < ts_numbers.height())
     {
         ts_numbers[0][year] = value;
     }

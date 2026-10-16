@@ -13,48 +13,36 @@
 using namespace std;
 using namespace Antares;
 
-template<class T = double, class ReadWriteT = T>
-class Matrix_easy_to_fill: public Matrix<T, ReadWriteT>
+template<class T = double>
+class Matrix_easy_to_fill: public Matrix<T>
 {
 public:
     Matrix_easy_to_fill():
-        Matrix<T, ReadWriteT>()
+        Matrix<T>()
     {
     }
 
-    Matrix_easy_to_fill(uint height, uint width):
-        Matrix<T, ReadWriteT>(height, width)
+    Matrix_easy_to_fill(unsigned int height, unsigned int width):
+        Matrix<T>(height, width)
     {
     }
 
-    Matrix_easy_to_fill(uint height, uint width, const vector<T>& vec):
-        Matrix<T, ReadWriteT>()
+    Matrix_easy_to_fill(unsigned int height, unsigned int width, const std::vector<T>& vec):
+        Matrix<T>()
     {
         BOOST_REQUIRE_EQUAL(height * width, vec.size());
         this->reset(width, height);
-        uint count = 0;
-        for (uint j = 0; j < height; j++)
+        unsigned int count = 0;
+        for (unsigned int j = 0; j < height; j++)
         {
-            for (uint i = 0; i < width; i++)
+            for (unsigned int i = 0; i < width; i++)
             {
-                this->entry[i][j] = vec[count];
+                (*this)[i][j] = vec[count];
                 count++;
             }
         }
     }
 
-    bool openFile(Yuni::IO::File::Stream& /* file */,
-                  const AnyString& /* filename */) const override
-    {
-        return true;
-    }
-
-    void saveBufferToFile(std::string& buffer, Yuni::IO::File::Stream& /* f */) const override
-    {
-        data = buffer;
-    }
-
-public:
     mutable std::string data;
 };
 

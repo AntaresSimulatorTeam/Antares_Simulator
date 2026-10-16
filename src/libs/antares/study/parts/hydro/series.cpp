@@ -5,13 +5,12 @@
 
 #include <algorithm>
 
+#include <antares/array/matrix-io.h>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/study/parts/hydro/series.h>
 
 namespace fs = std::filesystem;
-
-#define SEP Yuni::IO::Separator
 
 namespace Antares::Data
 {
@@ -23,8 +22,7 @@ static bool loadTSfromFile(Matrix<double>& ts,
                            unsigned int height)
 {
     fs::path filePath = folder / areaID / filename;
-    Matrix<>::BufferType fileContent;
-    return ts.loadFromCSVFile(filePath.string(), 1, height, &fileContent);
+    return MatrixIO::load(ts, filePath.string(), 1, height, 0);
 }
 
 static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,
@@ -112,20 +110,12 @@ bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
 bool DataSeriesHydro::LoadMaxPower(const std::string& areaID, const fs::path& folder)
 {
     bool ret = true;
-    Matrix<>::BufferType fileContent;
-
     fs::path filePath = folder / areaID / "maxHourlyGenPower.txt";
-    ret = maxHourlyGenPower.timeSeries.loadFromCSVFile(filePath.string(),
-                                                       1,
-                                                       HOURS_PER_YEAR,
-                                                       &fileContent)
+    ret = MatrixIO::load(maxHourlyGenPower.timeSeries, filePath.string(), 1, HOURS_PER_YEAR, 0)
           && ret;
 
     filePath = folder / areaID / "maxHourlyPumpPower.txt";
-    ret = maxHourlyPumpPower.timeSeries.loadFromCSVFile(filePath.string(),
-                                                        1,
-                                                        HOURS_PER_YEAR,
-                                                        &fileContent)
+    ret = MatrixIO::load(maxHourlyPumpPower.timeSeries, filePath.string(), 1, HOURS_PER_YEAR, 0)
           && ret;
 
     return ret;
@@ -162,26 +152,30 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID,
                                    const std::string& folder,
                                    Parameters::Compatibility::HydroPmax hydroPmax) const
 {
-    const std::string buffer = folder + SEP + areaID;
+    const auto buffer = fs::path(folder) / areaID;
     /* Make sure the folder is created */
-    if (Yuni::IO::Directory::Create(buffer))
+    std::error_code ec;
+    const bool created = std::filesystem::create_directories(buffer, ec);
+    std::error_code directoryEc;
+    const bool isDirectory = std::filesystem::is_directory(buffer, directoryEc);
+    if (created || isDirectory)
     {
         bool ret = true;
 
         // Saving data
-        ret = ror.timeSeries.saveToCSVFile(folder + SEP + areaID + SEP + "ror.txt", 0) && ret;
-        ret = storage.timeSeries.saveToCSVFile(folder + SEP + areaID + SEP + "mod.txt", 0) && ret;
-        ret = mingen.timeSeries.saveToCSVFile(folder + SEP + areaID + SEP + "mingen.txt", 0) && ret;
+        ret = MatrixIO::save(ror.timeSeries, (buffer / "ror.txt").string(), 0) && ret;
+        ret = MatrixIO::save(storage.timeSeries, (buffer / "mod.txt").string(), 0) && ret;
+        ret = MatrixIO::save(mingen.timeSeries, (buffer / "mingen.txt").string(), 0) && ret;
 
         if (hydroPmax == Parameters::Compatibility::HydroPmax::Hourly)
         {
-            ret = maxHourlyGenPower.timeSeries.saveToCSVFile(folder + SEP + areaID + SEP
-                                                               + "maxHourlyGenPower.txt",
-                                                             0)
+            ret = MatrixIO::save(maxHourlyGenPower.timeSeries,
+                                 (buffer / "maxHourlyGenPower.txt").string(),
+                                 0)
                   && ret;
-            ret = maxHourlyPumpPower.timeSeries.saveToCSVFile(folder + SEP + areaID + SEP
-                                                                + "maxHourlyPumpPower.txt",
-                                                              0)
+            ret = MatrixIO::save(maxHourlyPumpPower.timeSeries,
+                                 (buffer / "maxHourlyPumpPower.txt").string(),
+                                 0)
                   && ret;
         }
 

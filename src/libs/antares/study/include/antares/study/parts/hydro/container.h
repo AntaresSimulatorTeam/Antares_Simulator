@@ -157,9 +157,9 @@ public:
     double pumpingEfficiency;
     //! Daily max power ({generating max Power, generating max energy, pumping max power, pumping
     //! max energy}x365)
-    Matrix<double, double> dailyMaxPumpAndGen;
+    Matrix<double> dailyMaxPumpAndGen;
     //! Credit Modulation (default 0, 101 * 2)
-    Matrix<double, double> creditModulation;
+    Matrix<double> creditModulation;
 
     //! Daily Inflow Patern ([default 1, 0<x<dayspermonth]x365)
     Matrix<double> inflowPattern;
@@ -178,8 +178,8 @@ public:
     // TODO : following time series could be hosted by the series data member above (of type
     // DataSeriesHydro),
     //        which contains other time.
-    Matrix<double, double> dailyNbHoursAtGenPmax;
-    Matrix<double, double> dailyNbHoursAtPumpPmax;
+    Matrix<double> dailyNbHoursAtGenPmax;
+    Matrix<double> dailyNbHoursAtPumpPmax;
     std::unordered_map<unsigned int, AreaDependantHydroManagementData> managementData;
 
     std::vector<std::optional<double>> deltaBetweenFinalAndInitialLevels;
@@ -207,7 +207,7 @@ double getWaterValue(const double& level,
 
 // Interpolates a rate from the credit modulation table according to a level
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,
-                           Matrix<double, double>& creditMod,
+                           Matrix<double>& creditMod,
                            int modType);
 
 } // namespace Antares::Data

@@ -5,12 +5,8 @@
 #define __ANTARES_LIBS_ARRAY_MATRIX_H__
 
 #include <cassert>
-#include <set>
-
-#include <yuni/yuni.h>
-#include <yuni/io/file.h>
-
-#include <antares/memory/memory.h>
+#include <span>
+#include <vector>
 
 namespace Antares
 {
@@ -18,10 +14,9 @@ namespace Antares
 ** \brief A n-by-n matrix
 **
 ** \ingroup matrix
-** \tparam T          A pod type for each cell of the matrix
-** \tparam ReadWriteT The type to use when reading/saving the matrix
+** \tparam T A pod type for each cell of the matrix
 */
-template<class T = double, class ReadWriteT = T>
+template<class T = double>
 class Matrix
 {
 public:
@@ -30,19 +25,15 @@ public:
     //! Pointer
     using TypePtr = T*;
     //! Matrix type
-    using MatrixType = Matrix<T, ReadWriteT>;
-
-    //! Read / Write type
-    using ReadWriteType = ReadWriteT;
+    using MatrixType = Matrix<T>;
 
     //! Pointer
     using MatrixPtr = Matrix<T>*;
 
     //! Column type
-    using ColumnType = typename Antares::Memory::Stored<T>::Type;
-
-    //! A buffer, for large amount of data
-    using BufferType = Yuni::Clob;
+    using ColumnType = std::vector<T>;
+    using ColumnView = std::span<T>;
+    using ConstColumnView = std::span<const T>;
 
     /*!
     ** \brief Options when loading a file
@@ -59,12 +50,6 @@ public:
         optNoWarnIfEmpty = 16,
         //! The loading never fails
         optNeverFails = 32,
-    };
-
-    enum
-    {
-        //! A Hard-coded maximum filesize
-        filesizeHardLimit = 1536 * 1024 * 1024, // 1.5Go
     };
 
 public:
@@ -87,15 +72,15 @@ public:
     /*!
     ** \brief Copy constructor
     */
-    template<class U, class V>
-    Matrix(const Matrix<U, V>& rhs);
+    template<class U>
+    Matrix(const Matrix<U>& rhs);
 
     /*!
     ** \brief Constructor with a initial size
     */
-    Matrix(uint w, uint h);
+    Matrix(unsigned int w, unsigned int h);
     //! Destructor
-    virtual ~Matrix();
+    ~Matrix() = default;
     //@}
 
     //! \name Copy / Paste
@@ -103,11 +88,11 @@ public:
     /*!
     ** \brief Copy values from another matrix
     */
-    template<class U, class V>
-    void copyFrom(const Matrix<U, V>& rhs);
+    template<class U>
+    void copyFrom(const Matrix<U>& rhs);
 
-    template<class U, class V>
-    void copyFrom(const Matrix<U, V>* rhs);
+    template<class U>
+    void copyFrom(const Matrix<U>* rhs);
     //@}
 
     //@{
@@ -116,90 +101,6 @@ public:
     */
     void swap(MatrixType& rhs) noexcept;
     //@}
-
-    //! \name File manipulation
-    //@{
-    /*!
-    ** \brief Load entries from a CSV file
-    **
-    ** If the param `fixedSize` is false, the number of columns will be
-    ** automatically detected from the first row in the CSV file.
-    **
-    ** \param filename A filename to a CSV file
-    ** \param minWidth The minimum allowed width
-    ** \param maxHeight The new height
-    ** \param fixedSize True to not automatically determine the width of the matrix
-    ** \param warning True to produce warnings when an error occurs
-    ** \param buffer An optional buffer for reading the file
-    ** \return True if the operation succeeded
-    */
-    virtual bool loadFromCSVFile(const AnyString& filename,
-                                 uint minWidth,
-                                 uint maxHeight,
-                                 uint options = optNone,
-                                 BufferType* buffer = NULL);
-
-    bool loadFromCSVFile(const AnyString& filename,
-                         uint minWidth,
-                         uint maxHeight,
-                         BufferType* buffer);
-
-    bool loadFromCSVFile(const AnyString& filename);
-
-    /*!
-    ** \brief Trying to open a file
-    **
-    ** \param file The file object
-    ** \param filename The full path of the file we try to open
-    ** \return True if file could be opened, False otherwise (no enough permission or wrong path)
-    */
-    virtual bool openFile(Yuni::IO::File::Stream& file, const AnyString& filename) const;
-
-    virtual void saveBufferToFile(std::string& buffer, Yuni::IO::File::Stream& f) const;
-
-    /*!
-    ** \brief Write the content of a matrix into a single file
-    **
-    ** \param m The matrix
-    ** \param filename The file where to write data
-    ** \return A non-zero value if the operation succeeded, 0 otherwise
-    */
-    bool saveToCSVFile(const AnyString& filename,
-                       uint precision = 6,
-                       bool print_dimensions = false,
-                       bool saveEvenIfAllZero = false) const;
-
-    /*!
-    ** \brief Write the content of a matrix into a single file
-    **
-    ** \param m         The matrix
-    ** \param filename  The file where to write data
-    ** \param predicate A predicate for modyfing values on the fly
-    ** \return A non-zero value if the operation succeeded, 0 otherwise
-    */
-    template<class PredicateT>
-    bool saveToCSVFile(const AnyString& filename,
-                       uint precision,
-                       bool print_dimensions,
-                       PredicateT& predicate,
-                       bool saveEvenIfAllZero = false) const;
-
-    //@}
-
-    virtual Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer,
-                                                 const AnyString& filename) const
-    {
-        return Yuni::IO::File::LoadFromFile(buffer, filename, filesizeHardLimit);
-    }
-
-    template<class PredicateT>
-    void saveToFileDescriptor(std::string& data,
-                              uint precision,
-                              bool print_dimensions,
-                              PredicateT& predicate) const
-    {
-        saveToBuffer(data, precision, print_dimensions, predicate, false);
-    }
 
     //! \name Operations on columns and rows
     //@{
@@ -210,12 +111,12 @@ public:
     ** \param w The new width
     ** \param h The new height
     */
-    void resize(uint w, uint h);
+    void resize(unsigned int w, unsigned int h);
 
     /*!
     ** \brief Resize the matrix without destroying its content
     */
-    void resizeWithoutDataLost(uint x, uint y, const T& defVal = T());
+    void resizeWithoutDataLost(unsigned int x, unsigned int y, const T& defVal = T());
 
     /*!
     ** \brief Empty the matrix
@@ -234,12 +135,12 @@ public:
     ** \see resize()
     ** \see zero()
     */
-    void reset(uint w, uint h);
+    void reset(unsigned int w, unsigned int h);
 
     //! Get the Nth column
-    ColumnType& column(uint n);
+    ColumnType& column(unsigned int n);
     //! Get the Nth column (const)
-    const ColumnType& column(uint n) const;
+    const ColumnType& column(unsigned int n) const;
 
     /*!
     ** \brief Make the matrix a zero matrix
@@ -279,7 +180,14 @@ public:
     ** \param data The data to copy
     */
     template<class U>
-    void pasteToColumn(uint x, const U* data);
+    void pasteToColumn(unsigned int x, const U* data);
+
+    template<class U>
+    void pasteToColumn(unsigned int x, const std::vector<U>& data)
+    {
+        assert(data.size() == height_);
+        pasteToColumn(x, data.data());
+    }
 
     /*!
     ** \brief Set a entire column with a given value
@@ -287,14 +195,14 @@ public:
     ** \param x The column index (zero-based)
     ** \param data The data to copy
     */
-    void fillColumn(uint x, const T& value);
+    void fillColumn(unsigned int x, const T& value);
 
     /*!
     ** \brief Set to zero a entire column
     **
     ** \param x The column index (zero-based)
     */
-    void columnToZero(uint x);
+    void columnToZero(unsigned int x);
 
     /*!
     ** \brief Get if the matrix only contains zero
@@ -322,6 +230,9 @@ public:
     */
     bool empty() const;
 
+    unsigned int width() const noexcept;
+    unsigned int height() const noexcept;
+
     //! \name Operators
     //@{
     //! Assignement
@@ -334,17 +245,13 @@ public:
     Matrix& operator=(const Matrix<U>& rhs);
 
     //! operator []
-    ColumnType& operator[](uint column);
-    const ColumnType& operator[](uint column) const;
+    ColumnType& operator[](unsigned int column);
+    const ColumnType& operator[](unsigned int column) const;
     //@}
 
 public:
     //! Width of the matrix
-    mutable uint width;
-    //! Height of the matrix
-    mutable uint height;
-    //! All entries of the matrix (bidimensional array)
-    mutable ColumnType* entry;
+    ColumnType& mutableColumn(unsigned int column) const;
 
     struct PredicateIdentity
     {
@@ -355,76 +262,14 @@ public:
         }
     };
 
-    void saveToBuffer(std::string& data, uint precision = 6) const;
-
-    template<class PredicateT>
-    void saveToBuffer(std::string& data,
-                      uint precision,
-                      bool print_dimensions,
-                      PredicateT& predicate,
-                      bool saveEvenIfAllZero) const;
-
 private:
+    unsigned int width_ = 0;
+    unsigned int height_ = 0;
+    mutable std::vector<ColumnType> columns_;
     /*!
     ** \brief Load data from a CSV file
     */
-    bool internalLoadCSVFile(const AnyString& filename,
-                             uint minWidth,
-                             uint maxHeight,
-                             uint options,
-                             BufferType* buffer = NULL);
-
-    /*!
-    ** \brief Save data to a CSV file
-    */
-    template<class PredicateT>
-    bool internalSaveCSVFile(const AnyString& filename,
-                             uint precision,
-                             bool print_dimensions,
-                             PredicateT& predicate,
-                             bool saveEvenIfAllZero) const;
-
-    bool loadFromBuffer(const AnyString& filename,
-                        BufferType& data,
-                        uint minWidth,
-                        uint maxHeight,
-                        const int fixedSize,
-                        uint options);
-
 }; // class Matrix
-
-template<class T>
-class MatrixSubColumn
-{
-    // using Type = <sub column> ;
-    // using Type = const <sub column> ;
-};
-
-template<class U>
-class MatrixSubColumn<U**>
-{
-public:
-    using Type = U*;
-    using ConstType = const U*;
-};
-
-template<>
-class MatrixSubColumn<Matrix<double>::ColumnType*>
-{
-public:
-    using MatrixType = Matrix<double>;
-    using Type = MatrixType::ColumnType&;
-    using ConstType = const MatrixType::ColumnType&;
-};
-
-template<>
-class MatrixSubColumn<Matrix<float>::ColumnType*>
-{
-public:
-    using MatrixType = Matrix<float>;
-    using Type = MatrixType::ColumnType&;
-    using ConstType = const MatrixType::ColumnType&;
-};
 
 /*!
 ** \brief Test if there is at least one positive value
@@ -432,8 +277,8 @@ public:
 ** \param m The matrix
 ** \return true if the test succeeded, false otherwise
 */
-template<class T1, class T2>
-bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T1, T2>& m);
+template<class T>
+bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T>& m);
 
 } // namespace Antares
 

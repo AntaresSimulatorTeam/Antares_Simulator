@@ -221,7 +221,7 @@ public:
                                                                  numSpace);
         }
 
-        return pValuesForTheCurrentYear[numSpace][column].hour;
+        return pValuesForTheCurrentYear[numSpace][column].hour.data();
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,

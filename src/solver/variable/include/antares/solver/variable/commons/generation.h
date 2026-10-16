@@ -63,8 +63,8 @@ public:
         {
             auto& holder = (BaseType::areaPtr->*TraitsType::areaMember);
             std::copy_n(holder.series.getColumn(year),
-                        holder.series.timeSeries.height,
-                        BaseType::yearlyValues[space].hour);
+                        holder.series.timeSeries.height(),
+                        BaseType::yearlyValues[space].hour.begin());
         }
     }
 

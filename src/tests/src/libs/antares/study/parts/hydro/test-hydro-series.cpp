@@ -20,10 +20,10 @@ namespace fs = std::filesystem;
 
 void fillTimeSeriesWithSpecialEnds(Matrix<double>& timeSeries, double start, double end)
 {
-    for (uint ts = 0; ts < timeSeries.width; ts++)
+    for (uint ts = 0; ts < timeSeries.width(); ts++)
     {
         timeSeries[ts][0] = start;
-        timeSeries[ts][timeSeries.height - 1] = end;
+        timeSeries[ts][timeSeries.height() - 1] = end;
     }
 }
 
@@ -159,8 +159,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_equal_width, Fixture
     fillTimeSeriesWithSpecialEnds(maxHourlyGenPower, 401., 402.);
     fillTimeSeriesWithSpecialEnds(maxHourlyPumpPower, 201., 202.);
 
-    ret = maxHourlyGenPower.saveToCSVFile(pathToMaxHourlyGenPower_file, 0) && ret;
-    ret = maxHourlyPumpPower.saveToCSVFile(pathToMaxHourlyPumpPower_file, 0) && ret;
+    ret = MatrixIO::save(maxHourlyGenPower, pathToMaxHourlyGenPower_file, 0) && ret;
+    ret = MatrixIO::save(maxHourlyPumpPower, pathToMaxHourlyPumpPower_file, 0) && ret;
 
     maxHourlyGenPower.reset(3, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(3, HOURS_PER_YEAR);
@@ -183,8 +183,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_matrix_equal_width_and_d
     fillTimeSeriesWithSpecialEnds(maxHourlyGenPower, 401., 402.);
     fillTimeSeriesWithSpecialEnds(maxHourlyPumpPower, 201., 202.);
 
-    ret = maxHourlyGenPower.saveToCSVFile(pathToMaxHourlyGenPower_file, 0) && ret;
-    ret = maxHourlyPumpPower.saveToCSVFile(pathToMaxHourlyPumpPower_file, 0) && ret;
+    ret = MatrixIO::save(maxHourlyGenPower, pathToMaxHourlyGenPower_file, 0) && ret;
+    ret = MatrixIO::save(maxHourlyPumpPower, pathToMaxHourlyPumpPower_file, 0) && ret;
 
     maxHourlyGenPower.reset(3, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(3, HOURS_PER_YEAR);
@@ -205,8 +205,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_matrices_different_width_case
     fillTimeSeriesWithSpecialEnds(maxHourlyGenPower, 401., 402.);
     fillTimeSeriesWithSpecialEnds(maxHourlyPumpPower, 201., 202.);
 
-    ret = maxHourlyGenPower.saveToCSVFile(pathToMaxHourlyGenPower_file, 0) && ret;
-    ret = maxHourlyPumpPower.saveToCSVFile(pathToMaxHourlyPumpPower_file, 0) && ret;
+    ret = MatrixIO::save(maxHourlyGenPower, pathToMaxHourlyGenPower_file, 0) && ret;
+    ret = MatrixIO::save(maxHourlyPumpPower, pathToMaxHourlyPumpPower_file, 0) && ret;
 
     maxHourlyGenPower.reset(3, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(2, HOURS_PER_YEAR);
@@ -227,8 +227,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_different_width_case_1, Fixtu
     fillTimeSeriesWithSpecialEnds(maxHourlyGenPower, 401., 402.);
     fillTimeSeriesWithSpecialEnds(maxHourlyPumpPower, 201., 202.);
 
-    ret = maxHourlyGenPower.saveToCSVFile(pathToMaxHourlyGenPower_file, 0) && ret;
-    ret = maxHourlyPumpPower.saveToCSVFile(pathToMaxHourlyPumpPower_file, 0) && ret;
+    ret = MatrixIO::save(maxHourlyGenPower, pathToMaxHourlyGenPower_file, 0) && ret;
+    ret = MatrixIO::save(maxHourlyPumpPower, pathToMaxHourlyPumpPower_file, 0) && ret;
 
     maxHourlyGenPower.reset(1, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(3, HOURS_PER_YEAR);
@@ -249,8 +249,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_different_width_case_2, Fixtu
     fillTimeSeriesWithSpecialEnds(maxHourlyGenPower, 401., 402.);
     fillTimeSeriesWithSpecialEnds(maxHourlyPumpPower, 201., 202.);
 
-    ret = maxHourlyGenPower.saveToCSVFile(pathToMaxHourlyGenPower_file, 0) && ret;
-    ret = maxHourlyPumpPower.saveToCSVFile(pathToMaxHourlyPumpPower_file, 0) && ret;
+    ret = MatrixIO::save(maxHourlyGenPower, pathToMaxHourlyGenPower_file, 0) && ret;
+    ret = MatrixIO::save(maxHourlyPumpPower, pathToMaxHourlyPumpPower_file, 0) && ret;
 
     maxHourlyGenPower.reset(4, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
@@ -271,8 +271,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_zeros, Fixture)
     fillTimeSeriesWithSpecialEnds(maxHourlyGenPower, 401., 402.);
     fillTimeSeriesWithSpecialEnds(maxHourlyPumpPower, 201., 202.);
 
-    ret = maxHourlyGenPower.saveToCSVFile(pathToMaxHourlyGenPower_file, 0) && ret;
-    ret = maxHourlyPumpPower.saveToCSVFile(pathToMaxHourlyPumpPower_file, 0) && ret;
+    ret = MatrixIO::save(maxHourlyGenPower, pathToMaxHourlyGenPower_file, 0) && ret;
+    ret = MatrixIO::save(maxHourlyPumpPower, pathToMaxHourlyPumpPower_file, 0) && ret;
 
     maxHourlyGenPower.reset(4, HOURS_PER_YEAR);
     maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
@@ -300,9 +300,9 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_matrices_equal_width, Fixt
     fillTimeSeriesWithSpecialEnds(minDailyRuleCurves, 0.3, 0.4);
     fillTimeSeriesWithSpecialEnds(avgDailyRuleCurves, 0.5, 0.6);
 
-    ret = maxDailyRuleCurves.saveToCSVFile(pathToMaxDailyReservoirLevels_file, 2) && ret;
-    ret = minDailyRuleCurves.saveToCSVFile(pathToMinDailyReservoirLevels_file, 2) && ret;
-    ret = avgDailyRuleCurves.saveToCSVFile(pathToAvgDailyReservoirLevels_file, 2) && ret;
+    ret = MatrixIO::save(maxDailyRuleCurves, pathToMaxDailyReservoirLevels_file, 2) && ret;
+    ret = MatrixIO::save(minDailyRuleCurves, pathToMinDailyReservoirLevels_file, 2) && ret;
+    ret = MatrixIO::save(avgDailyRuleCurves, pathToAvgDailyReservoirLevels_file, 2) && ret;
 
     maxDailyRuleCurves.reset(3, DAYS_PER_YEAR);
     minDailyRuleCurves.reset(3, DAYS_PER_YEAR);
@@ -355,7 +355,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_from_common_capacity_folde
     ruleCurves[RuleCurves::minimum][0] = 0.1;
     ruleCurves[RuleCurves::minimum][DAYS_PER_YEAR - 1] = 0.2;
 
-    ret = ruleCurves.saveToCSVFile(pathToReservoirLevels_file, 2) && ret;
+    ret = MatrixIO::save(ruleCurves, pathToReservoirLevels_file, 2) && ret;
 
     ruleCurves.reset(3, DAYS_PER_YEAR);
 
@@ -401,8 +401,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_missing_max_file, Fixture)
     fillTimeSeriesWithSpecialEnds(minDailyRuleCurves, 0.3, 0.4);
     fillTimeSeriesWithSpecialEnds(avgDailyRuleCurves, 0.5, 0.6);
 
-    ret = minDailyRuleCurves.saveToCSVFile(pathToMinDailyReservoirLevels_file, 2) && ret;
-    ret = avgDailyRuleCurves.saveToCSVFile(pathToAvgDailyReservoirLevels_file, 2) && ret;
+    ret = MatrixIO::save(minDailyRuleCurves, pathToMinDailyReservoirLevels_file, 2) && ret;
+    ret = MatrixIO::save(avgDailyRuleCurves, pathToAvgDailyReservoirLevels_file, 2) && ret;
 
     fs::remove(pathToMaxDailyReservoirLevels_file);
 
@@ -439,8 +439,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_missing_min_file, Fixture)
     fillTimeSeriesWithSpecialEnds(minDailyRuleCurves, 0.3, 0.4);
     fillTimeSeriesWithSpecialEnds(avgDailyRuleCurves, 0.5, 0.6);
 
-    ret = maxDailyRuleCurves.saveToCSVFile(pathToMaxDailyReservoirLevels_file, 2) && ret;
-    ret = avgDailyRuleCurves.saveToCSVFile(pathToAvgDailyReservoirLevels_file, 2) && ret;
+    ret = MatrixIO::save(maxDailyRuleCurves, pathToMaxDailyReservoirLevels_file, 2) && ret;
+    ret = MatrixIO::save(avgDailyRuleCurves, pathToAvgDailyReservoirLevels_file, 2) && ret;
 
     fs::remove(pathToMinDailyReservoirLevels_file);
 
@@ -477,8 +477,8 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_missing_avg_file, Fixture)
     fillTimeSeriesWithSpecialEnds(minDailyRuleCurves, 0.3, 0.4);
     fillTimeSeriesWithSpecialEnds(avgDailyRuleCurves, 0.5, 0.6);
 
-    ret = maxDailyRuleCurves.saveToCSVFile(pathToMaxDailyReservoirLevels_file, 2) && ret;
-    ret = minDailyRuleCurves.saveToCSVFile(pathToMinDailyReservoirLevels_file, 2) && ret;
+    ret = MatrixIO::save(maxDailyRuleCurves, pathToMaxDailyReservoirLevels_file, 2) && ret;
+    ret = MatrixIO::save(minDailyRuleCurves, pathToMinDailyReservoirLevels_file, 2) && ret;
 
     fs::remove(pathToAvgDailyReservoirLevels_file);
 
@@ -510,7 +510,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_missing_reservoir_file, Fi
     standardRuleCurves.fillColumn(RuleCurves::average, 0.5);
     standardRuleCurves[RuleCurves::minimum][0] = 0.1;
 
-    ret = standardRuleCurves.saveToCSVFile(pathToReservoirLevels_file, 2) && ret;
+    ret = MatrixIO::save(standardRuleCurves, pathToReservoirLevels_file, 2) && ret;
 
     fs::remove(pathToReservoirLevels_file);
 

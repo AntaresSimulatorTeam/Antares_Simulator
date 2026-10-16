@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values)
     fs::path test1_path = working_tmp_dir / "ts-numbers" / "bindingconstraints" / "test1.txt";
     BOOST_CHECK_EQUAL(fs::exists(test1_path), true);
     Matrix<uint32_t> out;
-    out.loadFromCSVFile(test1_path.string());
+    MatrixIO::load(out, test1_path.string());
     BOOST_CHECK_EQUAL(tsNumbers[0] + 1, out[0][0]);
     BOOST_CHECK_EQUAL(tsNumbers[1] + 1, out[0][1]);
 }
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_CASE(sts_area_cluster_inflows_timeseries_numbers_store_values)
     BOOST_CHECK_EQUAL(fs::exists(inflow_ts_file), true);
 
     Matrix<uint32_t> out;
-    out.loadFromCSVFile(inflow_ts_file.string());
+    MatrixIO::load(out, inflow_ts_file.string());
 
     // TimeSeriesNumbers are stored as values + 1
     BOOST_CHECK_EQUAL(out[0][0], 4); // 3 + 1
@@ -226,7 +226,7 @@ BOOST_AUTO_TEST_CASE(sts_area_cluster_additional_constraints_timeseries_numbers_
     BOOST_CHECK_EQUAL(fs::exists(ac_ts_file), true);
 
     Matrix<uint32_t> out;
-    out.loadFromCSVFile(ac_ts_file.string());
+    MatrixIO::load(out, ac_ts_file.string());
 
     // TimeSeriesNumbers are stored as values + 1
     BOOST_CHECK_EQUAL(out[0][0], 8); // 7 + 1

@@ -23,7 +23,7 @@ class AreaScratchpad final
 {
 public:
     //! Matrix used for time-series
-    using TSMatrix = Matrix<double, int32_t>;
+    using TSMatrix = Matrix<double>;
 
     //! \name Constructor
     //@{

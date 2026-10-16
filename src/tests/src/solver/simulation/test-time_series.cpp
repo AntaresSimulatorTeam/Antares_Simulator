@@ -13,6 +13,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/array/matrix-io.h>
 #include <antares/study/study.h>
 
 using namespace Antares;
@@ -45,12 +46,12 @@ public:
 template<class Ta, class Tb>
 void CheckEqual(const Matrix<Ta>& a, const Matrix<Tb>& b)
 {
-    BOOST_CHECK_EQUAL(a.width, b.width);
-    BOOST_CHECK_EQUAL(a.height, b.height);
-    if (a.height > 0 && a.width > 0)
+    BOOST_CHECK_EQUAL(a.width(), b.width());
+    BOOST_CHECK_EQUAL(a.height(), b.height());
+    if (a.height() > 0 && a.width() > 0)
     {
         BOOST_CHECK_EQUAL(a[0][0], b[0][0]);
-        BOOST_CHECK_EQUAL(a[a.width - 1][a.height - 1], b[b.width - 1][b.height - 1]);
+        BOOST_CHECK_EQUAL(a[a.width() - 1][a.height() - 1], b[b.width() - 1][b.height() - 1]);
     }
 }
 
@@ -89,12 +90,12 @@ struct Fixture
         expected_equality_series.fillColumn(2, 0.9);
         expected_equality_series[0][8763] = 1;
 
-        expected_lower_bound_series.saveToCSVFile(
-          (working_tmp_dir / "bindingconstraints" / "dummy_name_lt.txt").string());
-        expected_upper_bound_series.saveToCSVFile(
-          (working_tmp_dir / "bindingconstraints" / "dummy_name_gt.txt").string());
-        expected_equality_series.saveToCSVFile(
-          (working_tmp_dir / "bindingconstraints" / "dummy_name_eq.txt").string());
+        MatrixIO::save(expected_lower_bound_series,
+                       (working_tmp_dir / "bindingconstraints" / "dummy_name_lt.txt").string());
+        MatrixIO::save(expected_upper_bound_series,
+                       (working_tmp_dir / "bindingconstraints" / "dummy_name_gt.txt").string());
+        MatrixIO::save(expected_equality_series,
+                       (working_tmp_dir / "bindingconstraints" / "dummy_name_eq.txt").string());
     }
 
     void addConstraint(const std::string& name, const std::string& group, bool reset = false) const
@@ -205,8 +206,8 @@ BOOST_FIXTURE_TEST_CASE(BC_disabled_skips_timeseries_loading, Fixture)
 
     auto bc = study->bindingConstraints.find("dummy_name");
     BOOST_CHECK_EQUAL(bc->enabled(), false);
-    BOOST_CHECK_EQUAL(bc->RHSTimeSeries().width, 0);
-    BOOST_CHECK_EQUAL(bc->RHSTimeSeries().height, 0);
+    BOOST_CHECK_EQUAL(bc->RHSTimeSeries().width(), 0);
+    BOOST_CHECK_EQUAL(bc->RHSTimeSeries().height(), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(
@@ -217,7 +218,8 @@ BOOST_FIXTURE_TEST_CASE(
     Matrix values;
     values.resize(5, 8784);
     values.fill(0.42);
-    values.saveToCSVFile((working_tmp_dir / "bindingconstraints" / "dummy_name_2_eq.txt").string());
+    MatrixIO::save(values,
+                   (working_tmp_dir / "bindingconstraints" / "dummy_name_2_eq.txt").string());
     auto loading_ok = study->internalLoadBindingConstraints(options);
     BOOST_CHECK_EQUAL(loading_ok, false);
 }
@@ -231,7 +233,8 @@ BOOST_FIXTURE_TEST_CASE(
     Matrix values;
     values.resize(3, 8784);
     values.fill(0.42);
-    values.saveToCSVFile((working_tmp_dir / "bindingconstraints" / "dummy_name_2_eq.txt").string());
+    MatrixIO::save(values,
+                   (working_tmp_dir / "bindingconstraints" / "dummy_name_2_eq.txt").string());
     auto loading_ok = study->internalLoadBindingConstraints(options);
     BOOST_CHECK_EQUAL(loading_ok, true);
 }

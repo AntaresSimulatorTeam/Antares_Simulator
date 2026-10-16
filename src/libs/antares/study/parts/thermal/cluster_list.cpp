@@ -148,10 +148,11 @@ bool ThermalClusterList::loadFromFolder(const fs::path& folder,
             options = Matrix<>::optFixedSize,
         };
 
-        ret = cluster->modulation.loadFromCSVFile(modulationFile.string(),
-                                                  thermalModulationMax,
-                                                  HOURS_PER_YEAR,
-                                                  options)
+        ret = MatrixIO::load(cluster->modulation,
+                             modulationFile.string(),
+                             thermalModulationMax,
+                             HOURS_PER_YEAR,
+                             options)
               && ret;
 
         // Check the data integrity of the cluster

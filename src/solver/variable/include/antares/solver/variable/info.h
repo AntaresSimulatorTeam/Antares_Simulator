@@ -184,7 +184,7 @@ struct VariableAccessor
         assert(!std::isnan(v));
         for (uint i = 0; i != ColumnCountT; ++i)
         {
-            Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour;
+            Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour.data();
             for (uint y = 0; y != HOURS_PER_YEAR; ++y)
             {
                 array[y] *= v;
@@ -197,7 +197,7 @@ struct VariableAccessor
     {
         for (uint i = 0; i != ColumnCountT; ++i)
         {
-            Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour;
+            Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour.data();
             for (uint y = 0; y != HOURS_PER_YEAR; ++y)
             {
                 array[y] = std::abs(array[y]) > 0. ? 1. : 0.;
@@ -210,7 +210,7 @@ struct VariableAccessor
     {
         for (uint i = 0; i != ColumnCountT; ++i)
         {
-            Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour;
+            Antares::Memory::Stored<double>::ReturnType array = intermediateValues[i].hour.data();
             for (uint y = 0; y != HOURS_PER_YEAR; ++y)
             {
                 array[y] = std::abs(array[y]) > 0. ? 100. : 0.;
@@ -389,7 +389,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         const typename Type::const_iterator end = intermediateValues.end();
         for (typename Type::const_iterator i = intermediateValues.begin(); i != end; ++i)
         {
-            array = (*i).hour;
+            array = (*i).hour.data();
             for (uint y = 0; y != HOURS_PER_YEAR; ++y)
             {
                 array[y] *= v;
@@ -404,7 +404,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         const typename Type::const_iterator end = intermediateValues.end();
         for (typename Type::const_iterator i = intermediateValues.begin(); i != end; ++i)
         {
-            array = (*i).hour;
+            array = (*i).hour.data();
             for (uint y = 0; y != HOURS_PER_YEAR; ++y)
             {
                 array[y] = std::abs(array[y]) > 0. ? 1. : 0.;
@@ -419,7 +419,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         const typename Type::const_iterator end = intermediateValues.end();
         for (typename Type::const_iterator i = intermediateValues.begin(); i != end; ++i)
         {
-            array = (*i).hour;
+            array = (*i).hour.data();
             for (uint y = 0; y != HOURS_PER_YEAR; ++y)
             {
                 array[y] = std::abs(array[y]) > 0. ? 100. : 0.;
