@@ -10,9 +10,10 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "unit_test_utils.h"
 #include <antares/study/parts/hydro/series.h>
 #include <antares/study/study.h>
+
+#include "unit_test_utils.h"
 
 #define SEP "/"
 

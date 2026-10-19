@@ -8,9 +8,9 @@
 #include <antares/inifile/inifile.h>
 #include <antares/study/area/capacityReservation.h>
 #include <antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h>
+#include <antares/utils/utils.h>
 #include "antares/study/parts/reserves/reservesParticipationsLoader.h"
 #include "antares/study/study.h"
-#include <antares/utils/utils.h>
 
 namespace fs = std::filesystem;
 
@@ -147,7 +147,8 @@ bool PartHydro::LoadIniFile(Study& study, const std::filesystem::path& folder)
         {
             if (Antares::stringToBool(property->value))
             {
-                logs.warning() << path << ": use leeway = yes is no longer supported and will be ignored";
+                logs.warning() << path
+                               << ": use leeway = yes is no longer supported and will be ignored";
                 break;
             }
         }
