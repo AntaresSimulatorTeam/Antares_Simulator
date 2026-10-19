@@ -296,6 +296,13 @@ BOOST_AUTO_TEST_CASE(portfieldSum_with_no_connection_expr)
       InputError,
       containsMessage("expected 'no_connection_expr = ...'"));
 
+    // A comparison is not a valid default value
+    BOOST_CHECK_EXCEPTION(
+      convertExpressionToNode("sum_connections(port1.field1, no_connection_expr = pmax <= 3)",
+                              model),
+      InputError,
+      containsMessage("must be a value, not a comparison"));
+
     // Identifiers of the default are resolved against the current model
     BOOST_CHECK_THROW(
       convertExpressionToNode("sum_connections(port1.field1, no_connection_expr = unknown)", model),

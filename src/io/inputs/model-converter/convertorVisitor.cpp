@@ -409,6 +409,13 @@ std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* co
                                          op));
         }
         noConnectionExpr = std::any_cast<Node*>(visit(context->expr()));
+        if (dynamic_cast<ComparisonNode*>(noConnectionExpr))
+        {
+            throw InputError(fmt::format("In 'sum_connections({}.{}, ...)': 'no_connection_expr' "
+                                         "must be a value, not a comparison",
+                                         portName,
+                                         fieldName));
+        }
     }
 
     return static_cast<Node*>(
