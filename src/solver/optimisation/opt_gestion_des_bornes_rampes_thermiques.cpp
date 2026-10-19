@@ -21,6 +21,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     std::vector<double>& Xmin = ProblemeAResoudre->Xmin;
     std::vector<double>& Xmax = ProblemeAResoudre->Xmax;
+    std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees
+      = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
 
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
@@ -41,13 +43,20 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireRampesThermiques(
                     const int palier = PaliersThermiquesDuPays
                                          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
+                    auto& productionThermique = problemeHebdo->ResultatsHoraires[pays]
+                                                  .ProductionThermique[pdtHebdo];
+
                     int var = CorrespondanceVarNativesVarOptim.powerRampingDecreaseIndex[palier];
                     Xmin[var] = 0;
                     Xmax[var] = LINFINI_ANTARES;
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var]
+                      = &productionThermique.powerRampingDecrease[index];
 
                     var = CorrespondanceVarNativesVarOptim.powerRampingIncreaseIndex[palier];
                     Xmin[var] = 0;
                     Xmax[var] = LINFINI_ANTARES;
+                    AdresseOuPlacerLaValeurDesVariablesOptimisees[var]
+                      = &productionThermique.powerRampingIncrease[index];
                 }
             }
         }
