@@ -252,6 +252,56 @@ BOOST_AUTO_TEST_CASE(portfieldSum)
     BOOST_CHECK_THROW(convertExpressionToNode(expression, model), InputError);
 }
 
+BOOST_AUTO_TEST_CASE(portfieldSum_with_no_connection_expr)
+{
+    YmlModel::Model model{
+      .id = "model0",
+      .description = "description",
+      .parameters = {{"pmax", false, false}},
+      .variables = {},
+      .ports = {{.id = "port1", .type = "blue"}},
+      .port_field_definitions = {{"port1", "field1", YmlModel::ExpressionLineNumber{"", 0}}},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {{"objective-id", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml"}},
+      .extra_outputs = {},
+      .filename = ""};
+
+    auto expr = convertExpressionToNode(
+      "sum_connections(port1.field1, no_connection_expr = 2 * pmax)",
+      model);
+    auto* portFieldSumNode = dynamic_cast<Nodes::PortFieldSumNode*>(expr.node);
+    BOOST_REQUIRE(portFieldSumNode);
+    BOOST_CHECK_EQUAL(portFieldSumNode->getPortName(), "port1");
+    BOOST_CHECK_EQUAL(portFieldSumNode->getFieldName(), "field1");
+    BOOST_REQUIRE(portFieldSumNode->noConnectionExpr());
+    BOOST_CHECK_EQUAL(portFieldSumNode->noConnectionExpr()->name(), "MultiplicationNode");
+
+    // Without default
+    expr = convertExpressionToNode("sum_connections(port1.field1)", model);
+    portFieldSumNode = dynamic_cast<Nodes::PortFieldSumNode*>(expr.node);
+    BOOST_REQUIRE(portFieldSumNode);
+    BOOST_CHECK(!portFieldSumNode->noConnectionExpr());
+
+    // Used inside a comparison, '=' of the comparison is not mistaken for the default's one
+    expr = convertExpressionToNode("sum_connections(port1.field1, no_connection_expr = pmax) = 3",
+                                   model);
+    BOOST_CHECK_EQUAL(expr.node->name(), "EqualNode");
+    expr = convertExpressionToNode("pmax = 3", model);
+    BOOST_CHECK_EQUAL(expr.node->name(), "EqualNode");
+
+    // Only '=' is allowed between no_connection_expr and its value
+    BOOST_CHECK_EXCEPTION(
+      convertExpressionToNode("sum_connections(port1.field1, no_connection_expr <= pmax)", model),
+      InputError,
+      containsMessage("expected 'no_connection_expr = ...'"));
+
+    // Identifiers of the default are resolved against the current model
+    BOOST_CHECK_THROW(
+      convertExpressionToNode("sum_connections(port1.field1, no_connection_expr = unknown)", model),
+      InputError);
+}
+
 YmlModel::Model createYmlModel()
 {
     YmlModel::Model model{

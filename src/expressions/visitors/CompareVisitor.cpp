@@ -115,7 +115,10 @@ bool CompareVisitor::visit(const Nodes::PortFieldNode* node, const Nodes::Node* 
 
 bool CompareVisitor::visit(const Nodes::PortFieldSumNode* node, const Nodes::Node* other)
 {
-    return compareEqualOperator(node, other);
+    const auto* other_node = dynamic_cast<const Nodes::PortFieldSumNode*>(other);
+    return other_node && node->getPortName() == other_node->getPortName()
+           && node->getFieldName() == other_node->getFieldName()
+           && compareParentNode(*this, node, other);
 }
 
 bool CompareVisitor::visit(const Nodes::TimeShiftNode* timeShiftNode, const Nodes::Node* other)

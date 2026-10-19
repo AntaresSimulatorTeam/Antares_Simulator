@@ -244,6 +244,11 @@ public:
     class Ramping
     {
     public:
+        // User-provided on purpose (not "= default"): clang evaluates the default
+        // constructibility of a nested class before parsing its default member initializers,
+        // which makes std::optional<Ramping>::emplace() fail to compile.
+        Ramping() {}
+
         //! Cost of power increase (euros/MW)
         double powerIncreaseCost = 0.;
         //! Cost of power decrease (euros/MW)

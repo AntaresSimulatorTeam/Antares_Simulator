@@ -136,11 +136,10 @@ void AstDOTStyleVisitor::visit(const Nodes::PortFieldNode* node, std::ostream& o
 
 void AstDOTStyleVisitor::visit(const Nodes::PortFieldSumNode* node, std::ostream& os)
 {
-    auto id = getNodeID(node);
-    emitNode(id,
-             "PFSUM(" + node->getPortName() + "," + node->getFieldName() + ")",
-             NodeStyle::PortFieldStyle,
-             os);
+    processParentNode(node,
+                      "PFSUM(" + node->getPortName() + "," + node->getFieldName() + ")",
+                      NodeStyle::PortFieldStyle,
+                      os);
 }
 
 void AstDOTStyleVisitor::visit(const Nodes::TimeShiftNode* node, std::ostream& os)

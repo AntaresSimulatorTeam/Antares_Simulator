@@ -396,7 +396,23 @@ std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* co
     const auto portName = port->getPortName();
     const auto fieldName = port->getFieldName();
 
-    return static_cast<Node*>(registry_.create<PortFieldSumNode>(portName, fieldName));
+    Node* noConnectionExpr = nullptr;
+    if (context->expr())
+    {
+        if (const auto op = context->COMPARISON()->getText(); op != "=")
+        {
+            throw InputError(fmt::format("In 'sum_connections({}.{}, ...)': expected "
+                                         "'no_connection_expr = ...', got 'no_connection_expr {} "
+                                         "...'",
+                                         portName,
+                                         fieldName,
+                                         op));
+        }
+        noConnectionExpr = std::any_cast<Node*>(visit(context->expr()));
+    }
+
+    return static_cast<Node*>(
+      registry_.create<PortFieldSumNode>(portName, fieldName, noConnectionExpr));
 }
 
 std::vector<std::string> ExpressionsToIds(const std::vector<ExprParser::ExprContext*>& expressions)

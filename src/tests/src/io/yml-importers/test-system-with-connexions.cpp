@@ -419,6 +419,149 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connectivity)
     BOOST_CHECK_EQUAL(thermalConnection.clusterId, "nuclear1");
 }
 
+// An operational model using sum_connections(..., no_connection_expr = ...) works with or
+// without an investment add-on connected to it.
+static const auto investmentAddOnYmlLib = R"(
+  library:
+    id: lib
+    description: operational model and its investment add-on
+
+    port-types:
+      - id: capacity_port
+        fields:
+          - id: capacity
+
+    models:
+      - id: thermal_invest
+        parameters:
+          - id: investment_cost
+          - id: max_investment
+        variables:
+          - id: invested_capacity
+            lower-bound: 0
+            upper-bound: max_investment
+            variable-type: continuous
+        ports:
+          - id: capacity_port
+            type: capacity_port
+        port-field-definitions:
+          - port: capacity_port
+            field: capacity
+            definition: invested_capacity
+        objective-contributions:
+          - id: objective
+            expression: investment_cost * invested_capacity
+
+      - id: thermal
+        parameters:
+          - id: p_max_cluster
+        variables:
+          - id: generation
+            lower-bound: 0
+            variable-type: continuous
+        ports:
+          - id: capacity_port
+            type: capacity_port
+        binding-constraints:
+          - id: generation_max_constraint
+            expression: generation <= sum_connections(capacity_port.capacity, no_connection_expr = p_max_cluster)
+)"s;
+
+BOOST_AUTO_TEST_CASE(sum_connections_with_no_connection_expr__operational_model_alone)
+{
+    const auto yml_system = R"(
+      system:
+        id: simulation
+        components:
+          - id: my_thermal_op
+            model: lib.thermal
+            parameters:
+              - id: p_max_cluster
+                time-dependent: false
+                scenario-dependent: false
+                value: 100
+    )";
+
+    YmlModel::Parser parserModel;
+    std::vector<SystemModel::Library> libraries;
+    libraries.push_back(ModelConverter::convert(parserModel.parse(investmentAddOnYmlLib)));
+
+    YmlSystem::Parser parserSystem;
+    YmlSystem::System system = parserSystem.parse(yml_system, "");
+
+    BOOST_CHECK_NO_THROW(SystemConverter::convert(system, libraries));
+}
+
+BOOST_AUTO_TEST_CASE(sum_connections_with_no_connection_expr__investment_add_on_connected)
+{
+    const auto yml_system = R"(
+      system:
+        id: investment
+        components:
+          - id: my_thermal_invest
+            model: lib.thermal_invest
+            parameters:
+              - id: investment_cost
+                time-dependent: false
+                scenario-dependent: false
+                value: 10
+              - id: max_investment
+                time-dependent: false
+                scenario-dependent: false
+                value: 500
+          - id: my_thermal_op
+            model: lib.thermal
+            parameters:
+              - id: p_max_cluster
+                time-dependent: false
+                scenario-dependent: false
+                value: 100
+        connections:
+          - component1: my_thermal_invest
+            port1: capacity_port
+            component2: my_thermal_op
+            port2: capacity_port
+    )";
+
+    YmlModel::Parser parserModel;
+    std::vector<SystemModel::Library> libraries;
+    libraries.push_back(ModelConverter::convert(parserModel.parse(investmentAddOnYmlLib)));
+
+    YmlSystem::Parser parserSystem;
+    YmlSystem::System system = parserSystem.parse(yml_system, "");
+
+    BOOST_CHECK_NO_THROW(SystemConverter::convert(system, libraries));
+}
+
+BOOST_AUTO_TEST_CASE(sum_connections_with_non_linear_no_connection_expr___exception_raised)
+{
+    const auto yml_lib = R"(
+      library:
+        id: lib
+        port-types:
+          - id: capacity_port
+            fields:
+              - id: capacity
+        models:
+          - id: thermal
+            variables:
+              - id: generation
+                lower-bound: 0
+                variable-type: continuous
+            ports:
+              - id: capacity_port
+                type: capacity_port
+            binding-constraints:
+              - id: generation_max_constraint
+                expression: generation <= sum_connections(capacity_port.capacity, no_connection_expr = dual(generation_max_constraint))
+    )";
+
+    YmlModel::Parser parserModel;
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(parserModel.parse(yml_lib)),
+                          InputError,
+                          containsMessage("'FunctionNode::dual' is not allowed"));
+}
+
 BOOST_AUTO_TEST_CASE(binding_constraint_with_sum_connections_op_is_non_linear___exception_raised)
 {
     // This library defines :

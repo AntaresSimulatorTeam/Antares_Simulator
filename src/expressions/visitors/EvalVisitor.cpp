@@ -159,6 +159,12 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
     std::string portId = node->getPortName();
     std::string fieldId = node->getFieldName();
 
+    if (const auto* noConnectionExpr = node->noConnectionExpr();
+        noConnectionExpr && !component_.isPortConnected(portId))
+    {
+        return dispatch(noConnectionExpr);
+    }
+
     EvaluationResult result(0.);
     for (const auto connectionEnd: component_.componentConnectionsViaPort(portId))
     {
