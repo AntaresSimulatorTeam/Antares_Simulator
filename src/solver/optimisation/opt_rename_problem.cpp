@@ -724,12 +724,6 @@ void ConstraintNamer::ParticipationOfOffUnitsToReserves(unsigned constrIndex,
     SetThermalClusterElementName(constrIndex, "ParticipationOfOffUnitsToReserves", clusterName);
 }
 
-void ConstraintNamer::POffUnitsUpperBound(unsigned constrIndex,
-                                          const std::string& clusterName) const
-{
-    SetThermalClusterElementName(constrIndex, "POffUnitsUpperBound", clusterName);
-}
-
 void ConstraintNamer::POutCapacityThresholdInf(unsigned constrIndex,
                                                const std::string& clusterName) const
 {
