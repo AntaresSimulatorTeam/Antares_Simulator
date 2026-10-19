@@ -280,7 +280,8 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
                                                                                   * newUnitCount;
 
         // ramping
-        if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate
+        if ((unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate
+             || unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucMILP)
             && thermalCluster->ramping)
         {
             double startingStoppingProduction = (newUnitCount - previousUnitCount)
@@ -523,7 +524,8 @@ void State::yearEndBuildCalculateRampingCosts(const uint& maxDurationON,
                                               const std::array<int, HOURS_PER_YEAR>& ON_opt,
                                               const Data::ThermalCluster* currentCluster)
 {
-    if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate
+    if ((unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate
+         || unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucMILP)
         && currentCluster->ramping)
     {
         uint startHourForCurrentYear = study.runtime.rangeLimits.hour[Data::rangeBegin];
