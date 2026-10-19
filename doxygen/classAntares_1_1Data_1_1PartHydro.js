@@ -25,8 +25,6 @@ var classAntares_1_1Data_1_1PartHydro =
     [ "interDailyBreakdown", "classAntares_1_1Data_1_1PartHydro.html#ac3892ee70210889a4b8b641befbb7dc0", null ],
     [ "intermonthlyBreakdown", "classAntares_1_1Data_1_1PartHydro.html#a5b4e48d70a7adf68355747bd4f08ea01", null ],
     [ "intraDailyModulation", "classAntares_1_1Data_1_1PartHydro.html#aaaa1a7fb19c92c573e1fc7c4417ed309", null ],
-    [ "leewayLowerBound", "classAntares_1_1Data_1_1PartHydro.html#a77de4f19d3828f4b5d8e90b56ee3eccd", null ],
-    [ "leewayUpperBound", "classAntares_1_1Data_1_1PartHydro.html#a9d2425626e4b6eb115fcd58e82b7f010", null ],
     [ "managementData", "classAntares_1_1Data_1_1PartHydro.html#aebcd863156d02a667eb105200885e23e", null ],
     [ "overflowSpilledCostDifference", "classAntares_1_1Data_1_1PartHydro.html#ad96b766d46dc1f81cd1585f1bfabac0e", null ],
     [ "powerToLevel", "classAntares_1_1Data_1_1PartHydro.html#a7e223043e3ce64cd2ec889f97a78c447", null ],
@@ -37,7 +35,6 @@ var classAntares_1_1Data_1_1PartHydro =
     [ "reservoirManagement", "classAntares_1_1Data_1_1PartHydro.html#ae7e8bd32e00515c61d8b74bf66895c44", null ],
     [ "series", "classAntares_1_1Data_1_1PartHydro.html#a0ffcc118af62ecfc6449f232f5482695", null ],
     [ "useHeuristicTarget", "classAntares_1_1Data_1_1PartHydro.html#a70bf5d6cc1a7ff0ce37d558fc4bca632", null ],
-    [ "useLeeway", "classAntares_1_1Data_1_1PartHydro.html#ab2a5d66303e98b274e4aebb1c6f671ec", null ],
     [ "useWaterValue", "classAntares_1_1Data_1_1PartHydro.html#a285715312461d478c1d809ce110ce138", null ],
     [ "waterValues", "classAntares_1_1Data_1_1PartHydro.html#aae97bf4ecd5ea0e09b287c83abfd5f28", null ]
 ];
