@@ -187,7 +187,7 @@ BOOST_FIXTURE_TEST_CASE(fail_on_no_id, SystemBuilderCreationFixture)
     system_builder.withComponents(std::move(components));
     BOOST_CHECK_EXCEPTION(system_builder.build(),
                           std::invalid_argument,
-                          checkMessage("A system can't have an empty id"));
+                          containsMessage("A system can't have an empty id"));
 }
 
 BOOST_FIXTURE_TEST_CASE(fail_on_no_component1, SystemBuilderCreationFixture)
@@ -195,7 +195,7 @@ BOOST_FIXTURE_TEST_CASE(fail_on_no_component1, SystemBuilderCreationFixture)
     system_builder.withId("system");
     BOOST_CHECK_EXCEPTION(system_builder.build(),
                           std::invalid_argument,
-                          checkMessage("A system must contain at least one component"));
+                          containsMessage("A system must contain at least one component"));
 }
 
 BOOST_FIXTURE_TEST_CASE(fail_on_no_component2, SystemBuilderCreationFixture)
@@ -203,7 +203,7 @@ BOOST_FIXTURE_TEST_CASE(fail_on_no_component2, SystemBuilderCreationFixture)
     system_builder.withId("system").withComponents(std::move(components));
     BOOST_CHECK_EXCEPTION(system_builder.build(),
                           std::invalid_argument,
-                          checkMessage("A system must contain at least one component"));
+                          containsMessage("A system must contain at least one component"));
 }
 
 BOOST_AUTO_TEST_CASE(PortFieldLessOperator)

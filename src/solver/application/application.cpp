@@ -356,14 +356,12 @@ void Application::postParametersChecks() const
                                                         isHybrid);
     }
 
-    bool tsGenThermal = (0
-                         != (pParameters->timeSeriesToGenerate
-                             & Antares::Data::TimeSeriesType::timeSeriesThermal));
-
-    checkMinStablePower(tsGenThermal, pStudy->areas);
+    checkMinStablePower(pParameters, pStudy->areas);
 
     checkFuelCostColumnNumber(pStudy->areas);
     checkCO2CostColumnNumber(pStudy->areas);
+
+    checkThermalRampingWithFastMode(*pParameters);
 }
 
 void Application::prepare(int argc, const char* argv[])

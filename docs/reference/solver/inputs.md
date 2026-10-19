@@ -18,6 +18,54 @@ _**This section is under construction**_
 - **Binding constraints**
 - **Economic opt.**
 
+## Thermal cluster ramping
+
+Thermal-cluster ramping is configured in each area's thermal-cluster list:
+`input/thermal/clusters/<area id>/list.ini`. Ramping is opt-in at both study and cluster
+level.
+
+### Global enable
+
+In `settings/generaldata.ini`, under `[optimization]`, set
+`include-thermal-cluster-ramping` to `true` to enable ramping for the study:
+
+```ini
+[optimization]
+include-thermal-cluster-ramping = true
+```
+
+Please note that ramping has no effect if `unit-commitment-mode = fast`. Only `unit-commitment-mode = accurate` and `unit-commitment-mode = milp` allow ramping. This limitation is related to the formulation of the optimization problems.
+
+### Per-cluster settings
+
+In each thermal-cluster section of `list.ini`, set `ramping-enabled` to `true` and provide the
+upward and downward rates and costs. For example:
+
+```ini
+[thermal_1]
+ramping-enabled = true
+max-upward-power-ramping-rate = 10
+max-downward-power-ramping-rate = 10
+power-increase-cost = 2.5
+power-decrease-cost = 1.5
+```
+
+Keep the cluster's other thermal properties in the same section as usual.
+
+The maximum upward and downward rates are in MW/hour **per generating unit**. Increase and
+decrease costs are in euros per MW of ramping; zero is valid. Rates and costs must be non-negative.
+The solver applies hourly ramp limits to changes in cluster production, accounting separately for
+units starting or stopping. The ramping cost is based on the production change beyond the output
+associated with those starts or stops.
+
+Both switches must be enabled for a cluster's ramping data to be used. If
+`include-thermal-cluster-ramping` is false (the default), cluster ramping settings are ignored. If
+the global option is true but `ramping-enabled` is absent or false for a cluster, that cluster has
+no ramp constraints or ramping costs.
+
+See [optimization parameters](parameters.md#include-thermal-cluster-ramping) and
+[ramping output variables](outputs.md#ramping-costs).
+
 ## Conventions regarding names
 
 - Names for areas, thermal plants, etc.

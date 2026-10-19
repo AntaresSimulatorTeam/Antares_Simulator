@@ -96,20 +96,6 @@ HydroHeuristicPolicy StringToHydroHeuristicPolicy(const std::string& text)
     return hhpUnknown;
 }
 
-const char* HydroHeuristicPolicyToCString(HydroHeuristicPolicy hhPolicy)
-{
-    switch (hhPolicy)
-    {
-    case hhpAccommodateRuleCurves:
-        return "accommodate rule curves";
-    case hhpMaximizeGeneration:
-        return "maximize generation";
-    case hhpUnknown:
-        return "";
-    }
-    return "";
-}
-
 // ... Hydro pricing ...
 HydroPricingMode StringToHydroPricingMode(const std::string& text)
 {
@@ -129,20 +115,6 @@ HydroPricingMode StringToHydroPricingMode(const std::string& text)
     }
 
     return hpUnknown;
-}
-
-const char* HydroPricingModeToCString(HydroPricingMode hpm)
-{
-    switch (hpm)
-    {
-    case hpHeuristic:
-        return "fast";
-    case hpMILP:
-        return "accurate"; // (slow)
-    case hpUnknown:
-        return "";
-    }
-    return "";
 }
 
 PowerFluctuations StringToPowerFluctuations(const std::string& text)
@@ -169,22 +141,6 @@ PowerFluctuations StringToPowerFluctuations(const std::string& text)
     return lssUnknown;
 }
 
-const char* PowerFluctuationsToCString(PowerFluctuations fluctuations)
-{
-    switch (fluctuations)
-    {
-    case lssFreeModulations:
-        return "free modulations";
-    case lssMinimizeRamping:
-        return "minimize ramping";
-    case lssMinimizeExcursions:
-        return "minimize excursions";
-    case lssUnknown:
-        return "";
-    }
-    return "";
-}
-
 SheddingPolicy StringToSheddingPolicy(const std::string& text)
 {
     if (text.empty())
@@ -207,22 +163,6 @@ SheddingPolicy StringToSheddingPolicy(const std::string& text)
     }
 
     return shpUnknown;
-}
-
-const char* SheddingPolicyToCString(SheddingPolicy strategy)
-{
-    switch (strategy)
-    {
-    case shpShavePeaks:
-        return "shave peaks";
-    case shpAccurateShavePeaks:
-        return "accurate shave peaks";
-    case shpMinimizeDuration:
-        return "minimize duration";
-    case shpUnknown:
-        return "";
-    }
-    return "";
 }
 
 UnitCommitmentMode StringToUnitCommitmentMode(const std::string& text)
@@ -295,40 +235,6 @@ NumberOfCoresMode StringToNumberOfCoresMode(const std::string& text)
     }
 
     return ncUnknown;
-}
-
-const char* NumberOfCoresModeToCString(NumberOfCoresMode ucores)
-{
-    switch (ucores)
-    {
-    case ncMin:
-        return "minimum";
-    case ncLow:
-        return "low";
-    case ncAvg:
-        return "medium";
-    case ncHigh:
-        return "high";
-    case ncMax:
-        return "maximum";
-    case ncUnknown:
-        return "";
-    }
-    return "";
-}
-
-const char* RenewableGenerationModellingToCString(RenewableGenerationModelling rgModelling)
-{
-    switch (rgModelling)
-    {
-    case rgAggregated:
-        return "aggregated";
-    case rgClusters:
-        return "clusters"; // using renewable clusters
-    case rgUnknown:
-        return "";
-    }
-    return "";
 }
 
 std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status)

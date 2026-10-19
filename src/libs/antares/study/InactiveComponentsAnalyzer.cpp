@@ -1,11 +1,11 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
+#include "antares/study/InactiveComponentsAnalyzer.h"
 
 #include <cassert>
 
-namespace Antares::Optimization
+namespace Antares::Data
 {
 
 bool InactiveComponentsAnalyzer::getFlag(const std::vector<bool>& flags, uint32_t pays)
@@ -44,7 +44,7 @@ void InactiveComponentsAnalyzer::setWindAllZero(uint32_t pays, bool value)
 
 void InactiveComponentsAnalyzer::setMiscGenColumnAllZero(uint32_t pays, unsigned column, bool value)
 {
-    assert(column < Data::fhhMax);
+    assert(column < fhhMax);
     setFlag(miscGenColumnAllZero_[column], pays, value);
 }
 
@@ -80,7 +80,7 @@ bool InactiveComponentsAnalyzer::windIsAllZero(uint32_t pays) const
 
 bool InactiveComponentsAnalyzer::miscGenColumnIsAllZero(uint32_t pays, unsigned column) const
 {
-    assert(column < Data::fhhMax);
+    assert(column < fhhMax);
     return getFlag(miscGenColumnAllZero_[column], pays);
 }
 
@@ -94,4 +94,4 @@ bool InactiveComponentsAnalyzer::linkIsAllZero(uint32_t interco) const
     return getFlag(linkAllZero_, interco);
 }
 
-} // namespace Antares::Optimization
+} // namespace Antares::Data

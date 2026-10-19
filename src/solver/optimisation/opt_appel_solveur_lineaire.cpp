@@ -7,7 +7,6 @@
 #include <antares/logs/logs.h>
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/optimization-options/options.h"
-#include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/optimisation/simplex/InfeasibilityAnalyzer.h"
@@ -15,6 +14,7 @@
 #include "antares/solver/optimisation/simplex/SimplexOrchestrator.h"
 #include "antares/solver/optimisation/simplex/SimplexResult.h"
 #include "antares/solver/utils/opt_period_string_generator.h"
+#include "antares/study/InactiveComponentsAnalyzer.h"
 #include "antares/writer/i_writer.h"
 
 using Antares::Solver::Optimization::Simplex::applyResults;
@@ -24,15 +24,14 @@ using Antares::Solver::Optimization::Simplex::SimplexOrchestrator;
 namespace Antares::Solver::Optimization
 {
 
-bool OPT_AppelDuSimplexe(
-  const Antares::Optimization::SingleOptimOptions& options,
-  PROBLEME_HEBDO& problemeHebdo,
-  int NumIntervalle,
-  int optimizationNumber,
-  const OptPeriodStringGenerator& optPeriodStringGenerator,
-  IResultWriter& writer,
-  IO::Outputs::SimulationTable* simulationTable,
-  const Antares::Optimization::InactiveComponentsAnalyzer* inactiveComponents)
+bool OPT_AppelDuSimplexe(const Antares::Optimization::SingleOptimOptions& options,
+                         PROBLEME_HEBDO& problemeHebdo,
+                         int NumIntervalle,
+                         int optimizationNumber,
+                         const OptPeriodStringGenerator& optPeriodStringGenerator,
+                         IResultWriter& writer,
+                         IO::Outputs::SimulationTable* simulationTable,
+                         const Antares::Data::InactiveComponentsAnalyzer* inactiveComponents)
 {
     SimplexOrchestrator orchestrator(options,
                                      problemeHebdo,

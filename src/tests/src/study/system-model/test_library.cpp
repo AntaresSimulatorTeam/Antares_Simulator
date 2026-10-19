@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(model_with_same_objects_of_same_id)
                                   Parameter("param1", TimeDependent::NO, ScenarioDependent::NO)});
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage(
+                          containsMessage(
                             "Model \"model\" contains multiple objects with ID \"param1\"."));
 
     // Two variables with same ID
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(model_with_same_objects_of_same_id)
     model_builder.withVariables(std::move(variables));
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage(
+                          containsMessage(
                             "Model \"model\" contains multiple objects with ID \"var1\"."));
 
     // Two constraints with same ID
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(model_with_same_objects_of_same_id)
     model_builder.withConstraints(std::move(constraints));
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage(
+                          containsMessage(
                             "Model \"model32\" contains multiple objects with ID \"ctt\"."));
 
     // Two ports with same ID
@@ -67,7 +67,8 @@ BOOST_AUTO_TEST_CASE(model_with_same_objects_of_same_id)
     model_builder.withPorts({port1, port2});
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage("Model \"model\" contains multiple objects with ID \"p\"."));
+                          containsMessage(
+                            "Model \"model\" contains multiple objects with ID \"p\"."));
 
     // Two extra outputs with same ID
     model_builder.withId("model312");
@@ -80,7 +81,7 @@ BOOST_AUTO_TEST_CASE(model_with_same_objects_of_same_id)
     model_builder.withExtraOutputs(std::move(outputs));
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage(
+                          containsMessage(
                             "Model \"model312\" contains multiple objects with ID \"output\"."));
 }
 
@@ -96,7 +97,8 @@ BOOST_AUTO_TEST_CASE(model_with_different_objects_of_same_id)
     model_builder.withVariables(std::move(variables));
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage("Model \"model\" contains multiple objects with ID \"z\"."));
+                          containsMessage(
+                            "Model \"model\" contains multiple objects with ID \"z\"."));
 
     // Constraint with same id as parameter
     model_builder.withId("model32");
@@ -107,7 +109,7 @@ BOOST_AUTO_TEST_CASE(model_with_different_objects_of_same_id)
     model_builder.withConstraints(std::move(constraints));
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage(
+                          containsMessage(
                             "Model \"model32\" contains multiple objects with ID \"x\"."));
 }
 
@@ -130,7 +132,8 @@ BOOST_AUTO_TEST_CASE(model_with_port_ct_same_id)
 
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage("Model \"model\" contains multiple objects with ID \"x\"."));
+                          containsMessage(
+                            "Model \"model\" contains multiple objects with ID \"x\"."));
 
     // Extra output with same ID as variable
     model_builder.withId("model__");
@@ -143,7 +146,7 @@ BOOST_AUTO_TEST_CASE(model_with_port_ct_same_id)
     model_builder.withExtraOutputs(std::move(extraOutputs));
     BOOST_CHECK_EXCEPTION(model_builder.build(),
                           Antares::Error::RuntimeError,
-                          checkMessage(
+                          containsMessage(
                             "Model \"model__\" contains multiple objects with ID \"y\"."));
 }
 
@@ -165,7 +168,7 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection)
     PortField field1("firstField");
     PortField field2("secondField");
     std::vector fields = {field1, field2};
-    PortType portType("portTypeId", std::move(fields), {"secondField", "", ""});
+    PortType portType("portTypeId", std::move(fields), {"secondField", "", "", ""});
     BOOST_CHECK_EQUAL(portType.Id(), "portTypeId");
     BOOST_REQUIRE_EQUAL(portType.Fields().size(), 2);
     BOOST_CHECK_EQUAL(portType.Fields()[0].Id(), "firstField");
@@ -180,7 +183,7 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection_error)
     {
         PortField field1("firstField");
         std::vector fields = {field1};
-        return PortType("portTypeId", std::move(fields), {"secondField", "", ""});
+        return PortType("portTypeId", std::move(fields), {"secondField", "", "", ""});
     };
 
     BOOST_CHECK_NO_THROW(shouldNotThrow());
@@ -191,7 +194,7 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection_having_last_field_undefined_
     auto shouldNotThrow = []
     {
         std::vector fields = {PortField("field-1"), PortField("field-2")};
-        return PortType("portTypeId", std::move(fields), {"field-1", "field-2", "field-3"});
+        return PortType("portTypeId", std::move(fields), {"field-1", "field-2", "field-3", ""});
     };
     BOOST_CHECK_NO_THROW(shouldNotThrow());
 }
@@ -199,7 +202,7 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection_having_last_field_undefined_
 BOOST_AUTO_TEST_CASE(port_type_with_area_connection_having_all_fields_defined)
 {
     std::vector fields = {PortField("field-1"), PortField("field-2"), PortField("field-3")};
-    PortType portType("portTypeId", std::move(fields), {"field-3", "field-2", "field-1"});
+    PortType portType("portTypeId", std::move(fields), {"field-3", "field-2", "field-1", ""});
 
     BOOST_CHECK(portType.areaConnection().has_value());
 

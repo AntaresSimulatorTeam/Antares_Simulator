@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(nominal_build_with_parameters)
     BOOST_CHECK_EQUAL(std::stod(component.getParameterValue("param2")), 3);
     BOOST_CHECK_EXCEPTION(component.getParameterValue("param3"),
                           std::invalid_argument,
-                          checkMessage("Parameter 'param3' not found in component 'component'"));
+                          containsMessage("Parameter 'param3' not found in component 'component'"));
     BOOST_CHECK_EQUAL(component.getScenarioGroupId(), "scenario_group");
 }
 
@@ -76,7 +76,8 @@ BOOST_AUTO_TEST_CASE(nominal_build_without_parameters1)
     BOOST_CHECK_EQUAL(component.getModel(), &model);
     BOOST_CHECK_EXCEPTION(component.getParameterValue("param1"),
                           std::invalid_argument,
-                          checkMessage("Parameter 'param1' not found in component 'component2'"));
+                          containsMessage(
+                            "Parameter 'param1' not found in component 'component2'"));
     BOOST_CHECK_EQUAL(component.getScenarioGroupId(), "scenario_group2");
 }
 
@@ -126,7 +127,7 @@ BOOST_AUTO_TEST_CASE(fail_on_no_id)
     auto component = component_builder.withModel(&model).withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage("A component can't have an empty id"));
+                          containsMessage("A component can't have an empty id"));
 }
 
 BOOST_AUTO_TEST_CASE(fail_on_no_model)
@@ -134,7 +135,7 @@ BOOST_AUTO_TEST_CASE(fail_on_no_model)
     auto component = component_builder.withId("component").withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage("A component can't have an empty model"));
+                          containsMessage("A component can't have an empty model"));
 }
 
 BOOST_AUTO_TEST_CASE(fail_on_no_params1)
@@ -145,7 +146,7 @@ BOOST_AUTO_TEST_CASE(fail_on_no_params1)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage(
+                          containsMessage(
                             "The component \"component\" has 0 parameter(s), but its model has 2"));
 }
 
@@ -158,7 +159,7 @@ BOOST_AUTO_TEST_CASE(fail_on_no_params2)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage(
+                          containsMessage(
                             "The component \"component\" has 0 parameter(s), but its model has 2"));
 }
 
@@ -171,7 +172,7 @@ BOOST_AUTO_TEST_CASE(fail_on_missing_param)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage(
+                          containsMessage(
                             "The component \"component\" has 1 parameter(s), but its model has 2"));
 }
 
@@ -185,7 +186,7 @@ BOOST_AUTO_TEST_CASE(fail_on_missing_wrong_param)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage(
+                          containsMessage(
                             "The component 'component' has no value for parameter 'param1'"));
 }
 
@@ -200,7 +201,7 @@ BOOST_AUTO_TEST_CASE(fail_on_too_many_params1)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage(
+                          containsMessage(
                             "The component \"component\" has 3 parameter(s), but its model has 2"));
 }
 
@@ -213,7 +214,7 @@ BOOST_AUTO_TEST_CASE(fail_on_too_many_params2)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage(
+                          containsMessage(
                             "The component \"component\" has 1 parameter(s), but its model has 0"));
 }
 
@@ -230,8 +231,9 @@ BOOST_AUTO_TEST_CASE(param_variability_scenario_mismatch)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage("Model 'model': Component 'component': Parameter 'param1': "
-                                       "Scenario dependance mismatch between model and system"));
+                          containsMessage(
+                            "Model 'model': Component 'component': Parameter 'param1': "
+                            "Scenario dependance mismatch between model and system"));
 }
 
 BOOST_AUTO_TEST_CASE(param_variability_time_mismatch)
@@ -247,8 +249,9 @@ BOOST_AUTO_TEST_CASE(param_variability_time_mismatch)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage("Model 'model': Component 'component': Parameter 'param2': "
-                                       "Time dependance mismatch between model and system"));
+                          containsMessage(
+                            "Model 'model': Component 'component': Parameter 'param2': "
+                            "Time dependance mismatch between model and system"));
 }
 
 BOOST_AUTO_TEST_CASE(param_variability_time_and_scenario_mismatch)
@@ -264,7 +267,7 @@ BOOST_AUTO_TEST_CASE(param_variability_time_and_scenario_mismatch)
                        .withScenarioGroupId("scenario_group");
     BOOST_CHECK_EXCEPTION(component_builder.build(),
                           std::invalid_argument,
-                          checkMessage(
+                          containsMessage(
                             "Model 'model': Component 'component': Parameter 'param1': "
                             "Time and Scenario dependance mismatch between model and system"));
 }
@@ -283,7 +286,7 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_unexisting_port)
     BOOST_CHECK_EXCEPTION(
       component.addAreaConnection("wrongPort", "area1"),
       std::invalid_argument,
-      checkMessage(
+      containsMessage(
         "Cannot connect area 'area1' to port 'wrongPort' of component "
         "'myComponent': Port with id 'wrongPort' not found in component 'myComponent'."));
     BOOST_CHECK(component.portToAreaConnections().empty());
@@ -303,9 +306,10 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_thermal_capacity_to_unexisting_port)
     BOOST_CHECK_EXCEPTION(
       component.addThermalCapacityConnection("wrongPort", "area1", "cluster265"),
       std::invalid_argument,
-      checkMessage("Cannot connect thermal capacity '(area = area1, "
-                   "clusterId = cluster265)' to port 'wrongPort' of component 'myComponent': Port "
-                   "with id 'wrongPort' not found in component 'myComponent'."));
+      containsMessage(
+        "Cannot connect thermal capacity '(area = area1, "
+        "clusterId = cluster265)' to port 'wrongPort' of component 'myComponent': Port "
+        "with id 'wrongPort' not found in component 'myComponent'."));
     BOOST_CHECK(component.portToAreaConnections().empty());
 }
 
@@ -328,7 +332,7 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_port_with_no_area_connection_f
     BOOST_CHECK_EXCEPTION(
       component.addAreaConnection("portNoAC", "area1"),
       std::invalid_argument,
-      checkMessage(
+      containsMessage(
         "Cannot connect area 'area1' to port 'portNoAC' of component 'myComponent': port "
         "type 'portType1' has no area-connection field ID defined"));
     BOOST_CHECK_EQUAL(component.areaConnectedToPort("portNoAC").has_value(), false);
@@ -354,9 +358,9 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_port_with_no_thermal_capacity_
     BOOST_CHECK_EXCEPTION(
       component.addThermalCapacityConnection("portNoAC", "area1", "cluster236"),
       std::invalid_argument,
-      checkMessage("Cannot connect thermal capacity '(area = area1, "
-                   "clusterId = cluster236)' to port 'portNoAC' of component 'myComponent': "
-                   "port type 'portType1' has no thermal-capacity-connection field ID defined"));
+      containsMessage("Cannot connect thermal capacity '(area = area1, "
+                      "clusterId = cluster236)' to port 'portNoAC' of component 'myComponent': "
+                      "port type 'portType1' has no thermal-capacity-connection field ID defined"));
     BOOST_CHECK_EQUAL(component.thermalCapacityConnectedToPort("portNoAC").has_value(), false);
     BOOST_CHECK(component.portToAreaConnections().empty());
 }
@@ -365,7 +369,9 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_undefined_field)
 {
     PortField field2("field2");
     std::vector portFields2 = {field2};
-    PortType portTypeWithAreaConnection("portType2", std::move(portFields2), {"field2", "", ""});
+    PortType portTypeWithAreaConnection("portType2",
+                                        std::move(portFields2),
+                                        {"field2", "", "", ""});
 
     Port portACNoDef("portACNoDef", portTypeWithAreaConnection);
     ModelBuilder model_builder;
@@ -405,9 +411,9 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_thermal_capacity_to_undefined_field)
     BOOST_CHECK_EXCEPTION(
       component.addThermalCapacityConnection("portACNoDef", "area1", "cluster989"),
       std::invalid_argument,
-      checkMessage("Cannot connect thermal capacity '(area = area1, "
-                   "clusterId = cluster989)' to port 'portACNoDef' of component 'myComponent': "
-                   "port field 'field2' is not defined in the component's model 'myModel'"));
+      containsMessage("Cannot connect thermal capacity '(area = area1, "
+                      "clusterId = cluster989)' to port 'portACNoDef' of component 'myComponent': "
+                      "port field 'field2' is not defined in the component's model 'myModel'"));
     BOOST_CHECK_EQUAL(component.thermalCapacityConnectedToPort("portACNoDef").has_value(), false);
     BOOST_CHECK(component.portToThermalCapacityConnections().empty());
 }
@@ -445,9 +451,9 @@ BOOST_AUTO_TEST_CASE(connect_area_to_port_with_price_field_not_in_port_type__exc
 
     BOOST_CHECK_EXCEPTION(component.addAreaConnection("port", "area1"),
                           std::invalid_argument,
-                          checkMessage("Cannot connect area 'area1' to port 'port' of component "
-                                       "'myComponent': price field 'price' is not a field of "
-                                       "port type 'port-type-id'"));
+                          containsMessage("Cannot connect area 'area1' to port 'port' of component "
+                                          "'myComponent': price field 'price' is not a field of "
+                                          "port type 'port-type-id'"));
     BOOST_CHECK(!component.areaConnectedToPort("port").has_value());
 }
 
@@ -455,7 +461,9 @@ BOOST_AUTO_TEST_CASE(successfully_connect_area_to_port)
 {
     PortField field_flow("flow");
     std::vector portFields = {field_flow};
-    PortType portTypeWithAreaConnection("port-type-id", std::move(portFields), {"flow", "", ""});
+    PortType portTypeWithAreaConnection("port-type-id",
+                                        std::move(portFields),
+                                        {"flow", "", "", ""});
 
     Port portACDef("portACDef", portTypeWithAreaConnection);
     std::vector<PortFieldDefinition> portFieldDefs;
@@ -480,7 +488,7 @@ BOOST_AUTO_TEST_CASE(successfully_connect_area_to_port)
     BOOST_CHECK_EQUAL(component.portToAreaConnections().at("portACDef"), "area1");
     BOOST_CHECK_EXCEPTION(component.addAreaConnection("portACDef", "area2"),
                           std::invalid_argument,
-                          checkMessage(
+                          containsMessage(
                             "Cannot connect area 'area2' to port 'portACDef' of component "
                             "'myComponent': port is already connected to 'area1'"));
     BOOST_CHECK_EQUAL(component.areaConnectedToPort("portACDef").has_value(), true);
@@ -534,7 +542,7 @@ BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_fails_because_port_
     PortField from_area_bound("from-area-bound");
     std::vector portFields = {flow, to_area_bound, from_area_bound};
     //  area-connection:
-    AreaConnection area_connection = {"flow", "to-area-bound", "from-area-bound"};
+    AreaConnection area_connection = {"flow", "to-area-bound", "from-area-bound", ""};
     //  Finally : the port type
     PortType portTypeWithAreaConnection("port-type-id", std::move(portFields), area_connection);
 
@@ -577,7 +585,7 @@ BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_is_successful)
     PortField from_area_bound("from-area-bound");
     std::vector portFields = {flow, to_area_bound, from_area_bound};
     //  area-connection:
-    AreaConnection area_connection = {"flow", "to-area-bound", "from-area-bound"};
+    AreaConnection area_connection = {"flow", "to-area-bound", "from-area-bound", ""};
     //  Finally : the port type
     PortType portTypeWithAreaConnection("port-type-id", std::move(portFields), area_connection);
 
@@ -615,7 +623,7 @@ BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_is_successful)
                          "'my-component': port is already connected to 'some-area'";
     BOOST_CHECK_EXCEPTION(component.addAreaConnection("balance-port", "area-2"),
                           std::invalid_argument,
-                          checkMessage(errMsg));
+                          containsMessage(errMsg));
     BOOST_CHECK(component.areaConnectedToPort("balance-port").has_value());
     BOOST_CHECK_EQUAL(component.areaConnectedToPort("balance-port").value(), "some-area");
     BOOST_CHECK_EQUAL(component.portToAreaConnections().size(), 1);

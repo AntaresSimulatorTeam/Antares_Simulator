@@ -11,7 +11,7 @@
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
 #include "antares/solver/variable/adequacy/all.h"
 
-namespace Antares::Optimization
+namespace Antares::Data
 {
 class InactiveComponentsAnalyzer;
 }
@@ -81,7 +81,7 @@ private:
     std::reference_wrapper<ISimulationObserver> simulationObserver_;
     // Study-wide activity flags, built once in simulationBegin(); consulted only
     // while producing the legacy simulation tables.
-    std::shared_ptr<const Antares::Optimization::InactiveComponentsAnalyzer> inactiveComponents_;
+    std::shared_ptr<const Antares::Data::InactiveComponentsAnalyzer> inactiveComponents_;
 }; // class Adequacy
 
 // See economy.h: concentrate the single ISimulation<Adequacy> instantiation in
