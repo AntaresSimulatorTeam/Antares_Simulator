@@ -562,6 +562,36 @@ BOOST_AUTO_TEST_CASE(sum_connections_with_non_linear_no_connection_expr___except
                           containsMessage("'FunctionNode::dual' is not allowed"));
 }
 
+BOOST_AUTO_TEST_CASE(sum_connections_with_port_field_in_no_connection_expr___exception_raised)
+{
+    const auto yml_lib = R"(
+      library:
+        id: lib
+        port-types:
+          - id: capacity_port
+            fields:
+              - id: capacity
+        models:
+          - id: thermal
+            variables:
+              - id: generation
+                lower-bound: 0
+                variable-type: continuous
+            ports:
+              - id: capacity_port
+                type: capacity_port
+            binding-constraints:
+              - id: generation_max_constraint
+                expression: generation <= sum_connections(capacity_port.capacity, no_connection_expr = capacity_port.capacity)
+    )";
+
+    YmlModel::Parser parserModel;
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(parserModel.parse(yml_lib)),
+                          InputError,
+                          containsMessage("'PortFieldSumNode' is not allowed to contain "
+                                          "'PortFieldNode'"));
+}
+
 BOOST_AUTO_TEST_CASE(binding_constraint_with_sum_connections_op_is_non_linear___exception_raised)
 {
     // This library defines :

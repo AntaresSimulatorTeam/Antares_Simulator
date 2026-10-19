@@ -83,6 +83,9 @@ ForbiddenNodes ForbidNodesInBindingConstraint()
     ForbiddenNodes f;
     ForbidInFunctionNodes(f);
     f.forbidGlobally<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
+    // The no_connection_expr of a sum_connections is evaluated within the model itself, where
+    // port fields cannot be resolved
+    f.parentForbidsChild<PortFieldSumNode, PortFieldNode>();
     return f;
 }
 
