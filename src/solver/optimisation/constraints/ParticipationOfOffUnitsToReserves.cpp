@@ -40,8 +40,7 @@ void ParticipationOfOffUnitsToReserves::add(int pays, int cluster, int pdt)
               .lessThan();
 
             data.CorrespondanceCntNativesCntOptim[pdt]
-              .reservesIndices.value()
-              .maxPowerOffUnitsInThermalCluster[globalClusterIdx]
+              .reservesIndices->maxPowerOffUnitsInThermalCluster[globalClusterIdx]
               = builder.data.nombreDeContraintes;
 
             ConstraintNamer namer(builder.data.NomDesContraintes);

@@ -51,6 +51,29 @@ class solver_output_handler:
         assert absolute_path.exists(), f"Path %s does not exist." % absolute_path
         return pd.read_csv(absolute_path, header=[0, 1], skiprows=ignore_rows, sep='\t', low_memory=False)
 
+    # --- generic mc-ind hourly accessors -------------------------------------
+    # These expose whole mc-ind hourly files (2-level column header, one row per
+    # hour, row i == absolute_time_index i) so callers can pull an arbitrary
+    # column without a dedicated getter. Used by the legacy <-> simulation-table
+    # equivalence checks (simulation_table_equivalence.py).
+
+    def area_values_hourly(self, area: str, year: int) -> pd.DataFrame:
+        return self.__read_csv(f"{self.mode}/mc-ind/{year:05d}/areas/{area.lower()}/values-hourly.txt")
+
+    def area_details_hourly(self, area: str, year: int) -> pd.DataFrame:
+        return self.__read_csv(f"{self.mode}/mc-ind/{year:05d}/areas/{area.lower()}/details-hourly.txt")
+
+    def area_sts_details_hourly(self, area: str, year: int) -> pd.DataFrame:
+        return self.__read_csv(
+            f"{self.mode}/mc-ind/{year:05d}/areas/{area.lower()}/details-STstorage-hourly.txt")
+
+    def link_values_hourly(self, link_dir: str, year: int) -> pd.DataFrame:
+        # link_dir is the on-disk folder name, e.g. "east - west"
+        return self.__read_csv(f"{self.mode}/mc-ind/{year:05d}/links/{link_dir}/values-hourly.txt")
+
+    def has_mc_ind_year(self, year: int) -> bool:
+        return (Path(self.study_output_path) / self.mode / "mc-ind" / f"{year:05d}").is_dir()
+
 
     def __if_none_then_parse(self, rs: result_type, area, year, file_name: str):
         if self.hourly_results[rs] is None:
@@ -116,6 +139,16 @@ class solver_output_handler:
 
     def get_hourly_n_dispatched_units(self, area: str, year: int, prod_name: str) -> pd.Series:
         return self.__get_details_hourly(area, year)[prod_name]['NODU']
+    
+    def get_hourly_nodu(self, area: str, year: int) -> pd.Series:
+        return self.__get_values_hourly(area, year)["NODU"][" "]
+
+    def get_reference_nodu(self, study_path):
+        ignore_rows = [0, 1, 2, 3, 6]
+        reference_path = Path(study_path) / "reference" / "values-hourly.txt"
+        assert reference_path.exists(), f"Reference file not found: {reference_path}"
+        df = pd.read_csv(reference_path, header=[0, 1], skiprows=ignore_rows, sep='\t', low_memory=False)
+        return df["NODU"].iloc[:, 0]
 
     def get_loss_of_load_weekly_duration_h(self, area: str, year: int, week: int) -> int:
         df = self.__get_values_hourly_for_specific_week(area, year, week)
@@ -147,6 +180,9 @@ class solver_output_handler:
             return self.__get_values_hourly(area, year)["OV. COST"]["Euro"].sum()
         else:
             return self.__get_values_hourly_for_specific_hour(area, year, date)["OV. COST"]["Euro"].sum()
+        
+    def get_weekly_overall_cost_eur(self, area: str, year: int, week: int) -> float:
+        return self.__get_values_hourly_for_specific_week(area, year, week)["OV. COST"]["Euro"].sum()
 
     def get_battery_level_mwh(self, area: str, year: int, date: str) -> float:
         return self.__get_values_hourly_for_specific_hour(area, year, date)["BATTERY_LEVEL"]["MWh"].sum()
@@ -204,3 +240,9 @@ class solver_output_handler:
         
     def get_values_for_st_storage_cluster_for_specific_hour_mw(self, area: str, year: int, date: str, cluster_name: str, keySTstorageValue: str):
         return self.__get_details_st_storage_hourly_for_specific_hour(area, year, date)[cluster_name][keySTstorageValue]
+        
+    def get_ramp_cost_cluster(self, area: str, year: int, cluster: str) -> pd.Series:
+        return self.__get_details_hourly(area, year)[cluster]["Ramping Cost - Euro"]
+        
+    def get_ramp_cost_area(self, area: str, year: int) -> pd.Series:
+        return self.__get_values_hourly(area, year)["RAMP COST"]["Euro"]

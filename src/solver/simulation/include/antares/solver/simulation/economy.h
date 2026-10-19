@@ -74,11 +74,17 @@ private:
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
-    std::vector<Optimization::WeeklyOptimization> weeklyOptProblems_;
+    std::vector<Antares::Optimization::WeeklyOptimization> weeklyOptProblems_;
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
     IResultWriter& resultWriter_;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
 }; // class Economy
+
+// ISimulation<Economy> is heavy to instantiate (run/loopThroughYears, the
+// year-job/std::function chain, and the whole Variable output container). It is
+// used by ~10 TUs; declaring it extern here concentrates the single definition
+// in economy.cpp instead of re-instantiating it in every one of them.
+extern template class ISimulation<Economy>;
 
 } // namespace Antares::Solver::Simulation
 

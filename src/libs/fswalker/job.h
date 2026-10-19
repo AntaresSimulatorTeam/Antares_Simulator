@@ -30,7 +30,7 @@ public:
     {
     }
 
-    virtual ~IJob();
+    ~IJob() override;
 
 protected:
     void decrementCounter();

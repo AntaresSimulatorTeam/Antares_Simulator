@@ -7,17 +7,18 @@
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/system-model/library.h"
 
 struct FillerFixture
 {
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
-    std::unique_ptr<Solver::ModelerData> modelerData;
-    std::vector<ModelerStudy::SystemModel::Library> libraries;
-    Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem;
-    Optimisation::ScenarioGroupRepository scenarioGroupRepository;
-    Antares::Optimisation::LinearProblemDataImpl::LinearProblemData linearProblemData;
+    std::unique_ptr<Antares::Solver::ModelerData> modelerData;
+    std::vector<Antares::ModelerStudy::SystemModel::Library> libraries;
+    Antares::LinearProblem::MpsolverImpl::OrtoolsLinearProblem linearProblem;
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepository;
+    Antares::LinearProblem::DataImpl::LinearProblemData linearProblemData;
 
     FillerFixture();
     void init(const std::string& systemYaml, const std::string& libraryYaml);
@@ -29,7 +30,7 @@ struct FillerFixture
 
     void addModelerVariables(unsigned int ts_start,
                              unsigned int ts_end,
-                             Optimisation::OptimEntityContainer& optimEntityContainer);
+                             Antares::LinearProblem::OptimEntityContainer& optimEntityContainer);
 
     void addEmptyConstraintsToLinearProblem(std::vector<std::string>& names, double rhs);
 
@@ -38,6 +39,6 @@ struct FillerFixture
     void addLegacyLp(std::vector<std::string>& constraintNames, double rhs);
 
     void fillProblemWithThermalCapacityConnectionFiller(
-      const Optimisation::LinearProblemApi::FillContext& fillCtx,
-      Optimisation::OptimEntityContainer& optimEntityContainer) const;
+      const Antares::LinearProblem::Api::FillContext& fillCtx,
+      Antares::LinearProblem::OptimEntityContainer& optimEntityContainer) const;
 };

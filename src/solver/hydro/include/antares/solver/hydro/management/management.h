@@ -13,21 +13,21 @@
 #include "antares/date/date.h"
 #include "antares/writer/i_writer.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
+namespace Antares::Solver::Variable
 {
 class State;
 }
 
+namespace Antares::Solver
+{
 double randomReservoirLevel(double min, double avg, double max, MersenneTwister& random);
 double BetaVariable(double a, double b, MersenneTwister& random);
 double GammaVariable(double a, MersenneTwister& random);
 
-} // namespace Solver
+} // namespace Antares::Solver
 
+namespace Antares
+{
 typedef struct
 {
     std::vector<double> HydrauliqueModulableQuotidien; /* indice par jour */

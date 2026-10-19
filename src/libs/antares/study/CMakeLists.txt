@@ -1,9 +1,19 @@
+set(SRC_INACTIVE_COMPONENTS
+        include/antares/study/InactiveComponentsAnalyzer.h
+        InactiveComponentsAnalyzer.cpp
+        include/antares/study/InactiveComponentsAnalyzerBuilder.h
+        InactiveComponentsAnalyzerBuilder.cpp
+)
 set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/scBuilderDataInterface.h
         include/antares/study/scenario-builder/TSnumberData.h
         scenario-builder/TSnumberData.cpp
-        include/antares/study/scenario-builder/hydroLevelsData.h
-        scenario-builder/hydroLevelsData.cpp
+        include/antares/study/scenario-builder/HydroLevelsData.h
+        scenario-builder/HydroLevelsData.cpp
+        include/antares/study/scenario-builder/HydroFinalLevelsData.h
+        scenario-builder/HydroFinalLevelsData.cpp
+        include/antares/study/scenario-builder/HydroInitialLevelsData.h
+        scenario-builder/HydroInitialLevelsData.cpp
         include/antares/study/scenario-builder/rules.h
         include/antares/study/scenario-builder/rules.hxx
         scenario-builder/rules.cpp
@@ -40,11 +50,9 @@ set(SRC_AREAS
         include/antares/study/area/capacityReservation.h
         include/antares/study/area/reserveParticipation.h
         include/antares/study/area/reserveParticipationContainer.h
-        include/antares/study/area/ReserveOpt.h
         include/antares/study/area/area.hxx
         include/antares/study/area/scratchpad.h
-		include/antares/study/area/forTestsOnlyList.h
-        area/scratchpad.cpp
+	        area/scratchpad.cpp
         area/area.cpp
         area/links.cpp
         include/antares/study/area/links.h
@@ -69,6 +77,9 @@ set(SRC_STUDY_PART_THERMAL
         include/antares/study/parts/thermal/ecoInput.h
         parts/thermal/ecoInput.cpp
         include/antares/study/parts/thermal/cluster.h
+        include/antares/study/parts/thermal/law.h
+        include/antares/study/parts/thermal/prepro.h
+        parts/thermal/prepro.cpp
         include/antares/study/parts/thermal/cost_provider.h
         include/antares/study/parts/thermal/cluster.hxx
         parts/thermal/cluster.cpp
@@ -97,6 +108,7 @@ set(SRC_STUDY_PART_RESERVES
         include/antares/study/parts/reserves/SymmetryCollectorVisitor.h
         include/antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h
         parts/reserves/makeGroupsofSymmetriesFromString.cpp
+        parts/reserves/reservesParticipationsLoader.cpp
 )
 source_group("study\\part\\reserves" FILES ${SRC_STUDY_PART_RESERVES})
 
@@ -121,7 +133,6 @@ set(SRC_STUDY_PART_WIND
         include/antares/study/parts/wind/container.h
         parts/wind/container.cpp
         include/antares/study/parts/wind/prepro.h
-        include/antares/study/parts/wind/prepro.hxx
         parts/wind/prepro.cpp
 )
 source_group("study\\part\\wind" FILES ${SRC_STUDY_PART_WIND})
@@ -200,14 +211,12 @@ set(SRC_STUDY
         parts/load/container.cpp
         parts/load/prepro.cpp
         include/antares/study/parts/load/prepro.h
-        include/antares/study/parts/load/prepro.hxx
 
         # Solar
         include/antares/study/parts/solar/container.h
         parts/solar/container.cpp
         parts/solar/prepro.cpp
         include/antares/study/parts/solar/prepro.h
-        include/antares/study/parts/solar/prepro.hxx
 
         # Study
         include/antares/study/header.h
@@ -244,6 +253,7 @@ set(SRC_STUDY
         area/sets.cpp
 
         # variable selection
+        include/antares/study/categories.h
         include/antares/study/variable-print-info.h
         variable-print-info.cpp
 )
@@ -251,6 +261,7 @@ set(SRC_STUDY
 source_group("study\\study" FILES ${SRC_STUDY})
 
 set(SRC_ALL
+        ${SRC_INACTIVE_COMPONENTS}
         ${SRC_STDCXX}
         ${SRC_AREAS}
         ${SRC_XCAST}
@@ -289,19 +300,20 @@ target_link_libraries(study
         yuni-static-core
         Antares::date
         Antares::inifile
+        Antares::io
+        Antares::simulation-table
         Antares::study-utils
-        Antares::solverUtils
+        Antares::optimization-options
         Antares::correlation
         Antares::path
         Antares::mersenne
         Antares::result_writer
         Antares::series
         Antares::array
-        Antares::hydro
         Antares::scenario-builder-utils
         Antares::enums
-        antares-solver-simulation
         antares-core
+        yaml-cpp::yaml-cpp
         PRIVATE
         Antares::antares-study-system-model
         linear-problem-api
@@ -311,7 +323,6 @@ target_link_libraries(study
         Antares::exception
         fmt::fmt
         Antares::benchmarking
-        antares-solver-variable
         Antares::additional-constraint-rhs-antlr-interface
         Antares::reserves-parsing-antlr-interface
 )

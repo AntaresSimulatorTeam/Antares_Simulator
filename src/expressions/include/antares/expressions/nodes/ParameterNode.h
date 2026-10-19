@@ -17,7 +17,7 @@ class ParameterNode final: public Leaf<std::string>
 {
 public:
     explicit ParameterNode(const std::string& value,
-                           Optimisation::VariabilityType time_index = Optimisation::
+                           LinearProblem::VariabilityType time_index = LinearProblem::
                              VariabilityType::VARYING_IN_TIME_AND_SCENARIO):
         Leaf<std::string>(value),
         variability_(time_index)
@@ -29,12 +29,12 @@ public:
         return "ParameterNode";
     }
 
-    Optimisation::VariabilityType variability() const
+    LinearProblem::VariabilityType variability() const
     {
         return variability_;
     }
 
 private:
-    Optimisation::VariabilityType variability_;
+    LinearProblem::VariabilityType variability_;
 };
 } // namespace Antares::Expressions::Nodes

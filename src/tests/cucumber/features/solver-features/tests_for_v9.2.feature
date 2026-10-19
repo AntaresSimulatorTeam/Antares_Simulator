@@ -1,6 +1,6 @@
 Feature: tests for v9.2
   
-  @fast @short
+  @short
   Scenario: min gen for thermal clusters
   Given the solver study path is "Antares_Simulator_Tests_NR/valid-v920/min-gen-for-thermal"
   When I run antares simulator
@@ -15,7 +15,7 @@ Feature: tests for v9.2
   # area : AREA 3
   And in area "AREA 3", year 1, no mingens for cluster "cluster-must-run"
 
-  @fast @short
+  @short
     Scenario: Short-term storage additional constraints
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-v920/ST-additional-constraints"
     When I run antares simulator

@@ -17,6 +17,7 @@
 #include <antares/study/study.h>
 #include "antares/study/parts/thermal/cluster_list.h"
 
+using namespace Antares;
 using namespace Antares::Data;
 using std::filesystem::temp_directory_path;
 

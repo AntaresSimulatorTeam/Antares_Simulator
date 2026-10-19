@@ -79,38 +79,11 @@ class solver_input_handler:
         else:
             return None
 
-    def set_reserve_value(self, area, sectionName, variable, value):
-        # File path
-        file = self.files_path["reserves"] / area / "reserves.ini"
-        # Content to print in file (tmp content)
-        content_out = []
-        # Reading the file content (content in)
-        with open(file) as f:
-            # Searching variable and setting its value in a tmp content
-            for line in f:
-                if line.startswith("["):
-                    content_out.append(line)
-                    if f"[{sectionName}]" in line:
-                        correct_section = True
-                    else:
-                        correct_section = False
-                else:
-                    if correct_section and line.strip().startswith(variable):
-                        content_out.append(variable + " = " + value + "\n")
-                    else:
-                        content_out.append(line)
-        # Erasing file content with the tmp content (content out)
-        with open(file, "w") as f:
-            f.writelines(content_out)
-
-    def copy_reserve_ini_from_file(self, origin, destination):
+    def copy_reserve_yml_from_file(self, origin, destination):
         # File path
         fileToReplace = os.path.join(self.study_root_dir, *destination)
         fileToCopy = os.path.join(self.study_root_dir, *origin)
         shutil.copyfile(fileToCopy, fileToReplace)
-
-    def set_parameter_from_file(self, area, sectionName, paramName, paramValue):
-        self.set_reserve_value(area.lower(), sectionName, paramName, paramValue)
 
     def set_input(self, input_file, section, variable, value):
         """Set `variable = value` inside `[section]` of an input/ ini file.

@@ -59,3 +59,16 @@ add_boost_test(test-numspace-manager
         numspace_manager.cpp
         LIBS
         solver-lib)
+
+# ===================================
+# Tests on input-generation series naming (simulation table components)
+# ===================================
+add_boost_test(test-input-generation-series
+        SRC test-input-generation-series.cpp
+        INCLUDE
+        "${src_solver_simulation}"
+        "${src_libs_antares_study}"
+        LIBS
+        antares-solver-simulation
+        test_utils_unit
+        solver-lib)

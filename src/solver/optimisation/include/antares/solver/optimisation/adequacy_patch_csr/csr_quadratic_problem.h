@@ -6,7 +6,7 @@
 #include "../constraints/ConstraintBuilder.h"
 class HourlyCSRProblem;
 
-namespace Antares::Solver::Optimization
+namespace Antares::Optimization
 {
 
 class CsrQuadraticProblem final
@@ -35,4 +35,4 @@ private:
     void setBindingConstraints(ConstraintBuilder& builder);
 };
 
-} // namespace Antares::Solver::Optimization
+} // namespace Antares::Optimization

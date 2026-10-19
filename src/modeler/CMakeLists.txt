@@ -24,7 +24,6 @@ import_std_libs(antares-modeler)
 executable_strip(antares-modeler)
 
 copy_dependency(sirius_solver antares-modeler)
-copy_project_shared_lib(simulation-table-writers antares-modeler)
 
 install(TARGETS antares-modeler EXPORT antares-modeler DESTINATION bin)
 

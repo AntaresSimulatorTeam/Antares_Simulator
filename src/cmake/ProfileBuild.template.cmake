@@ -48,7 +48,7 @@ set(YUNI_TARGET "${ANTARES_VERSION_TARGET}")
 # Uncomment the following line to override the module list
 # Example : `ui,scripts,-net`
 # Note : `cmake -DMODULES=help` to have a list of all available modules
-set(MODULES "core,uuid")
+set(MODULES "core")
 
 
 

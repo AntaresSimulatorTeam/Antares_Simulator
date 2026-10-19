@@ -29,7 +29,6 @@ struct ImportPreproFixture
         if (areaA)
         {
             areaA->createMissingData();
-            areaA->resetToDefaultValues();
         }
 
         testFolder = CREATE_TMP_DIR_BASED_ON_TEST_NAME();

@@ -3,52 +3,66 @@
 
 #include "antares/concurrency/concurrency.h"
 
-#include <memory>
-
-#include "yuni/job/job.h"
-
 namespace Antares::Concurrency
 {
 
-namespace
+ThreadPool::ThreadPool(unsigned threadCount)
 {
+    workers_.reserve(threadCount);
+    for (unsigned i = 0; i < threadCount; ++i)
+    {
+        workers_.emplace_back([this] { workerLoop(); });
+    }
+}
 
-/*!
- * Just wraps an arbitrary task as a yuni job, and allows to retrieve the corresponding future.
- */
-class PackagedJob final: public Yuni::Job::IJob
+ThreadPool::~ThreadPool()
 {
-public:
-    PackagedJob(const Task& task):
-        task_(task)
     {
+        std::lock_guard lock(mutex_);
+        stop_ = true;
     }
+    condition_.notify_all();
+    // workers_ are std::jthread: they join on destruction, after having
+    // drained the remaining tasks (see workerLoop exit condition).
+}
 
-    TaskFuture getFuture()
-    {
-        return task_.get_future();
-    }
-
-protected:
-    void onExecute() override
-    {
-        task_();
-    }
-
-private:
-    std::packaged_task<void()> task_;
-};
-
-} // namespace
-
-TaskFuture AddTask(Yuni::Job::QueueService& threadPool,
-                   const Task& task,
-                   Yuni::Job::Priority priority)
+TaskFuture ThreadPool::add(Task task)
 {
-    auto job = std::make_unique<PackagedJob>(task);
-    auto future = job->getFuture();
-    threadPool.add(job.release(), priority);
+    std::packaged_task<void()> packagedTask(std::move(task));
+    auto future = packagedTask.get_future();
+    {
+        std::lock_guard lock(mutex_);
+        tasks_.push_back(std::move(packagedTask));
+    }
+    condition_.notify_one();
     return future;
+}
+
+void ThreadPool::workerLoop()
+{
+    while (true)
+    {
+        std::packaged_task<void()> task;
+        {
+            std::unique_lock lock(mutex_);
+            condition_.wait(lock, [this] { return stop_ || !tasks_.empty(); });
+            if (tasks_.empty())
+            {
+                // stop_ is necessarily true here: drain complete, exit
+                return;
+            }
+            task = std::move(tasks_.front());
+            tasks_.pop_front();
+        }
+        // Run outside the lock. Exceptions are captured by the packaged_task
+        // and delivered through the associated future; the worker survives.
+        task();
+    }
+}
+
+TaskFuture AddTask(ThreadPool& threadPool, const Task& task)
+{
+    return threadPool.add(task);
 }
 
 void FutureSet::add(TaskFuture&& f)

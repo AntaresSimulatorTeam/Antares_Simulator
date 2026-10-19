@@ -7,7 +7,7 @@
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using namespace IO::Outputs;
-using Antares::Solver::Optimization::OptimizationOptions;
+using Antares::Optimization::OptimizationOptions;
 
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       PROBLEME_HEBDO* problemeHebdo,

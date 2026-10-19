@@ -14,6 +14,7 @@
 
 #define SEP "/"
 
+using namespace Antares;
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
@@ -38,7 +39,6 @@ struct Fixture
         if (area_1)
         {
             area_1->createMissingData();
-            area_1->resetToDefaultValues();
         }
         study->areas.rebuildIndexes();
 
@@ -173,7 +173,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_matrix_equal_width_and_d
 {
     bool ret = true;
     study->parameters.derated = true;
-    StudyVersion studyVersion(9, 1);
+    StudyVersion _(9, 1);
 
     auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower.timeSeries;
     auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower.timeSeries;
@@ -341,7 +341,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_from_common_capacity_folde
     auto& avgDailyRuleCurves = area_1->hydro.series->ruleCurves.avg.timeSeries;
     Matrix<double> ruleCurves;
 
-    ruleCurves.reset(3, DAYS_PER_YEAR, true);
+    ruleCurves.reset(3, DAYS_PER_YEAR);
 
     ruleCurves.fillColumn(RuleCurves::maximum, 1.);
     ruleCurves.fillColumn(RuleCurves::average, 0.5);
@@ -357,7 +357,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_from_common_capacity_folde
 
     ret = ruleCurves.saveToCSVFile(pathToReservoirLevels_file, 2) && ret;
 
-    ruleCurves.reset(3, DAYS_PER_YEAR, true);
+    ruleCurves.reset(3, DAYS_PER_YEAR);
 
     RuleCurvesLoaderService ruleCurvesLoaderService(area_1->hydro.series->ruleCurves);
 
@@ -504,7 +504,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_missing_reservoir_file, Fi
       Single;
 
     Matrix<double> standardRuleCurves;
-    standardRuleCurves.reset(3L, DAYS_PER_YEAR, true);
+    standardRuleCurves.reset(3L, DAYS_PER_YEAR);
 
     standardRuleCurves.fillColumn(RuleCurves::maximum, 1.);
     standardRuleCurves.fillColumn(RuleCurves::average, 0.5);
@@ -514,7 +514,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_missing_reservoir_file, Fi
 
     fs::remove(pathToReservoirLevels_file);
 
-    standardRuleCurves.reset(3, DAYS_PER_YEAR, true);
+    standardRuleCurves.reset(3, DAYS_PER_YEAR);
 
     RuleCurvesLoaderService ruleCurvesLoaderService(area_1->hydro.series->ruleCurves);
 

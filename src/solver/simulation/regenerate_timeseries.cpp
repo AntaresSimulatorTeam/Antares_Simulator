@@ -53,7 +53,7 @@ void regenerateTimeSeries(Data::Study& study,
         generateThermalTimeSeries(study, clusters, study.runtime.random[Data::seedTsGenThermal]);
 
         bool archive = study.parameters.timeSeriesToArchive & Data::timeSeriesThermal;
-        bool doWeWrite = archive && !study.parameters.noOutput;
+        bool doWeWrite = archive;
         if (doWeWrite)
         {
             fs::path savePath = study.folderOutput / "ts-generator" / "thermal" / "mc-" / "0";

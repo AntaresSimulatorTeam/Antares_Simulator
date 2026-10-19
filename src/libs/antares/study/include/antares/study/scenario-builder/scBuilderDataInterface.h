@@ -4,12 +4,7 @@
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_DATA_INTERFACE_H__
 #define __LIBS_STUDY_SCENARIO_BUILDER_DATA_INTERFACE_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
-
 #include "antares/study/study.h"
-
-using namespace Yuni;
 
 namespace Antares::Data::ScenarioBuilder
 {
@@ -28,9 +23,9 @@ public:
      */
     virtual bool reset(const Study& study) = 0;
 
-    [[nodiscard]] virtual uint width() const = 0;
+    [[nodiscard]] virtual unsigned int width() const = 0;
 
-    [[nodiscard]] virtual uint height() const = 0;
+    [[nodiscard]] virtual unsigned int height() const = 0;
 
     /*!
      ** \brief Apply the changes to the study corresponding data (time series, hydro levels, ...)

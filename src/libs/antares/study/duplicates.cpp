@@ -30,7 +30,8 @@ bool check(const Container& c, const std::string& objectType, const std::string&
     {
         if (auto [name, inserted] = names.insert(getName(it)); !inserted)
         {
-            logs.error() << "Duplicate " << objectType << " `" << *name << "` found in " << context;
+            Antares::logs.error() << "Duplicate " << objectType << " `" << *name << "` found in "
+                                  << context;
             ret = false;
         }
     }

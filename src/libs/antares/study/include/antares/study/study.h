@@ -5,14 +5,11 @@
 #define __ANTARES_LIBS_STUDY_STUDY_H__
 
 #include <memory>
-
-#include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
+#include <string>
 
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/correlation/correlation.h>
 #include <antares/date/date.h>
-#include <antares/solver/modeler/ModelerData.h>
 #include <antares/study/runtime/runtime.h>
 #include <antares/writer/i_writer.h>
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
@@ -24,15 +21,28 @@
 #include "parameters.h"
 #include "sets.h"
 
+namespace Antares::Solver::Simulation
+{
+struct ReserveIndexMaps;
+}
+
+namespace Antares::Solver
+{
+struct ModelerData;
+}
+
 namespace Antares::Data
 {
 /*!
 ** \brief Antares Study
 */
 
-class Study: public Yuni::NonCopyable<Study>
+class Study
 {
 public:
+    Study(const Study&) = delete;
+    Study& operator=(const Study&) = delete;
+
     using Ptr = std::shared_ptr<Study>;
     //! Set of studies
     using Set = std::set<Ptr>;
@@ -48,7 +58,7 @@ public:
     ** \param folder A study folder
     ** \return True if the folder is a study, false otherwise
     */
-    static bool IsRootStudy(const AnyString& folder);
+    static bool IsRootStudy(const std::string& folder);
 
     //! \name Constructor & Destructor
     //@{
@@ -91,7 +101,7 @@ public:
     **
     ** \param n A number of years
     */
-    void resizeAllTimeseriesNumbers(uint n);
+    void resizeAllTimeseriesNumbers(unsigned int n);
 
     /*!
     ** \brief Store the timeseries numbers
@@ -185,7 +195,7 @@ public:
     ** From the "Number of Cores" level (in GUI --> Advanced parameters), computes
     ** the real numbers of logical cores to be involved in the MC years parallelisation.
     */
-    void getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced);
+    void getNumberOfCores(const bool forceParallel, const unsigned int nbYearsParallelForced);
 
     //! \name
     //@{
@@ -244,7 +254,7 @@ public:
     // It is a possible reduction of the raw number of cores set by user (simulation cores level).
     // In solver, it is the max number of years (actually run, not skipped) a set of parallel
     // years can contain.
-    uint maxNbYearsInParallel = 1;
+    unsigned int maxNbYearsInParallel = 1;
 
     //! Parameters
     Parameters parameters;
@@ -311,6 +321,10 @@ public:
     */
     StudyRuntimeInfos runtime;
 
+    //! Lookup tables mapping reserves to their solver-side participation indices.
+    //! Owned by the solver (opaque handle), populated once the weekly problem is built.
+    std::shared_ptr<Solver::Simulation::ReserveIndexMaps> reserveMaps;
+
     /*!
     ** \name Cache
     */
@@ -321,20 +335,11 @@ public:
     //@{
     //! A buffer for temporary operations on large amount of data
     mutable Matrix<>::BufferType dataBuffer;
-    //! A buffer used when loading time-series for dealing with filenames (prepro/series only)
-    mutable YString bufferLoadingTS;
 
     //@}
 
-    Solver::ModelerData* getModelerData() const
-    {
-        return modelerInput_.get();
-    }
-
-    void setModelerData(std::unique_ptr<Solver::ModelerData> modelerData)
-    {
-        modelerInput_ = std::move(modelerData);
-    }
+    Solver::ModelerData* getModelerData() const;
+    void setModelerData(std::unique_ptr<Solver::ModelerData> modelerData);
 
 protected:
     //! \name Loading
@@ -359,7 +364,7 @@ protected:
     void loadModelerComponents();
     void checkModelerDataCompatibility() const;
 
-    void parameterFiller(const StudyLoadOptions& options);
+    void parameterFiller();
 
     //! \name Misc
     //@{

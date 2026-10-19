@@ -109,41 +109,41 @@ typedef struct
 class Hydro_problem_costs final
 {
 public:
-    Hydro_problem_costs(const Data::Parameters& parameters);
+    Hydro_problem_costs(const Antares::Data::Parameters& parameters);
 
     inline double get_end_days_levels_cost() const
     {
-        return end_days_levels + noiseGenerator() * Constants::noiseAmplitude;
+        return end_days_levels + noiseGenerator() * Antares::Constants::noiseAmplitude;
     }
 
     inline double get_overflow_cost() const
     {
-        return overflow + noiseGenerator() * Constants::noiseAmplitude;
+        return overflow + noiseGenerator() * Antares::Constants::noiseAmplitude;
     }
 
     inline double get_deviations_cost() const
     {
-        return deviations + noiseGenerator() * Constants::noiseAmplitude;
+        return deviations + noiseGenerator() * Antares::Constants::noiseAmplitude;
     }
 
     inline double get_violations_cost() const
     {
-        return violations + noiseGenerator() * Constants::noiseAmplitude;
+        return violations + noiseGenerator() * Antares::Constants::noiseAmplitude;
     }
 
     inline double get_waste_cost() const
     {
-        return waste + noiseGenerator() * Constants::noiseAmplitude;
+        return waste + noiseGenerator() * Antares::Constants::noiseAmplitude;
     }
 
     inline double get_deviationMax_cost() const
     {
-        return deviationMax + noiseGenerator() * Constants::noiseAmplitude;
+        return deviationMax + noiseGenerator() * Antares::Constants::noiseAmplitude;
     }
 
     inline double get_violationMax_cost() const
     {
-        return violationMax + noiseGenerator() * Constants::noiseAmplitude;
+        return violationMax + noiseGenerator() * Antares::Constants::noiseAmplitude;
     }
 
 private:

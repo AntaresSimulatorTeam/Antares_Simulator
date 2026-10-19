@@ -3,11 +3,9 @@
 
 #pragma once
 
+#include <memory>
 #include <mutex>
 #include <string>
-
-#include <yuni/core/string.h>
-#include <yuni/job/queue/service.h>
 
 #include <antares/benchmarking/DurationCollector.h>
 #include "antares/concurrency/concurrency.h"
@@ -60,10 +58,10 @@ private:
 class ZipWriter final: public IResultWriter
 {
 public:
-    ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
+    ZipWriter(std::shared_ptr<Concurrency::ThreadPool> threadPool,
               const std::filesystem::path& archivePath,
               Benchmarking::DurationCollector& duration_collector);
-    virtual ~ZipWriter();
+    ~ZipWriter() override;
     void addEntryFromBuffer(const std::filesystem::path& entryPath,
                             std::string& entryContent) override;
     void addEntryFromFile(const std::filesystem::path& entryPath,
@@ -71,12 +69,11 @@ public:
     void flush() override;
     bool needsTheJobQueue() const override;
     void finalize(bool verbose) override;
-    friend class ZipWriteJob<Yuni::Clob>;
     friend class ZipWriteJob<std::string>;
 
 private:
-    // Queue where jobs will be appended
-    std::shared_ptr<Yuni::Job::QueueService> pQueueService;
+    // Thread pool where jobs will be appended
+    std::shared_ptr<Concurrency::ThreadPool> pThreadPool;
     // Prevent concurrent writes to the zip file
     std::mutex pZipMutex;
     // minizip-ng requires a void* as a zip handle.

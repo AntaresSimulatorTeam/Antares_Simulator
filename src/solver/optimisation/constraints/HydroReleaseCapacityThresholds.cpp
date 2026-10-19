@@ -40,8 +40,7 @@ void HydroReleaseCapacityThresholds::add(int pays, int pdt)
                 }
                 builder.greaterThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .reservesIndices.value()
-                  .HydroReleaseCapacityThresholdsMin[globalClusterIdx]
+                  .reservesIndices->HydroReleaseCapacityThresholdsMin[globalClusterIdx]
                   = builder.data.nombreDeContraintes;
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
@@ -76,8 +75,7 @@ void HydroReleaseCapacityThresholds::add(int pays, int pdt)
                 }
                 builder.lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .reservesIndices.value()
-                  .HydroReleaseCapacityThresholdsMax[globalClusterIdx]
+                  .reservesIndices->HydroReleaseCapacityThresholdsMax[globalClusterIdx]
                   = builder.data.nombreDeContraintes;
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;

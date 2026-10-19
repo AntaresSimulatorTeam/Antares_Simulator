@@ -3,20 +3,13 @@
 
 #include "antares/study/parts/hydro/prepro.h"
 
-#include <yuni/yuni.h>
-#include <yuni/io/directory.h>
-#include <yuni/io/file.h>
-
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include "antares/study/study.h"
 
 using namespace Antares;
-using namespace Yuni;
 
 namespace fs = std::filesystem;
-
-#define SEP IO::Separator
 
 namespace Antares::Data
 {
@@ -39,8 +32,7 @@ static bool PreproHydroLoadSettings(PreproHydro* h, const fs::path& filename)
             p = s->find("intermonthly-correlation");
             if (p || (p = s->find("intermonthlycorrelationvalue")))
             {
-                const CString<20, false> t = p->value;
-                ret = t.to(h->intermonthlyCorrelation);
+                ret = p->value.to(h->intermonthlyCorrelation);
             }
             else
             {
@@ -65,16 +57,17 @@ static bool PreproHydroLoadSettings(PreproHydro* h, const fs::path& filename)
 
 PreproHydro::PreproHydro()
 {
+    reset();
 }
 
 void PreproHydro::reset()
 {
     intermonthlyCorrelation = 0.5;
     // data
-    data.reset(hydroPreproMax, 12, true);
+    data.reset(hydroPreproMax, 12);
     // Expectation
     auto& col = data[expectation];
-    for (uint i = 0; i != 12; ++i)
+    for (unsigned int i = 0; i != 12; ++i)
     {
         col[i] = 0.;
     }
@@ -84,18 +77,17 @@ void PreproHydro::copyFrom(const PreproHydro& rhs)
 {
     intermonthlyCorrelation = rhs.intermonthlyCorrelation;
     data = rhs.data;
-    rhs.data.unloadFromMemory();
 }
 
 bool PreproHydro::loadFromFolder(Study& s, const std::string& areaID, const fs::path& folder)
 {
     enum
     {
-        mtrxOption = Matrix<>::optFixedSize | Matrix<>::optImmediate,
+        mtrxOption = Matrix<>::optFixedSize,
     };
 
     constexpr int maxNbOfLineToLoad = 12;
-    data.resize(hydroPreproMax, 12, true);
+    data.resize(hydroPreproMax, 12);
 
     fs::path preproPath = folder / areaID / "prepro.ini";
     bool ret = PreproHydroLoadSettings(this, preproPath);

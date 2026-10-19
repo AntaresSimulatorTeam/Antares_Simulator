@@ -10,7 +10,7 @@
 #include <antares/optimisation/linear-problem-data-impl/dataSeriesRepo.h>
 #include <antares/optimisation/linear-problem-data-impl/timeSeriesSet.h>
 
-using namespace Antares::Optimisation::LinearProblemDataImpl;
+using namespace Antares::LinearProblem::DataImpl;
 
 BOOST_AUTO_TEST_CASE(repo_is_empty__asking_any_data_series_raises_exception)
 {
@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_CASE(repo_is_empty__asking_any_data_series_raises_exception)
     std::string expected_err_msg = "Data series repo is empty, and somebody requests data from it";
     BOOST_CHECK_EXCEPTION((void)dataSeriesRepository.getDataSeries("dummy name"),
                           DataSeriesRepository::Empty,
-                          checkMessage(expected_err_msg));
+                          containsMessage(expected_err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(adding_to_repo_a_data_it_already_contains___exception_raised)
@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(adding_to_repo_a_data_it_already_contains___exception_raise
     std::string expected_err_msg = "Data series repo : data series 'some TS set' already exists";
     BOOST_CHECK_EXCEPTION(dataSeriesRepository.addDataSeries(std::move(some_other_TS_set)),
                           DataSeriesRepository::DataSeriesAlreadyExists,
-                          checkMessage(expected_err_msg));
+                          containsMessage(expected_err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(repo_not_empty__asking_nonexistent_data_raises_exception)
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(repo_not_empty__asking_nonexistent_data_raises_exception)
     std::string expected_err_msg = "Data series repo : data series 'dummy name' does not exist";
     BOOST_CHECK_EXCEPTION((void)dataSeriesRepository.getDataSeries("dummy name"),
                           DataSeriesRepository::DataSeriesNotExist,
-                          checkMessage(expected_err_msg));
+                          containsMessage(expected_err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(ask_a_simple_data_repo_some_data_it_contains___answer_is_correct)
@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE(ask_a_simple_data_repo_some_data_it_contains___answer_is_co
 
     dataSeriesRepository.addDataSeries(std::move(some_TS_set));
 
-    Antares::Optimisation::LinearProblemApi::IScenario::TimeSeriesNumber tsNumber = 2;
+    Antares::LinearProblem::Api::IScenario::TimeSeriesNumber tsNumber = 2;
     unsigned hour = 3;
     BOOST_CHECK_EQUAL(dataSeriesRepository.getDataSeries("some TS set").getData(tsNumber, hour),
                       14.);
@@ -72,13 +72,13 @@ BOOST_AUTO_TEST_CASE(asking_repo_data_for_a_too_big_hour___exception_from_data_s
     some_TS_set->add({1., 2., 3., 4., 5.});
     dataSeriesRepository.addDataSeries(std::move(some_TS_set));
 
-    Antares::Optimisation::LinearProblemApi::IScenario::TimeSeriesNumber tsNumber = 1;
+    Antares::LinearProblem::Api::IScenario::TimeSeriesNumber tsNumber = 1;
     unsigned hour = 100; // Hour too big
     std::string expected_err_msg = "TS set 'some TS set' : hour 100 exceeds TS set's height";
     BOOST_CHECK_EXCEPTION(
       (void)dataSeriesRepository.getDataSeries("some TS set").getData(tsNumber, hour),
       TimeSeriesSet::HourTooBig,
-      checkMessage(expected_err_msg));
+      containsMessage(expected_err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(ask_a_more_complex_data_repo_some_data_it_contains___answer_is_correct)
@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE(ask_a_more_complex_data_repo_some_data_it_contains___answer
     dataSeriesRepository.addDataSeries(std::move(TS_set_1));
     dataSeriesRepository.addDataSeries(std::move(TS_set_2));
 
-    Antares::Optimisation::LinearProblemApi::IScenario::TimeSeriesNumber tsNumber = 2;
+    Antares::LinearProblem::Api::IScenario::TimeSeriesNumber tsNumber = 2;
     unsigned hour = 3;
     BOOST_CHECK_EQUAL(dataSeriesRepository.getDataSeries("TS set 1").getData(tsNumber, hour), 14.);
 

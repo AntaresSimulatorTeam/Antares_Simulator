@@ -5,14 +5,12 @@
 #include "antares/solver/hydro/management/HydroErrorsCollector.h"
 #include "antares/study/parts/hydro/container.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 class PartHydro;
 }
 
-namespace Solver
+namespace Antares::Solver
 {
 class FinalLevelValidator final
 {
@@ -54,5 +52,4 @@ private:
     // area input errors
     HydroErrorsCollector& errorCollector_;
 };
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver

@@ -6,9 +6,8 @@
 
 #include <stdexcept>
 
-#include <yuni/job/queue/service.h>
-
 #include <antares/benchmarking/DurationCollector.h>
+#include <antares/concurrency/concurrency.h>
 #include <antares/logs/logs.h>
 #include <antares/solver/simulation/ISimulationObserver.h>
 #include <antares/study/study.h>
@@ -105,8 +104,8 @@ private:
     std::mutex buffersMutex_;
 
 public:
-    //! The queue service that runs every set of parallel years
-    std::shared_ptr<Yuni::Job::QueueService> pQueueService = nullptr;
+    //! The thread pool that runs every set of parallel years
+    std::shared_ptr<Concurrency::ThreadPool> pQueueService = nullptr;
     //! Result writer
     Antares::Solver::IResultWriter& pResultWriter;
 

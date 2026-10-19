@@ -9,7 +9,7 @@
 
 #include "mipVariable.h"
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 enum class MipStatus
 {
@@ -33,4 +33,4 @@ public:
     [[nodiscard]] virtual MipStatus getStatus() const = 0;
     [[nodiscard]] virtual double getObjectiveValue() const = 0;
 };
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace Antares::LinearProblem::Api

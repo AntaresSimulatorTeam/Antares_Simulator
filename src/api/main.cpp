@@ -4,6 +4,7 @@
 #include <filesystem>
 
 #include <antares/logs/logs.h>
+#include <antares/solver/variable/registerThematicTrimmingVariables.h>
 #include "antares/api/modelerProblems.h"
 #include "antares/api/singleProblemGetter.h"
 
@@ -13,10 +14,12 @@ using namespace Antares::Solver;
 
 int main(const int argc, const char** argv)
 {
+    Antares::Solver::Variable::RegisterThematicTrimmingVariables();
+
     if (argc < 2)
     {
-        logs.error() << "Please provide valid study path.";
-        logs.error() << "Usage:" << argv[0] << "/path/to/study";
+        Antares::logs.error() << "Please provide valid study path.";
+        Antares::logs.error() << "Usage:" << argv[0] << "/path/to/study";
         return 1;
     }
 
@@ -25,21 +28,28 @@ int main(const int argc, const char** argv)
     const fs::path antaresMarker = studyPath / "study.antares";
     const fs::path modelerMarker = studyPath / "parameters.yml";
 
-    if (fs::exists(antaresMarker))
+    try
     {
-        logs.info() << "Loading Antares study...";
-        const SingleProblemGetter getter(studyPath);
-        getter.printProblems();
+        if (fs::exists(antaresMarker))
+        {
+            Antares::logs.info() << "Loading Antares study...";
+            const SingleProblemGetter getter(studyPath);
+            getter.printProblems();
+        }
+        else if (fs::exists(modelerMarker))
+        {
+            Antares::logs.info() << "Loading Modeler study...";
+            const ModelerProblems modelerProblems(studyPath);
+        }
+        else
+        {
+            Antares::logs.error() << "Invalid study path: neither Antares nor Modeler study found.";
+            return 1;
+        }
     }
-    else if (fs::exists(modelerMarker))
+    catch (const std::exception& e)
     {
-        logs.info() << "Loading Modeler study...";
-        const ModelerProblems modelerProblems(studyPath);
-        modelerProblems.logSize();
-    }
-    else
-    {
-        logs.error() << "Invalid study path: neither Antares nor Modeler study found.";
+        Antares::logs.error() << "Error: " << e.what();
         return 1;
     }
 

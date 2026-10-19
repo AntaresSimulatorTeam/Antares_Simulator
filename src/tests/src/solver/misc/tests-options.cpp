@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE(study_folder_is_empty___exception_raised)
     std::string err_msg = "A study folder is required. Use '--help' for more information";
     BOOST_CHECK_EXCEPTION(checkStudyFolder(studyFolder.string()),
                           std::runtime_error,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 #if defined(_WIN32)
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE(parallel_optione_incompatible)
     std::string err_msg = "Options --parallel and --force-parallel are incompatible";
     BOOST_CHECK_EXCEPTION(checkAndCorrectSettingsAndOptions(settings, options),
                           std::runtime_error,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(optimization_range_set_to_unknown___exception_raised)
@@ -157,7 +157,7 @@ BOOST_AUTO_TEST_CASE(optimization_range_set_to_unknown___exception_raised)
                           "expected)";
     BOOST_CHECK_EXCEPTION(checkAndCorrectSettingsAndOptions(settings, options),
                           std::runtime_error,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(optimization_range_set_to_day)
@@ -174,15 +174,49 @@ BOOST_AUTO_TEST_CASE(optimization_range_set_to_week)
     BOOST_CHECK_EQUAL(options.simplexOptimizationRange, sorWeek);
 }
 
-// settings.noOutput && settings.forceZipOutput
+// settings.settings.outputSelection == OutputSelection::None&& settings.forceZipOutput
 BOOST_AUTO_TEST_CASE(output_settings_are_incompatible___exception_raised)
 {
-    settings.noOutput = true;
+    settings.outputSelection = OutputSelection{OutputSelection::None};
     settings.forceZipOutput = true;
     std::string err_msg = "no-output and zip-output options are incompatible";
     BOOST_CHECK_EXCEPTION(checkAndCorrectSettingsAndOptions(settings, options),
+                          Antares::Error::IncompatibleOutputOptions,
+                          containsMessage(err_msg));
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(output_selection)
+
+BOOST_AUTO_TEST_CASE(output_selection_defaults_to_monte_carlo)
+{
+    Settings settings;
+
+    BOOST_CHECK(settings.outputSelection.shouldExportMonteCarloResults());
+    BOOST_CHECK(!settings.outputSelection.shouldExportSimulationTable());
+}
+
+BOOST_AUTO_TEST_CASE(output_selection_can_be_parsed_from_string)
+{
+    Settings settings;
+    settings.outputSelectionStr = "simulation-tables";
+
+    settings.resolveOutputSelection();
+
+    BOOST_CHECK(!settings.outputSelection.shouldExportMonteCarloResults());
+    BOOST_CHECK(settings.outputSelection.shouldExportSimulationTable());
+}
+
+BOOST_AUTO_TEST_CASE(output_selection_rejects_invalid_value)
+{
+    Settings settings;
+    settings.outputSelectionStr = "invalid";
+
+    std::string err_msg = "Invalid value for --output: 'invalid'";
+    BOOST_CHECK_EXCEPTION(settings.resolveOutputSelection(),
                           std::runtime_error,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -203,7 +237,7 @@ BOOST_AUTO_TEST_CASE(reset_restores_default_values)
     settings.ignoreLoadingErrors = true;
     settings.ignoreConstraints = true;
     settings.tsGeneratorsOnly = true;
-    settings.noOutput = true;
+    settings.outputSelection = OutputSelection{OutputSelection::None};
     settings.forceZipOutput = true;
 
     settings.solverOptions.linearSolver = "custom-linear";
@@ -227,7 +261,7 @@ BOOST_AUTO_TEST_CASE(reset_restores_default_values)
     BOOST_CHECK(!settings.ignoreLoadingErrors);
     BOOST_CHECK(!settings.ignoreConstraints);
     BOOST_CHECK(!settings.tsGeneratorsOnly);
-    BOOST_CHECK(!settings.noOutput);
+    BOOST_CHECK(!(settings.outputSelection == OutputSelection::None));
     BOOST_CHECK(!settings.forceZipOutput);
 
     BOOST_CHECK_EQUAL(settings.solverOptions.linearSolver, std::string("sirius"));
@@ -252,7 +286,7 @@ BOOST_AUTO_TEST_CASE(default_parser_resets_settings_and_keeps_defaults)
     settings.simulationName = "simulation";
     settings.commentFile = "comment";
     settings.simplexOptimRange = "day";
-    settings.noOutput = true;
+    settings.outputSelection = OutputSelection{OutputSelection::None};
     settings.forceZipOutput = true;
 
     StudyLoadOptions options;
@@ -270,7 +304,7 @@ BOOST_AUTO_TEST_CASE(default_parser_resets_settings_and_keeps_defaults)
     BOOST_CHECK(!settings.ignoreLoadingErrors);
     BOOST_CHECK(!settings.ignoreConstraints);
     BOOST_CHECK(!settings.tsGeneratorsOnly);
-    BOOST_CHECK(!settings.noOutput);
+    BOOST_CHECK(!(settings.outputSelection == OutputSelection::None));
     BOOST_CHECK(!settings.forceZipOutput);
 
     // Solver options should be at their defaults

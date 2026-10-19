@@ -5,15 +5,6 @@
 
 #include <antares/logs/logs.h>
 
-std::function<bool(const std::exception&)> checkMessage(std::string expected_message)
-{
-    return [expected_message](const std::exception& e)
-    {
-        BOOST_CHECK_EQUAL(e.what(), expected_message);
-        return true;
-    };
-}
-
 std::function<bool(const std::exception&)> containsMessage(std::string expected_message)
 {
     return [expected_message](const std::exception& e)
@@ -34,14 +25,13 @@ CaptureAntaresLogs::CaptureAntaresLogs()
 CaptureAntaresLogs::~CaptureAntaresLogs()
 {
     logs.callback.clear();
-    destroyBoundEvents();
 }
 
 void CaptureAntaresLogs::onLogMessage(int level, const std::string& message)
 {
     switch (level)
     {
-        using namespace Yuni::Logs::Verbosity;
+        using namespace Antares::Logs::Verbosity;
     case Warning::level:
         warnings_.insert(message);
         break;

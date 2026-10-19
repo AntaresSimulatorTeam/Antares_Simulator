@@ -20,4 +20,4 @@ runs:
       shell: bash
       run: |
         cd src/tests/cucumber
-        behave --tags ${{ inputs.tags }} ${{ inputs.feature }}
+        behave --format progress3 --no-timings --no-multiline --quiet --tags ${{ inputs.tags }} ${{ inputs.feature }}

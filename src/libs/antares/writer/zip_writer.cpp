@@ -93,10 +93,10 @@ void ZipWriteJob<ContentT>::writeEntry()
 }
 
 // Class ZipWriter
-ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
+ZipWriter::ZipWriter(std::shared_ptr<Concurrency::ThreadPool> threadPool,
                      const fs::path& archivePath,
                      Benchmarking::DurationCollector& duration_collector):
-    pQueueService(qs),
+    pThreadPool(threadPool),
     pState(ZipState::can_receive_data),
     pArchivePath(archivePath.string() + ".zip"),
     pDurationCollector(duration_collector)

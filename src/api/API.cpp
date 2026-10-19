@@ -5,6 +5,7 @@
 
 #include <SimulationObserver.h>
 
+#include <antares/concurrency/concurrency.h>
 #include <antares/writer/writer_factory.h>
 #include "antares/application/application.h"
 #include "antares/benchmarking/DurationCollector.h"
@@ -16,10 +17,9 @@
 namespace Antares::API
 {
 
-SimulationResults APIInternal::run(
-  const IStudyLoader& study_loader,
-  const std::filesystem::path& output,
-  const Antares::Solver::Optimization::OptimizationOptions& optOptions)
+SimulationResults APIInternal::run(const IStudyLoader& study_loader,
+                                   const std::filesystem::path& output,
+                                   const Antares::Optimization::OptimizationOptions& optOptions)
 {
     try
     {
@@ -43,7 +43,7 @@ SimulationResults APIInternal::run(
  */
 SimulationResults APIInternal::execute(
   const std::filesystem::path& output,
-  const Antares::Solver::Optimization::OptimizationOptions& optOptions) const
+  const Antares::Optimization::OptimizationOptions& optOptions) const
 {
     // study_ == nullptr e.g when the -h flag is given
     if (!study_)
@@ -59,9 +59,7 @@ SimulationResults APIInternal::execute(
     Settings settings;
     Benchmarking::DurationCollector durationCollector;
     Benchmarking::OptimizationInfo optimizationInfo;
-    auto ioQueueService = std::make_shared<Yuni::Job::QueueService>();
-    ioQueueService->maximumThreadCount(1);
-    ioQueueService->start();
+    auto ioQueueService = std::make_shared<Concurrency::ThreadPool>(1);
 
     study_->folderOutput = output;
     auto resultWriter = Solver::resultWriterFactory(parameters.resultFormat,

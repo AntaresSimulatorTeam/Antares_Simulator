@@ -71,8 +71,7 @@ void HydroStoreCapacityThresholds::add(int pays, int pdt)
                 }
                 builder.lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .reservesIndices.value()
-                  .HydroStoreCapacityThresholds[globalClusterIdx]
+                  .reservesIndices->HydroStoreCapacityThresholds[globalClusterIdx]
                   = builder.data.nombreDeContraintes;
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;

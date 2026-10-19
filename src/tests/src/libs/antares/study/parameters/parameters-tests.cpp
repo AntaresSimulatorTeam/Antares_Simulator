@@ -9,8 +9,10 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/solver/variable/registerThematicTrimmingVariables.h>
 #include <antares/study/study.h>
 
+using namespace Antares;
 using namespace Antares::Data;
 
 IniFile validINI()
@@ -125,6 +127,11 @@ IniFile invalidINI()
 
 struct Fixture
 {
+    Fixture()
+    {
+        Antares::Solver::Variable::RegisterThematicTrimmingVariables();
+    }
+
     Parameters p;
     StudyLoadOptions options;
     StudyVersion version = StudyVersion::latest();
@@ -147,6 +154,15 @@ BOOST_FIXTURE_TEST_CASE(reset, Fixture)
     BOOST_CHECK_EQUAL(p.optOptions.quadraticOptimOptions.solverName, "sirius");
 }
 
+BOOST_FIXTURE_TEST_CASE(output_selection_defaults_to_monte_carlo_results_only, Fixture)
+{
+    p.reset();
+
+    BOOST_CHECK_EQUAL(p.outputSelection.value(), OutputSelection::MonteCarlo);
+    BOOST_CHECK_EQUAL(p.writeMonteCarloResults(), true);
+    BOOST_CHECK_EQUAL(p.writeSimulationTable(), false);
+}
+
 BOOST_FIXTURE_TEST_CASE(initializing_solvers_options_with_cmd_line_options, Fixture)
 {
     options.solverOptions.linearSolver = "xpress";
@@ -157,6 +173,25 @@ BOOST_FIXTURE_TEST_CASE(initializing_solvers_options_with_cmd_line_options, Fixt
     BOOST_CHECK_EQUAL(p.optOptions.firstOptimOptions.solverName, "xpress");
     BOOST_CHECK_EQUAL(p.optOptions.secondOptimOptions.solverName, "xpress");
     BOOST_CHECK_EQUAL(p.optOptions.quadraticOptimOptions.solverName, "scip");
+}
+
+BOOST_FIXTURE_TEST_CASE(ramping_outputs_follow_global_flag, Fixture)
+{
+    p.reset();
+    p.variablesPrintInfo.setPrintStatus("RAMP COST", true);
+    p.variablesPrintInfo.setPrintStatus("RAMP COST BY PLANT", true);
+
+    p.validateOptions(options);
+
+    BOOST_CHECK_EQUAL(p.include.thermal_ramping, false);
+    BOOST_CHECK_EQUAL(p.variablesPrintInfo.isPrinted("RAMP COST"), false);
+    BOOST_CHECK_EQUAL(p.variablesPrintInfo.isPrinted("RAMP COST BY PLANT"), false);
+
+    p.include.thermal_ramping = true;
+    p.validateOptions(options);
+
+    BOOST_CHECK_EQUAL(p.variablesPrintInfo.isPrinted("RAMP COST"), true);
+    BOOST_CHECK_EQUAL(p.variablesPrintInfo.isPrinted("RAMP COST BY PLANT"), true);
 }
 
 BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
@@ -204,10 +239,6 @@ BOOST_FIXTURE_TEST_CASE(hydroPmax, Fixture)
     p.fixBadValues();
 
     BOOST_CHECK(p.compatibility.hydroPmax == Parameters::Compatibility::HydroPmax::Hourly);
-
-    BOOST_CHECK_EQUAL(CompatibilityHydroPmaxToCString(p.compatibility.hydroPmax), "hourly");
-    BOOST_CHECK_EQUAL(CompatibilityHydroPmaxToCString(Parameters::Compatibility::HydroPmax::Daily),
-                      "daily");
 
     BOOST_CHECK(StringToCompatibilityHydroPmax(p.compatibility.hydroPmax, "daily"));
     BOOST_CHECK(!StringToCompatibilityHydroPmax(p.compatibility.hydroPmax, ""));

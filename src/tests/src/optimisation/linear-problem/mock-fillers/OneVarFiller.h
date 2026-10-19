@@ -3,7 +3,7 @@
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 
 class OneVarFiller final: public LinearProblemFiller
@@ -38,4 +38,4 @@ void OneVarFiller::addObjectives([[maybe_unused]] const FillContext& ctx)
     optimEntityContainer_.Problem().setObjectiveCoefficient(var, 1);
 }
 
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace Antares::LinearProblem::Api

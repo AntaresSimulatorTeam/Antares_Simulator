@@ -33,11 +33,6 @@ public:
     /// @param IDs IDs of the reserves for which the participation is symmetrical
     void addReserveParticipationSymmetry(std::set<ReserveID> reserveIDs)
     {
-        if (reserveIDs.size() < 2)
-        {
-            logs.error() << "Must have at least two distinct reserves to participate to a symmetry";
-        }
-
         // Check if entity is participating to reserves
         for (const auto& reserveID: reserveIDs)
         {

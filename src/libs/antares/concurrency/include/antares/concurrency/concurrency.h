@@ -4,9 +4,14 @@
 #ifndef ANTARES_CONCURRENCY_H
 #define ANTARES_CONCURRENCY_H
 
+#include <condition_variable>
+#include <deque>
+#include <functional>
 #include <future>
-
-#include "yuni/job/queue/service.h"
+#include <memory>
+#include <mutex>
+#include <thread>
+#include <vector>
 
 namespace Antares::Concurrency
 {
@@ -15,27 +20,56 @@ using Task = std::function<void()>;
 using TaskFuture = std::future<void>;
 
 /*!
+ * \brief A fixed-size pool of worker threads consuming tasks in FIFO order.
+ *
+ * Worker threads are spawned by the constructor and run until destruction.
+ * The destructor completes all queued tasks before joining the workers.
+ */
+class ThreadPool
+{
+public:
+    explicit ThreadPool(unsigned threadCount);
+    ~ThreadPool();
+
+    ThreadPool(const ThreadPool&) = delete;
+    ThreadPool& operator=(const ThreadPool&) = delete;
+    ThreadPool(ThreadPool&&) = delete;
+    ThreadPool& operator=(ThreadPool&&) = delete;
+
+    /*!
+     * \brief Queues the provided task and returns the corresponding std::future.
+     *
+     * Exceptions thrown by the task are delivered through the future.
+     */
+    [[nodiscard]] TaskFuture add(Task task);
+
+private:
+    void workerLoop();
+
+    std::mutex mutex_;
+    std::condition_variable condition_;
+    std::deque<std::packaged_task<void()>> tasks_;
+    bool stop_ = false;
+    // Declared last so that workers join before the other members are destroyed
+    std::vector<std::jthread> workers_;
+};
+
+/*!
  * \brief Queues the provided function and returns the corresponding std::future.
  *
- * This allows to handle exceptions occuring in the underlying task,
- * as opposite to Yuni::Job::QueueService::add which swallows them.
+ * This allows to handle exceptions occuring in the underlying task.
  */
-[[nodiscard]] TaskFuture AddTask(Yuni::Job::QueueService& threadPool,
-                                 const Task& task,
-                                 Yuni::Job::Priority priority = Yuni::Job::priorityDefault);
+[[nodiscard]] TaskFuture AddTask(ThreadPool& threadPool, const Task& task);
 
 /*!
  * \brief Queues the provided function objects and returns the corresponding std::future.
  *
  * T must define operator ().
  *
- * This allows to handle exceptions occuring in the underlying task,
- * as opposite to Yuni::Job::QueueService::add which swallows them.
+ * This allows to handle exceptions occuring in the underlying task.
  */
 template<class T>
-[[nodiscard]] TaskFuture AddTask(Yuni::Job::QueueService& threadPool,
-                                 const std::shared_ptr<T>& task,
-                                 Yuni::Job::Priority priority = Yuni::Job::priorityDefault);
+[[nodiscard]] TaskFuture AddTask(ThreadPool& threadPool, const std::shared_ptr<T>& task);
 
 /*!
  * \brief Utility class to gather futures to wait for.
@@ -103,12 +137,10 @@ private:
 } // namespace Detail
 
 template<class T>
-TaskFuture AddTask(Yuni::Job::QueueService& threadPool,
-                   const std::shared_ptr<T>& task,
-                   Yuni::Job::Priority priority)
+TaskFuture AddTask(ThreadPool& threadPool, const std::shared_ptr<T>& task)
 {
     Task wrappedTask = Detail::CopyableCallable<T>(task);
-    return AddTask(threadPool, wrappedTask, priority);
+    return AddTask(threadPool, wrappedTask);
 }
 
 } // namespace Antares::Concurrency

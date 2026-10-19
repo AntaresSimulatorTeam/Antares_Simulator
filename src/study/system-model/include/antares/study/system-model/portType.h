@@ -19,7 +19,18 @@ struct AreaConnection
     std::string inject_to_balance;
     std::string spillage_bound;
     std::string unsupplied_energy_bound;
+    std::string price;
 };
+
+inline std::string getUnsupEnergyBound(const AreaConnection& ac)
+{
+    return ac.unsupplied_energy_bound;
+}
+
+inline std::string getSpilledBound(const AreaConnection& ac)
+{
+    return ac.spillage_bound;
+}
 
 class PortType final
 {

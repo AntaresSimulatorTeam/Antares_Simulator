@@ -19,6 +19,7 @@
 static double origineExtremite = -1;
 static double extremiteOrigine = 5;
 
+using namespace Antares;
 using namespace Antares::Data::AdequacyPatch;
 namespace tt = boost::test_tools;
 

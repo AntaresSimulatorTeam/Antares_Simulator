@@ -12,3 +12,9 @@ add_boost_test(constraints_namer
         LIBS
 	model_antares)
 
+add_boost_test(legacy_variable_info_namer
+        SRC
+        legacy_variable_info_namer.cpp
+        LIBS
+	model_antares)
+

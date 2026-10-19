@@ -4,12 +4,14 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include <yuni/yuni.h>
 #include <yuni/core/getopt.h>
 #include <yuni/core/string.h>
 
 #include <antares/optimization-options/options.h>
+#include <antares/study/output-selection.h>
 #include <antares/study/study.h>
 
 /*!
@@ -38,15 +40,24 @@ public:
     //! Run the TS generator only
     bool tsGeneratorsOnly = false;
 
-    //! True to disable the writing in the output folder
-    bool noOutput = false;
+    //! Override the study's output selection
+    Antares::Data::OutputSelection outputSelection;
+
+    //! Raw string from CLI, converted to outputSelection after parsing
+    std::string outputSelectionStr;
+
+    //! Convert outputSelectionStr to outputSelection (call after parsing)
+    void resolveOutputSelection();
 
     // In case we print simulation tables, do we print it in csv or parquet ?
     bool parquetFmtForSimuTables = false;
 
+    //! Raw stage list from CLI, validated and converted once the study is known
+    std::string simulationTableStagesStr;
+
     Yuni::String PID;
     bool forceZipOutput = false;
-    Antares::Solver::Optimization::CmdLineOptimOptions solverOptions;
+    Antares::Optimization::CmdLineOptimOptions solverOptions;
 }; // class Settings
 
 /*!
@@ -58,4 +69,5 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings,
 void checkStudyFolder(const std::string& studyFolder);
 std::string fixStudyFolder(const std::string& studyFolder);
 void printPIDtoDisk(const Settings& settings);
-void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options);
+void checkAndCorrectSettingsAndOptions(Settings& settings,
+                                       Antares::Data::StudyLoadOptions& options);

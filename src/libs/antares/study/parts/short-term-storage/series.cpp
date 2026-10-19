@@ -6,12 +6,8 @@
 #include <fstream>
 #include <iomanip>
 
-#include <yuni/io/file.h>
-
 #include <antares/logs/logs.h>
 #include "antares/antares/constants.h"
-
-#define SEP Yuni::IO::Separator
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -96,7 +92,7 @@ bool Series::loadFromFolder(const fs::path& folder, StudyVersion studyVersion)
 
     if (auto path = folder / "inflows.txt"; std::filesystem::exists(path))
     {
-        ret = inflows.loadFromFile(path, false, Matrix<>::optImmediate) && ret;
+        ret = inflows.loadFromFile(path, false) && ret;
     }
     else
     {

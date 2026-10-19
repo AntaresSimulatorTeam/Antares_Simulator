@@ -55,7 +55,7 @@ find_dependency(antlr4-runtime REQUIRED)
 find_dependency(fmt REQUIRED)
 find_dependency(Arrow REQUIRED)
 find_dependency(Parquet REQUIRED)
-find_package(Boost REQUIRED COMPONENTS iostreams)
+find_package(Boost CONFIG REQUIRED COMPONENTS iostreams)
 include("${CMAKE_CURRENT_LIST_DIR}/AntaresTargets.cmake")
 
 check_required_components(Antares)

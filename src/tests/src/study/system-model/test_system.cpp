@@ -39,8 +39,8 @@ static Component createComponent(std::string id)
 static Antares::IO::Inputs::YmlModel::Variable GiveMeOneVar()
 {
     return {.id = "x",
-            .lower_bound = "2",
-            .upper_bound = "4",
+            .lower_bound = {.input_expr = "2", .line_number = 0},
+            .upper_bound = {.input_expr = "4", .line_number = 0},
             .variable_type = Antares::IO::Inputs::YmlModel::ValueType::CONTINUOUS,
             .time_dependent = true,
             .scenario_dependent = true,
@@ -56,16 +56,18 @@ static Model createModelWith2PortsOneWayExchange()
     Port port1("port1", PortType("type", {port_field}));
     Port port2("port2", PortType("type", {port_field}));
     const auto var = GiveMeOneVar();
-    YmlModel::Model ymlmodel{.id = "model1",
-                             .description = "description",
-                             .parameters = {},
-                             .variables = {var},
-                             .ports = {},
-                             .port_field_definitions = {{"port1", "field", var.id}},
-                             .constraints = {},
-                             .binding_constraints = {},
-                             .objectives = {},
-                             .extra_outputs = {}};
+    YmlModel::Model ymlmodel{
+      .id = "model1",
+      .description = "description",
+      .parameters = {},
+      .variables = {var},
+      .ports = {},
+      .port_field_definitions = {{"port1", "field", {.input_expr = var.id, .line_number = 0}}},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {},
+      .extra_outputs = {},
+      .filename = ""};
     auto nodeRegistry = convertExpressionToNode(var.id, ymlmodel);
     std::vector<PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.emplace_back(port1,
@@ -136,17 +138,19 @@ static Model createModelWith2Ports2WayExchange()
                                                      .time_dependent = false,
                                                      .scenario_dependent = false};
 
-    YmlModel::Model ymlmodel{.id = "model1",
-                             .description = "description",
-                             .parameters = {p},
-                             .variables = {var},
-                             .ports = {},
-                             .port_field_definitions = {{"port1", "rice", var.id},
-                                                        {"port2", "corn", p.id}},
-                             .constraints = {},
-                             .binding_constraints = {},
-                             .objectives = {},
-                             .extra_outputs = {}};
+    YmlModel::Model ymlmodel{
+      .id = "model1",
+      .description = "description",
+      .parameters = {p},
+      .variables = {var},
+      .ports = {},
+      .port_field_definitions = {{"port1", "rice", {.input_expr = var.id, .line_number = 0}},
+                                 {"port2", "corn", {.input_expr = p.id, .line_number = 0}}},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {},
+      .extra_outputs = {},
+      .filename = ""};
     auto nodeRegistryForVar = convertExpressionToNode(var.id, ymlmodel);
     auto nodeRegistryForP = convertExpressionToNode(p.id, ymlmodel);
     std::vector<PortFieldDefinition> portFieldDefinitions;
@@ -183,7 +187,7 @@ BOOST_FIXTURE_TEST_CASE(fail_on_no_id, SystemBuilderCreationFixture)
     system_builder.withComponents(std::move(components));
     BOOST_CHECK_EXCEPTION(system_builder.build(),
                           std::invalid_argument,
-                          checkMessage("A system can't have an empty id"));
+                          containsMessage("A system can't have an empty id"));
 }
 
 BOOST_FIXTURE_TEST_CASE(fail_on_no_component1, SystemBuilderCreationFixture)
@@ -191,7 +195,7 @@ BOOST_FIXTURE_TEST_CASE(fail_on_no_component1, SystemBuilderCreationFixture)
     system_builder.withId("system");
     BOOST_CHECK_EXCEPTION(system_builder.build(),
                           std::invalid_argument,
-                          checkMessage("A system must contain at least one component"));
+                          containsMessage("A system must contain at least one component"));
 }
 
 BOOST_FIXTURE_TEST_CASE(fail_on_no_component2, SystemBuilderCreationFixture)
@@ -199,7 +203,7 @@ BOOST_FIXTURE_TEST_CASE(fail_on_no_component2, SystemBuilderCreationFixture)
     system_builder.withId("system").withComponents(std::move(components));
     BOOST_CHECK_EXCEPTION(system_builder.build(),
                           std::invalid_argument,
-                          checkMessage("A system must contain at least one component"));
+                          containsMessage("A system must contain at least one component"));
 }
 
 BOOST_AUTO_TEST_CASE(PortFieldLessOperator)
@@ -213,18 +217,14 @@ BOOST_AUTO_TEST_CASE(PortFieldeEqualityOperator)
     BOOST_CHECK(PortField("A") == PortField("A"));
 }
 
-BOOST_AUTO_TEST_CASE(PrintSenderFieldRole)
+BOOST_AUTO_TEST_CASE(fmtSenderFieldRole)
 {
-    std::ostringstream os;
-    os << FieldRole::Sender;
-    BOOST_CHECK_EQUAL(os.str(), "Sender");
+    BOOST_CHECK_EQUAL(fmt::format("{}", FieldRole::Sender), "Sender");
 }
 
-BOOST_AUTO_TEST_CASE(PrintReceiverFieldRole)
+BOOST_AUTO_TEST_CASE(fmtReceiverFieldRole)
 {
-    std::ostringstream os;
-    os << FieldRole::Receiver;
-    BOOST_CHECK_EQUAL(os.str(), "Receiver");
+    BOOST_CHECK_EQUAL(fmt::format("{}", FieldRole::Receiver), "Receiver");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

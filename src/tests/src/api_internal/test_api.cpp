@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(result_with_ortools_coin)
 {
     API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
-    const Solver::Optimization::OptimizationOptions opt;
+    const Antares::Optimization::OptimizationOptions opt;
 
     auto results = api.run(*study_loader, {}, opt);
 
@@ -91,12 +91,12 @@ BOOST_AUTO_TEST_CASE(invalid_ortools_linear_solver)
 {
     API::APIInternal api;
     auto study_loader = std::make_unique<InMemoryStudyLoader>();
-    Solver::Optimization::OptimizationOptions opt;
+    Antares::Optimization::OptimizationOptions opt;
     opt.firstOptimOptions.solverName = "this-solver-does-not-exist";
 
     auto shouldThrow = [&api, &study_loader, &opt] { return api.run(*study_loader, {}, opt); };
     BOOST_CHECK_EXCEPTION((void)shouldThrow(),
                           std::invalid_argument,
-                          checkMessage("Solver this-solver-does-not-exist is not supported by "
-                                       "Antares or does not support LP problems."));
+                          containsMessage("Solver this-solver-does-not-exist is not supported by "
+                                          "Antares or does not support LP problems."));
 }

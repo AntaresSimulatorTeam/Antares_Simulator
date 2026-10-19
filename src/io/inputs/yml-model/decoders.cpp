@@ -9,6 +9,8 @@
 #include <antares/io/inputs/InputError.h>
 #include <antares/io/inputs/yml-utils/YmlTreeDisplayer.h>
 
+#include "include/antares/io/inputs/yml-model/Library.h"
+
 using namespace Antares::IO::Inputs;
 
 namespace YAML
@@ -45,14 +47,6 @@ std::vector<std::string> diffSet(const std::unordered_set<std::string>& setA,
     return diff;
 }
 
-auto compare_sets(const std::unordered_set<std::string>& setA,
-                  const std::unordered_set<std::string>& setB)
-{
-    const auto unexpected = diffSet(setA, setB);
-    const auto missing = diffSet(setB, setA);
-    return std::make_tuple(unexpected, missing);
-}
-
 std::string build_error_message(const size_t& nbFieldsAllowed,
                                 const YmlTreeDisplayer& displayer,
                                 const std::vector<std::string>& unexpected,
@@ -80,7 +74,9 @@ std::string build_error_message(const size_t& nbFieldsAllowed,
     return message;
 }
 
-void checkFields(const Node& node, const std::unordered_set<std::string>& allowedFields)
+void checkFields(const Node& node,
+                 const std::unordered_set<std::string>& mandatoryFields,
+                 const std::unordered_set<std::string>& optionalFields)
 {
     if (!node.IsMap())
     {
@@ -96,14 +92,19 @@ void checkFields(const Node& node, const std::unordered_set<std::string>& allowe
                                               : std::string("<unknown>"));
     }
 
-    if (actualKeys == allowedFields)
+    std::unordered_set<std::string> allowedFields = mandatoryFields;
+    allowedFields.insert(optionalFields.begin(), optionalFields.end());
+
+    const auto unexpected = diffSet(actualKeys, allowedFields);
+    const auto missing = diffSet(mandatoryFields, actualKeys);
+
+    if (unexpected.empty() && missing.empty())
     {
         return; // valid
     }
 
     // Invalid map: now build the displayer for error reporting
     YmlTreeDisplayer displayer(node);
-    const auto [unexpected, missing] = compare_sets(actualKeys, allowedFields);
 
     const std::string message = build_error_message(allowedFields.size(),
                                                     displayer,
@@ -111,6 +112,18 @@ void checkFields(const Node& node, const std::unordered_set<std::string>& allowe
                                                     missing);
 
     throw Exception(node.Mark(), message);
+}
+
+bool convert<YmlModel::ExpressionLineNumber>::decode(const Node& node,
+                                                     YmlModel::ExpressionLineNumber& rhs)
+{
+    rhs.line_number = 0;
+    if (node.IsDefined() && !node.IsNull())
+    {
+        rhs.line_number = node.Mark().line + 1;
+    }
+    rhs.input_expr = node.as<std::string>("");
+    return true;
 }
 
 bool convert<YmlModel::PortType>::convertAreaConnectionFields(const Node& node,
@@ -129,12 +142,14 @@ bool convert<YmlModel::PortType>::convertAreaConnectionFields(const Node& node,
     }
 
     checkFields(areaConnNode,
-                {"injection-to-balance", "spillage-bound", "unsupplied-energy-bound"});
+                {"injection-to-balance", "spillage-bound", "unsupplied-energy-bound"},
+                {"price"});
 
     rhs.area_connection.inject_to_balance = getFieldFromNode(areaConnNode, "injection-to-balance");
     rhs.area_connection.spillage_bound = getFieldFromNode(areaConnNode, "spillage-bound");
     rhs.area_connection.unsupplied_energy_bound = getFieldFromNode(areaConnNode,
                                                                    "unsupplied-energy-bound");
+    rhs.area_connection.price = getFieldFromNode(areaConnNode, "price");
     return true;
 }
 
@@ -234,8 +249,12 @@ bool convert<YmlModel::Variable>::decode(const Node& node, YmlModel::Variable& r
 
     checkMandatoryIdField(node, "variable");
     rhs.id = node["id"].as<std::string>();
-    rhs.lower_bound = node["lower-bound"].as<std::string>("");
-    rhs.upper_bound = node["upper-bound"].as<std::string>("");
+    rhs.lower_bound = node["lower-bound"].as<YmlModel::ExpressionLineNumber>(
+      YmlModel::ExpressionLineNumber{});
+    // optional key
+    rhs.upper_bound = node["upper-bound"].as<YmlModel::ExpressionLineNumber>(
+      YmlModel::ExpressionLineNumber{});
+    // optional key
     rhs.variable_type = node["variable-type"].as<YmlModel::ValueType>(
       YmlModel::ValueType::CONTINUOUS);
     rhs.time_dependent = node["time-dependent"].as<bool>(true);
@@ -266,7 +285,7 @@ bool convert<YmlModel::PortFieldDefinition>::decode(const Node& node,
     }
     rhs.port = node["port"].as<std::string>();
     rhs.field = node["field"].as<std::string>();
-    rhs.definition = node["definition"].as<std::string>();
+    rhs.definition = node["definition"].as<YmlModel::ExpressionLineNumber>();
     return true;
 }
 
@@ -278,7 +297,7 @@ bool convert<YmlModel::Constraint>::decode(const Node& node, YmlModel::Constrain
     }
 
     rhs.id = node["id"].as<std::string>("");
-    rhs.expression = node["expression"].as<std::string>();
+    rhs.expression = node["expression"].as<YmlModel::ExpressionLineNumber>();
     rhs.location = node["location"].as<std::string>("subproblems");
     return true;
 }
@@ -291,7 +310,7 @@ bool convert<YmlModel::ExtraOutput>::decode(const Node& node, YmlModel::ExtraOut
     }
 
     rhs.id = node["id"].as<std::string>("");
-    rhs.expression = node["expression"].as<std::string>();
+    rhs.expression = node["expression"].as<YmlModel::ExpressionLineNumber>();
     return true;
 }
 
@@ -303,7 +322,7 @@ bool convert<YmlModel::Objective>::decode(const Node& node, YmlModel::Objective&
     }
 
     rhs.id = node["id"].as<std::string>("");
-    rhs.expression = node["expression"].as<std::string>();
+    rhs.expression = node["expression"].as<YmlModel::ExpressionLineNumber>();
     rhs.location = node["location"].as<std::string>("subproblems");
     return true;
 }

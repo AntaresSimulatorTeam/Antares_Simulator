@@ -50,6 +50,7 @@ src/distrib/unix/packages.sh
 src/distrib/unix/rpm/pkginfo-*
 src/distrib/unix/rpm/*.rpm
 src/distrib/changelog.txt
+distrib
 
 _build*
 .vscode/
@@ -72,4 +73,7 @@ _codeql_detected_source_root
 #doxygen
 doxygen-awesome-css/
 html/
+
+# mkdocs
+site/
 

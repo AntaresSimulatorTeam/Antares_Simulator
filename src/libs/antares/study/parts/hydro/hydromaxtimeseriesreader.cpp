@@ -6,10 +6,6 @@
 #include <antares/inifile/inifile.h>
 #include "antares/study/study.h"
 
-using namespace Yuni;
-
-#define SEP IO::Separator
-
 namespace Antares::Data
 {
 
@@ -20,15 +16,15 @@ HydroMaxTimeSeriesReader::HydroMaxTimeSeriesReader(PartHydro& hydro,
     areaID_(areaID),
     areaName_(areaName)
 {
-    hydro_.dailyMaxPumpAndGen.reset(4U, DAYS_PER_YEAR, true);
+    hydro_.dailyMaxPumpAndGen.reset(4U, DAYS_PER_YEAR);
 }
 
 static bool checkPower(const Matrix<>& dailyMaxPumpAndGen, const std::string& areaName)
 {
-    for (uint i = 0; i < 4U; ++i)
+    for (unsigned int i = 0; i < 4U; ++i)
     {
         auto& col = dailyMaxPumpAndGen[i];
-        for (uint day = 0; day < DAYS_PER_YEAR; ++day)
+        for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
         {
             if (col[day] < 0. || (i % 2U /*column hours*/ && col[day] > 24.))
             {
@@ -41,18 +37,18 @@ static bool checkPower(const Matrix<>& dailyMaxPumpAndGen, const std::string& ar
     return true;
 }
 
-bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& folder)
+bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const std::string& folder)
 {
-    YString filePath;
+    std::filesystem::path filePath;
     Matrix<>::BufferType fileContent;
     bool ret = true;
 
-    filePath.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxpower_"
-                     << areaID_ << ".txt";
+    std::string filename = "maxpower_" + std::string(areaID_) + ".txt";
+    filePath = std::filesystem::path(folder) / "common" / "capacity" / filename;
 
     //  It is necessary to load maxpower_ txt file.
 
-    ret = hydro_.dailyMaxPumpAndGen.loadFromCSVFile(filePath,
+    ret = hydro_.dailyMaxPumpAndGen.loadFromCSVFile(filePath.string(),
                                                     4U,
                                                     DAYS_PER_YEAR,
                                                     Matrix<>::optFixedSize,
@@ -72,7 +68,7 @@ void HydroMaxTimeSeriesReader::copyDailyMaxGenerationEnergy() const
     auto& dailyNbHoursAtGenPmax = hydro_.dailyNbHoursAtGenPmax;
     const auto& dailyMaxGenE = hydro_.dailyMaxPumpAndGen[genMaxE];
 
-    dailyNbHoursAtGenPmax.reset(1U, DAYS_PER_YEAR, true);
+    dailyNbHoursAtGenPmax.reset(1U, DAYS_PER_YEAR);
 
     dailyNbHoursAtGenPmax.pasteToColumn(0, dailyMaxGenE);
 }
@@ -82,12 +78,12 @@ void HydroMaxTimeSeriesReader::copyDailyMaxPumpingEnergy() const
     auto& dailyNbHoursAtPumpPmax = hydro_.dailyNbHoursAtPumpPmax;
     const auto& dailyMaxPumpE = hydro_.dailyMaxPumpAndGen[pumpMaxE];
 
-    dailyNbHoursAtPumpPmax.reset(1U, DAYS_PER_YEAR, true);
+    dailyNbHoursAtPumpPmax.reset(1U, DAYS_PER_YEAR);
 
     dailyNbHoursAtPumpPmax.pasteToColumn(0, dailyMaxPumpE);
 }
 
-bool HydroMaxTimeSeriesReader::read(const AnyString& folder)
+bool HydroMaxTimeSeriesReader::read(const std::string& folder)
 {
     bool ret = loadDailyMaxPowersAndEnergies(folder);
     ret = checkPower(hydro_.dailyMaxPumpAndGen, areaName_) && ret;

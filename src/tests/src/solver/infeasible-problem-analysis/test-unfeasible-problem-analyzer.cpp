@@ -430,13 +430,13 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_trigger_analyzer_or_named_flag)
     DummyOptPeriodStringGenerator generator;
     SimulationTable simulationTable;
 
-    const bool result = OPT_AppelDuSimplexe(options,
-                                            &problemeHebdo,
-                                            0, // NumIntervalle
-                                            1, // optimizationNumber
-                                            generator,
-                                            writer,
-                                            &simulationTable);
+    const bool result = Antares::Solver::Optimization::OPT_AppelDuSimplexe(options,
+                                                                           problemeHebdo,
+                                                                           0, // NumIntervalle
+                                                                           1, // optimizationNumber
+                                                                           generator,
+                                                                           writer,
+                                                                           &simulationTable);
 
     const auto expectedMps = R"(* Antares Simulator MPSGenerator
 * Number of variables: 1
@@ -494,13 +494,13 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
     DummyOptPeriodStringGenerator generator;
     SimulationTable simulationTable;
 
-    const bool result = OPT_AppelDuSimplexe(options,
-                                            &problemeHebdo,
-                                            0, // NumIntervalle
-                                            1, // optimizationNumber
-                                            generator,
-                                            writer,
-                                            &simulationTable);
+    const bool result = Antares::Solver::Optimization::OPT_AppelDuSimplexe(options,
+                                                                           problemeHebdo,
+                                                                           0, // NumIntervalle
+                                                                           1, // optimizationNumber
+                                                                           generator,
+                                                                           writer,
+                                                                           &simulationTable);
     const auto expectedMps = R"(* Antares Simulator MPSGenerator
 * Number of variables: 1
 * Number of constraints: 2

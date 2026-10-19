@@ -4,8 +4,7 @@
 #pragma once
 
 #include <filesystem>
-
-#include <yuni/job/queue/service.h>
+#include <memory>
 
 #include "i_writer.h"
 #include "result_format.h"
@@ -15,10 +14,15 @@ namespace Benchmarking
 class DurationCollector;
 }
 
+namespace Antares::Concurrency
+{
+class ThreadPool;
+}
+
 namespace Antares::Solver
 {
 IResultWriter::Ptr resultWriterFactory(Antares::Data::ResultFormat fmt,
                                        const std::filesystem::path& folderOutput,
-                                       std::shared_ptr<Yuni::Job::QueueService> qs,
+                                       std::shared_ptr<Concurrency::ThreadPool> threadPool,
                                        Benchmarking::DurationCollector& duration_collector);
 }

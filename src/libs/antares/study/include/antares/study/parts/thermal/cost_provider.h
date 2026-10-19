@@ -12,9 +12,9 @@ class CostProvider
 {
 public:
     virtual ~CostProvider() = default;
-    virtual double getOperatingCost(uint serieIndex, uint hourInTheYear) const = 0;
-    virtual double getMarginalCost(uint serieIndex, uint hourInTheYear) const = 0;
-    virtual double getMarketBidCost(uint hourInTheYear, uint year) const = 0;
+    virtual double getOperatingCost(unsigned int serieIndex, unsigned int hourInTheYear) const = 0;
+    virtual double getMarginalCost(unsigned int serieIndex, unsigned int hourInTheYear) const = 0;
+    virtual double getMarketBidCost(unsigned int hourInTheYear, unsigned int year) const = 0;
 };
 
 class ThermalCluster;
@@ -23,10 +23,10 @@ class ConstantCostProvider final: public CostProvider
 {
 public:
     explicit ConstantCostProvider(const ThermalCluster& cluster);
-    virtual ~ConstantCostProvider() = default;
-    double getOperatingCost(uint serieIndex, uint hourInTheYear) const override;
-    double getMarginalCost(uint serieIndex, uint hourInTheYear) const override;
-    double getMarketBidCost(uint hourInTheYear, uint year) const override;
+    ~ConstantCostProvider() override = default;
+    double getOperatingCost(unsigned int serieIndex, unsigned int hourInTheYear) const override;
+    double getMarginalCost(unsigned int serieIndex, unsigned int hourInTheYear) const override;
+    double getMarketBidCost(unsigned int hourInTheYear, unsigned int year) const override;
 
 private:
     const ThermalCluster& cluster;
@@ -36,10 +36,10 @@ class ScenarizedCostProvider final: public CostProvider
 {
 public:
     explicit ScenarizedCostProvider(const ThermalCluster& cluster);
-    virtual ~ScenarizedCostProvider() = default;
-    double getOperatingCost(uint serieIndex, uint hourInTheYear) const override;
-    double getMarginalCost(uint serieIndex, uint hourInTheYear) const override;
-    double getMarketBidCost(uint hourInTheYear, uint year) const override;
+    ~ScenarizedCostProvider() override = default;
+    double getOperatingCost(unsigned int serieIndex, unsigned int hourInTheYear) const override;
+    double getMarginalCost(unsigned int serieIndex, unsigned int hourInTheYear) const override;
+    double getMarketBidCost(unsigned int hourInTheYear, unsigned int year) const override;
 
 private:
     /*!

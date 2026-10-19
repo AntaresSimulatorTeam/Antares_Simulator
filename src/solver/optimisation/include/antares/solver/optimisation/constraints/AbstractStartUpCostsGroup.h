@@ -13,7 +13,7 @@ public:
                               bool simulation,
                               ConstraintBuilder& builder);
 
-    virtual void BuildConstraints() = 0;
+    void BuildConstraints() override = 0;
     StartUpCostsData GetStartUpCostsDataFromProblemHebdo();
 
 protected:

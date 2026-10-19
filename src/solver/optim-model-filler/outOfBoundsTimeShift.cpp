@@ -5,11 +5,11 @@
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 bool hasOutOfBoundsTimeShift(const Expressions::Nodes::Node* node,
                              unsigned timeStep,
-                             const LinearProblemApi::FillContext& ctx,
+                             const Api::FillContext& ctx,
                              Expressions::Visitors::EvalVisitor& evalVisitor)
 {
     if (!node)
@@ -42,4 +42,4 @@ bool hasOutOfBoundsTimeShift(const Expressions::Nodes::Node* node,
 
     return false;
 }
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem

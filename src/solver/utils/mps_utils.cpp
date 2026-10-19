@@ -38,12 +38,12 @@ using namespace Antares::Data;
 */
 #include <string>
 
-#include "antares/solver/optimisation/opt_constants.h"
+#include "antares/solver/utils/opt_constants.h"
 
 // ---------------------------------
 // Full mps writing
 // ---------------------------------
-MPSwriter::MPSwriter(const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+MPSwriter::MPSwriter(const LinearProblem::Api::ILinearProblem& linearProblem,
                      uint optNumber,
                      bool keepNames):
     I_MPS_writer(optNumber),
@@ -64,11 +64,10 @@ void MPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string& fi
     writer.addEntryFromBuffer(filename, mps);
 }
 
-mpsWriterFactory::mpsWriterFactory(
-  Data::mpsExportStatus exportMPS,
-  bool exportMPSOnError,
-  const int current_optim_number,
-  const Optimisation::LinearProblemApi::ILinearProblem& linearProblem):
+mpsWriterFactory::mpsWriterFactory(Data::mpsExportStatus exportMPS,
+                                   bool exportMPSOnError,
+                                   const int current_optim_number,
+                                   const LinearProblem::Api::ILinearProblem& linearProblem):
     export_mps_(exportMPS),
     export_mps_on_error_(exportMPSOnError),
     linearProblem_(linearProblem),

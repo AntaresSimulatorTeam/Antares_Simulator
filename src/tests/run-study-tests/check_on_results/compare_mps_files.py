@@ -1,4 +1,3 @@
-import math
 from pathlib import Path
 
 from check_decorators.print_name import printNameDecorator
@@ -7,8 +6,7 @@ from utils.find_reference import find_reference_folder
 from utils.find_output import find_dated_output_folder, find_simulation_folder
 from utils.assertions import check
 from shared_utils.mps_utils import *
-
-tol = 1e-12
+from pytest import approx
 @printNameDecorator
 class compare_mps_files(check_interface):
     def __init__(self, study_path):
@@ -39,7 +37,7 @@ class compare_mps_files(check_interface):
             ref_mps = pair[0]
             out_mps = pair[1]
 
-            if not self.compare_files(pair, ref_mps, out_mps):
+            if not self.compare_files(ref_mps, out_mps):
                 print(f"Difference between files {pair[0]} and {pair[1]}")
                 self.compare_models(pair, str(ref_mps), str(out_mps))
 
@@ -80,10 +78,7 @@ class compare_mps_files(check_interface):
         return is_lp
 
     def check_numbers(self, left, right, msg: str):
-        if math.isinf(left):
-            check(math.isinf(right), msg)
-        else:
-            check(abs(left - right) < tol, msg)
+        check(left == approx(right, abs=1e-12, rel=1e-6), msg)
 
     def compare_variables(self, pair, ref_model, out_model):
         ref_vars = extract_variables(ref_model)
@@ -153,7 +148,7 @@ class compare_mps_files(check_interface):
         check(ref_nb_vars == out_nb_vars,
               f"Difference in number of variables between files {pair[0]} and {pair[1]}")
 
-    def compare_files(self, pair, ref_mps, out_mps):
+    def compare_files(self, ref_mps, out_mps):
         ref_content = open(ref_mps).read()
         output_content = open(out_mps).read()
         return ref_content == output_content

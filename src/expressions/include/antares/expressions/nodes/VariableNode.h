@@ -8,7 +8,7 @@
 #include <antares/expressions/nodes/Leaf.h>
 #include <antares/study/system-model-base/variabilityType.h>
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 enum class VariabilityType : unsigned int;
 }
@@ -24,7 +24,7 @@ class VariableNode final: public Leaf<std::string>
 public:
     explicit VariableNode(const std::string& value,
                           unsigned int index,
-                          Optimisation::VariabilityType variability = Optimisation::
+                          LinearProblem::VariabilityType variability = LinearProblem::
                             VariabilityType::VARYING_IN_TIME_AND_SCENARIO):
         Leaf<std::string>(value),
         variability_(variability),
@@ -38,7 +38,7 @@ public:
         return "VariableNode";
     }
 
-    Optimisation::VariabilityType variability() const
+    LinearProblem::VariabilityType variability() const
     {
         return variability_;
     }
@@ -50,7 +50,7 @@ public:
 
 private:
     // Is the variable time-dependent / scenario-dependent ?
-    const Optimisation::VariabilityType variability_;
+    const LinearProblem::VariabilityType variability_;
     // Local index within the component, starting from 0
     const unsigned int index_ = 0;
 };

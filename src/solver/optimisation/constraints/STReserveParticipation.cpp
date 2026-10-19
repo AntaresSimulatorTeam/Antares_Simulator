@@ -8,8 +8,8 @@ void STReserveParticipation::add(int pays, int reserve, int cluster, int pdt)
     if (!data.Simulation)
     {
         // 15 (o & p)
-        // Participation to the up / down reserve is the sum of the release and store participation
-        // constraint : P_res = H_res + Π_res
+        // Participation is the signed net quantity: release - store for UP,
+        // store - release for DOWN.
         // H : Release participation to reserve
         // Π : Store participation to reserve
         // P : Up / down Reserve Participation

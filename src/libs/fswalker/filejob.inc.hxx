@@ -18,9 +18,7 @@ public:
     {
     }
 
-    virtual ~FileJob()
-    {
-    }
+    ~FileJob() override = default;
 
 public:
     //! All files
@@ -35,7 +33,7 @@ public:
     EventsRegistry& events;
 
 protected:
-    virtual void onExecute();
+    void onExecute() override;
 
 }; // class FileJob
 

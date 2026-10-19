@@ -15,6 +15,8 @@ source_group("exception" FILES ${SRC_PROJ})
 add_library(${PROJ} ${SRC_PROJ})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
+set_target_properties(${PROJ} PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
 target_include_directories(${PROJ}
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

@@ -6,6 +6,7 @@
 
 #include <cmath>
 
+#include <antares/solver/simulation/reserve-index-maps.h>
 #include "antares/solver/variable/surveyresults.h"
 #include "antares/study/fwd.h"
 
@@ -40,7 +41,7 @@ struct vcard_caption_traits<Economy::Reserves::VCardReserveParticipationByDispat
         const auto& thermal = results.data.area->thermal;
         auto [clusterName, reserveID] = thermal.list
                                           .reserveParticipationClusterAt(results.data.area, i);
-        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        auto reserveName = results.data.study.reserveMaps->idToName.at(reserveID);
         results.variableCaption = reserveName + "_" + clusterName;
         return true;
     }
@@ -54,7 +55,7 @@ struct vcard_caption_traits<Economy::Reserves::VCardReserveParticipationByDispat
         const auto& thermal = results.data.area->thermal;
         auto [clusterName, reserveID] = thermal.list
                                           .reserveParticipationClusterAt(results.data.area, i);
-        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        auto reserveName = results.data.study.reserveMaps->idToName.at(reserveID);
         results.variableCaption = reserveName + "_" + clusterName + "_off";
         return true;
     }
@@ -68,7 +69,7 @@ struct vcard_caption_traits<Economy::Reserves::VCardReserveParticipationByTherma
         const auto& thermal = results.data.area->thermal;
         auto [groupName, reserveID] = thermal.list.reserveParticipationGroupAt(results.data.area,
                                                                                i);
-        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        auto reserveName = results.data.study.reserveMaps->idToName.at(reserveID);
         results.variableCaption = reserveName + "_" + groupName;
         return true;
     }
@@ -82,7 +83,7 @@ struct vcard_caption_traits<Economy::Reserves::VCardReserveParticipationBySTStor
         const auto& shortTermStorage = results.data.area->shortTermStorage;
         auto [clusterName, reserveID] = shortTermStorage
                                           .reserveParticipationClusterAt(results.data.area, i);
-        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        auto reserveName = results.data.study.reserveMaps->idToName.at(reserveID);
         results.variableCaption = reserveName + "_" + clusterName;
         return true;
     }
@@ -96,7 +97,7 @@ struct vcard_caption_traits<Economy::Reserves::VCardReserveParticipationBySTStor
         const auto& shortTermStorage = results.data.area->shortTermStorage;
         auto [groupName, reserveID] = shortTermStorage
                                         .reserveParticipationGroupAt(results.data.area, i);
-        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        auto reserveName = results.data.study.reserveMaps->idToName.at(reserveID);
         results.variableCaption = reserveName + "_" + groupName;
         return true;
     }
@@ -119,9 +120,9 @@ struct vcard_caption_traits<Economy::Reserves::VCardReserveParticipationUnsuppli
 {
     static bool apply(SurveyResults& results, uint i)
     {
-        auto [unsuppliedOrSpilled, reserveID] = results.data.area->allCapacityReservations.value()
-                                                  .reserveParticipationUnsuppliedSpilledAt(i);
-        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        auto [unsuppliedOrSpilled, reserveID] = results.data.area->allCapacityReservations
+                                                  ->reserveParticipationUnsuppliedSpilledAt(i);
+        auto reserveName = results.data.study.reserveMaps->idToName.at(reserveID);
         results.variableCaption = reserveName + "_"
                                   + std::string(Economy::Reserves::unsuppliedSpilledToString(
                                     unsuppliedOrSpilled));
@@ -134,9 +135,8 @@ struct vcard_caption_traits<Economy::Reserves::VCardReserveParticipationMarginal
 {
     static bool apply(SurveyResults& results, uint i)
     {
-        const auto& reserveID = results.data.area->allCapacityReservations.value()
-                                  .getReserveAtIndex(i);
-        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
+        const auto& reserveID = results.data.area->allCapacityReservations->getReserveAtIndex(i);
+        auto reserveName = results.data.study.reserveMaps->idToName.at(reserveID);
         results.variableCaption = reserveName + "_MRG.COST";
         return true;
     }
@@ -328,6 +328,7 @@ struct VariableAccessor
             if (*results.isPrinted)
             {
                 results.variableCaption = VCardType::Multiple::Caption(i);
+                results.variableUnit = VCardType::Multiple::Unit(i);
                 container[i].template buildAnnualSurveyReport<VCardType>(results,
                                                                          fileLevel,
                                                                          precision);

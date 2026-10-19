@@ -1,4 +1,4 @@
-find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+find_package(Boost CONFIG COMPONENTS unit_test_framework REQUIRED)
 
 add_executable(test_client)
 

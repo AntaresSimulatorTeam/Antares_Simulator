@@ -7,7 +7,7 @@
 #include "hasName.h"
 #include "hasStatus.h"
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 
 class IMipVariable: public IHasBounds, public IHasName, public IHasStatus
@@ -18,4 +18,4 @@ public:
     virtual double reducedCost() const = 0;
 };
 
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace Antares::LinearProblem::Api

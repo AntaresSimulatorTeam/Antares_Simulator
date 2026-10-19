@@ -10,14 +10,14 @@
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::ModelerStudy::SystemModel;
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 
 ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
-  const Optimisation::OptimEntityContainer& optimEntityContainer,
-  const Optimisation::LinearProblemApi::FillContext& fillContext,
+  const LinearProblem::OptimEntityContainer& optimEntityContainer,
+  const LinearProblem::Api::FillContext& fillContext,
   const Component& component,
-  const LinearProblemApi::ILinearProblemData* data,
+  const Api::ILinearProblemData* data,
   const ScenarioGroupRepository& scenarioGroupRepo):
     linear_expression_visitor_(optimEntityContainer,
                                fillContext,
@@ -158,4 +158,4 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const FunctionNode*)
 {
     throw IllegalNodeException();
 }
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem

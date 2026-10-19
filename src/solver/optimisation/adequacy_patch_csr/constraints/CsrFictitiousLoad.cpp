@@ -12,7 +12,7 @@ void CsrFictitiousLoad::add()
             continue;
         }
 
-        builder.updateHourWithinWeek(data.hour);
+        builder.updateHourWithinWeek(0);
 
         // Add spillage variable with coefficient +1.0
         // Constraint: spillage <= RHS

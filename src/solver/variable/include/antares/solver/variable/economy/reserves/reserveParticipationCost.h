@@ -38,8 +38,7 @@ struct ReserveParticipationCostTraits
     {
         if (state.reserveData)
         {
-            values[state.hourInTheYear] = state.reserveData.value()
-                                            .at(state.area->index)
+            values[state.hourInTheYear] = state.reserveData->at(state.area->index)
                                             .reserveParticipationCostForYear[state.hourInTheYear];
         }
         else

@@ -5,9 +5,6 @@
 
 #include "progress.h"
 
-using namespace Yuni;
-using namespace Antares;
-
 namespace // anonymous
 {
 template<class StringT>
@@ -63,7 +60,7 @@ void ResultMatrix::resize(uint i)
 
 bool ResultMatrix::saveToCSVFile(const String& filename) const
 {
-    IO::File::Stream file;
+    Yuni::IO::File::Stream file;
     if (!file.openRW(filename))
     {
         return false;

@@ -9,7 +9,7 @@
 
 namespace Antares::Solver::Simulation
 {
-constexpr double TOLERANCE = 1.e-6;
+constexpr double TOLERANCE = 2.e-6;
 
 class StorageForRemixNoLevels: public IStorageForRemix
 {
@@ -33,7 +33,7 @@ protected:
     std::vector<double>& unsupE_;
     const std::vector<double> pmax_;
     const std::vector<double> pmin_;
-    const std::string error_msg_start_hydro_remix = "Remix hydro input : ";
+    const std::string error_msg_start_hydro_remix;
 };
 
 } // namespace Antares::Solver::Simulation

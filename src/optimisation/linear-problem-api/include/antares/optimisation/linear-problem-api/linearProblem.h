@@ -11,7 +11,7 @@
 #include "mipVariable.h"
 
 /// Namespace for the classes related to the linear problem API
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 
 /**
@@ -48,9 +48,7 @@ public:
     [[nodiscard]] virtual const std::vector<std::unique_ptr<IMipConstraint>>& getConstraints() const
       = 0;
     [[nodiscard]] virtual IMipConstraint* getConstraint(std::size_t index) const = 0;
-    [[nodiscard]] virtual LinearProblemApi::IMipConstraint* lookupConstraint(
-      const std::string& name) const
-      = 0;
+    [[nodiscard]] virtual Api::IMipConstraint* lookupConstraint(const std::string& name) const = 0;
     [[nodiscard]] virtual int constraintCount() const = 0;
 
     /// Set the objective coefficient for a given variable
@@ -68,7 +66,12 @@ public:
     [[nodiscard]] virtual bool isMinimization() const = 0;
     [[nodiscard]] virtual bool isMaximization() const = 0;
 
-    /// Solve the problem, returns a IMipSolution
+    /// Solve the problem, returns the resulting IMipSolution.
+    ///
+    /// Ownership: the returned pointer is NOT owned by the caller. It points to solution
+    /// state owned by this ILinearProblem and is only valid for as long as the problem
+    /// (and its internal solver state) outlives all uses of the solution. Callers that need
+    /// to keep the solution alive must keep the problem alive as well.
     virtual IMipSolution* solve(bool verboseSolver) = 0;
 
     // Definition of infinity
@@ -78,4 +81,4 @@ public:
     virtual double objectiveValue() const = 0;
 };
 
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace Antares::LinearProblem::Api

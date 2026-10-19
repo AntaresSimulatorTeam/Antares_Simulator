@@ -26,7 +26,7 @@ public:
 
     AreaReference operator()(const std::string& name);
     HydroErrorsCollector() = default;
-    void CheckForErrors() const;
+    void checkForErrors() const;
 
 private:
     std::map<std::string, std::vector<std::string>> areasErrorMap_;

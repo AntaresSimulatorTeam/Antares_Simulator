@@ -16,15 +16,15 @@ class EvalVisitor;
 }
 } // namespace Antares::Expressions
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 class FillContext;
 }
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 bool hasOutOfBoundsTimeShift(const Expressions::Nodes::Node* node,
                              unsigned timeStep,
-                             const LinearProblemApi::FillContext& ctx,
+                             const Api::FillContext& ctx,
                              Expressions::Visitors::EvalVisitor& evalVisitor);
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem

@@ -5,6 +5,7 @@
 #define __SOLVER_VARIABLE_STATE_H__
 
 #include <array>
+#include <optional>
 #include <vector>
 
 #include <yuni/yuni.h>
@@ -39,7 +40,7 @@ public:
         //! Minimum power of all clusters for the current hour in the year
         std::vector<double> PMinOfClusters;
 
-        std::vector<unsigned int> unitCountLastHour;
+        std::vector<int> unitCountLastHour;
         std::vector<double> productionLastHour;
         std::vector<double> pminOfAGroup;
     };
@@ -120,14 +121,20 @@ private:
 
     void yearEndBuildThermalClusterCalculateStartupCosts(
       const uint& maxDurationON,
-      const std::array<uint, HOURS_PER_YEAR>& ON_min,
-      const std::array<uint, HOURS_PER_YEAR>& ON_opt,
+      const std::array<int, HOURS_PER_YEAR>& ON_min,
+      const std::array<int, HOURS_PER_YEAR>& ON_opt,
       const Data::ThermalCluster* currentCluster);
 
-    std::array<uint, HOURS_PER_YEAR> computeEconomicallyOptimalNbClustersONforEachHour(
+    void yearEndBuildCalculateRampingCosts(const uint& maxDurationON,
+                                           const std::array<int, HOURS_PER_YEAR>& ON_min,
+                                           const std::array<int, HOURS_PER_YEAR>& ON_opt,
+                                           const Data::ThermalCluster* currentCluster);
+
+    std::array<int, HOURS_PER_YEAR> computeEconomicallyOptimalNbClustersONforEachHour(
+
       const uint& maxDurationON,
-      const std::array<uint, HOURS_PER_YEAR>& ON_min,
-      const std::array<uint, HOURS_PER_YEAR>& ON_max) const;
+      const std::array<int, HOURS_PER_YEAR>& ON_min,
+      const std::array<int, HOURS_PER_YEAR>& ON_max) const;
 
     /*!
     ** \brief Smooth the thermal units run after resolutions
@@ -200,11 +207,6 @@ public:
             double onUnitsParticipation = 0;
             double offUnitsParticipation = 0;
 
-            void addParticipation(double participation)
-            {
-                totalParticipation += participation;
-            }
-
             void addOffParticipation(double participation)
             {
                 offUnitsParticipation += participation;
@@ -243,8 +245,8 @@ public:
           reserveParticipationPerSTStorageClusterForYear{HOURS_PER_YEAR};
 
         //! Reserve Participation for each Hydro per reserve
-        std::vector<std::map<std::string, std::map<ReserveID, double>>>
-          reserveParticipationPerHydroForYear{HOURS_PER_YEAR};
+        std::vector<std::map<ReserveID, double>> reserveParticipationPerHydroForYear{
+          HOURS_PER_YEAR};
 
         //! Reserve Participation cost for the whole year
         std::vector<double> reserveParticipationCostForYear;
@@ -260,20 +262,14 @@ public:
 
         ReserveData()
         {
-            reserveParticipationCostForYear.resize(HOURS_PER_YEAR, 0);
-            thermalClusterReserveParticipationCostForYear.resize(HOURS_PER_YEAR, 0);
-            STStorageClusterReserveParticipationCostForYear.resize(HOURS_PER_YEAR, 0);
-            HydroReserveParticipationCostForYear.resize(HOURS_PER_YEAR, 0);
-            reserveParticipationPerSTStorageClusterForYear.clear();
-            reserveParticipationPerSTStorageClusterForYear.resize(HOURS_PER_YEAR);
-            reserveParticipationPerHydroForYear.clear();
-            reserveParticipationPerHydroForYear.resize(HOURS_PER_YEAR);
-            reserveParticipationPerThermalClusterForYear.clear();
-            reserveParticipationPerThermalClusterForYear.resize(HOURS_PER_YEAR);
+            reserveParticipationCostForYear.assign(HOURS_PER_YEAR, 0);
+            thermalClusterReserveParticipationCostForYear.assign(HOURS_PER_YEAR, 0);
+            STStorageClusterReserveParticipationCostForYear.assign(HOURS_PER_YEAR, 0);
+            HydroReserveParticipationCostForYear.assign(HOURS_PER_YEAR, 0);
         }
     };
 
-    ReserveOpt<std::vector<ReserveData>> reserveData;
+    std::optional<std::vector<ReserveData>> reserveData;
 
     //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
     //! ucMILP (accurate)
@@ -285,6 +281,8 @@ public:
     double thermalClusterNonProportionalCostForYear[HOURS_PER_YEAR];
     //! Minimum power of the cluster for the whole year
     double thermalClusterPMinOfTheClusterForYear[HOURS_PER_YEAR];
+    //! Ramping cost of the thermal cluster for the whole year
+    double thermalClusterRampingCostForYear[HOURS_PER_YEAR];
 
     double renewableClusterProduction;
     //@}

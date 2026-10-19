@@ -14,7 +14,7 @@ Feature: hydro parameters loading (hydro.ini / PartHydro::LoadIniFile)
   # *every* section; the scenarios below verify end-to-end propagation where it
   # is observable.
 
-  @fast @short
+  @short
   Scenario Outline: hydro section "<section>" value "<value>" loads and the simulation is stable
     Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hydro/hydro-parameters"
     And in input "hydro/hydro.ini" section "<section>" variable "area" is set to "<value>"
@@ -43,7 +43,7 @@ Feature: hydro parameters loading (hydro.ini / PartHydro::LoadIniFile)
       | pumping efficiency               | 0.750000      | 106823000 | 100001 | 9488   | 0     | 0     |
       | overflow spilled cost difference | 0.500000      | 106823000 | 138751 | 45158  | 38750 | 35670 |
 
-  @fast @short
+  @short
   Scenario: section "use heuristic" = false (combined with "use water" = true to remain valid)
     Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hydro/hydro-parameters"
     And in input "hydro/hydro.ini" section "use heuristic" variable "area" is set to "false"
@@ -61,7 +61,7 @@ Feature: hydro parameters loading (hydro.ini / PartHydro::LoadIniFile)
   # hydro validation time. The simulation failing with the expected error
   # proves the parameter was loaded and applied.
 
-  @fast @short
+  @short
   Scenario: section "initialize reservoir date" = 6 is rejected by final-levels
     Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hydro/hydro-parameters"
     And in input "hydro/hydro.ini" section "initialize reservoir date" variable "area" is set to "6"
@@ -69,7 +69,7 @@ Feature: hydro parameters loading (hydro.ini / PartHydro::LoadIniFile)
     Then the simulation fails
     And the message "Hydro allocation must start on the 1st simulation month" is reported in the logs
 
-  @fast @short
+  @short
   Scenario: section "reservoir capacity" = 350000 is rejected by final-levels
     Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hydro/hydro-parameters"
     And in input "hydro/hydro.ini" section "reservoir capacity" variable "area" is set to "350000.000000"

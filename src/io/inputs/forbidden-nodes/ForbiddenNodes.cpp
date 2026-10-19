@@ -28,6 +28,7 @@ void forbidVariablesInFunctionNodes(ForbiddenNodes& f)
     f.parentForbidsChild<FunctionNodeType::ceil, VariableNode>();
     f.parentForbidsChild<FunctionNodeType::round, VariableNode>();
     f.parentForbidsChild<FunctionNodeType::abs, VariableNode>();
+    f.parentForbidsChild<FunctionNodeType::pow, VariableNode>();
 }
 
 void forbidPortFieldsInFunctionNodes(ForbiddenNodes& f)
@@ -119,18 +120,19 @@ ForbiddenNodes ForbidNodesInExtraOutput()
     return {}; // Nothing is forbidden
 }
 
+// Used to check linearity of binding constraints behind connections (and of the port field
+// definitions resolved through them).
+// Non-linear function nodes (max, min, floor, ceil, round, abs, pow) are not globally
+// forbidden : they are allowed as long as they do not take variables (directly or
+// indirectly) as arguments, since in that case they only depend on parameters and
+// literals, which evaluate to constants before the linear optimization.
+// reduced_cost and dual are always forbidden, as they depend on the solution.
 static ForbiddenNodes ForbidNonLinearNodes()
 {
     ForbiddenNodes f;
-    f.forbidGlobally<FunctionNodeType::reduced_cost,
-                     FunctionNodeType::dual,
-                     FunctionNodeType::max,
-                     FunctionNodeType::min,
-                     FunctionNodeType::floor,
-                     FunctionNodeType::ceil,
-                     FunctionNodeType::round,
-                     FunctionNodeType::abs,
-                     FunctionNodeType::pow>();
+    f.forbidGlobally<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
+    forbidVariablesInFunctionNodes(f);
+
     return f;
 }
 

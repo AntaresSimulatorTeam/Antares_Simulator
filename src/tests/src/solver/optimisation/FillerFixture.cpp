@@ -8,16 +8,17 @@
 #include "antares/io/inputs/yml-system/converter.h"
 #include "antares/io/inputs/yml-system/parser.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
 using namespace std::string_literals;
 
-using namespace Optimization;
+using namespace Antares::Optimization;
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Optimisation;
-using namespace LinearProblemApi;
-using namespace LinearProblemDataImpl;
+using namespace Antares::LinearProblem;
+using namespace Api;
+using namespace DataImpl;
 
 FillerFixture::FillerFixture():
     linearProblem(true, "scip"),
@@ -46,12 +47,13 @@ void FillerFixture::setData(const std::string& name, const std::vector<double>& 
 void FillerFixture::setUpModelerSystem(const std::string& systemYaml,
                                        const std::string& libraryYaml)
 {
-    IO::Inputs::YmlModel::Parser parserModel;
-    libraries.push_back(IO::Inputs::ModelConverter::convert(parserModel.parse(libraryYaml)));
-    IO::Inputs::YmlSystem::Parser parserSystem;
+    Antares::IO::Inputs::YmlModel::Parser parserModel;
+    libraries.push_back(
+      Antares::IO::Inputs::ModelConverter::convert(parserModel.parse(libraryYaml)));
+    Antares::IO::Inputs::YmlSystem::Parser parserSystem;
     auto ymlSystem = parserSystem.parse(systemYaml, "");
-    auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
-    modelerData = std::make_unique<Solver::ModelerData>();
+    auto system = Antares::IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
+    modelerData = std::make_unique<Antares::Solver::ModelerData>();
     modelerData->system = std::make_unique<System>(std::move(system));
     problemeHebdo->modelerData = modelerData.get();
 }

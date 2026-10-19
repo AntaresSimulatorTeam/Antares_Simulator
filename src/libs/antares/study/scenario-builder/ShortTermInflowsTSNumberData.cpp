@@ -7,7 +7,7 @@
 
 namespace Antares::Data::ScenarioBuilder
 {
-uint ShortTermInflowsTSNumberData::get_tsGenCount(const Study&) const
+unsigned int ShortTermInflowsTSNumberData::get_tsGenCount(const Study&) const
 {
     return 0;
 }
@@ -16,7 +16,7 @@ bool ShortTermInflowsTSNumberData::apply(Study& study)
 {
     bool ret = true;
     auto tsGenMax = get_tsGenCount(study);
-    uint errors = 0;
+    unsigned int errors = 0;
     for (auto& sts: pArea->shortTermStorage.storagesByIndex)
     {
         auto& rule = rules_[&sts];
@@ -47,7 +47,7 @@ unsigned ShortTermInflowsTSNumberData::get(const ShortTermStorage::STStorageClus
 
 bool ShortTermInflowsTSNumberData::reset(const Study& study)
 {
-    const uint nbYears = study.parameters.nbYears;
+    const unsigned int nbYears = study.parameters.nbYears;
     for (const auto& sts: pArea->shortTermStorage.storagesByIndex)
     {
         auto& ts_numbers = rules_[&sts];

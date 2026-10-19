@@ -5,19 +5,10 @@
 
 #include <filesystem>
 
-#include <yuni/yuni.h>
-#include <yuni/core/math.h>
-#include <yuni/io/directory.h>
-#include <yuni/io/file.h>
-
 #include <antares/logs/logs.h>
 #include "antares/study/study.h"
 
-using namespace Yuni;
-
 namespace fs = std::filesystem;
-
-#define SEP IO::Separator
 
 namespace Antares::Data
 {
@@ -29,7 +20,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
 
     if (study.header.version >= StudyVersion(8, 7))
     {
-        Yuni::Clob dataBuffer;
+        Matrix<>::BufferType dataBuffer;
 
         fs::path filename = folder / "fuelCost.txt";
         if (fs::exists(filename))
@@ -37,7 +28,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
             ret = fuelcost.loadFromCSVFile(filename.string(),
                                            1,
                                            HOURS_PER_YEAR,
-                                           Matrix<>::optImmediate,
+                                           Matrix<>::optNone,
                                            &dataBuffer)
                   && ret;
             if (study.parameters.derated)
@@ -52,7 +43,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
             ret = co2cost.loadFromCSVFile(filename.string(),
                                           1,
                                           HOURS_PER_YEAR,
-                                          Matrix<>::optImmediate,
+                                          Matrix<>::optNone,
                                           &dataBuffer)
                   && ret;
             if (study.parameters.derated)

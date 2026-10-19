@@ -16,5 +16,6 @@ class AntlrParsingError final: public IO::Inputs::InputError
 };
 
 Expressions::NodeRegistry convertExpressionToNode(const std::string& exprStr,
-                                                  const YmlModel::Model& model);
+                                                  const YmlModel::Model& model,
+                                                  const std::string& fileAndLineNb = "");
 } // namespace Antares::IO::Inputs::ModelConverter

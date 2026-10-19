@@ -1,6 +1,6 @@
 Feature: reserves tests
 
-@fast @short
+@short
 # Lot 1 : Intégration de la participation du thermique allumé à des réserves à la hausse et baisse
 # Le test vise a vérifier que la desactivation des réserves dans le general.data fonctionne bien
 # On ajoute donc dans l'étude des réserves et des clusters qui peuvent y participer, mais on désactive les réserves. Ces dernières ne doivent pas être prises en compte dans l'optimisation
@@ -14,7 +14,7 @@ Feature: reserves tests
     And in area "AREA", during year 1, hourly production of "thermal_expensive_res_part" is always equal to 100 MWh
     And the annual system cost is 6.7872e+07
 
-@fast @short
+@short
 # Lot 1 : Intégration de la participation du thermique allumé à des réserves à la hausse
 # Le test vise à vérifier la fonctionnalité de participation des clusters thermique allumés aux réserves à la hausse, en prenant en compte les surcoûts de participation.
 # les surcoûts de participation doivent permettre de hierarchiser l'odre de participation des clusters aux réserves et doivent apparaître dans le coût total
@@ -31,9 +31,9 @@ Feature: reserves tests
     And in area "AREA", during year 1, for cluster "thermal_all_cheap" and reserve "Res_1", reserve participation power is always equal to 20 MWh
     And in area "AREA", during year 1, for cluster "thermal_expensive_prod" and reserve "Res_1", reserve participation power is always equal to 20 MWh
     And in area "AREA", during year 1, for cluster "thermal_expensive_res_part" and reserve "Res_1", reserve participation power is always equal to 0 MWh
-    And the annual system cost is 7.04928e+07
+    And the annual system cost is 7.04995e+07
 
-@fast @short
+@short
 # Lot 1 : Intégration de la participation du thermique allumé à des réserves à la baisse
 # Le test vise à vérifier la fonctionnalité de participation des clusters thermique allumés aux réserves à la baisse, en prenant en compte les surcoûts de participation.
 # les surcoûts de participation doivent permettre de hierarchiser l'odre de participation des clusters aux réserves et doivent apparaître dans le coût total
@@ -50,9 +50,9 @@ Feature: reserves tests
     And in area "AREA", during year 1, for cluster "thermal_all_cheap" and reserve "Res_1", reserve participation power is always equal to 20 MWh
     And in area "AREA", during year 1, for cluster "thermal_expensive_prod" and reserve "Res_1", reserve participation power is always equal to 0 MWh
     And in area "AREA", during year 1, for cluster "thermal_expensive_res_part" and reserve "Res_1", reserve participation power is always equal to 0 MWh
-    And the annual system cost is 7.0896e+07
+    And the annual system cost is 7.08994e+07
 
-@fast @short
+@short
 # Lot 1 : Intégration de la participation du thermique allumé à des réserves à la hausse et baisse
 # Le test vise à vérifier la fonctionnalité de participation des clusters thermique allumés aux réserves à la baisse et la hausse, en prenant en compte les surcoûts de participation.
 # les surcoûts de participation doivent permettre de hierarchiser l'odre de participation des clusters aux réserves et doivent apparaître dans le coût total
@@ -77,9 +77,9 @@ Feature: reserves tests
     And in area "AREA", during year 1, for cluster "thermal_expensive_res_part" and reserve "Res_down", reserve participation power is always equal to 0 MWh
 	  And in area "AREA", during year 1, for group "COAL" and reserve "Res_down", reserve participation power is always equal to 0 MWh
 
-    And the annual system cost is 7.35168e+07
+    And the annual system cost is 7.35269e+07
 
-@fast @short
+@short
 # Lot 2 : Intégration de la participation du thermique éteint et des stockage CT et LT
 # Description : L'objectif de ce test est de permettre la participation d'un cluster lorsqu'il est allumé ou éteint. l'optimisation doit donner la répartition allumé/éteint optimale pour minimiser le coût total.
   Scenario: lot_2_cluster_off_1_area
@@ -114,11 +114,43 @@ Feature: reserves tests
     And in area "AREA1", during year 1, for reserve "Res_1", reserve unsupplied power is always equal to 5 MWh
     And in area "AREA1", during year 1, for reserve "Res_3", reserve unsupplied power is always equal to 25 MWh
 
+@short
+# Lot 2 : Intégration de la participation du thermique éteint et des stockage CT et LT
+# Un cluster qui participe avec à une réserve à la hausse avec des unités off
+  Scenario: lot_2_off_cluster_participation
+    Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/lot_2_off_cluster_participation"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 20 seconds
+    And in area "AREA", during year 1, for cluster "thermal1" and reserve "Res_1", total reserve participation power is 0 MWh
+    And in area "AREA", during year 1, for cluster "thermal1" and reserve "Res_1", participation of off units to the reserve is always equal to 40 MWh
+    # OV. Cost = 20 *50+1*40+500*50+3000*10 euros (Prod cluster + Surcoûts réserves + défaillance EOD + défaillance réserves)
+    And in area "AREA", overall cost on "1 JAN 06:00" of year 1 is of 56040 Euro 
+    And the annual system cost is 9.41472e+06
+
+@short
+# Lot 2
+# Un cluster qui participe avec à deux réserves à la hausse avec des unités off, on vérifié qu'il priviligie la plus rentable
+  Scenario: lot_2_off_cluster_participation_multiple_res
+    Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/lot_2_off_cluster_participation_multiple_res"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 20 seconds
+    And in area "AREA", during year 1, for cluster "thermal1" and reserve "Res_1", total reserve participation power is 0 MWh
+    And in area "AREA", during year 1, for cluster "thermal1" and reserve "Res_2", total reserve participation power is 0 MWh
+    And in area "AREA", during year 1, for cluster "thermal1" and reserve "Res_1", participation of off units to the reserve is always equal to 30 MWh
+    And in area "AREA", during year 1, for cluster "thermal1" and reserve "Res_2", participation of off units to the reserve is always equal to 20 MWh
+    And in area "AREA", during year 1, for reserve "Res_1", reserve unsupplied power is always equal to 10 MWh
+    And in area "AREA", during year 1, for reserve "Res_2", reserve unsupplied power is always equal to 0 MWh
+    And in area "AREA", overall cost on "1 JAN 06:00" of year 1 is of 80050 Euro 
+    And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 100 MW
+    And the annual system cost is 1.34484e+07
+
 #
 # Pour les tests du lot 3 : se référer au document "Schema_de_tests_des_réserves_3_nov_2024.pptx"
 #
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve up
@@ -126,14 +158,14 @@ Feature: reserves tests
 # Dans ce premier test, on ne considère pas les contraintes associées aux paramètres de contraintes de stocks
   Scenario: ST_1UP_reserves_test1
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_1_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_1_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 33600 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", reserve participation power is always equal to 200 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve up
@@ -141,14 +173,14 @@ Feature: reserves tests
 # Dans ce 2nd test, on ne considère que la contrainte de power activation
   Scenario: ST_1UP_reserves_test2
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_2_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_2_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 16800 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", reserve participation power is always equal to 100 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve up
@@ -156,14 +188,14 @@ Feature: reserves tests
 # Dans ce 3ème test, on ne considère que la contrainte de power activation ainsi que ref activation duration et energy activation ratio mais les deux derniers paramètres ne doivent pas impacter
   Scenario: ST_1UP_reserves_test3
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_3_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_3_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 16800 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", reserve participation power is always equal to 100 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve up
@@ -171,14 +203,14 @@ Feature: reserves tests
 # Dans ce 4ème test, on ne considère que la contrainte de power activation ainsi que ref activation duration et energy activation ratio avec les deux derniers paramètres qui doivent impacter
   Scenario: ST_1UP_reserves_test4
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_4_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_4_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 16800 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", the sum over two hours of reserve participation power is always equal to 200 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve up
@@ -186,14 +218,14 @@ Feature: reserves tests
 # Dans ce 5ème test, on ne considère pas la contrainte de power activation mais ref activation duration et energy activation ratio avec les deux derniers paramètres qui doivent impacter
   Scenario: ST_1UP_reserves_test5
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_5_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_5_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 8400 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", the sum over two hours of reserve participation power is always equal to 100 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve up
@@ -202,14 +234,14 @@ Feature: reserves tests
 
   Scenario: ST_1UP_reserves_test6
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_6_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_6_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 8400 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", the sum over two hours of reserve participation power is always equal to 100 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve up
@@ -218,14 +250,14 @@ Feature: reserves tests
 
   Scenario: ST_1UP_reserves_test7
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_7_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_7_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 8400 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", the sum over two hours of reserve participation power is always equal to 100 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve up
@@ -234,14 +266,14 @@ Feature: reserves tests
 
   Scenario: ST_1UP_reserves_test8
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_8_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_8_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 33600 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", reserve participation power is always equal to 200 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve up
@@ -249,14 +281,14 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur le power activation ratio pour une réserve spécifique
   Scenario: ST_1UP_reserves_test9
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_9_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_9_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 33600 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", reserve participation power is always equal to 200 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1DOWN_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve down
@@ -264,7 +296,7 @@ Feature: reserves tests
 # Dans ce premier test, on ne considère pas les contraintes associées aux paramètres de contraintes de stocks
   Scenario: ST_1DOWN_reserves_test1
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_1_down.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_1_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -272,7 +304,7 @@ Feature: reserves tests
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", reserve participation power is always equal to 200 MWh
 
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1DOWN_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve down
@@ -280,14 +312,14 @@ Feature: reserves tests
 # Dans ce 2nd test, on ne considère que la contrainte de power activation
   Scenario: ST_1DOWN_reserves_test2
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-  	When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_2_down.ini"
+  	When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_2_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 16800 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", reserve participation power is always equal to 100 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1DOWN_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve down
@@ -295,14 +327,14 @@ Feature: reserves tests
 # Dans ce 3ème test, on ne considère que la contrainte de power activation ainsi que ref activation duration et energy activation ratio mais les deux derniers paramètres ne doivent pas impacter
   Scenario: ST_1DOWN_reserves_test3
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_3_down.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_3_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 16800 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", reserve participation power is always equal to 100 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1DOWN_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve down
@@ -310,14 +342,14 @@ Feature: reserves tests
 # Dans ce 4ème test, on ne considère que la contrainte de power activation ainsi que ref activation duration et energy activation ratio avec les deux derniers paramètres qui doivent impacter
   Scenario: ST_1DOWN_reserves_test4
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-	  When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_4_down.ini"
+	  When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_4_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 16800 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", the sum over two hours of reserve participation power is always equal to 200 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1DOWN_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve down
@@ -325,14 +357,14 @@ Feature: reserves tests
 # Dans ce 5ème test, on ne considère pas la contrainte de power activation mais ref activation duration et energy activation ratio avec les deux derniers paramètres qui doivent impacter
   Scenario: ST_1DOWN_reserves_test5
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_5_down.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_5_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 8400 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", the sum over two hours of reserve participation power is always equal to 100 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1DOWN_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve down
@@ -340,14 +372,14 @@ Feature: reserves tests
 # Dans ce 6ème test, on considère la contrainte de power activation et ref activation duration mais pas energy activation ratio 
   Scenario: ST_1DOWN_reserves_test6
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_6_down.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_6_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 8400 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", the sum over two hours of reserve participation power is always equal to 100 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1DOWN_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve down
@@ -355,14 +387,14 @@ Feature: reserves tests
 # Dans ce 7ème test, on se concentre sur le energy activation ratio pour une réserve spécifique
   Scenario: ST_1DOWN_reserves_test7
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_7_down.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_7_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 8400 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", the sum over two hours of reserve participation power is always equal to 100 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1DOWN_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve down
@@ -370,14 +402,14 @@ Feature: reserves tests
 # Dans ce 8ème test, on se concentre sur le power activation ratio pour une réserve spécifique
   Scenario: ST_1DOWN_reserves_test8
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_8_down.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_8_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 33600 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", reserve participation power is always equal to 200 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_1DOWN_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio
 # On considère 1 réserve down
@@ -385,14 +417,14 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur le power activation ratio pour une réserve spécifique
   Scenario: ST_1DOWN_reserves_test9
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_9_down.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_9_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 33600 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", reserve participation power is always equal to 200 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_2UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio dans le cas de 2 besoins de réserves
 # Ce test est intéressant car les contraintes précédentes somment la participation par type de réserves (up ou down) dans leur formulation
@@ -401,7 +433,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test1
   Scenario: ST_2UP_reserves_test1
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_1_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_1_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -410,7 +442,7 @@ Feature: reserves tests
 	  And in area "AREA", during year 1, for cluster "st1" and reserve "Res_2", total reserve participation power is 25200 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_2", reserve participation power is always equal to 150 MWh
 	
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_2UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio dans le cas de 2 besoins de réserves
 # Ce test est intéressant car les contraintes précédentes somment la participation par type de réserves (up ou down) dans leur formulation
@@ -419,7 +451,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test2
   Scenario: ST_2UP_reserves_test2
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_2_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_2_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -428,7 +460,7 @@ Feature: reserves tests
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_2", total reserve participation power is 8400 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_2", reserve participation power is always equal to 50 MWh
 	
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_2UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio dans le cas de 2 besoins de réserves
 # Ce test est intéressant car les contraintes précédentes somment la participation par type de réserves (up ou down) dans leur formulation
@@ -437,7 +469,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test3
   Scenario: ST_2UP_reserves_test3
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_3_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_3_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -446,7 +478,7 @@ Feature: reserves tests
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_2", total reserve participation power is 8400 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_2", reserve participation power is always equal to 50 MWh
 	
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_2UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio dans le cas de 2 besoins de réserves
 # Ce test est intéressant car les contraintes précédentes somment la participation par type de réserves (up ou down) dans leur formulation
@@ -455,7 +487,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test4
   Scenario: ST_2UP_reserves_test4
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_4_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_4_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -464,7 +496,7 @@ Feature: reserves tests
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_2", total reserve participation power is 8400 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_2", the sum over two hours of reserve participation power is always equal to 100 MWh
 	
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_2UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio dans le cas de 2 besoins de réserves
 # Ce test est intéressant car les contraintes précédentes somment la participation par type de réserves (up ou down) dans leur formulation
@@ -473,7 +505,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test5
   Scenario: ST_2UP_reserves_test5
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_5_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_5_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -481,7 +513,7 @@ Feature: reserves tests
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", the sum over two hours of reserve participation power is always equal to 100 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_2", reserve participation power is always equal to 0 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_2UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio dans le cas de 2 besoins de réserves
 # Ce test est intéressant car les contraintes précédentes somment la participation par type de réserves (up ou down) dans leur formulation
@@ -490,7 +522,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test6
   Scenario: ST_2UP_reserves_test6
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_6_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_6_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -498,7 +530,7 @@ Feature: reserves tests
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", the sum over two hours of reserve participation power is always equal to 100 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_2", reserve participation power is always equal to 0 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_2UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio dans le cas de 2 besoins de réserves
 # Ce test est intéressant car les contraintes précédentes somment la participation par type de réserves (up ou down) dans leur formulation
@@ -507,7 +539,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test7
   Scenario: ST_2UP_reserves_test7
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_7_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_7_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -516,7 +548,7 @@ Feature: reserves tests
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_2", total reserve participation power is 8400 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_2", the sum over two hours of reserve participation power is always equal to 100 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_2UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio dans le cas de 2 besoins de réserves
 # On considère 2 réserves up
@@ -525,7 +557,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test8
   Scenario: ST_2UP_reserves_test8
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_8_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_8_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -534,7 +566,7 @@ Feature: reserves tests
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_2", total reserve participation power is 25200 MWh
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_2", reserve participation power is always equal to 150 MWh
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Les tests "ST_2UP_reserves_testX" visent à tester les contraintes associées aux paramètres ref activation duration et energy activation ratio dans le cas de 2 besoins de réserves
 # On considère 2 réserves up
@@ -543,7 +575,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test9
   Scenario: ST_2UP_reserves_test9
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_9_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_9_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -557,22 +589,22 @@ Feature: reserves tests
 
 
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Thermal cluster n'est pas diponible au départ : la batterie participe aux réserves, puis se vide pour limiter le loss of load, et se remplit quand le cluster se rallume
 # Lot 3 non actif
   Scenario: ST_3UP_unavailable_reserves_test1
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_3_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_unavailable_prod_1.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_unavailable_prod_1.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", total reserve participation power is 33400 MWh
     And in area "AREA", battery level on "1 JAN 06:00" of year 1 is 0 MWh
-    And the annual system cost is 3.02e+06
+    And the annual system cost is 3.521e+06
     And in area "AREA", during year 1, loss of load lasts 3 hours
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Thermal cluster n'est pas diponible au départ : la batterie participe aux réserves, puis se vide pour limiter le loss of load, et se remplit quand le cluster se rallume
 # energy-activation-ratio-up = 1
@@ -581,7 +613,7 @@ Feature: reserves tests
 # reference-activation-duration = 2
   Scenario: ST_3UP_unavailable_reserves_test2
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_3_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_unavailable_prod_2.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_unavailable_prod_2.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -589,10 +621,10 @@ Feature: reserves tests
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", on "1 JAN 06:00", reserve participation power is 0 MWh
     And in area "AREA", battery level on "1 JAN 06:00" of year 1 is 0 MWh
     And in area "AREA", battery level on "1 JAN 10:00" of year 1 is 200 MWh
-    And the annual system cost is 3.08e+06
+    And the annual system cost is 3.572e+06
     And in area "AREA", during year 1, loss of load lasts 3 hours
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Thermal cluster n'est pas diponible au départ : la batterie participe aux réserves, puis se vide pour limiter le loss of load, et se remplit quand le cluster se rallume
 # energy-activation-ratio-up = 0.5
@@ -601,7 +633,7 @@ Feature: reserves tests
 # power-activation-ratio = 0.5 
 Scenario: ST_3UP_unavailable_reserves_test3
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_3_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_unavailable_prod_3.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_unavailable_prod_3.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -609,10 +641,10 @@ Scenario: ST_3UP_unavailable_reserves_test3
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", on "1 JAN 06:00", reserve participation power is 0 MWh
     And in area "AREA", battery level on "1 JAN 06:00" of year 1 is 0 MWh
     And in area "AREA", battery level on "1 JAN 10:00" of year 1 is 200 MWh
-    And the annual system cost is 3.08e+06
+    And the annual system cost is 3.572e+06
     And in area "AREA", during year 1, loss of load lasts 3 hours
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Thermal cluster n'est pas diponible au départ : la batterie participe aux réserves, puis se vide pour limiter le loss of load, et se remplit quand le cluster se rallume
 # energy-activation-ratio-up = 0.5
@@ -622,7 +654,7 @@ Scenario: ST_3UP_unavailable_reserves_test3
 # reference-activation-duration = 2
   Scenario: ST_3UP_unavailable_reserves_test4
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_3_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_unavailable_prod_4.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_unavailable_prod_4.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -630,10 +662,10 @@ Scenario: ST_3UP_unavailable_reserves_test3
     And in area "AREA", during year 1, for cluster "st1" and reserve "Res_1", on "1 JAN 06:00", reserve participation power is 0 MWh
     And in area "AREA", battery level on "1 JAN 06:00" of year 1 is 0 MWh
     And in area "AREA", battery level on "1 JAN 10:00" of year 1 is 200 MWh
-    And the annual system cost is 6.44e+06
+    And the annual system cost is 6.686e+06
     And in area "AREA", during year 1, loss of load lasts 3 hours
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Test des réserves dans l'hydro avec un réservoir vide sans définir de power activation ratio
   Scenario: LT_1_up_down_reserves_without_power_activation_ratio_empty
@@ -645,10 +677,11 @@ Scenario: ST_3UP_unavailable_reserves_test3
 	  And in area "AREA", during year 1, for cluster "Hydro" and reserve "Res_2", total reserve participation power is 1680 MWh
     And in area "AREA", during year 1, for cluster "Hydro" and reserve "Res_1", on "1 JAN 06:00", reserve participation power is 6 MWh
 	  And in area "AREA", during year 1, for cluster "Hydro" and reserve "Res_2", on "1 JAN 06:00", reserve participation power is 10 MWh
-    And the annual system cost is 2.1504e+06
+    And in area "AREA", during year 1, total reserve participation cost is 436.8 Euro
+    And the annual system cost is 2.1508368e+06
 	
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Test des réserves dans l'hydro avec un réservoir vide avec power activation ratio : les réserves à la hausse ne peuvent pas participer quand le réservoir est trop bas
   Scenario: LT_2_up_down_reserves_with_power_activation_ratio_empty
@@ -658,10 +691,10 @@ Scenario: ST_3UP_unavailable_reserves_test3
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "Hydro" and reserve "Res_1", total reserve participation power is inferior to 1000 MWh
 	  And in area "AREA", during year 1, for cluster "Hydro" and reserve "Res_2", total reserve participation power is 1680 MWh
-    And the annual system cost is 2.15533e+06
+    And the annual system cost is 2.15577e+06
 
 
-@fast @short
+@short
 # Lot 3 : intégration des contraintes de stock en puissance et en énergie pour les stocks CT et LT
 # Test des réserves dans l'hydro avec un réservoir plein avec power activation ratio : les réserves à la baisse ne peuvent pas participer quand le réservoir est trop plein
   Scenario: LT_3_up_down_reserves_with_power_activation_ratio_full
@@ -671,9 +704,9 @@ Scenario: ST_3UP_unavailable_reserves_test3
     And the simulation takes less than 20 seconds
     And in area "AREA", during year 1, for cluster "Hydro" and reserve "Res_1", total reserve participation power is 1008 MWh
 	  And in area "AREA", during year 1, for cluster "Hydro" and reserve "Res_2", total reserve participation power is inferior to 1680 MWh
-    And the annual system cost is 2.15718e+06
+    And the annual system cost is 2.15761e+06
 
-@fast @short
+@medium
 # Lot 3_1 : intégration des contraintes de symétries
 # Test des symmetries avec clusters thermiques
 # l'objectif est de tester la symétrie pour un cluster sur deux réserves, pour lesquelles il a une certification de participation différente
@@ -689,7 +722,7 @@ Scenario: ST_3UP_unavailable_reserves_test3
     And in area "FRANCE", during year 1, hourly production of "therm" is always equal to 60 MWh
     And in area "FRANCE", unsupplied energy on "2 JAN 09:00" of year 1 is of 40 MW
 
-@fast @short
+@medium
 # Lot 3_1 : intégration des contraintes de symétries
 # l'objectif de ce test est de tester la symétrie d'un stock CT dans un cas où la symétrie est sur une réserve à la hausse + baisse
 # les contraintes physiques sur la participation à la hausse contraignent la participation à la baisse du fait des symétries
@@ -706,7 +739,7 @@ Scenario: ST_3UP_unavailable_reserves_test3
     And in area "FRANCE", year 1 and hour 1, withdrawal for short-term storage "st1" is 10
     And in area "FRANCE", year 1 and hour 1, injection for short-term storage "st1" is 10
  
-@fast @short
+@medium
 # Lot 3_1 : intégration des contraintes de symétries
 # l'objectif de ce test est de tester la symétrie d'un stock LT dans un cas où la symétrie est sur une réserve à la hausse + baisse
 # les contraintes physiques sur la participation à la hausse contraignent la participation à la baisse du fait des symétries
@@ -723,7 +756,7 @@ Scenario: ST_3UP_unavailable_reserves_test3
     And in area "FRANCE", during year 1, total hydro production is 87360 MWh
     And in area "FRANCE", during year 1, total hydro pumping is 87360 MWh
  
-@fast @short
+@medium
 # Lot 3_1 : intégration des contraintes de symétries
 # l'objectif de ce test est de tester la symétrie d'un stock CT dans un cas où la symétrie est sur deux réserve à la hausse
 # les contraintes physiques sur la participation à la hausse contraignent la participation à la baisse du fait des symétries
@@ -740,7 +773,7 @@ Scenario: ST_3UP_unavailable_reserves_test3
     And in area "FRANCE", year 1 and hour 1, withdrawal for short-term storage "st1" is 0
     And in area "FRANCE", year 1 and hour 1, injection for short-term storage "st1" is 0
  
-@fast @short
+@medium
 # Lot 3_1 : intégration des contraintes de symétries
 # l'objectif de ce test est de tester la symétrie d'un stock LT dans un cas où la symétrie est sur deux réserve à la hausse
 # les contraintes physiques sur la participation à la hausse contraignent la participation à la baisse du fait des symétries

@@ -13,7 +13,7 @@ void CsrBindingConstraintHour::add(int CntCouplante)
 
     int NbInterco = data.MatriceDesContraintesCouplantes[CntCouplante]
                       .NombreDInterconnexionsDansLaContrainteCouplante;
-    builder.updateHourWithinWeek(data.hour);
+    builder.updateHourWithinWeek(0);
 
     for (int Index = 0; Index < NbInterco; Index++)
     {

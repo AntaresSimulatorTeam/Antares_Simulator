@@ -6,9 +6,6 @@
 
 #include <string>
 
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-
 #include <antares/enums/Enum.hpp>
 
 namespace Antares::Data
@@ -21,21 +18,21 @@ enum FilterFlag
     filterWeekly = 4,
     filterMonthly = 8,
     filterAnnual = 16,
-    filterAll = (uint)-1,
+    filterAll = (unsigned int)-1,
 };
 
 // Convert a date precision filter into a string (obtained by concatenating filter components)
-std::string datePrecisionIntoString(uint datePrecisionFilter);
+std::string datePrecisionIntoString(unsigned int datePrecisionFilter);
 
 /*!
 ** \brief Convert a string into date precision filter flags
 */
-uint stringIntoDatePrecision(const AnyString& string);
+unsigned int stringIntoDatePrecision(const std::string& string);
 
 /*!
 ** \brief Convert a filter indices into filter flags
 */
-uint addTimeIntervallToDatePrecisionFilter(const uint index);
+unsigned int addTimeIntervallToDatePrecisionFilter(const unsigned int index);
 
 namespace Enum
 {

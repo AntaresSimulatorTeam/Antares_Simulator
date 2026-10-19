@@ -8,6 +8,7 @@ import tempfile
 from pathlib import Path
 
 import numpy as np
+import parse
 from behave import *
 from common_steps.solver_input_handler import solver_input_handler
 from common_steps.solver_output_handler import solver_output_handler
@@ -52,12 +53,19 @@ def change_transmission_capacities(context, link, value):
     file_path = context.study_path / "input" / "links" / link / "properties.ini"
     context.sih.set_value(variable="transmission-capacities", value=value, file_path=file_path)
 
+@given('the unit commitment mode is "{mode}"')
+def set_unit_commitment_mode(context, mode):
+    """Set `unit-commitment-mode` in generaldata.ini. Use it on a *copy* of a study."""
+    context.sih.set_parameter_value(variable="unit-commitment-mode", value=mode,
+                                    file_nick_name="general")
+
+
 @when('I replace the "{destinationPath}" file with "{originPath}"')
-def replace_reserve_ini(context, destinationPath, originPath):
+def replace_reserve_yml(context, destinationPath, originPath):
     destination = destinationPath.split("/")
     origin = originPath.split("/")
     input_handler = solver_input_handler(Path(context.study_path))
-    input_handler.copy_reserve_ini_from_file(origin, destination)
+    input_handler.copy_reserve_yml_from_file(origin, destination)
 
 
 @given('in input "{input_file}" section "{section}" variable "{variable}" is set to "{value}"')
@@ -65,6 +73,25 @@ def set_input_section_variable(context, input_file, section, variable, value):
     context.sih.set_input(input_file=input_file, section=section,
                           variable=variable, value=value)
 
+
+@given('in input "{series_file}" the time series is emptied')
+def empty_input_series(context, series_file):
+    # An empty series file is Antares' own convention for "no data": the
+    # series loads as a single all-zero column (see e.g. the "he" area's
+    # empty mod.txt/ror.txt in the "Accurate hydro pricing" fixture).
+    #
+    # This overwrites a file on disk, so it must run on a throwaway copy of
+    # the study, never on the shared resources tree -- otherwise every later
+    # scenario reusing the same study would see the emptied series.
+    # 'the solver study path is a copy of "..."' sets context.tmp_workdir.
+    assert hasattr(context, "tmp_workdir"), (
+        'the "time series is emptied" step modifies study files; load the '
+        'study with \'Given the solver study path is a copy of "..."\' so the '
+        "change stays confined to a temporary copy"
+    )
+    file_path = context.study_path / "input" / Path(series_file.replace("/", os.sep))
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+    file_path.write_text("")
 
 @given('the linear solver is {solver_name}')
 def set_linear_solver(context, solver_name):
@@ -85,6 +112,12 @@ def parse_options(context, options):
         if options.count("--parallel") > 0:
             context.parallel = True
 
+        for opt in options.split():
+            if opt.startswith("--output="):
+                context.output_selection = opt.split("=", 1)[1]
+            if opt.startswith("--simulation-table-stages="):
+                context.simulation_table_stages = opt.split("=", 1)[1]
+
 @when('I run antares simulator')
 @when('I run antares simulator with {options}')
 def run_antares(context, options=None):
@@ -94,6 +127,18 @@ def run_antares(context, options=None):
 @then('the simulation succeeds')
 def simu_success(context):
     assert context.return_code == 0, f"Process failed with return code {context.return_code}: \nSTDOUT: \n{context.logs_out} \n STDERR: \n{context.logs_err}"
+
+
+@then('the output file "{file_path}" exists')
+def output_file_exists(context, file_path):
+    output_file = context.soh.output_dir() / Path(file_path.replace("/", os.sep))
+    assert output_file.is_file(), f"Output file does not exist: {file_path}"
+
+
+@then('the output file "{file_path}" does not exist')
+def output_file_does_not_exist(context, file_path):
+    output_file = context.soh.output_dir() / Path(file_path.replace("/", os.sep))
+    assert not output_file.exists(), f"Output file unexpectedly exists: {file_path}"
 
 
 @then('the simulation fails')
@@ -250,7 +295,7 @@ def check_prod_for_specific_year(context, area, year, prod_name, comparator_and_
     'in area "{area}", during year {year:d}, hourly production of "{prod_name}" for hour {hour:d} is equal to {expected_prod:d} MWh')
 def check_prod_for_specific_year_hour(context, area, year, prod_name, hour, expected_prod):
     actual_hourly_prod = context.soh.get_hourly_prod_mwh(area, year, prod_name)[hour]
-    assert expected_prod == actual_hourly_prod
+    assert expected_prod == actual_hourly_prod, f"Expected production was {expected_prod}, actual is {actual_hourly_prod}. "
 
 
 @then('in area "{area}", hourly production of "{prod_name}" is always {comparator_and_hourly_prod} MWh')
@@ -305,6 +350,38 @@ def should_check(row, key):
     return key in row.headings and len(row[key]) > 0
 
 
+# The stages of the weekly resolution, in the order the solver runs them.
+# `--simulation-table-stages` only ever removes stages from this list, so it
+# doubles as the order to fall back through when looking for a stage to read.
+SIMULATION_TABLE_STAGES = ["optim-nb-1", "optim-nb-2", "peak-shaving", "adq-patch"]
+
+_STAGE_OF_TABLE_FILE = re.compile(r"^simulation-table-\d+-(.+)\.csv$")
+
+
+def stages_in_output(output_path: Path) -> set:
+    """The stage suffixes of the simulation-table files in `output_path`."""
+    found = set()
+    for table_file in output_path.glob("simulation-table-*.csv"):
+        match = _STAGE_OF_TABLE_FILE.match(table_file.name)
+        assert match, f"Unexpected simulation table file name: {table_file.name}"
+        found.add(match.group(1))
+    return found
+
+
+def default_simulation_table_stage(output_path: Path):
+    """The stage `the modeler outputs contain ...` reads unless told otherwise.
+
+    A full run always has optim-nb-1, but a run restricted with
+    --simulation-table-stages need not, so fall back to the earliest stage that
+    was actually produced. Returns None when the run wrote no table at all.
+    """
+    produced = stages_in_output(output_path)
+    for stage in SIMULATION_TABLE_STAGES:
+        if stage in produced:
+            return stage
+    return None
+
+
 def run_simulation(context):
     command = build_antares_solver_command(context)
     print(f"Running command: {command}")
@@ -328,15 +405,81 @@ def run_simulation(context):
             context.logs_err = err.decode('cp1252')
         else:
             context.logs_err = ""
-    context.output_path = parse_output_folder_from_logs(out)
     context.return_code = process.returncode
-    context.soh = solver_output_handler(context.output_path, context.mode)
-    # For hybrid studies:
-    outputPath = Path(context.output_path)
-    if any(outputPath.glob("simulation-table*.csv")):
-        file_pattern = f"simulation-table-*-optim-nb-1.csv"
-        ST_reader_factory = make_simu_table_reader(outputPath, OutputFormat.CSV, file_pattern)
-        context.simu_table = SimulationTable(ST_reader_factory())
+    try:
+        context.output_path = parse_output_folder_from_logs(out)
+    except LookupError:
+        context.output_path = None
+
+    if context.output_path is not None:
+        context.soh = solver_output_handler(context.output_path, context.mode)
+        # For hybrid studies:
+        outputPath = Path(context.output_path)
+        default_stage = default_simulation_table_stage(outputPath)
+        if default_stage is not None:
+            file_pattern = f"simulation-table-*-{default_stage}.csv"
+            ST_reader_factory = make_simu_table_reader(outputPath, OutputFormat.CSV, file_pattern)
+            context.simu_table = SimulationTable(ST_reader_factory())
+
+
+@step('the modeler outputs are read from stage "{stage}"')
+def read_modeler_outputs_from_stage(context, stage):
+    """Re-point context.simu_table at the tables of one resolution stage.
+
+    The solver writes one simulation table per stage of the weekly resolution
+    (optim-nb-1, optim-nb-2, peak-shaving, adq-patch). run_simulation loads
+    the first stage the run produced; this step swaps in another stage, so every
+    `the modeler outputs contain ...` step after it reads that stage instead.
+    """
+    output_path = Path(context.output_path)
+    file_pattern = f"simulation-table-*-{stage}.csv"
+    ST_reader_factory = make_simu_table_reader(output_path, OutputFormat.CSV, file_pattern)
+    context.simu_table = SimulationTable(ST_reader_factory())
+
+
+@parse.with_pattern(r".*")
+def parse_maybe_empty(text):
+    return text
+
+
+register_type(MaybeEmpty=parse_maybe_empty)
+
+
+@given('the study asks for the simulation table stages "{stages:MaybeEmpty}"')
+def set_simulation_table_stages_in_ini(context, stages):
+    """Set `simulation-table-stages` in the [output] section of generaldata.ini.
+
+    Unlike solver_input_handler.set_value this inserts the key when it is
+    absent, which it is in every fixture. Use it on a *copy* of a study, since
+    it edits the study in place.
+    """
+    ini_path = Path(context.study_path) / "settings" / "generaldata.ini"
+    lines = ini_path.read_text().splitlines()
+    out, done = [], False
+    for line in lines:
+        if line.strip().startswith("simulation-table-stages"):
+            continue
+        out.append(line)
+        if line.strip() == "[output]":
+            out.append(f"simulation-table-stages = {stages}")
+            done = True
+    assert done, f"No [output] section in {ini_path}"
+    ini_path.write_text("\n".join(out) + "\n")
+
+
+@then('the simulation tables cover exactly the stages "{stages}"')
+def check_simulation_table_stages(context, stages):
+    """Check the exact set of stage suffixes among the simulation-table files.
+
+    Stage names are part of the output contract, so this pins them; `exactly`
+    also catches a stage being emitted where it should have been skipped (an
+    empty table is not written at all).
+    """
+    expected = sorted(stage.strip() for stage in stages.split(","))
+    found = stages_in_output(Path(context.output_path))
+    assert sorted(found) == expected, \
+        f"Expected simulation table stages {expected}, found {sorted(found)}"
+
 
 def init_simulation(context):
     sih = solver_input_handler(context.study_path)
@@ -358,6 +501,10 @@ def build_antares_solver_command(context):
         command.append('--named-mps-problems')
     if context.parallel:
         command.append('--force-parallel=4')
+    if hasattr(context, "output_selection"):
+        command.append(f'--output={context.output_selection}')
+    if hasattr(context, "simulation_table_stages"):
+        command.append(f'--simulation-table-stages={context.simulation_table_stages}')
     return command
 
 
@@ -442,6 +589,12 @@ def check_res_participation_for_specific_year_and_cluster_yearly(context, area, 
 def check_res_participation_for_specific_year_and_cluster_yearly_inferior(context, area, year, res, cluster, res_part):
     assert (context.soh.get_reserve_total_participation_for_year_and_cluster(area, year, res,cluster) < res_part)
 
+
+@then('in area "{area}", during year {year:d}, total reserve participation cost is {expected_cost:g} Euro')
+def check_reserve_participation_cost(context, area, year, expected_cost):
+    actual_cost = context.soh.get_reserve_participation_cost(area, year)
+    assert_double_close(expected_cost, actual_cost, 1e-6, "Reserve participation cost")
+
 @step('the message "{log}" is reported in the logs')
 def ckeck_log_exists(context, log):
     for log_line in context.logs_err.splitlines():
@@ -471,12 +624,11 @@ def _store_simulation_result(context, study_index: int):
     context.multi_studies.append(result)
 
 
-def _run_study_at_index(context, study_index: int, study_path: Path):
+def _run_study_at_index(context, study_index: int, study_path: Path, options):
     """Run a single study and store its results"""
     context.study_path = study_path
+    parse_options(context, options)
     init_simulation(context)
-    context.named_mps_problems = False
-    context.parallel = False
     run_simulation(context)
     _store_simulation_result(context, study_index)
 
@@ -499,10 +651,11 @@ def nth_study_path_is(context, study_num, string):
     context.study_paths[study_num - 1] = study_path
 
 
-@when('I run antares simulator on all studies')
-def run_antares_on_all_studies(context):
+@when('I run antares simulator on all studies with {options}')
+def run_antares_on_all_studies(context, options):
     """Run simulator on all defined studies"""
     _initialize_multi_study_context(context)
+    parse_options(context, options)
 
     assert hasattr(context, 'study_paths'), "No study paths defined"
     assert len(context.study_paths) > 0, "No study paths defined"
@@ -510,7 +663,7 @@ def run_antares_on_all_studies(context):
     # Run all studies
     for idx, study_path in enumerate(context.study_paths):
         assert study_path is not None, f"Study path at index {idx} is not defined"
-        _run_study_at_index(context, idx, study_path)
+        _run_study_at_index(context, idx, study_path, options)
 
 
 @then('all simulations succeed')
@@ -824,3 +977,44 @@ def check_storages_values_for_specific_year_hour_and_cluster(context, area, year
     else:
         raise NotImplementedError(f"Unknown value for variable injection_or_withdrawal '{injection_or_withdrawal}'")
     assert_double_close(float(actual_storage_value.item()), float(value_storage), 1e-6)
+
+
+@then('the simulation has two optimization iterations')
+def check_two_optimization_iterations(context):
+    output_path = Path(context.output_path)
+    optim_nb_1_files = list(output_path.glob("*optim-nb-1*"))
+    optim_nb_2_files = list(output_path.glob("*optim-nb-2*"))
+    assert len(optim_nb_1_files) > 0, \
+        f"No first optimization output files found in {output_path}"
+    assert len(optim_nb_2_files) > 0, \
+        f"No second optimization output files found in {output_path}. " \
+        f"This means the thermal heuristic did not run (only 1 iteration)."
+    
+@then('in area "{area}", during year {year:d}, weekly overall cost for week {week:d} is {value:g}')
+def check_weekly_overall_cost(context, area, year, week, value):
+    actual = context.soh.get_weekly_overall_cost_eur(area, year, week)
+    assert_double_close(value, actual, 0.001, f"Weekly OV. COST week {week}")
+    
+@then('in area "{area}", during year {year:d}, NODU for all hours matches reference')
+def check_all_nodu_against_reference(context, area, year):
+    actual_nodu = context.soh.get_hourly_nodu(area, year)
+    ref_nodu = context.soh.get_reference_nodu(context.study_path)
+    assert len(actual_nodu) == len(ref_nodu), \
+        f"Length mismatch: simulation has {len(actual_nodu)} hours, reference has {len(ref_nodu)} hours"
+    mismatches = []
+    for hour in range(len(ref_nodu)):
+        if int(actual_nodu.iloc[hour]) != int(ref_nodu.iloc[hour]):
+            mismatches.append(
+                f"  Hour {hour}: expected {int(ref_nodu.iloc[hour])}, got {int(actual_nodu.iloc[hour])}")
+    assert len(mismatches) == 0, \
+        f"NODU mismatches found:\n" + "\n".join(mismatches[:20])
+
+@then('in area "{area}", during year {year:d}, ramping cost of cluster "{cluster}" for hour {hour:d} is equal to {ramp_cost}')
+def check_ramp_cost_for_specific_year_hour_and_cluster(context, area, year, cluster, hour, ramp_cost):
+    actual_ramp_cost = context.soh.get_ramp_cost_cluster(area, year, cluster)[hour]
+    assert_double_close(float(ramp_cost), float(actual_ramp_cost), 1e-6)
+    
+@then('in area "{area}", during year {year:d}, ramping cost for hour {hour:d} is equal to {ramp_cost}')
+def check_ramp_cost_for_specific_year_hour_and_area(context, area, year, hour, ramp_cost):
+    actual_ramp_cost = context.soh.get_ramp_cost_area(area, year)[hour]
+    assert_double_close(float(ramp_cost), float(actual_ramp_cost), 1e-6)

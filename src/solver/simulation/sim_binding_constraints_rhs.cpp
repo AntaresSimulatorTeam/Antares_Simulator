@@ -44,7 +44,7 @@ auto filterByMustrunCluster(const clusterWeightMap& map)
 
 std::vector<double> accumulateByDay(const TimeSerie& ts)
 {
-    if (ts.size() != Constants::nbHoursInAWeek) // ts must be an hourly TS, covering a week
+    if (ts.size() != Antares::Constants::nbHoursInAWeek) // ts must be an hourly TS, covering a week
     {
         throw std::invalid_argument("Trying to make a daily TS of a non 168 values TS");
     }
@@ -69,7 +69,7 @@ std::vector<double> computeMustrunDailyTerms(const BindingConstraint* bc,
     for (auto& [cluster, weight]: mustrunClustersWeigths)
     {
         auto hourlyProductionTS = TimeSerie{cluster->series.getColumn(year) + PasDeTempsDebut,
-                                            Constants::nbHoursInAWeek};
+                                            Antares::Constants::nbHoursInAWeek};
         std::vector<double> dailyProductionTS = accumulateByDay(hourlyProductionTS);
         to_return += dailyProductionTS * weight;
     }
@@ -80,13 +80,13 @@ std::vector<double> computeMustrunHourlyTerms(const BindingConstraint* bc,
                                               const unsigned year,
                                               const unsigned PasDeTempsDebut)
 {
-    std::vector<double> to_return(Constants::nbHoursInAWeek, 0.);
+    std::vector<double> to_return(Antares::Constants::nbHoursInAWeek, 0.);
 
     auto mustrunClustersWeigths = filterByMustrunCluster(bc->clustersAndWeights());
     for (auto& [cluster, weight]: mustrunClustersWeigths)
     {
         auto hourlyProductionTS = TimeSerie{cluster->series.getColumn(year) + PasDeTempsDebut,
-                                            Constants::nbHoursInAWeek};
+                                            Antares::Constants::nbHoursInAWeek};
         to_return += hourlyProductionTS * weight;
     }
     return to_return;
@@ -105,7 +105,7 @@ static void setRHSforHourlyBC(PROBLEME_HEBDO& problem,
     std::vector<double>& rhs = problem.MatriceDesContraintesCouplantes[bcIndex]
                                  .SecondMembreDeLaContrainteCouplante;
 
-    for (unsigned hour = 0; hour < Constants::nbHoursInAWeek; ++hour)
+    for (unsigned hour = 0; hour < Antares::Constants::nbHoursInAWeek; ++hour)
     {
         rhs[hour] = hourlyBCrhs[PasDeTempsDebut + hour] - mustrunHourlyTerms[hour];
     }
@@ -166,26 +166,26 @@ void setBindingConstraintsRHS(PROBLEME_HEBDO& problem,
     {
         switch (bc->type())
         {
-        case Data::BindingConstraint::typeHourly:
+        case BindingConstraint::typeHourly:
         {
             setRHSforHourlyBC(problem, bc.get(), bcGroups, PasDeTempsDebut, bcIndex);
             break;
         }
-        case Data::BindingConstraint::typeDaily:
+        case BindingConstraint::typeDaily:
         {
             setRHSforDailyBC(problem, bc.get(), bcGroups, PasDeTempsDebut, weekFirstDay, bcIndex);
             break;
         }
-        case Data::BindingConstraint::typeWeekly:
+        case BindingConstraint::typeWeekly:
         {
             setRHSforWeeklyBC(problem, bc.get(), bcGroups, PasDeTempsDebut, weekFirstDay, bcIndex);
             break;
         }
-        case Data::BindingConstraint::typeUnknown:
-        case Data::BindingConstraint::typeMax:
+        case BindingConstraint::typeUnknown:
+        case BindingConstraint::typeMax:
         default:
         {
-            logs.error() << "internal error. Please submit a full bug report";
+            Antares::logs.error() << "internal error. Please submit a full bug report";
             assert(false && "invalid constraint type");
             break;
         }

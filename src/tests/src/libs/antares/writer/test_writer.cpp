@@ -5,9 +5,8 @@
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
-#include "yuni/job/queue/service.h"
-
 #include "antares/benchmarking/DurationCollector.h"
+#include "antares/concurrency/concurrency.h"
 #include "antares/writer/i_writer.h"
 #include "antares/writer/in_memory_writer.h"
 #include "antares/writer/writer_factory.h"
@@ -22,24 +21,21 @@ extern "C"
 #include <mz_zip_rw.h>
 }
 
-using namespace Yuni::Job;
+using Antares::Concurrency::ThreadPool;
 using Antares::Solver::IResultWriter;
 using Benchmarking::DurationCollector;
 
 // Handles lifetime of necessary objects
 struct TestContext
 {
-    std::shared_ptr<QueueService> threadPool;
+    std::shared_ptr<ThreadPool> threadPool;
     std::unique_ptr<DurationCollector> durationCollector;
     std::shared_ptr<IResultWriter> writer;
 };
 
-std::shared_ptr<QueueService> createThreadPool(int size)
+std::shared_ptr<ThreadPool> createThreadPool(unsigned size)
 {
-    auto threadPool = std::make_shared<QueueService>();
-    threadPool->maximumThreadCount(size);
-    threadPool->start();
-    return threadPool;
+    return std::make_shared<ThreadPool>(size);
 }
 
 std::string removeExtension(const std::string& name, const std::string& ext)

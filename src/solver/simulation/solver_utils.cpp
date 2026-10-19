@@ -32,7 +32,7 @@ void addTimeMeasure(Benchmarking::DurationCollector& durationCollector,
       .addDuration(timeMeasure[0].solveTime + timeMeasure[1].solveTime);
     durationCollector("problem_build_time")
       .addDuration(timeMeasure[0].updateTime + timeMeasure[1].updateTime);
-    durationCollector("export_simulation_tables")
+    durationCollector("simulation_table_compute")
       .addDuration(timeMeasure[0].simulationTableFillTime + timeMeasure[1].simulationTableFillTime);
 }
 

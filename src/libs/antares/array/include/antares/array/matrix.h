@@ -11,7 +11,6 @@
 #include <yuni/io/file.h>
 
 #include <antares/memory/memory.h>
-#include "antares/jit/jit.h"
 
 namespace Antares
 {
@@ -56,8 +55,6 @@ public:
         optFixedSize = 1,
         //! Do not produce warnings/errors
         optQuiet = 2,
-        //! Do not postpone the loading
-        optImmediate = 4,
         //! Do not warn if the file is empty
         optNoWarnIfEmpty = 16,
         //! The loading never fails
@@ -125,8 +122,6 @@ public:
     /*!
     ** \brief Load entries from a CSV file
     **
-    ** The data might not be actually loaded, if the load-on-demand is
-    ** enabled.
     ** If the param `fixedSize` is false, the number of columns will be
     ** automatically detected from the first row in the CSV file.
     **
@@ -135,7 +130,6 @@ public:
     ** \param maxHeight The new height
     ** \param fixedSize True to not automatically determine the width of the matrix
     ** \param warning True to produce warnings when an error occurs
-    ** \param immediate True to not postpone the loading
     ** \param buffer An optional buffer for reading the file
     ** \return True if the operation succeeded
     */
@@ -166,9 +160,6 @@ public:
     /*!
     ** \brief Write the content of a matrix into a single file
     **
-    ** If JIT is enabled, the matrix will be resized to 0x0 if the write
-    ** is successful.
-    **
     ** \param m The matrix
     ** \param filename The file where to write data
     ** \return A non-zero value if the operation succeeded, 0 otherwise
@@ -180,9 +171,6 @@ public:
 
     /*!
     ** \brief Write the content of a matrix into a single file
-    **
-    ** If JIT is enabled, the matrix will be resized to 0x0 if the write
-    ** is successful.
     **
     ** \param m         The matrix
     ** \param filename  The file where to write data
@@ -222,7 +210,7 @@ public:
     ** \param w The new width
     ** \param h The new height
     */
-    void resize(uint w, uint h, bool fixedSize = false);
+    void resize(uint w, uint h);
 
     /*!
     ** \brief Resize the matrix without destroying its content
@@ -246,7 +234,7 @@ public:
     ** \see resize()
     ** \see zero()
     */
-    void reset(uint w, uint h, bool fixedSize = false);
+    void reset(uint w, uint h);
 
     //! Get the Nth column
     ColumnType& column(uint n);
@@ -275,14 +263,6 @@ public:
     void multiplyAllEntriesBy(const U& c);
 
     /*!
-    ** \brief Multiply or divide a column by a given value
-    */
-    template<class U>
-    void multiplyColumnBy(uint x, const U& c);
-    template<class U>
-    void divideColumnBy(uint x, const U& c);
-
-    /*!
     ** \brief Compute the average of all timeseries (derated mode)
     */
     void averageTimeseries(bool roundValues = true);
@@ -291,21 +271,6 @@ public:
     ** \brief Round all entries
     */
     void roundAllEntries();
-
-    /*!
-    ** \brief Find the lower bound
-    */
-    T findLowerBound() const;
-
-    /*!
-    ** \brief Find the upper bound
-    */
-    T findUpperBound() const;
-
-    /*!
-    ** \brief Make all entries absolute
-    */
-    void makeAllEntriesAbsolute();
 
     /*!
     ** \brief Copy values into a given column in the matrix
@@ -344,34 +309,8 @@ public:
     template<class PredicateT>
     bool containsOnlyZero(PredicateT& predicate) const;
 
-    /*!
-    ** \brief Shift all rows
-    */
-    void circularShiftRows(uint count);
-
-    /*!
-    ** \brief Shift all rows of a specific column
-    */
-    void circularShiftRows(uint column, uint count);
-    //@}
-
     //! \name Memory Management
     //@{
-    /*!
-    ** \brief Force the Load of data (if not done) for the next save and mark the matrix as modified
-    **
-    ** This method is only useful if the load-on-demand is used.
-    ** The matrix will be marked as modified to force the written.
-    */
-
-    /*!
-    ** \brief Try to remove from memory all data from the matrix
-    **
-    ** This is possible only when enough informations is provided by the JIT
-    ** structure and when the matrix is not modified
-    */
-    void unloadFromMemory() const;
-
     /*!
     ** \brief Get if the matrix is empty
     **
@@ -382,11 +321,6 @@ public:
     ** \endcode
     */
     bool empty() const;
-
-    /*!
-    ** \brief Print the matrix to std::cout (debug)
-    */
-    void print() const;
 
     //! \name Operators
     //@{
@@ -411,8 +345,6 @@ public:
     mutable uint height;
     //! All entries of the matrix (bidimensional array)
     mutable ColumnType* entry;
-    //! Just-in-time informations
-    mutable JIT::Informations* jit;
 
     struct PredicateIdentity
     {
@@ -442,12 +374,6 @@ private:
                              uint options,
                              BufferType* buffer = NULL);
 
-    //! Initialize the JIT structures and returns true
-    bool internalLoadJITData(const AnyString& filename,
-                             uint minWidth,
-                             uint maxHeight,
-                             uint options);
-
     /*!
     ** \brief Save data to a CSV file
     */
@@ -464,15 +390,6 @@ private:
                         uint maxHeight,
                         const int fixedSize,
                         uint options);
-    /*!
-    ** \brief Make sure that all JIT Data are loaded into memory
-    */
-    bool loadAllJITData() const;
-
-    /*!
-    ** \brief Reverse all values for a specific column
-    */
-    void reverseRows(uint column, uint start, uint end);
 
 }; // class Matrix
 

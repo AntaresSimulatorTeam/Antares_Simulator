@@ -7,6 +7,8 @@
 #include "antares/solver/lps/LpsFromAntares.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
+// Kept in Antares::Solver (not the optim subtree): this bridges the legacy weekly
+// problem structures to the LPS translation layer, it isn't itself optimization-model code.
 namespace Antares::Solver
 {
 

@@ -104,10 +104,10 @@ BOOST_AUTO_TEST_CASE(creating_an_STS_with_unsup_having_a_wrong_size_leads_to_exc
 {
     std::vector<double> unsupE(5, 0.);
     STS_holder<4> sts_holder;
-    std::string err_msg = "Remix hydro input : arrays of different sizes";
+    std::string err_msg = "Remix hydro input for 'sts1' : arrays of different sizes";
     BOOST_CHECK_EXCEPTION(sts_holder.createSTS(unsupE, "sts1"),
                           std::invalid_argument,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(create_2_STS_for_nb_of_hours_not_equal___check_input_for_algo_raises_exception)
@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_CASE(create_2_STS_for_nb_of_hours_not_equal___check_input_for_al
     std::string err_msg = "Remix storage input : arrays of different sizes";
     BOOST_CHECK_EXCEPTION(checkInput(Load, unsupE_1, Spillage, DTG_MRG, storagesForRemix),
                           std::invalid_argument,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 // Using directly InputFixture<n, m> in fixture test cases does not compile on Win MSVC.

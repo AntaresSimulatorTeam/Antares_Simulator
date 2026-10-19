@@ -5,7 +5,7 @@
 
 #include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 
 ScenarioGroupRepository::AlreadyExists::AlreadyExists(const std::string& groupId):
@@ -18,4 +18,4 @@ ScenarioGroupRepository::DoesNotExist::DoesNotExist(const std::string& groupId):
 {
 }
 
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem

@@ -5,9 +5,9 @@
 
 #include <algorithm>
 
+#include <antares/study/output-selection.h>
+#include <antares/utils/utils.h>
 #include <antares/writer/result_format.h>
-
-using namespace Yuni;
 
 namespace Antares::Data
 {
@@ -76,16 +76,14 @@ const char* SeedToID(SeedIndex seed)
 }
 
 // ... Hydro heuristic policy ...
-HydroHeuristicPolicy StringToHydroHeuristicPolicy(const AnyString& text)
+HydroHeuristicPolicy StringToHydroHeuristicPolicy(const std::string& text)
 {
-    if (!text)
+    if (text.empty())
     {
         return hhpUnknown;
     }
 
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
+    const std::string s = stringToLower(stringTrim(text));
     if (s == "accommodate rule curves")
     {
         return hhpAccommodateRuleCurves;
@@ -98,31 +96,15 @@ HydroHeuristicPolicy StringToHydroHeuristicPolicy(const AnyString& text)
     return hhpUnknown;
 }
 
-const char* HydroHeuristicPolicyToCString(HydroHeuristicPolicy hhPolicy)
-{
-    switch (hhPolicy)
-    {
-    case hhpAccommodateRuleCurves:
-        return "accommodate rule curves";
-    case hhpMaximizeGeneration:
-        return "maximize generation";
-    case hhpUnknown:
-        return "";
-    }
-    return "";
-}
-
 // ... Hydro pricing ...
-HydroPricingMode StringToHydroPricingMode(const AnyString& text)
+HydroPricingMode StringToHydroPricingMode(const std::string& text)
 {
-    if (!text)
+    if (text.empty())
     {
         return hpUnknown;
     }
 
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
+    const std::string s = stringToLower(stringTrim(text));
     if (s == "fast")
     {
         return hpHeuristic;
@@ -135,30 +117,14 @@ HydroPricingMode StringToHydroPricingMode(const AnyString& text)
     return hpUnknown;
 }
 
-const char* HydroPricingModeToCString(HydroPricingMode hpm)
+PowerFluctuations StringToPowerFluctuations(const std::string& text)
 {
-    switch (hpm)
-    {
-    case hpHeuristic:
-        return "fast";
-    case hpMILP:
-        return "accurate"; // (slow)
-    case hpUnknown:
-        return "";
-    }
-    return "";
-}
-
-PowerFluctuations StringToPowerFluctuations(const AnyString& text)
-{
-    if (!text)
+    if (text.empty())
     {
         return lssUnknown;
     }
 
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
+    const std::string s = stringToLower(stringTrim(text));
     if (s == "minimize ramping")
     {
         return lssMinimizeRamping;
@@ -175,32 +141,14 @@ PowerFluctuations StringToPowerFluctuations(const AnyString& text)
     return lssUnknown;
 }
 
-const char* PowerFluctuationsToCString(PowerFluctuations fluctuations)
+SheddingPolicy StringToSheddingPolicy(const std::string& text)
 {
-    switch (fluctuations)
-    {
-    case lssFreeModulations:
-        return "free modulations";
-    case lssMinimizeRamping:
-        return "minimize ramping";
-    case lssMinimizeExcursions:
-        return "minimize excursions";
-    case lssUnknown:
-        return "";
-    }
-    return "";
-}
-
-SheddingPolicy StringToSheddingPolicy(const AnyString& text)
-{
-    if (!text)
+    if (text.empty())
     {
         return shpUnknown;
     }
 
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
+    const std::string s = stringToLower(stringTrim(text));
     if (s == "shave peaks")
     {
         return shpShavePeaks;
@@ -217,32 +165,14 @@ SheddingPolicy StringToSheddingPolicy(const AnyString& text)
     return shpUnknown;
 }
 
-const char* SheddingPolicyToCString(SheddingPolicy strategy)
+UnitCommitmentMode StringToUnitCommitmentMode(const std::string& text)
 {
-    switch (strategy)
-    {
-    case shpShavePeaks:
-        return "shave peaks";
-    case shpAccurateShavePeaks:
-        return "accurate shave peaks";
-    case shpMinimizeDuration:
-        return "minimize duration";
-    case shpUnknown:
-        return "";
-    }
-    return "";
-}
-
-UnitCommitmentMode StringToUnitCommitmentMode(const AnyString& text)
-{
-    if (!text)
+    if (text.empty())
     {
         return ucUnknown;
     }
 
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
+    const std::string s = stringToLower(stringTrim(text));
     if (s == "fast")
     {
         return ucHeuristicFast;
@@ -275,16 +205,14 @@ const char* UnitCommitmentModeToCString(UnitCommitmentMode ucommitment)
     return "";
 }
 
-NumberOfCoresMode StringToNumberOfCoresMode(const AnyString& text)
+NumberOfCoresMode StringToNumberOfCoresMode(const std::string& text)
 {
-    if (!text)
+    if (text.empty())
     {
         return ncUnknown;
     }
 
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
+    const std::string s = stringToLower(stringTrim(text));
     if (s == "minimum")
     {
         return ncMin;
@@ -309,40 +237,6 @@ NumberOfCoresMode StringToNumberOfCoresMode(const AnyString& text)
     return ncUnknown;
 }
 
-const char* NumberOfCoresModeToCString(NumberOfCoresMode ucores)
-{
-    switch (ucores)
-    {
-    case ncMin:
-        return "minimum";
-    case ncLow:
-        return "low";
-    case ncAvg:
-        return "medium";
-    case ncHigh:
-        return "high";
-    case ncMax:
-        return "maximum";
-    case ncUnknown:
-        return "";
-    }
-    return "";
-}
-
-const char* RenewableGenerationModellingToCString(RenewableGenerationModelling rgModelling)
-{
-    switch (rgModelling)
-    {
-    case rgAggregated:
-        return "aggregated";
-    case rgClusters:
-        return "clusters"; // using renewable clusters
-    case rgUnknown:
-        return "";
-    }
-    return "";
-}
-
 std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status)
 {
     switch (mps_export_status)
@@ -360,16 +254,14 @@ std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status)
     }
 }
 
-mpsExportStatus stringToMPSexportStatus(const AnyString& value)
+mpsExportStatus stringToMPSexportStatus(const std::string& value)
 {
-    if (!value)
+    if (value.empty())
     {
         return mpsExportStatus::UNKNOWN_EXPORT;
     }
 
-    CString<24, false> v = value;
-    v.trim();
-    v.toLower();
+    const std::string v = stringToLower(stringTrim(value));
     if (v == "both-optims"
         || v == "true") // Case "true" : for compatibily with older study versions
     {
@@ -420,12 +312,11 @@ std::string GlobalTransmissionCapacitiesToString_Display(
     return result;
 }
 
-bool stringToGlobalTransmissionCapacities(const AnyString& value, GlobalTransmissionCapacities& out)
+bool stringToGlobalTransmissionCapacities(const std::string& value,
+                                          GlobalTransmissionCapacities& out)
 {
     using GlobalNTCtype = GlobalTransmissionCapacities;
-    CString<64, false> v = value;
-    v.trim();
-    v.toLower();
+    const std::string v = stringToLower(stringTrim(value));
     if (v == "local-values" || v == "true" || v == "enabled")
     {
         out = GlobalNTCtype::localValuesForAllLinks;
@@ -531,6 +422,16 @@ template<>
 const std::initializer_list<std::string>& getNames<SimplexOptimization>()
 {
     static const std::initializer_list<std::string> il = {"unknown", "day", "week"};
+    return il;
+}
+
+template<>
+const std::initializer_list<std::string>& getNames<OutputSelection::Value>()
+{
+    static const std::initializer_list<std::string> il = {"all",
+                                                          "none",
+                                                          "monte-carlo",
+                                                          "simulation-tables"};
     return il;
 }
 } // namespace Enum

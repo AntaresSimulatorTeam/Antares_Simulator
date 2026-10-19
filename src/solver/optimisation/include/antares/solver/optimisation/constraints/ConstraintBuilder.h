@@ -23,10 +23,7 @@ public:
     std::vector<int>& NombreDeTermesDesLignes;
     std::string& Sens;
     int& IncrementDAllocationMatriceDesContraintes;
-    std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim;
     const int32_t& NombreDePasDeTempsPourUneOptimisation;
-    std::vector<int>& NumeroDeVariableStockFinal;
-    std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock;
     std::vector<std::string>& NomDesContraintes;
     const std::vector<const char*>& NomsDesPays;
     const uint32_t& weekInTheYear;
@@ -50,12 +47,43 @@ class ConstraintBuilder final
 public:
     ConstraintBuilder() = delete;
 
-    explicit ConstraintBuilder(ConstraintBuilderData& data):
-        data(data),
-        variableManager_(data.CorrespondanceVarNativesVarOptim,
-                         data.NumeroDeVariableStockFinal,
-                         data.NumeroDeVariableDeTrancheDeStock,
-                         data.NombreDePasDeTempsPourUneOptimisation)
+    // Resolves variables through an existing VariableManager (copied: it only holds references)
+    // instead of building a new one from problemeHebdo's correspondence tables. For a solve that
+    // reuses problemeHebdo's static data (areas, links, week length, ...) but must not read or
+    // write the *main* weekly problem's variable numbering -- e.g. the adequacy patch's CSR, which
+    // owns a VariableManager over its own short-lived per-hour correspondence table.
+    explicit ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo,
+                               PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
+                               const VariableManagement::VariableManager& variableManager):
+        data({ProblemeAResoudre.Pi,
+              ProblemeAResoudre.Colonne,
+              ProblemeAResoudre.NombreDeContraintes,
+              ProblemeAResoudre.NombreDeTermesDansLaMatriceDesContraintes,
+              ProblemeAResoudre.IndicesDebutDeLigne,
+              ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes,
+              ProblemeAResoudre.IndicesColonnes,
+              ProblemeAResoudre.NombreDeTermesDesLignes,
+              ProblemeAResoudre.Sens,
+              ProblemeAResoudre.IncrementDAllocationMatriceDesContraintes,
+              problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
+              ProblemeAResoudre.NomDesContraintes,
+              problemeHebdo->NomsDesPays,
+              problemeHebdo->weekInTheYear,
+              problemeHebdo->NombreDePasDeTemps}),
+        variableManager_(variableManager)
+    {
+    }
+
+    explicit ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo,
+                               PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre):
+        ConstraintBuilder(problemeHebdo,
+                          ProblemeAResoudre,
+                          VariableManagement::VariableManager(problemeHebdo))
+    {
+    }
+
+    explicit ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo):
+        ConstraintBuilder(problemeHebdo, *problemeHebdo->ProblemeAResoudre)
     {
     }
 
@@ -134,6 +162,16 @@ public:
                                              double coeff,
                                              int offset = 0,
                                              int delta = 0);
+
+    ConstraintBuilder& ProductionDecreaseAboveMin(unsigned int index,
+                                                  double coeff,
+                                                  int offset = 0,
+                                                  int delta = 0);
+
+    ConstraintBuilder& ProductionIncreaseAboveMin(unsigned int index,
+                                                  double coeff,
+                                                  int offset = 0,
+                                                  int delta = 0);
 
     ConstraintBuilder& NumberOfDispatchableUnits(unsigned int index, double coeff);
 
@@ -269,7 +307,7 @@ public:
         return nombreDeTermes_;
     }
 
-    ConstraintBuilderData& data;
+    ConstraintBuilderData data;
 
 private:
     void OPT_ChargerLaContrainteDansLaMatriceDesContraintes();
@@ -344,7 +382,7 @@ struct ShortTermStorageData
 {
     std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
 
-    const std::vector<::AREA_INPUT>& ShortTermStorage;
+    const std::vector<AREA_INPUT>& ShortTermStorage;
 };
 
 struct ShortTermStorageCumulativeConstraintData: ShortTermStorageData
@@ -357,9 +395,9 @@ using namespace Antares::Data;
 struct ReserveData
 {
     bool Simulation;
-    std::vector<::AREA_RESERVES_VECTOR>& areaReserves;
+    std::vector<AREA_RESERVES_VECTOR>& areaReserves;
     std::vector<PALIERS_THERMIQUES>& thermalClusters;
-    std::vector<::AREA_INPUT>& shortTermStorageOfArea;
+    std::vector<AREA_INPUT>& shortTermStorageOfArea;
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES>& hydroOfArea;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
 

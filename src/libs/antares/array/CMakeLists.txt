@@ -13,7 +13,7 @@ target_link_libraries(array
         yuni-static-core
         PUBLIC
         io #matrix.hxx
-        jit #jit.hxx require logs
+        Antares::logs #matrix.hxx
         Antares::memory
         Antares::study-utils
 )

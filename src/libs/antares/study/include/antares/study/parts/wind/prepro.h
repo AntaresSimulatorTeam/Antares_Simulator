@@ -4,6 +4,9 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_H__
 #define __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_H__
 
+#include <filesystem>
+#include <string>
+
 #include "../../fwd.h"
 #include "../../xcast.h"
 
@@ -37,12 +40,7 @@ public:
     /*!
     ** \brief Save data to a folder
     */
-    bool saveToFolder(const AnyString& folder) const;
-
-    /*!
-    ** \brief Reset to default all values
-    */
-    void resetToDefault();
+    bool saveToFolder(const std::string& folder) const;
 
     //! XCast
     Data::XCast xcast;
@@ -50,7 +48,5 @@ public:
 }; // Prepro
 
 } // namespace Antares::Data::Wind
-
-#include "prepro.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_H__

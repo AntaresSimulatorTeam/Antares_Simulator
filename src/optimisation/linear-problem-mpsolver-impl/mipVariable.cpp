@@ -6,7 +6,7 @@
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipVariable.h>
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 
-namespace Antares::Optimisation::LinearProblemMpsolverImpl
+namespace Antares::LinearProblem::MpsolverImpl
 {
 
 OrtoolsMipVariable::OrtoolsMipVariable(operations_research::MPVariable* mpVar):
@@ -44,7 +44,7 @@ const operations_research::MPVariable* OrtoolsMipVariable::getMpVar() const
     return mpVar_;
 }
 
-LinearProblemApi::MipBasisStatus OrtoolsMipVariable::getMipBasisStatus() const
+Api::MipBasisStatus OrtoolsMipVariable::getMipBasisStatus() const
 {
     return convertOrtoolsBasisStatus(mpVar_->basis_status());
 }
@@ -69,4 +69,4 @@ double OrtoolsMipVariable::reducedCost() const
     return mpVar_->reduced_cost();
 }
 
-} // namespace Antares::Optimisation::LinearProblemMpsolverImpl
+} // namespace Antares::LinearProblem::MpsolverImpl

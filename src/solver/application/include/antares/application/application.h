@@ -3,12 +3,8 @@
 
 #pragma once
 
-#include <yuni/core/string.h>
-#include <yuni/job/queue/service.h>
-
 #include <antares/benchmarking/DurationCollector.h>
-#include <antares/benchmarking/timer.h>
-#include <antares/study/load-options.h>
+#include <antares/concurrency/concurrency.h>
 #include <antares/study/study.h>
 #include <antares/writer/i_writer.h>
 #include "antares/infoCollection/StudyInfoCollector.h"
@@ -18,7 +14,7 @@
 namespace Antares::Solver
 {
 
-class Application final: public Yuni::IEventObserver<Application, Yuni::Policy::SingleThreaded>
+class Application final
 {
 public:
     //! \name Constructor & Destructor
@@ -30,7 +26,7 @@ public:
     /*!
     ** \brief Destructor
     */
-    ~Application() override;
+    ~Application();
     //@}
 
     Application(const Application&) = delete;
@@ -109,7 +105,7 @@ private:
     Benchmarking::DurationCollector pDurationCollector;
     Benchmarking::OptimizationInfo pOptimizationInfo;
 
-    std::shared_ptr<Yuni::Job::QueueService> ioQueueService;
+    std::shared_ptr<Concurrency::ThreadPool> ioQueueService;
     IResultWriter::Ptr resultWriter = nullptr;
     std::vector<std::pair<LogType, std::string>> messagesStack;
 

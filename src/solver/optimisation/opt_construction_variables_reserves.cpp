@@ -38,7 +38,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
         }
 
         // Init variables for a reserve
-        void initReserve(int pdt, const int reserveIndex, const std::string& reserveName)
+        void initReserve(int pdt, const int reserveIndex, const ReserveIdentity& reserve)
         {
             if (Simulation)
             {
@@ -50,14 +50,14 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                 variableManager.InternalUnsatisfiedReserve(reserveIndex, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.InternalUnsatisfiedReserve(NombreDeVariables, reserveName);
+                variableNamer.InternalUnsatisfiedReserve(NombreDeVariables, reserve);
                 NombreDeVariables++;
 
                 // For Excess Reserves
                 variableManager.InternalExcessReserve(reserveIndex, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.InternalExcessReserve(NombreDeVariables, reserveName);
+                variableNamer.InternalExcessReserve(NombreDeVariables, reserve);
                 NombreDeVariables++;
             }
         }
@@ -67,13 +67,13 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
           ReserveType type,
           int pdt,
           const RESERVE_PARTICIPATION_THERMAL& clusterReserveParticipation,
-          const std::string& reserveName)
+          const ReserveIdentity& reserve)
         {
             const auto& clusterName = clusterReserveParticipation.clusterName;
             if (Simulation)
             {
-                NombreDeVariables += (type == ReserveType::UP ? 4
-                                                              : 2); // 4 for up reserves, 2 for down
+                NombreDeVariables += (type == ReserveType::UP ? 3
+                                                              : 2); // 3 for up reserves, 2 for down
             }
             else
             {
@@ -86,7 +86,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ParticipationOfRunningUnitsToReserve(NombreDeVariables,
                                                                    clusterName,
-                                                                   reserveName);
+                                                                   reserve);
                 NombreDeVariables++;
 
                 if (type == ReserveType::UP) // For off units in cluster (off units can not
@@ -100,7 +100,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                       = VARIABLE_BORNEE_DES_DEUX_COTES;
                     variableNamer.ParticipationOfOffUnitsToReserve(NombreDeVariables,
                                                                    clusterName,
-                                                                   reserveName);
+                                                                   reserve);
                     NombreDeVariables++;
                 }
 
@@ -113,7 +113,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ThermalClusterReserveParticipation(NombreDeVariables,
                                                                  clusterName,
-                                                                 reserveName);
+                                                                 reserve);
                 NombreDeVariables++;
             }
         }
@@ -123,7 +123,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
           ReserveType type,
           int pdt,
           const RESERVE_PARTICIPATION_STSTORAGE& clusterReserveParticipation,
-          const std::string& reserveName)
+          const ReserveIdentity& reserve)
         {
             const auto& clusterName = clusterReserveParticipation.clusterName;
             if (Simulation)
@@ -141,7 +141,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ParticipationOfSTStorageReleaseToReserve(NombreDeVariables,
                                                                        clusterName,
-                                                                       reserveName);
+                                                                       reserve);
                 NombreDeVariables++;
 
                 // For Store participation to the reserves
@@ -153,7 +153,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ParticipationOfSTStorageStoreToReserve(NombreDeVariables,
                                                                      clusterName,
-                                                                     reserveName);
+                                                                     reserve);
                 NombreDeVariables++;
 
                 // For Short Term Storage participation to the up reserves
@@ -166,7 +166,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                 variableNamer.ParticipationOfSTStorageToReserve(type,
                                                                 NombreDeVariables,
                                                                 clusterName,
-                                                                reserveName);
+                                                                reserve);
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 NombreDeVariables++;
@@ -178,7 +178,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
           ReserveType type,
           int pdt,
           const RESERVE_PARTICIPATION_HYDRO& clusterReserveParticipation,
-          const std::string& reserveName)
+          const ReserveIdentity& reserve)
         {
             const auto& clusterName = clusterReserveParticipation.clusterName;
             if (Simulation)
@@ -196,7 +196,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ParticipationOfHydroReleaseToReserve(NombreDeVariables,
                                                                    clusterName,
-                                                                   reserveName);
+                                                                   reserve);
                 NombreDeVariables++;
 
                 // For Store participation to the reserves
@@ -208,7 +208,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ParticipationOfHydroStoreToReserve(NombreDeVariables,
                                                                  clusterName,
-                                                                 reserveName);
+                                                                 reserve);
                 NombreDeVariables++;
 
                 // For Hydro participation to the reserves
@@ -223,7 +223,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                 variableNamer.ParticipationOfHydroToReserve(type,
                                                             NombreDeVariables,
                                                             clusterName,
-                                                            reserveName);
+                                                            reserve);
 
                 NombreDeVariables++;
             }
@@ -243,12 +243,13 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
         {
             variableNamer.UpdateArea(problemeHebdo->NomsDesPays[pays]);
 
-            for (auto& areaReserve:
-                 problemeHebdo->allReserves.value()[pays].areaCapacityReservations)
+            for (auto& areaReserve: problemeHebdo->allReserves->at(pays).areaCapacityReservations)
             {
+                const ReserveIdentity reserve{areaReserve.reserveName, areaReserve.reserveID};
+
                 reserveVariablesInitializer.initReserve(pdt,
                                                         areaReserve.globalReserveIndex,
-                                                        areaReserve.reserveName);
+                                                        reserve);
 
                 // Thermal Clusters
                 for (auto& [clusterId, clusterReserveParticipation]:
@@ -258,7 +259,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                       areaReserve.type,
                       pdt,
                       clusterReserveParticipation,
-                      areaReserve.reserveName);
+                      reserve);
                 }
 
                 // Short Term Storage Clusters
@@ -269,7 +270,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                       areaReserve.type,
                       pdt,
                       clusterReserveParticipation,
-                      areaReserve.reserveName);
+                      reserve);
                 }
 
                 // Hydro
@@ -279,7 +280,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                       areaReserve.type,
                       pdt,
                       clusterReserveParticipation,
-                      areaReserve.reserveName);
+                      reserve);
                 }
             }
         }

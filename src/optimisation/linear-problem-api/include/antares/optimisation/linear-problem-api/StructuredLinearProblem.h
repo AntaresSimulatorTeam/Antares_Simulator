@@ -12,7 +12,7 @@
 #include <antares/optimisation/linear-problem-api/mipConstraint.h>
 #include <antares/optimisation/linear-problem-api/mipVariable.h>
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 
 class StructuredMipVariable final: public IMipVariable
@@ -134,4 +134,4 @@ private:
     double infinity_ = std::numeric_limits<double>::infinity();
 };
 
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace Antares::LinearProblem::Api

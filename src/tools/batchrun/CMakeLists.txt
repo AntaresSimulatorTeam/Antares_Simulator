@@ -44,6 +44,7 @@ set(BATCHRUN_LIBS
 		Antares::resources
 		Antares::locale
 		Antares::locator
+		Antares::antares-solver-simulation
 )
 
 target_link_libraries(${execname}
@@ -53,5 +54,4 @@ target_link_libraries(${execname}
 
 import_std_libs(${execname})
 executable_strip(${execname})
-copy_project_shared_lib(simulation-table-writers ${execname})
 

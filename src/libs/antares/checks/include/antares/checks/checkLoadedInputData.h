@@ -7,7 +7,7 @@
 
 namespace Antares::Check
 {
-void checkStudyVersion(const Data::StudyVersion& version, const AnyString& StudyFolder);
+void checkStudyVersion(const Data::StudyVersion& version, const std::string& StudyFolder);
 
 void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
                                    Antares::Data::HydroPricingMode hpMode);
@@ -18,10 +18,13 @@ void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optR
 void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange,
                                      const Antares::Data::AreaList& areas);
 
-void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas);
+void checkMinStablePower(const Antares::Data::Parameters* parameters,
+                         const Antares::Data::AreaList& areas);
 
 void checkFuelCostColumnNumber(const Antares::Data::AreaList& areas);
 void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas);
+
+void checkThermalRampingWithFastMode(const Antares::Data::Parameters& params);
 
 class IncompatibleDailyOptHeuristicForArea final: public Error::LoadingError
 {

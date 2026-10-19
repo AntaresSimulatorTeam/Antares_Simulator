@@ -2,21 +2,12 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <cstdint>
-#include <global_JIT_manager.h>
 
 #include "fill-matrix.h"
 #include "matrix-bypass-load.h"
 using namespace std;
 using namespace Yuni;
 using namespace Antares;
-
-struct TSNumbersPredicate
-{
-    uint32_t operator()(uint32_t value) const
-    {
-        return value + 1;
-    }
-};
 
 struct PredicateIdentity
 {
