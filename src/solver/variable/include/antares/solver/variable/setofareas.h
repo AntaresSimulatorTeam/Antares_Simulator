@@ -149,8 +149,8 @@ public:
     //! The study
     const Data::Study* pStudy;
 
-    typename Data::Study::SetsOfAreas::IDType::Vector pIds;
-    typename Data::Study::SetsOfAreas::IDType::Vector pNames;
+    std::vector<Data::Study::SetsOfAreas::IDType> pIds;
+    std::vector<Data::Study::SetsOfAreas::IDType> pNames;
 
 }; // class SetsOfAreas
 

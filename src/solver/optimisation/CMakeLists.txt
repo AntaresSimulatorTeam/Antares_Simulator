@@ -1,6 +1,10 @@
 set(RTESOLVER_OPT
         opt_optimisation_hebdo.cpp
         opt_appel_solveur_quadratique.cpp
+        include/antares/solver/optimisation/ortools_quadratic_wrapper.h
+        ortools_quadratic_wrapper.cpp
+        include/antares/solver/optimisation/ortools_wrapper.h
+        ortools_wrapper.cpp
         opt_gestion_second_membre_cas_lineaire.cpp
         opt_optimisation_lineaire.cpp
         opt_chainage_intercos.cpp
@@ -9,7 +13,6 @@ set(RTESOLVER_OPT
         opt_pilotage_optimisation_lineaire.cpp
         opt_pilotage_optimisation_quadratique.cpp
         include/antares/solver/optimisation/opt_structure_probleme_a_resoudre.h
-        include/antares/solver/optimisation/opt_constants.h
         opt_alloc_probleme_a_optimiser.cpp
         opt_gestion_des_bornes_cas_quadratique.cpp
         opt_construction_variables_optimisees_lineaire.cpp
@@ -21,10 +24,19 @@ set(RTESOLVER_OPT
         opt_construction_variables_optimisees_quadratique.cpp
         opt_decompte_variables_et_contraintes.cpp
         opt_decompte_variables_et_contraintes.cpp
+        opt_construction_variables_rampes_thermiques.cpp
         opt_gestion_des_bornes_cas_lineaire.cpp
         opt_verification_presence_reserve_jmoins1.cpp
         opt_init_contraintes_hydrauliques.cpp
         opt_appel_solveur_lineaire.cpp
+        simplex/LpFiller.cpp
+        include/antares/solver/optimisation/simplex/LpFiller.h
+        simplex/SimplexOrchestrator.cpp
+        include/antares/solver/optimisation/simplex/SimplexOrchestrator.h
+        simplex/SimplexResult.cpp
+        include/antares/solver/optimisation/simplex/SimplexResult.h
+        simplex/InfeasibilityAnalyzer.cpp
+        include/antares/solver/optimisation/simplex/InfeasibilityAnalyzer.h
         opt_restaurer_les_donnees.cpp
         opt_gestion_des_couts_cas_quadratique.cpp
         opt_gestion_des_couts_cas_quadratique.cpp
@@ -56,6 +68,7 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_post_process_list.h
         adequacy_patch_csr/adq_patch_post_process_list.cpp
         include/antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h
+        include/antares/solver/optimisation/adequacy_patch_csr/gems-part.h
         adequacy_patch_csr/adq_patch_curtailment_sharing.cpp
         adequacy_patch_csr/solve_problem.cpp
         adequacy_patch_csr/set_variable_boundaries.cpp
@@ -72,10 +85,14 @@ set(RTESOLVER_OPT
         adequacy_patch_csr/constraints/CsrAreaBalance.cpp
         include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrBindingConstraintHour.h
         adequacy_patch_csr/constraints/CsrBindingConstraintHour.cpp
+        opt_decompte_variables_et_contraintes_rampes_thermiques.cpp
+        opt_gestion_des_bornes_rampes_thermiques.cpp
+        opt_gestion_des_couts_rampes_thermiques.cpp
         include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFictitiousLoad.h
         adequacy_patch_csr/constraints/CsrFictitiousLoad.cpp
         include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrMaxEnsLoad.h
         adequacy_patch_csr/constraints/CsrMaxEnsLoad.cpp
+        adequacy_patch_csr/gems-part.cpp
 
         include/antares/solver/optimisation/opt_rename_problem.h
         opt_rename_problem.cpp
@@ -189,12 +206,23 @@ set(RTESOLVER_OPT
 		constraints/HydroEnergyLevelReserveParticipation.cpp
 		include/antares/solver/optimisation/constraints/HydroGlobalEnergyLevelReserveParticipation.h
 		constraints/HydroGlobalEnergyLevelReserveParticipation.cpp
+        include/antares/solver/optimisation/constraints/RampingIncreaseRate.h
+        constraints/RampingIncreaseRate.cpp
+        include/antares/solver/optimisation/constraints/RampingDecreaseRate.h
+        constraints/RampingDecreaseRate.cpp
+        include/antares/solver/optimisation/constraints/PowerOutputVariationIncrease.h
+        constraints/PowerOutputVariationIncrease.cpp
+        include/antares/solver/optimisation/constraints/PowerOutputVariationDecrease.h
+        constraints/PowerOutputVariationDecrease.cpp
+
         include/antares/solver/optimisation/ProblemMatrixEssential.h
         ProblemMatrixEssential.cpp
         include/antares/solver/optimisation/LinearProblemMatrixStartUpCosts.h
         LinearProblemMatrixStartUpCosts.cpp
-		include/antares/solver/optimisation/LinearProblemMatrixReserves.h
-		LinearProblemMatrixReserves.cpp
+        include/antares/solver/optimisation/LinearProblemMatrixReserves.h
+        LinearProblemMatrixReserves.cpp
+        include/antares/solver/optimisation/LinearProblemMatrixRamping.h
+        LinearProblemMatrixRamping.cpp
         include/antares/solver/optimisation/LinearProblemMatrix.h
         LinearProblemMatrix.cpp
         include/antares/solver/optimisation/QuadraticProblemMatrix.h
@@ -210,6 +238,10 @@ set(RTESOLVER_OPT
         constraints/HydroPowerGroup.cpp
         include/antares/solver/optimisation/constraints/HydraulicSmoothingGroup.h
         constraints/HydraulicSmoothingGroup.cpp
+        include/antares/solver/optimisation/constraints/RampingIncreaseDecreaseRateGroup.h
+        constraints/RampingIncreaseDecreaseRateGroup.cpp
+        include/antares/solver/optimisation/constraints/PowerOutputVariationGroup.h
+        constraints/PowerOutputVariationGroup.cpp
         include/antares/solver/optimisation/constraints/MinMaxHydroPowerGroup.h
         constraints/MinMaxHydroPowerGroup.cpp
         include/antares/solver/optimisation/constraints/MaxPumpingGroup.h
@@ -248,12 +280,17 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/LegacyVariableInfo.h
         include/antares/solver/optimisation/LegacyExtraOutputs.h
         LegacyExtraOutputs.cpp
+        include/antares/solver/optimisation/LegacySimulationTableSnapshot.h
+        LegacySimulationTableSnapshot.cpp
+        LegacySimulationTableStage.cpp
         include/antares/solver/optimisation/LegacyNameMapper.h
         LegacyNameMapper.cpp
         include/antares/solver/optimisation/ComponentToAreaConnectionFiller.h
         ComponentToAreaConnectionFiller.cpp
         include/antares/solver/optimisation/ThermalCapacityFiller.h
         ThermalCapacityFiller.cpp
+        include/antares/solver/optimisation/HebdoAreaPriceProvider.h
+        HebdoAreaPriceProvider.cpp
 )
 
 

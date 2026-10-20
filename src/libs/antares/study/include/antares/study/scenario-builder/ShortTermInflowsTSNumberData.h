@@ -16,8 +16,8 @@ class ShortTermInflowsTSNumberData final: public TSNumberData
 {
 public:
     bool apply(Study& study) override;
-    CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const override;
+    std::string get_prefix() const override;
+    unsigned int get_tsGenCount(const Study& study) const override;
 
     bool reset(const Study& study) override;
 
@@ -34,7 +34,7 @@ private:
     const Area* pArea{nullptr};
 };
 
-inline CString<512, false> ShortTermInflowsTSNumberData::get_prefix() const
+inline std::string ShortTermInflowsTSNumberData::get_prefix() const
 {
     return "sts,";
 }

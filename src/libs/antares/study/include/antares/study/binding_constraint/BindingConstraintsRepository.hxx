@@ -12,9 +12,9 @@
 namespace Antares::Data
 {
 
-inline uint BindingConstraintsRepository::size() const
+inline unsigned int BindingConstraintsRepository::size() const
 {
-    return (uint)constraints_.size();
+    return (unsigned int)constraints_.size();
 }
 
 inline bool BindingConstraintsRepository::empty() const

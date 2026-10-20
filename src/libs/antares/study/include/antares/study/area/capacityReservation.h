@@ -62,7 +62,7 @@ struct CapacityReservation
         need->timeSeries.loadFromCSVFile(path.string(), 1, HOURS_PER_YEAR, &fileContent);
     }
 
-    void setName(const AnyString& newname)
+    void setName(const std::string& newname)
     {
         pName = newname;
         pID.clear();

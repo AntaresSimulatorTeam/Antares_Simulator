@@ -3,7 +3,7 @@
 
 #pragma once
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 /**
  * @brief Represents the time and scenario variation of a value.
@@ -65,4 +65,4 @@ constexpr bool isConstant(VariabilityType variability)
     return variability == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
 }
 
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem

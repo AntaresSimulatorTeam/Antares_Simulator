@@ -7,7 +7,7 @@
 #include <antares/optimisation/linear-problem-api/StructuredLinearProblem.h>
 #include "antares/exception/RuntimeError.hpp"
 
-namespace Antares::Optimisation::LinearProblemApi
+namespace Antares::LinearProblem::Api
 {
 
 StructuredMipVariable::StructuredMipVariable(double lb,
@@ -361,4 +361,4 @@ double StructuredLinearProblem::objectiveValue() const
       "StructuredLinearProblem::objectiveValue not available (problem not solved)");
 }
 
-} // namespace Antares::Optimisation::LinearProblemApi
+} // namespace Antares::LinearProblem::Api

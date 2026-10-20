@@ -3,6 +3,8 @@
 
 #include "antares/io/inputs/model-converter/modelConverter.h"
 
+#include <set>
+
 #include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h> // gp : why do we need this inclusion ?
 #include "antares/expressions/expression.h"
@@ -52,7 +54,7 @@ static OutOfBoundsProcessingMode convertOutOfBoundsProcessingMode(const std::str
 
 AreaConnection convert_to_system(const YmlModel::AreaConnection& ac)
 {
-    return {ac.inject_to_balance, ac.spillage_bound, ac.unsupplied_energy_bound};
+    return {ac.inject_to_balance, ac.spillage_bound, ac.unsupplied_energy_bound, ac.price};
 }
 
 std::vector<PortType> convertPortTypes(const YmlModel::Library& library)
@@ -239,7 +241,8 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                            { return p.Id() == pfdefinition.port; });
         if (itPort == ports.end())
         {
-            throw InputError("In port-field-definitions, port not found: " + pfdefinition.port);
+            throw InputError(
+              fmt::format("In port-field-definitions, port not found: {}", pfdefinition.port));
         }
 
         // second check if the field exists in type
@@ -249,8 +252,10 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                             { return field.Id() == pfdefinition.field; });
         if (itField == portFields.end())
         {
-            throw InputError("In port-field-definitions, for port: " + pfdefinition.port
-                             + " , field not found: " + pfdefinition.field);
+            throw InputError(
+              fmt::format("In port-field-definitions, for port: {} , field not found: {}",
+                          pfdefinition.port,
+                          pfdefinition.field));
         }
 
         auto nodeRegistry = convertExpressionToNode(
@@ -266,9 +271,12 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                { return dynamic_cast<const PortFieldNode*>(&node) != nullptr; });
         if (it != preorder.end())
         {
-            throw InputError("In port-field-definitions, for port: " + pfdefinition.port
-                             + " , found another port in the definition: "
-                             + dynamic_cast<const PortFieldNode&>(*it).getPortName());
+            throw InputError(
+
+              fmt::format("In port-field-definitions, for port: {} , found another port in the "
+                          "definition: {}",
+                          pfdefinition.port,
+                          dynamic_cast<const PortFieldNode&>(*it).getPortName()));
         }
 
         ForbiddenNodesVisitor(forbiddenInPortFieldDef, pfdefinition.definition.input_expr)
@@ -282,6 +290,7 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
         // A definition for a port field means this field is a sender
         itPort->setFieldRole(itField->Id(), FieldRole::Sender);
     }
+
     return portFieldDefinitions;
 }
 
@@ -385,6 +394,144 @@ std::vector<Objective> convertObjectives(const YmlModel::Model& model,
 }
 
 /**
+ * \brief Checks that no field is both defined in a port-field-definition and used
+ * in a sum_connections in a binding constraint within the same model.
+ *
+ * A field defined in a port-field-definition has the Sender role, while sum_connections
+ * consumes fields from the Receiver side. Having both in the same model is contradictory.
+ */
+void checkPortFieldDefinitionConflictWithSumConnections(
+  const std::vector<Constraint>& constraints,
+  const std::vector<YmlModel::PortFieldDefinition>& portFieldDefs,
+  const std::string& modelId)
+{
+    if (portFieldDefs.empty())
+    {
+        return;
+    }
+
+    std::set<std::pair<std::string, std::string>> senderFields;
+    for (const auto& pfd: portFieldDefs)
+    {
+        senderFields.insert({pfd.port, pfd.field});
+    }
+
+    for (const auto& constraint: constraints)
+    {
+        if (!constraint.isBindingConstraint())
+        {
+            continue;
+        }
+        if (!constraint.expression().RootNode())
+        {
+            continue;
+        }
+
+        AST ast(constraint.expression().RootNode());
+        for (const auto& node: ast)
+        {
+            if (const auto* sumNode = dynamic_cast<const PortFieldSumNode*>(&node))
+            {
+                auto key = std::make_pair(sumNode->getPortName(), sumNode->getFieldName());
+                if (senderFields.contains(key))
+                {
+                    throw InputError(
+                      fmt::format("In model '{}', field '{}' of port '{}' is defined in a "
+                                  "port-field-definition and also used in a sum_connections "
+                                  "in binding constraint '{}'. "
+                                  "A field cannot be both a sender and a receiver in the "
+                                  "same model.",
+                                  modelId,
+                                  sumNode->getFieldName(),
+                                  sumNode->getPortName(),
+                                  constraint.Id()));
+                }
+            }
+        }
+    }
+}
+
+/**
+ * \brief Checks that no port field holding a legacy area's dual price (declared via the
+ * 'price' entry of a port-type's area-connection) is referenced from a constraint or an
+ * objective, whether directly or through sum_connections.
+ *
+ * The price field only holds a meaningful value once the optimization problem has been
+ * solved (it is the dual value of the legacy area's balance equation), so it can only be
+ * used in extra-outputs, exactly like the 'dual' and 'reduced_cost' functions.
+ */
+void checkPriceFieldNotUsedInConstraintsOrObjectives(const std::vector<Port>& ports,
+                                                     const std::vector<Constraint>& constraints,
+                                                     const std::vector<Objective>& objectives,
+                                                     const std::string& modelId)
+{
+    std::set<std::pair<std::string, std::string>> priceFields;
+    for (const auto& port: ports)
+    {
+        const auto& areaConnection = port.Type().areaConnection();
+        if (areaConnection.has_value() && !areaConnection->price.empty())
+        {
+            priceFields.insert({port.Id(), areaConnection->price});
+        }
+    }
+
+    if (priceFields.empty())
+    {
+        return;
+    }
+
+    auto checkExpression =
+      [&priceFields, &modelId](const Expression& expression, const std::string& usageId)
+    {
+        if (!expression.RootNode())
+        {
+            return;
+        }
+
+        AST ast(expression.RootNode());
+        for (const auto& node: ast)
+        {
+            std::string portName;
+            std::string fieldName;
+            if (const auto* sumNode = dynamic_cast<const PortFieldSumNode*>(&node))
+            {
+                portName = sumNode->getPortName();
+                fieldName = sumNode->getFieldName();
+            }
+            else if (const auto* fieldNode = dynamic_cast<const PortFieldNode*>(&node))
+            {
+                portName = fieldNode->getPortName();
+                fieldName = fieldNode->getFieldName();
+            }
+            else
+            {
+                continue;
+            }
+
+            if (priceFields.contains({portName, fieldName}))
+            {
+                throw InputError(fmt::format(
+                  "In model '{}', field '{}' of port '{}' holds the dual value of a legacy "
+                  "area's balance equation and can only be used in extra-outputs, not in '{}'.",
+                  modelId,
+                  fieldName,
+                  portName,
+                  usageId));
+            }
+        }
+    };
+
+    for (const auto& constraint: constraints)
+    {
+        checkExpression(constraint.expression(), constraint.Id());
+    }
+    for (const auto& objective: objectives)
+    {
+        checkExpression(objective.expression(), objective.Id());
+    }
+}
+
+/**
  * \brief Converts models from YmlModel::Library to SystemModel::Model.
  *
  * \param library The YmlModel::Library object containing models.
@@ -406,6 +553,11 @@ std::vector<Model> convertModels(const YmlModel::Library& library,
         std::vector<Constraint> constraints = convertConstraints(model, library.filename);
         std::vector<ExtraOutput> extraOutputs = convertExtraOutputs(model, library.filename);
         std::vector<Objective> objectives = convertObjectives(model, library.filename);
+
+        checkPortFieldDefinitionConflictWithSumConnections(constraints,
+                                                           model.port_field_definitions,
+                                                           model.id);
+        checkPriceFieldNotUsedInConstraintsOrObjectives(ports, constraints, objectives, model.id);
 
         auto modelObj = modelBuilder.withId(model.id)
                           .withLibraryId(library.id)

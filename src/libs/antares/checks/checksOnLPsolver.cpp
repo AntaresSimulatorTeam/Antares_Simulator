@@ -8,7 +8,7 @@
 #include "antares/solver/utils/ortools_utils.h"
 
 using namespace Antares;
-using namespace Antares::Solver::Optimization;
+using namespace Antares::Optimization;
 
 namespace Antares::Check
 {

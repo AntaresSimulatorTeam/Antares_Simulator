@@ -6,7 +6,6 @@
 #include <antares/config/config.h>
 #include "antares/study/study.h"
 
-using namespace Yuni;
 using namespace Antares::Data;
 
 namespace
@@ -30,6 +29,7 @@ constexpr auto supportedVersions = std::to_array({
   StudyVersion(9, 3),
   StudyVersion(10, 0),
   StudyVersion(10, 1),
+  StudyVersion(10, 2)
   // Add new versions here
 });
 

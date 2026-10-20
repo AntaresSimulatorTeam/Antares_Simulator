@@ -12,7 +12,7 @@ void CsrMaxEnsLoad::add()
             continue;
         }
 
-        builder.updateHourWithinWeek(data.hour);
+        builder.updateHourWithinWeek(0);
 
         builder.UnsuppliedEnergy(Area, 1.0);
 

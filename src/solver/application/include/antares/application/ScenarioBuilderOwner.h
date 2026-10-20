@@ -3,14 +3,12 @@
 
 #pragma once
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 class Study;
 }
 
-namespace Solver
+namespace Antares::Solver
 {
 
 class ScenarioBuilderOwner
@@ -23,5 +21,4 @@ public:
 private:
     Antares::Data::Study& study_;
 };
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver

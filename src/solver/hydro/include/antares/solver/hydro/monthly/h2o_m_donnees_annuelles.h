@@ -51,5 +51,5 @@ struct DONNEES_ANNUELLES
     std::vector<double> overflow;
 
     // Problemes internes (utilise uniquement par l'optimisation)
-    DonneesOptimisationMensuelle::PROBLEME_HYDRAULIQUE ProblemeHydraulique{};
+    Antares::Solver::Hydro::Monthly::PROBLEME_HYDRAULIQUE ProblemeHydraulique{};
 };

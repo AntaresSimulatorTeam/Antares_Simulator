@@ -6,6 +6,9 @@
 #include <sstream>
 
 #include <boost/algorithm/string/case_conv.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/trim.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <antares/logs/logs.h>
 
@@ -29,6 +32,106 @@ std::string transformNameIntoID(const std::string& name)
     std::string out;
     TransformNameIntoID(name, out);
     return out;
+}
+
+bool stringToBool(const std::string& s)
+{
+    if (s.empty())
+    {
+        return false;
+    }
+
+    const std::size_t count = s.size();
+    if (count >= 5)
+    {
+        return false;
+    }
+
+    if (count == 1)
+    {
+        const char c = s[0];
+        return ('1' == c or 'Y' == c or 'y' == c or 'O' == c or 'o' == c or 't' == c or 'T' == c);
+    }
+
+    return boost::iequals(s, "true") or boost::iequals(s, "on") or boost::iequals(s, "yes");
+}
+
+bool stringToDouble(const std::string& s, double& out)
+{
+    if (s.empty())
+    {
+        out = 0.;
+        return true;
+    }
+    return boost::conversion::try_lexical_convert(s, out);
+}
+
+bool stringToFloat(const std::string& s, float& out)
+{
+    if (s.empty())
+    {
+        out = 0.f;
+        return true;
+    }
+    return boost::conversion::try_lexical_convert(s, out);
+}
+
+bool stringToInt(const std::string& s, int& out)
+{
+    if (s.empty())
+    {
+        out = 0;
+        return true;
+    }
+    return boost::conversion::try_lexical_convert(s, out);
+}
+
+bool stringToUint(const std::string& s, unsigned int& out)
+{
+    if (s.empty())
+    {
+        out = 0;
+        return true;
+    }
+    return boost::conversion::try_lexical_convert(s, out);
+}
+
+double stringToDouble(const std::string& s)
+{
+    double out = 0.;
+    stringToDouble(s, out);
+    return out;
+}
+
+float stringToFloat(const std::string& s)
+{
+    float out = 0.f;
+    stringToFloat(s, out);
+    return out;
+}
+
+int stringToInt(const std::string& s)
+{
+    int out = 0;
+    stringToInt(s, out);
+    return out;
+}
+
+unsigned int stringToUint(const std::string& s)
+{
+    unsigned int out = 0;
+    stringToUint(s, out);
+    return out;
+}
+
+std::string stringToLower(const std::string& s)
+{
+    return boost::algorithm::to_lower_copy(s);
+}
+
+std::string stringTrim(const std::string& s)
+{
+    return boost::algorithm::trim_copy(s);
 }
 
 std::tm getCurrentTime()

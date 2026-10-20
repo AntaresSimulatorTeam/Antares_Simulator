@@ -10,10 +10,10 @@
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 #include "antares/optimisation/linear-problem-data-impl/dataSeriesRepo.h"
 
-namespace Antares::Optimisation::LinearProblemDataImpl
+namespace Antares::LinearProblem::DataImpl
 {
 
-class LinearProblemData: public LinearProblemApi::ILinearProblemData
+class LinearProblemData: public Api::ILinearProblemData
 {
 public:
     LinearProblemData() = default;
@@ -24,7 +24,7 @@ public:
     }
 
     [[nodiscard]] double getData(const std::string& dataSetId,
-                                 LinearProblemApi::IScenario::TimeSeriesNumber timeSeriesNumber,
+                                 Api::IScenario::TimeSeriesNumber timeSeriesNumber,
                                  unsigned hour) const override;
     [[nodiscard]] std::span<const double> getData(const std::string& dataSetId,
                                                   unsigned timeSeriesNumber,
@@ -37,4 +37,4 @@ private:
     DataSeriesRepository dataSeriesRepository_;
 };
 
-} // namespace Antares::Optimisation::LinearProblemDataImpl
+} // namespace Antares::LinearProblem::DataImpl

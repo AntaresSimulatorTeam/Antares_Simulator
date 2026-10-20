@@ -4,6 +4,7 @@
 #include <filesystem>
 
 #include <antares/logs/logs.h>
+#include <antares/solver/variable/registerThematicTrimmingVariables.h>
 #include "antares/api/modelerProblems.h"
 #include "antares/api/singleProblemGetter.h"
 
@@ -13,6 +14,8 @@ using namespace Antares::Solver;
 
 int main(const int argc, const char** argv)
 {
+    Antares::Solver::Variable::RegisterThematicTrimmingVariables();
+
     if (argc < 2)
     {
         Antares::logs.error() << "Please provide valid study path.";
@@ -25,21 +28,28 @@ int main(const int argc, const char** argv)
     const fs::path antaresMarker = studyPath / "study.antares";
     const fs::path modelerMarker = studyPath / "parameters.yml";
 
-    if (fs::exists(antaresMarker))
+    try
     {
-        Antares::logs.info() << "Loading Antares study...";
-        const SingleProblemGetter getter(studyPath);
-        getter.printProblems();
+        if (fs::exists(antaresMarker))
+        {
+            Antares::logs.info() << "Loading Antares study...";
+            const SingleProblemGetter getter(studyPath);
+            getter.printProblems();
+        }
+        else if (fs::exists(modelerMarker))
+        {
+            Antares::logs.info() << "Loading Modeler study...";
+            const ModelerProblems modelerProblems(studyPath);
+        }
+        else
+        {
+            Antares::logs.error() << "Invalid study path: neither Antares nor Modeler study found.";
+            return 1;
+        }
     }
-    else if (fs::exists(modelerMarker))
+    catch (const std::exception& e)
     {
-        Antares::logs.info() << "Loading Modeler study...";
-        const ModelerProblems modelerProblems(studyPath);
-        modelerProblems.logSize();
-    }
-    else
-    {
-        Antares::logs.error() << "Invalid study path: neither Antares nor Modeler study found.";
+        Antares::logs.error() << "Error: " << e.what();
         return 1;
     }
 

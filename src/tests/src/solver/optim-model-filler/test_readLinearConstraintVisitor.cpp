@@ -8,7 +8,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "visitorFixture.hpp"
-using namespace Antares::Optimisation;
+using namespace Antares::LinearProblem;
 using namespace Antares::Expressions;
 using namespace Antares::ModelerStudy;
 using namespace Antares::Expressions::Nodes;
@@ -128,7 +128,7 @@ BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, VisitorFixture<ReadLinearConstr
     {
         BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
                               Antares::Error::InvalidArgumentError,
-                              checkMessage("Root node of a constraint must be a comparator."));
+                              containsMessage("Root node of a constraint must be a comparator."));
     }
 }
 

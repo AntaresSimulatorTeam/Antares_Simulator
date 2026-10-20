@@ -13,6 +13,7 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
+#include <antares/modeler-optimisation-container/EvaluationContext.h>
 #include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
 #include "antares/expressions/ShiftVector.h"
 
@@ -22,82 +23,21 @@ using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::Expressions::Visitors;
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::Optimisation;
+using namespace Antares::LinearProblem;
 
 BOOST_AUTO_TEST_SUITE(_PrintAndEvalNodes_)
 
-BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
+BOOST_AUTO_TEST_CASE(parameterValueToDouble_convertsAndReportsErrors)
 {
-    // Mock dependency
-    struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
-    {
-        [[nodiscard]] double getData(const std::string&, unsigned int, unsigned int) const override
-        {
-            return 123.45; // Mock return value for testing
-        }
+    using InvalidParameterValue = EvaluationContext::CouldNotEvaluateConstantParameter<
+      std::invalid_argument>;
+    using OutOfRangeParameterValue = EvaluationContext::CouldNotEvaluateConstantParameter<
+      std::out_of_range>;
 
-        [[nodiscard]] std::span<const double> getData(
-          [[maybe_unused]] const std::string& dataSetId,
-          [[maybe_unused]] unsigned timeSeriesNumber,
-          [[maybe_unused]] unsigned firstHour,
-          [[maybe_unused]] unsigned lastHour) const override
-        {
-            static std::vector<double> data = {123.45};
-            return data;
-        }
-    } mockData;
-
-    const auto valid_number = "valid_number";
-    const auto invalid_number = "invalid_number";
-    const auto out_of_range = "out_of_range";
-    const auto scenario_only = "scenario_only";
-    const auto timeserie_param = "timeserie_param";
-    std::vector<Parameter> params = {
-      Parameter{valid_number, TimeDependent::NO, ScenarioDependent::NO},
-      Parameter{invalid_number, TimeDependent::NO, ScenarioDependent::NO},
-      Parameter{out_of_range, TimeDependent::NO, ScenarioDependent::NO},
-      Parameter{scenario_only, TimeDependent::NO, ScenarioDependent::YES},
-      Parameter{timeserie_param, TimeDependent::YES, ScenarioDependent::YES}};
-
-    std::map<std::string, ParameterTypeAndValue> system_parameters = {
-      {valid_number, {valid_number, VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "42.5"}},
-      {invalid_number, {invalid_number, VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "abc"}},
-      {out_of_range, {out_of_range, VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "1e500"}},
-      {scenario_only, {scenario_only, VariabilityType::VARYING_IN_SCENARIO_ONLY, "timeserie_file"}},
-      {timeserie_param,
-       {timeserie_param, VariabilityType::VARYING_IN_TIME_ONLY, "timeserie_file"}}};
-
-    std::map<std::string, double> variables; // Not needed for this test
-
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
-    auto model = createModelWithParameters(params);
-    const std::vector<Component> components{createComponent(model, "compo", system_parameters)};
-    EvaluationContext context(&components.back(), &mockData, &emptyScenario);
-
-    // 1. Valid number (CONSTANT)
-    BOOST_CHECK_EQUAL(context.getSystemParameterValueAsDouble(valid_number), 42.5);
-
-    // 2. Parameter not found
-    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble("nonexistent"),
-                      EvaluationContext::CouldNotEvaluateConstantParameter<std::out_of_range>);
-
-    // 3. Invalid number format
-    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble(invalid_number),
-                      EvaluationContext::CouldNotEvaluateConstantParameter<std::invalid_argument>);
-
-    // 4. Out of range value
-    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble(out_of_range),
-                      EvaluationContext::CouldNotEvaluateConstantParameter<std::out_of_range>);
-
-    // 5. Timeserie parameter should NOT be converted to double, expect an exception
-    BOOST_CHECK_THROW((void)context.getSystemParameterValueAsDouble(timeserie_param),
-                      EvaluationContext::CouldNotEvaluateConstantParameter<std::invalid_argument>);
-
-    // 6. Timeserie parameter should be handled by getParameterValue instead
-    BOOST_CHECK_EQUAL(context.getParameterValue(timeserie_param, 0, 1), 123.45);
-
-    // 7. Scenario only: handled like a timeserie parameter
-    BOOST_CHECK_EQUAL(context.getParameterValue(scenario_only, 0, 1), 123.45);
+    const auto value = parameterValueToDouble("parameter", "42.5");
+    BOOST_CHECK_EQUAL(value, 42.5);
+    BOOST_CHECK_THROW(parameterValueToDouble("parameter", "not a number"), InvalidParameterValue);
+    BOOST_CHECK_THROW(parameterValueToDouble("parameter", "1e9999"), OutOfRangeParameterValue);
 }
 
 BOOST_AUTO_TEST_CASE(EvaluationResult_ConstructorTest)
@@ -647,6 +587,82 @@ BOOST_FIXTURE_TEST_CASE(print_port_field_sum_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(printed, "august.2024");
 }
 
+namespace
+{
+class MockAreaPriceProvider: public Antares::LinearProblem::Api::IAreaPriceProvider
+{
+public:
+    [[nodiscard]] double getAreaPrice(const std::string& areaId, unsigned hour) const override
+    {
+        if (areaId != "area1")
+        {
+            return 0.;
+        }
+        return 42. + hour;
+    }
+};
+} // namespace
+
+BOOST_FIXTURE_TEST_CASE(evaluate_sum_connections_on_area_connection_price_field, MyDummyFixture)
+{
+    AreaConnection areaConnection{.inject_to_balance = "flow",
+                                  .spillage_bound = "",
+                                  .unsupplied_energy_bound = "",
+                                  .price = "price"};
+    PortType portType("flow_port", {PortField("flow"), PortField("price")}, areaConnection);
+    Port port("generation", portType);
+
+    Model model = ModelBuilder().withId("gen_model").withPorts({port}).build();
+    Component component = ComponentBuilder().withId("gen1").withModel(&model).build();
+    component.addAreaConnection("generation", "area1");
+
+    Antares::LinearProblem::Api::EmptyScenario scenario;
+    MockAreaPriceProvider areaPriceProvider;
+    // 2 local time steps (hours 0 and 1), so the price's per-timestep nature can be checked.
+    Antares::LinearProblem::Api::FillContext twoStepCtx{0, 1, 0, 1, 0};
+    EvalVisitor visitor(optimEntityContainer,
+                        twoStepCtx,
+                        component,
+                        &data,
+                        scenario,
+                        &areaPriceProvider);
+
+    Nodes::PortFieldSumNode priceSum("generation", "price");
+    const auto priceResult = visitor.dispatch(&priceSum);
+    BOOST_CHECK_EQUAL(priceResult.value(0), 42.);
+    BOOST_CHECK_EQUAL(priceResult.value(1), 43.);
+
+    // A field that isn't the port's price field must not pick up the area price.
+    Nodes::PortFieldSumNode otherFieldSum("generation", "flow");
+    const auto otherResult = visitor.dispatch(&otherFieldSum);
+    BOOST_CHECK_EQUAL(otherResult.value(0), 0.);
+    BOOST_CHECK_EQUAL(otherResult.value(1), 0.);
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_sum_connections_on_area_connection_price_without_provider,
+                        MyDummyFixture)
+{
+    AreaConnection areaConnection{.inject_to_balance = "flow",
+                                  .spillage_bound = "",
+                                  .unsupplied_energy_bound = "",
+                                  .price = "price"};
+    PortType portType("flow_port", {PortField("flow"), PortField("price")}, areaConnection);
+    Port port("generation", portType);
+
+    Model model = ModelBuilder().withId("gen_model").withPorts({port}).build();
+    Component component = ComponentBuilder().withId("gen1").withModel(&model).build();
+    component.addAreaConnection("generation", "area1");
+
+    Antares::LinearProblem::Api::EmptyScenario scenario;
+    // No area price provider supplied: must default to 0 (matches full-GEMS/MILP behavior).
+    EvalVisitor visitor(optimEntityContainer, ctx, component, &data, scenario);
+
+    Nodes::PortFieldSumNode priceSum("generation", "price");
+    const auto result = visitor.dispatch(&priceSum);
+    BOOST_CHECK_EQUAL(result.value(0), 0.);
+    BOOST_CHECK_EQUAL(result.value(1), 0.);
+}
+
 BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
 {
     ParameterNode root("my-param", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
@@ -689,7 +705,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param_scenario_only, MyDummyFixture)
     BOOST_CHECK_EQUAL(std::stod(value), eval);
 }
 
-struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
+struct MockLinearProblemData: Antares::LinearProblem::Api::ILinearProblemData
 {
     [[nodiscard]] double getData(const std::string& dataSetId,
                                  const unsigned /*scenario*/,
@@ -770,12 +786,12 @@ struct TimeDependentParameterFixture
     Model model;
     std::string compoName = "1245";
     std::vector<Component> components;
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo;
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo;
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer = OptimEntityContainer(linearProblem);
 
     std::unique_ptr<Antares::Expressions::Visitors::EvalVisitor> evalVisitor;
-    Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 1, 0, 1, 1};
+    Antares::LinearProblem::Api::FillContext ctx{0, 1, 0, 1, 1};
 
     TimeDependentParameterFixture(
       std::map<std::string, ParameterTypeAndValue> additionnalParams = {})
@@ -832,7 +848,7 @@ EvaluationResult CreateAndEvaluateTimeNode(Node* p)
     NodeType root(&paramNode, p);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
+    Antares::LinearProblem::Api::EmptyScenario emptyScenario;
 
     unsigned first = 0;
     unsigned last = 2;
@@ -844,16 +860,16 @@ EvaluationResult CreateAndEvaluateTimeNode(Node* p)
                                               VariabilityType::VARYING_IN_TIME_ONLY);
     const auto compoName = "1245";
     const std::vector<Component> components{createComponent(model, compoName, {param})};
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
-    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{first,
-                                                                           last /*three hours*/,
-                                                                           first,
-                                                                           last,
-                                                                           0};
+    const Antares::LinearProblem::Api::FillContext fillContext{first,
+                                                               last /*three hours*/,
+                                                               first,
+                                                               last,
+                                                               0};
     EvalVisitor visitor(optimContainer,
                         fillContext,
                         components.back(),
@@ -889,7 +905,7 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
     TimeSumNode root(from, to, &paramNode);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
+    Antares::LinearProblem::Api::EmptyScenario emptyScenario;
 
     unsigned first = 0;
     unsigned last = 2;
@@ -901,17 +917,17 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
                                               VariabilityType::VARYING_IN_TIME_ONLY);
     const auto compoName = "1245";
     const std::vector<Component> components{createComponent(model, compoName, {param})};
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
-    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{first,
-                                                                           last /*three hours*/,
-                                                                           first,
-                                                                           last,
-                                                                           0};
+    const Antares::LinearProblem::Api::FillContext fillContext{first,
+                                                               last /*three hours*/,
+                                                               first,
+                                                               last,
+                                                               0};
     EvalVisitor visitor(optimContainer,
                         fillContext,
                         components.back(),
@@ -962,7 +978,7 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
     AllTimeSumNode root(&paramNode);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
+    Antares::LinearProblem::Api::EmptyScenario emptyScenario;
 
     unsigned first = 0;
     unsigned last = 2;
@@ -974,17 +990,17 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
                                               VariabilityType::VARYING_IN_TIME_ONLY);
     const auto compoName = "1245";
     const std::vector<Component> components{createComponent(model, compoName, {param})};
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
-    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{first,
-                                                                           last /*three hours*/,
-                                                                           first,
-                                                                           last,
-                                                                           0};
+    const Antares::LinearProblem::Api::FillContext fillContext{first,
+                                                               last /*three hours*/,
+                                                               first,
+                                                               last,
+                                                               0};
     EvalVisitor visitor(optimContainer,
                         fillContext,
                         components.back(),
@@ -1020,16 +1036,16 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
                                               VariabilityType::VARYING_IN_TIME_ONLY);
     const auto compoName = "1245";
     const std::vector<Component> components{createComponent(model, compoName, {param})};
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
-    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{hour_0,
-                                                                           hour_1 /*two hours*/,
-                                                                           hour_0,
-                                                                           hour_1,
-                                                                           0};
+    const Antares::LinearProblem::Api::FillContext fillContext{hour_0,
+                                                               hour_1 /*two hours*/,
+                                                               hour_0,
+                                                               hour_1,
+                                                               0};
     EvalVisitor visitor(optimContainer,
                         fillContext,
                         components.back(),
@@ -1077,7 +1093,7 @@ void evaluate_time_dependent_operation()
     BinaryNode root(&literal, &paramNode); // Correctly use the type as a template argument
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
+    Antares::LinearProblem::Api::EmptyScenario emptyScenario;
     unsigned hour_0 = 1;
     unsigned hour_1 = 2;
 
@@ -1090,17 +1106,17 @@ void evaluate_time_dependent_operation()
 
     const std::vector<Component> components{createComponent(model, compoName, {param})};
 
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
-    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{hour_0,
-                                                                           hour_1 /*three hours*/,
-                                                                           hour_0,
-                                                                           hour_1,
-                                                                           0};
+    const Antares::LinearProblem::Api::FillContext fillContext{hour_0,
+                                                               hour_1 /*three hours*/,
+                                                               hour_0,
+                                                               hour_1,
+                                                               0};
     EvalVisitor visitor(optimContainer,
                         fillContext,
                         components.back(),
@@ -1123,7 +1139,7 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
     const std::string value = "dummy";
 
     MockLinearProblemData dummy_data;
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
+    Antares::LinearProblem::Api::EmptyScenario emptyScenario;
     std::vector<unsigned int> hours = {1, 2};
 
     Model model = createModelWithParameters(
@@ -1134,13 +1150,16 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
     const auto compoName = "1245";
     const std::vector<Component> components{createComponent(model, compoName, {param})};
 
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
-    const Antares::Optimisation::LinearProblemApi::FillContext
-      fillContext{hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0};
+    const Antares::LinearProblem::Api::FillContext fillContext{hours.at(0),
+                                                               hours.at(1) /*two hours*/,
+                                                               hours.at(0),
+                                                               hours.at(1),
+                                                               0};
     EvalVisitor visitor(optimContainer,
                         fillContext,
                         components.back(),
@@ -1170,7 +1189,7 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
     const std::string value = "dummy";
 
     MockLinearProblemData dummy_data;
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
+    Antares::LinearProblem::Api::EmptyScenario emptyScenario;
     std::vector<unsigned int> hours = {1, 2};
 
     Model model = createModelWithParameters(
@@ -1182,13 +1201,16 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
 
     const std::vector<Component> components{createComponent(model, compoName, {param})};
 
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
-    const Antares::Optimisation::LinearProblemApi::FillContext
-      fillContext{hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0};
+    const Antares::LinearProblem::Api::FillContext fillContext{hours.at(0),
+                                                               hours.at(1) /*two hours*/,
+                                                               hours.at(0),
+                                                               hours.at(1),
+                                                               0};
     EvalVisitor visitor(optimContainer,
                         fillContext,
                         components.back(),
@@ -1718,7 +1740,7 @@ BOOST_AUTO_TEST_CASE(HandleEmptyString)
 
 BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
 {
-    Antares::Optimisation::LinearProblemApi::FillContext fillContext{0, 2, 10, 12, 0};
+    Antares::LinearProblem::Api::FillContext fillContext{0, 2, 10, 12, 0};
     ModelBuilder modelBuilder;
 
     unsigned varIndex = 0;
@@ -1741,9 +1763,9 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
 
     ComponentBuilder component_builder;
     std::vector components = {component_builder.withModel(&model).withId("my_component").build()};
-    LinearProblemDataImpl::LinearProblemData testData;
+    DataImpl::LinearProblemData testData;
 
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
+    Antares::LinearProblem::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     PredfinedSolutionLinearProblemMock linearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);

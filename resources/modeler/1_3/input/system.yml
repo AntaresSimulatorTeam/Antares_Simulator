@@ -1,7 +1,6 @@
 system:
   id: sys_example_1_3
   description: Bugged system because of timeseries of different sizes
-  model-libraries: lib_example_1_3
 
   components:
     - id: node1

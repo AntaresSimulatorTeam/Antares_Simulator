@@ -1,7 +1,9 @@
 add_library(modeler-parameters
         include/antares/solver/modeler/parameters/modelerParameters.h
         include/antares/solver/modeler/parameters/parseModelerParameters.h
+        include/antares/solver/modeler/parameters/scenarioScope.h
         parseModelerParameters.cpp
+        scenarioScope.cpp
         decoder.hxx)
 
 add_library(Antares::modeler-parameters ALIAS modeler-parameters)
@@ -9,7 +11,7 @@ add_library(Antares::modeler-parameters ALIAS modeler-parameters)
 target_link_libraries(modeler-parameters
         PRIVATE
         yaml-cpp::yaml-cpp
-        Antares::io)
+        Antares::logs)
 
 target_include_directories(modeler-parameters
         PUBLIC

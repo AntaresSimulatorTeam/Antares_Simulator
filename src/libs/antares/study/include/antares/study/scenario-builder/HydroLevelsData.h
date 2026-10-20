@@ -31,16 +31,16 @@ public:
     ** \param year  A year
     ** \param value The new hydro level
     */
-    void setTSnumber(uint index, uint year, double value);
+    void setTSnumber(unsigned int index, unsigned int year, double value);
     //@}
 
-    uint width() const override;
+    unsigned int width() const override;
 
-    uint height() const override;
+    unsigned int height() const override;
 
-    double get_value(uint x, uint y) const;
+    double get_value(unsigned int x, unsigned int y) const;
 
-    void set_value(uint x, uint y, double value);
+    void set_value(unsigned int x, unsigned int y, double value);
 
     bool apply(Study& study) override = 0;
 

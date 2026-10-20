@@ -20,4 +20,6 @@ target_link_libraries(view-builder
     Antares::antares-core
     Antares::input-error
     yaml-cpp::yaml-cpp
+    PRIVATE
+    Antares::modeler-lib
 )

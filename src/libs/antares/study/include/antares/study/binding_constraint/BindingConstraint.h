@@ -5,11 +5,9 @@
 
 #include <memory>
 #include <set>
+#include <string>
 #include <utility>
 #include <vector>
-
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
 
 #include <antares/array/matrix.h>
 #include <antares/inifile/inifile.h>
@@ -73,10 +71,6 @@ public:
     using Set = std::set<std::shared_ptr<BindingConstraint>, CompareBindingConstraintName>;
     //! Map of weight (for links)
     using linkWeightMap = std::map<const AreaLink*, double, CompareLinkName>;
-    //! Iterator
-    using iterator = linkWeightMap::iterator;
-    //! Const iterator
-    using const_iterator = linkWeightMap::const_iterator;
 
     //! Map of weight (for thermal clusters)
     using clusterWeightMap = std::map<const ThermalCluster*, double, CompareClusterName>;
@@ -95,12 +89,8 @@ public:
     /*!
     ** \brief Convert a string into its corresponding type
     */
-    static Type StringToType(const AnyString& text);
+    static Type StringToType(const std::string& text);
 
-    /*!
-    ** \brief Convert a binding constraint operator into a mere C-String
-    */
-    static const char* OperatorToCString(Operator o);
     /*!
     ** \brief Convert a binding constraint operator into a short C-String
     */
@@ -114,7 +104,7 @@ public:
     /*!
     ** \brief Converter a raw string into an operator
     */
-    static Operator StringToOperator(const AnyString& text);
+    static Operator StringToOperator(const std::string& text);
 
     //! \name Constructor & Destructor
     //@{
@@ -134,25 +124,18 @@ public:
     /*!
     ** \brief Set the name of the binding constraint
     */
-    void name(const AnyString& newname);
+    void name(const std::string& newname);
 
     /*!
     ** \brief Set the pId of the binding constraint
     */
-    void pId(const AnyString& name);
+    void pId(const std::string& name);
 
     /*!
     ** \brief Get the ID of the binding constraint
     */
     const std::string& id() const;
     //@}
-
-    //! \name Comments
-    //@{
-    /*!
-    ** \brief Get the comments
-    */
-    const YString& comments() const;
 
     //! \name Group
     //@{
@@ -161,23 +144,6 @@ public:
     */
     std::string group() const;
     void group(std::string group_name);
-
-    /*!
-    ** \brief Set the comments
-    */
-    void comments(const AnyString& newcomments);
-    //@}
-
-    void resetToDefaultValues();
-
-    //! \name iterator
-    //@{
-    iterator begin();
-    const_iterator begin() const;
-
-    iterator end();
-    const_iterator end() const;
-    //@}
 
     bool skipped() const;
     bool isActive() const;
@@ -262,12 +228,12 @@ public:
     /*!
     ** \brief Get how many links the binding constraint contains
     */
-    uint linkCount() const;
+    unsigned int linkCount() const;
 
     /*!
     ** \brief Get how many thermal clusters the binding constraint contains
     */
-    uint clusterCount() const;
+    unsigned int clusterCount() const;
     //@}
 
     //! \name Type of the binding constraint
@@ -289,8 +255,8 @@ public:
     void operatorType(Operator o);
     //@}
 
-    uint yearByYearFilter() const;
-    uint synthesisFilter() const;
+    unsigned int yearByYearFilter() const;
+    unsigned int synthesisFilter() const;
 
     //! \name Enabled / Disabled
     //@{
@@ -308,29 +274,8 @@ public:
     ** \param name Name of the binding constraint
     ** \param newType Its new type (hourly, daily...)
     */
-    void clearAndReset(const AnyString& name, Type newType, Operator op);
+    void clearAndReset(const std::string& name, Type newType, Operator op);
     //@}
-
-    /*!
-    ** \brief Get if the given binding constraint is identical
-    */
-    bool contains(const BindingConstraint* bc) const;
-    /*!
-    ** \brief Get if the binding constraint is linked with a given area
-    */
-    bool contains(const Area* area) const;
-
-    /*!
-    ** \brief Get if the binding constraint is linked with an interconnection or thermal cluster
-    */
-    bool contains(const AreaLink* lnk) const;
-
-    bool contains(const ThermalCluster* clstr) const;
-
-    /*!
-    ** \brief Build a human readable formula for the binding constraint
-    */
-    void buildFormula(YString& s) const;
 
     BindingConstraintStructures initLinkArrays() const;
 
@@ -361,14 +306,12 @@ private:
     Operator pOperator;
     //! Print binding constraint's marginal prices of any year for which time step granularity ?
     // By default, print nothing
-    uint pFilterYearByYear = filterNone;
+    unsigned int pFilterYearByYear = filterNone;
     //! Print binding constraint's marginal prices synthesis for which time step granularity ?
     // By default, print nothing
-    uint pFilterSynthesis = filterNone;
+    unsigned int pFilterSynthesis = filterNone;
     //! Enabled / Disabled
     bool pEnabled = false;
-    //! Comments
-    YString pComments;
     //! Group
     std::string group_ = "default";
 

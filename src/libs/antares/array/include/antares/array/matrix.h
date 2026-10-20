@@ -263,14 +263,6 @@ public:
     void multiplyAllEntriesBy(const U& c);
 
     /*!
-    ** \brief Multiply or divide a column by a given value
-    */
-    template<class U>
-    void multiplyColumnBy(uint x, const U& c);
-    template<class U>
-    void divideColumnBy(uint x, const U& c);
-
-    /*!
     ** \brief Compute the average of all timeseries (derated mode)
     */
     void averageTimeseries(bool roundValues = true);
@@ -279,21 +271,6 @@ public:
     ** \brief Round all entries
     */
     void roundAllEntries();
-
-    /*!
-    ** \brief Find the lower bound
-    */
-    T findLowerBound() const;
-
-    /*!
-    ** \brief Find the upper bound
-    */
-    T findUpperBound() const;
-
-    /*!
-    ** \brief Make all entries absolute
-    */
-    void makeAllEntriesAbsolute();
 
     /*!
     ** \brief Copy values into a given column in the matrix
@@ -332,17 +309,6 @@ public:
     template<class PredicateT>
     bool containsOnlyZero(PredicateT& predicate) const;
 
-    /*!
-    ** \brief Shift all rows
-    */
-    void circularShiftRows(uint count);
-
-    /*!
-    ** \brief Shift all rows of a specific column
-    */
-    void circularShiftRows(uint column, uint count);
-    //@}
-
     //! \name Memory Management
     //@{
     /*!
@@ -355,11 +321,6 @@ public:
     ** \endcode
     */
     bool empty() const;
-
-    /*!
-    ** \brief Print the matrix to std::cout (debug)
-    */
-    void print() const;
 
     //! \name Operators
     //@{
@@ -429,11 +390,6 @@ private:
                         uint maxHeight,
                         const int fixedSize,
                         uint options);
-
-    /*!
-    ** \brief Reverse all values for a specific column
-    */
-    void reverseRows(uint column, uint start, uint end);
 
 }; // class Matrix
 

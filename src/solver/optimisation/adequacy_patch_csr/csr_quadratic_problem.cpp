@@ -19,7 +19,7 @@
 
 using namespace Antares::Data;
 
-namespace Antares::Solver::Optimization
+namespace Antares::Optimization
 {
 
 void CsrQuadraticProblem::setConstraintsOnFlows(ConstraintBuilder& builder)
@@ -132,7 +132,7 @@ void CsrQuadraticProblem::buildConstraintMatrix()
     problemeAResoudre_.NombreDeContraintes = 0;
     problemeAResoudre_.NombreDeTermesDansLaMatriceDesContraintes = 0;
 
-    ConstraintBuilder builder(problemeHebdo_, problemeAResoudre_);
+    ConstraintBuilder builder = hourlyCsrProblem_.makeConstraintBuilder();
     setConstraintsOnFlows(builder);
     setNodeBalanceConstraints(builder);
     setFictitiousLoadConstraints(builder);
@@ -140,4 +140,4 @@ void CsrQuadraticProblem::buildConstraintMatrix()
     setBindingConstraints(builder);
 }
 
-} // namespace Antares::Solver::Optimization
+} // namespace Antares::Optimization

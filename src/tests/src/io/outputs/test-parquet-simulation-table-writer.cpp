@@ -20,7 +20,7 @@
 
 namespace fs = std::filesystem;
 using namespace Antares::IO::Outputs;
-using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::LinearProblem::Api;
 
 // =======================================================
 // Reading a Parquet file into an Arrow table
@@ -112,11 +112,12 @@ BOOST_FIXTURE_TEST_CASE(write_SimuTable_then_read_it_back___reading_fits, LocalF
     BOOST_CHECK_EQUAL(block->Value(0), entry.block);
 
     // entry : component
-    auto component = getColumn<arrow::StringArray>(read_table, 1);
+    auto component = getColumn<arrow::LargeStringArray>(read_table, 1);
     BOOST_CHECK_EQUAL(component->Value(0), entry.component.value());
+    BOOST_CHECK_EQUAL(read_table->schema()->field(1)->type()->id(), arrow::Type::LARGE_STRING);
 
     // entry : output
-    auto output = getColumn<arrow::StringArray>(read_table, 2);
+    auto output = getColumn<arrow::LargeStringArray>(read_table, 2);
     BOOST_CHECK_EQUAL(output->Value(0), entry.output);
 
     // entry : absolute_time_index
@@ -136,7 +137,7 @@ BOOST_FIXTURE_TEST_CASE(write_SimuTable_then_read_it_back___reading_fits, LocalF
     BOOST_CHECK_EQUAL(value->Value(0), entry.value.value());
 
     // entry : status
-    auto status = getColumn<arrow::StringArray>(read_table, 7);
+    auto status = getColumn<arrow::LargeStringArray>(read_table, 7);
     BOOST_CHECK_EQUAL(status->Value(0), StatusToString(entry.status));
 }
 
@@ -172,11 +173,11 @@ BOOST_FIXTURE_TEST_CASE(write_table_with_many_empty_entries_then_read_it_back___
     BOOST_CHECK_EQUAL(block->Value(0), entry.block);
 
     // entry : component
-    auto component = getColumn<arrow::StringArray>(read_table, 1);
+    auto component = getColumn<arrow::LargeStringArray>(read_table, 1);
     BOOST_CHECK(!component->IsValid(0));
 
     // entry : output
-    auto output = getColumn<arrow::StringArray>(read_table, 2);
+    auto output = getColumn<arrow::LargeStringArray>(read_table, 2);
     BOOST_CHECK_EQUAL(output->Value(0), entry.output);
 
     // entry : absolute_time_index
@@ -196,7 +197,7 @@ BOOST_FIXTURE_TEST_CASE(write_table_with_many_empty_entries_then_read_it_back___
     BOOST_CHECK(!value->IsValid(0));
 
     // entry : status
-    auto status = getColumn<arrow::StringArray>(read_table, 7);
+    auto status = getColumn<arrow::LargeStringArray>(read_table, 7);
     BOOST_CHECK(!status->IsValid(0));
 }
 
@@ -231,13 +232,13 @@ BOOST_FIXTURE_TEST_CASE(write_3_lines_table_then_read_it_back___read_fits, Local
     BOOST_CHECK_EQUAL(col_0->Value(2), line_2.block);
 
     // column 1 (component):
-    auto col_1 = getColumn<arrow::StringArray>(read_table, 1);
+    auto col_1 = getColumn<arrow::LargeStringArray>(read_table, 1);
     BOOST_CHECK_EQUAL(col_1->Value(0), line_0.component.value());
     BOOST_CHECK(!col_1->IsValid(1));
     BOOST_CHECK_EQUAL(col_1->Value(2), line_2.component.value());
 
     // column 2 (output) :
-    auto col_2 = getColumn<arrow::StringArray>(read_table, 2);
+    auto col_2 = getColumn<arrow::LargeStringArray>(read_table, 2);
     BOOST_CHECK_EQUAL(col_2->Value(0), line_0.output);
     BOOST_CHECK_EQUAL(col_2->Value(1), line_1.output);
     BOOST_CHECK_EQUAL(col_2->Value(2), line_2.output);
@@ -267,7 +268,7 @@ BOOST_FIXTURE_TEST_CASE(write_3_lines_table_then_read_it_back___read_fits, Local
     BOOST_CHECK_EQUAL(col_6->Value(2), line_2.value.value());
 
     // column 7 (status):
-    auto col_7 = getColumn<arrow::StringArray>(read_table, 7);
+    auto col_7 = getColumn<arrow::LargeStringArray>(read_table, 7);
     BOOST_CHECK_EQUAL(col_7->Value(0), StatusToString(line_0.status));
     BOOST_CHECK_EQUAL(col_7->Value(1), StatusToString(line_1.status));
     BOOST_CHECK(!col_7->IsValid(2));

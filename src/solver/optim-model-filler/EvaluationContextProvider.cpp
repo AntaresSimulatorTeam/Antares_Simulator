@@ -3,10 +3,10 @@
 
 #include <antares/solver/optim-model-filler/EvaluationContextProvider.h>
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 EvaluationContextProvider::EvaluationContextProvider(
-  const LinearProblemApi::ILinearProblemData& data,
+  const Api::ILinearProblemData& data,
   const ScenarioGroupRepository& scenarioGroupRepository,
   std::map<std::string, double> variables):
     data_(data),
@@ -24,4 +24,4 @@ Expressions::Visitors::EvaluationContext EvaluationContextProvider::provide(
                                                     scenarioGroupRepository_.scenario(
                                                       component.getScenarioGroupId()));
 }
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem

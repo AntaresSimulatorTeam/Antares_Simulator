@@ -19,9 +19,9 @@
 #include "inmemory-modeler.h"
 #include "unit_test_utils.h"
 
-using namespace Antares::Optimisation::LinearProblemApi;
-using namespace Antares::Optimisation::LinearProblemDataImpl;
-using namespace Antares::Optimisation;
+using namespace Antares::LinearProblem::Api;
+using namespace Antares::LinearProblem::DataImpl;
+using namespace Antares::LinearProblem;
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Optimization;
 using namespace Antares::Expressions;
@@ -273,11 +273,12 @@ BOOST_AUTO_TEST_CASE(
       {{"x", ValueType::FLOAT, literal(-5), literal(10), true, false}},
       {},
       objective);
-    createComponent(
-      "model",
-      "componentA",
-      {build_context_parameter_with("param", "bounds", VariabilityType::VARYING_IN_TIME_ONLY)},
-      "scenario_group");
+    createComponent("model",
+                    "componentA",
+                    {build_context_parameter_with("param",
+                                                  "bounds",
+                                                  VariabilityType::VARYING_IN_TIME_AND_SCENARIO)},
+                    "scenario_group");
 
     FillContext ctx{0, 2, 0, 2, 0}; // 3 time steps
     auto bounds_time_series = std::make_unique<TimeSeriesSet>("bounds", 3);

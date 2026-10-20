@@ -3,26 +3,13 @@
 
 #include "antares/study/parts/wind/container.h"
 
-#include <yuni/yuni.h>
-
 #include "antares/study/study.h"
-
-using namespace Yuni;
 
 namespace Antares::Data::Wind
 {
 Container::Container():
     series(tsNumbers)
 {
-}
-
-void Container::resetToDefault()
-{
-    series.reset();
-    if (prepro)
-    {
-        prepro->resetToDefault();
-    }
 }
 
 } // namespace Antares::Data::Wind

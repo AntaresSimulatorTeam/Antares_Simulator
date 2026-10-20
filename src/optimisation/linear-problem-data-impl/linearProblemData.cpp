@@ -3,7 +3,7 @@
 
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
-namespace Antares::Optimisation::LinearProblemDataImpl
+namespace Antares::LinearProblem::DataImpl
 {
 
 void LinearProblemData::addDataSeries(std::unique_ptr<IDataSeries> dataSeries)
@@ -12,7 +12,7 @@ void LinearProblemData::addDataSeries(std::unique_ptr<IDataSeries> dataSeries)
 }
 
 double LinearProblemData::getData(const std::string& dataSetId,
-                                  LinearProblemApi::IScenario::TimeSeriesNumber timeSeriesNumber,
+                                  Api::IScenario::TimeSeriesNumber timeSeriesNumber,
                                   unsigned hour) const
 {
     return dataSeriesRepository_.getDataSeries(dataSetId).getData(timeSeriesNumber, hour);
@@ -28,4 +28,4 @@ std::span<const double> LinearProblemData::getData(const std::string& dataSetId,
                                                                   lastHour);
 }
 
-} // namespace Antares::Optimisation::LinearProblemDataImpl
+} // namespace Antares::LinearProblem::DataImpl

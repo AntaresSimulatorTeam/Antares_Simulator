@@ -1,6 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <algorithm>
 #include <fmt/format.h>
 
 #include <boost/algorithm/string/case_conv.hpp>
@@ -201,6 +202,21 @@ void Component::addAreaConnection(const std::string& localPortId, const std::str
     checkPortFieldDefinitionExists(localPortId,
                                    area_connection->unsupplied_energy_bound,
                                    exceptionPrefix);
+
+    // 'price' is optional. Unlike the fields above it is not defined by the component's model
+    // (it is provided by the area), so it must be one of the port type's fields.
+    if (const auto& price = area_connection->price; !price.empty())
+    {
+        const auto& fields = port.Type().Fields();
+        if (std::ranges::none_of(fields, [&price](const auto& f) { return f.Id() == price; }))
+        {
+            throw std::invalid_argument(
+              exceptionPrefix
+              + fmt::format("price field '{}' is not a field of port type '{}'",
+                            price,
+                            port.Type().Id()));
+        }
+    }
 
     if (portToAreaConnections_.contains(localPortId))
     {

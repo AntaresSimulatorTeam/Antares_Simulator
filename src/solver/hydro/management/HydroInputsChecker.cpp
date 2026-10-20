@@ -269,7 +269,7 @@ void HydroInputsChecker::checkInitialReservoirLevel(
     }
 
     areas_.each(
-      [this, &initialReservoirLevels, &year](const Data::Area& area)
+      [&initialReservoirLevels, &year](const Data::Area& area)
       {
           // if deltaBetweenFinalAndInitialLevels[year] has no value, it means
           // the final level is implicitly equal to the initial level

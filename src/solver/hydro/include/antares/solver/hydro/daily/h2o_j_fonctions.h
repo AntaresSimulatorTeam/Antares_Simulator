@@ -4,7 +4,7 @@
 #ifndef __SOLVER_H2O_J_FONCTIONS__
 #define __SOLVER_H2O_J_FONCTIONS__
 
-namespace DoneesOptimisationJournaliere
+namespace Antares::Solver::Hydro::Daily
 {
 DONNEES_MENSUELLES H2O_J_Instanciation(void);
 
@@ -34,5 +34,5 @@ void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES*, int, const std::string
 void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES*, int);
 void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES*, int);
 void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES&);
-} // namespace DoneesOptimisationJournaliere
+} // namespace Antares::Solver::Hydro::Daily
 #endif /* __SOLVER_H2O_J_FONCTIONS__ */

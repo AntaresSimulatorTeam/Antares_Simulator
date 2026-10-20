@@ -15,9 +15,8 @@ namespace Antares::Solver::LoadFiles
 {
 using namespace IO::Inputs;
 
-ModelerStudy::SystemModel::System loadSystem(
-  const fs::path& studyPath,
-  const std::vector<ModelerStudy::SystemModel::Library>& libraries)
+LoadedSystem loadSystem(const fs::path& studyPath,
+                        const std::vector<ModelerStudy::SystemModel::Library>& libraries)
 {
     std::string filename = "system.yml";
     std::string systemStr;
@@ -43,9 +42,24 @@ ModelerStudy::SystemModel::System loadSystem(
         throw ErrorLoadingYaml(e.what());
     }
 
+    std::map<std::string, std::vector<ComponentProperty>> componentProperties;
+    for (const auto& comp: systemObj.components)
+    {
+        if (!comp.properties.empty())
+        {
+            std::vector<ComponentProperty> props;
+            props.reserve(comp.properties.size());
+            for (const auto& prop: comp.properties)
+            {
+                props.emplace_back(prop.id, prop.value);
+            }
+            componentProperties[comp.id] = std::move(props);
+        }
+    }
+
     try
     {
-        return SystemConverter::convert(systemObj, libraries);
+        return {SystemConverter::convert(systemObj, libraries), std::move(componentProperties)};
     }
     catch (const std::runtime_error& e)
     {

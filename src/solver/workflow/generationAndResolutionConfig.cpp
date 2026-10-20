@@ -3,6 +3,7 @@
 
 #include "antares/solver/workflow/generationAndResolutionConfig.h"
 
+#include <antares/solver/modeler/ModelerData.h>
 #include <antares/solver/optimisation/MipDetection.h>
 #include <antares/study/system-model/component.h>
 #include <antares/study/system-model/model.h>

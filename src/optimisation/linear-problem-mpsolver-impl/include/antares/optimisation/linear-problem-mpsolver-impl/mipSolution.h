@@ -10,10 +10,10 @@
 
 #include <antares/optimisation/linear-problem-api/mipSolution.h>
 
-namespace Antares::Optimisation::LinearProblemMpsolverImpl
+namespace Antares::LinearProblem::MpsolverImpl
 {
 
-class OrtoolsMipSolution final: public LinearProblemApi::IMipSolution
+class OrtoolsMipSolution final: public Api::IMipSolution
 {
 public:
     OrtoolsMipSolution(operations_research::MPSolver::ResultStatus& responseStatus,
@@ -21,7 +21,7 @@ public:
 
     ~OrtoolsMipSolution() override = default;
 
-    [[nodiscard]] LinearProblemApi::MipStatus getStatus() const override;
+    [[nodiscard]] Api::MipStatus getStatus() const override;
     [[nodiscard]] double getObjectiveValue() const override;
 
 private:
@@ -30,4 +30,4 @@ private:
     std::map<std::string, double> solution_;
 };
 
-} // namespace Antares::Optimisation::LinearProblemMpsolverImpl
+} // namespace Antares::LinearProblem::MpsolverImpl

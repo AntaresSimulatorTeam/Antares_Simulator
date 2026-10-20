@@ -4,7 +4,7 @@
 #pragma once
 #include <string>
 
-namespace Antares::Solver::Optimization
+namespace Antares::Optimization
 {
 struct SingleOptimOptions
 {
@@ -53,4 +53,4 @@ public:
     bool solverLogs = false;
     ExportBehavior exportBehavior = ExportBehavior::Never;
 };
-} // namespace Antares::Solver::Optimization
+} // namespace Antares::Optimization

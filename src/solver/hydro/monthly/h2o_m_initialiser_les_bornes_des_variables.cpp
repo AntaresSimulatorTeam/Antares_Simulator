@@ -4,7 +4,7 @@
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
 
-namespace DonneesOptimisationMensuelle
+namespace Antares::Solver::Hydro::Monthly
 {
 void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
@@ -83,4 +83,4 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES& DonneesAnnuel
     Var = CorrespondanceDesVariables.NumeroDeLaVariableXi;
     CoutLineaire[Var] = 1.0;
 }
-} // namespace DonneesOptimisationMensuelle
+} // namespace Antares::Solver::Hydro::Monthly

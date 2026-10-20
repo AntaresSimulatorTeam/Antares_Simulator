@@ -5,6 +5,7 @@
 #include <string>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/optimisation/linear-problem-api/IAreaPriceProvider.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/study/system-model/component.h>
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
@@ -16,18 +17,18 @@ namespace Antares::Solver
 struct ModelerData;
 }
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 class OptimEntityContainer;
 
-namespace LinearProblemApi
+namespace Api
 {
 class ILinearProblem;
 
 class IMipSolution;
 class FillContext;
-} // namespace LinearProblemApi
-} // namespace Antares::Optimisation
+} // namespace Api
+} // namespace Antares::LinearProblem
 
 namespace Antares::Optimization
 {
@@ -58,8 +59,8 @@ TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
                                                  const TimeConversionMode& mode,
                                                  unsigned currentBlock);
 
-Optimisation::VariabilityType updateVariabilityIfShouldForceScenario(
-  Optimisation::VariabilityType variability,
+LinearProblem::VariabilityType updateVariabilityIfShouldForceScenario(
+  LinearProblem::VariabilityType variability,
   bool forceExportForScenarioIndex);
 
 std::string BuildModelerConstraintName(const std::string& componentId,
@@ -67,10 +68,10 @@ std::string BuildModelerConstraintName(const std::string& componentId,
                                        const std::optional<unsigned>& ts);
 
 void addVariableEntries(SimulationTable& simulationTable,
-                        const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
-                        const Optimisation::LinearProblemApi::FillContext& fillContext,
+                        const LinearProblem::Api::ILinearProblem& linearProblem,
+                        const LinearProblem::Api::FillContext& fillContext,
                         const ModelerStudy::SystemModel::Component& component,
-                        const Optimisation::OptimEntityContainer& optimEntityContainer,
+                        const LinearProblem::OptimEntityContainer& optimEntityContainer,
                         unsigned currentBlock,
                         const TimeConversionMode& timeConversionMode,
                         unsigned year);
@@ -89,14 +90,18 @@ void addVariableEntries(SimulationTable& simulationTable,
  * @param timeConversionMode the block to absolute time conversion mode
  * @param forceExportForScenarioIndex set to true if you want to force the scenario index to be
  * exported for scenario-independent outputs (useful for hybrid mode)
+ * @param areaPriceProvider dual value of legacy areas' balance equations, used to evaluate
+ * GEMS extra-outputs referencing a hybrid area-connection's 'price' field. Null when no legacy
+ * area is involved (full GEMS), in which case such a field always evaluates to 0.
  */
 void FillSimulationTable(SimulationTable& simulationTable,
-                         const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+                         const LinearProblem::Api::ILinearProblem& linearProblem,
                          double objectiveValue,
                          const Solver::ModelerData& modelerData,
-                         const Optimisation::OptimEntityContainer& optimEntityContainer,
-                         const Optimisation::LinearProblemApi::FillContext& fillContext,
+                         const LinearProblem::OptimEntityContainer& optimEntityContainer,
+                         const LinearProblem::Api::FillContext& fillContext,
                          unsigned currentBlock,
                          const TimeConversionMode& timeConversionMode,
-                         bool forceExportForScenarioIndex = false);
+                         bool forceExportForScenarioIndex = false,
+                         const LinearProblem::Api::IAreaPriceProvider* areaPriceProvider = nullptr);
 } // namespace Antares::IO::Outputs

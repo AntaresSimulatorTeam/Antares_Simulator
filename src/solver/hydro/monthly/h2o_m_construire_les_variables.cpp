@@ -6,7 +6,7 @@
 
 #include "spx_constantes_externes.h"
 
-namespace DonneesOptimisationMensuelle
+namespace Antares::Solver::Hydro::Monthly
 {
 void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
 {
@@ -104,4 +104,4 @@ void H2O_M_ConstruireLesVariables(DONNEES_ANNUELLES& DonneesAnnuelles)
 
     return;
 }
-} // namespace DonneesOptimisationMensuelle
+} // namespace Antares::Solver::Hydro::Monthly

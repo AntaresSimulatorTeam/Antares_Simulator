@@ -346,6 +346,80 @@ BOOST_AUTO_TEST_CASE(port_types_with_only_unsupplied_energy_bound_field__in_area
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.unsupplied_energy_bound, "f2");
 }
 
+BOOST_AUTO_TEST_CASE(port_types_with_price_field__in_area_connection)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types:
+               - id: capacity_port
+                 fields:
+                   - id: capacity
+                   - id: price
+                 area-connection:
+                   injection-to-balance: capa
+                   spillage-bound:
+                   unsupplied-energy-bound:
+                   price: price
+            models: []
+    )"s;
+    auto libraryObj = parser.parse(library);
+    BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
+    const auto& capacity_port_type = libraryObj.port_types[0];
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.inject_to_balance, "capa");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.spillage_bound, "");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.unsupplied_energy_bound, "");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.price, "price");
+}
+
+BOOST_AUTO_TEST_CASE(port_types_without_price_field__in_area_connection_still_valid)
+{
+    // 'price' is optional: area-connection blocks written before its introduction
+    // must keep parsing without declaring it.
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types:
+               - id: capacity_port
+                 fields:
+                   - id: capacity
+                 area-connection:
+                   injection-to-balance: capa
+                   spillage-bound:
+                   unsupplied-energy-bound:
+            models: []
+    )"s;
+    auto libraryObj = parser.parse(library);
+    BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
+    const auto& capacity_port_type = libraryObj.port_types[0];
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.price, "");
+}
+
+BOOST_AUTO_TEST_CASE(area_connection_rejects_unknown_field)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types:
+               - id: capacity_port
+                 fields:
+                   - id: capacity
+                 area-connection:
+                   injection-to-balance: capa
+                   spillage-bound:
+                   unsupplied-energy-bound:
+                   not-a-field:
+            models: []
+    )"s;
+    BOOST_REQUIRE_THROW((void)parser.parse(library), YAML::Exception);
+}
+
 BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)
 {
     YmlModel::Parser parser;

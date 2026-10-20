@@ -33,7 +33,6 @@ struct StudyWithOneArea
         if (area)
         {
             area->createMissingData();
-            area->resetToDefaultValues();
         }
         study->areas.rebuildIndexes();
         area->index = 0;

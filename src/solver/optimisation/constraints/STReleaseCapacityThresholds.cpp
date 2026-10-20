@@ -37,8 +37,7 @@ void STReleaseCapacityThresholds::add(int pays, int cluster, int pdt)
             {
                 builder.ShortTermStorageWithdrawal(globalClusterIdx, 1).greaterThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .reservesIndices.value()
-                  .STStorageClusterReleaseCapacityThresholdsMin[globalClusterIdx]
+                  .reservesIndices->STStorageClusterReleaseCapacityThresholdsMin[globalClusterIdx]
                   = builder.data.nombreDeContraintes;
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
@@ -72,8 +71,7 @@ void STReleaseCapacityThresholds::add(int pays, int cluster, int pdt)
             {
                 builder.ShortTermStorageWithdrawal(globalClusterIdx, 1).lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
-                  .reservesIndices.value()
-                  .STStorageClusterReleaseCapacityThresholdsMax[globalClusterIdx]
+                  .reservesIndices->STStorageClusterReleaseCapacityThresholdsMax[globalClusterIdx]
                   = builder.data.nombreDeContraintes;
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;

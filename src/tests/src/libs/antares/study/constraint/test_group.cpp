@@ -81,7 +81,6 @@ BOOST_FIXTURE_TEST_CASE(WhenLoadingAConstraint_AGroupExists, Fixture)
     BOOST_CHECK_EQUAL(constraint->operatorType(), BindingConstraint::Operator::opEquality);
     BOOST_CHECK_EQUAL(constraint->yearByYearFilter(), FilterFlag::filterAnnual);
     BOOST_CHECK_EQUAL(constraint->synthesisFilter(), FilterFlag::filterHourly);
-    BOOST_CHECK_EQUAL(constraint->comments(), "dummy_comment");
     BOOST_CHECK_EQUAL(constraint->group(), "dummy_group");
 }
 

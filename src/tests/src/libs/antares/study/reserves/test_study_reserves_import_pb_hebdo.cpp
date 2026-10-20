@@ -100,13 +100,11 @@ BOOST_FIXTURE_TEST_CASE(test_importCapacityReservation_allGood, OneProblemWithRe
     BOOST_CHECK_EQUAL(problemeHebdo->allReserves.has_value(), true);
     int indexA = study->areas.find("a")->index;
     int indexB = study->areas.find("b")->index;
-    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.value()[indexA].areaCapacityReservations.size(),
-                      2);
-    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.value()[indexB].areaCapacityReservations.size(),
-                      2);
+    BOOST_CHECK_EQUAL(problemeHebdo->allReserves->at(indexA).areaCapacityReservations.size(), 2);
+    BOOST_CHECK_EQUAL(problemeHebdo->allReserves->at(indexB).areaCapacityReservations.size(), 2);
     bool containsUp = false;
     bool containsDown = false;
-    for (auto& reserve: problemeHebdo->allReserves.value()[indexA].areaCapacityReservations)
+    for (auto& reserve: problemeHebdo->allReserves->at(indexA).areaCapacityReservations)
     {
         if (reserve.type == Antares::Data::ReserveType::UP)
         {
@@ -133,7 +131,7 @@ BOOST_FIXTURE_TEST_CASE(test_importCapacityReservation_allGood, OneProblemWithRe
     containsUp = false;
     containsDown = false;
 
-    for (auto& reserve: problemeHebdo->allReserves.value()[indexB].areaCapacityReservations)
+    for (auto& reserve: problemeHebdo->allReserves->at(indexB).areaCapacityReservations)
     {
         if (reserve.type == Antares::Data::ReserveType::UP)
         {
@@ -187,7 +185,7 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
     areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserveA.yml");
     areaA->hydro.loadReserveParticipations(*areaB, studyPath / "myreserveB.yml");
 
-    areaA->hydro.reserveParticipationContainer.value().addReserveParticipationSymmetry(
+    areaA->hydro.reserveParticipationContainer->addReserveParticipationSymmetry(
       {"reserveupa", "reservedowna"});
 
     importCapacityReservations(study->areas, *problemeHebdo);
@@ -195,18 +193,17 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
 
     int indexA = study->areas.find("a")->index;
     int indexB = study->areas.find("b")->index;
-    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.value()[indexA].areaCapacityReservations.size(),
-                      2);
-    BOOST_CHECK_EQUAL(problemeHebdo->allReserves.value()[indexB].areaCapacityReservations.size(),
-                      2);
+    BOOST_CHECK_EQUAL(problemeHebdo->allReserves->at(indexA).areaCapacityReservations.size(), 2);
+    BOOST_CHECK_EQUAL(problemeHebdo->allReserves->at(indexB).areaCapacityReservations.size(), 2);
+    int maxGlobalHydroParticipationIndex;
     bool containsUp = false;
     bool containsDown = false;
 
     BOOST_CHECK_EQUAL(
-      problemeHebdo->allReserves.value()[indexA].HydroReservesParticipationSymmetries.size(),
+      problemeHebdo->allReserves->at(indexA).HydroReservesParticipationSymmetries.size(),
       1);
 
-    for (auto& reserve: problemeHebdo->allReserves.value()[indexA].areaCapacityReservations)
+    for (auto& reserve: problemeHebdo->allReserves->at(indexA).areaCapacityReservations)
     {
         BOOST_CHECK_EQUAL(reserve.AllHydroReservesParticipation.size(), 1);
 
@@ -217,6 +214,8 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
             BOOST_CHECK_EQUAL(part.participationCost, 1.1);
             BOOST_CHECK_EQUAL(part.maxStore, 2.2);
             BOOST_CHECK_EQUAL(part.maxRelease, 3.3);
+            maxGlobalHydroParticipationIndex = std::max(maxGlobalHydroParticipationIndex,
+                                                        part.globalIndexClusterParticipation);
             BOOST_CHECK_EQUAL(reserve.reserveName, "ReserveUpA");
             BOOST_CHECK_EQUAL(reserve.need->numberOfColumns(), 2);
             BOOST_CHECK_EQUAL(reserve.need->getCoefficient(0, 0), 2);
@@ -228,6 +227,8 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
             BOOST_CHECK_EQUAL(part.participationCost, 4.4);
             BOOST_CHECK_EQUAL(part.maxStore, 5.5);
             BOOST_CHECK_EQUAL(part.maxRelease, 6.6);
+            maxGlobalHydroParticipationIndex = std::max(maxGlobalHydroParticipationIndex,
+                                                        part.globalIndexClusterParticipation);
             BOOST_CHECK_EQUAL(reserve.reserveName, "ReserveDownA");
             containsDown = true;
         }
@@ -236,7 +237,7 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
     BOOST_CHECK_EQUAL(containsUp, true);
     containsUp = false;
     containsDown = false;
-    for (auto& reserve: problemeHebdo->allReserves.value()[indexB].areaCapacityReservations)
+    for (auto& reserve: problemeHebdo->allReserves->at(indexB).areaCapacityReservations)
     {
         if (reserve.AllHydroReservesParticipation.size() == 1)
         {
@@ -247,6 +248,8 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
                 BOOST_CHECK_EQUAL(part.participationCost, 9.9);
                 BOOST_CHECK_EQUAL(part.maxStore, 8.8);
                 BOOST_CHECK_EQUAL(part.maxRelease, 7.7);
+                maxGlobalHydroParticipationIndex = std::max(maxGlobalHydroParticipationIndex,
+                                                            part.globalIndexClusterParticipation);
                 BOOST_CHECK_EQUAL(reserve.reserveName, "ReserveUpB");
                 containsUp = true;
             }

@@ -24,7 +24,7 @@ public:
 
     void setAreaTSnumber(const uint year, uint value);
     bool apply(Study& study) override;
-    CString<512, false> get_prefix() const override;
+    std::string get_prefix() const override;
 
     uint get_tsGenCount(const Study& study) const override
     {
@@ -36,7 +36,7 @@ private:
     const Area* pArea = nullptr;
 };
 
-inline CString<512, false> ReservesNeedTSNumberData::get_prefix() const
+inline std::string ReservesNeedTSNumberData::get_prefix() const
 {
     return "res,";
 }

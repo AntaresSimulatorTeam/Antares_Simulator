@@ -4,8 +4,6 @@
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_SETS_H__
 #define __LIBS_STUDY_SCENARIO_BUILDER_SETS_H__
 
-#include <yuni/yuni.h>
-
 #include "rules.h"
 
 namespace Antares::Data::ScenarioBuilder
@@ -94,7 +92,7 @@ public:
     /*!
     ** \brief Get the number of available sets
     */
-    uint size() const;
+    unsigned int size() const;
 
     /*!
     ** \brief Get if empty
@@ -104,7 +102,7 @@ public:
 
 private:
     //! Load all rulesets into a mere INI file
-    bool internalLoadFromINIFile(const AnyString& filename);
+    bool internalLoadFromINIFile(const std::string& filename);
 
 private:
     //! All available sets, ordered by their lower name

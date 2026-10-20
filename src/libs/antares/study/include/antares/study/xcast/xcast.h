@@ -4,9 +4,8 @@
 #ifndef __ANTARES_LIBS_STUDY_XCAST_XCAST_H__
 #define __ANTARES_LIBS_STUDY_XCAST_XCAST_H__
 
+#include <string>
 #include <vector>
-
-#include <yuni/yuni.h>
 
 #include <antares/array/matrix.h>
 #include <antares/study/fwd.h>
@@ -73,14 +72,9 @@ public:
 
 public:
     /*!
-    ** \brief Convert a distribution into its human readable representation
-    */
-    static const char* DistributionToCString(Distribution d);
-
-    /*!
     ** \brief Convert a CString into a probability distribution
     */
-    static Distribution StringToDistribution(AnyString str);
+    static Distribution StringToDistribution(const std::string& str);
 
     /*!
     ** \brief Convert a probability distribution into its string id representation
@@ -92,7 +86,7 @@ public:
     */
     static const char* TSTranslationUseToCString(TSTranslationUse use);
 
-    static TSTranslationUse CStringToTSTranslationUse(const AnyString& str);
+    static TSTranslationUse CStringToTSTranslationUse(const std::string& str);
 
 public:
     //! \name Constructor & Destructor
@@ -108,11 +102,6 @@ public:
     //@}
 
     /*!
-    ** \brief Reset to default values
-    */
-    void resetToDefaultValues();
-
-    /*!
     ** \brief Copy settings from another XCast struct
     */
     void copyFrom(const XCast& rhs);
@@ -125,7 +114,7 @@ public:
     /*!
     ** \brief Save data to a folder
     */
-    bool saveToFolder(const AnyString& folder) const;
+    bool saveToFolder(const std::string& folder) const;
 
     //! \name Memory management
     //@{

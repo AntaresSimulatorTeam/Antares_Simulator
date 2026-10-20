@@ -5,13 +5,14 @@
 #include <antares/exception/LoadingError.hpp>
 #include <antares/series/series.h>
 #include <antares/study/area/area.h>
+#include <antares/study/parameters.h>
 
 namespace Antares::Check
 {
+using namespace Antares::Data;
 
-void checkStudyVersion(const Data::StudyVersion& version, const AnyString& StudyFolder)
+void checkStudyVersion(const StudyVersion& version, const std::string& StudyFolder)
 {
-    using namespace Antares::Data;
     if (version == StudyVersion::unknown())
     {
         throw Error::InvalidStudy(StudyFolder);
@@ -25,10 +26,8 @@ void checkStudyVersion(const Data::StudyVersion& version, const AnyString& Study
 
 // CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing
 // = MILP ».
-void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
-                                   Antares::Data::HydroPricingMode hpMode)
+void checkSimplexRangeHydroPricing(SimplexOptimization optRange, HydroPricingMode hpMode)
 {
-    using namespace Antares::Data;
     if (optRange == SimplexOptimization::sorDay && hpMode == HydroPricingMode::hpMILP)
     {
         throw Error::IncompatibleOptRangeHydroPricing();
@@ -37,11 +36,9 @@ void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
 
 // CHECK incompatible de choix simultané des options « simplex range= daily » et «
 // unit-commitment = MILP ».
-void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optRange,
-                                         Antares::Data::UnitCommitmentMode ucMode)
+void checkSimplexRangeUnitCommitmentMode(SimplexOptimization optRange, UnitCommitmentMode ucMode)
 {
-    if (optRange == Antares::Data::SimplexOptimization::sorDay
-        && ucMode == Antares::Data::UnitCommitmentMode::ucMILP)
+    if (optRange == SimplexOptimization::sorDay && ucMode == UnitCommitmentMode::ucMILP)
     {
         throw Error::IncompatibleOptRangeUCMode();
     }
@@ -49,10 +46,9 @@ void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optR
 
 // Daily simplex optimisation and any area's use heurictic target turned to "No" are not
 // compatible.
-void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange,
-                                     const Antares::Data::AreaList& areas)
+void checkSimplexRangeHydroHeuristic(SimplexOptimization optRange, const AreaList& areas)
 {
-    if (optRange == Antares::Data::SimplexOptimization::sorDay)
+    if (optRange == SimplexOptimization::sorDay)
     {
         for (uint i = 0; i < areas.size(); ++i)
         {
@@ -65,10 +61,10 @@ void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange
     }
 }
 
-bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& areas,
+bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
                                                 std::map<int, std::string>& areaClusterNames)
 {
-    YString areaname = "";
+    std::string areaname;
     bool resultat = true;
     int count = 0;
     for (const auto& [_, area]: areas)
@@ -76,14 +72,14 @@ bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& a
         areaname = area->name;
         logs.debug() << "areaname : " << areaname;
 
-        std::vector<YString> clusternames;
+        std::vector<std::string> clusternames;
 
         if (!area->thermalClustersMinStablePowerValidity(clusternames))
         {
-            for (auto it = clusternames.begin(); it != clusternames.end(); it++)
+            for (const auto& clusterName: clusternames)
             {
-                logs.debug() << "areaname : " << areaname << " ; clustername : " << (*it);
-                YString res = "Area : " + areaname + " cluster name : " + (*it).c_str();
+                logs.debug() << "areaname : " << areaname << " ; clustername : " << clusterName;
+                std::string res = "Area : " + areaname + " cluster name : " + clusterName;
                 areaClusterNames.try_emplace(count++, res);
             }
             resultat = false;
@@ -92,8 +88,10 @@ bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& a
     return resultat;
 }
 
-void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas)
+void checkMinStablePower(const Parameters* parameters, const AreaList& areas)
 {
+    const bool tsGenThermal = (parameters->timeSeriesToGenerate & TimeSeriesType::timeSeriesThermal)
+                              != 0;
     if (tsGenThermal)
     {
         std::map<int, std::string> areaClusterNames;
@@ -111,9 +109,8 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
 // Number of columns for Fuel & CO2 cost in thermal clusters must be one, or same as the number of
 // TS
 template<class ExceptionT>
-static void checkThermalColumnNumber(
-  const Antares::Data::AreaList& areas,
-  Antares::Data::TimeSeries::TS Antares::Data::EconomicInputData::*matrix)
+static void checkThermalColumnNumber(const AreaList& areas,
+                                     TimeSeries::TS EconomicInputData::*matrix)
 {
     ExceptionT exception;
     bool error = false;
@@ -122,7 +119,7 @@ static void checkThermalColumnNumber(
         const auto& area = *(areas.byIndex[areaIndex]);
         for (auto& cluster: area.thermal.list.each_enabled())
         {
-            if (cluster->costgeneration == Antares::Data::setManually)
+            if (cluster->costgeneration == setManually)
             {
                 continue;
             }
@@ -142,22 +139,21 @@ static void checkThermalColumnNumber(
     }
 }
 
-void checkFuelCostColumnNumber(const Antares::Data::AreaList& areas)
+void checkFuelCostColumnNumber(const AreaList& areas)
 {
     checkThermalColumnNumber<Antares::Error::IncompatibleFuelCostColumns>(
       areas,
-      &Antares::Data::EconomicInputData::fuelcost);
+      &EconomicInputData::fuelcost);
 }
 
-void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas)
+void checkCO2CostColumnNumber(const AreaList& areas)
 {
     checkThermalColumnNumber<Antares::Error::IncompatibleCO2CostColumns>(
       areas,
-      &Antares::Data::EconomicInputData::co2cost);
+      &EconomicInputData::co2cost);
 }
 
-IncompatibleDailyOptHeuristicForArea::IncompatibleDailyOptHeuristicForArea(
-  const Antares::Data::AreaName& name):
+IncompatibleDailyOptHeuristicForArea::IncompatibleDailyOptHeuristicForArea(const AreaName& name):
     LoadingError(
       std::string("Area ") + name.c_str()
       + " : simplex daily optimization and use heuristic target == no are not compatible")
@@ -186,5 +182,16 @@ InvalidParametersForThermalClusters::InvalidParametersForThermalClusters(
   const std::map<int, std::string>& clusterNames):
     LoadingError(buildMessage(clusterNames))
 {
+}
+
+void checkThermalRampingWithFastMode(const Parameters& params)
+{
+    if (params.include.thermal_ramping && params.unitCommitment.ucMode == ucHeuristicFast)
+    {
+        logs.warning()
+          << "Thermal cluster ramping is enabled but 'unit-commitment-mode' is set to 'fast'. "
+          << "Ramping constraints, ramping costs, and ramping variables are ignored in fast mode. "
+          << "To enforce ramping, set 'unit-commitment-mode' to 'accurate' or 'milp'.";
+    }
 }
 } // namespace Antares::Check

@@ -6,7 +6,7 @@
 
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 
-namespace Antares::Optimisation::LinearProblemDataImpl
+namespace Antares::LinearProblem::DataImpl
 {
 
 TimeSeriesSet::AddTSofWrongSize::AddTSofWrongSize(const std::string& name,
@@ -37,4 +37,4 @@ TimeSeriesSet::HourTooBig::HourTooBig(const std::string& name, unsigned int hour
 {
 }
 
-} // namespace Antares::Optimisation::LinearProblemDataImpl
+} // namespace Antares::LinearProblem::DataImpl

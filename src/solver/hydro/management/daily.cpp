@@ -374,7 +374,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
             uint firstDay = calendar_.months[simulationMonth].daysYear.first;
             uint endDay = firstDay + daysPerMonth;
 
-            auto problem = DoneesOptimisationJournaliere::H2O_J_Instanciation();
+            auto problem = Antares::Solver::Hydro::Daily::H2O_J_Instanciation();
             H2O_J_AjouterBruitAuCout(problem);
             problem.NombreDeJoursDuMois = (int)daysPerMonth;
             problem.TurbineDuMois = hydro_specific.monthly[realmonth].MOG;

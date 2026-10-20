@@ -26,10 +26,14 @@ std::optional<ModelerData> loadAll(const std::filesystem::path& studyPath)
     {
         return {};
     }
-    std::tie(data.libraries, data.resolutionMode) = res.value();
+    data.libraries = std::move(res->libraries);
+    data.resolutionMode = res->resolutionMode;
+    data.scenarioScope = std::move(res->scenarioScope);
     logs.info() << "Libraries loaded";
 
-    data.system = std::make_unique<SystemModel::System>(loadSystem(studyPath, data.libraries));
+    auto loadedSystem = loadSystem(studyPath, data.libraries);
+    data.system = std::make_unique<SystemModel::System>(std::move(loadedSystem.system));
+    data.componentProperties = std::move(loadedSystem.componentProperties);
     logs.info() << "System loaded";
 
     data.dataSeries = loadDataSeries(studyPath);

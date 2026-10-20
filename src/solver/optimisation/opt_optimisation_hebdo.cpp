@@ -12,8 +12,8 @@ using namespace Antares;
 using namespace Antares::Data;
 using namespace IO::Outputs;
 
-using Solver::Optimization::OptimizationOptions;
-using Solver::Optimization::SingleOptimOptions;
+using Optimization::OptimizationOptions;
+using Optimization::SingleOptimOptions;
 
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions&,
                                       PROBLEME_HEBDO*,

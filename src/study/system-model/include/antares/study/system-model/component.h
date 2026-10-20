@@ -19,7 +19,7 @@ namespace Antares::ModelerStudy::SystemModel
 struct ParameterTypeAndValue
 {
     std::string id;
-    Optimisation::VariabilityType type;
+    LinearProblem::VariabilityType type;
     std::string value;
 };
 

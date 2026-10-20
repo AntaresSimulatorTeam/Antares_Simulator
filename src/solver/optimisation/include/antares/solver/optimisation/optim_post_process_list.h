@@ -5,6 +5,8 @@
 
 #include "antares/solver/simulation/base_post_process.h"
 
+// Kept in Antares::Solver::Simulation (not the optim subtree): this is simulation
+// post-processing, not optimization-model code.
 namespace Antares::Solver::Simulation
 {
 class OptPostProcessList final: public interfacePostProcessList
@@ -13,9 +15,10 @@ public:
     OptPostProcessList(PROBLEME_HEBDO* problemeHebdo,
                        uint numSpace,
                        AreaList& areas,
-                       const Data::Parameters& params,
+                       const Parameters& params,
                        Calendar& calendar,
-                       IResultWriter& resultWriter);
+                       IResultWriter& resultWriter,
+                       IO::Outputs::OptimisationsSimulationTable* simulationTables);
 
     ~OptPostProcessList() override = default;
 };

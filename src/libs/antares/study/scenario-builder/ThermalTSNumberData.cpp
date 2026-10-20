@@ -13,7 +13,7 @@ namespace Antares::Data::ScenarioBuilder
 {
 bool thermalTSNumberData::reset(const Study& study)
 {
-    const uint nbYears = study.parameters.nbYears;
+    const unsigned int nbYears = study.parameters.nbYears;
     assert(pArea != nullptr);
 
     // If an area is available, it can only be an overlay for thermal timeseries
@@ -21,7 +21,7 @@ bool thermalTSNumberData::reset(const Study& study)
     //   solver or not.
     // WARNING: At this point, the variable pArea->thermal.list.size()
     //   might not be valid (because not really initialized yet)
-    uint clusterCount = pArea->thermal.list.allClustersCount();
+    unsigned int clusterCount = pArea->thermal.list.allClustersCount();
 
     // Resize
     pTSNumberRules.reset(clusterCount, nbYears);
@@ -29,8 +29,8 @@ bool thermalTSNumberData::reset(const Study& study)
 }
 
 void thermalTSNumberData::setTSnumber(const Antares::Data::ThermalCluster* cluster,
-                                      const uint year,
-                                      uint value)
+                                      const unsigned int year,
+                                      unsigned int value)
 {
     assert(cluster != nullptr);
     if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
@@ -42,9 +42,9 @@ void thermalTSNumberData::setTSnumber(const Antares::Data::ThermalCluster* clust
 bool thermalTSNumberData::apply(Study& study)
 {
     bool ret = true;
-    CString<512, false> logprefix;
+    std::string logprefix;
     // Errors
-    uint errors = 0;
+    unsigned int errors = 0;
 
     // Alias to the current area
     assert(pArea != nullptr);
@@ -56,18 +56,17 @@ bool thermalTSNumberData::apply(Study& study)
         assert(cluster->areaWideIndex < pTSNumberRules.width);
         const auto& col = pTSNumberRules[cluster->areaWideIndex];
 
-        uint tsGenCount = cluster->tsGenBehavior == LocalTSGenerationBehavior::forceNoGen
-                            ? cluster->series.timeSeries.width
-                            : get_tsGenCount(study);
+        unsigned int tsGenCount = cluster->tsGenBehavior == LocalTSGenerationBehavior::forceNoGen
+                                    ? cluster->series.timeSeries.width
+                                    : get_tsGenCount(study);
 
-        logprefix.clear() << "Thermal: area '" << area.name << "', cluster: '" << cluster->name()
-                          << "': ";
+        logprefix = "Thermal: area '" + area.name + "', cluster: '" + cluster->name() + "': ";
         ret = ApplyToMatrix(errors, logprefix, cluster->series, col, tsGenCount) && ret;
     }
     return ret;
 }
 
-uint thermalTSNumberData::get_tsGenCount(const Study& study) const
+unsigned int thermalTSNumberData::get_tsGenCount(const Study& study) const
 {
     // General data
     auto& parameters = study.parameters;

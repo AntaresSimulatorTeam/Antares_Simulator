@@ -7,94 +7,89 @@
 #include <cassert>
 #include <numeric>
 
-#include <yuni/yuni.h>
-#include <yuni/io/file.h>
-
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include <antares/solver/ts-generator/law.h>
+#include <antares/study/parts/thermal/law.h>
 #include <antares/utils/utils.h>
 #include "antares/array/matrix.h"
 #include "antares/study/parts/thermal/cluster.h"
 #include "antares/study/study.h"
 
-using namespace Yuni;
 using namespace Antares;
-
-namespace Yuni::Extension::CString
-{
-bool Into<Antares::Data::StatisticalLaw>::Perform(AnyString string, TargetType& out)
-{
-    string.trim();
-    if (string.empty())
-    {
-        return false;
-    }
-
-    if (string.equalsInsensitive("uniform"))
-    {
-        out = Antares::Data::LawUniform;
-        return true;
-    }
-    if (string.equalsInsensitive("geometric"))
-    {
-        out = Antares::Data::LawGeometric;
-        return true;
-    }
-    return false;
-}
-
-bool Into<Antares::Data::CostGeneration>::Perform(AnyString string, TargetType& out)
-{
-    string.trim();
-    if (string.empty())
-    {
-        return false;
-    }
-
-    if (string.equalsInsensitive("setManually"))
-    {
-        out = Antares::Data::setManually;
-        return true;
-    }
-    if (string.equalsInsensitive("useCostTimeseries"))
-    {
-        out = Antares::Data::useCostTimeseries;
-        return true;
-    }
-    return false;
-}
-
-bool Into<Antares::Data::LocalTSGenerationBehavior>::Perform(AnyString string, TargetType& out)
-{
-    string.trim();
-    if (string.empty())
-    {
-        return false;
-    }
-
-    if (string.equalsInsensitive("use global"))
-    {
-        out = Antares::Data::LocalTSGenerationBehavior::useGlobalParameter;
-        return true;
-    }
-    if (string.equalsInsensitive("force generation"))
-    {
-        out = Antares::Data::LocalTSGenerationBehavior::forceGen;
-        return true;
-    }
-    if (string.equalsInsensitive("force no generation"))
-    {
-        out = Antares::Data::LocalTSGenerationBehavior::forceNoGen;
-        return true;
-    }
-    return false;
-}
-
-} // namespace Yuni::Extension::CString
 
 namespace Antares::Data
 {
+bool stringToStatisticalLaw(const std::string& text, StatisticalLaw& out)
+{
+    const std::string trimmed = stringTrim(text);
+    if (trimmed.empty())
+    {
+        return false;
+    }
+
+    const std::string lower = stringToLower(trimmed);
+    if (lower == "uniform")
+    {
+        out = LawUniform;
+        return true;
+    }
+    if (lower == "geometric")
+    {
+        out = LawGeometric;
+        return true;
+    }
+    return false;
+}
+
+bool stringToCostGeneration(const std::string& text, CostGeneration& out)
+{
+    const std::string trimmed = stringTrim(text);
+    if (trimmed.empty())
+    {
+        return false;
+    }
+
+    const std::string lower = stringToLower(trimmed);
+    if (lower == "setmanually")
+    {
+        out = setManually;
+        return true;
+    }
+    if (lower == "usecosttimeseries")
+    {
+        out = useCostTimeseries;
+        return true;
+    }
+    return false;
+}
+
+bool stringToLocalTSGenerationBehavior(const std::string& text, LocalTSGenerationBehavior& out)
+{
+    const std::string trimmed = stringTrim(text);
+    if (trimmed.empty())
+    {
+        return false;
+    }
+
+    const std::string lower = stringToLower(trimmed);
+    if (lower == "use global")
+    {
+        out = LocalTSGenerationBehavior::useGlobalParameter;
+        return true;
+    }
+    if (lower == "force generation")
+    {
+        out = LocalTSGenerationBehavior::forceGen;
+        return true;
+    }
+    if (lower == "force no generation")
+    {
+        out = LocalTSGenerationBehavior::forceNoGen;
+        return true;
+    }
+    return false;
+}
+
 Data::ThermalCluster::ThermalCluster(Area* parent):
     Cluster(parent),
     PthetaInf(HOURS_PER_YEAR, 0)
@@ -248,16 +243,11 @@ bool Data::ThermalCluster::integrityCheck()
     // Modulation
     ret = checkModulation() && ret;
 
-    // la valeur minStablePower should not be modified
-    /*
-    if (minStablePower > nominalCapacity)
+    // ramping
+    if (ramping)
     {
-            logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                    << ": failed min stable power < nominal capacity (with min power = "
-                    << minStablePower << ", nominal power = " << nominalCapacity;
-            minStablePower = nominalCapacity;
-            ret = false;
-    }*/
+        ret = ramping->checkValidity(parentArea, pName) && ret;
+    }
 
     return ret;
 }
@@ -289,7 +279,7 @@ void ThermalCluster::calculatMinDivModulation()
                               / std::ceil(modulation[thermalModulationCapacity][0]));
     minDivModulation.index = 0;
 
-    for (uint t = 1; t < modulation.height; t++)
+    for (unsigned int t = 1; t < modulation.height; t++)
     {
         double div = modulation[thermalModulationCapacity][t]
                      / ceil(modulation[thermalModulationCapacity][t]);
@@ -339,7 +329,7 @@ bool ThermalCluster::checkMinStablePower()
     return true;
 }
 
-bool ThermalCluster::checkMinStablePowerWithNewModulation(uint idx, double value)
+bool ThermalCluster::checkMinStablePowerWithNewModulation(unsigned int idx, double value)
 {
     if (!minDivModulation.isCalculated || idx == minDivModulation.index)
     {
@@ -406,9 +396,9 @@ void ThermalCluster::checkAndCorrectAvailability()
     bool condition = false;
     bool report = false;
 
-    for (uint y = 0; y != series.timeSeries.height; ++y)
+    for (unsigned int y = 0; y != series.timeSeries.height; ++y)
     {
-        for (uint x = 0; x != series.timeSeries.width; ++x)
+        for (unsigned int x = 0; x != series.timeSeries.width; ++x)
         {
             auto rightpart = PminDUnGroupeDuPalierThermique
                              * ceil(series.timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
@@ -431,6 +421,45 @@ void ThermalCluster::checkAndCorrectAvailability()
 bool ThermalCluster::isActive() const
 {
     return enabled && !mustrun;
+}
+
+void ThermalCluster::Ramping::reset()
+{
+    powerIncreaseCost = 0;
+    powerDecreaseCost = 0;
+    maxUpwardPowerRampingRate = 0;
+    maxDownwardPowerRampingRate = 0;
+}
+
+bool ThermalCluster::Ramping::checkValidity(const Area* area, const std::string& clusterName) const
+{
+    bool ret = true;
+
+    if (maxUpwardPowerRampingRate < 0)
+    {
+        logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
+                     << ": The maximum upward power ramping rate must be non-negative. ";
+        ret = false;
+    }
+    if (maxDownwardPowerRampingRate < 0)
+    {
+        logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
+                     << ": The maximum downward power ramping rate must be non-negative. ";
+        ret = false;
+    }
+    if (powerIncreaseCost < 0)
+    {
+        logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
+                     << ": The ramping power increase cost must be positive or null. ";
+        ret = false;
+    }
+    if (powerDecreaseCost < 0)
+    {
+        logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
+                     << ": The ramping power decrease cost must be positive or null. ";
+        ret = false;
+    }
+    return ret;
 }
 
 } // namespace Antares::Data

@@ -5,7 +5,7 @@
 
 #include <antares/solver/optim-model-filler/BendersDecomposition.h>
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 
 void BendersDecomposition::setCurrentProblemId(std::string id)
@@ -54,4 +54,4 @@ std::string BendersDecompositionWriter::getBendersDecomposition() const
     return structure;
 }
 
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem

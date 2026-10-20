@@ -44,6 +44,7 @@ set(BATCHRUN_LIBS
 		Antares::resources
 		Antares::locale
 		Antares::locator
+		Antares::antares-solver-simulation
 )
 
 target_link_libraries(${execname}

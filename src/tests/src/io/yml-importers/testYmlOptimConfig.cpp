@@ -464,4 +464,117 @@ models:
     BOOST_CHECK_EQUAL(config.models[0].id, "model1");
 }
 
+// Tests for scenario-scope field
+BOOST_AUTO_TEST_CASE(parse_scenario_scope_inline)
+{
+    std::string yaml_content = R"(
+scenario-scope:
+  include:
+    - 5
+    - "3"
+    - "0-9"
+  exclude:
+    - 9
+    - 14
+models:
+  - id: model1
+    model-decomposition:
+      variables: []
+      objective-contributions: []
+)";
+
+    Parser parser;
+    OptimConfig config = parser.parse(yaml_content);
+
+    BOOST_REQUIRE(config.scenario_scope.has_value());
+    const auto& scope = config.scenario_scope.value();
+    BOOST_REQUIRE_EQUAL(scope.include.size(), 3);
+    BOOST_CHECK_EQUAL(scope.include[0], "5");
+    BOOST_CHECK_EQUAL(scope.include[1], "3");
+    BOOST_CHECK_EQUAL(scope.include[2], "0-9");
+    BOOST_REQUIRE_EQUAL(scope.exclude.size(), 2);
+    BOOST_CHECK_EQUAL(scope.exclude[0], "9");
+    BOOST_CHECK_EQUAL(scope.exclude[1], "14");
+}
+
+BOOST_AUTO_TEST_CASE(parse_scenario_scope_absent_is_default)
+{
+    std::string yaml_content = R"(
+models:
+  - id: model1
+    model-decomposition:
+      variables: []
+      objective-contributions: []
+)";
+
+    Parser parser;
+    OptimConfig config = parser.parse(yaml_content);
+
+    BOOST_CHECK(!config.scenario_scope.has_value());
+}
+
+BOOST_AUTO_TEST_CASE(parse_scenario_scope_empty_is_default)
+{
+    std::string yaml_content = R"(
+scenario-scope:
+models:
+  - id: model1
+    model-decomposition:
+      variables: []
+      objective-contributions: []
+)";
+
+    Parser parser;
+    OptimConfig config = parser.parse(yaml_content);
+
+    BOOST_CHECK(!config.scenario_scope.has_value());
+}
+
+BOOST_AUTO_TEST_CASE(parse_scenario_scope_include_not_a_sequence_throws)
+{
+    std::string yaml_content = R"(
+scenario-scope:
+  include: not-a-sequence
+models:
+  - id: model1
+    model-decomposition:
+      variables: []
+      objective-contributions: []
+)";
+
+    Parser parser;
+    BOOST_CHECK_THROW(parser.parse(yaml_content), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(parse_scenario_scope_exclude_not_a_sequence_throws)
+{
+    std::string yaml_content = R"(
+scenario-scope:
+  exclude: not-a-sequence
+models:
+  - id: model1
+    model-decomposition:
+      variables: []
+      objective-contributions: []
+)";
+
+    Parser parser;
+    BOOST_CHECK_THROW(parser.parse(yaml_content), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(parse_scenario_scope_not_a_mapping_throws)
+{
+    std::string yaml_content = R"(
+scenario-scope: 5
+models:
+  - id: model1
+    model-decomposition:
+      variables: []
+      objective-contributions: []
+)";
+
+    Parser parser;
+    BOOST_CHECK_THROW(parser.parse(yaml_content), std::runtime_error);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

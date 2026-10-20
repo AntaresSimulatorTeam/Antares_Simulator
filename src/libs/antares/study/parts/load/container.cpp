@@ -3,27 +3,14 @@
 
 #include "antares/study/parts/load/container.h"
 
-#include <yuni/yuni.h>
-
 #include "antares/study/parts/load/prepro.h"
 #include "antares/study/study.h"
-
-using namespace Yuni;
 
 namespace Antares::Data::Load
 {
 Container::Container():
     series(tsNumbers)
 {
-}
-
-void Container::resetToDefault()
-{
-    series.reset();
-    if (prepro)
-    {
-        prepro->resetToDefault();
-    }
 }
 
 } // namespace Antares::Data::Load

@@ -13,7 +13,7 @@
 
 #include "ReadLinearConstraintVisitor.h"
 
-namespace Antares::Optimisation
+namespace Antares::LinearProblem
 {
 
 /**
@@ -21,7 +21,7 @@ namespace Antares::Optimisation
  * Implements LinearProblemFiller interface.
  * Fills a LinearProblem with variables, constraints, and objective coefficients of a Component
  */
-class ComponentFiller: public LinearProblemApi::LinearProblemFiller
+class ComponentFiller: public Api::LinearProblemFiller
 {
 public:
     ComponentFiller() = delete;
@@ -29,16 +29,16 @@ public:
     ComponentFiller(ComponentFiller& other) = delete;
 
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
-                             const LinearProblemApi::ILinearProblemData* data,
+                             const Api::ILinearProblemData* data,
                              OptimEntityContainer& optimEntityContainer,
                              const ScenarioGroupRepository& scenarioGroupRepository,
                              Solver::Config::Location targetLocation,
                              BendersDecomposition* bendersDecomposition = nullptr);
 
-    void addVariables(const LinearProblemApi::FillContext& ctx) override;
+    void addVariables(const Api::FillContext& ctx) override;
 
-    void addConstraints(const LinearProblemApi::FillContext& ctx) override;
-    void addObjectives(const LinearProblemApi::FillContext& ctx) override;
+    void addConstraints(const Api::FillContext& ctx) override;
+    void addObjectives(const Api::FillContext& ctx) override;
 
 private:
     void addStaticConstraint(const LinearConstraint& linear_constraint,
@@ -46,7 +46,7 @@ private:
 
     void addTimeDependentConstraints(const LinearConstraint& linear_constraints,
                                      const std::string& constraint_id,
-                                     const LinearProblemApi::FillContext& ctx,
+                                     const Api::FillContext& ctx,
                                      const ModelerStudy::SystemModel::Constraint& constraint) const;
 
     void addStaticObjective(const Optimization::LinearExpression& expression) const;
@@ -56,9 +56,9 @@ private:
 
     const ModelerStudy::SystemModel::Component& component_;
     OptimEntityContainer& optimEntityContainer_;
-    LinearProblemApi::ILinearProblem& pb_;
-    const Optimisation::LinearProblemApi::ILinearProblemData* data_;
-    const Optimisation::ScenarioGroupRepository& scenarioGroupRepo_;
+    Api::ILinearProblem& pb_;
+    const LinearProblem::Api::ILinearProblemData* data_;
+    const LinearProblem::ScenarioGroupRepository& scenarioGroupRepo_;
     const Solver::Config::Location targetLocation_;
     BendersDecomposition* bendersDecomposition_ = nullptr;
 
@@ -70,4 +70,4 @@ private:
           { return AreLocationsCompatibleForFillers(item.location(), targetLocation_); });
     }
 };
-} // namespace Antares::Optimisation
+} // namespace Antares::LinearProblem

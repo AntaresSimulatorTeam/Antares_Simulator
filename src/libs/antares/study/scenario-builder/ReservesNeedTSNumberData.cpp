@@ -28,7 +28,7 @@ void ReservesNeedTSNumberData::setAreaTSnumber(const uint year, uint value)
 bool ReservesNeedTSNumberData::apply(Study& study)
 {
     bool ret = true;
-    CString<512, false> logprefix;
+    Yuni::CString<512, false> logprefix;
     // Errors
     uint errors = 0;
 

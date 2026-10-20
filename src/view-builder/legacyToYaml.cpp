@@ -60,31 +60,6 @@ std::string miscGenMiscellaneousType(int index)
 namespace Antares::ViewBuilder
 {
 
-std::string miscGenTypeName(int index)
-{
-    switch (index)
-    {
-    case MiscGenIndex::fhhCHP:
-        return "combined_heat_power";
-    case MiscGenIndex::fhhBioMass:
-        return "biomass";
-    case MiscGenIndex::fhhBioGaz:
-        return "biogas";
-    case MiscGenIndex::fhhWaste:
-        return "waste";
-    case MiscGenIndex::fhhGeoThermal:
-        return "geothermal";
-    case MiscGenIndex::fhhOther:
-        return "other";
-    case MiscGenIndex::fhhPSP:
-        return "pumped_storage_power";
-    case MiscGenIndex::fhhRowBalance:
-        return "rest_world";
-    default:
-        return "unknown";
-    }
-}
-
 std::string areaLocation(const std::string& areaId)
 {
     return BuildAreaNodeComponentId(areaId);
@@ -150,10 +125,11 @@ YAML::Node renewableClusterToYaml(const RenewableCluster& cluster)
 
 YAML::Node miscGenToYaml(const Area& area, int miscGenIndex)
 {
-    return makeComponent(BuildMiscGenComponentId(area.id, miscGenTypeName(miscGenIndex)),
+    const std::string technology = std::string(miscGenComponentNames[miscGenIndex]);
+    return makeComponent(BuildMiscGenComponentId(area.id, technology),
                          "antares_legacy_models.miscellaneous_generation",
                          {{"carrier", "electricity"},
-                          {"technology", miscGenTypeName(miscGenIndex)},
+                          {"technology", technology},
                           {"miscellaneous_type", miscGenMiscellaneousType(miscGenIndex)}});
 }
 

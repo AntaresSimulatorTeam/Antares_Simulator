@@ -64,7 +64,7 @@ bool fileSetContent(const std::string& filename, const std::string& content)
     }
 #endif
 
-    uint attempt = 0;
+    unsigned int attempt = 0;
     do
     {
         if (attempt > 0)

@@ -4,6 +4,8 @@
 
 #include "antares/solver/hydro/management/PrepareInflows.h"
 
+#include <antares/antares/constants.h>
+
 namespace Antares
 {
 
@@ -75,14 +77,16 @@ void PrepareInflows::changeInflowsToAccommodateFinalLevels(uint year)
           }
 
           // Must be done before prepareMonthlyTargetGenerations
+          int firstHydroMonth = area.hydro.initializeReservoirLevelDate;
+          int lastHydroMonth = (firstHydroMonth + 11) % MONTHS_PER_YEAR;
           double delta = area.hydro.deltaBetweenFinalAndInitialLevels[year].value();
           if (delta < 0)
           {
-              data.inflows[0] -= delta;
+              data.inflows[firstHydroMonth] -= delta;
           }
           else if (delta > 0)
           {
-              data.inflows[11] -= delta;
+              data.inflows[lastHydroMonth] -= delta;
           }
       });
 }

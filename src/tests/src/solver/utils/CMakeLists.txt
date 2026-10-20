@@ -11,4 +11,5 @@ add_boost_test(tests-solver-utils
         LIBS
         ortools::ortools
         Antares::solverUtils
+        model_antares
         test_utils_unit)

@@ -6,8 +6,6 @@
 #include <string>
 #include <vector>
 
-#include <yuni/core/string.h>
-
 #include <antares/inifile/inifile.h>
 #include <antares/study/fwd.h>
 #include "antares/exception/LoadingError.hpp"
@@ -30,6 +28,12 @@ class IncompatibleSimulationModeForAdqPatch final: public LoadingError
 {
 public:
     IncompatibleSimulationModeForAdqPatch();
+};
+
+class IncompatiblePriceTakingOrderForHybrid final: public LoadingError
+{
+public:
+    IncompatiblePriceTakingOrderForHybrid();
 };
 
 } // namespace Antares::Error
@@ -84,8 +88,7 @@ public:
     //! Check CSR cost function prior & after CSR optimization
     bool checkCsrCostFunction;
 
-    bool updateFromKeyValue(const Yuni::String& key, const Yuni::String& value);
-    void addProperties(IniFile::Section* section) const;
+    bool updateFromKeyValue(const std::string& key, const std::string& value);
 
     void reset();
 
@@ -109,14 +112,16 @@ struct AdqPatchParams
 
     void reset();
     void addExcludedVariables(std::vector<std::string>&) const;
-    bool updateFromKeyValue(const Yuni::String& key, const Yuni::String& value);
+    bool updateFromKeyValue(const std::string& key, const std::string& value);
     bool checkAdqPatchParams(const SimulationMode simulationMode,
                              const AreaList& areas,
-                             const bool includeHurdleCostParameters) const;
+                             const bool includeHurdleCostParameters,
+                             const bool isHybridMode = false) const;
 
     void checkAdqPatchSimulationModeEconomyOnly(const SimulationMode simulationMode) const;
     void checkAdqPatchContainsAdqPatchArea(const Antares::Data::AreaList& areas) const;
     void checkAdqPatchIncludeHurdleCost(const bool includeHurdleCost) const;
+    void checkAdqPatchPriceTakingOrderForHybrid(bool isHybridMode) const;
 };
 
 } // namespace Antares::Data::AdequacyPatch
