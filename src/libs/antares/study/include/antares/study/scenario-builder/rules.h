@@ -92,7 +92,7 @@ public:
     windTSNumberData wind;
 
     //! ReserveNeed (array [0..pAreaCount - 1])
-    std::optional<std::vector<ReservesNeedTSNumberData>> reservesNeed;
+    std::vector<ReservesNeedTSNumberData> reservesNeed;
     //! Thermal (array [0..pAreaCount - 1])
     std::vector<thermalTSNumberData> thermal;
     //! Renewable (array [0..pAreaCount - 1])

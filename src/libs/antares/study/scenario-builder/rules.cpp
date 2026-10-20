@@ -39,14 +39,7 @@ bool Rules::reset()
     pAreaCount = study_.areas.size();
 
     load.reset(study_);
-    if (study_.parameters.include.reserves)
-    {
-        if (!reservesNeed)
-        {
-            reservesNeed.emplace();
-        }
-        ::reset(reservesNeed.value(), study_);
-    }
+    ::reset(reservesNeed, study_);
     solar.reset(study_);
     hydro.reset(study_);
     wind.reset(study_);
@@ -190,7 +183,7 @@ bool Rules::readReservesNeed(const std::vector<std::string>& splitKey, const std
     uint val = fromStringToTSnumber(value);
     if (area->allCapacityReservations)
     {
-        reservesNeed.value()[area->index].setAreaTSnumber(year, val);
+        reservesNeed[area->index].setAreaTSnumber(year, val);
     }
     return true;
 }
@@ -538,7 +531,7 @@ bool Rules::apply()
                               && returned_status;
             if (study_.parameters.include.reserves)
             {
-                returned_status = reservesNeed.value()[i].apply(study_) && returned_status;
+                returned_status = reservesNeed[i].apply(study_) && returned_status;
             }
         }
         returned_status = hydroInitialLevels.apply(study_) && returned_status;

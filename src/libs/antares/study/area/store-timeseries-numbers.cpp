@@ -42,7 +42,6 @@ void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesReservesNeed>(
         const auto& [resID, cr] = *area.allCapacityReservations.value()
                                      .areaCapacityReservations.begin();
         // All reserves in area share the same TS number, so it only stores the FIRST reserve!
-        const std::string reserveName = resID;
         storeTSnumbers(writer, cr.need->timeseriesNumbers, area.id, "reservesNeed");
     }
 }

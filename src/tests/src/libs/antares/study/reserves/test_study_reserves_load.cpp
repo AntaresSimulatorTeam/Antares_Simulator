@@ -1191,7 +1191,7 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_minimal, OneProblemWithoutReservesOn
     file.close();
 
     std::ofstream fileNeeds(studyPath / "reserves" / "a" / "reserveup.txt");
-    for (int i = 0; i < HOURS_PER_YEAR; ++i)
+    for (uint i = 0; i < HOURS_PER_YEAR; ++i)
     {
         fileNeeds << "1\n";
     }
@@ -1273,7 +1273,7 @@ global-parameters:
     file.close();
 
     std::ofstream fileNeeds(studyPath / "reserves" / "a" / "reserveup.txt");
-    for (int i = 0; i < HOURS_PER_YEAR; ++i)
+    for (uint i = 0; i < HOURS_PER_YEAR; ++i)
     {
         fileNeeds << "1\n";
     }
