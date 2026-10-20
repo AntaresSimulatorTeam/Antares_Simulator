@@ -26,7 +26,7 @@ public:
     bool apply(Study& study) override;
     std::string get_prefix() const override;
 
-    uint get_tsGenCount(const Study& study) const override
+    uint get_tsGenCount(const Study&) const override
     {
         return 0; // This time series is not generated, so we return 0
     }
