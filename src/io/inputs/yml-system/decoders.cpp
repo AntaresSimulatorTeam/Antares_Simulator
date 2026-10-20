@@ -22,7 +22,7 @@ bool convert<YmlSystem::Parameter>::decode(const Node& node, YmlSystem::Paramete
     {
         return false;
     }
-    checkFields(node, {"id", "time-dependent", "scenario-dependent", "value"});
+    checkFields(node, {"id", "time-dependent", "scenario-dependent", "value"}, {"scenario-group"});
     rhs.id = node["id"].as<std::string>();
     rhs.time_dependent = node["time-dependent"].as<bool>();
     rhs.scenario_dependent = node["scenario-dependent"].as<bool>();
