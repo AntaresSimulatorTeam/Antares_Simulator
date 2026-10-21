@@ -15,4 +15,5 @@ add_boost_test(tests-adq-patch
         Antares::model-converter
         Antares::yml-system
         Antares::simulation-table
+        Antares::tests::in-memory-study
         test_utils_unit)
