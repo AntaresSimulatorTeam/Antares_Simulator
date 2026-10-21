@@ -5,6 +5,7 @@
 #include <fmt/format.h>
 
 #include <antares/antares/fatal-error.h>
+#include <antares/array/matrix-io.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include <antares/writer/i_writer.h>

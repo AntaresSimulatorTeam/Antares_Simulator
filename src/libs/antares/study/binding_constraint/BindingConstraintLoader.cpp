@@ -12,6 +12,7 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 
+#include <antares/array/matrix-io.h>
 #include <antares/utils/utils.h>
 #include "antares/study/binding_constraint/BindingConstraint.h"
 #include "antares/study/version.h"
@@ -124,8 +125,7 @@ bool BindingConstraintLoader::loadTimeSeries(EnvForLoading& env,
                                   1,
                                   (bindingConstraint->type() == BindingConstraint::typeHourly)
                                     ? 8784
-                                    : 366,
-                                  Matrix<>::optNone);
+                                    : 366);
     if (load_ok)
     {
         logs.info() << " loaded time series for `" << bindingConstraint->name() << "` ("
@@ -149,11 +149,7 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(
     std::filesystem::path path = env.folder / (bindingConstraint->pID + ".txt");
     Matrix<> intermediate;
     const int height = (bindingConstraint->pType == BindingConstraint::typeHourly) ? 8784 : 366;
-    if (MatrixIO::load(intermediate,
-                       path.string(),
-                       BindingConstraint::columnMax,
-                       height,
-                       Matrix<>::optFixedSize))
+    if (MatrixIO::load(intermediate, path.string(), BindingConstraint::columnMax, height))
     {
         logs.info() << " added `" << bindingConstraint->pName << "` ("
                     << BindingConstraint::TypeToCString(bindingConstraint->pType) << ", "

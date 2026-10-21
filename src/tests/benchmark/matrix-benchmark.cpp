@@ -5,6 +5,8 @@
 #include <chrono>
 #include <cstdint>
 #include <cstdlib>
+#include <filesystem>
+#include <fstream>
 #include <functional>
 #include <iomanip>
 #include <iostream>
@@ -87,7 +89,11 @@ template<class T>
 void benchmarkLoads(unsigned int width, unsigned int height, unsigned int iterations)
 {
     const std::string csv = makeCsv<T>(width, height);
-    std::string input = csv;
+    const auto filename = std::filesystem::temp_directory_path() / "antares-matrix-benchmark.txt";
+    {
+        std::ofstream file(filename, std::ios::binary | std::ios::trunc);
+        file.write(csv.data(), static_cast<std::streamsize>(csv.size()));
+    }
     Antares::Matrix<T> matrix;
 
     runBenchmark(std::string("load-") + (std::is_floating_point_v<T> ? "double" : "uint32"),
@@ -96,13 +102,7 @@ void benchmarkLoads(unsigned int width, unsigned int height, unsigned int iterat
                  iterations,
                  [&]
                  {
-                     const bool loaded = Antares::MatrixIO::load(matrix,
-                                                                 "matrix-benchmark",
-                                                                 width,
-                                                                 height,
-                                                                 Antares::Matrix<T>::optFixedSize
-                                                                   | Antares::Matrix<T>::optQuiet,
-                                                                 &input);
+                     const bool loaded = Antares::MatrixIO::load(matrix, filename, width, height);
                      if (!loaded || matrix.width() != width || matrix.height() != height)
                      {
                          std::cerr << "matrix load failed\n";
@@ -110,6 +110,7 @@ void benchmarkLoads(unsigned int width, unsigned int height, unsigned int iterat
                      }
                      consume(static_cast<std::uint64_t>(matrix[width - 1][height - 1]));
                  });
+    std::filesystem::remove(filename);
 }
 
 void benchmarkAllocation(unsigned int width, unsigned int height, unsigned int iterations)

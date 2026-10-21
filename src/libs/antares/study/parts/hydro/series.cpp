@@ -22,7 +22,7 @@ static bool loadTSfromFile(Matrix<double>& ts,
                            unsigned int height)
 {
     fs::path filePath = folder / areaID / filename;
-    return MatrixIO::load(ts, filePath.string(), 1, height, 0);
+    return MatrixIO::load(ts, filePath.string(), 1, height);
 }
 
 static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,
@@ -111,11 +111,10 @@ bool DataSeriesHydro::LoadMaxPower(const std::string& areaID, const fs::path& fo
 {
     bool ret = true;
     fs::path filePath = folder / areaID / "maxHourlyGenPower.txt";
-    ret = MatrixIO::load(maxHourlyGenPower.timeSeries, filePath.string(), 1, HOURS_PER_YEAR, 0)
-          && ret;
+    ret = MatrixIO::load(maxHourlyGenPower.timeSeries, filePath.string(), 1, HOURS_PER_YEAR) && ret;
 
     filePath = folder / areaID / "maxHourlyPumpPower.txt";
-    ret = MatrixIO::load(maxHourlyPumpPower.timeSeries, filePath.string(), 1, HOURS_PER_YEAR, 0)
+    ret = MatrixIO::load(maxHourlyPumpPower.timeSeries, filePath.string(), 1, HOURS_PER_YEAR)
           && ret;
 
     return ret;

@@ -226,19 +226,16 @@ bool XCast::loadFromFolder(const fs::path& folder)
     fs::path p = folder / "data.txt";
 
     // Performing normal loading
-    ret = MatrixIO::load(data, p.string(), (unsigned int)dataMax, 12, Matrix<>::optFixedSize)
-          && ret;
+    ret = MatrixIO::load(data, p.string(), (unsigned int)dataMax, 12) && ret;
 
     // K
     p = folder / "k.txt";
-    ret = MatrixIO::load(K, p.string(), 12, 24, Matrix<>::optFixedSize) && ret;
-
-    unsigned int opts = Matrix<>::optNone;
+    ret = MatrixIO::load(K, p.string(), 12, 24) && ret;
 
     // Time-series translation
     p = folder / "translation.txt";
 
-    ret = MatrixIO::load(translation, p.string(), 1, HOURS_PER_YEAR, opts) && ret;
+    ret = MatrixIO::load(translation, p.string(), 1, HOURS_PER_YEAR) && ret;
 
     if (translation.empty())
     {
@@ -256,12 +253,10 @@ bool XCast::loadFromFolder(const fs::path& folder)
         }
     }
 
-    opts = Matrix<>::optNone;
-
     // Transfer function
     p = folder / "conversion.txt";
 
-    ret = MatrixIO::load(conversion, p.string(), 3, 2, opts) && ret;
+    ret = MatrixIO::load(conversion, p.string(), 3, 2) && ret;
     if (conversion.width() >= 3 && conversion.width() <= conversionMaxPoints)
     {
         // We will overwrite the left and the right value

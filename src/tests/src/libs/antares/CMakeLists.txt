@@ -37,7 +37,6 @@ add_boost_test(tests-matrix-save
         SRC
         logs/antares/logs/logs.h
         array/fill-matrix.h
-        array/matrix-bypass-load.h
         array/tests-matrix-save.h
         array/tests-matrix-save.cpp
         INCLUDE
@@ -57,7 +56,6 @@ add_boost_test(tests-matrix-save
 add_boost_test(tests-matrix-load
         SRC
         array/fill-matrix.h
-        array/matrix-bypass-load.h
         array/tests-matrix-load.h
         array/tests-matrix-load.cpp
         INCLUDE

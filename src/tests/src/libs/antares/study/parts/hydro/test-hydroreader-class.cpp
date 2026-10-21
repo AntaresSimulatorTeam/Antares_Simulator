@@ -9,6 +9,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/array/matrix-io.h>
 #include <antares/array/matrix.h>
 #include <antares/study/study.h>
 

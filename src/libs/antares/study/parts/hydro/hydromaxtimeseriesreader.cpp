@@ -48,12 +48,7 @@ bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const std::string& 
 
     //  It is necessary to load maxpower_ txt file.
 
-    ret = MatrixIO::load(hydro_.dailyMaxPumpAndGen,
-                         filePath.string(),
-                         4U,
-                         DAYS_PER_YEAR,
-                         Matrix<>::optFixedSize)
-          && ret;
+    ret = MatrixIO::load(hydro_.dailyMaxPumpAndGen, filePath.string(), 4U, DAYS_PER_YEAR) && ret;
     return ret;
 }
 

@@ -49,11 +49,7 @@ private:
         Matrix<double> standardRuleCurves;
         standardRuleCurves.reset(3L, DAYS_PER_YEAR);
 
-        bool ret = MatrixIO::load(standardRuleCurves,
-                                  filePath.string(),
-                                  3,
-                                  DAYS_PER_YEAR,
-                                  Matrix<>::optFixedSize);
+        bool ret = MatrixIO::load(standardRuleCurves, filePath.string(), 3, DAYS_PER_YEAR);
 
         min_.timeSeries.reset(1U, DAYS_PER_YEAR);
         min_.timeSeries.pasteToColumn(0, standardRuleCurves[RuleCurves::minimum]);
@@ -78,11 +74,11 @@ private:
         bool ret = true;
 
         fs::path filePath = path / "maxDailyReservoirLevels.txt";
-        ret = MatrixIO::load(max_.timeSeries, filePath.string(), 1, DAYS_PER_YEAR, 0) && ret;
+        ret = MatrixIO::load(max_.timeSeries, filePath.string(), 1, DAYS_PER_YEAR) && ret;
         filePath = path / "minDailyReservoirLevels.txt";
-        ret = MatrixIO::load(min_.timeSeries, filePath.string(), 1, DAYS_PER_YEAR, 0) && ret;
+        ret = MatrixIO::load(min_.timeSeries, filePath.string(), 1, DAYS_PER_YEAR) && ret;
         filePath = path / "avgDailyReservoirLevels.txt";
-        ret = MatrixIO::load(avg_.timeSeries, filePath.string(), 1, DAYS_PER_YEAR, 0) && ret;
+        ret = MatrixIO::load(avg_.timeSeries, filePath.string(), 1, DAYS_PER_YEAR) && ret;
 
         return ret;
     }

@@ -5,6 +5,7 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 
+#include <antares/array/matrix-io.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 
@@ -93,7 +94,7 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
     bool ret = true;
     fs::path seriesPath = folder / parentArea->id / id() / "series.txt";
 
-    ret = MatrixIO::load(series.timeSeries, seriesPath.string(), 1, HOURS_PER_YEAR, 0) && ret;
+    ret = MatrixIO::load(series.timeSeries, seriesPath.string(), 1, HOURS_PER_YEAR) && ret;
 
     if (s.parameters.derated)
     {

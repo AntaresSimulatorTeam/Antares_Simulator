@@ -48,12 +48,6 @@ void Study::setModelerData(std::unique_ptr<Solver::ModelerData> modelerData)
     modelerInput_ = std::move(modelerData);
 }
 
-void Study::reduceMemoryUsage()
-{
-    dataBuffer.clear();
-    dataBuffer.shrink_to_fit();
-}
-
 unsigned Study::getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode)
 {
     if (!nbLogicalCores)

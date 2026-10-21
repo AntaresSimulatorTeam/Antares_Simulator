@@ -1,6 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <antares/array/matrix-io.h>
 #include <antares/logs/logs.h>
 #include <antares/study/parts/thermal/prepro.h>
 #include "antares/study/study.h"
@@ -39,11 +40,7 @@ bool PreproAvailability::loadFromFolder(Study& study, const std::filesystem::pat
 {
     auto filePath = folder / "data.txt";
     // standard loading
-    return MatrixIO::load(data,
-                          filePath.string(),
-                          preproAvailabilityMax,
-                          DAYS_PER_YEAR,
-                          Matrix<>::optFixedSize);
+    return MatrixIO::load(data, filePath.string(), preproAvailabilityMax, DAYS_PER_YEAR);
 }
 
 bool PreproAvailability::validate() const

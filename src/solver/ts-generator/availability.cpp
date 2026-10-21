@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include <antares/array/matrix-io.h>
 #include <antares/io/file.h> // For Antares::IO::fileSetContent
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/generator.h>

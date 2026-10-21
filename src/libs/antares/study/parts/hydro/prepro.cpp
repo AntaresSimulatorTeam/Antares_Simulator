@@ -3,6 +3,7 @@
 
 #include "antares/study/parts/hydro/prepro.h"
 
+#include <antares/array/matrix-io.h>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include "antares/study/study.h"
@@ -81,11 +82,6 @@ void PreproHydro::copyFrom(const PreproHydro& rhs)
 
 bool PreproHydro::loadFromFolder(Study&, const std::string& areaID, const fs::path& folder)
 {
-    enum
-    {
-        mtrxOption = Matrix<>::optFixedSize,
-    };
-
     constexpr int maxNbOfLineToLoad = 12;
     data.resize(hydroPreproMax, 12);
 
@@ -93,8 +89,7 @@ bool PreproHydro::loadFromFolder(Study&, const std::string& areaID, const fs::pa
     bool ret = PreproHydroLoadSettings(this, preproPath);
 
     fs::path energyPath = folder / areaID / "energy.txt";
-    ret = MatrixIO::load(data, energyPath.string(), hydroPreproMax, maxNbOfLineToLoad, mtrxOption)
-          && ret;
+    ret = MatrixIO::load(data, energyPath.string(), hydroPreproMax, maxNbOfLineToLoad) && ret;
 
     return ret;
 }

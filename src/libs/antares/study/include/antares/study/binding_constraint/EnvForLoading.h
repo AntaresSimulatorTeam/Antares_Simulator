@@ -3,10 +3,9 @@
 
 #pragma once
 
+#include <filesystem>
 #include <string>
 
-#include <antares/array/matrix-io.h>
-#include <antares/array/matrix.h>
 #include <antares/inifile/inifile.h>
 #include <antares/study/version.h>
 
@@ -35,7 +34,6 @@ public:
     IniFile::Section* section{nullptr};
 
     std::string buffer;
-    MatrixIO::BufferType matrixBuffer;
     std::filesystem::path folder;
 
     //! List of areas

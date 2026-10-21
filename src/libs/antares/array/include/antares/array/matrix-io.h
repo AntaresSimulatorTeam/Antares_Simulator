@@ -6,7 +6,7 @@
 
 #include <filesystem>
 
-#include "matrix-io.hxx"
 #include "matrix.h"
+#include "matrix-io.hxx"
 
 #endif

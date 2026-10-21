@@ -4,6 +4,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 
+#include <filesystem>
 #include <map>
 #include <optional>
 #include <string>
@@ -57,9 +58,7 @@ public:
      ** \param average used to average timeseries
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
-    bool loadFromFile(const std::filesystem::path& path,
-                      const bool average,
-                      unsigned options = Matrix<>::optNone);
+    bool loadFromFile(const std::filesystem::path& path, const bool average);
     /*!
      ** \brief Save time series to a file
      **

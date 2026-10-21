@@ -35,23 +35,6 @@ public:
     using ColumnView = std::span<T>;
     using ConstColumnView = std::span<const T>;
 
-    /*!
-    ** \brief Options when loading a file
-    */
-    enum Options
-    {
-        //! None
-        optNone = 0,
-        //! The matrix can not see its size modified
-        optFixedSize = 1,
-        //! Do not produce warnings/errors
-        optQuiet = 2,
-        //! Do not warn if the file is empty
-        optNoWarnIfEmpty = 16,
-        //! The loading never fails
-        optNeverFails = 32,
-    };
-
 public:
     //! \name Constructors & Destructor
     //@{

@@ -24,8 +24,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
         fs::path filename = folder / "fuelCost.txt";
         if (fs::exists(filename))
         {
-            ret = MatrixIO::load(fuelcost, filename.string(), 1, HOURS_PER_YEAR, Matrix<>::optNone)
-                  && ret;
+            ret = MatrixIO::load(fuelcost, filename.string(), 1, HOURS_PER_YEAR) && ret;
             if (study.parameters.derated)
             {
                 fuelcost.averageTimeseries();
@@ -35,8 +34,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
         filename = folder / "CO2Cost.txt";
         if (fs::exists(filename))
         {
-            ret = MatrixIO::load(co2cost, filename.string(), 1, HOURS_PER_YEAR, Matrix<>::optNone)
-                  && ret;
+            ret = MatrixIO::load(co2cost, filename.string(), 1, HOURS_PER_YEAR) && ret;
             if (study.parameters.derated)
             {
                 co2cost.averageTimeseries();

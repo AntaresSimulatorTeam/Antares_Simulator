@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <limits>
 
+#include <antares/array/matrix-io.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include "antares/study//study.h"
@@ -65,11 +66,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_below_810(const fs::path& folder)
     // Load link's data
     Matrix<> tmpMatrix;
     const unsigned int matrixWidth = 8;
-    if (!MatrixIO::load(tmpMatrix,
-                        path.string(),
-                        matrixWidth,
-                        HOURS_PER_YEAR,
-                        Matrix<>::optFixedSize))
+    if (!MatrixIO::load(tmpMatrix, path.string(), matrixWidth, HOURS_PER_YEAR))
     {
         return false;
     }
@@ -97,12 +94,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const fs::path& fold
     // Read link's parameters times series
     std::string paramId = with->id + "_parameters.txt";
     fs::path path = folder / paramId;
-    success = MatrixIO::load(parameters,
-                             path.string(),
-                             fhlMax,
-                             HOURS_PER_YEAR,
-                             Matrix<>::optFixedSize)
-              && success;
+    success = MatrixIO::load(parameters, path.string(), fhlMax, HOURS_PER_YEAR) && success;
 
     fs::path capacitiesFolder = folder / "capacities";
 

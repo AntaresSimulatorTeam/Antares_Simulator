@@ -5,13 +5,14 @@
 #include <chrono>
 #include <cstdint>
 #include <cstdlib>
+#include <filesystem>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <limits>
 #include <string>
 #include <string_view>
 #include <type_traits>
-#include <vector>
 
 #include <antares/array/matrix-io.h>
 #include <antares/array/matrix.h>
@@ -20,8 +21,6 @@
 namespace
 {
 using Clock = std::chrono::steady_clock;
-using BufferType = Antares::MatrixIO::BufferType;
-
 constexpr unsigned int defaultHeight = 8760;
 constexpr unsigned int defaultIterations = 10;
 
@@ -84,24 +83,16 @@ std::string makeCsv(unsigned int width, unsigned int height)
 }
 
 template<class T>
-std::vector<BufferType> makeInputs(const std::string& csv, unsigned int count)
-{
-    std::vector<BufferType> inputs;
-    inputs.reserve(count);
-    for (unsigned int i = 0; i < count; ++i)
-    {
-        inputs.emplace_back(csv);
-    }
-    return inputs;
-}
-
-template<class T>
 void benchmarkLoad(unsigned int width, unsigned int height, unsigned int iterations)
 {
     const std::string csv = makeCsv<T>(width, height);
-    auto inputs = makeInputs<T>(csv, iterations + 1);
+    const auto filename = std::filesystem::temp_directory_path()
+                          / "antares-matrix-load-benchmark.txt";
+    {
+        std::ofstream file(filename, std::ios::binary | std::ios::trunc);
+        file.write(csv.data(), static_cast<std::streamsize>(csv.size()));
+    }
     Antares::Matrix<T> matrix;
-    unsigned int inputIndex = 0;
 
     runBenchmark(std::is_floating_point_v<T> ? "load-double" : "load-uint32",
                  width,
@@ -109,23 +100,17 @@ void benchmarkLoad(unsigned int width, unsigned int height, unsigned int iterati
                  iterations,
                  [&]
                  {
-                     BufferType& input = inputs[inputIndex++];
-                     const bool loaded = Antares::MatrixIO::load(matrix,
-                                                                 "matrix-load-benchmark",
-                                                                 width,
-                                                                 height,
-                                                                 Antares::Matrix<T>::optFixedSize
-                                                                   | Antares::Matrix<T>::optQuiet,
-                                                                 &input);
+                     const bool loaded = Antares::MatrixIO::load(matrix, filename, width, height);
                      if (!loaded || matrix.width() != width || matrix.height() != height)
                      {
                          std::cerr << "matrix load failed: loaded=" << loaded
                                    << " dimensions=" << matrix.width() << 'x' << matrix.height()
-                                   << " input-size=" << input.size() << '\n';
+                                   << '\n';
                          std::exit(EXIT_FAILURE);
                      }
                      consume(static_cast<std::uint64_t>(matrix[width - 1][height - 1]));
                  });
+    std::filesystem::remove(filename);
 }
 
 unsigned int parseIterations(int argc, char** argv)
