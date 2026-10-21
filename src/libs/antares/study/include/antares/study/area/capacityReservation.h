@@ -45,7 +45,7 @@ struct CapacityReservation
     double powerActivationRatio = 0.;
     double energyActivationRatio = 1.;
     int referenceActivationDuration = 1.;
-    std::shared_ptr<TimeSeries> need = nullptr;
+    std::shared_ptr<TimeSeries> need;
 
     uint32_t areaWideIndex = 0;
 
@@ -59,7 +59,10 @@ struct CapacityReservation
     void loadNeedFromFile(const fs::path& path)
     {
         Matrix<>::BufferType fileContent;
-        need->timeSeries.loadFromCSVFile(path.string(), 1, HOURS_PER_YEAR, &fileContent);
+        if (!need->timeSeries.loadFromCSVFile(path.string(), 1, HOURS_PER_YEAR, &fileContent))
+        {
+            throw std::runtime_error("Failed to load need from CSV file: " + path.string());
+        }
     }
 
     void setName(const std::string& newname)

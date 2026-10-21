@@ -163,7 +163,7 @@ void Area::resizeAllTimeseriesNumbers(unsigned int nbYears)
     shortTermStorage.resizeTimeseriesNumbers(nbYears);
     if (allCapacityReservations)
     {
-        allCapacityReservations.value().resizeTimeseriesNumbers(nbYears);
+        allCapacityReservations->resizeTimeseriesNumbers(nbYears);
     }
 }
 

@@ -37,10 +37,10 @@ void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesReservesNeed>(
   Solver::IResultWriter& writer,
   const Area& area)
 {
-    if (area.allCapacityReservations)
+    if (area.allCapacityReservations
+        && !area.allCapacityReservations->areaCapacityReservations.empty())
     {
-        const auto& [resID, cr] = *area.allCapacityReservations.value()
-                                     .areaCapacityReservations.begin();
+        const auto& cr = area.allCapacityReservations->areaCapacityReservations.begin()->second;
         // All reserves in area share the same TS number, so it only stores the FIRST reserve!
         storeTSnumbers(writer, cr.need->timeseriesNumbers, area.id, "reservesNeed");
     }

@@ -127,7 +127,7 @@ bool readReserveParameters(const fs::path& folderInput, Area& area, const YAML::
         return false;
     }
 
-    CapacityReservation capacityReservation(area.allCapacityReservations.value().TSNumbers);
+    CapacityReservation capacityReservation(area.allCapacityReservations->TSNumbers);
     capacityReservation.setName(reserveName);
 
     for (const auto& entry: reserveNode)
@@ -220,7 +220,7 @@ bool readReserveParameters(const fs::path& folderInput, Area& area, const YAML::
             ret = false;
         }
     }
-    area.allCapacityReservations.value().TSNumbers.clear();
+    area.allCapacityReservations->TSNumbers.clear();
     fs::path filePath = folderInput / "reserves" / area.id / (capacityReservation.id() + ".txt");
     capacityReservation.loadNeedFromFile(filePath);
     area.allCapacityReservations->areaCapacityReservations.emplace(capacityReservation.id(),
