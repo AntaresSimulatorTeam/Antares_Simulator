@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <limits>
 
+#include <antares/array/matrix-io.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include "antares/study//study.h"
@@ -65,10 +66,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_below_810(const fs::path& folder)
     // Load link's data
     Matrix<> tmpMatrix;
     const unsigned int matrixWidth = 8;
-    if (!tmpMatrix.loadFromCSVFile(path.string(),
-                                   matrixWidth,
-                                   HOURS_PER_YEAR,
-                                   Matrix<>::optFixedSize))
+    if (!MatrixIO::load(tmpMatrix, path.string(), matrixWidth, HOURS_PER_YEAR))
     {
         return false;
     }
@@ -96,11 +94,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const fs::path& fold
     // Read link's parameters times series
     std::string paramId = with->id + "_parameters.txt";
     fs::path path = folder / paramId;
-    success = parameters.loadFromCSVFile(path.string(),
-                                         fhlMax,
-                                         HOURS_PER_YEAR,
-                                         Matrix<>::optFixedSize)
-              && success;
+    success = MatrixIO::load(parameters, path.string(), fhlMax, HOURS_PER_YEAR) && success;
 
     fs::path capacitiesFolder = folder / "capacities";
 
@@ -409,8 +403,8 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link,
 
 void AreaLink::checkLoadedData()
 {
-    const unsigned int nbDirectTS = directCapacities.timeSeries.width;
-    const unsigned int nbIndirectTS = indirectCapacities.timeSeries.width;
+    const unsigned int nbDirectTS = directCapacities.timeSeries.width();
+    const unsigned int nbIndirectTS = indirectCapacities.timeSeries.width();
     if (nbDirectTS != nbIndirectTS)
     {
         logLinkDataCheckErrorDirectIndirect(*this, nbDirectTS, nbIndirectTS);
@@ -424,8 +418,8 @@ void AreaLink::checkLoadedData()
 
     for (unsigned int indexTS = 0; indexTS < nbDirectTS; ++indexTS)
     {
-        const double* directCapacitiesPtr = directCapacities[indexTS];
-        const double* indirectCapacitiesPtr = indirectCapacities[indexTS];
+        const auto& directCapacitiesPtr = directCapacities[indexTS];
+        const auto& indirectCapacitiesPtr = indirectCapacities[indexTS];
 
         // Checks on direct capacities
         for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)

@@ -33,9 +33,7 @@ void Study::scenarioRulesLoadIfNotAvailable()
 // TODO remove after vacuum
 bool Study::IsRootStudy(const std::string& folder)
 {
-    std::string buffer;
-    buffer.reserve(folder.size() + 16);
-    buffer = folder + Yuni::IO::Separator + "study.antares";
+    const std::string buffer = (std::filesystem::path(folder) / "study.antares").string();
     StudyHeader header;
     return header.loadFromFile(buffer, false);
 }

@@ -4,6 +4,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 
+#include <filesystem>
 #include <map>
 #include <optional>
 #include <string>
@@ -57,9 +58,7 @@ public:
      ** \param average used to average timeseries
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
-    bool loadFromFile(const std::filesystem::path& path,
-                      const bool average,
-                      unsigned options = Matrix<>::optNone);
+    bool loadFromFile(const std::filesystem::path& path, const bool average);
     /*!
      ** \brief Save time series to a file
      **
@@ -78,7 +77,7 @@ public:
 
     /// \brief overload operator to return a column
     /// Unlike getColumn() it uses direct indexing and not timeseriesNumbers
-    double* operator[](uint32_t index);
+    Matrix<double>::ColumnType& operator[](uint32_t index);
 
     void reset();
     void reset(uint32_t width, uint32_t height);

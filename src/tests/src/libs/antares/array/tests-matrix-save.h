@@ -3,10 +3,10 @@
 
 #include <cstdint>
 
+#include <antares/array/matrix-io.h>
+
 #include "fill-matrix.h"
-#include "matrix-bypass-load.h"
 using namespace std;
-using namespace Yuni;
 using namespace Antares;
 
 struct PredicateIdentity

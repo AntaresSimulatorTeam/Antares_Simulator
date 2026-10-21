@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include <antares/array/matrix-io.h>
 #include <antares/io/file.h> // For Antares::IO::fileSetContent
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/generator.h>
@@ -575,7 +576,7 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& are
 void writeTStoDisk(const Matrix<>& series, const std::filesystem::path savePath)
 {
     std::string buffer;
-    series.saveToBuffer(buffer, 0);
+    MatrixIO::saveToBuffer(series, buffer, 0, false, std::identity{}, true);
 
     std::filesystem::path parentDir = savePath.parent_path();
     if (!std::filesystem::exists(parentDir))

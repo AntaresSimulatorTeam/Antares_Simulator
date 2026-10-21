@@ -6,6 +6,7 @@
 #include <numeric>
 #include <ranges>
 
+#include <antares/array/matrix-io.h>
 #include <antares/utils/utils.h>
 #include "antares/study/parts/common/cluster.h"
 #include "antares/study/study.h"
@@ -143,15 +144,10 @@ bool ThermalClusterList::loadFromFolder(const fs::path& folder,
         auto modulationFile = folder.parent_path().parent_path() / "prepro"
                               / cluster->parentArea->id.c_str() / cluster->id() / "modulation.txt";
 
-        enum
-        {
-            options = Matrix<>::optFixedSize,
-        };
-
-        ret = cluster->modulation.loadFromCSVFile(modulationFile.string(),
-                                                  thermalModulationMax,
-                                                  HOURS_PER_YEAR,
-                                                  options)
+        ret = MatrixIO::load(cluster->modulation,
+                             modulationFile.string(),
+                             thermalModulationMax,
+                             HOURS_PER_YEAR)
               && ret;
 
         // Check the data integrity of the cluster

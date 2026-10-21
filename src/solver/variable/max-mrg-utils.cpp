@@ -36,7 +36,7 @@ MaxMRGinput MaxMrgUsualDataFactory::data()
     }
     else
     {
-        maxMRGinput_.spillage = state_.resSpilled[state_.area->index];
+        maxMRGinput_.spillage = state_.resSpilled.mutableColumn(state_.area->index).data();
     }
 
     maxMRGinput_.dens = weeklyResults_.ValeursHorairesDeDefaillancePositive.data();

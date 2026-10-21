@@ -3,11 +3,13 @@ add_subdirectory(outputs)
 set(HEADERS
         include/antares/io/statistics.h
         include/antares/io/file.h
+        include/antares/io/CsvReader.h
 )
 set(SRC_IO
         ${HEADERS}
         statistics.cpp
         file.cpp
+        CsvReader.cpp
 )
 source_group("io" FILES ${SRC_IO})
 
@@ -16,10 +18,14 @@ add_library(io
 )
 add_library(Antares::io ALIAS io)
 
+find_package(Boost CONFIG REQUIRED COMPONENTS iostreams)
+
 target_link_libraries(io
         PRIVATE
         yuni-static-core
         logs
+        Boost::headers
+        Boost::iostreams
 )
 
 target_include_directories(io

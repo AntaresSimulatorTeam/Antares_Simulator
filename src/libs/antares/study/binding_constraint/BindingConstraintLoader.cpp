@@ -12,6 +12,7 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 
+#include <antares/array/matrix-io.h>
 #include <antares/utils/utils.h>
 #include "antares/study/binding_constraint/BindingConstraint.h"
 #include "antares/study/version.h"
@@ -119,12 +120,12 @@ bool BindingConstraintLoader::loadTimeSeries(EnvForLoading& env,
                                              BindingConstraint* bindingConstraint) const
 {
     env.buffer = bindingConstraint->timeSeriesFileName(env);
-    bool load_ok = bindingConstraint->RHSTimeSeries_.loadFromCSVFile(
-      env.buffer,
-      1,
-      (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8784 : 366,
-      Matrix<>::optNone,
-      &env.matrixBuffer);
+    bool load_ok = MatrixIO::load(bindingConstraint->RHSTimeSeries_,
+                                  env.buffer,
+                                  1,
+                                  (bindingConstraint->type() == BindingConstraint::typeHourly)
+                                    ? 8784
+                                    : 366);
     if (load_ok)
     {
         logs.info() << " loaded time series for `" << bindingConstraint->name() << "` ("
@@ -148,11 +149,7 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(
     std::filesystem::path path = env.folder / (bindingConstraint->pID + ".txt");
     Matrix<> intermediate;
     const int height = (bindingConstraint->pType == BindingConstraint::typeHourly) ? 8784 : 366;
-    if (intermediate.loadFromCSVFile(path.string(),
-                                     BindingConstraint::columnMax,
-                                     height,
-                                     Matrix<>::optFixedSize,
-                                     &env.matrixBuffer))
+    if (MatrixIO::load(intermediate, path.string(), BindingConstraint::columnMax, height))
     {
         logs.info() << " added `" << bindingConstraint->pName << "` ("
                     << BindingConstraint::TypeToCString(bindingConstraint->pType) << ", "
