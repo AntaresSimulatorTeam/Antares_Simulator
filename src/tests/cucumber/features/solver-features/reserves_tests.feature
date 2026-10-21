@@ -754,3 +754,18 @@ Scenario: ST_3UP_unavailable_reserves_test3
     And in area "FRANCE", during year 1, for reserve "Res_2_up", reserve unsupplied power is always equal to 10 MWh
     And in area "FRANCE", during year 1, total hydro production is 0 MWh
     And in area "FRANCE", during year 1, total hydro pumping is 0 MWh
+    
+@fast @short
+# Lot 4 : Scénarisation du besoin
+# Ce cas test a pour objectif de vérifier qu’il est possible de différencier pour une même zone, selon l’année Monte-carlo, les besoins de réserve. On définira ainsi 2 réserves (Res_1 up et Res_2 up) qui auront 2 time series. On différenciera les time series selon 2 années Monte-carlo.
+  Scenario: lot_1_simple_up_scenarisation
+    Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/lot_1_simple_up_scenarisation"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 20 seconds
+    And in area "AREA", during year 1, for cluster "cluster_1" and reserve "Res_1", reserve participation power is always equal to 20 MWh
+    And in area "AREA", during year 1, for cluster "cluster_1" and reserve "Res_2", reserve participation power is always equal to 10 MWh
+    And in area "AREA", during year 2, for cluster "cluster_1" and reserve "Res_1", reserve participation power is always equal to 0 MWh
+    And in area "AREA", during year 2, for cluster "cluster_1" and reserve "Res_2", reserve participation power is always equal to 0 MWh
+    And in area "AREA", during year 3, for cluster "cluster_1" and reserve "Res_1", reserve participation power is always equal to 20 MWh
+    And in area "AREA", during year 3, for cluster "cluster_1" and reserve "Res_2", reserve participation power is always equal to 10 MWh

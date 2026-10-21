@@ -5,8 +5,8 @@
 
 void ThermalReserveParticipation::add(int pays, int reserve, int cluster, int pdt)
 {
-    CAPACITY_RESERVATION capacityReservation = data.areaReserves[pays]
-                                                 .areaCapacityReservations[reserve];
+    CAPACITY_RESERVATION& capacityReservation = data.areaReserves[pays]
+                                                  .areaCapacityReservations[reserve];
 
     auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation[cluster];
     bool offUnitParticipating = capacityReservation.type == ReserveType::UP
