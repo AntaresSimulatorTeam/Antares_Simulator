@@ -14,6 +14,8 @@
 #include <antares/study/parts/hydro/series.h>
 #include <antares/study/study.h>
 
+#include "unit_test_utils.h"
+
 #define SEP "/"
 
 using namespace Antares::Data;
@@ -215,6 +217,27 @@ BOOST_FIXTURE_TEST_CASE(test_use_heuristic_target, HydroFixture)
     BOOST_CHECK_EQUAL(west->hydro.useHeuristicTarget, false);
 }
 
+BOOST_FIXTURE_TEST_CASE(test_use_leeway_yes_warns, HydroFixture)
+{
+    Antares::UnitTests::CaptureAntaresLogs logs;
+    writeToHydroIniFile("[use leeway]\neast = yes\n");
+
+    BOOST_CHECK(load());
+    BOOST_CHECK_EQUAL(logs.getWarnings().size(), 1);
+    BOOST_CHECK(logs.getWarnings().begin()->find(
+                  "use leeway = yes is no longer supported and will be ignored")
+                != std::string::npos);
+}
+
+BOOST_FIXTURE_TEST_CASE(test_use_leeway_no_does_not_warn, HydroFixture)
+{
+    Antares::UnitTests::CaptureAntaresLogs logs;
+    writeToHydroIniFile("[use leeway]\neast = no\n");
+
+    BOOST_CHECK(load());
+    BOOST_CHECK(logs.getWarnings().empty());
+}
+
 BOOST_FIXTURE_TEST_CASE(test_power_to_level, HydroFixture)
 {
     writeToHydroIniFile("[power to level]\neast = true\nwest = true\n");
@@ -229,30 +252,6 @@ BOOST_FIXTURE_TEST_CASE(test_initialize_reservoir_level_date, HydroFixture)
     BOOST_CHECK(load());
     BOOST_CHECK_EQUAL(east->hydro.initializeReservoirLevelDate, 5);
     BOOST_CHECK_EQUAL(west->hydro.initializeReservoirLevelDate, 11);
-}
-
-BOOST_FIXTURE_TEST_CASE(test_use_leeway, HydroFixture)
-{
-    writeToHydroIniFile("[use leeway]\neast = true\n");
-    BOOST_CHECK(load());
-    BOOST_CHECK_EQUAL(east->hydro.useLeeway, true);
-    BOOST_CHECK_EQUAL(west->hydro.useLeeway, false);
-}
-
-BOOST_FIXTURE_TEST_CASE(test_leeway_lower_bound, HydroFixture)
-{
-    writeToHydroIniFile("[leeway low]\neast = 0.2\nwest = 0.4\n");
-    BOOST_CHECK(load());
-    BOOST_CHECK_EQUAL(east->hydro.leewayLowerBound, 0.2);
-    BOOST_CHECK_EQUAL(west->hydro.leewayLowerBound, 0.4);
-}
-
-BOOST_FIXTURE_TEST_CASE(test_leeway_upper_bound, HydroFixture)
-{
-    writeToHydroIniFile("[leeway up]\neast = 0.8\nwest = 0.6\n");
-    BOOST_CHECK(load());
-    BOOST_CHECK_EQUAL(east->hydro.leewayUpperBound, 0.8);
-    BOOST_CHECK_EQUAL(west->hydro.leewayUpperBound, 0.6);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_pumping_efficiency, HydroFixture)
@@ -298,8 +297,6 @@ BOOST_FIXTURE_TEST_CASE(test_absent_section_preserves_constructor_default, Hydro
     BOOST_CHECK_EQUAL(east->hydro.followLoadModulations, true);
     BOOST_CHECK_EQUAL(east->hydro.useWaterValue, false);
     BOOST_CHECK_EQUAL(east->hydro.pumpingEfficiency, 1.0);
-    BOOST_CHECK_EQUAL(east->hydro.leewayLowerBound, 1.0);
-    BOOST_CHECK_EQUAL(east->hydro.leewayUpperBound, 1.0);
 }
 
 BOOST_AUTO_TEST_CASE(test_CheckDailyMaxEnergy_valid_and_invalid)
@@ -417,8 +414,6 @@ BOOST_FIXTURE_TEST_CASE(test_validate_clamps_invalid_scalar_properties, HydroFix
     east->hydro.intraDailyModulation = 0.5; // must be >= 1
     east->hydro.intermonthlyBreakdown = -1.;
     east->hydro.initializeReservoirLevelDate = -1;
-    east->hydro.leewayLowerBound = -1.;
-    east->hydro.leewayUpperBound = -1.;
     east->hydro.pumpingEfficiency = -1.;
 
     BOOST_CHECK(!validate());
@@ -427,26 +422,10 @@ BOOST_FIXTURE_TEST_CASE(test_validate_clamps_invalid_scalar_properties, HydroFix
     BOOST_CHECK_EQUAL(east->hydro.intraDailyModulation, 1.);
     BOOST_CHECK_EQUAL(east->hydro.intermonthlyBreakdown, 0.);
     BOOST_CHECK_EQUAL(east->hydro.initializeReservoirLevelDate, 0);
-    BOOST_CHECK_EQUAL(east->hydro.leewayLowerBound, 0.);
-    BOOST_CHECK_EQUAL(east->hydro.leewayUpperBound, 0.);
     BOOST_CHECK_EQUAL(east->hydro.pumpingEfficiency, 0.);
 
     // west is untouched: still holds reset() defaults
     BOOST_CHECK_EQUAL(west->hydro.intraDailyModulation, 24.);
-    BOOST_CHECK_EQUAL(west->hydro.leewayLowerBound, 1.);
-    BOOST_CHECK_EQUAL(west->hydro.leewayUpperBound, 1.);
-}
-
-BOOST_FIXTURE_TEST_CASE(test_validate_leeway_lower_greater_than_upper, HydroFixture)
-{
-    east->hydro.leewayLowerBound = 0.8;
-    east->hydro.leewayUpperBound = 0.2;
-
-    // Unlike the other checks, an inverted leeway range is only logged, not
-    // reported as a validation failure and not corrected (existing behavior).
-    BOOST_CHECK(validate());
-    BOOST_CHECK_EQUAL(east->hydro.leewayLowerBound, 0.8);
-    BOOST_CHECK_EQUAL(east->hydro.leewayUpperBound, 0.2);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_validate_detects_invalid_inflow_and_credit_modulation, HydroFixture)

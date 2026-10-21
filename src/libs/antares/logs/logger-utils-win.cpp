@@ -1,15 +1,15 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "antares/logs/logger-utils-win.h"
-
 #ifdef _WIN32
 
 #include <iostream>
+#include <windows.h>
+
+#include "antares/logs/logger-utils.h"
 
 namespace Antares::Logs
 {
-
 namespace
 {
 constexpr WORD winDefault = 7; // FOREGROUND_RED|GREEN|BLUE, no intensity
