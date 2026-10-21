@@ -1316,7 +1316,7 @@ reserves:
 
     std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "reserveup.txt");
     fileNeedsUp << "2\n3\n";
-    for (int i = 2; i < HOURS_PER_YEAR; ++i)
+    for (uint i = 2; i < HOURS_PER_YEAR; ++i)
     {
         fileNeedsUp << "0\n";
     }
