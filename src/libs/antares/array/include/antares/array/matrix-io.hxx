@@ -18,9 +18,11 @@
 #include <memory>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <type_traits>
 #include <utility>
 
+#include <antares/io/CsvReader.h>
 #include <antares/io/statistics.h>
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
@@ -47,16 +49,6 @@ using MatrixType = Matrix<T>;
 namespace // anonymous
 {
 constexpr std::uintmax_t matrixFileSizeLimit = 1536ULL * 1024ULL * 1024ULL;
-
-struct PopBackGuard final
-{
-    std::string& value;
-
-    ~PopBackGuard()
-    {
-        value.pop_back();
-    }
-};
 
 template<class T>
 class MatrixStringConverter final
@@ -153,14 +145,35 @@ bool detectEncoding(const std::string& filename, const std::string& data, size_t
     return true;
 }
 
+std::size_t matrixWidth(IO::CSVRow row)
+{
+    auto width = row.size();
+    while (width > 0 && row[width - 1].value.empty())
+    {
+        if (width == 1)
+        {
+            if (row[0].separator != '\t')
+            {
+                break;
+            }
+        }
+        else if (row[width - 2].separator != '\t')
+        {
+            break;
+        }
+        --width;
+    }
+    return width;
+}
+
 template<class T>
-bool loadFromBuffer(Matrix<T>& matrix,
-                    const std::string& filename,
-                    const std::string& data,
-                    unsigned int minWidth,
-                    unsigned int maxHeight,
-                    bool fixedSize,
-                    unsigned int options)
+bool loadFromCSV(Matrix<T>& matrix,
+                 const std::string& filename,
+                 const std::string& data,
+                 unsigned int minWidth,
+                 unsigned int maxHeight,
+                 bool fixedSize,
+                 unsigned int options)
 {
     logs.debug() << "  :: loading `" << filename << "`";
 
@@ -171,8 +184,11 @@ bool loadFromBuffer(Matrix<T>& matrix,
         return false;
     }
 
-    unsigned int offset = static_cast<unsigned int>(bom);
-    unsigned int x = 0;
+    const std::string_view csvData(data.data() + bom, data.size() - bom);
+    constexpr std::string_view separators = "\t;,";
+    std::string_view dataToRead = csvData;
+    std::size_t dataOffset = bom;
+    bool hasHeader = false;
 
     if (fixedSize)
     {
@@ -180,100 +196,117 @@ bool loadFromBuffer(Matrix<T>& matrix,
     }
     else
     {
-        if (!maxHeight)
+        const auto newlinePosition = csvData.find_first_of("\r\n");
+        const auto firstLineEnd = newlinePosition == std::string_view::npos ? csvData.size()
+                                                                            : newlinePosition;
+        if (!csvData.empty())
         {
-            maxHeight = static_cast<unsigned int>(std::count(data.begin(), data.end(), '\n'));
-            if (data.back() == '\n')
+            auto headerEnd = firstLineEnd;
+            while (headerEnd > 0
+                   && (csvData[headerEnd - 1] == '\r' || csvData[headerEnd - 1] == '\t'
+                       || csvData[headerEnd - 1] == ' '))
             {
-                --maxHeight;
+                --headerEnd;
             }
-            else
+
+            hasHeader = headerEnd > 7 && csvData.compare(0, 5, "size:") == 0;
+            if (hasHeader)
             {
-                ++maxHeight;
-            }
-        }
-
-        size_t max = data.find('\n');
-        if (max == std::string::npos)
-        {
-            logs.error() << filename << ": At least one line-return must be available";
-            matrix.reset(minWidth, maxHeight);
-            return false;
-        }
-
-        offset = static_cast<unsigned int>(max + 1);
-        if (max > 0)
-        {
-            do
-            {
-                const char c = data[max - 1];
-                if (c == '\r' || c == '\t' || c == ' ')
-                {
-                    if (!(--max))
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    break;
-                }
-            } while (true);
-        }
-
-        if (max > 7 && data.compare(0, 5, "size:") == 0)
-        {
-            std::string header = data.substr(0, max);
-            int headerWidth = 0;
-            int headerHeight = 0;
+                const std::string header(csvData.substr(0, headerEnd));
+                int headerWidth = 0;
+                int headerHeight = 0;
 #ifdef _MSC_VER
-            const int parsed = sscanf_s(header.c_str(), "size:%dx%d", &headerWidth, &headerHeight);
+                const int parsed = sscanf_s(header.c_str(),
+                                            "size:%dx%d",
+                                            &headerWidth,
+                                            &headerHeight);
 #else
-            const int parsed = sscanf(header.c_str(), "size:%dx%d", &headerWidth, &headerHeight);
+                const int parsed = sscanf(header.c_str(),
+                                          "size:%dx%d",
+                                          &headerWidth,
+                                          &headerHeight);
 #endif
-            if (parsed != 2)
-            {
-                headerWidth = 0;
-                headerHeight = 0;
-            }
+                if (parsed != 2)
+                {
+                    headerWidth = 0;
+                    headerHeight = 0;
+                }
 
-            if (headerWidth < 1)
-            {
-                if (!(options & Matrix<T>::optQuiet))
+                if (headerWidth < 1)
                 {
-                    logs.warning() << '`' << filename << "`: Invalid header";
+                    if (!(options & Matrix<T>::optQuiet))
+                    {
+                        logs.warning() << '`' << filename << "`: Invalid header";
+                    }
+                    headerWidth = 1;
                 }
-                headerWidth = 1;
-            }
-            if (headerHeight < 1)
-            {
-                if (!(options & Matrix<T>::optQuiet))
+                if (headerHeight < 1)
                 {
-                    logs.warning() << '`' << filename << "`: Invalid header";
+                    if (!(options & Matrix<T>::optQuiet))
+                    {
+                        logs.warning() << '`' << filename << "`: Invalid header";
+                    }
+
+                    if (!maxHeight)
+                    {
+                        unsigned int rows = 0;
+                        const auto bodyStart = newlinePosition == std::string_view::npos
+                                                 ? csvData.size()
+                                                 : firstLineEnd + 1
+                                                     + ((csvData[firstLineEnd] == '\r'
+                                                         && firstLineEnd + 1 < csvData.size()
+                                                         && csvData[firstLineEnd + 1] == '\n')
+                                                          ? 1
+                                                          : 0);
+                        IO::readCSV(csvData.substr(bodyStart),
+                                    separators,
+                                    [&rows](std::size_t, IO::CSVRow)
+                                    {
+                                        ++rows;
+                                        return true;
+                                    });
+                        maxHeight = rows;
+                    }
+                    headerHeight = static_cast<int>(maxHeight);
                 }
-                headerHeight = static_cast<int>(maxHeight);
+                maxHeight = static_cast<unsigned int>(headerHeight);
+                matrix.resize(static_cast<unsigned int>(headerWidth), maxHeight);
+
+                auto bodyStart = newlinePosition == std::string_view::npos ? csvData.size()
+                                                                           : firstLineEnd + 1;
+                if (newlinePosition != std::string_view::npos && csvData[firstLineEnd] == '\r'
+                    && bodyStart < csvData.size() && csvData[bodyStart] == '\n')
+                {
+                    ++bodyStart;
+                }
+                dataToRead = csvData.substr(bodyStart);
+                dataOffset += bodyStart;
             }
-            maxHeight = static_cast<unsigned int>(headerHeight);
-            matrix.resize(static_cast<unsigned int>(headerWidth),
-                          static_cast<unsigned int>(headerHeight));
         }
-        else
-        {
-            offset = 0;
-            x = max > 0 ? 1 : 0;
 
-            if (max > 0)
+        if (!hasHeader)
+        {
+            unsigned int width = 0;
+            unsigned int rows = 0;
+            IO::readCSV(dataToRead,
+                        separators,
+                        [&width, &rows, maxHeight](std::size_t rowIndex, IO::CSVRow row)
+                        {
+                            if (rowIndex == 0)
+                            {
+                                width = static_cast<unsigned int>(matrixWidth(row));
+                            }
+                            ++rows;
+                            return maxHeight == 0;
+                        });
+
+            if (!maxHeight)
             {
-                while ((offset = static_cast<unsigned int>(data.find_first_of("\t;,", offset)))
-                       < max)
-                {
-                    ++offset;
-                    ++x;
-                }
+                maxHeight = rows;
             }
 
-            matrix.resize(x < minWidth ? minWidth : x, maxHeight);
-            if (!x)
+            matrix.resize(std::max(width, minWidth), maxHeight);
+            if (!width)
             {
                 if (!(options & Matrix<T>::optQuiet) && !(options & Matrix<T>::optNoWarnIfEmpty))
                 {
@@ -282,28 +315,25 @@ bool loadFromBuffer(Matrix<T>& matrix,
                 matrix.zero();
                 return false;
             }
-
-            offset = static_cast<unsigned int>(bom);
         }
     }
 
     unsigned int y = 0;
-    unsigned int pos = 0;
     int errorCount = 6;
-    char separator = '\0';
     std::string converter;
     T cellValue{};
     bool result = true;
 
     const auto handleInvalidNumericValue =
-      [&](unsigned int cellX, unsigned int cellY, unsigned int cellOffset)
+      [&](unsigned int cellX, unsigned int cellY, const IO::CSVCell& cell)
     {
         result = false;
         if (!(options & Matrix<T>::optQuiet) && errorCount)
         {
             logs.warning() << '`' << filename << "`: Invalid numeric value (x:" << cellX
-                           << ",y:" << cellY << ", offset: " << cellOffset << "byte), text: `"
-                           << converter << " read:" << matrix[cellX][cellY] << '`';
+                           << ",y:" << cellY << ", offset: " << dataOffset + cell.offset
+                           << "byte), text: `" << std::string(cell.value)
+                           << " read:" << matrix[cellX][cellY] << '`';
             if (!(--errorCount))
             {
                 logs.warning() << " ... (skipped)";
@@ -312,160 +342,144 @@ bool loadFromBuffer(Matrix<T>& matrix,
         matrix[cellX][cellY] = T{};
     };
 
-    while (y < maxHeight && offset < data.size())
+    const bool parsed = IO::readCSV(
+      dataToRead,
+      separators,
+      [&](std::size_t, IO::CSVRow row)
+      {
+          if (y >= matrix.height())
+          {
+              return true;
+          }
+
+          if (options & Matrix<T>::optNeverFails)
+          {
+              const auto requiredWidth = matrixWidth(row);
+              if (requiredWidth > matrix.width())
+              {
+                  matrix.resizeWithoutDataLost(static_cast<unsigned int>(requiredWidth),
+                                               matrix.height());
+              }
+          }
+
+          unsigned int x = 0;
+          for (const auto& cell: row)
+          {
+              if (x >= matrix.width())
+              {
+                  if (cell.value.empty())
+                  {
+                      ++x;
+                      continue;
+                  }
+
+                  if (options & Matrix<T>::optNeverFails)
+                  {
+                      assert(x < matrix.width());
+                  }
+                  else
+                  {
+                      result = false;
+                      if (!(options & Matrix<T>::optQuiet) && errorCount > 0)
+                      {
+                          logs.warning() << '`' << filename
+                                         << "`: Invalid format: Too many columns_ for the row " << y
+                                         << " (offset: " << dataOffset + cell.offset << "byte)";
+                          if (!(--errorCount))
+                          {
+                              logs.warning() << " ... (skipped)";
+                          }
+                      }
+                      break;
+                  }
+              }
+
+              if (cell.value.empty())
+              {
+                  matrix[x][y] = T{};
+                  if (!(options & Matrix<T>::optQuiet))
+                  {
+                      logs.debug() << "  empty value at " << (x + 1) << 'x' << (y + 1);
+                  }
+              }
+              else if constexpr (std::is_same_v<T, std::string>)
+              {
+                  matrix[x][y].assign(cell.value);
+              }
+              else
+              {
+                  converter.assign(cell.value);
+                  if (!MatrixStringConverter<T>::Do(converter, cellValue))
+                  {
+                      double fallback = 0;
+                      if (!MatrixStringConverter<double>::Do(converter, fallback))
+                      {
+                          handleInvalidNumericValue(x, y, cell);
+                      }
+                      else
+                      {
+                          if constexpr (std::is_integral_v<T>)
+                          {
+                              if (!std::isfinite(fallback)
+                                  || fallback < static_cast<double>(std::numeric_limits<T>::min())
+                                  || (std::numeric_limits<T>::digits
+                                          > std::numeric_limits<double>::digits
+                                        ? fallback
+                                            >= static_cast<double>(std::numeric_limits<T>::max())
+                                        : fallback
+                                            > static_cast<double>(std::numeric_limits<T>::max())))
+                              {
+                                  handleInvalidNumericValue(x, y, cell);
+                              }
+                              else
+                              {
+                                  matrix[x][y] = static_cast<T>(std::trunc(fallback));
+                              }
+                          }
+                          else
+                          {
+                              matrix[x][y] = static_cast<T>(fallback);
+                          }
+                      }
+                  }
+                  else
+                  {
+                      matrix[x][y] = cellValue;
+                  }
+              }
+              ++x;
+          }
+
+          if (x < matrix.width())
+          {
+              if (!(options & Matrix<T>::optNeverFails))
+              {
+                  result = false;
+                  if (!(options & Matrix<T>::optQuiet) && errorCount)
+                  {
+                      logs.warning()
+                        << filename << ": at line " << (y + 1) << ", not enough columns (expected "
+                        << matrix.width() << ", got " << x << ')';
+                      if (!(--errorCount))
+                      {
+                          logs.warning() << " ... (skipped)";
+                      }
+                  }
+              }
+              while (x < matrix.width())
+              {
+                  matrix[x][y] = T{};
+                  ++x;
+              }
+          }
+
+          ++y;
+          return true;
+      });
+
+    if (!parsed)
     {
-        x = 0;
-        pos = offset;
-        const unsigned int lineOffset = offset;
-
-        while ((offset = static_cast<unsigned int>(data.find_first_of("\t\r\n;,", offset)))
-               != static_cast<unsigned int>(std::string::npos))
-        {
-            separator = data[offset];
-            converter.assign(data, pos, offset - pos);
-
-            if (!converter.empty())
-            {
-                if (x >= matrix.width())
-                {
-                    if (options & Matrix<T>::optNeverFails)
-                    {
-                        if (separator == '\n')
-                        {
-                            matrix.resizeWithoutDataLost(x + 1, matrix.height());
-                        }
-                        else
-                        {
-                            unsigned int newOffset = offset;
-                            unsigned int newWidth = matrix.width() + 1;
-                            while ((newOffset = static_cast<unsigned int>(
-                                      data.find_first_of("\t\r\n;,", newOffset)))
-                                   != static_cast<unsigned int>(std::string::npos))
-                            {
-                                if (data[newOffset] == '\n')
-                                {
-                                    ++newWidth;
-                                    break;
-                                }
-                                if (data[newOffset] != '\r')
-                                {
-                                    ++newWidth;
-                                }
-                                ++newOffset;
-                            }
-                            matrix.resizeWithoutDataLost(newWidth, matrix.height());
-                        }
-                    }
-                    else
-                    {
-                        result = false;
-                        if (!(options & Matrix<T>::optQuiet) && errorCount > 0)
-                        {
-                            logs.warning() << '`' << filename
-                                           << "`: Invalid format: Too many columns_ for the row "
-                                           << y << " (offset: " << pos << "byte)";
-                            if (!(--errorCount))
-                            {
-                                logs.warning() << " ... (skipped)";
-                            }
-                        }
-                        break;
-                    }
-                }
-
-                if constexpr (std::is_same_v<T, std::string>)
-                {
-                    matrix[x][y] = converter;
-                }
-                else if (!MatrixStringConverter<T>::Do(converter, cellValue))
-                {
-                    double fallback = 0;
-                    if (!MatrixStringConverter<double>::Do(converter, fallback))
-                    {
-                        handleInvalidNumericValue(x, y, pos);
-                    }
-                    else
-                    {
-                        if constexpr (std::is_integral_v<T>)
-                        {
-                            if (!std::isfinite(fallback)
-                                || fallback < static_cast<double>(std::numeric_limits<T>::min())
-                                || (std::numeric_limits<T>::digits
-                                        > std::numeric_limits<double>::digits
-                                      ? fallback
-                                          >= static_cast<double>(std::numeric_limits<T>::max())
-                                      : fallback
-                                          > static_cast<double>(std::numeric_limits<T>::max())))
-                            {
-                                handleInvalidNumericValue(x, y, pos);
-                            }
-                            else
-                            {
-                                matrix[x][y] = static_cast<T>(std::trunc(fallback));
-                            }
-                        }
-                        else
-                        {
-                            matrix[x][y] = static_cast<T>(fallback);
-                        }
-                    }
-                }
-                else
-                {
-                    matrix[x][y] = cellValue;
-                }
-            }
-            else if (x < matrix.width())
-            {
-                matrix[x][y] = T{};
-                if (!(options & Matrix<T>::optQuiet))
-                {
-                    logs.debug() << "  empty value at " << (x + 1) << 'x' << (y + 1)
-                                 << " (line offset: " << (offset - lineOffset) << ")";
-                }
-            }
-
-            pos = ++offset;
-            ++x;
-
-            if (separator == '\r')
-            {
-                if (offset < data.size() && data[offset] == '\n')
-                {
-                    pos = ++offset;
-                    break;
-                }
-            }
-            else if (separator == '\n')
-            {
-                break;
-            }
-        }
-
-        if (x < matrix.width())
-        {
-            if (!(options & Matrix<T>::optNeverFails))
-            {
-                result = false;
-                if (!(options & Matrix<T>::optQuiet) && errorCount)
-                {
-                    logs.warning()
-                      << filename << ": at line " << (y + 1) << ", not enough columns (expected "
-                      << matrix.width() << ", got " << x << ')';
-                    if (!(--errorCount))
-                    {
-                        logs.warning() << " ... (skipped)";
-                    }
-                }
-            }
-            while (x < matrix.width())
-            {
-                matrix[x][y] = T{};
-                ++x;
-            }
-        }
-
-        ++y;
+        result = false;
     }
 
     if (y < matrix.height())
@@ -478,7 +492,7 @@ bool loadFromBuffer(Matrix<T>& matrix,
         }
         while (y < matrix.height())
         {
-            for (x = 0; x < matrix.width(); ++x)
+            for (unsigned int x = 0; x < matrix.width(); ++x)
             {
                 matrix[x][y] = T{};
             }
@@ -583,15 +597,13 @@ bool load(MatrixType<T>& matrix,
         Statistics::HasReadFromDisk(input->size());
     }
 
-    input->push_back('\n');
-    PopBackGuard guard{*input};
-    const bool result = loadFromBuffer(matrix,
-                                       filename,
-                                       *input,
-                                       minWidth,
-                                       maxHeight,
-                                       (options & MatrixType<T>::optFixedSize) != 0,
-                                       options);
+    const bool result = loadFromCSV(matrix,
+                                    filename,
+                                    *input,
+                                    minWidth,
+                                    maxHeight,
+                                    (options & MatrixType<T>::optFixedSize) != 0,
+                                    options);
     if (!result)
     {
         matrix.reset(minWidth, maxHeight);

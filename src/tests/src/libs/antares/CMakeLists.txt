@@ -48,6 +48,7 @@ add_boost_test(tests-matrix-save
         "${CMAKE_SOURCE_DIR}/src/tests/src/libs"
         LIBS
         matrix
+        Antares::io
         yuni-static-core
         antares-core
         Antares::exception)
@@ -67,6 +68,7 @@ add_boost_test(tests-matrix-load
         "${CMAKE_SOURCE_DIR}/src/tests/src/libs"
         LIBS
         matrix
+        Antares::io
         yuni-static-core
         antares-core
         Antares::exception)

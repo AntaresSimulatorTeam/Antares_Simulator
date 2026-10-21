@@ -20,7 +20,7 @@ using BufferType = MatrixIO::BufferType;
 using std::string;
 
 /*
-All loadFromCSVFile(...) entries (some directions to test this big method):
+All MatrixIO::load(...) entries (some directions to test this big method):
         1. file to be loaded (= buffer) :
                 a. empty
                 b. contains the head banner 'size:nxm' or not
@@ -28,10 +28,10 @@ All loadFromCSVFile(...) entries (some directions to test this big method):
                 d. full of zeros,
                 e. full of numbers (> 0 or < 0)
                 f. strange cases
-        2. Initial matrix state (matrix state when loadFromCSVFile(...) is called) :
+        2. Initial matrix state (matrix state when MatrixIO::load(...) is called) :
                 a. empty
                 b. sized n x m
-        3. loadFromBuffer(...) method arguments :
+        3. CSV reader and MatrixIO::load(...) arguments :
                 a. desired final matrix size (minWidth & maxHeight)
                 b. options :
                         + optNone = 0,				//! None
@@ -394,6 +394,22 @@ BOOST_AUTO_TEST_CASE(file_with_columns_of_different_size___load_succeeds__row_no
 
     BOOST_REQUIRE_EQUAL(mtx[0][1], 1.3);
     BOOST_REQUIRE_EQUAL(mtx[1][1], 4.5);
+}
+
+BOOST_AUTO_TEST_CASE(csv_trailing_empty_column_is_preserved)
+{
+    BufferType buffer = "1,2,\r\n3,4,\r\n";
+    Matrix<double> matrix;
+
+    BOOST_REQUIRE(MatrixIO::load(matrix, "path/to/a/file", 0, 0, Matrix<>::optNone, &buffer));
+    BOOST_REQUIRE_EQUAL(matrix.width(), 3);
+    BOOST_REQUIRE_EQUAL(matrix.height(), 2);
+    BOOST_CHECK_EQUAL(matrix[0][0], 1.);
+    BOOST_CHECK_EQUAL(matrix[1][0], 2.);
+    BOOST_CHECK_EQUAL(matrix[2][0], 0.);
+    BOOST_CHECK_EQUAL(matrix[0][1], 3.);
+    BOOST_CHECK_EQUAL(matrix[1][1], 4.);
+    BOOST_CHECK_EQUAL(matrix[2][1], 0.);
 }
 
 // 1.f.
