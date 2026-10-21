@@ -1176,8 +1176,11 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_file_missing_needs,
   - name: ReserveUp
 )";
     file.close();
-    BOOST_CHECK(Antares::Data::loadReservesParameters(studyPath, *areaA));
-    BOOST_CHECK_EQUAL(getErrors().size(), 1);
+    BOOST_CHECK_EXCEPTION(Antares::Data::loadReservesParameters(studyPath, *areaA),
+                          std::runtime_error,
+                          containsMessage(
+                            "Failed to load need from CSV file: "
+                            + (studyPath / "reserves" / "a" / "reserveup.txt").string()));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_minimal, OneProblemWithoutReservesOneAreaWithLogger)
