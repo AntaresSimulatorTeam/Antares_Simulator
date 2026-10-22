@@ -203,9 +203,12 @@ models:
   - id: thermal_invest
     parameters:
       - id: investment_cost
+        time-dependent: false
       - id: max_investment
+        time-dependent: false
     variables:
       - id: invested_capacity
+        time-dependent: false
         lower-bound: 0
         upper-bound: max_investment
     ports:
@@ -232,6 +235,10 @@ models:
       - id: generation_max_constraint
         expression: generation <= sum_connections(capacity_port.capacity, no_connection_expr = p_max_cluster)
 ~~~
+
+The investment parameters and variable are declared `time-dependent: false`: the investment is a single decision
+shared by all time steps, which also keeps its objective contribution time-independent (time-dependent objectives
+are not supported).
 
 Connecting a `thermal_invest` component to a `thermal` component (through their `capacity_port`) turns a simulation
 study into an investment study, the `thermal` model being unchanged.
