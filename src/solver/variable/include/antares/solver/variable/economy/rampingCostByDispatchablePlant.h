@@ -46,8 +46,9 @@ public:
     {
         for (unsigned int i = 0; i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd]; ++i)
         {
-            state.thermalClusterRampingCostForYear[i]
-              = yearlyValues[numSpace][state.thermalCluster->enabledIndex].hour[i];
+            state.thermalClusterRampingCostForYear[i] = yearlyValues[numSpace][state.thermalCluster
+                                                                                 ->enabledIndex]
+                                                          .hour[i];
         }
     }
 
