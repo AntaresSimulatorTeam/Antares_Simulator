@@ -303,6 +303,7 @@ EvaluationResult EvalVisitor::visitDual(const Nodes::FunctionNode* node)
     {
         const auto localTimeStep = timeStep - fillContext_.getLocalFirstTimeStep();
         if (LinearProblem::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
+                                                   component_,
                                                    timeStep,
                                                    fillContext_,
                                                    *this))
