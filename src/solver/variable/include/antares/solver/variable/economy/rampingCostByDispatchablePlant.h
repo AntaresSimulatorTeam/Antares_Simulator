@@ -25,6 +25,33 @@ public:
         return "Ramping costs by all the clusters";
     }
 
+    static void setHourlyValue(std::vector<IntermediateValues>& clusterValues,
+                               State& state,
+                               [[maybe_unused]] unsigned int numSpace)
+    {
+        auto area = state.area;
+        auto& thermal = state.thermal;
+        for (auto& cluster: area->thermal.list.each_enabled())
+        {
+            clusterValues[cluster->enabledIndex].hour[state.hourInTheYear]
+              = thermal[area->index].thermalClustersRampingCost[cluster->enabledIndex];
+        }
+    }
+
+    static void yearEndBuildPrepareDataForEachThermalCluster(
+      std::vector<std::vector<IntermediateValues>>& yearlyValues,
+      State& state,
+      uint,
+      unsigned int numSpace)
+    {
+        for (unsigned int i = 0; i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd]; ++i)
+        {
+            state.thermalClusterRampingCostForYear[i] = yearlyValues[numSpace][state.thermalCluster
+                                                                                 ->enabledIndex]
+                                                          .hour[i];
+        }
+    }
+
     static void yearEndBuildForEachThermalCluster(
       std::vector<std::vector<IntermediateValues>>& yearlyValues,
       State& state,
