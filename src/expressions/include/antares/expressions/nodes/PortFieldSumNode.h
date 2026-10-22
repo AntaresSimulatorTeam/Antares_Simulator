@@ -4,14 +4,16 @@
 #pragma once
 #include <string>
 
-#include <antares/expressions/nodes/Leaf.h>
+#include <antares/expressions/nodes/ParentNode.h>
 
 namespace Antares::Expressions::Nodes
 {
 /**
  * @brief Represents a port field node where the expression is a sum.
+ *
+ * Optionally holds a default expression (its only operand), used when the port is not connected.
  */
-class PortFieldSumNode final: public Node
+class PortFieldSumNode final: public ParentNode
 {
 public:
     /**
@@ -19,8 +21,12 @@ public:
      *
      * @param port_name The port name.
      * @param field_name The field name.
+     * @param no_connection_expr Expression used instead of the sum when the port is not
+     * connected, may be nullptr.
      */
-    explicit PortFieldSumNode(const std::string& port_name, const std::string& field_name);
+    explicit PortFieldSumNode(const std::string& port_name,
+                              const std::string& field_name,
+                              Node* no_connection_expr = nullptr);
 
     /**
      * @brief Retrieves the port name.
@@ -36,7 +42,12 @@ public:
      */
     const std::string& getFieldName() const;
 
-    bool operator==(const PortFieldSumNode& other) const = default;
+    /**
+     * @brief Retrieves the expression used when the port is not connected.
+     *
+     * @return The default expression, or nullptr if none was given.
+     */
+    Node* noConnectionExpr() const;
 
     std::string name() const override
     {

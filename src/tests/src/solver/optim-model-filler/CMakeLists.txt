@@ -20,6 +20,7 @@ add_boost_test(unit-tests-for-component-filler
         test_linearExpression.cpp
         test_readLinearExpressionVisitor.cpp
         test_readLinExprVisitor_sum_connections.cpp
+        test_outOfBoundsTimeShift.cpp
         test_readLinearConstraintVisitor.cpp
         visitorFixture.hpp
         ${SRC_UTILS_FOR_COMPONENT_FILLER_TESTS}

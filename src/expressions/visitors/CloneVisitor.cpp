@@ -82,8 +82,11 @@ Nodes::Node* CloneVisitor::visit(const Nodes::PortFieldNode* portfieldNode)
 
 Nodes::Node* CloneVisitor::visit(const Nodes::PortFieldSumNode* portfieldSumNode)
 {
+    const auto* noConnectionExpr = portfieldSumNode->noConnectionExpr();
     return registry_.create<Nodes::PortFieldSumNode>(portfieldSumNode->getPortName(),
-                                                     portfieldSumNode->getFieldName());
+                                                     portfieldSumNode->getFieldName(),
+                                                     noConnectionExpr ? dispatch(noConnectionExpr)
+                                                                      : nullptr);
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::TimeShiftNode* node)

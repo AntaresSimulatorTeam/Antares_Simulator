@@ -13,6 +13,7 @@
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
+#include "antares/study/system-model/connection.h"
 
 #include "visitorFixture.hpp"
 using namespace Antares::Expressions;
@@ -641,6 +642,73 @@ BOOST_AUTO_TEST_CASE(area_connection_price_field_forbidden_in_linear_expression)
       containsMessage("Field 'price' of port 'generation' holds the dual value of a legacy area's "
                       "balance equation and can only be used in extra-outputs, not in a linear "
                       "expression."));
+}
+
+BOOST_FIXTURE_TEST_CASE(sum_connections_on_unconnected_port_uses_no_connection_expr,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // sum_connections(port.field, no_connection_expr = param_3 + 7 * var) = { 3, {var : 7} }
+    Node* product = create<MultiplicationNode>(create<LiteralNode>(7.),
+                                               create<VariableNode>("var", 0));
+    Node* noConnectionExpr = create<SumNode>(create<ParameterNode>("param_3"), product);
+    Node* node = create<PortFieldSumNode>("port", "field", noConnectionExpr);
+
+    auto linear_expression = visitor().dispatch(node);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 3.);
+    BOOST_REQUIRE_EQUAL(linear_expression[0].size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0][0].first, 0);
+    BOOST_CHECK_EQUAL(linear_expression[0][0].second, 7.);
+}
+
+BOOST_FIXTURE_TEST_CASE(sum_connections_on_connected_port_ignores_no_connection_expr,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    SystemModel::PortField field("field");
+    SystemModel::Port port("port", SystemModel::PortType("port_type", {field}));
+
+    // A peer component sends 5 through "port.field"
+    Registry<Node> peerRegistry;
+    Node* five = peerRegistry.create<LiteralNode>(5.);
+    std::vector<SystemModel::PortFieldDefinition> definitions;
+    definitions.emplace_back(port,
+                             field,
+                             SystemModel::Expression("5",
+                                                     NodeRegistry(five, std::move(peerRegistry))));
+    auto peerModel = SystemModel::ModelBuilder()
+                       .withId("peer_model")
+                       .withPorts({port})
+                       .withPortFieldDefinitions(std::move(definitions))
+                       .build();
+    auto peer = SystemModel::ComponentBuilder()
+                  .withId("peer")
+                  .withModel(&peerModel)
+                  .withScenarioGroupId("group")
+                  .build();
+
+    // The receiving component has a default (8) for its connected port
+    auto receiverModel = SystemModel::ModelBuilder()
+                           .withId("receiver_model")
+                           .withPorts({port})
+                           .build();
+    auto receiver = SystemModel::ComponentBuilder()
+                      .withId("receiver")
+                      .withModel(&receiverModel)
+                      .withScenarioGroupId("group")
+                      .build();
+    receiver.addComponentConnection("port", SystemModel::ConnectionEnd(&peer, &port));
+
+    Node* node = create<PortFieldSumNode>("port", "field", create<LiteralNode>(8.));
+
+    ReadLinearExpressionVisitor receiverVisitor(optimContainer,
+                                                ctx,
+                                                receiver,
+                                                &data,
+                                                scenarioGroupRepository);
+    auto linear_expression = receiverVisitor.dispatch(node);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_inverted_bounds_returns_zero,
