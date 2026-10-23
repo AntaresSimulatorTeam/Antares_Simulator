@@ -4,15 +4,18 @@
 #include "antares/io/inputs/yml-optim-config/parser.h"
 
 #include "antares/io/inputs/yml-optim-config/decoders.h"
+#include "antares/io/inputs/yml-utils/DiagnosticsScope.h"
 
 namespace Antares::IO::Inputs::YmlOptimConfig
 {
 OptimConfig Parser::parse(const std::string& content)
 {
+    YmlUtils::DiagnosticsScope diagnostics;
     YAML::Node root = YAML::Load(content);
 
     // Parse the entire OptimConfig structure including resolution-mode
     auto optimConfig = root.as<OptimConfig>();
+    diagnostics.flush();
 
     return optimConfig;
 }

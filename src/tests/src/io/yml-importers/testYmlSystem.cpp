@@ -270,7 +270,7 @@ BOOST_AUTO_TEST_CASE(connection_with_missing_field_throws_input_error)
     BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
-BOOST_AUTO_TEST_CASE(connection_with_extra_field_throws_input_error)
+BOOST_AUTO_TEST_CASE(connection_with_extra_field_is_ignored_with_warning)
 {
     YmlSystem::Parser parser;
     const auto system = R"(
@@ -283,7 +283,32 @@ BOOST_AUTO_TEST_CASE(connection_with_extra_field_throws_input_error)
                   port2: p2
                   extra: bad
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+    BOOST_CHECK_NO_THROW(parser.parse(system, ""));
+}
+
+BOOST_AUTO_TEST_CASE(all_missing_fields_are_reported_at_once)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            components:
+                - id: N
+                  scenario-groups: g
+                - model: lib.model
+            connections:
+                - component1: N
+                  port1: p1
+    )"s;
+    BOOST_CHECK_EXCEPTION(parser.parse(system, ""),
+                          InputError,
+                          [](const InputError& e)
+                          {
+                              const std::string msg = e.what();
+                              return msg.find("Missing field: model") != std::string::npos
+                                     && msg.find("Missing field: id") != std::string::npos
+                                     && msg.find("Missing field: component2") != std::string::npos;
+                          });
 }
 
 BOOST_AUTO_TEST_CASE(area_connection_with_wrong_field_count_throws_input_error)
@@ -420,7 +445,7 @@ BOOST_AUTO_TEST_CASE(decoder_throws_for_defined_non_map_nodes)
     }
 }
 
-BOOST_AUTO_TEST_CASE(misspelled_component_field_is_rejected)
+BOOST_AUTO_TEST_CASE(misspelled_component_field_is_ignored_with_warning)
 {
     YmlSystem::Parser parser;
     const auto system = R"(
@@ -431,7 +456,5 @@ BOOST_AUTO_TEST_CASE(misspelled_component_field_is_rejected)
                   model: lib.model
                   scenario-groups: g
     )"s;
-    BOOST_CHECK_EXCEPTION(parser.parse(system, ""),
-                          Antares::IO::Inputs::InputError,
-                          containsMessage("Unrecognised field: scenario-groups"));
+    BOOST_CHECK_NO_THROW(parser.parse(system, ""));
 }

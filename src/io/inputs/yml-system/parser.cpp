@@ -4,6 +4,7 @@
 #include "antares/io/inputs/yml-system/parser.h"
 
 #include "antares/io/inputs/yml-system/decoders.h"
+#include "antares/io/inputs/yml-utils/DiagnosticsScope.h"
 #include "antares/io/inputs/yml-system/system.h"
 
 namespace Antares::IO::Inputs::YmlSystem
@@ -63,6 +64,7 @@ void tagNodes(YAML::Node& node)
 
 System Parser::parse(const std::string& content, const std::string& pathFromRoot)
 {
+    YmlUtils::DiagnosticsScope diagnostics;
     YAML::Node root = YAML::Load(content);
 
     auto systemNode = root["system"];
@@ -73,6 +75,7 @@ System Parser::parse(const std::string& content, const std::string& pathFromRoot
     }
 
     System system = root["system"].as<System>();
+    diagnostics.flush();
 
     return system;
 }

@@ -13,6 +13,7 @@
 #include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/yml-model/decoders.h"
 #include "antares/io/inputs/yml-model/parser.h"
+#include "antares/io/inputs/yml-utils/DiagnosticsScope.h"
 #include "antares/io/inputs/yml-utils/checkFields.h"
 
 #include "enum_operators.h"
@@ -140,6 +141,30 @@ BOOST_AUTO_TEST_CASE(checkFields_reports_unexpected_and_missing_keys)
     )");
     BOOST_CHECK_THROW((YAML::checkFields(node, std::unordered_set<std::string>{"a", "b"})),
                       Antares::IO::Inputs::InputError);
+}
+
+BOOST_AUTO_TEST_CASE(checkFields_throws_dedicated_error_for_unexpected_keys_only)
+{
+    const auto node = YAML::Load(R"(
+        a: 1
+        c: 3
+    )");
+    BOOST_CHECK_THROW((YAML::checkFields(node, std::unordered_set<std::string>{"a"})),
+                      YAML::UnexpectedFieldsError);
+}
+
+BOOST_AUTO_TEST_CASE(checkFields_in_diagnostics_scope_records_instead_of_throwing)
+{
+    const auto node = YAML::Load(R"(
+        a: 1
+        c: 3
+    )");
+    YmlUtils::DiagnosticsScope diagnostics;
+    BOOST_CHECK((YAML::checkFields(node, std::unordered_set<std::string>{"a"})));
+    BOOST_CHECK(!(YAML::checkFields(node, std::unordered_set<std::string>{"a", "b"})));
+    BOOST_CHECK_EXCEPTION(diagnostics.flush(),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("Missing field: b"));
 }
 
 BOOST_AUTO_TEST_CASE(checkFields_rejects_duplicated_keys)
@@ -411,7 +436,7 @@ BOOST_AUTO_TEST_CASE(port_types_without_price_field__in_area_connection_still_va
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.price, "");
 }
 
-BOOST_AUTO_TEST_CASE(area_connection_rejects_unknown_field)
+BOOST_AUTO_TEST_CASE(area_connection_ignores_unknown_field_with_warning)
 {
     YmlModel::Parser parser;
     const auto library = R"(
@@ -429,7 +454,7 @@ BOOST_AUTO_TEST_CASE(area_connection_rejects_unknown_field)
                    not-a-field:
             models: []
     )"s;
-    BOOST_REQUIRE_THROW((void)parser.parse(library), Antares::IO::Inputs::InputError);
+    BOOST_REQUIRE_NO_THROW((void)parser.parse(library));
 }
 
 BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)
@@ -1116,7 +1141,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_extra_outputs)
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].expression.input_expr, "expression2");
 }
 
-BOOST_AUTO_TEST_CASE(misspelled_model_field_is_rejected)
+BOOST_AUTO_TEST_CASE(misspelled_model_field_is_ignored_with_warning)
 {
     YmlModel::Parser parser;
     const auto library = R"(
@@ -1128,12 +1153,10 @@ BOOST_AUTO_TEST_CASE(misspelled_model_field_is_rejected)
                     - id: "profit"
                       expression: "p"
         )"s;
-    BOOST_CHECK_EXCEPTION(parser.parse(library),
-                          Antares::IO::Inputs::InputError,
-                          containsMessage("Unrecognised field: extra-output"));
+    BOOST_CHECK_NO_THROW(parser.parse(library));
 }
 
-BOOST_AUTO_TEST_CASE(misspelled_variable_field_is_rejected)
+BOOST_AUTO_TEST_CASE(misspelled_variable_field_is_ignored_with_warning)
 {
     YmlModel::Parser parser;
     const auto library = R"(
@@ -1145,7 +1168,5 @@ BOOST_AUTO_TEST_CASE(misspelled_variable_field_is_rejected)
                     - id: "p"
                       lower_bound: 0
         )"s;
-    BOOST_CHECK_EXCEPTION(parser.parse(library),
-                          Antares::IO::Inputs::InputError,
-                          containsMessage("Unrecognised field: lower_bound"));
+    BOOST_CHECK_NO_THROW(parser.parse(library));
 }

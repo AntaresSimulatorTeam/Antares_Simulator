@@ -22,10 +22,15 @@ bool convert<YmlSystem::Parameter>::decode(const Node& node, YmlSystem::Paramete
     {
         return false;
     }
-    checkFields(node, {"id", "time-dependent", "scenario-dependent", "value"}, {"scenario-group"});
+    if (!checkFields(node,
+                     {"id", "value"},
+                     {"time-dependent", "scenario-dependent", "scenario-group"}))
+    {
+        return true;
+    }
     rhs.id = node["id"].as<std::string>();
-    rhs.time_dependent = node["time-dependent"].as<bool>();
-    rhs.scenario_dependent = node["scenario-dependent"].as<bool>();
+    rhs.time_dependent = node["time-dependent"].as<bool>(false);
+    rhs.scenario_dependent = node["scenario-dependent"].as<bool>(false);
     rhs.value = node["value"].as<std::string>();
     return true;
 }
@@ -36,7 +41,10 @@ bool convert<YmlSystem::Property>::decode(const Node& node, YmlSystem::Property&
     {
         return false;
     }
-    checkFields(node, {"id", "value"});
+    if (!checkFields(node, {"id", "value"}))
+    {
+        return true;
+    }
     rhs.id = node["id"].as<std::string>();
     rhs.value = node["value"].as<std::string>();
     return true;
@@ -48,7 +56,10 @@ bool convert<YmlSystem::Component>::decode(const Node& node, YmlSystem::Componen
     {
         return false;
     }
-    checkFields(node, {"id", "model"}, {"scenario-group", "parameters", "properties"});
+    if (!checkFields(node, {"id", "model"}, {"scenario-group", "parameters", "properties"}))
+    {
+        return true;
+    }
     rhs.id = node["id"].as<std::string>();
     rhs.model = node["model"].as<std::string>();
     rhs.scenarioGroup = node["scenario-group"].as<std::string>("");
@@ -63,7 +74,10 @@ bool convert<YmlSystem::Connection>::decode(const Node& node, YmlSystem::Connect
     {
         return false;
     }
-    checkFields(node, {"component1", "port1", "component2", "port2"});
+    if (!checkFields(node, {"component1", "port1", "component2", "port2"}))
+    {
+        return true;
+    }
     rhs.firstEntry.componentId = node["component1"].as<std::string>();
     rhs.firstEntry.portId = node["port1"].as<std::string>();
 
@@ -78,7 +92,10 @@ bool convert<YmlSystem::AreaConnection>::decode(const Node& node, YmlSystem::Are
     {
         return false;
     }
-    checkFields(node, {"component", "port", "area"});
+    if (!checkFields(node, {"component", "port", "area"}))
+    {
+        return true;
+    }
     rhs.componentId = node["component"].as<std::string>();
     rhs.portId = node["port"].as<std::string>();
     rhs.areaId = node["area"].as<std::string>();
@@ -92,7 +109,10 @@ bool convert<YmlSystem::ThermalComponent>::decode(const Node& node,
     {
         return false;
     }
-    checkFields(node, {"area", "cluster-id"});
+    if (!checkFields(node, {"area", "cluster-id"}))
+    {
+        return true;
+    }
     rhs.areaId = node["area"].as<std::string>();
     rhs.clusterId = node["cluster-id"].as<std::string>();
     return true;
@@ -106,7 +126,10 @@ bool convert<YmlSystem::ThermalCapacityConnection>::decode(
     {
         return false;
     }
-    checkFields(node, {"component", "port", "thermal-component"});
+    if (!checkFields(node, {"component", "port", "thermal-component"}))
+    {
+        return true;
+    }
     rhs.componentId = node["component"].as<std::string>();
     rhs.portId = node["port"].as<std::string>();
     const Node thermalComponentNode = node["thermal-component"];
@@ -135,15 +158,19 @@ bool convert<YmlSystem::System>::decode(const Node& node, YmlSystem::System& rhs
     {
         throw InputError("Expected a YAML mapping for 'system'");
     }
-    checkFields(node,
-                {"id"},
-                {"description",
+    if (!checkFields(node,
+                {},
+                {"id",
+                 "description",
                  "model-libraries",
                  "components",
                  "connections",
                  "area-connections",
-                 "thermal-capacity-connections"});
-    rhs.id = node["id"].as<std::string>();
+                 "thermal-capacity-connections"}))
+    {
+        return true;
+    }
+    rhs.id = node["id"].as<std::string>("");
     rhs.components = as_fallback_default<std::vector<YmlSystem::Component>>(node["components"]);
     rhs.connections = as_fallback_default<std::vector<YmlSystem::Connection>>(node["connections"]);
     rhs.areaConnections = as_fallback_default<std::vector<YmlSystem::AreaConnection>>(

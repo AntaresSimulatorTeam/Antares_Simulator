@@ -5,6 +5,7 @@
 
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/io/inputs/yml-model/decoders.h"
+#include "antares/io/inputs/yml-utils/DiagnosticsScope.h"
 
 namespace Antares::IO::Inputs::YmlModel
 {
@@ -60,6 +61,7 @@ void tagNodes(YAML::Node& node)
 
 Library Parser::parse(const std::string& content)
 {
+    YmlUtils::DiagnosticsScope diagnostics;
     YAML::Node root = YAML::Load(content);
     auto libraryNode = root["library"];
     if (libraryNode.IsDefined() && !libraryNode.IsNull())
@@ -72,6 +74,7 @@ Library Parser::parse(const std::string& content)
         tagNodes(libraryNode);
     }
     auto library = root["library"].as<Library>();
+    diagnostics.flush();
 
     return library;
 }

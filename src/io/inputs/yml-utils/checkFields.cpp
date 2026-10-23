@@ -9,6 +9,7 @@
 #include <vector>
 
 #include <antares/io/inputs/InputError.h>
+#include "antares/io/inputs/yml-utils/DiagnosticsScope.h"
 #include "antares/io/inputs/yml-utils/YmlTreeDisplayer.h"
 
 namespace YAML
@@ -60,13 +61,13 @@ std::string build_message(const std::string& header,
 
 } // namespace
 
-void checkFields(const Node& node,
+bool checkFields(const Node& node,
                  const std::unordered_set<std::string>& mandatoryFields,
                  const std::unordered_set<std::string>& optionalFields)
 {
     if (!node.IsDefined() || !node.IsMap())
     {
-        return;
+        return true;
     }
 
     // Extract actual key names (cheap, no line-number tracking yet)
@@ -89,14 +90,14 @@ void checkFields(const Node& node,
 
     if (unexpected.empty() && missing.empty() && duplicated.empty())
     {
-        return; // valid
+        return true; // valid
     }
 
     // Invalid map: now build the displayer for reporting
     YmlTreeDisplayer displayer(node);
 
     const auto mark = node.Mark();
-    throw Antares::IO::Inputs::InputError(fmt::format(
+    const auto message = fmt::format(
       "Line {} column {}\n{}",
       mark.line + 1,
       mark.column + 1,
@@ -106,7 +107,27 @@ void checkFields(const Node& node,
                     displayer,
                     unexpected,
                     missing,
-                    duplicated)));
+                    duplicated));
+
+    const bool decodable = missing.empty() && duplicated.empty();
+    if (auto* scope = Antares::IO::Inputs::YmlUtils::DiagnosticsScope::current())
+    {
+        if (decodable)
+        {
+            scope->addWarning(message);
+        }
+        else
+        {
+            scope->addError(message);
+        }
+        return decodable;
+    }
+
+    if (decodable)
+    {
+        throw UnexpectedFieldsError(message);
+    }
+    throw Antares::IO::Inputs::InputError(message);
 }
 
 } // namespace YAML
