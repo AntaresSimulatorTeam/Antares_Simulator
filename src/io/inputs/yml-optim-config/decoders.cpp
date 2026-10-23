@@ -8,6 +8,7 @@
 namespace YAML
 {
 
+// Keep field reads in sync with the validation schema in parser.cpp.
 namespace
 {
 /// Throws InputError if the node is present but is not a YAML map.

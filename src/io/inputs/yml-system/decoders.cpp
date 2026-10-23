@@ -15,6 +15,7 @@ using namespace Antares::IO::Inputs;
 namespace YAML
 {
 
+// Keep field reads in sync with the validation schema in parser.cpp.
 bool convert<YmlSystem::Parameter>::decode(const Node& node, YmlSystem::Parameter& rhs)
 {
     if (!YmlUtils::requireMap(node, "parameter"))
@@ -104,14 +105,14 @@ bool convert<YmlSystem::ThermalCapacityConnection>::decode(
     const Node thermalComponentNode = node["thermal-component"];
     if (!thermalComponentNode.IsDefined())
     {
-        YmlTreeDisplayer displayer(node);
+        YmlTreeDisplayer displayer(node, "thermal-capacity-connection");
         throw InputError(fmt::format("Missing required field 'thermal-component'.\n{}{}",
                                      displayer.baseTree(),
                                      displayer.buildMarkedTree({}, {"thermal-component"})));
     }
     if (thermalComponentNode.IsNull())
     {
-        YmlTreeDisplayer displayer(node);
+        YmlTreeDisplayer displayer(node, "thermal-capacity-connection");
         throw InputError(
           fmt::format("Expected a YAML mapping for 'thermal-component' (got null).\n{}{}",
                       displayer.baseTree(),

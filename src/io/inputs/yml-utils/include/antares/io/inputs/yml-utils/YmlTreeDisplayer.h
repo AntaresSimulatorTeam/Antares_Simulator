@@ -19,7 +19,7 @@ namespace YAML
 class YmlTreeDisplayer
 {
 public:
-    explicit YmlTreeDisplayer(const Node& node);
+    YmlTreeDisplayer(const Node& node, const std::string& path);
 
     const std::string& baseTree() const;
 

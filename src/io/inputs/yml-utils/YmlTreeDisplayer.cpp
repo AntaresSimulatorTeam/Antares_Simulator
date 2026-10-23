@@ -9,9 +9,9 @@
 namespace YAML
 {
 
-YmlTreeDisplayer::YmlTreeDisplayer(const Node& node)
+YmlTreeDisplayer::YmlTreeDisplayer(const Node& node, const std::string& path)
 {
-    const std::filesystem::path nodeTagPath(node.Tag());
+    const std::filesystem::path nodePath(path);
 
     for (const auto& entry: node)
     {
@@ -27,10 +27,10 @@ YmlTreeDisplayer::YmlTreeDisplayer(const Node& node)
     }
 
     const auto depthParts = static_cast<std::size_t>(
-      std::distance(nodeTagPath.begin(), nodeTagPath.end()));
+      std::distance(nodePath.begin(), nodePath.end()));
     indentSpaces_ = (depthParts > 0 ? depthParts - 1 : 0) * 4;
 
-    baseTree_ = Antares::IO::Inputs::YmlUtils::getBaseTree(nodeTagPath);
+    baseTree_ = Antares::IO::Inputs::YmlUtils::getBaseTree(nodePath);
 }
 
 const std::string& YmlTreeDisplayer::baseTree() const

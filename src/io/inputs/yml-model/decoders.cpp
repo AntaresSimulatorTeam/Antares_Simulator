@@ -15,15 +15,12 @@ using namespace Antares::IO::Inputs;
 namespace YAML
 {
 
+// Keep field reads in sync with the validation schema in parser.cpp.
 void checkMandatoryIdField(const Node& node, const std::string& nodeName)
 {
     if (!node["id"].IsDefined() || node["id"].IsNull())
     {
-        std::filesystem::path nodePath(node.Tag());
-        throw KeyNotFound(node.Mark(),
-                          fmt::format("{} id is mandatory in library\n{}",
-                                      nodeName,
-                                      YmlUtils::printPathTree(nodePath)));
+        throw KeyNotFound(node.Mark(), fmt::format("{} id is mandatory in library", nodeName));
     }
 }
 

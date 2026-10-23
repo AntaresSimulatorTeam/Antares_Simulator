@@ -18,6 +18,19 @@ namespace Antares::IO::Inputs::YmlUtils
 
 namespace
 {
+struct Findings
+{
+    std::vector<std::string> unexpected = {};
+    std::vector<std::string> missing = {};
+    std::vector<std::string> duplicated = {};
+};
+
+struct ValidationResult
+{
+    std::vector<std::string> warnings;
+    std::vector<std::string> errors;
+};
+
 std::vector<std::string> diffSet(const std::unordered_set<std::string>& setA,
                                  const std::unordered_set<std::string>& setB)
 {
@@ -29,58 +42,53 @@ std::vector<std::string> diffSet(const std::unordered_set<std::string>& setA,
     return diff;
 }
 
-std::string build_message(const std::string& header,
-                          const YAML::YmlTreeDisplayer& displayer,
-                          const std::vector<std::string>& unexpected,
-                          const std::vector<std::string>& missing,
-                          const std::vector<std::string>& duplicated)
+std::string buildMessage(const YAML::Node& node, const std::string& path, const Findings& findings)
 {
+    const YAML::YmlTreeDisplayer displayer(node, path);
     // Duplicated keys are highlighted like unexpected ones
-    auto markedUnexpected = unexpected;
-    markedUnexpected.insert(markedUnexpected.end(), duplicated.begin(), duplicated.end());
+    auto markedUnexpected = findings.unexpected;
+    markedUnexpected.insert(markedUnexpected.end(),
+                            findings.duplicated.begin(),
+                            findings.duplicated.end());
 
     std::string fieldsList;
-    for (const auto& f: unexpected)
+    for (const auto& f: findings.unexpected)
     {
         fieldsList += fmt::format("- Unrecognised field: {}\n", f);
     }
-    for (const auto& f: missing)
+    for (const auto& f: findings.missing)
     {
         fieldsList += fmt::format("- Missing field: {}\n", f);
     }
 
-    for (const auto& f: duplicated)
+    for (const auto& f: findings.duplicated)
     {
         fieldsList += fmt::format("- Duplicated field: {}\n", f);
     }
 
-    return fmt::format("{}\n{}\n{}{}",
-                       header,
+    const auto mark = node.Mark();
+    return fmt::format("Line {} column {}\nYAML field validation:\n{}\n{}{}",
+                       mark.line + 1,
+                       mark.column + 1,
                        fieldsList,
                        displayer.baseTree(),
-                       displayer.buildMarkedTree(markedUnexpected, missing));
+                       displayer.buildMarkedTree(markedUnexpected, findings.missing));
 }
 
-void collectFieldErrors(YAML::Node node,
-                        const std::vector<Field>& fields,
-                        const std::string& path,
-                        std::vector<std::string>& errors)
+void validateMap(const YAML::Node& node,
+                 const std::vector<Field>& fields,
+                 const std::string& path,
+                 ValidationResult& result)
 {
-    if (!node.IsMap())
-    {
-        return;
-    }
-    node.SetTag(path);
-
     std::unordered_set<std::string> actualKeys;
     std::vector<std::string> duplicated;
     for (const auto& entry: node)
     {
         if (!entry.first.IsScalar())
         {
-            errors.push_back(fmt::format("Line {}: expected a scalar field name in '{}'.",
-                                         entry.first.Mark().line + 1,
-                                         path));
+            result.errors.push_back(fmt::format("Line {}: expected a scalar field name in '{}'.",
+                                                entry.first.Mark().line + 1,
+                                                path));
             continue;
         }
         auto key = entry.first.as<std::string>();
@@ -104,34 +112,40 @@ void collectFieldErrors(YAML::Node node,
     const auto unexpected = diffSet(actualKeys, allowedFields);
     const auto missing = diffSet(mandatoryFields, actualKeys);
 
-    if (!unexpected.empty() || !missing.empty() || !duplicated.empty())
+    if (!unexpected.empty())
     {
-        YAML::YmlTreeDisplayer displayer(node);
-        const auto mark = node.Mark();
-        if (!unexpected.empty())
+        result.warnings.push_back(buildMessage(node, path, {.unexpected = unexpected}));
+    }
+    if (!missing.empty() || !duplicated.empty())
+    {
+        result.errors.push_back(
+          buildMessage(node, path, {.missing = missing, .duplicated = duplicated}));
+    }
+}
+
+std::string sequenceItemName(const YAML::Node& node, std::size_t index)
+{
+    if (node.IsMap())
+    {
+        const auto id = node["id"];
+        if (id.IsDefined() && id.IsScalar())
         {
-            Antares::logs.warning()
-              << fmt::format("Line {} column {}\n{}",
-                             mark.line + 1,
-                             mark.column + 1,
-                             build_message("Unrecognised field(s) will be ignored.",
-                                           displayer,
-                                           unexpected,
-                                           {},
-                                           {}));
-        }
-        if (!missing.empty() || !duplicated.empty())
-        {
-            errors.push_back(fmt::format("Line {} column {}\n{}",
-                                         mark.line + 1,
-                                         mark.column + 1,
-                                         build_message("Duplicated or missing field(s).",
-                                                       displayer,
-                                                       {},
-                                                       missing,
-                                                       duplicated)));
+            return id.as<std::string>();
         }
     }
+    return "[" + std::to_string(index) + "]";
+}
+
+void collectFieldErrors(const YAML::Node& node,
+                        const std::vector<Field>& fields,
+                        const std::string& path,
+                        ValidationResult& result)
+{
+    if (!node.IsMap())
+    {
+        return;
+    }
+    validateMap(node, fields, path, result);
 
     // Visit every occurrence, including duplicated sections, without looking up ambiguous keys.
     for (const auto& entry: node)
@@ -147,37 +161,47 @@ void collectFieldErrors(YAML::Node node,
             continue;
         }
         const auto childPath = path.empty() ? key : path + "/" + key;
-        auto child = entry.second;
+        const auto& child = entry.second;
         if (child.IsSequence())
         {
             for (std::size_t i = 0; i < child.size(); ++i)
             {
                 auto item = child[i];
-                auto name = "[" + std::to_string(i) + "]";
-                if (item.IsMap() && item["id"].IsScalar())
-                {
-                    name = item["id"].as<std::string>();
-                }
-                collectFieldErrors(item, field->children, childPath + "/" + name, errors);
+                collectFieldErrors(item,
+                                   field->children,
+                                   childPath + "/" + sequenceItemName(item, i),
+                                   result);
             }
         }
         else
         {
-            collectFieldErrors(child, field->children, childPath, errors);
+            collectFieldErrors(child, field->children, childPath, result);
         }
     }
+}
+
+ValidationResult validateFields(const YAML::Node& node,
+                                const std::vector<Field>& fields,
+                                const std::string& path)
+{
+    ValidationResult result;
+    collectFieldErrors(node, fields, path, result);
+    return result;
 }
 
 } // namespace
 
 void checkFields(const YAML::Node& node, const std::vector<Field>& fields, const std::string& path)
 {
-    std::vector<std::string> errors;
-    collectFieldErrors(node, fields, path, errors);
-    if (!errors.empty())
+    const auto result = validateFields(node, fields, path);
+    for (const auto& warning: result.warnings)
+    {
+        Antares::logs.warning() << warning;
+    }
+    if (!result.errors.empty())
     {
         std::string message;
-        for (const auto& error: errors)
+        for (const auto& error: result.errors)
         {
             message += error + '\n';
         }

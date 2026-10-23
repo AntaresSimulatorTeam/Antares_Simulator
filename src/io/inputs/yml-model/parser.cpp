@@ -11,6 +11,7 @@ namespace Antares::IO::Inputs::YmlModel
 {
 namespace
 {
+// Keep this schema in sync with field reads in decoders.cpp.
 const std::vector<YmlUtils::Field> expressionFields = {{"id", true},
                                                        {"expression", true},
                                                        {"location"}};

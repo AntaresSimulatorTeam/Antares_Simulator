@@ -21,6 +21,7 @@ struct Field
 /// Validates maps and sequence entries recursively before decoding. Logs unknown fields and
 /// throws InputError containing all missing and duplicated fields. Value conversion is left to
 /// the decoders, so malformed values cannot hide field errors elsewhere in the document.
+/// The diagnostic path is explicit; validation does not modify the document or its YAML tags.
 void checkFields(const YAML::Node& node,
                  const std::vector<Field>& fields,
                  const std::string& path = "");
