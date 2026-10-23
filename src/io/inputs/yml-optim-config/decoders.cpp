@@ -8,6 +8,7 @@
 namespace YAML
 {
 
+// Keep field reads in sync with the validation schema in parser.cpp.
 namespace
 {
 /// Throws InputError if the node is present but is not a YAML map.
@@ -178,7 +179,10 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::OptimConfig>::decode(
     }
 
     // Parse models list
-    rhs.models = node["models"].as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Model>>();
+    if (node["models"].IsDefined() && !node["models"].IsNull())
+    {
+        rhs.models = node["models"].as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Model>>();
+    }
 
     // Parse scenario-scope (optional, absent -> default scenario scope)
     if (node["scenario-scope"].IsDefined() && !node["scenario-scope"].IsNull())

@@ -3,29 +3,34 @@
 
 #include "antares/io/inputs/yml-utils/YmlTreeDisplayer.h"
 
+#include <filesystem>
 #include <iterator>
 
 namespace YAML
 {
 
-YmlTreeDisplayer::YmlTreeDisplayer(const Node& node):
-    nodeTagPath_(node.Tag())
+YmlTreeDisplayer::YmlTreeDisplayer(const Node& node, const std::string& path)
 {
+    const std::filesystem::path nodePath(path);
+
     for (const auto& entry: node)
     {
         const Node keyNode = entry.first;
-        std::string keyName = keyNode.IsDefined() ? keyNode.as<std::string>()
-                                                  : std::string("<unknown>");
+        if (!keyNode.IsScalar())
+        {
+            continue;
+        }
+        std::string keyName = keyNode.as<std::string>();
         const auto mark = keyNode.Mark();
         const int line = static_cast<int>(mark.line) + 1;
         actualKeysLine_.emplace(keyName, line);
     }
 
     const auto depthParts = static_cast<std::size_t>(
-      std::distance(nodeTagPath_.begin(), nodeTagPath_.end()));
+      std::distance(nodePath.begin(), nodePath.end()));
     indentSpaces_ = (depthParts > 0 ? depthParts - 1 : 0) * 4;
 
-    baseTree_ = Antares::IO::Inputs::YmlUtils::getBaseTree(nodeTagPath_);
+    baseTree_ = Antares::IO::Inputs::YmlUtils::getBaseTree(nodePath);
 }
 
 const std::string& YmlTreeDisplayer::baseTree() const

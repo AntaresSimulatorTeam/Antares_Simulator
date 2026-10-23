@@ -5,6 +5,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <unit_test_utils.h>
 #include <yaml-cpp/exceptions.h>
 
 #include <boost/test/unit_test.hpp>
@@ -12,11 +13,13 @@
 #include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/yml-model/decoders.h"
 #include "antares/io/inputs/yml-model/parser.h"
+#include "antares/io/inputs/yml-utils/checkFields.h"
 
 #include "enum_operators.h"
 
 using namespace std::string_literals;
 using namespace Antares::IO::Inputs;
+using Antares::UnitTests::CaptureAntaresLogs;
 
 // Test empty library
 BOOST_AUTO_TEST_CASE(EmptyLibrary_is_valid)
@@ -45,7 +48,7 @@ BOOST_AUTO_TEST_CASE(library_without_id_throws)
             port-types: []
             models: []
     )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(parameter_without_id_throws)
@@ -65,7 +68,7 @@ BOOST_AUTO_TEST_CASE(parameter_without_id_throws)
                   constraints: []
                   objective-contributions: []
         )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(variable_without_id_throws)
@@ -86,7 +89,7 @@ BOOST_AUTO_TEST_CASE(variable_without_id_throws)
                   constraints: []
                   objective-contributions: []
         )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(model_without_id_throws)
@@ -105,7 +108,7 @@ BOOST_AUTO_TEST_CASE(model_without_id_throws)
                   constraints: []
                   objective-contributions: []
         )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(port_without_id_throws)
@@ -127,7 +130,7 @@ BOOST_AUTO_TEST_CASE(port_without_id_throws)
                   constraints: []
                   objective-contributions: []
         )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(checkFields_reports_unexpected_and_missing_keys)
@@ -136,8 +139,43 @@ BOOST_AUTO_TEST_CASE(checkFields_reports_unexpected_and_missing_keys)
         a: 1
         c: 3
     )");
-    BOOST_CHECK_THROW((YAML::checkFields(node, std::unordered_set<std::string>{"a", "b"})),
-                      YAML::Exception);
+    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node, {{"a", true}, {"b", true}})),
+                          InputError,
+                          containsMessage("Missing field: b"));
+}
+
+BOOST_AUTO_TEST_CASE(checkFields_warns_for_unexpected_keys_only)
+{
+    const auto node = YAML::Load(R"(
+        a: 1
+        c: 3
+    )");
+    CaptureAntaresLogs logs;
+    BOOST_CHECK_NO_THROW((YmlUtils::checkFields(node, {{"a", true}})));
+    BOOST_REQUIRE_EQUAL(logs.getWarnings().size(), 1);
+    BOOST_CHECK(logs.getWarnings().begin()->find("Unrecognised field: c") != std::string::npos);
+    BOOST_CHECK(logs.getWarnings().begin()->find("|__X c at line 3") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(checkFields_accepts_absent_optional_fields_without_warning)
+{
+    const auto node = YAML::Load(R"(
+        a: 1
+    )");
+    CaptureAntaresLogs logs;
+    BOOST_CHECK_NO_THROW((YmlUtils::checkFields(node, {{"a", true}, {"b"}})));
+    BOOST_CHECK(logs.getWarnings().empty());
+}
+
+BOOST_AUTO_TEST_CASE(checkFields_rejects_duplicated_keys)
+{
+    const auto node = YAML::Load(R"(
+        id: supply
+        id: demand
+    )");
+    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node, {{"id", true}})),
+                          InputError,
+                          containsMessage("Duplicated field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(printPathTree_formats_nested_paths)
@@ -399,7 +437,7 @@ BOOST_AUTO_TEST_CASE(port_types_without_price_field__in_area_connection_still_va
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.price, "");
 }
 
-BOOST_AUTO_TEST_CASE(area_connection_rejects_unknown_field)
+BOOST_AUTO_TEST_CASE(area_connection_ignores_unknown_field_with_warning)
 {
     YmlModel::Parser parser;
     const auto library = R"(
@@ -417,7 +455,7 @@ BOOST_AUTO_TEST_CASE(area_connection_rejects_unknown_field)
                    not-a-field:
             models: []
     )"s;
-    BOOST_REQUIRE_THROW((void)parser.parse(library), YAML::Exception);
+    BOOST_REQUIRE_NO_THROW((void)parser.parse(library));
 }
 
 BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)
@@ -1102,4 +1140,34 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_extra_outputs)
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[0].expression.input_expr, "expression1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].id, "output_name2");
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].expression.input_expr, "expression2");
+}
+
+BOOST_AUTO_TEST_CASE(misspelled_model_field_is_ignored_with_warning)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            models:
+                - id: "model_id"
+                  extra-output:
+                    - id: "profit"
+                      expression: "p"
+        )"s;
+    BOOST_CHECK_NO_THROW(parser.parse(library));
+}
+
+BOOST_AUTO_TEST_CASE(misspelled_variable_field_is_ignored_with_warning)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            models:
+                - id: "model_id"
+                  variables:
+                    - id: "p"
+                      lower_bound: 0
+        )"s;
+    BOOST_CHECK_NO_THROW(parser.parse(library));
 }

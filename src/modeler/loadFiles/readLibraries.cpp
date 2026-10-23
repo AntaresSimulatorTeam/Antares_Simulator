@@ -47,6 +47,11 @@ YmlModel::Library loadSingleLibrary(const fs::path& filePath)
         auto&& err = markYamlError(e, filePath.string());
         throw Error::LoadingError(err);
     }
+    catch (const Antares::IO::Inputs::InputError& e)
+    {
+        auto&& err = markInputError(e, filePath.string());
+        throw Error::LoadingError(err);
+    }
 }
 
 std::vector<SystemModel::Library> convertIntoSystemLibs(const std::vector<YmlModel::Library>& libs)

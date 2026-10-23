@@ -3,6 +3,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <unit_test_utils.h>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/io/inputs/InputError.h>
@@ -268,7 +270,7 @@ BOOST_AUTO_TEST_CASE(connection_with_missing_field_throws_input_error)
     BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
-BOOST_AUTO_TEST_CASE(connection_with_extra_field_throws_input_error)
+BOOST_AUTO_TEST_CASE(connection_with_extra_field_is_ignored_with_warning)
 {
     YmlSystem::Parser parser;
     const auto system = R"(
@@ -281,7 +283,32 @@ BOOST_AUTO_TEST_CASE(connection_with_extra_field_throws_input_error)
                   port2: p2
                   extra: bad
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+    BOOST_CHECK_NO_THROW(parser.parse(system, ""));
+}
+
+BOOST_AUTO_TEST_CASE(all_missing_fields_are_reported_at_once)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            components:
+                - id: N
+                  scenario-groups: g
+                - model: lib.model
+            connections:
+                - component1: N
+                  port1: p1
+    )"s;
+    BOOST_CHECK_EXCEPTION(parser.parse(system, ""),
+                          InputError,
+                          [](const InputError& e)
+                          {
+                              const std::string msg = e.what();
+                              return msg.find("Missing field: model") != std::string::npos
+                                     && msg.find("Missing field: id") != std::string::npos
+                                     && msg.find("Missing field: component2") != std::string::npos;
+                          });
 }
 
 BOOST_AUTO_TEST_CASE(area_connection_with_wrong_field_count_throws_input_error)
@@ -416,4 +443,18 @@ BOOST_AUTO_TEST_CASE(decoder_throws_for_defined_non_map_nodes)
         YmlSystem::System s;
         BOOST_CHECK_THROW(YAML::convert<YmlSystem::System>::decode(scalar, s), InputError);
     }
+}
+
+BOOST_AUTO_TEST_CASE(misspelled_component_field_is_ignored_with_warning)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            components:
+                - id: N
+                  model: lib.model
+                  scenario-groups: g
+    )"s;
+    BOOST_CHECK_NO_THROW(parser.parse(system, ""));
 }

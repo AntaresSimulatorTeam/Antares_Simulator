@@ -15,6 +15,14 @@ follows:
 
 Note that Antares will automatically create an **output** directory to write the modeler [outputs](03-outputs.md).
 
+### YAML field validation
+
+Model libraries, `system.yml`, and optimization configuration files are checked for field names
+before their values are decoded. All missing required fields and duplicate fields are reported
+together, with their location in the document, and prevent loading. Unknown fields are ignored
+with a warning; absent optional fields do not produce warnings. Value conversion errors are
+reported after field validation succeeds.
+
 ## Model libraries
 
 The model libraries directory shall contain all the model library files needed to run the study.  
