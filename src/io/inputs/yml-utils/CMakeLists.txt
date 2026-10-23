@@ -1,11 +1,9 @@
 set(SOURCES
         path_utils.cpp
         checkFields.cpp
-        DiagnosticsScope.cpp
         YmlTreeDisplayer.cpp
         include/antares/io/inputs/yml-utils/path_utils.h
         include/antares/io/inputs/yml-utils/checkFields.h
-        include/antares/io/inputs/yml-utils/DiagnosticsScope.h
         include/antares/io/inputs/yml-utils/YmlTreeDisplayer.h
 )
 

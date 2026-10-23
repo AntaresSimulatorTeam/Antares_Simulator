@@ -16,6 +16,10 @@ YmlTreeDisplayer::YmlTreeDisplayer(const Node& node)
     for (const auto& entry: node)
     {
         const Node keyNode = entry.first;
+        if (!keyNode.IsScalar())
+        {
+            continue;
+        }
         std::string keyName = keyNode.as<std::string>();
         const auto mark = keyNode.Mark();
         const int line = static_cast<int>(mark.line) + 1;

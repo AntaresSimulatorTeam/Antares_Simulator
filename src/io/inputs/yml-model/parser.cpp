@@ -5,77 +5,57 @@
 
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/io/inputs/yml-model/decoders.h"
-#include "antares/io/inputs/yml-utils/DiagnosticsScope.h"
+#include "antares/io/inputs/yml-utils/checkFields.h"
 
 namespace Antares::IO::Inputs::YmlModel
 {
 namespace
 {
-void tagNodes(YAML::Node& node);
+const std::vector<YmlUtils::Field> expressionFields = {{"id", true},
+                                                       {"expression", true},
+                                                       {"location"}};
 
-void visitMap(YAML::Node& node)
-{
-    for (auto it = node.begin(); it != node.end(); ++it)
-    {
-        YAML::Node child = it->second;
-        child.SetTag(node.Tag() + "/" + it->first.as<std::string>());
-        tagNodes(child);
-    }
-}
-
-void visitSequence(YAML::Node& node)
-{
-    for (std::size_t i = 0; i < node.size(); ++i)
-    {
-        YAML::Node child = node[i];
-
-        auto childIdNode = child["id"];
-        std::string childName = "__without__id__";
-        if (childIdNode.IsDefined() && !childIdNode.IsNull())
-        {
-            childName = childIdNode.as<std::string>();
-        }
-        child.SetTag(node.Tag() + "/" + childName);
-
-        tagNodes(child);
-    }
-}
-
-void tagNodes(YAML::Node& node)
-{
-    if (!node || node.IsNull())
-    {
-        return;
-    }
-
-    if (node.IsMap())
-    {
-        visitMap(node);
-    }
-    else if (node.IsSequence())
-    {
-        visitSequence(node);
-    }
-}
+const std::vector<YmlUtils::Field> libraryFields = {
+  {"id", true},
+  {"description"},
+  {"port-types",
+   false,
+   {{"id", true},
+    {"description"},
+    {"fields", false, {{"id", true}}},
+    {"area-connection",
+     false,
+     {{"injection-to-balance", true},
+      {"spillage-bound", true},
+      {"unsupplied-energy-bound", true},
+      {"price"}}},
+    {"thermal-capacity-connection", false, {{"capacity-field", true}}}}},
+  {"models",
+   false,
+   {{"id", true},
+    {"description"},
+    {"parameters", false, {{"id", true}, {"time-dependent"}, {"scenario-dependent"}}},
+    {"variables",
+     false,
+     {{"id", true},
+      {"lower-bound"},
+      {"upper-bound"},
+      {"variable-type"},
+      {"time-dependent"},
+      {"scenario-dependent"},
+      {"location"}}},
+    {"ports", false, {{"id", true}, {"type", true}}},
+    {"port-field-definitions", false, {{"port", true}, {"field", true}, {"definition", true}}},
+    {"constraints", false, expressionFields},
+    {"binding-constraints", false, expressionFields},
+    {"objective-contributions", false, expressionFields},
+    {"extra-outputs", false, {{"id", true}, {"expression", true}}}}}};
 } // anonymous namespace
 
 Library Parser::parse(const std::string& content)
 {
-    YmlUtils::DiagnosticsScope diagnostics;
     YAML::Node root = YAML::Load(content);
-    auto libraryNode = root["library"];
-    if (libraryNode.IsDefined() && !libraryNode.IsNull())
-    {
-        libraryNode.SetTag("library");
-        checkMandatoryIdField(libraryNode, "library");
-
-        const auto libraryName = libraryNode["id"].as<std::string>();
-        libraryNode.SetTag(libraryName);
-        tagNodes(libraryNode);
-    }
-    auto library = root["library"].as<Library>();
-    diagnostics.flush();
-
-    return library;
+    YmlUtils::checkFields(root, {{"library", true, libraryFields}});
+    return root["library"].as<Library>();
 }
 } // namespace Antares::IO::Inputs::YmlModel

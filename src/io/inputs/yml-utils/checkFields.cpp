@@ -6,13 +6,14 @@
 #include <algorithm>
 #include <fmt/format.h>
 #include <iterator>
+#include <unordered_set>
 #include <vector>
 
 #include <antares/io/inputs/InputError.h>
-#include "antares/io/inputs/yml-utils/DiagnosticsScope.h"
+#include <antares/logs/logs.h>
 #include "antares/io/inputs/yml-utils/YmlTreeDisplayer.h"
 
-namespace YAML
+namespace Antares::IO::Inputs::YmlUtils
 {
 
 namespace
@@ -24,11 +25,12 @@ std::vector<std::string> diffSet(const std::unordered_set<std::string>& setA,
     std::ranges::copy_if(setA,
                          std::back_inserter(diff),
                          [&setB](const auto& item) { return !setB.contains(item); });
+    std::ranges::sort(diff);
     return diff;
 }
 
 std::string build_message(const std::string& header,
-                          const YmlTreeDisplayer& displayer,
+                          const YAML::YmlTreeDisplayer& displayer,
                           const std::vector<std::string>& unexpected,
                           const std::vector<std::string>& missing,
                           const std::vector<std::string>& duplicated)
@@ -59,22 +61,28 @@ std::string build_message(const std::string& header,
                        displayer.buildMarkedTree(markedUnexpected, missing));
 }
 
-} // namespace
-
-bool checkFields(const Node& node,
-                 const std::unordered_set<std::string>& mandatoryFields,
-                 const std::unordered_set<std::string>& optionalFields)
+void collectFieldErrors(YAML::Node node,
+                        const std::vector<Field>& fields,
+                        const std::string& path,
+                        std::vector<std::string>& errors)
 {
-    if (!node.IsDefined() || !node.IsMap())
+    if (!node.IsMap())
     {
-        return true;
+        return;
     }
+    node.SetTag(path);
 
-    // Extract actual key names (cheap, no line-number tracking yet)
     std::unordered_set<std::string> actualKeys;
     std::vector<std::string> duplicated;
     for (const auto& entry: node)
     {
+        if (!entry.first.IsScalar())
+        {
+            errors.push_back(fmt::format("Line {}: expected a scalar field name in '{}'.",
+                                         entry.first.Mark().line + 1,
+                                         path));
+            continue;
+        }
         auto key = entry.first.as<std::string>();
         if (!actualKeys.insert(key).second)
         {
@@ -82,52 +90,99 @@ bool checkFields(const Node& node,
         }
     }
 
-    std::unordered_set<std::string> allowedFields = mandatoryFields;
-    allowedFields.insert(optionalFields.begin(), optionalFields.end());
+    std::unordered_set<std::string> mandatoryFields;
+    std::unordered_set<std::string> allowedFields;
+    for (const auto& field: fields)
+    {
+        allowedFields.insert(field.name);
+        if (field.required)
+        {
+            mandatoryFields.insert(field.name);
+        }
+    }
 
     const auto unexpected = diffSet(actualKeys, allowedFields);
     const auto missing = diffSet(mandatoryFields, actualKeys);
 
-    if (unexpected.empty() && missing.empty() && duplicated.empty())
+    if (!unexpected.empty() || !missing.empty() || !duplicated.empty())
     {
-        return true; // valid
+        YAML::YmlTreeDisplayer displayer(node);
+        const auto mark = node.Mark();
+        if (!unexpected.empty())
+        {
+            Antares::logs.warning()
+              << fmt::format("Line {} column {}\n{}",
+                             mark.line + 1,
+                             mark.column + 1,
+                             build_message("Unrecognised field(s) will be ignored.",
+                                           displayer,
+                                           unexpected,
+                                           {},
+                                           {}));
+        }
+        if (!missing.empty() || !duplicated.empty())
+        {
+            errors.push_back(fmt::format("Line {} column {}\n{}",
+                                         mark.line + 1,
+                                         mark.column + 1,
+                                         build_message("Duplicated or missing field(s).",
+                                                       displayer,
+                                                       {},
+                                                       missing,
+                                                       duplicated)));
+        }
     }
 
-    // Invalid map: now build the displayer for reporting
-    YmlTreeDisplayer displayer(node);
-
-    const auto mark = node.Mark();
-    const auto message = fmt::format(
-      "Line {} column {}\n{}",
-      mark.line + 1,
-      mark.column + 1,
-      build_message(fmt::format("Unexpected, duplicated or missing field(s) (expected {} "
-                                "field(s)).",
-                                allowedFields.size()),
-                    displayer,
-                    unexpected,
-                    missing,
-                    duplicated));
-
-    const bool decodable = missing.empty() && duplicated.empty();
-    if (auto* scope = Antares::IO::Inputs::YmlUtils::DiagnosticsScope::current())
+    // Visit every occurrence, including duplicated sections, without looking up ambiguous keys.
+    for (const auto& entry: node)
     {
-        if (decodable)
+        if (!entry.first.IsScalar())
         {
-            scope->addWarning(message);
+            continue;
+        }
+        const auto key = entry.first.as<std::string>();
+        const auto field = std::ranges::find(fields, key, &Field::name);
+        if (field == fields.end() || field->children.empty())
+        {
+            continue;
+        }
+        const auto childPath = path.empty() ? key : path + "/" + key;
+        auto child = entry.second;
+        if (child.IsSequence())
+        {
+            for (std::size_t i = 0; i < child.size(); ++i)
+            {
+                auto item = child[i];
+                auto name = "[" + std::to_string(i) + "]";
+                if (item.IsMap() && item["id"].IsScalar())
+                {
+                    name = item["id"].as<std::string>();
+                }
+                collectFieldErrors(item, field->children, childPath + "/" + name, errors);
+            }
         }
         else
         {
-            scope->addError(message);
+            collectFieldErrors(child, field->children, childPath, errors);
         }
-        return decodable;
     }
-
-    if (decodable)
-    {
-        throw UnexpectedFieldsError(message);
-    }
-    throw Antares::IO::Inputs::InputError(message);
 }
 
-} // namespace YAML
+} // namespace
+
+void checkFields(const YAML::Node& node, const std::vector<Field>& fields, const std::string& path)
+{
+    std::vector<std::string> errors;
+    collectFieldErrors(node, fields, path, errors);
+    if (!errors.empty())
+    {
+        std::string message;
+        for (const auto& error: errors)
+        {
+            message += error + '\n';
+        }
+        throw InputError(message);
+    }
+}
+
+} // namespace Antares::IO::Inputs::YmlUtils

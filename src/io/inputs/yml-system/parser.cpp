@@ -4,80 +4,42 @@
 #include "antares/io/inputs/yml-system/parser.h"
 
 #include "antares/io/inputs/yml-system/decoders.h"
-#include "antares/io/inputs/yml-utils/DiagnosticsScope.h"
 #include "antares/io/inputs/yml-system/system.h"
+#include "antares/io/inputs/yml-utils/checkFields.h"
 
 namespace Antares::IO::Inputs::YmlSystem
 {
 namespace
 {
-void tagNodes(YAML::Node& node);
-
-void visitMap(YAML::Node& node)
-{
-    for (auto it = node.begin(); it != node.end(); ++it)
-    {
-        YAML::Node child = it->second;
-        child.SetTag(node.Tag() + "/" + it->first.as<std::string>());
-        tagNodes(child);
-    }
-}
-
-void visitSequence(YAML::Node& node)
-{
-    for (std::size_t i = 0; i < node.size(); ++i)
-    {
-        YAML::Node child = node[i];
-
-        std::string childName = "[" + std::to_string(i) + "]";
-        if (child.IsMap())
-        {
-            auto childIdNode = child["id"];
-            if (childIdNode.IsDefined() && !childIdNode.IsNull())
-            {
-                childName = childIdNode.as<std::string>();
-            }
-        }
-        child.SetTag(node.Tag() + "/" + childName);
-
-        tagNodes(child);
-    }
-}
-
-void tagNodes(YAML::Node& node)
-{
-    if (!node || node.IsNull())
-    {
-        return;
-    }
-
-    if (node.IsMap())
-    {
-        visitMap(node);
-    }
-    else if (node.IsSequence())
-    {
-        visitSequence(node);
-    }
-}
+const std::vector<YmlUtils::Field> systemFields = {
+  {"id"},
+  {"description"},
+  {"model-libraries"},
+  {"components",
+   false,
+   {{"id", true},
+    {"model", true},
+    {"scenario-group"},
+    {"parameters",
+     false,
+     {{"id", true}, {"value", true}, {"time-dependent"}, {"scenario-dependent"}}},
+    {"properties", false, {{"id", true}, {"value", true}}}}},
+  {"connections",
+   false,
+   {{"component1", true}, {"port1", true}, {"component2", true}, {"port2", true}}},
+  {"area-connections", false, {{"component", true}, {"port", true}, {"area", true}}},
+  {"thermal-capacity-connections",
+   false,
+   {{"component", true},
+    {"port", true},
+    {"thermal-component", true, {{"area", true}, {"cluster-id", true}}}}}};
 } // namespace
 
 System Parser::parse(const std::string& content, const std::string& pathFromRoot)
 {
-    YmlUtils::DiagnosticsScope diagnostics;
     YAML::Node root = YAML::Load(content);
-
-    auto systemNode = root["system"];
-    if (systemNode.IsDefined() && !systemNode.IsNull())
-    {
-        systemNode.SetTag(pathFromRoot);
-        tagNodes(systemNode);
-    }
-
-    System system = root["system"].as<System>();
-    diagnostics.flush();
-
-    return system;
+    YmlUtils::checkFields(root, {{"system", true, systemFields}}, pathFromRoot);
+    return root["system"].as<System>();
 }
 
 } // namespace Antares::IO::Inputs::YmlSystem

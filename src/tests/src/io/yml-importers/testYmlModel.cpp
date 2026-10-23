@@ -13,13 +13,13 @@
 #include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/yml-model/decoders.h"
 #include "antares/io/inputs/yml-model/parser.h"
-#include "antares/io/inputs/yml-utils/DiagnosticsScope.h"
 #include "antares/io/inputs/yml-utils/checkFields.h"
 
 #include "enum_operators.h"
 
 using namespace std::string_literals;
 using namespace Antares::IO::Inputs;
+using Antares::UnitTests::CaptureAntaresLogs;
 
 // Test empty library
 BOOST_AUTO_TEST_CASE(EmptyLibrary_is_valid)
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(library_without_id_throws)
             port-types: []
             models: []
     )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(parameter_without_id_throws)
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(parameter_without_id_throws)
                   constraints: []
                   objective-contributions: []
         )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(variable_without_id_throws)
@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(variable_without_id_throws)
                   constraints: []
                   objective-contributions: []
         )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(model_without_id_throws)
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE(model_without_id_throws)
                   constraints: []
                   objective-contributions: []
         )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(port_without_id_throws)
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE(port_without_id_throws)
                   constraints: []
                   objective-contributions: []
         )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(checkFields_reports_unexpected_and_missing_keys)
@@ -139,32 +139,32 @@ BOOST_AUTO_TEST_CASE(checkFields_reports_unexpected_and_missing_keys)
         a: 1
         c: 3
     )");
-    BOOST_CHECK_THROW((YAML::checkFields(node, std::unordered_set<std::string>{"a", "b"})),
-                      Antares::IO::Inputs::InputError);
-}
-
-BOOST_AUTO_TEST_CASE(checkFields_throws_dedicated_error_for_unexpected_keys_only)
-{
-    const auto node = YAML::Load(R"(
-        a: 1
-        c: 3
-    )");
-    BOOST_CHECK_THROW((YAML::checkFields(node, std::unordered_set<std::string>{"a"})),
-                      YAML::UnexpectedFieldsError);
-}
-
-BOOST_AUTO_TEST_CASE(checkFields_in_diagnostics_scope_records_instead_of_throwing)
-{
-    const auto node = YAML::Load(R"(
-        a: 1
-        c: 3
-    )");
-    YmlUtils::DiagnosticsScope diagnostics;
-    BOOST_CHECK((YAML::checkFields(node, std::unordered_set<std::string>{"a"})));
-    BOOST_CHECK(!(YAML::checkFields(node, std::unordered_set<std::string>{"a", "b"})));
-    BOOST_CHECK_EXCEPTION(diagnostics.flush(),
-                          Antares::IO::Inputs::InputError,
+    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node, {{"a", true}, {"b", true}})),
+                          InputError,
                           containsMessage("Missing field: b"));
+}
+
+BOOST_AUTO_TEST_CASE(checkFields_warns_for_unexpected_keys_only)
+{
+    const auto node = YAML::Load(R"(
+        a: 1
+        c: 3
+    )");
+    CaptureAntaresLogs logs;
+    BOOST_CHECK_NO_THROW((YmlUtils::checkFields(node, {{"a", true}})));
+    BOOST_REQUIRE_EQUAL(logs.getWarnings().size(), 1);
+    BOOST_CHECK(logs.getWarnings().begin()->find("Unrecognised field: c") != std::string::npos);
+    BOOST_CHECK(logs.getWarnings().begin()->find("|__X c at line 3") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(checkFields_accepts_absent_optional_fields_without_warning)
+{
+    const auto node = YAML::Load(R"(
+        a: 1
+    )");
+    CaptureAntaresLogs logs;
+    BOOST_CHECK_NO_THROW((YmlUtils::checkFields(node, {{"a", true}, {"b"}})));
+    BOOST_CHECK(logs.getWarnings().empty());
 }
 
 BOOST_AUTO_TEST_CASE(checkFields_rejects_duplicated_keys)
@@ -173,8 +173,9 @@ BOOST_AUTO_TEST_CASE(checkFields_rejects_duplicated_keys)
         id: supply
         id: demand
     )");
-    BOOST_CHECK_THROW((YAML::checkFields(node, std::unordered_set<std::string>{"id"})),
-                      Antares::IO::Inputs::InputError);
+    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node, {{"id", true}})),
+                          InputError,
+                          containsMessage("Duplicated field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(printPathTree_formats_nested_paths)
