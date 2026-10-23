@@ -16,8 +16,7 @@ YmlTreeDisplayer::YmlTreeDisplayer(const Node& node)
     for (const auto& entry: node)
     {
         const Node keyNode = entry.first;
-        std::string keyName = keyNode.IsDefined() ? keyNode.as<std::string>()
-                                                  : std::string("<unknown>");
+        std::string keyName = keyNode.as<std::string>();
         const auto mark = keyNode.Mark();
         const int line = static_cast<int>(mark.line) + 1;
         actualKeysLine_.emplace(keyName, line);

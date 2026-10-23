@@ -74,8 +74,7 @@ void checkFields(const Node& node,
     std::vector<std::string> duplicated;
     for (const auto& entry: node)
     {
-        const Node keyNode = entry.first;
-        auto key = keyNode.IsDefined() ? keyNode.as<std::string>() : std::string("<unknown>");
+        auto key = entry.first.as<std::string>();
         if (!actualKeys.insert(key).second)
         {
             duplicated.push_back(std::move(key));
