@@ -22,6 +22,14 @@ struct AreaConnection
     std::string price;
 };
 
+struct LinkCapacityConnectionFields
+{
+    std::string direct;
+    std::string indirect;
+
+    bool operator==(const LinkCapacityConnectionFields& other) const = default;
+};
+
 inline std::string getUnsupEnergyBound(const AreaConnection& ac)
 {
     return ac.unsupplied_energy_bound;
@@ -38,9 +46,12 @@ public:
     PortType(const std::string& id,
              std::vector<PortField>&& fields,
              const AreaConnection& areaConnection = {},
-             const std::string& thermalCapacityConnectionField = "");
+             const std::string& thermalCapacityConnectionField = "",
+             const std::string& linkCapacityConnectionDirectField = "",
+             const std::string& linkCapacityConnectionIndirectField = "");
 
     const std::optional<std::string>& ThermalCapacityConnectionFieldId() const;
+    const std::optional<LinkCapacityConnectionFields>& LinkCapacityConnectionFieldIds() const;
 
     const std::string& Id() const;
     const std::vector<PortField>& Fields() const;
@@ -51,6 +62,7 @@ private:
     std::string id_;
     std::vector<PortField> fields_;
     std::optional<std::string> thermalCapacityConnectionFieldId_;
+    std::optional<LinkCapacityConnectionFields> linkCapacityConnectionFieldIds_;
     std::optional<AreaConnection> areaConnection_;
 };
 

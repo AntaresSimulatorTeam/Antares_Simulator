@@ -533,6 +533,44 @@ BOOST_AUTO_TEST_CASE(successfully_connect_thermal_capacity_to_port)
     BOOST_CHECK_EQUAL(component.portToThermalCapacityConnections().size(), 1);
 }
 
+BOOST_AUTO_TEST_CASE(successfully_connect_link_capacity_to_port)
+{
+    PortField direct("direct");
+    PortField indirect("indirect");
+    std::vector portFields = {direct, indirect};
+    PortType portTypeWithLinkCapacityConnection("portType2",
+                                                std::move(portFields),
+                                                {},
+                                                "",
+                                                "direct",
+                                                "indirect");
+
+    Port portACDef("portACDef", portTypeWithLinkCapacityConnection);
+    std::vector<PortFieldDefinition> portFieldDefs;
+    portFieldDefs.emplace_back(portACDef, direct, Expression());
+    portFieldDefs.emplace_back(portACDef, indirect, Expression());
+
+    ModelBuilder model_builder;
+    auto model = model_builder.withId("myModel")
+                   .withPorts({portACDef})
+                   .withPortFieldDefinitions(std::move(portFieldDefs))
+                   .build();
+
+    auto component = component_builder.withId("myComponent")
+                       .withModel(&model)
+                       .withScenarioGroupId("sg")
+                       .build();
+
+    BOOST_CHECK_EQUAL(component.linkCapacityConnectedToPort("portACDef").has_value(), false);
+    component.addLinkCapacityConnection("portACDef", "de", "fr");
+    const auto linkConnectionOpt = component.linkCapacityConnectedToPort("portACDef");
+    BOOST_CHECK_EQUAL(linkConnectionOpt.has_value(), true);
+    const auto [from, to] = linkConnectionOpt.value();
+    BOOST_CHECK_EQUAL(from, "de");
+    BOOST_CHECK_EQUAL(to, "fr");
+    BOOST_CHECK_EQUAL(component.portToLinkCapacityConnections().size(), 1);
+}
+
 BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_fails_because_port_definition_missing)
 {
     // Defining a PortType

@@ -234,7 +234,52 @@ thermal-capacity-connections:
 ~~~
 
 The linked port field is then used as an upper bound on the thermal cluster dispatchable production, hour by hour. When this connection is present, the legacy thermal capacity time series is ignored for that cluster and replaced by the expression coming from the modeler port.
- 
+
+#### Connecting modeler components to legacy links
+Hybrid studies can also connect a modeler component to a legacy interconnection (link), typically for
+investment add-ons that modify direct/indirect transfer capacities.
+
+The setup mirrors thermal connections:
+
+- in the model library, the port type may define a `link-capacity-connection` section with two fields:
+  - `capacity-direct-field`
+  - `capacity-indirect-field`
+- in the system file, `link-capacity-connections` links a component port to a legacy link identified by
+  `from` and `to` areas (Antares lexicographical direction).
+
+Model library:
+~~~yaml
+port-types:
+  - id: bidirectional_capacity_port
+    fields:
+      - id: capacity_direct
+      - id: capacity_indirect
+    link-capacity-connection:
+      capacity-direct-field: capacity_direct
+      capacity-indirect-field: capacity_indirect
+~~~
+
+System file:
+~~~yaml
+link-capacity-connections:
+  - component: my_link_invest
+    port: capacity_port
+    link-component:
+      from: de
+      to: fr
+~~~
+
+For each connected link and each timestep, the two port-field expressions replace the legacy link
+capacity bounds by constraints:
+
+- `-capacity_indirect <= NTCDirect <= capacity_direct`
+- if hurdle-cost variables exist:
+  - `0 <= IntercoDirectCost <= capacity_direct`
+  - `0 <= IntercoIndirectCost <= capacity_indirect`
+
+The link reference must use the legacy orientation (`from -> to`) as stored by Antares; if only the
+reverse orientation exists, the solver raises an error.
+  
 #### Adding a linear expression in optimization model
 When you connect a component to an area via a port (containing an **area-connection** section), you must respect conventions on the GEMS side.
 

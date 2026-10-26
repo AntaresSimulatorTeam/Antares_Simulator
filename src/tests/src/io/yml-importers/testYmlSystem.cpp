@@ -178,6 +178,31 @@ BOOST_AUTO_TEST_CASE(component_properties)
     BOOST_CHECK_EQUAL(prop2.value, "2");
 }
 
+BOOST_AUTO_TEST_CASE(link_capacity_connections_are_parsed)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            components:
+                - id: link-addon
+                  model: invest.link
+            link-capacity-connections:
+                - component: link-addon
+                  port: capacity_port
+                  link-component:
+                    from: de
+                    to: fr
+    )"s;
+    YmlSystem::System systemObj = parser.parse(system, "");
+    BOOST_REQUIRE_EQUAL(systemObj.linkCapacityConnections.size(), 1);
+    const auto& connection = systemObj.linkCapacityConnections[0];
+    BOOST_CHECK_EQUAL(connection.componentId, "link-addon");
+    BOOST_CHECK_EQUAL(connection.portId, "capacity_port");
+    BOOST_CHECK_EQUAL(connection.linkComponent.from, "de");
+    BOOST_CHECK_EQUAL(connection.linkComponent.to, "fr");
+}
+
 // --------------------------------------------------------------------------
 // Decoder error-path coverage: requireMap / requireSize / System::decode
 // --------------------------------------------------------------------------
@@ -254,6 +279,18 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connection_is_a_scalar_throws_input_error)
     BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
+BOOST_AUTO_TEST_CASE(link_capacity_connection_is_a_scalar_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            link-capacity-connections:
+                - "not a map"
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
 BOOST_AUTO_TEST_CASE(connection_with_missing_field_throws_input_error)
 {
     YmlSystem::Parser parser;
@@ -310,6 +347,19 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connection_with_wrong_field_count_throws_i
     BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
+BOOST_AUTO_TEST_CASE(link_capacity_connection_with_wrong_field_count_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            link-capacity-connections:
+                - component: c1
+                  port: p1
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
 BOOST_AUTO_TEST_CASE(thermal_component_with_wrong_field_count_throws_input_error)
 {
     YmlSystem::Parser parser;
@@ -335,6 +385,35 @@ BOOST_AUTO_TEST_CASE(thermal_component_null_throws_input_error)
                 - component: c1
                   port: p1
                   thermal-component: ~
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(link_component_with_wrong_field_count_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            link-capacity-connections:
+                - component: c1
+                  port: p1
+                  link-component:
+                    from: fr
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(link_component_null_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            link-capacity-connections:
+                - component: c1
+                  port: p1
+                  link-component: ~
     )"s;
     BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
@@ -380,6 +459,16 @@ BOOST_AUTO_TEST_CASE(decoder_returns_false_for_null_or_undefined_nodes)
         BOOST_CHECK(!YAML::convert<YmlSystem::ThermalCapacityConnection>::decode(undefined, tcc));
         BOOST_CHECK(!YAML::convert<YmlSystem::ThermalCapacityConnection>::decode(nullNode, tcc));
     }
+    {
+        YmlSystem::LinkComponent lc;
+        BOOST_CHECK(!YAML::convert<YmlSystem::LinkComponent>::decode(undefined, lc));
+        BOOST_CHECK(!YAML::convert<YmlSystem::LinkComponent>::decode(nullNode, lc));
+    }
+    {
+        YmlSystem::LinkCapacityConnection lcc;
+        BOOST_CHECK(!YAML::convert<YmlSystem::LinkCapacityConnection>::decode(undefined, lcc));
+        BOOST_CHECK(!YAML::convert<YmlSystem::LinkCapacityConnection>::decode(nullNode, lcc));
+    }
 }
 
 BOOST_AUTO_TEST_CASE(decoder_throws_for_defined_non_map_nodes)
@@ -410,6 +499,15 @@ BOOST_AUTO_TEST_CASE(decoder_throws_for_defined_non_map_nodes)
     {
         YmlSystem::ThermalCapacityConnection tcc;
         BOOST_CHECK_THROW(YAML::convert<YmlSystem::ThermalCapacityConnection>::decode(scalar, tcc),
+                          InputError);
+    }
+    {
+        YmlSystem::LinkComponent lc;
+        BOOST_CHECK_THROW(YAML::convert<YmlSystem::LinkComponent>::decode(scalar, lc), InputError);
+    }
+    {
+        YmlSystem::LinkCapacityConnection lcc;
+        BOOST_CHECK_THROW(YAML::convert<YmlSystem::LinkCapacityConnection>::decode(scalar, lcc),
                           InputError);
     }
     {

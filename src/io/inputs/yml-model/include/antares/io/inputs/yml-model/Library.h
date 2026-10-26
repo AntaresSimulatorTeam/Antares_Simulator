@@ -125,6 +125,8 @@ struct PortType
     std::string description;
     std::vector<std::string> fields;
     std::string thermal_capacity_connection_field;
+    std::string link_capacity_connection_direct_field;
+    std::string link_capacity_connection_indirect_field;
     AreaConnection area_connection;
 };
 

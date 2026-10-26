@@ -232,6 +232,15 @@ void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& connecti
                                            connection.thermalComponent.clusterId);
 }
 
+void connectLinkCapacity(const YmlSystem::LinkCapacityConnection& connection,
+                         std::vector<Component>& components)
+{
+    auto& component = findComponent(connection.componentId, components);
+    component.addLinkCapacityConnection(connection.portId,
+                                        connection.linkComponent.from,
+                                        connection.linkComponent.to);
+}
+
 } // anonymous namespace
 
 void checkForNonLinearityBehindConnections(const std::vector<Component>& components)
@@ -297,6 +306,13 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
         logs.debug() << "Loaded thermal-capacity connection (component=`" << connection.componentId
                      << "` area=`" << connection.thermalComponent.areaId << "` clusterId=`"
                      << connection.thermalComponent.clusterId << "`)";
+    }
+    for (const auto& connection: ymlSystem.linkCapacityConnections)
+    {
+        connectLinkCapacity(connection, components);
+        logs.debug() << "Loaded link-capacity connection (component=`" << connection.componentId
+                     << "` from=`" << connection.linkComponent.from << "` to=`"
+                     << connection.linkComponent.to << "`)";
     }
 
     // Build system from components and connections

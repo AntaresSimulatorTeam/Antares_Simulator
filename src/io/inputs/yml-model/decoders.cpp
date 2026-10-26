@@ -173,6 +173,27 @@ bool convert<YmlModel::PortType>::convertThermalCapacityField(const Node& node,
     return true;
 }
 
+bool convert<YmlModel::PortType>::convertLinkCapacityFields(const Node& node,
+                                                            YmlModel::PortType& rhs)
+{
+    auto childNode = node["link-capacity-connection"];
+    if (!childNode.IsDefined())
+    {
+        return true;
+    }
+
+    if (!childNode.IsMap())
+    {
+        throw InputError("Expected a YAML mapping for 'link-capacity-connection' in port-type");
+    }
+
+    checkFields(childNode, {"capacity-direct-field", "capacity-indirect-field"});
+    rhs.link_capacity_connection_direct_field = getFieldFromNode(childNode, "capacity-direct-field");
+    rhs.link_capacity_connection_indirect_field = getFieldFromNode(childNode,
+                                                                   "capacity-indirect-field");
+    return true;
+}
+
 bool convert<YmlModel::PortType>::decode(const Node& node, YmlModel::PortType& rhs)
 {
     if (!YmlUtils::requireMap(node, "port-type"))
@@ -192,7 +213,11 @@ bool convert<YmlModel::PortType>::decode(const Node& node, YmlModel::PortType& r
     {
         return false;
     }
-    return convertThermalCapacityField(node, rhs);
+    if (!convertThermalCapacityField(node, rhs))
+    {
+        return false;
+    }
+    return convertLinkCapacityFields(node, rhs);
 }
 
 bool convert<YmlModel::Parameter>::decode(const Node& node, YmlModel::Parameter& rhs)

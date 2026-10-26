@@ -41,4 +41,7 @@ struct FillerFixture
     void fillProblemWithThermalCapacityConnectionFiller(
       const Antares::LinearProblem::Api::FillContext& fillCtx,
       Antares::LinearProblem::OptimEntityContainer& optimEntityContainer) const;
+    void fillProblemWithLinkCapacityConnectionFiller(
+      const Antares::LinearProblem::Api::FillContext& fillCtx,
+      Antares::LinearProblem::OptimEntityContainer& optimEntityContainer) const;
 };

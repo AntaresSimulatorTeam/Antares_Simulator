@@ -11,6 +11,7 @@
 #include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
+#include "antares/solver/optimisation/LinkCapacityFiller.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
 using namespace std::string_literals;
 
@@ -127,6 +128,21 @@ void FillerFixture::fillProblemWithThermalCapacityConnectionFiller(
                                  optimEntityContainer,
                                  &linearProblemData,
                                  scenarioGroupRepository);
+    filler.addVariables(fillCtx);
+    filler.addConstraints(fillCtx);
+    filler.addObjectives(fillCtx);
+}
+
+void FillerFixture::fillProblemWithLinkCapacityConnectionFiller(
+  const FillContext& fillCtx,
+  OptimEntityContainer& optimEntityContainer) const
+{
+    problemeHebdo->NombreDePasDeTempsPourUneOptimisation = fillCtx.getLocalNumberOfTimeSteps();
+
+    LinkCapacityFiller filler(problemeHebdo.get(),
+                              optimEntityContainer,
+                              &linearProblemData,
+                              scenarioGroupRepository);
     filler.addVariables(fillCtx);
     filler.addConstraints(fillCtx);
     filler.addObjectives(fillCtx);
