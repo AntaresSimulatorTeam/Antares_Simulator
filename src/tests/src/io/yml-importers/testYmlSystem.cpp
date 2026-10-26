@@ -107,6 +107,56 @@ BOOST_AUTO_TEST_CASE(component_parameter)
     BOOST_CHECK_EQUAL(std::stod(param.value), 30);
 }
 
+BOOST_AUTO_TEST_CASE(component_parameter_flags_default_to_false_when_missing)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            components:
+                - id: N
+                  model: std.node
+                  parameters:
+                    - id: cost
+                      value: 30
+    )"s;
+    const YmlSystem::System systemObj = parser.parse(system, "");
+    const auto& param = systemObj.components[0].parameters[0];
+    BOOST_CHECK_EQUAL(param.time_dependent, false);
+    BOOST_CHECK_EQUAL(param.scenario_dependent, false);
+}
+
+BOOST_AUTO_TEST_CASE(invalid_time_dependent_flag_throws_conversion_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            components:
+                - id: N
+                  model: std.node
+                  parameters:
+                    - id: cost
+                      time-dependent: treu
+                      value: 30
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), YAML::BadConversion);
+}
+
+BOOST_AUTO_TEST_CASE(invalid_scenario_dependent_flag_throws_conversion_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            components:
+                - id: N
+                  model: std.node
+                  parameters:
+                    - id: cost
+                      scenario-dependent: [true]
+                      value: 30
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), YAML::BadConversion);
+}
+
 BOOST_AUTO_TEST_CASE(component_two_parameters)
 {
     YmlSystem::Parser parser;
