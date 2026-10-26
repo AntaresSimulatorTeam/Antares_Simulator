@@ -509,16 +509,13 @@ BOOST_AUTO_TEST_CASE(non_map_sequence_items_do_not_hide_other_field_errors)
       InputError,
       [](const InputError& e)
       {
-          BOOST_CHECK_EQUAL(e.what(),
-                            "Line 4 column 5\n"
-                            "YAML field validation:\n"
-                            "- Missing field: value\n"
-                            "\n"
-                            "root\n"
-                            "|__ children\n"
-                            "    |__ [2]\n"
-                            "        |__? value (missing)\n"
-                            "\n");
+          const std::string message = e.what();
+          BOOST_CHECK(message.find("Line 2: expected a YAML mapping in 'root/children/[0]'.")
+                      != std::string::npos);
+          BOOST_CHECK(message.find("Line 3: expected a YAML mapping in 'root/children/[1]'.")
+                      != std::string::npos);
+          BOOST_CHECK(message.find("Missing field: value") != std::string::npos);
+          BOOST_CHECK(message.find("|__ [2]") != std::string::npos);
           return true;
       });
 }

@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <fmt/format.h>
 #include <unordered_set>
+#include <yaml-cpp/yaml.h>
 
 #include "antares/io/inputs/yml-model/Library.h"
 

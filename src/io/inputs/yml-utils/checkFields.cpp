@@ -167,9 +167,17 @@ void collectFieldErrors(const YAML::Node& node,
             for (std::size_t i = 0; i < child.size(); ++i)
             {
                 auto item = child[i];
+                const auto itemPath = childPath + "/" + sequenceItemName(item, i);
+                if (!item.IsMap())
+                {
+                    result.errors.push_back(fmt::format("Line {}: expected a YAML mapping in '{}'.",
+                                                        item.Mark().line + 1,
+                                                        itemPath));
+                    continue;
+                }
                 collectFieldErrors(item,
                                    field->children,
-                                   childPath + "/" + sequenceItemName(item, i),
+                                   itemPath,
                                    result);
             }
         }

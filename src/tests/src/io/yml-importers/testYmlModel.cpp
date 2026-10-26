@@ -14,6 +14,7 @@
 #include "antares/io/inputs/yml-model/decoders.h"
 #include "antares/io/inputs/yml-model/parser.h"
 #include "antares/io/inputs/yml-utils/checkFields.h"
+#include "antares/io/inputs/yml-utils/path_utils.h"
 
 #include "enum_operators.h"
 

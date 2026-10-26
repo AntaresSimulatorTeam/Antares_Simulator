@@ -6,6 +6,7 @@
 #include <span>
 
 #include <antares/io/inputs/InputError.h>
+#include <antares/io/inputs/yml-utils/path_utils.h>
 
 #include "include/antares/io/inputs/yml-model/Library.h"
 
