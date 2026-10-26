@@ -175,10 +175,7 @@ void collectFieldErrors(const YAML::Node& node,
                                                         itemPath));
                     continue;
                 }
-                collectFieldErrors(item,
-                                   field->children,
-                                   itemPath,
-                                   result);
+                collectFieldErrors(item, field->children, itemPath, result);
             }
         }
         else

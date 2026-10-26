@@ -26,8 +26,8 @@ bool convert<YmlSystem::Parameter>::decode(const Node& node, YmlSystem::Paramete
     const Node timeDependentNode = node["time-dependent"];
     rhs.time_dependent = timeDependentNode.IsDefined() ? timeDependentNode.as<bool>() : false;
     const Node scenarioDependentNode = node["scenario-dependent"];
-    rhs.scenario_dependent =
-      scenarioDependentNode.IsDefined() ? scenarioDependentNode.as<bool>() : false;
+    rhs.scenario_dependent = scenarioDependentNode.IsDefined() ? scenarioDependentNode.as<bool>()
+                                                               : false;
     rhs.value = node["value"].as<std::string>();
     return true;
 }
