@@ -225,8 +225,8 @@ public:
             if (simulation_->variables)
             {
                 simulation_->variables->computeSpatialAggregatesSummary(*simulation_->variables,
-                                                                         y,
-                                                                         numSpace);
+                                                                        y,
+                                                                        numSpace);
             }
 
             // Annual system-cost statistics are produced by the legacy output variables.
@@ -419,9 +419,9 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
             if (ImplementationType::variables)
             {
                 ImplementationType::variables->exportSurveyResults(synthesis,
-                                                                    newPath,
-                                                                    numSpace,
-                                                                    pResultWriter);
+                                                                   newPath,
+                                                                   numSpace,
+                                                                   pResultWriter);
             }
         }
     }
