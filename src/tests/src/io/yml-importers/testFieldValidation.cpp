@@ -128,16 +128,16 @@ models:
       constraints: []
       objective-contributions: []
 )";
-    BOOST_CHECK_EXCEPTION(
-      YmlOptimConfig::Parser{}.parse(content),
-      InputError,
-      [](const InputError& e)
-      {
-          const std::string message = e.what();
-          BOOST_CHECK(message.find("Missing field: model-decomposition") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
-          return true;
-      });
+    BOOST_CHECK_EXCEPTION(YmlOptimConfig::Parser{}.parse(content),
+                          InputError,
+                          [](const InputError& e)
+                          {
+                              const std::string message = e.what();
+                              BOOST_CHECK(message.find("Missing field: model-decomposition")
+                                          != std::string::npos);
+                              BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
+                              return true;
+                          });
 }
 
 BOOST_AUTO_TEST_CASE(duplicated_sections_are_all_validated)
