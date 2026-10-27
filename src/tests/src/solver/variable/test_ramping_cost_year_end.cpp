@@ -58,7 +58,7 @@ struct StudyWithRampingCluster
 
         cluster = addClusterToArea(area, "TestCluster").get();
         cluster->series.timeseriesNumbers.reset(study->parameters.nbYears);
-        cluster->nominalCapacityWithSpinning = 100.;
+        cluster->nominalCapacity = 100.;
         cluster->unitCount = 1;
         cluster->ramping = ThermalCluster::Ramping();
         cluster->ramping->powerIncreaseCost = increaseCost;
