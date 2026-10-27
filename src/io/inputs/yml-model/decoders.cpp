@@ -267,6 +267,7 @@ bool convert<YmlModel::Model>::decode(const Node& node, YmlModel::Model& rhs)
 
 bool convert<YmlModel::Library>::decode(const Node& node, YmlModel::Library& rhs)
 {
+    checkMandatoryIdField(node, "library");
     rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
     rhs.port_types = as_fallback_default<std::vector<YmlModel::PortType>>(node["port-types"]);

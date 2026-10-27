@@ -52,6 +52,20 @@ BOOST_AUTO_TEST_CASE(library_without_id_throws)
     BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
 }
 
+BOOST_AUTO_TEST_CASE(library_with_null_id_throws)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: null
+            port-types: []
+            models: []
+    )"s;
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          YAML::KeyNotFound,
+                          containsMessage("library id is mandatory in library"));
+}
+
 BOOST_AUTO_TEST_CASE(parameter_without_id_throws)
 {
     YmlModel::Parser parser;
