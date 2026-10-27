@@ -6,8 +6,10 @@
 #include "tests-matrix-load.h"
 
 #include <chrono>
+#include <cstdint>
 #include <filesystem>
 #include <fstream>
+#include <limits>
 #include <stdexcept>
 #include <string_view>
 #include <utility>
@@ -122,6 +124,42 @@ BOOST_AUTO_TEST_CASE(integral_values_are_truncated)
     BOOST_REQUIRE(Antares::MatrixIO::load(matrix, file.path, 2, 1));
     BOOST_CHECK_EQUAL(matrix[0][0], 1);
     BOOST_CHECK_EQUAL(matrix[1][0], -2);
+}
+
+BOOST_AUTO_TEST_CASE(loads_uint32_values_without_fallback_conversion)
+{
+    const auto file = writeFile("0\t42\t4294967295\n");
+    Antares::Matrix<std::uint32_t> matrix;
+
+    BOOST_REQUIRE(Antares::MatrixIO::load(matrix, file.path, 3, 1));
+    BOOST_CHECK_EQUAL(matrix[0][0], 0U);
+    BOOST_CHECK_EQUAL(matrix[1][0], 42U);
+    BOOST_CHECK_EQUAL(matrix[2][0], std::numeric_limits<std::uint32_t>::max());
+}
+
+BOOST_AUTO_TEST_CASE(uint32_values_keep_legacy_decimal_fallback)
+{
+    const auto file = writeFile("1.9\t2.1\n");
+    Antares::Matrix<std::uint32_t> matrix;
+
+    BOOST_REQUIRE(Antares::MatrixIO::load(matrix, file.path, 2, 1));
+    BOOST_CHECK_EQUAL(matrix[0][0], 1U);
+    BOOST_CHECK_EQUAL(matrix[1][0], 2U);
+}
+
+BOOST_AUTO_TEST_CASE(character_and_boolean_matrices_keep_stream_conversion)
+{
+    const auto characterFile = writeFile("4\t1\n");
+    const auto booleanFile = writeFile("1\t0\n");
+    Antares::Matrix<char> characters;
+    Antares::Matrix<bool> boolean;
+
+    BOOST_REQUIRE(Antares::MatrixIO::load(characters, characterFile.path, 2, 1));
+    BOOST_REQUIRE(Antares::MatrixIO::load(boolean, booleanFile.path, 2, 1));
+    BOOST_CHECK_EQUAL(characters[0][0], '4');
+    BOOST_CHECK_EQUAL(characters[1][0], '1');
+    BOOST_CHECK(boolean[0][0]);
+    BOOST_CHECK(!boolean[1][0]);
 }
 
 BOOST_AUTO_TEST_CASE(invalid_numeric_values_fail_and_are_zeroed)

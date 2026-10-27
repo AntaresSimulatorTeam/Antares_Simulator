@@ -150,8 +150,12 @@ void Matrix<T>::fillUnit()
 template<class T>
 inline void Matrix<T>::reset(unsigned int w, unsigned int h)
 {
+    const bool sameSize = w == width_ && h == height_;
     resize(w, h);
-    zero();
+    if (sameSize)
+    {
+        zero();
+    }
 }
 
 template<class T>
@@ -237,8 +241,13 @@ void Matrix<T>::resize(unsigned int w, unsigned int h)
             width_ = w;
             height_ = h;
 
-            // Allocating the columns_ for the matrix
-            columns_.assign(w, ColumnType(h));
+            // Allocate each column independently to avoid copying a temporary column.
+            columns_.clear();
+            columns_.resize(w);
+            for (auto& column: columns_)
+            {
+                column.resize(h);
+            }
         }
     }
 }

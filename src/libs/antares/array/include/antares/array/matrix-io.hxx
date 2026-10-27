@@ -5,6 +5,7 @@
 #define ANTARES_ARRAY_MATRIX_IO_HXX
 
 #include <cassert>
+#include <charconv>
 #include <cmath>
 #include <cstdlib>
 #include <exception>
@@ -14,6 +15,7 @@
 #include <limits>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <type_traits>
 #include <utility>
 
@@ -29,12 +31,45 @@ namespace Antares::MatrixIO
 namespace // anonymous
 {
 template<class T>
+concept MatrixFastIntegral = std::is_integral_v<T> && !std::is_same_v<T, bool>
+                             && !std::is_same_v<T, char> && !std::is_same_v<T, signed char>
+                             && !std::is_same_v<T, unsigned char> && !std::is_same_v<T, wchar_t>
+                             && !std::is_same_v<T, char8_t> && !std::is_same_v<T, char16_t>
+                             && !std::is_same_v<T, char32_t>
+                             && requires(const char* first, const char* last, T& value) {
+                                    std::from_chars(first, last, value);
+                                };
+
+template<class T>
 class MatrixStringConverter final
 {
 public:
-    static bool Do(const std::string& str, T& out)
+    static bool Do(std::string_view str, T& out)
     {
-        std::istringstream stream(str);
+        std::istringstream stream{std::string(str)};
+        stream >> out;
+        stream >> std::ws;
+        return !stream.fail() && stream.eof();
+    }
+};
+
+template<class T>
+requires MatrixFastIntegral<T>
+class MatrixStringConverter<T> final
+{
+public:
+    static bool Do(std::string_view str, T& out)
+    {
+        const auto first = str.data();
+        const auto last = first + str.size();
+        const auto [end, error] = std::from_chars(first, last, out);
+        if (error == std::errc{} && end == last)
+        {
+            return true;
+        }
+
+        // Keep the legacy behavior for signs, whitespace, and other values accepted by streams.
+        std::istringstream stream{std::string(str)};
         stream >> out;
         stream >> std::ws;
         return !stream.fail() && stream.eof();
@@ -45,10 +80,25 @@ template<>
 class MatrixStringConverter<double> final
 {
 public:
-    static bool Do(const std::string& str, double& out)
+    static bool Do(std::string_view str, double& out)
     {
+        const auto first = str.data();
+        const auto last = first + str.size();
+        const auto [end, error] = std::from_chars(first, last, out);
+        if (error == std::errc{} && end == last)
+        {
+            return true;
+        }
+
+        return DoLegacy(str, out);
+    }
+
+private:
+    static bool DoLegacy(std::string_view str, double& out)
+    {
+        const std::string value(str);
         char* end = nullptr;
-        out = ::strtod(str.c_str(), &end);
+        out = ::strtod(value.c_str(), &end);
         return end != nullptr && *end == '\0';
     }
 };
@@ -57,10 +107,25 @@ template<>
 class MatrixStringConverter<float> final
 {
 public:
-    static bool Do(const std::string& str, float& out)
+    static bool Do(std::string_view str, float& out)
     {
+        const auto first = str.data();
+        const auto last = first + str.size();
+        const auto [end, error] = std::from_chars(first, last, out);
+        if (error == std::errc{} && end == last)
+        {
+            return true;
+        }
+
+        return DoLegacy(str, out);
+    }
+
+private:
+    static bool DoLegacy(std::string_view str, float& out)
+    {
+        const std::string value(str);
         char* end = nullptr;
-        out = static_cast<float>(::strtod(str.c_str(), &end));
+        out = static_cast<float>(::strtod(value.c_str(), &end));
         return end != nullptr && *end == '\0';
     }
 };
@@ -69,9 +134,9 @@ template<>
 class MatrixStringConverter<std::string> final
 {
 public:
-    static bool Do(const std::string& str, std::string& out)
+    static bool Do(std::string_view str, std::string& out)
     {
-        out = str;
+        out.assign(str);
         return true;
     }
 };
@@ -112,7 +177,6 @@ bool load(Matrix<T>& matrix,
     unsigned int rowCount = 0;
     bool result = true;
     int errorCount = 6;
-    std::string converter;
     T cellValue{};
 
     const auto handleInvalidNumericValue =
@@ -171,11 +235,10 @@ bool load(Matrix<T>& matrix,
                   }
                   else
                   {
-                      converter.assign(cell.value);
-                      if (!MatrixStringConverter<T>::Do(converter, cellValue))
+                      if (!MatrixStringConverter<T>::Do(cell.value, cellValue))
                       {
                           double fallback = 0;
-                          if (!MatrixStringConverter<double>::Do(converter, fallback))
+                          if (!MatrixStringConverter<double>::Do(cell.value, fallback))
                           {
                               handleInvalidNumericValue(column, rowCount, cell);
                           }
