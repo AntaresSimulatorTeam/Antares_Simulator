@@ -232,7 +232,6 @@ BOOST_AUTO_TEST_CASE(area_components_have_district_properties)
     BOOST_REQUIRE_EQUAL((*germanyNode)["properties"].size(), 2);
     BOOST_CHECK_EQUAL((*germanyNode)["properties"][1]["id"].as<std::string>(), "district_eu");
     BOOST_CHECK_EQUAL((*germanyNode)["properties"][1]["value"].as<std::string>(), "eu");
-
 }
 
 BOOST_AUTO_TEST_CASE(load_component)
