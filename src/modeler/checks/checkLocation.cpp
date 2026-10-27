@@ -148,6 +148,20 @@ void checkExpression(const Node* expression,
               portFieldNode->getFieldName());
 
             PortFieldKey key(portFieldNode->getPortName(), portFieldNode->getFieldName());
+            if (!model.PortFieldDefinitions().contains(key))
+            {
+                throw LocationError(fmt::format("Model '{}': In expression '{}': Port field "
+                                                "'{}.{}' has no definition in this model. "
+                                                "If you want to reference a port field, use "
+                                                "'sum_connections({}.{})' to aggregate "
+                                                "values from connected components.",
+                                                model.Id(),
+                                                exprStr,
+                                                portFieldNode->getPortName(),
+                                                portFieldNode->getFieldName(),
+                                                portFieldNode->getPortName(),
+                                                portFieldNode->getFieldName()));
+            }
             auto& expr = model.PortFieldDefinitions().at(key).Definition();
             checkExpression(model.PortFieldDefinitions().at(key).Definition().RootNode(),
                             location,
