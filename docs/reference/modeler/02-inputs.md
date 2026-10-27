@@ -23,6 +23,64 @@ together, with their location in the document, and prevent loading. Unknown fiel
 with a warning; absent optional fields do not produce warnings. Value conversion errors are
 reported after field validation succeeds.
 
+The following lists describe field presence requirements. A field listed as required inside an
+optional section or collection entry is required only when that section or entry is present.
+
+**Model library**
+
+- **Required:** `library`; `library.id`; `library.port-types[].id`;
+  `library.port-types[].fields[].id`; `library.models[].id`;
+  `library.models[].parameters[].id`; `library.models[].variables[].id`;
+  `library.models[].ports[].id` and `library.models[].ports[].type`;
+  `library.models[].port-field-definitions[].port`,
+  `library.models[].port-field-definitions[].field`, and
+  `library.models[].port-field-definitions[].definition`; `id` and `expression` in each
+  `constraints`, `binding-constraints`, `objective-contributions`, and `extra-outputs` entry;
+  `library.port-types[].area-connection.injection-to-balance`,
+  `library.port-types[].area-connection.spillage-bound`,
+  `library.port-types[].area-connection.unsupplied-energy-bound`, and
+  `library.port-types[].thermal-capacity-connection.capacity-field` when those connection
+  sections are present.
+- **Optional:** `library.description`, `library.port-types`, `library.models`;
+  `library.port-types[].description`, `library.port-types[].fields`,
+  `library.port-types[].area-connection`, `library.port-types[].thermal-capacity-connection`;
+  `library.models[].description`, `library.models[].parameters`, `library.models[].variables`,
+  `library.models[].ports`, `library.models[].port-field-definitions`,
+  `library.models[].constraints`, `library.models[].binding-constraints`,
+  `library.models[].objective-contributions`, `library.models[].extra-outputs`;
+  parameter `time-dependent` and `scenario-dependent`; variable `lower-bound`, `upper-bound`,
+  `variable-type`, `time-dependent`, `scenario-dependent`, and `location`; expression `location`;
+  and `library.port-types[].area-connection.price`.
+
+**System file**
+
+- **Required:** `system`; `components[].id` and `components[].model`;
+  `components[].parameters[].id` and `components[].parameters[].value`;
+  `components[].properties[].id` and `components[].properties[].value`;
+  `connections[].component1`, `connections[].port1`, `connections[].component2`, and
+  `connections[].port2`; `area-connections[].component`, `area-connections[].port`, and
+  `area-connections[].area`; `thermal-capacity-connections[].component`,
+  `thermal-capacity-connections[].port`, `thermal-capacity-connections[].thermal-component.area`,
+  and `thermal-capacity-connections[].thermal-component.cluster-id`.
+- **Optional:** `system.id`, `system.description`, `system.model-libraries`, `system.components`,
+  `system.connections`, `system.area-connections`, `system.thermal-capacity-connections`;
+  `components[].scenario-group`, `components[].parameters[].time-dependent`, and
+  `components[].parameters[].scenario-dependent`.
+
+**Optimization configuration**
+
+- **Required:** `models[].id` and `models[].model-decomposition`; every entry in
+  `models[].model-decomposition.variables`, `models[].model-decomposition.constraints`, and
+  `models[].model-decomposition.objective-contributions` requires `id` and `location`;
+  `models[].out-of-bounds-processing.constraints[].id`.
+- **Optional:** `resolution-mode`, `models`, `models[].model-decomposition.variables`,
+  `models[].model-decomposition.constraints`,
+  `models[].model-decomposition.objective-contributions`,
+  `models[].out-of-bounds-processing`,
+  `models[].out-of-bounds-processing.constraints`,
+  `models[].out-of-bounds-processing.constraints[].mode`, `scenario-scope`,
+  `scenario-scope.include`, and `scenario-scope.exclude`.
+
 ## Model libraries
 
 The model libraries directory shall contain all the model library files needed to run the study.  
