@@ -1,7 +1,12 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <map>
 #include <ranges>
+#include <set>
+#include <string>
+#include <utility>
+#include <vector>
 #include <yaml-cpp/yaml.h>
 
 #include <antares/io/inputs/InputError.h>
@@ -18,6 +23,54 @@ using namespace Antares::Data;
 
 namespace
 {
+
+using ComponentProperties = std::vector<std::pair<std::string, std::string>>;
+using DistrictPropertiesByArea = std::map<std::string, ComponentProperties>;
+
+DistrictPropertiesByArea buildDistrictPropertiesByArea(const Study& study)
+{
+    DistrictPropertiesByArea propertiesByArea;
+    for (const auto& [districtName, areas]: study.setsOfAreas)
+    {
+        for (const auto* area: *areas)
+        {
+            propertiesByArea[area->id].emplace_back("district_" + districtName, districtName);
+        }
+    }
+    return propertiesByArea;
+}
+
+void appendProperties(YAML::Node& component, const ComponentProperties& properties)
+{
+    if (properties.empty())
+    {
+        return;
+    }
+
+    if (!component["properties"].IsDefined())
+    {
+        component["properties"] = YAML::Node(YAML::NodeType::Sequence);
+    }
+
+    for (const auto& [propertyId, propertyValue]: properties)
+    {
+        YAML::Node property;
+        property["id"] = propertyId;
+        property["value"] = propertyValue;
+        component["properties"].push_back(property);
+    }
+}
+
+void appendAreaProperties(YAML::Node& component,
+                          const std::string& areaId,
+                          const DistrictPropertiesByArea& propertiesByArea)
+{
+    const auto propertiesIt = propertiesByArea.find(areaId);
+    if (propertiesIt != propertiesByArea.end())
+    {
+        appendProperties(component, propertiesIt->second);
+    }
+}
 
 YAML::Node makeConnection(const std::string& component1,
                           const std::string& port1,
@@ -64,7 +117,9 @@ void checkForDuplicatesBetweenLegacyAndModeler(YAML::Node& systemYaml,
     }
 }
 
-void appendModelerData(YAML::Node& systemYaml, const Antares::Solver::ModelerData& modelerData)
+void appendModelerData(YAML::Node& systemYaml,
+                       const Antares::Solver::ModelerData& modelerData,
+                       const DistrictPropertiesByArea& propertiesByArea)
 {
     YAML::Node system = systemYaml["system"];
 
@@ -88,6 +143,11 @@ void appendModelerData(YAML::Node& systemYaml, const Antares::Solver::ModelerDat
                 props.push_back(prop);
             }
             compNode["properties"] = props;
+        }
+
+        if (component.getModel()->Id() == "area")
+        {
+            appendAreaProperties(compNode, component.Id(), propertiesByArea);
         }
 
         system["components"].push_back(compNode);
@@ -140,11 +200,12 @@ void exportSystemForView(const Antares::Data::Study& study, Solver::IResultWrite
 
 YAML::Node generateSystemForView(const Antares::Data::Study& study)
 {
+    const auto districtPropertiesByArea = buildDistrictPropertiesByArea(study);
     YAML::Node systemYaml = generateSystemLegacyComponents(study);
     if (auto* modelerData = study.getModelerData())
     {
         checkForDuplicatesBetweenLegacyAndModeler(systemYaml, modelerData);
-        appendModelerData(systemYaml, *modelerData);
+        appendModelerData(systemYaml, *modelerData, districtPropertiesByArea);
     }
     return systemYaml;
 }
@@ -152,6 +213,7 @@ YAML::Node generateSystemForView(const Antares::Data::Study& study)
 YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
 {
     const auto inactiveComponents = Antares::Data::BuildInactiveComponentsAnalyzer(study);
+    const auto districtPropertiesByArea = buildDistrictPropertiesByArea(study);
     YAML::Node system;
     system["id"] = study.folder.string();
 
@@ -162,11 +224,14 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
     // BuildInactiveComponentsAnalyzer's area/link traversal.
     uint32_t interco = 0;
     study.areas.each(
-      [&components, &connections, &study, &inactiveComponents, &interco](const Area& area)
+      [&components, &connections, &study, &inactiveComponents, &interco, &districtPropertiesByArea](
+        const Area& area)
       {
           std::string areaLoc = BuildAreaNodeComponentId(area.id);
 
-          components.push_back(areaToYaml(area));
+          YAML::Node areaComponent = areaToYaml(area);
+          appendAreaProperties(areaComponent, area.id, districtPropertiesByArea);
+          components.push_back(areaComponent);
 
           if (!inactiveComponents->loadIsAllZero(area.index))
           {
