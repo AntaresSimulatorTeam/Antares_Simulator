@@ -210,19 +210,6 @@ BOOST_AUTO_TEST_CASE(area_components_have_district_properties)
     study->setsOfAreas.add("eu", secondDistrict, secondOptions);
     study->setsOfAreas.rebuildIndexes();
 
-    Model areaModel = ModelBuilder().withId("area").withLibraryId("library").build();
-    std::vector<Component> modelerComponents;
-    modelerComponents.emplace_back(
-      ComponentBuilder().withId("france").withModel(&areaModel).build());
-
-    auto modelerSystem = SystemBuilder()
-                           .withId("system")
-                           .withComponents(std::move(modelerComponents))
-                           .build();
-    auto modelerData = std::make_unique<Antares::Solver::ModelerData>();
-    modelerData->system = std::make_unique<System>(std::move(modelerSystem));
-    study->setModelerData(std::move(modelerData));
-
     const YAML::Node components = generateSystemForView(*study)["system"]["components"];
     const auto findComponent = [&components](const std::string& id)
     {
@@ -246,13 +233,6 @@ BOOST_AUTO_TEST_CASE(area_components_have_district_properties)
     BOOST_CHECK_EQUAL((*germanyNode)["properties"][1]["id"].as<std::string>(), "district_eu");
     BOOST_CHECK_EQUAL((*germanyNode)["properties"][1]["value"].as<std::string>(), "eu");
 
-    const auto franceGemsArea = findComponent("france");
-    BOOST_REQUIRE(franceGemsArea != components.end());
-    BOOST_REQUIRE_EQUAL((*franceGemsArea)["properties"].size(), 2);
-    BOOST_CHECK_EQUAL((*franceGemsArea)["properties"][0]["id"].as<std::string>(), "district_eu");
-    BOOST_CHECK_EQUAL((*franceGemsArea)["properties"][0]["value"].as<std::string>(), "eu");
-    BOOST_CHECK_EQUAL((*franceGemsArea)["properties"][1]["id"].as<std::string>(), "district_it");
-    BOOST_CHECK_EQUAL((*franceGemsArea)["properties"][1]["value"].as<std::string>(), "it");
 }
 
 BOOST_AUTO_TEST_CASE(load_component)

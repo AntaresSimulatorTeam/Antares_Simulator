@@ -117,9 +117,7 @@ void checkForDuplicatesBetweenLegacyAndModeler(YAML::Node& systemYaml,
     }
 }
 
-void appendModelerData(YAML::Node& systemYaml,
-                       const Antares::Solver::ModelerData& modelerData,
-                       const DistrictPropertiesByArea& propertiesByArea)
+void appendModelerData(YAML::Node& systemYaml, const Antares::Solver::ModelerData& modelerData)
 {
     YAML::Node system = systemYaml["system"];
 
@@ -143,11 +141,6 @@ void appendModelerData(YAML::Node& systemYaml,
                 props.push_back(prop);
             }
             compNode["properties"] = props;
-        }
-
-        if (component.getModel()->Id() == "area")
-        {
-            appendAreaProperties(compNode, component.Id(), propertiesByArea);
         }
 
         system["components"].push_back(compNode);
@@ -200,12 +193,11 @@ void exportSystemForView(const Antares::Data::Study& study, Solver::IResultWrite
 
 YAML::Node generateSystemForView(const Antares::Data::Study& study)
 {
-    const auto districtPropertiesByArea = buildDistrictPropertiesByArea(study);
     YAML::Node systemYaml = generateSystemLegacyComponents(study);
     if (auto* modelerData = study.getModelerData())
     {
         checkForDuplicatesBetweenLegacyAndModeler(systemYaml, modelerData);
-        appendModelerData(systemYaml, *modelerData, districtPropertiesByArea);
+        appendModelerData(systemYaml, *modelerData);
     }
     return systemYaml;
 }
