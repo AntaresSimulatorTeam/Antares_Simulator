@@ -576,9 +576,9 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown,
     BOOST_CHECK_EXCEPTION(
       visitor().dispatch(node),
       Antares::Error::InvalidArgumentError,
-      checkMessage("Port field 'port.field' cannot be used directly in a linear expression. "
-                   "Use 'sum_connections(port.field)' to aggregate port field values from "
-                   "connected components."));
+      containsMessage("Port field 'port.field' cannot be used directly in a linear expression. "
+                      "Use 'sum_connections(port.field)' to aggregate port field values from "
+                      "connected components."));
 
     node = create<FunctionNode>(FunctionNodeType::dual,
                                 create<ParameterNode>("constraint1"),
