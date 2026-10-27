@@ -118,6 +118,28 @@ models:
       });
 }
 
+BOOST_AUTO_TEST_CASE(optim_config_collects_missing_model_decomposition_with_sibling_errors)
+{
+    const auto content = R"(
+models:
+  - id: first
+  - model-decomposition:
+      variables: []
+      constraints: []
+      objective-contributions: []
+)";
+    BOOST_CHECK_EXCEPTION(
+      YmlOptimConfig::Parser{}.parse(content),
+      InputError,
+      [](const InputError& e)
+      {
+          const std::string message = e.what();
+          BOOST_CHECK(message.find("Missing field: model-decomposition") != std::string::npos);
+          BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
+          return true;
+      });
+}
+
 BOOST_AUTO_TEST_CASE(duplicated_sections_are_all_validated)
 {
     const auto content = R"(

@@ -272,7 +272,9 @@ models:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_EXCEPTION(parser.parse(yaml_content),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("Missing field: model-decomposition"));
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_variable_id_throws)
