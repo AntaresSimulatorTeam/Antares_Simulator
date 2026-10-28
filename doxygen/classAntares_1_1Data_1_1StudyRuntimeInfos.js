@@ -3,6 +3,7 @@ var classAntares_1_1Data_1_1StudyRuntimeInfos =
     [ "Counts", "structAntares_1_1Data_1_1StudyRuntimeInfos_1_1Counts.html", "structAntares_1_1Data_1_1StudyRuntimeInfos_1_1Counts" ],
     [ "StudyRuntimeInfos", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#af1f6117511f38d9392284eddb2005989", null ],
     [ "~StudyRuntimeInfos", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#ac0abd4cba8aa233c5057aea91d5aec24", null ],
+    [ "initializeQuadraticFlowStorage", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a6ac7dbcc61884a7d42785f0f8479ddc7", null ],
     [ "initializeRandomNumberGenerators", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#aacc2750e79b6547eed327099a892ddeb", null ],
     [ "interconnectionsCount", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#afe52f5b3950ed139e430cd789b71d11c", null ],
     [ "loadFromStudy", "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a54efdc144f837bfda2010785d3751a1c", null ],

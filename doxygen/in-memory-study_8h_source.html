@@ -358,7 +358,7 @@ $(document).ready(function(){initNavTree('in-memory-study_8h_source.html',''); i
 <div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* OutputRetriever::retrieveAreaResults(<a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area)</div>
 <div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;{</div>
 <div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* result = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    simulation_.variables.retrieveResultsForArea&lt;VCard&gt;(&amp;result, area);</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    simulation_.variables-&gt;retrieveResultsForArea&lt;VCard&gt;(&amp;result, area);</div>
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    <span class="keywordflow">return</span> result;</div>
 <div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;}</div>
 <div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160; </div>
@@ -366,7 +366,7 @@ $(document).ready(function(){initNavTree('in-memory-study_8h_source.html',''); i
 <div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;<span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* OutputRetriever::retrieveLinkResults(<a class="code" href="classAntares_1_1Data_1_1AreaLink.html">AreaLink</a>* link)</div>
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;{</div>
 <div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* result = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    simulation_.variables.retrieveResultsForLink&lt;VCard&gt;(&amp;result, link);</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    simulation_.variables-&gt;retrieveResultsForLink&lt;VCard&gt;(&amp;result, link);</div>
 <div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    <span class="keywordflow">return</span> result;</div>
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;}</div>
 <div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160; </div>
@@ -375,7 +375,7 @@ $(document).ready(function(){initNavTree('in-memory-study_8h_source.html',''); i
 <div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;  <a class="code" href="classAntares_1_1Data_1_1ThermalCluster.html">ThermalCluster</a>* cluster)</div>
 <div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;{</div>
 <div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* result = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    simulation_.variables.retrieveResultsForThermalCluster&lt;VCard&gt;(&amp;result, cluster);</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    simulation_.variables-&gt;retrieveResultsForThermalCluster&lt;VCard&gt;(&amp;result, cluster);</div>
 <div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    <span class="keywordflow">return</span> result;</div>
 <div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;}</div>
 <div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160; </div>
