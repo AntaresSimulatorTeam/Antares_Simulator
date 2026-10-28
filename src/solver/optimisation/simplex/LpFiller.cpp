@@ -73,6 +73,7 @@ void LpFiller::fillLinearProblem(const LinearProblem::Api::FillContext& fillCtx,
                                  LinearProblem::OptimEntityContainer& optimEntityContainer,
                                  LinearProblem::BendersDecomposition* bendersDecomposition)
 {
+    problemeHebdo.linkCapacityConstraints.clear();
     std::vector<std::unique_ptr<LinearProblem::Api::LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
       std::make_unique<Antares::Optimization::LegacyFiller>(optimEntityContainer.Problem(),

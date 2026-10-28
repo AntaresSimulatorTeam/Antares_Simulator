@@ -23,6 +23,23 @@ std::string toLowerCase(std::string value)
     boost::algorithm::to_lower(value);
     return value;
 }
+
+constexpr double hurdleCostMargin = 0.01;
+
+// The constraint reads: sign * flow - capacity(x) <= capacity constant, with capacity(x) the
+// variable part of the capacity expression.
+double solvedCapacity(const IMipConstraint& constraint, int flowVariable, const ILinearProblem& pb)
+{
+    double capacity = constraint.getUb();
+    for (const auto& [varIndex, coef]: constraint.getCoefficients())
+    {
+        if (varIndex != flowVariable)
+        {
+            capacity -= coef * pb.getVariable(varIndex)->solutionValue();
+        }
+    }
+    return capacity;
+}
 } // namespace
 
 namespace Antares::Optimization
@@ -121,11 +138,12 @@ void LinkCapacityFiller::addComponentPortContributionToLinkCapacity(
     for (auto localIndex(ctx.getLocalFirstTimeStep()); localIndex <= ctx.getLocalLastTimeStep();
          ++localIndex)
     {
-        auto pdt = localIndex % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
+        const int pdt = static_cast<int>(localIndex % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation);
         const auto hourSuffix = fmt::format("::hour<{}>",
                                             pdt + problemeHebdo_->weekInTheYear * 168);
 
-        auto* directFlow = pb_.getVariable(variableManager_.DirectFlow(interco, pdt));
+        const int directFlowIndex = variableManager_.DirectFlow(interco, pdt);
+        auto* directFlow = pb_.getVariable(directFlowIndex);
         directFlow->setLb(-pb_.infinity());
         directFlow->setUb(pb_.infinity());
 
@@ -146,14 +164,23 @@ void LinkCapacityFiller::addComponentPortContributionToLinkCapacity(
         {
             lowerCt->setCoefficient(solverVariables[varIndex].get(), -coef);
         }
+        problemeHebdo_->linkCapacityConstraints.push_back(
+          {.interco = static_cast<uint32_t>(interco),
+           .pdt = static_cast<int>(pdt),
+           .flowVariable = directFlowIndex,
+           .direct = upperCt,
+           .indirect = lowerCt});
 
         if (problemeHebdo_->CoutDeTransport[interco].IntercoGereeAvecDesCouts)
         {
             auto* directCost = pb_.getVariable(variableManager_.PositiveDirectFlow(interco, pdt));
             directCost->setLb(0.);
             directCost->setUb(pb_.infinity());
+            // Same margin as the legacy bounds: the capacity dual must stay on the flow
+            // constraints, not be split with these degenerate ones.
             auto* directCostCt = pb_.addConstraint(-pb_.infinity(),
-                                                   directExpression[localIndex].constant(),
+                                                   directExpression[localIndex].constant()
+                                                     + hurdleCostMargin,
                                                    linkPrefix + "::IntercoDirectCostUpper"
                                                      + hourSuffix);
             directCostCt->setCoefficient(directCost, 1.0);
@@ -167,7 +194,8 @@ void LinkCapacityFiller::addComponentPortContributionToLinkCapacity(
             indirectCost->setLb(0.);
             indirectCost->setUb(pb_.infinity());
             auto* indirectCostCt = pb_.addConstraint(-pb_.infinity(),
-                                                     indirectExpression[localIndex].constant(),
+                                                     indirectExpression[localIndex].constant()
+                                                       + hurdleCostMargin,
                                                      linkPrefix + "::IntercoIndirectCostUpper"
                                                        + hourSuffix);
             indirectCostCt->setCoefficient(indirectCost, 1.0);
@@ -175,6 +203,31 @@ void LinkCapacityFiller::addComponentPortContributionToLinkCapacity(
             {
                 indirectCostCt->setCoefficient(solverVariables[varIndex].get(), -coef);
             }
+        }
+    }
+}
+
+void applyLinkCapacityResults(PROBLEME_HEBDO& problemeHebdo,
+                              const ILinearProblem& pb,
+                              int NumIntervalle)
+{
+    const int firstPdt = NumIntervalle * problemeHebdo.NombreDePasDeTempsPourUneOptimisation;
+    auto& reducedCosts = problemeHebdo.ProblemeAResoudre->CoutsReduits;
+    for (const auto& link: problemeHebdo.linkCapacityConstraints)
+    {
+        auto& ntc = problemeHebdo.ValeursDeNTC[firstPdt + link.pdt];
+        ntc.ValeurDeNTCOrigineVersExtremite[link.interco] = solvedCapacity(*link.direct,
+                                                                           link.flowVariable,
+                                                                           pb);
+        ntc.ValeurDeNTCExtremiteVersOrigine[link.interco] = solvedCapacity(*link.indirect,
+                                                                           link.flowVariable,
+                                                                           pb);
+        // Duals are not extracted from a MIP, see extract_from_MPSolver
+        if (pb.isLP())
+        {
+            // Equivalent reduced cost of the flow bounds: the flow coefficient is +1 in the
+            // direct constraint and -1 in the indirect one.
+            reducedCosts[link.flowVariable] = link.direct->dual() - link.indirect->dual();
         }
     }
 }

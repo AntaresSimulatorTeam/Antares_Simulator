@@ -38,7 +38,7 @@ public:
     void addObjectives(const LinearProblem::Api::FillContext& ctx) override;
 
 private:
-    const PROBLEME_HEBDO* problemeHebdo_;
+    PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
     LinearProblem::OptimEntityContainer& optimEntityContainer_;
     LinearProblem::Api::ILinearProblem& pb_;
@@ -54,5 +54,17 @@ private:
       const std::string& portId,
       const ModelerStudy::SystemModel::LinkComponent& linkConnection);
 };
+
+/**
+ * @brief Report the solved link capacity constraints on the legacy link structures.
+ *
+ * LinkCapacityFiller leaves the flow variable unbounded, so its reduced cost and the legacy NTC
+ * no longer describe the link. Writes the effective capacities into ValeursDeNTC and the duals of
+ * the capacity constraints into the flow variable's reduced cost, from where applyResults copies
+ * them to VariablesDualesDesContraintesDeNTC.
+ */
+void applyLinkCapacityResults(PROBLEME_HEBDO& problemeHebdo,
+                              const LinearProblem::Api::ILinearProblem& pb,
+                              int NumIntervalle);
 
 } // namespace Antares::Optimization

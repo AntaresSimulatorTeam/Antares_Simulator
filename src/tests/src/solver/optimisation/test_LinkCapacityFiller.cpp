@@ -5,6 +5,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/solver/optimisation/LinkCapacityFiller.h"
+
 #include "FillerFixture.h"
 
 using namespace std::string_literals;
@@ -98,6 +100,86 @@ system:
         to: fr
 )"s;
 
+namespace
+{
+struct LinkFixture: FillerFixture
+{
+    LinkFixture():
+        FillerFixture(false, "sirius")
+    {
+    }
+
+    void setUpLink(OptimEntityContainer& optimEntityContainer)
+    {
+        init(linkConnectionSystem, linkConnectionLib);
+        setData("availability_factor_direct", {4.0});
+        setData("availability_factor_indirect", {5.0});
+        setData("already_installed_availability_factor_direct", {6.0});
+        setData("already_installed_availability_factor_indirect", {7.0});
+
+        optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
+
+        problemeHebdo->NomsDesPays = {"de", "fr"};
+        problemeHebdo->NombreDePays = 2;
+        problemeHebdo->NombreDInterconnexions = 1;
+        problemeHebdo->PaysOrigineDeLInterconnexion = {0};
+        problemeHebdo->PaysExtremiteDeLInterconnexion = {1};
+        problemeHebdo->CoutDeTransport.resize(1);
+        problemeHebdo->CorrespondanceVarNativesVarOptim.resize(1);
+        auto& varMap = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
+        varMap.NumeroDeVariableDuFluxDirect = {0};
+        varMap.NumeroDeVariableDuFluxDirectPositif = {1};
+        varMap.NumeroDeVariableDuFluxIndirectPositif = {2};
+        problemeHebdo->ValeursDeNTC.resize(1);
+        problemeHebdo->ValeursDeNTC[0].ValeurDeNTCOrigineVersExtremite = {1000.};
+        problemeHebdo->ValeursDeNTC[0].ValeurDeNTCExtremiteVersOrigine = {1000.};
+        problemeHebdo->ProblemeAResoudre->CoutsReduits.assign(3, 0.);
+
+        addLegacyVariables({"direct_flow_t0", "direct_cost_t0", "indirect_cost_t0"});
+        addModelerVariables(0, 0, optimEntityContainer);
+        fillProblemWithLinkCapacityConnectionFiller({0, 0, 0, 0, 0}, optimEntityContainer);
+
+        // Invested capacity 10: direct capacity 4 * 10 + 6 * 20, indirect 5 * 10 + 7 * 20
+        linearProblem.lookupVariable("my_link_invest.invested_capacity_t0")->setBounds(10., 10.);
+    }
+};
+} // namespace
+
+BOOST_FIXTURE_TEST_SUITE(_LinkCapacityResults_, LinkFixture)
+
+BOOST_AUTO_TEST_CASE(binding_direct_capacity_is_reported_on_legacy_link)
+{
+    OptimEntityContainer optimEntityContainer(linearProblem);
+    setUpLink(optimEntityContainer);
+    // Maximize the direct flow
+    linearProblem.setObjectiveCoefficient(linearProblem.lookupVariable("direct_flow_t0"), -1.);
+    linearProblem.solve(false);
+
+    applyLinkCapacityResults(*problemeHebdo, linearProblem, 0);
+
+    const auto& ntc = problemeHebdo->ValeursDeNTC[0];
+    BOOST_CHECK_CLOSE(ntc.ValeurDeNTCOrigineVersExtremite[0], 160., 1e-6);
+    BOOST_CHECK_CLOSE(ntc.ValeurDeNTCExtremiteVersOrigine[0], 190., 1e-6);
+    // Same sign as the reduced cost of a flow variable at its legacy upper bound
+    BOOST_CHECK_CLOSE(problemeHebdo->ProblemeAResoudre->CoutsReduits[0], -1., 1e-6);
+}
+
+BOOST_AUTO_TEST_CASE(binding_indirect_capacity_is_reported_on_legacy_link)
+{
+    OptimEntityContainer optimEntityContainer(linearProblem);
+    setUpLink(optimEntityContainer);
+    // Maximize the indirect flow
+    linearProblem.setObjectiveCoefficient(linearProblem.lookupVariable("direct_flow_t0"), 1.);
+    linearProblem.solve(false);
+
+    applyLinkCapacityResults(*problemeHebdo, linearProblem, 0);
+
+    BOOST_CHECK_CLOSE(linearProblem.lookupVariable("direct_flow_t0")->solutionValue(), -190., 1e-6);
+    BOOST_CHECK_CLOSE(problemeHebdo->ProblemeAResoudre->CoutsReduits[0], 1., 1e-6);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
 BOOST_FIXTURE_TEST_SUITE(_ComponentToLinkCapacityFiller_, FillerFixture)
 
 BOOST_AUTO_TEST_CASE(add_link_capacity_constraints_and_override_legacy_bounds)
@@ -164,14 +246,14 @@ BOOST_AUTO_TEST_CASE(add_link_capacity_constraints_and_override_legacy_bounds)
     BOOST_REQUIRE(directCostCt);
     BOOST_CHECK_EQUAL(directCostCt->getCoefficient(directCost), 1.0);
     BOOST_CHECK_EQUAL(directCostCt->getCoefficient(investedCapacity), -4.0);
-    BOOST_CHECK_EQUAL(directCostCt->getUb(), 120.0);
+    BOOST_CHECK_CLOSE(directCostCt->getUb(), 120.01, 1e-9);
 
     const auto* indirectCostCt = linearProblem.lookupConstraint(
       "LinkCapacity::from<de>::to<fr>::IntercoIndirectCostUpper::hour<0>");
     BOOST_REQUIRE(indirectCostCt);
     BOOST_CHECK_EQUAL(indirectCostCt->getCoefficient(indirectCost), 1.0);
     BOOST_CHECK_EQUAL(indirectCostCt->getCoefficient(investedCapacity), -5.0);
-    BOOST_CHECK_EQUAL(indirectCostCt->getUb(), 140.0);
+    BOOST_CHECK_CLOSE(indirectCostCt->getUb(), 140.01, 1e-9);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

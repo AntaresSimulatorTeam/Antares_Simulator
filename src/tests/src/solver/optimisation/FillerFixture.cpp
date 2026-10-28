@@ -22,7 +22,12 @@ using namespace Api;
 using namespace DataImpl;
 
 FillerFixture::FillerFixture():
-    linearProblem(true, "scip"),
+    FillerFixture(true, "scip")
+{
+}
+
+FillerFixture::FillerFixture(bool isMip, const std::string& solverName):
+    linearProblem(isMip, solverName),
     linearProblemData((DataSeriesRepository()))
 {
 }
