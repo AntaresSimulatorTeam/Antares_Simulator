@@ -127,7 +127,7 @@ bool readReserveParameters(const fs::path& folderInput, Area& area, const YAML::
         return false;
     }
 
-    CapacityReservation capacityReservation;
+    CapacityReservation capacityReservation(area.allCapacityReservations->TSNumbers);
     capacityReservation.setName(reserveName);
 
     for (const auto& entry: reserveNode)
@@ -220,6 +220,7 @@ bool readReserveParameters(const fs::path& folderInput, Area& area, const YAML::
             ret = false;
         }
     }
+    area.allCapacityReservations->TSNumbers.clear();
     fs::path filePath = folderInput / "reserves" / area.id / (capacityReservation.id() + ".txt");
     capacityReservation.loadNeedFromFile(filePath);
     area.allCapacityReservations->areaCapacityReservations.emplace(capacityReservation.id(),
@@ -1211,6 +1212,7 @@ void validateCapacityReservations(const Area& area)
 {
     if (area.allCapacityReservations)
     {
+        auto& areaCapacityRes = area.allCapacityReservations.value();
         errorIfNegativeValue("maxGlobalEnergyActivationRatio up",
                              area.allCapacityReservations->maxGlobalEnergyActivationRatio.up,
                              area.name);
@@ -1241,6 +1243,22 @@ void validateCapacityReservations(const Area& area)
                                  area.name,
                                  std::nullopt,
                                  resID);
+        }
+
+        // check size of need time series (should have the same number of years)
+        const auto it = std::ranges::adjacent_find(areaCapacityRes.areaCapacityReservations,
+                                                   std::not_equal_to{},
+                                                   [](const auto& entry) {
+                                                       return entry.second.need->numberOfColumns();
+                                                   });
+
+        if (it != areaCapacityRes.areaCapacityReservations.end())
+        {
+            const auto& [resID, capacityRes] = *it;
+            logs.error() << "Inconsistent size of need time series for capacity reservation `"
+                         << resID << "` in area `" << area.name
+                         << "`. Expected size: " << std::next(it)->second.need->numberOfColumns()
+                         << ", actual size: " << capacityRes.need->numberOfColumns();
         }
     }
 }
