@@ -81,6 +81,41 @@ Feature: reserves tests
 
 @short
 # Lot 2 : Intégration de la participation du thermique éteint et des stockage CT et LT
+# Description : L'objectif de ce test est de permettre la participation d'un cluster lorsqu'il est allumé ou éteint. l'optimisation doit donner la répartition allumé/éteint optimale pour minimiser le coût total.
+  Scenario: lot_2_cluster_off_1_area
+    Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/lot_2_cluster_off_1_area"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 20 seconds
+    And in area "AREA", during year 1, for cluster "cluster1" and reserve "Res_1", reserve participation power is always equal to 10 MWh
+    And in area "AREA", during year 1, for cluster "cluster1" and reserve "Res_1", participation of off units to the reserve is always equal to 10 MWh
+    And in area "AREA", during year 1, for cluster "cluster1" and reserve "Res_2", participation of off units to the reserve is always equal to 50 MWh
+    And in area "AREA", during year 1, for reserve "Res_2", reserve unsupplied power is always equal to 10 MWh
+    And in area "AREA", during year 1, for reserve "Res_1", reserve unsupplied power is always equal to 5 MWh
+    And in area "AREA", overall cost on "1 JAN 06:00" of year 1 is of 6500 Euro
+ 
+@fast @short
+# Lot 2 : Intégration de la participation du thermique éteint sur 2 zones
+# Description : L'objectif de ce test est de permettre la participation d'un cluster lorsqu'il est allumé ou éteint. l'optimisation doit donner la répartition allumé/éteint optimale pour minimiser le coût total. On considère plusieurs zones afin de vérifier les résultats dans ce contexte.
+  Scenario: lot_2_cluster_off_2_areas
+    Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/lot_2_cluster_off_2_areas"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 20 seconds
+    And in area "AREA", during year 1, for cluster "cluster1" and reserve "Res_1", reserve participation power is always equal to 10 MWh
+    And in area "AREA", during year 1, for cluster "cluster1" and reserve "Res_1", participation of off units to the reserve is always equal to 10 MWh
+    And in area "AREA", during year 1, for cluster "cluster1" and reserve "Res_2", participation of off units to the reserve is always equal to 50 MWh
+    And in area "AREA", during year 1, for reserve "Res_2", reserve unsupplied power is always equal to 10 MWh
+    And in area "AREA", during year 1, for reserve "Res_1", reserve unsupplied power is always equal to 5 MWh
+    And in area "AREA1", during year 1, for cluster "cluster1" and reserve "Res_1", reserve participation power is always equal to 10 MWh
+    And in area "AREA1", during year 1, for cluster "cluster1" and reserve "Res_1", participation of off units to the reserve is always equal to 10 MWh
+    And in area "AREA1", during year 1, for cluster "cluster1" and reserve "Res_2", participation of off units to the reserve is always equal to 50 MWh
+    And in area "AREA1", during year 1, for reserve "Res_2", reserve unsupplied power is always equal to 10 MWh
+    And in area "AREA1", during year 1, for reserve "Res_1", reserve unsupplied power is always equal to 5 MWh
+    And in area "AREA1", during year 1, for reserve "Res_3", reserve unsupplied power is always equal to 25 MWh
+
+@short
+# Lot 2 : Intégration de la participation du thermique éteint et des stockage CT et LT
 # Un cluster qui participe avec à une réserve à la hausse avec des unités off
   Scenario: lot_2_off_cluster_participation
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/lot_2_off_cluster_participation"
