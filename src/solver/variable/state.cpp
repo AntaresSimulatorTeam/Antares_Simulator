@@ -507,20 +507,74 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterEnabledIndex)
     // Calculation of non linear and startup costs
     yearEndBuildThermalClusterCalculateStartupCosts(maxDurationON, ON_min, ON_opt, currentCluster);
     // Calculation of ramping costs
-    yearEndBuildCalculateRampingCosts(currentCluster);
+    yearEndBuildCalculateRampingCosts(maxDurationON, ON_min, ON_opt, currentCluster);
 }
 
-void State::yearEndBuildCalculateRampingCosts(const Data::ThermalCluster* currentCluster)
+void State::yearEndBuildCalculateMustRunRampingCosts(const uint& maxDurationON,
+                                                     const std::array<int, HOURS_PER_YEAR>& ON_min,
+                                                     const std::array<int, HOURS_PER_YEAR>& ON_opt,
+                                                     const Data::ThermalCluster* currentCluster)
 {
-    if ((unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate
-         || unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucMILP)
-        && currentCluster->ramping)
+    uint startHourForCurrentYear = study.runtime.rangeLimits.hour[Data::rangeBegin];
+    uint endHourForCurrentYear = startHourForCurrentYear
+                                 + study.runtime.rangeLimits.hour[Data::rangeCount];
+    // In must-run mode, the production directly comes from the time-series
+    const auto& production = currentCluster->series.getColumn(this->year);
+    for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
     {
+        uint last_index = (h > startHourForCurrentYear) ? h - 1 : startHourForCurrentYear;
+
+        double startingStoppingProduction = 0.;
+        if (h >= startHourForCurrentYear + 1)
+        {
+            // Number of units started at hour h
+            int delta = (maxDurationON == 0) ? ON_min[h] - ON_min[h - 1]
+                                             : ON_opt[h] - ON_opt[h - 1];
+
+            startingStoppingProduction = delta * currentCluster->nominalCapacityWithSpinning;
+        }
+        double startingProduction = std::max(0., startingStoppingProduction);
+        double stoppingProduction = std::max(0., -startingStoppingProduction);
+
+        double rampingIncrease = std::max(production[h] - production[last_index]
+                                            - startingProduction,
+                                          0.);
+        double rampingDecrease = std::max(production[last_index] - production[h]
+                                            - stoppingProduction,
+                                          0.);
+
+        thermalClusterRampingCostForYear[h] = rampingIncrease
+                                                * currentCluster->ramping->powerIncreaseCost
+                                              + rampingDecrease
+                                                  * currentCluster->ramping->powerDecreaseCost;
+    }
+}
+
+void State::yearEndBuildCalculateRampingCosts(const uint& maxDurationON,
+                                              const std::array<int, HOURS_PER_YEAR>& ON_min,
+                                              const std::array<int, HOURS_PER_YEAR>& ON_opt,
+                                              const Data::ThermalCluster* currentCluster)
+{
+    if (!currentCluster->ramping)
+    {
+        return;
+    }
+
+    if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate
+        || unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucMILP)
+    {
+        // Must-run clusters are not optimized, so they have no ramping variables: their
+        // ramping cost is computed from their time-series.
+        if (currentCluster->mustrun)
+        {
+            yearEndBuildCalculateMustRunRampingCosts(maxDurationON, ON_min, ON_opt, currentCluster);
+        }
+
         uint startHourForCurrentYear = study.runtime.rangeLimits.hour[Data::rangeBegin];
         uint endHourForCurrentYear = startHourForCurrentYear
                                      + study.runtime.rangeLimits.hour[Data::rangeCount];
-        // thermalClusterRampingCostForYear comes from the optimization ramping variables
-        // (see RampingCostByDispatchablePlant)
+        // For dispatchable clusters, thermalClusterRampingCostForYear comes from the
+        // optimization ramping variables (see RampingCostByDispatchablePlant)
         for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
         {
             thermalClusterOperatingCostForYear[h] += thermalClusterRampingCostForYear[h];
