@@ -314,16 +314,15 @@ void Component::addLinkCapacityConnection(const std::string& portId,
     }
     if (portToLinkConnections_.contains(portId))
     {
-        const auto msg
-          = fmt::format("port '{}' is already connected to '(from = {}, to = {})'",
-                        portId,
-                        portToLinkConnections_.at(portId).from,
-                        portToLinkConnections_.at(portId).to);
+        const auto msg = fmt::format("port '{}' is already connected to '(from = {}, to = {})'",
+                                     portId,
+                                     portToLinkConnections_.at(portId).from,
+                                     portToLinkConnections_.at(portId).to);
         throw std::invalid_argument(msg);
     }
-    portToLinkConnections_.try_emplace(
-      portId,
-      LinkComponent{toLowerCase(fromAreaId), toLowerCase(toAreaId)});
+    portToLinkConnections_.try_emplace(portId,
+                                       LinkComponent{toLowerCase(fromAreaId),
+                                                     toLowerCase(toAreaId)});
 }
 
 std::optional<std::string> Component::areaConnectedToPort(const std::string& portId) const

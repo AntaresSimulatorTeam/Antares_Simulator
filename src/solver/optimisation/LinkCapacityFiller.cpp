@@ -3,8 +3,9 @@
 
 #include "antares/solver/optimisation/LinkCapacityFiller.h"
 
-#include <boost/algorithm/string/case_conv.hpp>
 #include <fmt/format.h>
+
+#include <boost/algorithm/string/case_conv.hpp>
 
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/solver/modeler/ModelerData.h"
@@ -88,7 +89,11 @@ void LinkCapacityFiller::addComponentPortContributionToLinkCapacity(
   const std::string& portId,
   const LinkComponent& linkConnection)
 {
-    const auto fields = component.getModel()->Ports().at(portId).Type().LinkCapacityConnectionFieldIds();
+    const auto fields = component.getModel()
+                          ->Ports()
+                          .at(portId)
+                          .Type()
+                          .LinkCapacityConnectionFieldIds();
     if (!fields.has_value())
     {
         throw Error::RuntimeError(
@@ -157,7 +162,8 @@ void LinkCapacityFiller::addComponentPortContributionToLinkCapacity(
                 directCostCt->setCoefficient(solverVariables[varIndex].get(), -coef);
             }
 
-            auto* indirectCost = pb_.getVariable(variableManager_.PositiveIndirectFlow(interco, pdt));
+            auto* indirectCost = pb_.getVariable(
+              variableManager_.PositiveIndirectFlow(interco, pdt));
             indirectCost->setLb(0.);
             indirectCost->setUb(pb_.infinity());
             auto* indirectCostCt = pb_.addConstraint(-pb_.infinity(),

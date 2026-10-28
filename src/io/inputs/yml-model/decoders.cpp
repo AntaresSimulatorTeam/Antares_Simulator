@@ -188,7 +188,8 @@ bool convert<YmlModel::PortType>::convertLinkCapacityFields(const Node& node,
     }
 
     checkFields(childNode, {"capacity-direct-field", "capacity-indirect-field"});
-    rhs.link_capacity_connection_direct_field = getFieldFromNode(childNode, "capacity-direct-field");
+    rhs.link_capacity_connection_direct_field = getFieldFromNode(childNode,
+                                                                 "capacity-direct-field");
     rhs.link_capacity_connection_indirect_field = getFieldFromNode(childNode,
                                                                    "capacity-indirect-field");
     return true;

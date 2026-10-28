@@ -141,7 +141,8 @@ BOOST_AUTO_TEST_CASE(add_link_capacity_constraints_and_override_legacy_bounds)
     BOOST_CHECK_EQUAL(indirectCost->getLb(), 0.);
     BOOST_CHECK_EQUAL(indirectCost->getUb(), linearProblem.infinity());
 
-    const auto* investedCapacity = linearProblem.lookupVariable("my_link_invest.invested_capacity_t0");
+    const auto* investedCapacity = linearProblem.lookupVariable(
+      "my_link_invest.invested_capacity_t0");
     BOOST_REQUIRE(investedCapacity);
 
     const auto* ntcUpper = linearProblem.lookupConstraint(

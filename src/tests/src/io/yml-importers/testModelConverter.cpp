@@ -570,13 +570,8 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_conflicts_with_sum_connections_dif
 BOOST_FIXTURE_TEST_CASE(port_field_definition_no_conflict_when_sum_connections_on_different_field,
                         Fixture)
 {
-    YmlModel::PortType portType{"my-port-type",
-                                "description",
-                                {"field1", "field2"},
-                                "",
-                                "",
-                                "",
-                                {}};
+    YmlModel::PortType
+      portType{"my-port-type", "description", {"field1", "field2"}, "", "", "", {}};
     library.port_types = {portType};
 
     YmlModel::Model model{

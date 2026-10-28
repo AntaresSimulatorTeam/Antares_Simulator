@@ -172,9 +172,10 @@ bool convert<YmlSystem::LinkCapacityConnection>::decode(const Node& node,
     if (linkComponentNode.IsNull())
     {
         YmlTreeDisplayer displayer(node);
-        throw InputError(fmt::format("Expected a YAML mapping for 'link-component' (got null).\n{}{}",
-                                     displayer.baseTree(),
-                                     displayer.buildMarkedTree({"link-component"}, {})));
+        throw InputError(
+          fmt::format("Expected a YAML mapping for 'link-component' (got null).\n{}{}",
+                      displayer.baseTree(),
+                      displayer.buildMarkedTree({"link-component"}, {})));
     }
     rhs.linkComponent = linkComponentNode.as<YmlSystem::LinkComponent>();
     return true;
@@ -193,8 +194,8 @@ bool convert<YmlSystem::System>::decode(const Node& node, YmlSystem::System& rhs
       node["area-connections"]);
     rhs.thermalCapacityConnections = as_fallback_default<
       std::vector<YmlSystem::ThermalCapacityConnection>>(node["thermal-capacity-connections"]);
-    rhs.linkCapacityConnections = as_fallback_default<std::vector<YmlSystem::LinkCapacityConnection>>(
-      node["link-capacity-connections"]);
+    rhs.linkCapacityConnections = as_fallback_default<
+      std::vector<YmlSystem::LinkCapacityConnection>>(node["link-capacity-connections"]);
     return true;
 }
 

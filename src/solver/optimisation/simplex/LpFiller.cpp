@@ -8,8 +8,8 @@
 #include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
-#include "antares/solver/optimisation/LinkCapacityFiller.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
+#include "antares/solver/optimisation/LinkCapacityFiller.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
 #include "antares/study/system-model/system.h"
 
