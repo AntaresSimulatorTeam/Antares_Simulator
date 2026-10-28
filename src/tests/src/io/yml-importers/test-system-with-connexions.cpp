@@ -490,6 +490,53 @@ BOOST_AUTO_TEST_CASE(link_capacity_connectivity)
     BOOST_CHECK_EQUAL(linkConnection.to, "fr");
 }
 
+BOOST_AUTO_TEST_CASE(two_link_capacity_connections_to_the_same_link___exception_raised)
+{
+    const auto systemYml = R"(
+system:
+  id: my_system
+  components:
+  - id: invest_1
+    model: invest_lib.link_invest
+    parameters:
+      - id: p
+        scenario-dependent: false
+        time-dependent: false
+        value: 0
+  - id: invest_2
+    model: invest_lib.link_invest
+    parameters:
+      - id: p
+        scenario-dependent: false
+        time-dependent: false
+        value: 0
+
+  link-capacity-connections:
+    - component : invest_1
+      port: capacity_port
+      link-component:
+        from: de
+        to: fr
+    - component : invest_2
+      port: capacity_port
+      link-component:
+        from: DE
+        to: fr)";
+
+    YmlModel::Parser parserModel;
+    std::vector<SystemModel::Library> libraries;
+    libraries.push_back(ModelConverter::convert(parserModel.parse(linkConnectionLib)));
+    YmlSystem::Parser parserSystem;
+    YmlSystem::System system = parserSystem.parse(systemYml, "");
+    BOOST_CHECK_EXCEPTION(SystemConverter::convert(system, libraries),
+                          InputError,
+                          containsMessage(
+                            "Link '(from = DE, to = fr)' has several link-capacity "
+                            "connections (component 'invest_1' port 'capacity_port', "
+                            "and component 'invest_2' port 'capacity_port'). Only one "
+                            "is supported: gather the capacities in a single model."));
+}
+
 BOOST_AUTO_TEST_CASE(binding_constraint_with_sum_connections_op_is_non_linear___exception_raised)
 {
     // This library defines :
