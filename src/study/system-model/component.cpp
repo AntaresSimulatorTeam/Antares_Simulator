@@ -183,6 +183,20 @@ void Component::checkPortFieldDefinitionExists(const std::string& portName,
     }
 }
 
+void Component::requirePortFieldDefinition(const std::string& portId,
+                                           const std::string& fieldId,
+                                           const std::string& errMsgPrefix) const
+{
+    if (!getModel()->PortFieldDefinitions().contains(PortFieldKey(portId, fieldId)))
+    {
+        throw std::invalid_argument(
+          errMsgPrefix
+          + fmt::format("port field '{}' is not defined in the component's model '{}'",
+                        fieldId,
+                        getModel()->Id()));
+    }
+}
+
 void Component::addAreaConnection(const std::string& localPortId, const std::string& areaId)
 {
     std::string exceptionPrefix = fmt::format(
@@ -253,15 +267,7 @@ void Component::addThermalCapacityConnection(const std::string& portId,
           + fmt::format("port type '{}' has no thermal-capacity-connection field ID defined",
                         port.Type().Id()));
     }
-    PortFieldKey key(portId, thermalCapacityConnectionFieldId.value());
-    if (!data_.model->PortFieldDefinitions().contains(key))
-    {
-        throw std::invalid_argument(
-          exceptionPrefix
-          + fmt::format("port field '{}' is not defined in the component's model '{}'",
-                        thermalCapacityConnectionFieldId.value(),
-                        data_.model->Id()));
-    }
+    requirePortFieldDefinition(portId, thermalCapacityConnectionFieldId.value(), exceptionPrefix);
     if (portToThermalConnections_.contains(portId))
     {
         const auto& connected = portToThermalConnections_.at(portId);
@@ -294,24 +300,8 @@ void Component::addLinkCapacityConnection(const std::string& portId,
           + fmt::format("port type '{}' has no link-capacity-connection field IDs defined",
                         port.Type().Id()));
     }
-    const PortFieldKey directKey(portId, linkCapacityConnectionFields->direct);
-    if (!data_.model->PortFieldDefinitions().contains(directKey))
-    {
-        throw std::invalid_argument(
-          exceptionPrefix
-          + fmt::format("port field '{}' is not defined in the component's model '{}'",
-                        linkCapacityConnectionFields->direct,
-                        data_.model->Id()));
-    }
-    const PortFieldKey indirectKey(portId, linkCapacityConnectionFields->indirect);
-    if (!data_.model->PortFieldDefinitions().contains(indirectKey))
-    {
-        throw std::invalid_argument(
-          exceptionPrefix
-          + fmt::format("port field '{}' is not defined in the component's model '{}'",
-                        linkCapacityConnectionFields->indirect,
-                        data_.model->Id()));
-    }
+    requirePortFieldDefinition(portId, linkCapacityConnectionFields->direct, exceptionPrefix);
+    requirePortFieldDefinition(portId, linkCapacityConnectionFields->indirect, exceptionPrefix);
     if (portToLinkConnections_.contains(portId))
     {
         const auto& connected = portToLinkConnections_.at(portId);
