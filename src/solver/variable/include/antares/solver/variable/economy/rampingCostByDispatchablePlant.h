@@ -38,20 +38,6 @@ public:
         }
     }
 
-    static void yearEndBuildPrepareDataForEachThermalCluster(
-      std::vector<std::vector<IntermediateValues>>& yearlyValues,
-      State& state,
-      uint,
-      unsigned int numSpace)
-    {
-        for (unsigned int i = 0; i <= state.study.runtime.rangeLimits.hour[Data::rangeEnd]; ++i)
-        {
-            state.thermalClusterRampingCostForYear[i] = yearlyValues[numSpace][state.thermalCluster
-                                                                                 ->enabledIndex]
-                                                          .hour[i];
-        }
-    }
-
     static void yearEndBuildForEachThermalCluster(
       std::vector<std::vector<IntermediateValues>>& yearlyValues,
       State& state,

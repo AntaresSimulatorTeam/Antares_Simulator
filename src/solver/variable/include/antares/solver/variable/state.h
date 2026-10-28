@@ -37,6 +37,10 @@ public:
         //! ramping variables
         std::vector<double> thermalClustersRampingCost;
 
+        //! The ramping cost of each cluster for every hour of the current year, kept for the
+        //! end of year costs. Empty for clusters without ramping.
+        std::vector<std::vector<double>> thermalClustersRampingCostForYear;
+
         //! Number of units turned ON by cluster for the current hour in the year with the ucMILP
         //! (accurate) unit commitment mode
         std::vector<uint> numberOfUnitsONbyCluster;

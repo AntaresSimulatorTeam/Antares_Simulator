@@ -3,6 +3,7 @@
 
 #include "antares/solver/variable/state.h"
 
+#include <algorithm>
 #include <cmath>
 
 #include <antares/solver/simulation/reserve-index-maps.h>
@@ -38,6 +39,14 @@ void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
     numberOfUnitsONbyCluster.resize(count);
     thermalClustersOperatingCost.resize(count);
     thermalClustersRampingCost.resize(count, 0);
+    thermalClustersRampingCostForYear.resize(count);
+    for (const auto& cluster: area.thermal.list.each_enabled())
+    {
+        if (cluster->ramping)
+        {
+            thermalClustersRampingCostForYear[cluster->enabledIndex].assign(HOURS_PER_YEAR, 0.);
+        }
+    }
     PMinOfClusters.resize(count);
     unitCountLastHour.resize(count, 0);
     productionLastHour.resize(count, 0);
@@ -231,6 +240,12 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
                         * thermalCluster->ramping->powerIncreaseCost
                       + production.powerRampingDecrease[thermalCluster->index]
                           * thermalCluster->ramping->powerDecreaseCost;
+    }
+    if (auto& rampingCostForYear = thermal[area->index]
+                                     .thermalClustersRampingCostForYear[clusterEnabledIndex];
+        !rampingCostForYear.empty())
+    {
+        rampingCostForYear[hourInTheYear] = rampingCost;
     }
 
     if (thermal[area->index].thermalClustersProductions[clusterEnabledIndex] > 0.)
@@ -563,18 +578,25 @@ void State::yearEndBuildCalculateRampingCosts(const uint& maxDurationON,
     if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate
         || unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucMILP)
     {
-        // Must-run clusters are not optimized, so they have no ramping variables: their
-        // ramping cost is computed from their time-series.
-        if (currentCluster->mustrun)
-        {
-            yearEndBuildCalculateMustRunRampingCosts(maxDurationON, ON_min, ON_opt, currentCluster);
-        }
-
         uint startHourForCurrentYear = study.runtime.rangeLimits.hour[Data::rangeBegin];
         uint endHourForCurrentYear = startHourForCurrentYear
                                      + study.runtime.rangeLimits.hour[Data::rangeCount];
-        // For dispatchable clusters, thermalClusterRampingCostForYear comes from the
-        // optimization ramping variables (see RampingCostByDispatchablePlant)
+        if (currentCluster->mustrun)
+        {
+            // Must-run clusters are not optimized, so they have no ramping variables: their
+            // ramping cost is computed from their time-series.
+            yearEndBuildCalculateMustRunRampingCosts(maxDurationON, ON_min, ON_opt, currentCluster);
+        }
+        else
+        {
+            // From the optimization ramping variables, stored hour by hour
+            const auto& rampingCostForYear = thermal[area->index].thermalClustersRampingCostForYear
+                                               [currentCluster->enabledIndex];
+            std::copy(rampingCostForYear.begin() + startHourForCurrentYear,
+                      rampingCostForYear.begin() + endHourForCurrentYear,
+                      thermalClusterRampingCostForYear + startHourForCurrentYear);
+        }
+
         for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
         {
             thermalClusterOperatingCostForYear[h] += thermalClusterRampingCostForYear[h];
