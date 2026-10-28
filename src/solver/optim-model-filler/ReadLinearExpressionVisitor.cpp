@@ -176,6 +176,12 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
     auto& portId = node->getPortName();
     auto& fieldId = node->getFieldName();
 
+    if (const auto* noConnectionExpr = node->noConnectionExpr();
+        noConnectionExpr && !component_.isPortConnected(portId))
+    {
+        return dispatch(noConnectionExpr);
+    }
+
     if (const auto& areaConnection = component_.areaConnectionAtPort(portId);
         areaConnection && !fieldId.empty() && areaConnection->price == fieldId)
     {

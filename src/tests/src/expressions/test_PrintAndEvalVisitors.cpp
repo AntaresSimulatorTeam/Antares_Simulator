@@ -587,6 +587,25 @@ BOOST_FIXTURE_TEST_CASE(print_port_field_sum_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(printed, "august.2024");
 }
 
+BOOST_FIXTURE_TEST_CASE(print_port_field_sum_node_with_no_connection_expr, MyDummyFixture)
+{
+    PortFieldSumNode pt_fd("august", "2024", create<ParameterNode>("pmax"));
+    PrintVisitor printVisitor;
+    const auto printed = printVisitor.dispatch(&pt_fd);
+
+    BOOST_CHECK_EQUAL(printed, "august.2024 (no_connection_expr = pmax)");
+}
+
+BOOST_FIXTURE_TEST_CASE(eval_sum_connections_on_unconnected_port_uses_no_connection_expr,
+                        MyDummyFixture)
+{
+    PortFieldSumNode withDefault("port", "field", create<LiteralNode>(7.));
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(&withDefault).valueAsDouble(), 7.);
+
+    PortFieldSumNode withoutDefault("port", "field");
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(&withoutDefault).valueAsDouble(), 0.);
+}
+
 namespace
 {
 class MockAreaPriceProvider: public Antares::LinearProblem::Api::IAreaPriceProvider
