@@ -531,6 +531,13 @@ BOOST_AUTO_TEST_CASE(successfully_connect_thermal_capacity_to_port)
     BOOST_CHECK_EQUAL(areaId, "area1");
     BOOST_CHECK_EQUAL(clusterId, "cluster57");
     BOOST_CHECK_EQUAL(component.portToThermalCapacityConnections().size(), 1);
+
+    BOOST_CHECK_EXCEPTION(
+      component.addThermalCapacityConnection("portACDef", "area2", "cluster58"),
+      std::invalid_argument,
+      containsMessage("Cannot connect thermal capacity '(area = area2, clusterId = cluster58)' to "
+                      "port 'portACDef' of component 'myComponent': port is already connected to "
+                      "'(area = area1, clusterId = cluster57)'"));
 }
 
 BOOST_AUTO_TEST_CASE(successfully_connect_link_capacity_to_port)
@@ -569,6 +576,12 @@ BOOST_AUTO_TEST_CASE(successfully_connect_link_capacity_to_port)
     BOOST_CHECK_EQUAL(from, "de");
     BOOST_CHECK_EQUAL(to, "fr");
     BOOST_CHECK_EQUAL(component.portToLinkCapacityConnections().size(), 1);
+
+    BOOST_CHECK_EXCEPTION(component.addLinkCapacityConnection("portACDef", "be", "fr"),
+                          std::invalid_argument,
+                          containsMessage("Cannot connect link '(from = be, to = fr)' to port "
+                                          "'portACDef' of component 'myComponent': port is already "
+                                          "connected to '(from = de, to = fr)'"));
 }
 
 BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_fails_because_port_definition_missing)

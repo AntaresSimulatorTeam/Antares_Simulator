@@ -264,12 +264,12 @@ void Component::addThermalCapacityConnection(const std::string& portId,
     }
     if (portToThermalConnections_.contains(portId))
     {
-        const auto msg = fmt::format("port '{}' port is already connected to '(area = {}, "
-                                     "clusterId = {})'",
-                                     portId,
-                                     areaId,
-                                     clusterId);
-        throw std::invalid_argument(msg);
+        const auto& connected = portToThermalConnections_.at(portId);
+        throw std::invalid_argument(
+          exceptionPrefix
+          + fmt::format("port is already connected to '(area = {}, clusterId = {})'",
+                        connected.areaId,
+                        connected.clusterId));
     }
 
     portToThermalConnections_.try_emplace(portId, ThermalComponent{toLowerCase(areaId), clusterId});
@@ -314,11 +314,12 @@ void Component::addLinkCapacityConnection(const std::string& portId,
     }
     if (portToLinkConnections_.contains(portId))
     {
-        const auto msg = fmt::format("port '{}' is already connected to '(from = {}, to = {})'",
-                                     portId,
-                                     portToLinkConnections_.at(portId).from,
-                                     portToLinkConnections_.at(portId).to);
-        throw std::invalid_argument(msg);
+        const auto& connected = portToLinkConnections_.at(portId);
+        throw std::invalid_argument(
+          exceptionPrefix
+          + fmt::format("port is already connected to '(from = {}, to = {})'",
+                        connected.from,
+                        connected.to));
     }
     portToLinkConnections_.try_emplace(portId,
                                        LinkComponent{toLowerCase(fromAreaId),
