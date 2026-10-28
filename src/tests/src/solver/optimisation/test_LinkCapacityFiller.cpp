@@ -5,7 +5,9 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/exception/LoadingError.hpp"
 #include "antares/solver/optimisation/LinkCapacityFiller.h"
+#include "antares/study/study.h"
 
 #include "FillerFixture.h"
 
@@ -254,6 +256,52 @@ BOOST_AUTO_TEST_CASE(add_link_capacity_constraints_and_override_legacy_bounds)
     BOOST_CHECK_EQUAL(indirectCostCt->getCoefficient(indirectCost), 1.0);
     BOOST_CHECK_EQUAL(indirectCostCt->getCoefficient(investedCapacity), -5.0);
     BOOST_CHECK_CLOSE(indirectCostCt->getUb(), 140.01, 1e-9);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+namespace
+{
+struct CompatibilityCheckStudy: Antares::Data::Study
+{
+    using Study::checkModelerDataCompatibility;
+};
+
+struct TransmissionCapacitiesFixture: FillerFixture
+{
+    CompatibilityCheckStudy study;
+    Antares::Data::AreaLink* link = nullptr;
+
+    TransmissionCapacitiesFixture()
+    {
+        init(linkConnectionSystem, linkConnectionLib);
+        auto* de = addAreaToListOfAreas(study.areas, "de");
+        auto* fr = addAreaToListOfAreas(study.areas, "fr");
+        link = AreaAddLinkBetweenAreas(de, fr);
+        problemeHebdo->modelerData = nullptr;
+        study.setModelerData(std::move(modelerData));
+    }
+};
+} // namespace
+
+BOOST_FIXTURE_TEST_SUITE(_LinkCapacityTransmissionCapacities_, TransmissionCapacitiesFixture)
+
+BOOST_AUTO_TEST_CASE(link_using_transmission_capacities_is_accepted)
+{
+    link->transmissionCapacities = Antares::Data::LocalTransmissionCapacities::enabled;
+    BOOST_CHECK_NO_THROW(study.checkModelerDataCompatibility());
+}
+
+BOOST_AUTO_TEST_CASE(link_ignoring_transmission_capacities_is_rejected)
+{
+    link->transmissionCapacities = Antares::Data::LocalTransmissionCapacities::null;
+    BOOST_CHECK_THROW(study.checkModelerDataCompatibility(), Antares::Error::LoadingError);
+}
+
+BOOST_AUTO_TEST_CASE(copper_plate_link_is_rejected)
+{
+    link->transmissionCapacities = Antares::Data::LocalTransmissionCapacities::infinite;
+    BOOST_CHECK_THROW(study.checkModelerDataCompatibility(), Antares::Error::LoadingError);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

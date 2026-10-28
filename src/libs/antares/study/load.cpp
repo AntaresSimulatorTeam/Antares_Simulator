@@ -201,9 +201,34 @@ void Study::loadModelerComponents()
  * Checks that the modeler data is compatible with the solver for hybrid studies.
  * Currently, unsupported cases in the solver are :
  * - variables that are not scenario dependent (allowed only in benders-decomposition mode)
+ * - link capacity connections to a link whose transmission capacities are not used
  */
 void Study::checkModelerDataCompatibility() const
 {
+    // The GEMS capacity replaces the link's NTC: it would silently override a link set to
+    // ignore its transmission capacities or to copper plate, globally or locally.
+    for (const auto& component: modelerInput_->system->Components())
+    {
+        for (const auto& [portId, linkConnection]: component.portToLinkCapacityConnections())
+        {
+            // Unknown links are reported when the link capacity constraints are built
+            const auto* link = areas.findLink(linkConnection.from, linkConnection.to);
+            if (link && link->transmissionCapacities != LocalTransmissionCapacities::enabled)
+            {
+                throw Error::LoadingError(fmt::format(
+                  "Link capacity connection of component \"{}\" (port \"{}\") targets link "
+                  "\"{} -> {}\" whose transmission capacities are \"{}\". Investing on a link "
+                  "requires its transmission capacities to be used: set them to \"enabled\" on "
+                  "the link and to \"local values\" in the global parameters.",
+                  component.Id(),
+                  portId,
+                  linkConnection.from,
+                  linkConnection.to,
+                  transmissionCapacitiesToString(link->transmissionCapacities)));
+            }
+        }
+    }
+
     // Scenario-independent variables are allowed in benders-decomposition mode for investment
     // studies
     if (modelerInput_->resolutionMode == Solver::ResolutionMode::BENDERS_DECOMPOSITION)
