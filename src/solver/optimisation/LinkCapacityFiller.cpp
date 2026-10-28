@@ -5,8 +5,6 @@
 
 #include <fmt/format.h>
 
-#include <boost/algorithm/string/case_conv.hpp>
-
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
@@ -18,12 +16,6 @@ using namespace Antares::ModelerStudy::SystemModel;
 
 namespace
 {
-std::string toLowerCase(std::string value)
-{
-    boost::algorithm::to_lower(value);
-    return value;
-}
-
 constexpr double hurdleCostMargin = 0.01;
 
 // The constraint reads: sign * flow - capacity(x) <= capacity constant, with capacity(x) the
@@ -73,10 +65,11 @@ int LinkCapacityFiller::getIntercoIndex(const std::string& from, const std::stri
     bool reverseExists = false;
     for (uint32_t interco = 0; interco < problemeHebdo_->NombreDInterconnexions; ++interco)
     {
-        const auto fromArea = toLowerCase(
-          problemeHebdo_->NomsDesPays[problemeHebdo_->PaysOrigineDeLInterconnexion[interco]]);
-        const auto toArea = toLowerCase(
-          problemeHebdo_->NomsDesPays[problemeHebdo_->PaysExtremiteDeLInterconnexion[interco]]);
+        // Area ids and link capacity connection ends are both lowercase
+        const auto& fromArea = problemeHebdo_->NomsDesPays
+                                 [problemeHebdo_->PaysOrigineDeLInterconnexion[interco]];
+        const auto& toArea = problemeHebdo_->NomsDesPays
+                               [problemeHebdo_->PaysExtremiteDeLInterconnexion[interco]];
         if (fromArea == from && toArea == to)
         {
             return static_cast<int>(interco);
