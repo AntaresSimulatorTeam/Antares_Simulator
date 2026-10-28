@@ -500,8 +500,7 @@ bool SingleProblemGetter::areWeeksIndependent() const
                                [&](const auto& area)
                                {
                                    const auto& hydro = area->hydro;
-                                   return !hydro.reservoirManagement
-                                          || (hydro.useHeuristicTarget && !hydro.useLeeway);
+                                   return !hydro.reservoirManagement || hydro.useHeuristicTarget;
                                });
 }
 

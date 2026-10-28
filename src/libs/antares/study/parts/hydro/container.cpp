@@ -8,6 +8,7 @@
 #include <antares/inifile/inifile.h>
 #include <antares/study/area/capacityReservation.h>
 #include <antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h>
+#include <antares/utils/utils.h>
 #include "antares/study/parts/reserves/reservesParticipationsLoader.h"
 #include "antares/study/study.h"
 
@@ -26,10 +27,7 @@ PartHydro::PartHydro():
     useHeuristicTarget(true),
     reservoirCapacity(0.),
     initializeReservoirLevelDate(0),
-    useLeeway(false),
     powerToLevel(false),
-    leewayLowerBound(1.),
-    leewayUpperBound(1.),
     pumpingEfficiency(1.),
     series(nullptr)
 {
@@ -143,6 +141,19 @@ bool PartHydro::LoadIniFile(Study& study, const std::filesystem::path& folder)
               && ret;
     }
 
+    if (IniFile::Section* section = ini.find("use leeway"))
+    {
+        for (auto* property = section->firstProperty; property; property = property->next)
+        {
+            if (Antares::stringToBool(property->value))
+            {
+                logs.warning() << path
+                               << ": use leeway = yes is no longer supported and will be ignored";
+                break;
+            }
+        }
+    }
+
     if (IniFile::Section* section = ini.find("power to level"))
     {
         ret = loadProperties(study, section->firstProperty, path, &PartHydro::powerToLevel) && ret;
@@ -154,23 +165,6 @@ bool PartHydro::LoadIniFile(Study& study, const std::filesystem::path& folder)
                              section->firstProperty,
                              path,
                              &PartHydro::initializeReservoirLevelDate)
-              && ret;
-    }
-
-    if (IniFile::Section* section = ini.find("use leeway"))
-    {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::useLeeway) && ret;
-    }
-
-    if (IniFile::Section* section = ini.find("leeway low"))
-    {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::leewayLowerBound)
-              && ret;
-    }
-
-    if (IniFile::Section* section = ini.find("leeway up"))
-    {
-        ret = loadProperties(study, section->firstProperty, path, &PartHydro::leewayUpperBound)
               && ret;
     }
 
@@ -207,10 +201,7 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
           area.hydro.useWaterValue = false;
           area.hydro.hardBoundsOnRuleCurves = false;
           area.hydro.useHeuristicTarget = true;
-          area.hydro.useLeeway = false;
           area.hydro.powerToLevel = false;
-          area.hydro.leewayLowerBound = 1.;
-          area.hydro.leewayUpperBound = 1.;
           area.hydro.initializeReservoirLevelDate = 0;
           area.hydro.reservoirCapacity = 0.;
           area.hydro.pumpingEfficiency = 1.;
@@ -341,25 +332,6 @@ bool PartHydro::checkProperties(Study& study)
           {
               logs.error() << area.id << ": Invalid initialize reservoir date";
               area.hydro.initializeReservoirLevelDate = 0;
-          }
-
-          if (area.hydro.leewayLowerBound < 0.)
-          {
-              logs.error() << area.id << ": Invalid leeway lower bound. It must be >= 0.0, Got "
-                           << area.hydro.leewayLowerBound;
-              area.hydro.leewayLowerBound = 0.;
-          }
-
-          if (area.hydro.leewayUpperBound < 0.)
-          {
-              logs.error() << area.id << ": Invalid leeway upper bound. It must be >= 0.0, Got "
-                           << area.hydro.leewayUpperBound;
-              area.hydro.leewayUpperBound = 0.;
-          }
-
-          if (area.hydro.leewayLowerBound > area.hydro.leewayUpperBound)
-          {
-              logs.error() << area.id << ": Leeway lower bound greater than leeway upper bound.";
           }
 
           if (area.hydro.pumpingEfficiency < 0)
