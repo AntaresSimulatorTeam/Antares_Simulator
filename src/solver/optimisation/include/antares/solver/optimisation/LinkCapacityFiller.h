@@ -48,6 +48,14 @@ private:
 
     int getIntercoIndex(const std::string& from, const std::string& to) const;
 
+    /// Add the constraint: sign * variable <= capacity + margin
+    LinearProblem::Api::IMipConstraint* addCapacityConstraint(
+      LinearProblem::Api::IMipVariable* variable,
+      double sign,
+      const Optimization::LinearExpression& capacity,
+      double margin,
+      const std::string& name);
+
     void addComponentPortContributionToLinkCapacity(
       const LinearProblem::Api::FillContext& ctx,
       const ModelerStudy::SystemModel::Component& component,

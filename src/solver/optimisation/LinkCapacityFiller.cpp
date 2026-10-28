@@ -134,11 +134,11 @@ void LinkCapacityFiller::addComponentPortContributionToLinkCapacity(
     const auto linkPrefix = fmt::format("LinkCapacity::from<{}>::to<{}>",
                                         linkConnection.from,
                                         linkConnection.to);
-    const auto& solverVariables = pb_.getVariables();
     for (auto localIndex(ctx.getLocalFirstTimeStep()); localIndex <= ctx.getLocalLastTimeStep();
          ++localIndex)
     {
-        const int pdt = static_cast<int>(localIndex % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation);
+        const int pdt = static_cast<int>(localIndex
+                                         % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation);
         const auto hourSuffix = fmt::format("::hour<{}>",
                                             pdt + problemeHebdo_->weekInTheYear * 168);
 
@@ -147,26 +147,19 @@ void LinkCapacityFiller::addComponentPortContributionToLinkCapacity(
         directFlow->setLb(-pb_.infinity());
         directFlow->setUb(pb_.infinity());
 
-        auto* upperCt = pb_.addConstraint(-pb_.infinity(),
-                                          directExpression[localIndex].constant(),
-                                          linkPrefix + "::NTCDirectUpper" + hourSuffix);
-        upperCt->setCoefficient(directFlow, 1.0);
-        for (const auto& [varIndex, coef]: directExpression[localIndex])
-        {
-            upperCt->setCoefficient(solverVariables[varIndex].get(), -coef);
-        }
-
-        auto* lowerCt = pb_.addConstraint(-pb_.infinity(),
-                                          indirectExpression[localIndex].constant(),
-                                          linkPrefix + "::NTCDirectLower" + hourSuffix);
-        lowerCt->setCoefficient(directFlow, -1.0);
-        for (const auto& [varIndex, coef]: indirectExpression[localIndex])
-        {
-            lowerCt->setCoefficient(solverVariables[varIndex].get(), -coef);
-        }
+        auto* upperCt = addCapacityConstraint(directFlow,
+                                              1.,
+                                              directExpression[localIndex],
+                                              0.,
+                                              linkPrefix + "::NTCDirectUpper" + hourSuffix);
+        auto* lowerCt = addCapacityConstraint(directFlow,
+                                              -1.,
+                                              indirectExpression[localIndex],
+                                              0.,
+                                              linkPrefix + "::NTCDirectLower" + hourSuffix);
         problemeHebdo_->linkCapacityConstraints.push_back(
           {.interco = static_cast<uint32_t>(interco),
-           .pdt = static_cast<int>(pdt),
+           .pdt = pdt,
            .flowVariable = directFlowIndex,
            .direct = upperCt,
            .indirect = lowerCt});
@@ -176,35 +169,42 @@ void LinkCapacityFiller::addComponentPortContributionToLinkCapacity(
             auto* directCost = pb_.getVariable(variableManager_.PositiveDirectFlow(interco, pdt));
             directCost->setLb(0.);
             directCost->setUb(pb_.infinity());
-            // Same margin as the legacy bounds: the capacity dual must stay on the flow
-            // constraints, not be split with these degenerate ones.
-            auto* directCostCt = pb_.addConstraint(-pb_.infinity(),
-                                                   directExpression[localIndex].constant()
-                                                     + hurdleCostMargin,
-                                                   linkPrefix + "::IntercoDirectCostUpper"
-                                                     + hourSuffix);
-            directCostCt->setCoefficient(directCost, 1.0);
-            for (const auto& [varIndex, coef]: directExpression[localIndex])
-            {
-                directCostCt->setCoefficient(solverVariables[varIndex].get(), -coef);
-            }
-
             auto* indirectCost = pb_.getVariable(
               variableManager_.PositiveIndirectFlow(interco, pdt));
             indirectCost->setLb(0.);
             indirectCost->setUb(pb_.infinity());
-            auto* indirectCostCt = pb_.addConstraint(-pb_.infinity(),
-                                                     indirectExpression[localIndex].constant()
-                                                       + hurdleCostMargin,
-                                                     linkPrefix + "::IntercoIndirectCostUpper"
-                                                       + hourSuffix);
-            indirectCostCt->setCoefficient(indirectCost, 1.0);
-            for (const auto& [varIndex, coef]: indirectExpression[localIndex])
-            {
-                indirectCostCt->setCoefficient(solverVariables[varIndex].get(), -coef);
-            }
+
+            // Same margin as the legacy bounds: the capacity dual must stay on the flow
+            // constraints, not be split with these degenerate ones.
+            addCapacityConstraint(directCost,
+                                  1.,
+                                  directExpression[localIndex],
+                                  hurdleCostMargin,
+                                  linkPrefix + "::IntercoDirectCostUpper" + hourSuffix);
+            addCapacityConstraint(indirectCost,
+                                  1.,
+                                  indirectExpression[localIndex],
+                                  hurdleCostMargin,
+                                  linkPrefix + "::IntercoIndirectCostUpper" + hourSuffix);
         }
     }
+}
+
+IMipConstraint* LinkCapacityFiller::addCapacityConstraint(IMipVariable* variable,
+                                                          double sign,
+                                                          const LinearExpression& capacity,
+                                                          double margin,
+                                                          const std::string& name)
+{
+    // sign * variable <= capacity + margin
+    auto* constraint = pb_.addConstraint(-pb_.infinity(), capacity.constant() + margin, name);
+    constraint->setCoefficient(variable, sign);
+    const auto& solverVariables = pb_.getVariables();
+    for (const auto& [varIndex, coef]: capacity)
+    {
+        constraint->setCoefficient(solverVariables[varIndex].get(), -coef);
+    }
+    return constraint;
 }
 
 void applyLinkCapacityResults(PROBLEME_HEBDO& problemeHebdo,
