@@ -93,9 +93,7 @@ bool readCSV(std::string_view data, std::string_view separators, const CSVRowCal
     return readCSVBuffer(data, separators, callback);
 }
 
-bool readCSVFile(const std::filesystem::path& filename,
-                 std::string_view separators,
-                 const CSVRowCallback& callback)
+CSVTable readCSVFile(const std::filesystem::path& filename, std::string_view separators)
 {
     std::error_code error;
     const auto size = std::filesystem::file_size(filename, error);
@@ -107,7 +105,7 @@ bool readCSVFile(const std::filesystem::path& filename,
 
     if (size == 0)
     {
-        return true;
+        return {};
     }
 
     boost::iostreams::mapped_file_source file(filename.string());
@@ -116,6 +114,19 @@ bool readCSVFile(const std::filesystem::path& filename,
         throw std::runtime_error("Failed to open file: " + filename.string());
     }
 
-    return readCSVBuffer(std::string_view(file.data(), file.size()), separators, callback);
+    CSVTable table;
+    readCSVBuffer(std::string_view(file.data(), file.size()),
+                  separators,
+                  [&table](std::size_t, CSVRow row)
+                  {
+                      auto& values = table.emplace_back();
+                      values.reserve(row.size());
+                      for (const auto& cell: row)
+                      {
+                          values.emplace_back(cell.value);
+                      }
+                      return true;
+                  });
+    return table;
 }
 } // namespace Antares::IO

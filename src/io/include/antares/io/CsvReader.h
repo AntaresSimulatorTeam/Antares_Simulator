@@ -7,7 +7,9 @@
 #include <filesystem>
 #include <functional>
 #include <span>
+#include <string>
 #include <string_view>
+#include <vector>
 
 namespace Antares::IO
 {
@@ -18,6 +20,7 @@ struct CSVCell final
 
 using CSVRow = std::span<const CSVCell>;
 using CSVRowCallback = std::function<bool(std::size_t, CSVRow)>;
+using CSVTable = std::vector<std::vector<std::string>>;
 
 /**
  * Read CSV rows from an in-memory buffer.
@@ -34,10 +37,8 @@ bool readCSV(std::string_view data, std::string_view separators, const CSVRowCal
 /**
  * Read CSV rows directly from a file.
  *
- * The file is memory-mapped and remains mapped for the duration of the
- * callback invocations.
+ * Cell values are copied into the returned table, so they remain valid after
+ * the file is closed and unmapped.
  */
-bool readCSVFile(const std::filesystem::path& filename,
-                 std::string_view separators,
-                 const CSVRowCallback& callback);
+CSVTable readCSVFile(const std::filesystem::path& filename, std::string_view separators);
 } // namespace Antares::IO

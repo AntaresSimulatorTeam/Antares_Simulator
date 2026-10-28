@@ -79,13 +79,13 @@ inline bool load(Matrix& matrix,
     int errorCount = 6;
 
     const auto handleInvalidNumericValue =
-      [&](unsigned int cellX, unsigned int cellY, const IO::CSVCell& cell)
+      [&](unsigned int cellX, unsigned int cellY, const std::string& cell)
     {
         result = false;
         if (errorCount > 0)
         {
             logs.warning() << '`' << filename << "`: Invalid numeric value (x:" << cellX
-                           << ",y:" << cellY << ", text: `" << std::string(cell.value) << '`';
+                           << ",y:" << cellY << ", text: `" << cell << '`';
             if (!(--errorCount))
             {
                 logs.warning() << " ... (skipped)";
@@ -94,76 +94,67 @@ inline bool load(Matrix& matrix,
         matrix[cellX][cellY] = 0.;
     };
 
-    bool parsed = false;
     try
     {
-        parsed = IO::readCSVFile(
-          filename,
-          "\t;,",
-          [&](std::size_t, IO::CSVRow row)
-          {
-              if (rowCount >= matrix.height())
-              {
-                  return true;
-              }
+        const auto rows = IO::readCSVFile(filename, "\t;,");
+        for (const auto& row: rows)
+        {
+            if (rowCount >= matrix.height())
+            {
+                break;
+            }
 
-              // Time-series files use one as the minimum width and store their actual width in
-              // the first row. Resize once before storing that row.
-              if (rowCount == 0 && row.size() > matrix.width())
-              {
-                  matrix.resize(static_cast<unsigned int>(row.size()), matrix.height());
-              }
+            // Time-series files use one as the minimum width and store their actual width in
+            // the first row. Resize once before storing that row.
+            if (rowCount == 0 && row.size() > matrix.width())
+            {
+                matrix.resize(static_cast<unsigned int>(row.size()), matrix.height());
+            }
 
-              unsigned int column = 0;
-              for (const auto& cell: row)
-              {
-                  if (column >= matrix.width())
-                  {
-                      result = false;
-                      logs.warning() << filename << ": too many columns on row " << rowCount;
-                      break;
-                  }
+            unsigned int column = 0;
+            for (const auto& cell: row)
+            {
+                if (column >= matrix.width())
+                {
+                    result = false;
+                    logs.warning() << filename << ": too many columns on row " << rowCount;
+                    break;
+                }
 
-                  if (cell.value.empty())
-                  {
-                      matrix[column][rowCount] = 0.;
-                  }
-                  else
-                  {
-                      double value = 0.;
-                      if (!parseDouble(cell.value, value))
-                      {
-                          handleInvalidNumericValue(column, rowCount, cell);
-                      }
-                      else
-                      {
-                          matrix[column][rowCount] = value;
-                      }
-                  }
-                  ++column;
-              }
+                if (cell.empty())
+                {
+                    matrix[column][rowCount] = 0.;
+                }
+                else
+                {
+                    double value = 0.;
+                    if (!parseDouble(cell, value))
+                    {
+                        handleInvalidNumericValue(column, rowCount, cell);
+                    }
+                    else
+                    {
+                        matrix[column][rowCount] = value;
+                    }
+                }
+                ++column;
+            }
 
-              if (column < matrix.width())
-              {
-                  result = false;
-                  logs.warning() << filename << ": not enough columns on row " << rowCount
-                                 << " (expected " << matrix.width() << ", got " << column << ')';
-              }
+            if (column < matrix.width())
+            {
+                result = false;
+                logs.warning() << filename << ": not enough columns on row " << rowCount
+                               << " (expected " << matrix.width() << ", got " << column << ')';
+            }
 
-              ++rowCount;
-              return true;
-          });
+            ++rowCount;
+        }
     }
     catch (const std::exception& exception)
     {
         logs.error() << "I/O Error: failed to load '" << filename << "': " << exception.what();
         matrix.reset(minWidth, height);
         return false;
-    }
-
-    if (!parsed)
-    {
-        result = false;
     }
 
     if (rowCount < matrix.height())

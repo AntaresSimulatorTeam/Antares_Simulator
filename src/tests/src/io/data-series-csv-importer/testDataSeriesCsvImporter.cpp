@@ -98,6 +98,27 @@ std::filesystem::path CsvCreationFixture::writeFile(const string filename, const
     return filepath;
 }
 
+BOOST_FIXTURE_TEST_SUITE(_CsvReaderFile_, CsvCreationFixture)
+
+BOOST_AUTO_TEST_CASE(file_reader_returns_owned_rows)
+{
+    const auto filePath = writeFile("data.csv", "1,,3\r\n,5,\n");
+    const auto rows = Antares::IO::readCSVFile(filePath, ",");
+    filesystem::remove(filePath);
+
+    BOOST_REQUIRE_EQUAL(rows.size(), 2);
+    BOOST_REQUIRE_EQUAL(rows[0].size(), 3);
+    BOOST_CHECK_EQUAL(rows[0][0], "1");
+    BOOST_CHECK_EQUAL(rows[0][1], "");
+    BOOST_CHECK_EQUAL(rows[0][2], "3");
+    BOOST_REQUIRE_EQUAL(rows[1].size(), 3);
+    BOOST_CHECK_EQUAL(rows[1][0], "");
+    BOOST_CHECK_EQUAL(rows[1][1], "5");
+    BOOST_CHECK_EQUAL(rows[1][2], "");
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
 BOOST_FIXTURE_TEST_SUITE(_DataSeriesImport_OneCsvFile_, CsvCreationFixture)
 
 BOOST_AUTO_TEST_CASE(row_two_has_less_columns)
