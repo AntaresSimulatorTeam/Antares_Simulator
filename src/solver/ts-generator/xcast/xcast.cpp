@@ -143,14 +143,20 @@ void XCast::updateMissingCoefficients(PredicateT& predicate)
             case Data::XCast::dtNormal:
             {
                 auto& v = data.data;
-                v[gamma][realmonth] = v[alpha][realmonth] - 6.f * v[beta][realmonth];
-                v[delta][realmonth] = v[alpha][realmonth] + 6.f * v[beta][realmonth];
+                // Keep the historical float arithmetic used by XCast. The study data is stored
+                // as doubles, but the generated series and their seeded random path are
+                // float-based.
+                const float average = static_cast<float>(v[alpha][realmonth]);
+                const float deviation = static_cast<float>(v[beta][realmonth]);
+                v[gamma][realmonth] = average - 6.f * deviation;
+                v[delta][realmonth] = average + 6.f * deviation;
                 break;
             }
             case Data::XCast::dtWeibullShapeA:
             {
                 auto& v = data.data;
-                v[delta][realmonth] = (float)GammaEuler(1. + 1. / v[alpha][realmonth]);
+                const float shape = static_cast<float>(v[alpha][realmonth]);
+                v[delta][realmonth] = static_cast<float>(GammaEuler(1. + 1. / shape));
                 break;
             }
             default:
@@ -333,7 +339,7 @@ bool XCast::runWithPredicate(PredicateT& predicate)
                     MA[s] = +std::numeric_limits<float>::max();
                 }
                 }
-                    std::copy_n(xcastdata.K[realmonth].begin(), HOURS_PER_DAY, FO[s].begin());
+                std::copy_n(xcastdata.K[realmonth].begin(), HOURS_PER_DAY, FO[s].begin());
             }
 
             uint nbDaysPerMonth = study.calendar.months[month].days;

@@ -10,8 +10,8 @@
 namespace Antares::Data
 {
 
-    bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix& dailyPower,
-                                           const Matrix::ColumnType& nbHoursAtPmaxPerDay)
+bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix& dailyPower,
+                                       const Matrix::ColumnType& nbHoursAtPmaxPerDay)
 {
     for (unsigned int tsNumber = 0; tsNumber < dailyPower.width(); ++tsNumber)
     {
@@ -173,7 +173,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
 }
 
 void AreaScratchpad::CalculateMeanDailyMaxPowerMatrices(const Matrix& hourlyMaxGenMatrix,
-                                                         const Matrix& hourlyMaxPumpMatrix)
+                                                        const Matrix& hourlyMaxPumpMatrix)
 {
     for (unsigned int nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxGenMatrix.width();
          ++nbOfTimeSeries)

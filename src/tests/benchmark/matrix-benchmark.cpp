@@ -111,7 +111,7 @@ void benchmarkAllocation(unsigned int width, unsigned int height, unsigned int i
                  iterations,
                  [=]
                  {
-                      Antares::Matrix matrix;
+                     Antares::Matrix matrix;
                      matrix.resize(width, height);
                      consume(matrix.width() + matrix.height());
                  });
@@ -122,7 +122,7 @@ void benchmarkAllocation(unsigned int width, unsigned int height, unsigned int i
                  iterations,
                  [=]
                  {
-                      Antares::Matrix matrix;
+                     Antares::Matrix matrix;
                      matrix.reset(width, height);
                      consume(matrix.width() + matrix.height());
                  });

@@ -418,7 +418,7 @@ unsigned int PartHydro::count() const
 }
 
 double getWaterValue(const double& level /* format : in % of reservoir capacity */,
-                      const Matrix& waterValues,
+                     const Matrix& waterValues,
                      const unsigned int day)
 {
     if (level < 0. - 1e-6 || level > 100. + 1e-6)
@@ -442,7 +442,7 @@ double getWaterValue(const double& level /* format : in % of reservoir capacity 
 }
 
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,
-                            Matrix& creditMod,
+                           Matrix& creditMod,
                            int modType)
 {
     if (level < 0. - 1e-6 || level > 100. + 1e-6)

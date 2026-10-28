@@ -3,8 +3,8 @@
 
 #include "antares/series/series.h"
 
-#include <functional>
 #include <filesystem>
+#include <functional>
 #include <sstream>
 #include <vector>
 

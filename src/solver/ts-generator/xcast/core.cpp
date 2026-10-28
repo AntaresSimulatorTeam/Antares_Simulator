@@ -144,7 +144,7 @@ bool XCast::generateValuesForTheCurrentDay()
                         x = 1.f - ALPH[s] * ALPH[t];
                         x /= BETA[s];
                         x /= BETA[t];
-                         CORR[s][t] = (*pCorrMonth)[s][t] * x;
+                        CORR[s][t] = (*pCorrMonth)[s][t] * x;
                         if (CORR[s][t] > 1.f)
                         {
                             CORR[s][t] = 1.f;
@@ -182,7 +182,7 @@ bool XCast::generateValuesForTheCurrentDay()
                     else
                     {
                         x = D_COPIE[s] * STDE[t] / z;
-                             CORR[s][t] = (*pCorrMonth)[s][t] * (x + 1.f / x) / 2.f;
+                        CORR[s][t] = (*pCorrMonth)[s][t] * (x + 1.f / x) / 2.f;
                         if (CORR[s][t] > 1.f)
                         {
                             CORR[s][t] = 1.f;

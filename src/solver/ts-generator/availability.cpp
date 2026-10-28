@@ -28,7 +28,7 @@ AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::ThermalCluster* c
 }
 
 AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(LinkTSgenerationParams& source,
-                                                          Matrix& modulation,
+                                                         Matrix& modulation,
                                                          const std::string& areaDestName):
     unitCount(source.unitCount),
     nominalCapacity(source.nominalCapacity),

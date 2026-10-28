@@ -41,8 +41,7 @@ bool equalDailyMaxPowerAsHourlyTs(const Matrix::ColumnType& hourlyColumn,
     return true;
 }
 
-bool equalDailyMaxEnergyTs(const Matrix::ColumnType& col1,
-                           const Matrix::ColumnType& col2)
+bool equalDailyMaxEnergyTs(const Matrix::ColumnType& col1, const Matrix::ColumnType& col2)
 {
     for (uint h = 0; h < DAYS_PER_YEAR; ++h)
     {

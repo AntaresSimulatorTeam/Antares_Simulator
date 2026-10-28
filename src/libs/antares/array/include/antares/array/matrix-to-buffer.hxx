@@ -82,7 +82,8 @@ void matrixToBuffer(const Matrix& matrix,
       "%.16f",
     };
 
-    const char* format = formats[std::min(precision, static_cast<unsigned int>(formats.size() - 1))];
+    const char* format = formats[std::min(precision,
+                                          static_cast<unsigned int>(formats.size() - 1))];
 
     for (unsigned int y = 0; y != matrix.height(); ++y)
     {

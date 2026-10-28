@@ -120,9 +120,8 @@ bool DataSeriesHydro::LoadMaxPower(const std::string& areaID, const fs::path& fo
     return ret;
 }
 
-void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(
-  const Matrix::ColumnType& DailyMaxGenPower,
-  const Matrix::ColumnType& DailyMaxPumpPower)
+void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(const Matrix::ColumnType& DailyMaxGenPower,
+                                                     const Matrix::ColumnType& DailyMaxPumpPower)
 {
     const unsigned int count = 1;
 
