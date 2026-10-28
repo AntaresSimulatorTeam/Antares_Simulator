@@ -15,7 +15,7 @@ namespace fs = std::filesystem;
 namespace Antares::Data
 {
 
-static bool loadTSfromFile(Matrix<double>& ts,
+static bool loadTSfromFile(Matrix& ts,
                            const std::string& areaID,
                            const fs::path& folder,
                            const std::string& filename,
@@ -25,8 +25,8 @@ static bool loadTSfromFile(Matrix<double>& ts,
     return MatrixIO::load(ts, filePath.string(), 1, height);
 }
 
-static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyColumn,
-                                       Matrix<double>::ColumnType& hourlyColumn)
+static void ConvertDailyTSintoHourlyTS(const Matrix::ColumnType& dailyColumn,
+                                       Matrix::ColumnType& hourlyColumn)
 {
     unsigned int hour = 0;
     unsigned int day = 0;
@@ -42,8 +42,8 @@ static void ConvertDailyTSintoHourlyTS(const Matrix<double>::ColumnType& dailyCo
     }
 }
 
-static void ConvertHourlyTSintoDailyTS(const Matrix<double>::ColumnType& hourlyColumn,
-                                       Matrix<double>::ColumnType& dailyColumn)
+static void ConvertHourlyTSintoDailyTS(const Matrix::ColumnType& hourlyColumn,
+                                       Matrix::ColumnType& dailyColumn)
 {
     for (unsigned hour = 0; hour < HOURS_PER_YEAR; ++hour)
     {
@@ -121,8 +121,8 @@ bool DataSeriesHydro::LoadMaxPower(const std::string& areaID, const fs::path& fo
 }
 
 void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(
-  const Matrix<double>::ColumnType& DailyMaxGenPower,
-  const Matrix<double>::ColumnType& DailyMaxPumpPower)
+  const Matrix::ColumnType& DailyMaxGenPower,
+  const Matrix::ColumnType& DailyMaxPumpPower)
 {
     const unsigned int count = 1;
 
@@ -133,16 +133,16 @@ void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(
     ConvertDailyTSintoHourlyTS(DailyMaxPumpPower, maxHourlyPumpPower.timeSeries[0]);
 }
 
-Matrix<> DataSeriesHydro::getDailyMaxGenPowerFromHourlyTS()
+Matrix DataSeriesHydro::getDailyMaxGenPowerFromHourlyTS()
 {
-    Matrix<> dailyTs(1, DAYS_PER_YEAR);
+    Matrix dailyTs(1, DAYS_PER_YEAR);
     ConvertHourlyTSintoDailyTS(maxHourlyGenPower.timeSeries[0], dailyTs[0]);
     return dailyTs;
 }
 
-Matrix<> DataSeriesHydro::getDailyMaxPumpPowerFromHourlyTS()
+Matrix DataSeriesHydro::getDailyMaxPumpPowerFromHourlyTS()
 {
-    Matrix<> dailyTs(1, DAYS_PER_YEAR);
+    Matrix dailyTs(1, DAYS_PER_YEAR);
     ConvertHourlyTSintoDailyTS(maxHourlyPumpPower.timeSeries[0], dailyTs[0]);
     return dailyTs;
 }

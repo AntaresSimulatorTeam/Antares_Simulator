@@ -7,7 +7,7 @@
 
 namespace Antares::Data
 {
-inline void InterAreaCorrelationResetMatrix(Matrix<>* m, AreaList* l)
+inline void InterAreaCorrelationResetMatrix(Matrix* m, AreaList* l)
 {
     assert(NULL != m);
     assert(NULL != l);
@@ -26,7 +26,7 @@ inline Correlation::Mode Correlation::mode() const
 }
 
 template<class StringT>
-inline void Correlation::set(Matrix<>& m, const Area& from, const Area& to, const StringT& value)
+inline void Correlation::set(Matrix& m, const Area& from, const Area& to, const StringT& value)
 {
     double d;
     if (!value.template to<double>(d))

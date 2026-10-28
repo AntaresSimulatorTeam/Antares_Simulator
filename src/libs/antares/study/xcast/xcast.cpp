@@ -3,6 +3,8 @@
 
 #include "antares/study/xcast/xcast.h"
 
+#include <cmath>
+#include <cstdint>
 #include <limits>
 
 #include <antares/array/matrix-io.h>
@@ -126,11 +128,11 @@ XCast::XCast(TimeSeriesType ts):
 {
     K.reset(12, 24);
     data.reset((unsigned int)dataMax, 12);
-    data.fillColumn(dataCoeffAlpha, 1.f);
-    data.fillColumn(dataCoeffBeta, 1.f);
-    data.fillColumn(dataCoeffDelta, 1.f);
-    data.fillColumn(dataCoeffTheta, 1.f);
-    data.fillColumn(dataCoeffMu, 1.f);
+    data.fillColumn(dataCoeffAlpha, 1.);
+    data.fillColumn(dataCoeffBeta, 1.);
+    data.fillColumn(dataCoeffDelta, 1.);
+    data.fillColumn(dataCoeffTheta, 1.);
+    data.fillColumn(dataCoeffMu, 1.);
     resetTransferFunction();
     translation.reset(1, HOURS_PER_YEAR);
 }
@@ -237,6 +239,20 @@ bool XCast::loadFromFolder(const fs::path& folder)
 
     ret = MatrixIO::load(translation, p.string(), 1, HOURS_PER_YEAR) && ret;
 
+    for (double& value: translation[0])
+    {
+        if (!std::isfinite(value)
+            || value < static_cast<double>(std::numeric_limits<std::int32_t>::min())
+            || value > static_cast<double>(std::numeric_limits<std::int32_t>::max()))
+        {
+            logs.warning() << folder << ": invalid value in the time-series translation.";
+            translation.reset(1, HOURS_PER_YEAR);
+            ret = false;
+            break;
+        }
+        value = std::trunc(value);
+    }
+
     if (translation.empty())
     {
         // This is not really an error
@@ -262,7 +278,7 @@ bool XCast::loadFromFolder(const fs::path& folder)
         // We will overwrite the left and the right value
         // Warning !!! std::numeric_limits must not be used
         //  it produces unwanted behavior on Linux
-        conversion[0][0] = (float)(-1.0e+19); // - std::numeric_limits<float>::max();
+        conversion[0][0] = -1.0e+19;
         conversion[0][1] = conversion[1][1];
         for (unsigned int x = 1; x < conversion.width() - 1; ++x)
         {
@@ -271,9 +287,7 @@ bool XCast::loadFromFolder(const fs::path& folder)
                 logs.error() << "TS-Generator: Conversion: Invalid range: " << p;
             }
         }
-        conversion[conversion.width() - 1][0]
-          = (float)1.0e+19; // +
-                            // std::numeric_limits<float>::max();
+        conversion[conversion.width() - 1][0] = 1.0e+19;
         conversion[conversion.width() - 1][1] = conversion[conversion.width() - 2][1];
     }
     else
@@ -289,12 +303,12 @@ bool XCast::loadFromFolder(const fs::path& folder)
 void XCast::resetTransferFunction()
 {
     conversion.reset(3, 2);
-    conversion[0][0] = (float)(-1.0e+19); // - std::numeric_limits<float>::max();
-    conversion[0][1] = 0.f;
-    conversion[1][0] = 0.f;
-    conversion[1][1] = 0.f;
-    conversion[2][0] = (float)(+1.0e+19); // + std::numeric_limits<float>::max();
-    conversion[2][1] = 0.f;
+    conversion[0][0] = -1.0e+19;
+    conversion[0][1] = 0.;
+    conversion[1][0] = 0.;
+    conversion[1][1] = 0.;
+    conversion[2][0] = 1.0e+19;
+    conversion[2][1] = 0.;
 }
 
 bool XCast::saveToFolder(const std::string& folder) const

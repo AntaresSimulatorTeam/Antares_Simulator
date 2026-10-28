@@ -124,8 +124,8 @@ BOOST_AUTO_TEST_CASE(getDailyMaxGenAndPumpPowerFromHourlyTS_averages_per_day)
     d.maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
     d.maxHourlyPumpPower.fill(20.0);
 
-    Antares::Matrix<> dailyGen = d.getDailyMaxGenPowerFromHourlyTS();
-    Antares::Matrix<> dailyPump = d.getDailyMaxPumpPowerFromHourlyTS();
+    Antares::Matrix dailyGen = d.getDailyMaxGenPowerFromHourlyTS();
+    Antares::Matrix dailyPump = d.getDailyMaxPumpPowerFromHourlyTS();
 
     BOOST_REQUIRE_EQUAL(dailyGen.width(), 1u);
     BOOST_REQUIRE_EQUAL(dailyGen.height(), DAYS_PER_YEAR);

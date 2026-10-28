@@ -20,7 +20,7 @@ HydroMaxTimeSeriesReader::HydroMaxTimeSeriesReader(PartHydro& hydro,
     hydro_.dailyMaxPumpAndGen.reset(4U, DAYS_PER_YEAR);
 }
 
-static bool checkPower(const Matrix<>& dailyMaxPumpAndGen, const std::string& areaName)
+static bool checkPower(const Matrix& dailyMaxPumpAndGen, const std::string& areaName)
 {
     for (unsigned int i = 0; i < 4U; ++i)
     {

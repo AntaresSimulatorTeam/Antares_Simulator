@@ -19,7 +19,7 @@ using namespace Antares;
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
-void fillTimeSeriesWithSpecialEnds(Matrix<double>& timeSeries, double start, double end)
+void fillTimeSeriesWithSpecialEnds(Matrix& timeSeries, double start, double end)
 {
     for (uint ts = 0; ts < timeSeries.width(); ts++)
     {
@@ -340,7 +340,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_from_common_capacity_folde
     auto& maxDailyRuleCurves = area_1->hydro.series->ruleCurves.max.timeSeries;
     auto& minDailyRuleCurves = area_1->hydro.series->ruleCurves.min.timeSeries;
     auto& avgDailyRuleCurves = area_1->hydro.series->ruleCurves.avg.timeSeries;
-    Matrix<double> ruleCurves;
+    Matrix ruleCurves;
 
     ruleCurves.reset(3, DAYS_PER_YEAR);
 
@@ -504,7 +504,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_missing_reservoir_file, Fi
     study->parameters.compatibility.hydroRuleCurves = Parameters::Compatibility::HydroRuleCurves::
       Single;
 
-    Matrix<double> standardRuleCurves;
+    Matrix standardRuleCurves;
     standardRuleCurves.reset(3L, DAYS_PER_YEAR);
 
     standardRuleCurves.fillColumn(RuleCurves::maximum, 1.);

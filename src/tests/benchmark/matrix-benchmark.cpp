@@ -13,7 +13,6 @@
 #include <limits>
 #include <string>
 #include <string_view>
-#include <type_traits>
 #include <vector>
 
 #include <antares/array/matrix-io.h>
@@ -54,7 +53,6 @@ void runBenchmark(std::string_view name,
               << std::setprecision(3) << elapsed << ',' << elapsed / iterations << '\n';
 }
 
-template<class T>
 std::string makeCsv(unsigned int width, unsigned int height)
 {
     std::string result;
@@ -70,14 +68,7 @@ std::string makeCsv(unsigned int width, unsigned int height)
             }
 
             const auto value = (x * 17 + y * 13) % 1000;
-            if constexpr (std::is_floating_point_v<T>)
-            {
-                result += std::to_string(static_cast<double>(value) / 10.0 + 0.25);
-            }
-            else
-            {
-                result += std::to_string(value + 1);
-            }
+            result += std::to_string(static_cast<double>(value) / 10.0 + 0.25);
         }
         result += '\n';
     }
@@ -85,18 +76,17 @@ std::string makeCsv(unsigned int width, unsigned int height)
     return result;
 }
 
-template<class T>
 void benchmarkLoads(unsigned int width, unsigned int height, unsigned int iterations)
 {
-    const std::string csv = makeCsv<T>(width, height);
+    const std::string csv = makeCsv(width, height);
     const auto filename = std::filesystem::temp_directory_path() / "antares-matrix-benchmark.txt";
     {
         std::ofstream file(filename, std::ios::binary | std::ios::trunc);
         file.write(csv.data(), static_cast<std::streamsize>(csv.size()));
     }
-    Antares::Matrix<T> matrix;
+    Antares::Matrix matrix;
 
-    runBenchmark(std::string("load-") + (std::is_floating_point_v<T> ? "double" : "uint32"),
+    runBenchmark("load-double",
                  width,
                  height,
                  iterations,
@@ -121,7 +111,7 @@ void benchmarkAllocation(unsigned int width, unsigned int height, unsigned int i
                  iterations,
                  [=]
                  {
-                     Antares::Matrix<double> matrix;
+                      Antares::Matrix matrix;
                      matrix.resize(width, height);
                      consume(matrix.width() + matrix.height());
                  });
@@ -132,7 +122,7 @@ void benchmarkAllocation(unsigned int width, unsigned int height, unsigned int i
                  iterations,
                  [=]
                  {
-                     Antares::Matrix<double> matrix;
+                      Antares::Matrix matrix;
                      matrix.reset(width, height);
                      consume(matrix.width() + matrix.height());
                  });
@@ -140,7 +130,7 @@ void benchmarkAllocation(unsigned int width, unsigned int height, unsigned int i
 
 void benchmarkSerialization(unsigned int width, unsigned int height, unsigned int iterations)
 {
-    Antares::Matrix<double> matrix(width, height);
+    Antares::Matrix matrix(width, height);
     for (unsigned int y = 0; y < height; ++y)
     {
         for (unsigned int x = 0; x < width; ++x)
@@ -176,8 +166,8 @@ void benchmarkSerialization(unsigned int width, unsigned int height, unsigned in
 
 void benchmarkBulkOperations(unsigned int width, unsigned int height, unsigned int iterations)
 {
-    Antares::Matrix<double> matrix(width, height);
-    Antares::Matrix<double> source(width, height);
+    Antares::Matrix matrix(width, height);
+    Antares::Matrix source(width, height);
     source.fill(2.5);
     std::vector<double> column(height, 1.5);
 
@@ -256,8 +246,7 @@ int main(int argc, char** argv)
     for (const unsigned int width: {1U, 10U, 100U})
     {
         benchmarkAllocation(width, defaultHeight, iterations);
-        benchmarkLoads<double>(width, defaultHeight, iterations);
-        benchmarkLoads<std::uint32_t>(width, defaultHeight, iterations);
+        benchmarkLoads(width, defaultHeight, iterations);
         benchmarkSerialization(width, defaultHeight, iterations);
     }
 

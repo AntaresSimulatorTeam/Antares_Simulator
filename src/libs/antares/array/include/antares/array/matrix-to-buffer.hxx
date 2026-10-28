@@ -21,24 +21,7 @@ namespace Antares
 {
 namespace // anonymous
 {
-template<class T>
 struct MatrixScalar
-{
-    static inline void Append(std::string& file, T v, const char* const)
-    {
-        if (Utils::isZero(v))
-        {
-            file.append(std::to_string(0));
-        }
-        else
-        {
-            file.append(std::to_string(v));
-        }
-    }
-};
-
-template<>
-struct MatrixScalar<double>
 {
     static void Append(std::string& file, double v, const char* const format)
     {
@@ -71,47 +54,12 @@ struct MatrixScalar<double>
     }
 };
 
-template<>
-struct MatrixScalar<float>
-{
-    static void Append(std::string& file, float v, const char* const format)
-    {
-        if (Utils::isZero(v))
-        {
-            file += '0';
-        }
-        else
-        {
-            char ConversionBuffer[128];
-            const int sizePrintf = Utils::isZero(v - floor(v))
-                                     ? ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
-                                                               sizeof(ConversionBuffer),
-                                                               "%.0f",
-                                                               (double)v)
-                                     : ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
-                                                               sizeof(ConversionBuffer),
-                                                               format,
-                                                               (double)v);
-
-            if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
-            {
-                file += (const char*)ConversionBuffer;
-            }
-            else
-            {
-                file += "ERR";
-            }
-        }
-    }
-};
-
 } // anonymous namespace
 
-template<class T, class PredicateT>
-void matrixToBuffer(const Matrix<T>& matrix,
+template<class PredicateT>
+void matrixToBuffer(const Matrix& matrix,
                     std::string& data,
                     PredicateT& predicate,
-                    bool isDecimal,
                     unsigned int precision)
 {
     static constexpr std::array formats = {
@@ -134,11 +82,7 @@ void matrixToBuffer(const Matrix<T>& matrix,
       "%.16f",
     };
 
-    const char* format = formats[0];
-    if (isDecimal)
-    {
-        format = formats[std::min(precision, static_cast<unsigned int>(formats.size() - 1))];
-    }
+    const char* format = formats[std::min(precision, static_cast<unsigned int>(formats.size() - 1))];
 
     for (unsigned int y = 0; y != matrix.height(); ++y)
     {
@@ -148,7 +92,7 @@ void matrixToBuffer(const Matrix<T>& matrix,
             {
                 data += '\t';
             }
-            MatrixScalar<T>::Append(data, static_cast<T>(predicate(matrix[x][y])), format);
+            MatrixScalar::Append(data, static_cast<double>(predicate(matrix[x][y])), format);
         }
         data += '\n';
     }

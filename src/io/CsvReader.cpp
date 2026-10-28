@@ -26,9 +26,7 @@ bool readCSVBuffer(std::string_view data,
     row.reserve(16);
 
     std::size_t rowIndex = 0;
-    std::size_t rowStart = 0;
     std::size_t cellStart = 0;
-    char lastSeparator = '\0';
     bool hasCell = false;
 
     for (std::size_t index = 0; index <= data.size();)
@@ -40,16 +38,14 @@ bool readCSVBuffer(std::string_view data,
         if (atEnd || atNewline)
         {
             // Do not manufacture a row after a final newline.
-            if (atEnd && index == rowStart && !hasCell)
+            if (atEnd && !hasCell)
             {
                 break;
             }
 
             if (hasCell)
             {
-                row.push_back({data.substr(cellStart, index - cellStart),
-                               cellStart,
-                               cellStart == index ? lastSeparator : value});
+                row.push_back({data.substr(cellStart, index - cellStart)});
             }
 
             if (!callback(rowIndex, row))
@@ -60,7 +56,6 @@ bool readCSVBuffer(std::string_view data,
             row.clear();
             ++rowIndex;
             hasCell = false;
-            lastSeparator = '\0';
 
             if (atEnd)
             {
@@ -72,16 +67,14 @@ bool readCSVBuffer(std::string_view data,
             {
                 ++index;
             }
-            rowStart = index;
             cellStart = index;
             continue;
         }
 
         if (isSeparator(value, separators))
         {
-            row.push_back({data.substr(cellStart, index - cellStart), cellStart, value});
+            row.push_back({data.substr(cellStart, index - cellStart)});
             hasCell = true;
-            lastSeparator = value;
             ++index;
             cellStart = index;
             continue;

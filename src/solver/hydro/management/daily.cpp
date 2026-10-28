@@ -52,8 +52,8 @@ enum
 
 struct DebugData
 {
-    using MaxPowerType = Matrix<double>::ColumnType;
-    using ReservoirLevelType = Matrix<double>::ColumnType;
+    using MaxPowerType = Matrix::ColumnType;
+    using ReservoirLevelType = Matrix::ColumnType;
 
     std::array<double, 366> OPP{0};
     std::array<double, 366> DailyTargetGen{0};

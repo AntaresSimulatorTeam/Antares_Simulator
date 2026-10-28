@@ -1110,7 +1110,7 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_RHSTimeSeries_constOverload)
     bc.RHSTimeSeries()[0][0] = 42.0;
 
     const BindingConstraint& constBc = bc;
-    const Antares::Matrix<>& rhs = constBc.RHSTimeSeries();
+    const Antares::Matrix& rhs = constBc.RHSTimeSeries();
     BOOST_CHECK_EQUAL(rhs.width(), 2u);
     BOOST_CHECK_EQUAL(rhs.height(), 4u);
     BOOST_CHECK_CLOSE(rhs[0][0], 42.0, 0.0001);

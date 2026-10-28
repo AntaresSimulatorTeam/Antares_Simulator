@@ -43,8 +43,7 @@ public:
     }
 };
 
-template<class Ta, class Tb>
-void CheckEqual(const Matrix<Ta>& a, const Matrix<Tb>& b)
+void CheckEqual(const Matrix& a, const Matrix& b)
 {
     BOOST_CHECK_EQUAL(a.width(), b.width());
     BOOST_CHECK_EQUAL(a.height(), b.height());
@@ -127,9 +126,9 @@ struct Fixture
     StudyLoadOptions options;
     std::filesystem::path working_tmp_dir;
     ;
-    Matrix<double> expected_lower_bound_series;
-    Matrix<double> expected_upper_bound_series;
-    Matrix<double> expected_equality_series;
+    Matrix expected_lower_bound_series;
+    Matrix expected_upper_bound_series;
+    Matrix expected_equality_series;
 };
 
 BOOST_AUTO_TEST_SUITE(BC_TimeSeries)

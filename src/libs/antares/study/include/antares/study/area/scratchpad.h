@@ -23,7 +23,7 @@ class AreaScratchpad final
 {
 public:
     //! Matrix used for time-series
-    using TSMatrix = Matrix<double>;
+    using TSMatrix = Matrix;
 
     //! \name Constructor
     //@{
@@ -76,8 +76,8 @@ private:
     ** Calculates daily mean maximum generation/pumping power
     ** power matrices meanMaxDailyGenPower/meanMaxDailyPumpPower
     */
-    void CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& hourlyMaxGenMatrix,
-                                            const Matrix<double>& hourlyMaxPumpMatrix);
+    void CalculateMeanDailyMaxPowerMatrices(const Matrix& hourlyMaxGenMatrix,
+                                            const Matrix& hourlyMaxPumpMatrix);
 
 }; // class AreaScratchpad
 

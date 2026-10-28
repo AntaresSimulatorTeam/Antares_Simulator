@@ -3,6 +3,7 @@
 
 #include "antares/series/series.h"
 
+#include <functional>
 #include <filesystem>
 #include <sstream>
 #include <vector>
@@ -37,22 +38,22 @@ static std::string errorMessage(const std::map<std::string, const TimeSeries*>& 
 
 uint TimeSeriesNumbers::height() const
 {
-    return tsNumbers.height();
+    return static_cast<uint>(tsNumbers.size());
 }
 
 uint32_t TimeSeriesNumbers::operator[](uint y) const
 {
-    return tsNumbers[0][y];
+    return tsNumbers[y];
 }
 
 uint32_t& TimeSeriesNumbers::operator[](uint y)
 {
-    return tsNumbers[0][y];
+    return tsNumbers[y];
 }
 
 void TimeSeriesNumbers::reset(uint h)
 {
-    tsNumbers.reset(1, h);
+    tsNumbers.assign(h, 0);
 }
 
 void TimeSeriesNumbers::clear()
@@ -62,8 +63,12 @@ void TimeSeriesNumbers::clear()
 
 void TimeSeriesNumbers::saveToBuffer(std::string& data) const
 {
-    const auto add1 = [](uint32_t x) { return x + 1; };
-    MatrixIO::saveToBuffer(tsNumbers, data, 0, false, add1, true);
+    Matrix matrix(1, height());
+    for (unsigned int y = 0; y < height(); ++y)
+    {
+        matrix[0][y] = tsNumbers[y] + 1;
+    }
+    MatrixIO::saveToBuffer(matrix, data, 0, false, std::identity{}, true);
 }
 
 std::optional<std::string> TimeSeriesNumbers::checkSeriesNumberOfColumnsConsistency() const
@@ -132,7 +137,7 @@ uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
     return timeseriesNumbers[year];
 }
 
-Matrix<double>::ColumnType& TimeSeries::operator[](uint32_t index)
+Matrix::ColumnType& TimeSeries::operator[](uint32_t index)
 {
     return timeSeries[index];
 }

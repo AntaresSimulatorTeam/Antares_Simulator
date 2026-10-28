@@ -6,7 +6,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <type_traits>
 #include <utility>
 
 #include <antares/logs/logs.h>
@@ -14,41 +13,34 @@
 
 namespace Antares
 {
-template<class T>
-Matrix<T>::Matrix() = default;
+inline Matrix::Matrix() = default;
 
-template<class T>
-Matrix<T>::Matrix(const Matrix<T>&) = default;
+inline Matrix::Matrix(const Matrix&) = default;
 
-template<class T>
-Matrix<T>::Matrix(unsigned int w, unsigned int h):
+inline Matrix::Matrix(unsigned int w, unsigned int h):
     width_(0),
     height_(0)
 {
     resize(w, h);
 }
 
-template<class T>
-unsigned int Matrix<T>::width() const noexcept
+inline unsigned int Matrix::width() const noexcept
 {
     return width_;
 }
 
-template<class T>
-unsigned int Matrix<T>::height() const noexcept
+inline unsigned int Matrix::height() const noexcept
 {
     return height_;
 }
 
-template<class T>
-typename Matrix<T>::ColumnType& Matrix<T>::mutableColumn(unsigned int column) const
+inline Matrix::ColumnType& Matrix::mutableColumn(unsigned int column) const
 {
     assert(column < width_);
     return columns_[column];
 }
 
-template<class T>
-Matrix<T>::Matrix(Matrix<T>&& rhs) noexcept:
+inline Matrix::Matrix(Matrix&& rhs) noexcept:
     width_(rhs.width_),
     height_(rhs.height_),
     columns_(std::move(rhs.columns_))
@@ -57,34 +49,21 @@ Matrix<T>::Matrix(Matrix<T>&& rhs) noexcept:
     rhs.height_ = 0;
 }
 
-template<class T>
-template<class U>
-Matrix<T>::Matrix(const Matrix<U>& rhs):
-    width_(0),
-    height_(0),
-    columns_()
+inline void Matrix::zero()
 {
-    copyFrom(rhs);
-}
-
-template<class T>
-inline void Matrix<T>::zero()
-{
-    for (unsigned int i = 0; i != width_; ++i)
+    for (auto& column: columns_)
     {
-        ColumnType& column = columns_[i];
-        std::fill(column.begin(), column.end(), T{});
+        std::fill(column.begin(), column.end(), 0.);
     }
 }
 
-template<class T>
-void Matrix<T>::averageTimeseries(bool roundValues)
+inline void Matrix::averageTimeseries(bool roundValues)
 {
     if (width_ > 1)
     {
         ColumnType& first = columns_[0];
 
-        // add the values of each timeseries to the first one
+        // Add the values of each time series to the first one.
         for (unsigned int i = 1; i != width_; ++i)
         {
             ColumnType& column = columns_[i];
@@ -94,14 +73,12 @@ void Matrix<T>::averageTimeseries(bool roundValues)
             }
         }
 
-        // average
-        double coeff = 1. / width_;
+        const double coeff = 1. / width_;
         if (roundValues)
         {
             for (unsigned int j = 0; j != height_; ++j)
             {
-                const double d = first[j] * coeff;
-                first[j] = std::round(d);
+                first[j] = std::round(first[j] * coeff);
             }
         }
         else
@@ -112,19 +89,16 @@ void Matrix<T>::averageTimeseries(bool roundValues)
             }
         }
 
-        // Release all timeseries no longer needed
         for (unsigned int i = 1; i != width_; ++i)
         {
             columns_[i].clear();
         }
         columns_.resize(1);
-        // reset the width_ to 1
         width_ = 1;
     }
 }
 
-template<class T>
-void Matrix<T>::fill(const T& v)
+inline void Matrix::fill(double v)
 {
     for (auto& column: columns_)
     {
@@ -132,23 +106,18 @@ void Matrix<T>::fill(const T& v)
     }
 }
 
-template<class T>
-void Matrix<T>::fillUnit()
+inline void Matrix::fillUnit()
 {
-    for (auto& column: columns_)
-    {
-        std::fill(column.begin(), column.end(), T{});
-    }
+    zero();
 
     const auto diagonalSize = std::min(width_, height_);
     for (unsigned int i = 0; i != diagonalSize; ++i)
     {
-        columns_[i][i] = T(1);
+        columns_[i][i] = 1.;
     }
 }
 
-template<class T>
-inline void Matrix<T>::reset(unsigned int w, unsigned int h)
+inline void Matrix::reset(unsigned int w, unsigned int h)
 {
     const bool sameSize = w == width_ && h == height_;
     resize(w, h);
@@ -158,77 +127,46 @@ inline void Matrix<T>::reset(unsigned int w, unsigned int h)
     }
 }
 
-template<class T>
-template<class U>
-void Matrix<T>::pasteToColumn(unsigned int x, const U* data)
+inline void Matrix::pasteToColumn(unsigned int x, const double* data)
 {
     assert(x < width_ and "Invalid column index (bigger than `this->width_`)");
-    ColumnType& column = columns_[x];
-
-    // if the two types are strictly equal, we can perform some major
-    // optimisations
-    if (std::is_same_v<T, U>)
-    {
-        std::copy(data, data + height_, column.begin());
-    }
-    else
-    {
-        // ...otherwise we have to copy each item by hand in any cases
-        for (unsigned int y = 0; y != height_; ++y)
-        {
-            column[y] = (T)data[y];
-        }
-    }
+    std::copy(data, data + height_, columns_[x].begin());
 }
 
-template<class T>
-void Matrix<T>::fillColumn(unsigned int x, const T& value)
+inline void Matrix::fillColumn(unsigned int x, double value)
 {
     assert(x < width_ and "Invalid column index (bigger than `this->width_`)");
-    ColumnType& column = columns_[x];
-
-    std::fill(column.begin(), column.end(), value);
+    std::fill(columns_[x].begin(), columns_[x].end(), value);
 }
 
-template<class T>
-inline void Matrix<T>::columnToZero(unsigned int x)
+inline void Matrix::columnToZero(unsigned int x)
 {
     assert(x < width_ and "Invalid column index (bigger than `this->width_`)");
-    ColumnType& column = columns_[x];
-
-    std::fill(column.begin(), column.end(), T{});
+    std::fill(columns_[x].begin(), columns_[x].end(), 0.);
 }
 
-template<class T>
-inline bool Matrix<T>::empty() const
+inline bool Matrix::empty() const
 {
     return (!width_) or (!height_);
 }
 
-template<class T>
-void Matrix<T>::clear()
+inline void Matrix::clear()
 {
     columns_.clear();
     width_ = 0;
     height_ = 0;
 }
 
-template<class T>
-void Matrix<T>::reset()
+inline void Matrix::reset()
 {
     clear();
 }
 
-template<class T>
-void Matrix<T>::resize(unsigned int w, unsigned int h)
+inline void Matrix::resize(unsigned int w, unsigned int h)
 {
-    // Asserts
-    // This limit is correlated with the maximal amount of years
-    // See the routine GeneralData::fixBadValues() if some changes are needed
     assert(w <= 50000 and "The new width_ seems a bit excessive");
     assert(h <= 50000 and "The new height_ seems a bit excessive");
 
-    // Checking if the matrix really needs to be resized
     if (w != width_ or h != height_)
     {
         if (!w or !h)
@@ -237,11 +175,8 @@ void Matrix<T>::resize(unsigned int w, unsigned int h)
         }
         else
         {
-            // Assigning the new size
             width_ = w;
             height_ = h;
-
-            // Allocate each column independently to avoid copying a temporary column.
             columns_.clear();
             columns_.resize(w);
             for (auto& column: columns_)
@@ -252,57 +187,45 @@ void Matrix<T>::resize(unsigned int w, unsigned int h)
     }
 }
 
-template<class T>
-void Matrix<T>::resizeWithoutDataLost(unsigned int x, unsigned int y, const T& defVal)
+inline void Matrix::resizeWithoutDataLost(unsigned int x, unsigned int y, double defVal)
 {
     if (!x or !y)
     {
         clear();
     }
+    else if (x <= width_ and y <= height_)
+    {
+        columns_.resize(x);
+        for (auto& column: columns_)
+        {
+            column.resize(y);
+        }
+        width_ = x;
+        height_ = y;
+    }
     else
     {
-        if (x <= width_ and y <= height_) // shrinking
+        const Matrix copy(*this);
+        resize(x, y);
+        const unsigned int minW = std::min(x, copy.width_);
+        const unsigned int minH = std::min(y, copy.height_);
+
+        for (unsigned int i = 0; i < minW; ++i)
         {
-            columns_.resize(x);
-            for (auto& column: columns_)
-            {
-                column.resize(y);
-            }
-            width_ = x;
-            height_ = y;
+            ColumnType& column = columns_[i];
+            std::copy_n(copy.columns_[i].begin(), minH, column.begin());
+            std::fill(column.begin() + minH, column.end(), defVal);
         }
-        else
+
+        for (unsigned int i = minW; i < x; ++i)
         {
-            const Matrix<T> copy(*this);
-            resize(x, y);
-            // Copy values
-            const unsigned int minW = std::min(x, copy.width_);
-            const unsigned int minH = std::min(y, copy.height_);
-
-            for (unsigned int i = 0; i < minW; ++i)
-            {
-                ColumnType& column = columns_[i];
-
-                std::copy_n(copy.columns_[i].begin(), minH, column.begin());
-
-                for (unsigned int j = minH; j < y; ++j)
-                {
-                    column[j] = defVal;
-                }
-            }
-
-            for (unsigned int i = minW; i < x; ++i)
-            {
-                std::fill(columns_[i].begin(), columns_[i].end(), defVal);
-            }
+            std::fill(columns_[i].begin(), columns_[i].end(), defVal);
         }
     }
     logs.debug() << "  :: end resizeWithoutDataLost";
 }
 
-template<class T>
-template<class U>
-void Matrix<T>::multiplyAllEntriesBy(const U& c)
+inline void Matrix::multiplyAllEntriesBy(double c)
 {
     if (columns_.empty())
     {
@@ -311,13 +234,11 @@ void Matrix<T>::multiplyAllEntriesBy(const U& c)
 
     if (!Utils::isZero(c))
     {
-        for (unsigned int x = 0; x != width_; ++x)
+        for (auto& column: columns_)
         {
-            ColumnType& column = columns_[x];
-
-            for (unsigned int y = 0; y != height_; ++y)
+            for (auto& value: column)
             {
-                column[y] *= (T)c;
+                value *= c;
             }
         }
     }
@@ -327,35 +248,31 @@ void Matrix<T>::multiplyAllEntriesBy(const U& c)
     }
 }
 
-template<class T>
-void Matrix<T>::roundAllEntries()
+inline void Matrix::roundAllEntries()
 {
-    for (unsigned int x = 0; x != width_; ++x)
+    for (auto& column: columns_)
     {
-        ColumnType& col = columns_[x];
-        for (unsigned int y = 0; y != height_; ++y)
+        for (auto& value: column)
         {
-            col[y] = (T)std::round(col[y]);
+            value = std::round(value);
         }
     }
 }
 
-template<class T>
-bool Matrix<T>::containsOnlyZero() const
+inline bool Matrix::containsOnlyZero() const
 {
     PredicateIdentity predicate;
     return containsOnlyZero(predicate);
 }
 
-template<class T>
 template<class PredicateT>
-bool Matrix<T>::containsOnlyZero(PredicateT& predicate) const
+bool Matrix::containsOnlyZero(PredicateT& predicate) const
 {
     for (const auto& column: columns_)
     {
         for (const auto& value: column)
         {
-            if (!Utils::isZero(static_cast<T>(predicate(value))))
+            if (!Utils::isZero(predicate(value)))
             {
                 return false;
             }
@@ -364,11 +281,9 @@ bool Matrix<T>::containsOnlyZero(PredicateT& predicate) const
     return true;
 }
 
-template<class T>
-template<class U>
-void Matrix<T>::copyFrom(const Matrix<U>& rhs)
+inline void Matrix::copyFrom(const Matrix& rhs)
 {
-    assert((void*)(&rhs) != (void*)this and "Undefined behavior");
+    assert(&rhs != this and "Undefined behavior");
 
     if (rhs.empty())
     {
@@ -376,35 +291,15 @@ void Matrix<T>::copyFrom(const Matrix<U>& rhs)
     }
     else
     {
-        // resize the matrix
         resize(rhs.width(), rhs.height());
-        // copy raw values
         for (unsigned int x = 0; x != rhs.width(); ++x)
         {
-            auto& column = columns_[x];
-            const auto& src = rhs[x];
-
-            // if the two types are strictly equal, we can perform some major
-            // optimisations
-            if (std::is_same_v<T, U>)
-            {
-                std::copy(src.begin(), src.end(), column.begin());
-            }
-            else
-            {
-                // ...otherwise we have to copy each item by hand in any cases
-                for (unsigned int y = 0; y != height_; ++y)
-                {
-                    column[y] = (T)src[y];
-                }
-            }
+            columns_[x] = rhs[x];
         }
     }
 }
 
-template<class T>
-template<class U>
-inline void Matrix<T>::copyFrom(const Matrix<U>* rhs)
+inline void Matrix::copyFrom(const Matrix* rhs)
 {
     if (rhs)
     {
@@ -412,27 +307,22 @@ inline void Matrix<T>::copyFrom(const Matrix<U>* rhs)
     }
 }
 
-template<class T>
-void Matrix<T>::swap(Matrix<T>& rhs) noexcept
+inline void Matrix::swap(Matrix& rhs) noexcept
 {
-    // argument deduction lookup (ADL)
     using std::swap;
-    swap(this->width_, rhs.width_);
-    swap(this->height_, rhs.height_);
-    swap(this->columns_, rhs.columns_);
+    swap(width_, rhs.width_);
+    swap(height_, rhs.height_);
+    swap(columns_, rhs.columns_);
 }
 
-template<class T>
-inline Matrix<T>& Matrix<T>::operator=(const Matrix<T>& rhs)
+inline Matrix& Matrix::operator=(const Matrix& rhs)
 {
     copyFrom(rhs);
     return *this;
 }
 
-template<class T>
-inline Matrix<T>& Matrix<T>::operator=(Matrix<T>&& rhs) noexcept
+inline Matrix& Matrix::operator=(Matrix&& rhs) noexcept
 {
-    // Free existing resources before taking new ones
     width_ = rhs.width_;
     height_ = rhs.height_;
     columns_ = std::move(rhs.columns_);
@@ -441,58 +331,41 @@ inline Matrix<T>& Matrix<T>::operator=(Matrix<T>&& rhs) noexcept
     return *this;
 }
 
-template<class T>
-template<class U>
-inline Matrix<T>& Matrix<T>::operator=(const Matrix<U>& rhs)
+inline bool MatrixTestForAtLeastOnePositiveValue(const Matrix& m)
 {
-    copyFrom(rhs);
-    return *this;
-}
-
-template<class T>
-bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T>& m)
-{
-    if (m.width() and m.height())
+    for (unsigned int x = 0; x < m.width(); ++x)
     {
-        unsigned int y;
-        for (unsigned int x = 0; x < m.width(); ++x)
+        const auto& column = m[x];
+        for (unsigned int y = 0; y < m.height(); ++y)
         {
-            const auto& col = m[x];
-            for (y = 0; y < m.height(); ++y)
+            if (column[y] > 0.)
             {
-                if (col[y] > T(0))
-                {
-                    return true;
-                }
+                return true;
             }
         }
     }
     return false;
 }
 
-template<class T>
-inline const typename Matrix<T>::ColumnType& Matrix<T>::operator[](unsigned int column) const
+inline const Matrix::ColumnType& Matrix::operator[](unsigned int column) const
 {
     assert(column < width_);
     return columns_[column];
 }
 
-template<class T>
-inline typename Matrix<T>::ColumnType& Matrix<T>::operator[](unsigned int column)
+inline Matrix::ColumnType& Matrix::operator[](unsigned int column)
 {
     assert(column < width_);
     return columns_[column];
 }
 
-template<class T>
-inline const typename Matrix<T>::ColumnType& Matrix<T>::column(unsigned int n) const
+inline const Matrix::ColumnType& Matrix::column(unsigned int n) const
 {
     assert(n < width_);
     return columns_[n];
 }
 
-template<class T>
-inline typename Matrix<T>::ColumnType& Matrix<T>::column(unsigned int n)
+inline Matrix::ColumnType& Matrix::column(unsigned int n)
 {
     assert(n < width_);
     return columns_[n];

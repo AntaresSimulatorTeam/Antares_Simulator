@@ -12,7 +12,6 @@
 #include <limits>
 #include <string>
 #include <string_view>
-#include <type_traits>
 
 #include <antares/array/matrix-io.h>
 #include <antares/array/matrix.h>
@@ -51,7 +50,6 @@ void runBenchmark(std::string_view name,
               << std::setprecision(3) << elapsed << ',' << elapsed / iterations << '\n';
 }
 
-template<class T>
 std::string makeCsv(unsigned int width, unsigned int height)
 {
     std::string result;
@@ -67,14 +65,7 @@ std::string makeCsv(unsigned int width, unsigned int height)
             }
 
             const auto value = (x * 17 + y * 13) % 1000;
-            if constexpr (std::is_floating_point_v<T>)
-            {
-                result += std::to_string(static_cast<double>(value) / 10.0 + 0.25);
-            }
-            else
-            {
-                result += std::to_string(value + 1);
-            }
+            result += std::to_string(static_cast<double>(value) / 10.0 + 0.25);
         }
         result += '\n';
     }
@@ -82,19 +73,18 @@ std::string makeCsv(unsigned int width, unsigned int height)
     return result;
 }
 
-template<class T>
 void benchmarkLoad(unsigned int width, unsigned int height, unsigned int iterations)
 {
-    const std::string csv = makeCsv<T>(width, height);
+    const std::string csv = makeCsv(width, height);
     const auto filename = std::filesystem::temp_directory_path()
                           / "antares-matrix-load-benchmark.txt";
     {
         std::ofstream file(filename, std::ios::binary | std::ios::trunc);
         file.write(csv.data(), static_cast<std::streamsize>(csv.size()));
     }
-    Antares::Matrix<T> matrix;
+    Antares::Matrix matrix;
 
-    runBenchmark(std::is_floating_point_v<T> ? "load-double" : "load-uint32",
+    runBenchmark("load-double",
                  width,
                  height,
                  iterations,
@@ -145,8 +135,7 @@ int main(int argc, char** argv)
     std::cout << "case,width,height,iterations,total_ms,ms_per_iteration\n";
     for (const unsigned int width: {1U, 10U, 100U})
     {
-        benchmarkLoad<double>(width, defaultHeight, iterations);
-        benchmarkLoad<std::uint32_t>(width, defaultHeight, iterations);
+        benchmarkLoad(width, defaultHeight, iterations);
     }
 
     std::cerr << "benchmark sink: " << benchmarkSink.load(std::memory_order_relaxed) << '\n';

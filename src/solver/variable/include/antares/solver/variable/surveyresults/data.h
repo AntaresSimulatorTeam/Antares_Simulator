@@ -69,7 +69,7 @@ public:
     Yuni::String::Vector rowCaptions;
 
     //! A multi-purposes matrix (mainly used for the digest)
-    Matrix<double> matrix;
+    Matrix matrix;
 
     unsigned int rowIndex;
 
@@ -83,7 +83,7 @@ public:
 void InternalExportDigestLinksMatrix(const Data::Study& study,
                                      const char* title,
                                      std::string& fileBuffer,
-                                     const Matrix<>& matrix);
+                                      const Matrix& matrix);
 } // namespace Antares::Solver::Variable::Private
 
 #endif // __SOLVER_VARIABLE_SURVEY_RESULTS_DATA_H__

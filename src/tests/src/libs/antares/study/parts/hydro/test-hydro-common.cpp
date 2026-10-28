@@ -358,7 +358,7 @@ BOOST_AUTO_TEST_CASE(test_count_reflects_series_TScount)
 
 BOOST_AUTO_TEST_CASE(test_getWaterValue_normal_and_clamped_levels)
 {
-    Antares::Matrix<double> waterValues;
+    Antares::Matrix waterValues;
     waterValues.reset(101, 1); // 101 levels (0..100), 1 day
     for (unsigned int level = 0; level < 101; ++level)
     {
@@ -377,7 +377,7 @@ BOOST_AUTO_TEST_CASE(test_getWaterValue_normal_and_clamped_levels)
 
 BOOST_AUTO_TEST_CASE(test_getWeeklyModulation_exact_and_interpolated_and_clamped)
 {
-    Antares::Matrix<double> creditMod;
+    Antares::Matrix creditMod;
     creditMod.reset(101, 2);
     for (unsigned int level = 0; level < 101; ++level)
     {

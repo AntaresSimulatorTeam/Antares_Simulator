@@ -76,7 +76,7 @@ private:
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
-    Matrix<> pRES;
+    Matrix pRES;
     IResultWriter& resultWriter;
     std::reference_wrapper<ISimulationObserver> simulationObserver_;
     // Study-wide activity flags, built once in simulationBegin(); consulted only

@@ -13,22 +13,21 @@
 using namespace std;
 using namespace Antares;
 
-template<class T = double>
-class Matrix_easy_to_fill: public Matrix<T>
+class Matrix_easy_to_fill: public Matrix
 {
 public:
     Matrix_easy_to_fill():
-        Matrix<T>()
+        Matrix()
     {
     }
 
     Matrix_easy_to_fill(unsigned int height, unsigned int width):
-        Matrix<T>(height, width)
+        Matrix(height, width)
     {
     }
 
-    Matrix_easy_to_fill(unsigned int height, unsigned int width, const std::vector<T>& vec):
-        Matrix<T>()
+    Matrix_easy_to_fill(unsigned int height, unsigned int width, const std::vector<double>& vec):
+        Matrix()
     {
         BOOST_REQUIRE_EQUAL(height * width, vec.size());
         this->reset(width, height);

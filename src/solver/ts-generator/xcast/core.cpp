@@ -86,7 +86,7 @@ bool XCast::generateValuesForTheCurrentDay()
                 // partout)
                 for (uint j = 0; j < i; ++j)
                 {
-                    pCorrMonth->mutableColumn(i)[j] *= 0.999f;
+                    (*pCorrMonth)[i][j] *= 0.999f;
                 }
             }
 
@@ -144,7 +144,7 @@ bool XCast::generateValuesForTheCurrentDay()
                         x = 1.f - ALPH[s] * ALPH[t];
                         x /= BETA[s];
                         x /= BETA[t];
-                        CORR[s][t] = (*pCorrMonth)[s][t] * x;
+                         CORR[s][t] = (*pCorrMonth)[s][t] * x;
                         if (CORR[s][t] > 1.f)
                         {
                             CORR[s][t] = 1.f;
@@ -182,7 +182,7 @@ bool XCast::generateValuesForTheCurrentDay()
                     else
                     {
                         x = D_COPIE[s] * STDE[t] / z;
-                        CORR[s][t] = (*pCorrMonth)[s][t] * (x + 1.f / x) / 2.f;
+                             CORR[s][t] = (*pCorrMonth)[s][t] * (x + 1.f / x) / 2.f;
                         if (CORR[s][t] > 1.f)
                         {
                             CORR[s][t] = 1.f;
@@ -398,7 +398,7 @@ bool XCast::generateValuesForTheCurrentDay()
                     for (uint s = 0; s != processCount; ++s)
                     {
                         auto& corr_s = CORR[s];
-                        auto& userMonthlyCorr = pCorrMonth->column(s);
+                        auto& userMonthlyCorr = (*pCorrMonth)[s];
                         for (uint t = 0; t < s; ++t)
                         {
                             if (Utils::isZero(DIFF[s]) || Utils::isZero(DIFF[t]))

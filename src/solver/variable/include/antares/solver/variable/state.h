@@ -187,7 +187,7 @@ public:
     /*!
     ** \brief Spilled energy for all areas in the week
     */
-    Matrix<> resSpilled;
+    Matrix resSpilled;
     //@}
 
     //! \name Economy

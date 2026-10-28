@@ -46,7 +46,7 @@ private:
         const fs::path filePath = baseFolder_ / "common" / "capacity"
                                   / std::string("reservoir_" + areaID_ + ".txt");
 
-        Matrix<double> standardRuleCurves;
+        Matrix standardRuleCurves;
         standardRuleCurves.reset(3L, DAYS_PER_YEAR);
 
         bool ret = MatrixIO::load(standardRuleCurves, filePath.string(), 3, DAYS_PER_YEAR);

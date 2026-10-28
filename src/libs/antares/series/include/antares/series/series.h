@@ -4,10 +4,12 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 
+#include <cstdint>
 #include <filesystem>
 #include <map>
 #include <optional>
 #include <string>
+#include <vector>
 
 #include <antares/array/matrix.h>
 
@@ -18,7 +20,7 @@ namespace Antares::Data
  ** \brief This class is used to represent the generic time series
  **
  **  The goal is to handle indexing with the time series numbers: getCoefficient()
- **  and also providing a wrapper for all the Matrix<> functions such as resize()
+ **  and also providing a wrapper for all the Matrix functions such as resize()
  */
 class TimeSeries;
 
@@ -41,14 +43,14 @@ public:
     void saveToBuffer(std::string& data) const;
 
 private:
-    Matrix<uint32_t> tsNumbers;
+    std::vector<uint32_t> tsNumbers;
     std::map<std::string, const TimeSeries*> series;
 };
 
 class TimeSeries final
 {
 public:
-    using TS = Matrix<double>;
+    using TS = Matrix;
 
     explicit TimeSeries(TimeSeriesNumbers& tsNumbers);
     /*!
@@ -77,7 +79,7 @@ public:
 
     /// \brief overload operator to return a column
     /// Unlike getColumn() it uses direct indexing and not timeseriesNumbers
-    Matrix<double>::ColumnType& operator[](uint32_t index);
+    Matrix::ColumnType& operator[](uint32_t index);
 
     void reset();
     void reset(uint32_t width, uint32_t height);

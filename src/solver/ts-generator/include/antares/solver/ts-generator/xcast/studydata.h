@@ -4,6 +4,9 @@
 #ifndef __ANTARES_SOLVER_TS_GENERATOR_XCAST_STUDY_DATA_H__
 #define __ANTARES_SOLVER_TS_GENERATOR_XCAST_STUDY_DATA_H__
 
+#include <array>
+#include <vector>
+
 #include <yuni/yuni.h>
 
 #include <antares/correlation/correlation.h>
@@ -60,7 +63,7 @@ public:
     //! List of all areas (sub-set of the complete list)
     Data::Area::Vector localareas;
     //! Correlation coefficients for each month
-    std::array<Matrix<float>, 12> correlation;
+    std::array<std::vector<std::vector<float>>, 12> correlation;
     /*!
     ** \brief Correlation mode (monthly / annual)
     **
@@ -74,7 +77,7 @@ private:
     //! Rebuild data from our own area list
     void reloadDataFromAreaList(const Data::Correlation& correlation);
 
-    void prepareMatrix(Matrix<float>& m, const Matrix<float>& source) const;
+    void prepareMatrix(std::vector<std::vector<float>>& m, const Matrix& source) const;
 
 }; // class StudyData
 

@@ -76,7 +76,7 @@ public:
 
     //! All {FO,PO}{Duration,Rate} annual values
     // max x DAYS_PER_YEAR
-    Matrix<> data;
+    Matrix data;
     // Parent thermal cluster
     YString id;
     unsigned int unitCount;

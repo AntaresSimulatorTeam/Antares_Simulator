@@ -10,8 +10,8 @@
 namespace Antares::Data
 {
 
-bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix<double>& dailyPower,
-                                       const Matrix<double>::ColumnType& nbHoursAtPmaxPerDay)
+    bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix& dailyPower,
+                                           const Matrix::ColumnType& nbHoursAtPmaxPerDay)
 {
     for (unsigned int tsNumber = 0; tsNumber < dailyPower.width(); ++tsNumber)
     {
@@ -27,8 +27,8 @@ bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix<double>& dailyPower,
     return false;
 }
 
-void CalculateDailyMeanPower(const Matrix<double>::ColumnType& hourlyColumn,
-                             Matrix<double>::ColumnType& dailyColumn)
+void CalculateDailyMeanPower(const Matrix::ColumnType& hourlyColumn,
+                             Matrix::ColumnType& dailyColumn)
 {
     for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
     {
@@ -172,8 +172,8 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
                                                    dailyNbHoursAtPumpPmax);
 }
 
-void AreaScratchpad::CalculateMeanDailyMaxPowerMatrices(const Matrix<double>& hourlyMaxGenMatrix,
-                                                        const Matrix<double>& hourlyMaxPumpMatrix)
+void AreaScratchpad::CalculateMeanDailyMaxPowerMatrices(const Matrix& hourlyMaxGenMatrix,
+                                                         const Matrix& hourlyMaxPumpMatrix)
 {
     for (unsigned int nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxGenMatrix.width();
          ++nbOfTimeSeries)

@@ -53,9 +53,9 @@ public:
     Mode mode() const;
     //@}
 
-    void set(Matrix<>& m, const Area& from, const Area& to, double v);
+    void set(Matrix& m, const Area& from, const Area& to, double v);
     template<class StringT>
-    void set(Matrix<>& m, const Area& from, const Area& to, const StringT& value);
+    void set(Matrix& m, const Area& from, const Area& to, const StringT& value);
 
     //! \name Load / Save
     //@{
@@ -98,9 +98,9 @@ public:
 
 public:
     //! The correlation matrix for the whole year
-    Matrix<> annual;
+    Matrix annual;
     //! All correlation matrices per month (12)
-    std::vector<Matrix<>> monthly; // [12]
+    std::vector<Matrix> monthly; // [12]
 
     //! The name to displays in logs
     std::string correlationName;
@@ -122,7 +122,7 @@ private:
 ** \param[in,out] m The matrix to initialize
 ** \param l The list of areas
 */
-void InterAreaCorrelationResetMatrix(Matrix<>* m, AreaList* l);
+void InterAreaCorrelationResetMatrix(Matrix* m, AreaList* l);
 
 /*!
 ** \brief Load an inter-area correlation matrix from a file
@@ -137,7 +137,7 @@ void InterAreaCorrelationResetMatrix(Matrix<>* m, AreaList* l);
 ** \param filename The filename to use to load values
 ** \return A non-zero value if the matrix has been loaded, 0 otherwise
 */
-int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const std::string& filename);
+int InterAreaCorrelationLoadFromFile(Matrix* m, AreaList* l, const std::string& filename);
 
 /*!
 ** \brief Save an inter-area correlation matrix to a file
@@ -151,7 +151,7 @@ int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const std::string
 ** \param filename The filename to use to values
 ** \return A non-zero value if the matrix has been saved, 0 otherwise
 */
-int InterAreaCorrelationSaveToFile(const Matrix<>* m, const AreaList* l, const char filename[]);
+int InterAreaCorrelationSaveToFile(const Matrix* m, const AreaList* l, const char filename[]);
 
 /*!
 ** \brief Load an inter-area correlation matrix from a Ini file structure
@@ -167,7 +167,7 @@ int InterAreaCorrelationSaveToFile(const Matrix<>* m, const AreaList* l, const c
 ** \param warnings A non-zero value to enable warnings
 ** \return A non-zero value if the matrix has been loaded, 0 otherwise
 */
-int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, int warnings);
+int InterAreaCorrelationLoadFromIniFile(Matrix* m, AreaList* l, IniFile* ini, int warnings);
 
 } // namespace Antares::Data
 

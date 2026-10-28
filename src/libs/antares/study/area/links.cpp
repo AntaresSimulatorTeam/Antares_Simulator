@@ -64,7 +64,7 @@ bool AreaLink::linkLoadTimeSeries_for_version_below_810(const fs::path& folder)
     fs::path path = folder / static_cast<std::string>(with->id + ".txt");
 
     // Load link's data
-    Matrix<> tmpMatrix;
+    Matrix tmpMatrix;
     const unsigned int matrixWidth = 8;
     if (!MatrixIO::load(tmpMatrix, path.string(), matrixWidth, HOURS_PER_YEAR))
     {

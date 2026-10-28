@@ -333,7 +333,7 @@ bool XCast::runWithPredicate(PredicateT& predicate)
                     MA[s] = +std::numeric_limits<float>::max();
                 }
                 }
-                std::copy_n(xcastdata.K[realmonth].begin(), HOURS_PER_DAY, FO[s].begin());
+                    std::copy_n(xcastdata.K[realmonth].begin(), HOURS_PER_DAY, FO[s].begin());
             }
 
             uint nbDaysPerMonth = study.calendar.months[month].days;

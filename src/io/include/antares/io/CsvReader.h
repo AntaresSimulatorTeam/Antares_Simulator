@@ -14,8 +14,6 @@ namespace Antares::IO
 struct CSVCell final
 {
     std::string_view value;
-    std::size_t offset = 0;
-    char separator = '\0';
 };
 
 using CSVRow = std::span<const CSVCell>;

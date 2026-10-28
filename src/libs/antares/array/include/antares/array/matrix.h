@@ -11,29 +11,27 @@
 namespace Antares
 {
 /*!
-** \brief A n-by-n matrix
+** \brief A n-by-n matrix of doubles
 **
 ** \ingroup matrix
-** \tparam T A pod type for each cell of the matrix
 */
-template<class T = double>
 class Matrix
 {
 public:
     //! Type
-    using Type = T;
+    using Type = double;
     //! Pointer
-    using TypePtr = T*;
+    using TypePtr = double*;
     //! Matrix type
-    using MatrixType = Matrix<T>;
+    using MatrixType = Matrix;
 
     //! Pointer
-    using MatrixPtr = Matrix<T>*;
+    using MatrixPtr = Matrix*;
 
     //! Column type
-    using ColumnType = std::vector<T>;
-    using ColumnView = std::span<T>;
-    using ConstColumnView = std::span<const T>;
+    using ColumnType = std::vector<double>;
+    using ColumnView = std::span<double>;
+    using ConstColumnView = std::span<const double>;
 
 public:
     //! \name Constructors & Destructor
@@ -53,12 +51,6 @@ public:
     Matrix(Matrix&& rhs) noexcept;
 
     /*!
-    ** \brief Copy constructor
-    */
-    template<class U>
-    Matrix(const Matrix<U>& rhs);
-
-    /*!
     ** \brief Constructor with a initial size
     */
     Matrix(unsigned int w, unsigned int h);
@@ -71,11 +63,9 @@ public:
     /*!
     ** \brief Copy values from another matrix
     */
-    template<class U>
-    void copyFrom(const Matrix<U>& rhs);
+    void copyFrom(const Matrix& rhs);
 
-    template<class U>
-    void copyFrom(const Matrix<U>* rhs);
+    void copyFrom(const Matrix* rhs);
     //@}
 
     //@{
@@ -99,7 +89,7 @@ public:
     /*!
     ** \brief Resize the matrix without destroying its content
     */
-    void resizeWithoutDataLost(unsigned int x, unsigned int y, const T& defVal = T());
+    void resizeWithoutDataLost(unsigned int x, unsigned int y, double defVal = 0.);
 
     /*!
     ** \brief Empty the matrix
@@ -133,7 +123,7 @@ public:
     /*!
     ** \brief Fill the matrix with a given value
     */
-    void fill(const T& v);
+    void fill(double v);
 
     /*!
     ** \brief Make the matrix an unit matrix (identity matrix)
@@ -143,8 +133,7 @@ public:
     /*!
     ** \brief Multiply all entries by a given value
     */
-    template<class U>
-    void multiplyAllEntriesBy(const U& c);
+    void multiplyAllEntriesBy(double c);
 
     /*!
     ** \brief Compute the average of all timeseries (derated mode)
@@ -162,11 +151,9 @@ public:
     ** \param x The column index (zero-based)
     ** \param data The data to copy
     */
-    template<class U>
-    void pasteToColumn(unsigned int x, const U* data);
+    void pasteToColumn(unsigned int x, const double* data);
 
-    template<class U>
-    void pasteToColumn(unsigned int x, const std::vector<U>& data)
+    void pasteToColumn(unsigned int x, const std::vector<double>& data)
     {
         assert(data.size() == height_);
         pasteToColumn(x, data.data());
@@ -178,7 +165,7 @@ public:
     ** \param x The column index (zero-based)
     ** \param data The data to copy
     */
-    void fillColumn(unsigned int x, const T& value);
+    void fillColumn(unsigned int x, double value);
 
     /*!
     ** \brief Set to zero a entire column
@@ -223,10 +210,6 @@ public:
 
     Matrix& operator=(Matrix&& rhs) noexcept;
 
-    //! Assignement
-    template<class U>
-    Matrix& operator=(const Matrix<U>& rhs);
-
     //! operator []
     ColumnType& operator[](unsigned int column);
     const ColumnType& operator[](unsigned int column) const;
@@ -238,8 +221,7 @@ public:
 
     struct PredicateIdentity
     {
-        template<class U = Type>
-        inline U operator()(const U& value) const
+        inline double operator()(double value) const
         {
             return value;
         }
@@ -260,8 +242,7 @@ private:
 ** \param m The matrix
 ** \return true if the test succeeded, false otherwise
 */
-template<class T>
-bool MatrixTestForAtLeastOnePositiveValue(const Matrix<T>& m);
+bool MatrixTestForAtLeastOnePositiveValue(const Matrix& m);
 
 } // namespace Antares
 

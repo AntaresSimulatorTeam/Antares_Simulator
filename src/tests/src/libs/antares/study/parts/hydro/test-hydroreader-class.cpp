@@ -19,8 +19,8 @@ using namespace Antares;
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
-bool equalDailyMaxPowerAsHourlyTs(const Matrix<double>::ColumnType& hourlyColumn,
-                                  const Matrix<double>::ColumnType& dailyColumn)
+bool equalDailyMaxPowerAsHourlyTs(const Matrix::ColumnType& hourlyColumn,
+                                  const Matrix::ColumnType& dailyColumn)
 {
     uint hour = 0;
     uint day = 0;
@@ -41,8 +41,8 @@ bool equalDailyMaxPowerAsHourlyTs(const Matrix<double>::ColumnType& hourlyColumn
     return true;
 }
 
-bool equalDailyMaxEnergyTs(const Matrix<double>::ColumnType& col1,
-                           const Matrix<double>::ColumnType& col2)
+bool equalDailyMaxEnergyTs(const Matrix::ColumnType& col1,
+                           const Matrix::ColumnType& col2)
 {
     for (uint h = 0; h < DAYS_PER_YEAR; ++h)
     {
@@ -55,7 +55,7 @@ bool equalDailyMaxEnergyTs(const Matrix<double>::ColumnType& col1,
     return true;
 }
 
-void fillColumnWithSpecialEnds(Matrix<double>::ColumnType& col, double value, uint heigth)
+void fillColumnWithSpecialEnds(Matrix::ColumnType& col, double value, uint heigth)
 {
     col[0] = value + 1;
     col[heigth - 1] = value + 2;
@@ -160,7 +160,7 @@ struct Fixture
     std::string maxpower = "maxpower_";
     std::string maxHourlyGenPower = "maxHourlyGenPower.txt";
     std::string maxHourlyPumpPower = "maxHourlyPumpPower.txt";
-    Matrix<double> dailyMaxPumpAndGen;
+    Matrix dailyMaxPumpAndGen;
 
     ~Fixture()
     {

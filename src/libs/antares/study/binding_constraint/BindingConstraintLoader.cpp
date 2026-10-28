@@ -147,7 +147,7 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(
   BindingConstraint* bindingConstraint) const
 {
     std::filesystem::path path = env.folder / (bindingConstraint->pID + ".txt");
-    Matrix<> intermediate;
+    Matrix intermediate;
     const int height = (bindingConstraint->pType == BindingConstraint::typeHourly) ? 8784 : 366;
     if (MatrixIO::load(intermediate, path.string(), BindingConstraint::columnMax, height))
     {

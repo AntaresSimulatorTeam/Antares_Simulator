@@ -6,19 +6,14 @@
 
 #include <string>
 
-namespace Antares
-{
-template<class T>
-class Matrix;
-}
+#include "matrix.h"
 
 namespace Antares
 {
-template<class T, class PredicateT>
-void matrixToBuffer(const Matrix<T>& matrix,
+template<class PredicateT>
+void matrixToBuffer(const Matrix& matrix,
                     std::string& data,
                     PredicateT& predicate,
-                    bool isDecimal,
                     unsigned int precision);
 
 } // namespace Antares

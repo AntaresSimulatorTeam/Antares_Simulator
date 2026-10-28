@@ -51,12 +51,12 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
     uint DIM = MONTHS_PER_YEAR * study.areas.size();
     uint DEM = DIM / 2;
 
-    Matrix<double> CHSKY;
+    Matrix CHSKY;
     CHSKY.reset(DIM, DIM);
 
     std::vector<double> QCHOLTemp(DIM);
 
-    Matrix<double> B;
+    Matrix B;
     B.reset(DIM, DIM);
     double x, y, z, u;
     double** nullmatrx = nullptr;
@@ -72,7 +72,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
         throw FatalError("TS Generator: Hydro: Invalid correlation matrix");
     }
 
-    Matrix<double> CORRE;
+    Matrix CORRE;
     CORRE.reset(DIM, DIM);
 
     for (uint i = 0; i < DIM; i++)

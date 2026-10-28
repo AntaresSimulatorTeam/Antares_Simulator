@@ -14,7 +14,7 @@ namespace Antares::Data
 
 namespace
 {
-bool columnIsAllZero(const Matrix<>& matrix, unsigned column)
+bool columnIsAllZero(const Matrix& matrix, unsigned column)
 {
     const auto& values = matrix[column];
     return std::all_of(values.begin(), values.end(), Utils::isZero);

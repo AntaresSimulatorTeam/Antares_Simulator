@@ -4,18 +4,75 @@
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_DATA_TS_NUMBER_H__
 #define __LIBS_STUDY_SCENARIO_BUILDER_DATA_TS_NUMBER_H__
 
+#include <cassert>
+#include <cstdint>
+#include <vector>
+
 #include "scBuilderDataInterface.h"
 
 namespace Antares::Data::ScenarioBuilder
 {
+class TSNumberMatrix final
+{
+public:
+    using ColumnType = std::vector<uint32_t>;
+
+    void reset(unsigned int width, unsigned int height)
+    {
+        if (!width || !height)
+        {
+            columns_.clear();
+            width_ = 0;
+            height_ = 0;
+            return;
+        }
+
+        width_ = width;
+        height_ = height;
+        columns_.assign(width, ColumnType(height, 0));
+    }
+
+    unsigned int width() const noexcept
+    {
+        return width_;
+    }
+
+    unsigned int height() const noexcept
+    {
+        return height_;
+    }
+
+    ColumnType& operator[](unsigned int column)
+    {
+        assert(column < width_);
+        return columns_[column];
+    }
+
+    const ColumnType& operator[](unsigned int column) const
+    {
+        assert(column < width_);
+        return columns_[column];
+    }
+
+    ColumnType& mutableColumn(unsigned int column) const
+    {
+        assert(column < width_);
+        return columns_[column];
+    }
+
+private:
+    unsigned int width_ = 0;
+    unsigned int height_ = 0;
+    mutable std::vector<ColumnType> columns_;
+};
+
 /*!
 ** \brief Rules for TS numbers, for all years and a single timeseries
 */
 class TSNumberData: public dataInterface
 {
 public:
-    //! Matrix
-    using MatrixType = Matrix<uint32_t>;
+    using MatrixType = TSNumberMatrix;
 
 public:
     // We use default constructor and destructor

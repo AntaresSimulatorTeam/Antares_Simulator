@@ -123,7 +123,7 @@ public:
                 // We must not include the CHP and the Solar. So we have to start from `2`
                 for (unsigned int x = 1; x != (unsigned int)Data::fhhPSP; ++x)
                 {
-                    const Matrix<>::ColumnType& col = area->miscGen[x];
+                    const Matrix::ColumnType& col = area->miscGen[x];
                     for (unsigned int y = 0; y != area->miscGen.height(); ++y)
                     {
                         pValuesForTheCurrentYear[numSpace].hour[y] += col[y];
