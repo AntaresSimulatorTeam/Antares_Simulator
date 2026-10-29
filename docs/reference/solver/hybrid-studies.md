@@ -283,6 +283,9 @@ reverse orientation exists, the solver raises an error.
 Adequacy-patch curtailment sharing uses the solved link capacities, not the replaced legacy NTC
 series.
 
+The standard `CONG. PROB +` and `CONG. PROB -` reports also use the solved capacities for
+each hour, falling back to the legacy NTC when no effective capacity is available.
+
 !!! warning "`FLOW QUAD.` is not supported with link-capacity connections"
     The quadratic post-processing behind the `FLOW QUAD.` output variable rebuilds link capacities
     from the average of the legacy NTC time series over the Monte Carlo years. It does not see the
