@@ -593,6 +593,51 @@ BOOST_AUTO_TEST_CASE(no_duplicate_id_passes)
     BOOST_CHECK(it != componentsNode.end());
 }
 
+BOOST_AUTO_TEST_CASE(modeler_capacity_retains_zero_legacy_capacity_link_and_connections)
+{
+    auto* link = fr->links.begin()->second;
+    link->directCapacities.fill(0.);
+    link->indirectCapacities.fill(0.);
+
+    PortField direct("direct");
+    PortField indirect("indirect");
+    PortType capacityType("capacity", {direct, indirect}, {}, "", "direct", "indirect");
+    Port capacityPort("capacity_port", capacityType);
+    std::vector<PortFieldDefinition> definitions;
+    definitions.emplace_back(capacityPort, direct, Expression());
+    definitions.emplace_back(capacityPort, indirect, Expression());
+    auto model = ModelBuilder()
+                   .withId("link_investment")
+                   .withLibraryId("investment")
+                   .withPorts({capacityPort})
+                   .withPortFieldDefinitions(std::move(definitions))
+                   .build();
+    auto component = ComponentBuilder().withId("investment").withModel(&model).build();
+    component.addLinkCapacityConnection("capacity_port", "france", "germany");
+    std::vector<Component> components;
+    components.push_back(std::move(component));
+    auto modelerData = std::make_unique<Antares::Solver::ModelerData>();
+    modelerData->system = std::make_unique<System>(
+      SystemBuilder().withId("test_system").withComponents(std::move(components)).build());
+    study->setModelerData(std::move(modelerData));
+
+    const auto root = generateSystemForView(*study);
+    const auto viewComponents = root["system"]["components"];
+    BOOST_CHECK(std::any_of(viewComponents.begin(),
+                            viewComponents.end(),
+                            [](const YAML::Node& node)
+                            { return node["id"].as<std::string>() == "france_germany_link"; }));
+    unsigned linkConnections = 0;
+    for (const auto& connection: root["system"]["connections"])
+    {
+        if (connection["component1"].as<std::string>() == "france_germany_link")
+        {
+            ++linkConnections;
+        }
+    }
+    BOOST_CHECK_EQUAL(linkConnections, 2);
+}
+
 BOOST_AUTO_TEST_CASE(modeler_component_properties_are_output)
 {
     Model model = buildDummyModel();

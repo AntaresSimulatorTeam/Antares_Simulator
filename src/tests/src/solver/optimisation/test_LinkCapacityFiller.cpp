@@ -7,6 +7,7 @@
 
 #include "antares/exception/LoadingError.hpp"
 #include "antares/solver/optimisation/LinkCapacityFiller.h"
+#include "antares/study/InactiveComponentsAnalyzerBuilder.h"
 #include "antares/study/study.h"
 
 #include "FillerFixture.h"
@@ -290,6 +291,32 @@ BOOST_AUTO_TEST_CASE(link_using_transmission_capacities_is_accepted)
 {
     link->transmissionCapacities = Antares::Data::LocalTransmissionCapacities::enabled;
     BOOST_CHECK_NO_THROW(study.checkModelerDataCompatibility());
+}
+
+BOOST_AUTO_TEST_CASE(modeler_capacity_retains_zero_legacy_capacity_link)
+{
+    link->transmissionCapacities = Antares::Data::LocalTransmissionCapacities::enabled;
+    link->directCapacities.fill(0.);
+    link->indirectCapacities.fill(0.);
+
+    auto* gb = addAreaToListOfAreas(study.areas, "gb");
+    auto* unconnectedLink = AreaAddLinkBetweenAreas(link->from, gb);
+    unconnectedLink->transmissionCapacities = Antares::Data::LocalTransmissionCapacities::enabled;
+    unconnectedLink->directCapacities.fill(0.);
+    unconnectedLink->indirectCapacities.fill(0.);
+    study.areas.rebuildIndexes();
+    for (unsigned index = 0; index < study.areas.size(); ++index)
+    {
+        study.areas[index]->createMissingData();
+    }
+
+    const auto analyzer = Antares::Data::BuildInactiveComponentsAnalyzer(study);
+
+    BOOST_CHECK(!analyzer->linkIsAllZero(0));
+    BOOST_CHECK(analyzer->linkIsAllZero(1));
+
+    study.setModelerData(nullptr);
+    BOOST_CHECK(Antares::Data::BuildInactiveComponentsAnalyzer(study)->linkIsAllZero(0));
 }
 
 BOOST_AUTO_TEST_CASE(link_ignoring_transmission_capacities_is_rejected)
