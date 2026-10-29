@@ -207,7 +207,7 @@ private:
                                  std::size_t link)
     {
         return link < effective.size() && !std::isnan(effective[link]) ? effective[link]
-                                                                        : ntc[link];
+                                                                       : ntc[link];
     }
 };
 
