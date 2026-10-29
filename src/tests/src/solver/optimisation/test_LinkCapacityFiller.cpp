@@ -7,6 +7,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/exception/LoadingError.hpp"
+#include "antares/exception/RuntimeError.hpp"
 #include "antares/solver/optimisation/LinkCapacityFiller.h"
 #include "antares/study/InactiveComponentsAnalyzerBuilder.h"
 #include "antares/study/study.h"
@@ -185,6 +186,18 @@ BOOST_AUTO_TEST_CASE(binding_indirect_capacity_is_reported_on_legacy_link)
 
     BOOST_CHECK_CLOSE(linearProblem.lookupVariable("direct_flow_t0")->solutionValue(), -190., 1e-6);
     BOOST_CHECK_CLOSE(problemeHebdo->ProblemeAResoudre->CoutsReduits[0], 1., 1e-6);
+}
+
+BOOST_AUTO_TEST_CASE(legacy_bounds_reapplied_on_flow_are_detected)
+{
+    OptimEntityContainer optimEntityContainer(linearProblem);
+    setUpLink(optimEntityContainer);
+    // Simulates a legacy filler running after LinkCapacityFiller
+    linearProblem.lookupVariable("direct_flow_t0")->setBounds(-1000., 1000.);
+    linearProblem.solve(false);
+
+    BOOST_CHECK_THROW(applyLinkCapacityResults(*problemeHebdo, linearProblem, 0),
+                      Antares::Error::RuntimeError);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

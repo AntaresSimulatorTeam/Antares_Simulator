@@ -32,6 +32,32 @@ double solvedCapacity(const IMipConstraint& constraint, int flowVariable, const 
     }
     return capacity;
 }
+
+// The capacities are read back from the capacity constraints and the dual from the flow
+// coefficients, which holds only while the flow variable is bounded by these constraints alone
+// (and not by the legacy NTC bounds, which LinkCapacityFiller must override) and has the
+// coefficients it was given.
+void checkFlowOnlyBoundedByCapacityConstraints(const LINK_CAPACITY_CONSTRAINTS& link,
+                                               const ILinearProblem& pb)
+{
+    const auto* flow = pb.getVariable(link.flowVariable);
+    if (flow->getLb() > -pb.infinity() || flow->getUb() < pb.infinity())
+    {
+        throw Antares::Error::RuntimeError(
+          fmt::format("Link capacity: flow variable '{}' is bounded by [{}, {}], the legacy "
+                      "bounds were not overridden. LinkCapacityFiller must run after LegacyFiller.",
+                      flow->getName(),
+                      flow->getLb(),
+                      flow->getUb()));
+    }
+    if (link.direct->getCoefficient(flow) != 1. || link.indirect->getCoefficient(flow) != -1.)
+    {
+        throw Antares::Error::RuntimeError(
+          fmt::format("Link capacity: unexpected flow coefficients on the capacity constraints of "
+                      "'{}'.",
+                      flow->getName()));
+    }
+}
 } // namespace
 
 namespace Antares::Optimization
@@ -217,6 +243,7 @@ void applyLinkCapacityResults(PROBLEME_HEBDO& problemeHebdo,
     auto& reducedCosts = problemeHebdo.ProblemeAResoudre->CoutsReduits;
     for (const auto& link: problemeHebdo.linkCapacityConstraints)
     {
+        checkFlowOnlyBoundedByCapacityConstraints(link, pb);
         auto& ntc = problemeHebdo.ValeursDeNTC[firstPdt + link.pdt];
         ntc.CapaciteEffectiveOrigineVersExtremite[link.interco] = solvedCapacity(*link.direct,
                                                                                  link.flowVariable,

@@ -101,6 +101,7 @@ void LpFiller::fillLinearProblem(const LinearProblem::Api::FillContext& fillCtx,
           optimEntityContainer,
           problemeHebdo.modelerData->dataSeries.get(),
           problemeHebdo.modelerData->scenarioGroupRepository));
+        // Must run after LegacyFiller: it overrides the legacy NTC bounds of the flow variables
         fillersCollection.push_back(std::make_unique<Antares::Optimization::LinkCapacityFiller>(
           &problemeHebdo,
           optimEntityContainer,
