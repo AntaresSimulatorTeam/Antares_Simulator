@@ -259,6 +259,48 @@ BOOST_AUTO_TEST_CASE(add_link_capacity_constraints_and_override_legacy_bounds)
     BOOST_CHECK_CLOSE(indirectCostCt->getUb(), 140.01, 1e-9);
 }
 
+BOOST_AUTO_TEST_CASE(hurdle_cost_bounds_preserve_legacy_loop_flow_offsets)
+{
+    init(linkConnectionSystem, linkConnectionLib);
+    setData("availability_factor_direct", {4.0});
+    setData("availability_factor_indirect", {5.0});
+    setData("already_installed_availability_factor_direct", {6.0});
+    setData("already_installed_availability_factor_indirect", {7.0});
+
+    OptimEntityContainer optimEntityContainer(linearProblem);
+    optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
+
+    problemeHebdo->NomsDesPays = {"de", "fr"};
+    problemeHebdo->NombreDePays = 2;
+    problemeHebdo->NombreDInterconnexions = 1;
+    problemeHebdo->PaysOrigineDeLInterconnexion = {0};
+    problemeHebdo->PaysExtremiteDeLInterconnexion = {1};
+    problemeHebdo->CoutDeTransport.resize(1);
+    problemeHebdo->CoutDeTransport[0].IntercoGereeAvecDesCouts = true;
+    problemeHebdo->CoutDeTransport[0].IntercoGereeAvecLoopFlow = true;
+    problemeHebdo->ValeursDeNTC.resize(1);
+    problemeHebdo->ValeursDeNTC[0].ValeurDeLoopFlowOrigineVersExtremite = {20.0};
+    problemeHebdo->CorrespondanceVarNativesVarOptim.resize(1);
+    auto& varMap = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
+    varMap.NumeroDeVariableDuFluxDirect = {0};
+    varMap.NumeroDeVariableDuFluxDirectPositif = {1};
+    varMap.NumeroDeVariableDuFluxIndirectPositif = {2};
+
+    addLegacyVariables({"direct_flow_t0", "direct_cost_t0", "indirect_cost_t0"});
+    addModelerVariables(0, 0, optimEntityContainer);
+    fillProblemWithLinkCapacityConnectionFiller({0, 0, 0, 0, 0}, optimEntityContainer);
+
+    const auto* directCostCt = linearProblem.lookupConstraint(
+      "LinkCapacity::from<de>::to<fr>::IntercoDirectCostUpper::hour<0>");
+    BOOST_REQUIRE(directCostCt);
+    BOOST_CHECK_CLOSE(directCostCt->getUb(), 100.01, 1e-9);
+
+    const auto* indirectCostCt = linearProblem.lookupConstraint(
+      "LinkCapacity::from<de>::to<fr>::IntercoIndirectCostUpper::hour<0>");
+    BOOST_REQUIRE(indirectCostCt);
+    BOOST_CHECK_CLOSE(indirectCostCt->getUb(), 160.01, 1e-9);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 namespace

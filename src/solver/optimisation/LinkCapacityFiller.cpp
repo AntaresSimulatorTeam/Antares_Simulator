@@ -167,17 +167,26 @@ void LinkCapacityFiller::addComponentPortContributionToLinkCapacity(
             indirectCost->setLb(0.);
             indirectCost->setUb(pb_.infinity());
 
+            const int weekPdt = static_cast<int>(ctx.getGlobalFirstTimeStep() + localIndex
+                                                 - ctx.getLocalFirstTimeStep())
+                                - problemeHebdo_->HeureDansLAnnee;
+            const double loopFlow = problemeHebdo_->CoutDeTransport[interco]
+                                        .IntercoGereeAvecLoopFlow
+                                      ? problemeHebdo_->ValeursDeNTC[weekPdt]
+                                          .ValeurDeLoopFlowOrigineVersExtremite[interco]
+                                      : 0.;
+
             // Same margin as the legacy bounds: the capacity dual must stay on the flow
             // constraints, not be split with these degenerate ones.
             addCapacityConstraint(directCost,
                                   1.,
                                   directExpression[localIndex],
-                                  hurdleCostMargin,
+                                  hurdleCostMargin - loopFlow,
                                   linkPrefix + "::IntercoDirectCostUpper" + hourSuffix);
             addCapacityConstraint(indirectCost,
                                   1.,
                                   indirectExpression[localIndex],
-                                  hurdleCostMargin,
+                                  hurdleCostMargin + loopFlow,
                                   linkPrefix + "::IntercoIndirectCostUpper" + hourSuffix);
         }
     }
