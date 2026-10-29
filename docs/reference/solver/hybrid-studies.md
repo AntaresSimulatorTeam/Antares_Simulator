@@ -279,6 +279,9 @@ capacity bounds by constraints:
 
 The link reference must use the legacy orientation (`from -> to`) as stored by Antares; if only the
 reverse orientation exists, the solver raises an error.
+
+Adequacy-patch curtailment sharing uses the solved link capacities, not the replaced legacy NTC
+series.
   
 #### Adding a linear expression in optimization model
 When you connect a component to an area via a port (containing an **area-connection** section), you must respect conventions on the GEMS side.

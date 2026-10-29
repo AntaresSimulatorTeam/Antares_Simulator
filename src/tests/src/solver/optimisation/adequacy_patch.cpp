@@ -1,6 +1,9 @@
 #define WIN32_LEAN_AND_MEAN
 
+#include <algorithm>
+#include <cmath>
 #include <fstream>
+#include <limits>
 #include <tuple>
 #include <vector>
 
@@ -9,7 +12,10 @@
 #include <antares/exception/LoadingError.hpp>
 #include <antares/solver/simulation/adequacy_patch_runtime_data.h>
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
 #include "antares/study/parameters/adq-patch-params.h"
+
+#include "in-memory-study.h"
 
 using namespace Antares::Data::AdequacyPatch;
 namespace tt = boost::test_tools;
@@ -85,6 +91,87 @@ AdqPatchParams createParams()
 }
 
 BOOST_AUTO_TEST_SUITE(_AdequacyPatch_)
+
+BOOST_AUTO_TEST_CASE(curtailment_sharing_uses_effective_capacities_in_both_directions)
+{
+    for (const bool direct: {true, false})
+    {
+        for (const double legacyCapacity: {0., 100.})
+        {
+            for (const double effectiveCapacity:
+                 {10., 100., std::numeric_limits<double>::quiet_NaN()})
+            {
+                Antares::Data::Study study;
+                auto* origin = addAreaToListOfAreas(study.areas, "origin");
+                auto* destination = addAreaToListOfAreas(study.areas, "destination");
+                origin->adequacyPatchMode = physicalAreaInsideAdqPatch;
+                destination->adequacyPatchMode = physicalAreaInsideAdqPatch;
+                study.areas.rebuildIndexes();
+
+                PROBLEME_HEBDO problem;
+                problem.NombreDePays = 2;
+                problem.NombreDInterconnexions = 1;
+                problem.NombreDePasDeTemps = 1;
+                problem.NombreDePasDeTempsPourUneOptimisation = 1;
+                problem.NomsDesPays = {"origin", "destination"};
+                problem.PaysOrigineDeLInterconnexion = {0};
+                problem.PaysExtremiteDeLInterconnexion = {1};
+                problem.IndexDebutIntercoOrigine = {0, -1};
+                problem.IndexDebutIntercoExtremite = {-1, 0};
+                problem.IndexSuivantIntercoOrigine = {-1};
+                problem.IndexSuivantIntercoExtremite = {-1};
+                problem.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>(
+                  study.areas,
+                  std::vector<Antares::Data::AreaLink*>{});
+                problem.adequacyPatchRuntimeData->originAreaMode = {physicalAreaInsideAdqPatch};
+                problem.adequacyPatchRuntimeData->extremityAreaMode = {physicalAreaInsideAdqPatch};
+                problem.CorrespondanceVarNativesVarOptim.resize(1);
+                problem.ResultatsHoraires.resize(2);
+                for (unsigned area = 0; area < 2; ++area)
+                {
+                    auto& results = problem.ResultatsHoraires[area];
+                    results.ValeursHorairesDENS = {100.};
+                    results.ValeursHorairesDeDefaillancePositive = {(area == 1) == direct ? 100.
+                                                                                          : 0.};
+                    results.ValeursHorairesDeDefaillanceNegative = {0.};
+                    results.ProductionThermique.resize(1);
+                }
+                problem.PaliersThermiquesDuPays.resize(2);
+                problem.DefaillanceNegativeUtiliserPMinThermique = {false, false};
+                problem.DefaillanceNegativeUtiliserHydro = {false, false};
+                problem.DefaillanceNegativeUtiliserConsoAbattue = {false, false};
+                problem.ConsommationsAbattues.resize(1);
+                problem.ConsommationsAbattues[0].ConsommationAbattueDuPays = {100., 100.};
+                problem.AllMustRunGeneration.resize(1);
+                problem.AllMustRunGeneration[0].AllMustRunGenerationOfArea = {0., 0.};
+                problem.ValeursDeNTC.resize(1);
+                auto& ntc = problem.ValeursDeNTC[0];
+                ntc.ValeurDuFlux = {0.};
+                ntc.ValeurDeNTCOrigineVersExtremite = {legacyCapacity};
+                ntc.ValeurDeNTCExtremiteVersOrigine = {legacyCapacity};
+                ntc.CapaciteEffectiveOrigineVersExtremite = {effectiveCapacity};
+                ntc.CapaciteEffectiveExtremiteVersOrigine = {effectiveCapacity};
+
+                auto params = createParams();
+                params.curtailmentSharing.includeHurdleCost = false;
+                params.curtailmentSharing.checkCsrCostFunction = false;
+                params.curtailmentSharing.thresholdVarBoundsRelaxation = 6;
+                Antares::Optimization::OptimizationOptions options;
+                options.quadraticOptimOptions.solverName = "sirius";
+                HourlyCSRProblem csr(params, &problem, options);
+                csr.setHour(0);
+                csr.run(0, 0);
+
+                const double capacity = std::isnan(effectiveCapacity) ? legacyCapacity
+                                                                      : effectiveCapacity;
+                const double expectedFlow = (direct ? 1. : -1.) * std::min(50., capacity);
+                BOOST_CHECK_SMALL(ntc.ValeurDuFlux[0] - expectedFlow, 1e-3);
+                BOOST_CHECK_EQUAL(ntc.ValeurDeNTCOrigineVersExtremite[0], legacyCapacity);
+                BOOST_CHECK_EQUAL(ntc.ValeurDeNTCExtremiteVersOrigine[0], legacyCapacity);
+            }
+        }
+    }
+}
 
 // Area 0 is physical area inside adq-patch connected to two areas:
 // Area1 virtual-area, and Area2-virtual area
