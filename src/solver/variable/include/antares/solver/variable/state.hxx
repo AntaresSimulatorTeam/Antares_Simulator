@@ -21,6 +21,14 @@ inline void State::startANewYear()
            sizeof(thermalClusterDispatchedUnitsCountForYear));
 
     memset(thermalClusterRampingCostForYear, 0, sizeof(thermalClusterRampingCostForYear));
+    for (unsigned int areaIndex = 0; areaIndex < study.areas.size(); ++areaIndex)
+    {
+        for (auto& rampingCostForYear:
+             thermal[areaIndex].thermalClustersRampingCostForYear)
+        {
+            rampingCostForYear.assign(rampingCostForYear.size(), 0.);
+        }
+    }
 
     if (study.parameters.include.reserves)
     {
