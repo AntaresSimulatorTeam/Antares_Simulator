@@ -626,7 +626,7 @@ struct VARIABLES_DUALES_INTERCONNEXIONS
 struct LINK_CAPACITY_CONSTRAINTS
 {
     uint32_t interco;
-    int pdt; // Time step within the optimization interval
+    int pdt; // Zero-based time step relative to the start of the optimization interval
     int flowVariable;
     const Antares::LinearProblem::Api::IMipConstraint* direct;
     const Antares::LinearProblem::Api::IMipConstraint* indirect;

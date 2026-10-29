@@ -156,8 +156,7 @@ void LinkCapacityFiller::addComponentPortContributionToLinkCapacity(
     for (auto localIndex(ctx.getLocalFirstTimeStep()); localIndex <= ctx.getLocalLastTimeStep();
          ++localIndex)
     {
-        const int pdt = static_cast<int>(localIndex
-                                         % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation);
+        const int pdt = static_cast<int>(localIndex - ctx.getLocalFirstTimeStep());
         const auto hourSuffix = fmt::format("::hour<{}>",
                                             pdt + problemeHebdo_->weekInTheYear * 168);
 
@@ -168,12 +167,12 @@ void LinkCapacityFiller::addComponentPortContributionToLinkCapacity(
 
         auto* upperCt = addCapacityConstraint(directFlow,
                                               1.,
-                                              directExpression[localIndex],
+                                              directExpression[pdt],
                                               0.,
                                               linkPrefix + "::NTCDirectUpper" + hourSuffix);
         auto* lowerCt = addCapacityConstraint(directFlow,
                                               -1.,
-                                              indirectExpression[localIndex],
+                                              indirectExpression[pdt],
                                               0.,
                                               linkPrefix + "::NTCDirectLower" + hourSuffix);
         problemeHebdo_->linkCapacityConstraints.push_back(
@@ -193,9 +192,8 @@ void LinkCapacityFiller::addComponentPortContributionToLinkCapacity(
             indirectCost->setLb(0.);
             indirectCost->setUb(pb_.infinity());
 
-            const int weekPdt = static_cast<int>(ctx.getGlobalFirstTimeStep() + localIndex
-                                                 - ctx.getLocalFirstTimeStep())
-                                - problemeHebdo_->HeureDansLAnnee;
+            const int weekPdt = static_cast<int>(ctx.getGlobalFirstTimeStep())
+                                - problemeHebdo_->HeureDansLAnnee + pdt;
             const double loopFlow = problemeHebdo_->CoutDeTransport[interco]
                                         .IntercoGereeAvecLoopFlow
                                       ? problemeHebdo_->ValeursDeNTC[weekPdt]
@@ -206,12 +204,12 @@ void LinkCapacityFiller::addComponentPortContributionToLinkCapacity(
             // constraints, not be split with these degenerate ones.
             addCapacityConstraint(directCost,
                                   1.,
-                                  directExpression[localIndex],
+                                  directExpression[pdt],
                                   hurdleCostMargin - loopFlow,
                                   linkPrefix + "::IntercoDirectCostUpper" + hourSuffix);
             addCapacityConstraint(indirectCost,
                                   1.,
-                                  indirectExpression[localIndex],
+                                  indirectExpression[pdt],
                                   hurdleCostMargin + loopFlow,
                                   linkPrefix + "::IntercoIndirectCostUpper" + hourSuffix);
         }

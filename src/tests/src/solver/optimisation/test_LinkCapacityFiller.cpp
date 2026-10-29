@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <string>
+#include <vector>
 
 #include <boost/test/unit_test.hpp>
 
@@ -318,6 +319,113 @@ BOOST_AUTO_TEST_CASE(hurdle_cost_bounds_preserve_legacy_loop_flow_offsets)
       "LinkCapacity::from<de>::to<fr>::IntercoIndirectCostUpper::hour<0>");
     BOOST_REQUIRE(indirectCostCt);
     BOOST_CHECK_CLOSE(indirectCostCt->getUb(), 160.01, 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(loop_flow_and_results_use_the_same_hour_for_an_unaligned_daily_interval)
+{
+    constexpr unsigned localFirst = 25;
+    constexpr unsigned intervalLength = 24;
+    constexpr unsigned weekFirst = 168;
+    constexpr unsigned firstPdt = 24;
+    constexpr unsigned globalFirst = weekFirst + firstPdt;
+
+    init(linkConnectionSystem, linkConnectionLib);
+    setData("availability_factor_direct", std::vector<double>(globalFirst + intervalLength, 4.));
+    setData("availability_factor_indirect", std::vector<double>(globalFirst + intervalLength, 5.));
+    setData("already_installed_availability_factor_direct",
+            std::vector<double>(globalFirst + intervalLength, 6.));
+    setData("already_installed_availability_factor_indirect",
+            std::vector<double>(globalFirst + intervalLength, 7.));
+
+    OptimEntityContainer optimEntityContainer(linearProblem);
+    optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
+
+    problemeHebdo->HeureDansLAnnee = weekFirst;
+    problemeHebdo->weekInTheYear = 1;
+    problemeHebdo->NomsDesPays = {"de", "fr"};
+    problemeHebdo->NombreDePays = 2;
+    problemeHebdo->NombreDInterconnexions = 1;
+    problemeHebdo->PaysOrigineDeLInterconnexion = {0};
+    problemeHebdo->PaysExtremiteDeLInterconnexion = {1};
+    problemeHebdo->CoutDeTransport.resize(1);
+    problemeHebdo->CoutDeTransport[0].IntercoGereeAvecDesCouts = true;
+    problemeHebdo->CoutDeTransport[0].IntercoGereeAvecLoopFlow = true;
+    problemeHebdo->ValeursDeNTC.resize(168);
+    for (unsigned hour = 0; hour < problemeHebdo->ValeursDeNTC.size(); ++hour)
+    {
+        auto& ntc = problemeHebdo->ValeursDeNTC[hour];
+        ntc.ValeurDeLoopFlowOrigineVersExtremite = {static_cast<double>(hour)};
+        ntc.CapaciteEffectiveOrigineVersExtremite = {std::nan("")};
+        ntc.CapaciteEffectiveExtremiteVersOrigine = {std::nan("")};
+    }
+
+    problemeHebdo->CorrespondanceVarNativesVarOptim.resize(intervalLength);
+    std::vector<std::string> variableNames;
+    for (unsigned pdt = 0; pdt < intervalLength; ++pdt)
+    {
+        auto& varMap = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
+        varMap.NumeroDeVariableDuFluxDirect = {static_cast<int>(3 * pdt)};
+        varMap.NumeroDeVariableDuFluxDirectPositif = {static_cast<int>(3 * pdt + 1)};
+        varMap.NumeroDeVariableDuFluxIndirectPositif = {static_cast<int>(3 * pdt + 2)};
+        variableNames.push_back("direct_flow_t" + std::to_string(pdt));
+        variableNames.push_back("direct_cost_t" + std::to_string(pdt));
+        variableNames.push_back("indirect_cost_t" + std::to_string(pdt));
+    }
+    problemeHebdo->ProblemeAResoudre->CoutsReduits.assign(variableNames.size(), 0.);
+    addLegacyVariables(variableNames);
+    addModelerVariables(localFirst, localFirst + intervalLength - 1, optimEntityContainer);
+    fillProblemWithLinkCapacityConnectionFiller({localFirst,
+                                                 localFirst + intervalLength - 1,
+                                                 globalFirst,
+                                                 globalFirst + intervalLength - 1,
+                                                 0},
+                                                optimEntityContainer);
+
+    BOOST_REQUIRE_EQUAL(problemeHebdo->linkCapacityConstraints.size(), intervalLength);
+    for (unsigned pdt = 0; pdt < intervalLength; ++pdt)
+    {
+        const auto& link = problemeHebdo->linkCapacityConstraints[pdt];
+        BOOST_CHECK_EQUAL(link.pdt, pdt);
+        BOOST_CHECK_EQUAL(link.flowVariable, 3 * pdt);
+
+        auto* investedCapacity = linearProblem.lookupVariable("my_link_invest.invested_capacity_t"
+                                                              + std::to_string(localFirst + pdt));
+        BOOST_REQUIRE(investedCapacity);
+        investedCapacity->setBounds(10., 10.);
+        BOOST_CHECK_EQUAL(link.direct->getCoefficient(investedCapacity), -4.);
+        BOOST_CHECK_EQUAL(link.indirect->getCoefficient(investedCapacity), -5.);
+
+        const auto suffix = "::hour<" + std::to_string(weekFirst + pdt) + ">";
+        const auto* directCostCt = linearProblem.lookupConstraint(
+          "LinkCapacity::from<de>::to<fr>::IntercoDirectCostUpper" + suffix);
+        const auto* indirectCostCt = linearProblem.lookupConstraint(
+          "LinkCapacity::from<de>::to<fr>::IntercoIndirectCostUpper" + suffix);
+        BOOST_REQUIRE(directCostCt);
+        BOOST_REQUIRE(indirectCostCt);
+        BOOST_CHECK_EQUAL(directCostCt->getCoefficient(
+                            linearProblem.lookupVariable("direct_cost_t" + std::to_string(pdt))),
+                          1.);
+        BOOST_CHECK_EQUAL(indirectCostCt->getCoefficient(
+                            linearProblem.lookupVariable("indirect_cost_t" + std::to_string(pdt))),
+                          1.);
+        const double loopFlow = problemeHebdo->ValeursDeNTC[firstPdt + pdt]
+                                  .ValeurDeLoopFlowOrigineVersExtremite[0];
+        BOOST_CHECK_CLOSE(directCostCt->getUb(), 120.01 - loopFlow, 1e-9);
+        BOOST_CHECK_CLOSE(indirectCostCt->getUb(), 140.01 + loopFlow, 1e-9);
+    }
+
+    linearProblem.solve(false);
+    applyLinkCapacityResults(*problemeHebdo, linearProblem, 1);
+    for (unsigned pdt = 0; pdt < intervalLength; ++pdt)
+    {
+        const auto& ntc = problemeHebdo->ValeursDeNTC[firstPdt + pdt];
+        BOOST_CHECK_CLOSE(ntc.directCapacity(0), 160., 1e-6);
+        BOOST_CHECK_CLOSE(ntc.indirectCapacity(0), 190., 1e-6);
+    }
+    BOOST_CHECK(std::isnan(
+      problemeHebdo->ValeursDeNTC[firstPdt - 1].CapaciteEffectiveOrigineVersExtremite[0]));
+    BOOST_CHECK(std::isnan(problemeHebdo->ValeursDeNTC[firstPdt + intervalLength]
+                             .CapaciteEffectiveOrigineVersExtremite[0]));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
