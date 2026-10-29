@@ -36,7 +36,7 @@ bool PreproAvailability::saveToFolder(const AnyString& folder) const
     return false;
 }
 
-bool PreproAvailability::loadFromFolder(Study& study, const std::filesystem::path& folder)
+bool PreproAvailability::loadFromFolder(Study&, const std::filesystem::path& folder)
 {
     auto filePath = folder / "data.txt";
     // standard loading
