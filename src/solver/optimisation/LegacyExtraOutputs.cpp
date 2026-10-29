@@ -416,11 +416,11 @@ void LegacyExtraOutputEmitter::linkOutputs(uint32_t interco, int pdt)
     emit("is_directly_congested",
          link,
          pdt,
-         flow >= ntc.ValeurDeNTCOrigineVersExtremite[interco] - saturationEpsilon ? 1. : 0.);
+         flow >= ntc.directCapacity(interco) - saturationEpsilon ? 1. : 0.);
     emit("is_indirectly_congested",
          link,
          pdt,
-         -flow >= ntc.ValeurDeNTCExtremiteVersOrigine[interco] - saturationEpsilon ? 1. : 0.);
+         -flow >= ntc.indirectCapacity(interco) - saturationEpsilon ? 1. : 0.);
 
     const double priceDelta = areaPrice(destination, pdt) - areaPrice(origin, pdt);
     emit("abs_congestion_fee", link, pdt, std::abs(flow) * std::abs(priceDelta));

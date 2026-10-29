@@ -1,6 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <cmath>
 #include <string>
 
 #include <boost/test/unit_test.hpp>
@@ -136,6 +137,8 @@ struct LinkFixture: FillerFixture
         problemeHebdo->ValeursDeNTC.resize(1);
         problemeHebdo->ValeursDeNTC[0].ValeurDeNTCOrigineVersExtremite = {1000.};
         problemeHebdo->ValeursDeNTC[0].ValeurDeNTCExtremiteVersOrigine = {1000.};
+        problemeHebdo->ValeursDeNTC[0].CapaciteEffectiveOrigineVersExtremite = {std::nan("")};
+        problemeHebdo->ValeursDeNTC[0].CapaciteEffectiveExtremiteVersOrigine = {std::nan("")};
         problemeHebdo->ProblemeAResoudre->CoutsReduits.assign(3, 0.);
 
         addLegacyVariables({"direct_flow_t0", "direct_cost_t0", "indirect_cost_t0"});
@@ -161,8 +164,11 @@ BOOST_AUTO_TEST_CASE(binding_direct_capacity_is_reported_on_legacy_link)
     applyLinkCapacityResults(*problemeHebdo, linearProblem, 0);
 
     const auto& ntc = problemeHebdo->ValeursDeNTC[0];
-    BOOST_CHECK_CLOSE(ntc.ValeurDeNTCOrigineVersExtremite[0], 160., 1e-6);
-    BOOST_CHECK_CLOSE(ntc.ValeurDeNTCExtremiteVersOrigine[0], 190., 1e-6);
+    BOOST_CHECK_CLOSE(ntc.directCapacity(0), 160., 1e-6);
+    BOOST_CHECK_CLOSE(ntc.indirectCapacity(0), 190., 1e-6);
+    // The study NTC is left untouched
+    BOOST_CHECK_EQUAL(ntc.ValeurDeNTCOrigineVersExtremite[0], 1000.);
+    BOOST_CHECK_EQUAL(ntc.ValeurDeNTCExtremiteVersOrigine[0], 1000.);
     // Same sign as the reduced cost of a flow variable at its legacy upper bound
     BOOST_CHECK_CLOSE(problemeHebdo->ProblemeAResoudre->CoutsReduits[0], -1., 1e-6);
 }

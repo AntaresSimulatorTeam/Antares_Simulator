@@ -44,10 +44,9 @@ struct MarginalCostTraits
 
         const double flow = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]
                               .ValeurDuFlux[state.link->index];
-        const double flow_lowerbound = -state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]
-                                          .ValeurDeNTCExtremiteVersOrigine[state.link->index];
-        const double flow_upperbound = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek]
-                                         .ValeurDeNTCOrigineVersExtremite[state.link->index];
+        const auto& ntc = state.problemeHebdo->ValeursDeNTC[state.hourInTheWeek];
+        const double flow_lowerbound = -ntc.indirectCapacity(state.link->index);
+        const double flow_upperbound = ntc.directCapacity(state.link->index);
 
         if (flow - 0.001 > flow_lowerbound && flow + 0.001 < flow_upperbound)
         {

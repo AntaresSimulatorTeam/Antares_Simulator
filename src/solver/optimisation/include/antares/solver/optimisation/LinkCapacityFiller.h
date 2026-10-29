@@ -67,7 +67,8 @@ private:
  * @brief Report the solved link capacity constraints on the legacy link structures.
  *
  * LinkCapacityFiller leaves the flow variable unbounded, so its reduced cost and the legacy NTC
- * no longer describe the link. Writes the effective capacities into ValeursDeNTC and the duals of
+ * no longer describe the link. Writes the effective capacities into ValeursDeNTC (effective
+ * capacity fields, the NTC inputs are left untouched) and the duals of
  * the capacity constraints into the flow variable's reduced cost, from where applyResults copies
  * them to VariablesDualesDesContraintesDeNTC.
  */

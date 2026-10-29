@@ -218,12 +218,12 @@ void applyLinkCapacityResults(PROBLEME_HEBDO& problemeHebdo,
     for (const auto& link: problemeHebdo.linkCapacityConstraints)
     {
         auto& ntc = problemeHebdo.ValeursDeNTC[firstPdt + link.pdt];
-        ntc.ValeurDeNTCOrigineVersExtremite[link.interco] = solvedCapacity(*link.direct,
-                                                                           link.flowVariable,
-                                                                           pb);
-        ntc.ValeurDeNTCExtremiteVersOrigine[link.interco] = solvedCapacity(*link.indirect,
-                                                                           link.flowVariable,
-                                                                           pb);
+        ntc.CapaciteEffectiveOrigineVersExtremite[link.interco] = solvedCapacity(*link.direct,
+                                                                                 link.flowVariable,
+                                                                                 pb);
+        ntc.CapaciteEffectiveExtremiteVersOrigine[link.interco] = solvedCapacity(*link.indirect,
+                                                                                 link.flowVariable,
+                                                                                 pb);
         // Duals are not extracted from a MIP, see extract_from_MPSolver
         if (pb.isLP())
         {

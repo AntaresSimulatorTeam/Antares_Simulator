@@ -5,6 +5,8 @@
 #define __SOLVER_SIMULATION_ECO_STRUCTS_H__
 
 #include <array>
+#include <cmath>
+#include <cstddef>
 #include <memory>
 #include <optional>
 #include <vector>
@@ -176,7 +178,37 @@ struct VALEURS_DE_NTC_ET_RESISTANCES
     std::vector<double> ValeurDeLoopFlowOrigineVersExtremite;
     std::vector<double> ValeurDuFlux;
 
+    // Capacities solved by LinkCapacityFiller, NaN for links it does not manage.
+    // The NTC above are study inputs and are never overwritten by the solve.
+    std::vector<double> CapaciteEffectiveOrigineVersExtremite;
+    std::vector<double> CapaciteEffectiveExtremiteVersOrigine;
+
     std::vector<double> ResistanceApparente;
+
+    // Capacity bounding the flow after the solve: the solved capacity when the link is managed
+    // by LinkCapacityFiller, the NTC otherwise.
+    double directCapacity(std::size_t link) const
+    {
+        return effectiveOrNtc(CapaciteEffectiveOrigineVersExtremite,
+                              ValeurDeNTCOrigineVersExtremite,
+                              link);
+    }
+
+    double indirectCapacity(std::size_t link) const
+    {
+        return effectiveOrNtc(CapaciteEffectiveExtremiteVersOrigine,
+                              ValeurDeNTCExtremiteVersOrigine,
+                              link);
+    }
+
+private:
+    static double effectiveOrNtc(const std::vector<double>& effective,
+                                 const std::vector<double>& ntc,
+                                 std::size_t link)
+    {
+        return link < effective.size() && !std::isnan(effective[link]) ? effective[link]
+                                                                        : ntc[link];
+    }
 };
 
 struct TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE
