@@ -92,7 +92,7 @@ struct CsvCreationFixture
 std::filesystem::path CsvCreationFixture::writeFile(const string filename, const string content)
 {
     auto filepath = temp_path / (filename);
-    std::ofstream outfile(filepath);
+    std::ofstream outfile(filepath, std::ios::binary);
     outfile << content;
     outfile.close();
     return filepath;
