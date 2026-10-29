@@ -69,6 +69,7 @@ toc_depth: 2
 * Fix missing inactiveComponents in some simulation table stages (#3933)
 * Rename adq-patch and shave-peak simulation table stages for consistency (#3936)
 * Fix incorrect renewable cluster name in short-term storage output (#3938)
+* `system-for-views.yml`: add the `name` property, declared by the `thermal` and `short_term_storage` models of `antares_legacy_models`, to thermal clusters and short-term storages
 
 #### Documentation
 

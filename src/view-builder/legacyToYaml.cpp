@@ -112,7 +112,8 @@ YAML::Node thermalClusterToYaml(const ThermalCluster& cluster)
     return makeComponent(BuildThermalClusterComponentId(cluster.parentArea->id, cluster.id()),
                          "antares_legacy_models.thermal",
                          {{"carrier", "electricity"},
-                          {"technology", boost::to_lower_copy(cluster.getGroup())}});
+                          {"technology", boost::to_lower_copy(cluster.getGroup())},
+                          {"name", cluster.id()}});
 }
 
 YAML::Node renewableClusterToYaml(const RenewableCluster& cluster)
@@ -139,7 +140,8 @@ YAML::Node shortTermStorageToYaml(const Area& area,
     return makeComponent(BuildSTStorageClusterComponentId(area.id, storage.id),
                          "antares_legacy_models.short_term_storage",
                          {{"carrier", "electricity"},
-                          {"group", boost::to_lower_copy(storage.getGroup())}});
+                          {"group", boost::to_lower_copy(storage.getGroup())},
+                          {"name", storage.id}});
 }
 
 YAML::Node longTermStorageToYaml(const Area& area)

@@ -254,11 +254,13 @@ BOOST_AUTO_TEST_CASE(thermal_component)
             BOOST_CHECK_EQUAL(comp["model"].as<std::string>(), "antares_legacy_models.thermal");
             auto props = comp["properties"];
             BOOST_REQUIRE(props.IsSequence());
-            BOOST_REQUIRE_EQUAL(props.size(), 2);
+            BOOST_REQUIRE_EQUAL(props.size(), 3);
             BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
             BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
             BOOST_CHECK_EQUAL(props[1]["id"].as<std::string>(), "technology");
             BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "other");
+            BOOST_CHECK_EQUAL(props[2]["id"].as<std::string>(), "name");
+            BOOST_CHECK_EQUAL(props[2]["value"].as<std::string>(), "nuc_fr");
         }
     }
     BOOST_CHECK(found);
@@ -303,11 +305,13 @@ BOOST_AUTO_TEST_CASE(sts_component)
                               "antares_legacy_models.short_term_storage");
             auto props = comp["properties"];
             BOOST_REQUIRE(props.IsSequence());
-            BOOST_REQUIRE_EQUAL(props.size(), 2);
+            BOOST_REQUIRE_EQUAL(props.size(), 3);
             BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
             BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
             BOOST_CHECK_EQUAL(props[1]["id"].as<std::string>(), "group");
             BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "other1");
+            BOOST_CHECK_EQUAL(props[2]["id"].as<std::string>(), "name");
+            BOOST_CHECK_EQUAL(props[2]["value"].as<std::string>(), "battery_fr");
         }
     }
     BOOST_CHECK(found);
