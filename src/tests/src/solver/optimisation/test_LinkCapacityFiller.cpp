@@ -11,6 +11,7 @@
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/solver/optimisation/LinkCapacityFiller.h"
 #include "antares/study/InactiveComponentsAnalyzerBuilder.h"
+#include "antares/study/categories.h"
 #include "antares/study/study.h"
 
 #include "FillerFixture.h"
@@ -459,6 +460,28 @@ BOOST_FIXTURE_TEST_SUITE(_LinkCapacityTransmissionCapacities_, TransmissionCapac
 BOOST_AUTO_TEST_CASE(link_using_transmission_capacities_is_accepted)
 {
     link->transmissionCapacities = Antares::Data::LocalTransmissionCapacities::enabled;
+    BOOST_CHECK_NO_THROW(study.checkModelerDataCompatibility());
+}
+
+BOOST_AUTO_TEST_CASE(flow_quad_is_rejected_with_link_capacity_connections)
+{
+    const Antares::Data::VariablePrintInfo flowQuadInfo(
+      Antares::Solver::Variable::Category::FileLevel::va,
+      Antares::Solver::Variable::Category::DataLevel::link);
+    study.parameters.variablesPrintInfo.add("FLOW QUAD.", flowQuadInfo);
+    link->transmissionCapacities = Antares::Data::LocalTransmissionCapacities::enabled;
+
+    // The quadratic optimisation only runs when a link has an impedance
+    link->parameters[Antares::Data::fhlImpedances][0] = 1.;
+
+    study.parameters.variablesPrintInfo.setPrintStatus("FLOW QUAD.", true);
+    BOOST_CHECK_THROW(study.checkModelerDataCompatibility(), Antares::Error::LoadingError);
+
+    study.parameters.variablesPrintInfo.setPrintStatus("FLOW QUAD.", false);
+    BOOST_CHECK_NO_THROW(study.checkModelerDataCompatibility());
+
+    study.parameters.variablesPrintInfo.setPrintStatus("FLOW QUAD.", true);
+    link->parameters[Antares::Data::fhlImpedances][0] = 0.;
     BOOST_CHECK_NO_THROW(study.checkModelerDataCompatibility());
 }
 

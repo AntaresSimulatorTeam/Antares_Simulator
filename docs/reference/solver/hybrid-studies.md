@@ -282,6 +282,21 @@ reverse orientation exists, the solver raises an error.
 
 Adequacy-patch curtailment sharing uses the solved link capacities, not the replaced legacy NTC
 series.
+
+!!! warning "`FLOW QUAD.` is not supported with link-capacity connections"
+    The quadratic post-processing behind the `FLOW QUAD.` output variable rebuilds link capacities
+    from the average of the legacy NTC time series over the Monte Carlo years. It does not see the
+    capacity brought by a link-capacity connection: a link with a zero legacy NTC that is given
+    capacity by investment would be fixed to zero, and the problem could be infeasible.
+
+    Aggregating the solved capacities across Monte Carlo years is not supported. Instead, the
+    study is rejected at loading time when all of the following hold:
+
+    - at least one component has a link-capacity connection,
+    - `FLOW QUAD.` is selected in the output variables,
+    - at least one link has a non-null impedance (otherwise the quadratic optimisation is not run).
+
+    To run such a study, deselect `FLOW QUAD.` in the output variables selection.
   
 #### Adding a linear expression in optimization model
 When you connect a component to an area via a port (containing an **area-connection** section), you must respect conventions on the GEMS side.
