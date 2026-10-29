@@ -24,10 +24,10 @@ void POffUnits::add(int pays, int cluster, int pdt)
             for (const auto& capacityReservation:
                  data.areaReserves[pays].areaCapacityReservations | filter(ReserveType::UP))
             {
-                if (capacityReservation.AllThermalReservesParticipation.contains(cluster))
+                const auto& participations = capacityReservation.AllThermalReservesParticipation;
+                if (const auto it = participations.find(cluster); it != participations.end())
                 {
-                    auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation
-                                                   .at(cluster);
+                    const auto& reserveParticipation = it->second;
                     builder.OffThermalClusterReserveParticipation(
                       reserveParticipation.globalIndexClusterParticipation,
                       1);

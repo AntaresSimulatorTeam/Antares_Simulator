@@ -30,10 +30,11 @@ void STStorageGlobalEnergyLevelReserveParticipation::add(int pays, int cluster, 
                 for (auto& capacityReservation:
                      data.areaReserves[pays].areaCapacityReservations | filter(type))
                 {
-                    if (capacityReservation.AllSTStorageReservesParticipation.contains(cluster))
+                    const auto& participations = capacityReservation
+                                                   .AllSTStorageReservesParticipation;
+                    if (const auto it = participations.find(cluster); it != participations.end())
                     {
-                        RESERVE_PARTICIPATION_STSTORAGE& reserveParticipation
-                          = capacityReservation.AllSTStorageReservesParticipation[cluster];
+                        const auto& reserveParticipation = it->second;
                         builder.STStorageClusterReserveParticipation(
                           capacityReservation.type,
                           reserveParticipation.globalIndexClusterParticipation,
