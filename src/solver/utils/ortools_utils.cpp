@@ -135,11 +135,12 @@ std::string toString(const std::list<std::string>& solverList)
 
 static std::optional<std::string> translateSolverName(const std::string& solverName, bool isMip)
 {
-    if (!OrtoolsUtils::mpSolverMap.contains(solverName))
+    const auto it = OrtoolsUtils::mpSolverMap.find(solverName);
+    if (it == OrtoolsUtils::mpSolverMap.end())
     {
         return {};
     }
-    auto names = OrtoolsUtils::mpSolverMap.at(solverName);
+    const auto& names = it->second;
     if (isMip)
     {
         return names.MIPSolverName;
