@@ -113,6 +113,78 @@ def set_component_parameter(context, system_file, parameter, component, value):
     file_path.write_text(yaml.safe_dump(system, sort_keys=False))
 
 
+def _require_study_copy(context, step_name):
+    assert hasattr(context, "tmp_workdir"), (
+        f'the "{step_name}" step modifies study files; load the '
+        'study with \'Given the solver study path is a copy of "..."\' so the '
+        "change stays confined to a temporary copy"
+    )
+
+
+def _unescape(text):
+    return text.replace("\\n", "\n").replace("\\t", "\t")
+
+
+@given('in input "{file}" the text "{old}" is replaced by "{new}"')
+def replace_text_in_input(context, file, old, new):
+    """Replace `old` by `new` in an input file ("\\n" and "\\t" are expanded)."""
+    _require_study_copy(context, "text is replaced")
+    file_path = context.study_path / "input" / Path(file.replace("/", os.sep))
+    content = file_path.read_text()
+    old, new = _unescape(old), _unescape(new)
+    assert content.count(old) == 1, (
+        f"Expected exactly one occurrence of {old!r} in {file_path}, found {content.count(old)}"
+    )
+    file_path.write_text(content.replace(old, new))
+
+
+@given('in input "{file}" the {count:d} lines are all set to "{line}"')
+def set_all_lines_in_input(context, file, count, line):
+    """Overwrite an input series with `count` identical lines ("\\t" is expanded)."""
+    _require_study_copy(context, "lines are all set")
+    file_path = context.study_path / "input" / Path(file.replace("/", os.sep))
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+    file_path.write_text((_unescape(line) + "\n") * count)
+
+
+@given('in input "{file}" the {count:d} lines cycle through "{pattern}"')
+def set_cyclic_lines_in_input(context, file, count, pattern):
+    """Overwrite an input series with `count` lines made of the blocks of `pattern`.
+
+    `pattern` is a "|"-separated list of "<line>*<repeat>" blocks (the repeat is optional, "\\t" is
+    expanded), played in a loop: "150*84|60*84" gives 84 lines of 150 then 84 lines of 60, again.
+    """
+    _require_study_copy(context, "lines cycle through")
+    blocks = []
+    for block in pattern.split("|"):
+        line, _, repeat = block.partition("*")
+        blocks.extend([_unescape(line)] * (int(repeat) if repeat else 1))
+    file_path = context.study_path / "input" / Path(file.replace("/", os.sep))
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+    file_path.write_text("".join(blocks[i % len(blocks)] + "\n" for i in range(count)))
+
+
+@given('the general parameter "{variable}" is set to "{value}"')
+def set_general_parameter(context, variable, value):
+    """Set a generaldata.ini parameter. Use it on a *copy* of a study."""
+    _require_study_copy(context, "general parameter is set")
+    context.sih.set_parameter_value(variable=variable, value=value, file_nick_name="general")
+
+
+@given('the output variable "{variable}" is deselected')
+def deselect_output_variable(context, variable):
+    _require_study_copy(context, "output variable is deselected")
+    file_path = context.study_path / "settings" / "generaldata.ini"
+    content = file_path.read_text()
+    assert "[variables selection]" not in content, "A variables selection already exists"
+    # The selection is only taken into account when thematic trimming is enabled
+    content = re.sub(r"(?m)^thematic-trimming\s*=.*$", "thematic-trimming = true", content)
+    file_path.write_text(
+        content.rstrip("\n")
+        + f"\n\n[variables selection]\nselected_vars_reset = true\nselect_var - = {variable}\n"
+    )
+
+
 @then('on link "{link}", during year {year:d}, the hourly "{column}" is {value:g} for every hour')
 def check_link_hourly_column(context, link, year, column, value):
     # link is the mc-ind folder name, e.g. "a - b"
