@@ -6,7 +6,6 @@
 
 #include <cassert>
 #include <functional>
-#include <span>
 #include <vector>
 
 namespace Antares
@@ -21,8 +20,6 @@ class Matrix
 public:
     //! Type
     using Type = double;
-    //! Pointer
-    using TypePtr = double*;
     //! Matrix type
     using MatrixType = Matrix;
 
@@ -210,7 +207,7 @@ public:
     const ColumnType& operator[](unsigned int column) const;
     //@}
 
-    //! Width of the matrix
+    //! Get a mutable reference to a column.
     ColumnType& mutableColumn(unsigned int column) const;
 
 private:

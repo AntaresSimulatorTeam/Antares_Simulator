@@ -249,7 +249,7 @@ BOOST_AUTO_TEST_SUITE_END()
 // =============================
 // ===  Matrix  ===
 // =============================
-BOOST_AUTO_TEST_SUITE(coeffs_are_double__save_into_int)
+BOOST_AUTO_TEST_SUITE(matrix_serialization)
 
 BOOST_AUTO_TEST_CASE(coeffs_only_0s__no_print_dim___result_empty)
 {
@@ -267,14 +267,14 @@ BOOST_AUTO_TEST_CASE(coeffs_only_0s__print_dim___get_dim_and_0s_in_output)
     BOOST_REQUIRE_EQUAL(mtx.data, "size:1x3\n0\n0\n0\n");
 }
 
-BOOST_AUTO_TEST_CASE(precision_is_3__get_coeffs_floor_integers)
+BOOST_AUTO_TEST_CASE(precision_controls_fractional_digits)
 {
     Matrix_easy_to_fill mtx(2, 2, {1.99, 2.44, -3.999, -1.51});
     MatrixIO::saveToBuffer(mtx, mtx.data, 3, false);
     BOOST_REQUIRE_EQUAL(mtx.data, "1.990\t2.440\n-3.999\t-1.510\n");
 }
 
-BOOST_AUTO_TEST_CASE(precision_has_no_effect_on_int_coeffs)
+BOOST_AUTO_TEST_CASE(precision_preserves_fractional_values)
 {
     Matrix_easy_to_fill mtx(3, 2, {1.99, -2.49, 3, -4.99, -5, 6.99});
     MatrixIO::saveToBuffer(mtx, mtx.data, 5, true);

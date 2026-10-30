@@ -11,10 +11,11 @@ add_library(array ${SRC_MATRIX})
 add_library(Antares::array ALIAS array)
 
 target_link_libraries(array
+        PRIVATE
+        yuni-static-core
         PUBLIC
         io #matrix.hxx
         Antares::logs #matrix.hxx
-        Antares::memory
         Antares::study-utils
 )
 

@@ -66,9 +66,6 @@ public:
     std::array<std::vector<std::vector<float>>, 12> correlation;
     /*!
     ** \brief Correlation mode (monthly / annual)
-    **
-    ** \internal This value is a copy from the correlation data and
-    **   it's used to properly delete the coefficient matrices.
     */
     Data::Correlation::Mode mode;
 

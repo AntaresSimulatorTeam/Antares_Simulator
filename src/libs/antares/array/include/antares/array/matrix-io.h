@@ -4,9 +4,6 @@
 #ifndef ANTARES_ARRAY_MATRIX_IO_H
 #define ANTARES_ARRAY_MATRIX_IO_H
 
-#include <filesystem>
-
 #include "matrix-io.hxx"
-#include "matrix.h"
 
 #endif
