@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include <map>
 #include <ranges>
 #include <set>
 #include <string>
@@ -27,16 +26,16 @@ namespace
 using DistrictInfo = std::string;
 using DistrictName = std::string;
 using ComponentProperties = std::vector<std::pair<DistrictInfo, DistrictName>>;
-using DistrictPropertiesByArea = std::map<std::string, ComponentProperties>;
+using DistrictPropertiesByArea = std::vector<ComponentProperties>;
 
 DistrictPropertiesByArea buildDistrictPropertiesByArea(const Study& study)
 {
-    DistrictPropertiesByArea propertiesByArea;
+    DistrictPropertiesByArea propertiesByArea(study.areas.size());
     for (const auto& [districtName, areas]: study.setsOfAreas)
     {
         for (const auto* area: *areas)
         {
-            propertiesByArea[area->id].emplace_back("district_" + districtName, districtName);
+            propertiesByArea[area->index].emplace_back("district_" + districtName, districtName);
         }
     }
     return propertiesByArea;
@@ -64,14 +63,10 @@ void appendProperties(YAML::Node& component, const ComponentProperties& properti
 }
 
 void appendAreaProperties(YAML::Node& component,
-                          const std::string& areaId,
+                          unsigned int areaIndex,
                           const DistrictPropertiesByArea& propertiesByArea)
 {
-    const auto propertiesIt = propertiesByArea.find(areaId);
-    if (propertiesIt != propertiesByArea.end())
-    {
-        appendProperties(component, propertiesIt->second);
-    }
+    appendProperties(component, propertiesByArea[areaIndex]);
 }
 
 YAML::Node makeConnection(const std::string& component1,
@@ -224,7 +219,7 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
           std::string areaLoc = BuildAreaNodeComponentId(area.id);
 
           YAML::Node areaComponent = areaToYaml(area);
-          appendAreaProperties(areaComponent, area.id, districtPropertiesByArea);
+          appendAreaProperties(areaComponent, area.index, districtPropertiesByArea);
           components.push_back(areaComponent);
 
           if (!inactiveComponents->loadIsAllZero(area.index))
