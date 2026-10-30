@@ -62,13 +62,6 @@ void appendProperties(YAML::Node& component, const ComponentProperties& properti
     }
 }
 
-void appendAreaProperties(YAML::Node& component,
-                          unsigned int areaIndex,
-                          const DistrictPropertiesByArea& propertiesByArea)
-{
-    appendProperties(component, propertiesByArea[areaIndex]);
-}
-
 YAML::Node makeConnection(const std::string& component1,
                           const std::string& port1,
                           const std::string& component2,
@@ -219,7 +212,7 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
           std::string areaLoc = BuildAreaNodeComponentId(area.id);
 
           YAML::Node areaComponent = areaToYaml(area);
-          appendAreaProperties(areaComponent, area.index, districtPropertiesByArea);
+          appendProperties(areaComponent, districtPropertiesByArea[area.index]);
           components.push_back(areaComponent);
 
           if (!inactiveComponents->loadIsAllZero(area.index))
