@@ -1175,5 +1175,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
           = problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire;
     }
 
-    fillInputGenerationSeries(study, problem, PasDeTempsDebut);
+    if (study.parameters.writeSimulationTable())
+    {
+        fillInputGenerationSeries(study, problem, PasDeTempsDebut);
+    }
 }
