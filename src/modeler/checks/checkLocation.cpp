@@ -137,8 +137,22 @@ void checkExpression(const Node* expression,
         // Portfields can contains variables, we recursively check their expressions
         if (const auto* portFieldNode = dynamic_cast<const PortFieldNode*>(&node); portFieldNode)
         {
-            // This code allows to have a clear message if one of the referenced expression contains
-            // bad locations
+            PortFieldKey key(portFieldNode->getPortName(), portFieldNode->getFieldName());
+            auto it = model.PortFieldDefinitions().find(key);
+            if (it == model.PortFieldDefinitions().end())
+            {
+                throw LocationError(fmt::format(
+                  "Model '{}': In expression '{}': Port field '{}.{}' has no definition in this "
+                  "model. If you want to reference a port field, use 'sum_connections({}.{})' to "
+                  "aggregate values from connected components.",
+                  model.Id(),
+                  exprStr,
+                  portFieldNode->getPortName(),
+                  portFieldNode->getFieldName(),
+                  portFieldNode->getPortName(),
+                  portFieldNode->getFieldName()));
+            }
+
             std::string msgInCaseOfError = fmt::format(
               "In model '{}': In expression '{}': this port field definition '{}.{}': is "
               "referencing an expression containing an incorrect location: ",
@@ -147,9 +161,8 @@ void checkExpression(const Node* expression,
               portFieldNode->getPortName(),
               portFieldNode->getFieldName());
 
-            PortFieldKey key(portFieldNode->getPortName(), portFieldNode->getFieldName());
-            auto& expr = model.PortFieldDefinitions().at(key).Definition();
-            checkExpression(model.PortFieldDefinitions().at(key).Definition().RootNode(),
+            auto& expr = it->second.Definition();
+            checkExpression(expr.RootNode(),
                             location,
                             model,
                             system,
