@@ -16,6 +16,10 @@
 
 namespace Antares
 {
+
+/// Replace spaces with underscores so that legacy component IDs are homogeneous.
+inline std::string SanitizeId(std::string id);
+
 /*!
 ** \brief Transform an arbitrary string into an ID
 **

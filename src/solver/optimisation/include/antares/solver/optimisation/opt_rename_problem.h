@@ -11,6 +11,7 @@
 
 #include <antares/study/fwd.h>
 #include "antares/solver/optimisation/LegacyVariableInfo.h"
+#include "antares/utils/utils.h"
 
 inline const std::string SEP = "::";
 inline const std::string AREA_SEP = "$$";
@@ -26,65 +27,65 @@ inline std::string LocationIdentifier(const std::string& location, const std::st
 
 inline std::string BuildAreaNodeComponentId(const std::string& areaId)
 {
-    return areaId + "_node";
+    return Antares::SanitizeId(areaId) + "_node";
 }
 
 inline std::string BuildThermalClusterComponentId(const std::string& areaId,
                                                   const std::string& clusterId)
 {
-    return areaId + "_thermal_" + clusterId;
+    return Antares::SanitizeId(areaId) + "_thermal_" + Antares::SanitizeId(clusterId);
 }
 
 inline std::string BuildSTStorageClusterComponentId(const std::string& areaId,
                                                     const std::string& clusterId)
 {
-    return areaId + "_short_term_storage_" + clusterId;
+    return Antares::SanitizeId(areaId) + "_short_term_storage_" + Antares::SanitizeId(clusterId);
 }
 
 inline std::string BuildRenewableClusterComponentId(const std::string& areaId,
                                                     const std::string& clusterId)
 {
-    return areaId + "_renewable_" + clusterId;
+    return Antares::SanitizeId(areaId) + "_renewable_" + Antares::SanitizeId(clusterId);
 }
 
 inline std::string BuildHydroStorageComponentId(const std::string& areaId)
 {
-    return areaId + "_hydro_storage";
+    return Antares::SanitizeId(areaId) + "_hydro_storage";
 }
 
 inline std::string BuildLoadComponentId(const std::string& areaId)
 {
-    return areaId + "_load";
+    return Antares::SanitizeId(areaId) + "_load";
 }
 
 inline std::string BuildWindComponentId(const std::string& areaId)
 {
-    return areaId + "_wind";
+    return Antares::SanitizeId(areaId) + "_wind";
 }
 
 inline std::string BuildSolarComponentId(const std::string& areaId)
 {
-    return areaId + "_solar";
+    return Antares::SanitizeId(areaId) + "_solar";
 }
 
 inline std::string BuildRorComponentId(const std::string& areaId)
 {
-    return areaId + "_run_of_river";
+    return Antares::SanitizeId(areaId) + "_run_of_river";
 }
 
 inline std::string BuildMiscGenComponentId(const std::string& areaId,
                                            const std::string& miscGenType)
 {
-    return areaId + "_" + miscGenType;
+    return Antares::SanitizeId(areaId) + "_" + Antares::SanitizeId(miscGenType);
 }
 
 inline std::string BuildLinkComponentId(const std::string& origin, const std::string& destination)
 {
     if (origin < destination)
     {
-        return origin + "_" + destination + "_link";
+        return Antares::SanitizeId(origin) + "_" + Antares::SanitizeId(destination) + "_link";
     }
-    return destination + "_" + origin + "_link";
+    return Antares::SanitizeId(destination) + "_" + Antares::SanitizeId(origin) + "_link";
 }
 
 // Structured legacy descriptions, parallel to the names vector.
