@@ -4,10 +4,9 @@
 #include "antares/io/inputs/yml-model/decoders.h"
 
 #include <span>
-#include <unordered_set>
 
 #include <antares/io/inputs/InputError.h>
-#include <antares/io/inputs/yml-utils/YmlTreeDisplayer.h>
+#include <antares/io/inputs/yml-utils/path_utils.h>
 
 #include "include/antares/io/inputs/yml-model/Library.h"
 
@@ -16,15 +15,12 @@ using namespace Antares::IO::Inputs;
 namespace YAML
 {
 
+// Keep field reads in sync with the validation schema in parser.cpp.
 void checkMandatoryIdField(const Node& node, const std::string& nodeName)
 {
     if (!node["id"].IsDefined() || node["id"].IsNull())
     {
-        std::filesystem::path nodePath(node.Tag());
-        throw KeyNotFound(node.Mark(),
-                          fmt::format("{} id is mandatory in library\n{}",
-                                      nodeName,
-                                      YmlUtils::printPathTree(nodePath)));
+        throw KeyNotFound(node.Mark(), fmt::format("{} id is mandatory in library", nodeName));
     }
 }
 
@@ -35,83 +31,6 @@ std::string getFieldFromNode(const Node& node, const std::string& fieldName)
         return {};
     }
     return node[fieldName].as<std::string>("");
-}
-
-std::vector<std::string> diffSet(const std::unordered_set<std::string>& setA,
-                                 const std::unordered_set<std::string>& setB)
-{
-    std::vector<std::string> diff;
-    std::ranges::copy_if(setA,
-                         std::back_inserter(diff),
-                         [&setB](const auto& item) { return !setB.contains(item); });
-    return diff;
-}
-
-std::string build_error_message(const size_t& nbFieldsAllowed,
-                                const YmlTreeDisplayer& displayer,
-                                const std::vector<std::string>& unexpected,
-                                const std::vector<std::string>& missing)
-{
-    // Build a readable list of errors (one per line), then append the tree
-    std::string errors_list;
-    for (const auto& f: unexpected)
-    {
-        errors_list += fmt::format("- Unexpected field: {}\n", f);
-    }
-    for (const auto& f: missing)
-    {
-        errors_list += fmt::format("- Missing field: {}\n", f);
-    }
-
-    // Final message: brief header, individual errors, then the tree
-    const std::string message = fmt::format(
-      "Unexpected or missing field(s) (expected {} field(s)).\n{}\n{}{}",
-      nbFieldsAllowed,
-      errors_list,
-      displayer.baseTree(),
-      displayer.buildMarkedTree(unexpected, missing));
-
-    return message;
-}
-
-void checkFields(const Node& node,
-                 const std::unordered_set<std::string>& mandatoryFields,
-                 const std::unordered_set<std::string>& optionalFields)
-{
-    if (!node.IsMap())
-    {
-        return;
-    }
-
-    // Extract actual key names (cheap, no line-number tracking yet)
-    std::unordered_set<std::string> actualKeys;
-    for (const auto& entry: node)
-    {
-        const Node keyNode = entry.first;
-        actualKeys.insert(keyNode.IsDefined() ? keyNode.as<std::string>()
-                                              : std::string("<unknown>"));
-    }
-
-    std::unordered_set<std::string> allowedFields = mandatoryFields;
-    allowedFields.insert(optionalFields.begin(), optionalFields.end());
-
-    const auto unexpected = diffSet(actualKeys, allowedFields);
-    const auto missing = diffSet(mandatoryFields, actualKeys);
-
-    if (unexpected.empty() && missing.empty())
-    {
-        return; // valid
-    }
-
-    // Invalid map: now build the displayer for error reporting
-    YmlTreeDisplayer displayer(node);
-
-    const std::string message = build_error_message(allowedFields.size(),
-                                                    displayer,
-                                                    unexpected,
-                                                    missing);
-
-    throw Exception(node.Mark(), message);
 }
 
 bool convert<YmlModel::ExpressionLineNumber>::decode(const Node& node,
@@ -141,10 +60,6 @@ bool convert<YmlModel::PortType>::convertAreaConnectionFields(const Node& node,
         return false;
     }
 
-    checkFields(areaConnNode,
-                {"injection-to-balance", "spillage-bound", "unsupplied-energy-bound"},
-                {"price"});
-
     rhs.area_connection.inject_to_balance = getFieldFromNode(areaConnNode, "injection-to-balance");
     rhs.area_connection.spillage_bound = getFieldFromNode(areaConnNode, "spillage-bound");
     rhs.area_connection.unsupplied_energy_bound = getFieldFromNode(areaConnNode,
@@ -166,8 +81,6 @@ bool convert<YmlModel::PortType>::convertThermalCapacityField(const Node& node,
     {
         throw InputError("Expected a YAML mapping for 'thermal-capacity-connection' in port-type");
     }
-
-    checkFields(childNode, {"capacity-field"});
 
     rhs.thermal_capacity_connection_field = getFieldFromNode(childNode, "capacity-field");
     return true;
@@ -296,7 +209,7 @@ bool convert<YmlModel::Constraint>::decode(const Node& node, YmlModel::Constrain
         return false;
     }
 
-    rhs.id = node["id"].as<std::string>("");
+    rhs.id = node["id"].as<std::string>();
     rhs.expression = node["expression"].as<YmlModel::ExpressionLineNumber>();
     rhs.location = node["location"].as<std::string>("subproblems");
     return true;
@@ -309,7 +222,7 @@ bool convert<YmlModel::ExtraOutput>::decode(const Node& node, YmlModel::ExtraOut
         return false;
     }
 
-    rhs.id = node["id"].as<std::string>("");
+    rhs.id = node["id"].as<std::string>();
     rhs.expression = node["expression"].as<YmlModel::ExpressionLineNumber>();
     return true;
 }
@@ -321,7 +234,7 @@ bool convert<YmlModel::Objective>::decode(const Node& node, YmlModel::Objective&
         return false;
     }
 
-    rhs.id = node["id"].as<std::string>("");
+    rhs.id = node["id"].as<std::string>();
     rhs.expression = node["expression"].as<YmlModel::ExpressionLineNumber>();
     rhs.location = node["location"].as<std::string>("subproblems");
     return true;
@@ -354,10 +267,14 @@ bool convert<YmlModel::Model>::decode(const Node& node, YmlModel::Model& rhs)
 
 bool convert<YmlModel::Library>::decode(const Node& node, YmlModel::Library& rhs)
 {
+    checkMandatoryIdField(node, "library");
     rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
     rhs.port_types = as_fallback_default<std::vector<YmlModel::PortType>>(node["port-types"]);
-    rhs.models = node["models"].as<std::vector<YmlModel::Model>>();
+    if (node["models"].IsDefined() && !node["models"].IsNull())
+    {
+        rhs.models = node["models"].as<std::vector<YmlModel::Model>>();
+    }
     return true;
 }
 

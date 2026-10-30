@@ -3,6 +3,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <unit_test_utils.h>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/io/inputs/InputError.h>
@@ -103,6 +105,56 @@ BOOST_AUTO_TEST_CASE(component_parameter)
     BOOST_CHECK_EQUAL(param.time_dependent, false);
     BOOST_CHECK_EQUAL(param.scenario_dependent, false);
     BOOST_CHECK_EQUAL(std::stod(param.value), 30);
+}
+
+BOOST_AUTO_TEST_CASE(component_parameter_flags_default_to_false_when_missing)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            components:
+                - id: N
+                  model: std.node
+                  parameters:
+                    - id: cost
+                      value: 30
+    )"s;
+    const YmlSystem::System systemObj = parser.parse(system, "");
+    const auto& param = systemObj.components[0].parameters[0];
+    BOOST_CHECK_EQUAL(param.time_dependent, false);
+    BOOST_CHECK_EQUAL(param.scenario_dependent, false);
+}
+
+BOOST_AUTO_TEST_CASE(invalid_time_dependent_flag_throws_conversion_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            components:
+                - id: N
+                  model: std.node
+                  parameters:
+                    - id: cost
+                      time-dependent: treu
+                      value: 30
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), YAML::BadConversion);
+}
+
+BOOST_AUTO_TEST_CASE(invalid_scenario_dependent_flag_throws_conversion_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            components:
+                - id: N
+                  model: std.node
+                  parameters:
+                    - id: cost
+                      scenario-dependent: [true]
+                      value: 30
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), YAML::BadConversion);
 }
 
 BOOST_AUTO_TEST_CASE(component_two_parameters)
@@ -268,7 +320,7 @@ BOOST_AUTO_TEST_CASE(connection_with_missing_field_throws_input_error)
     BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
-BOOST_AUTO_TEST_CASE(connection_with_extra_field_throws_input_error)
+BOOST_AUTO_TEST_CASE(connection_with_extra_field_is_ignored_with_warning)
 {
     YmlSystem::Parser parser;
     const auto system = R"(
@@ -281,7 +333,32 @@ BOOST_AUTO_TEST_CASE(connection_with_extra_field_throws_input_error)
                   port2: p2
                   extra: bad
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+    BOOST_CHECK_NO_THROW(parser.parse(system, ""));
+}
+
+BOOST_AUTO_TEST_CASE(all_missing_fields_are_reported_at_once)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            components:
+                - id: N
+                  scenario-groups: g
+                - model: lib.model
+            connections:
+                - component1: N
+                  port1: p1
+    )"s;
+    BOOST_CHECK_EXCEPTION(parser.parse(system, ""),
+                          InputError,
+                          [](const InputError& e)
+                          {
+                              const std::string msg = e.what();
+                              return msg.find("Missing field: model") != std::string::npos
+                                     && msg.find("Missing field: id") != std::string::npos
+                                     && msg.find("Missing field: component2") != std::string::npos;
+                          });
 }
 
 BOOST_AUTO_TEST_CASE(area_connection_with_wrong_field_count_throws_input_error)
@@ -416,4 +493,18 @@ BOOST_AUTO_TEST_CASE(decoder_throws_for_defined_non_map_nodes)
         YmlSystem::System s;
         BOOST_CHECK_THROW(YAML::convert<YmlSystem::System>::decode(scalar, s), InputError);
     }
+}
+
+BOOST_AUTO_TEST_CASE(misspelled_component_field_is_ignored_with_warning)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            components:
+                - id: N
+                  model: lib.model
+                  scenario-groups: g
+    )"s;
+    BOOST_CHECK_NO_THROW(parser.parse(system, ""));
 }
