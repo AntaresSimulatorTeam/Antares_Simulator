@@ -202,8 +202,11 @@ bool Economy::year(Variable::State& state,
             failedWeekList.push_back(w + 1);
 
             // Stop simulation
-            logs.error("Assertion error for week " + std::to_string(w + 1)
-                       + " simulation is stopped : " + ex.what());
+            logs.error(
+              fmt::format("Assertion error for MC year {}, week {} simulation is stopped : {}",
+                          state.year + 1,
+                          w + 1,
+                          ex.what()));
             return false;
         }
         catch (UnfeasibleProblemError&)

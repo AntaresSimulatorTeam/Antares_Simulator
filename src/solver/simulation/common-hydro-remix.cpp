@@ -271,7 +271,9 @@ std::shared_ptr<IStorageForRemix> extractHydroForRemix(const Data::Area& area,
                              capacity,
                              efficiency,
                              reservoirManagement,
-                             std::string(area.name) + " hydro");
+                             fmt::format("area '{}', reservoir '{}'",
+                                         area.name,
+                                         stsProperties.name));
 }
 
 std::span<const double> weekSubRange(const std::vector<double>& v, unsigned firstHourOfWeek)
@@ -358,7 +360,8 @@ std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
                            initLevel,
                            withdrawalEff,
                            injectionEff,
-                           std::string(area.name) + " " + stsProperties.name);
+                           "area '" + std::string(area.name) + "', reservoir '" + stsProperties.name
+                             + "'");
 }
 
 ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
@@ -397,20 +400,19 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
           const auto& spillage = weeklyResults.ValeursHorairesDeDefaillanceNegative;
           const auto dtgMrg = extractDTG_MRG(area, numSpace);
-
-          ListStorageForRemix listStorage;
-
-          auto hydroStorage = extractHydroForRemix(area, problem, firstHourOfWeek);
-          listStorage.push_back(hydroStorage);
-
-          if (includeSTS)
-          {
-              auto stsForRemix = extractListSTSforRemix(area, problem, firstHourOfWeek);
-              listStorage.insert(listStorage.end(), stsForRemix.begin(), stsForRemix.end());
-          }
-
           try
           {
+              ListStorageForRemix listStorage;
+
+              auto hydroStorage = extractHydroForRemix(area, problem, firstHourOfWeek);
+              listStorage.push_back(hydroStorage);
+
+              if (includeSTS)
+              {
+                  auto stsForRemix = extractListSTSforRemix(area, problem, firstHourOfWeek);
+                  listStorage.insert(listStorage.end(), stsForRemix.begin(), stsForRemix.end());
+              }
+
               checkInput(load, unsupE, spillage, dtgMrg, listStorage);
               shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, listStorage);
               if (writer)
@@ -420,11 +422,11 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           }
           catch (std::exception& e)
           {
-              std::string msg = "(year, area, week) = (" + std::to_string(problem.year) + ", "
-                                + area.id + ", "
-                                + std::to_string((firstHourOfWeek + 1) / HOURS_IN_WEEK)
-                                + ") : " + e.what();
-              logs.warning(msg);
+              std::string msg = fmt::format("(MC year {}, area '{}', week {}) : {}",
+                                            problem.year + 1,
+                                            area.id,
+                                            (firstHourOfWeek + 1) / HOURS_IN_WEEK,
+                                            e.what());
           }
       });
 
