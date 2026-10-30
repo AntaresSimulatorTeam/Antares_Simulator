@@ -62,8 +62,8 @@ BOOST_AUTO_TEST_CASE(library_with_null_id_throws)
             models: []
     )"s;
     BOOST_CHECK_EXCEPTION(parser.parse(library),
-                          YAML::KeyNotFound,
-                          containsMessage("library id is mandatory in library"));
+                          InputError,
+                          containsMessage("Invalid null value for required field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(parameter_without_id_throws)
@@ -1012,6 +1012,23 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_portfields)
 }
 
 // Test library with one model containing constraints
+BOOST_AUTO_TEST_CASE(constraint_with_null_id_throws)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            models:
+                - id: "model_id"
+                  constraints:
+                      - id: null
+                        expression: "expression"
+        )"s;
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          InputError,
+                          containsMessage("Invalid null value for required field: id"));
+}
+
 BOOST_AUTO_TEST_CASE(constraints_properly_parsed)
 {
     YmlModel::Parser parser;

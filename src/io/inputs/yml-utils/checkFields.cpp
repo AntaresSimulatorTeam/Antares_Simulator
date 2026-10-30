@@ -23,6 +23,7 @@ struct Findings
     std::vector<std::string> unexpected = {};
     std::vector<std::string> missing = {};
     std::vector<std::string> duplicated = {};
+    std::vector<std::string> nullIds = {};
 };
 
 struct ValidationResult
@@ -50,6 +51,9 @@ std::string buildMessage(const YAML::Node& node, const std::string& path, const 
     markedUnexpected.insert(markedUnexpected.end(),
                             findings.duplicated.begin(),
                             findings.duplicated.end());
+    markedUnexpected.insert(markedUnexpected.end(),
+                            findings.nullIds.begin(),
+                            findings.nullIds.end());
 
     std::string fieldsList;
     for (const auto& f: findings.unexpected)
@@ -64,6 +68,10 @@ std::string buildMessage(const YAML::Node& node, const std::string& path, const 
     for (const auto& f: findings.duplicated)
     {
         fieldsList += fmt::format("- Duplicated field: {}\n", f);
+    }
+    for (const auto& f: findings.nullIds)
+    {
+        fieldsList += fmt::format("- Invalid null value for required field: {}\n", f);
     }
 
     const auto mark = node.Mark();
@@ -100,12 +108,17 @@ void validateMap(const YAML::Node& node,
 
     std::unordered_set<std::string> mandatoryFields;
     std::unordered_set<std::string> allowedFields;
+    std::vector<std::string> nullIds;
     for (const auto& field: fields)
     {
         allowedFields.insert(field.name);
         if (field.required)
         {
             mandatoryFields.insert(field.name);
+            if (field.name == "id" && node[field.name].IsNull())
+            {
+                nullIds.push_back(field.name);
+            }
         }
     }
 
@@ -116,10 +129,12 @@ void validateMap(const YAML::Node& node,
     {
         result.warnings.push_back(buildMessage(node, path, {.unexpected = unexpected}));
     }
-    if (!missing.empty() || !duplicated.empty())
+    if (!missing.empty() || !duplicated.empty() || !nullIds.empty())
     {
         result.errors.push_back(
-          buildMessage(node, path, {.missing = missing, .duplicated = duplicated}));
+          buildMessage(node,
+                       path,
+                       {.missing = missing, .duplicated = duplicated, .nullIds = nullIds}));
     }
 }
 

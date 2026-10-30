@@ -90,6 +90,26 @@ system:
       });
 }
 
+BOOST_AUTO_TEST_CASE(required_ids_cannot_be_null)
+{
+    const auto content = R"(
+system:
+  components:
+    - id: null
+      model: lib.model
+)";
+    BOOST_CHECK_EXCEPTION(YmlSystem::Parser{}.parse(content, ""),
+                          InputError,
+                          [](const InputError& e)
+                          {
+                              const std::string message = e.what();
+                              BOOST_CHECK(message.find("Invalid null value for required field: id")
+                                          != std::string::npos);
+                              BOOST_CHECK(message.find("|__ [0]") != std::string::npos);
+                              return true;
+                          });
+}
+
 BOOST_AUTO_TEST_CASE(optim_config_collects_errors_before_resolution_mode_conversion)
 {
     const auto content = R"(
