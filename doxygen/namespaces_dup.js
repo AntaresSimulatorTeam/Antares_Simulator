@@ -532,6 +532,7 @@ var namespaces_dup =
         [ "ThermalClusterLoadFromSection", "thermal_2cluster__list_8h.html#a21b9ceb31a1a05e92f289cc1651d5117", null ],
         [ "transmissionCapacitiesToString", "fwd_8cpp.html#a7d39e2178d67f31ae37e7dc3f16f3e91", null ],
         [ "UnitCommitmentModeToCString", "fwd_8cpp.html#a2cf3b517b0f08f08ffd34b53f11a09eb", null ],
+        [ "usesExplicitUnitCommitment", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#ae6cc5a2c0e6b23780ccfd831fc52ad31", null ],
         [ "validateCapacityReservations", "study_2area_2list_8cpp.html#aa9d3ed30f8af5772579a6b0ad3c9ecdc", null ],
         [ "allTimeSeriesMask", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#afd2917ad5e73189d9de08a4af138c02a", null ],
         [ "antaresSeedDefaultValue", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a3244a44273ecadf23d5147801d42085d", null ],

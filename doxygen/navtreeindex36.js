@@ -1,5 +1,6 @@
 var NAVTREEINDEX36 =
 {
+"structAntares_1_1Data_1_1CapacityReservation.html#a18961fe90f080b970a84ef58aa26308b":[9,0,0,3,15,3],
 "structAntares_1_1Data_1_1CapacityReservation.html#a2a11aeb8b681da2d74351102404780dd":[9,0,0,3,15,7],
 "structAntares_1_1Data_1_1CapacityReservation.html#a49761ec501f2b76e8a048f3bd7aba7c7":[9,0,0,3,15,6],
 "structAntares_1_1Data_1_1CapacityReservation.html#a4e8256cfc6e873d3eb7ad4f7f81b5a20":[9,0,0,3,15,10],
@@ -248,6 +249,5 @@ var NAVTREEINDEX36 =
 "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html#a725dc1bd14128fc71ae9cbcc01b01872":[9,0,0,7,0,4,4,0],
 "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html#a8b594c0eadd9923360d9ff870cfe1d41":[9,0,0,7,0,4,4,3],
 "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html#aa358090aa03ebcc7157315d9323e1c17":[9,0,0,7,0,4,4,1],
-"structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html":[9,0,0,7,0,4,3],
-"structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html#a27b18e92cb79db2bf1304f3257786de3":[9,0,0,7,0,4,3,1]
+"structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html":[9,0,0,7,0,4,3]
 };

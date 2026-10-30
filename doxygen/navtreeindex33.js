@@ -1,5 +1,6 @@
 var NAVTREEINDEX33 =
 {
+"marginalCost_8h.html#a4a5835fab897bf3ad78a1bfde6838140":[8,0,0,15,9,5,126],
 "marginalCost_8h_source.html":[10,0,0,8,11,0,0,0,0,3,1,9],
 "math_8hxx_source.html":[10,0,0,8,9,0,0,0,0,0,1],
 "matrix-bypass-load_8h_source.html":[10,0,0,10,2,1,0,0,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX33 =
 "output-selection_8h_source.html":[10,0,0,4,0,25,0,0,0,20],
 "output_8h_source.html":[10,0,0,11,1,3],
 "output__compare_8py.html#a0b1626757c53d26985a9d14341a1a780":[8,0,5,8,4],
-"output__compare_8py.html#a1e5a62aa6379be1dc5c011dd1e2d7794":[8,0,5,8,6],
-"output__compare_8py.html#a50b7a583378d9fa0b0300fbb0c5ce22e":[8,0,5,8,3]
+"output__compare_8py.html#a1e5a62aa6379be1dc5c011dd1e2d7794":[8,0,5,8,6]
 };

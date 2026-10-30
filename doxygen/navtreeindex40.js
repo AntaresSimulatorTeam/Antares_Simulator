@@ -1,5 +1,6 @@
 var NAVTREEINDEX40 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a1c1adf40fad20580d2436d764db0c08c":[9,0,0,12,7,62,3],
 "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a30e2bce7bf8725e4faeb6bff1d278fa7":[9,0,0,12,7,62,4],
 "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a3750a1b71293c6ea6b191d6880fba1d7":[9,0,0,12,7,62,1],
 "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a61f234773186606b5c626e7f37c03940":[9,0,0,12,7,62,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX40 =
 "structCORRESPONDANCES__DES__VARIABLES_1_1ReservesIndices.html#a12119a229c7474f0afc5947e9f9a46c1":[9,0,81,0,2],
 "structCORRESPONDANCES__DES__VARIABLES_1_1ReservesIndices.html#a26a3622a00bbcf1387c9a76408da094d":[9,0,81,0,1],
 "structCORRESPONDANCES__DES__VARIABLES_1_1ReservesIndices.html#a2906d7a7b2c00ca7357dd8f3151f9503":[9,0,81,0,8],
-"structCORRESPONDANCES__DES__VARIABLES_1_1ReservesIndices.html#a561e1643c3dde90dc0157827d21ee0a7":[9,0,81,0,0],
-"structCORRESPONDANCES__DES__VARIABLES_1_1ReservesIndices.html#a82b6181dfcf6365956d99a6eed46f8ac":[9,0,81,0,3]
+"structCORRESPONDANCES__DES__VARIABLES_1_1ReservesIndices.html#a561e1643c3dde90dc0157827d21ee0a7":[9,0,81,0,0]
 };

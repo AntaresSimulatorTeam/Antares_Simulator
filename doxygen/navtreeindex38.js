@@ -1,5 +1,6 @@
 var NAVTREEINDEX38 =
 {
+"structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#a9d1a13c29c7d80b139a52cd7cce60478":[9,0,0,12,1,1,0,4],
 "structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#aaf7433e27a2e1b9ff4ad1ee4a70d3015":[9,0,0,12,1,1,0,7],
 "structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html":[9,0,0,12,1,1,1],
 "structAntares_1_1Solver_1_1Hydro_1_1Monthly_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#a06b8e8c3019cae7771007a64de2fcd6c":[9,0,0,12,1,1,1,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCapTraits.html":[9,0,0,12,7,5,70],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCapTraits.html#acdd26e71baafa5f874706e6270de1b2f":[9,0,0,12,7,5,70,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCapTraits.html#ae4cfb1b84707a63d8800393f16335081":[9,0,0,12,7,5,70,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlantTraits.html":[9,0,0,12,7,5,72],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostTraits.html":[9,0,0,12,7,5,71]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlantTraits.html":[9,0,0,12,7,5,72]
 };

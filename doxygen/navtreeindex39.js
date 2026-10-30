@@ -1,5 +1,6 @@
 var NAVTREEINDEX39 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostTraits.html":[9,0,0,12,7,5,71],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostTraits.html#a913deb950ea279e7e8c05773cd757929":[9,0,0,12,7,5,71,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCostTraits.html":[9,0,0,12,7,5,73],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCostTraits.html#ac9df8dd45924f9e36e6468948c3e5457":[9,0,0,12,7,5,73,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX39 =
 "structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html#a3fb862fe2eabfef1fd6705a593943529":[9,0,0,12,7,13,0],
 "structAntares_1_1Solver_1_1Variable_1_1VCardAllSetsOfAreas.html":[9,0,0,12,7,53],
 "structAntares_1_1Solver_1_1Variable_1_1VCardAllSetsOfAreas.html#acca4aa42deec49483901806cb9437aec":[9,0,0,12,7,53,0],
-"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html":[9,0,0,12,7,62],
-"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a1c1adf40fad20580d2436d764db0c08c":[9,0,0,12,7,62,3]
+"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html":[9,0,0,12,7,62]
 };
