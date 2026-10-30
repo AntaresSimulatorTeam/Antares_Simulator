@@ -59,17 +59,21 @@ inline bool load(Matrix& matrix,
         return false;
     }
 
-    matrix.reset(minWidth, height);
     if (size == 0)
     {
+        matrix.reset(minWidth, height);
         return true;
     }
 
     if (!minWidth || !height)
     {
         logs.error() << filename << ": matrix dimensions are required for a non-empty file";
+        matrix.reset(minWidth, height);
         return false;
     }
+
+    // The successful path writes every cell. Malformed or incomplete input is reset below.
+    matrix.resize(minWidth, height);
 
     Statistics::HasReadFromDisk(size);
     logs.debug() << "  :: loading `" << filename << "`";
@@ -79,13 +83,13 @@ inline bool load(Matrix& matrix,
     int errorCount = 6;
 
     const auto handleInvalidNumericValue =
-      [&](unsigned int cellX, unsigned int cellY, const std::string& cell)
+      [&](unsigned int cellX, unsigned int cellY, std::string_view cell)
     {
         result = false;
         if (errorCount > 0)
         {
             logs.warning() << '`' << filename << "`: Invalid numeric value (x:" << cellX
-                           << ",y:" << cellY << ", text: `" << cell << '`';
+                           << ",y:" << cellY << ", text: `" << std::string(cell) << '`';
             if (!(--errorCount))
             {
                 logs.warning() << " ... (skipped)";
@@ -96,59 +100,64 @@ inline bool load(Matrix& matrix,
 
     try
     {
-        const auto rows = IO::readCSVFile(filename, "\t;,");
-        for (const auto& row: rows)
-        {
-            if (rowCount >= matrix.height())
-            {
-                break;
-            }
+        IO::readCSVFile(filename,
+                        "\t;,",
+                        [&](std::size_t, IO::CSVRow row)
+                        {
+                            if (rowCount >= matrix.height())
+                            {
+                                return true;
+                            }
 
-            // Time-series files use one as the minimum width and store their actual width in
-            // the first row. Resize once before storing that row.
-            if (rowCount == 0 && row.size() > matrix.width())
-            {
-                matrix.resize(static_cast<unsigned int>(row.size()), matrix.height());
-            }
+                            // Time-series files use one as the minimum width and store their actual
+                            // width in the first row. Resize once before storing that row.
+                            if (rowCount == 0 && row.size() > matrix.width())
+                            {
+                                matrix.resize(static_cast<unsigned int>(row.size()),
+                                              matrix.height());
+                            }
 
-            unsigned int column = 0;
-            for (const auto& cell: row)
-            {
-                if (column >= matrix.width())
-                {
-                    result = false;
-                    logs.warning() << filename << ": too many columns on row " << rowCount;
-                    break;
-                }
+                            unsigned int column = 0;
+                            for (const auto& cell: row)
+                            {
+                                if (column >= matrix.width())
+                                {
+                                    result = false;
+                                    logs.warning()
+                                      << filename << ": too many columns on row " << rowCount;
+                                    break;
+                                }
 
-                if (cell.empty())
-                {
-                    matrix[column][rowCount] = 0.;
-                }
-                else
-                {
-                    double value = 0.;
-                    if (!parseDouble(cell, value))
-                    {
-                        handleInvalidNumericValue(column, rowCount, cell);
-                    }
-                    else
-                    {
-                        matrix[column][rowCount] = value;
-                    }
-                }
-                ++column;
-            }
+                                if (cell.value.empty())
+                                {
+                                    matrix[column][rowCount] = 0.;
+                                }
+                                else
+                                {
+                                    double value = 0.;
+                                    if (!parseDouble(cell.value, value))
+                                    {
+                                        handleInvalidNumericValue(column, rowCount, cell.value);
+                                    }
+                                    else
+                                    {
+                                        matrix[column][rowCount] = value;
+                                    }
+                                }
+                                ++column;
+                            }
 
-            if (column < matrix.width())
-            {
-                result = false;
-                logs.warning() << filename << ": not enough columns on row " << rowCount
-                               << " (expected " << matrix.width() << ", got " << column << ')';
-            }
+                            if (column < matrix.width())
+                            {
+                                result = false;
+                                logs.warning()
+                                  << filename << ": not enough columns on row " << rowCount
+                                  << " (expected " << matrix.width() << ", got " << column << ')';
+                            }
 
-            ++rowCount;
-        }
+                            ++rowCount;
+                            return rowCount < matrix.height();
+                        });
     }
     catch (const std::exception& exception)
     {

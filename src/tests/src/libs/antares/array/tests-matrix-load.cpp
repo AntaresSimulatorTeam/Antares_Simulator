@@ -90,6 +90,25 @@ BOOST_AUTO_TEST_CASE(loads_comma_separated_values_and_empty_cells)
     BOOST_CHECK_EQUAL(matrix[1][1], 5.);
 }
 
+BOOST_AUTO_TEST_CASE(reloading_overwrites_previous_values)
+{
+    const auto file = writeFile("1\t2\n3\t4\n");
+    Antares::Matrix matrix;
+
+    BOOST_REQUIRE(Antares::MatrixIO::load(matrix, file.path, 2, 2));
+
+    {
+        std::ofstream output(file.path, std::ios::binary | std::ios::trunc);
+        output << "5\t\n\t8\n";
+    }
+
+    BOOST_REQUIRE(Antares::MatrixIO::load(matrix, file.path, 2, 2));
+    BOOST_CHECK_EQUAL(matrix[0][0], 5.);
+    BOOST_CHECK_EQUAL(matrix[1][0], 0.);
+    BOOST_CHECK_EQUAL(matrix[0][1], 0.);
+    BOOST_CHECK_EQUAL(matrix[1][1], 8.);
+}
+
 BOOST_AUTO_TEST_CASE(minimum_width_is_preserved)
 {
     const auto file = writeFile("1\t2\t3\n4\t5\t6\n");

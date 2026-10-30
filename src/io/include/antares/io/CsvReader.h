@@ -37,6 +37,16 @@ bool readCSV(std::string_view data, std::string_view separators, const CSVRowCal
 /**
  * Read CSV rows directly from a file.
  *
+ * The file is memory-mapped and remains mapped for the duration of the
+ * callback invocations. Cell values are valid only during the callback.
+ */
+bool readCSVFile(const std::filesystem::path& filename,
+                 std::string_view separators,
+                 const CSVRowCallback& callback);
+
+/**
+ * Read CSV rows directly from a file.
+ *
  * Cell values are copied into the returned table, so they remain valid after
  * the file is closed and unmapped.
  */

@@ -13,15 +13,13 @@ namespace Antares::IO
 {
 namespace
 {
-bool isSeparator(char value, std::string_view separators)
-{
-    return separators.find(value) != std::string_view::npos;
-}
-
 bool readCSVBuffer(std::string_view data,
                    std::string_view separators,
                    const CSVRowCallback& callback)
 {
+    std::string delimiters(separators);
+    delimiters += "\r\n";
+
     std::vector<CSVCell> row;
     row.reserve(16);
 
@@ -31,9 +29,16 @@ bool readCSVBuffer(std::string_view data,
 
     for (std::size_t index = 0; index <= data.size();)
     {
-        const bool atEnd = index == data.size();
+        const auto delimiterIndex = data.find_first_of(delimiters, index);
+        const bool atEnd = delimiterIndex == std::string_view::npos;
+        index = atEnd ? data.size() : delimiterIndex;
         const char value = atEnd ? '\0' : data[index];
-        const bool atNewline = !atEnd && (value == '\n' || value == '\r');
+        const bool atNewline = value == '\n' || value == '\r';
+
+        if (index > cellStart)
+        {
+            hasCell = true;
+        }
 
         if (atEnd || atNewline)
         {
@@ -71,17 +76,10 @@ bool readCSVBuffer(std::string_view data,
             continue;
         }
 
-        if (isSeparator(value, separators))
-        {
-            row.push_back({data.substr(cellStart, index - cellStart)});
-            hasCell = true;
-            ++index;
-            cellStart = index;
-            continue;
-        }
-
+        row.push_back({data.substr(cellStart, index - cellStart)});
         hasCell = true;
         ++index;
+        cellStart = index;
     }
 
     return true;
@@ -93,7 +91,9 @@ bool readCSV(std::string_view data, std::string_view separators, const CSVRowCal
     return readCSVBuffer(data, separators, callback);
 }
 
-CSVTable readCSVFile(const std::filesystem::path& filename, std::string_view separators)
+bool readCSVFile(const std::filesystem::path& filename,
+                 std::string_view separators,
+                 const CSVRowCallback& callback)
 {
     std::error_code error;
     const auto size = std::filesystem::file_size(filename, error);
@@ -105,7 +105,7 @@ CSVTable readCSVFile(const std::filesystem::path& filename, std::string_view sep
 
     if (size == 0)
     {
-        return {};
+        return true;
     }
 
     boost::iostreams::mapped_file_source file(filename.string());
@@ -114,19 +114,24 @@ CSVTable readCSVFile(const std::filesystem::path& filename, std::string_view sep
         throw std::runtime_error("Failed to open file: " + filename.string());
     }
 
+    return readCSVBuffer(std::string_view(file.data(), file.size()), separators, callback);
+}
+
+CSVTable readCSVFile(const std::filesystem::path& filename, std::string_view separators)
+{
     CSVTable table;
-    readCSVBuffer(std::string_view(file.data(), file.size()),
-                  separators,
-                  [&table](std::size_t, CSVRow row)
-                  {
-                      auto& values = table.emplace_back();
-                      values.reserve(row.size());
-                      for (const auto& cell: row)
-                      {
-                          values.emplace_back(cell.value);
-                      }
-                      return true;
-                  });
+    readCSVFile(filename,
+                separators,
+                [&table](std::size_t, CSVRow row)
+                {
+                    auto& values = table.emplace_back();
+                    values.reserve(row.size());
+                    for (const auto& cell: row)
+                    {
+                        values.emplace_back(cell.value);
+                    }
+                    return true;
+                });
     return table;
 }
 } // namespace Antares::IO

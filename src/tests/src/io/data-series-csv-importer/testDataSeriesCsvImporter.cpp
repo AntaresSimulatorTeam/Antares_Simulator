@@ -117,6 +117,34 @@ BOOST_AUTO_TEST_CASE(file_reader_returns_owned_rows)
     BOOST_CHECK_EQUAL(rows[1][2], "");
 }
 
+BOOST_AUTO_TEST_CASE(file_reader_streams_rows)
+{
+    const auto filePath = writeFile("data.csv", "1,,3\r\n,5,\n");
+    std::vector<std::vector<std::string>> rows;
+
+    BOOST_REQUIRE(Antares::IO::readCSVFile(filePath,
+                                           ",",
+                                           [&rows](std::size_t, Antares::IO::CSVRow row)
+                                           {
+                                               auto& values = rows.emplace_back();
+                                               for (const auto& cell: row)
+                                               {
+                                                   values.emplace_back(cell.value);
+                                               }
+                                               return true;
+                                           }));
+
+    BOOST_REQUIRE_EQUAL(rows.size(), 2);
+    BOOST_REQUIRE_EQUAL(rows[0].size(), 3);
+    BOOST_CHECK_EQUAL(rows[0][0], "1");
+    BOOST_CHECK_EQUAL(rows[0][1], "");
+    BOOST_CHECK_EQUAL(rows[0][2], "3");
+    BOOST_REQUIRE_EQUAL(rows[1].size(), 3);
+    BOOST_CHECK_EQUAL(rows[1][0], "");
+    BOOST_CHECK_EQUAL(rows[1][1], "5");
+    BOOST_CHECK_EQUAL(rows[1][2], "");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_FIXTURE_TEST_SUITE(_DataSeriesImport_OneCsvFile_, CsvCreationFixture)
