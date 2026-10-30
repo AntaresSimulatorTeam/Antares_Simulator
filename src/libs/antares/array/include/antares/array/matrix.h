@@ -171,11 +171,16 @@ public:
 
     /*!
     ** \brief Get if the matrix only contains zero
+    */
+    bool containsOnlyZero() const;
+
+    /*!
+    ** \brief Get if the matrix only contains zero
     **
     ** \param predicate A predicate to modify the values on the fly
     */
-    template<class PredicateT = std::identity>
-    bool containsOnlyZero(const PredicateT& predicate = {}) const;
+    template<class PredicateT>
+    bool containsOnlyZero(const PredicateT& predicate) const;
 
     //! \name Memory Management
     //@{

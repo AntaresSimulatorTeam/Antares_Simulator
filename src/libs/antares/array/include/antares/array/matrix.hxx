@@ -259,6 +259,11 @@ inline void Matrix::roundAllEntries()
     }
 }
 
+inline bool Matrix::containsOnlyZero() const
+{
+    return containsOnlyZero(std::identity{});
+}
+
 template<class PredicateT>
 bool Matrix::containsOnlyZero(const PredicateT& predicate) const
 {
