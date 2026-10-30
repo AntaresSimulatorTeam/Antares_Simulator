@@ -4,6 +4,7 @@
 #ifndef __ANTARES_LIBS_STUDY_AREAS_CONSTANTS_H__
 #define __ANTARES_LIBS_STUDY_AREAS_CONSTANTS_H__
 
+#include <algorithm>
 #include <array>
 #include <cassert>
 #include <string>
