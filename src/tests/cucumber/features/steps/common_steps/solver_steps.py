@@ -9,6 +9,7 @@ from pathlib import Path
 
 import numpy as np
 import parse
+import yaml
 from behave import *
 from common_steps.solver_input_handler import solver_input_handler
 from common_steps.solver_output_handler import solver_output_handler
@@ -92,6 +93,35 @@ def empty_input_series(context, series_file):
     file_path = context.study_path / "input" / Path(series_file.replace("/", os.sep))
     file_path.parent.mkdir(parents=True, exist_ok=True)
     file_path.write_text("")
+
+
+@given('in input "{system_file}" the parameter "{parameter}" of component "{component}" is set to "{value:g}"')
+def set_component_parameter(context, system_file, parameter, component, value):
+    # Rewrites a file of the study, so it must run on a throwaway copy (see empty_input_series).
+    assert hasattr(context, "tmp_workdir"), (
+        'the "component parameter is set" step modifies study files; load the '
+        'study with \'Given the solver study path is a copy of "..."\' so the '
+        "change stays confined to a temporary copy"
+    )
+    file_path = context.study_path / "input" / Path(system_file.replace("/", os.sep))
+    system = yaml.safe_load(file_path.read_text())
+    components = [c for c in system["system"]["components"] if c["id"] == component]
+    assert len(components) == 1, f"Component '{component}' not found in {file_path}"
+    parameters = [p for p in components[0]["parameters"] if p["id"] == parameter]
+    assert len(parameters) == 1, f"Parameter '{parameter}' not found in component '{component}'"
+    parameters[0]["value"] = value
+    file_path.write_text(yaml.safe_dump(system, sort_keys=False))
+
+
+@then('on link "{link}", during year {year:d}, the hourly "{column}" is {value:g} for every hour')
+def check_link_hourly_column(context, link, year, column, value):
+    # link is the mc-ind folder name, e.g. "a - b"
+    values = context.soh.link_values_hourly(link, year)[column].iloc[:, 0]
+    wrong = values[~np.isclose(values, value)]
+    assert wrong.empty, (
+        f"Link '{link}', year {year}: '{column}' expected to be {value} at every hour, "
+        f"but {len(wrong)} hours differ (first: hour {wrong.index[0] + 1} = {wrong.iloc[0]})"
+    )
 
 @given('the linear solver is {solver_name}')
 def set_linear_solver(context, solver_name):
