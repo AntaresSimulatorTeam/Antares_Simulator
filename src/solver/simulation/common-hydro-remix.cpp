@@ -271,7 +271,9 @@ std::shared_ptr<IStorageForRemix> extractHydroForRemix(const Data::Area& area,
                              capacity,
                              efficiency,
                              reservoirManagement,
-                             "area '" + std::string(area.name) + "', reservoir 'hydro'");
+                             fmt::format("area '{}', reservoir '{}'",
+                                         area.name,
+                                         stsProperties.name));
 }
 
 std::span<const double> weekSubRange(const std::vector<double>& v, unsigned firstHourOfWeek)
@@ -420,11 +422,11 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           }
           catch (std::exception& e)
           {
-              std::string msg = "(MC year " + std::to_string(problem.year + 1) + ", area '"
-                                + area.id + "'" + ", week "
-                                + std::to_string((firstHourOfWeek + 1) / HOURS_IN_WEEK)
-                                + ") : " + e.what();
-              logs.warning(msg);
+              std::string msg = fmt::format("(MC year {}, area '{}', week {}) : {}",
+                                            problem.year + 1,
+                                            area.id,
+                                            (firstHourOfWeek + 1) / HOURS_IN_WEEK,
+                                            e.what());
           }
       });
 
