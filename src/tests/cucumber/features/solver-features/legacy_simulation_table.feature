@@ -63,7 +63,7 @@ Feature: Legacy variables in simulation table
     And the modeler outputs contain the following entries with relative tolerance 1e-4
       | block | component | output         | timestep | scenario | value  |
       | 0     | area_thermal_base      | prop_cost      | 33       | 0        | 126000 |
-      | 0     | area_thermal_semi base | prop_cost      | 33       | 0        | 75000  |
+      | 0     | area_thermal_semi_base | prop_cost      | 33       | 0        | 75000  |
       | 0     | area_thermal_peak      | prop_cost      | 33       | 0        | 64000  |
       | 0     | area_node      | imbalance_cost | 33       | 0        | 520000 |
       | 0     | area_node      | is_loss_of_load | 33      | 0        | 1      |
@@ -296,18 +296,18 @@ Feature: Legacy variables in simulation table
     And the modeler outputs contain the following entries
       | block | component | output              | timestep | scenario | value |
       | 0     | area_thermal_base      | actual_num_units_on | 33       | 0        | 4     |
-      | 0     | area_thermal_semi base | actual_num_units_on | 33       | 0        | 5     |
+      | 0     | area_thermal_semi_base | actual_num_units_on | 33       | 0        | 5     |
       | 0     | area_thermal_peak      | actual_num_units_on | 33       | 0        | 8     |
       | 0     | area_node      | is_loss_of_load     | 33       | 0        | 1     |
       | 0     | area_node      | is_significant_loss_of_load | 33 | 0     | 1     |
       | 0     | area_thermal_base      | co2_emissions        | 33       | 0        | 4320  |
-      | 0     | area_thermal_semi base | co2_emissions        | 33       | 0        | 900   |
+      | 0     | area_thermal_semi_base | co2_emissions        | 33       | 0        | 900   |
       | 0     | area_thermal_peak      | co2_emissions        | 33       | 0        | 560   |
       | 0     | area_thermal_base      | cluster_availability | 33       | 0        | 3600  |
-      | 0     | area_thermal_semi base | cluster_availability | 33       | 0        | 1500  |
+      | 0     | area_thermal_semi_base | cluster_availability | 33       | 0        | 1500  |
       | 0     | area_thermal_peak      | cluster_availability | 33       | 0        | 800   |
       | 0     | area_thermal_base      | up_margin            | 33       | 0        | 0     |
-      | 0     | area_thermal_semi base | up_margin            | 33       | 0        | 0     |
+      | 0     | area_thermal_semi_base | up_margin            | 33       | 0        | 0     |
       | 0     | area_thermal_peak      | up_margin            | 33       | 0        | 0     |
       | 0     | area_thermal_base      | min_gen_power        | 33       | 0        | 0     |
       | 0     | area_thermal_base      | down_margin          | 33       | 0        | 3600  |
@@ -318,7 +318,7 @@ Feature: Legacy variables in simulation table
     And the modeler outputs contain the following entries with relative tolerance 1e-4
       | block | component | output         | timestep | scenario | value  |
       | 0     | area_thermal_base      | prop_cost      | 33       | 0        | 126000 |
-      | 0     | area_thermal_semi base | prop_cost      | 33       | 0        | 75000  |
+      | 0     | area_thermal_semi_base | prop_cost      | 33       | 0        | 75000  |
       | 0     | area_thermal_peak      | prop_cost      | 33       | 0        | 64000  |
       | 0     | area_thermal_base      | non_prop_cost | 33       | 0        | 6800  |
       | 0     | area_node      | imbalance_cost | 33       | 0        | 1040000 |

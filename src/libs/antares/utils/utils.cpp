@@ -19,6 +19,12 @@ namespace fs = std::filesystem;
 namespace Antares
 {
 
+std::string SanitizeId(std::string id)
+{
+    std::replace(id.begin(), id.end(), ' ', '_');
+    return id;
+}
+
 template<>
 void TransformNameIntoID(const AnyString& name, std::string& out)
 {

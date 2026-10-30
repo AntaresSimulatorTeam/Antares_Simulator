@@ -606,7 +606,7 @@ void fillInputGenerationSeries(const Study& study,
     for (uint k = 0; k < study.areas.size(); ++k)
     {
         const auto& area = *(study.areas.byIndex[k]);
-        const std::string areaId = area.id.c_str();
+        const std::string areaId = Antares::SanitizeId(std::string(area.id.c_str()));
         auto& entries = problem.InputGenerationOfArea[k];
 
         auto addEntry = [&entries, PasDeTempsDebut, nbPdt](std::string componentName,
