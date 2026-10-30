@@ -43,11 +43,6 @@ jobs:
       os: ubuntu-22.04
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
-      # Sanitizer runtime configuration, honoured by every executable run in
-      # this job (tests included). halt_on_error guarantees a non-zero exit on
-      # the first issue so the workflow turns red.
-      ASAN_OPTIONS: "halt_on_error=1:abort_on_error=1:detect_leaks=0:strict_string_checks=1:check_initialization_order=1:detect_stack_use_after_return=1"
-      UBSAN_OPTIONS: "halt_on_error=1:print_stacktrace=1"
 
     steps:
     - uses: actions/checkout@v6
@@ -84,7 +79,7 @@ jobs:
     - name: Install APT dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y ccache uuid-dev xsltproc
+        sudo apt-get install -y ccache ninja-build uuid-dev xsltproc
 
     - name: Restore ccache cache
       id: cache
@@ -128,56 +123,40 @@ jobs:
         pip3 install -r src/tests/examples/requirements.txt
 
     - name: Configure
-      # Sanitizer + hardening flags are injected through CMAKE_<LANG>_FLAGS so
-      # they are appended to the per-configuration flags set by the project.
-      #   * -fsanitize=address,undefined        : the actual sanity checks
-      #   * -fno-sanitize-recover=all           : make every UBSan finding fatal
-      #   * -fno-omit-frame-pointer             : readable sanitizer stack traces
-      #   * -Werror                             : compiler warnings become blocking
-      #   * -D_GLIBCXX_ASSERTIONS               : hardened libstdc++ bounds checks
+      # Sanitizer + hardening flags, triplet, generator and build type live in
+      # the `ci-clang-sanitizers` preset of CMakePresets.json (single source of
+      # truth, also usable locally). Only CI-specific settings are passed here;
+      # command-line -D options take precedence over the preset.
       run: |
-        SANITIZE_FLAGS="-fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer -g"
-        cmake -B _build -S . \
+        cmake --preset ci-clang-sanitizers \
         -DCMAKE_C_COMPILER=clang-${{ env.CLANG_VERSION }} \
         -DCMAKE_CXX_COMPILER=clang++-${{ env.CLANG_VERSION }} \
         -DCMAKE_C_COMPILER_LAUNCHER=ccache \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-        -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
-        -DVCPKG_TARGET_TRIPLET=x64-linux \
-        -DCMAKE_BUILD_TYPE=Debug \
-        -DBUILD_TESTING=ON \
-        -DBUILD_TOOLS=ON \
-        -DCMAKE_CXX_FLAGS="$SANITIZE_FLAGS -Werror -D_GLIBCXX_ASSERTIONS" \
-        -DCMAKE_C_FLAGS="$SANITIZE_FLAGS" \
-        -DCMAKE_EXE_LINKER_FLAGS="$SANITIZE_FLAGS" \
-        -DCMAKE_SHARED_LINKER_FLAGS="$SANITIZE_FLAGS" \
         -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
         -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python"
 
     - name: Build
-      run: cmake --build _build -j$(nproc)
+      run: cmake --build --preset ci-clang-sanitizers -j$(nproc)
 
     - name: Run unit and end-to-end tests under sanitizers
-      run: |
-        cd _build
-        # The or-tools/sirius solver is linked as a prebuilt static library that
-        # is NOT instrumented with ASan/UBSan. Tests that construct an or-tools
-        # MPSolver crash inside or-tools' own code under the sanitizers (e.g.
-        # SEGV in MPObjective::offset()/SetCoefficient(), or a constraint/variable
-        # that is never built so a later lookup returns null) — a limitation of
-        # mixing instrumented application code with the uninstrumented prebuilt
-        # solver, not an Antares bug. These tests stay fully covered by the standard
-        # Ubuntu CI; exclude them here so the sanitizer job can exercise the rest
-        # of the code base. Revisit if or-tools is ever rebuilt with sanitizers.
-        ORTOOLS_DEPENDENT_TESTS="^(tests-binding_constraints|tests-modeler|tests-simple-study|test-api|timeseries-tests|test-unfeasible-problem-analyzer|unit-tests-for-solver-optimisation|unit-tests-for-component-filler|tests-solver-utils|test-expressions|unit-tests-for-modeler-api|testOutputs|test-hebdo-area-price-provider)$"
-        ctest -C Debug --output-on-failure -L "unit|end-to-end" -E "$ORTOOLS_DEPENDENT_TESTS"
+      # Test selection, exclusions and ASAN/UBSAN options are defined in the
+      # `ci-clang-sanitizers` test preset (CMakePresets.json).
+      # The excluded tests are those depending on the prebuilt or-tools/sirius
+      # solver, which is NOT instrumented with ASan/UBSan: they crash inside
+      # or-tools' own code under the sanitizers (e.g. SEGV in
+      # MPObjective::offset()/SetCoefficient()) - a limitation of mixing
+      # instrumented application code with the uninstrumented solver, not an
+      # Antares bug. They stay covered by the standard Ubuntu CI. Revisit if
+      # or-tools is ever rebuilt with sanitizers.
+      run: ctest --preset ci-clang-sanitizers
 
     - name: Upload logs for failed tests
       if: ${{ failure() }}
       uses: actions/upload-artifact@v7
       with:
         name: test-log-clang-sanitizers
-        path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
+        path: ${{ github.workspace }}/build-sanitizers/Testing/Temporary/LastTest.log
 
     - name: Cache vcpkg binary dir
       if: always()

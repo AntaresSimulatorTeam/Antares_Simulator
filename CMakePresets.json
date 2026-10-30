@@ -49,7 +49,7 @@
       "filter": {
         "include": { "label": "unit|end-to-end" },
         "exclude": {
-          "name": "^(tests-binding_constraints|tests-modeler|tests-simple-study|test-api|timeseries-tests|test-unfeasible-problem-analyzer|unit-tests-for-solver-optimisation|unit-tests-for-component-filler|tests-solver-utils|test-expressions|unit-tests-for-modeler-api|testOutputs)$"
+          "name": "^(tests-binding_constraints|tests-modeler|tests-simple-study|test-api|timeseries-tests|test-unfeasible-problem-analyzer|unit-tests-for-solver-optimisation|unit-tests-for-component-filler|tests-solver-utils|test-expressions|unit-tests-for-modeler-api|testOutputs|test-hebdo-area-price-provider)$"
         }
       }
     }
