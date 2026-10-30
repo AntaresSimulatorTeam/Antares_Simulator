@@ -25,15 +25,9 @@ public:
     //! Matrix type
     using MatrixType = Matrix;
 
-    //! Pointer
-    using MatrixPtr = Matrix*;
-
     //! Column type
     using ColumnType = std::vector<double>;
-    using ColumnView = std::span<double>;
-    using ConstColumnView = std::span<const double>;
 
-public:
     //! \name Constructors & Destructor
     //@{
     /*!
@@ -215,7 +209,6 @@ public:
     const ColumnType& operator[](unsigned int column) const;
     //@}
 
-public:
     //! Width of the matrix
     ColumnType& mutableColumn(unsigned int column) const;
 
@@ -231,9 +224,6 @@ private:
     unsigned int width_ = 0;
     unsigned int height_ = 0;
     mutable std::vector<ColumnType> columns_;
-    /*!
-    ** \brief Load data from a CSV file
-    */
 }; // class Matrix
 
 /*!

@@ -146,7 +146,7 @@ bool PreproHydro::validate(const std::string& areaID)
     }
 
     const auto& colExp = data[expectation];
-    for (unsigned i = 0; i != data.height(); i++)
+    for (unsigned i = 0; i != data.height(); ++i)
     {
         if (colExp[i] < 0.)
         {
@@ -157,7 +157,7 @@ bool PreproHydro::validate(const std::string& areaID)
     }
 
     const auto& colStdDev = data[stdDeviation];
-    for (unsigned i = 0; i != data.height(); i++)
+    for (unsigned i = 0; i != data.height(); ++i)
     {
         if (colStdDev[i] < 0.)
         {
