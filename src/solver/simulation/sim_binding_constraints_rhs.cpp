@@ -22,17 +22,17 @@ TimeSerie fetchBindingConstraintRHS(const BindingConstraint* bc,
                                     const BindingConstraintGroupRepository& bcGroups,
                                     int year)
 {
-    assert(bc->RHSTimeSeries().width && "Invalid constraint data width");
+    assert(bc->RHSTimeSeries().width() && "Invalid constraint data width");
 
     unsigned ts_number = 0;
     auto* group = bcGroups[bc->group()];
-    if (group && bc->RHSTimeSeries().width != 1)
+    if (group && bc->RHSTimeSeries().width() != 1)
     {
         ts_number = group->timeseriesNumbers[year];
     }
 
-    const double* TS = bc->RHSTimeSeries()[ts_number];
-    return {TS, bc->RHSTimeSeries().height};
+    const double* TS = bc->RHSTimeSeries()[ts_number].data();
+    return {TS, bc->RHSTimeSeries().height()};
 }
 
 auto filterByMustrunCluster(const clusterWeightMap& map)
@@ -118,7 +118,7 @@ static void setRHSforDailyBC(PROBLEME_HEBDO& problem,
                              const unsigned weekFirstDay,
                              const unsigned bcIndex)
 {
-    assert(weekFirstDay + 6 < bc->RHSTimeSeries().height && "Invalid constraint data height");
+    assert(weekFirstDay + 6 < bc->RHSTimeSeries().height() && "Invalid constraint data height");
 
     TimeSerie dailyBCrhs = fetchBindingConstraintRHS(bc, bcGroups, problem.year);
     std::vector<double> mustrunDailyTerms = computeMustrunDailyTerms(bc,
@@ -140,7 +140,7 @@ static void setRHSforWeeklyBC(PROBLEME_HEBDO& problem,
                               const unsigned weekFirstDay,
                               const unsigned bcIndex)
 {
-    assert(weekFirstDay + 6 < bc->RHSTimeSeries().height && "Invalid constraint data height");
+    assert(weekFirstDay + 6 < bc->RHSTimeSeries().height() && "Invalid constraint data height");
 
     TimeSerie dailyBCrhs = fetchBindingConstraintRHS(bc, bcGroups, problem.year);
     std::vector<double> mustrunDailyTerms = computeMustrunDailyTerms(bc,

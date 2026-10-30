@@ -7,9 +7,11 @@
 #include <iostream>
 #include <string>
 #include <unit_test_utils.h>
+#include <vector>
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/io/CsvReader.h>
 #include <antares/io/inputs/InputError.h>
 #include <antares/io/inputs/data-series-csv-importer/DataSeriesRepoImporter.h>
 #include <antares/optimisation/linear-problem-data-impl/timeSeriesSet.h>
@@ -18,6 +20,53 @@ using namespace std;
 using namespace Antares::IO::Inputs;
 using namespace Antares::IO::Inputs::DataSeriesCsvImporter;
 using namespace Antares::LinearProblem::DataImpl;
+
+BOOST_AUTO_TEST_SUITE(CsvReader)
+
+BOOST_AUTO_TEST_CASE(in_memory_reader_preserves_empty_cells_and_crlf)
+{
+    const std::string data = "1,,3\r\n,5,\n";
+    std::vector<std::vector<std::string>> rows;
+
+    BOOST_REQUIRE(Antares::IO::readCSV(data,
+                                       ",",
+                                       [&](std::size_t, auto row)
+                                       {
+                                           auto& values = rows.emplace_back();
+                                           for (const auto& cell: row)
+                                           {
+                                               values.emplace_back(cell.value);
+                                           }
+                                           return true;
+                                       }));
+
+    BOOST_REQUIRE_EQUAL(rows.size(), 2);
+    BOOST_REQUIRE_EQUAL(rows[0].size(), 3);
+    BOOST_CHECK_EQUAL(rows[0][0], "1");
+    BOOST_CHECK_EQUAL(rows[0][1], "");
+    BOOST_CHECK_EQUAL(rows[0][2], "3");
+    BOOST_REQUIRE_EQUAL(rows[1].size(), 3);
+    BOOST_CHECK_EQUAL(rows[1][0], "");
+    BOOST_CHECK_EQUAL(rows[1][1], "5");
+    BOOST_CHECK_EQUAL(rows[1][2], "");
+}
+
+BOOST_AUTO_TEST_CASE(in_memory_reader_stops_when_callback_rejects_a_row)
+{
+    unsigned int rowsRead = 0;
+    const bool completed = Antares::IO::readCSV("1\n2\n3",
+                                                ",",
+                                                [&rowsRead](std::size_t, auto)
+                                                {
+                                                    ++rowsRead;
+                                                    return rowsRead < 2;
+                                                });
+
+    BOOST_CHECK(!completed);
+    BOOST_CHECK_EQUAL(rowsRead, 2);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
 
 struct CsvCreationFixture
 {
@@ -43,11 +92,60 @@ struct CsvCreationFixture
 std::filesystem::path CsvCreationFixture::writeFile(const string filename, const string content)
 {
     auto filepath = temp_path / (filename);
-    std::ofstream outfile(filepath);
+    std::ofstream outfile(filepath, std::ios::binary);
     outfile << content;
     outfile.close();
     return filepath;
 }
+
+BOOST_FIXTURE_TEST_SUITE(_CsvReaderFile_, CsvCreationFixture)
+
+BOOST_AUTO_TEST_CASE(file_reader_returns_owned_rows)
+{
+    const auto filePath = writeFile("data.csv", "1,,3\r\n,5,\n");
+    const auto rows = Antares::IO::readCSVFile(filePath, ",");
+    filesystem::remove(filePath);
+
+    BOOST_REQUIRE_EQUAL(rows.size(), 2);
+    BOOST_REQUIRE_EQUAL(rows[0].size(), 3);
+    BOOST_CHECK_EQUAL(rows[0][0], "1");
+    BOOST_CHECK_EQUAL(rows[0][1], "");
+    BOOST_CHECK_EQUAL(rows[0][2], "3");
+    BOOST_REQUIRE_EQUAL(rows[1].size(), 3);
+    BOOST_CHECK_EQUAL(rows[1][0], "");
+    BOOST_CHECK_EQUAL(rows[1][1], "5");
+    BOOST_CHECK_EQUAL(rows[1][2], "");
+}
+
+BOOST_AUTO_TEST_CASE(file_reader_streams_rows)
+{
+    const auto filePath = writeFile("data.csv", "1,,3\r\n,5,\n");
+    std::vector<std::vector<std::string>> rows;
+
+    BOOST_REQUIRE(Antares::IO::readCSVFile(filePath,
+                                           ",",
+                                           [&rows](std::size_t, Antares::IO::CSVRow row)
+                                           {
+                                               auto& values = rows.emplace_back();
+                                               for (const auto& cell: row)
+                                               {
+                                                   values.emplace_back(cell.value);
+                                               }
+                                               return true;
+                                           }));
+
+    BOOST_REQUIRE_EQUAL(rows.size(), 2);
+    BOOST_REQUIRE_EQUAL(rows[0].size(), 3);
+    BOOST_CHECK_EQUAL(rows[0][0], "1");
+    BOOST_CHECK_EQUAL(rows[0][1], "");
+    BOOST_CHECK_EQUAL(rows[0][2], "3");
+    BOOST_REQUIRE_EQUAL(rows[1].size(), 3);
+    BOOST_CHECK_EQUAL(rows[1][0], "");
+    BOOST_CHECK_EQUAL(rows[1][1], "5");
+    BOOST_CHECK_EQUAL(rows[1][2], "");
+}
+
+BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_FIXTURE_TEST_SUITE(_DataSeriesImport_OneCsvFile_, CsvCreationFixture)
 

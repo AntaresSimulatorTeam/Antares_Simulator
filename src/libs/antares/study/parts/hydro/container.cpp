@@ -5,6 +5,7 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 
+#include <antares/array/matrix-io.h>
 #include <antares/inifile/inifile.h>
 #include <antares/study/area/capacityReservation.h>
 #include <antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h>
@@ -222,29 +223,16 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
 
           std::string creditId = "creditmodulations_" + area.id + ".txt";
           fs::path creditPath = capacityPath / creditId;
-          ret = area.hydro.creditModulation.loadFromCSVFile(creditPath.string(),
-                                                            101,
-                                                            2,
-                                                            Matrix<>::optFixedSize,
-                                                            &study.dataBuffer)
-                && ret;
+          ret = MatrixIO::load(area.hydro.creditModulation, creditPath.string(), 101, 2) && ret;
 
           std::string waterValueId = "waterValues_" + area.id + ".txt";
           fs::path waterValuePath = capacityPath / waterValueId;
-          ret = area.hydro.waterValues.loadFromCSVFile(waterValuePath.string(),
-                                                       101,
-                                                       DAYS_PER_YEAR,
-                                                       Matrix<>::optFixedSize,
-                                                       &study.dataBuffer)
+          ret = MatrixIO::load(area.hydro.waterValues, waterValuePath.string(), 101, DAYS_PER_YEAR)
                 && ret;
 
           std::string inflowId = "inflowPattern_" + area.id + ".txt";
           fs::path inflowPath = capacityPath / inflowId;
-          ret = area.hydro.inflowPattern.loadFromCSVFile(inflowPath.string(),
-                                                         1,
-                                                         DAYS_PER_YEAR,
-                                                         Matrix<>::optFixedSize,
-                                                         &study.dataBuffer)
+          ret = MatrixIO::load(area.hydro.inflowPattern, inflowPath.string(), 1, DAYS_PER_YEAR)
                 && ret;
       });
     ret = PartHydro::LoadIniFile(study, folder) && ret;
@@ -352,24 +340,13 @@ bool PartHydro::validate(Study& study)
 
 bool PartHydro::LoadDailyMaxEnergy(const fs::path& folder, const std::string& areaid)
 {
-    Matrix<>::BufferType fileContent;
     bool ret = true;
 
     fs::path genPath = folder / "common" / "capacity" / ("maxDailyGenEnergy_" + areaid + ".txt");
-    ret = dailyNbHoursAtGenPmax.loadFromCSVFile(genPath.string(),
-                                                1,
-                                                DAYS_PER_YEAR,
-                                                Matrix<>::optFixedSize,
-                                                &fileContent)
-          && ret;
+    ret = MatrixIO::load(dailyNbHoursAtGenPmax, genPath.string(), 1, DAYS_PER_YEAR) && ret;
 
     fs::path pumpPath = folder / "common" / "capacity" / ("maxDailyPumpEnergy_" + areaid + ".txt");
-    ret = dailyNbHoursAtPumpPmax.loadFromCSVFile(pumpPath.string(),
-                                                 1,
-                                                 DAYS_PER_YEAR,
-                                                 Matrix<>::optFixedSize,
-                                                 &fileContent)
-          && ret;
+    ret = MatrixIO::load(dailyNbHoursAtPumpPmax, pumpPath.string(), 1, DAYS_PER_YEAR) && ret;
 
     return ret;
 }
@@ -441,7 +418,7 @@ unsigned int PartHydro::count() const
 }
 
 double getWaterValue(const double& level /* format : in % of reservoir capacity */,
-                     const Matrix<double>& waterValues,
+                     const Matrix& waterValues,
                      const unsigned int day)
 {
     if (level < 0. - 1e-6 || level > 100. + 1e-6)
@@ -465,7 +442,7 @@ double getWaterValue(const double& level /* format : in % of reservoir capacity 
 }
 
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,
-                           Matrix<double, double>& creditMod,
+                           Matrix& creditMod,
                            int modType)
 {
     if (level < 0. - 1e-6 || level > 100. + 1e-6)

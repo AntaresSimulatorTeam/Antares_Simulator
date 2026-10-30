@@ -112,7 +112,7 @@ public:
       unsigned int column,
       unsigned int numSpace) const
     {
-        return pValuesForTheCurrentYear[numSpace][column].hour;
+        return pValuesForTheCurrentYear[numSpace][column].hour.data();
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,

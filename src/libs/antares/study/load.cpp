@@ -100,9 +100,6 @@ void Study::parameterFiller()
                           parameters.firstWeekday,
                           parameters.firstMonthInYear,
                           parameters.leapYear});
-
-    // Reducing memory footprint
-    reduceMemoryUsage();
 }
 
 bool Study::internalLoadFromFolder(const fs::path& path,
@@ -119,9 +116,6 @@ bool Study::internalLoadFromFolder(const fs::path& path,
 
     // Initialize all internal paths
     relocate(path.string());
-
-    // Reserving enough space in buffer to avoid several calls to realloc
-    this->dataBuffer.reserve(4 * 1024 * 1024); // For matrices, reserving 4Mo
 
     if (!internalLoadIni(path, options))
     {

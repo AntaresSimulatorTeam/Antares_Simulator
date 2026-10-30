@@ -20,7 +20,7 @@ namespace Antares::Solver::Variable::Private
 void InternalExportDigestLinksMatrix(const Data::Study& study,
                                      const char* title,
                                      std::string& buffer,
-                                     const Matrix<>& matrix)
+                                     const Matrix& matrix)
 {
     // THIS FILE IS DEPRECATED !!!
     buffer.append("\n\n\n\n\t").append(title).append("\n\t\tFrom...\n\t...To");

@@ -133,14 +133,14 @@ public:
     ** Reserves, DSM, D-1...
     ** \see enum ReservesIndex
     */
-    Matrix<> reserves;
+    Matrix reserves;
     /*!
     ** \brief Misc Gen
     **
     ** (previously called `Fatal hors hydro`) - fhhMax * HOURS_PER_YEAR
     ** The sum is done in runtimeinfos.cpp
     */
-    Matrix<> miscGen; // [fhhMax][HOURS_PER_YEAR]
+    Matrix miscGen; // [fhhMax][HOURS_PER_YEAR]
     //@}
 
     //! \name Load

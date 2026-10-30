@@ -205,7 +205,7 @@ void checkSizeFirst(const std::vector<double>& in, double v)
 
 void checkSizeFirst(const TimeSeries& series, double value)
 {
-    BOOST_CHECK_EQUAL(series.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(series.timeSeries.height(), HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(series.getCoefficient(0, 0), value);
 }
 
@@ -673,7 +673,7 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_ValidRhs, AdditConstrFixture<1
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
 
     const auto& rhs = storageInput.storagesByIndex[0].additionalConstraints[0]->rhs();
-    BOOST_CHECK_EQUAL(rhs.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(rhs.timeSeries.height(), HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(rhs.getCoefficient(0, 0), 0.0);
     BOOST_CHECK_EQUAL(rhs.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
 }
@@ -697,7 +697,7 @@ BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, AdditConstrFixture<1>)
     BOOST_CHECK_EQUAL(constraint1->cluster_id, sts_names[0]);
 
     const auto& rhs1 = constraint1->rhs();
-    BOOST_CHECK_EQUAL(rhs1.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(rhs1.timeSeries.height(), HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(rhs1.getCoefficient(0, 0), 0.0);
     BOOST_CHECK_EQUAL(rhs1.getCoefficient(0, HOURS_PER_YEAR - 1), HOURS_PER_YEAR - 1);
 
@@ -709,7 +709,7 @@ BOOST_FIXTURE_TEST_CASE(Load2ConstraintsFromIniFile, AdditConstrFixture<1>)
     BOOST_CHECK_EQUAL(constraint2->cluster_id, sts_names[0]);
 
     const auto& rhs2 = constraint2->rhs();
-    BOOST_CHECK_EQUAL(rhs2.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(rhs2.timeSeries.height(), HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(rhs2.getCoefficient(0, 0), 0.0);
     BOOST_CHECK_EQUAL(rhs2.getCoefficient(0, HOURS_PER_YEAR - 1), 0);
 }
@@ -721,7 +721,7 @@ BOOST_FIXTURE_TEST_CASE(loadAdditionalConstraints_MissingRhsFile, AdditConstrFix
     BOOST_CHECK(storageInput.loadAdditionalConstraints(work_dir));
 
     const auto& constraintRhs = storageInput.storagesByIndex[0].additionalConstraints[0]->rhs();
-    BOOST_CHECK_EQUAL(constraintRhs.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(constraintRhs.timeSeries.height(), HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(constraintRhs.getCoefficient(0, 0), 0.0);
 }
 
@@ -764,7 +764,7 @@ BOOST_DATA_TEST_CASE_F(AdditConstrFixture<1>,
     BOOST_CHECK_EQUAL(loadedConstraint->operatorType, op);
 
     const auto& rhs = loadedConstraint->rhs();
-    BOOST_REQUIRE_EQUAL(rhs.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_REQUIRE_EQUAL(rhs.timeSeries.height(), HOURS_PER_YEAR);
 
     unsigned i = 0;
     while (i < HOURS_PER_YEAR)

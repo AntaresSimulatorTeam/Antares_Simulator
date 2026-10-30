@@ -45,8 +45,8 @@ struct LinkTSgenerationParams
 
     std::unique_ptr<Data::PreproAvailability> prepro;
 
-    Matrix<> modulationCapacityDirect;
-    Matrix<> modulationCapacityIndirect;
+    Matrix modulationCapacityDirect;
+    Matrix modulationCapacityIndirect;
 
     bool forceNoGeneration = false;
     bool hasValidData = true;
@@ -58,7 +58,7 @@ public:
     explicit AvailabilityTSGeneratorData(Data::ThermalCluster*);
 
     AvailabilityTSGeneratorData(LinkTSgenerationParams&,
-                                Matrix<>& modulation,
+                                Matrix& modulation,
                                 const std::string& name);
 
     const unsigned& unitCount;
@@ -72,7 +72,7 @@ public:
 
     Data::PreproAvailability* prepro;
 
-    Matrix<>::ColumnType& modulationCapacity;
+    Matrix::ColumnType& modulationCapacity;
 
     const std::string& name;
 };

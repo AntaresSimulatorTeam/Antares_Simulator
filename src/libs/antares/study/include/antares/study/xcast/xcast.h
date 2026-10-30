@@ -123,17 +123,17 @@ public:
     /*!
     ** \brief Data required for XCast: coefficients (coeffMax x 12)
     */
-    Matrix<float> data;
+    Matrix data;
 
     /*!
     ** \brief K (12x24)
     */
-    Matrix<float> K;
+    Matrix K;
 
     /*!
     ** \brief Time-series average
     */
-    Matrix<int32_t> translation;
+    Matrix translation;
 
     //! How to use the timeseries average
     TSTranslationUse useTranslation;
@@ -151,7 +151,7 @@ public:
     **
     ** The first row gives the X-Coordinates, the second one the Y-Coordinates.
     */
-    Matrix<float> conversion;
+    Matrix conversion;
 
     //! The related time-series
     const TimeSeriesType timeSeries;

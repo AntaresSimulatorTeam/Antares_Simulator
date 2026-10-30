@@ -9,6 +9,7 @@
 
 #include <boost/algorithm/string/trim.hpp>
 
+#include <antares/array/matrix-io.h>
 #include <antares/inifile/inifile.h>
 #include <antares/io/file.h>
 #include <antares/logs/logs.h>
@@ -541,15 +542,15 @@ static void readAdqPatchMode(Study& study, Area& area)
     }
 }
 
-static bool checkMatrixPositive(const Matrix<>& m, const std::string& buffer, unsigned limit)
+static bool checkMatrixPositive(const Matrix& m, const std::string& buffer, unsigned limit)
 {
     logs.debug() << "Checking : " << buffer;
-    if (m.width and m.height and limit)
+    if (m.width() and m.height() and limit)
     {
         for (unsigned x = 0; x < limit; ++x)
         {
-            auto& column = m.entry[x];
-            for (unsigned y = 0; y < m.height; ++y)
+            auto& column = m[x];
+            for (unsigned y = 0; y < m.height(); ++y)
             {
                 if (column[y] < 0.)
                 {
@@ -582,11 +583,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // DSM, Reserves, D-1
     fs::path reservesPath = (study.folderInput / "reserves" / area.id).replace_extension("txt");
-    ret = area.reserves.loadFromCSVFile(reservesPath.string(),
-                                        fhrMax,
-                                        HOURS_PER_YEAR,
-                                        Matrix<>::optFixedSize)
-          && ret;
+    ret = MatrixIO::load(area.reserves, reservesPath.string(), fhrMax, HOURS_PER_YEAR) && ret;
 
     // Optimzation preferences
     if (!study.parameters.include.reserve.dayAhead)
@@ -606,11 +603,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     std::string miscgenName = "miscgen-" + area.id + ".txt";
     fs::path miscgenPath = study.folderInput / "misc-gen" / miscgenName;
 
-    ret = area.miscGen.loadFromCSVFile(miscgenPath.string(),
-                                       fhhMax,
-                                       HOURS_PER_YEAR,
-                                       Matrix<>::optFixedSize)
-          && ret;
+    ret = MatrixIO::load(area.miscGen, miscgenPath.string(), fhhMax, HOURS_PER_YEAR) && ret;
 
     // Check misc gen
     buffer = "Misc Gen: `" + area.id + '`';

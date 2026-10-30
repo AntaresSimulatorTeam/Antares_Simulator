@@ -511,12 +511,12 @@ void BindingConstraint::group(std::string group_name)
     group_ = std::move(group_name);
 }
 
-const Matrix<>& BindingConstraint::RHSTimeSeries() const
+const Matrix& BindingConstraint::RHSTimeSeries() const
 {
     return RHSTimeSeries_;
 }
 
-Matrix<>& BindingConstraint::RHSTimeSeries()
+Matrix& BindingConstraint::RHSTimeSeries()
 {
     return RHSTimeSeries_;
 }

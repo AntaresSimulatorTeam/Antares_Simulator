@@ -37,7 +37,6 @@ add_boost_test(tests-matrix-save
         SRC
         logs/antares/logs/logs.h
         array/fill-matrix.h
-        array/matrix-bypass-load.h
         array/tests-matrix-save.h
         array/tests-matrix-save.cpp
         INCLUDE
@@ -48,6 +47,7 @@ add_boost_test(tests-matrix-save
         "${CMAKE_SOURCE_DIR}/src/tests/src/libs"
         LIBS
         matrix
+        Antares::io
         yuni-static-core
         antares-core
         Antares::exception)
@@ -56,7 +56,6 @@ add_boost_test(tests-matrix-save
 add_boost_test(tests-matrix-load
         SRC
         array/fill-matrix.h
-        array/matrix-bypass-load.h
         array/tests-matrix-load.h
         array/tests-matrix-load.cpp
         INCLUDE
@@ -67,6 +66,7 @@ add_boost_test(tests-matrix-load
         "${CMAKE_SOURCE_DIR}/src/tests/src/libs"
         LIBS
         matrix
+        Antares::io
         yuni-static-core
         antares-core
         Antares::exception)

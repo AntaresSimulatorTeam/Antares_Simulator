@@ -117,17 +117,16 @@ public:
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
         // Copy raw values
-        unsigned int height = area->miscGen.height;
-        (void)::memcpy(pValuesForTheCurrentYear.hour,
-                       area->miscGen.entry[Data::fhhRowBalance],
+        unsigned int height = area->miscGen.height();
+        (void)::memcpy(pValuesForTheCurrentYear.hour.data(),
+                       area->miscGen[Data::fhhRowBalance].data(),
                        sizeof(double) * height);
 
         if (study->parameters.mode == Data::SimulationMode::Adequacy)
         {
             for (unsigned int h = 0; h != height; ++h)
             {
-                pValuesForTheCurrentYear.hour[h] -= area->reserves
-                                                      .entry[Data::fhrPrimaryReserve][h];
+                pValuesForTheCurrentYear.hour[h] -= area->reserves[Data::fhrPrimaryReserve][h];
             }
         }
         // Compute all statistics for the current year (daily,weekly,monthly)

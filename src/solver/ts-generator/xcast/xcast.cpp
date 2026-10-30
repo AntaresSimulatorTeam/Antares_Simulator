@@ -9,6 +9,7 @@
 #include <string>
 
 #include <antares/antares/fatal-error.h>
+#include <antares/array/matrix-io.h>
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
 #include "antares/solver/ts-generator/xcast/predicate.hxx"
@@ -55,7 +56,7 @@ void XCast::exportTimeSeriesToTheOutput(PredicateT& predicate)
           std::string areaId = area.id + "txt";
           fs::path filename = output / areaId;
           std::string buffer;
-          predicate.matrix(area).saveToBuffer(buffer);
+          MatrixIO::saveToBuffer(predicate.matrix(area), buffer, 6, false, std::identity{}, true);
 
           pWriter.addEntryFromBuffer(filename, buffer);
       });
@@ -88,9 +89,9 @@ void XCast::applyTransferFunction(PredicateT& predicate)
 
             uint last_i = 0;
 
-            a[tf.width] = 0.f;
-            b[tf.width] = 0.f;
-            for (i = 0; i != tf.width - 1; ++i)
+            a[tf.width()] = 0.f;
+            b[tf.width()] = 0.f;
+            for (i = 0; i != tf.width() - 1; ++i)
             {
                 auto& p0 = tf[i];
                 auto& p1 = tf[i + 1];
@@ -108,10 +109,10 @@ void XCast::applyTransferFunction(PredicateT& predicate)
             auto& dailyResults = DATA[s];
             for (h = 0; h != HOURS_PER_DAY; ++h)
             {
-                for (i = 0; i != tf.width; ++i)
+                for (i = 0; i != tf.width(); ++i)
                 {
-                    j = (i + last_i) % (tf.width);
-                    k = (i + last_i + 1) % (tf.width);
+                    j = (i + last_i) % tf.width();
+                    k = (i + last_i + 1) % tf.width();
                     auto& pj = tf.column(j);
                     auto& pk = tf.column(k);
 
@@ -141,15 +142,21 @@ void XCast::updateMissingCoefficients(PredicateT& predicate)
             {
             case Data::XCast::dtNormal:
             {
-                float** v = data.data.entry;
-                v[gamma][realmonth] = v[alpha][realmonth] - 6.f * v[beta][realmonth];
-                v[delta][realmonth] = v[alpha][realmonth] + 6.f * v[beta][realmonth];
+                auto& v = data.data;
+                // Keep the historical float arithmetic used by XCast. The study data is stored
+                // as doubles, but the generated series and their seeded random path are
+                // float-based.
+                const float average = static_cast<float>(v[alpha][realmonth]);
+                const float deviation = static_cast<float>(v[beta][realmonth]);
+                v[gamma][realmonth] = average - 6.f * deviation;
+                v[delta][realmonth] = average + 6.f * deviation;
                 break;
             }
             case Data::XCast::dtWeibullShapeA:
             {
-                float** v = data.data.entry;
-                v[delta][realmonth] = (float)GammaEuler(1. + 1. / v[alpha][realmonth]);
+                auto& v = data.data;
+                const float shape = static_cast<float>(v[alpha][realmonth]);
+                v[delta][realmonth] = static_cast<float>(GammaEuler(1. + 1. / shape));
                 break;
             }
             default:
@@ -253,7 +260,7 @@ bool XCast::runWithPredicate(PredicateT& predicate)
 
             auto& xcast = predicate.xcastData(area);
 
-            pUseConversion[s] = (xcast.useConversion && xcast.conversion.width >= 3);
+            pUseConversion[s] = (xcast.useConversion && xcast.conversion.width() >= 3);
         }
 
         pAccuracyOnCorrelation = ((study.parameters.timeSeriesAccuracyOnCorrelation
@@ -332,7 +339,7 @@ bool XCast::runWithPredicate(PredicateT& predicate)
                     MA[s] = +std::numeric_limits<float>::max();
                 }
                 }
-                memcpy(FO[s].data(), xcastdata.K[realmonth], sizeof(float) * HOURS_PER_DAY);
+                std::copy_n(xcastdata.K[realmonth].begin(), HOURS_PER_DAY, FO[s].begin());
             }
 
             uint nbDaysPerMonth = study.calendar.months[month].days;
@@ -369,7 +376,7 @@ bool XCast::runWithPredicate(PredicateT& predicate)
 
                     auto& column = srcData.translation[0];
                     auto& dailyResults = DATA[s];
-                    assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height
+                    assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height()
                            && "Bound checking");
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
@@ -402,7 +409,7 @@ bool XCast::runWithPredicate(PredicateT& predicate)
                     auto& srcData = predicate.xcastData(currentArea);
 
                     auto& series = predicate.matrix(currentArea);
-                    assert(tsIndex < series.width);
+                    assert(tsIndex < series.width());
                     auto& column = series.column(tsIndex);
                     auto& dailyResults = DATA[s];
 
@@ -414,7 +421,7 @@ bool XCast::runWithPredicate(PredicateT& predicate)
 
                     if (srcData.useTranslation == Data::XCast::tsTranslationAfterConversion)
                     {
-                        assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height
+                        assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height()
                                && "Bound checking");
                         auto& tsavg = srcData.translation[0];
                         for (uint h = 0; h != HOURS_PER_DAY; ++h)
@@ -423,7 +430,7 @@ bool XCast::runWithPredicate(PredicateT& predicate)
                         }
                     }
 
-                    assert(hourInTheYear + HOURS_PER_DAY <= series.height && "Bound checking");
+                    assert(hourInTheYear + HOURS_PER_DAY <= series.height() && "Bound checking");
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
                         column[hourInTheYear + h] = std::round(dailyResults[h]);
@@ -463,17 +470,17 @@ bool XCast::runWithPredicate(PredicateT& predicate)
         {
             auto& area = *(study.areas.byIndex[s]);
 
-            assert(static_cast<uint>(Data::fhrDSM) < area.reserves.width);
+            assert(static_cast<uint>(Data::fhrDSM) < area.reserves.width());
 
             auto& matrix = area.load.series.timeSeries;
             auto& dsmvalues = area.reserves.column(Data::fhrDSM);
 
-            assert(matrix.width > 0);
-            assert(matrix.height > 0);
-            for (uint timeSeries = 0; timeSeries < matrix.width; ++timeSeries)
+            assert(matrix.width() > 0);
+            assert(matrix.height() > 0);
+            for (uint timeSeries = 0; timeSeries < matrix.width(); ++timeSeries)
             {
                 auto& perHour = matrix.column(timeSeries);
-                for (uint h = 0; h < matrix.height; ++h)
+                for (uint h = 0; h < matrix.height(); ++h)
                 {
                     perHour[h] += dsmvalues[h];
                     assert(!std::isnan(perHour[h]));

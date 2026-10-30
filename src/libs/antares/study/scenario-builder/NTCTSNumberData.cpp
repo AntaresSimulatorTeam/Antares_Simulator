@@ -28,7 +28,7 @@ void ntcTSNumberData::setTSnumber(const Antares::Data::AreaLink* link,
                                   unsigned int value)
 {
     assert(link != nullptr);
-    if (year < pTSNumberRules.height && link->indexForArea < pTSNumberRules.width)
+    if (year < pTSNumberRules.height() && link->indexForArea < pTSNumberRules.width())
     {
         pTSNumberRules[link->indexForArea][year] = value;
     }
@@ -52,7 +52,7 @@ bool ntcTSNumberData::apply(Study& study)
     {
         auto* link = i.second;
         unsigned int linkIndex = link->indexForArea;
-        assert(linkIndex < pTSNumberRules.width);
+        assert(linkIndex < pTSNumberRules.width());
         const auto& col = pTSNumberRules[linkIndex];
         logprefix = "NTC: area '" + area.name + "', link: '" + link->getName() + "': ";
         ret = ApplyToMatrix(errors, logprefix, *link, col, ntcGeneratedTScount) && ret;

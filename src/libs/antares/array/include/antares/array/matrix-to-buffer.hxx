@@ -4,7 +4,12 @@
 #ifndef __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_HXX__
 #define __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_HXX__
 
-#ifdef YUNI_OS_MSVC
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <cstdio>
+
+#ifdef _MSC_VER
 #define ANTARES_MATRIX_SNPRINTF sprintf_s
 #else
 #define ANTARES_MATRIX_SNPRINTF snprintf
@@ -16,24 +21,7 @@ namespace Antares
 {
 namespace // anonymous
 {
-template<class T>
 struct MatrixScalar
-{
-    static inline void Append(std::string& file, T v, const char* const)
-    {
-        if (Utils::isZero(v))
-        {
-            file.append(std::to_string(0));
-        }
-        else
-        {
-            file.append(std::to_string(v));
-        }
-    }
-};
-
-template<>
-struct MatrixScalar<double>
 {
     static void Append(std::string& file, double v, const char* const format)
     {
@@ -66,124 +54,48 @@ struct MatrixScalar<double>
     }
 };
 
-template<>
-struct MatrixScalar<float>
-{
-    static void Append(std::string& file, float v, const char* const format)
-    {
-        if (Utils::isZero(v))
-        {
-            file += '0';
-        }
-        else
-        {
-            char ConversionBuffer[128];
-            const int sizePrintf = Utils::isZero(v - floor(v))
-                                     ? ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
-                                                               sizeof(ConversionBuffer),
-                                                               "%.0f",
-                                                               (double)v)
-                                     : ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
-                                                               sizeof(ConversionBuffer),
-                                                               format,
-                                                               (double)v);
-
-            if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
-            {
-                file += (const char*)ConversionBuffer;
-            }
-            else
-            {
-                file += "ERR";
-            }
-        }
-    }
-};
-
 } // anonymous namespace
 
-template<class T, class ReadWriteT, class PredicateT>
-std::unique_ptr<I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>>
-matrix_to_buffer_dumper_factory::get_dumper(const Matrix<T, ReadWriteT>* mtx,
-                                            std::string& data,
-                                            PredicateT& predicate)
+template<class PredicateT>
+void matrixToBuffer(const Matrix& matrix,
+                    std::string& data,
+                    PredicateT& predicate,
+                    unsigned int precision)
 {
-    if (mtx->width == 1)
-    {
-        return std::make_unique<one_column__dumper<T, ReadWriteT, PredicateT>>(mtx,
-                                                                               data,
-                                                                               predicate);
-    }
-    else
-    {
-        return std::make_unique<multiple_columns__dumper<T, ReadWriteT, PredicateT>>(mtx,
-                                                                                     data,
-                                                                                     predicate);
-    }
-}
+    static constexpr std::array formats = {
+      "%.0f",
+      "%.1f",
+      "%.2f",
+      "%.3f",
+      "%.4f",
+      "%.5f",
+      "%.6f",
+      "%.7f",
+      "%.8f",
+      "%.9f",
+      "%.10f",
+      "%.11f",
+      "%.12f",
+      "%.13f",
+      "%.14f",
+      "%.15f",
+      "%.16f",
+    };
 
-template<class T, class ReadWriteT, class PredicateT>
-void I_mtx_to_buffer_dumper<T, ReadWriteT, PredicateT>::set_print_format(bool isDecimal,
-                                                                         uint precision)
-{
-    // Determining the string format to use according the given precision
-    format_ = "%.0f";
+    const char* format = formats[std::min(precision,
+                                          static_cast<unsigned int>(formats.size() - 1))];
 
-    if (isDecimal and precision)
+    for (unsigned int y = 0; y != matrix.height(); ++y)
     {
-        const char* const sfmt[] = {
-          "%.0f",
-          "%.1f",
-          "%.2f",
-          "%.3f",
-          "%.4f",
-          "%.5f",
-          "%.6f",
-          "%.7f",
-          "%.8f",
-          "%.9f",
-          "%.10f",
-          "%.11f",
-          "%.12f",
-          "%.13f",
-          "%.14f",
-          "%.15f",
-          "%.16f",
-        };
-        assert(precision <= 16);
-        format_ = sfmt[precision];
-    }
-}
-
-template<class T, class ReadWriteT, class PredicateT>
-void one_column__dumper<T, ReadWriteT, PredicateT>::run()
-{
-    for (uint y = 0; y != (this->mtx_)->height; ++y)
-    {
-        MatrixScalar<ReadWriteT>::Append(this->buffer_,
-                                         (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]),
-                                         this->format_.c_str());
-        this->buffer_ += '\n';
-    }
-}
-
-template<class T, class ReadWriteT, class PredicateT>
-void multiple_columns__dumper<T, ReadWriteT, PredicateT>::run()
-{
-    for (uint y = 0; y < (this->mtx_)->height; ++y)
-    {
-        MatrixScalar<ReadWriteT>::Append(this->buffer_,
-                                         (ReadWriteT)this->predicate_((this->mtx_)->entry[0][y]),
-                                         this->format_.c_str());
-        for (uint x = 1; x < (this->mtx_)->width; ++x)
+        for (unsigned int x = 0; x != matrix.width(); ++x)
         {
-            this->buffer_ += '\t';
-            MatrixScalar<ReadWriteT>::Append(this->buffer_,
-                                             (ReadWriteT)this->predicate_(
-                                               (this->mtx_)->entry[x][y]),
-                                             this->format_.c_str());
+            if (x)
+            {
+                data += '\t';
+            }
+            MatrixScalar::Append(data, static_cast<double>(predicate(matrix[x][y])), format);
         }
-        this->buffer_ += '\n';
+        data += '\n';
     }
 }
 

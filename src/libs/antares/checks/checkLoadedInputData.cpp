@@ -123,8 +123,8 @@ static void checkThermalColumnNumber(const AreaList& areas,
             {
                 continue;
             }
-            const uint otherMatrixWidth = (cluster->ecoInput.*matrix).width;
-            uint tsWidth = cluster->series.timeSeries.width;
+            const uint otherMatrixWidth = (cluster->ecoInput.*matrix).width();
+            uint tsWidth = cluster->series.timeSeries.width();
             if (otherMatrixWidth != 1 && otherMatrixWidth != tsWidth)
             {
                 logs.warning() << "Area: " << area.name << ". Cluster name: " << cluster->name()

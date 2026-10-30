@@ -184,8 +184,8 @@ bool Adequacy::year(Variable::State& state,
                     double& conso = currentProblem.ConsommationsAbattues[hw]
                                       .ConsommationAbattueDuPays[ar];
                     double stratReserve = area.reserves[fhrStrategicReserve][hw + hourInTheYear];
-                    assert(ar < state.resSpilled.width);
-                    assert(hw < state.resSpilled.height);
+                    assert(ar < state.resSpilled.width());
+                    assert(hw < state.resSpilled.height());
 
                     if (conso < -stratReserve)
                     {
@@ -316,8 +316,8 @@ bool Adequacy::year(Variable::State& state,
 
                 for (uint k = 0; k != nbAreas; ++k)
                 {
-                    assert(k < state.resSpilled.width);
-                    assert(j < state.resSpilled.height);
+                    assert(k < state.resSpilled.width());
+                    assert(j < state.resSpilled.height());
                     auto& hydroVentilation = hydroVentilationResults[k];
                     auto& hourlyResults = currentProblem.ResultatsHoraires[k];
 
