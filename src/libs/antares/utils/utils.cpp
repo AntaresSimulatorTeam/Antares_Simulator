@@ -19,7 +19,7 @@ namespace fs = std::filesystem;
 namespace Antares
 {
 
-inline std::string SanitizeId(std::string id)
+std::string SanitizeId(std::string id)
 {
     std::replace(id.begin(), id.end(), ' ', '_');
     return id;
