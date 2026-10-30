@@ -259,14 +259,8 @@ inline void Matrix::roundAllEntries()
     }
 }
 
-inline bool Matrix::containsOnlyZero() const
-{
-    PredicateIdentity predicate;
-    return containsOnlyZero(predicate);
-}
-
 template<class PredicateT>
-bool Matrix::containsOnlyZero(PredicateT& predicate) const
+bool Matrix::containsOnlyZero(const PredicateT& predicate) const
 {
     for (const auto& column: columns_)
     {

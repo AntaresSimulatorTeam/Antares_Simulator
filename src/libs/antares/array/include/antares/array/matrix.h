@@ -5,6 +5,7 @@
 #define __ANTARES_LIBS_ARRAY_MATRIX_H__
 
 #include <cassert>
+#include <functional>
 #include <span>
 #include <vector>
 
@@ -170,16 +171,11 @@ public:
 
     /*!
     ** \brief Get if the matrix only contains zero
-    */
-    bool containsOnlyZero() const;
-
-    /*!
-    ** \brief Get if the matrix only contains zero
     **
     ** \param predicate A predicate to modify the values on the fly
     */
-    template<class PredicateT>
-    bool containsOnlyZero(PredicateT& predicate) const;
+    template<class PredicateT = std::identity>
+    bool containsOnlyZero(const PredicateT& predicate = {}) const;
 
     //! \name Memory Management
     //@{
@@ -211,14 +207,6 @@ public:
 
     //! Width of the matrix
     ColumnType& mutableColumn(unsigned int column) const;
-
-    struct PredicateIdentity
-    {
-        inline double operator()(double value) const
-        {
-            return value;
-        }
-    };
 
 private:
     unsigned int width_ = 0;
