@@ -188,7 +188,7 @@ void LegacyExtraOutputEmitter::emit(const std::string& output,
                                     int pdt,
                                     double value) const
 {
-    const unsigned hour = problemeHebdo_.weekInTheYear * 168 + static_cast<unsigned>(pdt);
+    const unsigned hour = fillContext_.getGlobalFirstTimeStep() + static_cast<unsigned>(pdt);
     table_.addEntry({.block = block_,
                      .component = component,
                      .output = output,
@@ -409,18 +409,20 @@ void LegacyExtraOutputEmitter::linkOutputs(uint32_t interco, int pdt)
     emit("out_port.flow", link, pdt, flow);
     emit("in_port.flow", link, pdt, -flow);
 
-    const auto& ntc = problemeHebdo_.ValeursDeNTC[pdt];
+    const int weekPdt = static_cast<int>(fillContext_.getGlobalFirstTimeStep())
+                        - problemeHebdo_.HeureDansLAnnee + pdt;
+    const auto& ntc = problemeHebdo_.ValeursDeNTC[weekPdt];
     emit("actual_loop_flow", link, pdt, ntc.ValeurDeLoopFlowOrigineVersExtremite[interco]);
 
     constexpr double saturationEpsilon = 1e-5;
     emit("is_directly_congested",
          link,
          pdt,
-         flow >= ntc.ValeurDeNTCOrigineVersExtremite[interco] - saturationEpsilon ? 1. : 0.);
+         flow >= ntc.directCapacity(interco) - saturationEpsilon ? 1. : 0.);
     emit("is_indirectly_congested",
          link,
          pdt,
-         -flow >= ntc.ValeurDeNTCExtremiteVersOrigine[interco] - saturationEpsilon ? 1. : 0.);
+         -flow >= ntc.indirectCapacity(interco) - saturationEpsilon ? 1. : 0.);
 
     const double priceDelta = areaPrice(destination, pdt) - areaPrice(origin, pdt);
     emit("abs_congestion_fee", link, pdt, std::abs(flow) * std::abs(priceDelta));

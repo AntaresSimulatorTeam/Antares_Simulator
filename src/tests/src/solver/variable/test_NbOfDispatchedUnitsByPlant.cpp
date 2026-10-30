@@ -135,4 +135,26 @@ BOOST_AUTO_TEST_CASE(yearEndBuildForEach_copiesBackDispatchedUnitsCount)
     BOOST_CHECK_CLOSE(hourlyValues[rangeEnd], static_cast<double>(expectedNodu), 1e-6);
 }
 
+BOOST_AUTO_TEST_CASE(startANewYear_resets_thermal_ramping_cost_cache)
+{
+    StudyWithOneArea fixture;
+    auto* area = fixture.area;
+    auto* cluster = fixture.cluster;
+    cluster->ramping.emplace();
+
+    State state(*fixture.study);
+
+    auto& rampingCostForYear = state.thermal[area->index]
+                                 .thermalClustersRampingCostForYear[cluster->enabledIndex];
+    BOOST_REQUIRE(!rampingCostForYear.empty());
+
+    rampingCostForYear[5] = 12.3;
+    rampingCostForYear[42] = 7.8;
+
+    state.startANewYear();
+
+    BOOST_CHECK_EQUAL(rampingCostForYear[5], 0.);
+    BOOST_CHECK_EQUAL(rampingCostForYear[42], 0.);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

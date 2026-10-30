@@ -47,6 +47,8 @@ public:
                                             Antares::IO::Inputs::YmlModel::PortType& rhs);
     static bool convertThermalCapacityField(const Node& node,
                                             Antares::IO::Inputs::YmlModel::PortType& rhs);
+    static bool convertLinkCapacityFields(const Node& node,
+                                          Antares::IO::Inputs::YmlModel::PortType& rhs);
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::PortType& rhs);
 };
 

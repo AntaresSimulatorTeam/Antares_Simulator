@@ -185,17 +185,15 @@ public:
         float ratio = yearsWeight[state.year] / yearsWeightSum;
 
         assert(state.link != NULL);
-        const auto& linkDirectCapa = state.link->directCapacities;
-        const auto& linkIndirectCapa = state.link->indirectCapacities;
         // CONG. PROB +
         if (state.ntc.ValeurDuFlux[state.link->index]
-            > +linkDirectCapa.getCoefficient(state.year, state.hourInTheYear) - 10e-6)
+            > state.ntc.directCapacity(state.link->index) - 10e-6)
         {
             pValuesForTheCurrentYear[numSpace][0].hour[state.hourInTheYear] += 100.0 * ratio;
         }
         // CONG. PROB -
         if (state.ntc.ValeurDuFlux[state.link->index]
-            < -linkIndirectCapa.getCoefficient(state.year, state.hourInTheYear) + 10e-6)
+            < -state.ntc.indirectCapacity(state.link->index) + 10e-6)
         {
             pValuesForTheCurrentYear[numSpace][1].hour[state.hourInTheYear] += 100.0 * ratio;
         }

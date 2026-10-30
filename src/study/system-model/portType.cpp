@@ -57,13 +57,43 @@ std::optional<std::string> getConnectionField(const std::vector<PortField>& fiel
     return std::nullopt;
 }
 
+std::optional<LinkCapacityConnectionFields> getLinkConnectionFields(
+  const std::vector<PortField>& fields,
+  const std::string& portTypeId,
+  const std::string& directConnectionFieldId,
+  const std::string& indirectConnectionFieldId)
+{
+    if (directConnectionFieldId.empty() && indirectConnectionFieldId.empty())
+    {
+        return std::nullopt;
+    }
+    const auto directField = getConnectionField(fields,
+                                                portTypeId,
+                                                directConnectionFieldId,
+                                                "link capacity (direct)");
+    const auto indirectField = getConnectionField(fields,
+                                                  portTypeId,
+                                                  indirectConnectionFieldId,
+                                                  "link capacity (indirect)");
+    if (!directField.has_value() || !indirectField.has_value())
+    {
+        throw std::invalid_argument(
+          fmt::format("PortType '{}': both direct and indirect fields are required for "
+                      "link capacity connections.",
+                      portTypeId));
+    }
+    return LinkCapacityConnectionFields{directField.value(), indirectField.value()};
+}
+
 // -------------------
 // PortType methods
 // -------------------
 PortType::PortType(const std::string& id,
                    std::vector<PortField>&& portFields,
                    const AreaConnection& areaConnection,
-                   const std::string& thermalCapacityConnectionField):
+                   const std::string& thermalCapacityConnectionField,
+                   const std::string& linkCapacityConnectionDirectField,
+                   const std::string& linkCapacityConnectionIndirectField):
     id_(id),
     fields_(std::move(portFields))
 {
@@ -75,6 +105,10 @@ PortType::PortType(const std::string& id,
                                                            id,
                                                            thermalCapacityConnectionField,
                                                            "thermal capacity");
+    linkCapacityConnectionFieldIds_ = getLinkConnectionFields(fields_,
+                                                              id,
+                                                              linkCapacityConnectionDirectField,
+                                                              linkCapacityConnectionIndirectField);
 }
 
 const std::string& PortType::Id() const
@@ -95,11 +129,17 @@ const std::optional<AreaConnection>& PortType::areaConnection() const
 bool PortType::operator==(const PortType& other) const
 {
     return id_ == other.id_ && fields_ == other.fields_ && areaConnection_ == other.areaConnection_
-           && thermalCapacityConnectionFieldId_ == other.thermalCapacityConnectionFieldId_;
+           && thermalCapacityConnectionFieldId_ == other.thermalCapacityConnectionFieldId_
+           && linkCapacityConnectionFieldIds_ == other.linkCapacityConnectionFieldIds_;
 }
 
 const std::optional<std::string>& PortType::ThermalCapacityConnectionFieldId() const
 {
     return thermalCapacityConnectionFieldId_;
+}
+
+const std::optional<LinkCapacityConnectionFields>& PortType::LinkCapacityConnectionFieldIds() const
+{
+    return linkCapacityConnectionFieldIds_;
 }
 } // namespace Antares::ModelerStudy::SystemModel

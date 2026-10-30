@@ -15,6 +15,11 @@ add_boost_test(test-residual-load
   LIBS
   antares-solver-variable)
 
+add_boost_test(test-congestion-probability
+  SRC test_congestion_probability.cpp
+  LIBS
+  antares-solver-variable)
+
 add_boost_test(test-dynamic-aggregation
     SRC test_dynamic.cpp
     LIBS

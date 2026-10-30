@@ -75,6 +75,16 @@ port-types:
   by [antares-modeler](08-command-line.md).
   For more information on hybrid
   studies, [see the relevant documentation](../solver/hybrid-studies.md#selecting-the-area-connection-port-fields).
+- **thermal-capacity-connection** _(optional)_: used only for hybrid studies, ignored by
+  [antares-modeler](08-command-line.md).
+  It declares that a port field must be interpreted as a legacy thermal cluster capacity expression.
+  For more information, see the relevant documentation on
+  [hybrid studies](../solver/hybrid-studies.md#connecting-modeler-components-to-thermal-clusters).
+- **link-capacity-connection** _(optional)_: used only for hybrid studies, ignored by
+  [antares-modeler](08-command-line.md).
+  It declares the two port fields used to override the direct and indirect limits of a legacy link.
+  For more information, see the relevant documentation on
+  [hybrid studies](../solver/hybrid-studies.md#connecting-modeler-components-to-legacy-links).
 
 ### Models
 
@@ -325,6 +335,78 @@ The **area-connections** section is used only for hybrid (solver x modeler) stud
 by [antares-modeler](08-command-line.md).  
 For more information on hybrid
 studies, [see the relevant documentation](../solver/hybrid-studies.md#connecting-modeler-components-to-legacy-areas).
+
+### Hybrid-only legacy connections
+
+The following sections are used only in hybrid (solver x modeler) studies, and are ignored by
+[antares-modeler](08-command-line.md).
+
+#### Area connections
+
+The **area-connections** section allows a modeler port to be connected to an Antares legacy area. This is used to
+inject or extract expressions directly into the legacy area balance.
+
+~~~yaml
+area-connections:
+- component: my_prod
+  port: injection
+  area: some_area
+~~~
+
+- **component**: the ID of the component to which the port belongs
+- **port**: the port ID defined by the component model
+- **area**: the legacy area ID to which the expression is connected
+
+For the exact port-field conventions and constraints generated, see
+[hybrid studies](../solver/hybrid-studies.md#connecting-modeler-components-to-legacy-areas).
+
+#### Thermal capacity connections
+
+The **thermal-capacity-connections** section allows a modeler port to replace the legacy capacity of a thermal cluster.
+
+~~~yaml
+thermal-capacity-connections:
+- component: my_thermal_invest
+  port: capacity_port
+  thermal-component:
+    area: fr
+    cluster-id: nuclear1
+~~~
+
+- **component**: the ID of the component to which the port belongs
+- **port**: the port ID defined by the component model
+- **thermal-component**:
+    - **area**: the legacy area ID containing the cluster
+    - **cluster-id**: the thermal cluster ID
+
+The connected port field is used as the effective capacity expression for the cluster and replaces the legacy capacity
+series for that cluster.
+
+#### Link capacity connections
+
+The **link-capacity-connections** section allows a modeler port to override the direct and indirect bounds of a legacy
+interconnection.
+
+~~~yaml
+link-capacity-connections:
+- component: my_link_invest
+  port: capacity_port
+  link-component:
+    from: de
+    to: fr
+~~~
+
+- **component**: the ID of the component to which the port belongs
+- **port**: the port ID defined by the component model
+- **link-component**:
+    - **from**: the legacy origin area of the link (Antares orientation)
+    - **to**: the legacy destination area of the link (Antares orientation)
+
+The connected port fields must be declared in the port type with `link-capacity-connection` and are used to constrain
+`NTCDirect` and indirect transfer limits for that link.
+
+For the exact semantics and formulae, see
+[hybrid studies](../solver/hybrid-studies.md#connecting-modeler-components-to-legacy-links).
 
 ## Optim-config file
 

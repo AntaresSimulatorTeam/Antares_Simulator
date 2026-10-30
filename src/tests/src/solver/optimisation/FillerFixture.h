@@ -21,6 +21,7 @@ struct FillerFixture
     Antares::LinearProblem::DataImpl::LinearProblemData linearProblemData;
 
     FillerFixture();
+    FillerFixture(bool isMip, const std::string& solverName);
     void init(const std::string& systemYaml, const std::string& libraryYaml);
 
     void setData(const std::string& name, const std::vector<double>& some_param_value);
@@ -39,6 +40,9 @@ struct FillerFixture
     void addLegacyLp(std::vector<std::string>& constraintNames, double rhs);
 
     void fillProblemWithThermalCapacityConnectionFiller(
+      const Antares::LinearProblem::Api::FillContext& fillCtx,
+      Antares::LinearProblem::OptimEntityContainer& optimEntityContainer) const;
+    void fillProblemWithLinkCapacityConnectionFiller(
       const Antares::LinearProblem::Api::FillContext& fillCtx,
       Antares::LinearProblem::OptimEntityContainer& optimEntityContainer) const;
 };

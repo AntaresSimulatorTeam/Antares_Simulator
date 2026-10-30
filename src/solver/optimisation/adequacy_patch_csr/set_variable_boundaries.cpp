@@ -94,10 +94,8 @@ void HourlyCSRProblem::setBoundsOnFlows()
         // flow
         int var = variableManager_
                     .DirectFlow(Interco, 0); // hour = 0 since we only store 1 correspondance table
-        Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco]
-                    + belowThisThresholdSetToZero;
-        Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco])
-                    - belowThisThresholdSetToZero;
+        Xmax[var] = ValeursDeNTC.directCapacity(Interco) + belowThisThresholdSetToZero;
+        Xmin[var] = -ValeursDeNTC.indirectCapacity(Interco) - belowThisThresholdSetToZero;
         problemeAResoudre_.X[var] = ValeursDeNTC.ValeurDuFlux[Interco];
 
         if (std::isinf(Xmax[var]))
@@ -135,8 +133,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
           0); // hour = 0 since we only store 1 correspondance table
 
         Xmin[var] = -belowThisThresholdSetToZero;
-        Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco]
-                    + belowThisThresholdSetToZero;
+        Xmax[var] = ValeursDeNTC.directCapacity(Interco) + belowThisThresholdSetToZero;
         problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
         if (std::isinf(Xmax[var]))
         {
@@ -151,8 +148,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
           0); // hour = 0 since we only store 1 correspondance table
 
         Xmin[var] = -belowThisThresholdSetToZero;
-        Xmax[var] = ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco]
-                    + belowThisThresholdSetToZero;
+        Xmax[var] = ValeursDeNTC.indirectCapacity(Interco) + belowThisThresholdSetToZero;
         problemeAResoudre_.TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
         if (std::isinf(Xmax[var]))
         {
