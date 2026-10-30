@@ -24,7 +24,9 @@ using namespace Antares::Data;
 namespace
 {
 
-using ComponentProperties = std::vector<std::pair<std::string, std::string>>;
+using DistrictInfo = std::string;
+using DistrictName = std::string;
+using ComponentProperties = std::vector<std::pair<DistrictInfo, DistrictName>>;
 using DistrictPropertiesByArea = std::map<std::string, ComponentProperties>;
 
 DistrictPropertiesByArea buildDistrictPropertiesByArea(const Study& study)
