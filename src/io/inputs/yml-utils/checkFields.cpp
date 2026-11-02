@@ -4,8 +4,10 @@
 #include "antares/io/inputs/yml-utils/checkFields.h"
 
 #include <algorithm>
+#include <array>
 #include <fmt/format.h>
 #include <iterator>
+#include <span>
 #include <unordered_set>
 #include <vector>
 
@@ -84,7 +86,7 @@ std::string buildMessage(const YAML::Node& node, const std::string& path, const 
 }
 
 void validateMap(const YAML::Node& node,
-                 const std::vector<Field>& fields,
+                 const std::span<const Field> fields,
                  const std::string& path,
                  ValidationResult& result)
 {
@@ -115,9 +117,13 @@ void validateMap(const YAML::Node& node,
         if (field.required)
         {
             mandatoryFields.insert(field.name);
-            if (field.name == "id" && node[field.name].IsNull())
+            if (field.name == "id")
             {
-                nullIds.push_back(field.name);
+                const auto value = node[field.name];
+                if (value.IsDefined() && value.IsNull())
+                {
+                    nullIds.push_back(field.name);
+                }
             }
         }
     }
@@ -152,7 +158,7 @@ std::string sequenceItemName(const YAML::Node& node, std::size_t index)
 }
 
 void collectFieldErrors(const YAML::Node& node,
-                        const std::vector<Field>& fields,
+                        const std::span<const Field> fields,
                         const std::string& path,
                         ValidationResult& result)
 {
@@ -201,7 +207,7 @@ void collectFieldErrors(const YAML::Node& node,
 }
 
 ValidationResult validateFields(const YAML::Node& node,
-                                const std::vector<Field>& fields,
+                                const std::span<const Field> fields,
                                 const std::string& path)
 {
     ValidationResult result;
@@ -209,11 +215,8 @@ ValidationResult validateFields(const YAML::Node& node,
     return result;
 }
 
-} // namespace
-
-void checkFields(const YAML::Node& node, const std::vector<Field>& fields, const std::string& path)
+void handleValidationResult(const ValidationResult& result)
 {
-    const auto result = validateFields(node, fields, path);
     for (const auto& warning: result.warnings)
     {
         Antares::logs.warning() << warning;
@@ -227,6 +230,19 @@ void checkFields(const YAML::Node& node, const std::vector<Field>& fields, const
         }
         throw InputError(message);
     }
+}
+
+} // namespace
+
+void checkFields(const YAML::Node& node, const Field& field, const std::string& path)
+{
+    const auto fields = std::array{field};
+    handleValidationResult(validateFields(node, fields, path));
+}
+
+void checkFields(const YAML::Node& node, const std::vector<Field>& fields, const std::string& path)
+{
+    handleValidationResult(validateFields(node, fields, path));
 }
 
 } // namespace Antares::IO::Inputs::YmlUtils

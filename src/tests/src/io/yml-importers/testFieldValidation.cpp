@@ -274,7 +274,9 @@ children:
   - {}
 )");
     BOOST_CHECK_EXCEPTION(
-      (YmlUtils::checkFields(node, {{"id", true}, {"children", false, {{"value", true}}}})),
+      (YmlUtils::checkFields(node,
+                             std::vector<YmlUtils::Field>{{"id", true},
+                                                          {"children", false, {{"value", true}}}})),
       InputError,
       [](const InputError& e)
       {
@@ -323,13 +325,17 @@ children:
     const auto before = YAML::Dump(node);
     CaptureAntaresLogs logs;
     BOOST_CHECK_NO_THROW(
-      (YmlUtils::checkFields(node, {{"children", false, {{"id", true}}}}, "explicit-path")));
+      (YmlUtils::checkFields(node,
+                             std::vector<YmlUtils::Field>{{"children", false, {{"id", true}}}},
+                             "explicit-path")));
     BOOST_CHECK_EQUAL(YAML::Dump(node), before);
     BOOST_REQUIRE_EQUAL(logs.getWarnings().size(), 1);
     BOOST_CHECK(logs.getWarnings().begin()->find("explicit-path") != std::string::npos);
     BOOST_CHECK(logs.getWarnings().begin()->find("original-root") == std::string::npos);
     BOOST_CHECK_THROW(
-      (YmlUtils::checkFields(node, {{"children", false, {{"id", true}, {"value", true}}}})),
+      (YmlUtils::checkFields(node,
+                             std::vector<YmlUtils::Field>{
+                               {"children", false, {{"id", true}, {"value", true}}}})),
       InputError);
     BOOST_CHECK_EQUAL(YAML::Dump(node), before);
 }
@@ -338,18 +344,19 @@ BOOST_AUTO_TEST_CASE(mixed_findings_keep_warnings_separate_from_errors)
 {
     const auto node = YAML::Load("id: first\nid: second\nunexpected: ignored\n");
     CaptureAntaresLogs logs;
-    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node, {{"id", true}, {"value", true}}, "root")),
-                          InputError,
-                          [](const InputError& e)
-                          {
-                              const std::string message = e.what();
-                              BOOST_CHECK(message.find("Missing field: value")
-                                          != std::string::npos);
-                              BOOST_CHECK(message.find("Duplicated field: id")
-                                          != std::string::npos);
-                              BOOST_CHECK(message.find("Unrecognised field") == std::string::npos);
-                              return true;
-                          });
+    BOOST_CHECK_EXCEPTION(
+      (YmlUtils::checkFields(node,
+                             std::vector<YmlUtils::Field>{{"id", true}, {"value", true}},
+                             "root")),
+      InputError,
+      [](const InputError& e)
+      {
+          const std::string message = e.what();
+          BOOST_CHECK(message.find("Missing field: value") != std::string::npos);
+          BOOST_CHECK(message.find("Duplicated field: id") != std::string::npos);
+          BOOST_CHECK(message.find("Unrecognised field") == std::string::npos);
+          return true;
+      });
     BOOST_REQUIRE_EQUAL(logs.getWarnings().size(), 1);
     const auto& warning = *logs.getWarnings().begin();
     BOOST_CHECK(warning.find("Unrecognised field: unexpected") != std::string::npos);
@@ -379,7 +386,9 @@ BOOST_AUTO_TEST_CASE(nested_unknown_field_warning_matches_complete_tree)
                                  "  - id: generator\n"
                                  "    typo: ignored\n");
     CaptureAntaresLogs logs;
-    YmlUtils::checkFields(node, {{"children", false, {{"id", true}}}}, "library");
+    YmlUtils::checkFields(node,
+                          std::vector<YmlUtils::Field>{{"children", false, {{"id", true}}}},
+                          "library");
     BOOST_REQUIRE_EQUAL(logs.getWarnings().size(), 1);
     BOOST_CHECK_EQUAL(*logs.getWarnings().begin(),
                       "Line 2 column 5\n"
@@ -428,48 +437,50 @@ BOOST_AUTO_TEST_CASE(sibling_errors_match_complete_trees_with_index_fallback)
                                  "  - id: named\n"
                                  "  - id: null\n"
                                  "  - {}\n");
-    BOOST_CHECK_EXCEPTION(
-      (YmlUtils::checkFields(node, {{"children", false, {{"value", true}, {"id"}}}}, "root")),
-      InputError,
-      [](const InputError& e)
-      {
-          BOOST_CHECK_EQUAL(e.what(),
-                            "Line 2 column 5\n"
-                            "YAML field validation:\n"
-                            "- Missing field: value\n"
-                            "\n"
-                            "root\n"
-                            "|__ children\n"
-                            "    |__ named\n"
-                            "        |__? value (missing)\n"
-                            "\n"
-                            "Line 3 column 5\n"
-                            "YAML field validation:\n"
-                            "- Missing field: value\n"
-                            "\n"
-                            "root\n"
-                            "|__ children\n"
-                            "    |__ [1]\n"
-                            "        |__? value (missing)\n"
-                            "\n"
-                            "Line 4 column 5\n"
-                            "YAML field validation:\n"
-                            "- Missing field: value\n"
-                            "\n"
-                            "root\n"
-                            "|__ children\n"
-                            "    |__ [2]\n"
-                            "        |__? value (missing)\n"
-                            "\n");
-          return true;
-      });
+    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node,
+                                                 std::vector<YmlUtils::Field>{
+                                                   {"children", false, {{"value", true}, {"id"}}}},
+                                                 "root")),
+                          InputError,
+                          [](const InputError& e)
+                          {
+                              BOOST_CHECK_EQUAL(e.what(),
+                                                "Line 2 column 5\n"
+                                                "YAML field validation:\n"
+                                                "- Missing field: value\n"
+                                                "\n"
+                                                "root\n"
+                                                "|__ children\n"
+                                                "    |__ named\n"
+                                                "        |__? value (missing)\n"
+                                                "\n"
+                                                "Line 3 column 5\n"
+                                                "YAML field validation:\n"
+                                                "- Missing field: value\n"
+                                                "\n"
+                                                "root\n"
+                                                "|__ children\n"
+                                                "    |__ [1]\n"
+                                                "        |__? value (missing)\n"
+                                                "\n"
+                                                "Line 4 column 5\n"
+                                                "YAML field validation:\n"
+                                                "- Missing field: value\n"
+                                                "\n"
+                                                "root\n"
+                                                "|__ children\n"
+                                                "    |__ [2]\n"
+                                                "        |__? value (missing)\n"
+                                                "\n");
+                              return true;
+                          });
 }
 
 BOOST_AUTO_TEST_CASE(root_warning_matches_complete_message_without_path)
 {
     const auto node = YAML::Load("z: ignored\na: ignored\n");
     CaptureAntaresLogs logs;
-    YmlUtils::checkFields(node, {});
+    YmlUtils::checkFields(node, std::vector<YmlUtils::Field>{});
     BOOST_REQUIRE_EQUAL(logs.getWarnings().size(), 1);
     BOOST_CHECK_EQUAL(*logs.getWarnings().begin(),
                       "Line 1 column 1\n"
@@ -547,7 +558,9 @@ BOOST_AUTO_TEST_CASE(non_map_sequence_items_do_not_hide_other_field_errors)
 {
     const auto node = YAML::Load("children:\n  - scalar\n  - null\n  - {}\n");
     BOOST_CHECK_EXCEPTION(
-      (YmlUtils::checkFields(node, {{"children", false, {{"value", true}}}}, "root")),
+      (YmlUtils::checkFields(node,
+                             std::vector<YmlUtils::Field>{{"children", false, {{"value", true}}}},
+                             "root")),
       InputError,
       [](const InputError& e)
       {

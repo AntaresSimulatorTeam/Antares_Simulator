@@ -56,7 +56,7 @@ const std::vector<YmlUtils::Field> libraryFields = {
 Library Parser::parse(const std::string& content)
 {
     YAML::Node root = YAML::Load(content);
-    YmlUtils::checkFields(root, {{"library", true, libraryFields}});
+    YmlUtils::checkFields(root, {"library", true, libraryFields});
     return root["library"].as<Library>();
 }
 } // namespace Antares::IO::Inputs::YmlModel

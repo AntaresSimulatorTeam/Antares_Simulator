@@ -39,7 +39,7 @@ const std::vector<YmlUtils::Field> systemFields = {
 System Parser::parse(const std::string& content, const std::string& pathFromRoot)
 {
     YAML::Node root = YAML::Load(content);
-    YmlUtils::checkFields(root, {{"system", true, systemFields}}, pathFromRoot);
+    YmlUtils::checkFields(root, {"system", true, systemFields}, pathFromRoot);
     return root["system"].as<System>();
 }
 
