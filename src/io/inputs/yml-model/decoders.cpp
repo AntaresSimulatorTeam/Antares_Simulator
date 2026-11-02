@@ -3,10 +3,7 @@
 
 #include "antares/io/inputs/yml-model/decoders.h"
 
-#include <span>
-
 #include <antares/io/inputs/InputError.h>
-#include <antares/io/inputs/yml-utils/path_utils.h>
 
 #include "include/antares/io/inputs/yml-model/Library.h"
 
@@ -16,14 +13,6 @@ namespace YAML
 {
 
 // Keep field reads in sync with the validation schema in parser.cpp.
-void checkMandatoryIdField(const Node& node, const std::string& nodeName)
-{
-    if (!node["id"].IsDefined() || node["id"].IsNull())
-    {
-        throw KeyNotFound(node.Mark(), fmt::format("{} id is mandatory in library", nodeName));
-    }
-}
-
 std::string getFieldFromNode(const Node& node, const std::string& fieldName)
 {
     if (!node[fieldName].IsDefined() || node[fieldName].IsNull())
@@ -45,19 +34,14 @@ bool convert<YmlModel::ExpressionLineNumber>::decode(const Node& node,
     return true;
 }
 
-bool convert<YmlModel::PortType>::convertAreaConnectionFields(const Node& node,
+void convert<YmlModel::PortType>::convertAreaConnectionFields(const Node& node,
                                                               YmlModel::PortType& rhs)
 {
     const auto areaConnNode = node["area-connection"];
 
     if (!areaConnNode.IsDefined())
     {
-        return true;
-    }
-
-    if (!YmlUtils::requireMap(areaConnNode, "area-connection"))
-    {
-        return false;
+        return;
     }
 
     rhs.area_connection.inject_to_balance = getFieldFromNode(areaConnNode, "injection-to-balance");
@@ -65,35 +49,22 @@ bool convert<YmlModel::PortType>::convertAreaConnectionFields(const Node& node,
     rhs.area_connection.unsupplied_energy_bound = getFieldFromNode(areaConnNode,
                                                                    "unsupplied-energy-bound");
     rhs.area_connection.price = getFieldFromNode(areaConnNode, "price");
-    return true;
 }
 
-bool convert<YmlModel::PortType>::convertThermalCapacityField(const Node& node,
+void convert<YmlModel::PortType>::convertThermalCapacityField(const Node& node,
                                                               YmlModel::PortType& rhs)
 {
     auto childNode = node["thermal-capacity-connection"];
     if (!childNode.IsDefined())
     {
-        return true;
-    }
-
-    if (!childNode.IsMap())
-    {
-        throw InputError("Expected a YAML mapping for 'thermal-capacity-connection' in port-type");
+        return;
     }
 
     rhs.thermal_capacity_connection_field = getFieldFromNode(childNode, "capacity-field");
-    return true;
 }
 
 bool convert<YmlModel::PortType>::decode(const Node& node, YmlModel::PortType& rhs)
 {
-    if (!YmlUtils::requireMap(node, "port-type"))
-    {
-        return false;
-    }
-
-    checkMandatoryIdField(node, "port-type");
     rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
     for (const auto& field: node["fields"])
@@ -101,21 +72,13 @@ bool convert<YmlModel::PortType>::decode(const Node& node, YmlModel::PortType& r
         rhs.fields.push_back(field["id"].as<std::string>());
     }
 
-    if (!convertAreaConnectionFields(node, rhs))
-    {
-        return false;
-    }
-    return convertThermalCapacityField(node, rhs);
+    convertAreaConnectionFields(node, rhs);
+    convertThermalCapacityField(node, rhs);
+    return true;
 }
 
 bool convert<YmlModel::Parameter>::decode(const Node& node, YmlModel::Parameter& rhs)
 {
-    if (!YmlUtils::requireMap(node, "parameter"))
-    {
-        return false;
-    }
-
-    checkMandatoryIdField(node, "parameter");
     rhs.id = node["id"].as<std::string>();
     rhs.time_dependent = node["time-dependent"].as<bool>(true);
     rhs.scenario_dependent = node["scenario-dependent"].as<bool>(true);
@@ -155,12 +118,6 @@ bool convert<YmlModel::ValueType>::decode(const Node& node, YmlModel::ValueType&
 
 bool convert<YmlModel::Variable>::decode(const Node& node, YmlModel::Variable& rhs)
 {
-    if (!YmlUtils::requireMap(node, "variable"))
-    {
-        return false;
-    }
-
-    checkMandatoryIdField(node, "variable");
     rhs.id = node["id"].as<std::string>();
     rhs.lower_bound = node["lower-bound"].as<YmlModel::ExpressionLineNumber>(
       YmlModel::ExpressionLineNumber{});
@@ -178,12 +135,6 @@ bool convert<YmlModel::Variable>::decode(const Node& node, YmlModel::Variable& r
 
 bool convert<YmlModel::Port>::decode(const Node& node, YmlModel::Port& rhs)
 {
-    if (!YmlUtils::requireMap(node, "port"))
-    {
-        return false;
-    }
-
-    checkMandatoryIdField(node, "port");
     rhs.id = node["id"].as<std::string>();
     rhs.type = node["type"].as<std::string>();
     return true;
@@ -192,10 +143,6 @@ bool convert<YmlModel::Port>::decode(const Node& node, YmlModel::Port& rhs)
 bool convert<YmlModel::PortFieldDefinition>::decode(const Node& node,
                                                     YmlModel::PortFieldDefinition& rhs)
 {
-    if (!YmlUtils::requireMap(node, "port-field-definition"))
-    {
-        return false;
-    }
     rhs.port = node["port"].as<std::string>();
     rhs.field = node["field"].as<std::string>();
     rhs.definition = node["definition"].as<YmlModel::ExpressionLineNumber>();
@@ -204,11 +151,6 @@ bool convert<YmlModel::PortFieldDefinition>::decode(const Node& node,
 
 bool convert<YmlModel::Constraint>::decode(const Node& node, YmlModel::Constraint& rhs)
 {
-    if (!YmlUtils::requireMap(node, "constraint"))
-    {
-        return false;
-    }
-
     rhs.id = node["id"].as<std::string>();
     rhs.expression = node["expression"].as<YmlModel::ExpressionLineNumber>();
     rhs.location = node["location"].as<std::string>("subproblems");
@@ -217,11 +159,6 @@ bool convert<YmlModel::Constraint>::decode(const Node& node, YmlModel::Constrain
 
 bool convert<YmlModel::ExtraOutput>::decode(const Node& node, YmlModel::ExtraOutput& rhs)
 {
-    if (!YmlUtils::requireMap(node, "extra-output"))
-    {
-        return false;
-    }
-
     rhs.id = node["id"].as<std::string>();
     rhs.expression = node["expression"].as<YmlModel::ExpressionLineNumber>();
     return true;
@@ -229,11 +166,6 @@ bool convert<YmlModel::ExtraOutput>::decode(const Node& node, YmlModel::ExtraOut
 
 bool convert<YmlModel::Objective>::decode(const Node& node, YmlModel::Objective& rhs)
 {
-    if (!YmlUtils::requireMap(node, "objective"))
-    {
-        return false;
-    }
-
     rhs.id = node["id"].as<std::string>();
     rhs.expression = node["expression"].as<YmlModel::ExpressionLineNumber>();
     rhs.location = node["location"].as<std::string>("subproblems");
@@ -242,12 +174,6 @@ bool convert<YmlModel::Objective>::decode(const Node& node, YmlModel::Objective&
 
 bool convert<YmlModel::Model>::decode(const Node& node, YmlModel::Model& rhs)
 {
-    if (!YmlUtils::requireMap(node, "model"))
-    {
-        throw InputError("Expected a YAML mapping for 'model'");
-    }
-
-    checkMandatoryIdField(node, "model");
     rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
     rhs.parameters = as_fallback_default<std::vector<YmlModel::Parameter>>(node["parameters"]);
@@ -267,7 +193,6 @@ bool convert<YmlModel::Model>::decode(const Node& node, YmlModel::Model& rhs)
 
 bool convert<YmlModel::Library>::decode(const Node& node, YmlModel::Library& rhs)
 {
-    checkMandatoryIdField(node, "library");
     rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
     rhs.port_types = as_fallback_default<std::vector<YmlModel::PortType>>(node["port-types"]);

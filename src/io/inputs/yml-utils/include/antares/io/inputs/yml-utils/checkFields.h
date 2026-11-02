@@ -17,10 +17,13 @@ struct Field
     std::string name;
     bool required = false;
     std::vector<Field> children = {};
+    bool isMapping = false;
 };
 
 /// Validates maps and sequence entries recursively before decoding. Logs unknown fields and
-/// throws InputError containing missing fields, null required IDs, and duplicated fields. Value
+/// throws InputError containing missing fields, null required IDs, duplicated fields, and invalid
+/// mappings. Fields with children accept a map or sequence of maps unless isMapping is set.
+/// Optional null collections are treated as absent, but explicit mappings cannot be null. Value
 /// conversion is left to the decoders, so malformed values cannot hide field errors elsewhere in
 /// the document.
 /// The diagnostic path is explicit; validation does not modify the document or its YAML tags.

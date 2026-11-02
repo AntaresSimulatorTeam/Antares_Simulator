@@ -358,7 +358,9 @@ BOOST_AUTO_TEST_CASE(parse_empty_string_throws)
     std::string yaml_content;
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_EXCEPTION(parser.parse(yaml_content),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("expected a YAML mapping in 'optim-config'"));
 }
 
 BOOST_AUTO_TEST_CASE(parse_multiple_models_different_structures)

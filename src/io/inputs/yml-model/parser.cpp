@@ -29,8 +29,9 @@ const std::vector<YmlUtils::Field> libraryFields = {
      {{"injection-to-balance", true},
       {"spillage-bound", true},
       {"unsupplied-energy-bound", true},
-      {"price"}}},
-    {"thermal-capacity-connection", false, {{"capacity-field", true}}}}},
+      {"price"}},
+     true},
+    {"thermal-capacity-connection", false, {{"capacity-field", true}}, true}}},
   {"models",
    false,
    {{"id", true},
@@ -56,7 +57,7 @@ const std::vector<YmlUtils::Field> libraryFields = {
 Library Parser::parse(const std::string& content)
 {
     YAML::Node root = YAML::Load(content);
-    YmlUtils::checkFields(root, {"library", true, libraryFields});
+    YmlUtils::checkFields(root, {"library", true, libraryFields, true});
     return root["library"].as<Library>();
 }
 } // namespace Antares::IO::Inputs::YmlModel

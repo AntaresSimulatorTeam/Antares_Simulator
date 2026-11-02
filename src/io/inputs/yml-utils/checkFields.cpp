@@ -164,6 +164,8 @@ void collectFieldErrors(const YAML::Node& node,
 {
     if (!node.IsMap())
     {
+        result.errors.push_back(
+          fmt::format("Line {}: expected a YAML mapping in '{}'.", node.Mark().line + 1, path));
         return;
     }
     validateMap(node, fields, path, result);
@@ -183,19 +185,16 @@ void collectFieldErrors(const YAML::Node& node,
         }
         const auto childPath = path.empty() ? key : path + "/" + key;
         const auto& child = entry.second;
-        if (child.IsSequence())
+        if (child.IsNull() && !field->required && !field->isMapping)
+        {
+            continue;
+        }
+        if (child.IsSequence() && !field->isMapping)
         {
             for (std::size_t i = 0; i < child.size(); ++i)
             {
                 auto item = child[i];
                 const auto itemPath = childPath + "/" + sequenceItemName(item, i);
-                if (!item.IsMap())
-                {
-                    result.errors.push_back(fmt::format("Line {}: expected a YAML mapping in '{}'.",
-                                                        item.Mark().line + 1,
-                                                        itemPath));
-                    continue;
-                }
                 collectFieldErrors(item, field->children, itemPath, result);
             }
         }

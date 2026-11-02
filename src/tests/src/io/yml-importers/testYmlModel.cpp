@@ -508,7 +508,10 @@ BOOST_AUTO_TEST_CASE(area__connection_should_have_exactly_3_fields)
 
             models: []
     )"s;
-    BOOST_REQUIRE_THROW((void)parser.parse(library), YAML::TypedBadConversion<YmlModel::PortType>);
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          InputError,
+                          containsMessage("expected a YAML mapping in "
+                                          "'library/port-types/capacity_port/area-connection'"));
 }
 
 // Test library with multiple port types

@@ -18,6 +18,159 @@ using Antares::UnitTests::CaptureAntaresLogs;
 
 BOOST_AUTO_TEST_SUITE(FieldValidation)
 
+BOOST_AUTO_TEST_CASE(library_requires_mapping_root_and_section)
+{
+    for (const auto* value: {"", "null", "scalar", "[]", "[{id: lib}]"})
+    {
+        BOOST_TEST_CONTEXT("root: " << value)
+        {
+            BOOST_CHECK_EXCEPTION(YmlModel::Parser{}.parse(value),
+                                  InputError,
+                                  containsMessage("expected a YAML mapping"));
+        }
+        BOOST_TEST_CONTEXT("library: " << value)
+        {
+            BOOST_CHECK_EXCEPTION(YmlModel::Parser{}.parse(std::string("library: ") + value),
+                                  InputError,
+                                  containsMessage("expected a YAML mapping in 'library'"));
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(port_type_connections_require_mappings)
+{
+    for (const auto* field: {"area-connection", "thermal-capacity-connection"})
+    {
+        for (const auto* value: {"null", "scalar", "[]", "[{}]"})
+        {
+            BOOST_TEST_CONTEXT(field << ": " << value)
+            {
+                const auto content = std::string("library:\n"
+                                                 "  id: lib\n"
+                                                 "  port-types:\n"
+                                                 "    - id: p\n"
+                                                 "      ")
+                                     + field + ": " + value;
+                BOOST_CHECK_EXCEPTION(
+                  YmlModel::Parser{}.parse(content),
+                  InputError,
+                  containsMessage(std::string("expected a YAML mapping in 'library/port-types/p/")
+                                  + field + "'"));
+            }
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(model_sequence_entries_require_mappings)
+{
+    for (const auto* field: {"parameters",
+                             "variables",
+                             "ports",
+                             "port-field-definitions",
+                             "constraints",
+                             "binding-constraints",
+                             "objective-contributions",
+                             "extra-outputs"})
+    {
+        for (const auto* value: {"null", "scalar", "[]"})
+        {
+            BOOST_TEST_CONTEXT(field << ": [" << value << "]")
+            {
+                const auto content = std::string("library:\n"
+                                                 "  id: lib\n"
+                                                 "  models:\n"
+                                                 "    - id: m\n"
+                                                 "      ")
+                                     + field + ": [" + value + "]";
+                BOOST_CHECK_EXCEPTION(YmlModel::Parser{}.parse(content),
+                                      InputError,
+                                      containsMessage(
+                                        std::string("expected a YAML mapping in 'library/models/m/")
+                                        + field + "/[0]'"));
+            }
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(mapping_errors_are_collected_before_value_conversion)
+{
+    const auto content = R"(
+library:
+  id: lib
+  port-types:
+    - scalar
+    - id: p
+      fields: [null]
+      area-connection: scalar
+      thermal-capacity-connection: []
+  models:
+    - null
+    - id: m
+      variables:
+        - id: v
+          variable-type: invalid
+      ports:
+        - id: missing_type
+)";
+    BOOST_CHECK_EXCEPTION(
+      YmlModel::Parser{}.parse(content),
+      InputError,
+      [](const InputError& e)
+      {
+          const std::string message = e.what();
+          for (const auto* path: {"library/port-types/[0]",
+                                  "library/port-types/p/fields/[0]",
+                                  "library/port-types/p/area-connection",
+                                  "library/port-types/p/thermal-capacity-connection",
+                                  "library/models/[0]"})
+          {
+              BOOST_CHECK(message.find(std::string("expected a YAML mapping in '") + path + "'")
+                          != std::string::npos);
+          }
+          BOOST_CHECK(message.find("Missing field: type") != std::string::npos);
+          BOOST_CHECK(message.find("Unknown variable-type") == std::string::npos);
+          return true;
+      });
+}
+
+BOOST_AUTO_TEST_CASE(null_optional_model_collections_remain_valid)
+{
+    const auto library = YmlModel::Parser{}.parse(R"(
+library:
+  id: lib
+  port-types:
+    - id: p
+      fields: null
+  models:
+    - id: m
+      parameters: null
+      variables: null
+      ports: null
+      port-field-definitions: null
+      constraints: null
+      binding-constraints: null
+      objective-contributions: null
+      extra-outputs: null
+)");
+    BOOST_REQUIRE_EQUAL(library.port_types.size(), 1);
+    BOOST_CHECK(library.port_types[0].fields.empty());
+    BOOST_REQUIRE_EQUAL(library.models.size(), 1);
+    const auto& model = library.models[0];
+    BOOST_CHECK(model.parameters.empty());
+    BOOST_CHECK(model.variables.empty());
+    BOOST_CHECK(model.ports.empty());
+    BOOST_CHECK(model.port_field_definitions.empty());
+    BOOST_CHECK(model.constraints.empty());
+    BOOST_CHECK(model.binding_constraints.empty());
+    BOOST_CHECK(model.objectives.empty());
+    BOOST_CHECK(model.extra_outputs.empty());
+
+    const auto emptyLibrary = YmlModel::Parser{}.parse(
+      "library: {id: lib, port-types: null, models: null}");
+    BOOST_CHECK(emptyLibrary.port_types.empty());
+    BOOST_CHECK(emptyLibrary.models.empty());
+}
+
 BOOST_AUTO_TEST_CASE(library_collects_errors_in_nested_and_sibling_nodes)
 {
     const auto content = R"(
@@ -368,12 +521,12 @@ BOOST_AUTO_TEST_CASE(null_model_ids_are_rejected_without_tag_context)
 {
     auto node = YAML::Load("id: null");
     node.SetTag("unrelated-tag");
-    BOOST_CHECK_EXCEPTION(YAML::checkMandatoryIdField(node, "model"),
-                          YAML::KeyNotFound,
-                          [](const YAML::KeyNotFound& e)
+    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node, YmlUtils::Field{"id", true}, "model"),
+                          InputError,
+                          [](const InputError& e)
                           {
                               const std::string message = e.what();
-                              BOOST_CHECK(message.find("model id is mandatory in library")
+                              BOOST_CHECK(message.find("Invalid null value for required field: id")
                                           != std::string::npos);
                               BOOST_CHECK(message.find("unrelated-tag") == std::string::npos);
                               return true;
