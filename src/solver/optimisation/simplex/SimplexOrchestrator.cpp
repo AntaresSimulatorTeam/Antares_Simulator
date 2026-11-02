@@ -217,6 +217,7 @@ void SimplexOrchestrator::exportMps()
 
 void SimplexOrchestrator::fillSimulationTable()
 {
+    measure_.reset();
     IO::Outputs::TimeConversionMode timeConversionMode
       = problemeHebdo_.OptimisationAuPasHebdomadaire ? IO::Outputs::TimeConversionMode::WeeklyBlocks
                                                      : IO::Outputs::TimeConversionMode::DailyBlocks;
