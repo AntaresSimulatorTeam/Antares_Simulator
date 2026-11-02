@@ -416,82 +416,25 @@ BOOST_AUTO_TEST_CASE(thermal_component_null_throws_input_error)
     BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
-// Direct unit tests against the decoder templates: they let us exercise the
-// silent "absent/null node -> return false" branch of requireMap for decoder
-// types that cannot reach it through public YAML input (yaml-cpp's vector
-// decoder rethrows when an element decoder returns false, so this branch is
-// otherwise unreachable for Parameter, Component, Connection, AreaConnection
-// and ThermalCapacityConnection).
-BOOST_AUTO_TEST_CASE(decoder_returns_false_for_null_or_undefined_nodes)
+BOOST_AUTO_TEST_CASE(non_mapping_entries_are_rejected_by_field_validation)
 {
-    YAML::Node undefined; // default-constructed: undefined / invalid
-    YAML::Node nullNode = YAML::Load("~");
-
+    YmlSystem::Parser parser;
+    const std::vector<std::string> systems = {
+      "system:\n  components:\n    - scalar\n",
+      "system:\n  connections:\n    - scalar\n",
+      "system:\n  area-connections:\n    - scalar\n",
+      "system:\n  thermal-capacity-connections:\n    - scalar\n",
+      "system:\n  thermal-capacity-connections:\n    - component: c\n      port: p\n"
+      "      thermal-component: null\n",
+      "system: scalar\n"};
+    for (const auto& system: systems)
     {
-        YmlSystem::Parameter p;
-        BOOST_CHECK(!YAML::convert<YmlSystem::Parameter>::decode(undefined, p));
-        BOOST_CHECK(!YAML::convert<YmlSystem::Parameter>::decode(nullNode, p));
-    }
-    {
-        YmlSystem::Component c;
-        BOOST_CHECK(!YAML::convert<YmlSystem::Component>::decode(undefined, c));
-        BOOST_CHECK(!YAML::convert<YmlSystem::Component>::decode(nullNode, c));
-    }
-    {
-        YmlSystem::Connection c;
-        BOOST_CHECK(!YAML::convert<YmlSystem::Connection>::decode(undefined, c));
-        BOOST_CHECK(!YAML::convert<YmlSystem::Connection>::decode(nullNode, c));
-    }
-    {
-        YmlSystem::AreaConnection ac;
-        BOOST_CHECK(!YAML::convert<YmlSystem::AreaConnection>::decode(undefined, ac));
-        BOOST_CHECK(!YAML::convert<YmlSystem::AreaConnection>::decode(nullNode, ac));
-    }
-    {
-        YmlSystem::ThermalComponent tc;
-        BOOST_CHECK(!YAML::convert<YmlSystem::ThermalComponent>::decode(undefined, tc));
-        BOOST_CHECK(!YAML::convert<YmlSystem::ThermalComponent>::decode(nullNode, tc));
-    }
-    {
-        YmlSystem::ThermalCapacityConnection tcc;
-        BOOST_CHECK(!YAML::convert<YmlSystem::ThermalCapacityConnection>::decode(undefined, tcc));
-        BOOST_CHECK(!YAML::convert<YmlSystem::ThermalCapacityConnection>::decode(nullNode, tcc));
-    }
-}
-
-BOOST_AUTO_TEST_CASE(decoder_throws_for_defined_non_map_nodes)
-{
-    YAML::Node scalar = YAML::Load("\"some-scalar\"");
-
-    {
-        YmlSystem::Parameter p;
-        BOOST_CHECK_THROW(YAML::convert<YmlSystem::Parameter>::decode(scalar, p), InputError);
-    }
-    {
-        YmlSystem::Component c;
-        BOOST_CHECK_THROW(YAML::convert<YmlSystem::Component>::decode(scalar, c), InputError);
-    }
-    {
-        YmlSystem::Connection c;
-        BOOST_CHECK_THROW(YAML::convert<YmlSystem::Connection>::decode(scalar, c), InputError);
-    }
-    {
-        YmlSystem::AreaConnection ac;
-        BOOST_CHECK_THROW(YAML::convert<YmlSystem::AreaConnection>::decode(scalar, ac), InputError);
-    }
-    {
-        YmlSystem::ThermalComponent tc;
-        BOOST_CHECK_THROW(YAML::convert<YmlSystem::ThermalComponent>::decode(scalar, tc),
-                          InputError);
-    }
-    {
-        YmlSystem::ThermalCapacityConnection tcc;
-        BOOST_CHECK_THROW(YAML::convert<YmlSystem::ThermalCapacityConnection>::decode(scalar, tcc),
-                          InputError);
-    }
-    {
-        YmlSystem::System s;
-        BOOST_CHECK_THROW(YAML::convert<YmlSystem::System>::decode(scalar, s), InputError);
+        BOOST_TEST_CONTEXT(system)
+        {
+            BOOST_CHECK_EXCEPTION(parser.parse(system, ""),
+                                  InputError,
+                                  containsMessage("expected a YAML mapping"));
+        }
     }
 }
 

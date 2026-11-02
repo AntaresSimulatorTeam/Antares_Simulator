@@ -33,13 +33,13 @@ const std::vector<YmlUtils::Field> systemFields = {
    false,
    {{"component", true},
     {"port", true},
-    {"thermal-component", true, {{"area", true}, {"cluster-id", true}}}}}};
+    {"thermal-component", true, {{"area", true}, {"cluster-id", true}}, YmlUtils::Shape::Map}}}};
 } // namespace
 
 System Parser::parse(const std::string& content, const std::string& pathFromRoot)
 {
     YAML::Node root = YAML::Load(content);
-    YmlUtils::checkFields(root, {"system", true, systemFields}, pathFromRoot);
+    YmlUtils::checkFields(root, {"system", true, systemFields, YmlUtils::Shape::Map}, pathFromRoot);
     return root["system"].as<System>();
 }
 

@@ -21,8 +21,12 @@ const std::vector<YmlUtils::Field> optimConfigFields = {
      true,
      {{"variables", false, locationFields},
       {"constraints", false, locationFields},
-      {"objective-contributions", false, locationFields}}},
-    {"out-of-bounds-processing", false, {{"constraints", false, {{"id", true}, {"mode"}}}}}}},
+      {"objective-contributions", false, locationFields}},
+     YmlUtils::Shape::Map},
+    {"out-of-bounds-processing",
+     false,
+     {{"constraints", false, {{"id", true}, {"mode"}}}},
+     YmlUtils::Shape::Map}}},
   {"resolution-mode"},
   {"scenario-scope", false, {{"include"}, {"exclude"}}}};
 } // namespace
