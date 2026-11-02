@@ -16,13 +16,14 @@ of that workflow locally and how to fix the usual classes of errors.
 Other details worth knowing:
 
 - The build type is `Debug`, with `-fno-omit-frame-pointer -g` so stack traces are readable.
-- Runtime behaviour is controlled by `ASAN_OPTIONS` / `UBSAN_OPTIONS` (see the workflow `env:`). `halt_on_error=1`
-  makes the first finding fatal. `detect_leaks=0`: leaks are **not** checked.
+- Runtime behaviour is controlled by `ASAN_OPTIONS` / `UBSAN_OPTIONS` (see `environment` in the
+  `ci-clang-sanitizers` test preset in `CMakePresets.json`). `halt_on_error=1` makes the first finding fatal.
+  `detect_leaks=0`: leaks are **not** checked.
 - Only tests labelled `unit` or `end-to-end` are run.
-- Tests that use the prebuilt or-tools/sirius solver are excluded (`ORTOOLS_DEPENDENT_TESTS` in the workflow). That
-  library is not instrumented, and those tests crash inside it under the sanitizers. They are still covered by the
-  regular Ubuntu CI. If you add a new test that builds an or-tools `MPSolver`, it will likely need to be added to that
-  exclusion list; the preset below must be kept in sync with it.
+- Tests that use the prebuilt or-tools/sirius solver are excluded (`filter.exclude.name` in the
+  `ci-clang-sanitizers` test preset in `CMakePresets.json`). That library is not instrumented, and those tests crash
+  inside it under the sanitizers. They are still covered by the regular Ubuntu CI. If you add a new test that builds
+  an or-tools `MPSolver`, it will likely need to be added to that exclusion list.
 
 ## Reproducing locally
 
@@ -168,8 +169,8 @@ the abort's backtrace (visible in the test log) points at the caller.
 ### Findings that are not in Antares code
 
 If the top frames are inside or-tools/sirius (the uninstrumented prebuilt solver), the test belongs in the
-`ORTOOLS_DEPENDENT_TESTS` exclusion list of the workflow (and in the preset's `filter.exclude.name`). Do not exclude a
-test merely to get a green build: first check that the stack really has no Antares frame at fault.
+`filter.exclude.name` exclusion list of the `ci-clang-sanitizers` test preset in `CMakePresets.json`. Do not exclude
+a test merely to get a green build: first check that the stack really has no Antares frame at fault.
 
 ## Checklist when the workflow is red
 
