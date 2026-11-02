@@ -109,7 +109,7 @@ YAML::Node linkToYaml(const AreaLink& link)
 
 YAML::Node thermalClusterToYaml(const ThermalCluster& cluster)
 {
-    const auto componentId = BuildThermalClusterComponentId(cluster.parentArea->id, cluster.id());
+    const std::string componentId = BuildThermalClusterComponentId(cluster.parentArea->id, cluster.id());
     return makeComponent(componentId,
                          "antares_legacy_models.thermal",
                          {{"carrier", "electricity"},
@@ -119,7 +119,7 @@ YAML::Node thermalClusterToYaml(const ThermalCluster& cluster)
 
 YAML::Node renewableClusterToYaml(const RenewableCluster& cluster)
 {
-    const auto componentId = BuildRenewableClusterComponentId(cluster.parentArea->id, cluster.id());
+    const std::string componentId = BuildRenewableClusterComponentId(cluster.parentArea->id, cluster.id());
     return makeComponent(componentId,
                          "antares_legacy_models.renewable",
                          {{"carrier", "electricity"},
@@ -140,7 +140,7 @@ YAML::Node miscGenToYaml(const Area& area, int miscGenIndex)
 YAML::Node shortTermStorageToYaml(const Area& area,
                                   const ShortTermStorage::STStorageCluster& storage)
 {
-    const auto componentId = BuildSTStorageClusterComponentId(area.id, storage.id);
+    const std::string componentId = BuildSTStorageClusterComponentId(area.id, storage.id);
     return makeComponent(componentId,
                          "antares_legacy_models.short_term_storage",
                          {{"carrier", "electricity"},
