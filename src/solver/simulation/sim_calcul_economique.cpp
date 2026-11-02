@@ -291,8 +291,8 @@ void SIM_InitialisationProblemeHebdo(const Study& study,
     problem.NamedProblems = study.parameters.namedProblems;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
-    problem.OptimisationNotFastMode = (study.parameters.unitCommitment.ucMode
-                                       != Antares::Data::UnitCommitmentMode::ucHeuristicFast);
+    problem.OptimisationNotFastMode = Antares::Data::usesExplicitUnitCommitment(
+      study.parameters.unitCommitment.ucMode);
 
     auto workflow = Solver::Workflow::getWorkflow(study);
 
@@ -520,8 +520,7 @@ void SIM_InitialisationProblemeHebdo(const Study& study,
             pbPalier.emissionFactors[cluster->index] = cluster->emissions.factors;
         }
 
-        if (study.parameters.unitCommitment.ucMode
-              != Antares::Data::UnitCommitmentMode::ucHeuristicFast
+        if (Antares::Data::usesExplicitUnitCommitment(study.parameters.unitCommitment.ucMode)
             && study.parameters.include.reserves && area.allCapacityReservations)
         {
             auto& areaReserves = problem.allReserves->at(i);
