@@ -143,8 +143,7 @@ void checkExpression(const Node* expression,
             {
                 throw LocationError(fmt::format(
                   "Model '{}': In expression '{}': Port field '{}.{}' has no definition in this "
-                  "model. If you want to reference a port field, use 'sum_connections({}.{})' to "
-                  "aggregate values from connected components.",
+                  "model. If you want to reference a port field, it needs to be defined first.",
                   model.Id(),
                   exprStr,
                   portFieldNode->getPortName(),
