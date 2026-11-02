@@ -85,6 +85,17 @@ HydroMaxPowerStudy::HydroMaxPowerStudy()
 
 BOOST_AUTO_TEST_SUITE(ONE_AREA__ONE_THERMAL_CLUSTER)
 
+BOOST_FIXTURE_TEST_CASE(simulation_tables_do_not_allocate_legacy_variables, StudyFixture)
+{
+    setNumberMCyears(1);
+    study->parameters.outputSelection = OutputSelection{OutputSelection::SimulationTable};
+
+    simulation.create();
+    simulation.run();
+
+    BOOST_CHECK(!simulation.rawSimu().variables);
+}
+
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_fullfills_area_demand, StudyFixture)
 {
     setNumberMCyears(1);
