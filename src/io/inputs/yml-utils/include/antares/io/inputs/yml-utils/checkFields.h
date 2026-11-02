@@ -15,7 +15,7 @@ struct Field
 {
     std::string name;
     bool required = false;
-    std::vector<Field> children = {};
+    std::vector<Field> children;
 };
 
 /// Validates maps and sequence entries recursively before decoding. Logs unknown fields and
