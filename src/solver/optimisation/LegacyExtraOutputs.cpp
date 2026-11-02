@@ -13,6 +13,7 @@
 #include <antares/utils/utils.h>
 #include "antares/solver/optimisation/HebdoAreaPriceProvider.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/opt_rename_problem.h"
 #include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/InactiveComponentsAnalyzer.h"
@@ -81,7 +82,7 @@ public:
         for (uint32_t pays = 0; pays < problemeHebdo.NombreDePays; ++pays)
         {
             const std::string area = problemeHebdo.NomsDesPays[pays];
-            areaNames_.push_back(area + "_node");
+            areaNames_.push_back(BuildAreaComponentId(area));
             hydroStorageNames_.push_back(area + "_hydro_storage");
 
             const PALIERS_THERMIQUES& paliers = problemeHebdo.PaliersThermiquesDuPays[pays];
@@ -101,8 +102,7 @@ public:
                                     [problemeHebdo.PaysOrigineDeLInterconnexion[interco]];
             const std::string d = problemeHebdo.NomsDesPays
                                     [problemeHebdo.PaysExtremiteDeLInterconnexion[interco]];
-            const auto& [a1, a2] = (o < d) ? std::tie(o, d) : std::tie(d, o);
-            linkNames_.push_back(a1 + "_" + a2 + "_link");
+            linkNames_.push_back(BuildLinkComponentId(o, d));
         }
     }
 
