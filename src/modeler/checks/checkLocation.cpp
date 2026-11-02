@@ -149,7 +149,7 @@ void checkExpression(const Node* expression,
 
             PortFieldKey key(portFieldNode->getPortName(), portFieldNode->getFieldName());
             auto& expr = model.PortFieldDefinitions().at(key).Definition();
-            checkExpression(model.PortFieldDefinitions().at(key).Definition().RootNode(),
+            checkExpression(expr.RootNode(),
                             location,
                             model,
                             system,
