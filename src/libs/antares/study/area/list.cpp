@@ -640,9 +640,18 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Reserves
-    if (study.parameters.include.reserves && studyVersion >= StudyVersion(10, 1))
+    if (study.parameters.include.reserves)
     {
-        ret = Antares::Data::loadReservesParameters(study.folderInput, area) && ret;
+        if (studyVersion >= StudyVersion(10, 1))
+        {
+            ret = Antares::Data::loadReservesParameters(study.folderInput, area) && ret;
+        }
+        else
+        {
+            logs.warning() << "Reserves are not supported in study version "
+                           << studyVersion.toString()
+                           << ". Reserves will be silently ignored. Consider upgrading the study.";
+        }
     }
 
     // Solar
