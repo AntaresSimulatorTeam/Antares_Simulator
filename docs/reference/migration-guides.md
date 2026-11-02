@@ -3,9 +3,22 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to
 lower the costs of changing existing interfaces, both GUI and scripts.
 
+## v10.3.0
+
+### Input
+
+#### Hydro leeway
+
+Hydro leeway has been removed. The `[leeway low]` and `[leeway up]` sections in
+`input/hydro/hydro.ini` are no longer read and should be removed from existing studies.
+
+The `[use leeway]` section is also no longer supported. It is accepted for compatibility,
+but `use leeway = yes` is ignored with a warning; remove the section from the study.
+
 ## v10.2.0
 
 ### Input
+
 #### Reserves files
 
 In file settings/generaldata.ini, in section `optimization`, new property `include-reserves` is added (bool, default value `false`).

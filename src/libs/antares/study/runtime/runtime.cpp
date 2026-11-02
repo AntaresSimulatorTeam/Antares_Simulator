@@ -260,6 +260,15 @@ StudyRuntimeInfos::StudyRuntimeInfos():
 {
 }
 
+void StudyRuntimeInfos::initializeQuadraticFlowStorage(const unsigned int count)
+{
+    transitMoyenInterconnexionsRecalculQuadratique.resize(count);
+    for (auto& values: transitMoyenInterconnexionsRecalculQuadratique)
+    {
+        values.assign(HOURS_PER_YEAR, 0.);
+    }
+}
+
 void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
 {
     const auto& gd = study.parameters;
@@ -332,11 +341,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Check if some clusters request TS generation
     checkThermalTSGeneration(study);
 
-    transitMoyenInterconnexionsRecalculQuadratique.resize(interconnectionsCount());
-    for (unsigned int i = 0; i != interconnectionsCount(); i++)
-    {
-        transitMoyenInterconnexionsRecalculQuadratique[i].assign(HOURS_PER_YEAR, 0.);
-    }
+    transitMoyenInterconnexionsRecalculQuadratique.clear();
 
     if (not gd.geographicTrimming)
     {

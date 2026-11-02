@@ -163,7 +163,7 @@ void State::initFromShortTermStorageClusterIndex(const uint clusterAreaWideIndex
     STStorageCluster = &area->shortTermStorage.storagesByIndex[clusterAreaWideIndex];
 
     // Reserves
-    if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast
+    if (Antares::Data::usesExplicitUnitCommitment(unitCommitmentMode)
         && study.parameters.include.reserves && STStorageCluster->reserveParticipationContainer)
     {
         auto& resData = reserveData->at(area->index);
@@ -201,7 +201,7 @@ void State::initFromHydro()
 
     auto& Hydro = area->hydro;
 
-    if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast
+    if (Antares::Data::usesExplicitUnitCommitment(unitCommitmentMode)
         && study.parameters.include.reserves && Hydro.reserveParticipationContainer)
     {
         auto& resData = reserveData->at(area->index);
@@ -323,7 +323,7 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
     thermal[area->index].thermalClustersOperatingCost[clusterEnabledIndex] += rampingCost;
 
     // Reserves
-    if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast
+    if (Antares::Data::usesExplicitUnitCommitment(unitCommitmentMode)
         && study.parameters.include.reserves && thermalCluster->reserveParticipationContainer)
     {
         auto& resData = reserveData->at(area->index);
@@ -575,8 +575,7 @@ void State::yearEndBuildCalculateRampingCosts(const uint& maxDurationON,
         return;
     }
 
-    if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate
-        || unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucMILP)
+    if (Antares::Data::usesExplicitUnitCommitment(unitCommitmentMode))
     {
         uint startHourForCurrentYear = study.runtime.rangeLimits.hour[Data::rangeBegin];
         uint endHourForCurrentYear = startHourForCurrentYear
@@ -606,7 +605,7 @@ void State::yearEndBuildCalculateRampingCosts(const uint& maxDurationON,
 
 void State::calculateReserveParticipationCosts()
 {
-    if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
+    if (Antares::Data::usesExplicitUnitCommitment(unitCommitmentMode))
     {
         uint startHourForCurrentYear = study.runtime.rangeLimits.hour[Data::rangeBegin];
         uint endHourForCurrentYear = startHourForCurrentYear
