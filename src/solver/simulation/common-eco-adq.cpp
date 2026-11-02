@@ -333,7 +333,7 @@ void SetInitialHydroLevel(Data::Study& study,
       [&problem, &firstDaySimu, &hydroVentilationResults](const Data::Area& area)
       {
           bool updatePreviousLevel = area.hydro.reservoirManagement
-                                     && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
+                                     && !area.hydro.useHeuristicTarget;
           if (updatePreviousLevel)
           {
               double capacity = area.hydro.reservoirCapacity;

@@ -6,7 +6,7 @@ Feature: hydro parameters loading (hydro.ini / PartHydro::LoadIniFile)
   # section, then runs the solver.
   #
   # Note: parameters that participate only in soft hydro heuristics (the four
-  # breakdown / modulation parameters, follow-load, hard-bounds, leeway-low/up,
+  # breakdown / modulation parameters, follow-load, hard-bounds,
   # power-to-level, overflow-spilled-cost-difference) do not change the simulation
   # output in this study setup because the final-levels feature pins start/end
   # reservoir levels and the optimizer has enough slack to ignore soft targets.
@@ -37,9 +37,6 @@ Feature: hydro parameters loading (hydro.ini / PartHydro::LoadIniFile)
       | use water                        | true          | 106827000 | 0      | 114196 | 0     | 4881  |
       | hard bounds                      | true          | 106823000 | 138751 | 45158  | 38750 | 35670 |
       | power to level                   | true          | 106823000 | 138751 | 45158  | 38750 | 35670 |
-      | use leeway                       | true          | 106823000 | 100001 | 9488   | 0     | 0     |
-      | leeway low                       | 0.500000      | 106823000 | 138751 | 45158  | 38750 | 35670 |
-      | leeway up                        | 1.500000      | 106823000 | 138751 | 45158  | 38750 | 35670 |
       | pumping efficiency               | 0.750000      | 106823000 | 100001 | 9488   | 0     | 0     |
       | overflow spilled cost difference | 0.500000      | 106823000 | 138751 | 45158  | 38750 | 35670 |
 

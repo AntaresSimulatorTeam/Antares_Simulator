@@ -11,25 +11,13 @@ using namespace Antares::Data;
 namespace
 {
 constexpr auto supportedVersions = std::to_array({
-  StudyVersion(7, 0),
-  StudyVersion(7, 1),
-  StudyVersion(7, 2),
-  StudyVersion(8, 0),
-  StudyVersion(8, 1),
-  StudyVersion(8, 2),
-  StudyVersion(8, 3),
-  StudyVersion(8, 4),
-  StudyVersion(8, 5),
-  StudyVersion(8, 6),
-  StudyVersion(8, 7),
-  StudyVersion(8, 8),
-  StudyVersion(9, 0),
-  StudyVersion(9, 1),
-  StudyVersion(9, 2),
-  StudyVersion(9, 3),
-  StudyVersion(10, 0),
-  StudyVersion(10, 1),
-  StudyVersion(10, 2)
+  StudyVersion(7, 0),  StudyVersion(7, 1),  StudyVersion(7, 2),
+  StudyVersion(8, 0),  StudyVersion(8, 1),  StudyVersion(8, 2),
+  StudyVersion(8, 3),  StudyVersion(8, 4),  StudyVersion(8, 5),
+  StudyVersion(8, 6),  StudyVersion(8, 7),  StudyVersion(8, 8),
+  StudyVersion(9, 0),  StudyVersion(9, 1),  StudyVersion(9, 2),
+  StudyVersion(9, 3),  StudyVersion(10, 0), StudyVersion(10, 1),
+  StudyVersion(10, 2), StudyVersion(10, 3)
   // Add new versions here
 });
 

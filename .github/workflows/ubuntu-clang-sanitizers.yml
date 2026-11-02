@@ -45,7 +45,7 @@ jobs:
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Install up-to-date Clang ${{ env.CLANG_VERSION }}
       run: |
@@ -70,7 +70,7 @@ jobs:
 
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary
-      uses: actions/cache/restore@v5
+      uses: actions/cache/restore@v6
       with:
         path: ${{ github.workspace }}/vcpkg_cache
         key: vcpkg-cache-ubuntu-clang-${{ hashFiles('vcpkg.json', '.git/modules/vcpkg/HEAD') }}
@@ -83,7 +83,7 @@ jobs:
 
     - name: Restore ccache cache
       id: cache
-      uses: actions/cache/restore@v5
+      uses: actions/cache/restore@v6
       with:
         path: ${{ github.workspace }}/.ccache_ubuntu_clang
         key: ${{ env.os }}-clang-${{ github.ref_name }}
@@ -113,7 +113,7 @@ jobs:
 
     - name: Set up Python
       id: setup-python
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v7
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 
@@ -160,7 +160,7 @@ jobs:
 
     - name: Cache vcpkg binary dir
       if: always()
-      uses: actions/cache/save@v5
+      uses: actions/cache/save@v6
       with:
         path: ${{ github.workspace }}/vcpkg_cache
         key: vcpkg-cache-ubuntu-clang-${{ hashFiles('vcpkg.json', '.git/modules/vcpkg/HEAD') }}
@@ -170,7 +170,7 @@ jobs:
 
     - name: Save ccache cache
       if: ${{ !cancelled() }}
-      uses: actions/cache/save@v5
+      uses: actions/cache/save@v6
       with:
         path: ${{ github.workspace }}/.ccache_ubuntu_clang
         key: ${{ steps.cache.outputs.cache-primary-key }}

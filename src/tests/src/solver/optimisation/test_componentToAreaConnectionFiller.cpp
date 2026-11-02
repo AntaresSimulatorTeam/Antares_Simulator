@@ -334,7 +334,7 @@ BOOST_AUTO_TEST_CASE(failure_if_a_connection_references_a_not_existing_area)
     errMsg += ": area1";
     BOOST_CHECK_EXCEPTION(addConstraintsFromConnectionsToLP({0, 0, 0, 0, 0}, optimEntityContainer),
                           std::runtime_error,
-                          checkMessage(errMsg));
+                          containsMessage(errMsg));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

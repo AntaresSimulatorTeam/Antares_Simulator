@@ -145,14 +145,8 @@ public:
     // gp : pb - initializeReservoirLevelDate must be an enum from january (= 0) to december (= 11)
     //! Initialize reservoir level date (month)
     int initializeReservoirLevelDate;
-    //! Use Leeway
-    bool useLeeway;
     //! Power to level modulations
     bool powerToLevel;
-    //! Leeway low bound
-    double leewayLowerBound;
-    //! Leeway upper bound
-    double leewayUpperBound;
     //! Puming efficiency
     double pumpingEfficiency;
     //! Daily max power ({generating max Power, generating max energy, pumping max power, pumping

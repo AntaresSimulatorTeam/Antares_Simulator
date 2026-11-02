@@ -104,7 +104,8 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
     std::string expression = "abc"; // not a param or var
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage("No parameter or variable found for this identifier: abc"));
+                          containsMessage(
+                            "No parameter or variable found for this identifier: abc"));
 }
 
 BOOST_AUTO_TEST_CASE(addTwoLiterals)
@@ -466,7 +467,7 @@ BOOST_FIXTURE_TEST_CASE(dualExpression, SupplyModelForDualOperator)
     std::string expected_msg = "dual called with unknown constraint 'abc' in model 'model0'";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(badExpression, model),
                           InputError,
-                          checkMessage(expected_msg));
+                          containsMessage(expected_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(EmptyDualExpression, SupplyModelForDualOperator)
@@ -475,7 +476,7 @@ BOOST_FIXTURE_TEST_CASE(EmptyDualExpression, SupplyModelForDualOperator)
     std::string expected_msg = "dual operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(expected_msg));
+                          containsMessage(expected_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(WrongDualExpression, SupplyModelForDualOperator)
@@ -484,7 +485,7 @@ BOOST_FIXTURE_TEST_CASE(WrongDualExpression, SupplyModelForDualOperator)
     auto err_msg = "dual operator expects exactly one constraint id got: constraintA, e^(iPi)+1=0";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 struct SupplyModelForFunctionalOperator
@@ -536,7 +537,7 @@ BOOST_FIXTURE_TEST_CASE(reducedCostExpression, SupplyModelForFunctionalOperator)
     std::string err_msg = "reduced_cost called with unknown variable 'abc' in model 'model0'";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(badExpression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(reducedCostExpressionTwoVariables, SupplyModelForFunctionalOperator)
@@ -545,7 +546,7 @@ BOOST_FIXTURE_TEST_CASE(reducedCostExpressionTwoVariables, SupplyModelForFunctio
     std::string err_msg = "reduced_cost operator expects exactly one variable id got: varB, 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(EmptyReducedCostExpression, SupplyModelForFunctionalOperator)
@@ -554,7 +555,7 @@ BOOST_FIXTURE_TEST_CASE(EmptyReducedCostExpression, SupplyModelForFunctionalOper
     std::string err_msg = "reduced_cost operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(ValidPowerExpression, SupplyModelForFunctionalOperator)
@@ -581,7 +582,7 @@ BOOST_FIXTURE_TEST_CASE(WrongPowerExpression, SupplyModelForFunctionalOperator)
     std::string expression = "varA^_";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage("No parameter or variable found for this identifier: _"));
+                          containsMessage("No parameter or variable found for this identifier: _"));
 }
 
 BOOST_FIXTURE_TEST_CASE(ValidMinExpression, SupplyModelForFunctionalOperator)
@@ -624,7 +625,7 @@ BOOST_FIXTURE_TEST_CASE(MaxOperatorWrongNumberOfParameter, SupplyModelForFunctio
     std::string expression = "max(varB)";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage("max operator expects at least 2 operands got 1"));
+                          containsMessage("max operator expects at least 2 operands got 1"));
 }
 
 BOOST_FIXTURE_TEST_CASE(MinOperatorWrongNumberOfParameter, SupplyModelForFunctionalOperator)
@@ -632,7 +633,7 @@ BOOST_FIXTURE_TEST_CASE(MinOperatorWrongNumberOfParameter, SupplyModelForFunctio
     std::string expression = "min(varB)";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage("min operator expects at least 2 operands got 1"));
+                          containsMessage("min operator expects at least 2 operands got 1"));
 }
 
 BOOST_FIXTURE_TEST_CASE(MinWithForbiddenNode, SupplyModelForFunctionalOperator)
@@ -648,7 +649,7 @@ BOOST_FIXTURE_TEST_CASE(MinWithForbiddenNode, SupplyModelForFunctionalOperator)
                    + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(MaxWithForbiddenNode, SupplyModelForFunctionalOperator)
@@ -664,7 +665,7 @@ BOOST_FIXTURE_TEST_CASE(MaxWithForbiddenNode, SupplyModelForFunctionalOperator)
     err_msg += "expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignLT, SupplyModelForFunctionalOperator)
@@ -678,7 +679,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignLT, SupplyModelFor
     std::string err_msg = "'LessThanOrEqualNode' is not allowed in expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignGT, SupplyModelForFunctionalOperator)
@@ -693,7 +694,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignGT, SupplyModelFor
                           + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainEqualSign, SupplyModelForFunctionalOperator)
@@ -707,7 +708,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainEqualSign, SupplyModelForFunctio
     std::string err_msg = "'EqualNode' is not allowed in expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_a_variable_as_arg,
@@ -721,7 +722,7 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_a_variable_as_arg,
     err_msg += "expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(floor_operator___nominal_case, SupplyModelForFunctionalOperator)
@@ -781,7 +782,7 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_no_arg, SupplyModelForFun
     std::string err_msg = "floor operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_more_than_one_arg,
@@ -792,7 +793,7 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_more_than_one_arg,
     std::string err_msg = "floor() expects 1 argument, but has 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(ceil_operator___nominal_case, SupplyModelForFunctionalOperator)
@@ -842,7 +843,7 @@ BOOST_FIXTURE_TEST_CASE(ceil_operator_should_not_take_no_arg, SupplyModelForFunc
     std::string err_msg = "ceil operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(ceil_operator_should_not_take_more_than_one_arg,
@@ -853,7 +854,7 @@ BOOST_FIXTURE_TEST_CASE(ceil_operator_should_not_take_more_than_one_arg,
     std::string err_msg = "ceil() expects 1 argument, but has 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(ceil_operator_forbidden_on_variable_with_forbidden_nodes,
@@ -871,7 +872,7 @@ BOOST_FIXTURE_TEST_CASE(ceil_operator_forbidden_on_variable_with_forbidden_nodes
                           + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 // ─────────────────────────────────────────────
@@ -925,7 +926,7 @@ BOOST_FIXTURE_TEST_CASE(round_operator_should_not_take_no_arg, SupplyModelForFun
     std::string err_msg = "round operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(round_operator_should_not_take_more_than_one_arg,
@@ -936,7 +937,7 @@ BOOST_FIXTURE_TEST_CASE(round_operator_should_not_take_more_than_one_arg,
     std::string err_msg = "round() expects 1 argument, but has 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(round_operator_forbidden_on_variable_with_forbidden_nodes,
@@ -954,7 +955,7 @@ BOOST_FIXTURE_TEST_CASE(round_operator_forbidden_on_variable_with_forbidden_node
                           + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 // ─────────────────────────────────────────────
@@ -1030,7 +1031,7 @@ BOOST_FIXTURE_TEST_CASE(abs_operator_should_not_take_no_arg, SupplyModelForFunct
     std::string err_msg = "abs operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(abs_operator_should_not_take_more_than_one_arg,
@@ -1041,7 +1042,7 @@ BOOST_FIXTURE_TEST_CASE(abs_operator_should_not_take_more_than_one_arg,
     std::string err_msg = "abs() expects 1 argument, but has 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(abs_operator_forbidden_on_variable_with_forbidden_nodes,
@@ -1059,7 +1060,7 @@ BOOST_FIXTURE_TEST_CASE(abs_operator_forbidden_on_variable_with_forbidden_nodes,
                           + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

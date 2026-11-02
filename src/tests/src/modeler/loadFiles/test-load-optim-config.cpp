@@ -273,7 +273,7 @@ BOOST_FIXTURE_TEST_CASE(no_library_but_reference_an_objective_in_optim_config___
 
     BOOST_CHECK_EXCEPTION(loadLibraries(studyFolder),
                           std::runtime_error,
-                          checkMessage("No library 'my-lib' found."));
+                          containsMessage("No library 'my-lib' found."));
 }
 
 BOOST_FIXTURE_TEST_CASE(model_does_not_exist_in_library___exception_raised, CreateInputFileFixture)
@@ -294,7 +294,7 @@ BOOST_FIXTURE_TEST_CASE(model_does_not_exist_in_library___exception_raised, Crea
 
     BOOST_CHECK_EXCEPTION(loadLibraries(studyFolder),
                           std::runtime_error,
-                          checkMessage("No model 'my-lib.some-model' found."));
+                          containsMessage("No model 'my-lib.some-model' found."));
 }
 
 BOOST_FIXTURE_TEST_CASE(objective_does_not_exist_in_model___exception_raised,
@@ -324,7 +324,7 @@ BOOST_FIXTURE_TEST_CASE(objective_does_not_exist_in_model___exception_raised,
 
     BOOST_CHECK_EXCEPTION(loadLibraries(studyFolder),
                           std::runtime_error,
-                          checkMessage("No objective 'some_obj' found."));
+                          containsMessage("No objective 'some_obj' found."));
 }
 
 BOOST_FIXTURE_TEST_CASE(variable_does_not_exist_in_model___exception_raised, CreateInputFileFixture)
@@ -352,7 +352,7 @@ BOOST_FIXTURE_TEST_CASE(variable_does_not_exist_in_model___exception_raised, Cre
 
     BOOST_CHECK_EXCEPTION(loadLibraries(studyFolder),
                           std::runtime_error,
-                          checkMessage("No variable 'v' found."));
+                          containsMessage("No variable 'v' found."));
 }
 
 BOOST_FIXTURE_TEST_CASE(constraint_does_not_exist_in_model___exception_raised,
@@ -383,7 +383,7 @@ BOOST_FIXTURE_TEST_CASE(constraint_does_not_exist_in_model___exception_raised,
 
     BOOST_CHECK_EXCEPTION(loadLibraries(studyFolder),
                           std::runtime_error,
-                          checkMessage("No constraint 'some_constraint' found."));
+                          containsMessage("No constraint 'some_constraint' found."));
 }
 
 BOOST_AUTO_TEST_CASE(locationToString)

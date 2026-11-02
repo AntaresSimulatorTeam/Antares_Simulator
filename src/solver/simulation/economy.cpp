@@ -30,6 +30,11 @@ Economy::Economy(Study& study,
 {
 }
 
+void Economy::initializeVariables()
+{
+    variables = std::make_unique<Solver::Variable::Economy::AllVariables>();
+}
+
 Benchmarking::OptimizationInfo Economy::getOptimizationInfo() const
 {
     const uint numSpace = 0;
@@ -60,7 +65,11 @@ bool Economy::simulationBegin()
         weeklyOptProblems_.clear();
         postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
 
-        const auto inactiveComponents = Antares::Data::BuildInactiveComponentsAnalyzer(study);
+        std::shared_ptr<const Antares::Data::InactiveComponentsAnalyzer> inactiveComponents;
+        if (study.parameters.writeSimulationTable())
+        {
+            inactiveComponents = Antares::Data::BuildInactiveComponentsAnalyzer(study);
+        }
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
@@ -154,26 +163,29 @@ bool Economy::year(Variable::State& state,
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
 
-            variables.weekBegin(state);
-            uint previousHourInTheYear = state.hourInTheYear;
-
-            for (uint hw = 0; hw != nbHoursInAWeek;
-                 ++hw, ++state.hourInTheYear, ++state.hourInTheSimulation)
+            if (variables)
             {
-                state.hourInTheWeek = hw;
+                variables->weekBegin(state);
+                uint previousHourInTheYear = state.hourInTheYear;
 
-                state.ntc = currentProblem.ValeursDeNTC[hw];
+                for (uint hw = 0; hw != nbHoursInAWeek;
+                     ++hw, ++state.hourInTheYear, ++state.hourInTheSimulation)
+                {
+                    state.hourInTheWeek = hw;
 
-                variables.hourBegin(state.hourInTheYear);
+                    state.ntc = currentProblem.ValeursDeNTC[hw];
 
-                variables.hourForEachArea(state, numSpace);
+                    variables->hourBegin(state.hourInTheYear);
 
-                variables.hourEnd(state, state.hourInTheYear);
+                    variables->hourForEachArea(state, numSpace);
+
+                    variables->hourEnd(state, state.hourInTheYear);
+                }
+
+                state.hourInTheYear = previousHourInTheYear;
+                variables->weekForEachArea(state, numSpace);
+                variables->weekEnd(state);
             }
-
-            state.hourInTheYear = previousHourInTheYear;
-            variables.weekForEachArea(state, numSpace);
-            variables.weekEnd(state);
 
             for (int opt = 0; opt < 7; opt++)
             {
@@ -247,9 +259,9 @@ static std::vector<AvgExchangeResults*> retrieveBalance(const Study& study,
 
 void Economy::simulationEnd()
 {
-    if (!preproOnly && study.runtime.interconnectionsCount() > 0)
+    if (variables && !preproOnly && study.runtime.interconnectionsCount() > 0)
     {
-        auto balance = retrieveBalance(study, variables);
+        auto balance = retrieveBalance(study, *variables);
         ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
     }
 }

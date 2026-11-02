@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE(PbData_is_empty_asking_it_a_value_leads_to_exception)
     std::string expected_err_msg = "Data series repo is empty, and somebody requests data from it";
     BOOST_CHECK_EXCEPTION((void)linearProblemData.getData("data set name", 0, 0),
                           std::invalid_argument,
-                          checkMessage(expected_err_msg));
+                          containsMessage(expected_err_msg));
 }
 
 BOOST_AUTO_TEST_CASE(ask_to_a_simple_linearProblemData_data_it_contains_answer_ok)
