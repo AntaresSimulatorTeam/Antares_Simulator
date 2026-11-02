@@ -34,6 +34,12 @@ Other details worth knowing:
   version as CI matters: newer Clang releases add warnings that older ones do not have, which is the most common reason
   for a "works on my machine" `-Werror` failure.
 - vcpkg and a pre-compiled OR-Tools, as described in [Build](3-Build.md).
+- CMake 3.24 or newer, required to read the version 5 `CMakePresets.json`.
+- Ninja, used by the shared preset. On Ubuntu: `sudo apt-get install ninja-build`.
+- Python 3 with the test dependencies installed in your Python environment:
+  `python3 -m pip install -r src/tests/examples/requirements.txt`.
+  If multiple Python environments are installed, pass `-DPython3_EXECUTABLE=/path/to/python3` when configuring
+  to select the interpreter containing those dependencies.
 
 ### With the CMake preset (recommended)
 
