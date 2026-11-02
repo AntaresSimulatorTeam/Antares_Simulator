@@ -614,12 +614,8 @@ BOOST_AUTO_TEST_CASE(congestion_fees_use_the_endpoint_area_prices)
     BOOST_CHECK_CLOSE(FindRow(table, "alg_congestion_fee", "area1_area2")->value,
                       120. * -9950.,
                       1e-9);
-    BOOST_CHECK_CLOSE(FindRow(table, "abs_congestion_fee", "area2_area3")->value,
-                      30. * 25.,
-                      1e-9);
-    BOOST_CHECK_CLOSE(FindRow(table, "alg_congestion_fee", "area2_area3")->value,
-                      -30. * 25.,
-                      1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "abs_congestion_fee", "area2_area3")->value, 30. * 25., 1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "alg_congestion_fee", "area2_area3")->value, -30. * 25., 1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(link_prop_cost_sums_direct_and_indirect_hurdle_costs)
