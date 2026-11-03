@@ -331,6 +331,88 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
     std::filesystem::remove(file2);
 }
 
+static void addWeekEntries(SimulationTable& table, unsigned week)
+{
+    for (unsigned h = 0; h < 3; ++h)
+    {
+        table.addEntry({.block = week + 1,
+                        .component = "comp" + std::to_string(h),
+                        .output = "var",
+                        .absolute_time_index = week * 168 + h,
+                        .block_time_index = h,
+                        .scenario_index = 0,
+                        .value = 1.5 * (week + h),
+                        .status = MipBasisStatus::BASIC});
+    }
+}
+
+BOOST_AUTO_TEST_CASE(Streaming_CsvFlushPerWeek_IsIdenticalToOneShotWrite)
+{
+    auto tempDir = std::filesystem::temp_directory_path();
+    constexpr unsigned nbWeeks = 4;
+
+    // One-shot reference (year 20)
+    {
+        OptimisationsSimulationTable tables{nullptr};
+        for (unsigned w = 0; w < nbWeeks; ++w)
+        {
+            addWeekEntries(*tables.firstOptimSimulationTable(), w);
+        }
+        LegacySimulationTablesWriter(tempDir, 20, TableFormat::CSV).write(tables);
+    }
+
+    // Streamed: flush after each week, tables are cleared in between (year 21)
+    {
+        OptimisationsSimulationTable tables{nullptr};
+        LegacySimulationTablesWriter writer(tempDir, 21, TableFormat::CSV);
+        for (unsigned w = 0; w < nbWeeks; ++w)
+        {
+            addWeekEntries(*tables.firstOptimSimulationTable(), w);
+            writer.flush(tables);
+            BOOST_CHECK_EQUAL(tables.firstOptimSimulationTable()->rowCount(), 0u);
+        }
+        writer.finish(tables);
+        // Stage never filled: no file
+        BOOST_CHECK(!std::filesystem::exists(tempDir / "simulation-table-21-optim-nb-2.csv"));
+    }
+
+    auto ref = tempDir / "simulation-table-20-optim-nb-1.csv";
+    auto streamed = tempDir / "simulation-table-21-optim-nb-1.csv";
+    BOOST_REQUIRE(std::filesystem::exists(ref));
+    BOOST_REQUIRE(std::filesystem::exists(streamed));
+    BOOST_CHECK_EQUAL(readFileContent(streamed), readFileContent(ref));
+    std::filesystem::remove(ref);
+    std::filesystem::remove(streamed);
+}
+
+BOOST_AUTO_TEST_CASE(Streaming_ParquetFlushPerWeek_WritesOneRowGroupPerFlush)
+{
+    auto tempDir = std::filesystem::temp_directory_path();
+    constexpr unsigned nbWeeks = 4;
+    {
+        OptimisationsSimulationTable tables{nullptr};
+        LegacySimulationTablesWriter writer(tempDir, 22, TableFormat::Parquet);
+        for (unsigned w = 0; w < nbWeeks; ++w)
+        {
+            addWeekEntries(*tables.firstOptimSimulationTable(), w);
+            writer.flush(tables);
+        }
+        writer.finish(tables);
+    }
+    const auto path = tempDir / "simulation-table-22-optim-nb-1.parquet";
+    BOOST_REQUIRE(std::filesystem::exists(path));
+
+    std::shared_ptr<arrow::io::ReadableFile> infile;
+    PARQUET_ASSIGN_OR_THROW(infile, arrow::io::ReadableFile::Open(path.string()));
+    std::unique_ptr<parquet::arrow::FileReader> reader;
+    PARQUET_ASSIGN_OR_THROW(reader, parquet::arrow::OpenFile(infile, arrow::default_memory_pool()));
+    BOOST_CHECK_EQUAL(reader->num_row_groups(), static_cast<int>(nbWeeks));
+    std::shared_ptr<arrow::Table> table;
+    PARQUET_THROW_NOT_OK(reader->ReadTable(&table));
+    BOOST_CHECK_EQUAL(table->num_rows(), static_cast<int64_t>(nbWeeks * 3));
+    std::filesystem::remove(path);
+}
+
 BOOST_AUTO_TEST_CASE(WriteTo_ParquetFormat_CreatesCorrectFiles)
 {
     OptimisationsSimulationTable tables{nullptr};

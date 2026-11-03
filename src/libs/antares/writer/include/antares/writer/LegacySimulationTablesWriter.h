@@ -4,6 +4,8 @@
 #pragma once
 
 #include <filesystem>
+#include <map>
+#include <memory>
 #include <string>
 
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
@@ -20,10 +22,24 @@ public:
     LegacySimulationTablesWriter(const std::filesystem::path& folder,
                                  const unsigned year,
                                  TableFormat tableFormat = TableFormat::CSV);
-    void write(const IO::Outputs::OptimisationsSimulationTable& tables) const;
+
+    /// One-shot write of everything in `tables` (flush + finish). Tables are
+    /// left untouched.
+    void write(const IO::Outputs::OptimisationsSimulationTable& tables);
+
+    /// Streaming API, to keep the in-memory tables small: appends the rows
+    /// currently held by each stage of `tables` to the stage's file for this
+    /// year, then clears them. Stages with no row are skipped (their file is
+    /// created only once they have content). Can be called any number of times
+    /// (e.g. once per week), then finish() must close the files.
+    void flush(const IO::Outputs::OptimisationsSimulationTable& tables);
+
+    /// Flushes the remaining rows and closes all files of the year.
+    void finish(const IO::Outputs::OptimisationsSimulationTable& tables);
 
 private:
-    void writeForStage(const IO::Outputs::SimulationTable& table, IO::Outputs::Stage stage) const;
+    StreamingSimulationTableWriter& streamFor(IO::Outputs::Stage stage);
+    std::map<IO::Outputs::Stage, std::unique_ptr<StreamingSimulationTableWriter>> streams_;
     unsigned year_ = 0;
     TableFormat tableFormat_;
     const std::filesystem::path folder_;
