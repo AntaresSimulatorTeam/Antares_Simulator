@@ -4,14 +4,17 @@
 #ifndef ANTARES_ARRAY_MATRIX_IO_HXX
 #define ANTARES_ARRAY_MATRIX_IO_HXX
 
+#include <algorithm>
 #include <cassert>
 #include <charconv>
+#include <cstdint>
 #include <cstdlib>
 #include <exception>
 #include <filesystem>
 #include <fstream>
 #include <functional>
 #include <limits>
+#include <new>
 #include <string>
 #include <string_view>
 
@@ -24,8 +27,16 @@
 
 namespace Antares::MatrixIO
 {
+enum class WidthPolicy
+{
+    AtLeast,
+    Exact,
+};
+
 namespace
 {
+constexpr std::uintmax_t kMaxMatrixFileSize = Matrix::kMaxAllocationBytes;
+
 bool parseDouble(std::string_view text, double& value)
 {
     const auto first = text.data();
@@ -41,44 +52,122 @@ bool parseDouble(std::string_view text, double& value)
     value = std::strtod(stringValue.c_str(), &legacyEnd);
     return legacyEnd != nullptr && *legacyEnd == '\0';
 }
+
+bool startsWithDimensionHeader(std::string_view text)
+{
+    while (!text.empty() && (text.front() == ' ' || text.front() == '\t'))
+    {
+        text.remove_prefix(1);
+    }
+    return text.starts_with("size:");
+}
+
+std::string_view trimDimensionHeader(std::string_view text)
+{
+    while (!text.empty() && (text.front() == ' ' || text.front() == '\t'))
+    {
+        text.remove_prefix(1);
+    }
+    while (!text.empty() && (text.back() == ' ' || text.back() == '\t'))
+    {
+        text.remove_suffix(1);
+    }
+    return text;
+}
+
+bool parseDimensionHeader(std::string_view text, unsigned int& width, unsigned int& height)
+{
+    text = trimDimensionHeader(text);
+    constexpr std::string_view prefix = "size:";
+    const auto separator = text.find('x', prefix.size());
+    if (separator == std::string_view::npos || separator == prefix.size()
+        || separator + 1 == text.size())
+    {
+        return false;
+    }
+
+    const auto parseUnsigned = [](std::string_view value, unsigned int& result)
+    {
+        const auto first = value.data();
+        const auto last = first + value.size();
+        const auto [end, error] = std::from_chars(first, last, result);
+        return error == std::errc{} && end == last;
+    };
+
+    return parseUnsigned(text.substr(prefix.size(), separator - prefix.size()), width)
+           && parseUnsigned(text.substr(separator + 1), height);
+}
+
+bool validDimensions(unsigned int width, unsigned int height)
+{
+    return width <= Matrix::kMaxDimension && height <= Matrix::kMaxDimension
+           && static_cast<std::uintmax_t>(width) * height <= Matrix::kMaxElements;
+}
 } // namespace
 
 inline bool load(Matrix& matrix,
                  const std::string& filename,
                  unsigned int minWidth,
-                 unsigned int height)
+                 unsigned int height,
+                 WidthPolicy widthPolicy = WidthPolicy::AtLeast)
 {
     assert(!filename.empty());
+
+    const auto resetToRequestedDimensions = [&]()
+    {
+        if (validDimensions(minWidth, height))
+        {
+            matrix.reset(minWidth, height);
+        }
+        else
+        {
+            matrix.clear();
+        }
+    };
+
+    if (!validDimensions(minWidth, height))
+    {
+        logs.error() << filename << ": matrix dimensions exceed the supported limit";
+        matrix.clear();
+        return false;
+    }
 
     std::error_code error;
     const auto size = std::filesystem::file_size(filename, error);
     if (error)
     {
         logs.error() << "I/O Error: not found: '" << filename << "'";
-        matrix.reset(minWidth, height);
+        resetToRequestedDimensions();
+        return false;
+    }
+
+    if (size > kMaxMatrixFileSize)
+    {
+        logs.error() << filename << ": matrix file is too large (maximum 1536 MiB)";
+        resetToRequestedDimensions();
         return false;
     }
 
     if (size == 0)
     {
-        matrix.reset(minWidth, height);
+        resetToRequestedDimensions();
         return true;
     }
 
     if (!minWidth || !height)
     {
         logs.error() << filename << ": matrix dimensions are required for a non-empty file";
-        matrix.reset(minWidth, height);
+        resetToRequestedDimensions();
         return false;
     }
-
-    // The successful path writes every cell. Malformed or incomplete input is reset below.
-    matrix.resize(minWidth, height);
 
     Statistics::HasReadFromDisk(size);
     logs.debug() << "  :: loading `" << filename << "`";
 
     unsigned int rowCount = 0;
+    unsigned int targetWidth = 0;
+    unsigned int targetHeight = height;
+    bool matrixInitialized = false;
     bool result = true;
     int errorCount = 6;
 
@@ -100,82 +189,152 @@ inline bool load(Matrix& matrix,
 
     try
     {
-        IO::readCSVFile(filename,
-                        "\t;,",
-                        [&](std::size_t, IO::CSVRow row)
-                        {
-                            if (rowCount >= matrix.height())
-                            {
-                                return true;
-                            }
+        IO::readCSVFile(
+          filename,
+          "\t;,",
+          [&](std::size_t, IO::CSVRow row)
+          {
+              if (matrixInitialized && rowCount >= targetHeight)
+              {
+                  return false;
+              }
 
-                            // Time-series files use one as the minimum width and store their actual
-                            // width in the first row. Resize once before storing that row.
-                            if (rowCount == 0 && row.size() > matrix.width())
-                            {
-                                matrix.resize(static_cast<unsigned int>(row.size()),
-                                              matrix.height());
-                            }
+              if (!matrixInitialized)
+              {
+                  const bool hasDimensionHeader = !row.empty()
+                                                  && startsWithDimensionHeader(row.front().value)
+                                                  && std::all_of(row.begin() + 1,
+                                                                 row.end(),
+                                                                 [](const IO::CSVCell& cell)
+                                                                 { return cell.value.empty(); });
+                  if (hasDimensionHeader)
+                  {
+                      unsigned int headerWidth = 0;
+                      unsigned int headerHeight = 0;
+                      if (!parseDimensionHeader(row.front().value, headerWidth, headerHeight)
+                          || !headerWidth || !headerHeight
+                          || !validDimensions(headerWidth, headerHeight))
+                      {
+                          logs.warning() << filename << ": invalid matrix header";
+                          result = false;
+                          return false;
+                      }
 
-                            unsigned int column = 0;
-                            for (const auto& cell: row)
-                            {
-                                if (column >= matrix.width())
-                                {
-                                    result = false;
-                                    logs.warning()
-                                      << filename << ": too many columns on row " << rowCount;
-                                    break;
-                                }
+                      if (widthPolicy == WidthPolicy::Exact
+                          && (headerWidth != minWidth || headerHeight != height))
+                      {
+                          logs.warning() << filename
+                                         << ": matrix dimensions do not match the "
+                                            "requested dimensions";
+                          result = false;
+                          return false;
+                      }
 
-                                if (cell.value.empty())
-                                {
-                                    matrix[column][rowCount] = 0.;
-                                }
-                                else
-                                {
-                                    double value = 0.;
-                                    if (!parseDouble(cell.value, value))
-                                    {
-                                        handleInvalidNumericValue(column, rowCount, cell.value);
-                                    }
-                                    else
-                                    {
-                                        matrix[column][rowCount] = value;
-                                    }
-                                }
-                                ++column;
-                            }
+                      if (widthPolicy == WidthPolicy::AtLeast && headerWidth < minWidth)
+                      {
+                          logs.warning() << filename
+                                         << ": matrix header width is smaller than "
+                                            "the requested minimum";
+                          result = false;
+                          return false;
+                      }
 
-                            if (column < matrix.width())
-                            {
-                                result = false;
-                                logs.warning()
-                                  << filename << ": not enough columns on row " << rowCount
-                                  << " (expected " << matrix.width() << ", got " << column << ')';
-                            }
+                      targetWidth = headerWidth;
+                      targetHeight = headerHeight;
+                      matrix.resize(targetWidth, targetHeight);
+                      matrixInitialized = true;
+                      return true;
+                  }
 
-                            ++rowCount;
-                            return rowCount < matrix.height();
-                        });
+                  if (row.size() > Matrix::kMaxDimension)
+                  {
+                      logs.warning() << filename
+                                     << ": matrix width exceeds the "
+                                        "supported limit";
+                      result = false;
+                      return false;
+                  }
+
+                  targetWidth = widthPolicy == WidthPolicy::Exact
+                                  ? minWidth
+                                  : std::max<unsigned int>(minWidth, row.size());
+                  if (!validDimensions(targetWidth, targetHeight))
+                  {
+                      logs.warning() << filename
+                                     << ": matrix dimensions exceed the "
+                                        "supported limit";
+                      result = false;
+                      return false;
+                  }
+
+                  matrix.resize(targetWidth, targetHeight);
+                  matrixInitialized = true;
+              }
+
+              unsigned int column = 0;
+              for (const auto& cell: row)
+              {
+                  if (column >= targetWidth)
+                  {
+                      result = false;
+                      logs.warning() << filename << ": too many columns on row " << rowCount;
+                      break;
+                  }
+
+                  if (cell.value.empty())
+                  {
+                      matrix[column][rowCount] = 0.;
+                  }
+                  else
+                  {
+                      double value = 0.;
+                      if (!parseDouble(cell.value, value))
+                      {
+                          handleInvalidNumericValue(column, rowCount, cell.value);
+                      }
+                      else
+                      {
+                          matrix[column][rowCount] = value;
+                      }
+                  }
+                  ++column;
+              }
+
+              if (column < targetWidth)
+              {
+                  result = false;
+                  logs.warning() << filename << ": not enough columns on row " << rowCount
+                                 << " (expected " << targetWidth << ", got " << column << ')';
+              }
+
+              ++rowCount;
+              return rowCount < targetHeight;
+          });
+    }
+    catch (const std::bad_alloc& exception)
+    {
+        logs.error() << "I/O Error: failed to allocate matrix for '" << filename
+                     << "': " << exception.what();
+        matrix.clear();
+        return false;
     }
     catch (const std::exception& exception)
     {
         logs.error() << "I/O Error: failed to load '" << filename << "': " << exception.what();
-        matrix.reset(minWidth, height);
+        resetToRequestedDimensions();
         return false;
     }
 
-    if (rowCount < matrix.height())
+    if (!matrixInitialized || rowCount < targetHeight)
     {
         result = false;
-        logs.warning() << filename << ": not enough rows (expected " << matrix.height() << ", got "
+        logs.warning() << filename << ": not enough rows (expected " << targetHeight << ", got "
                        << rowCount << ')';
     }
 
     if (!result)
     {
-        matrix.reset(minWidth, height);
+        resetToRequestedDimensions();
     }
 
     return result;
@@ -184,9 +343,10 @@ inline bool load(Matrix& matrix,
 inline bool load(Matrix& matrix,
                  const std::filesystem::path& filename,
                  unsigned int minWidth,
-                 unsigned int height)
+                 unsigned int height,
+                 WidthPolicy widthPolicy = WidthPolicy::AtLeast)
 {
-    return load(matrix, filename.string(), minWidth, height);
+    return load(matrix, filename.string(), minWidth, height, widthPolicy);
 }
 
 template<class Predicate = std::identity>

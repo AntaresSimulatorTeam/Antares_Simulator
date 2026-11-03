@@ -23,65 +23,71 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
     std::string separators = " \t";
     separators += sep;
     std::size_t dataRowIndex = 0;
+    std::vector<double> values;
 
     try
     {
-        const auto rows = IO::readCSVFile(filename, separators);
-        for (const auto& row: rows)
-        {
-            std::vector<double> values;
-            values.reserve(row.size());
-            for (const auto& cell: row)
-            {
-                if (cell.empty())
-                {
-                    continue;
-                }
+        IO::readCSVFile(filename,
+                        separators,
+                        [&](std::size_t, IO::CSVRow row)
+                        {
+                            values.clear();
+                            values.reserve(row.size());
+                            for (const auto& cell: row)
+                            {
+                                if (cell.value.empty())
+                                {
+                                    continue;
+                                }
 
-                double value = 0.;
-                const auto* first = cell.data();
-                const auto* last = first + cell.size();
-                const auto [end, error] = std::from_chars(first, last, value);
-                if (error != std::errc{} || end != last)
-                {
-                    const char invalid = end < last ? *end : *first;
-                    throw InputError(filename.string() + ": \"" + invalid + "\" is not a number");
-                }
-                values.push_back(value);
-            }
+                                double value = 0.;
+                                const auto* first = cell.value.data();
+                                const auto* last = first + cell.value.size();
+                                const auto [end, error] = std::from_chars(first, last, value);
+                                if (error != std::errc{} || end != last)
+                                {
+                                    const char invalid = end < last ? *end : *first;
+                                    throw InputError(filename.string() + ": \"" + invalid
+                                                     + "\" is not a number");
+                                }
+                                values.push_back(value);
+                            }
 
-            if (values.empty())
-            {
-                continue;
-            }
+                            if (values.empty())
+                            {
+                                return true;
+                            }
 
-            const auto rowIndex = dataRowIndex++;
+                            const auto rowIndex = dataRowIndex++;
 
-            if (columns.empty())
-            {
-                columns.resize(values.size());
-            }
-            else if (values.size() != columns.size())
-            {
-                std::ostringstream message;
-                if (values.size() < columns.size())
-                {
-                    message << filename.string() << ": row (" << rowIndex << ") has less columns ("
-                            << values.size() << ") than the expected (" << columns.size() << ").";
-                }
-                else
-                {
-                    message << filename.string() << ": row (" << rowIndex << ") has more columns ("
-                            << values.size() << ") than the expected (" << columns.size() << ").";
-                }
-                throw InputError(message.str());
-            }
+                            if (columns.empty())
+                            {
+                                columns.resize(values.size());
+                            }
+                            else if (values.size() != columns.size())
+                            {
+                                std::ostringstream message;
+                                if (values.size() < columns.size())
+                                {
+                                    message << filename.string() << ": row (" << rowIndex
+                                            << ") has less columns (" << values.size()
+                                            << ") than the expected (" << columns.size() << ").";
+                                }
+                                else
+                                {
+                                    message << filename.string() << ": row (" << rowIndex
+                                            << ") has more columns (" << values.size()
+                                            << ") than the expected (" << columns.size() << ").";
+                                }
+                                throw InputError(message.str());
+                            }
 
-            for (std::size_t column = 0; column < values.size(); ++column)
-            {
-                columns[column].push_back(values[column]);
-            }
-        }
+                            for (std::size_t column = 0; column < values.size(); ++column)
+                            {
+                                columns[column].push_back(values[column]);
+                            }
+                            return true;
+                        });
     }
     catch (const InputError&)
     {

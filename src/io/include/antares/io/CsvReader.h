@@ -42,7 +42,9 @@ bool readCSV(std::string_view data, std::string_view separators, const CSVRowCal
  */
 bool readCSVFile(const std::filesystem::path& filename,
                  std::string_view separators,
-                 const CSVRowCallback& callback);
+                 const CSVRowCallback& callback,
+                 // Zero means that rows are not limited.
+                 std::size_t maxCellsPerRow = 0);
 
 /**
  * Read CSV rows directly from a file.

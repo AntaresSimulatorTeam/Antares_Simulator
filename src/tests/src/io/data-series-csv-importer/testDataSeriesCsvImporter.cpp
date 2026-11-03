@@ -270,6 +270,17 @@ BOOST_AUTO_TEST_CASE(one_simple_file)
     BOOST_CHECK_EQUAL(repo.getDataSeries("one").getData(1, 0), 123);
 }
 
+BOOST_AUTO_TEST_CASE(utf8_bom_is_ignored)
+{
+    writeFile("bom.csv",
+              "\xEF\xBB\xBF"
+              "1;2\n3;4\n");
+    auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path, ';');
+
+    BOOST_CHECK_EQUAL(repo.getDataSeries("bom").getData(1, 0), 1);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("bom").getData(2, 1), 4);
+}
+
 BOOST_AUTO_TEST_CASE(two_simple_files)
 {
     writeFile("one.csv", "123");

@@ -223,16 +223,29 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
 
           std::string creditId = "creditmodulations_" + area.id + ".txt";
           fs::path creditPath = capacityPath / creditId;
-          ret = MatrixIO::load(area.hydro.creditModulation, creditPath.string(), 101, 2) && ret;
+          ret = MatrixIO::load(area.hydro.creditModulation,
+                               creditPath.string(),
+                               101,
+                               2,
+                               MatrixIO::WidthPolicy::Exact)
+                && ret;
 
           std::string waterValueId = "waterValues_" + area.id + ".txt";
           fs::path waterValuePath = capacityPath / waterValueId;
-          ret = MatrixIO::load(area.hydro.waterValues, waterValuePath.string(), 101, DAYS_PER_YEAR)
+          ret = MatrixIO::load(area.hydro.waterValues,
+                               waterValuePath.string(),
+                               101,
+                               DAYS_PER_YEAR,
+                               MatrixIO::WidthPolicy::Exact)
                 && ret;
 
           std::string inflowId = "inflowPattern_" + area.id + ".txt";
           fs::path inflowPath = capacityPath / inflowId;
-          ret = MatrixIO::load(area.hydro.inflowPattern, inflowPath.string(), 1, DAYS_PER_YEAR)
+          ret = MatrixIO::load(area.hydro.inflowPattern,
+                               inflowPath.string(),
+                               1,
+                               DAYS_PER_YEAR,
+                               MatrixIO::WidthPolicy::Exact)
                 && ret;
       });
     ret = PartHydro::LoadIniFile(study, folder) && ret;
@@ -343,10 +356,20 @@ bool PartHydro::LoadDailyMaxEnergy(const fs::path& folder, const std::string& ar
     bool ret = true;
 
     fs::path genPath = folder / "common" / "capacity" / ("maxDailyGenEnergy_" + areaid + ".txt");
-    ret = MatrixIO::load(dailyNbHoursAtGenPmax, genPath.string(), 1, DAYS_PER_YEAR) && ret;
+    ret = MatrixIO::load(dailyNbHoursAtGenPmax,
+                         genPath.string(),
+                         1,
+                         DAYS_PER_YEAR,
+                         MatrixIO::WidthPolicy::Exact)
+          && ret;
 
     fs::path pumpPath = folder / "common" / "capacity" / ("maxDailyPumpEnergy_" + areaid + ".txt");
-    ret = MatrixIO::load(dailyNbHoursAtPumpPmax, pumpPath.string(), 1, DAYS_PER_YEAR) && ret;
+    ret = MatrixIO::load(dailyNbHoursAtPumpPmax,
+                         pumpPath.string(),
+                         1,
+                         DAYS_PER_YEAR,
+                         MatrixIO::WidthPolicy::Exact)
+          && ret;
 
     return ret;
 }

@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <stdexcept>
 #include <utility>
 
 #include <antares/logs/logs.h>
@@ -164,8 +165,10 @@ inline void Matrix::reset()
 
 inline void Matrix::resize(unsigned int w, unsigned int h)
 {
-    assert(w <= 50000 and "The new width_ seems a bit excessive");
-    assert(h <= 50000 and "The new height_ seems a bit excessive");
+    if (w > kMaxDimension || h > kMaxDimension || static_cast<std::uintmax_t>(w) * h > kMaxElements)
+    {
+        throw std::length_error("Matrix dimensions exceed the supported limit");
+    }
 
     if (w != width_ or h != height_)
     {
@@ -189,6 +192,11 @@ inline void Matrix::resize(unsigned int w, unsigned int h)
 
 inline void Matrix::resizeWithoutDataLost(unsigned int x, unsigned int y, double defVal)
 {
+    if (x > kMaxDimension || y > kMaxDimension || static_cast<std::uintmax_t>(x) * y > kMaxElements)
+    {
+        throw std::length_error("Matrix dimensions exceed the supported limit");
+    }
+
     if (!x or !y)
     {
         clear();
@@ -205,22 +213,22 @@ inline void Matrix::resizeWithoutDataLost(unsigned int x, unsigned int y, double
     }
     else
     {
-        const Matrix copy(*this);
-        resize(x, y);
-        const unsigned int minW = std::min(x, copy.width_);
-        const unsigned int minH = std::min(y, copy.height_);
+        const unsigned int preservedWidth = std::min(x, width_);
+        columns_.resize(x);
 
-        for (unsigned int i = 0; i < minW; ++i)
+        for (unsigned int i = 0; i < preservedWidth; ++i)
         {
             ColumnType& column = columns_[i];
-            std::copy_n(copy.columns_[i].begin(), minH, column.begin());
-            std::fill(column.begin() + minH, column.end(), defVal);
+            column.resize(y, defVal);
         }
 
-        for (unsigned int i = minW; i < x; ++i)
+        for (unsigned int i = preservedWidth; i < x; ++i)
         {
-            std::fill(columns_[i].begin(), columns_[i].end(), defVal);
+            columns_[i].assign(y, defVal);
         }
+
+        width_ = x;
+        height_ = y;
     }
     logs.debug() << "  :: end resizeWithoutDataLost";
 }

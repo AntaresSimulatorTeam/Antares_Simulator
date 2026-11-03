@@ -228,16 +228,22 @@ bool XCast::loadFromFolder(const fs::path& folder)
     fs::path p = folder / "data.txt";
 
     // Performing normal loading
-    ret = MatrixIO::load(data, p.string(), (unsigned int)dataMax, 12) && ret;
+    ret = MatrixIO::load(data,
+                         p.string(),
+                         static_cast<unsigned int>(dataMax),
+                         12,
+                         MatrixIO::WidthPolicy::Exact)
+          && ret;
 
     // K
     p = folder / "k.txt";
-    ret = MatrixIO::load(K, p.string(), 12, 24) && ret;
+    ret = MatrixIO::load(K, p.string(), 12, 24, MatrixIO::WidthPolicy::Exact) && ret;
 
     // Time-series translation
     p = folder / "translation.txt";
 
-    ret = MatrixIO::load(translation, p.string(), 1, HOURS_PER_YEAR) && ret;
+    ret = MatrixIO::load(translation, p.string(), 1, HOURS_PER_YEAR, MatrixIO::WidthPolicy::Exact)
+          && ret;
 
     for (double& value: translation[0])
     {

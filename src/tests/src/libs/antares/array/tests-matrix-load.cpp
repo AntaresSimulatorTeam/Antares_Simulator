@@ -77,6 +77,118 @@ BOOST_AUTO_TEST_CASE(loads_numeric_values_and_infers_variable_width)
     BOOST_CHECK_EQUAL(matrix[2][1], 6.);
 }
 
+BOOST_AUTO_TEST_CASE(exact_width_rejects_extra_columns)
+{
+    const auto file = writeFile("1\t2\t3\n4\t5\t6\n");
+    Antares::Matrix matrix;
+
+    BOOST_CHECK(
+      !Antares::MatrixIO::load(matrix, file.path, 2, 2, Antares::MatrixIO::WidthPolicy::Exact));
+    BOOST_REQUIRE_EQUAL(matrix.width(), 2);
+    BOOST_REQUIRE_EQUAL(matrix.height(), 2);
+    BOOST_CHECK(matrix.containsOnlyZero());
+}
+
+BOOST_AUTO_TEST_CASE(exact_width_rejects_extra_columns_on_later_rows)
+{
+    const auto file = writeFile("1\t2\n3\t4\t5\n");
+    Antares::Matrix matrix;
+
+    BOOST_CHECK(
+      !Antares::MatrixIO::load(matrix, file.path, 2, 2, Antares::MatrixIO::WidthPolicy::Exact));
+    BOOST_REQUIRE_EQUAL(matrix.width(), 2);
+    BOOST_REQUIRE_EQUAL(matrix.height(), 2);
+    BOOST_CHECK(matrix.containsOnlyZero());
+}
+
+BOOST_AUTO_TEST_CASE(loads_utf8_bom)
+{
+    const auto file = writeFile("\xEF\xBB\xBF"
+                                "1.5\t2\n3\t4\n");
+    Antares::Matrix matrix;
+
+    BOOST_REQUIRE(Antares::MatrixIO::load(matrix, file.path, 2, 2));
+    BOOST_CHECK_EQUAL(matrix[0][0], 1.5);
+    BOOST_CHECK_EQUAL(matrix[1][1], 4.);
+}
+
+BOOST_AUTO_TEST_CASE(loads_dimension_header)
+{
+    Antares::Matrix source(2, 2);
+    source[0][0] = 1.5;
+    source[1][0] = 2.5;
+    source[0][1] = 3.5;
+    source[1][1] = 4.5;
+
+    std::string contents;
+    Antares::MatrixIO::saveToBuffer(source, contents, 1, true);
+    const auto file = writeFile(contents);
+    Antares::Matrix matrix;
+
+    BOOST_REQUIRE(Antares::MatrixIO::load(matrix, file.path, 1, 2));
+    BOOST_REQUIRE_EQUAL(matrix.width(), 2);
+    BOOST_REQUIRE_EQUAL(matrix.height(), 2);
+    BOOST_CHECK_EQUAL(matrix[0][0], 1.5);
+    BOOST_CHECK_EQUAL(matrix[1][1], 4.5);
+}
+
+BOOST_AUTO_TEST_CASE(loads_dimension_header_with_trailing_whitespace)
+{
+    for (const auto header: {"size:2x2 \n", "size:2x2\t\n"})
+    {
+        const auto file = writeFile(std::string(header) + "1\t2\n3\t4\n");
+        Antares::Matrix matrix;
+
+        BOOST_REQUIRE(Antares::MatrixIO::load(matrix, file.path, 1, 2));
+        BOOST_REQUIRE_EQUAL(matrix.width(), 2);
+        BOOST_REQUIRE_EQUAL(matrix.height(), 2);
+        BOOST_CHECK_EQUAL(matrix[0][0], 1.);
+        BOOST_CHECK_EQUAL(matrix[1][1], 4.);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(file_larger_than_the_matrix_file_limit_is_rejected)
+{
+    const auto file = writeFile("");
+    std::filesystem::resize_file(file.path, 1536ULL * 1024ULL * 1024ULL + 1);
+    Antares::Matrix matrix;
+
+    BOOST_CHECK(!Antares::MatrixIO::load(matrix, file.path, 1, 2));
+    BOOST_REQUIRE_EQUAL(matrix.width(), 1);
+    BOOST_REQUIRE_EQUAL(matrix.height(), 2);
+    BOOST_CHECK(matrix.containsOnlyZero());
+}
+
+BOOST_AUTO_TEST_CASE(huge_dimension_header_is_rejected_before_allocation)
+{
+    const auto file = writeFile("size:50000x50000\n");
+    Antares::Matrix matrix;
+
+    BOOST_CHECK(!Antares::MatrixIO::load(matrix, file.path, 1, 1));
+    BOOST_REQUIRE_EQUAL(matrix.width(), 1);
+    BOOST_REQUIRE_EQUAL(matrix.height(), 1);
+    BOOST_CHECK(matrix.containsOnlyZero());
+}
+
+BOOST_AUTO_TEST_CASE(dynamic_width_load_reuses_requested_height)
+{
+    const auto file = writeFile("1\t2\t3\n4\t5\t6\n");
+    Antares::Matrix matrix;
+
+    BOOST_REQUIRE(Antares::MatrixIO::load(matrix, file.path, 1, 2));
+    BOOST_REQUIRE_EQUAL(matrix.width(), 3);
+
+    {
+        std::ofstream output(file.path, std::ios::binary | std::ios::trunc);
+        output << "7\t8\n9\t10\n";
+    }
+
+    BOOST_REQUIRE(Antares::MatrixIO::load(matrix, file.path, 1, 2));
+    BOOST_REQUIRE_EQUAL(matrix.width(), 2);
+    BOOST_CHECK_EQUAL(matrix[0][0], 7.);
+    BOOST_CHECK_EQUAL(matrix[1][1], 10.);
+}
+
 BOOST_AUTO_TEST_CASE(loads_comma_separated_values_and_empty_cells)
 {
     const auto file = writeFile("1,,3\r\n4,5,6\r\n");

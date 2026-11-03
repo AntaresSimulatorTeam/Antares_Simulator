@@ -235,6 +235,40 @@ BOOST_AUTO_TEST_CASE(resize_without_data_lost_fills_new_values)
     BOOST_CHECK_EQUAL(matrix[1][1], 3);
 }
 
+BOOST_AUTO_TEST_CASE(resize_without_data_lost_preserves_values_during_mixed_resize)
+{
+    Matrix matrix(2, 3);
+    matrix[0][0] = 1;
+    matrix[0][1] = 2;
+    matrix[1][0] = 3;
+
+    matrix.resizeWithoutDataLost(1, 5, 9);
+    BOOST_REQUIRE_EQUAL(matrix.width(), 1);
+    BOOST_REQUIRE_EQUAL(matrix.height(), 5);
+    BOOST_CHECK_EQUAL(matrix[0][0], 1);
+    BOOST_CHECK_EQUAL(matrix[0][1], 2);
+    BOOST_CHECK_EQUAL(matrix[0][2], 0);
+    BOOST_CHECK_EQUAL(matrix[0][3], 9);
+    BOOST_CHECK_EQUAL(matrix[0][4], 9);
+
+    matrix.resizeWithoutDataLost(4, 2, 8);
+    BOOST_REQUIRE_EQUAL(matrix.width(), 4);
+    BOOST_REQUIRE_EQUAL(matrix.height(), 2);
+    BOOST_CHECK_EQUAL(matrix[0][0], 1);
+    BOOST_CHECK_EQUAL(matrix[0][1], 2);
+    BOOST_CHECK_EQUAL(matrix[1][0], 8);
+    BOOST_CHECK_EQUAL(matrix[3][1], 8);
+}
+
+BOOST_AUTO_TEST_CASE(resize_rejects_excessive_dimensions)
+{
+    Matrix matrix;
+
+    BOOST_CHECK_THROW(matrix.resize(Matrix::kMaxDimension + 1, 1), std::length_error);
+    BOOST_CHECK_THROW(matrix.resizeWithoutDataLost(Matrix::kMaxDimension + 1, 1),
+                      std::length_error);
+}
+
 BOOST_AUTO_TEST_CASE(zero_sized_constructor_keeps_matrix_empty)
 {
     Matrix matrix(0, 3);

@@ -15,8 +15,15 @@ namespace
 {
 bool readCSVBuffer(std::string_view data,
                    std::string_view separators,
-                   const CSVRowCallback& callback)
+                   const CSVRowCallback& callback,
+                   std::size_t maxCellsPerRow)
 {
+    // UTF-8 BOM support
+    if (data.starts_with("\xEF\xBB\xBF"))
+    {
+        data.remove_prefix(3);
+    }
+
     std::string delimiters(separators);
     delimiters += "\r\n";
 
@@ -50,6 +57,10 @@ bool readCSVBuffer(std::string_view data,
 
             if (hasCell)
             {
+                if (maxCellsPerRow && row.size() >= maxCellsPerRow)
+                {
+                    throw std::length_error("CSV row exceeds the maximum number of cells");
+                }
                 row.push_back({data.substr(cellStart, index - cellStart)});
             }
 
@@ -76,6 +87,10 @@ bool readCSVBuffer(std::string_view data,
             continue;
         }
 
+        if (maxCellsPerRow && row.size() >= maxCellsPerRow)
+        {
+            throw std::length_error("CSV row exceeds the maximum number of cells");
+        }
         row.push_back({data.substr(cellStart, index - cellStart)});
         hasCell = true;
         ++index;
@@ -88,12 +103,13 @@ bool readCSVBuffer(std::string_view data,
 
 bool readCSV(std::string_view data, std::string_view separators, const CSVRowCallback& callback)
 {
-    return readCSVBuffer(data, separators, callback);
+    return readCSVBuffer(data, separators, callback, 0);
 }
 
 bool readCSVFile(const std::filesystem::path& filename,
                  std::string_view separators,
-                 const CSVRowCallback& callback)
+                 const CSVRowCallback& callback,
+                 std::size_t maxCellsPerRow)
 {
     std::error_code error;
     const auto size = std::filesystem::file_size(filename, error);
@@ -114,7 +130,10 @@ bool readCSVFile(const std::filesystem::path& filename,
         throw std::runtime_error("Failed to open file: " + filename.string());
     }
 
-    return readCSVBuffer(std::string_view(file.data(), file.size()), separators, callback);
+    return readCSVBuffer(std::string_view(file.data(), file.size()),
+                         separators,
+                         callback,
+                         maxCellsPerRow);
 }
 
 CSVTable readCSVFile(const std::filesystem::path& filename, std::string_view separators)

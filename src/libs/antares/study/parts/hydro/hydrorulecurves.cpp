@@ -49,7 +49,11 @@ private:
         Matrix standardRuleCurves;
         standardRuleCurves.reset(3L, DAYS_PER_YEAR);
 
-        bool ret = MatrixIO::load(standardRuleCurves, filePath.string(), 3, DAYS_PER_YEAR);
+        bool ret = MatrixIO::load(standardRuleCurves,
+                                  filePath.string(),
+                                  3,
+                                  DAYS_PER_YEAR,
+                                  MatrixIO::WidthPolicy::Exact);
 
         min_.timeSeries.reset(1U, DAYS_PER_YEAR);
         min_.timeSeries.pasteToColumn(0, standardRuleCurves[RuleCurves::minimum]);

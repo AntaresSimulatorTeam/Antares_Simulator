@@ -5,6 +5,7 @@
 #define __ANTARES_LIBS_ARRAY_MATRIX_H__
 
 #include <cassert>
+#include <cstdint>
 #include <functional>
 #include <vector>
 
@@ -25,6 +26,10 @@ public:
 
     //! Column type
     using ColumnType = std::vector<double>;
+
+    static constexpr unsigned int kMaxDimension = 50000;
+    static constexpr std::uintmax_t kMaxAllocationBytes = 1536ULL * 1024ULL * 1024ULL;
+    static constexpr std::uintmax_t kMaxElements = kMaxAllocationBytes / sizeof(double);
 
     //! \name Constructors & Destructor
     //@{
