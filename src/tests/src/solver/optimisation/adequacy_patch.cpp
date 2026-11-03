@@ -4,6 +4,7 @@
 #include <cmath>
 #include <fstream>
 #include <limits>
+#include <memory>
 #include <tuple>
 #include <vector>
 
@@ -101,12 +102,12 @@ BOOST_AUTO_TEST_CASE(curtailment_sharing_uses_effective_capacities_in_both_direc
             for (const double effectiveCapacity:
                  {10., 100., std::numeric_limits<double>::quiet_NaN()})
             {
-                Antares::Data::Study study;
-                auto* origin = addAreaToListOfAreas(study.areas, "origin");
-                auto* destination = addAreaToListOfAreas(study.areas, "destination");
+                auto study = std::make_unique<Antares::Data::Study>();
+                auto* origin = addAreaToListOfAreas(study->areas, "origin");
+                auto* destination = addAreaToListOfAreas(study->areas, "destination");
                 origin->adequacyPatchMode = physicalAreaInsideAdqPatch;
                 destination->adequacyPatchMode = physicalAreaInsideAdqPatch;
-                study.areas.rebuildIndexes();
+                study->areas.rebuildIndexes();
 
                 PROBLEME_HEBDO problem;
                 problem.NombreDePays = 2;
@@ -121,7 +122,7 @@ BOOST_AUTO_TEST_CASE(curtailment_sharing_uses_effective_capacities_in_both_direc
                 problem.IndexSuivantIntercoOrigine = {-1};
                 problem.IndexSuivantIntercoExtremite = {-1};
                 problem.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>(
-                  study.areas,
+                  study->areas,
                   std::vector<Antares::Data::AreaLink*>{});
                 problem.adequacyPatchRuntimeData->originAreaMode = {physicalAreaInsideAdqPatch};
                 problem.adequacyPatchRuntimeData->extremityAreaMode = {physicalAreaInsideAdqPatch};
