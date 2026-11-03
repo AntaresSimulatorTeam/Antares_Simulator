@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <cmath>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -440,7 +441,10 @@ struct CompatibilityCheckStudy: Antares::Data::Study
 
 struct TransmissionCapacitiesFixture: FillerFixture
 {
-    CompatibilityCheckStudy study;
+    // Study is far too large for the stack (stack overflow on Windows): keep it on the heap
+    std::unique_ptr<CompatibilityCheckStudy>
+      studyOnHeap = std::make_unique<CompatibilityCheckStudy>();
+    CompatibilityCheckStudy& study = *studyOnHeap;
     Antares::Data::AreaLink* link = nullptr;
 
     TransmissionCapacitiesFixture()
