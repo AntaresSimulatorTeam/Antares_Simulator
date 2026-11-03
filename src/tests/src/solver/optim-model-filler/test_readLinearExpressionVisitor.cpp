@@ -572,10 +572,13 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {
     Node* node = create<PortFieldNode>("port", "field");
-    BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
-                          Antares::Error::InvalidArgumentError,
-                          containsMessage(
-                            "ReadLinearExpressionVisitor cannot visit PortFieldNodes"));
+
+    BOOST_CHECK_EXCEPTION(
+      visitor().dispatch(node),
+      Antares::Error::InvalidArgumentError,
+      containsMessage("Port field 'port.field' cannot be used directly in a linear expression. "
+                      "Use 'sum_connections(port.field)' to aggregate port field values from "
+                      "connected components."));
 
     node = create<FunctionNode>(FunctionNodeType::dual,
                                 create<ParameterNode>("constraint1"),
