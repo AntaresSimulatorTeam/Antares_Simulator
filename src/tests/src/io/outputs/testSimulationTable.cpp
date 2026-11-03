@@ -408,7 +408,7 @@ BOOST_AUTO_TEST_CASE(Streaming_ParquetFlushPerWeek_WritesOneRowGroupPerFlush)
     PARQUET_ASSIGN_OR_THROW(reader, parquet::arrow::OpenFile(infile, arrow::default_memory_pool()));
     BOOST_CHECK_EQUAL(reader->num_row_groups(), static_cast<int>(nbWeeks));
     std::shared_ptr<arrow::Table> table;
-    PARQUET_THROW_NOT_OK(reader->ReadTable(&table));
+    PARQUET_ASSIGN_OR_THROW(table, reader->ReadTable());
     BOOST_CHECK_EQUAL(table->num_rows(), static_cast<int64_t>(nbWeeks * 3));
     std::filesystem::remove(path);
 }
