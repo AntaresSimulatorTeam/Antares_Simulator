@@ -198,8 +198,9 @@ void StreamingSimulationTableWriter::append(const IO::Outputs::SimulationTable& 
 
     if (!impl_)
     {
+        auto outfile = throwOnResultKO(arrow::io::FileOutputStream::Open(output_file_.string()));
         impl_ = std::make_unique<Impl>();
-        impl_->outfile = throwOnResultKO(arrow::io::FileOutputStream::Open(output_file_.string()));
+        impl_->outfile = std::move(outfile);
         switch (table_format_)
         {
         case TableFormat::Parquet:
