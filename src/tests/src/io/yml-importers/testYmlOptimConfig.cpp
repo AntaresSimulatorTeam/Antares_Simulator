@@ -241,10 +241,7 @@ models:
 
 BOOST_AUTO_TEST_CASE(parse_missing_models_key_gives_no_models)
 {
-    std::string yaml_content = R"(
-other_key:
-  - id: model1
-)";
+    const std::string yaml_content = "{}";
 
     Parser parser;
     BOOST_CHECK(parser.parse(yaml_content).models.empty());
@@ -583,7 +580,7 @@ models:
     BOOST_CHECK_THROW(parser.parse(yaml_content), std::runtime_error);
 }
 
-BOOST_AUTO_TEST_CASE(misspelled_model_field_is_ignored_with_warning)
+BOOST_AUTO_TEST_CASE(misspelled_model_field_is_rejected)
 {
     const auto yaml_content = R"(
 models:
@@ -594,17 +591,21 @@ models:
       constraints: []
 )"s;
     Parser parser;
-    BOOST_CHECK_NO_THROW(parser.parse(yaml_content));
+    BOOST_CHECK_EXCEPTION(parser.parse(yaml_content),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("Unrecognised field: out-of-bound-processing"));
 }
 
-BOOST_AUTO_TEST_CASE(misspelled_top_level_field_is_ignored_with_warning)
+BOOST_AUTO_TEST_CASE(misspelled_top_level_field_is_rejected)
 {
     const auto yaml_content = R"(
 resolution-modes: benders-decomposition
 models: []
 )"s;
     Parser parser;
-    BOOST_CHECK_NO_THROW(parser.parse(yaml_content));
+    BOOST_CHECK_EXCEPTION(parser.parse(yaml_content),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("Unrecognised field: resolution-modes"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

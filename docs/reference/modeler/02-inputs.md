@@ -18,10 +18,9 @@ Note that Antares will automatically create an **output** directory to write the
 ### YAML field validation
 
 Model libraries, `system.yml`, and optimization configuration files are checked for field names
-before their values are decoded. All missing required fields and duplicate fields are reported
-together, with their location in the document, and prevent loading. Unknown fields are ignored
-with a warning; absent optional fields do not produce warnings. Value conversion errors are
-reported after field validation succeeds.
+before their values are decoded. All missing required fields, duplicate fields, and unknown fields
+are reported with their location in the document and prevent loading. Absent optional fields do not
+produce warnings. Value conversion errors are reported after field validation succeeds.
 
 The following lists describe field presence requirements. A field listed as required inside an
 optional section or collection entry is required only when that section or entry is present.

@@ -320,7 +320,7 @@ BOOST_AUTO_TEST_CASE(connection_with_missing_field_throws_input_error)
     BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
-BOOST_AUTO_TEST_CASE(connection_with_extra_field_is_ignored_with_warning)
+BOOST_AUTO_TEST_CASE(connection_with_extra_field_is_rejected)
 {
     YmlSystem::Parser parser;
     const auto system = R"(
@@ -333,7 +333,9 @@ BOOST_AUTO_TEST_CASE(connection_with_extra_field_is_ignored_with_warning)
                   port2: p2
                   extra: bad
     )"s;
-    BOOST_CHECK_NO_THROW(parser.parse(system, ""));
+    BOOST_CHECK_EXCEPTION(parser.parse(system, ""),
+                          InputError,
+                          containsMessage("Unrecognised field: extra"));
 }
 
 BOOST_AUTO_TEST_CASE(all_missing_fields_are_reported_at_once)
@@ -438,7 +440,7 @@ BOOST_AUTO_TEST_CASE(non_mapping_entries_are_rejected_by_field_validation)
     }
 }
 
-BOOST_AUTO_TEST_CASE(misspelled_component_field_is_ignored_with_warning)
+BOOST_AUTO_TEST_CASE(misspelled_component_field_is_rejected)
 {
     YmlSystem::Parser parser;
     const auto system = R"(
@@ -449,5 +451,7 @@ BOOST_AUTO_TEST_CASE(misspelled_component_field_is_ignored_with_warning)
                   model: lib.model
                   scenario-groups: g
     )"s;
-    BOOST_CHECK_NO_THROW(parser.parse(system, ""));
+    BOOST_CHECK_EXCEPTION(parser.parse(system, ""),
+                          InputError,
+                          containsMessage("Unrecognised field: scenario-groups"));
 }

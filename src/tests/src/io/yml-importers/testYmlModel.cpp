@@ -157,20 +157,33 @@ BOOST_AUTO_TEST_CASE(checkFields_reports_unexpected_and_missing_keys)
     BOOST_CHECK_EXCEPTION(
       (YmlUtils::checkFields(node, std::vector<YmlUtils::Field>{{"a", true}, {"b", true}})),
       InputError,
-      containsMessage("Missing field: b"));
+      [](const InputError& e)
+      {
+          const std::string message = e.what();
+          BOOST_CHECK(message.find("Missing field: b") != std::string::npos);
+          BOOST_CHECK(message.find("Unrecognised field: c") != std::string::npos);
+          return true;
+      });
 }
 
-BOOST_AUTO_TEST_CASE(checkFields_warns_for_unexpected_keys_only)
+BOOST_AUTO_TEST_CASE(checkFields_rejects_unexpected_keys)
 {
     const auto node = YAML::Load(R"(
         a: 1
         c: 3
     )");
     CaptureAntaresLogs logs;
-    BOOST_CHECK_NO_THROW((YmlUtils::checkFields(node, std::vector<YmlUtils::Field>{{"a", true}})));
-    BOOST_REQUIRE_EQUAL(logs.getWarnings().size(), 1);
-    BOOST_CHECK(logs.getWarnings().begin()->find("Unrecognised field: c") != std::string::npos);
-    BOOST_CHECK(logs.getWarnings().begin()->find("|__X c at line 3") != std::string::npos);
+    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node, std::vector<YmlUtils::Field>{{"a", true}})),
+                          InputError,
+                          [](const InputError& e)
+                          {
+                              const std::string message = e.what();
+                              BOOST_CHECK(message.find("Unrecognised field: c")
+                                          != std::string::npos);
+                              BOOST_CHECK(message.find("|__X c at line 3") != std::string::npos);
+                              return true;
+                          });
+    BOOST_CHECK(logs.getWarnings().empty());
 }
 
 BOOST_AUTO_TEST_CASE(checkFields_accepts_absent_optional_fields_without_warning)
@@ -454,7 +467,7 @@ BOOST_AUTO_TEST_CASE(port_types_without_price_field__in_area_connection_still_va
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.price, "");
 }
 
-BOOST_AUTO_TEST_CASE(area_connection_ignores_unknown_field_with_warning)
+BOOST_AUTO_TEST_CASE(area_connection_rejects_unknown_field)
 {
     YmlModel::Parser parser;
     const auto library = R"(
@@ -466,13 +479,15 @@ BOOST_AUTO_TEST_CASE(area_connection_ignores_unknown_field_with_warning)
                  fields:
                    - id: capacity
                  area-connection:
-                   injection-to-balance: capa
-                   spillage-bound:
-                   unsupplied-energy-bound:
-                   not-a-field:
+                   injection-to-balance: injection
+                   spillage-bound: spillage
+                   unsupplied-energy-bound: unsupplied
+                   not-a-field: value
             models: []
     )"s;
-    BOOST_REQUIRE_NO_THROW((void)parser.parse(library));
+    BOOST_CHECK_EXCEPTION((void)parser.parse(library),
+                          InputError,
+                          containsMessage("Unrecognised field: not-a-field"));
 }
 
 BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)
@@ -1179,7 +1194,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_extra_outputs)
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].expression.input_expr, "expression2");
 }
 
-BOOST_AUTO_TEST_CASE(misspelled_model_field_is_ignored_with_warning)
+BOOST_AUTO_TEST_CASE(misspelled_model_field_is_rejected)
 {
     YmlModel::Parser parser;
     const auto library = R"(
@@ -1191,10 +1206,12 @@ BOOST_AUTO_TEST_CASE(misspelled_model_field_is_ignored_with_warning)
                     - id: "profit"
                       expression: "p"
         )"s;
-    BOOST_CHECK_NO_THROW(parser.parse(library));
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          InputError,
+                          containsMessage("Unrecognised field: extra-output"));
 }
 
-BOOST_AUTO_TEST_CASE(misspelled_variable_field_is_ignored_with_warning)
+BOOST_AUTO_TEST_CASE(misspelled_variable_field_is_rejected)
 {
     YmlModel::Parser parser;
     const auto library = R"(
@@ -1206,5 +1223,7 @@ BOOST_AUTO_TEST_CASE(misspelled_variable_field_is_ignored_with_warning)
                     - id: "p"
                       lower_bound: 0
         )"s;
-    BOOST_CHECK_NO_THROW(parser.parse(library));
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          InputError,
+                          containsMessage("Unrecognised field: lower_bound"));
 }

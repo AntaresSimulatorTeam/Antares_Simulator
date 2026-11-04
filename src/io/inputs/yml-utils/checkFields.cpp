@@ -12,7 +12,6 @@
 #include <vector>
 
 #include <antares/io/inputs/InputError.h>
-#include <antares/logs/logs.h>
 #include "antares/io/inputs/yml-utils/YmlTreeDisplayer.h"
 
 namespace Antares::IO::Inputs::YmlUtils
@@ -30,7 +29,6 @@ struct Findings
 
 struct ValidationResult
 {
-    std::vector<std::string> warnings;
     std::vector<std::string> errors;
 };
 
@@ -131,16 +129,14 @@ void validateMap(const YAML::Node& node,
     const auto unexpected = diffSet(actualKeys, allowedFields);
     const auto missing = diffSet(mandatoryFields, actualKeys);
 
-    if (!unexpected.empty())
+    if (!unexpected.empty() || !missing.empty() || !duplicated.empty() || !nullIds.empty())
     {
-        result.warnings.push_back(buildMessage(node, path, {.unexpected = unexpected}));
-    }
-    if (!missing.empty() || !duplicated.empty() || !nullIds.empty())
-    {
-        result.errors.push_back(
-          buildMessage(node,
-                       path,
-                       {.missing = missing, .duplicated = duplicated, .nullIds = nullIds}));
+        result.errors.push_back(buildMessage(node,
+                                             path,
+                                             {.unexpected = unexpected,
+                                              .missing = missing,
+                                              .duplicated = duplicated,
+                                              .nullIds = nullIds}));
     }
 }
 
@@ -216,10 +212,6 @@ ValidationResult validateFields(const YAML::Node& node,
 
 void handleValidationResult(const ValidationResult& result)
 {
-    for (const auto& warning: result.warnings)
-    {
-        Antares::logs.warning() << warning;
-    }
     if (!result.errors.empty())
     {
         std::string message;
