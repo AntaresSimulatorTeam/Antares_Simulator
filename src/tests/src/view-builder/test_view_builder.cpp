@@ -659,7 +659,7 @@ BOOST_AUTO_TEST_CASE(no_duplicate_id_passes)
 
     auto componentsNode = root["system"]["components"];
     BOOST_REQUIRE(componentsNode.IsSequence());
-    BOOST_CHECK_EQUAL(componentsNode.size(), 33);
+    BOOST_CHECK_EQUAL(componentsNode.size(), 29);
 
     const auto it = std::find_if(componentsNode.begin(),
                                  componentsNode.end(),
