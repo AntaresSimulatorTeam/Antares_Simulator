@@ -112,22 +112,37 @@ BOOST_AUTO_TEST_CASE(study_to_yaml_structure)
     auto components = sys["components"];
     BOOST_REQUIRE(components.IsSequence());
 
-    // fr: area(1) + load(1) + wind(1) + solar(1) + ror(1) + miscGen(8) +
-    //     thermal(1) + renewable(1) + sts(1) + hydro(1) + link(1) = 18
-    // de: area(1) + load(1) + wind(1) + solar(1) + ror(1) + miscGen(8) +
-    //     hydro(1) = 14
-    // total: 32
-    BOOST_CHECK_EQUAL(components.size(), 32);
+    // fr: area(1) + load(1) + ror(1) + miscGen(8) +
+    //     thermal(1) + renewable(1) + sts(1) + hydro(1) + link(1) = 16
+    // de: area(1) + load(1) + ror(1) + miscGen(8) +
+    //     hydro(1) = 12
+    // total: 28
+    BOOST_CHECK_EQUAL(components.size(), 28);
 
     auto connections = sys["connections"];
     BOOST_REQUIRE(connections.IsSequence());
-    // fr sub-components: load(1) + wind(1) + solar(1) + ror(1) + miscGen(8) +
-    //     thermal(1) + renewable(1) + sts(1) + hydro(1) = 16
-    // de sub-components: load(1) + wind(1) + solar(1) + ror(1) + miscGen(8) +
-    //     hydro(1) = 13
+    // fr sub-components: load(1) + ror(1) + miscGen(8) +
+    //     thermal(1) + renewable(1) + sts(1) + hydro(1) = 14
+    // de sub-components: load(1) + ror(1) + miscGen(8) +
+    //     hydro(1) = 11
     // link: in_port + out_port = 2
-    // total: 31
-    BOOST_CHECK_EQUAL(connections.size(), 31);
+    // total: 27
+    BOOST_CHECK_EQUAL(connections.size(), 27);
+}
+
+BOOST_AUTO_TEST_CASE(historical_renewables_are_omitted_in_cluster_mode)
+{
+    // The fixture keeps both legacy time series non-zero.
+    const YAML::Node components = generateSystemForView(*study)["system"]["components"];
+
+    for (const auto& component: components)
+    {
+        const auto id = component["id"].as<std::string>();
+        BOOST_CHECK(id != "france_wind");
+        BOOST_CHECK(id != "france_solar");
+        BOOST_CHECK(id != "germany_wind");
+        BOOST_CHECK(id != "germany_solar");
+    }
 }
 
 BOOST_FIXTURE_TEST_CASE(disabled_components_are_omitted, ViewBuilderFixture)
@@ -266,6 +281,7 @@ BOOST_AUTO_TEST_CASE(load_component)
 
 BOOST_AUTO_TEST_CASE(wind_component)
 {
+    study->parameters.renewableGeneration.toAggregated();
     YAML::Node root = generateSystemForView(*study);
     auto components = root["system"]["components"];
 
@@ -281,6 +297,29 @@ BOOST_AUTO_TEST_CASE(wind_component)
             BOOST_REQUIRE_EQUAL(props.size(), 2);
             checkProperties(props[0], "carrier", "electricity");
             checkProperties(props[1], "technology", "wind");
+        }
+    }
+    BOOST_CHECK(found);
+}
+
+BOOST_AUTO_TEST_CASE(solar_component)
+{
+    study->parameters.renewableGeneration.toAggregated();
+    YAML::Node root = generateSystemForView(*study);
+    auto components = root["system"]["components"];
+
+    bool found = false;
+    for (const auto& comp: components)
+    {
+        if (comp["id"].as<std::string>() == "france_solar")
+        {
+            found = true;
+            BOOST_CHECK_EQUAL(comp["model"].as<std::string>(), "antares_legacy_models.renewable");
+            auto props = comp["properties"];
+            BOOST_REQUIRE(props.IsSequence());
+            BOOST_REQUIRE_EQUAL(props.size(), 2);
+            checkProperties(props[0], "carrier", "electricity");
+            checkProperties(props[1], "technology", "solar");
         }
     }
     BOOST_CHECK(found);
@@ -469,9 +508,9 @@ BOOST_AUTO_TEST_CASE(round_trip_yaml_parse)
 
     auto sys = reparsed["system"];
     BOOST_REQUIRE(sys["components"].IsSequence());
-    BOOST_CHECK_EQUAL(sys["components"].size(), 32);
+    BOOST_CHECK_EQUAL(sys["components"].size(), 28);
     BOOST_REQUIRE(sys["connections"].IsSequence());
-    BOOST_CHECK_EQUAL(sys["connections"].size(), 31);
+    BOOST_CHECK_EQUAL(sys["connections"].size(), 27);
 }
 
 BOOST_AUTO_TEST_CASE(connections_structure)
@@ -480,7 +519,7 @@ BOOST_AUTO_TEST_CASE(connections_structure)
     auto connections = root["system"]["connections"];
 
     BOOST_REQUIRE(connections.IsSequence());
-    BOOST_CHECK_EQUAL(connections.size(), 31);
+    BOOST_CHECK_EQUAL(connections.size(), 27);
 
     for (const auto& conn: connections)
     {
