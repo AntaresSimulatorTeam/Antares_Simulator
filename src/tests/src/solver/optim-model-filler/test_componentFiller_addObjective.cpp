@@ -100,6 +100,24 @@ BOOST_AUTO_TEST_CASE(time_sum_var_with_objective)
     }
 }
 
+BOOST_AUTO_TEST_CASE(time_sum_with_absolute_bounds_is_accepted_as_objective)
+{
+    // Objective: sum(0 .. 1, 2 * x) => coefficient 2 on x_t0 and x_t1, 0 on x_t2
+    auto expression = multiply(literal(2),
+                               variable("x", 0, VariabilityType::VARYING_IN_TIME_ONLY));
+    auto timeSum = nodeRegistry.create<TimeSumNode>(literal(0), literal(1), expression);
+
+    createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, timeSum, true);
+    createComponent("model", "componentA", {});
+
+    FillContext ctx{0, 2, 0, 2, 0};
+    BOOST_REQUIRE_NO_THROW(buildLinearProblem(ctx));
+
+    BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable("componentA.x_s0_t0")), 2);
+    BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable("componentA.x_s0_t1")), 2);
+    BOOST_CHECK_EQUAL(pb->getObjectiveCoefficient(pb->lookupVariable("componentA.x_s0_t2")), 0);
+}
+
 BOOST_AUTO_TEST_CASE(objective_varying_in_time_not_supported_error)
 {
     // Objective: 2*x + 3
