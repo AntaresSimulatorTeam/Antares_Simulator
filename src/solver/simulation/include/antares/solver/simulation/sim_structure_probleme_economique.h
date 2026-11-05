@@ -513,6 +513,9 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
     std::vector<double> NombreDeGroupesQuiSArretentDuPalier;
 
     std::vector<double> NombreDeGroupesQuiTombentEnPanneDuPalier;
+
+    std::vector<double> powerRampingIncrease;
+    std::vector<double> powerRampingDecrease;
 };
 
 struct OPTIMAL_HYDRO_USAGE
