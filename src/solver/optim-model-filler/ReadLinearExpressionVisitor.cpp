@@ -265,10 +265,14 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
         {
             const auto from = Antares::Expressions::Visitors::resolveTimeSumBound(node->from(),
                                                                                   evalVisitor_,
-                                                                                  localTimeStep);
+                                                                                  localTimeStep,
+                                                                                  static_cast<int>(
+                                                                                    nbtimeSteps_));
             const auto to = Antares::Expressions::Visitors::resolveTimeSumBound(node->to(),
                                                                                 evalVisitor_,
-                                                                                localTimeStep);
+                                                                                localTimeStep,
+                                                                                static_cast<int>(
+                                                                                  nbtimeSteps_));
             if (from <= to)
             {
                 auto term = expression[0];
@@ -284,10 +288,14 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
     {
         const auto from = Antares::Expressions::Visitors::resolveTimeSumBound(node->from(),
                                                                               evalVisitor_,
-                                                                              localTimeStep);
+                                                                              localTimeStep,
+                                                                              static_cast<int>(
+                                                                                nbtimeSteps_));
         const auto to = Antares::Expressions::Visitors::resolveTimeSumBound(node->to(),
                                                                             evalVisitor_,
-                                                                            localTimeStep);
+                                                                            localTimeStep,
+                                                                            static_cast<int>(
+                                                                              nbtimeSteps_));
         Antares::Expressions::Visitors::forEachTimeSumIndex(
           from,
           to,

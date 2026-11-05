@@ -131,11 +131,12 @@ For time-dependent parameters, variables, and port fields, you can use these tim
   horizon.
 - **sum(S .. E, X)** aggregator: where X is the time-dependent operand, this operator sums the operand between S and E (
   included), where:
-    - **S** represents the first timestamp, either as an expression resolving to an integer, or a time-shift expression
-      like the ones defined above
-    - **E** represents the last timestamp, either as an expression resolving to an integer, or a time-shift expression
-      like the ones defined above
-    - in both forms, `S` and `E` must not depend on time
+    - **S** represents the first timestamp in the current optimization block, either as an expression
+      resolving to an integer, or a time-shift expression like the ones defined above
+    - **E** represents the last timestamp in the current optimization block, either as an expression
+      resolving to an integer, or a time-shift expression like the ones defined above
+    - in both forms, `S` and `E` must not depend on time or decision variables; bounds must resolve to integers
+    - absolute bounds outside the optimization block are errors; relative bounds wrap by default, but an out-of-bounds `drop` mode drops the constraint instance
 
 _Examples:_
 

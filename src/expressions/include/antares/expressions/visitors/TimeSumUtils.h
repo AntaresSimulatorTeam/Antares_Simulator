@@ -24,9 +24,12 @@ inline void forEachTimeSumIndex(int from, int to, int size, Callback callback)
 }
 
 // Resolve a bound used in a time-sum when no variability check is required.
-int resolveTimeSumBound(const Nodes::Node* bound, EvalVisitor& visitor, unsigned localTimeStep);
+int resolveTimeSumBound(const Nodes::Node* bound,
+                        EvalVisitor& visitor,
+                        unsigned localTimeStep,
+                        int numberOfTimeSteps);
 
-// Check that a time-sum bound is constant in time.
+// Check that a time-sum bound is fixed in time and can be evaluated before optimization.
 void checkTimeSumBoundVariability(const Nodes::Node* bound, VariabilityVisitor& variabilityVisitor);
 
 } // namespace Antares::Expressions::Visitors
