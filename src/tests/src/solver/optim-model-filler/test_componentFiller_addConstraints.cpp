@@ -193,7 +193,8 @@ BOOST_AUTO_TEST_CASE(time_sum_with_relative_bounds_inside_block_keeps_every_time
     }
 }
 
-BOOST_AUTO_TEST_CASE(relative_time_sum_nested_in_all_time_sum_gives_a_single_constraint_in_drop_mode)
+BOOST_AUTO_TEST_CASE(
+  relative_time_sum_nested_in_all_time_sum_gives_a_single_constraint_in_drop_mode)
 {
     // sum(sum(t .. t, var1)) <= 10: the outer sum collapses time, so the constraint has a single
     // instance even in DROP mode (no per-timestep bounds to read).
@@ -231,8 +232,7 @@ namespace
 {
 // Builds the problem for a single DROP constraint "ct1" on a time-dependent var1 over block
 // [0, 3], and returns which of ct1_0 .. ct1_3 were created.
-std::array<bool, 4> buildDropConstraint(LinearProblemBuildingFixture& fixture,
-                                        Node* constraintNode)
+std::array<bool, 4> buildDropConstraint(LinearProblemBuildingFixture& fixture, Node* constraintNode)
 {
     fixture.createModel(
       "model",
