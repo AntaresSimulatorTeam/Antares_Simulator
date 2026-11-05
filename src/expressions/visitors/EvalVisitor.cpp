@@ -222,8 +222,8 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeShiftNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
 {
     const auto ret = dispatch(node->left());
-    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
-    const auto timeIndex = static_cast<int>(dispatch(node->right()).valueAsDouble());
+    VariabilityVisitor variabilityVisitor(optimContainer_, component_);
+    const auto timeIndex = resolveTimeIndex(node->right(), *this, variabilityVisitor);
     return ret[timeIndex];
 }
 
