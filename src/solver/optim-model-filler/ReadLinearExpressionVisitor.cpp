@@ -233,8 +233,10 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
     {
         return expression;
     }
-    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue]
-    const auto timeIndex = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
+    Visitors::VariabilityVisitor variabilityVisitor(optimEntityContainer_, component_);
+    const auto timeIndex = Antares::Expressions::Visitors::resolveTimeIndex(node->right(),
+                                                                            evalVisitor_,
+                                                                            variabilityVisitor);
 
     if (timeIndex < 0 || static_cast<std::size_t>(timeIndex) >= expression.size())
     {
@@ -265,10 +267,14 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
         {
             const auto from = Antares::Expressions::Visitors::resolveTimeSumBound(node->from(),
                                                                                   evalVisitor_,
-                                                                                  localTimeStep);
+                                                                                  localTimeStep,
+                                                                                  static_cast<int>(
+                                                                                    nbtimeSteps_));
             const auto to = Antares::Expressions::Visitors::resolveTimeSumBound(node->to(),
                                                                                 evalVisitor_,
-                                                                                localTimeStep);
+                                                                                localTimeStep,
+                                                                                static_cast<int>(
+                                                                                  nbtimeSteps_));
             if (from <= to)
             {
                 auto term = expression[0];
@@ -284,10 +290,14 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
     {
         const auto from = Antares::Expressions::Visitors::resolveTimeSumBound(node->from(),
                                                                               evalVisitor_,
-                                                                              localTimeStep);
+                                                                              localTimeStep,
+                                                                              static_cast<int>(
+                                                                                nbtimeSteps_));
         const auto to = Antares::Expressions::Visitors::resolveTimeSumBound(node->to(),
                                                                             evalVisitor_,
-                                                                            localTimeStep);
+                                                                            localTimeStep,
+                                                                            static_cast<int>(
+                                                                              nbtimeSteps_));
         Antares::Expressions::Visitors::forEachTimeSumIndex(
           from,
           to,

@@ -663,4 +663,26 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_inverted_bounds_returns_zero,
     BOOST_CHECK_EQUAL(linear_expression[2].constant(), 0.);
 }
 
+BOOST_FIXTURE_TEST_CASE(visit_timeIndex_with_time_dependent_index_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // param_ts[param_ts]: the index changes with time but is evaluated only once
+    Node* index = create<TimeIndexNode>(create<ParameterNode>("param_ts"),
+                                        create<ParameterNode>("param_ts"));
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
+
+    BOOST_CHECK_THROW(visitor().dispatch(index), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeIndex_with_non_integer_index_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // param_ts[1.5] must not be silently truncated to param_ts[1]
+    Node* index = create<TimeIndexNode>(create<ParameterNode>("param_ts"),
+                                        create<LiteralNode>(1.5));
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
+
+    BOOST_CHECK_THROW(visitor().dispatch(index), Antares::Error::InvalidArgumentError);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
