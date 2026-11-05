@@ -663,6 +663,28 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_inverted_bounds_returns_zero,
     BOOST_CHECK_EQUAL(linear_expression[2].constant(), 0.);
 }
 
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_absolute_bounds_returns_a_single_expression,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // param_ts = {0, 1, 2}
+    // sum(1 .. 2, param_ts) = 1 + 2 = 3 ; sum(0 .. 1, 4) = 8
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
+    Node* sumOfTs = create<TimeSumNode>(create<LiteralNode>(1.),
+                                        create<LiteralNode>(2.),
+                                        create<ParameterNode>("param_ts"));
+    Node* sumOfLiteral = create<TimeSumNode>(create<LiteralNode>(0.),
+                                             create<LiteralNode>(1.),
+                                             create<LiteralNode>(4.));
+
+    const auto tsExpression = visitor().dispatch(sumOfTs);
+    BOOST_REQUIRE_EQUAL(tsExpression.size(), 1);
+    BOOST_CHECK_EQUAL(tsExpression[0].constant(), 3.);
+
+    const auto literalExpression = visitor().dispatch(sumOfLiteral);
+    BOOST_REQUIRE_EQUAL(literalExpression.size(), 1);
+    BOOST_CHECK_EQUAL(literalExpression[0].constant(), 8.);
+}
+
 BOOST_FIXTURE_TEST_CASE(all_time_sum_of_constant_expression_scales_with_horizon,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {
