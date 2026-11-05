@@ -32,4 +32,10 @@ int resolveTimeSumBound(const Nodes::Node* bound,
 // Check that a time-sum bound is fixed in time and can be evaluated before optimization.
 void checkTimeSumBoundVariability(const Nodes::Node* bound, VariabilityVisitor& variabilityVisitor);
 
+// Resolve the index of a TimeIndexNode (x[i]): the index must be fixed in time and resolve to an
+// integer. Range checking is left to the caller, which knows the size of the indexed expression.
+int resolveTimeIndex(const Nodes::Node* index,
+                     EvalVisitor& visitor,
+                     VariabilityVisitor& variabilityVisitor);
+
 } // namespace Antares::Expressions::Visitors

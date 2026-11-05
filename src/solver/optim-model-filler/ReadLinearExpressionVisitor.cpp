@@ -233,8 +233,10 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
     {
         return expression;
     }
-    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue]
-    const auto timeIndex = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
+    Visitors::VariabilityVisitor variabilityVisitor(optimEntityContainer_, component_);
+    const auto timeIndex = Antares::Expressions::Visitors::resolveTimeIndex(node->right(),
+                                                                            evalVisitor_,
+                                                                            variabilityVisitor);
 
     if (timeIndex < 0 || static_cast<std::size_t>(timeIndex) >= expression.size())
     {

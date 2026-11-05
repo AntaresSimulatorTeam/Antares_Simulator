@@ -6,6 +6,7 @@
 #include <cmath>
 #include <fmt/format.h>
 #include <limits>
+#include <string_view>
 
 #include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/expressions/visitors/EvalVisitor.h"
@@ -16,7 +17,7 @@ namespace Antares::Expressions::Visitors
 {
 namespace
 {
-int checkedTimeIndex(double value, const Nodes::Node* bound)
+int checkedTimeIndex(double value, const Nodes::Node* bound, std::string_view what = "A sum bound")
 {
     if (!std::isfinite(value) || std::trunc(value) != value
         || value < std::numeric_limits<int>::min()
@@ -24,7 +25,8 @@ int checkedTimeIndex(double value, const Nodes::Node* bound)
     {
         PrintVisitor printVisitor;
         throw Error::InvalidArgumentError(
-          fmt::format("A sum bound must resolve to an integer, got '{}' in '{}'.",
+          fmt::format("{} must resolve to an integer, got '{}' in '{}'.",
+                      what,
                       value,
                       printVisitor.dispatch(bound)));
     }
@@ -86,6 +88,19 @@ void checkTimeSumBoundVariability(const Nodes::Node* bound, VariabilityVisitor& 
         throw Error::InvalidArgumentError(
           fmt::format("A sum bound must be fixed in time in '{}'.", printVisitor.dispatch(bound)));
     }
+}
+
+int resolveTimeIndex(const Nodes::Node* index,
+                     EvalVisitor& visitor,
+                     VariabilityVisitor& variabilityVisitor)
+{
+    if (isTimeDependent(variabilityVisitor.dispatch(index)))
+    {
+        PrintVisitor printVisitor;
+        throw Error::InvalidArgumentError(
+          fmt::format("A time index must be fixed in time in '{}'.", printVisitor.dispatch(index)));
+    }
+    return checkedTimeIndex(visitor.dispatch(index).valueAsDouble(), index, "A time index");
 }
 
 } // namespace Antares::Expressions::Visitors
