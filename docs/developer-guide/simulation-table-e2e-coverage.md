@@ -5,7 +5,7 @@ Antares currently produces two output systems in parallel:
 * the historical **`mc-all` / `mc-ind`** text tree, built by the
   `src/solver/variable/` template machinery — this is the production output;
 * the flat **simulation table**
-  (`simulation-table-<year>-optim-nb-<n>.csv` / `.parquet`), written only when
+  (`simulation-tables/simulation-table-<year>-optim-nb-<n>.csv` / `.parquet`), written only when
   the solver runs with `--output=all` or `--output=simulation-tables`.
 
 The simulation table is not used in production yet. This page tracks the e2e
@@ -19,7 +19,7 @@ coverage that has to be in place before it can be.
 | Worked-example e2e (hand-picked hours, inline expected values) | `src/tests/cucumber/features/solver-features/legacy_simulation_table.feature` |
 | **Systematic legacy ⇔ table equivalence** | `src/tests/cucumber/features/solver-features/legacy_simulation_table_equivalence.feature` + `features/steps/common_steps/simulation_table_equivalence.py` |
 | Parquet round-trip (pure modeler) | `src/tests/cucumber/features/modeler-features/test_launcher_parquet.feature` |
-| Folder diff vs inline reference | `hybrid_studies.feature` (`simulation tables match the references`) |
+| Folder diff vs inline reference | `hybrid_studies.feature` (`simulation tables match the references`), comparing the run's `simulation-tables/` directory with the reference folder |
 
 ## The equivalence check
 

@@ -84,7 +84,7 @@ still accepted for compatibility, but should be removed from the study:
 #### One simulation table per optimization and post-process
 
 A simulation table is now written after **each** stage (optimization or post-process), one
-file per stage, named `simulation-table-<year>-<stage>`:
+file per stage under `simulation-tables/`, named `simulation-table-<year>-<stage>`:
 
 | Stage | Written after | Produced |
 |---|---|---|

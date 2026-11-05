@@ -165,10 +165,10 @@ A week is not resolved in one shot: two optimisation passes are followed by post
 
 | Stage | File | Written after | Produced in |
 |---|---|---|---|
-| `optim-nb-1` | `simulation-table-{year}-optim-nb-1` | the first optimisation pass | every mode |
-| `optim-nb-2` | `simulation-table-{year}-optim-nb-2` | the second pass | every mode that runs it (§ *Skipped stages* below) |
-| `peak-shaving` | `simulation-table-{year}-peak-shaving` | `RemixHydroPostProcessCmd` (peak-shaving) | economy (both post-process lists) and adequacy |
-| `adq-patch` | `simulation-table-{year}-adq-patch` | `UpdateMrgPriceAfterCSRcmd`, i.e. once the whole CSR treatment has been applied | economy with `include-adq-patch = true` |
+| `optim-nb-1` | `simulation-tables/simulation-table-{year}-optim-nb-1` | the first optimisation pass | every mode |
+| `optim-nb-2` | `simulation-tables/simulation-table-{year}-optim-nb-2` | the second pass | every mode that runs it (§ *Skipped stages* below) |
+| `peak-shaving` | `simulation-tables/simulation-table-{year}-peak-shaving` | `RemixHydroPostProcessCmd` (peak-shaving) | economy (both post-process lists) and adequacy |
+| `adq-patch` | `simulation-tables/simulation-table-{year}-adq-patch` | `UpdateMrgPriceAfterCSRcmd`, i.e. once the whole CSR treatment has been applied | economy with `include-adq-patch = true` |
 
 Stages are the `IO::Outputs::Stage` enum (`src/io/outputs/include/antares/io/outputs/SimulationTableStage.h`); each maps to a file-name suffix through `stageName()`, and those strings are part of the public output contract. The tables of one Monte-Carlo year live in a `std::map<IO::Outputs::Stage, SimulationTable>` created on demand (`tableForStage`) — `std::map` because its nodes are address-stable, so a pointer handed to the optim-1 call site stays valid once later stages are added, and because `SimulationTable` is move-only. The enumerators are ordered as the weekly resolution reaches them, which is the order the map iterates in.
 
