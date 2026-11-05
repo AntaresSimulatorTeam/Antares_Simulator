@@ -282,7 +282,7 @@ Format is CSV with spaces as separator.
 
 Each type of file is created before and after adequacy patch process (4 files per week). Files are named accordingly. Format is CSV with spaces as separator.
 
-Regular variables files columns: *Area Hour DENS UnsuppliedEnergy UnsuppliedEnergyCSR MRGPrice MRGPriceCSR DTGmrgCSR SpilledEnergy*
+Regular variables files columns: *Area Hour DENS UnsuppliedEnergy UnsuppliedEnergyCSR MRGPrice MRGPriceCSR DTGmrgCSR SpilledEnergy*. For an inside area-hour whose post-CSR unsupplied energy is below `threshold-initiate-curtailment-sharing-rule`, the adequacy-patch output contains `UnsuppliedEnergy = 0`, `UnsuppliedEnergyCSR = 0`, `DTGmrgCSR` equal to the pre-CSR dispatchable-generation margin, and both marginal-price columns equal to the pre-CSR marginal price.
 
 Link variables files columns: *Link Hour Flow*
 
@@ -630,13 +630,24 @@ _**This section is under construction**_
 
 ---
 #### threshold-initiate-curtailment-sharing-rule
-[//]: # (TODO: document this parameter)
-_**This section is under construction**_  
+- **Expected value:** a non-negative number
+- **Required:** no
+- **Default value:** `0.0`
+- **Usage:** Sets the threshold, in MW, used by the adequacy-patch curtailment-sharing rule.
 
-- **Expected value:**
-- **Required:** **yes**
-- **Default value:**
-- **Usage:**
+  For each hour, the initial unsupplied energy of all physical areas inside the adequacy-patch
+  domain is summed. Curtailment sharing is initiated when this total is strictly greater than the
+  threshold.
+
+  After curtailment sharing, the threshold is also applied independently to each inside area for
+  the triggered hours. If an area's resulting unsupplied energy is strictly below the threshold,
+  it is set to zero. For that area-hour, `UNSP. ENRG. CSR` is set to zero, `DTG MRG CSR` is set to
+  the dispatchable-generation margin before curtailment sharing, and both `MRG. PRICE` and
+  `MRG. PRICE CSR` retain the marginal price from before curtailment sharing.
+
+  Values equal to the threshold are not zeroed. This parameter is distinct from
+  `threshold-csr-variable-bounds-relaxation`, which is a numerical tolerance for CSR optimization
+  variables.
 
 ---
 #### threshold-display-local-matching-rule-violations
