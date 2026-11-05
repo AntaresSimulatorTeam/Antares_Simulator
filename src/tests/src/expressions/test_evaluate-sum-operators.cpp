@@ -229,6 +229,18 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_on_interval_t__t_plus_1, 
     BOOST_CHECK(actual == expected);
 }
 
+BOOST_FIXTURE_TEST_CASE(sum_with_absolute_bounds_evaluates_to_a_scalar, tests_fixture)
+{
+    // Expression : sum(0 .. 1, p), where p = {1., 2., 3.}. Constant in time, so consumers
+    // (extra outputs, port fields) read it with valueAsDouble().
+    Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
+    Node* sum = timeSum(literal(0), literal(1), p);
+
+    auto evalResult = evalVisitor->dispatch(sum);
+
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 3.);
+}
+
 BOOST_FIXTURE_TEST_CASE(non_integer_time_sum_bound_is_rejected, tests_fixture)
 {
     Node* sum = timeSum(literal(1.5), literal(2), literal(1));

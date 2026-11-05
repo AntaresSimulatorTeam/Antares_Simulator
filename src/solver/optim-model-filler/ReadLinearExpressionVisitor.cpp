@@ -260,6 +260,36 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
     Antares::Expressions::Visitors::checkTimeSumBoundVariability(node->from(), variabilityVisitor);
     Antares::Expressions::Visitors::checkTimeSumBoundVariability(node->to(), variabilityVisitor);
 
+    if (Antares::Expressions::Visitors::hasAbsoluteBounds(node))
+    {
+        // Constant in time (see VariabilityVisitor): a single expression for the whole block
+        const auto numberOfTimeSteps = static_cast<int>(nbtimeSteps_);
+        const auto from = Antares::Expressions::Visitors::resolveTimeSumBound(node->from(),
+                                                                              evalVisitor_,
+                                                                              0,
+                                                                              numberOfTimeSteps);
+        const auto to = Antares::Expressions::Visitors::resolveTimeSumBound(node->to(),
+                                                                            evalVisitor_,
+                                                                            0,
+                                                                            numberOfTimeSteps);
+        LinearExpression ret;
+        if (expression.isConstant())
+        {
+            if (from <= to)
+            {
+                ret += expression[0];
+                ret *= static_cast<double>(to - from + 1);
+            }
+            return TimeDependentLinearExpression(std::move(ret));
+        }
+        Antares::Expressions::Visitors::forEachTimeSumIndex(from,
+                                                            to,
+                                                            numberOfTimeSteps,
+                                                            [&ret, &expression](int timeIndex)
+                                                            { ret += expression[timeIndex]; });
+        return TimeDependentLinearExpression(std::move(ret));
+    }
+
     if (expression.isConstant())
     {
         TimeDependentLinearExpression ret(nbtimeSteps_);

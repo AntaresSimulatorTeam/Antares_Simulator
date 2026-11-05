@@ -44,6 +44,12 @@ int normalizeTimeIndex(int timeIndex, int size)
     return r;
 }
 
+bool hasAbsoluteBounds(const Nodes::TimeSumNode* node)
+{
+    return !dynamic_cast<const Nodes::TPlusNode*>(node->from())
+           && !dynamic_cast<const Nodes::TPlusNode*>(node->to());
+}
+
 int resolveTimeSumBound(const Nodes::Node* bound,
                         EvalVisitor& visitor,
                         unsigned localTimeStep,

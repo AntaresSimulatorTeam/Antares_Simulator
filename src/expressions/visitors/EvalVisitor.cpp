@@ -235,8 +235,23 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 
     auto result = dispatch(node->expression());
     result.toConstantVector(fillContext_.getLocalNumberOfTimeSteps());
+    const auto numberOfTimeSteps = static_cast<int>(fillContext_.getLocalNumberOfTimeSteps());
 
-    std::vector<double> values(fillContext_.getLocalNumberOfTimeSteps(), 0.0);
+    if (hasAbsoluteBounds(node))
+    {
+        // Constant in time (see VariabilityVisitor): evaluate once and return a scalar
+        const auto from = resolveTimeSumBound(node->from(), *this, 0, numberOfTimeSteps);
+        const auto to = resolveTimeSumBound(node->to(), *this, 0, numberOfTimeSteps);
+        double value = 0.;
+        forEachTimeSumIndex(from,
+                            to,
+                            numberOfTimeSteps,
+                            [&value, &result](int timeIndex)
+                            { value += result[timeIndex].valueAsDouble(); });
+        return EvaluationResult(value);
+    }
+
+    std::vector<double> values(numberOfTimeSteps, 0.0);
     for (unsigned localTimeStep = 0; localTimeStep < values.size(); ++localTimeStep)
     {
         const auto from = resolveTimeSumBound(node->from(),
