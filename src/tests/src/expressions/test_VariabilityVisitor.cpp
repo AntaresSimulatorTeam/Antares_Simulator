@@ -130,27 +130,45 @@ BOOST_AUTO_TEST_CASE(timeIndexNode_expression)
 
     TimeIndexNode t2(&parameterNode, &literalNode);
 
-    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t2),
-                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t2), VariabilityType::VARYING_IN_SCENARIO_ONLY);
 
     TimeIndexNode t3(&variableNode, &literalNode);
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t3),
                       VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+
+    TimeIndexNode t4(&variableNode, &parameterNode);
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t4), VariabilityType::VARYING_IN_SCENARIO_ONLY);
 }
 
 BOOST_AUTO_TEST_CASE(timeSumNode_expression)
 {
+    // The upper bound is scenario-dependent, so is the number of summed terms
     TimeSumNode t1(&literalNode, &parameterNode, &literalNode);
 
-    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t1),
-                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t1), VariabilityType::VARYING_IN_SCENARIO_ONLY);
 
     TimeSumNode t2(&literalNode, &parameterNode, &parameterNode);
 
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t2), VariabilityType::VARYING_IN_SCENARIO_ONLY);
 
+    // Absolute bounds: the sum is the same at every timestep
     TimeSumNode t3(&literalNode, &parameterNode, &variableNode);
-    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t3), VariabilityType::VARYING_IN_TIME_ONLY);
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t3), VariabilityType::VARYING_IN_SCENARIO_ONLY);
+}
+
+BOOST_AUTO_TEST_CASE(timeSumNode_accounts_for_bound_variability)
+{
+    TPlusNode relativeBound(&literalNode);
+    TimeSumNode absoluteBounds(&literalNode, &literalNode, &variableNode);
+    TimeSumNode mixedBounds(&literalNode, &relativeBound, &literalNode);
+    TimeSumNode scenarioDependentBound(&parameterNode, &literalNode, &variableNode);
+
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&absoluteBounds),
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&mixedBounds),
+                      VariabilityType::VARYING_IN_TIME_ONLY);
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&scenarioDependentBound),
+                      VariabilityType::VARYING_IN_SCENARIO_ONLY);
 }
 
 BOOST_AUTO_TEST_CASE(tPlusNode_expression)
