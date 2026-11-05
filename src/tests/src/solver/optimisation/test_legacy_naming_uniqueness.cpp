@@ -64,11 +64,11 @@ struct ConstraintNamerFixture
 
 BOOST_AUTO_TEST_SUITE(LegacyNamingUniqueness)
 
-BOOST_FIXTURE_TEST_CASE(area_variable_component_is_area_node, NamerFixture)
+BOOST_FIXTURE_TEST_CASE(area_variable_component_is_area, NamerFixture)
 {
     setupArea("west");
     varNamer.UnsuppliedEnergy(0);
-    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "west_node");
+    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "west");
 }
 
 BOOST_FIXTURE_TEST_CASE(spillage_component_matches_unsupplied_energy, NamerFixture)
@@ -79,15 +79,15 @@ BOOST_FIXTURE_TEST_CASE(spillage_component_matches_unsupplied_energy, NamerFixtu
     BOOST_CHECK_EQUAL(legacyInfo[0]->component, legacyInfo[1]->component);
 }
 
-BOOST_FIXTURE_TEST_CASE(different_areas_produce_different_node_components, NamerFixture)
+BOOST_FIXTURE_TEST_CASE(different_areas_produce_different_components, NamerFixture)
 {
     setupArea("west");
     varNamer.UnsuppliedEnergy(0);
     setupArea("east");
     varNamer.UnsuppliedEnergy(1);
     BOOST_CHECK_NE(legacyInfo[0]->component, legacyInfo[1]->component);
-    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "west_node");
-    BOOST_CHECK_EQUAL(legacyInfo[1]->component, "east_node");
+    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "west");
+    BOOST_CHECK_EQUAL(legacyInfo[1]->component, "east");
 }
 
 BOOST_FIXTURE_TEST_CASE(thermal_component_includes_area_and_cluster, NamerFixture)
@@ -144,7 +144,7 @@ BOOST_FIXTURE_TEST_CASE(link_component_is_alphabetically_ordered, NamerFixture)
 {
     setupLink("west", "east");
     varNamer.DirectFlow(0);
-    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "east_west_link");
+    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "east_west");
 }
 
 BOOST_FIXTURE_TEST_CASE(link_component_is_same_regardless_of_direction, NamerFixture)
@@ -164,7 +164,7 @@ BOOST_FIXTURE_TEST_CASE(link_flow_variables_share_component, NamerFixture)
     varNamer.PositiveIndirectFlow(2);
     BOOST_CHECK_EQUAL(legacyInfo[0]->component, legacyInfo[1]->component);
     BOOST_CHECK_EQUAL(legacyInfo[1]->component, legacyInfo[2]->component);
-    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "area1_area2_link");
+    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "area1_area2");
 }
 
 BOOST_FIXTURE_TEST_CASE(hydro_prod_component_is_area_hydro_storage, NamerFixture)
@@ -190,7 +190,7 @@ BOOST_FIXTURE_TEST_CASE(all_hydro_variables_share_component, NamerFixture)
     }
 }
 
-BOOST_FIXTURE_TEST_CASE(hydro_component_differs_from_node_component, NamerFixture)
+BOOST_FIXTURE_TEST_CASE(hydro_component_differs_from_area_component, NamerFixture)
 {
     setupArea("west");
     varNamer.UnsuppliedEnergy(0);
@@ -198,18 +198,18 @@ BOOST_FIXTURE_TEST_CASE(hydro_component_differs_from_node_component, NamerFixtur
     BOOST_CHECK_NE(legacyInfo[0]->component, legacyInfo[1]->component);
 }
 
-BOOST_FIXTURE_TEST_CASE(area_balance_constraint_component_is_area_node, ConstraintNamerFixture)
+BOOST_FIXTURE_TEST_CASE(area_balance_constraint_component_is_area, ConstraintNamerFixture)
 {
     setupArea("west");
     constrNamer.AreaBalance(0);
-    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "west_node");
+    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "west");
 }
 
 BOOST_FIXTURE_TEST_CASE(flow_dissociation_constraint_component_is_link, ConstraintNamerFixture)
 {
     setupLink("west", "east");
     constrNamer.FlowDissociation(0);
-    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "east_west_link");
+    BOOST_CHECK_EQUAL(legacyInfo[0]->component, "east_west");
 }
 
 BOOST_FIXTURE_TEST_CASE(final_stock_expression_constraint_is_hydro, ConstraintNamerFixture)
@@ -219,7 +219,7 @@ BOOST_FIXTURE_TEST_CASE(final_stock_expression_constraint_is_hydro, ConstraintNa
     BOOST_CHECK_EQUAL(legacyInfo[0]->component, "west_hydro_storage");
 }
 
-BOOST_FIXTURE_TEST_CASE(thermal_and_node_components_never_collide, NamerFixture)
+BOOST_FIXTURE_TEST_CASE(thermal_and_area_components_never_collide, NamerFixture)
 {
     setupArea("west");
     varNamer.UnsuppliedEnergy(0);

@@ -165,7 +165,7 @@ BOOST_FIXTURE_TEST_CASE(disabled_components_are_omitted, ViewBuilderFixture)
       "france_renewable_wind_fr",
       "france_short_term_storage_battery_fr",
       "france_hydro_storage",
-      "france_germany_link",
+      "france_germany",
     };
 
     const auto componentIsPresent = [&components](const auto& id)
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE(area_component)
     bool found = false;
     for (const auto& comp: components)
     {
-        if (comp["id"].as<std::string>() == "france_node")
+        if (comp["id"].as<std::string>() == "france")
         {
             found = true;
             BOOST_CHECK_EQUAL(comp["model"].as<std::string>(), "antares_legacy_models.area");
@@ -231,13 +231,13 @@ BOOST_AUTO_TEST_CASE(area_components_have_district_properties)
                             { return component["id"].as<std::string>() == id; });
     };
 
-    const auto franceNode = findComponent("france_node");
+    const auto franceNode = findComponent("france");
     BOOST_REQUIRE(franceNode != components.end());
     BOOST_REQUIRE_EQUAL((*franceNode)["properties"].size(), 3);
     checkProperties((*franceNode)["properties"][1], "district_eu", "eu");
     checkProperties((*franceNode)["properties"][2], "district_it", "it");
 
-    const auto germanyNode = findComponent("germany_node");
+    const auto germanyNode = findComponent("germany");
     BOOST_REQUIRE(germanyNode != components.end());
     BOOST_REQUIRE_EQUAL((*germanyNode)["properties"].size(), 2);
     checkProperties((*germanyNode)["properties"][1], "district_eu", "eu");
@@ -386,7 +386,7 @@ BOOST_AUTO_TEST_CASE(link_component)
     bool found = false;
     for (const auto& comp: components)
     {
-        if (comp["id"].as<std::string>() == "france_germany_link")
+        if (comp["id"].as<std::string>() == "france_germany")
         {
             found = true;
             BOOST_CHECK_EQUAL(comp["model"].as<std::string>(), "antares_legacy_models.link");
@@ -501,7 +501,7 @@ BOOST_AUTO_TEST_CASE(connection_for_load)
     for (const auto& conn: connections)
     {
         if (conn["component1"].as<std::string>() == "france_load"
-            && conn["component2"].as<std::string>() == "france_node")
+            && conn["component2"].as<std::string>() == "france")
         {
             found = true;
             BOOST_CHECK_EQUAL(conn["port1"].as<std::string>(), "balance_port");
@@ -520,7 +520,7 @@ BOOST_AUTO_TEST_CASE(connection_for_thermal)
     for (const auto& conn: connections)
     {
         if (conn["component1"].as<std::string>() == "france_thermal_nuc_fr"
-            && conn["component2"].as<std::string>() == "france_node")
+            && conn["component2"].as<std::string>() == "france")
         {
             found = true;
             BOOST_CHECK_EQUAL(conn["port1"].as<std::string>(), "balance_port");
@@ -539,24 +539,24 @@ BOOST_AUTO_TEST_CASE(connection_for_link)
     bool foundOutPort = false;
     for (const auto& conn: connections)
     {
-        if (conn["component1"].as<std::string>() == "france_germany_link")
+        if (conn["component1"].as<std::string>() == "france_germany")
         {
             if (conn["port1"].as<std::string>() == "in_port"
-                && conn["component2"].as<std::string>() == "france_node"
+                && conn["component2"].as<std::string>() == "france"
                 && conn["port2"].as<std::string>() == "balance_port")
             {
                 foundInPort = true;
             }
             if (conn["port1"].as<std::string>() == "out_port"
-                && conn["component2"].as<std::string>() == "germany_node"
+                && conn["component2"].as<std::string>() == "germany"
                 && conn["port2"].as<std::string>() == "balance_port")
             {
                 foundOutPort = true;
             }
         }
     }
-    BOOST_CHECK_MESSAGE(foundInPort, "Missing link in_port -> france_node connection");
-    BOOST_CHECK_MESSAGE(foundOutPort, "Missing link out_port -> germany_node connection");
+    BOOST_CHECK_MESSAGE(foundInPort, "Missing link in_port -> france connection");
+    BOOST_CHECK_MESSAGE(foundOutPort, "Missing link out_port -> germany connection");
 }
 
 using namespace Antares::ModelerStudy::SystemModel;
@@ -581,7 +581,7 @@ BOOST_AUTO_TEST_CASE(duplicate_id_between_legacy_and_modeler_throws)
     Library library = LibraryBuilder().withId("dummy_library").build();
 
     std::vector<Component> components;
-    components.emplace_back(ComponentBuilder().withId("france_node").withModel(&model).build());
+    components.emplace_back(ComponentBuilder().withId("france").withModel(&model).build());
 
     SystemBuilder systemBuilder;
     auto system = systemBuilder.withId("test_system").withComponents(std::move(components)).build();
