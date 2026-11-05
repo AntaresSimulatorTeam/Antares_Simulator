@@ -36,6 +36,7 @@ unsigned countActiveConstraintTimesteps(
                                                                       ctx.getLocalLastTimeStep()})
     {
         if (!Antares::LinearProblem::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
+                                                             component,
                                                              timeStep,
                                                              ctx,
                                                              evalVisitor))
@@ -360,6 +361,7 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
         {
             const auto localIndex = static_cast<std::size_t>(t - firstTimestep);
             if (Antares::LinearProblem::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
+                                                                component_,
                                                                 t,
                                                                 ctx,
                                                                 evalVisitor))
