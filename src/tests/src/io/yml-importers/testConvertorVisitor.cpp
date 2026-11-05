@@ -412,6 +412,30 @@ BOOST_FIXTURE_TEST_CASE(TimeSumExpressionWithMixedBounds, RegistryHolder)
     BOOST_CHECK(cmp.dispatch(expr.node, timeSumNode));
 }
 
+BOOST_AUTO_TEST_CASE(time_sum_and_time_shift_accept_right_side_multiplication)
+{
+    const auto model = createYmlModel();
+    BOOST_CHECK_NO_THROW(convertExpressionToNode("sum(t + 1 - param1 / 2 .. t, varP)", model));
+    BOOST_CHECK_NO_THROW(convertExpressionToNode("varP[t + 1 - param1 / 2]", model));
+}
+
+BOOST_AUTO_TEST_CASE(time_sum_bounds_reject_variables)
+{
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(varP .. 2, varP)", createYmlModel()),
+                          InputError,
+                          containsMessage("Time-sum bounds cannot contain variables"));
+}
+
+BOOST_AUTO_TEST_CASE(time_shift_and_index_arguments_reject_variables)
+{
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[t + varP]", createYmlModel()),
+                          InputError,
+                          containsMessage("Time shift arguments cannot contain variables"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[varP]", createYmlModel()),
+                          InputError,
+                          containsMessage("Time index arguments cannot contain variables"));
+}
+
 BOOST_FIXTURE_TEST_CASE(AlltimeSumExpression, RegistryHolder)
 {
     const auto [expression, div] = expected_expression(registry);

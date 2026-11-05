@@ -7,6 +7,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/visitors/PrintVisitor.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
 #include "antares/expressions/nodes/TimeSumNode.h"
 
@@ -18,6 +19,34 @@ namespace Antares::IO::Inputs::ModelConverter
 
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::LinearProblem;
+
+namespace
+{
+void validateTimeBoundNode(const Node* node, const std::string& context)
+{
+    if (dynamic_cast<const VariableNode*>(node))
+    {
+        Expressions::Visitors::PrintVisitor printVisitor;
+        throw InputError(
+          fmt::format("{} cannot contain variables: '{}'.", context, printVisitor.dispatch(node)));
+    }
+    if (const auto* functionNode = dynamic_cast<const FunctionNode*>(node);
+        functionNode
+        && (functionNode->type() == FunctionNodeType::dual
+            || functionNode->type() == FunctionNodeType::reduced_cost))
+    {
+        throw InputError(
+          fmt::format("{} cannot contain '{}' operators.", context, functionNode->typeToString()));
+    }
+    if (const auto* parentNode = dynamic_cast<const ParentNode*>(node))
+    {
+        for (const auto* operand: parentNode->getConstOperands())
+        {
+            validateTimeBoundNode(operand, context);
+        }
+    }
+}
+} // namespace
 
 /// Visitor to convert ANTLR expressions to Antares::Expressions::Nodes
 class ConvertorVisitor final: public ExprVisitor
@@ -351,7 +380,8 @@ std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
 std::any ConvertorVisitor::visitTimeIndex(ExprParser::TimeIndexContext* context)
 {
     Node* expr = convertIdentifier(context->IDENTIFIER()->getText());
-    auto* index = registry_.create<LiteralNode>(std::stoi(context->expr()->getText()));
+    auto* index = std::any_cast<Node*>(context->expr()->accept(this));
+    validateTimeBoundNode(index, "Time index arguments");
     return static_cast<Node*>(registry_.create<TimeIndexNode>(expr, index));
 }
 
@@ -360,6 +390,7 @@ std::any ConvertorVisitor::buildShiftNode(Node* shifted_expr, ExprParser::ShiftC
     if (auto shift_maybe = context->shift_expr()) // [t+1], [t-1], etc.
     {
         Node* shift = std::any_cast<Node*>(shift_maybe->accept(this));
+        validateTimeBoundNode(shift, "Time shift arguments");
         return static_cast<Node*>(registry_.create<TimeShiftNode>(shifted_expr, shift));
     }
     else // [t]
@@ -382,6 +413,7 @@ std::any ConvertorVisitor::visitTimeIndexExpr(ExprParser::TimeIndexExprContext* 
 {
     Node* left = std::any_cast<Node*>(visit(context->expr(0)));
     Node* right = std::any_cast<Node*>(visit(context->expr(1)));
+    validateTimeBoundNode(right, "Time index arguments");
     return static_cast<Node*>(registry_.create<TimeIndexNode>(left, right));
 }
 
@@ -615,8 +647,9 @@ Node* ConvertorVisitor::NodeFromShiftContext(ExprParser::Shift_exprContext* shif
 std::any ConvertorVisitor::visitTimeSum(ExprParser::TimeSumContext* context)
 {
     auto* from = std::any_cast<Node*>(context->from->accept(this));
-
     auto* to = std::any_cast<Node*>(context->to->accept(this));
+    validateTimeBoundNode(from, "Time-sum bounds");
+    validateTimeBoundNode(to, "Time-sum bounds");
 
     auto* expr = std::any_cast<Node*>(context->expr()->accept(this));
 
@@ -673,11 +706,13 @@ std::any ConvertorVisitor::visitShiftMuldiv(ExprParser::ShiftMuldivContext* cont
                        : static_cast<Node*>(registry_.create<DivisionNode>(left, right));
 }
 
-// TODO implement this
-std::any ConvertorVisitor::visitRightMuldiv(
-  [[maybe_unused]] ExprParser::RightMuldivContext* context)
+std::any ConvertorVisitor::visitRightMuldiv(ExprParser::RightMuldivContext* context)
 {
-    throw IO::Inputs::InputError("Node right mul div not implemented yet");
+    Node* left = std::any_cast<Node*>(visit(context->right_expr(0)));
+    Node* right = std::any_cast<Node*>(visit(context->right_expr(1)));
+    const auto op = context->op->getText();
+    return (op == "*") ? static_cast<Node*>(registry_.create<MultiplicationNode>(left, right))
+                       : static_cast<Node*>(registry_.create<DivisionNode>(left, right));
 }
 
 std::any ConvertorVisitor::visitSignedExpression(ExprParser::SignedExpressionContext* context)
