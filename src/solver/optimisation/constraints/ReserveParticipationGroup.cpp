@@ -12,11 +12,11 @@
 #include "antares/solver/optimisation/constraints/HydroReserveParticipation.h"
 #include "antares/solver/optimisation/constraints/HydroStoreCapacityThresholds.h"
 #include "antares/solver/optimisation/constraints/HydroStoreMaxReserve.h"
-#include "antares/solver/optimisation/constraints/OffUnitsThermalParticipatingToReserves.h"
 #include "antares/solver/optimisation/constraints/PMaxReserve.h"
-#include "antares/solver/optimisation/constraints/POffUnits.h"
 #include "antares/solver/optimisation/constraints/POutBounds.h"
 #include "antares/solver/optimisation/constraints/POutCapacityThresholds.h"
+#include "antares/solver/optimisation/constraints/ParticipationOfOffUnitsToReserve.h"
+#include "antares/solver/optimisation/constraints/ParticipationOfOffUnitsToReserves.h"
 #include "antares/solver/optimisation/constraints/ReserveSatisfaction.h"
 #include "antares/solver/optimisation/constraints/STReleaseCapacityThresholds.h"
 #include "antares/solver/optimisation/constraints/STReleaseMaxReserve.h"
@@ -55,9 +55,8 @@ void ReserveParticipationGroup::BuildConstraints()
     {
         auto data = GetReserveDataFromProblemHebdo();
         PMaxReserve pMaxReserve(builder_, data);
-        OffUnitsThermalParticipatingToReserves offUnitsThermalParticipatingToReserves(builder_,
-                                                                                      data);
-        POffUnits pOffUnits(builder_, data);
+        ParticipationOfOffUnitsToReserve participationOfOffUnitsToReserve(builder_, data);
+        ParticipationOfOffUnitsToReserves pOffUnits(builder_, data);
         ThermalReserveParticipation thermalReserveParticipation(builder_, data);
         ReserveSatisfaction reserveSatisfaction(builder_, data);
         STReleaseMaxReserve STReleaseMaxReserve(builder_, data);
@@ -106,10 +105,7 @@ void ReserveParticipationGroup::BuildConstraints()
                                 && clusterReserveParticipation.maxPowerOff > 0)
                             {
                                 // 16 ter
-                                offUnitsThermalParticipatingToReserves.add(pays,
-                                                                           reserve,
-                                                                           clusterId,
-                                                                           pdt);
+                                participationOfOffUnitsToReserve.add(pays, reserve, clusterId, pdt);
                             }
 
                             // 17 quinquies & sexies

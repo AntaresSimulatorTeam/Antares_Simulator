@@ -5,12 +5,12 @@
 #include "ConstraintBuilder.h"
 
 /*!
- * represent 'OffUnitsThermalParticipatingToReserves' Constraint type
+ * represent 'ParticipationOfOffUnitsToReserves' Constraint type
  */
-class OffUnitsThermalParticipatingToReserves: private ConstraintFactory
+class ParticipationOfOffUnitsToReserves: private ConstraintFactory
 {
 public:
-    OffUnitsThermalParticipatingToReserves(ConstraintBuilder& builder, ReserveData& data):
+    ParticipationOfOffUnitsToReserves(ConstraintBuilder& builder, ReserveData& data):
         ConstraintFactory(builder),
         data(data)
     {
@@ -19,11 +19,10 @@ public:
     /*!
      * @brief Add variables to the constraint and update constraints Matrix
      * @param pays : area
-     * @param reserve : capacity reservation
-     * @param cluster : local index of the cluster
+     * @param cluster : global index of the cluster
      * @param pdt : timestep
      */
-    void add(int pays, int reserve, int cluster, int pdt);
+    void add(int pays, int cluster, int pdt);
 
 private:
     ReserveData& data;
