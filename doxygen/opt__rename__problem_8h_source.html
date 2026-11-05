@@ -151,11 +151,11 @@ $(document).ready(function(){initNavTree('opt__rename__problem_8h_source.html','
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordflow">return</span> locationType + <span class="stringliteral">&quot;&lt;&quot;</span> + location + <span class="stringliteral">&quot;&gt;&quot;</span>;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;}</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// ── Component ID builders (underscore format, shared with view‑builder) ──</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// ── Component ID builders shared with the view-builder ──</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">inline</span> std::string BuildAreaNodeComponentId(<span class="keyword">const</span> std::string&amp; areaId)</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">inline</span> std::string BuildAreaComponentId(<span class="keyword">const</span> std::string&amp; areaId)</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordflow">return</span> areaId + <span class="stringliteral">&quot;_node&quot;</span>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordflow">return</span> areaId;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;}</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">inline</span> std::string BuildThermalClusterComponentId(<span class="keyword">const</span> std::string&amp; areaId,</div>
@@ -211,9 +211,9 @@ $(document).ready(function(){initNavTree('opt__rename__problem_8h_source.html','
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;{</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">if</span> (origin &lt; destination)</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    {</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordflow">return</span> origin + <span class="stringliteral">&quot;_&quot;</span> + destination + <span class="stringliteral">&quot;_link&quot;</span>;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordflow">return</span> origin + <span class="stringliteral">&quot;_&quot;</span> + destination;</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    }</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> destination + <span class="stringliteral">&quot;_&quot;</span> + origin + <span class="stringliteral">&quot;_link&quot;</span>;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> destination + <span class="stringliteral">&quot;_&quot;</span> + origin;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">// Structured legacy descriptions, parallel to the names vector.</span></div>
