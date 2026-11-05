@@ -193,6 +193,40 @@ BOOST_AUTO_TEST_CASE(time_sum_with_relative_bounds_inside_block_keeps_every_time
     }
 }
 
+BOOST_AUTO_TEST_CASE(relative_time_sum_nested_in_all_time_sum_gives_a_single_constraint_in_drop_mode)
+{
+    // sum(sum(t .. t, var1)) <= 10: the outer sum collapses time, so the constraint has a single
+    // instance even in DROP mode (no per-timestep bounds to read).
+    auto* from = nodeRegistry.create<TPlusNode>(literal(0));
+    auto* to = nodeRegistry.create<TPlusNode>(literal(0));
+    auto* innerSum = nodeRegistry.create<TimeSumNode>(
+      from,
+      to,
+      variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY));
+    auto* constraintNode = nodeRegistry.create<LessThanOrEqualNode>(
+      nodeRegistry.create<AllTimeSumNode>(innerSum),
+      literal(10));
+
+    createModel("model",
+                {},
+                {{"var1", ValueType::FLOAT, literal(-5), literal(10), true, false}},
+                {{"ct1", constraintNode, OutOfBoundsProcessingMode::DROP}});
+    createComponent("model", "componentToto");
+    FillContext ctx{0, 3, 0, 3, 0};
+    buildLinearProblem(ctx);
+
+    BOOST_REQUIRE_EQUAL(pb->constraintCount(), 1);
+    const auto* ct = pb->lookupConstraint("componentToto.ct1");
+    BOOST_REQUIRE(ct);
+    BOOST_CHECK_EQUAL(ct->getUb(), 10);
+    for (unsigned i = 0; i < 4; ++i)
+    {
+        const auto* var = pb->lookupVariable("componentToto.var1_s0_t" + to_string(i));
+        BOOST_REQUIRE(var);
+        BOOST_CHECK_EQUAL(ct->getCoefficient(var), 1);
+    }
+}
+
 BOOST_AUTO_TEST_CASE(time_sum_with_inverted_relative_bounds_is_not_dropped)
 {
     // sum(t+1 .. t-1, var1) + var1 <= 10: the window is empty for every t, so even when

@@ -439,8 +439,12 @@ void ComponentFiller::addConstraints(const Api::FillContext& ctx)
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
         auto variability = getVariability(root_node, component_);
+        // In DROP mode, a relative time-sum window may leave the block at some timesteps only, so
+        // instances must be filtered one by one. Only possible when the constraint has one entry
+        // per timestep: the sum may be nested in an operator that collapses time, e.g.
+        // sum(sum(t .. t, x)), in which case there is a single instance and nothing to drop.
         if (constraint.outOfBoundsProcessingMode() == OutOfBoundsProcessingMode::DROP
-            && hasRelativeTimeSum(root_node))
+            && linear_constraints.lb.size() > 1 && hasRelativeTimeSum(root_node))
         {
             variability = variability | VariabilityType::VARYING_IN_TIME_ONLY;
         }
