@@ -142,6 +142,203 @@ BOOST_AUTO_TEST_CASE(ct_with_drop_out_of_bounds_processing_skips_out_of_bounds_t
     // NB : var1 = var1[t]
 }
 
+BOOST_AUTO_TEST_CASE(time_sum_windows_are_dropped_when_relative_bounds_leave_block)
+{
+    auto* from = nodeRegistry.create<TPlusNode>(nodeRegistry.create<NegationNode>(literal(2)));
+    auto* to = nodeRegistry.create<TPlusNode>(literal(0));
+    auto* sum = nodeRegistry.create<TimeSumNode>(from, to, literal(1));
+    auto* constraintNode = nodeRegistry.create<LessThanOrEqualNode>(sum, literal(10));
+
+    createModel("model",
+                {},
+                {{"var1", ValueType::FLOAT, literal(-5), literal(10), true, false}},
+                {{"ct1", constraintNode, OutOfBoundsProcessingMode::DROP}});
+    createComponent("model", "componentToto");
+    FillContext ctx{0, 3, 0, 3, 0};
+    buildLinearProblem(ctx);
+
+    BOOST_REQUIRE_EQUAL(pb->constraintCount(), 2);
+    BOOST_CHECK(!pb->lookupConstraint("componentToto.ct1_0"));
+    BOOST_CHECK(!pb->lookupConstraint("componentToto.ct1_1"));
+    BOOST_CHECK(pb->lookupConstraint("componentToto.ct1_2"));
+    BOOST_CHECK(pb->lookupConstraint("componentToto.ct1_3"));
+}
+
+BOOST_AUTO_TEST_CASE(time_sum_with_relative_bounds_inside_block_keeps_every_timestep_in_drop_mode)
+{
+    // sum(t .. t, var1) <= 10 with a time-constant var1: the window never leaves the block,
+    // but relative bounds in DROP mode still make the constraint time-dependent.
+    auto* from = nodeRegistry.create<TPlusNode>(literal(0));
+    auto* to = nodeRegistry.create<TPlusNode>(literal(0));
+    auto* sum = nodeRegistry.create<TimeSumNode>(from, to, variable("var1", 0));
+    auto* constraintNode = nodeRegistry.create<LessThanOrEqualNode>(sum, literal(10));
+
+    createModel("model",
+                {},
+                {{"var1", ValueType::FLOAT, literal(-5), literal(10), false, false}},
+                {{"ct1", constraintNode, OutOfBoundsProcessingMode::DROP}});
+    createComponent("model", "componentToto");
+    FillContext ctx{0, 3, 0, 3, 0};
+    buildLinearProblem(ctx);
+
+    BOOST_REQUIRE_EQUAL(pb->constraintCount(), 4);
+    const auto* var = pb->lookupVariable("componentToto.var1");
+    BOOST_REQUIRE(var);
+    for (unsigned i = 0; i < 4; ++i)
+    {
+        const auto* ct = pb->lookupConstraint("componentToto.ct1_" + to_string(i));
+        BOOST_REQUIRE(ct);
+        BOOST_CHECK_EQUAL(ct->getCoefficient(var), 1);
+        BOOST_CHECK_EQUAL(ct->getUb(), 10);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(
+  relative_time_sum_nested_in_all_time_sum_gives_a_single_constraint_in_drop_mode)
+{
+    // sum(sum(t .. t, var1)) <= 10: the outer sum collapses time, so the constraint has a single
+    // instance even in DROP mode (no per-timestep bounds to read).
+    auto* from = nodeRegistry.create<TPlusNode>(literal(0));
+    auto* to = nodeRegistry.create<TPlusNode>(literal(0));
+    auto* innerSum = nodeRegistry.create<TimeSumNode>(
+      from,
+      to,
+      variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY));
+    auto* constraintNode = nodeRegistry.create<LessThanOrEqualNode>(
+      nodeRegistry.create<AllTimeSumNode>(innerSum),
+      literal(10));
+
+    createModel("model",
+                {},
+                {{"var1", ValueType::FLOAT, literal(-5), literal(10), true, false}},
+                {{"ct1", constraintNode, OutOfBoundsProcessingMode::DROP}});
+    createComponent("model", "componentToto");
+    FillContext ctx{0, 3, 0, 3, 0};
+    buildLinearProblem(ctx);
+
+    BOOST_REQUIRE_EQUAL(pb->constraintCount(), 1);
+    const auto* ct = pb->lookupConstraint("componentToto.ct1");
+    BOOST_REQUIRE(ct);
+    BOOST_CHECK_EQUAL(ct->getUb(), 10);
+    for (unsigned i = 0; i < 4; ++i)
+    {
+        const auto* var = pb->lookupVariable("componentToto.var1_s0_t" + to_string(i));
+        BOOST_REQUIRE(var);
+        BOOST_CHECK_EQUAL(ct->getCoefficient(var), 1);
+    }
+}
+
+namespace
+{
+// Builds the problem for a single DROP constraint "ct1" on a time-dependent var1 over block
+// [0, 3], and returns which of ct1_0 .. ct1_3 were created.
+std::array<bool, 4> buildDropConstraint(LinearProblemBuildingFixture& fixture, Node* constraintNode)
+{
+    fixture.createModel(
+      "model",
+      {},
+      {{"var1", ValueType::FLOAT, fixture.literal(-5), fixture.literal(10), true, false}},
+      {{"ct1", constraintNode, OutOfBoundsProcessingMode::DROP}});
+    fixture.createComponent("model", "componentToto");
+    FillContext ctx{0, 3, 0, 3, 0};
+    fixture.buildLinearProblem(ctx);
+
+    std::array<bool, 4> created{};
+    for (unsigned i = 0; i < created.size(); ++i)
+    {
+        created[i] = fixture.pb->lookupConstraint("componentToto.ct1_" + to_string(i)) != nullptr;
+    }
+    return created;
+}
+} // namespace
+
+BOOST_AUTO_TEST_CASE(nested_relative_time_sums_are_checked_at_the_selected_timesteps)
+{
+    // sum(t .. t+1, sum(t .. t+1, var1)) <= 10 on block [0, 3]:
+    // t=2 -> outer window [2, 3], inner window at 3 is [3, 4] -> dropped
+    // t=3 -> outer window [3, 4] -> dropped
+    auto* var1 = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+    auto* innerSum = nodeRegistry.create<TimeSumNode>(nodeRegistry.create<TPlusNode>(literal(0)),
+                                                      nodeRegistry.create<TPlusNode>(literal(1)),
+                                                      var1);
+    auto* outerSum = nodeRegistry.create<TimeSumNode>(nodeRegistry.create<TPlusNode>(literal(0)),
+                                                      nodeRegistry.create<TPlusNode>(literal(1)),
+                                                      innerSum);
+    auto* constraintNode = nodeRegistry.create<LessThanOrEqualNode>(outerSum, literal(10));
+
+    const auto created = buildDropConstraint(*this, constraintNode);
+
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 2);
+    BOOST_CHECK((created == std::array{true, true, false, false}));
+}
+
+BOOST_AUTO_TEST_CASE(time_shift_inside_relative_time_sum_is_checked_at_the_selected_timesteps)
+{
+    // sum(t-2 .. t-1, var1[t+1]) <= 10 on block [0, 3]:
+    // t=0, t=1 -> window starts before the block -> dropped
+    // t=2 -> var1[1] + var1[2] ; t=3 -> var1[2] + var1[3] -> both kept
+    auto* var1 = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+    auto* shifted = nodeRegistry.create<TimeShiftNode>(var1, literal(1));
+    auto* from = nodeRegistry.create<TPlusNode>(nodeRegistry.create<NegationNode>(literal(2)));
+    auto* to = nodeRegistry.create<TPlusNode>(nodeRegistry.create<NegationNode>(literal(1)));
+    auto* sum = nodeRegistry.create<TimeSumNode>(from, to, shifted);
+    auto* constraintNode = nodeRegistry.create<LessThanOrEqualNode>(sum, literal(10));
+
+    const auto created = buildDropConstraint(*this, constraintNode);
+
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 2);
+    BOOST_CHECK((created == std::array{false, false, true, true}));
+}
+
+BOOST_AUTO_TEST_CASE(time_shift_inside_all_time_sum_does_not_drop_instances)
+{
+    // sum(var1[t+1]) + var1 <= 10: the shift is inside a sum over the whole block, where it wraps
+    // cyclically; it does not depend on the constraint instance, so no instance is dropped.
+    auto* var1 = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+    auto* allTimeSum = nodeRegistry.create<AllTimeSumNode>(
+      nodeRegistry.create<TimeShiftNode>(var1, literal(1)));
+    auto* constraintNode = nodeRegistry.create<LessThanOrEqualNode>(
+      nodeRegistry.create<SumNode>(allTimeSum, var1),
+      literal(10));
+
+    const auto created = buildDropConstraint(*this, constraintNode);
+
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 4);
+    BOOST_CHECK((created == std::array{true, true, true, true}));
+}
+
+BOOST_AUTO_TEST_CASE(time_sum_with_inverted_relative_bounds_is_not_dropped)
+{
+    // sum(t+1 .. t-1, var1) + var1 <= 10: the window is empty for every t, so even when
+    // t+1 or t-1 leaves the block the constraint instance must be kept in DROP mode.
+    auto* var1 = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+    auto* from = nodeRegistry.create<TPlusNode>(literal(1));
+    auto* to = nodeRegistry.create<TPlusNode>(nodeRegistry.create<NegationNode>(literal(1)));
+    auto* sum = nodeRegistry.create<TimeSumNode>(from, to, var1);
+    auto* constraintNode = nodeRegistry.create<LessThanOrEqualNode>(
+      nodeRegistry.create<SumNode>(sum, var1),
+      literal(10));
+
+    createModel("model",
+                {},
+                {{"var1", ValueType::FLOAT, literal(-5), literal(10), true, false}},
+                {{"ct1", constraintNode, OutOfBoundsProcessingMode::DROP}});
+    createComponent("model", "componentToto");
+    FillContext ctx{0, 3, 0, 3, 0};
+    buildLinearProblem(ctx);
+
+    BOOST_REQUIRE_EQUAL(pb->constraintCount(), 4);
+    for (unsigned i = 0; i < 4; ++i)
+    {
+        const auto* ct = pb->lookupConstraint("componentToto.ct1_" + to_string(i));
+        BOOST_REQUIRE(ct);
+        // Only the var1[t] term outside the empty sum remains
+        const auto* var = pb->lookupVariable("componentToto.var1_s0_t" + to_string(i));
+        BOOST_REQUIRE(var);
+        BOOST_CHECK_EQUAL(ct->getCoefficient(var), 1);
+    }
+}
+
 /**
  * @brief Test case for ensuring that variable bounds are correctly set using a time-series.
  *
