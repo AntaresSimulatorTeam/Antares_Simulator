@@ -15,6 +15,31 @@
 
 namespace
 {
+bool hasRelativeTimeSum(const Antares::Expressions::Nodes::Node* node)
+{
+    if (const auto* timeSumNode = dynamic_cast<const Antares::Expressions::Nodes::TimeSumNode*>(
+          node))
+    {
+        if (dynamic_cast<const Antares::Expressions::Nodes::TPlusNode*>(timeSumNode->from())
+            || dynamic_cast<const Antares::Expressions::Nodes::TPlusNode*>(timeSumNode->to()))
+        {
+            return true;
+        }
+    }
+
+    if (const auto* parentNode = dynamic_cast<const Antares::Expressions::Nodes::ParentNode*>(node))
+    {
+        for (const auto* operand: parentNode->getConstOperands())
+        {
+            if (hasRelativeTimeSum(operand))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 unsigned countActiveConstraintTimesteps(
   const Antares::ModelerStudy::SystemModel::Constraint& constraint,
   const Antares::LinearProblem::Api::FillContext& ctx,
@@ -413,7 +438,12 @@ void ComponentFiller::addConstraints(const Api::FillContext& ctx)
     {
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
-        const auto variability = getVariability(root_node, component_);
+        auto variability = getVariability(root_node, component_);
+        if (constraint.outOfBoundsProcessingMode() == OutOfBoundsProcessingMode::DROP
+            && hasRelativeTimeSum(root_node))
+        {
+            variability = variability | VariabilityType::VARYING_IN_TIME_ONLY;
+        }
 
         unsigned activeConstraintCount = 1;
         if (isTimeDependent(variability))
