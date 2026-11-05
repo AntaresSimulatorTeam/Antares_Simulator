@@ -103,8 +103,7 @@ BOOST_AUTO_TEST_CASE(time_sum_var_with_objective)
 BOOST_AUTO_TEST_CASE(time_sum_with_absolute_bounds_is_accepted_as_objective)
 {
     // Objective: sum(0 .. 1, 2 * x) => coefficient 2 on x_t0 and x_t1, 0 on x_t2
-    auto expression = multiply(literal(2),
-                               variable("x", 0, VariabilityType::VARYING_IN_TIME_ONLY));
+    auto expression = multiply(literal(2), variable("x", 0, VariabilityType::VARYING_IN_TIME_ONLY));
     auto timeSum = nodeRegistry.create<TimeSumNode>(literal(0), literal(1), expression);
 
     createModelWithOneFloatVar("model", {}, "x", literal(-50), literal(-40), {}, timeSum, true);
