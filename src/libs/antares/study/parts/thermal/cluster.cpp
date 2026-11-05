@@ -90,6 +90,10 @@ bool stringToLocalTSGenerationBehavior(const std::string& text, LocalTSGeneratio
     return false;
 }
 
+// Defined out-of-line so that clang sees Ramping as default-constructible
+// from std::optional<Ramping> while ThermalCluster is still incomplete
+Data::ThermalCluster::Ramping::Ramping() = default;
+
 Data::ThermalCluster::ThermalCluster(Area* parent):
     Cluster(parent),
     PthetaInf(HOURS_PER_YEAR, 0)

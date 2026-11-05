@@ -289,6 +289,8 @@ set(RTESOLVER_OPT
         ComponentToAreaConnectionFiller.cpp
         include/antares/solver/optimisation/ThermalCapacityFiller.h
         ThermalCapacityFiller.cpp
+        include/antares/solver/optimisation/LinkCapacityFiller.h
+        LinkCapacityFiller.cpp
         include/antares/solver/optimisation/HebdoAreaPriceProvider.h
         HebdoAreaPriceProvider.cpp
 )

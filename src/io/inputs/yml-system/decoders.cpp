@@ -139,6 +139,48 @@ bool convert<YmlSystem::ThermalCapacityConnection>::decode(
     return true;
 }
 
+bool convert<YmlSystem::LinkComponent>::decode(const Node& node, YmlSystem::LinkComponent& rhs)
+{
+    if (!YmlUtils::requireMap(node, "link-component"))
+    {
+        return false;
+    }
+    requireSize(node, 2, "link-component (from, to)");
+    rhs.from = node["from"].as<std::string>();
+    rhs.to = node["to"].as<std::string>();
+    return true;
+}
+
+bool convert<YmlSystem::LinkCapacityConnection>::decode(const Node& node,
+                                                        YmlSystem::LinkCapacityConnection& rhs)
+{
+    if (!YmlUtils::requireMap(node, "link-capacity-connection"))
+    {
+        return false;
+    }
+    requireSize(node, 3, "link-capacity-connection (component, port, link-component)");
+    rhs.componentId = node["component"].as<std::string>();
+    rhs.portId = node["port"].as<std::string>();
+    const Node linkComponentNode = node["link-component"];
+    if (!linkComponentNode.IsDefined())
+    {
+        YmlTreeDisplayer displayer(node);
+        throw InputError(fmt::format("Missing required field 'link-component'.\n{}{}",
+                                     displayer.baseTree(),
+                                     displayer.buildMarkedTree({}, {"link-component"})));
+    }
+    if (linkComponentNode.IsNull())
+    {
+        YmlTreeDisplayer displayer(node);
+        throw InputError(
+          fmt::format("Expected a YAML mapping for 'link-component' (got null).\n{}{}",
+                      displayer.baseTree(),
+                      displayer.buildMarkedTree({"link-component"}, {})));
+    }
+    rhs.linkComponent = linkComponentNode.as<YmlSystem::LinkComponent>();
+    return true;
+}
+
 bool convert<YmlSystem::System>::decode(const Node& node, YmlSystem::System& rhs)
 {
     if (!node.IsMap())
@@ -152,6 +194,8 @@ bool convert<YmlSystem::System>::decode(const Node& node, YmlSystem::System& rhs
       node["area-connections"]);
     rhs.thermalCapacityConnections = as_fallback_default<
       std::vector<YmlSystem::ThermalCapacityConnection>>(node["thermal-capacity-connections"]);
+    rhs.linkCapacityConnections = as_fallback_default<
+      std::vector<YmlSystem::LinkCapacityConnection>>(node["link-capacity-connections"]);
     return true;
 }
 

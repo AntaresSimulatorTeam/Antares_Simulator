@@ -5,6 +5,8 @@
 #define __SOLVER_SIMULATION_ECO_STRUCTS_H__
 
 #include <array>
+#include <cmath>
+#include <cstddef>
 #include <memory>
 #include <optional>
 #include <vector>
@@ -22,6 +24,11 @@ namespace Antares::Optimization
 {
 struct SolvedModelerProblem;
 } // namespace Antares::Optimization
+
+namespace Antares::LinearProblem::Api
+{
+class IMipConstraint;
+} // namespace Antares::LinearProblem::Api
 
 namespace Antares::Data
 {
@@ -171,7 +178,37 @@ struct VALEURS_DE_NTC_ET_RESISTANCES
     std::vector<double> ValeurDeLoopFlowOrigineVersExtremite;
     std::vector<double> ValeurDuFlux;
 
+    // Capacities solved by LinkCapacityFiller, NaN for links it does not manage.
+    // The NTC above are study inputs and are never overwritten by the solve.
+    std::vector<double> CapaciteEffectiveOrigineVersExtremite;
+    std::vector<double> CapaciteEffectiveExtremiteVersOrigine;
+
     std::vector<double> ResistanceApparente;
+
+    // Capacity bounding the flow after the solve: the solved capacity when the link is managed
+    // by LinkCapacityFiller, the NTC otherwise.
+    double directCapacity(std::size_t link) const
+    {
+        return effectiveOrNtc(CapaciteEffectiveOrigineVersExtremite,
+                              ValeurDeNTCOrigineVersExtremite,
+                              link);
+    }
+
+    double indirectCapacity(std::size_t link) const
+    {
+        return effectiveOrNtc(CapaciteEffectiveExtremiteVersOrigine,
+                              ValeurDeNTCExtremiteVersOrigine,
+                              link);
+    }
+
+private:
+    static double effectiveOrNtc(const std::vector<double>& effective,
+                                 const std::vector<double>& ntc,
+                                 std::size_t link)
+    {
+        return link < effective.size() && !std::isnan(effective[link]) ? effective[link]
+                                                                       : ntc[link];
+    }
 };
 
 struct TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE
@@ -513,6 +550,9 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
     std::vector<double> NombreDeGroupesQuiSArretentDuPalier;
 
     std::vector<double> NombreDeGroupesQuiTombentEnPanneDuPalier;
+
+    std::vector<double> powerRampingIncrease;
+    std::vector<double> powerRampingDecrease;
 };
 
 struct OPTIMAL_HYDRO_USAGE
@@ -579,6 +619,17 @@ using TIME_MEASURES = std::array<TIME_MEASURE, 2>;
 struct VARIABLES_DUALES_INTERCONNEXIONS
 {
     std::vector<double> VariableDualeParInterconnexion;
+};
+
+/// \brief Capacity constraints added by LinkCapacityFiller on a legacy link for one time step.
+/// The flow variable is left unbounded, so these constraints carry the NTC and its dual.
+struct LINK_CAPACITY_CONSTRAINTS
+{
+    uint32_t interco;
+    int pdt; // Zero-based time step relative to the start of the optimization interval
+    int flowVariable;
+    const Antares::LinearProblem::Api::IMipConstraint* direct;
+    const Antares::LinearProblem::Api::IMipConstraint* indirect;
 };
 
 struct PROBLEME_HEBDO
@@ -837,6 +888,10 @@ public:
 
     /// \brief Keeps the LP alive so optimEntityContainer's reference remains valid
     std::shared_ptr<Antares::LinearProblem::Api::ILinearProblem> ortoolsProblem_;
+
+    /// \brief Link capacity constraints of the LP being solved, pointing into ortoolsProblem_.
+    /// Read after the solve to report the effective NTC and its dual on legacy link outputs.
+    std::vector<LINK_CAPACITY_CONSTRAINTS> linkCapacityConstraints;
 };
 
 // Import functions for capacity and hydro reserves

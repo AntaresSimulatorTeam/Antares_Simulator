@@ -88,6 +88,11 @@ const std::map<std::string, ThermalComponent>& Component::portToThermalCapacityC
     return portToThermalConnections_;
 }
 
+const std::map<std::string, LinkComponent>& Component::portToLinkCapacityConnections() const
+{
+    return portToLinkConnections_;
+}
+
 Component::Component(const ComponentData& component_data)
 {
     checkComponentDataValidity(component_data);
@@ -178,6 +183,20 @@ void Component::checkPortFieldDefinitionExists(const std::string& portName,
     }
 }
 
+void Component::requirePortFieldDefinition(const std::string& portId,
+                                           const std::string& fieldId,
+                                           const std::string& errMsgPrefix) const
+{
+    if (!getModel()->PortFieldDefinitions().contains(PortFieldKey(portId, fieldId)))
+    {
+        throw std::invalid_argument(
+          errMsgPrefix
+          + fmt::format("port field '{}' is not defined in the component's model '{}'",
+                        fieldId,
+                        getModel()->Id()));
+    }
+}
+
 void Component::addAreaConnection(const std::string& localPortId, const std::string& areaId)
 {
     std::string exceptionPrefix = fmt::format(
@@ -248,26 +267,53 @@ void Component::addThermalCapacityConnection(const std::string& portId,
           + fmt::format("port type '{}' has no thermal-capacity-connection field ID defined",
                         port.Type().Id()));
     }
-    PortFieldKey key(portId, thermalCapacityConnectionFieldId.value());
-    if (!data_.model->PortFieldDefinitions().contains(key))
-    {
-        throw std::invalid_argument(
-          exceptionPrefix
-          + fmt::format("port field '{}' is not defined in the component's model '{}'",
-                        thermalCapacityConnectionFieldId.value(),
-                        data_.model->Id()));
-    }
+    requirePortFieldDefinition(portId, thermalCapacityConnectionFieldId.value(), exceptionPrefix);
     if (portToThermalConnections_.contains(portId))
     {
-        const auto msg = fmt::format("port '{}' port is already connected to '(area = {}, "
-                                     "clusterId = {})'",
-                                     portId,
-                                     areaId,
-                                     clusterId);
-        throw std::invalid_argument(msg);
+        const auto& connected = portToThermalConnections_.at(portId);
+        throw std::invalid_argument(
+          exceptionPrefix
+          + fmt::format("port is already connected to '(area = {}, clusterId = {})'",
+                        connected.areaId,
+                        connected.clusterId));
     }
 
     portToThermalConnections_.try_emplace(portId, ThermalComponent{toLowerCase(areaId), clusterId});
+}
+
+void Component::addLinkCapacityConnection(const std::string& portId,
+                                          const std::string& fromAreaId,
+                                          const std::string& toAreaId)
+{
+    const std::string exceptionPrefix = fmt::format(
+      "Cannot connect link '(from = {}, to = {})' to port '{}' of component '{}': ",
+      fromAreaId,
+      toAreaId,
+      portId,
+      data_.id);
+    const auto& port = findPort(portId, exceptionPrefix);
+    const auto& linkCapacityConnectionFields = port.Type().LinkCapacityConnectionFieldIds();
+    if (!linkCapacityConnectionFields.has_value())
+    {
+        throw std::invalid_argument(
+          exceptionPrefix
+          + fmt::format("port type '{}' has no link-capacity-connection field IDs defined",
+                        port.Type().Id()));
+    }
+    requirePortFieldDefinition(portId, linkCapacityConnectionFields->direct, exceptionPrefix);
+    requirePortFieldDefinition(portId, linkCapacityConnectionFields->indirect, exceptionPrefix);
+    if (portToLinkConnections_.contains(portId))
+    {
+        const auto& connected = portToLinkConnections_.at(portId);
+        throw std::invalid_argument(
+          exceptionPrefix
+          + fmt::format("port is already connected to '(from = {}, to = {})'",
+                        connected.from,
+                        connected.to));
+    }
+    portToLinkConnections_.try_emplace(portId,
+                                       LinkComponent{toLowerCase(fromAreaId),
+                                                     toLowerCase(toAreaId)});
 }
 
 std::optional<std::string> Component::areaConnectedToPort(const std::string& portId) const
@@ -282,6 +328,16 @@ std::optional<ThermalComponent> Component::thermalCapacityConnectedToPort(
 {
     const auto it = portToThermalConnections_.find(portId);
     if (it == portToThermalConnections_.end())
+    {
+        return std::nullopt;
+    }
+    return it->second;
+}
+
+std::optional<LinkComponent> Component::linkCapacityConnectedToPort(const std::string& portId) const
+{
+    const auto it = portToLinkConnections_.find(portId);
+    if (it == portToLinkConnections_.end())
     {
         return std::nullopt;
     }

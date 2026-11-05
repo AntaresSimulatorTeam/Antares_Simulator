@@ -156,6 +156,7 @@ struct Fixture
     explicit Fixture(int nbPdt = 1)
     {
         problem.weekInTheYear = 1;
+        problem.HeureDansLAnnee = 168;
         problem.NombreDePasDeTemps = nbPdt;
         problem.NombreDePasDeTempsPourUneOptimisation = nbPdt;
         problem.OptimisationNotFastMode = true;
@@ -415,7 +416,7 @@ BOOST_AUTO_TEST_CASE(extra_output_entries_carry_block_time_and_scenario)
     const auto row = FindRow(table, "prop_cost", "area1_thermal_cluster1");
     BOOST_REQUIRE(row.has_value());
     BOOST_CHECK_EQUAL(row->block, "1");               // currentBlock (0-indexed, same as raw rows)
-    BOOST_CHECK_EQUAL(row->absoluteTimeIndex, "168"); // weekInTheYear * 168 + pdt
+    BOOST_CHECK_EQUAL(row->absoluteTimeIndex, "168"); // interval start + pdt
     BOOST_CHECK_EQUAL(row->blockTimeIndex, "0");      // first timestep of the block
     BOOST_CHECK_EQUAL(row->scenarioIndex, "2");
     BOOST_CHECK_EQUAL(row->basisStatus, "None");
@@ -600,6 +601,33 @@ BOOST_AUTO_TEST_CASE(is_indirectly_congested_compares_minus_flow_to_indirect_cap
 
     BOOST_CHECK_EQUAL(FindRow(table, "is_indirectly_congested", "area1_area2_link")->value, 0.);
     BOOST_CHECK_EQUAL(FindRow(table, "is_indirectly_congested", "area2_area3_link")->value, 1.);
+}
+
+BOOST_AUTO_TEST_CASE(daily_link_outputs_use_week_relative_capacities_and_loop_flows)
+{
+    problem.NombreDePasDeTemps = 168;
+    problem.ValeursDeNTC.resize(168, problem.ValeursDeNTC[0]);
+    fillContext = FillContext{0, 0, 192, 192, 2};
+    currentBlock = 8;
+
+    problem.ValeursDeNTC[0].CapaciteEffectiveOrigineVersExtremite = {200., 200.};
+    problem.ValeursDeNTC[0].CapaciteEffectiveExtremiteVersOrigine = {200., 200.};
+    auto& ntc = problem.ValeursDeNTC[24];
+    ntc.CapaciteEffectiveOrigineVersExtremite = {120., 200.};
+    ntc.CapaciteEffectiveExtremiteVersOrigine = {200., 30.};
+    ntc.ValeurDeLoopFlowOrigineVersExtremite = {25., -18.};
+
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "is_directly_congested", "area1_area2_link")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_indirectly_congested", "area2_area3_link")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_loop_flow", "area1_area2_link")->value, 25.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_loop_flow", "area2_area3_link")->value, -18.);
+    BOOST_CHECK_EQUAL(FindRow(table, "abs_flow", "area1_area2_link")->value, 120.);
+    const auto row = FindRow(table, "is_directly_congested", "area1_area2_link");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_EQUAL(row->absoluteTimeIndex, "192");
+    BOOST_CHECK_EQUAL(row->blockTimeIndex, "0");
 }
 
 BOOST_AUTO_TEST_CASE(congestion_fees_use_the_endpoint_area_prices)

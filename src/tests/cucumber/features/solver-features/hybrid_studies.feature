@@ -235,4 +235,3 @@ Feature: hybrid (simulator+modeler) studies
     And the simulation has two optimization iterations
     And in area "west", during year 1, weekly overall cost for week 1 is 4441208
     And in area "west", during year 1, NODU for all hours matches reference
-

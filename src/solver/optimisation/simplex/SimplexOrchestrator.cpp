@@ -16,6 +16,7 @@
 #include "antares/solver/optimisation/HebdoAreaPriceProvider.h"
 #include "antares/solver/optimisation/LegacyNameMapper.h"
 #include "antares/solver/optimisation/LegacySimulationTableSnapshot.h"
+#include "antares/solver/optimisation/LinkCapacityFiller.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/ortools_wrapper.h"
 #include "antares/solver/optimisation/simplex/InfeasibilityAnalyzer.h"
@@ -133,6 +134,11 @@ SimplexResult SimplexOrchestrator::solve()
                 .objectiveValue = 0,
                 .success = false};
     }
+
+    // Before the simulation table and applyResults, which read the legacy link structures
+    Antares::Optimization::applyLinkCapacityResults(problemeHebdo_,
+                                                    *ortoolsProblem_,
+                                                    NumIntervalle_);
 
     // Hand the modeler side to the post-process dumps. Called for both passes,
     // so what survives is the last one actually run. Independent of
