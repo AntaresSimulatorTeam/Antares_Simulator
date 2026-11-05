@@ -12,6 +12,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/io/outputs/SimulationTablePath.h>
 #include <antares/study/study.h>
 
 // Test the generation of folder output names
@@ -133,6 +134,30 @@ BOOST_FIXTURE_TEST_CASE(adequacy_zip_label_now, Fixture)
                                                                label,
                                                                *localtime(&startTime));
     BOOST_CHECK_EQUAL(actualOutput_suffix, expectedOutput_suffix);
+}
+
+BOOST_FIXTURE_TEST_CASE(simulation_table_output_directory_is_created_when_enabled, Fixture)
+{
+    Study study;
+    study.folder = outputRoot;
+    study.parameters.outputSelection = OutputSelection{OutputSelection::SimulationTable};
+
+    study.prepareOutput();
+
+    BOOST_CHECK(
+      fs::is_directory(Antares::IO::Outputs::simulationTableOutputDirectory(study.folderOutput)));
+}
+
+BOOST_FIXTURE_TEST_CASE(simulation_table_output_directory_is_not_created_when_disabled, Fixture)
+{
+    Study study;
+    study.folder = outputRoot;
+
+    study.prepareOutput();
+    fs::create_directories(study.folderOutput);
+
+    BOOST_CHECK(
+      !fs::exists(Antares::IO::Outputs::simulationTableOutputDirectory(study.folderOutput)));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

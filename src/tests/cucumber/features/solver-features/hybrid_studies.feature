@@ -82,7 +82,8 @@ Feature: hybrid (simulator+modeler) studies
     # contents: adding a stage would otherwise silently go unchecked here
     # (compare_folders walks the reference side), and the reference would have
     # to be regenerated for every stage the solver learns to emit. The full set
-    # is covered by the scenario below.
+    # is covered by the scenario below. The table files are in the dedicated
+    # simulation-tables subdirectory of each output.
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
     When I run antares simulator with --output=all --simulation-table-stages=optim-nb-1,optim-nb-2
     Then the simulation succeeds
@@ -235,4 +236,3 @@ Feature: hybrid (simulator+modeler) studies
     And the simulation has two optimization iterations
     And in area "west", during year 1, weekly overall cost for week 1 is 4441208
     And in area "west", during year 1, NODU for all hours matches reference
-

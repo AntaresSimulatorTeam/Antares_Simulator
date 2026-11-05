@@ -11,6 +11,7 @@
 #include <string>
 #include <thread>
 
+#include <antares/io/outputs/SimulationTablePath.h>
 #include <antares/solver/modeler/ModelerData.h>
 #include <antares/writer/writer_factory.h>
 #include "antares/study/area/constants.h"
@@ -223,6 +224,11 @@ void Study::prepareOutput()
                                          baseFolderOutput,
                                          simulationName,
                                          getCurrentTime());
+
+    if (parameters.writeSimulationTable() && parameters.resultFormat != inMemory)
+    {
+        fs::create_directories(IO::Outputs::simulationTableOutputDirectory(folderOutput));
+    }
 
     logs.info() << "  Output folder : " << folderOutput;
 }

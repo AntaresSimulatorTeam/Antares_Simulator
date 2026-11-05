@@ -16,9 +16,9 @@ You can find simple examples by checking out the studies used in our [test base]
 The hybrid simulation outputs the [same files as a legacy study](outputs.md). But these files only contain the 
 optimization results of the system components that were created by the legacy study.  
 
-The results of the modeler's components optimization is exported under the simulation table format, described in 
-the [modeler outputs page](../modeler/03-outputs.md), in the same output folder as the legacy outputs.  
-One simulation table for each optimization step (called `simulation_table--optim-nb-X`) will be generated.
+The results of the modeler's components optimization are exported as simulation tables, described in
+the [modeler outputs page](../modeler/03-outputs.md), under `simulation-tables/` in the run's output folder.
+One table is written for each selected optimization or post-process stage.
 
 Simulation tables are **not** written by default: run the solver with `--output=simulation-tables` to get them.
 The two families of results are independent, so a hybrid study can write the Monte-Carlo results only (default), the

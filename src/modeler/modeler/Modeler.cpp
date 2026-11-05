@@ -8,6 +8,7 @@
 #include <fstream>
 #include <stdexcept>
 
+#include <antares/io/outputs/SimulationTablePath.h>
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/StructuredLinearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
@@ -87,6 +88,11 @@ Modeler::Modeler(ILoader& loader, fs::path ouputPath, TableFormat tableFormat):
 
     scenarios_ = resolveScenarioScopeScenarios(data_.scenarioScope);
     validateScenariosAgainstScenarioBuilder();
+    if (!outputPath_.empty() && !parameters_.noOutput && !scenarios_.empty()
+        && data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
+    {
+        fs::create_directories(IO::Outputs::simulationTableOutputDirectory(outputPath_));
+    }
     logs.info() << fmt::format("Number of Monte-Carlo scenarios to simulate: {}",
                                scenarios_.size());
 }
@@ -490,7 +496,8 @@ void Modeler::run()
                                     optimEntityContainer,
                                     fillContext);
 
-                auto outputFile = outputPath_ / ("simulation-table-" + std::to_string(year));
+                auto outputFile = IO::Outputs::simulationTableOutputDirectory(outputPath_)
+                                  / ("simulation-table-" + std::to_string(year));
                 SimulationTableWriter writer(outputFile, tableFormat_);
                 writer.writeTable(simulationTable);
                 logs.info() << "Simulation table of scenario " << year
