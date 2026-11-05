@@ -227,6 +227,86 @@ BOOST_AUTO_TEST_CASE(relative_time_sum_nested_in_all_time_sum_gives_a_single_con
     }
 }
 
+namespace
+{
+// Builds the problem for a single DROP constraint "ct1" on a time-dependent var1 over block
+// [0, 3], and returns which of ct1_0 .. ct1_3 were created.
+std::array<bool, 4> buildDropConstraint(LinearProblemBuildingFixture& fixture,
+                                        Node* constraintNode)
+{
+    fixture.createModel(
+      "model",
+      {},
+      {{"var1", ValueType::FLOAT, fixture.literal(-5), fixture.literal(10), true, false}},
+      {{"ct1", constraintNode, OutOfBoundsProcessingMode::DROP}});
+    fixture.createComponent("model", "componentToto");
+    FillContext ctx{0, 3, 0, 3, 0};
+    fixture.buildLinearProblem(ctx);
+
+    std::array<bool, 4> created{};
+    for (unsigned i = 0; i < created.size(); ++i)
+    {
+        created[i] = fixture.pb->lookupConstraint("componentToto.ct1_" + to_string(i)) != nullptr;
+    }
+    return created;
+}
+} // namespace
+
+BOOST_AUTO_TEST_CASE(nested_relative_time_sums_are_checked_at_the_selected_timesteps)
+{
+    // sum(t .. t+1, sum(t .. t+1, var1)) <= 10 on block [0, 3]:
+    // t=2 -> outer window [2, 3], inner window at 3 is [3, 4] -> dropped
+    // t=3 -> outer window [3, 4] -> dropped
+    auto* var1 = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+    auto* innerSum = nodeRegistry.create<TimeSumNode>(nodeRegistry.create<TPlusNode>(literal(0)),
+                                                      nodeRegistry.create<TPlusNode>(literal(1)),
+                                                      var1);
+    auto* outerSum = nodeRegistry.create<TimeSumNode>(nodeRegistry.create<TPlusNode>(literal(0)),
+                                                      nodeRegistry.create<TPlusNode>(literal(1)),
+                                                      innerSum);
+    auto* constraintNode = nodeRegistry.create<LessThanOrEqualNode>(outerSum, literal(10));
+
+    const auto created = buildDropConstraint(*this, constraintNode);
+
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 2);
+    BOOST_CHECK((created == std::array{true, true, false, false}));
+}
+
+BOOST_AUTO_TEST_CASE(time_shift_inside_relative_time_sum_is_checked_at_the_selected_timesteps)
+{
+    // sum(t-2 .. t-1, var1[t+1]) <= 10 on block [0, 3]:
+    // t=0, t=1 -> window starts before the block -> dropped
+    // t=2 -> var1[1] + var1[2] ; t=3 -> var1[2] + var1[3] -> both kept
+    auto* var1 = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+    auto* shifted = nodeRegistry.create<TimeShiftNode>(var1, literal(1));
+    auto* from = nodeRegistry.create<TPlusNode>(nodeRegistry.create<NegationNode>(literal(2)));
+    auto* to = nodeRegistry.create<TPlusNode>(nodeRegistry.create<NegationNode>(literal(1)));
+    auto* sum = nodeRegistry.create<TimeSumNode>(from, to, shifted);
+    auto* constraintNode = nodeRegistry.create<LessThanOrEqualNode>(sum, literal(10));
+
+    const auto created = buildDropConstraint(*this, constraintNode);
+
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 2);
+    BOOST_CHECK((created == std::array{false, false, true, true}));
+}
+
+BOOST_AUTO_TEST_CASE(time_shift_inside_all_time_sum_does_not_drop_instances)
+{
+    // sum(var1[t+1]) + var1 <= 10: the shift is inside a sum over the whole block, where it wraps
+    // cyclically; it does not depend on the constraint instance, so no instance is dropped.
+    auto* var1 = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+    auto* allTimeSum = nodeRegistry.create<AllTimeSumNode>(
+      nodeRegistry.create<TimeShiftNode>(var1, literal(1)));
+    auto* constraintNode = nodeRegistry.create<LessThanOrEqualNode>(
+      nodeRegistry.create<SumNode>(allTimeSum, var1),
+      literal(10));
+
+    const auto created = buildDropConstraint(*this, constraintNode);
+
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 4);
+    BOOST_CHECK((created == std::array{true, true, true, true}));
+}
+
 BOOST_AUTO_TEST_CASE(time_sum_with_inverted_relative_bounds_is_not_dropped)
 {
     // sum(t+1 .. t-1, var1) + var1 <= 10: the window is empty for every t, so even when
