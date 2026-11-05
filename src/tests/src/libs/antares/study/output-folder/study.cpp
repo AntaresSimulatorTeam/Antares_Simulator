@@ -8,6 +8,7 @@
 #include <cstdlib> // setenv
 #include <filesystem>
 #include <fstream>
+#include <memory>
 #include <string>
 
 #include <boost/test/unit_test.hpp>
@@ -138,26 +139,26 @@ BOOST_FIXTURE_TEST_CASE(adequacy_zip_label_now, Fixture)
 
 BOOST_FIXTURE_TEST_CASE(simulation_table_output_directory_is_created_when_enabled, Fixture)
 {
-    Study study;
-    study.folder = outputRoot;
-    study.parameters.outputSelection = OutputSelection{OutputSelection::SimulationTable};
+    auto study = std::make_unique<Study>();
+    study->folder = outputRoot;
+    study->parameters.outputSelection = OutputSelection{OutputSelection::SimulationTable};
 
-    study.prepareOutput();
+    study->prepareOutput();
 
     BOOST_CHECK(
-      fs::is_directory(Antares::IO::Outputs::simulationTableOutputDirectory(study.folderOutput)));
+      fs::is_directory(Antares::IO::Outputs::simulationTableOutputDirectory(study->folderOutput)));
 }
 
 BOOST_FIXTURE_TEST_CASE(simulation_table_output_directory_is_not_created_when_disabled, Fixture)
 {
-    Study study;
-    study.folder = outputRoot;
+    auto study = std::make_unique<Study>();
+    study->folder = outputRoot;
 
-    study.prepareOutput();
-    fs::create_directories(study.folderOutput);
+    study->prepareOutput();
+    fs::create_directories(study->folderOutput);
 
     BOOST_CHECK(
-      !fs::exists(Antares::IO::Outputs::simulationTableOutputDirectory(study.folderOutput)));
+      !fs::exists(Antares::IO::Outputs::simulationTableOutputDirectory(study->folderOutput)));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
