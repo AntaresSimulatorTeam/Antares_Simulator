@@ -358,8 +358,7 @@ std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
                            initLevel,
                            withdrawalEff,
                            injectionEff,
-                           "area '" + std::string(area.name) + "', reservoir '" + stsProperties.name
-                             + "'");
+                           fmt::format("area '{}', reservoir '{}'", area.name, stsProperties.name));
 }
 
 ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
