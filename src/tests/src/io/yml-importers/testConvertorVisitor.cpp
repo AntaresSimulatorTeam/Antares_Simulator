@@ -412,6 +412,82 @@ BOOST_FIXTURE_TEST_CASE(TimeSumExpressionWithMixedBounds, RegistryHolder)
     BOOST_CHECK(cmp.dispatch(expr.node, timeSumNode));
 }
 
+BOOST_AUTO_TEST_CASE(time_sum_and_time_shift_accept_right_side_multiplication)
+{
+    const auto model = createYmlModel();
+    BOOST_CHECK_NO_THROW(convertExpressionToNode("sum(t + 1 - param1 / 2 .. t, varP)", model));
+    BOOST_CHECK_NO_THROW(convertExpressionToNode("varP[t + 1 - param1 / 2]", model));
+}
+
+BOOST_AUTO_TEST_CASE(time_sum_bounds_reject_variables)
+{
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(varP .. 2, varP)", createYmlModel()),
+                          InputError,
+                          containsMessage("Time-sum bounds cannot contain variables"));
+}
+
+BOOST_AUTO_TEST_CASE(time_indices_accept_expressions)
+{
+    const auto model = createYmlModel();
+    for (const std::string indexExpression: {"param2 + 1", "1 + 2"})
+    {
+        const auto expr = convertExpressionToNode("varP[" + indexExpression + "]", model);
+        const auto* timeIndex = dynamic_cast<const Nodes::TimeIndexNode*>(expr.node);
+        BOOST_REQUIRE(timeIndex);
+
+        const auto expectedIndex = convertExpressionToNode(indexExpression, model);
+        Visitors::CompareVisitor cmp;
+        BOOST_CHECK(cmp.dispatch(timeIndex->right(), expectedIndex.node));
+    }
+}
+
+BOOST_AUTO_TEST_CASE(dual_and_reduced_cost_are_rejected_recursively_in_time_sum_bounds)
+{
+    auto model = createYmlModel();
+    model.constraints.push_back(
+      {"constraintA", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml", ""});
+
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(1 + dual(constraintA) .. 2, varP)", model),
+                          InputError,
+                          containsMessage("Time-sum bounds cannot contain 'dual' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(1 + reduced_cost(varP) .. 2, varP)", model),
+                          InputError,
+                          containsMessage(
+                            "Time-sum bounds cannot contain 'reduced_cost' operators"));
+}
+
+BOOST_AUTO_TEST_CASE(time_shift_and_index_arguments_reject_variables)
+{
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[t + varP]", createYmlModel()),
+                          InputError,
+                          containsMessage("Time shift arguments cannot contain variables"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[varP]", createYmlModel()),
+                          InputError,
+                          containsMessage("Time index arguments cannot contain variables"));
+}
+
+BOOST_AUTO_TEST_CASE(dual_and_reduced_cost_are_rejected_recursively_in_shifts_and_indices)
+{
+    auto model = createYmlModel();
+    model.constraints.push_back(
+      {"constraintA", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml", ""});
+
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[t + (1 * dual(constraintA))]", model),
+                          InputError,
+                          containsMessage("Time shift arguments cannot contain 'dual' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[t + (1 * reduced_cost(varP))]", model),
+                          InputError,
+                          containsMessage(
+                            "Time shift arguments cannot contain 'reduced_cost' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[1 + dual(constraintA)]", model),
+                          InputError,
+                          containsMessage("Time index arguments cannot contain 'dual' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[1 + reduced_cost(varP)]", model),
+                          InputError,
+                          containsMessage(
+                            "Time index arguments cannot contain 'reduced_cost' operators"));
+}
+
 BOOST_FIXTURE_TEST_CASE(AlltimeSumExpression, RegistryHolder)
 {
     const auto [expression, div] = expected_expression(registry);
