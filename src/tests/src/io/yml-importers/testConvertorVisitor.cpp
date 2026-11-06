@@ -426,6 +426,21 @@ BOOST_AUTO_TEST_CASE(time_sum_bounds_reject_variables)
                           containsMessage("Time-sum bounds cannot contain variables"));
 }
 
+BOOST_AUTO_TEST_CASE(time_indices_accept_expressions)
+{
+    const auto model = createYmlModel();
+    for (const std::string indexExpression: {"param2 + 1", "1 + 2"})
+    {
+        const auto expr = convertExpressionToNode("varP[" + indexExpression + "]", model);
+        const auto* timeIndex = dynamic_cast<const Nodes::TimeIndexNode*>(expr.node);
+        BOOST_REQUIRE(timeIndex);
+
+        const auto expectedIndex = convertExpressionToNode(indexExpression, model);
+        Visitors::CompareVisitor cmp;
+        BOOST_CHECK(cmp.dispatch(timeIndex->right(), expectedIndex.node));
+    }
+}
+
 BOOST_AUTO_TEST_CASE(dual_and_reduced_cost_are_rejected_recursively_in_time_sum_bounds)
 {
     auto model = createYmlModel();
