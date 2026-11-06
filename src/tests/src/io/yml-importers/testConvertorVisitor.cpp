@@ -426,6 +426,21 @@ BOOST_AUTO_TEST_CASE(time_sum_bounds_reject_variables)
                           containsMessage("Time-sum bounds cannot contain variables"));
 }
 
+BOOST_AUTO_TEST_CASE(dual_and_reduced_cost_are_rejected_recursively_in_time_sum_bounds)
+{
+    auto model = createYmlModel();
+    model.constraints.push_back(
+      {"constraintA", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml", ""});
+
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(1 + dual(constraintA) .. 2, varP)", model),
+                          InputError,
+                          containsMessage("Time-sum bounds cannot contain 'dual' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(1 + reduced_cost(varP) .. 2, varP)", model),
+                          InputError,
+                          containsMessage(
+                            "Time-sum bounds cannot contain 'reduced_cost' operators"));
+}
+
 BOOST_AUTO_TEST_CASE(time_shift_and_index_arguments_reject_variables)
 {
     BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[t + varP]", createYmlModel()),
@@ -434,6 +449,28 @@ BOOST_AUTO_TEST_CASE(time_shift_and_index_arguments_reject_variables)
     BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[varP]", createYmlModel()),
                           InputError,
                           containsMessage("Time index arguments cannot contain variables"));
+}
+
+BOOST_AUTO_TEST_CASE(dual_and_reduced_cost_are_rejected_recursively_in_shifts_and_indices)
+{
+    auto model = createYmlModel();
+    model.constraints.push_back(
+      {"constraintA", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml", ""});
+
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[t + (1 * dual(constraintA))]", model),
+                          InputError,
+                          containsMessage("Time shift arguments cannot contain 'dual' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[t + (1 * reduced_cost(varP))]", model),
+                          InputError,
+                          containsMessage(
+                            "Time shift arguments cannot contain 'reduced_cost' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[1 + dual(constraintA)]", model),
+                          InputError,
+                          containsMessage("Time index arguments cannot contain 'dual' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[1 + reduced_cost(varP)]", model),
+                          InputError,
+                          containsMessage(
+                            "Time index arguments cannot contain 'reduced_cost' operators"));
 }
 
 BOOST_FIXTURE_TEST_CASE(AlltimeSumExpression, RegistryHolder)
