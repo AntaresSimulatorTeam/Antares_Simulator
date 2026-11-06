@@ -3,6 +3,8 @@
 
 #include "antares/solver/simulation/adequacy.h"
 
+#include <optional>
+
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
@@ -147,6 +149,14 @@ bool Adequacy::year(Variable::State& state,
         simulationTables = std::make_unique<IO::Outputs::OptimisationsSimulationTable>(
           inactiveComponents_);
         simulationTables->selectStages(study.parameters.simulationTableStages);
+    }
+
+    // Tables are appended to their file at the end of each week and cleared, so that only
+    // one week of rows is held in memory per parallel year
+    std::optional<LegacySimulationTablesWriter> legacyWriter;
+    if (simulationTables && !study.folderOutput.empty())
+    {
+        legacyWriter.emplace(study.folderOutput, state.year, study.parameters.simuTableFormat);
     }
 
     for (uint w = 0; w != pNbWeeks; ++w)
@@ -363,18 +373,19 @@ bool Adequacy::year(Variable::State& state,
             variables->weekEnd(state);
         }
 
+        if (legacyWriter)
+        {
+            legacyWriter->flush(*simulationTables);
+        }
+
         hourInTheYear += nbHoursInAWeek;
         optWriter.addTime(w, currentProblem.timeMeasure);
         addTimeMeasure(durationCollector, currentProblem.timeMeasure);
     }
 
-    if (simulationTables && !study.folderOutput.empty())
+    if (legacyWriter)
     {
-        LegacySimulationTablesWriter legacyWriter(study.folderOutput,
-                                                  state.year,
-                                                  study.parameters.simuTableFormat);
-        legacyWriter.write(*simulationTables);
-        simulationTables->clear();
+        legacyWriter->finish(*simulationTables);
     }
 
     optWriter.finalize();

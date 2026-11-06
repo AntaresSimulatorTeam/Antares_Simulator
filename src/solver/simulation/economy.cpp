@@ -3,6 +3,8 @@
 
 #include "antares/solver/simulation/economy.h"
 
+#include <optional>
+
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
@@ -137,6 +139,14 @@ bool Economy::year(Variable::State& state,
     currentProblem.ProblemeAResoudre->clearBasis();
     auto* simulationTables = weeklyOptProblems_[numSpace].simulationTables();
 
+    // Tables are appended to their file at the end of each week and cleared, so that only
+    // one week of rows is held in memory per parallel year
+    std::optional<LegacySimulationTablesWriter> legacyWriter;
+    if (simulationTables && !study.folderOutput.empty())
+    {
+        legacyWriter.emplace(study.folderOutput, state.year, study.parameters.simuTableFormat);
+    }
+
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
@@ -221,20 +231,20 @@ bool Economy::year(Variable::State& state,
             }
         }
 
+        if (legacyWriter)
+        {
+            durationCollector("simulation_table_export")
+              << [&legacyWriter, simulationTables]() { legacyWriter->flush(*simulationTables); };
+        }
+
         hourInTheYear += nbHoursInAWeek;
     }
 
-    durationCollector("simulation_table_export") << [this, &state, &simulationTables]()
+    if (legacyWriter)
     {
-        if (simulationTables && !study.folderOutput.empty())
-        {
-            LegacySimulationTablesWriter legacyWriter(study.folderOutput,
-                                                      state.year,
-                                                      study.parameters.simuTableFormat);
-            legacyWriter.write(*simulationTables);
-            simulationTables->clear();
-        }
-    };
+        durationCollector("simulation_table_export")
+          << [&legacyWriter, simulationTables]() { legacyWriter->finish(*simulationTables); };
+    }
 
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);
