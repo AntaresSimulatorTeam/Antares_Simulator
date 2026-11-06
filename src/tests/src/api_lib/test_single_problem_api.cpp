@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
     BOOST_CHECK_EQUAL(constantData.ConstraintsMatrixCoeff[1], -1);
 
     const WeeklyDataFromAntares firstWeekData = getter.getWeeklyData({0, 1});
-    BOOST_CHECK_EQUAL(firstWeekData.name, "problem-1-1--optim-nb-1");
+    BOOST_CHECK_EQUAL(firstWeekData.name, "problem-0-0--optim-nb-1");
 
     // COST
     BOOST_CHECK_CLOSE(firstWeekData.LinearCost[dispatchableVariable],
@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
                       3048.5130614352684,
                       EPSILON); // random initial level
 
-    BOOST_CHECK_EQUAL(secondWeekData.name, "problem-1-2--optim-nb-1");
+    BOOST_CHECK_EQUAL(secondWeekData.name, "problem-0-1--optim-nb-1");
 }
 BOOST_AUTO_TEST_SUITE_END()
 
@@ -726,10 +726,10 @@ ENDATA
     BOOST_CHECK_EQUAL(outputs.at("master.mps"), master);
 
     static constexpr std::string_view structure = R"(master	component.x	0
+problem-0-0--optim-nb-1	component.x	1008
+problem-0-1--optim-nb-1	component.x	1008
+problem-1-0--optim-nb-1	component.x	1008
 problem-1-1--optim-nb-1	component.x	1008
-problem-1-2--optim-nb-1	component.x	1008
-problem-2-1--optim-nb-1	component.x	1008
-problem-2-2--optim-nb-1	component.x	1008
 )";
     BOOST_CHECK_EQUAL(outputs.at("structure.txt"), structure);
 }
