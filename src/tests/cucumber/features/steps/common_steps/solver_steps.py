@@ -770,7 +770,7 @@ def week_hours_from_mps_filename(file_name):
     optim_nb = int(match.group(3))
 
     # Generate 168 time steps for the week
-    week_hours = [(week - 1) * 168 + hour for hour in range(168)]
+    week_hours = [week * 168 + hour for hour in range(168)]
 
     return week_hours
 
@@ -800,7 +800,7 @@ def check_area_balance_rhs(context, area, values_str, constant_str):
     list_values = make_values_from_string(values_str)
     constant = float(constant_str)
 
-    mps_file_path = context.soh.get_output_file_with_name("problem-1-1--optim-nb-1.mps")
+    mps_file_path = context.soh.get_output_file_with_name("problem-0-0--optim-nb-1.mps")
     assert mps_file_path, f"No output file named problem-1-1--optim-nb-1.mps"
 
     mps_problem = mpu.load_problem(mps_file_path)
