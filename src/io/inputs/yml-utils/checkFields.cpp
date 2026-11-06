@@ -179,12 +179,13 @@ void collectFieldErrors(const YAML::Node& node,
         {
             continue;
         }
-        const auto childPath = path.empty() ? key : path + "/" + key;
         const auto& child = entry.second;
         if (child.IsNull() && !field->required && field->shape != Shape::Map)
         {
             continue;
         }
+
+        const auto childPath = path.empty() ? key : path + "/" + key;
         if (child.IsSequence() && field->shape != Shape::Map)
         {
             for (std::size_t i = 0; i < child.size(); ++i)
