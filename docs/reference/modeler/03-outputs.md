@@ -4,6 +4,9 @@ _**This feature is under development and may change frequently**_
 
 Antares modeler automatically creates an **output** directory under the study root directory, to write output files into it.  
 Currently, Antares modeler outputs the simulation table and optionally MPS files for debugging.
+It also exports the system definition used by views to
+`<timestamp output>/views/input/system-for-views.yml`. In a modeler-only run, this file is a copy of
+`input/system.yml`.
 
 ## MPS Files
 

@@ -178,7 +178,7 @@ void exportSystemForView(const Antares::Data::Study& study, Solver::IResultWrite
 {
     YAML::Node systemYaml = generateSystemForView(study);
     std::string yamlContent = YAML::Dump(systemYaml);
-    resultWriter->addEntryFromBuffer("system-for-views.yml", yamlContent);
+    resultWriter->addEntryFromBuffer("views/input/system-for-views.yml", yamlContent);
 }
 
 YAML::Node generateSystemForView(const Antares::Data::Study& study)
