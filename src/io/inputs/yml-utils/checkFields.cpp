@@ -33,14 +33,10 @@ struct ValidationResult
     std::vector<std::string> warnings;
     std::vector<std::string> errors;
 
-    ValidationResult& operator+=(ValidationResult other)
+    ValidationResult& operator+=(const ValidationResult& other)
     {
-        warnings.insert(warnings.end(),
-                        std::make_move_iterator(other.warnings.begin()),
-                        std::make_move_iterator(other.warnings.end()));
-        errors.insert(errors.end(),
-                      std::make_move_iterator(other.errors.begin()),
-                      std::make_move_iterator(other.errors.end()));
+        warnings.insert(warnings.end(), other.warnings.begin(), other.warnings.end());
+        errors.insert(errors.end(), other.errors.begin(), other.errors.end());
         return *this;
     }
 };
