@@ -33,6 +33,20 @@ void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesLoad>(Solver::IR
 }
 
 template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesReservesNeed>(
+  Solver::IResultWriter& writer,
+  const Area& area)
+{
+    if (area.allCapacityReservations
+        && !area.allCapacityReservations->areaCapacityReservations.empty())
+    {
+        const auto& cr = area.allCapacityReservations->areaCapacityReservations.begin()->second;
+        // All reserves in area share the same TS number, so it only stores the FIRST reserve!
+        storeTSnumbers(writer, cr.need->timeseriesNumbers, area.id, "reservesNeed");
+    }
+}
+
+template<>
 void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesSolar>(
   Solver::IResultWriter& writer,
   const Area& area)
