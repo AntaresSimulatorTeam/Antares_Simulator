@@ -6,11 +6,11 @@
 #include <filesystem>
 #include <fmt/format.h>
 #include <unordered_set>
+#include <yaml-cpp/yaml.h>
 
 #include "antares/io/inputs/yml-model/Library.h"
-#include "antares/io/inputs/yml-utils/YmlTreeDisplayer.h"
 
-// Implement convert specializations
+// Convert nodes after structural validation by Parser::parse.
 namespace YAML
 {
 
@@ -30,22 +30,16 @@ inline T as_fallback_default(const Node& n)
     return n.as<T>(T());
 }
 
-void checkMandatoryIdField(const Node& node, const std::string& nodeName);
-
 /// Returns the string value of a field from a YAML node, or empty string if absent/null.
 std::string getFieldFromNode(const Node& node, const std::string& fieldName);
-
-void checkFields(const Node& node,
-                 const std::unordered_set<std::string>& mandatoryFields,
-                 const std::unordered_set<std::string>& optionalFields = {});
 
 template<>
 class convert<Antares::IO::Inputs::YmlModel::PortType>
 {
 public:
-    static bool convertAreaConnectionFields(const Node& node,
+    static void convertAreaConnectionFields(const Node& node,
                                             Antares::IO::Inputs::YmlModel::PortType& rhs);
-    static bool convertThermalCapacityField(const Node& node,
+    static void convertThermalCapacityField(const Node& node,
                                             Antares::IO::Inputs::YmlModel::PortType& rhs);
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::PortType& rhs);
 };
