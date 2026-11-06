@@ -97,7 +97,7 @@ public:
     ** \brief Data related to the link
     **
     */
-    Matrix<> parameters;
+    Matrix parameters;
     TimeSeries directCapacities;
     TimeSeries indirectCapacities;
 

@@ -229,8 +229,8 @@ void HydroInputsChecker::checkFinalReservoirLevelsConfiguration(uint year)
     areas_.each(
       [this, year](Data::Area& area)
       {
-          double initialLevel = scenarioInitialHydroLevels_.entry[area.index][year];
-          double finalLevel = scenarioFinalHydroLevels_.entry[area.index][year];
+          double initialLevel = scenarioInitialHydroLevels_[area.index][year];
+          double finalLevel = scenarioFinalHydroLevels_[area.index][year];
 
           Antares::Solver::FinalLevelValidator validator(area.hydro,
                                                          area.name,

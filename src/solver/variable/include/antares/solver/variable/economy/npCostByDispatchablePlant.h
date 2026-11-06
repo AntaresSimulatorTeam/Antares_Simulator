@@ -44,7 +44,7 @@ struct NonProportionalCostByDispatchablePlantTraits
       unsigned int,
       unsigned int numSpace)
     {
-        return yearlyValues[numSpace][0].hour;
+        return yearlyValues[numSpace][0].hour.data();
     }
 };
 

@@ -16,13 +16,16 @@ StudyData::StudyData():
 {
 }
 
-void StudyData::prepareMatrix(Matrix<float>& m, const Matrix<float>& source) const
+void StudyData::prepareMatrix(std::vector<std::vector<float>>& m, const Matrix& source) const
 {
     uint areaCount = (uint)localareas.size();
-    m.resize(areaCount, areaCount);
-    m.fillUnit();
+    m.assign(areaCount, std::vector<float>(areaCount, 0.f));
+    for (uint i = 0; i < areaCount; ++i)
+    {
+        m[i][i] = 1.f;
+    }
 
-    for (uint x = 1; x < m.width; ++x)
+    for (uint x = 1; x < m.size(); ++x)
     {
         uint areaXindx = localareas[x]->index;
         auto& sourceX = source[areaXindx];
@@ -31,7 +34,7 @@ void StudyData::prepareMatrix(Matrix<float>& m, const Matrix<float>& source) con
         for (uint y = 0; y < x; ++y)
         {
             uint areaYindx = localareas[y]->index;
-            float d = sourceX[areaYindx];
+            const float d = static_cast<float>(sourceX[areaYindx]);
             mX[y] = d;
             m[y][x] = d;
         }

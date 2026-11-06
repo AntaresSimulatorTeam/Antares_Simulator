@@ -37,7 +37,7 @@ bool hydroTSNumberData::apply(Study& study)
         // Alias to the current area
         Area& area = *(study.areas.byIndex[areaIndex]);
         // alias to the current column
-        assert(areaIndex < pTSNumberRules.width);
+        assert(areaIndex < pTSNumberRules.width());
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix = "Hydro: area '" + area.name + "': ";

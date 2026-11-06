@@ -157,7 +157,7 @@ private:
     StudyData pData;
 
     //! The correlation matrix for the current month
-    const Matrix<float>* pCorrMonth;
+    std::vector<std::vector<float>>* pCorrMonth;
 
     bool pNeverInitialized = true;
     uint Nombre_points_intermediaire;

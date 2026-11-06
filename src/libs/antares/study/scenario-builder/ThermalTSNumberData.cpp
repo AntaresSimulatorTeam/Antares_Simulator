@@ -33,7 +33,7 @@ void thermalTSNumberData::setTSnumber(const Antares::Data::ThermalCluster* clust
                                       unsigned int value)
 {
     assert(cluster != nullptr);
-    if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
+    if (year < pTSNumberRules.height() && cluster->areaWideIndex < pTSNumberRules.width())
     {
         pTSNumberRules[cluster->areaWideIndex][year] = value;
     }
@@ -53,11 +53,11 @@ bool thermalTSNumberData::apply(Study& study)
 
     for (auto& cluster: area.thermal.list.each_enabled())
     {
-        assert(cluster->areaWideIndex < pTSNumberRules.width);
+        assert(cluster->areaWideIndex < pTSNumberRules.width());
         const auto& col = pTSNumberRules[cluster->areaWideIndex];
 
         unsigned int tsGenCount = cluster->tsGenBehavior == LocalTSGenerationBehavior::forceNoGen
-                                    ? cluster->series.timeSeries.width
+                                    ? cluster->series.timeSeries.width()
                                     : get_tsGenCount(study);
 
         logprefix = "Thermal: area '" + area.name + "', cluster: '" + cluster->name() + "': ";

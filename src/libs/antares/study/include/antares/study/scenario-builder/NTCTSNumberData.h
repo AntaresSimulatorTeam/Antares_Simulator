@@ -40,7 +40,7 @@ inline unsigned int ntcTSNumberData::get(const Antares::Data::AreaLink* link,
                                          const unsigned int year) const
 {
     assert(link != nullptr);
-    if (year < pTSNumberRules.height && link->indexForArea < pTSNumberRules.width)
+    if (year < pTSNumberRules.height() && link->indexForArea < pTSNumberRules.width())
     {
         const unsigned int index = link->indexForArea;
         return pTSNumberRules[index][year];

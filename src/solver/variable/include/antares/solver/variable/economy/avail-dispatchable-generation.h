@@ -70,7 +70,7 @@ struct AvailableDispatchGenTraits
         for (const auto& cluster: area->thermal.list.each_enabled())
         {
             const auto& availableProduction = cluster->series.getColumn(year);
-            for (unsigned int hour = 0; hour != cluster->series.timeSeries.height; ++hour)
+            for (unsigned int hour = 0; hour != cluster->series.timeSeries.height(); ++hour)
             {
                 yearlyValues.hour[hour] += availableProduction[hour];
             }

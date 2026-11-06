@@ -84,7 +84,7 @@ public:
     //! The intermonthly correlation value
     double intermonthlyCorrelation;
     //! data
-    Matrix<> data;
+    Matrix data;
 
 }; // class PreproHydro
 

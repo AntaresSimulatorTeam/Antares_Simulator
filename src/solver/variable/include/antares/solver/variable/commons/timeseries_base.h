@@ -289,7 +289,7 @@ public:
       unsigned int,
       unsigned int space) const noexcept
     {
-        return yearlyValues[space].hour;
+        return yearlyValues[space].hour.data();
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,

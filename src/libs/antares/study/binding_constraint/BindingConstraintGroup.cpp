@@ -37,10 +37,10 @@ unsigned BindingConstraintGroup::numberOfTimeseries() const
     }
     auto it = std::ranges::max_element(constraints_,
                                        [](const auto& a, const auto& b) {
-                                           return a->RHSTimeSeries().width
-                                                  < b->RHSTimeSeries().width;
+                                           return a->RHSTimeSeries().width()
+                                                  < b->RHSTimeSeries().width();
                                        });
-    return (*it)->RHSTimeSeries().width;
+    return (*it)->RHSTimeSeries().width();
 }
 
 } // namespace Antares::Data

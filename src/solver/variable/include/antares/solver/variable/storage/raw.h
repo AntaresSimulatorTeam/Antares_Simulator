@@ -53,7 +53,7 @@ public:
             case Category::hourly:
                 InternalExportValues<Category::hourly, HOURS_PER_YEAR, VCardT>(
                   report,
-                  ::Antares::Memory::RawPointer(rawdata.hourly));
+                  rawdata.hourly.data());
                 break;
             case Category::daily:
                 InternalExportValues<Category::daily, DAYS_PER_YEAR, VCardT>(report, rawdata.daily);
@@ -97,7 +97,7 @@ public:
 
     Antares::Memory::Stored<double>::ConstReturnType hourlyForSpatialAggregate() const
     {
-        return rawdata.hourly;
+        return rawdata.hourly.data();
     }
 
 public:

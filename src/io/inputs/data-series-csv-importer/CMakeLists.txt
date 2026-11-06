@@ -12,15 +12,12 @@ target_include_directories(data-series-csv-importer
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
-find_package(Boost CONFIG REQUIRED COMPONENTS iostreams)
 # Link dependencies
 target_link_libraries(data-series-csv-importer
         PUBLIC
         Antares::input-error
+        Antares::io
         Antares::linear-problem-data-impl
-        PRIVATE
-        Boost::headers
-        Boost::iostreams
 )
 
 install(DIRECTORY include/antares

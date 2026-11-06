@@ -12,7 +12,7 @@ using namespace Antares;
 
 namespace Antares::Data
 {
-static inline void InterAreaCorrelationSetValue(Matrix<>& m,
+static inline void InterAreaCorrelationSetValue(Matrix& m,
                                                 const char filename[],
                                                 Area* from,
                                                 Area* to,
@@ -91,7 +91,7 @@ static inline bool ReadCorrelationModeFromINI(const IniFile& ini,
 
 static inline void ReadCorrelationCoefficients(Correlation& correlation,
                                                Study& study,
-                                               Matrix<>& m,
+                                               Matrix& m,
                                                const IniFile& ini,
                                                const IniFile::Section& section,
                                                bool warnings)
@@ -157,7 +157,7 @@ static inline void ReadCorrelationCoefficients(Correlation& correlation,
     }
 }
 
-int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, int warnings)
+int InterAreaCorrelationLoadFromIniFile(Matrix* m, AreaList* l, IniFile* ini, int warnings)
 {
     // Asserts
     assert(m);
@@ -203,7 +203,7 @@ int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, 
     return 0;
 }
 
-int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const std::string& filename)
+int InterAreaCorrelationLoadFromFile(Matrix* m, AreaList* l, const std::string& filename)
 {
     /* Asserts */
     assert(m);
@@ -346,7 +346,7 @@ bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool war
     return true;
 }
 
-void Correlation::set(Matrix<>& m, const Area& from, const Area& to, double v)
+void Correlation::set(Matrix& m, const Area& from, const Area& to, double v)
 {
     if (from.index == to.index)
     {
@@ -389,8 +389,8 @@ static inline uint FindMappedAreaName(const AreaName& name,
     return (!area) ? ((uint)-1) : area->index;
 }
 
-static void CopyFromSingleMatrix(const Matrix<>& mxsrc,
-                                 Matrix<>& mxout,
+static void CopyFromSingleMatrix(const Matrix& mxsrc,
+                                 Matrix& mxout,
                                  const Study& studySource,
                                  uint areaSource,
                                  uint areaTarget,
@@ -460,7 +460,6 @@ void Correlation::copyFrom(const Correlation& source,
     }
 
     // copying the annual correlation matrix
-    std::cout << "ANNUAL\n";
     CopyFromSingleMatrix(source.annual,
                          annual,
                          studySource,
@@ -469,7 +468,6 @@ void Correlation::copyFrom(const Correlation& source,
                          mapping,
                          study);
 
-    std::cout << "MONTHLY\n";
     // copying monthly correlation matrix
     for (uint i = 0; i != 12; ++i)
     {
