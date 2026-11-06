@@ -83,9 +83,6 @@ void Namer::SetLinkElementName(unsigned elementIndex, const std::string& element
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[elementIndex] = name;
-    // Alphabetical order per the ST nomenclature
-    const auto& [a1, a2] = (origin_ < destination_) ? std::tie(origin_, destination_)
-                                                    : std::tie(destination_, origin_);
     RecordLegacyVariableInfo(elementIndex,
                              elementType,
                              BuildLinkComponentId(origin_, destination_));
@@ -251,7 +248,7 @@ void Namer::SetThermalClusterReserveElementName(unsigned varIndex,
     names_[varIndex] = name;
     RecordLegacyVariableInfo(varIndex,
                              legacyOutput.empty() ? elementType : legacyOutput,
-                             BuildAreaNodeComponentId(area_.value()));
+                             BuildAreaComponentId(area_.value()));
 }
 
 void VariableNamer::DispatchableProduction(unsigned varIndex, const std::string& clusterName) const
@@ -532,17 +529,17 @@ void VariableNamer::FinalStorage(unsigned varIndex)
 
 void VariableNamer::UnsuppliedEnergy(unsigned varIndex)
 {
-    SetAreaElementNameHour(varIndex, "UnsuppliedEnergy", BuildAreaNodeComponentId(getArea()));
+    SetAreaElementNameHour(varIndex, "UnsuppliedEnergy", BuildAreaComponentId(getArea()));
 }
 
 void VariableNamer::Spillage(unsigned varIndex)
 {
-    SetAreaElementNameHour(varIndex, "Spillage", BuildAreaNodeComponentId(getArea()));
+    SetAreaElementNameHour(varIndex, "Spillage", BuildAreaComponentId(getArea()));
 }
 
 void VariableNamer::AreaBalance(unsigned varIndex)
 {
-    SetAreaElementNameHour(varIndex, "AreaBalance", BuildAreaNodeComponentId(getArea()));
+    SetAreaElementNameHour(varIndex, "AreaBalance", BuildAreaComponentId(getArea()));
 }
 
 void ConstraintNamer::FlowDissociation(unsigned constrIndex) const
@@ -562,7 +559,7 @@ void ConstraintNamer::CsrAreaBalance(unsigned constrIndex) const
 
 void ConstraintNamer::AreaBalance(unsigned constrIndex)
 {
-    SetAreaElementNameHour(constrIndex, "AreaBalance", BuildAreaNodeComponentId(getArea()));
+    SetAreaElementNameHour(constrIndex, "AreaBalance", BuildAreaComponentId(getArea()));
 }
 
 void ConstraintNamer::FictiveLoads(unsigned constrIndex) const

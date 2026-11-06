@@ -23,7 +23,7 @@ Feature: Legacy variables in simulation table
     And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
     And the modeler outputs contain the following entries
       | block | component  | output            | timestep | scenario | value |
-      | 0     | area_node | unsupplied_energy | 33       | 0        | 52    |
+      | 0     | area      | unsupplied_energy | 33       | 0        | 52    |
 
   @short
   Scenario: Extra outputs prop_cost and imbalance_cost are derived from the legacy solution
@@ -65,11 +65,11 @@ Feature: Legacy variables in simulation table
       | 0     | area_thermal_base      | prop_cost      | 33       | 0        | 126000 |
       | 0     | area_thermal_semi base | prop_cost      | 33       | 0        | 75000  |
       | 0     | area_thermal_peak      | prop_cost      | 33       | 0        | 64000  |
-      | 0     | area_node      | imbalance_cost | 33       | 0        | 520000 |
-      | 0     | area_node      | is_loss_of_load | 33      | 0        | 1      |
-      | 0     | area_node      | is_significant_loss_of_load | 33 | 0  | 1      |
-      | 0     | area_node      | price          | 33       | 0        | 10000  |
-      | 0     | area_node      | is_near_loss_of_load | 33  | 0        | 1      |
+      | 0     | area           | imbalance_cost | 33       | 0        | 520000 |
+      | 0     | area           | is_loss_of_load | 33      | 0        | 1      |
+      | 0     | area           | is_significant_loss_of_load | 33 | 0  | 1      |
+      | 0     | area           | price          | 33       | 0        | 10000  |
+      | 0     | area           | is_near_loss_of_load | 33  | 0        | 1      |
       | 0     | area_load      | actual_load    | 33       | 0        | 6111   |
 
   @fast @short
@@ -103,13 +103,13 @@ Feature: Legacy variables in simulation table
     Then the simulation succeeds
     And the modeler outputs contain the following entries with relative tolerance 1e-4
       | block | component  | output                  | timestep | scenario | value   |
-      | 2     | east_west_link | abs_flow                | 425      | 0        | 213.452 |
-      | 2     | east_west_link | minus_flow              | 425      | 0        | -213.452 |
-      | 2     | east_west_link | actual_loop_flow        | 425      | 0        | 0       |
-      | 2     | east_west_link | prop_cost               | 425      | 0        | 213.452 |
-      | 2     | east_west_link | capacity_shadow_price   | 425      | 0        | 1.0     |
-      | 2     | east_node       | price                   | 425      | 0        | 44.926  |
-      | 2     | west_node       | price                   | 425      | 0        | 45.926  |
+      | 2     | east_west       | abs_flow                | 425      | 0        | 213.452 |
+      | 2     | east_west       | minus_flow              | 425      | 0        | -213.452 |
+      | 2     | east_west       | actual_loop_flow        | 425      | 0        | 0       |
+      | 2     | east_west       | prop_cost               | 425      | 0        | 213.452 |
+      | 2     | east_west       | capacity_shadow_price   | 425      | 0        | 1.0     |
+      | 2     | east            | price                   | 425      | 0        | 44.926  |
+      | 2     | west            | price                   | 425      | 0        | 45.926  |
 
       # is_directly/indirectly_congested compare the (signed) DirectFlow to the
       # link's per-hour capacity (3000 MW direct and indirect, constant in this
@@ -117,8 +117,8 @@ Feature: Legacy variables in simulation table
       # indicators are 0; the saturation case (= 1) is covered by the unit
       # tests, since no realistic single-week dispatch on this fixture pushes
       # the link to 3000 MW.
-      | 2     | east_west_link | is_directly_congested   | 425      | 0        | 0       |
-      | 2     | east_west_link | is_indirectly_congested | 425      | 0        | 0       |
+      | 2     | east_west       | is_directly_congested   | 425      | 0        | 0       |
+      | 2     | east_west       | is_indirectly_congested | 425      | 0        | 0       |
 
   @fast @short
   Scenario: hydro_shadow_price is emitted when hydro-pricing-mode is accurate
@@ -227,14 +227,14 @@ Feature: Legacy variables in simulation table
     And in input "links/east/capacities/west_indirect.txt" the time series is emptied
     When I run antares simulator with --output=simulation-tables
     Then the simulation succeeds
-    And the modeler outputs contain no "abs_flow" entries for component "east_west_link"
-    And the modeler outputs contain no "minus_flow" entries for component "east_west_link"
-    And the modeler outputs contain no "out_port.flow" entries for component "east_west_link"
-    And the modeler outputs contain no "in_port.flow" entries for component "east_west_link"
-    And the modeler outputs contain no "prop_cost" entries for component "east_west_link"
-    And the modeler outputs contain no "capacity_shadow_price" entries for component "east_west_link"
-    And the modeler outputs contain no "is_directly_congested" entries for component "east_west_link"
-    And the modeler outputs contain no "is_indirectly_congested" entries for component "east_west_link"
+    And the modeler outputs contain no "abs_flow" entries for component "east_west"
+    And the modeler outputs contain no "minus_flow" entries for component "east_west"
+    And the modeler outputs contain no "out_port.flow" entries for component "east_west"
+    And the modeler outputs contain no "in_port.flow" entries for component "east_west"
+    And the modeler outputs contain no "prop_cost" entries for component "east_west"
+    And the modeler outputs contain no "capacity_shadow_price" entries for component "east_west"
+    And the modeler outputs contain no "is_directly_congested" entries for component "east_west"
+    And the modeler outputs contain no "is_indirectly_congested" entries for component "east_west"
 
   @fast @short
   Scenario: actual_num_units_on is emitted in accurate unit-commitment mode
@@ -298,8 +298,8 @@ Feature: Legacy variables in simulation table
       | 0     | area_thermal_base      | actual_num_units_on | 33       | 0        | 4     |
       | 0     | area_thermal_semi base | actual_num_units_on | 33       | 0        | 5     |
       | 0     | area_thermal_peak      | actual_num_units_on | 33       | 0        | 8     |
-      | 0     | area_node      | is_loss_of_load     | 33       | 0        | 1     |
-      | 0     | area_node      | is_significant_loss_of_load | 33 | 0     | 1     |
+      | 0     | area           | is_loss_of_load     | 33       | 0        | 1     |
+      | 0     | area           | is_significant_loss_of_load | 33 | 0     | 1     |
       | 0     | area_thermal_base      | co2_emissions        | 33       | 0        | 4320  |
       | 0     | area_thermal_semi base | co2_emissions        | 33       | 0        | 900   |
       | 0     | area_thermal_peak      | co2_emissions        | 33       | 0        | 560   |
@@ -321,7 +321,7 @@ Feature: Legacy variables in simulation table
       | 0     | area_thermal_semi base | prop_cost      | 33       | 0        | 75000  |
       | 0     | area_thermal_peak      | prop_cost      | 33       | 0        | 64000  |
       | 0     | area_thermal_base      | non_prop_cost | 33       | 0        | 6800  |
-      | 0     | area_node      | imbalance_cost | 33       | 0        | 1040000 |
+      | 0     | area           | imbalance_cost | 33       | 0        | 1040000 |
 
 
   @short
@@ -350,19 +350,19 @@ Feature: Legacy variables in simulation table
     And the simulation tables cover exactly the stages "optim-nb-1, optim-nb-2, peak-shaving, adq-patch"
     And the modeler outputs from stage "optim-nb-2" contain the following entries with relative tolerance 1e-4
       | block | component              | output            | timestep | scenario | value  |
-      | 0     | areain-1_node          | unsupplied_energy | 0        | 0        | 0      |
-      | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 400    |
-      | 0     | areain-1_areain-2_link | flow              | 0        | 0        | -101   |
-      | 0     | areain-1_node          | price             | 0        | 0        | 800    |
-      | 0     | areain-2_node          | price             | 0        | 0        | 800    |
+      | 0     | areain-1              | unsupplied_energy | 0        | 0        | 0      |
+      | 0     | areain-2              | unsupplied_energy | 0        | 0        | 400    |
+      | 0     | areain-1_areain-2     | flow              | 0        | 0        | -101   |
+      | 0     | areain-1              | price             | 0        | 0        | 800    |
+      | 0     | areain-2              | price             | 0        | 0        | 800    |
 
     # No managed hydro in this study, so peak-shaving / remix hydro has nothing
     # to move: the stage exists and reproduces optim-nb-2 exactly.
     And the modeler outputs from stage "peak-shaving" contain the following entries with relative tolerance 1e-4
       | block | component              | output            | timestep | scenario | value  |
-      | 0     | areain-1_node          | unsupplied_energy | 0        | 0        | 0      |
-      | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 400    |
-      | 0     | areain-1_areain-2_link | flow              | 0        | 0        | -101   |
+      | 0     | areain-1              | unsupplied_energy | 0        | 0        | 0      |
+      | 0     | areain-2              | unsupplied_energy | 0        | 0        | 400    |
+      | 0     | areain-1_areain-2     | flow              | 0        | 0        | -101   |
 
     # Curtailment sharing redistributes the shortfall between the two inside
     # areas, conserving the total: 199.9526 + 200.0474 = 400.0000. The link
@@ -374,9 +374,9 @@ Feature: Legacy variables in simulation table
     # relative tolerance on the quantities.
     And the modeler outputs from stage "adq-patch" contain the following entries with relative tolerance 1e-4
       | block | component              | output            | timestep | scenario | value    |
-      | 0     | areain-1_node          | unsupplied_energy | 0        | 0        | 199.9526 |
-      | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 200.0474 |
-      | 0     | areain-1_areain-2_link | flow              | 0        | 0        | 98.9526  |
+      | 0     | areain-1              | unsupplied_energy | 0        | 0        | 199.9526 |
+      | 0     | areain-2              | unsupplied_energy | 0        | 0        | 200.0474 |
+      | 0     | areain-1_areain-2     | flow              | 0        | 0        | 98.9526  |
 
     # price exercises the *other* half of the refresh: the duals, read back
     # through AdresseOuPlacerLaValeurDesCoutsMarginaux, which
@@ -388,8 +388,8 @@ Feature: Legacy variables in simulation table
     # study cost, so these are exact and need no tolerance.
     And the modeler outputs from stage "adq-patch" contain the following entries
       | block | component     | output | timestep | scenario | value |
-      | 0     | areain-1_node | price  | 0        | 0        | 1000  |
-      | 0     | areain-2_node | price  | 0        | 0        | 800   |
+      | 0     | areain-1     | price  | 0        | 0        | 1000  |
+      | 0     | areain-2     | price  | 0        | 0        | 800   |
 
   @short
   Scenario: Only the selected stages get a simulation table
@@ -405,13 +405,13 @@ Feature: Legacy variables in simulation table
     And the modeler outputs are read from stage "optim-nb-2"
     And the modeler outputs contain the following entries with relative tolerance 1e-4
       | block | component              | output            | timestep | scenario | value |
-      | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 400   |
-      | 0     | areain-1_areain-2_link | flow              | 0        | 0        | -101  |
+      | 0     | areain-2              | unsupplied_energy | 0        | 0        | 400   |
+      | 0     | areain-1_areain-2     | flow              | 0        | 0        | -101  |
     And the modeler outputs are read from stage "adq-patch"
     And the modeler outputs contain the following entries with relative tolerance 1e-4
       | block | component              | output            | timestep | scenario | value    |
-      | 0     | areain-2_node          | unsupplied_energy | 0        | 0        | 200.0474 |
-      | 0     | areain-1_areain-2_link | flow              | 0        | 0        | 98.9526  |
+      | 0     | areain-2              | unsupplied_energy | 0        | 0        | 200.0474 |
+      | 0     | areain-1_areain-2     | flow              | 0        | 0        | 98.9526  |
 
 
   @short
