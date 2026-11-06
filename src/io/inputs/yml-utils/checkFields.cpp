@@ -32,6 +32,17 @@ struct ValidationResult
 {
     std::vector<std::string> warnings;
     std::vector<std::string> errors;
+
+    ValidationResult& operator+=(ValidationResult other)
+    {
+        warnings.insert(warnings.end(),
+                        std::make_move_iterator(other.warnings.begin()),
+                        std::make_move_iterator(other.warnings.end()));
+        errors.insert(errors.end(),
+                      std::make_move_iterator(other.errors.begin()),
+                      std::make_move_iterator(other.errors.end()));
+        return *this;
+    }
 };
 
 std::vector<std::string> diffSet(const std::unordered_set<std::string>& setA,
@@ -85,11 +96,11 @@ std::string buildMessage(const YAML::Node& node, const std::string& path, const 
                        displayer.buildMarkedTree(markedUnexpected, findings.missing));
 }
 
-void validateMap(const YAML::Node& node,
-                 const std::span<const Field> fields,
-                 const std::string& path,
-                 ValidationResult& result)
+ValidationResult validateMap(const YAML::Node& node,
+                             const std::span<const Field> fields,
+                             const std::string& path)
 {
+    ValidationResult result;
     std::unordered_set<std::string> actualKeys;
     std::vector<std::string> duplicated;
     for (const auto& entry: node)
@@ -142,6 +153,7 @@ void validateMap(const YAML::Node& node,
                        path,
                        {.missing = missing, .duplicated = duplicated, .nullIds = nullIds}));
     }
+    return result;
 }
 
 std::string sequenceItemName(const YAML::Node& node, std::size_t index)
@@ -157,18 +169,18 @@ std::string sequenceItemName(const YAML::Node& node, std::size_t index)
     return "[" + std::to_string(index) + "]";
 }
 
-void collectFieldErrors(const YAML::Node& node,
-                        const std::span<const Field> fields,
-                        const std::string& path,
-                        ValidationResult& result)
+ValidationResult collectFieldErrors(const YAML::Node& node,
+                                    const std::span<const Field> fields,
+                                    const std::string& path)
 {
+    ValidationResult result;
     if (!node.IsMap())
     {
         result.errors.push_back(
           fmt::format("Line {}: expected a YAML mapping in '{}'.", node.Mark().line + 1, path));
-        return;
+        return result;
     }
-    validateMap(node, fields, path, result);
+    result += validateMap(node, fields, path);
 
     // Visit every occurrence, including duplicated sections, without looking up ambiguous keys.
     for (const auto& entry: node)
@@ -196,22 +208,14 @@ void collectFieldErrors(const YAML::Node& node,
             {
                 auto item = child[i];
                 const auto itemPath = childPath + "/" + sequenceItemName(item, i);
-                collectFieldErrors(item, field->children, itemPath, result);
+                result += collectFieldErrors(item, field->children, itemPath);
             }
         }
         else
         {
-            collectFieldErrors(child, field->children, childPath, result);
+            result += collectFieldErrors(child, field->children, childPath);
         }
     }
-}
-
-ValidationResult validateFields(const YAML::Node& node,
-                                const std::span<const Field> fields,
-                                const std::string& path)
-{
-    ValidationResult result;
-    collectFieldErrors(node, fields, path, result);
     return result;
 }
 
@@ -237,12 +241,12 @@ void handleValidationResult(const ValidationResult& result)
 void checkFields(const YAML::Node& node, const Field& field, const std::string& path)
 {
     const auto fields = std::array{field};
-    handleValidationResult(validateFields(node, fields, path));
+    handleValidationResult(collectFieldErrors(node, fields, path));
 }
 
 void checkFields(const YAML::Node& node, const std::vector<Field>& fields, const std::string& path)
 {
-    handleValidationResult(validateFields(node, fields, path));
+    handleValidationResult(collectFieldErrors(node, fields, path));
 }
 
 } // namespace Antares::IO::Inputs::YmlUtils
