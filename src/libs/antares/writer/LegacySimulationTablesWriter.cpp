@@ -49,12 +49,9 @@ StreamingSimulationTableWriter& LegacySimulationTablesWriter::streamFor(Stage st
     if (it == streams_.end())
     {
         auto filepath = makeSimuTableFilePath(folder_, year_, stageName(stage));
-        it = streams_
-               .emplace(stage,
-                        std::make_unique<StreamingSimulationTableWriter>(filepath, tableFormat_))
-               .first;
+        it = streams_.emplace(stage, StreamingSimulationTableWriter(filepath, tableFormat_)).first;
     }
-    return *it->second;
+    return it->second;
 }
 
 void LegacySimulationTablesWriter::flush(const OptimisationsSimulationTable& tables)
@@ -86,7 +83,7 @@ void LegacySimulationTablesWriter::finish(const OptimisationsSimulationTable& ta
     }
     for (auto& [stage, stream]: streams_)
     {
-        stream->close();
+        stream.close();
     }
     streams_.clear();
 }
@@ -112,7 +109,7 @@ void LegacySimulationTablesWriter::write(const OptimisationsSimulationTable& tab
     }
     for (auto& [stage, stream]: streams_)
     {
-        stream->close();
+        stream.close();
     }
     streams_.clear();
 }

@@ -183,6 +183,12 @@ StreamingSimulationTableWriter::~StreamingSimulationTableWriter()
     }
 }
 
+StreamingSimulationTableWriter::StreamingSimulationTableWriter(StreamingSimulationTableWriter&&)
+  = default;
+StreamingSimulationTableWriter& StreamingSimulationTableWriter::operator=(
+  StreamingSimulationTableWriter&&)
+  = default;
+
 void StreamingSimulationTableWriter::append(const IO::Outputs::SimulationTable& simuTable)
 {
     if (simuTable.columns().empty())

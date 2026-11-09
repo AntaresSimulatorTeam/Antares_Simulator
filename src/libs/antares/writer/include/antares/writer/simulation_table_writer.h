@@ -50,6 +50,8 @@ public:
     ~StreamingSimulationTableWriter();
     StreamingSimulationTableWriter(const StreamingSimulationTableWriter&) = delete;
     StreamingSimulationTableWriter& operator=(const StreamingSimulationTableWriter&) = delete;
+    StreamingSimulationTableWriter(StreamingSimulationTableWriter&& other);
+    StreamingSimulationTableWriter& operator=(StreamingSimulationTableWriter&& other);
 
     /// Appends the rows currently stored in the table. No-op if the table has no row.
     void append(const IO::Outputs::SimulationTable& simuTable);
