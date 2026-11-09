@@ -4,7 +4,6 @@
 #include "antares/io/inputs/yml-utils/checkFields.h"
 
 #include <algorithm>
-#include <array>
 #include <fmt/format.h>
 #include <iterator>
 #include <span>
@@ -234,7 +233,9 @@ void handleValidationResult(const ValidationResult& result)
 
 } // namespace
 
-void checkFields(const YAML::Node& node, const std::vector<ExpectedField>& expectedFields, const std::string& path)
+void checkFields(const YAML::Node& node,
+                 const std::vector<ExpectedField>& expectedFields,
+                 const std::string& path)
 {
     handleValidationResult(collectFieldErrors(node, expectedFields, path));
 }
