@@ -10,9 +10,37 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/exception/LoadingError.hpp>
 #include "antares/study/study.h"
 
 using namespace Antares::Data;
+
+namespace
+{
+class StudyWithModelerLoading: public Study
+{
+public:
+    using Study::loadModelerComponents;
+};
+
+struct ModelerLoadingFixture
+{
+    ModelerLoadingFixture()
+    {
+        studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+        inputPath = createFolder(studyPath.string(), "input");
+    }
+
+    ~ModelerLoadingFixture()
+    {
+        std::filesystem::remove_all(studyPath);
+    }
+
+    std::filesystem::path studyPath;
+    std::filesystem::path inputPath;
+    StudyWithModelerLoading study;
+};
+} // namespace
 
 /*!
  * Study with one area named "A"
@@ -365,6 +393,78 @@ BOOST_AUTO_TEST_CASE(add_area_with_forbidden_character_returns_nullptr)
     const auto area = addAreaToListOfAreas(study->areas, "area*name");
     BOOST_CHECK(area == nullptr);
     BOOST_CHECK_EQUAL(study->areas.size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(model_libraries_without_system_file_are_ignored, ModelerLoadingFixture)
+{
+    createFolder(inputPath.string(), "model-libraries");
+    study.relocate(studyPath);
+
+    study.loadModelerComponents();
+
+    BOOST_CHECK(study.getModelerData() == nullptr);
+}
+
+BOOST_FIXTURE_TEST_CASE(system_file_with_component_and_no_library_directory_fails,
+                        ModelerLoadingFixture)
+{
+    {
+        std::ofstream systemFile(inputPath / "system.yml");
+        systemFile << "system:\n"
+                      "  id: system_without_library\n"
+                      "  components:\n"
+                      "    - id: N\n"
+                      "      model: std.generator\n";
+    }
+    std::ofstream(inputPath / "optim-config.yml");
+    study.relocate(studyPath);
+
+    BOOST_CHECK_THROW(study.loadModelerComponents(), Antares::Error::LoadingError);
+}
+
+BOOST_FIXTURE_TEST_CASE(system_file_loads_modeler_data_with_library, ModelerLoadingFixture)
+{
+    const auto libraryDirectory = createFolder(inputPath.string(), "model-libraries");
+    {
+        std::ofstream libraryFile(std::filesystem::path(libraryDirectory) / "std.yml");
+        libraryFile << "library:\n"
+                       "  id: std\n"
+                       "  description: test library\n"
+                       "  port-types: []\n"
+                       "  models:\n"
+                       "    - id: generator\n"
+                       "      description: test generator\n";
+    }
+    {
+        std::ofstream systemFile(inputPath / "system.yml");
+        systemFile << "system:\n"
+                      "  id: test_system\n"
+                      "  components:\n"
+                      "    - id: N\n"
+                      "      model: std.generator\n";
+    }
+    std::ofstream(inputPath / "optim-config.yml");
+    study.relocate(studyPath);
+
+    study.loadModelerComponents();
+
+    BOOST_CHECK(study.getModelerData() != nullptr);
+}
+
+BOOST_FIXTURE_TEST_CASE(system_file_without_optim_config_fails_modeler_loading,
+                        ModelerLoadingFixture)
+{
+    {
+        std::ofstream systemFile(inputPath / "system.yml");
+        systemFile << "system:\n"
+                      "  id: test_system\n"
+                      "  components:\n"
+                      "    - id: N\n"
+                      "      model: std.generator\n";
+    }
+    study.relocate(studyPath);
+
+    BOOST_CHECK_THROW(study.loadModelerComponents(), Antares::Error::LoadingError);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // version
