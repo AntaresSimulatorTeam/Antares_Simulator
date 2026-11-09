@@ -428,7 +428,7 @@ children:
 )");
     BOOST_CHECK_EXCEPTION(
       (YmlUtils::checkFields(node,
-                             std::vector<YmlUtils::Field>{{"id", true},
+                             std::vector<YmlUtils::ExpectedField>{{"id", true},
                                                           {"children", false, {{"value", true}}}})),
       InputError,
       [](const InputError& e)
@@ -479,7 +479,7 @@ children:
     CaptureAntaresLogs logs;
     BOOST_CHECK_NO_THROW(
       (YmlUtils::checkFields(node,
-                             std::vector<YmlUtils::Field>{{"children", false, {{"id", true}}}},
+                             std::vector<YmlUtils::ExpectedField>{{"children", false, {{"id", true}}}},
                              "explicit-path")));
     BOOST_CHECK_EQUAL(YAML::Dump(node), before);
     BOOST_REQUIRE_EQUAL(logs.getWarnings().size(), 1);
@@ -487,7 +487,7 @@ children:
     BOOST_CHECK(logs.getWarnings().begin()->find("original-root") == std::string::npos);
     BOOST_CHECK_THROW(
       (YmlUtils::checkFields(node,
-                             std::vector<YmlUtils::Field>{
+                             std::vector<YmlUtils::ExpectedField>{
                                {"children", false, {{"id", true}, {"value", true}}}})),
       InputError);
     BOOST_CHECK_EQUAL(YAML::Dump(node), before);
@@ -499,7 +499,7 @@ BOOST_AUTO_TEST_CASE(mixed_findings_keep_warnings_separate_from_errors)
     CaptureAntaresLogs logs;
     BOOST_CHECK_EXCEPTION(
       (YmlUtils::checkFields(node,
-                             std::vector<YmlUtils::Field>{{"id", true}, {"value", true}},
+                             std::vector<YmlUtils::ExpectedField>{{"id", true}, {"value", true}},
                              "root")),
       InputError,
       [](const InputError& e)
@@ -521,7 +521,7 @@ BOOST_AUTO_TEST_CASE(null_model_ids_are_rejected_without_tag_context)
 {
     auto node = YAML::Load("id: null");
     node.SetTag("unrelated-tag");
-    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node, YmlUtils::Field{"id", true}, "model"),
+    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node, YmlUtils::ExpectedField{"id", true}, "model"),
                           InputError,
                           [](const InputError& e)
                           {
@@ -540,7 +540,7 @@ BOOST_AUTO_TEST_CASE(nested_unknown_field_warning_matches_complete_tree)
                                  "    typo: ignored\n");
     CaptureAntaresLogs logs;
     YmlUtils::checkFields(node,
-                          std::vector<YmlUtils::Field>{{"children", false, {{"id", true}}}},
+                          std::vector<YmlUtils::ExpectedField>{{"children", false, {{"id", true}}}},
                           "library");
     BOOST_REQUIRE_EQUAL(logs.getWarnings().size(), 1);
     BOOST_CHECK_EQUAL(*logs.getWarnings().begin(),
@@ -591,7 +591,7 @@ BOOST_AUTO_TEST_CASE(sibling_errors_match_complete_trees_with_index_fallback)
                                  "  - id: null\n"
                                  "  - {}\n");
     BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node,
-                                                 std::vector<YmlUtils::Field>{
+                                                 std::vector<YmlUtils::ExpectedField>{
                                                    {"children", false, {{"value", true}, {"id"}}}},
                                                  "root")),
                           InputError,
@@ -633,7 +633,7 @@ BOOST_AUTO_TEST_CASE(root_warning_matches_complete_message_without_path)
 {
     const auto node = YAML::Load("z: ignored\na: ignored\n");
     CaptureAntaresLogs logs;
-    YmlUtils::checkFields(node, std::vector<YmlUtils::Field>{});
+    YmlUtils::checkFields(node, std::vector<YmlUtils::ExpectedField>{});
     BOOST_REQUIRE_EQUAL(logs.getWarnings().size(), 1);
     BOOST_CHECK_EQUAL(*logs.getWarnings().begin(),
                       "Line 1 column 1\n"
@@ -712,7 +712,7 @@ BOOST_AUTO_TEST_CASE(non_map_sequence_items_do_not_hide_other_field_errors)
     const auto node = YAML::Load("children:\n  - scalar\n  - null\n  - {}\n");
     BOOST_CHECK_EXCEPTION(
       (YmlUtils::checkFields(node,
-                             std::vector<YmlUtils::Field>{{"children", false, {{"value", true}}}},
+                             std::vector<YmlUtils::ExpectedField>{{"children", false, {{"value", true}}}},
                              "root")),
       InputError,
       [](const InputError& e)

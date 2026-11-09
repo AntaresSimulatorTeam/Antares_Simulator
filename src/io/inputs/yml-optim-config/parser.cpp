@@ -11,9 +11,9 @@ namespace Antares::IO::Inputs::YmlOptimConfig
 namespace
 {
 // Keep this schema in sync with field reads in decoders.cpp.
-const std::vector<YmlUtils::Field> locationFields = {{"id", true}, {"location", true}};
+const std::vector<YmlUtils::ExpectedField> locationFields = {{"id", true}, {"location", true}};
 
-const std::vector<YmlUtils::Field> optimConfigFields = {
+const std::vector<YmlUtils::ExpectedField> optimConfigFields = {
   {"models",
    false,
    {{"id", true},

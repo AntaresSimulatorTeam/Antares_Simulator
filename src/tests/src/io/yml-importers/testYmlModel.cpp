@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_CASE(checkFields_reports_unexpected_and_missing_keys)
         c: 3
     )");
     BOOST_CHECK_EXCEPTION(
-      (YmlUtils::checkFields(node, std::vector<YmlUtils::Field>{{"a", true}, {"b", true}})),
+      (YmlUtils::checkFields(node, std::vector<YmlUtils::ExpectedField>{{"a", true}, {"b", true}})),
       InputError,
       containsMessage("Missing field: b"));
 }
@@ -167,7 +167,7 @@ BOOST_AUTO_TEST_CASE(checkFields_warns_for_unexpected_keys_only)
         c: 3
     )");
     CaptureAntaresLogs logs;
-    BOOST_CHECK_NO_THROW((YmlUtils::checkFields(node, std::vector<YmlUtils::Field>{{"a", true}})));
+    BOOST_CHECK_NO_THROW((YmlUtils::checkFields(node, std::vector<YmlUtils::ExpectedField>{{"a", true}})));
     BOOST_REQUIRE_EQUAL(logs.getWarnings().size(), 1);
     BOOST_CHECK(logs.getWarnings().begin()->find("Unrecognised field: c") != std::string::npos);
     BOOST_CHECK(logs.getWarnings().begin()->find("|__X c at line 3") != std::string::npos);
@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE(checkFields_accepts_absent_optional_fields_without_warning)
     )");
     CaptureAntaresLogs logs;
     BOOST_CHECK_NO_THROW(
-      (YmlUtils::checkFields(node, std::vector<YmlUtils::Field>{{"a", true}, {"b"}})));
+      (YmlUtils::checkFields(node, std::vector<YmlUtils::ExpectedField>{{"a", true}, {"b"}})));
     BOOST_CHECK(logs.getWarnings().empty());
 }
 
@@ -190,7 +190,7 @@ BOOST_AUTO_TEST_CASE(checkFields_rejects_duplicated_keys)
         id: supply
         id: demand
     )");
-    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node, std::vector<YmlUtils::Field>{{"id", true}})),
+    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node, std::vector<YmlUtils::ExpectedField>{{"id", true}})),
                           InputError,
                           containsMessage("Duplicated field: id"));
 }
