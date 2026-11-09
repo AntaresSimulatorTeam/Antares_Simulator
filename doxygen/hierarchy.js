@@ -431,6 +431,7 @@ var hierarchy =
     ] ],
     [ "Antares::Logs::Verbosity::Fatal", "structAntares_1_1Logs_1_1Verbosity_1_1Fatal.html", null ],
     [ "FictitiousLoadData", "structFictitiousLoadData.html", null ],
+    [ "Antares::IO::Inputs::YmlUtils::Field", "structAntares_1_1IO_1_1Inputs_1_1YmlUtils_1_1Field.html", null ],
     [ "Benchmarking::FileContent", "classBenchmarking_1_1FileContent.html", null ],
     [ "PathList::FileInfo", "structPathList_1_1FileInfo.html", null ],
     [ "Antares::LinearProblem::Api::FillContext", "classAntares_1_1LinearProblem_1_1Api_1_1FillContext.html", null ],

@@ -810,10 +810,15 @@ var namespaces_dup =
             [ "System", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System" ]
           ] ],
           [ "YmlUtils", null, [
+            [ "Field", "structAntares_1_1IO_1_1Inputs_1_1YmlUtils_1_1Field.html", "structAntares_1_1IO_1_1Inputs_1_1YmlUtils_1_1Field" ],
+            [ "Shape", "checkFields_8h.html#ad63d56ee887278c40e3355329c2109d7", [
+              [ "MapOrSequence", "checkFields_8h.html#ad63d56ee887278c40e3355329c2109d7a82837e98ca71c4a571bc052faf4eb30c", null ],
+              [ "Map", "checkFields_8h.html#ad63d56ee887278c40e3355329c2109d7a46f3ea056caa3126b91f3f70beea068c", null ]
+            ] ],
+            [ "checkFields", "checkFields_8cpp.html#a363e4d83f54c564609fa2a76aaad781d", null ],
+            [ "checkFields", "checkFields_8cpp.html#a5763c3b142bd8c08e99520c4daf50fc4", null ],
             [ "getBaseTree", "path__utils_8h.html#a1fd1983765ec84e77c3161a8a7b2df40", null ],
-            [ "printPathTree", "path__utils_8h.html#a919685a630949eebbc5312ec44eebdda", null ],
-            [ "requireMap", "path__utils_8cpp.html#ad1e673ca91968012c1aa0bf603e441d6", null ],
-            [ "requireMap", "path__utils_8h.html#ac656c70614dac8ef5ce6915a0b5d5665", null ]
+            [ "printPathTree", "path__utils_8h.html#a919685a630949eebbc5312ec44eebdda", null ]
           ] ],
           [ "InputError", "classAntares_1_1IO_1_1Inputs_1_1InputError.html", null ]
         ] ],
@@ -1147,6 +1152,7 @@ var namespaces_dup =
           [ "ErrorLoadingYaml", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html", "classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml" ],
           [ "convertIntoSystemLibs", "readLibraries_8cpp.html#a4c4fde5299afed81da67e3ec8f8991bb", null ],
           [ "fetchModelInLibrairies", "readLibraries_8cpp.html#a897616993842a84f6267d85100dfdee3", null ],
+          [ "handleInputError", "handleErrors_8cpp.html#a60f20705ec922407cb20a171087de3ad", null ],
           [ "handleYamlError", "handleErrors_8cpp.html#a3931b46cb45d08d279deff1b66f27d16", null ],
           [ "loadAll", "loadFiles_8h.html#ac700c1dfcefe4544446c5fabebd7fb9b", null ],
           [ "loadDataSeries", "loadFiles_8h.html#aee47b90032e29baa24843ea6ffdde1ca", null ],
@@ -1161,6 +1167,7 @@ var namespaces_dup =
           [ "loadSingleLibrary", "readLibraries_8cpp.html#ac8aa90a4721ecdd2fc4553869e1e7576", null ],
           [ "loadSystem", "readSystem_8cpp.html#a6b61e095796b0529468487365c439a17", null ],
           [ "loadSystem", "loadFiles_8h.html#a9c401d72cdb58ec72d3c1172d5c7c29e", null ],
+          [ "markInputError", "handleErrors_8cpp.html#adaba383d4243ac406e42d4a4feda9990", null ],
           [ "markYamlError", "handleErrors_8cpp.html#a86648f8563a8e962d4141f6a31bb4906", null ],
           [ "parseModelerParameters", "parseModelerParameters_8h.html#aec770ce15d1ae94b5c46e6d8575f038f", null ],
           [ "parseScenarioGroupRepository", "readScenarioGroup_8cpp.html#a4e550d1b902922f25bf343fecbb3a662", null ],
@@ -2503,10 +2510,6 @@ var namespaces_dup =
       [ "convert< Power >", "structYAML_1_1convert_3_01Power_01_4.html", null ],
       [ "convert< Monster >", "structYAML_1_1convert_3_01Monster_01_4.html", null ],
       [ "as_fallback_default", "yml-model_2include_2antares_2io_2inputs_2yml-model_2decoders_8h.html#a1f73904464749314bdb46864a93c5dae", null ],
-      [ "build_error_message", "yml-model_2decoders_8cpp.html#a34f9b1d9c39e7bf135418198b25b9567", null ],
-      [ "checkFields", "yml-model_2decoders_8cpp.html#adabf8c8e8f33d9d474e18a697dc89b83", null ],
-      [ "checkMandatoryIdField", "yml-model_2decoders_8cpp.html#a3be392c252fb5f6f3318ebeee55671ab", null ],
-      [ "diffSet", "yml-model_2decoders_8cpp.html#ab51c41c080021d52febe90172ea26be2", null ],
       [ "getFieldFromNode", "yml-model_2decoders_8cpp.html#afc5b7de82649b3ced3d8b91f2dc536fc", null ]
     ] ]
 ];

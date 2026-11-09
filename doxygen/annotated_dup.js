@@ -309,6 +309,9 @@ var annotated_dup =
             [ "ThermalCapacityConnection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection" ],
             [ "System", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System" ]
           ] ],
+          [ "YmlUtils", null, [
+            [ "Field", "structAntares_1_1IO_1_1Inputs_1_1YmlUtils_1_1Field.html", "structAntares_1_1IO_1_1Inputs_1_1YmlUtils_1_1Field" ]
+          ] ],
           [ "InputError", "classAntares_1_1IO_1_1Inputs_1_1InputError.html", null ]
         ] ],
         [ "Outputs", null, [
