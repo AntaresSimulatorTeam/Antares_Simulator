@@ -112,7 +112,10 @@ void ForbiddenNodesVisitor::visit(const PortFieldNode* portFieldNode)
 
 void ForbiddenNodesVisitor::visit(const PortFieldSumNode* portFieldSumNode)
 {
-    checkIsForbidden(portFieldSumNode, typeIndexOf<PortFieldSumNode>());
+    std::type_index nodeTypeId = typeIndexOf<PortFieldSumNode>();
+    checkIsForbidden(portFieldSumNode, nodeTypeId);
+    // The no_connection_expr belongs to the current model, check it as such
+    visitChildren(portFieldSumNode, nodeTypeId);
 }
 
 void ForbiddenNodesInComponentVisitor::visit(const PortFieldSumNode* portFieldSumNode)
@@ -134,6 +137,12 @@ void ForbiddenNodesInComponentVisitor::visit(const PortFieldSumNode* portFieldSu
 
         ForbiddenNodesVisitor visitor(forbiddenNodes_, expr_str);
         visitor.dispatch(nodeToVisit);
+    }
+
+    if (const auto* noConnectionExpr = portFieldSumNode->noConnectionExpr();
+        noConnectionExpr && !component_.isPortConnected(localPortId))
+    {
+        dispatch(noConnectionExpr);
     }
 }
 

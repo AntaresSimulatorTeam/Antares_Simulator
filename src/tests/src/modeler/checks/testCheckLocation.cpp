@@ -240,4 +240,32 @@ BOOST_FIXTURE_TEST_CASE(porfieldsum_throw, Fixture)
         "'model2': In expression 'var1': Error for variable 'var1': Location doesn't match the "
         "expression location (variable location: master, expression location: subproblems)"));
 }
+
+BOOST_FIXTURE_TEST_CASE(porfieldsum_no_connection_expr_throw, Fixture)
+{
+    // The default of a sum_connections belongs to the current model: its variables are checked
+    Node* badLocVar = registry.create<VariableNode>("var1", 0);
+    Node* pfSumNode = registry.create<PortFieldSumNode>("port", "field", badLocVar);
+
+    std::vector<Variable> variables;
+    variables.push_back({"var1", {}, {}, ValueType::FLOAT, {}, {}, Location::MASTER});
+
+    auto model = modelBuilder.withVariables(std::move(variables)).withId("base model").build();
+    auto system = systemBuilder
+                    .withComponents(
+                      {componentBuilder.withModel(&model).withId("component").build()})
+                    .withId("system")
+                    .build();
+
+    BOOST_CHECK_EXCEPTION(
+      checkExpression(pfSumNode,
+                      Location::SUBPROBLEMS,
+                      model,
+                      system,
+                      "sum_connections(port.field, no_connection_expr = var1)"),
+      LocationError,
+      containsMessage("Error for variable 'var1': Location doesn't match the expression location "
+                      "(variable location: master, expression location: subproblems)"));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

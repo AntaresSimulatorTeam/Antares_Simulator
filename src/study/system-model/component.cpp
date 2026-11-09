@@ -119,6 +119,12 @@ std::vector<ConnectionEnd> Component::componentConnectionsViaPort(const std::str
     return {};
 }
 
+bool Component::isPortConnected(const std::string& portId) const
+{
+    return componentConnectionEnds_.contains(portId) || portToAreaConnections_.contains(portId)
+           || portToThermalConnections_.contains(portId);
+}
+
 Node* Component::nodeAtPortField(const std::string& portId, const std::string& fieldId) const
 {
     try

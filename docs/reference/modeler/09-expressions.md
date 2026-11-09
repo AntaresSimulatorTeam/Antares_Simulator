@@ -177,6 +177,72 @@ _Examples:_
 expression: sum_connections(dc_port.flow) = 0
 ~~~
 
+#### Default value when the port is not connected
+
+An optional default value can be given:
+
+**sum_connections(port.field, no_connection_expr = expression)**
+
+- if the port is connected (to another component, or through a hybrid connection), the operator
+  computes the sum described above, and the default value is ignored;
+- if the port is not connected at all, the operator evaluates to **expression** instead. This expression
+  belongs to the current model: it may use its parameters and variables, and follows the same rules as the
+  expression containing the **sum_connections**.
+
+Without default value, a **sum_connections** on a port that is not connected evaluates to 0.
+
+Note that only a port field is allowed as first argument: to negate the sum, write
+`-sum_connections(port.field, no_connection_expr = expression)`.
+
+This makes it possible to plug an optional model on another one, without modifying the latter. For instance, an
+investment model can give the capacity of a thermal model, which uses its own `p_max_cluster` when no investment
+model is connected:
+
+~~~yaml
+models:
+  - id: thermal_invest
+    parameters:
+      - id: investment_cost
+        time-dependent: false
+      - id: max_investment
+        time-dependent: false
+    variables:
+      - id: invested_capacity
+        time-dependent: false
+        lower-bound: 0
+        upper-bound: max_investment
+    ports:
+      - id: capacity_port
+        type: capacity_port
+    port-field-definitions:
+      - port: capacity_port
+        field: capacity
+        definition: invested_capacity
+    objective-contributions:
+      - id: objective
+        expression: investment_cost * invested_capacity
+
+  - id: thermal
+    parameters:
+      - id: p_max_cluster
+    variables:
+      - id: generation
+        lower-bound: 0
+    ports:
+      - id: capacity_port
+        type: capacity_port
+    binding-constraints:
+      - id: generation_max_constraint
+        expression: generation <= sum_connections(capacity_port.capacity, no_connection_expr = p_max_cluster)
+~~~
+
+The investment parameters and variable are declared `time-dependent: false`: the investment is a single decision
+shared by all time steps, which also keeps its objective contribution time-independent (time-dependent objectives
+are not supported).
+
+Connecting a `thermal_invest` component to a `thermal` component (through their `capacity_port`) turns a simulation
+study into an investment study, the `thermal` model being unchanged.
+
 ### Dual operators
 
 By **dual operators**, we mean unary operators **dual** and **reduced_cost**.

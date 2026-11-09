@@ -25,6 +25,10 @@ std::vector<Node*> childrenLeftToRight(Node* node)
     {
         return sum->getOperands();
     }
+    else if (auto* portFieldSum = dynamic_cast<PortFieldSumNode*>(node))
+    {
+        return portFieldSum->getOperands();
+    }
     return {};
 }
 
@@ -42,6 +46,10 @@ std::vector<const Node*> childrenLeftToRight(const Node* node)
     else if (auto* sum = dynamic_cast<const SumNode*>(node))
     {
         return sum->getConstOperands();
+    }
+    else if (auto* portFieldSum = dynamic_cast<const PortFieldSumNode*>(node))
+    {
+        return portFieldSum->getConstOperands();
     }
     return {};
 }

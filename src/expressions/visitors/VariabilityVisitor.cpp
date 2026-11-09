@@ -102,6 +102,12 @@ VariabilityType VariabilityVisitor::visit(const Nodes::PortFieldSumNode* node)
     std::string portId = node->getPortName();
     std::string fieldId = node->getFieldName();
 
+    if (const auto* noConnectionExpr = node->noConnectionExpr();
+        noConnectionExpr && !component_.isPortConnected(portId))
+    {
+        return dispatch(noConnectionExpr);
+    }
+
     auto to_return = VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
     for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
     {

@@ -1,0 +1,61 @@
+# Same operational components, with the investment add-on plugged on the thermal component.
+# The cap is now the invested capacity (p_max_cluster is ignored): investing 100 is optimal.
+# Objective = 50 * 100 + 3 time steps * 100 * 10 = 8000
+system:
+  id: investment_addon_connected
+  components:
+  - id: node
+    model: lib.node
+  - id: load
+    model: lib.load
+    parameters:
+    - id: demand
+      time-dependent: false
+      scenario-dependent: false
+      value: 100
+  - id: unsupplied
+    model: lib.unsupplied
+    parameters:
+    - id: cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 1000
+  - id: thermal
+    model: lib.thermal
+    parameters:
+    - id: p_max_cluster
+      time-dependent: false
+      scenario-dependent: false
+      value: 60
+    - id: generation_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 10
+  - id: thermal_invest
+    model: lib.thermal_invest
+    parameters:
+    - id: investment_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 50
+    - id: max_investment
+      time-dependent: false
+      scenario-dependent: false
+      value: 200
+  connections:
+  - component1: node
+    port1: balance_port
+    component2: load
+    port2: balance_port
+  - component1: node
+    port1: balance_port
+    component2: unsupplied
+    port2: balance_port
+  - component1: node
+    port1: balance_port
+    component2: thermal
+    port2: balance_port
+  - component1: thermal_invest
+    port1: capacity_port
+    component2: thermal
+    port2: capacity_port

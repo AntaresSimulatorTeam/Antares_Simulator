@@ -1,0 +1,45 @@
+# Operational study: the thermal generation is capped by p_max_cluster (60).
+# Objective = 3 time steps * (60 * 10 + 40 * 1000) = 121800
+system:
+  id: investment_addon_not_connected
+  components:
+  - id: node
+    model: lib.node
+  - id: load
+    model: lib.load
+    parameters:
+    - id: demand
+      time-dependent: false
+      scenario-dependent: false
+      value: 100
+  - id: unsupplied
+    model: lib.unsupplied
+    parameters:
+    - id: cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 1000
+  - id: thermal
+    model: lib.thermal
+    parameters:
+    - id: p_max_cluster
+      time-dependent: false
+      scenario-dependent: false
+      value: 60
+    - id: generation_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 10
+  connections:
+  - component1: node
+    port1: balance_port
+    component2: load
+    port2: balance_port
+  - component1: node
+    port1: balance_port
+    component2: unsupplied
+    port2: balance_port
+  - component1: node
+    port1: balance_port
+    component2: thermal
+    port2: balance_port

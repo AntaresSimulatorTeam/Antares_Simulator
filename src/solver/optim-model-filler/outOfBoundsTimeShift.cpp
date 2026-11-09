@@ -4,10 +4,12 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
+#include <antares/study/system-model/component.h>
 
 namespace Antares::LinearProblem
 {
 bool hasOutOfBoundsTimeShift(const Expressions::Nodes::Node* node,
+                             const ModelerStudy::SystemModel::Component& component,
                              unsigned timeStep,
                              const Api::FillContext& ctx,
                              Expressions::Visitors::EvalVisitor& evalVisitor)
@@ -29,11 +31,23 @@ bool hasOutOfBoundsTimeShift(const Expressions::Nodes::Node* node,
         }
     }
 
+    if (const auto* portFieldSumNode = dynamic_cast<const Expressions::Nodes::PortFieldSumNode*>(
+          node))
+    {
+        // The fallback operand is only evaluated when the port is not connected
+        return !component.isPortConnected(portFieldSumNode->getPortName())
+               && hasOutOfBoundsTimeShift(portFieldSumNode->noConnectionExpr(),
+                                          component,
+                                          timeStep,
+                                          ctx,
+                                          evalVisitor);
+    }
+
     if (const auto* parentNode = dynamic_cast<const Expressions::Nodes::ParentNode*>(node))
     {
         for (const auto* operand: parentNode->getConstOperands())
         {
-            if (hasOutOfBoundsTimeShift(operand, timeStep, ctx, evalVisitor))
+            if (hasOutOfBoundsTimeShift(operand, component, timeStep, ctx, evalVisitor))
             {
                 return true;
             }

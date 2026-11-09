@@ -324,4 +324,34 @@ BOOST_FIXTURE_TEST_CASE(comparing_a_ceil_node_to_a_different_floor_node, Compari
     BOOST_CHECK(!compareVisitor.dispatch(floorNode1, floorNode2));
 }
 
+BOOST_FIXTURE_TEST_CASE(compare_port_field_sums_with_no_connection_expr, ComparisonFixture)
+{
+    CompareVisitor cmp;
+    Node* withDefault = registry_.create<PortFieldSumNode>("port",
+                                                           "field",
+                                                           createSimpleExpression(1.));
+    Node* withSameDefault = registry_.create<PortFieldSumNode>("port",
+                                                               "field",
+                                                               createSimpleExpression(1.));
+    Node* withOtherDefault = registry_.create<PortFieldSumNode>("port",
+                                                                "field",
+                                                                createSimpleExpression(2.));
+    Node* withoutDefault = registry_.create<PortFieldSumNode>("port", "field");
+    Node* otherField = registry_.create<PortFieldSumNode>("port",
+                                                          "other",
+                                                          createSimpleExpression(1.));
+
+    BOOST_CHECK(cmp.dispatch(withDefault, withSameDefault));
+    BOOST_CHECK(!cmp.dispatch(withDefault, withOtherDefault));
+    BOOST_CHECK(!cmp.dispatch(withDefault, withoutDefault));
+    BOOST_CHECK(!cmp.dispatch(withoutDefault, withDefault));
+    BOOST_CHECK(!cmp.dispatch(withDefault, otherField));
+
+    CloneVisitor cloneVisitor(registry_);
+    Node* cloned = cloneVisitor.dispatch(withDefault);
+    BOOST_CHECK(cmp.dispatch(withDefault, cloned));
+    BOOST_CHECK(dynamic_cast<PortFieldSumNode*>(cloned)->noConnectionExpr()
+                != dynamic_cast<PortFieldSumNode*>(withDefault)->noConnectionExpr());
+}
+
 BOOST_AUTO_TEST_SUITE_END()

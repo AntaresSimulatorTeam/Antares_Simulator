@@ -32,7 +32,7 @@ expr
     | expr op=('+' | '-') expr                 # addsub
     | expr COMPARISON expr                     # comparison
     | 'sum' '(' expr ')'                       # allTimeSum
-    | 'sum_connections' '(' portFieldExpr ')'           # portFieldSum
+    | 'sum_connections' '(' portFieldExpr (',' 'no_connection_expr' COMPARISON expr)? ')'  # portFieldSum
     | 'sum' '(' from=sum_bound '..' to=sum_bound ',' expr ')'  # timeSum
     | IDENTIFIER '(' argList? ')'              # function
     | IDENTIFIER '[' shift ']'                 # timeShift

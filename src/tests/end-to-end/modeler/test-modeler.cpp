@@ -15,6 +15,7 @@
 
 #include <antares/solver/modeler/ILoader.h>
 #include <antares/solver/modeler/Modeler.h>
+#include <antares/solver/modeler/loadFiles/Fileloader.h>
 #include <antares/study/system-model-base/variabilityType.h>
 #include "antares/expressions/nodes/GreaterThanOrEqualNode.h"
 #include "antares/io/outputs/SimulationTable.h"
@@ -556,4 +557,48 @@ BOOST_AUTO_TEST_CASE(read_scenario_indexes_skips_malformed_rows)
     BOOST_REQUIRE_EQUAL(indices.size(), 2u);
     BOOST_CHECK_EQUAL(indices[0], 1u);
     BOOST_CHECK_EQUAL(indices[1], 2u);
+}
+
+// Studies read from disk: the "thermal" operational model caps its generation with
+// sum_connections(capacity_port.capacity, no_connection_expr = p_max_cluster)
+struct InvestmentAddOnCase
+{
+    std::string study;
+    double expectedObjective;
+};
+
+std::ostream& operator<<(std::ostream& os, const InvestmentAddOnCase& c)
+{
+    return os << c.study;
+}
+
+static const std::vector<InvestmentAddOnCase> investmentAddOnCases{
+  // No add-on: capped by p_max_cluster (60), 40 unsupplied per time step
+  // 3 * (60 * 10 + 40 * 1000)
+  {"investment_addon_not_connected", 121800.},
+  // Add-on connected: the cap is the invested capacity, investing 100 is optimal
+  // 50 * 100 + 3 * 100 * 10
+  {"investment_addon_connected", 8000.}};
+
+BOOST_DATA_TEST_CASE(sum_connections_no_connection_expr_with_investment_add_on,
+                     boost::unit_test::data::make(investmentAddOnCases),
+                     testCase)
+{
+    namespace fs = std::filesystem;
+    const fs::path studyPath = fs::path(RESOURCES_DIR) / "modeler" / testCase.study;
+    const auto outputDir = fs::temp_directory_path() / ("antares-modeler-e2e-" + testCase.study);
+    std::error_code ec;
+    fs::remove_all(outputDir, ec);
+    fs::create_directories(outputDir);
+
+    LoadFiles::FileLoader loader(studyPath);
+    Modeler modeler(loader, outputDir, TableFormat::CSV);
+    modeler.run();
+
+    BOOST_REQUIRE(modeler.subProbSolution() != nullptr);
+    BOOST_CHECK_CLOSE(modeler.subProbSolution()->getObjectiveValue(),
+                      testCase.expectedObjective,
+                      1e-6);
+
+    fs::remove_all(outputDir, ec);
 }

@@ -50,6 +50,9 @@ toc_depth: 2
   can read the legacy area's marginal price with `sum_connections(<port>.<price-field>)`, e.g. to
   compute a profit output. The price is 0 when the problem is solved as a MILP. The field must be one
   of the port type's fields
+* Add an optional default value to `sum_connections`: `sum_connections(port.field, no_connection_expr = expr)`
+  evaluates to `expr` when the port is not connected, so an investment add-on can be plugged on an
+  operational model without modifying it [ANT-4344]
 
 #### Reserves
 
