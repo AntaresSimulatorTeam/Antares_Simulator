@@ -7,6 +7,7 @@
 #include <vector>
 #include <yaml-cpp/yaml.h>
 
+#include <antares/io/inputs/InputError.h>
 #include <antares/solver/modeler/ModelerData.h>
 #include <antares/solver/modeler/parameters/modelerParameters.h>
 #include <antares/solver/modeler/parameters/scenarioScope.h>
@@ -48,6 +49,8 @@ LinearProblem::ScenarioGroupRepository loadScenarioGroupRepository(
 
 void handleYamlError(const YAML::Exception& e, const std::string& filename);
 std::string markYamlError(const YAML::Exception& e, const std::string& filename);
+void handleInputError(const Antares::IO::Inputs::InputError& e, const std::string& filename);
+std::string markInputError(const Antares::IO::Inputs::InputError& e, const std::string& filename);
 
 /// Generic error class for all loading errors to catch in the main
 class ErrorLoadingYaml final: public std::runtime_error

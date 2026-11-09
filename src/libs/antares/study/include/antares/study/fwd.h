@@ -391,6 +391,11 @@ enum UnitCommitmentMode
     ucUnknown,
 };
 
+constexpr bool usesExplicitUnitCommitment(UnitCommitmentMode mode)
+{
+    return mode == ucHeuristicAccurate || mode == ucMILP;
+}
+
 /*!
 ** \brief Convert a unit commitment mode into a text
 */

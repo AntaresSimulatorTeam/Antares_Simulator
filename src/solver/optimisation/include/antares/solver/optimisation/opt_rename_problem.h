@@ -22,11 +22,11 @@ inline std::string LocationIdentifier(const std::string& location, const std::st
     return locationType + "<" + location + ">";
 }
 
-// ── Component ID builders (underscore format, shared with view‑builder) ──
+// ── Component ID builders shared with the view-builder ──
 
-inline std::string BuildAreaNodeComponentId(const std::string& areaId)
+inline std::string BuildAreaComponentId(const std::string& areaId)
 {
-    return areaId + "_node";
+    return areaId;
 }
 
 inline std::string BuildThermalClusterComponentId(const std::string& areaId,
@@ -82,9 +82,9 @@ inline std::string BuildLinkComponentId(const std::string& origin, const std::st
 {
     if (origin < destination)
     {
-        return origin + "_" + destination + "_link";
+        return origin + "_" + destination;
     }
-    return destination + "_" + origin + "_link";
+    return destination + "_" + origin;
 }
 
 // Structured legacy descriptions, parallel to the names vector.
