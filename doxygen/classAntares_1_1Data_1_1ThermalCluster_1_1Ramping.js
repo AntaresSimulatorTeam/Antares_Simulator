@@ -1,5 +1,6 @@
 var classAntares_1_1Data_1_1ThermalCluster_1_1Ramping =
 [
+    [ "Ramping", "classAntares_1_1Data_1_1ThermalCluster_1_1Ramping.html#a6370ea9af7509dacd2e26ef4c945f579", null ],
     [ "checkValidity", "classAntares_1_1Data_1_1ThermalCluster_1_1Ramping.html#a5662fd772987e4194d2aad6fb6c9bc9d", null ],
     [ "reset", "classAntares_1_1Data_1_1ThermalCluster_1_1Ramping.html#ac79b864094c1af67379a22f6e66b08b9", null ],
     [ "operator<<", "classAntares_1_1Data_1_1ThermalCluster_1_1Ramping.html#a1ee78a9c36c6a5f9645e7d475c6d2caa", null ],
