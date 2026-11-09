@@ -45,21 +45,21 @@ struct CapacityReservation
     double powerActivationRatio = 0.;
     double energyActivationRatio = 1.;
     int referenceActivationDuration = 1.;
-    std::shared_ptr<TimeSeries> need;
+    TimeSeries need;
 
     uint32_t areaWideIndex = 0;
 
     CapacityReservation() = delete;
 
     explicit CapacityReservation(TimeSeriesNumbers& tsNumbers):
-        need(std::make_shared<TimeSeries>(tsNumbers))
+        need(tsNumbers)
     {
     }
 
     void loadNeedFromFile(const fs::path& path)
     {
         Matrix<>::BufferType fileContent;
-        if (!need->timeSeries.loadFromCSVFile(path.string(), 1, HOURS_PER_YEAR, &fileContent))
+        if (!need.timeSeries.loadFromCSVFile(path.string(), 1, HOURS_PER_YEAR, &fileContent))
         {
             throw std::runtime_error("Failed to load need from CSV file: " + path.string());
         }
@@ -177,7 +177,7 @@ struct AllCapacityReservations
     {
         for (auto& [resID, capacityRes]: areaCapacityReservations)
         {
-            capacityRes.need->timeseriesNumbers.reset(nbYears);
+            capacityRes.need.timeseriesNumbers.reset(nbYears);
         }
     }
 };

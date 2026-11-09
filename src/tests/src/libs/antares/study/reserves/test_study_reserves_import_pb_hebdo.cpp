@@ -47,8 +47,8 @@ struct OneProblemWithReservesTwoAreas
             res.referenceActivationDuration = r;
             res.powerActivationRatio = p;
             res.energyActivationRatio = e;
-            res.need->resize(2, HOURS_PER_YEAR);
-            res.need->fill(2);
+            res.need.resize(2, HOURS_PER_YEAR);
+            res.need.fill(2);
             return res;
         };
 
@@ -113,9 +113,9 @@ BOOST_FIXTURE_TEST_CASE(test_importCapacityReservation_allGood, OneProblemWithRe
             BOOST_CHECK_EQUAL(reserve.powerActivationRatio, 3);
             BOOST_CHECK_EQUAL(reserve.energyActivationRatio, 4);
             containsUp = true;
-            BOOST_CHECK_EQUAL(reserve.need->numberOfColumns(), 2);
-            BOOST_CHECK_EQUAL(reserve.need->getCoefficient(0, 0), 2);
-            BOOST_CHECK_EQUAL(reserve.need->getCoefficient(0, 1), 2);
+            BOOST_CHECK_EQUAL(reserve.need.numberOfColumns(), 2);
+            BOOST_CHECK_EQUAL(reserve.need.getCoefficient(0, 0), 2);
+            BOOST_CHECK_EQUAL(reserve.need.getCoefficient(0, 1), 2);
         }
         else
         {
@@ -217,9 +217,9 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
             maxGlobalHydroParticipationIndex = std::max(maxGlobalHydroParticipationIndex,
                                                         part.globalIndexClusterParticipation);
             BOOST_CHECK_EQUAL(reserve.reserveName, "ReserveUpA");
-            BOOST_CHECK_EQUAL(reserve.need->numberOfColumns(), 2);
-            BOOST_CHECK_EQUAL(reserve.need->getCoefficient(0, 0), 2);
-            BOOST_CHECK_EQUAL(reserve.need->getCoefficient(0, 1), 2);
+            BOOST_CHECK_EQUAL(reserve.need.numberOfColumns(), 2);
+            BOOST_CHECK_EQUAL(reserve.need.getCoefficient(0, 0), 2);
+            BOOST_CHECK_EQUAL(reserve.need.getCoefficient(0, 1), 2);
             containsUp = true;
         }
         else

@@ -49,7 +49,7 @@ bool ReservesNeedTSNumberData::apply(Study& study)
         {
             logprefix.clear() << "Reserves Need: Area '" << area.name << "', Reserve '" << reserveID
                               << "': ";
-            ret = ApplyToMatrix(errors, logprefix, *reserve.need, col, 0) && ret;
+            ret = ApplyToMatrix(errors, logprefix, reserve.need, col, 0) && ret;
         }
     }
     return ret;
