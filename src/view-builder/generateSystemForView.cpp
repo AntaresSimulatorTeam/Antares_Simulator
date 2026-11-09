@@ -178,7 +178,7 @@ void exportSystemForView(const Antares::Data::Study& study, Solver::IResultWrite
 {
     YAML::Node systemYaml = generateSystemForView(study);
     std::string yamlContent = YAML::Dump(systemYaml);
-    resultWriter->addEntryFromBuffer("system-for-views.yml", yamlContent);
+    resultWriter->addEntryFromBuffer("views/input/system-for-views.yml", yamlContent);
 }
 
 YAML::Node generateSystemForView(const Antares::Data::Study& study)
@@ -209,7 +209,7 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
       [&components, &connections, &study, &inactiveComponents, &interco, &districtPropertiesByArea](
         const Area& area)
       {
-          std::string areaLoc = BuildAreaNodeComponentId(area.id);
+          std::string areaLoc = BuildAreaComponentId(area.id);
 
           YAML::Node areaComponent = areaToYaml(area);
           appendProperties(areaComponent, districtPropertiesByArea[area.index]);
@@ -327,8 +327,8 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
               components.push_back(linkToYaml(*link));
 
               std::string linkId = BuildLinkComponentId(link->from->id, link->with->id);
-              std::string area1Loc = BuildAreaNodeComponentId(link->from->id);
-              std::string area2Loc = BuildAreaNodeComponentId(link->with->id);
+              std::string area1Loc = BuildAreaComponentId(link->from->id);
+              std::string area2Loc = BuildAreaComponentId(link->with->id);
 
               if (link->from->id < link->with->id)
               {

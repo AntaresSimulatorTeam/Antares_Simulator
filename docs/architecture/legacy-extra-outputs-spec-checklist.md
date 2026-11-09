@@ -120,7 +120,7 @@ margin context.
 
 `price_out`/`price_in` are the balance duals of the link's extremity / origin areas,
 looked up in the area-price map (A) after splitting the `DirectFlow` anchor's
-`origin$$destination` component into its two endpoint area names. Skipped when
+`origin_destination` component into its two endpoint area names. Skipped when
 either endpoint area has no recorded price.
 
 ---
@@ -161,14 +161,14 @@ Component naming: models sharing the area's identity get their own suffixed
 component so `balance_port.flow` rows cannot collide — `{area}_load` (load) and
 `{area}_hydro_storage` (long_term_storage); everything else uses the component of
 its extra-outputs (area, cluster, storage `{area}_short_term_storage_{name}`,
-`origin$$destination`, input-generation names).
+`origin_destination`, input-generation names).
 
 | Done | Model | Component | Port field | Definition |
 |------|-------|-----------|-----------|------------|
 | [x] | area | `{area}` | `balance_port.price` | `dual(balance)` (same value as `price`) |
 | [x] | load | `{area}_load` | `balance_port.flow` | `-load` (raw load, as `actual_load`) |
-| [x] | link | `origin$$destination` | `out_port.flow` | `flow` |
-| [x] | link | `origin$$destination` | `in_port.flow` | `-flow` |
+| [x] | link | `origin_destination` | `out_port.flow` | `flow` |
+| [x] | link | `origin_destination` | `in_port.flow` | `-flow` |
 | [x] | renewable | input-generation names | `balance_port.flow` | `available_power` |
 | [x] | miscellaneous_generation | input-generation names | `balance_port.flow` | `available_power` |
 | [x] | thermal | cluster name | `balance_port.flow` | `generation_power` |

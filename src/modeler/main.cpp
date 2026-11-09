@@ -42,7 +42,8 @@ void exportSystemForViews(fs::path studyPath, fs::path outputPath)
     try
     {
         fs::path systemInput = studyPath / "input" / "system.yml";
-        fs::path systemOutput = outputPath / "system-for-views.yml";
+        fs::path systemOutput = outputPath / "views" / "input" / "system-for-views.yml";
+        fs::create_directories(systemOutput.parent_path());
         fs::copy(systemInput, systemOutput);
     }
     catch (const std::exception& e)
