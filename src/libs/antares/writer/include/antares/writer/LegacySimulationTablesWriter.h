@@ -39,7 +39,7 @@ public:
 
 private:
     StreamingSimulationTableWriter& streamFor(IO::Outputs::Stage stage);
-    std::map<IO::Outputs::Stage, std::unique_ptr<StreamingSimulationTableWriter>> streams_;
+    std::map<IO::Outputs::Stage, StreamingSimulationTableWriter> streams_;
     unsigned year_ = 0;
     TableFormat tableFormat_;
     const std::filesystem::path folder_;
