@@ -147,8 +147,6 @@ void checkExpression(const Node* expression,
                   model.Id(),
                   exprStr,
                   portFieldNode->getPortName(),
-                  portFieldNode->getFieldName(),
-                  portFieldNode->getPortName(),
                   portFieldNode->getFieldName()));
             }
 
