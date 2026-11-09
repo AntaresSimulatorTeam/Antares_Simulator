@@ -90,7 +90,7 @@ std::string buildMessage(const YAML::Node& node, const std::string& path, const 
 }
 
 ValidationResult validateMap(const YAML::Node& node,
-                             const std::span<const ExpectedField> fields,
+                             const std::span<const ExpectedField> expectedFields,
                              const std::string& path)
 {
     ValidationResult result;
@@ -115,7 +115,7 @@ ValidationResult validateMap(const YAML::Node& node,
     std::unordered_set<std::string> mandatoryFields;
     std::unordered_set<std::string> allowedFields;
     std::vector<std::string> nullIds;
-    for (const auto& field: fields)
+    for (const auto& field: expectedFields)
     {
         allowedFields.insert(field.name);
         if (field.required)
@@ -161,7 +161,7 @@ std::string sequenceItemName(const YAML::Node& node, std::size_t index)
 }
 
 ValidationResult collectFieldErrors(const YAML::Node& node,
-                                    const std::span<const ExpectedField> fields,
+                                    const std::span<const ExpectedField> expectedFields,
                                     const std::string& path)
 {
     ValidationResult result;
@@ -171,7 +171,7 @@ ValidationResult collectFieldErrors(const YAML::Node& node,
           fmt::format("Line {}: expected a YAML mapping in '{}'.", node.Mark().line + 1, path));
         return result;
     }
-    result += validateMap(node, fields, path);
+    result += validateMap(node, expectedFields, path);
 
     // Visit every occurrence, including duplicated sections, without looking up ambiguous keys.
     for (const auto& entry: node)
@@ -181,8 +181,8 @@ ValidationResult collectFieldErrors(const YAML::Node& node,
             continue;
         }
         const auto key = entry.first.as<std::string>();
-        const auto field = std::ranges::find(fields, key, &ExpectedField::name);
-        if (field == fields.end() || field->children.empty())
+        const auto field = std::ranges::find(expectedFields, key, &ExpectedField::name);
+        if (field == expectedFields.end() || field->children.empty())
         {
             continue;
         }
@@ -225,15 +225,9 @@ void handleValidationResult(const ValidationResult& result)
 
 } // namespace
 
-void checkFields(const YAML::Node& node, const ExpectedField& field, const std::string& path)
+void checkFields(const YAML::Node& node, const std::vector<ExpectedField>& expectedFields, const std::string& path)
 {
-    const auto fields = std::array{field};
-    handleValidationResult(collectFieldErrors(node, fields, path));
-}
-
-void checkFields(const YAML::Node& node, const std::vector<ExpectedField>& fields, const std::string& path)
-{
-    handleValidationResult(collectFieldErrors(node, fields, path));
+    handleValidationResult(collectFieldErrors(node, expectedFields, path));
 }
 
 } // namespace Antares::IO::Inputs::YmlUtils

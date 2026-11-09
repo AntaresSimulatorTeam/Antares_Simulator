@@ -518,7 +518,8 @@ BOOST_AUTO_TEST_CASE(null_model_ids_are_rejected_without_tag_context)
 {
     auto node = YAML::Load("id: null");
     node.SetTag("unrelated-tag");
-    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node, YmlUtils::ExpectedField{"id", true}, "model"),
+    std::vector<YmlUtils::ExpectedField> expectedFields{{"id", true}};
+    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node, expectedFields, "model"),
                           InputError,
                           [](const InputError& e)
                           {

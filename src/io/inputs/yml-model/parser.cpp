@@ -7,16 +7,18 @@
 #include "antares/io/inputs/yml-model/decoders.h"
 #include "antares/io/inputs/yml-utils/checkFields.h"
 
+using namespace Antares::IO::Inputs::YmlUtils;
+
 namespace Antares::IO::Inputs::YmlModel
 {
 namespace
 {
 // Keep this schema in sync with field reads in decoders.cpp.
-const std::vector<YmlUtils::ExpectedField> expressionFields = {{"id", true},
-                                                       {"expression", true},
-                                                       {"location"}};
+const std::vector<ExpectedField> expressionFields = {{"id", true},
+                                                     {"expression", true},
+                                                     {"location"}};
 
-const std::vector<YmlUtils::ExpectedField> libraryFields = {
+const std::vector<ExpectedField> libraryFields = {
   {"id", true},
   {"description"},
   {"port-types",
@@ -30,8 +32,8 @@ const std::vector<YmlUtils::ExpectedField> libraryFields = {
       {"spillage-bound", true},
       {"unsupplied-energy-bound", true},
       {"price"}},
-     YmlUtils::Shape::Map},
-    {"thermal-capacity-connection", false, {{"capacity-field", true}}, YmlUtils::Shape::Map}}},
+     Shape::Map},
+    {"thermal-capacity-connection", false, {{"capacity-field", true}}, Shape::Map}}},
   {"models",
    false,
    {{"id", true},
@@ -57,7 +59,8 @@ const std::vector<YmlUtils::ExpectedField> libraryFields = {
 Library Parser::parse(const std::string& content)
 {
     YAML::Node root = YAML::Load(content);
-    YmlUtils::checkFields(root, {"library", true, libraryFields, YmlUtils::Shape::Map});
+    std::vector<ExpectedField> expectedFields = {{"library", true, libraryFields, Shape::Map}};
+    checkFields(root, expectedFields);
     return root["library"].as<Library>();
 }
 } // namespace Antares::IO::Inputs::YmlModel
