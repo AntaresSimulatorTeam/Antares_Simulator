@@ -61,7 +61,7 @@ fs::path makeOutputPath(fs::path studyPath)
         throw Modeler::ModelerError("Output folder already exists: " + outputPath.string());
     }
 
-    logs.info() << "Output folder : " << outputPath;
+    logs.info() << "Output folder: " << outputPath;
     if (!fs::is_directory(outputPath) && !fs::create_directories(outputPath))
     {
         throw Modeler::ModelerError("Failed to create output directory. Exiting simulation.");

@@ -16,6 +16,7 @@ Here is a description of workflows with their associated status.
 
 | .yml                                                    | Description                                                                                                       | Status                                       |
 |:--------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|----------------------------------------------|
+| `ubuntu-clang-sanitizers.yml`                           | Clang ASan/UBSan, `-Werror` and hardened libstdc++ build, [how to reproduce](sanitizers.md)                       |                                              |
 | `sonarcloud.yml`                                        | Compilation with specific options for sonarcloud analysis                                                         | [![Status][sonarcloud_svg]][sonarcloud_link] |
 | `branchNameValidation.yml`                              | This workflow verifies that new branches respect Antares Simulator Team's naming conventions[^1]                  |                                              |
 | `docker.yml`                                            | Builds and pushes ["centos7-basic-requirements" docker image](https://hub.docker.com/r/antaresrte/rte-antares)    |                                              |

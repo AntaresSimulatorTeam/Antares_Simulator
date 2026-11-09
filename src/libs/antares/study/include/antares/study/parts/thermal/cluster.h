@@ -244,6 +244,8 @@ public:
     class Ramping
     {
     public:
+        Ramping();
+
         //! Cost of power increase (euros/MW)
         double powerIncreaseCost = 0.;
         //! Cost of power decrease (euros/MW)
