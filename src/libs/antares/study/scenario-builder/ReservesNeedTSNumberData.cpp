@@ -32,25 +32,21 @@ bool ReservesNeedTSNumberData::apply(Study& study)
     // Errors
     uint errors = 0;
 
-    // The total number of areas;
-    const uint areaCount = study.areas.size();
+    assert(pArea != nullptr);
+    assert(pArea->index < study.areas.size());
+    Area& area = *(study.areas.byIndex[pArea->index]);
 
-    for (uint areaIndex = 0; areaIndex != areaCount; ++areaIndex)
+    if (!area.allCapacityReservations)
     {
-        // Alias to the current area
-        Area& area = *(study.areas.byIndex[areaIndex]);
-        // alias to the current column
-        assert(areaIndex < pTSNumberRules.width);
-        const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
+        return ret;
+    }
 
-        logprefix.clear() << "Reserves Need: Area '" << area.name << "': ";
-        for (const auto& [reserveID, reserve]:
-             area.allCapacityReservations->areaCapacityReservations)
-        {
-            logprefix.clear() << "Reserves Need: Area '" << area.name << "', Reserve '" << reserveID
-                              << "': ";
-            ret = ApplyToMatrix(errors, logprefix, reserve.need, col, 0) && ret;
-        }
+    const MatrixType::ColumnType& col = pTSNumberRules[0];
+    for (const auto& [reserveID, reserve]: area.allCapacityReservations->areaCapacityReservations)
+    {
+        logprefix.clear() << "Reserves Need: Area '" << area.name << "', Reserve '" << reserveID
+                          << "': ";
+        ret = ApplyToMatrix(errors, logprefix, reserve.need, col, 0) && ret;
     }
     return ret;
 }
