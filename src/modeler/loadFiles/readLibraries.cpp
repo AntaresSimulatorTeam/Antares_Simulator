@@ -104,9 +104,7 @@ std::pair<std::string, std::string> splitModelId(const std::string& modelId)
 YmlModel::Model& fetchModelInLibrairies(const Model& optimConfigModel,
                                         std::vector<YmlModel::Library>& ymlLibs)
 {
-    const auto modelIdentifiers = splitModelId(optimConfigModel.id);
-    const auto& libId = modelIdentifiers.first;
-    const auto& modelId = modelIdentifiers.second;
+    const auto [libId, modelId] = splitModelId(optimConfigModel.id);
 
     auto lib = std::ranges::find_if(ymlLibs, [&libId](const auto& l) { return l.id == libId; });
     if (lib == ymlLibs.end())

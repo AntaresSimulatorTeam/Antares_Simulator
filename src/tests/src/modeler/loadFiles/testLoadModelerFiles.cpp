@@ -262,8 +262,7 @@ BOOST_FIXTURE_TEST_CASE(load_all_with_system_component_and_no_model_libraries_fa
     BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadAll(studyPath), std::runtime_error);
 }
 
-BOOST_FIXTURE_TEST_CASE(load_all_requires_optim_config_when_system_exists,
-                        FixtureLoadFile)
+BOOST_FIXTURE_TEST_CASE(load_all_requires_optim_config_when_system_exists, FixtureLoadFile)
 {
     fs::remove_all(libraryDirPath);
     std::ofstream systemStream(inputPath / "system.yml");

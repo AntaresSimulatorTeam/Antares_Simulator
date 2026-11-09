@@ -1,6 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <memory>
 #define BOOST_TEST_MODULE study
 #define WIN32_LEAN_AND_MEAN
 
@@ -27,6 +28,7 @@ struct ModelerLoadingFixture
 {
     ModelerLoadingFixture()
     {
+        study = std::make_unique<StudyWithModelerLoading>();
         studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
         inputPath = createFolder(studyPath.string(), "input");
     }
@@ -38,7 +40,7 @@ struct ModelerLoadingFixture
 
     std::filesystem::path studyPath;
     std::filesystem::path inputPath;
-    StudyWithModelerLoading study;
+    std::unique_ptr<StudyWithModelerLoading> study;
 };
 } // namespace
 
@@ -398,11 +400,11 @@ BOOST_AUTO_TEST_CASE(add_area_with_forbidden_character_returns_nullptr)
 BOOST_FIXTURE_TEST_CASE(model_libraries_without_system_file_are_ignored, ModelerLoadingFixture)
 {
     createFolder(inputPath.string(), "model-libraries");
-    study.relocate(studyPath);
+    study->relocate(studyPath);
 
-    study.loadModelerComponents();
+    study->loadModelerComponents();
 
-    BOOST_CHECK(study.getModelerData() == nullptr);
+    BOOST_CHECK(study->getModelerData() == nullptr);
 }
 
 BOOST_FIXTURE_TEST_CASE(system_file_with_component_and_no_library_directory_fails,
@@ -417,9 +419,9 @@ BOOST_FIXTURE_TEST_CASE(system_file_with_component_and_no_library_directory_fail
                       "      model: std.generator\n";
     }
     std::ofstream(inputPath / "optim-config.yml");
-    study.relocate(studyPath);
+    study->relocate(studyPath);
 
-    BOOST_CHECK_THROW(study.loadModelerComponents(), Antares::Error::LoadingError);
+    BOOST_CHECK_THROW(study->loadModelerComponents(), Antares::Error::LoadingError);
 }
 
 BOOST_FIXTURE_TEST_CASE(system_file_loads_modeler_data_with_library, ModelerLoadingFixture)
@@ -444,11 +446,11 @@ BOOST_FIXTURE_TEST_CASE(system_file_loads_modeler_data_with_library, ModelerLoad
                       "      model: std.generator\n";
     }
     std::ofstream(inputPath / "optim-config.yml");
-    study.relocate(studyPath);
+    study->relocate(studyPath);
 
-    study.loadModelerComponents();
+    study->loadModelerComponents();
 
-    BOOST_CHECK(study.getModelerData() != nullptr);
+    BOOST_CHECK(study->getModelerData() != nullptr);
 }
 
 BOOST_FIXTURE_TEST_CASE(system_file_without_optim_config_fails_modeler_loading,
@@ -462,9 +464,9 @@ BOOST_FIXTURE_TEST_CASE(system_file_without_optim_config_fails_modeler_loading,
                       "    - id: N\n"
                       "      model: std.generator\n";
     }
-    study.relocate(studyPath);
+    study->relocate(studyPath);
 
-    BOOST_CHECK_THROW(study.loadModelerComponents(), Antares::Error::LoadingError);
+    BOOST_CHECK_THROW(study->loadModelerComponents(), Antares::Error::LoadingError);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // version
