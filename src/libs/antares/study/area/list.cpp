@@ -640,9 +640,18 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Reserves
-    if (study.parameters.include.reserves && studyVersion >= StudyVersion(10, 1))
+    if (study.parameters.include.reserves)
     {
-        ret = Antares::Data::loadReservesParameters(study.folderInput, area) && ret;
+        if (studyVersion >= StudyVersion(10, 1))
+        {
+            ret = Antares::Data::loadReservesParameters(study.folderInput, area) && ret;
+        }
+        else
+        {
+            logs.warning() << "Reserves are not supported in study version "
+                           << studyVersion.toString()
+                           << ". Reserves will be silently ignored. Consider upgrading the study.";
+        }
     }
 
     // Solar
@@ -711,7 +720,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                                                  studyVersion,
                                                  study.parameters.compatibility.hydroPmax);
 
-        if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
+        if (usesExplicitUnitCommitment(study.parameters.unitCommitment.ucMode)
             && study.parameters.include.reserves && studyVersion >= StudyVersion(10, 1))
         {
             // the path change after 10.2 to avoid a collision with common/capacity
@@ -754,7 +763,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             area.thermal.list.enableMustrunForEveryone();
         }
-        if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
+        if (usesExplicitUnitCommitment(study.parameters.unitCommitment.ucMode)
             && study.parameters.include.reserves && studyVersion >= StudyVersion(10, 1))
         {
             fs::path reservesThermal = study.folderInput / "thermal" / "clusters" / area.id
@@ -771,7 +780,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         ret = area.shortTermStorage.loadSeriesFromFolder(seriesPath, studyVersion) && ret;
         ret = area.shortTermStorage.validate(studyVersion) && ret;
 
-        if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
+        if (usesExplicitUnitCommitment(study.parameters.unitCommitment.ucMode)
             && study.parameters.include.reserves && studyVersion >= StudyVersion(10, 1))
         {
             fs::path reservesFilePath = study.folderInput / "st-storage" / "clusters" / area.id

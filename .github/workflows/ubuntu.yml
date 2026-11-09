@@ -170,6 +170,7 @@ jobs:
         path: _build/*.tar.gz
 
     - name: Run API tests
+      if: ${{ (env.RUN_SIMPLE_TESTS == 'true' || env.RUN_EXTENDED_TESTS == 'true') && !cancelled() }}
       run: |
         cmake --install _build --prefix antares_install
         cd src/api_client_example

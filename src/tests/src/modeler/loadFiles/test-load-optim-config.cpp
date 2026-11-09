@@ -267,7 +267,7 @@ BOOST_FIXTURE_TEST_CASE(no_library_but_reference_an_objective_in_optim_config___
 {
     std::string yamlContent = R"(models:
       - id: my-lib.some-model
-        model-decomposition: [])";
+        model-decomposition: {})";
 
     createOptimConfigFile(yamlContent);
 
