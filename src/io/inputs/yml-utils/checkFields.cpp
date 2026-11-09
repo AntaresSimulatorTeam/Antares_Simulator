@@ -90,7 +90,7 @@ std::string buildMessage(const YAML::Node& node, const std::string& path, const 
 }
 
 ValidationResult validateMap(const YAML::Node& node,
-                             const std::span<const Field> fields,
+                             const std::span<const ExpectedField> fields,
                              const std::string& path)
 {
     ValidationResult result;
@@ -161,7 +161,7 @@ std::string sequenceItemName(const YAML::Node& node, std::size_t index)
 }
 
 ValidationResult collectFieldErrors(const YAML::Node& node,
-                                    const std::span<const Field> fields,
+                                    const std::span<const ExpectedField> fields,
                                     const std::string& path)
 {
     ValidationResult result;
@@ -181,7 +181,7 @@ ValidationResult collectFieldErrors(const YAML::Node& node,
             continue;
         }
         const auto key = entry.first.as<std::string>();
-        const auto field = std::ranges::find(fields, key, &Field::name);
+        const auto field = std::ranges::find(fields, key, &ExpectedField::name);
         if (field == fields.end() || field->children.empty())
         {
             continue;
@@ -225,13 +225,13 @@ void handleValidationResult(const ValidationResult& result)
 
 } // namespace
 
-void checkFields(const YAML::Node& node, const Field& field, const std::string& path)
+void checkFields(const YAML::Node& node, const ExpectedField& field, const std::string& path)
 {
     const auto fields = std::array{field};
     handleValidationResult(collectFieldErrors(node, fields, path));
 }
 
-void checkFields(const YAML::Node& node, const std::vector<Field>& fields, const std::string& path)
+void checkFields(const YAML::Node& node, const std::vector<ExpectedField>& fields, const std::string& path)
 {
     handleValidationResult(collectFieldErrors(node, fields, path));
 }

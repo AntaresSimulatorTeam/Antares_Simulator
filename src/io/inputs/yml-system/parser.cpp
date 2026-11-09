@@ -12,7 +12,7 @@ namespace Antares::IO::Inputs::YmlSystem
 namespace
 {
 // Keep this schema in sync with field reads in decoders.cpp.
-const std::vector<YmlUtils::Field> systemFields = {
+const std::vector<YmlUtils::ExpectedField> systemFields = {
   {"id"},
   {"description"},
   {"model-libraries"},
