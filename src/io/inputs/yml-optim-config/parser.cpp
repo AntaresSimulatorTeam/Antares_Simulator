@@ -6,14 +6,16 @@
 #include "antares/io/inputs/yml-optim-config/decoders.h"
 #include "antares/io/inputs/yml-utils/checkFields.h"
 
+using namespace Antares::IO::Inputs::YmlUtils;
+
 namespace Antares::IO::Inputs::YmlOptimConfig
 {
 namespace
 {
 // Keep this schema in sync with field reads in decoders.cpp.
-const std::vector<YmlUtils::ExpectedField> locationFields = {{"id", true}, {"location", true}};
+const std::vector<ExpectedField> locationFields = {{"id", true}, {"location", true}};
 
-const std::vector<YmlUtils::ExpectedField> optimConfigFields = {
+const std::vector<ExpectedField> optimConfigFields = {
   {"models",
    false,
    {{"id", true},
@@ -22,11 +24,11 @@ const std::vector<YmlUtils::ExpectedField> optimConfigFields = {
      {{"variables", false, locationFields},
       {"constraints", false, locationFields},
       {"objective-contributions", false, locationFields}},
-     YmlUtils::Shape::Map},
+     Shape::Map},
     {"out-of-bounds-processing",
      false,
      {{"constraints", false, {{"id", true}, {"mode"}}}},
-     YmlUtils::Shape::Map}}},
+     Shape::Map}}},
   {"resolution-mode"},
   {"scenario-scope", false, {{"include"}, {"exclude"}}}};
 } // namespace
@@ -34,7 +36,7 @@ const std::vector<YmlUtils::ExpectedField> optimConfigFields = {
 OptimConfig Parser::parse(const std::string& content)
 {
     YAML::Node root = YAML::Load(content);
-    YmlUtils::checkFields(root, optimConfigFields, "optim-config");
+    checkFields(root, optimConfigFields, "optim-config");
     return root.as<OptimConfig>();
 }
 } // namespace Antares::IO::Inputs::YmlOptimConfig
