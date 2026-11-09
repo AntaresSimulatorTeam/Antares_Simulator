@@ -232,13 +232,13 @@ struct Fixture
         // them in sim_calcul_economique.cpp); the reserve variable indices are
         // wired below into CorrespondanceVarNativesVarOptim.reservesIndices.
         problem.allReserves = std::vector<AREA_RESERVES_VECTOR>(3);
+        TimeSeriesNumbers tsnum;
+        tsnum.reset(1);
+        tsnum[0] = 0;
+        TimeSeries reserveNeed(tsnum);
         {
-            TimeSeriesNumbers tsnum;
-            tsnum.reset(1);
-            tsnum[0] = 0;
-            auto need = std::make_shared<TimeSeries>(tsnum);
             auto& area1Reserve = problem.allReserves->at(0).areaCapacityReservations.emplace_back(
-              need);
+              reserveNeed);
             area1Reserve.reserveName = "Res_1";
             area1Reserve.reserveID = "Res_1";
             area1Reserve.globalReserveIndex = 0;
@@ -258,12 +258,8 @@ struct Fixture
             hydroPart.clusterName = "Hydro";
         }
         {
-            TimeSeriesNumbers tsnum;
-            tsnum.reset(1);
-            tsnum[0] = 0;
-            auto need = std::make_shared<TimeSeries>(tsnum);
             auto& area2Reserve = problem.allReserves->at(1).areaCapacityReservations.emplace_back(
-              need);
+              reserveNeed);
             area2Reserve.reserveName = "Res_Down";
             area2Reserve.reserveID = "Res_Down";
             area2Reserve.globalReserveIndex = 1;

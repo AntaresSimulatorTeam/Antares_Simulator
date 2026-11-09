@@ -275,7 +275,7 @@ void drawAndStoreTSnumbers(uint year, Study& study)
           if (area.allCapacityReservations)
           {
               for (const auto& reserveCapacity:
-                   area.allCapacityReservations.value().areaCapacityReservations)
+                   area.allCapacityReservations->areaCapacityReservations)
               {
                   const auto nbTimeSeries = reserveCapacity.second.need.timeSeries.width;
                   if (nbTimeSeries > 1)

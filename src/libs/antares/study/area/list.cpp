@@ -1212,7 +1212,7 @@ void validateCapacityReservations(const Area& area)
 {
     if (area.allCapacityReservations)
     {
-        auto& areaCapacityRes = area.allCapacityReservations.value();
+        const auto& areaCapacityRes = *area.allCapacityReservations;
         errorIfNegativeValue("maxGlobalEnergyActivationRatio up",
                              area.allCapacityReservations->maxGlobalEnergyActivationRatio.up,
                              area.name);
@@ -1248,9 +1248,8 @@ void validateCapacityReservations(const Area& area)
         // check size of need time series (should have the same number of years)
         const auto it = std::ranges::adjacent_find(areaCapacityRes.areaCapacityReservations,
                                                    std::not_equal_to{},
-                                                   [](const auto& entry) {
-                                                       return entry.second.need.numberOfColumns();
-                                                   });
+                                                   [](const auto& entry)
+                                                   { return entry.second.need.numberOfColumns(); });
 
         if (it != areaCapacityRes.areaCapacityReservations.end())
         {

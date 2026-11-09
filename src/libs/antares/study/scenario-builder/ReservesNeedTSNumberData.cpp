@@ -45,7 +45,7 @@ bool ReservesNeedTSNumberData::apply(Study& study)
 
         logprefix.clear() << "Reserves Need: Area '" << area.name << "': ";
         for (const auto& [reserveID, reserve]:
-             area.allCapacityReservations.value().areaCapacityReservations)
+             area.allCapacityReservations->areaCapacityReservations)
         {
             logprefix.clear() << "Reserves Need: Area '" << area.name << "', Reserve '" << reserveID
                               << "': ";

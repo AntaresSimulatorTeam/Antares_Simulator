@@ -61,7 +61,7 @@ struct OneProblemWithReservesTwoAreas
 
     void initReservations(Area* area, auto makeReservation)
     {
-        auto& reservations = area->allCapacityReservations.value().areaCapacityReservations;
+        auto& reservations = area->allCapacityReservations->areaCapacityReservations;
         if (area == areaA)
         {
             const auto& resUpA = makeReservation("ReserveUpA", ReserveType::UP, 1, 2, 3, 4);
