@@ -19,6 +19,7 @@ optimization results of the system components that were created by the legacy st
 The results of the modeler's components optimization are exported as simulation tables, described in
 the [modeler outputs page](../modeler/03-outputs.md), under `simulation-tables/` in the run's output folder.
 One table is written for each selected optimization or post-process stage.
+The system definition for views is also exported to `<timestamp output>/views/input/system-for-views.yml`.
 
 Simulation tables are **not** written by default: run the solver with `--output=simulation-tables` to get them.
 The two families of results are independent, so a hybrid study can write the Monte-Carlo results only (default), the
