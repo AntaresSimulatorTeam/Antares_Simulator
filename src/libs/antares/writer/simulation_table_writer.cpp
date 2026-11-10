@@ -157,17 +157,126 @@ void SimulationTableWriter::writeTable(const IO::Outputs::SimulationTable& simuT
 
 struct StreamingSimulationTableWriter::Impl
 {
-    std::shared_ptr<arrow::io::FileOutputStream> outfile;
-    // Parquet
-    std::unique_ptr<parquet::arrow::FileWriter> parquetWriter;
-    // CSV
-    std::shared_ptr<arrow::ipc::RecordBatchWriter> csvWriter;
+    struct ParquetWriterImpl;
+    struct CSVWriterImpl;
+
+    virtual ~Impl() = default;
+    virtual void WriteTable(const arrow::Table& table) = 0;
+    virtual void Close() = 0;
+
+    static std::unique_ptr<Impl> Create(TableFormat tableFormat, const fs::path& outputFile);
 };
+
+struct StreamingSimulationTableWriter::Impl::ParquetWriterImpl final
+    : StreamingSimulationTableWriter::Impl
+{
+    explicit ParquetWriterImpl(fs::path outputFile):
+        output_file_(std::move(outputFile))
+    {
+    }
+
+    void WriteTable(const arrow::Table& table) override
+    {
+        if (!writer_)
+        {
+            auto outfile = throwOnResultKO(
+              arrow::io::FileOutputStream::Open(output_file_.string()));
+            auto writer = throwOnResultKO(parquet::arrow::FileWriter::Open(
+              *table.schema(),
+              arrow::default_memory_pool(),
+              outfile,
+              parquetWriterProperties(),
+              parquet::ArrowWriterProperties::Builder().store_schema()->build()));
+            outfile_ = std::move(outfile);
+            writer_ = std::move(writer);
+        }
+
+        // One row group per call
+        throwOnStatusKO(writer_->WriteTable(table, parquetChunkSize));
+    }
+
+    void Close() override
+    {
+        auto writer = std::move(writer_);
+        auto outfile = std::move(outfile_);
+        if (writer)
+        {
+            throwOnStatusKO(writer->Close());
+        }
+        if (outfile)
+        {
+            throwOnStatusKO(outfile->Close());
+        }
+    }
+
+private:
+    fs::path output_file_;
+    std::shared_ptr<arrow::io::FileOutputStream> outfile_;
+    std::unique_ptr<parquet::arrow::FileWriter> writer_;
+};
+
+struct StreamingSimulationTableWriter::Impl::CSVWriterImpl final
+    : StreamingSimulationTableWriter::Impl
+{
+    explicit CSVWriterImpl(fs::path outputFile):
+        output_file_(std::move(outputFile))
+    {
+    }
+
+    void WriteTable(const arrow::Table& table) override
+    {
+        if (!writer_)
+        {
+            auto outfile = throwOnResultKO(
+              arrow::io::FileOutputStream::Open(output_file_.string()));
+            auto writer = throwOnResultKO(
+              arrow::csv::MakeCSVWriter(outfile, table.schema(), csvWriteOptions()));
+            outfile_ = std::move(outfile);
+            writer_ = std::move(writer);
+        }
+
+        throwOnStatusKO(writer_->WriteTable(table));
+    }
+
+    void Close() override
+    {
+        auto writer = std::move(writer_);
+        auto outfile = std::move(outfile_);
+        if (writer)
+        {
+            throwOnStatusKO(writer->Close());
+        }
+        if (outfile)
+        {
+            throwOnStatusKO(outfile->Close());
+        }
+    }
+
+private:
+    fs::path output_file_;
+    std::shared_ptr<arrow::io::FileOutputStream> outfile_;
+    std::shared_ptr<arrow::ipc::RecordBatchWriter> writer_;
+};
+
+std::unique_ptr<StreamingSimulationTableWriter::Impl> StreamingSimulationTableWriter::Impl::Create(
+  TableFormat tableFormat,
+  const fs::path& outputFile)
+{
+    switch (tableFormat)
+    {
+    case TableFormat::Parquet:
+        return std::make_unique<ParquetWriterImpl>(outputFile);
+    case TableFormat::CSV:
+        return std::make_unique<CSVWriterImpl>(outputFile);
+    default:
+        throw std::invalid_argument("StreamingSimulationTableWriter: unknown table format");
+    }
+}
 
 StreamingSimulationTableWriter::StreamingSimulationTableWriter(const fs::path& filePath,
                                                                TableFormat tableFormat):
     output_file_(replaceExtension(filePath, tableFormat)),
-    table_format_(tableFormat)
+    impl_(Impl::Create(tableFormat, output_file_))
 {
     createParentDirectories(output_file_);
 }
@@ -198,6 +307,10 @@ StreamingSimulationTableWriter& StreamingSimulationTableWriter::operator=(
 
 void StreamingSimulationTableWriter::append(const IO::Outputs::SimulationTable& simuTable)
 {
+    if (!impl_)
+    {
+        throw std::logic_error("StreamingSimulationTableWriter: cannot append after move");
+    }
     if (simuTable.columns().empty())
     {
         throw std::invalid_argument("StreamingSimulationTableWriter: simulation table is empty");
@@ -208,43 +321,7 @@ void StreamingSimulationTableWriter::append(const IO::Outputs::SimulationTable& 
     }
 
     auto table = makeArrowTable(simuTable);
-
-    if (!impl_)
-    {
-        auto outfile = throwOnResultKO(arrow::io::FileOutputStream::Open(output_file_.string()));
-        impl_ = std::make_unique<Impl>();
-        impl_->outfile = std::move(outfile);
-        switch (table_format_)
-        {
-        case TableFormat::Parquet:
-        {
-            auto arrow_props = parquet::ArrowWriterProperties::Builder().store_schema()->build();
-            impl_->parquetWriter = throwOnResultKO(
-              parquet::arrow::FileWriter::Open(*table->schema(),
-                                               arrow::default_memory_pool(),
-                                               impl_->outfile,
-                                               parquetWriterProperties(),
-                                               arrow_props));
-            break;
-        }
-        case TableFormat::CSV:
-            impl_->csvWriter = throwOnResultKO(
-              arrow::csv::MakeCSVWriter(impl_->outfile, table->schema(), csvWriteOptions()));
-            break;
-        default:
-            throw std::invalid_argument("StreamingSimulationTableWriter: unknown table format");
-        }
-    }
-
-    if (impl_->parquetWriter)
-    {
-        // One row group per call
-        throwOnStatusKO(impl_->parquetWriter->WriteTable(*table, parquetChunkSize));
-    }
-    else
-    {
-        throwOnStatusKO(impl_->csvWriter->WriteTable(*table));
-    }
+    impl_->WriteTable(*table);
 }
 
 void StreamingSimulationTableWriter::close()
@@ -253,16 +330,7 @@ void StreamingSimulationTableWriter::close()
     {
         return;
     }
-    auto impl = std::move(impl_);
-    if (impl->parquetWriter)
-    {
-        throwOnStatusKO(impl->parquetWriter->Close());
-    }
-    if (impl->csvWriter)
-    {
-        throwOnStatusKO(impl->csvWriter->Close());
-    }
-    throwOnStatusKO(impl->outfile->Close());
+    impl_->Close();
 }
 
 } // namespace Antares::Writer

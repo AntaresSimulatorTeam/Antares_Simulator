@@ -65,7 +65,6 @@ public:
 private:
     struct Impl;
     std::filesystem::path output_file_;
-    TableFormat table_format_;
     std::unique_ptr<Impl> impl_;
 };
 
