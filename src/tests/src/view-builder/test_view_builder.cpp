@@ -390,32 +390,51 @@ BOOST_AUTO_TEST_CASE(area_view_geographic_trimming_includes_enabled_districts)
     const YAML::Node view = generateAreaViewConfig(*study)["view"];
     BOOST_REQUIRE_EQUAL(view["scope"]["extra-locations"].size(), 1);
     BOOST_CHECK_EQUAL(view["scope"]["extra-locations"][0]["id"].as<std::string>(), "district_eu");
-    BOOST_REQUIRE_EQUAL(view["aggregations-patterns"].size(), 10);
+    BOOST_REQUIRE_EQUAL(view["aggregations-patterns"].size(), 4);
     BOOST_CHECK(locations(findPattern(view, "hour-ind"))
                 == (std::set<std::string>{"eu", "france"}));
     BOOST_CHECK(locations(findPattern(view, "hour-all")) == (std::set<std::string>{"eu"}));
     BOOST_CHECK(!findPattern(view, "day-ind")["location-filter"].IsDefined());
     BOOST_CHECK(!findPattern(view, "day-all")["location-filter"].IsDefined());
-    const auto empty = locations(findPattern(view, "week-ind"));
-    BOOST_REQUIRE_EQUAL(empty.size(), 1);
-    BOOST_CHECK(*empty.begin() != "france");
-    BOOST_CHECK(*empty.begin() != "germany");
-    BOOST_CHECK(*empty.begin() != "eu");
+    BOOST_CHECK(!findPattern(view, "week-ind").IsDefined());
+    BOOST_CHECK(!findPattern(view, "week-all").IsDefined());
 }
 
-BOOST_AUTO_TEST_CASE(area_view_no_location_placeholder_avoids_collisions)
+BOOST_AUTO_TEST_CASE(area_view_skipped_when_no_aggregation_is_selected)
 {
     study->parameters.geographicTrimming = true;
     fr->filterYearByYear = filterNone;
     de->filterYearByYear = filterNone;
+    fr->filterSynthesis = filterNone;
+    de->filterSynthesis = filterNone;
+    const auto view = generateAreaViewConfig(*study)["view"];
+    BOOST_CHECK(view["aggregations-patterns"].IsSequence());
+    BOOST_CHECK_EQUAL(view["aggregations-patterns"].size(), 0);
+    BOOST_CHECK_GT(view["metrics"].size(), 0);
+    CapturingWriter writer;
+    BOOST_CHECK(!exportAreaViewConfig(*study, &writer));
+    BOOST_CHECK(writer.entries.empty());
+}
+
+BOOST_AUTO_TEST_CASE(area_view_written_when_only_district_aggregation_is_selected)
+{
+    study->parameters.geographicTrimming = true;
+    fr->filterYearByYear = filterNone;
+    de->filterYearByYear = filterNone;
+    fr->filterSynthesis = filterNone;
+    de->filterSynthesis = filterNone;
     auto members = std::make_shared<Sets::SetAreasType>();
     members->insert(fr);
     Sets::Options options;
     options.filterYearByYear = filterNone;
-    study->setsOfAreas.add("__antares_no_location__", members, options);
-    const auto view = generateAreaViewConfig(*study)["view"];
-    BOOST_CHECK(locations(findPattern(view, "hour-ind"))
-                == (std::set<std::string>{"__antares_no_location___"}));
+    options.filterSynthesis = filterHourly;
+    study->setsOfAreas.add("eu", members, options);
+
+    CapturingWriter writer;
+    BOOST_REQUIRE(exportAreaViewConfig(*study, &writer));
+    const auto view = YAML::Load(writer.entries.at("views/input/view_config_area.yml"))["view"];
+    BOOST_REQUIRE_EQUAL(view["aggregations-patterns"].size(), 1);
+    BOOST_CHECK(locations(findPattern(view, "hour-all")) == (std::set<std::string>{"eu"}));
 }
 
 BOOST_AUTO_TEST_CASE(export_area_view_uses_views_input_directory)

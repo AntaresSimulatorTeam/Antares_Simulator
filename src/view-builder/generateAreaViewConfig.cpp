@@ -2,12 +2,10 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <array>
-#include <set>
 #include <string>
 #include <string_view>
 #include <vector>
 
-#include <antares/solver/modeler/ModelerData.h>
 #include <antares/study/filter.h>
 #include <antares/view-builder/legacyToYaml.h>
 #include <antares/view-builder/viewBuilder.h>
@@ -85,43 +83,13 @@ constexpr std::array metrics = {
   Metric{"H_COST", {"H. COST"}},
 };
 
-// An empty location-filter means all locations in GEMS, so use a name that cannot match.
-std::string unusedLocation(const Data::Study& study)
-{
-    std::set<std::string> names;
-    study.areas.each([&names](const Data::Area& area) { names.insert(areaLocation(area.id)); });
-    for (const auto& [name, areas]: study.setsOfAreas)
-    {
-        names.insert(name);
-    }
-    if (const auto* modelerData = study.getModelerData())
-    {
-        for (const auto& component: modelerData->system->Components())
-        {
-            names.insert(component.Id());
-        }
-        for (const auto& [component, properties]: modelerData->componentProperties)
-        {
-            for (const auto& [id, value]: properties)
-            {
-                names.insert(value);
-            }
-        }
-    }
-    std::string name = "__antares_no_location__";
-    while (names.contains(name))
-    {
-        name += "_";
-    }
-    return name;
-}
-
 } // namespace
 
 bool exportAreaViewConfig(const Data::Study& study, Solver::IResultWriter* resultWriter)
 {
     const auto config = generateAreaViewConfig(study);
-    if (config["view"]["metrics"].size() == 0)
+    if (config["view"]["metrics"].size() == 0
+        || config["view"]["aggregations-patterns"].size() == 0)
     {
         return false;
     }
@@ -149,7 +117,6 @@ YAML::Node generateAreaViewConfig(const Data::Study& study)
         }
     }
 
-    const auto noLocation = unusedLocation(study);
     YAML::Node patterns(YAML::NodeType::Sequence);
     for (const auto& [granularity, flag]: granularities)
     {
@@ -182,12 +149,12 @@ YAML::Node generateAreaViewConfig(const Data::Study& study)
                     }
                 }
 
-                if (selected.size() != study.areas.size() + districts.size() || selected.empty())
+                if (selected.empty())
                 {
-                    if (selected.empty())
-                    {
-                        selected.push_back(noLocation);
-                    }
+                    continue;
+                }
+                if (selected.size() != study.areas.size() + districts.size())
+                {
                     for (const auto& location: selected)
                     {
                         pattern["location-filter"].push_back(location);
