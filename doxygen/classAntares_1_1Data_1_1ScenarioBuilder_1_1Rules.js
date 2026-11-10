@@ -20,6 +20,7 @@ var classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules =
     [ "linksNTC", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ac715bb520d5fd16f8963d6bf96bcfae3", null ],
     [ "load", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a49dbf33e08f992f535825ccedd246ae9", null ],
     [ "renewable", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a196dd0b7824fd2d282cfb6283d43757b", null ],
+    [ "reservesNeed", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a18fd239671ea701241e8d8463c59f7aa", null ],
     [ "shortTermStorageAdditionalConstraints", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a6fed061efaf6bee5a69c2fe53c31611f", null ],
     [ "shortTermStorageInflows", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ae8609f746a924c9d350f08d2a3c3a6eb", null ],
     [ "solar", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a8da38fa854bfd552ffa4bc130f218199", null ],

@@ -76,7 +76,7 @@ var NAVTREEINDEX1 =
 "ISimulationObserver_8h_source.html":[10,0,0,8,8,0,0,0,0,9],
 "IStudyLoader_8h_source.html":[10,0,0,4,0,26,0,0,0,0],
 "ITimeSeriesNumbersWriter_8h_source.html":[10,0,0,8,8,0,0,0,0,10],
-"InactiveComponentsAnalyzerBuilder_8cpp.html#aadee93366902ea6edc7d473efa009885":[8,0,0,4,148],
+"InactiveComponentsAnalyzerBuilder_8cpp.html#aadee93366902ea6edc7d473efa009885":[8,0,0,4,149],
 "InactiveComponentsAnalyzerBuilder_8h_source.html":[10,0,0,4,0,25,0,0,0,18],
 "InactiveComponentsAnalyzer_8h_source.html":[10,0,0,4,0,25,0,0,0,17],
 "InfeasibilityAnalyzer_8h_source.html":[10,0,0,8,6,1,0,0,0,2,0],
@@ -216,6 +216,7 @@ var NAVTREEINDEX1 =
 "RenewableTSNumberData_8h_source.html":[10,0,0,4,0,25,0,0,0,7,8],
 "ReserveParticipationGroup_8h_source.html":[10,0,0,8,6,1,0,0,0,1,61],
 "ReserveSatisfaction_8h_source.html":[10,0,0,8,6,1,0,0,0,1,62],
+"ReservesNeedTSNumberData_8h_source.html":[10,0,0,4,0,25,0,0,0,7,9],
 "RotateIndex_8h_source.html":[10,0,0,2,1,0,0,7],
 "RuntimeError_8hpp_source.html":[10,0,0,4,0,9,0,0,0,4],
 "STReleaseCapacityThresholds_8h_source.html":[10,0,0,8,6,1,0,0,0,1,66],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "ScenarioBuilderBaseVisitor_8h_source.html":[10,0,0,4,0,23,1,0],
 "ScenarioBuilderLexer_8h_source.html":[10,0,0,4,0,23,1,1],
 "ScenarioBuilderOwner_8h_source.html":[10,0,0,8,0,0,0,0,1],
-"ScenarioBuilderParser_8h_source.html":[10,0,0,4,0,23,1,2],
-"ScenarioBuilderVisitor_8h_source.html":[10,0,0,4,0,23,1,3]
+"ScenarioBuilderParser_8h_source.html":[10,0,0,4,0,23,1,2]
 };

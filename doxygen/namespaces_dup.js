@@ -96,6 +96,7 @@ var namespaces_dup =
           [ "loadTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1loadTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1loadTSNumberData" ],
           [ "ntcTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ntcTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ntcTSNumberData" ],
           [ "renewableTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1renewableTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1renewableTSNumberData" ],
+          [ "ReservesNeedTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ReservesNeedTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ReservesNeedTSNumberData" ],
           [ "Rules", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules" ],
           [ "dataInterface", "classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface" ],
           [ "Sets", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets" ],
@@ -185,6 +186,7 @@ var namespaces_dup =
         [ "TimeSeriesToCStr< 8 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_018_01_4.html", null ],
         [ "TimeSeriesToCStr< 16 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_0116_01_4.html", null ],
         [ "TimeSeriesToCStr< 32 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_0132_01_4.html", null ],
+        [ "TimeSeriesToCStr< 512 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_01512_01_4.html", null ],
         [ "ReserveTypeData", "structAntares_1_1Data_1_1ReserveTypeData.html", "structAntares_1_1Data_1_1ReserveTypeData" ],
         [ "StudyHeader", "classAntares_1_1Data_1_1StudyHeader.html", "classAntares_1_1Data_1_1StudyHeader" ],
         [ "InactiveComponentsAnalyzer", "classAntares_1_1Data_1_1InactiveComponentsAnalyzer.html", "classAntares_1_1Data_1_1InactiveComponentsAnalyzer" ],
@@ -426,7 +428,8 @@ var namespaces_dup =
           [ "timeSeriesRenewable", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a54bc5b99bddf744fb54d6f446fae169aac21091f9ec12c572756654adb92b4d0f", null ],
           [ "timeSeriesTransmissionCapacities", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a54bc5b99bddf744fb54d6f446fae169aae37ea3096871386fe013dacaa36eda57", null ],
           [ "timeSeriesShortTermInflows", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a54bc5b99bddf744fb54d6f446fae169aab9e08730ba7785e02363db0ec732601b", null ],
-          [ "timeSeriesShortTermAdditionalConstraints", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a54bc5b99bddf744fb54d6f446fae169aa10307a3ab2ceed142452906d6302e2ef", null ]
+          [ "timeSeriesShortTermAdditionalConstraints", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a54bc5b99bddf744fb54d6f446fae169aa10307a3ab2ceed142452906d6302e2ef", null ],
+          [ "timeSeriesReservesNeed", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a54bc5b99bddf744fb54d6f446fae169aaa41b8a71a0cc0843da653662e5b8acad", null ]
         ] ],
         [ "UnfeasibleProblemBehavior", "UnfeasibleProblemBehavior_8hpp.html#a7d6e48d9fb3dab16778f9e17a3762442", [
           [ "WARNING_DRY", "UnfeasibleProblemBehavior_8hpp.html#a7d6e48d9fb3dab16778f9e17a3762442ae231662f29467661b45c45713c1a61bd", null ],
@@ -499,6 +502,7 @@ var namespaces_dup =
         [ "singleAreaStoreTimeseriesNumbers< TimeSeriesType::timeSeriesHydro >", "store-timeseries-numbers_8cpp.html#a41b9b6700ecf85c958a349f72668e753", null ],
         [ "singleAreaStoreTimeseriesNumbers< TimeSeriesType::timeSeriesLoad >", "store-timeseries-numbers_8cpp.html#ab4d0be44d1a2c44ba5b6670b40839fbb", null ],
         [ "singleAreaStoreTimeseriesNumbers< TimeSeriesType::timeSeriesRenewable >", "store-timeseries-numbers_8cpp.html#ac1d87ce713e3a338357bdfcb0da4946a", null ],
+        [ "singleAreaStoreTimeseriesNumbers< TimeSeriesType::timeSeriesReservesNeed >", "store-timeseries-numbers_8cpp.html#a5a023ab286b68eca0cebc5e1ed6df7d8", null ],
         [ "singleAreaStoreTimeseriesNumbers< TimeSeriesType::timeSeriesShortTermAdditionalConstraints >", "store-timeseries-numbers_8cpp.html#a41d11430497576afc3ce63d7a7c5f54a", null ],
         [ "singleAreaStoreTimeseriesNumbers< TimeSeriesType::timeSeriesShortTermInflows >", "store-timeseries-numbers_8cpp.html#a11ef60b2ee53a2b498870e9133ba3350", null ],
         [ "singleAreaStoreTimeseriesNumbers< TimeSeriesType::timeSeriesSolar >", "store-timeseries-numbers_8cpp.html#aad303f6fde4fd0050abcec0e848b29c0", null ],

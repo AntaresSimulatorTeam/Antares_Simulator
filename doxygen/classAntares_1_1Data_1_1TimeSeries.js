@@ -2,6 +2,7 @@ var classAntares_1_1Data_1_1TimeSeries =
 [
     [ "TS", "classAntares_1_1Data_1_1TimeSeries.html#a6f3f5e793e533198cd8ae5627d2318ab", null ],
     [ "TimeSeries", "classAntares_1_1Data_1_1TimeSeries.html#a3850c8f1621200b8be4765f7f24eafbf", null ],
+    [ "TimeSeries", "classAntares_1_1Data_1_1TimeSeries.html#ae92e10512135b79be328199e52114939", null ],
     [ "averageTimeseries", "classAntares_1_1Data_1_1TimeSeries.html#ac735c94dbd5498649138cfd80e4811ae", null ],
     [ "fill", "classAntares_1_1Data_1_1TimeSeries.html#ae494bc3c9fcedfe95b423ba40ac8701d", null ],
     [ "getCoefficient", "classAntares_1_1Data_1_1TimeSeries.html#a1c52ab185c2a179ee967cdfc0205c640", null ],

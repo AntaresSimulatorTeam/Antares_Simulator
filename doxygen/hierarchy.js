@@ -363,6 +363,7 @@ var hierarchy =
       ] ],
       [ "Antares::Data::ScenarioBuilder::TSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData.html", [
         [ "Antares::Data::ScenarioBuilder::BindingConstraintsTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html", null ],
+        [ "Antares::Data::ScenarioBuilder::ReservesNeedTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ReservesNeedTSNumberData.html", null ],
         [ "Antares::Data::ScenarioBuilder::ShortTermAdditionalConstraintsTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermAdditionalConstraintsTSNumberData.html", null ],
         [ "Antares::Data::ScenarioBuilder::ShortTermInflowsTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermInflowsTSNumberData.html", null ],
         [ "Antares::Data::ScenarioBuilder::hydroTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroTSNumberData.html", null ],
@@ -1565,6 +1566,7 @@ var hierarchy =
     [ "Antares::Data::TimeSeriesToCStr< 2 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_012_01_4.html", null ],
     [ "Antares::Data::TimeSeriesToCStr< 32 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_0132_01_4.html", null ],
     [ "Antares::Data::TimeSeriesToCStr< 4 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_014_01_4.html", null ],
+    [ "Antares::Data::TimeSeriesToCStr< 512 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_01512_01_4.html", null ],
     [ "Antares::Data::TimeSeriesToCStr< 8 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_018_01_4.html", null ],
     [ "Antares::Solver::Variable::Economy::TimeSeriesTraits< Derived >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html", null ],
     [ "Antares::Solver::Variable::Economy::TimeSeriesTraits< TraitsType >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html", [

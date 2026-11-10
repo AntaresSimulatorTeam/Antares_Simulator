@@ -1,12 +1,13 @@
 var structCAPACITY__RESERVATION =
 [
+    [ "CAPACITY_RESERVATION", "structCAPACITY__RESERVATION.html#aa756cbc5e77c5556d850c7484b3b1a33", null ],
     [ "AllHydroReservesParticipation", "structCAPACITY__RESERVATION.html#a17e1e6f450f2e3876bbe0f76c2d35761", null ],
     [ "AllSTStorageReservesParticipation", "structCAPACITY__RESERVATION.html#af192634187334aa0ea2c26039d5375f5", null ],
     [ "AllThermalReservesParticipation", "structCAPACITY__RESERVATION.html#ab45dc1b2a7ec420e249765a319b03376", null ],
     [ "areaReserveIndex", "structCAPACITY__RESERVATION.html#a87cf2bea02861a82b9497c7b2ada5bf5", null ],
     [ "energyActivationRatio", "structCAPACITY__RESERVATION.html#ab9a09257f84e93b55a3816d77d8919bb", null ],
     [ "globalReserveIndex", "structCAPACITY__RESERVATION.html#a8dabc5b986b688003ac69d29c1a4a6a9", null ],
-    [ "need", "structCAPACITY__RESERVATION.html#a4a3114b855c75a098f519276215957f1", null ],
+    [ "need", "structCAPACITY__RESERVATION.html#aa69ed9d91372b94360d4c90249a89a62", null ],
     [ "powerActivationRatio", "structCAPACITY__RESERVATION.html#a795b9e4594ed209991413b293d36031c", null ],
     [ "referenceActivationDuration", "structCAPACITY__RESERVATION.html#aba8ec1d668654bcbd311639efb87c9b5", null ],
     [ "reserveID", "structCAPACITY__RESERVATION.html#ad5ddf7f9eb70e107d5879c14f628f7aa", null ],

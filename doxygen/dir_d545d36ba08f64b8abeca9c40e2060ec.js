@@ -9,6 +9,7 @@ var dir_d545d36ba08f64b8abeca9c40e2060ec =
     [ "LoadTSNumberData.h", "LoadTSNumberData_8h_source.html", null ],
     [ "NTCTSNumberData.h", "NTCTSNumberData_8h_source.html", null ],
     [ "RenewableTSNumberData.h", "RenewableTSNumberData_8h_source.html", null ],
+    [ "ReservesNeedTSNumberData.h", "ReservesNeedTSNumberData_8h_source.html", null ],
     [ "rules.h", "rules_8h_source.html", null ],
     [ "rules.hxx", "rules_8hxx_source.html", null ],
     [ "scBuilderDataInterface.h", "scBuilderDataInterface_8h_source.html", null ],

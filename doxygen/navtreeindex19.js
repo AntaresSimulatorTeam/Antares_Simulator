@@ -1,5 +1,17 @@
 var NAVTREEINDEX19 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Results.html#a094077c145054f6b161685587a28243d":[9,0,0,12,7,59,7],
+"classAntares_1_1Solver_1_1Variable_1_1Results.html#a0e03037439c19c9181446a8efde4b385":[9,0,0,12,7,59,2],
+"classAntares_1_1Solver_1_1Variable_1_1Results.html#a5e7e34b52741857972a765f74885d4f3":[9,0,0,12,7,59,1],
+"classAntares_1_1Solver_1_1Variable_1_1Results.html#a71a78b8ab798600ab580c5f6f997c2ce":[9,0,0,12,7,59,3],
+"classAntares_1_1Solver_1_1Variable_1_1Results.html#a7b4fbfc0005b03b0db6d9f73268f35d4":[9,0,0,12,7,59,0],
+"classAntares_1_1Solver_1_1Variable_1_1Results.html#a805c4f190c264c162f847e81dc77aa25":[9,0,0,12,7,59,4],
+"classAntares_1_1Solver_1_1Variable_1_1Results.html#a86620948003d1e115093da119977c65e":[9,0,0,12,7,59,8],
+"classAntares_1_1Solver_1_1Variable_1_1Results.html#aabe0fd88b5bb16e6c0390f285530cc4d":[9,0,0,12,7,59,9],
+"classAntares_1_1Solver_1_1Variable_1_1Results.html#ae1a03d332e140abfe2b20d946ab01f57":[9,0,0,12,7,59,6],
+"classAntares_1_1Solver_1_1Variable_1_1Results.html#af398884997724211c72f92e2920e2851":[9,0,0,12,7,59,10],
+"classAntares_1_1Solver_1_1Variable_1_1Results.html#af583b176d58e478a1916d69448cfafc5":[9,0,0,12,7,59,5],
+"classAntares_1_1Solver_1_1Variable_1_1SetDataAllYears.html":[9,0,0,12,7,20],
 "classAntares_1_1Solver_1_1Variable_1_1SetDataAllYears.html#a223e7e10c8456c096830fc00ac94851b":[9,0,0,12,7,20,0],
 "classAntares_1_1Solver_1_1Variable_1_1SetDataAllYears.html#a2ab84e715e82a706356a8eddaf40caba":[9,0,0,12,7,20,1],
 "classAntares_1_1Solver_1_1Variable_1_1SetDataAllYears.html#acfdf266d74ab20ecbc97acb88b11c9d9":[9,0,0,12,7,20,2],
@@ -237,17 +249,5 @@ var NAVTREEINDEX19 =
 "classAntares_1_1Writer_1_1IColumnAdapter.html#ab61d8588b60fb11c588e037c37ab119c":[9,0,0,16,1,2],
 "classAntares_1_1Writer_1_1IColumnAdapter.html#ae24225c5705421829f3b00cc1a1e0d93":[9,0,0,16,1,1],
 "classAntares_1_1Writer_1_1IntColumnAdapter.html":[9,0,0,16,4],
-"classAntares_1_1Writer_1_1IntColumnAdapter.html#a0e3b2a21cf470a168b38ac355c04fdff":[9,0,0,16,4,2],
-"classAntares_1_1Writer_1_1IntColumnAdapter.html#a2a91530a4f0f1785b8a38396dd3ed477":[9,0,0,16,4,0],
-"classAntares_1_1Writer_1_1IntColumnAdapter.html#a3ab0627ef0ae69d39fcd97fc34fd4eeb":[9,0,0,16,4,1],
-"classAntares_1_1Writer_1_1InternedStringColumnAdapter.html":[9,0,0,16,5],
-"classAntares_1_1Writer_1_1InternedStringColumnAdapter.html#a73b2f6d30f96406e7086743f94ba0b86":[9,0,0,16,5,2],
-"classAntares_1_1Writer_1_1InternedStringColumnAdapter.html#ac3bcf0061a87ef144c86c1fef6f60a71":[9,0,0,16,5,0],
-"classAntares_1_1Writer_1_1InternedStringColumnAdapter.html#aff392e79dfbab5b5f10bf2b7568dfe6e":[9,0,0,16,5,1],
-"classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html":[9,0,0,16,9],
-"classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html#a4d2df795f0ba13cfe82e9015f8ee64ca":[9,0,0,16,9,1],
-"classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html#a7394b72a4139ae394862bf113b263bb3":[9,0,0,16,9,0],
-"classAntares_1_1Writer_1_1OptDoubleColumnAdapter.html":[9,0,0,16,7],
-"classAntares_1_1Writer_1_1OptDoubleColumnAdapter.html#a5b64b4eb0711c68f8e27825db9069c45":[9,0,0,16,7,2],
-"classAntares_1_1Writer_1_1OptDoubleColumnAdapter.html#aabd9d5ae9aba6971395fdfdb129ce40d":[9,0,0,16,7,0]
+"classAntares_1_1Writer_1_1IntColumnAdapter.html#a0e3b2a21cf470a168b38ac355c04fdff":[9,0,0,16,4,2]
 };

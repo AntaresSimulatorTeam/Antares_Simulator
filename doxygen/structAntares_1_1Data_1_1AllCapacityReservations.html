@@ -148,12 +148,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa4c8e556d2af417de05a5dc40dd9ec99"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Data_1_1AllCapacityReservations.html#aa4c8e556d2af417de05a5dc40dd9ec99">size</a> () const</td></tr>
 <tr class="memdesc:aa4c8e556d2af417de05a5dc40dd9ec99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of capacityReservations in the area.  <a href="structAntares_1_1Data_1_1AllCapacityReservations.html#aa4c8e556d2af417de05a5dc40dd9ec99">More...</a><br /></td></tr>
 <tr class="separator:aa4c8e556d2af417de05a5dc40dd9ec99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38dc47b4e11f08540bfa479be454430a"><td class="memItemLeft" align="right" valign="top">std::pair&lt; UnsuppliedSpilled, ReserveID &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Data_1_1AllCapacityReservations.html#a38dc47b4e11f08540bfa479be454430a">reserveParticipationUnsuppliedSpilledAt</a> (unsigned int index) const</td></tr>
-<tr class="memdesc:a38dc47b4e11f08540bfa479be454430a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the name of the reserve at index i.  <a href="structAntares_1_1Data_1_1AllCapacityReservations.html#a38dc47b4e11f08540bfa479be454430a">More...</a><br /></td></tr>
-<tr class="separator:a38dc47b4e11f08540bfa479be454430a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18d5adf3b9cb627df4a26ed3ecbfab15"><td class="memItemLeft" align="right" valign="top">std::pair&lt; UnsuppliedSpilled, ReserveID &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Data_1_1AllCapacityReservations.html#a18d5adf3b9cb627df4a26ed3ecbfab15">reserveParticipationUnsuppliedSpilledAt</a> (uint32_t index) const</td></tr>
+<tr class="memdesc:a18d5adf3b9cb627df4a26ed3ecbfab15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the name of the reserve at index i.  <a href="structAntares_1_1Data_1_1AllCapacityReservations.html#a18d5adf3b9cb627df4a26ed3ecbfab15">More...</a><br /></td></tr>
+<tr class="separator:a18d5adf3b9cb627df4a26ed3ecbfab15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aacce42a29d766fe6a92a791eded3eec4"><td class="memItemLeft" align="right" valign="top">const ReserveID &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Data_1_1AllCapacityReservations.html#aacce42a29d766fe6a92a791eded3eec4">getReserveAtIndex</a> (size_t index) const</td></tr>
 <tr class="memdesc:aacce42a29d766fe6a92a791eded3eec4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the reserve name at the specified index in the map.  <a href="structAntares_1_1Data_1_1AllCapacityReservations.html#aacce42a29d766fe6a92a791eded3eec4">More...</a><br /></td></tr>
 <tr class="separator:aacce42a29d766fe6a92a791eded3eec4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5473b15ee7c5d655a5ff52258a0cedac"><td class="memItemLeft" align="right" valign="top"><a id="a5473b15ee7c5d655a5ff52258a0cedac"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>rebuildIndexes</b> ()</td></tr>
+<tr class="separator:a5473b15ee7c5d655a5ff52258a0cedac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16a6156c6f8487131e19ab987b474ab7"><td class="memItemLeft" align="right" valign="top"><a id="a16a6156c6f8487131e19ab987b474ab7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>resizeTimeseriesNumbers</b> (uint32_t nbYears)</td></tr>
+<tr class="separator:a16a6156c6f8487131e19ab987b474ab7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -172,6 +178,9 @@ std::map&lt; ReserveID, std::set&lt; std::string &gt; &gt;&#160;</td><td class="
 <tr class="memitem:ac3c2af377015157330e5f2798959ab1a"><td class="memItemLeft" align="right" valign="top"><a id="ac3c2af377015157330e5f2798959ab1a"></a>
 std::map&lt; ReserveID, <a class="el" href="structAntares_1_1Data_1_1CapacityReservation.html">CapacityReservation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>areaCapacityReservations</b></td></tr>
 <tr class="separator:ac3c2af377015157330e5f2798959ab1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f887a4f3960dc52cde105ac960c341f"><td class="memItemLeft" align="right" valign="top"><a id="a2f887a4f3960dc52cde105ac960c341f"></a>
+<a class="el" href="classAntares_1_1Data_1_1TimeSeriesNumbers.html">TimeSeriesNumbers</a>&#160;</td><td class="memItemRight" valign="bottom"><b>TSNumbers</b></td></tr>
+<tr class="separator:a2f887a4f3960dc52cde105ac960c341f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Stores all the Capacity reservations in two maps for the up and down reserves. </p>
@@ -281,8 +290,8 @@ std::map&lt; ReserveID, <a class="el" href="structAntares_1_1Data_1_1CapacityRes
 
 </div>
 </div>
-<a id="a38dc47b4e11f08540bfa479be454430a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38dc47b4e11f08540bfa479be454430a">&#9670;&nbsp;</a></span>reserveParticipationUnsuppliedSpilledAt()</h2>
+<a id="a18d5adf3b9cb627df4a26ed3ecbfab15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18d5adf3b9cb627df4a26ed3ecbfab15">&#9670;&nbsp;</a></span>reserveParticipationUnsuppliedSpilledAt()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -293,7 +302,7 @@ std::map&lt; ReserveID, <a class="el" href="structAntares_1_1Data_1_1CapacityRes
         <tr>
           <td class="memname">std::pair&lt;UnsuppliedSpilled, ReserveID&gt; Antares::Data::AllCapacityReservations::reserveParticipationUnsuppliedSpilledAt </td>
           <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>index</em></td><td>)</td>
           <td> const</td>
         </tr>

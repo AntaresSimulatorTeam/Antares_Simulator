@@ -1,5 +1,13 @@
 var NAVTREEINDEX27 =
 {
+"classThermalClusterConfig.html#ac83352ac06f31d36246b1e5243408d8b":[9,0,376,1],
+"classThermalReserveParticipation.html":[9,0,379],
+"classThermalReserveParticipation.html#a3486119265be0749b008718840976a6b":[9,0,379,1],
+"classThermalReserveParticipation.html#a8b5789c5ed0b74b26fd5137b99aab63b":[9,0,379,0],
+"classTimeSeriesConfigurer.html":[9,0,382],
+"classTimeSeriesConfigurer.html#a09aa7d8152e9531ca6c7cc5650274c50":[9,0,382,4],
+"classTimeSeriesConfigurer.html#a1b41d4ee31d8ed634be783eead089e27":[9,0,382,5],
+"classTimeSeriesConfigurer.html#a32031f39f78c7938983319850a51afc3":[9,0,382,3],
 "classTimeSeriesConfigurer.html#a43c97c7242191a1dcf72edcd1c980bc2":[9,0,382,1],
 "classTimeSeriesConfigurer.html#ad9676e891021049bf0838df96cf9a345":[9,0,382,2],
 "classTimeSeriesConfigurer.html#adb20a03277de3d723aee72bb0df2913a":[9,0,382,0],
@@ -241,13 +249,5 @@ var NAVTREEINDEX27 =
 "classcheck__on__results_1_1tolerances_1_1Tolerances.html#a58d9b4082ebfe6ebf40b76a1ad37300d":[9,0,4,9,0,0],
 "classcheck__on__results_1_1tolerances_1_1Tolerances.html#a657c7cb4a5ef1df7e7a3079190b8673e":[9,0,4,9,0,7],
 "classcheck__on__results_1_1tolerances_1_1Tolerances.html#a7040be736efa5a501d6b4152fb638955":[9,0,4,9,0,6],
-"classcheck__on__results_1_1tolerances_1_1Tolerances.html#a76f8b56236430c92dd333c961f645455":[9,0,4,9,0,8],
-"classcheck__on__results_1_1tolerances_1_1Tolerances.html#a7fb7265d94e9288b20ac42f513f42dc0":[9,0,4,9,0,2],
-"classcheck__on__results_1_1tolerances_1_1Tolerances.html#a9619783f875aefab8b2614736650a8ae":[9,0,4,9,0,1],
-"classcheck__on__results_1_1tolerances_1_1Tolerances.html#aabd61bb89b9d5f8aa07cc1b6ba293de8":[9,0,4,9,0,3],
-"classcheck__on__results_1_1tolerances_1_1Win__tolerances.html":[9,0,4,9,2],
-"classcheck__on__results_1_1tolerances_1_1Win__tolerances.html#a2c3b98f2605f8bff0af956dbf6573915":[9,0,4,9,2,0],
-"classcheck__on__results_1_1unfeasible__problem_1_1behavior__flag.html":[9,0,4,10,1],
-"classcheck__on__results_1_1unfeasible__problem_1_1behavior__flag.html#a36e78a3e5b26eb2788b5ae8c203ea25f":[9,0,4,10,1,6],
-"classcheck__on__results_1_1unfeasible__problem_1_1behavior__flag.html#a49624c9d4182e19dcbab6fd19d24c51f":[9,0,4,10,1,4]
+"classcheck__on__results_1_1tolerances_1_1Tolerances.html#a76f8b56236430c92dd333c961f645455":[9,0,4,9,0,8]
 };
