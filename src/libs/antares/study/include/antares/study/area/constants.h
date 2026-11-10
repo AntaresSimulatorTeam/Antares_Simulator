@@ -10,6 +10,8 @@
 #include <string>
 #include <string_view>
 
+#include "antares/utils/utils.h"
+
 namespace Antares::Data
 {
 struct CompareAreaName;
@@ -90,9 +92,8 @@ inline constexpr std::array<std::string_view, fhhMax> miscGenComponentNames = {
 //! Full simulation-table component id of a misc-gen column: `"{area}_{name}"`.
 [[nodiscard]] inline std::string miscGenComponentId(const std::string& areaId, MiscGenIndex index)
 {
-    std::string sanitized = areaId;
-    std::replace(sanitized.begin(), sanitized.end(), ' ', '_');
-    return areaId + miscGenComponentSuffix(index);
+    std::string sanitized = Antares::SanitizeId(areaId);
+    return sanitized + miscGenComponentSuffix(index);
 }
 
 enum ReservesIndex

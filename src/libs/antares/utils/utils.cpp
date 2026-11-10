@@ -18,7 +18,7 @@ namespace fs = std::filesystem;
 
 namespace Antares
 {
-    
+
 template<>
 void TransformNameIntoID(const AnyString& name, std::string& out)
 {

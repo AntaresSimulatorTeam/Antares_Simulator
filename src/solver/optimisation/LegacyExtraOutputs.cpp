@@ -81,7 +81,6 @@ public:
         thermalNames_.reserve(problemeHebdo.NombreDePays);
         for (uint32_t pays = 0; pays < problemeHebdo.NombreDePays; ++pays)
         {
-
             const std::string area = Antares::SanitizeId(problemeHebdo.NomsDesPays[pays]);
             areaNames_.push_back(area);
             hydroStorageNames_.push_back(area + "_hydro_storage");
