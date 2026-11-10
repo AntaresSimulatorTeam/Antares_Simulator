@@ -422,15 +422,14 @@ BOOST_AUTO_TEST_CASE(time_sum_and_time_shift_accept_right_side_multiplication)
 BOOST_AUTO_TEST_CASE(time_bounds_reject_solution_operators_and_nested_variables)
 {
     auto model = createYmlModel();
-    model.constraints = {
-      {"constraintA", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml", ""}};
+    model.constraints = {{"constraintA", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml", ""}};
     BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(dual(constraintA) .. 2, varP)", model),
                           InputError,
-                          containsMessage("Time-sum bounds cannot contain 'dual' operators"));
-    BOOST_CHECK_EXCEPTION(
-      convertExpressionToNode("varP[reduced_cost(varP)]", model),
-      InputError,
-      containsMessage("Time index arguments cannot contain 'reduced_cost' operators"));
+                          containsMessage("Time-sum `from` bound cannot contain 'dual' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[reduced_cost(varP)]", model),
+                          InputError,
+                          containsMessage(
+                            "Time index arguments cannot contain 'reduced_cost' operators"));
     BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[t + (1 + dual(constraintA))]", model),
                           InputError,
                           containsMessage("Time shift arguments cannot contain 'dual' operators"));
@@ -450,19 +449,32 @@ BOOST_AUTO_TEST_CASE(time_sum_bounds_reject_variables)
                           containsMessage("Time-sum `to` bound cannot contain variables: 'varP'."));
 }
 
-BOOST_AUTO_TEST_CASE(time_indices_accept_expressions)
+BOOST_FIXTURE_TEST_CASE(time_index_accepts_parameter_expression, RegistryHolder)
 {
-    const auto model = createYmlModel();
-    for (const std::string indexExpression: {"param2 + 1", "1 + 2"})
-    {
-        const auto expr = convertExpressionToNode("varP[" + indexExpression + "]", model);
-        const auto* timeIndex = dynamic_cast<const Nodes::TimeIndexNode*>(expr.node);
-        BOOST_REQUIRE(timeIndex);
+    const auto expr = convertExpressionToNode("varP[param2 + 1]", createYmlModel());
 
-        const auto expectedIndex = convertExpressionToNode(indexExpression, model);
-        Visitors::CompareVisitor cmp;
-        BOOST_CHECK(cmp.dispatch(timeIndex->right(), expectedIndex.node));
-    }
+    auto* variable = registry.create<Nodes::VariableNode>("varP", 0);
+    auto* parameter = registry.create<Nodes::ParameterNode>("param2");
+    auto* one = registry.create<Nodes::LiteralNode>(1);
+    auto* index = registry.create<Nodes::SumNode>(parameter, one);
+    auto* expected = registry.create<Nodes::TimeIndexNode>(variable, index);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, expected));
+}
+
+BOOST_FIXTURE_TEST_CASE(time_index_accepts_literal_expression, RegistryHolder)
+{
+    const auto expr = convertExpressionToNode("varP[1 + 2]", createYmlModel());
+
+    auto* variable = registry.create<Nodes::VariableNode>("varP", 0);
+    auto* one = registry.create<Nodes::LiteralNode>(1);
+    auto* two = registry.create<Nodes::LiteralNode>(2);
+    auto* index = registry.create<Nodes::SumNode>(one, two);
+    auto* expected = registry.create<Nodes::TimeIndexNode>(variable, index);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, expected));
 }
 
 BOOST_AUTO_TEST_CASE(dual_and_reduced_cost_are_rejected_recursively_in_time_sum_bounds)
