@@ -176,7 +176,7 @@ var NAVTREEINDEX25 =
 "classSTStoreMaxReserve.html#aa2604ca3f17f8b22942c67ef8bff7202":[9,0,348,0],
 "classSTStoreMaxReserve.html#ae2ac0ea361489bc49685f50ac6af6e38":[9,0,348,1],
 "classScalingLoader.html":[9,0,305],
-"classScalingLoader.html#a7a99b8d068d9e7f44c10a664bc5b65b1":[9,0,305,1],
+"classScalingLoader.html#a39b1500c15fd853437aeff0f91855858":[9,0,305,1],
 "classScalingLoader.html#a83b7171ed320d1b15e17c211cfe33454":[9,0,305,6],
 "classScalingLoader.html#a9308c20353fa1875112b245f1c8cbb4b":[9,0,305,4],
 "classScalingLoader.html#a9bced6a65b9b7deeae1604a942f13a2d":[9,0,305,0],
