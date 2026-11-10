@@ -224,7 +224,7 @@ void Study::prepareOutput()
                                          simulationName,
                                          getCurrentTime());
 
-    logs.info() << "  Output folder : " << folderOutput;
+    logs.info() << "  Output folder: " << folderOutput;
 }
 
 void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)

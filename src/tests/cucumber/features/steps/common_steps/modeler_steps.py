@@ -265,8 +265,8 @@ def build_antares_problem_generator_command(context):
 # TODO: code duplicated with solver steps
 def parse_output_folder_from_logs(logs: str) -> str:
     for line in logs.splitlines():
-        if 'Output folder : ' in line:
-            return line.split('Output folder : ')[1]
+        if 'Output folder: ' in line:
+            return line.split('Output folder: ')[1]
     raise LookupError("Could not parse output folder in output logs")
 
 
