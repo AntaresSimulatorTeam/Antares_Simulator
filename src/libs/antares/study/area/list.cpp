@@ -648,9 +648,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         }
         else
         {
-            logs.warning() << "Reserves are not supported in study version "
-                           << studyVersion.toString()
-                           << ". Reserves will be silently ignored. Consider upgrading the study.";
+            logs.error() << "Reserves are not supported in study version "
+                         << studyVersion.toString()
+                         << ". Upgrade the study to version 10.1 or later.";
+            ret = false;
         }
     }
 
