@@ -32,50 +32,57 @@ constexpr std::array granularities = {
   Granularity{"year", Data::filterAnnual},
 };
 
+struct Metric
+{
+    std::string_view id;
+    std::array<std::string_view, 4> variables;
+};
+
+// Legacy variable-to-metric correspondence from the GEMS converter's view documentation.
 constexpr std::array metrics = {
-  "OV_COST",
-  "OP_COST",
-  "MRG_PRICE",
-  "CO2_EMIS",
-  "NH3_EMIS",
-  "SO2_EMIS",
-  "NOX_EMIS",
-  "PM2_5_EMIS",
-  "PM5_EMIS",
-  "PM10_EMIS",
-  "NMVOC_EMIS",
-  "OP1_EMIS",
-  "OP2_EMIS",
-  "OP3_EMIS",
-  "OP4_EMIS",
-  "OP5_EMIS",
-  "LOAD",
-  "RES_LOAD",
-  "DTG_BY_TECHNOLOGY",
-  "BALANCE",
-  "RES_GENERATION",
-  "STS_INJECTION",
-  "STS_WITHDRAWAL",
-  "STS_LEVEL",
-  "UNSP_ENRG",
-  "SPIL_ENRG",
-  "NODU",
-  "NP_COST",
-  "AVL_DTG",
-  "DTG_MRG",
-  "LOLD",
-  "LOLP",
-  "NPCAP_HOURS",
-  "ROW_BAL",
-  "MISC_NDG",
-  "PSP",
-  "H_STOR",
-  "H_PUMP",
-  "H_OVFL",
-  "H_INFL",
-  "H_LEV",
-  "H_VAL",
-  "H_COST",
+  Metric{"OV_COST", {"OV. COST"}},
+  Metric{"OP_COST", {"OP. COST"}},
+  Metric{"MRG_PRICE", {"MRG. PRICE"}},
+  Metric{"CO2_EMIS", {"CO2 EMIS."}},
+  Metric{"NH3_EMIS", {"NH3 EMIS."}},
+  Metric{"SO2_EMIS", {"SO2 EMIS."}},
+  Metric{"NOX_EMIS", {"NOX EMIS."}},
+  Metric{"PM2_5_EMIS", {"PM2_5 EMIS."}},
+  Metric{"PM5_EMIS", {"PM5 EMIS."}},
+  Metric{"PM10_EMIS", {"PM10 EMIS."}},
+  Metric{"NMVOC_EMIS", {"NMVOC EMIS."}},
+  Metric{"OP1_EMIS", {"OP1 EMIS."}},
+  Metric{"OP2_EMIS", {"OP2 EMIS."}},
+  Metric{"OP3_EMIS", {"OP3 EMIS."}},
+  Metric{"OP4_EMIS", {"OP4 EMIS."}},
+  Metric{"OP5_EMIS", {"OP5 EMIS."}},
+  Metric{"LOAD", {"LOAD"}},
+  Metric{"RES_LOAD", {"RES LOAD"}},
+  Metric{"DTG_BY_TECHNOLOGY", {"Dispatch. Gen."}},
+  Metric{"BALANCE", {"BALANCE"}},
+  Metric{"RES_GENERATION", {"Renewable Gen.", "WIND", "SOLAR", "H. ROR"}},
+  Metric{"STS_INJECTION", {"STS by group"}},
+  Metric{"STS_WITHDRAWAL", {"STS by group"}},
+  Metric{"STS_LEVEL", {"STS by group"}},
+  Metric{"UNSP_ENRG", {"UNSP. ENRG"}},
+  Metric{"SPIL_ENRG", {"SPIL. ENRG"}},
+  Metric{"NODU", {"NODU"}},
+  Metric{"NP_COST", {"NP COST"}},
+  Metric{"AVL_DTG", {"AVL DTG"}},
+  Metric{"DTG_MRG", {"DTG MRG"}},
+  Metric{"LOLD", {"LOLD"}},
+  Metric{"LOLP", {"LOLP"}},
+  Metric{"NPCAP_HOURS", {"NPCAP HOURS"}},
+  Metric{"ROW_BAL", {"ROW BAL."}},
+  Metric{"MISC_NDG", {"MISC. NDG"}},
+  Metric{"PSP", {"PSP"}},
+  Metric{"H_STOR", {"H. STOR"}},
+  Metric{"H_PUMP", {"H. PUMP"}},
+  Metric{"H_OVFL", {"H. OVFL"}},
+  Metric{"H_INFL", {"H. INFL"}},
+  Metric{"H_LEV", {"H. LEV"}},
+  Metric{"H_VAL", {"H. VAL"}},
+  Metric{"H_COST", {"H. COST"}},
 };
 
 // An empty location-filter means all locations in GEMS, so use a name that cannot match.
@@ -111,10 +118,16 @@ std::string unusedLocation(const Data::Study& study)
 
 } // namespace
 
-void exportAreaViewConfig(const Data::Study& study, Solver::IResultWriter* resultWriter)
+bool exportAreaViewConfig(const Data::Study& study, Solver::IResultWriter* resultWriter)
 {
-    std::string content = YAML::Dump(generateAreaViewConfig(study));
+    const auto config = generateAreaViewConfig(study);
+    if (config["view"]["metrics"].size() == 0)
+    {
+        return false;
+    }
+    std::string content = YAML::Dump(config);
     resultWriter->addEntryFromBuffer("views/input/view_config_area.yml", content);
+    return true;
 }
 
 YAML::Node generateAreaViewConfig(const Data::Study& study)
@@ -186,12 +199,32 @@ YAML::Node generateAreaViewConfig(const Data::Study& study)
     }
     view["aggregations-patterns"] = patterns;
 
-    for (const auto* metric: metrics)
+    YAML::Node selectedMetrics(YAML::NodeType::Sequence);
+    for (const auto& metric: metrics)
     {
+        if (study.parameters.thematicTrimming)
+        {
+            bool selected = false;
+            for (const auto variable: metric.variables)
+            {
+                if (!variable.empty()
+                    && study.parameters.variablesPrintInfo.exists(std::string(variable))
+                    && study.parameters.variablesPrintInfo.isPrinted(std::string(variable)))
+                {
+                    selected = true;
+                    break;
+                }
+            }
+            if (!selected)
+            {
+                continue;
+            }
+        }
         YAML::Node entry;
-        entry["id"] = std::string("antares_legacy_area_catalog.") + metric;
-        view["metrics"].push_back(entry);
+        entry["id"] = std::string("antares_legacy_area_catalog.") + std::string(metric.id);
+        selectedMetrics.push_back(entry);
     }
+    view["metrics"] = selectedMetrics;
     YAML::Node root;
     root["view"] = view;
     return root;

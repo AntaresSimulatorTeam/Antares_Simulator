@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <map>
 #include <set>
+#include <sstream>
 #include <unordered_set>
 #include <yaml-cpp/yaml.h>
 
@@ -14,6 +15,7 @@
 
 #include <antares/io/inputs/InputError.h>
 #include <antares/solver/modeler/ModelerData.h>
+#include <antares/solver/variable/registerThematicTrimmingVariables.h>
 #include <antares/study/area/area.h>
 #include <antares/study/area/constants.h>
 #include <antares/study/area/links.h>
@@ -66,6 +68,16 @@ std::set<std::string> locations(const YAML::Node& pattern)
     return result;
 }
 
+std::set<std::string> metricIds(const YAML::Node& view)
+{
+    std::set<std::string> result;
+    for (const auto& metric: view["metrics"])
+    {
+        result.insert(metric["id"].as<std::string>());
+    }
+    return result;
+}
+
 class CapturingWriter final: public Antares::Solver::IResultWriter
 {
 public:
@@ -106,6 +118,7 @@ struct ViewBuilderFixture
 
     ViewBuilderFixture()
     {
+        Antares::Solver::Variable::RegisterThematicTrimmingVariables();
         study = std::make_unique<Study>();
         study->parameters.reset();
         study->parameters.renewableGeneration.toClusters();
@@ -153,6 +166,169 @@ struct ViewBuilderFixture
 };
 
 BOOST_FIXTURE_TEST_SUITE(view_builder_tests, ViewBuilderFixture)
+
+BOOST_AUTO_TEST_CASE(area_view_thematic_variable_mappings)
+{
+    study->parameters.thematicTrimming = true;
+    auto& variables = study->parameters.variablesPrintInfo;
+    const std::vector<std::pair<std::string, std::string>> mappings = {
+      {"OV. COST", "OV_COST"},
+      {"OP. COST", "OP_COST"},
+      {"MRG. PRICE", "MRG_PRICE"},
+      {"CO2 EMIS.", "CO2_EMIS"},
+      {"NH3 EMIS.", "NH3_EMIS"},
+      {"SO2 EMIS.", "SO2_EMIS"},
+      {"NOX EMIS.", "NOX_EMIS"},
+      {"PM2_5 EMIS.", "PM2_5_EMIS"},
+      {"PM5 EMIS.", "PM5_EMIS"},
+      {"PM10 EMIS.", "PM10_EMIS"},
+      {"NMVOC EMIS.", "NMVOC_EMIS"},
+      {"OP1 EMIS.", "OP1_EMIS"},
+      {"OP2 EMIS.", "OP2_EMIS"},
+      {"OP3 EMIS.", "OP3_EMIS"},
+      {"OP4 EMIS.", "OP4_EMIS"},
+      {"OP5 EMIS.", "OP5_EMIS"},
+      {"LOAD", "LOAD"},
+      {"RES LOAD", "RES_LOAD"},
+      {"Dispatch. Gen.", "DTG_BY_TECHNOLOGY"},
+      {"BALANCE", "BALANCE"},
+      {"Renewable Gen.", "RES_GENERATION"},
+      {"WIND", "RES_GENERATION"},
+      {"SOLAR", "RES_GENERATION"},
+      {"H. ROR", "RES_GENERATION"},
+      {"UNSP. ENRG", "UNSP_ENRG"},
+      {"SPIL. ENRG", "SPIL_ENRG"},
+      {"NODU", "NODU"},
+      {"NP COST", "NP_COST"},
+      {"AVL DTG", "AVL_DTG"},
+      {"DTG MRG", "DTG_MRG"},
+      {"LOLD", "LOLD"},
+      {"LOLP", "LOLP"},
+      {"NPCAP HOURS", "NPCAP_HOURS"},
+      {"ROW BAL.", "ROW_BAL"},
+      {"MISC. NDG", "MISC_NDG"},
+      {"PSP", "PSP"},
+      {"H. STOR", "H_STOR"},
+      {"H. PUMP", "H_PUMP"},
+      {"H. OVFL", "H_OVFL"},
+      {"H. INFL", "H_INFL"},
+      {"H. LEV", "H_LEV"},
+      {"H. VAL", "H_VAL"},
+      {"H. COST", "H_COST"},
+    };
+    for (const auto& [variable, metric]: mappings)
+    {
+        BOOST_TEST_CONTEXT(variable)
+        {
+            BOOST_REQUIRE(variables.exists(variable));
+            variables.setAllPrintStatusesTo(false);
+            variables.setPrintStatus(variable, true);
+            const auto view = generateAreaViewConfig(*study)["view"];
+            BOOST_REQUIRE_EQUAL(view["metrics"].size(), 1);
+            BOOST_CHECK_EQUAL(view["metrics"][0]["id"].as<std::string>(),
+                              "antares_legacy_area_catalog." + metric);
+        }
+    }
+
+    variables.setAllPrintStatusesTo(false);
+    variables.setPrintStatus("sts BY group", true);
+    const auto view = generateAreaViewConfig(*study)["view"];
+    BOOST_REQUIRE_EQUAL(view["metrics"].size(), 3);
+    BOOST_CHECK(metricIds(view)
+                == (std::set<std::string>{"antares_legacy_area_catalog.STS_INJECTION",
+                                          "antares_legacy_area_catalog.STS_WITHDRAWAL",
+                                          "antares_legacy_area_catalog.STS_LEVEL"}));
+}
+
+BOOST_AUTO_TEST_CASE(area_view_thematic_selection_combines_with_geographic_trimming)
+{
+    study->parameters.thematicTrimming = true;
+    study->parameters.geographicTrimming = true;
+    fr->filterYearByYear = filterHourly;
+    de->filterYearByYear = filterNone;
+    auto& variables = study->parameters.variablesPrintInfo;
+    variables.setAllPrintStatusesTo(false);
+    for (const auto* variable: {"wind", "solar", "h. ror", "load"})
+    {
+        variables.setPrintStatus(variable, true);
+    }
+
+    CapturingWriter writer;
+    BOOST_REQUIRE(exportAreaViewConfig(*study, &writer));
+    const auto view = YAML::Load(writer.entries.at("views/input/view_config_area.yml"))["view"];
+    BOOST_REQUIRE_EQUAL(view["metrics"].size(), 2);
+    BOOST_CHECK(metricIds(view)
+                == (std::set<std::string>{"antares_legacy_area_catalog.LOAD",
+                                          "antares_legacy_area_catalog.RES_GENERATION"}));
+    BOOST_CHECK(locations(findPattern(view, "hour-ind")) == (std::set<std::string>{"france"}));
+}
+
+BOOST_AUTO_TEST_CASE(area_view_skipped_when_no_mapped_metric_is_selected)
+{
+    study->parameters.thematicTrimming = true;
+    auto& variables = study->parameters.variablesPrintInfo;
+    variables.setAllPrintStatusesTo(false);
+    variables.setPrintStatus("FLOW LIN.", true);
+    const auto view = generateAreaViewConfig(*study)["view"];
+    BOOST_CHECK(view["metrics"].IsSequence());
+    BOOST_CHECK_EQUAL(view["metrics"].size(), 0);
+    CapturingWriter writer;
+    BOOST_CHECK(!exportAreaViewConfig(*study, &writer));
+    BOOST_CHECK(writer.entries.empty());
+}
+
+BOOST_AUTO_TEST_CASE(area_view_ignores_variable_statuses_without_thematic_trimming)
+{
+    study->parameters.variablesPrintInfo.setAllPrintStatusesTo(false);
+    BOOST_CHECK_EQUAL(generateAreaViewConfig(*study)["view"]["metrics"].size(), 43);
+}
+
+BOOST_AUTO_TEST_CASE(area_view_with_all_thematic_variables_selected)
+{
+    study->parameters.thematicTrimming = true;
+    study->parameters.variablesPrintInfo.setAllPrintStatusesTo(true);
+    const auto view = generateAreaViewConfig(*study)["view"];
+    BOOST_CHECK_EQUAL(view["metrics"].size(), 43);
+    BOOST_CHECK_EQUAL(metricIds(view).size(), 43);
+}
+
+BOOST_AUTO_TEST_CASE(area_view_uses_loaded_variable_selection)
+{
+    std::stringstream stream(R"([general]
+thematic-trimming = true
+[variables selection]
+selected_vars_reset = false
+select_var + = LoAd
+select_var + = WIND
+select_var + = SoLaR
+select_var - = wind
+select_var + = STS by group
+[other preferences]
+renewable-generation-modelling = aggregated
+)");
+    Antares::IniFile ini;
+    ini.readStream(stream);
+    BOOST_REQUIRE(study->parameters.loadFromINI(ini, StudyVersion::latest()));
+    study->parameters.validateOptions(StudyLoadOptions{});
+    const auto view = generateAreaViewConfig(*study)["view"];
+    BOOST_REQUIRE_EQUAL(view["metrics"].size(), 5);
+    BOOST_CHECK(metricIds(view)
+                == (std::set<std::string>{"antares_legacy_area_catalog.LOAD",
+                                          "antares_legacy_area_catalog.RES_GENERATION",
+                                          "antares_legacy_area_catalog.STS_INJECTION",
+                                          "antares_legacy_area_catalog.STS_WITHDRAWAL",
+                                          "antares_legacy_area_catalog.STS_LEVEL"}));
+
+    // The solver excludes aggregated renewable variables in cluster mode.
+    study->parameters.renewableGeneration.toClusters();
+    study->parameters.validateOptions(StudyLoadOptions{});
+    const auto clusterView = generateAreaViewConfig(*study)["view"];
+    BOOST_CHECK(metricIds(clusterView)
+                == (std::set<std::string>{"antares_legacy_area_catalog.LOAD",
+                                          "antares_legacy_area_catalog.STS_INJECTION",
+                                          "antares_legacy_area_catalog.STS_WITHDRAWAL",
+                                          "antares_legacy_area_catalog.STS_LEVEL"}));
+}
 
 BOOST_AUTO_TEST_CASE(area_view_without_geographic_trimming)
 {
