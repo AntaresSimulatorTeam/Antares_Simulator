@@ -116,6 +116,7 @@ private:
     std::any visitCeil(ExprParser::ArgListContext* context);
     std::any visitRound(ExprParser::ArgListContext* context);
     std::any visitAbs(ExprParser::ArgListContext* context);
+    Node* makeMulDiv(Node* left, Node* right, std::string_view op);
     Node* extractOneArgument(ExprParser::ArgListContext* context, const std::string& opName);
     std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
     Node* NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr);
@@ -258,14 +259,18 @@ std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* contex
     return convertIdentifier(context->getText());
 }
 
+Node* ConvertorVisitor::makeMulDiv(Node* left, Node* right, std::string_view op)
+{
+    return (op == "*") ? static_cast<Node*>(registry_.create<MultiplicationNode>(left, right))
+                       : static_cast<Node*>(registry_.create<DivisionNode>(left, right));
+}
+
 std::any ConvertorVisitor::visitMuldiv(ExprParser::MuldivContext* context)
 {
     auto* left = std::any_cast<Node*>(visit(context->expr(0)));
     auto* right = std::any_cast<Node*>(visit(context->expr(1)));
 
-    std::string op = context->op->getText();
-    return (op == "*") ? static_cast<Node*>(registry_.create<MultiplicationNode>(left, right))
-                       : static_cast<Node*>(registry_.create<DivisionNode>(left, right));
+    return makeMulDiv(left, right, context->op->getText());
 }
 
 std::any ConvertorVisitor::visitFullexpr(ExprParser::FullexprContext* context)
@@ -716,18 +721,14 @@ std::any ConvertorVisitor::visitShiftMuldiv(ExprParser::ShiftMuldivContext* cont
 {
     Node* left = std::any_cast<Node*>(visit(context->shift_expr()));
     Node* right = std::any_cast<Node*>(visit(context->right_expr()));
-    const auto op = context->op->getText();
-    return (op == "*") ? static_cast<Node*>(registry_.create<MultiplicationNode>(left, right))
-                       : static_cast<Node*>(registry_.create<DivisionNode>(left, right));
+    return makeMulDiv(left, right, context->op->getText());
 }
 
 std::any ConvertorVisitor::visitRightMuldiv(ExprParser::RightMuldivContext* context)
 {
     Node* left = std::any_cast<Node*>(visit(context->right_expr(0)));
     Node* right = std::any_cast<Node*>(visit(context->right_expr(1)));
-    const auto op = context->op->getText();
-    return (op == "*") ? static_cast<Node*>(registry_.create<MultiplicationNode>(left, right))
-                       : static_cast<Node*>(registry_.create<DivisionNode>(left, right));
+    return makeMulDiv(left, right, context->op->getText());
 }
 
 std::any ConvertorVisitor::visitSignedExpression(ExprParser::SignedExpressionContext* context)
