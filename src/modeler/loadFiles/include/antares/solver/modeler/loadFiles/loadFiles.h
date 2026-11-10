@@ -18,7 +18,7 @@ namespace Antares::Solver::LoadFiles
 {
 
 /// Load the libraries, system and dataseries
-std::optional<ModelerData> loadAll(const std::filesystem::path& studyPath);
+ModelerData loadAll(const std::filesystem::path& studyPath);
 
 ModelerParameters loadParameters(const std::filesystem::path& studyPath);
 
@@ -30,7 +30,7 @@ struct LoadedLibraries
     ScenarioScope scenarioScope;
 };
 
-std::optional<LoadedLibraries> loadLibraries(const std::filesystem::path& studyPath);
+LoadedLibraries loadLibraries(const std::filesystem::path& studyPath);
 
 struct LoadedSystem
 {

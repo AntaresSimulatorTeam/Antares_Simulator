@@ -3,6 +3,7 @@
 
 #pragma once
 #include <filesystem>
+#include <optional>
 
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include "antares/io/outputs/SimulationTable.h"
