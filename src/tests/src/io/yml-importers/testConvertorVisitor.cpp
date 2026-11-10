@@ -419,6 +419,26 @@ BOOST_AUTO_TEST_CASE(time_sum_and_time_shift_accept_right_side_multiplication)
     BOOST_CHECK_NO_THROW(convertExpressionToNode("varP[t + 1 - param1 / 2]", model));
 }
 
+BOOST_AUTO_TEST_CASE(time_bounds_reject_solution_operators_and_nested_variables)
+{
+    auto model = createYmlModel();
+    model.constraints = {
+      {"constraintA", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml", ""}};
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(dual(constraintA) .. 2, varP)", model),
+                          InputError,
+                          containsMessage("Time-sum bounds cannot contain 'dual' operators"));
+    BOOST_CHECK_EXCEPTION(
+      convertExpressionToNode("varP[reduced_cost(varP)]", model),
+      InputError,
+      containsMessage("Time index arguments cannot contain 'reduced_cost' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[t + (1 + dual(constraintA))]", model),
+                          InputError,
+                          containsMessage("Time shift arguments cannot contain 'dual' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[t + (1 + varP)]", model),
+                          InputError,
+                          containsMessage("Time shift arguments cannot contain variables"));
+}
+
 BOOST_AUTO_TEST_CASE(time_sum_bounds_reject_variables)
 {
     BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(varP .. 2, varP)", createYmlModel()),
