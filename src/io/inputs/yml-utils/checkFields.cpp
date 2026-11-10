@@ -34,8 +34,8 @@ struct ValidationResult
 
     ValidationResult& operator+=(const ValidationResult& other)
     {
-        warnings.insert(warnings.end(), other.warnings.begin(), other.warnings.end());
-        errors.insert(errors.end(), other.errors.begin(), other.errors.end());
+        std::ranges::copy(other.warnings, std::back_inserter(warnings));
+        std::ranges::copy(other.errors, std::back_inserter(errors));
         return *this;
     }
 };
