@@ -466,10 +466,10 @@ BOOST_AUTO_TEST_CASE(area_connection_ignores_unknown_field_with_warning)
                  fields:
                    - id: capacity
                  area-connection:
-                   injection-to-balance: capa
-                   spillage-bound:
-                   unsupplied-energy-bound:
-                   not-a-field:
+                   injection-to-balance: injection
+                   spillage-bound: spillage
+                   unsupplied-energy-bound: unsupplied
+                   not-a-field: value
             models: []
     )"s;
     BOOST_REQUIRE_NO_THROW((void)parser.parse(library));

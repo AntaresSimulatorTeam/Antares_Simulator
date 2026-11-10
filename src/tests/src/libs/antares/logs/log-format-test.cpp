@@ -238,7 +238,7 @@ BOOST_FIXTURE_TEST_CASE(char_types_append_as_characters_not_numbers, LogsUnderTe
 BOOST_FIXTURE_TEST_CASE(filesystem_path_is_streamed_raw_without_quotes, LogsUnderTest)
 {
     const std::filesystem::path path("some dir/sub");
-    logs.info() << "Output folder : " << path;
+    logs.info() << "Output folder: " << path;
     const auto lines = readLogFile();
     BOOST_REQUIRE_EQUAL(lines.size(), 1);
     const std::string expected = std::string("Output folder : ") + escapeForRegex(path.string());

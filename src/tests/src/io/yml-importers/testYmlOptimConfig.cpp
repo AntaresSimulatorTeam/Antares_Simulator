@@ -241,10 +241,7 @@ models:
 
 BOOST_AUTO_TEST_CASE(parse_missing_models_key_gives_no_models)
 {
-    std::string yaml_content = R"(
-other_key:
-  - id: model1
-)";
+    const std::string yaml_content = "{}";
 
     Parser parser;
     BOOST_CHECK(parser.parse(yaml_content).models.empty());

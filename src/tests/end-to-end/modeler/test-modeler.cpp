@@ -89,7 +89,7 @@ public:
                 .lastTimeStep = timeSteps.second};
     }
 
-    std::optional<ModelerData> loadAll() override
+    ModelerData loadAll() override
     {
         auto objective = fixture.variable("x", 0);
         auto var_node = fixture.variable("x", 0);
@@ -325,7 +325,7 @@ public:
                 .lastTimeStep = timeSteps_ - 1};
     }
 
-    std::optional<ModelerData> loadAll() override
+    ModelerData loadAll() override
     {
         auto var_node = fixture.variable("x", 0);
 
