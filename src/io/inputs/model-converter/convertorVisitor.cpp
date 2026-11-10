@@ -648,8 +648,8 @@ std::any ConvertorVisitor::visitTimeSum(ExprParser::TimeSumContext* context)
 {
     auto* from = std::any_cast<Node*>(context->from->accept(this));
     auto* to = std::any_cast<Node*>(context->to->accept(this));
-    validateTimeBoundNode(from, "Time-sum bounds");
-    validateTimeBoundNode(to, "Time-sum bounds");
+    validateTimeBoundNode(from, "Time-sum `from` bound");
+    validateTimeBoundNode(to, "Time-sum `to` bound");
 
     auto* expr = std::any_cast<Node*>(context->expr()->accept(this));
 

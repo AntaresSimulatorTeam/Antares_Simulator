@@ -423,7 +423,10 @@ BOOST_AUTO_TEST_CASE(time_sum_bounds_reject_variables)
 {
     BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(varP .. 2, varP)", createYmlModel()),
                           InputError,
-                          containsMessage("Time-sum bounds cannot contain variables"));
+                          containsMessage("Time-sum `from` bound cannot contain variables"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(1 .. varP, varP)", createYmlModel()),
+                          InputError,
+                          containsMessage("Time-sum `to` bound cannot contain variables"));
 }
 
 BOOST_AUTO_TEST_CASE(time_indices_accept_expressions)
@@ -449,11 +452,11 @@ BOOST_AUTO_TEST_CASE(dual_and_reduced_cost_are_rejected_recursively_in_time_sum_
 
     BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(1 + dual(constraintA) .. 2, varP)", model),
                           InputError,
-                          containsMessage("Time-sum bounds cannot contain 'dual' operators"));
+                          containsMessage("Time-sum `from` bound cannot contain 'dual' operators"));
     BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(1 + reduced_cost(varP) .. 2, varP)", model),
                           InputError,
                           containsMessage(
-                            "Time-sum bounds cannot contain 'reduced_cost' operators"));
+                            "Time-sum `from` bound cannot contain 'reduced_cost' operators"));
 }
 
 BOOST_AUTO_TEST_CASE(time_shift_and_index_arguments_reject_variables)
