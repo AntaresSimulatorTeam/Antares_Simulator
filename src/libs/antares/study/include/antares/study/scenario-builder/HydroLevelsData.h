@@ -15,7 +15,7 @@ class HydroLevelsData: public dataInterface
 {
 public:
     //! Matrix
-    using MatrixType = Matrix<double>;
+    using MatrixType = Matrix;
 
     //! \name Data manipulation
     //@{

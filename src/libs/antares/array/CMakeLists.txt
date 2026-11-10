@@ -1,6 +1,8 @@
 set(SRC_MATRIX
         include/antares/array/matrix.h
         include/antares/array/matrix.hxx
+        include/antares/array/matrix-io.h
+        include/antares/array/matrix-io.hxx
         matrix.cpp
 )
 source_group("array" FILES ${SRC_MATRIX})
@@ -9,12 +11,10 @@ add_library(array ${SRC_MATRIX})
 add_library(Antares::array ALIAS array)
 
 target_link_libraries(array
-        PRIVATE
-        yuni-static-core
         PUBLIC
+        yuni-static-core
         io #matrix.hxx
         Antares::logs #matrix.hxx
-        Antares::memory
         Antares::study-utils
 )
 

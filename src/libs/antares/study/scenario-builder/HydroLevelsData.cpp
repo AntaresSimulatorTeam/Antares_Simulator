@@ -20,7 +20,7 @@ bool HydroLevelsData::reset(const Study& study)
 
 void HydroLevelsData::setTSnumber(unsigned int areaindex, unsigned int year, double value)
 {
-    if (areaindex < pHydroLevelsRules.width && year < pHydroLevelsRules.height)
+    if (areaindex < pHydroLevelsRules.width() && year < pHydroLevelsRules.height())
     {
         pHydroLevelsRules[areaindex][year] = value;
     }
@@ -28,22 +28,22 @@ void HydroLevelsData::setTSnumber(unsigned int areaindex, unsigned int year, dou
 
 unsigned int HydroLevelsData::width() const
 {
-    return pHydroLevelsRules.width;
+    return pHydroLevelsRules.width();
 }
 
 unsigned int HydroLevelsData::height() const
 {
-    return pHydroLevelsRules.height;
+    return pHydroLevelsRules.height();
 }
 
 double HydroLevelsData::get_value(unsigned int x, unsigned int y) const
 {
-    return pHydroLevelsRules.entry[y][x];
+    return pHydroLevelsRules[y][x];
 }
 
 void HydroLevelsData::set_value(unsigned int x, unsigned int y, double value)
 {
-    pHydroLevelsRules.entry[y][x] = value;
+    pHydroLevelsRules[y][x] = value;
 }
 
 } // namespace Antares::Data::ScenarioBuilder

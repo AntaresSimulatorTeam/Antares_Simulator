@@ -46,7 +46,7 @@ struct OverallCostTraits
                                       * state.area->thermal.unsuppliedEnergyCost;
 
         const double spilledCost = (hourlyResults.ValeursHorairesDeDefaillanceNegative[hourInWeek]
-                                    + state.resSpilled.entry[state.area->index][hourInWeek])
+                                    + state.resSpilled[state.area->index][hourInWeek])
                                    * state.area->thermal.spilledEnergyCost;
 
         return unsuppliedCost + spilledCost;

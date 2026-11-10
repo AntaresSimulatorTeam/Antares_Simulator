@@ -110,7 +110,7 @@ void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& 
 ** \param avg Weighted average NTC, resized to hourCount. avg[h] refers to hour firstHour + h
 */
 void retrieveAverageNTC(const Data::Study& study,
-                        const Matrix<>& capacities,
+                        const Matrix& capacities,
                         const Data::TimeSeriesNumbers& tsNumbers,
                         uint firstHour,
                         uint hourCount,

@@ -4,6 +4,7 @@
 #ifndef __ANTARES_LIBS_STUDY_STUDY_H__
 #define __ANTARES_LIBS_STUDY_STUDY_H__
 
+#include <filesystem>
 #include <memory>
 #include <string>
 
@@ -329,15 +330,6 @@ public:
     ** \name Cache
     */
 
-    /*!
-    ** \brief Mark the whole study as modified
-    */
-    //@{
-    //! A buffer for temporary operations on large amount of data
-    mutable Matrix<>::BufferType dataBuffer;
-
-    //@}
-
     Solver::ModelerData* getModelerData() const;
     void setModelerData(std::unique_ptr<Solver::ModelerData> modelerData);
 
@@ -365,12 +357,6 @@ protected:
     void checkModelerDataCompatibility() const;
 
     void parameterFiller();
-
-    //! \name Misc
-    //@{
-    //! Release all unnecessary buffers
-    void reduceMemoryUsage();
-    //@}
 
 private:
     std::unique_ptr<Solver::ModelerData> modelerInput_;

@@ -3,14 +3,13 @@
 
 #include "antares/series/series.h"
 
+#include <filesystem>
+#include <functional>
 #include <sstream>
 #include <vector>
 
-#include <yuni/yuni.h>
-#include <yuni/io/directory.h>
-#include <yuni/io/file.h>
-
 #include <antares/antares/constants.h>
+#include <antares/array/matrix-io.h>
 #include <antares/utils/utils.h>
 
 namespace Antares::Data
@@ -39,22 +38,22 @@ static std::string errorMessage(const std::map<std::string, const TimeSeries*>& 
 
 uint TimeSeriesNumbers::height() const
 {
-    return tsNumbers.height;
+    return static_cast<uint>(tsNumbers.size());
 }
 
 uint32_t TimeSeriesNumbers::operator[](uint y) const
 {
-    return tsNumbers[0][y];
+    return tsNumbers[y];
 }
 
 uint32_t& TimeSeriesNumbers::operator[](uint y)
 {
-    return tsNumbers[0][y];
+    return tsNumbers[y];
 }
 
 void TimeSeriesNumbers::reset(uint h)
 {
-    tsNumbers.reset(1, h);
+    tsNumbers.assign(h, 0);
 }
 
 void TimeSeriesNumbers::clear()
@@ -64,8 +63,12 @@ void TimeSeriesNumbers::clear()
 
 void TimeSeriesNumbers::saveToBuffer(std::string& data) const
 {
-    const auto add1 = [](uint32_t x) { return x + 1; };
-    tsNumbers.saveToBuffer(data, 0, true, add1, true);
+    Matrix matrix(1, height());
+    for (unsigned int y = 0; y < height(); ++y)
+    {
+        matrix[0][y] = tsNumbers[y] + 1;
+    }
+    MatrixIO::saveToBuffer(matrix, data, 0, false, std::identity{}, true);
 }
 
 std::optional<std::string> TimeSeriesNumbers::checkSeriesNumberOfColumnsConsistency() const
@@ -88,13 +91,10 @@ TimeSeries::TimeSeries(TimeSeriesNumbers& tsNumbers):
 {
 }
 
-bool TimeSeries::loadFromFile(const std::filesystem::path& path,
-                              const bool average,
-                              unsigned options)
+bool TimeSeries::loadFromFile(const std::filesystem::path& path, const bool average)
 {
     bool ret = true;
-    Matrix<>::BufferType dataBuffer;
-    ret = timeSeries.loadFromCSVFile(path.string(), 1, HOURS_PER_YEAR, options, &dataBuffer) && ret;
+    ret = MatrixIO::load(timeSeries, path.string(), 1, HOURS_PER_YEAR) && ret;
 
     if (average)
     {
@@ -108,9 +108,8 @@ int TimeSeries::saveToFolder(const std::string& areaID,
                              const std::string& folder,
                              const std::string& prefix) const
 {
-    Yuni::Clob buffer;
-    buffer.clear() << folder << Yuni::IO::Separator << prefix << areaID << ".txt";
-    return timeSeries.saveToCSVFile(buffer, 0);
+    const std::filesystem::path path = std::filesystem::path(folder) / (prefix + areaID + ".txt");
+    return MatrixIO::save(timeSeries, path.string(), 0);
 }
 
 double TimeSeries::getCoefficient(uint32_t year, uint32_t timestep) const
@@ -120,11 +119,11 @@ double TimeSeries::getCoefficient(uint32_t year, uint32_t timestep) const
 
 const double* TimeSeries::getColumn(uint32_t year) const
 {
-    if (timeSeries.width == 0)
+    if (timeSeries.width() == 0)
     {
         return emptyColumn.data();
     }
-    return timeSeries[getSeriesIndex(year)];
+    return timeSeries[getSeriesIndex(year)].data();
 }
 
 uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
@@ -138,12 +137,8 @@ uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
     return timeseriesNumbers[year];
 }
 
-double* TimeSeries::operator[](uint32_t index)
+Matrix::ColumnType& TimeSeries::operator[](uint32_t index)
 {
-    if (timeSeries.width <= index)
-    {
-        return nullptr;
-    }
     return timeSeries[index];
 }
 
@@ -159,7 +154,7 @@ void TimeSeries::reset(uint32_t width, uint32_t height)
 
 uint32_t TimeSeries::numberOfColumns() const
 {
-    return timeSeries.width;
+    return timeSeries.width();
 }
 
 void TimeSeries::resize(uint32_t timeSeriesCount, uint32_t timestepCount)

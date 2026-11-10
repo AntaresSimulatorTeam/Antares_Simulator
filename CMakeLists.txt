@@ -365,6 +365,11 @@ if (BUILD_TESTING)
     add_subdirectory("src/tests")
 endif ()
 
+option(BUILD_MATRIX_BENCHMARKS "Build the matrix microbenchmark" OFF)
+if (BUILD_MATRIX_BENCHMARKS)
+    add_subdirectory("src/tests/benchmark")
+endif ()
+
 OMESSAGE("")
 
 

@@ -311,8 +311,7 @@ BOOST_AUTO_TEST_CASE(single_link_ntc_ts_numbers)
     std::ifstream read(output_dir / "ts-numbers" / "ntc" / "area" / "zrea.txt");
     BOOST_REQUIRE(read);
     std::string content((std::istreambuf_iterator<char>(read)), std::istreambuf_iterator<char>());
-    const std::string expected = R"(size:1x5
-1
+    const std::string expected = R"(1
 2
 3
 1

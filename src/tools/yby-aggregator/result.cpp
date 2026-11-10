@@ -3,6 +3,8 @@
 
 #include "result.h"
 
+#include <yuni/io/file.h>
+
 #include "progress.h"
 
 namespace // anonymous

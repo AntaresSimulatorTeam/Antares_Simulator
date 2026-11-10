@@ -119,7 +119,7 @@ void SetDataSingleYear::processGroups(const std::vector<std::vector<long double>
         IntermediateValues values;
         values.initializeFromStudy(study);
         values.reset();
-        std::ranges::copy(results[index], values.hour);
+        std::ranges::copy(results[index], values.hour.begin());
 
         // average is only used for STS level
         doWeAverage ? values.computeAveragesForCurrentYearFromHourlyResults()
