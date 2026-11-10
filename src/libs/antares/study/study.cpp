@@ -230,7 +230,7 @@ void Study::prepareOutput()
         fs::create_directories(IO::Outputs::simulationTableOutputDirectory(folderOutput));
     }
 
-    logs.info() << "  Output folder : " << folderOutput;
+    logs.info() << "  Output folder: " << folderOutput;
 }
 
 void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)

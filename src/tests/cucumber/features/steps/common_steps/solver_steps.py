@@ -497,7 +497,7 @@ def build_antares_solver_command(context):
 
 def parse_output_folder_from_logs(logs: bytes) -> str:
     for line in logs.splitlines():
-        if b'Output folder : ' in line:
+        if b'Output folder: ' in line:
             return line.split(b'Output folder : ')[1].decode('ascii')
     raise LookupError("Could not parse output folder in output logs")
 

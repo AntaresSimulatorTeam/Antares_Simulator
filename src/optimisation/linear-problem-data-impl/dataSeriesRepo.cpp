@@ -8,11 +8,10 @@ namespace Antares::LinearProblem::DataImpl
 void DataSeriesRepository::addDataSeries(std::unique_ptr<IDataSeries> dataSeries)
 {
     std::string name = dataSeries->name();
-    if (dataSeries_.contains(name))
+    if (!dataSeries_.try_emplace(name, std::move(dataSeries)).second)
     {
         throw DataSeriesAlreadyExists(name);
     }
-    dataSeries_[name] = std::move(dataSeries);
 }
 
 IDataSeries& DataSeriesRepository::getDataSeries(const std::string& setId) const
@@ -21,10 +20,11 @@ IDataSeries& DataSeriesRepository::getDataSeries(const std::string& setId) const
     {
         throw Empty();
     }
-    if (!dataSeries_.contains(setId))
+    const auto it = dataSeries_.find(setId);
+    if (it == dataSeries_.end())
     {
         throw DataSeriesNotExist(setId);
     }
-    return *(dataSeries_.at(setId));
+    return *it->second;
 }
 } // namespace Antares::LinearProblem::DataImpl
