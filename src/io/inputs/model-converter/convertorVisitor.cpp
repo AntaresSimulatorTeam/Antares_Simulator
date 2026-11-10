@@ -3,6 +3,7 @@
 
 #include <ExprVisitor.h>
 #include <fmt/format.h>
+#include <string_view>
 
 #include <boost/algorithm/string.hpp>
 
@@ -21,7 +22,7 @@ using namespace Antares::LinearProblem;
 
 namespace
 {
-void validateTimeBoundNode(const Node* node, const std::string& context)
+void validateTimeArgument(const Node* node, std::string_view context)
 {
     if (dynamic_cast<const LiteralNode*>(node))
     {
@@ -54,7 +55,7 @@ void validateTimeBoundNode(const Node* node, const std::string& context)
     {
         for (const auto* operand: parentNode->getConstOperands())
         {
-            validateTimeBoundNode(operand, context);
+            validateTimeArgument(operand, context);
         }
         return;
     }
@@ -395,7 +396,7 @@ std::any ConvertorVisitor::visitTimeIndex(ExprParser::TimeIndexContext* context)
 {
     Node* expr = convertIdentifier(context->IDENTIFIER()->getText());
     auto* index = std::any_cast<Node*>(context->expr()->accept(this));
-    validateTimeBoundNode(index, "Time index arguments");
+    validateTimeArgument(index, "Time index arguments");
     return static_cast<Node*>(registry_.create<TimeIndexNode>(expr, index));
 }
 
@@ -404,7 +405,7 @@ std::any ConvertorVisitor::buildShiftNode(Node* shifted_expr, ExprParser::ShiftC
     if (auto shift_maybe = context->shift_expr()) // [t+1], [t-1], etc.
     {
         Node* shift = std::any_cast<Node*>(shift_maybe->accept(this));
-        validateTimeBoundNode(shift, "Time shift arguments");
+        validateTimeArgument(shift, "Time shift arguments");
         return static_cast<Node*>(registry_.create<TimeShiftNode>(shifted_expr, shift));
     }
     else // [t]
@@ -427,7 +428,7 @@ std::any ConvertorVisitor::visitTimeIndexExpr(ExprParser::TimeIndexExprContext* 
 {
     Node* left = std::any_cast<Node*>(visit(context->expr(0)));
     Node* right = std::any_cast<Node*>(visit(context->expr(1)));
-    validateTimeBoundNode(right, "Time index arguments");
+    validateTimeArgument(right, "Time index arguments");
     return static_cast<Node*>(registry_.create<TimeIndexNode>(left, right));
 }
 
@@ -662,8 +663,8 @@ std::any ConvertorVisitor::visitTimeSum(ExprParser::TimeSumContext* context)
 {
     auto* from = std::any_cast<Node*>(context->from->accept(this));
     auto* to = std::any_cast<Node*>(context->to->accept(this));
-    validateTimeBoundNode(from, "Time-sum `from` bound");
-    validateTimeBoundNode(to, "Time-sum `to` bound");
+    validateTimeArgument(from, "Time-sum `from` bound");
+    validateTimeArgument(to, "Time-sum `to` bound");
 
     auto* expr = std::any_cast<Node*>(context->expr()->accept(this));
 
