@@ -2,10 +2,15 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <array>
+#include <ranges>
+#include <span>
+#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <vector>
 
+#include <antares/solver/optimisation/opt_rename_problem.h>
+#include <antares/study/area/links.h>
 #include <antares/study/filter.h>
 #include <antares/view-builder/legacyToYaml.h>
 #include <antares/view-builder/viewBuilder.h>
@@ -37,7 +42,7 @@ struct Metric
 };
 
 // Legacy variable-to-metric correspondence from the GEMS converter's view documentation.
-constexpr std::array metrics = {
+constexpr std::array areaMetrics = {
   Metric{"OV_COST", {"OV. COST"}},
   Metric{"OP_COST", {"OP. COST"}},
   Metric{"MRG_PRICE", {"MRG. PRICE"}},
@@ -83,37 +88,95 @@ constexpr std::array metrics = {
   Metric{"H_COST", {"H. COST"}},
 };
 
-} // namespace
+constexpr std::array linkMetrics = {
+  Metric{"FLOW_LIN", {"FLOW LIN."}},
+  Metric{"UCAP_LIN", {"UCAP LIN."}},
+  Metric{"CONG_FEE_ABS", {"CONG. FEE (ABS.)"}},
+  Metric{"CONG_FEE_ALG", {"CONG. FEE (ALG.)"}},
+  Metric{"MARG_COST", {"MARG. COST"}},
+  Metric{"CONG_PROB_DIR", {"CONG. PROB +"}},
+  Metric{"CONG_PROB_INDIR", {"CONG. PROB -"}},
+  Metric{"HURDLE_COST", {"HURDLE COST"}},
+  Metric{"LOOP_FLOW", {"LOOP FLOW"}},
+};
 
-bool exportAreaViewConfig(const Data::Study& study, Solver::IResultWriter* resultWriter)
+constexpr std::array thermalMetrics = {
+  Metric{"GENERATION", {"DTG by plant"}},
+  Metric{"MIN_GEN", {"MIN DTG by plant"}},
+  Metric{"PROFIT", {"Profit by plant"}},
+  Metric{"NODU", {"NODU by plant"}},
+  Metric{"NP_COST", {"NP Cost by plant"}},
+};
+
+constexpr std::array storageMetrics = {
+  Metric{"P_INJECTION", {"STS inj by plant"}},
+  Metric{"P_WITHDRAWAL", {"STS withdrawal by plant"}},
+  Metric{"LEVELS", {"STS lvl by plant"}},
+  Metric{"CASHFLOW", {"STS Cashflow By Cluster"}},
+};
+
+constexpr std::array renewableMetrics = {
+  Metric{"GENERATION", {"RES generation by plant"}},
+};
+
+struct ViewDefinition
 {
-    const auto config = generateAreaViewConfig(study);
-    if (config["view"]["metrics"].size() == 0
-        || config["view"]["aggregations-patterns"].size() == 0)
+    std::string_view id;
+    std::string_view filename;
+    std::string_view catalog;
+    std::span<const Metric> metrics;
+};
+
+ViewDefinition definition(ViewType type)
+{
+    switch (type)
     {
-        return false;
+    case ViewType::area:
+        return {"view_area", "view_config_area.yml", "antares_legacy_area_catalog", areaMetrics};
+    case ViewType::link:
+        return {"view_link", "view_config_link.yml", "antares_legacy_link_catalog", linkMetrics};
+    case ViewType::thermal:
+        return {"view_thermal",
+                "view_config_thermal.yml",
+                "antares_legacy_thermal_cluster_catalog",
+                thermalMetrics};
+    case ViewType::storage:
+        return {"view_storage",
+                "view_config_sts.yml",
+                "antares_legacy_short_term_storage_catalog",
+                storageMetrics};
+    case ViewType::renewable:
+        return {"view_renewable",
+                "view_config_renewable.yml",
+                "antares_legacy_renewable_cluster_catalog",
+                renewableMetrics};
     }
-    std::string content = YAML::Dump(config);
-    resultWriter->addEntryFromBuffer("views/input/view_config_area.yml", content);
-    return true;
+    throw std::invalid_argument("Unknown view type");
 }
 
-YAML::Node generateAreaViewConfig(const Data::Study& study)
+} // namespace
+
+YAML::Node generateViewConfig(const Data::Study& study, ViewType type)
 {
+    const auto def = definition(type);
+    const bool isLink = type == ViewType::link;
     YAML::Node view;
-    view["id"] = "view_area";
+    view["id"] = std::string(def.id);
     view["taxonomy"] = "antares_legacy_taxonomy";
-    view["scope"]["location"]["taxonomy-category"] = "balance";
+    view["scope"]["location"]["taxonomy-category"] = isLink ? "link" : "balance";
 
     std::vector<std::string> districts;
-    for (const auto& [name, areas]: study.setsOfAreas)
+    if (!isLink)
     {
-        if (study.setsOfAreas.hasOutput(name) && !areas->empty())
+        for (const auto& [name, areas]: study.setsOfAreas)
         {
-            districts.push_back(name);
-            YAML::Node extraLocation;
-            extraLocation["id"] = "district_" + name;
-            view["scope"]["extra-locations"].push_back(extraLocation);
+            if (study.setsOfAreas.hasOutput(name) && !areas->empty())
+            {
+                districts.push_back(name);
+                YAML::Node extraLocation;
+                extraLocation["id"] = "district_" + name;
+                view["scope"]["extra-locations"].push_back(extraLocation);
+            }
         }
     }
 
@@ -130,13 +193,33 @@ YAML::Node generateAreaViewConfig(const Data::Study& study)
             if (study.parameters.geographicTrimming)
             {
                 std::vector<std::string> selected;
+                size_t locationCount = districts.size();
                 study.areas.each(
                   [&](const Data::Area& area)
                   {
-                      const auto filter = scenario ? area.filterSynthesis : area.filterYearByYear;
-                      if (filter & flag)
+                      if (isLink)
                       {
-                          selected.push_back(areaLocation(area.id));
+                          for (const auto& link: area.links | std::views::values)
+                          {
+                              ++locationCount;
+                              const auto filter = scenario ? link->filterSynthesis
+                                                           : link->filterYearByYear;
+                              if (filter & flag)
+                              {
+                                  selected.push_back(
+                                    BuildLinkComponentId(link->from->id, link->with->id));
+                              }
+                          }
+                      }
+                      else
+                      {
+                          ++locationCount;
+                          const auto filter = scenario ? area.filterSynthesis
+                                                       : area.filterYearByYear;
+                          if (filter & flag)
+                          {
+                              selected.push_back(areaLocation(area.id));
+                          }
                       }
                   });
                 const auto report = scenario ? Data::Sets::ReportType::synthesis
@@ -153,7 +236,7 @@ YAML::Node generateAreaViewConfig(const Data::Study& study)
                 {
                     continue;
                 }
-                if (selected.size() != study.areas.size() + districts.size())
+                if (selected.size() != locationCount)
                 {
                     for (const auto& location: selected)
                     {
@@ -167,7 +250,7 @@ YAML::Node generateAreaViewConfig(const Data::Study& study)
     view["aggregations-patterns"] = patterns;
 
     YAML::Node selectedMetrics(YAML::NodeType::Sequence);
-    for (const auto& metric: metrics)
+    for (const auto& metric: def.metrics)
     {
         if (study.parameters.thematicTrimming)
         {
@@ -188,13 +271,37 @@ YAML::Node generateAreaViewConfig(const Data::Study& study)
             }
         }
         YAML::Node entry;
-        entry["id"] = std::string("antares_legacy_area_catalog.") + std::string(metric.id);
+        entry["id"] = std::string(def.catalog) + "." + std::string(metric.id);
         selectedMetrics.push_back(entry);
     }
     view["metrics"] = selectedMetrics;
     YAML::Node root;
     root["view"] = view;
     return root;
+}
+
+YAML::Node generateAreaViewConfig(const Data::Study& study)
+{
+    return generateViewConfig(study, ViewType::area);
+}
+
+bool exportViewConfig(const Data::Study& study, Solver::IResultWriter* resultWriter, ViewType type)
+{
+    const auto config = generateViewConfig(study, type);
+    if (config["view"]["metrics"].size() == 0
+        || config["view"]["aggregations-patterns"].size() == 0)
+    {
+        return false;
+    }
+    std::string content = YAML::Dump(config);
+    resultWriter->addEntryFromBuffer("views/input/" + std::string(definition(type).filename),
+                                     content);
+    return true;
+}
+
+bool exportAreaViewConfig(const Data::Study& study, Solver::IResultWriter* resultWriter)
+{
+    return exportViewConfig(study, resultWriter, ViewType::area);
 }
 
 } // namespace Antares::ViewBuilder

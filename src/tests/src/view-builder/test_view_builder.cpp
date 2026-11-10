@@ -5,6 +5,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <algorithm>
+#include <cctype>
 #include <map>
 #include <set>
 #include <sstream>
@@ -166,6 +167,174 @@ struct ViewBuilderFixture
 };
 
 BOOST_FIXTURE_TEST_SUITE(view_builder_tests, ViewBuilderFixture)
+
+BOOST_AUTO_TEST_CASE(other_views_thematic_variable_mappings_and_exports)
+{
+    struct ViewCase
+    {
+        ViewType type;
+        std::string id;
+        std::string filename;
+        std::string catalog;
+        std::vector<std::pair<std::string, std::string>> mappings;
+    };
+
+    const std::vector<ViewCase> cases = {
+      {ViewType::link,
+       "view_link",
+       "view_config_link.yml",
+       "antares_legacy_link_catalog",
+       {{"FLOW LIN.", "FLOW_LIN"},
+        {"UCAP LIN.", "UCAP_LIN"},
+        {"CONG. FEE (ABS.)", "CONG_FEE_ABS"},
+        {"CONG. FEE (ALG.)", "CONG_FEE_ALG"},
+        {"MARG. COST", "MARG_COST"},
+        {"CONG. PROB +", "CONG_PROB_DIR"},
+        {"CONG. PROB -", "CONG_PROB_INDIR"},
+        {"HURDLE COST", "HURDLE_COST"},
+        {"LOOP FLOW", "LOOP_FLOW"}}},
+      {ViewType::thermal,
+       "view_thermal",
+       "view_config_thermal.yml",
+       "antares_legacy_thermal_cluster_catalog",
+       {{"DTG by plant", "GENERATION"},
+        {"MIN DTG by plant", "MIN_GEN"},
+        {"Profit by plant", "PROFIT"},
+        {"NODU by plant", "NODU"},
+        {"NP Cost by plant", "NP_COST"}}},
+      {ViewType::storage,
+       "view_storage",
+       "view_config_sts.yml",
+       "antares_legacy_short_term_storage_catalog",
+       {{"STS inj by plant", "P_INJECTION"},
+        {"STS withdrawal by plant", "P_WITHDRAWAL"},
+        {"STS lvl by plant", "LEVELS"},
+        {"STS Cashflow By Cluster", "CASHFLOW"}}},
+      {ViewType::renewable,
+       "view_renewable",
+       "view_config_renewable.yml",
+       "antares_legacy_renewable_cluster_catalog",
+       {{"RES generation by plant", "GENERATION"}}},
+    };
+    auto& variables = study->parameters.variablesPrintInfo;
+    for (const auto& test: cases)
+    {
+        BOOST_TEST_CONTEXT(test.id)
+        {
+            study->parameters.thematicTrimming = false;
+            variables.setAllPrintStatusesTo(false);
+            CapturingWriter writer;
+            BOOST_REQUIRE(exportViewConfig(*study, &writer, test.type));
+            const auto view = YAML::Load(writer.entries.at("views/input/" + test.filename))["view"];
+            BOOST_CHECK_EQUAL(view["id"].as<std::string>(), test.id);
+            BOOST_CHECK_EQUAL(view["scope"]["location"]["taxonomy-category"].as<std::string>(),
+                              test.type == ViewType::link ? "link" : "balance");
+            BOOST_CHECK_EQUAL(view["aggregations-patterns"].size(), 10);
+            BOOST_CHECK_EQUAL(view["metrics"].size(), test.mappings.size());
+            std::set<std::string> expectedMetrics;
+            for (const auto& [variable, metric]: test.mappings)
+            {
+                expectedMetrics.insert(test.catalog + "." + metric);
+            }
+            BOOST_CHECK(metricIds(view) == expectedMetrics);
+
+            study->parameters.thematicTrimming = true;
+            CapturingWriter emptyWriter;
+            BOOST_CHECK(!exportViewConfig(*study, &emptyWriter, test.type));
+            BOOST_CHECK(emptyWriter.entries.empty());
+            for (const auto& [variable, metric]: test.mappings)
+            {
+                BOOST_TEST_CONTEXT(variable)
+                {
+                    BOOST_REQUIRE(variables.exists(variable));
+                    variables.setAllPrintStatusesTo(false);
+                    auto lowercaseVariable = variable;
+                    std::transform(lowercaseVariable.begin(),
+                                   lowercaseVariable.end(),
+                                   lowercaseVariable.begin(),
+                                   [](unsigned char ch) { return std::tolower(ch); });
+                    variables.setPrintStatus(lowercaseVariable, true);
+                    const auto selected = generateViewConfig(*study, test.type)["view"];
+                    BOOST_REQUIRE_EQUAL(selected["metrics"].size(), 1);
+                    BOOST_CHECK_EQUAL(selected["metrics"][0]["id"].as<std::string>(),
+                                      test.catalog + "." + metric);
+                }
+            }
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(cluster_views_share_area_and_district_aggregations)
+{
+    study->parameters.geographicTrimming = true;
+    fr->filterYearByYear = filterHourly;
+    de->filterYearByYear = filterNone;
+    fr->filterSynthesis = filterNone;
+    de->filterSynthesis = filterNone;
+    auto members = std::make_shared<Sets::SetAreasType>();
+    members->insert(fr);
+    Sets::Options options;
+    options.filterYearByYear = filterNone;
+    options.filterSynthesis = filterDaily;
+    study->setsOfAreas.add("eu", members, options);
+    for (auto type: {ViewType::thermal, ViewType::storage, ViewType::renewable})
+    {
+        const auto view = generateViewConfig(*study, type)["view"];
+        BOOST_REQUIRE_EQUAL(view["scope"]["extra-locations"].size(), 1);
+        BOOST_CHECK_EQUAL(view["scope"]["extra-locations"][0]["id"].as<std::string>(),
+                          "district_eu");
+        BOOST_REQUIRE_EQUAL(view["aggregations-patterns"].size(), 2);
+        BOOST_CHECK(locations(findPattern(view, "hour-ind")) == (std::set<std::string>{"france"}));
+        BOOST_CHECK(locations(findPattern(view, "day-all")) == (std::set<std::string>{"eu"}));
+    }
+}
+
+BOOST_AUTO_TEST_CASE(cluster_views_skipped_without_any_aggregation)
+{
+    study->parameters.geographicTrimming = true;
+    fr->filterYearByYear = fr->filterSynthesis = filterNone;
+    de->filterYearByYear = de->filterSynthesis = filterNone;
+    CapturingWriter writer;
+    for (auto type: {ViewType::thermal, ViewType::storage, ViewType::renewable})
+    {
+        BOOST_CHECK(!exportViewConfig(*study, &writer, type));
+    }
+    BOOST_CHECK(writer.entries.empty());
+}
+
+BOOST_AUTO_TEST_CASE(link_view_uses_link_filters_not_area_or_district_filters)
+{
+    study->parameters.geographicTrimming = true;
+    fr->filterYearByYear = filterNone;
+    de->filterYearByYear = filterNone;
+    auto* it = addAreaToListOfAreas(study->areas, "italy");
+    AreaAddLinkBetweenAreas(de, it);
+    auto& first = *fr->links.begin()->second;
+    auto& second = *de->links.begin()->second;
+    first.filterYearByYear = filterHourly | filterDaily;
+    first.filterSynthesis = filterDaily;
+    second.filterYearByYear = filterDaily;
+    second.filterSynthesis = filterNone;
+    auto members = std::make_shared<Sets::SetAreasType>();
+    members->insert(fr);
+    Sets::Options options;
+    study->setsOfAreas.add("eu", members, options);
+
+    const auto view = generateViewConfig(*study, ViewType::link)["view"];
+    BOOST_CHECK(!view["scope"]["extra-locations"].IsDefined());
+    BOOST_REQUIRE_EQUAL(view["aggregations-patterns"].size(), 3);
+    BOOST_CHECK(locations(findPattern(view, "hour-ind"))
+                == (std::set<std::string>{"france_germany"}));
+    BOOST_CHECK(!findPattern(view, "day-ind")["location-filter"].IsDefined());
+    BOOST_CHECK(locations(findPattern(view, "day-all"))
+                == (std::set<std::string>{"france_germany"}));
+
+    first.filterYearByYear = first.filterSynthesis = filterNone;
+    second.filterYearByYear = second.filterSynthesis = filterNone;
+    CapturingWriter writer;
+    BOOST_CHECK(!exportViewConfig(*study, &writer, ViewType::link));
+    BOOST_CHECK(writer.entries.empty());
+}
 
 BOOST_AUTO_TEST_CASE(area_view_thematic_variable_mappings)
 {
