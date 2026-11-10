@@ -241,7 +241,7 @@ BOOST_FIXTURE_TEST_CASE(filesystem_path_is_streamed_raw_without_quotes, LogsUnde
     logs.info() << "Output folder: " << path;
     const auto lines = readLogFile();
     BOOST_REQUIRE_EQUAL(lines.size(), 1);
-    const std::string expected = std::string("Output folder : ") + escapeForRegex(path.string());
+    const std::string expected = std::string("Output folder: ") + escapeForRegex(path.string());
     checkLine(lines[0], R"(\[test\]\[infos\] )" + expected);
     BOOST_CHECK(lines[0].find('"') == std::string::npos);
 }
