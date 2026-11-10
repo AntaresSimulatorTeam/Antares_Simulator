@@ -23,8 +23,18 @@ namespace
 {
 void validateTimeBoundNode(const Node* node, const std::string& context)
 {
-    if (dynamic_cast<const LiteralNode*>(node) || dynamic_cast<const ParameterNode*>(node))
+    if (dynamic_cast<const LiteralNode*>(node))
     {
+        return;
+    }
+    if (const auto* parameterNode = dynamic_cast<const ParameterNode*>(node))
+    {
+        if (isTimeDependent(parameterNode->variability()))
+        {
+            throw InputError(fmt::format("{} cannot contain time-dependent parameters: '{}'.",
+                                         context,
+                                         parameterNode->value()));
+        }
         return;
     }
     if (const auto* variableNode = dynamic_cast<const VariableNode*>(node))

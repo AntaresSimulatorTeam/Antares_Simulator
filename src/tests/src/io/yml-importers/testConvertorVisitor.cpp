@@ -324,10 +324,10 @@ BOOST_FIXTURE_TEST_CASE(NumericalTimeIndexExpresion, RegistryHolder)
 BOOST_FIXTURE_TEST_CASE(TimeIndexExpresion, RegistryHolder)
 {
     const auto [expression, div] = expected_expression(registry);
-    const auto expressionWithTimeIndex = "(" + expression + ")" + "[param1]";
+    const auto expressionWithTimeIndex = "(" + expression + ")" + "[param2]";
     auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
 
-    auto* time_index = registry.create<Nodes::ParameterNode>("param1");
+    auto* time_index = registry.create<Nodes::ParameterNode>("param2");
     auto* timeIndexNode = registry.create<Nodes::TimeIndexNode>(div, time_index);
 
     Visitors::CompareVisitor cmp;
@@ -351,13 +351,13 @@ BOOST_FIXTURE_TEST_CASE(TimeShiftExpression, RegistryHolder)
 BOOST_FIXTURE_TEST_CASE(TimeShiftExpressionMul, RegistryHolder)
 {
     const auto [expression, div] = expected_expression(registry);
-    const auto expressionWithTimeIndex = "(" + expression + ")" + "[t-89*param1]";
+    const auto expressionWithTimeIndex = "(" + expression + ")" + "[t-89*param2]";
     auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
 
     auto* lit = registry.create<Nodes::LiteralNode>(89);
     auto* neg = registry.create<Nodes::NegationNode>(lit);
 
-    auto* param = registry.create<Nodes::ParameterNode>("param1");
+    auto* param = registry.create<Nodes::ParameterNode>("param2");
     auto* mult = registry.create<Nodes::MultiplicationNode>(neg, param);
     auto* timeShiftNode = registry.create<Nodes::TimeShiftNode>(div, mult);
 
@@ -368,13 +368,13 @@ BOOST_FIXTURE_TEST_CASE(TimeShiftExpressionMul, RegistryHolder)
 BOOST_FIXTURE_TEST_CASE(TimeSumExpression, RegistryHolder)
 {
     const auto [e, div] = expected_expression(registry);
-    const auto expressionWithTimeIndex = "sum(t-89*param1 .. t+(param1/89)," + e + ")";
+    const auto expressionWithTimeIndex = "sum(t-89*param2 .. t+(param2/89)," + e + ")";
     auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
 
     auto* lit = registry.create<Nodes::LiteralNode>(89);
     auto* neg = registry.create<Nodes::NegationNode>(lit);
 
-    auto* param = registry.create<Nodes::ParameterNode>("param1");
+    auto* param = registry.create<Nodes::ParameterNode>("param2");
     auto* from = registry.create<Nodes::TPlusNode>(
       registry.create<Nodes::MultiplicationNode>(neg, param));
     auto* to = registry.create<Nodes::TPlusNode>(registry.create<Nodes::DivisionNode>(param, lit));
@@ -415,8 +415,8 @@ BOOST_FIXTURE_TEST_CASE(TimeSumExpressionWithMixedBounds, RegistryHolder)
 BOOST_AUTO_TEST_CASE(time_sum_and_time_shift_accept_right_side_multiplication)
 {
     const auto model = createYmlModel();
-    BOOST_CHECK_NO_THROW(convertExpressionToNode("sum(t + 1 - param1 / 2 .. t, varP)", model));
-    BOOST_CHECK_NO_THROW(convertExpressionToNode("varP[t + 1 - param1 / 2]", model));
+    BOOST_CHECK_NO_THROW(convertExpressionToNode("sum(t + 1 - param2 / 2 .. t, varP)", model));
+    BOOST_CHECK_NO_THROW(convertExpressionToNode("varP[t + 1 - param2 / 2]", model));
 }
 
 BOOST_AUTO_TEST_CASE(time_bounds_reject_solution_operators_and_nested_variables)
@@ -500,6 +500,52 @@ BOOST_AUTO_TEST_CASE(time_shift_and_index_arguments_reject_variables)
     BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[varP]", createYmlModel()),
                           InputError,
                           containsMessage("Time index arguments cannot contain variables"));
+}
+
+BOOST_AUTO_TEST_CASE(time_arguments_reject_time_dependent_parameters_at_load_time)
+{
+    auto model = createYmlModel();
+    const std::pair<std::string, std::string> cases[] = {
+      {"varP[param1]", "Time index arguments"},
+      {"(varP + 1)[1 + param1 / 2]", "Time index arguments"},
+      {"varP[t + param1]", "Time shift arguments"},
+      {"(varP + 1)[t - (1 + param1 / 2)]", "Time shift arguments"},
+      {"sum(param1 .. 2, varP)", "Time-sum `from` bound"},
+      {"sum(1 .. t + (param1 / 2), varP)", "Time-sum `to` bound"}};
+
+    for (const bool scenarioDependent: {false, true})
+    {
+        model.parameters[0].scenario_dependent = scenarioDependent;
+        for (const auto& [expression, context]: cases)
+        {
+            BOOST_TEST_CONTEXT(expression << ", scenario-dependent: " << scenarioDependent)
+            {
+                BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model, "test.yaml:42"),
+                                      InputError,
+                                      containsMessage(
+                                        "in test.yaml:42 : Error while converting expression '"
+                                        + expression + "': " + context
+                                        + " cannot contain time-dependent parameters: 'param1'."));
+            }
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(time_arguments_accept_scenario_dependent_time_constant_parameters)
+{
+    auto model = createYmlModel();
+    model.parameters[1].scenario_dependent = true;
+    for (const std::string expression: {"varP[param2 + 1]",
+                                        "(varP + 1)[param2]",
+                                        "varP[t - param2]",
+                                        "(varP + 1)[t + 1 - param2 / 2]",
+                                        "sum(param2 .. t + param2, varP)"})
+    {
+        BOOST_TEST_CONTEXT(expression)
+        {
+            BOOST_CHECK_NO_THROW(convertExpressionToNode(expression, model));
+        }
+    }
 }
 
 BOOST_AUTO_TEST_CASE(time_arguments_reject_port_fields)
