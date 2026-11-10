@@ -88,6 +88,12 @@ TimeSeries::TimeSeries(TimeSeriesNumbers& tsNumbers):
 {
 }
 
+TimeSeries::TimeSeries(const TimeSeries& other):
+    timeSeries(other.timeSeries),
+    timeseriesNumbers(other.timeseriesNumbers)
+{
+}
+
 bool TimeSeries::loadFromFile(const std::filesystem::path& path,
                               const bool average,
                               unsigned options)
