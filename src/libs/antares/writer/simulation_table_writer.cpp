@@ -8,6 +8,7 @@
 #include <utility>
 
 #include "antares/io/outputs/SimulationTable.h"
+#include "antares/logs/logs.h"
 
 // Arrow / Parquet
 #include <arrow/api.h>
@@ -177,9 +178,15 @@ StreamingSimulationTableWriter::~StreamingSimulationTableWriter()
     {
         close();
     }
+    catch (const std::exception& e)
+    {
+        logs.error() << "Failed to finalize simulation table file '" << output_file_
+                     << "': " << e.what();
+    }
     catch (...)
     {
-        // Never throw from a destructor; the file may be incomplete.
+        logs.error() << "Failed to finalize simulation table file '" << output_file_
+                     << "': unknown exception";
     }
 }
 
