@@ -5,6 +5,8 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <algorithm>
+#include <map>
+#include <set>
 #include <unordered_set>
 #include <yaml-cpp/yaml.h>
 
@@ -25,6 +27,7 @@
 #include <antares/study/system-model/system.h>
 #include <antares/view-builder/legacyToYaml.h>
 #include <antares/view-builder/viewBuilder.h>
+#include <antares/writer/i_writer.h>
 
 using namespace Antares::Data;
 using namespace Antares::ViewBuilder;
@@ -40,6 +43,56 @@ void checkProperties(const YAML::Node& property,
     BOOST_CHECK_EQUAL(property["id"].as<std::string>(), expectedId);
     BOOST_CHECK_EQUAL(property["value"].as<std::string>(), expectedValue);
 }
+
+YAML::Node findPattern(const YAML::Node& view, const std::string& id)
+{
+    for (const auto& pattern: view["aggregations-patterns"])
+    {
+        if (pattern["id"].as<std::string>() == id)
+        {
+            return pattern;
+        }
+    }
+    return YAML::Node(YAML::NodeType::Undefined);
+}
+
+std::set<std::string> locations(const YAML::Node& pattern)
+{
+    std::set<std::string> result;
+    for (const auto& location: pattern["location-filter"])
+    {
+        result.insert(location.as<std::string>());
+    }
+    return result;
+}
+
+class CapturingWriter final: public Antares::Solver::IResultWriter
+{
+public:
+    void addEntryFromBuffer(const std::filesystem::path& path, std::string& content) override
+    {
+        entries[path] = content;
+    }
+
+    void addEntryFromFile(const std::filesystem::path&, const std::filesystem::path&) override
+    {
+    }
+
+    void flush() override
+    {
+    }
+
+    bool needsTheJobQueue() const override
+    {
+        return false;
+    }
+
+    void finalize(bool) override
+    {
+    }
+
+    std::map<std::filesystem::path, std::string> entries;
+};
 
 } // anonymous namespace
 
@@ -100,6 +153,107 @@ struct ViewBuilderFixture
 };
 
 BOOST_FIXTURE_TEST_SUITE(view_builder_tests, ViewBuilderFixture)
+
+BOOST_AUTO_TEST_CASE(area_view_without_geographic_trimming)
+{
+    fr->filterYearByYear = filterNone;
+    de->filterSynthesis = filterNone;
+    auto members = std::make_shared<Sets::SetAreasType>();
+    members->insert(fr);
+    Sets::Options options;
+    options.filterYearByYear = filterNone;
+    study->setsOfAreas.add("eu", members, options);
+
+    const YAML::Node view = generateAreaViewConfig(*study)["view"];
+    BOOST_CHECK_EQUAL(view["id"].as<std::string>(), "view_area");
+    BOOST_CHECK_EQUAL(view["taxonomy"].as<std::string>(), "antares_legacy_taxonomy");
+    BOOST_CHECK_EQUAL(view["scope"]["location"]["taxonomy-category"].as<std::string>(), "balance");
+    BOOST_REQUIRE_EQUAL(view["scope"]["extra-locations"].size(), 1);
+    BOOST_CHECK_EQUAL(view["scope"]["extra-locations"][0]["id"].as<std::string>(), "district_eu");
+    BOOST_REQUIRE_EQUAL(view["aggregations-patterns"].size(), 10);
+    for (const auto& granularity: {"hour", "day", "week", "month", "year"})
+    {
+        for (bool scenario: {false, true})
+        {
+            const auto pattern = findPattern(view,
+                                             std::string(granularity)
+                                               + (scenario ? "-all" : "-ind"));
+            BOOST_REQUIRE(pattern.IsDefined());
+            BOOST_CHECK_EQUAL(pattern["time-granularity"].as<std::string>(), granularity);
+            BOOST_CHECK_EQUAL(pattern["scenario"].as<bool>(), scenario);
+            BOOST_CHECK(!pattern["location-filter"].IsDefined());
+        }
+    }
+    BOOST_REQUIRE_EQUAL(view["metrics"].size(), 43);
+    BOOST_CHECK_EQUAL(view["metrics"][0]["id"].as<std::string>(),
+                      "antares_legacy_area_catalog.OV_COST");
+    BOOST_CHECK_EQUAL(view["metrics"][42]["id"].as<std::string>(),
+                      "antares_legacy_area_catalog.H_COST");
+}
+
+BOOST_AUTO_TEST_CASE(area_view_geographic_trimming_includes_enabled_districts)
+{
+    study->parameters.geographicTrimming = true;
+    fr->filterYearByYear = filterHourly | filterDaily;
+    de->filterYearByYear = filterDaily;
+    fr->filterSynthesis = filterDaily;
+    de->filterSynthesis = filterDaily;
+
+    auto members = std::make_shared<Sets::SetAreasType>();
+    members->insert(fr);
+    members->insert(de);
+    Sets::Options options;
+    options.filterYearByYear = filterHourly | filterDaily;
+    options.filterSynthesis = filterHourly | filterDaily;
+    study->setsOfAreas.add("eu", members, options);
+    options.output = false;
+    study->setsOfAreas.add("disabled", members, options);
+    options.output = true;
+    study->setsOfAreas.add("empty", std::make_shared<Sets::SetAreasType>(), options);
+
+    const YAML::Node view = generateAreaViewConfig(*study)["view"];
+    BOOST_REQUIRE_EQUAL(view["scope"]["extra-locations"].size(), 1);
+    BOOST_CHECK_EQUAL(view["scope"]["extra-locations"][0]["id"].as<std::string>(), "district_eu");
+    BOOST_REQUIRE_EQUAL(view["aggregations-patterns"].size(), 10);
+    BOOST_CHECK(locations(findPattern(view, "hour-ind"))
+                == (std::set<std::string>{"eu", "france"}));
+    BOOST_CHECK(locations(findPattern(view, "hour-all")) == (std::set<std::string>{"eu"}));
+    BOOST_CHECK(!findPattern(view, "day-ind")["location-filter"].IsDefined());
+    BOOST_CHECK(!findPattern(view, "day-all")["location-filter"].IsDefined());
+    const auto empty = locations(findPattern(view, "week-ind"));
+    BOOST_REQUIRE_EQUAL(empty.size(), 1);
+    BOOST_CHECK(*empty.begin() != "france");
+    BOOST_CHECK(*empty.begin() != "germany");
+    BOOST_CHECK(*empty.begin() != "eu");
+}
+
+BOOST_AUTO_TEST_CASE(area_view_no_location_placeholder_avoids_collisions)
+{
+    study->parameters.geographicTrimming = true;
+    fr->filterYearByYear = filterNone;
+    de->filterYearByYear = filterNone;
+    auto members = std::make_shared<Sets::SetAreasType>();
+    members->insert(fr);
+    Sets::Options options;
+    options.filterYearByYear = filterNone;
+    study->setsOfAreas.add("__antares_no_location__", members, options);
+    const auto view = generateAreaViewConfig(*study)["view"];
+    BOOST_CHECK(locations(findPattern(view, "hour-ind"))
+                == (std::set<std::string>{"__antares_no_location___"}));
+}
+
+BOOST_AUTO_TEST_CASE(export_area_view_uses_views_input_directory)
+{
+    CapturingWriter writer;
+    exportSystemForView(*study, &writer);
+    exportAreaViewConfig(*study, &writer);
+    BOOST_REQUIRE_EQUAL(writer.entries.size(), 2);
+    BOOST_CHECK(writer.entries.contains("views/input/system-for-views.yml"));
+    BOOST_REQUIRE(writer.entries.contains("views/input/view_config_area.yml"));
+    const auto view = YAML::Load(writer.entries.at("views/input/view_config_area.yml"))["view"];
+    BOOST_CHECK_EQUAL(view["aggregations-patterns"].size(), 10);
+    BOOST_CHECK_EQUAL(view["id"].as<std::string>(), "view_area");
+}
 
 BOOST_AUTO_TEST_CASE(study_to_yaml_structure)
 {

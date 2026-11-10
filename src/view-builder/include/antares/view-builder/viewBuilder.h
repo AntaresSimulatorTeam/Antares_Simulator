@@ -12,8 +12,10 @@ namespace Antares::ViewBuilder
 {
 
 void exportSystemForView(const Data::Study& study, Solver::IResultWriter* resultWriter);
+void exportAreaViewConfig(const Data::Study& study, Solver::IResultWriter* resultWriter);
 
 YAML::Node generateSystemForView(const Antares::Data::Study& study);
 YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study);
+YAML::Node generateAreaViewConfig(const Data::Study& study);
 
 } // namespace Antares::ViewBuilder
