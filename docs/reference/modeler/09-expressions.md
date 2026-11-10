@@ -137,6 +137,9 @@ For time-dependent parameters, variables, and port fields, you can use these tim
       like the ones defined above
     - in both forms, `S` and `E` must not depend on time
 
+Time indices, shift offsets, and sum bounds may only contain literals and parameters, not variables,
+port fields, or `sum_connections` expressions.
+
 _Examples:_
 
 ~~~yaml

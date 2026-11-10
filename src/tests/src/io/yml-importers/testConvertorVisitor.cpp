@@ -502,6 +502,43 @@ BOOST_AUTO_TEST_CASE(time_shift_and_index_arguments_reject_variables)
                           containsMessage("Time index arguments cannot contain variables"));
 }
 
+BOOST_AUTO_TEST_CASE(time_arguments_reject_port_fields)
+{
+    auto model = createYmlModel();
+    model.ports.push_back({.id = "port", .type = "blue"});
+
+    for (const std::string portExpression: {"port.flow", "sum_connections(port.flow)"})
+    {
+        BOOST_TEST_CONTEXT(portExpression)
+        {
+            BOOST_CHECK_EXCEPTION(
+              convertExpressionToNode("varP[" + portExpression + "]", model),
+              InputError,
+              containsMessage("Time index arguments can only contain literals and parameters."));
+            BOOST_CHECK_EXCEPTION(
+              convertExpressionToNode("(varP + 1)[1 + " + portExpression + "]", model),
+              InputError,
+              containsMessage("Time index arguments can only contain literals and parameters."));
+            BOOST_CHECK_EXCEPTION(
+              convertExpressionToNode("varP[t + (" + portExpression + ")]", model),
+              InputError,
+              containsMessage("Time shift arguments can only contain literals and parameters."));
+            BOOST_CHECK_EXCEPTION(
+              convertExpressionToNode("(varP + 1)[t - (1 + " + portExpression + ")]", model),
+              InputError,
+              containsMessage("Time shift arguments can only contain literals and parameters."));
+            BOOST_CHECK_EXCEPTION(
+              convertExpressionToNode("sum(" + portExpression + " .. 2, varP)", model),
+              InputError,
+              containsMessage("Time-sum `from` bound can only contain literals and parameters."));
+            BOOST_CHECK_EXCEPTION(
+              convertExpressionToNode("sum(1 .. t + (" + portExpression + "), varP)", model),
+              InputError,
+              containsMessage("Time-sum `to` bound can only contain literals and parameters."));
+        }
+    }
+}
+
 BOOST_AUTO_TEST_CASE(dual_and_reduced_cost_are_rejected_recursively_in_shifts_and_indices)
 {
     auto model = createYmlModel();

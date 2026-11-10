@@ -23,6 +23,10 @@ namespace
 {
 void validateTimeBoundNode(const Node* node, const std::string& context)
 {
+    if (dynamic_cast<const LiteralNode*>(node) || dynamic_cast<const ParameterNode*>(node))
+    {
+        return;
+    }
     if (const auto* variableNode = dynamic_cast<const VariableNode*>(node))
     {
         throw InputError(
@@ -42,7 +46,9 @@ void validateTimeBoundNode(const Node* node, const std::string& context)
         {
             validateTimeBoundNode(operand, context);
         }
+        return;
     }
+    throw InputError(fmt::format("{} can only contain literals and parameters.", context));
 }
 } // namespace
 
