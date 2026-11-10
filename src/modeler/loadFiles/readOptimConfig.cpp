@@ -42,6 +42,11 @@ static YmlOptimConfig::OptimConfig parseOptimConfig(const std::string& content,
         handleYamlError(e, configPath.string());
         throw ErrorLoadingYaml(e.what());
     }
+    catch (const Antares::IO::Inputs::InputError& e)
+    {
+        handleInputError(e, configPath.string());
+        throw ErrorLoadingYaml(e.what());
+    }
 }
 
 YmlOptimConfig::OptimConfig loadOptimConfigFromYaml(const fs::path& studyPath)

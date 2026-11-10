@@ -62,12 +62,12 @@ namespace Antares::ViewBuilder
 
 std::string areaLocation(const std::string& areaId)
 {
-    return BuildAreaNodeComponentId(areaId);
+    return BuildAreaComponentId(areaId);
 }
 
 YAML::Node areaToYaml(const Area& area)
 {
-    return makeComponent(BuildAreaNodeComponentId(area.id),
+    return makeComponent(BuildAreaComponentId(area.id),
                          "antares_legacy_models.area",
                          {{"carrier", "electricity"}});
 }

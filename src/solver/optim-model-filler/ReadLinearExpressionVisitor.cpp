@@ -165,9 +165,15 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Li
     return TimeDependentLinearExpression({}, node->value());
 }
 
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::PortFieldNode*)
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::PortFieldNode* node)
 {
-    throw Error::InvalidArgumentError("ReadLinearExpressionVisitor cannot visit PortFieldNodes");
+    throw Error::InvalidArgumentError(fmt::format(
+      "Port field '{}.{}' cannot be used directly in a linear expression. "
+      "Use 'sum_connections({}.{})' to aggregate port field values from connected components.",
+      node->getPortName(),
+      node->getFieldName(),
+      node->getPortName(),
+      node->getFieldName()));
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
