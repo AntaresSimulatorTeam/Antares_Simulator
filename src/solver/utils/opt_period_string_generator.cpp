@@ -19,7 +19,7 @@ std::string OptDailyStringGenerator::to_string() const
 {
     std::string to_return = std::to_string(year_) + "-";
     to_return += std::to_string(week_) + "-";
-    to_return += std::to_string(day_ + 1);
+    to_return += std::to_string(day_);
     return to_return;
 }
 
