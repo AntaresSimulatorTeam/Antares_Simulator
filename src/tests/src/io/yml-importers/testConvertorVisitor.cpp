@@ -423,10 +423,11 @@ BOOST_AUTO_TEST_CASE(time_sum_bounds_reject_variables)
 {
     BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(varP .. 2, varP)", createYmlModel()),
                           InputError,
-                          containsMessage("Time-sum `from` bound cannot contain variables"));
+                          containsMessage(
+                            "Time-sum `from` bound cannot contain variables: 'varP'."));
     BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(1 .. varP, varP)", createYmlModel()),
                           InputError,
-                          containsMessage("Time-sum `to` bound cannot contain variables"));
+                          containsMessage("Time-sum `to` bound cannot contain variables: 'varP'."));
 }
 
 BOOST_AUTO_TEST_CASE(time_indices_accept_expressions)

@@ -7,7 +7,6 @@
 #include <boost/algorithm/string.hpp>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
-#include <antares/expressions/visitors/PrintVisitor.h>
 #include <antares/io/inputs/model-converter/convertorVisitor.h>
 #include "antares/expressions/nodes/TimeSumNode.h"
 
@@ -24,11 +23,10 @@ namespace
 {
 void validateTimeBoundNode(const Node* node, const std::string& context)
 {
-    if (dynamic_cast<const VariableNode*>(node))
+    if (const auto* variableNode = dynamic_cast<const VariableNode*>(node))
     {
-        Expressions::Visitors::PrintVisitor printVisitor;
         throw InputError(
-          fmt::format("{} cannot contain variables: '{}'.", context, printVisitor.dispatch(node)));
+          fmt::format("{} cannot contain variables: '{}'.", context, variableNode->value()));
     }
     if (const auto* functionNode = dynamic_cast<const FunctionNode*>(node);
         functionNode
