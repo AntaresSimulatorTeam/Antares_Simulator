@@ -1899,6 +1899,7 @@ var namespaces_dup =
         [ "OptIntColumnAdapter", "classAntares_1_1Writer_1_1OptIntColumnAdapter.html", "classAntares_1_1Writer_1_1OptIntColumnAdapter" ],
         [ "LegacySimulationTablesWriter", "classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html", "classAntares_1_1Writer_1_1LegacySimulationTablesWriter" ],
         [ "SimulationTableWriter", "classAntares_1_1Writer_1_1SimulationTableWriter.html", "classAntares_1_1Writer_1_1SimulationTableWriter" ],
+        [ "StreamingSimulationTableWriter", "classAntares_1_1Writer_1_1StreamingSimulationTableWriter.html", "classAntares_1_1Writer_1_1StreamingSimulationTableWriter" ],
         [ "TableFormat", "table__format_8h.html#a0381893c1d8965a118bc7d6c1807077a", [
           [ "CSV", "table__format_8h.html#a0381893c1d8965a118bc7d6c1807077aacc8d68c551c4a9a6d5313e07de4deafd", null ],
           [ "Parquet", "table__format_8h.html#a0381893c1d8965a118bc7d6c1807077aaace780da4816e1e457db8c57d60b5d66", null ]

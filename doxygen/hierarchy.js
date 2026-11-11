@@ -575,6 +575,10 @@ var hierarchy =
       [ "Antares::LinearProblem::MpsolverImpl::OrtoolsMipSolution", "classAntares_1_1LinearProblem_1_1MpsolverImpl_1_1OrtoolsMipSolution.html", null ],
       [ "MockMipSolution", "structMockMipSolution.html", null ]
     ] ],
+    [ "Antares::Writer::StreamingSimulationTableWriter::Impl", "structAntares_1_1Writer_1_1StreamingSimulationTableWriter_1_1Impl.html", [
+      [ "Antares::Writer::StreamingSimulationTableWriter::Impl::CSVWriterImpl", "structAntares_1_1Writer_1_1StreamingSimulationTableWriter_1_1Impl_1_1CSVWriterImpl.html", null ],
+      [ "Antares::Writer::StreamingSimulationTableWriter::Impl::ParquetWriterImpl", "structAntares_1_1Writer_1_1StreamingSimulationTableWriter_1_1Impl_1_1ParquetWriterImpl.html", null ]
+    ] ],
     [ "Impl", null, [
       [ "Antares::Solver::Simulation::ISimulation< Impl >", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html", null ]
     ] ],
@@ -1452,6 +1456,7 @@ var hierarchy =
     [ "Antares::Memory::Stored< CellData >", "structAntares_1_1Memory_1_1Stored.html", null ],
     [ "Antares::Memory::Stored< double >", "structAntares_1_1Memory_1_1Stored.html", null ],
     [ "Antares::Memory::Stored< Type >", "structAntares_1_1Memory_1_1Stored.html", null ],
+    [ "Antares::Writer::StreamingSimulationTableWriter", "classAntares_1_1Writer_1_1StreamingSimulationTableWriter.html", null ],
     [ "StructureIndex< TSData, ObjectT >", "classStructureIndex.html", null ],
     [ "StructureIndex< BindingConstraintsTSNumberData, std::string >", "classStructureIndex.html", [
       [ "Fixture::BindingConstraint", "structFixture_1_1BindingConstraint.html", null ]

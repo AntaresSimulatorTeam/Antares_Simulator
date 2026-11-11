@@ -1,5 +1,17 @@
 var NAVTREEINDEX39 =
 {
+"structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps.html#a61f858203610664f85f80508dc50984d":[9,0,0,12,6,29,6],
+"structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps.html#a6f6222e2e657d21c437b459b75f7a614":[9,0,0,12,6,29,2],
+"structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps.html#a79550220f4d601821cc14cbcce54a044":[9,0,0,12,6,29,7],
+"structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps.html#a86b182f51fd6daded7c84e2c82543cfe":[9,0,0,12,6,29,5],
+"structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps.html#aba0b85c0dff1e3c320c4460115e90348":[9,0,0,12,6,29,1],
+"structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps.html#ae613655c6ff102e6e8469ad775f046b4":[9,0,0,12,6,29,8],
+"structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps.html#af389e62ec897f4d6eb06eb534aaae5c3":[9,0,0,12,6,29,4],
+"structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps.html#afcaf99fe75d2af35672dfc5bacd58b75":[9,0,0,12,6,29,9],
+"structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps_1_1AreaReserveIndexMap.html":[9,0,0,12,6,29,0],
+"structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps_1_1AreaReserveIndexMap.html#a07acbb1407ea59ba729c4a018770f50c":[9,0,0,12,6,29,0,0],
+"structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps_1_1AreaReserveIndexMap.html#a0ad343556c08f4d1ba791b1ea68c92a4":[9,0,0,12,6,29,0,6],
+"structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps_1_1AreaReserveIndexMap.html#a5cdd5db583b3533145c23ba2f1036cc7":[9,0,0,12,6,29,0,2],
 "structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps_1_1AreaReserveIndexMap.html#a74d804733ec9916c280d89fba1e9d7e6":[9,0,0,12,6,29,0,1],
 "structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps_1_1AreaReserveIndexMap.html#a92e9b237227d4cb0096259b15d5c34c6":[9,0,0,12,6,29,0,4],
 "structAntares_1_1Solver_1_1Simulation_1_1ReserveIndexMaps_1_1AreaReserveIndexMap.html#aa4af8527cb21affaee68a6751bb12760":[9,0,0,12,6,29,0,5],
@@ -237,17 +249,5 @@ var NAVTREEINDEX39 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1StaticLinkBase_1_1Statistics.html":[9,0,0,12,7,5,51,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissionsTraits.html":[9,0,0,12,7,5,96],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissionsTraits.html#ad711d461ef63c49b4096b676e566e921":[9,0,0,12,7,5,96,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html":[9,0,0,12,7,5,15],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html#a3e988a0d084b394408a73866611e7578":[9,0,0,12,7,5,15,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html#ac9dccef6049d004e6231b2891a6ebf70":[9,0,0,12,7,5,15,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html#ae4bb6e0dea8196f0129ea81f61bbf421":[9,0,0,12,7,5,15,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html#ae66c8ec6fadc712599ceee65d953a031":[9,0,0,12,7,5,15,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesBase_1_1Statistics.html":[9,0,0,12,7,5,17,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsuppliedEnergyCSRTrait.html":[9,0,0,12,7,5,98],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsuppliedEnergyTrait.html":[9,0,0,12,7,5,97],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsuppliedEnergyTrait.html#af1b539f53f7f367441c3a67abee50c8e":[9,0,0,12,7,5,97,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html":[9,0,0,12,7,5,20],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#a621a539cd5a98cc3b775d7946cccf22e":[9,0,0,12,7,5,20,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#a9ac4ecc5366710743bf8e33faa6f4986":[9,0,0,12,7,5,20,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#ab829a8c7c8e037d4362a6ba356d33d43":[9,0,0,12,7,5,20,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html":[9,0,0,12,7,5,15]
 };

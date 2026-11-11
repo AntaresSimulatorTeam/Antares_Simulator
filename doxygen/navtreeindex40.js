@@ -1,5 +1,17 @@
 var NAVTREEINDEX40 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html#a3e988a0d084b394408a73866611e7578":[9,0,0,12,7,5,15,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html#ac9dccef6049d004e6231b2891a6ebf70":[9,0,0,12,7,5,15,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html#ae4bb6e0dea8196f0129ea81f61bbf421":[9,0,0,12,7,5,15,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html#ae66c8ec6fadc712599ceee65d953a031":[9,0,0,12,7,5,15,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesBase_1_1Statistics.html":[9,0,0,12,7,5,17,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsuppliedEnergyCSRTrait.html":[9,0,0,12,7,5,98],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsuppliedEnergyTrait.html":[9,0,0,12,7,5,97],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsuppliedEnergyTrait.html#af1b539f53f7f367441c3a67abee50c8e":[9,0,0,12,7,5,97,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html":[9,0,0,12,7,5,20],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#a621a539cd5a98cc3b775d7946cccf22e":[9,0,0,12,7,5,20,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#a9ac4ecc5366710743bf8e33faa6f4986":[9,0,0,12,7,5,20,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#ab829a8c7c8e037d4362a6ba356d33d43":[9,0,0,12,7,5,20,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html":[9,0,0,12,7,5,39],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a019df18e6c2084449381239d9c52df4b":[9,0,0,12,7,5,39,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a34dcf74afcb58403f83d2fc4d0dd51ff":[9,0,0,12,7,5,39,2],
@@ -237,17 +249,5 @@ var NAVTREEINDEX40 =
 "structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html":[9,0,0,36],
 "structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html#a0f16a56af5a122a7bb53d001ec5766b2":[9,0,0,36,2],
 "structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html#a3f4e46a2c01111997947cfd695098203":[9,0,0,36,0],
-"structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html#a65d663b810a47e3a602a09f8882ce0bc":[9,0,0,36,1],
-"structAreaBalanceData.html":[9,0,36],
-"structAreaBalanceData.html#a20c3f61835bc421234b0d98082cd4e70":[9,0,36,3],
-"structAreaBalanceData.html#a3a735bf61dea302452c8bc9e717d1a17":[9,0,36,2],
-"structAreaBalanceData.html#a76475951a00bfba4e2f77e6271c958b5":[9,0,36,1],
-"structAreaBalanceData.html#a822128e8cc90a1b359a26569bc618ef7":[9,0,36,0],
-"structAreaBalanceData.html#a8e92c3278f56ef665e68c6f9a418cad6":[9,0,36,6],
-"structAreaBalanceData.html#ac60174dffa37447eaa8d9286c422198f":[9,0,36,4],
-"structAreaBalanceData.html#ae39c2e4849c2556d5ae82573b45db831":[9,0,36,5],
-"structAreaConnectionFixture.html":[9,0,37],
-"structAreaConnectionFixture.html#a12544be58265c31fa4e018d0088bfe33":[9,0,37,9],
-"structAreaConnectionFixture.html#a1387edce30aaea095a878eb7f0b6fff2":[9,0,37,6],
-"structAreaConnectionFixture.html#a2d34aa50c451d8251972125142aa9b0b":[9,0,37,11]
+"structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html#a65d663b810a47e3a602a09f8882ce0bc":[9,0,0,36,1]
 };

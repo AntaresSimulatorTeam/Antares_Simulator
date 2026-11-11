@@ -136,10 +136,54 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7394b72a4139ae394862bf113b263bb3"><td class="memItemLeft" align="right" valign="top"><a id="a7394b72a4139ae394862bf113b263bb3"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>LegacySimulationTablesWriter</b> (const std::filesystem::path &amp;folder, const unsigned year, TableFormat tableFormat=TableFormat::CSV)</td></tr>
 <tr class="separator:a7394b72a4139ae394862bf113b263bb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d2df795f0ba13cfe82e9015f8ee64ca"><td class="memItemLeft" align="right" valign="top"><a id="a4d2df795f0ba13cfe82e9015f8ee64ca"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>write</b> (const <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">IO::Outputs::OptimisationsSimulationTable</a> &amp;tables) const</td></tr>
-<tr class="separator:a4d2df795f0ba13cfe82e9015f8ee64ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a639a202df304c603d7fafefd5c73cebd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html#a639a202df304c603d7fafefd5c73cebd">write</a> (const <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">IO::Outputs::OptimisationsSimulationTable</a> &amp;tables)</td></tr>
+<tr class="separator:a639a202df304c603d7fafefd5c73cebd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62ed1afdac54cc4b2f187d32bd16b9ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html#a62ed1afdac54cc4b2f187d32bd16b9ca">flush</a> (const <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">IO::Outputs::OptimisationsSimulationTable</a> &amp;tables)</td></tr>
+<tr class="separator:a62ed1afdac54cc4b2f187d32bd16b9ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa850cb54ba02765e448d0270b7daee2a"><td class="memItemLeft" align="right" valign="top"><a id="aa850cb54ba02765e448d0270b7daee2a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html#aa850cb54ba02765e448d0270b7daee2a">finish</a> (const <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">IO::Outputs::OptimisationsSimulationTable</a> &amp;tables)</td></tr>
+<tr class="memdesc:aa850cb54ba02765e448d0270b7daee2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flushes the remaining rows and closes all files of the year. <br /></td></tr>
+<tr class="separator:aa850cb54ba02765e448d0270b7daee2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a62ed1afdac54cc4b2f187d32bd16b9ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62ed1afdac54cc4b2f187d32bd16b9ca">&#9670;&nbsp;</a></span>flush()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Antares::Writer::LegacySimulationTablesWriter::flush </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">IO::Outputs::OptimisationsSimulationTable</a> &amp;&#160;</td>
+          <td class="paramname"><em>tables</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Streaming API, to keep the in-memory tables small: appends the rows currently held by each stage of <code>tables</code> to the stage's file for this year, then clears them. Stages with no row are skipped (their file is created only once they have content). Can be called any number of times (e.g. once per week), then <a class="el" href="classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html#aa850cb54ba02765e448d0270b7daee2a" title="Flushes the remaining rows and closes all files of the year.">finish()</a> must close the files. </p>
+
+</div>
+</div>
+<a id="a639a202df304c603d7fafefd5c73cebd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a639a202df304c603d7fafefd5c73cebd">&#9670;&nbsp;</a></span>write()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Antares::Writer::LegacySimulationTablesWriter::write </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">IO::Outputs::OptimisationsSimulationTable</a> &amp;&#160;</td>
+          <td class="paramname"><em>tables</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>One-shot write of everything in <code>tables</code> (flush + finish). Tables are left untouched. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/libs/antares/writer/include/antares/writer/<a class="el" href="LegacySimulationTablesWriter_8h_source.html">LegacySimulationTablesWriter.h</a></li>
 <li>src/libs/antares/writer/LegacySimulationTablesWriter.cpp</li>
