@@ -32,7 +32,8 @@ struct ExpectedField
 /// collections are treated as absent, but explicit mappings cannot be null. Value conversion is
 /// left to the decoders, so malformed values cannot hide field errors elsewhere in the document.
 /// The diagnostic path is explicit; validation does not modify the document or its YAML tags.
-/// Function checkFields takes a node and accepts multiple top-level expected fields (prebuilt list).
+/// Function checkFields takes a node and accepts multiple top-level expected fields (prebuilt
+/// list).
 void checkFields(const YAML::Node& node,
                  const std::vector<ExpectedField>& expectedFields,
                  const std::string& path = "");
