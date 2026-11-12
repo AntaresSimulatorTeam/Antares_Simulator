@@ -362,7 +362,8 @@ static void addWeekEntries(SimulationTable& table, unsigned week)
 
 BOOST_AUTO_TEST_CASE(Streaming_CsvFlushPerWeek_IsIdenticalToOneShotWrite)
 {
-    auto tempDir = std::filesystem::temp_directory_path();
+    auto tempDir = makeTemporaryOutputDirectory();
+    const auto tablesDir = simulationTableOutputDirectory(tempDir);
     constexpr unsigned nbWeeks = 4;
 
     // One-shot reference (year 20)
@@ -387,21 +388,21 @@ BOOST_AUTO_TEST_CASE(Streaming_CsvFlushPerWeek_IsIdenticalToOneShotWrite)
         }
         writer.finish(tables);
         // Stage never filled: no file
-        BOOST_CHECK(!std::filesystem::exists(tempDir / "simulation-table-21-optim-nb-2.csv"));
+        BOOST_CHECK(!std::filesystem::exists(tablesDir / "simulation-table-21-optim-nb-2.csv"));
     }
 
-    auto ref = tempDir / "simulation-table-20-optim-nb-1.csv";
-    auto streamed = tempDir / "simulation-table-21-optim-nb-1.csv";
+    auto ref = tablesDir / "simulation-table-20-optim-nb-1.csv";
+    auto streamed = tablesDir / "simulation-table-21-optim-nb-1.csv";
     BOOST_REQUIRE(std::filesystem::exists(ref));
     BOOST_REQUIRE(std::filesystem::exists(streamed));
     BOOST_CHECK_EQUAL(readFileContent(streamed), readFileContent(ref));
-    std::filesystem::remove(ref);
-    std::filesystem::remove(streamed);
+    std::filesystem::remove_all(tempDir);
 }
 
 BOOST_AUTO_TEST_CASE(Streaming_ParquetFlushPerWeek_WritesOneRowGroupPerFlush)
 {
-    auto tempDir = std::filesystem::temp_directory_path();
+    auto tempDir = makeTemporaryOutputDirectory();
+    const auto tablesDir = simulationTableOutputDirectory(tempDir);
     constexpr unsigned nbWeeks = 4;
     {
         OptimisationsSimulationTable tables{nullptr};
@@ -413,7 +414,7 @@ BOOST_AUTO_TEST_CASE(Streaming_ParquetFlushPerWeek_WritesOneRowGroupPerFlush)
         }
         writer.finish(tables);
     }
-    const auto path = tempDir / "simulation-table-22-optim-nb-1.parquet";
+    const auto path = tablesDir / "simulation-table-22-optim-nb-1.parquet";
     BOOST_REQUIRE(std::filesystem::exists(path));
 
     std::shared_ptr<arrow::io::ReadableFile> infile;
@@ -426,7 +427,7 @@ BOOST_AUTO_TEST_CASE(Streaming_ParquetFlushPerWeek_WritesOneRowGroupPerFlush)
     BOOST_CHECK_EQUAL(table->num_rows(), static_cast<int64_t>(nbWeeks * 3));
     reader.reset();
     PARQUET_THROW_NOT_OK(infile->Close());
-    std::filesystem::remove(path);
+    std::filesystem::remove_all(tempDir);
 }
 
 BOOST_AUTO_TEST_CASE(WriteTo_ParquetFormat_CreatesCorrectFiles)
