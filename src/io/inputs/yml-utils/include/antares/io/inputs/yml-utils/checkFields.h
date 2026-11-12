@@ -14,8 +14,8 @@ namespace Antares::IO::Inputs::YmlUtils
 /// Accepted YAML shape of a field that has children.
 enum class Shape
 {
-    MapOrSequence, ///< A map, or a sequence of maps (the default)
-    Map            ///< A single map only; sequences are rejected
+    Sequence,
+    Map
 };
 
 struct ExpectedField
@@ -23,7 +23,7 @@ struct ExpectedField
     std::string name;
     bool required = false;
     std::vector<ExpectedField> children = {};
-    Shape shape = Shape::MapOrSequence;
+    Shape shape = Shape::Sequence;
 };
 
 /// Validates maps and sequence entries recursively before decoding. Throws InputError containing
