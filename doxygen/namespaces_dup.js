@@ -1964,6 +1964,7 @@ var namespaces_dup =
       [ "isEmpty", "inifile_8cpp.html#a262fb3bd61547089ae2118d4db17480c", null ],
       [ "MatrixTestForAtLeastOnePositiveValue", "matrix_8h.html#a8dc26aa738df72a4c21b451d3721b7d9", null ],
       [ "PrintVersionToStdCout", "include_2antares_2antares_2version_8h.html#a4024e883225652507e7cdf981b5f327a", null ],
+      [ "SanitizeId", "utils_8h.html#a60323262fa3d544ad16bfcef636ec91b", null ],
       [ "splitStringIntoPairs", "utils_8h.html#aa34d6e237ef3d1c78d9d5a2635f407dc", null ],
       [ "stringToBool", "utils_8h.html#a8a80bd96b0939503a4f2c8c55078f443", null ],
       [ "stringToDouble", "utils_8h.html#ab84eda9b15b34e966c462d7dd1a83fd4", null ],
