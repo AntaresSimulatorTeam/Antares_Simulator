@@ -32,7 +32,7 @@ struct ValidationResult
 
     ValidationResult& operator+=(const ValidationResult& other)
     {
-        errors.insert(errors.end(), other.errors.begin(), other.errors.end());
+        std::ranges::copy(other.errors, std::back_inserter(errors));
         return *this;
     }
 };
@@ -53,12 +53,8 @@ std::string buildMessage(const YAML::Node& node, const std::string& path, const 
     const YAML::YmlTreeDisplayer displayer(node, path);
     // Duplicated keys are highlighted like unexpected ones
     auto markedUnexpected = findings.unexpected;
-    markedUnexpected.insert(markedUnexpected.end(),
-                            findings.duplicated.begin(),
-                            findings.duplicated.end());
-    markedUnexpected.insert(markedUnexpected.end(),
-                            findings.nullIds.begin(),
-                            findings.nullIds.end());
+    std::ranges::copy(findings.duplicated, std::back_inserter(markedUnexpected));
+    std::ranges::copy(findings.nullIds, std::back_inserter(markedUnexpected));
 
     std::string fieldsList;
     for (const auto& f: findings.unexpected)
