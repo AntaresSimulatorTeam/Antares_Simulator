@@ -284,8 +284,8 @@ BOOST_AUTO_TEST_CASE(cluster_views_share_area_and_district_aggregations)
         BOOST_CHECK_EQUAL(view["scope"]["extra-locations"][0]["id"].as<std::string>(),
                           "district_eu");
         BOOST_REQUIRE_EQUAL(view["aggregations-patterns"].size(), 2);
-        BOOST_CHECK(locations(findPattern(view, "hour-ind")) == (std::set<std::string>{"france"}));
-        BOOST_CHECK(locations(findPattern(view, "day-all")) == (std::set<std::string>{"eu"}));
+        BOOST_CHECK(locations(findPattern(view, "hour_ind")) == (std::set<std::string>{"france"}));
+        BOOST_CHECK(locations(findPattern(view, "day_all")) == (std::set<std::string>{"eu"}));
     }
 }
 
@@ -323,10 +323,10 @@ BOOST_AUTO_TEST_CASE(link_view_uses_link_filters_not_area_or_district_filters)
     const auto view = generateViewConfig(*study, ViewType::link)["view"];
     BOOST_CHECK(!view["scope"]["extra-locations"].IsDefined());
     BOOST_REQUIRE_EQUAL(view["aggregations-patterns"].size(), 3);
-    BOOST_CHECK(locations(findPattern(view, "hour-ind"))
+    BOOST_CHECK(locations(findPattern(view, "hour_ind"))
                 == (std::set<std::string>{"france_germany"}));
-    BOOST_CHECK(!findPattern(view, "day-ind")["location-filter"].IsDefined());
-    BOOST_CHECK(locations(findPattern(view, "day-all"))
+    BOOST_CHECK(!findPattern(view, "day_ind")["location-filter"].IsDefined());
+    BOOST_CHECK(locations(findPattern(view, "day_all"))
                 == (std::set<std::string>{"france_germany"}));
 
     first.filterYearByYear = first.filterSynthesis = filterNone;
@@ -429,7 +429,7 @@ BOOST_AUTO_TEST_CASE(area_view_thematic_selection_combines_with_geographic_trimm
     BOOST_CHECK(metricIds(view)
                 == (std::set<std::string>{"antares_legacy_area_catalog.LOAD",
                                           "antares_legacy_area_catalog.RES_GENERATION"}));
-    BOOST_CHECK(locations(findPattern(view, "hour-ind")) == (std::set<std::string>{"france"}));
+    BOOST_CHECK(locations(findPattern(view, "hour_ind")) == (std::set<std::string>{"france"}));
 }
 
 BOOST_AUTO_TEST_CASE(area_view_skipped_when_no_mapped_metric_is_selected)
@@ -522,7 +522,7 @@ BOOST_AUTO_TEST_CASE(area_view_without_geographic_trimming)
         {
             const auto pattern = findPattern(view,
                                              std::string(granularity)
-                                               + (scenario ? "-all" : "-ind"));
+                                               + (scenario ? "_all" : "_ind"));
             BOOST_REQUIRE(pattern.IsDefined());
             BOOST_CHECK_EQUAL(pattern["time-granularity"].as<std::string>(), granularity);
             BOOST_CHECK_EQUAL(pattern["scenario"].as<bool>(), scenario);
@@ -560,13 +560,13 @@ BOOST_AUTO_TEST_CASE(area_view_geographic_trimming_includes_enabled_districts)
     BOOST_REQUIRE_EQUAL(view["scope"]["extra-locations"].size(), 1);
     BOOST_CHECK_EQUAL(view["scope"]["extra-locations"][0]["id"].as<std::string>(), "district_eu");
     BOOST_REQUIRE_EQUAL(view["aggregations-patterns"].size(), 4);
-    BOOST_CHECK(locations(findPattern(view, "hour-ind"))
+    BOOST_CHECK(locations(findPattern(view, "hour_ind"))
                 == (std::set<std::string>{"eu", "france"}));
-    BOOST_CHECK(locations(findPattern(view, "hour-all")) == (std::set<std::string>{"eu"}));
-    BOOST_CHECK(!findPattern(view, "day-ind")["location-filter"].IsDefined());
-    BOOST_CHECK(!findPattern(view, "day-all")["location-filter"].IsDefined());
-    BOOST_CHECK(!findPattern(view, "week-ind").IsDefined());
-    BOOST_CHECK(!findPattern(view, "week-all").IsDefined());
+    BOOST_CHECK(locations(findPattern(view, "hour_all")) == (std::set<std::string>{"eu"}));
+    BOOST_CHECK(!findPattern(view, "day_ind")["location-filter"].IsDefined());
+    BOOST_CHECK(!findPattern(view, "day_all")["location-filter"].IsDefined());
+    BOOST_CHECK(!findPattern(view, "week_ind").IsDefined());
+    BOOST_CHECK(!findPattern(view, "week_all").IsDefined());
 }
 
 BOOST_AUTO_TEST_CASE(area_view_skipped_when_no_aggregation_is_selected)
@@ -603,7 +603,7 @@ BOOST_AUTO_TEST_CASE(area_view_written_when_only_district_aggregation_is_selecte
     BOOST_REQUIRE(exportAreaViewConfig(*study, &writer));
     const auto view = YAML::Load(writer.entries.at("views/input/view_config_area.yml"))["view"];
     BOOST_REQUIRE_EQUAL(view["aggregations-patterns"].size(), 1);
-    BOOST_CHECK(locations(findPattern(view, "hour-all")) == (std::set<std::string>{"eu"}));
+    BOOST_CHECK(locations(findPattern(view, "hour_all")) == (std::set<std::string>{"eu"}));
 }
 
 BOOST_AUTO_TEST_CASE(export_area_view_uses_views_input_directory)

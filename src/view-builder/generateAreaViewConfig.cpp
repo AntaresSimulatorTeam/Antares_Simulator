@@ -186,7 +186,7 @@ YAML::Node generateViewConfig(const Data::Study& study, ViewType type)
         for (bool scenario: {false, true})
         {
             YAML::Node pattern;
-            pattern["id"] = std::string(granularity) + (scenario ? "-all" : "-ind");
+            pattern["id"] = std::string(granularity) + (scenario ? "_all" : "_ind");
             pattern["time-granularity"] = std::string(granularity);
             pattern["scenario"] = scenario;
 
