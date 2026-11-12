@@ -31,7 +31,7 @@ Three sources cover every formula:
 
 Link capacities and loop flows use the week-relative index `weekPdt = fillContext.getGlobalFirstTimeStep() - HeureDansLAnnee + pdt`, including for daily optimisation. Congestion indicators use solved effective capacities when available, otherwise the original NTC. Variable and constraint lookups remain interval-local.
 
-Row conventions are fixed in one place (`LegacyExtraOutputEmitter::emit`): the absolute hour is `fillContext.getGlobalFirstTimeStep() + pdt` (matching the time index recorded on the raw rows), `block_time_index` comes from `LegacyBlockTimeIndex` (shared with the raw-row loop), `scenario_index = fillContext.getYear()`. Components follow the uniqueness convention: `{area}_node` for area rows, `{area}_hydro_storage` for the hydro storage, `{area}_thermal_{cluster}` for thermal clusters, `{area}_short_term_storage_{name}` for short-term storages, `{origin}_{destination}_link` for links (endpoints sorted), `{area}_load` / `{area}_hydro_storage` for the load / long-term-storage port rows.
+Row conventions are fixed in one place (`LegacyExtraOutputEmitter::emit`): the absolute hour is `weekInTheYear * 168 + pdt` (matching the time index recorded on the raw rows), `block_time_index` comes from `LegacyBlockTimeIndex` (shared with the raw-row loop), `scenario_index = fillContext.getYear()`. Components follow the uniqueness convention: `{area}` for area rows, `{area}_hydro_storage` for the hydro storage, `{area}_thermal_{cluster}` for thermal clusters, `{area}_short_term_storage_{name}` for short-term storages, `{origin}_{destination}` for links (endpoints sorted), `{area}_load` / `{area}_hydro_storage` for the load / long-term-storage port rows.
 
 ### Guards
 
@@ -50,7 +50,7 @@ Reserve raw rows use the reserve ID in their public output name (for example,
 the internal LP variable name. This is an intentional schema rename from the
 previous generic reserve raw-output names. The internal reserve imbalance rows
 (`unsupplied_energy_reserve_<reserveId>` and
-`spilled_energy_reserve_<reserveId>`) use the owning area's `{area}_node`
+`spilled_energy_reserve_<reserveId>`) use the owning area's `{area}`
 component, matching `reserve_imbalance_cost_<reserveId>` and avoiding collisions
 between equal display names in different areas.
 
@@ -105,7 +105,7 @@ area-level `balance_port.flow` rows from colliding on the area name.
 
 The `price` formula negates the stored dual: with the legacy balance-constraint sign convention, `CoutsMarginauxDesContraintes` holds the **negative** of the marginal price (the legacy outputs print `-CoutsMarginauxHoraires`).
 
-The reserve rows follow the same conventions as their area-level counterparts: `reserve_imbalance_cost_<reserveId>` anchors on `{area}_node`, and each `reserve_participation_cost_<reserveId>` row anchors on the participating entity (thermal cluster, short-term storage, or the area's hydro storage), so a reserve served by several technologies yields one row per technology. The costs come from the study's `CAPACITY_RESERVATION` / `RESERVE_PARTICIPATION_*` structs (the un-noised user values), matching the `imbalance_cost` / `prop_cost` style. Both reserve outputs are guarded on `allReserves` being present **and** `OptimisationNotFastMode`, the exact condition under which the reserve variables are constructed (`opt_construction_variables_optimisees_lineaire.cpp`); in fast mode, or when reserves are not configured, no reserve row is emitted and the `OffThermalClusterReserveParticipation` term is dropped for DOWN reserves (off units cannot participate in down reserves).
+The reserve rows follow the same conventions as their area-level counterparts: `reserve_imbalance_cost_<reserveId>` anchors on `{area}`, and each `reserve_participation_cost_<reserveId>` row anchors on the participating entity (thermal cluster, short-term storage, or the area's hydro storage), so a reserve served by several technologies yields one row per technology. The costs come from the study's `CAPACITY_RESERVATION` / `RESERVE_PARTICIPATION_*` structs (the un-noised user values), matching the `imbalance_cost` / `prop_cost` style. Both reserve outputs are guarded on `allReserves` being present **and** `OptimisationNotFastMode`, the exact condition under which the reserve variables are constructed (`opt_construction_variables_optimisees_lineaire.cpp`); in fast mode, or when reserves are not configured, no reserve row is emitted and the `OffThermalClusterReserveParticipation` term is dropped for DOWN reserves (off units cannot participate in down reserves).
 The storage and hydro participation-cost rows intentionally use the signed net
 quantity from the LP objective. Consequently, their values can be negative when
 the asset stores against an UP reserve or releases against a DOWN reserve; this

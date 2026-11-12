@@ -37,10 +37,6 @@ public:
         //! ramping variables
         std::vector<double> thermalClustersRampingCost;
 
-        //! The ramping cost of each cluster for every hour of the current year, kept for the
-        //! end of year costs. Empty for clusters without ramping.
-        std::vector<std::vector<double>> thermalClustersRampingCostForYear;
-
         //! Number of units turned ON by cluster for the current hour in the year with the ucMILP
         //! (accurate) unit commitment mode
         std::vector<uint> numberOfUnitsONbyCluster;
@@ -133,15 +129,7 @@ private:
       const std::array<int, HOURS_PER_YEAR>& ON_opt,
       const Data::ThermalCluster* currentCluster);
 
-    void yearEndBuildCalculateRampingCosts(const uint& maxDurationON,
-                                           const std::array<int, HOURS_PER_YEAR>& ON_min,
-                                           const std::array<int, HOURS_PER_YEAR>& ON_opt,
-                                           const Data::ThermalCluster* currentCluster);
-
-    void yearEndBuildCalculateMustRunRampingCosts(const uint& maxDurationON,
-                                                  const std::array<int, HOURS_PER_YEAR>& ON_min,
-                                                  const std::array<int, HOURS_PER_YEAR>& ON_opt,
-                                                  const Data::ThermalCluster* currentCluster);
+    void yearEndBuildCalculateRampingCosts(const Data::ThermalCluster* currentCluster);
 
     std::array<int, HOURS_PER_YEAR> computeEconomicallyOptimalNbClustersONforEachHour(
 

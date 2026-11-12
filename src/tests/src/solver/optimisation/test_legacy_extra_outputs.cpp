@@ -233,8 +233,13 @@ struct Fixture
         // them in sim_calcul_economique.cpp); the reserve variable indices are
         // wired below into CorrespondanceVarNativesVarOptim.reservesIndices.
         problem.allReserves = std::vector<AREA_RESERVES_VECTOR>(3);
+        TimeSeriesNumbers tsnum;
+        tsnum.reset(1);
+        tsnum[0] = 0;
+        TimeSeries reserveNeed(tsnum);
         {
-            auto& area1Reserve = problem.allReserves->at(0).areaCapacityReservations.emplace_back();
+            auto& area1Reserve = problem.allReserves->at(0).areaCapacityReservations.emplace_back(
+              reserveNeed);
             area1Reserve.reserveName = "Res_1";
             area1Reserve.reserveID = "Res_1";
             area1Reserve.globalReserveIndex = 0;
@@ -254,7 +259,8 @@ struct Fixture
             hydroPart.clusterName = "Hydro";
         }
         {
-            auto& area2Reserve = problem.allReserves->at(1).areaCapacityReservations.emplace_back();
+            auto& area2Reserve = problem.allReserves->at(1).areaCapacityReservations.emplace_back(
+              reserveNeed);
             area2Reserve.reserveName = "Res_Down";
             area2Reserve.reserveID = "Res_Down";
             area2Reserve.globalReserveIndex = 1;
@@ -428,7 +434,7 @@ BOOST_AUTO_TEST_CASE(imbalance_cost_combines_unsupplied_and_spilled_energy)
 
     const auto rows = RowsForOutput(table, "imbalance_cost");
     BOOST_REQUIRE_EQUAL(rows.size(), 3);
-    BOOST_CHECK_EQUAL(rows[0].component, "area1_node");
+    BOOST_CHECK_EQUAL(rows[0].component, "area1");
     BOOST_CHECK_CLOSE(rows[0].value, 9500. * 52. + 3. * 7., 1e-9);
 }
 
@@ -438,10 +444,10 @@ BOOST_AUTO_TEST_CASE(is_significant_loss_of_load_is_one_above_threshold_and_zero
 
     const auto rows = RowsForOutput(table, "is_significant_loss_of_load");
     BOOST_REQUIRE_EQUAL(rows.size(), 3);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area1_node")->value, 1.);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area2_node")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area1")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area2")->value, 1.);
     // 0.2 MW of unsupplied energy is below the 0.5 MW threshold.
-    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area3_node")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area3")->value, 0.);
 }
 
 BOOST_AUTO_TEST_CASE(is_significant_loss_of_load_is_zero_exactly_at_threshold)
@@ -451,7 +457,7 @@ BOOST_AUTO_TEST_CASE(is_significant_loss_of_load_is_zero_exactly_at_threshold)
     problem.ProblemeAResoudre->X[unsuppliedArea3] = 0.5;
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area3_node")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area3")->value, 0.);
 }
 
 BOOST_AUTO_TEST_CASE(is_loss_of_load_is_one_for_any_positive_unsupplied_energy)
@@ -460,10 +466,10 @@ BOOST_AUTO_TEST_CASE(is_loss_of_load_is_one_for_any_positive_unsupplied_energy)
 
     const auto rows = RowsForOutput(table, "is_loss_of_load");
     BOOST_REQUIRE_EQUAL(rows.size(), 3);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area1_node")->value, 1.);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area2_node")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area1")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area2")->value, 1.);
     // Strict > 0: even 0.2 MW below the significance threshold counts.
-    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3_node")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3")->value, 1.);
 }
 
 BOOST_AUTO_TEST_CASE(is_loss_of_load_is_zero_without_unsupplied_energy)
@@ -471,7 +477,7 @@ BOOST_AUTO_TEST_CASE(is_loss_of_load_is_zero_without_unsupplied_energy)
     problem.ProblemeAResoudre->X[unsuppliedArea3] = 0.;
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3_node")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3")->value, 0.);
 }
 
 BOOST_AUTO_TEST_CASE(actual_load_is_the_residual_load_plus_must_run_generation)
@@ -489,9 +495,9 @@ BOOST_AUTO_TEST_CASE(price_is_minus_the_area_balance_dual)
 
     const auto rows = RowsForOutput(table, "price");
     BOOST_REQUIRE_EQUAL(rows.size(), 3);
-    BOOST_CHECK_EQUAL(FindRow(table, "price", "area1_node")->value, 10000.);
-    BOOST_CHECK_EQUAL(FindRow(table, "price", "area2_node")->value, 50.);
-    BOOST_CHECK_EQUAL(FindRow(table, "price", "area3_node")->value, 75.);
+    BOOST_CHECK_EQUAL(FindRow(table, "price", "area1")->value, 10000.);
+    BOOST_CHECK_EQUAL(FindRow(table, "price", "area2")->value, 50.);
+    BOOST_CHECK_EQUAL(FindRow(table, "price", "area3")->value, 75.);
 }
 
 BOOST_AUTO_TEST_CASE(is_near_loss_of_load_compares_price_to_unsupplied_cost)
@@ -499,9 +505,9 @@ BOOST_AUTO_TEST_CASE(is_near_loss_of_load_compares_price_to_unsupplied_cost)
     fill();
 
     // area1: price 10000 > 9500 - 5; area2: 50 <= 19000 - 5; area3: 75 <= 8500 - 5.
-    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area1_node")->value, 1.);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area2_node")->value, 0.);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area3_node")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area1")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area2")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area3")->value, 0.);
 }
 
 BOOST_AUTO_TEST_CASE(level_percentage_is_hydro_level_over_reservoir_capacity)
@@ -559,24 +565,24 @@ BOOST_AUTO_TEST_CASE(abs_flow_is_absolute_value_of_signed_flow)
 
     const auto rows = RowsForOutput(table, "abs_flow");
     BOOST_REQUIRE_EQUAL(rows.size(), 2);
-    BOOST_CHECK_EQUAL(FindRow(table, "abs_flow", "area1_area2_link")->value, 120.);
-    BOOST_CHECK_EQUAL(FindRow(table, "abs_flow", "area2_area3_link")->value, 30.); // |-30|
+    BOOST_CHECK_EQUAL(FindRow(table, "abs_flow", "area1_area2")->value, 120.);
+    BOOST_CHECK_EQUAL(FindRow(table, "abs_flow", "area2_area3")->value, 30.); // |-30|
 }
 
 BOOST_AUTO_TEST_CASE(minus_flow_is_the_negated_signed_flow)
 {
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "minus_flow", "area1_area2_link")->value, -120.);
-    BOOST_CHECK_EQUAL(FindRow(table, "minus_flow", "area2_area3_link")->value, 30.); // -(-30)
+    BOOST_CHECK_EQUAL(FindRow(table, "minus_flow", "area1_area2")->value, -120.);
+    BOOST_CHECK_EQUAL(FindRow(table, "minus_flow", "area2_area3")->value, 30.); // -(-30)
 }
 
 BOOST_AUTO_TEST_CASE(actual_loop_flow_reads_the_link_loop_flow_series)
 {
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "actual_loop_flow", "area1_area2_link")->value, 15.);
-    BOOST_CHECK_EQUAL(FindRow(table, "actual_loop_flow", "area2_area3_link")->value, -8.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_loop_flow", "area1_area2")->value, 15.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_loop_flow", "area2_area3")->value, -8.);
 }
 
 BOOST_AUTO_TEST_CASE(is_directly_congested_is_one_at_capacity_and_zero_below)
@@ -587,8 +593,8 @@ BOOST_AUTO_TEST_CASE(is_directly_congested_is_one_at_capacity_and_zero_below)
     problem.ValeursDeNTC[0].ValeurDeNTCOrigineVersExtremite = {120., 100.};
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "is_directly_congested", "area1_area2_link")->value, 1.);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_directly_congested", "area2_area3_link")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_directly_congested", "area1_area2")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_directly_congested", "area2_area3")->value, 0.);
 }
 
 BOOST_AUTO_TEST_CASE(is_indirectly_congested_compares_minus_flow_to_indirect_capacity)
@@ -599,8 +605,8 @@ BOOST_AUTO_TEST_CASE(is_indirectly_congested_compares_minus_flow_to_indirect_cap
     problem.ValeursDeNTC[0].ValeurDeNTCExtremiteVersOrigine = {200., 30.};
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "is_indirectly_congested", "area1_area2_link")->value, 0.);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_indirectly_congested", "area2_area3_link")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_indirectly_congested", "area1_area2")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_indirectly_congested", "area2_area3")->value, 1.);
 }
 
 BOOST_AUTO_TEST_CASE(daily_link_outputs_use_week_relative_capacities_and_loop_flows)
@@ -619,12 +625,12 @@ BOOST_AUTO_TEST_CASE(daily_link_outputs_use_week_relative_capacities_and_loop_fl
 
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "is_directly_congested", "area1_area2_link")->value, 1.);
-    BOOST_CHECK_EQUAL(FindRow(table, "is_indirectly_congested", "area2_area3_link")->value, 1.);
-    BOOST_CHECK_EQUAL(FindRow(table, "actual_loop_flow", "area1_area2_link")->value, 25.);
-    BOOST_CHECK_EQUAL(FindRow(table, "actual_loop_flow", "area2_area3_link")->value, -18.);
-    BOOST_CHECK_EQUAL(FindRow(table, "abs_flow", "area1_area2_link")->value, 120.);
-    const auto row = FindRow(table, "is_directly_congested", "area1_area2_link");
+    BOOST_CHECK_EQUAL(FindRow(table, "is_directly_congested", "area1_area2")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_indirectly_congested", "area2_area3")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_loop_flow", "area1_area2")->value, 25.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_loop_flow", "area2_area3")->value, -18.);
+    BOOST_CHECK_EQUAL(FindRow(table, "abs_flow", "area1_area2")->value, 120.);
+    const auto row = FindRow(table, "is_directly_congested", "area1_area2");
     BOOST_REQUIRE(row.has_value());
     BOOST_CHECK_EQUAL(row->absoluteTimeIndex, "192");
     BOOST_CHECK_EQUAL(row->blockTimeIndex, "0");
@@ -636,25 +642,21 @@ BOOST_AUTO_TEST_CASE(congestion_fees_use_the_endpoint_area_prices)
     // delta = -9950. Link 1: flow -30, delta = 75 - 50 = 25.
     fill();
 
-    BOOST_CHECK_CLOSE(FindRow(table, "abs_congestion_fee", "area1_area2_link")->value,
+    BOOST_CHECK_CLOSE(FindRow(table, "abs_congestion_fee", "area1_area2")->value,
                       120. * 9950.,
                       1e-9);
-    BOOST_CHECK_CLOSE(FindRow(table, "alg_congestion_fee", "area1_area2_link")->value,
+    BOOST_CHECK_CLOSE(FindRow(table, "alg_congestion_fee", "area1_area2")->value,
                       120. * -9950.,
                       1e-9);
-    BOOST_CHECK_CLOSE(FindRow(table, "abs_congestion_fee", "area2_area3_link")->value,
-                      30. * 25.,
-                      1e-9);
-    BOOST_CHECK_CLOSE(FindRow(table, "alg_congestion_fee", "area2_area3_link")->value,
-                      -30. * 25.,
-                      1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "abs_congestion_fee", "area2_area3")->value, 30. * 25., 1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "alg_congestion_fee", "area2_area3")->value, -30. * 25., 1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(link_prop_cost_sums_direct_and_indirect_hurdle_costs)
 {
     fill();
 
-    const auto row = FindRow(table, "prop_cost", "area1_area2_link");
+    const auto row = FindRow(table, "prop_cost", "area1_area2");
     BOOST_REQUIRE(row.has_value());
     BOOST_CHECK_CLOSE(row->value, 0.5 * 120. + 0.7 * 0., 1e-9);
 }
@@ -666,7 +668,7 @@ BOOST_AUTO_TEST_CASE(is_near_loss_of_load_is_skipped_without_unsupplied_variable
     // "area4" has a balance constraint but no UnsuppliedEnergy variable, so
     // its unsupplied energy cost is unknown: price only, no nearness flag.
     BOOST_CHECK_EQUAL(RowsForOutput(table, "is_near_loss_of_load").size(), 3);
-    BOOST_CHECK(!FindRow(table, "is_near_loss_of_load", "area4_node").has_value());
+    BOOST_CHECK(!FindRow(table, "is_near_loss_of_load", "area4").has_value());
 }
 
 BOOST_AUTO_TEST_CASE(capacity_shadow_price_is_the_absolute_flow_dissociation_dual)
@@ -675,7 +677,7 @@ BOOST_AUTO_TEST_CASE(capacity_shadow_price_is_the_absolute_flow_dissociation_dua
 
     const auto rows = RowsForOutput(table, "capacity_shadow_price");
     BOOST_REQUIRE_EQUAL(rows.size(), 1);
-    BOOST_CHECK_EQUAL(rows[0].component, "area1_area2_link");
+    BOOST_CHECK_EQUAL(rows[0].component, "area1_area2");
     BOOST_CHECK_EQUAL(rows[0].value, 3.); // |-3|
 }
 
@@ -685,8 +687,8 @@ BOOST_AUTO_TEST_CASE(hurdle_cost_outputs_are_skipped_for_links_without_hurdle_co
 
     // Link 1 is not managed with hurdle costs: no flow decomposition
     // variables, no FlowDissociation constraint.
-    BOOST_CHECK(!FindRow(table, "prop_cost", "area2_area3_link").has_value());
-    BOOST_CHECK(!FindRow(table, "capacity_shadow_price", "area2_area3_link").has_value());
+    BOOST_CHECK(!FindRow(table, "prop_cost", "area2_area3").has_value());
+    BOOST_CHECK(!FindRow(table, "capacity_shadow_price", "area2_area3").has_value());
 }
 
 // --- Suppression of the entire row set for a link flagged all-zero (both
@@ -696,18 +698,18 @@ BOOST_AUTO_TEST_CASE(hurdle_cost_outputs_are_skipped_for_links_without_hurdle_co
 BOOST_AUTO_TEST_CASE(link_outputs_are_entirely_suppressed_when_flagged_all_zero)
 {
     auto analyzer = std::make_shared<Antares::Data::InactiveComponentsAnalyzer>();
-    analyzer->setLinkAllZero(0, true); // area1_area2_link
+    analyzer->setLinkAllZero(0, true); // area1_area2
     inactiveComponents = analyzer;
     fill();
 
-    BOOST_CHECK(!FindRow(table, "abs_flow", "area1_area2_link").has_value());
-    BOOST_CHECK(!FindRow(table, "minus_flow", "area1_area2_link").has_value());
-    BOOST_CHECK(!FindRow(table, "out_port.flow", "area1_area2_link").has_value());
-    BOOST_CHECK(!FindRow(table, "in_port.flow", "area1_area2_link").has_value());
-    BOOST_CHECK(!FindRow(table, "prop_cost", "area1_area2_link").has_value());
-    BOOST_CHECK(!FindRow(table, "capacity_shadow_price", "area1_area2_link").has_value());
+    BOOST_CHECK(!FindRow(table, "abs_flow", "area1_area2").has_value());
+    BOOST_CHECK(!FindRow(table, "minus_flow", "area1_area2").has_value());
+    BOOST_CHECK(!FindRow(table, "out_port.flow", "area1_area2").has_value());
+    BOOST_CHECK(!FindRow(table, "in_port.flow", "area1_area2").has_value());
+    BOOST_CHECK(!FindRow(table, "prop_cost", "area1_area2").has_value());
+    BOOST_CHECK(!FindRow(table, "capacity_shadow_price", "area1_area2").has_value());
     // The other link (index 1) is unaffected.
-    BOOST_CHECK(FindRow(table, "abs_flow", "area2_area3_link").has_value());
+    BOOST_CHECK(FindRow(table, "abs_flow", "area2_area3").has_value());
 }
 
 BOOST_AUTO_TEST_CASE(link_outputs_are_kept_when_the_all_zero_flag_is_false)
@@ -717,7 +719,7 @@ BOOST_AUTO_TEST_CASE(link_outputs_are_kept_when_the_all_zero_flag_is_false)
     inactiveComponents = analyzer;
     fill();
 
-    BOOST_CHECK(FindRow(table, "abs_flow", "area1_area2_link").has_value());
+    BOOST_CHECK(FindRow(table, "abs_flow", "area1_area2").has_value());
 }
 
 BOOST_AUTO_TEST_CASE(hydro_shadow_price_is_the_final_stock_expression_dual)
@@ -766,9 +768,9 @@ BOOST_AUTO_TEST_CASE(port_field_balance_price_mirrors_the_area_price)
 {
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area1_node")->value, 10000.);
-    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area2_node")->value, 50.);
-    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area3_node")->value, 75.);
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area1")->value, 10000.);
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area2")->value, 50.);
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area3")->value, 75.);
 }
 
 BOOST_AUTO_TEST_CASE(port_field_load_flow_is_minus_the_raw_load)
@@ -847,10 +849,10 @@ BOOST_AUTO_TEST_CASE(port_field_link_flows_are_the_signed_flow_and_its_negation)
 {
     fill();
 
-    BOOST_CHECK_EQUAL(FindRow(table, "out_port.flow", "area1_area2_link")->value, 120.);
-    BOOST_CHECK_EQUAL(FindRow(table, "in_port.flow", "area1_area2_link")->value, -120.);
-    BOOST_CHECK_EQUAL(FindRow(table, "out_port.flow", "area2_area3_link")->value, -30.);
-    BOOST_CHECK_EQUAL(FindRow(table, "in_port.flow", "area2_area3_link")->value, 30.);
+    BOOST_CHECK_EQUAL(FindRow(table, "out_port.flow", "area1_area2")->value, 120.);
+    BOOST_CHECK_EQUAL(FindRow(table, "in_port.flow", "area1_area2")->value, -120.);
+    BOOST_CHECK_EQUAL(FindRow(table, "out_port.flow", "area2_area3")->value, -30.);
+    BOOST_CHECK_EQUAL(FindRow(table, "in_port.flow", "area2_area3")->value, 30.);
 }
 
 BOOST_AUTO_TEST_CASE(port_field_flows_cover_thermal_storage_and_input_generation)
@@ -1183,13 +1185,13 @@ BOOST_AUTO_TEST_CASE(reserve_imbalance_cost_is_emitted)
     // * unsatisfied(5) = 3000 + 40000.
     fill();
 
-    const auto area1 = FindRow(table, "reserve_imbalance_cost_Res_1", "area1_node");
+    const auto area1 = FindRow(table, "reserve_imbalance_cost_Res_1", "area1");
     BOOST_REQUIRE(area1.has_value());
     BOOST_CHECK_CLOSE(area1->value, 200. * 15. + 8000. * 5., 1e-9);
 
     // area2 "Res_Down": spillageCost(150) * excess(2) + unsuppliedCost(9000)
     // * unsatisfied(6) = 300 + 54000.
-    const auto area2 = FindRow(table, "reserve_imbalance_cost_Res_Down", "area2_node");
+    const auto area2 = FindRow(table, "reserve_imbalance_cost_Res_Down", "area2");
     BOOST_REQUIRE(area2.has_value());
     BOOST_CHECK_CLOSE(area2->value, 150. * 2. + 9000. * 6., 1e-9);
 }
@@ -1347,7 +1349,7 @@ void wireResultAddresses(PROBLEME_HEBDO& problem)
                                                                [balanceArea1];
 
     solved.LegacyVariablesInfo[unsuppliedArea1] = LegacyVariableInfo{.name = "UnsuppliedEnergy",
-                                                                     .component = "area1_node",
+                                                                     .component = "area1",
                                                                      .timeIndex = 168};
 }
 
@@ -1363,18 +1365,18 @@ BOOST_AUTO_TEST_CASE(post_process_dump_reads_results_mutated_after_the_solve)
     DumpSimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
 
     // Raw row: the recorded variable now carries the post-processed value, not X.
-    const auto raw = FindRow(table, "unsupplied_energy", "area1_node");
+    const auto raw = FindRow(table, "unsupplied_energy", "area1");
     BOOST_REQUIRE(raw.has_value());
     BOOST_CHECK_CLOSE(raw->value, 20., 1e-9);
 
     // Derived rows are recomputed from the refreshed solution: imbalance_cost is
     // spillCost * spilled + unsuppliedCost * unsupplied.
-    const auto imbalance = FindRow(table, "imbalance_cost", "area1_node");
+    const auto imbalance = FindRow(table, "imbalance_cost", "area1");
     BOOST_REQUIRE(imbalance.has_value());
     BOOST_CHECK_CLOSE(imbalance->value, 3. * 7. + 9500. * 20., 1e-9);
 
     // ... and price follows the repriced dual, negated.
-    const auto price = FindRow(table, "price", "area1_node");
+    const auto price = FindRow(table, "price", "area1");
     BOOST_REQUIRE(price.has_value());
     BOOST_CHECK_CLOSE(price->value, 9500., 1e-9);
 }
@@ -1433,16 +1435,16 @@ BOOST_AUTO_TEST_CASE(adequacy_patch_outputs_reflect_nonzero_values)
 
     fill();
 
-    const auto dens = FindRow(table, "domestic_unsupplied_energy", "area1_node");
+    const auto dens = FindRow(table, "domestic_unsupplied_energy", "area1");
     BOOST_REQUIRE(dens.has_value());
     BOOST_CHECK_CLOSE(dens->value, 42.5, 1e-9);
 
-    const auto lmr = FindRow(table, "is_local_matching_rule_violated", "area1_node");
+    const auto lmr = FindRow(table, "is_local_matching_rule_violated", "area1");
     BOOST_REQUIRE(lmr.has_value());
     BOOST_CHECK_CLOSE(lmr->value, 1., 1e-9);
 
     // area2 remains zero
-    const auto dens2 = FindRow(table, "domestic_unsupplied_energy", "area2_node");
+    const auto dens2 = FindRow(table, "domestic_unsupplied_energy", "area2");
     BOOST_REQUIRE(dens2.has_value());
     BOOST_CHECK_CLOSE(dens2->value, 0., 1e-9);
 }

@@ -14,8 +14,8 @@ void PMaxReserve::add(int pays, int reserve, int cluster, int pdt)
         // M : Number of running units in the cluster
         // B : Maximum accessible power if each unit running on the cluster for the reserve
 
-        CAPACITY_RESERVATION capacityReservation = data.areaReserves[pays]
-                                                     .areaCapacityReservations[reserve];
+        CAPACITY_RESERVATION& capacityReservation = data.areaReserves[pays]
+                                                      .areaCapacityReservations[reserve];
 
         auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation[cluster];
 

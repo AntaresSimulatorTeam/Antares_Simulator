@@ -5,6 +5,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <unit_test_utils.h>
 #include <yaml-cpp/exceptions.h>
 
 #include <boost/test/unit_test.hpp>
@@ -12,11 +13,14 @@
 #include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/yml-model/decoders.h"
 #include "antares/io/inputs/yml-model/parser.h"
+#include "antares/io/inputs/yml-utils/checkFields.h"
+#include "antares/io/inputs/yml-utils/path_utils.h"
 
 #include "enum_operators.h"
 
 using namespace std::string_literals;
 using namespace Antares::IO::Inputs;
+using Antares::UnitTests::CaptureAntaresLogs;
 
 // Test empty library
 BOOST_AUTO_TEST_CASE(EmptyLibrary_is_valid)
@@ -45,7 +49,21 @@ BOOST_AUTO_TEST_CASE(library_without_id_throws)
             port-types: []
             models: []
     )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
+}
+
+BOOST_AUTO_TEST_CASE(library_with_null_id_throws)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: null
+            port-types: []
+            models: []
+    )"s;
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          InputError,
+                          containsMessage("Invalid null value for required field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(parameter_without_id_throws)
@@ -65,7 +83,7 @@ BOOST_AUTO_TEST_CASE(parameter_without_id_throws)
                   constraints: []
                   objective-contributions: []
         )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(variable_without_id_throws)
@@ -86,7 +104,7 @@ BOOST_AUTO_TEST_CASE(variable_without_id_throws)
                   constraints: []
                   objective-contributions: []
         )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(model_without_id_throws)
@@ -105,7 +123,7 @@ BOOST_AUTO_TEST_CASE(model_without_id_throws)
                   constraints: []
                   objective-contributions: []
         )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(port_without_id_throws)
@@ -127,7 +145,7 @@ BOOST_AUTO_TEST_CASE(port_without_id_throws)
                   constraints: []
                   objective-contributions: []
         )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(checkFields_reports_unexpected_and_missing_keys)
@@ -136,8 +154,58 @@ BOOST_AUTO_TEST_CASE(checkFields_reports_unexpected_and_missing_keys)
         a: 1
         c: 3
     )");
-    BOOST_CHECK_THROW((YAML::checkFields(node, std::unordered_set<std::string>{"a", "b"})),
-                      YAML::Exception);
+    BOOST_CHECK_EXCEPTION(
+      (YmlUtils::checkFields(node, std::vector<YmlUtils::Field>{{"a", true}, {"b", true}})),
+      InputError,
+      [](const InputError& e)
+      {
+          const std::string message = e.what();
+          BOOST_CHECK(message.find("Missing field: b") != std::string::npos);
+          BOOST_CHECK(message.find("Unrecognised field: c") != std::string::npos);
+          return true;
+      });
+}
+
+BOOST_AUTO_TEST_CASE(checkFields_rejects_unexpected_keys)
+{
+    const auto node = YAML::Load(R"(
+        a: 1
+        c: 3
+    )");
+    CaptureAntaresLogs logs;
+    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node, std::vector<YmlUtils::Field>{{"a", true}})),
+                          InputError,
+                          [](const InputError& e)
+                          {
+                              const std::string message = e.what();
+                              BOOST_CHECK(message.find("Unrecognised field: c")
+                                          != std::string::npos);
+                              BOOST_CHECK(message.find("|__X c at line 3") != std::string::npos);
+                              return true;
+                          });
+    BOOST_CHECK(logs.getWarnings().empty());
+}
+
+BOOST_AUTO_TEST_CASE(checkFields_accepts_absent_optional_fields_without_warning)
+{
+    const auto node = YAML::Load(R"(
+        a: 1
+    )");
+    CaptureAntaresLogs logs;
+    BOOST_CHECK_NO_THROW(
+      (YmlUtils::checkFields(node, std::vector<YmlUtils::Field>{{"a", true}, {"b"}})));
+    BOOST_CHECK(logs.getWarnings().empty());
+}
+
+BOOST_AUTO_TEST_CASE(checkFields_rejects_duplicated_keys)
+{
+    const auto node = YAML::Load(R"(
+        id: supply
+        id: demand
+    )");
+    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node, std::vector<YmlUtils::Field>{{"id", true}})),
+                          InputError,
+                          containsMessage("Duplicated field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(printPathTree_formats_nested_paths)
@@ -436,13 +504,15 @@ BOOST_AUTO_TEST_CASE(area_connection_rejects_unknown_field)
                  fields:
                    - id: capacity
                  area-connection:
-                   injection-to-balance: capa
-                   spillage-bound:
-                   unsupplied-energy-bound:
-                   not-a-field:
+                   injection-to-balance: injection
+                   spillage-bound: spillage
+                   unsupplied-energy-bound: unsupplied
+                   not-a-field: value
             models: []
     )"s;
-    BOOST_REQUIRE_THROW((void)parser.parse(library), YAML::Exception);
+    BOOST_CHECK_EXCEPTION((void)parser.parse(library),
+                          InputError,
+                          containsMessage("Unrecognised field: not-a-field"));
 }
 
 BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)
@@ -478,7 +548,10 @@ BOOST_AUTO_TEST_CASE(area__connection_should_have_exactly_3_fields)
 
             models: []
     )"s;
-    BOOST_REQUIRE_THROW((void)parser.parse(library), YAML::TypedBadConversion<YmlModel::PortType>);
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          InputError,
+                          containsMessage("expected a YAML mapping in "
+                                          "'library/port-types/capacity_port/area-connection'"));
 }
 
 // Test library with multiple port types
@@ -984,6 +1057,23 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_portfields)
 }
 
 // Test library with one model containing constraints
+BOOST_AUTO_TEST_CASE(constraint_with_null_id_throws)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            models:
+                - id: "model_id"
+                  constraints:
+                      - id: null
+                        expression: "expression"
+        )"s;
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          InputError,
+                          containsMessage("Invalid null value for required field: id"));
+}
+
 BOOST_AUTO_TEST_CASE(constraints_properly_parsed)
 {
     YmlModel::Parser parser;
@@ -1127,4 +1217,38 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_extra_outputs)
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[0].expression.input_expr, "expression1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].id, "output_name2");
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[1].expression.input_expr, "expression2");
+}
+
+BOOST_AUTO_TEST_CASE(misspelled_model_field_is_rejected)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            models:
+                - id: "model_id"
+                  extra-output:
+                    - id: "profit"
+                      expression: "p"
+        )"s;
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          InputError,
+                          containsMessage("Unrecognised field: extra-output"));
+}
+
+BOOST_AUTO_TEST_CASE(misspelled_variable_field_is_rejected)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            models:
+                - id: "model_id"
+                  variables:
+                    - id: "p"
+                      lower_bound: 0
+        )"s;
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          InputError,
+                          containsMessage("Unrecognised field: lower_bound"));
 }
