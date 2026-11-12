@@ -663,4 +663,16 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_inverted_bounds_returns_zero,
     BOOST_CHECK_EQUAL(linear_expression[2].constant(), 0.);
 }
 
+BOOST_FIXTURE_TEST_CASE(all_time_sum_of_constant_expression_scales_with_horizon,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    ctx = Api::FillContext{0, 2, 0, 2, 0};
+    auto* sum = create<AllTimeSumNode>(create<LiteralNode>(2.));
+
+    const auto expression = visitor().dispatch(sum);
+
+    BOOST_REQUIRE_EQUAL(expression.size(), 1);
+    BOOST_CHECK_EQUAL(expression[0].constant(), 6.);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

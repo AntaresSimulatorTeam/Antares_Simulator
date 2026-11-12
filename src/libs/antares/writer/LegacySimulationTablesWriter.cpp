@@ -44,29 +44,75 @@ LegacySimulationTablesWriter::LegacySimulationTablesWriter(const fs::path& folde
     check_is_existing_folder(folder_);
 }
 
-void LegacySimulationTablesWriter::write(const OptimisationsSimulationTable& tables) const
+StreamingSimulationTableWriter& LegacySimulationTablesWriter::streamFor(Stage stage)
+{
+    auto it = streams_.find(stage);
+    if (it == streams_.end())
+    {
+        auto filepath = makeSimuTableFilePath(folder_, year_, stageName(stage));
+        it = streams_.emplace(stage, StreamingSimulationTableWriter(filepath, tableFormat_)).first;
+    }
+    return it->second;
+}
+
+void LegacySimulationTablesWriter::flush(const OptimisationsSimulationTable& tables)
 {
     for (const auto& [stage, table]: tables.stages())
     {
-        // A stage with no rows produced nothing worth reporting -- e.g. a
-        // post-process dump that declined to run. Writing it would emit a
-        // header-only file suggesting the stage ran and found nothing.
+        // A stage with no rows produced nothing (yet): no file is created for it
         if (table.rowCount() == 0)
+        {
+            continue;
+        }
+        streamFor(stage).append(table);
+        table.clear();
+    }
+}
+
+void LegacySimulationTablesWriter::finish(const OptimisationsSimulationTable& tables)
+{
+    flush(tables);
+    for (const auto& [stage, table]: tables.stages())
+    {
+        if (!streams_.contains(stage))
+        {
+            // Writing a header-only file would suggest the stage ran and found nothing.
+            logs.info() << fmt::format(
+              "No content for stage '{}', skipping writing corresponding simulation table",
+              stageName(stage));
+        }
+    }
+    for (auto& [stage, stream]: streams_)
+    {
+        stream.close();
+    }
+    streams_.clear();
+}
+
+void LegacySimulationTablesWriter::write(const OptimisationsSimulationTable& tables)
+{
+    for (const auto& [stage, table]: tables.stages())
+    {
+        if (table.rowCount() == 0)
+        {
+            continue;
+        }
+        streamFor(stage).append(table);
+    }
+    for (const auto& [stage, table]: tables.stages())
+    {
+        if (!streams_.contains(stage))
         {
             logs.info() << fmt::format(
               "No content for stage '{}', skipping writing corresponding simulation table",
               stageName(stage));
-            continue;
         }
-        writeForStage(table, stage);
     }
-}
-
-void LegacySimulationTablesWriter::writeForStage(const SimulationTable& table, Stage stage) const
-{
-    auto filepath = makeSimuTableFilePath(folder_, year_, stageName(stage));
-    SimulationTableWriter writer(filepath, tableFormat_);
-    writer.writeTable(table);
+    for (auto& [stage, stream]: streams_)
+    {
+        stream.close();
+    }
+    streams_.clear();
 }
 
 } // namespace Antares::Writer
