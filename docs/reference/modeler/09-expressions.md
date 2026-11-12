@@ -138,6 +138,11 @@ For time-dependent parameters, variables, and port fields, you can use these tim
     - in both forms, `S` and `E` must not depend on time or decision variables; bounds must resolve to integers
     - absolute bounds outside the optimization block are errors; relative bounds wrap by default, but an out-of-bounds `drop` mode drops the constraint instance
 
+Time indices, shift offsets, and sum bounds may only contain literals and parameters, not variables,
+port fields, or `sum_connections` expressions. Parameters in these arguments must be declared
+`time-dependent: false`; they may still be scenario-dependent. Time-dependent parameters are rejected
+when the expression is loaded.
+
 _Examples:_
 
 ~~~yaml

@@ -3,11 +3,6 @@
 
 #include "antares/io/inputs/yml-system/decoders.h"
 
-#include <fmt/format.h>
-
-#include <antares/io/inputs/InputError.h>
-#include <antares/io/inputs/yml-utils/YmlTreeDisplayer.h>
-
 #include "include/antares/io/inputs/yml-system/system.h"
 
 using namespace Antares::IO::Inputs;
@@ -15,39 +10,21 @@ using namespace Antares::IO::Inputs;
 namespace YAML
 {
 
-namespace
-{
-
-/// Throws InputError if the map does not have the expected number of fields.
-void requireSize(const Node& node, std::size_t expected, const char* typeName)
-{
-    if (node.size() != expected)
-    {
-        throw InputError(std::string("Expected ") + std::to_string(expected) + " field(s) for '"
-                         + typeName + "', got " + std::to_string(node.size()));
-    }
-}
-} // namespace
-
+// Keep field reads in sync with the validation schema in parser.cpp.
 bool convert<YmlSystem::Parameter>::decode(const Node& node, YmlSystem::Parameter& rhs)
 {
-    if (!YmlUtils::requireMap(node, "parameter"))
-    {
-        return false;
-    }
     rhs.id = node["id"].as<std::string>();
-    rhs.time_dependent = node["time-dependent"].as<bool>();
-    rhs.scenario_dependent = node["scenario-dependent"].as<bool>();
+    const Node timeDependentNode = node["time-dependent"];
+    rhs.time_dependent = timeDependentNode.IsDefined() ? timeDependentNode.as<bool>() : false;
+    const Node scenarioDependentNode = node["scenario-dependent"];
+    rhs.scenario_dependent = scenarioDependentNode.IsDefined() ? scenarioDependentNode.as<bool>()
+                                                               : false;
     rhs.value = node["value"].as<std::string>();
     return true;
 }
 
 bool convert<YmlSystem::Property>::decode(const Node& node, YmlSystem::Property& rhs)
 {
-    if (!YmlUtils::requireMap(node, "properties"))
-    {
-        return false;
-    }
     rhs.id = node["id"].as<std::string>();
     rhs.value = node["value"].as<std::string>();
     return true;
@@ -55,10 +32,6 @@ bool convert<YmlSystem::Property>::decode(const Node& node, YmlSystem::Property&
 
 bool convert<YmlSystem::Component>::decode(const Node& node, YmlSystem::Component& rhs)
 {
-    if (!YmlUtils::requireMap(node, "component"))
-    {
-        return false;
-    }
     rhs.id = node["id"].as<std::string>();
     rhs.model = node["model"].as<std::string>();
     rhs.scenarioGroup = node["scenario-group"].as<std::string>("");
@@ -69,11 +42,6 @@ bool convert<YmlSystem::Component>::decode(const Node& node, YmlSystem::Componen
 
 bool convert<YmlSystem::Connection>::decode(const Node& node, YmlSystem::Connection& rhs)
 {
-    if (!YmlUtils::requireMap(node, "connection"))
-    {
-        return false;
-    }
-    requireSize(node, 4, "connection (component1, port1, component2, port2)");
     rhs.firstEntry.componentId = node["component1"].as<std::string>();
     rhs.firstEntry.portId = node["port1"].as<std::string>();
 
@@ -84,11 +52,6 @@ bool convert<YmlSystem::Connection>::decode(const Node& node, YmlSystem::Connect
 
 bool convert<YmlSystem::AreaConnection>::decode(const Node& node, YmlSystem::AreaConnection& rhs)
 {
-    if (!YmlUtils::requireMap(node, "area-connection"))
-    {
-        return false;
-    }
-    requireSize(node, 3, "area-connection (component, port, area)");
     rhs.componentId = node["component"].as<std::string>();
     rhs.portId = node["port"].as<std::string>();
     rhs.areaId = node["area"].as<std::string>();
@@ -98,11 +61,6 @@ bool convert<YmlSystem::AreaConnection>::decode(const Node& node, YmlSystem::Are
 bool convert<YmlSystem::ThermalComponent>::decode(const Node& node,
                                                   YmlSystem::ThermalComponent& rhs)
 {
-    if (!YmlUtils::requireMap(node, "thermal-component"))
-    {
-        return false;
-    }
-    requireSize(node, 2, "thermal-component (area, cluster-id)");
     rhs.areaId = node["area"].as<std::string>();
     rhs.clusterId = node["cluster-id"].as<std::string>();
     return true;
@@ -112,40 +70,15 @@ bool convert<YmlSystem::ThermalCapacityConnection>::decode(
   const Node& node,
   YmlSystem::ThermalCapacityConnection& rhs)
 {
-    if (!YmlUtils::requireMap(node, "thermal-capacity-connection"))
-    {
-        return false;
-    }
-    requireSize(node, 3, "thermal-capacity-connection (component, port, thermal-component)");
     rhs.componentId = node["component"].as<std::string>();
     rhs.portId = node["port"].as<std::string>();
-    const Node thermalComponentNode = node["thermal-component"];
-    if (!thermalComponentNode.IsDefined())
-    {
-        YmlTreeDisplayer displayer(node);
-        throw InputError(fmt::format("Missing required field 'thermal-component'.\n{}{}",
-                                     displayer.baseTree(),
-                                     displayer.buildMarkedTree({}, {"thermal-component"})));
-    }
-    if (thermalComponentNode.IsNull())
-    {
-        YmlTreeDisplayer displayer(node);
-        throw InputError(
-          fmt::format("Expected a YAML mapping for 'thermal-component' (got null).\n{}{}",
-                      displayer.baseTree(),
-                      displayer.buildMarkedTree({"thermal-component"}, {})));
-    }
-    rhs.thermalComponent = thermalComponentNode.as<YmlSystem::ThermalComponent>();
+    rhs.thermalComponent = node["thermal-component"].as<YmlSystem::ThermalComponent>();
     return true;
 }
 
 bool convert<YmlSystem::System>::decode(const Node& node, YmlSystem::System& rhs)
 {
-    if (!node.IsMap())
-    {
-        throw InputError("Expected a YAML mapping for 'system'");
-    }
-    rhs.id = node["id"].as<std::string>();
+    rhs.id = node["id"].as<std::string>("");
     rhs.components = as_fallback_default<std::vector<YmlSystem::Component>>(node["components"]);
     rhs.connections = as_fallback_default<std::vector<YmlSystem::Connection>>(node["connections"]);
     rhs.areaConnections = as_fallback_default<std::vector<YmlSystem::AreaConnection>>(

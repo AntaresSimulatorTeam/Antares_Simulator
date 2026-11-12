@@ -44,7 +44,7 @@ void importCapacityReservations(const AreaList& areas, PROBLEME_HEBDO& problem)
         for (const auto& [reserveID, reserveCapacity]:
              area->allCapacityReservations->areaCapacityReservations)
         {
-            CAPACITY_RESERVATION areaCapacityReservation;
+            CAPACITY_RESERVATION areaCapacityReservation(reserveCapacity.need);
             areaCapacityReservation.type = reserveCapacity.type;
             areaCapacityReservation.unsuppliedCost = reserveCapacity.unsuppliedCost;
             areaCapacityReservation.spillageCost = reserveCapacity.spillageCost;
@@ -58,7 +58,6 @@ void importCapacityReservations(const AreaList& areas, PROBLEME_HEBDO& problem)
             areaCapacityReservation.areaReserveIndex = areaReserveIndex;
             globalReserveIndex++;
             areaReserveIndex++;
-            areaCapacityReservation.need = reserveCapacity.need;
 
             areaReserves.areaCapacityReservations.emplace_back(areaCapacityReservation);
         }
@@ -605,7 +604,7 @@ void fillInputGenerationSeries(const Study& study,
     for (uint k = 0; k < study.areas.size(); ++k)
     {
         const auto& area = *(study.areas.byIndex[k]);
-        const std::string areaId = area.id.c_str();
+        const std::string areaId = Antares::SanitizeId(area.id);
         auto& entries = problem.InputGenerationOfArea[k];
 
         auto addEntry = [&entries, PasDeTempsDebut, nbPdt](std::string componentName,

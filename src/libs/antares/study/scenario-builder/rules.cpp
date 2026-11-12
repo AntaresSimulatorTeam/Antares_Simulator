@@ -39,6 +39,7 @@ bool Rules::reset()
     pAreaCount = study_.areas.size();
 
     load.reset(study_);
+    ::reset(reservesNeed, study_);
     solar.reset(study_);
     hydro.reset(study_);
     wind.reset(study_);
@@ -149,6 +150,40 @@ bool Rules::readRenewableCluster(const std::vector<std::string>& splitKey, const
             disabledClustersOnRuleActive[clusterId].push_back(year + 1);
             return false;
         }
+    }
+    return true;
+}
+
+bool Rules::readReservesNeed(const std::vector<std::string>& splitKey, const std::string& value)
+{
+    const AreaName& areaname = splitKey[1];
+    uint year;
+    try
+    {
+        year = std::stoul(splitKey[2]);
+    }
+    catch (const std::exception&)
+    {
+        logs.error() << "[scenario-builder] Invalid year value for reserves need TS number: '"
+                     << splitKey[2] << "'";
+        return false;
+    }
+
+    if (!study_.parameters.include.reserves)
+    {
+        return false;
+    }
+
+    Data::Area* area = getArea(areaname);
+    if (!area)
+    {
+        return false;
+    }
+
+    uint val = fromStringToTSnumber(value);
+    if (area->allCapacityReservations)
+    {
+        reservesNeed[area->index].setAreaTSnumber(year, val);
     }
     return true;
 }
@@ -433,6 +468,10 @@ bool Rules::readLine(const std::vector<std::string>& splitKey, const std::string
     {
         return readLoad(splitKey, value);
     }
+    else if (kind_of_scenario == "res")
+    {
+        return readReservesNeed(splitKey, value);
+    }
     else if (kind_of_scenario == "w")
     {
         return readWind(splitKey, value);
@@ -490,6 +529,10 @@ bool Rules::apply()
             returned_status = shortTermStorageInflows[i].apply(study_) && returned_status;
             returned_status = shortTermStorageAdditionalConstraints[i].apply(study_)
                               && returned_status;
+            if (study_.parameters.include.reserves)
+            {
+                returned_status = reservesNeed[i].apply(study_) && returned_status;
+            }
         }
         returned_status = hydroInitialLevels.apply(study_) && returned_status;
         returned_status = hydroFinalLevels.apply(study_) && returned_status;
