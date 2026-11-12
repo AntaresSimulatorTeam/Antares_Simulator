@@ -38,8 +38,8 @@ Feature: link capacity connections (hybrid studies)
       |       | a_b       | flow                    | 0-167    | 0        | -60   |
       |       | gen_b     | p                       | 0-167    | 0        | 110   |
       |       | gen_a     | p                       | 0-167    | 0        | 40    |
-      |       | a_node    | price                   | 0-167    | 0        | 10    |
-      |       | b_node    | price                   | 0-167    | 0        | 1     |
+      |       | a         | price                   | 0-167    | 0        | 10    |
+      |       | b         | price                   | 0-167    | 0        | 1     |
       |       | a_b       | is_indirectly_congested | 0-167    | 0        | 1     |
       |       | a_b       | is_directly_congested   | 0-167    | 0        | 0     |
       |       | a_b       | alg_congestion_fee      | 0-167    | 0        | 540   |
@@ -413,12 +413,12 @@ Feature: link capacity connections (hybrid studies)
     And the modeler outputs from stage "optim-nb-1" contain the following entries with relative tolerance 0.001
       | block | component | output             | timestep | scenario | value |
       |       | a_b       | flow               | 0-167    | 0        | -60   |
-      |       | a_node    | unsupplied_energy  | 0-167    | 0        | 40    |
+      |       | a         | unsupplied_energy  | 0-167    | 0        | 40    |
     And the modeler outputs from stage "adq-patch" contain the following entries with relative tolerance 0.001
       | block | component | output                     | timestep | scenario | value |
       |       | a_b       | flow                       | 0-167    | 0        | -60   |
-      |       | a_node    | unsupplied_energy          | 0-167    | 0        | 40    |
-      |       | a_node    | domestic_unsupplied_energy | 0-167    | 0        | 100   |
+      |       | a         | unsupplied_energy          | 0-167    | 0        | 40    |
+      |       | a         | domestic_unsupplied_energy | 0-167    | 0        | 100   |
 
   # ---- Interaction with legacy binding constraints -------------------------------------------
 
