@@ -222,8 +222,7 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
     // Ramping cost, as seen by the optimization (ramping variables P+ and P-)
     double& rampingCost = thermal[area->index].thermalClustersRampingCost[clusterEnabledIndex];
     rampingCost = 0.;
-    if ((unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate
-         || unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucMILP)
+    if (Antares::Data::usesExplicitUnitCommitment(unitCommitmentMode)
         && thermalCluster->ramping && !thermalCluster->mustrun)
     {
         const auto& production = hourlyResults->ProductionThermique[hourInTheWeek];
