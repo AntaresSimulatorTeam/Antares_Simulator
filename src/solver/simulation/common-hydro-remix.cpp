@@ -271,7 +271,7 @@ std::shared_ptr<IStorageForRemix> extractHydroForRemix(const Data::Area& area,
                              capacity,
                              efficiency,
                              reservoirManagement,
-                             std::string(area.name) + " hydro");
+                             fmt::format("area '{}', reservoir 'hydro'", area.name));
 }
 
 std::span<const double> weekSubRange(const std::vector<double>& v, unsigned firstHourOfWeek)
@@ -358,7 +358,7 @@ std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
                            initLevel,
                            withdrawalEff,
                            injectionEff,
-                           std::string(area.name) + " " + stsProperties.name);
+                           fmt::format("area '{}', reservoir '{}'", area.name, stsProperties.name));
 }
 
 ListStorageForRemix extractListSTSforRemix(const Data::Area& area,
@@ -408,7 +408,6 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
               auto stsForRemix = extractListSTSforRemix(area, problem, firstHourOfWeek);
               listStorage.insert(listStorage.end(), stsForRemix.begin(), stsForRemix.end());
           }
-
           try
           {
               checkInput(load, unsupE, spillage, dtgMrg, listStorage);
@@ -420,10 +419,11 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           }
           catch (std::exception& e)
           {
-              std::string msg = "(year, area, week) = (" + std::to_string(problem.year) + ", "
-                                + area.id + ", "
-                                + std::to_string((firstHourOfWeek + 1) / HOURS_IN_WEEK)
-                                + ") : " + e.what();
+              std::string msg = fmt::format(fmt::runtime("(MC year {}, area '{}', week {}) : {}"),
+                                            problem.year + 1,
+                                            area.id,
+                                            (firstHourOfWeek + 1) / HOURS_IN_WEEK,
+                                            e.what());
               logs.warning(msg);
           }
       });

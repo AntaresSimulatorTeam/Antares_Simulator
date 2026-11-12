@@ -685,4 +685,16 @@ BOOST_FIXTURE_TEST_CASE(visit_timeIndex_with_non_integer_index_throws,
     BOOST_CHECK_THROW(visitor().dispatch(index), Antares::Error::InvalidArgumentError);
 }
 
+BOOST_FIXTURE_TEST_CASE(all_time_sum_of_constant_expression_scales_with_horizon,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    ctx = Api::FillContext{0, 2, 0, 2, 0};
+    auto* sum = create<AllTimeSumNode>(create<LiteralNode>(2.));
+
+    const auto expression = visitor().dispatch(sum);
+
+    BOOST_REQUIRE_EQUAL(expression.size(), 1);
+    BOOST_CHECK_EQUAL(expression[0].constant(), 6.);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

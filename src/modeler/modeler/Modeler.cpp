@@ -61,7 +61,7 @@ fs::path makeOutputPath(fs::path studyPath)
         throw Modeler::ModelerError("Output folder already exists: " + outputPath.string());
     }
 
-    logs.info() << "Output folder : " << outputPath;
+    logs.info() << "Output folder: " << outputPath;
     if (!fs::is_directory(outputPath) && !fs::create_directories(outputPath))
     {
         throw Modeler::ModelerError("Failed to create output directory. Exiting simulation.");
@@ -76,14 +76,7 @@ Modeler::Modeler(ILoader& loader, fs::path ouputPath, TableFormat tableFormat):
 {
     parameters_ = loader_.loadParameters();
     logs.info() << "Parameters loaded";
-    auto data = loader_.loadAll();
-    if (!data.has_value())
-    {
-        throw ModelerError("Error while loading files, exiting");
-    }
-    // Move the loaded ModelerData out of the optional to avoid copying
-    // (ModelerData contains unique_ptr members and is move-only).
-    data_ = std::move(*data);
+    data_ = loader_.loadAll();
 
     scenarios_ = resolveScenarioScopeScenarios(data_.scenarioScope);
     validateScenariosAgainstScenarioBuilder();

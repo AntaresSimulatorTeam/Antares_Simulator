@@ -3,10 +3,12 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <unit_test_utils.h>
 #include <yaml-cpp/exceptions.h>
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/io/inputs/InputError.h>
 #include "antares/io/inputs/yml-optim-config/parser.h"
 using namespace Antares::IO::Inputs::YmlOptimConfig;
 using namespace std::string_literals;
@@ -237,15 +239,12 @@ models:
     BOOST_CHECK(config.models[0].constraints[2].location == "master-and-subproblems");
 }
 
-BOOST_AUTO_TEST_CASE(parse_missing_models_key_throws)
+BOOST_AUTO_TEST_CASE(parse_missing_models_key_gives_no_models)
 {
-    std::string yaml_content = R"(
-other_key:
-  - id: model1
-)";
+    const std::string yaml_content = "{}";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK(parser.parse(yaml_content).models.empty());
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_id_throws)
@@ -259,7 +258,7 @@ models:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_model_decomposition_throws)
@@ -270,7 +269,9 @@ models:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_EXCEPTION(parser.parse(yaml_content),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("Missing field: model-decomposition"));
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_variable_id_throws)
@@ -285,7 +286,7 @@ models:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_variable_location_throws)
@@ -300,7 +301,7 @@ models:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_objective_id_throws)
@@ -315,7 +316,7 @@ models:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_objective_location_throws)
@@ -330,7 +331,7 @@ models:
 )";
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_THROW(parser.parse(yaml_content), Antares::IO::Inputs::InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parse_invalid_yaml_syntax_throws)
@@ -354,7 +355,9 @@ BOOST_AUTO_TEST_CASE(parse_empty_string_throws)
     std::string yaml_content;
 
     Parser parser;
-    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+    BOOST_CHECK_EXCEPTION(parser.parse(yaml_content),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("expected a YAML mapping in 'optim-config'"));
 }
 
 BOOST_AUTO_TEST_CASE(parse_multiple_models_different_structures)
@@ -575,6 +578,34 @@ models:
 
     Parser parser;
     BOOST_CHECK_THROW(parser.parse(yaml_content), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(misspelled_model_field_is_rejected)
+{
+    const auto yaml_content = R"(
+models:
+  - id: lib.model
+    model-decomposition:
+      variables: []
+    out-of-bound-processing:
+      constraints: []
+)"s;
+    Parser parser;
+    BOOST_CHECK_EXCEPTION(parser.parse(yaml_content),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("Unrecognised field: out-of-bound-processing"));
+}
+
+BOOST_AUTO_TEST_CASE(misspelled_top_level_field_is_rejected)
+{
+    const auto yaml_content = R"(
+resolution-modes: benders-decomposition
+models: []
+)"s;
+    Parser parser;
+    BOOST_CHECK_EXCEPTION(parser.parse(yaml_content),
+                          Antares::IO::Inputs::InputError,
+                          containsMessage("Unrecognised field: resolution-modes"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

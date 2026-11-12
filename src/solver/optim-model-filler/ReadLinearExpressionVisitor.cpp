@@ -317,6 +317,12 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Al
 {
     LinearExpression ret; // Constant expr
     auto expr = dispatch(node->child());
+    if (expr.isConstant())
+    {
+        ret += expr[0];
+        ret *= static_cast<double>(nbtimeSteps_);
+        return TimeDependentLinearExpression(std::move(ret));
+    }
     for (auto& s: expr)
     {
         ret += s;

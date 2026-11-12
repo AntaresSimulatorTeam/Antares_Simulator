@@ -3,7 +3,6 @@
 
 #pragma once
 
-#include <filesystem>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -20,7 +19,7 @@ namespace YAML
 class YmlTreeDisplayer
 {
 public:
-    explicit YmlTreeDisplayer(const Node& node);
+    YmlTreeDisplayer(const Node& node, const std::string& path);
 
     const std::string& baseTree() const;
 
@@ -28,7 +27,6 @@ public:
                                 const std::vector<std::string>& missing) const;
 
 private:
-    std::filesystem::path nodeTagPath_;
     std::unordered_map<std::string, int> actualKeysLine_;
     std::size_t indentSpaces_ = 0;
     std::string baseTree_;

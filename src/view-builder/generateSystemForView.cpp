@@ -178,7 +178,7 @@ void exportSystemForView(const Antares::Data::Study& study, Solver::IResultWrite
 {
     YAML::Node systemYaml = generateSystemForView(study);
     std::string yamlContent = YAML::Dump(systemYaml);
-    resultWriter->addEntryFromBuffer("system-for-views.yml", yamlContent);
+    resultWriter->addEntryFromBuffer("views/input/system-for-views.yml", yamlContent);
 }
 
 YAML::Node generateSystemForView(const Antares::Data::Study& study)
@@ -224,7 +224,8 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
                                                    "balance_port"));
           }
 
-          if (!inactiveComponents->windIsAllZero(area.index))
+          if (study.parameters.renewableGeneration() != rgClusters
+              && !inactiveComponents->windIsAllZero(area.index))
           {
               components.push_back(windToYaml(area));
               connections.push_back(makeConnection(BuildWindComponentId(area.id),
@@ -233,7 +234,8 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
                                                    "balance_port"));
           }
 
-          if (!inactiveComponents->solarIsAllZero(area.index))
+          if (study.parameters.renewableGeneration() != rgClusters
+              && !inactiveComponents->solarIsAllZero(area.index))
           {
               components.push_back(solarToYaml(area));
               connections.push_back(makeConnection(BuildSolarComponentId(area.id),
