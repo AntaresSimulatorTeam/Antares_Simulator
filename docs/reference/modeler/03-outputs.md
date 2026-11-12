@@ -38,6 +38,10 @@ These files are saved in the output directory of your study, typically named:
     simulation-table-0.csv (pure modeler, for scenario 0)
     simulation-table-1.csv (pure modeler, for scenario 1)
 
+When solver results are requested as a ZIP archive with `--zip-output`, simulation tables
+are written as standalone files beside the archive, in the run's output directory; they are not
+included in the ZIP archive.
+
 ### Structure
 
 Each line in the simulation table corresponds to a variable, constraint,
