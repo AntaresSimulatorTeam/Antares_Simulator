@@ -33,7 +33,6 @@ struct ValidationResult
 
     ValidationResult& operator+=(const ValidationResult& other)
     {
-        warnings.insert(warnings.end(), other.warnings.begin(), other.warnings.end());
         errors.insert(errors.end(), other.errors.begin(), other.errors.end());
         return *this;
     }
