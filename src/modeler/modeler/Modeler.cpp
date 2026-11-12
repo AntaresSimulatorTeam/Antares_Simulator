@@ -7,6 +7,7 @@
 #include <fmt/format.h>
 #include <fstream>
 #include <stdexcept>
+#include <system_error>
 
 #include <antares/io/outputs/SimulationTablePath.h>
 #include <antares/logs/logs.h>
@@ -84,7 +85,17 @@ Modeler::Modeler(ILoader& loader, fs::path ouputPath, TableFormat tableFormat):
     if (!outputPath_.empty() && !parameters_.noOutput && !scenarios_.empty()
         && data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
     {
-        fs::create_directories(IO::Outputs::simulationTableOutputDirectory(outputPath_));
+        const auto simulationTableOutputPath =
+          IO::Outputs::simulationTableOutputDirectory(outputPath_);
+        std::error_code error;
+        fs::create_directories(simulationTableOutputPath, error);
+        if (error)
+        {
+            logs.error() << "Failed to create simulation table output directory '"
+                         << simulationTableOutputPath << "': " << error.message();
+            throw ModelerError("Failed to create simulation table output directory '"
+                               + simulationTableOutputPath.string() + "': " + error.message());
+        }
     }
     logs.info() << fmt::format("Number of Monte-Carlo scenarios to simulate: {}",
                                scenarios_.size());

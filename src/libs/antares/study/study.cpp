@@ -9,6 +9,7 @@
 #include <ctime>
 #include <sstream> // std::ostringstream
 #include <string>
+#include <system_error>
 #include <thread>
 
 #include <antares/io/outputs/SimulationTablePath.h>
@@ -227,7 +228,18 @@ void Study::prepareOutput()
 
     if (parameters.writeSimulationTable() && parameters.resultFormat != inMemory)
     {
-        fs::create_directories(IO::Outputs::simulationTableOutputDirectory(folderOutput));
+        const auto simulationTableOutputPath =
+          IO::Outputs::simulationTableOutputDirectory(folderOutput);
+        std::error_code error;
+        fs::create_directories(simulationTableOutputPath, error);
+        if (error)
+        {
+            logs.error() << "Failed to create simulation table output directory '"
+                         << simulationTableOutputPath << "': " << error.message();
+            throw Error::LoadingError("Failed to create simulation table output directory '"
+                                      + simulationTableOutputPath.string() + "': "
+                                      + error.message());
+        }
     }
 
     logs.info() << "  Output folder: " << folderOutput;
