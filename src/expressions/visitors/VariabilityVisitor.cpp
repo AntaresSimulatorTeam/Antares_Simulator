@@ -67,9 +67,9 @@ VariabilityType VariabilityVisitor::visit(const Nodes::VariableNode* var)
 VariabilityType VariabilityVisitor::visit(const Nodes::ParameterNode* param)
 {
     const auto& parameters = component_.getParameterValues();
-    if (parameters.contains(param->value()))
+    if (const auto it = parameters.find(param->value()); it != parameters.end())
     {
-        return parameters.at(param->value()).type;
+        return it->second.type;
     }
     else
     {

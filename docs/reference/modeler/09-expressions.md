@@ -141,6 +141,11 @@ For time-dependent parameters, variables, and port fields, you can use these tim
       selects; inside a sum with absolute bounds or a `sum(X)` over the whole block, they wrap cyclically
       and never drop the constraint instance
 
+Time indices, shift offsets, and sum bounds may only contain literals and parameters, not variables,
+port fields, or `sum_connections` expressions. Parameters in these arguments must be declared
+`time-dependent: false`; they may still be scenario-dependent. Time-dependent parameters are rejected
+when the expression is loaded.
+
 _Examples:_
 
 ~~~yaml
