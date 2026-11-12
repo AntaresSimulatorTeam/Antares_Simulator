@@ -38,7 +38,7 @@ hide:
 | -y, --year=VALUE         | Override the [number of MC years](parameters.md#nbyears)                                       |
 | --year-by-year           | Force the [writing the result output for each year](parameters.md#year-by-year) (economy only) |
 | --derated                | Force the [derated](parameters.md#derated) mode                                                |
-| -z, --zip-output         | Write the results into a single zip archive                                                       |
+| -z, --zip-output         | Write the regular simulation results into a single zip archive. Simulation tables, when enabled, are written as standalone files outside the archive in the run's output directory. |
 | --parquet                | Write simulation table in format parquet instead of csv format                                    |
 | --simulation-table-stages=VALUE | Override [which resolution stages get a simulation table](parameters.md#simulation-table-stages): `all`, `last`, or a comma-separated list among `optim-nb-1`, `optim-nb-2`, `peak-shaving`, `adq-patch`. `last` is the final stage the run reaches. Must not be empty. Default: `all`. Requires --output [all\|simulation-tables] |
 
