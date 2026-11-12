@@ -85,8 +85,8 @@ Modeler::Modeler(ILoader& loader, fs::path ouputPath, TableFormat tableFormat):
     if (!outputPath_.empty() && !parameters_.noOutput && !scenarios_.empty()
         && data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
     {
-        const auto simulationTableOutputPath =
-          IO::Outputs::simulationTableOutputDirectory(outputPath_);
+        const auto simulationTableOutputPath = IO::Outputs::simulationTableOutputDirectory(
+          outputPath_);
         std::error_code error;
         fs::create_directories(simulationTableOutputPath, error);
         if (error)

@@ -152,9 +152,9 @@ BOOST_DATA_TEST_CASE_F(Fixture,
 
     study->prepareOutput();
 
-    BOOST_CHECK_EQUAL(
-      fs::is_directory(Antares::IO::Outputs::simulationTableOutputDirectory(study->folderOutput)),
-      simulationTableEnabled);
+    BOOST_CHECK_EQUAL(fs::is_directory(
+                        Antares::IO::Outputs::simulationTableOutputDirectory(study->folderOutput)),
+                      simulationTableEnabled);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

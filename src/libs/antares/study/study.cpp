@@ -228,8 +228,8 @@ void Study::prepareOutput()
 
     if (parameters.writeSimulationTable() && parameters.resultFormat != inMemory)
     {
-        const auto simulationTableOutputPath =
-          IO::Outputs::simulationTableOutputDirectory(folderOutput);
+        const auto simulationTableOutputPath = IO::Outputs::simulationTableOutputDirectory(
+          folderOutput);
         std::error_code error;
         fs::create_directories(simulationTableOutputPath, error);
         if (error)
@@ -237,8 +237,8 @@ void Study::prepareOutput()
             logs.error() << "Failed to create simulation table output directory '"
                          << simulationTableOutputPath << "': " << error.message();
             throw Error::LoadingError("Failed to create simulation table output directory '"
-                                      + simulationTableOutputPath.string() + "': "
-                                      + error.message());
+                                      + simulationTableOutputPath.string()
+                                      + "': " + error.message());
         }
     }
 
