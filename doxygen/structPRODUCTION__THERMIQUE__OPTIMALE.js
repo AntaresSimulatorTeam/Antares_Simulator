@@ -7,5 +7,7 @@ var structPRODUCTION__THERMIQUE__OPTIMALE =
     [ "ParticipationReservesDuPalier", "structPRODUCTION__THERMIQUE__OPTIMALE.html#a7189feac1a3d236d258c255b940b5b3c", null ],
     [ "ParticipationReservesDuPalierOff", "structPRODUCTION__THERMIQUE__OPTIMALE.html#a037b05fe77c7807cc029ed7e3bfb78f3", null ],
     [ "ParticipationReservesDuPalierOn", "structPRODUCTION__THERMIQUE__OPTIMALE.html#a7aa5642fe7d707379100694db564fd01", null ],
+    [ "powerRampingDecrease", "structPRODUCTION__THERMIQUE__OPTIMALE.html#a805454218f7b1fea66cc1174360369a5", null ],
+    [ "powerRampingIncrease", "structPRODUCTION__THERMIQUE__OPTIMALE.html#adce596169286835b441125daa227785a", null ],
     [ "ProductionThermiqueDuPalier", "structPRODUCTION__THERMIQUE__OPTIMALE.html#ae8203031f9963b1ca409daeaca22f96d", null ]
 ];
