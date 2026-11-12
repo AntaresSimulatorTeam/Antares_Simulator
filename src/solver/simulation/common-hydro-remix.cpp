@@ -271,7 +271,7 @@ std::shared_ptr<IStorageForRemix> extractHydroForRemix(const Data::Area& area,
                              capacity,
                              efficiency,
                              reservoirManagement,
-                             fmt::format(fmt::runtime("area '{}', reservoir '{}'"), area.name));
+                             fmt::format("area '{}', reservoir 'hydro'", area.name));
 }
 
 std::span<const double> weekSubRange(const std::vector<double>& v, unsigned firstHourOfWeek)
@@ -397,19 +397,19 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
           const auto& spillage = weeklyResults.ValeursHorairesDeDefaillanceNegative;
           const auto dtgMrg = extractDTG_MRG(area, numSpace);
+
+          ListStorageForRemix listStorage;
+
+          auto hydroStorage = extractHydroForRemix(area, problem, firstHourOfWeek);
+          listStorage.push_back(hydroStorage);
+
+          if (includeSTS)
+          {
+              auto stsForRemix = extractListSTSforRemix(area, problem, firstHourOfWeek);
+              listStorage.insert(listStorage.end(), stsForRemix.begin(), stsForRemix.end());
+          }
           try
           {
-              ListStorageForRemix listStorage;
-
-              auto hydroStorage = extractHydroForRemix(area, problem, firstHourOfWeek);
-              listStorage.push_back(hydroStorage);
-
-              if (includeSTS)
-              {
-                  auto stsForRemix = extractListSTSforRemix(area, problem, firstHourOfWeek);
-                  listStorage.insert(listStorage.end(), stsForRemix.begin(), stsForRemix.end());
-              }
-
               checkInput(load, unsupE, spillage, dtgMrg, listStorage);
               shavePeaksByRemixingStorageGen(load, unsupE, spillage, dtgMrg, listStorage);
               if (writer)
@@ -419,11 +419,12 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           }
           catch (std::exception& e)
           {
-              std::string msg = fmt::format("(MC year {}, area '{}', week {}) : {}",
+              std::string msg = fmt::format(fmt::runtime("(MC year {}, area '{}', week {}) : {}"),
                                             problem.year + 1,
                                             area.id,
                                             (firstHourOfWeek + 1) / HOURS_IN_WEEK,
                                             e.what());
+              logs.warning(msg);
           }
       });
 
