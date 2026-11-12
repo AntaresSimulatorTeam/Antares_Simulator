@@ -83,8 +83,8 @@ BOOST_AUTO_TEST_CASE(renewable_cluster_component_uses_zone_renewable_cluster_nam
 
     // Same convention as the view-builder's system-for-views:
     // {zone}_renewable_{cluster id}
-    BOOST_CHECK(contains(names, "france_renewable_wind onshore"));
-    BOOST_CHECK(!contains(names, "wind onshore"));
+    BOOST_CHECK(contains(names, "france_renewable_wind_onshore"));
+    BOOST_CHECK(!contains(names, "wind_onshore"));
 }
 
 BOOST_AUTO_TEST_CASE(several_renewable_clusters_are_all_prefixed)
