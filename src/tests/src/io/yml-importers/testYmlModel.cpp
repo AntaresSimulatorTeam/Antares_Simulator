@@ -173,16 +173,16 @@ BOOST_AUTO_TEST_CASE(checkFields_rejects_unexpected_keys)
         c: 3
     )");
     CaptureAntaresLogs logs;
-    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node, std::vector<YmlUtils::ExpectedField>{{"a", true}})),
-                          InputError,
-                          [](const InputError& e)
-                          {
-                              const std::string message = e.what();
-                              BOOST_CHECK(message.find("Unrecognised field: c")
-                                          != std::string::npos);
-                              BOOST_CHECK(message.find("|__X c at line 3") != std::string::npos);
-                              return true;
-                          });
+    BOOST_CHECK_EXCEPTION(
+      (YmlUtils::checkFields(node, std::vector<YmlUtils::ExpectedField>{{"a", true}})),
+      InputError,
+      [](const InputError& e)
+      {
+          const std::string message = e.what();
+          BOOST_CHECK(message.find("Unrecognised field: c") != std::string::npos);
+          BOOST_CHECK(message.find("|__X c at line 3") != std::string::npos);
+          return true;
+      });
     BOOST_CHECK(logs.getWarnings().empty());
 }
 
@@ -203,9 +203,10 @@ BOOST_AUTO_TEST_CASE(checkFields_rejects_duplicated_keys)
         id: supply
         id: demand
     )");
-    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node, std::vector<YmlUtils::ExpectedField>{{"id", true}})),
-                          InputError,
-                          containsMessage("Duplicated field: id"));
+    BOOST_CHECK_EXCEPTION(
+      (YmlUtils::checkFields(node, std::vector<YmlUtils::ExpectedField>{{"id", true}})),
+      InputError,
+      containsMessage("Duplicated field: id"));
 }
 
 BOOST_AUTO_TEST_CASE(printPathTree_formats_nested_paths)

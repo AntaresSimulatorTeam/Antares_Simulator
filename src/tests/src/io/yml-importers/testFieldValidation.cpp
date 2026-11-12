@@ -420,19 +420,21 @@ BOOST_AUTO_TEST_CASE(complex_keys_do_not_hide_other_field_errors)
 children:
   - {}
 )");
-    BOOST_CHECK_EXCEPTION(
-      (YmlUtils::checkFields(node,
-                             std::vector<YmlUtils::ExpectedField>{{"id", true},
-                                                          {"children", false, {{"value", true}}}})),
-      InputError,
-      [](const InputError& e)
-      {
-          const std::string message = e.what();
-          BOOST_CHECK(message.find("expected a scalar field name") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: value") != std::string::npos);
-          return true;
-      });
+    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node,
+                                                 std::vector<YmlUtils::ExpectedField>{
+                                                   {"id", true},
+                                                   {"children", false, {{"value", true}}}})),
+                          InputError,
+                          [](const InputError& e)
+                          {
+                              const std::string message = e.what();
+                              BOOST_CHECK(message.find("expected a scalar field name")
+                                          != std::string::npos);
+                              BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
+                              BOOST_CHECK(message.find("Missing field: value")
+                                          != std::string::npos);
+                              return true;
+                          });
 }
 
 BOOST_AUTO_TEST_CASE(non_scalar_ids_do_not_hide_sibling_field_errors)
@@ -471,19 +473,20 @@ children:
     node["children"][0].SetTag("original-child");
     const auto before = YAML::Dump(node);
     CaptureAntaresLogs logs;
-    BOOST_CHECK_EXCEPTION(
-      (YmlUtils::checkFields(node,
-                             std::vector<YmlUtils::ExpectedField>{{"children", false, {{"id", true}}}},
-                             "explicit-path")),
-      InputError,
-      [](const InputError& e)
-      {
-          const std::string message = e.what();
-          BOOST_CHECK(message.find("Unrecognised field: unexpected") != std::string::npos);
-          BOOST_CHECK(message.find("explicit-path") != std::string::npos);
-          BOOST_CHECK(message.find("original-root") == std::string::npos);
-          return true;
-      });
+    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node,
+                                                 std::vector<YmlUtils::ExpectedField>{
+                                                   {"children", false, {{"id", true}}}},
+                                                 "explicit-path")),
+                          InputError,
+                          [](const InputError& e)
+                          {
+                              const std::string message = e.what();
+                              BOOST_CHECK(message.find("Unrecognised field: unexpected")
+                                          != std::string::npos);
+                              BOOST_CHECK(message.find("explicit-path") != std::string::npos);
+                              BOOST_CHECK(message.find("original-root") == std::string::npos);
+                              return true;
+                          });
     BOOST_CHECK_EQUAL(YAML::Dump(node), before);
     BOOST_CHECK(logs.getWarnings().empty());
     BOOST_CHECK_THROW(
@@ -727,7 +730,8 @@ BOOST_AUTO_TEST_CASE(non_map_sequence_items_do_not_hide_other_field_errors)
     const auto node = YAML::Load("children:\n  - scalar\n  - null\n  - {}\n");
     BOOST_CHECK_EXCEPTION(
       (YmlUtils::checkFields(node,
-                             std::vector<YmlUtils::ExpectedField>{{"children", false, {{"value", true}}}},
+                             std::vector<YmlUtils::ExpectedField>{
+                               {"children", false, {{"value", true}}}},
                              "root")),
       InputError,
       [](const InputError& e)
