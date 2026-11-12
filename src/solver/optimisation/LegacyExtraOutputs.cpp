@@ -81,8 +81,8 @@ public:
         thermalNames_.reserve(problemeHebdo.NombreDePays);
         for (uint32_t pays = 0; pays < problemeHebdo.NombreDePays; ++pays)
         {
-            const std::string area = problemeHebdo.NomsDesPays[pays];
-            areaNames_.push_back(BuildAreaComponentId(area));
+            const std::string area = Antares::SanitizeId(problemeHebdo.NomsDesPays[pays]);
+            areaNames_.push_back(area);
             hydroStorageNames_.push_back(area + "_hydro_storage");
 
             const PALIERS_THERMIQUES& paliers = problemeHebdo.PaliersThermiquesDuPays[pays];
@@ -90,8 +90,9 @@ public:
             clusterNames.reserve(paliers.NombreDePaliersThermiques);
             for (int index = 0; index < paliers.NombreDePaliersThermiques; ++index)
             {
-                clusterNames.push_back(area + "_thermal_"
-                                       + paliers.NomsDesPaliersThermiques[index]);
+                clusterNames.push_back(
+                  area + "_thermal_"
+                  + Antares::SanitizeId(paliers.NomsDesPaliersThermiques[index]));
             }
         }
 
@@ -518,8 +519,9 @@ void LegacyExtraOutputEmitter::shortTermStorageOutputs(uint32_t pays, int pdt)
         const double injection = x(
           variableManager_.ShortTermStorageInjection(storage.clusterGlobalIndex, pdt));
         const std::string component = fmt::format("{}_short_term_storage_{}",
-                                                  problemeHebdo_.NomsDesPays[pays],
-                                                  storage.name);
+                                                  Antares::SanitizeId(
+                                                    problemeHebdo_.NomsDesPays[pays]),
+                                                  Antares::SanitizeId(storage.name));
         emit("profit", component, pdt, std::floor((withdrawal - injection) * price + 0.5));
         emit("balance_port.flow", component, pdt, withdrawal - injection);
     }
@@ -600,7 +602,8 @@ void LegacyExtraOutputEmitter::emitReserveSTSParticipation(
           stsPart.globalIndexClusterParticipation,
           pdt);
         emit(reserveParticipationOutput,
-             area + "_short_term_storage_" + stsPart.clusterName,
+             Antares::SanitizeId(area) + "_short_term_storage_"
+               + Antares::SanitizeId(stsPart.clusterName),
              pdt,
              stsPart.participationCost * x(participationVar));
     }
@@ -626,7 +629,10 @@ void LegacyExtraOutputEmitter::emitReserveThermalParticipation(
               pdt);
             val += thermalPart.participationCostOff * x(offVar);
         }
-        emit(reserveParticipationOutput, area + "_thermal_" + thermalPart.clusterName, pdt, val);
+        emit(Antares::SanitizeId(reserveParticipationOutput),
+             area + "_thermal_" + Antares::SanitizeId(thermalPart.clusterName),
+             pdt,
+             val);
     }
 }
 
