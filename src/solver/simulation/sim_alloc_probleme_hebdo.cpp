@@ -550,7 +550,9 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
                            &production.NombreDeGroupesEnMarcheDuPalier,
                            &production.NombreDeGroupesQuiDemarrentDuPalier,
                            &production.NombreDeGroupesQuiSArretentDuPalier,
-                           &production.NombreDeGroupesQuiTombentEnPanneDuPalier})
+                           &production.NombreDeGroupesQuiTombentEnPanneDuPalier,
+                           &production.powerRampingIncrease,
+                           &production.powerRampingDecrease})
             {
                 v->assign(nbPaliers, 0.);
             }
