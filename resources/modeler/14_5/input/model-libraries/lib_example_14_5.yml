@@ -1,14 +1,14 @@
 library:
   id: lib_example_14_5
-  description: Fixed sum bounds that require cyclic wrap-around (upper index exceeds window size)
+  description: Fixed sum bounds reaching the last index of the window
 
   models:
-    - id: fixed_bounds_wrap_demo
+    - id: fixed_bounds_last_index_demo
       description: >
-        Variable bounded below by sum(3 .. 6, p) with 5 timesteps (size=5).
-        The upper bound 6 exceeds the last valid index 4, so indices 5 and 6
-        wrap cyclically: normalizeTimeIndex(5, 5)=0, normalizeTimeIndex(6, 5)=1.
-        Accessed indices: 3, 4, 0, 1 -> p[3]+p[4]+p[0]+p[1] = 4+5+1+2 = 12.
+        Variable bounded below by sum(3 .. 4, p) with 5 timesteps (size=5).
+        The upper bound 4 is the last valid index of the block (absolute bounds
+        outside [0, 4] are rejected).
+        Accessed indices: 3, 4 -> p[3]+p[4] = 4+5 = 9.
         This result is constant across all timesteps (fixed bounds).
       parameters:
         - id: p
@@ -19,10 +19,10 @@ library:
           lower-bound: 0
           upper-bound: 1000
           variable-type: continuous
-          # x[t] >= sum(3..6, p) = p[3]+p[4]+p[0]+p[1] = 4+5+1+2 = 12 for all t
+          # x[t] >= sum(3..4, p) = p[3]+p[4] = 4+5 = 9 for all t
       constraints:
         - id: lower_bound_from_wrapping_sum
-          expression: x >= sum(3 .. 6, p)
+          expression: x >= sum(3 .. 4, p)
       objective-contributions:
         - id: objective
           expression: sum(x)
