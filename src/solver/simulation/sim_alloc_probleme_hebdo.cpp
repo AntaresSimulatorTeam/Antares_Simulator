@@ -3,6 +3,8 @@
 
 #include "antares/solver/simulation/sim_alloc_probleme_hebdo.h"
 
+#include <limits>
+
 #include <antares/study/study.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_donnees.h"
@@ -130,6 +132,12 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
     {
         problem.ValeursDeNTC[k].ValeurDeNTCOrigineVersExtremite.assign(linkCount, 0.);
         problem.ValeursDeNTC[k].ValeurDeNTCExtremiteVersOrigine.assign(linkCount, 0.);
+        problem.ValeursDeNTC[k].CapaciteEffectiveOrigineVersExtremite.assign(
+          linkCount,
+          std::numeric_limits<double>::quiet_NaN());
+        problem.ValeursDeNTC[k].CapaciteEffectiveExtremiteVersOrigine.assign(
+          linkCount,
+          std::numeric_limits<double>::quiet_NaN());
         problem.ValeursDeNTC[k].ValeurDeLoopFlowOrigineVersExtremite.assign(linkCount, 0.);
         problem.ValeursDeNTC[k].ValeurDuFlux.assign(linkCount, 0.);
         problem.ValeursDeNTC[k].ResistanceApparente.assign(linkCount, 0.);

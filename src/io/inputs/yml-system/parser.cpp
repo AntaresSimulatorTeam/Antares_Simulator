@@ -33,7 +33,12 @@ const std::vector<YmlUtils::Field> systemFields = {
    false,
    {{"component", true},
     {"port", true},
-    {"thermal-component", true, {{"area", true}, {"cluster-id", true}}, YmlUtils::Shape::Map}}}};
+    {"thermal-component", true, {{"area", true}, {"cluster-id", true}}, YmlUtils::Shape::Map}}},
+  {"link-capacity-connections",
+   false,
+   {{"component", true},
+    {"port", true},
+    {"link-component", true, {{"from", true}, {"to", true}}, YmlUtils::Shape::Map}}}};
 } // namespace
 
 System Parser::parse(const std::string& content, const std::string& pathFromRoot)

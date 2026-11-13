@@ -63,6 +63,21 @@ void convert<YmlModel::PortType>::convertThermalCapacityField(const Node& node,
     rhs.thermal_capacity_connection_field = getFieldFromNode(childNode, "capacity-field");
 }
 
+void convert<YmlModel::PortType>::convertLinkCapacityFields(const Node& node,
+                                                            YmlModel::PortType& rhs)
+{
+    auto childNode = node["link-capacity-connection"];
+    if (!childNode.IsDefined())
+    {
+        return;
+    }
+
+    rhs.link_capacity_connection_direct_field = getFieldFromNode(childNode,
+                                                                 "capacity-direct-field");
+    rhs.link_capacity_connection_indirect_field = getFieldFromNode(childNode,
+                                                                   "capacity-indirect-field");
+}
+
 bool convert<YmlModel::PortType>::decode(const Node& node, YmlModel::PortType& rhs)
 {
     rhs.id = node["id"].as<std::string>();
@@ -74,6 +89,7 @@ bool convert<YmlModel::PortType>::decode(const Node& node, YmlModel::PortType& r
 
     convertAreaConnectionFields(node, rhs);
     convertThermalCapacityField(node, rhs);
+    convertLinkCapacityFields(node, rhs);
     return true;
 }
 

@@ -7,6 +7,7 @@ add_boost_test(unit-tests-for-solver-optimisation
         FillerFixture.h
         test_componentToAreaConnectionFiller.cpp
         test_ThermalCapacityFiller.cpp
+        test_LinkCapacityFiller.cpp
         test_area_connections--spillage--unsupE.cpp
         test_mip_detection.cpp
         test_legacy_name_mapper.cpp

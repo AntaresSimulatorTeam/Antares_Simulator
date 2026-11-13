@@ -67,6 +67,19 @@ struct ThermalCapacityConnection
     ThermalComponent thermalComponent;
 };
 
+struct LinkComponent
+{
+    std::string from;
+    std::string to;
+};
+
+struct LinkCapacityConnection
+{
+    std::string componentId;
+    std::string portId;
+    LinkComponent linkComponent;
+};
+
 struct System
 {
     std::string id;
@@ -74,6 +87,7 @@ struct System
     std::vector<Connection> connections;
     std::vector<AreaConnection> areaConnections;
     std::vector<ThermalCapacityConnection> thermalCapacityConnections;
+    std::vector<LinkCapacityConnection> linkCapacityConnections;
 };
 
 } // namespace Antares::IO::Inputs::YmlSystem

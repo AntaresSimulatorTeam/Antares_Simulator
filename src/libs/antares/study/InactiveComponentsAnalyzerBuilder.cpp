@@ -4,7 +4,9 @@
 #include "antares/study/InactiveComponentsAnalyzerBuilder.h"
 
 #include <algorithm>
+#include <unordered_set>
 
+#include <antares/solver/modeler/ModelerData.h>
 #include <antares/study/area/constants.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
@@ -53,6 +55,21 @@ std::shared_ptr<const InactiveComponentsAnalyzer> BuildInactiveComponentsAnalyze
 {
     auto analyzer = std::make_shared<InactiveComponentsAnalyzer>();
 
+    std::unordered_set<const AreaLink*> modelerCapacityLinks;
+    if (const auto* modelerData = study.getModelerData(); modelerData && modelerData->system)
+    {
+        for (const auto& component: modelerData->system->Components())
+        {
+            for (const auto& [portId, connection]: component.portToLinkCapacityConnections())
+            {
+                if (const auto* link = study.areas.findLink(connection.from, connection.to))
+                {
+                    modelerCapacityLinks.insert(link);
+                }
+            }
+        }
+    }
+
     uint32_t interco = 0;
     for (uint32_t pays = 0; pays < study.areas.size(); ++pays)
     {
@@ -86,7 +103,10 @@ std::shared_ptr<const InactiveComponentsAnalyzer> BuildInactiveComponentsAnalyze
                                                && selectedColumnsAreAllZero(
                                                  link->indirectCapacities);
             const bool ignored = link->transmissionCapacities == LocalTransmissionCapacities::null;
-            analyzer->setLinkAllZero(interco, bothDirectionsAllZero || ignored);
+            // Modeler capacities replace the legacy series and can activate an all-zero link.
+            analyzer->setLinkAllZero(interco,
+                                     !modelerCapacityLinks.contains(link)
+                                       && (bothDirectionsAllZero || ignored));
             ++interco;
         }
     }

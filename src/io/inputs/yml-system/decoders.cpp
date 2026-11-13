@@ -76,6 +76,22 @@ bool convert<YmlSystem::ThermalCapacityConnection>::decode(
     return true;
 }
 
+bool convert<YmlSystem::LinkComponent>::decode(const Node& node, YmlSystem::LinkComponent& rhs)
+{
+    rhs.from = node["from"].as<std::string>();
+    rhs.to = node["to"].as<std::string>();
+    return true;
+}
+
+bool convert<YmlSystem::LinkCapacityConnection>::decode(const Node& node,
+                                                        YmlSystem::LinkCapacityConnection& rhs)
+{
+    rhs.componentId = node["component"].as<std::string>();
+    rhs.portId = node["port"].as<std::string>();
+    rhs.linkComponent = node["link-component"].as<YmlSystem::LinkComponent>();
+    return true;
+}
+
 bool convert<YmlSystem::System>::decode(const Node& node, YmlSystem::System& rhs)
 {
     rhs.id = node["id"].as<std::string>("");
@@ -85,6 +101,8 @@ bool convert<YmlSystem::System>::decode(const Node& node, YmlSystem::System& rhs
       node["area-connections"]);
     rhs.thermalCapacityConnections = as_fallback_default<
       std::vector<YmlSystem::ThermalCapacityConnection>>(node["thermal-capacity-connections"]);
+    rhs.linkCapacityConnections = as_fallback_default<
+      std::vector<YmlSystem::LinkCapacityConnection>>(node["link-capacity-connections"]);
     return true;
 }
 
