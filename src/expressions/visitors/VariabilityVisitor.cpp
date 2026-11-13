@@ -133,16 +133,36 @@ VariabilityType VariabilityVisitor::visit(const Nodes::TimeShiftNode* timeShiftN
     return dispatch(timeShiftNode->left());
 }
 
-VariabilityType VariabilityVisitor::visit(
-  [[maybe_unused]] const Nodes::TimeIndexNode* timeIndexNode)
+VariabilityType VariabilityVisitor::visit(const Nodes::TimeIndexNode* timeIndexNode)
 {
-    return VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
+    const auto valueVariability = dispatch(timeIndexNode->left());
+    if (!isTimeDependent(valueVariability))
+    {
+        // Indexing a value that is constant in time yields that value, whatever the index
+        return valueVariability;
+    }
+    const auto indexVariability = dispatch(timeIndexNode->right());
+    return variability(isTimeDependent(indexVariability),
+                       isScenarioDependent(valueVariability)
+                         || isScenarioDependent(indexVariability));
 }
 
 VariabilityType VariabilityVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
 {
-    // TODO  case from = to
-    return dispatch(timeSumNode->expression());
+    const auto expressionVariability = dispatch(timeSumNode->expression());
+    const auto fromVariability = dispatch(timeSumNode->from());
+    const auto toVariability = dispatch(timeSumNode->to());
+    const bool fromRelative = dynamic_cast<const Nodes::TPlusNode*>(timeSumNode->from()) != nullptr;
+    const bool toRelative = dynamic_cast<const Nodes::TPlusNode*>(timeSumNode->to()) != nullptr;
+    const bool mixedBounds = fromRelative != toRelative;
+    const bool timeDependent = mixedBounds
+                               || (fromRelative && toRelative
+                                   && isTimeDependent(expressionVariability));
+    const bool scenarioDependent = isScenarioDependent(expressionVariability)
+                                   || isScenarioDependent(fromVariability)
+                                   || isScenarioDependent(toVariability);
+
+    return variability(timeDependent, scenarioDependent);
 }
 
 VariabilityType VariabilityVisitor::visit(const Nodes::TPlusNode* node)

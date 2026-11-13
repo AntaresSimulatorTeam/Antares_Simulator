@@ -23,6 +23,10 @@ inline void forEachTimeSumIndex(int from, int to, int size, Callback callback)
     }
 }
 
+// A time-sum with two absolute bounds (no t+k) collapses time: it has the same value at every
+// timestep of the block.
+bool hasAbsoluteBounds(const Nodes::TimeSumNode* node);
+
 // Resolve a bound used in a time-sum when no variability check is required.
 int resolveTimeSumBound(const Nodes::Node* bound,
                         EvalVisitor& visitor,
