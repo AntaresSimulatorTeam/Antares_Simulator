@@ -15,6 +15,7 @@
 #include <antares/solver/simulation/adequacy_patch_runtime_data.h>
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/study/parameters/adq-patch-params.h"
+#include "in-memory-study.h"
 
 static double origineExtremite = -1;
 static double extremiteOrigine = 5;
@@ -92,6 +93,21 @@ AdqPatchParams createParams()
     p.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isDens;
 
     return p;
+}
+
+BOOST_AUTO_TEST_CASE(reset_csr_triggered_hours)
+{
+    StudyBuilder builder;
+    builder.addAreaToStudy("FR");
+    builder.study->initializeRuntimeInfos();
+    AdequacyPatchRuntimeData runtimeData(builder.study->areas, builder.study->runtime.areaLink);
+
+    runtimeData.addCSRTriggeredAtAreaHour(0, 42);
+    BOOST_CHECK(runtimeData.wasCSRTriggeredAtAreaHour(0, 42));
+
+    runtimeData.resetCSRTriggeredHours();
+
+    BOOST_CHECK(!runtimeData.wasCSRTriggeredAtAreaHour(0, 42));
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:
