@@ -299,9 +299,4 @@ bool exportViewConfig(const Data::Study& study, Solver::IResultWriter* resultWri
     return true;
 }
 
-bool exportAreaViewConfig(const Data::Study& study, Solver::IResultWriter* resultWriter)
-{
-    return exportViewConfig(study, resultWriter, ViewType::area);
-}
-
 } // namespace Antares::ViewBuilder

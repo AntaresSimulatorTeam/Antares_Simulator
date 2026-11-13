@@ -21,7 +21,6 @@ enum class ViewType
 };
 
 void exportSystemForView(const Data::Study& study, Solver::IResultWriter* resultWriter);
-bool exportAreaViewConfig(const Data::Study& study, Solver::IResultWriter* resultWriter);
 bool exportViewConfig(const Data::Study& study, Solver::IResultWriter* resultWriter, ViewType type);
 
 YAML::Node generateSystemForView(const Antares::Data::Study& study);

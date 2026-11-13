@@ -400,7 +400,7 @@ BOOST_AUTO_TEST_CASE(area_view_thematic_selection_combines_with_geographic_trimm
 
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
-    BOOST_REQUIRE(exportAreaViewConfig(*study, &writer));
+    BOOST_REQUIRE(exportViewConfig(*study, &writer, ViewType::area));
     const auto view = YAML::Load(writer.getMap().at("views/input/view_config_area.yml"))["view"];
     BOOST_REQUIRE_EQUAL(view["metrics"].size(), 2);
     BOOST_CHECK(metricIds(view)
@@ -420,7 +420,7 @@ BOOST_AUTO_TEST_CASE(area_view_skipped_when_no_mapped_metric_is_selected)
     BOOST_CHECK_EQUAL(view["metrics"].size(), 0);
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
-    BOOST_CHECK(!exportAreaViewConfig(*study, &writer));
+    BOOST_CHECK(!exportViewConfig(*study, &writer, ViewType::area));
     BOOST_CHECK(writer.getMap().empty());
 }
 
@@ -560,7 +560,7 @@ BOOST_AUTO_TEST_CASE(area_view_skipped_when_no_aggregation_is_selected)
     BOOST_CHECK_GT(view["metrics"].size(), 0);
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
-    BOOST_CHECK(!exportAreaViewConfig(*study, &writer));
+    BOOST_CHECK(!exportViewConfig(*study, &writer, ViewType::area));
     BOOST_CHECK(writer.getMap().empty());
 }
 
@@ -580,7 +580,7 @@ BOOST_AUTO_TEST_CASE(area_view_written_when_only_district_aggregation_is_selecte
 
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
-    BOOST_REQUIRE(exportAreaViewConfig(*study, &writer));
+    BOOST_REQUIRE(exportViewConfig(*study, &writer, ViewType::area));
     const auto view = YAML::Load(writer.getMap().at("views/input/view_config_area.yml"))["view"];
     BOOST_REQUIRE_EQUAL(view["aggregations-patterns"].size(), 1);
     BOOST_CHECK(locations(findPattern(view, "hour_all")) == (std::set<std::string>{"eu"}));
@@ -591,7 +591,7 @@ BOOST_AUTO_TEST_CASE(export_area_view_uses_views_input_directory)
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
     exportSystemForView(*study, &writer);
-    exportAreaViewConfig(*study, &writer);
+    exportViewConfig(*study, &writer, ViewType::area);
     BOOST_REQUIRE_EQUAL(writer.getMap().size(), 2);
     BOOST_CHECK(writer.getMap().contains("views/input/system-for-views.yml"));
     BOOST_REQUIRE(writer.getMap().contains("views/input/view_config_area.yml"));
