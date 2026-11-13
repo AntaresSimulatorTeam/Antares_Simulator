@@ -127,9 +127,9 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_2_components_with_a_port_field,
     // ------------------
     const std::string portId = injection_port.Id();
     generatorComponent.addComponentConnection(portId,
-                                              ConnectionEnd(&nodeComponent, &injection_port));
+                                              ConnectionEnd(nodeComponent, injection_port));
     nodeComponent.addComponentConnection(portId,
-                                         ConnectionEnd(&generatorComponent, &injection_port));
+                                         ConnectionEnd(generatorComponent, injection_port));
 
     // Visitor associated to component named "N"
 
@@ -239,12 +239,12 @@ BOOST_FIXTURE_TEST_CASE(sum_conections_connects_3_components_with_a_port_field,
     // ------------------
     const std::string portId = injection_port.Id();
     generatorComponent.addComponentConnection(portId,
-                                              ConnectionEnd(&nodeComponent, &injection_port));
+                                              ConnectionEnd(nodeComponent, injection_port));
     nodeComponent.addComponentConnection(portId,
-                                         ConnectionEnd(&generatorComponent, &injection_port));
+                                         ConnectionEnd(generatorComponent, injection_port));
 
-    demandComponent.addComponentConnection(portId, ConnectionEnd(&nodeComponent, &injection_port));
-    nodeComponent.addComponentConnection(portId, ConnectionEnd(&demandComponent, &injection_port));
+    demandComponent.addComponentConnection(portId, ConnectionEnd(nodeComponent, injection_port));
+    nodeComponent.addComponentConnection(portId, ConnectionEnd(demandComponent, injection_port));
 
     // Visitor associated to component named "N"
     ReadLinearExpressionVisitor visitor{evaluationContextProvider(), fillContext, nodeComponent};

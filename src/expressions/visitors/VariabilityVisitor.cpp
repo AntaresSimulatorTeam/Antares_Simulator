@@ -105,11 +105,11 @@ VariabilityType VariabilityVisitor::visit(const Nodes::PortFieldSumNode* node)
     auto to_return = VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
     for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
     {
-        auto* component = connexion_end.component();
-        auto* port = connexion_end.port();
+        const auto& component = connexion_end.component();
+        const auto& port = connexion_end.port();
 
-        VariabilityVisitor visitor(optimEntityContainer_, *component, isLP_);
-        const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
+        VariabilityVisitor visitor(optimEntityContainer_, component, isLP_);
+        const Nodes::Node* node = component.nodeAtPortField(port.Id(), fieldId);
         to_return = to_return | visitor.dispatch(node);
     }
 

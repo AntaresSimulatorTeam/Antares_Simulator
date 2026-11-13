@@ -187,8 +187,8 @@ void connectComponents(const YmlSystem::Connection& connection, std::vector<Comp
 
     // TODO : Do we need to connect both components to one another ?
     // TODO : Or should we rather consider the field role and only connect receiver to the sender ?
-    component_1.addComponentConnection(port_1.Id(), ConnectionEnd(&component_2, &port_2));
-    component_2.addComponentConnection(port_2.Id(), ConnectionEnd(&component_1, &port_1));
+    component_1.addComponentConnection(port_1.Id(), ConnectionEnd(component_2, port_2));
+    component_2.addComponentConnection(port_2.Id(), ConnectionEnd(component_1, port_1));
 }
 
 /**
