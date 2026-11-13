@@ -3,8 +3,10 @@
 
 #include "antares/expressions/visitors/EvalVisitor.h"
 
+#include <algorithm>
 #include <numeric>
 #include <stdexcept>
+#include <vector>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/TimeSumUtils.h>
@@ -38,6 +40,38 @@ EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
     fillContext_(fillContext),
     areaPriceProvider_(areaPriceProvider)
 {
+}
+
+bool EvalVisitor::hasOutOfBoundsTimeShiftInConnectedPortFields(const Nodes::PortFieldSumNode* node,
+                                                               unsigned timeStep) const
+{
+    const auto& connectionEnds = component_.componentConnectionsViaPort(node->getPortName());
+    return std::any_of(
+      connectionEnds.begin(),
+      connectionEnds.end(),
+      [this, node, timeStep](const ModelerStudy::SystemModel::ConnectionEnd& connectionEnd)
+      {
+          const ModelerStudy::SystemModel::Component* connectedComponent = connectionEnd
+                                                                             .component();
+          const ModelerStudy::SystemModel::Port* connectedPort = connectionEnd.port();
+          if (!connectedComponent || !connectedPort)
+          {
+              return false;
+          }
+          EvalVisitor connectedVisitor(optimContainer_,
+                                       fillContext_,
+                                       *connectedComponent,
+                                       data_,
+                                       scenario_,
+                                       areaPriceProvider_);
+          const Nodes::Node* connectedFieldExpression = connectedComponent->nodeAtPortField(
+            connectedPort->Id(),
+            node->getFieldName());
+          return LinearProblem::hasOutOfBoundsTimeShift(connectedFieldExpression,
+                                                        timeStep,
+                                                        fillContext_,
+                                                        connectedVisitor);
+      });
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::SumNode* node)
