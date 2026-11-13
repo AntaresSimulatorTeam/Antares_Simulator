@@ -17,9 +17,9 @@ OptDailyStringGenerator::OptDailyStringGenerator(unsigned int day,
 
 std::string OptDailyStringGenerator::to_string() const
 {
-    std::string to_return = std::to_string(year_ + 1) + "-";
-    to_return += std::to_string(week_ + 1) + "-";
-    to_return += std::to_string(day_ + 1);
+    std::string to_return = std::to_string(year_) + "-";
+    to_return += std::to_string(week_) + "-";
+    to_return += std::to_string(day_);
     return to_return;
 }
 
@@ -34,7 +34,7 @@ OptWeeklyStringGenerator::OptWeeklyStringGenerator(unsigned int week, unsigned i
 
 std::string OptWeeklyStringGenerator::to_string() const
 {
-    std::string to_return = std::to_string(year_ + 1) + "-";
-    to_return += std::to_string(week_ + 1);
+    std::string to_return = std::to_string(year_) + "-";
+    to_return += std::to_string(week_);
     return to_return;
 }
