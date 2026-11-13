@@ -198,7 +198,8 @@ BOOST_AUTO_TEST_CASE(other_views_thematic_variable_mappings_and_exports)
             Benchmarking::DurationCollector durationCollector;
             Antares::Solver::InMemoryWriter writer(durationCollector);
             BOOST_REQUIRE(exportViewConfig(*study, &writer, test.type));
-            const auto view = YAML::Load(writer.getMap().at("views/input/" + test.filename))["view"];
+            const auto view = YAML::Load(
+              writer.getMap().at("views/input/" + test.filename))["view"];
             BOOST_CHECK_EQUAL(view["id"].as<std::string>(), test.id);
             BOOST_CHECK_EQUAL(view["scope"]["location"]["taxonomy-category"].as<std::string>(),
                               test.type == ViewType::link ? "link" : "balance");
