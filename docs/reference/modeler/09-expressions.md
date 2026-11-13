@@ -137,6 +137,9 @@ For time-dependent parameters, variables, and port fields, you can use these tim
       resolving to an integer, or a time-shift expression like the ones defined above
     - in both forms, `S` and `E` must not depend on time or decision variables; bounds must resolve to integers
     - absolute bounds outside the optimization block are errors; relative bounds wrap by default, but an out-of-bounds `drop` mode drops the constraint instance
+    - in `drop` mode, time shifts and sums inside a relative sum are checked at each timestep the window
+      selects; inside a sum with absolute bounds or a `sum(X)` over the whole block, they wrap cyclically
+      and never drop the constraint instance
 
 **Absolute time indices.** In `x[N]` and in absolute bounds of `sum(S .. E, x)`, indices are relative to the
 current optimization block: `0` is the first time step of the block (the week or day in the simulator, the first time

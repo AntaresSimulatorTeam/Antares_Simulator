@@ -15,6 +15,31 @@
 
 namespace
 {
+bool hasRelativeTimeSum(const Antares::Expressions::Nodes::Node* node)
+{
+    if (const auto* timeSumNode = dynamic_cast<const Antares::Expressions::Nodes::TimeSumNode*>(
+          node))
+    {
+        if (dynamic_cast<const Antares::Expressions::Nodes::TPlusNode*>(timeSumNode->from())
+            || dynamic_cast<const Antares::Expressions::Nodes::TPlusNode*>(timeSumNode->to()))
+        {
+            return true;
+        }
+    }
+
+    if (const auto* parentNode = dynamic_cast<const Antares::Expressions::Nodes::ParentNode*>(node))
+    {
+        for (const auto* operand: parentNode->getConstOperands())
+        {
+            if (hasRelativeTimeSum(operand))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 unsigned countActiveConstraintTimesteps(
   const Antares::ModelerStudy::SystemModel::Constraint& constraint,
   const Antares::LinearProblem::Api::FillContext& ctx,
@@ -413,7 +438,16 @@ void ComponentFiller::addConstraints(const Api::FillContext& ctx)
     {
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
-        const auto variability = getVariability(root_node, component_);
+        auto variability = getVariability(root_node, component_);
+        // In DROP mode, a relative time-sum window may leave the block at some timesteps only, so
+        // instances must be filtered one by one. Only possible when the constraint has one entry
+        // per timestep: the sum may be nested in an operator that collapses time, e.g.
+        // sum(sum(t .. t, x)), in which case there is a single instance and nothing to drop.
+        if (constraint.outOfBoundsProcessingMode() == OutOfBoundsProcessingMode::DROP
+            && linear_constraints.lb.size() > 1 && hasRelativeTimeSum(root_node))
+        {
+            variability = variability | VariabilityType::VARYING_IN_TIME_ONLY;
+        }
 
         unsigned activeConstraintCount = 1;
         if (isTimeDependent(variability))
