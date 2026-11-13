@@ -7,12 +7,14 @@
 #include "antares/io/inputs/yml-system/system.h"
 #include "antares/io/inputs/yml-utils/checkFields.h"
 
+using namespace Antares::IO::Inputs::YmlUtils;
+
 namespace Antares::IO::Inputs::YmlSystem
 {
 namespace
 {
 // Keep this schema in sync with field reads in decoders.cpp.
-const std::vector<YmlUtils::Field> systemFields = {
+const std::vector<ExpectedField> systemFields = {
   {"id"},
   {"description"},
   {"model-libraries"},
@@ -39,7 +41,8 @@ const std::vector<YmlUtils::Field> systemFields = {
 System Parser::parse(const std::string& content, const std::string& pathFromRoot)
 {
     YAML::Node root = YAML::Load(content);
-    YmlUtils::checkFields(root, {"system", true, systemFields, YmlUtils::Shape::Map}, pathFromRoot);
+    const std::vector<ExpectedField> expectedFields = {{"system", true, systemFields, Shape::Map}};
+    checkFields(root, expectedFields, pathFromRoot);
     return root["system"].as<System>();
 }
 

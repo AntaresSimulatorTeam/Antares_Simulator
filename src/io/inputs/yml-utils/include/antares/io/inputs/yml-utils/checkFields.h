@@ -3,7 +3,6 @@
 
 #pragma once
 
-#include <initializer_list>
 #include <string>
 #include <vector>
 
@@ -15,16 +14,16 @@ namespace Antares::IO::Inputs::YmlUtils
 /// Accepted YAML shape of a field that has children.
 enum class Shape
 {
-    MapOrSequence, ///< A map, or a sequence of maps (the default)
-    Map            ///< A single map only; sequences are rejected
+    Sequence,
+    Map
 };
 
-struct Field
+struct ExpectedField
 {
     std::string name;
     bool required = false;
-    std::vector<Field> children = {};
-    Shape shape = Shape::MapOrSequence;
+    std::vector<ExpectedField> children = {};
+    Shape shape = Shape::Sequence;
 };
 
 /// Validates maps and sequence entries recursively before decoding. Throws InputError containing
@@ -33,11 +32,10 @@ struct Field
 /// collections are treated as absent, but explicit mappings cannot be null. Value conversion is
 /// left to the decoders, so malformed values cannot hide field errors elsewhere in the document.
 /// The diagnostic path is explicit; validation does not modify the document or its YAML tags.
-void checkFields(const YAML::Node& node, const Field& field, const std::string& path = "");
-
-/// Overload for a node accepting multiple top-level fields (prebuilt list).
+/// Function checkFields takes a node and accepts multiple top-level expected fields (prebuilt
+/// list).
 void checkFields(const YAML::Node& node,
-                 const std::vector<Field>& fields,
+                 const std::vector<ExpectedField>& expectedFields,
                  const std::string& path = "");
 
 } // namespace Antares::IO::Inputs::YmlUtils
