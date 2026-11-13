@@ -221,8 +221,7 @@ BOOST_FIXTURE_TEST_CASE(porfieldsum_throw, Fixture)
     auto component1 = componentBuilder.withModel(&model1).withId("comp1").build();
     auto component2 = componentBuilder.withModel(&model2).withId("comp2").build();
 
-    component1.addComponentConnection("port",
-                                      ConnectionEnd(component2, model2.Ports().at("port")));
+    component1.addComponentConnection("port", ConnectionEnd(component2, model2.Ports().at("port")));
 
     auto system = systemBuilder.withComponents({component1, component2}).withId("system").build();
 

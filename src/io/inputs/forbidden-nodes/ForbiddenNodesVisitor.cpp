@@ -126,8 +126,7 @@ void ForbiddenNodesInComponentVisitor::visit(const PortFieldSumNode* portFieldSu
         const auto& connectedPort = connectionEnd.port();
 
         // Expression (as a string) at connected port field
-        const auto expr_str = connectedComponent
-                                .expressionAtPortField(connectedPort.Id(), fieldId)
+        const auto expr_str = connectedComponent.expressionAtPortField(connectedPort.Id(), fieldId)
                                 .Value();
         // Expression (as a root node) at connected port field
         const auto* nodeToVisit = connectedComponent.nodeAtPortField(connectedPort.Id(), fieldId);
