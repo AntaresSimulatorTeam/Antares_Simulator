@@ -6,7 +6,6 @@
 
 #include <algorithm>
 #include <cctype>
-#include <map>
 #include <set>
 #include <sstream>
 #include <unordered_set>
@@ -14,6 +13,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/benchmarking/DurationCollector.h>
 #include <antares/io/inputs/InputError.h>
 #include <antares/solver/modeler/ModelerData.h>
 #include <antares/solver/variable/registerThematicTrimmingVariables.h>
@@ -30,7 +30,7 @@
 #include <antares/study/system-model/system.h>
 #include <antares/view-builder/legacyToYaml.h>
 #include <antares/view-builder/viewBuilder.h>
-#include <antares/writer/i_writer.h>
+#include <antares/writer/in_memory_writer.h>
 
 using namespace Antares::Data;
 using namespace Antares::ViewBuilder;
@@ -78,34 +78,6 @@ std::set<std::string> metricIds(const YAML::Node& view)
     }
     return result;
 }
-
-class CapturingWriter final: public Antares::Solver::IResultWriter
-{
-public:
-    void addEntryFromBuffer(const std::filesystem::path& path, std::string& content) override
-    {
-        entries[path] = content;
-    }
-
-    void addEntryFromFile(const std::filesystem::path&, const std::filesystem::path&) override
-    {
-    }
-
-    void flush() override
-    {
-    }
-
-    bool needsTheJobQueue() const override
-    {
-        return false;
-    }
-
-    void finalize(bool) override
-    {
-    }
-
-    std::map<std::filesystem::path, std::string> entries;
-};
 
 } // anonymous namespace
 
@@ -223,9 +195,10 @@ BOOST_AUTO_TEST_CASE(other_views_thematic_variable_mappings_and_exports)
         {
             study->parameters.thematicTrimming = false;
             variables.setAllPrintStatusesTo(false);
-            CapturingWriter writer;
+            Benchmarking::DurationCollector durationCollector;
+            Antares::Solver::InMemoryWriter writer(durationCollector);
             BOOST_REQUIRE(exportViewConfig(*study, &writer, test.type));
-            const auto view = YAML::Load(writer.entries.at("views/input/" + test.filename))["view"];
+            const auto view = YAML::Load(writer.getMap().at("views/input/" + test.filename))["view"];
             BOOST_CHECK_EQUAL(view["id"].as<std::string>(), test.id);
             BOOST_CHECK_EQUAL(view["scope"]["location"]["taxonomy-category"].as<std::string>(),
                               test.type == ViewType::link ? "link" : "balance");
@@ -239,9 +212,10 @@ BOOST_AUTO_TEST_CASE(other_views_thematic_variable_mappings_and_exports)
             BOOST_CHECK(metricIds(view) == expectedMetrics);
 
             study->parameters.thematicTrimming = true;
-            CapturingWriter emptyWriter;
+            Benchmarking::DurationCollector emptyDurationCollector;
+            Antares::Solver::InMemoryWriter emptyWriter(emptyDurationCollector);
             BOOST_CHECK(!exportViewConfig(*study, &emptyWriter, test.type));
-            BOOST_CHECK(emptyWriter.entries.empty());
+            BOOST_CHECK(emptyWriter.getMap().empty());
             for (const auto& [variable, metric]: test.mappings)
             {
                 BOOST_TEST_CONTEXT(variable)
@@ -294,12 +268,13 @@ BOOST_AUTO_TEST_CASE(cluster_views_skipped_without_any_aggregation)
     study->parameters.geographicTrimming = true;
     fr->filterYearByYear = fr->filterSynthesis = filterNone;
     de->filterYearByYear = de->filterSynthesis = filterNone;
-    CapturingWriter writer;
+    Benchmarking::DurationCollector durationCollector;
+    Antares::Solver::InMemoryWriter writer(durationCollector);
     for (auto type: {ViewType::thermal, ViewType::storage, ViewType::renewable})
     {
         BOOST_CHECK(!exportViewConfig(*study, &writer, type));
     }
-    BOOST_CHECK(writer.entries.empty());
+    BOOST_CHECK(writer.getMap().empty());
 }
 
 BOOST_AUTO_TEST_CASE(link_view_uses_link_filters_not_area_or_district_filters)
@@ -331,9 +306,10 @@ BOOST_AUTO_TEST_CASE(link_view_uses_link_filters_not_area_or_district_filters)
 
     first.filterYearByYear = first.filterSynthesis = filterNone;
     second.filterYearByYear = second.filterSynthesis = filterNone;
-    CapturingWriter writer;
+    Benchmarking::DurationCollector durationCollector;
+    Antares::Solver::InMemoryWriter writer(durationCollector);
     BOOST_CHECK(!exportViewConfig(*study, &writer, ViewType::link));
-    BOOST_CHECK(writer.entries.empty());
+    BOOST_CHECK(writer.getMap().empty());
 }
 
 BOOST_AUTO_TEST_CASE(area_view_thematic_variable_mappings)
@@ -422,9 +398,10 @@ BOOST_AUTO_TEST_CASE(area_view_thematic_selection_combines_with_geographic_trimm
         variables.setPrintStatus(variable, true);
     }
 
-    CapturingWriter writer;
+    Benchmarking::DurationCollector durationCollector;
+    Antares::Solver::InMemoryWriter writer(durationCollector);
     BOOST_REQUIRE(exportAreaViewConfig(*study, &writer));
-    const auto view = YAML::Load(writer.entries.at("views/input/view_config_area.yml"))["view"];
+    const auto view = YAML::Load(writer.getMap().at("views/input/view_config_area.yml"))["view"];
     BOOST_REQUIRE_EQUAL(view["metrics"].size(), 2);
     BOOST_CHECK(metricIds(view)
                 == (std::set<std::string>{"antares_legacy_area_catalog.LOAD",
@@ -441,9 +418,10 @@ BOOST_AUTO_TEST_CASE(area_view_skipped_when_no_mapped_metric_is_selected)
     const auto view = generateAreaViewConfig(*study)["view"];
     BOOST_CHECK(view["metrics"].IsSequence());
     BOOST_CHECK_EQUAL(view["metrics"].size(), 0);
-    CapturingWriter writer;
+    Benchmarking::DurationCollector durationCollector;
+    Antares::Solver::InMemoryWriter writer(durationCollector);
     BOOST_CHECK(!exportAreaViewConfig(*study, &writer));
-    BOOST_CHECK(writer.entries.empty());
+    BOOST_CHECK(writer.getMap().empty());
 }
 
 BOOST_AUTO_TEST_CASE(area_view_ignores_variable_statuses_without_thematic_trimming)
@@ -580,9 +558,10 @@ BOOST_AUTO_TEST_CASE(area_view_skipped_when_no_aggregation_is_selected)
     BOOST_CHECK(view["aggregations-patterns"].IsSequence());
     BOOST_CHECK_EQUAL(view["aggregations-patterns"].size(), 0);
     BOOST_CHECK_GT(view["metrics"].size(), 0);
-    CapturingWriter writer;
+    Benchmarking::DurationCollector durationCollector;
+    Antares::Solver::InMemoryWriter writer(durationCollector);
     BOOST_CHECK(!exportAreaViewConfig(*study, &writer));
-    BOOST_CHECK(writer.entries.empty());
+    BOOST_CHECK(writer.getMap().empty());
 }
 
 BOOST_AUTO_TEST_CASE(area_view_written_when_only_district_aggregation_is_selected)
@@ -599,22 +578,24 @@ BOOST_AUTO_TEST_CASE(area_view_written_when_only_district_aggregation_is_selecte
     options.filterSynthesis = filterHourly;
     study->setsOfAreas.add("eu", members, options);
 
-    CapturingWriter writer;
+    Benchmarking::DurationCollector durationCollector;
+    Antares::Solver::InMemoryWriter writer(durationCollector);
     BOOST_REQUIRE(exportAreaViewConfig(*study, &writer));
-    const auto view = YAML::Load(writer.entries.at("views/input/view_config_area.yml"))["view"];
+    const auto view = YAML::Load(writer.getMap().at("views/input/view_config_area.yml"))["view"];
     BOOST_REQUIRE_EQUAL(view["aggregations-patterns"].size(), 1);
     BOOST_CHECK(locations(findPattern(view, "hour_all")) == (std::set<std::string>{"eu"}));
 }
 
 BOOST_AUTO_TEST_CASE(export_area_view_uses_views_input_directory)
 {
-    CapturingWriter writer;
+    Benchmarking::DurationCollector durationCollector;
+    Antares::Solver::InMemoryWriter writer(durationCollector);
     exportSystemForView(*study, &writer);
     exportAreaViewConfig(*study, &writer);
-    BOOST_REQUIRE_EQUAL(writer.entries.size(), 2);
-    BOOST_CHECK(writer.entries.contains("views/input/system-for-views.yml"));
-    BOOST_REQUIRE(writer.entries.contains("views/input/view_config_area.yml"));
-    const auto view = YAML::Load(writer.entries.at("views/input/view_config_area.yml"))["view"];
+    BOOST_REQUIRE_EQUAL(writer.getMap().size(), 2);
+    BOOST_CHECK(writer.getMap().contains("views/input/system-for-views.yml"));
+    BOOST_REQUIRE(writer.getMap().contains("views/input/view_config_area.yml"));
+    const auto view = YAML::Load(writer.getMap().at("views/input/view_config_area.yml"))["view"];
     BOOST_CHECK_EQUAL(view["aggregations-patterns"].size(), 10);
     BOOST_CHECK_EQUAL(view["id"].as<std::string>(), "view_area");
 }
