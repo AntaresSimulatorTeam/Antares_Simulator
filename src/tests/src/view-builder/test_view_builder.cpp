@@ -294,9 +294,10 @@ BOOST_AUTO_TEST_CASE(wind_component)
             BOOST_CHECK_EQUAL(comp["model"].as<std::string>(), "antares_legacy_models.renewable");
             auto props = comp["properties"];
             BOOST_REQUIRE(props.IsSequence());
-            BOOST_REQUIRE_EQUAL(props.size(), 2);
+            BOOST_REQUIRE_EQUAL(props.size(), 3);
             checkProperties(props[0], "carrier", "electricity");
-            checkProperties(props[1], "technology", "wind");
+            checkProperties(props[1], "name", "france_wind");
+            checkProperties(props[2], "technology", "wind");
         }
     }
     BOOST_CHECK(found);
@@ -317,9 +318,33 @@ BOOST_AUTO_TEST_CASE(solar_component)
             BOOST_CHECK_EQUAL(comp["model"].as<std::string>(), "antares_legacy_models.renewable");
             auto props = comp["properties"];
             BOOST_REQUIRE(props.IsSequence());
-            BOOST_REQUIRE_EQUAL(props.size(), 2);
+            BOOST_REQUIRE_EQUAL(props.size(), 3);
             checkProperties(props[0], "carrier", "electricity");
-            checkProperties(props[1], "technology", "solar");
+            checkProperties(props[1], "name", "france_solar");
+            checkProperties(props[2], "technology", "solar");
+        }
+    }
+    BOOST_CHECK(found);
+}
+
+BOOST_AUTO_TEST_CASE(run_of_river_component)
+{
+    YAML::Node root = generateSystemForView(*study);
+    auto components = root["system"]["components"];
+
+    bool found = false;
+    for (const auto& comp: components)
+    {
+        if (comp["id"].as<std::string>() == "france_run_of_river")
+        {
+            found = true;
+            BOOST_CHECK_EQUAL(comp["model"].as<std::string>(), "antares_legacy_models.renewable");
+            auto props = comp["properties"];
+            BOOST_REQUIRE(props.IsSequence());
+            BOOST_REQUIRE_EQUAL(props.size(), 3);
+            checkProperties(props[0], "carrier", "electricity");
+            checkProperties(props[1], "name", "france_run_of_river");
+            checkProperties(props[2], "technology", "run_of_river");
         }
     }
     BOOST_CHECK(found);
