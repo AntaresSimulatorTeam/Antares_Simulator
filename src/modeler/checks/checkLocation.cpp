@@ -18,32 +18,65 @@ namespace Antares::Solver::Checks
 
 void checkModel(const Model& model, const System& system)
 {
+    std::vector<std::string> errors;
     for (const auto& constraint: model.Constraints())
     {
-        checkExpression(constraint.expression().RootNode(),
-                        constraint.location(),
-                        model,
-                        system,
-                        constraint.expression().Value());
+        try
+        {
+            checkExpression(constraint.expression().RootNode(),
+                            constraint.location(),
+                            model,
+                            system,
+                            constraint.expression().Value());
+        }
+
+        catch (const LocationError& e)
+        {
+            errors.push_back(e.what());
+        }
     }
 
     for (const auto& objective: model.Objectives())
     {
-        checkExpression(objective.expression().RootNode(),
-                        objective.location(),
-                        model,
-                        system,
-                        objective.expression().Value());
+        try
+        {
+            checkExpression(objective.expression().RootNode(),
+                            objective.location(),
+                            model,
+                            system,
+                            objective.expression().Value());
+        }
+        catch (const LocationError& e)
+        {
+            errors.push_back(e.what());
+        }
     }
 
     // Extra outputs must be evaluated, they need to contain only subproblem objects
     for (const auto& [_, extraOutput]: model.ExtraOutputs())
     {
-        checkExpression(extraOutput.expression().RootNode(),
-                        Location::SUBPROBLEMS,
-                        model,
-                        system,
-                        extraOutput.expression().Value());
+        try
+        {
+            checkExpression(extraOutput.expression().RootNode(),
+                            Location::SUBPROBLEMS,
+                            model,
+                            system,
+                            extraOutput.expression().Value());
+        }
+        catch (const LocationError& e)
+        {
+            errors.push_back(e.what());
+        }
+    }
+
+    if (!errors.empty())
+    {
+        std::string combined;
+        for (const auto& err: errors)
+        {
+            combined += err + "\n";
+        }
+        throw LocationError(combined);
     }
 }
 
@@ -109,6 +142,7 @@ void checkExpression(const Node* expression,
                      const std::string& exprStr,              // used for error msgs
                      const std::string& errorMsgForPortField) // used for error msgs
 {
+    std::vector<std::string> errors;
     for (const auto& node: ASTconst(expression))
     {
         // base variable
@@ -119,7 +153,7 @@ void checkExpression(const Node* expression,
                 if (variable.Id() == varNode->value()
                     && !AreLocationsCompatibleForExpressions(variable.location(), location))
                 {
-                    throw LocationError(
+                    errors.push_back(
                       fmt::format("{}Model '{}': In expression '{}': Error for variable '{}': "
                                   "Location doesn't match the expression location (variable "
                                   "location: {}, expression location: {})",
@@ -210,6 +244,16 @@ void checkExpression(const Node* expression,
 
         // handle dual and reduced_cost
         checkFunctionNode(node, model, exprStr);
+    }
+
+    if (!errors.empty())
+    {
+        std::string combined;
+        for (const auto& err: errors)
+        {
+            combined += err + "\n";
+        }
+        throw LocationError(combined);
     }
 }
 } // namespace Antares::Solver::Checks
