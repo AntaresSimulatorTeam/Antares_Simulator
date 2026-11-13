@@ -15,6 +15,7 @@ from common_steps.simulation_table import SimulationTable
 from common_steps.simulation_table_reader import (
     OutputFormat,
     make_simu_table_reader,
+    simulation_table_directory,
 )
 from shared_utils import mps_utils as mpu
 from pathlib import Path
@@ -67,6 +68,9 @@ def no_simulation_table_expected(context):
     # context.simu_table.
     assert getattr(context, "simu_table", None) is None, \
         f"Expected no simulation table, but one is present: {getattr(context, 'simu_table', None)}"
+    output_path = Path(parse_output_folder_from_logs(context.logs_out))
+    tables_path = simulation_table_directory(output_path)
+    assert not tables_path.exists(), f"Unexpected simulation-tables directory: {tables_path}"
 
 @step('the modeler outputs from stage "{stage}" contain the following entries')
 def modeler_output_values_for_stage(context, stage):
@@ -104,7 +108,9 @@ def simulation_tables_written_per_scenario(context):
     output_format = getattr(context, "outputFormat", OutputFormat.CSV)
     for row in context.table:
         scenario = int(row["scenario"])
-        expected = output_path / f"simulation-table-{scenario}.{output_format.value}"
+        expected = simulation_table_directory(output_path) / (
+            f"simulation-table-{scenario}.{output_format.value}"
+        )
         assert expected.exists(), f"Missing simulation table for scenario {scenario}: {expected}"
 
 @step('the modeler outputs contain no entries for component "{component}"')

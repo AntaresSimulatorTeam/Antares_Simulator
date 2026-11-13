@@ -41,6 +41,7 @@ from behave import then
 from common_steps.simulation_table_reader import (
     OutputFormat,
     make_simu_table_reader,
+    simulation_table_directory,
 )
 
 
@@ -254,20 +255,21 @@ def _load_final_pass_table(output_path: Path, year_index: int, stage: Optional[s
     instead, so the caller must pass the stage explicitly
     (see `SIMULATION_TABLE_STAGES` in solver_steps.py).
     """
+    table_directory = simulation_table_directory(output_path)
     if stage is not None:
         pattern = f"simulation-table-{year_index}-{stage}.csv"
-        if any(output_path.glob(pattern)):
+        if any(table_directory.glob(pattern)):
             reader = make_simu_table_reader(output_path, OutputFormat.CSV, pattern)
             return reader()
-        raise FileNotFoundError(f"No {pattern} in {output_path}")
+        raise FileNotFoundError(f"No {pattern} in {table_directory}")
 
     for optim in (2, 1):
         pattern = f"simulation-table-{year_index}-optim-nb-{optim}.csv"
-        if any(output_path.glob(pattern)):
+        if any(table_directory.glob(pattern)):
             reader = make_simu_table_reader(output_path, OutputFormat.CSV, pattern)
             return reader()
     raise FileNotFoundError(
-        f"No simulation-table-{year_index}-optim-nb-*.csv in {output_path}")
+        f"No simulation-table-{year_index}-optim-nb-*.csv in {table_directory}")
 
 
 # --------------------------------------------------------------------------- #

@@ -293,7 +293,7 @@ Link variables files columns: *Link Hour Flow*
 - **Required:** no
 - **Default value:** `all`
 - **Usage:** selects which stages of the weekly resolution get a simulation table. One file is
-  written per selected stage, named `simulation-table-<year>-<stage>`:
+  written per selected stage under `simulation-tables/`, named `simulation-table-<year>-<stage>`:
 
     - `optim-nb-1`: after the first optimisation pass
     - `optim-nb-2`: after the second pass

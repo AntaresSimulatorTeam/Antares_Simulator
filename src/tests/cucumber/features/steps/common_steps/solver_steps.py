@@ -16,6 +16,7 @@ from common_steps.simulation_table import SimulationTable
 from common_steps.simulation_table_reader import (
     OutputFormat,
     make_simu_table_reader,
+    simulation_table_directory,
 )
 
 from common_steps.assertions import assert_double_close
@@ -340,7 +341,7 @@ def check_annual_results(context):
 @then("simulation tables match the references")
 def check_simulation_tables(context):
     referenceDir = context.sih.reference_dir()
-    outputDir = context.soh.output_dir()
+    outputDir = simulation_table_directory(context.soh.output_dir())
 
     dir_identical, err_messages = compare_folders(referenceDir, outputDir)
 
@@ -359,9 +360,9 @@ _STAGE_OF_TABLE_FILE = re.compile(r"^simulation-table-\d+-(.+)\.csv$")
 
 
 def stages_in_output(output_path: Path) -> set:
-    """The stage suffixes of the simulation-table files in `output_path`."""
+    """The stage suffixes of tables under the run's `simulation-tables` directory."""
     found = set()
-    for table_file in output_path.glob("simulation-table-*.csv"):
+    for table_file in simulation_table_directory(output_path).glob("simulation-table-*.csv"):
         match = _STAGE_OF_TABLE_FILE.match(table_file.name)
         assert match, f"Unexpected simulation table file name: {table_file.name}"
         found.add(match.group(1))
@@ -968,8 +969,9 @@ def check_storages_values_for_specific_year_hour_and_cluster(context, area, year
 @then('the simulation has two optimization iterations')
 def check_two_optimization_iterations(context):
     output_path = Path(context.output_path)
-    optim_nb_1_files = list(output_path.glob("*optim-nb-1*"))
-    optim_nb_2_files = list(output_path.glob("*optim-nb-2*"))
+    tables_path = simulation_table_directory(output_path)
+    optim_nb_1_files = list(tables_path.glob("*optim-nb-1*"))
+    optim_nb_2_files = list(tables_path.glob("*optim-nb-2*"))
     assert len(optim_nb_1_files) > 0, \
         f"No first optimization output files found in {output_path}"
     assert len(optim_nb_2_files) > 0, \
