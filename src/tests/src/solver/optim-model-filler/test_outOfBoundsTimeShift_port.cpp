@@ -69,7 +69,7 @@ BOOST_FIXTURE_TEST_CASE(connected_port_field_sum_checks_peer_time_shifts,
                                      .withModel(&ownerModel)
                                      .withScenarioGroupId("group")
                                      .build();
-    owner.addComponentConnection("port", SystemModel::ConnectionEnd(&peer, &port));
+    owner.addComponentConnection("port", SystemModel::ConnectionEnd(peer, port));
 
     BOOST_CHECK(outOfBoundsAt(ownerExpression, owner, 0));
     BOOST_CHECK(!outOfBoundsAt(ownerExpression, owner, 1));
@@ -108,7 +108,7 @@ BOOST_FIXTURE_TEST_CASE(connected_port_field_sum_in_bounds, PortFieldSumTimeShif
                                      .withModel(&ownerModel)
                                      .withScenarioGroupId("group")
                                      .build();
-    owner.addComponentConnection("port", SystemModel::ConnectionEnd(&peer, &port));
+    owner.addComponentConnection("port", SystemModel::ConnectionEnd(peer, port));
 
     // Positive shift of +1 at time step 0 should be in bounds (not out of bounds)
     BOOST_CHECK(!outOfBoundsAt(ownerExpression, owner, 0));
@@ -146,7 +146,7 @@ BOOST_FIXTURE_TEST_CASE(connected_port_field_sum_no_shift, PortFieldSumTimeShift
                                      .withModel(&ownerModel)
                                      .withScenarioGroupId("group")
                                      .build();
-    owner.addComponentConnection("port", SystemModel::ConnectionEnd(&peer, &port));
+    owner.addComponentConnection("port", SystemModel::ConnectionEnd(peer, port));
 
     // No time shift → should be in bounds (not out of bounds)
     BOOST_CHECK(!outOfBoundsAt(ownerExpression, owner, 0));

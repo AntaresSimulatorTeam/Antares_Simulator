@@ -51,21 +51,16 @@ bool EvalVisitor::hasOutOfBoundsTimeShiftInConnectedPortFields(const Nodes::Port
       connectionEnds.end(),
       [this, node, timeStep](const ModelerStudy::SystemModel::ConnectionEnd& connectionEnd)
       {
-          const ModelerStudy::SystemModel::Component* connectedComponent = connectionEnd
-                                                                             .component();
-          const ModelerStudy::SystemModel::Port* connectedPort = connectionEnd.port();
-          if (!connectedComponent || !connectedPort)
-          {
-              return false;
-          }
+          const auto& connectedComponent = connectionEnd.component();
+          const auto& connectedPort = connectionEnd.port();
           EvalVisitor connectedVisitor(optimContainer_,
                                        fillContext_,
-                                       *connectedComponent,
+                                       connectedComponent,
                                        data_,
                                        scenario_,
                                        areaPriceProvider_);
-          const Nodes::Node* connectedFieldExpression = connectedComponent->nodeAtPortField(
-            connectedPort->Id(),
+          const Nodes::Node* connectedFieldExpression = connectedComponent.nodeAtPortField(
+            connectedPort.Id(),
             node->getFieldName());
           return LinearProblem::hasOutOfBoundsTimeShift(connectedFieldExpression,
                                                         timeStep,
@@ -196,15 +191,15 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
     EvaluationResult result(0.);
     for (const auto connectionEnd: component_.componentConnectionsViaPort(portId))
     {
-        auto* component = connectionEnd.component();
-        auto* port = connectionEnd.port();
+        const auto& component = connectionEnd.component();
+        const auto& port = connectionEnd.port();
         EvalVisitor visitor(optimContainer_,
                             fillContext_,
-                            *component,
+                            component,
                             data_,
                             scenario_,
                             areaPriceProvider_);
-        const auto* nodeToVisit = component->nodeAtPortField(port->Id(), fieldId);
+        const auto* nodeToVisit = component.nodeAtPortField(port.Id(), fieldId);
         auto dispatchResult = visitor.dispatch(nodeToVisit);
         result += dispatchResult;
     }

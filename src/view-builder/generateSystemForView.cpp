@@ -155,13 +155,13 @@ void appendModelerData(YAML::Node& systemYaml, const Antares::Solver::ModelerDat
         {
             for (const auto& connEnd: component.componentConnectionsViaPort(portId))
             {
-                if (component.Id() < connEnd.component()->Id())
+                if (component.Id() < connEnd.component().Id())
                 {
                     YAML::Node conn;
                     conn["component1"] = component.Id();
                     conn["port1"] = portId;
-                    conn["component2"] = connEnd.component()->Id();
-                    conn["port2"] = connEnd.port()->Id();
+                    conn["component2"] = connEnd.component().Id();
+                    conn["port2"] = connEnd.port().Id();
                     system["connections"].push_back(conn);
                 }
             }
