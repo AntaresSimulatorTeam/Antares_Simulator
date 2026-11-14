@@ -158,60 +158,79 @@ std::string sequenceItemName(const YAML::Node& node, std::size_t index)
 ValidationResult collectFieldErrors(const YAML::Node& node,
                                     const std::span<const ExpectedField> expectedFields,
                                     const std::string& path,
-                                    const Shape shape = Shape::Map)
+                                    const Shape shape = Shape::Map);
+
+ValidationResult visit_default(const YAML::Node& node, const std::string& path)
 {
     ValidationResult result;
-    switch (node.Type())
-    {
-    case YAML::NodeType::Map:
-    {
-        result += validateMap(node, expectedFields, path);
-
-        for (const auto& entry: node)
-        {
-            if (!entry.first.IsScalar())
-            {
-                continue;
-            }
-            const auto key = entry.first.as<std::string>();
-            const auto field = std::ranges::find(expectedFields, key, &ExpectedField::name);
-            if (field == expectedFields.end() || field->children.empty())
-            {
-                continue;
-            }
-            const auto& child = entry.second;
-            if (child.IsNull() && !field->required && field->shape == Shape::Sequence)
-            {
-                continue;
-            }
-
-            const auto childPath = path.empty() ? key : path + "/" + key;
-            result += collectFieldErrors(child, field->children, childPath, field->shape);
-        }
-        return result;
-    }
-    case YAML::NodeType::Sequence:
-    {
-        if (shape == Shape::Sequence)
-        {
-            for (std::size_t i = 0; i < node.size(); ++i)
-            {
-                const auto item = node[i];
-                const auto itemPath = path + "/" + sequenceItemName(item, i);
-                result += collectFieldErrors(item, expectedFields, itemPath);
-            }
-            return result;
-        }
-        break;
-    }
-    case YAML::NodeType::Scalar:
-    case YAML::NodeType::Null:
-    case YAML::NodeType::Undefined:
-        break;
-    }
     result.errors.push_back(
       fmt::format("Line {}: expected a YAML mapping in '{}'.", node.Mark().line + 1, path));
     return result;
+}
+
+ValidationResult visitMap(const YAML::Node& node,
+                          const std::span<const ExpectedField> expectedFields,
+                          const std::string& path)
+{
+    ValidationResult result = validateMap(node, expectedFields, path);
+    for (const auto& entry: node)
+    {
+        if (!entry.first.IsScalar())
+        {
+            continue;
+        }
+        const auto key = entry.first.as<std::string>();
+        const auto field = std::ranges::find(expectedFields, key, &ExpectedField::name);
+        if (field == expectedFields.end() || field->children.empty())
+        {
+            continue;
+        }
+        const auto& child = entry.second;
+        if (child.IsNull() && !field->required && field->shape == Shape::Sequence)
+        {
+            continue;
+        }
+
+        const auto childPath = path.empty() ? key : path + "/" + key;
+        result += collectFieldErrors(child, field->children, childPath, field->shape);
+    }
+    return result;
+}
+
+ValidationResult visitSequence(const YAML::Node& node,
+                               const std::span<const ExpectedField> expectedFields,
+                               const std::string& path,
+                               const Shape shape)
+{
+    if (shape != Shape::Sequence)
+    {
+        return visit_default(node, path);
+    }
+
+    ValidationResult result;
+    for (std::size_t i = 0; i < node.size(); ++i)
+    {
+        const auto item = node[i];
+        const auto itemPath = path + "/" + sequenceItemName(item, i);
+        result += collectFieldErrors(item, expectedFields, itemPath);
+    }
+    return result;
+}
+
+ValidationResult collectFieldErrors(const YAML::Node& node,
+                                    const std::span<const ExpectedField> expectedFields,
+                                    const std::string& path,
+                                    const Shape shape)
+{
+    switch (node.Type())
+    {
+    case YAML::NodeType::Map:
+        return visitMap(node, expectedFields, path);
+    case YAML::NodeType::Sequence:
+        return visitSequence(node, expectedFields, path, shape);
+    default:
+        return visit_default(node, path);
+    }
 }
 
 void handleValidationResult(const ValidationResult& result)
