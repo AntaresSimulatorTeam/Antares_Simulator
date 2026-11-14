@@ -752,10 +752,12 @@ BOOST_AUTO_TEST_CASE(sequence_fields_accept_maps_and_validate_their_fields)
     const std::vector<YmlUtils::ExpectedField> expected_fields{
       {"children", false, {{"id", true}, {"value", true}}}};
 
-    const auto validNode = YAML::Load("children: {id: child, value: 1}");
+    std::string yaml_content = "children: {id: child, value: 1}";
+    const auto validNode = YAML::Load(yaml_content);
     BOOST_CHECK_NO_THROW(YmlUtils::checkFields(validNode, expected_fields, "root"));
 
-    const auto invalidNode = YAML::Load("children: {id: child}");
+    yaml_content = "children: {id: child}";
+    const auto invalidNode = YAML::Load(yaml_content);
     BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(invalidNode, expected_fields, "root"),
                           InputError,
                           containsMessage("Missing field: value"));
