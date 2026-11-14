@@ -747,4 +747,88 @@ BOOST_AUTO_TEST_CASE(non_map_sequence_items_do_not_hide_other_field_errors)
       });
 }
 
+BOOST_AUTO_TEST_CASE(sequence_fields_accept_maps_and_validate_their_fields)
+{
+    const std::vector<YmlUtils::ExpectedField> fields{
+      {"children", false, {{"id", true}, {"value", true}}}};
+    BOOST_CHECK_NO_THROW(YmlUtils::checkFields(YAML::Load("children: {id: child, value: 1}"),
+                                               fields,
+                                               "root"));
+    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(YAML::Load("children: {id: child}"),
+                                               fields,
+                                               "root"),
+                          InputError,
+                          containsMessage("Missing field: value"));
+}
+
+BOOST_AUTO_TEST_CASE(undefined_root_requires_a_mapping)
+{
+    const YAML::Node node(YAML::NodeType::Undefined);
+    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node, {}, "root"),
+                          InputError,
+                          containsMessage("expected a YAML mapping in 'root'"));
+}
+
+BOOST_AUTO_TEST_CASE(sequence_dispatch_preserves_shape_and_entry_errors)
+{
+    const auto node = YAML::Load("children:\n"
+                                 "  - [{unexpected: value}]\n"
+                                 "  - id: named\n"
+                                 "  - scalar\n"
+                                 "mapping: [{unexpected: value}]\n");
+    const std::vector<YmlUtils::ExpectedField> fields{
+      {"children", false, {{"id", true}, {"value", true}}},
+      {"mapping", false, {{"value", true}}, YmlUtils::Shape::Map}};
+    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node, fields, "root"),
+                          InputError,
+                          [](const InputError& e)
+                          {
+                              const std::string message = e.what();
+                              const std::string nestedSequence =
+                                "Line 2: expected a YAML mapping in 'root/children/[0]'.";
+                              const std::string missing = "Missing field: value";
+                              const std::string scalar =
+                                "Line 4: expected a YAML mapping in 'root/children/[2]'.";
+                              const std::string mapping =
+                                "Line 5: expected a YAML mapping in 'root/mapping'.";
+                              const auto nestedPos = message.find(nestedSequence);
+                              const auto missingPos = message.find(missing);
+                              const auto scalarPos = message.find(scalar);
+                              const auto mappingPos = message.find(mapping);
+                              BOOST_CHECK(nestedPos != std::string::npos);
+                              BOOST_CHECK(missingPos != std::string::npos);
+                              BOOST_CHECK(scalarPos != std::string::npos);
+                              BOOST_CHECK(mappingPos != std::string::npos);
+                              BOOST_CHECK(nestedPos < missingPos);
+                              BOOST_CHECK(missingPos < scalarPos);
+                              BOOST_CHECK(scalarPos < mappingPos);
+                              BOOST_CHECK(message.find("Unrecognised field: unexpected")
+                                          == std::string::npos);
+                              return true;
+                          });
+}
+
+BOOST_AUTO_TEST_CASE(optional_and_required_null_children_keep_existing_behavior)
+{
+    const auto node = YAML::Load("optional: null\nrequired: null\nmapping: null\n");
+    const std::vector<YmlUtils::ExpectedField> fields{
+      {"optional", false, {{"value", true}}},
+      {"required", true, {{"value", true}}},
+      {"mapping", false, {{"value", true}}, YmlUtils::Shape::Map}};
+    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node, fields, "root"),
+                          InputError,
+                          [](const InputError& e)
+                          {
+                              const std::string message = e.what();
+                              BOOST_CHECK(message.find("Line 2: expected a YAML mapping in "
+                                                       "'root/required'.")
+                                          != std::string::npos);
+                              BOOST_CHECK(message.find("Line 3: expected a YAML mapping in "
+                                                       "'root/mapping'.")
+                                          != std::string::npos);
+                              BOOST_CHECK(message.find("root/optional") == std::string::npos);
+                              return true;
+                          });
+}
+
 BOOST_AUTO_TEST_SUITE_END()

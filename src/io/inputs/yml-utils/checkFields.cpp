@@ -157,51 +157,61 @@ std::string sequenceItemName(const YAML::Node& node, std::size_t index)
 
 ValidationResult collectFieldErrors(const YAML::Node& node,
                                     const std::span<const ExpectedField> expectedFields,
-                                    const std::string& path)
+                                    const std::string& path,
+                                    const Shape shape = Shape::Map)
 {
     ValidationResult result;
-    if (!node.IsMap())
+    switch (node.Type())
     {
-        result.errors.push_back(
-          fmt::format("Line {}: expected a YAML mapping in '{}'.", node.Mark().line + 1, path));
+    case YAML::NodeType::Map:
+    {
+        result += validateMap(node, expectedFields, path);
+
+        // Visit every occurrence, including duplicated sections, without looking up ambiguous keys.
+        for (const auto& entry: node)
+        {
+            if (!entry.first.IsScalar())
+            {
+                continue;
+            }
+            const auto key = entry.first.as<std::string>();
+            const auto field = std::ranges::find(expectedFields, key, &ExpectedField::name);
+            if (field == expectedFields.end() || field->children.empty())
+            {
+                continue;
+            }
+            const auto& child = entry.second;
+            if (child.IsNull() && !field->required && field->shape == Shape::Sequence)
+            {
+                continue;
+            }
+
+            const auto childPath = path.empty() ? key : path + "/" + key;
+            result += collectFieldErrors(child, field->children, childPath, field->shape);
+        }
         return result;
     }
-    result += validateMap(node, expectedFields, path);
-
-    // Visit every occurrence, including duplicated sections, without looking up ambiguous keys.
-    for (const auto& entry: node)
+    case YAML::NodeType::Sequence:
     {
-        if (!entry.first.IsScalar())
+        if (shape == Shape::Sequence)
         {
-            continue;
-        }
-        const auto key = entry.first.as<std::string>();
-        const auto field = std::ranges::find(expectedFields, key, &ExpectedField::name);
-        if (field == expectedFields.end() || field->children.empty())
-        {
-            continue;
-        }
-        const auto& child = entry.second;
-        if (child.IsNull() && !field->required && field->shape == Shape::Sequence)
-        {
-            continue;
-        }
-
-        const auto childPath = path.empty() ? key : path + "/" + key;
-        if (child.IsSequence() && field->shape == Shape::Sequence)
-        {
-            for (std::size_t i = 0; i < child.size(); ++i)
+            for (std::size_t i = 0; i < node.size(); ++i)
             {
-                auto item = child[i];
-                const auto itemPath = childPath + "/" + sequenceItemName(item, i);
-                result += collectFieldErrors(item, field->children, itemPath);
+                const auto item = node[i];
+                const auto itemPath = path + "/" + sequenceItemName(item, i);
+                result += collectFieldErrors(item, expectedFields, itemPath);
             }
+            return result;
         }
-        else
-        {
-            result += collectFieldErrors(child, field->children, childPath);
-        }
+        break;
     }
+    case YAML::NodeType::Scalar:
+    case YAML::NodeType::Null:
+    case YAML::NodeType::Undefined:
+        break;
+    }
+    result.errors.push_back(
+      fmt::format("Line {}: expected a YAML mapping in '{}'.", node.Mark().line + 1, path));
     return result;
 }
 
