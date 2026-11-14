@@ -167,7 +167,6 @@ ValidationResult collectFieldErrors(const YAML::Node& node,
     {
         result += validateMap(node, expectedFields, path);
 
-        // Visit every occurrence, including duplicated sections, without looking up ambiguous keys.
         for (const auto& entry: node)
         {
             if (!entry.first.IsScalar())
