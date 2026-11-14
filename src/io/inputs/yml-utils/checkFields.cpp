@@ -160,7 +160,7 @@ ValidationResult collectFieldErrors(const YAML::Node& node,
                                     const std::string& path,
                                     const Shape shape = Shape::Map);
 
-ValidationResult visit_default(const YAML::Node& node, const std::string& path)
+ValidationResult visitDefault(const YAML::Node& node, const std::string& path)
 {
     ValidationResult result;
     result.errors.push_back(
@@ -204,7 +204,7 @@ ValidationResult visitSequence(const YAML::Node& node,
 {
     if (shape != Shape::Sequence)
     {
-        return visit_default(node, path);
+        return visitDefault(node, path);
     }
 
     ValidationResult result;
@@ -229,7 +229,7 @@ ValidationResult collectFieldErrors(const YAML::Node& node,
     case YAML::NodeType::Sequence:
         return visitSequence(node, expectedFields, path, shape);
     default:
-        return visit_default(node, path);
+        return visitDefault(node, path);
     }
 }
 
@@ -252,7 +252,8 @@ void checkFields(const YAML::Node& node,
                  const std::vector<ExpectedField>& expectedFields,
                  const std::string& path)
 {
-    handleValidationResult(collectFieldErrors(node, expectedFields, path));
+    const auto validationResult = collectFieldErrors(node, expectedFields, path);
+    handleValidationResult(validationResult);
 }
 
 } // namespace Antares::IO::Inputs::YmlUtils
