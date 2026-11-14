@@ -414,12 +414,13 @@ BOOST_AUTO_TEST_CASE(validation_state_does_not_leak_between_parses)
 
 BOOST_AUTO_TEST_CASE(complex_keys_do_not_hide_other_field_errors)
 {
-    const auto node = YAML::Load(R"(
+    const std::string yaml_content = R"(
 ? [invalid, key]
 : ignored
 children:
   - {}
-)");
+)";
+    const auto node = YAML::Load(yaml_content);
     BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node,
                                                  std::vector<YmlUtils::ExpectedField>{
                                                    {"id", true},
@@ -463,11 +464,12 @@ library:
 
 BOOST_AUTO_TEST_CASE(validation_preserves_document_tags_on_failure)
 {
-    auto node = YAML::Load(R"(
+    const std::string yaml_content = R"(
 children:
   - id: child
     unexpected: ignored
-)");
+)";
+    auto node = YAML::Load(yaml_content);
     node.SetTag("original-root");
     node["children"].SetTag("original-sequence");
     node["children"][0].SetTag("original-child");
@@ -499,7 +501,12 @@ children:
 
 BOOST_AUTO_TEST_CASE(mixed_findings_are_reported_as_errors)
 {
-    const auto node = YAML::Load("id: first\nid: second\nunexpected: ignored\n");
+    const std::string yaml_content = R"(
+id: first
+id: second
+unexpected: ignored
+)";
+    const auto node = YAML::Load(yaml_content);
     CaptureAntaresLogs logs;
     BOOST_CHECK_EXCEPTION(
       (YmlUtils::checkFields(node,
@@ -519,7 +526,8 @@ BOOST_AUTO_TEST_CASE(mixed_findings_are_reported_as_errors)
 
 BOOST_AUTO_TEST_CASE(null_model_ids_are_rejected_without_tag_context)
 {
-    auto node = YAML::Load("id: null");
+    const std::string yaml_content = R"(id: null)";
+    auto node = YAML::Load(yaml_content);
     node.SetTag("unrelated-tag");
     std::vector<YmlUtils::ExpectedField> expectedFields{{"id", true}};
     BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node, expectedFields, "model"),
@@ -536,9 +544,12 @@ BOOST_AUTO_TEST_CASE(null_model_ids_are_rejected_without_tag_context)
 
 BOOST_AUTO_TEST_CASE(nested_unknown_field_error_matches_complete_tree)
 {
-    const auto node = YAML::Load("children:\n"
-                                 "  - id: generator\n"
-                                 "    typo: ignored\n");
+    const std::string yaml_content = R"(
+children:
+  - id: generator
+    typo: ignored
+)";
+    const auto node = YAML::Load(yaml_content);
     CaptureAntaresLogs logs;
     BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node,
                                                 std::vector<YmlUtils::ExpectedField>{
@@ -548,14 +559,14 @@ BOOST_AUTO_TEST_CASE(nested_unknown_field_error_matches_complete_tree)
                           [](const InputError& e)
                           {
                               BOOST_CHECK_EQUAL(e.what(),
-                                                "Line 2 column 5\n"
+                                                "Line 3 column 5\n"
                                                 "YAML field validation:\n"
                                                 "- Unrecognised field: typo\n"
                                                 "\n"
                                                 "library\n"
                                                 "|__ children\n"
                                                 "    |__ generator\n"
-                                                "        |__X typo at line 3\n"
+                                                "        |__X typo at line 4\n"
                                                 "\n");
                               return true;
                           });
@@ -564,9 +575,12 @@ BOOST_AUTO_TEST_CASE(nested_unknown_field_error_matches_complete_tree)
 
 BOOST_AUTO_TEST_CASE(missing_and_duplicated_fields_match_complete_tree)
 {
-    const auto node = YAML::Load("children:\n"
-                                 "  - id: generator\n"
-                                 "    id: duplicate\n");
+    const std::string yaml_content = R"(
+children:
+  - id: generator
+    id: duplicate
+)";
+    const auto node = YAML::Load(yaml_content);
     BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(
                             node,
                             {{"children", false, {{"id", true}, {"value", true}, {"model", true}}}},
@@ -575,7 +589,7 @@ BOOST_AUTO_TEST_CASE(missing_and_duplicated_fields_match_complete_tree)
                           [](const InputError& e)
                           {
                               BOOST_CHECK_EQUAL(e.what(),
-                                                "Line 2 column 5\n"
+                                                "Line 3 column 5\n"
                                                 "YAML field validation:\n"
                                                 "- Missing field: model\n"
                                                 "- Missing field: value\n"
@@ -584,7 +598,7 @@ BOOST_AUTO_TEST_CASE(missing_and_duplicated_fields_match_complete_tree)
                                                 "library\n"
                                                 "|__ children\n"
                                                 "    |__ generator\n"
-                                                "        |__X id at line 2\n"
+                                                "        |__X id at line 3\n"
                                                 "        |__? model (missing)\n"
                                                 "        |__? value (missing)\n"
                                                 "\n");
@@ -594,10 +608,13 @@ BOOST_AUTO_TEST_CASE(missing_and_duplicated_fields_match_complete_tree)
 
 BOOST_AUTO_TEST_CASE(sibling_errors_match_complete_trees_with_index_fallback)
 {
-    const auto node = YAML::Load("children:\n"
-                                 "  - id: named\n"
-                                 "  - id: null\n"
-                                 "  - {}\n");
+    const std::string yaml_content = R"(
+children:
+  - id: named
+  - id: null
+  - {}
+)";
+    const auto node = YAML::Load(yaml_content);
     BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node,
                                                  std::vector<YmlUtils::ExpectedField>{
                                                    {"children", false, {{"value", true}, {"id"}}}},
@@ -606,7 +623,7 @@ BOOST_AUTO_TEST_CASE(sibling_errors_match_complete_trees_with_index_fallback)
                           [](const InputError& e)
                           {
                               BOOST_CHECK_EQUAL(e.what(),
-                                                "Line 2 column 5\n"
+                                                "Line 3 column 5\n"
                                                 "YAML field validation:\n"
                                                 "- Missing field: value\n"
                                                 "\n"
@@ -615,7 +632,7 @@ BOOST_AUTO_TEST_CASE(sibling_errors_match_complete_trees_with_index_fallback)
                                                 "    |__ named\n"
                                                 "        |__? value (missing)\n"
                                                 "\n"
-                                                "Line 3 column 5\n"
+                                                "Line 4 column 5\n"
                                                 "YAML field validation:\n"
                                                 "- Missing field: value\n"
                                                 "\n"
@@ -624,7 +641,7 @@ BOOST_AUTO_TEST_CASE(sibling_errors_match_complete_trees_with_index_fallback)
                                                 "    |__ [1]\n"
                                                 "        |__? value (missing)\n"
                                                 "\n"
-                                                "Line 4 column 5\n"
+                                                "Line 5 column 5\n"
                                                 "YAML field validation:\n"
                                                 "- Missing field: value\n"
                                                 "\n"
@@ -639,20 +656,24 @@ BOOST_AUTO_TEST_CASE(sibling_errors_match_complete_trees_with_index_fallback)
 
 BOOST_AUTO_TEST_CASE(root_unknown_field_error_matches_complete_message_without_path)
 {
-    const auto node = YAML::Load("z: ignored\na: ignored\n");
+    const std::string yaml_content = R"(
+z: ignored
+a: ignored
+)";
+    const auto node = YAML::Load(yaml_content);
     CaptureAntaresLogs logs;
     BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node, std::vector<YmlUtils::ExpectedField>{}),
                           InputError,
                           [](const InputError& e)
                           {
                               BOOST_CHECK_EQUAL(e.what(),
-                                                "Line 1 column 1\n"
+                                                "Line 2 column 1\n"
                                                 "YAML field validation:\n"
                                                 "- Unrecognised field: a\n"
                                                 "- Unrecognised field: z\n"
                                                 "\n"
-                                                "|__X a at line 2\n"
-                                                "|__X z at line 1\n"
+                                                "|__X a at line 3\n"
+                                                "|__X z at line 2\n"
                                                 "\n");
                               return true;
                           });
@@ -727,7 +748,13 @@ BOOST_AUTO_TEST_CASE(optim_config_parser_error_matches_complete_tree)
 
 BOOST_AUTO_TEST_CASE(non_map_sequence_items_do_not_hide_other_field_errors)
 {
-    const auto node = YAML::Load("children:\n  - scalar\n  - null\n  - {}\n");
+    const std::string yaml_content = R"(
+children:
+  - scalar
+  - null
+  - {}
+)";
+    const auto node = YAML::Load(yaml_content);
     BOOST_CHECK_EXCEPTION(
       (YmlUtils::checkFields(node,
                              std::vector<YmlUtils::ExpectedField>{
@@ -737,9 +764,9 @@ BOOST_AUTO_TEST_CASE(non_map_sequence_items_do_not_hide_other_field_errors)
       [](const InputError& e)
       {
           const std::string message = e.what();
-          BOOST_CHECK(message.find("Line 2: expected a YAML mapping in 'root/children/[0]'.")
+          BOOST_CHECK(message.find("Line 3: expected a YAML mapping in 'root/children/[0]'.")
                       != std::string::npos);
-          BOOST_CHECK(message.find("Line 3: expected a YAML mapping in 'root/children/[1]'.")
+          BOOST_CHECK(message.find("Line 4: expected a YAML mapping in 'root/children/[1]'.")
                       != std::string::npos);
           BOOST_CHECK(message.find("Missing field: value") != std::string::npos);
           BOOST_CHECK(message.find("|__ [2]") != std::string::npos);
@@ -752,11 +779,11 @@ BOOST_AUTO_TEST_CASE(sequence_fields_accept_maps_and_validate_their_fields)
     const std::vector<YmlUtils::ExpectedField> expected_fields{
       {"children", false, {{"id", true}, {"value", true}}}};
 
-    std::string yaml_content = "children: {id: child, value: 1}";
+    std::string yaml_content = R"(children: {id: child, value: 1})";
     const auto validNode = YAML::Load(yaml_content);
     BOOST_CHECK_NO_THROW(YmlUtils::checkFields(validNode, expected_fields, "root"));
 
-    yaml_content = "children: {id: child}";
+    yaml_content = R"(children: {id: child})";
     const auto invalidNode = YAML::Load(yaml_content);
     BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(invalidNode, expected_fields, "root"),
                           InputError,
@@ -773,11 +800,14 @@ BOOST_AUTO_TEST_CASE(undefined_root_requires_a_mapping)
 
 BOOST_AUTO_TEST_CASE(sequence_dispatch_preserves_shape_and_entry_errors)
 {
-    const auto node = YAML::Load("children:\n"
-                                 "  - [{unexpected: value}]\n"
-                                 "  - id: named\n"
-                                 "  - scalar\n"
-                                 "mapping: [{unexpected: value}]\n");
+    const std::string yaml_content = R"(
+children:
+  - [{unexpected: value}]
+  - id: named
+  - scalar
+mapping: [{unexpected: value}]
+)";
+    const auto node = YAML::Load(yaml_content);
     const std::vector<YmlUtils::ExpectedField> expected_fields{
       {"children", false, {{"id", true}, {"value", true}}},
       {"mapping", false, {{"value", true}}, YmlUtils::Shape::Map}};
@@ -787,11 +817,11 @@ BOOST_AUTO_TEST_CASE(sequence_dispatch_preserves_shape_and_entry_errors)
       [](const InputError& e)
       {
           const std::string message = e.what();
-          const std::string nestedSequence = "Line 2: expected a YAML mapping in "
+          const std::string nestedSequence = "Line 3: expected a YAML mapping in "
                                              "'root/children/[0]'.";
           const std::string missing = "Missing field: value";
-          const std::string scalar = "Line 4: expected a YAML mapping in 'root/children/[2]'.";
-          const std::string mapping = "Line 5: expected a YAML mapping in 'root/mapping'.";
+          const std::string scalar = "Line 5: expected a YAML mapping in 'root/children/[2]'.";
+          const std::string mapping = "Line 6: expected a YAML mapping in 'root/mapping'.";
           const auto nestedPos = message.find(nestedSequence);
           const auto missingPos = message.find(missing);
           const auto scalarPos = message.find(scalar);
@@ -810,7 +840,12 @@ BOOST_AUTO_TEST_CASE(sequence_dispatch_preserves_shape_and_entry_errors)
 
 BOOST_AUTO_TEST_CASE(optional_and_required_null_children_keep_existing_behavior)
 {
-    const auto node = YAML::Load("optional: null\nrequired: null\nmapping: null\n");
+    const std::string yaml_content = R"(
+optional: null
+required: null
+mapping: null
+)";
+    const auto node = YAML::Load(yaml_content);
     const std::vector<YmlUtils::ExpectedField> expected_fields{
       {"optional", false, {{"value", true}}},
       {"required", true, {{"value", true}}},
@@ -820,10 +855,10 @@ BOOST_AUTO_TEST_CASE(optional_and_required_null_children_keep_existing_behavior)
                           [](const InputError& e)
                           {
                               const std::string message = e.what();
-                              BOOST_CHECK(message.find("Line 2: expected a YAML mapping in "
+                              BOOST_CHECK(message.find("Line 3: expected a YAML mapping in "
                                                        "'root/required'.")
                                           != std::string::npos);
-                              BOOST_CHECK(message.find("Line 3: expected a YAML mapping in "
+                              BOOST_CHECK(message.find("Line 4: expected a YAML mapping in "
                                                        "'root/mapping'.")
                                           != std::string::npos);
                               BOOST_CHECK(message.find("root/optional") == std::string::npos);
