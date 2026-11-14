@@ -749,13 +749,14 @@ BOOST_AUTO_TEST_CASE(non_map_sequence_items_do_not_hide_other_field_errors)
 
 BOOST_AUTO_TEST_CASE(sequence_fields_accept_maps_and_validate_their_fields)
 {
-    const std::vector<YmlUtils::ExpectedField> fields{
+    const std::vector<YmlUtils::ExpectedField> expected_fields{
       {"children", false, {{"id", true}, {"value", true}}}};
+
     const auto validNode = YAML::Load("children: {id: child, value: 1}");
-    BOOST_CHECK_NO_THROW(YmlUtils::checkFields(validNode, fields, "root"));
+    BOOST_CHECK_NO_THROW(YmlUtils::checkFields(validNode, expected_fields, "root"));
 
     const auto invalidNode = YAML::Load("children: {id: child}");
-    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(invalidNode, fields, "root"),
+    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(invalidNode, expected_fields, "root"),
                           InputError,
                           containsMessage("Missing field: value"));
 }
@@ -775,11 +776,11 @@ BOOST_AUTO_TEST_CASE(sequence_dispatch_preserves_shape_and_entry_errors)
                                  "  - id: named\n"
                                  "  - scalar\n"
                                  "mapping: [{unexpected: value}]\n");
-    const std::vector<YmlUtils::ExpectedField> fields{
+    const std::vector<YmlUtils::ExpectedField> expected_fields{
       {"children", false, {{"id", true}, {"value", true}}},
       {"mapping", false, {{"value", true}}, YmlUtils::Shape::Map}};
     BOOST_CHECK_EXCEPTION(
-      YmlUtils::checkFields(node, fields, "root"),
+      YmlUtils::checkFields(node, expected_fields, "root"),
       InputError,
       [](const InputError& e)
       {
@@ -808,11 +809,11 @@ BOOST_AUTO_TEST_CASE(sequence_dispatch_preserves_shape_and_entry_errors)
 BOOST_AUTO_TEST_CASE(optional_and_required_null_children_keep_existing_behavior)
 {
     const auto node = YAML::Load("optional: null\nrequired: null\nmapping: null\n");
-    const std::vector<YmlUtils::ExpectedField> fields{
+    const std::vector<YmlUtils::ExpectedField> expected_fields{
       {"optional", false, {{"value", true}}},
       {"required", true, {{"value", true}}},
       {"mapping", false, {{"value", true}}, YmlUtils::Shape::Map}};
-    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node, fields, "root"),
+    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node, expected_fields, "root"),
                           InputError,
                           [](const InputError& e)
                           {
