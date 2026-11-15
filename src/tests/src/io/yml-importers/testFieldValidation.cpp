@@ -29,6 +29,7 @@ BOOST_AUTO_TEST_CASE(library_requires_mapping_root_and_section)
                                   InputError,
                                   containsMessage("expected a YAML mapping"));
         }
+        // gp : what is point of this new test ? What does it bring more than the previous one ?
         BOOST_TEST_CONTEXT("library: " << value)
         {
             BOOST_CHECK_EXCEPTION(YmlModel::Parser{}.parse(std::string("library: ") + value),
@@ -38,7 +39,28 @@ BOOST_AUTO_TEST_CASE(library_requires_mapping_root_and_section)
     }
 }
 
-BOOST_AUTO_TEST_CASE(port_type_connections_require_mappings)
+BOOST_AUTO_TEST_CASE(in_yaml_model__area_connection_should_be_maps___if_null_then_throw)
+{
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types:
+                - id: capacity_port
+                  fields:
+                      - id: capacity
+                  area-connection: null
+            models: []
+    )";
+
+    YmlModel::Parser parser;
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          InputError,
+                          containsMessage("expected a YAML mapping in "
+                                          "'library/port-types/capacity_port/area-connection'"));
+}
+
+BOOST_AUTO_TEST_CASE(in_yaml_model__some_fields_should_be_maps___if_not_then_throw)
 {
     for (const auto* field: {"area-connection", "thermal-capacity-connection"})
     {
@@ -752,9 +774,7 @@ children:
       {"children", false, {{"id", true}, {"value", true}}}};
 
     BOOST_CHECK_EXCEPTION(
-      (checkFields(node,
-                   expected_fields,
-                   "root")),
+      (checkFields(node, expected_fields, "root")),
       InputError,
       [](const InputError& e)
       {
