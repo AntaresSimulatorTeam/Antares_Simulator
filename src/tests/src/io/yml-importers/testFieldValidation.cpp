@@ -14,6 +14,7 @@
 #include <antares/io/inputs/yml-utils/checkFields.h>
 
 using namespace Antares::IO::Inputs;
+using namespace Antares::IO::Inputs::YmlUtils;
 using Antares::UnitTests::CaptureAntaresLogs;
 
 BOOST_AUTO_TEST_SUITE(FieldValidation)
@@ -421,21 +422,19 @@ children:
   - {}
 )";
     const auto node = YAML::Load(yaml_content);
-    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node,
-                                                 std::vector<YmlUtils::ExpectedField>{
-                                                   {"id", true},
-                                                   {"children", false, {{"value", true}}}})),
-                          InputError,
-                          [](const InputError& e)
-                          {
-                              const std::string message = e.what();
-                              BOOST_CHECK(message.find("expected a scalar field name")
-                                          != std::string::npos);
-                              BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
-                              BOOST_CHECK(message.find("Missing field: value")
-                                          != std::string::npos);
-                              return true;
-                          });
+    BOOST_CHECK_EXCEPTION(
+      (checkFields(node,
+                   std::vector<ExpectedField>{{"id", true},
+                                              {"children", false, {{"value", true}}}})),
+      InputError,
+      [](const InputError& e)
+      {
+          const std::string message = e.what();
+          BOOST_CHECK(message.find("expected a scalar field name") != std::string::npos);
+          BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
+          BOOST_CHECK(message.find("Missing field: value") != std::string::npos);
+          return true;
+      });
 }
 
 BOOST_AUTO_TEST_CASE(non_scalar_ids_do_not_hide_sibling_field_errors)
@@ -475,27 +474,25 @@ children:
     node["children"][0].SetTag("original-child");
     const auto before = YAML::Dump(node);
     CaptureAntaresLogs logs;
-    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node,
-                                                 std::vector<YmlUtils::ExpectedField>{
-                                                   {"children", false, {{"id", true}}}},
-                                                 "explicit-path")),
-                          InputError,
-                          [](const InputError& e)
-                          {
-                              const std::string message = e.what();
-                              BOOST_CHECK(message.find("Unrecognised field: unexpected")
-                                          != std::string::npos);
-                              BOOST_CHECK(message.find("explicit-path") != std::string::npos);
-                              BOOST_CHECK(message.find("original-root") == std::string::npos);
-                              return true;
-                          });
+    BOOST_CHECK_EXCEPTION(
+      (checkFields(node,
+                   std::vector<ExpectedField>{{"children", false, {{"id", true}}}},
+                   "explicit-path")),
+      InputError,
+      [](const InputError& e)
+      {
+          const std::string message = e.what();
+          BOOST_CHECK(message.find("Unrecognised field: unexpected") != std::string::npos);
+          BOOST_CHECK(message.find("explicit-path") != std::string::npos);
+          BOOST_CHECK(message.find("original-root") == std::string::npos);
+          return true;
+      });
     BOOST_CHECK_EQUAL(YAML::Dump(node), before);
     BOOST_CHECK(logs.getWarnings().empty());
-    BOOST_CHECK_THROW(
-      (YmlUtils::checkFields(node,
-                             std::vector<YmlUtils::ExpectedField>{
-                               {"children", false, {{"id", true}, {"value", true}}}})),
-      InputError);
+    BOOST_CHECK_THROW((checkFields(node,
+                                   std::vector<ExpectedField>{
+                                     {"children", false, {{"id", true}, {"value", true}}}})),
+                      InputError);
     BOOST_CHECK_EQUAL(YAML::Dump(node), before);
 }
 
@@ -509,9 +506,7 @@ unexpected: ignored
     const auto node = YAML::Load(yaml_content);
     CaptureAntaresLogs logs;
     BOOST_CHECK_EXCEPTION(
-      (YmlUtils::checkFields(node,
-                             std::vector<YmlUtils::ExpectedField>{{"id", true}, {"value", true}},
-                             "root")),
+      (checkFields(node, std::vector<ExpectedField>{{"id", true}, {"value", true}}, "root")),
       InputError,
       [](const InputError& e)
       {
@@ -529,8 +524,8 @@ BOOST_AUTO_TEST_CASE(null_model_ids_are_rejected_without_tag_context)
     const std::string yaml_content = R"(id: null)";
     auto node = YAML::Load(yaml_content);
     node.SetTag("unrelated-tag");
-    std::vector<YmlUtils::ExpectedField> expectedFields{{"id", true}};
-    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node, expectedFields, "model"),
+    std::vector<ExpectedField> expectedFields{{"id", true}};
+    BOOST_CHECK_EXCEPTION(checkFields(node, expectedFields, "model"),
                           InputError,
                           [](const InputError& e)
                           {
@@ -551,25 +546,23 @@ children:
 )";
     const auto node = YAML::Load(yaml_content);
     CaptureAntaresLogs logs;
-    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node,
-                                                std::vector<YmlUtils::ExpectedField>{
-                                                  {"children", false, {{"id", true}}}},
-                                                "library"),
-                          InputError,
-                          [](const InputError& e)
-                          {
-                              BOOST_CHECK_EQUAL(e.what(),
-                                                "Line 3 column 5\n"
-                                                "YAML field validation:\n"
-                                                "- Unrecognised field: typo\n"
-                                                "\n"
-                                                "library\n"
-                                                "|__ children\n"
-                                                "    |__ generator\n"
-                                                "        |__X typo at line 4\n"
-                                                "\n");
-                              return true;
-                          });
+    BOOST_CHECK_EXCEPTION(
+      checkFields(node, std::vector<ExpectedField>{{"children", false, {{"id", true}}}}, "library"),
+      InputError,
+      [](const InputError& e)
+      {
+          BOOST_CHECK_EQUAL(e.what(),
+                            "Line 3 column 5\n"
+                            "YAML field validation:\n"
+                            "- Unrecognised field: typo\n"
+                            "\n"
+                            "library\n"
+                            "|__ children\n"
+                            "    |__ generator\n"
+                            "        |__X typo at line 4\n"
+                            "\n");
+          return true;
+      });
     BOOST_CHECK(logs.getWarnings().empty());
 }
 
@@ -581,29 +574,29 @@ children:
     id: duplicate
 )";
     const auto node = YAML::Load(yaml_content);
-    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(
-                            node,
-                            {{"children", false, {{"id", true}, {"value", true}, {"model", true}}}},
-                            "library")),
-                          InputError,
-                          [](const InputError& e)
-                          {
-                              BOOST_CHECK_EQUAL(e.what(),
-                                                "Line 3 column 5\n"
-                                                "YAML field validation:\n"
-                                                "- Missing field: model\n"
-                                                "- Missing field: value\n"
-                                                "- Duplicated field: id\n"
-                                                "\n"
-                                                "library\n"
-                                                "|__ children\n"
-                                                "    |__ generator\n"
-                                                "        |__X id at line 3\n"
-                                                "        |__? model (missing)\n"
-                                                "        |__? value (missing)\n"
-                                                "\n");
-                              return true;
-                          });
+    BOOST_CHECK_EXCEPTION(
+      (checkFields(node,
+                   {{"children", false, {{"id", true}, {"value", true}, {"model", true}}}},
+                   "library")),
+      InputError,
+      [](const InputError& e)
+      {
+          BOOST_CHECK_EQUAL(e.what(),
+                            "Line 3 column 5\n"
+                            "YAML field validation:\n"
+                            "- Missing field: model\n"
+                            "- Missing field: value\n"
+                            "- Duplicated field: id\n"
+                            "\n"
+                            "library\n"
+                            "|__ children\n"
+                            "    |__ generator\n"
+                            "        |__X id at line 3\n"
+                            "        |__? model (missing)\n"
+                            "        |__? value (missing)\n"
+                            "\n");
+          return true;
+      });
 }
 
 BOOST_AUTO_TEST_CASE(sibling_errors_match_complete_trees_with_index_fallback)
@@ -615,10 +608,10 @@ children:
   - {}
 )";
     const auto node = YAML::Load(yaml_content);
-    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node,
-                                                 std::vector<YmlUtils::ExpectedField>{
-                                                   {"children", false, {{"value", true}, {"id"}}}},
-                                                 "root")),
+    BOOST_CHECK_EXCEPTION((checkFields(node,
+                                       std::vector<ExpectedField>{
+                                         {"children", false, {{"value", true}, {"id"}}}},
+                                       "root")),
                           InputError,
                           [](const InputError& e)
                           {
@@ -662,7 +655,7 @@ a: ignored
 )";
     const auto node = YAML::Load(yaml_content);
     CaptureAntaresLogs logs;
-    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node, std::vector<YmlUtils::ExpectedField>{}),
+    BOOST_CHECK_EXCEPTION(checkFields(node, std::vector<ExpectedField>{}),
                           InputError,
                           [](const InputError& e)
                           {
@@ -755,11 +748,13 @@ children:
   - {}
 )";
     const auto node = YAML::Load(yaml_content);
+    const std::vector<ExpectedField> expected_fields{
+      {"children", false, {{"id", true}, {"value", true}}}};
+
     BOOST_CHECK_EXCEPTION(
-      (YmlUtils::checkFields(node,
-                             std::vector<YmlUtils::ExpectedField>{
-                               {"children", false, {{"value", true}}}},
-                             "root")),
+      (checkFields(node,
+                   expected_fields,
+                   "root")),
       InputError,
       [](const InputError& e)
       {
@@ -776,16 +771,16 @@ children:
 
 BOOST_AUTO_TEST_CASE(sequence_fields_accept_maps_and_validate_their_fields)
 {
-    const std::vector<YmlUtils::ExpectedField> expected_fields{
+    const std::vector<ExpectedField> expected_fields{
       {"children", false, {{"id", true}, {"value", true}}}};
 
     std::string yaml_content = R"(children: {id: child, value: 1})";
     const auto validNode = YAML::Load(yaml_content);
-    BOOST_CHECK_NO_THROW(YmlUtils::checkFields(validNode, expected_fields, "root"));
+    BOOST_CHECK_NO_THROW(checkFields(validNode, expected_fields, "root"));
 
     yaml_content = R"(children: {id: child})";
     const auto invalidNode = YAML::Load(yaml_content);
-    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(invalidNode, expected_fields, "root"),
+    BOOST_CHECK_EXCEPTION(checkFields(invalidNode, expected_fields, "root"),
                           InputError,
                           containsMessage("Missing field: value"));
 }
@@ -793,7 +788,7 @@ BOOST_AUTO_TEST_CASE(sequence_fields_accept_maps_and_validate_their_fields)
 BOOST_AUTO_TEST_CASE(undefined_root_requires_a_mapping)
 {
     const YAML::Node node(YAML::NodeType::Undefined);
-    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node, {}, "root"),
+    BOOST_CHECK_EXCEPTION(checkFields(node, {}, "root"),
                           InputError,
                           containsMessage("expected a YAML mapping in 'root'"));
 }
@@ -808,11 +803,11 @@ children:
 mapping: [{unexpected: value}]
 )";
     const auto node = YAML::Load(yaml_content);
-    const std::vector<YmlUtils::ExpectedField> expected_fields{
+    const std::vector<ExpectedField> expected_fields{
       {"children", false, {{"id", true}, {"value", true}}},
-      {"mapping", false, {{"value", true}}, YmlUtils::Shape::Map}};
+      {"mapping", false, {{"value", true}}, Shape::Map}};
     BOOST_CHECK_EXCEPTION(
-      YmlUtils::checkFields(node, expected_fields, "root"),
+      checkFields(node, expected_fields, "root"),
       InputError,
       [](const InputError& e)
       {
@@ -846,11 +841,12 @@ required: null
 mapping: null
 )";
     const auto node = YAML::Load(yaml_content);
-    const std::vector<YmlUtils::ExpectedField> expected_fields{
+    const std::vector<ExpectedField> expected_fields{
       {"optional", false, {{"value", true}}},
       {"required", true, {{"value", true}}},
-      {"mapping", false, {{"value", true}}, YmlUtils::Shape::Map}};
-    BOOST_CHECK_EXCEPTION(YmlUtils::checkFields(node, expected_fields, "root"),
+      {"mapping", false, {{"value", true}}, Shape::Map}};
+
+    BOOST_CHECK_EXCEPTION(checkFields(node, expected_fields, "root"),
                           InputError,
                           [](const InputError& e)
                           {
