@@ -972,6 +972,14 @@ BOOST_FIXTURE_TEST_CASE(evaluate_tPlusNode, MyDummyFixture)
     BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(&tPlus).valueAsDouble(), 2.0);
 }
 
+BOOST_FIXTURE_TEST_CASE(evaluate_tPlusNode_negativeOffset, MyDummyFixture)
+{
+    LiteralNode offset(-1.0);
+    TPlusNode tPlus(&offset);
+
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(&tPlus).valueAsDouble(), -1.0);
+}
+
 EvaluationResult CreateAndEvaluateAllTimeSumNode()
 {
     ParameterNode paramNode("my-param", VariabilityType::VARYING_IN_TIME_ONLY);

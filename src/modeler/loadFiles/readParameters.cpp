@@ -36,6 +36,11 @@ ModelerParameters loadParameters(const fs::path& studyPath)
         handleYamlError(e, filename);
         throw ErrorLoadingYaml(e.what());
     }
+    catch (const Antares::IO::Inputs::InputError& e)
+    {
+        handleInputError(e, filename);
+        throw ErrorLoadingYaml(e.what());
+    }
 }
 
 } // namespace Antares::Solver::LoadFiles

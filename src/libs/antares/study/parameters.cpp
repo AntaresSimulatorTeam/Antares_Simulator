@@ -41,6 +41,10 @@ static bool ConvertCStrToListTimeSeries(const std::string& value, unsigned int& 
         {
             v |= timeSeriesLoad;
         }
+        else if (lower == "reserves-need")
+        {
+            v |= timeSeriesReservesNeed;
+        }
         else if (lower == "wind")
         {
             v |= timeSeriesWind;

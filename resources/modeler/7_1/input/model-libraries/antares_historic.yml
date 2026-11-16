@@ -121,7 +121,9 @@ library:
         - id: startup_cost
         - id: fixed_cost
         - id: d_min_up
+          time-dependent: false
         - id: d_min_down
+          time-dependent: false
         - id: nb_units_min # Equals to ceil(p_min_cluster/p_max_unit), to be done in preprocessing
           scenario-dependent: true
           time-dependent: true

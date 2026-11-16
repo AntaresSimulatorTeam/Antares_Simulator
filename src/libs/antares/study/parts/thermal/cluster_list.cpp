@@ -364,7 +364,7 @@ bool ThermalClusterLoadFromSection(const std::string& areaName,
             }
             else if (rampingEnabled)
             {
-                cluster.ramping.emplace();
+                cluster.ramping = ThermalCluster::Ramping{};
             }
         }
     }

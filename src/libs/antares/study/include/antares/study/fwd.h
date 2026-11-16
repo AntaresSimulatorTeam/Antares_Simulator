@@ -188,6 +188,8 @@ enum TimeSeriesType : unsigned int
     timeSeriesShortTermInflows = 1u << 7,
     //! TimeSeries : Renewable
     timeSeriesShortTermAdditionalConstraints = 1u << 8,
+    //! TimeSeries : Reserves Need
+    timeSeriesReservesNeed = 1u << 9,
     // ***********************************************************************
     // Please update the constant allTimeSeriesMask if you add / remove an item
     // ***********************************************************************
@@ -204,7 +206,8 @@ constexpr unsigned int allTimeSeriesMask = static_cast<unsigned int>(timeSeriesL
                                              timeSeriesTransmissionCapacities)
                                            | static_cast<unsigned int>(timeSeriesShortTermInflows)
                                            | static_cast<unsigned int>(
-                                             timeSeriesShortTermAdditionalConstraints);
+                                             timeSeriesShortTermAdditionalConstraints)
+                                           | static_cast<unsigned int>(timeSeriesReservesNeed);
 /*!
 ** \brief Types of timeSeries
 **
@@ -266,6 +269,15 @@ struct TimeSeriesToCStr<32>
     static const char* Value()
     {
         return "renewable";
+    }
+};
+
+template<>
+struct TimeSeriesToCStr<512>
+{
+    static const char* Value()
+    {
+        return "reserves_need";
     }
 };
 

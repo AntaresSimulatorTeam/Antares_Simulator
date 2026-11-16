@@ -62,12 +62,12 @@ namespace Antares::ViewBuilder
 
 std::string areaLocation(const std::string& areaId)
 {
-    return BuildAreaNodeComponentId(areaId);
+    return BuildAreaComponentId(areaId);
 }
 
 YAML::Node areaToYaml(const Area& area)
 {
-    return makeComponent(BuildAreaNodeComponentId(area.id),
+    return makeComponent(BuildAreaComponentId(area.id),
                          "antares_legacy_models.area",
                          {{"carrier", "electricity"}});
 }
@@ -81,23 +81,32 @@ YAML::Node loadToYaml(const Area& area)
 
 YAML::Node windToYaml(const Area& area)
 {
-    return makeComponent(BuildWindComponentId(area.id),
+    const std::string componentId = BuildWindComponentId(area.id);
+    return makeComponent(componentId,
                          "antares_legacy_models.renewable",
-                         {{"carrier", "electricity"}, {"technology", "wind"}});
+                         {{"carrier", "electricity"},
+                          {"name", componentId},
+                          {"technology", "wind"}});
 }
 
 YAML::Node solarToYaml(const Area& area)
 {
-    return makeComponent(BuildSolarComponentId(area.id),
+    const std::string componentId = BuildSolarComponentId(area.id);
+    return makeComponent(componentId,
                          "antares_legacy_models.renewable",
-                         {{"carrier", "electricity"}, {"technology", "solar"}});
+                         {{"carrier", "electricity"},
+                          {"name", componentId},
+                          {"technology", "solar"}});
 }
 
 YAML::Node rorToYaml(const Area& area)
 {
-    return makeComponent(BuildRorComponentId(area.id),
+    const std::string componentId = BuildRorComponentId(area.id);
+    return makeComponent(componentId,
                          "antares_legacy_models.renewable",
-                         {{"carrier", "electricity"}, {"technology", "run_of_river"}});
+                         {{"carrier", "electricity"},
+                          {"name", componentId},
+                          {"technology", "run_of_river"}});
 }
 
 YAML::Node linkToYaml(const AreaLink& link)

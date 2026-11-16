@@ -4,6 +4,7 @@ add_boost_test(TestYmlModel
         SRC
         testYmlModel.cpp
         testYmlOptimConfig.cpp
+        testFieldValidation.cpp
         testModelConverter.cpp
         testConvertorVisitor.cpp
         test_full.cpp
