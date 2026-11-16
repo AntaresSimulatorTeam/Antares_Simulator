@@ -15,6 +15,39 @@ Hydro leeway has been removed. The `[leeway low]` and `[leeway up]` sections in
 The `[use leeway]` section is also no longer supported. It is accepted for compatibility,
 but `use leeway = yes` is ignored with a warning; remove the section from the study.
 
+#### Reserves require study version 10.1 or later
+
+Enabling reserves (`include-reserves`) in a study whose format is older than 10.1 used to log a warning
+and continue, which led to a crash later in the run. The solver now stops with an error when the study
+is loaded. Upgrade the study to version 10.1 or later to use reserves.
+
+### Output
+
+#### Legacy component names no longer have `_node` / `_link` suffixes
+
+The component IDs generated for legacy objects, in the simulation tables and in `system-for-views.yml`,
+no longer carry a suffix:
+
+| Object | Before | Now |
+|--------|--------|-----|
+| Area | `<area>_node` | `<area>` |
+| Link | `<origin>_<destination>_link` | `<origin>_<destination>` |
+
+Scripts that match on these IDs must be updated. The other components (`<area>_thermal_<cluster>`,
+`<area>_hydro_storage`, ...) are unchanged.
+
+#### Spaces in legacy component names are replaced by underscores
+
+Legacy object IDs may contain spaces (e.g. `all areas`, `semi base`). In the component IDs written to the
+simulation tables and to `system-for-views.yml`, spaces are now replaced by underscores, so that IDs are
+consistently underscore-separated. For instance `area_thermal_semi base` becomes `area_thermal_semi_base`
+and `district_all areas` becomes `district_all_areas`. Names on disk in the study are not modified.
+
+#### `system-for-views.yml` moved to `views/input/`
+
+The file is now written to `<timestamp output>/views/input/system-for-views.yml` instead of the root of
+the output folder, for both the solver and the modeler. Update any script that reads it from the old location.
+
 ## v10.2.0
 
 ### Input
