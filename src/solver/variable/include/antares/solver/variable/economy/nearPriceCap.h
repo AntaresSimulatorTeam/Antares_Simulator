@@ -31,6 +31,11 @@ struct VCardNearPriceCap
         return "Near Price Cap Hours";
     }
 
+    static double marginalPrice(const State& state)
+    {
+        return -state.hourlyResults->CoutsMarginauxHoraires[state.hourInTheWeek];
+    }
+
     //! The expecte results
     typedef Results<R::AllYears::Average< // The average values throughout all years
       R::AllYears::StdDeviation<          // The standard deviation values throughout all years
@@ -72,19 +77,39 @@ struct VCardNearPriceCap
 
 }; // class VCardNearPriceCap
 
+struct VCardNearPriceCapCSR: VCardNearPriceCap
+{
+    static std::string Caption()
+    {
+        return "NPCAP HOURS CSR";
+    }
+
+    static std::string Description()
+    {
+        return "Near Price Cap Hours CSR";
+    }
+
+    static double marginalPrice(const State& state)
+    {
+        return -state.hourlyResults->CoutsMarginauxHorairesCSR[state.hourInTheWeek];
+    }
+
+    using VCardForSpatialAggregate = VCardNearPriceCapCSR;
+};
+
 /*!
 ** \brief
 */
-template<class NextT = Container::EndOfList>
-class NearPriceCap: public Variable::IVariable<NearPriceCap<NextT>, NextT, VCardNearPriceCap>
+template<class CardT, class NextT = Container::EndOfList>
+class NearPriceCapBase: public Variable::IVariable<NearPriceCapBase<CardT, NextT>, NextT, CardT>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardNearPriceCap VCardType;
+    typedef CardT VCardType;
     //! Ancestor
-    typedef Variable::IVariable<NearPriceCap<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<NearPriceCapBase<CardT, NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -181,7 +206,7 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        double mrgPrice = -state.hourlyResults->CoutsMarginauxHoraires[state.hourInTheWeek];
+        double mrgPrice = VCardType::marginalPrice(state);
         if (mrgPrice > unsuppliedEnergyCost - margin + eps)
         {
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 1.;
@@ -219,6 +244,12 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
     double unsuppliedEnergyCost = 0.;
-}; // class NearPriceCap
+}; // class NearPriceCapBase
+
+template<class NextT = Container::EndOfList>
+using NearPriceCap = NearPriceCapBase<VCardNearPriceCap, NextT>;
+
+template<class NextT = Container::EndOfList>
+using NearPriceCapCSR = NearPriceCapBase<VCardNearPriceCapCSR, NextT>;
 
 } // namespace Antares::Solver::Variable::Economy
