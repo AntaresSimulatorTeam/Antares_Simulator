@@ -85,6 +85,7 @@ public:
                 .solverLogs = false,
                 .solverParameters = "DUMMY",
                 .noOutput = false,
+                .exportMps = exportMps,
                 .firstTimeStep = timeSteps.first,
                 .lastTimeStep = timeSteps.second};
     }
@@ -152,6 +153,7 @@ public:
         md.system = std::make_unique<System>(std::move(system));
         md.dataSeries = std::move(data);
         md.scenarioGroupRepository = std::move(scenarioGroupRepository);
+        md.resolutionMode = resolutionMode;
         md.scenarioScope = scenarioScope;
 
         return md;
@@ -193,6 +195,8 @@ public:
     Nodes::Node* lower_bound = fixture.literal(0.0);
     bool timeDependent{false};
     bool masterOnly{false};
+    bool exportMps{false};
+    ResolutionMode resolutionMode{ResolutionMode::SEQUENTIAL_SUBPROBLEMS};
     std::map<std::string, PTV> parameters{};
     std::vector<std::string> parameterIds{};
     ScenarioGroupRepository scenarioGroupRepository{};
@@ -463,20 +467,43 @@ BOOST_AUTO_TEST_CASE(multi_scenario_produces_one_table_per_scenario)
     // The solution is owned by the last retained subproblem and must stay usable after run().
     BOOST_CHECK(modeler.subProbSolution() != nullptr);
     BOOST_CHECK_EQUAL(modeler.subProbSolution()->getObjectiveValue(), 0);
-    BOOST_CHECK(fs::exists(outputDir / "simulation-table-1.csv"));
-    BOOST_CHECK(fs::exists(outputDir / "simulation-table-2.csv"));
-    BOOST_CHECK(!fs::exists(outputDir / "simulation-table.csv"));
+    const auto simulationTablesDir = outputDir / "simulation-tables";
+    BOOST_CHECK(fs::is_directory(simulationTablesDir));
+    BOOST_CHECK(fs::exists(simulationTablesDir / "simulation-table-1.csv"));
+    BOOST_CHECK(fs::exists(simulationTablesDir / "simulation-table-2.csv"));
+    BOOST_CHECK(!fs::exists(simulationTablesDir / "simulation-table.csv"));
 
     for (const unsigned scenario: {1, 2})
     {
         const auto indices = readScenarioIndexes(
-          outputDir / ("simulation-table-" + std::to_string(scenario) + ".csv"));
+          simulationTablesDir / ("simulation-table-" + std::to_string(scenario) + ".csv"));
         BOOST_CHECK(!indices.empty());
         for (const auto index: indices)
         {
             BOOST_CHECK_EQUAL(index, scenario);
         }
     }
+
+    fs::remove_all(outputDir, ec);
+}
+
+BOOST_AUTO_TEST_CASE(benders_decomposition_does_not_create_simulation_tables_directory)
+{
+    namespace fs = std::filesystem;
+    InMemoryLoader inMemoryLoader;
+    inMemoryLoader.masterOnly = true;
+    inMemoryLoader.exportMps = true;
+    inMemoryLoader.resolutionMode = ResolutionMode::BENDERS_DECOMPOSITION;
+
+    const auto outputDir = fs::temp_directory_path() / "antares-modeler-e2e-benders-output";
+    std::error_code ec;
+    fs::remove_all(outputDir, ec);
+    fs::create_directories(outputDir, ec);
+
+    Modeler modeler(inMemoryLoader, outputDir, TableFormat::CSV);
+    modeler.run();
+
+    BOOST_CHECK(!fs::exists(outputDir / "simulation-tables"));
 
     fs::remove_all(outputDir, ec);
 }

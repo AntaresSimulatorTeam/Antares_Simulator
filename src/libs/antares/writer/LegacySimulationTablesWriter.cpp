@@ -6,6 +6,7 @@
 #include <string_view>
 
 #include <antares/exception/RuntimeError.hpp>
+#include <antares/io/outputs/SimulationTablePath.h>
 #include <antares/logs/logs.h>
 #include "antares/writer/simulation_table_writer.h"
 
@@ -30,7 +31,7 @@ static fs::path makeSimuTableFilePath(const fs::path& parentFolder,
 {
     // File name without extension
     std::string filename = "simulation-table-" + std::to_string(year) + "-" + std::string(stage);
-    return parentFolder / filename;
+    return IO::Outputs::simulationTableOutputDirectory(parentFolder) / filename;
 }
 
 LegacySimulationTablesWriter::LegacySimulationTablesWriter(const fs::path& folder,
