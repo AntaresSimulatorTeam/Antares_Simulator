@@ -4,6 +4,88 @@ toc_depth: 2
 
 # Antares Changelog
 
+## Branch 10.3.x
+
+### 10.3.0
+
+#### Breaking changes
+
+* Remove the `leeway` feature [ANT-5838] (#3967). See the
+  [migration guide](../reference/migration-guides.md)
+* Remove `_node` and `_link` from the names of legacy components [ANT-6126] (#4017)
+* Fail on reserves in study versions that do not support them (#4039); a warning is emitted
+  when reserves are loaded in older study versions (#4012)
+
+#### Features
+
+* Ramping model for thermal clusters [ANT-992] (#2684), with a warning when ramping is enabled
+  with `unit-commitment-mode = fast` [ANT-992] (#3984)
+* Streaming simulation table writer for the legacy solver [ANT-6073] (#4019)
+* Legacy outputs linked to the adequacy patch [ANT-5240] (#3980)
+* Disable legacy variables when they are not needed [ANT-5332] (#3992)
+* Allow blank spaces in legacy names [ANT-6132] (#4018)
+* Support a scenario-independent time series in a parameter used with a scenario builder
+  [ANT-5944] (#3969)
+* Scenarisation of the reserve needs (#3719)
+* Better log for remix-hydro [ANT-5972] (#4004)
+* Simulation tables can be written into a ZIP output; see the documentation (#4041)
+
+#### GEMS / Modeler
+
+* Accept expressions as time indices and right-side multiplication / division in shifts
+  [ANT-6199] (#4026)
+* Add field checks for model nodes [ANT-6041] (#3976)
+* Clearer error message for `sum_connections` [ANT-5143] (#4005)
+* Use `system.yml` to determine whether a study is hybrid [ANT-6203] (#4033)
+
+#### System for views
+
+* Add district to areas [ANT-6074] (#4006)
+* Add names for clusters [ANT-6050] (#4014)
+* Add names for wind, run-of-river and solar [ANT-6169] (#4044)
+* Remove disabled components [ANT-5954] (#3968, #4021)
+* Write files related to the view builder in a subdirectory (#4023)
+
+#### Bug fixes
+
+* Fix the MILP ramping constraints [ANT-6070] (#3999)
+* Ramping cost now uses the optimisation variable [ANT-6070] (#4000)
+* Scale the sum over a block of a time-constant expression by the horizon [ANT-6200] (#4027)
+* Avoid unsigned wraparound when evaluating `t + offset` [ANT-6201] (#4025)
+* Disable district trimming with geographic trimming (#3972, #3981)
+* Move the thermal time series check into the min stable power check (#3985)
+* Homogenize the "output folder" log message (#4035, #4037)
+* Logger fixes and improvements (#3986, #3991)
+
+#### Documentation
+
+* Document district output granularity filtering in the migration guide (#3971)
+* GEMS contribution to the adequacy patch (#3966)
+* Sanitizers (#3988)
+* Fix broken links (#3955, #3982)
+
+#### Tests
+
+* Legacy simulation table equivalence checks [ANT-5136] (#3908)
+* Cucumber scenario for district filtering (#3964)
+* Remove duplicate hydro tests (#3974)
+* Fix `range-loop-construct` warnings in `test_constraint.cpp` (#4038)
+
+#### Internal
+
+* Simplify access to container elements (#4010)
+* Remove `checkMessage` in favour of `containsMessage` (#3987)
+* Remove class `ColorEnabler` in favour of a function (#3989)
+* Remove unused `*ToCString` methods (#3983)
+* Try to avoid the Arrow size limit (#3975)
+
+#### CI
+
+* Add Ubuntu Clang workflow with sanitizers and strict warnings (#3763)
+* Align sanitizer workflow triggers (#4043)
+* Bump `actions/cache`, `actions/checkout`, `actions/setup-python` and the Sonar scanner
+  (#3973, #3993, #3994, #3995, #4016, #4032)
+
 ## Branch 10.2.x
 
 #### Breaking changes
