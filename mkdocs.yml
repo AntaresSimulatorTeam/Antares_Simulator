@@ -51,6 +51,7 @@ nav:
           - Standard library: reference/modeler/07-standard-library.md
           - Command-line interface: reference/modeler/08-command-line.md
           - Expressions: reference/modeler/09-expressions.md
+      - View builder: reference/viewbuilder.md
       - Time-series generation:
           - Overview: reference/ts-generator/01-overview-tsgenerator.md
           - Input files: reference/ts-generator/02-inputs.md

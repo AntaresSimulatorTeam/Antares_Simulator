@@ -7,6 +7,7 @@ Currently, Antares modeler outputs the simulation table and optionally MPS files
 It also exports the system definition used by views to
 `<timestamp output>/views/input/system-for-views.yml`. In a modeler-only run, this file is a copy of
 `input/system.yml`.
+See [View builder](../viewbuilder.md) for details about the system and view configuration files.
 
 ## MPS Files
 
