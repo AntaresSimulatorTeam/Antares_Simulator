@@ -35,12 +35,6 @@ inline unsigned int Matrix::height() const noexcept
     return height_;
 }
 
-inline Matrix::ColumnType& Matrix::mutableColumn(unsigned int column) const
-{
-    assert(column < width_);
-    return columns_[column];
-}
-
 inline Matrix::Matrix(Matrix&& rhs) noexcept:
     width_(rhs.width_),
     height_(rhs.height_),
@@ -165,7 +159,7 @@ inline void Matrix::reset()
 
 inline void Matrix::resize(unsigned int w, unsigned int h)
 {
-    if (w > kMaxDimension || h > kMaxDimension || static_cast<std::uintmax_t>(w) * h > kMaxElements)
+    if (w > kMaxDimension || h > kMaxDimension)
     {
         throw std::length_error("Matrix dimensions exceed the supported limit");
     }
@@ -178,21 +172,21 @@ inline void Matrix::resize(unsigned int w, unsigned int h)
         }
         else
         {
-            width_ = w;
-            height_ = h;
-            columns_.clear();
-            columns_.resize(w);
-            for (auto& column: columns_)
+            std::vector<ColumnType> newColumns(w);
+            for (auto& column: newColumns)
             {
                 column.resize(h);
             }
+            columns_.swap(newColumns);
+            width_ = w;
+            height_ = h;
         }
     }
 }
 
 inline void Matrix::resizeWithoutDataLost(unsigned int x, unsigned int y, double defVal)
 {
-    if (x > kMaxDimension || y > kMaxDimension || static_cast<std::uintmax_t>(x) * y > kMaxElements)
+    if (x > kMaxDimension || y > kMaxDimension)
     {
         throw std::length_error("Matrix dimensions exceed the supported limit");
     }
@@ -203,10 +197,21 @@ inline void Matrix::resizeWithoutDataLost(unsigned int x, unsigned int y, double
     }
     else if (x <= width_ and y <= height_)
     {
-        columns_.resize(x);
-        for (auto& column: columns_)
+        if (x == width_)
         {
-            column.resize(y);
+            for (unsigned int i = 0; i < x; ++i)
+            {
+                columns_[i].resize(y);
+            }
+        }
+        else
+        {
+            std::vector<ColumnType> newColumns(columns_.begin(), columns_.begin() + x);
+            for (auto& column: newColumns)
+            {
+                column.resize(y);
+            }
+            columns_.swap(newColumns);
         }
         width_ = x;
         height_ = y;
@@ -214,19 +219,20 @@ inline void Matrix::resizeWithoutDataLost(unsigned int x, unsigned int y, double
     else
     {
         const unsigned int preservedWidth = std::min(x, width_);
-        columns_.resize(x);
+        const unsigned int preservedHeight = std::min(y, height_);
+        std::vector<ColumnType> newColumns(x);
 
-        for (unsigned int i = 0; i < preservedWidth; ++i)
+        for (unsigned int i = 0; i < x; ++i)
         {
-            ColumnType& column = columns_[i];
-            column.resize(y, defVal);
+            auto& column = newColumns[i];
+            column.assign(y, defVal);
+            if (i < preservedWidth)
+            {
+                std::copy_n(columns_[i].begin(), preservedHeight, column.begin());
+            }
         }
 
-        for (unsigned int i = preservedWidth; i < x; ++i)
-        {
-            columns_[i].assign(y, defVal);
-        }
-
+        columns_.swap(newColumns);
         width_ = x;
         height_ = y;
     }

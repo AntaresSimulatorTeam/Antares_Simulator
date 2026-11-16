@@ -147,6 +147,33 @@ BOOST_AUTO_TEST_CASE(loads_dimension_header_with_trailing_whitespace)
     }
 }
 
+BOOST_AUTO_TEST_CASE(dimension_header_must_match_requested_height)
+{
+    const auto file = writeFile("size:1x1\n7\n");
+    Antares::Matrix matrix;
+
+    BOOST_CHECK(!Antares::MatrixIO::load(matrix, file.path, 1, 2));
+    BOOST_REQUIRE_EQUAL(matrix.width(), 1);
+    BOOST_REQUIRE_EQUAL(matrix.height(), 2);
+    BOOST_CHECK(matrix.containsOnlyZero());
+}
+
+BOOST_AUTO_TEST_CASE(exact_width_load_ignores_a_trailing_separator)
+{
+    const auto file = writeFile("1\t\n2\t\n");
+    Antares::Matrix matrix;
+
+    BOOST_REQUIRE(Antares::MatrixIO::load(matrix,
+                                          file.path,
+                                          1,
+                                          2,
+                                          Antares::MatrixIO::WidthPolicy::Exact));
+    BOOST_REQUIRE_EQUAL(matrix.width(), 1);
+    BOOST_REQUIRE_EQUAL(matrix.height(), 2);
+    BOOST_CHECK_EQUAL(matrix[0][0], 1.);
+    BOOST_CHECK_EQUAL(matrix[0][1], 2.);
+}
+
 BOOST_AUTO_TEST_CASE(file_larger_than_the_matrix_file_limit_is_rejected)
 {
     const auto file = writeFile("");

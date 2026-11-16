@@ -28,8 +28,6 @@ public:
     using ColumnType = std::vector<double>;
 
     static constexpr unsigned int kMaxDimension = 50000;
-    static constexpr std::uintmax_t kMaxAllocationBytes = 1536ULL * 1024ULL * 1024ULL;
-    static constexpr std::uintmax_t kMaxElements = kMaxAllocationBytes / sizeof(double);
 
     //! \name Constructors & Destructor
     //@{
@@ -212,13 +210,10 @@ public:
     const ColumnType& operator[](unsigned int column) const;
     //@}
 
-    //! Get a mutable reference to a column.
-    ColumnType& mutableColumn(unsigned int column) const;
-
 private:
     unsigned int width_ = 0;
     unsigned int height_ = 0;
-    mutable std::vector<ColumnType> columns_;
+    std::vector<ColumnType> columns_;
 }; // class Matrix
 
 /*!

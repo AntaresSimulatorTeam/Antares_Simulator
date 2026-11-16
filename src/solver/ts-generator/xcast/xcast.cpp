@@ -148,15 +148,16 @@ void XCast::updateMissingCoefficients(PredicateT& predicate)
                 // float-based.
                 const float average = static_cast<float>(v[alpha][realmonth]);
                 const float deviation = static_cast<float>(v[beta][realmonth]);
-                v[gamma][realmonth] = average - 6.f * deviation;
-                v[delta][realmonth] = average + 6.f * deviation;
+                v[gamma][realmonth] = static_cast<float>(average - 6.f * deviation);
+                v[delta][realmonth] = static_cast<float>(average + 6.f * deviation);
                 break;
             }
             case Data::XCast::dtWeibullShapeA:
             {
                 auto& v = data.data;
                 const float shape = static_cast<float>(v[alpha][realmonth]);
-                v[delta][realmonth] = static_cast<float>(GammaEuler(1. + 1. / shape));
+                const float mean = static_cast<float>(GammaEuler(1. + 1. / shape));
+                v[delta][realmonth] = mean;
                 break;
             }
             default:
@@ -305,7 +306,7 @@ bool XCast::runWithPredicate(PredicateT& predicate)
                 B[s] = xcastdata.data[beta][realmonth];
                 G[s] = xcastdata.data[gamma][realmonth];
                 D[s] = xcastdata.data[delta][realmonth];
-                M[s] = (int)xcastdata.data[mu][realmonth];
+                M[s] = static_cast<int>(static_cast<float>(xcastdata.data[mu][realmonth]));
                 T[s] = xcastdata.data[theta][realmonth];
                 L[s] = xcastdata.distribution;
 

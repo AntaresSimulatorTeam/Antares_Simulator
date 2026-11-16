@@ -277,7 +277,7 @@ void drawAndStoreTSnumbers(uint year, Study& study)
               for (const auto& reserveCapacity:
                    area.allCapacityReservations->areaCapacityReservations)
               {
-                  const auto nbTimeSeries = reserveCapacity.second.need.timeSeries.width;
+                   const auto nbTimeSeries = reserveCapacity.second.need.timeSeries.width();
                   if (nbTimeSeries > 1)
                   {
                       reserveCapacity.second.need.timeseriesNumbers[year] = static_cast<uint32_t>(

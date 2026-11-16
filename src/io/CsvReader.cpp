@@ -33,6 +33,7 @@ bool readCSVBuffer(std::string_view data,
     std::size_t rowIndex = 0;
     std::size_t cellStart = 0;
     bool hasCell = false;
+    bool afterSeparator = false;
 
     for (std::size_t index = 0; index <= data.size();)
     {
@@ -50,12 +51,12 @@ bool readCSVBuffer(std::string_view data,
         if (atEnd || atNewline)
         {
             // Do not manufacture a row after a final newline.
-            if (atEnd && !hasCell)
+            if (atEnd && !hasCell && !afterSeparator)
             {
                 break;
             }
 
-            if (hasCell)
+            if (hasCell || afterSeparator)
             {
                 if (maxCellsPerRow && row.size() >= maxCellsPerRow)
                 {
@@ -72,6 +73,7 @@ bool readCSVBuffer(std::string_view data,
             row.clear();
             ++rowIndex;
             hasCell = false;
+            afterSeparator = false;
 
             if (atEnd)
             {
@@ -93,6 +95,7 @@ bool readCSVBuffer(std::string_view data,
         }
         row.push_back({data.substr(cellStart, index - cellStart)});
         hasCell = true;
+        afterSeparator = true;
         ++index;
         cellStart = index;
     }

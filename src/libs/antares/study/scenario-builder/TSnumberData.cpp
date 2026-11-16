@@ -27,9 +27,9 @@ void TSNumberData::setTSnumber(unsigned int areaindex, unsigned int year, unsign
     }
 }
 
-void TSNumberData::set_value(unsigned int x, unsigned int y, unsigned int value) const
+void TSNumberData::set_value(unsigned int x, unsigned int y, unsigned int value)
 {
-    pTSNumberRules.mutableColumn(y)[x] = value;
+    pTSNumberRules[y][x] = value;
 }
 
 } // namespace Antares::Data::ScenarioBuilder

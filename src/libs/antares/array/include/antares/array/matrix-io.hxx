@@ -35,7 +35,8 @@ enum class WidthPolicy
 
 namespace
 {
-constexpr std::uintmax_t kMaxMatrixFileSize = Matrix::kMaxAllocationBytes;
+constexpr std::uintmax_t kMaxMatrixFileSize = 1536ULL * 1024ULL * 1024ULL;
+constexpr std::uintmax_t kMaxMatrixElements = kMaxMatrixFileSize / sizeof(double);
 
 bool parseDouble(std::string_view text, double& value)
 {
@@ -101,8 +102,9 @@ bool parseDimensionHeader(std::string_view text, unsigned int& width, unsigned i
 bool validDimensions(unsigned int width, unsigned int height)
 {
     return width <= Matrix::kMaxDimension && height <= Matrix::kMaxDimension
-           && static_cast<std::uintmax_t>(width) * height <= Matrix::kMaxElements;
+           && static_cast<std::uintmax_t>(width) * height <= kMaxMatrixElements;
 }
+
 } // namespace
 
 inline bool load(Matrix& matrix,
@@ -220,8 +222,8 @@ inline bool load(Matrix& matrix,
                           return false;
                       }
 
-                      if (widthPolicy == WidthPolicy::Exact
-                          && (headerWidth != minWidth || headerHeight != height))
+                      if ((widthPolicy == WidthPolicy::Exact && headerWidth != minWidth)
+                          || headerHeight != height)
                       {
                           logs.warning() << filename
                                          << ": matrix dimensions do not match the "
@@ -240,13 +242,18 @@ inline bool load(Matrix& matrix,
                       }
 
                       targetWidth = headerWidth;
-                      targetHeight = headerHeight;
+                      targetHeight = height;
                       matrix.resize(targetWidth, targetHeight);
                       matrixInitialized = true;
                       return true;
                   }
 
-                  if (row.size() > Matrix::kMaxDimension)
+                   auto firstRowWidth = row.size();
+                   if (firstRowWidth && row.back().value.empty())
+                   {
+                       --firstRowWidth;
+                   }
+                   if (firstRowWidth > Matrix::kMaxDimension)
                   {
                       logs.warning() << filename
                                      << ": matrix width exceeds the "
@@ -255,9 +262,9 @@ inline bool load(Matrix& matrix,
                       return false;
                   }
 
-                  targetWidth = widthPolicy == WidthPolicy::Exact
-                                  ? minWidth
-                                  : std::max<unsigned int>(minWidth, row.size());
+                   targetWidth = widthPolicy == WidthPolicy::Exact
+                                   ? minWidth
+                                   : std::max<unsigned int>(minWidth, firstRowWidth);
                   if (!validDimensions(targetWidth, targetHeight))
                   {
                       logs.warning() << filename
@@ -271,14 +278,19 @@ inline bool load(Matrix& matrix,
                   matrixInitialized = true;
               }
 
-              unsigned int column = 0;
-              for (const auto& cell: row)
-              {
-                  if (column >= targetWidth)
-                  {
-                      result = false;
-                      logs.warning() << filename << ": too many columns on row " << rowCount;
-                      break;
+               unsigned int column = 0;
+               for (std::size_t cellIndex = 0; cellIndex < row.size(); ++cellIndex)
+               {
+                   const auto& cell = row[cellIndex];
+                   if (column >= targetWidth)
+                   {
+                       if (cell.value.empty())
+                       {
+                           continue;
+                       }
+                       result = false;
+                       logs.warning() << filename << ": too many columns on row " << rowCount;
+                       break;
                   }
 
                   if (cell.value.empty())
@@ -309,7 +321,8 @@ inline bool load(Matrix& matrix,
 
               ++rowCount;
               return rowCount < targetHeight;
-          });
+          },
+          Matrix::kMaxDimension + 1);
     }
     catch (const std::bad_alloc& exception)
     {

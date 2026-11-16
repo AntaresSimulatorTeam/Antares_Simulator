@@ -17,6 +17,18 @@ class TSNumberMatrix final
 public:
     using ColumnType = std::vector<uint32_t>;
 
+    ColumnType& column(unsigned int index)
+    {
+        assert(index < width_);
+        return columns_[index];
+    }
+
+    const ColumnType& column(unsigned int index) const
+    {
+        assert(index < width_);
+        return columns_[index];
+    }
+
     void reset(unsigned int width, unsigned int height)
     {
         if (!width || !height)
@@ -27,9 +39,10 @@ public:
             return;
         }
 
+        std::vector<ColumnType> newColumns(width, ColumnType(height, 0));
+        columns_.swap(newColumns);
         width_ = width;
         height_ = height;
-        columns_.assign(width, ColumnType(height, 0));
     }
 
     unsigned int width() const noexcept
@@ -54,16 +67,10 @@ public:
         return columns_[column];
     }
 
-    ColumnType& mutableColumn(unsigned int column) const
-    {
-        assert(column < width_);
-        return columns_[column];
-    }
-
 private:
     unsigned int width_ = 0;
     unsigned int height_ = 0;
-    mutable std::vector<ColumnType> columns_;
+    std::vector<ColumnType> columns_;
 };
 
 /*!
@@ -98,7 +105,7 @@ public:
     unsigned int height() const override;
 
     double get_value(unsigned int x, unsigned int y) const;
-    void set_value(unsigned int x, unsigned int y, unsigned int value) const;
+    void set_value(unsigned int x, unsigned int y, unsigned int value);
 
 protected:
     virtual std::string get_prefix() const = 0;

@@ -68,7 +68,7 @@ void TimeSeriesNumbers::saveToBuffer(std::string& data) const
     {
         matrix[0][y] = tsNumbers[y] + 1;
     }
-    MatrixIO::saveToBuffer(matrix, data, 0, false, std::identity{}, true);
+    MatrixIO::saveToBuffer(matrix, data, 0, true, std::identity{}, true);
 }
 
 std::optional<std::string> TimeSeriesNumbers::checkSeriesNumberOfColumnsConsistency() const
