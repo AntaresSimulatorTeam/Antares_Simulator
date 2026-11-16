@@ -15,6 +15,7 @@
 #include <antares/solver/simulation/adequacy_patch_runtime_data.h>
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/study/parameters/adq-patch-params.h"
+
 #include "in-memory-study.h"
 
 static double origineExtremite = -1;

@@ -99,7 +99,8 @@ BOOST_AUTO_TEST_CASE(test_adq_patch_ens_below_threshold_is_zeroed_per_area)
     SIM_AllocationProblemeHebdo(*builder.study, pb, gNumberTimeSteps);
     pb.NombreDePays = builder.study->areas.size();
     pb.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>(
-      builder.study->areas, builder.study->runtime.areaLink);
+      builder.study->areas,
+      builder.study->runtime.areaLink);
     pb.adequacyPatchRuntimeData->areaMode = {
       Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch,
       Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch,
@@ -145,50 +146,42 @@ BOOST_AUTO_TEST_CASE(test_adq_patch_ens_below_threshold_is_zeroed_per_area)
     UpdateMrgPriceAfterCSRcmd updatePrice(&pb, builder.study->areas, gNumSpace);
     updatePrice.execute(opt_runtime_data);
 
-    BOOST_CHECK_EQUAL(
-      pb.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[hour], 0.0);
-    BOOST_CHECK_EQUAL(
-      pb.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositiveCSR[hour], 0.0);
+    BOOST_CHECK_EQUAL(pb.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[hour], 0.0);
+    BOOST_CHECK_EQUAL(pb.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositiveCSR[hour], 0.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[0].ValeursHorairesDtgMrgCsr[hour], 10.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[0].CoutsMarginauxHoraires[hour], -40.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[0].CoutsMarginauxHorairesCSR[hour], -40.0);
 
-    BOOST_CHECK_EQUAL(
-      pb.ResultatsHoraires[1].ValeursHorairesDeDefaillancePositive[hour], 150.0);
-    BOOST_CHECK_EQUAL(
-      pb.ResultatsHoraires[1].ValeursHorairesDeDefaillancePositiveCSR[hour], 140.0);
+    BOOST_CHECK_EQUAL(pb.ResultatsHoraires[1].ValeursHorairesDeDefaillancePositive[hour], 150.0);
+    BOOST_CHECK_EQUAL(pb.ResultatsHoraires[1].ValeursHorairesDeDefaillancePositiveCSR[hour], 140.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[1].ValeursHorairesDtgMrgCsr[hour], 0.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[1].CoutsMarginauxHoraires[hour], -1000.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[1].CoutsMarginauxHorairesCSR[hour], -1000.0);
 
-    BOOST_CHECK_EQUAL(
-      pb.ResultatsHoraires[2].ValeursHorairesDeDefaillancePositive[hour], 25.0);
-    BOOST_CHECK_EQUAL(
-      pb.ResultatsHoraires[2].ValeursHorairesDeDefaillancePositiveCSR[hour], 25.0);
+    BOOST_CHECK_EQUAL(pb.ResultatsHoraires[2].ValeursHorairesDeDefaillancePositive[hour], 25.0);
+    BOOST_CHECK_EQUAL(pb.ResultatsHoraires[2].ValeursHorairesDeDefaillancePositiveCSR[hour], 25.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[2].ValeursHorairesDtgMrgCsr[hour], 10.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[2].CoutsMarginauxHoraires[hour], -60.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[2].CoutsMarginauxHorairesCSR[hour], -60.0);
 
-    BOOST_CHECK_EQUAL(
-      pb.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[hour + 1], 100.0);
-    BOOST_CHECK_EQUAL(
-      pb.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositiveCSR[hour + 1], 100.0);
+    BOOST_CHECK_EQUAL(pb.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[hour + 1],
+                      100.0);
+    BOOST_CHECK_EQUAL(pb.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositiveCSR[hour + 1],
+                      100.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[0].ValeursHorairesDtgMrgCsr[hour + 1], 0.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[0].CoutsMarginauxHoraires[hour + 1], -1000.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[0].CoutsMarginauxHorairesCSR[hour + 1], -1000.0);
 
-    BOOST_CHECK_EQUAL(
-      pb.ResultatsHoraires[1].ValeursHorairesDeDefaillancePositive[hour + 1], 25.0);
-    BOOST_CHECK_EQUAL(
-      pb.ResultatsHoraires[1].ValeursHorairesDeDefaillancePositiveCSR[hour + 1], 25.0);
+    BOOST_CHECK_EQUAL(pb.ResultatsHoraires[1].ValeursHorairesDeDefaillancePositive[hour + 1], 25.0);
+    BOOST_CHECK_EQUAL(pb.ResultatsHoraires[1].ValeursHorairesDeDefaillancePositiveCSR[hour + 1],
+                      25.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[1].ValeursHorairesDtgMrgCsr[hour + 1], 0.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[1].CoutsMarginauxHoraires[hour + 1], -80.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[1].CoutsMarginauxHorairesCSR[hour + 1], -1000.0);
 
-    BOOST_CHECK_EQUAL(
-      pb.ResultatsHoraires[2].ValeursHorairesDeDefaillancePositive[hour + 1], 25.0);
-    BOOST_CHECK_EQUAL(
-      pb.ResultatsHoraires[2].ValeursHorairesDeDefaillancePositiveCSR[hour + 1], 25.0);
+    BOOST_CHECK_EQUAL(pb.ResultatsHoraires[2].ValeursHorairesDeDefaillancePositive[hour + 1], 25.0);
+    BOOST_CHECK_EQUAL(pb.ResultatsHoraires[2].ValeursHorairesDeDefaillancePositiveCSR[hour + 1],
+                      25.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[2].ValeursHorairesDtgMrgCsr[hour + 1], 0.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[2].CoutsMarginauxHoraires[hour + 1], -90.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[2].CoutsMarginauxHorairesCSR[hour + 1], -90.0);

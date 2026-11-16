@@ -106,8 +106,7 @@ void UpdateMrgPriceAfterCSRcmd::execute(const optRuntimeData&)
         for (uint hour = 0; hour < nbHoursInWeek; hour++)
         {
             const bool ensWasZeroedByThreshold = problemeHebdo_->adequacyPatchRuntimeData
-                                                   ->wasENSZeroedByThresholdAtAreaHour(Area,
-                                                                                        hour);
+                                                   ->wasENSZeroedByThresholdAtAreaHour(Area, hour);
             const bool isHourTriggeredByCsr = problemeHebdo_->adequacyPatchRuntimeData
                                                 ->wasCSRTriggeredAtAreaHour(Area, hour);
 
@@ -261,7 +260,9 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
         for (uint hour = 0; hour < nbHoursInWeek; ++hour)
         {
             problemeHebdo_->adequacyPatchRuntimeData->setMarginalCostBeforeAdqPatch(
-              area, hour, hourlyResults.CoutsMarginauxHoraires[hour]);
+              area,
+              hour,
+              hourlyResults.CoutsMarginauxHoraires[hour]);
         }
     }
     problemeHebdo_->adequacyPatchRuntimeData->resetENSZeroedByThreshold();

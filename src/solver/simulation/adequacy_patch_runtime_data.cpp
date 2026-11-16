@@ -87,8 +87,9 @@ AdequacyPatchRuntimeData::AdequacyPatchRuntimeData(
 {
     csrTriggeredHoursPerArea_.resize(areas.size());
     ensZeroedByThresholdPerArea_.resize(areas.size());
-    marginalCostsBeforeAdqPatch_.resize(
-      areas.size(), std::vector<double>(Antares::Constants::nbHoursInAWeek, 0.));
+    marginalCostsBeforeAdqPatch_.resize(areas.size(),
+                                        std::vector<double>(Antares::Constants::nbHoursInAWeek,
+                                                            0.));
     areaMode.resize(areas.size());
     for (uint i = 0; i != areas.size(); ++i)
     {
