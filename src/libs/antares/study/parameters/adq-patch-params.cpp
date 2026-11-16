@@ -44,6 +44,7 @@ void CurtailmentSharing::resetThresholds()
 {
     // Initialize all thresholds values for adequacy patch
     thresholdRun = defaultThresholdToRunCurtailmentSharing;
+    thresholdEns = defaultThresholdEns;
     thresholdDisplayViolations = defaultThresholdDisplayLocalMatchingRuleViolations;
     thresholdVarBoundsRelaxation = defaultValueThresholdVarBoundsRelaxation;
 }
@@ -92,6 +93,10 @@ bool CurtailmentSharing::updateFromKeyValue(const Yuni::String& key, const Yuni:
     {
         return value.to<double>(thresholdRun);
     }
+    if (key == "threshold-ens")
+    {
+        return value.to<double>(thresholdEns);
+    }
     if (key == "threshold-display-local-matching-rule-violations")
     {
         return value.to<double>(thresholdDisplayViolations);
@@ -125,6 +130,7 @@ void CurtailmentSharing::addProperties(IniFile::Section* section) const
 
     // Thresholds
     section->add("threshold-initiate-curtailment-sharing-rule", thresholdRun);
+    section->add("threshold-ens", thresholdEns);
     section->add("threshold-display-local-matching-rule-violations", thresholdDisplayViolations);
     section->add("threshold-csr-variable-bounds-relaxation", thresholdVarBoundsRelaxation);
 }

@@ -226,6 +226,8 @@ Note that for all the hours for which curtailment sharing rule was not triggered
 
 - MRG.PRICE (node A) = Unsupplied Energy Cost (node A)
 
+The optional `threshold-ens` parameter applies an additional per-area cutoff after CSR: for a CSR-triggered hour, ENS in a physical area inside the adequacy patch is set to zero when it is strictly less than `threshold-ens` (in MWh). The default is `0.0`, so no positive ENS is removed by default. This setting is independent of `threshold-initiate-curtailment-sharing-rule`, which determines whether CSR runs for an hour.
+
 _**Notes**_
 
 - _SPIL. ENRG. CSR and DTG MRG CSR outputs of Antares, for all selected areas, are available in the General values tab, as year-by-year and synthetic results. All the statistic values for it are calculated as well (min, max, mean, standard deviation). For the areas not part of the patch, the default output is set to 0._
@@ -237,5 +239,4 @@ LMR violation check is performed for all hours (CSR triggered or not) after LMR 
   - _Abs[net_position_init (node A) + $\sum$ flows (node 1 -> node A)] > ENS_init (node A) + GUI_defined_threshold._
 
     _Second equation is satisfied if the area is exporting power. Depending on the GUI option member ($\sum$ flows (node 1 -> node A)) is optional._
-
 

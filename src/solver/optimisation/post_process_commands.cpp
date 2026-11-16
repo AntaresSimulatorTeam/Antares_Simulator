@@ -173,7 +173,7 @@ void DTGnettingAfterCSRcmd::execute(const optRuntimeData&)
             if (isHourTriggeredByCsr && areaInside)
             {
                 double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
-                if (ens < adqPatchParams_.curtailmentSharing.thresholdRun)
+                if (ens < adqPatchParams_.curtailmentSharing.thresholdEns)
                 {
                     ens = 0.0;
                     problemeHebdo_->adequacyPatchRuntimeData

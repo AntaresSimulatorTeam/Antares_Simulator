@@ -128,7 +128,8 @@ BOOST_AUTO_TEST_CASE(test_adq_patch_ens_below_threshold_is_zeroed_per_area)
     builder.study->areas[2]->scratchpad[gNumSpace].dispatchableGenerationMargin[hour] = 10.0;
 
     AdqPatchParams adqPatchParams;
-    adqPatchParams.curtailmentSharing.thresholdRun = 100.0;
+    adqPatchParams.curtailmentSharing.thresholdRun = 50.0;
+    adqPatchParams.curtailmentSharing.thresholdEns = 100.0;
     for (unsigned int area = 0; area < pb.NombreDePays; ++area)
     {
         for (unsigned int currentHour = 0; currentHour < gNumberTimeSteps; ++currentHour)

@@ -75,6 +75,7 @@ IniFile validINI()
             include-hurdle-cost-csr = false
             check-csr-cost-function = false
             threshold-initiate-curtailment-sharing-rule = 0.000000
+            threshold-ens = 12.500000
             threshold-display-local-matching-rule-violations = 0.000000
             threshold-csr-variable-bounds-relaxation = 3
 
@@ -140,6 +141,7 @@ BOOST_AUTO_TEST_SUITE(parameters_tests)
 
 BOOST_FIXTURE_TEST_CASE(reset, Fixture)
 {
+    p.adqPatchParams.curtailmentSharing.thresholdEns = 20.0;
     p.reset();
     BOOST_CHECK_EQUAL(p.simulationDays.first, 0);
     BOOST_CHECK_EQUAL(p.nbTimeSeriesThermal, 1);
@@ -147,6 +149,7 @@ BOOST_FIXTURE_TEST_CASE(reset, Fixture)
     BOOST_CHECK_EQUAL(p.optOptions.firstOptimOptions.solverName, "sirius");
     BOOST_CHECK_EQUAL(p.optOptions.secondOptimOptions.solverName, "sirius");
     BOOST_CHECK_EQUAL(p.optOptions.quadraticOptimOptions.solverName, "sirius");
+    BOOST_CHECK_EQUAL(p.adqPatchParams.curtailmentSharing.thresholdEns, 0.0);
 }
 
 BOOST_FIXTURE_TEST_CASE(initializing_solvers_options_with_cmd_line_options, Fixture)
@@ -171,6 +174,8 @@ BOOST_FIXTURE_TEST_CASE(loadValid, Fixture)
     BOOST_CHECK_EQUAL(p.seed[seedTsGenThermal], 5489);
     BOOST_CHECK_EQUAL(p.include.reserve.dayAhead, true);
     BOOST_CHECK_EQUAL(p.shedding.policy, shpAccurateShavePeaks);
+    BOOST_CHECK_EQUAL(p.adqPatchParams.curtailmentSharing.thresholdRun, 0.0);
+    BOOST_CHECK_EQUAL(p.adqPatchParams.curtailmentSharing.thresholdEns, 12.5);
 }
 
 BOOST_FIXTURE_TEST_CASE(fixBadValue, Fixture)
@@ -225,6 +230,8 @@ BOOST_AUTO_TEST_CASE(saveLoadGeneralData)
                                       | timeSeriesThermal | timeSeriesSolar | timeSeriesRenewable;
 
     parameters.resultFormat = zipArchive;
+    parameters.adqPatchParams.curtailmentSharing.thresholdRun = 5.0;
+    parameters.adqPatchParams.curtailmentSharing.thresholdEns = 12.5;
 
     parameters.saveToINI(ini);
 
@@ -232,6 +239,22 @@ BOOST_AUTO_TEST_CASE(saveLoadGeneralData)
     loaded.loadFromINI(ini, StudyVersion::latest());
     BOOST_CHECK_EQUAL(parameters.timeSeriesToGenerate, loaded.timeSeriesToGenerate);
     BOOST_CHECK_EQUAL(parameters.resultFormat, loaded.resultFormat);
+    BOOST_CHECK_EQUAL(loaded.adqPatchParams.curtailmentSharing.thresholdRun, 5.0);
+    BOOST_CHECK_EQUAL(loaded.adqPatchParams.curtailmentSharing.thresholdEns, 12.5);
+}
+
+BOOST_AUTO_TEST_CASE(missingEnsThresholdUsesDefault)
+{
+    std::stringstream stream;
+    stream << "[adequacy patch]\nthreshold-initiate-curtailment-sharing-rule = 9.0\n";
+    IniFile ini;
+    ini.readStream(stream);
+
+    Parameters parameters;
+    parameters.loadFromINI(ini, StudyVersion::latest());
+
+    BOOST_CHECK_EQUAL(parameters.adqPatchParams.curtailmentSharing.thresholdRun, 9.0);
+    BOOST_CHECK_EQUAL(parameters.adqPatchParams.curtailmentSharing.thresholdEns, 0.0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

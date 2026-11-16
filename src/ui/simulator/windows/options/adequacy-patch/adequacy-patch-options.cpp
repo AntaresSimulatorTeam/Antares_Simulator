@@ -207,6 +207,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent):
     // Threshold values
     {
         pThresholdCSRStart = nullptr;
+        pThresholdEns = nullptr;
         pThresholdLMRviolations = nullptr;
         pThresholdCSRVarBoundsRelaxation = nullptr;
         pThresholdCSRStart = insertEdit(this,
@@ -214,6 +215,10 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent):
                                         wxStringFromUTF8("Initiate curtailment sharing rule"),
                                         wxCommandEventHandler(
                                           AdequacyPatchOptions::onEditThresholds));
+        pThresholdEns = insertEdit(this,
+                                   s,
+                                   wxStringFromUTF8("ENS threshold for zeroing (MWh)"),
+                                   wxCommandEventHandler(AdequacyPatchOptions::onEditThresholds));
         pThresholdLMRviolations = insertEdit(
           this,
           s,
@@ -356,6 +361,11 @@ void AdequacyPatchOptions::refresh()
         {
             pThresholdCSRStart->SetValue(
               wxString() << study.parameters.adqPatchParams.curtailmentSharing.thresholdRun);
+        }
+        if (pThresholdEns)
+        {
+            pThresholdEns->SetValue(
+              wxString() << study.parameters.adqPatchParams.curtailmentSharing.thresholdEns);
         }
         if (pThresholdLMRviolations)
         {
@@ -575,6 +585,24 @@ void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
                 study.parameters.adqPatchParams.curtailmentSharing.thresholdRun = newthreshold;
                 MarkTheStudyAsModified();
             }
+        }
+        return;
+    }
+
+    if (pThresholdEns && id == pThresholdEns->GetId())
+    {
+        String text;
+        wxStringToString(pThresholdEns->GetValue(), text);
+
+        double newThreshold;
+        if (!text.to(newThreshold))
+        {
+            logs.error() << "impossible to update the ENS threshold";
+        }
+        else if (newThreshold != study.parameters.adqPatchParams.curtailmentSharing.thresholdEns)
+        {
+            study.parameters.adqPatchParams.curtailmentSharing.thresholdEns = newThreshold;
+            MarkTheStudyAsModified();
         }
         return;
     }
