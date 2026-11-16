@@ -876,11 +876,13 @@ var namespaces_dup =
           [ "MakeExportableName", "ExportableName_8cpp.html#a2a6c84d1e0836ee85267606be33f30c9", null ],
           [ "MakeExportableName", "ExportableName_8h.html#a3661124bee1e43280c56732dcc9e3459", null ],
           [ "MakeMpsSafeUniqueName", "ExportableName_8cpp.html#a4fba717c6f56bbd17d0f568daad780cb", null ],
+          [ "simulationTableOutputDirectory", "SimulationTablePath_8h.html#a7f06a35f3fd4c4812d7a93ad0b48ec07", null ],
           [ "stageFromName", "SimulationTableStage_8h.html#ab5066feb195b29a9995faeb83fa7312e", null ],
           [ "stageName", "SimulationTableStage_8h.html#ada052a817c5083959dbb0e6e39b01bfe", null ],
           [ "updateVariabilityIfShouldForceScenario", "SimulationTableGenerator_8h.html#aad221e18a2c748339a08e23bd0c47c70", null ],
           [ "allStages", "SimulationTableStage_8h.html#acab3857df15ef57721ede470e0ce597a", null ],
-          [ "is_optional_v", "columns_8h.html#ab6897cfdf6496b395c29e90dd2d8fa2a", null ]
+          [ "is_optional_v", "columns_8h.html#ab6897cfdf6496b395c29e90dd2d8fa2a", null ],
+          [ "simulationTableDirectoryName", "SimulationTablePath_8h.html#aa196b324176b91447341f3c19f6a0a0d", null ]
         ] ],
         [ "fileSetContent", "file_8cpp.html#a2d0c92d569f739fb52bbf5e0b1b4fef2", null ],
         [ "readFile", "file_8cpp.html#a752414a7e2eb33d25b41deeb4167d3c9", null ],
@@ -2275,7 +2277,9 @@ var namespaces_dup =
       [ "accumulate_simu_table_files", "simulation__table__reader_8py.html#a0ade5856730ddbc6b610c7e4b03bd196", null ],
       [ "make_simu_table_reader", "simulation__table__reader_8py.html#a86cd5a37b52053baaa3ec6cf80307926", null ],
       [ "read_simulation_table_csv", "simulation__table__reader_8py.html#a49b40803a2333f1c4425f1f61c7a2ca9", null ],
-      [ "read_simulation_table_parquet", "simulation__table__reader_8py.html#a188cf52af0c3d9602264175e686f22e1", null ]
+      [ "read_simulation_table_parquet", "simulation__table__reader_8py.html#a188cf52af0c3d9602264175e686f22e1", null ],
+      [ "simulation_table_directory", "simulation__table__reader_8py.html#a3127cd6047c6ea0105f9c7864b82eb60", null ],
+      [ "SIMULATION_TABLE_DIRECTORY", "simulation__table__reader_8py.html#ae233b855a951e8293b3bfc8d8c0b1cda", null ]
     ] ],
     [ "solver_input_handler", null, [
       [ "solver_input_handler", "classsolver__input__handler_1_1solver__input__handler.html", "classsolver__input__handler_1_1solver__input__handler" ]
