@@ -163,11 +163,8 @@ BOOST_AUTO_TEST_CASE(exact_width_load_ignores_a_trailing_separator)
     const auto file = writeFile("1\t\n2\t\n");
     Antares::Matrix matrix;
 
-    BOOST_REQUIRE(Antares::MatrixIO::load(matrix,
-                                          file.path,
-                                          1,
-                                          2,
-                                          Antares::MatrixIO::WidthPolicy::Exact));
+    BOOST_REQUIRE(
+      Antares::MatrixIO::load(matrix, file.path, 1, 2, Antares::MatrixIO::WidthPolicy::Exact));
     BOOST_REQUIRE_EQUAL(matrix.width(), 1);
     BOOST_REQUIRE_EQUAL(matrix.height(), 2);
     BOOST_CHECK_EQUAL(matrix[0][0], 1.);

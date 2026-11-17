@@ -248,12 +248,12 @@ inline bool load(Matrix& matrix,
                       return true;
                   }
 
-                   auto firstRowWidth = row.size();
-                   if (firstRowWidth && row.back().value.empty())
-                   {
-                       --firstRowWidth;
-                   }
-                   if (firstRowWidth > Matrix::kMaxDimension)
+                  auto firstRowWidth = row.size();
+                  if (firstRowWidth && row.back().value.empty())
+                  {
+                      --firstRowWidth;
+                  }
+                  if (firstRowWidth > Matrix::kMaxDimension)
                   {
                       logs.warning() << filename
                                      << ": matrix width exceeds the "
@@ -262,9 +262,9 @@ inline bool load(Matrix& matrix,
                       return false;
                   }
 
-                   targetWidth = widthPolicy == WidthPolicy::Exact
-                                   ? minWidth
-                                   : std::max<unsigned int>(minWidth, firstRowWidth);
+                  targetWidth = widthPolicy == WidthPolicy::Exact
+                                  ? minWidth
+                                  : std::max<unsigned int>(minWidth, firstRowWidth);
                   if (!validDimensions(targetWidth, targetHeight))
                   {
                       logs.warning() << filename
@@ -278,19 +278,19 @@ inline bool load(Matrix& matrix,
                   matrixInitialized = true;
               }
 
-               unsigned int column = 0;
-               for (std::size_t cellIndex = 0; cellIndex < row.size(); ++cellIndex)
-               {
-                   const auto& cell = row[cellIndex];
-                   if (column >= targetWidth)
-                   {
-                       if (cell.value.empty())
-                       {
-                           continue;
-                       }
-                       result = false;
-                       logs.warning() << filename << ": too many columns on row " << rowCount;
-                       break;
+              unsigned int column = 0;
+              for (std::size_t cellIndex = 0; cellIndex < row.size(); ++cellIndex)
+              {
+                  const auto& cell = row[cellIndex];
+                  if (column >= targetWidth)
+                  {
+                      if (cell.value.empty())
+                      {
+                          continue;
+                      }
+                      result = false;
+                      logs.warning() << filename << ": too many columns on row " << rowCount;
+                      break;
                   }
 
                   if (cell.value.empty())
