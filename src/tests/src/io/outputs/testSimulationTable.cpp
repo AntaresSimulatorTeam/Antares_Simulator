@@ -4,6 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <algorithm>
+#include <chrono>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
@@ -29,6 +30,7 @@
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/io/outputs/SimulationTableEntry.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
+#include "antares/io/outputs/SimulationTablePath.h"
 #include "antares/io/outputs/SimulationTableStage.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
@@ -144,6 +146,15 @@ std::string readFileContent(fs::path& path)
 {
     std::ifstream file_istream(path);
     return std::string{std::istreambuf_iterator<char>(file_istream), {}};
+}
+
+fs::path makeTemporaryOutputDirectory()
+{
+    const auto nonce = std::chrono::steady_clock::now().time_since_epoch().count();
+    const auto path = fs::temp_directory_path()
+                      / ("antares-simulation-table-output-" + std::to_string(nonce));
+    fs::create_directories(path);
+    return path;
 }
 
 BOOST_AUTO_TEST_SUITE(SimulationTableCsvTests)
@@ -298,14 +309,18 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
     tables.firstOptimSimulationTable()->addEntry(entry1);
     tables.secondOptimSimulationTable()->addEntry(entry2);
 
-    auto tempDir = std::filesystem::temp_directory_path();
+    auto tempDir = makeTemporaryOutputDirectory();
+    const auto tablesDir = simulationTableOutputDirectory(tempDir);
     LegacySimulationTablesWriter legacyWriter(tempDir, 1 /* year */, TableFormat::CSV);
     legacyWriter.write(tables);
 
     // Check that both CSV files were created
-    auto file1 = tempDir / "simulation-table-1-optim-nb-1.csv";
-    auto file2 = tempDir / "simulation-table-1-optim-nb-2.csv";
+    auto file1 = tablesDir / "simulation-table-1-optim-nb-1.csv";
+    auto file2 = tablesDir / "simulation-table-1-optim-nb-2.csv";
 
+    BOOST_CHECK(!std::filesystem::exists(tempDir / file1.filename()));
+    BOOST_CHECK(!std::filesystem::exists(tempDir / file2.filename()));
+    BOOST_CHECK(std::filesystem::is_directory(tablesDir));
     BOOST_CHECK(std::filesystem::exists(file1));
     BOOST_CHECK(std::filesystem::exists(file2));
 
@@ -327,8 +342,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
     }
 
     // Remove the created files
-    std::filesystem::remove(file1);
-    std::filesystem::remove(file2);
+    std::filesystem::remove_all(tempDir);
 }
 
 static void addWeekEntries(SimulationTable& table, unsigned week)
@@ -348,7 +362,8 @@ static void addWeekEntries(SimulationTable& table, unsigned week)
 
 BOOST_AUTO_TEST_CASE(Streaming_CsvFlushPerWeek_IsIdenticalToOneShotWrite)
 {
-    auto tempDir = std::filesystem::temp_directory_path();
+    auto tempDir = makeTemporaryOutputDirectory();
+    const auto tablesDir = simulationTableOutputDirectory(tempDir);
     constexpr unsigned nbWeeks = 4;
 
     // One-shot reference (year 20)
@@ -373,21 +388,21 @@ BOOST_AUTO_TEST_CASE(Streaming_CsvFlushPerWeek_IsIdenticalToOneShotWrite)
         }
         writer.finish(tables);
         // Stage never filled: no file
-        BOOST_CHECK(!std::filesystem::exists(tempDir / "simulation-table-21-optim-nb-2.csv"));
+        BOOST_CHECK(!std::filesystem::exists(tablesDir / "simulation-table-21-optim-nb-2.csv"));
     }
 
-    auto ref = tempDir / "simulation-table-20-optim-nb-1.csv";
-    auto streamed = tempDir / "simulation-table-21-optim-nb-1.csv";
+    auto ref = tablesDir / "simulation-table-20-optim-nb-1.csv";
+    auto streamed = tablesDir / "simulation-table-21-optim-nb-1.csv";
     BOOST_REQUIRE(std::filesystem::exists(ref));
     BOOST_REQUIRE(std::filesystem::exists(streamed));
     BOOST_CHECK_EQUAL(readFileContent(streamed), readFileContent(ref));
-    std::filesystem::remove(ref);
-    std::filesystem::remove(streamed);
+    std::filesystem::remove_all(tempDir);
 }
 
 BOOST_AUTO_TEST_CASE(Streaming_ParquetFlushPerWeek_WritesOneRowGroupPerFlush)
 {
-    auto tempDir = std::filesystem::temp_directory_path();
+    auto tempDir = makeTemporaryOutputDirectory();
+    const auto tablesDir = simulationTableOutputDirectory(tempDir);
     constexpr unsigned nbWeeks = 4;
     {
         OptimisationsSimulationTable tables{nullptr};
@@ -399,7 +414,7 @@ BOOST_AUTO_TEST_CASE(Streaming_ParquetFlushPerWeek_WritesOneRowGroupPerFlush)
         }
         writer.finish(tables);
     }
-    const auto path = tempDir / "simulation-table-22-optim-nb-1.parquet";
+    const auto path = tablesDir / "simulation-table-22-optim-nb-1.parquet";
     BOOST_REQUIRE(std::filesystem::exists(path));
 
     std::shared_ptr<arrow::io::ReadableFile> infile;
@@ -412,7 +427,7 @@ BOOST_AUTO_TEST_CASE(Streaming_ParquetFlushPerWeek_WritesOneRowGroupPerFlush)
     BOOST_CHECK_EQUAL(table->num_rows(), static_cast<int64_t>(nbWeeks * 3));
     reader.reset();
     PARQUET_THROW_NOT_OK(infile->Close());
-    std::filesystem::remove(path);
+    std::filesystem::remove_all(tempDir);
 }
 
 BOOST_AUTO_TEST_CASE(WriteTo_ParquetFormat_CreatesCorrectFiles)
@@ -435,11 +450,12 @@ BOOST_AUTO_TEST_CASE(WriteTo_ParquetFormat_CreatesCorrectFiles)
                                                    .value = 20.0,
                                                    .status = MipBasisStatus::FREE});
 
-    auto tempDir = std::filesystem::temp_directory_path();
+    auto tempDir = makeTemporaryOutputDirectory();
+    const auto tablesDir = simulationTableOutputDirectory(tempDir);
     LegacySimulationTablesWriter(tempDir, 1, TableFormat::Parquet).write(tables);
 
-    const auto file1 = tempDir / "simulation-table-1-optim-nb-1.parquet";
-    const auto file2 = tempDir / "simulation-table-1-optim-nb-2.parquet";
+    const auto file1 = tablesDir / "simulation-table-1-optim-nb-1.parquet";
+    const auto file2 = tablesDir / "simulation-table-1-optim-nb-2.parquet";
 
     // Helper to verify file content
     auto verifyParquet = [](const std::filesystem::path& path)
@@ -460,8 +476,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_ParquetFormat_CreatesCorrectFiles)
     verifyParquet(file1);
     verifyParquet(file2);
 
-    std::filesystem::remove(file1);
-    std::filesystem::remove(file2);
+    std::filesystem::remove_all(tempDir);
 }
 
 BOOST_AUTO_TEST_CASE(TableForStage_CreatesOnDemandAndKeepsPointersStable)
@@ -516,17 +531,18 @@ BOOST_AUTO_TEST_CASE(WriteTo_NamesOneFilePerStage)
     tables.secondOptimSimulationTable()->addEntry(entry);
     tables.tableForStage(Stage::peakShaving)->addEntry(entry);
 
-    auto tempDir = std::filesystem::temp_directory_path();
+    auto tempDir = makeTemporaryOutputDirectory();
+    const auto tablesDir = simulationTableOutputDirectory(tempDir);
     LegacySimulationTablesWriter(tempDir, 7 /* year */, TableFormat::CSV).write(tables);
 
     for (const auto* name: {"simulation-table-7-optim-nb-1.csv",
                             "simulation-table-7-optim-nb-2.csv",
                             "simulation-table-7-peak-shaving.csv"})
     {
-        const auto file = tempDir / name;
+        const auto file = tablesDir / name;
         BOOST_CHECK_MESSAGE(std::filesystem::exists(file), "missing " + std::string(name));
-        std::filesystem::remove(file);
     }
+    std::filesystem::remove_all(tempDir);
 }
 
 BOOST_AUTO_TEST_CASE(WriteTo_SkipsStagesWithNoRows)
@@ -543,17 +559,17 @@ BOOST_AUTO_TEST_CASE(WriteTo_SkipsStagesWithNoRows)
     // Asked for, but never filled -- a post-process dump that declined to run.
     tables.tableForStage(Stage::peakShaving);
 
-    auto tempDir = std::filesystem::temp_directory_path();
+    auto tempDir = makeTemporaryOutputDirectory();
+    const auto tablesDir = simulationTableOutputDirectory(tempDir);
     LegacySimulationTablesWriter(tempDir, 8 /* year */, TableFormat::CSV).write(tables);
 
-    const auto filled = tempDir / "simulation-table-8-optim-nb-1.csv";
-    const auto empty = tempDir / "simulation-table-8-peak-shaving.csv";
+    const auto filled = tablesDir / "simulation-table-8-optim-nb-1.csv";
+    const auto empty = tablesDir / "simulation-table-8-peak-shaving.csv";
     BOOST_CHECK(std::filesystem::exists(filled));
     BOOST_CHECK_MESSAGE(!std::filesystem::exists(empty),
                         "an empty stage must not produce a header-only file");
 
-    std::filesystem::remove(filled);
-    std::filesystem::remove(empty);
+    std::filesystem::remove_all(tempDir);
 }
 
 BOOST_AUTO_TEST_CASE(ParseStageSelection_AcceptsAllTheStageNames)
@@ -723,17 +739,17 @@ BOOST_AUTO_TEST_CASE(SelectStages_WriterOnlyEmitsSelectedStages)
                                      .status = MipBasisStatus::BASIC};
     tables.firstOptimSimulationTable()->addEntry(entry);
 
-    auto tempDir = std::filesystem::temp_directory_path();
+    auto tempDir = makeTemporaryOutputDirectory();
+    const auto tablesDir = simulationTableOutputDirectory(tempDir);
     LegacySimulationTablesWriter(tempDir, 9 /* year */, TableFormat::CSV).write(tables);
 
-    const auto selected = tempDir / "simulation-table-9-optim-nb-1.csv";
-    const auto refused = tempDir / "simulation-table-9-optim-nb-2.csv";
+    const auto selected = tablesDir / "simulation-table-9-optim-nb-1.csv";
+    const auto refused = tablesDir / "simulation-table-9-optim-nb-2.csv";
     BOOST_CHECK(std::filesystem::exists(selected));
     BOOST_CHECK_MESSAGE(!std::filesystem::exists(refused),
                         "an unselected stage must not produce a file");
 
-    std::filesystem::remove(selected);
-    std::filesystem::remove(refused);
+    std::filesystem::remove_all(tempDir);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
