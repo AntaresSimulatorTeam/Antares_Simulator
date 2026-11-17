@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <map>
 #include <string>
 #include <utility>
@@ -12,6 +13,7 @@
 #include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
 #include <antares/solver/modeler/parameters/scenarioScope.h>
 #include <antares/solver/optim-model-filler/BendersDecomposition.h>
+#include <antares/study/system-model/heuristic.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
 
@@ -26,6 +28,10 @@ enum class ResolutionMode : unsigned
 
 using ComponentProperty = std::pair<std::string, std::string>; // (id, value)
 
+/// Heuristics declared in optim-config.yml, by model id (format: libraryId.modelId)
+using HeuristicsByModel = std::map<std::string,
+                                   std::vector<ModelerStudy::SystemModel::HeuristicDefinition>>;
+
 struct ModelerData
 {
     std::vector<ModelerStudy::SystemModel::Library> libraries;
@@ -36,6 +42,40 @@ struct ModelerData
     ScenarioScope scenarioScope;
     LinearProblem::BendersDecomposition bendersDecomposition;
     std::map<std::string, std::vector<ComponentProperty>> componentProperties;
+    HeuristicsByModel heuristicsByModel;
+
+    /// The heuristic definition to apply to a component, nullptr if it is not handled by a
+    /// heuristic
+    const ModelerStudy::SystemModel::HeuristicDefinition* heuristicFor(
+      const ModelerStudy::SystemModel::Component& component) const
+    {
+        const auto type = component.heuristicType();
+        if (!type)
+        {
+            return nullptr;
+        }
+        const auto* model = component.getModel();
+        const auto it = heuristicsByModel.find(model->LibraryId() + "." + model->Id());
+        if (it == heuristicsByModel.end())
+        {
+            return nullptr;
+        }
+        for (const auto& heuristic: it->second)
+        {
+            if (heuristic.type == *type)
+            {
+                return &heuristic;
+            }
+        }
+        return nullptr;
+    }
+
+    bool hasHeuristicComponents() const
+    {
+        return system
+               && std::ranges::any_of(system->Components(),
+                                      [](const auto& c) { return c.heuristicType().has_value(); });
+    }
 };
 
 // Operator for printing ResolutionMode in logs and tests

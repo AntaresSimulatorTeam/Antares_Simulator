@@ -10,6 +10,7 @@
 #include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/solver/optim-model-filler/BendersDecomposition.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
+#include "antares/solver/optim-model-filler/VariableBoundOverrides.h"
 
 #include "ReadLinearConstraintVisitor.h"
 
@@ -33,7 +34,8 @@ public:
                              OptimEntityContainer& optimEntityContainer,
                              const ScenarioGroupRepository& scenarioGroupRepository,
                              Solver::Config::Location targetLocation,
-                             BendersDecomposition* bendersDecomposition = nullptr);
+                             BendersDecomposition* bendersDecomposition = nullptr,
+                             const VariableBoundOverrides* boundOverrides = nullptr);
 
     void addVariables(const Api::FillContext& ctx) override;
 
@@ -61,6 +63,7 @@ private:
     const LinearProblem::ScenarioGroupRepository& scenarioGroupRepo_;
     const Solver::Config::Location targetLocation_;
     BendersDecomposition* bendersDecomposition_ = nullptr;
+    const VariableBoundOverrides* boundOverrides_ = nullptr;
 
     // Filter to keep only items compatible with the target location
     auto locationFilter()

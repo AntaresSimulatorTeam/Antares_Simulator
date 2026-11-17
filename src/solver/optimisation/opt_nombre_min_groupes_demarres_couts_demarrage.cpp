@@ -3,7 +3,7 @@
 
 #include <spx_fonctions.h>
 
-#include "antares/solver/modeler/ModelerData.h"
+#include "antares/solver/optimisation/thermalHeuristicsCore.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
@@ -177,7 +177,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
   RESULTATS_HORAIRES& ResultatsHoraires,
   PALIERS_THERMIQUES& PaliersThermiquesDuPays)
 {
-    std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
+    const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
       = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index]
           .NombreMaxDeGroupesEnMarcheDuPalierThermique;
     const int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
@@ -305,6 +305,21 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
         return;
     }
 
+    OPT_ResoudreLePbLineaireDuNombreMinDeGroupesEnMarche(
+      NbMinOptDeGroupesEnMarche,
+      NombreMaxDeGroupesEnMarcheDuPalierThermique,
+      DureeMinimaleDeMarcheDUnGroupeDuPalierThermique,
+      DureeMinimaleDArretDUnGroupeDuPalierThermique,
+      NombreDePasDeTempsProblemeHebdo);
+}
+
+void OPT_ResoudreLePbLineaireDuNombreMinDeGroupesEnMarche(
+  std::vector<int>& NbMinOptDeGroupesEnMarche,
+  const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique,
+  int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique,
+  int DureeMinimaleDArretDUnGroupeDuPalierThermique,
+  int NombreDePasDeTempsProblemeHebdo)
+{
     int NombreDeVariables = 0;
     NombreDeVariables += NombreDePasDeTempsProblemeHebdo;
     NombreDeVariables += NombreDePasDeTempsProblemeHebdo;

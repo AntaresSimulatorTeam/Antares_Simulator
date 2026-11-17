@@ -19,6 +19,9 @@ namespace Antares::Solver::LoadFiles
 /// Load the libraries, system and dataseries
 std::optional<ModelerData> loadAll(const std::filesystem::path& studyPath);
 
+/// Checks the integer strategies of the components against optim-config.yml
+void checkIntegerStrategies(const ModelerData& data);
+
 ModelerParameters loadParameters(const std::filesystem::path& studyPath);
 
 /// Result of loading the model libraries together with the settings taken from optim-config.yml
@@ -27,6 +30,7 @@ struct LoadedLibraries
     std::vector<ModelerStudy::SystemModel::Library> libraries;
     ResolutionMode resolutionMode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
     ScenarioScope scenarioScope;
+    HeuristicsByModel heuristicsByModel;
 };
 
 std::optional<LoadedLibraries> loadLibraries(const std::filesystem::path& studyPath);

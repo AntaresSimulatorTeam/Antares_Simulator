@@ -126,7 +126,6 @@ struct Model
     std::vector<Constraint> constraints;
     std::vector<Objective> objectives;
     std::vector<ConstraintOutOfBoundsProcessing> constraints_out_of_bounds_processing;
-    bool isHeuristic = false;
     std::vector<Heuristic> heuristics;
 };
 

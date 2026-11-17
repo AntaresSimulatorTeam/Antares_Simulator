@@ -203,7 +203,20 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::HeuristicInput>::decode(
 
     rhs.heuristic_element = parseHeuristicElement(node["heuristic-element"].as<std::string>());
 
-    rhs.id = node["id"].as<std::string>();
+    // The specification uses both "id" and "value" to name the model parameter/variable
+    if (node["id"])
+    {
+        rhs.id = node["id"].as<std::string>();
+    }
+    else if (node["value"])
+    {
+        rhs.id = node["value"].as<std::string>();
+    }
+    else
+    {
+        throw Antares::IO::Inputs::InputError("Missing 'id' for heuristic input '"
+                                              + node["heuristic-element"].as<std::string>() + "'");
+    }
 
     if (node["type"])
     {
@@ -242,6 +255,14 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::Heuristic>::decode(
 
     rhs.id = node["id"].as<std::string>();
     rhs.type = parseHeuristicType(rhs.id);
+    for (const auto& element: {"inputs", "outputs"})
+    {
+        if (node[element] && !node[element].IsSequence())
+        {
+            throw Antares::IO::Inputs::InputError(std::string("Heuristic '") + rhs.id + "': '"
+                                                  + element + "' must be a list");
+        }
+    }
 
     rhs.inputs = as_fallback_default<
       std::vector<Antares::IO::Inputs::YmlOptimConfig::HeuristicInput>>(node["inputs"]);
@@ -262,14 +283,11 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::Model>::decode(
     }
     rhs.id = node["id"].as<std::string>();
     const auto& modelDecompositionNode = node["model-decomposition"];
-    const auto& modelHeuristicsNode = node["heuristics"];
-    if (modelDecompositionNode && modelHeuristicsNode)
+    if (!modelDecompositionNode && !node["heuristics"])
     {
-        throw Antares::IO::Inputs::InputError("Ambiguous model format");
-    }
-    if (!modelDecompositionNode && !modelHeuristicsNode)
-    {
-        throw Antares::IO::Inputs::InputError("Ambiguous model format");
+        throw YAML::Exception(node.Mark(),
+                              "Model '" + rhs.id
+                                + "': expected 'model-decomposition' or 'heuristics'");
     }
     if (modelDecompositionNode)
     {
@@ -284,22 +302,18 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::Model>::decode(
         rhs.objectives = as_fallback_default<
           std::vector<Antares::IO::Inputs::YmlOptimConfig::Objective>>(
           modelDecompositionNode["objective-contributions"]);
-
-        const auto& outOfBoundsProcessingNode = node["out-of-bounds-processing"];
-        if (outOfBoundsProcessingNode && outOfBoundsProcessingNode["constraints"])
-        {
-            rhs.constraints_out_of_bounds_processing = as_fallback_default<
-              std::vector<Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcessing>>(
-              outOfBoundsProcessingNode["constraints"]);
-        }
     }
-    else
+
+    const auto& outOfBoundsProcessingNode = node["out-of-bounds-processing"];
+    if (outOfBoundsProcessingNode && outOfBoundsProcessingNode["constraints"])
     {
-        rhs.isHeuristic = true;
-
-        rhs.heuristics = as_fallback_default<
-          std::vector<Antares::IO::Inputs::YmlOptimConfig::Heuristic>>(modelHeuristicsNode);
+        rhs.constraints_out_of_bounds_processing = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcessing>>(
+          outOfBoundsProcessingNode["constraints"]);
     }
+
+    rhs.heuristics = as_fallback_default<
+      std::vector<Antares::IO::Inputs::YmlOptimConfig::Heuristic>>(node["heuristics"]);
 
     return true;
 }

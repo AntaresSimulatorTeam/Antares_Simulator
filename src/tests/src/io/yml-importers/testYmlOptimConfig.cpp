@@ -577,4 +577,131 @@ models:
     BOOST_CHECK_THROW(parser.parse(yaml_content), std::runtime_error);
 }
 
+BOOST_AUTO_TEST_CASE(parse_model_heuristics)
+{
+    std::string yaml_content = R"(
+models:
+  - id: antares_legacy_models.thermal
+    heuristics:
+      - id: accurate
+        inputs:
+          - heuristic-element: min_up_duration
+            value: d_min_up
+          - heuristic-element: min_down_duration
+            id: d_min_down
+            type: parameter
+          - heuristic-element: num_units_max
+            value: nb_units_max
+          - heuristic-element: num_units_on_opt
+            value: nb_units_on
+            type: variable-solution
+        outputs:
+          - heuristic-element: minimum_num_units_on
+            id: nb_units_on
+            type: variable-lower-bound
+      - id: fast
+        inputs:
+          - heuristic-element: generation_power
+            value: generation
+            type: variable-solution
+        outputs:
+          - heuristic-element: minimum_generation_power
+            id: generation
+            type: variable-upper-bound
+)";
+
+    Parser parser;
+    OptimConfig config = parser.parse(yaml_content);
+
+    BOOST_REQUIRE_EQUAL(config.models.size(), 1);
+    const auto& heuristics = config.models[0].heuristics;
+    BOOST_REQUIRE_EQUAL(heuristics.size(), 2);
+
+    BOOST_CHECK(heuristics[0].type == HeuristicType::Accurate);
+    BOOST_REQUIRE_EQUAL(heuristics[0].inputs.size(), 4);
+    BOOST_CHECK(heuristics[0].inputs[0].heuristic_element == HeuristicElement::MinUpDuration);
+    BOOST_CHECK_EQUAL(heuristics[0].inputs[0].id, "d_min_up");
+    BOOST_CHECK(heuristics[0].inputs[0].type == HeuristicInputType::Parameter);
+    BOOST_CHECK_EQUAL(heuristics[0].inputs[1].id, "d_min_down");
+    BOOST_CHECK(heuristics[0].inputs[3].heuristic_element == HeuristicElement::NumUnitsOnOpt);
+    BOOST_CHECK(heuristics[0].inputs[3].type == HeuristicInputType::VariableSolution);
+    BOOST_REQUIRE_EQUAL(heuristics[0].outputs.size(), 1);
+    BOOST_CHECK(heuristics[0].outputs[0].heuristic_element == HeuristicElement::MinimumNumUnitsOn);
+    BOOST_CHECK_EQUAL(heuristics[0].outputs[0].id, "nb_units_on");
+    BOOST_CHECK(heuristics[0].outputs[0].type == HeuristicOutputType::VariableLowerBound);
+
+    BOOST_CHECK(heuristics[1].type == HeuristicType::Fast);
+    BOOST_CHECK(heuristics[1].outputs[0].type == HeuristicOutputType::VariableUpperBound);
+
+    // No model-decomposition: nothing else is defined
+    BOOST_CHECK(config.models[0].variables.empty());
+    BOOST_CHECK(config.models[0].constraints.empty());
+}
+
+BOOST_AUTO_TEST_CASE(parse_model_with_heuristics_and_model_decomposition)
+{
+    std::string yaml_content = R"(
+models:
+  - id: lib.model
+    model-decomposition:
+      variables:
+        - id: var1
+          location: subproblems
+    heuristics:
+      - id: fast
+)";
+
+    Parser parser;
+    OptimConfig config = parser.parse(yaml_content);
+    BOOST_REQUIRE_EQUAL(config.models.size(), 1);
+    BOOST_CHECK_EQUAL(config.models[0].variables.size(), 1);
+    BOOST_CHECK_EQUAL(config.models[0].heuristics.size(), 1);
+}
+
+BOOST_AUTO_TEST_CASE(parse_heuristic_errors)
+{
+    Parser parser;
+    // Unknown heuristic
+    BOOST_CHECK_THROW(parser.parse(R"(
+models:
+  - id: lib.model
+    heuristics:
+      - id: medium
+)"),
+                      std::runtime_error);
+    // Unknown heuristic element
+    BOOST_CHECK_THROW(parser.parse(R"(
+models:
+  - id: lib.model
+    heuristics:
+      - id: fast
+        inputs:
+          - heuristic-element: unknown
+            id: p
+)"),
+                      std::runtime_error);
+    // Output type must be a variable bound
+    BOOST_CHECK_THROW(parser.parse(R"(
+models:
+  - id: lib.model
+    heuristics:
+      - id: fast
+        outputs:
+          - heuristic-element: minimum_generation_power
+            id: generation
+            type: parameter
+)"),
+                      std::runtime_error);
+    // Input without id
+    BOOST_CHECK_THROW(parser.parse(R"(
+models:
+  - id: lib.model
+    heuristics:
+      - id: fast
+        inputs:
+          - heuristic-element: generation_power
+)"),
+                      std::runtime_error);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

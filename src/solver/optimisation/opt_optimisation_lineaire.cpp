@@ -8,10 +8,12 @@
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
+#include "antares/solver/optimisation/gemsThermalHeuristics.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/utils/filename.h"
 
 using namespace Antares::Solver;
@@ -204,26 +206,16 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
     return true;
 }
 
+/// Legacy thermal clusters: heuristic fast or accurate depending on the unit commitment mode
 void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
 {
-    /*
-    Sinon, on est dependant de optimisation fast mode pour tout
-    if (vectorHeuristicCompenentsFast not empty)
-    {
-        OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDTComponents(problemeHebdo ou component)
-    }
-    if (vectorHeuristicCompenentsAccurate not empty)
-    {
-        OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrageComponents(problemeHebdo)
-    }
-    */
+    const int NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTemps;
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
     {
         RESULTATS_HORAIRES& ResultatsHoraires = problemeHebdo->ResultatsHoraires[pays];
         bool OptimisationAvecVariablesEntieres = problemeHebdo->OptimisationAvecVariablesEntieres;
         bool Expansion = problemeHebdo->Expansion;
         PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
-        int NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTemps;
 
         std::vector<int>& NbGrpCourbeGuide = problemeHebdo->NbGrpCourbeGuide;
         std::vector<int>& NbGrpOpt = problemeHebdo->NbGrpOpt;
@@ -236,10 +228,10 @@ void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
                   NombreDePasDeTempsProblemeHebdo,
                   PaliersThermiquesDuPays,
                   ResultatsHoraires,
-                  pays,
                   Expansion,
                   index,
-                  OptimisationAvecVariablesEntieres);
+                  OptimisationAvecVariablesEntieres,
+                  static_cast<int>(pays));
             }
             else
             {
@@ -326,6 +318,21 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                                                 && problemeHebdo->OptimisationAuPasHebdomadaire
                                                 && simulationTables->anyPostProcessStageSelected();
 
+    // GEMS components with integer strategy "heuristic": clear the values of the previous week
+    const bool useGemsThermalHeuristics = problemeHebdo->useGemsThermalHeuristics
+                                          && problemeHebdo->modelerData;
+    if (useGemsThermalHeuristics)
+    {
+        if (!problemeHebdo->gemsHeuristicsState)
+        {
+            problemeHebdo->gemsHeuristicsState = std::make_shared<
+              Antares::Optimization::GemsHeuristicsState>();
+        }
+        problemeHebdo->gemsHeuristicsState->reset(
+          static_cast<unsigned>(problemeHebdo->HeureDansLAnnee),
+          static_cast<unsigned>(problemeHebdo->NombreDePasDeTemps));
+    }
+
     auto* firstOptimSimulationTable = simulationTables
                                         ? simulationTables->firstOptimSimulationTable()
                                         : nullptr;
@@ -342,10 +349,22 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode
     // and if the 1st one failed.
-    if (ret && !problemeHebdo->Expansion && problemeHebdo->useThermalHeuristic)
+    // The 2nd optimization is needed when a heuristic (legacy thermal clusters or GEMS
+    // components) adjusts some bounds after the 1st one.
+    if (ret && !problemeHebdo->Expansion
+        && (problemeHebdo->useThermalHeuristic || useGemsThermalHeuristics))
     {
         // We need to adjust some stuff before running the 2nd optimisation
-        runThermalHeuristic(problemeHebdo);
+        if (problemeHebdo->useThermalHeuristic)
+        {
+            runThermalHeuristic(problemeHebdo);
+        }
+        if (useGemsThermalHeuristics)
+        {
+            Antares::Optimization::runGemsThermalHeuristics(*problemeHebdo->gemsHeuristicsState,
+                                     *problemeHebdo->modelerData,
+                                     problemeHebdo->year);
+        }
         auto* secondOptimSimulationTable = simulationTables
                                              ? simulationTables->secondOptimSimulationTable()
                                              : nullptr;

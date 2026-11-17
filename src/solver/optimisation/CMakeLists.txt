@@ -86,6 +86,10 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/MipDetection.h
         MipDetection.cpp
 
+        include/antares/solver/optimisation/thermalHeuristicsCore.h
+        include/antares/solver/optimisation/gemsThermalHeuristics.h
+        gemsThermalHeuristics.cpp
+
         constraints/ConstraintBuilder.cpp
         include/antares/solver/optimisation/constraints/ConstraintBuilder.h
         include/antares/solver/optimisation/constraints/AreaBalance.h

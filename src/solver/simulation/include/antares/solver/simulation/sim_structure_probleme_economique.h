@@ -21,6 +21,7 @@ namespace Antares::Optimization
 {
 struct SolvedModelerProblem;
 class InactiveComponentsAnalyzer;
+struct GemsHeuristicsState;
 } // namespace Antares::Optimization
 
 struct CORRESPONDANCES_DES_VARIABLES
@@ -563,6 +564,7 @@ struct PROBLEME_HEBDO
     bool OptimisationNotFastMode = false;
     bool OptimisationAvecVariablesEntieres = false;
     bool useThermalHeuristic = true;
+    bool useGemsThermalHeuristics = false;
 
     /// \brief Study-wide, precomputed activity flags used to suppress
     /// simulation-table rows for structurally inactive objects (see
@@ -798,6 +800,10 @@ public:
     /// alive past the solve so a post-process simulation table can re-emit the
     /// modeler component rows. Null unless retainSolvedModelerProblem is set.
     std::shared_ptr<const Antares::Optimization::SolvedModelerProblem> lastSolvedModelerProblem;
+
+    /// \brief Values exchanged between the two optimisations of a week by the heuristics of
+    /// the GEMS components (integer strategy "heuristic"). Null unless useGemsThermalHeuristics.
+    std::shared_ptr<Antares::Optimization::GemsHeuristicsState> gemsHeuristicsState;
 };
 
 // Import functions for capacity and hydro reserves

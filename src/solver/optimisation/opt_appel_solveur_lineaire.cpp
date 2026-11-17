@@ -24,6 +24,7 @@
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/LegacySimulationTableSnapshot.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
+#include "antares/solver/optimisation/gemsThermalHeuristics.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/optimisation/ortools_wrapper.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -68,7 +69,8 @@ static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
   Solver::ModelerData* modelerData,
   OptimEntityContainer& optimEntityContainer,
-  BendersDecomposition* bendersDecomposition)
+  BendersDecomposition* bendersDecomposition,
+  const VariableBoundOverrides* boundOverrides)
 {
     const auto& components = modelerData->system->Components();
     optimEntityContainer.addFromSystemComponents(components);
@@ -80,7 +82,8 @@ static void fillModelerComponents(
                                             optimEntityContainer,
                                             modelerData->scenarioGroupRepository,
                                             Solver::Config::Location::SUBPROBLEMS,
-                                            bendersDecomposition));
+                                            bendersDecomposition,
+                                            boundOverrides));
     }
 }
 
@@ -121,10 +124,13 @@ void fillLinearProblem(const FillContext& fillCtx,
     if (problemeHebdo->modelerData)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
+        const auto& gemsHeuristicsState = problemeHebdo->gemsHeuristicsState;
         fillModelerComponents(fillersCollection,
                               problemeHebdo->modelerData,
                               optimEntityContainer,
-                              bendersDecomposition);
+                              bendersDecomposition,
+                              gemsHeuristicsState ? &gemsHeuristicsState->boundOverrides
+                                                  : nullptr);
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
@@ -241,6 +247,16 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                     .objectiveValue = 0};
         }
         throw FatalError("Internal error: insufficient memory");
+    }
+
+    // The heuristics of the GEMS components need some values of the first optimisation
+    if (optimizationNumber == PREMIERE_OPTIMISATION && problemeHebdo->gemsHeuristicsState
+        && modelerData)
+    {
+        captureGemsHeuristicInputs(*problemeHebdo->gemsHeuristicsState,
+                                   *modelerData,
+                                   *optimEntityContainer,
+                                   fillCtx);
     }
 
     // Hand the modeler side to the post-process dumps. Called for both passes,

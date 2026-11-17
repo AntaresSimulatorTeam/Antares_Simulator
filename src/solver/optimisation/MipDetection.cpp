@@ -21,6 +21,11 @@ bool hasIntegerVariables(const Solver::ModelerData* modelerData,
 
     for (const auto& component: modelerData->system->Components())
     {
+        if (component.hasRelaxedIntegerVariables())
+        {
+            // integer strategy "relaxed" or "heuristic"
+            continue;
+        }
         for (const auto& variable: component.getModel()->Variables())
         {
             if (location == Antares::Solver::Config::Location::SUBPROBLEMS

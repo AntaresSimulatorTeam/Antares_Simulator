@@ -584,4 +584,63 @@ BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_is_successful)
 
     BOOST_CHECK_THROW(component.nodeAtPortField("wrong port", "field"), std::invalid_argument);
 }
+BOOST_AUTO_TEST_CASE(integer_strategy_defaults_to_exact)
+{
+    Model model = createModelWithoutParameters();
+    auto component = component_builder.withId("component").withModel(&model).build();
+    BOOST_CHECK_EQUAL(component.integerStrategy().id, "exact");
+    BOOST_CHECK(!component.hasRelaxedIntegerVariables());
+    BOOST_CHECK(!component.heuristicType().has_value());
+}
+
+BOOST_AUTO_TEST_CASE(integer_strategy_relaxed_and_heuristic)
+{
+    Model model = createModelWithoutParameters();
+    auto relaxed = component_builder.withId("relaxed")
+                     .withModel(&model)
+                     .withIntegerStrategy("relaxed")
+                     .build();
+    BOOST_CHECK(relaxed.hasRelaxedIntegerVariables());
+    BOOST_CHECK(!relaxed.heuristicType().has_value());
+
+    auto accurate = component_builder.withId("accurate")
+                      .withModel(&model)
+                      .withIntegerStrategy("heuristic", "accurate")
+                      .build();
+    BOOST_CHECK(accurate.hasRelaxedIntegerVariables());
+    BOOST_REQUIRE(accurate.heuristicType().has_value());
+    BOOST_CHECK(accurate.heuristicType().value() == HeuristicType::Accurate);
+
+    // The builder is reset after build(): the strategy must not leak into the next component
+    auto exact = component_builder.withId("exact").withModel(&model).build();
+    BOOST_CHECK_EQUAL(exact.integerStrategy().id, "exact");
+    BOOST_CHECK(exact.integerStrategy().heuristic_id.empty());
+}
+
+BOOST_AUTO_TEST_CASE(invalid_integer_strategies)
+{
+    Model model = createModelWithoutParameters();
+    BOOST_CHECK_EXCEPTION(
+      component_builder.withId("c").withModel(&model).withIntegerStrategy("integer").build(),
+      std::invalid_argument,
+      checkMessage("Component 'c': invalid integer strategy 'integer'. Expected 'exact', "
+                   "'relaxed' or 'heuristic'"));
+    BOOST_CHECK_EXCEPTION(
+      component_builder.withId("c").withModel(&model).withIntegerStrategy("heuristic").build(),
+      std::invalid_argument,
+      checkMessage("Component 'c': 'heuristic-id' is mandatory when integer strategy is "
+                   "'heuristic'"));
+    BOOST_CHECK_EXCEPTION(component_builder.withId("c")
+                            .withModel(&model)
+                            .withIntegerStrategy("heuristic", "slow")
+                            .build(),
+                          std::invalid_argument,
+                          checkMessage("Component 'c': invalid heuristic-id 'slow'. Expected "
+                                       "'fast' or 'accurate'"));
+    BOOST_CHECK_EXCEPTION(
+      component_builder.withId("c").withModel(&model).withIntegerStrategy("exact", "fast").build(),
+      std::invalid_argument,
+      checkMessage("Component 'c': 'heuristic-id' must not be specified when integer strategy "
+                   "is 'exact'"));
+}
 BOOST_AUTO_TEST_SUITE_END()

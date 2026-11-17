@@ -1,6 +1,10 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <cmath>
+#include <functional>
+
+#include "antares/solver/optimisation/thermalHeuristicsCore.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 constexpr double ZERO_PMIN = 1.e-2;
@@ -67,39 +71,14 @@ double OPT_CalculerAireMaxPminJour(int PremierPdt,
     return (Cout);
 }
 
-void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(int NombreDePasDeTemps,
-                                                       int NombreDePays,
-                                                       std::vector<int>& NbGrpCourbeGuide,
-                                                       std::vector<int>& NbGrpOpt,
-                                                       RESULTATS_HORAIRES& ResultatsHoraires,
-                                                       PALIERS_THERMIQUES& PaliersThermiquesDuPays,
-                                                       int indexPalier)
+void OPT_CalculerLaCourbeGuideDuNombreDeGroupes(int NombreDePasDeTemps,
+                                                const std::function<double(int)>& production,
+                                                double TailleUnitaireDUnGroupe,
+                                                std::vector<int>& NbGrpCourbeGuide)
 {
-    const std::vector<double>& PminDuPalierThermiquePendantUneHeure
-      = PaliersThermiquesDuPays.PminDuPalierThermiquePendantUneHeure;
-    const std::vector<double>& TailleUnitaireDUnGroupeDuPalierThermique
-      = PaliersThermiquesDuPays.TailleUnitaireDUnGroupeDuPalierThermique;
-    const std::vector<int>& minUpDownTime = PaliersThermiquesDuPays.minUpDownTime;
-
-    const std::vector<PRODUCTION_THERMIQUE_OPTIMALE>& ProductionThermiqueOptimale
-      = ResultatsHoraires.ProductionThermique;
-
-    PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDispoEtCout = PaliersThermiquesDuPays
-                                                                 .PuissanceDisponibleEtCout
-                                                                   [indexPalier];
-    std::vector<double>& PuissanceMinDuPalierThermique = PuissanceDispoEtCout
-                                                           .PuissanceMinDuPalierThermique;
-    const std::vector<double>& PuissanceDisponibleDuPalierThermique
-      = PuissanceDispoEtCout.PuissanceDisponibleDuPalierThermique;
-
-    if (fabs(PminDuPalierThermiquePendantUneHeure[indexPalier]) < ZERO_PMIN)
-    {
-        return;
-    }
-
     for (int Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
     {
-        double P = ProductionThermiqueOptimale[Pdt].ProductionThermiqueDuPalier[indexPalier];
+        double P = production(Pdt);
 
         NbGrpCourbeGuide[Pdt] = 0;
         if (fabs(P) < ZERO_PMIN)
@@ -107,20 +86,23 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(int NombreDePasDeTemps,
             continue;
         }
 
-        if (TailleUnitaireDUnGroupeDuPalierThermique[indexPalier] > ZERO_PMIN)
+        if (TailleUnitaireDUnGroupe > ZERO_PMIN)
         {
-            NbGrpCourbeGuide[Pdt] = (int)ceil(
-              P / TailleUnitaireDUnGroupeDuPalierThermique[indexPalier]);
+            NbGrpCourbeGuide[Pdt] = (int)ceil(P / TailleUnitaireDUnGroupe);
         }
         else
         {
             NbGrpCourbeGuide[Pdt] = (int)ceil(P);
         }
     }
+}
 
+bool OPT_CalculerLeNombreDeGroupesParBlocsDeMUTetMDT(int NombreDePasDeTemps,
+                                                     int MUTetMDT,
+                                                     std::vector<int>& NbGrpCourbeGuide,
+                                                     std::vector<int>& NbGrpOpt)
+{
     double EcartOpt = LINFINI_ANTARES;
-    int MUTetMDT = minUpDownTime[indexPalier];
-
     int iOpt = -1;
 
     int IntervalleDAjustement = MUTetMDT;
@@ -153,7 +135,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(int NombreDePasDeTemps,
 
     if (iOpt < 0)
     {
-        return;
+        return false;
     }
 
     int PremierPdt = iOpt;
@@ -165,6 +147,53 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(int NombreDePasDeTemps,
                                 NombreDePasDeTemps,
                                 NbGrpCourbeGuide,
                                 NbGrpOpt);
+    return true;
+}
+
+void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(int NombreDePasDeTemps,
+                                                       int NombreDePays,
+                                                       std::vector<int>& NbGrpCourbeGuide,
+                                                       std::vector<int>& NbGrpOpt,
+                                                       RESULTATS_HORAIRES& ResultatsHoraires,
+                                                       PALIERS_THERMIQUES& PaliersThermiquesDuPays,
+                                                       int indexPalier)
+{
+    const std::vector<double>& PminDuPalierThermiquePendantUneHeure
+      = PaliersThermiquesDuPays.PminDuPalierThermiquePendantUneHeure;
+    const std::vector<double>& TailleUnitaireDUnGroupeDuPalierThermique
+      = PaliersThermiquesDuPays.TailleUnitaireDUnGroupeDuPalierThermique;
+    const std::vector<int>& minUpDownTime = PaliersThermiquesDuPays.minUpDownTime;
+
+    const std::vector<PRODUCTION_THERMIQUE_OPTIMALE>& ProductionThermiqueOptimale
+      = ResultatsHoraires.ProductionThermique;
+
+    PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDispoEtCout = PaliersThermiquesDuPays
+                                                                 .PuissanceDisponibleEtCout
+                                                                   [indexPalier];
+    std::vector<double>& PuissanceMinDuPalierThermique = PuissanceDispoEtCout
+                                                           .PuissanceMinDuPalierThermique;
+    const std::vector<double>& PuissanceDisponibleDuPalierThermique
+      = PuissanceDispoEtCout.PuissanceDisponibleDuPalierThermique;
+
+    if (fabs(PminDuPalierThermiquePendantUneHeure[indexPalier]) < ZERO_PMIN)
+    {
+        return;
+    }
+
+    OPT_CalculerLaCourbeGuideDuNombreDeGroupes(
+      NombreDePasDeTemps,
+      [&](int Pdt)
+      { return ProductionThermiqueOptimale[Pdt].ProductionThermiqueDuPalier[indexPalier]; },
+      TailleUnitaireDUnGroupeDuPalierThermique[indexPalier],
+      NbGrpCourbeGuide);
+
+    if (!OPT_CalculerLeNombreDeGroupesParBlocsDeMUTetMDT(NombreDePasDeTemps,
+                                                         minUpDownTime[indexPalier],
+                                                         NbGrpCourbeGuide,
+                                                         NbGrpOpt))
+    {
+        return;
+    }
 
     for (int Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
     {
@@ -180,6 +209,4 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(int NombreDePasDeTemps,
             PuissanceMinDuPalierThermique[Pdt] = PuissanceDisponibleDuPalierThermique[Pdt];
         }
     }
-
-    return;
 }
