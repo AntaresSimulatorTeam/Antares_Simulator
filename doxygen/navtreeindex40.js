@@ -1,5 +1,6 @@
 var NAVTREEINDEX40 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html":[9,0,0,12,7,5,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergyTraits.html":[9,0,0,12,7,5,88],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergyTraits.html#a3a070d0f435a0177d11cc0e670b5e540":[9,0,0,12,7,5,88,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1StaticLinkBase_1_1Statistics.html":[9,0,0,12,7,5,51,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX40 =
 "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html#ae1ecbe06ff67fb1717502e11e9a1bcaf":[9,0,0,13,3,6],
 "structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS.html":[9,0,0,13,2],
 "structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS.html#a0152d97aa1ef25e5db29aaad0027f2e0":[9,0,0,13,2,0],
-"structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS.html#a17ad00d9418a44d0d49258a0f9d1a49f":[9,0,0,13,2,2],
-"structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS.html#a18838d901144d227316526bf2becfae3":[9,0,0,13,2,1]
+"structAntares_1_1TSGenerator_1_1StudyParamsForLinkTS.html#a17ad00d9418a44d0d49258a0f9d1a49f":[9,0,0,13,2,2]
 };
