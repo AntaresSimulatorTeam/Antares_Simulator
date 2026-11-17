@@ -1,6 +1,6 @@
 ---
 name: complete-review
-description: Full pre-merge review of a branch or PR in Antares Simulator. Runs mechanical gates (format, branch name, commit/PR conventions, build, tests, CI) then several independent review passes (flo-review, code-review, project guidelines, tests) and merges them into one verified report. Use for "complete review", "full review", or before marking a PR ready.
+description: Full pre-merge review of a branch or PR in Antares Simulator. Runs mechanical gates (format, branch name, commit/PR conventions, build, tests, CI) then several independent review passes (maintainer checklist, bug hunt, project guidelines, tests) and merges them into one verified report. Use for "complete review", "full review", or before marking a PR ready.
 ---
 
 # Complete review (Antares Simulator)
@@ -34,7 +34,7 @@ Run these as separate subagents in parallel (one message, several Agent calls). 
 diff, the PR title/description and its own lens, so findings are not anchored on each other.
 Each returns findings as `file:line | severity | claim | evidence`.
 
-1. **Florian lens**: invoke `/flo-review <target>` instructions (correctness, tests, design, idiom, hygiene, docs/CI).
+1. **Maintainer checklist**: apply `checklist.md` in this skill's directory (correctness, tests, design, idiom, hygiene, docs/CI).
 2. **Bug hunt**: `/code-review high <target>` (correctness bugs only).
 3. **Guidelines**: check the diff against `.github/agents/code-style.md`, `cpp-guidelines.md`,
    `error-handling.md`, `project-structure.md` (naming, includes, `const`, logging levels, exceptions).
@@ -50,7 +50,12 @@ lenses separate.
 - Deduplicate findings reported by several passes (agreement raises confidence).
 - Verify each remaining finding against the code on the PR head: quote the real line, and grep the
   repo for the convention before keeping a style NIT. Drop or mark "unverified" anything you cannot
-  confirm. See "Before reporting" in the flo-review skill.
+  confirm. In particular:
+  - re-read the cited line on the PR head (`git show <headRefOid>:<path>`); a finding must quote what
+    the code does, not what the hunk suggests (e.g. "copies the element" is false if it is already `const auto&`);
+  - grep the repo for the convention before keeping a style NIT (if sibling files do the same, drop it);
+  - check every spelling variant of a pattern (`connexion_end` vs `connectionEnd`) so lists are complete;
+  - inline comments can only target lines inside the PR diff hunks.
 - Rank: **HIGH** (wrong results, UB, weakened test, failing gate that blocks merge), **MED**, **NIT**.
 
 ## 5. Output
