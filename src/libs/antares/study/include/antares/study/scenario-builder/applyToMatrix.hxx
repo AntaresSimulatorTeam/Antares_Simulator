@@ -58,7 +58,7 @@ template<class StringT, class D>
 bool ApplyToMatrix(unsigned int& errors,
                    StringT& logprefix,
                    D& data,
-                   const TSNumberData::MatrixType::ColumnType& years,
+                   TSNumberData::MatrixType::ConstColumnType years,
                    unsigned int tsGenMax)
 {
     bool ret = true;

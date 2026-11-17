@@ -4,6 +4,10 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_H__
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_H__
 
+#include <filesystem>
+
+#include <yuni/core/string.h>
+
 #include <antares/array/matrix.h>
 #include <antares/study/fwd.h>
 #include <antares/study/parts/thermal/defines.h>

@@ -31,7 +31,9 @@ bool selectedColumnsAreAllZero(const TimeSeries& ts)
     const uint32_t nbYears = ts.timeseriesNumbers.height();
     if (nbYears == 0 || ts.numberOfColumns() <= 1)
     {
-        return ts.numberOfColumns() == 0 || ts.timeSeries.containsOnlyZero();
+        return ts.numberOfColumns() == 0
+               || ts.timeSeries.containsOnlyZero([](double value)
+                                                 { return Utils::isZero(value) ? 0. : value; });
     }
     for (uint32_t year = 0; year < nbYears; ++year)
     {

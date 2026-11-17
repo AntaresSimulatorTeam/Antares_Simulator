@@ -74,7 +74,7 @@ void XCast::applyTransferFunction(PredicateT& predicate)
         maxPoints = Data::XCast::conversionMaxPoints,
     };
 
-    uint h, i, j, k;
+    uint h, i;
 
     float a[maxPoints];
     float b[maxPoints];
@@ -91,12 +91,10 @@ void XCast::applyTransferFunction(PredicateT& predicate)
 
             uint last_i = 0;
 
-            a[tf.width()] = 0.f;
-            b[tf.width()] = 0.f;
             for (i = 0; i != tf.width() - 1; ++i)
             {
-                auto& p0 = tf[i];
-                auto& p1 = tf[i + 1];
+                auto p0 = tf[i];
+                auto p1 = tf[i + 1];
                 if (p1[x] <= p0[x])
                 {
                     std::ostringstream msg;
@@ -116,20 +114,13 @@ void XCast::applyTransferFunction(PredicateT& predicate)
             auto& dailyResults = DATA[s];
             for (h = 0; h != HOURS_PER_DAY; ++h)
             {
-                for (i = 0; i != tf.width(); ++i)
+                const uint segmentCount = tf.width() - 1;
+                const uint segment = findTransferSegment(tf, tf.width(), dailyResults[h], last_i);
+                if (segment < segmentCount)
                 {
-                    j = (i + last_i) % tf.width();
-                    k = (i + last_i + 1) % tf.width();
-                    auto& pj = tf.column(j);
-                    auto& pk = tf.column(k);
-
-                    if (dailyResults[h] >= pj[x] && dailyResults[h] <= pk[x])
-                    {
-                        assert(!std::isinf(b[j]) && "Infinite value");
-                        dailyResults[h] = (a[j] * dailyResults[h]) + b[j];
-                        last_i = i;
-                        break;
-                    }
+                    assert(!std::isinf(b[segment]) && "Infinite value");
+                    dailyResults[h] = (a[segment] * dailyResults[h]) + b[segment];
+                    last_i = segment;
                 }
             }
         }
@@ -382,7 +373,7 @@ bool XCast::runWithPredicate(PredicateT& predicate)
                         continue;
                     }
 
-                    auto& column = srcData.translation[0];
+                    auto column = srcData.translation[0];
                     auto& dailyResults = DATA[s];
                     assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height()
                            && "Bound checking");
@@ -418,7 +409,7 @@ bool XCast::runWithPredicate(PredicateT& predicate)
 
                     auto& series = predicate.matrix(currentArea);
                     assert(tsIndex < series.width());
-                    auto& column = series.column(tsIndex);
+                    auto column = series.column(tsIndex);
                     auto& dailyResults = DATA[s];
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
@@ -431,7 +422,7 @@ bool XCast::runWithPredicate(PredicateT& predicate)
                     {
                         assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height()
                                && "Bound checking");
-                        auto& tsavg = srcData.translation[0];
+                        auto tsavg = srcData.translation[0];
                         for (uint h = 0; h != HOURS_PER_DAY; ++h)
                         {
                             dailyResults[h] += (float)tsavg[hourInTheYear + h];
@@ -481,13 +472,13 @@ bool XCast::runWithPredicate(PredicateT& predicate)
             assert(static_cast<uint>(Data::fhrDSM) < area.reserves.width());
 
             auto& matrix = area.load.series.timeSeries;
-            auto& dsmvalues = area.reserves.column(Data::fhrDSM);
+            auto dsmvalues = area.reserves.column(Data::fhrDSM);
 
             assert(matrix.width() > 0);
             assert(matrix.height() > 0);
             for (uint timeSeries = 0; timeSeries < matrix.width(); ++timeSeries)
             {
-                auto& perHour = matrix.column(timeSeries);
+                auto perHour = matrix.column(timeSeries);
                 for (uint h = 0; h < matrix.height(); ++h)
                 {
                     perHour[h] += dsmvalues[h];

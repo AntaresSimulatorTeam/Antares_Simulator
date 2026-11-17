@@ -189,6 +189,51 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(matrix_operations)
 
+BOOST_AUTO_TEST_CASE(small_multiplier_is_not_treated_as_zero)
+{
+    Matrix matrix(1, 1);
+    matrix[0][0] = 1e9;
+    matrix.multiplyAllEntriesBy(1e-7);
+    BOOST_CHECK_CLOSE(matrix[0][0], 100., 1e-10);
+}
+
+BOOST_AUTO_TEST_CASE(multiplication_by_zero_obeys_floating_point_arithmetic)
+{
+    Matrix matrix(1, 1);
+    matrix[0][0] = std::numeric_limits<double>::infinity();
+    matrix.multiplyAllEntriesBy(0.);
+    BOOST_CHECK(std::isnan(matrix[0][0]));
+}
+
+BOOST_AUTO_TEST_CASE(column_views_and_self_assignment_preserve_shape)
+{
+    Matrix matrix(1, 2);
+    auto column = matrix[0];
+    column[1] = 7.;
+    matrix = matrix;
+    BOOST_CHECK_EQUAL(matrix.height(), 2);
+    BOOST_CHECK_EQUAL(matrix[0][1], 7.);
+    BOOST_CHECK_THROW(matrix.pasteToColumn(0, std::span<const double>(column.data(), 1)),
+                      std::invalid_argument);
+}
+
+BOOST_AUTO_TEST_CASE(typed_storage_preserves_shape_after_copy_and_move)
+{
+    ColumnMatrix<uint32_t> numbers;
+    numbers.reset(2, 3);
+    numbers[1][2] = 9;
+    auto copy = numbers;
+    ColumnMatrix<uint32_t> moved(std::move(copy));
+    BOOST_CHECK_EQUAL(moved.width(), 2);
+    BOOST_CHECK_EQUAL(moved.height(), 3);
+    BOOST_CHECK_EQUAL(moved[1][2], 9);
+    BOOST_CHECK_EQUAL(copy.width(), 0);
+    ColumnMatrix<float> correlations;
+    correlations.reset(2, 2);
+    correlations[0][1] = 0.5f;
+    BOOST_CHECK_EQUAL(correlations[0][1], 0.5f);
+}
+
 BOOST_AUTO_TEST_CASE(fill_unit_handles_rectangular_matrices)
 {
     Matrix matrix(3, 1);
@@ -284,6 +329,34 @@ BOOST_AUTO_TEST_SUITE_END()
 // ===  Matrix  ===
 // =============================
 BOOST_AUTO_TEST_SUITE(matrix_serialization)
+
+BOOST_AUTO_TEST_CASE(serializes_small_and_near_integer_values_at_requested_precision)
+{
+    Matrix matrix(2, 1);
+    matrix[0][0] = 0.0000005;
+    matrix[1][0] = 1.0000005;
+    std::string result;
+    MatrixIO::saveToBuffer(matrix, result, 7);
+    BOOST_CHECK_EQUAL(result, "0.0000005\t1.0000005\n");
+}
+
+BOOST_AUTO_TEST_CASE(nonfinite_values_are_not_silently_serialized)
+{
+    Matrix matrix(1, 1);
+    matrix[0][0] = std::numeric_limits<double>::infinity();
+    std::string result;
+    BOOST_CHECK_THROW(MatrixIO::saveToBuffer(matrix, result), std::invalid_argument);
+}
+
+BOOST_AUTO_TEST_CASE(large_finite_values_are_serialized)
+{
+    Matrix matrix(1, 1);
+    matrix[0][0] = std::numeric_limits<double>::max();
+    std::string result;
+    MatrixIO::saveToBuffer(matrix, result);
+    BOOST_CHECK_EQUAL(result.size(), 310);
+    BOOST_CHECK(result.find("ERR") == std::string::npos);
+}
 
 BOOST_AUTO_TEST_CASE(coeffs_only_0s__no_print_dim___result_empty)
 {

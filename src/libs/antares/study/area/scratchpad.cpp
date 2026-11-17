@@ -11,7 +11,7 @@ namespace Antares::Data
 {
 
 bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix& dailyPower,
-                                       const Matrix::ColumnType& nbHoursAtPmaxPerDay)
+                                       Matrix::ConstColumnType nbHoursAtPmaxPerDay)
 {
     for (unsigned int tsNumber = 0; tsNumber < dailyPower.width(); ++tsNumber)
     {
@@ -27,8 +27,7 @@ bool doWeHaveOnePositiveMaxDailyEnergy(const Matrix& dailyPower,
     return false;
 }
 
-void CalculateDailyMeanPower(const Matrix::ColumnType& hourlyColumn,
-                             Matrix::ColumnType& dailyColumn)
+void CalculateDailyMeanPower(Matrix::ConstColumnType hourlyColumn, Matrix::ColumnType dailyColumn)
 {
     for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
     {
@@ -144,8 +143,8 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area):
     {
         auto& m = area.hydro.prepro->data;
         double valueCol = 0.;
-        auto& colPowerOverWater = m[PreproHydro::powerOverWater];
-        auto& colMaxEnergy = m[PreproHydro::maximumEnergy];
+        auto colPowerOverWater = m[PreproHydro::powerOverWater];
+        auto colMaxEnergy = m[PreproHydro::maximumEnergy];
 
         for (unsigned int month = 0; month < MONTHS_PER_YEAR; ++month)
         {
@@ -178,16 +177,16 @@ void AreaScratchpad::CalculateMeanDailyMaxPowerMatrices(const Matrix& hourlyMaxG
     for (unsigned int nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxGenMatrix.width();
          ++nbOfTimeSeries)
     {
-        auto& hourlyMaxGenColumn = hourlyMaxGenMatrix[nbOfTimeSeries];
-        auto& MeanMaxDailyGenPowerColumn = meanMaxDailyGenPower.timeSeries[nbOfTimeSeries];
+        auto hourlyMaxGenColumn = hourlyMaxGenMatrix[nbOfTimeSeries];
+        auto MeanMaxDailyGenPowerColumn = meanMaxDailyGenPower.timeSeries[nbOfTimeSeries];
         CalculateDailyMeanPower(hourlyMaxGenColumn, MeanMaxDailyGenPowerColumn);
     }
 
     for (unsigned int nbOfTimeSeries = 0; nbOfTimeSeries < hourlyMaxPumpMatrix.width();
          ++nbOfTimeSeries)
     {
-        auto& MeanMaxDailyPumpPowerColumn = meanMaxDailyPumpPower.timeSeries[nbOfTimeSeries];
-        auto& hourlyMaxPumpColumn = hourlyMaxPumpMatrix[nbOfTimeSeries];
+        auto MeanMaxDailyPumpPowerColumn = meanMaxDailyPumpPower.timeSeries[nbOfTimeSeries];
+        auto hourlyMaxPumpColumn = hourlyMaxPumpMatrix[nbOfTimeSeries];
         CalculateDailyMeanPower(hourlyMaxPumpColumn, MeanMaxDailyPumpPowerColumn);
     }
 }

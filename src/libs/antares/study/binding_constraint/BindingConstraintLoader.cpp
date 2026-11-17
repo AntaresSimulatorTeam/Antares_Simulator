@@ -120,12 +120,11 @@ bool BindingConstraintLoader::loadTimeSeries(EnvForLoading& env,
                                              BindingConstraint* bindingConstraint) const
 {
     env.buffer = bindingConstraint->timeSeriesFileName(env);
-    bool load_ok = MatrixIO::load(bindingConstraint->RHSTimeSeries_,
-                                  env.buffer,
-                                  1,
-                                  (bindingConstraint->type() == BindingConstraint::typeHourly)
-                                    ? 8784
-                                    : 366);
+    bool load_ok = MatrixIO::loadOrReset(
+      bindingConstraint->RHSTimeSeries_,
+      env.buffer,
+      1,
+      (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8784 : 366);
     if (load_ok)
     {
         logs.info() << " loaded time series for `" << bindingConstraint->name() << "` ("

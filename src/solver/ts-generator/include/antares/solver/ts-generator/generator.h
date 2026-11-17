@@ -72,7 +72,7 @@ public:
 
     Data::PreproAvailability* prepro;
 
-    Matrix::ColumnType& modulationCapacity;
+    Matrix::ColumnType modulationCapacity;
 
     const std::string& name;
 };

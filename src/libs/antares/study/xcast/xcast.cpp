@@ -241,23 +241,23 @@ bool XCast::loadFromFolder(const fs::path& folder)
     fs::path p = folder / "data.txt";
 
     // Performing normal loading
-    ret = MatrixIO::load(data,
-                         p.string(),
-                         static_cast<unsigned int>(dataMax),
-                         12,
-                         MatrixIO::WidthPolicy::Exact)
+    ret = MatrixIO::loadOrReset(data,
+                                p.string(),
+                                static_cast<unsigned int>(dataMax),
+                                12,
+                                MatrixIO::WidthPolicy::Exact)
           && ret;
     convertToFloatPrecision(data);
 
     // K
     p = folder / "k.txt";
-    ret = MatrixIO::load(K, p.string(), 12, 24, MatrixIO::WidthPolicy::Exact) && ret;
+    ret = MatrixIO::loadOrReset(K, p, 12, 24, MatrixIO::WidthPolicy::Exact) && ret;
     convertToFloatPrecision(K);
 
     // Time-series translation
     p = folder / "translation.txt";
 
-    const bool translationLoaded = MatrixIO::load(translation, p.string(), 1, HOURS_PER_YEAR);
+    const bool translationLoaded = MatrixIO::loadOrReset(translation, p, 1, HOURS_PER_YEAR);
     ret = translationLoaded && ret;
 
     if (translation.empty())
@@ -289,7 +289,7 @@ bool XCast::loadFromFolder(const fs::path& folder)
     // Transfer function
     p = folder / "conversion.txt";
 
-    ret = MatrixIO::load(conversion, p.string(), 3, 2) && ret;
+    ret = MatrixIO::loadOrReset(conversion, p, 3, 2) && ret;
     convertToFloatPrecision(conversion);
     if (conversion.width() >= 3 && conversion.width() <= conversionMaxPoints)
     {

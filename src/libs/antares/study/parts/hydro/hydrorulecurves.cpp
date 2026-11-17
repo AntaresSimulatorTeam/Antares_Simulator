@@ -78,11 +78,11 @@ private:
         bool ret = true;
 
         fs::path filePath = path / "maxDailyReservoirLevels.txt";
-        ret = MatrixIO::load(max_.timeSeries, filePath.string(), 1, DAYS_PER_YEAR) && ret;
+        ret = MatrixIO::loadOrReset(max_.timeSeries, filePath, 1, DAYS_PER_YEAR) && ret;
         filePath = path / "minDailyReservoirLevels.txt";
-        ret = MatrixIO::load(min_.timeSeries, filePath.string(), 1, DAYS_PER_YEAR) && ret;
+        ret = MatrixIO::loadOrReset(min_.timeSeries, filePath, 1, DAYS_PER_YEAR) && ret;
         filePath = path / "avgDailyReservoirLevels.txt";
-        ret = MatrixIO::load(avg_.timeSeries, filePath.string(), 1, DAYS_PER_YEAR) && ret;
+        ret = MatrixIO::loadOrReset(avg_.timeSeries, filePath, 1, DAYS_PER_YEAR) && ret;
 
         return ret;
     }

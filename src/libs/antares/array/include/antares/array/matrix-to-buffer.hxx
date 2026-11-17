@@ -6,16 +6,9 @@
 
 #include <algorithm>
 #include <array>
+#include <charconv>
 #include <cmath>
-#include <cstdio>
-
-#ifdef _MSC_VER
-#define ANTARES_MATRIX_SNPRINTF sprintf_s
-#else
-#define ANTARES_MATRIX_SNPRINTF snprintf
-#endif
-
-#include <antares/utils/utils.h>
+#include <stdexcept>
 
 namespace Antares
 {
@@ -23,34 +16,26 @@ namespace // anonymous
 {
 struct MatrixScalar
 {
-    static void Append(std::string& file, double v, const char* const format)
+    static void Append(std::string& file, double v, unsigned int precision)
     {
-        if (Utils::isZero(v))
+        if (!std::isfinite(v))
         {
-            file += '0';
+            throw std::invalid_argument("Cannot serialize non-finite matrix value");
         }
-        else
+        // A finite double in fixed notation needs at most 309 integer digits,
+        // a sign, a decimal point and the supported fractional digits.
+        char buffer[328];
+        const int digits = (v == std::trunc(v)) ? 0 : static_cast<int>(precision);
+        const auto [end, error] = std::to_chars(buffer,
+                                                buffer + sizeof(buffer),
+                                                v,
+                                                std::chars_format::fixed,
+                                                digits);
+        if (error != std::errc{})
         {
-            char ConversionBuffer[128];
-            const int sizePrintf = Utils::isZero(v - floor(v))
-                                     ? ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
-                                                               sizeof(ConversionBuffer),
-                                                               "%.0f",
-                                                               v)
-                                     : ANTARES_MATRIX_SNPRINTF(ConversionBuffer,
-                                                               sizeof(ConversionBuffer),
-                                                               format,
-                                                               v);
-
-            if (sizePrintf >= 0 and sizePrintf < (int)(sizeof(ConversionBuffer)))
-            {
-                file += (const char*)ConversionBuffer;
-            }
-            else
-            {
-                file += "ERR";
-            }
+            throw std::runtime_error("Failed to format matrix value");
         }
+        file.append(buffer, end);
     }
 };
 
@@ -62,28 +47,7 @@ void matrixToBuffer(const Matrix& matrix,
                     PredicateT& predicate,
                     unsigned int precision)
 {
-    static constexpr std::array formats = {
-      "%.0f",
-      "%.1f",
-      "%.2f",
-      "%.3f",
-      "%.4f",
-      "%.5f",
-      "%.6f",
-      "%.7f",
-      "%.8f",
-      "%.9f",
-      "%.10f",
-      "%.11f",
-      "%.12f",
-      "%.13f",
-      "%.14f",
-      "%.15f",
-      "%.16f",
-    };
-
-    const char* format = formats[std::min(precision,
-                                          static_cast<unsigned int>(formats.size() - 1))];
+    precision = std::min(precision, 16u);
 
     for (unsigned int y = 0; y != matrix.height(); ++y)
     {
@@ -93,14 +57,12 @@ void matrixToBuffer(const Matrix& matrix,
             {
                 data += '\t';
             }
-            MatrixScalar::Append(data, static_cast<double>(predicate(matrix[x][y])), format);
+            MatrixScalar::Append(data, static_cast<double>(predicate(matrix[x][y])), precision);
         }
         data += '\n';
     }
 }
 
 } // namespace Antares
-
-#undef ANTARES_MATRIX_SNPRINTF
 
 #endif // __ANTARES_LIBS_ARRAY_MATRIX_TO_BUFFER_SENDER_HXX__

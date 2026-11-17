@@ -63,7 +63,7 @@ public:
     //! List of all areas (sub-set of the complete list)
     Data::Area::Vector localareas;
     //! Correlation coefficients for each month
-    std::array<std::vector<std::vector<float>>, 12> correlation;
+    std::array<ColumnMatrix<float>, 12> correlation;
     /*!
     ** \brief Correlation mode (monthly / annual)
     */
@@ -74,7 +74,7 @@ private:
     //! Rebuild data from our own area list
     void reloadDataFromAreaList(const Data::Correlation& correlation);
 
-    void prepareMatrix(std::vector<std::vector<float>>& m, const Matrix& source) const;
+    void prepareMatrix(ColumnMatrix<float>& m, const Matrix& source) const;
 
 }; // class StudyData
 

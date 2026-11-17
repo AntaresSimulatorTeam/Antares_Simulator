@@ -41,7 +41,7 @@ bool ReservesNeedTSNumberData::apply(Study& study)
         return ret;
     }
 
-    const MatrixType::ColumnType& col = pTSNumberRules.column(0);
+    const auto col = pTSNumberRules.column(0);
     for (const auto& [reserveID, reserve]: area.allCapacityReservations->areaCapacityReservations)
     {
         logprefix.clear() << "Reserves Need: Area '" << area.name << "', Reserve '" << reserveID

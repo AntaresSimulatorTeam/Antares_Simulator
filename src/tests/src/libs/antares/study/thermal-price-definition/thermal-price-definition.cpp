@@ -140,11 +140,11 @@ BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_failing_not_enough_valu
     BOOST_CHECK(!eco.loadFromFolder(*study, fuelCostTSfile.getFolder()));
 }
 
-BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_working_with_many_values, FixtureStudyOnly)
+BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_rejects_extra_values, FixtureStudyOnly)
 {
     TimeSeriesFile co2CostTSfile("CO2Cost.txt", 10000);
     EconomicInputData eco;
-    BOOST_CHECK(eco.loadFromFolder(*study, co2CostTSfile.getFolder()));
+    BOOST_CHECK(!eco.loadFromFolder(*study, co2CostTSfile.getFolder()));
 }
 BOOST_AUTO_TEST_SUITE_END()
 

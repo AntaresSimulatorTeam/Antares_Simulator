@@ -144,11 +144,11 @@ bool ThermalClusterList::loadFromFolder(const fs::path& folder,
         auto modulationFile = folder.parent_path().parent_path() / "prepro"
                               / cluster->parentArea->id.c_str() / cluster->id() / "modulation.txt";
 
-        ret = MatrixIO::load(cluster->modulation,
-                             modulationFile.string(),
-                             thermalModulationMax,
-                             HOURS_PER_YEAR,
-                             MatrixIO::WidthPolicy::Exact)
+        ret = MatrixIO::loadOrReset(cluster->modulation,
+                                    modulationFile.string(),
+                                    thermalModulationMax,
+                                    HOURS_PER_YEAR,
+                                    MatrixIO::WidthPolicy::Exact)
               && ret;
 
         // Check the data integrity of the cluster

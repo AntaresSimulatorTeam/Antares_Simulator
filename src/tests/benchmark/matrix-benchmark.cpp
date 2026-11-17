@@ -86,7 +86,7 @@ void benchmarkLoads(unsigned int width, unsigned int height, unsigned int iterat
     }
     Antares::Matrix matrix;
 
-    runBenchmark("load-double",
+    runBenchmark("load-repeated",
                  width,
                  height,
                  iterations,
@@ -99,6 +99,20 @@ void benchmarkLoads(unsigned int width, unsigned int height, unsigned int iterat
                          std::exit(EXIT_FAILURE);
                      }
                      consume(static_cast<std::uint64_t>(matrix[width - 1][height - 1]));
+                 });
+    runBenchmark("load-fresh",
+                 width,
+                 height,
+                 iterations,
+                 [&]
+                 {
+                     Antares::Matrix fresh;
+                     if (!Antares::MatrixIO::load(fresh, filename, 1, height))
+                     {
+                         std::cerr << "matrix load failed\n";
+                         std::exit(EXIT_FAILURE);
+                     }
+                     consume(static_cast<std::uint64_t>(fresh[width - 1][height - 1]));
                  });
     std::filesystem::remove(filename);
 }
@@ -153,7 +167,7 @@ void benchmarkSerialization(unsigned int width, unsigned int height, unsigned in
 
     std::string reusedOutput;
     runBenchmark(
-      "save-reused-buffer",
+      "save-existing-output",
       width,
       height,
       iterations,
@@ -210,6 +224,17 @@ void benchmarkBulkOperations(unsigned int width, unsigned int height, unsigned i
                      matrix.pasteToColumn(0, column);
                      consume(static_cast<std::uint64_t>(matrix[0][0]));
                  });
+
+    runBenchmark("average-timeseries",
+                 width,
+                 height,
+                 iterations,
+                 [&]
+                 {
+                     Antares::Matrix copy(source);
+                     copy.averageTimeseries(false);
+                     consume(static_cast<std::uint64_t>(copy[0][0]));
+                 });
 }
 
 unsigned int parseIterations(int argc, char** argv)
@@ -243,7 +268,7 @@ int main(int argc, char** argv)
 
     std::cout << "case,width,height,iterations,total_ms,ms_per_iteration\n";
 
-    for (const unsigned int width: {1U, 10U, 100U})
+    for (const unsigned int width: {1U, 10U, 100U, 500U})
     {
         benchmarkAllocation(width, defaultHeight, iterations);
         benchmarkLoads(width, defaultHeight, iterations);

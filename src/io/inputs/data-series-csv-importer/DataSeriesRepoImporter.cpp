@@ -41,12 +41,9 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
                                 }
 
                                 double value = 0.;
-                                const auto* first = cell.value.data();
-                                const auto* last = first + cell.value.size();
-                                const auto [end, error] = std::from_chars(first, last, value);
-                                if (error != std::errc{} || end != last)
+                                if (!IO::parseCSVDouble(cell.value, value))
                                 {
-                                    const char invalid = end < last ? *end : *first;
+                                    const char invalid = cell.value.front();
                                     throw InputError(filename.string() + ": \"" + invalid
                                                      + "\" is not a number");
                                 }

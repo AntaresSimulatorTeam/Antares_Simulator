@@ -24,6 +24,9 @@ using CSVRow = std::span<const CSVCell>;
 using CSVRowCallback = std::function<bool(std::size_t, CSVRow)>;
 using CSVTable = std::vector<std::vector<std::string>>;
 
+/** Parse a complete, finite decimal value, allowing surrounding whitespace and a leading plus. */
+bool parseCSVDouble(std::string_view text, double& value);
+
 /**
  * Read CSV rows from an in-memory buffer.
  *

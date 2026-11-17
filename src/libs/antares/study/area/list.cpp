@@ -550,7 +550,7 @@ static bool checkMatrixPositive(const Matrix& m, const std::string& buffer, unsi
     {
         for (unsigned x = 0; x < limit; ++x)
         {
-            auto& column = m[x];
+            auto column = m[x];
             for (unsigned y = 0; y < m.height(); ++y)
             {
                 if (column[y] < 0.)
@@ -584,11 +584,11 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // DSM, Reserves, D-1
     fs::path reservesPath = (study.folderInput / "reserves" / area.id).replace_extension("txt");
-    ret = MatrixIO::load(area.reserves,
-                         reservesPath.string(),
-                         fhrMax,
-                         HOURS_PER_YEAR,
-                         MatrixIO::WidthPolicy::Exact)
+    ret = MatrixIO::loadOrReset(area.reserves,
+                                reservesPath.string(),
+                                fhrMax,
+                                HOURS_PER_YEAR,
+                                MatrixIO::WidthPolicy::Exact)
           && ret;
 
     // Optimzation preferences
@@ -609,11 +609,11 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     std::string miscgenName = "miscgen-" + area.id + ".txt";
     fs::path miscgenPath = study.folderInput / "misc-gen" / miscgenName;
 
-    ret = MatrixIO::load(area.miscGen,
-                         miscgenPath.string(),
-                         fhhMax,
-                         HOURS_PER_YEAR,
-                         MatrixIO::WidthPolicy::Exact)
+    ret = MatrixIO::loadOrReset(area.miscGen,
+                                miscgenPath.string(),
+                                fhhMax,
+                                HOURS_PER_YEAR,
+                                MatrixIO::WidthPolicy::Exact)
           && ret;
 
     // Check misc gen

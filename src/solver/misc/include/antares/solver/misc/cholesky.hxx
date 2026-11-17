@@ -22,7 +22,7 @@ bool Cholesky(U1& L, U2& A, uint size, T* temp)
 
     for (uint i = 0; i < size; ++i)
     {
-        auto& Li = L[i];
+        auto&& Li = L[i];
 
         // on calcule d'abord L[i][i]
         som = A[i][i];
@@ -38,8 +38,8 @@ bool Cholesky(U1& L, U2& A, uint size, T* temp)
             // maintenant on cherche L[k][i], k > i.
             for (uint k = i + 1; k < size; ++k)
             {
-                auto& Lk = L[k];
-                auto& Ak = A[k];
+                auto&& Lk = L[k];
+                auto&& Ak = A[k];
 
                 if (temp[k] == Ak[k])
                 {

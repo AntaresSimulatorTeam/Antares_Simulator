@@ -177,17 +177,17 @@ Matrix AvailabilityTSgenerator::run(AvailabilityTSGeneratorData& tsGenerationDat
 
     int AUN = tsGenerationData.unitCount;
 
-    auto& FOD = preproData.data[Data::PreproAvailability::foDuration];
+    auto FOD = preproData.data[Data::PreproAvailability::foDuration];
 
-    auto& POD = preproData.data[Data::PreproAvailability::poDuration];
+    auto POD = preproData.data[Data::PreproAvailability::poDuration];
 
-    auto& FOR = preproData.data[Data::PreproAvailability::foRate];
+    auto FOR = preproData.data[Data::PreproAvailability::foRate];
 
-    auto& POR = preproData.data[Data::PreproAvailability::poRate];
+    auto POR = preproData.data[Data::PreproAvailability::poRate];
 
-    auto& NPOmin = preproData.data[Data::PreproAvailability::npoMin];
+    auto NPOmin = preproData.data[Data::PreproAvailability::npoMin];
 
-    auto& NPOmax = preproData.data[Data::PreproAvailability::npoMax];
+    auto NPOmax = preproData.data[Data::PreproAvailability::npoMax];
 
     double f_volatility = tsGenerationData.forcedVolatility;
 

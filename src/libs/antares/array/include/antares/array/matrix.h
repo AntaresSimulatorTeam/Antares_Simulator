@@ -7,7 +7,10 @@
 #include <cassert>
 #include <cstdint>
 #include <functional>
+#include <span>
 #include <vector>
+
+#include "column-matrix.h"
 
 namespace Antares
 {
@@ -16,7 +19,7 @@ namespace Antares
 **
 ** \ingroup matrix
 */
-class Matrix
+class Matrix: private ColumnMatrix<double>
 {
 public:
     //! Type
@@ -25,7 +28,8 @@ public:
     using MatrixType = Matrix;
 
     //! Column type
-    using ColumnType = std::vector<double>;
+    using ColumnType = std::span<double>;
+    using ConstColumnType = std::span<const double>;
 
     static constexpr unsigned int kMaxDimension = 50000;
 
@@ -106,9 +110,10 @@ public:
     void reset(unsigned int w, unsigned int h);
 
     //! Get the Nth column
-    ColumnType& column(unsigned int n);
+    // Views are invalidated when the matrix is resized, cleared or replaced.
+    ColumnType column(unsigned int n);
     //! Get the Nth column (const)
-    const ColumnType& column(unsigned int n) const;
+    ConstColumnType column(unsigned int n) const;
 
     /*!
     ** \brief Make the matrix a zero matrix
@@ -146,13 +151,7 @@ public:
     ** \param x The column index (zero-based)
     ** \param data The data to copy
     */
-    void pasteToColumn(unsigned int x, const double* data);
-
-    void pasteToColumn(unsigned int x, const std::vector<double>& data)
-    {
-        assert(data.size() == height_);
-        pasteToColumn(x, data.data());
-    }
+    void pasteToColumn(unsigned int x, ConstColumnType data);
 
     /*!
     ** \brief Set a entire column with a given value
@@ -206,14 +205,10 @@ public:
     Matrix& operator=(Matrix&& rhs) noexcept;
 
     //! operator []
-    ColumnType& operator[](unsigned int column);
-    const ColumnType& operator[](unsigned int column) const;
+    ColumnType operator[](unsigned int column);
+    ConstColumnType operator[](unsigned int column) const;
     //@}
 
-private:
-    unsigned int width_ = 0;
-    unsigned int height_ = 0;
-    std::vector<ColumnType> columns_;
 }; // class Matrix
 
 /*!

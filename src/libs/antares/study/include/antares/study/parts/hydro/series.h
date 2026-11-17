@@ -53,8 +53,8 @@ public:
     // Loading hydro max generation and mqx pumping TS's
     bool LoadMaxPower(const std::string& areaID, const std::filesystem::path& folder);
 
-    void buildHourlyMaxPowerFromDailyTS(const Matrix::ColumnType& DailyMaxGenPower,
-                                        const Matrix::ColumnType& DailyMaxPumpPower);
+    void buildHourlyMaxPowerFromDailyTS(Matrix::ConstColumnType DailyMaxGenPower,
+                                        Matrix::ConstColumnType DailyMaxPumpPower);
 
     // used when compatibility hydro-pmax = daily
     Matrix getDailyMaxGenPowerFromHourlyTS();

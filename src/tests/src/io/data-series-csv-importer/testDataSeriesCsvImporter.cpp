@@ -23,6 +23,24 @@ using namespace Antares::LinearProblem::DataImpl;
 
 BOOST_AUTO_TEST_SUITE(CsvReader)
 
+BOOST_AUTO_TEST_CASE(numeric_parser_validates_the_complete_finite_value)
+{
+    double value = 0.;
+    BOOST_REQUIRE(Antares::IO::parseCSVDouble("  +1.25e2 ", value));
+    BOOST_CHECK_EQUAL(value, 125.);
+    for (const std::string& invalid: std::vector<std::string>{std::string("1\0junk", 6),
+                                                              "1e309",
+                                                              "1e-9999",
+                                                              "nan",
+                                                              "inf",
+                                                              "  ",
+                                                              "+-1",
+                                                              "1x"})
+    {
+        BOOST_CHECK(!Antares::IO::parseCSVDouble(invalid, value));
+    }
+}
+
 BOOST_AUTO_TEST_CASE(in_memory_reader_preserves_empty_cells_and_crlf)
 {
     const std::string data = "1,,3\r\n,5,\n";

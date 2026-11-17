@@ -63,12 +63,12 @@ void TimeSeriesNumbers::clear()
 
 void TimeSeriesNumbers::saveToBuffer(std::string& data) const
 {
-    Matrix matrix(1, height());
-    for (unsigned int y = 0; y < height(); ++y)
+    std::string serialized = "size:1x" + std::to_string(height()) + '\n';
+    for (const uint32_t number: tsNumbers)
     {
-        matrix[0][y] = tsNumbers[y] + 1;
+        serialized += std::to_string(static_cast<uint64_t>(number) + 1) + '\n';
     }
-    MatrixIO::saveToBuffer(matrix, data, 0, true, std::identity{}, true);
+    data = std::move(serialized);
 }
 
 std::optional<std::string> TimeSeriesNumbers::checkSeriesNumberOfColumnsConsistency() const
@@ -100,7 +100,7 @@ TimeSeries::TimeSeries(const TimeSeries& other):
 bool TimeSeries::loadFromFile(const std::filesystem::path& path, const bool average)
 {
     bool ret = true;
-    ret = MatrixIO::load(timeSeries, path.string(), 1, HOURS_PER_YEAR) && ret;
+    ret = MatrixIO::loadOrReset(timeSeries, path, 1, HOURS_PER_YEAR) && ret;
 
     if (average)
     {
@@ -143,7 +143,7 @@ uint32_t TimeSeries::getSeriesIndex(uint32_t year) const
     return timeseriesNumbers[year];
 }
 
-Matrix::ColumnType& TimeSeries::operator[](uint32_t index)
+Matrix::ColumnType TimeSeries::operator[](uint32_t index)
 {
     return timeSeries[index];
 }

@@ -8,70 +8,13 @@
 #include <cstdint>
 #include <vector>
 
+#include <antares/array/column-matrix.h>
+
 #include "scBuilderDataInterface.h"
 
 namespace Antares::Data::ScenarioBuilder
 {
-class TSNumberMatrix final
-{
-public:
-    using ColumnType = std::vector<uint32_t>;
-
-    ColumnType& column(unsigned int index)
-    {
-        assert(index < width_);
-        return columns_[index];
-    }
-
-    const ColumnType& column(unsigned int index) const
-    {
-        assert(index < width_);
-        return columns_[index];
-    }
-
-    void reset(unsigned int width, unsigned int height)
-    {
-        if (!width || !height)
-        {
-            columns_.clear();
-            width_ = 0;
-            height_ = 0;
-            return;
-        }
-
-        std::vector<ColumnType> newColumns(width, ColumnType(height, 0));
-        columns_.swap(newColumns);
-        width_ = width;
-        height_ = height;
-    }
-
-    unsigned int width() const noexcept
-    {
-        return width_;
-    }
-
-    unsigned int height() const noexcept
-    {
-        return height_;
-    }
-
-    ColumnType& operator[](unsigned int column)
-    {
-        assert(column < width_);
-        return columns_[column];
-    }
-
-    const ColumnType& operator[](unsigned int column) const
-    {
-        assert(column < width_);
-        return columns_[column];
-    }
-
-private:
-    unsigned int width_ = 0;
-    unsigned int height_ = 0;
-    std::vector<ColumnType> columns_;
-};
+using TSNumberMatrix = ColumnMatrix<uint32_t>;
 
 /*!
 ** \brief Rules for TS numbers, for all years and a single timeseries

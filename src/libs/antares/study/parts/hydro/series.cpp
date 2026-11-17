@@ -22,11 +22,11 @@ static bool loadTSfromFile(Matrix& ts,
                            unsigned int height)
 {
     fs::path filePath = folder / areaID / filename;
-    return MatrixIO::load(ts, filePath.string(), 1, height);
+    return MatrixIO::loadOrReset(ts, filePath, 1, height);
 }
 
-static void ConvertDailyTSintoHourlyTS(const Matrix::ColumnType& dailyColumn,
-                                       Matrix::ColumnType& hourlyColumn)
+static void ConvertDailyTSintoHourlyTS(Matrix::ConstColumnType dailyColumn,
+                                       Matrix::ColumnType hourlyColumn)
 {
     unsigned int hour = 0;
     unsigned int day = 0;
@@ -42,8 +42,8 @@ static void ConvertDailyTSintoHourlyTS(const Matrix::ColumnType& dailyColumn,
     }
 }
 
-static void ConvertHourlyTSintoDailyTS(const Matrix::ColumnType& hourlyColumn,
-                                       Matrix::ColumnType& dailyColumn)
+static void ConvertHourlyTSintoDailyTS(Matrix::ConstColumnType hourlyColumn,
+                                       Matrix::ColumnType dailyColumn)
 {
     for (unsigned hour = 0; hour < HOURS_PER_YEAR; ++hour)
     {
@@ -111,17 +111,16 @@ bool DataSeriesHydro::LoadMaxPower(const std::string& areaID, const fs::path& fo
 {
     bool ret = true;
     fs::path filePath = folder / areaID / "maxHourlyGenPower.txt";
-    ret = MatrixIO::load(maxHourlyGenPower.timeSeries, filePath.string(), 1, HOURS_PER_YEAR) && ret;
+    ret = MatrixIO::loadOrReset(maxHourlyGenPower.timeSeries, filePath, 1, HOURS_PER_YEAR) && ret;
 
     filePath = folder / areaID / "maxHourlyPumpPower.txt";
-    ret = MatrixIO::load(maxHourlyPumpPower.timeSeries, filePath.string(), 1, HOURS_PER_YEAR)
-          && ret;
+    ret = MatrixIO::loadOrReset(maxHourlyPumpPower.timeSeries, filePath, 1, HOURS_PER_YEAR) && ret;
 
     return ret;
 }
 
-void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(const Matrix::ColumnType& DailyMaxGenPower,
-                                                     const Matrix::ColumnType& DailyMaxPumpPower)
+void DataSeriesHydro::buildHourlyMaxPowerFromDailyTS(Matrix::ConstColumnType DailyMaxGenPower,
+                                                     Matrix::ConstColumnType DailyMaxPumpPower)
 {
     const unsigned int count = 1;
 

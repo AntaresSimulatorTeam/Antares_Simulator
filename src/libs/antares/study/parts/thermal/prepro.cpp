@@ -40,11 +40,11 @@ bool PreproAvailability::loadFromFolder(Study&, const std::filesystem::path& fol
 {
     auto filePath = folder / "data.txt";
     // standard loading
-    return MatrixIO::load(data,
-                          filePath.string(),
-                          preproAvailabilityMax,
-                          DAYS_PER_YEAR,
-                          MatrixIO::WidthPolicy::Exact);
+    return MatrixIO::loadOrReset(data,
+                                 filePath.string(),
+                                 preproAvailabilityMax,
+                                 DAYS_PER_YEAR,
+                                 MatrixIO::WidthPolicy::Exact);
 }
 
 bool PreproAvailability::validate() const
@@ -125,8 +125,8 @@ bool PreproAvailability::validate() const
 bool PreproAvailability::normalizeAndCheckNPO()
 {
     // alias to our data columns
-    auto& columnNPOMax = data[npoMax];
-    auto& columnNPOMin = data[npoMin];
+    auto columnNPOMax = data[npoMax];
+    auto columnNPOMin = data[npoMin];
     // errors management
     uint errors = 0;
     uint maxErrors = 10;

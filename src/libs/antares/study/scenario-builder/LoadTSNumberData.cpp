@@ -38,7 +38,7 @@ bool loadTSNumberData::apply(Study& study)
         Area& area = *(study.areas.byIndex[areaIndex]);
         // alias to the current column
         assert(areaIndex < pTSNumberRules.width());
-        const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
+        const auto col = pTSNumberRules[areaIndex];
 
         logprefix = "Load: Area '" + area.name + "': ";
         ret = ApplyToMatrix(errors, logprefix, area.load.series, col, tsGenCountLoad) && ret;

@@ -67,7 +67,7 @@ void PreproHydro::reset()
     // data
     data.reset(hydroPreproMax, 12);
     // Expectation
-    auto& col = data[expectation];
+    auto col = data[expectation];
     for (unsigned int i = 0; i != 12; ++i)
     {
         col[i] = 0.;
@@ -89,11 +89,11 @@ bool PreproHydro::loadFromFolder(Study&, const std::string& areaID, const fs::pa
     bool ret = PreproHydroLoadSettings(this, preproPath);
 
     fs::path energyPath = folder / areaID / "energy.txt";
-    ret = MatrixIO::load(data,
-                         energyPath.string(),
-                         hydroPreproMax,
-                         maxNbOfLineToLoad,
-                         MatrixIO::WidthPolicy::Exact)
+    ret = MatrixIO::loadOrReset(data,
+                                energyPath.string(),
+                                hydroPreproMax,
+                                maxNbOfLineToLoad,
+                                MatrixIO::WidthPolicy::Exact)
           && ret;
 
     return ret;

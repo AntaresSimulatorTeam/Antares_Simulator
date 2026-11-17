@@ -98,11 +98,11 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const fs::path& fold
     // Read link's parameters times series
     std::string paramId = with->id + "_parameters.txt";
     fs::path path = folder / paramId;
-    success = MatrixIO::load(parameters,
-                             path.string(),
-                             fhlMax,
-                             HOURS_PER_YEAR,
-                             MatrixIO::WidthPolicy::Exact)
+    success = MatrixIO::loadOrReset(parameters,
+                                    path.string(),
+                                    fhlMax,
+                                    HOURS_PER_YEAR,
+                                    MatrixIO::WidthPolicy::Exact)
               && success;
 
     fs::path capacitiesFolder = folder / "capacities";
@@ -419,11 +419,11 @@ void AreaLink::checkLoadedData()
         logLinkDataCheckErrorDirectIndirect(*this, nbDirectTS, nbIndirectTS);
     }
 
-    auto& directHurdlesCost = parameters[fhlHurdlesCostDirect];
-    auto& indirectHurdlesCost = parameters[fhlHurdlesCostIndirect];
-    auto& loopFlow = parameters[fhlLoopFlow];
-    auto& PShiftMinus = parameters[fhlPShiftMinus];
-    auto& PShiftPlus = parameters[fhlPShiftPlus];
+    auto directHurdlesCost = parameters[fhlHurdlesCostDirect];
+    auto indirectHurdlesCost = parameters[fhlHurdlesCostIndirect];
+    auto loopFlow = parameters[fhlLoopFlow];
+    auto PShiftMinus = parameters[fhlPShiftMinus];
+    auto PShiftPlus = parameters[fhlPShiftPlus];
 
     for (unsigned int indexTS = 0; indexTS < nbDirectTS; ++indexTS)
     {

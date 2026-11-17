@@ -3,6 +3,8 @@
 
 #include "antares/io/CsvReader.h"
 
+#include <charconv>
+#include <cmath>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -11,6 +13,33 @@
 
 namespace Antares::IO
 {
+bool parseCSVDouble(std::string_view text, double& value)
+{
+    constexpr std::string_view whitespace = " \t\r\n\f\v";
+    const auto first = text.find_first_not_of(whitespace);
+    if (first == std::string_view::npos)
+    {
+        return false;
+    }
+    text = text.substr(first, text.find_last_not_of(whitespace) - first + 1);
+    if (text.front() == '+')
+    {
+        text.remove_prefix(1);
+        if (text.empty() || text.front() == '+' || text.front() == '-')
+        {
+            return false;
+        }
+    }
+    double parsed = 0.;
+    const auto [end, error] = std::from_chars(text.data(), text.data() + text.size(), parsed);
+    if (error != std::errc{} || end != text.data() + text.size() || !std::isfinite(parsed))
+    {
+        return false;
+    }
+    value = parsed;
+    return true;
+}
+
 namespace
 {
 bool readCSVBuffer(std::string_view data,

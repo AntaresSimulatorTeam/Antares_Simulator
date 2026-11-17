@@ -69,7 +69,7 @@ struct ViewBuilderFixture
             area->miscGen.zero();
             for (unsigned column = 0; column < MiscGenIndex::fhhMax; ++column)
             {
-                auto& values = area->miscGen[column];
+                auto values = area->miscGen[column];
                 std::fill(values.begin(), values.end(), 1.0);
             }
             area->hydro.reservoirManagement = true;

@@ -111,7 +111,7 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
     for (uint j = 0; j < study.runtime.interconnectionsCount(); ++j)
     {
         auto& lnk = *(study.runtime.areaLink[j]);
-        auto& impedances = lnk.parameters[Data::fhlImpedances];
+        auto impedances = lnk.parameters[Data::fhlImpedances];
 
         for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {

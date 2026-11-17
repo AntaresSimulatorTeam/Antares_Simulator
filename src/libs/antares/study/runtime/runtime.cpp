@@ -30,8 +30,8 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         if (area.hydro.prepro)
         {
             auto& m = area.hydro.prepro->data;
-            auto& e = m[PreproHydro::expectation];
-            auto& s = m[PreproHydro::stdDeviation];
+            auto e = m[PreproHydro::expectation];
+            auto s = m[PreproHydro::stdDeviation];
             double nE, nS;
             for (unsigned int i = 0; i != 12; ++i)
             {

@@ -24,7 +24,7 @@ static bool checkPower(const Matrix& dailyMaxPumpAndGen, const std::string& area
 {
     for (unsigned int i = 0; i < 4U; ++i)
     {
-        auto& col = dailyMaxPumpAndGen[i];
+        auto col = dailyMaxPumpAndGen[i];
         for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
         {
             if (col[day] < 0. || (i % 2U /*column hours*/ && col[day] > 24.))
@@ -48,11 +48,11 @@ bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const std::string& 
 
     //  It is necessary to load maxpower_ txt file.
 
-    ret = MatrixIO::load(hydro_.dailyMaxPumpAndGen,
-                         filePath.string(),
-                         4U,
-                         DAYS_PER_YEAR,
-                         MatrixIO::WidthPolicy::Exact)
+    ret = MatrixIO::loadOrReset(hydro_.dailyMaxPumpAndGen,
+                                filePath.string(),
+                                4U,
+                                DAYS_PER_YEAR,
+                                MatrixIO::WidthPolicy::Exact)
           && ret;
     return ret;
 }

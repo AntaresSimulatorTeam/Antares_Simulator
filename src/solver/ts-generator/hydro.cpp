@@ -80,9 +80,9 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
         uint areaIndexI = i / MONTHS_PER_YEAR;
         auto* prepro = study.areas.byIndex[areaIndexI]->hydro.prepro.get();
 
-        auto& corre = CORRE[i];
+        auto corre = CORRE[i];
 
-        auto& annualCorrAreaI = study.preproHydroCorrelation.annual[areaIndexI];
+        auto annualCorrAreaI = study.preproHydroCorrelation.annual[areaIndexI];
 
         for (uint j = 0; j < DIM; j++)
         {
@@ -150,13 +150,13 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
             auto& area = *(study.areas.byIndex[i / MONTHS_PER_YEAR]);
             auto& prepro = *area.hydro.prepro;
             auto& series = *area.hydro.series;
-            auto& ror = series.ror[l];
+            auto ror = series.ror[l];
 
-            auto& colExpectation = prepro.data[Data::PreproHydro::expectation];
-            auto& colStdDeviation = prepro.data[Data::PreproHydro::stdDeviation];
-            auto& colMinEnergy = prepro.data[Data::PreproHydro::minimumEnergy];
-            auto& colMaxEnergy = prepro.data[Data::PreproHydro::maximumEnergy];
-            auto& colPOW = prepro.data[Data::PreproHydro::powerOverWater];
+            auto colExpectation = prepro.data[Data::PreproHydro::expectation];
+            auto colStdDeviation = prepro.data[Data::PreproHydro::stdDeviation];
+            auto colMinEnergy = prepro.data[Data::PreproHydro::minimumEnergy];
+            auto colMaxEnergy = prepro.data[Data::PreproHydro::maximumEnergy];
+            auto colPOW = prepro.data[Data::PreproHydro::powerOverWater];
 
             uint month = i % MONTHS_PER_YEAR;
             uint realmonth = calendar.months[month].realmonth;

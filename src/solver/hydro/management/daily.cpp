@@ -52,8 +52,8 @@ enum
 
 struct DebugData
 {
-    using MaxPowerType = Matrix::ColumnType;
-    using ReservoirLevelType = Matrix::ColumnType;
+    using MaxPowerType = Matrix::ConstColumnType;
+    using ReservoirLevelType = Matrix::ConstColumnType;
 
     std::array<double, 366> OPP{0};
     std::array<double, 366> DailyTargetGen{0};
@@ -71,10 +71,10 @@ struct DebugData
     const Antares::Data::AreaDependantHydroManagementData& data;
     const VENTILATION_HYDRO_RESULTS_BY_AREA& ventilationResults;
     const double* srcinflows;
-    const MaxPowerType& maxP;
-    const MaxPowerType& maxE;
+    MaxPowerType maxP;
+    MaxPowerType maxE;
     const double* dailyTargetGen;
-    const ReservoirLevelType& lowLevel;
+    ReservoirLevelType lowLevel;
     const double reservoirCapacity;
 
     const Antares::Data::TimeDependantHydroManagementData& hydro_specific;
