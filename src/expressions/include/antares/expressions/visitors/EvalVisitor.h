@@ -321,8 +321,11 @@ public:
 
     std::string name() const override;
 
-    bool hasOutOfBoundsTimeShiftInConnectedPortFields(const Nodes::PortFieldSumNode* node,
-                                                      unsigned timeStep) const;
+    [[nodiscard]] const ModelerStudy::SystemModel::Component& component() const;
+
+    /// Same context (data, scenario, fill context...) but bound to another component.
+    [[nodiscard]] EvalVisitor forComponent(
+      const ModelerStudy::SystemModel::Component& component) const;
 
 private:
     const LinearProblem::OptimEntityContainer& optimContainer_;
