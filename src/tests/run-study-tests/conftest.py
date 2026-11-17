@@ -6,6 +6,7 @@ def pytest_addoption(parser):
     parser.addoption("--antares-simu-path", action="store")
     parser.addoption("--named-mps-problems", action="store_true", default=False)
     parser.addoption("--force-parallel", action="store_true", default=False)
+    parser.addoption("--dump-simulation-tables", action="store_true", default=False)
     parser.addoption("--antares-problem-generator-exe", action="store", default="")
 
 
@@ -27,6 +28,11 @@ def named_mps_problems(request):
 @pytest.fixture()
 def parallel(request):
     return request.config.getoption("--force-parallel")
+
+
+@pytest.fixture()
+def dump_simulation_tables(request):
+    return request.config.getoption("--dump-simulation-tables")
 
 
 @pytest.fixture()
