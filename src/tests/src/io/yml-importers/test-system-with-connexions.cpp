@@ -26,8 +26,8 @@ using namespace Antares::ModelerStudy;
 using namespace Antares::IO::Inputs::ForbidNodes;
 
 // A ConnectionEnd stores references: binding a temporary Port would leave it dangling
-using SystemModel::ConnectionEnd;
 using SystemModel::Component;
+using SystemModel::ConnectionEnd;
 using SystemModel::Port;
 static_assert(std::is_constructible_v<ConnectionEnd, Component&, const Port&>);
 static_assert(!std::is_constructible_v<ConnectionEnd, Component&, Port>);
