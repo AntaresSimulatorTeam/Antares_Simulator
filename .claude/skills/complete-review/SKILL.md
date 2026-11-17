@@ -12,7 +12,7 @@ Never post to GitHub, push or edit code unless asked. Report only.
 
 - `gh pr view <n> --json title,body,headRefName,headRefOid,baseRefName,isDraft,statusCheckRollup`
   or `git diff develop...HEAD --stat`.
-- Get the diff once (`gh pr diff <n>` / `git diff`) and reuse it. Note the head SHA.
+- Get the diff once (`gh pr diff <n>` for a PR; otherwise `git diff develop...<branch>`, with `<branch>` defaulting to `HEAD`) and reuse it. Note the reviewed head SHA.
 
 ## 2. Mechanical gates (run them, do not eyeball)
 
