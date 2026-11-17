@@ -23,7 +23,7 @@ Report each as PASS / FAIL with the evidence.
 | Branch name | compare `headRefName` with `.github/workflows/branchNameValidation.yml` | Use the actual `valid-branch-name` rule; inspect each relevant workflow's triggers separately to determine whether CI runs (including `copilot/*`, `dependabot/**` and `tests/*` where configured). |
 | Formatting | `clang-format --dry-run --Werror` on changed `.cpp/.h/.hpp` | CI requires clang-format 18.1.3. `src/format-code.sh` **exits with an error** on any other version: never discard its output (`>/dev/null`). Use `src/format-code-docker.sh` or run `clang-format` directly (18.1.8 gave identical results so far) |
 | Commit messages | `git log develop..HEAD --format=%s` | conventional commits `type(scope): imperative`, subject under 50 chars (`.github/git-commit-instructions.md`) |
-| PR description | read body | Motivation + Method, proportional to size; draft if not ready; docs updated if a documented feature changed (`docs/`) |
+| PR title and description | inspect title and read body | Title must match `^[a-z]+(\([^)]+\))?!?: .+ \[ANT-[0-9]+\]$` (Conventional Commit subject followed by an ANT JIRA key); keep it self-explanatory. Body: Motivation + Method, proportional to size; draft if not ready; docs updated if a documented feature changed (`docs/`) |
 | Build | build only the affected targets in `~/CLionProjects/build_simulator` (`ninja <target>`) | working build dir, see memory |
 | Tests | run the affected test binaries / `ctest -R` | a changed behaviour needs a test that fails without the change (mutate the fix and check) |
 | CI | `gh pr checks <n>` | list failing checks and read the log of each before concluding |
