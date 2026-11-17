@@ -5,7 +5,7 @@
 The legacy (weekly) solver exposes its results in the modeler simulation table in two categories:
 
 - **Raw rows** — one per named optimisation variable, `value = X[i]`. `VariableNamer` records, at problem-naming time, a `LegacyVariableInfo{name, component, timeIndex}` parallel to the variable name (`PROBLEME_ANTARES_A_RESOUDRE::LegacyVariablesInfo`); after each solve `FillLegacySimulationTable` writes one row per recorded variable, translating the legacy name to its public output name through `LegacyNameMapper` (e.g. `UnsuppliedEnergy` → `unsupplied_energy`).
-- **Derived rows** — quantities computed from the solution rather than variables of the problem: a thermal cluster's `prop_cost = generation_cost × generation_power`, an area's `price = -dual(balance constraint)`, congestion indicators, emissions, margins, `profit`, ... These are produced by `AddLegacyExtraOutputs` (`src/solver/optimisation/LegacyExtraOutputs.cpp`), the single entry point for all extra outputs.
+- **Derived rows** — quantities computed from the solution rather than variables of the problem: a thermal cluster's `prop_cost = generation_cost × generation_power`, an area's `price = -dual(balance constraint)` (computed by `legacyAreaPrice`, shared with the GEMS area-connection `price` field, see `HebdoAreaPriceProvider.h`), congestion indicators, emissions, margins, `profit`, ... These are produced by `AddLegacyExtraOutputs` (`src/solver/optimisation/LegacyExtraOutputs.cpp`), the single entry point for all extra outputs.
 
 ## 2. Design: iterate the study structure, read by index
 
@@ -29,18 +29,28 @@ Three sources cover every formula:
 | Dual of a constraint | `CoutsMarginauxDesContraintes[c]`, with `c` from the constraint correspondence tables: `CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays[pays]`, `.NumeroDeContrainteDeDissociationDeFlux[interco]`, `NumeroDeContrainteExpressionStockFinal[pays]` |
 | Study data that is not in the problem's objective (capacities, inflows, load, emission factors, unit data) | straight from `PROBLEME_HEBDO`: `ValeursDeNTC[pdt]`, `CaracteristiquesHydrauliques[pays]`, `ConsommationsAbattues[pdt]` + `AllMustRunGeneration[pdt]`, `PaliersThermiquesDuPays[pays]` |
 
-Row conventions are fixed in one place (`LegacyExtraOutputEmitter::emit`): the absolute hour is `weekInTheYear * 168 + pdt` (matching the time index recorded on the raw rows), `block_time_index` comes from `LegacyBlockTimeIndex` (shared with the raw-row loop), `scenario_index = fillContext.getYear()`. Components follow the uniqueness convention: `{area}_node` for area rows, `{area}_hydro_storage` for the hydro storage, `{area}_thermal_{cluster}` for thermal clusters, `{area}_short_term_storage_{name}` for short-term storages, `{origin}_{destination}_link` for links (endpoints sorted), `{area}_load` / `{area}_hydro_storage` for the load / long-term-storage port rows.
+Row conventions are fixed in one place (`LegacyExtraOutputEmitter::emit`): the absolute hour is `weekInTheYear * 168 + pdt` (matching the time index recorded on the raw rows), `block_time_index` comes from `LegacyBlockTimeIndex` (shared with the raw-row loop), `scenario_index = fillContext.getYear()`. Components follow the uniqueness convention: `{area}` for area rows, `{area}_hydro_storage` for the hydro storage, `{area}_thermal_{cluster}` for thermal clusters, `{area}_short_term_storage_{name}` for short-term storages, `{origin}_{destination}` for links (endpoints sorted), `{area}_load` / `{area}_hydro_storage` for the load / long-term-storage port rows.
 
 ### Guards
 
 Emitters skip outputs whose anchor does not exist, mirroring the construction sites (`opt_construction_variables_optimisees_lineaire.cpp`, `constraints/`):
 
 - variable indices use the `-1` sentinel where construction writes one (`HydroLevel` for areas without a managed reservoir);
-- variables and constraints that exist only in a given mode are guarded by that mode's condition, because their correspondence slots are **not** sentinel-initialised: hurdle-cost links (`CoutDeTransport[interco].IntercoGereeAvecDesCouts` → link `prop_cost`, `capacity_shadow_price`), unit commitment (`OptimisationNotFastMode` → `actual_num_units_on`, `non_prop_cost`), accurate water value (`CaracteristiquesHydrauliques[pays].AccurateWaterValue` → `hydro_shadow_price`);
-- per-hour study series are bounds-checked (`ApportNaturelHoraire`, thermal availability / min-generation series);
+- variables and constraints that exist only in a given mode are guarded by that mode's condition, because their correspondence slots are **not** sentinel-initialised: hurdle-cost links (`CoutDeTransport[interco].IntercoGereeAvecDesCouts` → link `prop_cost`, `capacity_shadow_price`), accurate water value (`CaracteristiquesHydrauliques[pays].AccurateWaterValue` → `hydro_shadow_price`);
+- the unit-commitment outputs (`actual_num_units_on`, `non_prop_cost`) are **not** guarded but switch formula on `OptimisationNotFastMode`, since fast mode has neither the `NODU` variable nor its objective coefficients (see §3);
+- per-hour study series are bounds-checked (`ApportNaturelHoraire`, thermal availability / min-generation series).
 - structurally inactive objects (an entirely-zero series, a link with no capacity) are guarded by the precomputed `InactiveComponentsAnalyzer` — see §7.
 
 ## 3. Outputs
+
+Reserve raw rows use the reserve ID in their public output name (for example,
+`spilled_energy_reserve_<reserveId>`), while reserve display names remain part of
+the internal LP variable name. This is an intentional schema rename from the
+previous generic reserve raw-output names. The internal reserve imbalance rows
+(`unsupplied_energy_reserve_<reserveId>` and
+`spilled_energy_reserve_<reserveId>`) use the owning area's `{area}`
+component, matching `reserve_imbalance_cost_<reserveId>` and avoiding collisions
+between equal display names in different areas.
 
 | Output | Entity | Formula | Operands |
 |--------|--------|---------|----------|
@@ -51,19 +61,24 @@ Emitters skip outputs whose anchor does not exist, mirroring the construction si
 | `min_gen_power` | cluster | `min(X[ip], minGen[pdt])` | `PuissanceMinDuPalierThermique` |
 | `down_margin` | cluster | `X[ip] − min(cluster_availability, minGen[pdt])` | as above |
 | `profit` | cluster | `(price − CoutLineaire[ip]) × max(X[ip] − minGen[pdt], 0)` | area price = balance dual of the cluster's area |
-| `actual_num_units_on` | cluster | `ceil(X[in])` | `in = vm.NumberOfDispatchableUnits` (may be fractional when relaxed) |
-| `non_prop_cost` | cluster | `startup_cost × started + fixed_cost × ceil(X[in])` | startup cost = coefficient on `NumberStartingDispatchableUnits`; `started` compares `ceil(NODU)` against `pdt−1`, dropped at the interval's first hour |
+| `actual_num_units_on` (not fast) | cluster | `ceil(X[in])` | `in = vm.NumberOfDispatchableUnits` (may be fractional when relaxed) |
+| `actual_num_units_on` (fast) | cluster | `max(min(floor(minGen[pdt] / pminOfAUnit), ceil(avail / unitSize)), ceil(X[ip] / unitSize))`, `0` without generation or unit size | no `NODU` variable in fast mode: `minGen[pdt] = PuissanceMinDuPalierThermique`, the production variable's lower bound, is `pminDUnGroupeDuPalierThermique × ` the units the MUT/MDT heuristic keeps running (`OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT`), so the division recovers that count — same formula as the legacy `ucHeuristicFast` `ON_min` (`State::yearEndBuildThermalClusterData`) |
+| `non_prop_cost` | cluster | `startup_cost × started + fixed_cost × units_on` | `units_on` = `actual_num_units_on`; `started = max(0, units_on − units_on[pdt−1])`, dropped at the interval's first hour. Costs are the coefficients on `NumberOfDispatchableUnits` / `NumberStartingDispatchableUnits`, or, in fast mode where those variables do not exist, the cluster data those coefficients are built from (`CoutFixeDeMarche/CoutDeDemarrageDUnGroupeDuPalierThermique`) |
 | `imbalance_cost` | area | `spillCost × spilled + unsCost × unsupplied` | `vm.Spillage`, `vm.UnsuppliedEnergy`; costs = `CoutDeDefaillanceNegative/PositiveSansBruit[pays]`, the user costs without noise |
 | `is_loss_of_load` | area | `X[iu] > 0 ? 1 : 0` | strict positivity |
 | `is_significant_loss_of_load` | area | `X[iu] > 0.5 ? 1 : 0` | 0.5 MW solver-noise threshold |
 | `actual_load` | `{area}_load` | `ConsommationAbattueDuPays + AllMustRunGenerationOfArea` | residual load plus must-run (raw input load) |
 | `price` | area | `−dual(AreaBalance)` | see sign note below |
 | `is_near_loss_of_load` | area | `price > unsCost − 5 ? 1 : 0` | `unsCost = CoutLineaire[iu]` |
+| `domestic_unsupplied_energy` | area | `ValeursHorairesDENS[pdt]` | `ResultatsHoraires[pays]`; zero-initialised, populated by CSR post-processing |
+| `is_local_matching_rule_violated` | area | `double(ValeursHorairesLmrViolations[pdt])` | `ResultatsHoraires[pays]`; 0 or 1 after CSR |
 | `level_percentage` | area | `X[ih] / TailleReservoir × 100` | skipped when the capacity is non-positive |
 | `actual_inflows` | area | `round(ApportNaturelHoraire[pdt])` | only areas with a managed reservoir |
 | `hydro_shadow_price` | area | `-dual(FinalStockExpression)` | weekly, accurate water value mode only |
 | `bellman_value` | area | `−Σ_layer CoutLineaire[il] × X[il]` | `il = vm.LayerStorage(pays, layer)`; weekly, accurate water value mode only |
 | `profit` | storage | `floor((X[iw] − X[ii]) × price + 0.5)` | `iw/ii = vm.ShortTermStorageWithdrawal/Injection(clusterGlobalIndex)`; price = balance dual of the storage's area |
+| `reserve_imbalance_cost_<reserveId>` | area | `spillageCost × J⁻ + unsuppliedCost × J⁺` | `reserve.spillageCost` / `unsuppliedCost` (user costs, un-noised); `J⁻/J⁺ = vm.InternalExcessReserve / InternalUnsatisfiedReserve(globalReserveIndex)` |
+| `reserve_participation_cost_<reserveId>` | cluster / storage / hydro | thermal: `participationCost × P_on + [UP] participationCostOff × P_off`; STS & hydro: `participationCost × P_net` | one row per participating entity, on the entity's component; `P_net = release − store` for UP reserves and `P_net = store − release` for DOWN reserves, from `vm.STStorageClusterReserveParticipation / HydroReserveParticipation(reserve.type, globalIndexClusterParticipation)`; thermal operands remain `vm.RunningThermalClusterReserveParticipation / OffThermalClusterReserveParticipation`; costs from the `RESERVE_PARTICIPATION_*` structs |
 | `generation_power` | renewable / misc gen | `availablePower[pdt]` | `InputGenerationOfArea[pays]`, filled from study series by `SIM_RenseignementProblemeHebdo` (not an LP variable) |
 | `minus_generation` | renewable / misc gen | `−availablePower[pdt]` | as above |
 
@@ -88,6 +103,12 @@ area-level `balance_port.flow` rows from colliding on the area name.
 
 The `price` formula negates the stored dual: with the legacy balance-constraint sign convention, `CoutsMarginauxDesContraintes` holds the **negative** of the marginal price (the legacy outputs print `-CoutsMarginauxHoraires`).
 
+The reserve rows follow the same conventions as their area-level counterparts: `reserve_imbalance_cost_<reserveId>` anchors on `{area}`, and each `reserve_participation_cost_<reserveId>` row anchors on the participating entity (thermal cluster, short-term storage, or the area's hydro storage), so a reserve served by several technologies yields one row per technology. The costs come from the study's `CAPACITY_RESERVATION` / `RESERVE_PARTICIPATION_*` structs (the un-noised user values), matching the `imbalance_cost` / `prop_cost` style. Both reserve outputs are guarded on `allReserves` being present **and** `OptimisationNotFastMode`, the exact condition under which the reserve variables are constructed (`opt_construction_variables_optimisees_lineaire.cpp`); in fast mode, or when reserves are not configured, no reserve row is emitted and the `OffThermalClusterReserveParticipation` term is dropped for DOWN reserves (off units cannot participate in down reserves).
+The storage and hydro participation-cost rows intentionally use the signed net
+quantity from the LP objective. Consequently, their values can be negative when
+the asset stores against an UP reserve or releases against a DOWN reserve; this
+replaces the former non-negative `store + release` calculation.
+
 ## 4. How to Add a New Extra Output
 
 1. Pick the entity loop the output belongs to (`areaOutputs`, `linkOutputs`, `thermalOutputs`, or a weekly method) in `LegacyExtraOutputs.cpp`.
@@ -98,20 +119,20 @@ The `price` formula negates the stored dual: with the legacy balance-constraint 
 
 ## 5. Known Caveats
 
-- **Cost noise.** `CoutLineaire` holds the costs the optimizer actually used, which the legacy solver deliberately perturbs to break degeneracy (`PrepareRandomNumbers` in `src/solver/simulation/common-eco-adq.cpp`); each thermal cost gets a noise whose absolute value is forced into `[5e-4, 6e-4]` even with a zero `spread-cost`, and the unsupplied/spilled costs get the same treatment. Thermal `prop_cost` and `imbalance_cost` therefore do **not** read `CoutLineaire`: they use the un-noised user costs kept alongside the noised ones (`CoutHoraireDeProductionDuPalierThermiqueSansBruit`, `CoutDeDefaillancePositive/NegativeSansBruit`), so they match the theoretical `study_cost × quantity` exactly. Outputs still derived from the perturbed optimisation (`non_prop_cost` via `CoutLineaire`, `is_near_loss_of_load`'s VoLL threshold, and every dual-derived value such as `price` and `profit`) deviate accordingly; the noise can also shift the dispatch itself between equal-cost solutions. The quantities (`X`) are otherwise unaffected.
+- **Cost noise.** `CoutLineaire` holds the costs the optimizer actually used, which the legacy solver deliberately perturbs to break degeneracy (`PrepareRandomNumbers` in `src/solver/simulation/common-eco-adq.cpp`); each thermal cost gets a noise whose absolute value is forced into `[5e-4, 6e-4]` even with a zero `spread-cost`, and the unsupplied/spilled costs get the same treatment. Thermal `prop_cost` and `imbalance_cost` therefore do **not** read `CoutLineaire`: they use the un-noised user costs kept alongside the noised ones (`CoutHoraireDeProductionDuPalierThermiqueSansBruit`, `CoutDeDefaillancePositive/NegativeSansBruit`), so they match the theoretical `study_cost × quantity` exactly. Outputs still derived from the perturbed optimisation (`non_prop_cost` via `CoutLineaire` in not-fast mode, `is_near_loss_of_load`'s VoLL threshold, and every dual-derived value such as `price` and `profit`) deviate accordingly; the noise can also shift the dispatch itself between equal-cost solutions. The quantities (`X`) are otherwise unaffected.
 - **MIP solves.** When the weekly problem is a MIP, OR-Tools' dual extraction is skipped and `CoutsMarginauxDesContraintes` is zero-filled (`extract_from_MPSolver`, a known TODO in `ortools_utils.cpp`), so every dual-derived output (`price`, `is_near_loss_of_load`, fees, shadow prices, `profit`) reads 0 — the same caveat as the legacy marginal-price output.
 - **Spinning and the margin formulas.** The thermal availability series and unit size are already multiplied by `(1 − spinning/100)` at load time (`cluster.cpp::calculationOfSpinning`). The spec writes `cluster_availability` with the raw quantities and re-applies the factor; algebraically it cancels, so the formulas use the spinning-adjusted quantities the problem already holds.
-- **Cross-time terms.** `non_prop_cost` uses `NODU[t−1]`; at the first hour of an optimisation interval the previous value is not part of the solution and the start-up term is dropped.
+- **Cross-time terms.** `non_prop_cost` uses the units on at `t−1`; at the first hour of an optimisation interval the previous value is not part of the solution and the start-up term is dropped.
 - **Port-based outputs.** Outputs the specification expresses with `in_port`/`out_port` semantics beyond the endpoint-price congestion fees are out of scope; the legacy weekly problem has no port concept.
 
 ## 6. Testing
 
-- `src/tests/src/solver/optimisation/test_legacy_extra_outputs.cpp` — unit tests of the derived rows on a minimal hand-built `PROBLEME_HEBDO` (three areas, two links, one cluster): formulas (including the dual sign negation for `price`), row metadata conventions, and the mode guards (fast mode, hurdle costs, reservoir management, accurate water value). Runs in the `unit-tests-for-solver-optimisation` Boost target, which compiles `LegacyExtraOutputs.cpp` and the `VariableManager` sources directly.
+- `src/tests/src/solver/optimisation/test_legacy_extra_outputs.cpp` — unit tests of the derived rows on a minimal hand-built `PROBLEME_HEBDO` (three areas, two links, one cluster): formulas (including the dual sign negation for `price`), row metadata conventions, the mode guards (hurdle costs, reservoir management, accurate water value) and both unit-commitment modes. Runs in the `unit-tests-for-solver-optimisation` Boost target, which compiles `LegacyExtraOutputs.cpp` and the `VariableManager` sources directly.
 - `src/tests/src/solver/optimisation/test_legacy_extra_outputs.cpp` (post-process cases) — unit tests of the per-stage dump (§8) on the same fixture: that the dump reads results mutated *after* the solve, that it leaves `X` and the duals exactly as it found them, that it no-ops when the optimisation range is daily, and that the block index is derived from the hour in the year. The `X` and dual refreshes are checked to be independently exercised — disabling only the `X` refresh must break assertions that the dual refresh alone still satisfies.
 - `src/tests/src/io/outputs/testSimulationTable.cpp` — unit tests of the stage map: a stage is created on first use and its pointer stays valid once later stages are added, the writer names one file per stage, and a stage with no rows is skipped rather than written as a header-only file. Also the stage selection (§8): every stage name parses, `all` and an empty list mean no restriction, spaces around commas are tolerated, an unknown name (including a prefix of a real one, and one sitting after an `all`) throws, an unselected stage returns `nullptr` and is never created, and the writer emits no file for it. Also that the post-process stages *alone* answer whether the solve must retain its modeler problem — asked without creating a table, and false only when neither of them is selected.
 - `src/tests/src/solver/optimisation/constraints/legacy_variable_info_namer.cpp` — unit tests of the raw-row recording (`VariableNamer` → `LegacyVariableInfo`).
 - `src/tests/src/solver/optimisation/test_inactive_components_analyzer_builder.cpp` — unit tests of `BuildInactiveComponentsAnalyzer` against an in-memory `Data::Study` (via the `StudyBuilder`/`TimeSeriesConfigurer` test helpers), confirming a component is judged inactive when only its selected chronicle is all-zero, even if the series matrix has other, non-zero, unselected columns.
-- `src/tests/cucumber/features/solver-features/legacy_simulation_table.feature` — end-to-end scenarios: "002 Thermal fleet - Base" at a loss-of-load hour (closed-form `prop_cost`, `imbalance_cost`, `is_loss_of_load`, `price`, `is_near_loss_of_load`), "008 Thermal fleet - Accurate unit commitment" (`actual_num_units_on`, emissions, margins), the `Hurdle-cost link` fixture (`abs_flow`, link `prop_cost`, `capacity_shadow_price`, congestion indicators) and the `Accurate hydro pricing` fixture (`hydro_shadow_price`, `level_percentage`). The same feature also covers §7's suppression rules (zero-series load/ROR/solar/wind/misc-gen, unmanaged+dry hydro, zero-NTC links). It also covers §8's per-stage tables on the `adq-patch-CSR-test-case-v02` fixture: the set of stage files produced (which pins the stage names), and — reading from the `adq-patch-csr` stage — the curtailment-sharing redistribution of unsupplied energy between the two *inside* areas, the matching shift of the link flow, and the post-CSR `price`, i.e. one assertion on each of the two halves of the refresh. Four further scenarios cover the stage selection: a two-stage command-line selection, which asserts both the restricted file set *and* that the surviving stages still carry the values the unrestricted run produces; a single-stage selection; a study that asks for its stages in `generaldata.ini`; and `--simulation-table-stages=all` overriding a study that restricts them. A fifth, on the hybrid `3_6_1` fixture, guards the retention rule: with only `remix-hydro` selected — so neither optimisation pass has a table — that stage must still carry its `gen1` component rows.
+- `src/tests/cucumber/features/solver-features/legacy_simulation_table.feature` — end-to-end scenarios: "002 Thermal fleet - Base" at a loss-of-load hour (closed-form `prop_cost`, `imbalance_cost`, `is_loss_of_load`, `price`, `is_near_loss_of_load`), "008 Thermal fleet - Accurate unit commitment" (`actual_num_units_on`, emissions, margins), the `Hurdle-cost link` fixture (`abs_flow`, link `prop_cost`, `capacity_shadow_price`, congestion indicators) and the `Accurate hydro pricing` fixture (`hydro_shadow_price`, `level_percentage`). The same feature also covers §7's suppression rules (zero-series load/ROR/solar/wind/misc-gen, unmanaged+dry hydro, zero-NTC links). It also covers §8's per-stage tables on the `adq-patch-CSR-test-case-v02` fixture: the set of stage files produced (which pins the stage names), and — reading from the `adq-patch` stage — the curtailment-sharing redistribution of unsupplied energy between the two *inside* areas, the matching shift of the link flow, and the post-CSR `price`, i.e. one assertion on each of the two halves of the refresh. Further scenarios cover the stage selection: a two-stage command-line selection, which asserts both the restricted file set *and* that the surviving stages still carry the values the unrestricted run produces; a single-stage selection; a study that asks for its stages in `generaldata.ini`; and `--simulation-table-stages=all` overriding a study that restricts them. A fifth, on the hybrid `3_6_1` fixture, guards the retention rule: with only `peak-shaving` selected — so neither optimisation pass has a table — that stage must still carry its `gen1` component rows.
 
 ## 7. Suppressing Rows for Structurally Inactive Components
 
@@ -140,14 +161,14 @@ These guards live entirely inside `AddLegacyExtraOutputs` and therefore only sup
 
 ## 8. Per-Stage Simulation Tables
 
-A week is not resolved in one shot: two optimisation passes are followed by post-treatments that move the results without re-solving (shave-peaks / remix hydro, and — when the adequacy patch is on — curtailment sharing, DTG netting and the marginal price update). The simulation table is written **once per stage**, so the effect of each treatment is observable.
+A week is not resolved in one shot: two optimisation passes are followed by post-treatments that move the results without re-solving (peak-shaving / remix hydro, and — when the adequacy patch is on — curtailment sharing, DTG netting and the marginal price update). The simulation table is written **once per stage**, so the effect of each treatment is observable.
 
 | Stage | File | Written after | Produced in |
 |---|---|---|---|
-| `optim-nb-1` | `simulation-table-{year}-optim-nb-1` | the first optimisation pass | every mode |
-| `optim-nb-2` | `simulation-table-{year}-optim-nb-2` | the second pass | every mode that runs it (§ *Skipped stages* below) |
-| `remix-hydro` | `simulation-table-{year}-remix-hydro` | `RemixHydroPostProcessCmd` (shave-peaks) | economy (both post-process lists) and adequacy |
-| `adq-patch-csr` | `simulation-table-{year}-adq-patch-csr` | `UpdateMrgPriceAfterCSRcmd`, i.e. once the whole CSR treatment has been applied | economy with `include-adq-patch = true` |
+| `optim-nb-1` | `simulation-tables/simulation-table-{year}-optim-nb-1` | the first optimisation pass | every mode |
+| `optim-nb-2` | `simulation-tables/simulation-table-{year}-optim-nb-2` | the second pass | every mode that runs it (§ *Skipped stages* below) |
+| `peak-shaving` | `simulation-tables/simulation-table-{year}-peak-shaving` | `RemixHydroPostProcessCmd` (peak-shaving) | economy (both post-process lists) and adequacy |
+| `adq-patch` | `simulation-tables/simulation-table-{year}-adq-patch` | `UpdateMrgPriceAfterCSRcmd`, i.e. once the whole CSR treatment has been applied | economy with `include-adq-patch = true` |
 
 Stages are the `IO::Outputs::Stage` enum (`src/io/outputs/include/antares/io/outputs/SimulationTableStage.h`); each maps to a file-name suffix through `stageName()`, and those strings are part of the public output contract. The tables of one Monte-Carlo year live in a `std::map<IO::Outputs::Stage, SimulationTable>` created on demand (`tableForStage`) — `std::map` because its nodes are address-stable, so a pointer handed to the optim-1 call site stays valid once later stages are added, and because `SimulationTable` is move-only. The enumerators are ordered as the weekly resolution reaches them, which is the order the map iterates in.
 
@@ -170,27 +191,29 @@ Both go through `Antares::Optimization::DumpSimulationTableStage(tables, stage, 
 
 A stage table would otherwise carry only the legacy half of a hybrid study. To avoid that, the solved modeler problem is retained past the solve on `PROBLEME_HEBDO::lastSolvedModelerProblem` (a `SolvedModelerProblem`: the `ILinearProblem`, its `OptimEntityContainer`, and the objective value), and `DumpSimulationTableAfterPostProcess` re-emits the modeler component rows before the legacy ones. This is cheap — `OrtoolsMipVariable` only wraps a raw `MPVariable*`, and the `MPSolver` that owns the data is already retained for the whole week in `ProblemeAResoudre->ProblemesSpx`. It is only populated when it will actually be read: `PROBLEME_HEBDO::retainSolvedModelerProblem`, set once per week by `OPT_OptimisationLineaire`, requires simulation tables to be enabled, the study to have a modeler side, and at least one *post-process* stage to be selected.
 
-That condition is deliberately **not** "this optimisation pass writes a table". A selection such as `--simulation-table-stages=remix-hydro` leaves both passes without a table of their own, and tying the retention to that would silently reduce every stage the run *did* ask for to its legacy half.
+That condition is deliberately **not** "this optimisation pass writes a table". A selection such as `--simulation-table-stages=peak-shaving` leaves both passes without a table of their own, and tying the retention to that would silently reduce every stage the run *did* ask for to its legacy half.
 
-**Caveat: a stage table mixes two vintages.** Post-processing mutates the legacy result structures and cannot move a modeler variable, so in a hybrid study the legacy rows are *post*-treatment while the modeler component rows are the values the solver left. A `gen1` row in `remix-hydro` must not be read as "after remix" — it is identical to its `optim-nb-2` row by construction.
+**Caveat: a stage table mixes two vintages.** Post-processing mutates the legacy result structures and cannot move a modeler variable, so in a hybrid study the legacy rows are *post*-treatment while the modeler component rows are the values the solver left. A `gen1` row in `peak-shaving` must not be read as "after remix" — it is identical to its `optim-nb-2` row by construction.
 
 ### Selecting which stages to write
 
 Every stage costs a full table's worth of memory for the whole Monte-Carlo year and the time to write it, and a run that only wants to inspect one treatment has no use for the other three. The selection is a comma-separated list of stage names, `all` (the default) meaning every stage, and it can be set in either place:
 
+The list also accepts `last`, which stands for whichever stage the run actually reaches last — `adq-patch` when the adequacy patch is enabled, `peak-shaving` otherwise (that post-process always runs). It is resolved to a concrete `Stage` in `Application::readDataForTheStudy`, *after* the study is loaded so the adequacy-patch flag is known, and the resolved stage is what `parseStageSelection` receives as its `lastStage` argument; the output file is named for that stage, never `last`.
+
 ```ini
 # settings/generaldata.ini
 [output]
-simulation-table-stages = optim-nb-2, adq-patch-csr
+simulation-table-stages = optim-nb-2, adq-patch
 ```
 
 ```
-antares-solver -i study --output=simulation-tables --simulation-table-stages=optim-nb-2,adq-patch-csr
+antares-solver -i study --output=simulation-tables --simulation-table-stages=optim-nb-2,adq-patch
 ```
 
 **The command line wins over `generaldata.ini`**, including `--simulation-table-stages=all`, which is how a study that restricts the stages is put back to the full set for one run. The two are told apart by the raw command-line string being empty, not by the resolved set, since an empty *set* is what "every stage" means internally.
 
-Both go through `OptimisationsSimulationTable::parseStageSelection`, so an unknown name fails the run either way, with the valid names listed. An `all` widens the selection wherever it appears in the list, but does not stop the parse: the names after it are still checked, so `all,optim-nb-3` is rejected rather than quietly taken for `all`. The error says which of the two sources it read, because they send the reader to different files. The command-line list is validated *before* the study is loaded, so a typo there costs nothing; the ini list can only be checked after the load, and is only parsed when it is the one actually being used — so a command-line selection is also the way past a study whose ini value is wrong.
+Both go through `OptimisationsSimulationTable::parseStageSelection`, so an unknown name fails the run either way, with the valid names listed. An `all` widens the selection wherever it appears in the list, but does not stop the parse: the names after it are still checked, so `all,optim-nb-3` is rejected rather than quietly taken for `all`. A list with **no usable name at all** — an empty value, or only whitespace and commas — is rejected too: an absent key means "every stage", so letting an explicitly blank `simulation-table-stages =` mean the same would hide a likely mistake. The ini value is caught at load time, in `SGDIntLoadFamily_Output`, before it ever reaches `parseStageSelection`. The error says which of the two sources it read, because they send the reader to different files. The command-line list is validated *before* the study is loaded, so a typo there costs nothing; the ini list can only be checked after the load, and is only parsed when it is the one actually being used — so a command-line selection is also the way past a study whose ini value is wrong.
 
 `Data::Parameters` therefore holds both the raw ini string (`simulationTableStagesStr`, filled by `SGDIntLoadFamily_Output`) and the resolved set (`simulationTableStages`). The stage names live in the simulation-table library, which sits *above* `Antares::study` in the layer graph, so the study cannot validate them itself; `Application::readDataForTheStudy` is the one place that sees both. Selection is orthogonal to `--output`: it narrows the set of tables, it does not enable them -- and says so, with a warning, when stages are asked for in a run that writes no tables at all.
 
@@ -202,5 +225,5 @@ The one thing the selection must not reach is what the solve *keeps*: the modele
 
 - **Empty stages produce no file.** `LegacySimulationTablesWriter` skips a stage whose table has no rows. This is a behaviour change: before per-stage tables, a header-only `optim-nb-2` file was written even when the second pass never ran (Expansion / MIP); now no file appears at all.
 - **Weekly simplex range only.** With `simplex-range = day` the week is solved in seven intervals that each rebuild the address table, so only the last day would be readable. The dump then no-ops with a one-time warning. That setting is deprecated — `parameters.cpp` logs an error for it — but the error does not stop the load, so the path is still reachable with `--force`.
-- **CSR-only quantities are out of reach.** Values that exist only in the patch's own structures (`...CSR`, `DENS`, `DtgMrgCsr`) have no LP variable in the weekly problem and therefore no entry in the address tables; the refresh cannot see them.
+- **CSR-only quantities are out of reach.** Values that exist only in the patch's own structures (`...CSR`,`DtgMrgCsr`) have no LP variable in the weekly problem and therefore no entry in the address tables; the refresh cannot see them.`DENS` and `LmrViolations` are now emitted directly from `ResultatsHoraires` (ANT-5240).
 - **Rows, not schema.** Stage tables use the same fill code as the optimisation-pass tables, so their column set and row conventions (§2) are identical; only the values differ.

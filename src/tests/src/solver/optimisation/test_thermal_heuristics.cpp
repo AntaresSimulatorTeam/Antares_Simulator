@@ -3,6 +3,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <numeric>
 #include <vector>
 
 #include <boost/test/unit_test.hpp>
@@ -47,11 +48,21 @@ BOOST_AUTO_TEST_CASE(accurate_enforces_minimum_up_duration)
                                                          3,
                                                          1,
                                                          6);
-    const std::vector<int> expected = {0, 1, 1, 1, 0, 0};
-    BOOST_CHECK_EQUAL_COLLECTIONS(minNumberOfUnits.begin(),
-                                  minNumberOfUnits.end(),
-                                  expected.begin(),
-                                  expected.end());
+    // Several optima exist (the period is cyclic): the unit started for hour 1 must stay on for
+    // 3 consecutive hours, and not longer
+    BOOST_CHECK_EQUAL(minNumberOfUnits[1], 1);
+    BOOST_CHECK_EQUAL(std::accumulate(minNumberOfUnits.begin(), minNumberOfUnits.end(), 0), 3);
+    const auto nbTimeSteps = static_cast<int>(minNumberOfUnits.size());
+    int starts = 0;
+    for (int t = 0; t < nbTimeSteps; ++t)
+    {
+        BOOST_CHECK(minNumberOfUnits[t] == 0 || minNumberOfUnits[t] == 1);
+        if (minNumberOfUnits[t] == 1 && minNumberOfUnits[(t + nbTimeSteps - 1) % nbTimeSteps] == 0)
+        {
+            ++starts;
+        }
+    }
+    BOOST_CHECK_EQUAL(starts, 1); // the 3 hours are consecutive
 }
 
 BOOST_AUTO_TEST_SUITE_END()

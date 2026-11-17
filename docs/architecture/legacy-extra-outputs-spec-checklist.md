@@ -1,4 +1,4 @@
-# Legacy Extra-Outputs — Spec Checklist (ANT-5006 §2.4 / §2.5)
+  # Legacy Extra-Outputs — Spec Checklist (ANT-5006 §2.4 / §2.5)
 
 Status of every extra-output (and port field) the GEMS views need from the legacy
 solver's simulation table. See `legacy-extra-outputs.md` for the design of the
@@ -26,9 +26,10 @@ supplies the row's component and time index.
 | [x] | `is_significant_loss_of_load` | `unsupplied_energy > 0.5` | `UnsuppliedEnergy` |
 | [x] | `is_near_loss_of_load` | `dual(balance) > unsupplied_energy_cost - 5` | `AreaBalance` constraint |
 
-Adequacy-patch outputs (`domestic_unsupplied_energy` / DENS,
-`is_local_matching_rule_violated` / LMR.VIOL) are **blocked on ANT-5240** (spec
-still being written); CSR outputs are explicitly out of scope per the spec.
+| [x] | `domestic_unsupplied_energy` | `DENS` (domestic energy not supplied, from `ResultatsHoraires`) | `ResultatsHoraires[pays].ValeursHorairesDENS` |
+| [x] | `is_local_matching_rule_violated` | `LMR violation flag` (from `ResultatsHoraires`) | `ResultatsHoraires[pays].ValeursHorairesLmrViolations` |
+
+CSR outputs are explicitly out of scope per the spec.
 
 ---
 
@@ -76,9 +77,9 @@ renewable. Component → `miscGen.entry` index mapping:
 
 | Done | Output | Formula | Anchor / Design |
 |------|--------|---------|-----------------|
-| [x] | `actual_num_units_on` | `ceil(num_units_on)` | `NODU` |
+| [x] | `actual_num_units_on` | `ceil(num_units_on)`; in fast mode, where `NODU` does not exist, rebuilt from the generation and the production variable's lower bound: `max(min(floor(min_gen/pmin_of_a_unit), ceil(avail/Mpu)), ceil(generation_power/Mpu))` | `NODU`, else `DispatchableProduction` |
 | [x] | `prop_cost` | `market_bid_cost · generation_power` (user cost, un-noised: `CoutMarginalDeProductionDuPalierThermique`) | `DispatchableProduction` |
-| [x] | `non_prop_cost` | `startup_cost·max(0, ceil(N) - ceil(N)[t-1]) + fixed_cost·ceil(N)` | `NODU` (+ `NumberStartingDispatchableUnits` via view) |
+| [x] | `non_prop_cost` | `startup_cost·max(0, N - N[t-1]) + fixed_cost·N`, with `N = actual_num_units_on`; in fast mode the costs come from the cluster data instead of the (absent) variables' coefficients | `NODU` (+ `NumberStartingDispatchableUnits` via view), else `DispatchableProduction` |
 | [x] | `cluster_availability` | `max(cmg·(1-s), mpu·ceil(cmg/Mpu))` | `DispatchableProduction` (spinning cancels) |
 | [x] | `min_gen_power` | `min(generation_power, min_gen_mod·num_units·Mpu)` | `DispatchableProduction` |
 | [x] | `up_margin` | `cluster_availability - generation_power` | `DispatchableProduction` |
@@ -119,7 +120,7 @@ margin context.
 
 `price_out`/`price_in` are the balance duals of the link's extremity / origin areas,
 looked up in the area-price map (A) after splitting the `DirectFlow` anchor's
-`origin$$destination` component into its two endpoint area names. Skipped when
+`origin_destination` component into its two endpoint area names. Skipped when
 either endpoint area has no recorded price.
 
 ---
@@ -160,14 +161,14 @@ Component naming: models sharing the area's identity get their own suffixed
 component so `balance_port.flow` rows cannot collide — `{area}_load` (load) and
 `{area}_hydro_storage` (long_term_storage); everything else uses the component of
 its extra-outputs (area, cluster, storage `{area}_short_term_storage_{name}`,
-`origin$$destination`, input-generation names).
+`origin_destination`, input-generation names).
 
 | Done | Model | Component | Port field | Definition |
 |------|-------|-----------|-----------|------------|
 | [x] | area | `{area}` | `balance_port.price` | `dual(balance)` (same value as `price`) |
 | [x] | load | `{area}_load` | `balance_port.flow` | `-load` (raw load, as `actual_load`) |
-| [x] | link | `origin$$destination` | `out_port.flow` | `flow` |
-| [x] | link | `origin$$destination` | `in_port.flow` | `-flow` |
+| [x] | link | `origin_destination` | `out_port.flow` | `flow` |
+| [x] | link | `origin_destination` | `in_port.flow` | `-flow` |
 | [x] | renewable | input-generation names | `balance_port.flow` | `available_power` |
 | [x] | miscellaneous_generation | input-generation names | `balance_port.flow` | `available_power` |
 | [x] | thermal | cluster name | `balance_port.flow` | `generation_power` |
@@ -180,7 +181,7 @@ its extra-outputs (area, cluster, storage `{area}_short_term_storage_{name}`,
 
 | Model | Implemented | Remaining |
 |-------|-------------|-----------|
-| area | 5 / 5 | — (adequacy-patch rows blocked on ANT-5240) |
+| area | 7 / 7 | — |
 | renewable | 2 / 2 | — |
 | misc_gen | 2 / 2 | — |
 | thermal | 23 / 23 | — |

@@ -9,6 +9,7 @@
 #include <optional>
 #include <vector>
 
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/utils/opt_constants.h"
 #include "antares/solver/utils/optimization_statistics.h"
@@ -20,9 +21,13 @@ class AdequacyPatchRuntimeData;
 namespace Antares::Optimization
 {
 struct SolvedModelerProblem;
-class InactiveComponentsAnalyzer;
 struct GemsHeuristicsState;
 } // namespace Antares::Optimization
+
+namespace Antares::Data
+{
+class InactiveComponentsAnalyzer;
+} // namespace Antares::Data
 
 struct CORRESPONDANCES_DES_VARIABLES
 {
@@ -36,6 +41,14 @@ struct CORRESPONDANCES_DES_VARIABLES
     std::vector<int> NumeroDeVariableDuFluxIndirectPositif;
 
     std::vector<int> NumeroDeVariableDuPalierThermique;
+    //! index of the variables for the power output hourly increases (MW above P_min,between t and
+    //! t+1)
+    // for the thermal clusters
+    std::vector<int> powerRampingIncreaseIndex;
+    //! index of the variables for the power output hourly dereases (MW above P_min,between t and
+    //! t+1)
+    // for the thermal clusters
+    std::vector<int> powerRampingDecreaseIndex;
 
     std::vector<int> NumeroDeVariablesDeLaProdHyd;
 
@@ -349,7 +362,7 @@ struct CAPACITY_RESERVATION
     std::map</*area_clusterId*/ int, RESERVE_PARTICIPATION_STSTORAGE>
       AllSTStorageReservesParticipation;
     std::vector<RESERVE_PARTICIPATION_HYDRO> AllHydroReservesParticipation;
-    std::vector<double> need; //!< Vector size is number of hours in year
+    const TimeSeries& need;
 
     ReserveType type{ReserveType::DOWN};
     double unsuppliedCost = 0;
@@ -361,6 +374,11 @@ struct CAPACITY_RESERVATION
     std::string reserveID;
     int globalReserveIndex;
     int areaReserveIndex;
+
+    explicit CAPACITY_RESERVATION(const TimeSeries& need):
+        need(need)
+    {
+    }
 };
 
 template<typename T>
@@ -415,6 +433,23 @@ struct PALIERS_THERMIQUES
     // co2_emissions ... op5_emissions = generation_power * factor; not used by
     // the optimization itself.
     std::vector<std::array<double, Pollutant::POLLUTANT_MAX>> emissionFactors;
+
+    //! Whether local ramping data is enabled for each thermal cluster.
+    std::vector<bool> rampingEnabled;
+    //! maximum hourly upward power ramping rate for a thermal unit (MW/hour)
+    std::vector<double> maxUpwardPowerRampingRate;
+    //! maximum hourly downward power ramping rate for a thermal unit (MW/hour)
+    std::vector<double> maxDownwardPowerRampingRate;
+
+    struct RampingCosts
+    {
+        //! cost of 1 MW power increase for the thermal cluster (above minimum stable level)
+        std::vector<double> upward;
+        //! cost of 1 MW power decrease for the thermal cluster
+        std::vector<double> downward;
+    };
+
+    RampingCosts rampingCosts;
 };
 
 struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
@@ -484,6 +519,9 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
     std::vector<double> NombreDeGroupesQuiSArretentDuPalier;
 
     std::vector<double> NombreDeGroupesQuiTombentEnPanneDuPalier;
+
+    std::vector<double> powerRampingIncrease;
+    std::vector<double> powerRampingDecrease;
 };
 
 struct OPTIMAL_HYDRO_USAGE
@@ -570,7 +608,7 @@ struct PROBLEME_HEBDO
     /// simulation-table rows for structurally inactive objects (see
     /// AddLegacyExtraOutputs). Null by default, so callers and test fixtures
     /// that leave it unset keep emitting every row.
-    std::shared_ptr<const Antares::Optimization::InactiveComponentsAnalyzer> inactiveComponents;
+    std::shared_ptr<const Antares::Data::InactiveComponentsAnalyzer> inactiveComponents;
 
     uint32_t NombreDePays = 0;
     std::vector<const char*> NomsDesPays;
@@ -610,6 +648,8 @@ struct PROBLEME_HEBDO
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
     std::optional<std::vector<AREA_RESERVES_VECTOR>> allReserves;
+
+    bool rampingEnabled = false;
 
     uint32_t NumberOfShortTermStorages = 0;
     std::vector<AREA_INPUT> ShortTermStorage;
@@ -804,6 +844,12 @@ public:
     /// \brief Values exchanged between the two optimisations of a week by the heuristics of
     /// the GEMS components (integer strategy "heuristic"). Null unless useGemsThermalHeuristics.
     std::shared_ptr<Antares::Optimization::GemsHeuristicsState> gemsHeuristicsState;
+    /// \brief Kept alive past the solve so the CSR adequacy patch post-process
+    /// can evaluate GEMS port field expressions via EvalVisitor.
+    std::shared_ptr<Antares::LinearProblem::OptimEntityContainer> optimEntityContainer;
+
+    /// \brief Keeps the LP alive so optimEntityContainer's reference remains valid
+    std::shared_ptr<Antares::LinearProblem::Api::ILinearProblem> ortoolsProblem_;
 };
 
 // Import functions for capacity and hydro reserves

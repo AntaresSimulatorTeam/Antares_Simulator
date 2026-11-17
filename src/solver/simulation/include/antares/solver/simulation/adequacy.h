@@ -4,6 +4,8 @@
 #ifndef __SOLVER_SIMULATION_ADEQUACY_H__
 #define __SOLVER_SIMULATION_ADEQUACY_H__
 
+#include <memory>
+
 #include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/solver/simulation/common-eco-adq.h"
@@ -11,7 +13,7 @@
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
 #include "antares/solver/variable/adequacy/all.h"
 
-namespace Antares::Optimization
+namespace Antares::Data
 {
 class InactiveComponentsAnalyzer;
 }
@@ -46,9 +48,11 @@ public:
     //! Current study
     Study& study;
     //! All variables
-    Variable::Adequacy::AllVariables variables;
+    std::unique_ptr<Variable::Adequacy::AllVariables> variables;
     //! Prepro only
     bool preproOnly = false;
+
+    void initializeVariables();
 
 protected:
     void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
@@ -81,7 +85,7 @@ private:
     std::reference_wrapper<ISimulationObserver> simulationObserver_;
     // Study-wide activity flags, built once in simulationBegin(); consulted only
     // while producing the legacy simulation tables.
-    std::shared_ptr<const Optimization::InactiveComponentsAnalyzer> inactiveComponents_;
+    std::shared_ptr<const Antares::Data::InactiveComponentsAnalyzer> inactiveComponents_;
 }; // class Adequacy
 
 // See economy.h: concentrate the single ISimulation<Adequacy> instantiation in

@@ -13,13 +13,4 @@ Container::Container():
 {
 }
 
-void Container::resetToDefault()
-{
-    series.reset();
-    if (prepro)
-    {
-        prepro->resetToDefault();
-    }
-}
-
 } // namespace Antares::Data::Solar

@@ -513,7 +513,7 @@ void ComponentFiller::addObjectives(const Api::FillContext& ctx)
 
 VariabilityType ComponentFiller::getVariability(const Node* node, const Component& component) const
 {
-    Visitors::VariabilityVisitor variability_visitor(optimEntityContainer_, component);
+    Visitors::VariabilityVisitor variability_visitor(optimEntityContainer_, component, pb_.isLP());
     return variability_visitor.dispatch(node);
 }
 } // namespace Antares::LinearProblem

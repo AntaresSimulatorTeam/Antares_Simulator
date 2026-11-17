@@ -11,10 +11,13 @@
 
 struct PROBLEME_HEBDO;
 
+namespace Antares::Data
+{
+class InactiveComponentsAnalyzer;
+}
+
 namespace Antares::Optimization
 {
-
-class InactiveComponentsAnalyzer;
 
 /**
  * \brief Read-only view of the solution a legacy fill should publish: primal
@@ -52,6 +55,6 @@ void AddLegacyExtraOutputs(IO::Outputs::SimulationTable& simulationTable,
                            const LegacySolution& solution,
                            const LinearProblem::Api::FillContext& fillContext,
                            unsigned currentBlock,
-                           const InactiveComponentsAnalyzer* inactiveComponents = nullptr);
+                           const Data::InactiveComponentsAnalyzer* inactiveComponents = nullptr);
 
 } // namespace Antares::Optimization

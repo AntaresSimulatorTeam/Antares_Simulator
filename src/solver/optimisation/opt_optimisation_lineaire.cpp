@@ -18,8 +18,8 @@
 
 using namespace Antares::Solver;
 using namespace IO::Outputs;
-using Optimization::ExportBehavior;
-using Optimization::OptimizationOptions;
+using Antares::Optimization::ExportBehavior;
+using Antares::Optimization::OptimizationOptions;
 
 namespace
 {
@@ -133,7 +133,7 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
                            int optimizationNumber,
                            Simulation::ISimulationObserver& simulationObserver,
                            SimulationTable* simulationTable,
-                           const Optimization::InactiveComponentsAnalyzer* inactiveComponents)
+                           const Antares::Data::InactiveComponentsAnalyzer* inactiveComponents)
 {
     const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                         ->NombreDePasDeTempsPourUneOptimisation;
@@ -173,14 +173,14 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
                            simulationObserver,
                            optPeriodStringGenerator.get());
 
-        if (!OPT_AppelDuSimplexe(options,
-                                 problemeHebdo,
-                                 numeroDeLIntervalle,
-                                 optimizationNumber,
-                                 *optPeriodStringGenerator,
-                                 writer,
-                                 simulationTable,
-                                 inactiveComponents))
+        if (!Antares::Solver::Optimization::OPT_AppelDuSimplexe(options,
+                                                                *problemeHebdo,
+                                                                numeroDeLIntervalle,
+                                                                optimizationNumber,
+                                                                *optPeriodStringGenerator,
+                                                                writer,
+                                                                simulationTable,
+                                                                inactiveComponents))
         {
             return false;
         }

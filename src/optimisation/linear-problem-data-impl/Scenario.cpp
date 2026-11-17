@@ -29,11 +29,10 @@ bool Scenario::hasYear(Year year) const
 
 void Scenario::setTimeSerieNumber(Year year, TimeSeriesNumber timeSeriesNumber)
 {
-    if (timeSerieData_.contains(year))
+    if (!timeSerieData_.try_emplace(year, timeSeriesNumber).second)
     {
         throw Error::RuntimeError(
           fmt::format("Time serie number for year {} already exists.", year));
     }
-    timeSerieData_[year] = timeSeriesNumber;
 }
 } // namespace Antares::LinearProblem::DataImpl

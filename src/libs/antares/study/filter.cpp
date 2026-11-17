@@ -11,6 +11,12 @@ namespace Antares::Data
 {
 std::string datePrecisionIntoString(unsigned int datePrecisionFilter)
 {
+    // Special case - none
+    if (datePrecisionFilter == filterNone)
+    {
+        return "none";
+    }
+
     std::string to_return;
     if (datePrecisionFilter & filterHourly)
     {

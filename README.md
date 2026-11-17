@@ -47,7 +47,7 @@ This software suite has been tested under:
 
 Build instructions [here](docs/developer-guide/3-Build.md)
 
-For installation instructions, please visit the [documentation website](https://antares-simulator.readthedocs.io/) or [its sources](docs/developer-guide/0-Introduction.md).
+For installation instructions, please visit the [documentation website](https://antares-simulator.readthedocs.io/) or [its sources](docs/developer-guide/0-Overview.md).
 
 # Source Code Content
 
@@ -56,7 +56,6 @@ For installation instructions, please visit the [documentation website](https://
 * [CONTRIBUTING](CONTRIBUTING.md)         - How to submit patches and discuss code evolutions
 * [COPYING](COPYING.txt)            - The MPL v2 license.
 * [README](README.md)             - This file.
-* [ROADMAP](ROADMAP.txt)            - Main orientations for further developments
 * [THANKS](THANKS.txt)             - Attribution notices for external libraries and contributors.
 * [resources/](resources)     - Free sample data sets.
 * [src/cmake/](src/cmake)        - files for initializing a solution ready for compilation.

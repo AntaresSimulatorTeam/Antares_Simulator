@@ -42,9 +42,9 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
       | 0     | G         | num_units_on     | 12       | 0        | 3     |
       | 0     | G         | num_units_on     | 13-167   | 0        | 2     |
       | 0     | G         | non_prop_cost    | 12       | 0        | 53    |
-      | 0     | node_node | spilled_energy   | 12       | 0        | 50    |
-      | 0     | node_node | spilled_energy   | 13-167   | 0        | 0     |
-      | 0     | node_node | unsupplied_energy| 0-167    | 0        | 0     |
+      | 0     | node      | spilled_energy   | 12       | 0        | 50    |
+      | 0     | node      | spilled_energy   | 13-167   | 0        | 0     |
+      | 0     | node      | unsupplied_energy| 0-167    | 0        | 0     |
 
   @short
   Scenario: One cluster - relaxed: 2.05 units at hour 12, no spillage
@@ -59,7 +59,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
       | 0     | G         | generation_power | 12       | 0        | 2050  |
       | 0     | G         | num_units_on     | 12       | 0        | 2.05  |
       | 0     | G         | non_prop_cost    | 12       | 0        | 4.55  |
-      | 0     | node_node | spilled_energy   | 0-167    | 0        | 0     |
+      | 0     | node      | spilled_energy   | 0-167    | 0        | 0     |
 
   @short
   Scenario: One cluster - heuristic accurate: same solution as MILP
@@ -81,7 +81,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
       | 0     | G         | num_units_on     | 12       | 0        | 3     |
       | 0     | G         | num_units_on     | 13-167   | 0        | 2     |
       | 0     | G         | non_prop_cost    | 12       | 0        | 53    |
-      | 0     | node_node | spilled_energy   | 12       | 0        | 50    |
+      | 0     | node      | spilled_energy   | 12       | 0        | 50    |
 
   @short
   Scenario: One cluster - heuristic fast: the third unit runs for a whole block of 10 hours
@@ -98,11 +98,11 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
       | 0     | G         | generation_power | 0-9      | 0        | 2000  |
       | 0     | G         | generation_power | 10-19    | 0        | 2100  |
       | 0     | G         | generation_power | 20-167   | 0        | 2000  |
-      | 0     | node_node | spilled_energy   | 0-9      | 0        | 0     |
-      | 0     | node_node | spilled_energy   | 10-11    | 0        | 100   |
-      | 0     | node_node | spilled_energy   | 12       | 0        | 50    |
-      | 0     | node_node | spilled_energy   | 13-19    | 0        | 100   |
-      | 0     | node_node | spilled_energy   | 20-167   | 0        | 0     |
+      | 0     | node      | spilled_energy   | 0-9      | 0        | 0     |
+      | 0     | node      | spilled_energy   | 10-11    | 0        | 100   |
+      | 0     | node      | spilled_energy   | 12       | 0        | 50    |
+      | 0     | node      | spilled_energy   | 13-19    | 0        | 100   |
+      | 0     | node      | spilled_energy   | 20-167   | 0        | 0     |
     And the modeler outputs contain no "num_units_on" entries for component "G"
 
   # ---------------------------------------------------------------------------------------------
@@ -184,7 +184,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
       | 0     | G1        | num_units_on     | 0        | 0        | 35    |
       | 0     | G2        | generation_power | 12       | 0        | 7177  |
       | 0     | G2        | num_units_on     | 12       | 0        | 8     |
-      | 0     | node_node | spilled_energy   | 0        | 0        | 1211  |
+      | 0     | node      | spilled_energy   | 0        | 0        | 1211  |
 
   @short
   Scenario: Two clusters with a low load - heuristic accurate on both clusters
@@ -201,7 +201,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
       | 0     | G1        | num_units_on     | 0        | 0        | 36    |
       | 0     | G2        | generation_power | 12       | 0        | 6277  |
       | 0     | G2        | num_units_on     | 12       | 0        | 8     |
-      | 0     | node_node | spilled_energy   | 0        | 0        | 1811  |
+      | 0     | node      | spilled_energy   | 0        | 0        | 1811  |
 
   @short
   Scenario: Two clusters with a low load - heuristic fast on both clusters
@@ -216,7 +216,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
       | block | component | output           | timestep | scenario | value |
       | 0     | G1        | generation_power | 0        | 0        | 24600 |
       | 0     | G2        | generation_power | 12       | 0        | 0     |
-      | 0     | node_node | spilled_energy   | 0        | 0        | 4811  |
+      | 0     | node      | spilled_energy   | 0        | 0        | 4811  |
 
   # ---------------------------------------------------------------------------------------------
   # Four clusters, all integer strategies in the same study: G1 relaxed, G2 heuristic fast,
@@ -250,8 +250,8 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
       | 0     | G4        | num_units_on      | 13       | 0        | 0     |
       | 0     | G4        | num_units_on      | 14-16    | 0        | 1     |
       | 0     | G4        | num_units_on      | 17       | 0        | 0     |
-      | 0     | node_node | spilled_energy    | 0-167    | 0        | 0     |
-      | 0     | node_node | unsupplied_energy | 0-167    | 0        | 0     |
+      | 0     | node      | spilled_energy    | 0-167    | 0        | 0     |
+      | 0     | node      | unsupplied_energy | 0-167    | 0        | 0     |
 
   # ---------------------------------------------------------------------------------------------
   # Configuration errors

@@ -4,10 +4,13 @@
 #ifndef __ANTARES_LIBS_STUDY_AREAS_CONSTANTS_H__
 #define __ANTARES_LIBS_STUDY_AREAS_CONSTANTS_H__
 
+#include <algorithm>
 #include <array>
 #include <cassert>
 #include <string>
 #include <string_view>
+
+#include "antares/utils/utils.h"
 
 namespace Antares::Data
 {
@@ -89,7 +92,8 @@ inline constexpr std::array<std::string_view, fhhMax> miscGenComponentNames = {
 //! Full simulation-table component id of a misc-gen column: `"{area}_{name}"`.
 [[nodiscard]] inline std::string miscGenComponentId(const std::string& areaId, MiscGenIndex index)
 {
-    return areaId + miscGenComponentSuffix(index);
+    std::string sanitized = Antares::SanitizeId(areaId);
+    return sanitized + miscGenComponentSuffix(index);
 }
 
 enum ReservesIndex

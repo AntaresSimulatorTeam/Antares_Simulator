@@ -150,7 +150,10 @@ public:
         state.year = y;
 
         // 5 - Resetting all variables for the output
-        simulation_->variables.yearBegin(y, numSpace);
+        if (simulation_->variables)
+        {
+            simulation_->variables->yearBegin(y, numSpace);
+        }
 
         // 6 - The Solver itself
         std::list<uint> failedWeekList;
@@ -168,17 +171,26 @@ public:
         // Log failing weeks
         logFailedWeek(y, study, failedWeekList);
 
-        simulation_->variables.buildThermalClusterYearEndResults(state, y, numSpace);
+        if (simulation_->variables)
+        {
+            simulation_->variables->buildThermalClusterYearEndResults(state, y, numSpace);
+        }
 
         // 7 - End of the year, this is the last stade where the variables can retrieve
         // their data for this year.
-        simulation_->variables.yearEnd(y, numSpace);
+        if (simulation_->variables)
+        {
+            simulation_->variables->yearEnd(y, numSpace);
+        }
 
         // 8 - Spatial clusters
         // Notifying all variables to perform spatial aggregates.
         // This must be done only when all variables have finished to compute their
         // data for the year.
-        simulation_->variables.yearEndSpatialAggregates(simulation_->variables, y, numSpace);
+        if (simulation_->variables)
+        {
+            simulation_->variables->yearEndSpatialAggregates(*simulation_->variables, y, numSpace);
+        }
 
         // 9 - Write results for the current year
         if (yearByYear)
@@ -186,7 +198,10 @@ public:
             pDurationCollector("yby_export") << [this, &numSpace]
             {
                 // Before writing, some variable may require minor modifications
-                simulation_->variables.beforeYearByYearExport(y, numSpace);
+                if (simulation_->variables)
+                {
+                    simulation_->variables->beforeYearByYearExport(y, numSpace);
+                }
                 // writing the results for the current year into the output
                 simulation_->writeResults(false, y, numSpace); // false for synthesis
             };
@@ -201,16 +216,24 @@ public:
 
         pDurationCollector("synthesis_compute") << [this, &numSpace, &state]
         {
-            simulation_->variables.computeSummary(y, numSpace);
+            if (simulation_->variables)
+            {
+                simulation_->variables->computeSummary(y, numSpace);
+            }
 
             // Computing summary of spatial aggregations
-            simulation_->variables.computeSpatialAggregatesSummary(simulation_->variables,
-                                                                   y,
-                                                                   numSpace);
+            if (simulation_->variables)
+            {
+                simulation_->variables->computeSpatialAggregatesSummary(*simulation_->variables,
+                                                                        y,
+                                                                        numSpace);
+            }
 
-            // Computes statistics on annual (system and solution) costs, to be printed in output
-            // into separate files
-            simulation_->computeAnnualCostsStatistics(state);
+            // Annual system-cost statistics are produced by the legacy output variables.
+            if (study.parameters.writeMonteCarloResults())
+            {
+                simulation_->computeAnnualCostsStatistics(state);
+            }
         };
 
         logs.debug() << "year " << y + 1 << " ended and returned numSpace " << numSpace;
@@ -267,10 +290,18 @@ void ISimulation<ImplementationType>::run()
 {
     pNbMaxPerformedYearsInParallel = study.maxNbYearsInParallel;
 
-    // Initialize all data
-    ImplementationType::variables.initializeFromStudy(study);
-
-    study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports(study.setsOfAreas);
+    // Initialize legacy output data only when Monte-Carlo results are requested.
+    if (!settings.tsGeneratorsOnly && study.parameters.writeMonteCarloResults())
+    {
+        study.runtime.initializeQuadraticFlowStorage(study.runtime.interconnectionsCount());
+        ImplementationType::initializeVariables();
+        ImplementationType::variables->initializeFromStudy(study);
+        study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports(study.setsOfAreas);
+    }
+    else
+    {
+        ImplementationType::variables.reset();
+    }
 
     logs.info() << "Allocating resources...";
 
@@ -294,8 +325,11 @@ void ISimulation<ImplementationType>::run()
         {
             return;
         }
-        // Allocating the memory
-        ImplementationType::variables.simulationBegin();
+        // Allocating legacy output memory, when enabled
+        if (ImplementationType::variables)
+        {
+            ImplementationType::variables->simulationBegin();
+        }
 
         // For beauty
         logs.info();
@@ -322,13 +356,20 @@ void ISimulation<ImplementationType>::run()
         // Post operations
         pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };
 
-        ImplementationType::variables.simulationEnd();
+        if (ImplementationType::variables)
+        {
+            ImplementationType::variables->simulationEnd();
+        }
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
         // This must be done only when all variables have finished to compute their
         // own data.
-        ImplementationType::variables.simulationEndSpatialAggregates(ImplementationType::variables);
+        if (ImplementationType::variables)
+        {
+            ImplementationType::variables->simulationEndSpatialAggregates(
+              *ImplementationType::variables);
+        }
     }
 }
 
@@ -375,10 +416,13 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
             }
 
             // Dumping
-            ImplementationType::variables.exportSurveyResults(synthesis,
-                                                              newPath,
-                                                              numSpace,
-                                                              pResultWriter);
+            if (ImplementationType::variables)
+            {
+                ImplementationType::variables->exportSurveyResults(synthesis,
+                                                                   newPath,
+                                                                   numSpace,
+                                                                   pResultWriter);
+            }
         }
     }
 }
@@ -509,9 +553,12 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Set to zero the random numbers of all parallel years
     randomForParallelYears.reset();
 
-    // Writing annual costs statistics
-    pAnnualStatistics.endStandardDeviations();
-    pAnnualStatistics.writeToOutput(pResultWriter);
+    if (study.parameters.writeMonteCarloResults())
+    {
+        // Writing annual costs statistics
+        pAnnualStatistics.endStandardDeviations();
+        pAnnualStatistics.writeToOutput(pResultWriter);
+    }
 }
 } // namespace Antares::Solver::Simulation
 

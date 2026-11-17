@@ -1,3 +1,9 @@
+set(SRC_INACTIVE_COMPONENTS
+        include/antares/study/InactiveComponentsAnalyzer.h
+        InactiveComponentsAnalyzer.cpp
+        include/antares/study/InactiveComponentsAnalyzerBuilder.h
+        InactiveComponentsAnalyzerBuilder.cpp
+)
 set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/scBuilderDataInterface.h
         include/antares/study/scenario-builder/TSnumberData.h
@@ -30,6 +36,8 @@ set(SRC_STUDY_SCENARIO_BUILDER
         scenario-builder/WindTSNumberData.cpp
         include/antares/study/scenario-builder/LoadTSNumberData.h
         scenario-builder/LoadTSNumberData.cpp
+        include/antares/study/scenario-builder/ReservesNeedTSNumberData.h
+        scenario-builder/ReservesNeedTSNumberData.cpp
         include/antares/study/scenario-builder/ShortTermInflowsTSNumberData.h
         scenario-builder/ShortTermInflowsTSNumberData.cpp
         include/antares/study/scenario-builder/ShortTermAdditionalConstraintsTSNumberData.h
@@ -127,7 +135,6 @@ set(SRC_STUDY_PART_WIND
         include/antares/study/parts/wind/container.h
         parts/wind/container.cpp
         include/antares/study/parts/wind/prepro.h
-        include/antares/study/parts/wind/prepro.hxx
         parts/wind/prepro.cpp
 )
 source_group("study\\part\\wind" FILES ${SRC_STUDY_PART_WIND})
@@ -206,14 +213,12 @@ set(SRC_STUDY
         parts/load/container.cpp
         parts/load/prepro.cpp
         include/antares/study/parts/load/prepro.h
-        include/antares/study/parts/load/prepro.hxx
 
         # Solar
         include/antares/study/parts/solar/container.h
         parts/solar/container.cpp
         parts/solar/prepro.cpp
         include/antares/study/parts/solar/prepro.h
-        include/antares/study/parts/solar/prepro.hxx
 
         # Study
         include/antares/study/header.h
@@ -258,6 +263,7 @@ set(SRC_STUDY
 source_group("study\\study" FILES ${SRC_STUDY})
 
 set(SRC_ALL
+        ${SRC_INACTIVE_COMPONENTS}
         ${SRC_STDCXX}
         ${SRC_AREAS}
         ${SRC_XCAST}

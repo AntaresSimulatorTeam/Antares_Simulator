@@ -113,50 +113,88 @@ public:
         nextFileLevel = CFile * 2,
     };
 
-    static void Run(const ListType& list, SurveyResults& results, unsigned int numSpace)
+    static void Run(const ListType& list,
+                    SurveyResults& results,
+                    unsigned int numSpace,
+                    unsigned int precisionFilter = Data::filterAll)
     {
         if (globalResults)
         {
-            RunGlobalResults(list, results);
+            RunGlobalResults(list, results, precisionFilter);
         }
         else
         {
-            RunAnnual(list, results, numSpace);
+            RunAnnual(list, results, numSpace, precisionFilter);
         }
 
         // The survey type
         using SurveyRBFileType = SurveyReportBuilderFile<GlobalT, NextT, CDataLevel, nextFileLevel>;
         // Go to the next data level
-        SurveyRBFileType::Run(list, results, numSpace);
+        SurveyRBFileType::Run(list, results, numSpace, precisionFilter);
     }
 
 private:
-    static void RunGlobalResults(const ListType& list, SurveyResults& results)
+    static void RunGlobalResults(const ListType& list,
+                                 SurveyResults& results,
+                                 unsigned int precisionFilter)
     {
         // All hours
-        list.buildSurveyReport(results, CDataLevel, CFile, Category::hourly);
+        if (precisionFilter & Data::filterHourly)
+        {
+            list.buildSurveyReport(results, CDataLevel, CFile, Category::hourly);
+        }
         // All days
-        list.buildSurveyReport(results, CDataLevel, CFile, Category::daily);
+        if (precisionFilter & Data::filterDaily)
+        {
+            list.buildSurveyReport(results, CDataLevel, CFile, Category::daily);
+        }
         // All weeks
-        list.buildSurveyReport(results, CDataLevel, CFile, Category::weekly);
+        if (precisionFilter & Data::filterWeekly)
+        {
+            list.buildSurveyReport(results, CDataLevel, CFile, Category::weekly);
+        }
         // All months
-        list.buildSurveyReport(results, CDataLevel, CFile, Category::monthly);
+        if (precisionFilter & Data::filterMonthly)
+        {
+            list.buildSurveyReport(results, CDataLevel, CFile, Category::monthly);
+        }
         // All years
-        list.buildSurveyReport(results, CDataLevel, CFile, Category::annual);
+        if (precisionFilter & Data::filterAnnual)
+        {
+            list.buildSurveyReport(results, CDataLevel, CFile, Category::annual);
+        }
     }
 
-    static void RunAnnual(const ListType& list, SurveyResults& results, unsigned int numSpace)
+    static void RunAnnual(const ListType& list,
+                          SurveyResults& results,
+                          unsigned int numSpace,
+                          unsigned int precisionFilter)
     {
         // All hours
-        list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::hourly, numSpace);
+        if (precisionFilter & Data::filterHourly)
+        {
+            list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::hourly, numSpace);
+        }
         // All days
-        list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::daily, numSpace);
+        if (precisionFilter & Data::filterDaily)
+        {
+            list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::daily, numSpace);
+        }
         // All weeks
-        list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::weekly, numSpace);
+        if (precisionFilter & Data::filterWeekly)
+        {
+            list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::weekly, numSpace);
+        }
         // All months
-        list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::monthly, numSpace);
+        if (precisionFilter & Data::filterMonthly)
+        {
+            list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::monthly, numSpace);
+        }
         // All years
-        list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::annual, numSpace);
+        if (precisionFilter & Data::filterAnnual)
+        {
+            list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::annual, numSpace);
+        }
     }
 
 }; // class SurveyReportBuilderFile
@@ -169,7 +207,7 @@ public:
     using ListType = NextT;
 
     // dead end
-    static inline void Run(const ListType&, SurveyResults&, unsigned int)
+    static inline void Run(const ListType&, SurveyResults&, unsigned int, unsigned int)
     {
     }
 };
@@ -440,7 +478,20 @@ private:
             results.data.output = path.string();
             results.data.setOfAreasName = setName;
 
-            SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
+            // Per-district granularity filter (filter-synthesis / filter-year-by-year keys of
+            // sets.ini): if no granularity is selected for the current report type, skip the
+            // district directory (same behavior as for areas).
+            const auto reportType = GlobalT ? Data::Sets::ReportType::synthesis
+                                            : Data::Sets::ReportType::yearByYear;
+            const unsigned int filter = sets.outputFilter(setName, reportType);
+            if (filter == Data::filterNone)
+            {
+                continue;
+            }
+            SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list,
+                                                                     results,
+                                                                     numSpace,
+                                                                     filter);
         }
     }
 

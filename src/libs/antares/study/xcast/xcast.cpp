@@ -48,13 +48,6 @@ XCast::TSTranslationUse XCast::CStringToTSTranslationUse(const std::string& str)
     return tsTranslationNone;
 }
 
-const char* XCast::DistributionToCString(XCast::Distribution d)
-{
-    assert((int)d < dtMax);
-    static const char* const names[dtMax] = {"", "Uniform", "Beta", "Normal", "Weibull", "Gamma"};
-    return names[d];
-}
-
 const char* XCast::DistributionToNameID(XCast::Distribution d)
 {
     static const char* const names[dtMax] = {
@@ -130,9 +123,15 @@ XCast::XCast(TimeSeriesType ts):
     useConversion(false),
     timeSeries(ts)
 {
-    K.resize(12, 24);
-    data.resize((unsigned int)dataMax, 12);
-    // Do nothing
+    K.reset(12, 24);
+    data.reset((unsigned int)dataMax, 12);
+    data.fillColumn(dataCoeffAlpha, 1.f);
+    data.fillColumn(dataCoeffBeta, 1.f);
+    data.fillColumn(dataCoeffDelta, 1.f);
+    data.fillColumn(dataCoeffTheta, 1.f);
+    data.fillColumn(dataCoeffMu, 1.f);
+    resetTransferFunction();
+    translation.reset(1, HOURS_PER_YEAR);
 }
 
 XCast::~XCast()
@@ -141,25 +140,6 @@ XCast::~XCast()
     K.clear();
     translation.clear();
     conversion.clear();
-}
-
-void XCast::resetToDefaultValues()
-{
-    data.reset(dataMax, 12);
-    data.fillColumn(dataCoeffAlpha, 1.f);
-    data.fillColumn(dataCoeffBeta, 1.f);
-    data.fillColumn(dataCoeffDelta, 1.f);
-    data.fillColumn(dataCoeffTheta, 1.f);
-    data.fillColumn(dataCoeffMu, 1.f);
-    K.reset(12, 24);
-    distribution = dtBeta;
-    capacity = 0.;
-    useConversion = false;
-    resetTransferFunction();
-
-    // Time-series translation
-    translation.reset(1, HOURS_PER_YEAR);
-    useTranslation = tsTranslationNone;
 }
 
 bool XCast::loadFromFolder(const fs::path& folder)

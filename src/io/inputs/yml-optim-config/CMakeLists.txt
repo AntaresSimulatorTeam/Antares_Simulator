@@ -19,8 +19,10 @@ target_include_directories(yml-optim-config
 target_link_libraries(yml-optim-config
         PRIVATE
         yaml-cpp::yaml-cpp
+        fmt::fmt
         PUBLIC
         Antares::input-error
+        Antares::yml-utils
         Antares::antares-study-system-model
 )
 

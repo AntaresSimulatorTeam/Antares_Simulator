@@ -13,7 +13,7 @@ void CsrAreaBalance::add()
         }
 
         // + ENS
-        builder.updateHourWithinWeek(data.hour).UnsuppliedEnergy(Area, 1.0);
+        builder.updateHourWithinWeek(0).UnsuppliedEnergy(Area, 1.0);
 
         // - export flows
         int Interco = data.IndexDebutIntercoOrigine[Area];

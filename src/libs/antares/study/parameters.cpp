@@ -11,6 +11,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
 
 #include <antares/exception/AssertionError.hpp>
+#include <antares/exception/InvalidArgumentError.hpp>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
@@ -39,6 +40,10 @@ static bool ConvertCStrToListTimeSeries(const std::string& value, unsigned int& 
         if (lower == "load")
         {
             v |= timeSeriesLoad;
+        }
+        else if (lower == "reserves-need")
+        {
+            v |= timeSeriesReservesNeed;
         }
         else if (lower == "wind")
         {
@@ -74,6 +79,9 @@ static bool ConvertCStrToListTimeSeries(const std::string& value, unsigned int& 
     return true;
 }
 
+/*!
+** \brief Convert a text into a renewable generation modelling
+*/
 static bool ConvertStringToRenewableGenerationModelling(const std::string& text,
                                                         RenewableGenerationModelling& out)
 {
@@ -166,19 +174,6 @@ const char* SimulationModeToCString(SimulationMode mode)
         return "Adequacy";
     case SimulationMode::Expansion:
         return "Expansion";
-    default:
-        return "Unknown";
-    }
-}
-
-const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::HydroPmax mode)
-{
-    switch (mode)
-    {
-    case Parameters::Compatibility::HydroPmax::Daily:
-        return "daily";
-    case Parameters::Compatibility::HydroPmax::Hourly:
-        return "hourly";
     default:
         return "Unknown";
     }
@@ -337,6 +332,8 @@ void Parameters::reset()
     simplexOptimizationRange = sorWeek;
 
     include.reserves = false;
+
+    include.thermal_ramping = false;
 
     include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.exportStructure = false;
@@ -560,6 +557,16 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
     }
     if (key == "simulation-table-stages")
     {
+        if (value.find_first_not_of(" \t") == std::string::npos)
+        {
+            // An empty value reads like "write no simulation table", but the
+            // selection only ever removes stages from the full set -- there is
+            // no way to spell "none" here. Reject it rather than let it be
+            // taken for "every stage", which is what an absent key means.
+            throw Error::InvalidArgumentError(
+              "Invalid value for simulation-table-stages in generaldata.ini: empty "
+              "(expected all, last, or a comma-separated list of stage names)");
+        }
         // Kept raw: the stage names belong to the simulation-table library,
         // which sits above this one. Validated and resolved when the command
         // line is applied, so that both sources go through the same check.
@@ -621,6 +628,11 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     if (key == "include-reserves")
     {
         d.include.reserves = Antares::stringToBool(value);
+        return true;
+    }
+    if (key == "include-thermal-cluster-ramping")
+    {
+        d.include.thermal_ramping = Antares::stringToBool(value);
         return true;
     }
 
@@ -1047,7 +1059,7 @@ static bool SGDIntLoadFamily_Compatibility(Parameters& d,
         return StringToCompatibilityHydroPmax(d.compatibility.hydroPmax, value);
     }
 
-    if (key == "hydro-rule-curves")
+    else if (key == "hydro-rule-curves")
     {
         return StringToCompatibilityHydroRuleCurves(d.compatibility.hydroRuleCurves, value);
     }
@@ -1552,6 +1564,16 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     renewableGeneration.addExcludedVariables(excluded_vars);
     adqPatchParams.addExcludedVariables(excluded_vars);
     unitCommitment.addExcludedVariables(excluded_vars);
+    if (!include.thermal_ramping)
+    {
+        for (const auto* rampingVariable: {"RAMP COST", "RAMP COST BY PLANT"})
+        {
+            if (variablesPrintInfo.exists(rampingVariable))
+            {
+                excluded_vars.emplace_back(rampingVariable);
+            }
+        }
+    }
 
     variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
 

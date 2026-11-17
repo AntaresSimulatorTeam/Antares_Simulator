@@ -5,7 +5,7 @@
 
 void CsrFlowDissociation::add()
 {
-    builder.updateHourWithinWeek(data.hour);
+    builder.updateHourWithinWeek(0);
 
     ConstraintNamer namer(builder.data.NomDesContraintes);
     namer.UpdateTimeStep(data.hour);

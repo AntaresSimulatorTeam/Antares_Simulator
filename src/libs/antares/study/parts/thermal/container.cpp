@@ -20,14 +20,6 @@ PartThermal::PartThermal():
 {
 }
 
-void PartThermal::reset()
-{
-    unsuppliedEnergyCost = 0.;
-    spilledEnergyCost = 0.;
-
-    list.clearAll();
-}
-
 void PartThermal::resizeAllTimeseriesNumbers(unsigned int n) const
 {
     list.resizeAllTimeseriesNumbers(n);

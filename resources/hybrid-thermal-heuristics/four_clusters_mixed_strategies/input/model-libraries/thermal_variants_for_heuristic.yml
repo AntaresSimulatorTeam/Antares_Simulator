@@ -24,7 +24,6 @@ library:
 
   models:
     - id: area
-      taxonomy-category: balance
       parameters:
         - id: spillage_cost
         - id: unsupplied_energy_cost
@@ -46,7 +45,6 @@ library:
           expression: sum(spillage_cost * spilled_energy + unsupplied_energy_cost * unsupplied_energy)
 
     - id: load
-      taxonomy-category: fatal_consumption
       parameters:
         - id: load
           time-dependent: true
@@ -60,7 +58,6 @@ library:
           definition: -load
 
     - id: thermal
-      taxonomy-category: dispatchable_generation
       parameters:
         - id: cluster_min_gen_modulation # Timeseries used to define the minimum generation of the cluster by cluster_min_gen_modulation * num_units * max_power_per_unit, this cannot exceed the maximum generation power cluster_max_generation (after being increased by min_power_per_unit). 
           scenario-dependent: true
@@ -69,14 +66,32 @@ library:
           scenario-dependent: true
           time-dependent: true
         - id: min_power_per_unit # Minimum generation per on unit. Used to increase cluster_max_generation so that it is at least equal to min_power_per_unit times the number of available units, which is ceil(cluster_max_generation / max_power_per_unit). This number of available units does not change when cluster_max_generation is increased because ceil((min_power_per_unit*ceil(cluster_max_generation / max_power_per_unit))/ (max_power_per_unit*(1-spinning/100)))=ceil(cluster_max_generation / max_power_per_unit) under the assumption that min_power_per_unit <= max_power_per_unit*(1-spinning/100).
+          time-dependent: false
+          scenario-dependent: false
         - id: max_power_per_unit
+          time-dependent: false
+          scenario-dependent: false
         - id: market_bid_cost
+          time-dependent: false
+          scenario-dependent: false
         - id: startup_cost
+          time-dependent: false
+          scenario-dependent: false
         - id: fixed_cost
+          time-dependent: false
+          scenario-dependent: false
         - id: min_up_duration
+          time-dependent: false
+          scenario-dependent: false
         - id: min_down_duration
+          time-dependent: false
+          scenario-dependent: false
         - id: num_units
+          time-dependent: false
+          scenario-dependent: false
         - id: spinning # in percentage, taken into account in cluster_max_generation and max_power_per_unit (except when computing minimum generation)
+          time-dependent: false
+          scenario-dependent: false
       variables:
         - id: generation_power
           lower-bound: min(max(cluster_max_generation*(1-spinning/100), min_power_per_unit * ceil(cluster_max_generation / max_power_per_unit)), cluster_min_gen_modulation * num_units * max_power_per_unit) # real expression before simplification : min(upper-bound(generation_power),cluster_min_gen_modulation * num_units * max_power_per_unit) = min(max(cluster_max_generation*(1-spinning/100), min_power_per_unit * ceil(cluster_max_generation*(1-spinning/100) / (max_power_per_unit*(1-spinning/100)))), cluster_min_gen_modulation * num_units * max_power_per_unit)
@@ -124,7 +139,6 @@ library:
           expression: startup_cost * num_units_starting + fixed_cost * num_units_on
     
     - id: thermal_fast
-      taxonomy-category: dispatchable_generation
       parameters:
         - id: cluster_min_gen_modulation # Timeseries used to define the minimum generation of the cluster by cluster_min_gen_modulation * num_units * max_power_per_unit, this cannot exceed the maximum generation power cluster_max_generation (after being increased by min_power_per_unit). 
           scenario-dependent: true
@@ -133,14 +147,32 @@ library:
           scenario-dependent: true
           time-dependent: true
         - id: min_power_per_unit # Minimum generation per on unit. Used to increase cluster_max_generation so that it is at least equal to min_power_per_unit times the number of available units, which is ceil(cluster_max_generation / max_power_per_unit). This number of available units does not change when cluster_max_generation is increased because ceil((min_power_per_unit*ceil(cluster_max_generation / max_power_per_unit))/ (max_power_per_unit*(1-spinning/100)))=ceil(cluster_max_generation / max_power_per_unit) under the assumption that min_power_per_unit <= max_power_per_unit*(1-spinning/100).
+          time-dependent: false
+          scenario-dependent: false
         - id: max_power_per_unit
+          time-dependent: false
+          scenario-dependent: false
         - id: market_bid_cost
+          time-dependent: false
+          scenario-dependent: false
         - id: startup_cost
+          time-dependent: false
+          scenario-dependent: false
         - id: fixed_cost
+          time-dependent: false
+          scenario-dependent: false
         - id: min_up_duration
+          time-dependent: false
+          scenario-dependent: false
         - id: min_down_duration
+          time-dependent: false
+          scenario-dependent: false
         - id: num_units
+          time-dependent: false
+          scenario-dependent: false
         - id: spinning # in percentage, taken into account in cluster_max_generation and max_power_per_unit (except when computing minimum generation)
+          time-dependent: false
+          scenario-dependent: false
       variables:
         - id: generation_power
           lower-bound: min(max(cluster_max_generation*(1-spinning/100), min_power_per_unit * ceil(cluster_max_generation / max_power_per_unit)), cluster_min_gen_modulation * num_units * max_power_per_unit) # real expression before simplification : min(upper-bound(generation_power),cluster_min_gen_modulation * num_units * max_power_per_unit) = min(max(cluster_max_generation*(1-spinning/100), min_power_per_unit * ceil(cluster_max_generation*(1-spinning/100) / (max_power_per_unit*(1-spinning/100)))), cluster_min_gen_modulation * num_units * max_power_per_unit)

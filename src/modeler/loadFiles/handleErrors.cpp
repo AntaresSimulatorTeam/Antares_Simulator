@@ -31,4 +31,15 @@ std::string markYamlError(const YAML::Exception& e, const std::string& context)
     return ss.str();
 }
 
+void handleInputError(const Antares::IO::Inputs::InputError& e, const std::string& context)
+{
+    logs.error() << "Error while parsing the yml file: " << context;
+    logs.error() << e.what();
+}
+
+std::string markInputError(const Antares::IO::Inputs::InputError& e, const std::string& context)
+{
+    return "Error while parsing the yml file: " + context + "\n" + e.what();
+}
+
 } // namespace Antares::Solver::LoadFiles

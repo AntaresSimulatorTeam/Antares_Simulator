@@ -102,7 +102,8 @@ std::vector<double> inputValues(const GemsHeuristicsState& state,
     if (LinearProblem::isConstant(parameter.type))
     {
         return std::vector<double>(state.nbTimeSteps,
-                                   context.getSystemParameterValueAsDouble(input.id));
+                                   LinearProblem::parameterValueToDouble(input.id,
+                                                                         parameter.value));
     }
     if (parameter.type == LinearProblem::VariabilityType::VARYING_IN_SCENARIO_ONLY)
     {

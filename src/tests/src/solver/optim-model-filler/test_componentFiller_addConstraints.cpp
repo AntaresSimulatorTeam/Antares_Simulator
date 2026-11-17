@@ -228,7 +228,7 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
 
     createModelWithSystemModelParameter(
       "model",
-      {Parameter{"bounds", TimeDependent::YES, ScenarioDependent::NO}},
+      {Parameter{"bounds", TimeDependent::YES, ScenarioDependent::YES}},
       {{"var1",
         ValueType::BOOL,
         parameter("bounds", VariabilityType::VARYING_IN_TIME_ONLY),
@@ -237,11 +237,12 @@ BOOST_AUTO_TEST_CASE(get_timeseriesNumber_for_given_year)
         false}},
       {{"ct1", ct_node}});
 
-    createComponent(
-      "model",
-      "componentToto",
-      {build_context_parameter_with("bounds", "bounds", VariabilityType::VARYING_IN_TIME_ONLY)},
-      "GROUPENAME");
+    createComponent("model",
+                    "componentToto",
+                    {build_context_parameter_with("bounds",
+                                                  "bounds",
+                                                  VariabilityType::VARYING_IN_TIME_AND_SCENARIO)},
+                    "GROUPENAME");
 
     const vector<unsigned int> timeSteps{0, 1};
     FillContext ctx{timeSteps.at(0), timeSteps.at(1), timeSteps.at(0), timeSteps.at(1), 3};

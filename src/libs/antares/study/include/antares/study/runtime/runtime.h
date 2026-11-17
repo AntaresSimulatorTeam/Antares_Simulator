@@ -69,6 +69,8 @@ public:
     */
     bool loadFromStudy(Study& study);
 
+    void initializeQuadraticFlowStorage(unsigned int count);
+
     void initializeRandomNumberGenerators(const Parameters& parameters);
 
 public:

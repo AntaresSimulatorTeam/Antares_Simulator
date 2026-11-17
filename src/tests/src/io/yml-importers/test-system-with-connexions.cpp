@@ -111,6 +111,46 @@ BOOST_AUTO_TEST_CASE(port_type_area_connection_is_more_complete_and_is_still_rea
     BOOST_CHECK_EQUAL(area_connection->unsupplied_energy_bound, "from-area-bound");
 }
 
+// This yaml lib contains a port type whose area connection also declares the
+// (optional) 'price' field, which should survive the yml-model -> system-model conversion.
+static const auto onlyPortTypeYmlLibWithPrice = R"(
+library:
+  id: my_lib
+  description: test model library
+
+  port-types:
+    - id: power_flow
+      description: power flow
+      fields:
+        - id: flow
+        - id: price
+      area-connection:
+        injection-to-balance: flow
+        spillage-bound:
+        unsupplied-energy-bound:
+        price: price
+
+  models:
+    - id: empty model
+      description: we need this empty model, otherwise parser fails !
+)"s;
+
+BOOST_AUTO_TEST_CASE(port_type_area_connection_price_field_is_read_correctly)
+{
+    YmlModel::Parser parserModel;
+    SystemModel::Library library = ModelConverter::convert(
+      parserModel.parse(onlyPortTypeYmlLibWithPrice));
+
+    BOOST_CHECK_EQUAL(library.PortTypes().size(), 1);
+
+    SystemModel::PortType portType = library.PortTypes().begin()->second;
+
+    auto area_connection = portType.areaConnection();
+    BOOST_CHECK(area_connection.has_value());
+    BOOST_CHECK_EQUAL(area_connection->inject_to_balance, "flow");
+    BOOST_CHECK_EQUAL(area_connection->price, "price");
+}
+
 static const auto libraryYaml = R"(
 library:
   id: my_lib
@@ -456,7 +496,7 @@ BOOST_AUTO_TEST_CASE(binding_constraint_with_sum_connections_op_is_non_linear___
     std::string err_msg = "'FunctionNode::dual' is not allowed in expression 'dual(my_constraint)'";
     BOOST_CHECK_EXCEPTION(SystemConverter::convert(system, libraries),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 // Unlike the dual() case above, a max() taking only parameters and literals as arguments
@@ -611,7 +651,7 @@ BOOST_AUTO_TEST_CASE(binding_constraint_with_max_op_on_a_variable_is_non_linear_
                           "expression 'max(var_1 + p1, 2)'";
     BOOST_CHECK_EXCEPTION(SystemConverter::convert(system, libraries),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
