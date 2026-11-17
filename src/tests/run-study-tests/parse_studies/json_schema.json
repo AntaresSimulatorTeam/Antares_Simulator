@@ -13,6 +13,7 @@
                 "anyOf":
                 [
                     {"required": ["output_compare"]},
+                    {"required": ["simu_table_compare"]},
                     {"required": ["integrity_compare"]},
                     {"required": ["hydro_level"]},
                     {"required": ["unfeasible_problem"]},
@@ -28,6 +29,12 @@
                             "absolute_tolerances" : {"type" :  "object", "additionalProperties" : {"type" :  "number"}},
                             "relative_tolerances" : {"type" :  "object", "additionalProperties" : {"type" :  "number"}}
                         },
+                        "additionalProperties" : false
+                    },
+
+                    "simu_table_compare" :
+                    {
+                        "type" : "object",
                         "additionalProperties" : false
                     },
 
