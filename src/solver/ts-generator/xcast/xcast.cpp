@@ -14,6 +14,8 @@
 #include <antares/study/study.h>
 #include "antares/solver/ts-generator/xcast/predicate.hxx"
 
+#include "transfer-function.h"
+
 namespace fs = std::filesystem;
 
 namespace Antares::TSGenerator::XCast
@@ -102,8 +104,13 @@ void XCast::applyTransferFunction(PredicateT& predicate)
                         << (i + 1) << ")";
                     throw FatalError(msg.str());
                 }
-                a[i] = (p1[y] - p0[y]) / (p1[x] - p0[x]);
-                b[i] = (p0[y] * p1[x] - p1[y] * p0[x]) / (p1[x] - p0[x]);
+                const auto [slope, intercept] = transferFunctionCoefficients(
+                  static_cast<float>(p0[x]),
+                  static_cast<float>(p0[y]),
+                  static_cast<float>(p1[x]),
+                  static_cast<float>(p1[y]));
+                a[i] = slope;
+                b[i] = intercept;
             }
 
             auto& dailyResults = DATA[s];

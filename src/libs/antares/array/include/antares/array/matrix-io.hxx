@@ -36,7 +36,6 @@ enum class WidthPolicy
 namespace
 {
 constexpr std::uintmax_t kMaxMatrixFileSize = 1536ULL * 1024ULL * 1024ULL;
-constexpr std::uintmax_t kMaxMatrixElements = kMaxMatrixFileSize / sizeof(double);
 
 bool parseDouble(std::string_view text, double& value)
 {
@@ -101,8 +100,7 @@ bool parseDimensionHeader(std::string_view text, unsigned int& width, unsigned i
 
 bool validDimensions(unsigned int width, unsigned int height)
 {
-    return width <= Matrix::kMaxDimension && height <= Matrix::kMaxDimension
-           && static_cast<std::uintmax_t>(width) * height <= kMaxMatrixElements;
+    return width <= Matrix::kMaxDimension && height <= Matrix::kMaxDimension;
 }
 
 } // namespace
@@ -249,7 +247,12 @@ inline bool load(Matrix& matrix,
                   }
 
                   auto firstRowWidth = row.size();
-                  if (firstRowWidth && row.back().value.empty())
+                  // Historically trailing spaces and tabs were removed before
+                  // counting separators, while commas and semicolons were not.
+                  while (firstRowWidth > 1
+                         && row[firstRowWidth - 1].value.find_first_not_of(' ')
+                              == std::string_view::npos
+                         && row[firstRowWidth - 2].separator == '\t')
                   {
                       --firstRowWidth;
                   }

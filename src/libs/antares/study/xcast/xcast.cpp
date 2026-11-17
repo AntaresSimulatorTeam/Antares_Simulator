@@ -257,8 +257,13 @@ bool XCast::loadFromFolder(const fs::path& folder)
     // Time-series translation
     p = folder / "translation.txt";
 
-    ret = MatrixIO::load(translation, p.string(), 1, HOURS_PER_YEAR, MatrixIO::WidthPolicy::Exact)
-          && ret;
+    const bool translationLoaded = MatrixIO::load(translation, p.string(), 1, HOURS_PER_YEAR);
+    ret = translationLoaded && ret;
+
+    if (translation.empty())
+    {
+        return false;
+    }
 
     for (double& value: translation[0])
     {
@@ -274,20 +279,11 @@ bool XCast::loadFromFolder(const fs::path& folder)
         value = static_cast<std::int32_t>(std::trunc(value));
     }
 
-    if (translation.empty())
+    if (translation.width() != 1 || translation.height() != HOURS_PER_YEAR)
     {
-        // This is not really an error
+        logs.warning() << folder << ": invalid size for the time-series translation.";
+        translation.resizeWithoutDataLost(1, HOURS_PER_YEAR);
         useTranslation = tsTranslationNone;
-        translation.reset(1, HOURS_PER_YEAR);
-    }
-    else
-    {
-        if (translation.width() != 1 || translation.height() != HOURS_PER_YEAR)
-        {
-            logs.warning() << folder << ": invalid size for the time-series translation.";
-            translation.resizeWithoutDataLost(1, HOURS_PER_YEAR);
-            useTranslation = tsTranslationNone;
-        }
     }
 
     // Transfer function

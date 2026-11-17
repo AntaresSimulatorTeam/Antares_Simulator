@@ -16,6 +16,8 @@ namespace Antares::IO
 struct CSVCell final
 {
     std::string_view value;
+    // Separator following this cell, or '\0' at the end of the row.
+    char separator = '\0';
 };
 
 using CSVRow = std::span<const CSVCell>;
@@ -26,8 +28,9 @@ using CSVTable = std::vector<std::vector<std::string>>;
  * Read CSV rows from an in-memory buffer.
  *
  * Separators are not included in cell values. Empty cells are preserved,
- * including cells created by trailing separators. Newline characters are
- * treated as row separators and CRLF is handled as one newline.
+ * including cells created by trailing separators. A blank row contains one
+ * empty cell. Newline characters are treated as row separators and CRLF is
+ * handled as one newline.
  *
  * The callback is invoked while the row storage is valid. Returning false
  * stops reading and makes this function return false.

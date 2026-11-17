@@ -8,3 +8,6 @@ add_subdirectory(utils)
 add_subdirectory(hydro)
 add_subdirectory(variable)
 
+add_boost_test(test-xcast-transfer-function
+        SRC test-xcast-transfer-function.cpp
+        INCLUDE "${CMAKE_SOURCE_DIR}/src/solver/ts-generator/xcast")

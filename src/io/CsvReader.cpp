@@ -56,14 +56,11 @@ bool readCSVBuffer(std::string_view data,
                 break;
             }
 
-            if (hasCell || afterSeparator)
+            if (maxCellsPerRow && row.size() >= maxCellsPerRow)
             {
-                if (maxCellsPerRow && row.size() >= maxCellsPerRow)
-                {
-                    throw std::length_error("CSV row exceeds the maximum number of cells");
-                }
-                row.push_back({data.substr(cellStart, index - cellStart)});
+                throw std::length_error("CSV row exceeds the maximum number of cells");
             }
+            row.push_back({data.substr(cellStart, index - cellStart)});
 
             if (!callback(rowIndex, row))
             {
@@ -93,7 +90,7 @@ bool readCSVBuffer(std::string_view data,
         {
             throw std::length_error("CSV row exceeds the maximum number of cells");
         }
-        row.push_back({data.substr(cellStart, index - cellStart)});
+        row.push_back({data.substr(cellStart, index - cellStart), value});
         hasCell = true;
         afterSeparator = true;
         ++index;

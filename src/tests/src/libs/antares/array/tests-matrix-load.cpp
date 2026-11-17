@@ -226,6 +226,47 @@ BOOST_AUTO_TEST_CASE(loads_comma_separated_values_and_empty_cells)
     BOOST_CHECK_EQUAL(matrix[1][1], 5.);
 }
 
+BOOST_AUTO_TEST_CASE(variable_width_counts_final_empty_comma_cells)
+{
+    const auto file = writeFile("1,\n2,3\n");
+    Antares::Matrix matrix;
+
+    BOOST_REQUIRE(Antares::MatrixIO::load(matrix, file.path, 1, 2));
+    BOOST_REQUIRE_EQUAL(matrix.width(), 2);
+    BOOST_CHECK_EQUAL(matrix[1][0], 0.);
+    BOOST_CHECK_EQUAL(matrix[1][1], 3.);
+}
+
+BOOST_AUTO_TEST_CASE(variable_width_ignores_multiple_trailing_tabs)
+{
+    const auto file = writeFile("1\t\t\n2\n");
+    Antares::Matrix matrix;
+
+    BOOST_REQUIRE(Antares::MatrixIO::load(matrix, file.path, 1, 2));
+    BOOST_REQUIRE_EQUAL(matrix.width(), 1);
+    BOOST_CHECK_EQUAL(matrix[0][0], 1.);
+    BOOST_CHECK_EQUAL(matrix[0][1], 2.);
+}
+
+BOOST_AUTO_TEST_CASE(blank_single_column_row_is_zero)
+{
+    const auto file = writeFile("1\n\n2\n");
+    Antares::Matrix matrix;
+
+    BOOST_REQUIRE(Antares::MatrixIO::load(matrix, file.path, 1, 3));
+    BOOST_REQUIRE_EQUAL(matrix.width(), 1);
+    BOOST_CHECK_EQUAL(matrix[0][0], 1.);
+    BOOST_CHECK_EQUAL(matrix[0][1], 0.);
+    BOOST_CHECK_EQUAL(matrix[0][2], 2.);
+}
+
+BOOST_AUTO_TEST_CASE(dimension_checks_allow_large_decoded_matrices)
+{
+    BOOST_CHECK(Antares::MatrixIO::validDimensions(25000, 8760));
+    BOOST_CHECK(!Antares::MatrixIO::validDimensions(50001, 8760));
+    BOOST_CHECK(!Antares::MatrixIO::validDimensions(1, 50001));
+}
+
 BOOST_AUTO_TEST_CASE(reloading_overwrites_previous_values)
 {
     const auto file = writeFile("1\t2\n3\t4\n");
