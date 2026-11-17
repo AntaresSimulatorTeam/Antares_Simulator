@@ -312,6 +312,12 @@ The following table contains a list of new output variables in recent versions.
 | 9.2.0 | MIN DTG by plant | details-\*.txt | yes |
 | 9.2.1, 9.3.0 | NPCAP HOURS | values-\*.txt | yes |
 | 9.3 | Use dynamic groups for thermal dispatchable generation and renewable generation, instead of static groups. 
+| Upcoming | NPCAP HOURS CSR | values-\*.txt | yes |
+
+`NPCAP HOURS CSR` counts the hours for which `MRG. PRICE CSR` is strictly greater than
+the area's unsupplied energy cost minus 5 €/MWh plus a numerical tolerance of 0.01 €/MWh.
+As for `NPCAP HOURS`, time aggregates sum the hourly indicators. For a set of areas, an hour
+is counted once if at least one area exceeds its own threshold.
 
 ### execution\_info.ini
 

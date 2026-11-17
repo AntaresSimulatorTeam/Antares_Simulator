@@ -52,6 +52,14 @@ def set_linear_solver(context, solver_name):
     context.config.userdata["linear-solver"] = solver_name
 
 
+@given('the adequacy patch is enabled for area "{area}" and all output variables are selected')
+def enable_adequacy_patch_for_area(context, area):
+    context.sih.set_parameter_value("include-adq-patch", "true", "general")
+    context.sih.set_parameter_value("selected_vars_reset", "true", "general")
+    file_path = context.study_path / "input" / "areas" / area.lower() / "adequacy_patch.ini"
+    context.sih.set_value("adequacy-patch-mode", "inside", file_path)
+
+
 @given('the quadratic solver is {solver_name}')
 def set_quadratic_solver(context, solver_name):
     context.config.userdata["quadratic-solver"] = solver_name
@@ -549,3 +557,9 @@ def check_hourly_variable_value(context, area, year, var_name, hour, expected_va
 def check_near_price_cap(context, area, year, hour, value):
     actual = context.soh.get_npcap_hours_for_hour(area, year, hour)
     assert actual == value, f"Near price cap hours mismatch: expected {value}, got {actual}"
+
+
+@then('in area "{area}", year {year:d} and hour {hour:d}, near price cap CSR is {value:d} hours')
+def check_near_price_cap_csr(context, area, year, hour, value):
+    actual = context.soh.get_npcap_hours_csr_for_hour(area, year, hour)
+    assert actual == value, f"Near price cap CSR hours mismatch: expected {value}, got {actual}"
