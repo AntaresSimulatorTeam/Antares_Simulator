@@ -6,7 +6,6 @@ def pytest_addoption(parser):
     parser.addoption("--antares-simu-path", action="store")
     parser.addoption("--named-mps-problems", action="store_true", default=False)
     parser.addoption("--force-parallel", action="store_true", default=False)
-    parser.addoption("--ts-generator", action="store_true", default=False)
     parser.addoption("--antares-problem-generator-exe", action="store", default="")
 
 
