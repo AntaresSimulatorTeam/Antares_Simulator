@@ -39,8 +39,8 @@ bool hasOutOfBoundsTimeShift(const Expressions::Nodes::Node* node,
                || hasOutOfBoundsTimeShift(timeShiftNode->right(), timeStep, ctx, evalVisitor);
     }
 
-    if (const auto* portFieldSumNode
-        = dynamic_cast<const Expressions::Nodes::PortFieldSumNode*>(node))
+    if (const auto* portFieldSumNode = dynamic_cast<const Expressions::Nodes::PortFieldSumNode*>(
+          node))
     {
         const auto& connectionEnds = evalVisitor.component().componentConnectionsViaPort(
           portFieldSumNode->getPortName());
