@@ -52,11 +52,11 @@ struct PortFieldSumTimeShiftFixture: VisitorFixture<ReadLinearExpressionVisitor>
         std::vector<SystemModel::PortFieldDefinition> fieldDefinitions;
         if (fieldExpression)
         {
-            fieldDefinitions.emplace_back(
-              port,
-              field,
-              SystemModel::Expression(id + "_field",
-                                      NodeRegistry(fieldExpression, std::move(*this))));
+            fieldDefinitions.emplace_back(port,
+                                          field,
+                                          SystemModel::Expression(id + "_field",
+                                                                  NodeRegistry(fieldExpression,
+                                                                               std::move(*this))));
         }
         std::vector<SystemModel::Parameter> parameters;
         for (const auto& [parameterId, value]: parameterValues)
