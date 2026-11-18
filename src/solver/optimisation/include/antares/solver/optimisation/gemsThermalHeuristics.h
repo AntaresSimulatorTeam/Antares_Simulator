@@ -4,6 +4,7 @@
 #pragma once
 
 #include <map>
+#include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
@@ -24,12 +25,20 @@ class OptimEntityContainer;
 namespace Antares::Optimization
 {
 
+/// Error raised when the heuristics of the GEMS components cannot be applied (inconsistent
+/// heuristic definition, missing value of the first optimisation...)
+class GemsHeuristicError: public std::runtime_error
+{
+public:
+    using std::runtime_error::runtime_error;
+};
+
 /**
  * Per-week state of the thermal heuristics applied to GEMS components whose integer strategy is
  * "heuristic" (see integer-strategy in system.yml and heuristics in optim-config.yml).
  *
  * Workflow for each week:
- * 1. reset() before the first optimisation
+ * 1. resetGemsHeuristicsState() before the first optimisation
  * 2. captureGemsHeuristicInputs() after each solve of the first optimisation (one solve per week,
  *    or one per day with a daily optimisation)
  * 3. runGemsThermalHeuristics() between the two optimisations: computes boundOverrides
@@ -40,8 +49,6 @@ namespace Antares::Optimization
 struct GemsHeuristicsState
 {
     using VariableKey = std::pair<std::string, std::string>; // (component id, variable id)
-
-    void reset(unsigned firstGlobalTimeStep, unsigned nbTimeSteps);
 
     unsigned firstGlobalTimeStep = 0;
     unsigned nbTimeSteps = 0;
@@ -54,6 +61,11 @@ struct GemsHeuristicsState
     // Bounds computed by the heuristics, applied when building the second optimisation
     LinearProblem::VariableBoundOverrides boundOverrides;
 };
+
+/// Clears the values of the previous week and sets the time steps of the new one
+void resetGemsHeuristicsState(GemsHeuristicsState& state,
+                              unsigned firstGlobalTimeStep,
+                              unsigned nbTimeSteps);
 
 /// Stores the variable values needed by the heuristics, after a solve of the first optimisation
 void captureGemsHeuristicInputs(GemsHeuristicsState& state,

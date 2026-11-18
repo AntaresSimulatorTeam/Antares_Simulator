@@ -31,7 +31,7 @@ void checkIntegerStrategies(const ModelerData& data)
                           "the benders-decomposition resolution mode",
                           component.Id()));
         }
-        const auto* heuristic = data.heuristicFor(component);
+        const auto* heuristic = heuristicFor(data, component);
         if (!heuristic)
         {
             const auto* model = component.getModel();

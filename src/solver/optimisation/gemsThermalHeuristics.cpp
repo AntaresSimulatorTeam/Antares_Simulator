@@ -33,7 +33,7 @@ unsigned variableIndex(const Component& component, const std::string& variableId
     const auto it = std::ranges::find(variables, variableId, &Variable::Id);
     if (it == variables.end())
     {
-        throw std::invalid_argument(
+        throw GemsHeuristicError(
           fmt::format("Component '{}': no variable '{}' in the model", component.Id(), variableId));
     }
     return static_cast<unsigned>(std::distance(variables.begin(), it));
@@ -52,9 +52,9 @@ auto* capturedValues(State& state, HeuristicInputSource source)
     case HeuristicInputSource::VariableUpperBound:
         return &state.upperBounds;
     case HeuristicInputSource::Parameter:
+    default:
         return static_cast<Values>(nullptr);
     }
-    return static_cast<Values>(nullptr);
 }
 
 double readVariable(const LinearProblem::Api::IMipVariable& variable, HeuristicInputSource source)
@@ -83,7 +83,7 @@ std::vector<double> inputValues(const GemsHeuristicsState& state,
         const auto it = values->find({component.Id(), input.id});
         if (it == values->end())
         {
-            throw std::runtime_error(
+            throw GemsHeuristicError(
               fmt::format("Component '{}': value of variable '{}' from the first optimisation is "
                           "not available for heuristic input '{}'",
                           component.Id(),
@@ -145,7 +145,7 @@ void runFastHeuristic(GemsHeuristicsState& state,
                       const HeuristicDefinition& heuristic,
                       unsigned year)
 {
-    auto input = [&](HeuristicElement element)
+    auto input = [&state, &modelerData, &component, &heuristic, year](HeuristicElement element)
     { return inputValues(state, modelerData, component, *heuristic.input(element), year); };
 
     const auto production = input(HeuristicElement::GenerationPower);
@@ -198,7 +198,7 @@ void runAccurateHeuristic(GemsHeuristicsState& state,
                           const HeuristicDefinition& heuristic,
                           unsigned year)
 {
-    auto input = [&](HeuristicElement element)
+    auto input = [&state, &modelerData, &component, &heuristic, year](HeuristicElement element)
     { return inputValues(state, modelerData, component, *heuristic.input(element), year); };
 
     const auto numUnitsOn = input(HeuristicElement::NumUnitsOnOpt);
@@ -231,14 +231,16 @@ void runAccurateHeuristic(GemsHeuristicsState& state,
 }
 } // namespace
 
-void GemsHeuristicsState::reset(unsigned firstGlobalTimeStep_, unsigned nbTimeSteps_)
+void resetGemsHeuristicsState(GemsHeuristicsState& state,
+                              unsigned firstGlobalTimeStep,
+                              unsigned nbTimeSteps)
 {
-    firstGlobalTimeStep = firstGlobalTimeStep_;
-    nbTimeSteps = nbTimeSteps_;
-    solutions.clear();
-    lowerBounds.clear();
-    upperBounds.clear();
-    boundOverrides.reset(firstGlobalTimeStep_);
+    state.firstGlobalTimeStep = firstGlobalTimeStep;
+    state.nbTimeSteps = nbTimeSteps;
+    state.solutions.clear();
+    state.lowerBounds.clear();
+    state.upperBounds.clear();
+    state.boundOverrides.reset(firstGlobalTimeStep);
 }
 
 void captureGemsHeuristicInputs(GemsHeuristicsState& state,
@@ -248,7 +250,7 @@ void captureGemsHeuristicInputs(GemsHeuristicsState& state,
 {
     for (const auto& component: modelerData.system->Components())
     {
-        const auto* heuristic = modelerData.heuristicFor(component);
+        const auto* heuristic = Solver::heuristicFor(modelerData, component);
         if (!heuristic)
         {
             continue;
@@ -299,7 +301,7 @@ void runGemsThermalHeuristics(GemsHeuristicsState& state,
 {
     for (const auto& component: modelerData.system->Components())
     {
-        const auto* heuristic = modelerData.heuristicFor(component);
+        const auto* heuristic = Solver::heuristicFor(modelerData, component);
         if (!heuristic)
         {
             continue;
@@ -313,6 +315,8 @@ void runGemsThermalHeuristics(GemsHeuristicsState& state,
         case HeuristicType::Accurate:
             runAccurateHeuristic(state, modelerData, component, *heuristic, year);
             break;
+        default:
+            throw GemsHeuristicError("Component '" + component.Id() + "': unknown heuristic type");
         }
     }
 }

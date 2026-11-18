@@ -64,8 +64,8 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
             if (NombreDeGroupesEnMarcheDuPalier - eps_nbGroupes
                 > NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo])
             {
-                NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = (int)ceil(
-                  NombreDeGroupesEnMarcheDuPalier - eps_nbGroupes);
+                NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = static_cast<int>(
+                  ceil(NombreDeGroupesEnMarcheDuPalier - eps_nbGroupes));
             }
         }
     }
@@ -125,7 +125,8 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
                        PmaxDUnGroupeDuPalierThermique);
             }
 
-            NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = (int)Antares::Utils::ceil(X);
+            NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = static_cast<int>(
+              Antares::Utils::ceil(X));
         }
 
         if (!OptimisationAvecVariablesEntieres)
@@ -617,7 +618,8 @@ void OPT_ResoudreLePbLineaireDuNombreMinDeGroupesEnMarche(
     {
         for (int pdt = 0; pdt < NombreDePasDeTempsProblemeHebdo; pdt++)
         {
-            NbMinOptDeGroupesEnMarche[pdt] = (int)ceil(Xsolution[NumeroDeVariableDeM[pdt]]);
+            NbMinOptDeGroupesEnMarche[pdt] = static_cast<int>(
+              ceil(Xsolution[NumeroDeVariableDeM[pdt]]));
         }
     }
     else

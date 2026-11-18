@@ -326,7 +326,8 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
             problemeHebdo->gemsHeuristicsState = std::make_shared<
               Antares::Optimization::GemsHeuristicsState>();
         }
-        problemeHebdo->gemsHeuristicsState->reset(
+        Antares::Optimization::resetGemsHeuristicsState(
+          *problemeHebdo->gemsHeuristicsState,
           static_cast<unsigned>(problemeHebdo->HeureDansLAnnee),
           static_cast<unsigned>(problemeHebdo->NombreDePasDeTemps));
     }

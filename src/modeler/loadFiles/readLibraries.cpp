@@ -253,8 +253,9 @@ SystemModel::HeuristicElement convertHeuristicElement(YmlOptimConfig::HeuristicE
         return Out::MinimumNumUnitsOn;
     case In::MinimumGenerationPower:
         return Out::MinimumGenerationPower;
+    default:
+        throw Error::InvalidArgumentError("Unknown heuristic element");
     }
-    throw Error::InvalidArgumentError("Unknown heuristic element");
 }
 
 SystemModel::HeuristicInputSource convertHeuristicInputSource(
@@ -270,8 +271,9 @@ SystemModel::HeuristicInputSource convertHeuristicInputSource(
         return SystemModel::HeuristicInputSource::VariableUpperBound;
     case YmlOptimConfig::HeuristicInputType::Parameter:
         return SystemModel::HeuristicInputSource::Parameter;
+    default:
+        throw Error::InvalidArgumentError("Unknown heuristic input type");
     }
-    throw Error::InvalidArgumentError("Unknown heuristic input type");
 }
 
 SystemModel::HeuristicOutputTarget convertHeuristicOutputTarget(
@@ -346,6 +348,7 @@ void checkHeuristicElementBinding(const SystemModel::Model& model,
         }
         break;
     case SystemModel::HeuristicElementTimeDependency::Any:
+    default:
         break;
     }
 }

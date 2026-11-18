@@ -166,7 +166,7 @@ struct GemsHeuristicsFixture
         scenario->setTimeSerieNumber(0, 1);
         modelerData.scenarioGroupRepository.addScenario("SG", std::move(scenario));
 
-        state.reset(0, 4);
+        Optimization::resetGemsHeuristicsState(state, 0, 4);
     }
 
     void solveFirstOptimisation()
@@ -266,7 +266,7 @@ BOOST_AUTO_TEST_CASE(reset_clears_the_previous_week)
     Optimization::captureGemsHeuristicInputs(state, modelerData, optimEntityContainer, ctx);
     Optimization::runGemsThermalHeuristics(state, modelerData, 0);
 
-    state.reset(168, 4);
+    Optimization::resetGemsHeuristicsState(state, 168, 4);
     BOOST_CHECK(state.solutions.empty());
     BOOST_CHECK(state.lowerBounds.empty());
     BOOST_CHECK(state.upperBounds.empty());
@@ -278,7 +278,7 @@ BOOST_AUTO_TEST_CASE(missing_first_optimisation_values)
 {
     // runGemsThermalHeuristics without captureGemsHeuristicInputs
     BOOST_CHECK_THROW(Optimization::runGemsThermalHeuristics(state, modelerData, 0),
-                      std::runtime_error);
+                      Optimization::GemsHeuristicError);
 }
 
 BOOST_AUTO_TEST_CASE(fast_does_nothing_without_minimum_power)
@@ -306,7 +306,7 @@ BOOST_AUTO_TEST_CASE(unknown_input_variable)
     solveFirstOptimisation();
     BOOST_CHECK_THROW(
       Optimization::captureGemsHeuristicInputs(state, modelerData, optimEntityContainer, ctx),
-      std::invalid_argument);
+      Optimization::GemsHeuristicError);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -88,11 +88,11 @@ void OPT_CalculerLaCourbeGuideDuNombreDeGroupes(int NombreDePasDeTemps,
 
         if (TailleUnitaireDUnGroupe > ZERO_PMIN)
         {
-            NbGrpCourbeGuide[Pdt] = (int)ceil(P / TailleUnitaireDUnGroupe);
+            NbGrpCourbeGuide[Pdt] = static_cast<int>(ceil(P / TailleUnitaireDUnGroupe));
         }
         else
         {
-            NbGrpCourbeGuide[Pdt] = (int)ceil(P);
+            NbGrpCourbeGuide[Pdt] = static_cast<int>(ceil(P));
         }
     }
 }
@@ -181,7 +181,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(int NombreDePasDeTemps,
 
     OPT_CalculerLaCourbeGuideDuNombreDeGroupes(
       NombreDePasDeTemps,
-      [&](int Pdt)
+      [&ProductionThermiqueOptimale, indexPalier](int Pdt)
       { return ProductionThermiqueOptimale[Pdt].ProductionThermiqueDuPalier[indexPalier]; },
       TailleUnitaireDUnGroupeDuPalierThermique[indexPalier],
       NbGrpCourbeGuide);

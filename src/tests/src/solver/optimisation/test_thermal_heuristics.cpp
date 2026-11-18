@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE(fast_guide_is_ceil_of_production_over_unit_size)
     std::vector<int> guide(production.size(), -1);
     OPT_CalculerLaCourbeGuideDuNombreDeGroupes(
       static_cast<int>(production.size()),
-      [&](int t) { return production[t]; },
+      [&production](int t) { return production[t]; },
       100.,
       guide);
     const std::vector<int> expected = {0, 2, 2, 0, 1};

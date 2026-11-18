@@ -43,40 +43,41 @@ struct ModelerData
     LinearProblem::BendersDecomposition bendersDecomposition;
     std::map<std::string, std::vector<ComponentProperty>> componentProperties;
     HeuristicsByModel heuristicsByModel;
+};
 
-    /// The heuristic definition to apply to a component, nullptr if it is not handled by a
-    /// heuristic
-    const ModelerStudy::SystemModel::HeuristicDefinition* heuristicFor(
-      const ModelerStudy::SystemModel::Component& component) const
+/// The heuristic definition to apply to a component, nullptr if it is not handled by a heuristic
+inline const ModelerStudy::SystemModel::HeuristicDefinition* heuristicFor(
+  const ModelerData& data,
+  const ModelerStudy::SystemModel::Component& component)
+{
+    const auto type = component.heuristicType();
+    if (!type)
     {
-        const auto type = component.heuristicType();
-        if (!type)
-        {
-            return nullptr;
-        }
-        const auto* model = component.getModel();
-        const auto it = heuristicsByModel.find(model->LibraryId() + "." + model->Id());
-        if (it == heuristicsByModel.end())
-        {
-            return nullptr;
-        }
-        for (const auto& heuristic: it->second)
-        {
-            if (heuristic.type == *type)
-            {
-                return &heuristic;
-            }
-        }
         return nullptr;
     }
-
-    bool hasHeuristicComponents() const
+    const auto* model = component.getModel();
+    const auto it = data.heuristicsByModel.find(model->LibraryId() + "." + model->Id());
+    if (it == data.heuristicsByModel.end())
     {
-        return system
-               && std::ranges::any_of(system->Components(),
-                                      [](const auto& c) { return c.heuristicType().has_value(); });
+        return nullptr;
     }
-};
+    for (const auto& heuristic: it->second)
+    {
+        if (heuristic.type == *type)
+        {
+            return &heuristic;
+        }
+    }
+    return nullptr;
+}
+
+/// True if at least one component of the system is handled by a heuristic
+inline bool hasHeuristicComponents(const ModelerData& data)
+{
+    return data.system
+           && std::ranges::any_of(data.system->Components(),
+                                  [](const auto& c) { return c.heuristicType().has_value(); });
+}
 
 // Operator for printing ResolutionMode in logs and tests
 inline std::ostream& operator<<(std::ostream& os, ResolutionMode mode)

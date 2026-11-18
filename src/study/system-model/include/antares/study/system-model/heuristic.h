@@ -140,8 +140,9 @@ inline std::string toString(HeuristicElement element)
         return "min_up_duration";
     case HeuristicElement::MinDownDuration:
         return "min_down_duration";
+    default:
+        return "unknown";
     }
-    return "unknown";
 }
 
 /// Mandatory inputs of each heuristic (fixed schema)
@@ -187,9 +188,9 @@ inline HeuristicElementTimeDependency expectedTimeDependency(HeuristicElement el
         return HeuristicElementTimeDependency::TimeDependent;
     case NumUnitsMax:
     case ClusterMaxGeneration:
+    default:
         return HeuristicElementTimeDependency::Any;
     }
-    return HeuristicElementTimeDependency::Any;
 }
 
 } // namespace Antares::ModelerStudy::SystemModel

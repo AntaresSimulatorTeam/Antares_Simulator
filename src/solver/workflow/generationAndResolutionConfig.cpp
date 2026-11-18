@@ -59,7 +59,7 @@ static void applyModelerConfig(GenerationAndResolutionConfig& config,
     config.resolutionMode = resMode;
     config.master = determineMasterSolverType(resMode, modelerData);
     config.subproblems = determineSubproblemSolverType(ucMode, modelerData);
-    config.useGemsThermalHeuristics = modelerData->hasHeuristicComponents();
+    config.useGemsThermalHeuristics = hasHeuristicComponents(*modelerData);
 }
 
 GenerationAndResolutionConfig getWorkflow(const Data::Study& study)

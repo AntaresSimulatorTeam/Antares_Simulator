@@ -371,9 +371,9 @@ BOOST_FIXTURE_TEST_CASE(declared_heuristic_is_accepted, IntegerStrategiesFixture
 {
     const auto data = modelerData("heuristic", "fast", optimConfig(fastHeuristic));
     BOOST_CHECK_NO_THROW(checkIntegerStrategies(data));
-    BOOST_CHECK(data.hasHeuristicComponents());
-    BOOST_REQUIRE(data.heuristicFor(data.system->Components()[0]) != nullptr);
-    BOOST_CHECK(data.heuristicFor(data.system->Components()[0])->type == HeuristicType::Fast);
+    BOOST_CHECK(hasHeuristicComponents(data));
+    BOOST_REQUIRE(heuristicFor(data, data.system->Components()[0]) != nullptr);
+    BOOST_CHECK(heuristicFor(data, data.system->Components()[0])->type == HeuristicType::Fast);
 }
 
 BOOST_FIXTURE_TEST_CASE(heuristic_not_declared_for_the_model, IntegerStrategiesFixture)
@@ -394,7 +394,7 @@ BOOST_FIXTURE_TEST_CASE(model_without_any_heuristic, IntegerStrategiesFixture)
     model-decomposition:
       variables: []
 )");
-    BOOST_CHECK(data.heuristicFor(data.system->Components()[0]) == nullptr);
+    BOOST_CHECK(heuristicFor(data, data.system->Components()[0]) == nullptr);
     BOOST_CHECK_EXCEPTION(checkIntegerStrategies(data),
                           std::exception,
                           containsMessage("heuristic 'fast' is not declared"));
