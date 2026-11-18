@@ -27,7 +27,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
 
   @short
   Scenario: One cluster - exact (MILP): a third unit is started at hour 12 only
-    Given the solver study path is a copy of "hybrid-thermal-heuristics/one_cluster"
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/thermal_heuristics/one_cluster"
     And in system.yml, component "G" has integer strategy "exact"
     When I run antares simulator with --output=all
     Then the simulation succeeds
@@ -48,7 +48,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
 
   @short
   Scenario: One cluster - relaxed: 2.05 units at hour 12, no spillage
-    Given the solver study path is a copy of "hybrid-thermal-heuristics/one_cluster"
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/thermal_heuristics/one_cluster"
     And in system.yml, component "G" has integer strategy "relaxed"
     When I run antares simulator with --output=all
     Then the simulation succeeds
@@ -63,7 +63,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
 
   @short
   Scenario: One cluster - heuristic accurate: same solution as MILP
-    Given the solver study path is a copy of "hybrid-thermal-heuristics/one_cluster"
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/thermal_heuristics/one_cluster"
     And in system.yml, component "G" has integer strategy "heuristic accurate"
     When I run antares simulator with --output=all
     Then the simulation succeeds
@@ -87,7 +87,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
   Scenario: One cluster - heuristic fast: the third unit runs for a whole block of 10 hours
     # Blocks of max(min up, min down) = 10 hours: the third unit is on from hour 10 to 19, its
     # pmin (700 MW) forces 100 MW of spillage at each of these hours (50 MW at hour 12).
-    Given the solver study path is a copy of "hybrid-thermal-heuristics/one_cluster"
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/thermal_heuristics/one_cluster"
     And in system.yml, component "G" uses model "antares_legacy_models.thermal_fast" with integer strategy "heuristic fast"
     When I run antares simulator with --output=all
     Then the simulation succeeds
@@ -111,7 +111,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
 
   @short
   Scenario: One cluster without pmin - exact (MILP)
-    Given the solver study path is a copy of "hybrid-thermal-heuristics/one_cluster_no_pmin"
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/thermal_heuristics/one_cluster_no_pmin"
     And in system.yml, component "G" has integer strategy "exact"
     When I run antares simulator with --output=all
     Then the simulation succeeds
@@ -126,7 +126,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
   @short
   Scenario: One cluster without pmin - relaxed
     # The hours at which the 2.05 units are on (min up 3 h) are not unique: only hour 12 is checked
-    Given the solver study path is a copy of "hybrid-thermal-heuristics/one_cluster_no_pmin"
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/thermal_heuristics/one_cluster_no_pmin"
     And in system.yml, component "G" has integer strategy "relaxed"
     When I run antares simulator with --output=all
     Then the simulation succeeds
@@ -139,7 +139,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
 
   @short
   Scenario: One cluster without pmin - heuristic accurate: same cost as MILP
-    Given the solver study path is a copy of "hybrid-thermal-heuristics/one_cluster_no_pmin"
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/thermal_heuristics/one_cluster_no_pmin"
     And in system.yml, component "G" has integer strategy "heuristic accurate"
     When I run antares simulator with --output=all
     Then the simulation succeeds
@@ -152,7 +152,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
 
   @short
   Scenario: One cluster without pmin - heuristic fast: no start-up nor fixed cost in the model
-    Given the solver study path is a copy of "hybrid-thermal-heuristics/one_cluster_no_pmin"
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/thermal_heuristics/one_cluster_no_pmin"
     And in system.yml, component "G" uses model "antares_legacy_models.thermal_fast" with integer strategy "heuristic fast"
     When I run antares simulator with --output=all
     Then the simulation succeeds
@@ -171,7 +171,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
 
   @short
   Scenario: Two clusters with a low load - exact (MILP)
-    Given the solver study path is a copy of "hybrid-thermal-heuristics/two_clusters_low_load"
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/thermal_heuristics/two_clusters_low_load"
     And in system.yml, component "G1" has integer strategy "exact"
     And in system.yml, component "G2" has integer strategy "exact"
     When I run antares simulator with --output=all
@@ -188,7 +188,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
 
   @short
   Scenario: Two clusters with a low load - heuristic accurate on both clusters
-    Given the solver study path is a copy of "hybrid-thermal-heuristics/two_clusters_low_load"
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/thermal_heuristics/two_clusters_low_load"
     And in system.yml, component "G1" has integer strategy "heuristic accurate"
     And in system.yml, component "G2" has integer strategy "heuristic accurate"
     When I run antares simulator with --output=all
@@ -205,7 +205,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
 
   @short
   Scenario: Two clusters with a low load - heuristic fast on both clusters
-    Given the solver study path is a copy of "hybrid-thermal-heuristics/two_clusters_low_load"
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/thermal_heuristics/two_clusters_low_load"
     And in system.yml, component "G1" uses model "antares_legacy_models.thermal_fast" with integer strategy "heuristic fast"
     And in system.yml, component "G2" uses model "antares_legacy_models.thermal_fast" with integer strategy "heuristic fast"
     When I run antares simulator with --output=all
@@ -226,7 +226,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
 
   @short
   Scenario: Four clusters with mixed integer strategies
-    Given the solver study path is a copy of "hybrid-thermal-heuristics/four_clusters_mixed_strategies"
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/thermal_heuristics/four_clusters_mixed_strategies"
     When I run antares simulator with --output=all
     Then the simulation succeeds
     # First optimisation: G4 (accurate) is relaxed
@@ -260,7 +260,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
   @short
   Scenario: A heuristic must be declared in optim-config.yml for the model of the component
     # optim-config.yml declares "fast" for thermal_fast only
-    Given the solver study path is a copy of "hybrid-thermal-heuristics/one_cluster"
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/thermal_heuristics/one_cluster"
     And in system.yml, component "G" has integer strategy "heuristic fast"
     When I run antares simulator
     Then the simulation fails
@@ -268,7 +268,7 @@ Feature: hybrid studies - integer strategy of GEMS thermal components
 
   @short
   Scenario: heuristic-id is mandatory with the integer strategy heuristic
-    Given the solver study path is a copy of "hybrid-thermal-heuristics/one_cluster"
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/thermal_heuristics/one_cluster"
     And in system.yml, component "G" has integer strategy "heuristic"
     When I run antares simulator
     Then the simulation fails

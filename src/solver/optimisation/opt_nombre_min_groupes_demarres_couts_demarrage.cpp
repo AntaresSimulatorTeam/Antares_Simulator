@@ -8,7 +8,6 @@
 
 void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
   std::vector<int>& NbMinOptDeGroupesEnMarche,
-  int Pays,
   int index,
   int NombreDePasDeTempsProblemeHebdo,
   RESULTATS_HORAIRES& ResultatsHoraires,
@@ -133,7 +132,6 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
         {
             OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
               NombreMinDeGroupesEnMarcheDuPalierThermique,
-              pays,
               index,
               NombreDePasDeTempsProblemeHebdo,
               ResultatsHoraires,
@@ -175,7 +173,6 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
 
 void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
   std::vector<int>& NbMinOptDeGroupesEnMarche,
-  int Pays,
   int index,
   int NombreDePasDeTempsProblemeHebdo,
   RESULTATS_HORAIRES& ResultatsHoraires,
