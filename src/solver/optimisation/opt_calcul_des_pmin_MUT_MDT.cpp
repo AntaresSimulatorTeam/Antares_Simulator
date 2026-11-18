@@ -151,7 +151,6 @@ bool OPT_CalculerLeNombreDeGroupesParBlocsDeMUTetMDT(int NombreDePasDeTemps,
 }
 
 void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(int NombreDePasDeTemps,
-                                                       int NombreDePays,
                                                        std::vector<int>& NbGrpCourbeGuide,
                                                        std::vector<int>& NbGrpOpt,
                                                        RESULTATS_HORAIRES& ResultatsHoraires,

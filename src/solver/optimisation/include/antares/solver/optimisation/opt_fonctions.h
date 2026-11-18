@@ -94,7 +94,6 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO*);
 /*------------------------------*/
 
 void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(int NombreDePasDeTemps,
-                                                       int NombreDePays,
                                                        std::vector<int>& NbGrpCourbeGuide,
                                                        std::vector<int>& NbGrpOpt,
                                                        RESULTATS_HORAIRES& ResultatsHoraires,

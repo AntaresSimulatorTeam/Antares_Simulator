@@ -219,7 +219,6 @@ void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
 
         std::vector<int>& NbGrpCourbeGuide = problemeHebdo->NbGrpCourbeGuide;
         std::vector<int>& NbGrpOpt = problemeHebdo->NbGrpOpt;
-        int NombreDePays = problemeHebdo->NombreDePays;
         for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
         {
             if (problemeHebdo->OptimisationNotFastMode)
@@ -236,7 +235,6 @@ void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
             else
             {
                 OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(NombreDePasDeTempsProblemeHebdo,
-                                                                  NombreDePays,
                                                                   NbGrpCourbeGuide,
                                                                   NbGrpOpt,
                                                                   ResultatsHoraires,

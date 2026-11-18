@@ -57,30 +57,6 @@ enum class HeuristicElement
     MinimumGenerationPower
 };
 
-inline bool isValidHeuristicElement(HeuristicType heuristic, HeuristicElement element)
-{
-    switch (heuristic)
-    {
-    case HeuristicType::Accurate:
-        return element == HeuristicElement::NumUnitsOnOpt
-               || element == HeuristicElement::NumUnitsMax
-               || element == HeuristicElement::MinUpDuration
-               || element == HeuristicElement::MinDownDuration
-               || element == HeuristicElement::MinimumNumUnitsOn;
-
-    case HeuristicType::Fast:
-        return element == HeuristicElement::GenerationPower
-               || element == HeuristicElement::ClusterMaxGeneration
-               || element == HeuristicElement::MinPowerPerUnit
-               || element == HeuristicElement::MaxPowerPerUnit
-               || element == HeuristicElement::MinUpDuration
-               || element == HeuristicElement::MinDownDuration
-               || element == HeuristicElement::MinimumGenerationPower;
-    }
-
-    return false;
-}
-
 enum class HeuristicInputType
 {
     VariableSolution,
