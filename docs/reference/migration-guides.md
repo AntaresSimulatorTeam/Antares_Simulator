@@ -68,6 +68,21 @@ simulation tables and to `system-for-views.yml`, spaces are now replaced by unde
 consistently underscore-separated. For instance `area_thermal_semi base` becomes `area_thermal_semi_base`
 and `district_all areas` becomes `district_all_areas`. Names on disk in the study are not modified.
 
+#### Simulation tables written in a `simulation-tables/` subdirectory
+
+When simulation tables are enabled, they are now written in a `simulation-tables` subdirectory of the run's
+output folder instead of its root, for the solver (`simulation-table-<year>-<stage>`) and for the modeler
+(`simulation-table-<scenario>`). Runs that do not export simulation tables do not create this directory.
+Scripts that read the tables must look in the new location.
+
+#### Year and week numbers in raw optimisation files are 0-based
+
+In the names of the exported MPS, `criterion`, `optimal-values`, `reduced-costs` and `marginal-costs` files, the
+year, week and day now start at 0, like the indices used in the simulation tables, instead of 1. For example
+`problem-1-1--optim-nb-1.mps` becomes `problem-0-0--optim-nb-1.mps` for the first year and first week.
+The stage names `optim-nb-1` and `optim-nb-2` are unchanged, and so are the log messages
+(`Year X failed at week Y`), which still count from 1.
+
 #### `system-for-views.yml` moved to `views/input/`
 
 The file is now written to `<timestamp output>/views/input/system-for-views.yml` instead of the root of
@@ -123,7 +138,7 @@ still accepted for compatibility, but should be removed from the study:
 #### One simulation table per optimization and post-process
 
 A simulation table is now written after **each** stage (optimization or post-process), one
-file per stage under `simulation-tables/`, named `simulation-table-<year>-<stage>`:
+file per stage, named `simulation-table-<year>-<stage>`:
 
 | Stage | Written after | Produced |
 |---|---|---|

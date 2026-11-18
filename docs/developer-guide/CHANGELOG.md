@@ -16,6 +16,10 @@ toc_depth: 2
   `_node` (areas) or `_link` (links) [ANT-6126] (#4017), and spaces in them are replaced by underscores
   [ANT-6132] (#4018)
 * `system-for-views.yml` is written to `views/input/` of the output folder instead of its root (#4023)
+* Simulation tables are written in a `simulation-tables/` subdirectory of the output folder instead of its
+  root [ANT-6195] (#4022)
+* The year, week and day in the names of the MPS, criterion, optimal-values, reduced-costs and
+  marginal-costs files are 0-based instead of 1-based [ANT-6021] (#4031)
 * Enabling reserves in a study older than version 10.1 is now an error instead of a crash later in the
   run (#4012, #4039)
 * `sum(x)` over the whole block of a time-constant expression `x` is now multiplied by the number of time
