@@ -24,7 +24,7 @@ Report each as PASS / FAIL with the evidence.
 | Formatting | `clang-format --dry-run --Werror` on changed `.cpp/.h/.hpp` | CI requires clang-format 18.1.3. `src/format-code.sh` **exits with an error** on any other version: never discard its output (`>/dev/null`). Use `src/format-code-docker.sh` or run `clang-format` directly (18.1.8 gave identical results so far) |
 | Commit messages | `git log develop..HEAD --format=%s` | conventional commits `type(scope): imperative`, subject under 50 chars (`.github/git-commit-instructions.md`) |
 | PR title and description | inspect title and read body | Title must match `^[a-z]+(\([^)]+\))?!?: .+ \[ANT-[0-9]+\]$` (Conventional Commit subject followed by an ANT JIRA key); keep it self-explanatory. Body: Motivation + Method, proportional to size; draft if not ready; docs updated if a documented feature changed (`docs/`) |
-| Build | build only the affected targets in `~/CLionProjects/build_simulator` (`ninja <target>`) | working build dir, see memory |
+| Build | Configure a build directory from the reviewed source tree using the documented CMake options; build affected targets with `cmake --build <build-dir> --target <target>` | Use CMake's generator-independent build command; do not assume a particular path, generator, or session memory (`docs/developer-guide/3-Build.md`) |
 | Tests | run the affected test binaries / `ctest -R` | a changed behaviour needs a test that fails without the change (mutate the fix and check) |
 | CI | `gh pr checks <n>` | list failing checks and read the log of each before concluding |
 
