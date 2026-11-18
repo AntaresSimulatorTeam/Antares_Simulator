@@ -36,22 +36,22 @@ static std::string errorMessage(const std::map<std::string, const TimeSeries*>& 
     return msg.str();
 }
 
-uint TimeSeriesNumbers::height() const
+uint32_t TimeSeriesNumbers::height() const
 {
-    return static_cast<uint>(tsNumbers.size());
+    return static_cast<uint32_t>(tsNumbers.size());
 }
 
-uint32_t TimeSeriesNumbers::operator[](uint y) const
-{
-    return tsNumbers[y];
-}
-
-uint32_t& TimeSeriesNumbers::operator[](uint y)
+uint32_t TimeSeriesNumbers::operator[](uint32_t y) const
 {
     return tsNumbers[y];
 }
 
-void TimeSeriesNumbers::reset(uint h)
+uint32_t& TimeSeriesNumbers::operator[](uint32_t y)
+{
+    return tsNumbers[y];
+}
+
+void TimeSeriesNumbers::reset(uint32_t h)
 {
     tsNumbers.assign(h, 0);
 }
@@ -73,7 +73,7 @@ void TimeSeriesNumbers::saveToBuffer(std::string& data) const
 
 std::optional<std::string> TimeSeriesNumbers::checkSeriesNumberOfColumnsConsistency() const
 {
-    std::vector<uint> width;
+    std::vector<uint32_t> width;
     for (const auto& [_, s]: series)
     {
         width.push_back(s->numberOfColumns());

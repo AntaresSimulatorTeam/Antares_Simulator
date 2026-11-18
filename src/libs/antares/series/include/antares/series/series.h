@@ -32,13 +32,13 @@ public:
     // otherwis
     std::optional<std::string> checkSeriesNumberOfColumnsConsistency() const;
 
-    uint32_t operator[](uint y) const;
-    uint32_t& operator[](uint y);
+    uint32_t operator[](uint32_t y) const;
+    uint32_t& operator[](uint32_t y);
 
     void clear();
-    void reset(uint h);
+    void reset(uint32_t h);
 
-    uint height() const;
+    uint32_t height() const;
 
     void saveToBuffer(std::string& data) const;
 
