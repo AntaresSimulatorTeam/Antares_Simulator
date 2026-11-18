@@ -240,4 +240,88 @@ BOOST_FIXTURE_TEST_CASE(porfieldsum_throw, Fixture)
         "'model2': In expression 'var1': Error for variable 'var1': Location doesn't match the "
         "expression location (variable location: master, expression location: subproblems)"));
 }
+
+BOOST_FIXTURE_TEST_CASE(two_portfield_errors_both_reported_in_exception_and_logs, Fixture)
+{
+    // Two constraints each using a bare PortFieldNode (without sum_connections).
+    // checkModel must report BOTH errors in the exception AND log each one.
+
+    Antares::Expressions::Registry<Node> reg1;
+    Node* pf1 = reg1.create<PortFieldNode>("port", "field1");
+    Antares::Expressions::NodeRegistry nodeReg1(pf1, std::move(reg1));
+    Expression expr1("port.field1", std::move(nodeReg1));
+
+    Antares::Expressions::Registry<Node> reg2;
+    Node* pf2 = reg2.create<PortFieldNode>("port", "field2");
+    Antares::Expressions::NodeRegistry nodeReg2(pf2, std::move(reg2));
+    Expression expr2("port.field2", std::move(nodeReg2));
+
+    std::vector<Constraint> constraints;
+    constraints.push_back({"c1", std::move(expr1), Location::SUBPROBLEMS});
+    constraints.push_back({"c2", std::move(expr2), Location::SUBPROBLEMS});
+
+    auto model = modelBuilder.withConstraints(std::move(constraints)).withId("test_model").build();
+    auto system = systemBuilder
+                    .withComponents(
+                      {componentBuilder.withModel(&model).withId("component").build()})
+                    .withId("system")
+                    .build();
+
+    class StreamCapture
+    {
+    public:
+        explicit StreamCapture(std::ostream& stream):
+            stream_(stream),
+            previousBuffer_(stream.rdbuf(captured_.rdbuf()))
+        {
+        }
+
+        ~StreamCapture()
+        {
+            stream_.rdbuf(previousBuffer_);
+        }
+
+        std::string str() const
+        {
+            return captured_.str();
+        }
+
+    private:
+        std::ostringstream captured_;
+        std::ostream& stream_;
+        std::streambuf* previousBuffer_;
+    };
+
+    std::string errBytes;
+    std::string exceptionMsg;
+    {
+        StreamCapture err(std::cerr);
+
+        try
+        {
+            checkModel(model, system);
+            BOOST_FAIL("Expected LocationError to be thrown");
+        }
+        catch (const LocationError& e)
+        {
+            exceptionMsg = e.what();
+        }
+
+        errBytes = err.str();
+    }
+
+    // Check exception.what() contains both errors
+    BOOST_CHECK_MESSAGE(exceptionMsg.find("port.field1") != std::string::npos,
+                        "Exception should mention port.field1: " + exceptionMsg);
+    BOOST_CHECK_MESSAGE(exceptionMsg.find("port.field2") != std::string::npos,
+                        "Exception should mention port.field2: " + exceptionMsg);
+    BOOST_CHECK_MESSAGE(exceptionMsg.find("sum_connections") != std::string::npos,
+                        "Exception should suggest sum_connections: " + exceptionMsg);
+
+    // Check logs (stderr) contain both errors
+    BOOST_CHECK_MESSAGE(errBytes.find("port.field1") != std::string::npos,
+                        "Logs should mention port.field1: " + errBytes);
+    BOOST_CHECK_MESSAGE(errBytes.find("port.field2") != std::string::npos,
+                        "Logs should mention port.field2: " + errBytes);
+}
 BOOST_AUTO_TEST_SUITE_END()
