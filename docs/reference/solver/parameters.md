@@ -293,7 +293,7 @@ Link variables files columns: *Link Hour Flow*
 - **Required:** no
 - **Default value:** `all`
 - **Usage:** selects which stages of the weekly resolution get a simulation table. One file is
-  written per selected stage, named `simulation-table-<year>-<stage>`:
+  written per selected stage under `simulation-tables/`, named `simulation-table-<year>-<stage>`:
 
     - `optim-nb-1`: after the first optimisation pass
     - `optim-nb-2`: after the second pass
@@ -514,7 +514,7 @@ _**This section is under construction**_
 - **Usage:** set to `true` to activate writing the raw optimization results, that is
   - For each variable, optimal values (saved in output/output-name/optimal-values-y-w--optim-nb-z.txt) and reduced costs (saved in output/output-name/reduced-costs-y-w--optim-nb-z.txt) 
   - each constraint, the marginal cost is saved in output/output-name/marginal-costs-y-w--optim-nb-z.txt
-where y is the year number (starting from 1), w is the week number (starting from 1) and z is the optimization index (1 or 2).
+where y is the year number (starting from 0), w is the week number (starting from 0) and z is the optimization index (1 or 2).
 
 This is an advanced option intended to help developers and advanced users better understand their simulation results.
 

@@ -4,6 +4,66 @@ toc_depth: 2
 
 # Antares Changelog
 
+## Branch 10.3.x
+
+### 10.3.0
+
+#### Breaking changes
+
+* Remove the hydro `leeway` feature [ANT-5838] (#3967). See the
+  [migration guide](../reference/migration-guides.md)
+* Legacy component IDs, in the simulation tables and in `system-for-views.yml`, no longer end with
+  `_node` (areas) or `_link` (links) [ANT-6126] (#4017), and spaces in them are replaced by underscores
+  [ANT-6132] (#4018)
+* `system-for-views.yml` is written to `views/input/` of the output folder instead of its root (#4023)
+* Simulation tables are written in a `simulation-tables/` subdirectory of the output folder instead of its
+  root [ANT-6195] (#4022)
+* The year, week and day in the names of the MPS, criterion, optimal-values, reduced-costs and
+  marginal-costs files are 0-based instead of 1-based [ANT-6021] (#4031)
+* Enabling reserves in a study older than version 10.1 is now an error instead of a crash later in the
+  run (#4012, #4039)
+* `sum(x)` over the whole block of a time-constant expression `x` is now multiplied by the number of time
+  steps in the optimisation problem, as in its evaluation [ANT-6200] (#4027)
+
+#### Features
+
+* Thermal cluster ramping: ramp constraints and costs, enabled with `include-thermal-cluster-ramping`
+  and the `ramping-enabled` cluster property, with the `RAMP COST` and `RAMP COST BY PLANT` outputs
+  [ANT-992] (#2684, #3984)
+* Reserve needs can be scenarised per Monte-Carlo year, with several time series per reserve and a new
+  `res` scenario-builder rule (#3719)
+* Add `domestic_unsupplied_energy` and `is_local_matching_rule_violated` per area in the simulation
+  table [ANT-5240] (#3980)
+* Simulation tables of the legacy solver are written incrementally [ANT-6073] (#4019)
+* System for views: add the district of each area [ANT-6074] (#4006), the names of clusters
+  [ANT-6050] (#4014) and of wind, run-of-river and solar [ANT-6169] (#4044); disabled components and legacy
+  wind/solar in cluster mode are no longer exported [ANT-5954] (#3968, #4021)
+
+#### GEMS / Modeler
+
+* Accept expressions as time indices and right-side multiplication / division in shifts
+  [ANT-6199] (#4026)
+* Add field checks for model nodes [ANT-6041] (#3976)
+* Use `system.yml` to determine whether a study is hybrid [ANT-6203] (#4033)
+* Clearer error message for `sum_connections` [ANT-5143] (#4005)
+
+#### Bug fixes
+
+* Fix `t + offset` evaluated with an unsigned wraparound, e.g. `t - 1` at `t = 0` [ANT-6201] (#4025)
+* Fix a scenario-independent GEMS parameter that did not always use its first time series [ANT-5944] (#3969)
+* District output filters are now ignored when `geographic-trimming = false` (#3972)
+* Fix the Arrow capacity error when writing the simulation table of large studies (#3975)
+* Clearer log messages for remix-hydro: MC year, area and reservoir names [ANT-5972] (#4004)
+
+#### Documentation
+
+* Document simulation tables written in a ZIP output (#4041)
+* Add a documentation page about sanitizers (#3988)
+
+#### CI
+
+* Add Ubuntu Clang workflow with sanitizers and strict warnings (#3763)
+
 ## Branch 10.2.x
 
 #### Breaking changes
@@ -18,7 +78,7 @@ toc_depth: 2
 * Write one simulation table per stage of the weekly resolution, so the effect of each
   post-treatment is observable: `optim-nb-1`, `optim-nb-2`, `peak-shaving` (the peak-shaving /
   remix-hydro post-process) and `adq-patch` (the adequacy patch CSR treatment). Each stage gets its own
-  `simulation-table-<year>-<stage>` file
+  `simulation-table-<year>-<stage>` file (#3933, #3936, #3959)
 * Select which stages are written, with `simulation-table-stages` in the `[output]` section of
   `generaldata.ini` or the `--simulation-table-stages` command-line option (default: all stages).
 * Add `--simulation-table-stages-last` to write only the last-produced stage (#3939)
@@ -26,7 +86,7 @@ toc_depth: 2
 * Extra-outputs: export legacy outputs in simulation table [ANT-5006] (#3715, #3717, #3727, #3739)
 * Add warning when final level is outside rule curves [ANT-3139] (#3759)
 * Export original problem for unfeasible problems [ANT-4987] (#3692)
-* Parquet support for modeler and legacy solver [ANT-4633] (#3565, #3586)
+* Parquet support for modeler and legacy solver [ANT-4633] (#3565, #3586, #3622, #3678)
 * Export by MC year instead of global 2-file aggregation [ANT-4633] (#3640)
 * Add filtering for district output granularities with `sets.ini` (#3926)
 * Improve unit commitment calculations for legacy outputs [ANT-5334] (#3888)
@@ -60,14 +120,10 @@ toc_depth: 2
 
 #### Bugfixes
 
-* Fix libparquet_writer.so install dir [ANT-4633] (#3622, #3678)
-* Fix failing tests on simulation table [ANT-4986] (#3736)
 * Yaml files now give a warning and optim-config.yml requires system.yml (#3695, #3722)
 * Use fmt for double conversion, improving performances (#3773)
 * Fix uninitialized Parameters members found by UBSan (#3753)
 * Fix stack-use-after-scope in EvalVisitor tests (#3754)
-* Fix missing inactiveComponents in some simulation table stages (#3933)
-* Rename adq-patch and shave-peak simulation table stages for consistency (#3936)
 * Fix incorrect renewable cluster name in short-term storage output (#3938)
 
 #### Documentation
@@ -94,6 +150,7 @@ toc_depth: 2
 * Remove unused Study members and pQueueService, remove one of Study::IsRootStudy static methods (#3743, #3744, #3745)
 * Fix build warnings (#3684, #3694, #3701, #3724, #3725, #3732, #3733, #3734, #3735, #3740, #3750, #3760)
 * Add cucumber tests for problem generator, workflow and valid-hydro [ANT-5004, ANT-5005] (#3708, #3713, #3714)
+* Fix failing tests on simulation table [ANT-4986] (#3736)
 * Enhance loading and testing for inter-monthly breakdown properties [ANT-4985] (#3665)
 * Increase timeout of case 035 (#3737)
 * Remove JIT [ANT-4954] (#3782)
