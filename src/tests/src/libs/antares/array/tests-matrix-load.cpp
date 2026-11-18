@@ -6,6 +6,7 @@
 #include "tests-matrix-load.h"
 
 #include <chrono>
+#include <cmath>
 #include <filesystem>
 #include <fstream>
 #include <stdexcept>
@@ -75,6 +76,28 @@ BOOST_AUTO_TEST_CASE(loads_numeric_values_and_infers_variable_width)
     BOOST_CHECK_EQUAL(matrix[2][0], 3.);
     BOOST_CHECK_EQUAL(matrix[0][1], 4.);
     BOOST_CHECK_EQUAL(matrix[2][1], 6.);
+}
+
+BOOST_AUTO_TEST_CASE(loads_infinite_binding_constraint_bounds)
+{
+    const auto file = writeFile("0\t-inf\t0\ninf\t+infinity\t-INFINITY\n");
+    Antares::Matrix matrix;
+
+    BOOST_REQUIRE(Antares::MatrixIO::load(matrix, file.path, 3, 2));
+    BOOST_CHECK(std::isinf(matrix[1][0]) && std::signbit(matrix[1][0]));
+    BOOST_CHECK(std::isinf(matrix[0][1]) && !std::signbit(matrix[0][1]));
+    BOOST_CHECK(std::isinf(matrix[1][1]) && !std::signbit(matrix[1][1]));
+    BOOST_CHECK(std::isinf(matrix[2][1]) && std::signbit(matrix[2][1]));
+}
+
+BOOST_AUTO_TEST_CASE(rejects_nan_and_invalid_infinity_values)
+{
+    for (const auto value: {"nan", "-nan", "infjunk", "1e309"})
+    {
+        const auto file = writeFile(std::string(value) + "\n");
+        Antares::Matrix matrix;
+        BOOST_CHECK(!Antares::MatrixIO::load(matrix, file.path, 1, 1));
+    }
 }
 
 BOOST_AUTO_TEST_CASE(exact_width_rejects_extra_columns)

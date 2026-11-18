@@ -210,7 +210,8 @@ BOOST_AUTO_TEST_CASE(column_views_and_self_assignment_preserve_shape)
     Matrix matrix(1, 2);
     auto column = matrix[0];
     column[1] = 7.;
-    matrix = matrix;
+    const auto assign = [](Matrix& destination, const Matrix& source) { destination = source; };
+    assign(matrix, matrix);
     BOOST_CHECK_EQUAL(matrix.height(), 2);
     BOOST_CHECK_EQUAL(matrix[0][1], 7.);
     BOOST_CHECK_THROW(matrix.pasteToColumn(0, std::span<const double>(column.data(), 1)),

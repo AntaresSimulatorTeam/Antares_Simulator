@@ -13,7 +13,7 @@
 
 namespace Antares::IO
 {
-bool parseCSVDouble(std::string_view text, double& value)
+bool parseCSVDouble(std::string_view text, double& value, CSVDoublePolicy policy)
 {
     constexpr std::string_view whitespace = " \t\r\n\f\v";
     const auto first = text.find_first_not_of(whitespace);
@@ -32,7 +32,8 @@ bool parseCSVDouble(std::string_view text, double& value)
     }
     double parsed = 0.;
     const auto [end, error] = std::from_chars(text.data(), text.data() + text.size(), parsed);
-    if (error != std::errc{} || end != text.data() + text.size() || !std::isfinite(parsed))
+    if (error != std::errc{} || end != text.data() + text.size() || std::isnan(parsed)
+        || (policy == CSVDoublePolicy::FiniteOnly && std::isinf(parsed)))
     {
         return false;
     }

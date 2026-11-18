@@ -163,7 +163,9 @@ std::optional<LoadError> loadDetailed(Matrix& destination,
                   if (!row[column].value.empty())
                   {
                       double value = 0.;
-                      if (!IO::parseCSVDouble(row[column].value, value))
+                      if (!IO::parseCSVDouble(row[column].value,
+                                              value,
+                                              IO::CSVDoublePolicy::AllowInfinity))
                       {
                           result = failure("invalid numeric value", fileRow + 1, column + 1);
                           return false;
