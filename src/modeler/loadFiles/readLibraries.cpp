@@ -354,7 +354,9 @@ SystemModel::HeuristicDefinition convertHeuristic(const YmlOptimConfig::Heuristi
                                                   const SystemModel::Model& model,
                                                   const std::string& fullModelId)
 {
-    SystemModel::HeuristicDefinition heuristic{.type = convertHeuristicType(ymlHeuristic.type)};
+    SystemModel::HeuristicDefinition heuristic{.type = convertHeuristicType(ymlHeuristic.type),
+                                               .inputs = {},
+                                               .outputs = {}};
     const auto errorPrefix = fmt::format("optim-config.yml: model '{}', heuristic '{}': ",
                                          fullModelId,
                                          ymlHeuristic.id);

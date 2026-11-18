@@ -19,10 +19,11 @@ BOOST_AUTO_TEST_CASE(fast_guide_is_ceil_of_production_over_unit_size)
 {
     const std::vector<double> production = {0., 150., 200., 0.005, 99.};
     std::vector<int> guide(production.size(), -1);
-    OPT_CalculerLaCourbeGuideDuNombreDeGroupes(static_cast<int>(production.size()),
-                                               [&](int t) { return production[t]; },
-                                               100.,
-                                               guide);
+    OPT_CalculerLaCourbeGuideDuNombreDeGroupes(
+      static_cast<int>(production.size()),
+      [&](int t) { return production[t]; },
+      100.,
+      guide);
     const std::vector<int> expected = {0, 2, 2, 0, 1};
     BOOST_CHECK_EQUAL_COLLECTIONS(guide.begin(), guide.end(), expected.begin(), expected.end());
 }

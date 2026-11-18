@@ -90,8 +90,7 @@ void LpFiller::fillLinearProblem(const LinearProblem::Api::FillContext& fillCtx,
                               *problemeHebdo.modelerData,
                               optimEntityContainer,
                               bendersDecomposition,
-                              gemsHeuristicsState ? &gemsHeuristicsState->boundOverrides
-                                                  : nullptr);
+                              gemsHeuristicsState ? &gemsHeuristicsState->boundOverrides : nullptr);
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!

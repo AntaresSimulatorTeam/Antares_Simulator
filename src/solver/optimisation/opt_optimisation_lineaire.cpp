@@ -6,6 +6,7 @@
 
 #include <antares/logs/logs.h>
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
 #include "antares/solver/optimisation/gemsThermalHeuristics.h"
@@ -13,7 +14,6 @@
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/utils/filename.h"
 
 using namespace Antares::Solver;
@@ -362,8 +362,8 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
         if (useGemsThermalHeuristics)
         {
             Antares::Optimization::runGemsThermalHeuristics(*problemeHebdo->gemsHeuristicsState,
-                                     *problemeHebdo->modelerData,
-                                     problemeHebdo->year);
+                                                            *problemeHebdo->modelerData,
+                                                            problemeHebdo->year);
         }
         auto* secondOptimSimulationTable = simulationTables
                                              ? simulationTables->secondOptimSimulationTable()

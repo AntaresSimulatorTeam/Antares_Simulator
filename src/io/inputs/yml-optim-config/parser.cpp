@@ -6,7 +6,6 @@
 #include <fmt/format.h>
 
 #include <antares/io/inputs/InputError.h>
-
 #include "antares/io/inputs/yml-optim-config/decoders.h"
 #include "antares/io/inputs/yml-utils/checkFields.h"
 

@@ -631,6 +631,7 @@ BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_is_successful)
 
     BOOST_CHECK_THROW(component.nodeAtPortField("wrong port", "field"), std::invalid_argument);
 }
+
 BOOST_AUTO_TEST_CASE(integer_strategy_defaults_to_exact)
 {
     Model model = createModelWithoutParameters();
@@ -671,23 +672,23 @@ BOOST_AUTO_TEST_CASE(invalid_integer_strategies)
       component_builder.withId("c").withModel(&model).withIntegerStrategy("integer").build(),
       std::invalid_argument,
       containsMessage("Component 'c': invalid integer strategy 'integer'. Expected 'exact', "
-                   "'relaxed' or 'heuristic'"));
+                      "'relaxed' or 'heuristic'"));
     BOOST_CHECK_EXCEPTION(
       component_builder.withId("c").withModel(&model).withIntegerStrategy("heuristic").build(),
       std::invalid_argument,
       containsMessage("Component 'c': 'heuristic-id' is mandatory when integer strategy is "
-                   "'heuristic'"));
+                      "'heuristic'"));
     BOOST_CHECK_EXCEPTION(component_builder.withId("c")
                             .withModel(&model)
                             .withIntegerStrategy("heuristic", "slow")
                             .build(),
                           std::invalid_argument,
                           containsMessage("Component 'c': invalid heuristic-id 'slow'. Expected "
-                                       "'fast' or 'accurate'"));
+                                          "'fast' or 'accurate'"));
     BOOST_CHECK_EXCEPTION(
       component_builder.withId("c").withModel(&model).withIntegerStrategy("exact", "fast").build(),
       std::invalid_argument,
       containsMessage("Component 'c': 'heuristic-id' must not be specified when integer strategy "
-                   "is 'exact'"));
+                      "is 'exact'"));
 }
 BOOST_AUTO_TEST_SUITE_END()

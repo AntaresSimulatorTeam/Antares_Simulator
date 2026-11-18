@@ -124,6 +124,7 @@ HeuristicElement parseHeuristicElement(const std::string& value)
 }
 
 } // namespace
+
 bool convert<Antares::IO::Inputs::YmlOptimConfig::Variable>::decode(
   const Node& node,
   Antares::IO::Inputs::YmlOptimConfig::Variable& rhs)

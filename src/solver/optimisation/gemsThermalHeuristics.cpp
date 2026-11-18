@@ -33,9 +33,8 @@ unsigned variableIndex(const Component& component, const std::string& variableId
     const auto it = std::ranges::find(variables, variableId, &Variable::Id);
     if (it == variables.end())
     {
-        throw std::invalid_argument(fmt::format("Component '{}': no variable '{}' in the model",
-                                                component.Id(),
-                                                variableId));
+        throw std::invalid_argument(
+          fmt::format("Component '{}': no variable '{}' in the model", component.Id(), variableId));
     }
     return static_cast<unsigned>(std::distance(variables.begin(), it));
 }
@@ -94,10 +93,10 @@ std::vector<double> inputValues(const GemsHeuristicsState& state,
         return it->second;
     }
 
-    const LinearProblem::EvaluationContext context(
-      &component,
-      modelerData.dataSeries.get(),
-      &modelerData.scenarioGroupRepository.scenario(component.getScenarioGroupId()));
+    const LinearProblem::EvaluationContext context(&component,
+                                                   modelerData.dataSeries.get(),
+                                                   &modelerData.scenarioGroupRepository.scenario(
+                                                     component.getScenarioGroupId()));
     const auto parameter = context.getParameter(input.id);
     if (LinearProblem::isConstant(parameter.type))
     {
@@ -164,10 +163,11 @@ void runFastHeuristic(GemsHeuristicsState& state,
     const int nbTimeSteps = static_cast<int>(state.nbTimeSteps);
     std::vector<int> guide(nbTimeSteps);
     std::vector<int> numberOfUnits(nbTimeSteps);
-    OPT_CalculerLaCourbeGuideDuNombreDeGroupes(nbTimeSteps,
-                                               [&production](int t) { return production[t]; },
-                                               maxPowerPerUnit,
-                                               guide);
+    OPT_CalculerLaCourbeGuideDuNombreDeGroupes(
+      nbTimeSteps,
+      [&production](int t) { return production[t]; },
+      maxPowerPerUnit,
+      guide);
     if (!OPT_CalculerLeNombreDeGroupesParBlocsDeMUTetMDT(nbTimeSteps,
                                                          toDuration(minUpDownDuration,
                                                                     state.nbTimeSteps),

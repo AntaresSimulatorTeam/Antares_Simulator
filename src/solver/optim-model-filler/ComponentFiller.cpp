@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <ranges>
-#include <type_traits>
 #include <stdexcept>
+#include <type_traits>
 #include <variant>
 
 #include <antares/exception/RuntimeError.hpp>
