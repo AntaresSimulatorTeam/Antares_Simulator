@@ -21,7 +21,7 @@ bool Exchange::isPossible() const
 std::set<unsigned> ValidHours(const std::vector<double>& Spillage,
                               const std::vector<double>& DTG_MRG)
 {
-    auto isValidHour = [&](int h) { return std::abs(Spillage[h] + DTG_MRG[h]) < eps; };
+    auto isValidHour = [&](int h) { return std::abs(Spillage[h]) < eps; };
 
     auto allHours = vws::iota(0, (int)Spillage.size());
     auto validHours = allHours | vws::filter(isValidHour);
