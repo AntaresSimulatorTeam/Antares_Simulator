@@ -67,7 +67,7 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
     const std::vector<double> UnsupEinit = UnsupE;
     std::vector<double> TotalGen = Load - UnsupEinit;
 
-    std::set<unsigned> validHours = ValidHours(Spillage, DTG_MRG);
+    const std::set<unsigned> validHours = ValidHours(Spillage, DTG_MRG);
 
     unsigned nbLoops = 0;
     CyclicIterator<std::shared_ptr<IStorageForRemix>> cyclic_it(listStorage);
@@ -78,8 +78,10 @@ void shavePeaksByRemixingStorageGen(const std::vector<double>& Load,
             throw std::runtime_error("storage remix > max nb of iterations was reached");
         }
 
-        updateValidHours(validHours, **cyclic_it, UnsupEinit);
-        auto exchange = searchForExhange(validHours, TotalGen, UnsupE, **cyclic_it);
+        // Filter a copy so that one storage's filter does not restrict the others
+        std::set<unsigned> storageValidHours(validHours);
+        updateValidHours(storageValidHours, **cyclic_it, UnsupEinit);
+        auto exchange = searchForExhange(storageValidHours, TotalGen, UnsupE, **cyclic_it);
 
         if (!exchange.isPossible())
         {
