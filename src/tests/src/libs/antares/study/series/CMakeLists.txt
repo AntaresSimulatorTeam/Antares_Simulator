@@ -6,4 +6,5 @@ include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 add_boost_test(timeseries-tests
   SRC timeseries-tests.cpp
   LIBS
-  solver-lib)
+  solver-lib
+  test_utils_unit)

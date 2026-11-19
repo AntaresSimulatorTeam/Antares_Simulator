@@ -121,6 +121,44 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS)
     BOOST_CHECK_CLOSE(constraint->RHSTimeSeries()[2][8783], 0.6, 0.0001);
 }
 
+BOOST_AUTO_TEST_CASE(BC_load_dimension_headers_for_annual_and_padded_series)
+{
+    auto study = std::make_shared<Study>();
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto area2 = addAreaToListOfAreas(study->areas, "area2");
+    AreaAddLinkBetweenAreas(area1, area2);
+    study->header.version = StudyVersion(8, 7);
+    StudyLoadOptions options;
+    const auto directory = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    for (const auto& [type, height]: std::vector<std::pair<std::string, unsigned>>{{"hourly", 8760},
+                                                                                   {"hourly", 8784},
+                                                                                   {"daily", 365},
+                                                                                   {"daily", 366},
+                                                                                   {"weekly", 365},
+                                                                                   {"weekly", 366}})
+    {
+        std::ofstream ini(directory / "bindingconstraints.ini");
+        ini << "[1]\nname = c\nid = c\nenabled = true\ntype = " << type
+            << "\noperator = less\narea1%area2 = 1\n";
+        ini.close();
+        std::ofstream rhs(directory / "c_lt.txt");
+        rhs << "size:2x" << height << '\n';
+        for (unsigned i = 0; i < height; ++i)
+        {
+            rhs << "1\tinf\n";
+        }
+        rhs.close();
+        BindingConstraintsRepository constraints;
+        BOOST_REQUIRE(constraints.loadFromFolder(*study, options, directory.string()));
+        BOOST_REQUIRE_EQUAL(constraints.size(), 1);
+        const auto& matrix = (*constraints.begin())->RHSTimeSeries();
+        BOOST_CHECK_EQUAL(matrix.height(), height);
+        BOOST_CHECK_EQUAL(matrix.width(), 2);
+        BOOST_CHECK_EQUAL(matrix[0][height - 1], 1.);
+        BOOST_CHECK(std::isinf(matrix[1][height - 1]));
+    }
+}
+
 BOOST_AUTO_TEST_CASE(BC_load_range_type)
 {
     auto study = std::make_shared<Study>();

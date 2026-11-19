@@ -70,7 +70,8 @@ bool AreaLink::linkLoadTimeSeries_for_version_below_810(const fs::path& folder)
                         path.string(),
                         matrixWidth,
                         HOURS_PER_YEAR,
-                        MatrixIO::WidthPolicy::Exact))
+                        MatrixIO::WidthPolicy::Exact,
+                        MatrixIO::RowPolicy::Prefix))
     {
         return false;
     }
@@ -102,7 +103,8 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const fs::path& fold
                                     path.string(),
                                     fhlMax,
                                     HOURS_PER_YEAR,
-                                    MatrixIO::WidthPolicy::Exact)
+                                    MatrixIO::WidthPolicy::Exact,
+                                    MatrixIO::RowPolicy::Prefix)
               && success;
 
     fs::path capacitiesFolder = folder / "capacities";

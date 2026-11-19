@@ -7,12 +7,12 @@ namespace Antares
 {
 inline unsigned int Matrix::width() const noexcept
 {
-    return width_;
+    return ColumnMatrix<double>::width();
 }
 
 inline unsigned int Matrix::height() const noexcept
 {
-    return height_;
+    return ColumnMatrix<double>::height();
 }
 
 inline Matrix::ConstColumnType Matrix::operator[](unsigned int column) const
@@ -42,7 +42,8 @@ bool Matrix::containsOnlyZero(const PredicateT& predicate) const
     {
         for (const auto& value: column)
         {
-            if (predicate(value) != 0.)
+            // Exact zero is required: small nonzero values must be serialized.
+            if (predicate(value) != 0.) // NOSONAR
             {
                 return false;
             }

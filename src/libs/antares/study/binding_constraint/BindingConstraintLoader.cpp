@@ -124,7 +124,10 @@ bool BindingConstraintLoader::loadTimeSeries(EnvForLoading& env,
       bindingConstraint->RHSTimeSeries_,
       env.buffer,
       1,
-      (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8784 : 366);
+      (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8784 : 366,
+      MatrixIO::WidthPolicy::AtLeast,
+      MatrixIO::RowPolicy::HeaderOrPrefix,
+      (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8760 : 365);
     if (load_ok)
     {
         logs.info() << " loaded time series for `" << bindingConstraint->name() << "` ("
@@ -152,7 +155,8 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(
                        path.string(),
                        BindingConstraint::columnMax,
                        height,
-                       MatrixIO::WidthPolicy::Exact))
+                       MatrixIO::WidthPolicy::Exact,
+                       MatrixIO::RowPolicy::Prefix))
     {
         logs.info() << " added `" << bindingConstraint->pName << "` ("
                     << BindingConstraint::TypeToCString(bindingConstraint->pType) << ", "

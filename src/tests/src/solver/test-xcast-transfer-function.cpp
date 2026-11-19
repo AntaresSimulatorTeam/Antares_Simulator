@@ -30,7 +30,46 @@ BOOST_AUTO_TEST_CASE(find_segment_with_maximum_number_of_points)
         points[i][0] = static_cast<float>(i);
     }
     using Antares::TSGenerator::XCast::findTransferSegment;
-    BOOST_CHECK_EQUAL(findTransferSegment(points, 100, 98.5f, 0), 98);
-    BOOST_CHECK_EQUAL(findTransferSegment(points, 100, 0.5f, 98), 0);
-    BOOST_CHECK_EQUAL(findTransferSegment(points, 100, 100.f, 98), 99);
+    BOOST_CHECK_EQUAL(findTransferSegment(points, 100, 98.5f, 0).index, 98);
+    BOOST_CHECK_EQUAL(findTransferSegment(points, 100, 0.5f, 98).index, 0);
+    BOOST_CHECK_EQUAL(findTransferSegment(points, 100, 100.f, 98).index, 99);
+}
+
+BOOST_AUTO_TEST_CASE(shared_knot_preserves_historical_search_cursor)
+{
+    using namespace Antares::TSGenerator::XCast;
+    const std::array<std::array<float, 2>, 5> points{
+      {{-10.f, 0.1f}, {1.f, 0.1f}, {2.f, 0.5f}, {3.f, 0.1f}, {10.f, 0.1f}}};
+    unsigned int cursor = 0;
+    auto match = findTransferSegment(points, 5, 1.5f, cursor);
+    BOOST_REQUIRE_EQUAL(match.index, 1);
+    cursor = match.searchOffset;
+    match = findTransferSegment(points, 5, 2.5f, cursor);
+    BOOST_REQUIRE_EQUAL(match.index, 2);
+    cursor = match.searchOffset;
+    match = findTransferSegment(points, 5, 2.f, cursor);
+    BOOST_REQUIRE_EQUAL(match.index, 1);
+    const auto [slope, intercept] = transferFunctionCoefficients(1.f, 0.1f, 2.f, 0.5f);
+    BOOST_CHECK_EQUAL(std::round(slope * 2.f + intercept), 1.f);
+    const auto [rightSlope, rightIntercept] = transferFunctionCoefficients(2.f, 0.5f, 3.f, 0.1f);
+    BOOST_CHECK_EQUAL(std::round(rightSlope * 2.f + rightIntercept), 0.f);
+    BOOST_CHECK_EQUAL(findTransferSegment(points, 5, 11.f, cursor).index, 4);
+}
+
+BOOST_AUTO_TEST_CASE(transfer_segment_reverse_crossing_and_endpoints)
+{
+    using namespace Antares::TSGenerator::XCast;
+    const std::array<std::array<float, 2>, 5> points{
+      {{-10.f, 0.f}, {1.f, 0.f}, {2.f, 0.5f}, {3.f, 1.f}, {10.f, 1.f}}};
+    unsigned int cursor = 0;
+    for (const auto& [value, expected]: std::array<std::pair<float, unsigned int>, 4>{
+           {{2.5f, 2}, {1.5f, 1}, {-10.f, 0}, {10.f, 3}}})
+    {
+        const auto result = findTransferSegment(points, points.size(), value, cursor);
+        BOOST_REQUIRE_EQUAL(result.index, expected);
+        cursor = result.searchOffset;
+    }
+    const auto outside = findTransferSegment(points, points.size(), -11.f, cursor);
+    BOOST_CHECK_EQUAL(outside.index, 4);
+    BOOST_CHECK_EQUAL(outside.searchOffset, cursor);
 }

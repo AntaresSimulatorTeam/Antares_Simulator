@@ -408,3 +408,39 @@ BOOST_AUTO_TEST_CASE(extra_rows_require_explicit_prefix_policy)
                                           Antares::MatrixIO::RowPolicy::Prefix));
     BOOST_CHECK_EQUAL(matrix[0][1], 2.);
 }
+
+BOOST_AUTO_TEST_CASE(header_or_prefix_loads_only_complete_bounded_matrices)
+{
+    using namespace Antares::MatrixIO;
+    Antares::Matrix matrix(1, 1);
+    matrix[0][0] = 42.;
+    const auto load = [&](std::string_view content)
+    {
+        const auto file = writeFile(content);
+        return Antares::MatrixIO::load(matrix,
+                                       file.path,
+                                       1,
+                                       3,
+                                       WidthPolicy::AtLeast,
+                                       RowPolicy::HeaderOrPrefix,
+                                       2);
+    };
+    BOOST_REQUIRE(load("size:2x2\n1\t2\n3\tinf\n"));
+    BOOST_CHECK_EQUAL(matrix.height(), 2);
+    BOOST_CHECK_EQUAL(matrix[0][1], 3.);
+    BOOST_CHECK(std::isinf(matrix[1][1]));
+    BOOST_REQUIRE(load("size:1x3\n1\n2\n3\n"));
+    BOOST_CHECK_EQUAL(matrix.height(), 3);
+    BOOST_REQUIRE(load("1\n2\n3\nignored\n"));
+    BOOST_CHECK_EQUAL(matrix[0][2], 3.);
+    for (const auto invalid: {"size:1x1\n1\n",
+                              "size:1x4\n1\n2\n3\n4\n",
+                              "size:1x2\n1\n",
+                              "size:1x2\n1\n2\n3\n",
+                              "1\nbad\n3\n4\n"})
+    {
+        BOOST_CHECK(!load(invalid));
+        BOOST_CHECK_EQUAL(matrix.height(), 3);
+        BOOST_CHECK_EQUAL(matrix[0][2], 3.);
+    }
+}

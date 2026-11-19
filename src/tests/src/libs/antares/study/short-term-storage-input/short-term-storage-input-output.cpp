@@ -295,14 +295,16 @@ BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_too_big, Fixture)
 {
     createFileSeries(1.0, 9000);
 
-    BOOST_CHECK(!series.loadFromFolder(work_dir, StudyVersion::latest()));
+    BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion::latest()));
+    BOOST_CHECK(series.validate("", StudyVersion::latest()));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_too_big_880, Fixture)
 {
     createFileSeries(1.0, 9000);
 
-    BOOST_CHECK(!series.loadFromFolder(work_dir, StudyVersion(8, 8)));
+    BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion(8, 8)));
+    BOOST_CHECK(series.validate("", StudyVersion(8, 8)));
 }
 
 BOOST_FIXTURE_TEST_CASE(check_series_folder_loading_too_small, Fixture)

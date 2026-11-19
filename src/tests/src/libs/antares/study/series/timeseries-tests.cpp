@@ -5,6 +5,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <files-system.h>
+#include <fstream>
 #include <memory>
 #include <vector>
 
@@ -97,6 +99,40 @@ private:
 // ==================
 
 BOOST_AUTO_TEST_SUITE(timeseries_tests)
+
+BOOST_FIXTURE_TEST_CASE(load_hourly_prefix_and_reject_invalid_required_rows, Fixture)
+{
+    const auto directory = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    const auto path = directory / "series.txt";
+    {
+        std::ofstream output(path);
+        for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
+        {
+            output << i << '\n';
+        }
+        output << "ignored\n";
+    }
+    BOOST_REQUIRE(ts.loadFromFile(path, false));
+    BOOST_CHECK_EQUAL(ts.timeSeries.height(), HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(ts.timeSeries[0][HOURS_PER_YEAR - 1], HOURS_PER_YEAR - 1);
+    {
+        std::ofstream output(path);
+        output << "bad\n";
+        for (unsigned int i = 1; i < HOURS_PER_YEAR; ++i)
+        {
+            output << i << '\n';
+        }
+    }
+    BOOST_CHECK(!ts.loadFromFile(path, false));
+    {
+        std::ofstream output(path);
+        for (unsigned int i = 0; i < HOURS_PER_YEAR - 1; ++i)
+        {
+            output << i << '\n';
+        }
+    }
+    BOOST_CHECK(!ts.loadFromFile(path, false));
+}
 
 BOOST_FIXTURE_TEST_CASE(getSeriesIndex, Fixture)
 {

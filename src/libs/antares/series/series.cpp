@@ -100,7 +100,13 @@ TimeSeries::TimeSeries(const TimeSeries& other):
 bool TimeSeries::loadFromFile(const std::filesystem::path& path, const bool average)
 {
     bool ret = true;
-    ret = MatrixIO::loadOrReset(timeSeries, path, 1, HOURS_PER_YEAR) && ret;
+    ret = MatrixIO::loadOrReset(timeSeries,
+                                path,
+                                1,
+                                HOURS_PER_YEAR,
+                                MatrixIO::WidthPolicy::AtLeast,
+                                MatrixIO::RowPolicy::Prefix)
+          && ret;
 
     if (average)
     {

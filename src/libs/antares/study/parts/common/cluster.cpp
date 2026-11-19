@@ -94,7 +94,13 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
     bool ret = true;
     fs::path seriesPath = folder / parentArea->id / id() / "series.txt";
 
-    ret = MatrixIO::loadOrReset(series.timeSeries, seriesPath, 1, HOURS_PER_YEAR) && ret;
+    ret = MatrixIO::loadOrReset(series.timeSeries,
+                                seriesPath,
+                                1,
+                                HOURS_PER_YEAR,
+                                MatrixIO::WidthPolicy::AtLeast,
+                                MatrixIO::RowPolicy::Prefix)
+          && ret;
 
     if (s.parameters.derated)
     {

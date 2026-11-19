@@ -93,7 +93,8 @@ bool PreproHydro::loadFromFolder(Study&, const std::string& areaID, const fs::pa
                                 energyPath.string(),
                                 hydroPreproMax,
                                 maxNbOfLineToLoad,
-                                MatrixIO::WidthPolicy::Exact)
+                                MatrixIO::WidthPolicy::Exact,
+                                MatrixIO::RowPolicy::Prefix)
           && ret;
 
     return ret;

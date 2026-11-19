@@ -13,22 +13,34 @@ inline std::pair<float, float> transferFunctionCoefficients(float x0, float y0, 
     return {(y1 - y0) / (x1 - x0), (y0 * x1 - y1 * x0) / (x1 - x0)};
 }
 
-// Returns the number of segments when the value lies outside the function's domain.
-template<class Points>
-unsigned int findTransferSegment(const Points& points,
-                                 unsigned int pointCount,
-                                 float value,
-                                 unsigned int previousSegment)
+struct TransferSegment
 {
-    const unsigned int segmentCount = pointCount - 1;
-    for (unsigned int i = 0; i < segmentCount; ++i)
+    unsigned int index;
+    unsigned int searchOffset;
+};
+
+// Preserve the historical search order and cursor (the offset, not the segment
+// index). Skip the wraparound pair, which is not a valid function segment.
+template<class Points>
+TransferSegment findTransferSegment(const Points& points,
+                                    unsigned int pointCount,
+                                    float value,
+                                    unsigned int previousOffset)
+{
+    if (pointCount < 2)
     {
-        const unsigned int segment = (i + previousSegment) % segmentCount;
-        if (value >= points[segment][0] && value <= points[segment + 1][0])
+        return {0, previousOffset};
+    }
+    const unsigned int segmentCount = pointCount - 1;
+    for (unsigned int i = 0; i < pointCount; ++i)
+    {
+        const unsigned int segment = (i + previousOffset) % pointCount;
+        if (segment < segmentCount && value >= points[segment][0]
+            && value <= points[segment + 1][0])
         {
-            return segment;
+            return {segment, i};
         }
     }
-    return segmentCount;
+    return {segmentCount, previousOffset};
 }
 } // namespace Antares::TSGenerator::XCast

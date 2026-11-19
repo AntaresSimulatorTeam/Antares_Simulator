@@ -140,11 +140,13 @@ BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_failing_not_enough_valu
     BOOST_CHECK(!eco.loadFromFolder(*study, fuelCostTSfile.getFolder()));
 }
 
-BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_rejects_extra_values, FixtureStudyOnly)
+BOOST_FIXTURE_TEST_CASE(EconomicInputData_loadFromFolder_uses_annual_prefix, FixtureStudyOnly)
 {
     TimeSeriesFile co2CostTSfile("CO2Cost.txt", 10000);
     EconomicInputData eco;
-    BOOST_CHECK(!eco.loadFromFolder(*study, co2CostTSfile.getFolder()));
+    BOOST_REQUIRE(eco.loadFromFolder(*study, co2CostTSfile.getFolder()));
+    BOOST_CHECK_EQUAL(eco.co2cost.height(), HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(eco.co2cost[0][HOURS_PER_YEAR - 1], 1.);
 }
 BOOST_AUTO_TEST_SUITE_END()
 

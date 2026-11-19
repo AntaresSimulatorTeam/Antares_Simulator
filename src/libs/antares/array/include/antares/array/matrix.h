@@ -38,16 +38,16 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    Matrix();
+    Matrix() = default;
     /*!
     ** \brief Copy constructor
     */
-    Matrix(const Matrix& rhs);
+    Matrix(const Matrix& rhs) = default;
 
     /*!
     ** \brief Move constructor
     */
-    Matrix(Matrix&& rhs) noexcept;
+    Matrix(Matrix&& rhs) noexcept = default;
 
     /*!
     ** \brief Constructor with a initial size
@@ -110,7 +110,8 @@ public:
     void reset(unsigned int w, unsigned int h);
 
     //! Get the Nth column
-    // Views are invalidated when the matrix is resized, cleared or replaced.
+    // Views are invalidated when storage is resized, cleared or replaced.
+    // averageTimeseries also invalidates views of removed columns.
     ColumnType column(unsigned int n);
     //! Get the Nth column (const)
     ConstColumnType column(unsigned int n) const;
@@ -200,9 +201,9 @@ public:
     //! \name Operators
     //@{
     //! Assignement
-    Matrix& operator=(const Matrix& rhs);
+    Matrix& operator=(const Matrix& rhs) = default;
 
-    Matrix& operator=(Matrix&& rhs) noexcept;
+    Matrix& operator=(Matrix&& rhs) noexcept = default;
 
     //! operator []
     ColumnType operator[](unsigned int column);

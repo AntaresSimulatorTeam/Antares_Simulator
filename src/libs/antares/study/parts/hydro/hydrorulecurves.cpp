@@ -53,7 +53,8 @@ private:
                                   filePath.string(),
                                   3,
                                   DAYS_PER_YEAR,
-                                  MatrixIO::WidthPolicy::Exact);
+                                  MatrixIO::WidthPolicy::Exact,
+                                  MatrixIO::RowPolicy::Prefix);
 
         min_.timeSeries.reset(1U, DAYS_PER_YEAR);
         min_.timeSeries.pasteToColumn(0, standardRuleCurves[RuleCurves::minimum]);
@@ -78,11 +79,29 @@ private:
         bool ret = true;
 
         fs::path filePath = path / "maxDailyReservoirLevels.txt";
-        ret = MatrixIO::loadOrReset(max_.timeSeries, filePath, 1, DAYS_PER_YEAR) && ret;
+        ret = MatrixIO::loadOrReset(max_.timeSeries,
+                                    filePath,
+                                    1,
+                                    DAYS_PER_YEAR,
+                                    MatrixIO::WidthPolicy::AtLeast,
+                                    MatrixIO::RowPolicy::Prefix)
+              && ret;
         filePath = path / "minDailyReservoirLevels.txt";
-        ret = MatrixIO::loadOrReset(min_.timeSeries, filePath, 1, DAYS_PER_YEAR) && ret;
+        ret = MatrixIO::loadOrReset(min_.timeSeries,
+                                    filePath,
+                                    1,
+                                    DAYS_PER_YEAR,
+                                    MatrixIO::WidthPolicy::AtLeast,
+                                    MatrixIO::RowPolicy::Prefix)
+              && ret;
         filePath = path / "avgDailyReservoirLevels.txt";
-        ret = MatrixIO::loadOrReset(avg_.timeSeries, filePath, 1, DAYS_PER_YEAR) && ret;
+        ret = MatrixIO::loadOrReset(avg_.timeSeries,
+                                    filePath,
+                                    1,
+                                    DAYS_PER_YEAR,
+                                    MatrixIO::WidthPolicy::AtLeast,
+                                    MatrixIO::RowPolicy::Prefix)
+              && ret;
 
         return ret;
     }

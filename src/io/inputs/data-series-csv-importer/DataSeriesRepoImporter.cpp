@@ -27,64 +27,64 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
 
     try
     {
-        IO::readCSVFile(filename,
-                        separators,
-                        [&](std::size_t, IO::CSVRow row)
-                        {
-                            values.clear();
-                            values.reserve(row.size());
-                            for (const auto& cell: row)
-                            {
-                                if (cell.value.empty())
-                                {
-                                    continue;
-                                }
+        IO::readCSVFile(
+          filename,
+          separators,
+          [&](std::size_t, IO::CSVRow row)
+          {
+              values.clear();
+              values.reserve(row.size());
+              for (const auto& cell: row)
+              {
+                  if (cell.value.empty())
+                  {
+                      continue;
+                  }
 
-                                double value = 0.;
-                                if (!IO::parseCSVDouble(cell.value, value))
-                                {
-                                    const char invalid = cell.value.front();
-                                    throw InputError(filename.string() + ": \"" + invalid
-                                                     + "\" is not a number");
-                                }
-                                values.push_back(value);
-                            }
+                  double value = 0.;
+                  if (!IO::parseCSVDouble(cell.value, value, IO::CSVDoublePolicy::AllowInfinity))
+                  {
+                      const char invalid = cell.value.front();
+                      throw InputError(filename.string() + ": \"" + invalid + "\" is not a number");
+                  }
+                  values.push_back(value);
+              }
 
-                            if (values.empty())
-                            {
-                                return true;
-                            }
+              if (values.empty())
+              {
+                  return true;
+              }
 
-                            const auto rowIndex = dataRowIndex++;
+              const auto rowIndex = dataRowIndex++;
 
-                            if (columns.empty())
-                            {
-                                columns.resize(values.size());
-                            }
-                            else if (values.size() != columns.size())
-                            {
-                                std::ostringstream message;
-                                if (values.size() < columns.size())
-                                {
-                                    message << filename.string() << ": row (" << rowIndex
-                                            << ") has less columns (" << values.size()
-                                            << ") than the expected (" << columns.size() << ").";
-                                }
-                                else
-                                {
-                                    message << filename.string() << ": row (" << rowIndex
-                                            << ") has more columns (" << values.size()
-                                            << ") than the expected (" << columns.size() << ").";
-                                }
-                                throw InputError(message.str());
-                            }
+              if (columns.empty())
+              {
+                  columns.resize(values.size());
+              }
+              else if (values.size() != columns.size())
+              {
+                  std::ostringstream message;
+                  if (values.size() < columns.size())
+                  {
+                      message << filename.string() << ": row (" << rowIndex
+                              << ") has less columns (" << values.size() << ") than the expected ("
+                              << columns.size() << ").";
+                  }
+                  else
+                  {
+                      message << filename.string() << ": row (" << rowIndex
+                              << ") has more columns (" << values.size() << ") than the expected ("
+                              << columns.size() << ").";
+                  }
+                  throw InputError(message.str());
+              }
 
-                            for (std::size_t column = 0; column < values.size(); ++column)
-                            {
-                                columns[column].push_back(values[column]);
-                            }
-                            return true;
-                        });
+              for (std::size_t column = 0; column < values.size(); ++column)
+              {
+                  columns[column].push_back(values[column]);
+              }
+              return true;
+          });
     }
     catch (const InputError&)
     {

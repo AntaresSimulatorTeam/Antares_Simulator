@@ -52,7 +52,8 @@ bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const std::string& 
                                 filePath.string(),
                                 4U,
                                 DAYS_PER_YEAR,
-                                MatrixIO::WidthPolicy::Exact)
+                                MatrixIO::WidthPolicy::Exact,
+                                MatrixIO::RowPolicy::Prefix)
           && ret;
     return ret;
 }

@@ -10,18 +10,9 @@
 
 namespace Antares
 {
-Matrix::Matrix() = default;
-
-Matrix::Matrix(const Matrix&) = default;
-
 Matrix::Matrix(unsigned int w, unsigned int h)
 {
     resize(w, h);
-}
-
-Matrix::Matrix(Matrix&& rhs) noexcept:
-    ColumnMatrix<double>(std::move(rhs))
-{
 }
 
 void Matrix::zero()
@@ -94,12 +85,11 @@ void Matrix::fillUnit()
 
 void Matrix::reset(unsigned int w, unsigned int h)
 {
-    const bool sameSize = w == width_ && h == height_;
-    resize(w, h);
-    if (sameSize)
+    if (w > kMaxDimension || h > kMaxDimension)
     {
-        zero();
+        throw std::length_error("Matrix dimensions exceed the supported limit");
     }
+    ColumnMatrix<double>::reset(w, h);
 }
 
 void Matrix::pasteToColumn(unsigned int x, ConstColumnType data)
@@ -131,9 +121,7 @@ bool Matrix::empty() const
 
 void Matrix::clear()
 {
-    columns_.clear();
-    width_ = 0;
-    height_ = 0;
+    ColumnMatrix<double>::clear();
 }
 
 void Matrix::reset()
@@ -148,24 +136,7 @@ void Matrix::resize(unsigned int w, unsigned int h)
         throw std::length_error("Matrix dimensions exceed the supported limit");
     }
 
-    if (w != width_ or h != height_)
-    {
-        if (!w or !h)
-        {
-            clear();
-        }
-        else
-        {
-            std::vector<std::vector<double>> newColumns(w);
-            for (auto& column: newColumns)
-            {
-                column.resize(h);
-            }
-            columns_.swap(newColumns);
-            width_ = w;
-            height_ = h;
-        }
-    }
+    ColumnMatrix<double>::resize(w, h);
 }
 
 void Matrix::resizeWithoutDataLost(unsigned int x, unsigned int y, double defVal)
@@ -175,51 +146,7 @@ void Matrix::resizeWithoutDataLost(unsigned int x, unsigned int y, double defVal
         throw std::length_error("Matrix dimensions exceed the supported limit");
     }
 
-    if (!x or !y)
-    {
-        clear();
-    }
-    else if (x <= width_ and y <= height_)
-    {
-        if (x == width_)
-        {
-            for (unsigned int i = 0; i < x; ++i)
-            {
-                columns_[i].resize(y);
-            }
-        }
-        else
-        {
-            std::vector<std::vector<double>> newColumns(columns_.begin(), columns_.begin() + x);
-            for (auto& column: newColumns)
-            {
-                column.resize(y);
-            }
-            columns_.swap(newColumns);
-        }
-        width_ = x;
-        height_ = y;
-    }
-    else
-    {
-        const unsigned int preservedWidth = std::min(x, width_);
-        const unsigned int preservedHeight = std::min(y, height_);
-        std::vector<std::vector<double>> newColumns(x);
-
-        for (unsigned int i = 0; i < x; ++i)
-        {
-            auto& column = newColumns[i];
-            column.assign(y, defVal);
-            if (i < preservedWidth)
-            {
-                std::copy_n(columns_[i].begin(), preservedHeight, column.begin());
-            }
-        }
-
-        columns_.swap(newColumns);
-        width_ = x;
-        height_ = y;
-    }
+    ColumnMatrix<double>::resizeWithoutDataLost(x, y, defVal);
 }
 
 void Matrix::multiplyAllEntriesBy(double c)
@@ -251,20 +178,7 @@ bool Matrix::containsOnlyZero() const
 
 void Matrix::copyFrom(const Matrix& rhs)
 {
-    if (&rhs == this)
-    {
-        return;
-    }
-
-    if (rhs.empty())
-    {
-        clear();
-    }
-    else
-    {
-        Matrix copy(rhs);
-        swap(copy);
-    }
+    *this = rhs;
 }
 
 void Matrix::copyFrom(const Matrix* rhs)
@@ -277,30 +191,7 @@ void Matrix::copyFrom(const Matrix* rhs)
 
 void Matrix::swap(Matrix& rhs) noexcept
 {
-    using std::swap;
-    swap(width_, rhs.width_);
-    swap(height_, rhs.height_);
-    swap(columns_, rhs.columns_);
-}
-
-Matrix& Matrix::operator=(const Matrix& rhs)
-{
-    copyFrom(rhs);
-    return *this;
-}
-
-Matrix& Matrix::operator=(Matrix&& rhs) noexcept
-{
-    if (this == &rhs)
-    {
-        return *this;
-    }
-    width_ = rhs.width_;
-    height_ = rhs.height_;
-    columns_ = std::move(rhs.columns_);
-    rhs.width_ = 0;
-    rhs.height_ = 0;
-    return *this;
+    ColumnMatrix<double>::swap(rhs);
 }
 
 bool MatrixTestForAtLeastOnePositiveValue(const Matrix& m)

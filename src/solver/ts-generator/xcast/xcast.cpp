@@ -115,12 +115,12 @@ void XCast::applyTransferFunction(PredicateT& predicate)
             for (h = 0; h != HOURS_PER_DAY; ++h)
             {
                 const uint segmentCount = tf.width() - 1;
-                const uint segment = findTransferSegment(tf, tf.width(), dailyResults[h], last_i);
-                if (segment < segmentCount)
+                const auto segment = findTransferSegment(tf, tf.width(), dailyResults[h], last_i);
+                if (segment.index < segmentCount)
                 {
-                    assert(!std::isinf(b[segment]) && "Infinite value");
-                    dailyResults[h] = (a[segment] * dailyResults[h]) + b[segment];
-                    last_i = segment;
+                    assert(!std::isinf(b[segment.index]) && "Infinite value");
+                    dailyResults[h] = (a[segment.index] * dailyResults[h]) + b[segment.index];
+                    last_i = segment.searchOffset;
                 }
             }
         }

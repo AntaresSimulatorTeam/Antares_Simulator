@@ -235,6 +235,44 @@ BOOST_AUTO_TEST_CASE(typed_storage_preserves_shape_after_copy_and_move)
     BOOST_CHECK_EQUAL(correlations[0][1], 0.5f);
 }
 
+BOOST_AUTO_TEST_CASE(shared_storage_resize_reset_swap_and_move)
+{
+    ColumnMatrix<int> values;
+    values.reset(2, 2);
+    values[0][0] = 4;
+    values.resize(2, 2);
+    BOOST_CHECK_EQUAL(values[0][0], 4);
+    values.resizeWithoutDataLost(3, 3, 7);
+    BOOST_CHECK_EQUAL(values[0][0], 4);
+    BOOST_CHECK_EQUAL(values[2][2], 7);
+    values.resizeWithoutDataLost(1, 2);
+    BOOST_CHECK_EQUAL(values[0][0], 4);
+    values.reset(1, 2);
+    BOOST_CHECK_EQUAL(values[0][0], 0);
+    values[0][1] = 9;
+    ColumnMatrix<int> other;
+    other.swap(values);
+    BOOST_CHECK_EQUAL(values.width(), 0);
+    BOOST_CHECK_EQUAL(other[0][1], 9);
+    values = std::move(other);
+    BOOST_CHECK_EQUAL(other.width(), 0);
+    BOOST_CHECK_EQUAL(values[0][1], 9);
+    values.resize(0, 3);
+    BOOST_CHECK_EQUAL(values.width(), 0);
+    BOOST_CHECK_EQUAL(values.height(), 0);
+
+    Matrix matrix(2, 1);
+    matrix[0][0] = 2.;
+    matrix[1][0] = 4.;
+    matrix.averageTimeseries(false);
+    BOOST_CHECK_EQUAL(matrix.width(), 1);
+    BOOST_CHECK_EQUAL(matrix[0][0], 3.);
+    Matrix moved;
+    moved = std::move(matrix);
+    BOOST_CHECK(matrix.empty());
+    BOOST_CHECK_EQUAL(moved[0][0], 3.);
+}
+
 BOOST_AUTO_TEST_CASE(fill_unit_handles_rectangular_matrices)
 {
     Matrix matrix(3, 1);

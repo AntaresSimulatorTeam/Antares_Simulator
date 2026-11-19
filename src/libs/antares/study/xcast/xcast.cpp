@@ -245,19 +245,31 @@ bool XCast::loadFromFolder(const fs::path& folder)
                                 p.string(),
                                 static_cast<unsigned int>(dataMax),
                                 12,
-                                MatrixIO::WidthPolicy::Exact)
+                                MatrixIO::WidthPolicy::Exact,
+                                MatrixIO::RowPolicy::Prefix)
           && ret;
     convertToFloatPrecision(data);
 
     // K
     p = folder / "k.txt";
-    ret = MatrixIO::loadOrReset(K, p, 12, 24, MatrixIO::WidthPolicy::Exact) && ret;
+    ret = MatrixIO::loadOrReset(K,
+                                p,
+                                12,
+                                24,
+                                MatrixIO::WidthPolicy::Exact,
+                                MatrixIO::RowPolicy::Prefix)
+          && ret;
     convertToFloatPrecision(K);
 
     // Time-series translation
     p = folder / "translation.txt";
 
-    const bool translationLoaded = MatrixIO::loadOrReset(translation, p, 1, HOURS_PER_YEAR);
+    const bool translationLoaded = MatrixIO::loadOrReset(translation,
+                                                         p,
+                                                         1,
+                                                         HOURS_PER_YEAR,
+                                                         MatrixIO::WidthPolicy::AtLeast,
+                                                         MatrixIO::RowPolicy::Prefix);
     ret = translationLoaded && ret;
 
     if (translation.empty())
@@ -289,7 +301,13 @@ bool XCast::loadFromFolder(const fs::path& folder)
     // Transfer function
     p = folder / "conversion.txt";
 
-    ret = MatrixIO::loadOrReset(conversion, p, 3, 2) && ret;
+    ret = MatrixIO::loadOrReset(conversion,
+                                p,
+                                3,
+                                2,
+                                MatrixIO::WidthPolicy::AtLeast,
+                                MatrixIO::RowPolicy::Prefix)
+          && ret;
     convertToFloatPrecision(conversion);
     if (conversion.width() >= 3 && conversion.width() <= conversionMaxPoints)
     {

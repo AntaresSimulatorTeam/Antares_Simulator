@@ -44,7 +44,8 @@ bool PreproAvailability::loadFromFolder(Study&, const std::filesystem::path& fol
                                  filePath.string(),
                                  preproAvailabilityMax,
                                  DAYS_PER_YEAR,
-                                 MatrixIO::WidthPolicy::Exact);
+                                 MatrixIO::WidthPolicy::Exact,
+                                 MatrixIO::RowPolicy::Prefix);
 }
 
 bool PreproAvailability::validate() const

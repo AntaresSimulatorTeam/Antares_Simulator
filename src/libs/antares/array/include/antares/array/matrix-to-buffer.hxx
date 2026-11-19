@@ -25,7 +25,8 @@ struct MatrixScalar
         // A finite double in fixed notation needs at most 309 integer digits,
         // a sign, a decimal point and the supported fractional digits.
         char buffer[328];
-        const int digits = (v == std::trunc(v)) ? 0 : static_cast<int>(precision);
+        // Only exactly integral values can be printed without fractional digits.
+        const int digits = (v == std::trunc(v)) ? 0 : static_cast<int>(precision); // NOSONAR
         const auto [end, error] = std::to_chars(buffer,
                                                 buffer + sizeof(buffer),
                                                 v,

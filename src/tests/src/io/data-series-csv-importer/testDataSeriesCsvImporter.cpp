@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
+#include <cmath>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -166,6 +167,18 @@ BOOST_AUTO_TEST_CASE(file_reader_streams_rows)
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_FIXTURE_TEST_SUITE(_DataSeriesImport_OneCsvFile_, CsvCreationFixture)
+
+BOOST_AUTO_TEST_CASE(imports_infinite_bounds_alongside_other_series)
+{
+    writeFile("bounds.tsv", "1\tinf\n-inf\t4\n");
+    writeFile("other.tsv", "7\n8\n");
+    const auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path);
+    const auto& bounds = repo.getDataSeries("bounds");
+    BOOST_CHECK_EQUAL(bounds.getData(1, 0), 1.);
+    BOOST_CHECK(std::isinf(bounds.getData(2, 0)) && bounds.getData(2, 0) > 0);
+    BOOST_CHECK(std::isinf(bounds.getData(1, 1)) && bounds.getData(1, 1) < 0);
+    BOOST_CHECK_EQUAL(repo.getDataSeries("other").getData(1, 1), 8.);
+}
 
 BOOST_AUTO_TEST_CASE(row_two_has_less_columns)
 {

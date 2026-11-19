@@ -44,6 +44,30 @@ BOOST_AUTO_TEST_CASE(saveToFolder_then_load_roundtrip_hourly)
     BOOST_CHECK_CLOSE(reader.maxHourlyPumpPower.timeSeries[0][0], 7.0, 0.0001);
 }
 
+BOOST_AUTO_TEST_CASE(load_daily_series_uses_annual_prefix)
+{
+    const auto dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    DataSeriesHydro writer;
+    writer.reset();
+    writer.ror.fill(1.);
+    writer.storage.fill(2.);
+    writer.mingen.fill(3.);
+    BOOST_REQUIRE(
+      writer.saveToFolder("area1", dir.string(), Parameters::Compatibility::HydroPmax::Daily));
+    {
+        std::ofstream output(dir / "area1" / "mod.txt");
+        for (unsigned i = 0; i < DAYS_PER_YEAR; ++i)
+        {
+            output << i << '\n';
+        }
+        output << "ignored\n";
+    }
+    DataSeriesHydro reader;
+    BOOST_REQUIRE(reader.loadGenerationTS("area1", dir, StudyVersion(8, 6)));
+    BOOST_CHECK_EQUAL(reader.storage.timeSeries.height(), DAYS_PER_YEAR);
+    BOOST_CHECK_EQUAL(reader.storage.timeSeries[0][DAYS_PER_YEAR - 1], DAYS_PER_YEAR - 1);
+}
+
 BOOST_AUTO_TEST_CASE(saveToFolder_daily_does_not_write_maxpower_files)
 {
     auto dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();

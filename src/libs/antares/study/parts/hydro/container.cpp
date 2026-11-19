@@ -227,7 +227,8 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
                                       creditPath.string(),
                                       101,
                                       2,
-                                      MatrixIO::WidthPolicy::Exact)
+                                      MatrixIO::WidthPolicy::Exact,
+                                      MatrixIO::RowPolicy::Prefix)
                 && ret;
 
           std::string waterValueId = "waterValues_" + area.id + ".txt";
@@ -236,7 +237,8 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
                                       waterValuePath.string(),
                                       101,
                                       DAYS_PER_YEAR,
-                                      MatrixIO::WidthPolicy::Exact)
+                                      MatrixIO::WidthPolicy::Exact,
+                                      MatrixIO::RowPolicy::Prefix)
                 && ret;
 
           std::string inflowId = "inflowPattern_" + area.id + ".txt";
@@ -245,7 +247,8 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
                                       inflowPath.string(),
                                       1,
                                       DAYS_PER_YEAR,
-                                      MatrixIO::WidthPolicy::Exact)
+                                      MatrixIO::WidthPolicy::Exact,
+                                      MatrixIO::RowPolicy::Prefix)
                 && ret;
       });
     ret = PartHydro::LoadIniFile(study, folder) && ret;
@@ -360,7 +363,8 @@ bool PartHydro::LoadDailyMaxEnergy(const fs::path& folder, const std::string& ar
                                 genPath.string(),
                                 1,
                                 DAYS_PER_YEAR,
-                                MatrixIO::WidthPolicy::Exact)
+                                MatrixIO::WidthPolicy::Exact,
+                                MatrixIO::RowPolicy::Prefix)
           && ret;
 
     fs::path pumpPath = folder / "common" / "capacity" / ("maxDailyPumpEnergy_" + areaid + ".txt");
@@ -368,7 +372,8 @@ bool PartHydro::LoadDailyMaxEnergy(const fs::path& folder, const std::string& ar
                                 pumpPath.string(),
                                 1,
                                 DAYS_PER_YEAR,
-                                MatrixIO::WidthPolicy::Exact)
+                                MatrixIO::WidthPolicy::Exact,
+                                MatrixIO::RowPolicy::Prefix)
           && ret;
 
     return ret;

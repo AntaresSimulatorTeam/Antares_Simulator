@@ -588,7 +588,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                                 reservesPath.string(),
                                 fhrMax,
                                 HOURS_PER_YEAR,
-                                MatrixIO::WidthPolicy::Exact)
+                                MatrixIO::WidthPolicy::Exact,
+                                MatrixIO::RowPolicy::Prefix)
           && ret;
 
     // Optimzation preferences
@@ -613,7 +614,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                                 miscgenPath.string(),
                                 fhhMax,
                                 HOURS_PER_YEAR,
-                                MatrixIO::WidthPolicy::Exact)
+                                MatrixIO::WidthPolicy::Exact,
+                                MatrixIO::RowPolicy::Prefix)
           && ret;
 
     // Check misc gen

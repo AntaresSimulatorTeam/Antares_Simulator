@@ -58,13 +58,14 @@ std::optional<LoadError> loadDetailed(Matrix& destination,
                                       unsigned int minWidth,
                                       unsigned int height,
                                       WidthPolicy widthPolicy,
-                                      RowPolicy rowPolicy)
+                                      RowPolicy rowPolicy,
+                                      unsigned int minHeaderHeight)
 {
     auto failure = [&](std::string message,
                        std::optional<std::size_t> row = {},
                        std::optional<std::size_t> column = {}) -> std::optional<LoadError>
     { return LoadError{filename, row, column, std::move(message)}; };
-    if (!validDimensions(minWidth, height))
+    if (!validDimensions(minWidth, height) || minHeaderHeight > height)
     {
         return failure("matrix dimensions exceed the supported limit");
     }
@@ -96,7 +97,9 @@ std::optional<LoadError> loadDetailed(Matrix& destination,
         Statistics::HasReadFromDisk(size);
         unsigned int rowCount = 0;
         unsigned int targetWidth = 0;
+        unsigned int targetHeight = height;
         bool initialized = false;
+        bool headerControlsHeight = false;
         std::optional<LoadError> result;
 
         IO::readCSVFile(
@@ -104,7 +107,7 @@ std::optional<LoadError> loadDetailed(Matrix& destination,
           "\t;,",
           [&](std::size_t fileRow, IO::CSVRow row)
           {
-              if (initialized && rowCount >= height)
+              if (initialized && rowCount >= targetHeight)
               {
                   result = failure("too many rows", fileRow + 1);
                   return false;
@@ -129,14 +132,21 @@ std::optional<LoadError> loadDetailed(Matrix& destination,
                       if ((widthPolicy == WidthPolicy::Exact && headerWidth != minWidth)
                           || (widthPolicy == WidthPolicy::AtLeast && headerWidth < minWidth)
                           || (rowPolicy == RowPolicy::Exact && headerHeight != height)
-                          || (rowPolicy == RowPolicy::Prefix && headerHeight < height))
+                          || (rowPolicy == RowPolicy::Prefix && headerHeight < height)
+                          || (rowPolicy == RowPolicy::HeaderOrPrefix
+                              && (headerHeight < minHeaderHeight || headerHeight > height)))
                       {
                           result = failure("matrix header dimensions do not match request",
                                            fileRow + 1);
                           return false;
                       }
                       targetWidth = headerWidth;
-                      matrix.resize(targetWidth, height);
+                      if (rowPolicy == RowPolicy::HeaderOrPrefix)
+                      {
+                          targetHeight = headerHeight;
+                          headerControlsHeight = true;
+                      }
+                      matrix.resize(targetWidth, targetHeight);
                       initialized = true;
                       return true;
                   }
@@ -174,7 +184,8 @@ std::optional<LoadError> loadDetailed(Matrix& destination,
                   }
               }
               ++rowCount;
-              return rowPolicy == RowPolicy::Exact || rowCount < height;
+              return rowPolicy == RowPolicy::Exact || headerControlsHeight
+                     || rowCount < targetHeight;
           },
           Matrix::kMaxDimension + 1);
 
@@ -182,9 +193,9 @@ std::optional<LoadError> loadDetailed(Matrix& destination,
         {
             return result;
         }
-        if (!initialized || rowCount < height)
+        if (!initialized || rowCount < targetHeight)
         {
-            return failure("expected " + std::to_string(height) + " rows, got "
+            return failure("expected " + std::to_string(targetHeight) + " rows, got "
                            + std::to_string(rowCount));
         }
         destination.swap(matrix);
@@ -201,9 +212,16 @@ bool load(Matrix& matrix,
           unsigned int minWidth,
           unsigned int height,
           WidthPolicy widthPolicy,
-          RowPolicy rowPolicy)
+          RowPolicy rowPolicy,
+          unsigned int minHeaderHeight)
 {
-    const auto error = loadDetailed(matrix, filename, minWidth, height, widthPolicy, rowPolicy);
+    const auto error = loadDetailed(matrix,
+                                    filename,
+                                    minWidth,
+                                    height,
+                                    widthPolicy,
+                                    rowPolicy,
+                                    minHeaderHeight);
     if (!error)
     {
         return true;
@@ -226,9 +244,16 @@ bool load(Matrix& matrix,
           unsigned int minWidth,
           unsigned int height,
           WidthPolicy widthPolicy,
-          RowPolicy rowPolicy)
+          RowPolicy rowPolicy,
+          unsigned int minHeaderHeight)
 {
-    return load(matrix, std::filesystem::path(filename), minWidth, height, widthPolicy, rowPolicy);
+    return load(matrix,
+                std::filesystem::path(filename),
+                minWidth,
+                height,
+                widthPolicy,
+                rowPolicy,
+                minHeaderHeight);
 }
 
 bool loadOrReset(Matrix& matrix,
@@ -236,9 +261,10 @@ bool loadOrReset(Matrix& matrix,
                  unsigned int width,
                  unsigned int height,
                  WidthPolicy widthPolicy,
-                 RowPolicy rowPolicy)
+                 RowPolicy rowPolicy,
+                 unsigned int minHeaderHeight)
 {
-    if (load(matrix, filename, width, height, widthPolicy, rowPolicy))
+    if (load(matrix, filename, width, height, widthPolicy, rowPolicy, minHeaderHeight))
     {
         return true;
     }
