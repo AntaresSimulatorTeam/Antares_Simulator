@@ -326,6 +326,7 @@ jobs:
         simtest-tag: ${{ env.SIMTEST }}
         batch-name: valid-simu-tables
         os: ${{ env.os }}
+        variant: "simulation-table-compare"
 
     - name: Run short-tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
