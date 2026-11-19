@@ -169,26 +169,30 @@ bool Study::internalLoadFromFolder(const fs::path& path,
 
 void Study::loadModelerComponents()
 {
-    try
+    if (!fs::exists(folderInput / "system.yml"))
     {
-        auto data = Solver::LoadFiles::loadAll(folder);
-        if (data.has_value())
+        logs.info() << "No system.yml found, skipping modeler components loading";
+    }
+    else
+    {
+        try
         {
-            // Move the ModelerData out of the optional to avoid copying
-            // (ModelerData contains unique_ptr members and is move-only: it can be moved but not
-            // copied).
-            modelerInput_ = std::make_unique<Solver::ModelerData>(std::move(*data));
+            auto data = Solver::LoadFiles::loadAll(folder);
+            modelerInput_ = std::make_unique<Solver::ModelerData>(std::move(data));
             checkModelerDataCompatibility();
         }
-    }
-    catch (const Error::LoadingError& e)
-    {
-        logs.error() << "Error while loading modeler components: " << e.what();
-    }
-    catch (const std::exception& e)
-    {
-        logs.error() << "No modeler inputs were loaded\n"
-                     << "Modeler inputs error: " << e.what();
+        catch (const Error::LoadingError& e)
+        {
+            logs.error() << "Error while loading modeler components: " << e.what();
+            throw;
+        }
+        catch (const std::exception& e)
+        {
+            logs.error() << "No modeler inputs were loaded\n"
+                         << "Modeler inputs error: " << e.what();
+            throw Error::LoadingError("Error while loading modeler components: "
+                                      + std::string(e.what()));
+        }
     }
 
     if (fs::exists(folder / "parameters.yml"))

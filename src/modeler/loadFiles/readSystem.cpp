@@ -41,6 +41,11 @@ LoadedSystem loadSystem(const fs::path& studyPath,
         handleYamlError(e, filename);
         throw ErrorLoadingYaml(e.what());
     }
+    catch (const Antares::IO::Inputs::InputError& e)
+    {
+        handleInputError(e, filename);
+        throw ErrorLoadingYaml(e.what());
+    }
 
     std::map<std::string, std::vector<ComponentProperty>> componentProperties;
     for (const auto& comp: systemObj.components)

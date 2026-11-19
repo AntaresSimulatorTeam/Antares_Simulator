@@ -21,7 +21,7 @@ public:
       Solver::IResultWriter& writer,
       Solver::Simulation::ISimulationObserver& simulationObserver,
       bool writeSimuTable,
-      std::shared_ptr<const InactiveComponentsAnalyzer> inactiveComponents = nullptr);
+      std::shared_ptr<const Data::InactiveComponentsAnalyzer> inactiveComponents = nullptr);
     ~WeeklyOptimization() = default;
     WeeklyOptimization(const WeeklyOptimization&) = delete;
     WeeklyOptimization& operator=(const WeeklyOptimization&) = delete;

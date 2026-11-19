@@ -8,6 +8,7 @@ import tempfile
 from pathlib import Path
 
 import numpy as np
+import parse
 from behave import *
 from common_steps.solver_input_handler import solver_input_handler
 from common_steps.solver_output_handler import solver_output_handler
@@ -15,6 +16,7 @@ from common_steps.simulation_table import SimulationTable
 from common_steps.simulation_table_reader import (
     OutputFormat,
     make_simu_table_reader,
+    simulation_table_directory,
 )
 
 from common_steps.assertions import assert_double_close
@@ -51,6 +53,13 @@ def solver_study_path_is(context, string):
 def change_transmission_capacities(context, link, value):
     file_path = context.study_path / "input" / "links" / link / "properties.ini"
     context.sih.set_value(variable="transmission-capacities", value=value, file_path=file_path)
+
+@given('the unit commitment mode is "{mode}"')
+def set_unit_commitment_mode(context, mode):
+    """Set `unit-commitment-mode` in generaldata.ini. Use it on a *copy* of a study."""
+    context.sih.set_parameter_value(variable="unit-commitment-mode", value=mode,
+                                    file_nick_name="general")
+
 
 @when('I replace the "{destinationPath}" file with "{originPath}"')
 def replace_reserve_yml(context, destinationPath, originPath):
@@ -119,6 +128,18 @@ def run_antares(context, options=None):
 @then('the simulation succeeds')
 def simu_success(context):
     assert context.return_code == 0, f"Process failed with return code {context.return_code}: \nSTDOUT: \n{context.logs_out} \n STDERR: \n{context.logs_err}"
+
+
+@then('the output file "{file_path}" exists')
+def output_file_exists(context, file_path):
+    output_file = context.soh.output_dir() / Path(file_path.replace("/", os.sep))
+    assert output_file.is_file(), f"Output file does not exist: {file_path}"
+
+
+@then('the output file "{file_path}" does not exist')
+def output_file_does_not_exist(context, file_path):
+    output_file = context.soh.output_dir() / Path(file_path.replace("/", os.sep))
+    assert not output_file.exists(), f"Output file unexpectedly exists: {file_path}"
 
 
 @then('the simulation fails')
@@ -275,7 +296,7 @@ def check_prod_for_specific_year(context, area, year, prod_name, comparator_and_
     'in area "{area}", during year {year:d}, hourly production of "{prod_name}" for hour {hour:d} is equal to {expected_prod:d} MWh')
 def check_prod_for_specific_year_hour(context, area, year, prod_name, hour, expected_prod):
     actual_hourly_prod = context.soh.get_hourly_prod_mwh(area, year, prod_name)[hour]
-    assert expected_prod == actual_hourly_prod
+    assert expected_prod == actual_hourly_prod, f"Expected production was {expected_prod}, actual is {actual_hourly_prod}. "
 
 
 @then('in area "{area}", hourly production of "{prod_name}" is always {comparator_and_hourly_prod} MWh')
@@ -320,7 +341,7 @@ def check_annual_results(context):
 @then("simulation tables match the references")
 def check_simulation_tables(context):
     referenceDir = context.sih.reference_dir()
-    outputDir = context.soh.output_dir()
+    outputDir = simulation_table_directory(context.soh.output_dir())
 
     dir_identical, err_messages = compare_folders(referenceDir, outputDir)
 
@@ -339,9 +360,9 @@ _STAGE_OF_TABLE_FILE = re.compile(r"^simulation-table-\d+-(.+)\.csv$")
 
 
 def stages_in_output(output_path: Path) -> set:
-    """The stage suffixes of the simulation-table files in `output_path`."""
+    """The stage suffixes of tables under the run's `simulation-tables` directory."""
     found = set()
-    for table_file in output_path.glob("simulation-table-*.csv"):
+    for table_file in simulation_table_directory(output_path).glob("simulation-table-*.csv"):
         match = _STAGE_OF_TABLE_FILE.match(table_file.name)
         assert match, f"Unexpected simulation table file name: {table_file.name}"
         found.add(match.group(1))
@@ -367,34 +388,25 @@ def run_simulation(context):
     print(f"Running command: {command}")
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
-    try:
-        if out:
-            context.logs_out = out.decode('utf-8')
-        else:
-            context.logs_out = ""
-        if err:
-            context.logs_err = err.decode('utf-8')
-        else:
-            context.logs_err = ""
-    except UnicodeDecodeError: # On windows, process communication can return another format
-        if out:
-            context.logs_out = out.decode('cp1252')
-        else:
-            context.logs_out = ""
-        if err:
-            context.logs_err = err.decode('cp1252')
-        else:
-            context.logs_err = ""
-    context.output_path = parse_output_folder_from_logs(out)
+    # Solver warnings can contain bytes from a platform-specific encoding.
+    # Keep the logs usable without making the scenario fail during decoding.
+    context.logs_out = out.decode("utf-8", errors="replace") if out else ""
+    context.logs_err = err.decode("utf-8", errors="replace") if err else ""
     context.return_code = process.returncode
-    context.soh = solver_output_handler(context.output_path, context.mode)
-    # For hybrid studies:
-    outputPath = Path(context.output_path)
-    default_stage = default_simulation_table_stage(outputPath)
-    if default_stage is not None:
-        file_pattern = f"simulation-table-*-{default_stage}.csv"
-        ST_reader_factory = make_simu_table_reader(outputPath, OutputFormat.CSV, file_pattern)
-        context.simu_table = SimulationTable(ST_reader_factory())
+    try:
+        context.output_path = parse_output_folder_from_logs(out)
+    except LookupError:
+        context.output_path = None
+
+    if context.output_path is not None:
+        context.soh = solver_output_handler(context.output_path, context.mode)
+        # For hybrid studies:
+        outputPath = Path(context.output_path)
+        default_stage = default_simulation_table_stage(outputPath)
+        if default_stage is not None:
+            file_pattern = f"simulation-table-*-{default_stage}.csv"
+            ST_reader_factory = make_simu_table_reader(outputPath, OutputFormat.CSV, file_pattern)
+            context.simu_table = SimulationTable(ST_reader_factory())
 
 
 @step('the modeler outputs are read from stage "{stage}"')
@@ -412,7 +424,15 @@ def read_modeler_outputs_from_stage(context, stage):
     context.simu_table = SimulationTable(ST_reader_factory())
 
 
-@given('the study asks for the simulation table stages "{stages}"')
+@parse.with_pattern(r".*")
+def parse_maybe_empty(text):
+    return text
+
+
+register_type(MaybeEmpty=parse_maybe_empty)
+
+
+@given('the study asks for the simulation table stages "{stages:MaybeEmpty}"')
 def set_simulation_table_stages_in_ini(context, stages):
     """Set `simulation-table-stages` in the [output] section of generaldata.ini.
 
@@ -477,8 +497,8 @@ def build_antares_solver_command(context):
 
 def parse_output_folder_from_logs(logs: bytes) -> str:
     for line in logs.splitlines():
-        if b'Output folder : ' in line:
-            return line.split(b'Output folder : ')[1].decode('ascii')
+        if b'Output folder: ' in line:
+            return line.split(b'Output folder: ')[1].decode('ascii')
     raise LookupError("Could not parse output folder in output logs")
 
 def make_values_from_string(values: str):
@@ -751,7 +771,7 @@ def week_hours_from_mps_filename(file_name):
     optim_nb = int(match.group(3))
 
     # Generate 168 time steps for the week
-    week_hours = [(week - 1) * 168 + hour for hour in range(168)]
+    week_hours = [week * 168 + hour for hour in range(168)]
 
     return week_hours
 
@@ -781,7 +801,7 @@ def check_area_balance_rhs(context, area, values_str, constant_str):
     list_values = make_values_from_string(values_str)
     constant = float(constant_str)
 
-    mps_file_path = context.soh.get_output_file_with_name("problem-1-1--optim-nb-1.mps")
+    mps_file_path = context.soh.get_output_file_with_name("problem-0-0--optim-nb-1.mps")
     assert mps_file_path, f"No output file named problem-1-1--optim-nb-1.mps"
 
     mps_problem = mpu.load_problem(mps_file_path)
@@ -949,8 +969,9 @@ def check_storages_values_for_specific_year_hour_and_cluster(context, area, year
 @then('the simulation has two optimization iterations')
 def check_two_optimization_iterations(context):
     output_path = Path(context.output_path)
-    optim_nb_1_files = list(output_path.glob("*optim-nb-1*"))
-    optim_nb_2_files = list(output_path.glob("*optim-nb-2*"))
+    tables_path = simulation_table_directory(output_path)
+    optim_nb_1_files = list(tables_path.glob("*optim-nb-1*"))
+    optim_nb_2_files = list(tables_path.glob("*optim-nb-2*"))
     assert len(optim_nb_1_files) > 0, \
         f"No first optimization output files found in {output_path}"
     assert len(optim_nb_2_files) > 0, \
@@ -975,3 +996,13 @@ def check_all_nodu_against_reference(context, area, year):
                 f"  Hour {hour}: expected {int(ref_nodu.iloc[hour])}, got {int(actual_nodu.iloc[hour])}")
     assert len(mismatches) == 0, \
         f"NODU mismatches found:\n" + "\n".join(mismatches[:20])
+
+@then('in area "{area}", during year {year:d}, ramping cost of cluster "{cluster}" for hour {hour:d} is equal to {ramp_cost}')
+def check_ramp_cost_for_specific_year_hour_and_cluster(context, area, year, cluster, hour, ramp_cost):
+    actual_ramp_cost = context.soh.get_ramp_cost_cluster(area, year, cluster)[hour]
+    assert_double_close(float(ramp_cost), float(actual_ramp_cost), 1e-6)
+    
+@then('in area "{area}", during year {year:d}, ramping cost for hour {hour:d} is equal to {ramp_cost}')
+def check_ramp_cost_for_specific_year_hour_and_area(context, area, year, hour, ramp_cost):
+    actual_ramp_cost = context.soh.get_ramp_cost_area(area, year)[hour]
+    assert_double_close(float(ramp_cost), float(actual_ramp_cost), 1e-6)

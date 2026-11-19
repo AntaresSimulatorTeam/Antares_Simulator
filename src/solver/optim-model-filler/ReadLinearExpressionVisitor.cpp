@@ -139,7 +139,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Pa
     const auto systemParameter = evalContext_.getParameter(node->value());
     if (systemParameter.type == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
     {
-        double value = evalContext_.getSystemParameterValueAsDouble(node->value());
+        double value = parameterValueToDouble(node->value(),
+                                              evalContext_.getSystemParameterValue(node->value()));
 
         return TimeDependentLinearExpression({}, value);
     }
@@ -164,9 +165,15 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Li
     return TimeDependentLinearExpression({}, node->value());
 }
 
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::PortFieldNode*)
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::PortFieldNode* node)
 {
-    throw Error::InvalidArgumentError("ReadLinearExpressionVisitor cannot visit PortFieldNodes");
+    throw Error::InvalidArgumentError(fmt::format(
+      "Port field '{}.{}' cannot be used directly in a linear expression. "
+      "Use 'sum_connections({}.{})' to aggregate port field values from connected components.",
+      node->getPortName(),
+      node->getFieldName(),
+      node->getPortName(),
+      node->getFieldName()));
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
@@ -174,6 +181,16 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
 {
     auto& portId = node->getPortName();
     auto& fieldId = node->getFieldName();
+
+    if (const auto& areaConnection = component_.areaConnectionAtPort(portId);
+        areaConnection && !fieldId.empty() && areaConnection->price == fieldId)
+    {
+        throw Error::InvalidArgumentError(fmt::format(
+          "Field '{}' of port '{}' holds the dual value of a legacy area's balance equation "
+          "and can only be used in extra-outputs, not in a linear expression.",
+          fieldId,
+          portId));
+    }
 
     TimeDependentLinearExpression to_return(nbtimeSteps_);
 
@@ -290,6 +307,12 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Al
 {
     LinearExpression ret; // Constant expr
     auto expr = dispatch(node->child());
+    if (expr.isConstant())
+    {
+        ret += expr[0];
+        ret *= static_cast<double>(nbtimeSteps_);
+        return TimeDependentLinearExpression(std::move(ret));
+    }
     for (auto& s: expr)
     {
         ret += s;

@@ -180,7 +180,7 @@ BOOST_FIXTURE_TEST_CASE(linear_expr_from_floor_of_a_variable_throws,
 
     BOOST_CHECK_EXCEPTION(visitor().dispatch(floorNode),
                           std::invalid_argument,
-                          checkMessage(
+                          containsMessage(
                             "floor operator: its argument is not constant, but has to be."));
 }
 
@@ -221,7 +221,7 @@ BOOST_FIXTURE_TEST_CASE(linear_expr_from_ceil_of_a_variable_throws,
 
     BOOST_CHECK_EXCEPTION(visitor().dispatch(ceilNode),
                           std::invalid_argument,
-                          checkMessage(
+                          containsMessage(
                             "ceil operator: its argument is not constant, but has to be."));
 }
 
@@ -262,7 +262,7 @@ BOOST_FIXTURE_TEST_CASE(linear_expr_from_round_of_a_variable_throws,
 
     BOOST_CHECK_EXCEPTION(visitor().dispatch(roundNode),
                           std::invalid_argument,
-                          checkMessage(
+                          containsMessage(
                             "round operator: its argument is not constant, but has to be."));
 }
 
@@ -302,7 +302,7 @@ BOOST_FIXTURE_TEST_CASE(linear_expr_from_abs_of_a_variable_throws,
 
     BOOST_CHECK_EXCEPTION(visitor().dispatch(absNode),
                           std::invalid_argument,
-                          checkMessage(
+                          containsMessage(
                             "abs operator: its argument is not constant, but has to be."));
 }
 
@@ -389,7 +389,7 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_time_dependent_fixed_bound_throws,
 
     BOOST_CHECK_EXCEPTION(visitor().dispatch(sum),
                           Antares::Error::InvalidArgumentError,
-                          checkMessage("A sum bound must be fixed in time in 'var1'."));
+                          containsMessage("A sum bound must be fixed in time in 'var1'."));
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_time_dependent_moving_bound_throws,
@@ -401,7 +401,7 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_time_dependent_moving_bound_throws,
 
     BOOST_CHECK_EXCEPTION(visitor().dispatch(sum),
                           Antares::Error::InvalidArgumentError,
-                          checkMessage("A sum bound must be fixed in time in 't+var1'."));
+                          containsMessage("A sum bound must be fixed in time in 't+var1'."));
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, VisitorFixture<ReadLinearExpressionVisitor>)
@@ -550,7 +550,7 @@ BOOST_FIXTURE_TEST_CASE(comparison_nodes__exception_thrown,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {
     Node* literal = create<LiteralNode>(5.);
-    auto predicate = checkMessage("A linear expression can't contain comparison operators.");
+    auto predicate = containsMessage("A linear expression can't contain comparison operators.");
 
     Node* node = create<EqualNode>(literal, literal);
     BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
@@ -572,23 +572,78 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {
     Node* node = create<PortFieldNode>("port", "field");
-    BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
-                          Antares::Error::InvalidArgumentError,
-                          checkMessage("ReadLinearExpressionVisitor cannot visit PortFieldNodes"));
+
+    BOOST_CHECK_EXCEPTION(
+      visitor().dispatch(node),
+      Antares::Error::InvalidArgumentError,
+      containsMessage("Port field 'port.field' cannot be used directly in a linear expression. "
+                      "Use 'sum_connections(port.field)' to aggregate port field values from "
+                      "connected components."));
 
     node = create<FunctionNode>(FunctionNodeType::dual,
                                 create<ParameterNode>("constraint1"),
                                 create<LiteralNode>(0));
     BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
                           Antares::Error::InvalidArgumentError,
-                          checkMessage(
+                          containsMessage(
                             "A linear expression can't contain extra output operator dual."));
 
     node = create<FunctionNode>(FunctionNodeType::reduced_cost, create<VariableNode>("var", 0));
     BOOST_CHECK_EXCEPTION(
       visitor().dispatch(node),
       Antares::Error::InvalidArgumentError,
-      checkMessage("A linear expression can't contain extra output operator reduced_cost."));
+      containsMessage("A linear expression can't contain extra output operator reduced_cost."));
+}
+
+BOOST_AUTO_TEST_CASE(area_connection_price_field_forbidden_in_linear_expression)
+{
+    // Defense in depth: ModelConverter already rejects this at parse time
+    // (see checkPriceFieldNotUsedInConstraintsOrObjectives), this test exercises the
+    // ReadLinearExpressionVisitor-level guard directly, bypassing that earlier check.
+    SystemModel::AreaConnection areaConnection{.inject_to_balance = "flow",
+                                               .spillage_bound = "",
+                                               .unsupplied_energy_bound = "",
+                                               .price = "price"};
+    SystemModel::PortType portType("flow_port",
+                                   {SystemModel::PortField("flow"),
+                                    SystemModel::PortField("price")},
+                                   areaConnection);
+    SystemModel::Port port("generation", portType);
+
+    SystemModel::Model model = SystemModel::ModelBuilder()
+                                 .withId("gen_model")
+                                 .withPorts({port})
+                                 .build();
+    SystemModel::Component component = SystemModel::ComponentBuilder()
+                                         .withId("gen1")
+                                         .withModel(&model)
+                                         .withScenarioGroupId("GROUP")
+                                         .build();
+    component.addAreaConnection("generation", "area1");
+
+    MockLinearProblem linearProblem(false);
+    OptimEntityContainer optimContainer(linearProblem);
+    std::vector<SystemModel::Component> components;
+    components.push_back(std::move(component));
+    optimContainer.addFromSystemComponents(components);
+
+    MockLinearProblemData data;
+    ScenarioGroupRepository scenarioGroupRepository = createScenario();
+    Api::FillContext ctx{0, 0, 0, 0, 0};
+
+    ReadLinearExpressionVisitor visitor(optimContainer,
+                                        ctx,
+                                        components[0],
+                                        &data,
+                                        scenarioGroupRepository);
+
+    PortFieldSumNode priceSum("generation", "price");
+    BOOST_CHECK_EXCEPTION(
+      visitor.dispatch(&priceSum),
+      Antares::Error::InvalidArgumentError,
+      containsMessage("Field 'price' of port 'generation' holds the dual value of a legacy area's "
+                      "balance equation and can only be used in extra-outputs, not in a linear "
+                      "expression."));
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_inverted_bounds_returns_zero,
@@ -606,6 +661,18 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_inverted_bounds_returns_zero,
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 0.);
     BOOST_CHECK_EQUAL(linear_expression[1].constant(), 0.);
     BOOST_CHECK_EQUAL(linear_expression[2].constant(), 0.);
+}
+
+BOOST_FIXTURE_TEST_CASE(all_time_sum_of_constant_expression_scales_with_horizon,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    ctx = Api::FillContext{0, 2, 0, 2, 0};
+    auto* sum = create<AllTimeSumNode>(create<LiteralNode>(2.));
+
+    const auto expression = visitor().dispatch(sum);
+
+    BOOST_REQUIRE_EQUAL(expression.size(), 1);
+    BOOST_CHECK_EQUAL(expression[0].constant(), 6.);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

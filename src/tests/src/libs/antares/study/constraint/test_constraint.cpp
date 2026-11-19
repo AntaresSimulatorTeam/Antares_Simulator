@@ -21,6 +21,7 @@
 #include "antares/utils/utils.h"
 
 using namespace Antares::Data;
+using namespace std::string_literals;
 namespace fs = std::filesystem;
 
 BOOST_AUTO_TEST_SUITE(BindingConstraintTests)
@@ -962,19 +963,19 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_clusterCount)
 BOOST_AUTO_TEST_CASE(BindingConstraint_StringToOperator_aliases)
 {
     using Operator = BindingConstraint::Operator;
-    for (const std::string& s: {"both", "<>", "><", "< and >", "BOTH"})
+    for (const std::string& s: {"both"s, "<>"s, "><"s, "< and >"s, "BOTH"s})
     {
         BOOST_CHECK_EQUAL(BindingConstraint::StringToOperator(s), Operator::opBoth);
     }
-    for (const std::string& s: {"less", "<", "<="})
+    for (const std::string& s: {"less"s, "<"s, "<="s})
     {
         BOOST_CHECK_EQUAL(BindingConstraint::StringToOperator(s), Operator::opLess);
     }
-    for (const std::string& s: {"greater", ">", ">="})
+    for (const std::string& s: {"greater"s, ">"s, ">="s})
     {
         BOOST_CHECK_EQUAL(BindingConstraint::StringToOperator(s), Operator::opGreater);
     }
-    for (const std::string& s: {"equal", "=", "=="})
+    for (const std::string& s: {"equal"s, "="s, "=="s})
     {
         BOOST_CHECK_EQUAL(BindingConstraint::StringToOperator(s), Operator::opEquality);
     }
@@ -984,15 +985,15 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_StringToOperator_aliases)
 BOOST_AUTO_TEST_CASE(BindingConstraint_StringToType_aliases)
 {
     using Type = BindingConstraint::Type;
-    for (const std::string& s: {"hourly", "hour", "h"})
+    for (const std::string& s: {"hourly"s, "hour"s, "h"s})
     {
         BOOST_CHECK_EQUAL(BindingConstraint::StringToType(s), Type::typeHourly);
     }
-    for (const std::string& s: {"daily", "day", "d"})
+    for (const std::string& s: {"daily"s, "day"s, "d"s})
     {
         BOOST_CHECK_EQUAL(BindingConstraint::StringToType(s), Type::typeDaily);
     }
-    for (const std::string& s: {"weekly", "week", "w"})
+    for (const std::string& s: {"weekly"s, "week"s, "w"s})
     {
         BOOST_CHECK_EQUAL(BindingConstraint::StringToType(s), Type::typeWeekly);
     }
@@ -1006,17 +1007,6 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_TypeToCString_allValues)
     BOOST_CHECK_EQUAL(std::string(BindingConstraint::TypeToCString(Type::typeHourly)), "hourly");
     BOOST_CHECK_EQUAL(std::string(BindingConstraint::TypeToCString(Type::typeDaily)), "daily");
     BOOST_CHECK_EQUAL(std::string(BindingConstraint::TypeToCString(Type::typeWeekly)), "weekly");
-}
-
-BOOST_AUTO_TEST_CASE(BindingConstraint_OperatorToCString_allValues)
-{
-    using Operator = BindingConstraint::Operator;
-    BOOST_CHECK_EQUAL(std::string(BindingConstraint::OperatorToCString(Operator::opEquality)),
-                      "equal");
-    BOOST_CHECK_EQUAL(std::string(BindingConstraint::OperatorToCString(Operator::opLess)), "less");
-    BOOST_CHECK_EQUAL(std::string(BindingConstraint::OperatorToCString(Operator::opGreater)),
-                      "greater");
-    BOOST_CHECK_EQUAL(std::string(BindingConstraint::OperatorToCString(Operator::opBoth)), "both");
 }
 
 BOOST_AUTO_TEST_CASE(BindingConstraint_OperatorToShortCString_allValues)
@@ -1049,19 +1039,6 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_pId_slugifiesName)
     BindingConstraint bc;
     bc.pId("My Constraint Name!");
     BOOST_CHECK_EQUAL(bc.id(), Antares::transformNameIntoID("My Constraint Name!"));
-}
-
-BOOST_AUTO_TEST_CASE(BindingConstraint_resetToDefaultValues)
-{
-    BindingConstraint bc;
-    bc.enabled(false);
-    bc.RHSTimeSeries().resize(2, 5);
-
-    bc.resetToDefaultValues();
-
-    BOOST_CHECK_EQUAL(bc.enabled(), true);
-    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width, 0u);
-    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height, 0u);
 }
 
 BOOST_AUTO_TEST_CASE(BindingConstraint_clearAndReset_hourly)

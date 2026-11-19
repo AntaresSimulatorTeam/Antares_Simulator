@@ -136,6 +136,7 @@ std::filesystem::path writeTempIni(const std::string& content)
 std::unique_ptr<Antares::Data::Study> makeStudyWithArea()
 {
     auto study = std::make_unique<Antares::Data::Study>();
+    study->parameters.reset();
     study->parameters.simulationDays.first = 0;
     study->parameters.simulationDays.end = 7;
     study->parameters.nbYears = 1;

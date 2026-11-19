@@ -100,14 +100,23 @@ static void ExportGridInfosAreas(const Data::Study& study,
     Yuni::Clob outLinks;
     Yuni::Clob outThermal;
 
+    const bool rampingEnabled = study.parameters.include.thermal_ramping;
+
     out << "id\tname\n";
     outLinks << "upstream\tdownstream\n";
     outThermal << "area id\tid\tname\tgroup\tunit count\tnominal capacity\t"
                   "min stable power\tmin up/down time\tspinning\tco2\t"
-                  "marginal cost\tfixed cost\tstartup cost\tmarket bid cost\tspread cost\n";
+                  "marginal cost\tfixed cost\tstartup cost\tmarket bid cost\tspread cost";
+    if (rampingEnabled)
+    {
+        outThermal
+          << "\tpower increase cost\tpower decrease cost\tmax power upward rate\tmax power "
+             "downward rate";
+    }
+    outThermal << '\n';
 
     study.areas.each(
-      [&out, &outLinks, &outThermal](const Data::Area& area)
+      [&out, &outLinks, &outThermal, rampingEnabled](const Data::Area& area)
       {
           out << area.id << '\t';
           out << area.name << '\n';
@@ -139,8 +148,23 @@ static void ExportGridInfosAreas(const Data::Study& study,
               outThermal << cluster->fixedCost << '\t';
               outThermal << cluster->startupCost << '\t';
               outThermal << cluster->marketBidCost << '\t';
-              outThermal << cluster->spreadCost << '\n';
-
+              outThermal << cluster->spreadCost;
+              if (rampingEnabled)
+              {
+                  outThermal << '\t';
+                  if (cluster->ramping)
+                  {
+                      outThermal << cluster->ramping->powerIncreaseCost << '\t';
+                      outThermal << cluster->ramping->powerDecreaseCost << '\t';
+                      outThermal << cluster->ramping->maxUpwardPowerRampingRate << '\t';
+                      outThermal << cluster->ramping->maxDownwardPowerRampingRate;
+                  }
+                  else
+                  {
+                      outThermal << "\t\t\t";
+                  }
+              }
+              outThermal << '\n';
           } // each thermal cluster
       }); // each area
     auto add = [&writer, &originalOutput](const std::string& filename, Yuni::Clob&& buffer)

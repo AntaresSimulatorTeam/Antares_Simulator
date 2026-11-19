@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE(solver_not_supported)
     BOOST_CHECK_EXCEPTION(
       solve(),
       std::invalid_argument,
-      checkMessage(
+      containsMessage(
         "Solver sirius is not supported for quadratic problems optimization through MathOpt."));
 }
 
@@ -296,7 +296,7 @@ BOOST_AUTO_TEST_CASE(invalid_variable_type)
     problemeAResoudre.TypeDeVariable[0] = 15;
     BOOST_CHECK_EXCEPTION(solve(),
                           std::invalid_argument,
-                          checkMessage("Unknown variable type: 15"));
+                          containsMessage("Unknown variable type: 15"));
 }
 
 BOOST_AUTO_TEST_CASE(invalid_constraint_sense)
@@ -306,7 +306,8 @@ BOOST_AUTO_TEST_CASE(invalid_constraint_sense)
     problemeAResoudre.Sens = "+";
     BOOST_CHECK_EXCEPTION(solve(),
                           std::invalid_argument,
-                          checkMessage("Expected constraint sense to be =, <, or >, but was: +"));
+                          containsMessage(
+                            "Expected constraint sense to be =, <, or >, but was: +"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

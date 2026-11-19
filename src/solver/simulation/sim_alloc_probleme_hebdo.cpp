@@ -154,8 +154,9 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
               &variablesMapping.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique,
               &variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique,
               &variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique,
-              &variablesMapping
-                 .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique})
+              &variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique,
+              &variablesMapping.powerRampingIncreaseIndex,
+              &variablesMapping.powerRampingDecreaseIndex})
         {
             v->assign(thermalCount, 0);
         }
@@ -449,6 +450,16 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             v->assign(nbPaliers, 0.);
         }
 
+        palier.rampingEnabled.assign(nbPaliers, false);
+
+        for (auto* v: {&palier.rampingCosts.downward,
+                       &palier.rampingCosts.upward,
+                       &palier.maxUpwardPowerRampingRate,
+                       &palier.maxDownwardPowerRampingRate})
+        {
+            v->assign(nbPaliers, -1);
+        }
+
         palier.NomsDesPaliersThermiques.resize(nbPaliers);
         palier.emissionFactors
           .assign(nbPaliers, std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX>{});
@@ -539,7 +550,9 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
                            &production.NombreDeGroupesEnMarcheDuPalier,
                            &production.NombreDeGroupesQuiDemarrentDuPalier,
                            &production.NombreDeGroupesQuiSArretentDuPalier,
-                           &production.NombreDeGroupesQuiTombentEnPanneDuPalier})
+                           &production.NombreDeGroupesQuiTombentEnPanneDuPalier,
+                           &production.powerRampingIncrease,
+                           &production.powerRampingDecrease})
             {
                 v->assign(nbPaliers, 0.);
             }

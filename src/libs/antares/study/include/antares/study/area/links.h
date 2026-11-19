@@ -75,8 +75,6 @@ public:
     */
     void reverse();
 
-    void resetToDefaultValues();
-
     std::string getName() const;
 
     bool isLinkPhysical() const;

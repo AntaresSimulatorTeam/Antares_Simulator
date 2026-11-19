@@ -15,20 +15,16 @@ using namespace Antares::ModelerStudy;
 namespace Antares::Solver::LoadFiles
 {
 
-std::optional<ModelerData> loadAll(const std::filesystem::path& studyPath)
+ModelerData loadAll(const std::filesystem::path& studyPath)
 {
     Utils::TimeMeasurement measure;
     logs.info() << "Loading modeler files...";
     ModelerData data;
 
     auto res = loadLibraries(studyPath);
-    if (!res.has_value())
-    {
-        return {};
-    }
-    data.libraries = std::move(res->libraries);
-    data.resolutionMode = res->resolutionMode;
-    data.scenarioScope = std::move(res->scenarioScope);
+    data.libraries = std::move(res.libraries);
+    data.resolutionMode = res.resolutionMode;
+    data.scenarioScope = std::move(res.scenarioScope);
     logs.info() << "Libraries loaded";
 
     auto loadedSystem = loadSystem(studyPath, data.libraries);

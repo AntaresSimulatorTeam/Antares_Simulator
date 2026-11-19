@@ -16,6 +16,8 @@ namespace Antares::Data
 class HydroAllocation final
 {
 public:
+    void setDefaultForArea(const AreaName& areaid);
+
     //! Coefficients
     using Coefficients = std::map<AreaName, double>;
 
@@ -24,11 +26,6 @@ public:
     ** \brief Clear all coefficients
     */
     void clear();
-
-    /*!
-    ** \brief Set the coefficient for a specific area index
-    */
-    void fromArea(const AreaName& areaid, double value);
 
     /*!
     ** \brief Load allocation coefficients from a file

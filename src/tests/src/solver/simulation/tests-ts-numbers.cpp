@@ -41,7 +41,6 @@ Area* addAreaToStudy(Study::Ptr study, const std::string& areaName)
     if (area)
     {
         area->createMissingData();
-        area->resetToDefaultValues();
     }
     BOOST_CHECK(area);
 

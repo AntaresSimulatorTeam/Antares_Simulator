@@ -188,6 +188,8 @@ enum TimeSeriesType : unsigned int
     timeSeriesShortTermInflows = 1u << 7,
     //! TimeSeries : Renewable
     timeSeriesShortTermAdditionalConstraints = 1u << 8,
+    //! TimeSeries : Reserves Need
+    timeSeriesReservesNeed = 1u << 9,
     // ***********************************************************************
     // Please update the constant allTimeSeriesMask if you add / remove an item
     // ***********************************************************************
@@ -204,7 +206,8 @@ constexpr unsigned int allTimeSeriesMask = static_cast<unsigned int>(timeSeriesL
                                              timeSeriesTransmissionCapacities)
                                            | static_cast<unsigned int>(timeSeriesShortTermInflows)
                                            | static_cast<unsigned int>(
-                                             timeSeriesShortTermAdditionalConstraints);
+                                             timeSeriesShortTermAdditionalConstraints)
+                                           | static_cast<unsigned int>(timeSeriesReservesNeed);
 /*!
 ** \brief Types of timeSeries
 **
@@ -269,6 +272,15 @@ struct TimeSeriesToCStr<32>
     }
 };
 
+template<>
+struct TimeSeriesToCStr<512>
+{
+    static const char* Value()
+    {
+        return "reserves_need";
+    }
+};
+
 enum SeedIndex
 {
     //! The seed for wind
@@ -324,8 +336,6 @@ enum HydroHeuristicPolicy
 
 HydroHeuristicPolicy StringToHydroHeuristicPolicy(const std::string& text);
 
-const char* HydroHeuristicPolicyToCString(HydroHeuristicPolicy hhPolicy);
-
 // ... Hydro Pricing ...
 enum HydroPricingMode
 {
@@ -333,11 +343,6 @@ enum HydroPricingMode
     hpMILP, // mixed integer linear problem
     hpUnknown,
 };
-
-/*!
-** \brief Convert a hyfro pricing mode into a text
-*/
-const char* HydroPricingModeToCString(HydroPricingMode hpm);
 
 /*!
 ** \brief Convert a text into a hydro pricing mode
@@ -354,11 +359,6 @@ enum PowerFluctuations
 };
 
 /*!
-** \brief Convert a local shedding strategy into a text
-*/
-const char* PowerFluctuationsToCString(PowerFluctuations fluctuations);
-
-/*!
 ** \brief Convert a text into a local shedding strategy
 */
 PowerFluctuations StringToPowerFluctuations(const std::string& text);
@@ -370,11 +370,6 @@ enum SheddingPolicy
     shpMinimizeDuration,
     shpUnknown,
 };
-
-/*!
-** \brief Convert a global shedding policy into a text
-*/
-const char* SheddingPolicyToCString(SheddingPolicy strategy);
 
 /*!
 ** \brief Convert a text into a global shedding policy
@@ -395,6 +390,11 @@ enum UnitCommitmentMode
     //! Unknown mode, mainly used for error handling
     ucUnknown,
 };
+
+constexpr bool usesExplicitUnitCommitment(UnitCommitmentMode mode)
+{
+    return mode == ucHeuristicAccurate || mode == ucMILP;
+}
 
 /*!
 ** \brief Convert a unit commitment mode into a text
@@ -417,11 +417,6 @@ enum NumberOfCoresMode
 };
 
 /*!
-** \brief Convert a numbers of cores mode into a text
-*/
-const char* NumberOfCoresModeToCString(NumberOfCoresMode ncores);
-
-/*!
 ** \brief Convert a text into a nb of cores mode
 */
 NumberOfCoresMode StringToNumberOfCoresMode(const std::string& text);
@@ -435,16 +430,6 @@ enum RenewableGenerationModelling
     rgClusters,       // Using renewable clusters
     rgUnknown,
 };
-
-/*!
-** \brief Convert a renewable generation modelling into a text
-*/
-const char* RenewableGenerationModellingToCString(RenewableGenerationModelling rgModelling);
-
-/*!
-** \brief Convert a text into a renewable generation modelling
-*/
-RenewableGenerationModelling StringToRenewableGenerationModelling(const std::string& text);
 
 // ------------------------
 // MPS export status

@@ -15,6 +15,4 @@ std::string printPathTree(const std::filesystem::path& p);
 
 std::string getBaseTree(const std::filesystem::path& nodeTagPath);
 
-bool requireMap(const YAML::Node& node, const char* typeName);
-
 } // namespace Antares::IO::Inputs::YmlUtils

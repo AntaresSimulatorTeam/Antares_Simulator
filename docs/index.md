@@ -1,17 +1,16 @@
----
-hide:
- - toc
----
-
-<style>
-/* hide title in this page */
-.md-typeset h1 {
-    display: none;
-}
-</style>
-
-![antares logo](assets/antares.png){ .add-padding-and-white-bg }
-
+<div style="display: flex; align-items: center; margin-bottom: 30px; justify-content: center;">
+  <img
+    src="assets/logo-antares.svg"
+    alt="Antares Logo"
+    style="height: 150px; width: 150px; margin-right: 30px;"
+  />
+  <div>
+    <h1 style="margin: 0;">Antares Simulator</h1>
+    <p style="margin: 5px 0 0 0; font-size: 1.2em; color: #666;">
+        Core computations for Antares 
+    </p>
+  </div>
+</div>
 
 [![Status][ubuntu_ci_svg]][ubuntu_ci_link] 
 [![Status][windows_ci_svg]][windows_ci_link] 
@@ -21,10 +20,12 @@ hide:
 
 ![C++](https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white) 
 
-Antares Simulator is an open-source power system simulator.  
+## Overview
+
+Antares Simulator is an open-source power system simulator.
 It is meant to be used by anybody placing value in quantifying the adequacy, or the
 economic performance, of interconnected power systems, at short or
-remote time horizons:
+remote time horizons.
 
 Transmission system operators, power producers, regulators, academics,
 consultants, NGOs and all others actors concerned by energy policy issues
@@ -33,21 +34,22 @@ are welcome to use the software.
 The Antares Simulator project was initiated by RTE (French Electricity
 Transmission system Operator) in 2007. It has been developed since the beginning
 as a cross-platform application (Windows, GNU/Linux, Unix).
+The original GUI has been deprecated in favor of [Antares Web](https://antares-web.readthedocs.io).
+
+## License 
 
 Until 2018, it had been distributed under the terms of a proprietary license.
-
 In May 2018, RTE decided to release the project under the GPLv3 license.
-
 In January 2024, RTE, as the exclusive copyright owner, decided to switch from the GPLv3 to the MPLv2 license, 
 starting with the 9.0 version of Antares Simulator.
 
-The GUI is deprecated in favor of [Antares Web](https://antares-web.readthedocs.io).
 
-### Links
+## Links
+
 - Antares ecosystem: [https://antares-doc.readthedocs.io](https://antares-doc.readthedocs.io)
 - Antares website: [https://antares-simulator.org](https://antares-simulator.org)
 - RTE website: [http://www.rte-france.com/](http://www.rte-france.com/)
-
+- Report an issue: [new issue](https://github.com/AntaresSimulatorTeam/Antares_Simulator/issues/new?template=support_request.md)
 
 [ubuntu_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/ubuntu.yml/badge.svg?branch=develop
 

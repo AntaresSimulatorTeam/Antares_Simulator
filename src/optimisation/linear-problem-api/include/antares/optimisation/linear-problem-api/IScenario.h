@@ -34,10 +34,7 @@ public:
      * Implementations that serve a fixed time series for any year (empty/default scenarios)
      * keep the default behavior of returning true.
      */
-    [[nodiscard]] virtual bool hasYear(Year) const
-    {
-        return true;
-    }
+    [[nodiscard]] virtual bool hasYear(Year) const = 0;
 
     [[nodiscard]] std::string group() const
     {
@@ -63,6 +60,11 @@ public:
     [[nodiscard]] TimeSeriesNumber getData(Year) const override
     {
         return 1; // No data available in an empty scenario
+    }
+
+    [[nodiscard]] bool hasYear(Year) const override
+    {
+        return true;
     }
 };
 } // namespace Antares::LinearProblem::Api

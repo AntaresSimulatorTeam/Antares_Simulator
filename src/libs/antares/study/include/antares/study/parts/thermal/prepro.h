@@ -43,11 +43,6 @@ public:
     explicit PreproAvailability(const YString& id, unsigned int unitCount);
     //@}
 
-    /*!
-    ** \brief Reset all values to their default ones
-    */
-    void reset();
-
     //! Copy data from another struct
     void copyFrom(const PreproAvailability& rhs);
 

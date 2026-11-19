@@ -39,17 +39,4 @@ std::string getBaseTree(const std::filesystem::path& nodeTagPath)
     return printPathTree(nodeTagPath);
 }
 
-bool requireMap(const ::YAML::Node& node, const char* typeName)
-{
-    if (node.IsMap())
-    {
-        return true;
-    }
-    if (node.IsDefined() && !node.IsNull())
-    {
-        throw InputError(std::string("Expected a YAML mapping for '") + typeName + "'");
-    }
-    return false;
-}
-
 } // namespace Antares::IO::Inputs::YmlUtils

@@ -8,10 +8,13 @@
 #include <cstdlib> // setenv
 #include <filesystem>
 #include <fstream>
+#include <memory>
 #include <string>
 
+#include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
+#include <antares/io/outputs/SimulationTablePath.h>
 #include <antares/study/study.h>
 
 // Test the generation of folder output names
@@ -133,6 +136,25 @@ BOOST_FIXTURE_TEST_CASE(adequacy_zip_label_now, Fixture)
                                                                label,
                                                                *localtime(&startTime));
     BOOST_CHECK_EQUAL(actualOutput_suffix, expectedOutput_suffix);
+}
+
+BOOST_DATA_TEST_CASE_F(Fixture,
+                       simulation_table_output_directory_creation_respects_output_selection,
+                       boost::unit_test::data::make({true, false}),
+                       simulationTableEnabled)
+{
+    auto study = std::make_unique<Study>();
+    study->folder = outputRoot;
+    if (simulationTableEnabled)
+    {
+        study->parameters.outputSelection = OutputSelection{OutputSelection::SimulationTable};
+    }
+
+    study->prepareOutput();
+
+    BOOST_CHECK_EQUAL(fs::is_directory(
+                        Antares::IO::Outputs::simulationTableOutputDirectory(study->folderOutput)),
+                      simulationTableEnabled);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

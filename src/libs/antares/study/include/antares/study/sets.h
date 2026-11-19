@@ -194,6 +194,9 @@ public:
     //! filterAll means no restriction (all granularities are exported).
     unsigned int outputFilter(const IDType& id, ReportType report) const;
 
+    //! Disable geographic trimming filters for all districts.
+    void disableOutputFilters();
+
     /*!
     ** \brief format the string to match the options
     */

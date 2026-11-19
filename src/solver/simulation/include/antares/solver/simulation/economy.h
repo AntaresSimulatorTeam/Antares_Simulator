@@ -4,6 +4,8 @@
 #ifndef __SOLVER_SIMULATION_ECONOMY_H__
 #define __SOLVER_SIMULATION_ECONOMY_H__
 
+#include <memory>
+
 #include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/solver/optimisation/weekly_optimization.h"
 #include "antares/solver/simulation/opt_time_writer.h"
@@ -48,9 +50,11 @@ public:
     //! Current study
     Data::Study& study;
     //! All variables
-    Solver::Variable::Economy::AllVariables variables;
+    std::unique_ptr<Solver::Variable::Economy::AllVariables> variables;
     //! Prepro only
     bool preproOnly;
+
+    void initializeVariables();
 
 protected:
     void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
@@ -74,7 +78,7 @@ private:
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
-    std::vector<Optimization::WeeklyOptimization> weeklyOptProblems_;
+    std::vector<Antares::Optimization::WeeklyOptimization> weeklyOptProblems_;
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
     IResultWriter& resultWriter_;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;

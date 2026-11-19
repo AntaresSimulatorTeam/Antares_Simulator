@@ -15,6 +15,8 @@
 
 namespace Antares::Data
 {
+const std::vector<double> TimeSeries::emptyColumn{};
+
 void TimeSeriesNumbers::registerSeries(const TimeSeries* s, std::string label)
 {
     series[std::move(label)] = s;
@@ -86,6 +88,12 @@ TimeSeries::TimeSeries(TimeSeriesNumbers& tsNumbers):
 {
 }
 
+TimeSeries::TimeSeries(const TimeSeries& other):
+    timeSeries(other.timeSeries),
+    timeseriesNumbers(other.timeseriesNumbers)
+{
+}
+
 bool TimeSeries::loadFromFile(const std::filesystem::path& path,
                               const bool average,
                               unsigned options)
@@ -118,6 +126,10 @@ double TimeSeries::getCoefficient(uint32_t year, uint32_t timestep) const
 
 const double* TimeSeries::getColumn(uint32_t year) const
 {
+    if (timeSeries.width == 0)
+    {
+        return emptyColumn.data();
+    }
     return timeSeries[getSeriesIndex(year)];
 }
 

@@ -13,6 +13,7 @@ public:
     explicit ProblemMatrixEssential(PROBLEME_HEBDO* problemeHebdo);
 
     virtual void Run();
+    virtual ~ProblemMatrixEssential() = default;
 
     void InitializeProblemAResoudreCounters();
     PROBLEME_HEBDO* problemeHebdo_;

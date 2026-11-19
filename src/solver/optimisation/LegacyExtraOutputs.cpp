@@ -7,18 +7,24 @@
 #include <array>
 #include <cmath>
 #include <string>
+#include <utility>
 #include <vector>
 
-#include "antares/solver/optimisation/InactiveComponentsAnalyzer.h"
+#include <antares/utils/utils.h>
+#include "antares/solver/optimisation/HebdoAreaPriceProvider.h"
+#include "antares/solver/optimisation/opt_rename_problem.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/study/InactiveComponentsAnalyzer.h"
 
 using Antares::IO::Outputs::SimulationTable;
 using Antares::LinearProblem::Api::FillContext;
 
 namespace Antares::Optimization
 {
+
+using Data::InactiveComponentsAnalyzer;
 
 std::optional<unsigned> LegacyBlockTimeIndex(const FillContext& fillContext, unsigned timeIndex)
 {
@@ -75,8 +81,8 @@ public:
         thermalNames_.reserve(problemeHebdo.NombreDePays);
         for (uint32_t pays = 0; pays < problemeHebdo.NombreDePays; ++pays)
         {
-            const std::string area = problemeHebdo.NomsDesPays[pays];
-            areaNames_.push_back(area + "_node");
+            const std::string area = Antares::SanitizeId(problemeHebdo.NomsDesPays[pays]);
+            areaNames_.push_back(area);
             hydroStorageNames_.push_back(area + "_hydro_storage");
 
             const PALIERS_THERMIQUES& paliers = problemeHebdo.PaliersThermiquesDuPays[pays];
@@ -84,8 +90,9 @@ public:
             clusterNames.reserve(paliers.NombreDePaliersThermiques);
             for (int index = 0; index < paliers.NombreDePaliersThermiques; ++index)
             {
-                clusterNames.push_back(area + "_thermal_"
-                                       + paliers.NomsDesPaliersThermiques[index]);
+                clusterNames.push_back(
+                  area + "_thermal_"
+                  + Antares::SanitizeId(paliers.NomsDesPaliersThermiques[index]));
             }
         }
 
@@ -96,8 +103,7 @@ public:
                                     [problemeHebdo.PaysOrigineDeLInterconnexion[interco]];
             const std::string d = problemeHebdo.NomsDesPays
                                     [problemeHebdo.PaysExtremiteDeLInterconnexion[interco]];
-            const auto& [a1, a2] = (o < d) ? std::tie(o, d) : std::tie(d, o);
-            linkNames_.push_back(a1 + "_" + a2 + "_link");
+            linkNames_.push_back(BuildLinkComponentId(o, d));
         }
     }
 
@@ -107,10 +113,29 @@ public:
     void shortTermStorageOutputs(uint32_t pays, int pdt);
     void inputGenerationOutputs(uint32_t pays, int pdt) const;
     void weeklyHydroOutputs(uint32_t pays);
+    void emitReserveHydroParticipations(uint32_t pays,
+                                        int pdt,
+                                        const CAPACITY_RESERVATION& reserve,
+                                        std::string reserveParticipationOutput);
+    void emitReserveSTSParticipation(int pdt,
+                                     const std::string& area,
+                                     const CAPACITY_RESERVATION& reserve,
+                                     std::string reserveParticipationOutput);
+    void emitReserveThermalParticipation(int pdt,
+                                         const std::string& area,
+                                         const CAPACITY_RESERVATION& reserve,
+                                         std::string reserveParticipationOutput);
+    void emitReserveImbalance(int pdt,
+                              const std::string& node,
+                              const CAPACITY_RESERVATION& reserve);
+    void reserveOutputs(uint32_t pays, int pdt);
 
 private:
     void emit(const std::string& output, const std::string& component, int pdt, double value) const;
 
+    // Not const: the variable manager's index accessors are not const.
+    [[nodiscard]] double numberOfUnitsOn(uint32_t pays, int index, int pdt);
+    [[nodiscard]] std::pair<double, double> unitCommitmentCosts(uint32_t pays, int index, int pdt);
     // True when `componentName` (an InputGenerationOfArea entry name, e.g.
     // "{area}_wind") is flagged all-zero across the whole study by the
     // precomputed analyzer, and its rows should therefore be suppressed.
@@ -136,8 +161,10 @@ private:
 
     [[nodiscard]] double areaPrice(uint32_t pays, int pdt) const
     {
-        return -dual(problemeHebdo_.CorrespondanceCntNativesCntOptim[pdt]
-                       .NumeroDeContrainteDesBilansPays[pays]);
+        return legacyAreaPrice(problemeHebdo_,
+                               pays,
+                               static_cast<unsigned>(pdt),
+                               [this](int constraintIndex) { return dual(constraintIndex); });
     }
 
     SimulationTable& table_;
@@ -171,6 +198,69 @@ void LegacyExtraOutputEmitter::emit(const std::string& output,
                      .scenario_index = fillContext_.getYear(),
                      .value = value,
                      .status = std::nullopt});
+}
+
+double LegacyExtraOutputEmitter::numberOfUnitsOn(uint32_t pays, int index, int pdt)
+{
+    const PALIERS_THERMIQUES& paliers = problemeHebdo_.PaliersThermiquesDuPays[pays];
+    const int palier = paliers.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+
+    if (problemeHebdo_.OptimisationNotFastMode)
+    {
+        // Relaxed unless the problem is solved as a MILP, hence the rounding up
+        // of a possibly fractional count.
+        return std::ceil(x(variableManager_.NumberOfDispatchableUnits(palier, pdt)));
+    }
+
+    // Fast mode has no unit-commitment variable: rebuild the count the way the
+    // legacy year-end smoothing does (`State::yearEndBuildThermalClusterData`,
+    // `ucHeuristicFast`), from the dispatched power and the lower bound of the
+    // production variable. That bound is the min stable power of one unit times
+    // the number of units the MUT/MDT heuristic keeps running
+    // (`OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT`), so dividing it back
+    // gives that number; it is capped by the units the availability can carry,
+    // and never falls below the units the generation itself requires.
+    const double unitSize = paliers.TailleUnitaireDUnGroupeDuPalierThermique[index];
+    const double generation = x(variableManager_.DispatchableProduction(palier, pdt));
+    if (unitSize <= 0. || generation <= 0.)
+    {
+        return 0.;
+    }
+
+    const double unitsCarryingTheGeneration = Utils::ceil(generation / unitSize);
+
+    const double minPowerOfAUnit = paliers.pminDUnGroupeDuPalierThermique[index];
+    if (minPowerOfAUnit <= 0.)
+    {
+        return unitsCarryingTheGeneration;
+    }
+
+    const auto& disp = paliers.PuissanceDisponibleEtCout[index];
+    const double committedUnits = Utils::floor(disp.PuissanceMinDuPalierThermique[pdt]
+                                               / minPowerOfAUnit);
+    const double availableUnits = std::ceil(disp.PuissanceDisponibleDuPalierThermique[pdt]
+                                            / unitSize);
+    return std::clamp(committedUnits, unitsCarryingTheGeneration, availableUnits);
+}
+
+std::pair<double, double> LegacyExtraOutputEmitter::unitCommitmentCosts(uint32_t pays,
+                                                                        int index,
+                                                                        int pdt)
+{
+    const PALIERS_THERMIQUES& paliers = problemeHebdo_.PaliersThermiquesDuPays[pays];
+
+    // In fast mode there is no unit-commitment variable to read the objective
+    // coefficients from; they are taken from the cluster data the not-fast mode
+    // builds those coefficients from (OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage).
+    if (!problemeHebdo_.OptimisationNotFastMode)
+    {
+        return {paliers.CoutFixeDeMarcheDUnGroupeDuPalierThermique[index],
+                paliers.CoutDeDemarrageDUnGroupeDuPalierThermique[index]};
+    }
+
+    const int palier = paliers.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+    return {cost(variableManager_.NumberOfDispatchableUnits(palier, pdt)),
+            cost(variableManager_.NumberStartingDispatchableUnits(palier, pdt))};
 }
 
 bool LegacyExtraOutputEmitter::inputGenerationIsSuppressed(uint32_t pays,
@@ -247,6 +337,16 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
          price > problemeHebdo_.CoutDeDefaillancePositiveSansBruit[pays] - nearLossOfLoadCutoff
            ? 1.
            : 0.);
+
+    emit("domestic_unsupplied_energy",
+         area,
+         pdt,
+         problemeHebdo_.ResultatsHoraires[pays].ValeursHorairesDENS[pdt]);
+    emit("is_local_matching_rule_violated",
+         area,
+         pdt,
+         static_cast<double>(
+           problemeHebdo_.ResultatsHoraires[pays].ValeursHorairesLmrViolations[pdt]));
 
     // Port fields of the load and long_term_storage models, emitted on their
     // own components ({area}_load, {area}_hydro_storage) so their balance_port.flow
@@ -397,24 +497,16 @@ void LegacyExtraOutputEmitter::thermalOutputs(uint32_t pays, int index, int pdt)
                           * std::max(generation - minGen, 0.);
     emit("profit", cluster, pdt, profit);
 
-    if (!problemeHebdo_.OptimisationNotFastMode)
-    {
-        return;
-    }
-
-    const int nodu = variableManager_.NumberOfDispatchableUnits(palier, pdt);
-    const double unitsOn = std::ceil(x(nodu));
+    const double unitsOn = numberOfUnitsOn(pays, index, pdt);
     emit("actual_num_units_on", cluster, pdt, unitsOn);
 
-    const double startupCost = cost(variableManager_.NumberStartingDispatchableUnits(palier, pdt));
     double startedUnits = 0.;
     if (pdt > 0)
     {
-        const double previousUnitsOn = std::ceil(
-          x(variableManager_.NumberOfDispatchableUnits(palier, pdt - 1)));
-        startedUnits = std::max(0., unitsOn - previousUnitsOn);
+        startedUnits = std::max(0., unitsOn - numberOfUnitsOn(pays, index, pdt - 1));
     }
-    emit("non_prop_cost", cluster, pdt, startupCost * startedUnits + cost(nodu) * unitsOn);
+    const auto [fixedCost, startupCost] = unitCommitmentCosts(pays, index, pdt);
+    emit("non_prop_cost", cluster, pdt, startupCost * startedUnits + fixedCost * unitsOn);
 }
 
 void LegacyExtraOutputEmitter::shortTermStorageOutputs(uint32_t pays, int pdt)
@@ -427,8 +519,9 @@ void LegacyExtraOutputEmitter::shortTermStorageOutputs(uint32_t pays, int pdt)
         const double injection = x(
           variableManager_.ShortTermStorageInjection(storage.clusterGlobalIndex, pdt));
         const std::string component = fmt::format("{}_short_term_storage_{}",
-                                                  problemeHebdo_.NomsDesPays[pays],
-                                                  storage.name);
+                                                  Antares::SanitizeId(
+                                                    problemeHebdo_.NomsDesPays[pays]),
+                                                  Antares::SanitizeId(storage.name));
         emit("profit", component, pdt, std::floor((withdrawal - injection) * price + 0.5));
         emit("balance_port.flow", component, pdt, withdrawal - injection);
     }
@@ -477,6 +570,113 @@ void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays)
     emit("bellman_value", problemeHebdo_.NomsDesPays[pays], pdt, bellmanValue);
 }
 
+void LegacyExtraOutputEmitter::emitReserveHydroParticipations(
+  uint32_t pays,
+  int pdt,
+  const CAPACITY_RESERVATION& reserve,
+  const std::string reserveParticipationOutput)
+{
+    for (const auto& hydroPart: reserve.AllHydroReservesParticipation)
+    {
+        const int participationVar = variableManager_.HydroReserveParticipation(
+          reserve.type,
+          hydroPart.globalIndexClusterParticipation,
+          pdt);
+        emit(reserveParticipationOutput,
+             hydroStorageNames_[pays],
+             pdt,
+             hydroPart.participationCost * x(participationVar));
+    }
+}
+
+void LegacyExtraOutputEmitter::emitReserveSTSParticipation(
+  int pdt,
+  const std::string& area,
+  const CAPACITY_RESERVATION& reserve,
+  const std::string reserveParticipationOutput)
+{
+    for (const auto& stsPart: reserve.AllSTStorageReservesParticipation | std::views::values)
+    {
+        const int participationVar = variableManager_.STStorageClusterReserveParticipation(
+          reserve.type,
+          stsPart.globalIndexClusterParticipation,
+          pdt);
+        emit(reserveParticipationOutput,
+             Antares::SanitizeId(area) + "_short_term_storage_"
+               + Antares::SanitizeId(stsPart.clusterName),
+             pdt,
+             stsPart.participationCost * x(participationVar));
+    }
+}
+
+void LegacyExtraOutputEmitter::emitReserveThermalParticipation(
+  int pdt,
+  const std::string& area,
+  const CAPACITY_RESERVATION& reserve,
+  const std::string reserveParticipationOutput)
+{
+    for (const auto& thermalPart: reserve.AllThermalReservesParticipation | std::views::values)
+    {
+        const int runningVar = variableManager_.RunningThermalClusterReserveParticipation(
+          thermalPart.globalIndexClusterParticipation,
+          pdt);
+        double val = thermalPart.participationCost * x(runningVar);
+
+        if (reserve.type == ReserveType::UP)
+        {
+            const int offVar = variableManager_.OffThermalClusterReserveParticipation(
+              thermalPart.globalIndexClusterParticipation,
+              pdt);
+            val += thermalPart.participationCostOff * x(offVar);
+        }
+        emit(Antares::SanitizeId(reserveParticipationOutput),
+             area + "_thermal_" + Antares::SanitizeId(thermalPart.clusterName),
+             pdt,
+             val);
+    }
+}
+
+void LegacyExtraOutputEmitter::emitReserveImbalance(int pdt,
+                                                    const std::string& node,
+                                                    const CAPACITY_RESERVATION& reserve)
+{
+    const std::string reserveImbalanceOutput = fmt::format("reserve_imbalance_cost_{}",
+                                                           reserve.reserveID);
+    const int excess = variableManager_.InternalExcessReserve(reserve.globalReserveIndex, pdt);
+    const int unsatisfied = variableManager_.InternalUnsatisfiedReserve(reserve.globalReserveIndex,
+                                                                        pdt);
+    emit(reserveImbalanceOutput,
+         node,
+         pdt,
+         reserve.spillageCost * x(excess) + reserve.unsuppliedCost * x(unsatisfied));
+}
+
+void LegacyExtraOutputEmitter::reserveOutputs(uint32_t pays, int pdt)
+{
+    if (!problemeHebdo_.allReserves || !problemeHebdo_.OptimisationNotFastMode)
+    {
+        return;
+    }
+
+    const std::string& node = areaNames_[pays];
+    const std::string& area = problemeHebdo_.NomsDesPays[pays];
+    const auto& areaReserves = problemeHebdo_.allReserves->at(pays).areaCapacityReservations;
+
+    for (const auto& reserve: areaReserves)
+    {
+        const std::string reserveParticipationOutput = fmt::format("reserve_participation_cost_{}",
+                                                                   reserve.reserveID);
+
+        emitReserveImbalance(pdt, node, reserve);
+
+        emitReserveThermalParticipation(pdt, area, reserve, reserveParticipationOutput);
+
+        emitReserveSTSParticipation(pdt, area, reserve, reserveParticipationOutput);
+
+        emitReserveHydroParticipations(pays, pdt, reserve, reserveParticipationOutput);
+    }
+}
+
 } // namespace
 
 void AddLegacyExtraOutputs(SimulationTable& simulationTable,
@@ -500,6 +700,7 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
             emitter.areaOutputs(pays, pdt);
             emitter.shortTermStorageOutputs(pays, pdt);
             emitter.inputGenerationOutputs(pays, pdt);
+            emitter.reserveOutputs(pays, pdt);
 
             const PALIERS_THERMIQUES& paliers = problemeHebdo.PaliersThermiquesDuPays[pays];
             for (int index = 0; index < paliers.NombreDePaliersThermiques; ++index)

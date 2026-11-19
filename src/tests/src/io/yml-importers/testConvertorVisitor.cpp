@@ -104,7 +104,8 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
     std::string expression = "abc"; // not a param or var
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage("No parameter or variable found for this identifier: abc"));
+                          containsMessage(
+                            "No parameter or variable found for this identifier: abc"));
 }
 
 BOOST_AUTO_TEST_CASE(addTwoLiterals)
@@ -323,10 +324,10 @@ BOOST_FIXTURE_TEST_CASE(NumericalTimeIndexExpresion, RegistryHolder)
 BOOST_FIXTURE_TEST_CASE(TimeIndexExpresion, RegistryHolder)
 {
     const auto [expression, div] = expected_expression(registry);
-    const auto expressionWithTimeIndex = "(" + expression + ")" + "[param1]";
+    const auto expressionWithTimeIndex = "(" + expression + ")" + "[param2]";
     auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
 
-    auto* time_index = registry.create<Nodes::ParameterNode>("param1");
+    auto* time_index = registry.create<Nodes::ParameterNode>("param2");
     auto* timeIndexNode = registry.create<Nodes::TimeIndexNode>(div, time_index);
 
     Visitors::CompareVisitor cmp;
@@ -350,13 +351,13 @@ BOOST_FIXTURE_TEST_CASE(TimeShiftExpression, RegistryHolder)
 BOOST_FIXTURE_TEST_CASE(TimeShiftExpressionMul, RegistryHolder)
 {
     const auto [expression, div] = expected_expression(registry);
-    const auto expressionWithTimeIndex = "(" + expression + ")" + "[t-89*param1]";
+    const auto expressionWithTimeIndex = "(" + expression + ")" + "[t-89*param2]";
     auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
 
     auto* lit = registry.create<Nodes::LiteralNode>(89);
     auto* neg = registry.create<Nodes::NegationNode>(lit);
 
-    auto* param = registry.create<Nodes::ParameterNode>("param1");
+    auto* param = registry.create<Nodes::ParameterNode>("param2");
     auto* mult = registry.create<Nodes::MultiplicationNode>(neg, param);
     auto* timeShiftNode = registry.create<Nodes::TimeShiftNode>(div, mult);
 
@@ -367,13 +368,13 @@ BOOST_FIXTURE_TEST_CASE(TimeShiftExpressionMul, RegistryHolder)
 BOOST_FIXTURE_TEST_CASE(TimeSumExpression, RegistryHolder)
 {
     const auto [e, div] = expected_expression(registry);
-    const auto expressionWithTimeIndex = "sum(t-89*param1 .. t+(param1/89)," + e + ")";
+    const auto expressionWithTimeIndex = "sum(t-89*param2 .. t+(param2/89)," + e + ")";
     auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
 
     auto* lit = registry.create<Nodes::LiteralNode>(89);
     auto* neg = registry.create<Nodes::NegationNode>(lit);
 
-    auto* param = registry.create<Nodes::ParameterNode>("param1");
+    auto* param = registry.create<Nodes::ParameterNode>("param2");
     auto* from = registry.create<Nodes::TPlusNode>(
       registry.create<Nodes::MultiplicationNode>(neg, param));
     auto* to = registry.create<Nodes::TPlusNode>(registry.create<Nodes::DivisionNode>(param, lit));
@@ -409,6 +410,201 @@ BOOST_FIXTURE_TEST_CASE(TimeSumExpressionWithMixedBounds, RegistryHolder)
 
     Visitors::CompareVisitor cmp;
     BOOST_CHECK(cmp.dispatch(expr.node, timeSumNode));
+}
+
+BOOST_AUTO_TEST_CASE(time_sum_and_time_shift_accept_right_side_multiplication)
+{
+    const auto model = createYmlModel();
+    BOOST_CHECK_NO_THROW(convertExpressionToNode("sum(t + 1 - param2 / 2 .. t, varP)", model));
+    BOOST_CHECK_NO_THROW(convertExpressionToNode("varP[t + 1 - param2 / 2]", model));
+}
+
+BOOST_AUTO_TEST_CASE(time_bounds_reject_solution_operators_and_nested_variables)
+{
+    auto model = createYmlModel();
+    model.constraints = {{"constraintA", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml", ""}};
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(dual(constraintA) .. 2, varP)", model),
+                          InputError,
+                          containsMessage("Time-sum `from` bound cannot contain 'dual' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[reduced_cost(varP)]", model),
+                          InputError,
+                          containsMessage(
+                            "Time index arguments cannot contain 'reduced_cost' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[t + (1 + dual(constraintA))]", model),
+                          InputError,
+                          containsMessage("Time shift arguments cannot contain 'dual' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[t + (1 + varP)]", model),
+                          InputError,
+                          containsMessage("Time shift arguments cannot contain variables"));
+}
+
+BOOST_AUTO_TEST_CASE(time_sum_bounds_reject_variables)
+{
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(varP .. 2, varP)", createYmlModel()),
+                          InputError,
+                          containsMessage(
+                            "Time-sum `from` bound cannot contain variables: 'varP'."));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(1 .. varP, varP)", createYmlModel()),
+                          InputError,
+                          containsMessage("Time-sum `to` bound cannot contain variables: 'varP'."));
+}
+
+BOOST_FIXTURE_TEST_CASE(time_index_accepts_parameter_expression, RegistryHolder)
+{
+    const auto expr = convertExpressionToNode("varP[param2 + 1]", createYmlModel());
+
+    auto* variable = registry.create<Nodes::VariableNode>("varP", 0);
+    auto* parameter = registry.create<Nodes::ParameterNode>("param2");
+    auto* one = registry.create<Nodes::LiteralNode>(1);
+    auto* index = registry.create<Nodes::SumNode>(parameter, one);
+    auto* expected = registry.create<Nodes::TimeIndexNode>(variable, index);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, expected));
+}
+
+BOOST_FIXTURE_TEST_CASE(time_index_accepts_literal_expression, RegistryHolder)
+{
+    const auto expr = convertExpressionToNode("varP[1 + 2]", createYmlModel());
+
+    auto* variable = registry.create<Nodes::VariableNode>("varP", 0);
+    auto* one = registry.create<Nodes::LiteralNode>(1);
+    auto* two = registry.create<Nodes::LiteralNode>(2);
+    auto* index = registry.create<Nodes::SumNode>(one, two);
+    auto* expected = registry.create<Nodes::TimeIndexNode>(variable, index);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, expected));
+}
+
+BOOST_AUTO_TEST_CASE(dual_and_reduced_cost_are_rejected_recursively_in_time_sum_bounds)
+{
+    auto model = createYmlModel();
+    model.constraints.push_back(
+      {"constraintA", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml", ""});
+
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(1 + dual(constraintA) .. 2, varP)", model),
+                          InputError,
+                          containsMessage("Time-sum `from` bound cannot contain 'dual' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("sum(1 + reduced_cost(varP) .. 2, varP)", model),
+                          InputError,
+                          containsMessage(
+                            "Time-sum `from` bound cannot contain 'reduced_cost' operators"));
+}
+
+BOOST_AUTO_TEST_CASE(time_shift_and_index_arguments_reject_variables)
+{
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[t + varP]", createYmlModel()),
+                          InputError,
+                          containsMessage("Time shift arguments cannot contain variables"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[varP]", createYmlModel()),
+                          InputError,
+                          containsMessage("Time index arguments cannot contain variables"));
+}
+
+BOOST_AUTO_TEST_CASE(time_arguments_reject_time_dependent_parameters_at_load_time)
+{
+    auto model = createYmlModel();
+    const std::pair<std::string, std::string> cases[] = {
+      {"varP[param1]", "Time index arguments"},
+      {"(varP + 1)[1 + param1 / 2]", "Time index arguments"},
+      {"varP[t + param1]", "Time shift arguments"},
+      {"(varP + 1)[t - (1 + param1 / 2)]", "Time shift arguments"},
+      {"sum(param1 .. 2, varP)", "Time-sum `from` bound"},
+      {"sum(1 .. t + (param1 / 2), varP)", "Time-sum `to` bound"}};
+
+    for (const bool scenarioDependent: {false, true})
+    {
+        model.parameters[0].scenario_dependent = scenarioDependent;
+        for (const auto& [expression, context]: cases)
+        {
+            BOOST_TEST_CONTEXT(expression << ", scenario-dependent: " << scenarioDependent)
+            {
+                BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model, "test.yaml:42"),
+                                      InputError,
+                                      containsMessage(
+                                        "in test.yaml:42 : Error while converting expression '"
+                                        + expression + "': " + context
+                                        + " cannot contain time-dependent parameters: 'param1'."));
+            }
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(time_arguments_accept_scenario_dependent_time_constant_parameters)
+{
+    auto model = createYmlModel();
+    model.parameters[1].scenario_dependent = true;
+    for (const std::string expression: {"varP[param2 + 1]",
+                                        "(varP + 1)[param2]",
+                                        "varP[t - param2]",
+                                        "(varP + 1)[t + 1 - param2 / 2]",
+                                        "sum(param2 .. t + param2, varP)"})
+    {
+        BOOST_TEST_CONTEXT(expression)
+        {
+            BOOST_CHECK_NO_THROW(convertExpressionToNode(expression, model));
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(time_arguments_reject_port_fields)
+{
+    auto model = createYmlModel();
+    model.ports.push_back({.id = "port", .type = "blue"});
+
+    for (const std::string portExpression: {"port.flow", "sum_connections(port.flow)"})
+    {
+        BOOST_TEST_CONTEXT(portExpression)
+        {
+            BOOST_CHECK_EXCEPTION(
+              convertExpressionToNode("varP[" + portExpression + "]", model),
+              InputError,
+              containsMessage("Time index arguments can only contain literals and parameters."));
+            BOOST_CHECK_EXCEPTION(
+              convertExpressionToNode("(varP + 1)[1 + " + portExpression + "]", model),
+              InputError,
+              containsMessage("Time index arguments can only contain literals and parameters."));
+            BOOST_CHECK_EXCEPTION(
+              convertExpressionToNode("varP[t + (" + portExpression + ")]", model),
+              InputError,
+              containsMessage("Time shift arguments can only contain literals and parameters."));
+            BOOST_CHECK_EXCEPTION(
+              convertExpressionToNode("(varP + 1)[t - (1 + " + portExpression + ")]", model),
+              InputError,
+              containsMessage("Time shift arguments can only contain literals and parameters."));
+            BOOST_CHECK_EXCEPTION(
+              convertExpressionToNode("sum(" + portExpression + " .. 2, varP)", model),
+              InputError,
+              containsMessage("Time-sum `from` bound can only contain literals and parameters."));
+            BOOST_CHECK_EXCEPTION(
+              convertExpressionToNode("sum(1 .. t + (" + portExpression + "), varP)", model),
+              InputError,
+              containsMessage("Time-sum `to` bound can only contain literals and parameters."));
+        }
+    }
+}
+
+BOOST_AUTO_TEST_CASE(dual_and_reduced_cost_are_rejected_recursively_in_shifts_and_indices)
+{
+    auto model = createYmlModel();
+    model.constraints.push_back(
+      {"constraintA", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml", ""});
+
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[t + (1 * dual(constraintA))]", model),
+                          InputError,
+                          containsMessage("Time shift arguments cannot contain 'dual' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[t + (1 * reduced_cost(varP))]", model),
+                          InputError,
+                          containsMessage(
+                            "Time shift arguments cannot contain 'reduced_cost' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[1 + dual(constraintA)]", model),
+                          InputError,
+                          containsMessage("Time index arguments cannot contain 'dual' operators"));
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode("varP[1 + reduced_cost(varP)]", model),
+                          InputError,
+                          containsMessage(
+                            "Time index arguments cannot contain 'reduced_cost' operators"));
 }
 
 BOOST_FIXTURE_TEST_CASE(AlltimeSumExpression, RegistryHolder)
@@ -466,7 +662,7 @@ BOOST_FIXTURE_TEST_CASE(dualExpression, SupplyModelForDualOperator)
     std::string expected_msg = "dual called with unknown constraint 'abc' in model 'model0'";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(badExpression, model),
                           InputError,
-                          checkMessage(expected_msg));
+                          containsMessage(expected_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(EmptyDualExpression, SupplyModelForDualOperator)
@@ -475,7 +671,7 @@ BOOST_FIXTURE_TEST_CASE(EmptyDualExpression, SupplyModelForDualOperator)
     std::string expected_msg = "dual operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(expected_msg));
+                          containsMessage(expected_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(WrongDualExpression, SupplyModelForDualOperator)
@@ -484,7 +680,7 @@ BOOST_FIXTURE_TEST_CASE(WrongDualExpression, SupplyModelForDualOperator)
     auto err_msg = "dual operator expects exactly one constraint id got: constraintA, e^(iPi)+1=0";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 struct SupplyModelForFunctionalOperator
@@ -536,7 +732,7 @@ BOOST_FIXTURE_TEST_CASE(reducedCostExpression, SupplyModelForFunctionalOperator)
     std::string err_msg = "reduced_cost called with unknown variable 'abc' in model 'model0'";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(badExpression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(reducedCostExpressionTwoVariables, SupplyModelForFunctionalOperator)
@@ -545,7 +741,7 @@ BOOST_FIXTURE_TEST_CASE(reducedCostExpressionTwoVariables, SupplyModelForFunctio
     std::string err_msg = "reduced_cost operator expects exactly one variable id got: varB, 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(EmptyReducedCostExpression, SupplyModelForFunctionalOperator)
@@ -554,7 +750,7 @@ BOOST_FIXTURE_TEST_CASE(EmptyReducedCostExpression, SupplyModelForFunctionalOper
     std::string err_msg = "reduced_cost operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(ValidPowerExpression, SupplyModelForFunctionalOperator)
@@ -581,7 +777,7 @@ BOOST_FIXTURE_TEST_CASE(WrongPowerExpression, SupplyModelForFunctionalOperator)
     std::string expression = "varA^_";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage("No parameter or variable found for this identifier: _"));
+                          containsMessage("No parameter or variable found for this identifier: _"));
 }
 
 BOOST_FIXTURE_TEST_CASE(ValidMinExpression, SupplyModelForFunctionalOperator)
@@ -624,7 +820,7 @@ BOOST_FIXTURE_TEST_CASE(MaxOperatorWrongNumberOfParameter, SupplyModelForFunctio
     std::string expression = "max(varB)";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage("max operator expects at least 2 operands got 1"));
+                          containsMessage("max operator expects at least 2 operands got 1"));
 }
 
 BOOST_FIXTURE_TEST_CASE(MinOperatorWrongNumberOfParameter, SupplyModelForFunctionalOperator)
@@ -632,7 +828,7 @@ BOOST_FIXTURE_TEST_CASE(MinOperatorWrongNumberOfParameter, SupplyModelForFunctio
     std::string expression = "min(varB)";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage("min operator expects at least 2 operands got 1"));
+                          containsMessage("min operator expects at least 2 operands got 1"));
 }
 
 BOOST_FIXTURE_TEST_CASE(MinWithForbiddenNode, SupplyModelForFunctionalOperator)
@@ -648,7 +844,7 @@ BOOST_FIXTURE_TEST_CASE(MinWithForbiddenNode, SupplyModelForFunctionalOperator)
                    + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(MaxWithForbiddenNode, SupplyModelForFunctionalOperator)
@@ -664,7 +860,7 @@ BOOST_FIXTURE_TEST_CASE(MaxWithForbiddenNode, SupplyModelForFunctionalOperator)
     err_msg += "expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignLT, SupplyModelForFunctionalOperator)
@@ -678,7 +874,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignLT, SupplyModelFor
     std::string err_msg = "'LessThanOrEqualNode' is not allowed in expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignGT, SupplyModelForFunctionalOperator)
@@ -693,7 +889,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignGT, SupplyModelFor
                           + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainEqualSign, SupplyModelForFunctionalOperator)
@@ -707,7 +903,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainEqualSign, SupplyModelForFunctio
     std::string err_msg = "'EqualNode' is not allowed in expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_a_variable_as_arg,
@@ -721,7 +917,7 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_a_variable_as_arg,
     err_msg += "expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(floor_operator___nominal_case, SupplyModelForFunctionalOperator)
@@ -781,7 +977,7 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_no_arg, SupplyModelForFun
     std::string err_msg = "floor operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_more_than_one_arg,
@@ -792,7 +988,7 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_more_than_one_arg,
     std::string err_msg = "floor() expects 1 argument, but has 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(ceil_operator___nominal_case, SupplyModelForFunctionalOperator)
@@ -842,7 +1038,7 @@ BOOST_FIXTURE_TEST_CASE(ceil_operator_should_not_take_no_arg, SupplyModelForFunc
     std::string err_msg = "ceil operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(ceil_operator_should_not_take_more_than_one_arg,
@@ -853,7 +1049,7 @@ BOOST_FIXTURE_TEST_CASE(ceil_operator_should_not_take_more_than_one_arg,
     std::string err_msg = "ceil() expects 1 argument, but has 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(ceil_operator_forbidden_on_variable_with_forbidden_nodes,
@@ -871,7 +1067,7 @@ BOOST_FIXTURE_TEST_CASE(ceil_operator_forbidden_on_variable_with_forbidden_nodes
                           + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 // ─────────────────────────────────────────────
@@ -925,7 +1121,7 @@ BOOST_FIXTURE_TEST_CASE(round_operator_should_not_take_no_arg, SupplyModelForFun
     std::string err_msg = "round operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(round_operator_should_not_take_more_than_one_arg,
@@ -936,7 +1132,7 @@ BOOST_FIXTURE_TEST_CASE(round_operator_should_not_take_more_than_one_arg,
     std::string err_msg = "round() expects 1 argument, but has 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(round_operator_forbidden_on_variable_with_forbidden_nodes,
@@ -954,7 +1150,7 @@ BOOST_FIXTURE_TEST_CASE(round_operator_forbidden_on_variable_with_forbidden_node
                           + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 // ─────────────────────────────────────────────
@@ -1030,7 +1226,7 @@ BOOST_FIXTURE_TEST_CASE(abs_operator_should_not_take_no_arg, SupplyModelForFunct
     std::string err_msg = "abs operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(abs_operator_should_not_take_more_than_one_arg,
@@ -1041,7 +1237,7 @@ BOOST_FIXTURE_TEST_CASE(abs_operator_should_not_take_more_than_one_arg,
     std::string err_msg = "abs() expects 1 argument, but has 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(abs_operator_forbidden_on_variable_with_forbidden_nodes,
@@ -1059,7 +1255,7 @@ BOOST_FIXTURE_TEST_CASE(abs_operator_forbidden_on_variable_with_forbidden_nodes,
                           + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
                           InputError,
-                          checkMessage(err_msg));
+                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

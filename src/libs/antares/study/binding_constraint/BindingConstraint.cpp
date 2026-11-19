@@ -84,13 +84,6 @@ const char* BindingConstraint::TypeToCString(const BindingConstraint::Type type)
     return names[type];
 }
 
-const char* BindingConstraint::OperatorToCString(BindingConstraint::Operator o)
-{
-    static const char* const names[opMax + 1] = {"", "equal", "less", "greater", "both", ""};
-    assert((unsigned int)o < (unsigned int)(opMax + 1));
-    return names[o];
-}
-
 const char* BindingConstraint::OperatorToShortCString(BindingConstraint::Operator o)
 {
     static const char* const names[opMax + 1] = {"",
@@ -200,12 +193,6 @@ void BindingConstraint::offset(const ThermalCluster* cluster, int o)
             pClusterOffsets[cluster] = o;
         }
     }
-}
-
-void BindingConstraint::resetToDefaultValues()
-{
-    pEnabled = true;
-    RHSTimeSeries_.reset();
 }
 
 void BindingConstraint::copyWeights(

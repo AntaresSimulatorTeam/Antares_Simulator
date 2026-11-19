@@ -20,6 +20,14 @@ class OutputFormat(Enum):
     PARQUET = "parquet"
 
 
+SIMULATION_TABLE_DIRECTORY = "simulation-tables"
+
+
+def simulation_table_directory(output_path: Path) -> Path:
+    """Return the directory containing simulation-table files for an output run."""
+    return output_path / SIMULATION_TABLE_DIRECTORY
+
+
 def accumulate_simu_table_files(directory: Path, filePattern: str) -> str:
     """
     Accumulate contents of all simulation-table*.csv files into a single string.
@@ -40,14 +48,15 @@ def accumulate_simu_table_files(directory: Path, filePattern: str) -> str:
 
 def read_simulation_table_csv(outputPath: Path, filePattern: str) -> pd.DataFrame:
     """
-    Read simulation-table*.csv files from the output directory.
+    Read simulation-table*.csv files from the output/simulation-tables directory.
     If multiple files exist (e.g., for multiple optimisations), concatenate them.
     Returns a pandas DataFrame.
     """
-    simu_table_str = accumulate_simu_table_files(outputPath, filePattern)
+    table_directory = simulation_table_directory(outputPath)
+    simu_table_str = accumulate_simu_table_files(table_directory, filePattern)
     if not simu_table_str:
         raise FileNotFoundError(
-            f"No simulation table files matching '{filePattern}' found in '{outputPath}'"
+            f"No simulation table files matching '{filePattern}' found in '{table_directory}'"
         )
     df = pd.read_csv(StringIO(simu_table_str), header=0, sep=",", low_memory=False)
     return _normalize_simulation_table(df)
@@ -55,15 +64,16 @@ def read_simulation_table_csv(outputPath: Path, filePattern: str) -> pd.DataFram
 
 def read_simulation_table_parquet(outputPath: Path, filePattern: str) -> pd.DataFrame:
     """
-    Read simulation-table*.parquet files from the output directory.
+    Read simulation-table*.parquet files from the output/simulation-tables directory.
     If multiple files exist (e.g., for multiple optimisations), concatenate them.
     Returns a pandas DataFrame.
     """
 
-    files = sorted(outputPath.glob(filePattern))
+    table_directory = simulation_table_directory(outputPath)
+    files = sorted(table_directory.glob(filePattern))
     if not files:
         raise FileNotFoundError(
-            f"No simulation table files matching '{filePattern}' found in '{outputPath}'"
+            f"No simulation table files matching '{filePattern}' found in '{table_directory}'"
         )
 
     tables = [parquet.read_table(f) for f in files]
@@ -98,7 +108,7 @@ def make_simu_table_reader(
     """Factory function that returns the appropriate simulation table reader.
 
     Args:
-        output_path: Path to the output directory containing simulation table files.
+        output_path: Path to the run's output directory.
         output_format: CSV or Parquet format.
         file_pattern: Glob pattern for simulation table files.
             Defaults to the solver pattern "simulation-table-*-optim-nb-1.{format}".

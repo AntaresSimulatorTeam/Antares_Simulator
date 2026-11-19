@@ -11,6 +11,7 @@
 
 #include <antares/study/fwd.h>
 #include "antares/solver/optimisation/LegacyVariableInfo.h"
+#include "antares/utils/utils.h"
 
 inline const std::string SEP = "::";
 inline const std::string AREA_SEP = "$$";
@@ -22,73 +23,79 @@ inline std::string LocationIdentifier(const std::string& location, const std::st
     return locationType + "<" + location + ">";
 }
 
-// ── Component ID builders (underscore format, shared with view‑builder) ──
+// ── Component ID builders shared with the view-builder ──
 
-inline std::string BuildAreaNodeComponentId(const std::string& areaId)
+inline std::string BuildAreaComponentId(const std::string& areaId)
 {
-    return areaId + "_node";
+    return Antares::SanitizeId(areaId);
 }
 
 inline std::string BuildThermalClusterComponentId(const std::string& areaId,
                                                   const std::string& clusterId)
 {
-    return areaId + "_thermal_" + clusterId;
+    return Antares::SanitizeId(areaId + "_thermal_" + clusterId);
 }
 
 inline std::string BuildSTStorageClusterComponentId(const std::string& areaId,
                                                     const std::string& clusterId)
 {
-    return areaId + "_short_term_storage_" + clusterId;
+    return Antares::SanitizeId(areaId + "_short_term_storage_" + clusterId);
 }
 
 inline std::string BuildRenewableClusterComponentId(const std::string& areaId,
                                                     const std::string& clusterId)
 {
-    return areaId + "_renewable_" + clusterId;
+    return Antares::SanitizeId(areaId + "_renewable_" + clusterId);
 }
 
 inline std::string BuildHydroStorageComponentId(const std::string& areaId)
 {
-    return areaId + "_hydro_storage";
+    return Antares::SanitizeId(areaId + "_hydro_storage");
 }
 
 inline std::string BuildLoadComponentId(const std::string& areaId)
 {
-    return areaId + "_load";
+    return Antares::SanitizeId(areaId + "_load");
 }
 
 inline std::string BuildWindComponentId(const std::string& areaId)
 {
-    return areaId + "_wind";
+    return Antares::SanitizeId(areaId + "_wind");
 }
 
 inline std::string BuildSolarComponentId(const std::string& areaId)
 {
-    return areaId + "_solar";
+    return Antares::SanitizeId(areaId + "_solar");
 }
 
 inline std::string BuildRorComponentId(const std::string& areaId)
 {
-    return areaId + "_run_of_river";
+    return Antares::SanitizeId(areaId + "_run_of_river");
 }
 
 inline std::string BuildMiscGenComponentId(const std::string& areaId,
                                            const std::string& miscGenType)
 {
-    return areaId + "_" + miscGenType;
+    return Antares::SanitizeId(areaId + "_" + miscGenType);
 }
 
 inline std::string BuildLinkComponentId(const std::string& origin, const std::string& destination)
 {
     if (origin < destination)
     {
-        return origin + "_" + destination + "_link";
+        return Antares::SanitizeId(origin + "_" + destination);
     }
-    return destination + "_" + origin + "_link";
+    return Antares::SanitizeId(destination + "_" + origin);
 }
 
 // Structured legacy descriptions, parallel to the names vector.
 using LegacyInfoVec = std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>;
+
+struct ReserveIdentity
+{
+    std::string name;
+    std::string id;
+};
 
 class Namer
 {
@@ -128,7 +135,8 @@ protected:
     void SetThermalClusterAndReserveElementName(unsigned varIndex,
                                                 const std::string& elementType,
                                                 const std::string& clusterName,
-                                                const std::string& reserveName) const;
+                                                const std::string& reserveName,
+                                                const std::string& legacyOutput = {}) const;
     void SetThermalClusterAndReservesElementName(unsigned varIndex,
                                                  const std::string& elementType,
                                                  const std::string& clusterName,
@@ -140,17 +148,20 @@ protected:
     void SetSTStorageClusterAndReserveElementName(unsigned varIndex,
                                                   const std::string& elementType,
                                                   const std::string& clusterName,
-                                                  const std::string& reserveName) const;
+                                                  const std::string& reserveName,
+                                                  const std::string& legacyOutput = {}) const;
     void SetHydroElementName(unsigned varIndex,
                              const std::string& variableType,
                              const std::string& clusterName) const;
     void SetHydroAndReserveElementName(unsigned varIndex,
                                        const std::string& elementType,
                                        const std::string& clusterName,
-                                       const std::string& reserveName) const;
+                                       const std::string& reserveName,
+                                       const std::string& legacyOutput = {}) const;
     void SetThermalClusterReserveElementName(unsigned varIndex,
                                              const std::string& elementType,
-                                             const std::string& reserveName) const;
+                                             const std::string& reserveName,
+                                             const std::string& legacyOutput = {}) const;
     std::string TimeIdentifier(const std::string& timeGranularity) const;
     std::string linkLocation() const;
     std::string areaLocation() const;
@@ -184,40 +195,42 @@ public:
     void DispatchableProduction(unsigned varIndex, const std::string& clusterName) const;
     void ThermalClusterReserveParticipation(unsigned varIndex,
                                             const std::string& clusterName,
-                                            const std::string& reserveName) const;
+                                            const ReserveIdentity& reserve) const;
     void ParticipationOfSTStorageReleaseToReserve(unsigned varIndex,
                                                   const std::string& clusterName,
-                                                  const std::string& reserveName) const;
+                                                  const ReserveIdentity& reserve) const;
     void ParticipationOfSTStorageStoreToReserve(unsigned varIndex,
                                                 const std::string& clusterName,
-                                                const std::string& reserveName) const;
+                                                const ReserveIdentity& reserve) const;
     void ParticipationOfSTStorageToReserve(ReserveType type,
                                            unsigned varIndex,
                                            const std::string& clusterName,
-                                           const std::string& reserveName) const;
+                                           const ReserveIdentity& reserve) const;
     void ParticipationOfHydroReleaseToReserve(unsigned varIndex,
                                               const std::string& clusterName,
-                                              const std::string& reserveName) const;
+                                              const ReserveIdentity& reserve) const;
     void ParticipationOfHydroStoreToReserve(unsigned varIndex,
                                             const std::string& clusterName,
-                                            const std::string& reserveName) const;
+                                            const ReserveIdentity& reserve) const;
     void ParticipationOfHydroToReserve(ReserveType type,
                                        unsigned varIndex,
                                        const std::string& clusterName,
-                                       const std::string& reserveName) const;
+                                       const ReserveIdentity& reserve) const;
     void ParticipationOfRunningUnitsToReserve(unsigned varIndex,
                                               const std::string& clusterName,
-                                              const std::string& reserveName) const;
+                                              const ReserveIdentity& reserve) const;
     void ParticipationOfOffUnitsToReserve(unsigned varIndex,
                                           const std::string& clusterName,
-                                          const std::string& reserveName) const;
-    void InternalUnsatisfiedReserve(unsigned varIndex, const std::string& reserveName) const;
-    void InternalExcessReserve(unsigned varIndex, const std::string& reserveName) const;
+                                          const ReserveIdentity& reserve) const;
+    void InternalUnsatisfiedReserve(unsigned varIndex, const ReserveIdentity& reserve) const;
+    void InternalExcessReserve(unsigned varIndex, const ReserveIdentity& reserve) const;
     void NODU(unsigned varIndex, const std::string& clusterName) const;
     void NumberStoppingDispatchableUnits(unsigned varIndex, const std::string& clusterName) const;
     void NumberStartingDispatchableUnits(unsigned varIndex, const std::string& clusterName) const;
     void NumberBreakingDownDispatchableUnits(unsigned varIndex,
                                              const std::string& clusterName) const;
+    void ProductionIncreaseAboveMin(unsigned varIndex, const std::string& clusterName) const;
+    void ProductionDecreaseAboveMin(unsigned varIndex, const std::string& clusterName) const;
     void DirectFlow(unsigned varIndex) const;
     void PositiveDirectFlow(unsigned varIndex) const;
     void PositiveIndirectFlow(unsigned varIndex) const;
@@ -351,6 +364,12 @@ public:
     void ReserveSatisfaction(unsigned constrIndex, const std::string& reserveName) const;
     void PMaxDispatchableGeneration(unsigned constrIndex, const std::string& clusterName) const;
     void PMinDispatchableGeneration(unsigned constrIndex, const std::string& clusterName) const;
+    void RampingIncreaseRate(unsigned constraint, const std::string& clusterName) const;
+    void RampingDecreaseRate(unsigned constraint, const std::string& clusterName) const;
+    void ProductionOutputVariationIncrease(unsigned constraint,
+                                           const std::string& clusterName) const;
+    void ProductionOutputVariationDecrease(unsigned constraint,
+                                           const std::string& clusterName) const;
     void ConsistenceNODU(unsigned constrIndex, const std::string& clusterName) const;
     void ShortTermStorageLevel(unsigned constrIndex, const std::string& name) const;
     void BindingConstraintHour(unsigned constrIndex, const std::string& name) const;

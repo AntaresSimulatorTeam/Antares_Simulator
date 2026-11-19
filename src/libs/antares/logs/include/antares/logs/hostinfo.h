@@ -4,6 +4,16 @@
 #ifndef __ANTARES_LIBS_HOST_INFO_H__
 #define __ANTARES_LIBS_HOST_INFO_H__
 
+#include <string>
+
+namespace Antares::Logs
+{
+/*!
+** \brief Canonical name of the machine, "<unknown>" if it cannot be resolved
+*/
+std::string hostName();
+} // namespace Antares::Logs
+
 /*!
 ** \brief Write the host info into logs
 */

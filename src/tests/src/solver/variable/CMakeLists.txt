@@ -32,3 +32,9 @@ add_boost_test(test-nodu-by-plant
     LIBS
     antares-solver-variable
     in-memory-study)
+
+add_boost_test(test-ramping-cost-year-end
+    SRC test_ramping_cost_year_end.cpp
+    LIBS
+    antares-solver-variable
+    in-memory-study)

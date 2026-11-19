@@ -1,6 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <algorithm>
 #include <fmt/format.h>
 
 #include <boost/algorithm/string/case_conv.hpp>
@@ -101,12 +102,14 @@ void Component::addComponentConnection(const std::string localPortId, Connection
 const std::optional<AreaConnection>& Component::areaConnectionAtPort(
   const std::string& portId) const
 {
-    if (!getModel()->Ports().contains(portId))
+    const auto& ports = getModel()->Ports();
+    const auto it = ports.find(portId);
+    if (it == ports.end())
     {
         std::string errMsg = "Port '" + portId + "' not found in component '" + data_.id + "'";
         throw std::invalid_argument(errMsg);
     }
-    return getModel()->Ports().at(portId).Type().areaConnection();
+    return it->second.Type().areaConnection();
 }
 
 std::vector<ConnectionEnd> Component::componentConnectionsViaPort(const std::string& portId) const
@@ -202,6 +205,21 @@ void Component::addAreaConnection(const std::string& localPortId, const std::str
                                    area_connection->unsupplied_energy_bound,
                                    exceptionPrefix);
 
+    // 'price' is optional. Unlike the fields above it is not defined by the component's model
+    // (it is provided by the area), so it must be one of the port type's fields.
+    if (const auto& price = area_connection->price; !price.empty())
+    {
+        const auto& fields = port.Type().Fields();
+        if (std::ranges::none_of(fields, [&price](const auto& f) { return f.Id() == price; }))
+        {
+            throw std::invalid_argument(
+              exceptionPrefix
+              + fmt::format("price field '{}' is not a field of port type '{}'",
+                            price,
+                            port.Type().Id()));
+        }
+    }
+
     if (portToAreaConnections_.contains(localPortId))
     {
         throw std::invalid_argument(exceptionPrefix
@@ -256,9 +274,11 @@ void Component::addThermalCapacityConnection(const std::string& portId,
 
 std::optional<std::string> Component::areaConnectedToPort(const std::string& portId) const
 {
-    return portToAreaConnections_.contains(portId)
-             ? std::optional(portToAreaConnections_.at(portId))
-             : std::nullopt;
+    if (const auto it = portToAreaConnections_.find(portId); it != portToAreaConnections_.end())
+    {
+        return it->second;
+    }
+    return std::nullopt;
 }
 
 std::optional<ThermalComponent> Component::thermalCapacityConnectedToPort(

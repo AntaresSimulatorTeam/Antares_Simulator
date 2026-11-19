@@ -1,6 +1,7 @@
 set(PROJ logs)
 set(HEADERS
         include/antares/${PROJ}/logs.h
+        include/antares/${PROJ}/logger-utils.h
         include/antares/${PROJ}/hostinfo.h
         include/antares/${PROJ}/hostname.hxx
 )
@@ -10,6 +11,11 @@ set(SRC_LOGS
         logs-instance.cpp
         hostinfo.cpp
 )
+if (WIN32)
+    list(APPEND SRC_LOGS logger-utils-win.cpp)
+else ()
+    list(APPEND SRC_LOGS logger-utils-linux.cpp)
+endif ()
 source_group("misc\\logs" FILES ${SRC_LOGS})
 
 add_library(${PROJ} ${SRC_LOGS})
