@@ -41,8 +41,9 @@ def resultsRemover(study_path):
     return results_remover(study_path)
 
 @pytest.fixture
-def simulation(study_path, antares_simu_path, solver_name, named_mps_problems, parallel):
-    return study_run(study_path, antares_simu_path, solver_name, named_mps_problems, parallel)
+def simulation(study_path, antares_simu_path, solver_name, named_mps_problems, parallel, dump_simulation_tables):
+    return study_run(study_path, antares_simu_path, solver_name, named_mps_problems, parallel,
+                     dump_simulation_tables)
 
 @pytest.fixture
 def antares_problem_generator(study_path, antares_problem_generator_exe):

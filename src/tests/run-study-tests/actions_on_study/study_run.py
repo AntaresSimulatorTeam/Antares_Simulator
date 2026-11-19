@@ -4,12 +4,14 @@ from pathlib import Path
 from utils.assertions import check
 
 class study_run:
-    def __init__(self, study_path, antares_simu_path, solver_name, named_mps_problems, parallel):
+    def __init__(self, study_path, antares_simu_path, solver_name, named_mps_problems, parallel,
+                 dump_simulation_tables):
         self.study_path = study_path
         self.antares_simu_path = antares_simu_path
         self.solverName = solver_name
         self.named_mps_problems = named_mps_problems
         self.parallel = parallel
+        self.dump_simulation_tables = dump_simulation_tables
         self.raise_exception_on_failure = True
         self.return_code = 0
 
@@ -27,6 +29,8 @@ class study_run:
             command.append('--named-mps-problems')
         if self.parallel:
             command.append('--force-parallel=4')
+        if self.dump_simulation_tables:
+            command.extend(['--output=simulation-tables', '--simulation-table-stages=optim-nb-1'])
 
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         process.communicate()

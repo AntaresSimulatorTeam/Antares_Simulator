@@ -293,6 +293,15 @@ jobs:
         batch-name: valid-v930
         os: ${{ env.os }}
 
+    - name: Run tests on simulation table
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{ env.SIMTEST }}
+        batch-name: valid-simu-tables
+        os: ${{ env.os }}
+        variant: "simulation-table-compare"
+
     - name: Run short-tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
       uses: ./.github/workflows/run-tests

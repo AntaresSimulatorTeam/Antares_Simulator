@@ -13,6 +13,7 @@
                 "anyOf":
                 [
                     {"required": ["output_compare"]},
+                    {"required": ["simu_table_compare"]},
                     {"required": ["integrity_compare"]},
                     {"required": ["hydro_level"]},
                     {"required": ["unfeasible_problem"]},
@@ -31,6 +32,7 @@
                         "additionalProperties" : false
                     },
 
+                    "simu_table_compare" : {"type" : "null"},
                     "integrity_compare" : {"type" : "null"},
                     "mps_compare" : {"type" : "null"},
 
