@@ -145,8 +145,13 @@ void runFastHeuristic(GemsHeuristicsState& state,
                       const HeuristicDefinition& heuristic,
                       unsigned year)
 {
-    auto input = [&state, &modelerData, &component, &heuristic, year](HeuristicElement element)
-    { return inputValues(state, modelerData, component, *heuristic.input(element), year); };
+    auto input = [&state, &modelerData, &component, &heuristic, year](HeuristicElement element) {
+        return inputValues(state,
+                           modelerData,
+                           component,
+                           *heuristicInput(heuristic, element),
+                           year);
+    };
 
     const auto production = input(HeuristicElement::GenerationPower);
     const auto clusterMaxGeneration = input(HeuristicElement::ClusterMaxGeneration);
@@ -161,11 +166,11 @@ void runFastHeuristic(GemsHeuristicsState& state,
     }
 
     const int nbTimeSteps = static_cast<int>(state.nbTimeSteps);
-    std::vector<int> guide(nbTimeSteps);
-    std::vector<int> numberOfUnits(nbTimeSteps);
+    std::vector<int> guide(state.nbTimeSteps);
+    std::vector<int> numberOfUnits(state.nbTimeSteps);
     OPT_CalculerLaCourbeGuideDuNombreDeGroupes(
       nbTimeSteps,
-      [&production](int t) { return production[t]; },
+      [&production](int t) { return production[static_cast<std::size_t>(t)]; },
       maxPowerPerUnit,
       guide);
     if (!OPT_CalculerLeNombreDeGroupesParBlocsDeMUTetMDT(nbTimeSteps,
@@ -177,15 +182,15 @@ void runFastHeuristic(GemsHeuristicsState& state,
         return;
     }
 
-    std::vector<double> minimumGeneration(nbTimeSteps);
-    for (int t = 0; t < nbTimeSteps; ++t)
+    std::vector<double> minimumGeneration(state.nbTimeSteps);
+    for (std::size_t t = 0; t < minimumGeneration.size(); ++t)
     {
         minimumGeneration[t] = std::min(minPowerPerUnit * numberOfUnits[t],
                                         clusterMaxGeneration[t]);
     }
     setOutput(state,
               component,
-              *heuristic.output(HeuristicElement::MinimumGenerationPower),
+              *heuristicOutput(heuristic, HeuristicElement::MinimumGenerationPower),
               std::move(minimumGeneration));
 }
 
@@ -198,8 +203,13 @@ void runAccurateHeuristic(GemsHeuristicsState& state,
                           const HeuristicDefinition& heuristic,
                           unsigned year)
 {
-    auto input = [&state, &modelerData, &component, &heuristic, year](HeuristicElement element)
-    { return inputValues(state, modelerData, component, *heuristic.input(element), year); };
+    auto input = [&state, &modelerData, &component, &heuristic, year](HeuristicElement element) {
+        return inputValues(state,
+                           modelerData,
+                           component,
+                           *heuristicInput(heuristic, element),
+                           year);
+    };
 
     const auto numUnitsOn = input(HeuristicElement::NumUnitsOnOpt);
     const auto numUnitsMax = input(HeuristicElement::NumUnitsMax);
@@ -208,10 +218,9 @@ void runAccurateHeuristic(GemsHeuristicsState& state,
     const int minDownDuration = toDuration(input(HeuristicElement::MinDownDuration).at(0),
                                            state.nbTimeSteps);
 
-    const int nbTimeSteps = static_cast<int>(state.nbTimeSteps);
-    std::vector<int> minNumUnits(nbTimeSteps);
-    std::vector<int> maxNumUnits(nbTimeSteps);
-    for (int t = 0; t < nbTimeSteps; ++t)
+    std::vector<int> minNumUnits(state.nbTimeSteps);
+    std::vector<int> maxNumUnits(state.nbTimeSteps);
+    for (std::size_t t = 0; t < minNumUnits.size(); ++t)
     {
         minNumUnits[t] = static_cast<int>(Antares::Utils::ceil(numUnitsOn[t]));
         maxNumUnits[t] = std::max(static_cast<int>(Antares::Utils::ceil(numUnitsMax[t])),
@@ -222,11 +231,11 @@ void runAccurateHeuristic(GemsHeuristicsState& state,
                                                          maxNumUnits,
                                                          minUpDuration,
                                                          minDownDuration,
-                                                         nbTimeSteps);
+                                                         static_cast<int>(state.nbTimeSteps));
 
     setOutput(state,
               component,
-              *heuristic.output(HeuristicElement::MinimumNumUnitsOn),
+              *heuristicOutput(heuristic, HeuristicElement::MinimumNumUnitsOn),
               std::vector<double>(minNumUnits.begin(), minNumUnits.end()));
 }
 } // namespace

@@ -84,19 +84,23 @@ struct HeuristicDefinition
     HeuristicType type;
     std::vector<HeuristicInput> inputs;
     std::vector<HeuristicOutput> outputs;
-
-    const HeuristicInput* input(HeuristicElement element) const
-    {
-        auto it = std::ranges::find(inputs, element, &HeuristicInput::element);
-        return it == inputs.end() ? nullptr : &*it;
-    }
-
-    const HeuristicOutput* output(HeuristicElement element) const
-    {
-        auto it = std::ranges::find(outputs, element, &HeuristicOutput::element);
-        return it == outputs.end() ? nullptr : &*it;
-    }
 };
+
+/// The input of a heuristic bound to a heuristic element, nullptr if there is none
+inline const HeuristicInput* heuristicInput(const HeuristicDefinition& heuristic,
+                                            HeuristicElement element)
+{
+    auto it = std::ranges::find(heuristic.inputs, element, &HeuristicInput::element);
+    return it == heuristic.inputs.end() ? nullptr : &*it;
+}
+
+/// The output of a heuristic bound to a heuristic element, nullptr if there is none
+inline const HeuristicOutput* heuristicOutput(const HeuristicDefinition& heuristic,
+                                              HeuristicElement element)
+{
+    auto it = std::ranges::find(heuristic.outputs, element, &HeuristicOutput::element);
+    return it == heuristic.outputs.end() ? nullptr : &*it;
+}
 
 inline std::optional<HeuristicType> heuristicTypeFromString(const std::string& value)
 {

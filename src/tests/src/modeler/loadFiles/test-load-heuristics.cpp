@@ -152,20 +152,20 @@ BOOST_FIXTURE_TEST_CASE(both_heuristics_are_converted, HeuristicsFixture)
     const auto& fast = heuristics[0];
     BOOST_CHECK(fast.type == HeuristicType::Fast);
     BOOST_CHECK_EQUAL(fast.inputs.size(), 6);
-    BOOST_CHECK(fast.input(HeuristicElement::GenerationPower)->source
+    BOOST_CHECK(heuristicInput(fast, HeuristicElement::GenerationPower)->source
                 == HeuristicInputSource::VariableSolution);
-    BOOST_CHECK_EQUAL(fast.input(HeuristicElement::MinUpDuration)->id, "d_min_up");
-    BOOST_CHECK(fast.input(HeuristicElement::MinUpDuration)->source
+    BOOST_CHECK_EQUAL(heuristicInput(fast, HeuristicElement::MinUpDuration)->id, "d_min_up");
+    BOOST_CHECK(heuristicInput(fast, HeuristicElement::MinUpDuration)->source
                 == HeuristicInputSource::Parameter);
-    BOOST_CHECK(fast.output(HeuristicElement::MinimumGenerationPower)->target
+    BOOST_CHECK(heuristicOutput(fast, HeuristicElement::MinimumGenerationPower)->target
                 == HeuristicOutputTarget::VariableLowerBound);
-    BOOST_CHECK(fast.input(HeuristicElement::NumUnitsOnOpt) == nullptr);
+    BOOST_CHECK(heuristicInput(fast, HeuristicElement::NumUnitsOnOpt) == nullptr);
 
     const auto& accurate = heuristics[1];
     BOOST_CHECK(accurate.type == HeuristicType::Accurate);
-    BOOST_CHECK(accurate.input(HeuristicElement::NumUnitsMax)->source
+    BOOST_CHECK(heuristicInput(accurate, HeuristicElement::NumUnitsMax)->source
                 == HeuristicInputSource::VariableUpperBound);
-    BOOST_CHECK(accurate.output(HeuristicElement::MinimumNumUnitsOn)->target
+    BOOST_CHECK(heuristicOutput(accurate, HeuristicElement::MinimumNumUnitsOn)->target
                 == HeuristicOutputTarget::VariableUpperBound);
 }
 
@@ -176,7 +176,7 @@ BOOST_FIXTURE_TEST_CASE(variable_bounds_can_be_inputs, HeuristicsFixture)
                              "type: variable-lower-bound");
     const auto loaded = load(optimConfig(heuristic));
     const auto& accurate = loaded.heuristicsByModel.at("lib.thermal")[0];
-    BOOST_CHECK(accurate.input(HeuristicElement::NumUnitsMax)->source
+    BOOST_CHECK(heuristicInput(accurate, HeuristicElement::NumUnitsMax)->source
                 == HeuristicInputSource::VariableLowerBound);
 }
 
@@ -310,10 +310,8 @@ BOOST_FIXTURE_TEST_CASE(free_element_accepts_a_constant_variable, HeuristicsFixt
                                    "id: p_max_cluster",
                                    "id: invested\n            type: variable-solution");
     const auto loaded = load(optimConfig(heuristic));
-    BOOST_CHECK_EQUAL(loaded.heuristicsByModel.at("lib.thermal")[0]
-                        .input(HeuristicElement::ClusterMaxGeneration)
-                        ->id,
-                      "invested");
+    const auto& fast = loaded.heuristicsByModel.at("lib.thermal")[0];
+    BOOST_CHECK_EQUAL(heuristicInput(fast, HeuristicElement::ClusterMaxGeneration)->id, "invested");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

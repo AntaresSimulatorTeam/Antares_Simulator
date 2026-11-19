@@ -210,7 +210,7 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::Heuristic>::decode(
 {
     rhs.id = node["id"].as<std::string>();
     rhs.type = parseHeuristicType(rhs.id);
-    for (const auto& element: {"inputs", "outputs"})
+    for (const auto* element: {"inputs", "outputs"})
     {
         if (node[element] && !node[element].IsSequence())
         {

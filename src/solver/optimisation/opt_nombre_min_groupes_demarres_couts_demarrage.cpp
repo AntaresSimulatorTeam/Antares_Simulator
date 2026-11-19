@@ -1,6 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <cstddef>
 #include <spx_fonctions.h>
 
 #include "antares/solver/optimisation/thermalHeuristicsCore.h"
@@ -13,6 +14,104 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
   RESULTATS_HORAIRES& ResultatsHoraires,
   PALIERS_THERMIQUES& PaliersThermiquesDuPays);
 
+namespace
+{
+void adjustBoundsForExpansion(std::size_t nbTimeSteps,
+                              PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDisponibleEtCout,
+                              const std::vector<PRODUCTION_THERMIQUE_OPTIMALE>& ProductionThermique,
+                              std::size_t palier)
+{
+    const double eps_prodTherm = 1.0;
+    const double eps_nbGroupes = 1.0;
+
+    std::vector<int>& NombreMinDeGroupesEnMarcheDuPalierThermique
+      = PuissanceDisponibleEtCout.NombreMinDeGroupesEnMarcheDuPalierThermique;
+    std::vector<double>& PuissanceDisponibleDuPalierThermique
+      = PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique;
+    std::vector<double>& PuissanceMinDuPalierThermique = PuissanceDisponibleEtCout
+                                                           .PuissanceMinDuPalierThermique;
+
+    for (std::size_t pdtHebdo = 0; pdtHebdo < nbTimeSteps; ++pdtHebdo)
+    {
+        const double ProductionThermiqueDuPalier = ProductionThermique[pdtHebdo]
+                                                     .ProductionThermiqueDuPalier[palier];
+
+        if (ProductionThermiqueDuPalier - eps_prodTherm > PuissanceMinDuPalierThermique[pdtHebdo])
+        {
+            PuissanceMinDuPalierThermique[pdtHebdo] = ProductionThermiqueDuPalier - eps_prodTherm;
+        }
+
+        if (ProductionThermiqueDuPalier + eps_prodTherm
+            < PuissanceDisponibleDuPalierThermique[pdtHebdo])
+        {
+            PuissanceDisponibleDuPalierThermique[pdtHebdo] = ProductionThermiqueDuPalier
+                                                             + eps_prodTherm;
+        }
+
+        const double NombreDeGroupesEnMarcheDuPalier = ProductionThermique[pdtHebdo]
+                                                         .NombreDeGroupesEnMarcheDuPalier[palier];
+
+        if (NombreDeGroupesEnMarcheDuPalier - eps_nbGroupes
+            > NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo])
+        {
+            NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = static_cast<int>(
+              ceil(NombreDeGroupesEnMarcheDuPalier - eps_nbGroupes));
+        }
+    }
+}
+
+/// Warns if the solution of the 1st optimisation does not respect the bounds of the cluster
+void warnIfInconsistentWithBounds(double X,
+                                  double P,
+                                  int NombreMinDeGroupes,
+                                  int NombreMaxDeGroupes,
+                                  double pminDUnGroupe,
+                                  double PmaxDUnGroupe,
+                                  int pays,
+                                  int index)
+{
+    const double Eps = 1.e-3;
+    if (X > NombreMaxDeGroupes + Eps)
+    {
+        printf("Attention, AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage: \n");
+        printf("Pays %d palier dans le pays %d NombreDeGroupesEnMarche %e max %d\n",
+               pays,
+               index,
+               X,
+               NombreMaxDeGroupes);
+    }
+    if (X < NombreMinDeGroupes - Eps)
+    {
+        printf("Attention, AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage: \n");
+        printf("Pays %d palier dans le pays %d NombreDeGroupesEnMarche %e min %d\n",
+               pays,
+               index,
+               X,
+               NombreMinDeGroupes);
+    }
+    if (P < X * pminDUnGroupe - Eps)
+    {
+        printf("Attention, AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage: \n");
+        printf("Pays %d palier dans le pays %d P %e < NbGroupe (%e) * PminGroupe (%e)\n",
+               pays,
+               index,
+               P,
+               X,
+               pminDUnGroupe);
+    }
+    if (P > X * PmaxDUnGroupe + Eps)
+    {
+        printf("Attention, AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage: \n");
+        printf("Pays %d palier dans le pays %d P %e > NbGroupe (%e) * PmaxGroupe (%e)\n",
+               pays,
+               index,
+               P,
+               X,
+               PmaxDUnGroupe);
+    }
+}
+} // namespace
+
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
   int NombreDePasDeTempsProblemeHebdo,
   PALIERS_THERMIQUES& PaliersThermiquesDuPays,
@@ -22,152 +121,86 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
   bool OptimisationAvecVariablesEntieres,
   int pays)
 {
-    double Eps = 1.e-3;
-    double eps_prodTherm = 1.0;
-    double eps_nbGroupes = 1.0;
-
-    std::vector<PDISP_ET_COUTS_HORAIRES_PAR_PALIER>& PuissanceDisponibleEtCout
-      = PaliersThermiquesDuPays.PuissanceDisponibleEtCout;
+    const auto palier = static_cast<std::size_t>(index);
+    const auto nbTimeSteps = static_cast<std::size_t>(NombreDePasDeTempsProblemeHebdo);
+    PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDisponibleEtCout = PaliersThermiquesDuPays
+                                                                      .PuissanceDisponibleEtCout
+                                                                        [palier];
     const std::vector<PRODUCTION_THERMIQUE_OPTIMALE>& ProductionThermique = ResultatsHoraires
                                                                               .ProductionThermique;
     if (expansion)
     {
-        std::vector<int>& NombreMinDeGroupesEnMarcheDuPalierThermique
-          = PuissanceDisponibleEtCout[index].NombreMinDeGroupesEnMarcheDuPalierThermique;
-        std::vector<double>& PuissanceDisponibleDuPalierThermique
-          = PuissanceDisponibleEtCout[index].PuissanceDisponibleDuPalierThermique;
-        std::vector<double>& PuissanceMinDuPalierThermique = PuissanceDisponibleEtCout[index]
-                                                               .PuissanceMinDuPalierThermique;
-
-        for (int pdtHebdo = 0; pdtHebdo < NombreDePasDeTempsProblemeHebdo; pdtHebdo++)
-        {
-            double ProductionThermiqueDuPalier = ProductionThermique[pdtHebdo]
-                                                   .ProductionThermiqueDuPalier[index];
-
-            if (ProductionThermiqueDuPalier - eps_prodTherm
-                > PuissanceMinDuPalierThermique[pdtHebdo])
-            {
-                PuissanceMinDuPalierThermique[pdtHebdo] = ProductionThermiqueDuPalier
-                                                          - eps_prodTherm;
-            }
-
-            if (ProductionThermiqueDuPalier + eps_prodTherm
-                < PuissanceDisponibleDuPalierThermique[pdtHebdo])
-            {
-                PuissanceDisponibleDuPalierThermique[pdtHebdo] = ProductionThermiqueDuPalier
-                                                                 + eps_prodTherm;
-            }
-
-            double NombreDeGroupesEnMarcheDuPalier = ProductionThermique[pdtHebdo]
-                                                       .NombreDeGroupesEnMarcheDuPalier[index];
-
-            if (NombreDeGroupesEnMarcheDuPalier - eps_nbGroupes
-                > NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo])
-            {
-                NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = static_cast<int>(
-                  ceil(NombreDeGroupesEnMarcheDuPalier - eps_nbGroupes));
-            }
-        }
+        adjustBoundsForExpansion(nbTimeSteps,
+                                 PuissanceDisponibleEtCout,
+                                 ProductionThermique,
+                                 palier);
+        return;
     }
-    else
+
+    std::vector<int>& NombreMinDeGroupesEnMarcheDuPalierThermique
+      = PuissanceDisponibleEtCout.NombreMinDeGroupesEnMarcheDuPalierThermique;
+    std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
+      = PuissanceDisponibleEtCout.NombreMaxDeGroupesEnMarcheDuPalierThermique;
+    std::vector<double>& PuissanceDisponibleDuPalierThermique
+      = PuissanceDisponibleEtCout.PuissanceDisponibleDuPalierThermique;
+    const double pminDUnGroupeDuPalierThermique = PaliersThermiquesDuPays
+                                                    .pminDUnGroupeDuPalierThermique[palier];
+    const double PmaxDUnGroupeDuPalierThermique = PaliersThermiquesDuPays
+                                                    .PmaxDUnGroupeDuPalierThermique[palier];
+
+    for (std::size_t pdtHebdo = 0; pdtHebdo < nbTimeSteps; ++pdtHebdo)
     {
-        std::vector<int>& NombreMinDeGroupesEnMarcheDuPalierThermique
-          = PuissanceDisponibleEtCout[index].NombreMinDeGroupesEnMarcheDuPalierThermique;
-        std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
-          = PuissanceDisponibleEtCout[index].NombreMaxDeGroupesEnMarcheDuPalierThermique;
-        std::vector<double>& PuissanceDisponibleDuPalierThermique
-          = PuissanceDisponibleEtCout[index].PuissanceDisponibleDuPalierThermique;
-        double pminDUnGroupeDuPalierThermique = PaliersThermiquesDuPays
-                                                  .pminDUnGroupeDuPalierThermique[index];
-        double PmaxDUnGroupeDuPalierThermique = PaliersThermiquesDuPays
-                                                  .PmaxDUnGroupeDuPalierThermique[index];
+        const double X = ProductionThermique[pdtHebdo].NombreDeGroupesEnMarcheDuPalier[palier];
+        const double P = ProductionThermique[pdtHebdo].ProductionThermiqueDuPalier[palier];
+        warnIfInconsistentWithBounds(X,
+                                     P,
+                                     NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo],
+                                     NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo],
+                                     pminDUnGroupeDuPalierThermique,
+                                     PmaxDUnGroupeDuPalierThermique,
+                                     pays,
+                                     index);
 
-        for (int pdtHebdo = 0; pdtHebdo < NombreDePasDeTempsProblemeHebdo; pdtHebdo++)
+        NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = static_cast<int>(
+          Antares::Utils::ceil(X));
+    }
+
+    if (OptimisationAvecVariablesEntieres)
+    {
+        for (std::size_t pdtHebdo = 0; pdtHebdo < nbTimeSteps; ++pdtHebdo)
         {
-            double X = ProductionThermique[pdtHebdo].NombreDeGroupesEnMarcheDuPalier[index];
-            if (X > NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo] + Eps)
-            {
-                printf("Attention, AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage: \n");
-                printf("Pays %d palier dans le pays %d NombreDeGroupesEnMarche %e max %d\n",
-                       pays,
-                       index,
-                       X,
-                       NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]);
-            }
-            if (X < NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] - Eps)
-            {
-                printf("Attention, AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage: \n");
-                printf("Pays %d palier dans le pays %d NombreDeGroupesEnMarche %e min %d\n",
-                       pays,
-                       index,
-                       X,
-                       NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo]);
-            }
-            double P = ProductionThermique[pdtHebdo].ProductionThermiqueDuPalier[index];
-            if (P < X * pminDUnGroupeDuPalierThermique - Eps)
-            {
-                printf("Attention, AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage: \n");
-                printf("Pays %d palier dans le pays %d P %e < NbGroupe (%e) * PminGroupe (%e)\n",
-                       pays,
-                       index,
-                       P,
-                       X,
-                       pminDUnGroupeDuPalierThermique);
-            }
-            if (P > X * PmaxDUnGroupeDuPalierThermique + Eps)
-            {
-                printf("Attention, AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage: \n");
-                printf("Pays %d palier dans le pays %d P %e > NbGroupe (%e) * PmaxGroupe (%e)\n",
-                       pays,
-                       index,
-                       P,
-                       X,
-                       PmaxDUnGroupeDuPalierThermique);
-            }
+            NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
+              = NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo];
+        }
+        return;
+    }
 
-            NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = static_cast<int>(
-              Antares::Utils::ceil(X));
+    OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
+      NombreMinDeGroupesEnMarcheDuPalierThermique,
+      index,
+      NombreDePasDeTempsProblemeHebdo,
+      ResultatsHoraires,
+      PaliersThermiquesDuPays);
+
+    for (std::size_t pdtHebdo = 0; pdtHebdo < nbTimeSteps; ++pdtHebdo)
+    {
+        // When using the ramping model, we must ensure that the NODU don't change
+        // during the 2nd optimization. Without this, the solver may bypass the
+        // ramping constraints by partially starting/stopping units.
+        if (NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
+              < NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
+            || PaliersThermiquesDuPays.rampingEnabled[palier])
+        {
+            NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
+              = NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo];
         }
 
-        if (!OptimisationAvecVariablesEntieres)
+        if (pminDUnGroupeDuPalierThermique * NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
+            > PuissanceDisponibleDuPalierThermique[pdtHebdo])
         {
-            OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
-              NombreMinDeGroupesEnMarcheDuPalierThermique,
-              index,
-              NombreDePasDeTempsProblemeHebdo,
-              ResultatsHoraires,
-              PaliersThermiquesDuPays);
-
-            for (int pdtHebdo = 0; pdtHebdo < NombreDePasDeTempsProblemeHebdo; pdtHebdo++)
-            {
-                // When using the ramping model, we must ensure that the NODU don't change
-                // during the 2nd optimization. Without this, the solver may bypass the
-                // ramping constraints by partially starting/stopping units.
-                if (NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
-                      < NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
-                    || PaliersThermiquesDuPays.rampingEnabled[index])
-                {
-                    NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
-                      = NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo];
-                }
-
-                if (pminDUnGroupeDuPalierThermique
-                      * NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
-                    > PuissanceDisponibleDuPalierThermique[pdtHebdo])
-                {
-                    PuissanceDisponibleDuPalierThermique[pdtHebdo]
-                      = pminDUnGroupeDuPalierThermique
-                        * NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo];
-                }
-            }
-        }
-        else
-        {
-            for (int pdtHebdo = 0; pdtHebdo < NombreDePasDeTempsProblemeHebdo; pdtHebdo++)
-            {
-                NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
-                  = NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo];
-            }
+            PuissanceDisponibleDuPalierThermique[pdtHebdo]
+              = pminDUnGroupeDuPalierThermique
+                * NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo];
         }
     }
 }
@@ -179,132 +212,63 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
   RESULTATS_HORAIRES& ResultatsHoraires,
   PALIERS_THERMIQUES& PaliersThermiquesDuPays)
 {
+    const auto palier = static_cast<std::size_t>(index);
+    const auto nbTimeSteps = static_cast<std::size_t>(NombreDePasDeTempsProblemeHebdo);
     const std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
-      = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index]
+      = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[palier]
           .NombreMaxDeGroupesEnMarcheDuPalierThermique;
     const auto DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
-      = PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index];
+      = PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[palier];
     const auto DureeMinimaleDArretDUnGroupeDuPalierThermique
-      = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
+      = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[palier];
 
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE>& ProductionThermique = ResultatsHoraires
                                                                         .ProductionThermique;
 
-    bool ResoudreLeProblemeLineaire = true;
-
-    for (int pdt = 0; pdt < NombreDePasDeTempsProblemeHebdo; pdt++)
+    for (std::size_t t1 = 0; t1 < nbTimeSteps; ++t1)
     {
-        int t1 = pdt;
-        int t1moins1 = t1 - 1;
-        if (t1moins1 < 0)
-        {
-            t1moins1 = NombreDePasDeTempsProblemeHebdo + t1moins1;
-        }
+        // The week is cyclic: the time step before the first one is the last one
+        const std::size_t t1moins1 = (t1 == 0 ? nbTimeSteps : t1) - 1;
+        auto& production = ProductionThermique[t1];
 
         if (NbMinOptDeGroupesEnMarche[t1] - NbMinOptDeGroupesEnMarche[t1moins1] < 0)
         {
-            ProductionThermique[t1].NombreDeGroupesQuiDemarrentDuPalier[index] = 0;
-            ProductionThermique[t1].NombreDeGroupesQuiSArretentDuPalier[index]
+            production.NombreDeGroupesQuiDemarrentDuPalier[palier] = 0;
+            production.NombreDeGroupesQuiSArretentDuPalier[palier]
               = NbMinOptDeGroupesEnMarche[t1moins1] - NbMinOptDeGroupesEnMarche[t1];
-            ProductionThermique[t1].NombreDeGroupesQuiTombentEnPanneDuPalier[index] = 0;
+            production.NombreDeGroupesQuiTombentEnPanneDuPalier[palier] = 0;
             if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
                 < NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1])
             {
                 if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
                       - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
-                    < ProductionThermique[t1].NombreDeGroupesQuiSArretentDuPalier[index])
+                    < production.NombreDeGroupesQuiSArretentDuPalier[palier])
                 {
-                    ProductionThermique[t1].NombreDeGroupesQuiTombentEnPanneDuPalier[index]
+                    production.NombreDeGroupesQuiTombentEnPanneDuPalier[palier]
                       = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
                         - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
                 }
                 else
                 {
-                    ProductionThermique[t1].NombreDeGroupesQuiTombentEnPanneDuPalier[index]
-                      = ProductionThermique[t1].NombreDeGroupesQuiSArretentDuPalier[index];
+                    production.NombreDeGroupesQuiTombentEnPanneDuPalier[palier]
+                      = production.NombreDeGroupesQuiSArretentDuPalier[palier];
                 }
             }
         }
         else if (NbMinOptDeGroupesEnMarche[t1] - NbMinOptDeGroupesEnMarche[t1moins1] > 0)
         {
-            ProductionThermique[t1].NombreDeGroupesQuiDemarrentDuPalier[index]
-              = NbMinOptDeGroupesEnMarche[t1] - NbMinOptDeGroupesEnMarche[t1moins1];
-            ProductionThermique[t1].NombreDeGroupesQuiSArretentDuPalier[index] = 0;
-            ProductionThermique[t1].NombreDeGroupesQuiTombentEnPanneDuPalier[index] = 0;
+            production.NombreDeGroupesQuiDemarrentDuPalier[palier] = NbMinOptDeGroupesEnMarche[t1]
+                                                                     - NbMinOptDeGroupesEnMarche
+                                                                       [t1moins1];
+            production.NombreDeGroupesQuiSArretentDuPalier[palier] = 0;
+            production.NombreDeGroupesQuiTombentEnPanneDuPalier[palier] = 0;
         }
         else
         {
-            ProductionThermique[t1].NombreDeGroupesQuiDemarrentDuPalier[index] = 0;
-            ProductionThermique[t1].NombreDeGroupesQuiSArretentDuPalier[index] = 0;
-            ProductionThermique[t1].NombreDeGroupesQuiTombentEnPanneDuPalier[index] = 0;
+            production.NombreDeGroupesQuiDemarrentDuPalier[palier] = 0;
+            production.NombreDeGroupesQuiSArretentDuPalier[palier] = 0;
+            production.NombreDeGroupesQuiTombentEnPanneDuPalier[palier] = 0;
         }
-    }
-
-    for (int pdt = 0; pdt < NombreDePasDeTempsProblemeHebdo; pdt++)
-    {
-        if (DureeMinimaleDeMarcheDUnGroupeDuPalierThermique > 0)
-        {
-            double SMarche = 0;
-            int t1 = 0;
-            for (int k = pdt - DureeMinimaleDeMarcheDUnGroupeDuPalierThermique + 1; k <= pdt; k++)
-            {
-                t1 = k;
-
-                if (k < 0)
-                {
-                    t1 = NombreDePasDeTempsProblemeHebdo + k;
-                }
-                SMarche += ProductionThermique[t1].NombreDeGroupesQuiDemarrentDuPalier[index]
-                           - ProductionThermique[t1]
-                               .NombreDeGroupesQuiTombentEnPanneDuPalier[index];
-            }
-            if (NbMinOptDeGroupesEnMarche[t1] < SMarche)
-            {
-                ResoudreLeProblemeLineaire = true;
-                break;
-            }
-        }
-
-        int t1 = pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique;
-
-        if (t1 < 0)
-        {
-            t1 = NombreDePasDeTempsProblemeHebdo + t1;
-        }
-        double SArret = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
-
-        for (int k = pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique + 1; k <= pdt; k++)
-        {
-            t1 = k;
-
-            if (t1 < 0)
-            {
-                t1 = NombreDePasDeTempsProblemeHebdo + t1;
-            }
-            int t1moins1 = t1 - 1;
-            if (t1moins1 < 0)
-            {
-                t1moins1 = NombreDePasDeTempsProblemeHebdo + t1moins1;
-            }
-            if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
-                  - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
-                > 0)
-            {
-                SArret += NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
-                          - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1];
-            }
-            SArret -= ProductionThermique[t1].NombreDeGroupesQuiSArretentDuPalier[index];
-        }
-        if (NbMinOptDeGroupesEnMarche[t1] > SArret)
-        {
-            ResoudreLeProblemeLineaire = true;
-            break;
-        }
-    }
-
-    if (!ResoudreLeProblemeLineaire)
-    {
-        return;
     }
 
     OPT_ResoudreLePbLineaireDuNombreMinDeGroupesEnMarche(
@@ -618,8 +582,9 @@ void OPT_ResoudreLePbLineaireDuNombreMinDeGroupesEnMarche(
     {
         for (int pdt = 0; pdt < NombreDePasDeTempsProblemeHebdo; pdt++)
         {
-            NbMinOptDeGroupesEnMarche[pdt] = static_cast<int>(
-              ceil(Xsolution[NumeroDeVariableDeM[pdt]]));
+            const auto t = static_cast<std::size_t>(pdt);
+            const auto variable = static_cast<std::size_t>(NumeroDeVariableDeM[t]);
+            NbMinOptDeGroupesEnMarche[t] = static_cast<int>(ceil(Xsolution[variable]));
         }
     }
     else

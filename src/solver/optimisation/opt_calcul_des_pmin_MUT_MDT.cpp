@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <cmath>
+#include <cstddef>
 #include <functional>
 
 #include "antares/solver/optimisation/thermalHeuristicsCore.h"
@@ -76,11 +77,12 @@ void OPT_CalculerLaCourbeGuideDuNombreDeGroupes(int NombreDePasDeTemps,
                                                 double TailleUnitaireDUnGroupe,
                                                 std::vector<int>& NbGrpCourbeGuide)
 {
-    for (int Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
+    for (int Pdt = 0; Pdt < NombreDePasDeTemps; ++Pdt)
     {
-        double P = production(Pdt);
+        const double P = production(Pdt);
+        auto& nbGroupes = NbGrpCourbeGuide[static_cast<std::size_t>(Pdt)];
 
-        NbGrpCourbeGuide[Pdt] = 0;
+        nbGroupes = 0;
         if (fabs(P) < ZERO_PMIN)
         {
             continue;
@@ -88,11 +90,11 @@ void OPT_CalculerLaCourbeGuideDuNombreDeGroupes(int NombreDePasDeTemps,
 
         if (TailleUnitaireDUnGroupe > ZERO_PMIN)
         {
-            NbGrpCourbeGuide[Pdt] = static_cast<int>(ceil(P / TailleUnitaireDUnGroupe));
+            nbGroupes = static_cast<int>(ceil(P / TailleUnitaireDUnGroupe));
         }
         else
         {
-            NbGrpCourbeGuide[Pdt] = static_cast<int>(ceil(P));
+            nbGroupes = static_cast<int>(ceil(P));
         }
     }
 }
@@ -157,6 +159,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(int NombreDePasDeTemps,
                                                        PALIERS_THERMIQUES& PaliersThermiquesDuPays,
                                                        int indexPalier)
 {
+    const auto palier = static_cast<std::size_t>(indexPalier);
     const std::vector<double>& PminDuPalierThermiquePendantUneHeure
       = PaliersThermiquesDuPays.PminDuPalierThermiquePendantUneHeure;
     const std::vector<double>& TailleUnitaireDUnGroupeDuPalierThermique
@@ -167,40 +170,41 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(int NombreDePasDeTemps,
       = ResultatsHoraires.ProductionThermique;
 
     PDISP_ET_COUTS_HORAIRES_PAR_PALIER& PuissanceDispoEtCout = PaliersThermiquesDuPays
-                                                                 .PuissanceDisponibleEtCout
-                                                                   [indexPalier];
+                                                                 .PuissanceDisponibleEtCout[palier];
     std::vector<double>& PuissanceMinDuPalierThermique = PuissanceDispoEtCout
                                                            .PuissanceMinDuPalierThermique;
     const std::vector<double>& PuissanceDisponibleDuPalierThermique
       = PuissanceDispoEtCout.PuissanceDisponibleDuPalierThermique;
 
-    if (fabs(PminDuPalierThermiquePendantUneHeure[indexPalier]) < ZERO_PMIN)
+    const double pminDUnGroupe = PminDuPalierThermiquePendantUneHeure[palier];
+    if (fabs(pminDUnGroupe) < ZERO_PMIN)
     {
         return;
     }
 
     OPT_CalculerLaCourbeGuideDuNombreDeGroupes(
       NombreDePasDeTemps,
-      [&ProductionThermiqueOptimale, indexPalier](int Pdt)
-      { return ProductionThermiqueOptimale[Pdt].ProductionThermiqueDuPalier[indexPalier]; },
-      TailleUnitaireDUnGroupeDuPalierThermique[indexPalier],
+      [&ProductionThermiqueOptimale, palier](int Pdt)
+      {
+          return ProductionThermiqueOptimale[static_cast<std::size_t>(Pdt)]
+            .ProductionThermiqueDuPalier[palier];
+      },
+      TailleUnitaireDUnGroupeDuPalierThermique[palier],
       NbGrpCourbeGuide);
 
     if (!OPT_CalculerLeNombreDeGroupesParBlocsDeMUTetMDT(NombreDePasDeTemps,
-                                                         minUpDownTime[indexPalier],
+                                                         minUpDownTime[palier],
                                                          NbGrpCourbeGuide,
                                                          NbGrpOpt))
     {
         return;
     }
 
-    for (int Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
+    for (std::size_t Pdt = 0; Pdt < static_cast<std::size_t>(NombreDePasDeTemps); ++Pdt)
     {
-        if (PminDuPalierThermiquePendantUneHeure[indexPalier] * NbGrpOpt[Pdt]
-            > PuissanceMinDuPalierThermique[Pdt])
+        if (pminDUnGroupe * NbGrpOpt[Pdt] > PuissanceMinDuPalierThermique[Pdt])
         {
-            PuissanceMinDuPalierThermique[Pdt] = PminDuPalierThermiquePendantUneHeure[indexPalier]
-                                                 * NbGrpOpt[Pdt];
+            PuissanceMinDuPalierThermique[Pdt] = pminDUnGroupe * NbGrpOpt[Pdt];
         }
 
         if (PuissanceMinDuPalierThermique[Pdt] > PuissanceDisponibleDuPalierThermique[Pdt])

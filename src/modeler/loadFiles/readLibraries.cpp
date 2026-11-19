@@ -373,7 +373,7 @@ SystemModel::HeuristicDefinition convertHeuristic(const YmlOptimConfig::Heuristi
             throw Error::InvalidArgumentError(errorPrefix + "'" + SystemModel::toString(element)
                                               + "' is not an input of this heuristic");
         }
-        if (heuristic.input(element))
+        if (heuristicInput(heuristic, element))
         {
             throw Error::InvalidArgumentError(errorPrefix + "input '"
                                               + SystemModel::toString(element)
@@ -397,7 +397,7 @@ SystemModel::HeuristicDefinition convertHeuristic(const YmlOptimConfig::Heuristi
             throw Error::InvalidArgumentError(errorPrefix + "'" + SystemModel::toString(element)
                                               + "' is not an output of this heuristic");
         }
-        if (heuristic.output(element))
+        if (heuristicOutput(heuristic, element))
         {
             throw Error::InvalidArgumentError(errorPrefix + "output '"
                                               + SystemModel::toString(element)
@@ -411,7 +411,7 @@ SystemModel::HeuristicDefinition convertHeuristic(const YmlOptimConfig::Heuristi
 
     for (const auto element: expectedInputs)
     {
-        if (!heuristic.input(element))
+        if (!heuristicInput(heuristic, element))
         {
             throw Error::InvalidArgumentError(errorPrefix + "missing input '"
                                               + SystemModel::toString(element) + "'");
@@ -419,7 +419,7 @@ SystemModel::HeuristicDefinition convertHeuristic(const YmlOptimConfig::Heuristi
     }
     for (const auto element: expectedOutputs)
     {
-        if (!heuristic.output(element))
+        if (!heuristicOutput(heuristic, element))
         {
             throw Error::InvalidArgumentError(errorPrefix + "missing output '"
                                               + SystemModel::toString(element) + "'");

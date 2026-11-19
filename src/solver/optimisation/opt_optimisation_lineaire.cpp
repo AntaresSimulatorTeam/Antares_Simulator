@@ -209,7 +209,8 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
 /// Legacy thermal clusters: heuristic fast or accurate depending on the unit commitment mode
 void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
 {
-    const int NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTemps;
+    const auto NombreDePasDeTempsProblemeHebdo = static_cast<int>(
+      problemeHebdo->NombreDePasDeTemps);
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
     {
         RESULTATS_HORAIRES& ResultatsHoraires = problemeHebdo->ResultatsHoraires[pays];
@@ -219,7 +220,7 @@ void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
 
         std::vector<int>& NbGrpCourbeGuide = problemeHebdo->NbGrpCourbeGuide;
         std::vector<int>& NbGrpOpt = problemeHebdo->NbGrpOpt;
-        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; index++)
+        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; ++index)
         {
             if (problemeHebdo->OptimisationNotFastMode)
             {
