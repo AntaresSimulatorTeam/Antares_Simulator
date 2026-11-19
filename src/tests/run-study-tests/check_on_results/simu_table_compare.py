@@ -4,7 +4,7 @@ from check_on_results.check_general import check_interface
 from check_decorators.print_name import printNameDecorator
 from utils.assertions import check
 from utils.find_reference import find_reference_folder
-from utils.find_output import find_dated_output_folder, find_simulation_folder
+from utils.find_output import find_dated_output_folder
 
 
 @printNameDecorator
@@ -14,9 +14,9 @@ class simu_table_compare(check_interface):
         self.ref_folder = find_reference_folder(self.study_path)
 
     def run(self):
-        ref_simulation_folder = Path(find_simulation_folder(self.ref_folder))
+        ref_simulation_folder = Path(self.ref_folder) / 'simulation-tables'
         path_to_output = find_dated_output_folder(self.study_path)
-        simulation_folder = Path(find_simulation_folder(path_to_output))
+        simulation_folder = path_to_output / 'simulation-tables'
 
         reference_files = sorted(ref_simulation_folder.rglob("simulation-table-*-optim-nb-*.csv"))
         check(reference_files, f"No simulation table files found in {ref_simulation_folder}")
