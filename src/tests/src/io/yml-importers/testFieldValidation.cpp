@@ -171,6 +171,39 @@ library:
     BOOST_CHECK(emptyLibrary.models.empty());
 }
 
+BOOST_AUTO_TEST_CASE(documented_gems_metadata_is_accepted_and_ignored)
+{
+    const auto library = YmlModel::Parser{}.parse(R"(
+library:
+  id: lib
+  version: "1.2.3"
+  taxonomy: my-taxonomy
+  models:
+    - id: m
+      taxonomy-category: some-category
+      properties:
+        - id: prop1
+        - id: prop2
+)");
+    BOOST_CHECK_EQUAL(library.id, "lib");
+    BOOST_REQUIRE_EQUAL(library.models.size(), 1);
+    BOOST_CHECK_EQUAL(library.models[0].id, "m");
+}
+
+BOOST_AUTO_TEST_CASE(model_properties_require_an_id)
+{
+    BOOST_CHECK_EXCEPTION(YmlModel::Parser{}.parse(R"(
+library:
+  id: lib
+  models:
+    - id: m
+      properties:
+        - name: prop1
+)"),
+                          InputError,
+                          containsMessage("Missing field: id"));
+}
+
 BOOST_AUTO_TEST_CASE(library_collects_errors_in_nested_and_sibling_nodes)
 {
     const auto content = R"(
