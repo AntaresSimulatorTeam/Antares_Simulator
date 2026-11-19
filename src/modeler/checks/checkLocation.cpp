@@ -2,10 +2,13 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <fmt/format.h>
+#include <sstream>
+#include <vector>
 
 #include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
+#include <antares/logs/logs.h>
 #include <antares/solver/modeler/ModelerData.h>
 #include <antares/solver/modeler/checks/checkLocation.h>
 
@@ -71,12 +74,17 @@ void checkModel(const Model& model, const System& system)
 
     if (!errors.empty())
     {
-        std::string combined;
-        for (const auto& err: errors)
+        std::ostringstream oss;
+        for (std::size_t i = 0; i < errors.size(); ++i)
         {
-            combined += err + "\n";
+            Antares::logs.error() << errors[i];
+            if (i > 0)
+            {
+                oss << "\n";
+            }
+            oss << errors[i];
         }
-        throw LocationError(combined);
+        throw LocationError(oss.str());
     }
 }
 
@@ -171,34 +179,15 @@ void checkExpression(const Node* expression,
         // Portfields can contains variables, we recursively check their expressions
         if (const auto* portFieldNode = dynamic_cast<const PortFieldNode*>(&node); portFieldNode)
         {
-            PortFieldKey key(portFieldNode->getPortName(), portFieldNode->getFieldName());
-            auto it = model.PortFieldDefinitions().find(key);
-            if (it == model.PortFieldDefinitions().end())
-            {
-                throw LocationError(fmt::format(
-                  "Model '{}': In expression '{}': Port field '{}.{}' has no definition in this "
-                  "model. If you want to reference a port field, it needs to be defined first.",
-                  model.Id(),
-                  exprStr,
-                  portFieldNode->getPortName(),
-                  portFieldNode->getFieldName()));
-            }
-
-            std::string msgInCaseOfError = fmt::format(
-              "In model '{}': In expression '{}': this port field definition '{}.{}': is "
-              "referencing an expression containing an incorrect location: ",
+            errors.push_back(fmt::format(
+              "Model '{}': In expression '{}': Port field '{}.{}' cannot be used directly. "
+              "Use 'sum_connections({}.{})' to aggregate values from connected components.",
               model.Id(),
               exprStr,
               portFieldNode->getPortName(),
-              portFieldNode->getFieldName());
-
-            auto& expr = it->second.Definition();
-            checkExpression(expr.RootNode(),
-                            location,
-                            model,
-                            system,
-                            expr.Value(),
-                            msgInCaseOfError);
+              portFieldNode->getFieldName(),
+              portFieldNode->getPortName(),
+              portFieldNode->getFieldName()));
             continue;
         }
 
