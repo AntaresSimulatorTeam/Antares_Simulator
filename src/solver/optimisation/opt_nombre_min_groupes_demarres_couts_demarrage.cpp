@@ -292,10 +292,11 @@ void OPT_ResoudreLePbLineaireDuNombreMinDeGroupesEnMarche(
     NombreDeVariables += NombreDePasDeTempsProblemeHebdo;
     NombreDeVariables += NombreDePasDeTempsProblemeHebdo;
 
-    std::vector<int> NumeroDeVariableDeM(NombreDePasDeTempsProblemeHebdo);
-    std::vector<int> NumeroDeVariableDeMMoinsMoins(NombreDePasDeTempsProblemeHebdo);
-    std::vector<int> NumeroDeVariableDeMPlus(NombreDePasDeTempsProblemeHebdo);
-    std::vector<int> NumeroDeVariableDeMMoins(NombreDePasDeTempsProblemeHebdo);
+    const auto nbTimeSteps = static_cast<std::size_t>(NombreDePasDeTempsProblemeHebdo);
+    std::vector<int> NumeroDeVariableDeM(nbTimeSteps);
+    std::vector<int> NumeroDeVariableDeMMoinsMoins(nbTimeSteps);
+    std::vector<int> NumeroDeVariableDeMPlus(nbTimeSteps);
+    std::vector<int> NumeroDeVariableDeMMoins(nbTimeSteps);
 
     int NombreDeContraintes = 0;
     NombreDeContraintes += NombreDePasDeTempsProblemeHebdo;
@@ -330,7 +331,7 @@ void OPT_ResoudreLePbLineaireDuNombreMinDeGroupesEnMarche(
     std::vector<double> CoefficientsDeLaMatriceDesContraintes(NbTermesMatrice);
 
     NombreDeVariables = 0;
-    for (int pdt = 0; pdt < NombreDePasDeTempsProblemeHebdo; pdt++)
+    for (int pdt = 0; pdt < NombreDePasDeTempsProblemeHebdo; ++pdt)
     {
         NumeroDeVariableDeM[pdt] = NombreDeVariables;
         CoutLineaire[NombreDeVariables] = 1;
@@ -368,7 +369,7 @@ void OPT_ResoudreLePbLineaireDuNombreMinDeGroupesEnMarche(
 
     NbTermesMatrice = 0;
     NombreDeContraintes = 0;
-    for (int pdt = 0; pdt < NombreDePasDeTempsProblemeHebdo; pdt++)
+    for (int pdt = 0; pdt < NombreDePasDeTempsProblemeHebdo; ++pdt)
     {
         int NombreDeTermes = 0;
         IndicesDebutDeLigne[NombreDeContraintes] = NbTermesMatrice;
@@ -580,7 +581,7 @@ void OPT_ResoudreLePbLineaireDuNombreMinDeGroupesEnMarche(
 
     if (Probleme.ExistenceDUneSolution == OUI_SPX)
     {
-        for (int pdt = 0; pdt < NombreDePasDeTempsProblemeHebdo; pdt++)
+        for (int pdt = 0; pdt < NombreDePasDeTempsProblemeHebdo; ++pdt)
         {
             const auto t = static_cast<std::size_t>(pdt);
             const auto variable = static_cast<std::size_t>(NumeroDeVariableDeM[t]);
