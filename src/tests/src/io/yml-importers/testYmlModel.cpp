@@ -49,7 +49,9 @@ BOOST_AUTO_TEST_CASE(library_without_id_throws)
             port-types: []
             models: []
     )"s;
-    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          InputError,
+                          containsMessage("Required property 'id' not found."));
 }
 
 BOOST_AUTO_TEST_CASE(library_with_null_id_throws)
@@ -63,7 +65,8 @@ BOOST_AUTO_TEST_CASE(library_with_null_id_throws)
     )"s;
     BOOST_CHECK_EXCEPTION(parser.parse(library),
                           InputError,
-                          containsMessage("Invalid null value for required field: id"));
+                          containsMessage(
+                            "Line 3 column 13: 'library/id': Expected string, found null"));
 }
 
 BOOST_AUTO_TEST_CASE(parameter_without_id_throws)
@@ -83,7 +86,9 @@ BOOST_AUTO_TEST_CASE(parameter_without_id_throws)
                   constraints: []
                   objective-contributions: []
         )"s;
-    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          InputError,
+                          containsMessage("Required property 'id' not found."));
 }
 
 BOOST_AUTO_TEST_CASE(variable_without_id_throws)
@@ -104,7 +109,9 @@ BOOST_AUTO_TEST_CASE(variable_without_id_throws)
                   constraints: []
                   objective-contributions: []
         )"s;
-    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          InputError,
+                          containsMessage("Required property 'id' not found."));
 }
 
 BOOST_AUTO_TEST_CASE(model_without_id_throws)
@@ -123,7 +130,9 @@ BOOST_AUTO_TEST_CASE(model_without_id_throws)
                   constraints: []
                   objective-contributions: []
         )"s;
-    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          InputError,
+                          containsMessage("Required property 'id' not found."));
 }
 
 BOOST_AUTO_TEST_CASE(port_without_id_throws)
@@ -145,7 +154,9 @@ BOOST_AUTO_TEST_CASE(port_without_id_throws)
                   constraints: []
                   objective-contributions: []
         )"s;
-    BOOST_CHECK_EXCEPTION(parser.parse(library), InputError, containsMessage("Missing field: id"));
+    BOOST_CHECK_EXCEPTION(parser.parse(library),
+                          InputError,
+                          containsMessage("Required property 'id' not found."));
 }
 
 BOOST_AUTO_TEST_CASE(checkFields_reports_unexpected_and_missing_keys)
@@ -487,7 +498,8 @@ BOOST_AUTO_TEST_CASE(area_connection_rejects_unknown_field)
     )"s;
     BOOST_CHECK_EXCEPTION((void)parser.parse(library),
                           InputError,
-                          containsMessage("Unrecognised field: not-a-field"));
+                          containsMessage(
+                            "Additional property 'not-a-field' not allowed by schema."));
 }
 
 BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)
@@ -525,8 +537,8 @@ BOOST_AUTO_TEST_CASE(area__connection_should_have_exactly_3_fields)
     )"s;
     BOOST_CHECK_EXCEPTION(parser.parse(library),
                           InputError,
-                          containsMessage("expected a YAML mapping in "
-                                          "'library/port-types/capacity_port/area-connection'"));
+                          containsMessage("'library/port-types/capacity_port/area-connection': "
+                                          "Expected object, found null"));
 }
 
 // Test library with multiple port types
@@ -846,6 +858,26 @@ BOOST_AUTO_TEST_CASE(variables_bounds_are_literals)
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound.input_expr, "pmax");
 }
 
+BOOST_AUTO_TEST_CASE(binary_variable_type_is_an_alias_of_boolean)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            models:
+                - id: "model_id"
+                  variables:
+                    - id: "var1"
+                      variable-type: binary
+                    - id: "var2"
+                      variable-type: boolean
+        )"s;
+    const auto libraryObj = parser.parse(library);
+    const auto& variables = libraryObj.models[0].variables;
+    BOOST_CHECK_EQUAL(variables[0].variable_type, YmlModel::ValueType::BOOL);
+    BOOST_CHECK_EQUAL(variables[1].variable_type, YmlModel::ValueType::BOOL);
+}
+
 // variable variable-type
 BOOST_AUTO_TEST_CASE(variable_types_can_be_integer_bool_float_default_to_float)
 {
@@ -1044,9 +1076,10 @@ BOOST_AUTO_TEST_CASE(constraint_with_null_id_throws)
                       - id: null
                         expression: "expression"
         )"s;
-    BOOST_CHECK_EXCEPTION(parser.parse(library),
-                          InputError,
-                          containsMessage("Invalid null value for required field: id"));
+    BOOST_CHECK_EXCEPTION(
+      parser.parse(library),
+      InputError,
+      containsMessage("'library/models/model_id/constraints/[0]/id': Expected string, found null"));
 }
 
 BOOST_AUTO_TEST_CASE(constraints_properly_parsed)
@@ -1208,7 +1241,8 @@ BOOST_AUTO_TEST_CASE(misspelled_model_field_is_rejected)
         )"s;
     BOOST_CHECK_EXCEPTION(parser.parse(library),
                           InputError,
-                          containsMessage("Unrecognised field: extra-output"));
+                          containsMessage(
+                            "Additional property 'extra-output' not allowed by schema."));
 }
 
 BOOST_AUTO_TEST_CASE(misspelled_variable_field_is_rejected)
@@ -1225,5 +1259,6 @@ BOOST_AUTO_TEST_CASE(misspelled_variable_field_is_rejected)
         )"s;
     BOOST_CHECK_EXCEPTION(parser.parse(library),
                           InputError,
-                          containsMessage("Unrecognised field: lower_bound"));
+                          containsMessage(
+                            "Additional property 'lower_bound' not allowed by schema."));
 }

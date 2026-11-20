@@ -10,7 +10,8 @@ using namespace Antares::IO::Inputs;
 namespace YAML
 {
 
-// Keep field reads in sync with the validation schema in parser.cpp.
+// The documents are validated against schemas/system.schema.yml before they are decoded (see
+// parser.cpp): required keys and types are guaranteed here. Keep field reads in sync with it.
 bool convert<YmlSystem::Parameter>::decode(const Node& node, YmlSystem::Parameter& rhs)
 {
     rhs.id = node["id"].as<std::string>();
