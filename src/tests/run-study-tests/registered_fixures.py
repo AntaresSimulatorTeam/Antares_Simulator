@@ -23,7 +23,7 @@ class check_handler:
 # ================
 # Fixtures
 # ================
-@pytest.fixture()
+@pytest.fixture
 def study_path(request):
     return request.param
 

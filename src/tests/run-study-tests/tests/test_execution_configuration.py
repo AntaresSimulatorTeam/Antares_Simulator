@@ -11,7 +11,7 @@ import pytest
 
 from actions_on_study.create_simulation import create_simulation
 from actions_on_study.study_run import RunStudyWithProblemGenerator, RunStudyWithSolver, StudyRun
-from executable_paths import load_executables
+from retrieve_exe_paths import load_executables
 from registered_fixures import check_handler
 from parse_studies.load_check_config import load_check_config
 from parse_studies.json_collector import contains_json_config, jsonCollector

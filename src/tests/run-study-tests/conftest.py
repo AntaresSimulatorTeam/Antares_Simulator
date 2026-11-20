@@ -1,6 +1,6 @@
 import pytest
 
-from executable_paths import load_executables
+from retrieve_exe_paths import load_executables
 
 pytest_plugins = ["registered_fixures"]
 
