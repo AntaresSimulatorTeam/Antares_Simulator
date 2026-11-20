@@ -182,7 +182,7 @@ $defs:
           Antares_Simulator develop spells it `boolean` (L02). AntaREST makes the key mandatory (L02).
         enum: [continuous, integer, binary, boolean]
         x-discrepancy: [L02]
-        x-simulator-deviation: "`boolean` added: Antares_Simulator accepts it and test studies use it."
+        x-simulator-deviation: "`boolean` added: Antares_Simulator accepts it and test studies use it. `binary` is read as an alias of `boolean`."
       location:
         $ref: "#/$defs/Location"
         x-simulator-deviation: "Simulator-only key (L04)."

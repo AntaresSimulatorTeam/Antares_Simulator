@@ -26,7 +26,6 @@ target_link_libraries(yml-system
         PRIVATE
         Antares::yml-schema
         Antares::forbidden-nodes
-        Antares::yml-utils
         yaml-cpp::yaml-cpp
 )
 

@@ -857,6 +857,26 @@ BOOST_AUTO_TEST_CASE(variables_bounds_are_literals)
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound.input_expr, "pmax");
 }
 
+BOOST_AUTO_TEST_CASE(binary_variable_type_is_an_alias_of_boolean)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            models:
+                - id: "model_id"
+                  variables:
+                    - id: "var1"
+                      variable-type: binary
+                    - id: "var2"
+                      variable-type: boolean
+        )"s;
+    const auto libraryObj = parser.parse(library);
+    const auto& variables = libraryObj.models[0].variables;
+    BOOST_CHECK_EQUAL(variables[0].variable_type, YmlModel::ValueType::BOOL);
+    BOOST_CHECK_EQUAL(variables[1].variable_type, YmlModel::ValueType::BOOL);
+}
+
 // variable variable-type
 BOOST_AUTO_TEST_CASE(variable_types_can_be_integer_bool_float_default_to_float)
 {

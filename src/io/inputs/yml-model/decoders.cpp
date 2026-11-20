@@ -12,7 +12,8 @@ using namespace Antares::IO::Inputs;
 namespace YAML
 {
 
-// Keep field reads in sync with the validation schema in parser.cpp.
+// The documents are validated against schemas/model-library.schema.yml before they are decoded
+// (see parser.cpp): required keys and types are guaranteed here. Keep field reads in sync with it.
 std::string getFieldFromNode(const Node& node, const std::string& fieldName)
 {
     if (!node[fieldName].IsDefined() || node[fieldName].IsNull())
@@ -87,14 +88,8 @@ bool convert<YmlModel::Parameter>::decode(const Node& node, YmlModel::Parameter&
 
 bool convert<YmlModel::ValueType>::decode(const Node& node, YmlModel::ValueType& rhs)
 {
-    if (!node.IsScalar())
-    {
-        if (node.IsDefined() && !node.IsNull())
-        {
-            throw InputError("Expected a scalar value for 'variable-type'");
-        }
-        return false;
-    }
+    // The schema guarantees one of these values; `binary` (the GEMS spelling) is an alias of
+    // `boolean`. The final branch only guards against the schema and this list going out of sync.
     const auto value = node.as<std::string>();
     if (value == "continuous")
     {
@@ -104,14 +99,14 @@ bool convert<YmlModel::ValueType>::decode(const Node& node, YmlModel::ValueType&
     {
         rhs = YmlModel::ValueType::INTEGER;
     }
-    else if (value == "boolean")
+    else if (value == "boolean" || value == "binary")
     {
         rhs = YmlModel::ValueType::BOOL;
     }
     else
     {
         throw InputError("Unknown variable-type: '" + value
-                         + "'. Expected one of: 'continuous', 'integer', 'boolean'");
+                         + "'. Expected one of: 'continuous', 'integer', 'boolean', 'binary'");
     }
     return true;
 }
@@ -196,10 +191,7 @@ bool convert<YmlModel::Library>::decode(const Node& node, YmlModel::Library& rhs
     rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
     rhs.port_types = as_fallback_default<std::vector<YmlModel::PortType>>(node["port-types"]);
-    if (node["models"].IsDefined() && !node["models"].IsNull())
-    {
-        rhs.models = node["models"].as<std::vector<YmlModel::Model>>();
-    }
+    rhs.models = as_fallback_default<std::vector<YmlModel::Model>>(node["models"]);
     return true;
 }
 

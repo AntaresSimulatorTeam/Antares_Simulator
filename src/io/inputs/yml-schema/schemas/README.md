@@ -34,7 +34,7 @@ to propose upstream or to remove.
 
 | Where | Deviation | Upstream ID | Why |
 |---|---|---|---|
-| `model-library` | `variable-type` also accepts `boolean` | L02 | The Simulator spells the third type `boolean`; 5 test libraries use it. GEMS, GemsPy and AntaREST use `binary`. |
+| `model-library` | `variable-type` also accepts `boolean` | L02 | The Simulator spells the third type `boolean`; 5 test libraries use it. GEMS, GemsPy and AntaREST use `binary`. The decoder treats `binary` as an alias of `boolean`. |
 | `model-library` | `location` accepted on variables, constraints and objective contributions (new `Location` and `Objective` defs) | L04 | Simulator-only key. |
 | `model-library` | every collection also accepts `null` | L12 | The Simulator reads a null collection as absent. |
 | `model-library` | `thermal-capacity-connection.capacity-field` accepts `null` | - | The Simulator accepts an empty value. |
