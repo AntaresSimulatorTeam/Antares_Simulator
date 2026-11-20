@@ -4,7 +4,6 @@
 #include "antares/io/inputs/yml-utils/checkFields.h"
 
 #include <algorithm>
-#include <array>
 #include <fmt/format.h>
 #include <iterator>
 #include <span>
@@ -30,6 +29,12 @@ struct Findings
 struct ValidationResult
 {
     std::vector<std::string> errors;
+
+    ValidationResult& operator+=(const ValidationResult& other)
+    {
+        std::ranges::copy(other.errors, std::back_inserter(errors));
+        return *this;
+    }
 };
 
 std::vector<std::string> diffSet(const std::unordered_set<std::string>& setA,
@@ -48,12 +53,8 @@ std::string buildMessage(const YAML::Node& node, const std::string& path, const 
     const YAML::YmlTreeDisplayer displayer(node, path);
     // Duplicated keys are highlighted like unexpected ones
     auto markedUnexpected = findings.unexpected;
-    markedUnexpected.insert(markedUnexpected.end(),
-                            findings.duplicated.begin(),
-                            findings.duplicated.end());
-    markedUnexpected.insert(markedUnexpected.end(),
-                            findings.nullIds.begin(),
-                            findings.nullIds.end());
+    std::ranges::copy(findings.duplicated, std::back_inserter(markedUnexpected));
+    std::ranges::copy(findings.nullIds, std::back_inserter(markedUnexpected));
 
     std::string fieldsList;
     for (const auto& f: findings.unexpected)
@@ -83,11 +84,11 @@ std::string buildMessage(const YAML::Node& node, const std::string& path, const 
                        displayer.buildMarkedTree(markedUnexpected, findings.missing));
 }
 
-void validateMap(const YAML::Node& node,
-                 const std::span<const Field> fields,
-                 const std::string& path,
-                 ValidationResult& result)
+ValidationResult validateMap(const YAML::Node& node,
+                             const std::span<const ExpectedField> expectedFields,
+                             const std::string& path)
 {
+    ValidationResult result;
     std::unordered_set<std::string> actualKeys;
     std::vector<std::string> duplicated;
     for (const auto& entry: node)
@@ -109,7 +110,7 @@ void validateMap(const YAML::Node& node,
     std::unordered_set<std::string> mandatoryFields;
     std::unordered_set<std::string> allowedFields;
     std::vector<std::string> nullIds;
-    for (const auto& field: fields)
+    for (const auto& field: expectedFields)
     {
         allowedFields.insert(field.name);
         if (field.required)
@@ -138,6 +139,7 @@ void validateMap(const YAML::Node& node,
                                               .duplicated = duplicated,
                                               .nullIds = nullIds}));
     }
+    return result;
 }
 
 std::string sequenceItemName(const YAML::Node& node, std::size_t index)
@@ -153,20 +155,24 @@ std::string sequenceItemName(const YAML::Node& node, std::size_t index)
     return "[" + std::to_string(index) + "]";
 }
 
-void collectFieldErrors(const YAML::Node& node,
-                        const std::span<const Field> fields,
-                        const std::string& path,
-                        ValidationResult& result)
-{
-    if (!node.IsMap())
-    {
-        result.errors.push_back(
-          fmt::format("Line {}: expected a YAML mapping in '{}'.", node.Mark().line + 1, path));
-        return;
-    }
-    validateMap(node, fields, path, result);
+ValidationResult collectFieldErrors(const YAML::Node& node,
+                                    const std::span<const ExpectedField> expectedFields,
+                                    const std::string& path,
+                                    const Shape shape = Shape::Map);
 
-    // Visit every occurrence, including duplicated sections, without looking up ambiguous keys.
+ValidationResult visitDefault(const YAML::Node& node, const std::string& path)
+{
+    ValidationResult result;
+    result.errors.push_back(
+      fmt::format("Line {}: expected a YAML mapping in '{}'.", node.Mark().line + 1, path));
+    return result;
+}
+
+ValidationResult visitMap(const YAML::Node& node,
+                          const std::span<const ExpectedField> expectedFields,
+                          const std::string& path)
+{
+    ValidationResult result = validateMap(node, expectedFields, path);
     for (const auto& entry: node)
     {
         if (!entry.first.IsScalar())
@@ -174,40 +180,57 @@ void collectFieldErrors(const YAML::Node& node,
             continue;
         }
         const auto key = entry.first.as<std::string>();
-        const auto field = std::ranges::find(fields, key, &Field::name);
-        if (field == fields.end() || field->children.empty())
+        const auto field = std::ranges::find(expectedFields, key, &ExpectedField::name);
+        if (field == expectedFields.end() || field->children.empty())
         {
             continue;
         }
-        const auto childPath = path.empty() ? key : path + "/" + key;
         const auto& child = entry.second;
-        if (child.IsNull() && !field->required && field->shape != Shape::Map)
+        if (child.IsNull() && !field->required && field->shape == Shape::Sequence)
         {
             continue;
         }
-        if (child.IsSequence() && field->shape != Shape::Map)
-        {
-            for (std::size_t i = 0; i < child.size(); ++i)
-            {
-                auto item = child[i];
-                const auto itemPath = childPath + "/" + sequenceItemName(item, i);
-                collectFieldErrors(item, field->children, itemPath, result);
-            }
-        }
-        else
-        {
-            collectFieldErrors(child, field->children, childPath, result);
-        }
+
+        const auto childPath = path.empty() ? key : path + "/" + key;
+        result += collectFieldErrors(child, field->children, childPath, field->shape);
     }
+    return result;
 }
 
-ValidationResult validateFields(const YAML::Node& node,
-                                const std::span<const Field> fields,
-                                const std::string& path)
+ValidationResult visitSequence(const YAML::Node& node,
+                               const std::span<const ExpectedField> expectedFields,
+                               const std::string& path,
+                               const Shape shape)
 {
+    if (shape != Shape::Sequence)
+    {
+        return visitDefault(node, path);
+    }
+
     ValidationResult result;
-    collectFieldErrors(node, fields, path, result);
+    for (std::size_t i = 0; i < node.size(); ++i)
+    {
+        const auto item = node[i];
+        const auto itemPath = path + "/" + sequenceItemName(item, i);
+        result += collectFieldErrors(item, expectedFields, itemPath);
+    }
     return result;
+}
+
+ValidationResult collectFieldErrors(const YAML::Node& node,
+                                    const std::span<const ExpectedField> expectedFields,
+                                    const std::string& path,
+                                    const Shape shape)
+{
+    switch (node.Type())
+    {
+    case YAML::NodeType::Map:
+        return visitMap(node, expectedFields, path);
+    case YAML::NodeType::Sequence:
+        return visitSequence(node, expectedFields, path, shape);
+    default:
+        return visitDefault(node, path);
+    }
 }
 
 void handleValidationResult(const ValidationResult& result)
@@ -225,15 +248,12 @@ void handleValidationResult(const ValidationResult& result)
 
 } // namespace
 
-void checkFields(const YAML::Node& node, const Field& field, const std::string& path)
+void checkFields(const YAML::Node& node,
+                 const std::vector<ExpectedField>& expectedFields,
+                 const std::string& path)
 {
-    const auto fields = std::array{field};
-    handleValidationResult(validateFields(node, fields, path));
-}
-
-void checkFields(const YAML::Node& node, const std::vector<Field>& fields, const std::string& path)
-{
-    handleValidationResult(validateFields(node, fields, path));
+    const auto validationResult = collectFieldErrors(node, expectedFields, path);
+    handleValidationResult(validationResult);
 }
 
 } // namespace Antares::IO::Inputs::YmlUtils
