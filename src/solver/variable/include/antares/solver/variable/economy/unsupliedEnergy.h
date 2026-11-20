@@ -27,7 +27,7 @@ struct UnsuppliedEnergyTrait
 
     using ResultsProfile = StandardResults<>;
 
-    static constexpr uint8_t decimal = 0;
+    static constexpr uint8_t decimal = 4;
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
 
     static double value(const State& state)
