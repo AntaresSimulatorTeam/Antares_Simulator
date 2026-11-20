@@ -15,7 +15,7 @@ from actions_on_study.study_run import study_run
 from executable_paths import load_executables
 from fixtures import check_handler
 from parse_studies.configuration import load_check_config
-from parse_studies.json_collector import jsonCollector
+from parse_studies.json_collector import contains_json_config, jsonCollector
 
 
 pytest_plugins = ["pytester"]
@@ -43,6 +43,40 @@ def test_collector_preserves_execution_settings(tmp_path, entry, monkeypatch):
     collector.collect()
     assert collector.pairs() == [(tmp_path, entry)]
     assert collector.testIds() == [f"example  ({tmp_path.parent.name} / {tmp_path.name})"]
+
+
+def test_contains_json_config(tmp_path, entry):
+    assert not contains_json_config(tmp_path)
+    write_config(tmp_path, [entry])
+    assert contains_json_config(tmp_path)
+
+
+def test_collector_skips_missing_config_and_continues(tmp_path, entry, capsys):
+    missing = tmp_path / "missing"
+    valid = tmp_path / "valid"
+    missing.mkdir()
+    valid.mkdir()
+    write_config(valid, [entry])
+    collector = jsonCollector([missing, valid])
+
+    collector.collect()
+
+    assert collector.pairs() == [(valid, entry)]
+    assert collector.testIds() == [f"example  ({tmp_path.name} / valid)"]
+    assert f"Skipping checks on '{missing}': check-config.json does not exist" in capsys.readouterr().out
+
+
+def test_collector_reports_other_missing_files(tmp_path, entry, monkeypatch):
+    write_config(tmp_path, [entry])
+    monkeypatch.setattr("parse_studies.configuration.SCHEMA_FILE", tmp_path / "missing-schema.json")
+    with pytest.raises(FileNotFoundError, match="missing-schema.json"):
+        jsonCollector([tmp_path]).collect()
+
+
+def test_collector_rejects_malformed_config(tmp_path):
+    (tmp_path / "check-config.json").write_text("{")
+    with pytest.raises(ValueError, match="check-config.json: invalid JSON"):
+        jsonCollector([tmp_path]).collect()
 
 
 @pytest.mark.parametrize(

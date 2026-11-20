@@ -50,9 +50,10 @@ For example, use `--solver=sirius`, `--solver=coin`,
 explicitly when needed. To run a study in multiple ways, add separate named
 entries with the corresponding checks and options.
 
-The schema is `parse_studies/json_schema.json`. Missing files, malformed JSON,
-invalid execution settings, and duplicate names are errors; they do not
-silently select a default executable or drop a test.
+The schema is `parse_studies/json_schema.json`. Studies without a
+`check-config.json` are reported and skipped. Malformed JSON, invalid execution
+settings, and duplicate names are errors; they do not silently select a default
+executable or drop a configured test.
 
 ### Infeasible-problem tests
 
