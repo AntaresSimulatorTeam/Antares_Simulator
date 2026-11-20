@@ -9,9 +9,8 @@ from unittest.mock import Mock
 
 import pytest
 
-from actions_on_study.antares_problem_generator import AntaresProblemGeneratorRun
 from actions_on_study.create_simulation import create_simulation
-from actions_on_study.study_run import study_run
+from actions_on_study.study_run import RunStudyWithProblemGenerator, RunStudyWithSolver, StudyRun
 from executable_paths import load_executables
 from registered_fixures import check_handler
 from parse_studies.configuration import load_check_config
@@ -116,15 +115,15 @@ def test_configuration_errors(tmp_path, entry):
 
 
 @pytest.mark.parametrize("runner,study_args", [
-    (study_run, ["-i", "study with spaces"]),
-    (AntaresProblemGeneratorRun, ["study with spaces"]),
+    (RunStudyWithSolver, ["-i", "study with spaces"]),
+    (RunStudyWithProblemGenerator, ["study with spaces"]),
 ])
 @pytest.mark.parametrize("options", [[], [
     "--named-mps-problems", "--force-parallel=4", "--output=simulation-tables",
     "--simulation-table-stages=optim-nb-1", "--label", "value with spaces",
     "--label", "second value",
 ]])
-def test_runner_command(tmp_path, monkeypatch, runner, study_args, options):
+def test_runner_command(tmp_path, monkeypatch, capsys, runner, study_args, options):
     process = Mock(returncode=0)
     popen = Mock(return_value=process)
     monkeypatch.setattr(subprocess, "Popen", popen)
@@ -139,11 +138,13 @@ def test_runner_command(tmp_path, monkeypatch, runner, study_args, options):
         stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
     )
     process.communicate.assert_called_once_with()
+    assert capsys.readouterr().out == f"\nRunning the study with {executable}\n"
+    assert isinstance(simulation, StudyRun)
     assert simulation.get_return_code() == 0
     assert simulation.success()
 
 
-@pytest.mark.parametrize("runner", [study_run, AntaresProblemGeneratorRun])
+@pytest.mark.parametrize("runner", [RunStudyWithSolver, RunStudyWithProblemGenerator])
 def test_expected_and_unexpected_failure(tmp_path, monkeypatch, runner):
     monkeypatch.setattr(subprocess, "Popen", Mock(return_value=Mock(returncode=7)))
     simulation = runner(tmp_path, tmp_path / "binary", [])
@@ -156,8 +157,8 @@ def test_expected_and_unexpected_failure(tmp_path, monkeypatch, runner):
 
 
 @pytest.mark.parametrize("name,runner", [
-    ("antares-solver", study_run),
-    ("antares-problem-generator", AntaresProblemGeneratorRun),
+    ("antares-solver", RunStudyWithSolver),
+    ("antares-problem-generator", RunStudyWithProblemGenerator),
 ])
 def test_simulation_selects_only_requested_binary(tmp_path, entry, name, runner):
     path = tmp_path / name
