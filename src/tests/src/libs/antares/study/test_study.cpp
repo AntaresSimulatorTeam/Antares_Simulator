@@ -78,6 +78,31 @@ BOOST_AUTO_TEST_CASE(area_add)
 
 BOOST_AUTO_TEST_SUITE_END() // areas
 
+BOOST_AUTO_TEST_CASE(xcast_multicolumn_translation_disables_translation)
+{
+    const auto path = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    XCast original(timeSeriesLoad);
+    original.useTranslation = XCast::tsTranslationBeforeConversion;
+    BOOST_REQUIRE(original.saveToFolder(path.string()));
+
+    {
+        std::ofstream output(path / "translation.txt", std::ios::trunc);
+        BOOST_REQUIRE(output);
+        for (unsigned int hour = 0; hour < HOURS_PER_YEAR; ++hour)
+        {
+            output << "2.5\t7\n";
+        }
+    }
+
+    XCast loaded(timeSeriesLoad);
+    BOOST_REQUIRE(loaded.loadFromFolder(path));
+    BOOST_CHECK(loaded.useTranslation == XCast::tsTranslationNone);
+    BOOST_REQUIRE_EQUAL(loaded.translation.width(), 1);
+    BOOST_CHECK_EQUAL(loaded.translation[0][0], 2.);
+    BOOST_CHECK_EQUAL(loaded.translation[0][HOURS_PER_YEAR - 1], 2.);
+    std::filesystem::remove_all(path);
+}
+
 // Check that disabled objects are indeed removed from computations
 BOOST_AUTO_TEST_SUITE(remove_disabled)
 
@@ -213,9 +238,9 @@ BOOST_FIXTURE_TEST_CASE(WithForceNoGenOptionTimeSeriesNotGeneratedForReverseSpin
     ts.fill(100);
     cluster->reverseCalculationOfSpinning();
 
-    for (unsigned i = 0; i < ts.width; ++i)
+    for (unsigned i = 0; i < ts.width(); ++i)
     {
-        for (unsigned j = 0; j < ts.height; ++j)
+        for (unsigned j = 0; j < ts.height(); ++j)
         {
             BOOST_CHECK_EQUAL_MESSAGE(ts[i][j],
                                       100,

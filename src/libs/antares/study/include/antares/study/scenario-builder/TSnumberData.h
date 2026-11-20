@@ -4,18 +4,25 @@
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_DATA_TS_NUMBER_H__
 #define __LIBS_STUDY_SCENARIO_BUILDER_DATA_TS_NUMBER_H__
 
+#include <cassert>
+#include <cstdint>
+#include <vector>
+
+#include <antares/array/column-matrix.h>
+
 #include "scBuilderDataInterface.h"
 
 namespace Antares::Data::ScenarioBuilder
 {
+using TSNumberMatrix = ColumnMatrix<uint32_t>;
+
 /*!
 ** \brief Rules for TS numbers, for all years and a single timeseries
 */
 class TSNumberData: public dataInterface
 {
 public:
-    //! Matrix
-    using MatrixType = Matrix<uint32_t>;
+    using MatrixType = TSNumberMatrix;
 
 public:
     // We use default constructor and destructor
@@ -41,7 +48,7 @@ public:
     unsigned int height() const override;
 
     double get_value(unsigned int x, unsigned int y) const;
-    void set_value(unsigned int x, unsigned int y, unsigned int value) const;
+    void set_value(unsigned int x, unsigned int y, unsigned int value);
 
 protected:
     virtual std::string get_prefix() const = 0;
@@ -58,17 +65,17 @@ protected:
 
 inline unsigned int TSNumberData::width() const
 {
-    return pTSNumberRules.width;
+    return pTSNumberRules.width();
 }
 
 inline unsigned int TSNumberData::height() const
 {
-    return pTSNumberRules.height;
+    return pTSNumberRules.height();
 }
 
 inline double TSNumberData::get_value(unsigned int x, unsigned int y) const
 {
-    return pTSNumberRules.entry[y][x];
+    return pTSNumberRules[y][x];
 }
 
 } // namespace Antares::Data::ScenarioBuilder

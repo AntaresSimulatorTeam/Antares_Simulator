@@ -67,7 +67,7 @@ TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned column, doub
 TimeSeriesConfigurer& TimeSeriesConfigurer::fillColumnWith(unsigned column,
                                                            const std::vector<double>& values)
 {
-    ts_->pasteToColumn(column, values.data());
+    ts_->pasteToColumn(column, values);
     return *this;
 }
 

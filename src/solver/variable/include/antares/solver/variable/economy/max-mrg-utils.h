@@ -28,12 +28,12 @@ void computeMaxMRG(double* maxMrgOut, const MaxMRGinput& in);
 class MaxMrgDataFactory
 {
 public:
-    MaxMrgDataFactory(const State& state, unsigned int numSpace);
+    MaxMrgDataFactory(State& state, unsigned int numSpace);
     virtual MaxMRGinput data() = 0;
 
 protected:
     // in data
-    const State& state_;
+    State& state_;
     const unsigned int numSpace_ = 0;
     RESULTATS_HORAIRES& weeklyResults_;
     // data to be built

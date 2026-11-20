@@ -114,9 +114,9 @@ public:
         // Copy raw values
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
-            (void)::memcpy(pValuesForTheCurrentYear[numSpace].hour,
-                           area->miscGen.entry[Data::fhhPSP],
-                           sizeof(double) * area->miscGen.height);
+            (void)::memcpy(pValuesForTheCurrentYear[numSpace].hour.data(),
+                           area->miscGen[Data::fhhPSP].data(),
+                           sizeof(double) * area->miscGen.height());
         }
     }
 
@@ -142,7 +142,7 @@ public:
       unsigned int,
       unsigned int numSpace) const
     {
-        return pValuesForTheCurrentYear[numSpace].hour;
+        return pValuesForTheCurrentYear[numSpace].hour.data();
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,

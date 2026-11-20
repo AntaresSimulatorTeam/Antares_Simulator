@@ -185,7 +185,7 @@ public:
       uint column,
       uint numSpace) const
     {
-        return pValuesForTheCurrentYear[numSpace][column].hour;
+        return pValuesForTheCurrentYear[numSpace][column].hour.data();
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,

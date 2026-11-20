@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(disabled_thermal_cluster_skips_series_loading)
 
     bool ret = cluster->loadDataSeriesFromFolder(*study, working_tmp_dir);
     BOOST_CHECK_EQUAL(ret, true);
-    BOOST_CHECK_EQUAL(cluster->series.timeSeries.width, 0);
+    BOOST_CHECK_EQUAL(cluster->series.timeSeries.width(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(enabled_thermal_cluster_loads_series)
@@ -68,7 +68,25 @@ BOOST_AUTO_TEST_CASE(enabled_thermal_cluster_loads_series)
 
     bool ret = cluster->loadDataSeriesFromFolder(*study, working_tmp_dir);
     BOOST_CHECK_EQUAL(ret, true);
-    BOOST_CHECK_EQUAL(cluster->series.timeSeries.width, 1);
-    BOOST_CHECK_EQUAL(cluster->series.timeSeries.height, HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(cluster->series.timeSeries.width(), 1);
+    BOOST_CHECK_EQUAL(cluster->series.timeSeries.height(), HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(cluster->series.timeSeries[0][0], 100);
+}
+
+BOOST_AUTO_TEST_CASE(saving_series_returns_false_when_target_is_not_a_directory)
+{
+    auto study = std::make_shared<Study>();
+    auto area = addAreaToListOfAreas(study->areas, "area1");
+
+    auto cluster = std::make_shared<ThermalCluster>(area);
+    cluster->setName("my_cluster");
+    area->thermal.list.addToCompleteList(cluster);
+
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    const auto blockingPath = working_tmp_dir / "not-a-directory";
+    std::ofstream blockingFile(blockingPath);
+    blockingFile << "blocking path";
+    blockingFile.close();
+
+    BOOST_CHECK(!cluster->saveDataSeriesToFolder(blockingPath.string()));
 }

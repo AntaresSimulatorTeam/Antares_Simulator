@@ -145,7 +145,7 @@ public:
       uint,
       uint) const
     {
-        return pValuesForTheCurrentYear.hour;
+        return pValuesForTheCurrentYear.hour.data();
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,

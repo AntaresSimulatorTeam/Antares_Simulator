@@ -14,7 +14,7 @@ namespace Antares::Solver::Variable::Util
 template<class T>
 concept HourlySeries = requires(T t, unsigned y) {
     { t.series.getColumn(y) } -> std::convertible_to<const double*>;
-    { t.series.timeSeries.height } -> std::convertible_to<size_t>;
+    { t.series.timeSeries.height() } -> std::convertible_to<size_t>;
 };
 
 template<class Ptr, class F>

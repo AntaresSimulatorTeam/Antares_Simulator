@@ -5,6 +5,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <files-system.h>
+#include <fstream>
 #include <memory>
 #include <vector>
 
@@ -45,7 +47,7 @@ struct Fixture
 
 void Fixture::fillColumn(unsigned int idx)
 {
-    for (unsigned int i = 0; i < ts.timeSeries.height; i++)
+    for (unsigned int i = 0; i < ts.timeSeries.height(); i++)
     {
         ts.timeSeries[idx][i] = i;
     }
@@ -53,7 +55,7 @@ void Fixture::fillColumn(unsigned int idx)
 
 void Fixture::fillColumnReverse(unsigned int idx)
 {
-    for (unsigned int i = 0; i < ts.timeSeries.height; i++)
+    for (unsigned int i = 0; i < ts.timeSeries.height(); i++)
     {
         ts.timeSeries[idx][i] = HOURS_PER_YEAR - i;
     }
@@ -61,8 +63,8 @@ void Fixture::fillColumnReverse(unsigned int idx)
 
 void Fixture::fillTsnum()
 {
-    tsnum.reset(ts.timeSeries.width);
-    for (unsigned int i = 0; i < ts.timeSeries.width; i++)
+    tsnum.reset(ts.timeSeries.width());
+    for (unsigned int i = 0; i < ts.timeSeries.width(); i++)
     {
         tsnum[i] = i;
     }
@@ -97,6 +99,40 @@ private:
 // ==================
 
 BOOST_AUTO_TEST_SUITE(timeseries_tests)
+
+BOOST_FIXTURE_TEST_CASE(load_hourly_prefix_and_reject_invalid_required_rows, Fixture)
+{
+    const auto directory = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    const auto path = directory / "series.txt";
+    {
+        std::ofstream output(path);
+        for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
+        {
+            output << i << '\n';
+        }
+        output << "ignored\n";
+    }
+    BOOST_REQUIRE(ts.loadFromFile(path, false));
+    BOOST_CHECK_EQUAL(ts.timeSeries.height(), HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(ts.timeSeries[0][HOURS_PER_YEAR - 1], HOURS_PER_YEAR - 1);
+    {
+        std::ofstream output(path);
+        output << "bad\n";
+        for (unsigned int i = 1; i < HOURS_PER_YEAR; ++i)
+        {
+            output << i << '\n';
+        }
+    }
+    BOOST_CHECK(!ts.loadFromFile(path, false));
+    {
+        std::ofstream output(path);
+        for (unsigned int i = 0; i < HOURS_PER_YEAR - 1; ++i)
+        {
+            output << i << '\n';
+        }
+    }
+    BOOST_CHECK(!ts.loadFromFile(path, false));
+}
 
 BOOST_FIXTURE_TEST_CASE(getSeriesIndex, Fixture)
 {
@@ -161,7 +197,7 @@ BOOST_FIXTURE_TEST_CASE(operatorArray, Fixture)
 {
     ts.resize(4, HOURS_PER_YEAR);
     fillTsnum();
-    auto* col = ts[2];
+    auto col = ts[2];
     col[27] = 12;
     BOOST_CHECK_EQUAL(ts.getCoefficient(2, 27), 12);
 }

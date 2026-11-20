@@ -17,8 +17,8 @@ IntermediateValues::IntermediateValues():
     calendar(nullptr),
     year(0.)
 {
-    Antares::Memory::Allocate<Type>(hour, HOURS_PER_YEAR);
-    Antares::Memory::Zero(HOURS_PER_YEAR, hour);
+    hour.resize(HOURS_PER_YEAR);
+    std::fill(hour.begin(), hour.end(), Type{});
     (void)::memset(month, 0, sizeof(Type) * MONTHS_PER_YEAR);
     (void)::memset(week, 0, sizeof(Type) * WEEKS_PER_YEAR);
     (void)::memset(day, 0, sizeof(Type) * DAYS_PER_YEAR);

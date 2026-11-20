@@ -52,7 +52,7 @@ struct MaxMargeCsrTraits
 
     static void weekForEachArea(IntermediateValues& iv, State& state, unsigned int numSpace)
     {
-        double* rawhourly = Memory::RawPointer(iv.hour);
+        double* rawhourly = iv.hour.data();
         MaxMrgCSRdataFactory maxMRGcsrDataFactory(state, numSpace);
         MaxMRGinput maxMRGinput = maxMRGcsrDataFactory.data();
         computeMaxMRG(rawhourly + state.hourInTheYear, maxMRGinput);

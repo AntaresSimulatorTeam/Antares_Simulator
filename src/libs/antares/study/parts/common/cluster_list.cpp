@@ -137,7 +137,6 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter& writer
         fs::path path = basePath / cluster->parentArea->id.c_str()
                         / std::string(cluster->id() + ".txt");
 
-        ts_content.clear(); // We must clear ts_content here, since saveToBuffer does not do it.
         cluster->series.timeseriesNumbers.saveToBuffer(ts_content);
         writer.addEntryFromBuffer(path, ts_content);
     }

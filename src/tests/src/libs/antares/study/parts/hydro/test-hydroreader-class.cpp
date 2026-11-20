@@ -9,6 +9,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/array/matrix-io.h>
 #include <antares/array/matrix.h>
 #include <antares/study/study.h>
 
@@ -18,8 +19,8 @@ using namespace Antares;
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
-bool equalDailyMaxPowerAsHourlyTs(const Matrix<double>::ColumnType& hourlyColumn,
-                                  const Matrix<double>::ColumnType& dailyColumn)
+bool equalDailyMaxPowerAsHourlyTs(Matrix::ConstColumnType hourlyColumn,
+                                  Matrix::ConstColumnType dailyColumn)
 {
     uint hour = 0;
     uint day = 0;
@@ -40,8 +41,7 @@ bool equalDailyMaxPowerAsHourlyTs(const Matrix<double>::ColumnType& hourlyColumn
     return true;
 }
 
-bool equalDailyMaxEnergyTs(const Matrix<double>::ColumnType& col1,
-                           const Matrix<double>::ColumnType& col2)
+bool equalDailyMaxEnergyTs(Matrix::ConstColumnType col1, Matrix::ConstColumnType col2)
 {
     for (uint h = 0; h < DAYS_PER_YEAR; ++h)
     {
@@ -54,7 +54,7 @@ bool equalDailyMaxEnergyTs(const Matrix<double>::ColumnType& col1,
     return true;
 }
 
-void fillColumnWithSpecialEnds(Matrix<double>::ColumnType& col, double value, uint heigth)
+void fillColumnWithSpecialEnds(Matrix::ColumnType col, double value, uint heigth)
 {
     col[0] = value + 1;
     col[heigth - 1] = value + 2;
@@ -81,23 +81,23 @@ struct Fixture
         // Create necessary folders and files for these two areas
         createFoldersAndFiles();
 
-        auto& gen = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxP];
+        auto gen = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxP];
         fillColumnWithSpecialEnds(gen, 300., DAYS_PER_YEAR);
 
-        auto& pump = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxP];
+        auto pump = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxP];
         fillColumnWithSpecialEnds(pump, 200., DAYS_PER_YEAR);
 
-        auto& hoursGen = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxE];
+        auto hoursGen = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxE];
         fillColumnWithSpecialEnds(hoursGen, 20., DAYS_PER_YEAR);
 
-        auto& hoursPump = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxE];
+        auto hoursPump = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxE];
         fillColumnWithSpecialEnds(hoursPump, 14., DAYS_PER_YEAR);
 
         std::string buffer;
         buffer.clear();
         buffer = base_folder + SEP + hydro_folder + SEP + common_folder + SEP + capacity_folder
                  + SEP + maxpower + area_1->id.c_str() + ".txt";
-        dailyMaxPumpAndGen.saveToCSVFile(buffer, 2);
+        MatrixIO::save(dailyMaxPumpAndGen, buffer, 2);
     }
 
     void createFoldersAndFiles()
@@ -159,7 +159,7 @@ struct Fixture
     std::string maxpower = "maxpower_";
     std::string maxHourlyGenPower = "maxHourlyGenPower.txt";
     std::string maxHourlyPumpPower = "maxHourlyPumpPower.txt";
-    Matrix<double> dailyMaxPumpAndGen;
+    Matrix dailyMaxPumpAndGen;
 
     ~Fixture()
     {
@@ -174,21 +174,19 @@ BOOST_FIXTURE_TEST_CASE(Testing_support_for_old_studies, Fixture)
     std::string buffer;
     bool ret = true;
 
-    auto& genP = area_1->hydro.series->maxHourlyGenPower.timeSeries[0];
-    auto& pumpP = area_1->hydro.series->maxHourlyPumpPower.timeSeries[0];
-    auto& genE = area_1->hydro.dailyNbHoursAtGenPmax[0];
-    auto& pumpE = area_1->hydro.dailyNbHoursAtPumpPmax[0];
-
-    auto& genPReader = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxP];
-    auto& pumpPReader = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxP];
-    auto& genEReader = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxE];
-    auto& pumpEReader = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxE];
-
     buffer.clear();
     buffer = base_folder + SEP + hydro_folder;
     ret = reader->read(buffer) && ret;
 
     BOOST_CHECK(ret);
+    auto genP = area_1->hydro.series->maxHourlyGenPower.timeSeries[0];
+    auto pumpP = area_1->hydro.series->maxHourlyPumpPower.timeSeries[0];
+    auto genE = area_1->hydro.dailyNbHoursAtGenPmax[0];
+    auto pumpE = area_1->hydro.dailyNbHoursAtPumpPmax[0];
+    auto genPReader = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxP];
+    auto pumpPReader = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxP];
+    auto genEReader = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::genMaxE];
+    auto pumpEReader = dailyMaxPumpAndGen[HydroMaxTimeSeriesReader::pumpMaxE];
     BOOST_CHECK(equalDailyMaxPowerAsHourlyTs(genP, genPReader));
     BOOST_CHECK(equalDailyMaxPowerAsHourlyTs(pumpP, pumpPReader));
     BOOST_CHECK(equalDailyMaxEnergyTs(genE, genEReader));

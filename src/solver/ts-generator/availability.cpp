@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include <antares/array/matrix-io.h>
 #include <antares/io/file.h> // For Antares::IO::fileSetContent
 #include <antares/logs/logs.h>
 #include <antares/solver/ts-generator/generator.h>
@@ -27,7 +28,7 @@ AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(Data::ThermalCluster* c
 }
 
 AvailabilityTSGeneratorData::AvailabilityTSGeneratorData(LinkTSgenerationParams& source,
-                                                         Matrix<>& modulation,
+                                                         Matrix& modulation,
                                                          const std::string& areaDestName):
     unitCount(source.unitCount),
     nominalCapacity(source.nominalCapacity),
@@ -48,7 +49,7 @@ class AvailabilityTSgenerator final
 public:
     explicit AvailabilityTSgenerator(bool, unsigned, MersenneTwister&);
 
-    Matrix<double> run(AvailabilityTSGeneratorData&) const;
+    Matrix run(AvailabilityTSGeneratorData&) const;
 
 private:
     bool derated;
@@ -160,11 +161,11 @@ int AvailabilityTSgenerator::durationGenerator(Data::StatisticalLaw law,
     return 0;
 }
 
-Matrix<double> AvailabilityTSgenerator::run(AvailabilityTSGeneratorData& tsGenerationData) const
+Matrix AvailabilityTSgenerator::run(AvailabilityTSGeneratorData& tsGenerationData) const
 {
     assert(tsGenerationData.prepro);
 
-    Matrix<double> to_return;
+    Matrix to_return;
     to_return.reset(nbOfSeriesToGen_, 24 * DAYS_PER_YEAR);
 
     if (0 == tsGenerationData.unitCount || 0 == tsGenerationData.nominalCapacity)
@@ -176,17 +177,17 @@ Matrix<double> AvailabilityTSgenerator::run(AvailabilityTSGeneratorData& tsGener
 
     int AUN = tsGenerationData.unitCount;
 
-    auto& FOD = preproData.data[Data::PreproAvailability::foDuration];
+    auto FOD = preproData.data[Data::PreproAvailability::foDuration];
 
-    auto& POD = preproData.data[Data::PreproAvailability::poDuration];
+    auto POD = preproData.data[Data::PreproAvailability::poDuration];
 
-    auto& FOR = preproData.data[Data::PreproAvailability::foRate];
+    auto FOR = preproData.data[Data::PreproAvailability::foRate];
 
-    auto& POR = preproData.data[Data::PreproAvailability::poRate];
+    auto POR = preproData.data[Data::PreproAvailability::poRate];
 
-    auto& NPOmin = preproData.data[Data::PreproAvailability::npoMin];
+    auto NPOmin = preproData.data[Data::PreproAvailability::npoMin];
 
-    auto& NPOmax = preproData.data[Data::PreproAvailability::npoMax];
+    auto NPOmax = preproData.data[Data::PreproAvailability::npoMax];
 
     double f_volatility = tsGenerationData.forcedVolatility;
 
@@ -572,10 +573,10 @@ std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& are
     return clusters;
 }
 
-void writeTStoDisk(const Matrix<>& series, const std::filesystem::path savePath)
+void writeTStoDisk(const Matrix& series, const std::filesystem::path savePath)
 {
     std::string buffer;
-    series.saveToBuffer(buffer, 0);
+    MatrixIO::saveToBuffer(series, buffer, 0, false, std::identity{}, true);
 
     std::filesystem::path parentDir = savePath.parent_path();
     if (!std::filesystem::exists(parentDir))

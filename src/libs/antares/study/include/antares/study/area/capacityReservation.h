@@ -9,6 +9,7 @@
 #include <set>
 #include <vector>
 
+#include <antares/array/matrix-io.h>
 #include <antares/logs/logs.h>
 #include <antares/study/fwd.h>
 #include <antares/utils/utils.h>
@@ -58,8 +59,7 @@ struct CapacityReservation
 
     void loadNeedFromFile(const fs::path& path)
     {
-        Matrix<>::BufferType fileContent;
-        if (!need.timeSeries.loadFromCSVFile(path.string(), 1, HOURS_PER_YEAR, &fileContent))
+        if (!MatrixIO::load(need.timeSeries, path, 1, HOURS_PER_YEAR))
         {
             throw std::runtime_error("Failed to load need from CSV file: " + path.string());
         }

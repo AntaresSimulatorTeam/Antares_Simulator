@@ -14,7 +14,7 @@ const unsigned int nbHoursInWeek = 168;
 namespace Antares::Solver::Variable::Economy
 {
 
-MaxMrgDataFactory::MaxMrgDataFactory(const State& state, unsigned int numSpace):
+MaxMrgDataFactory::MaxMrgDataFactory(State& state, unsigned int numSpace):
     state_(state),
     numSpace_(numSpace),
     weeklyResults_(state.problemeHebdo->ResultatsHoraires[state.area->index])
@@ -36,7 +36,7 @@ MaxMRGinput MaxMrgUsualDataFactory::data()
     }
     else
     {
-        maxMRGinput_.spillage = state_.resSpilled[state_.area->index];
+        maxMRGinput_.spillage = state_.resSpilled[state_.area->index].data();
     }
 
     maxMRGinput_.dens = weeklyResults_.ValeursHorairesDeDefaillancePositive.data();

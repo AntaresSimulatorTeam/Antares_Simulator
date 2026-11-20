@@ -5,6 +5,7 @@
 #include <fmt/format.h>
 
 #include <antares/antares/fatal-error.h>
+#include <antares/array/matrix-io.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include <antares/writer/i_writer.h>
@@ -50,19 +51,19 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
     uint DIM = MONTHS_PER_YEAR * study.areas.size();
     uint DEM = DIM / 2;
 
-    Matrix<double> CHSKY;
+    Matrix CHSKY;
     CHSKY.reset(DIM, DIM);
 
     std::vector<double> QCHOLTemp(DIM);
 
-    Matrix<double> B;
+    Matrix B;
     B.reset(DIM, DIM);
     double x, y, z, u;
     double** nullmatrx = nullptr;
 
-    if (1. > Solver::MatrixDPMake<double>(CHSKY.entry,
-                                          study.preproHydroCorrelation.annual.entry,
-                                          B.entry,
+    if (1. > Solver::MatrixDPMake<double>(CHSKY,
+                                          study.preproHydroCorrelation.annual,
+                                          B,
                                           nullmatrx,
                                           study.areas.size(),
                                           QCHOLTemp.data(),
@@ -71,7 +72,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
         throw FatalError("TS Generator: Hydro: Invalid correlation matrix");
     }
 
-    Matrix<double> CORRE;
+    Matrix CORRE;
     CORRE.reset(DIM, DIM);
 
     for (uint i = 0; i < DIM; i++)
@@ -79,9 +80,9 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
         uint areaIndexI = i / MONTHS_PER_YEAR;
         auto* prepro = study.areas.byIndex[areaIndexI]->hydro.prepro.get();
 
-        auto& corre = CORRE[i];
+        auto corre = CORRE[i];
 
-        auto& annualCorrAreaI = study.preproHydroCorrelation.annual[areaIndexI];
+        auto annualCorrAreaI = study.preproHydroCorrelation.annual[areaIndexI];
 
         for (uint j = 0; j < DIM; j++)
         {
@@ -98,9 +99,9 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
     }
 
     {
-        double r = Solver::MatrixDPMake<double>(CHSKY.entry,
-                                                CORRE.entry,
-                                                B.entry,
+        double r = Solver::MatrixDPMake<double>(CHSKY,
+                                                CORRE,
+                                                B,
                                                 nullmatrx,
                                                 DIM,
                                                 QCHOLTemp.data(),
@@ -115,7 +116,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
         }
     }
 
-    Solver::Cholesky<double>(CHSKY.entry, B.entry, DIM, QCHOLTemp.data());
+    Solver::Cholesky<double>(CHSKY, B, DIM, QCHOLTemp.data());
 
     B.clear();
     CORRE.clear();
@@ -151,16 +152,16 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
             auto& series = *area.hydro.series;
             auto ror = series.ror[l];
 
-            auto& colExpectation = prepro.data[Data::PreproHydro::expectation];
-            auto& colStdDeviation = prepro.data[Data::PreproHydro::stdDeviation];
-            auto& colMinEnergy = prepro.data[Data::PreproHydro::minimumEnergy];
-            auto& colMaxEnergy = prepro.data[Data::PreproHydro::maximumEnergy];
-            auto& colPOW = prepro.data[Data::PreproHydro::powerOverWater];
+            auto colExpectation = prepro.data[Data::PreproHydro::expectation];
+            auto colStdDeviation = prepro.data[Data::PreproHydro::stdDeviation];
+            auto colMinEnergy = prepro.data[Data::PreproHydro::minimumEnergy];
+            auto colMaxEnergy = prepro.data[Data::PreproHydro::maximumEnergy];
+            auto colPOW = prepro.data[Data::PreproHydro::powerOverWater];
 
             uint month = i % MONTHS_PER_YEAR;
             uint realmonth = calendar.months[month].realmonth;
 
-            assert(l < series.ror.timeSeries.width);
+            assert(l < series.ror.timeSeries.width());
             assert(not std::isnan(colPOW[realmonth]));
 
             double EnergieHydrauliqueTotaleMensuelle = 0;
@@ -258,11 +259,21 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
               fs::path outputFolder = fs::path("ts-generator") / "hydro" / mcYear / area.id;
 
               std::string buffer;
-              area.hydro.series->ror.timeSeries.saveToBuffer(buffer, precision);
+              MatrixIO::saveToBuffer(area.hydro.series->ror.timeSeries,
+                                     buffer,
+                                     precision,
+                                     false,
+                                     std::identity{},
+                                     true);
               fs::path outputFile = outputFolder / "ror.txt";
               writer.addEntryFromBuffer(outputFile, buffer);
 
-              area.hydro.series->storage.timeSeries.saveToBuffer(buffer, precision);
+              MatrixIO::saveToBuffer(area.hydro.series->storage.timeSeries,
+                                     buffer,
+                                     precision,
+                                     false,
+                                     std::identity{},
+                                     true);
               outputFile = outputFolder / "storage.txt";
               writer.addEntryFromBuffer(outputFile, buffer);
           });

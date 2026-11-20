@@ -148,14 +148,14 @@ public:
         // Total SpilledEnergy emissions
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
           = +state.hourlyResults->ValeursHorairesDeDefaillanceNegative[state.hourInTheWeek]
-            + state.resSpilled.entry[state.area->index][state.hourInTheWeek];
+            + state.resSpilled[state.area->index][state.hourInTheWeek];
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
       unsigned int,
       unsigned int numSpace) const
     {
-        return pValuesForTheCurrentYear[numSpace].hour;
+        return pValuesForTheCurrentYear[numSpace].hour.data();
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,

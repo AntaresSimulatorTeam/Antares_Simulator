@@ -1324,7 +1324,7 @@ reserves:
                       5.5);
 
     BOOST_CHECK_EQUAL(
-      areaA->allCapacityReservations->getReserveByID("reserveup")->need.timeSeries.height,
+      areaA->allCapacityReservations->getReserveByID("reserveup")->need.timeSeries.height(),
       HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(
       areaA->allCapacityReservations->getReserveByID("reserveup")->need.timeSeries[0][0],

@@ -27,7 +27,7 @@ class TimeSeriesConfigurer final
 public:
     TimeSeriesConfigurer() = default;
 
-    TimeSeriesConfigurer(Matrix<>& matrix):
+    TimeSeriesConfigurer(Matrix& matrix):
         ts_(&matrix)
     {
     }
@@ -42,7 +42,7 @@ public:
     TimeSeriesConfigurer& fillColumnWith(unsigned column, const std::vector<double>& values);
 
 private:
-    Matrix<>* ts_ = nullptr;
+    Matrix* ts_ = nullptr;
 };
 
 class ThermalClusterConfig final

@@ -16,22 +16,25 @@ StudyData::StudyData():
 {
 }
 
-void StudyData::prepareMatrix(Matrix<float>& m, const Matrix<float>& source) const
+void StudyData::prepareMatrix(ColumnMatrix<float>& m, const Matrix& source) const
 {
     uint areaCount = (uint)localareas.size();
-    m.resize(areaCount, areaCount);
-    m.fillUnit();
+    m.reset(areaCount, areaCount);
+    for (uint i = 0; i < areaCount; ++i)
+    {
+        m[i][i] = 1.f;
+    }
 
-    for (uint x = 1; x < m.width; ++x)
+    for (uint x = 1; x < m.width(); ++x)
     {
         uint areaXindx = localareas[x]->index;
-        auto& sourceX = source[areaXindx];
-        auto& mX = m[x];
+        auto sourceX = source[areaXindx];
+        auto mX = m[x];
 
         for (uint y = 0; y < x; ++y)
         {
             uint areaYindx = localareas[y]->index;
-            float d = sourceX[areaYindx];
+            const float d = static_cast<float>(sourceX[areaYindx]);
             mX[y] = d;
             m[y][x] = d;
         }

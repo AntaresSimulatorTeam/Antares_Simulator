@@ -149,8 +149,8 @@ public:
     bool isActive() const;
 
     // Ref to prevent copy. const ref to prevent modification.
-    const Matrix<>& RHSTimeSeries() const;
-    Matrix<>& RHSTimeSeries();
+    const Matrix& RHSTimeSeries() const;
+    Matrix& RHSTimeSeries();
 
     //! \name Links
     //@{
@@ -291,7 +291,7 @@ private:
     std::string pID;
     //! Time series of the binding constraint. Width = number of series. Height = nbTimeSteps. Only
     //! store series for operatorType
-    Matrix<> RHSTimeSeries_;
+    Matrix RHSTimeSeries_;
     //! Weights for links
     linkWeightMap pLinkWeights;
     //! Weights for thermal clusters

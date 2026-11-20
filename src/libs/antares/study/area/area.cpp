@@ -17,9 +17,6 @@ Area::Area():
     reserves(fhrMax, HOURS_PER_YEAR),
     miscGen(fhhMax, HOURS_PER_YEAR)
 {
-    // Matrix(width, height) allocates without zero-filling; reserves/miscGen must start at 0.
-    reserves.zero();
-    miscGen.zero();
 }
 
 Area::Area(const std::string& name):

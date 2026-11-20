@@ -1,8 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include <yuni/yuni.h>
-
+#include <antares/array/matrix-io.h>
 #include <antares/logs/logs.h>
 #include <antares/study/parts/thermal/prepro.h>
 #include "antares/study/study.h"
@@ -24,24 +23,29 @@ void PreproAvailability::copyFrom(const PreproAvailability& rhs)
 
 bool PreproAvailability::saveToFolder(const AnyString& folder) const
 {
-    if (Yuni::IO::Directory::Create(folder))
+    const auto folderPath = std::filesystem::path(folder.c_str());
+    std::error_code ec;
+    const bool created = std::filesystem::create_directories(folderPath, ec);
+    std::error_code directoryEc;
+    const bool isDirectory = std::filesystem::is_directory(folderPath, directoryEc);
+    if (created || isDirectory)
     {
-        Yuni::String buffer;
-        buffer.clear() << folder << Yuni::IO::Separator << "data.txt";
-        return data.saveToCSVFile(buffer, /*decimal*/ 6);
+        const auto buffer = folderPath / "data.txt";
+        return MatrixIO::save(data, buffer.string(), /*decimal*/ 6);
     }
     return false;
 }
 
-bool PreproAvailability::loadFromFolder(Study& study, const std::filesystem::path& folder)
+bool PreproAvailability::loadFromFolder(Study&, const std::filesystem::path& folder)
 {
     auto filePath = folder / "data.txt";
     // standard loading
-    return data.loadFromCSVFile(filePath.string(),
-                                preproAvailabilityMax,
-                                DAYS_PER_YEAR,
-                                Matrix<>::optFixedSize,
-                                &study.dataBuffer);
+    return MatrixIO::loadOrReset(data,
+                                 filePath.string(),
+                                 preproAvailabilityMax,
+                                 DAYS_PER_YEAR,
+                                 MatrixIO::WidthPolicy::Exact,
+                                 MatrixIO::RowPolicy::Prefix);
 }
 
 bool PreproAvailability::validate() const
@@ -122,8 +126,8 @@ bool PreproAvailability::validate() const
 bool PreproAvailability::normalizeAndCheckNPO()
 {
     // alias to our data columns
-    auto& columnNPOMax = data[npoMax];
-    auto& columnNPOMin = data[npoMin];
+    auto columnNPOMax = data[npoMax];
+    auto columnNPOMin = data[npoMin];
     // errors management
     uint errors = 0;
     uint maxErrors = 10;
@@ -131,7 +135,7 @@ bool PreproAvailability::normalizeAndCheckNPO()
     // Flag to determine whether the column NPO max has been normalized or not
     bool normalized = false;
 
-    for (uint y = 0; y != data.height; ++y)
+    for (uint y = 0; y != data.height(); ++y)
     {
         if (columnNPOMax[y] > unitCount)
         {
