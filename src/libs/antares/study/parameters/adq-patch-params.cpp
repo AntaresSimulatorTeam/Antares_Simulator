@@ -50,6 +50,7 @@ void CurtailmentSharing::resetThresholds()
 {
     // Initialize all thresholds values for adequacy patch
     thresholdRun = defaultThresholdToRunCurtailmentSharing;
+    thresholdEns = defaultThresholdEns;
     thresholdDisplayViolations = defaultThresholdDisplayLocalMatchingRuleViolations;
     thresholdVarBoundsRelaxation = defaultValueThresholdVarBoundsRelaxation;
 }
@@ -97,6 +98,10 @@ bool CurtailmentSharing::updateFromKeyValue(const std::string& key, const std::s
     if (key == "threshold-initiate-curtailment-sharing-rule")
     {
         return Antares::stringToDouble(value, thresholdRun);
+    }
+    if (key == "threshold-ens")
+    {
+        return Antares::stringToDouble(value, thresholdEns);
     }
     if (key == "threshold-display-local-matching-rule-violations")
     {

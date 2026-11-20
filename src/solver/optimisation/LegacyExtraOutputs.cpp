@@ -328,10 +328,12 @@ void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
     // 5 MW threshold for near LoL detection
     // Use the user-provided cost, not the noised one fed to the optimisation
     constexpr double nearLossOfLoadCutoff = 5.;
+    constexpr double nearLossOfLoadTolerance = 0.01;
     emit("is_near_loss_of_load",
          area,
          pdt,
          price > problemeHebdo_.CoutDeDefaillancePositiveSansBruit[pays] - nearLossOfLoadCutoff
+                   + nearLossOfLoadTolerance
            ? 1.
            : 0.);
 
