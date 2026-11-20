@@ -188,6 +188,10 @@ class solver_output_handler:
         df = self.__get_values_hourly(area, year)
         return int(df["NPCAP HOURS"]["Hours"].iloc[hour])
 
+    def get_npcap_hours_csr_for_hour(self, area: str, year: int, hour: int) -> int:
+        df = self.__get_values_hourly(area, year)
+        return int(df["NPCAP HOURS CSR"]["Hours"].iloc[hour])
+
     def get_mps_files(self):
         return list(Path(self.study_output_path).glob("*.mps"))
 
