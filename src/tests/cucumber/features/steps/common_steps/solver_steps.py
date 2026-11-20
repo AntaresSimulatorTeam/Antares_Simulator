@@ -104,6 +104,15 @@ def enable_adequacy_patch_for_area(context, area):
     file_path = context.study_path / "input" / "areas" / area.lower() / "adequacy_patch.ini"
     context.sih.set_value("adequacy-patch-mode", "inside", file_path)
 
+@given('the adequacy patch ENS threshold is {value:g} MWh')
+def set_adequacy_patch_ens_threshold(context, value):
+    assert hasattr(context, "tmp_workdir"), "This step requires a copy of the study"
+    path = context.study_path / "settings" / "generaldata.ini"
+    contents = path.read_text()
+    assert "[adequacy patch]" in contents
+    contents = contents.replace("[adequacy patch]", f"[adequacy patch]\nthreshold-ens = {value}", 1)
+    path.write_text(contents)
+
 @then('in area "{area}", year {year:d} and hour {hour:d}, near price cap CSR is {value:d} hours')
 def check_near_price_cap_csr(context, area, year, hour, value):
     actual = context.soh.get_npcap_hours_csr_for_hour(area, year, hour)

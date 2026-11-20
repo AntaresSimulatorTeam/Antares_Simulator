@@ -47,6 +47,6 @@ Feature: tests for v9.3
     When I run antares simulator
     Then the simulation succeeds
     And in area "area", year 1 and hour 0, near price cap CSR is 0 hours
-    And in area "area", year 1 and hour 48, near price cap CSR is 1 hours
+    And in area "area", year 1 and hour 73, near price cap CSR is 1 hours
     And in area "area 4", year 1 and hour 11, near price cap CSR is 1 hours
     And in area "area 4", year 1 and hour 13, near price cap CSR is 0 hours
