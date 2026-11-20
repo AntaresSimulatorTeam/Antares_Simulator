@@ -4,6 +4,8 @@
 #include "antares/io/inputs/yml-system/converter.h"
 
 #include <algorithm>
+#include <cctype>
+#include <map>
 #include <sstream>
 #include <string_view>
 #include <utility>
@@ -232,6 +234,54 @@ void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& connecti
                                            connection.thermalComponent.clusterId);
 }
 
+void connectLinkCapacity(const YmlSystem::LinkCapacityConnection& connection,
+                         std::vector<Component>& components)
+{
+    auto& component = findComponent(connection.componentId, components);
+    component.addLinkCapacityConnection(connection.portId,
+                                        connection.linkComponent.from,
+                                        connection.linkComponent.to);
+}
+
+/**
+ * @brief Only one component port can give the capacity of a legacy link: a second connection
+ * would add a second set of capacity constraints on the same flow.
+ *
+ * @throw IO::Inputs::InputError if two link-capacity connections reference the same link
+ */
+void checkLinkCapacityConnectionsAreUnique(
+  const std::vector<YmlSystem::LinkCapacityConnection>& connections)
+{
+    auto toLower = [](std::string value)
+    {
+        std::ranges::transform(value,
+                               value.begin(),
+                               [](unsigned char c) { return std::tolower(c); });
+        return value;
+    };
+    std::map<std::pair<std::string, std::string>, const YmlSystem::LinkCapacityConnection*>
+      connectedLinks;
+    for (const auto& connection: connections)
+    {
+        auto [it, inserted] = connectedLinks.try_emplace({toLower(connection.linkComponent.from),
+                                                          toLower(connection.linkComponent.to)},
+                                                         &connection);
+        if (!inserted)
+        {
+            throw InputError(fmt::format(
+              "Link '(from = {}, to = {})' has several link-capacity connections (component '{}' "
+              "port '{}', and component '{}' port '{}'). Only one is supported: gather the "
+              "capacities in a single model.",
+              connection.linkComponent.from,
+              connection.linkComponent.to,
+              it->second->componentId,
+              it->second->portId,
+              connection.componentId,
+              connection.portId));
+        }
+    }
+}
+
 } // anonymous namespace
 
 void checkForNonLinearityBehindConnections(const std::vector<Component>& components)
@@ -297,6 +347,14 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
         logs.debug() << "Loaded thermal-capacity connection (component=`" << connection.componentId
                      << "` area=`" << connection.thermalComponent.areaId << "` clusterId=`"
                      << connection.thermalComponent.clusterId << "`)";
+    }
+    checkLinkCapacityConnectionsAreUnique(ymlSystem.linkCapacityConnections);
+    for (const auto& connection: ymlSystem.linkCapacityConnections)
+    {
+        connectLinkCapacity(connection, components);
+        logs.debug() << "Loaded link-capacity connection (component=`" << connection.componentId
+                     << "` from=`" << connection.linkComponent.from << "` to=`"
+                     << connection.linkComponent.to << "`)";
     }
 
     // Build system from components and connections

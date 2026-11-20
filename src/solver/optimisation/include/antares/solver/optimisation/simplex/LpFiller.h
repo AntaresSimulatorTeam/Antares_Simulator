@@ -42,7 +42,8 @@ public:
      *
      * Adds fillers based on whether modeler data is present:
      * - Always: LegacyFiller
-     * - With modeler: ComponentFiller(s), ComponentToAreaConnectionFiller, ThermalCapacityFiller
+     * - With modeler: ComponentFiller(s), ComponentToAreaConnectionFiller, ThermalCapacityFiller,
+     *   LinkCapacityFiller
      *
      * @param fillCtx Context with time step ranges.
      * @param problemeHebdo The weekly optimization problem.

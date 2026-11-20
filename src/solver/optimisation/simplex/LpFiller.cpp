@@ -9,6 +9,7 @@
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
+#include "antares/solver/optimisation/LinkCapacityFiller.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
 #include "antares/study/system-model/system.h"
 
@@ -72,6 +73,7 @@ void LpFiller::fillLinearProblem(const LinearProblem::Api::FillContext& fillCtx,
                                  LinearProblem::OptimEntityContainer& optimEntityContainer,
                                  LinearProblem::BendersDecomposition* bendersDecomposition)
 {
+    problemeHebdo.linkCapacityConstraints.clear();
     std::vector<std::unique_ptr<LinearProblem::Api::LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
       std::make_unique<Antares::Optimization::LegacyFiller>(optimEntityContainer.Problem(),
@@ -95,6 +97,12 @@ void LpFiller::fillLinearProblem(const LinearProblem::Api::FillContext& fillCtx,
             problemeHebdo.modelerData->scenarioGroupRepository));
 
         fillersCollection.push_back(std::make_unique<Antares::Optimization::ThermalCapacityFiller>(
+          &problemeHebdo,
+          optimEntityContainer,
+          problemeHebdo.modelerData->dataSeries.get(),
+          problemeHebdo.modelerData->scenarioGroupRepository));
+        // Must run after LegacyFiller: it overrides the legacy NTC bounds of the flow variables
+        fillersCollection.push_back(std::make_unique<Antares::Optimization::LinkCapacityFiller>(
           &problemeHebdo,
           optimEntityContainer,
           problemeHebdo.modelerData->dataSeries.get(),
