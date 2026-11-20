@@ -22,6 +22,7 @@ target_link_libraries(yml-model
         fmt::fmt
         Antares::yml-utils
         PRIVATE
+        Antares::yml-schema
         yaml-cpp::yaml-cpp
 )
 

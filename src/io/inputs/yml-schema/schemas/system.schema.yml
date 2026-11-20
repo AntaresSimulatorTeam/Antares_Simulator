@@ -1,0 +1,186 @@
+# JSON Schema (draft 2020-12), authored in YAML, for GEMS system files (input/system.yml).
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://raw.githubusercontent.com/AntaresSimulatorTeam/GEMS/schemas-v0.1.0/schemas/system.schema.yml
+title: GEMS system
+x-schema-version: 0.1.0
+x-status: draft
+description: >-
+  Base: GemsPy `gems_craft.study.parsing` (SystemSchema, plus HybridSystemSchema for the two
+  hybrid sections), completed by GEMS doc/user-guide/input-files/system.md and
+  doc/interoperability/hybrid. Keys marked `x-discrepancy` are handled differently by at least
+  one other project; see DISCREPANCIES.md.
+
+type: object
+required: [system]
+additionalProperties: false
+properties:
+  system:
+    $ref: "#/$defs/System"
+
+$defs:
+  System:
+    type: object
+    additionalProperties: false
+    properties:
+      id:
+        description: >-
+          Optional in GemsPy and Antares_Simulator, mandatory in AntaREST, documented without an
+          "optional" tag (S02). Follows `Identifier` (relaxed, L08).
+        $ref: common.schema.yml#/$defs/Identifier
+        x-discrepancy: [S02]
+      description:
+        description: Documented, accepted by Antares_Simulator and AntaREST, REJECTED by GemsPy (S01).
+        type: string
+        x-discrepancy: [S01]
+      model-libraries:
+        description: >-
+          Documented as a comma-separated list of library ids. GemsPy types it as a string and does
+          not use it (S08). Several real files (GemsPy test studies, the PyPSA converter output) spell
+          the key `model_libraries`, which this schema rejects (S13).
+        type: string
+        x-discrepancy: [S08, S13]
+      components:
+        description: Mandatory in AntaREST, defaults to an empty list elsewhere (S03).
+        type: array
+        items:
+          $ref: "#/$defs/Component"
+        x-discrepancy: [S03]
+      connections:
+        type: array
+        items:
+          $ref: "#/$defs/Connection"
+      area-connections:
+        description: >-
+          Hybrid studies. Accepted by Antares_Simulator, AntaREST and GemsPy's hybrid schema;
+          REJECTED by GemsPy's plain SystemSchema (S09).
+        type: array
+        items:
+          $ref: "#/$defs/AreaConnection"
+        x-discrepancy: [S09]
+      thermal-capacity-connections:
+        description: Same support as `area-connections` (S09).
+        type: array
+        items:
+          $ref: "#/$defs/ThermalCapacityConnection"
+        x-discrepancy: [S09]
+
+  Component:
+    type: object
+    required: [id, model]
+    additionalProperties: false
+    properties:
+      id:
+        $ref: common.schema.yml#/$defs/Identifier
+      model:
+        description: "`<library_id>.<model_id>`. Resolution against the libraries is NOT checked (N02)."
+        type: string
+        x-simulator-deviation: >-
+          Plain string instead of `QualifiedModelId`: the `<library>.<model>` format is checked, with
+          a dedicated error message, when the system is converted.
+      scenario-group:
+        type: string
+      parameters:
+        type: array
+        items:
+          $ref: "#/$defs/ComponentParameter"
+      properties:
+        type: array
+        items:
+          $ref: common.schema.yml#/$defs/Property
+      integer-strategy:
+        description: >-
+          GemsPy (>= 0.2.0), AntaREST and the GEMS doc. The GEMS doc says the Modeler ignores it;
+          Antares_Simulator develop rejects it as an unrecognised field (S07).
+        $ref: "#/$defs/IntegerStrategy"
+        x-discrepancy: [S07]
+
+  ComponentParameter:
+    type: object
+    required: [id, value]
+    additionalProperties: false
+    properties:
+      id:
+        $ref: common.schema.yml#/$defs/Identifier
+      time-dependent:
+        description: Defaults to false in GemsPy and Antares_Simulator; the doc and AntaREST make it mandatory (S04).
+        type: boolean
+        x-discrepancy: [S04]
+      scenario-dependent:
+        description: Same as `time-dependent` (S04).
+        type: boolean
+        x-discrepancy: [S04]
+      value:
+        description: >-
+          Number for a constant parameter, data-series id for a time- or scenario-dependent one
+          (doc and AntaREST enforce this; GemsPy accepts any number-or-string, S05).
+        type: [number, string]
+      # Deviation (S06): `scenario-group` on a parameter is NOT accepted. GemsPy accepts it, but the GEMS
+      # doc only documents it on components and Antares_Simulator would silently ignore it, which
+      # would mislead users into thinking a parameter-level group is honoured.
+    # Deviation: the number-or-series-id rule (allOf/if/then/else) is dropped; Antares_Simulator reads
+    # every value as a string and rejects a series id on a constant parameter when it converts.
+    x-discrepancy: [S05]
+    x-simulator-deviation: "allOf/if/then/else on `value` removed; parameter-level `scenario-group` (S06) not accepted."
+
+  IntegerStrategy:
+    type: object
+    additionalProperties: false
+    properties:
+      id:
+        description: Defaults to `exact`.
+        enum: [exact, relaxed, heuristic]
+      heuristic-id:
+        enum: [fast, accurate]
+    if:
+      required: [id]
+      properties:
+        id: {const: heuristic}
+    then:
+      required: [heuristic-id]
+    else:
+      not:
+        required: [heuristic-id]
+
+  Connection:
+    type: object
+    required: [component1, port1, component2, port2]
+    additionalProperties: false
+    properties:
+      component1:
+        $ref: common.schema.yml#/$defs/Identifier
+      port1:
+        $ref: common.schema.yml#/$defs/Identifier
+      component2:
+        $ref: common.schema.yml#/$defs/Identifier
+      port2:
+        $ref: common.schema.yml#/$defs/Identifier
+
+  AreaConnection:
+    type: object
+    required: [component, port, area]
+    additionalProperties: false
+    properties:
+      component:
+        $ref: common.schema.yml#/$defs/Identifier
+      port:
+        $ref: common.schema.yml#/$defs/Identifier
+      area:
+        description: Legacy area id. Antares_Simulator and AntaREST lower-case it before matching.
+        type: string
+
+  ThermalCapacityConnection:
+    type: object
+    required: [component, port, thermal-component]
+    additionalProperties: false
+    properties:
+      component:
+        $ref: common.schema.yml#/$defs/Identifier
+      port:
+        $ref: common.schema.yml#/$defs/Identifier
+      thermal-component:
+        type: object
+        required: [area, cluster-id]
+        additionalProperties: false
+        properties:
+          area: {type: string}
+          cluster-id: {type: string}

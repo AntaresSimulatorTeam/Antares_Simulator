@@ -105,6 +105,7 @@ set(TARGET_LIBS #No alias
         yml-system
         yml-model
 		yml-utils
+        yml-schema
         model-converter
         modeler-parameters
         data-series-csv-importer

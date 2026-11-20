@@ -196,6 +196,7 @@ find_package(Boost CONFIG REQUIRED)
 
 find_package(antlr4-runtime REQUIRED)
 find_package(yaml-cpp REQUIRED)
+find_package(jsoncons CONFIG REQUIRED)
 find_package(fmt REQUIRED)
 
 #Sirius solver

@@ -1,0 +1,75 @@
+# Shared definitions for the GEMS input-file schemas. Not a file kind by itself.
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://raw.githubusercontent.com/AntaresSimulatorTeam/GEMS/schemas-v0.1.0/schemas/common.schema.yml
+title: GEMS common definitions
+x-schema-version: 0.1.0
+x-status: draft
+description: >-
+  Definitions shared by the model-library, system, optim-config and system-for-view schemas.
+  Reference them with `common.schema.yml#/$defs/<Name>`.
+
+$defs:
+  Identifier:
+    description: >-
+      Id of a library, model, port type, port, field, parameter, variable, constraint or component.
+      Deliberately relaxed to a non-empty string: the GEMS doc says ids are lower-case alphanumerics
+      and underscore (`StrictIdentifier`), but GemsPy and Antares_Simulator do not enforce it and many
+      real files shipped by GEMS, GemsPy and the Simulator break it (hyphens, spaces, upper case).
+      See DISCREPANCIES L08.
+    type: string
+    x-discrepancy: [L08]
+    x-simulator-deviation: "`minLength: 1` removed: Antares_Simulator accepts an empty id."
+
+  StrictIdentifier:
+    description: >-
+      The id naming rule as written in GEMS doc/user-guide/input-files/library.md. NOT referenced by
+      any schema yet: applying it would reject real files of the GEMS repository itself (L08). Kept
+      here so that the decision (fix the files, or fix the doc) can be taken in one place.
+    type: string
+    pattern: "^[a-z0-9_]+$"
+    x-discrepancy: [L08]
+
+  QualifiedModelId:
+    description: >-
+      Fully qualified model id, `<library_id>.<model_id>`: exactly one dot, as Antares_Simulator splits
+      on it. The parts follow `Identifier` (relaxed).
+    type: string
+    pattern: "^[^.]+\\.[^.]+$"
+
+  ExpressionOrNumber:
+    description: >-
+      A GEMS expression written as a string, or a bare YAML number read as the literal
+      expression (GemsPy `coerce_numbers_to_str`). The expression syntax itself is NOT checked
+      (see NOT_COVERED.md N01).
+    type: [string, number]
+    x-discrepancy: [L09]
+
+  Expression:
+    description: >-
+      A GEMS expression written as a string. The expression syntax itself is NOT checked
+      (see NOT_COVERED.md N01).
+    type: string
+
+  FreeText:
+    type: string
+
+  IdOnly:
+    description: An entry that only carries an `id`.
+    type: object
+    required: [id]
+    additionalProperties: false
+    properties:
+      id: {type: string}
+
+  Property:
+    description: >-
+      A property value set on a component: `{id, value}`. The property `id` is a free string:
+      the Simulator emits ids such as `district_all areas` (DISCREPANCIES S14).
+    type: object
+    required: [id, value]
+    additionalProperties: false
+    properties:
+      id: {type: string}
+      value: {type: [string, number, boolean]}
+    x-discrepancy: [S12, S14]
+    x-simulator-deviation: "`value` also accepts numbers and booleans: Antares_Simulator reads any scalar as a string."

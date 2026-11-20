@@ -1,0 +1,274 @@
+# JSON Schema (draft 2020-12), authored in YAML, for GEMS model-library files
+# (input/model-libraries/*.yml, libraries/*.yml).
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://raw.githubusercontent.com/AntaresSimulatorTeam/GEMS/schemas-v0.1.0/schemas/model-library.schema.yml
+title: GEMS model library
+x-schema-version: 0.1.0
+x-status: draft
+x-simulator-deviation: >-
+  Local copy for Antares_Simulator. Every collection also accepts null, which the Simulator reads
+  as absent (L12). Other deviations are marked inline with `x-simulator-deviation`.
+description: >-
+  Base: GemsPy `gems_craft.model.parsing` (pydantic, extra="forbid", kebab-case aliases),
+  completed by GEMS doc/user-guide/input-files/library.md and doc/interoperability/hybrid.
+  Keys marked `x-discrepancy` are handled differently by at least one other project; see
+  DISCREPANCIES.md. Where projects disagree the schema follows GemsPy and says so.
+
+type: object
+required: [library]
+additionalProperties: false
+properties:
+  library:
+    $ref: "#/$defs/Library"
+
+$defs:
+  Library:
+    type: object
+    required: [id]
+    additionalProperties: false
+    properties:
+      id:
+        $ref: common.schema.yml#/$defs/Identifier
+      description:
+        type: string
+      version:
+        description: Library version string. Rejected by Antares_Simulator develop (L01).
+        type: string
+        x-discrepancy: [L01]
+      taxonomy:
+        description: Id of the taxonomy the models' `taxonomy-category` refer to. Rejected by Antares_Simulator develop (L01).
+        type: string
+        x-discrepancy: [L01]
+      dependencies:
+        description: Only accepted by GemsPy; undocumented in GEMS, rejected by Antares_Simulator and AntaREST (L05).
+        type: [array, "null"]
+        items: {type: string}
+        x-discrepancy: [L05]
+      port-types:
+        type: [array, "null"]
+        items:
+          $ref: "#/$defs/PortType"
+      models:
+        type: [array, "null"]
+        items:
+          $ref: "#/$defs/Model"
+
+  PortType:
+    type: object
+    required: [id]
+    additionalProperties: false
+    properties:
+      id:
+        $ref: common.schema.yml#/$defs/Identifier
+      description:
+        type: string
+      fields:
+        type: [array, "null"]
+        items:
+          type: object
+          required: [id]
+          additionalProperties: false
+          properties:
+            id:
+              $ref: common.schema.yml#/$defs/Identifier
+      area-connection:
+        $ref: "#/$defs/AreaConnection"
+      thermal-capacity-connection:
+        $ref: "#/$defs/ThermalCapacityConnection"
+
+  AreaConnection:
+    description: >-
+      Hybrid studies only. The three keys must be present, values may be null when unused, and at
+      least one value must be set (GEMS doc hybrid-connections.md; Antares_Simulator requires the
+      three keys; GemsPy parser and AntaREST treat them as optional: L07). `price` is accepted by
+      GemsPy and Antares_Simulator, absent from the GEMS doc, rejected by AntaREST.
+    type: object
+    required: [injection-to-balance, spillage-bound, unsupplied-energy-bound]
+    additionalProperties: false
+    properties:
+      injection-to-balance: {type: [string, "null"]}
+      spillage-bound: {type: [string, "null"]}
+      unsupplied-energy-bound: {type: [string, "null"]}
+      price: {type: [string, "null"]}
+    # Deviation: the "at least one value set" rule (anyOf) is dropped, Antares_Simulator accepts
+    # an all-null area-connection.
+    x-discrepancy: [L07]
+    x-simulator-deviation: "anyOf (at least one non-null value) removed."
+
+  ThermalCapacityConnection:
+    description: Investment studies with legacy thermal clusters. Undocumented in library.md, documented in the hybrid doc.
+    type: object
+    required: [capacity-field]
+    additionalProperties: false
+    properties:
+      capacity-field: {type: [string, "null"], x-simulator-deviation: "null accepted (empty field)."}
+
+  Model:
+    type: object
+    required: [id]
+    additionalProperties: false
+    properties:
+      id:
+        $ref: common.schema.yml#/$defs/Identifier
+      description:
+        type: string
+      taxonomy-category:
+        description: Rejected by Antares_Simulator develop (L01).
+        type: string
+        x-discrepancy: [L01]
+      properties:
+        description: Declared property keys; the values are set per component in the system file. Rejected by Antares_Simulator develop (L01).
+        type: [array, "null"]
+        items:
+          $ref: common.schema.yml#/$defs/IdOnly
+        x-discrepancy: [L01]
+      parameters:
+        type: [array, "null"]
+        items:
+          $ref: "#/$defs/Parameter"
+      variables:
+        type: [array, "null"]
+        items:
+          $ref: "#/$defs/Variable"
+      ports:
+        type: [array, "null"]
+        items:
+          $ref: "#/$defs/Port"
+      port-field-definitions:
+        type: [array, "null"]
+        items:
+          $ref: "#/$defs/PortFieldDefinition"
+      constraints:
+        type: [array, "null"]
+        items:
+          $ref: "#/$defs/Constraint"
+      binding-constraints:
+        type: [array, "null"]
+        items:
+          $ref: "#/$defs/Constraint"
+      objective-contributions:
+        type: [array, "null"]
+        items:
+          $ref: "#/$defs/Objective"
+      extra-outputs:
+        type: [array, "null"]
+        items:
+          $ref: "#/$defs/ExpressionEntry"
+
+  Parameter:
+    type: object
+    required: [id]
+    additionalProperties: false
+    properties:
+      id:
+        $ref: common.schema.yml#/$defs/Identifier
+      time-dependent:
+        description: Defaults to true.
+        type: boolean
+      scenario-dependent:
+        description: Defaults to true.
+        type: boolean
+
+  Variable:
+    type: object
+    required: [id]
+    additionalProperties: false
+    properties:
+      id:
+        $ref: common.schema.yml#/$defs/Identifier
+      variable-type:
+        description: >-
+          Defaults to `continuous`. GEMS doc, GemsPy and AntaREST spell the third value `binary`;
+          Antares_Simulator develop spells it `boolean` (L02). AntaREST makes the key mandatory (L02).
+        enum: [continuous, integer, binary, boolean]
+        x-discrepancy: [L02]
+        x-simulator-deviation: "`boolean` added: Antares_Simulator accepts it and test studies use it."
+      location:
+        $ref: "#/$defs/Location"
+        x-simulator-deviation: "Simulator-only key (L04)."
+      lower-bound:
+        $ref: common.schema.yml#/$defs/ExpressionOrNumber
+      upper-bound:
+        $ref: common.schema.yml#/$defs/ExpressionOrNumber
+      time-dependent:
+        description: Defaults to true. Rejected by AntaREST (L03).
+        type: boolean
+        x-discrepancy: [L03]
+      scenario-dependent:
+        description: Defaults to true. Rejected by AntaREST (L03).
+        type: boolean
+        x-discrepancy: [L03]
+
+  Port:
+    type: object
+    required: [id, type]
+    additionalProperties: false
+    properties:
+      id:
+        $ref: common.schema.yml#/$defs/Identifier
+      type:
+        description: Id of a port type. Resolution against the available libraries is NOT checked (N02).
+        $ref: common.schema.yml#/$defs/Identifier
+
+  PortFieldDefinition:
+    type: object
+    required: [port, field, definition]
+    additionalProperties: false
+    properties:
+      port:
+        $ref: common.schema.yml#/$defs/Identifier
+      field:
+        $ref: common.schema.yml#/$defs/Identifier
+      definition:
+        $ref: common.schema.yml#/$defs/ExpressionOrNumber
+
+  Constraint:
+    type: object
+    required: [id, expression]
+    additionalProperties: false
+    properties:
+      id:
+        $ref: common.schema.yml#/$defs/Identifier
+      expression:
+        $ref: common.schema.yml#/$defs/Expression
+      lower-bound:
+        description: GemsPy only, undocumented (L06).
+        $ref: common.schema.yml#/$defs/ExpressionOrNumber
+        x-discrepancy: [L06]
+      upper-bound:
+        description: GemsPy only, undocumented (L06).
+        $ref: common.schema.yml#/$defs/ExpressionOrNumber
+        x-discrepancy: [L06]
+      location:
+        $ref: "#/$defs/Location"
+        x-simulator-deviation: "Simulator-only key (L04)."
+
+  Location:
+    description: Simulator-only placement of a variable, constraint or objective (L04).
+    type: string
+    x-simulator-deviation: "Whole definition is a local addition."
+
+  Objective:
+    description: Objective contribution. Same as ExpressionEntry plus the Simulator-only `location`.
+    type: object
+    required: [id, expression]
+    additionalProperties: false
+    properties:
+      id:
+        $ref: common.schema.yml#/$defs/Identifier
+      expression:
+        $ref: common.schema.yml#/$defs/Expression
+      location:
+        $ref: "#/$defs/Location"
+    x-simulator-deviation: "Whole definition is a local addition."
+
+  ExpressionEntry:
+    description: Objective contribution or extra output.
+    type: object
+    required: [id, expression]
+    additionalProperties: false
+    properties:
+      id:
+        $ref: common.schema.yml#/$defs/Identifier
+      expression:
+        $ref: common.schema.yml#/$defs/Expression
