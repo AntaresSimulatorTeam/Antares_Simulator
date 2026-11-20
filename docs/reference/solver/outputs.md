@@ -8,6 +8,7 @@ The general file organization is the same for Economy and Adequacy simulations.
 
 The system definition used by views is written to
 `<timestamp output>/views/input/system-for-views.yml`.
+See [View builder](../viewbuilder.md) for the system and view configuration files.
 
 **Economy:**
 
