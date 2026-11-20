@@ -6,7 +6,7 @@ pytest_plugins = ["registered_fixures"]
 
 
 @pytest.fixture(scope="session")
-def exe():
+def exe_paths():
     return load_executables()
 
 

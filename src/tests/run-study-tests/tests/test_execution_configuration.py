@@ -162,18 +162,18 @@ def test_expected_and_unexpected_failure(tmp_path, monkeypatch, runner):
 def test_simulation_selects_only_requested_binary(tmp_path, entry, name, runner):
     path = tmp_path / name
     path.touch()
-    exe = {
+    exe_paths = {
         "antares-solver": str(tmp_path / "not-built-solver"),
         "antares-problem-generator": str(tmp_path / "not-built-generator"),
     }
-    exe[name] = str(path)
+    exe_paths[name] = str(path)
     entry["exe"] = name
-    simulation = create_simulation(tmp_path, entry, exe)
+    simulation = create_simulation(tmp_path, entry, exe_paths)
     assert isinstance(simulation, runner)
     assert simulation.options == entry["options"]
     path.unlink()
     with pytest.raises(FileNotFoundError, match=f"{name} executable not found"):
-        create_simulation(tmp_path, entry, exe)
+        create_simulation(tmp_path, entry, exe_paths)
 
 
 def test_load_executable_paths_without_interpolation(tmp_path, monkeypatch):
@@ -222,11 +222,11 @@ def load_executables():
 """
     )
     pytester.makepyfile("""
-def test_first(exe):
-    assert exe == {"loaded": 1}
+def test_first(exe_paths):
+    assert exe_paths == {"loaded": 1}
 
-def test_second(exe):
-    assert exe == {"loaded": 1}
+def test_second(exe_paths):
+    assert exe_paths == {"loaded": 1}
 """)
     pytester.runpytest("-q").assert_outcomes(passed=2)
 
@@ -348,9 +348,9 @@ def test_json_entrypoint_passes_same_simulation(monkeypatch, tmp_path, entry):
     monkeypatch.setattr(module, "create_simulation", factory)
     monkeypatch.setattr(module, "create_checks", checks_factory)
     check_runner = Mock()
-    exe = {}
-    module.test(tmp_path, entry, check_runner, exe)
-    factory.assert_called_once_with(tmp_path, entry, exe)
+    exe_paths = {}
+    module.test(tmp_path, entry, check_runner, exe_paths)
+    factory.assert_called_once_with(tmp_path, entry, exe_paths)
     checks_factory.assert_called_once_with(tmp_path, entry["checks"], simulation=simulation)
     check_runner.run.assert_called_once_with(simulation, checks)
 
@@ -382,10 +382,10 @@ def test_infeasible_entrypoints_preserve_checks_and_skips(monkeypatch, tmp_path)
         monkeypatch.setattr(module, "create_simulation", factory)
         monkeypatch.setattr(module, "unfeasible_problem", check_factory)
         check_runner = Mock()
-        exe = {}
-        function(tmp_path, check_runner, exe)
+        exe_paths = {}
+        function(tmp_path, check_runner, exe_paths)
         factory.assert_called_once_with(
-            tmp_path, {"exe": "antares-solver", "options": []}, exe
+            tmp_path, {"exe": "antares-solver", "options": []}, exe_paths
         )
         assert not (tmp_path / "check-config.json").exists()
         arguments = check_factory.call_args.kwargs
