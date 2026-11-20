@@ -16,6 +16,8 @@
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/study/parameters/adq-patch-params.h"
 
+#include "in-memory-study.h"
+
 static double origineExtremite = -1;
 static double extremiteOrigine = 5;
 
@@ -92,6 +94,38 @@ AdqPatchParams createParams()
     p.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isDens;
 
     return p;
+}
+
+BOOST_AUTO_TEST_CASE(reset_csr_triggered_hours)
+{
+    StudyBuilder builder;
+    builder.addAreaToStudy("FR");
+    builder.addAreaToStudy("ES");
+    builder.study->initializeRuntimeInfos();
+    AdequacyPatchRuntimeData runtimeData(builder.study->areas, builder.study->runtime.areaLink);
+
+    runtimeData.addCSRTriggeredAtAreaHour(0, 42);
+    runtimeData.addCSRTriggeredAtAreaHour(1, 23);
+    runtimeData.addENSZeroedByThresholdAtAreaHour(0, 42);
+    runtimeData.addENSZeroedByThresholdAtAreaHour(1, 23);
+    runtimeData.setMarginalCostBeforeAdqPatch(0, 42, -40.);
+    BOOST_CHECK(runtimeData.wasCSRTriggeredAtAreaHour(0, 42));
+
+    runtimeData.resetCSRTriggeredHours();
+    runtimeData.resetENSZeroedByThreshold();
+
+    BOOST_CHECK(!runtimeData.wasCSRTriggeredAtAreaHour(0, 42));
+    BOOST_CHECK(!runtimeData.wasCSRTriggeredAtAreaHour(1, 23));
+    BOOST_CHECK(!runtimeData.wasENSZeroedByThresholdAtAreaHour(0, 42));
+    BOOST_CHECK(!runtimeData.wasENSZeroedByThresholdAtAreaHour(1, 23));
+    runtimeData.addCSRTriggeredAtAreaHour(0, 42);
+    runtimeData.addENSZeroedByThresholdAtAreaHour(0, 42);
+    runtimeData.setMarginalCostBeforeAdqPatch(0, 42, -60.);
+    BOOST_CHECK_EQUAL(runtimeData.marginalCostBeforeAdqPatch(0, 42), -60.);
+    runtimeData.resetCSRTriggeredHours();
+    runtimeData.resetENSZeroedByThreshold();
+    BOOST_CHECK(!runtimeData.wasCSRTriggeredAtAreaHour(0, 42));
+    BOOST_CHECK(!runtimeData.wasENSZeroedByThresholdAtAreaHour(0, 42));
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:
