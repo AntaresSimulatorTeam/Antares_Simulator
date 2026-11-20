@@ -4,6 +4,10 @@ $id: https://raw.githubusercontent.com/AntaresSimulatorTeam/GEMS/schemas-v0.1.0/
 title: GEMS system
 x-schema-version: 0.1.0
 x-status: draft
+x-simulator-deviation: >-
+  Local copy for Antares_Simulator. Every collection (system and component level) also accepts
+  null, which the Simulator reads as absent (L12). Other deviations are marked inline with
+  `x-simulator-deviation`.
 description: >-
   Base: GemsPy `gems_craft.study.parsing` (SystemSchema, plus HybridSystemSchema for the two
   hybrid sections), completed by GEMS doc/user-guide/input-files/system.md and
@@ -41,25 +45,25 @@ $defs:
         x-discrepancy: [S08, S13]
       components:
         description: Mandatory in AntaREST, defaults to an empty list elsewhere (S03).
-        type: array
+        type: [array, "null"]
         items:
           $ref: "#/$defs/Component"
         x-discrepancy: [S03]
       connections:
-        type: array
+        type: [array, "null"]
         items:
           $ref: "#/$defs/Connection"
       area-connections:
         description: >-
           Hybrid studies. Accepted by Antares_Simulator, AntaREST and GemsPy's hybrid schema;
           REJECTED by GemsPy's plain SystemSchema (S09).
-        type: array
+        type: [array, "null"]
         items:
           $ref: "#/$defs/AreaConnection"
         x-discrepancy: [S09]
       thermal-capacity-connections:
         description: Same support as `area-connections` (S09).
-        type: array
+        type: [array, "null"]
         items:
           $ref: "#/$defs/ThermalCapacityConnection"
         x-discrepancy: [S09]
@@ -80,11 +84,11 @@ $defs:
       scenario-group:
         type: string
       parameters:
-        type: array
+        type: [array, "null"]
         items:
           $ref: "#/$defs/ComponentParameter"
       properties:
-        type: array
+        type: [array, "null"]
         items:
           $ref: common.schema.yml#/$defs/Property
       integer-strategy:

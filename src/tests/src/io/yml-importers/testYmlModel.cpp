@@ -65,7 +65,8 @@ BOOST_AUTO_TEST_CASE(library_with_null_id_throws)
     )"s;
     BOOST_CHECK_EXCEPTION(parser.parse(library),
                           InputError,
-                          containsMessage("Expected string, found null"));
+                          containsMessage(
+                            "Line 3 column 13: 'library/id': Expected string, found null"));
 }
 
 BOOST_AUTO_TEST_CASE(parameter_without_id_throws)
@@ -1075,9 +1076,10 @@ BOOST_AUTO_TEST_CASE(constraint_with_null_id_throws)
                       - id: null
                         expression: "expression"
         )"s;
-    BOOST_CHECK_EXCEPTION(parser.parse(library),
-                          InputError,
-                          containsMessage("Expected string, found null"));
+    BOOST_CHECK_EXCEPTION(
+      parser.parse(library),
+      InputError,
+      containsMessage("'library/models/model_id/constraints/[0]/id': Expected string, found null"));
 }
 
 BOOST_AUTO_TEST_CASE(constraints_properly_parsed)

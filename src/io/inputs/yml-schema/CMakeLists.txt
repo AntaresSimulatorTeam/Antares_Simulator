@@ -33,7 +33,15 @@ string(APPEND EMBEDDED_SCHEMAS_CONTENT
         "    static const std::vector<EmbeddedSchema> schemas = {\n${EMBEDDED_SCHEMAS_TABLE}    };\n")
 string(APPEND EMBEDDED_SCHEMAS_CONTENT "    return schemas;\n}\n")
 string(APPEND EMBEDDED_SCHEMAS_CONTENT "} // namespace Antares::IO::Inputs::YmlSchema\n")
-file(WRITE ${EMBEDDED_SCHEMAS_CPP} "${EMBEDDED_SCHEMAS_CONTENT}")
+# Only write the file when its content changed: a plain file(WRITE) would bump its timestamp at every
+# configure and recompile everything that depends on it.
+set(EMBEDDED_SCHEMAS_PREVIOUS "")
+if (EXISTS ${EMBEDDED_SCHEMAS_CPP})
+    file(READ ${EMBEDDED_SCHEMAS_CPP} EMBEDDED_SCHEMAS_PREVIOUS)
+endif ()
+if (NOT "${EMBEDDED_SCHEMAS_PREVIOUS}" STREQUAL "${EMBEDDED_SCHEMAS_CONTENT}")
+    file(WRITE ${EMBEDDED_SCHEMAS_CPP} "${EMBEDDED_SCHEMAS_CONTENT}")
+endif ()
 
 set(SOURCES
         schemaValidation.cpp

@@ -36,7 +36,7 @@ to propose upstream or to remove.
 |---|---|---|---|
 | `model-library` | `variable-type` also accepts `boolean` | L02 | The Simulator spells the third type `boolean`; 5 test libraries use it. GEMS, GemsPy and AntaREST use `binary`. The decoder treats `binary` as an alias of `boolean`. |
 | `model-library` | `location` accepted on variables, constraints and objective contributions (new `Location` and `Objective` defs) | L04 | Simulator-only key. |
-| `model-library` | every collection also accepts `null` | L12 | The Simulator reads a null collection as absent. |
+| `model-library`, `system` | every collection also accepts `null` | L12 | The Simulator reads a null collection as absent. |
 | `model-library` | `thermal-capacity-connection.capacity-field` accepts `null` | - | The Simulator accepts an empty value. |
 | `model-library` | `area-connection`: the "at least one non-null value" rule (`anyOf`) is removed | L07 | The Simulator accepts an all-null connection. |
 | `common` | `Identifier` has no `minLength: 1` | L08 | The Simulator accepts an empty id. |
@@ -55,6 +55,10 @@ constraint bounds (L06); component `integer-strategy` (S07); the hybrid sections
 - Plain scalars are typed as in the YAML 1.2 core schema: `true`/`false`, `null`/`~`/empty,
   integers, floats. `yes`, `on`, `no` and `off` are **strings**. Quoted scalars are always strings,
   so `id: 123` is rejected where a string is expected but `id: "123"` is accepted.
+- Explicit `!!str` tags force a string too, whatever the scalar looks like.
+- Anchors and aliases are expanded before validation. A document nested deeper than 64 levels or
+  expanding to more than a million nodes (a self-referencing alias, a "billion laughs" document) is
+  rejected without being validated.
 - Duplicated mapping keys are errors (a JSON object cannot hold them). The first occurrence is the
   one validated.
 - Errors carry the line and column of the offending node and a path through the document that

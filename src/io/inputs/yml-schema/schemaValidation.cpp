@@ -4,14 +4,18 @@
 #include "antares/io/inputs/yml-schema/schemaValidation.h"
 
 #include <algorithm>
+#include <array>
 #include <charconv>
+#include <cstdint>
 #include <cstdlib>
 #include <fmt/format.h>
 #include <fmt/ranges.h>
 #include <jsoncons/json.hpp>
 #include <jsoncons_ext/jsonschema/jsonschema.hpp>
 #include <stdexcept>
+#include <string>
 #include <string_view>
+#include <system_error>
 #include <unordered_set>
 #include <utility>
 #include <vector>
@@ -33,6 +37,13 @@ struct Finding
     int column = 0;
     std::string text;
 };
+
+/// Findings are reported with 1-based coordinates. yaml-cpp gives no position (-1) to some nodes,
+/// e.g. the root of an empty document: report those at 1:1 rather than at line 0.
+Finding makeFinding(const YAML::Mark& mark, std::string text)
+{
+    return {std::max(mark.line, 0) + 1, std::max(mark.column, 0) + 1, std::move(text)};
+}
 
 std::string joinPath(const std::string& path, const std::string& item)
 {
@@ -97,23 +108,58 @@ Json plainScalar(const std::string& text)
 
 /// Converts a YAML tree to JSON. yaml-cpp does not type scalars, and duplicated keys would
 /// silently disappear in a JSON object, so both are handled here.
+///
+/// Anchors and aliases are expanded, so a small document can describe an enormous (or, with an
+/// alias to one of its own ancestors, infinite) tree. The conversion gives up beyond fixed limits
+/// instead of exhausting the stack or the memory; see `aborted()`.
 class YamlToJson
 {
 public:
+    /// Real inputs are a handful of levels deep and a few thousand nodes
+    static constexpr std::size_t maxDepth = 64;
+    static constexpr std::size_t maxNodes = 1'000'000;
+
     explicit YamlToJson(std::vector<Finding>& findings):
         findings_(findings)
     {
     }
 
+    /// True when a limit was exceeded: the result is then incomplete and must not be validated
+    bool aborted() const
+    {
+        return aborted_;
+    }
+
     Json convert(const YAML::Node& node, const std::string& path)
+    {
+        if (aborted_)
+        {
+            return Json::null();
+        }
+        if (depth_ >= maxDepth || ++nodes_ > maxNodes)
+        {
+            aborted_ = true;
+            findings_.push_back(makeFinding(node.Mark(),
+                                            fmt::format("'{}': document too deeply nested or too "
+                                                        "large (check anchors and aliases)",
+                                                        path)));
+            return Json::null();
+        }
+        ++depth_;
+        auto json = convertNode(node, path);
+        --depth_;
+        return json;
+    }
+
+private:
+    Json convertNode(const YAML::Node& node, const std::string& path)
     {
         switch (node.Type())
         {
         case YAML::NodeType::Null:
             return Json::null();
         case YAML::NodeType::Scalar:
-            // yaml-cpp gives quoted scalars the non-specific tag "!": always strings
-            return node.Tag() == "!" ? Json(node.Scalar()) : plainScalar(node.Scalar());
+            return isString(node) ? Json(node.Scalar()) : plainScalar(node.Scalar());
         case YAML::NodeType::Sequence:
             return convertSequence(node, path);
         case YAML::NodeType::Map:
@@ -123,7 +169,13 @@ public:
         }
     }
 
-private:
+    /// Quoted and block scalars have the non-specific tag "!" in yaml-cpp, `!!str` its own tag:
+    /// all are strings whatever they look like
+    static bool isString(const YAML::Node& node)
+    {
+        return node.Tag() == "!" || node.Tag() == "tag:yaml.org,2002:str";
+    }
+
     Json convertSequence(const YAML::Node& node, const std::string& path)
     {
         Json array(jsoncons::json_array_arg);
@@ -144,9 +196,12 @@ private:
         {
             if (!entry.first.IsScalar())
             {
-                report(entry.first,
+                // A null key (`~: 1`, `: 1`) has no position of its own: use its value's
+                report(entry.first.Mark().is_null() ? entry.second : entry.first,
                        path,
-                       "expected a scalar field name, found a mapping or a sequence");
+                       entry.first.IsNull()
+                         ? "field name must not be empty or null"
+                         : "expected a scalar field name, found a mapping or a sequence");
                 continue;
             }
             const auto key = entry.first.Scalar();
@@ -162,12 +217,14 @@ private:
 
     void report(const YAML::Node& where, const std::string& path, std::string message)
     {
-        const auto mark = where.Mark();
         findings_.push_back(
-          {mark.line + 1, mark.column + 1, fmt::format("'{}': {}", path, std::move(message))});
+          makeFinding(where.Mark(), fmt::format("'{}': {}", path, std::move(message))));
     }
 
     std::vector<Finding>& findings_;
+    std::size_t depth_ = 0;
+    std::size_t nodes_ = 0;
+    bool aborted_ = false;
 };
 
 /// Embedded schema by file name, as a JSON value.
@@ -220,19 +277,17 @@ jsonschema::json_schema<Json> compile(SchemaKind kind)
 
 const jsonschema::json_schema<Json>& compiledSchema(SchemaKind kind)
 {
-    // Compiled once. Validation is const, so the compiled schemas can be shared between threads.
+    // Compiled once, on first use. Validation is const, so the compiled schemas can be shared
+    // between threads.
+    static const std::array<jsonschema::json_schema<Json>, 2> schemas = {
+      compile(SchemaKind::ModelLibrary),
+      compile(SchemaKind::System)};
     switch (kind)
     {
     case SchemaKind::ModelLibrary:
-    {
-        static const auto schema = compile(SchemaKind::ModelLibrary);
-        return schema;
-    }
+        return schemas[0];
     case SchemaKind::System:
-    {
-        static const auto schema = compile(SchemaKind::System);
-        return schema;
-    }
+        return schemas[1];
     }
     throw std::logic_error("Unknown schema kind");
 }
@@ -265,7 +320,11 @@ Location locate(const YAML::Node& root, const jsoncons::jsonpointer::json_pointe
                 {
                     next.reset(entry.second);
                     keyMark = entry.first.Mark();
-                    mark = entry.second.Mark().is_null() ? keyMark : entry.second.Mark();
+                    // A null value has no position of its own (or one past the end of its line):
+                    // report the key
+                    mark = entry.second.IsNull() || entry.second.Mark().is_null()
+                             ? keyMark
+                             : entry.second.Mark();
                     break;
                 }
             }
@@ -286,7 +345,7 @@ Location locate(const YAML::Node& root, const jsoncons::jsonpointer::json_pointe
                     if (index == wanted)
                     {
                         next.reset(item);
-                        mark = item.Mark().is_null() ? current.mark : item.Mark();
+                        mark = item.IsNull() || item.Mark().is_null() ? current.mark : item.Mark();
                         keyMark = mark;
                         name = sequenceItemName(item, index);
                         break;
@@ -326,32 +385,10 @@ std::string describe(const jsonschema::validation_message& message)
 
 } // namespace
 
-void validate(const YAML::Node& root, SchemaKind kind, const std::string& context)
+namespace
 {
-    std::vector<Finding> findings;
-    const auto instance = YamlToJson(findings).convert(root, "");
-
-    compiledSchema(kind).validate(instance,
-                                  [&](const jsonschema::validation_message& message)
-                                  {
-                                      const auto where = locate(root, message.instance_location());
-                                      // An unknown key is best pointed at by the key itself, any
-                                      // other error by the offending value
-                                      const auto mark = message.keyword() == "additionalProperties"
-                                                          ? where.keyMark
-                                                          : where.mark;
-                                      findings.push_back(
-                                        {mark.line + 1,
-                                         mark.column + 1,
-                                         fmt::format("'{}': {}", where.path, describe(message))});
-                                      return jsonschema::walk_result::advance;
-                                  });
-
-    if (findings.empty())
-    {
-        return;
-    }
-
+[[noreturn]] void fail(std::vector<Finding> findings, const std::string& context)
+{
     std::ranges::stable_sort(findings,
                              [](const Finding& a, const Finding& b)
                              { return std::pair(a.line, a.column) < std::pair(b.line, b.column); });
@@ -367,6 +404,38 @@ void validate(const YAML::Node& root, SchemaKind kind, const std::string& contex
                               finding.text);
     }
     throw InputError(report);
+}
+} // namespace
+
+void validate(const YAML::Node& root, SchemaKind kind, const std::string& context)
+{
+    std::vector<Finding> findings;
+    YamlToJson converter(findings);
+    const auto instance = converter.convert(root, "");
+    if (converter.aborted())
+    {
+        // The tree is incomplete: validating it would only add misleading errors
+        fail(std::move(findings), context);
+    }
+
+    compiledSchema(kind).validate(
+      instance,
+      [&](const jsonschema::validation_message& message)
+      {
+          const auto where = locate(root, message.instance_location());
+          // An unknown key is best pointed at by the key itself, any
+          // other error by the offending value
+          const auto mark = message.keyword() == "additionalProperties" ? where.keyMark
+                                                                        : where.mark;
+          findings.push_back(
+            makeFinding(mark, fmt::format("'{}': {}", where.path, describe(message))));
+          return jsonschema::walk_result::advance;
+      });
+
+    if (!findings.empty())
+    {
+        fail(std::move(findings), context);
+    }
 }
 
 } // namespace Antares::IO::Inputs::YmlSchema

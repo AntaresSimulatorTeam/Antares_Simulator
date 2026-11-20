@@ -406,7 +406,10 @@ unexpected-root-key: ignored
           BOOST_CHECK(
             message.find("Additional property 'unexpected-root-key' not allowed by schema.")
             != std::string::npos);
-          BOOST_CHECK(message.find("Line 9 column 11:") != std::string::npos);
+          BOOST_CHECK(
+            message.find("Line 9 column 11: 'library/models/m/variables/p/lower_bound': Additional "
+                         "property 'lower_bound' not allowed by schema.")
+            != std::string::npos);
           return true;
       });
     BOOST_CHECK(logs.getWarnings().empty());
