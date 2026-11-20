@@ -13,7 +13,7 @@ from actions_on_study.create_simulation import create_simulation
 from actions_on_study.study_run import RunStudyWithProblemGenerator, RunStudyWithSolver, StudyRun
 from executable_paths import load_executables
 from registered_fixures import check_handler
-from parse_studies.configuration import load_check_config
+from parse_studies.load_check_config import load_check_config
 from parse_studies.json_collector import contains_json_config, jsonCollector
 
 
@@ -67,7 +67,7 @@ def test_collector_skips_missing_config_and_continues(tmp_path, entry, capsys):
 
 def test_collector_reports_other_missing_files(tmp_path, entry, monkeypatch):
     write_config(tmp_path, [entry])
-    monkeypatch.setattr("parse_studies.configuration.SCHEMA_FILE", tmp_path / "missing-schema.json")
+    monkeypatch.setattr("parse_studies.load_check_config.py.SCHEMA_FILE", tmp_path / "missing-schema.json")
     with pytest.raises(FileNotFoundError, match="missing-schema.json"):
         jsonCollector([tmp_path]).collect()
 

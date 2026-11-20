@@ -1,4 +1,4 @@
-from parse_studies.configuration import load_check_config
+from parse_studies.load_check_config import load_check_config
 
 
 def contains_json_config(study_path):
