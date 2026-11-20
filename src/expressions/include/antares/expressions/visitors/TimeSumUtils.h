@@ -13,6 +13,9 @@ class VariabilityVisitor;
 // Normalize a possibly negative or out-of-range time index into [0, size).
 int normalizeTimeIndex(int timeIndex, int size);
 
+// Resolve a time-shift offset, rejecting non-integer values and values outside the int range.
+int resolveTimeShift(const Nodes::Node* offset, EvalVisitor& visitor);
+
 // no-op if from > to
 template<class Callback>
 inline void forEachTimeSumIndex(int from, int to, int size, Callback callback)

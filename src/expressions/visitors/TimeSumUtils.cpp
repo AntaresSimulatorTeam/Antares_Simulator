@@ -34,6 +34,13 @@ int checkedTimeIndex(double value, const Nodes::Node* bound, std::string_view wh
 }
 } // namespace
 
+int resolveTimeShift(const Nodes::Node* offset, EvalVisitor& visitor)
+{
+    return checkedTimeIndex(visitor.dispatch(offset).valueAsDouble(),
+                            offset,
+                            "A time-shift offset");
+}
+
 int normalizeTimeIndex(int timeIndex, int size)
 {
     int r = timeIndex % size;

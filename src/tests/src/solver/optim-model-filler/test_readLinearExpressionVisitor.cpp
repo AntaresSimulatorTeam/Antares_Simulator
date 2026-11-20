@@ -3,12 +3,14 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <limits>
 #include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
+#include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 #include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
@@ -661,6 +663,80 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_inverted_bounds_returns_zero,
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 0.);
     BOOST_CHECK_EQUAL(linear_expression[1].constant(), 0.);
     BOOST_CHECK_EQUAL(linear_expression[2].constant(), 0.);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeShift_with_invalid_offset_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* operands[] = {create<LiteralNode>(13.), create<ParameterNode>("param_ts")};
+    for (unsigned lastTimeStep: {0u, 2u})
+    {
+        ctx = Api::FillContext(0, lastTimeStep, 0, lastTimeStep, 0);
+        for (Node* operand: operands)
+        {
+            for (double offset: {1.5,
+                                 -1.5,
+                                 static_cast<double>(std::numeric_limits<int>::max()) + 1,
+                                 static_cast<double>(std::numeric_limits<int>::min()) - 1,
+                                 std::numeric_limits<double>::infinity(),
+                                 std::numeric_limits<double>::quiet_NaN()})
+            {
+                Node* shift = create<TimeShiftNode>(operand, create<LiteralNode>(offset));
+                BOOST_CHECK_THROW(visitor().dispatch(shift), Antares::Error::InvalidArgumentError);
+            }
+            Node* fraction = create<DivisionNode>(create<LiteralNode>(-3.),
+                                                  create<LiteralNode>(2.));
+            Node* shift = create<TimeShiftNode>(operand, fraction);
+            BOOST_CHECK_THROW(visitor().dispatch(shift), Antares::Error::InvalidArgumentError);
+        }
+    }
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeShift_with_integer_offset_preserves_cyclic_wrapping,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
+    for (double offset: {-4., -1., 2., 5.})
+    {
+        Node* shift = create<TimeShiftNode>(create<ParameterNode>("param_ts"),
+                                            create<LiteralNode>(offset));
+        const auto expression = visitor().dispatch(shift);
+        BOOST_REQUIRE_EQUAL(expression.size(), 3);
+        BOOST_CHECK_EQUAL(expression[0].constant(), 2.);
+        BOOST_CHECK_EQUAL(expression[1].constant(), 0.);
+        BOOST_CHECK_EQUAL(expression[2].constant(), 1.);
+    }
+}
+
+BOOST_FIXTURE_TEST_CASE(drop_checker_with_invalid_time_shift_offset_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
+    EvalVisitor evalVisitor(optimContainer, ctx, components[0], &data, empty_scenario);
+    for (double offset: {1.5,
+                         -1.5,
+                         static_cast<double>(std::numeric_limits<int>::max()) + 1,
+                         static_cast<double>(std::numeric_limits<int>::min()) - 1,
+                         std::numeric_limits<double>::infinity(),
+                         std::numeric_limits<double>::quiet_NaN()})
+    {
+        Node* shift = create<TimeShiftNode>(create<LiteralNode>(13.), create<LiteralNode>(offset));
+        BOOST_CHECK_THROW(hasOutOfBoundsTimeShift(shift, 1, ctx, evalVisitor),
+                          Antares::Error::InvalidArgumentError);
+    }
+
+    Node* fraction = create<DivisionNode>(create<LiteralNode>(-3.), create<LiteralNode>(2.));
+    Node* shift = create<TimeShiftNode>(create<LiteralNode>(13.), fraction);
+    BOOST_CHECK_THROW(hasOutOfBoundsTimeShift(shift, 1, ctx, evalVisitor),
+                      Antares::Error::InvalidArgumentError);
+
+    for (double offset: {static_cast<double>(std::numeric_limits<int>::min()),
+                         static_cast<double>(std::numeric_limits<int>::max())})
+    {
+        Node* largeShift = create<TimeShiftNode>(create<LiteralNode>(13.),
+                                                 create<LiteralNode>(offset));
+        BOOST_CHECK(hasOutOfBoundsTimeShift(largeShift, 1, ctx, evalVisitor));
+    }
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_timeIndex_with_time_dependent_index_throws,

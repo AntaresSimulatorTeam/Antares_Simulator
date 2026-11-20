@@ -215,13 +215,12 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::TimeShiftNode* node)
 {
     auto expression = dispatch(node->left());
+    const auto timeShift = Visitors::resolveTimeShift(node->right(), evalVisitor_);
     if (expression.isConstant())
     {
         return expression;
     }
-    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue]
-    const auto timeIndex = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
-    expression.rotate(timeIndex);
+    expression.rotate(timeShift);
     return expression;
 }
 
