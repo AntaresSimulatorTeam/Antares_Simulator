@@ -1,7 +1,30 @@
 {
+    "definitions":
+    {
+        "execution":
+        {
+            "type": "object",
+            "required": ["name", "exe", "options"],
+            "properties":
+            {
+                "name": {"type": "string", "minLength": 1},
+                "exe":
+                {
+                    "type": "string",
+                    "enum": ["antares-solver", "antares-problem-generator"]
+                },
+                "options":
+                {
+                    "type": "array",
+                    "items": {"type": "string"}
+                }
+            }
+        }
+    },
     "type" : "array",
     "items":
     {
+        "allOf": [{"$ref": "#/definitions/execution"}],
         "type": "object",
         "required": ["name", "checks"],
         "properties" :
