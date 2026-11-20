@@ -19,6 +19,9 @@ const std::vector<YmlUtils::Field> expressionFields = {{"id", true},
 const std::vector<YmlUtils::Field> libraryFields = {
   {"id", true},
   {"description"},
+  // Documented GEMS metadata, accepted but not used by the Simulator
+  {"version"},
+  {"taxonomy"},
   {"port-types",
    false,
    {{"id", true},
@@ -36,6 +39,9 @@ const std::vector<YmlUtils::Field> libraryFields = {
    false,
    {{"id", true},
     {"description"},
+    // Documented GEMS metadata, accepted but not used by the Simulator
+    {"taxonomy-category"},
+    {"properties", false, {{"id", true}}},
     {"parameters", false, {{"id", true}, {"time-dependent"}, {"scenario-dependent"}}},
     {"variables",
      false,
