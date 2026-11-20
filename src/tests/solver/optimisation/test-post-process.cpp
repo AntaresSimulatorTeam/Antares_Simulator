@@ -9,6 +9,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+void resetAdequacyPatchResultsForNewWeek(PROBLEME_HEBDO& problem);
+
 namespace
 {
 Benchmarking::DurationCollector gDurationCollector;
@@ -188,4 +190,32 @@ BOOST_AUTO_TEST_CASE(test_adq_patch_ens_below_threshold_is_zeroed_per_area)
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[2].ValeursHorairesDtgMrgCsr[hour + 1], 0.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[2].CoutsMarginauxHoraires[hour + 1], -90.0);
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[2].CoutsMarginauxHorairesCSR[hour + 1], -90.0);
+}
+
+BOOST_AUTO_TEST_CASE(test_adequacy_patch_weekly_results_are_reset)
+{
+    StudyBuilder builder;
+    builder.addAreaToStudy("FR");
+    builder.study->initializeRuntimeInfos();
+    PROBLEME_HEBDO pb;
+    SIM_AllocationProblemeHebdo(*builder.study, pb, gNumberTimeSteps);
+    pb.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>(
+      builder.study->areas,
+      builder.study->runtime.areaLink);
+    auto& results = pb.ResultatsHoraires[0];
+    results.ValeursHorairesDeDefaillancePositiveCSR[42] = 4.;
+    results.ValeursHorairesDENS[42] = 5.;
+    results.ValeursHorairesLmrViolations[42] = 1;
+    results.ValeursHorairesDtgMrgCsr[42] = 6.;
+    results.CoutsMarginauxHorairesCSR[42] = -7.;
+    pb.adequacyPatchRuntimeData->addCSRTriggeredAtAreaHour(0, 42);
+    pb.adequacyPatchRuntimeData->addENSZeroedByThresholdAtAreaHour(0, 42);
+    resetAdequacyPatchResultsForNewWeek(pb);
+    BOOST_CHECK_EQUAL(results.ValeursHorairesDeDefaillancePositiveCSR[42], 0.);
+    BOOST_CHECK_EQUAL(results.ValeursHorairesDENS[42], 0.);
+    BOOST_CHECK_EQUAL(results.ValeursHorairesLmrViolations[42], 0);
+    BOOST_CHECK_EQUAL(results.ValeursHorairesDtgMrgCsr[42], 0.);
+    BOOST_CHECK_EQUAL(results.CoutsMarginauxHorairesCSR[42], 0.);
+    BOOST_CHECK(!pb.adequacyPatchRuntimeData->wasCSRTriggeredAtAreaHour(0, 42));
+    BOOST_CHECK(!pb.adequacyPatchRuntimeData->wasENSZeroedByThresholdAtAreaHour(0, 42));
 }
