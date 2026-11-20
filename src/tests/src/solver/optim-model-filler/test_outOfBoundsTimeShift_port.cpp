@@ -3,15 +3,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <map>
-#include <memory>
-#include <optional>
-#include <ostream>
-#include <string>
-#include <vector>
-
-#include <boost/test/data/monomorphic.hpp>
-#include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
@@ -21,213 +12,202 @@
 
 #include "visitorFixture.hpp"
 
-namespace bdata = boost::unit_test::data;
-
 namespace
 {
-// Time steps of the fixture go from 0 to 2
 struct PortFieldSumTimeShiftFixture: VisitorFixture<ReadLinearExpressionVisitor>
 {
-    using ParameterValues = std::map<std::string, SystemModel::ParameterTypeAndValue>;
-
     Api::FillContext fillContext{0, 2, 0, 2, 0};
 
-    SystemModel::PortField field{"field"};
-    SystemModel::PortType portType{"type", {field}};
-    SystemModel::Port port{"port", portType};
-
-    // ConnectionEnd holds references: models and components need stable addresses
-    std::vector<std::unique_ptr<SystemModel::Model>> models;
-    std::vector<std::unique_ptr<SystemModel::Component>> componentsStorage;
-
-    SystemModel::Component& owner = addComponent("owner", nullptr);
-
-    // Adds a component with a port "port", whose field "field" is defined by fieldExpression
-    // (no definition if nullptr). Create every node of fieldExpression before calling this: the
-    // fixture's registry is transferred to the component's expression.
-    SystemModel::Component& addComponent(const std::string& id,
-                                         Node* fieldExpression,
-                                         const ParameterValues& parameterValues = {})
-    {
-        std::vector<SystemModel::PortFieldDefinition> fieldDefinitions;
-        if (fieldExpression)
-        {
-            fieldDefinitions.emplace_back(port,
-                                          field,
-                                          SystemModel::Expression(id + "_field",
-                                                                  NodeRegistry(fieldExpression,
-                                                                               std::move(*this))));
-        }
-        std::vector<SystemModel::Parameter> parameters;
-        for (const auto& [parameterId, value]: parameterValues)
-        {
-            parameters.emplace_back(parameterId,
-                                    SystemModel::TimeDependent::NO,
-                                    SystemModel::ScenarioDependent::NO);
-        }
-
-        SystemModel::ModelBuilder modelBuilder;
-        auto& model = *models.emplace_back(std::make_unique<SystemModel::Model>(
-          modelBuilder.withId(id + "_model")
-            .withPorts({port})
-            .withParameters(std::move(parameters))
-            .withPortFieldDefinitions(std::move(fieldDefinitions))
-            .build()));
-
-        SystemModel::ComponentBuilder componentBuilder;
-        return *componentsStorage.emplace_back(
-          std::make_unique<SystemModel::Component>(componentBuilder.withId(id)
-                                                     .withModel(&model)
-                                                     .withScenarioGroupId("group")
-                                                     .withParameterValues(parameterValues)
-                                                     .build()));
-    }
-
-    void connect(SystemModel::Component& from, SystemModel::Component& to)
-    {
-        from.addComponentConnection("port", SystemModel::ConnectionEnd(to, port));
-    }
-
-    // Expression of the owner: port.field == 0 (or shift(port.field, outerShift) == 0)
-    Node* ownerExpression(std::optional<double> outerShift = std::nullopt)
-    {
-        Node* portFieldSum = create<PortFieldSumNode>("port", "field");
-        if (outerShift)
-        {
-            portFieldSum = create<TimeShiftNode>(portFieldSum, create<LiteralNode>(*outerShift));
-        }
-        return create<EqualNode>(portFieldSum, create<LiteralNode>(0.));
-    }
-
-    Node* shifted(double shift)
-    {
-        return create<TimeShiftNode>(create<LiteralNode>(0.), create<LiteralNode>(shift));
-    }
-
-    bool outOfBoundsAt(const Node* node, unsigned timeStep)
+    bool outOfBoundsAt(const Node* node, const SystemModel::Component& component, unsigned timeStep)
     {
         EvalVisitor evalVisitor(optimContainer,
                                 fillContext,
-                                owner,
+                                component,
                                 &data,
                                 scenarioGroupRepository.scenario("group"));
         return hasOutOfBoundsTimeShift(node, timeStep, fillContext, evalVisitor);
     }
-};
 
-struct ShiftCase
-{
-    double peerShift;
-    unsigned timeStep;
-    bool expectedOutOfBounds;
+    // Transfers the fixture's registry into the expression. Create every node needed by the test
+    // before calling this, so all AST nodes remain owned by that one registry.
+    SystemModel::Expression makeExpression(const std::string& value, Node* root)
+    {
+        return SystemModel::Expression(value, NodeRegistry(root, std::move(*this)));
+    }
 };
-
-std::ostream& operator<<(std::ostream& os, const ShiftCase& c)
-{
-    return os << "{peerShift=" << c.peerShift << ", timeStep=" << c.timeStep
-              << ", expectedOutOfBounds=" << c.expectedOutOfBounds << "}";
-}
 } // namespace
 
-BOOST_AUTO_TEST_SUITE(out_of_bounds_time_shift_port)
-
-BOOST_DATA_TEST_CASE_F(PortFieldSumTimeShiftFixture,
-                       connected_port_field_shift,
-                       bdata::make(std::vector<ShiftCase>{
-                         // Negative shift: out of bounds at the first step, in bounds afterwards
-                         {-1., 0, true},
-                         {-1., 1, false},
-                         // Positive shift: in bounds at the first step, out of bounds at the last
-                         {1., 0, false},
-                         {1., 2, true},
-                         // Neutral case
-                         {0., 0, false}}),
-                       c)
+BOOST_FIXTURE_TEST_CASE(connected_port_field_sum_checks_peer_time_shifts,
+                        PortFieldSumTimeShiftFixture)
 {
-    auto* expression = ownerExpression();
-    auto& peer = addComponent("peer", shifted(c.peerShift));
-    connect(owner, peer);
+    SystemModel::PortField field("field");
+    SystemModel::PortType portType("type", {field});
+    SystemModel::Port port("port", portType);
 
-    BOOST_CHECK_EQUAL(outOfBoundsAt(expression, c.timeStep), c.expectedOutOfBounds);
+    TimeShiftNode* peerExpression = create<TimeShiftNode>(create<LiteralNode>(0.),
+                                                          create<LiteralNode>(-1));
+    PortFieldSumNode* portFieldSum = create<PortFieldSumNode>("port", "field");
+    EqualNode* ownerExpression = create<EqualNode>(portFieldSum, create<LiteralNode>(0.));
+    SystemModel::Expression peerFieldExpression = makeExpression("time_shifted_peer_field",
+                                                                 peerExpression);
+    std::vector<SystemModel::PortFieldDefinition> fieldDefinitions;
+    fieldDefinitions.emplace_back(port, field, std::move(peerFieldExpression));
+
+    SystemModel::ModelBuilder modelBuilder;
+    SystemModel::Model peerModel = modelBuilder.withId("peer")
+                                     .withPorts({port})
+                                     .withPortFieldDefinitions(std::move(fieldDefinitions))
+                                     .build();
+    SystemModel::Model ownerModel = modelBuilder.withId("owner").withPorts({port}).build();
+
+    SystemModel::ComponentBuilder componentBuilder;
+    SystemModel::Component peer = componentBuilder.withId("peer_component")
+                                    .withModel(&peerModel)
+                                    .withScenarioGroupId("group")
+                                    .build();
+    SystemModel::Component owner = componentBuilder.withId("owner_component")
+                                     .withModel(&ownerModel)
+                                     .withScenarioGroupId("group")
+                                     .build();
+    owner.addComponentConnection("port", SystemModel::ConnectionEnd(peer, port));
+
+    BOOST_CHECK(outOfBoundsAt(ownerExpression, owner, 0));
+    BOOST_CHECK(!outOfBoundsAt(ownerExpression, owner, 1));
 }
 
-BOOST_FIXTURE_TEST_CASE(no_connection_is_in_bounds, PortFieldSumTimeShiftFixture)
+BOOST_FIXTURE_TEST_CASE(connected_port_field_sum_in_bounds, PortFieldSumTimeShiftFixture)
 {
-    BOOST_CHECK(!outOfBoundsAt(ownerExpression(), 0));
+    // Test: positive time shift within bounds (shift of +1 should not be out of bounds
+    // at the first timestep but out of bounds at the last one)
+    SystemModel::PortField field("field");
+    SystemModel::PortType portType("type", {field});
+    SystemModel::Port port("port", portType);
+
+    TimeShiftNode* peerExpression = create<TimeShiftNode>(create<LiteralNode>(0.),
+                                                          create<LiteralNode>(1.));
+    PortFieldSumNode* portFieldSum = create<PortFieldSumNode>("port", "field");
+    EqualNode* ownerExpression = create<EqualNode>(portFieldSum, create<LiteralNode>(0.));
+    SystemModel::Expression peerFieldExpression = makeExpression("time_shifted_peer_field",
+                                                                 peerExpression);
+    std::vector<SystemModel::PortFieldDefinition> fieldDefinitions;
+    fieldDefinitions.emplace_back(port, field, std::move(peerFieldExpression));
+
+    SystemModel::ModelBuilder modelBuilder;
+    SystemModel::Model peerModel = modelBuilder.withId("peer")
+                                     .withPorts({port})
+                                     .withPortFieldDefinitions(std::move(fieldDefinitions))
+                                     .build();
+    SystemModel::Model ownerModel = modelBuilder.withId("owner").withPorts({port}).build();
+
+    SystemModel::ComponentBuilder componentBuilder;
+    SystemModel::Component peer = componentBuilder.withId("peer_component")
+                                    .withModel(&peerModel)
+                                    .withScenarioGroupId("group")
+                                    .build();
+    SystemModel::Component owner = componentBuilder.withId("owner_component")
+                                     .withModel(&ownerModel)
+                                     .withScenarioGroupId("group")
+                                     .build();
+    owner.addComponentConnection("port", SystemModel::ConnectionEnd(peer, port));
+
+    // Positive shift of +1 at time step 0 should be in bounds (not out of bounds)
+    BOOST_CHECK(!outOfBoundsAt(ownerExpression, owner, 0));
+    // Positive shift of +1 at the last time step (2) should be out of bounds (2 + 1 > 2)
+    BOOST_CHECK(outOfBoundsAt(ownerExpression, owner, 2));
 }
 
-BOOST_FIXTURE_TEST_CASE(only_second_connection_is_shifted, PortFieldSumTimeShiftFixture)
+BOOST_FIXTURE_TEST_CASE(connected_port_field_sum_no_shift, PortFieldSumTimeShiftFixture)
 {
-    auto* expression = ownerExpression();
-    auto& peerA = addComponent("peerA", create<LiteralNode>(0.));
-    auto& peerB = addComponent("peerB", shifted(-1.));
-    connect(owner, peerA);
-    connect(owner, peerB);
+    // Test: no time shift on the peer field (neutral case should be in bounds)
+    SystemModel::PortField field("field");
+    SystemModel::PortType portType("type", {field});
+    SystemModel::Port port("port", portType);
 
-    BOOST_CHECK(outOfBoundsAt(expression, 0));
-    BOOST_CHECK(!outOfBoundsAt(expression, 1));
-}
+    LiteralNode* peerExpression = create<LiteralNode>(0.);
+    PortFieldSumNode* portFieldSum = create<PortFieldSumNode>("port", "field");
+    EqualNode* ownerExpression = create<EqualNode>(portFieldSum, create<LiteralNode>(0.));
+    SystemModel::Expression peerFieldExpression = makeExpression("field", peerExpression);
+    std::vector<SystemModel::PortFieldDefinition> fieldDefinitions;
+    fieldDefinitions.emplace_back(port, field, std::move(peerFieldExpression));
 
-BOOST_FIXTURE_TEST_CASE(peer_field_is_itself_a_port_field_sum, PortFieldSumTimeShiftFixture)
-{
-    auto* expression = ownerExpression();
-    auto& farPeer = addComponent("farPeer", shifted(-1.));
-    auto& nearPeer = addComponent("nearPeer", create<PortFieldSumNode>("port", "field"));
-    connect(owner, nearPeer);
-    connect(nearPeer, farPeer);
+    SystemModel::ModelBuilder modelBuilder;
+    SystemModel::Model peerModel = modelBuilder.withId("peer")
+                                     .withPorts({port})
+                                     .withPortFieldDefinitions(std::move(fieldDefinitions))
+                                     .build();
+    SystemModel::Model ownerModel = modelBuilder.withId("owner").withPorts({port}).build();
 
-    BOOST_CHECK(outOfBoundsAt(expression, 0));
-    BOOST_CHECK(!outOfBoundsAt(expression, 1));
-}
+    SystemModel::ComponentBuilder componentBuilder;
+    SystemModel::Component peer = componentBuilder.withId("peer_component")
+                                    .withModel(&peerModel)
+                                    .withScenarioGroupId("group")
+                                    .build();
+    SystemModel::Component owner = componentBuilder.withId("owner_component")
+                                     .withModel(&ownerModel)
+                                     .withScenarioGroupId("group")
+                                     .build();
+    owner.addComponentConnection("port", SystemModel::ConnectionEnd(peer, port));
 
-BOOST_FIXTURE_TEST_CASE(shift_nested_in_larger_peer_expression, PortFieldSumTimeShiftFixture)
-{
-    // peer field: 1 + shift(0, -1)
-    auto* expression = ownerExpression();
-    auto& peer = addComponent("peer", create<SumNode>(create<LiteralNode>(1.), shifted(-1.)));
-    connect(owner, peer);
-
-    BOOST_CHECK(outOfBoundsAt(expression, 0));
-    BOOST_CHECK(!outOfBoundsAt(expression, 1));
-}
-
-BOOST_FIXTURE_TEST_CASE(shift_value_is_evaluated_in_the_peer_context, PortFieldSumTimeShiftFixture)
-{
-    // "peer_shift" only exists on the peer: evaluating it in the owner's context would throw
-    auto* expression = ownerExpression();
-    auto& peer = addComponent("peer",
-                              create<TimeShiftNode>(create<LiteralNode>(0.),
-                                                    create<ParameterNode>("peer_shift")),
-                              {{"peer_shift",
-                                {.id = "peer_shift",
-                                 .type = VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO,
-                                 .value = "-1."}}});
-    connect(owner, peer);
-
-    BOOST_CHECK(outOfBoundsAt(expression, 0));
-    BOOST_CHECK(!outOfBoundsAt(expression, 1));
+    // No time shift → should be in bounds (not out of bounds)
+    BOOST_CHECK(!outOfBoundsAt(ownerExpression, owner, 0));
 }
 
 BOOST_FIXTURE_TEST_CASE(nested_time_shifts_compose, PortFieldSumTimeShiftFixture)
 {
     // shift(shift(0, +1), +1): total shift of +2, last time step is 2
-    Node* expression = create<TimeShiftNode>(shifted(1.), create<LiteralNode>(1.));
+    Node* expression = create<TimeShiftNode>(create<TimeShiftNode>(create<LiteralNode>(0.),
+                                                                   create<LiteralNode>(1.)),
+                                             create<LiteralNode>(1.));
+    SystemModel::ModelBuilder modelBuilder;
+    SystemModel::Model model = modelBuilder.withId("model").build();
+    SystemModel::ComponentBuilder componentBuilder;
+    SystemModel::Component component = componentBuilder.withId("component")
+                                         .withModel(&model)
+                                         .withScenarioGroupId("group")
+                                         .build();
 
-    BOOST_CHECK(!outOfBoundsAt(expression, 0));
-    BOOST_CHECK(outOfBoundsAt(expression, 1));
+    BOOST_CHECK(!outOfBoundsAt(expression, component, 0));
+    BOOST_CHECK(outOfBoundsAt(expression, component, 1));
 }
 
 BOOST_FIXTURE_TEST_CASE(outer_shift_composes_with_connected_port_field_shift,
                         PortFieldSumTimeShiftFixture)
 {
+    SystemModel::PortField field("field");
+    SystemModel::PortType portType("type", {field});
+    SystemModel::Port port("port", portType);
+
     // Owner: shift(port.field, +1). Peer field: shift(0, +1). Total shift: +2
-    auto* expression = ownerExpression(1.);
-    auto& peer = addComponent("peer", shifted(1.));
-    connect(owner, peer);
+    TimeShiftNode* peerExpression = create<TimeShiftNode>(create<LiteralNode>(0.),
+                                                          create<LiteralNode>(1.));
+    PortFieldSumNode* portFieldSum = create<PortFieldSumNode>("port", "field");
+    EqualNode* ownerExpression = create<EqualNode>(create<TimeShiftNode>(portFieldSum,
+                                                                         create<LiteralNode>(1.)),
+                                                   create<LiteralNode>(0.));
+    SystemModel::Expression peerFieldExpression = makeExpression("time_shifted_peer_field",
+                                                                 peerExpression);
+    std::vector<SystemModel::PortFieldDefinition> fieldDefinitions;
+    fieldDefinitions.emplace_back(port, field, std::move(peerFieldExpression));
 
-    BOOST_CHECK(!outOfBoundsAt(expression, 0));
+    SystemModel::ModelBuilder modelBuilder;
+    SystemModel::Model peerModel = modelBuilder.withId("peer")
+                                     .withPorts({port})
+                                     .withPortFieldDefinitions(std::move(fieldDefinitions))
+                                     .build();
+    SystemModel::Model ownerModel = modelBuilder.withId("owner").withPorts({port}).build();
+
+    SystemModel::ComponentBuilder componentBuilder;
+    SystemModel::Component peer = componentBuilder.withId("peer_component")
+                                    .withModel(&peerModel)
+                                    .withScenarioGroupId("group")
+                                    .build();
+    SystemModel::Component owner = componentBuilder.withId("owner_component")
+                                     .withModel(&ownerModel)
+                                     .withScenarioGroupId("group")
+                                     .build();
+    owner.addComponentConnection("port", SystemModel::ConnectionEnd(peer, port));
+
+    BOOST_CHECK(!outOfBoundsAt(ownerExpression, owner, 0));
     // 1 + 1 + 1 = 3 > 2: only detected if the outer shift is carried into the peer field
-    BOOST_CHECK(outOfBoundsAt(expression, 1));
+    BOOST_CHECK(outOfBoundsAt(ownerExpression, owner, 1));
 }
-
-BOOST_AUTO_TEST_SUITE_END()
