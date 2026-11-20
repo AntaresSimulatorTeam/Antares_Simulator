@@ -35,7 +35,9 @@ DistrictPropertiesByArea buildDistrictPropertiesByArea(const Study& study)
     {
         for (const auto* area: *areas)
         {
-            propertiesByArea[area->index].emplace_back("district_" + districtName, districtName);
+            propertiesByArea[area->index].emplace_back("district_"
+                                                         + Antares::SanitizeId(districtName),
+                                                       districtName);
         }
     }
     return propertiesByArea;
