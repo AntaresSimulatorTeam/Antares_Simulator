@@ -190,7 +190,7 @@ d) Two optional parameters, `filter-synthesis` and `filter-year-by-year`, that r
 - `monthly`
 - `annual`
 
-Only the listed granularities are written for the district (e.g. `values-hourly.txt`, `values-daily.txt`, …). Unknown tokens are ignored. If a key is missing, the default behavior is kept: all granularities are exported. Writing the key with no valid token (e.g. `filter-synthesis = none`) means that the district output is skipped entirely for that report. These keys use the same syntax and semantics as the `filter-synthesis` / `filter-year-by-year` keys of areas and links.
+Only the listed granularities are written for the district (e.g. `values-hourly.txt`, `values-daily.txt`, …). Unknown tokens are ignored. If a key is missing, the default behavior is kept: all granularities are exported. Writing the key with no valid token (e.g. `filter-synthesis = none`) means that the district output is skipped entirely for that report. These keys use the same syntax and semantics as the `filter-synthesis` / `filter-year-by-year` keys of areas and links. District filters are only applied when `geographic-trimming = true` in `generaldata.ini`.
 
 **EXAMPLES OF SETS.INI FILES**
 
