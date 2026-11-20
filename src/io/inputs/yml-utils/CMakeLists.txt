@@ -1,7 +1,9 @@
 set(SOURCES
         path_utils.cpp
+        checkFields.cpp
         YmlTreeDisplayer.cpp
         include/antares/io/inputs/yml-utils/path_utils.h
+        include/antares/io/inputs/yml-utils/checkFields.h
         include/antares/io/inputs/yml-utils/YmlTreeDisplayer.h
 )
 
@@ -18,6 +20,7 @@ target_link_libraries(yml-utils
         Antares::input-error
         fmt::fmt
         PRIVATE
+        logs
         yaml-cpp::yaml-cpp
 )
 

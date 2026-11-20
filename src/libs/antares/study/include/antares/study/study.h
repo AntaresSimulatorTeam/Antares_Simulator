@@ -12,10 +12,10 @@
 #include <antares/date/date.h>
 #include <antares/study/runtime/runtime.h>
 #include <antares/writer/i_writer.h>
-#include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
-#include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
 #include "area/store-timeseries-numbers.h"
+#include "binding_constraint/BindingConstraintGroupRepository.h"
+#include "binding_constraint/BindingConstraintsRepository.h"
 #include "fwd.h"
 #include "header.h"
 #include "parameters.h"

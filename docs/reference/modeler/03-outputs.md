@@ -4,6 +4,9 @@ _**This feature is under development and may change frequently**_
 
 Antares modeler automatically creates an **output** directory under the study root directory, to write output files into it.  
 Currently, Antares modeler outputs the simulation table and optionally MPS files for debugging.
+It also exports the system definition used by views to
+`<timestamp output>/views/input/system-for-views.yml`. In a modeler-only run, this file is a copy of
+`input/system.yml`.
 
 ## MPS Files
 
@@ -21,19 +24,24 @@ These files are intended for debugging and analysis purposes.
 
 Antares Simulator (hybrid and modeler modes) produces detailed optimization results for the modeler's components, 
 in the "simulation table", in CSV format:  
-- for each optimization run for hybrid mode (simulation_table--optim-nb-1.csv, simulation_table--optim-nb-2.csv)
-- one file per scenario for pure modeler (simulation-table-<scenario>.csv, or .parquet with the --parquet option).
+- for each optimization stage for hybrid mode (`simulation-table-<year>-<stage>.csv`)
+- one file per scenario for pure modeler (`simulation-table-<scenario>.csv`, or `.parquet` with the --parquet option).
 These files provide a comprehensive view of the variables and constraints involved in the optimization, including their
 values and basis statuses.
 
 ### Location
 
-These files are saved in the output directory of your study, typically named:
+When simulation tables are enabled, these files are saved in a `simulation-tables`
+subdirectory of the run's output directory. Runs that do not export simulation tables do not
+create this directory.
 
-    simulation_table--optim-nb-1.csv (hybrid, for the first optimization)
-    simulation_table--optim-nb-2.csv (hybrid, for the second optimization, if performed)
-    simulation-table-0.csv (pure modeler, for scenario 0)
-    simulation-table-1.csv (pure modeler, for scenario 1)
+    output/<timestamp>/simulation-tables/simulation-table-0-optim-nb-1.csv (hybrid, year 0)
+    output/<timestamp>/simulation-tables/simulation-table-0.csv (pure modeler, scenario 0)
+    output/<timestamp>/simulation-tables/simulation-table-1.csv (pure modeler, scenario 1)
+
+When solver results are requested as a ZIP archive with `--zip-output`, simulation tables
+are written as standalone files beside the archive, in the run's output directory; they are not
+included in the ZIP archive.
 
 ### Structure
 

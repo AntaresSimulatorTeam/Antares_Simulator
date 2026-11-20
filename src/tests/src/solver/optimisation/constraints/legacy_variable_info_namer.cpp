@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(direct_flow_records_origin_destination_as_component)
 
     BOOST_REQUIRE(info[2].has_value());
     BOOST_CHECK_EQUAL(info[2]->name, "DirectFlow");
-    BOOST_CHECK_EQUAL(info[2]->component, "de_fr_link");
+    BOOST_CHECK_EQUAL(info[2]->component, "de_fr");
     BOOST_CHECK_EQUAL(info[2]->timeIndex, 7u);
 }
 
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(unsupplied_energy_records_area_as_component)
 
     BOOST_REQUIRE(info[3].has_value());
     BOOST_CHECK_EQUAL(info[3]->name, "UnsuppliedEnergy");
-    BOOST_CHECK_EQUAL(info[3]->component, "es_node");
+    BOOST_CHECK_EQUAL(info[3]->component, "es");
     BOOST_CHECK_EQUAL(info[3]->timeIndex, 5u);
 }
 
@@ -173,8 +173,8 @@ BOOST_AUTO_TEST_CASE(reserve_variables_use_requested_legacy_output_ids)
     BOOST_CHECK_EQUAL(info[0]->component, "fr_thermal_gas");
     BOOST_CHECK_EQUAL(info[3]->component, "fr_short_term_storage_battery");
     BOOST_CHECK_EQUAL(info[6]->component, "fr_hydro_storage");
-    BOOST_CHECK_EQUAL(info[9]->component, "fr_node");
-    BOOST_CHECK_EQUAL(info[10]->component, "fr_node");
+    BOOST_CHECK_EQUAL(info[9]->component, "fr");
+    BOOST_CHECK_EQUAL(info[10]->component, "fr");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

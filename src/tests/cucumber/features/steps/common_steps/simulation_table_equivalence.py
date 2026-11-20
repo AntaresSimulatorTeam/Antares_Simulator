@@ -41,6 +41,7 @@ from behave import then
 from common_steps.simulation_table_reader import (
     OutputFormat,
     make_simu_table_reader,
+    simulation_table_directory,
 )
 
 
@@ -87,11 +88,11 @@ class Mapping:
 LEGACY_TO_ST = [
     # ---- area balance level ------------------------------------------------ #
     Mapping("unsupplied_energy", AREA_VALUES, "UNSP. ENRG", "unsupplied_energy",
-            "{area}_node", mc_sub="MWh"),
+            "{area}", mc_sub="MWh"),
     Mapping("spilled_energy", AREA_VALUES, "SPIL. ENRG", "spilled_energy",
-            "{area}_node", mc_sub="MWh"),
+            "{area}", mc_sub="MWh"),
     Mapping("price", AREA_VALUES, "MRG. PRICE", "price",
-            "{area}_node", mc_sub="Euro", atol=1e-2, rtol=1e-4, dual_derived=True),
+            "{area}", mc_sub="Euro", atol=1e-2, rtol=1e-4, dual_derived=True),
     Mapping("actual_load", AREA_VALUES, "LOAD", "actual_load",
             "{area}_load", mc_sub="MWh"),
 
@@ -112,26 +113,26 @@ LEGACY_TO_ST = [
 
     # ---- links -------------------------------------------------------------- #
     Mapping("flow", LINK_VALUES, "FLOW LIN.", "flow",
-            "{origin}_{dest}_link", mc_sub="MWh"),
+            "{origin}_{dest}", mc_sub="MWh"),
     Mapping("abs_flow", LINK_VALUES, "FLOW LIN.", "abs_flow",
-            "{origin}_{dest}_link", mc_sub="MWh", transform=lambda s: s.abs()),
+            "{origin}_{dest}", mc_sub="MWh", transform=lambda s: s.abs()),
     Mapping("minus_flow", LINK_VALUES, "FLOW LIN.", "minus_flow",
-            "{origin}_{dest}_link", mc_sub="MWh", transform=lambda s: -s),
+            "{origin}_{dest}", mc_sub="MWh", transform=lambda s: -s),
     Mapping("actual_loop_flow", LINK_VALUES, "LOOP FLOW", "actual_loop_flow",
-            "{origin}_{dest}_link", mc_sub="MWh"),
+            "{origin}_{dest}", mc_sub="MWh"),
     Mapping("abs_congestion_fee", LINK_VALUES, "CONG. FEE (ABS.)", "abs_congestion_fee",
-            "{origin}_{dest}_link", mc_sub="Euro", atol=0.5, rtol=1e-3, dual_derived=True),
+            "{origin}_{dest}", mc_sub="Euro", atol=0.5, rtol=1e-3, dual_derived=True),
     Mapping("alg_congestion_fee", LINK_VALUES, "CONG. FEE (ALG.)", "alg_congestion_fee",
-            "{origin}_{dest}_link", mc_sub="Euro", atol=0.5, rtol=1e-3, dual_derived=True),
+            "{origin}_{dest}", mc_sub="Euro", atol=0.5, rtol=1e-3, dual_derived=True),
 
     # ---- reserves ------------------------------------------------------------#
     # {reserve_name} is the reserve's display name (input/reserves/<area>/reserves.yml
     # "name" field), used in mc-ind captions. {reserve_id} is its lower-cased id, used
     # in the simulation table `output` names (LegacyNameMapper / opt_rename_problem).
     Mapping("spilled_energy_reserve", AREA_RESERVE_VALUES, "{reserve_name}_SPIL.",
-            "spilled_energy_reserve_{reserve_id}", "{area}_node", mc_sub="MWh"),
+            "spilled_energy_reserve_{reserve_id}", "{area}", mc_sub="MWh"),
     Mapping("unsupplied_energy_reserve", AREA_RESERVE_VALUES, "{reserve_name}_UNSP.",
-            "unsupplied_energy_reserve_{reserve_id}", "{area}_node", mc_sub="MWh"),
+            "unsupplied_energy_reserve_{reserve_id}", "{area}", mc_sub="MWh"),
     Mapping("units_on_reserve_power", AREA_RESERVE_THERMAL, "{reserve_name}_{cluster}",
             "units_on_reserve_power_{reserve_id}", "{area}_thermal_{cluster}",
             mc_sub="Reserve Participation Power - MWh"),
@@ -254,20 +255,21 @@ def _load_final_pass_table(output_path: Path, year_index: int, stage: Optional[s
     instead, so the caller must pass the stage explicitly
     (see `SIMULATION_TABLE_STAGES` in solver_steps.py).
     """
+    table_directory = simulation_table_directory(output_path)
     if stage is not None:
         pattern = f"simulation-table-{year_index}-{stage}.csv"
-        if any(output_path.glob(pattern)):
+        if any(table_directory.glob(pattern)):
             reader = make_simu_table_reader(output_path, OutputFormat.CSV, pattern)
             return reader()
-        raise FileNotFoundError(f"No {pattern} in {output_path}")
+        raise FileNotFoundError(f"No {pattern} in {table_directory}")
 
     for optim in (2, 1):
         pattern = f"simulation-table-{year_index}-optim-nb-{optim}.csv"
-        if any(output_path.glob(pattern)):
+        if any(table_directory.glob(pattern)):
             reader = make_simu_table_reader(output_path, OutputFormat.CSV, pattern)
             return reader()
     raise FileNotFoundError(
-        f"No simulation-table-{year_index}-optim-nb-*.csv in {output_path}")
+        f"No simulation-table-{year_index}-optim-nb-*.csv in {table_directory}")
 
 
 # --------------------------------------------------------------------------- #
@@ -406,7 +408,8 @@ def _run_equivalence(context, year: int, only_key: Optional[str], stage: Optiona
                         df = context.soh.link_values_hourly(f"{origin} - {dest_l}", year)
                     except AssertionError:
                         continue
-                    comp = m.st_component.format(origin=origin, dest=dest_l)
+                    first, second = sorted((origin, dest_l))
+                    comp = m.st_component.format(origin=first, dest=second)
                     _check_one(res, m, comp,
                                _mc_series(df, m.mc_col, m.mc_sub),
                                _st_series(st, comp, m.st_output, year_index))

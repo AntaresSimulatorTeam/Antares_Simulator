@@ -44,7 +44,7 @@ void importCapacityReservations(const AreaList& areas, PROBLEME_HEBDO& problem)
         for (const auto& [reserveID, reserveCapacity]:
              area->allCapacityReservations->areaCapacityReservations)
         {
-            CAPACITY_RESERVATION areaCapacityReservation;
+            CAPACITY_RESERVATION areaCapacityReservation(reserveCapacity.need);
             areaCapacityReservation.type = reserveCapacity.type;
             areaCapacityReservation.unsuppliedCost = reserveCapacity.unsuppliedCost;
             areaCapacityReservation.spillageCost = reserveCapacity.spillageCost;
@@ -58,7 +58,6 @@ void importCapacityReservations(const AreaList& areas, PROBLEME_HEBDO& problem)
             areaCapacityReservation.areaReserveIndex = areaReserveIndex;
             globalReserveIndex++;
             areaReserveIndex++;
-            areaCapacityReservation.need = reserveCapacity.need;
 
             areaReserves.areaCapacityReservations.emplace_back(areaCapacityReservation);
         }
@@ -291,8 +290,8 @@ void SIM_InitialisationProblemeHebdo(const Study& study,
     problem.NamedProblems = study.parameters.namedProblems;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
-    problem.OptimisationNotFastMode = (study.parameters.unitCommitment.ucMode
-                                       != Antares::Data::UnitCommitmentMode::ucHeuristicFast);
+    problem.OptimisationNotFastMode = Antares::Data::usesExplicitUnitCommitment(
+      study.parameters.unitCommitment.ucMode);
 
     auto workflow = Solver::Workflow::getWorkflow(study);
 
@@ -520,8 +519,7 @@ void SIM_InitialisationProblemeHebdo(const Study& study,
             pbPalier.emissionFactors[cluster->index] = cluster->emissions.factors;
         }
 
-        if (study.parameters.unitCommitment.ucMode
-              != Antares::Data::UnitCommitmentMode::ucHeuristicFast
+        if (Antares::Data::usesExplicitUnitCommitment(study.parameters.unitCommitment.ucMode)
             && study.parameters.include.reserves && area.allCapacityReservations)
         {
             auto& areaReserves = problem.allReserves->at(i);
@@ -606,7 +604,7 @@ void fillInputGenerationSeries(const Study& study,
     for (uint k = 0; k < study.areas.size(); ++k)
     {
         const auto& area = *(study.areas.byIndex[k]);
-        const std::string areaId = area.id.c_str();
+        const std::string areaId = Antares::SanitizeId(area.id);
         auto& entries = problem.InputGenerationOfArea[k];
 
         auto addEntry = [&entries, PasDeTempsDebut, nbPdt](std::string componentName,
@@ -1175,5 +1173,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
           = problem.CaracteristiquesHydrauliques[k].ContrainteDePmaxHydrauliqueHoraire;
     }
 
-    fillInputGenerationSeries(study, problem, PasDeTempsDebut);
+    if (study.parameters.writeSimulationTable())
+    {
+        fillInputGenerationSeries(study, problem, PasDeTempsDebut);
+    }
 }

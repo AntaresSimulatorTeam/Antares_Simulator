@@ -6,6 +6,9 @@ _**This section is under construction**_
 The general file organization is the same for Economy and Adequacy simulations.  
 **\<Simulation type\>\<simulation tag\>**
 
+The system definition used by views is written to
+`<timestamp output>/views/input/system-for-views.yml`.
+
 **Economy:**
 
 | OUTPUT/Simu id/economy/mc-all/ |                      |                 |                                          |

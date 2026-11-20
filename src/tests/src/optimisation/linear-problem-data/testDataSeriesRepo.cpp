@@ -26,6 +26,7 @@ BOOST_AUTO_TEST_CASE(adding_to_repo_a_data_it_already_contains___exception_raise
 {
     DataSeriesRepository dataSeriesRepository;
     auto some_TS_set = std::make_unique<TimeSeriesSet>("some TS set", 5);
+    const auto* originalDataSeries = some_TS_set.get();
     dataSeriesRepository.addDataSeries(std::move(some_TS_set));
 
     // This TS set wears the same name as the previous one
@@ -35,6 +36,7 @@ BOOST_AUTO_TEST_CASE(adding_to_repo_a_data_it_already_contains___exception_raise
     BOOST_CHECK_EXCEPTION(dataSeriesRepository.addDataSeries(std::move(some_other_TS_set)),
                           DataSeriesRepository::DataSeriesAlreadyExists,
                           containsMessage(expected_err_msg));
+    BOOST_CHECK(&dataSeriesRepository.getDataSeries("some TS set") == originalDataSeries);
 }
 
 BOOST_AUTO_TEST_CASE(repo_not_empty__asking_nonexistent_data_raises_exception)

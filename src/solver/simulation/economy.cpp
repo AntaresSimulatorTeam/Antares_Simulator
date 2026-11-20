@@ -3,6 +3,8 @@
 
 #include "antares/solver/simulation/economy.h"
 
+#include <optional>
+
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
@@ -28,6 +30,11 @@ Economy::Economy(Study& study,
     resultWriter_(resultWriter),
     simulationObserver_(simulationObserver)
 {
+}
+
+void Economy::initializeVariables()
+{
+    variables = std::make_unique<Solver::Variable::Economy::AllVariables>();
 }
 
 Benchmarking::OptimizationInfo Economy::getOptimizationInfo() const
@@ -60,7 +67,11 @@ bool Economy::simulationBegin()
         weeklyOptProblems_.clear();
         postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
 
-        const auto inactiveComponents = Antares::Data::BuildInactiveComponentsAnalyzer(study);
+        std::shared_ptr<const Antares::Data::InactiveComponentsAnalyzer> inactiveComponents;
+        if (study.parameters.writeSimulationTable())
+        {
+            inactiveComponents = Antares::Data::BuildInactiveComponentsAnalyzer(study);
+        }
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
@@ -128,6 +139,14 @@ bool Economy::year(Variable::State& state,
     currentProblem.ProblemeAResoudre->clearBasis();
     auto* simulationTables = weeklyOptProblems_[numSpace].simulationTables();
 
+    // Tables are appended to their file at the end of each week and cleared, so that only
+    // one week of rows is held in memory per parallel year
+    std::optional<LegacySimulationTablesWriter> legacyWriter;
+    if (simulationTables && !study.folderOutput.empty())
+    {
+        legacyWriter.emplace(study.folderOutput, state.year, study.parameters.simuTableFormat);
+    }
+
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
@@ -154,26 +173,29 @@ bool Economy::year(Variable::State& state,
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
 
-            variables.weekBegin(state);
-            uint previousHourInTheYear = state.hourInTheYear;
-
-            for (uint hw = 0; hw != nbHoursInAWeek;
-                 ++hw, ++state.hourInTheYear, ++state.hourInTheSimulation)
+            if (variables)
             {
-                state.hourInTheWeek = hw;
+                variables->weekBegin(state);
+                uint previousHourInTheYear = state.hourInTheYear;
 
-                state.ntc = currentProblem.ValeursDeNTC[hw];
+                for (uint hw = 0; hw != nbHoursInAWeek;
+                     ++hw, ++state.hourInTheYear, ++state.hourInTheSimulation)
+                {
+                    state.hourInTheWeek = hw;
 
-                variables.hourBegin(state.hourInTheYear);
+                    state.ntc = currentProblem.ValeursDeNTC[hw];
 
-                variables.hourForEachArea(state, numSpace);
+                    variables->hourBegin(state.hourInTheYear);
 
-                variables.hourEnd(state, state.hourInTheYear);
+                    variables->hourForEachArea(state, numSpace);
+
+                    variables->hourEnd(state, state.hourInTheYear);
+                }
+
+                state.hourInTheYear = previousHourInTheYear;
+                variables->weekForEachArea(state, numSpace);
+                variables->weekEnd(state);
             }
-
-            state.hourInTheYear = previousHourInTheYear;
-            variables.weekForEachArea(state, numSpace);
-            variables.weekEnd(state);
 
             for (int opt = 0; opt < 7; opt++)
             {
@@ -190,8 +212,11 @@ bool Economy::year(Variable::State& state,
             failedWeekList.push_back(w + 1);
 
             // Stop simulation
-            logs.error("Assertion error for week " + std::to_string(w + 1)
-                       + " simulation is stopped : " + ex.what());
+            logs.error(fmt::format(
+              fmt::runtime("Assertion error for MC year {}, week {} simulation is stopped : {}"),
+              state.year + 1,
+              w + 1,
+              ex.what()));
             return false;
         }
         catch (UnfeasibleProblemError&)
@@ -209,20 +234,20 @@ bool Economy::year(Variable::State& state,
             }
         }
 
+        if (legacyWriter)
+        {
+            durationCollector("simulation_table_export")
+              << [&legacyWriter, simulationTables]() { legacyWriter->flush(*simulationTables); };
+        }
+
         hourInTheYear += nbHoursInAWeek;
     }
 
-    durationCollector("simulation_table_export") << [this, &state, &simulationTables]()
+    if (legacyWriter)
     {
-        if (simulationTables && !study.folderOutput.empty())
-        {
-            LegacySimulationTablesWriter legacyWriter(study.folderOutput,
-                                                      state.year,
-                                                      study.parameters.simuTableFormat);
-            legacyWriter.write(*simulationTables);
-            simulationTables->clear();
-        }
-    };
+        durationCollector("simulation_table_export")
+          << [&legacyWriter, simulationTables]() { legacyWriter->finish(*simulationTables); };
+    }
 
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);
@@ -247,9 +272,9 @@ static std::vector<AvgExchangeResults*> retrieveBalance(const Study& study,
 
 void Economy::simulationEnd()
 {
-    if (!preproOnly && study.runtime.interconnectionsCount() > 0)
+    if (variables && !preproOnly && study.runtime.interconnectionsCount() > 0)
     {
-        auto balance = retrieveBalance(study, variables);
+        auto balance = retrieveBalance(study, *variables);
         ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
     }
 }

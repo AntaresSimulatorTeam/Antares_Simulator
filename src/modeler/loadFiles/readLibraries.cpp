@@ -47,6 +47,11 @@ YmlModel::Library loadSingleLibrary(const fs::path& filePath)
         auto&& err = markYamlError(e, filePath.string());
         throw Error::LoadingError(err);
     }
+    catch (const Antares::IO::Inputs::InputError& e)
+    {
+        auto&& err = markInputError(e, filePath.string());
+        throw Error::LoadingError(err);
+    }
 }
 
 std::vector<SystemModel::Library> convertIntoSystemLibs(const std::vector<YmlModel::Library>& libs)
@@ -69,14 +74,15 @@ std::vector<SystemModel::Library> convertIntoSystemLibs(const std::vector<YmlMod
     return libraries;
 }
 
-std::optional<std::vector<YmlModel::Library>> loadLibrariesFromYaml(const fs::path& studyPath)
+std::vector<YmlModel::Library> loadLibrariesFromYaml(const fs::path& studyPath)
 {
     std::vector<YmlModel::Library> yml_libs;
     const fs::path directoryPath = studyPath / "input" / "model-libraries";
     if (!fs::exists(directoryPath))
     {
-        logs.warning() << "Model library missing";
-        return {};
+        logs.info() << "Model library directory not found at " << directoryPath
+                    << ", loading no libraries";
+        return yml_libs;
     }
 
     for (const auto& entry: fs::directory_iterator(directoryPath))
@@ -223,19 +229,15 @@ void updateLibrariesWithOptimConfig(std::vector<YmlModel::Library>& ymlLibs,
     }
 }
 
-std::optional<LoadedLibraries> loadLibraries(const fs::path& studyPath)
+LoadedLibraries loadLibraries(const fs::path& studyPath)
 {
     auto ymlLibraries = loadLibrariesFromYaml(studyPath);
-    if (ymlLibraries.has_value())
-    {
-        const auto ymlOptimConfig = loadOptimConfigFromYaml(studyPath);
-        updateLibrariesWithOptimConfig(ymlLibraries.value(), ymlOptimConfig);
-        LoadedLibraries loadedLibraries;
-        loadedLibraries.libraries = convertIntoSystemLibs(ymlLibraries.value());
-        loadedLibraries.resolutionMode = convertResolutionMode(ymlOptimConfig.resolution_mode);
-        loadedLibraries.scenarioScope = convertScenarioScope(ymlOptimConfig);
-        return loadedLibraries;
-    }
-    return {};
+    const auto ymlOptimConfig = loadOptimConfigFromYaml(studyPath);
+    updateLibrariesWithOptimConfig(ymlLibraries, ymlOptimConfig);
+    LoadedLibraries loadedLibraries;
+    loadedLibraries.libraries = convertIntoSystemLibs(ymlLibraries);
+    loadedLibraries.resolutionMode = convertResolutionMode(ymlOptimConfig.resolution_mode);
+    loadedLibraries.scenarioScope = convertScenarioScope(ymlOptimConfig);
+    return loadedLibraries;
 }
 } // namespace Antares::Solver::LoadFiles

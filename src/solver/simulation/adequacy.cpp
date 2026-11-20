@@ -3,6 +3,8 @@
 
 #include "antares/solver/simulation/adequacy.h"
 
+#include <optional>
+
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
@@ -26,6 +28,11 @@ Adequacy::Adequacy(Study& study,
     resultWriter(resultWriter),
     simulationObserver_(simulationObserver)
 {
+}
+
+void Adequacy::initializeVariables()
+{
+    variables = std::make_unique<Variable::Adequacy::AllVariables>();
 }
 
 Benchmarking::OptimizationInfo Adequacy::getOptimizationInfo() const
@@ -58,7 +65,10 @@ bool Adequacy::simulationBegin()
     {
         pProblemesHebdo.resize(pNbMaxPerformedYearsInParallel);
 
-        inactiveComponents_ = Antares::Data::BuildInactiveComponentsAnalyzer(study);
+        if (study.parameters.writeSimulationTable())
+        {
+            inactiveComponents_ = Antares::Data::BuildInactiveComponentsAnalyzer(study);
+        }
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
@@ -139,6 +149,14 @@ bool Adequacy::year(Variable::State& state,
         simulationTables = std::make_unique<IO::Outputs::OptimisationsSimulationTable>(
           inactiveComponents_);
         simulationTables->selectStages(study.parameters.simulationTableStages);
+    }
+
+    // Tables are appended to their file at the end of each week and cleared, so that only
+    // one week of rows is held in memory per parallel year
+    std::optional<LegacySimulationTablesWriter> legacyWriter;
+    if (simulationTables && !study.folderOutput.empty())
+    {
+        legacyWriter.emplace(study.folderOutput, state.year, study.parameters.simuTableFormat);
     }
 
     for (uint w = 0; w != pNbWeeks; ++w)
@@ -232,8 +250,12 @@ bool Adequacy::year(Variable::State& state,
                 failedWeekList.push_back(w + 1);
 
                 // Stop simulation
-                logs.error("Assertion error for week " + std::to_string(w + 1)
-                           + " simulation is stopped : " + ex.what());
+                logs.error(fmt::format(
+                  fmt::runtime(
+                    "Assertion error for MC year {}, week {} simulation is stopped : {}"),
+                  state.year + 1,
+                  w + 1,
+                  ex.what()));
                 return false;
             }
             catch (UnfeasibleProblemError&)
@@ -331,39 +353,43 @@ bool Adequacy::year(Variable::State& state,
 
         updatingWeeklyFinalHydroLevel(study.areas, currentProblem);
 
-        variables.weekBegin(state);
-        uint previousHourInTheYear = state.hourInTheYear;
-
-        for (uint hw = 0; hw != nbHoursInAWeek;
-             ++hw, ++state.hourInTheYear, ++state.hourInTheSimulation)
+        if (variables)
         {
-            state.hourInTheWeek = hw;
+            variables->weekBegin(state);
+            uint previousHourInTheYear = state.hourInTheYear;
 
-            state.ntc = currentProblem.ValeursDeNTC[hw];
+            for (uint hw = 0; hw != nbHoursInAWeek;
+                 ++hw, ++state.hourInTheYear, ++state.hourInTheSimulation)
+            {
+                state.hourInTheWeek = hw;
 
-            variables.hourBegin(state.hourInTheYear);
+                state.ntc = currentProblem.ValeursDeNTC[hw];
 
-            variables.hourForEachArea(state, numSpace);
+                variables->hourBegin(state.hourInTheYear);
 
-            variables.hourEnd(state, state.hourInTheYear);
+                variables->hourForEachArea(state, numSpace);
+
+                variables->hourEnd(state, state.hourInTheYear);
+            }
+
+            state.hourInTheYear = previousHourInTheYear;
+            variables->weekForEachArea(state, numSpace);
+            variables->weekEnd(state);
         }
 
-        state.hourInTheYear = previousHourInTheYear;
-        variables.weekForEachArea(state, numSpace);
-        variables.weekEnd(state);
+        if (legacyWriter)
+        {
+            legacyWriter->flush(*simulationTables);
+        }
 
         hourInTheYear += nbHoursInAWeek;
         optWriter.addTime(w, currentProblem.timeMeasure);
         addTimeMeasure(durationCollector, currentProblem.timeMeasure);
     }
 
-    if (simulationTables && !study.folderOutput.empty())
+    if (legacyWriter)
     {
-        LegacySimulationTablesWriter legacyWriter(study.folderOutput,
-                                                  state.year,
-                                                  study.parameters.simuTableFormat);
-        legacyWriter.write(*simulationTables);
-        simulationTables->clear();
+        legacyWriter->finish(*simulationTables);
     }
 
     optWriter.finalize();
@@ -389,9 +415,9 @@ static std::vector<AvgExchangeResults*> retrieveBalance(const Study& study,
 
 void Adequacy::simulationEnd()
 {
-    if (!preproOnly && study.runtime.interconnectionsCount() > 0)
+    if (variables && !preproOnly && study.runtime.interconnectionsCount() > 0)
     {
-        auto balance = retrieveBalance(study, variables);
+        auto balance = retrieveBalance(study, *variables);
         ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
     }
 }

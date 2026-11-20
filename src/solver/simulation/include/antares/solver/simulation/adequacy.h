@@ -4,6 +4,8 @@
 #ifndef __SOLVER_SIMULATION_ADEQUACY_H__
 #define __SOLVER_SIMULATION_ADEQUACY_H__
 
+#include <memory>
+
 #include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/solver/simulation/common-eco-adq.h"
@@ -46,9 +48,11 @@ public:
     //! Current study
     Study& study;
     //! All variables
-    Variable::Adequacy::AllVariables variables;
+    std::unique_ptr<Variable::Adequacy::AllVariables> variables;
     //! Prepro only
     bool preproOnly = false;
+
+    void initializeVariables();
 
 protected:
     void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
