@@ -13,7 +13,7 @@ from actions_on_study.antares_problem_generator import AntaresProblemGeneratorRu
 from actions_on_study.create_simulation import create_simulation
 from actions_on_study.study_run import study_run
 from executable_paths import load_executables
-from fixtures import check_handler
+from registered_fixures import check_handler
 from parse_studies.configuration import load_check_config
 from parse_studies.json_collector import contains_json_config, jsonCollector
 
@@ -278,7 +278,6 @@ def test_fixture_teardown_after_execution_failure(pytester):
     pytester.makepyfile("""
 from pathlib import Path
 from unittest.mock import Mock
-from fixtures import check_runner, resultsRemover
 
 def test_failing(check_runner):
     simulation = Mock()
@@ -299,6 +298,8 @@ def test_teardown():
 from pathlib import Path
 import pytest
 
+pytest_plugins = ["registered_fixures"]
+
 @pytest.fixture
 def study_path():
     path = Path("study")
@@ -309,6 +310,28 @@ def study_path():
     return path
 """)
     pytester.runpytest("-q").assert_outcomes(failed=1, passed=1)
+
+
+@pytest.mark.parametrize("indirect", [False, True])
+def test_shared_fixtures_are_discovered_without_imports(pytester, indirect):
+    pytester.makeconftest((SCRIPT_DIR / "conftest.py").read_text())
+    study = pytester.path / "study"
+    (study / "output" / "reference").mkdir(parents=True)
+    (study / "output" / "generated").mkdir()
+    (study / "logs").mkdir()
+    pytester.makepyfile(f"""
+import pytest
+from pathlib import Path
+
+@pytest.mark.parametrize("study_path", [Path({str(study)!r})], indirect={indirect})
+def test_using_shared_fixtures(study_path, check_runner):
+    assert Path(study_path).name == "study"
+    assert check_runner is not None
+""")
+    pytester.runpytest("-q").assert_outcomes(passed=1)
+    assert (study / "output" / "reference").exists()
+    assert not (study / "output" / "generated").exists()
+    assert not (study / "logs").exists()
 
 
 def test_json_entrypoint_passes_same_simulation(monkeypatch, tmp_path, entry):

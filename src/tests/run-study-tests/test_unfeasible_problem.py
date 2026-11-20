@@ -5,8 +5,6 @@ from actions_on_study.create_simulation import create_simulation
 from check_on_results.check_general import check_list
 from check_on_results.unfeasible_problem import unfeasible_problem, weeks_in_year
 
-from fixtures import check_runner, resultsRemover, study_path
-
 ALL_STUDIES_PATH = (
     Path(__file__).resolve().parents[3]
     / 'resources' / 'Antares_Simulator_Tests_NR' / 'unfeasible-problem'

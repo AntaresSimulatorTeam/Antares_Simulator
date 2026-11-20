@@ -2,7 +2,6 @@ from pathlib import Path
 
 import pytest
 
-from fixtures import check_runner, resultsRemover
 from actions_on_study.create_simulation import create_simulation
 from parse_studies.look_for_studies import look_for_studies
 from parse_studies.json_collector import jsonCollector
