@@ -215,6 +215,7 @@ void addConstraintEntries(SimulationTable& simulationTable,
                 if (modelConstr.outOfBoundsProcessingMode()
                       == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP
                     && LinearProblem::hasOutOfBoundsTimeShift(modelConstr.expression().RootNode(),
+                                                              component,
                                                               *ts,
                                                               fillContext,
                                                               evalVisitor))
@@ -304,6 +305,7 @@ void addEntriesForNode(SimulationTable& simulationTable,
                 if (constraint.outOfBoundsProcessingMode()
                       == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP
                     && LinearProblem::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
+                                                              component,
                                                               *ts,
                                                               fillContext,
                                                               evalVisitor))

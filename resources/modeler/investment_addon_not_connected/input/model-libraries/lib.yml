@@ -1,0 +1,120 @@
+# Copyright (c) 2026, RTE (https://www.rte-france.com)
+#
+# See AUTHORS.txt
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+#
+# This file is part of the Antares project.
+
+# The operational "thermal" model caps its generation with sum_connections(..., no_connection_expr = ...):
+# - when no add-on is connected, the cap is its own p_max_cluster
+# - when the "thermal_invest" add-on is connected, the cap is the invested capacity
+library:
+  id: lib
+
+  port-types:
+    - id: flow
+      fields:
+        - id: flow
+    - id: capacity_port
+      fields:
+        - id: capacity
+
+  models:
+    - id: node
+      ports:
+        - id: balance_port
+          type: flow
+      binding-constraints:
+        - id: balance
+          expression: sum_connections(balance_port.flow) = 0
+
+    - id: load
+      parameters:
+        - id: demand
+          time-dependent: false
+          scenario-dependent: false
+      ports:
+        - id: balance_port
+          type: flow
+      port-field-definitions:
+        - port: balance_port
+          field: flow
+          definition: -demand
+
+    - id: unsupplied
+      parameters:
+        - id: cost
+          time-dependent: false
+          scenario-dependent: false
+      variables:
+        - id: unsupplied_energy
+          lower-bound: 0
+      ports:
+        - id: balance_port
+          type: flow
+      port-field-definitions:
+        - port: balance_port
+          field: flow
+          definition: unsupplied_energy
+      objective-contributions:
+        - id: objective
+          expression: sum(cost * unsupplied_energy)
+
+    # Operational model
+    - id: thermal
+      parameters:
+        - id: p_max_cluster
+          time-dependent: false
+          scenario-dependent: false
+        - id: generation_cost
+          time-dependent: false
+          scenario-dependent: false
+      variables:
+        - id: generation
+          lower-bound: 0
+      ports:
+        - id: balance_port
+          type: flow
+        - id: capacity_port
+          type: capacity_port
+      port-field-definitions:
+        - port: balance_port
+          field: flow
+          definition: generation
+      binding-constraints:
+        - id: generation_max_constraint
+          expression: generation <= sum_connections(capacity_port.capacity, no_connection_expr = p_max_cluster)
+      objective-contributions:
+        - id: objective
+          expression: sum(generation_cost * generation)
+
+    # Investment add-on
+    - id: thermal_invest
+      parameters:
+        - id: investment_cost
+          time-dependent: false
+          scenario-dependent: false
+        - id: max_investment
+          time-dependent: false
+          scenario-dependent: false
+      variables:
+        - id: invested_capacity
+          lower-bound: 0
+          upper-bound: max_investment
+          time-dependent: false
+          scenario-dependent: false
+      ports:
+        - id: capacity_port
+          type: capacity_port
+      port-field-definitions:
+        - port: capacity_port
+          field: capacity
+          definition: invested_capacity
+      objective-contributions:
+        - id: objective
+          expression: investment_cost * invested_capacity

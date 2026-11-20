@@ -77,7 +77,12 @@ std::string PrintVisitor::visit(const Nodes::PortFieldNode* node)
 
 std::string PrintVisitor::visit(const Nodes::PortFieldSumNode* node)
 {
-    return node->getPortName() + "." + node->getFieldName();
+    std::string printed = node->getPortName() + "." + node->getFieldName();
+    if (const auto* noConnectionExpr = node->noConnectionExpr())
+    {
+        printed += " (no_connection_expr = " + dispatch(noConnectionExpr) + ")";
+    }
+    return printed;
 }
 
 std::string trimAndFormat(std::string s)

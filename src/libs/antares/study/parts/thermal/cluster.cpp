@@ -423,8 +423,6 @@ bool ThermalCluster::isActive() const
     return enabled && !mustrun;
 }
 
-ThermalCluster::Ramping::Ramping() = default;
-
 void ThermalCluster::Ramping::reset()
 {
     powerIncreaseCost = 0;

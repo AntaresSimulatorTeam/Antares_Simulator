@@ -68,6 +68,12 @@ public:
         rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());
     }
 
+    template<typename Parent, typename Child>
+    void parentForbidsChild()
+    {
+        rules_[typeIndexOf<Parent>()].insert(typeIndexOf<Child>());
+    }
+
     bool isGloballyForbidden(const std::type_index& typeId) const;
     bool isForbiddenByParent(const std::type_index& parentTypeId,
                              const std::type_index& nodeTypeId) const;
