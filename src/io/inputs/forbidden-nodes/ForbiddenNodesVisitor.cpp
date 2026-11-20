@@ -122,15 +122,14 @@ void ForbiddenNodesInComponentVisitor::visit(const PortFieldSumNode* portFieldSu
 
     for (const auto connectionEnd: component_.componentConnectionsViaPort(localPortId))
     {
-        auto* connectedComponent = connectionEnd.component();
-        auto* connectedPort = connectionEnd.port();
+        const auto& connectedComponent = connectionEnd.component();
+        const auto& connectedPort = connectionEnd.port();
 
         // Expression (as a string) at connected port field
-        const auto expr_str = connectedComponent
-                                ->expressionAtPortField(connectedPort->Id(), fieldId)
+        const auto expr_str = connectedComponent.expressionAtPortField(connectedPort.Id(), fieldId)
                                 .Value();
         // Expression (as a root node) at connected port field
-        const auto* nodeToVisit = connectedComponent->nodeAtPortField(connectedPort->Id(), fieldId);
+        const auto* nodeToVisit = connectedComponent.nodeAtPortField(connectedPort.Id(), fieldId);
 
         ForbiddenNodesVisitor visitor(forbiddenNodes_, expr_str);
         visitor.dispatch(nodeToVisit);

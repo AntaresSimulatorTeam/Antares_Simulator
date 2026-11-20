@@ -261,8 +261,8 @@ BOOST_AUTO_TEST_CASE(two_components_connected_by_ports_of_same_type_but_differen
     auto connections_to_N = component_N->componentConnectionsViaPort(port_id);
 
     BOOST_CHECK_EQUAL(connections_to_N.size(), 1);
-    BOOST_CHECK_EQUAL(connections_to_N[0].port()->Id(), "some_other_port");
-    BOOST_CHECK_EQUAL(connections_to_N[0].component()->Id(), "NG");
+    BOOST_CHECK_EQUAL(connections_to_N[0].port().Id(), "some_other_port");
+    BOOST_CHECK_EQUAL(connections_to_N[0].component().Id(), "NG");
 
     // Symmetrically, check connexions of NG
     const auto component_NG = std::ranges::find_if(components,
@@ -271,8 +271,8 @@ BOOST_AUTO_TEST_CASE(two_components_connected_by_ports_of_same_type_but_differen
     auto connections_to_NG = component_NG->componentConnectionsViaPort("some_other_port");
 
     BOOST_CHECK_EQUAL(connections_to_NG.size(), 1);
-    BOOST_CHECK_EQUAL(connections_to_NG[0].port()->Id(), "injection_port");
-    BOOST_CHECK_EQUAL(connections_to_NG[0].component()->Id(), "N");
+    BOOST_CHECK_EQUAL(connections_to_NG[0].port().Id(), "injection_port");
+    BOOST_CHECK_EQUAL(connections_to_NG[0].component().Id(), "N");
 
     // Check area connections
     BOOST_CHECK_EQUAL(component_N->areaConnectedToPort("injection_port").has_value(), false);

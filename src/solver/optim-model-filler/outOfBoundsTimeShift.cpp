@@ -29,6 +29,14 @@ bool hasOutOfBoundsTimeShift(const Expressions::Nodes::Node* node,
         }
     }
 
+    if (const auto* portFieldSumNode = dynamic_cast<const Expressions::Nodes::PortFieldSumNode*>(
+          node);
+        portFieldSumNode
+        && evalVisitor.hasOutOfBoundsTimeShiftInConnectedPortFields(portFieldSumNode, timeStep))
+    {
+        return true;
+    }
+
     if (const auto* parentNode = dynamic_cast<const Expressions::Nodes::ParentNode*>(node))
     {
         for (const auto* operand: parentNode->getConstOperands())

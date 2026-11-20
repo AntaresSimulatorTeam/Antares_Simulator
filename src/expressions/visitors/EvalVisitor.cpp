@@ -3,8 +3,10 @@
 
 #include "antares/expressions/visitors/EvalVisitor.h"
 
+#include <algorithm>
 #include <numeric>
 #include <stdexcept>
+#include <vector>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/TimeSumUtils.h>
@@ -38,6 +40,33 @@ EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
     fillContext_(fillContext),
     areaPriceProvider_(areaPriceProvider)
 {
+}
+
+bool EvalVisitor::hasOutOfBoundsTimeShiftInConnectedPortFields(const Nodes::PortFieldSumNode* node,
+                                                               unsigned timeStep) const
+{
+    const auto& connectionEnds = component_.componentConnectionsViaPort(node->getPortName());
+    return std::any_of(
+      connectionEnds.begin(),
+      connectionEnds.end(),
+      [this, node, timeStep](const ModelerStudy::SystemModel::ConnectionEnd& connectionEnd)
+      {
+          const auto& connectedComponent = connectionEnd.component();
+          const auto& connectedPort = connectionEnd.port();
+          EvalVisitor connectedVisitor(optimContainer_,
+                                       fillContext_,
+                                       connectedComponent,
+                                       data_,
+                                       scenario_,
+                                       areaPriceProvider_);
+          const Nodes::Node* connectedFieldExpression = connectedComponent.nodeAtPortField(
+            connectedPort.Id(),
+            node->getFieldName());
+          return LinearProblem::hasOutOfBoundsTimeShift(connectedFieldExpression,
+                                                        timeStep,
+                                                        fillContext_,
+                                                        connectedVisitor);
+      });
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::SumNode* node)
@@ -162,15 +191,15 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
     EvaluationResult result(0.);
     for (const auto connectionEnd: component_.componentConnectionsViaPort(portId))
     {
-        auto* component = connectionEnd.component();
-        auto* port = connectionEnd.port();
+        const auto& component = connectionEnd.component();
+        const auto& port = connectionEnd.port();
         EvalVisitor visitor(optimContainer_,
                             fillContext_,
-                            *component,
+                            component,
                             data_,
                             scenario_,
                             areaPriceProvider_);
-        const auto* nodeToVisit = component->nodeAtPortField(port->Id(), fieldId);
+        const auto* nodeToVisit = component.nodeAtPortField(port.Id(), fieldId);
         auto dispatchResult = visitor.dispatch(nodeToVisit);
         result += dispatchResult;
     }

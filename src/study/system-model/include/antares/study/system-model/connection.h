@@ -16,13 +16,13 @@ class Component;
 class ConnectionEnd final
 {
 public:
-    ConnectionEnd(Component* component, const Port* port);
-    [[nodiscard]] const Component* component() const;
-    [[nodiscard]] const Port* port() const;
+    ConnectionEnd(Component& component, const Port& port);
+    [[nodiscard]] const Component& component() const;
+    [[nodiscard]] const Port& port() const;
 
 private:
-    const Component* component_;
-    const Port* port_;
+    const Component& component_;
+    const Port& port_;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel
