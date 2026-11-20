@@ -19,6 +19,7 @@ set(SRC_model
         include/antares/study/system-model/portFieldDefinition.h
         include/antares/study/system-model/portType.h
         include/antares/study/system-model/component.h
+        include/antares/study/system-model/heuristic.h
         include/antares/study/system-model/extraOutput.h
         include/antares/study/system-model/system.h
         include/antares/study/system-model/timeAndScenarioType.h

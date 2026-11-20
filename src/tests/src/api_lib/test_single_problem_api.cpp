@@ -698,6 +698,7 @@ ModelerData OneParameterOneVariableOneConstraint()
       .scenarioScope = {},
       .bendersDecomposition = {},
       .componentProperties = {},
+      .heuristicsByModel = {},
     };
 }
 

@@ -19,7 +19,12 @@ struct GenerationAndResolutionConfig
 {
     SolverType master = SolverType::LP;
     SolverType subproblems = SolverType::LP;
+    /// Legacy thermal clusters: run the legacy heuristic (fast or accurate) between two
+    /// optimisations
     bool useThermalHeuristic = true;
+    /// GEMS components with integer strategy "heuristic": run their heuristics between two
+    /// optimisations
+    bool useGemsThermalHeuristics = false;
     ResolutionMode resolutionMode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
 };
 

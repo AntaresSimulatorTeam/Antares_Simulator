@@ -10,6 +10,7 @@
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/solver/optim-model-filler/BendersDecomposition.h"
+#include "antares/solver/optim-model-filler/VariableBoundOverrides.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -63,7 +64,8 @@ private:
       std::vector<std::unique_ptr<LinearProblem::Api::LinearProblemFiller>>& fillersCollection,
       const ModelerData& modelerData,
       LinearProblem::OptimEntityContainer& optimEntityContainer,
-      LinearProblem::BendersDecomposition* bendersDecomposition);
+      LinearProblem::BendersDecomposition* bendersDecomposition,
+      const LinearProblem::VariableBoundOverrides* boundOverrides);
 };
 
 } // namespace Antares::Solver::Optimization::Simplex

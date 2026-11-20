@@ -13,6 +13,11 @@ add_boost_test(unit-tests-for-solver-optimisation
         test_legacy_extra_outputs.cpp
         test_legacy_naming_uniqueness.cpp
         test_inactive_components_analyzer_builder.cpp
+        test_thermal_heuristics.cpp
+        test_gems_thermal_heuristics.cpp
+        ${CMAKE_SOURCE_DIR}/src/solver/optimisation/gemsThermalHeuristics.cpp
+        ${CMAKE_SOURCE_DIR}/src/solver/optimisation/opt_calcul_des_pmin_MUT_MDT.cpp
+        ${CMAKE_SOURCE_DIR}/src/solver/optimisation/opt_nombre_min_groupes_demarres_couts_demarrage.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/LegacyNameMapper.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/LegacyExtraOutputs.cpp
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/LegacySimulationTableSnapshot.cpp
@@ -20,6 +25,7 @@ add_boost_test(unit-tests-for-solver-optimisation
         ${CMAKE_SOURCE_DIR}/src/solver/optimisation/variables/VariableManagerUtils.cpp
         LIBS
         antares-study-system-model
+        sirius_solver
         Antares::antares-solver-simulation
         Antares::simulation-table
         Antares::simu-table-generator

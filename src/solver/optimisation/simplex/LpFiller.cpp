@@ -10,6 +10,7 @@
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
+#include "antares/solver/optimisation/gemsThermalHeuristics.h"
 #include "antares/study/system-model/system.h"
 
 using Antares::LinearProblem::BendersDecomposition;
@@ -29,7 +30,8 @@ void LpFiller::fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblem::Api::LinearProblemFiller>>& fillersCollection,
   const ModelerData& modelerData,
   OptimEntityContainer& optimEntityContainer,
-  BendersDecomposition* bendersDecomposition)
+  BendersDecomposition* bendersDecomposition,
+  const LinearProblem::VariableBoundOverrides* boundOverrides)
 {
     const auto& components = modelerData.system->Components();
     optimEntityContainer.addFromSystemComponents(components);
@@ -41,7 +43,8 @@ void LpFiller::fillModelerComponents(
                                             optimEntityContainer,
                                             modelerData.scenarioGroupRepository,
                                             Antares::Solver::Config::Location::SUBPROBLEMS,
-                                            bendersDecomposition));
+                                            bendersDecomposition,
+                                            boundOverrides));
     }
 }
 
@@ -80,10 +83,14 @@ void LpFiller::fillLinearProblem(const LinearProblem::Api::FillContext& fillCtx,
     if (problemeHebdo.modelerData)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
+        // The bounds computed by the heuristics of GEMS components (integer strategy
+        // "heuristic") are applied when the second optimisation is built
+        const auto& gemsHeuristicsState = problemeHebdo.gemsHeuristicsState;
         fillModelerComponents(fillersCollection,
                               *problemeHebdo.modelerData,
                               optimEntityContainer,
-                              bendersDecomposition);
+                              bendersDecomposition,
+                              gemsHeuristicsState ? &gemsHeuristicsState->boundOverrides : nullptr);
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!

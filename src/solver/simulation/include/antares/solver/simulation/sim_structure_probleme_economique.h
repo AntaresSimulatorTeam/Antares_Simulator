@@ -21,6 +21,7 @@ class AdequacyPatchRuntimeData;
 namespace Antares::Optimization
 {
 struct SolvedModelerProblem;
+struct GemsHeuristicsState;
 } // namespace Antares::Optimization
 
 namespace Antares::Data
@@ -601,6 +602,7 @@ struct PROBLEME_HEBDO
     bool OptimisationNotFastMode = false;
     bool OptimisationAvecVariablesEntieres = false;
     bool useThermalHeuristic = true;
+    bool useGemsThermalHeuristics = false;
 
     /// \brief Study-wide, precomputed activity flags used to suppress
     /// simulation-table rows for structurally inactive objects (see
@@ -839,6 +841,9 @@ public:
     /// modeler component rows. Null unless retainSolvedModelerProblem is set.
     std::shared_ptr<const Antares::Optimization::SolvedModelerProblem> lastSolvedModelerProblem;
 
+    /// \brief Values exchanged between the two optimisations of a week by the heuristics of
+    /// the GEMS components (integer strategy "heuristic"). Null unless useGemsThermalHeuristics.
+    std::shared_ptr<Antares::Optimization::GemsHeuristicsState> gemsHeuristicsState;
     /// \brief Kept alive past the solve so the CSR adequacy patch post-process
     /// can evaluate GEMS port field expressions via EvalVisitor.
     std::shared_ptr<Antares::LinearProblem::OptimEntityContainer> optimEntityContainer;

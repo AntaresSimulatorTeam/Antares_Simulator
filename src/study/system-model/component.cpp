@@ -20,6 +20,45 @@ std::string toLowerCase(const std::string& str)
 namespace Antares::ModelerStudy::SystemModel
 {
 
+static void checkIntegerStrategyValidity(const ComponentData& data)
+{
+    const auto& strategy = data.integer_strategy;
+
+    if (strategy.id != "exact" && strategy.id != "relaxed" && strategy.id != "heuristic")
+    {
+        throw std::invalid_argument(fmt::format("Component '{}': invalid integer strategy '{}'. "
+                                                "Expected 'exact', 'relaxed' or 'heuristic'",
+                                                data.id,
+                                                strategy.id));
+    }
+
+    if (strategy.id == "heuristic")
+    {
+        if (strategy.heuristic_id.empty())
+        {
+            throw std::invalid_argument(fmt::format("Component '{}': 'heuristic-id' is mandatory "
+                                                    "when integer strategy is 'heuristic'",
+                                                    data.id));
+        }
+
+        if (strategy.heuristic_id != "fast" && strategy.heuristic_id != "accurate")
+        {
+            throw std::invalid_argument(fmt::format("Component '{}': invalid heuristic-id '{}'. "
+                                                    "Expected 'fast' or 'accurate'",
+                                                    data.id,
+                                                    strategy.heuristic_id));
+        }
+    }
+    else if (!strategy.heuristic_id.empty())
+    {
+        throw std::invalid_argument(
+          fmt::format("Component '{}': 'heuristic-id' must not be specified "
+                      "when integer strategy is '{}'",
+                      data.id,
+                      strategy.id));
+    }
+}
+
 static void checkComponentDataValidity(const ComponentData& data)
 {
     // Check that mandatory attributes are not empty
@@ -31,6 +70,7 @@ static void checkComponentDataValidity(const ComponentData& data)
     {
         throw std::invalid_argument("A component can't have an empty model");
     }
+    checkIntegerStrategyValidity(data);
     // Check that parameters values are coherent with the model
     if (data.model->Parameters().size() != data.parameter_values.size())
     {
@@ -318,6 +358,20 @@ ComponentBuilder& ComponentBuilder::withId(const std::string_view id)
 ComponentBuilder& ComponentBuilder::withModel(const Model* model)
 {
     data_.model = model;
+    return *this;
+}
+
+/**
+ * \brief Sets the integer strategy of the component.
+ *
+ * \param id The integer strategy: exact, relaxed or heuristic.
+ * \param heuristicId The heuristic (fast or accurate), only when id is heuristic.
+ * \return Reference to the ComponentBuilder object.
+ */
+ComponentBuilder& ComponentBuilder::withIntegerStrategy(std::string id, std::string heuristicId)
+{
+    data_.integer_strategy.id = std::move(id);
+    data_.integer_strategy.heuristic_id = std::move(heuristicId);
     return *this;
 }
 

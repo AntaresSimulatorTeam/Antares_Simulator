@@ -23,12 +23,19 @@ struct Property
     std::string value;
 };
 
+struct IntegerStrategy
+{
+    std::string id = "exact";
+    std::string heuristic_id;
+};
+
 struct Component
 {
     std::string id;
     std::string model;
     std::string scenarioGroup;
     std::vector<Parameter> parameters;
+    IntegerStrategy integer_strategy;
 
     // This field isn't an input for simulation, it's an output for the view builder
     // It's only used for building the system-for-views.yml
