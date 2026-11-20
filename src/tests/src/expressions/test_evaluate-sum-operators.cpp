@@ -8,6 +8,7 @@
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
+#include <antares/exception/InvalidArgumentError.hpp>
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
@@ -201,7 +202,7 @@ BOOST_AUTO_TEST_SUITE_END()
 // For example : sum(t .. t+1, p).
 //
 // As a consequence,
-// - the following expression : sum(0 .. 1, p) is rejected.
+// - sum(0 .. 1, p) is constant in time and evaluated once per optimization window.
 // - sum(t .. t+1, p) means that for each time step t, we sum p over the interval [t, t+1].
 // - sum(t .. t+1, p) results in a vector sized to the number of hours, even if p is a literal
 //   (that is of dimension 1).
@@ -226,6 +227,29 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_on_interval_t__t_plus_1, 
     std::vector<double> expected = {3., 5., 4.};
     std::vector<double> actual = evalResult.valuesAsVector();
     BOOST_CHECK(actual == expected);
+}
+
+BOOST_FIXTURE_TEST_CASE(non_integer_time_sum_bound_is_rejected, tests_fixture)
+{
+    Node* sum = timeSum(literal(1.5), literal(2), literal(1));
+
+    BOOST_CHECK_THROW(evalVisitor->dispatch(sum), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(absolute_time_sum_bound_outside_block_is_rejected, tests_fixture)
+{
+    Node* sum = timeSum(literal(-1), literal(0), literal(1));
+
+    BOOST_CHECK_THROW(evalVisitor->dispatch(sum), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(time_dependent_time_sum_bound_is_rejected, tests_fixture)
+{
+    Node* sum = timeSum(parameter("p", VariabilityType::VARYING_IN_TIME_ONLY),
+                        literal(0),
+                        literal(1));
+
+    BOOST_CHECK_THROW(evalVisitor->dispatch(sum), Antares::Error::InvalidArgumentError);
 }
 
 BOOST_FIXTURE_TEST_CASE(sum_a_squared_param_as_TS_on_interval_t__t_plus_1, tests_fixture)

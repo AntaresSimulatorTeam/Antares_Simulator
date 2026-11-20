@@ -131,11 +131,18 @@ For time-dependent parameters, variables, and port fields, you can use these tim
   horizon.
 - **sum(S .. E, X)** aggregator: where X is the time-dependent operand, this operator sums the operand between S and E (
   included), where:
-    - **S** represents the first timestamp, either as an expression resolving to an integer, or a time-shift expression
-      like the ones defined above
-    - **E** represents the last timestamp, either as an expression resolving to an integer, or a time-shift expression
-      like the ones defined above
-    - in both forms, `S` and `E` must not depend on time
+    - **S** represents the first timestamp in the current optimization block, either as an expression
+      resolving to an integer, or a time-shift expression like the ones defined above
+    - **E** represents the last timestamp in the current optimization block, either as an expression
+      resolving to an integer, or a time-shift expression like the ones defined above
+    - in both forms, `S` and `E` must not depend on time or decision variables; bounds must resolve to integers
+    - absolute bounds outside the optimization block are errors; relative bounds wrap by default, but an out-of-bounds `drop` mode drops the constraint instance
+
+**Absolute time indices.** In `x[N]` and in absolute bounds of `sum(S .. E, x)`, indices are relative to the
+current optimization block: `0` is the first time step of the block (the week or day in the simulator, the first time
+step in the modeler). An absolute index outside `[0, size-1]` is an error. Relative bounds (`t + N`) may leave the block
+and wrap cyclically (e.g. `sum(0 .. t+1, x)` adds `x[0]` again at the last time step). Indices and bounds must resolve
+to integers; non-integer values are rejected rather than truncated.
 
 Time indices, shift offsets, and sum bounds may only contain literals and parameters, not variables,
 port fields, or `sum_connections` expressions. Parameters in these arguments must be declared

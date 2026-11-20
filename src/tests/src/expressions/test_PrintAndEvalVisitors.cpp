@@ -3,12 +3,14 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <limits>
 #include <stdexcept>
 
 #include <boost/mpl/list.hpp>
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
+#include <antares/exception/InvalidArgumentError.hpp>
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
@@ -877,6 +879,31 @@ EvaluationResult CreateAndEvaluateTimeNode(Node* p)
                         scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
 
     return visitor.dispatch(&root);
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_shift_with_invalid_offset_throws, MyDummyFixture)
+{
+    for (double offset: {1.5,
+                         -1.5,
+                         static_cast<double>(std::numeric_limits<int>::max()) + 1,
+                         static_cast<double>(std::numeric_limits<int>::min()) - 1,
+                         std::numeric_limits<double>::infinity(),
+                         std::numeric_limits<double>::quiet_NaN()})
+    {
+        LiteralNode offsetNode(offset);
+        LiteralNode operand(13.);
+        TimeShiftNode constantShift(&operand, &offsetNode);
+        BOOST_CHECK_THROW(defaultComponentEvalVisitor->dispatch(&constantShift),
+                          Antares::Error::InvalidArgumentError);
+        BOOST_CHECK_THROW(CreateAndEvaluateTimeNode<TimeShiftNode>(&offsetNode),
+                          Antares::Error::InvalidArgumentError);
+    }
+
+    LiteralNode minusThree(-3.);
+    LiteralNode two(2.);
+    DivisionNode fractionalOffset(&minusThree, &two);
+    BOOST_CHECK_THROW(CreateAndEvaluateTimeNode<TimeShiftNode>(&fractionalOffset),
+                      Antares::Error::InvalidArgumentError);
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
