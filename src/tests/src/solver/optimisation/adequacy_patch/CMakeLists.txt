@@ -6,6 +6,7 @@ add_boost_test(tests-adq-patch
         LIBS
         model_antares
         array
+        Antares::tests::in-memory-study
         antares-study-system-model
         Antares::linear-problem-mpsolver-impl
         Antares::structured-linear-problem

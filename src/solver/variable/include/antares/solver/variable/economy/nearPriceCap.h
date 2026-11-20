@@ -57,6 +57,29 @@ struct NearPriceCapTraits
     }
 };
 
+struct NearPriceCapCSRTraits: NearPriceCapTraits
+{
+    static std::string Caption()
+    {
+        return "NPCAP HOURS CSR";
+    }
+
+    static std::string Description()
+    {
+        return "Near Price Cap Hours CSR";
+    }
+
+    static void setHourlyValue(IntermediateValues& iv,
+                               AuxiliaryDataType unsuppliedEnergyCost,
+                               const State& state,
+                               unsigned int)
+    {
+        const double price = -state.hourlyResults->CoutsMarginauxHorairesCSR[state.hourInTheWeek];
+        iv[state.hourInTheYear] = (price > unsuppliedEnergyCost - margin + eps) ? 1. : 0.;
+    }
+};
+
 using NearPriceCap = EconomyVariableBase<NearPriceCapTraits>;
+using NearPriceCapCSR = EconomyVariableBase<NearPriceCapCSRTraits>;
 
 } // namespace Antares::Solver::Variable::Economy

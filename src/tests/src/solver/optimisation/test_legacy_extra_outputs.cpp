@@ -509,6 +509,18 @@ BOOST_AUTO_TEST_CASE(is_near_loss_of_load_compares_price_to_unsupplied_cost)
     BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area3")->value, 0.);
 }
 
+BOOST_AUTO_TEST_CASE(is_near_loss_of_load_uses_strict_numerical_tolerance)
+{
+    problem.CoutDeDefaillancePositiveSansBruit = {100., 100., 100.};
+    problem.ProblemeAResoudre->CoutsMarginauxDesContraintes[balanceArea1] = -95.;
+    problem.ProblemeAResoudre->CoutsMarginauxDesContraintes[balanceArea2] = -95.01;
+    problem.ProblemeAResoudre->CoutsMarginauxDesContraintes[balanceArea3] = -95.02;
+    fill();
+    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area1")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area2")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area3")->value, 1.);
+}
+
 BOOST_AUTO_TEST_CASE(level_percentage_is_hydro_level_over_reservoir_capacity)
 {
     fill();
@@ -1351,6 +1363,21 @@ BOOST_AUTO_TEST_CASE(post_process_dump_reads_results_mutated_after_the_solve)
     const auto price = FindRow(table, "price", "area1");
     BOOST_REQUIRE(price.has_value());
     BOOST_CHECK_CLOSE(price->value, 9500., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(post_process_dump_reflects_threshold_zeroed_ens_and_restored_price)
+{
+    wireResultAddresses(problem);
+    problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[0] = 0.;
+    problem.ResultatsHoraires[0].CoutsMarginauxHoraires[0] = -40.;
+    DumpSimulationTableAfterPostProcess(table, problem, fillContext, currentBlock);
+    BOOST_CHECK_EQUAL(FindRow(table, "unsupplied_energy", "area1")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area1")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_significant_loss_of_load", "area1")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_near_loss_of_load", "area1")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "imbalance_cost", "area1")->value, 3. * 7.);
+    BOOST_CHECK_EQUAL(FindRow(table, "price", "area1")->value, 40.);
+    BOOST_CHECK_EQUAL(FindRow(table, "balance_port.price", "area1")->value, 40.);
 }
 
 BOOST_AUTO_TEST_CASE(post_process_dump_uses_published_reserve_participation)
