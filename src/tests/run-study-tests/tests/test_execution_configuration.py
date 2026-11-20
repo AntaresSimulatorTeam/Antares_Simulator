@@ -5,7 +5,6 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
@@ -15,7 +14,7 @@ from actions_on_study.create_simulation import create_simulation
 from actions_on_study.study_run import study_run
 from executable_paths import load_executables
 from fixtures import check_handler
-from parse_studies.configuration import load_check_config, load_test_execution
+from parse_studies.configuration import load_check_config
 from parse_studies.json_collector import jsonCollector
 
 
@@ -65,13 +64,10 @@ def test_required_fields(tmp_path, entry, field):
         load_check_config(tmp_path)
 
 
-def test_execution_only_entries(tmp_path, entry):
-    del entry["checks"]
+def test_empty_options(tmp_path, entry):
     entry["options"] = []
     write_config(tmp_path, [entry])
-    assert load_test_execution(tmp_path, entry["name"]) == entry
-    with pytest.raises(ValueError, match="no entry named 'missing'"):
-        load_test_execution(tmp_path, "missing")
+    assert load_check_config(tmp_path) == [entry]
 
 
 def test_configuration_errors(tmp_path, entry):
@@ -302,7 +298,7 @@ def test_json_entrypoint_passes_same_simulation(monkeypatch, tmp_path, entry):
     check_runner.run.assert_called_once_with(simulation, checks)
 
 
-def test_infeasible_entrypoints_preserve_checks_and_skips(monkeypatch, tmp_path, entry):
+def test_infeasible_entrypoints_preserve_checks_and_skips(monkeypatch, tmp_path):
     import test_unfeasible_problem as module
 
     functions = {name: function for name, function in vars(module).items()
@@ -323,18 +319,18 @@ def test_infeasible_entrypoints_preserve_checks_and_skips(monkeypatch, tmp_path,
     }
     for name, function in functions.items():
         number, behavior = name.removeprefix("test_unfeasible_problem_").split("__")
-        loader = Mock(return_value=entry)
         simulation = Mock()
         factory = Mock(return_value=simulation)
         check_factory = Mock()
-        monkeypatch.setattr(module, "load_test_execution", loader)
         monkeypatch.setattr(module, "create_simulation", factory)
         monkeypatch.setattr(module, "unfeasible_problem", check_factory)
         check_runner = Mock()
         exe = {}
-        function(tmp_path, check_runner, exe, SimpleNamespace(node=SimpleNamespace(originalname=name)))
-        loader.assert_called_once_with(tmp_path, name)
-        factory.assert_called_once_with(tmp_path, entry, exe)
+        function(tmp_path, check_runner, exe)
+        factory.assert_called_once_with(
+            tmp_path, {"exe": "antares-solver", "options": []}, exe
+        )
+        assert not (tmp_path / "check-config.json").exists()
         arguments = check_factory.call_args.kwargs
         assert arguments["simulation"] is simulation
         assert arguments["new_behavior"] == behavior.replace("_", "-")

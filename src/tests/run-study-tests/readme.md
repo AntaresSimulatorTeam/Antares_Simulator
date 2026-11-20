@@ -10,14 +10,13 @@ There are two entry points:
   already covered by cucumber, and reads their runs and checks from
   `check-config.json`.
 - `test_unfeasible_problem.py` keeps its checks, expected weeks, and skip markers
-  in Python. Its executable and options come from execution-only entries in each
-  study's `check-config.json`.
+  in Python. It always runs `antares-solver` with no extra options and does not
+  read `check-config.json`.
 
 ## Per-test configuration
 
 Each `check-config.json` is an array. Each entry describes one run and must have
-a unique `name`, an `exe`, and an `options` array. JSON-driven tests also require
-`checks`.
+a unique `name`, an `exe`, an `options` array, and `checks`.
 
 ```json
 [
@@ -57,41 +56,11 @@ silently select a default executable or drop a test.
 
 ### Infeasible-problem tests
 
-Add execution-only entries to each study under
-`resources/Antares_Simulator_Tests_NR/unfeasible-problem`. The entry's `name`
-must exactly match its Python test function's name, without pytest's
-`[study_path0]` suffix. For example, `unfeasible_problem_01/check-config.json`
-needs these four entries:
-
-```json
-[
-    {
-        "name": "test_unfeasible_problem_01__error_verbose",
-        "exe": "antares-solver",
-        "options": ["--solver=sirius"]
-    },
-    {
-        "name": "test_unfeasible_problem_01__error_dry",
-        "exe": "antares-solver",
-        "options": ["--solver=sirius"]
-    },
-    {
-        "name": "test_unfeasible_problem_01__warning_verbose",
-        "exe": "antares-solver",
-        "options": ["--solver=sirius"]
-    },
-    {
-        "name": "test_unfeasible_problem_01__warning_dry",
-        "exe": "antares-solver",
-        "options": ["--solver=sirius"]
-    }
-]
-```
-
-For studies `02` through `10`, provide the corresponding `warning_dry` and
-`error_dry` entries. The tests for `09` and `10` retain their existing skip
-markers. Infeasibility behavior and expected failing weeks remain defined in
-Python, not in these execution-only entries.
+The studies under `resources/Antares_Simulator_Tests_NR/unfeasible-problem`
+do not need JSON configuration. Each Python test explicitly selects
+`antares-solver` with `options: []`, using the solver path from the shared `exe`
+mapping. Infeasibility behavior and expected failing weeks remain defined in
+Python. The tests for studies `09` and `10` retain their existing skip markers.
 
 ## Executable paths
 
@@ -154,9 +123,9 @@ python -m pytest tests
 ### Dataset migration and rollout
 
 Before deploying this runner and its CI changes, migrate the `check-config.json`
-files in the published SimTest batches and in the
-`Antares_Simulator_Tests_NR` submodule. Publish/select migrated batches and update
-the submodule reference as a coordinated rollout. Those external changes are
+files in the published SimTest batches. Publish/select migrated batches as a
+coordinated rollout. The Python-defined infeasible-problem tests do not require
+configuration changes in the `Antares_Simulator_Tests_NR` submodule. Those external changes are
 not part of this repository refactor.
 
 The new runner deliberately has no legacy-configuration fallback. Old datasets
