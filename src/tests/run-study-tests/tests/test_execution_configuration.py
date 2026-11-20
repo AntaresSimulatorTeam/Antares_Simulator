@@ -236,12 +236,12 @@ def test_generator_skips_are_per_entry(pytester):
     pytester.makepyfile("""
 import pytest
 
-@pytest.mark.parametrize("test_data", [
+@pytest.mark.parametrize("json_config", [
     {"exe": "antares-solver"},
     {"exe": "antares-problem-generator"},
 ], ids=["solver", "generator"])
-def test_AreaHydroLevel(test_data):
-    assert test_data["exe"] == "antares-solver"
+def test_AreaHydroLevel(json_config):
+    assert json_config["exe"] == "antares-solver"
 """)
     pytester.runpytest("-q").assert_outcomes(passed=1, skipped=1)
 

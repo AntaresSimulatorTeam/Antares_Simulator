@@ -14,8 +14,8 @@ def pytest_collection_modifyitems(config, items):
     skipped_studies = ["AreaHydroLevel", "FinalStockEquivalent-cnt", "reservoir-Min-MaxHydroPower"]
     for item in items:
         callspec = getattr(item, "callspec", None)
-        test_data = callspec.params.get("test_data", {}) if callspec else {}
-        if test_data.get("exe") != "antares-problem-generator":
+        json_config = callspec.params.get("json_config", {}) if callspec else {}
+        if json_config.get("exe") != "antares-problem-generator":
             continue
         for study_name in skipped_studies:
             if study_name in item.name:

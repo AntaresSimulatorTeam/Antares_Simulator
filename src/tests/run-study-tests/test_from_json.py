@@ -25,8 +25,8 @@ json_collector = jsonCollector(study_paths)
 json_collector.collect()
 
 @pytest.mark.json
-@pytest.mark.parametrize('study_path, test_data', json_collector.pairs(), ids=json_collector.testIds())
-def test(study_path, test_data, check_runner, exe):
-    simulation = create_simulation(study_path, test_data, exe)
-    checks = create_checks(study_path, test_data["checks"], simulation=simulation)
+@pytest.mark.parametrize('study_path, json_config', json_collector.pairs(), ids=json_collector.testIds())
+def test(study_path, json_config, check_runner, exe):
+    simulation = create_simulation(study_path, json_config, exe)
+    checks = create_checks(study_path, json_config["checks"], simulation=simulation)
     check_runner.run(simulation, checks)
