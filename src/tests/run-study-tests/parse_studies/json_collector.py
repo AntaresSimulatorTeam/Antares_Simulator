@@ -16,10 +16,10 @@ class jsonCollector:
             if not contains_json_config(study_path):
                 print(f"Skipping checks on '{study_path}': check-config.json does not exist")
                 continue
-            for test in load_check_config(study_path):
+            for json_config in load_check_config(study_path):
                 study_path_id = f"{study_path.parent.name} / {study_path.name}"
-                self.test_ids_.append(f"{test['name']}  ({study_path_id})")
-                self.pairs_.append((study_path, test))
+                self.test_ids_.append(f"{json_config['name']}  ({study_path_id})")
+                self.pairs_.append((study_path, json_config))
 
     def pairs(self):
         return self.pairs_

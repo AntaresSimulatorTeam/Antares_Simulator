@@ -33,8 +33,11 @@ def resultsRemover(study_path):
 
 @pytest.fixture
 def check_runner(resultsRemover):
+    # Actions done before the current test
     my_check_handler = check_handler(resultsRemover)
     try:
+        # Running the current test here
         yield my_check_handler
     finally:
+        # Teardown : actions done after the current test, even if it failed
         my_check_handler.teardown()
