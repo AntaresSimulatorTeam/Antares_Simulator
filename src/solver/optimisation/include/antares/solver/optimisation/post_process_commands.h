@@ -42,8 +42,7 @@ private:
 class UpdateMrgPriceAfterCSRcmd final: public basePostProcessCommand
 {
 public:
-    UpdateMrgPriceAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo,
-                              AreaList& areas);
+    UpdateMrgPriceAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo, AreaList& areas);
     void execute(const optRuntimeData&) override;
 
 private:
