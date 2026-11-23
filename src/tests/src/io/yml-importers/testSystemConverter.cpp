@@ -369,8 +369,8 @@ BOOST_FIXTURE_TEST_CASE(SystemWithSenderAndReceiverPort, PrepareYaml)
     BOOST_CHECK(connections_to_G.size() == 0);
     BOOST_CHECK(connections_to_D.size() == 1);
 
-    BOOST_CHECK(connections_to_N[0].component()->Id() == "D");
-    BOOST_CHECK(connections_to_D[0].component()->Id() == "N");
+    BOOST_CHECK(connections_to_N[0].component().Id() == "D");
+    BOOST_CHECK(connections_to_D[0].component().Id() == "N");
 }
 
 BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownCompo, PrepareYaml)
