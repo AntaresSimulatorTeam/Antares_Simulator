@@ -414,7 +414,7 @@ BOOST_AUTO_TEST_CASE(sts_component)
             BOOST_REQUIRE_EQUAL(props.size(), 3);
             checkProperties(props[0], "carrier", "electricity");
             checkProperties(props[1], "name", "france_short_term_storage_battery_fr");
-            checkProperties(props[2], "group", "other1");
+            checkProperties(props[2], "technology", "other1");
         }
     }
     BOOST_CHECK(found);
