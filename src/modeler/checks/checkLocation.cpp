@@ -2,13 +2,10 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <fmt/format.h>
-#include <sstream>
-#include <vector>
 
 #include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/PrintVisitor.h>
-#include <antares/logs/logs.h>
 #include <antares/solver/modeler/ModelerData.h>
 #include <antares/solver/modeler/checks/checkLocation.h>
 
@@ -21,70 +18,32 @@ namespace Antares::Solver::Checks
 
 void checkModel(const Model& model, const System& system)
 {
-    std::vector<std::string> errors;
     for (const auto& constraint: model.Constraints())
     {
-        try
-        {
-            checkExpression(constraint.expression().RootNode(),
-                            constraint.location(),
-                            model,
-                            system,
-                            constraint.expression().Value());
-        }
-
-        catch (const LocationError& e)
-        {
-            errors.push_back(e.what());
-        }
+        checkExpression(constraint.expression().RootNode(),
+                        constraint.location(),
+                        model,
+                        system,
+                        constraint.expression().Value());
     }
 
     for (const auto& objective: model.Objectives())
     {
-        try
-        {
-            checkExpression(objective.expression().RootNode(),
-                            objective.location(),
-                            model,
-                            system,
-                            objective.expression().Value());
-        }
-        catch (const LocationError& e)
-        {
-            errors.push_back(e.what());
-        }
+        checkExpression(objective.expression().RootNode(),
+                        objective.location(),
+                        model,
+                        system,
+                        objective.expression().Value());
     }
 
     // Extra outputs must be evaluated, they need to contain only subproblem objects
     for (const auto& [_, extraOutput]: model.ExtraOutputs())
     {
-        try
-        {
-            checkExpression(extraOutput.expression().RootNode(),
-                            Location::SUBPROBLEMS,
-                            model,
-                            system,
-                            extraOutput.expression().Value());
-        }
-        catch (const LocationError& e)
-        {
-            errors.push_back(e.what());
-        }
-    }
-
-    if (!errors.empty())
-    {
-        std::ostringstream oss;
-        for (std::size_t i = 0; i < errors.size(); ++i)
-        {
-            Antares::logs.error() << errors[i];
-            if (i > 0)
-            {
-                oss << "\n";
-            }
-            oss << errors[i];
-        }
-        throw LocationError(oss.str());
+        checkExpression(extraOutput.expression().RootNode(),
+                        Location::SUBPROBLEMS,
+                        model,
+                        system,
+                        extraOutput.expression().Value());
     }
 }
 
@@ -150,7 +109,6 @@ void checkExpression(const Node* expression,
                      const std::string& exprStr,              // used for error msgs
                      const std::string& errorMsgForPortField) // used for error msgs
 {
-    std::vector<std::string> errors;
     for (const auto& node: ASTconst(expression))
     {
         // base variable
@@ -161,7 +119,7 @@ void checkExpression(const Node* expression,
                 if (variable.Id() == varNode->value()
                     && !AreLocationsCompatibleForExpressions(variable.location(), location))
                 {
-                    errors.push_back(
+                    throw LocationError(
                       fmt::format("{}Model '{}': In expression '{}': Error for variable '{}': "
                                   "Location doesn't match the expression location (variable "
                                   "location: {}, expression location: {})",
@@ -173,21 +131,6 @@ void checkExpression(const Node* expression,
                                   LocationToStr(location)));
                 }
             }
-            continue;
-        }
-
-        // Portfields can contains variables, we recursively check their expressions
-        if (const auto* portFieldNode = dynamic_cast<const PortFieldNode*>(&node); portFieldNode)
-        {
-            errors.push_back(fmt::format(
-              "Model '{}': In expression '{}': Port field '{}.{}' cannot be used directly. "
-              "Use 'sum_connections({}.{})' to aggregate values from connected components.",
-              model.Id(),
-              exprStr,
-              portFieldNode->getPortName(),
-              portFieldNode->getFieldName(),
-              portFieldNode->getPortName(),
-              portFieldNode->getFieldName()));
             continue;
         }
 
@@ -214,51 +157,25 @@ void checkExpression(const Node* expression,
                 for (const auto& connection:
                      component.componentConnectionsViaPort(portFieldSumNode->getPortName()))
                 {
-                    try
-                    {
-                        const auto& component = connection.component();
-                        const auto& port = connection.port();
-                        const auto& expr = component.expressionAtPortField(
-                          port.Id(),
-                          portFieldSumNode->getFieldName());
+                    const auto& component = connection.component();
+                    const auto& port = connection.port();
+                    const auto& expr = component.expressionAtPortField(
+                      port.Id(),
+                      portFieldSumNode->getFieldName());
 
-                        checkExpression(expr.RootNode(),
-                                        location,
-                                        *component.getModel(),
-                                        system,
-                                        expr.Value(),
-                                        msgInCaseOfError);
-                    }
-
-                    catch (const LocationError& e)
-                    {
-                        errors.push_back(e.what());
-                    }
+                    checkExpression(expr.RootNode(),
+                                    location,
+                                    *component.getModel(),
+                                    system,
+                                    expr.Value(),
+                                    msgInCaseOfError);
                 }
             }
             continue;
         }
 
         // handle dual and reduced_cost
-        try
-        {
-            checkFunctionNode(node, model, exprStr);
-        }
-
-        catch (const LocationError& e)
-        {
-            errors.push_back(e.what());
-        }
-    }
-
-    if (!errors.empty())
-    {
-        std::string combined;
-        for (const auto& err: errors)
-        {
-            combined += err + "\n";
-        }
-        throw LocationError(combined);
+        checkFunctionNode(node, model, exprStr);
     }
 }
 } // namespace Antares::Solver::Checks

@@ -32,6 +32,39 @@ struct Fixture
 
 BOOST_AUTO_TEST_SUITE(check_location)
 
+BOOST_FIXTURE_TEST_CASE(reports_first_location_error, Fixture)
+{
+    Antares::Expressions::Registry<Node> expressionRegistry;
+    Node* first = expressionRegistry.create<VariableNode>("first", 0);
+    Node* second = expressionRegistry.create<VariableNode>("second", 0);
+    Node* root = expressionRegistry.create<SumNode>(first, second);
+    Antares::Expressions::NodeRegistry nodeRegistry(root, std::move(expressionRegistry));
+    Expression expression("first + second", std::move(nodeRegistry));
+
+    std::vector<Variable> variables;
+    variables.push_back({"first", {}, {}, ValueType::FLOAT, {}, {}, Location::MASTER});
+    variables.push_back({"second", {}, {}, ValueType::FLOAT, {}, {}, Location::MASTER});
+    std::vector<Constraint> constraints;
+    constraints.push_back({"constraint", std::move(expression), Location::SUBPROBLEMS});
+    auto model = modelBuilder.withVariables(std::move(variables))
+                   .withConstraints(std::move(constraints))
+                   .withId("base model")
+                   .build();
+    auto system = systemBuilder
+                    .withComponents(
+                      {componentBuilder.withModel(&model).withId("component").build()})
+                    .withId("system")
+                    .build();
+
+    const std::string expected =
+      "Model 'base model': In expression 'first + second': Error for variable 'first': "
+      "Location doesn't match the expression location (variable location: master, "
+      "expression location: subproblems)";
+    BOOST_CHECK_EXCEPTION(checkModel(model, system),
+                          LocationError,
+                          [&expected](const LocationError& e) { return e.what() == expected; });
+}
+
 BOOST_FIXTURE_TEST_CASE(one_var_good_one_var_throw, Fixture)
 {
     Node* goodLocVar = registry.create<VariableNode>("var1", 0);
@@ -100,26 +133,6 @@ BOOST_FIXTURE_TEST_CASE(dual_throw, Fixture)
       LocationError,
       containsMessage("Model 'base model': In expression 'dual(constraint)': Error for constraint "
                       "'constraint': dual can only be used on constraints located in subproblems"));
-}
-
-BOOST_FIXTURE_TEST_CASE(portfield_throw, Fixture)
-{
-    Node* pfNode = registry.create<PortFieldNode>("port", "field");
-
-    auto model = modelBuilder.withId("base model").build();
-    auto system = systemBuilder
-                    .withComponents(
-                      {componentBuilder.withModel(&model).withId("component").build()})
-                    .withId("system")
-                    .build();
-
-    BOOST_CHECK_EXCEPTION(
-      checkExpression(pfNode, Location::MASTER, model, system, "port.field"),
-      LocationError,
-      containsMessage(
-        "Model 'base model': In expression 'port.field': Port field 'port.field' cannot be used "
-        "directly. Use 'sum_connections(port.field)' to aggregate values from connected "
-        "components."));
 }
 
 BOOST_FIXTURE_TEST_CASE(portfield_ok_var_throw, Fixture)
@@ -219,41 +232,4 @@ BOOST_FIXTURE_TEST_CASE(porfieldsum_throw, Fixture)
         "expression location (variable location: master, expression location: subproblems)"));
 }
 
-BOOST_FIXTURE_TEST_CASE(two_portfield_errors_both_reported_in_exception_and_logs, Fixture)
-{
-    // Two constraints each using a bare PortFieldNode (without sum_connections).
-    // checkModel must report BOTH errors in the exception AND log each one.
-
-    Antares::Expressions::Registry<Node> reg1;
-    Node* pf1 = reg1.create<PortFieldNode>("port", "field1");
-    Antares::Expressions::NodeRegistry nodeReg1(pf1, std::move(reg1));
-    Expression expr1("port.field1", std::move(nodeReg1));
-
-    Antares::Expressions::Registry<Node> reg2;
-    Node* pf2 = reg2.create<PortFieldNode>("port", "field2");
-    Antares::Expressions::NodeRegistry nodeReg2(pf2, std::move(reg2));
-    Expression expr2("port.field2", std::move(nodeReg2));
-
-    std::vector<Constraint> constraints;
-    constraints.push_back({"c1", std::move(expr1), Location::SUBPROBLEMS});
-    constraints.push_back({"c2", std::move(expr2), Location::SUBPROBLEMS});
-
-    auto model = modelBuilder.withConstraints(std::move(constraints)).withId("test_model").build();
-    auto system = systemBuilder
-                    .withComponents(
-                      {componentBuilder.withModel(&model).withId("component").build()})
-                    .withId("system")
-                    .build();
-
-    // Verify both errors appear in the combined exception
-    BOOST_CHECK_EXCEPTION(checkModel(model, system),
-                          LocationError,
-                          [](const std::exception& e)
-                          {
-                              std::string msg = e.what();
-                              return msg.find("port.field1") != std::string::npos
-                                     && msg.find("port.field2") != std::string::npos
-                                     && msg.find("sum_connections") != std::string::npos;
-                          });
-}
 BOOST_AUTO_TEST_SUITE_END()
