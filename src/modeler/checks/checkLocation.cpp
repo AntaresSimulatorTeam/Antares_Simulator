@@ -216,15 +216,15 @@ void checkExpression(const Node* expression,
                 {
                     try
                     {
-                        auto* component = connection.component();
-                        auto* port = connection.port();
-                        const auto& expr = component->expressionAtPortField(
-                          port->Id(),
+                        const auto& component = connection.component();
+                        const auto& port = connection.port();
+                        const auto& expr = component.expressionAtPortField(
+                          port.Id(),
                           portFieldSumNode->getFieldName());
 
                         checkExpression(expr.RootNode(),
                                         location,
-                                        *connection.component()->getModel(),
+                                        *component.getModel(),
                                         system,
                                         expr.Value(),
                                         msgInCaseOfError);
