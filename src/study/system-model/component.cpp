@@ -94,7 +94,7 @@ Component::Component(const ComponentData& component_data)
     data_ = std::move(component_data);
 }
 
-void Component::addComponentConnection(const std::string localPortId, ConnectionEnd&& connexionEnd)
+void Component::addComponentConnection(const std::string& localPortId, ConnectionEnd&& connexionEnd)
 {
     componentConnectionEnds_[localPortId].push_back(std::move(connexionEnd));
 }
@@ -116,9 +116,7 @@ const std::vector<ConnectionEnd>& Component::componentConnectionsViaPort(
   const std::string& portId) const
 {
     static const std::vector<ConnectionEnd> emptyConnections;
-    const std::map<std::string, std::vector<ConnectionEnd>>::const_iterator it
-      = componentConnectionEnds_.find(portId);
-    if (it != componentConnectionEnds_.end())
+    if (const auto it = componentConnectionEnds_.find(portId); it != componentConnectionEnds_.end())
     {
         return it->second;
     }

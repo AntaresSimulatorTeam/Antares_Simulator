@@ -120,7 +120,7 @@ void ForbiddenNodesInComponentVisitor::visit(const PortFieldSumNode* portFieldSu
     const std::string localPortId = portFieldSumNode->getPortName();
     const std::string fieldId = portFieldSumNode->getFieldName();
 
-    for (const auto connectionEnd: component_.componentConnectionsViaPort(localPortId))
+    for (const auto& connectionEnd: component_.componentConnectionsViaPort(localPortId))
     {
         const auto& connectedComponent = connectionEnd.component();
         const auto& connectedPort = connectionEnd.port();

@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <numeric>
+#include <ranges>
 #include <stdexcept>
 #include <vector>
 
@@ -46,26 +47,22 @@ bool EvalVisitor::hasOutOfBoundsTimeShiftInConnectedPortFields(const Nodes::Port
                                                                unsigned timeStep) const
 {
     const auto& connectionEnds = component_.componentConnectionsViaPort(node->getPortName());
-    return std::any_of(
-      connectionEnds.begin(),
-      connectionEnds.end(),
+    return std::ranges::any_of(
+      connectionEnds,
       [this, node, timeStep](const ModelerStudy::SystemModel::ConnectionEnd& connectionEnd)
       {
           const auto& connectedComponent = connectionEnd.component();
-          const auto& connectedPort = connectionEnd.port();
           EvalVisitor connectedVisitor(optimContainer_,
                                        fillContext_,
                                        connectedComponent,
                                        data_,
                                        scenario_,
                                        areaPriceProvider_);
-          const Nodes::Node* connectedFieldExpression = connectedComponent.nodeAtPortField(
-            connectedPort.Id(),
-            node->getFieldName());
-          return LinearProblem::hasOutOfBoundsTimeShift(connectedFieldExpression,
-                                                        timeStep,
-                                                        fillContext_,
-                                                        connectedVisitor);
+          return LinearProblem::hasOutOfBoundsTimeShift(
+            connectedComponent.nodeAtPortField(connectionEnd.port().Id(), node->getFieldName()),
+            timeStep,
+            fillContext_,
+            connectedVisitor);
       });
 }
 

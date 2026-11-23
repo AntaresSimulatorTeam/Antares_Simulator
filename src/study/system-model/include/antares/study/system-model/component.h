@@ -90,7 +90,7 @@ public:
         return data_.scenario_group_id;
     }
 
-    void addComponentConnection(const std::string localPortId, ConnectionEnd&& connection);
+    void addComponentConnection(const std::string& localPortId, ConnectionEnd&& connection);
     const std::optional<AreaConnection>& areaConnectionAtPort(const std::string& portId) const;
 
     const std::vector<ConnectionEnd>& componentConnectionsViaPort(const std::string& portId) const;

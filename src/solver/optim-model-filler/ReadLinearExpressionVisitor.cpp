@@ -194,7 +194,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
 
     TimeDependentLinearExpression to_return(nbtimeSteps_);
 
-    for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
+    for (const auto& connexion_end: component_.componentConnectionsViaPort(portId))
     {
         const auto& component = connexion_end.component();
         const auto& port = connexion_end.port();

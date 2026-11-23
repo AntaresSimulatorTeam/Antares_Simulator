@@ -321,8 +321,9 @@ public:
 
     std::string name() const override;
 
-    bool hasOutOfBoundsTimeShiftInConnectedPortFields(const Nodes::PortFieldSumNode* node,
-                                                      unsigned timeStep) const;
+    [[nodiscard]] bool hasOutOfBoundsTimeShiftInConnectedPortFields(
+      const Nodes::PortFieldSumNode* node,
+      unsigned timeStep) const;
 
 private:
     const LinearProblem::OptimEntityContainer& optimContainer_;

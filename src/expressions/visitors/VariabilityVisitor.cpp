@@ -103,7 +103,7 @@ VariabilityType VariabilityVisitor::visit(const Nodes::PortFieldSumNode* node)
     std::string fieldId = node->getFieldName();
 
     auto to_return = VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
-    for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
+    for (const auto& connexion_end: component_.componentConnectionsViaPort(portId))
     {
         const auto& component = connexion_end.component();
         const auto& port = connexion_end.port();
