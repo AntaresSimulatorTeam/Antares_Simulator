@@ -56,10 +56,10 @@ BOOST_FIXTURE_TEST_CASE(reports_first_location_error, Fixture)
                     .withId("system")
                     .build();
 
-    const std::string expected =
-      "Model 'base model': In expression 'first + second': Error for variable 'first': "
-      "Location doesn't match the expression location (variable location: master, "
-      "expression location: subproblems)";
+    const std::string expected
+      = "Model 'base model': In expression 'first + second': Error for variable 'first': "
+        "Location doesn't match the expression location (variable location: master, "
+        "expression location: subproblems)";
     BOOST_CHECK_EXCEPTION(checkModel(model, system),
                           LocationError,
                           [&expected](const LocationError& e) { return e.what() == expected; });
