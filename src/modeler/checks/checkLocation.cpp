@@ -214,25 +214,41 @@ void checkExpression(const Node* expression,
                 for (const auto& connection:
                      component.componentConnectionsViaPort(portFieldSumNode->getPortName()))
                 {
-                    auto* component = connection.component();
-                    auto* port = connection.port();
-                    const auto& expr = component->expressionAtPortField(
-                      port->Id(),
-                      portFieldSumNode->getFieldName());
+                    try
+                    {
+                        auto* component = connection.component();
+                        auto* port = connection.port();
+                        const auto& expr = component->expressionAtPortField(
+                          port->Id(),
+                          portFieldSumNode->getFieldName());
 
-                    checkExpression(expr.RootNode(),
-                                    location,
-                                    *connection.component()->getModel(),
-                                    system,
-                                    expr.Value(),
-                                    msgInCaseOfError);
+                        checkExpression(expr.RootNode(),
+                                        location,
+                                        *connection.component()->getModel(),
+                                        system,
+                                        expr.Value(),
+                                        msgInCaseOfError);
+                    }
+
+                    catch (const LocationError& e)
+                    {
+                        errors.push_back(e.what());
+                    }
                 }
             }
             continue;
         }
 
         // handle dual and reduced_cost
-        checkFunctionNode(node, model, exprStr);
+        try
+        {
+            checkFunctionNode(node, model, exprStr);
+        }
+
+        catch (const LocationError& e)
+        {
+            errors.push_back(e.what());
+        }
     }
 
     if (!errors.empty())

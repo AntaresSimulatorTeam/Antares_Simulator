@@ -102,46 +102,6 @@ BOOST_FIXTURE_TEST_CASE(dual_throw, Fixture)
                       "'constraint': dual can only be used on constraints located in subproblems"));
 }
 
-// BOOST_FIXTURE_TEST_CASE(portfield_throw, Fixture)
-// {
-//     // expressions setup
-//     Node* pfNode = registry.create<PortFieldNode>("port", "field");
-//     Antares::Expressions::Registry<Node> registry2;
-//     Node* varNode = registry2.create<VariableNode>("var1", 0);
-//     Antares::Expressions::NodeRegistry node_registry(varNode, std::move(registry2));
-//     Expression pfExpression("var1", std::move(node_registry));
-
-//     // var setup
-//     std::vector<Variable> variables;
-//     variables.push_back({"var1", {}, {}, ValueType::FLOAT, {}, {}, Location::SUBPROBLEMS});
-
-//     // ports setup
-//     PortField portfield("field");
-//     std::vector portFields = {portfield};
-//     PortType portType("port", std::move(portFields), {"field", "", "", ""});
-//     Port port("port", portType);
-//     std::vector<PortFieldDefinition> portFieldDefs;
-//     portFieldDefs.emplace_back(port, portfield, std::move(pfExpression));
-
-//     auto model = modelBuilder.withVariables(std::move(variables))
-//                    .withPortFieldDefinitions(std::move(portFieldDefs))
-//                    .withId("base model")
-//                    .build();
-//     auto system = systemBuilder
-//                     .withComponents(
-//                       {componentBuilder.withModel(&model).withId("component").build()})
-//                     .withId("system")
-//                     .build();
-
-//     BOOST_CHECK_EXCEPTION(
-//       checkExpression(pfNode, Location::MASTER, model, system, "port.field"),
-//       LocationError,
-//       containsMessage(
-//         "In model 'base model': In expression 'port.field': this port field definition "
-//         "'port.field': is referencing an expression containing an incorrect location: Model 'base
-//         " "model': In expression 'var1': Error for variable 'var1': Location doesn't match the "
-//         "expression location (variable location: subproblems, expression location: master)"));
-// }
 BOOST_FIXTURE_TEST_CASE(portfield_throw, Fixture)
 {
     Node* pfNode = registry.create<PortFieldNode>("port", "field");
