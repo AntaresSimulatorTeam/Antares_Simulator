@@ -54,8 +54,6 @@ jobs:
         include:
         - testNRTarget: versionTestNR
           isUploadTarget: true
-        - testNRTarget: latestTestNR
-          isUploadTarget: false
     steps:
     - uses: actions/checkout@v7
       with:
@@ -199,11 +197,6 @@ jobs:
       if: ${{ matrix.testNRTarget == 'versionTestNR' }}
       run: |
         git submodule update --init --depth 1 --recursive resources/Antares_Simulator_Tests_NR
-
-    - name: Init submodule Antares_Simulator_Tests_NR (latest)
-      if: ${{ matrix.testNRTarget == 'latestTestNR' }}
-      run: |
-        git submodule update --init --remote --recursive resources/Antares_Simulator_Tests_NR
 
     - name: Run named mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
