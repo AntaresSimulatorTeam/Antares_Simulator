@@ -19,6 +19,7 @@ bool hasOutOfBoundsTimeShift(const Expressions::Nodes::Node* node,
 
     if (const auto* timeShiftNode = dynamic_cast<const Expressions::Nodes::TimeShiftNode*>(node))
     {
+        // Fractional shifts are truncated toward zero (e.g., 1.5 → 1, -1.5 → -1).
         const auto timeShift = static_cast<int>(
           evalVisitor.dispatch(timeShiftNode->right()).valueAsDouble());
         const int shiftedTimestep = static_cast<int>(timeStep) + timeShift;
