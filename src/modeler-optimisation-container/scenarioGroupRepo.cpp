@@ -12,11 +12,10 @@ void ScenarioGroupRepository::addScenario(const std::string& groupId,
 {
     std::string gId = groupId;
     boost::to_upper(gId);
-    if (scenarioGroups_.contains(gId))
+    if (!scenarioGroups_.try_emplace(gId, std::move(scenario)).second)
     {
         throw AlreadyExists(gId);
     }
-    scenarioGroups_[gId] = std::move(scenario);
 }
 
 namespace
@@ -49,11 +48,12 @@ const Api::IScenario& ScenarioGroupRepository::scenario(const std::string& group
 
     std::string gId = groupId;
     boost::to_upper(gId);
-    if (!scenarioGroups_.contains(gId))
+    const auto it = scenarioGroups_.find(gId);
+    if (it == scenarioGroups_.end())
     {
         throw DoesNotExist(gId);
     }
-    return *scenarioGroups_.at(gId);
+    return *it->second;
 }
 
 bool ScenarioGroupRepository::contains(const std::string& groupId) const

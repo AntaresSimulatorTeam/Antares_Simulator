@@ -23,10 +23,10 @@ void STReleaseCapacityThresholds::add(int pays, int cluster, int pdt)
             for (const auto& capacityReservation:
                  data.areaReserves[pays].areaCapacityReservations | filter(ReserveType::DOWN))
             {
-                if (capacityReservation.AllSTStorageReservesParticipation.contains(cluster))
+                const auto& participations = capacityReservation.AllSTStorageReservesParticipation;
+                if (const auto it = participations.find(cluster); it != participations.end())
                 {
-                    auto& reserveParticipation = capacityReservation
-                                                   .AllSTStorageReservesParticipation.at(cluster);
+                    const auto& reserveParticipation = it->second;
                     builder.STStorageReleaseClusterReserveParticipation(
                       reserveParticipation.globalIndexClusterParticipation,
                       -1);
@@ -57,10 +57,10 @@ void STReleaseCapacityThresholds::add(int pays, int cluster, int pdt)
             for (const auto& capacityReservation:
                  data.areaReserves[pays].areaCapacityReservations | filter(ReserveType::UP))
             {
-                if (capacityReservation.AllSTStorageReservesParticipation.contains(cluster))
+                const auto& participations = capacityReservation.AllSTStorageReservesParticipation;
+                if (const auto it = participations.find(cluster); it != participations.end())
                 {
-                    auto& reserveParticipation = capacityReservation
-                                                   .AllSTStorageReservesParticipation.at(cluster);
+                    const auto& reserveParticipation = it->second;
                     builder.STStorageReleaseClusterReserveParticipation(
                       reserveParticipation.globalIndexClusterParticipation,
                       1);

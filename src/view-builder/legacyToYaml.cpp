@@ -62,12 +62,12 @@ namespace Antares::ViewBuilder
 
 std::string areaLocation(const std::string& areaId)
 {
-    return BuildAreaNodeComponentId(areaId);
+    return BuildAreaComponentId(areaId);
 }
 
 YAML::Node areaToYaml(const Area& area)
 {
-    return makeComponent(BuildAreaNodeComponentId(area.id),
+    return makeComponent(BuildAreaComponentId(area.id),
                          "antares_legacy_models.area",
                          {{"carrier", "electricity"}});
 }
@@ -81,23 +81,32 @@ YAML::Node loadToYaml(const Area& area)
 
 YAML::Node windToYaml(const Area& area)
 {
-    return makeComponent(BuildWindComponentId(area.id),
+    const std::string componentId = BuildWindComponentId(area.id);
+    return makeComponent(componentId,
                          "antares_legacy_models.renewable",
-                         {{"carrier", "electricity"}, {"technology", "wind"}});
+                         {{"carrier", "electricity"},
+                          {"name", componentId},
+                          {"technology", "wind"}});
 }
 
 YAML::Node solarToYaml(const Area& area)
 {
-    return makeComponent(BuildSolarComponentId(area.id),
+    const std::string componentId = BuildSolarComponentId(area.id);
+    return makeComponent(componentId,
                          "antares_legacy_models.renewable",
-                         {{"carrier", "electricity"}, {"technology", "solar"}});
+                         {{"carrier", "electricity"},
+                          {"name", componentId},
+                          {"technology", "solar"}});
 }
 
 YAML::Node rorToYaml(const Area& area)
 {
-    return makeComponent(BuildRorComponentId(area.id),
+    const std::string componentId = BuildRorComponentId(area.id);
+    return makeComponent(componentId,
                          "antares_legacy_models.renewable",
-                         {{"carrier", "electricity"}, {"technology", "run_of_river"}});
+                         {{"carrier", "electricity"},
+                          {"name", componentId},
+                          {"technology", "run_of_river"}});
 }
 
 YAML::Node linkToYaml(const AreaLink& link)
@@ -109,17 +118,21 @@ YAML::Node linkToYaml(const AreaLink& link)
 
 YAML::Node thermalClusterToYaml(const ThermalCluster& cluster)
 {
-    return makeComponent(BuildThermalClusterComponentId(cluster.parentArea->id, cluster.id()),
+    const std::string componentId = BuildThermalClusterComponentId(cluster.parentArea->id, cluster.id());
+    return makeComponent(componentId,
                          "antares_legacy_models.thermal",
                          {{"carrier", "electricity"},
+                          {"name", componentId},
                           {"technology", boost::to_lower_copy(cluster.getGroup())}});
 }
 
 YAML::Node renewableClusterToYaml(const RenewableCluster& cluster)
 {
-    return makeComponent(BuildRenewableClusterComponentId(cluster.parentArea->id, cluster.id()),
+    const std::string componentId = BuildRenewableClusterComponentId(cluster.parentArea->id, cluster.id());
+    return makeComponent(componentId,
                          "antares_legacy_models.renewable",
                          {{"carrier", "electricity"},
+                          {"name", componentId},
                           {"technology", boost::to_lower_copy(cluster.getGroup())}});
 }
 
@@ -136,10 +149,12 @@ YAML::Node miscGenToYaml(const Area& area, int miscGenIndex)
 YAML::Node shortTermStorageToYaml(const Area& area,
                                   const ShortTermStorage::STStorageCluster& storage)
 {
-    return makeComponent(BuildSTStorageClusterComponentId(area.id, storage.id),
+    const std::string componentId = BuildSTStorageClusterComponentId(area.id, storage.id);
+    return makeComponent(componentId,
                          "antares_legacy_models.short_term_storage",
                          {{"carrier", "electricity"},
-                          {"group", boost::to_lower_copy(storage.getGroup())}});
+                          {"name", componentId},
+                          {"technology", boost::to_lower_copy(storage.getGroup())}});
 }
 
 YAML::Node longTermStorageToYaml(const Area& area)

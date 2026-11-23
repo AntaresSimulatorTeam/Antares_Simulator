@@ -572,10 +572,13 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {
     Node* node = create<PortFieldNode>("port", "field");
-    BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
-                          Antares::Error::InvalidArgumentError,
-                          containsMessage(
-                            "ReadLinearExpressionVisitor cannot visit PortFieldNodes"));
+
+    BOOST_CHECK_EXCEPTION(
+      visitor().dispatch(node),
+      Antares::Error::InvalidArgumentError,
+      containsMessage("Port field 'port.field' cannot be used directly in a linear expression. "
+                      "Use 'sum_connections(port.field)' to aggregate port field values from "
+                      "connected components."));
 
     node = create<FunctionNode>(FunctionNodeType::dual,
                                 create<ParameterNode>("constraint1"),
@@ -658,6 +661,18 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_inverted_bounds_returns_zero,
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 0.);
     BOOST_CHECK_EQUAL(linear_expression[1].constant(), 0.);
     BOOST_CHECK_EQUAL(linear_expression[2].constant(), 0.);
+}
+
+BOOST_FIXTURE_TEST_CASE(all_time_sum_of_constant_expression_scales_with_horizon,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    ctx = Api::FillContext{0, 2, 0, 2, 0};
+    auto* sum = create<AllTimeSumNode>(create<LiteralNode>(2.));
+
+    const auto expression = visitor().dispatch(sum);
+
+    BOOST_REQUIRE_EQUAL(expression.size(), 1);
+    BOOST_CHECK_EQUAL(expression[0].constant(), 6.);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

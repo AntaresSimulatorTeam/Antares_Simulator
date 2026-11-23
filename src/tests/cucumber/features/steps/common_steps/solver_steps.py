@@ -16,6 +16,7 @@ from common_steps.simulation_table import SimulationTable
 from common_steps.simulation_table_reader import (
     OutputFormat,
     make_simu_table_reader,
+    simulation_table_directory,
 )
 
 from common_steps.assertions import assert_double_close
@@ -340,7 +341,7 @@ def check_annual_results(context):
 @then("simulation tables match the references")
 def check_simulation_tables(context):
     referenceDir = context.sih.reference_dir()
-    outputDir = context.soh.output_dir()
+    outputDir = simulation_table_directory(context.soh.output_dir())
 
     dir_identical, err_messages = compare_folders(referenceDir, outputDir)
 
@@ -359,9 +360,9 @@ _STAGE_OF_TABLE_FILE = re.compile(r"^simulation-table-\d+-(.+)\.csv$")
 
 
 def stages_in_output(output_path: Path) -> set:
-    """The stage suffixes of the simulation-table files in `output_path`."""
+    """The stage suffixes of tables under the run's `simulation-tables` directory."""
     found = set()
-    for table_file in output_path.glob("simulation-table-*.csv"):
+    for table_file in simulation_table_directory(output_path).glob("simulation-table-*.csv"):
         match = _STAGE_OF_TABLE_FILE.match(table_file.name)
         assert match, f"Unexpected simulation table file name: {table_file.name}"
         found.add(match.group(1))
@@ -496,8 +497,8 @@ def build_antares_solver_command(context):
 
 def parse_output_folder_from_logs(logs: bytes) -> str:
     for line in logs.splitlines():
-        if b'Output folder : ' in line:
-            return line.split(b'Output folder : ')[1].decode('ascii')
+        if b'Output folder: ' in line:
+            return line.split(b'Output folder: ')[1].decode('ascii')
     raise LookupError("Could not parse output folder in output logs")
 
 def make_values_from_string(values: str):
@@ -770,7 +771,7 @@ def week_hours_from_mps_filename(file_name):
     optim_nb = int(match.group(3))
 
     # Generate 168 time steps for the week
-    week_hours = [(week - 1) * 168 + hour for hour in range(168)]
+    week_hours = [week * 168 + hour for hour in range(168)]
 
     return week_hours
 
@@ -800,7 +801,7 @@ def check_area_balance_rhs(context, area, values_str, constant_str):
     list_values = make_values_from_string(values_str)
     constant = float(constant_str)
 
-    mps_file_path = context.soh.get_output_file_with_name("problem-1-1--optim-nb-1.mps")
+    mps_file_path = context.soh.get_output_file_with_name("problem-0-0--optim-nb-1.mps")
     assert mps_file_path, f"No output file named problem-1-1--optim-nb-1.mps"
 
     mps_problem = mpu.load_problem(mps_file_path)
@@ -968,8 +969,9 @@ def check_storages_values_for_specific_year_hour_and_cluster(context, area, year
 @then('the simulation has two optimization iterations')
 def check_two_optimization_iterations(context):
     output_path = Path(context.output_path)
-    optim_nb_1_files = list(output_path.glob("*optim-nb-1*"))
-    optim_nb_2_files = list(output_path.glob("*optim-nb-2*"))
+    tables_path = simulation_table_directory(output_path)
+    optim_nb_1_files = list(tables_path.glob("*optim-nb-1*"))
+    optim_nb_2_files = list(tables_path.glob("*optim-nb-2*"))
     assert len(optim_nb_1_files) > 0, \
         f"No first optimization output files found in {output_path}"
     assert len(optim_nb_2_files) > 0, \

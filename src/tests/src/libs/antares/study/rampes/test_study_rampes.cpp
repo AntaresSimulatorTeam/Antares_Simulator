@@ -65,6 +65,17 @@ std::ostream& operator<<(std::ostream& os, const ThermalCluster::Ramping& r)
 
 BOOST_AUTO_TEST_SUITE(ramping_load)
 
+BOOST_AUTO_TEST_CASE(default_ramping_can_be_emplaced_with_zero_parameters)
+{
+    std::optional<ThermalCluster::Ramping> ramping;
+    ramping.emplace();
+
+    BOOST_CHECK_EQUAL(ramping->powerIncreaseCost, 0.);
+    BOOST_CHECK_EQUAL(ramping->powerDecreaseCost, 0.);
+    BOOST_CHECK_EQUAL(ramping->maxUpwardPowerRampingRate, 0.);
+    BOOST_CHECK_EQUAL(ramping->maxDownwardPowerRampingRate, 0.);
+}
+
 BOOST_FIXTURE_TEST_CASE(test_thermal_load_cluster_ramp_parameters, OneProblemOneAreaRamping)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();

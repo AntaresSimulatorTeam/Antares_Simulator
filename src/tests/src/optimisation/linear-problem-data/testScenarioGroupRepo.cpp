@@ -32,13 +32,17 @@ BOOST_AUTO_TEST_CASE(add_to_repo_a_group_it_already_contains_exception_raised)
     auto scenarioPtr = std::make_unique<Scenario>("some group");
     scenarioGroupRepo.addScenario("some group", std::move(scenarioPtr));
 
-    auto anotherScenarioPtr = std::make_unique<Scenario>("some group");
+    std::unique_ptr<Api::IScenario> anotherScenarioPtr = std::make_unique<Scenario>("some group");
+    const auto* originalScenario = &scenarioGroupRepo.scenario("some group");
+    const auto* rejectedScenario = anotherScenarioPtr.get();
 
     std::string expectedErrMsg = "Scenario group 'SOME GROUP' already exists in group repo.";
     BOOST_CHECK_EXCEPTION(scenarioGroupRepo.addScenario("some group",
                                                         std::move(anotherScenarioPtr)),
                           ScenarioGroupRepository::AlreadyExists,
                           containsMessage(expectedErrMsg));
+    BOOST_CHECK(anotherScenarioPtr.get() == rejectedScenario);
+    BOOST_CHECK(&scenarioGroupRepo.scenario("some group") == originalScenario);
 }
 
 BOOST_AUTO_TEST_CASE(ask_an_empty_repo_a_rank_exception_raised)
@@ -83,7 +87,8 @@ BOOST_AUTO_TEST_CASE(set_should_fail_if_timeserie_exists)
     unsigned dataRank = 15;
     auto scenarioPtr = std::make_unique<Scenario>("some group");
     scenarioPtr->setTimeSerieNumber(scenario, dataRank);
-    BOOST_CHECK_EXCEPTION(scenarioPtr->setTimeSerieNumber(scenario, dataRank),
+    BOOST_CHECK_EXCEPTION(scenarioPtr->setTimeSerieNumber(scenario, dataRank + 1),
                           Antares::Error::RuntimeError,
                           containsMessage("Time serie number for year 10 already exists."));
+    BOOST_CHECK_EQUAL(scenarioPtr->getData(scenario), dataRank);
 }

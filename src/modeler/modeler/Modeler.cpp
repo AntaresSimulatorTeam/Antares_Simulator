@@ -7,7 +7,9 @@
 #include <fmt/format.h>
 #include <fstream>
 #include <stdexcept>
+#include <system_error>
 
+#include <antares/io/outputs/SimulationTablePath.h>
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/StructuredLinearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
@@ -61,7 +63,7 @@ fs::path makeOutputPath(fs::path studyPath)
         throw Modeler::ModelerError("Output folder already exists: " + outputPath.string());
     }
 
-    logs.info() << "Output folder : " << outputPath;
+    logs.info() << "Output folder: " << outputPath;
     if (!fs::is_directory(outputPath) && !fs::create_directories(outputPath))
     {
         throw Modeler::ModelerError("Failed to create output directory. Exiting simulation.");
@@ -76,17 +78,25 @@ Modeler::Modeler(ILoader& loader, fs::path ouputPath, TableFormat tableFormat):
 {
     parameters_ = loader_.loadParameters();
     logs.info() << "Parameters loaded";
-    auto data = loader_.loadAll();
-    if (!data.has_value())
-    {
-        throw ModelerError("Error while loading files, exiting");
-    }
-    // Move the loaded ModelerData out of the optional to avoid copying
-    // (ModelerData contains unique_ptr members and is move-only).
-    data_ = std::move(*data);
+    data_ = loader_.loadAll();
 
     scenarios_ = resolveScenarioScopeScenarios(data_.scenarioScope);
     validateScenariosAgainstScenarioBuilder();
+    if (!outputPath_.empty() && !parameters_.noOutput && !scenarios_.empty()
+        && data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
+    {
+        const auto simulationTableOutputPath = IO::Outputs::simulationTableOutputDirectory(
+          outputPath_);
+        std::error_code error;
+        fs::create_directories(simulationTableOutputPath, error);
+        if (error)
+        {
+            logs.error() << "Failed to create simulation table output directory '"
+                         << simulationTableOutputPath << "': " << error.message();
+            throw ModelerError("Failed to create simulation table output directory '"
+                               + simulationTableOutputPath.string() + "': " + error.message());
+        }
+    }
     logs.info() << fmt::format("Number of Monte-Carlo scenarios to simulate: {}",
                                scenarios_.size());
 }
@@ -490,7 +500,8 @@ void Modeler::run()
                                     optimEntityContainer,
                                     fillContext);
 
-                auto outputFile = outputPath_ / ("simulation-table-" + std::to_string(year));
+                auto outputFile = IO::Outputs::simulationTableOutputDirectory(outputPath_)
+                                  / ("simulation-table-" + std::to_string(year));
                 SimulationTableWriter writer(outputFile, tableFormat_);
                 writer.writeTable(simulationTable);
                 logs.info() << "Simulation table of scenario " << year

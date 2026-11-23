@@ -94,7 +94,7 @@ Component::Component(const ComponentData& component_data)
     data_ = std::move(component_data);
 }
 
-void Component::addComponentConnection(const std::string localPortId, ConnectionEnd&& connexionEnd)
+void Component::addComponentConnection(const std::string& localPortId, ConnectionEnd&& connexionEnd)
 {
     componentConnectionEnds_[localPortId].push_back(std::move(connexionEnd));
 }
@@ -102,21 +102,25 @@ void Component::addComponentConnection(const std::string localPortId, Connection
 const std::optional<AreaConnection>& Component::areaConnectionAtPort(
   const std::string& portId) const
 {
-    if (!getModel()->Ports().contains(portId))
+    const auto& ports = getModel()->Ports();
+    const auto it = ports.find(portId);
+    if (it == ports.end())
     {
         std::string errMsg = "Port '" + portId + "' not found in component '" + data_.id + "'";
         throw std::invalid_argument(errMsg);
     }
-    return getModel()->Ports().at(portId).Type().areaConnection();
+    return it->second.Type().areaConnection();
 }
 
-std::vector<ConnectionEnd> Component::componentConnectionsViaPort(const std::string& portId) const
+const std::vector<ConnectionEnd>& Component::componentConnectionsViaPort(
+  const std::string& portId) const
 {
-    if (auto it = componentConnectionEnds_.find(portId); it != componentConnectionEnds_.end())
+    static const std::vector<ConnectionEnd> emptyConnections;
+    if (const auto it = componentConnectionEnds_.find(portId); it != componentConnectionEnds_.end())
     {
         return it->second;
     }
-    return {};
+    return emptyConnections;
 }
 
 Node* Component::nodeAtPortField(const std::string& portId, const std::string& fieldId) const
@@ -272,9 +276,11 @@ void Component::addThermalCapacityConnection(const std::string& portId,
 
 std::optional<std::string> Component::areaConnectedToPort(const std::string& portId) const
 {
-    return portToAreaConnections_.contains(portId)
-             ? std::optional(portToAreaConnections_.at(portId))
-             : std::nullopt;
+    if (const auto it = portToAreaConnections_.find(portId); it != portToAreaConnections_.end())
+    {
+        return it->second;
+    }
+    return std::nullopt;
 }
 
 std::optional<ThermalComponent> Component::thermalCapacityConnectedToPort(

@@ -21,6 +21,7 @@ target_link_libraries(modeler-checks
         Antares::antares-study-system-model
         PRIVATE
         modeler-lib
+        Antares::logs
         fmt::fmt
 )
 

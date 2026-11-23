@@ -165,9 +165,15 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Li
     return TimeDependentLinearExpression({}, node->value());
 }
 
-TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::PortFieldNode*)
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::PortFieldNode* node)
 {
-    throw Error::InvalidArgumentError("ReadLinearExpressionVisitor cannot visit PortFieldNodes");
+    throw Error::InvalidArgumentError(fmt::format(
+      "Port field '{}.{}' cannot be used directly in a linear expression. "
+      "Use 'sum_connections({}.{})' to aggregate port field values from connected components.",
+      node->getPortName(),
+      node->getFieldName(),
+      node->getPortName(),
+      node->getFieldName()));
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
@@ -188,18 +194,18 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
 
     TimeDependentLinearExpression to_return(nbtimeSteps_);
 
-    for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
+    for (const auto& connexion_end: component_.componentConnectionsViaPort(portId))
     {
-        auto* component = connexion_end.component();
-        auto* port = connexion_end.port();
+        const auto& component = connexion_end.component();
+        const auto& port = connexion_end.port();
 
         ReadLinearExpressionVisitor visitor(optimEntityContainer_,
                                             fillContext_,
-                                            *component,
+                                            component,
                                             data_,
                                             scenarioGroupRepo_);
 
-        const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
+        const Nodes::Node* node = component.nodeAtPortField(port.Id(), fieldId);
         to_return += visitor.dispatch(node);
     }
 
@@ -301,6 +307,12 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Al
 {
     LinearExpression ret; // Constant expr
     auto expr = dispatch(node->child());
+    if (expr.isConstant())
+    {
+        ret += expr[0];
+        ret *= static_cast<double>(nbtimeSteps_);
+        return TimeDependentLinearExpression(std::move(ret));
+    }
     for (auto& s: expr)
     {
         ret += s;

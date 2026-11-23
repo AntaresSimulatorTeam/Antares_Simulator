@@ -50,6 +50,7 @@ public:
     using TS = Matrix<double>;
 
     explicit TimeSeries(TimeSeriesNumbers& tsNumbers);
+    TimeSeries(const TimeSeries& other);
     /*!
      ** \brief Load series from a file
      **

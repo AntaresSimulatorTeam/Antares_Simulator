@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
-#include <optional>
 
 #include <antares/solver/modeler/parameters/modelerParameters.h>
 #include "antares/solver/modeler/ModelerData.h"
@@ -16,6 +15,6 @@ public:
 
     virtual ModelerParameters loadParameters() = 0;
 
-    virtual std::optional<ModelerData> loadAll() = 0;
+    virtual ModelerData loadAll() = 0;
 };
 } // namespace Antares::Solver

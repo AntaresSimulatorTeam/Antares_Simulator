@@ -29,7 +29,7 @@ Three sources cover every formula:
 | Dual of a constraint | `CoutsMarginauxDesContraintes[c]`, with `c` from the constraint correspondence tables: `CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays[pays]`, `.NumeroDeContrainteDeDissociationDeFlux[interco]`, `NumeroDeContrainteExpressionStockFinal[pays]` |
 | Study data that is not in the problem's objective (capacities, inflows, load, emission factors, unit data) | straight from `PROBLEME_HEBDO`: `ValeursDeNTC[pdt]`, `CaracteristiquesHydrauliques[pays]`, `ConsommationsAbattues[pdt]` + `AllMustRunGeneration[pdt]`, `PaliersThermiquesDuPays[pays]` |
 
-Row conventions are fixed in one place (`LegacyExtraOutputEmitter::emit`): the absolute hour is `weekInTheYear * 168 + pdt` (matching the time index recorded on the raw rows), `block_time_index` comes from `LegacyBlockTimeIndex` (shared with the raw-row loop), `scenario_index = fillContext.getYear()`. Components follow the uniqueness convention: `{area}_node` for area rows, `{area}_hydro_storage` for the hydro storage, `{area}_thermal_{cluster}` for thermal clusters, `{area}_short_term_storage_{name}` for short-term storages, `{origin}_{destination}_link` for links (endpoints sorted), `{area}_load` / `{area}_hydro_storage` for the load / long-term-storage port rows.
+Row conventions are fixed in one place (`LegacyExtraOutputEmitter::emit`): the absolute hour is `weekInTheYear * 168 + pdt` (matching the time index recorded on the raw rows), `block_time_index` comes from `LegacyBlockTimeIndex` (shared with the raw-row loop), `scenario_index = fillContext.getYear()`. Components follow the uniqueness convention: `{area}` for area rows, `{area}_hydro_storage` for the hydro storage, `{area}_thermal_{cluster}` for thermal clusters, `{area}_short_term_storage_{name}` for short-term storages, `{origin}_{destination}` for links (endpoints sorted), `{area}_load` / `{area}_hydro_storage` for the load / long-term-storage port rows.
 
 ### Guards
 
@@ -48,7 +48,7 @@ Reserve raw rows use the reserve ID in their public output name (for example,
 the internal LP variable name. This is an intentional schema rename from the
 previous generic reserve raw-output names. The internal reserve imbalance rows
 (`unsupplied_energy_reserve_<reserveId>` and
-`spilled_energy_reserve_<reserveId>`) use the owning area's `{area}_node`
+`spilled_energy_reserve_<reserveId>`) use the owning area's `{area}`
 component, matching `reserve_imbalance_cost_<reserveId>` and avoiding collisions
 between equal display names in different areas.
 
@@ -103,7 +103,7 @@ area-level `balance_port.flow` rows from colliding on the area name.
 
 The `price` formula negates the stored dual: with the legacy balance-constraint sign convention, `CoutsMarginauxDesContraintes` holds the **negative** of the marginal price (the legacy outputs print `-CoutsMarginauxHoraires`).
 
-The reserve rows follow the same conventions as their area-level counterparts: `reserve_imbalance_cost_<reserveId>` anchors on `{area}_node`, and each `reserve_participation_cost_<reserveId>` row anchors on the participating entity (thermal cluster, short-term storage, or the area's hydro storage), so a reserve served by several technologies yields one row per technology. The costs come from the study's `CAPACITY_RESERVATION` / `RESERVE_PARTICIPATION_*` structs (the un-noised user values), matching the `imbalance_cost` / `prop_cost` style. Both reserve outputs are guarded on `allReserves` being present **and** `OptimisationNotFastMode`, the exact condition under which the reserve variables are constructed (`opt_construction_variables_optimisees_lineaire.cpp`); in fast mode, or when reserves are not configured, no reserve row is emitted and the `OffThermalClusterReserveParticipation` term is dropped for DOWN reserves (off units cannot participate in down reserves).
+The reserve rows follow the same conventions as their area-level counterparts: `reserve_imbalance_cost_<reserveId>` anchors on `{area}`, and each `reserve_participation_cost_<reserveId>` row anchors on the participating entity (thermal cluster, short-term storage, or the area's hydro storage), so a reserve served by several technologies yields one row per technology. The costs come from the study's `CAPACITY_RESERVATION` / `RESERVE_PARTICIPATION_*` structs (the un-noised user values), matching the `imbalance_cost` / `prop_cost` style. Both reserve outputs are guarded on `allReserves` being present **and** `OptimisationNotFastMode`, the exact condition under which the reserve variables are constructed (`opt_construction_variables_optimisees_lineaire.cpp`); in fast mode, or when reserves are not configured, no reserve row is emitted and the `OffThermalClusterReserveParticipation` term is dropped for DOWN reserves (off units cannot participate in down reserves).
 The storage and hydro participation-cost rows intentionally use the signed net
 quantity from the LP objective. Consequently, their values can be negative when
 the asset stores against an UP reserve or releases against a DOWN reserve; this
@@ -165,10 +165,10 @@ A week is not resolved in one shot: two optimisation passes are followed by post
 
 | Stage | File | Written after | Produced in |
 |---|---|---|---|
-| `optim-nb-1` | `simulation-table-{year}-optim-nb-1` | the first optimisation pass | every mode |
-| `optim-nb-2` | `simulation-table-{year}-optim-nb-2` | the second pass | every mode that runs it (§ *Skipped stages* below) |
-| `peak-shaving` | `simulation-table-{year}-peak-shaving` | `RemixHydroPostProcessCmd` (peak-shaving) | economy (both post-process lists) and adequacy |
-| `adq-patch` | `simulation-table-{year}-adq-patch` | `UpdateMrgPriceAfterCSRcmd`, i.e. once the whole CSR treatment has been applied | economy with `include-adq-patch = true` |
+| `optim-nb-1` | `simulation-tables/simulation-table-{year}-optim-nb-1` | the first optimisation pass | every mode |
+| `optim-nb-2` | `simulation-tables/simulation-table-{year}-optim-nb-2` | the second pass | every mode that runs it (§ *Skipped stages* below) |
+| `peak-shaving` | `simulation-tables/simulation-table-{year}-peak-shaving` | `RemixHydroPostProcessCmd` (peak-shaving) | economy (both post-process lists) and adequacy |
+| `adq-patch` | `simulation-tables/simulation-table-{year}-adq-patch` | `UpdateMrgPriceAfterCSRcmd`, i.e. once the whole CSR treatment has been applied | economy with `include-adq-patch = true` |
 
 Stages are the `IO::Outputs::Stage` enum (`src/io/outputs/include/antares/io/outputs/SimulationTableStage.h`); each maps to a file-name suffix through `stageName()`, and those strings are part of the public output contract. The tables of one Monte-Carlo year live in a `std::map<IO::Outputs::Stage, SimulationTable>` created on demand (`tableForStage`) — `std::map` because its nodes are address-stable, so a pointer handed to the optim-1 call site stays valid once later stages are added, and because `SimulationTable` is move-only. The enumerators are ordered as the weekly resolution reaches them, which is the order the map iterates in.
 

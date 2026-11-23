@@ -4,6 +4,7 @@
 #include "antares/expressions/visitors/EvalVisitor.h"
 
 #include <numeric>
+#include <ranges>
 #include <stdexcept>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
@@ -38,6 +39,21 @@ EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
     fillContext_(fillContext),
     areaPriceProvider_(areaPriceProvider)
 {
+}
+
+const ModelerStudy::SystemModel::Component& EvalVisitor::component() const
+{
+    return component_;
+}
+
+EvalVisitor EvalVisitor::forComponent(const ModelerStudy::SystemModel::Component& component) const
+{
+    return EvalVisitor(optimContainer_,
+                       fillContext_,
+                       component,
+                       data_,
+                       scenario_,
+                       areaPriceProvider_);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::SumNode* node)
@@ -162,15 +178,15 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
     EvaluationResult result(0.);
     for (const auto connectionEnd: component_.componentConnectionsViaPort(portId))
     {
-        auto* component = connectionEnd.component();
-        auto* port = connectionEnd.port();
+        const auto& component = connectionEnd.component();
+        const auto& port = connectionEnd.port();
         EvalVisitor visitor(optimContainer_,
                             fillContext_,
-                            *component,
+                            component,
                             data_,
                             scenario_,
                             areaPriceProvider_);
-        const auto* nodeToVisit = component->nodeAtPortField(port->Id(), fieldId);
+        const auto* nodeToVisit = component.nodeAtPortField(port.Id(), fieldId);
         auto dispatchResult = visitor.dispatch(nodeToVisit);
         result += dispatchResult;
     }
@@ -250,7 +266,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::TPlusNode* node)
 {
     const auto offset = static_cast<int>(dispatch(node->child()).valueAsDouble());
     return EvaluationResult(
-      static_cast<double>(static_cast<unsigned>(fillContext_.getGlobalFirstTimeStep()) + offset));
+      static_cast<double>(static_cast<int>(fillContext_.getGlobalFirstTimeStep()) + offset));
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)

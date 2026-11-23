@@ -30,6 +30,7 @@ find_package(fmt REQUIRED)
 # Link dependencies (if any)
 target_link_libraries(load-modeler-files
         PUBLIC
+        Antares::input-error
         Antares::antares-study-system-model
         Antares::linear-problem-api
         Antares::linear-problem-data-impl

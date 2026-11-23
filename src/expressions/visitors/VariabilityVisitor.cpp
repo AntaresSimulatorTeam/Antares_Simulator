@@ -67,9 +67,9 @@ VariabilityType VariabilityVisitor::visit(const Nodes::VariableNode* var)
 VariabilityType VariabilityVisitor::visit(const Nodes::ParameterNode* param)
 {
     const auto& parameters = component_.getParameterValues();
-    if (parameters.contains(param->value()))
+    if (const auto it = parameters.find(param->value()); it != parameters.end())
     {
-        return parameters.at(param->value()).type;
+        return it->second.type;
     }
     else
     {
@@ -103,13 +103,13 @@ VariabilityType VariabilityVisitor::visit(const Nodes::PortFieldSumNode* node)
     std::string fieldId = node->getFieldName();
 
     auto to_return = VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
-    for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
+    for (const auto& connexion_end: component_.componentConnectionsViaPort(portId))
     {
-        auto* component = connexion_end.component();
-        auto* port = connexion_end.port();
+        const auto& component = connexion_end.component();
+        const auto& port = connexion_end.port();
 
-        VariabilityVisitor visitor(optimEntityContainer_, *component, isLP_);
-        const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
+        VariabilityVisitor visitor(optimEntityContainer_, component, isLP_);
+        const Nodes::Node* node = component.nodeAtPortField(port.Id(), fieldId);
         to_return = to_return | visitor.dispatch(node);
     }
 
