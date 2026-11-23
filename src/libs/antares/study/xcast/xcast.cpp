@@ -269,7 +269,7 @@ bool XCast::loadFromFolder(const fs::path& folder)
                                                          1,
                                                          HOURS_PER_YEAR,
                                                          MatrixIO::WidthPolicy::AtLeast,
-                                                         MatrixIO::RowPolicy::Prefix);
+                                                         MatrixIO::RowPolicy::HeaderHeightOrPrefix);
     ret = translationLoaded && ret;
 
     if (translation.empty())
@@ -279,16 +279,17 @@ bool XCast::loadFromFolder(const fs::path& folder)
 
     for (double& value: translation[0])
     {
-        if (!std::isfinite(value)
-            || value < static_cast<double>(std::numeric_limits<std::int32_t>::min())
-            || value > static_cast<double>(std::numeric_limits<std::int32_t>::max()))
+        const double truncated = std::trunc(value);
+        if (!std::isfinite(truncated)
+            || truncated < static_cast<double>(std::numeric_limits<std::int32_t>::min())
+            || truncated > static_cast<double>(std::numeric_limits<std::int32_t>::max()))
         {
             logs.warning() << folder << ": invalid value in the time-series translation.";
             translation.reset(1, HOURS_PER_YEAR);
             ret = false;
             break;
         }
-        value = static_cast<std::int32_t>(std::trunc(value));
+        value = static_cast<std::int32_t>(truncated);
     }
 
     if (translation.width() != 1 || translation.height() != HOURS_PER_YEAR)

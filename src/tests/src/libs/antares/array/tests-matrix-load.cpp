@@ -444,3 +444,31 @@ BOOST_AUTO_TEST_CASE(header_or_prefix_loads_only_complete_bounded_matrices)
         BOOST_CHECK_EQUAL(matrix[0][2], 3.);
     }
 }
+
+BOOST_AUTO_TEST_CASE(header_height_or_prefix_preserves_declared_height)
+{
+    using namespace Antares::MatrixIO;
+    Antares::Matrix matrix;
+    const auto load = [&](std::string_view content)
+    {
+        const auto file = writeFile(content);
+        return Antares::MatrixIO::load(matrix,
+                                       file.path,
+                                       1,
+                                       2,
+                                       WidthPolicy::AtLeast,
+                                       RowPolicy::HeaderHeightOrPrefix);
+    };
+    BOOST_REQUIRE(load("size:1x1\n7\nignored\n"));
+    BOOST_CHECK_EQUAL(matrix.height(), 1);
+    BOOST_CHECK_EQUAL(matrix[0][0], 7.);
+    BOOST_REQUIRE(load("size:1x3\n1\n2\n3\nignored\n"));
+    BOOST_CHECK_EQUAL(matrix.height(), 3);
+    BOOST_CHECK_EQUAL(matrix[0][2], 3.);
+    BOOST_REQUIRE(load("1\n2\nignored\n"));
+    BOOST_CHECK_EQUAL(matrix.height(), 2);
+    BOOST_CHECK_EQUAL(matrix[0][1], 2.);
+    BOOST_CHECK(!load("size:1x3\n1\n2\n"));
+    BOOST_CHECK_EQUAL(matrix.height(), 2);
+    BOOST_CHECK_EQUAL(matrix[0][1], 2.);
+}

@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cassert>
 #include <span>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -23,11 +24,23 @@ public:
 
     ColumnMatrix& operator=(const ColumnMatrix& rhs)
     {
-        if (this != &rhs)
+        if (this == &rhs)
         {
-            ColumnMatrix copy(rhs);
-            swap(copy);
+            return *this;
         }
+        if constexpr (std::is_nothrow_copy_assignable_v<T>)
+        {
+            if (width_ == rhs.width_ && height_ == rhs.height_)
+            {
+                for (unsigned int x = 0; x < width_; ++x)
+                {
+                    std::copy(rhs.columns_[x].begin(), rhs.columns_[x].end(), columns_[x].begin());
+                }
+                return *this;
+            }
+        }
+        ColumnMatrix copy(rhs);
+        swap(copy);
         return *this;
     }
 
@@ -61,7 +74,11 @@ public:
             }
             return;
         }
-        std::vector<std::vector<T>> columns(width, std::vector<T>(height));
+        std::vector<std::vector<T>> columns(width);
+        for (auto& column: columns)
+        {
+            column.resize(height);
+        }
         columns_.swap(columns);
         width_ = width;
         height_ = height;

@@ -141,10 +141,11 @@ std::optional<LoadError> loadDetailed(Matrix& destination,
                           return false;
                       }
                       targetWidth = headerWidth;
-                      if (rowPolicy == RowPolicy::HeaderOrPrefix)
+                      if (rowPolicy == RowPolicy::HeaderOrPrefix
+                          || rowPolicy == RowPolicy::HeaderHeightOrPrefix)
                       {
                           targetHeight = headerHeight;
-                          headerControlsHeight = true;
+                          headerControlsHeight = rowPolicy == RowPolicy::HeaderOrPrefix;
                       }
                       matrix.resize(targetWidth, targetHeight);
                       initialized = true;
@@ -270,6 +271,11 @@ bool loadOrReset(Matrix& matrix,
     }
     matrix.reset(width, height);
     return false;
+}
+
+void logSerializationError(const std::string& filename, const std::string& message)
+{
+    logs.error() << "I/O error: " << filename << ": " << message;
 }
 
 bool writeBuffer(const std::string& filename, const std::string& data)

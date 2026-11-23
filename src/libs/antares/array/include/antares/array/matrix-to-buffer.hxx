@@ -20,7 +20,7 @@ struct MatrixScalar
     {
         if (!std::isfinite(v))
         {
-            throw std::invalid_argument("Cannot serialize non-finite matrix value");
+            throw MatrixSerializationError("Cannot serialize non-finite matrix value");
         }
         // A finite double in fixed notation needs at most 309 integer digits,
         // a sign, a decimal point and the supported fractional digits.
@@ -34,7 +34,7 @@ struct MatrixScalar
                                                 digits);
         if (error != std::errc{})
         {
-            throw std::runtime_error("Failed to format matrix value");
+            throw MatrixSerializationError("Failed to format matrix value");
         }
         file.append(buffer, end);
     }

@@ -117,6 +117,31 @@ BOOST_AUTO_TEST_CASE(save_replaces_existing_file)
     std::filesystem::remove(filename);
 }
 
+BOOST_AUTO_TEST_CASE(nonfinite_save_returns_false_and_preserves_existing_file)
+{
+    const auto filename = temporaryMatrixPath();
+    {
+        std::ofstream file(filename, std::ios::binary | std::ios::trunc);
+        BOOST_REQUIRE(file);
+        file << "old data";
+    }
+
+    Matrix matrix(1, 1);
+    for (double value: {std::numeric_limits<double>::quiet_NaN(),
+                        std::numeric_limits<double>::infinity(),
+                        -std::numeric_limits<double>::infinity()})
+    {
+        matrix[0][0] = value;
+        BOOST_CHECK(!MatrixIO::save(matrix, filename.string()));
+        std::ifstream file(filename, std::ios::binary);
+        BOOST_REQUIRE(file);
+        const std::string contents((std::istreambuf_iterator<char>(file)),
+                                   std::istreambuf_iterator<char>());
+        BOOST_CHECK_EQUAL(contents, "old data");
+    }
+    std::filesystem::remove(filename);
+}
+
 BOOST_AUTO_TEST_CASE(matrix_only_0s__print_dim___get_only_a_title_and_the_0s)
 {
     Matrix_easy_to_fill mtx;
@@ -233,6 +258,65 @@ BOOST_AUTO_TEST_CASE(typed_storage_preserves_shape_after_copy_and_move)
     correlations.reset(2, 2);
     correlations[0][1] = 0.5f;
     BOOST_CHECK_EQUAL(correlations[0][1], 0.5f);
+}
+
+BOOST_AUTO_TEST_CASE(same_shape_copy_reuses_numeric_columns)
+{
+    ColumnMatrix<double> source;
+    source.reset(2, 3);
+    source[0][1] = 4.;
+    source[1][2] = 9.;
+    ColumnMatrix<double> destination;
+    destination.reset(2, 3);
+    const auto* first = destination[0].data();
+    const auto* second = destination[1].data();
+    destination = source;
+    BOOST_CHECK(destination[0].data() == first);
+    BOOST_CHECK(destination[1].data() == second);
+    BOOST_CHECK_EQUAL(destination[0][1], 4.);
+    BOOST_CHECK_EQUAL(destination[1][2], 9.);
+    const auto assign = [](auto& lhs, const auto& rhs) { lhs = rhs; };
+    assign(destination, destination);
+    BOOST_CHECK(destination[0].data() == first);
+    BOOST_CHECK_EQUAL(destination[1][2], 9.);
+}
+
+struct ThrowingCopy
+{
+    int value = 0;
+    static inline bool throwOnCopy = false;
+    ThrowingCopy() = default;
+
+    ThrowingCopy(const ThrowingCopy& rhs):
+        value(rhs.value)
+    {
+        if (throwOnCopy)
+        {
+            throw std::runtime_error("copy failed");
+        }
+    }
+
+    ThrowingCopy& operator=(const ThrowingCopy& rhs)
+    {
+        value = rhs.value;
+        return *this;
+    }
+};
+
+BOOST_AUTO_TEST_CASE(throwing_element_copy_preserves_destination_on_failure)
+{
+    ColumnMatrix<ThrowingCopy> source;
+    source.reset(1, 1);
+    source[0][0].value = 7;
+    ColumnMatrix<ThrowingCopy> destination;
+    destination.reset(1, 1);
+    destination[0][0].value = 3;
+    ThrowingCopy::throwOnCopy = true;
+    BOOST_CHECK_THROW(destination = source, std::runtime_error);
+    ThrowingCopy::throwOnCopy = false;
+    BOOST_CHECK_EQUAL(destination[0][0].value, 3);
+    destination = source;
+    BOOST_CHECK_EQUAL(destination[0][0].value, 7);
 }
 
 BOOST_AUTO_TEST_CASE(shared_storage_resize_reset_swap_and_move)

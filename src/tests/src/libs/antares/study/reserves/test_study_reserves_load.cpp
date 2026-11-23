@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <files-system.h>
 #include <filesystem>
+#include <fstream>
 #include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
@@ -155,6 +156,36 @@ struct OneProblemWithReservesTwoAreas
 };
 
 BOOST_AUTO_TEST_SUITE(reserves_operations_load)
+
+BOOST_AUTO_TEST_CASE(reserve_need_requires_exact_hourly_height)
+{
+    const auto path = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    const auto file = path / "need.txt";
+    TimeSeriesNumbers tsnum;
+    CapacityReservation reserve(tsnum);
+    {
+        std::ofstream output(file);
+        BOOST_REQUIRE(output);
+        for (unsigned int hour = 0; hour < HOURS_PER_YEAR; ++hour)
+        {
+            output << "7\n";
+        }
+    }
+    BOOST_CHECK_NO_THROW(reserve.loadNeedFromFile(file));
+    BOOST_REQUIRE_EQUAL(reserve.need.timeSeries.height(), HOURS_PER_YEAR);
+    BOOST_CHECK_EQUAL(reserve.need.timeSeries[0][HOURS_PER_YEAR - 1], 7.);
+    {
+        std::ofstream output(file, std::ios::app);
+        BOOST_REQUIRE(output);
+        for (unsigned int hour = 0; hour < 24; ++hour)
+        {
+            output << "8\n";
+        }
+    }
+    BOOST_CHECK_THROW(reserve.loadNeedFromFile(file), std::runtime_error);
+    BOOST_CHECK_EQUAL(reserve.need.timeSeries[0][HOURS_PER_YEAR - 1], 7.);
+    std::filesystem::remove_all(path);
+}
 
 BOOST_AUTO_TEST_CASE(reserve_add)
 {

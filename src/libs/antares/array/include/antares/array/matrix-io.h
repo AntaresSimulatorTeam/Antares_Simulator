@@ -24,7 +24,9 @@ enum class RowPolicy
     Prefix,
     // A header may select a height between minHeaderHeight and the requested
     // height. Headerless files are read as a prefix of the requested height.
-    HeaderOrPrefix
+    HeaderOrPrefix,
+    // A header selects its height; otherwise consume the requested prefix.
+    HeaderHeightOrPrefix
 };
 
 struct LoadError
@@ -40,6 +42,8 @@ struct LoadError
 // rows must match the requested height; Prefix explicitly permits extra rows.
 // HeaderOrPrefix accepts an exact header-selected height in [minHeaderHeight,
 // height], or consumes a prefix of height rows when there is no header.
+// HeaderHeightOrPrefix consumes the header-selected height, if present, or
+// the requested height otherwise, ignoring any subsequent rows.
 // Returns an error on failure and leaves destination unchanged.
 std::optional<LoadError> loadDetailed(Matrix& destination,
                                       const std::filesystem::path& filename,
@@ -73,6 +77,7 @@ bool loadOrReset(Matrix& destination,
                  unsigned int minHeaderHeight = 0);
 
 bool writeBuffer(const std::string& filename, const std::string& data);
+void logSerializationError(const std::string& filename, const std::string& message);
 
 template<class Predicate = std::identity>
 void saveToBuffer(const Matrix& matrix,
@@ -107,9 +112,17 @@ bool save(const Matrix& matrix,
           bool saveEvenIfAllZero = false)
 {
     std::string data;
-    if (!matrix.empty())
+    try
     {
-        saveToBuffer(matrix, data, precision, printDimensions, predicate, saveEvenIfAllZero);
+        if (!matrix.empty())
+        {
+            saveToBuffer(matrix, data, precision, printDimensions, predicate, saveEvenIfAllZero);
+        }
+    }
+    catch (const MatrixSerializationError& error)
+    {
+        logSerializationError(filename, error.what());
+        return false;
     }
     return writeBuffer(filename, data);
 }
