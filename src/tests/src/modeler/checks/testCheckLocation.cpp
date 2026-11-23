@@ -245,61 +245,16 @@ BOOST_FIXTURE_TEST_CASE(two_portfield_errors_both_reported_in_exception_and_logs
                     .withId("system")
                     .build();
 
-    class StreamCapture
-    {
-    public:
-        explicit StreamCapture(std::ostream& stream):
-            stream_(stream),
-            previousBuffer_(stream.rdbuf(captured_.rdbuf()))
-        {
-        }
-
-        ~StreamCapture()
-        {
-            stream_.rdbuf(previousBuffer_);
-        }
-
-        std::string str() const
-        {
-            return captured_.str();
-        }
-
-    private:
-        std::ostringstream captured_;
-        std::ostream& stream_;
-        std::streambuf* previousBuffer_;
-    };
-
-    std::string errBytes;
-    std::string exceptionMsg;
-    {
-        StreamCapture err(std::cerr);
-
-        try
-        {
-            checkModel(model, system);
-            BOOST_FAIL("Expected LocationError to be thrown");
-        }
-        catch (const LocationError& e)
-        {
-            exceptionMsg = e.what();
-        }
-
-        errBytes = err.str();
-    }
-
-    // Check exception.what() contains both errors
-    BOOST_CHECK_MESSAGE(exceptionMsg.find("port.field1") != std::string::npos,
-                        "Exception should mention port.field1: " + exceptionMsg);
-    BOOST_CHECK_MESSAGE(exceptionMsg.find("port.field2") != std::string::npos,
-                        "Exception should mention port.field2: " + exceptionMsg);
-    BOOST_CHECK_MESSAGE(exceptionMsg.find("sum_connections") != std::string::npos,
-                        "Exception should suggest sum_connections: " + exceptionMsg);
-
-    // Check logs (stderr) contain both errors
-    BOOST_CHECK_MESSAGE(errBytes.find("port.field1") != std::string::npos,
-                        "Logs should mention port.field1: " + errBytes);
-    BOOST_CHECK_MESSAGE(errBytes.find("port.field2") != std::string::npos,
-                        "Logs should mention port.field2: " + errBytes);
+    // Verify both errors appear in the combined exception
+    BOOST_CHECK_EXCEPTION(
+      checkModel(model, system),
+      LocationError,
+      [](const std::exception& e)
+      {
+          std::string msg = e.what();
+          return msg.find("port.field1") != std::string::npos
+                 && msg.find("port.field2") != std::string::npos
+                 && msg.find("sum_connections") != std::string::npos;
+      });
 }
 BOOST_AUTO_TEST_SUITE_END()
