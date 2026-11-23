@@ -168,6 +168,28 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_FIXTURE_TEST_SUITE(_DataSeriesImport_OneCsvFile_, CsvCreationFixture)
 
+BOOST_AUTO_TEST_CASE(leading_blank_rows_are_ignored)
+{
+    writeFile("series.csv", "\n  \t\n1;2\n3;4\n");
+    const auto repo = DataSeriesRepoImporter::importFromDirectory(temp_path, ';');
+    const auto& series = repo.getDataSeries("series");
+    BOOST_CHECK_EQUAL(series.getData(1, 0), 1.);
+    BOOST_CHECK_EQUAL(series.getData(2, 1), 4.);
+}
+
+BOOST_AUTO_TEST_CASE(interior_blank_rows_are_rejected)
+{
+    for (const std::string blank: {"", " \t ", ";;"})
+    {
+        const auto filePath = writeFile("wrong.csv", "\n1;2\n" + blank + "\n3;4\n");
+        BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ';'),
+                              InputError,
+                              containsMessage(
+                                filePath.string()
+                                + ": row (2) has less columns (0) than the expected (2)."));
+    }
+}
+
 BOOST_AUTO_TEST_CASE(imports_infinite_bounds_alongside_other_series)
 {
     writeFile("bounds.tsv", "1\tinf\n-inf\t4\n");

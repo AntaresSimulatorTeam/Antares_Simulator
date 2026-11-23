@@ -22,7 +22,6 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
     std::vector<std::vector<double>> columns;
     std::string separators = " \t";
     separators += sep;
-    std::size_t dataRowIndex = 0;
     std::vector<double> values;
 
     try
@@ -30,7 +29,7 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
         IO::readCSVFile(
           filename,
           separators,
-          [&](std::size_t, IO::CSVRow row)
+          [&](std::size_t rowIndex, IO::CSVRow row)
           {
               values.clear();
               values.reserve(row.size());
@@ -50,12 +49,10 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
                   values.push_back(value);
               }
 
-              if (values.empty())
+              if (values.empty() && columns.empty())
               {
                   return true;
               }
-
-              const auto rowIndex = dataRowIndex++;
 
               if (columns.empty())
               {

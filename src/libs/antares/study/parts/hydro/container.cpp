@@ -225,30 +225,30 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
           fs::path creditPath = capacityPath / creditId;
           ret = MatrixIO::loadOrReset(area.hydro.creditModulation,
                                       creditPath.string(),
-                                      101,
-                                      2,
-                                      MatrixIO::WidthPolicy::Exact,
-                                      MatrixIO::RowPolicy::Prefix)
+                                      {.minWidth = 101,
+                                       .height = 2,
+                                       .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                                       .rowPolicy = MatrixIO::RowPolicy::Prefix})
                 && ret;
 
           std::string waterValueId = "waterValues_" + area.id + ".txt";
           fs::path waterValuePath = capacityPath / waterValueId;
           ret = MatrixIO::loadOrReset(area.hydro.waterValues,
                                       waterValuePath.string(),
-                                      101,
-                                      DAYS_PER_YEAR,
-                                      MatrixIO::WidthPolicy::Exact,
-                                      MatrixIO::RowPolicy::Prefix)
+                                      {.minWidth = 101,
+                                       .height = DAYS_PER_YEAR,
+                                       .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                                       .rowPolicy = MatrixIO::RowPolicy::Prefix})
                 && ret;
 
           std::string inflowId = "inflowPattern_" + area.id + ".txt";
           fs::path inflowPath = capacityPath / inflowId;
           ret = MatrixIO::loadOrReset(area.hydro.inflowPattern,
                                       inflowPath.string(),
-                                      1,
-                                      DAYS_PER_YEAR,
-                                      MatrixIO::WidthPolicy::Exact,
-                                      MatrixIO::RowPolicy::Prefix)
+                                      {.minWidth = 1,
+                                       .height = DAYS_PER_YEAR,
+                                       .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                                       .rowPolicy = MatrixIO::RowPolicy::Prefix})
                 && ret;
       });
     ret = PartHydro::LoadIniFile(study, folder) && ret;
@@ -361,19 +361,19 @@ bool PartHydro::LoadDailyMaxEnergy(const fs::path& folder, const std::string& ar
     fs::path genPath = folder / "common" / "capacity" / ("maxDailyGenEnergy_" + areaid + ".txt");
     ret = MatrixIO::loadOrReset(dailyNbHoursAtGenPmax,
                                 genPath.string(),
-                                1,
-                                DAYS_PER_YEAR,
-                                MatrixIO::WidthPolicy::Exact,
-                                MatrixIO::RowPolicy::Prefix)
+                                {.minWidth = 1,
+                                 .height = DAYS_PER_YEAR,
+                                 .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                                 .rowPolicy = MatrixIO::RowPolicy::Prefix})
           && ret;
 
     fs::path pumpPath = folder / "common" / "capacity" / ("maxDailyPumpEnergy_" + areaid + ".txt");
     ret = MatrixIO::loadOrReset(dailyNbHoursAtPumpPmax,
                                 pumpPath.string(),
-                                1,
-                                DAYS_PER_YEAR,
-                                MatrixIO::WidthPolicy::Exact,
-                                MatrixIO::RowPolicy::Prefix)
+                                {.minWidth = 1,
+                                 .height = DAYS_PER_YEAR,
+                                 .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                                 .rowPolicy = MatrixIO::RowPolicy::Prefix})
           && ret;
 
     return ret;

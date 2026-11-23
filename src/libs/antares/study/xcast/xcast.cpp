@@ -243,10 +243,10 @@ bool XCast::loadFromFolder(const fs::path& folder)
     // Performing normal loading
     ret = MatrixIO::loadOrReset(data,
                                 p.string(),
-                                static_cast<unsigned int>(dataMax),
-                                12,
-                                MatrixIO::WidthPolicy::Exact,
-                                MatrixIO::RowPolicy::Prefix)
+                                {.minWidth = static_cast<unsigned int>(dataMax),
+                                 .height = 12,
+                                 .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                                 .rowPolicy = MatrixIO::RowPolicy::Prefix})
           && ret;
     convertToFloatPrecision(data);
 
@@ -254,22 +254,22 @@ bool XCast::loadFromFolder(const fs::path& folder)
     p = folder / "k.txt";
     ret = MatrixIO::loadOrReset(K,
                                 p,
-                                12,
-                                24,
-                                MatrixIO::WidthPolicy::Exact,
-                                MatrixIO::RowPolicy::Prefix)
+                                {.minWidth = 12,
+                                 .height = 24,
+                                 .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                                 .rowPolicy = MatrixIO::RowPolicy::Prefix})
           && ret;
     convertToFloatPrecision(K);
 
     // Time-series translation
     p = folder / "translation.txt";
 
-    const bool translationLoaded = MatrixIO::loadOrReset(translation,
-                                                         p,
-                                                         1,
-                                                         HOURS_PER_YEAR,
-                                                         MatrixIO::WidthPolicy::AtLeast,
-                                                         MatrixIO::RowPolicy::HeaderHeightOrPrefix);
+    const bool translationLoaded = MatrixIO::loadOrReset(
+      translation,
+      p,
+      {.minWidth = 1,
+       .height = HOURS_PER_YEAR,
+       .rowPolicy = MatrixIO::RowPolicy::HeaderHeightOrPrefix});
     ret = translationLoaded && ret;
 
     if (translation.empty())
@@ -304,10 +304,9 @@ bool XCast::loadFromFolder(const fs::path& folder)
 
     ret = MatrixIO::loadOrReset(conversion,
                                 p,
-                                3,
-                                2,
-                                MatrixIO::WidthPolicy::AtLeast,
-                                MatrixIO::RowPolicy::Prefix)
+                                {.minWidth = 3,
+                                 .height = 2,
+                                 .rowPolicy = MatrixIO::RowPolicy::Prefix})
           && ret;
     convertToFloatPrecision(conversion);
     if (conversion.width() >= 3 && conversion.width() <= conversionMaxPoints)

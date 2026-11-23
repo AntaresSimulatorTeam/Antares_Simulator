@@ -92,7 +92,9 @@ void benchmarkLoads(unsigned int width, unsigned int height, unsigned int iterat
                  iterations,
                  [&]
                  {
-                     const bool loaded = Antares::MatrixIO::load(matrix, filename, 1, height);
+                     const bool loaded = Antares::MatrixIO::load(matrix,
+                                                                 filename,
+                                                                 {.minWidth = 1, .height = height});
                      if (!loaded || matrix.width() != width || matrix.height() != height)
                      {
                          std::cerr << "matrix load failed\n";
@@ -107,7 +109,9 @@ void benchmarkLoads(unsigned int width, unsigned int height, unsigned int iterat
                  [&]
                  {
                      Antares::Matrix fresh;
-                     if (!Antares::MatrixIO::load(fresh, filename, 1, height))
+                     if (!Antares::MatrixIO::load(fresh,
+                                                  filename,
+                                                  {.minWidth = 1, .height = height}))
                      {
                          std::cerr << "matrix load failed\n";
                          std::exit(EXIT_FAILURE);

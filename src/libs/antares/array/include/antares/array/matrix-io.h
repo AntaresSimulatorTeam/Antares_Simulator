@@ -29,6 +29,19 @@ enum class RowPolicy
     HeaderHeightOrPrefix
 };
 
+// minWidth and height specify the requested matrix shape. AtLeast allows
+// additional columns; Exact requires exactly minWidth. The row policy controls
+// extra rows and whether a header can select the height. minHeaderHeight only
+// applies to HeaderOrPrefix and must not exceed height.
+struct LoadOptions
+{
+    unsigned int minWidth;
+    unsigned int height;
+    WidthPolicy widthPolicy = WidthPolicy::AtLeast;
+    RowPolicy rowPolicy = RowPolicy::Exact;
+    unsigned int minHeaderHeight = 0;
+};
+
 struct LoadError
 {
     std::filesystem::path filename;
@@ -47,34 +60,14 @@ struct LoadError
 // Returns an error on failure and leaves destination unchanged.
 std::optional<LoadError> loadDetailed(Matrix& destination,
                                       const std::filesystem::path& filename,
-                                      unsigned int minWidth,
-                                      unsigned int height,
-                                      WidthPolicy widthPolicy = WidthPolicy::AtLeast,
-                                      RowPolicy rowPolicy = RowPolicy::Exact,
-                                      unsigned int minHeaderHeight = 0);
+                                      const LoadOptions& options);
 
 // On failure, destination is unchanged. An empty file represents a zero matrix.
-bool load(Matrix& destination,
-          const std::string& filename,
-          unsigned int minWidth,
-          unsigned int height,
-          WidthPolicy widthPolicy = WidthPolicy::AtLeast,
-          RowPolicy rowPolicy = RowPolicy::Exact,
-          unsigned int minHeaderHeight = 0);
-bool load(Matrix& destination,
-          const std::filesystem::path& filename,
-          unsigned int minWidth,
-          unsigned int height,
-          WidthPolicy widthPolicy = WidthPolicy::AtLeast,
-          RowPolicy rowPolicy = RowPolicy::Exact,
-          unsigned int minHeaderHeight = 0);
+bool load(Matrix& destination, const std::string& filename, const LoadOptions& options);
+bool load(Matrix& destination, const std::filesystem::path& filename, const LoadOptions& options);
 bool loadOrReset(Matrix& destination,
                  const std::filesystem::path& filename,
-                 unsigned int minWidth,
-                 unsigned int height,
-                 WidthPolicy widthPolicy = WidthPolicy::AtLeast,
-                 RowPolicy rowPolicy = RowPolicy::Exact,
-                 unsigned int minHeaderHeight = 0);
+                 const LoadOptions& options);
 
 bool writeBuffer(const std::string& filename, const std::string& data);
 void logSerializationError(const std::string& filename, const std::string& message);

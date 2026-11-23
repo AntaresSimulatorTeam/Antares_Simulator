@@ -26,10 +26,9 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
         {
             ret = MatrixIO::loadOrReset(fuelcost,
                                         filename,
-                                        1,
-                                        HOURS_PER_YEAR,
-                                        MatrixIO::WidthPolicy::AtLeast,
-                                        MatrixIO::RowPolicy::Prefix)
+                                        {.minWidth = 1,
+                                         .height = HOURS_PER_YEAR,
+                                         .rowPolicy = MatrixIO::RowPolicy::Prefix})
                   && ret;
             if (study.parameters.derated)
             {
@@ -42,10 +41,9 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
         {
             ret = MatrixIO::loadOrReset(co2cost,
                                         filename,
-                                        1,
-                                        HOURS_PER_YEAR,
-                                        MatrixIO::WidthPolicy::AtLeast,
-                                        MatrixIO::RowPolicy::Prefix)
+                                        {.minWidth = 1,
+                                         .height = HOURS_PER_YEAR,
+                                         .rowPolicy = MatrixIO::RowPolicy::Prefix})
                   && ret;
             if (study.parameters.derated)
             {

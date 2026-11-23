@@ -100,6 +100,24 @@ private:
 
 BOOST_AUTO_TEST_SUITE(timeseries_tests)
 
+BOOST_FIXTURE_TEST_CASE(averaging_ignores_trailing_tab_padding, Fixture)
+{
+    const auto directory = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    const auto path = directory / "series.txt";
+    {
+        std::ofstream output(path);
+        BOOST_REQUIRE(output);
+        for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
+        {
+            output << "12\t\n";
+        }
+    }
+    BOOST_REQUIRE(ts.loadFromFile(path, true));
+    BOOST_REQUIRE_EQUAL(ts.timeSeries.width(), 1);
+    BOOST_CHECK_EQUAL(ts.timeSeries[0][0], 12.);
+    BOOST_CHECK_EQUAL(ts.timeSeries[0][HOURS_PER_YEAR - 1], 12.);
+}
+
 BOOST_FIXTURE_TEST_CASE(load_hourly_prefix_and_reject_invalid_required_rows, Fixture)
 {
     const auto directory = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
@@ -115,6 +133,12 @@ BOOST_FIXTURE_TEST_CASE(load_hourly_prefix_and_reject_invalid_required_rows, Fix
     BOOST_REQUIRE(ts.loadFromFile(path, false));
     BOOST_CHECK_EQUAL(ts.timeSeries.height(), HOURS_PER_YEAR);
     BOOST_CHECK_EQUAL(ts.timeSeries[0][HOURS_PER_YEAR - 1], HOURS_PER_YEAR - 1);
+    const auto checkReset = [&]()
+    {
+        BOOST_REQUIRE_EQUAL(ts.timeSeries.width(), 1);
+        BOOST_REQUIRE_EQUAL(ts.timeSeries.height(), HOURS_PER_YEAR);
+        BOOST_CHECK(ts.timeSeries.containsOnlyZero());
+    };
     {
         std::ofstream output(path);
         output << "bad\n";
@@ -124,6 +148,9 @@ BOOST_FIXTURE_TEST_CASE(load_hourly_prefix_and_reject_invalid_required_rows, Fix
         }
     }
     BOOST_CHECK(!ts.loadFromFile(path, false));
+    checkReset();
+    ts.reset(2, HOURS_PER_YEAR);
+    ts.timeSeries.fill(42.);
     {
         std::ofstream output(path);
         for (unsigned int i = 0; i < HOURS_PER_YEAR - 1; ++i)
@@ -132,6 +159,11 @@ BOOST_FIXTURE_TEST_CASE(load_hourly_prefix_and_reject_invalid_required_rows, Fix
         }
     }
     BOOST_CHECK(!ts.loadFromFile(path, false));
+    checkReset();
+    ts.reset(2, HOURS_PER_YEAR);
+    ts.timeSeries.fill(42.);
+    BOOST_CHECK(!ts.loadFromFile(directory / "missing.txt", true));
+    checkReset();
 }
 
 BOOST_FIXTURE_TEST_CASE(getSeriesIndex, Fixture)

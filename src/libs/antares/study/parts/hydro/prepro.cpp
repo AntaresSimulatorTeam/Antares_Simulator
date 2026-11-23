@@ -91,10 +91,10 @@ bool PreproHydro::loadFromFolder(Study&, const std::string& areaID, const fs::pa
     fs::path energyPath = folder / areaID / "energy.txt";
     ret = MatrixIO::loadOrReset(data,
                                 energyPath.string(),
-                                hydroPreproMax,
-                                maxNbOfLineToLoad,
-                                MatrixIO::WidthPolicy::Exact,
-                                MatrixIO::RowPolicy::Prefix)
+                                {.minWidth = hydroPreproMax,
+                                 .height = maxNbOfLineToLoad,
+                                 .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                                 .rowPolicy = MatrixIO::RowPolicy::Prefix})
           && ret;
 
     return ret;

@@ -49,7 +49,8 @@ add_boost_test(tests-matrix-load
         Antares::io
         yuni-static-core
         antares-core
-        Antares::exception)
+        Antares::exception
+        test_utils_unit)
 
 # Test utilities
 add_boost_test(test-utils

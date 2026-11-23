@@ -42,10 +42,10 @@ bool PreproAvailability::loadFromFolder(Study&, const std::filesystem::path& fol
     // standard loading
     return MatrixIO::loadOrReset(data,
                                  filePath.string(),
-                                 preproAvailabilityMax,
-                                 DAYS_PER_YEAR,
-                                 MatrixIO::WidthPolicy::Exact,
-                                 MatrixIO::RowPolicy::Prefix);
+                                 {.minWidth = preproAvailabilityMax,
+                                  .height = DAYS_PER_YEAR,
+                                  .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                                  .rowPolicy = MatrixIO::RowPolicy::Prefix});
 }
 
 bool PreproAvailability::validate() const

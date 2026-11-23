@@ -96,10 +96,9 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
 
     ret = MatrixIO::loadOrReset(series.timeSeries,
                                 seriesPath,
-                                1,
-                                HOURS_PER_YEAR,
-                                MatrixIO::WidthPolicy::AtLeast,
-                                MatrixIO::RowPolicy::Prefix)
+                                {.minWidth = 1,
+                                 .height = HOURS_PER_YEAR,
+                                 .rowPolicy = MatrixIO::RowPolicy::Prefix})
           && ret;
 
     if (s.parameters.derated)

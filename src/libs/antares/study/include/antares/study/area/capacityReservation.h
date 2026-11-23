@@ -59,7 +59,7 @@ struct CapacityReservation
 
     void loadNeedFromFile(const fs::path& path)
     {
-        if (!MatrixIO::load(need.timeSeries, path, 1, HOURS_PER_YEAR))
+        if (!MatrixIO::load(need.timeSeries, path, {.minWidth = 1, .height = HOURS_PER_YEAR}))
         {
             throw std::runtime_error("Failed to load need from CSV file: " + path.string());
         }

@@ -51,16 +51,26 @@ bool parseHeader(std::string_view text, unsigned int& width, unsigned int& heigh
     return parseUnsigned(text.substr(0, separator), width)
            && parseUnsigned(text.substr(separator + 1), height);
 }
+
+// Trailing tabs historically acted as padding rather than extra columns.
+// Keep cells required by the requested or already established width.
+IO::CSVRow trimTabPadding(IO::CSVRow row, std::size_t minimumWidth)
+{
+    while (row.size() > minimumWidth && row.size() > 1
+           && row.back().value.find_first_not_of(" \t") == std::string_view::npos
+           && row[row.size() - 2].separator == '\t')
+    {
+        row = row.first(row.size() - 1);
+    }
+    return row;
+}
 } // namespace
 
 std::optional<LoadError> loadDetailed(Matrix& destination,
                                       const std::filesystem::path& filename,
-                                      unsigned int minWidth,
-                                      unsigned int height,
-                                      WidthPolicy widthPolicy,
-                                      RowPolicy rowPolicy,
-                                      unsigned int minHeaderHeight)
+                                      const LoadOptions& options)
 {
+    const auto& [minWidth, height, widthPolicy, rowPolicy, minHeaderHeight] = options;
     auto failure = [&](std::string message,
                        std::optional<std::size_t> row = {},
                        std::optional<std::size_t> column = {}) -> std::optional<LoadError>
@@ -120,6 +130,7 @@ std::optional<LoadError> loadDetailed(Matrix& destination,
                                          && firstCell.substr(first).starts_with("size:");
                   if (hasHeader)
                   {
+                      row = trimTabPadding(row, 1);
                       unsigned int headerWidth = 0;
                       unsigned int headerHeight = 0;
                       if (row.size() != 1 || !parseHeader(firstCell, headerWidth, headerHeight)
@@ -156,12 +167,14 @@ std::optional<LoadError> loadDetailed(Matrix& destination,
                       result = failure("matrix width exceeds the supported limit", fileRow + 1);
                       return false;
                   }
+                  row = trimTabPadding(row, minWidth);
                   targetWidth = widthPolicy == WidthPolicy::Exact
                                   ? minWidth
                                   : std::max<unsigned int>(minWidth, row.size());
                   matrix.resize(targetWidth, height);
                   initialized = true;
               }
+              row = trimTabPadding(row, targetWidth);
               if (row.size() != targetWidth)
               {
                   result = failure("expected " + std::to_string(targetWidth) + " columns, got "
@@ -208,21 +221,9 @@ std::optional<LoadError> loadDetailed(Matrix& destination,
     }
 }
 
-bool load(Matrix& matrix,
-          const std::filesystem::path& filename,
-          unsigned int minWidth,
-          unsigned int height,
-          WidthPolicy widthPolicy,
-          RowPolicy rowPolicy,
-          unsigned int minHeaderHeight)
+bool load(Matrix& matrix, const std::filesystem::path& filename, const LoadOptions& options)
 {
-    const auto error = loadDetailed(matrix,
-                                    filename,
-                                    minWidth,
-                                    height,
-                                    widthPolicy,
-                                    rowPolicy,
-                                    minHeaderHeight);
+    const auto error = loadDetailed(matrix, filename, options);
     if (!error)
     {
         return true;
@@ -240,36 +241,18 @@ bool load(Matrix& matrix,
     return false;
 }
 
-bool load(Matrix& matrix,
-          const std::string& filename,
-          unsigned int minWidth,
-          unsigned int height,
-          WidthPolicy widthPolicy,
-          RowPolicy rowPolicy,
-          unsigned int minHeaderHeight)
+bool load(Matrix& matrix, const std::string& filename, const LoadOptions& options)
 {
-    return load(matrix,
-                std::filesystem::path(filename),
-                minWidth,
-                height,
-                widthPolicy,
-                rowPolicy,
-                minHeaderHeight);
+    return load(matrix, std::filesystem::path(filename), options);
 }
 
-bool loadOrReset(Matrix& matrix,
-                 const std::filesystem::path& filename,
-                 unsigned int width,
-                 unsigned int height,
-                 WidthPolicy widthPolicy,
-                 RowPolicy rowPolicy,
-                 unsigned int minHeaderHeight)
+bool loadOrReset(Matrix& matrix, const std::filesystem::path& filename, const LoadOptions& options)
 {
-    if (load(matrix, filename, width, height, widthPolicy, rowPolicy, minHeaderHeight))
+    if (load(matrix, filename, options))
     {
         return true;
     }
-    matrix.reset(width, height);
+    matrix.reset(options.minWidth, options.height);
     return false;
 }
 

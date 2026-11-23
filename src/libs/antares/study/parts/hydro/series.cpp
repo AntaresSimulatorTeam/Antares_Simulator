@@ -24,10 +24,9 @@ static bool loadTSfromFile(Matrix& ts,
     fs::path filePath = folder / areaID / filename;
     return MatrixIO::loadOrReset(ts,
                                  filePath,
-                                 1,
-                                 height,
-                                 MatrixIO::WidthPolicy::AtLeast,
-                                 MatrixIO::RowPolicy::Prefix);
+                                 {.minWidth = 1,
+                                  .height = height,
+                                  .rowPolicy = MatrixIO::RowPolicy::Prefix});
 }
 
 static void ConvertDailyTSintoHourlyTS(Matrix::ConstColumnType dailyColumn,
@@ -118,19 +117,17 @@ bool DataSeriesHydro::LoadMaxPower(const std::string& areaID, const fs::path& fo
     fs::path filePath = folder / areaID / "maxHourlyGenPower.txt";
     ret = MatrixIO::loadOrReset(maxHourlyGenPower.timeSeries,
                                 filePath,
-                                1,
-                                HOURS_PER_YEAR,
-                                MatrixIO::WidthPolicy::AtLeast,
-                                MatrixIO::RowPolicy::Prefix)
+                                {.minWidth = 1,
+                                 .height = HOURS_PER_YEAR,
+                                 .rowPolicy = MatrixIO::RowPolicy::Prefix})
           && ret;
 
     filePath = folder / areaID / "maxHourlyPumpPower.txt";
     ret = MatrixIO::loadOrReset(maxHourlyPumpPower.timeSeries,
                                 filePath,
-                                1,
-                                HOURS_PER_YEAR,
-                                MatrixIO::WidthPolicy::AtLeast,
-                                MatrixIO::RowPolicy::Prefix)
+                                {.minWidth = 1,
+                                 .height = HOURS_PER_YEAR,
+                                 .rowPolicy = MatrixIO::RowPolicy::Prefix})
           && ret;
 
     return ret;

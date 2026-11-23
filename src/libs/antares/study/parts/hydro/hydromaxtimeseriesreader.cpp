@@ -50,10 +50,10 @@ bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const std::string& 
 
     ret = MatrixIO::loadOrReset(hydro_.dailyMaxPumpAndGen,
                                 filePath.string(),
-                                4U,
-                                DAYS_PER_YEAR,
-                                MatrixIO::WidthPolicy::Exact,
-                                MatrixIO::RowPolicy::Prefix)
+                                {.minWidth = 4U,
+                                 .height = DAYS_PER_YEAR,
+                                 .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                                 .rowPolicy = MatrixIO::RowPolicy::Prefix})
           && ret;
     return ret;
 }

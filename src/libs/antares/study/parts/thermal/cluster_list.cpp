@@ -146,10 +146,10 @@ bool ThermalClusterList::loadFromFolder(const fs::path& folder,
 
         ret = MatrixIO::loadOrReset(cluster->modulation,
                                     modulationFile.string(),
-                                    thermalModulationMax,
-                                    HOURS_PER_YEAR,
-                                    MatrixIO::WidthPolicy::Exact,
-                                    MatrixIO::RowPolicy::Prefix)
+                                    {.minWidth = thermalModulationMax,
+                                     .height = HOURS_PER_YEAR,
+                                     .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                                     .rowPolicy = MatrixIO::RowPolicy::Prefix})
               && ret;
 
         // Check the data integrity of the cluster

@@ -586,10 +586,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     fs::path reservesPath = (study.folderInput / "reserves" / area.id).replace_extension("txt");
     ret = MatrixIO::loadOrReset(area.reserves,
                                 reservesPath.string(),
-                                fhrMax,
-                                HOURS_PER_YEAR,
-                                MatrixIO::WidthPolicy::Exact,
-                                MatrixIO::RowPolicy::Prefix)
+                                {.minWidth = fhrMax,
+                                 .height = HOURS_PER_YEAR,
+                                 .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                                 .rowPolicy = MatrixIO::RowPolicy::Prefix})
           && ret;
 
     // Optimzation preferences
@@ -612,10 +612,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     ret = MatrixIO::loadOrReset(area.miscGen,
                                 miscgenPath.string(),
-                                fhhMax,
-                                HOURS_PER_YEAR,
-                                MatrixIO::WidthPolicy::Exact,
-                                MatrixIO::RowPolicy::Prefix)
+                                {.minWidth = fhhMax,
+                                 .height = HOURS_PER_YEAR,
+                                 .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                                 .rowPolicy = MatrixIO::RowPolicy::Prefix})
           && ret;
 
     // Check misc gen
