@@ -417,6 +417,10 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
                   collectRemixDebugInfo(listStorage, debugStream);
               }
           }
+          catch (std::invalid_argument&)
+          {
+              throw;
+          }
           catch (std::exception& e)
           {
               std::string msg = fmt::format(fmt::runtime("(MC year {}, area '{}', week {}) : {}"),
