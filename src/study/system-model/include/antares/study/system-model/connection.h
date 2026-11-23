@@ -18,7 +18,7 @@ class ConnectionEnd final
 public:
     ConnectionEnd(Component& component, const Port& port);
     // A temporary Port would leave port_ dangling
-    ConnectionEnd(Component& component, Port&& port) = delete;
+    ConnectionEnd(Component& component, const Port&& port) = delete;
     [[nodiscard]] const Component& component() const;
     [[nodiscard]] const Port& port() const;
 
