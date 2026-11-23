@@ -246,15 +246,14 @@ BOOST_FIXTURE_TEST_CASE(two_portfield_errors_both_reported_in_exception_and_logs
                     .build();
 
     // Verify both errors appear in the combined exception
-    BOOST_CHECK_EXCEPTION(
-      checkModel(model, system),
-      LocationError,
-      [](const std::exception& e)
-      {
-          std::string msg = e.what();
-          return msg.find("port.field1") != std::string::npos
-                 && msg.find("port.field2") != std::string::npos
-                 && msg.find("sum_connections") != std::string::npos;
-      });
+    BOOST_CHECK_EXCEPTION(checkModel(model, system),
+                          LocationError,
+                          [](const std::exception& e)
+                          {
+                              std::string msg = e.what();
+                              return msg.find("port.field1") != std::string::npos
+                                     && msg.find("port.field2") != std::string::npos
+                                     && msg.find("sum_connections") != std::string::npos;
+                          });
 }
 BOOST_AUTO_TEST_SUITE_END()
