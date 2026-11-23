@@ -105,7 +105,10 @@ void ReserveParticipationGroup::BuildConstraints()
                                 && clusterReserveParticipation.maxPowerOff > 0)
                             {
                                 // 16 ter
-                                participationOfOffUnitsToReserve.add(pays, reserve, clusterId, pdt);
+                                participationOfOffUnitsToReserve.add(static_cast<int>(pays),
+                                                                     static_cast<int>(reserve),
+                                                                     clusterId,
+                                                                     pdt);
                             }
 
                             // 17 quinquies & sexies

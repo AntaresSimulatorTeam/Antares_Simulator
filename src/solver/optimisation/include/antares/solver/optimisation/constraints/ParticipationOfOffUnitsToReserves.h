@@ -7,7 +7,7 @@
 /*!
  * represent 'ParticipationOfOffUnitsToReserves' Constraint type
  */
-class ParticipationOfOffUnitsToReserves: private ConstraintFactory
+class ParticipationOfOffUnitsToReserves final: public ConstraintFactory
 {
 public:
     ParticipationOfOffUnitsToReserves(ConstraintBuilder& builder, ReserveData& data):

@@ -38,7 +38,8 @@ void ParticipationOfOffUnitsToReserve::add(int pays, int reserve, int cluster, i
           = builder.data.nombreDeContraintes;
 
         ConstraintNamer namer(builder.data.NomDesContraintes);
-        const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
+        const uint32_t hourInTheYear = builder.data.weekInTheYear * 168
+                                       + static_cast<uint32_t>(pdt);
         namer.UpdateTimeStep(hourInTheYear);
         namer.UpdateArea(builder.data.NomsDesPays[pays]);
         namer.ParticipationOfOffUnitsToReserve(builder.data.nombreDeContraintes,
@@ -48,6 +49,6 @@ void ParticipationOfOffUnitsToReserve::add(int pays, int reserve, int cluster, i
     }
     else
     {
-        builder.data.nombreDeContraintes++;
+        ++builder.data.nombreDeContraintes;
     }
 }
