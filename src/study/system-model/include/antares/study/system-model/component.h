@@ -94,6 +94,12 @@ public:
 
     std::vector<ConnectionEnd> componentConnectionsViaPort(const std::string& portId) const;
 
+    /**
+     * @brief Whether the port is connected to anything: another component, a legacy area or a
+     * legacy thermal cluster.
+     */
+    bool isPortConnected(const std::string& portId) const;
+
     Expressions::Nodes::Node* nodeAtPortField(const std::string& portId,
                                               const std::string& fieldId) const;
 
