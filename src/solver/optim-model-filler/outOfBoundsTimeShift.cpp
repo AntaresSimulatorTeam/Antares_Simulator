@@ -32,6 +32,12 @@ bool hasOutOfBoundsTimeShift(const Expressions::Nodes::Node* node,
         {
             return true;
         }
+        // Shifts compose: the shifted operand is evaluated at the shifted time step
+        return hasOutOfBoundsTimeShift(timeShiftNode->left(),
+                                       static_cast<unsigned>(shiftedTimestep),
+                                       ctx,
+                                       evalVisitor)
+               || hasOutOfBoundsTimeShift(timeShiftNode->right(), timeStep, ctx, evalVisitor);
     }
 
     if (const auto* portFieldSumNode = dynamic_cast<const Expressions::Nodes::PortFieldSumNode*>(
