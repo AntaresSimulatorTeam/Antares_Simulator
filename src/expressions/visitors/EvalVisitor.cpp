@@ -3,11 +3,9 @@
 
 #include "antares/expressions/visitors/EvalVisitor.h"
 
-#include <algorithm>
 #include <numeric>
 #include <ranges>
 #include <stdexcept>
-#include <vector>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/TimeSumUtils.h>
@@ -43,27 +41,19 @@ EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
 {
 }
 
-bool EvalVisitor::hasOutOfBoundsTimeShiftInConnectedPortFields(const Nodes::PortFieldSumNode* node,
-                                                               unsigned timeStep) const
+const ModelerStudy::SystemModel::Component& EvalVisitor::component() const
 {
-    const auto& connectionEnds = component_.componentConnectionsViaPort(node->getPortName());
-    return std::ranges::any_of(
-      connectionEnds,
-      [this, node, timeStep](const ModelerStudy::SystemModel::ConnectionEnd& connectionEnd)
-      {
-          const auto& connectedComponent = connectionEnd.component();
-          EvalVisitor connectedVisitor(optimContainer_,
-                                       fillContext_,
-                                       connectedComponent,
-                                       data_,
-                                       scenario_,
-                                       areaPriceProvider_);
-          return LinearProblem::hasOutOfBoundsTimeShift(
-            connectedComponent.nodeAtPortField(connectionEnd.port().Id(), node->getFieldName()),
-            timeStep,
-            fillContext_,
-            connectedVisitor);
-      });
+    return component_;
+}
+
+EvalVisitor EvalVisitor::forComponent(const ModelerStudy::SystemModel::Component& component) const
+{
+    return EvalVisitor(optimContainer_,
+                       fillContext_,
+                       component,
+                       data_,
+                       scenario_,
+                       areaPriceProvider_);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::SumNode* node)
