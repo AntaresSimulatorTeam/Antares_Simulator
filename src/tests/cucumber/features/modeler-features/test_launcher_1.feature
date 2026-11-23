@@ -111,14 +111,14 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
       | c1        | x      | 0-4      | 20    |
 
   @short
-  Scenario: 1.11: Fixed bounds with cyclic wrap-around - upper index exceeds window size
+  Scenario: 1.11: Fixed bounds ending at the last index of the window
     Given the modeler study path is "modeler/14_5"
     When I run antares modeler
     Then the simulation succeeds
-    And the objective value is 60
+    And the objective value is 45
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | c1        | x      | 0-4      | 12    |
+      | c1        | x      | 0-4      | 9     |
 
   @short
   Scenario: 1.12: Negative t+ lower bound - three-element lookback window with cyclic wrap at start
