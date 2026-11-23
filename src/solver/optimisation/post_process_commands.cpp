@@ -90,11 +90,9 @@ void RemixHydroPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 using namespace Antares::Data::AdequacyPatch;
 
 UpdateMrgPriceAfterCSRcmd::UpdateMrgPriceAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo,
-                                                     AreaList& areas,
-                                                     unsigned int numSpace):
+                                                     AreaList& areas):
     basePostProcessCommand(problemeHebdo),
-    area_list_(areas),
-    numSpace_(numSpace)
+    area_list_(areas)
 {
 }
 

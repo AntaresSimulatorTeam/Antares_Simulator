@@ -43,13 +43,11 @@ class UpdateMrgPriceAfterCSRcmd final: public basePostProcessCommand
 {
 public:
     UpdateMrgPriceAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo,
-                              AreaList& areas,
-                              unsigned int numSpace);
+                              AreaList& areas);
     void execute(const optRuntimeData&) override;
 
 private:
     const AreaList& area_list_;
-    unsigned int numSpace_ = 0;
 };
 
 class DTGnettingAfterCSRcmd final: public basePostProcessCommand
