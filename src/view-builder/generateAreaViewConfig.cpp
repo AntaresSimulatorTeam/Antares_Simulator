@@ -10,6 +10,7 @@
 #include <vector>
 
 #include <antares/solver/optimisation/opt_rename_problem.h>
+#include <antares/study/InactiveComponentsAnalyzerBuilder.h>
 #include <antares/study/area/links.h>
 #include <antares/study/filter.h>
 #include <antares/view-builder/legacyToYaml.h>
@@ -131,21 +132,21 @@ ViewDefinition definition(ViewType type)
 {
     switch (type)
     {
-    case ViewType::area:
+    case ViewType::AREA:
         return {"view_area", "view_config_area.yml", "antares_legacy_area_catalog", areaMetrics};
-    case ViewType::link:
+    case ViewType::LINK:
         return {"view_link", "view_config_link.yml", "antares_legacy_link_catalog", linkMetrics};
-    case ViewType::thermal:
+    case ViewType::THERMAL:
         return {"view_thermal",
                 "view_config_thermal.yml",
                 "antares_legacy_thermal_cluster_catalog",
                 thermalMetrics};
-    case ViewType::storage:
+    case ViewType::STORAGE:
         return {"view_storage",
                 "view_config_sts.yml",
                 "antares_legacy_short_term_storage_catalog",
                 storageMetrics};
-    case ViewType::renewable:
+    case ViewType::RENEWABLE:
         return {"view_renewable",
                 "view_config_renewable.yml",
                 "antares_legacy_renewable_cluster_catalog",
@@ -159,7 +160,10 @@ ViewDefinition definition(ViewType type)
 YAML::Node generateViewConfig(const Data::Study& study, ViewType type)
 {
     const auto def = definition(type);
-    const bool isLink = type == ViewType::link;
+    const bool isLink = type == ViewType::LINK;
+    const auto inactiveComponents = study.parameters.geographicTrimming
+                                      ? Data::BuildInactiveComponentsAnalyzer(study)
+                                      : nullptr;
     YAML::Node view;
     view["id"] = std::string(def.id);
     view["taxonomy"] = "antares_legacy_taxonomy";
@@ -194,6 +198,7 @@ YAML::Node generateViewConfig(const Data::Study& study, ViewType type)
             {
                 std::vector<std::string> selected;
                 size_t locationCount = districts.size();
+                uint32_t interco = 0;
                 study.areas.each(
                   [&](const Data::Area& area)
                   {
@@ -201,6 +206,13 @@ YAML::Node generateViewConfig(const Data::Study& study, ViewType type)
                       {
                           for (const auto& link: area.links | std::views::values)
                           {
+                              const bool linkIsInactive = inactiveComponents->linkIsAllZero(
+                                interco);
+                              ++interco;
+                              if (linkIsInactive)
+                              {
+                                  continue;
+                              }
                               ++locationCount;
                               const auto filter = scenario ? link->filterSynthesis
                                                            : link->filterYearByYear;
@@ -282,7 +294,7 @@ YAML::Node generateViewConfig(const Data::Study& study, ViewType type)
 
 YAML::Node generateAreaViewConfig(const Data::Study& study)
 {
-    return generateViewConfig(study, ViewType::area);
+    return generateViewConfig(study, ViewType::AREA);
 }
 
 bool exportViewConfig(const Data::Study& study, Solver::IResultWriter* resultWriter, ViewType type)

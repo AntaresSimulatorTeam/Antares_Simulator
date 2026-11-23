@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE(other_views_thematic_variable_mappings_and_exports)
     };
 
     const std::vector<ViewCase> cases = {
-      {ViewType::link,
+      {ViewType::LINK,
        "view_link",
        "view_config_link.yml",
        "antares_legacy_link_catalog",
@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE(other_views_thematic_variable_mappings_and_exports)
         {"CONG. PROB -", "CONG_PROB_INDIR"},
         {"HURDLE COST", "HURDLE_COST"},
         {"LOOP FLOW", "LOOP_FLOW"}}},
-      {ViewType::thermal,
+      {ViewType::THERMAL,
        "view_thermal",
        "view_config_thermal.yml",
        "antares_legacy_thermal_cluster_catalog",
@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE(other_views_thematic_variable_mappings_and_exports)
         {"Profit by plant", "PROFIT"},
         {"NODU by plant", "NODU"},
         {"NP Cost by plant", "NP_COST"}}},
-      {ViewType::storage,
+      {ViewType::STORAGE,
        "view_storage",
        "view_config_sts.yml",
        "antares_legacy_short_term_storage_catalog",
@@ -182,7 +182,7 @@ BOOST_AUTO_TEST_CASE(other_views_thematic_variable_mappings_and_exports)
         {"STS withdrawal by plant", "P_WITHDRAWAL"},
         {"STS lvl by plant", "LEVELS"},
         {"STS Cashflow By Cluster", "CASHFLOW"}}},
-      {ViewType::renewable,
+      {ViewType::RENEWABLE,
        "view_renewable",
        "view_config_renewable.yml",
        "antares_legacy_renewable_cluster_catalog",
@@ -202,7 +202,7 @@ BOOST_AUTO_TEST_CASE(other_views_thematic_variable_mappings_and_exports)
               writer.getMap().at("views/input/" + test.filename))["view"];
             BOOST_CHECK_EQUAL(view["id"].as<std::string>(), test.id);
             BOOST_CHECK_EQUAL(view["scope"]["location"]["taxonomy-category"].as<std::string>(),
-                              test.type == ViewType::link ? "link" : "balance");
+                              test.type == ViewType::LINK ? "link" : "balance");
             BOOST_CHECK_EQUAL(view["aggregations-patterns"].size(), 10);
             BOOST_CHECK_EQUAL(view["metrics"].size(), test.mappings.size());
             std::set<std::string> expectedMetrics;
@@ -252,7 +252,7 @@ BOOST_AUTO_TEST_CASE(cluster_views_share_area_and_district_aggregations)
     options.filterYearByYear = filterNone;
     options.filterSynthesis = filterDaily;
     study->setsOfAreas.add("eu", members, options);
-    for (auto type: {ViewType::thermal, ViewType::storage, ViewType::renewable})
+    for (auto type: {ViewType::THERMAL, ViewType::STORAGE, ViewType::RENEWABLE})
     {
         const auto view = generateViewConfig(*study, type)["view"];
         BOOST_REQUIRE_EQUAL(view["scope"]["extra-locations"].size(), 1);
@@ -271,7 +271,7 @@ BOOST_AUTO_TEST_CASE(cluster_views_skipped_without_any_aggregation)
     de->filterYearByYear = de->filterSynthesis = filterNone;
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
-    for (auto type: {ViewType::thermal, ViewType::storage, ViewType::renewable})
+    for (auto type: {ViewType::THERMAL, ViewType::STORAGE, ViewType::RENEWABLE})
     {
         BOOST_CHECK(!exportViewConfig(*study, &writer, type));
     }
@@ -287,6 +287,8 @@ BOOST_AUTO_TEST_CASE(link_view_uses_link_filters_not_area_or_district_filters)
     AreaAddLinkBetweenAreas(de, it);
     auto& first = *fr->links.begin()->second;
     auto& second = *de->links.begin()->second;
+    second.directCapacities.fill(1.0);
+    second.indirectCapacities.fill(1.0);
     first.filterYearByYear = filterHourly | filterDaily;
     first.filterSynthesis = filterDaily;
     second.filterYearByYear = filterDaily;
@@ -296,7 +298,7 @@ BOOST_AUTO_TEST_CASE(link_view_uses_link_filters_not_area_or_district_filters)
     Sets::Options options;
     study->setsOfAreas.add("eu", members, options);
 
-    const auto view = generateViewConfig(*study, ViewType::link)["view"];
+    const auto view = generateViewConfig(*study, ViewType::LINK)["view"];
     BOOST_CHECK(!view["scope"]["extra-locations"].IsDefined());
     BOOST_REQUIRE_EQUAL(view["aggregations-patterns"].size(), 3);
     BOOST_CHECK(locations(findPattern(view, "hour_ind"))
@@ -309,7 +311,7 @@ BOOST_AUTO_TEST_CASE(link_view_uses_link_filters_not_area_or_district_filters)
     second.filterYearByYear = second.filterSynthesis = filterNone;
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
-    BOOST_CHECK(!exportViewConfig(*study, &writer, ViewType::link));
+    BOOST_CHECK(!exportViewConfig(*study, &writer, ViewType::LINK));
     BOOST_CHECK(writer.getMap().empty());
 }
 
@@ -401,7 +403,7 @@ BOOST_AUTO_TEST_CASE(area_view_thematic_selection_combines_with_geographic_trimm
 
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
-    BOOST_REQUIRE(exportViewConfig(*study, &writer, ViewType::area));
+    BOOST_REQUIRE(exportViewConfig(*study, &writer, ViewType::AREA));
     const auto view = YAML::Load(writer.getMap().at("views/input/view_config_area.yml"))["view"];
     BOOST_REQUIRE_EQUAL(view["metrics"].size(), 2);
     BOOST_CHECK(metricIds(view)
@@ -421,7 +423,7 @@ BOOST_AUTO_TEST_CASE(area_view_skipped_when_no_mapped_metric_is_selected)
     BOOST_CHECK_EQUAL(view["metrics"].size(), 0);
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
-    BOOST_CHECK(!exportViewConfig(*study, &writer, ViewType::area));
+    BOOST_CHECK(!exportViewConfig(*study, &writer, ViewType::AREA));
     BOOST_CHECK(writer.getMap().empty());
 }
 
@@ -561,8 +563,20 @@ BOOST_AUTO_TEST_CASE(area_view_skipped_when_no_aggregation_is_selected)
     BOOST_CHECK_GT(view["metrics"].size(), 0);
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
-    BOOST_CHECK(!exportViewConfig(*study, &writer, ViewType::area));
+    BOOST_CHECK(!exportViewConfig(*study, &writer, ViewType::AREA));
     BOOST_CHECK(writer.getMap().empty());
+}
+
+BOOST_AUTO_TEST_CASE(link_view_skips_inactive_links)
+{
+    study->parameters.geographicTrimming = true;
+    auto& link = *fr->links.begin()->second;
+    link.filterYearByYear = filterHourly;
+    link.directCapacities.fill(0.0);
+    link.indirectCapacities.fill(0.0);
+
+    const auto view = generateViewConfig(*study, ViewType::LINK)["view"];
+    BOOST_CHECK_EQUAL(view["aggregations-patterns"].size(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(area_view_written_when_only_district_aggregation_is_selected)
@@ -581,7 +595,7 @@ BOOST_AUTO_TEST_CASE(area_view_written_when_only_district_aggregation_is_selecte
 
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
-    BOOST_REQUIRE(exportViewConfig(*study, &writer, ViewType::area));
+    BOOST_REQUIRE(exportViewConfig(*study, &writer, ViewType::AREA));
     const auto view = YAML::Load(writer.getMap().at("views/input/view_config_area.yml"))["view"];
     BOOST_REQUIRE_EQUAL(view["aggregations-patterns"].size(), 1);
     BOOST_CHECK(locations(findPattern(view, "hour_all")) == (std::set<std::string>{"eu"}));
@@ -592,7 +606,7 @@ BOOST_AUTO_TEST_CASE(export_area_view_uses_views_input_directory)
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
     exportSystemForView(*study, &writer);
-    exportViewConfig(*study, &writer, ViewType::area);
+    exportViewConfig(*study, &writer, ViewType::AREA);
     BOOST_REQUIRE_EQUAL(writer.getMap().size(), 2);
     BOOST_CHECK(writer.getMap().contains("views/input/system-for-views.yml"));
     BOOST_REQUIRE(writer.getMap().contains("views/input/view_config_area.yml"));

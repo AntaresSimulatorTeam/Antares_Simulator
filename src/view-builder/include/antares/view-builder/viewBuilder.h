@@ -13,11 +13,11 @@ namespace Antares::ViewBuilder
 
 enum class ViewType
 {
-    area,
-    link,
-    thermal,
-    storage,
-    renewable,
+    AREA,
+    LINK,
+    THERMAL,
+    STORAGE,
+    RENEWABLE,
 };
 
 void exportSystemForView(const Data::Study& study, Solver::IResultWriter* resultWriter);

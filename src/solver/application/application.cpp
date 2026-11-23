@@ -465,11 +465,11 @@ void Application::execute()
     logs.info() << "system-for-views.yml has been generated in the output folder's views/input "
                    "subfolder.";
     for (const auto& [type, filename]: {
-           std::pair{ViewBuilder::ViewType::area, "view_config_area.yml"},
-           std::pair{ViewBuilder::ViewType::link, "view_config_link.yml"},
-           std::pair{ViewBuilder::ViewType::thermal, "view_config_thermal.yml"},
-           std::pair{ViewBuilder::ViewType::storage, "view_config_sts.yml"},
-           std::pair{ViewBuilder::ViewType::renewable, "view_config_renewable.yml"},
+           std::pair{ViewBuilder::ViewType::AREA, "view_config_area.yml"},
+           std::pair{ViewBuilder::ViewType::LINK, "view_config_link.yml"},
+           std::pair{ViewBuilder::ViewType::THERMAL, "view_config_thermal.yml"},
+           std::pair{ViewBuilder::ViewType::STORAGE, "view_config_sts.yml"},
+           std::pair{ViewBuilder::ViewType::RENEWABLE, "view_config_renewable.yml"},
          })
     {
         if (ViewBuilder::exportViewConfig(*pStudy, resultWriter.get(), type))
