@@ -32,7 +32,7 @@ struct Fixture
 
 BOOST_AUTO_TEST_SUITE(check_location)
 
-BOOST_FIXTURE_TEST_CASE(reports_first_location_error, Fixture)
+BOOST_FIXTURE_TEST_CASE(reports_all_location_errors, Fixture)
 {
     Antares::Expressions::Registry<Node> expressionRegistry;
     Node* first = expressionRegistry.create<VariableNode>("first", 0);
@@ -56,13 +56,18 @@ BOOST_FIXTURE_TEST_CASE(reports_first_location_error, Fixture)
                     .withId("system")
                     .build();
 
-    const std::string expected
+    const std::string firstError
       = "Model 'base model': In expression 'first + second': Error for variable 'first': "
+        "Location doesn't match the expression location (variable location: master, "
+        "expression location: subproblems)";
+    const std::string secondError
+      = "Model 'base model': In expression 'first + second': Error for variable 'second': "
         "Location doesn't match the expression location (variable location: master, "
         "expression location: subproblems)";
     BOOST_CHECK_EXCEPTION(checkModel(model, system),
                           LocationError,
-                          [&expected](const LocationError& e) { return e.what() == expected; });
+                          [&](const LocationError& e)
+                          { return e.what() == firstError + "\n" + secondError; });
 }
 
 BOOST_FIXTURE_TEST_CASE(one_var_good_one_var_throw, Fixture)
@@ -230,6 +235,119 @@ BOOST_FIXTURE_TEST_CASE(porfieldsum_throw, Fixture)
         "location: Model "
         "'model2': In expression 'var1': Error for variable 'var1': Location doesn't match the "
         "expression location (variable location: master, expression location: subproblems)"));
+}
+
+BOOST_FIXTURE_TEST_CASE(stacks_errors_in_nested_connected_port_fields, Fixture)
+{
+    PortField field("field");
+    PortType portType("port", std::vector<PortField>{field}, {"field", "", "", ""});
+    Port port("port", portType);
+
+    Antares::Expressions::Registry<Node> innerRegistry;
+    auto* first = innerRegistry.create<VariableNode>("first", 0);
+    auto* second = innerRegistry.create<VariableNode>("second", 0);
+    auto* reduced = innerRegistry.create<FunctionNode>(FunctionNodeType::reduced_cost,
+                                                       innerRegistry.create<VariableNode>("shared",
+                                                                                          0));
+    auto* innerRoot = innerRegistry.create<SumNode>(innerRegistry.create<SumNode>(first, second),
+                                                    reduced);
+    Expression innerExpression("first + second + reduced_cost(shared)",
+                               Antares::Expressions::NodeRegistry(innerRoot,
+                                                                  std::move(innerRegistry)));
+    std::vector<Variable> variables;
+    variables.push_back({"first", {}, {}, ValueType::FLOAT, {}, {}, Location::MASTER});
+    variables.push_back({"second", {}, {}, ValueType::FLOAT, {}, {}, Location::MASTER});
+    variables.push_back(
+      {"shared", {}, {}, ValueType::FLOAT, {}, {}, Location::MASTER_AND_SUBPROBLEMS});
+    std::vector<PortFieldDefinition> innerDefinitions;
+    innerDefinitions.emplace_back(port, field, std::move(innerExpression));
+    auto innerModel = modelBuilder.withId("inner")
+                        .withPorts({port})
+                        .withVariables(std::move(variables))
+                        .withPortFieldDefinitions(std::move(innerDefinitions))
+                        .build();
+
+    Antares::Expressions::Registry<Node> middleRegistry;
+    auto* middleRoot = middleRegistry.create<PortFieldSumNode>("port", "field");
+    Expression middleExpression("sum_connections(port.field)",
+                                Antares::Expressions::NodeRegistry(middleRoot,
+                                                                   std::move(middleRegistry)));
+    std::vector<PortFieldDefinition> middleDefinitions;
+    middleDefinitions.emplace_back(port, field, std::move(middleExpression));
+    auto middleModel = modelBuilder.withId("middle")
+                         .withPorts({port})
+                         .withPortFieldDefinitions(std::move(middleDefinitions))
+                         .build();
+    auto outerModel = modelBuilder.withId("outer").withPorts({port}).build();
+
+    auto inner = componentBuilder.withId("inner-component").withModel(&innerModel).build();
+    auto middle = componentBuilder.withId("middle-component").withModel(&middleModel).build();
+    auto outer = componentBuilder.withId("outer-component").withModel(&outerModel).build();
+    middle.addComponentConnection("port", ConnectionEnd(inner, innerModel.Ports().at("port")));
+    outer.addComponentConnection("port", ConnectionEnd(middle, middleModel.Ports().at("port")));
+    auto system = systemBuilder.withId("system").withComponents({outer, middle, inner}).build();
+    auto* root = registry.create<PortFieldSumNode>("port", "field");
+
+    BOOST_CHECK_EXCEPTION(
+      checkExpression(root, Location::SUBPROBLEMS, outerModel, system, "outer expression"),
+      LocationError,
+      [](const LocationError& e)
+      {
+          const std::string message = e.what();
+          const std::string context
+            = "In model 'outer': In expression 'outer expression': this "
+              "'sum_connections(port.field)' "
+              "is referencing an expression containing an incorrect location: "
+              "In model 'middle': In expression 'sum_connections(port.field)': this "
+              "'sum_connections(port.field)' is referencing an expression containing an incorrect "
+              "location: Model 'inner':";
+          const auto first = message.find(context);
+          const auto second = message.find(context, first + context.size());
+          const auto third = message.find(context, second + context.size());
+          return first == 0 && second != std::string::npos && third != std::string::npos
+                 && message.find("Error for variable 'first'") != std::string::npos
+                 && message.find("Error for variable 'second'") != std::string::npos
+                 && message.find("Error for variable 'shared': reduced_cost") != std::string::npos;
+      });
+}
+
+BOOST_FIXTURE_TEST_CASE(stacks_errors_across_models, Fixture)
+{
+    std::vector<Model> models;
+    for (const auto& name: {"first", "second"})
+    {
+        Antares::Expressions::Registry<Node> expressionRegistry;
+        auto* node = expressionRegistry.create<VariableNode>(name, 0);
+        Expression expression(name,
+                              Antares::Expressions::NodeRegistry(node,
+                                                                 std::move(expressionRegistry)));
+        std::vector<Variable> variables;
+        variables.push_back({name, {}, {}, ValueType::FLOAT, {}, {}, Location::MASTER});
+        std::vector<Constraint> constraints;
+        constraints.emplace_back("constraint", std::move(expression), Location::SUBPROBLEMS);
+        models.push_back(modelBuilder.withId(name)
+                           .withVariables(std::move(variables))
+                           .withConstraints(std::move(constraints))
+                           .build());
+    }
+    auto systemModel = modelBuilder.withId("system-model").build();
+    auto system = systemBuilder.withId("system")
+                    .withComponents(
+                      {componentBuilder.withId("component").withModel(&systemModel).build()})
+                    .build();
+    Antares::Solver::ModelerData data;
+    data.system = std::make_unique<System>(std::move(system));
+    data.libraries.push_back(
+      LibraryBuilder().withId("library").withModels(std::move(models)).build());
+
+    BOOST_CHECK_EXCEPTION(checkLocations(data),
+                          LocationError,
+                          [](const LocationError& e)
+                          {
+                              const std::string message = e.what();
+                              return message.find("Model 'first'") != std::string::npos
+                                     && message.find("Model 'second'") != std::string::npos;
+                          });
 }
 
 BOOST_AUTO_TEST_SUITE_END()
