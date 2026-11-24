@@ -10,6 +10,8 @@
 #include <string_view>
 #include <utility>
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
@@ -252,20 +254,14 @@ void connectLinkCapacity(const YmlSystem::LinkCapacityConnection& connection,
 void checkLinkCapacityConnectionsAreUnique(
   const std::vector<YmlSystem::LinkCapacityConnection>& connections)
 {
-    auto toLower = [](std::string value)
-    {
-        std::ranges::transform(value,
-                               value.begin(),
-                               [](unsigned char c) { return std::tolower(c); });
-        return value;
-    };
     std::map<std::pair<std::string, std::string>, const YmlSystem::LinkCapacityConnection*>
       connectedLinks;
     for (const auto& connection: connections)
     {
-        auto [it, inserted] = connectedLinks.try_emplace({toLower(connection.linkComponent.from),
-                                                          toLower(connection.linkComponent.to)},
-                                                         &connection);
+        auto [it, inserted] = connectedLinks.try_emplace(
+          {boost::algorithm::to_lower_copy(connection.linkComponent.from),
+           boost::algorithm::to_lower_copy(connection.linkComponent.to)},
+          &connection);
         if (!inserted)
         {
             throw InputError(fmt::format(
