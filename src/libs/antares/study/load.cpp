@@ -235,6 +235,10 @@ void Study::checkModelerDataCompatibility() const
 {
     // The GEMS capacity replaces the link's NTC: it would silently override a link set to
     // ignore its transmission capacities or to copper plate, globally or locally.
+    if (!modelerInput_ || !modelerInput_->system)
+    {
+        return;
+    }
     bool hasLinkCapacityConnection = false;
     for (const auto& component: modelerInput_->system->Components())
     {
@@ -243,6 +247,20 @@ void Study::checkModelerDataCompatibility() const
             hasLinkCapacityConnection = true;
             // Unknown links are reported when the link capacity constraints are built
             const auto* link = areas.findLink(linkConnection.from, linkConnection.to);
+            if (link
+                && (link->from->id != linkConnection.from || link->with->id != linkConnection.to))
+            {
+                throw Error::LoadingError(fmt::format(
+                  "Link capacity connection of component \"{}\" (port \"{}\") references "
+                  "link \"{} -> {}\" in the wrong order: the link is defined from \"{}\" to "
+                  "\"{}\".",
+                  component.Id(),
+                  portId,
+                  linkConnection.from,
+                  linkConnection.to,
+                  link->from->id,
+                  link->with->id));
+            }
             if (link && link->transmissionCapacities != LocalTransmissionCapacities::enabled)
             {
                 throw Error::LoadingError(fmt::format(
