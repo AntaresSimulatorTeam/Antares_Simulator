@@ -285,14 +285,12 @@ void Component::addThermalCapacityConnection(const std::string& portId,
     portToThermalConnections_.try_emplace(portId, ThermalComponent{toLowerCase(areaId), clusterId});
 }
 
-void Component::addLinkCapacityConnection(const std::string& portId,
-                                          const std::string& fromAreaId,
-                                          const std::string& toAreaId)
+void Component::addLinkCapacityConnection(const std::string& portId, const LinkComponent& link)
 {
     const std::string exceptionPrefix = fmt::format(
       "Cannot connect link '(from = {}, to = {})' to port '{}' of component '{}': ",
-      fromAreaId,
-      toAreaId,
+      link.from,
+      link.to,
       portId,
       data_.id);
     const auto& port = findPort(portId, exceptionPrefix);
@@ -306,18 +304,17 @@ void Component::addLinkCapacityConnection(const std::string& portId,
     }
     requirePortFieldDefinition(portId, linkCapacityConnectionFields->direct, exceptionPrefix);
     requirePortFieldDefinition(portId, linkCapacityConnectionFields->indirect, exceptionPrefix);
-    if (portToLinkConnections_.contains(portId))
+    const auto [it, inserted] = portToLinkConnections_.try_emplace(
+      portId,
+      LinkComponent{toLowerCase(link.from), toLowerCase(link.to)});
+    if (!inserted)
     {
-        const auto& connected = portToLinkConnections_.at(portId);
         throw std::invalid_argument(
           exceptionPrefix
           + fmt::format("port is already connected to '(from = {}, to = {})'",
-                        connected.from,
-                        connected.to));
+                        it->second.from,
+                        it->second.to));
     }
-    portToLinkConnections_.try_emplace(portId,
-                                       LinkComponent{toLowerCase(fromAreaId),
-                                                     toLowerCase(toAreaId)});
 }
 
 std::optional<std::string> Component::areaConnectedToPort(const std::string& portId) const
@@ -334,16 +331,6 @@ std::optional<ThermalComponent> Component::thermalCapacityConnectedToPort(
 {
     const auto it = portToThermalConnections_.find(portId);
     if (it == portToThermalConnections_.end())
-    {
-        return std::nullopt;
-    }
-    return it->second;
-}
-
-std::optional<LinkComponent> Component::linkCapacityConnectedToPort(const std::string& portId) const
-{
-    const auto it = portToLinkConnections_.find(portId);
-    if (it == portToLinkConnections_.end())
     {
         return std::nullopt;
     }

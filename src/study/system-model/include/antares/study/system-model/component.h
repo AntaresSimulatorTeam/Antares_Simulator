@@ -112,9 +112,7 @@ public:
     void addThermalCapacityConnection(const std::string& portId,
                                       const std::string& areaId,
                                       const std::string& clusterId);
-    void addLinkCapacityConnection(const std::string& portId,
-                                   const std::string& fromAreaId,
-                                   const std::string& toAreaId);
+    void addLinkCapacityConnection(const std::string& portId, const LinkComponent& link);
     std::optional<std::string> areaConnectedToPort(const std::string& portId) const;
 
     const std::map<std::string, std::string>& portToAreaConnections() const;
@@ -123,7 +121,6 @@ public:
     const std::map<std::string, LinkComponent>& portToLinkCapacityConnections() const;
 
     std::optional<ThermalComponent> thermalCapacityConnectedToPort(const std::string& portId) const;
-    std::optional<LinkComponent> linkCapacityConnectedToPort(const std::string& portId) const;
 
     const Port& findPort(const std::string& portId, const std::string& prefixMessage) const;
 

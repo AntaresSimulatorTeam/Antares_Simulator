@@ -567,20 +567,60 @@ BOOST_AUTO_TEST_CASE(successfully_connect_link_capacity_to_port)
                        .withScenarioGroupId("sg")
                        .build();
 
-    BOOST_CHECK_EQUAL(component.linkCapacityConnectedToPort("portACDef").has_value(), false);
-    component.addLinkCapacityConnection("portACDef", "de", "fr");
-    const auto linkConnectionOpt = component.linkCapacityConnectedToPort("portACDef");
-    BOOST_CHECK_EQUAL(linkConnectionOpt.has_value(), true);
-    const auto [from, to] = linkConnectionOpt.value();
+    BOOST_CHECK(component.portToLinkCapacityConnections().empty());
+    component.addLinkCapacityConnection("portACDef", {"DE", "fr"});
+    BOOST_REQUIRE_EQUAL(component.portToLinkCapacityConnections().size(), 1);
+    const auto& [from, to] = component.portToLinkCapacityConnections().at("portACDef");
     BOOST_CHECK_EQUAL(from, "de");
     BOOST_CHECK_EQUAL(to, "fr");
-    BOOST_CHECK_EQUAL(component.portToLinkCapacityConnections().size(), 1);
 
-    BOOST_CHECK_EXCEPTION(component.addLinkCapacityConnection("portACDef", "be", "fr"),
+    BOOST_CHECK_EXCEPTION(component.addLinkCapacityConnection("portACDef", {"be", "fr"}),
                           std::invalid_argument,
                           containsMessage("Cannot connect link '(from = be, to = fr)' to port "
                                           "'portACDef' of component 'myComponent': port is already "
                                           "connected to '(from = de, to = fr)'"));
+}
+
+BOOST_AUTO_TEST_CASE(connecting_link_capacity_fails_on_invalid_ports)
+{
+    PortField direct("direct");
+    PortField indirect("indirect");
+    PortType linkType("linkType", {direct, indirect}, {}, "", "direct", "indirect");
+    PortType plainType("plainType", {direct, indirect}, {}, "", "", "");
+
+    Port linkPortNoDirect("linkPortNoDirect", linkType);
+    Port linkPortNoIndirect("linkPortNoIndirect", linkType);
+    Port plainPort("plainPort", plainType);
+
+    std::vector<PortFieldDefinition> portFieldDefs;
+    portFieldDefs.emplace_back(linkPortNoDirect, indirect, Expression());
+    portFieldDefs.emplace_back(linkPortNoIndirect, direct, Expression());
+
+    ModelBuilder model_builder;
+    auto model = model_builder.withId("myModel")
+                   .withPorts({linkPortNoDirect, linkPortNoIndirect, plainPort})
+                   .withPortFieldDefinitions(std::move(portFieldDefs))
+                   .build();
+    ComponentBuilder component_builder;
+    auto component = component_builder.withId("myComponent")
+                       .withModel(&model)
+                       .withScenarioGroupId("sg")
+                       .build();
+
+    BOOST_CHECK_EXCEPTION(component.addLinkCapacityConnection("unknownPort", {"de", "fr"}),
+                          std::invalid_argument,
+                          containsMessage("Port with id 'unknownPort' not found"));
+    BOOST_CHECK_EXCEPTION(component.addLinkCapacityConnection("plainPort", {"de", "fr"}),
+                          std::invalid_argument,
+                          containsMessage("port type 'plainType' has no link-capacity-connection "
+                                          "field IDs defined"));
+    BOOST_CHECK_EXCEPTION(component.addLinkCapacityConnection("linkPortNoDirect", {"de", "fr"}),
+                          std::invalid_argument,
+                          containsMessage("port field 'direct' is not defined"));
+    BOOST_CHECK_EXCEPTION(component.addLinkCapacityConnection("linkPortNoIndirect", {"de", "fr"}),
+                          std::invalid_argument,
+                          containsMessage("port field 'indirect' is not defined"));
+    BOOST_CHECK(component.portToLinkCapacityConnections().empty());
 }
 
 BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_fails_because_port_definition_missing)

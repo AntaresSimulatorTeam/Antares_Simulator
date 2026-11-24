@@ -239,8 +239,8 @@ void connectLinkCapacity(const YmlSystem::LinkCapacityConnection& connection,
 {
     auto& component = findComponent(connection.componentId, components);
     component.addLinkCapacityConnection(connection.portId,
-                                        connection.linkComponent.from,
-                                        connection.linkComponent.to);
+                                        {connection.linkComponent.from,
+                                         connection.linkComponent.to});
 }
 
 /**
