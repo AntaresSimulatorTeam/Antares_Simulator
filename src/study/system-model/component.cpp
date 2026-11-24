@@ -274,12 +274,12 @@ void Component::addThermalCapacityConnection(const std::string& portId,
     requirePortFieldDefinition(portId, thermalCapacityConnectionFieldId.value(), exceptionPrefix);
     if (portToThermalConnections_.contains(portId))
     {
-        const auto& connected = portToThermalConnections_.at(portId);
-        throw std::invalid_argument(
-          exceptionPrefix
-          + fmt::format("port is already connected to '(area = {}, clusterId = {})'",
-                        connected.areaId,
-                        connected.clusterId));
+        const auto msg = fmt::format("port '{}' port is already connected to '(area = {}, "
+                                     "clusterId = {})'",
+                                     portId,
+                                     areaId,
+                                     clusterId);
+        throw std::invalid_argument(msg);
     }
 
     portToThermalConnections_.try_emplace(portId, ThermalComponent{toLowerCase(areaId), clusterId});

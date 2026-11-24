@@ -532,12 +532,11 @@ BOOST_AUTO_TEST_CASE(successfully_connect_thermal_capacity_to_port)
     BOOST_CHECK_EQUAL(clusterId, "cluster57");
     BOOST_CHECK_EQUAL(component.portToThermalCapacityConnections().size(), 1);
 
-    BOOST_CHECK_EXCEPTION(
-      component.addThermalCapacityConnection("portACDef", "area2", "cluster58"),
-      std::invalid_argument,
-      containsMessage("Cannot connect thermal capacity '(area = area2, clusterId = cluster58)' to "
-                      "port 'portACDef' of component 'myComponent': port is already connected to "
-                      "'(area = area1, clusterId = cluster57)'"));
+    BOOST_CHECK_EXCEPTION(component.addThermalCapacityConnection("portACDef", "area2", "cluster58"),
+                          std::invalid_argument,
+                          containsMessage(
+                            "port 'portACDef' port is already connected to '(area = area2, "
+                            "clusterId = cluster58)'"));
 }
 
 BOOST_AUTO_TEST_CASE(successfully_connect_link_capacity_to_port)
