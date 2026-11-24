@@ -50,6 +50,7 @@ void CurtailmentSharing::resetThresholds()
 {
     // Initialize all thresholds values for adequacy patch
     thresholdRun = defaultThresholdToRunCurtailmentSharing;
+    thresholdEns = defaultThresholdEns;
     thresholdDisplayViolations = defaultThresholdDisplayLocalMatchingRuleViolations;
     thresholdVarBoundsRelaxation = defaultValueThresholdVarBoundsRelaxation;
 }
@@ -98,6 +99,10 @@ bool CurtailmentSharing::updateFromKeyValue(const std::string& key, const std::s
     {
         return Antares::stringToDouble(value, thresholdRun);
     }
+    if (key == "threshold-ens")
+    {
+        return Antares::stringToDouble(value, thresholdEns);
+    }
     if (key == "threshold-display-local-matching-rule-violations")
     {
         return Antares::stringToDouble(value, thresholdDisplayViolations);
@@ -134,6 +139,7 @@ void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
         out.emplace_back("MAX MRG CSR");
         out.emplace_back("OV. COST CSR");
         out.emplace_back("MRG. PRICE CSR");
+        out.emplace_back("NPCAP HOURS CSR");
     }
 }
 

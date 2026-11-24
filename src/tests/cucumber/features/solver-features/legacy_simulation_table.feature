@@ -392,6 +392,24 @@ Feature: Legacy variables in simulation table
       | 0     | areain-2_node | price  | 0        | 0        | 800   |
 
   @short
+  Scenario: ENS threshold is reflected in the adequacy patch simulation table
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
+    And the adequacy patch ENS threshold is 200 MWh
+    When I run antares simulator with --output=all
+    Then the simulation succeeds
+    And the modeler outputs from stage "optim-nb-2" contain the following entries with relative tolerance 1e-4
+      | block | component     | output            | timestep | scenario | value |
+      | 0     | areain-1_node | unsupplied_energy | 0        | 0        | 0     |
+      | 0     | areain-1_node | price             | 0        | 0        | 800   |
+    And the modeler outputs from stage "adq-patch" contain the following entries with relative tolerance 1e-4
+      | block | component     | output                      | timestep | scenario | value    |
+      | 0     | areain-1_node | unsupplied_energy           | 0        | 0        | 0        |
+      | 0     | areain-1_node | is_loss_of_load             | 0        | 0        | 0        |
+      | 0     | areain-1_node | price                       | 0        | 0        | 800      |
+      | 0     | areain-1_node | balance_port.price          | 0        | 0        | 800      |
+      | 0     | areain-2_node | unsupplied_energy           | 0        | 0        | 200.0474 |
+
+  @short
   Scenario: Only the selected stages get a simulation table
     # Producing every stage costs memory and time for tables nobody reads, so
     # --simulation-table-stages restricts the run to the stages asked for.

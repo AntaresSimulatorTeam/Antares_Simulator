@@ -615,13 +615,17 @@ _**This section is under construction**_
 
 ---
 #### threshold-initiate-curtailment-sharing-rule
-[//]: # (TODO: document this parameter)
-_**This section is under construction**_  
+- **Expected value:** a number in MWh
+- **Required:** no
+- **Default value:** `0.0`
+- **Usage:** CSR is run for an hour when the sum of ENS across physical areas inside the adequacy patch is greater than this value.
 
-- **Expected value:**
-- **Required:** **yes**
-- **Default value:**
-- **Usage:**
+---
+#### threshold-ens
+- **Expected value:** a number in MWh
+- **Required:** no
+- **Default value:** `0.0`
+- **Usage:** For CSR-triggered hours, ENS in each physical area inside the adequacy patch is set to zero after CSR when it is strictly below this value. This threshold does not affect which hours trigger CSR.
 
 ---
 #### threshold-display-local-matching-rule-violations
