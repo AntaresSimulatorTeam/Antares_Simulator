@@ -9,6 +9,7 @@
 #include <string_view>
 #include <vector>
 
+#include <antares/logs/logs.h>
 #include <antares/solver/optimisation/opt_rename_problem.h>
 #include <antares/study/InactiveComponentsAnalyzerBuilder.h>
 #include <antares/study/area/links.h>
@@ -297,18 +298,19 @@ YAML::Node generateAreaViewConfig(const Data::Study& study)
     return generateViewConfig(study, ViewType::AREA);
 }
 
-bool exportViewConfig(const Data::Study& study, Solver::IResultWriter* resultWriter, ViewType type)
+void exportViewConfig(const Data::Study& study, Solver::IResultWriter* resultWriter, ViewType type)
 {
     const auto config = generateViewConfig(study, type);
     if (config["view"]["metrics"].size() == 0
         || config["view"]["aggregations-patterns"].size() == 0)
     {
-        return false;
+        return;
     }
     std::string content = YAML::Dump(config);
     resultWriter->addEntryFromBuffer("views/input/" + std::string(definition(type).filename),
                                      content);
-    return true;
+    logs.info() << definition(type).filename
+                << " has been generated in the output folder's views/input subfolder.";
 }
 
 } // namespace Antares::ViewBuilder

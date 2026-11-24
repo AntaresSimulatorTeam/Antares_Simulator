@@ -5,12 +5,12 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <algorithm>
-#include <cctype>
 #include <set>
 #include <sstream>
 #include <unordered_set>
 #include <yaml-cpp/yaml.h>
 
+#include <boost/algorithm/string/case_conv.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <antares/benchmarking/DurationCollector.h>
@@ -197,7 +197,8 @@ BOOST_AUTO_TEST_CASE(other_views_thematic_variable_mappings_and_exports)
             variables.setAllPrintStatusesTo(false);
             Benchmarking::DurationCollector durationCollector;
             Antares::Solver::InMemoryWriter writer(durationCollector);
-            BOOST_REQUIRE(exportViewConfig(*study, &writer, test.type));
+            exportViewConfig(*study, &writer, test.type);
+            BOOST_REQUIRE(writer.getMap().contains("views/input/" + test.filename));
             const auto view = YAML::Load(
               writer.getMap().at("views/input/" + test.filename))["view"];
             BOOST_CHECK_EQUAL(view["id"].as<std::string>(), test.id);
@@ -215,7 +216,7 @@ BOOST_AUTO_TEST_CASE(other_views_thematic_variable_mappings_and_exports)
             study->parameters.thematicTrimming = true;
             Benchmarking::DurationCollector emptyDurationCollector;
             Antares::Solver::InMemoryWriter emptyWriter(emptyDurationCollector);
-            BOOST_CHECK(!exportViewConfig(*study, &emptyWriter, test.type));
+            exportViewConfig(*study, &emptyWriter, test.type);
             BOOST_CHECK(emptyWriter.getMap().empty());
             for (const auto& [variable, metric]: test.mappings)
             {
@@ -223,11 +224,7 @@ BOOST_AUTO_TEST_CASE(other_views_thematic_variable_mappings_and_exports)
                 {
                     BOOST_REQUIRE(variables.exists(variable));
                     variables.setAllPrintStatusesTo(false);
-                    auto lowercaseVariable = variable;
-                    std::transform(lowercaseVariable.begin(),
-                                   lowercaseVariable.end(),
-                                   lowercaseVariable.begin(),
-                                   [](unsigned char ch) { return std::tolower(ch); });
+                    auto lowercaseVariable = boost::algorithm::to_lower_copy(variable);
                     variables.setPrintStatus(lowercaseVariable, true);
                     const auto selected = generateViewConfig(*study, test.type)["view"];
                     BOOST_REQUIRE_EQUAL(selected["metrics"].size(), 1);
@@ -273,7 +270,7 @@ BOOST_AUTO_TEST_CASE(cluster_views_skipped_without_any_aggregation)
     Antares::Solver::InMemoryWriter writer(durationCollector);
     for (auto type: {ViewType::THERMAL, ViewType::STORAGE, ViewType::RENEWABLE})
     {
-        BOOST_CHECK(!exportViewConfig(*study, &writer, type));
+        exportViewConfig(*study, &writer, type);
     }
     BOOST_CHECK(writer.getMap().empty());
 }
@@ -311,7 +308,7 @@ BOOST_AUTO_TEST_CASE(link_view_uses_link_filters_not_area_or_district_filters)
     second.filterYearByYear = second.filterSynthesis = filterNone;
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
-    BOOST_CHECK(!exportViewConfig(*study, &writer, ViewType::LINK));
+    exportViewConfig(*study, &writer, ViewType::LINK);
     BOOST_CHECK(writer.getMap().empty());
 }
 
@@ -403,7 +400,8 @@ BOOST_AUTO_TEST_CASE(area_view_thematic_selection_combines_with_geographic_trimm
 
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
-    BOOST_REQUIRE(exportViewConfig(*study, &writer, ViewType::AREA));
+    exportViewConfig(*study, &writer, ViewType::AREA);
+    BOOST_REQUIRE(writer.getMap().contains("views/input/view_config_area.yml"));
     const auto view = YAML::Load(writer.getMap().at("views/input/view_config_area.yml"))["view"];
     BOOST_REQUIRE_EQUAL(view["metrics"].size(), 2);
     BOOST_CHECK(metricIds(view)
@@ -423,7 +421,7 @@ BOOST_AUTO_TEST_CASE(area_view_skipped_when_no_mapped_metric_is_selected)
     BOOST_CHECK_EQUAL(view["metrics"].size(), 0);
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
-    BOOST_CHECK(!exportViewConfig(*study, &writer, ViewType::AREA));
+    exportViewConfig(*study, &writer, ViewType::AREA);
     BOOST_CHECK(writer.getMap().empty());
 }
 
@@ -563,7 +561,7 @@ BOOST_AUTO_TEST_CASE(area_view_skipped_when_no_aggregation_is_selected)
     BOOST_CHECK_GT(view["metrics"].size(), 0);
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
-    BOOST_CHECK(!exportViewConfig(*study, &writer, ViewType::AREA));
+    exportViewConfig(*study, &writer, ViewType::AREA);
     BOOST_CHECK(writer.getMap().empty());
 }
 
@@ -595,7 +593,8 @@ BOOST_AUTO_TEST_CASE(area_view_written_when_only_district_aggregation_is_selecte
 
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
-    BOOST_REQUIRE(exportViewConfig(*study, &writer, ViewType::AREA));
+    exportViewConfig(*study, &writer, ViewType::AREA);
+    BOOST_REQUIRE(writer.getMap().contains("views/input/view_config_area.yml"));
     const auto view = YAML::Load(writer.getMap().at("views/input/view_config_area.yml"))["view"];
     BOOST_REQUIRE_EQUAL(view["aggregations-patterns"].size(), 1);
     BOOST_CHECK(locations(findPattern(view, "hour_all")) == (std::set<std::string>{"eu"}));

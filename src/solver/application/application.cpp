@@ -464,19 +464,13 @@ void Application::execute()
     ViewBuilder::exportSystemForView(*pStudy, resultWriter.get());
     logs.info() << "system-for-views.yml has been generated in the output folder's views/input "
                    "subfolder.";
-    for (const auto& [type, filename]: {
-           std::pair{ViewBuilder::ViewType::AREA, "view_config_area.yml"},
-           std::pair{ViewBuilder::ViewType::LINK, "view_config_link.yml"},
-           std::pair{ViewBuilder::ViewType::THERMAL, "view_config_thermal.yml"},
-           std::pair{ViewBuilder::ViewType::STORAGE, "view_config_sts.yml"},
-           std::pair{ViewBuilder::ViewType::RENEWABLE, "view_config_renewable.yml"},
-         })
+    for (const auto type: {ViewBuilder::ViewType::AREA,
+                           ViewBuilder::ViewType::LINK,
+                           ViewBuilder::ViewType::THERMAL,
+                           ViewBuilder::ViewType::STORAGE,
+                           ViewBuilder::ViewType::RENEWABLE})
     {
-        if (ViewBuilder::exportViewConfig(*pStudy, resultWriter.get(), type))
-        {
-            logs.info() << filename
-                        << " has been generated in the output folder's views/input subfolder.";
-        }
+        ViewBuilder::exportViewConfig(*pStudy, resultWriter.get(), type);
     }
 
     SystemMemoryLogger memoryReport;
