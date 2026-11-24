@@ -213,14 +213,10 @@ bool hasNonNullLinkImpedance(const AreaList& areas)
       {
           for (const auto& [name, link]: area.links)
           {
-              const auto& impedances = link->parameters[fhlImpedances];
-              for (unsigned hour = 0; hour < HOURS_PER_YEAR; ++hour)
+              if (link->hasNonNullImpedance())
               {
-                  if (std::abs(impedances[hour]) >= 1e-100)
-                  {
-                      found = true;
-                      return;
-                  }
+                  found = true;
+                  return;
               }
           }
       });

@@ -3,7 +3,9 @@
 
 #include "antares/study/area/links.h"
 
+#include <algorithm>
 #include <array>
+#include <cmath>
 #include <filesystem>
 #include <limits>
 
@@ -406,6 +408,15 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link,
     throw Antares::Error::ReadingStudy();
 }
 } // anonymous namespace
+
+bool AreaLink::hasNonNullImpedance() const
+{
+    constexpr double impedanceThreshold = 1e-100;
+    const auto& impedances = parameters[fhlImpedances];
+    return std::any_of(impedances,
+                       impedances + HOURS_PER_YEAR,
+                       [](double impedance) { return std::abs(impedance) >= impedanceThreshold; });
+}
 
 void AreaLink::checkLoadedData()
 {
