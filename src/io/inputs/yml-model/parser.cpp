@@ -34,7 +34,7 @@ const std::vector<YmlUtils::Field> libraryFields = {
     {"thermal-capacity-connection", false, {{"capacity-field", true}}, YmlUtils::Shape::Map},
     {"link-capacity-connection",
      false,
-     {{"capacity-direct-field"}, {"capacity-indirect-field"}},
+     {{"capacity-direct-field", true}, {"capacity-indirect-field", true}},
      YmlUtils::Shape::Map}}},
   {"models",
    false,
