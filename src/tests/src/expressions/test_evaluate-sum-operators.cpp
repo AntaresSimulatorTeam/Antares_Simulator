@@ -34,6 +34,7 @@ struct build_AST_fixture
     Node* parameter(const std::string& name, const VariabilityType variability);
     Node* allTimeSum(Node* node);
     Node* timeSum(Node* from, Node* to, Node* p);
+    Node* timeIndex(Node* node, Node* index);
     Node* square(Node* node);
 
 private:
@@ -63,6 +64,11 @@ Node* build_AST_fixture::parameter(const std::string& name, const VariabilityTyp
 Node* build_AST_fixture::timeSum(Node* from, Node* to, Node* p)
 {
     return registry_.create<TimeSumNode>(from, to, p);
+}
+
+Node* build_AST_fixture::timeIndex(Node* node, Node* index)
+{
+    return registry_.create<TimeIndexNode>(node, index);
 }
 
 Node* build_AST_fixture::square(Node* node)
@@ -250,6 +256,31 @@ BOOST_FIXTURE_TEST_CASE(time_dependent_time_sum_bound_is_rejected, tests_fixture
                         literal(1));
 
     BOOST_CHECK_THROW(evalVisitor->dispatch(sum), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(integer_time_index_is_evaluated, tests_fixture)
+{
+    // Expression : p[1], where p = {1., 2., 3.}
+    Node* indexed = timeIndex(parameter("p", VariabilityType::VARYING_IN_TIME_ONLY), literal(1));
+
+    BOOST_CHECK_EQUAL(evalVisitor->dispatch(indexed).valueAsDouble(), 2.);
+}
+
+BOOST_FIXTURE_TEST_CASE(non_integer_time_index_is_rejected, tests_fixture)
+{
+    Node* indexed = timeIndex(parameter("p", VariabilityType::VARYING_IN_TIME_ONLY),
+                              literal(1.5));
+
+    BOOST_CHECK_THROW(evalVisitor->dispatch(indexed), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(time_dependent_time_index_is_rejected, tests_fixture)
+{
+    // Expression : five[p], where p varies in time
+    Node* indexed = timeIndex(parameter("five", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO),
+                              parameter("p", VariabilityType::VARYING_IN_TIME_ONLY));
+
+    BOOST_CHECK_THROW(evalVisitor->dispatch(indexed), Antares::Error::InvalidArgumentError);
 }
 
 BOOST_FIXTURE_TEST_CASE(sum_a_squared_param_as_TS_on_interval_t__t_plus_1, tests_fixture)
