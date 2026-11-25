@@ -205,7 +205,7 @@ YAML::Node generateViewConfig(const Data::Study& study, ViewType type)
                   {
                       if (isLink)
                       {
-                          for (const auto& link: area.links | std::views::values)
+                          for (const auto* link: area.links | std::views::values)
                           {
                               const bool linkIsInactive = inactiveComponents->linkIsAllZero(
                                 interco);
