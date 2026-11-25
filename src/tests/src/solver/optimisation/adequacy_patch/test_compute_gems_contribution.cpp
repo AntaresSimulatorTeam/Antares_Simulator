@@ -198,7 +198,6 @@ struct GemsContributionFixture
         pHebdo.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>();
         pHebdo.adequacyPatchRuntimeData->areaMode = {AdequacyPatch::physicalAreaInsideAdqPatch,
                                                      AdequacyPatch::physicalAreaInsideAdqPatch};
-
     }
 
     void makeProblemToSolve(PROBLEME_ANTARES_A_RESOUDRE&)
@@ -320,11 +319,9 @@ BOOST_FIXTURE_TEST_CASE(factory_returns_active_gems_part, GemsContributionFixtur
 BOOST_FIXTURE_TEST_CASE(throws_when_no_optimEntityContainer, GemsContributionFixture)
 {
     problemeHebdo.optimEntityContainer.reset();
-    BOOST_CHECK_THROW((ActiveGemsPart(&problemeHebdo,
-                                      problemAResoudre,
-                                      constraintFictitious,
-                                      constraintMaxEns)),
-                      std::runtime_error);
+    BOOST_CHECK_THROW(
+      (ActiveGemsPart(&problemeHebdo, problemAResoudre, constraintFictitious, constraintMaxEns)),
+      std::runtime_error);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
