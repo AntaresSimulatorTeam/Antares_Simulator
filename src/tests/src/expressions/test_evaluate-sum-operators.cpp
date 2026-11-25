@@ -268,8 +268,7 @@ BOOST_FIXTURE_TEST_CASE(integer_time_index_is_evaluated, tests_fixture)
 
 BOOST_FIXTURE_TEST_CASE(non_integer_time_index_is_rejected, tests_fixture)
 {
-    Node* indexed = timeIndex(parameter("p", VariabilityType::VARYING_IN_TIME_ONLY),
-                              literal(1.5));
+    Node* indexed = timeIndex(parameter("p", VariabilityType::VARYING_IN_TIME_ONLY), literal(1.5));
 
     BOOST_CHECK_THROW(evalVisitor->dispatch(indexed), Antares::Error::InvalidArgumentError);
 }
