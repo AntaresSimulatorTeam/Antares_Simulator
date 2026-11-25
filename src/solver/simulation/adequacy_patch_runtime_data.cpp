@@ -60,24 +60,11 @@ void AdequacyPatchRuntimeData::setMarginalCostBeforeAdqPatch(int area,
                                                              int hour,
                                                              double marginalCost)
 {
-    if (area >= static_cast<int>(marginalCostsBeforeAdqPatch_.size()))
-    {
-        marginalCostsBeforeAdqPatch_.resize(area + 1);
-    }
-    if (hour >= static_cast<int>(marginalCostsBeforeAdqPatch_[area].size()))
-    {
-        marginalCostsBeforeAdqPatch_[area].resize(hour + 1, 0.);
-    }
     marginalCostsBeforeAdqPatch_[area][hour] = marginalCost;
 }
 
 double AdequacyPatchRuntimeData::marginalCostBeforeAdqPatch(int area, int hour) const
 {
-    if (area < 0 || area >= static_cast<int>(marginalCostsBeforeAdqPatch_.size()) || hour < 0
-        || hour >= static_cast<int>(marginalCostsBeforeAdqPatch_[area].size()))
-    {
-        return 0.;
-    }
     return marginalCostsBeforeAdqPatch_[area][hour];
 }
 
