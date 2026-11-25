@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE(test_adq_patch_ens_below_threshold_is_zeroed_per_area)
     }
     DTGnettingAfterCSRcmd cmd(adqPatchParams, &pb, builder.study->areas, gNumSpace);
     cmd.execute(opt_runtime_data);
-    UpdateMrgPriceAfterCSRcmd updatePrice(&pb, builder.study->areas, gNumSpace);
+    UpdateMrgPriceAfterCSRcmd updatePrice(&pb, builder.study->areas);
     updatePrice.execute(opt_runtime_data);
 
     BOOST_CHECK_EQUAL(pb.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive[hour], 0.0);
