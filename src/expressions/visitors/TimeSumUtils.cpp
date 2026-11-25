@@ -19,7 +19,8 @@ namespace
 {
 int checkedTimeIndex(double value, const Nodes::Node* bound, std::string_view what = "A sum bound")
 {
-    if (!std::isfinite(value) || std::trunc(value) != value
+    // A non-zero fractional part (relational test, exact: no tolerance wanted)
+    if (!std::isfinite(value) || std::abs(value - std::trunc(value)) > 0.0
         || value < std::numeric_limits<int>::min()
         || value >= -static_cast<double>(std::numeric_limits<int>::min()))
     {

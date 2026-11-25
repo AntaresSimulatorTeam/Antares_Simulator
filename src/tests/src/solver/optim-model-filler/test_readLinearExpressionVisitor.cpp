@@ -666,6 +666,24 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_inverted_bounds_returns_zero,
     BOOST_CHECK_EQUAL(linear_expression[2].constant(), 0.);
 }
 
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_of_constant_over_full_int_range_does_not_overflow,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // sum(t+INT_MIN .. t+INT_MAX, 13) on a one-step block covers 2^32 indices:
+    // the count does not fit in an int.
+    Node* from = create<TPlusNode>(
+      create<LiteralNode>(static_cast<double>(std::numeric_limits<int>::min())));
+    Node* to = create<TPlusNode>(
+      create<LiteralNode>(static_cast<double>(std::numeric_limits<int>::max())));
+    Node* sum = create<TimeSumNode>(from, to, create<LiteralNode>(13.));
+
+    ctx = Api::FillContext(0, 0, 0, 0, 0);
+    const auto linear_expression = visitor().dispatch(sum);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 13. * 4294967296.);
+}
+
 BOOST_FIXTURE_TEST_CASE(visit_timeShift_with_invalid_offset_throws,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {

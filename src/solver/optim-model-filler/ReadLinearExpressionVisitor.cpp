@@ -277,7 +277,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
             if (from <= to)
             {
                 auto term = expression[0];
-                term *= static_cast<double>(to - from + 1);
+                // Computed in 64 bits: to - from + 1 can exceed INT_MAX
+                term *= static_cast<double>(static_cast<long long>(to) - from + 1);
                 ret[localTimeStep] += term;
             }
         }

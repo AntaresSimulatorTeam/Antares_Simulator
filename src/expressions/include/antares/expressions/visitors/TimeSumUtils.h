@@ -20,9 +20,10 @@ int resolveTimeShift(const Nodes::Node* offset, EvalVisitor& visitor);
 template<class Callback>
 inline void forEachTimeSumIndex(int from, int to, int size, Callback callback)
 {
-    for (int timeIndex = from; timeIndex <= to; ++timeIndex)
+    // 64-bit counter: with to == INT_MAX, an int counter would overflow on the last increment.
+    for (long long timeIndex = from; timeIndex <= to; ++timeIndex)
     {
-        callback(normalizeTimeIndex(timeIndex, size));
+        callback(normalizeTimeIndex(static_cast<int>(timeIndex), size));
     }
 }
 

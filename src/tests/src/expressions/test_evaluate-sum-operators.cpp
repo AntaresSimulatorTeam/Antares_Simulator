@@ -3,7 +3,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <limits>
 #include <memory>
+#include <vector>
 
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
@@ -12,6 +14,7 @@
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
+#include <antares/expressions/visitors/TimeSumUtils.h>
 #include <antares/study/system-model-base/variabilityType.h>
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 
@@ -256,6 +259,24 @@ BOOST_FIXTURE_TEST_CASE(time_dependent_time_sum_bound_is_rejected, tests_fixture
                         literal(1));
 
     BOOST_CHECK_THROW(evalVisitor->dispatch(sum), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_AUTO_TEST_CASE(for_each_time_sum_index_handles_int_max_endpoint)
+{
+    // INT_MAX % 5 == 2 ; a one-element interval ending at INT_MAX must not overflow the counter
+    constexpr int intMax = std::numeric_limits<int>::max();
+    std::vector<int> visited;
+    forEachTimeSumIndex(intMax, intMax, 5, [&visited](int index) { visited.push_back(index); });
+    const std::vector<int> expected{intMax % 5};
+    BOOST_CHECK_EQUAL_COLLECTIONS(visited.begin(), visited.end(), expected.begin(), expected.end());
+
+    visited.clear();
+    forEachTimeSumIndex(intMax - 1, intMax, 5, [&visited](int index) { visited.push_back(index); });
+    BOOST_CHECK_EQUAL(visited.size(), 2);
+
+    visited.clear();
+    forEachTimeSumIndex(intMax, intMax - 1, 5, [&visited](int index) { visited.push_back(index); });
+    BOOST_CHECK(visited.empty());
 }
 
 BOOST_FIXTURE_TEST_CASE(integer_time_index_is_evaluated, tests_fixture)
