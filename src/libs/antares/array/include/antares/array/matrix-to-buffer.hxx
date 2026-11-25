@@ -22,6 +22,10 @@ struct MatrixScalar
         {
             throw MatrixSerializationError("Cannot serialize non-finite matrix value");
         }
+        if (v == 0.) // NOSONAR
+        {
+            v = 0.;
+        }
         // A finite double in fixed notation needs at most 309 integer digits,
         // a sign, a decimal point and the supported fractional digits.
         char buffer[328];

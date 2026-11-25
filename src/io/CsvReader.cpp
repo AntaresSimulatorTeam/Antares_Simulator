@@ -83,7 +83,7 @@ bool readCSVBuffer(std::string_view data,
             // Do not manufacture a row after a final newline.
             if (atEnd && !hasCell && !afterSeparator)
             {
-                break;
+                return true;
             }
 
             if (maxCellsPerRow && row.size() >= maxCellsPerRow)
@@ -145,8 +145,8 @@ bool readCSVFile(const std::filesystem::path& filename,
     const auto size = std::filesystem::file_size(filename, error);
     if (error)
     {
-        throw std::runtime_error("Error reading CSV file( " + filename.string()
-                                 + "):" + error.message());
+        throw CSVReaderError("Error reading CSV file( " + filename.string()
+                             + "):" + error.message());
     }
 
     if (size == 0)
@@ -157,7 +157,7 @@ bool readCSVFile(const std::filesystem::path& filename,
     boost::iostreams::mapped_file_source file(filename.string());
     if (!file.is_open())
     {
-        throw std::runtime_error("Failed to open file: " + filename.string());
+        throw CSVReaderError("Failed to open file: " + filename.string());
     }
 
     return readCSVBuffer(std::string_view(file.data(), file.size()),

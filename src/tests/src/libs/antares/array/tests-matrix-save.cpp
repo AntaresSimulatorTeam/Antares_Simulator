@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE(save_does_not_open_file_when_serialization_throws)
     mtx[0][0] = 1.0;
 
     BOOST_CHECK_THROW(
-      MatrixIO::save(mtx, filename.string(), 6, false, ThrowOnSerialization{}, true),
+      (void)MatrixIO::save(mtx, filename.string(), 6, false, ThrowOnSerialization{}, true),
       std::runtime_error);
 
     {
@@ -461,6 +461,16 @@ BOOST_AUTO_TEST_CASE(serializes_small_and_near_integer_values_at_requested_preci
     std::string result;
     MatrixIO::saveToBuffer(matrix, result, 7);
     BOOST_CHECK_EQUAL(result, "0.0000005\t1.0000005\n");
+}
+
+BOOST_AUTO_TEST_CASE(negative_zero_is_serialized_as_zero)
+{
+    Matrix matrix(2, 1);
+    matrix[0][0] = -0.0;
+    matrix[1][0] = 1.5;
+    std::string result;
+    MatrixIO::saveToBuffer(matrix, result, 2);
+    BOOST_CHECK_EQUAL(result, "0\t1.50\n");
 }
 
 BOOST_AUTO_TEST_CASE(nonfinite_values_are_not_silently_serialized)

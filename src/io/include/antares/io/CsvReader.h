@@ -7,12 +7,19 @@
 #include <filesystem>
 #include <functional>
 #include <span>
+#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <vector>
 
 namespace Antares::IO
 {
+class CSVReaderError: public std::runtime_error
+{
+public:
+    using std::runtime_error::runtime_error;
+};
+
 struct CSVCell final
 {
     std::string_view value;

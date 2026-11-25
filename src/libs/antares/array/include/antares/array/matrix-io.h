@@ -1,8 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#ifndef ANTARES_ARRAY_MATRIX_IO_H
-#define ANTARES_ARRAY_MATRIX_IO_H
+#pragma once
 
 #include <filesystem>
 #include <functional>
@@ -58,16 +57,20 @@ struct LoadError
 // HeaderHeightOrPrefix consumes the header-selected height, if present, or
 // the requested height otherwise, ignoring any subsequent rows.
 // Returns an error on failure and leaves destination unchanged.
-std::optional<LoadError> loadDetailed(Matrix& destination,
-                                      const std::filesystem::path& filename,
-                                      const LoadOptions& options);
+[[nodiscard]] std::optional<LoadError> loadDetailed(Matrix& destination,
+                                                    const std::filesystem::path& filename,
+                                                    const LoadOptions& options);
 
 // On failure, destination is unchanged. An empty file represents a zero matrix.
-bool load(Matrix& destination, const std::string& filename, const LoadOptions& options);
-bool load(Matrix& destination, const std::filesystem::path& filename, const LoadOptions& options);
-bool loadOrReset(Matrix& destination,
-                 const std::filesystem::path& filename,
-                 const LoadOptions& options);
+[[nodiscard]] bool load(Matrix& destination,
+                        const std::string& filename,
+                        const LoadOptions& options);
+[[nodiscard]] bool load(Matrix& destination,
+                        const std::filesystem::path& filename,
+                        const LoadOptions& options);
+[[nodiscard]] bool loadOrReset(Matrix& destination,
+                               const std::filesystem::path& filename,
+                               const LoadOptions& options);
 
 bool writeBuffer(const std::string& filename, const std::string& data);
 void logSerializationError(const std::string& filename, const std::string& message);
@@ -97,12 +100,12 @@ void saveToBuffer(const Matrix& matrix,
 }
 
 template<class Predicate = std::identity>
-bool save(const Matrix& matrix,
-          const std::string& filename,
-          unsigned int precision = 6,
-          bool printDimensions = false,
-          Predicate predicate = {},
-          bool saveEvenIfAllZero = false)
+[[nodiscard]] bool save(const Matrix& matrix,
+                        const std::string& filename,
+                        unsigned int precision = 6,
+                        bool printDimensions = false,
+                        Predicate predicate = {},
+                        bool saveEvenIfAllZero = false)
 {
     std::string data;
     try
@@ -120,5 +123,3 @@ bool save(const Matrix& matrix,
     return writeBuffer(filename, data);
 }
 } // namespace Antares::MatrixIO
-
-#endif

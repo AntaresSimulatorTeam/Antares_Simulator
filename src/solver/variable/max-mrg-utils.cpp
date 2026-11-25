@@ -14,7 +14,7 @@ const unsigned int nbHoursInWeek = 168;
 namespace Antares::Solver::Variable::Economy
 {
 
-MaxMrgDataFactory::MaxMrgDataFactory(State& state, unsigned int numSpace):
+MaxMrgDataFactory::MaxMrgDataFactory(const State& state, unsigned int numSpace):
     state_(state),
     numSpace_(numSpace),
     weeklyResults_(state.problemeHebdo->ResultatsHoraires[state.area->index])

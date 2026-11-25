@@ -380,6 +380,24 @@ BOOST_AUTO_TEST_CASE(blank_single_column_row_is_zero)
     BOOST_CHECK_EQUAL(matrix[0][2], 2.);
 }
 
+BOOST_AUTO_TEST_CASE(whitespace_only_cells_are_treated_as_zero)
+{
+    const auto file = writeFile("1\t \t3\n \t5\t \n");
+    Antares::Matrix matrix;
+
+    BOOST_REQUIRE(
+      Antares::MatrixIO::load(matrix,
+                              file.path,
+                              (Antares::MatrixIO::LoadOptions{.minWidth = 3, .height = 2})));
+    BOOST_REQUIRE_EQUAL(matrix.width(), 3);
+    BOOST_CHECK_EQUAL(matrix[0][0], 1.);
+    BOOST_CHECK_EQUAL(matrix[1][0], 0.);
+    BOOST_CHECK_EQUAL(matrix[2][0], 3.);
+    BOOST_CHECK_EQUAL(matrix[0][1], 0.);
+    BOOST_CHECK_EQUAL(matrix[1][1], 5.);
+    BOOST_CHECK_EQUAL(matrix[2][1], 0.);
+}
+
 BOOST_AUTO_TEST_CASE(dimension_checks_allow_large_decoded_matrices)
 {
     Antares::Matrix matrix;

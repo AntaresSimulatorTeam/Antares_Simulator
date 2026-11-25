@@ -272,11 +272,6 @@ bool XCast::loadFromFolder(const fs::path& folder)
        .rowPolicy = MatrixIO::RowPolicy::HeaderHeightOrPrefix});
     ret = translationLoaded && ret;
 
-    if (translation.empty())
-    {
-        return false;
-    }
-
     for (double& value: translation[0])
     {
         const double truncated = std::trunc(value);

@@ -29,7 +29,7 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
         IO::readCSVFile(
           filename,
           separators,
-          [&](std::size_t rowIndex, IO::CSVRow row)
+          [&filename, &values, &columns](std::size_t rowIndex, IO::CSVRow row)
           {
               values.clear();
               values.reserve(row.size());

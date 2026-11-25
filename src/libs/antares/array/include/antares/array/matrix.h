@@ -4,11 +4,7 @@
 #ifndef __ANTARES_LIBS_ARRAY_MATRIX_H__
 #define __ANTARES_LIBS_ARRAY_MATRIX_H__
 
-#include <cassert>
-#include <cstdint>
-#include <functional>
 #include <span>
-#include <vector>
 
 #include "column-matrix.h"
 
@@ -19,7 +15,7 @@ namespace Antares
 **
 ** \ingroup matrix
 */
-class Matrix: private ColumnMatrix<double>
+class Matrix
 {
 public:
     //! Type
@@ -210,6 +206,8 @@ public:
     ConstColumnType operator[](unsigned int column) const;
     //@}
 
+private:
+    ColumnMatrix<double> storage_;
 }; // class Matrix
 
 /*!

@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <algorithm>
+#include <cassert>
 #include <cmath>
+#include <functional>
 #include <stdexcept>
 #include <utility>
 
@@ -17,57 +19,52 @@ Matrix::Matrix(unsigned int w, unsigned int h)
 
 void Matrix::zero()
 {
-    for (auto& column: columns_)
-    {
-        std::fill(column.begin(), column.end(), 0.);
-    }
+    fill(0.);
 }
 
 void Matrix::averageTimeseries(bool roundValues)
 {
-    if (width_ > 1)
+    const unsigned int currentWidth = width();
+    const unsigned int currentHeight = height();
+    if (currentWidth > 1)
     {
-        auto& first = columns_[0];
+        auto first = storage_[0];
 
         // Add the values of each time series to the first one.
-        for (unsigned int i = 1; i != width_; ++i)
+        for (unsigned int i = 1; i != currentWidth; ++i)
         {
-            auto& column = columns_[i];
-            for (unsigned int j = 0; j != height_; ++j)
+            auto column = storage_[i];
+            for (unsigned int j = 0; j != currentHeight; ++j)
             {
                 first[j] += column[j];
             }
         }
 
-        const double coeff = 1. / width_;
+        const double coeff = 1. / currentWidth;
         if (roundValues)
         {
-            for (unsigned int j = 0; j != height_; ++j)
+            for (unsigned int j = 0; j != currentHeight; ++j)
             {
                 first[j] = std::round(first[j] * coeff);
             }
         }
         else
         {
-            for (unsigned int j = 0; j != height_; ++j)
+            for (unsigned int j = 0; j != currentHeight; ++j)
             {
                 first[j] *= coeff;
             }
         }
 
-        for (unsigned int i = 1; i != width_; ++i)
-        {
-            columns_[i].clear();
-        }
-        columns_.resize(1);
-        width_ = 1;
+        storage_.shrinkWidth(1);
     }
 }
 
 void Matrix::fill(double v)
 {
-    for (auto& column: columns_)
+    for (unsigned int x = 0; x != width(); ++x)
     {
+        auto column = storage_[x];
         std::fill(column.begin(), column.end(), v);
     }
 }
@@ -76,10 +73,10 @@ void Matrix::fillUnit()
 {
     zero();
 
-    const auto diagonalSize = std::min(width_, height_);
+    const auto diagonalSize = std::min(width(), height());
     for (unsigned int i = 0; i != diagonalSize; ++i)
     {
-        columns_[i][i] = 1.;
+        storage_[i][i] = 1.;
     }
 }
 
@@ -89,39 +86,41 @@ void Matrix::reset(unsigned int w, unsigned int h)
     {
         throw std::length_error("Matrix dimensions exceed the supported limit");
     }
-    ColumnMatrix<double>::reset(w, h);
+    storage_.reset(w, h);
 }
 
 void Matrix::pasteToColumn(unsigned int x, ConstColumnType data)
 {
-    assert(x < width_ and "Invalid column index (bigger than `this->width_`)");
-    if (data.size() != height_)
+    assert(x < width() and "Invalid column index (bigger than `this->width()`)");
+    if (data.size() != height())
     {
         throw std::invalid_argument("Column height does not match matrix");
     }
-    std::copy(data.begin(), data.end(), columns_[x].begin());
+    std::copy(data.begin(), data.end(), storage_[x].begin());
 }
 
 void Matrix::fillColumn(unsigned int x, double value)
 {
-    assert(x < width_ and "Invalid column index (bigger than `this->width_`)");
-    std::fill(columns_[x].begin(), columns_[x].end(), value);
+    assert(x < width() and "Invalid column index (bigger than `this->width()`)");
+    auto column = storage_[x];
+    std::fill(column.begin(), column.end(), value);
 }
 
 void Matrix::columnToZero(unsigned int x)
 {
-    assert(x < width_ and "Invalid column index (bigger than `this->width_`)");
-    std::fill(columns_[x].begin(), columns_[x].end(), 0.);
+    assert(x < width() and "Invalid column index (bigger than `this->width()`)");
+    auto column = storage_[x];
+    std::fill(column.begin(), column.end(), 0.);
 }
 
 bool Matrix::empty() const
 {
-    return (!width_) or (!height_);
+    return (!width()) or (!height());
 }
 
 void Matrix::clear()
 {
-    ColumnMatrix<double>::clear();
+    storage_.clear();
 }
 
 void Matrix::reset()
@@ -136,7 +135,7 @@ void Matrix::resize(unsigned int w, unsigned int h)
         throw std::length_error("Matrix dimensions exceed the supported limit");
     }
 
-    ColumnMatrix<double>::resize(w, h);
+    storage_.resize(w, h);
 }
 
 void Matrix::resizeWithoutDataLost(unsigned int x, unsigned int y, double defVal)
@@ -146,14 +145,14 @@ void Matrix::resizeWithoutDataLost(unsigned int x, unsigned int y, double defVal
         throw std::length_error("Matrix dimensions exceed the supported limit");
     }
 
-    ColumnMatrix<double>::resizeWithoutDataLost(x, y, defVal);
+    storage_.resizeWithoutDataLost(x, y, defVal);
 }
 
 void Matrix::multiplyAllEntriesBy(double c)
 {
-    for (auto& column: columns_)
+    for (unsigned int x = 0; x != width(); ++x)
     {
-        for (auto& value: column)
+        for (auto& value: storage_[x])
         {
             value *= c;
         }
@@ -162,9 +161,9 @@ void Matrix::multiplyAllEntriesBy(double c)
 
 void Matrix::roundAllEntries()
 {
-    for (auto& column: columns_)
+    for (unsigned int x = 0; x != width(); ++x)
     {
-        for (auto& value: column)
+        for (auto& value: storage_[x])
         {
             value = std::round(value);
         }
@@ -191,7 +190,7 @@ void Matrix::copyFrom(const Matrix* rhs)
 
 void Matrix::swap(Matrix& rhs) noexcept
 {
-    ColumnMatrix<double>::swap(rhs);
+    storage_.swap(rhs.storage_);
 }
 
 bool MatrixTestForAtLeastOnePositiveValue(const Matrix& m)

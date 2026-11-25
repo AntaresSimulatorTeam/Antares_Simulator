@@ -87,7 +87,20 @@ public:
     void clear() noexcept
     {
         columns_.clear();
-        width_ = height_ = 0;
+        width_ = 0;
+        height_ = 0;
+    }
+
+    void shrinkWidth(unsigned int newWidth) noexcept
+    {
+        assert(newWidth <= width_);
+        if (newWidth == 0)
+        {
+            clear();
+            return;
+        }
+        columns_.resize(newWidth);
+        width_ = newWidth;
     }
 
     // Resizing to the current shape leaves values unchanged.
@@ -199,7 +212,7 @@ public:
         columns_.swap(rhs.columns_);
     }
 
-protected:
+private:
     unsigned int width_ = 0;
     unsigned int height_ = 0;
     std::vector<std::vector<T>> columns_;
