@@ -926,6 +926,20 @@ BOOST_FIXTURE_TEST_CASE(evaluate_timeIndex_param, MyDummyFixture)
     BOOST_CHECK_EQUAL(eval, 1); //
 }
 
+BOOST_AUTO_TEST_CASE(evaluate_time_index_rejects_fractional_index)
+{
+    LiteralNode index(1.5);
+    BOOST_CHECK_THROW(CreateAndEvaluateTimeNode<TimeIndexNode>(&index),
+                      Antares::Error::InvalidArgumentError);
+}
+
+BOOST_AUTO_TEST_CASE(evaluate_time_index_rejects_time_dependent_index)
+{
+    ParameterNode index("my-param", VariabilityType::VARYING_IN_TIME_ONLY);
+    BOOST_CHECK_THROW(CreateAndEvaluateTimeNode<TimeIndexNode>(&index),
+                      Antares::Error::InvalidArgumentError);
+}
+
 EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
 {
     ParameterNode paramNode("my-param", VariabilityType::VARYING_IN_TIME_ONLY);
