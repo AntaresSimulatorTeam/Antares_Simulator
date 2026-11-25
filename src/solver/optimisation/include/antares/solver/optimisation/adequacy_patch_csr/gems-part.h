@@ -17,18 +17,12 @@ namespace Antares::ModelerStudy::SystemModel
 struct AreaConnection;
 }
 
-namespace VariableManagement
-{
-class VariableManager;
-}
-
 // Interface
 class IGemsPart
 {
 public:
     virtual ~IGemsPart() = default;
     virtual void setHour(int triggeredHour) = 0;
-    virtual void setBoundsOnENS() = 0;
     virtual void setRHSfictitiousLoadValue() = 0;
     virtual void setRHSMaxEnsLoadValue() = 0;
 };
@@ -40,11 +34,6 @@ public:
     void setHour(int) override
     {
         // Intentionally empty: the null implementation has no GEMS state to update.
-    }
-
-    void setBoundsOnENS() override
-    {
-        // Intentionally empty: there are no GEMS bounds to apply in the null case.
     }
 
     void setRHSfictitiousLoadValue() override
@@ -73,12 +62,10 @@ public:
 
     ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo,
                    PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre,
-                   VariableManagement::VariableManager& variableManager,
                    std::map<int, int>& constraintCsrFictitiousLoad,
                    std::map<int, int>& constraintCsrMaxEnsLoad);
 
     void setHour(int triggeredHour) override;
-    void setBoundsOnENS() override;
     void setRHSfictitiousLoadValue() override;
     void setRHSMaxEnsLoadValue() override;
 
@@ -94,7 +81,6 @@ private:
     Antares::LinearProblem::Api::FillContext fillContext_{0, 0, 0, 0, 0};
 
     PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre_;
-    VariableManagement::VariableManager& variableManager_;
     std::map<int, int>& constraintCsrFictitiousLoad_;
     std::map<int, int>& constraintCsrMaxEnsLoad_;
 };
@@ -102,6 +88,5 @@ private:
 // Factory
 std::unique_ptr<IGemsPart> makeGemsPart(PROBLEME_HEBDO* problemeHebdo,
                                         PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre,
-                                        VariableManagement::VariableManager& variableManager,
                                         std::map<int, int>& constraintCsrFictitiousLoad,
                                         std::map<int, int>& constraintCsrMaxEnsLoad);

@@ -61,6 +61,68 @@ def set_unit_commitment_mode(context, mode):
                                     file_nick_name="general")
 
 
+@given('the adequacy patch price-taking order is "{order}"')
+def set_price_taking_order(context, order):
+    context.sih.set_parameter_value(variable="price-taking-order", value=order,
+                                    file_nick_name="general")
+
+
+@given('the CSR initiation threshold is {threshold:g}')
+def set_csr_threshold(context, threshold):
+    context.sih.set_parameter_value(variable="threshold-initiate-curtailment-sharing-rule",
+                                    value=str(threshold), file_nick_name="general")
+
+
+@given('a GEMS component injects {injection:g} MW with an ENS bound of {bound:g} MW in area "{area}"')
+def add_gems_area_injection(context, injection, bound, area):
+    """Install a constant net injection and gross load on a disposable study copy."""
+    assert hasattr(context, "tmp_workdir"), "This step requires a copy of the study"
+    input_dir = context.study_path / "input"
+    libraries = input_dir / "model-libraries"
+    libraries.mkdir(exist_ok=True)
+    (input_dir / "optim-config.yml").write_text("")
+    (libraries / "csr-load.yml").write_text(f"""\
+library:
+  id: csr_library
+  port-types:
+    - id: area_port
+      fields:
+        - id: injection
+        - id: load
+        - id: generation
+      area-connection:
+        injection-to-balance: injection
+        unsupplied-energy-bound: load
+        spillage-bound: generation
+  models:
+    - id: component
+      ports:
+        - id: area_port
+          type: area_port
+      port-field-definitions:
+        - port: area_port
+          field: injection
+          definition: {injection}
+        - port: area_port
+          field: load
+          definition: {bound}
+        - port: area_port
+          field: generation
+          definition: {injection + bound}
+""")
+    (input_dir / "system.yml").write_text(f"""\
+system:
+  id: csr_system
+  components:
+    - id: gems_component
+      model: csr_library.component
+  area-connections:
+    - area: {area}
+      component: gems_component
+      port: area_port
+""")
+
+
 @when('I replace the "{destinationPath}" file with "{originPath}"')
 def replace_reserve_yml(context, destinationPath, originPath):
     destination = destinationPath.split("/")
