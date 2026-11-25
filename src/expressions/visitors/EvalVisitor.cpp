@@ -240,6 +240,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
     const auto ret = dispatch(node->left());
     VariabilityVisitor variabilityVisitor(optimContainer_, component_);
     const auto timeIndex = resolveTimeIndex(node->right(), *this, variabilityVisitor);
+    if (timeIndex < 0
+        || static_cast<std::size_t>(timeIndex) >= fillContext_.getLocalNumberOfTimeSteps())
+    {
+        throw EvalResultTimeIndexOutOfRange("timeIndex is out of range");
+    }
     return ret[timeIndex];
 }
 

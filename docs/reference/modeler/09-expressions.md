@@ -139,8 +139,8 @@ For time-dependent parameters, variables, and port fields, you can use these tim
 
 **Absolute time indices.** In `x[N]` and in absolute bounds of `sum(S .. E, x)`, indices are relative to the
 current optimization block: `0` is the first time step of the block (the week or day in the simulator, the first time
-step in the modeler). An absolute index outside `[0, size-1]` is an error. Indices and bounds must resolve to integers;
-non-integer values are rejected rather than truncated.
+step in the modeler). An absolute index outside `[0, size-1]` is an error, even when `x` is constant in time.
+Indices and bounds must resolve to integers; non-integer values are rejected rather than truncated.
 
 **Relative sum bounds.** Relative bounds (`t + N`) wrap cyclically when they extend outside the block, even in `drop`
 mode. For example, `sum(0 .. t+1, x)` adds `x[0]` again at the last time step. A relative sum bound does not by itself

@@ -12,6 +12,7 @@
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
 #include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 #include "antares/exception/InvalidArgumentError.hpp"
+#include "antares/exception/LoadingError.hpp"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
@@ -759,6 +760,39 @@ BOOST_FIXTURE_TEST_CASE(visit_timeIndex_with_non_integer_index_throws,
     ctx = Api::FillContext(0, 2, 0, 2, 0);
 
     BOOST_CHECK_THROW(visitor().dispatch(index), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeIndex_on_constant_uses_block_length,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
+    auto* constant = create<LiteralNode>(13.);
+    auto* valid = create<TimeIndexNode>(constant, create<LiteralNode>(2.));
+    const auto indexed = visitor().dispatch(valid);
+    BOOST_REQUIRE_EQUAL(indexed.size(), 1);
+    BOOST_CHECK_EQUAL(indexed[0].constant(), 13.);
+
+    for (double index: {-1., 3.})
+    {
+        auto* invalid = create<TimeIndexNode>(constant, create<LiteralNode>(index));
+        BOOST_CHECK_THROW(visitor().dispatch(invalid), Antares::Error::LoadingError);
+    }
+
+    auto* fractional = create<TimeIndexNode>(constant, create<LiteralNode>(1.5));
+    BOOST_CHECK_THROW(visitor().dispatch(fractional), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeIndex_on_single_step_series_checks_range,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    auto* series = create<ParameterNode>("param_ts");
+    auto* valid = create<TimeIndexNode>(series, create<LiteralNode>(0.));
+    const auto indexed = visitor().dispatch(valid);
+    BOOST_REQUIRE_EQUAL(indexed.size(), 1);
+    BOOST_CHECK_EQUAL(indexed[0].constant(), 0.);
+
+    auto* invalid = create<TimeIndexNode>(series, create<LiteralNode>(1.));
+    BOOST_CHECK_THROW(visitor().dispatch(invalid), Antares::Error::LoadingError);
 }
 
 BOOST_FIXTURE_TEST_CASE(all_time_sum_of_constant_expression_scales_with_horizon,

@@ -227,24 +227,24 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::TimeIndexNode* node)
 {
     auto expression = dispatch(node->left());
-
-    if (expression.isConstant())
-    {
-        return expression;
-    }
     Visitors::VariabilityVisitor variabilityVisitor(optimEntityContainer_, component_);
     const auto timeIndex = Antares::Expressions::Visitors::resolveTimeIndex(node->right(),
                                                                             evalVisitor_,
                                                                             variabilityVisitor);
 
-    if (timeIndex < 0 || static_cast<std::size_t>(timeIndex) >= expression.size())
+    const auto indexableSize = expression.isConstant() ? nbtimeSteps_ : expression.size();
+    if (timeIndex < 0 || static_cast<std::size_t>(timeIndex) >= indexableSize)
     {
         Expressions::Visitors::PrintVisitor visitor;
-        throw Error::LoadingError(fmt::format(
-          "TimeIndexNode: index {} is out of range in expression '{}' (expression size: {})",
-          timeIndex,
-          visitor.dispatch(node),
-          expression.size()));
+        throw Error::LoadingError(
+          fmt::format("TimeIndexNode: index {} is out of range in expression '{}' ({} time steps)",
+                      timeIndex,
+                      visitor.dispatch(node),
+                      indexableSize));
+    }
+    if (expression.isConstant())
+    {
+        return expression;
     }
     return TimeDependentLinearExpression(std::move(expression[timeIndex]));
 }
