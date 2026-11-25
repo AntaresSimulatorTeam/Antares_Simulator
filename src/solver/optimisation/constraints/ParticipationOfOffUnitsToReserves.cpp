@@ -48,9 +48,8 @@ void ParticipationOfOffUnitsToReserves::add(int pays, int cluster, int pdt)
                                            + static_cast<uint32_t>(pdt);
             namer.UpdateTimeStep(hourInTheYear);
             namer.UpdateArea(builder.data.NomsDesPays[pays]);
-            namer.ParticipationOfOffUnitsToReserves(
-              builder.data.nombreDeContraintes,
-              data.thermalClusters[pays].NomsDesPaliersThermiques[cluster]);
+            namer.POffUnitsUpperBound(builder.data.nombreDeContraintes,
+                                      data.thermalClusters[pays].NomsDesPaliersThermiques[cluster]);
             builder.build();
         }
     }

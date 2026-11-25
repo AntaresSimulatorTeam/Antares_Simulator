@@ -715,10 +715,10 @@ void ConstraintNamer::SymmetryReserveParticipation(unsigned constrIndex,
                                             reserveName2);
 }
 
-void ConstraintNamer::ParticipationOfOffUnitsToReserves(unsigned constrIndex,
-                                                        const std::string& clusterName) const
+void ConstraintNamer::POffUnitsUpperBound(unsigned constrIndex,
+                                          const std::string& clusterName) const
 {
-    SetThermalClusterElementName(constrIndex, "ParticipationOfOffUnitsToReserves", clusterName);
+    SetThermalClusterElementName(constrIndex, "POffUnitsUpperBound", clusterName);
 }
 
 void ConstraintNamer::POutCapacityThresholdInf(unsigned constrIndex,
