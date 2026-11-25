@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/optimisation/include/antares/solver/optimisation/constraints/OffUnitsThermalParticipatingToReserves.h Source File</title>
+<title>Antares Simulator: src/solver/optimisation/include/antares/solver/optimisation/constraints/ParticipationOfOffUnitsToReserve.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('OffUnitsThermalParticipatingToReserves_8h_source.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('ParticipationOfOffUnitsToReserve_8h_source.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -124,7 +124,7 @@ $(document).ready(function(){initNavTree('OffUnitsThermalParticipatingToReserves
 
 <div class="header">
   <div class="headertitle">
-<div class="title">OffUnitsThermalParticipatingToReserves.h</div>  </div>
+<div class="title">ParticipationOfOffUnitsToReserve.h</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
@@ -133,31 +133,31 @@ $(document).ready(function(){initNavTree('OffUnitsThermalParticipatingToReserves
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;ConstraintBuilder.h&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classOffUnitsThermalParticipatingToReserves.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="classOffUnitsThermalParticipatingToReserves.html">OffUnitsThermalParticipatingToReserves</a>: <span class="keyword">private</span> <a class="code" href="classConstraintFactory.html">ConstraintFactory</a></div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classParticipationOfOffUnitsToReserve.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="classParticipationOfOffUnitsToReserve.html">ParticipationOfOffUnitsToReserve</a> final: <span class="keyword">public</span> <a class="code" href="classConstraintFactory.html">ConstraintFactory</a></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <a class="code" href="classOffUnitsThermalParticipatingToReserves.html">OffUnitsThermalParticipatingToReserves</a>(<a class="code" href="classConstraintBuilder.html">ConstraintBuilder</a>&amp; builder, <a class="code" href="structReserveData.html">ReserveData</a>&amp; data):</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <a class="code" href="classParticipationOfOffUnitsToReserve.html">ParticipationOfOffUnitsToReserve</a>(<a class="code" href="classConstraintBuilder.html">ConstraintBuilder</a>&amp; builder, <a class="code" href="structReserveData.html">ReserveData</a>&amp; data):</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <a class="code" href="classConstraintFactory.html">ConstraintFactory</a>(builder),</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        data(data)</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    {</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    }</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classOffUnitsThermalParticipatingToReserves.html#a5b06b74cfabc50f4602b68ce58b5b07a">add</a>(<span class="keywordtype">int</span> pays, <span class="keywordtype">int</span> reserve, <span class="keywordtype">int</span> cluster, <span class="keywordtype">int</span> pdt);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classParticipationOfOffUnitsToReserve.html#ab675adedb06eaac3b4a2a1bd8f130408">add</a>(<span class="keywordtype">int</span> pays, <span class="keywordtype">int</span> reserve, <span class="keywordtype">int</span> cluster, <span class="keywordtype">int</span> pdt);</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <a class="code" href="structReserveData.html">ReserveData</a>&amp; data;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;};</div>
 <div class="ttc" id="aclassConstraintBuilder_html"><div class="ttname"><a href="classConstraintBuilder.html">ConstraintBuilder</a></div><div class="ttdef"><b>Definition:</b> ConstraintBuilder.h:46</div></div>
 <div class="ttc" id="aclassConstraintFactory_html"><div class="ttname"><a href="classConstraintFactory.html">ConstraintFactory</a></div><div class="ttdef"><b>Definition:</b> ConstraintBuilder.h:333</div></div>
-<div class="ttc" id="aclassOffUnitsThermalParticipatingToReserves_html"><div class="ttname"><a href="classOffUnitsThermalParticipatingToReserves.html">OffUnitsThermalParticipatingToReserves</a></div><div class="ttdef"><b>Definition:</b> OffUnitsThermalParticipatingToReserves.h:11</div></div>
-<div class="ttc" id="aclassOffUnitsThermalParticipatingToReserves_html_a5b06b74cfabc50f4602b68ce58b5b07a"><div class="ttname"><a href="classOffUnitsThermalParticipatingToReserves.html#a5b06b74cfabc50f4602b68ce58b5b07a">OffUnitsThermalParticipatingToReserves::add</a></div><div class="ttdeci">void add(int pays, int reserve, int cluster, int pdt)</div><div class="ttdoc">Add variables to the constraint and update constraints Matrix.</div><div class="ttdef"><b>Definition:</b> OffUnitsThermalParticipatingToReserves.cpp:6</div></div>
+<div class="ttc" id="aclassParticipationOfOffUnitsToReserve_html"><div class="ttname"><a href="classParticipationOfOffUnitsToReserve.html">ParticipationOfOffUnitsToReserve</a></div><div class="ttdef"><b>Definition:</b> ParticipationOfOffUnitsToReserve.h:11</div></div>
+<div class="ttc" id="aclassParticipationOfOffUnitsToReserve_html_ab675adedb06eaac3b4a2a1bd8f130408"><div class="ttname"><a href="classParticipationOfOffUnitsToReserve.html#ab675adedb06eaac3b4a2a1bd8f130408">ParticipationOfOffUnitsToReserve::add</a></div><div class="ttdeci">void add(int pays, int reserve, int cluster, int pdt)</div><div class="ttdoc">Add variables to the constraint and update constraints Matrix.</div><div class="ttdef"><b>Definition:</b> ParticipationOfOffUnitsToReserve.cpp:6</div></div>
 <div class="ttc" id="astructReserveData_html"><div class="ttname"><a href="structReserveData.html">ReserveData</a></div><div class="ttdef"><b>Definition:</b> ConstraintBuilder.h:396</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_58214dbee968e8ac661492141d050741.html">optimisation</a></li><li class="navelem"><a class="el" href="dir_7f9265255be167d9fc7d889839beddde.html">include</a></li><li class="navelem"><a class="el" href="dir_4f3aa64cbfddff7c3784c9e1340ff9b3.html">antares</a></li><li class="navelem"><a class="el" href="dir_e3cb1c1c156f8a1a0f5e657d39af19ce.html">solver</a></li><li class="navelem"><a class="el" href="dir_703a08c8b9d2f88ac5fb64946c0e4ddb.html">optimisation</a></li><li class="navelem"><a class="el" href="dir_673a42b4d32adff6df2ecb8198a5dc4a.html">constraints</a></li><li class="navelem"><b>OffUnitsThermalParticipatingToReserves.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_58214dbee968e8ac661492141d050741.html">optimisation</a></li><li class="navelem"><a class="el" href="dir_7f9265255be167d9fc7d889839beddde.html">include</a></li><li class="navelem"><a class="el" href="dir_4f3aa64cbfddff7c3784c9e1340ff9b3.html">antares</a></li><li class="navelem"><a class="el" href="dir_e3cb1c1c156f8a1a0f5e657d39af19ce.html">solver</a></li><li class="navelem"><a class="el" href="dir_703a08c8b9d2f88ac5fb64946c0e4ddb.html">optimisation</a></li><li class="navelem"><a class="el" href="dir_673a42b4d32adff6df2ecb8198a5dc4a.html">constraints</a></li><li class="navelem"><b>ParticipationOfOffUnitsToReserve.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

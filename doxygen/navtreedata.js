@@ -131,7 +131,7 @@ var NAVTREEINDEX =
 "classExprParser_1_1Right__exprContext.html#ad038184318b0c3a564cfe5a0bb3c51e2",
 "classFixture.html#a502fc71bc233b3e5791d117774583e56",
 "classInMemoryStudyLoader.html#a0e3cd339cddf5eb08497d4ed54f4a005",
-"classOptimizationStatistics.html#a6d1052d9a506e01b0771ca315a5c4765",
+"classOptimizationStatistics.html#a905e634265172259c9efdced1cb4dfee",
 "classScenarioBuilderParser.html#af6158871fb6a580a2f8279d8358af1d8",
 "classSymmetryFieldParser_1_1SymmetryFieldContext.html#af209589dd3e3c37d37d683bb9575030f",
 "classcheck__on__results_1_1compare__mps__files_1_1compare__mps__files.html#adb1cd90013903ea86e2582d650304587",
