@@ -4,6 +4,7 @@
 
 - **C++20** strictly required
 - All C++17 and C++20 features are available
+- Use boost libraries if needed, it's included in the project
 
 ## Type Preferences
 
