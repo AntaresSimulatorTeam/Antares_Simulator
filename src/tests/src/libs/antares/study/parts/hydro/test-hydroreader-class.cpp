@@ -97,7 +97,7 @@ struct Fixture
         buffer.clear();
         buffer = base_folder + SEP + hydro_folder + SEP + common_folder + SEP + capacity_folder
                  + SEP + maxpower + area_1->id.c_str() + ".txt";
-        MatrixIO::save(dailyMaxPumpAndGen, buffer, 2);
+        BOOST_REQUIRE(MatrixIO::save(dailyMaxPumpAndGen, buffer, 2));
     }
 
     void createFoldersAndFiles()
