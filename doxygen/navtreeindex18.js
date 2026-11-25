@@ -1,5 +1,9 @@
 var NAVTREEINDEX18 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1StaticLinkBase.html#a90963bfb7f46cbe24beed2e0dc4482fd":[9,0,0,12,7,5,51,5],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1StaticLinkBase.html#a9389000bdf2d158696900013ddc02160":[9,0,0,12,7,5,51,1],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1StaticLinkBase.html#aaf51681057cd8dbc424251330f85724f":[9,0,0,12,7,5,51,3],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1StaticLinkBase.html#ab1571b5c882edf41080c1ee6006c8325":[9,0,0,12,7,5,51,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1StaticLinkBase.html#abce0451c8b8938370a8d95889dd338bb":[9,0,0,12,7,5,51,10],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1StaticLinkBase.html#adf0516fdba99b8d64fc568c8faa4c7c9":[9,0,0,12,7,5,51,6],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1StaticLinkBase.html#af6a9bd1adedc2ae40ea1a8933fe85481":[9,0,0,12,7,5,51,2],
@@ -245,9 +249,5 @@ var NAVTREEINDEX18 =
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html":[9,0,0,12,7,7,0,7],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a02fc26267153c8dd7a1d55d4f2d63e9b":[9,0,0,12,7,7,0,7,0],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a1d0af1e1218712154eb85c46d84c3166":[9,0,0,12,7,7,0,7,4],
-"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a1d26895c86cf3ef4f419075a4cbf0709":[9,0,0,12,7,7,0,7,8],
-"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a3922838022f051023e92a12d5a37aa5e":[9,0,0,12,7,7,0,7,1],
-"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a4d2376c429e7a3a49419702af7c253cc":[9,0,0,12,7,7,0,7,9],
-"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a60731f4ad1cb249e0f8e7195d97fa753":[9,0,0,12,7,7,0,7,2],
-"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a81022b487851c5dcb90ac7a1aa59b39b":[9,0,0,12,7,7,0,7,10]
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a1d26895c86cf3ef4f419075a4cbf0709":[9,0,0,12,7,7,0,7,8]
 };

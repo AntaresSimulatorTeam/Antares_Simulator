@@ -1,5 +1,9 @@
 var NAVTREEINDEX25 =
 {
+"classOptimizationStatisticsWriter.html":[9,0,242],
+"classOptimizationStatisticsWriter.html#a427073aa4fc98039e14526caf6b6561b":[9,0,242,0],
+"classOptimizationStatisticsWriter.html#aa075f6d9de67c1d79693faeaced45890":[9,0,242,1],
+"classOptimizationStatisticsWriter.html#aa186e71da32d45fd483e4c377a66a927":[9,0,242,2],
 "classOrtoolsUtils.html":[9,0,245],
 "classOutput.html":[9,0,246],
 "classOutput.html#a0482280c8f91af837c124f9c79d616ef":[9,0,246,11],
@@ -245,9 +249,5 @@ var NAVTREEINDEX25 =
 "classScenarioBuilderParser_1_1GroupContext.html#a83d41356548821e327ac96d785a84351":[9,0,309,0,0],
 "classScenarioBuilderParser_1_1GroupContext.html#ab256d8104a356941f8d5c4fb5702b7be":[9,0,309,0,2],
 "classScenarioBuilderParser_1_1GroupContext.html#ad47d1faf7d6147403a576520c091980f":[9,0,309,0,3],
-"classScenarioBuilderParser_1_1GroupContext.html#ae079563a5c75fe2f5b42224241fed831":[9,0,309,0,1],
-"classScenarioBuilderParser_1_1LineContext.html":[9,0,309,1],
-"classScenarioBuilderParser_1_1LineContext.html#a3c6499dc775e9b111ea1f0ea5b206a48":[9,0,309,1,2],
-"classScenarioBuilderParser_1_1LineContext.html#a5b6572a715e3276ae42e2873491b3de2":[9,0,309,1,5],
-"classScenarioBuilderParser_1_1LineContext.html#a614e86b2d9b9133ed3165ee86c8febf9":[9,0,309,1,1]
+"classScenarioBuilderParser_1_1GroupContext.html#ae079563a5c75fe2f5b42224241fed831":[9,0,309,0,1]
 };

@@ -687,7 +687,8 @@ var hierarchy =
       [ "Antares::LinearProblem::DataImpl::TimeSeriesSet::RankTooBig", "classAntares_1_1LinearProblem_1_1DataImpl_1_1TimeSeriesSet_1_1RankTooBig.html", null ],
       [ "Antares::LinearProblem::ScenarioGroupRepository::AlreadyExists", "classAntares_1_1LinearProblem_1_1ScenarioGroupRepository_1_1AlreadyExists.html", null ],
       [ "Antares::LinearProblem::ScenarioGroupRepository::DoesNotExist", "classAntares_1_1LinearProblem_1_1ScenarioGroupRepository_1_1DoesNotExist.html", null ],
-      [ "Antares::Solver::Checks::LocationError", "classAntares_1_1Solver_1_1Checks_1_1LocationError.html", null ]
+      [ "Antares::Solver::Checks::LocationError", "classAntares_1_1Solver_1_1Checks_1_1LocationError.html", null ],
+      [ "Antares::Solver::Checks::PortFieldError", "classAntares_1_1Solver_1_1Checks_1_1PortFieldError.html", null ]
     ] ],
     [ "invest_problems.invest_problems", "classinvest__problems_1_1invest__problems.html", null ],
     [ "Antares::Solver::IResultWriter", "classAntares_1_1Solver_1_1IResultWriter.html", [

@@ -473,7 +473,8 @@ var annotated_dup =
       ] ],
       [ "Solver", null, [
         [ "Checks", null, [
-          [ "LocationError", "classAntares_1_1Solver_1_1Checks_1_1LocationError.html", null ]
+          [ "LocationError", "classAntares_1_1Solver_1_1Checks_1_1LocationError.html", null ],
+          [ "PortFieldError", "classAntares_1_1Solver_1_1Checks_1_1PortFieldError.html", null ]
         ] ],
         [ "Hydro", null, [
           [ "Daily", null, [

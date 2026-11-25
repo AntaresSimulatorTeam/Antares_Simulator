@@ -1,5 +1,9 @@
 var NAVTREEINDEX39 =
 {
+"structAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexResult.html#a24ed4bb2b3b2fded76cd95cf4b423edb":[9,0,0,12,5,0,3,3],
+"structAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexResult.html#a96028420c95dd1778f4c0e3fe194cd63":[9,0,0,12,5,0,3,2],
+"structAntares_1_1Solver_1_1Optimization_1_1Simplex_1_1SimplexResult.html#af58ffb2a462021a5543c64b5c0946cc0":[9,0,0,12,5,0,3,0],
+"structAntares_1_1Solver_1_1ProblemEntity.html":[9,0,0,12,18],
 "structAntares_1_1Solver_1_1ProblemEntity.html#a1553a9db0d6771e21742bded884cc418":[9,0,0,12,18,0],
 "structAntares_1_1Solver_1_1ProblemEntity.html#af41ac3f273b0af5a85094dabd9db9cdf":[9,0,0,12,18,1],
 "structAntares_1_1Solver_1_1ScenarioScope.html":[9,0,0,12,25],
@@ -245,9 +249,5 @@ var NAVTREEINDEX39 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevelTraits.html#a87eb49fe419a9820e180c57f1685c54f":[9,0,0,12,7,5,86,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoadTraits.html":[9,0,0,12,7,5,87],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoadTraits.html#a3f767cdef3e8cb0efaca6491a1424654":[9,0,0,12,7,5,87,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoadTraits.html#ac94e3e3dab6163ce7ee40d59f5eab450":[9,0,0,12,7,5,87,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance_1_1Statistics.html":[9,0,0,12,7,5,14,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroupTraits.html":[9,0,0,12,7,5,89],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroupTraits.html#abc1999ac7aab37aee7f5811b7c73b2d0":[9,0,0,12,7,5,89,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroupTraits.html#ae3db69eaec216fff44feec0169a7e256":[9,0,0,12,7,5,89,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoadTraits.html#ac94e3e3dab6163ce7ee40d59f5eab450":[9,0,0,12,7,5,87,1]
 };

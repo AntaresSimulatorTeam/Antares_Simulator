@@ -1,5 +1,9 @@
 var NAVTREEINDEX40 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance_1_1Statistics.html":[9,0,0,12,7,5,14,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroupTraits.html":[9,0,0,12,7,5,89],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroupTraits.html#abc1999ac7aab37aee7f5811b7c73b2d0":[9,0,0,12,7,5,89,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroupTraits.html#ae3db69eaec216fff44feec0169a7e256":[9,0,0,12,7,5,89,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageByClusterBase_1_1Statistics.html":[9,0,0,12,7,5,91,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageInjectionByClusterTraits.html":[9,0,0,12,7,5,93],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageLevelsByClusterTraits.html":[9,0,0,12,7,5,94],
@@ -245,9 +249,5 @@ var NAVTREEINDEX40 =
 "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html#a2844fe3746edf8f66d1106a5b89d0c1f":[9,0,0,13,3,10],
 "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html#a44d01713ce180942ce8b013971248378":[9,0,0,13,3,2],
 "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html#a4920e25c8f7540896105d9f9dc2920bf":[9,0,0,13,3,9],
-"structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html#a4e99bdb9421fafe2095e2e4a00d4fb12":[9,0,0,13,3,8],
-"structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html#a79528bfeddf3e32045e1c12a5a217d0f":[9,0,0,13,3,3],
-"structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html#a9fa388886aa116b9262991a87335760b":[9,0,0,13,3,0],
-"structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html#aa7bdb0f9853614149f01d36d26a002bc":[9,0,0,13,3,11],
-"structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html#aad8a00a90d55fe269b3b4a067b194945":[9,0,0,13,3,4]
+"structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html#a4e99bdb9421fafe2095e2e4a00d4fb12":[9,0,0,13,3,8]
 };

@@ -1,5 +1,8 @@
 var NAVTREEINDEX8 =
 {
+"classAntares_1_1Data_1_1StudyRuntimeInfos.html#af1f6117511f38d9392284eddb2005989":[9,0,0,3,85,1],
+"classAntares_1_1Data_1_1StudyRuntimeInfos.html#afe52f5b3950ed139e430cd789b71d11c":[9,0,0,3,85,5],
+"classAntares_1_1Data_1_1StudyVersion.html":[9,0,0,3,93],
 "classAntares_1_1Data_1_1StudyVersion.html#a188ee2697e85307e84228ab806b817ee":[9,0,0,3,93,5],
 "classAntares_1_1Data_1_1StudyVersion.html#a26d794df23c8604eadce35cab13ec13e":[9,0,0,3,93,4],
 "classAntares_1_1Data_1_1StudyVersion.html#a40c6d959ece697abf00941264b637bcf":[9,0,0,3,93,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX8 =
 "classAntares_1_1Error_1_1InvalidOptimizationRange.html#a56863281501c16ae5e9b1e14cafeb2f5":[9,0,0,5,14,0],
 "classAntares_1_1Error_1_1InvalidSimulationMode.html":[9,0,0,5,15],
 "classAntares_1_1Error_1_1InvalidSimulationMode.html#a9db107aa1d976827ea86b414bc4bc53e":[9,0,0,5,15,0],
-"classAntares_1_1Error_1_1InvalidSolver.html":[9,0,0,5,16],
-"classAntares_1_1Error_1_1InvalidSolver.html#ad465ed599b972363fc516aef3a6c167e":[9,0,0,5,16,0],
-"classAntares_1_1Error_1_1InvalidSolverSpecificParameters.html":[9,0,0,5,17],
-"classAntares_1_1Error_1_1InvalidSolverSpecificParameters.html#a962b2bcd56ac0ee367c3f4a654281730":[9,0,0,5,17,0]
+"classAntares_1_1Error_1_1InvalidSolver.html":[9,0,0,5,16]
 };

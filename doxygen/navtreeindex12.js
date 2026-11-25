@@ -1,5 +1,8 @@
 var NAVTREEINDEX12 =
 {
+"classAntares_1_1LinearProblem_1_1DataImpl_1_1IDataSeries.html#ac4b4a9fb2978bc7d1c2a022b1cc9b4a5":[9,0,0,8,1,0,2],
+"classAntares_1_1LinearProblem_1_1DataImpl_1_1IDataSeries.html#ad76bed44226249290d268cbe14a27fd0":[9,0,0,8,1,0,4],
+"classAntares_1_1LinearProblem_1_1DataImpl_1_1IDataSeries.html#af1ea30fc5ac7e933c00d1d6e656cc0cf":[9,0,0,8,1,0,3],
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1LinearProblemData.html":[9,0,0,8,1,2],
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1LinearProblemData.html#a11609ca25d9093dc4bbb298624262a13":[9,0,0,8,1,2,4],
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1LinearProblemData.html#a7659d74216799f04792d889e20a52484":[9,0,0,8,1,2,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Matrix.html#a191b8d7400f0841c3c3e28d6c5c8288c":[9,0,0,17,22],
 "classAntares_1_1Matrix.html#a1cb6b532918e9b20971228ceff5691a2":[9,0,0,17,40],
 "classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2":[9,0,0,17,8],
-"classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a1d85b0d52cc96d30d04776011c3819e3":[9,0,0,17,8,2],
-"classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a34cdfceff80957c5a70e8c89f022a7b5":[9,0,0,17,8,4],
-"classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a49efeee2664a8ac46263360755d54140":[9,0,0,17,8,1],
-"classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a921105aa2239c4f7cc8e1532a24f89ee":[9,0,0,17,8,3]
+"classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a1d85b0d52cc96d30d04776011c3819e3":[9,0,0,17,8,2]
 };

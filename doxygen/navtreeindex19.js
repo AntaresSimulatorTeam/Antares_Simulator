@@ -1,5 +1,9 @@
 var NAVTREEINDEX19 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a3922838022f051023e92a12d5a37aa5e":[9,0,0,12,7,7,0,7,1],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a4d2376c429e7a3a49419702af7c253cc":[9,0,0,12,7,7,0,7,9],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a60731f4ad1cb249e0f8e7195d97fa753":[9,0,0,12,7,7,0,7,2],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a81022b487851c5dcb90ac7a1aa59b39b":[9,0,0,12,7,7,0,7,10],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#aa7f88cc26b6baa377b9759a3de9ca672":[9,0,0,12,7,7,0,7,11],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#ab21c86e3933ddcb88ca0fbe4968227c4":[9,0,0,12,7,7,0,7,6],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#aca1a535a92bbfd34e7d5b93a2530ece9":[9,0,0,12,7,7,0,7,5],
@@ -245,9 +249,5 @@ var NAVTREEINDEX19 =
 "classAntares_1_1Writer_1_1ColumnAdapterFactory.html#a7cab36ef292505033672ca53cb64c60d":[9,0,0,16,0,5],
 "classAntares_1_1Writer_1_1ColumnAdapterFactory.html#a9b05d24e35061ad72cd31b17cd9056d4":[9,0,0,16,0,3],
 "classAntares_1_1Writer_1_1ColumnAdapterFactory.html#abfeff3a5c5e53a1675d17b41f7ec670a":[9,0,0,16,0,2],
-"classAntares_1_1Writer_1_1ColumnAdapterFactory.html#acc815822a0b4468f550d3a1d7022efff":[9,0,0,16,0,6],
-"classAntares_1_1Writer_1_1ColumnAdapterFactory.html#ad6764652b1b326da21ff368ce4a6bf84":[9,0,0,16,0,1],
-"classAntares_1_1Writer_1_1DoubleColumnAdapter.html":[9,0,0,16,3],
-"classAntares_1_1Writer_1_1DoubleColumnAdapter.html#a147a64276aff6d8aa081dd57a48b8b48":[9,0,0,16,3,0],
-"classAntares_1_1Writer_1_1DoubleColumnAdapter.html#a7c534815b9ee9d3f7b1f935f54a1cad7":[9,0,0,16,3,2]
+"classAntares_1_1Writer_1_1ColumnAdapterFactory.html#acc815822a0b4468f550d3a1d7022efff":[9,0,0,16,0,6]
 };
