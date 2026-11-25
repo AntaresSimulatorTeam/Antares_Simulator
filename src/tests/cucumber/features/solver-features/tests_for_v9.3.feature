@@ -38,3 +38,15 @@ Feature: tests for v9.3
     And in area "area 4", year 1 and hour 12, near price cap is 1 hours
     And in area "area 4", year 1 and hour 13, near price cap is 0 hours
     And in area "area 4", year 1 and hour 17, near price cap is 1 hours
+
+  @fast @short
+  Scenario: near price cap CSR
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/valid-v930/tests-near-price-cap"
+    And the adequacy patch is enabled for area "area" and all output variables are selected
+    And the linear solver is sirius
+    When I run antares simulator
+    Then the simulation succeeds
+    And in area "area", year 1 and hour 0, near price cap CSR is 0 hours
+    And in area "area", year 1 and hour 73, near price cap CSR is 1 hours
+    And in area "area 4", year 1 and hour 11, near price cap CSR is 1 hours
+    And in area "area 4", year 1 and hour 13, near price cap CSR is 0 hours

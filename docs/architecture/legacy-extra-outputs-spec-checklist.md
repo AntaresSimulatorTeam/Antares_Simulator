@@ -24,7 +24,7 @@ supplies the row's component and time index.
 | [x] | `imbalance_cost` | `spillage_cost·spilled + unsupplied_energy_cost·unsupplied` (user costs, un-noised: `CoutDeDefaillance*SansBruit`) | `UnsuppliedEnergy` |
 | [x] | `is_loss_of_load` | `unsupplied_energy > 0` | `UnsuppliedEnergy` |
 | [x] | `is_significant_loss_of_load` | `unsupplied_energy > 0.5` | `UnsuppliedEnergy` |
-| [x] | `is_near_loss_of_load` | `dual(balance) > unsupplied_energy_cost - 5` | `AreaBalance` constraint |
+| [x] | `is_near_loss_of_load` | `price > unsupplied_energy_cost - 5 + 0.01` | `AreaBalance` constraint |
 
 | [x] | `domestic_unsupplied_energy` | `DENS` (domestic energy not supplied, from `ResultatsHoraires`) | `ResultatsHoraires[pays].ValeursHorairesDENS` |
 | [x] | `is_local_matching_rule_violated` | `LMR violation flag` (from `ResultatsHoraires`) | `ResultatsHoraires[pays].ValeursHorairesLmrViolations` |

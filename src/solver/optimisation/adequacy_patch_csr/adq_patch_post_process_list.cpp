@@ -47,9 +47,8 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(
                                                          numSpace_,
                                                          params.optOptions));
     post_process_list.push_back(
-      std::make_unique<DTGnettingAfterCSRcmd>(problemeHebdo_, areas, numSpace));
-    post_process_list.push_back(
-      std::make_unique<UpdateMrgPriceAfterCSRcmd>(problemeHebdo_, areas, numSpace));
+      std::make_unique<DTGnettingAfterCSRcmd>(adqPatchParams, problemeHebdo_, areas, numSpace));
+    post_process_list.push_back(std::make_unique<UpdateMrgPriceAfterCSRcmd>(problemeHebdo_, areas));
 
     // After curtailment sharing, DTG netting and the marginal price update, i.e.
     // once the whole patch has been applied.
