@@ -3,5 +3,4 @@
 	url = https://github.com/microsoft/vcpkg.git
 [submodule "Antares_Simulator_Tests_NR"]
 	path = resources/Antares_Simulator_Tests_NR
-	url = https://github.com/sylvmara/Antares_Simulator_Tests_NR.git
-	branch = feature/reserves_scalian_lot_2_new
+	url = https://github.com/AntaresSimulatorTeam/Antares_Simulator_Tests_NR.git
