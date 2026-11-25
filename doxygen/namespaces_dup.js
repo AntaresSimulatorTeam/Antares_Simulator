@@ -1873,11 +1873,21 @@ var namespaces_dup =
         [ "maxFolderSameTime", "utils_8cpp.html#a3e69fe3927d336b9ed56cebbe28bb837", null ]
       ] ],
       [ "ViewBuilder", null, [
+        [ "ViewType", "viewBuilder_8h.html#a912229e481b63a8e88725cf86aa9f5c1", [
+          [ "AREA", "viewBuilder_8h.html#a912229e481b63a8e88725cf86aa9f5c1a639aaa22a784d5e5cb03a522267e79c4", null ],
+          [ "LINK", "viewBuilder_8h.html#a912229e481b63a8e88725cf86aa9f5c1a58c0a0e97e6d2f615bc264c2775fda44", null ],
+          [ "THERMAL", "viewBuilder_8h.html#a912229e481b63a8e88725cf86aa9f5c1a1e607b3f66de7f6e704f0334fc50fc7b", null ],
+          [ "STORAGE", "viewBuilder_8h.html#a912229e481b63a8e88725cf86aa9f5c1a754a5d433173b5ddc7debc2110ac575f", null ],
+          [ "RENEWABLE", "viewBuilder_8h.html#a912229e481b63a8e88725cf86aa9f5c1ac1d08fe81ccef66bfb00f597e46aa7f3", null ]
+        ] ],
         [ "areaLocation", "legacyToYaml_8h.html#aa57f37d0a0b7f556edadfe17dd039a17", null ],
         [ "areaToYaml", "legacyToYaml_8h.html#aba2e2dbb9adc8c38abadb6804e660644", null ],
         [ "exportSystemForView", "generateSystemForView_8cpp.html#a29722fd70d0750415fc314586cf46b15", null ],
+        [ "exportViewConfig", "generateAreaViewConfig_8cpp.html#abb8112df98b13d4b951aed674210be56", null ],
+        [ "generateAreaViewConfig", "generateAreaViewConfig_8cpp.html#a35b2a8e94317bd9b0d34a1ea63e06a98", null ],
         [ "generateSystemForView", "generateSystemForView_8cpp.html#ad237bcc794787b0ef6f57e62d33d64c5", null ],
         [ "generateSystemLegacyComponents", "generateSystemForView_8cpp.html#ac6b5befac46704c74875ed534ab563e1", null ],
+        [ "generateViewConfig", "generateAreaViewConfig_8cpp.html#a7ae80626649188b46ec117deb40b4dea", null ],
         [ "linkToYaml", "legacyToYaml_8h.html#a1fd1fc6822ce52d49a1e571b74dc9eef", null ],
         [ "loadToYaml", "legacyToYaml_8h.html#a015299cf964cc3e4b1a36b7f056489af", null ],
         [ "longTermStorageToYaml", "legacyToYaml_8h.html#af4568ac887798e2bfaf278cf7b2588bf", null ],
