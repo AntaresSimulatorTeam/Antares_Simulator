@@ -230,6 +230,31 @@ BOOST_AUTO_TEST_CASE(component_properties)
     BOOST_CHECK_EQUAL(prop2.value, "2");
 }
 
+BOOST_AUTO_TEST_CASE(link_capacity_connections_are_parsed)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            components:
+                - id: link-addon
+                  model: invest.link
+            link-capacity-connections:
+                - component: link-addon
+                  port: capacity_port
+                  link-component:
+                    from: de
+                    to: fr
+    )"s;
+    YmlSystem::System systemObj = parser.parse(system, "");
+    BOOST_REQUIRE_EQUAL(systemObj.linkCapacityConnections.size(), 1);
+    const auto& connection = systemObj.linkCapacityConnections[0];
+    BOOST_CHECK_EQUAL(connection.componentId, "link-addon");
+    BOOST_CHECK_EQUAL(connection.portId, "capacity_port");
+    BOOST_CHECK_EQUAL(connection.linkComponent.from, "de");
+    BOOST_CHECK_EQUAL(connection.linkComponent.to, "fr");
+}
+
 // --------------------------------------------------------------------------
 // Decoder error-path coverage: requireMap / requireSize / System::decode
 // --------------------------------------------------------------------------
@@ -301,6 +326,18 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connection_is_a_scalar_throws_input_error)
         system:
             id: base_system
             thermal-capacity-connections:
+                - "not a map"
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(link_capacity_connection_is_a_scalar_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            link-capacity-connections:
                 - "not a map"
     )"s;
     BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
@@ -389,6 +426,19 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connection_with_wrong_field_count_throws_i
     BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
+BOOST_AUTO_TEST_CASE(link_capacity_connection_with_wrong_field_count_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            link-capacity-connections:
+                - component: c1
+                  port: p1
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
 BOOST_AUTO_TEST_CASE(thermal_component_with_wrong_field_count_throws_input_error)
 {
     YmlSystem::Parser parser;
@@ -418,6 +468,35 @@ BOOST_AUTO_TEST_CASE(thermal_component_null_throws_input_error)
     BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
+BOOST_AUTO_TEST_CASE(link_component_with_wrong_field_count_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            link-capacity-connections:
+                - component: c1
+                  port: p1
+                  link-component:
+                    from: fr
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(link_component_null_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            link-capacity-connections:
+                - component: c1
+                  port: p1
+                  link-component: ~
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
 BOOST_AUTO_TEST_CASE(non_mapping_entries_are_rejected_by_field_validation)
 {
     YmlSystem::Parser parser;
@@ -428,6 +507,9 @@ BOOST_AUTO_TEST_CASE(non_mapping_entries_are_rejected_by_field_validation)
       "system:\n  thermal-capacity-connections:\n    - scalar\n",
       "system:\n  thermal-capacity-connections:\n    - component: c\n      port: p\n"
       "      thermal-component: null\n",
+      "system:\n  link-capacity-connections:\n    - scalar\n",
+      "system:\n  link-capacity-connections:\n    - component: c\n      port: p\n"
+      "      link-component: null\n",
       "system: scalar\n"};
     for (const auto& system: systems)
     {
