@@ -1,5 +1,13 @@
 var NAVTREEINDEX11 =
 {
+"classAntares_1_1IniFile.html#a072c2782308977e7a081f799b159ee05":[9,0,0,28,10],
+"classAntares_1_1IniFile.html#a2d6fd096ed353185ffb459562cd55c9b":[9,0,0,28,8],
+"classAntares_1_1IniFile.html#a36b611ee4924c2e02d293ddd22f59bf0":[9,0,0,28,16],
+"classAntares_1_1IniFile.html#a48712ebe4688a922dfc30e348b67a263":[9,0,0,28,6],
+"classAntares_1_1IniFile.html#a5693d2cdf4825febbb2395e867bf079d":[9,0,0,28,5],
+"classAntares_1_1IniFile.html#a6f40170daf66853753e4cf72e6ab0ca0":[9,0,0,28,11],
+"classAntares_1_1IniFile.html#a8dc409ca95b773aadaa8819e0d0d6a41":[9,0,0,28,2],
+"classAntares_1_1IniFile.html#a9e9644d3db849bfe2853d8377617af4d":[9,0,0,28,7],
 "classAntares_1_1IniFile.html#a9f3dd37a1c93bdb672c81bd311d4fef4":[9,0,0,28,19],
 "classAntares_1_1IniFile.html#a9f8634c7a8be5990c044a3763716d388":[9,0,0,28,21],
 "classAntares_1_1IniFile.html#a9fadf26fd4930149bb82af0522789213":[9,0,0,28,4],
@@ -241,13 +249,5 @@ var NAVTREEINDEX11 =
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository.html#a7a5f0b568dd4aeeefd169185adac907d":[9,0,0,8,1,1,6],
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository.html#a9c5fb2533df95acacb8214f1da2bae94":[9,0,0,8,1,1,3],
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository.html#aa0b0a920fb8df9e84183d1fa26f4b3b5":[9,0,0,8,1,1,4],
-"classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists.html":[9,0,0,8,1,1,0],
-"classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists.html#a53966f50b6878b1d981e7592af0bbd81":[9,0,0,8,1,1,0,0],
-"classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist.html":[9,0,0,8,1,1,1],
-"classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist.html#aa5feadc2d7947d99b7c568249c5ae077":[9,0,0,8,1,1,1,0],
-"classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository_1_1Empty.html":[9,0,0,8,1,1,2],
-"classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository_1_1Empty.html#ac06fd069c071fab3c096a61b2e0a1535":[9,0,0,8,1,1,2,0],
-"classAntares_1_1LinearProblem_1_1DataImpl_1_1IDataSeries.html":[9,0,0,8,1,0],
-"classAntares_1_1LinearProblem_1_1DataImpl_1_1IDataSeries.html#a1ae47f469e1bfd4b73db82d510a7fe8a":[9,0,0,8,1,0,0],
-"classAntares_1_1LinearProblem_1_1DataImpl_1_1IDataSeries.html#a6576cdf2832a6bee47047b6038b570eb":[9,0,0,8,1,0,1]
+"classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists.html":[9,0,0,8,1,1,0]
 };

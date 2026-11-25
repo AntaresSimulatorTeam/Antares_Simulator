@@ -1,5 +1,13 @@
 var NAVTREEINDEX15 =
 {
+"classAntares_1_1Solver_1_1InMemoryWriter.html#a2b6b35b4c91e3fd77b4e0f6a0031efcb":[9,0,0,12,12,0],
+"classAntares_1_1Solver_1_1InMemoryWriter.html#a31970313a0ab45a1606530b4682454bb":[9,0,0,12,12,1],
+"classAntares_1_1Solver_1_1InMemoryWriter.html#a51ddf72f2c825c32f3912f09c55eb405":[9,0,0,12,12,8],
+"classAntares_1_1Solver_1_1InMemoryWriter.html#a5e4afcfa10d7328075ebd79d6047b8f9":[9,0,0,12,12,7],
+"classAntares_1_1Solver_1_1InMemoryWriter.html#a7a4e2e90cc6e8a088cb8f146bd32b3d3":[9,0,0,12,12,2],
+"classAntares_1_1Solver_1_1InMemoryWriter.html#a869ad6d0755f664efc50d6a21e28c79d":[9,0,0,12,12,5],
+"classAntares_1_1Solver_1_1InMemoryWriter.html#a9edd0f1f4856037959fa62ba05002afe":[9,0,0,12,12,4],
+"classAntares_1_1Solver_1_1InMemoryWriter.html#ae79bc278d4eff373baf313ebb426361b":[9,0,0,12,12,6],
 "classAntares_1_1Solver_1_1InMemoryWriter.html#af4649e785d4277c4ffd9e4b8324b4d8e":[9,0,0,12,12,3],
 "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html":[9,0,0,12,3,0,0],
 "classAntares_1_1Solver_1_1Initialization_1_1Error_1_1NoQueueService.html#a0773a60c212c3b0ab29b30de015da219":[9,0,0,12,3,0,0,0],
@@ -82,7 +90,7 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1Simulation_1_1CyclicIterator.html#adc9d53cd7e3e33b817ce17d800e2d80a":[9,0,0,12,6,23,4],
 "classAntares_1_1Solver_1_1Simulation_1_1DTGnettingAfterCSRcmd.html":[9,0,0,12,6,5],
 "classAntares_1_1Solver_1_1Simulation_1_1DTGnettingAfterCSRcmd.html#a1233ab55f8163572f45c05a50363a586":[9,0,0,12,6,5,1],
-"classAntares_1_1Solver_1_1Simulation_1_1DTGnettingAfterCSRcmd.html#a1b0aec674608d7dedab29a04250330ed":[9,0,0,12,6,5,0],
+"classAntares_1_1Solver_1_1Simulation_1_1DTGnettingAfterCSRcmd.html#a59024929dfedb5f251b33b276ceb8f81":[9,0,0,12,6,5,0],
 "classAntares_1_1Solver_1_1Simulation_1_1DispatchableMarginPostProcessCmd.html":[9,0,0,12,6,2],
 "classAntares_1_1Solver_1_1Simulation_1_1DispatchableMarginPostProcessCmd.html#a12525b9e45bf5462601a538292187f46":[9,0,0,12,6,2,1],
 "classAntares_1_1Solver_1_1Simulation_1_1DispatchableMarginPostProcessCmd.html#aab83fa01c83f8806161aaf42bbb19285":[9,0,0,12,6,2,0],
@@ -169,7 +177,7 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1Simulation_1_1StorageListSort.html#ab86005738de71f701552b20133409bbb":[9,0,0,12,6,26,0],
 "classAntares_1_1Solver_1_1Simulation_1_1UpdateMrgPriceAfterCSRcmd.html":[9,0,0,12,6,4],
 "classAntares_1_1Solver_1_1Simulation_1_1UpdateMrgPriceAfterCSRcmd.html#ad2c99471d6a40ecb9a1be1be721b4550":[9,0,0,12,6,4,1],
-"classAntares_1_1Solver_1_1Simulation_1_1UpdateMrgPriceAfterCSRcmd.html#af1086aa1d9fb6a6fa8ff6260d04781d3":[9,0,0,12,6,4,0],
+"classAntares_1_1Solver_1_1Simulation_1_1UpdateMrgPriceAfterCSRcmd.html#adfdaff67e2d6a2b3b8442b129158c0ab":[9,0,0,12,6,4,0],
 "classAntares_1_1Solver_1_1Simulation_1_1WriteDebugAdequacyPatch.html":[9,0,0,12,6,9],
 "classAntares_1_1Solver_1_1Simulation_1_1WriteDebugAdequacyPatch.html#a7d55a3334aea2231d3ee149d8f887d7f":[9,0,0,12,6,9,1],
 "classAntares_1_1Solver_1_1Simulation_1_1WriteDebugAdequacyPatch.html#aa05a43ba449ddebcb24f03f8998f980e":[9,0,0,12,6,9,0],
@@ -241,13 +249,5 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html#af64d429861d44ac78b178bfe3ae7e288":[9,0,0,12,6,21,12],
 "classAntares_1_1Solver_1_1SingleProblemGetter.html":[9,0,0,12,10],
 "classAntares_1_1Solver_1_1SingleProblemGetter.html#a0d217ecec39e7584f6167f63be17dd61":[9,0,0,12,10,6],
-"classAntares_1_1Solver_1_1SingleProblemGetter.html#a147c695f13a99c4e5c5ae4101f4117a7":[9,0,0,12,10,7],
-"classAntares_1_1Solver_1_1SingleProblemGetter.html#a2f69b06241987cb3d116a504de3b12eb":[9,0,0,12,10,5],
-"classAntares_1_1Solver_1_1SingleProblemGetter.html#a577c72d5a1ee659d8001b703d6b65234":[9,0,0,12,10,0],
-"classAntares_1_1Solver_1_1SingleProblemGetter.html#a70484175188fcdc158658a740917b940":[9,0,0,12,10,10],
-"classAntares_1_1Solver_1_1SingleProblemGetter.html#a7129bc80ae6e230afac331715bc35c71":[9,0,0,12,10,8],
-"classAntares_1_1Solver_1_1SingleProblemGetter.html#a8ea9031b9568c230449668a9633c9814":[9,0,0,12,10,2],
-"classAntares_1_1Solver_1_1SingleProblemGetter.html#aa223c37a230b8f3ce347606ce3fa05d8":[9,0,0,12,10,3],
-"classAntares_1_1Solver_1_1SingleProblemGetter.html#aa3f22eef8a4a0c56884490c755a3e5fd":[9,0,0,12,10,1],
-"classAntares_1_1Solver_1_1SingleProblemGetter.html#ae625c9a225b8b34cf95f6bdb59e2a5ad":[9,0,0,12,10,9]
+"classAntares_1_1Solver_1_1SingleProblemGetter.html#a147c695f13a99c4e5c5ae4101f4117a7":[9,0,0,12,10,7]
 };

@@ -686,6 +686,7 @@ var annotated_dup =
             [ "NbOfDispatchedUnitsTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsTraits.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsTraits" ],
             [ "NbOfDispatchedUnitsByPlantTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlantTraits.html", null ],
             [ "NearPriceCapTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCapTraits.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCapTraits" ],
+            [ "NearPriceCapCSRTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCapCSRTraits.html", null ],
             [ "NonProportionalCostTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostTraits.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostTraits" ],
             [ "NonProportionalCostByDispatchablePlantTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlantTraits.html", null ],
             [ "OperatingCostTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCostTraits.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCostTraits" ],

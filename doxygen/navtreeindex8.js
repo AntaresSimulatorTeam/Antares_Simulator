@@ -1,5 +1,13 @@
 var NAVTREEINDEX8 =
 {
+"classAntares_1_1Data_1_1StudyRuntimeInfos.html#a6ac7dbcc61884a7d42785f0f8479ddc7":[9,0,0,3,85,3],
+"classAntares_1_1Data_1_1StudyRuntimeInfos.html#a823b3b90b5b1c12dccbfdabbfde03d1e":[9,0,0,3,85,12],
+"classAntares_1_1Data_1_1StudyRuntimeInfos.html#a8ac89fa4b71166bc9a236b8137969db1":[9,0,0,3,85,15],
+"classAntares_1_1Data_1_1StudyRuntimeInfos.html#aacc2750e79b6547eed327099a892ddeb":[9,0,0,3,85,4],
+"classAntares_1_1Data_1_1StudyRuntimeInfos.html#ab0469673470309ef7b986493faf6db82":[9,0,0,3,85,8],
+"classAntares_1_1Data_1_1StudyRuntimeInfos.html#ac0abd4cba8aa233c5057aea91d5aec24":[9,0,0,3,85,2],
+"classAntares_1_1Data_1_1StudyRuntimeInfos.html#ac3e98059d9e4cc164dc654b6a5174671":[9,0,0,3,85,10],
+"classAntares_1_1Data_1_1StudyRuntimeInfos.html#adbe494c55b0338b8716771113752fa7d":[9,0,0,3,85,17],
 "classAntares_1_1Data_1_1StudyRuntimeInfos.html#af1f6117511f38d9392284eddb2005989":[9,0,0,3,85,1],
 "classAntares_1_1Data_1_1StudyRuntimeInfos.html#afe52f5b3950ed139e430cd789b71d11c":[9,0,0,3,85,5],
 "classAntares_1_1Data_1_1StudyVersion.html":[9,0,0,3,93],
@@ -241,13 +249,5 @@ var NAVTREEINDEX8 =
 "classAntares_1_1Error_1_1IncompatiblePriceTakingOrderForHybrid.html":[9,0,0,5,31],
 "classAntares_1_1Error_1_1IncompatiblePriceTakingOrderForHybrid.html#ae778964f384d7438123daeeb912fe02a":[9,0,0,5,31,0],
 "classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html":[9,0,0,5,30],
-"classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html#ad9f4d9a0757eb427fd1a014954a4ffb7":[9,0,0,5,30,0],
-"classAntares_1_1Error_1_1InvalidArgumentError.html":[9,0,0,5,0],
-"classAntares_1_1Error_1_1InvalidFileName.html":[9,0,0,5,6],
-"classAntares_1_1Error_1_1InvalidFileName.html#a00de22d645d8a660f22b7cca4618c0d0":[9,0,0,5,6,0],
-"classAntares_1_1Error_1_1InvalidOptimizationRange.html":[9,0,0,5,14],
-"classAntares_1_1Error_1_1InvalidOptimizationRange.html#a56863281501c16ae5e9b1e14cafeb2f5":[9,0,0,5,14,0],
-"classAntares_1_1Error_1_1InvalidSimulationMode.html":[9,0,0,5,15],
-"classAntares_1_1Error_1_1InvalidSimulationMode.html#a9db107aa1d976827ea86b414bc4bc53e":[9,0,0,5,15,0],
-"classAntares_1_1Error_1_1InvalidSolver.html":[9,0,0,5,16]
+"classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html#ad9f4d9a0757eb427fd1a014954a4ffb7":[9,0,0,5,30,0]
 };

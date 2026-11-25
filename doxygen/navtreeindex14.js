@@ -1,5 +1,13 @@
 var NAVTREEINDEX14 =
 {
+"classAntares_1_1Optimization_1_1BasisStatus.html#a21a4c93d32d00b804ee043465c87d67b":[9,0,0,11,34,3],
+"classAntares_1_1Optimization_1_1BasisStatus.html#a288190c43b625579499a7345ad4b09d5":[9,0,0,11,34,1],
+"classAntares_1_1Optimization_1_1BasisStatus.html#a642a40833735909fd9bcd3df091d5d48":[9,0,0,11,34,2],
+"classAntares_1_1Optimization_1_1BasisStatus.html#a7dbc918c5f0efb9ed7a668f0e801f2e8":[9,0,0,11,34,4],
+"classAntares_1_1Optimization_1_1BasisStatus.html#ab2b94cf7318e4cccfecdbc3652a8cdb9":[9,0,0,11,34,8],
+"classAntares_1_1Optimization_1_1BasisStatus.html#abf4ad63427cd6be77d421d8e48ebb644":[9,0,0,11,34,6],
+"classAntares_1_1Optimization_1_1BasisStatus.html#ac684bcee0cb5c08a6841c765bbf30b89":[9,0,0,11,34,5],
+"classAntares_1_1Optimization_1_1BasisStatus.html#ae03a6c0bfbb3643926d62dfaf804b5e3":[9,0,0,11,34,7],
 "classAntares_1_1Optimization_1_1BasisStatus.html#ae51c40ceaf3dee1dc0b97c99b94da52c":[9,0,0,11,34,9],
 "classAntares_1_1Optimization_1_1BasisStatus.html#afe30bcc6d4a62411b6c81ccb74a6a272":[9,0,0,11,34,0],
 "classAntares_1_1Optimization_1_1BasisStatusImpl.html":[9,0,0,11,33],
@@ -241,13 +249,5 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#ab186edf43dc7154042e8686079bdd241":[9,0,0,12,2,3,0],
 "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#ab74a63ccf14af598667171e29c41cdb8":[9,0,0,12,2,3,8],
 "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html#acb4a5cca89621b3bd7f4ccd273a7ee8e":[9,0,0,12,2,3,4],
-"classAntares_1_1Solver_1_1InMemoryWriter.html":[9,0,0,12,12],
-"classAntares_1_1Solver_1_1InMemoryWriter.html#a2b6b35b4c91e3fd77b4e0f6a0031efcb":[9,0,0,12,12,0],
-"classAntares_1_1Solver_1_1InMemoryWriter.html#a31970313a0ab45a1606530b4682454bb":[9,0,0,12,12,1],
-"classAntares_1_1Solver_1_1InMemoryWriter.html#a51ddf72f2c825c32f3912f09c55eb405":[9,0,0,12,12,8],
-"classAntares_1_1Solver_1_1InMemoryWriter.html#a5e4afcfa10d7328075ebd79d6047b8f9":[9,0,0,12,12,7],
-"classAntares_1_1Solver_1_1InMemoryWriter.html#a7a4e2e90cc6e8a088cb8f146bd32b3d3":[9,0,0,12,12,2],
-"classAntares_1_1Solver_1_1InMemoryWriter.html#a869ad6d0755f664efc50d6a21e28c79d":[9,0,0,12,12,5],
-"classAntares_1_1Solver_1_1InMemoryWriter.html#a9edd0f1f4856037959fa62ba05002afe":[9,0,0,12,12,4],
-"classAntares_1_1Solver_1_1InMemoryWriter.html#ae79bc278d4eff373baf313ebb426361b":[9,0,0,12,12,6]
+"classAntares_1_1Solver_1_1InMemoryWriter.html":[9,0,0,12,12]
 };

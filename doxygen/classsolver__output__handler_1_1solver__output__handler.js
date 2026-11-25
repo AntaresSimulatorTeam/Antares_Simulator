@@ -22,6 +22,7 @@ var classsolver__output__handler_1_1solver__output__handler =
     [ "get_mps_files", "classsolver__output__handler_1_1solver__output__handler.html#a77039a51e10551ac745866d064cc7b2a", null ],
     [ "get_non_proportional_cost", "classsolver__output__handler_1_1solver__output__handler.html#afec988d40cfc048c84c3b2102ca9b2d0", null ],
     [ "get_npcap_hours", "classsolver__output__handler_1_1solver__output__handler.html#af83a8b0acb397302e7bce7038f07ee09", null ],
+    [ "get_npcap_hours_csr_for_hour", "classsolver__output__handler_1_1solver__output__handler.html#af07f82f9655f88c259e6e28c3b453f82", null ],
     [ "get_npcap_hours_for_hour", "classsolver__output__handler_1_1solver__output__handler.html#a81e2f5a6d746f93b71481f404c588352", null ],
     [ "get_output_file_with_name", "classsolver__output__handler_1_1solver__output__handler.html#a3a3b6989827cf8502c0b859e084851b9", null ],
     [ "get_overall_cost_eur", "classsolver__output__handler_1_1solver__output__handler.html#ae3a46760d4b7ce23726fb9fea9ee70e2", null ],

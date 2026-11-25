@@ -1,5 +1,13 @@
 var NAVTREEINDEX24 =
 {
+"classInMemoryStudyLoader.html#a0e3cd339cddf5eb08497d4ed54f4a005":[9,0,168,2],
+"classInMemoryStudyLoader.html#a621c3dff4f011bbb5f0e9809fd0bd474":[9,0,168,1],
+"classInMemoryStudyLoader.html#ab168b5458c585edb8c328a79ae86ca63":[9,0,168,0],
+"classIntegerIndex.html":[9,0,170],
+"classIntegerIndex.html#a2afb8e0f492d9a9630e019ea40e398aa":[9,0,170,0],
+"classIntegerIndex.html#a2c5129e7b4eac2797c4d5ed8a8fd1b31":[9,0,170,3],
+"classIntegerIndex.html#a802a9e9d77c9a1be64cf0787c91117fa":[9,0,170,2],
+"classIntegerIndex.html#ad80d8fab2ee90b340cf59f58a47a2f89":[9,0,170,1],
 "classIntoUTF8ArgsTranslator.html":[9,0,171],
 "classIntoUTF8ArgsTranslator.html#a7302a9a557582c61fc43b92c22375397":[9,0,171,1],
 "classIntoUTF8ArgsTranslator.html#ae1872fff87e8505232d96f5bb3a846ee":[9,0,171,0],
@@ -241,13 +249,5 @@ var NAVTREEINDEX24 =
 "classOptimizationStatistics.html#a1cf6cc6198ff8807608c094ef5f96b27":[9,0,241,12],
 "classOptimizationStatistics.html#a299887bfa54f5e2471dc87a26d0fba5b":[9,0,241,14],
 "classOptimizationStatistics.html#a329a68aff44479e2f27366b6e02e1978":[9,0,241,1],
-"classOptimizationStatistics.html#a624298c1647519869c118d231562e79c":[9,0,241,13],
-"classOptimizationStatistics.html#a6d1052d9a506e01b0771ca315a5c4765":[9,0,241,5],
-"classOptimizationStatistics.html#a7ea6bae1f556f066c1191a7bd038ddd6":[9,0,241,4],
-"classOptimizationStatistics.html#a8d3f814bef588dab3ca90a03ede0c356":[9,0,241,0],
-"classOptimizationStatistics.html#a905e634265172259c9efdced1cb4dfee":[9,0,241,3],
-"classOptimizationStatistics.html#a9524cb34cc79a217f7563b7669d1dbae":[9,0,241,8],
-"classOptimizationStatistics.html#acace338fedfb85814d614a3a6506f4ae":[9,0,241,9],
-"classOptimizationStatistics.html#acd8e026e4ba0226461557a541be28920":[9,0,241,6],
-"classOptimizationStatistics.html#ad40d5c8781031506875cdf648a6d7eda":[9,0,241,11]
+"classOptimizationStatistics.html#a624298c1647519869c118d231562e79c":[9,0,241,13]
 };

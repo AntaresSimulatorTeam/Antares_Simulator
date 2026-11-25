@@ -1,5 +1,13 @@
 var NAVTREEINDEX9 =
 {
+"classAntares_1_1Error_1_1InvalidArgumentError.html":[9,0,0,5,0],
+"classAntares_1_1Error_1_1InvalidFileName.html":[9,0,0,5,6],
+"classAntares_1_1Error_1_1InvalidFileName.html#a00de22d645d8a660f22b7cca4618c0d0":[9,0,0,5,6,0],
+"classAntares_1_1Error_1_1InvalidOptimizationRange.html":[9,0,0,5,14],
+"classAntares_1_1Error_1_1InvalidOptimizationRange.html#a56863281501c16ae5e9b1e14cafeb2f5":[9,0,0,5,14,0],
+"classAntares_1_1Error_1_1InvalidSimulationMode.html":[9,0,0,5,15],
+"classAntares_1_1Error_1_1InvalidSimulationMode.html#a9db107aa1d976827ea86b414bc4bc53e":[9,0,0,5,15,0],
+"classAntares_1_1Error_1_1InvalidSolver.html":[9,0,0,5,16],
 "classAntares_1_1Error_1_1InvalidSolver.html#ad465ed599b972363fc516aef3a6c167e":[9,0,0,5,16,0],
 "classAntares_1_1Error_1_1InvalidSolverSpecificParameters.html":[9,0,0,5,17],
 "classAntares_1_1Error_1_1InvalidSolverSpecificParameters.html#a962b2bcd56ac0ee367c3f4a654281730":[9,0,0,5,17,0],
@@ -241,13 +249,5 @@ var NAVTREEINDEX9 =
 "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a2183e0b45e223ad9126308bd20c000b8":[9,0,0,6,1,9,14],
 "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a244013ab300671a80819f14be2a9d41f":[9,0,0,6,1,9,15],
 "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a29633ec9125f5b20d9996e17d6cadf42":[9,0,0,6,1,9,12],
-"classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a4aabe2271191698cccd9ae0a4edad1b8":[9,0,0,6,1,9,16],
-"classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a58c6ac837d73e32e8d5ba32465065230":[9,0,0,6,1,9,11],
-"classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a5ecbfa28369edec7e3595356666fa0b0":[9,0,0,6,1,9,3],
-"classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a67542fc3bd8a010d7460a46259d9a1db":[9,0,0,6,1,9,18],
-"classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a70f63a22ab1a7ba1180d8c810f91e97b":[9,0,0,6,1,9,19],
-"classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a72d6614909093cab385e2d6f2c73f2d8":[9,0,0,6,1,9,1],
-"classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a79dc705acc09f05f7bdea74a285a2fdc":[9,0,0,6,1,9,4],
-"classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#aa16e7bc2542a2262c79abe9b67cdd9ea":[9,0,0,6,1,9,0],
-"classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#aa489586042bf9d04176ce1d9ee5a5de2":[9,0,0,6,1,9,21]
+"classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html#a4aabe2271191698cccd9ae0a4edad1b8":[9,0,0,6,1,9,16]
 };

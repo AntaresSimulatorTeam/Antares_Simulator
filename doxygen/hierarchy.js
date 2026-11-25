@@ -971,7 +971,9 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::NbOfDispatchedUnitsByPlantTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlantTraits.html", null ],
     [ "Antares::Solver::Variable::Economy::NbOfDispatchedUnitsTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsTraits.html", null ],
     [ "NbUnitsOutageLessThanNbUnitsStopData", "structNbUnitsOutageLessThanNbUnitsStopData.html", null ],
-    [ "Antares::Solver::Variable::Economy::NearPriceCapTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCapTraits.html", null ],
+    [ "Antares::Solver::Variable::Economy::NearPriceCapTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCapTraits.html", [
+      [ "Antares::Solver::Variable::Economy::NearPriceCapCSRTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCapCSRTraits.html", null ]
+    ] ],
     [ "Antares::Solver::Variable::Category::NextLevel< Index, Limit >", "structAntares_1_1Solver_1_1Variable_1_1Category_1_1NextLevel.html", null ],
     [ "NoConstraintCreator", "structNoConstraintCreator.html", null ],
     [ "Antares::Expressions::NodeRegistry", "classAntares_1_1Expressions_1_1NodeRegistry.html", null ],

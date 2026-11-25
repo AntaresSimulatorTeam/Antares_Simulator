@@ -1,5 +1,13 @@
 var NAVTREEINDEX19 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#a951fa205f81b23aa56db6ccc5085a74a":[9,0,0,12,7,7,0,2,9],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#ab19a782333ec92485a5bf393232e425b":[9,0,0,12,7,7,0,2,5],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#accfe0a8eb45cc649d24df3d24b423343":[9,0,0,12,7,7,0,2,8],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#ad5c5b49864b6bef82edf3a558907976c":[9,0,0,12,7,7,0,2,7],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html":[9,0,0,12,7,7,0,7],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a02fc26267153c8dd7a1d55d4f2d63e9b":[9,0,0,12,7,7,0,7,0],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a1d0af1e1218712154eb85c46d84c3166":[9,0,0,12,7,7,0,7,4],
+"classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a1d26895c86cf3ef4f419075a4cbf0709":[9,0,0,12,7,7,0,7,8],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a3922838022f051023e92a12d5a37aa5e":[9,0,0,12,7,7,0,7,1],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a4d2376c429e7a3a49419702af7c253cc":[9,0,0,12,7,7,0,7,9],
 "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html#a60731f4ad1cb249e0f8e7195d97fa753":[9,0,0,12,7,7,0,7,2],
@@ -241,13 +249,5 @@ var NAVTREEINDEX19 =
 "classAntares_1_1Utils_1_1TimeMeasurement.html#a19bc82198b4364e15af94490bbadd278":[9,0,0,15,0,4],
 "classAntares_1_1Utils_1_1TimeMeasurement.html#a4366d64c4848418725278a9e40926f2e":[9,0,0,15,0,3],
 "classAntares_1_1Utils_1_1TimeMeasurement.html#aa7056bf97917162ea0a4be367d9c058e":[9,0,0,15,0,5],
-"classAntares_1_1Utils_1_1TimeMeasurement.html#aed8b94b8495b6c690ee729f0dce538a0":[9,0,0,15,0,0],
-"classAntares_1_1Utils_1_1TimeMeasurement.html#aef647bb9e6115db027fd8eeb0b62e2e5":[9,0,0,15,0,2],
-"classAntares_1_1Writer_1_1ColumnAdapterFactory.html":[9,0,0,16,0],
-"classAntares_1_1Writer_1_1ColumnAdapterFactory.html#a20a36ce7ca02ecaa6ea49bd9ee307478":[9,0,0,16,0,0],
-"classAntares_1_1Writer_1_1ColumnAdapterFactory.html#a5eaa4bad3dc1e7953b4814d71f594dfd":[9,0,0,16,0,4],
-"classAntares_1_1Writer_1_1ColumnAdapterFactory.html#a7cab36ef292505033672ca53cb64c60d":[9,0,0,16,0,5],
-"classAntares_1_1Writer_1_1ColumnAdapterFactory.html#a9b05d24e35061ad72cd31b17cd9056d4":[9,0,0,16,0,3],
-"classAntares_1_1Writer_1_1ColumnAdapterFactory.html#abfeff3a5c5e53a1675d17b41f7ec670a":[9,0,0,16,0,2],
-"classAntares_1_1Writer_1_1ColumnAdapterFactory.html#acc815822a0b4468f550d3a1d7022efff":[9,0,0,16,0,6]
+"classAntares_1_1Utils_1_1TimeMeasurement.html#aed8b94b8495b6c690ee729f0dce538a0":[9,0,0,15,0,0]
 };

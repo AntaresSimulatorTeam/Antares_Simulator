@@ -1,5 +1,13 @@
 var NAVTREEINDEX12 =
 {
+"classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists.html#a53966f50b6878b1d981e7592af0bbd81":[9,0,0,8,1,1,0,0],
+"classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist.html":[9,0,0,8,1,1,1],
+"classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist.html#aa5feadc2d7947d99b7c568249c5ae077":[9,0,0,8,1,1,1,0],
+"classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository_1_1Empty.html":[9,0,0,8,1,1,2],
+"classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository_1_1Empty.html#ac06fd069c071fab3c096a61b2e0a1535":[9,0,0,8,1,1,2,0],
+"classAntares_1_1LinearProblem_1_1DataImpl_1_1IDataSeries.html":[9,0,0,8,1,0],
+"classAntares_1_1LinearProblem_1_1DataImpl_1_1IDataSeries.html#a1ae47f469e1bfd4b73db82d510a7fe8a":[9,0,0,8,1,0,0],
+"classAntares_1_1LinearProblem_1_1DataImpl_1_1IDataSeries.html#a6576cdf2832a6bee47047b6038b570eb":[9,0,0,8,1,0,1],
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1IDataSeries.html#ac4b4a9fb2978bc7d1c2a022b1cc9b4a5":[9,0,0,8,1,0,2],
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1IDataSeries.html#ad76bed44226249290d268cbe14a27fd0":[9,0,0,8,1,0,4],
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1IDataSeries.html#af1ea30fc5ac7e933c00d1d6e656cc0cf":[9,0,0,8,1,0,3],
@@ -241,13 +249,5 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Logs_1_1NoopLogBuffer.html#a308ecaf6bce7d6c3c460f7fdf1d373ba":[9,0,0,9,3,1],
 "classAntares_1_1Logs_1_1NoopLogBuffer.html#ac82b25ad57193e3abe7fb8494bdb5d41":[9,0,0,9,3,0],
 "classAntares_1_1Logs_1_1NoopLogBuffer.html#ae9d6f0e737681e61a9e7a0c278705f00":[9,0,0,9,3,2],
-"classAntares_1_1Matrix.html":[9,0,0,17],
-"classAntares_1_1Matrix.html#a05d52281943a7cefd3f203068d3bd659":[9,0,0,17,28],
-"classAntares_1_1Matrix.html#a0764fae6bafeb8425318d6e0e379727b":[9,0,0,17,53],
-"classAntares_1_1Matrix.html#a09830e1cb9ea607c146ab5347e76358f":[9,0,0,17,39],
-"classAntares_1_1Matrix.html#a0cba35f3f9003e9f2f11952b8e72f007":[9,0,0,17,19],
-"classAntares_1_1Matrix.html#a191b8d7400f0841c3c3e28d6c5c8288c":[9,0,0,17,22],
-"classAntares_1_1Matrix.html#a1cb6b532918e9b20971228ceff5691a2":[9,0,0,17,40],
-"classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2":[9,0,0,17,8],
-"classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a1d85b0d52cc96d30d04776011c3819e3":[9,0,0,17,8,2]
+"classAntares_1_1Matrix.html":[9,0,0,17]
 };
