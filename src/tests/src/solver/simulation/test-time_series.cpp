@@ -89,15 +89,15 @@ struct Fixture
         expected_equality_series.fillColumn(2, 0.9);
         expected_equality_series[0][8763] = 1;
 
-        BOOST_REQUIRE(MatrixIO::save(
-          expected_lower_bound_series,
-          (working_tmp_dir / "bindingconstraints" / "dummy_name_lt.txt").string()));
-        BOOST_REQUIRE(MatrixIO::save(
-          expected_upper_bound_series,
-          (working_tmp_dir / "bindingconstraints" / "dummy_name_gt.txt").string()));
-        BOOST_REQUIRE(MatrixIO::save(
-          expected_equality_series,
-          (working_tmp_dir / "bindingconstraints" / "dummy_name_eq.txt").string()));
+        BOOST_REQUIRE(
+          MatrixIO::save(expected_lower_bound_series,
+                         (working_tmp_dir / "bindingconstraints" / "dummy_name_lt.txt").string()));
+        BOOST_REQUIRE(
+          MatrixIO::save(expected_upper_bound_series,
+                         (working_tmp_dir / "bindingconstraints" / "dummy_name_gt.txt").string()));
+        BOOST_REQUIRE(
+          MatrixIO::save(expected_equality_series,
+                         (working_tmp_dir / "bindingconstraints" / "dummy_name_eq.txt").string()));
     }
 
     void addConstraint(const std::string& name, const std::string& group, bool reset = false) const
@@ -220,8 +220,9 @@ BOOST_FIXTURE_TEST_CASE(
     Matrix values;
     values.resize(5, 8784);
     values.fill(0.42);
-    BOOST_REQUIRE(MatrixIO::save(
-      values, (working_tmp_dir / "bindingconstraints" / "dummy_name_2_eq.txt").string()));
+    BOOST_REQUIRE(
+      MatrixIO::save(values,
+                     (working_tmp_dir / "bindingconstraints" / "dummy_name_2_eq.txt").string()));
     auto loading_ok = study->internalLoadBindingConstraints(options);
     BOOST_CHECK_EQUAL(loading_ok, false);
 }
@@ -235,8 +236,9 @@ BOOST_FIXTURE_TEST_CASE(
     Matrix values;
     values.resize(3, 8784);
     values.fill(0.42);
-    BOOST_REQUIRE(MatrixIO::save(
-      values, (working_tmp_dir / "bindingconstraints" / "dummy_name_2_eq.txt").string()));
+    BOOST_REQUIRE(
+      MatrixIO::save(values,
+                     (working_tmp_dir / "bindingconstraints" / "dummy_name_2_eq.txt").string()));
     auto loading_ok = study->internalLoadBindingConstraints(options);
     BOOST_CHECK_EQUAL(loading_ok, true);
 }
