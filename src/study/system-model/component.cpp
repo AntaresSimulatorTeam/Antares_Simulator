@@ -94,7 +94,7 @@ Component::Component(const ComponentData& component_data)
     data_ = std::move(component_data);
 }
 
-void Component::addComponentConnection(const std::string localPortId, ConnectionEnd&& connexionEnd)
+void Component::addComponentConnection(const std::string& localPortId, ConnectionEnd&& connexionEnd)
 {
     componentConnectionEnds_[localPortId].push_back(std::move(connexionEnd));
 }
@@ -112,13 +112,15 @@ const std::optional<AreaConnection>& Component::areaConnectionAtPort(
     return it->second.Type().areaConnection();
 }
 
-std::vector<ConnectionEnd> Component::componentConnectionsViaPort(const std::string& portId) const
+const std::vector<ConnectionEnd>& Component::componentConnectionsViaPort(
+  const std::string& portId) const
 {
-    if (auto it = componentConnectionEnds_.find(portId); it != componentConnectionEnds_.end())
+    static const std::vector<ConnectionEnd> emptyConnections;
+    if (const auto it = componentConnectionEnds_.find(portId); it != componentConnectionEnds_.end())
     {
         return it->second;
     }
-    return {};
+    return emptyConnections;
 }
 
 Node* Component::nodeAtPortField(const std::string& portId, const std::string& fieldId) const

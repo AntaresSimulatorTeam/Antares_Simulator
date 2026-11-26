@@ -61,6 +61,68 @@ def set_unit_commitment_mode(context, mode):
                                     file_nick_name="general")
 
 
+@given('the adequacy patch price-taking order is "{order}"')
+def set_price_taking_order(context, order):
+    context.sih.set_parameter_value(variable="price-taking-order", value=order,
+                                    file_nick_name="general")
+
+
+@given('the CSR initiation threshold is {threshold:g}')
+def set_csr_threshold(context, threshold):
+    context.sih.set_parameter_value(variable="threshold-initiate-curtailment-sharing-rule",
+                                    value=str(threshold), file_nick_name="general")
+
+
+@given('a GEMS component injects {injection:g} MW with an ENS bound of {bound:g} MW in area "{area}"')
+def add_gems_area_injection(context, injection, bound, area):
+    """Install a constant net injection and gross load on a disposable study copy."""
+    assert hasattr(context, "tmp_workdir"), "This step requires a copy of the study"
+    input_dir = context.study_path / "input"
+    libraries = input_dir / "model-libraries"
+    libraries.mkdir(exist_ok=True)
+    (input_dir / "optim-config.yml").write_text("")
+    (libraries / "csr-load.yml").write_text(f"""\
+library:
+  id: csr_library
+  port-types:
+    - id: area_port
+      fields:
+        - id: injection
+        - id: load
+        - id: generation
+      area-connection:
+        injection-to-balance: injection
+        unsupplied-energy-bound: load
+        spillage-bound: generation
+  models:
+    - id: component
+      ports:
+        - id: area_port
+          type: area_port
+      port-field-definitions:
+        - port: area_port
+          field: injection
+          definition: {injection}
+        - port: area_port
+          field: load
+          definition: {bound}
+        - port: area_port
+          field: generation
+          definition: {injection + bound}
+""")
+    (input_dir / "system.yml").write_text(f"""\
+system:
+  id: csr_system
+  components:
+    - id: gems_component
+      model: csr_library.component
+  area-connections:
+    - area: {area}
+      component: gems_component
+      port: area_port
+""")
+
+
 @when('I replace the "{destinationPath}" file with "{originPath}"')
 def replace_reserve_yml(context, destinationPath, originPath):
     destination = destinationPath.split("/")
@@ -97,6 +159,27 @@ def empty_input_series(context, series_file):
 @given('the linear solver is {solver_name}')
 def set_linear_solver(context, solver_name):
     context.config.userdata["linear-solver"] = solver_name
+
+@given('the adequacy patch is enabled for area "{area}" and all output variables are selected')
+def enable_adequacy_patch_for_area(context, area):
+    context.sih.set_parameter_value("include-adq-patch", "true", "general")
+    context.sih.set_parameter_value("selected_vars_reset", "true", "general")
+    file_path = context.study_path / "input" / "areas" / area.lower() / "adequacy_patch.ini"
+    context.sih.set_value("adequacy-patch-mode", "inside", file_path)
+
+@given('the adequacy patch ENS threshold is {value:g} MWh')
+def set_adequacy_patch_ens_threshold(context, value):
+    assert hasattr(context, "tmp_workdir"), "This step requires a copy of the study"
+    path = context.study_path / "settings" / "generaldata.ini"
+    contents = path.read_text()
+    assert "[adequacy patch]" in contents
+    contents = contents.replace("[adequacy patch]", f"[adequacy patch]\nthreshold-ens = {value}", 1)
+    path.write_text(contents)
+
+@then('in area "{area}", year {year:d} and hour {hour:d}, near price cap CSR is {value:d} hours')
+def check_near_price_cap_csr(context, area, year, hour, value):
+    actual = context.soh.get_npcap_hours_csr_for_hour(area, year, hour)
+    assert actual == value, f"Near price cap CSR hours mismatch: expected {value}, got {actual}"
 
 @given('the quadratic solver is {solver_name}')
 def set_quadratic_solver(context, solver_name):

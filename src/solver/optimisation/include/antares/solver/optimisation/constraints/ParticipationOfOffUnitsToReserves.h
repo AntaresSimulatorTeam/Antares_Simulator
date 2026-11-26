@@ -5,12 +5,12 @@
 #include "ConstraintBuilder.h"
 
 /*!
- * represent 'POffUnits' Constraint type
+ * represent 'ParticipationOfOffUnitsToReserves' Constraint type
  */
-class POffUnits: private ConstraintFactory
+class ParticipationOfOffUnitsToReserves final: public ConstraintFactory
 {
 public:
-    POffUnits(ConstraintBuilder& builder, ReserveData& data):
+    ParticipationOfOffUnitsToReserves(ConstraintBuilder& builder, ReserveData& data):
         ConstraintFactory(builder),
         data(data)
     {

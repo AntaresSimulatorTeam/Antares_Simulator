@@ -1,7 +1,9 @@
 set(SOURCES
         checkLocation.cpp
+        checkPortFields.cpp
 
         include/antares/solver/modeler/checks/checkLocation.h
+        include/antares/solver/modeler/checks/checkPortFields.h
 )
 
 # Create the library
@@ -21,6 +23,7 @@ target_link_libraries(modeler-checks
         Antares::antares-study-system-model
         PRIVATE
         modeler-lib
+        Antares::logs
         fmt::fmt
 )
 

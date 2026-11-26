@@ -1,9 +1,9 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "antares/solver/optimisation/constraints/POffUnits.h"
+#include "antares/solver/optimisation/constraints/ParticipationOfOffUnitsToReserves.h"
 
-void POffUnits::add(int pays, int cluster, int pdt)
+void ParticipationOfOffUnitsToReserves::add(int pays, int cluster, int pdt)
 {
     if (!data.Simulation)
     {
@@ -11,9 +11,9 @@ void POffUnits::add(int pays, int cluster, int pdt)
         // Sum of participations to reserves is inferior to unit max power times number of off units
         // Sum P^off  ≤ Umax (M - M^on)
         // P^off : total participation of turned off units to res
-        // Umax : Max power of an unit
+        // Umax : Max power of an off unit
         // M : max number of running units in cluster
-        // M : actual number of running units in cluster
+        // M^on : actual number of running units in cluster
 
         int globalClusterIdx = data.thermalClusters[pays]
                                  .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
@@ -44,7 +44,8 @@ void POffUnits::add(int pays, int cluster, int pdt)
               = builder.data.nombreDeContraintes;
 
             ConstraintNamer namer(builder.data.NomDesContraintes);
-            const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
+            const uint32_t hourInTheYear = builder.data.weekInTheYear * 168
+                                           + static_cast<uint32_t>(pdt);
             namer.UpdateTimeStep(hourInTheYear);
             namer.UpdateArea(builder.data.NomsDesPays[pays]);
             namer.POffUnitsUpperBound(builder.data.nombreDeContraintes,
@@ -54,6 +55,6 @@ void POffUnits::add(int pays, int cluster, int pdt)
     }
     else
     {
-        builder.data.nombreDeContraintes++;
+        ++builder.data.nombreDeContraintes;
     }
 }

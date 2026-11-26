@@ -194,18 +194,18 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
 
     TimeDependentLinearExpression to_return(nbtimeSteps_);
 
-    for (const auto connexion_end: component_.componentConnectionsViaPort(portId))
+    for (const auto& connexion_end: component_.componentConnectionsViaPort(portId))
     {
-        auto* component = connexion_end.component();
-        auto* port = connexion_end.port();
+        const auto& component = connexion_end.component();
+        const auto& port = connexion_end.port();
 
         ReadLinearExpressionVisitor visitor(optimEntityContainer_,
                                             fillContext_,
-                                            *component,
+                                            component,
                                             data_,
                                             scenarioGroupRepo_);
 
-        const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
+        const Nodes::Node* node = component.nodeAtPortField(port.Id(), fieldId);
         to_return += visitor.dispatch(node);
     }
 

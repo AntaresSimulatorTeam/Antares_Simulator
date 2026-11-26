@@ -45,14 +45,20 @@ The GEMS contribution is evaluated by reading port field expressions
 (`unsupplied_energy_bound` and `spillage_bound`) at the triggered hour,
 using `EvalVisitor` on the `OptimEntityContainer` retained from the weekly solve.
 
-The following bounds are modified:
+The CSR problem uses the following GEMS-aware bounds and constraints:
 
 ### ENS variable upper bound
 
-The upper bound of the ENS variable for each area inside the adequacy patch
-is increased by the evaluated `unsupplied_energy_bound` expression of connected GEMS components:
+The upper bound of the ENS variable for each area inside the adequacy patch is the DENS value
+computed from the main solve (with a small numerical tolerance). The main solve already accounts
+for GEMS through its area-balance and max-ENS constraints: `injection-to-balance` and
+`unsupplied_energy_bound` expressions are attached to those constraints by
+`ComponentToAreaConnectionFiller`. DENS is then derived from the main solve's ENS and net-position
+results.
 
-**Xmax(ENS) = DENS_new + GEMS_unsupplied_energy_bound**
+Do **not** add `unsupplied_energy_bound` to this upper bound a second time:
+
+**Xmax(ENS) = DENS_new + tolerance**
 
 ### Fictitious load constraint RHS
 

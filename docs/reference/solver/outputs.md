@@ -8,6 +8,7 @@ The general file organization is the same for Economy and Adequacy simulations.
 
 The system definition used by views is written to
 `<timestamp output>/views/input/system-for-views.yml`.
+See [View builder](../viewbuilder.md) for the system and view configuration files.
 
 **Economy:**
 
@@ -328,7 +329,13 @@ The following table contains a list of new output variables in recent versions.
 | 9.1 | **Short-term storage** - dynamic groups instead of static groups. For any group :<br>\<STS group\>_injection <br> \<STS group\>_withdrawal <br> \<STS group\>_level| values-*.txt | yes |
 | 9.2.0 | MIN DTG by plant | details-\*.txt | yes |
 | 9.2.1, 9.3.0 | NPCAP HOURS | values-\*.txt | yes |
-| 9.3 | Use dynamic groups for thermal dispatchable generation and renewable generation, instead of static groups. 
+| 9.3 | Use dynamic groups for thermal dispatchable generation and renewable generation, instead of static groups. |
+| Upcoming | NPCAP HOURS CSR | values-\*.txt | yes |
+
+`NPCAP HOURS CSR` counts the hours for which `MRG. PRICE CSR` is strictly greater than
+the area's unsupplied energy cost minus 5 €/MWh plus a numerical tolerance of 0.01 €/MWh.
+Time aggregates sum hourly indicators. For a set of areas, an hour is counted once if at least
+one area exceeds its own threshold.
 
 
 

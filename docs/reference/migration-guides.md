@@ -3,6 +3,16 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to
 lower the costs of changing existing interfaces, both GUI and scripts.
 
+## Upcoming
+
+### Input
+
+#### Adequacy patch
+
+The optional `threshold-ens` property in the `[adequacy patch]` section of
+**settings/generaldata.ini** sets the per-area ENS cutoff applied after CSR. It defaults to
+`0.0` MWh and is independent of `threshold-initiate-curtailment-sharing-rule`.
+
 ## v10.3.0
 
 ### Input

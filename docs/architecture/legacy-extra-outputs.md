@@ -69,7 +69,7 @@ between equal display names in different areas.
 | `is_significant_loss_of_load` | area | `X[iu] > 0.5 ? 1 : 0` | 0.5 MW solver-noise threshold |
 | `actual_load` | `{area}_load` | `ConsommationAbattueDuPays + AllMustRunGenerationOfArea` | residual load plus must-run (raw input load) |
 | `price` | area | `−dual(AreaBalance)` | see sign note below |
-| `is_near_loss_of_load` | area | `price > unsCost − 5 ? 1 : 0` | `unsCost = CoutLineaire[iu]` |
+| `is_near_loss_of_load` | area | `price > unsCost − 5 + 0.01 ? 1 : 0` | `unsCost = CoutDeDefaillancePositiveSansBruit` |
 | `domestic_unsupplied_energy` | area | `ValeursHorairesDENS[pdt]` | `ResultatsHoraires[pays]`; zero-initialised, populated by CSR post-processing |
 | `is_local_matching_rule_violated` | area | `double(ValeursHorairesLmrViolations[pdt])` | `ResultatsHoraires[pays]`; 0 or 1 after CSR |
 | `level_percentage` | area | `X[ih] / TailleReservoir × 100` | skipped when the capacity is non-positive |

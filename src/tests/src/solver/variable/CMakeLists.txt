@@ -15,6 +15,10 @@ add_boost_test(test-residual-load
   LIBS
   antares-solver-variable)
 
+add_boost_test(test-near-price-cap
+  SRC test_near_price_cap.cpp
+  LIBS antares-solver-variable result_writer)
+
 add_boost_test(test-dynamic-aggregation
     SRC test_dynamic.cpp
     LIBS

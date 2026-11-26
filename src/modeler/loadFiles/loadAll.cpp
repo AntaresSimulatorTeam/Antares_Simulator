@@ -7,6 +7,7 @@
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/ModelerData.h>
 #include "antares/solver/modeler/checks/checkLocation.h"
+#include "antares/solver/modeler/checks/checkPortFields.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/utils/utils.h"
 
@@ -41,6 +42,7 @@ ModelerData loadAll(const std::filesystem::path& studyPath)
 
     logs.info() << "Modeler loaded in " << measure.toStringInSeconds();
 
+    Checks::checkPortFields(data);
     Checks::checkLocations(data);
     logs.info() << "Locations validity OK";
 
