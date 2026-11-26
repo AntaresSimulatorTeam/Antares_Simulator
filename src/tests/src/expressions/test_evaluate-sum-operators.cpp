@@ -303,22 +303,57 @@ BOOST_FIXTURE_TEST_CASE(time_dependent_time_shift_offset_is_rejected, tests_fixt
     BOOST_CHECK_THROW(evalVisitor->dispatch(shifted), Antares::Error::InvalidArgumentError);
 }
 
-BOOST_AUTO_TEST_CASE(for_each_time_sum_index_handles_int_max_endpoint)
+BOOST_AUTO_TEST_CASE(for_each_time_sum_index_visits_each_index_with_its_multiplicity)
 {
-    // INT_MAX % 5 == 2 ; a one-element interval ending at INT_MAX must not overflow the counter
+    using Visit = std::pair<int, long long>;
+    const auto collect = [](int from, int to, int size)
+    {
+        std::vector<Visit> visited;
+        forEachTimeSumIndex(from,
+                            to,
+                            size,
+                            [&visited](int index, long long count)
+                            { visited.emplace_back(index, count); });
+        return visited;
+    };
+
+    // Window shorter than the block: indices in window order, with wrap-around
+    BOOST_CHECK(collect(3, 6, 5) == (std::vector<Visit>{{3, 1}, {4, 1}, {0, 1}, {1, 1}}));
+    // Window longer than the block: 7 steps over a block of 5 cover indices 0 and 1 twice
+    BOOST_CHECK(collect(0, 6, 5) == (std::vector<Visit>{{0, 2}, {1, 2}, {2, 1}, {3, 1}, {4, 1}}));
+    // Empty window
+    BOOST_CHECK(collect(2, 1, 5).empty());
+
     constexpr int intMax = std::numeric_limits<int>::max();
-    std::vector<int> visited;
-    forEachTimeSumIndex(intMax, intMax, 5, [&visited](int index) { visited.push_back(index); });
-    const std::vector<int> expected{intMax % 5};
-    BOOST_CHECK_EQUAL_COLLECTIONS(visited.begin(), visited.end(), expected.begin(), expected.end());
+    constexpr int intMin = std::numeric_limits<int>::min();
+    // INT_MAX % 5 == 2: a one-element window ending at INT_MAX must not overflow
+    BOOST_CHECK(collect(intMax, intMax, 5) == (std::vector<Visit>{{intMax % 5, 1}}));
+    BOOST_CHECK(collect(intMax, intMax - 1, 5).empty());
 
-    visited.clear();
-    forEachTimeSumIndex(intMax - 1, intMax, 5, [&visited](int index) { visited.push_back(index); });
-    BOOST_CHECK_EQUAL(visited.size(), 2);
+    // The whole int range is 2^32 steps: the cost does not depend on the window length
+    long long total = 0;
+    for (const auto& [index, count]: collect(intMin, intMax, 5))
+    {
+        total += count;
+    }
+    BOOST_CHECK_EQUAL(total, 4294967296LL);
+}
 
-    visited.clear();
-    forEachTimeSumIndex(intMax, intMax - 1, 5, [&visited](int index) { visited.push_back(index); });
-    BOOST_CHECK(visited.empty());
+BOOST_FIXTURE_TEST_CASE(very_long_relative_time_sum_window_wraps_without_iterating, tests_fixture)
+{
+    // sum(t-1e9 .. t+1e9, p) with p = {1, 2, 3} : 2e9+1 = 3 * 666666667 steps, i.e. 666666667
+    // full cycles over the block, whatever t
+    Node* sum = timeSum(tPlus(-1e9),
+                        tPlus(1e9),
+                        parameter("p", VariabilityType::VARYING_IN_TIME_ONLY));
+
+    const auto values = evalVisitor->dispatch(sum).valuesAsVector();
+
+    BOOST_REQUIRE_EQUAL(values.size(), 3);
+    for (const auto value: values)
+    {
+        BOOST_CHECK_EQUAL(value, 6. * 666666667.);
+    }
 }
 
 BOOST_FIXTURE_TEST_CASE(integer_time_index_is_evaluated, tests_fixture)

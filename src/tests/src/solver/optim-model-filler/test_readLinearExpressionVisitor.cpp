@@ -684,6 +684,25 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_of_constant_over_full_int_range_does_not_o
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 13. * 4294967296.);
 }
 
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_of_series_over_very_long_window_wraps_without_iterating,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // sum(t-1e9 .. t+1e9, param_ts) : 2e9+1 = 3 * 666666667 steps, so each of the 3 indices is
+    // covered 666666667 times. param_ts = {0, 1, 2}.
+    Node* from = create<TPlusNode>(create<LiteralNode>(-1e9));
+    Node* to = create<TPlusNode>(create<LiteralNode>(1e9));
+    Node* sum = create<TimeSumNode>(from, to, create<ParameterNode>("param_ts"));
+
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
+    const auto linear_expression = visitor().dispatch(sum);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 3);
+    for (std::size_t t = 0; t < 3; ++t)
+    {
+        BOOST_CHECK_EQUAL(linear_expression[t].constant(), 3. * 666666667.);
+    }
+}
+
 BOOST_FIXTURE_TEST_CASE(visit_timeShift_with_invalid_offset_throws,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {

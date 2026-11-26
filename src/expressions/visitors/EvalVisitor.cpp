@@ -278,8 +278,10 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
         forEachTimeSumIndex(from,
                             to,
                             static_cast<int>(values.size()),
-                            [&values, &result, localTimeStep](int timeIndex)
-                            { values[localTimeStep] += result[timeIndex].valueAsDouble(); });
+                            [&values, &result, localTimeStep](int timeIndex, long long count) {
+                                values[localTimeStep] += static_cast<double>(count)
+                                                         * result[timeIndex].valueAsDouble();
+                            });
     }
 
     return EvaluationResult(values);

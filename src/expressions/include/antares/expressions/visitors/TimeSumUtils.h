@@ -16,14 +16,30 @@ int normalizeTimeIndex(int timeIndex, int size);
 // Resolve a time-shift offset, rejecting non-integer values and values outside the int range.
 int resolveTimeShift(const Nodes::Node* offset, EvalVisitor& visitor);
 
-// no-op if from > to
+// Visit the indices covered by the window [from, to] (no-op if from > to). Indices wrap cyclically
+// on [0, size): a window longer than the block covers some indices several times.
+// callback(index, count) is called once per index covered, with the number of times it is covered.
+// The cost is O(size), whatever the length of the window. For a window that is not longer than the
+// block, indices are visited in window order, each with a count of 1.
 template<class Callback>
 inline void forEachTimeSumIndex(int from, int to, int size, Callback callback)
 {
-    // 64-bit counter: with to == INT_MAX, an int counter would overflow on the last increment.
-    for (long long timeIndex = from; timeIndex <= to; ++timeIndex)
+    if (from > to || size <= 0)
     {
-        callback(normalizeTimeIndex(static_cast<int>(timeIndex), size));
+        return;
+    }
+    // 64-bit arithmetic: to - from + 1 can exceed INT_MAX
+    const long long length = static_cast<long long>(to) - from + 1;
+    const long long fullCycles = length / size;
+    const long long remainder = length % size;
+    const int first = normalizeTimeIndex(from, size);
+    for (int offset = 0; offset < size; ++offset)
+    {
+        const long long count = fullCycles + (offset < remainder ? 1 : 0);
+        if (count > 0)
+        {
+            callback((first + offset) % size, count);
+        }
     }
 }
 

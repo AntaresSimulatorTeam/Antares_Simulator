@@ -302,8 +302,12 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
           from,
           to,
           static_cast<int>(nbtimeSteps_),
-          [&ret, &expression, localTimeStep](int timeIndex)
-          { ret[localTimeStep] += expression[timeIndex]; });
+          [&ret, &expression, localTimeStep](int timeIndex, long long count)
+          {
+              auto term = expression[timeIndex];
+              term *= static_cast<double>(count);
+              ret[localTimeStep] += term;
+          });
     }
     return ret;
 }
