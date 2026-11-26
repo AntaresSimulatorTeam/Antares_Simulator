@@ -11,6 +11,7 @@
 #include <antares/study/system-model/component.h>
 #include <antares/study/system-model/system.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/simplex/LpFiller.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
@@ -37,11 +38,22 @@ ActiveGemsPart::ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo,
 
 void ActiveGemsPart::setHour(int triggeredHour)
 {
+    if (problemeHebdo_->OptimisationAuPasHebdomadaire)
+    {
+        // Variables are stored over the entire solved interval; time shifts also use that interval.
+        fillContext_ = Antares::Solver::Optimization::Simplex::LpFiller::buildFillContext(
+          *problemeHebdo_,
+          0);
+        evaluationHour_ = static_cast<unsigned>(triggeredHour);
+        return;
+    }
+
     fillContext_ = FillContext(0,
                                0,
                                triggeredHour + problemeHebdo_->HeureDansLAnnee,
                                triggeredHour + problemeHebdo_->HeureDansLAnnee,
                                problemeHebdo_->year);
+    evaluationHour_ = 0;
 }
 
 double ActiveGemsPart::gemsContributionForArea(
@@ -80,10 +92,7 @@ double ActiveGemsPart::gemsContributionForArea(
                                               component,
                                               modelerData->dataSeries.get(),
                                               scenario);
-            // The FillContext is set up for a single local timestep (index 0),
-            // positioned at the correct global hour via triggeredHour_.
-            // So value(0) evaluates the expression at triggeredHour_, not at hour 0.
-            contribution += evalVisitor.dispatch(expression).value(0);
+            contribution += evalVisitor.dispatch(expression).value(evaluationHour_);
         }
     }
     return contribution;
