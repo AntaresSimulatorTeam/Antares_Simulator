@@ -21,7 +21,7 @@ library:
           variable-type: continuous
           # x[t] >= sum(3..4, p) = p[3]+p[4] = 4+5 = 9 for all t
       constraints:
-        - id: lower_bound_from_wrapping_sum
+        - id: lower_bound_from_fixed_sum
           expression: x >= sum(3 .. 4, p)
       objective-contributions:
         - id: objective
