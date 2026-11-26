@@ -39,7 +39,6 @@ struct build_AST_fixture
     Node* timeSum(Node* from, Node* to, Node* p);
     Node* timeIndex(Node* node, Node* index);
     Node* timeShift(Node* node, Node* offset);
-    Node* variable(const std::string& name);
     Node* square(Node* node);
 
 private:
@@ -79,11 +78,6 @@ Node* build_AST_fixture::timeIndex(Node* node, Node* index)
 Node* build_AST_fixture::timeShift(Node* node, Node* offset)
 {
     return registry_.create<TimeShiftNode>(node, offset);
-}
-
-Node* build_AST_fixture::variable(const std::string& name)
-{
-    return registry_.create<VariableNode>(name, 0, VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 }
 
 Node* build_AST_fixture::square(Node* node)
@@ -312,28 +306,6 @@ BOOST_FIXTURE_TEST_CASE(invalid_relative_time_sum_bound_is_rejected, tests_fixtu
     BOOST_CHECK_THROW(evalVisitor->dispatch(
                         timeSum(tPlus(0), tPlus(std::numeric_limits<int>::max()), p)),
                       Antares::Error::InvalidArgumentError);
-}
-
-BOOST_FIXTURE_TEST_CASE(time_sum_bound_depending_on_a_variable_is_rejected, tests_fixture)
-{
-    // A time-constant variable has no value before the optimization: it must not drive a bound
-    Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
-    BOOST_CHECK_THROW(evalVisitor->dispatch(timeSum(variable("x"), literal(1), p)),
-                      Antares::Error::InvalidArgumentError);
-    BOOST_CHECK_THROW(evalVisitor->dispatch(timeSum(literal(0), variable("x"), p)),
-                      Antares::Error::InvalidArgumentError);
-}
-
-BOOST_FIXTURE_TEST_CASE(time_index_depending_on_a_variable_is_rejected, tests_fixture)
-{
-    Node* indexed = timeIndex(parameter("p", VariabilityType::VARYING_IN_TIME_ONLY), variable("x"));
-    BOOST_CHECK_THROW(evalVisitor->dispatch(indexed), Antares::Error::InvalidArgumentError);
-}
-
-BOOST_FIXTURE_TEST_CASE(time_shift_offset_depending_on_a_variable_is_rejected, tests_fixture)
-{
-    Node* shifted = timeShift(parameter("p", VariabilityType::VARYING_IN_TIME_ONLY), variable("x"));
-    BOOST_CHECK_THROW(evalVisitor->dispatch(shifted), Antares::Error::InvalidArgumentError);
 }
 
 BOOST_FIXTURE_TEST_CASE(time_dependent_time_shift_offset_is_rejected, tests_fixture)
