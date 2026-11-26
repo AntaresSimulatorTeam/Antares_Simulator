@@ -3,16 +3,6 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to
 lower the costs of changing existing interfaces, both GUI and scripts.
 
-## Upcoming
-
-### Input
-
-#### Adequacy patch
-
-The optional `threshold-ens` property in the `[adequacy patch]` section of
-**settings/generaldata.ini** sets the per-area ENS cutoff applied after CSR. It defaults to
-`0.0` MWh and is independent of `threshold-initiate-curtailment-sharing-rule`.
-
 ## v10.3.0
 
 ### Input
@@ -25,10 +15,19 @@ Hydro leeway has been removed. The `[leeway low]` and `[leeway up]` sections in
 The `[use leeway]` section is also no longer supported. It is accepted for compatibility,
 but `use leeway = yes` is ignored with a warning; remove the section from the study.
 
-#### Modeler: time indices and sum bounds must be integers
+#### Modeler: time indices and sum bounds are validated
 
-In GEMS expressions, sum bounds, time-shift offsets and time indices used to be silently truncated to an integer. A value
-that is not an integer, such as `x[t - 3/2]` or `x[1.5]`, is now rejected with an error naming the expression.
+In GEMS expressions, sum bounds, time-shift offsets and time indices used to be silently truncated to an integer, and
+absolute sum bounds and indices outside the optimization block used to wrap around. They are now checked, and a study
+that relied on them fails with an error naming the expression:
+
+- An absolute sum bound or index outside the block `[0, size-1]` is rejected. For example, `sum(3 .. 6, p)` on a
+  5-step block used to cover the time steps 3, 4, 0 and 1; write the bound you mean, such as `sum(3 .. 4, p)`.
+  `x[N]` on an expression that is constant in time is now checked too, where it used to return the constant.
+- A value that is not an integer is rejected rather than truncated. For example, `x[t - 3/2]` or `x[1.5]`.
+
+Relative bounds (`t + N`) still wrap cyclically. See the
+[expressions reference](modeler/09-expressions.md#time-operators).
 
 ## v10.2.0
 

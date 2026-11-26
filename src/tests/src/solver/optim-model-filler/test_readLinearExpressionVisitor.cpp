@@ -679,6 +679,8 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_invalid_bounds_throws,
                          static_cast<Node*>(create<LiteralNode>(13.))})
     {
         const std::vector<std::pair<Node*, Node*>> invalidBounds = {
+          {create<LiteralNode>(0.), create<LiteralNode>(3.)},  // above the block
+          {create<LiteralNode>(-1.), create<LiteralNode>(2.)}, // below the block
           {create<LiteralNode>(0.), create<LiteralNode>(1.5)}, // not an integer
           {create<TPlusNode>(create<LiteralNode>(0.)), create<TPlusNode>(create<LiteralNode>(1.5))},
           {create<TPlusNode>(create<LiteralNode>(1.5)), create<TPlusNode>(create<LiteralNode>(0.))},
@@ -689,6 +691,22 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_invalid_bounds_throws,
             BOOST_CHECK_THROW(visitor().dispatch(sumOf(from, to, operand)),
                               Antares::Error::InvalidArgumentError);
         }
+    }
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_absolute_bounds_at_block_limits_is_accepted,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
+    // param_ts = {0, 1, 2}: sum(0 .. 2, param_ts) covers the whole block
+    Node* sum = create<TimeSumNode>(create<LiteralNode>(0.),
+                                    create<LiteralNode>(2.),
+                                    create<ParameterNode>("param_ts"));
+    const auto linear_expression = visitor().dispatch(sum);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 3);
+    for (std::size_t t = 0; t < 3; ++t)
+    {
+        BOOST_CHECK_EQUAL(linear_expression[t].constant(), 3.);
     }
 }
 
@@ -827,6 +845,39 @@ BOOST_FIXTURE_TEST_CASE(visit_timeIndex_with_non_integer_index_throws,
     ctx = Api::FillContext(0, 2, 0, 2, 0);
 
     BOOST_CHECK_THROW(visitor().dispatch(index), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeIndex_on_constant_uses_block_length,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
+    auto* constant = create<LiteralNode>(13.);
+    auto* valid = create<TimeIndexNode>(constant, create<LiteralNode>(2.));
+    const auto indexed = visitor().dispatch(valid);
+    BOOST_REQUIRE_EQUAL(indexed.size(), 1);
+    BOOST_CHECK_EQUAL(indexed[0].constant(), 13.);
+
+    for (double index: {-1., 3.})
+    {
+        auto* invalid = create<TimeIndexNode>(constant, create<LiteralNode>(index));
+        BOOST_CHECK_THROW(visitor().dispatch(invalid), Antares::Error::LoadingError);
+    }
+
+    auto* fractional = create<TimeIndexNode>(constant, create<LiteralNode>(1.5));
+    BOOST_CHECK_THROW(visitor().dispatch(fractional), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeIndex_on_single_step_series_checks_range,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    auto* series = create<ParameterNode>("param_ts");
+    auto* valid = create<TimeIndexNode>(series, create<LiteralNode>(0.));
+    const auto indexed = visitor().dispatch(valid);
+    BOOST_REQUIRE_EQUAL(indexed.size(), 1);
+    BOOST_CHECK_EQUAL(indexed[0].constant(), 0.);
+
+    auto* invalid = create<TimeIndexNode>(series, create<LiteralNode>(1.));
+    BOOST_CHECK_THROW(visitor().dispatch(invalid), Antares::Error::LoadingError);
 }
 
 BOOST_FIXTURE_TEST_CASE(all_time_sum_of_constant_expression_scales_with_horizon,

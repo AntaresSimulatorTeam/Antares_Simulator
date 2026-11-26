@@ -3,11 +3,13 @@
 
 #include "antares/expressions/visitors/EvalVisitor.h"
 
+#include <fmt/format.h>
 #include <numeric>
 #include <ranges>
 #include <stdexcept>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/visitors/PrintVisitor.h>
 #include <antares/expressions/visitors/TimeSumUtils.h>
 #include <antares/expressions/visitors/VariabilityVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
@@ -240,6 +242,16 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
     const auto ret = dispatch(node->left());
     VariabilityVisitor variabilityVisitor(optimContainer_, component_);
     const auto timeIndex = resolveTimeIndex(node->right(), *this, variabilityVisitor);
+    const auto numberOfTimeSteps = fillContext_.getLocalNumberOfTimeSteps();
+    if (timeIndex < 0 || static_cast<std::size_t>(timeIndex) >= numberOfTimeSteps)
+    {
+        PrintVisitor printVisitor;
+        throw EvalResultTimeIndexOutOfRange(
+          fmt::format("TimeIndexNode: index {} is out of range in expression '{}' ({} time steps)",
+                      timeIndex,
+                      printVisitor.dispatch(node),
+                      numberOfTimeSteps));
+    }
     return ret[timeIndex];
 }
 
@@ -255,8 +267,14 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
     std::vector<double> values(fillContext_.getLocalNumberOfTimeSteps(), 0.0);
     for (unsigned localTimeStep = 0; localTimeStep < values.size(); ++localTimeStep)
     {
-        const auto from = resolveTimeSumBound(node->from(), *this, localTimeStep);
-        const auto to = resolveTimeSumBound(node->to(), *this, localTimeStep);
+        const auto from = resolveTimeSumBound(node->from(),
+                                              *this,
+                                              localTimeStep,
+                                              static_cast<int>(values.size()));
+        const auto to = resolveTimeSumBound(node->to(),
+                                            *this,
+                                            localTimeStep,
+                                            static_cast<int>(values.size()));
         forEachTimeSumIndex(from,
                             to,
                             static_cast<int>(values.size()),

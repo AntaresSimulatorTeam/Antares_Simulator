@@ -955,6 +955,36 @@ BOOST_AUTO_TEST_CASE(evaluate_time_index_rejects_time_dependent_index)
                       Antares::Error::InvalidArgumentError);
 }
 
+BOOST_FIXTURE_TEST_CASE(evaluate_time_index_on_constant_uses_block_length, MyDummyFixture)
+{
+    LiteralNode constant(13.);
+    LiteralNode lastIndex(2.);
+    LiteralNode beforeStart(-1.);
+    LiteralNode pastEnd(3.);
+    TimeIndexNode valid(&constant, &lastIndex);
+    TimeIndexNode negative(&constant, &beforeStart);
+    TimeIndexNode tooLarge(&constant, &pastEnd);
+
+    const Antares::LinearProblem::Api::FillContext context{0, 2, 0, 2, 0};
+    const auto& component = components.front();
+    EvalVisitor visitor(optimEntityContainer,
+                        context,
+                        component,
+                        &data,
+                        scenarioGroupRepository.scenario(component.getScenarioGroupId()));
+
+    BOOST_CHECK_EQUAL(visitor.dispatch(&valid).valueAsDouble(), 13.);
+    BOOST_CHECK_THROW(visitor.dispatch(&negative), EvalResultTimeIndexOutOfRange);
+    BOOST_CHECK_EXCEPTION(visitor.dispatch(&tooLarge),
+                          EvalResultTimeIndexOutOfRange,
+                          [](const EvalResultTimeIndexOutOfRange& e)
+                          {
+                              const std::string message = e.what();
+                              return message.find("index 3") != std::string::npos
+                                     && message.find("3 time steps") != std::string::npos;
+                          });
+}
+
 EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
 {
     ParameterNode paramNode("my-param", VariabilityType::VARYING_IN_TIME_ONLY);

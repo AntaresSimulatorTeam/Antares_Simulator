@@ -71,7 +71,10 @@ int normalizeTimeIndex(int timeIndex, int size)
     return r;
 }
 
-int resolveTimeSumBound(const Nodes::Node* bound, EvalVisitor& visitor, unsigned localTimeStep)
+int resolveTimeSumBound(const Nodes::Node* bound,
+                        EvalVisitor& visitor,
+                        unsigned localTimeStep,
+                        int numberOfTimeSteps)
 {
     if (const auto* tPlusNode = dynamic_cast<const Nodes::TPlusNode*>(bound))
     {
@@ -88,7 +91,16 @@ int resolveTimeSumBound(const Nodes::Node* bound, EvalVisitor& visitor, unsigned
         return static_cast<int>(index);
     }
 
-    return checkedTimeIndex(visitor.dispatch(bound).valueAsDouble(), bound);
+    const auto index = checkedTimeIndex(visitor.dispatch(bound).valueAsDouble(), bound);
+    if (index < 0 || index >= numberOfTimeSteps)
+    {
+        PrintVisitor printVisitor;
+        throw Error::InvalidArgumentError(
+          fmt::format("Absolute sum bound '{}' is outside the block [0, {}].",
+                      printVisitor.dispatch(bound),
+                      numberOfTimeSteps - 1));
+    }
+    return index;
 }
 
 void checkTimeSumBoundVariability(const Nodes::Node* bound, VariabilityVisitor& variabilityVisitor)

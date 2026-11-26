@@ -251,6 +251,13 @@ BOOST_FIXTURE_TEST_CASE(non_integer_time_sum_bound_is_rejected, tests_fixture)
     BOOST_CHECK_THROW(evalVisitor->dispatch(sum), Antares::Error::InvalidArgumentError);
 }
 
+BOOST_FIXTURE_TEST_CASE(absolute_time_sum_bound_outside_block_is_rejected, tests_fixture)
+{
+    Node* sum = timeSum(literal(-1), literal(0), literal(1));
+
+    BOOST_CHECK_THROW(evalVisitor->dispatch(sum), Antares::Error::InvalidArgumentError);
+}
+
 BOOST_FIXTURE_TEST_CASE(time_dependent_time_sum_bound_is_rejected, tests_fixture)
 {
     Node* sum = timeSum(parameter("p", VariabilityType::VARYING_IN_TIME_ONLY),
@@ -258,6 +265,33 @@ BOOST_FIXTURE_TEST_CASE(time_dependent_time_sum_bound_is_rejected, tests_fixture
                         literal(1));
 
     BOOST_CHECK_THROW(evalVisitor->dispatch(sum), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(invalid_upper_time_sum_bound_is_rejected, tests_fixture)
+{
+    Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
+    // Block of 3 steps: indices are in [0, 2]
+    BOOST_CHECK_THROW(evalVisitor->dispatch(timeSum(literal(0), literal(3), p)),
+                      Antares::Error::InvalidArgumentError);
+    BOOST_CHECK_THROW(evalVisitor->dispatch(timeSum(literal(0), literal(1.5), p)),
+                      Antares::Error::InvalidArgumentError);
+    BOOST_CHECK_THROW(evalVisitor->dispatch(timeSum(literal(0), literal(-1), p)),
+                      Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(absolute_time_sum_bounds_at_block_limits_are_accepted, tests_fixture)
+{
+    // p = {1, 2, 3}: sum(0 .. 2, p) covers the whole block
+    const auto values = evalVisitor
+                          ->dispatch(timeSum(literal(0),
+                                             literal(2),
+                                             parameter("p", VariabilityType::VARYING_IN_TIME_ONLY)))
+                          .valuesAsVector();
+    BOOST_REQUIRE_EQUAL(values.size(), 3);
+    for (const auto value: values)
+    {
+        BOOST_CHECK_EQUAL(value, 6.);
+    }
 }
 
 BOOST_FIXTURE_TEST_CASE(invalid_relative_time_sum_bound_is_rejected, tests_fixture)

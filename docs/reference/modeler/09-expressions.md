@@ -131,14 +131,17 @@ For time-dependent parameters, variables, and port fields, you can use these tim
   horizon.
 - **sum(S .. E, X)** aggregator: where X is the time-dependent operand, this operator sums the operand between S and E (
   included), where:
-    - **S** represents the first timestamp, either as an expression resolving to an integer, or a time-shift expression
-      like the ones defined above
-    - **E** represents the last timestamp, either as an expression resolving to an integer, or a time-shift expression
-      like the ones defined above
-    - in both forms, `S` and `E` must not depend on time; bounds must resolve to integers
+    - **S** represents the first timestamp in the current optimization block, either as an expression
+      resolving to an integer, or a time-shift expression like the ones defined above
+    - **E** represents the last timestamp in the current optimization block, either as an expression
+      resolving to an integer, or a time-shift expression like the ones defined above
+    - in both forms, `S` and `E` must not depend on time or decision variables; bounds must resolve to integers
 
-**Integer values.** Indices, bounds and shift offsets must resolve to integers that fit in a 32-bit signed integer; other
-values, such as `t - 3/2` or `x[1.5]`, are rejected rather than truncated.
+**Absolute time indices.** In `x[N]` and in absolute bounds of `sum(S .. E, x)`, indices are relative to the
+current optimization block: `0` is the first time step of the block (the week or day in the simulator, the first time
+step in the modeler). An absolute index outside `[0, size-1]` is an error, even when `x` is constant in time.
+Indices, bounds and shift offsets must resolve to integers that fit in a 32-bit signed integer; other values, such as
+`t - 3/2` or `x[1.5]`, are rejected rather than truncated.
 
 **Relative sum bounds.** Relative bounds (`t + N`) wrap cyclically when they extend outside the block, even in `drop`
 mode. For example, `sum(0 .. t+1, x)` adds `x[0]` again at the last time step. A relative sum bound does not by itself
@@ -149,9 +152,9 @@ time steps, `sum(t-5 .. t+5, x)` covers 11 time steps, so three of the four valu
 the remaining one twice. A window with `S > E` is empty and sums to 0.
 
 **When errors are reported.** Variables, port fields, `dual` and `reduced_cost` operators and time-dependent parameters
-in these arguments are rejected when the study is loaded. Non-integer values and relative bounds that overflow a 32-bit
-integer are rejected when the model of the affected block is built, before that block is optimized, and the error names
-the offending expression.
+in these arguments are rejected when the study is loaded. Non-integer values, absolute indices outside the block and
+relative bounds that overflow a 32-bit integer are rejected when the model of the affected block is built, before that
+block is optimized, and the error names the offending expression.
 
 Time indices, shift offsets, and sum bounds may only contain literals and parameters, not variables,
 port fields, or `sum_connections` expressions. Parameters in these arguments must be declared
@@ -167,6 +170,8 @@ expression: sum(4 .. 87, c) - sum(t - 3 * parameter_15 + 5 .. t, d)
 
 expression: sum(1 .. 2, expr) = expr[1] + expr[2]
 ~~~
+
+In these examples, absolute bounds such as `4 .. 87` assume an optimization block of at least 88 time steps.
 
 ### Scenario operators
 
