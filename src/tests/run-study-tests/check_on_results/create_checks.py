@@ -1,5 +1,6 @@
 from check_on_results.check_general import check_list
 from check_on_results.output_compare import output_compare
+from check_on_results.simu_table_compare import simu_table_compare
 from check_on_results.integrity_compare import integrity_compare
 from check_on_results.check_hydro_level import check_hydro_level
 from check_on_results.unfeasible_problem import unfeasible_problem, weeks_in_year
@@ -11,6 +12,8 @@ def create_checks(study_path, checks_data = {}, simulation = None):
     checks = check_list()
     if "output_compare" in checks_data:
         checks.add(create_output_compare(study_path, checks_data["output_compare"]))
+    if "simu_table_compare" in checks_data:
+        checks.add(create_simu_table_compare(study_path))
     if "integrity_compare" in checks_data:
         checks.add(create_intergrity_compare(study_path))
     if "hydro_level" in checks_data:
@@ -34,6 +37,13 @@ def create_output_compare(study_path, parameters = {}):
         tolerances.set_relative(parameters["relative_tolerances"])
     arg_list.append(tolerances)
     return output_compare(*arg_list)
+
+
+# --------------------------------------
+# simu_table_compare object creation
+# --------------------------------------
+def create_simu_table_compare(study_path):
+    return simu_table_compare(study_path)
 
 
 # --------------------------------------
@@ -71,4 +81,3 @@ def make_list_of_weeks(weeks_in_year_data):
 # --------------------------------------
 def create_mps_compare(study_path):
     return compare_mps_files(study_path)
-

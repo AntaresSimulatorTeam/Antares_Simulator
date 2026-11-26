@@ -213,7 +213,6 @@ jobs:
         simtest-tag: ${{ env.SIMTEST }}
         batch-name: valid-named-mps
         os: ${{ env.os }}
-        variant: "named-mps"
 
     - name: Run short cucumber
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -268,7 +267,6 @@ jobs:
       with:
         simtest-tag: ${{ env.SIMTEST }}
         batch-name: valid-milp
-        variant: "milp-cbc"
         os: ${{ env.os }}
 
     - name: Run tests on adequacy patch (CSR)
@@ -319,6 +317,14 @@ jobs:
         batch-name: valid-v930
         os: ${{ env.os }}
 
+    - name: Run tests on simulation table
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{ env.SIMTEST }}
+        batch-name: valid-simu-tables
+        os: ${{ env.os }}
+
     - name: Run short-tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
       uses: ./.github/workflows/run-tests
@@ -349,7 +355,6 @@ jobs:
         simtest-tag: ${{ env.SIMTEST }}
         batch-name: valid-parallel
         os: ${{ env.os }}
-        variant: "parallel"
 
     - name: Run medium-tests
       if: ${{ env.RUN_EXTENDED_TESTS == 'true' && !cancelled() }}

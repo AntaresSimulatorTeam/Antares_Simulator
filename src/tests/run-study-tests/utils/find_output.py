@@ -1,7 +1,7 @@
 from re import match
 import pathlib, os
 
-from utils.assertions import check
+from utils.assertions import check, raise_assertion
 
 class output_folder_finder:
     def __init__(self, study_path):
@@ -28,4 +28,5 @@ def find_simulation_folder(output_dir):
     for root, dirs, files in os.walk(output_dir):
         if os.path.basename(root) in ["adequacy", "economy"]:
             return pathlib.Path(root)
+    raise_assertion("Simulation folder not found")
 

@@ -216,7 +216,6 @@ jobs:
         simtest-tag: ${{ env.SIMTEST }}
         batch-name: valid-named-mps
         os: ${{ env.os }}
-        variant: "named-mps"
 
     - name: Run short cucumber
       if: ${{ !cancelled() }}

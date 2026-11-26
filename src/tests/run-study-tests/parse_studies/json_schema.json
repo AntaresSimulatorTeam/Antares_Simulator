@@ -1,7 +1,30 @@
 {
+    "definitions":
+    {
+        "execution":
+        {
+            "type": "object",
+            "required": ["name", "exe", "options"],
+            "properties":
+            {
+                "name": {"type": "string", "minLength": 1},
+                "exe":
+                {
+                    "type": "string",
+                    "enum": ["antares-solver", "antares-problem-generator"]
+                },
+                "options":
+                {
+                    "type": "array",
+                    "items": {"type": "string"}
+                }
+            }
+        }
+    },
     "type" : "array",
     "items":
     {
+        "allOf": [{"$ref": "#/definitions/execution"}],
         "type": "object",
         "required": ["name", "checks"],
         "properties" :
@@ -13,6 +36,7 @@
                 "anyOf":
                 [
                     {"required": ["output_compare"]},
+                    {"required": ["simu_table_compare"]},
                     {"required": ["integrity_compare"]},
                     {"required": ["hydro_level"]},
                     {"required": ["unfeasible_problem"]},
@@ -31,6 +55,7 @@
                         "additionalProperties" : false
                     },
 
+                    "simu_table_compare" : {"type" : "null"},
                     "integrity_compare" : {"type" : "null"},
                     "mps_compare" : {"type" : "null"},
 

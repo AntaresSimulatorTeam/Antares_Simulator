@@ -23,6 +23,7 @@ src/config/include/antares/config/config.h
 config.h
 src/tests/cucumber/conf.yaml
 src/tests/cucumber/behave.ini
+src/tests/run-study-tests/executables.ini
 
 
 # Yuni
