@@ -1,0 +1,24 @@
+library:
+  id: lib_example_14_8
+  description: Invalid fixed sum bound (the study must fail)
+
+  models:
+    - id: invalid_fixed_bound_demo
+      description: >
+        Variable bounded below by sum(3 .. 6, p) with 5 timesteps (size=5).
+        Absolute upper bound 6 is outside the block [0, 4] of a 5-timestep window: the study must be rejected instead of wrapping around.
+      parameters:
+        - id: p
+          time-dependent: true
+          scenario-dependent: false
+      variables:
+        - id: x
+          lower-bound: 0
+          upper-bound: 1000
+          variable-type: continuous
+      constraints:
+        - id: lower_bound_from_invalid_sum
+          expression: x >= sum(3 .. 6, p)
+      objective-contributions:
+        - id: objective
+          expression: sum(x)

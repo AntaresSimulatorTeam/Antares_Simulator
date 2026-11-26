@@ -273,6 +273,47 @@ BOOST_FIXTURE_TEST_CASE(time_dependent_time_sum_bound_is_rejected, tests_fixture
     BOOST_CHECK_THROW(evalVisitor->dispatch(sum), Antares::Error::InvalidArgumentError);
 }
 
+BOOST_FIXTURE_TEST_CASE(invalid_upper_time_sum_bound_is_rejected, tests_fixture)
+{
+    Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
+    // Block of 3 steps: indices are in [0, 2]
+    BOOST_CHECK_THROW(evalVisitor->dispatch(timeSum(literal(0), literal(3), p)),
+                      Antares::Error::InvalidArgumentError);
+    BOOST_CHECK_THROW(evalVisitor->dispatch(timeSum(literal(0), literal(1.5), p)),
+                      Antares::Error::InvalidArgumentError);
+    BOOST_CHECK_THROW(evalVisitor->dispatch(timeSum(literal(0), literal(-1), p)),
+                      Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(absolute_time_sum_bounds_at_block_limits_are_accepted, tests_fixture)
+{
+    // p = {1, 2, 3}: sum(0 .. 2, p) covers the whole block
+    const auto values = evalVisitor
+                          ->dispatch(timeSum(literal(0),
+                                             literal(2),
+                                             parameter("p", VariabilityType::VARYING_IN_TIME_ONLY)))
+                          .valuesAsVector();
+    BOOST_REQUIRE_EQUAL(values.size(), 3);
+    for (const auto value: values)
+    {
+        BOOST_CHECK_EQUAL(value, 6.);
+    }
+}
+
+BOOST_FIXTURE_TEST_CASE(invalid_relative_time_sum_bound_is_rejected, tests_fixture)
+{
+    Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
+    // sum(t .. t+1.5, p) and sum(t+1.5 .. t, p)
+    BOOST_CHECK_THROW(evalVisitor->dispatch(timeSum(tPlus(0), tPlus(1.5), p)),
+                      Antares::Error::InvalidArgumentError);
+    BOOST_CHECK_THROW(evalVisitor->dispatch(timeSum(tPlus(1.5), tPlus(0), p)),
+                      Antares::Error::InvalidArgumentError);
+    // t + INT_MAX does not fit in an int from the second time step on
+    BOOST_CHECK_THROW(evalVisitor->dispatch(
+                        timeSum(tPlus(0), tPlus(std::numeric_limits<int>::max()), p)),
+                      Antares::Error::InvalidArgumentError);
+}
+
 BOOST_FIXTURE_TEST_CASE(time_sum_bound_depending_on_a_variable_is_rejected, tests_fixture)
 {
     // A time-constant variable has no value before the optimization: it must not drive a bound

@@ -143,3 +143,15 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
       | c1        | x      | 0-4      | 20    |
+
+  @short
+  Scenario: 1.14: Absolute sum bound outside the window is rejected instead of wrapping around
+    Given the modeler study path is "modeler/14_8"
+    When I run antares modeler
+    Then the simulation fails
+
+  @short
+  Scenario: 1.15: Non-integer sum bound is rejected instead of being truncated
+    Given the modeler study path is "modeler/14_9"
+    When I run antares modeler
+    Then the simulation fails

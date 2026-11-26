@@ -1,0 +1,17 @@
+system:
+  id: sys_example_14_8
+  description: >
+    Single component with one variable x and time series p = {1, 2, 3, 4, 5}.
+    The constraint x >= sum(3 .. 6, p) has an invalid fixed bound.
+    Absolute upper bound 6 is outside the block [0, 4] of a 5-timestep window: the study must be rejected instead of wrapping around.
+
+
+  components:
+    - id: c1
+      model: lib_example_14_8.invalid_fixed_bound_demo
+
+      parameters:
+        - id: p
+          time-dependent: true
+          scenario-dependent: false
+          value: p_14_8

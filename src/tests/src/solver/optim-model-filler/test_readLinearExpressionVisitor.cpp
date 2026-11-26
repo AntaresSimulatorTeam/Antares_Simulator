@@ -666,6 +666,50 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_inverted_bounds_returns_zero,
     BOOST_CHECK_EQUAL(linear_expression[2].constant(), 0.);
 }
 
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_invalid_bounds_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    ctx = Api::FillContext(0, 2, 0, 2, 0); // block of 3 steps: absolute indices are in [0, 2]
+    constexpr double intMax = std::numeric_limits<int>::max();
+    const auto sumOf = [this](Node* from, Node* to, Node* operand)
+    { return create<TimeSumNode>(from, to, operand); };
+
+    // Series and constant operands go through different branches
+    for (Node* operand: {static_cast<Node*>(create<ParameterNode>("param_ts")),
+                         static_cast<Node*>(create<LiteralNode>(13.))})
+    {
+        const std::vector<std::pair<Node*, Node*>> invalidBounds = {
+          {create<LiteralNode>(0.), create<LiteralNode>(3.)},  // above the block
+          {create<LiteralNode>(-1.), create<LiteralNode>(2.)}, // below the block
+          {create<LiteralNode>(0.), create<LiteralNode>(1.5)}, // not an integer
+          {create<TPlusNode>(create<LiteralNode>(0.)), create<TPlusNode>(create<LiteralNode>(1.5))},
+          {create<TPlusNode>(create<LiteralNode>(1.5)), create<TPlusNode>(create<LiteralNode>(0.))},
+          {create<TPlusNode>(create<LiteralNode>(0.)),
+           create<TPlusNode>(create<LiteralNode>(intMax))}};
+        for (const auto& [from, to]: invalidBounds)
+        {
+            BOOST_CHECK_THROW(visitor().dispatch(sumOf(from, to, operand)),
+                              Antares::Error::InvalidArgumentError);
+        }
+    }
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_absolute_bounds_at_block_limits_is_accepted,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
+    // param_ts = {0, 1, 2}: sum(0 .. 2, param_ts) covers the whole block
+    Node* sum = create<TimeSumNode>(create<LiteralNode>(0.),
+                                    create<LiteralNode>(2.),
+                                    create<ParameterNode>("param_ts"));
+    const auto linear_expression = visitor().dispatch(sum);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 3);
+    for (std::size_t t = 0; t < 3; ++t)
+    {
+        BOOST_CHECK_EQUAL(linear_expression[t].constant(), 3.);
+    }
+}
+
 BOOST_FIXTURE_TEST_CASE(visit_timeSum_of_constant_over_full_int_range_does_not_overflow,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {
