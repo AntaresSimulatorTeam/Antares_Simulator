@@ -747,6 +747,20 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_of_series_over_very_long_window_wraps_with
     }
 }
 
+namespace
+{
+// Offsets that are not integers or do not fit in an int
+std::vector<double> invalidTimeShiftOffsets()
+{
+    return {1.5,
+            -1.5,
+            static_cast<double>(std::numeric_limits<int>::max()) + 1,
+            static_cast<double>(std::numeric_limits<int>::min()) - 1,
+            std::numeric_limits<double>::infinity(),
+            std::numeric_limits<double>::quiet_NaN()};
+}
+} // namespace
+
 BOOST_FIXTURE_TEST_CASE(visit_timeShift_with_invalid_offset_throws,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {
@@ -756,12 +770,7 @@ BOOST_FIXTURE_TEST_CASE(visit_timeShift_with_invalid_offset_throws,
         ctx = Api::FillContext(0, lastTimeStep, 0, lastTimeStep, 0);
         for (Node* operand: operands)
         {
-            for (double offset: {1.5,
-                                 -1.5,
-                                 static_cast<double>(std::numeric_limits<int>::max()) + 1,
-                                 static_cast<double>(std::numeric_limits<int>::min()) - 1,
-                                 std::numeric_limits<double>::infinity(),
-                                 std::numeric_limits<double>::quiet_NaN()})
+            for (double offset: invalidTimeShiftOffsets())
             {
                 Node* shift = create<TimeShiftNode>(operand, create<LiteralNode>(offset));
                 BOOST_CHECK_THROW(visitor().dispatch(shift), Antares::Error::InvalidArgumentError);
@@ -795,12 +804,7 @@ BOOST_FIXTURE_TEST_CASE(drop_checker_with_invalid_time_shift_offset_throws,
 {
     ctx = Api::FillContext(0, 2, 0, 2, 0);
     EvalVisitor evalVisitor(optimContainer, ctx, components[0], &data, empty_scenario);
-    for (double offset: {1.5,
-                         -1.5,
-                         static_cast<double>(std::numeric_limits<int>::max()) + 1,
-                         static_cast<double>(std::numeric_limits<int>::min()) - 1,
-                         std::numeric_limits<double>::infinity(),
-                         std::numeric_limits<double>::quiet_NaN()})
+    for (double offset: invalidTimeShiftOffsets())
     {
         Node* shift = create<TimeShiftNode>(create<LiteralNode>(13.), create<LiteralNode>(offset));
         BOOST_CHECK_THROW(hasOutOfBoundsTimeShift(shift, 1, ctx, evalVisitor),
