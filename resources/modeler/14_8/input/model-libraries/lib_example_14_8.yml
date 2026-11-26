@@ -1,0 +1,24 @@
+library:
+  id: lib_example_14_8
+  description: Invalid fixed sum bound (the study must fail)
+
+  models:
+    - id: invalid_fixed_bound_demo
+      description: >
+        Variable bounded below by sum(1.5 .. 4, p) with 5 timesteps (size=5).
+        Lower bound 1.5 is not an integer: the study must be rejected instead of truncating it.
+      parameters:
+        - id: p
+          time-dependent: true
+          scenario-dependent: false
+      variables:
+        - id: x
+          lower-bound: 0
+          upper-bound: 1000
+          variable-type: continuous
+      constraints:
+        - id: lower_bound_from_invalid_sum
+          expression: x >= sum(1.5 .. 4, p)
+      objective-contributions:
+        - id: objective
+          expression: sum(x)

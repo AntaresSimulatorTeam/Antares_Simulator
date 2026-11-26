@@ -9,6 +9,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/TimeSumUtils.h>
+#include <antares/expressions/visitors/VariabilityVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 #include "antares/expressions/ShiftVector.h"
@@ -230,20 +231,24 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeShiftNode* node)
 {
     const auto ret = dispatch(node->left());
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
-    const auto timeShift = static_cast<int>(dispatch(node->right()).valueAsDouble());
+    const auto timeShift = resolveTimeShift(node->right(), *this);
     return ret.timeShift(timeShift);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
 {
     const auto ret = dispatch(node->left());
-    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
-    const auto timeIndex = static_cast<int>(dispatch(node->right()).valueAsDouble());
+    VariabilityVisitor variabilityVisitor(optimContainer_, component_);
+    const auto timeIndex = resolveTimeIndex(node->right(), *this, variabilityVisitor);
     return ret[timeIndex];
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 {
+    VariabilityVisitor variabilityVisitor(optimContainer_, component_);
+    checkTimeSumBoundVariability(node->from(), variabilityVisitor);
+    checkTimeSumBoundVariability(node->to(), variabilityVisitor);
+
     auto result = dispatch(node->expression());
     result.toConstantVector(fillContext_.getLocalNumberOfTimeSteps());
 

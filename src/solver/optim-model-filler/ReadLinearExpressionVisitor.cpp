@@ -215,27 +215,27 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::TimeShiftNode* node)
 {
     auto expression = dispatch(node->left());
+    const auto timeShift = Visitors::resolveTimeShift(node->right(), evalVisitor_);
     if (expression.isConstant())
     {
         return expression;
     }
-    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue]
-    const auto timeIndex = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
-    expression.rotate(timeIndex);
+    expression.rotate(timeShift);
     return expression;
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::TimeIndexNode* node)
 {
     auto expression = dispatch(node->left());
+    Visitors::VariabilityVisitor variabilityVisitor(optimEntityContainer_, component_);
+    const auto timeIndex = Antares::Expressions::Visitors::resolveTimeIndex(node->right(),
+                                                                            evalVisitor_,
+                                                                            variabilityVisitor);
 
     if (expression.isConstant())
     {
         return expression;
     }
-    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue]
-    const auto timeIndex = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
-
     if (timeIndex < 0 || static_cast<std::size_t>(timeIndex) >= expression.size())
     {
         Expressions::Visitors::PrintVisitor visitor;
@@ -257,6 +257,9 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
     // visitor doesn't use current timestep), so perform them once before the loop.
     Antares::Expressions::Visitors::checkTimeSumBoundVariability(node->from(), variabilityVisitor);
     Antares::Expressions::Visitors::checkTimeSumBoundVariability(node->to(), variabilityVisitor);
+
+    // Block length as an int, to compare with the (signed) resolved bounds
+    const auto nbSteps = static_cast<int>(nbtimeSteps_);
 
     if (expression.isConstant())
     {
@@ -292,7 +295,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
         Antares::Expressions::Visitors::forEachTimeSumIndex(
           from,
           to,
-          static_cast<int>(nbtimeSteps_),
+          nbSteps,
           [&ret, &expression, localTimeStep](int timeIndex, long long count)
           {
               auto term = expression[timeIndex];

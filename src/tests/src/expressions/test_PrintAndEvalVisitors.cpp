@@ -896,6 +896,31 @@ BOOST_AUTO_TEST_CASE(time_sum_on_vector_with_int_max_upper_bound_does_not_overfl
     BOOST_CHECK_EQUAL(sum[0] + sum[1] + sum[2], 0.);
 }
 
+BOOST_FIXTURE_TEST_CASE(evaluate_shift_with_invalid_offset_throws, MyDummyFixture)
+{
+    for (double offset: {1.5,
+                         -1.5,
+                         static_cast<double>(std::numeric_limits<int>::max()) + 1,
+                         static_cast<double>(std::numeric_limits<int>::min()) - 1,
+                         std::numeric_limits<double>::infinity(),
+                         std::numeric_limits<double>::quiet_NaN()})
+    {
+        LiteralNode offsetNode(offset);
+        LiteralNode operand(13.);
+        TimeShiftNode constantShift(&operand, &offsetNode);
+        BOOST_CHECK_THROW(defaultComponentEvalVisitor->dispatch(&constantShift),
+                          Antares::Error::InvalidArgumentError);
+        BOOST_CHECK_THROW(CreateAndEvaluateTimeNode<TimeShiftNode>(&offsetNode),
+                          Antares::Error::InvalidArgumentError);
+    }
+
+    LiteralNode minusThree(-3.);
+    LiteralNode two(2.);
+    DivisionNode fractionalOffset(&minusThree, &two);
+    BOOST_CHECK_THROW(CreateAndEvaluateTimeNode<TimeShiftNode>(&fractionalOffset),
+                      Antares::Error::InvalidArgumentError);
+}
+
 BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
 {
     LiteralNode literal_node(-1.0);
@@ -914,6 +939,20 @@ BOOST_FIXTURE_TEST_CASE(evaluate_timeIndex_param, MyDummyFixture)
     // from MockLinearProblemData  param TSdata is {0, 1, 2}
     // here we applied TimeIndex[1]
     BOOST_CHECK_EQUAL(eval, 1); //
+}
+
+BOOST_AUTO_TEST_CASE(evaluate_time_index_rejects_fractional_index)
+{
+    LiteralNode index(1.5);
+    BOOST_CHECK_THROW(CreateAndEvaluateTimeNode<TimeIndexNode>(&index),
+                      Antares::Error::InvalidArgumentError);
+}
+
+BOOST_AUTO_TEST_CASE(evaluate_time_index_rejects_time_dependent_index)
+{
+    ParameterNode index("my-param", VariabilityType::VARYING_IN_TIME_ONLY);
+    BOOST_CHECK_THROW(CreateAndEvaluateTimeNode<TimeIndexNode>(&index),
+                      Antares::Error::InvalidArgumentError);
 }
 
 EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)

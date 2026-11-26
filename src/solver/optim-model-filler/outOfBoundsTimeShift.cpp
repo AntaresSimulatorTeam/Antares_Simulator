@@ -5,6 +5,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
+#include <antares/expressions/visitors/TimeSumUtils.h>
 #include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 #include <antares/study/system-model/component.h>
 #include <antares/study/system-model/connection.h>
@@ -23,12 +24,11 @@ bool hasOutOfBoundsTimeShift(const Expressions::Nodes::Node* node,
 
     if (const auto* timeShiftNode = dynamic_cast<const Expressions::Nodes::TimeShiftNode*>(node))
     {
-        // Fractional shifts are truncated toward zero (e.g., 1.5 → 1, -1.5 → -1).
-        const auto timeShift = static_cast<int>(
-          evalVisitor.dispatch(timeShiftNode->right()).valueAsDouble());
-        const int shiftedTimestep = static_cast<int>(timeStep) + timeShift;
-        if (shiftedTimestep < static_cast<int>(ctx.getLocalFirstTimeStep())
-            || shiftedTimestep > static_cast<int>(ctx.getLocalLastTimeStep()))
+        const auto timeShift = Expressions::Visitors::resolveTimeShift(timeShiftNode->right(),
+                                                                       evalVisitor);
+        const auto shiftedTimestep = static_cast<long long>(timeStep) + timeShift;
+        if (shiftedTimestep < ctx.getLocalFirstTimeStep()
+            || shiftedTimestep > ctx.getLocalLastTimeStep())
         {
             return true;
         }

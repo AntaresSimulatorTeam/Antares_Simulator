@@ -1,0 +1,17 @@
+system:
+  id: sys_example_14_8
+  description: >
+    Single component with one variable x and time series p = {1, 2, 3, 4, 5}.
+    The constraint x >= sum(1.5 .. 4, p) has an invalid fixed bound.
+    Lower bound 1.5 is not an integer: the study must be rejected instead of truncating it.
+
+
+  components:
+    - id: c1
+      model: lib_example_14_8.invalid_fixed_bound_demo
+
+      parameters:
+        - id: p
+          time-dependent: true
+          scenario-dependent: false
+          value: p_14_8

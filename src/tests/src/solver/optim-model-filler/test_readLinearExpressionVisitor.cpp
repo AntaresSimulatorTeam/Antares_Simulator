@@ -666,6 +666,32 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_inverted_bounds_returns_zero,
     BOOST_CHECK_EQUAL(linear_expression[2].constant(), 0.);
 }
 
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_invalid_bounds_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    ctx = Api::FillContext(0, 2, 0, 2, 0); // block of 3 steps: absolute indices are in [0, 2]
+    constexpr double intMax = std::numeric_limits<int>::max();
+    const auto sumOf = [this](Node* from, Node* to, Node* operand)
+    { return create<TimeSumNode>(from, to, operand); };
+
+    // Series and constant operands go through different branches
+    for (Node* operand: {static_cast<Node*>(create<ParameterNode>("param_ts")),
+                         static_cast<Node*>(create<LiteralNode>(13.))})
+    {
+        const std::vector<std::pair<Node*, Node*>> invalidBounds = {
+          {create<LiteralNode>(0.), create<LiteralNode>(1.5)}, // not an integer
+          {create<TPlusNode>(create<LiteralNode>(0.)), create<TPlusNode>(create<LiteralNode>(1.5))},
+          {create<TPlusNode>(create<LiteralNode>(1.5)), create<TPlusNode>(create<LiteralNode>(0.))},
+          {create<TPlusNode>(create<LiteralNode>(0.)),
+           create<TPlusNode>(create<LiteralNode>(intMax))}};
+        for (const auto& [from, to]: invalidBounds)
+        {
+            BOOST_CHECK_THROW(visitor().dispatch(sumOf(from, to, operand)),
+                              Antares::Error::InvalidArgumentError);
+        }
+    }
+}
+
 BOOST_FIXTURE_TEST_CASE(visit_timeSum_of_constant_over_full_int_range_does_not_overflow,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {
@@ -701,6 +727,106 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_of_series_over_very_long_window_wraps_with
     {
         BOOST_CHECK_EQUAL(linear_expression[t].constant(), 3. * 666666667.);
     }
+}
+
+namespace
+{
+// Offsets that are not integers or do not fit in an int
+std::vector<double> invalidTimeShiftOffsets()
+{
+    return {1.5,
+            -1.5,
+            static_cast<double>(std::numeric_limits<int>::max()) + 1,
+            static_cast<double>(std::numeric_limits<int>::min()) - 1,
+            std::numeric_limits<double>::infinity(),
+            std::numeric_limits<double>::quiet_NaN()};
+}
+} // namespace
+
+BOOST_FIXTURE_TEST_CASE(visit_timeShift_with_invalid_offset_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* operands[] = {create<LiteralNode>(13.), create<ParameterNode>("param_ts")};
+    for (unsigned lastTimeStep: {0u, 2u})
+    {
+        ctx = Api::FillContext(0, lastTimeStep, 0, lastTimeStep, 0);
+        for (Node* operand: operands)
+        {
+            for (double offset: invalidTimeShiftOffsets())
+            {
+                Node* shift = create<TimeShiftNode>(operand, create<LiteralNode>(offset));
+                BOOST_CHECK_THROW(visitor().dispatch(shift), Antares::Error::InvalidArgumentError);
+            }
+            Node* fraction = create<DivisionNode>(create<LiteralNode>(-3.),
+                                                  create<LiteralNode>(2.));
+            Node* shift = create<TimeShiftNode>(operand, fraction);
+            BOOST_CHECK_THROW(visitor().dispatch(shift), Antares::Error::InvalidArgumentError);
+        }
+    }
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeShift_with_integer_offset_preserves_cyclic_wrapping,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
+    for (double offset: {-4., -1., 2., 5.})
+    {
+        Node* shift = create<TimeShiftNode>(create<ParameterNode>("param_ts"),
+                                            create<LiteralNode>(offset));
+        const auto expression = visitor().dispatch(shift);
+        BOOST_REQUIRE_EQUAL(expression.size(), 3);
+        BOOST_CHECK_EQUAL(expression[0].constant(), 2.);
+        BOOST_CHECK_EQUAL(expression[1].constant(), 0.);
+        BOOST_CHECK_EQUAL(expression[2].constant(), 1.);
+    }
+}
+
+BOOST_FIXTURE_TEST_CASE(drop_checker_with_invalid_time_shift_offset_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
+    EvalVisitor evalVisitor(optimContainer, ctx, components[0], &data, empty_scenario);
+    for (double offset: invalidTimeShiftOffsets())
+    {
+        Node* shift = create<TimeShiftNode>(create<LiteralNode>(13.), create<LiteralNode>(offset));
+        BOOST_CHECK_THROW(hasOutOfBoundsTimeShift(shift, 1, ctx, evalVisitor),
+                          Antares::Error::InvalidArgumentError);
+    }
+
+    Node* fraction = create<DivisionNode>(create<LiteralNode>(-3.), create<LiteralNode>(2.));
+    Node* shift = create<TimeShiftNode>(create<LiteralNode>(13.), fraction);
+    BOOST_CHECK_THROW(hasOutOfBoundsTimeShift(shift, 1, ctx, evalVisitor),
+                      Antares::Error::InvalidArgumentError);
+
+    for (double offset: {static_cast<double>(std::numeric_limits<int>::min()),
+                         static_cast<double>(std::numeric_limits<int>::max())})
+    {
+        Node* largeShift = create<TimeShiftNode>(create<LiteralNode>(13.),
+                                                 create<LiteralNode>(offset));
+        BOOST_CHECK(hasOutOfBoundsTimeShift(largeShift, 1, ctx, evalVisitor));
+    }
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeIndex_with_time_dependent_index_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // param_ts[param_ts]: the index changes with time but is evaluated only once
+    Node* index = create<TimeIndexNode>(create<ParameterNode>("param_ts"),
+                                        create<ParameterNode>("param_ts"));
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
+
+    BOOST_CHECK_THROW(visitor().dispatch(index), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeIndex_with_non_integer_index_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // param_ts[1.5] must not be silently truncated to param_ts[1]
+    Node* index = create<TimeIndexNode>(create<ParameterNode>("param_ts"),
+                                        create<LiteralNode>(1.5));
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
+
+    BOOST_CHECK_THROW(visitor().dispatch(index), Antares::Error::InvalidArgumentError);
 }
 
 BOOST_FIXTURE_TEST_CASE(all_time_sum_of_constant_expression_scales_with_horizon,

@@ -244,6 +244,44 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_on_interval_t__t_plus_1, 
     BOOST_CHECK(actual == expected);
 }
 
+BOOST_FIXTURE_TEST_CASE(non_integer_time_sum_bound_is_rejected, tests_fixture)
+{
+    Node* sum = timeSum(literal(1.5), literal(2), literal(1));
+
+    BOOST_CHECK_THROW(evalVisitor->dispatch(sum), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(time_dependent_time_sum_bound_is_rejected, tests_fixture)
+{
+    Node* sum = timeSum(parameter("p", VariabilityType::VARYING_IN_TIME_ONLY),
+                        literal(0),
+                        literal(1));
+
+    BOOST_CHECK_THROW(evalVisitor->dispatch(sum), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(invalid_relative_time_sum_bound_is_rejected, tests_fixture)
+{
+    Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
+    // sum(t .. t+1.5, p) and sum(t+1.5 .. t, p)
+    BOOST_CHECK_THROW(evalVisitor->dispatch(timeSum(tPlus(0), tPlus(1.5), p)),
+                      Antares::Error::InvalidArgumentError);
+    BOOST_CHECK_THROW(evalVisitor->dispatch(timeSum(tPlus(1.5), tPlus(0), p)),
+                      Antares::Error::InvalidArgumentError);
+    // t + INT_MAX does not fit in an int from the second time step on
+    BOOST_CHECK_THROW(evalVisitor->dispatch(
+                        timeSum(tPlus(0), tPlus(std::numeric_limits<int>::max()), p)),
+                      Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(time_dependent_time_shift_offset_is_rejected, tests_fixture)
+{
+    // p[p] where the offset varies in time: a clear error, not an EvalResultTypeError
+    Node* shifted = timeShift(parameter("p", VariabilityType::VARYING_IN_TIME_ONLY),
+                              parameter("p", VariabilityType::VARYING_IN_TIME_ONLY));
+    BOOST_CHECK_THROW(evalVisitor->dispatch(shifted), Antares::Error::InvalidArgumentError);
+}
+
 BOOST_AUTO_TEST_CASE(for_each_time_sum_index_visits_each_index_with_its_multiplicity)
 {
     using Visit = std::pair<int, long long>;
@@ -295,6 +333,30 @@ BOOST_FIXTURE_TEST_CASE(very_long_relative_time_sum_window_wraps_without_iterati
     {
         BOOST_CHECK_EQUAL(value, 6. * 666666667.);
     }
+}
+
+BOOST_FIXTURE_TEST_CASE(integer_time_index_is_evaluated, tests_fixture)
+{
+    // Expression : p[1], where p = {1., 2., 3.}
+    Node* indexed = timeIndex(parameter("p", VariabilityType::VARYING_IN_TIME_ONLY), literal(1));
+
+    BOOST_CHECK_EQUAL(evalVisitor->dispatch(indexed).valueAsDouble(), 2.);
+}
+
+BOOST_FIXTURE_TEST_CASE(non_integer_time_index_is_rejected, tests_fixture)
+{
+    Node* indexed = timeIndex(parameter("p", VariabilityType::VARYING_IN_TIME_ONLY), literal(1.5));
+
+    BOOST_CHECK_THROW(evalVisitor->dispatch(indexed), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(time_dependent_time_index_is_rejected, tests_fixture)
+{
+    // Expression : five[p], where p varies in time
+    Node* indexed = timeIndex(parameter("five", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO),
+                              parameter("p", VariabilityType::VARYING_IN_TIME_ONLY));
+
+    BOOST_CHECK_THROW(evalVisitor->dispatch(indexed), Antares::Error::InvalidArgumentError);
 }
 
 BOOST_FIXTURE_TEST_CASE(sum_a_squared_param_as_TS_on_interval_t__t_plus_1, tests_fixture)
