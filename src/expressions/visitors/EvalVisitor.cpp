@@ -255,8 +255,10 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
         forEachTimeSumIndex(from,
                             to,
                             static_cast<int>(values.size()),
-                            [&values, &result, localTimeStep](int timeIndex)
-                            { values[localTimeStep] += result[timeIndex].valueAsDouble(); });
+                            [&values, &result, localTimeStep](int timeIndex, long long count) {
+                                values[localTimeStep] += static_cast<double>(count)
+                                                         * result[timeIndex].valueAsDouble();
+                            });
     }
 
     return EvaluationResult(values);
@@ -506,9 +508,10 @@ EvaluationResult EvaluationResult::timeSumOnVector(int from, int to) const
 {
     const std::vector<double> values = valuesAsVector(); // Exception throw if value_ not a vector
     std::vector<double> to_return(values.size(), 0.);
-    for (int shift = from; shift <= to; ++shift)
+    // 64-bit counter: with to == INT_MAX, an int counter would overflow on the last increment
+    for (long long shift = from; shift <= to; ++shift)
     {
-        std::vector<double> shifted_values = shiftVector(values, shift);
+        std::vector<double> shifted_values = shiftVector(values, static_cast<int>(shift));
         to_return += shifted_values;
     }
     return EvaluationResult(to_return);

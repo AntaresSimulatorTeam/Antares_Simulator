@@ -500,6 +500,8 @@ models:
 - `drop`: the constraint is not instantiated for timesteps where at least one shifted term falls outside the local
   block
 
+Relative bounds in `sum(S .. E, X)` are not checked by `drop` mode; they still wrap within the local block.
+
 Each configured constraint `id` must reference an existing constraint of the model.
 
 ### Scenario scope

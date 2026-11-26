@@ -3,14 +3,18 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <limits>
 #include <memory>
+#include <vector>
 
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
+#include <antares/exception/InvalidArgumentError.hpp>
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
+#include <antares/expressions/visitors/TimeSumUtils.h>
 #include <antares/study/system-model-base/variabilityType.h>
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 
@@ -33,6 +37,8 @@ struct build_AST_fixture
     Node* parameter(const std::string& name, const VariabilityType variability);
     Node* allTimeSum(Node* node);
     Node* timeSum(Node* from, Node* to, Node* p);
+    Node* timeIndex(Node* node, Node* index);
+    Node* timeShift(Node* node, Node* offset);
     Node* square(Node* node);
 
 private:
@@ -62,6 +68,16 @@ Node* build_AST_fixture::parameter(const std::string& name, const VariabilityTyp
 Node* build_AST_fixture::timeSum(Node* from, Node* to, Node* p)
 {
     return registry_.create<TimeSumNode>(from, to, p);
+}
+
+Node* build_AST_fixture::timeIndex(Node* node, Node* index)
+{
+    return registry_.create<TimeIndexNode>(node, index);
+}
+
+Node* build_AST_fixture::timeShift(Node* node, Node* offset)
+{
+    return registry_.create<TimeShiftNode>(node, offset);
 }
 
 Node* build_AST_fixture::square(Node* node)
@@ -201,7 +217,7 @@ BOOST_AUTO_TEST_SUITE_END()
 // For example : sum(t .. t+1, p).
 //
 // As a consequence,
-// - the following expression : sum(0 .. 1, p) is rejected.
+// - sum(0 .. 1, p) is constant in time and evaluated once per optimization window.
 // - sum(t .. t+1, p) means that for each time step t, we sum p over the interval [t, t+1].
 // - sum(t .. t+1, p) results in a vector sized to the number of hours, even if p is a literal
 //   (that is of dimension 1).
@@ -226,6 +242,59 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_on_interval_t__t_plus_1, 
     std::vector<double> expected = {3., 5., 4.};
     std::vector<double> actual = evalResult.valuesAsVector();
     BOOST_CHECK(actual == expected);
+}
+
+BOOST_AUTO_TEST_CASE(for_each_time_sum_index_visits_each_index_with_its_multiplicity)
+{
+    using Visit = std::pair<int, long long>;
+    const auto collect = [](int from, int to, int size)
+    {
+        std::vector<Visit> visited;
+        forEachTimeSumIndex(from,
+                            to,
+                            size,
+                            [&visited](int index, long long count)
+                            { visited.emplace_back(index, count); });
+        return visited;
+    };
+
+    // Window shorter than the block: indices in window order, with wrap-around
+    BOOST_CHECK(collect(3, 6, 5) == (std::vector<Visit>{{3, 1}, {4, 1}, {0, 1}, {1, 1}}));
+    // Window longer than the block: 7 steps over a block of 5 cover indices 0 and 1 twice
+    BOOST_CHECK(collect(0, 6, 5) == (std::vector<Visit>{{0, 2}, {1, 2}, {2, 1}, {3, 1}, {4, 1}}));
+    // Empty window
+    BOOST_CHECK(collect(2, 1, 5).empty());
+
+    constexpr int intMax = std::numeric_limits<int>::max();
+    constexpr int intMin = std::numeric_limits<int>::min();
+    // INT_MAX % 5 == 2: a one-element window ending at INT_MAX must not overflow
+    BOOST_CHECK(collect(intMax, intMax, 5) == (std::vector<Visit>{{intMax % 5, 1}}));
+    BOOST_CHECK(collect(intMax, intMax - 1, 5).empty());
+
+    // The whole int range is 2^32 steps: the cost does not depend on the window length
+    long long total = 0;
+    for (const auto& [index, count]: collect(intMin, intMax, 5))
+    {
+        total += count;
+    }
+    BOOST_CHECK_EQUAL(total, 4294967296LL);
+}
+
+BOOST_FIXTURE_TEST_CASE(very_long_relative_time_sum_window_wraps_without_iterating, tests_fixture)
+{
+    // sum(t-1e9 .. t+1e9, p) with p = {1, 2, 3} : 2e9+1 = 3 * 666666667 steps, i.e. 666666667
+    // full cycles over the block, whatever t
+    Node* sum = timeSum(tPlus(-1e9),
+                        tPlus(1e9),
+                        parameter("p", VariabilityType::VARYING_IN_TIME_ONLY));
+
+    const auto values = evalVisitor->dispatch(sum).valuesAsVector();
+
+    BOOST_REQUIRE_EQUAL(values.size(), 3);
+    for (const auto value: values)
+    {
+        BOOST_CHECK_EQUAL(value, 6. * 666666667.);
+    }
 }
 
 BOOST_FIXTURE_TEST_CASE(sum_a_squared_param_as_TS_on_interval_t__t_plus_1, tests_fixture)

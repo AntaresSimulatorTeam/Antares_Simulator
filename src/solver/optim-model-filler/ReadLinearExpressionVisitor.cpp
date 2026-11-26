@@ -272,7 +272,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
             if (from <= to)
             {
                 auto term = expression[0];
-                term *= static_cast<double>(to - from + 1);
+                // Computed in 64 bits: to - from + 1 can exceed INT_MAX
+                term *= static_cast<double>(static_cast<long long>(to) - from + 1);
                 ret[localTimeStep] += term;
             }
         }
@@ -292,8 +293,12 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
           from,
           to,
           static_cast<int>(nbtimeSteps_),
-          [&ret, &expression, localTimeStep](int timeIndex)
-          { ret[localTimeStep] += expression[timeIndex]; });
+          [&ret, &expression, localTimeStep](int timeIndex, long long count)
+          {
+              auto term = expression[timeIndex];
+              term *= static_cast<double>(count);
+              ret[localTimeStep] += term;
+          });
     }
     return ret;
 }

@@ -3,13 +3,16 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <limits>
 #include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h>
+#include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 #include "antares/exception/InvalidArgumentError.hpp"
+#include "antares/exception/LoadingError.hpp"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
@@ -661,6 +664,43 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_inverted_bounds_returns_zero,
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 0.);
     BOOST_CHECK_EQUAL(linear_expression[1].constant(), 0.);
     BOOST_CHECK_EQUAL(linear_expression[2].constant(), 0.);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_of_constant_over_full_int_range_does_not_overflow,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // sum(t+INT_MIN .. t+INT_MAX, 13) on a one-step block covers 2^32 indices:
+    // the count does not fit in an int.
+    Node* from = create<TPlusNode>(
+      create<LiteralNode>(static_cast<double>(std::numeric_limits<int>::min())));
+    Node* to = create<TPlusNode>(
+      create<LiteralNode>(static_cast<double>(std::numeric_limits<int>::max())));
+    Node* sum = create<TimeSumNode>(from, to, create<LiteralNode>(13.));
+
+    ctx = Api::FillContext(0, 0, 0, 0, 0);
+    const auto linear_expression = visitor().dispatch(sum);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 13. * 4294967296.);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_of_series_over_very_long_window_wraps_without_iterating,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // sum(t-1e9 .. t+1e9, param_ts) : 2e9+1 = 3 * 666666667 steps, so each of the 3 indices is
+    // covered 666666667 times. param_ts = {0, 1, 2}.
+    Node* from = create<TPlusNode>(create<LiteralNode>(-1e9));
+    Node* to = create<TPlusNode>(create<LiteralNode>(1e9));
+    Node* sum = create<TimeSumNode>(from, to, create<ParameterNode>("param_ts"));
+
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
+    const auto linear_expression = visitor().dispatch(sum);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 3);
+    for (std::size_t t = 0; t < 3; ++t)
+    {
+        BOOST_CHECK_EQUAL(linear_expression[t].constant(), 3. * 666666667.);
+    }
 }
 
 BOOST_FIXTURE_TEST_CASE(all_time_sum_of_constant_expression_scales_with_horizon,

@@ -3,12 +3,14 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <limits>
 #include <stdexcept>
 
 #include <boost/mpl/list.hpp>
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
+#include <antares/exception/InvalidArgumentError.hpp>
 #include <antares/expressions/Registry.hxx>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
@@ -877,6 +879,21 @@ EvaluationResult CreateAndEvaluateTimeNode(Node* p)
                         scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
 
     return visitor.dispatch(&root);
+}
+
+BOOST_AUTO_TEST_CASE(time_sum_on_vector_with_int_max_upper_bound_does_not_overflow)
+{
+    constexpr int intMax = std::numeric_limits<int>::max();
+    const EvaluationResult evalResult(std::vector<double>{1., 2., 3.});
+
+    // One-element interval ending at INT_MAX: a rotation of the vector
+    auto sum = evalResult.timeSumOnVector(intMax, intMax).valuesAsVector();
+    BOOST_REQUIRE_EQUAL(sum.size(), 3);
+    BOOST_CHECK_EQUAL(sum[0] + sum[1] + sum[2], 6.);
+
+    // Empty interval
+    sum = evalResult.timeSumOnVector(intMax, intMax - 1).valuesAsVector();
+    BOOST_CHECK_EQUAL(sum[0] + sum[1] + sum[2], 0.);
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_shifted_param, MyDummyFixture)
