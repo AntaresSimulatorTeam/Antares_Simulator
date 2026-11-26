@@ -881,6 +881,21 @@ EvaluationResult CreateAndEvaluateTimeNode(Node* p)
     return visitor.dispatch(&root);
 }
 
+BOOST_AUTO_TEST_CASE(time_sum_on_vector_with_int_max_upper_bound_does_not_overflow)
+{
+    constexpr int intMax = std::numeric_limits<int>::max();
+    const EvaluationResult evalResult(std::vector<double>{1., 2., 3.});
+
+    // One-element interval ending at INT_MAX: a rotation of the vector
+    auto sum = evalResult.timeSumOnVector(intMax, intMax).valuesAsVector();
+    BOOST_REQUIRE_EQUAL(sum.size(), 3);
+    BOOST_CHECK_EQUAL(sum[0] + sum[1] + sum[2], 6.);
+
+    // Empty interval
+    sum = evalResult.timeSumOnVector(intMax, intMax - 1).valuesAsVector();
+    BOOST_CHECK_EQUAL(sum[0] + sum[1] + sum[2], 0.);
+}
+
 BOOST_FIXTURE_TEST_CASE(evaluate_shift_with_invalid_offset_throws, MyDummyFixture)
 {
     for (double offset: {1.5,
