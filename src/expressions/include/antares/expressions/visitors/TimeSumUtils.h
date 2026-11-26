@@ -13,6 +13,9 @@ class VariabilityVisitor;
 // Normalize a possibly negative or out-of-range time index into [0, size).
 int normalizeTimeIndex(int timeIndex, int size);
 
+// Resolve a time-shift offset, rejecting non-integer values and values outside the int range.
+int resolveTimeShift(const Nodes::Node* offset, EvalVisitor& visitor);
+
 // Visit the indices covered by the window [from, to] (no-op if from > to). Indices wrap cyclically
 // on [0, size): a window longer than the block covers some indices several times.
 // callback(index, count) is called once per index covered, with the number of times it is covered.
@@ -43,7 +46,13 @@ inline void forEachTimeSumIndex(int from, int to, int size, Callback callback)
 // Resolve a bound used in a time-sum when no variability check is required.
 int resolveTimeSumBound(const Nodes::Node* bound, EvalVisitor& visitor, unsigned localTimeStep);
 
-// Check that a time-sum bound is constant in time.
+// Check that a time-sum bound is fixed in time and can be evaluated before optimization.
 void checkTimeSumBoundVariability(const Nodes::Node* bound, VariabilityVisitor& variabilityVisitor);
+
+// Resolve the index of a TimeIndexNode (x[i]): the index must be fixed in time and resolve to an
+// integer. Range checking is left to the caller, which knows the size of the indexed expression.
+int resolveTimeIndex(const Nodes::Node* index,
+                     EvalVisitor& visitor,
+                     VariabilityVisitor& variabilityVisitor);
 
 } // namespace Antares::Expressions::Visitors

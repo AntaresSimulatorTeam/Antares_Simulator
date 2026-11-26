@@ -25,6 +25,11 @@ Hydro leeway has been removed. The `[leeway low]` and `[leeway up]` sections in
 The `[use leeway]` section is also no longer supported. It is accepted for compatibility,
 but `use leeway = yes` is ignored with a warning; remove the section from the study.
 
+#### Modeler: time indices and sum bounds must be integers
+
+In GEMS expressions, sum bounds, time-shift offsets and time indices used to be silently truncated to an integer. A value
+that is not an integer, such as `x[t - 3/2]` or `x[1.5]`, is now rejected with an error naming the expression.
+
 ## v10.2.0
 
 ### Input
