@@ -1,6 +1,7 @@
 set(SOURCES
     legacyToYaml.cpp
     generateSystemForView.cpp
+    generateAreaViewConfig.cpp
     include/antares/view-builder/legacyToYaml.h
     include/antares/view-builder/viewBuilder.h
 )

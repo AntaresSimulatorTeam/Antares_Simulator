@@ -42,23 +42,24 @@ private:
 class UpdateMrgPriceAfterCSRcmd final: public basePostProcessCommand
 {
 public:
-    UpdateMrgPriceAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo,
-                              AreaList& areas,
-                              unsigned int numSpace);
+    UpdateMrgPriceAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo, AreaList& areas);
     void execute(const optRuntimeData&) override;
 
 private:
     const AreaList& area_list_;
-    unsigned int numSpace_ = 0;
 };
 
 class DTGnettingAfterCSRcmd final: public basePostProcessCommand
 {
 public:
-    DTGnettingAfterCSRcmd(PROBLEME_HEBDO* problemeHebdo, AreaList& areas, unsigned int numSpace);
+    DTGnettingAfterCSRcmd(const AdqPatchParams& adqPatchParams,
+                          PROBLEME_HEBDO* problemeHebdo,
+                          AreaList& areas,
+                          unsigned int numSpace);
     void execute(const optRuntimeData&) override;
 
 private:
+    const AdqPatchParams& adqPatchParams_;
     const AreaList& area_list_;
     unsigned int numSpace_ = 0;
 };

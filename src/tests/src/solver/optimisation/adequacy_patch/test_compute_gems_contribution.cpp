@@ -14,7 +14,6 @@
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 #include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/gems-part.h"
-#include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
@@ -95,11 +94,6 @@ system:
 
 namespace
 {
-// Indices of the unsupplied energy variables in the single-hour CSR problem
-// (Xmax/Xmin).
-constexpr int ensVarArea1 = 0;
-constexpr int ensVarArea2 = 1;
-
 // Indices of the constraints in problemAResoudre (SecondMembre).
 constexpr int fictitiousLoadArea1 = 10;
 constexpr int fictitiousLoadArea2 = 11;
@@ -136,20 +130,15 @@ struct GemsContributionFixture
 
         gemsPart = makeGemsPart(&problemeHebdo,
                                 problemAResoudre,
-                                variableManager_,
                                 constraintFictitious,
                                 constraintMaxEns);
     }
 
-    // Resets the bounds to the values set by the legacy adequacy patch, right before the GEMS
-    // contribution is applied.
+    // Resets the constraint RHS values before the GEMS contribution is applied.
     void setLegacyBounds()
     {
-        std::ranges::fill(problemAResoudre.Xmax, 0.0);
         std::ranges::fill(problemAResoudre.SecondMembre, 0.0);
 
-        problemAResoudre.Xmax[ensVarArea1] = 100.0;
-        problemAResoudre.Xmax[ensVarArea2] = 100.0;
         problemAResoudre.SecondMembre[fictitiousLoadArea1] = 500.0;
         problemAResoudre.SecondMembre[fictitiousLoadArea2] = 500.0;
         problemAResoudre.SecondMembre[maxEnsLoadArea1] = 300.0;
@@ -209,19 +198,10 @@ struct GemsContributionFixture
         pHebdo.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>();
         pHebdo.adequacyPatchRuntimeData->areaMode = {AdequacyPatch::physicalAreaInsideAdqPatch,
                                                      AdequacyPatch::physicalAreaInsideAdqPatch};
-
-        // CSR has one local time step: setHour selects the GEMS data time step,
-        // while the variables are always resolved through local hour 0.
-        pHebdo.CorrespondanceVarNativesVarOptim.resize(1);
-        pHebdo.CorrespondanceVarNativesVarOptim[0].NumeroDeVariableDefaillancePositive = {
-          ensVarArea1,
-          ensVarArea2};
     }
 
     void makeProblemToSolve(PROBLEME_ANTARES_A_RESOUDRE&)
     {
-        problemAResoudre.Xmax.resize(20, 0.0);
-        problemAResoudre.Xmin.resize(20, 0.0);
         problemAResoudre.SecondMembre.resize(20, 0.0);
 
         setLegacyBounds();
@@ -240,7 +220,6 @@ struct GemsContributionFixture
     std::unique_ptr<Solver::ModelerData> modelerData;
     // Keeps the model definitions alive: the system components hold raw pointers into them.
     std::vector<Library> libraries;
-    VariableManagement::VariableManager variableManager_{&problemeHebdo};
     std::unique_ptr<IGemsPart> gemsPart;
     PROBLEME_ANTARES_A_RESOUDRE problemAResoudre{};
     std::map<int, int> constraintFictitious;
@@ -249,45 +228,6 @@ struct GemsContributionFixture
 } // namespace
 
 BOOST_AUTO_TEST_SUITE(gems_contribution_tests)
-
-BOOST_FIXTURE_TEST_CASE(positive_load__gems_part_sets_ens_bounds__xmax_increased,
-                        GemsContributionFixture)
-{
-    // load = 50 -> 50 / 2 - 10 = 15
-    setGemsParameters({0.0, 0.0}, {50.0, 50.0});
-
-    gemsPart->setHour(0);
-    gemsPart->setBoundsOnENS();
-
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1], 100.0 + 15.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea2], 100.0); // not connected
-}
-
-BOOST_FIXTURE_TEST_CASE(negative_load__gems_part_sets_ens_bounds__xmax_decreased,
-                        GemsContributionFixture)
-{
-    // load = -10 -> -10 / 2 - 10 = -15
-    setGemsParameters({0.0, 0.0}, {-10.0, -10.0});
-
-    gemsPart->setHour(0);
-    gemsPart->setBoundsOnENS();
-
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1], 100.0 - 15.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea2], 100.0);
-}
-
-BOOST_FIXTURE_TEST_CASE(zero_load__gems_part_sets_ens_bounds__xmax_decreased_by_constant,
-                        GemsContributionFixture)
-{
-    // load = 0 -> 0 / 2 - 10 = -10
-    setGemsParameters({0.0, 0.0}, {0.0, 0.0});
-
-    gemsPart->setHour(0);
-    gemsPart->setBoundsOnENS();
-
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1], 100.0 - 10.0);
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea2], 100.0);
-}
 
 // --- setRHSfictitiousLoadValue (spillage_bound = 2 * residual_load + 30) ---
 
@@ -347,16 +287,16 @@ BOOST_FIXTURE_TEST_CASE(negative_load__gems_part_sets_rhs_max_ens__rhs_decreased
 
 // --- Time dependence ---
 
-BOOST_FIXTURE_TEST_CASE(ens_bounds_evaluated_at_triggered_hour, GemsContributionFixture)
+BOOST_FIXTURE_TEST_CASE(max_ens_load_evaluated_at_triggered_hour, GemsContributionFixture)
 {
     // load[0] = 20 -> 20 / 2 - 10 = 0
     // load[1] = 42 -> 42 / 2 - 10 = 11
     setGemsParameters({0.0, 0.0}, {20.0, 42.0});
 
     gemsPart->setHour(1);
-    gemsPart->setBoundsOnENS();
+    gemsPart->setRHSMaxEnsLoadValue();
 
-    BOOST_CHECK_EQUAL(problemAResoudre.Xmax[ensVarArea1], 100.0 + 11.0);
+    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea1], 300.0 + 11.0);
 }
 
 // --- Factory ---
@@ -366,9 +306,8 @@ BOOST_AUTO_TEST_CASE(factory_returns_null_gems_part_when_no_modeler_data)
     PROBLEME_HEBDO problem{};
     problem.modelerData = nullptr;
     PROBLEME_ANTARES_A_RESOUDRE pa{};
-    VariableManagement::VariableManager vm(&problem);
     std::map<int, int> cf, cm;
-    auto gp = makeGemsPart(&problem, pa, vm, cf, cm);
+    auto gp = makeGemsPart(&problem, pa, cf, cm);
     BOOST_CHECK(dynamic_cast<NullGemsPart*>(gp.get()) != nullptr);
 }
 
@@ -380,12 +319,9 @@ BOOST_FIXTURE_TEST_CASE(factory_returns_active_gems_part, GemsContributionFixtur
 BOOST_FIXTURE_TEST_CASE(throws_when_no_optimEntityContainer, GemsContributionFixture)
 {
     problemeHebdo.optimEntityContainer.reset();
-    BOOST_CHECK_THROW((ActiveGemsPart(&problemeHebdo,
-                                      problemAResoudre,
-                                      variableManager_,
-                                      constraintFictitious,
-                                      constraintMaxEns)),
-                      std::runtime_error);
+    BOOST_CHECK_THROW(
+      (ActiveGemsPart(&problemeHebdo, problemAResoudre, constraintFictitious, constraintMaxEns)),
+      std::runtime_error);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

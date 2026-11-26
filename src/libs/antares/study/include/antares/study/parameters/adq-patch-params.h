@@ -42,6 +42,8 @@ namespace Antares::Data::AdequacyPatch
 {
 //! A default threshold value for initiate curtailment sharing rule
 const double defaultThresholdToRunCurtailmentSharing = 0.0;
+//! A default ENS threshold below which ENS is zeroed after curtailment sharing
+const double defaultThresholdEns = 0.0;
 //! A default threshold value for display local matching rule violations
 const double defaultThresholdDisplayLocalMatchingRuleViolations = 0.0;
 //! CSR variables relaxation threshold
@@ -79,6 +81,8 @@ public:
     AdqPatchPTO priceTakingOrder;
     //! Threshold to initiate curtailment sharing rule
     double thresholdRun;
+    //! Threshold below which ENS is set to zero after curtailment sharing
+    double thresholdEns;
     //! Threshold to display Local Matching Rule violations
     double thresholdDisplayViolations;
     //! CSR Variables relaxation threshold

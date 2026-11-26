@@ -462,8 +462,16 @@ void Application::execute()
     pStudy->saveAboutTheStudy(*resultWriter);
 
     ViewBuilder::exportSystemForView(*pStudy, resultWriter.get());
-    logs.info()
-      << "system-for-views.yml has been generated in the output folder's views/input subfolder.";
+    logs.info() << "system-for-views.yml has been generated in the output folder's views/input "
+                   "subfolder.";
+    for (const auto type: {ViewBuilder::ViewType::AREA,
+                           ViewBuilder::ViewType::LINK,
+                           ViewBuilder::ViewType::THERMAL,
+                           ViewBuilder::ViewType::STORAGE,
+                           ViewBuilder::ViewType::RENEWABLE})
+    {
+        ViewBuilder::exportViewConfig(*pStudy, resultWriter.get(), type);
+    }
 
     SystemMemoryLogger memoryReport;
     memoryReport.interval(1000 * 60 * 5); // 5 minutes

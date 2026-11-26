@@ -154,7 +154,7 @@ YAML::Node shortTermStorageToYaml(const Area& area,
                          "antares_legacy_models.short_term_storage",
                          {{"carrier", "electricity"},
                           {"name", componentId},
-                          {"group", boost::to_lower_copy(storage.getGroup())}});
+                          {"technology", boost::to_lower_copy(storage.getGroup())}});
 }
 
 YAML::Node longTermStorageToYaml(const Area& area)

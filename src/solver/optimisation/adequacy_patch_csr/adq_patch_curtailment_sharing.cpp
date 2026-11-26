@@ -155,8 +155,8 @@ void HourlyCSRProblem::setVariableBounds()
     }
 
     logs.debug() << "[CSR] bounds";
+    // DENS is computed from the main solve, whose area balance already includes GEMS.
     setBoundsOnENS();
-    gemsPart_->setBoundsOnENS();
     setBoundsOnSpilledEnergy();
     setBoundsOnFlows();
 }
