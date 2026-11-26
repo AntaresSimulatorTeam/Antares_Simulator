@@ -161,6 +161,8 @@ expression: sum(4 .. 87, c) - sum(t - 3 * parameter_15 + 5 .. t, d)
 expression: sum(1 .. 2, expr) = expr[1] + expr[2]
 ~~~
 
+In these examples, absolute bounds such as `4 .. 87` assume an optimization block of at least 88 time steps.
+
 ### Scenario operators
 
 For scenario-dependent parameters, variables, and port fields, you can use this operator:
