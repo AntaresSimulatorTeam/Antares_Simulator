@@ -500,7 +500,9 @@ models:
 - `drop`: the constraint is not instantiated for timesteps where at least one shifted term falls outside the local
   block
 
-Relative bounds in `sum(S .. E, X)` are not checked by `drop` mode; they still wrap within the local block.
+In `drop` mode, a time-sum `sum(S .. E, X)` also counts as a term outside the local block when its window
+`[S, E]` is not empty and extends outside the block, or when `X` contains a shifted term that falls outside the block
+at one of the time steps of the window. An empty window (`S > E`) adds no term and never drops the constraint.
 
 Each configured constraint `id` must reference an existing constraint of the model.
 
