@@ -19,8 +19,10 @@ on:
     - fix/*
     - issue-*
     - release/*
+    - doc/*
     - dependabot/**
-  pull_request:
+    - tests/*
+    - copilot/*
   schedule:
   - cron: '34 3 * * *'
   workflow_dispatch:

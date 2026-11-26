@@ -20,6 +20,9 @@ void checkExpression(const Expressions::Nodes::Node* expression,
                      const std::string& exprStr,
                      const std::string& errorMsgForPortFieldSum = "");
 
+void checkModel(const ModelerStudy::SystemModel::Model& model,
+                const ModelerStudy::SystemModel::System& system);
+
 class LocationError final: public std::invalid_argument
 {
     using std::invalid_argument::invalid_argument;

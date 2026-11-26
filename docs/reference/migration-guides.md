@@ -3,6 +3,16 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to
 lower the costs of changing existing interfaces, both GUI and scripts.
 
+## Upcoming
+
+### Input
+
+#### Adequacy patch
+
+The optional `threshold-ens` property in the `[adequacy patch]` section of
+**settings/generaldata.ini** sets the per-area ENS cutoff applied after CSR. It defaults to
+`0.0` MWh and is independent of `threshold-initiate-curtailment-sharing-rule`.
+
 ## v10.3.0
 
 ### Input
@@ -25,22 +35,12 @@ In file settings/generaldata.ini, in section `optimization`, new property `inclu
 
 If `include-reserves = true`, the new reserve input files in **input/reserves** are read. See [reserve files](solver/optional-features/reserves.md) for more details.
 
-#### Filter district output granularities with `sets.ini`
+#### Filtering district output granularities
 
-Districts (sets of areas) now support geographic trimming for their exported time-series, controlled via the
-existing **`input/areas/sets.ini`** file. This allows restricting which granularities are exported per district and
-per report type, avoiding unnecessary output on large studies.
-
-Add the following optional keys to any district section in `sets.ini`:
-
-- **`filter-synthesis`** (applies to the synthesis report, `mc-all`)
-- **`filter-year-by-year`** (applies to the year-by-year reports, `mc-ind`)
-
-Each value is a comma- and/or space-separated list of granularities: `hourly`, `daily`, `weekly`, `monthly`, `annual`.
-
-**Default values:** If the keys are omitted or set to an unknown token, the default is `all` (all granularities are exported).
-
-**Example:**
+In file **input/areas/sets.ini**, two new optional properties, `filter-synthesis` and
+`filter-year-by-year`, restrict the time granularities exported for a district (set of areas),
+separately for the synthesis report (`mc-all`) and the year-by-year report (`mc-ind`). Each value
+is a list (comma and/or space separated) of `hourly`, `daily`, `weekly`, `monthly`, `annual`.
 
 ```ini
 [all system]
@@ -50,23 +50,11 @@ filter-synthesis = annual
 filter-year-by-year = hourly, daily
 ```
 
-| Input | Behavior |
-|---|---|
-| Key missing (or district not defined) | default behavior: all granularities exported |
-| `filter-synthesis = annual` | only `values-annual.txt` for that district in `mc-all` |
-| `filter-year-by-year = hourly, daily` | only `values-hourly.txt` and `values-daily.txt` in `mc-ind` |
-| key with no valid token (e.g. `filter-synthesis = none`) | the district output is skipped entirely for that report |
-| empty value (e.g. `filter-synthesis = `) | same as `none`: the district output is skipped entirely for that report |
-| unknown token (e.g. `bogus`) | ignored |
-
-> **Note:** Output **variables** (columns) per district are handled globally by the variables inspector and are not
-> affected by these filters. Granularity filtering for areas, links and binding constraints already existed via their
-> respective INI keys. This extends the same concept to districts.
->
-> An unknown granularity token (e.g. `filter-synthesis = bogus`) is ignored, meaning the filter stays at its default
-> of all granularities. The key is not rejected with an error.
-
-See [sets.ini documentation](solver/inputs.md) for more details.
+If a key is missing, the default behavior is kept: all granularities are exported for that
+district. Writing the key with no valid token (e.g. `filter-synthesis = none`) skips the
+district's output entirely for that report. These keys use the same syntax and semantics as the
+existing `filter-synthesis` / `filter-year-by-year` keys of areas and links. See
+[Definition of regional districts](solver/inputs.md#definition-of-regional-districts) for details.
 
 #### Deprecated properties
 
@@ -84,7 +72,7 @@ still accepted for compatibility, but should be removed from the study:
 #### One simulation table per optimization and post-process
 
 A simulation table is now written after **each** stage (optimization or post-process), one
-file per stage, named `simulation-table-<year>-<stage>`:
+file per stage under `simulation-tables/`, named `simulation-table-<year>-<stage>`:
 
 | Stage | Written after | Produced |
 |---|---|---|
@@ -93,7 +81,10 @@ file per stage, named `simulation-table-<year>-<stage>`:
 | `peak-shaving` | peak-shaving / remix hydro | weekly `simplex-range` only (see below) |
 | `adq-patch` | the whole adequacy patch CSR treatment | adequacy patch enabled, weekly `simplex-range` only |
 
-**The two pre-existing files are unchanged** — same names, same contents. `peak-shaving` and
+**The two pre-existing files are themselves renamed and re-scoped**, relative to v10.1.0:
+`simulation_table--optim-nb-1.csv` / `simulation_table--optim-nb-2.csv` (one file aggregating every
+MC year) become `simulation-table-<year>-optim-nb-1` / `simulation-table-<year>-optim-nb-2` (hyphenated,
+one file per MC year). Their per-stage content is otherwise the same. `peak-shaving` and
 `adq-patch` are new files that did not exist before. A script that globs
 `simulation-table-*` will therefore pick up more files than it used to, and should filter on the
 stage suffix if it only wants the optimization passes.
@@ -136,6 +127,12 @@ it stops the simulation rather than being read as `all` (which is what omitting 
 
 - Disabled binding constraints no longer load their time-series.
 - Disabled short-term storage clusters skip their time-series loading.
+
+#### Parquet simulation tables
+
+The new `--parquet` CLI flag writes simulation tables (`simulation-table-<year>-<stage>`) in
+Parquet format instead of CSV. Scripts that parse these files as CSV must check which format was
+requested before reading them.
 
 ## v10.1.0
 
@@ -181,6 +178,21 @@ but an error asking to use another value is logged.
 
 Existing files can be kept or removed; they are ignored by the simulation.
 
+### Output
+
+#### Named MPS variable renames
+
+When exporting named MPS problems (`--named-mps-problems`), several optimization variable names
+changed:
+
+- `NTCDirect` → `DirectFlow`
+- `IntercoDirectCost` → `PositiveDirectFlow`
+- `IntercoIndirectCost` → `PositiveIndirectFlow`
+- `PositiveUnsuppliedEnergy` → `UnsuppliedEnergy`
+- `NegativeUnsuppliedEnergy` → `Spillage`
+
+Tooling that parses MPS variable names (notably the Xpansion workflow) must be updated.
+
 ### Behavior
 
 The solver is now read-only with respect to the study: it no longer rewrites input files (areas, binding
@@ -201,6 +213,13 @@ The following properties were removed from **settings/generaldata.ini**.
 
 If the user provides a value for key refreshtimeseries the simulation will fail with a warning.
 Values for the refresh intervals will be ignored.
+
+#### Deprecated solver CLI options
+
+The command-line options `--solver` and `--solver-parameters` are deprecated in favor of
+`--linear-solver` and `--linear-solver-param` (plus the new `--linear-solver-param-optim-1` /
+`--linear-solver-param-optim-2`, to set parameters separately for each optimization pass). The old
+flags are still accepted for compatibility.
 
 #### Thermal and renewable clusters groups
 
@@ -382,6 +401,7 @@ hydro pmax time-series. For reference, this format consists of a single file wit
 
 - Remove column SPIL ENRG CSR (adequacy patch)
 - Add DTG MRG CSR and UNSP ENRG CSR variables
+- Add NPCAP HOURS variable (near price-cap hours)
 
 ## v9.1.0
 

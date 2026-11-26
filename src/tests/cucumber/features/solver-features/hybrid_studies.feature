@@ -82,7 +82,8 @@ Feature: hybrid (simulator+modeler) studies
     # contents: adding a stage would otherwise silently go unchecked here
     # (compare_folders walks the reference side), and the reference would have
     # to be regenerated for every stage the solver learns to emit. The full set
-    # is covered by the scenario below.
+    # is covered by the scenario below. The table files are in the dedicated
+    # simulation-tables subdirectory of each output.
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_1"
     When I run antares simulator with --output=all --simulation-table-stages=optim-nb-1,optim-nb-2
     Then the simulation succeeds
@@ -206,6 +207,32 @@ Feature: hybrid (simulator+modeler) studies
 	Then for first week, area balance RHS (for area unique) is first -12, -13, -14, -15, -16, then equals constant -11
 
   @short
+  Scenario: Hybrid CSR does not add GEMS load twice to DENS
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
+    And the adequacy patch price-taking order is "DENS"
+    And the CSR initiation threshold is 0
+    And in input "bindingconstraints/bindingconstraints.ini" section "0" variable "enabled" is set to "false"
+    And in input "bindingconstraints/bindingconstraints.ini" section "2" variable "enabled" is set to "false"
+    And in input "load/series/load_areain-1.txt" the time series is emptied
+    And in input "links/areain-1/capacities/areaout-1_direct.txt" the time series is emptied
+    And in input "links/areain-1/capacities/areaout-1_indirect.txt" the time series is emptied
+    And in input "links/areain-1/capacities/virtual-1_direct.txt" the time series is emptied
+    And in input "links/areain-1/capacities/virtual-1_indirect.txt" the time series is emptied
+    And in input "links/areain-2/capacities/areaout-2_direct.txt" the time series is emptied
+    And in input "links/areain-2/capacities/areaout-2_indirect.txt" the time series is emptied
+    And a GEMS component injects 200 MW with an ENS bound of 30 MW in area "areain-1"
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation succeeds
+    # Area 1 has a surplus and DENS is zero; it must not shed energy to spill
+    # more while area 2 is in deficit. CSR is forced on by the threshold above.
+    And the modeler outputs from stage "adq-patch" contain the following entries with relative tolerance 1e-4
+      | block | component | output                     | timestep | scenario | value |
+      | 0     | areain-1  | domestic_unsupplied_energy | 0        | 0        | 0     |
+      | 0     | areain-1  | unsupplied_energy          | 0        | 0        | 0     |
+      | 0     | areain-2  | domestic_unsupplied_energy | 0        | 0        | 200   |
+      | 0     | areain-2  | unsupplied_energy          | 0        | 0        | 100   |
+
+  @short
   Scenario: Scenario-independent GEMS time-series ignores scenario builder
 
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/parameter-scenario-independent/"
@@ -235,4 +262,3 @@ Feature: hybrid (simulator+modeler) studies
     And the simulation has two optimization iterations
     And in area "west", during year 1, weekly overall cost for week 1 is 4441208
     And in area "west", during year 1, NODU for all hours matches reference
-
