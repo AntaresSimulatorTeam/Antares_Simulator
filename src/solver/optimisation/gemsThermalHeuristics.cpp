@@ -24,7 +24,6 @@ namespace Antares::Optimization
 
 namespace
 {
-// Same threshold as the legacy heuristic "fast"
 constexpr double ZERO_PMIN = 1.e-2;
 
 unsigned variableIndex(const Component& component, const std::string& variableId)

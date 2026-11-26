@@ -48,17 +48,19 @@ public:
  */
 struct GemsHeuristicsState
 {
-    using VariableKey = std::pair<std::string, std::string>; // (component id, variable id)
+    using VariableKey = std::pair<std::string, std::string>; ///< (component id, variable id)
 
     unsigned firstGlobalTimeStep = 0;
     unsigned nbTimeSteps = 0;
 
-    // Variable values of the first optimisation, indexed by time step of the week
+    /// Variable values of the first optimisation, indexed by time step of the week
     std::map<VariableKey, std::vector<double>> solutions;
+    /// Lower bounds of the variables in the first optimisation, indexed by time step of the week
     std::map<VariableKey, std::vector<double>> lowerBounds;
+    /// Upper bounds of the variables in the first optimisation, indexed by time step of the week
     std::map<VariableKey, std::vector<double>> upperBounds;
 
-    // Bounds computed by the heuristics, applied when building the second optimisation
+    /// Bounds computed by the heuristics, applied when building the second optimisation
     LinearProblem::VariableBoundOverrides boundOverrides;
 };
 

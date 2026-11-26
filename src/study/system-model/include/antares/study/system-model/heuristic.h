@@ -68,14 +68,14 @@ enum class HeuristicElementTimeDependency
 struct HeuristicInput
 {
     HeuristicElement element;
-    std::string id; // parameter or variable id in the model
+    std::string id; ///< parameter or variable id in the model
     HeuristicInputSource source = HeuristicInputSource::Parameter;
 };
 
 struct HeuristicOutput
 {
     HeuristicElement element;
-    std::string id; // variable id in the model
+    std::string id; ///< variable id in the model
     HeuristicOutputTarget target;
 };
 

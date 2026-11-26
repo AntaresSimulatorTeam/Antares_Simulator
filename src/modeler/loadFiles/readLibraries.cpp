@@ -302,8 +302,8 @@ const SystemModel::Model& findSystemModel(const std::string& fullModelId,
     throw Error::InvalidArgumentError("No model '" + fullModelId + "' found.");
 }
 
-// Checks that the model element bound to a heuristic element exists and has the expected time
-// dependency
+/// Checks that the model element bound to a heuristic element exists and has the expected time
+/// dependency
 void checkHeuristicElementBinding(const SystemModel::Model& model,
                                   const std::string& errorPrefix,
                                   SystemModel::HeuristicElement element,

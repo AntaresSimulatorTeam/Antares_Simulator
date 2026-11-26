@@ -29,7 +29,7 @@ def _find_component(system: dict, component_id: str) -> dict:
 def _parse_integer_strategy(strategy: str) -> dict:
     """'exact', 'relaxed', 'heuristic fast' or 'heuristic accurate'.
 
-    'heuristic' alone (no heuristic-id) is accepted to test the input checks."""
+    The values are not checked here: Antares checks them when loading the study."""
     words = strategy.split()
     assert 1 <= len(words) <= 2, f"Unexpected integer strategy '{strategy}'"
     strategy_node = {"id": words[0]}

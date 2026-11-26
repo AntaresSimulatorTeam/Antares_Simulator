@@ -90,7 +90,6 @@ public:
         return data_.integer_strategy;
     }
 
-    /// True if the integer variables of the component must be linearly relaxed
     bool hasRelaxedIntegerVariables() const
     {
         return data_.integer_strategy.id != "exact";

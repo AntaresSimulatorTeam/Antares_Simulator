@@ -349,12 +349,9 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode
     // and if the 1st one failed.
-    // The 2nd optimization is needed when a heuristic (legacy thermal clusters or GEMS
-    // components) adjusts some bounds after the 1st one.
     if (ret && !problemeHebdo->Expansion
         && (problemeHebdo->useThermalHeuristic || useGemsThermalHeuristics))
     {
-        // We need to adjust some stuff before running the 2nd optimisation
         if (problemeHebdo->useThermalHeuristic)
         {
             runThermalHeuristic(problemeHebdo);

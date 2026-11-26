@@ -26,7 +26,6 @@ const std::vector<YmlUtils::Field> optimConfigFields = {
   {"models",
    false,
    {{"id", true},
-    // model-decomposition or heuristics is mandatory: checked by the Model decoder
     {"model-decomposition",
      false,
      {{"variables", false, locationFields},
@@ -41,7 +40,6 @@ const std::vector<YmlUtils::Field> optimConfigFields = {
   {"resolution-mode"},
   {"scenario-scope", false, {{"include"}, {"exclude"}}}};
 
-// A model needs model-decomposition or heuristics (or both): the schema above cannot express it
 std::string checkModelSections(const YAML::Node& root)
 {
     std::string errors;
