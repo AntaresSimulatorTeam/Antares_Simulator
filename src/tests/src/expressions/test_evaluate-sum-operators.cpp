@@ -295,6 +295,14 @@ BOOST_FIXTURE_TEST_CASE(time_shift_offset_depending_on_a_variable_is_rejected, t
     BOOST_CHECK_THROW(evalVisitor->dispatch(shifted), Antares::Error::InvalidArgumentError);
 }
 
+BOOST_FIXTURE_TEST_CASE(time_dependent_time_shift_offset_is_rejected, tests_fixture)
+{
+    // p[p] where the offset varies in time: a clear error, not an EvalResultTypeError
+    Node* shifted = timeShift(parameter("p", VariabilityType::VARYING_IN_TIME_ONLY),
+                              parameter("p", VariabilityType::VARYING_IN_TIME_ONLY));
+    BOOST_CHECK_THROW(evalVisitor->dispatch(shifted), Antares::Error::InvalidArgumentError);
+}
+
 BOOST_AUTO_TEST_CASE(for_each_time_sum_index_handles_int_max_endpoint)
 {
     // INT_MAX % 5 == 2 ; a one-element interval ending at INT_MAX must not overflow the counter

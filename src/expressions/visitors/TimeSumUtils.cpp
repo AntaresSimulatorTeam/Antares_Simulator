@@ -68,9 +68,20 @@ void rejectVariablesAndPortFields(const Nodes::Node* node, std::string_view what
 int resolveTimeShift(const Nodes::Node* offset, EvalVisitor& visitor)
 {
     rejectVariablesAndPortFields(offset, "A time-shift offset");
-    return checkedTimeIndex(visitor.dispatch(offset).valueAsDouble(),
-                            offset,
-                            "A time-shift offset");
+    double value;
+    try
+    {
+        value = visitor.dispatch(offset).valueAsDouble();
+    }
+    catch (const EvalResultTypeError&)
+    {
+        // The offset evaluated to a time series
+        PrintVisitor printVisitor;
+        throw Error::InvalidArgumentError(
+          fmt::format("A time-shift offset must be fixed in time in '{}'.",
+                      printVisitor.dispatch(offset)));
+    }
+    return checkedTimeIndex(value, offset, "A time-shift offset");
 }
 
 int normalizeTimeIndex(int timeIndex, int size)
