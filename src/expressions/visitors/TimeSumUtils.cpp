@@ -18,19 +18,27 @@ namespace Antares::Expressions::Visitors
 {
 namespace
 {
-int checkedTimeIndex(double value, const Nodes::Node* bound, std::string_view what = "A sum bound")
+int checkedTimeIndex(double value, const Nodes::Node* node, std::string_view what = "A sum bound")
 {
+    PrintVisitor printVisitor;
     // A non-zero fractional part (relational test, exact: no tolerance wanted)
-    if (!std::isfinite(value) || std::abs(value - std::trunc(value)) > 0.0
-        || value < std::numeric_limits<int>::min()
-        || value >= -static_cast<double>(std::numeric_limits<int>::min()))
+    if (!std::isfinite(value) || std::abs(value - std::trunc(value)) > 0.0)
     {
-        PrintVisitor printVisitor;
         throw Error::InvalidArgumentError(
           fmt::format("{} must resolve to an integer, got '{}' in '{}'.",
                       what,
                       value,
-                      printVisitor.dispatch(bound)));
+                      printVisitor.dispatch(node)));
+    }
+    if (value < std::numeric_limits<int>::min()
+        || value >= -static_cast<double>(std::numeric_limits<int>::min()))
+    {
+        throw Error::InvalidArgumentError(fmt::format("{} must be in [{}, {}], got '{}' in '{}'.",
+                                                      what,
+                                                      std::numeric_limits<int>::min(),
+                                                      std::numeric_limits<int>::max(),
+                                                      value,
+                                                      printVisitor.dispatch(node)));
     }
     return static_cast<int>(value);
 }
@@ -99,11 +107,10 @@ int resolveTimeSumBound(const Nodes::Node* bound,
                         unsigned localTimeStep,
                         int numberOfTimeSteps)
 {
-    int result;
     if (const auto* tPlusNode = dynamic_cast<const Nodes::TPlusNode*>(bound))
     {
         const auto offset = checkedTimeIndex(visitor.dispatch(tPlusNode->child()).valueAsDouble(),
-                                             tPlusNode->child());
+                                             bound);
         const auto index = static_cast<long long>(localTimeStep) + offset;
         if (index < std::numeric_limits<int>::min() || index > std::numeric_limits<int>::max())
         {
@@ -112,21 +119,19 @@ int resolveTimeSumBound(const Nodes::Node* bound,
               fmt::format("Resolved sum bound '{}' is outside the supported index range.",
                           printVisitor.dispatch(bound)));
         }
-        result = static_cast<int>(index);
+        return static_cast<int>(index);
     }
-    else
+
+    const auto index = checkedTimeIndex(visitor.dispatch(bound).valueAsDouble(), bound);
+    if (index < 0 || index >= numberOfTimeSteps)
     {
-        result = checkedTimeIndex(visitor.dispatch(bound).valueAsDouble(), bound);
-        if (result < 0 || result >= numberOfTimeSteps)
-        {
-            PrintVisitor printVisitor;
-            throw Error::InvalidArgumentError(
-              fmt::format("Absolute sum bound '{}' is outside the block [0, {}].",
-                          printVisitor.dispatch(bound),
-                          numberOfTimeSteps - 1));
-        }
+        PrintVisitor printVisitor;
+        throw Error::InvalidArgumentError(
+          fmt::format("Absolute sum bound '{}' is outside the block [0, {}].",
+                      printVisitor.dispatch(bound),
+                      numberOfTimeSteps - 1));
     }
-    return result;
+    return index;
 }
 
 void checkTimeSumBoundVariability(const Nodes::Node* bound, VariabilityVisitor& variabilityVisitor)
