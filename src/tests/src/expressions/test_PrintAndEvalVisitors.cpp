@@ -960,7 +960,14 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_index_on_constant_uses_block_length, MyDum
 
     BOOST_CHECK_EQUAL(visitor.dispatch(&valid).valueAsDouble(), 13.);
     BOOST_CHECK_THROW(visitor.dispatch(&negative), EvalResultTimeIndexOutOfRange);
-    BOOST_CHECK_THROW(visitor.dispatch(&tooLarge), EvalResultTimeIndexOutOfRange);
+    BOOST_CHECK_EXCEPTION(visitor.dispatch(&tooLarge),
+                          EvalResultTimeIndexOutOfRange,
+                          [](const EvalResultTimeIndexOutOfRange& e)
+                          {
+                              const std::string message = e.what();
+                              return message.find("index 3") != std::string::npos
+                                     && message.find("3 time steps") != std::string::npos;
+                          });
 }
 
 EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)

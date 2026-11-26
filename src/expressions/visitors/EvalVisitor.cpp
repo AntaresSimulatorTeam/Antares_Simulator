@@ -3,11 +3,13 @@
 
 #include "antares/expressions/visitors/EvalVisitor.h"
 
+#include <fmt/format.h>
 #include <numeric>
 #include <ranges>
 #include <stdexcept>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/visitors/PrintVisitor.h>
 #include <antares/expressions/visitors/TimeSumUtils.h>
 #include <antares/expressions/visitors/VariabilityVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
@@ -240,10 +242,15 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
     const auto ret = dispatch(node->left());
     VariabilityVisitor variabilityVisitor(optimContainer_, component_);
     const auto timeIndex = resolveTimeIndex(node->right(), *this, variabilityVisitor);
-    if (timeIndex < 0
-        || static_cast<std::size_t>(timeIndex) >= fillContext_.getLocalNumberOfTimeSteps())
+    const auto numberOfTimeSteps = fillContext_.getLocalNumberOfTimeSteps();
+    if (timeIndex < 0 || static_cast<std::size_t>(timeIndex) >= numberOfTimeSteps)
     {
-        throw EvalResultTimeIndexOutOfRange("timeIndex is out of range");
+        PrintVisitor printVisitor;
+        throw EvalResultTimeIndexOutOfRange(
+          fmt::format("TimeIndexNode: index {} is out of range in expression '{}' ({} time steps)",
+                      timeIndex,
+                      printVisitor.dispatch(node),
+                      numberOfTimeSteps));
     }
     return ret[timeIndex];
 }
