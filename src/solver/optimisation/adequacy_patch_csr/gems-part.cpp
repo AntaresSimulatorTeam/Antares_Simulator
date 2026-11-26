@@ -20,6 +20,78 @@ using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Expressions;
 using namespace Antares::LinearProblem::Api;
 
+namespace
+{
+std::vector<double> evaluateContributions(
+  PROBLEME_HEBDO& problem,
+  uint32_t area,
+  const FillContext& context,
+  const std::function<std::string(const AreaConnection&)>& getFieldId)
+{
+    auto* modelerData = problem.modelerData;
+    std::vector<double> contributions(context.getLocalNumberOfTimeSteps(), 0.);
+    const std::string areaName = problem.NomsDesPays[area];
+    const auto isConnectedToArea = [areaName](const auto& p) { return p.second == areaName; };
+    const auto filterPort = std::views::filter(isConnectedToArea) | std::views::keys;
+
+    for (const auto& component: modelerData->system->Components())
+    {
+        for (const auto& portId: component.portToAreaConnections() | filterPort)
+        {
+            const auto& port = component.findPort(portId, "");
+            const auto& areaConnection = port.Type().areaConnection();
+            if (!areaConnection)
+            {
+                continue;
+            }
+            const std::string fieldId = getFieldId(*areaConnection);
+            if (fieldId.empty())
+            {
+                continue;
+            }
+            const auto& scenario = modelerData->scenarioGroupRepository.scenario(
+              component.getScenarioGroupId());
+            Visitors::EvalVisitor visitor(*problem.optimEntityContainer,
+                                          context,
+                                          component,
+                                          modelerData->dataSeries.get(),
+                                          scenario);
+            const auto result = visitor.dispatch(component.nodeAtPortField(portId, fieldId));
+            for (unsigned hour = 0; hour < contributions.size(); ++hour)
+            {
+                contributions[hour] += result.value(hour);
+            }
+        }
+    }
+    return contributions;
+}
+} // namespace
+
+void captureDailyGemsContributions(PROBLEME_HEBDO& problem, unsigned interval)
+{
+    const auto context = Antares::Solver::Optimization::Simplex::LpFiller::buildFillContext(
+      problem,
+      interval);
+    const auto firstHour = context.getGlobalFirstTimeStep()
+                           - static_cast<unsigned>(problem.HeureDansLAnnee);
+    auto& runtime = *problem.adequacyPatchRuntimeData;
+    for (uint32_t area = 0; area < problem.NombreDePays; ++area)
+    {
+        if (runtime.areaMode[area] != physicalAreaInsideAdqPatch)
+        {
+            continue;
+        }
+        const auto spillage = evaluateContributions(problem, area, context, getSpilledBound);
+        const auto unsupplied = evaluateContributions(problem, area, context, getUnsupEnergyBound);
+        for (unsigned hour = 0; hour < spillage.size(); ++hour)
+        {
+            runtime.setDailyGemsContribution(area,
+                                             firstHour + hour,
+                                             {spillage[hour], unsupplied[hour]});
+        }
+    }
+}
+
 ActiveGemsPart::ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo,
                                PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre,
                                std::map<int, int>& constraintCsrFictitiousLoad,
@@ -38,6 +110,7 @@ ActiveGemsPart::ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo,
 
 void ActiveGemsPart::setHour(int triggeredHour)
 {
+    triggeredHour_ = static_cast<unsigned>(triggeredHour);
     if (problemeHebdo_->OptimisationAuPasHebdomadaire)
     {
         // Variables are stored over the entire solved interval; time shifts also use that interval.
@@ -45,61 +118,24 @@ void ActiveGemsPart::setHour(int triggeredHour)
           *problemeHebdo_,
           0);
         evaluationHour_ = static_cast<unsigned>(triggeredHour);
-        return;
     }
-
-    fillContext_ = FillContext(0,
-                               0,
-                               triggeredHour + problemeHebdo_->HeureDansLAnnee,
-                               triggeredHour + problemeHebdo_->HeureDansLAnnee,
-                               problemeHebdo_->year);
-    evaluationHour_ = 0;
 }
 
 double ActiveGemsPart::gemsContributionForArea(
   uint32_t area,
   const std::function<std::string(const AreaConnection&)>& getFieldId) const
 {
-    auto* modelerData = problemeHebdo_->modelerData;
-    double contribution = 0.0;
-    const std::string areaName = problemeHebdo_->NomsDesPays[area];
-    const auto isConnectedToArea = [areaName](const auto& p) { return p.second == areaName; };
-    const auto filterPort = std::views::filter(isConnectedToArea) | std::views::keys;
-
-    for (const auto& component: modelerData->system->Components())
-    {
-        for (const auto& portId: component.portToAreaConnections() | filterPort)
-        {
-            const auto& port = component.findPort(portId, "");
-            const auto& areaConnection = port.Type().areaConnection();
-            if (!areaConnection)
-            {
-                continue;
-            }
-
-            std::string fieldId = getFieldId(*areaConnection);
-            if (fieldId.empty())
-            {
-                continue;
-            }
-
-            auto* expression = component.nodeAtPortField(portId, fieldId);
-
-            const auto& scenario = modelerData->scenarioGroupRepository.scenario(
-              component.getScenarioGroupId());
-            Visitors::EvalVisitor evalVisitor(*problemeHebdo_->optimEntityContainer,
-                                              fillContext_,
-                                              component,
-                                              modelerData->dataSeries.get(),
-                                              scenario);
-            contribution += evalVisitor.dispatch(expression).value(evaluationHour_);
-        }
-    }
-    return contribution;
+    return evaluateContributions(*problemeHebdo_, area, fillContext_, getFieldId)
+      .at(evaluationHour_);
 }
 
 double ActiveGemsPart::gemsUnsupEnergyForArea(uint32_t area) const
 {
+    if (!problemeHebdo_->OptimisationAuPasHebdomadaire)
+    {
+        return problemeHebdo_->adequacyPatchRuntimeData->dailyGemsContribution(area, triggeredHour_)
+          .unsuppliedEnergy;
+    }
     return gemsContributionForArea(area, getUnsupEnergyBound);
 }
 
@@ -136,6 +172,11 @@ void ActiveGemsPart::setRHSMaxEnsLoadValue()
 
 double ActiveGemsPart::gemsSpilledForArea(uint32_t area) const
 {
+    if (!problemeHebdo_->OptimisationAuPasHebdomadaire)
+    {
+        return problemeHebdo_->adequacyPatchRuntimeData->dailyGemsContribution(area, triggeredHour_)
+          .spillage;
+    }
     return gemsContributionForArea(area, getSpilledBound);
 }
 

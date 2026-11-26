@@ -12,6 +12,9 @@
 struct PROBLEME_HEBDO;
 class PROBLEME_ANTARES_A_RESOUDRE;
 
+// Capture the solved daily interval before its LP is replaced by the next interval.
+void captureDailyGemsContributions(PROBLEME_HEBDO& problemeHebdo, unsigned interval);
+
 namespace Antares::ModelerStudy::SystemModel
 {
 struct AreaConnection;
@@ -80,6 +83,7 @@ private:
     PROBLEME_HEBDO* problemeHebdo_;
     Antares::LinearProblem::Api::FillContext fillContext_{0, 0, 0, 0, 0};
     unsigned evaluationHour_ = 0;
+    unsigned triggeredHour_ = 0;
 
     PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre_;
     std::map<int, int>& constraintCsrFictitiousLoad_;

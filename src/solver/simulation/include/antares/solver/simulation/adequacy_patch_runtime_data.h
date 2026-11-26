@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
+#include <optional>
 #include <set>
 #include <vector>
 
@@ -10,12 +11,19 @@
 
 using adqPatchParamsMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
 
+struct GemsCsrContribution
+{
+    double spillage = 0.;
+    double unsuppliedEnergy = 0.;
+};
+
 class AdequacyPatchRuntimeData
 {
 private:
     std::vector<std::set<int>> csrTriggeredHoursPerArea_;
     std::vector<std::set<int>> ensZeroedByThresholdPerArea_;
     std::vector<std::vector<double>> marginalCostsBeforeAdqPatch_;
+    std::vector<std::vector<std::optional<GemsCsrContribution>>> dailyGemsContributions_;
 
 public:
     explicit AdequacyPatchRuntimeData() = default;
@@ -37,4 +45,8 @@ public:
 
     void setMarginalCostBeforeAdqPatch(int area, int hour, double marginalCost);
     double marginalCostBeforeAdqPatch(int area, int hour) const;
+
+    void resetDailyGemsContributions(unsigned areaCount, unsigned hourCount);
+    void setDailyGemsContribution(unsigned area, unsigned hour, GemsCsrContribution contribution);
+    const GemsCsrContribution& dailyGemsContribution(unsigned area, unsigned hour) const;
 };

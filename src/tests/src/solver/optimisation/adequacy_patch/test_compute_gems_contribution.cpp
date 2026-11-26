@@ -189,8 +189,12 @@ struct GemsContributionFixture
                            const std::vector<double>& load) const
     {
         auto data = std::make_unique<LinearProblemData>();
-        addTimeSeries(*data, "residual_load", residualLoad);
-        addTimeSeries(*data, "load", load);
+        auto residualValues = residualLoad;
+        auto loadValues = load;
+        residualValues.resize(std::max<std::size_t>(168, residualValues.size()), 0.);
+        loadValues.resize(std::max<std::size_t>(168, loadValues.size()), 0.);
+        addTimeSeries(*data, "residual_load", residualValues);
+        addTimeSeries(*data, "load", loadValues);
         modelerData->dataSeries = std::move(data);
     }
 
@@ -233,6 +237,8 @@ struct GemsContributionFixture
         pHebdo.NombreDePays = 2;
         pHebdo.HeureDansLAnnee = 0;
         pHebdo.year = 0;
+        pHebdo.OptimisationAuPasHebdomadaire = true;
+        pHebdo.NombreDeJours = 7;
 
         pHebdo.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>();
         pHebdo.adequacyPatchRuntimeData->areaMode = {AdequacyPatch::physicalAreaInsideAdqPatch,
@@ -302,6 +308,54 @@ struct WeeklyVariableContributionFixture: GemsContributionFixture
     }
 
     MpsolverImpl::OrtoolsLinearProblem linearProblem;
+};
+
+struct DailyVariableContributionFixture: GemsContributionFixture
+{
+    explicit DailyVariableContributionFixture(const std::string& library = variableLibraryYaml):
+        GemsContributionFixture(library)
+    {
+        problemeHebdo.OptimisationAuPasHebdomadaire = false;
+        problemeHebdo.NombreDeJours = 7;
+        problemeHebdo.NombreDePasDeTemps = 168;
+        problemeHebdo.HeureDansLAnnee = 168;
+        std::vector<double> residualLoad(336);
+        std::vector<double> load(336);
+        for (unsigned hour = 0; hour < 336; ++hour)
+        {
+            residualLoad[hour] = hour;
+            load[hour] = 2 * hour;
+        }
+        setGemsParameters(residualLoad, load);
+        reset();
+    }
+
+    void reset()
+    {
+        problemeHebdo.adequacyPatchRuntimeData->resetDailyGemsContributions(2, 168);
+    }
+
+    void captureDay(unsigned day, unsigned offset = 0)
+    {
+        auto lp = std::make_unique<MpsolverImpl::OrtoolsLinearProblem>(false, "sirius");
+        auto container = std::make_shared<OptimEntityContainer>(*lp);
+        container->addFromSystemComponents(modelerData->system->Components());
+        container->addStartColumn();
+        auto* fixed = lp->addNumVariable(7, 7, "fixed");
+        auto* constraint = lp->addConstraint(7, 7, "fixed_constraint");
+        constraint->setCoefficient(fixed, 1);
+        container->addStartColumn();
+        for (unsigned hour = 0; hour < 24; ++hour)
+        {
+            const double value = offset + 24 * day + hour;
+            lp->addNumVariable(value, value, "hourly_" + std::to_string(hour));
+        }
+        lp->setMinimization();
+        BOOST_REQUIRE(lp->solve(false)->getStatus() == Api::MipStatus::OPTIMAL);
+        problemeHebdo.optimEntityContainer = std::move(container);
+        captureDailyGemsContributions(problemeHebdo, day);
+        problemeHebdo.optimEntityContainer.reset();
+    }
 };
 } // namespace
 
@@ -395,6 +449,86 @@ BOOST_FIXTURE_TEST_CASE(weekly_port_fields_use_triggered_hour_and_full_week,
         BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea2], 500);
         BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea2], 300);
     }
+}
+
+BOOST_FIXTURE_TEST_CASE(daily_port_fields_use_the_solved_day_and_hour,
+                        DailyVariableContributionFixture)
+{
+    for (unsigned day = 0; day < 7; ++day)
+    {
+        captureDay(day);
+    }
+    for (const unsigned hour: {0u, 5u, 23u, 24u, 77u, 143u, 144u, 167u})
+    {
+        setLegacyBounds();
+        gemsPart->setHour(hour);
+        gemsPart->setRHSfictitiousLoadValue();
+        gemsPart->setRHSMaxEnsLoadValue();
+        const double nextHour = 24 * (hour / 24) + (hour + 1) % 24;
+        BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea1],
+                          500 + nextHour + 7 + 168 + hour);
+        BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea1],
+                          300 + hour / 2.0 + 2 * (168 + hour));
+        BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea2], 500);
+        BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea2], 300);
+    }
+}
+
+BOOST_FIXTURE_TEST_CASE(daily_contributions_are_cleared_between_passes,
+                        DailyVariableContributionFixture)
+{
+    captureDay(0);
+    captureDay(1);
+    reset();
+    captureDay(0, 1000);
+    gemsPart->setHour(5);
+    gemsPart->setRHSMaxEnsLoadValue();
+    BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea1], 300 + 1005 / 2.0 + 2 * 173);
+    gemsPart->setHour(24);
+    BOOST_CHECK_THROW(gemsPart->setRHSMaxEnsLoadValue(), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(daily_time_sums_use_the_entire_solved_day)
+{
+    auto library = variableLibraryYaml;
+    const auto position = library.find("hourly[t + 1] + fixed + residual_load");
+    BOOST_REQUIRE(position != std::string::npos);
+    library.replace(position,
+                    std::string("hourly[t + 1] + fixed + residual_load").size(),
+                    "hourly[t + 1] + fixed + residual_load + sum(hourly)");
+    DailyVariableContributionFixture fixture(library);
+    fixture.captureDay(2);
+    fixture.gemsPart->setHour(71);
+    fixture.gemsPart->setRHSfictitiousLoadValue();
+    const double daySum = 24 * 48 + 276;
+    BOOST_CHECK_EQUAL(fixture.problemAResoudre.SecondMembre[fictitiousLoadArea1],
+                      500 + 48 + 7 + 168 + 71 + daySum);
+}
+
+BOOST_AUTO_TEST_CASE(daily_parameter_only_and_missing_fields_are_captured)
+{
+    auto library = libraryYaml;
+    const auto position = library.find("spillage-bound: to-area-bound");
+    BOOST_REQUIRE(position != std::string::npos);
+    library.replace(position,
+                    std::string("spillage-bound: to-area-bound").size(),
+                    "spillage-bound:");
+    GemsContributionFixture fixture(library);
+    fixture.problemeHebdo.OptimisationAuPasHebdomadaire = false;
+    fixture.problemeHebdo.NombreDePasDeTemps = 168;
+    fixture.problemeHebdo.adequacyPatchRuntimeData->resetDailyGemsContributions(2, 168);
+    std::vector<double> load(168);
+    for (unsigned hour = 0; hour < load.size(); ++hour)
+    {
+        load[hour] = 2 * hour;
+    }
+    fixture.setGemsParameters(std::vector<double>(168, 1.), load);
+    captureDailyGemsContributions(fixture.problemeHebdo, 3);
+    fixture.gemsPart->setHour(73);
+    fixture.gemsPart->setRHSfictitiousLoadValue();
+    fixture.gemsPart->setRHSMaxEnsLoadValue();
+    BOOST_CHECK_EQUAL(fixture.problemAResoudre.SecondMembre[fictitiousLoadArea1], 500);
+    BOOST_CHECK_EQUAL(fixture.problemAResoudre.SecondMembre[maxEnsLoadArea1], 300 + 73 - 10);
 }
 
 // --- Factory ---
