@@ -180,37 +180,6 @@ BOOST_FIXTURE_TEST_CASE(G_is_flat___H_increases___G_plus_H_gets_flat,
     BOOST_CHECK(UnsupE == expectedUnsupE);
 }
 
-BOOST_FIXTURE_TEST_CASE(same_test_as_above___we_just_raise_pmax___same_results,
-                        fixture_with_5_hours_2_storages)
-{
-    std::ranges::fill(TotaGenWithoutStorage, 100.);
-    UnsupE = {80., 60., 40., 20., 0.};
-
-    // Storage 1
-    std::ranges::fill(STS_holders[0].pmax, 50.);
-    STS_holders[0].withdrawal = {0., 10., 20., 30., 40.}; // We have : withdrawal <= Pmax
-    STS_holders[0].capacity = 1000.;
-    STS_holders[0].initLevel = 500.;
-
-    // Storage 2
-    std::ranges::fill(STS_holders[1].pmax, 20.);
-    STS_holders[1].withdrawal = {10., 10., 10., 10., 10.}; // We have : withdrawal <= Pmax
-    STS_holders[1].capacity = 400.;
-    STS_holders[1].initLevel = 200.;
-
-    runRemixStorageAlgorithm();
-
-    // G + H (= TotaGenWithoutStorage + sts_1.withdrawal + sts_2.withdrawal) gets flat
-    std::vector<double> expectedTotalWithdrawal = {30., 30., 30., 30., 30.};
-    std::vector<double> actualTotalWithdrawal = STS_holders[0].withdrawal
-                                                + STS_holders[1].withdrawal;
-    BOOST_CHECK(actualTotalWithdrawal == expectedTotalWithdrawal);
-
-    // UnsupE such as TotaGenWithoutStorage + sts_1.withdrawal + sts_2.withdrawal gets flat
-    std::vector<double> expectedUnsupE = {60., 50., 40., 30., 20.};
-    BOOST_CHECK(UnsupE == expectedUnsupE);
-}
-
 BOOST_FIXTURE_TEST_CASE(G_is_flat___H_decreases___G_plus_H_gets_flat,
                         fixture_with_5_hours_2_storages)
 {

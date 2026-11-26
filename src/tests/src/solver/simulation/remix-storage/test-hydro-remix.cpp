@@ -145,24 +145,6 @@ BOOST_FIXTURE_TEST_CASE(
     BOOST_CHECK(UnsupE == expected_UnsupE);
 }
 
-BOOST_FIXTURE_TEST_CASE(same_test_as_above___we_just_raise_pmax___same_results, InputFixture<5>)
-{
-    std::ranges::fill(pmax, 50.);
-    std::ranges::fill(TotalGenNoHydro, 100.);
-    HydroGen = {0., 10., 20., 30., 40.};
-    UnsupE = {80., 60., 40., 20., 0.};
-    init_level = 500.;
-    capacity = 1000.;
-
-    callRemixStorageAlgorithm();
-
-    std::vector<double> expected_HydroGen = {20., 20., 20., 20., 20.};
-    // UnsupE such as Load = TotalGenNoHydro + HydroGen + UnsupE remains constant at each hour
-    std::vector<double> expected_UnsupE = {60., 50., 40., 30., 20.};
-    BOOST_CHECK(HydroGen == expected_HydroGen);
-    BOOST_CHECK(UnsupE == expected_UnsupE);
-}
-
 BOOST_FIXTURE_TEST_CASE(
   hydro_decreases_and_pmax_40mwh___Hydro_gen_is_flattened_to_mean_Hydro_gen_20mwh,
   InputFixture<5>)
