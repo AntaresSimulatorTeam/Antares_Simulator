@@ -38,6 +38,8 @@ struct build_AST_fixture
     Node* allTimeSum(Node* node);
     Node* timeSum(Node* from, Node* to, Node* p);
     Node* timeIndex(Node* node, Node* index);
+    Node* timeShift(Node* node, Node* offset);
+    Node* variable(const std::string& name);
     Node* square(Node* node);
 
 private:
@@ -72,6 +74,16 @@ Node* build_AST_fixture::timeSum(Node* from, Node* to, Node* p)
 Node* build_AST_fixture::timeIndex(Node* node, Node* index)
 {
     return registry_.create<TimeIndexNode>(node, index);
+}
+
+Node* build_AST_fixture::timeShift(Node* node, Node* offset)
+{
+    return registry_.create<TimeShiftNode>(node, offset);
+}
+
+Node* build_AST_fixture::variable(const std::string& name)
+{
+    return registry_.create<VariableNode>(name, 0, VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 }
 
 Node* build_AST_fixture::square(Node* node)
@@ -259,6 +271,28 @@ BOOST_FIXTURE_TEST_CASE(time_dependent_time_sum_bound_is_rejected, tests_fixture
                         literal(1));
 
     BOOST_CHECK_THROW(evalVisitor->dispatch(sum), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(time_sum_bound_depending_on_a_variable_is_rejected, tests_fixture)
+{
+    // A time-constant variable has no value before the optimization: it must not drive a bound
+    Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
+    BOOST_CHECK_THROW(evalVisitor->dispatch(timeSum(variable("x"), literal(1), p)),
+                      Antares::Error::InvalidArgumentError);
+    BOOST_CHECK_THROW(evalVisitor->dispatch(timeSum(literal(0), variable("x"), p)),
+                      Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(time_index_depending_on_a_variable_is_rejected, tests_fixture)
+{
+    Node* indexed = timeIndex(parameter("p", VariabilityType::VARYING_IN_TIME_ONLY), variable("x"));
+    BOOST_CHECK_THROW(evalVisitor->dispatch(indexed), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(time_shift_offset_depending_on_a_variable_is_rejected, tests_fixture)
+{
+    Node* shifted = timeShift(parameter("p", VariabilityType::VARYING_IN_TIME_ONLY), variable("x"));
+    BOOST_CHECK_THROW(evalVisitor->dispatch(shifted), Antares::Error::InvalidArgumentError);
 }
 
 BOOST_AUTO_TEST_CASE(for_each_time_sum_index_handles_int_max_endpoint)

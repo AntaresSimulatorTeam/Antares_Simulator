@@ -3,6 +3,7 @@
 
 #include "antares/expressions/visitors/TimeSumUtils.h"
 
+#include <algorithm>
 #include <cmath>
 #include <fmt/format.h>
 #include <limits>
@@ -33,10 +34,40 @@ int checkedTimeIndex(double value, const Nodes::Node* bound, std::string_view wh
     }
     return static_cast<int>(value);
 }
+
+// Sum bounds, shift offsets and time indices are evaluated while the model is built: a decision
+// variable or a port field has no value yet at that point.
+bool dependsOnVariableOrPortField(const Nodes::Node* node)
+{
+    if (dynamic_cast<const Nodes::VariableNode*>(node)
+        || dynamic_cast<const Nodes::PortFieldNode*>(node)
+        || dynamic_cast<const Nodes::PortFieldSumNode*>(node))
+    {
+        return true;
+    }
+    if (const auto* parent = dynamic_cast<const Nodes::ParentNode*>(node))
+    {
+        return std::ranges::any_of(parent->getOperands(), dependsOnVariableOrPortField);
+    }
+    return false;
+}
+
+void rejectVariablesAndPortFields(const Nodes::Node* node, std::string_view what)
+{
+    if (dependsOnVariableOrPortField(node))
+    {
+        PrintVisitor printVisitor;
+        throw Error::InvalidArgumentError(
+          fmt::format("{} must not depend on variables or port fields in '{}'.",
+                      what,
+                      printVisitor.dispatch(node)));
+    }
+}
 } // namespace
 
 int resolveTimeShift(const Nodes::Node* offset, EvalVisitor& visitor)
 {
+    rejectVariablesAndPortFields(offset, "A time-shift offset");
     return checkedTimeIndex(visitor.dispatch(offset).valueAsDouble(),
                             offset,
                             "A time-shift offset");
@@ -96,6 +127,7 @@ void checkTimeSumBoundVariability(const Nodes::Node* bound, VariabilityVisitor& 
         throw Error::InvalidArgumentError(
           fmt::format("A sum bound must be fixed in time in '{}'.", printVisitor.dispatch(bound)));
     }
+    rejectVariablesAndPortFields(bound, "A sum bound");
 }
 
 int resolveTimeIndex(const Nodes::Node* index,
@@ -108,6 +140,7 @@ int resolveTimeIndex(const Nodes::Node* index,
         throw Error::InvalidArgumentError(
           fmt::format("A time index must be fixed in time in '{}'.", printVisitor.dispatch(index)));
     }
+    rejectVariablesAndPortFields(index, "A time index");
     return checkedTimeIndex(visitor.dispatch(index).valueAsDouble(), index, "A time index");
 }
 
