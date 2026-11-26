@@ -97,7 +97,6 @@ public:
         allocateProblem();
         gemsPart_ = makeGemsPart(problemeHebdo_,
                                  problemeAResoudre_,
-                                 variableManager_,
                                  numberOfConstraintCsrFictitiousLoad,
                                  numberOfConstraintCsrMaxEnsLoad);
     }
