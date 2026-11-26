@@ -1,6 +1,5 @@
 var NAVTREEINDEX6 =
 {
-"classAntares_1_1Data_1_1RuleCurves.html#a611bdcc8051e9724fcae29bda64216c5":[9,0,0,3,63,4],
 "classAntares_1_1Data_1_1RuleCurves.html#a831d70fdac8818db723af98ef7090df5":[9,0,0,3,63,5],
 "classAntares_1_1Data_1_1RuleCurves.html#aa208bf48281079c500d27d1d2754dfa1":[9,0,0,3,63,2],
 "classAntares_1_1Data_1_1RuleCurves.html#aefda1e853037d63515c743a38170fa15":[9,0,0,3,63,3],
@@ -249,5 +248,6 @@ var NAVTREEINDEX6 =
 "classAntares_1_1Data_1_1Sets_1_1Options.html#a6f3e45142cff36da11226183d4da5466":[9,0,0,3,86,0,9],
 "classAntares_1_1Data_1_1Sets_1_1Options.html#aa8b7f60291f7f48ef077bd5fb61ebe63":[9,0,0,3,86,0,6],
 "classAntares_1_1Data_1_1Sets_1_1Options.html#ae582f1a37318544e7273f303c366b2b6":[9,0,0,3,86,0,10],
-"classAntares_1_1Data_1_1Sets_1_1Options.html#af065194b111aedca371d9268ce726dc2":[9,0,0,3,86,0,4]
+"classAntares_1_1Data_1_1Sets_1_1Options.html#af065194b111aedca371d9268ce726dc2":[9,0,0,3,86,0,4],
+"classAntares_1_1Data_1_1Sets_1_1Options.html#af7e2d7792899b654c4a88c64e76168a7":[9,0,0,3,86,0,7]
 };

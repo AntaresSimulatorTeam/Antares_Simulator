@@ -1,6 +1,5 @@
 var NAVTREEINDEX16 =
 {
-"classAntares_1_1Solver_1_1SingleProblemGetter.html#a2f69b06241987cb3d116a504de3b12eb":[9,0,0,12,10,5],
 "classAntares_1_1Solver_1_1SingleProblemGetter.html#a577c72d5a1ee659d8001b703d6b65234":[9,0,0,12,10,0],
 "classAntares_1_1Solver_1_1SingleProblemGetter.html#a70484175188fcdc158658a740917b940":[9,0,0,12,10,10],
 "classAntares_1_1Solver_1_1SingleProblemGetter.html#a7129bc80ae6e230afac331715bc35c71":[9,0,0,12,10,8],
@@ -249,5 +248,6 @@ var NAVTREEINDEX16 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#aca73bf41f0bd120da7e552c4e330c34e":[9,0,0,12,7,5,40,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#ad75621671ccc2dbd3ff16e537b587ef7":[9,0,0,12,7,5,40,9],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase.html":[9,0,0,12,7,5,25],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase.html#a051dfa61abe23e889200167e7e76c8ef":[9,0,0,12,7,5,25,19]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase.html#a051dfa61abe23e889200167e7e76c8ef":[9,0,0,12,7,5,25,19],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase.html#a0ffce161661eb52d5849223b3778854e":[9,0,0,12,7,5,25,12]
 };

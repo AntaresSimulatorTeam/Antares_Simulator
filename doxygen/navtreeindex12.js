@@ -1,6 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists.html#a53966f50b6878b1d981e7592af0bbd81":[9,0,0,8,1,1,0,0],
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist.html":[9,0,0,8,1,1,1],
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist.html#aa5feadc2d7947d99b7c568249c5ae077":[9,0,0,8,1,1,1,0],
 "classAntares_1_1LinearProblem_1_1DataImpl_1_1DataSeriesRepository_1_1Empty.html":[9,0,0,8,1,1,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Logs_1_1NoopLogBuffer.html#a308ecaf6bce7d6c3c460f7fdf1d373ba":[9,0,0,9,3,1],
 "classAntares_1_1Logs_1_1NoopLogBuffer.html#ac82b25ad57193e3abe7fb8494bdb5d41":[9,0,0,9,3,0],
 "classAntares_1_1Logs_1_1NoopLogBuffer.html#ae9d6f0e737681e61a9e7a0c278705f00":[9,0,0,9,3,2],
-"classAntares_1_1Matrix.html":[9,0,0,17]
+"classAntares_1_1Matrix.html":[9,0,0,17],
+"classAntares_1_1Matrix.html#a05d52281943a7cefd3f203068d3bd659":[9,0,0,17,28]
 };

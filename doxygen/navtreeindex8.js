@@ -1,6 +1,5 @@
 var NAVTREEINDEX8 =
 {
-"classAntares_1_1Data_1_1StudyRuntimeInfos.html#a6ac7dbcc61884a7d42785f0f8479ddc7":[9,0,0,3,85,3],
 "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a823b3b90b5b1c12dccbfdabbfde03d1e":[9,0,0,3,85,12],
 "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a8ac89fa4b71166bc9a236b8137969db1":[9,0,0,3,85,15],
 "classAntares_1_1Data_1_1StudyRuntimeInfos.html#aacc2750e79b6547eed327099a892ddeb":[9,0,0,3,85,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX8 =
 "classAntares_1_1Error_1_1IncompatiblePriceTakingOrderForHybrid.html":[9,0,0,5,31],
 "classAntares_1_1Error_1_1IncompatiblePriceTakingOrderForHybrid.html#ae778964f384d7438123daeeb912fe02a":[9,0,0,5,31,0],
 "classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html":[9,0,0,5,30],
-"classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html#ad9f4d9a0757eb427fd1a014954a4ffb7":[9,0,0,5,30,0]
+"classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html#ad9f4d9a0757eb427fd1a014954a4ffb7":[9,0,0,5,30,0],
+"classAntares_1_1Error_1_1InvalidArgumentError.html":[9,0,0,5,0]
 };

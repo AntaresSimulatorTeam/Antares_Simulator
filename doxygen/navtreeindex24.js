@@ -1,7 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"classInMemoryStudyLoader.html#a0e3cd339cddf5eb08497d4ed54f4a005":[9,0,168,2],
-"classInMemoryStudyLoader.html#a621c3dff4f011bbb5f0e9809fd0bd474":[9,0,168,1],
 "classInMemoryStudyLoader.html#ab168b5458c585edb8c328a79ae86ca63":[9,0,168,0],
 "classIntegerIndex.html":[9,0,170],
 "classIntegerIndex.html#a2afb8e0f492d9a9630e019ea40e398aa":[9,0,170,0],
@@ -206,10 +204,9 @@ var NAVTREEINDEX24 =
 "classNbUnitsOutageLessThanNbUnitsStopGroup.html#a0640a47d12fe6575ac78e2ce18ac85cd":[9,0,223,0],
 "classNbUnitsOutageLessThanNbUnitsStopGroup.html#afe2f027428ff624611d55a752cc77c94":[9,0,223,1],
 "classNullGemsPart.html":[9,0,227],
-"classNullGemsPart.html#a3938ce818e5a0d635921e53ddf48c7e0":[9,0,227,2],
-"classNullGemsPart.html#a7c9777f13b9f69b2de29ff154bd5c6f3":[9,0,227,0],
-"classNullGemsPart.html#aed9dd746388c055957816c6b04b2025a":[9,0,227,3],
-"classNullGemsPart.html#aee8a02140d247faa2dd81a89cc6f1512":[9,0,227,1],
+"classNullGemsPart.html#a3938ce818e5a0d635921e53ddf48c7e0":[9,0,227,1],
+"classNullGemsPart.html#aed9dd746388c055957816c6b04b2025a":[9,0,227,2],
+"classNullGemsPart.html#aee8a02140d247faa2dd81a89cc6f1512":[9,0,227,0],
 "classOneProblemOneAreaNotRamping.html":[9,0,230],
 "classOneProblemOneAreaNotRamping.html#a5e17457dea1e9d073e57c3055af88ec0":[9,0,230,0],
 "classOneProblemOneAreaNotRamping.html#a81b3b0b1d2d702c9e4662bb13b554287":[9,0,230,1],
@@ -249,5 +246,8 @@ var NAVTREEINDEX24 =
 "classOptimizationStatistics.html#a624298c1647519869c118d231562e79c":[9,0,240,13],
 "classOptimizationStatistics.html#a6d1052d9a506e01b0771ca315a5c4765":[9,0,240,5],
 "classOptimizationStatistics.html#a7ea6bae1f556f066c1191a7bd038ddd6":[9,0,240,4],
-"classOptimizationStatistics.html#a8d3f814bef588dab3ca90a03ede0c356":[9,0,240,0]
+"classOptimizationStatistics.html#a8d3f814bef588dab3ca90a03ede0c356":[9,0,240,0],
+"classOptimizationStatistics.html#a905e634265172259c9efdced1cb4dfee":[9,0,240,3],
+"classOptimizationStatistics.html#a9524cb34cc79a217f7563b7669d1dbae":[9,0,240,8],
+"classOptimizationStatistics.html#acace338fedfb85814d614a3a6506f4ae":[9,0,240,9]
 };
