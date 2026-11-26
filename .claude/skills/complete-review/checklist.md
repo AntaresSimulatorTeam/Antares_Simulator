@@ -7,6 +7,8 @@ review feedback on this repository (C++20, Boost.Test, CMake/vcpkg, Python tests
 - Removed resets/initialisations causing accumulation across years (`+=` on stale data).
 - Unchecked preconditions: empty `allCapacityReservations`, null `timeSumNode->from()/to()`, negative index
   (e.g. `layerStorage = -1`) passed to `cost`/`x`, expression not evaluating to a vector (literal port value).
+- Integer overflow at accepted extremes: loop `for (int i = from; i <= to; ++i)` with `to == INT_MAX`,
+  `to - from + 1` in `int`, `a + b` after a range check. Widen to `long long` or reject the endpoint.
 - Bounds that may become inconsistent (`Xmax < Xmin`): suggest `std::max`/clamp.
 - Numerical tricks leaking into outputs (e.g. noise added to linear costs used when computing results).
 - Skipped years due to playlists; expression evaluated at the wrong time step.

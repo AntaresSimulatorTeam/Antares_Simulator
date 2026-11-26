@@ -140,11 +140,21 @@ For time-dependent parameters, variables, and port fields, you can use these tim
 **Absolute time indices.** In `x[N]` and in absolute bounds of `sum(S .. E, x)`, indices are relative to the
 current optimization block: `0` is the first time step of the block (the week or day in the simulator, the first time
 step in the modeler). An absolute index outside `[0, size-1]` is an error, even when `x` is constant in time.
-Indices and bounds must resolve to integers; non-integer values are rejected rather than truncated.
+Indices, bounds and shift offsets must resolve to integers that fit in a 32-bit signed integer; other values, such as
+`t - 3/2` or `x[1.5]`, are rejected rather than truncated.
 
 **Relative sum bounds.** Relative bounds (`t + N`) wrap cyclically when they extend outside the block, even in `drop`
 mode. For example, `sum(0 .. t+1, x)` adds `x[0]` again at the last time step. A relative sum bound does not by itself
 cause a constraint instance to be dropped.
+
+A window can be longer than the block. Each time step of the block is then counted several times: with a block of 4
+time steps, `sum(t-5 .. t+5, x)` covers 11 time steps, so three of the four values of `x` are counted three times and
+the remaining one twice. A window with `S > E` is empty and sums to 0.
+
+**When errors are reported.** Variables, port fields, `dual` and `reduced_cost` operators and time-dependent parameters
+in these arguments are rejected when the study is loaded. Non-integer values, absolute indices outside the block and
+relative bounds that overflow a 32-bit integer are rejected when the model of the affected block is built, before that
+block is optimized, and the error names the offending expression.
 
 Time indices, shift offsets, and sum bounds may only contain literals and parameters, not variables,
 port fields, or `sum_connections` expressions. Parameters in these arguments must be declared
