@@ -6,12 +6,18 @@
 
 #include <vector>
 
+#include "antares/solver/simulation/remix-storage/cumulation-constraint-for-remix.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 namespace Antares::Solver::Simulation
 {
 std::vector<double> extractSTSwithdrawalMax(const PROPERTIES& sts_properties,
                                             const unsigned firstHourOfWeek);
+
+std::vector<CumulationConstraintForRemix> extractSTScumulationConstraints(
+  const PROPERTIES& sts_properties,
+  const unsigned firstHourOfWeek,
+  const unsigned year);
 
 } // namespace Antares::Solver::Simulation
 

@@ -4,6 +4,7 @@
 #include <cassert>
 #include <cmath>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 
 #include <antares/exception/AssertionError.hpp>
@@ -322,6 +323,63 @@ std::vector<double> extractSTSinflows(const PROPERTIES& sts_properties,
     return to_return;
 }
 
+static CumulationVariable toCumulationVariable(const std::string& variable)
+{
+    if (variable == "withdrawal")
+    {
+        return CumulationVariable::Withdrawal;
+    }
+    if (variable == "injection")
+    {
+        return CumulationVariable::Injection;
+    }
+    if (variable == "netting")
+    {
+        return CumulationVariable::Netting;
+    }
+    throw std::invalid_argument("Invalid cumulation constraint type: " + variable);
+}
+
+static CumulationSense toCumulationSense(const std::string& sense)
+{
+    if (sense == "greater")
+    {
+        return CumulationSense::Greater;
+    }
+    if (sense == "less")
+    {
+        return CumulationSense::Less;
+    }
+    return CumulationSense::Equal;
+}
+
+std::vector<CumulationConstraintForRemix> extractSTScumulationConstraints(
+  const PROPERTIES& sts_properties,
+  const unsigned firstHourOfWeek,
+  const unsigned year)
+{
+    std::vector<CumulationConstraintForRemix> to_return;
+    for (const auto& additionalConstraints: sts_properties.additionalConstraints)
+    {
+        const auto variable = toCumulationVariable(additionalConstraints->variable);
+        const auto sense = toCumulationSense(additionalConstraints->operatorType);
+        const auto& rhs = additionalConstraints->rhs().getColumn(year);
+
+        for (const auto& constraint: additionalConstraints->constraints)
+        {
+            CumulationConstraintForRemix c{.variable = variable, .sense = sense, .rhs = 0.};
+            // Hours of additional constraints are 1-based within the week
+            for (const int hour: constraint.hours)
+            {
+                c.hours.push_back(hour - 1);
+                c.rhs += rhs[firstHourOfWeek + hour - 1];
+            }
+            to_return.push_back(std::move(c));
+        }
+    }
+    return to_return;
+}
+
 std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
                                                      PROBLEME_HEBDO& problem,
                                                      unsigned stsIndex,
@@ -370,7 +428,10 @@ std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
                            initLevel,
                            withdrawalEff,
                            injectionEff,
-                           fmt::format("area '{}', reservoir '{}'", area.name, stsProperties.name));
+                           fmt::format("area '{}', reservoir '{}'", area.name, stsProperties.name),
+                           extractSTScumulationConstraints(stsProperties,
+                                                           firstHourOfWeek,
+                                                           problem.year));
 }
 
 ListStorageForRemix extractListSTSforRemix(const Data::Area& area,

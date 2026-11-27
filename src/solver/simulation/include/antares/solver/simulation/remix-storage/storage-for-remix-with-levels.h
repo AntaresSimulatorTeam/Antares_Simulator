@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "cumulation-constraint-for-remix.h"
 #include "storage-for-remix-no-levels.h"
 
 namespace Antares::Solver::Simulation
@@ -25,7 +26,8 @@ public:
                               const double initLevel,
                               const double withdrawalEff,
                               const double injectionEff,
-                              const std::string& name = "");
+                              const std::string& name = "",
+                              std::vector<CumulationConstraintForRemix> cumulationConstraints = {});
 
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const override;
     void applyExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen, double amount) override;
@@ -39,6 +41,9 @@ private:
     double maxInjectionExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const;
     // Max level variation allowed on hours between hourOfMinGen and hourOfMaxGen
     double levelMargin(unsigned hourOfMaxGen, unsigned hourOfMinGen) const;
+    // Max amount exchangeable with the given lever under all cumulation constraints
+    double cumulationBound(RemixLever lever, unsigned hourOfMaxGen, unsigned hourOfMinGen) const;
+    void checkCumulationConstraints() const;
 
     std::vector<double>& levels_;
     const std::vector<double> inflows_;
@@ -53,6 +58,8 @@ private:
     const double initLevel_;
     const double withdrawalEff_;
     const double injectionEff_;
+
+    const std::vector<CumulationConstraintForRemix> cumulationConstraints_;
 };
 
 } // namespace Antares::Solver::Simulation

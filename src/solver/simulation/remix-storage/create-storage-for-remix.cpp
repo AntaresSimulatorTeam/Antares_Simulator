@@ -3,6 +3,8 @@
 
 #include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
 
+#include <utility>
+
 #include "antares/solver/simulation/remix-storage/storage-for-remix-with-levels.h"
 
 namespace Antares::Solver::Simulation
@@ -62,7 +64,9 @@ std::shared_ptr<IStorageForRemix> makeSTSforRemix(std::vector<double>& withdrawa
                                                   const double initLevel,
                                                   const double withdrawalEff,
                                                   const double injectionEff,
-                                                  const std::string& name)
+                                                  const std::string& name,
+                                                  std::vector<CumulationConstraintForRemix>
+                                                    cumulationConstraints)
 {
     size_t size = withdrawal.size();
     std::vector<double> pmin(size, 0.);
@@ -81,7 +85,8 @@ std::shared_ptr<IStorageForRemix> makeSTSforRemix(std::vector<double>& withdrawa
                                                        initLevel,
                                                        withdrawalEff,
                                                        injectionEff,
-                                                       name);
+                                                       name,
+                                                       std::move(cumulationConstraints));
 }
 
 } // namespace Antares::Solver::Simulation

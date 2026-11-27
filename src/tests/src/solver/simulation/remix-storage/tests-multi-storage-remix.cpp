@@ -47,11 +47,13 @@ struct STS_holder
                                initLevel,
                                withdrawalEff,
                                injectionEff,
-                               name);
+                               name,
+                               cumulationConstraints);
     }
 
     std::vector<double> withdrawal, injection, injectionMax, levels, pmax, inflows, ovf;
     std::vector<double> lowRuleCurve, upRuleCurve;
+    std::vector<CumulationConstraintForRemix> cumulationConstraints;
 
     double initLevel = 0.;
     double capacity = std::numeric_limits<double>::max();
@@ -137,6 +139,39 @@ BOOST_AUTO_TEST_CASE(create_2_STS_for_nb_of_hours_not_equal___check_input_for_al
     BOOST_CHECK_EXCEPTION(checkInput(Load, unsupE_1, Spillage, DTG_MRG, storagesForRemix),
                           std::invalid_argument,
                           containsMessage(err_msg));
+}
+
+BOOST_FIXTURE_TEST_CASE(equal_constraint_on_withdrawal___no_exchange_across_group_boundary,
+                        STS_holder<4>)
+{
+    std::vector<double> unsupE(4, 50.);
+    withdrawal = {10., 10., 10., 10.};
+    initLevel = 500.;
+    cumulationConstraints = {{.hours = {0, 1},
+                              .variable = CumulationVariable::Withdrawal,
+                              .sense = CumulationSense::Equal,
+                              .rhs = 20.}};
+
+    auto sts = createSTS(unsupE, "sts");
+
+    BOOST_CHECK_EQUAL(sts->maxExchange(0, 2), 0.);
+    BOOST_CHECK(sts->maxExchange(0, 1) > 0.);
+}
+
+BOOST_FIXTURE_TEST_CASE(less_constraint_on_injection___exchange_bounded_by_slack, STS_holder<4>)
+{
+    std::vector<double> unsupE(4, 50.);
+    injection = {10., 10., 10., 10.};
+    initLevel = 500.;
+    cumulationConstraints = {{.hours = {2, 3},
+                              .variable = CumulationVariable::Injection,
+                              .sense = CumulationSense::Less,
+                              .rhs = 25.}};
+
+    auto sts = createSTS(unsupE, "sts");
+
+    // Moving injection from hour 0 to hour 2 raises the group's sum : slack is 25 - 20
+    BOOST_CHECK_CLOSE(sts->maxExchange(2, 0), 5., 1e-9);
 }
 
 // Using directly InputFixture<n, m> in fixture test cases does not compile on Win MSVC.

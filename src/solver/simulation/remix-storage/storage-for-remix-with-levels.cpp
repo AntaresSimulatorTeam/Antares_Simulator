@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <limits>
 #include <stdexcept>
+#include <utility>
 
 #include <antares/logs/logs.h>
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
@@ -30,7 +31,9 @@ StorageForRemixWithLevels::StorageForRemixWithLevels(std::vector<double>& withdr
                                                      const double initLevel,
                                                      const double withdrawalEff,
                                                      const double injectionEff,
-                                                     const std::string& name):
+                                                     const std::string& name,
+                                                     std::vector<CumulationConstraintForRemix>
+                                                       cumulationConstraints):
     StorageForRemixNoLevels(withdrawal, unsupE, withdrawalMax, Pmin, name),
     levels_(levels),
     inflows_(inflows),
@@ -42,11 +45,13 @@ StorageForRemixWithLevels::StorageForRemixWithLevels(std::vector<double>& withdr
     ruleCurveUp_(upRuleCurve),
     initLevel_(initLevel),
     withdrawalEff_(withdrawalEff),
-    injectionEff_(injectionEff)
+    injectionEff_(injectionEff),
+    cumulationConstraints_(std::move(cumulationConstraints))
 {
     checkInput(unsupE_.size());
     update();
     checkLevels();
+    checkCumulationConstraints();
 }
 
 // Both levers (withdrawal, injection) lower the level between hourOfMinGen and hourOfMaxGen
@@ -71,8 +76,29 @@ static double levelBoundToPower(double levelMargin, double efficiency)
 double StorageForRemixWithLevels::maxWithdrawalExchangeWithLevels(unsigned hourOfMaxGen,
                                                                   unsigned hourOfMinGen) const
 {
-    return std::min(maxWithdrawalExchange(hourOfMaxGen, hourOfMinGen),
-                    levelBoundToPower(levelMargin(hourOfMaxGen, hourOfMinGen), withdrawalEff_));
+    return std::min({maxWithdrawalExchange(hourOfMaxGen, hourOfMinGen),
+                     levelBoundToPower(levelMargin(hourOfMaxGen, hourOfMinGen), withdrawalEff_),
+                     cumulationBound(RemixLever::Withdrawal, hourOfMaxGen, hourOfMinGen)});
+}
+
+double StorageForRemixWithLevels::cumulationBound(RemixLever lever,
+                                                  unsigned hourOfMaxGen,
+                                                  unsigned hourOfMinGen) const
+{
+    double bound = std::numeric_limits<double>::max();
+    for (const auto& constraint: cumulationConstraints_)
+    {
+        bound = std::min(bound,
+                         maxExchangeUnderCumulation(constraint,
+                                                    lever,
+                                                    hourOfMaxGen,
+                                                    hourOfMinGen,
+                                                    withdrawal_,
+                                                    injection_,
+                                                    withdrawalEff_,
+                                                    injectionEff_));
+    }
+    return bound;
 }
 
 double StorageForRemixWithLevels::maxInjectionExchange(unsigned hourOfMaxGen,
@@ -82,8 +108,9 @@ double StorageForRemixWithLevels::maxInjectionExchange(unsigned hourOfMaxGen,
     double boundPower = std::min({injection_[hourOfMinGen],
                                   injectionMax_[hourOfMaxGen] - injection_[hourOfMaxGen],
                                   unsupE_[hourOfMinGen]});
-    return std::min(boundPower,
-                    levelBoundToPower(levelMargin(hourOfMaxGen, hourOfMinGen), injectionEff_));
+    return std::min({boundPower,
+                     levelBoundToPower(levelMargin(hourOfMaxGen, hourOfMinGen), injectionEff_),
+                     cumulationBound(RemixLever::Injection, hourOfMaxGen, hourOfMinGen)});
 }
 
 double StorageForRemixWithLevels::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const
@@ -148,6 +175,37 @@ void StorageForRemixWithLevels::checkLevels()
 
         throw std::invalid_argument(error_msg_start_hydro_remix
                                     + "levels computed from input don't respect reservoir bounds");
+    }
+}
+
+void StorageForRemixWithLevels::checkCumulationConstraints() const
+{
+    for (const auto& constraint: cumulationConstraints_)
+    {
+        if (std::ranges::any_of(constraint.hours, [this](unsigned h) { return h >= levels_.size(); }))
+        {
+            throw std::invalid_argument(error_msg_start_hydro_remix
+                                        + "additional constraint hour out of bounds");
+        }
+
+        // Not an error : the remix bound is then clamped to 0 in the violating direction
+        const double sum = cumulationSum(constraint,
+                                         withdrawal_,
+                                         injection_,
+                                         withdrawalEff_,
+                                         injectionEff_);
+        const bool violated = (constraint.sense != CumulationSense::Greater
+                               && sum > constraint.rhs + TOLERANCE)
+                              || (constraint.sense != CumulationSense::Less
+                                  && sum < constraint.rhs - TOLERANCE);
+        if (violated)
+        {
+            logs.warning().appendFormat(
+              "%s - additional constraint not satisfied before remix : sum = %.17g, rhs = %.17g",
+              name().c_str(),
+              sum,
+              constraint.rhs);
+        }
     }
 }
 

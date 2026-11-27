@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "cumulation-constraint-for-remix.h"
 #include "storage-for-remix-no-levels.h"
 
 namespace Antares::Solver::Simulation
@@ -36,6 +37,8 @@ std::shared_ptr<IStorageForRemix> makeSTSforRemix(std::vector<double>& withdrawa
                                                   const double initLevel,
                                                   const double withdrawalEff,
                                                   const double injectionEff,
-                                                  const std::string& name = "");
+                                                  const std::string& name = "",
+                                                  std::vector<CumulationConstraintForRemix>
+                                                    cumulationConstraints = {});
 
 } // namespace Antares::Solver::Simulation
