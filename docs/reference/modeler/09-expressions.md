@@ -137,6 +137,13 @@ For time-dependent parameters, variables, and port fields, you can use these tim
       like the ones defined above
     - in both forms, `S` and `E` must not depend on time
 
+**Relative sum bounds.** In `cyclic` mode (the default), relative bounds (`t + N`) wrap cyclically when they extend
+outside the block. For example, `sum(0 .. t+1, x)` adds `x[0]` again at the last time step.
+
+A window can be longer than the block. Each time step of the block is then counted several times: with a block of 4
+time steps, `sum(t-5 .. t+5, x)` covers 11 time steps, so three of the four values of `x` are counted three times and
+the remaining one twice. A window with `S > E` is empty and sums to 0.
+
 Time indices, shift offsets, and sum bounds may only contain literals and parameters, not variables,
 port fields, or `sum_connections` expressions. Parameters in these arguments must be declared
 `time-dependent: false`; they may still be scenario-dependent. Time-dependent parameters are rejected

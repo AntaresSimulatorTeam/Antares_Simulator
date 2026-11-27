@@ -4,6 +4,7 @@
 #include "antares/expressions/visitors/EvalVisitor.h"
 
 #include <numeric>
+#include <optional>
 #include <ranges>
 #include <stdexcept>
 
@@ -248,15 +249,39 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
     result.toConstantVector(fillContext_.getLocalNumberOfTimeSteps());
 
     std::vector<double> values(fillContext_.getLocalNumberOfTimeSteps(), 0.0);
+    const int size = static_cast<int>(values.size());
+
+    // Sum of one full cycle of the block: independent of the time step, computed on first use.
+    // Complete cycles are summed once and scaled afterwards, so that cancelling values do not
+    // turn into inf - inf = NaN.
+    std::optional<double> cycleSum;
+    const auto getCycleSum = [&]
+    {
+        if (!cycleSum)
+        {
+            double sum = 0.0;
+            for (int i = 0; i < size; ++i)
+            {
+                sum += result[i].valueAsDouble();
+            }
+            cycleSum = sum;
+        }
+        return *cycleSum;
+    };
+
     for (unsigned localTimeStep = 0; localTimeStep < values.size(); ++localTimeStep)
     {
         const auto from = resolveTimeSumBound(node->from(), *this, localTimeStep);
         const auto to = resolveTimeSumBound(node->to(), *this, localTimeStep);
-        forEachTimeSumIndex(from,
-                            to,
-                            static_cast<int>(values.size()),
-                            [&values, &result, localTimeStep](int timeIndex)
-                            { values[localTimeStep] += result[timeIndex].valueAsDouble(); });
+        const auto window = splitTimeSumWindow(from, to, size);
+        double tailSum = 0.0;
+        for (long long offset = 0; offset < window.remainder; ++offset)
+        {
+            tailSum += result[wrapTimeSumIndex(window.first, offset, size)].valueAsDouble();
+        }
+        values[localTimeStep] = window.fullCycles > 0
+                                  ? static_cast<double>(window.fullCycles) * getCycleSum() + tailSum
+                                  : tailSum;
     }
 
     return EvaluationResult(values);
@@ -506,9 +531,10 @@ EvaluationResult EvaluationResult::timeSumOnVector(int from, int to) const
 {
     const std::vector<double> values = valuesAsVector(); // Exception throw if value_ not a vector
     std::vector<double> to_return(values.size(), 0.);
-    for (int shift = from; shift <= to; ++shift)
+    // 64-bit counter: with to == INT_MAX, an int counter would overflow on the last increment
+    for (long long shift = from; shift <= to; ++shift)
     {
-        std::vector<double> shifted_values = shiftVector(values, shift);
+        std::vector<double> shifted_values = shiftVector(values, static_cast<int>(shift));
         to_return += shifted_values;
     }
     return EvaluationResult(to_return);

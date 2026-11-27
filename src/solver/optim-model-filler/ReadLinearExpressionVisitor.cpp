@@ -4,6 +4,7 @@
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
 
 #include <cmath>
+#include <optional>
 
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/expressions/visitors/TimeSumUtils.h>
@@ -271,8 +272,11 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
                                                                                 localTimeStep);
             if (from <= to)
             {
+                // Constant expression: a single term, so there is nothing to cancel and it can
+                // be scaled directly by the window length.
                 auto term = expression[0];
-                term *= static_cast<double>(to - from + 1);
+                // Computed in 64 bits: to - from + 1 can exceed INT_MAX
+                term *= static_cast<double>(static_cast<long long>(to) - from + 1);
                 ret[localTimeStep] += term;
             }
         }
@@ -280,6 +284,25 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
     }
 
     TimeDependentLinearExpression ret(nbtimeSteps_);
+    const int size = static_cast<int>(nbtimeSteps_);
+
+    // Sum of one full cycle of the block: independent of the time step, computed on first use.
+    // Complete cycles are summed once and scaled afterwards, so that cancelling coefficients do
+    // not turn into inf - inf = NaN.
+    std::optional<LinearExpression> cycleSum;
+    const auto getCycleSum = [&]() -> const LinearExpression&
+    {
+        if (!cycleSum)
+        {
+            cycleSum.emplace();
+            for (int i = 0; i < size; ++i)
+            {
+                *cycleSum += expression[i];
+            }
+        }
+        return *cycleSum;
+    };
+
     for (unsigned localTimeStep = 0; localTimeStep < nbtimeSteps_; ++localTimeStep)
     {
         const auto from = Antares::Expressions::Visitors::resolveTimeSumBound(node->from(),
@@ -288,12 +311,18 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
         const auto to = Antares::Expressions::Visitors::resolveTimeSumBound(node->to(),
                                                                             evalVisitor_,
                                                                             localTimeStep);
-        Antares::Expressions::Visitors::forEachTimeSumIndex(
-          from,
-          to,
-          static_cast<int>(nbtimeSteps_),
-          [&ret, &expression, localTimeStep](int timeIndex)
-          { ret[localTimeStep] += expression[timeIndex]; });
+        const auto window = Antares::Expressions::Visitors::splitTimeSumWindow(from, to, size);
+        if (window.fullCycles > 0)
+        {
+            auto cycles = getCycleSum();
+            cycles *= static_cast<double>(window.fullCycles);
+            ret[localTimeStep] += cycles;
+        }
+        for (long long offset = 0; offset < window.remainder; ++offset)
+        {
+            ret[localTimeStep] += expression
+              [Antares::Expressions::Visitors::wrapTimeSumIndex(window.first, offset, size)];
+        }
     }
     return ret;
 }

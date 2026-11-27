@@ -13,14 +13,40 @@ class VariabilityVisitor;
 // Normalize a possibly negative or out-of-range time index into [0, size).
 int normalizeTimeIndex(int timeIndex, int size);
 
-// no-op if from > to
-template<class Callback>
-inline void forEachTimeSumIndex(int from, int to, int size, Callback callback)
+// Decomposition of the window [from, to] over a cyclic block of `size` steps:
+// the window covers every index of the block `fullCycles` times, plus the `remainder` indices
+// starting at `first` (wrapping around the block), once each.
+// A window that is not longer than the block has fullCycles == 0, so that its indices are summed
+// in window order.
+struct TimeSumWindow
 {
-    for (int timeIndex = from; timeIndex <= to; ++timeIndex)
+    long long fullCycles = 0;
+    long long remainder = 0;
+    int first = 0;
+};
+
+// Empty window (from > to, or size <= 0) gives fullCycles == 0 and remainder == 0.
+inline TimeSumWindow splitTimeSumWindow(int from, int to, int size)
+{
+    if (from > to || size <= 0)
     {
-        callback(normalizeTimeIndex(timeIndex, size));
+        return {};
     }
+    // 64-bit arithmetic: to - from + 1 can exceed INT_MAX
+    const long long length = static_cast<long long>(to) - from + 1;
+    const int first = normalizeTimeIndex(from, size);
+    if (length <= size)
+    {
+        return {0, length, first};
+    }
+    return {length / size, length % size, first};
+}
+
+// Index of the offset-th step after `first`, wrapped on [0, size). 64-bit: first + offset can
+// exceed INT_MAX.
+inline int wrapTimeSumIndex(int first, long long offset, int size)
+{
+    return static_cast<int>((static_cast<long long>(first) + offset) % size);
 }
 
 // Resolve a bound used in a time-sum when no variability check is required.
