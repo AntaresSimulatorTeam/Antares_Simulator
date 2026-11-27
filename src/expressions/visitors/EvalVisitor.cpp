@@ -4,6 +4,7 @@
 #include "antares/expressions/visitors/EvalVisitor.h"
 
 #include <numeric>
+#include <optional>
 #include <ranges>
 #include <stdexcept>
 
@@ -248,28 +249,39 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
     result.toConstantVector(fillContext_.getLocalNumberOfTimeSteps());
 
     std::vector<double> values(fillContext_.getLocalNumberOfTimeSteps(), 0.0);
+    const int size = static_cast<int>(values.size());
+
+    // Sum of one full cycle of the block: independent of the time step, computed on first use.
+    // Complete cycles are summed once and scaled afterwards, so that cancelling values do not
+    // turn into inf - inf = NaN.
+    std::optional<double> cycleSum;
+    const auto getCycleSum = [&]
+    {
+        if (!cycleSum)
+        {
+            double sum = 0.0;
+            for (int i = 0; i < size; ++i)
+            {
+                sum += result[i].valueAsDouble();
+            }
+            cycleSum = sum;
+        }
+        return *cycleSum;
+    };
+
     for (unsigned localTimeStep = 0; localTimeStep < values.size(); ++localTimeStep)
     {
         const auto from = resolveTimeSumBound(node->from(), *this, localTimeStep);
         const auto to = resolveTimeSumBound(node->to(), *this, localTimeStep);
-        const int size = static_cast<int>(values.size());
         const auto window = splitTimeSumWindow(from, to, size);
-        // Sum the complete cycles once and scale afterwards, so that cancelling values
-        // do not turn into inf - inf = NaN
-        double cycleSum = 0.0;
-        if (window.fullCycles > 0)
-        {
-            for (int i = 0; i < size; ++i)
-            {
-                cycleSum += result[i].valueAsDouble();
-            }
-        }
         double tailSum = 0.0;
         for (long long offset = 0; offset < window.remainder; ++offset)
         {
             tailSum += result[wrapTimeSumIndex(window.first, offset, size)].valueAsDouble();
         }
-        values[localTimeStep] = static_cast<double>(window.fullCycles) * cycleSum + tailSum;
+        values[localTimeStep] = window.fullCycles > 0
+                                  ? static_cast<double>(window.fullCycles) * getCycleSum() + tailSum
+                                  : tailSum;
     }
 
     return EvaluationResult(values);

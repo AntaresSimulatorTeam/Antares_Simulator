@@ -256,59 +256,55 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_on_interval_t__t_plus_1, 
     BOOST_CHECK(actual == expected);
 }
 
-BOOST_AUTO_TEST_CASE(for_each_time_sum_index_visits_each_index_with_its_multiplicity)
+BOOST_AUTO_TEST_CASE(split_time_sum_window_decomposes_window_into_cycles_and_remainder)
 {
-    using Visit = std::pair<int, long long>;
-    const auto collect = [](int from, int to, int size)
+    const auto check = [](int from, int to, int size, long long cycles, long long rest, int first)
     {
-        std::vector<Visit> visited;
-        forEachTimeSumIndex(from,
-                            to,
-                            size,
-                            [&visited](int index, long long count)
-                            { visited.emplace_back(index, count); });
-        return visited;
+        const auto window = splitTimeSumWindow(from, to, size);
+        BOOST_CHECK_EQUAL(window.fullCycles, cycles);
+        BOOST_CHECK_EQUAL(window.remainder, rest);
+        BOOST_CHECK_EQUAL(window.first, first);
     };
 
-    // Window shorter than the block: indices in window order, with wrap-around
-    BOOST_CHECK(collect(3, 6, 5) == (std::vector<Visit>{{3, 1}, {4, 1}, {0, 1}, {1, 1}}));
-    // Window longer than the block: 7 steps over a block of 5 cover indices 0 and 1 twice
-    BOOST_CHECK(collect(0, 6, 5) == (std::vector<Visit>{{0, 2}, {1, 2}, {2, 1}, {3, 1}, {4, 1}}));
-    // Empty window
-    BOOST_CHECK(collect(2, 1, 5).empty());
+    // Window shorter than the block: summed in window order, starting at index 3 with wrap-around
+    check(3, 6, 5, 0, 4, 3);
+    // Window as long as the block: still no full cycle, so that the window order is kept
+    check(2, 6, 5, 0, 5, 2);
+    // Window longer than the block: 7 steps over a block of 5 = 1 cycle + 2 extra indices
+    check(0, 6, 5, 1, 2, 0);
+    // Empty windows
+    check(2, 1, 5, 0, 0, 0);
+    check(0, 3, 0, 0, 0, 0);
 
     constexpr int intMax = std::numeric_limits<int>::max();
     constexpr int intMin = std::numeric_limits<int>::min();
     // INT_MAX % 5 == 2: a one-element window ending at INT_MAX must not overflow
-    BOOST_CHECK(collect(intMax, intMax, 5) == (std::vector<Visit>{{intMax % 5, 1}}));
-    BOOST_CHECK(collect(intMax, intMax - 1, 5).empty());
+    check(intMax, intMax, 5, 0, 1, intMax % 5);
+    check(intMax, intMax - 1, 5, 0, 0, 0);
 
     // The whole int range is 2^32 steps: the cost does not depend on the window length
-    long long total = 0;
-    for (const auto& [index, count]: collect(intMin, intMax, 5))
-    {
-        total += count;
-    }
-    BOOST_CHECK_EQUAL(total, 4294967296LL);
+    const auto whole = splitTimeSumWindow(intMin, intMax, 5);
+    BOOST_CHECK_EQUAL(whole.fullCycles * 5 + whole.remainder, 4294967296LL);
+    BOOST_CHECK_EQUAL(whole.first, normalizeTimeIndex(intMin, 5));
 }
 
-BOOST_AUTO_TEST_CASE(forEachTimeSumIndex_short_window_visits_only_window_length)
+BOOST_AUTO_TEST_CASE(split_time_sum_window_short_window_on_large_block_has_no_full_cycle)
 {
-    int calls = 0;
-    forEachTimeSumIndex(10, 11, 1000000, [&calls](int, long long) { ++calls; });
-    BOOST_CHECK_EQUAL(calls, 2);
+    // The number of indices to visit is the window length, not the block size
+    const auto window = splitTimeSumWindow(10, 11, 1000000);
+    BOOST_CHECK_EQUAL(window.fullCycles, 0);
+    BOOST_CHECK_EQUAL(window.remainder, 2);
 }
 
-BOOST_AUTO_TEST_CASE(forEachTimeSumIndex_wraps_without_int_overflow_on_huge_block)
+BOOST_AUTO_TEST_CASE(wrap_time_sum_index_does_not_overflow_on_huge_block)
 {
     constexpr int intMax = std::numeric_limits<int>::max();
-    // first = INT_MAX - 2: the 4th visited index must wrap to 1, not overflow
-    std::vector<int> visited;
-    forEachTimeSumIndex(-2,
-                        1,
-                        intMax,
-                        [&visited](int index, long long) { visited.push_back(index); });
-    BOOST_CHECK((visited == std::vector<int>{intMax - 2, intMax - 1, 0, 1}));
+    // Window [-2, 1] on a block of INT_MAX steps: first = INT_MAX - 2, and the 4th index wraps to 1
+    const auto window = splitTimeSumWindow(-2, 1, intMax);
+    BOOST_REQUIRE_EQUAL(window.first, intMax - 2);
+    BOOST_REQUIRE_EQUAL(window.remainder, 4);
+    BOOST_CHECK_EQUAL(wrapTimeSumIndex(window.first, 2, intMax), 0);
+    BOOST_CHECK_EQUAL(wrapTimeSumIndex(window.first, 3, intMax), 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(very_long_relative_time_sum_window_wraps_without_iterating, tests_fixture)
