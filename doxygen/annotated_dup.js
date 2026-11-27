@@ -309,6 +309,8 @@ var annotated_dup =
             [ "AreaConnection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1AreaConnection.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1AreaConnection" ],
             [ "ThermalComponent", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent" ],
             [ "ThermalCapacityConnection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection" ],
+            [ "LinkComponent", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1LinkComponent.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1LinkComponent" ],
+            [ "LinkCapacityConnection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1LinkCapacityConnection.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1LinkCapacityConnection" ],
             [ "System", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System" ]
           ] ],
           [ "YmlUtils", null, [
@@ -410,6 +412,7 @@ var annotated_dup =
           [ "ParameterTypeAndValue", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue.html", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue" ],
           [ "ComponentData", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentData.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentData" ],
           [ "ThermalComponent", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1ThermalComponent.html", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1ThermalComponent" ],
+          [ "LinkComponent", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1LinkComponent.html", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1LinkComponent" ],
           [ "Component", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component" ],
           [ "ComponentBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentBuilder.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentBuilder" ],
           [ "ConnectionEnd", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEnd.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEnd" ],
@@ -428,6 +431,7 @@ var annotated_dup =
           [ "PortField", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortField.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortField" ],
           [ "PortFieldDefinition", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldDefinition.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldDefinition" ],
           [ "AreaConnection", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1AreaConnection.html", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1AreaConnection" ],
+          [ "LinkCapacityConnectionFields", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1LinkCapacityConnectionFields.html", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1LinkCapacityConnectionFields" ],
           [ "PortType", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortType.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortType" ],
           [ "System", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1System" ],
           [ "SystemBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder" ],
@@ -1037,6 +1041,8 @@ var annotated_dup =
       [ "convert< Antares::IO::Inputs::YmlSystem::AreaConnection >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1AreaConnection_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::ThermalComponent >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection_01_4.html", null ],
+      [ "convert< Antares::IO::Inputs::YmlSystem::LinkComponent >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1LinkComponent_01_4.html", null ],
+      [ "convert< Antares::IO::Inputs::YmlSystem::LinkCapacityConnection >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1LinkCapacityConnection_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::Property >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Property_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::System >", "classYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System_01_4.html", null ],
       [ "YmlTreeDisplayer", "classYAML_1_1YmlTreeDisplayer.html", "classYAML_1_1YmlTreeDisplayer" ],

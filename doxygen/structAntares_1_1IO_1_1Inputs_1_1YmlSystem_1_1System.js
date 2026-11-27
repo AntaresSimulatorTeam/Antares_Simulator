@@ -4,5 +4,6 @@ var structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System =
     [ "components", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html#ad10a45d534b4eb0e1574369798e2bbed", null ],
     [ "connections", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html#a106daa73ce010711478b4a63889e9183", null ],
     [ "id", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html#a0a03b236c4b53d1b8fa02b85b7858efc", null ],
+    [ "linkCapacityConnections", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html#acd214b1c6c6add248345b7f03c527d88", null ],
     [ "thermalCapacityConnections", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html#a4de5e6a5702bfa294d7cfa59b58a525c", null ]
 ];

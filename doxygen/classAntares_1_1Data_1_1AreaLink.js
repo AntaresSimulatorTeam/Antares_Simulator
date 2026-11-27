@@ -9,6 +9,7 @@ var classAntares_1_1Data_1_1AreaLink =
     [ "~AreaLink", "classAntares_1_1Data_1_1AreaLink.html#af0c8f6d00e71c2e4ae498952c9ebb69d", null ],
     [ "checkLoadedData", "classAntares_1_1Data_1_1AreaLink.html#aa05f2d806bd53e70277cd57e92ce5cc8", null ],
     [ "getName", "classAntares_1_1Data_1_1AreaLink.html#a4ea28cb9dba2665cb93b146ef961e9f4", null ],
+    [ "hasNonNullImpedance", "classAntares_1_1Data_1_1AreaLink.html#ad4aadf0936c904ed810f6c7e21983dcb", null ],
     [ "isLinkPhysical", "classAntares_1_1Data_1_1AreaLink.html#abec06adf2ea4dcabac9f6f6633c5b919", null ],
     [ "loadTimeSeries", "classAntares_1_1Data_1_1AreaLink.html#ab7f9ba15562da05262cc0d104ff61875", null ],
     [ "operator=", "classAntares_1_1Data_1_1AreaLink.html#a07cd2e84d8cfbe0947be5a50fcef2dd2", null ],

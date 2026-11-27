@@ -3,6 +3,7 @@ var classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component =
     [ "Component", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#abf7f681293e73b1fca4ade3a18799b50", null ],
     [ "addAreaConnection", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#aa9aeff46a6ef78aab76b4fa6ce7d70f5", null ],
     [ "addComponentConnection", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a14dfd549ece9b9e2dcf179e1801bccee", null ],
+    [ "addLinkCapacityConnection", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a9e1c336fc2e0f224c50a40dcf900a24e", null ],
     [ "addThermalCapacityConnection", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a96c7dfaa69a744c5846f3268ef160e9f", null ],
     [ "areaConnectedToPort", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#adf8d8937a96e84a5e572b8b2199749fc", null ],
     [ "areaConnectionAtPort", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#afe2806362d1807bd568e8866415af79f", null ],
@@ -16,6 +17,7 @@ var classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component =
     [ "Id", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#ac2d42d7a1b82ae71ed292f82c23a621b", null ],
     [ "nodeAtPortField", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#ac4ae3860bbca91d7c2e164dffb99eb09", null ],
     [ "portToAreaConnections", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a434594ac7de2a71fd06048a864e18f13", null ],
+    [ "portToLinkCapacityConnections", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#aba9073cb52d3479c4405cb42173a81f8", null ],
     [ "portToThermalCapacityConnections", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#aaff821ff5b186fefacb2c63dbe1c8a55", null ],
     [ "thermalCapacityConnectedToPort", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a7a7238338b2dfb53ba53b50851c47ad1", null ],
     [ "ComponentBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a352938aacebb94060db85218d879f90d", null ]
