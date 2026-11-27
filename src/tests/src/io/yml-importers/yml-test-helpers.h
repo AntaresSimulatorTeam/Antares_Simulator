@@ -83,7 +83,7 @@ struct ModelSpec
     std::string ports = "[]";
     std::string portFieldDefinitions = "[]";
     std::string constraints = "[]";
-    std::string extraOutputs;
+    std::string extraOutputs = "";
     std::string objectives = R"(
         - id: objective
           expression: objective)";
