@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <antares/io/inputs/yml-system/converter.h>
@@ -18,137 +19,92 @@
 #include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 // clang-format on
 
+#include "yml-test-helpers.h"
+
 using namespace std::string_literals;
 using namespace Antares::IO::Inputs;
 using namespace Antares::ModelerStudy;
 using namespace Antares::IO::Inputs::ForbidNodes;
 
 BOOST_AUTO_TEST_SUITE(readYamlInput)
-// This yaml lib contains only a port type.
-// Note that : an empty model is added to prevent parser from failing when reading the lib
-static const auto onlyPortTypeYmlLib = R"(
-library:
-  id: my_lib
-  description: test model library
 
-  port-types:
-    - id:  power_flow
-      description: power flow
-      fields:
-        - id: flow
-      area-connection:
-        injection-to-balance: flow
-        spillage-bound: 
-        unsupplied-energy-bound: 
-  models:
-    - id: empty model
-      description: we need this empty model, otherwise parser fails !
-)"s;
-
-BOOST_AUTO_TEST_CASE(port_type_area_connection_is_read_correctly)
+namespace
 {
-    YmlModel::Parser parserModel;
-    SystemModel::Library library = ModelConverter::convert(parserModel.parse(onlyPortTypeYmlLib));
+struct PortTypeAreaConnectionCase
+{
+    std::string name;
+    std::vector<std::string> fields;
+    std::string areaConnection; // YAML content of 'area-connection'
+    std::string injection;
+    std::string spillage;
+    std::string unsupplied;
+    std::string price;
+};
 
-    BOOST_CHECK_EQUAL(library.PortTypes().size(), 1);
-
-    SystemModel::PortType portType = library.PortTypes().begin()->second;
-
-    auto fields = portType.Fields();
-    BOOST_CHECK_EQUAL(fields.size(), 1);
-    BOOST_CHECK_EQUAL(fields[0].Id(), "flow");
-
-    auto area_connection = portType.areaConnection();
-    BOOST_CHECK(area_connection.has_value());
-    BOOST_CHECK_EQUAL(area_connection->inject_to_balance, "flow");
-    BOOST_CHECK(area_connection->spillage_bound.empty());
-    BOOST_CHECK(area_connection->unsupplied_energy_bound.empty());
+std::ostream& operator<<(std::ostream& os, const PortTypeAreaConnectionCase& c)
+{
+    return os << c.name;
 }
+} // namespace
 
-// This yaml lib contains only a port type, but with a more complete area connection.
-// Note that : as previously (and for same reason), an empty model is added.
-static const auto onlyPortTypeYmlLib2 = R"(
-library:
-  id: my_lib
-  description: test model library
-
-  port-types:
-    - id: power_flow
-      description: power flow
-      fields:
-        - id: flow
-        - id: to-area-bound
-        - id: from-area-bound
-      area-connection:
-        injection-to-balance: flow
-        spillage-bound: to-area-bound
-        unsupplied-energy-bound: from-area-bound
-
-  models:
-    - id: empty model
-      description: we need this empty model, otherwise parser fails !
-)"s;
-
-BOOST_AUTO_TEST_CASE(port_type_area_connection_is_more_complete_and_is_still_read_correctly)
+// The yaml lib contains only a port type. An empty model is added to prevent the parser from
+// failing when reading the lib.
+BOOST_DATA_TEST_CASE(
+  port_type_area_connection_is_read_correctly,
+  boost::unit_test::data::make<PortTypeAreaConnectionCase>({
+    {"injection_only",
+     {"flow"},
+     "injection-to-balance: flow\nspillage-bound:\nunsupplied-energy-bound:\n",
+     "flow",
+     "",
+     "",
+     ""},
+    {"complete",
+     {"flow", "to-area-bound", "from-area-bound"},
+     "injection-to-balance: flow\nspillage-bound: to-area-bound\n"
+     "unsupplied-energy-bound: from-area-bound\n",
+     "flow",
+     "to-area-bound",
+     "from-area-bound",
+     ""},
+    // the optional 'price' field must survive the yml-model -> system-model conversion
+    {"with_price",
+     {"flow", "price"},
+     "injection-to-balance: flow\nspillage-bound:\nunsupplied-energy-bound:\nprice: price\n",
+     "flow",
+     "",
+     "",
+     "price"},
+  }),
+  c)
 {
-    YmlModel::Parser parserModel;
-    SystemModel::Library library = ModelConverter::convert(parserModel.parse(onlyPortTypeYmlLib2));
+    std::string portType = "- id: power_flow\n  description: power flow\n  fields:\n";
+    for (const auto& field: c.fields)
+    {
+        portType += "    - id: " + field + "\n";
+    }
+    portType += "  area-connection:\n" + YmlTest::indent(c.areaConnection, 4);
 
-    BOOST_CHECK_EQUAL(library.PortTypes().size(), 1);
-
-    SystemModel::PortType portType = library.PortTypes().begin()->second;
-
-    auto fields = portType.Fields();
-    BOOST_CHECK_EQUAL(fields.size(), 3);
-    BOOST_CHECK_EQUAL(fields[0].Id(), "flow");
-    BOOST_CHECK_EQUAL(fields[1].Id(), "to-area-bound");
-    BOOST_CHECK_EQUAL(fields[2].Id(), "from-area-bound");
-
-    auto area_connection = portType.areaConnection();
-    BOOST_CHECK(area_connection.has_value());
-    BOOST_CHECK_EQUAL(area_connection->inject_to_balance, "flow");
-    BOOST_CHECK_EQUAL(area_connection->spillage_bound, "to-area-bound");
-    BOOST_CHECK_EQUAL(area_connection->unsupplied_energy_bound, "from-area-bound");
-}
-
-// This yaml lib contains a port type whose area connection also declares the
-// (optional) 'price' field, which should survive the yml-model -> system-model conversion.
-static const auto onlyPortTypeYmlLibWithPrice = R"(
-library:
-  id: my_lib
-  description: test model library
-
-  port-types:
-    - id: power_flow
-      description: power flow
-      fields:
-        - id: flow
-        - id: price
-      area-connection:
-        injection-to-balance: flow
-        spillage-bound:
-        unsupplied-energy-bound:
-        price: price
-
-  models:
-    - id: empty model
-      description: we need this empty model, otherwise parser fails !
-)"s;
-
-BOOST_AUTO_TEST_CASE(port_type_area_connection_price_field_is_read_correctly)
-{
     YmlModel::Parser parserModel;
     SystemModel::Library library = ModelConverter::convert(
-      parserModel.parse(onlyPortTypeYmlLibWithPrice));
+      parserModel.parse(YmlTest::library({.portTypes = portType, .models = "- id: empty model"})));
 
-    BOOST_CHECK_EQUAL(library.PortTypes().size(), 1);
+    BOOST_REQUIRE_EQUAL(library.PortTypes().size(), 1);
+    const SystemModel::PortType portType_ = library.PortTypes().begin()->second;
 
-    SystemModel::PortType portType = library.PortTypes().begin()->second;
+    const auto fields = portType_.Fields();
+    BOOST_REQUIRE_EQUAL(fields.size(), c.fields.size());
+    for (size_t i = 0; i < fields.size(); ++i)
+    {
+        BOOST_CHECK_EQUAL(fields[i].Id(), c.fields[i]);
+    }
 
-    auto area_connection = portType.areaConnection();
-    BOOST_CHECK(area_connection.has_value());
-    BOOST_CHECK_EQUAL(area_connection->inject_to_balance, "flow");
-    BOOST_CHECK_EQUAL(area_connection->price, "price");
+    const auto areaConnection = portType_.areaConnection();
+    BOOST_REQUIRE(areaConnection.has_value());
+    BOOST_CHECK_EQUAL(areaConnection->inject_to_balance, c.injection);
+    BOOST_CHECK_EQUAL(areaConnection->spillage_bound, c.spillage);
+    BOOST_CHECK_EQUAL(areaConnection->unsupplied_energy_bound, c.unsupplied);
+    BOOST_CHECK_EQUAL(areaConnection->price, c.price);
 }
 
 static const auto libraryYaml = R"(
