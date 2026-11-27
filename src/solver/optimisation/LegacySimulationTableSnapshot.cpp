@@ -135,16 +135,20 @@ void DumpSimulationTableAfterPostProcess(SimulationTable& simulationTable,
     }
 
     // Modeler rows first, as during the solve, so a stage table has the same
-    // row order as the optimisation ones.
-    if (const auto& solved = problemeHebdo.lastSolvedModelerProblem;
-        solved && problemeHebdo.modelerData)
+    // row order as the optimisation ones. The LP kept on problemeHebdo is the
+    // last pass' solved problem: a failing week throws before post-processes
+    // run, and post-processing never mutates the solver's solution, so the
+    // objective read from it here is the value the solver left.
+    if (problemeHebdo.modelerData && problemeHebdo.ortoolsProblem_
+        && problemeHebdo.optimEntityContainer)
     {
-        const HebdoAreaPriceProvider areaPriceProvider(problemeHebdo, *solved->problem);
+        const auto& lp = *problemeHebdo.ortoolsProblem_;
+        const HebdoAreaPriceProvider areaPriceProvider(problemeHebdo, lp);
         IO::Outputs::FillSimulationTable(simulationTable,
-                                         *solved->problem,
-                                         solved->objectiveValue,
+                                         lp,
+                                         lp.objectiveValue(),
                                          *problemeHebdo.modelerData,
-                                         *solved->entities,
+                                         *problemeHebdo.optimEntityContainer,
                                          fillContext,
                                          currentBlock,
                                          IO::Outputs::TimeConversionMode::WeeklyBlocks,

@@ -34,22 +34,6 @@ namespace Antares::Optimization
 {
 
 /**
- * \brief The modeler side of a week's last optimisation pass, kept alive past
- * the solve so a post-process dump can re-emit the modeler component rows.
- *
- * Cheap to hold: the MPSolver owning the problem data stays in
- * PROBLEME_ANTARES_A_RESOUDRE::ProblemesSpx meanwhile, so this only adds the
- * wrapper objects. OPT_TryToCallSimplex drops the previous value before the next
- * problem, so two are never alive at once.
- */
-struct SolvedModelerProblem
-{
-    std::shared_ptr<const LinearProblem::Api::ILinearProblem> problem;
-    std::shared_ptr<const LinearProblem::OptimEntityContainer> entities;
-    double objectiveValue = 0.;
-};
-
-/**
  * \brief Write the legacy solver's contribution to the simulation table.
  *
  * One raw row per named optimisation variable (value `solution.primal[i]`, name
@@ -78,8 +62,8 @@ unsigned LegacyWeeklyBlock(const PROBLEME_HEBDO& problemeHebdo);
  * through the solver's address tables (post-processes mutate the legacy result
  * structures in place, never ProblemeAResoudre::X), then fills from those
  * locals -- the solver state is never touched, so this is observation-only. In
- * hybrid mode the modeler component rows are re-emitted first, from
- * PROBLEME_HEBDO::lastSolvedModelerProblem; those keep the values the solver
+ * hybrid mode the modeler component rows are re-emitted first, from the LP and
+ * entity container retained on PROBLEME_HEBDO; those keep the values the solver
  * left, as post-processing cannot move a modeler variable.
  *
  * No-op with a one-time warning when the simplex range is daily: the address
