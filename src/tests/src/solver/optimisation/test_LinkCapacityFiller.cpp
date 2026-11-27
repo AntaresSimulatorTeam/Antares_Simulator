@@ -168,8 +168,8 @@ BOOST_AUTO_TEST_CASE(binding_direct_capacity_is_reported_on_legacy_link)
     applyLinkCapacityResults(*problemeHebdo, linearProblem, 0);
 
     const auto& ntc = problemeHebdo->ValeursDeNTC[0];
-    BOOST_CHECK_CLOSE(ntc.directCapacity(0), 160., 1e-6);
-    BOOST_CHECK_CLOSE(ntc.indirectCapacity(0), 190., 1e-6);
+    BOOST_CHECK_CLOSE(ntc.CapaciteEffectiveOrigineVersExtremite[0], 160., 1e-6);
+    BOOST_CHECK_CLOSE(ntc.CapaciteEffectiveExtremiteVersOrigine[0], 190., 1e-6);
     // The study NTC is left untouched
     BOOST_CHECK_EQUAL(ntc.ValeurDeNTCOrigineVersExtremite[0], 1000.);
     BOOST_CHECK_EQUAL(ntc.ValeurDeNTCExtremiteVersOrigine[0], 1000.);
@@ -421,8 +421,8 @@ BOOST_AUTO_TEST_CASE(loop_flow_and_results_use_the_same_hour_for_an_unaligned_da
     for (unsigned pdt = 0; pdt < intervalLength; ++pdt)
     {
         const auto& ntc = problemeHebdo->ValeursDeNTC[firstPdt + pdt];
-        BOOST_CHECK_CLOSE(ntc.directCapacity(0), 160., 1e-6);
-        BOOST_CHECK_CLOSE(ntc.indirectCapacity(0), 190., 1e-6);
+        BOOST_CHECK_CLOSE(ntc.CapaciteEffectiveOrigineVersExtremite[0], 160., 1e-6);
+        BOOST_CHECK_CLOSE(ntc.CapaciteEffectiveExtremiteVersOrigine[0], 190., 1e-6);
     }
     BOOST_CHECK(std::isnan(
       problemeHebdo->ValeursDeNTC[firstPdt - 1].CapaciteEffectiveOrigineVersExtremite[0]));
