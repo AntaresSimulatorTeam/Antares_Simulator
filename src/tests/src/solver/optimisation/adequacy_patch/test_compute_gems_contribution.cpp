@@ -16,6 +16,7 @@
 #include "antares/solver/optimisation/adequacy_patch_csr/gems-part.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+
 #include "UtilMocks.h"
 
 using namespace std::string_literals;
