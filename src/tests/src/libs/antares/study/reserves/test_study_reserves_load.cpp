@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <unit_test_utils.h>
 
+#include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/unit_test_suite.hpp>
 
@@ -31,6 +32,24 @@ void addShortTermStorage(Area* area, const std::string& name)
     cluster.properties.name = name;
     cluster.id = name;
     area->shortTermStorage.storagesByIndex.push_back(cluster);
+}
+
+// Writes a reserve participation yml file.
+void writeFile(const std::filesystem::path& path, const std::string& content)
+{
+    std::ofstream file(path);
+    file << content;
+}
+
+// Reserve participations loaded for a thermal cluster / for the hydro of an area.
+auto& thermalReserves(Area* area, const std::string& cluster)
+{
+    return area->thermal.list.findInAll(cluster)->reserveParticipationContainer.value();
+}
+
+auto& hydroReserves(Area* area)
+{
+    return area->hydro.reserveParticipationContainer.value();
 }
 
 /*!
@@ -254,8 +273,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_One_No_Symmetries
     addThermalCluster(areaA, "cluster1");
     addThermalCluster(areaA, "cluster2");
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   - cluster: cluster1
     certifications:
       - reserve: ReserveUp
@@ -263,35 +281,18 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_One_No_Symmetries
         participation-cost: 8.8
         max-power-off: 7.7
         participation-cost-off: 6.6
-)";
-    file.close();
+)");
     areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(
       areaA->thermal.list.findInAll("cluster1")->reserveParticipationContainer.has_value());
     BOOST_CHECK(
       !areaA->thermal.list.findInAll("cluster2")->reserveParticipationContainer.has_value());
-    BOOST_CHECK(areaA->thermal.list.findInAll("cluster1")
-                  ->reserveParticipationContainer.value()
-                  .isParticipatingInReserve("reserveup"));
-    BOOST_CHECK(!areaA->thermal.list.findInAll("cluster1")
-                   ->reserveParticipationContainer.value()
-                   .isParticipatingInReserve("reservedown"));
-    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .reserveMaxPower("reserveup"),
-                      9.9);
-    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .reserveCost("reserveup"),
-                      8.8);
-    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .reserveMaxPowerOff("reserveup"),
-                      7.7);
-    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .reserveCostOff("reserveup"),
-                      6.6);
+    BOOST_CHECK(thermalReserves(areaA, "cluster1").isParticipatingInReserve("reserveup"));
+    BOOST_CHECK(!thermalReserves(areaA, "cluster1").isParticipatingInReserve("reservedown"));
+    BOOST_CHECK_EQUAL(thermalReserves(areaA, "cluster1").reserveMaxPower("reserveup"), 9.9);
+    BOOST_CHECK_EQUAL(thermalReserves(areaA, "cluster1").reserveCost("reserveup"), 8.8);
+    BOOST_CHECK_EQUAL(thermalReserves(areaA, "cluster1").reserveMaxPowerOff("reserveup"), 7.7);
+    BOOST_CHECK_EQUAL(thermalReserves(areaA, "cluster1").reserveCostOff("reserveup"), 6.6);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_One_Bad_Parameter,
@@ -301,14 +302,12 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_One_Bad_Parameter
     addThermalCluster(areaA, "cluster1");
     addThermalCluster(areaA, "cluster2");
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   - cluster: cluster1
     certifications:
       - reserve: ReserveUp
         bad: 9.9
-)";
-    file.close();
+)");
     areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK_EQUAL(getErrors().size(), 1);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
@@ -322,8 +321,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Symmetries,
     addThermalCluster(areaA, "cluster1");
     addThermalCluster(areaA, "cluster2");
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   - cluster: cluster1
     certifications:
       - reserve: ReserveUp
@@ -355,71 +353,38 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Symmetries,
       - reserves: [ReserveUp, ReserveDown]
       - reserves: [ReserveUpThree, ReserveDown]
       - reserves: [ReserveUpTwo, ReserveDownTwo]
-)";
-    file.close();
+)");
     areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(
       areaA->thermal.list.findInAll("cluster1")->reserveParticipationContainer.has_value());
     BOOST_CHECK(
       !areaA->thermal.list.findInAll("cluster2")->reserveParticipationContainer.has_value());
-    BOOST_CHECK(areaA->thermal.list.findInAll("cluster1")
-                  ->reserveParticipationContainer.value()
-                  .isParticipatingInReserve("reserveup"));
-    BOOST_CHECK(areaA->thermal.list.findInAll("cluster1")
-                  ->reserveParticipationContainer.value()
-                  .isParticipatingInReserve("reservedown"));
+    BOOST_CHECK(thermalReserves(areaA, "cluster1").isParticipatingInReserve("reserveup"));
+    BOOST_CHECK(thermalReserves(areaA, "cluster1").isParticipatingInReserve("reservedown"));
 
-    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .getNbSymGroups(),
-                      3);
+    BOOST_CHECK_EQUAL(thermalReserves(areaA, "cluster1").getNbSymGroups(), 3);
 
-    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .symmetricalIndices("reserveup")
-                        .size(),
-                      1);
+    BOOST_CHECK_EQUAL(thermalReserves(areaA, "cluster1").symmetricalIndices("reserveup").size(), 1);
 
-    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .symmetricalIndices("reservedown")
-                        .size(),
+    BOOST_CHECK_EQUAL(thermalReserves(areaA, "cluster1").symmetricalIndices("reservedown").size(),
                       2);
 
-    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .symmetricalIndices("reserveupthree")
-                        .size(),
+    BOOST_CHECK_EQUAL(
+      thermalReserves(areaA, "cluster1").symmetricalIndices("reserveupthree").size(),
+      1);
+
+    BOOST_CHECK_EQUAL(thermalReserves(areaA, "cluster1").symmetricalIndices("reserveuptwo").size(),
                       1);
 
-    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .symmetricalIndices("reserveuptwo")
-                        .size(),
-                      1);
+    BOOST_CHECK_EQUAL(
+      thermalReserves(areaA, "cluster1").symmetricalIndices("reservedowntwo").size(),
+      1);
 
-    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .symmetricalIndices("reservedowntwo")
-                        .size(),
-                      1);
+    std::vector<int> symDown = thermalReserves(areaA, "cluster1").symmetricalIndices("reservedown");
 
-    std::vector<int> symDown = areaA->thermal.list.findInAll("cluster1")
-                                 ->reserveParticipationContainer.value()
-                                 .symmetricalIndices("reservedown");
-
-    int symUp = areaA->thermal.list.findInAll("cluster1")
-                  ->reserveParticipationContainer.value()
-                  .symmetricalIndices("reserveup")
-                  .at(0);
-    int symUpTwo = areaA->thermal.list.findInAll("cluster1")
-                     ->reserveParticipationContainer.value()
-                     .symmetricalIndices("reserveuptwo")
-                     .at(0);
-    int symUpThree = areaA->thermal.list.findInAll("cluster1")
-                       ->reserveParticipationContainer.value()
-                       .symmetricalIndices("reserveupthree")
-                       .at(0);
+    int symUp = thermalReserves(areaA, "cluster1").symmetricalIndices("reserveup").at(0);
+    int symUpTwo = thermalReserves(areaA, "cluster1").symmetricalIndices("reserveuptwo").at(0);
+    int symUpThree = thermalReserves(areaA, "cluster1").symmetricalIndices("reserveupthree").at(0);
     BOOST_CHECK_EQUAL(
       count(symDown.begin(), symDown.end(), symUp),
       1); // Value in symmetricalIndices("ReserveUp") is also in symmetricalIndices("ReserveDown")
@@ -436,119 +401,78 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Symmetries,
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Bad_Cluster_Symmetry,
-                        OneProblemWithReservesOneAreaWithLogger)
+namespace
 {
-    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-    addThermalCluster(areaA, "cluster1");
+struct ThermalReserveErrorCase
+{
+    std::string name;
+    std::vector<std::string> clusters;
+    std::string yaml;
+    std::string expectedError;
+};
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
-  - cluster: cluster1
-    certifications:
-      - reserve: ReserveUp
-        max-power: 9.9
-        participation-cost: 8.8
-        max-power-off: 7.7
-        participation-cost-off: 6.6
-      - reserve: ReserveDown
-        max-power: 1.1
-        participation-cost: 2.2
-        max-power-off: 3.3
-        participation-cost-off: 4.4
-  - cluster: cluster3
-    symmetries:
-      - reserves: [ReserveUp, ReserveDown]
-)";
-    file.close();
-    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
-    BOOST_CHECK(getErrors().contains("Thermal cluster cluster3 does not exist in area A"));
+std::ostream& operator<<(std::ostream& os, const ThermalReserveErrorCase& c)
+{
+    return os << c.name;
 }
 
-BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Bad_Reserve_Symmetry,
-                        OneProblemWithReservesOneAreaWithLogger)
-{
-    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-    addThermalCluster(areaA, "cluster1");
-
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
-  - cluster: cluster1
-    certifications:
-      - reserve: ReserveUp
+const std::string certificationUp = R"(      - reserve: ReserveUp
         max-power: 9.9
         participation-cost: 8.8
         max-power-off: 7.7
         participation-cost-off: 6.6
-      - reserve: ReserveDown
+)";
+
+std::string certification(const std::string& reserve)
+{
+    return "      - reserve: " + reserve + R"(
         max-power: 1.1
         participation-cost: 2.2
         max-power-off: 3.3
         participation-cost-off: 4.4
-    symmetries:
-      - reserves: [ReserveNull, ReserveDown]
 )";
-    file.close();
-    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
-    BOOST_CHECK(getErrors().contains("This entity is not participating to reserve reservenull"));
 }
+} // namespace
 
-BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Bad_Cluster_Participation,
-                        OneProblemWithReservesOneAreaWithLogger)
+BOOST_DATA_TEST_CASE_F(
+  OneProblemWithReservesOneAreaWithLogger,
+  test_thermal_loadReserveParticipations_errors,
+  boost::unit_test::data::make<ThermalReserveErrorCase>({
+    {"symmetry_on_unknown_cluster",
+     {"cluster1"},
+     "participations:\n  - cluster: cluster1\n    certifications:\n" + certificationUp
+       + certification("ReserveDown")
+       + "  - cluster: cluster3\n    symmetries:\n      - reserves: [ReserveUp, ReserveDown]\n",
+     "Thermal cluster cluster3 does not exist in area A"},
+    {"symmetry_on_unknown_reserve",
+     {"cluster1"},
+     "participations:\n  - cluster: cluster1\n    certifications:\n" + certificationUp
+       + certification("ReserveDown")
+       + "    symmetries:\n      - reserves: [ReserveNull, ReserveDown]\n",
+     "This entity is not participating to reserve reservenull"},
+    {"symmetry_on_reserve_the_cluster_does_not_participate_in",
+     {"cluster1", "cluster3"},
+     "participations:\n  - cluster: cluster1\n    certifications:\n" + certificationUp
+       + "    symmetries:\n      - reserves: [ReserveUp, ReserveDown]\n"
+         "  - cluster: cluster3\n    certifications:\n"
+       + certification("ReserveDown"),
+     "This entity is not participating to reserve reservedown"},
+    {"participation_in_unknown_reserve",
+     {"cluster1"},
+     "participations:\n  - cluster: cluster1\n    certifications:\n" + certificationUp
+       + certification("ReserveNull"),
+     "A : missing reserve reservenull when loading thermal reserve participations"},
+  }),
+  c)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-    addThermalCluster(areaA, "cluster1");
-    addThermalCluster(areaA, "cluster3");
-
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
-  - cluster: cluster1
-    certifications:
-      - reserve: ReserveUp
-        max-power: 9.9
-        participation-cost: 8.8
-        max-power-off: 7.7
-        participation-cost-off: 6.6
-    symmetries:
-      - reserves: [ReserveUp, ReserveDown]
-  - cluster: cluster3
-    certifications:
-      - reserve: ReserveDown
-        max-power: 1.1
-        participation-cost: 2.2
-        max-power-off: 3.3
-        participation-cost-off: 4.4
-)";
-    file.close();
+    for (const auto& cluster: c.clusters)
+    {
+        addThermalCluster(areaA, cluster);
+    }
+    writeFile(studyPath / "myreserve.yml", c.yaml);
     areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
-    BOOST_CHECK(getErrors().contains("This entity is not participating to reserve reservedown"));
-}
-
-BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Bad_Reserve_Load,
-                        OneProblemWithReservesOneAreaWithLogger)
-{
-    auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-    addThermalCluster(areaA, "cluster1");
-
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
-  - cluster: cluster1
-    certifications:
-      - reserve: ReserveUp
-        max-power: 9.9
-        participation-cost: 8.8
-        max-power-off: 7.7
-        participation-cost-off: 6.6
-      - reserve: ReserveNull
-        max-power: 1.1
-        participation-cost: 2.2
-        max-power-off: 3.3
-        participation-cost-off: 4.4
-)";
-    file.close();
-    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
-    BOOST_CHECK(getErrors().contains(
-      "A : missing reserve reservenull when loading thermal reserve participations"));
+    BOOST_CHECK(getErrors().contains(c.expectedError));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Delete_Double_Sym_Participation,
@@ -557,8 +481,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Delete_Double_Sym
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   - cluster: cluster1
     certifications:
       - reserve: ReserveUp
@@ -574,8 +497,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Delete_Double_Sym
     symmetries:
       - reserves: [ReserveUp, ReserveDown]
       - reserves: [ReserveUp, ReserveDown]
-)";
-    file.close();
+)");
     areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains("Detected duplicate in reserves symmetries"));
 }
@@ -586,8 +508,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_No_Cluster_Provid
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   - cluster: cluster1
     certifications:
       - reserve: ReserveUp
@@ -602,8 +523,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_No_Cluster_Provid
         participation-cost: 2.2
         max-power-off: 3.3
         participation-cost-off: 4.4
-)";
-    file.close();
+)");
     areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(
       getErrors().contains("A : cluster/storage name is missing in a participation entry"));
@@ -615,8 +535,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Double_Cluster_Pa
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   - cluster: cluster1
     certifications:
       - reserve: ReserveUp
@@ -636,8 +555,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Double_Cluster_Pa
         participation-cost-off: 4.4
     symmetries:
       - reserves: [ReserveUp, ReserveDown]
-)";
-    file.close();
+)");
     areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(
       getErrors().contains("A, cluster cluster1 : duplicate participation to reserve reserveup"));
@@ -649,8 +567,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Only_One_Symmetry
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   - cluster: cluster1
     certifications:
       - reserve: ReserveUp
@@ -665,8 +582,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Only_One_Symmetry
         participation-cost-off: 4.4
     symmetries:
       - reserves: [ReserveUp]
-)";
-    file.close();
+)");
     areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains("A : symmetry group must have at least two reserves"));
 }
@@ -677,8 +593,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Triple_Symmetry,
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   - cluster: cluster1
     certifications:
       - reserve: ReserveUp
@@ -698,38 +613,19 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Triple_Symmetry,
         participation-cost-off: 4.4
     symmetries:
       - reserves: [ReserveUp, ReserveDown, ReserveDownTwo]
-)";
-    file.close();
+)");
     areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
-    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .symmetricalIndices("reserveup")
-                        .size(),
+    BOOST_CHECK_EQUAL(thermalReserves(areaA, "cluster1").symmetricalIndices("reserveup").size(), 1);
+    BOOST_CHECK_EQUAL(thermalReserves(areaA, "cluster1").symmetricalIndices("reservedown").size(),
                       1);
-    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .symmetricalIndices("reservedown")
-                        .size(),
-                      1);
-    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
-                        ->reserveParticipationContainer.value()
-                        .symmetricalIndices("reservedowntwo")
-                        .size(),
-                      1);
-    int symUp = areaA->thermal.list.findInAll("cluster1")
-                  ->reserveParticipationContainer.value()
-                  .symmetricalIndices("reserveup")
-                  .at(0);
-    int symDown = areaA->thermal.list.findInAll("cluster1")
-                    ->reserveParticipationContainer.value()
-                    .symmetricalIndices("reservedown")
-                    .at(0);
-    int symDownTwo = areaA->thermal.list.findInAll("cluster1")
-                       ->reserveParticipationContainer.value()
-                       .symmetricalIndices("reservedowntwo")
-                       .at(0);
+    BOOST_CHECK_EQUAL(
+      thermalReserves(areaA, "cluster1").symmetricalIndices("reservedowntwo").size(),
+      1);
+    int symUp = thermalReserves(areaA, "cluster1").symmetricalIndices("reserveup").at(0);
+    int symDown = thermalReserves(areaA, "cluster1").symmetricalIndices("reservedown").at(0);
+    int symDownTwo = thermalReserves(areaA, "cluster1").symmetricalIndices("reservedowntwo").at(0);
     BOOST_CHECK_EQUAL(symUp, symDown);
     BOOST_CHECK_EQUAL(symUp, symDownTwo); // all of them are participating to the same symmetry
 }
@@ -740,8 +636,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Double_Symmetry_S
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   - cluster: cluster1
     certifications:
       - reserve: ReserveUp
@@ -757,8 +652,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Double_Symmetry_S
     symmetries:
       - reserves: [ReserveUp, ReserveUp]
       - reserves: [ReserveUp, ReserveDown]
-)";
-    file.close();
+)");
     areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains("A : symmetry group must have at least two reserves"));
 }
@@ -769,13 +663,11 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Cluster_Participa
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   - cluster: cluster1
     symmetries:
       - reserves: [ReserveUp, ReserveDown]
-)";
-    file.close();
+)");
     areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains(
       "Area A, cluster1 : trying to add symmetries without any reserve participation"));
@@ -788,8 +680,7 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_reserveParticipationsCount,
     BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationsCount(), 0);
 
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   certifications:
     - reserve: ReserveUp
       participation-cost: 9.9
@@ -799,8 +690,7 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_reserveParticipationsCount,
       participation-cost: 9.9
       max-store: 8.8
       max-release: 7.7
-)";
-    file.close();
+)");
     areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
 
     BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationsCount(), 2);
@@ -809,8 +699,7 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_reserveParticipationsCount,
 BOOST_FIXTURE_TEST_CASE(test_hydro_reserveParticipationAt, OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   certifications:
     - reserve: ReserveUp
       participation-cost: 9.9
@@ -820,8 +709,7 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_reserveParticipationAt, OneProblemWithReserve
       participation-cost: 9.9
       max-store: 8.8
       max-release: 7.7
-)";
-    file.close();
+)");
     areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
 
     // The fixture registers 5 reserves on areaA (reserveup/reserveuptwo/reserveupthree/
@@ -845,8 +733,7 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_Symmetries,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   certifications:
     - reserve: ReserveUp
       participation-cost: 9.9
@@ -872,30 +759,20 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_Symmetries,
     - reserves: [ReserveUp, ReserveDown]
     - reserves: [ReserveUpThree, ReserveDown]
     - reserves: [ReserveUpTwo, ReserveDownTwo]
-)";
-    file.close();
+)");
     areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
 
     BOOST_CHECK(areaA->hydro.reserveParticipationContainer.has_value());
 
-    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer.value().isParticipatingInReserve(
-                        "reserveup"),
-                      true);
+    BOOST_CHECK_EQUAL(hydroReserves(areaA).isParticipatingInReserve("reserveup"), true);
 
-    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer.value().isParticipatingInReserve(
-                        "reservedown"),
-                      true);
+    BOOST_CHECK_EQUAL(hydroReserves(areaA).isParticipatingInReserve("reservedown"), true);
 
-    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer.value().getNbSymGroups(), 3);
+    BOOST_CHECK_EQUAL(hydroReserves(areaA).getNbSymGroups(), 3);
 
-    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer.value().reserveCost("reserveup"),
-                      9.9);
-    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer.value().reserveMaxStore(
-                        "reserveup"),
-                      8.8);
-    BOOST_CHECK_EQUAL(areaA->hydro.reserveParticipationContainer.value().reserveMaxRelease(
-                        "reserveup"),
-                      7.7);
+    BOOST_CHECK_EQUAL(hydroReserves(areaA).reserveCost("reserveup"), 9.9);
+    BOOST_CHECK_EQUAL(hydroReserves(areaA).reserveMaxStore("reserveup"), 8.8);
+    BOOST_CHECK_EQUAL(hydroReserves(areaA).reserveMaxRelease("reserveup"), 7.7);
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
 }
@@ -905,12 +782,10 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_no_reserve,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   symmetries:
     - reserves: [ReserveUp, ReserveDown]
-)";
-    file.close();
+)");
     areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains(
       "Area A, hydro : trying to add symmetries without any reserve participation"));
@@ -921,12 +796,10 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_missing_reserve,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   certifications:
     - reserve: reservenull
-)";
-    file.close();
+)");
     areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains(
       "A : missing reserve reservenull when loading hydro reserve participations"));
@@ -937,8 +810,7 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_cluster,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   certifications:
     - reserve: ReserveUp
       participation-cost: 9.9
@@ -950,8 +822,7 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_cluster,
       max-release: 7.7
   symmetries:
     - reserves: [ReserveUp, ReserveDown]
-)";
-    file.close();
+)");
     areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
 }
@@ -961,13 +832,11 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_bad_property,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   certifications:
     - reserve: ReserveUp
       bad: 9.9
-)";
-    file.close();
+)");
     areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK_EQUAL(getErrors().size(), 1);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
@@ -979,8 +848,7 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_bad_reserve,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   certifications:
     - reserve: ReserveUp
       participation-cost: 9.9
@@ -994,8 +862,7 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_bad_reserve,
       participation-cost-off: 16.6
   symmetries:
     - reserves: [ReserveUp, ReserveDown]
-)";
-    file.close();
+)");
     areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains("This entity is not participating to reserve reservedown"));
 }
@@ -1006,8 +873,7 @@ BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_Symmetries,
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
     addShortTermStorage(areaA, "cluster1");
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   - storage: cluster1
     certifications:
       - reserve: ReserveUp
@@ -1025,8 +891,7 @@ BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_Symmetries,
       - reserves: [ReserveUp, ReserveDown]
       - reserves: [ReserveUpThree, ReserveDown]
       - reserves: [ReserveUpTwo, ReserveDownTwo]
-)";
-    file.close();
+)");
 
     areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     auto* resContainer = &areaA->shortTermStorage.findInAll("cluster1")
@@ -1050,13 +915,11 @@ BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_bad_cluster_symmetry,
                         OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   - storage: cluster1
     symmetries:
       - reserves: [ReserveUp, ReserveDown]
-)";
-    file.close();
+)");
 
     areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains("Short term storage cluster1 does not exist in area A"));
@@ -1068,13 +931,11 @@ BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_no_reserves,
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addShortTermStorage(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   - storage: cluster1
     symmetries:
       - reserves: [ReserveUp, ReserveDown]
-)";
-    file.close();
+)");
     areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains(
       "Area A, cluster1 : trying to add symmetries without any reserve participation"));
@@ -1086,16 +947,14 @@ BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_bad_reserve,
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addShortTermStorage(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   - storage: cluster1
     certifications:
       - reserve: ReserveUp
       - reserve: ReserveDownTwo
     symmetries:
       - reserves: [ReserveUp, ReserveDown]
-)";
-    file.close();
+)");
     areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains("This entity is not participating to reserve reservedown"));
 }
@@ -1106,15 +965,13 @@ BOOST_FIXTURE_TEST_CASE(test_sts_loadReserveParticipations_No_Cluster_Provided,
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   - storage: cluster1
     certifications:
       - reserve: ReserveUp
   - certifications:
       - reserve: ReserveDown
-)";
-    file.close();
+)");
     areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains("Short term storage cluster1 does not exist in area A"));
 }
@@ -1125,16 +982,14 @@ BOOST_FIXTURE_TEST_CASE(test_sts_loadReserveParticipations_Invalid_Cluster,
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addShortTermStorage(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.yml");
-    file << R"(participations:
+    writeFile(studyPath / "myreserve.yml", R"(participations:
   - storage: cluster1
     certifications:
       - reserve: ReserveUp
   - storage: cluster4
     certifications:
       - reserve: ReserveDown
-)";
-    file.close();
+)");
     areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains("Short term storage cluster4 does not exist in area A"));
 }
@@ -1144,11 +999,9 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_file_missing_needs,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.yml");
-    file << R"(reserves:
+    writeFile(studyPath / "reserves" / "a" / "reserves.yml", R"(reserves:
   - name: ReserveUp
-)";
-    file.close();
+)");
     BOOST_CHECK_EXCEPTION(Antares::Data::loadReservesParameters(studyPath, *areaA),
                           std::runtime_error,
                           containsMessage(
@@ -1160,11 +1013,9 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_minimal, OneProblemWithoutReservesOn
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.yml");
-    file << R"(reserves:
+    writeFile(studyPath / "reserves" / "a" / "reserves.yml", R"(reserves:
   - name: ReserveUp
-)";
-    file.close();
+)");
 
     std::ofstream fileNeeds(studyPath / "reserves" / "a" / "reserveup.txt");
     for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
@@ -1204,15 +1055,13 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_ini, OneProblemWithoutReservesOneAr
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.yml");
-    file << R"(reserves:
+    writeFile(studyPath / "reserves" / "a" / "reserves.yml", R"(reserves:
   - name: ReserveUp
     a: [
 
 global-parameters:
   a: [
-)";
-    file.close();
+)");
 
     std::ofstream fileNeeds(studyPath / "reserves" / "a" / "reserveup.txt");
     fileNeeds << "\n";
@@ -1231,15 +1080,13 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_parameters, OneProblemWithoutReserv
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.yml");
-    file << R"(reserves:
+    writeFile(studyPath / "reserves" / "a" / "reserves.yml", R"(reserves:
   - name: ReserveUp
     a: a
 
 global-parameters:
   b: 2.1
-)";
-    file.close();
+)");
 
     std::ofstream fileNeeds(studyPath / "reserves" / "a" / "reserveup.txt");
     for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
@@ -1260,8 +1107,7 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok, OneProblemWithoutReservesOneAreaWit
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.yml");
-    file << R"(global-parameters:
+    writeFile(studyPath / "reserves" / "a" / "reserves.yml", R"(global-parameters:
   energy-activation-ratio-up: 6.6
   energy-activation-ratio-down: 7.7
   reference-activation-duration-up: 8
@@ -1277,8 +1123,7 @@ reserves:
     failure-cost: 5.5
   - name: ReserveDown
     type: down
-)";
-    file.close();
+)");
 
     std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "reserveup.txt");
     fileNeedsUp << "2\n3\n";
@@ -1342,8 +1187,7 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_negative_parameters_values,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.yml");
-    file << R"(reserves:
+    writeFile(studyPath / "reserves" / "a" / "reserves.yml", R"(reserves:
   - name: ReserveUp
     type: up
     reference-activation-duration: -1
@@ -1357,8 +1201,7 @@ global-parameters:
   energy-activation-ratio-down: -1
   reference-activation-duration-up: -2
   reference-activation-duration-down: -2
-)";
-    file.close();
+)");
 
     std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "reserveup.txt");
     fileNeedsUp.close();
@@ -1388,8 +1231,7 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_parameters_values,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.yml");
-    file << R"(reserves:
+    writeFile(studyPath / "reserves" / "a" / "reserves.yml", R"(reserves:
   - name: ReserveUp
     type: aa
     reference-activation-duration: 1.1
@@ -1403,8 +1245,7 @@ global-parameters:
   energy-activation-ratio-down: a
   reference-activation-duration-up: 1.1
   reference-activation-duration-down: 1.1
-)";
-    file.close();
+)");
 
     std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "reserveup.txt");
     fileNeedsUp.close();
@@ -1437,13 +1278,11 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_duplicated, OneProblemWithoutReservesOn
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.yml");
-    file << R"(reserves:
+    writeFile(studyPath / "reserves" / "a" / "reserves.yml", R"(reserves:
   - name: ReserveUp
   - name: ReserveUp
 global-parameters:
-)";
-    file.close();
+)");
 
     std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "reserveup.txt");
     fileNeedsUp.close();
