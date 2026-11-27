@@ -23,6 +23,11 @@ namespace Antares::Optimization
 struct SolvedModelerProblem;
 } // namespace Antares::Optimization
 
+namespace Antares::LinearProblem::Api
+{
+class IMipConstraint;
+} // namespace Antares::LinearProblem::Api
+
 namespace Antares::Data
 {
 class InactiveComponentsAnalyzer;
@@ -170,6 +175,11 @@ struct VALEURS_DE_NTC_ET_RESISTANCES
     std::vector<double> ValeurDeNTCExtremiteVersOrigine;
     std::vector<double> ValeurDeLoopFlowOrigineVersExtremite;
     std::vector<double> ValeurDuFlux;
+
+    // Capacities solved by LinkCapacityFiller, NaN for links it does not manage.
+    // The NTC above are study inputs and are never overwritten by the solve.
+    std::vector<double> CapaciteEffectiveOrigineVersExtremite;
+    std::vector<double> CapaciteEffectiveExtremiteVersOrigine;
 
     std::vector<double> ResistanceApparente;
 };
@@ -589,6 +599,17 @@ struct VARIABLES_DUALES_INTERCONNEXIONS
     std::vector<double> VariableDualeParInterconnexion;
 };
 
+/// \brief Capacity constraints added by LinkCapacityFiller on a legacy link for one time step.
+/// The flow variable is left unbounded, so these constraints carry the NTC and its dual.
+struct LINK_CAPACITY_CONSTRAINTS
+{
+    uint32_t interco;
+    int pdt; // Zero-based time step relative to the start of the optimization interval
+    int flowVariable;
+    const Antares::LinearProblem::Api::IMipConstraint* direct;
+    const Antares::LinearProblem::Api::IMipConstraint* indirect;
+};
+
 struct PROBLEME_HEBDO
 {
     uint32_t weekInTheYear = 0;
@@ -845,6 +866,12 @@ public:
 
     /// \brief Keeps the LP alive so optimEntityContainer's reference remains valid
     std::shared_ptr<Antares::LinearProblem::Api::ILinearProblem> ortoolsProblem_;
+
+    /// \brief Link capacity constraints of the LP being solved, pointing into ortoolsProblem_.
+    /// Read after the solve to report the effective NTC and its dual on legacy link outputs.
+    /// Must be cleared before ortoolsProblem_ is reassigned or destroyed (SimplexOrchestrator does
+    /// it, and LpFiller::fillLinearProblem again before filling).
+    std::vector<LINK_CAPACITY_CONSTRAINTS> linkCapacityConstraints;
 };
 
 // Import functions for capacity and hydro reserves
