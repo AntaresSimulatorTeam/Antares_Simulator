@@ -3,6 +3,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <functional>
+
+#include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
@@ -30,6 +33,42 @@ static Nodes::LiteralNode* toLiteral(Nodes::Node* n)
     return dynamic_cast<Nodes::LiteralNode*>(n);
 }
 
+YmlModel::Model createYmlModel()
+{
+    return {.id = "model0",
+            .description = "description",
+            .parameters = {{"param1", true, false}, {"param2", false, false}},
+            .variables = {{"varP",
+                           YmlModel::ExpressionLineNumber{"7", 0},
+                           YmlModel::ExpressionLineNumber{"pmin", 0},
+                           YmlModel::ValueType::CONTINUOUS,
+                           false,
+                           false,
+                           "test.yaml"}},
+            .ports = {},
+            .port_field_definitions = {},
+            .constraints = {},
+            .binding_constraints = {},
+            .objectives = {{"objective-id", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml"}},
+            .extra_outputs = {},
+            .filename = ""};
+}
+
+YmlModel::Model createModelWithPortField()
+{
+    return {.id = "model0",
+            .description = "description",
+            .parameters = {},
+            .variables = {},
+            .ports = {{.id = "port1", .type = "blue"}},
+            .port_field_definitions = {{"port1", "field1", YmlModel::ExpressionLineNumber{"", 0}}},
+            .constraints = {},
+            .binding_constraints = {},
+            .objectives = {{"objective-id", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml"}},
+            .extra_outputs = {},
+            .filename = ""};
+}
+
 BOOST_AUTO_TEST_SUITE(convertor_visitor)
 
 BOOST_AUTO_TEST_CASE(empty_expression)
@@ -51,24 +90,7 @@ BOOST_AUTO_TEST_CASE(negation)
 
 BOOST_AUTO_TEST_CASE(identifier)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"param1", true, false}, {"param2", false, false}},
-      .variables = {{"varP",
-                     YmlModel::ExpressionLineNumber{"7", 0},
-                     YmlModel::ExpressionLineNumber{"pmin", 0},
-                     YmlModel::ValueType::CONTINUOUS,
-                     false,
-                     false,
-                     "test.yaml"}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml"}},
-      .extra_outputs = {},
-      .filename = ""};
+    const auto model = createYmlModel();
 
     std::string expression = "param1";
     auto expr = convertExpressionToNode(expression, model);
@@ -82,24 +104,7 @@ BOOST_AUTO_TEST_CASE(identifier)
 
 BOOST_AUTO_TEST_CASE(identifierNotFound)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"param1", true, false}, {"param2", false, false}},
-      .variables = {{"varP",
-                     YmlModel::ExpressionLineNumber{"7", 0},
-                     YmlModel::ExpressionLineNumber{"pmin", 0},
-                     YmlModel::ValueType::CONTINUOUS,
-                     false,
-                     false,
-                     "test.yaml"}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml"}},
-      .extra_outputs = {},
-      .filename = ""};
+    const auto model = createYmlModel();
 
     std::string expression = "abc"; // not a param or var
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
@@ -203,18 +208,7 @@ BOOST_AUTO_TEST_CASE(comparison)
 
 BOOST_AUTO_TEST_CASE(portfield)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {},
-      .variables = {},
-      .ports = {{.id = "port1", .type = "blue"}},
-      .port_field_definitions = {{"port1", "field1", YmlModel::ExpressionLineNumber{"", 0}}},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml"}},
-      .extra_outputs = {},
-      .filename = ""};
+    const auto model = createModelWithPortField();
     std::string expression = "port1.field1";
     auto expr = convertExpressionToNode(expression, model);
 
@@ -226,18 +220,7 @@ BOOST_AUTO_TEST_CASE(portfield)
 
 BOOST_AUTO_TEST_CASE(portfieldSum)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {},
-      .variables = {},
-      .ports = {{.id = "port1", .type = "blue"}},
-      .port_field_definitions = {{"port1", "field1", YmlModel::ExpressionLineNumber{"", 0}}},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml"}},
-      .extra_outputs = {},
-      .filename = ""};
+    const auto model = createModelWithPortField();
 
     std::string expression = "sum_connections(port1.field1)";
     auto expr = convertExpressionToNode(expression, model);
@@ -250,30 +233,6 @@ BOOST_AUTO_TEST_CASE(portfieldSum)
 
     expression = "port2.field1";
     BOOST_CHECK_THROW(convertExpressionToNode(expression, model), InputError);
-}
-
-YmlModel::Model createYmlModel()
-{
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"param1", true, false}, {"param2", false, false}},
-      .variables = {{"varP",
-                     YmlModel::ExpressionLineNumber{"7", 0},
-                     YmlModel::ExpressionLineNumber{"pmin", 0},
-                     YmlModel::ValueType::CONTINUOUS,
-                     false,
-                     false,
-                     "test.yaml"}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml"}},
-      .extra_outputs = {},
-      .filename = ""};
-
-    return model;
 }
 
 std::pair<std::string, Nodes::Node*> expected_expression(Registry<Nodes::Node>& registry)
@@ -619,13 +578,26 @@ BOOST_FIXTURE_TEST_CASE(AlltimeSumExpression, RegistryHolder)
     BOOST_CHECK(cmp.dispatch(expr.node, timeSumNode));
 }
 
-struct SupplyModelForDualOperator
+struct SupplyModelForFunctionalOperator
 {
     YmlModel::Model model{
       .id = "model0",
       .description = "description",
-      .parameters = {},
-      .variables = {},
+      .parameters = {{"pmin", true, false}},
+      .variables = {{"varA",
+                     YmlModel::ExpressionLineNumber{"7", 0},
+                     YmlModel::ExpressionLineNumber{"pmin", 0},
+                     YmlModel::ValueType::CONTINUOUS,
+                     false,
+                     false,
+                     "test.yaml"},
+                    {"varB",
+                     YmlModel::ExpressionLineNumber{"7", 0},
+                     YmlModel::ExpressionLineNumber{"pmin", 0},
+                     YmlModel::ValueType::CONTINUOUS,
+                     false,
+                     false,
+                     "test.yaml"}},
       .ports = {},
       .port_field_definitions = {},
       .constraints = {{"constraintA", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml", ""}},
@@ -636,9 +608,11 @@ struct SupplyModelForDualOperator
       .objectives = {{"objective-id", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml"}},
       .extra_outputs = {},
       .filename = ""};
+
+    ForbiddenNodes forbiddenNodes;
 };
 
-BOOST_FIXTURE_TEST_CASE(dualExpression, SupplyModelForDualOperator)
+BOOST_FIXTURE_TEST_CASE(dualExpression, SupplyModelForFunctionalOperator)
 {
     // constraints
     std::string expression = "dual(constraintA)";
@@ -665,55 +639,6 @@ BOOST_FIXTURE_TEST_CASE(dualExpression, SupplyModelForDualOperator)
                           containsMessage(expected_msg));
 }
 
-BOOST_FIXTURE_TEST_CASE(EmptyDualExpression, SupplyModelForDualOperator)
-{
-    std::string expression = "dual()";
-    std::string expected_msg = "dual operator expects an argument, got nothing";
-    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          InputError,
-                          containsMessage(expected_msg));
-}
-
-BOOST_FIXTURE_TEST_CASE(WrongDualExpression, SupplyModelForDualOperator)
-{
-    std::string expression = "dual(constraintA, e^(iPi) + 1 = 0)";
-    auto err_msg = "dual operator expects exactly one constraint id got: constraintA, e^(iPi)+1=0";
-    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          InputError,
-                          containsMessage(err_msg));
-}
-
-struct SupplyModelForFunctionalOperator
-{
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"pmin", true, false}},
-      .variables = {{"varA",
-                     YmlModel::ExpressionLineNumber{"7", 0},
-                     YmlModel::ExpressionLineNumber{"pmin", 0},
-                     YmlModel::ValueType::CONTINUOUS,
-                     false,
-                     false,
-                     "test.yaml"},
-                    {"varB",
-                     YmlModel::ExpressionLineNumber{"7", 0},
-                     YmlModel::ExpressionLineNumber{"pmin", 0},
-                     YmlModel::ValueType::CONTINUOUS,
-                     false,
-                     false,
-                     "test.yaml"}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", YmlModel::ExpressionLineNumber{"", 0}, "test.yaml"}},
-      .extra_outputs = {},
-      .filename = ""};
-
-    ForbiddenNodes forbiddenNodes;
-};
-
 BOOST_FIXTURE_TEST_CASE(reducedCostExpression, SupplyModelForFunctionalOperator)
 {
     std::string expression = "reduced_cost(varB)";
@@ -731,24 +656,6 @@ BOOST_FIXTURE_TEST_CASE(reducedCostExpression, SupplyModelForFunctionalOperator)
     std::string badExpression = "reduced_cost(abc)";
     std::string err_msg = "reduced_cost called with unknown variable 'abc' in model 'model0'";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(badExpression, model),
-                          InputError,
-                          containsMessage(err_msg));
-}
-
-BOOST_FIXTURE_TEST_CASE(reducedCostExpressionTwoVariables, SupplyModelForFunctionalOperator)
-{
-    std::string expression = "reduced_cost(varB, 2)";
-    std::string err_msg = "reduced_cost operator expects exactly one variable id got: varB, 2";
-    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          InputError,
-                          containsMessage(err_msg));
-}
-
-BOOST_FIXTURE_TEST_CASE(EmptyReducedCostExpression, SupplyModelForFunctionalOperator)
-{
-    std::string expression = "reduced_cost()";
-    std::string err_msg = "reduced_cost operator expects an argument, got nothing";
-    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
                           InputError,
                           containsMessage(err_msg));
 }
@@ -772,14 +679,6 @@ BOOST_FIXTURE_TEST_CASE(EmptyPowerExpression, SupplyModelForFunctionalOperator)
     BOOST_CHECK_THROW(convertExpressionToNode(expression, model), AntlrParsingError);
 }
 
-BOOST_FIXTURE_TEST_CASE(WrongPowerExpression, SupplyModelForFunctionalOperator)
-{
-    std::string expression = "varA^_";
-    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          InputError,
-                          containsMessage("No parameter or variable found for this identifier: _"));
-}
-
 BOOST_FIXTURE_TEST_CASE(ValidMinExpression, SupplyModelForFunctionalOperator)
 {
     std::string expression = "min(varB, 2, pmin)";
@@ -796,7 +695,7 @@ BOOST_FIXTURE_TEST_CASE(ValidMinExpression, SupplyModelForFunctionalOperator)
 
 BOOST_FIXTURE_TEST_CASE(ValidMaxExpression, SupplyModelForFunctionalOperator)
 {
-    std::string expression = "min(varB, 2, pmin, varA, varB^pmin)";
+    std::string expression = "max(varB, 2, pmin, varA, varB^pmin)";
 
     auto expr = convertExpressionToNode(expression, model);
 
@@ -815,447 +714,164 @@ BOOST_FIXTURE_TEST_CASE(ValidMaxExpression, SupplyModelForFunctionalOperator)
                       "pmin");
 }
 
-BOOST_FIXTURE_TEST_CASE(MaxOperatorWrongNumberOfParameter, SupplyModelForFunctionalOperator)
+// ─────────────────────────────────────────────
+// Operators with an invalid argument list
+// ─────────────────────────────────────────────
+
+namespace
 {
-    std::string expression = "max(varB)";
-    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
+struct InvalidExpressionCase
+{
+    std::string expression;
+    std::string expectedMessage;
+};
+
+std::ostream& operator<<(std::ostream& os, const InvalidExpressionCase& c)
+{
+    return os << c.expression;
+}
+} // namespace
+
+BOOST_DATA_TEST_CASE_F(
+  SupplyModelForFunctionalOperator,
+  invalid_operator_arguments_are_rejected,
+  boost::unit_test::data::make<InvalidExpressionCase>({
+    {"dual()", "dual operator expects an argument, got nothing"},
+    {"dual(constraintA, e^(iPi) + 1 = 0)",
+     "dual operator expects exactly one constraint id got: constraintA, e^(iPi)+1=0"},
+    {"reduced_cost()", "reduced_cost operator expects an argument, got nothing"},
+    {"reduced_cost(varB, 2)", "reduced_cost operator expects exactly one variable id got: varB, 2"},
+    {"varA^_", "No parameter or variable found for this identifier: _"},
+    {"max(varB)", "max operator expects at least 2 operands got 1"},
+    {"min(varB)", "min operator expects at least 2 operands got 1"},
+    {"floor()", "floor operator expects an argument, got nothing"},
+    {"floor(pmin, 5)", "floor() expects 1 argument, but has 2"},
+    {"ceil()", "ceil operator expects an argument, got nothing"},
+    {"ceil(pmin, 5)", "ceil() expects 1 argument, but has 2"},
+    {"round()", "round operator expects an argument, got nothing"},
+    {"round(pmin, 5)", "round() expects 1 argument, but has 2"},
+    {"abs()", "abs operator expects an argument, got nothing"},
+    {"abs(pmin, 5)", "abs() expects 1 argument, but has 2"},
+  }),
+  c)
+{
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(c.expression, model),
                           InputError,
-                          containsMessage("max operator expects at least 2 operands got 1"));
-}
-
-BOOST_FIXTURE_TEST_CASE(MinOperatorWrongNumberOfParameter, SupplyModelForFunctionalOperator)
-{
-    std::string expression = "min(varB)";
-    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          InputError,
-                          containsMessage("min operator expects at least 2 operands got 1"));
-}
-
-BOOST_FIXTURE_TEST_CASE(MinWithForbiddenNode, SupplyModelForFunctionalOperator)
-{
-    std::string expression = "min(varB, reduced_cost(varB))";
-
-    auto node = convertExpressionToNode(expression, model);
-
-    // Forbid variable in min
-    forbiddenNodes.parentForbidsChild<Nodes::FunctionNodeType::min, Nodes::VariableNode>();
-
-    auto err_msg = "'FunctionNode::min' is not allowed to contain 'VariableNode' in expression '"
-                   + expression + "'";
-    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          InputError,
-                          containsMessage(err_msg));
-}
-
-BOOST_FIXTURE_TEST_CASE(MaxWithForbiddenNode, SupplyModelForFunctionalOperator)
-{
-    std::string expression = "max(reduced_cost(varB), pmin, varA)";
-
-    auto node = convertExpressionToNode(expression, model);
-
-    // Forbid variable in max
-    forbiddenNodes.parentForbidsChild<Nodes::FunctionNodeType::max, Nodes::VariableNode>();
-
-    std::string err_msg = "'FunctionNode::max' is not allowed to contain 'VariableNode' in ";
-    err_msg += "expression '" + expression + "'";
-    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          InputError,
-                          containsMessage(err_msg));
-}
-
-BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignLT, SupplyModelForFunctionalOperator)
-{
-    std::string expression = "varA <= 38";
-
-    auto node = convertExpressionToNode(expression, model);
-
-    forbiddenNodes.forbidGlobally<Nodes::LessThanOrEqualNode>();
-
-    std::string err_msg = "'LessThanOrEqualNode' is not allowed in expression '" + expression + "'";
-    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          InputError,
-                          containsMessage(err_msg));
-}
-
-BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignGT, SupplyModelForFunctionalOperator)
-{
-    std::string expression = "varA >= 38";
-
-    auto node = convertExpressionToNode(expression, model);
-
-    forbiddenNodes.forbidGlobally<Nodes::GreaterThanOrEqualNode>();
-
-    std::string err_msg = "'GreaterThanOrEqualNode' is not allowed in expression '" + expression
-                          + "'";
-    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          InputError,
-                          containsMessage(err_msg));
-}
-
-BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainEqualSign, SupplyModelForFunctionalOperator)
-{
-    std::string expression = "varA = 38";
-
-    auto node = convertExpressionToNode(expression, model);
-
-    forbiddenNodes.forbidGlobally<Nodes::EqualNode>();
-
-    std::string err_msg = "'EqualNode' is not allowed in expression '" + expression + "'";
-    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          InputError,
-                          containsMessage(err_msg));
-}
-
-BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_a_variable_as_arg,
-                        SupplyModelForFunctionalOperator)
-{
-    std::string expression = "floor(varA)";
-    auto node = convertExpressionToNode(expression, model);
-    forbiddenNodes.parentForbidsChild<Nodes::FunctionNodeType::floor, Nodes::VariableNode>();
-
-    std::string err_msg = "'FunctionNode::floor' is not allowed to contain 'VariableNode' in ";
-    err_msg += "expression '" + expression + "'";
-    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          InputError,
-                          containsMessage(err_msg));
-}
-
-BOOST_FIXTURE_TEST_CASE(floor_operator___nominal_case, SupplyModelForFunctionalOperator)
-{
-    std::string expression = "floor(pmin)";
-
-    auto expr = convertExpressionToNode(expression, model);
-
-    // Root node is a 'floor' node
-    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::floor");
-
-    auto FloorNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
-    BOOST_CHECK_EQUAL(FloorNode->typeToString(), "floor");
-
-    // Child node must be unique, and be the parameter node 'pmin' from the model
-    // ... Child node is unique
-    BOOST_CHECK_EQUAL(FloorNode->getOperands().size(), 1);
-    auto* childNode = FloorNode->getOperands()[0];
-
-    // ... Child node is a parameter node
-    const auto* paramNode = dynamic_cast<Nodes::ParameterNode*>(childNode);
-    BOOST_CHECK(paramNode);
-
-    // ... Child node is 'pmin' from the model
-    BOOST_CHECK_EQUAL(paramNode->value(), "pmin");
-}
-
-BOOST_FIXTURE_TEST_CASE(floor_operator_applied_to_a_literal, SupplyModelForFunctionalOperator)
-{
-    std::string expression = "floor(3.7)";
-
-    auto expr = convertExpressionToNode(expression, model);
-
-    // Root node is a 'floor' node
-    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::floor");
-
-    auto FloorNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
-    BOOST_CHECK_EQUAL(FloorNode->typeToString(), "floor");
-
-    // Child node must be unique, and be the literal node '3.7' from the model
-    // ... Child node is unique
-    BOOST_CHECK_EQUAL(FloorNode->getOperands().size(), 1);
-    auto* childNode = FloorNode->getOperands()[0];
-
-    // ... Child node is a parameter node
-    const auto* literalNode = dynamic_cast<Nodes::LiteralNode*>(childNode);
-    BOOST_CHECK(literalNode);
-
-    // ... Child node is 'pmin' from the model
-    BOOST_CHECK_EQUAL(literalNode->value(), 3.7);
-}
-
-BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_no_arg, SupplyModelForFunctionalOperator)
-{
-    std::string expression = "floor()";
-
-    std::string err_msg = "floor operator expects an argument, got nothing";
-    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          InputError,
-                          containsMessage(err_msg));
-}
-
-BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_more_than_one_arg,
-                        SupplyModelForFunctionalOperator)
-{
-    std::string expression = "floor(pmin, 5)";
-
-    std::string err_msg = "floor() expects 1 argument, but has 2";
-    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          InputError,
-                          containsMessage(err_msg));
-}
-
-BOOST_FIXTURE_TEST_CASE(ceil_operator___nominal_case, SupplyModelForFunctionalOperator)
-{
-    std::string expression = "ceil(pmin)";
-
-    auto expr = convertExpressionToNode(expression, model);
-
-    // Root node is a 'ceil' node
-    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::ceil");
-
-    auto ceilNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
-    BOOST_CHECK_EQUAL(ceilNode->typeToString(), "ceil");
-
-    // Child node must be unique, and be the parameter node 'pmin' from the model
-    BOOST_CHECK_EQUAL(ceilNode->getOperands().size(), 1);
-    auto* childNode = ceilNode->getOperands()[0];
-
-    const auto* paramNode = dynamic_cast<Nodes::ParameterNode*>(childNode);
-    BOOST_CHECK(paramNode);
-    BOOST_CHECK_EQUAL(paramNode->value(), "pmin");
-}
-
-BOOST_FIXTURE_TEST_CASE(ceil_operator_applied_to_a_literal, SupplyModelForFunctionalOperator)
-{
-    std::string expression = "ceil(3.7)";
-
-    auto expr = convertExpressionToNode(expression, model);
-
-    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::ceil");
-
-    auto ceilNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
-    BOOST_CHECK_EQUAL(ceilNode->typeToString(), "ceil");
-
-    BOOST_CHECK_EQUAL(ceilNode->getOperands().size(), 1);
-    auto* childNode = ceilNode->getOperands()[0];
-
-    const auto* literalNode = dynamic_cast<Nodes::LiteralNode*>(childNode);
-    BOOST_CHECK(literalNode);
-    BOOST_CHECK_EQUAL(literalNode->value(), 3.7);
-}
-
-BOOST_FIXTURE_TEST_CASE(ceil_operator_should_not_take_no_arg, SupplyModelForFunctionalOperator)
-{
-    std::string expression = "ceil()";
-
-    std::string err_msg = "ceil operator expects an argument, got nothing";
-    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          InputError,
-                          containsMessage(err_msg));
-}
-
-BOOST_FIXTURE_TEST_CASE(ceil_operator_should_not_take_more_than_one_arg,
-                        SupplyModelForFunctionalOperator)
-{
-    std::string expression = "ceil(pmin, 5)";
-
-    std::string err_msg = "ceil() expects 1 argument, but has 2";
-    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          InputError,
-                          containsMessage(err_msg));
-}
-
-BOOST_FIXTURE_TEST_CASE(ceil_operator_forbidden_on_variable_with_forbidden_nodes,
-                        SupplyModelForFunctionalOperator)
-{
-    std::string expression = "ceil(varA)";
-
-    auto node = convertExpressionToNode(expression, model);
-
-    // Forbid variables as children of ceil
-    forbiddenNodes.parentForbidsChild<Nodes::FunctionNodeType::ceil, Nodes::VariableNode>();
-
-    std::string err_msg = "'FunctionNode::ceil' is not allowed to contain 'VariableNode' in "
-                          "expression '"
-                          + expression + "'";
-    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          InputError,
-                          containsMessage(err_msg));
+                          containsMessage(c.expectedMessage));
 }
 
 // ─────────────────────────────────────────────
-// round operator tests
+// Forbidden nodes
 // ─────────────────────────────────────────────
 
-BOOST_FIXTURE_TEST_CASE(round_operator___nominal_case, SupplyModelForFunctionalOperator)
+namespace
 {
-    std::string expression = "round(pmin)";
+struct ForbiddenNodeCase
+{
+    std::string expression;
+    std::function<void(ForbiddenNodes&)> forbid;
+    std::string expectedMessage;
+};
 
-    auto expr = convertExpressionToNode(expression, model);
-
-    // Root node is a 'round' node
-    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::round");
-
-    auto roundNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
-    BOOST_CHECK_EQUAL(roundNode->typeToString(), "round");
-
-    // Child node must be unique, and be the parameter node 'pmin' from the model
-    BOOST_CHECK_EQUAL(roundNode->getOperands().size(), 1);
-    auto* childNode = roundNode->getOperands()[0];
-
-    const auto* paramNode = dynamic_cast<Nodes::ParameterNode*>(childNode);
-    BOOST_CHECK(paramNode);
-    BOOST_CHECK_EQUAL(paramNode->value(), "pmin");
+std::ostream& operator<<(std::ostream& os, const ForbiddenNodeCase& c)
+{
+    return os << c.expression;
 }
 
-BOOST_FIXTURE_TEST_CASE(round_operator_applied_to_a_literal, SupplyModelForFunctionalOperator)
+template<Nodes::FunctionNodeType type>
+ForbiddenNodeCase variableForbiddenInFunction(const std::string& expression, const std::string& fn)
 {
-    std::string expression = "round(3.7)";
-
-    auto expr = convertExpressionToNode(expression, model);
-
-    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::round");
-
-    auto roundNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
-    BOOST_CHECK_EQUAL(roundNode->typeToString(), "round");
-
-    BOOST_CHECK_EQUAL(roundNode->getOperands().size(), 1);
-    auto* childNode = roundNode->getOperands()[0];
-
-    const auto* literalNode = dynamic_cast<Nodes::LiteralNode*>(childNode);
-    BOOST_CHECK(literalNode);
-    BOOST_CHECK_EQUAL(literalNode->value(), 3.7);
+    return {expression,
+            [](ForbiddenNodes& f) { f.parentForbidsChild<type, Nodes::VariableNode>(); },
+            "'FunctionNode::" + fn + "' is not allowed to contain 'VariableNode' in expression '"
+              + expression + "'"};
 }
 
-BOOST_FIXTURE_TEST_CASE(round_operator_should_not_take_no_arg, SupplyModelForFunctionalOperator)
+template<class NodeType>
+ForbiddenNodeCase forbiddenGlobally(const std::string& expression, const std::string& nodeName)
 {
-    std::string expression = "round()";
+    return {expression,
+            [](ForbiddenNodes& f) { f.forbidGlobally<NodeType>(); },
+            "'" + nodeName + "' is not allowed in expression '" + expression + "'"};
+}
+} // namespace
 
-    std::string err_msg = "round operator expects an argument, got nothing";
-    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
+BOOST_DATA_TEST_CASE_F(
+  SupplyModelForFunctionalOperator,
+  forbidden_nodes_are_rejected,
+  boost::unit_test::data::make<ForbiddenNodeCase>({
+    variableForbiddenInFunction<Nodes::FunctionNodeType::min>("min(varB, reduced_cost(varB))",
+                                                              "min"),
+    variableForbiddenInFunction<Nodes::FunctionNodeType::max>("max(reduced_cost(varB), pmin, varA)",
+                                                              "max"),
+    variableForbiddenInFunction<Nodes::FunctionNodeType::floor>("floor(varA)", "floor"),
+    variableForbiddenInFunction<Nodes::FunctionNodeType::ceil>("ceil(varA)", "ceil"),
+    variableForbiddenInFunction<Nodes::FunctionNodeType::round>("round(varA)", "round"),
+    variableForbiddenInFunction<Nodes::FunctionNodeType::abs>("abs(varA)", "abs"),
+    forbiddenGlobally<Nodes::LessThanOrEqualNode>("varA <= 38", "LessThanOrEqualNode"),
+    forbiddenGlobally<Nodes::GreaterThanOrEqualNode>("varA >= 38", "GreaterThanOrEqualNode"),
+    forbiddenGlobally<Nodes::EqualNode>("varA = 38", "EqualNode"),
+  }),
+  c)
+{
+    auto node = convertExpressionToNode(c.expression, model);
+    c.forbid(forbiddenNodes);
+    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, c.expression).dispatch(node.node),
                           InputError,
-                          containsMessage(err_msg));
-}
-
-BOOST_FIXTURE_TEST_CASE(round_operator_should_not_take_more_than_one_arg,
-                        SupplyModelForFunctionalOperator)
-{
-    std::string expression = "round(pmin, 5)";
-
-    std::string err_msg = "round() expects 1 argument, but has 2";
-    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          InputError,
-                          containsMessage(err_msg));
-}
-
-BOOST_FIXTURE_TEST_CASE(round_operator_forbidden_on_variable_with_forbidden_nodes,
-                        SupplyModelForFunctionalOperator)
-{
-    std::string expression = "round(varA)";
-
-    auto node = convertExpressionToNode(expression, model);
-
-    // Forbid variables as children of round
-    forbiddenNodes.parentForbidsChild<Nodes::FunctionNodeType::round, Nodes::VariableNode>();
-
-    std::string err_msg = "'FunctionNode::round' is not allowed to contain 'VariableNode' in "
-                          "expression '"
-                          + expression + "'";
-    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          InputError,
-                          containsMessage(err_msg));
+                          containsMessage(c.expectedMessage));
 }
 
 // ─────────────────────────────────────────────
-// abs operator tests
+// Unary operators: floor, ceil, round, abs
 // ─────────────────────────────────────────────
 
-BOOST_FIXTURE_TEST_CASE(abs_operator___nominal_case, SupplyModelForFunctionalOperator)
+BOOST_DATA_TEST_CASE_F(SupplyModelForFunctionalOperator,
+                       unary_operator_on_a_parameter,
+                       boost::unit_test::data::make<std::string>({"floor", "ceil", "round", "abs"}),
+                       op)
 {
-    std::string expression = "abs(pmin)";
+    auto expr = convertExpressionToNode(op + "(pmin)", model);
 
-    auto expr = convertExpressionToNode(expression, model);
-
-    // Root node is an 'abs' node
-    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::abs");
-
-    auto absNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
-    BOOST_CHECK_EQUAL(absNode->typeToString(), "abs");
-
-    // Child node must be unique, and be the parameter node 'pmin' from the model
-    BOOST_CHECK_EQUAL(absNode->getOperands().size(), 1);
-    auto* childNode = absNode->getOperands()[0];
-
-    const auto* paramNode = dynamic_cast<Nodes::ParameterNode*>(childNode);
-    BOOST_CHECK(paramNode);
-    BOOST_CHECK_EQUAL(paramNode->value(), "pmin");
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::" + op);
+    const auto* function = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_REQUIRE(function);
+    BOOST_CHECK_EQUAL(function->typeToString(), op);
+    BOOST_REQUIRE_EQUAL(function->getOperands().size(), 1);
+    const auto* param = dynamic_cast<Nodes::ParameterNode*>(function->getOperands()[0]);
+    BOOST_REQUIRE(param);
+    BOOST_CHECK_EQUAL(param->value(), "pmin");
 }
 
-BOOST_FIXTURE_TEST_CASE(abs_operator_applied_to_a_literal, SupplyModelForFunctionalOperator)
+BOOST_DATA_TEST_CASE_F(SupplyModelForFunctionalOperator,
+                       unary_operator_on_a_literal,
+                       boost::unit_test::data::make<std::string>({"floor", "ceil", "round", "abs"}),
+                       op)
 {
-    std::string expression = "abs(3.7)";
+    auto expr = convertExpressionToNode(op + "(3.7)", model);
 
-    auto expr = convertExpressionToNode(expression, model);
-
-    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::abs");
-
-    auto absNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
-    BOOST_CHECK_EQUAL(absNode->typeToString(), "abs");
-
-    BOOST_CHECK_EQUAL(absNode->getOperands().size(), 1);
-    auto* childNode = absNode->getOperands()[0];
-
-    const auto* literalNode = dynamic_cast<Nodes::LiteralNode*>(childNode);
-    BOOST_CHECK(literalNode);
-    BOOST_CHECK_EQUAL(literalNode->value(), 3.7);
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::" + op);
+    const auto* function = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_REQUIRE(function);
+    BOOST_REQUIRE_EQUAL(function->getOperands().size(), 1);
+    const auto* literal = dynamic_cast<Nodes::LiteralNode*>(function->getOperands()[0]);
+    BOOST_REQUIRE(literal);
+    BOOST_CHECK_EQUAL(literal->value(), 3.7);
 }
 
 BOOST_FIXTURE_TEST_CASE(abs_operator_applied_to_negative_literal, SupplyModelForFunctionalOperator)
 {
-    std::string expression = "abs(-3.7)";
-
-    auto expr = convertExpressionToNode(expression, model);
+    auto expr = convertExpressionToNode("abs(-3.7)", model);
 
     BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::abs");
-
-    auto absNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
-    BOOST_CHECK_EQUAL(absNode->typeToString(), "abs");
-
-    BOOST_CHECK_EQUAL(absNode->getOperands().size(), 1);
-    auto* childNode = absNode->getOperands()[0];
-
+    const auto* absNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_REQUIRE(absNode);
+    BOOST_REQUIRE_EQUAL(absNode->getOperands().size(), 1);
     // Negative literals are represented as NegationNode(LiteralNode(3.7))
-    const auto* negNode = dynamic_cast<Nodes::NegationNode*>(childNode);
-    BOOST_CHECK(negNode);
+    const auto* negNode = dynamic_cast<Nodes::NegationNode*>(absNode->getOperands()[0]);
+    BOOST_REQUIRE(negNode);
     const auto* literalNode = dynamic_cast<Nodes::LiteralNode*>(negNode->child());
-    BOOST_CHECK(literalNode);
+    BOOST_REQUIRE(literalNode);
     BOOST_CHECK_EQUAL(literalNode->value(), 3.7);
-}
-
-BOOST_FIXTURE_TEST_CASE(abs_operator_should_not_take_no_arg, SupplyModelForFunctionalOperator)
-{
-    std::string expression = "abs()";
-
-    std::string err_msg = "abs operator expects an argument, got nothing";
-    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          InputError,
-                          containsMessage(err_msg));
-}
-
-BOOST_FIXTURE_TEST_CASE(abs_operator_should_not_take_more_than_one_arg,
-                        SupplyModelForFunctionalOperator)
-{
-    std::string expression = "abs(pmin, 5)";
-
-    std::string err_msg = "abs() expects 1 argument, but has 2";
-    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          InputError,
-                          containsMessage(err_msg));
-}
-
-BOOST_FIXTURE_TEST_CASE(abs_operator_forbidden_on_variable_with_forbidden_nodes,
-                        SupplyModelForFunctionalOperator)
-{
-    std::string expression = "abs(varA)";
-
-    auto node = convertExpressionToNode(expression, model);
-
-    // Forbid variables as children of abs
-    forbiddenNodes.parentForbidsChild<Nodes::FunctionNodeType::abs, Nodes::VariableNode>();
-
-    std::string err_msg = "'FunctionNode::abs' is not allowed to contain 'VariableNode' in "
-                          "expression '"
-                          + expression + "'";
-    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          InputError,
-                          containsMessage(err_msg));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
