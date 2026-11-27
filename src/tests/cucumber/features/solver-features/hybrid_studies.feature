@@ -237,7 +237,7 @@ Feature: hybrid (simulator+modeler) studies
     # The GEMS load is 10 MW at the first hour and 100 MW afterwards. At hour 5,
     # CSR can allocate 300 MW of ENS to areain-1; reading hour 0 instead would
     # cap it at 210 MW (the 200 MW legacy load plus the wrong 10 MW bound).
-    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/adequacy-patch-CSR/adq-patch-CSR-test-case-v02"
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/adequacy-patch-CSR-variable-bound"
     And the adequacy patch price-taking order is "DENS"
     And the CSR initiation threshold is 0
     And in input "bindingconstraints/bindingconstraints.ini" section "0" variable "enabled" is set to "false"
@@ -248,7 +248,6 @@ Feature: hybrid (simulator+modeler) studies
     And in input "links/areain-1/capacities/virtual-1_indirect.txt" the time series is emptied
     And in input "links/areain-2/capacities/areaout-2_direct.txt" the time series is emptied
     And in input "links/areain-2/capacities/areaout-2_indirect.txt" the time series is emptied
-    And a variable GEMS load contributes to the CSR bound in area "areain-1"
     When I run antares simulator with --output=simulation-tables
     Then the simulation succeeds
     And the modeler outputs from stage "adq-patch" contain the following entries with relative tolerance 1e-4
