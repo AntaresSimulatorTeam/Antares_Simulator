@@ -1,6 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <cmath>
 #include <fmt/format.h>
 #include <fstream>
 #include <sstream>
@@ -201,13 +202,92 @@ void Study::loadModelerComponents()
     }
 }
 
+namespace
+{
+// The quadratic optimisation is only run for links with a non-null impedance
+bool hasNonNullLinkImpedance(const AreaList& areas)
+{
+    bool found = false;
+    areas.each(
+      [&found](const Area& area)
+      {
+          for (const auto& [name, link]: area.links)
+          {
+              if (link->hasNonNullImpedance())
+              {
+                  found = true;
+                  return;
+              }
+          }
+      });
+    return found;
+}
+} // namespace
+
 /**
  * Checks that the modeler data is compatible with the solver for hybrid studies.
  * Currently, unsupported cases in the solver are :
  * - variables that are not scenario dependent (allowed only in benders-decomposition mode)
+ * - link capacity connections to a link whose transmission capacities are not used
+ * - link capacity connections together with the FLOW QUAD. output variable
  */
 void Study::checkModelerDataCompatibility() const
 {
+    // The GEMS capacity replaces the link's NTC: it would silently override a link set to
+    // ignore its transmission capacities or to copper plate, globally or locally.
+    if (!modelerInput_ || !modelerInput_->system)
+    {
+        return;
+    }
+    bool hasLinkCapacityConnection = false;
+    for (const auto& component: modelerInput_->system->Components())
+    {
+        for (const auto& [portId, linkConnection]: component.portToLinkCapacityConnections())
+        {
+            hasLinkCapacityConnection = true;
+            // Unknown links are reported when the link capacity constraints are built
+            const auto* link = areas.findLink(linkConnection.from, linkConnection.to);
+            if (link
+                && (link->from->id != linkConnection.from || link->with->id != linkConnection.to))
+            {
+                throw Error::LoadingError(fmt::format(
+                  "Link capacity connection of component \"{}\" (port \"{}\") references "
+                  "link \"{} -> {}\" in the wrong order: the link is defined from \"{}\" to "
+                  "\"{}\".",
+                  component.Id(),
+                  portId,
+                  linkConnection.from,
+                  linkConnection.to,
+                  link->from->id,
+                  link->with->id));
+            }
+            if (link && link->transmissionCapacities != LocalTransmissionCapacities::enabled)
+            {
+                throw Error::LoadingError(fmt::format(
+                  "Link capacity connection of component \"{}\" (port \"{}\") targets link "
+                  "\"{} -> {}\" whose transmission capacities are \"{}\". Investing on a link "
+                  "requires its transmission capacities to be used: set them to \"enabled\" on "
+                  "the link and to \"local values\" in the global parameters.",
+                  component.Id(),
+                  portId,
+                  linkConnection.from,
+                  linkConnection.to,
+                  transmissionCapacitiesToString(link->transmissionCapacities)));
+            }
+        }
+    }
+
+    // The quadratic post-processing rebuilds the capacities from the average of the legacy NTC
+    // time series: it cannot see the capacity brought by the modeler.
+    if (hasLinkCapacityConnection && parameters.variablesPrintInfo.exists("FLOW QUAD.")
+        && parameters.variablesPrintInfo.isPrinted("FLOW QUAD.") && hasNonNullLinkImpedance(areas))
+    {
+        throw Error::LoadingError(
+          "Output variable \"FLOW QUAD.\" is not supported in studies with link capacity "
+          "connections: it is computed from the legacy link capacities, not from the capacities "
+          "brought by the modeler. Deselect \"FLOW QUAD.\" in the output variables selection.");
+    }
+
     // Scenario-independent variables are allowed in benders-decomposition mode for investment
     // studies
     if (modelerInput_->resolutionMode == Solver::ResolutionMode::BENDERS_DECOMPOSITION)

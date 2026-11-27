@@ -51,6 +51,12 @@ struct ThermalComponent
     std::string clusterId;
 };
 
+struct LinkComponent
+{
+    std::string from;
+    std::string to;
+};
+
 /**
  * Defines an actual component of the simulated system.
  */
@@ -106,11 +112,13 @@ public:
     void addThermalCapacityConnection(const std::string& portId,
                                       const std::string& areaId,
                                       const std::string& clusterId);
+    void addLinkCapacityConnection(const std::string& portId, const LinkComponent& link);
     std::optional<std::string> areaConnectedToPort(const std::string& portId) const;
 
     const std::map<std::string, std::string>& portToAreaConnections() const;
 
     const std::map<std::string, ThermalComponent>& portToThermalCapacityConnections() const;
+    const std::map<std::string, LinkComponent>& portToLinkCapacityConnections() const;
 
     std::optional<ThermalComponent> thermalCapacityConnectedToPort(const std::string& portId) const;
 
@@ -120,6 +128,9 @@ private:
     void checkPortFieldDefinitionExists(const std::string& portName,
                                         const std::string& fieldName,
                                         const std::string& errMsgPrefix) const;
+    void requirePortFieldDefinition(const std::string& portId,
+                                    const std::string& fieldId,
+                                    const std::string& errMsgPrefix) const;
 
     // Only ComponentBuilder is allowed to build Component instances
     friend class ComponentBuilder;
@@ -127,6 +138,7 @@ private:
     std::map<std::string, std::vector<ConnectionEnd>> componentConnectionEnds_;
     std::map<std::string, std::string> portToAreaConnections_;
     std::map<std::string, ThermalComponent> portToThermalConnections_;
+    std::map<std::string, LinkComponent> portToLinkConnections_;
     ComponentData data_;
 };
 

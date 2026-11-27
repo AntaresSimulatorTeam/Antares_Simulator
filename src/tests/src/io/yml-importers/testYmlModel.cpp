@@ -302,6 +302,31 @@ BOOST_AUTO_TEST_CASE(port_types_with_empty__thermal_capacity_connection_field)
     BOOST_CHECK_EQUAL(capacity_port_type.thermal_capacity_connection_field, "");
 }
 
+BOOST_AUTO_TEST_CASE(port_types_with_link_capacity_connection_properly_parsed)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types:
+               - id: link_capacity_port
+                 fields:
+                   - id: capacity_direct
+                   - id: capacity_indirect
+                 link-capacity-connection:
+                   capacity-direct-field: capacity_direct
+                   capacity-indirect-field: capacity_indirect
+            models: []
+    )"s;
+    const auto libraryObj = parser.parse(library);
+    BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
+    const auto& capacity_port_type = libraryObj.port_types[0];
+    BOOST_CHECK_EQUAL(capacity_port_type.link_capacity_connection_direct_field, "capacity_direct");
+    BOOST_CHECK_EQUAL(capacity_port_type.link_capacity_connection_indirect_field,
+                      "capacity_indirect");
+}
+
 BOOST_AUTO_TEST_CASE(port_types_with_empty__area_connection_fields)
 {
     YmlModel::Parser parser;
@@ -506,6 +531,60 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)
             models: []
     )"s;
     BOOST_REQUIRE_THROW((void)parser.parse(library), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(link_capacity_connection_should_have_both_fields)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types:
+               - id: capacity_port
+                 fields:
+                   - id: capacity_direct
+                 link-capacity-connection:
+                   capacity-direct-field: capacity_direct
+            models: []
+    )"s;
+    BOOST_REQUIRE_THROW((void)parser.parse(library), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(link_capacity_connection_empty_block_is_rejected)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types:
+               - id: capacity_port
+                 fields:
+                   - id: capacity_direct
+                 link-capacity-connection: {}
+            models: []
+    )"s;
+    BOOST_REQUIRE_THROW((void)parser.parse(library), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(port_type_without_link_capacity_connection_has_empty_fields)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types:
+               - id: plain_port
+                 fields:
+                   - id: f
+            models: []
+    )"s;
+    const auto libraryObj = parser.parse(library);
+    BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
+    BOOST_CHECK_EQUAL(libraryObj.port_types[0].link_capacity_connection_direct_field, "");
+    BOOST_CHECK_EQUAL(libraryObj.port_types[0].link_capacity_connection_indirect_field, "");
 }
 
 BOOST_AUTO_TEST_CASE(area__connection_should_have_exactly_3_fields)

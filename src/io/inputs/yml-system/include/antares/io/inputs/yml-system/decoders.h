@@ -70,6 +70,21 @@ public:
 };
 
 template<>
+class convert<Antares::IO::Inputs::YmlSystem::LinkComponent>
+{
+public:
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::LinkComponent& rhs);
+};
+
+template<>
+class convert<Antares::IO::Inputs::YmlSystem::LinkCapacityConnection>
+{
+public:
+    static bool decode(const Node& node,
+                       Antares::IO::Inputs::YmlSystem::LinkCapacityConnection& rhs);
+};
+
+template<>
 class convert<Antares::IO::Inputs::YmlSystem::Property>
 {
 public:

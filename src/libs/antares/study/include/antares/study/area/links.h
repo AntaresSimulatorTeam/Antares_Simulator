@@ -163,6 +163,9 @@ public:
 
     void checkLoadedData();
 
+    //! True if the impedance is not null for at least one hour (quadratic flow is then relevant)
+    bool hasNonNullImpedance() const;
+
 private:
     bool linkLoadTimeSeries_for_version_below_810(const std::filesystem::path& folder);
     bool linkLoadTimeSeries_for_version_820_and_later(const std::filesystem::path& folder);
