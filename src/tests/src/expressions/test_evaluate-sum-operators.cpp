@@ -40,6 +40,8 @@ struct build_AST_fixture
     Node* timeIndex(Node* node, Node* index);
     Node* timeShift(Node* node, Node* offset);
     Node* square(Node* node);
+    Node* subtract(Node* lhs, Node* rhs);
+    Node* multiply(Node* lhs, Node* rhs);
 
 private:
     Registry<Nodes::Node> registry_;
@@ -84,6 +86,16 @@ Node* build_AST_fixture::square(Node* node)
 {
     Node* exponant = literal(2);
     return registry_.create<FunctionNode>(FunctionNodeType::pow, node, exponant);
+}
+
+Node* build_AST_fixture::subtract(Node* lhs, Node* rhs)
+{
+    return registry_.create<SubtractionNode>(lhs, rhs);
+}
+
+Node* build_AST_fixture::multiply(Node* lhs, Node* rhs)
+{
+    return registry_.create<MultiplicationNode>(lhs, rhs);
 }
 
 // =============================
@@ -313,6 +325,25 @@ BOOST_FIXTURE_TEST_CASE(very_long_relative_time_sum_window_wraps_without_iterati
     for (const auto value: values)
     {
         BOOST_CHECK_EQUAL(value, 6. * 666666667.);
+    }
+}
+
+BOOST_FIXTURE_TEST_CASE(multi_cycle_time_sum_of_cancelling_large_values_is_not_nan, tests_fixture)
+{
+    // sum(t .. t+5, (p - 2) * 1e308) with p = {1, 2, 3}: series {-1e308, 0, 1e308}.
+    // The window covers 2 full cycles. Scaling each term by 2 before summing would give
+    // -inf + 0 + inf = NaN; summing a cycle first gives exactly 0.
+    Node* series = multiply(subtract(parameter("p", VariabilityType::VARYING_IN_TIME_ONLY),
+                                     literal(2.)),
+                            literal(1e308));
+    Node* sum = timeSum(tPlus(0), tPlus(5), series);
+
+    const auto values = evalVisitor->dispatch(sum).valuesAsVector();
+
+    BOOST_REQUIRE_EQUAL(values.size(), 3);
+    for (const auto value: values)
+    {
+        BOOST_CHECK_EQUAL(value, 0.);
     }
 }
 

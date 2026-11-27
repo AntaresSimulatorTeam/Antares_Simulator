@@ -289,16 +289,25 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
         const auto to = Antares::Expressions::Visitors::resolveTimeSumBound(node->to(),
                                                                             evalVisitor_,
                                                                             localTimeStep);
-        Antares::Expressions::Visitors::forEachTimeSumIndex(
-          from,
-          to,
-          static_cast<int>(nbtimeSteps_),
-          [&ret, &expression, localTimeStep](int timeIndex, long long count)
-          {
-              auto term = expression[timeIndex];
-              term *= static_cast<double>(count);
-              ret[localTimeStep] += term;
-          });
+        const int size = static_cast<int>(nbtimeSteps_);
+        const auto window = Antares::Expressions::Visitors::splitTimeSumWindow(from, to, size);
+        // Sum the complete cycles once and scale afterwards, so that cancelling
+        // coefficients do not turn into inf - inf = NaN
+        if (window.fullCycles > 0)
+        {
+            LinearExpression cycleSum;
+            for (int i = 0; i < size; ++i)
+            {
+                cycleSum += expression[i];
+            }
+            cycleSum *= static_cast<double>(window.fullCycles);
+            ret[localTimeStep] += cycleSum;
+        }
+        for (long long offset = 0; offset < window.remainder; ++offset)
+        {
+            ret[localTimeStep] += expression
+              [Antares::Expressions::Visitors::wrapTimeSumIndex(window.first, offset, size)];
+        }
     }
     return ret;
 }

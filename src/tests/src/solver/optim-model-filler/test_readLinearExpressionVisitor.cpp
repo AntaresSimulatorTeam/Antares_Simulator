@@ -703,6 +703,28 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_of_series_over_very_long_window_wraps_with
     }
 }
 
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_multi_cycle_of_cancelling_large_values_is_not_nan,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // sum(t .. t+5, (param_ts - 1) * 1e308) with param_ts = {0, 1, 2}: series {-1e308, 0, 1e308}.
+    // The window covers 2 full cycles: scaling each term by 2 first would give -inf + inf = NaN.
+    Node* series = create<MultiplicationNode>(
+      create<SubtractionNode>(create<ParameterNode>("param_ts"), create<LiteralNode>(1.)),
+      create<LiteralNode>(1e308));
+    Node* from = create<TPlusNode>(create<LiteralNode>(0.));
+    Node* to = create<TPlusNode>(create<LiteralNode>(5.));
+    Node* sum = create<TimeSumNode>(from, to, series);
+
+    ctx = Api::FillContext(0, 2, 0, 2, 0);
+    const auto linear_expression = visitor().dispatch(sum);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 3);
+    for (std::size_t t = 0; t < 3; ++t)
+    {
+        BOOST_CHECK_EQUAL(linear_expression[t].constant(), 0.);
+    }
+}
+
 BOOST_FIXTURE_TEST_CASE(all_time_sum_of_constant_expression_scales_with_horizon,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {

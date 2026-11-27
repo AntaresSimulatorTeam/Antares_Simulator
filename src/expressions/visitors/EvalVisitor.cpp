@@ -252,13 +252,24 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
     {
         const auto from = resolveTimeSumBound(node->from(), *this, localTimeStep);
         const auto to = resolveTimeSumBound(node->to(), *this, localTimeStep);
-        forEachTimeSumIndex(from,
-                            to,
-                            static_cast<int>(values.size()),
-                            [&values, &result, localTimeStep](int timeIndex, long long count) {
-                                values[localTimeStep] += static_cast<double>(count)
-                                                         * result[timeIndex].valueAsDouble();
-                            });
+        const int size = static_cast<int>(values.size());
+        const auto window = splitTimeSumWindow(from, to, size);
+        // Sum the complete cycles once and scale afterwards, so that cancelling values
+        // do not turn into inf - inf = NaN
+        double cycleSum = 0.0;
+        if (window.fullCycles > 0)
+        {
+            for (int i = 0; i < size; ++i)
+            {
+                cycleSum += result[i].valueAsDouble();
+            }
+        }
+        double tailSum = 0.0;
+        for (long long offset = 0; offset < window.remainder; ++offset)
+        {
+            tailSum += result[wrapTimeSumIndex(window.first, offset, size)].valueAsDouble();
+        }
+        values[localTimeStep] = static_cast<double>(window.fullCycles) * cycleSum + tailSum;
     }
 
     return EvaluationResult(values);
