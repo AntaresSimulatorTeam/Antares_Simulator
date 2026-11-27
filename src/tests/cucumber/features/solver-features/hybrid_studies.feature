@@ -233,6 +233,30 @@ Feature: hybrid (simulator+modeler) studies
       | 0     | areain-2  | unsupplied_energy          | 0        | 0        | 100   |
 
   @short
+  Scenario: Hybrid CSR uses variable GEMS bounds at the triggered hour
+    # The GEMS load is 10 MW at the first hour and 100 MW afterwards. At hour 5,
+    # CSR can allocate 300 MW of ENS to areain-1; reading hour 0 instead would
+    # cap it at 210 MW (the 200 MW legacy load plus the wrong 10 MW bound).
+    Given the solver study path is a copy of "Antares_Simulator_Tests_NR/hybrid/adequacy-patch-CSR-variable-bound"
+    And the adequacy patch price-taking order is "DENS"
+    And the CSR initiation threshold is 0
+    And in input "bindingconstraints/bindingconstraints.ini" section "0" variable "enabled" is set to "false"
+    And in input "bindingconstraints/bindingconstraints.ini" section "2" variable "enabled" is set to "false"
+    And in input "links/areain-1/capacities/areaout-1_direct.txt" the time series is emptied
+    And in input "links/areain-1/capacities/areaout-1_indirect.txt" the time series is emptied
+    And in input "links/areain-1/capacities/virtual-1_direct.txt" the time series is emptied
+    And in input "links/areain-1/capacities/virtual-1_indirect.txt" the time series is emptied
+    And in input "links/areain-2/capacities/areaout-2_direct.txt" the time series is emptied
+    And in input "links/areain-2/capacities/areaout-2_indirect.txt" the time series is emptied
+    When I run antares simulator with --output=simulation-tables
+    Then the simulation succeeds
+    And the modeler outputs from stage "adq-patch" contain the following entries with relative tolerance 1e-4
+      | block | component | output            | timestep | scenario | value |
+      | 0     | areain-1  | unsupplied_energy | 0        | 0        | 210   |
+      | 0     | areain-1  | unsupplied_energy | 5        | 0        | 300   |
+      | 0     | areain-1  | unsupplied_energy | 30       | 0        | 100   |
+
+  @short
   Scenario: Scenario-independent GEMS time-series ignores scenario builder
 
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/parameter-scenario-independent/"

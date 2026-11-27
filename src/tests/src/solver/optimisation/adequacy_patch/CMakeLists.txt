@@ -8,7 +8,7 @@ add_boost_test(tests-adq-patch
         array
         Antares::tests::in-memory-study
         antares-study-system-model
-        Antares::linear-problem-mpsolver-impl
+        mock-modeler-objects
         Antares::structured-linear-problem
         Antares::optim-model-filler
         Antares::linear-problem-data-impl

@@ -11,6 +11,7 @@
 #include <antares/study/system-model/component.h>
 #include <antares/study/system-model/system.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/simplex/LpFiller.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
@@ -37,11 +38,11 @@ ActiveGemsPart::ActiveGemsPart(PROBLEME_HEBDO* problemeHebdo,
 
 void ActiveGemsPart::setHour(int triggeredHour)
 {
-    fillContext_ = FillContext(0,
-                               0,
-                               triggeredHour + problemeHebdo_->HeureDansLAnnee,
-                               triggeredHour + problemeHebdo_->HeureDansLAnnee,
-                               problemeHebdo_->year);
+    // Variables and time shifts use the whole solved weekly interval.
+    fillContext_ = Antares::Solver::Optimization::Simplex::LpFiller::buildFillContext(
+      *problemeHebdo_,
+      0);
+    evaluationHour_ = static_cast<unsigned>(triggeredHour);
 }
 
 double ActiveGemsPart::gemsContributionForArea(
@@ -64,26 +65,20 @@ double ActiveGemsPart::gemsContributionForArea(
             {
                 continue;
             }
-
-            std::string fieldId = getFieldId(*areaConnection);
+            const std::string fieldId = getFieldId(*areaConnection);
             if (fieldId.empty())
             {
                 continue;
             }
-
-            auto* expression = component.nodeAtPortField(portId, fieldId);
-
             const auto& scenario = modelerData->scenarioGroupRepository.scenario(
               component.getScenarioGroupId());
-            Visitors::EvalVisitor evalVisitor(*problemeHebdo_->optimEntityContainer,
-                                              fillContext_,
-                                              component,
-                                              modelerData->dataSeries.get(),
-                                              scenario);
-            // The FillContext is set up for a single local timestep (index 0),
-            // positioned at the correct global hour via triggeredHour_.
-            // So value(0) evaluates the expression at triggeredHour_, not at hour 0.
-            contribution += evalVisitor.dispatch(expression).value(0);
+            Visitors::EvalVisitor visitor(*problemeHebdo_->optimEntityContainer,
+                                          fillContext_,
+                                          component,
+                                          modelerData->dataSeries.get(),
+                                          scenario);
+            contribution += visitor.dispatch(component.nodeAtPortField(portId, fieldId))
+                              .value(evaluationHour_);
         }
     }
     return contribution;

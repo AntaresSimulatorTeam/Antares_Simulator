@@ -79,6 +79,7 @@ private:
 
     PROBLEME_HEBDO* problemeHebdo_;
     Antares::LinearProblem::Api::FillContext fillContext_{0, 0, 0, 0, 0};
+    unsigned evaluationHour_ = 0;
 
     PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre_;
     std::map<int, int>& constraintCsrFictitiousLoad_;

@@ -17,6 +17,8 @@
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
+#include "UtilMocks.h"
+
 using namespace std::string_literals;
 using namespace Antares;
 using namespace Antares::Optimization;
@@ -68,6 +70,44 @@ library:
           definition: load / 2 - 10
 )"s;
 
+static const auto variableLibraryYaml = R"(
+library:
+  id: my_lib
+  port-types:
+    - id: area_conn_port_type
+      fields:
+        - id: to-area-bound
+        - id: from-area-bound
+      area-connection:
+        injection-to-balance:
+        spillage-bound: to-area-bound
+        unsupplied-energy-bound: from-area-bound
+  models:
+    - id: gems_model
+      parameters:
+        - id: residual_load
+          time-dependent: true
+          scenario-dependent: true
+        - id: load
+          time-dependent: true
+          scenario-dependent: true
+      variables:
+        - id: fixed
+          time-dependent: false
+        - id: hourly
+          time-dependent: true
+      ports:
+        - id: area_conn_port
+          type: area_conn_port_type
+      port-field-definitions:
+        - port: area_conn_port
+          field: to-area-bound
+          definition: hourly[t + 1] + fixed + residual_load
+        - port: area_conn_port
+          field: from-area-bound
+          definition: hourly / 2 + load
+)"s;
+
 static const auto systemYaml = R"(
 system:
   id: my_system
@@ -105,9 +145,9 @@ namespace
 {
 struct GemsContributionFixture
 {
-    GemsContributionFixture()
+    explicit GemsContributionFixture(const std::string& library = libraryYaml)
     {
-        modelerData = buildModelerData();
+        modelerData = buildModelerData(library);
 
         makeWeeklyProblem(problemeHebdo);
         makeProblemToSolve(problemAResoudre);
@@ -121,7 +161,7 @@ struct GemsContributionFixture
         // without needing a solved LP or a populated OptimEntityContainer.
         // If expressions depended on component variables (LP solution values),
         // we would need a non-empty linear problem and OptimEntityContainer.
-        auto emptyLinearProblem = std::make_shared<StructuredLinearProblem>();
+        emptyLinearProblem = std::make_shared<StructuredLinearProblem>();
         problemeHebdo.optimEntityContainer = std::make_shared<OptimEntityContainer>(
           *emptyLinearProblem);
 
@@ -150,15 +190,19 @@ struct GemsContributionFixture
                            const std::vector<double>& load) const
     {
         auto data = std::make_unique<LinearProblemData>();
-        addTimeSeries(*data, "residual_load", residualLoad);
-        addTimeSeries(*data, "load", load);
+        auto residualValues = residualLoad;
+        auto loadValues = load;
+        residualValues.resize(std::max<std::size_t>(168, residualValues.size()), 0.);
+        loadValues.resize(std::max<std::size_t>(168, loadValues.size()), 0.);
+        addTimeSeries(*data, "residual_load", residualValues);
+        addTimeSeries(*data, "load", loadValues);
         modelerData->dataSeries = std::move(data);
     }
 
-    std::unique_ptr<System> createSystemFromYml()
+    std::unique_ptr<System> createSystemFromYml(const std::string& library)
     {
         libraries.push_back(
-          IO::Inputs::ModelConverter::convert(IO::Inputs::YmlModel::Parser::parse(libraryYaml)));
+          IO::Inputs::ModelConverter::convert(IO::Inputs::YmlModel::Parser::parse(library)));
 
         IO::Inputs::YmlSystem::Parser parserSystem;
         auto ymlSystem = parserSystem.parse(systemYaml, "");
@@ -177,10 +221,10 @@ struct GemsContributionFixture
         return scenarioGroupRepository;
     }
 
-    std::unique_ptr<Solver::ModelerData> buildModelerData()
+    std::unique_ptr<Solver::ModelerData> buildModelerData(const std::string& library)
     {
         auto data = std::make_unique<Solver::ModelerData>();
-        data->system = createSystemFromYml();
+        data->system = createSystemFromYml(library);
         data->scenarioGroupRepository = createScenarioGroupRepo();
 
         return data;
@@ -194,6 +238,8 @@ struct GemsContributionFixture
         pHebdo.NombreDePays = 2;
         pHebdo.HeureDansLAnnee = 0;
         pHebdo.year = 0;
+        pHebdo.OptimisationAuPasHebdomadaire = true;
+        pHebdo.NombreDeJours = 7;
 
         pHebdo.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>();
         pHebdo.adequacyPatchRuntimeData->areaMode = {AdequacyPatch::physicalAreaInsideAdqPatch,
@@ -218,6 +264,7 @@ struct GemsContributionFixture
 
     PROBLEME_HEBDO problemeHebdo{};
     std::unique_ptr<Solver::ModelerData> modelerData;
+    std::shared_ptr<StructuredLinearProblem> emptyLinearProblem;
     // Keeps the model definitions alive: the system components hold raw pointers into them.
     std::vector<Library> libraries;
     std::unique_ptr<IGemsPart> gemsPart;
@@ -225,6 +272,41 @@ struct GemsContributionFixture
     std::map<int, int> constraintFictitious;
     std::map<int, int> constraintMaxEns;
 };
+
+struct WeeklyVariableContributionFixture: GemsContributionFixture
+{
+    WeeklyVariableContributionFixture():
+        GemsContributionFixture(variableLibraryYaml),
+        linearProblem(true)
+    {
+        problemeHebdo.OptimisationAuPasHebdomadaire = true;
+        problemeHebdo.NombreDeJours = 7;
+        problemeHebdo.HeureDansLAnnee = 168;
+
+        auto container = std::make_shared<OptimEntityContainer>(linearProblem);
+        container->addFromSystemComponents(modelerData->system->Components());
+        container->addStartColumn();
+        linearProblem.addVariableValue(7);
+        container->addStartColumn();
+        for (unsigned hour = 0; hour < 168; ++hour)
+        {
+            linearProblem.addVariableValue(hour);
+        }
+        problemeHebdo.optimEntityContainer = std::move(container);
+
+        std::vector<double> residualLoad(336);
+        std::vector<double> load(336);
+        for (unsigned hour = 0; hour < 336; ++hour)
+        {
+            residualLoad[hour] = hour;
+            load[hour] = 2 * hour;
+        }
+        setGemsParameters(residualLoad, load);
+    }
+
+    PredfinedSolutionLinearProblemMock linearProblem;
+};
+
 } // namespace
 
 BOOST_AUTO_TEST_SUITE(gems_contribution_tests)
@@ -297,6 +379,26 @@ BOOST_FIXTURE_TEST_CASE(max_ens_load_evaluated_at_triggered_hour, GemsContributi
     gemsPart->setRHSMaxEnsLoadValue();
 
     BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea1], 300.0 + 11.0);
+}
+
+BOOST_FIXTURE_TEST_CASE(weekly_port_fields_use_triggered_hour_and_full_week,
+                        WeeklyVariableContributionFixture)
+{
+    for (const unsigned hour: {0u, 5u, 167u})
+    {
+        setLegacyBounds();
+        gemsPart->setHour(hour);
+        gemsPart->setRHSfictitiousLoadValue();
+        gemsPart->setRHSMaxEnsLoadValue();
+
+        const double nextHour = (hour + 1) % 168;
+        BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea1],
+                          500 + nextHour + 7 + 168 + hour);
+        BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea1],
+                          300 + hour / 2.0 + 2 * (168 + hour));
+        BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[fictitiousLoadArea2], 500);
+        BOOST_CHECK_EQUAL(problemAResoudre.SecondMembre[maxEnsLoadArea2], 300);
+    }
 }
 
 // --- Factory ---
