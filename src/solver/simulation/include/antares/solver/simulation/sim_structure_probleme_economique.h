@@ -18,11 +18,6 @@
 using namespace Antares::Data;
 class AdequacyPatchRuntimeData;
 
-namespace Antares::Optimization
-{
-struct SolvedModelerProblem;
-} // namespace Antares::Optimization
-
 namespace Antares::Data
 {
 class InactiveComponentsAnalyzer;
@@ -827,17 +822,13 @@ public:
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     Antares::Solver::ModelerData* modelerData = nullptr;
 
-    /// \brief Whether the solve must publish lastSolvedModelerProblem. Set per
-    /// week by OPT_OptimisationLineaire, the level that knows a post-process
-    /// stage will read it back. Not tied to whether *this* pass writes a table:
-    /// a run selecting only post-process stages would otherwise lose every
-    /// modeler row of the stages it asked for.
-    bool retainSolvedModelerProblem = false;
-
-    /// \brief Modeler side of the current week's last optimisation pass, kept
-    /// alive past the solve so a post-process simulation table can re-emit the
-    /// modeler component rows. Null unless retainSolvedModelerProblem is set.
-    std::shared_ptr<const Antares::Optimization::SolvedModelerProblem> lastSolvedModelerProblem;
+    /// \brief Objective value of the current week's last successful optimisation
+    /// pass, set by SimplexOrchestrator so a post-process simulation table can
+    /// re-emit the modeler component rows with the same objective as the solve.
+    /// The LP and entity container it is paired with are already retained on
+    /// this struct (ortoolsProblem_ / optimEntityContainer). Empty until a
+    /// pass succeeds: a failing week throws before any post-process runs.
+    std::optional<double> lastSolvedObjectiveValue;
 
     /// \brief Kept alive past the solve so the CSR adequacy patch post-process
     /// can evaluate GEMS port field expressions via EvalVisitor.

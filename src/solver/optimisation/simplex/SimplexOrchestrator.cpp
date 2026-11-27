@@ -85,13 +85,12 @@ SimplexResult SimplexOrchestrator::solve()
 
     const bool isMip = problemeHebdo_.OptimisationAvecVariablesEntieres;
 
-    // Release the problem retained by the previous pass before building this
-    // one, so the two never coexist: this function's peak is one problem, not
-    // two. Nothing can still want the old one -- a post-process dump runs after
-    // the week's last pass, and a week whose solve fails throws out of
+    // Clear the value published by the previous pass before running this one.
+    // Nothing can still want the old one: a post-process dump runs after the
+    // week's last pass, and a week whose solve fails throws out of
     // OPT_OptimisationHebdomadaireLineaire before the post-processes run, so the
     // value cleared here could never have been published either way.
-    problemeHebdo_.lastSolvedModelerProblem.reset();
+    problemeHebdo_.lastSolvedObjectiveValue.reset();
 
     // Step 1: Create LP problem
     ortoolsProblem_ = std::make_shared<LegacyOrtoolsLinearProblem>(isMip, options_.solverName);
@@ -134,19 +133,11 @@ SimplexResult SimplexOrchestrator::solve()
                 .success = false};
     }
 
-    // Hand the modeler side to the post-process dumps. Called for both passes,
+    // Publish the objective to the post-process dumps. Called for both passes,
     // so what survives is the last one actually run. Independent of
     // `simulationTable`: the stage selection can leave this pass without a table
     // of its own while a later post-process stage still needs these rows.
-    if (problemeHebdo_.retainSolvedModelerProblem)
-    {
-        problemeHebdo_.lastSolvedModelerProblem = std::make_shared<
-          const Antares::Optimization::SolvedModelerProblem>(
-          Antares::Optimization::SolvedModelerProblem{
-            .problem = ortoolsProblem_,
-            .entities = problemeHebdo_.optimEntityContainer,
-            .objectiveValue = ::getObjectiveValue(solver_.get())});
-    }
+    problemeHebdo_.lastSolvedObjectiveValue = ::getObjectiveValue(solver_.get());
 
     // Success path: fill simulation table
     if (simulationTable_)
@@ -260,15 +251,6 @@ void SimplexOrchestrator::fillSimulationTable()
       legacyNameMapper,
       currentBlock,
       inactiveComponents_);
-
-    // Hand the modeler side to the post-process dumps. Called for both
-    // passes, so what survives is the last one actually run.
-    problemeHebdo_.lastSolvedModelerProblem = std::make_shared<
-      const Antares::Optimization::SolvedModelerProblem>(
-      Antares::Optimization::SolvedModelerProblem{.problem = ortoolsProblem_,
-                                                  .entities = problemeHebdo_.optimEntityContainer,
-                                                  .objectiveValue = ::getObjectiveValue(
-                                                    solver_.get())});
 
     measure_.tick();
     timeMeasure_.simulationTableFillTime = measure_.duration_ms();
