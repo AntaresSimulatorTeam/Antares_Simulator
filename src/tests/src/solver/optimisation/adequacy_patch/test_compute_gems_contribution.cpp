@@ -12,11 +12,11 @@
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
-#include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
 #include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/gems-part.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "UtilMocks.h"
 
 using namespace std::string_literals;
 using namespace Antares;
@@ -276,7 +276,7 @@ struct WeeklyVariableContributionFixture: GemsContributionFixture
 {
     WeeklyVariableContributionFixture():
         GemsContributionFixture(variableLibraryYaml),
-        linearProblem(false, "sirius")
+        linearProblem(true)
     {
         problemeHebdo.OptimisationAuPasHebdomadaire = true;
         problemeHebdo.NombreDeJours = 7;
@@ -285,16 +285,12 @@ struct WeeklyVariableContributionFixture: GemsContributionFixture
         auto container = std::make_shared<OptimEntityContainer>(linearProblem);
         container->addFromSystemComponents(modelerData->system->Components());
         container->addStartColumn();
-        auto* fixed = linearProblem.addNumVariable(7, 7, "fixed");
-        auto* constraint = linearProblem.addConstraint(7, 7, "fixed_constraint");
-        constraint->setCoefficient(fixed, 1);
+        linearProblem.addVariableValue(7);
         container->addStartColumn();
         for (unsigned hour = 0; hour < 168; ++hour)
         {
-            linearProblem.addNumVariable(hour, hour, "hourly_" + std::to_string(hour));
+            linearProblem.addVariableValue(hour);
         }
-        linearProblem.setMinimization();
-        BOOST_REQUIRE(linearProblem.solve(false)->getStatus() == Api::MipStatus::OPTIMAL);
         problemeHebdo.optimEntityContainer = std::move(container);
 
         std::vector<double> residualLoad(336);
@@ -307,7 +303,7 @@ struct WeeklyVariableContributionFixture: GemsContributionFixture
         setGemsParameters(residualLoad, load);
     }
 
-    MpsolverImpl::OrtoolsLinearProblem linearProblem;
+    PredfinedSolutionLinearProblemMock linearProblem;
 };
 
 } // namespace
