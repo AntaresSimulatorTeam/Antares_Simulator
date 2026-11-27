@@ -3,7 +3,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <map>
 #include <stdexcept>
+#include <variant>
 
 #include <boost/mpl/list.hpp>
 #include <boost/test/data/test_case.hpp>
@@ -50,36 +52,96 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_ConstructorTest)
     BOOST_CHECK(std::get<std::vector<double>>(res2.value()) == vec);
 }
 
-BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorAdditionTest)
+namespace
 {
-    EvaluationResult res1(5.0);
-    EvaluationResult res2(3.0);
-    EvaluationResult res3 = res1 + res2;
-    BOOST_CHECK_EQUAL(std::get<double>(res3.value()), 8.0);
+using Operand = std::variant<double, std::vector<double>>;
+
+EvaluationResult toResult(const Operand& operand)
+{
+    return std::holds_alternative<double>(operand)
+             ? EvaluationResult(std::get<double>(operand))
+             : EvaluationResult(std::get<std::vector<double>>(operand));
 }
 
-BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorSubtractionTest)
+struct ArithmeticCase
 {
-    EvaluationResult res1(5.0);
-    EvaluationResult res2(3.0);
-    EvaluationResult res3 = res1 - res2;
-    BOOST_CHECK_EQUAL(std::get<double>(res3.value()), 2.0);
-}
+    std::string name;
+    Operand lhs;
+    char op;
+    Operand rhs;
+    Operand expected;
+};
 
-BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorMultiplicationTest)
+std::ostream& operator<<(std::ostream& os, const ArithmeticCase& c)
 {
-    EvaluationResult res1(5.0);
-    EvaluationResult res2(3.0);
-    EvaluationResult res3 = res1 * res2;
-    BOOST_CHECK_EQUAL(std::get<double>(res3.value()), 15.0);
+    return os << c.name;
 }
+} // namespace
 
-BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorDivisionTest)
+BOOST_DATA_TEST_CASE(EvaluationResult_arithmetic,
+                     boost::unit_test::data::make<ArithmeticCase>({
+                       {"scalar_add", 5.0, '+', 3.0, 8.0},
+                       {"scalar_sub", 5.0, '-', 3.0, 2.0},
+                       {"scalar_mul", 5.0, '*', 3.0, 15.0},
+                       {"scalar_div", 6.0, '/', 2.0, 3.0},
+                       {"vector_add",
+                        std::vector<double>{1., 2., 3.},
+                        '+',
+                        std::vector<double>{4., 5., 6.},
+                        std::vector<double>{5., 7., 9.}},
+                       {"vector_mul",
+                        std::vector<double>{1., 2., 3.},
+                        '*',
+                        std::vector<double>{4., 5., 6.},
+                        std::vector<double>{4., 10., 18.}},
+                       {"scalar_plus_vector",
+                        2.0,
+                        '+',
+                        std::vector<double>{1., 2., 3.},
+                        std::vector<double>{3., 4., 5.}},
+                       {"scalar_times_vector",
+                        2.0,
+                        '*',
+                        std::vector<double>{1., 2., 3.},
+                        std::vector<double>{2., 4., 6.}},
+                       {"vector_div_scalar",
+                        std::vector<double>{4., 8., 12.},
+                        '/',
+                        2.0,
+                        std::vector<double>{2., 4., 6.}},
+                     }),
+                     c)
 {
-    EvaluationResult res1(6.0);
-    EvaluationResult res2(2.0);
-    EvaluationResult res3 = res1 / res2;
-    BOOST_CHECK_EQUAL(std::get<double>(res3.value()), 3.0);
+    const auto lhs = toResult(c.lhs);
+    const auto rhs = toResult(c.rhs);
+    const auto result = [&]
+    {
+        switch (c.op)
+        {
+        case '+':
+            return lhs + rhs;
+        case '-':
+            return lhs - rhs;
+        case '*':
+            return lhs * rhs;
+        default:
+            return lhs / rhs;
+        }
+    }();
+
+    if (std::holds_alternative<double>(c.expected))
+    {
+        BOOST_CHECK_EQUAL(std::get<double>(result.value()), std::get<double>(c.expected));
+    }
+    else
+    {
+        const auto& actual = std::get<std::vector<double>>(result.value());
+        const auto& expected = std::get<std::vector<double>>(c.expected);
+        BOOST_CHECK_EQUAL_COLLECTIONS(actual.cbegin(),
+                                      actual.cend(),
+                                      expected.cbegin(),
+                                      expected.cend());
+    }
 }
 
 BOOST_AUTO_TEST_CASE(EvaluationResult_DivisionByZeroTest)
@@ -113,21 +175,6 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorNegationOnVector)
                                   expected_result.cend());
 }
 
-BOOST_AUTO_TEST_CASE(EvaluationResult_VectorOperationTest)
-{
-    std::vector<double> vec1 = {1.0, 2.0, 3.0};
-    std::vector<double> vec2 = {4.0, 5.0, 6.0};
-    EvaluationResult res1(vec1);
-    EvaluationResult res2(vec2);
-    EvaluationResult res3 = res1 + res2;
-    const auto expected_result = std::vector<double>{5.0, 7.0, 9.0};
-    const auto result = std::get<std::vector<double>>(res3.value());
-    BOOST_CHECK_EQUAL_COLLECTIONS(result.cbegin(),
-                                  result.cend(),
-                                  expected_result.cbegin(),
-                                  expected_result.cend());
-}
-
 BOOST_AUTO_TEST_CASE(EvaluationResult_MismatchedVectorSizeTest)
 {
     std::vector<double> vec1 = {1.0, 2.0};
@@ -135,63 +182,6 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_MismatchedVectorSizeTest)
     EvaluationResult res1(vec1);
     EvaluationResult res2(vec2);
     BOOST_CHECK_THROW(res1 + res2, std::runtime_error);
-}
-
-BOOST_AUTO_TEST_CASE(EvaluationResult_ScalarVectorAdditionTest)
-{
-    EvaluationResult res1(2.0);
-    std::vector<double> vec = {1.0, 2.0, 3.0};
-    EvaluationResult res2(vec);
-    EvaluationResult res3 = res1 + res2;
-    const auto expected_result = std::vector<double>{3.0, 4.0, 5.0};
-    const auto result = std::get<std::vector<double>>(res3.value());
-    BOOST_CHECK_EQUAL_COLLECTIONS(result.cbegin(),
-                                  result.cend(),
-                                  expected_result.cbegin(),
-                                  expected_result.cend());
-}
-
-BOOST_AUTO_TEST_CASE(EvaluationResult_ScalarVectorMultiplicationTest)
-{
-    EvaluationResult res1(2.0);
-    std::vector<double> vec = {1.0, 2.0, 3.0};
-    EvaluationResult res2(vec);
-    EvaluationResult res3 = res1 * res2;
-    const auto expected_result = std::vector<double>{2.0, 4.0, 6.0};
-    const auto result = res3.valuesAsVector();
-    BOOST_CHECK_EQUAL_COLLECTIONS(result.cbegin(),
-                                  result.cend(),
-                                  expected_result.cbegin(),
-                                  expected_result.cend());
-}
-
-BOOST_AUTO_TEST_CASE(EvaluationResult_VectorVectorMultiplicationTest)
-{
-    std::vector<double> vec1 = {1.0, 2.0, 3.0};
-    std::vector<double> vec2 = {4.0, 5.0, 6.0};
-    EvaluationResult res1(vec1);
-    EvaluationResult res2(vec2);
-    EvaluationResult res3 = res1 * res2;
-    const auto expected_result = std::vector<double>{4.0, 10.0, 18.0};
-    const auto result = res3.valuesAsVector();
-    BOOST_CHECK_EQUAL_COLLECTIONS(result.cbegin(),
-                                  result.cend(),
-                                  expected_result.cbegin(),
-                                  expected_result.cend());
-}
-
-BOOST_AUTO_TEST_CASE(EvaluationResult_VectorScalarDivisionTest)
-{
-    std::vector<double> vec = {4.0, 8.0, 12.0};
-    EvaluationResult res1(vec);
-    EvaluationResult res2(2.0);
-    EvaluationResult res3 = res1 / res2;
-    const auto expected_result = std::vector<double>{2.0, 4.0, 6.0};
-    const auto result = std::get<std::vector<double>>(res3.value());
-    BOOST_CHECK_EQUAL_COLLECTIONS(result.cbegin(),
-                                  result.cend(),
-                                  expected_result.cbegin(),
-                                  expected_result.cend());
 }
 
 // Equality operator
@@ -379,94 +369,41 @@ We can just write
 since create<T> is short for this->create<T>.
 */
 
-BOOST_FIXTURE_TEST_CASE(print_add_two_literals, MyDummyFixture)
+namespace
 {
-    Node* root = create<SumNode>(create<LiteralNode>(21), create<LiteralNode>(2));
+struct SumOfLiteralsCase
+{
+    std::vector<double> operands;
+    std::string printed;
+    double evaluated;
+};
 
-    PrintVisitor printVisitor;
-    const auto printed = printVisitor.dispatch(root);
-
-    BOOST_CHECK_EQUAL(printed,
-                      "(21.000000+2.000000)"); // TODO Number of decimals implementation dependent ?
+std::ostream& operator<<(std::ostream& os, const SumOfLiteralsCase& c)
+{
+    return os << c.operands.size() << " literals";
 }
+} // namespace
 
-BOOST_FIXTURE_TEST_CASE(print_add_one_literal, MyDummyFixture)
+BOOST_DATA_TEST_CASE_F(
+  MyDummyFixture,
+  sum_of_literals_is_printed_and_evaluated,
+  boost::unit_test::data::make<SumOfLiteralsCase>({
+    {{}, "()", 0.},
+    {{215}, "(215.000000)", 215.},
+    {{21, 2}, "(21.000000+2.000000)", 23.},
+    {{21, 2, 34, 56, 12, 86}, "(21.000000+2.000000+34.000000+56.000000+12.000000+86.000000)", 211.},
+  }),
+  c)
 {
-    Node* root = create<SumNode>(create<LiteralNode>(215));
+    std::vector<Node*> literals;
+    for (const double value: c.operands)
+    {
+        literals.push_back(create<LiteralNode>(value));
+    }
+    Node* root = create<SumNode>(literals);
 
-    PrintVisitor printVisitor;
-    const auto printed = printVisitor.dispatch(root);
-
-    BOOST_CHECK_EQUAL(printed,
-                      "(215.000000)"); // TODO Number of decimals implementation dependent ?
-}
-
-BOOST_FIXTURE_TEST_CASE(print_add_zero_literal, MyDummyFixture)
-{
-    Node* root = create<SumNode>();
-
-    PrintVisitor printVisitor;
-    const auto printed = printVisitor.dispatch(root);
-
-    BOOST_CHECK_EQUAL(printed, "()");
-}
-
-BOOST_FIXTURE_TEST_CASE(print_add_six_literals, MyDummyFixture)
-{
-    Node* root = create<SumNode>(create<LiteralNode>(21),
-                                 create<LiteralNode>(2),
-                                 create<LiteralNode>(34),
-                                 create<LiteralNode>(56),
-                                 create<LiteralNode>(12),
-                                 create<LiteralNode>(86));
-
-    PrintVisitor printVisitor;
-    const auto printed = printVisitor.dispatch(root);
-
-    BOOST_CHECK_EQUAL(
-      printed,
-      "(21.000000+2.000000+34.000000+56.000000+12.000000+86.000000)"); // TODO Number of decimals
-                                                                       // implementation dependent ?
-}
-
-BOOST_FIXTURE_TEST_CASE(eval_add_two_literals, MyDummyFixture)
-{
-    Node* root = create<SumNode>(create<LiteralNode>(21), create<LiteralNode>(2));
-    double eval = defaultComponentEvalVisitor->dispatch(root).valueAsDouble();
-
-    BOOST_CHECK_EQUAL(eval, 23.);
-}
-
-BOOST_FIXTURE_TEST_CASE(eval_add_one_literal, MyDummyFixture)
-{
-    Node* root = create<SumNode>(create<LiteralNode>(215));
-
-    double eval = defaultComponentEvalVisitor->dispatch(root).valueAsDouble();
-
-    BOOST_CHECK_EQUAL(eval, 215.);
-}
-
-BOOST_FIXTURE_TEST_CASE(eval_add_zero_literal, MyDummyFixture)
-{
-    Node* root = create<SumNode>();
-
-    double eval = defaultComponentEvalVisitor->dispatch(root).valueAsDouble();
-
-    BOOST_CHECK_EQUAL(eval, 0.);
-}
-
-BOOST_FIXTURE_TEST_CASE(eval_add_six_literals, MyDummyFixture)
-{
-    Node* root = create<SumNode>(create<LiteralNode>(21),
-                                 create<LiteralNode>(2),
-                                 create<LiteralNode>(34),
-                                 create<LiteralNode>(56),
-                                 create<LiteralNode>(12),
-                                 create<LiteralNode>(86));
-
-    double eval = defaultComponentEvalVisitor->dispatch(root).valueAsDouble();
-
-    BOOST_CHECK_EQUAL(eval, 211.);
+    BOOST_CHECK_EQUAL(PrintVisitor{}.dispatch(root), c.printed);
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(root).valueAsDouble(), c.evaluated);
 }
 
 BOOST_FIXTURE_TEST_CASE(eval_negation_literal, MyDummyFixture)
@@ -1583,167 +1520,86 @@ BOOST_FIXTURE_TEST_CASE(PrintReducedCostNode, MyDummyFixture)
     BOOST_CHECK(printVisitor.dispatch(reducedCost) == "reduced_cost(var)");
 }
 
-BOOST_FIXTURE_TEST_CASE(print_floor_applied_to_a_literal, MyDummyFixture)
+namespace
 {
-    Node* floor_node = create<FunctionNode>(FunctionNodeType::floor, create<LiteralNode>(2.3));
+const std::map<std::string, FunctionNodeType> unaryFunctions = {{"floor", FunctionNodeType::floor},
+                                                                {"ceil", FunctionNodeType::ceil},
+                                                                {"round", FunctionNodeType::round},
+                                                                {"abs", FunctionNodeType::abs}};
+const std::vector<std::string> unaryFunctionNames = {"floor", "ceil", "round", "abs"};
+} // namespace
+
+BOOST_DATA_TEST_CASE_F(MyDummyFixture,
+                       print_unary_function_applied_to_a_literal_or_a_parameter,
+                       boost::unit_test::data::make(unaryFunctionNames),
+                       name)
+{
     PrintVisitor printVisitor;
-    BOOST_CHECK(printVisitor.dispatch(floor_node) == "floor(2.300000)");
+    Node* onLiteral = create<FunctionNode>(unaryFunctions.at(name), create<LiteralNode>(2.3));
+    Node* onParameter = create<FunctionNode>(unaryFunctions.at(name), create<ParameterNode>("p"));
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(onLiteral), name + "(2.300000)");
+    BOOST_CHECK_EQUAL(printVisitor.dispatch(onParameter), name + "(p)");
 }
 
-BOOST_FIXTURE_TEST_CASE(print_floor_applied_to_a_parameter, MyDummyFixture)
+namespace
 {
-    Node* floor_node = create<FunctionNode>(FunctionNodeType::floor, create<ParameterNode>("p"));
-    PrintVisitor printVisitor;
-    BOOST_CHECK(printVisitor.dispatch(floor_node) == "floor(p)");
+struct ShiftCase
+{
+    std::string name;
+    std::vector<int> input;
+    int shift;
+    std::vector<int> expected;
+};
+
+std::ostream& operator<<(std::ostream& os, const ShiftCase& c)
+{
+    return os << c.name;
+}
+} // namespace
+
+BOOST_DATA_TEST_CASE(shiftVector_rotates_left_modulo_size,
+                     boost::unit_test::data::make<ShiftCase>({
+                       {"empty_vector", {}, 5, {}},
+                       {"zero", {1, 2, 3, 4, 5}, 0, {1, 2, 3, 4, 5}},
+                       {"positive", {1, 2, 3, 4, 5}, 2, {3, 4, 5, 1, 2}},
+                       {"negative", {1, 2, 3, 4, 5}, -2, {4, 5, 1, 2, 3}},
+                       {"equal_to_size", {1, 2, 3, 4, 5}, 5, {1, 2, 3, 4, 5}},
+                       {"greater_than_size", {1, 2, 3, 4, 5}, 7, {3, 4, 5, 1, 2}},
+                       {"one_element", {42}, 3, {42}},
+                       // 1000003 % 5 = 3, -1000003 % 5 = -3 and (-3 + 5) % 5 = 2
+                       {"large_positive", {1, 2, 3, 4, 5}, 1000003, {4, 5, 1, 2, 3}},
+                       {"large_negative", {1, 2, 3, 4, 5}, -1000003, {3, 4, 5, 1, 2}},
+                     }),
+                     c)
+{
+    const auto result = shiftVector(c.input, c.shift);
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(),
+                                  result.end(),
+                                  c.expected.begin(),
+                                  c.expected.end());
 }
 
-BOOST_FIXTURE_TEST_CASE(print_ceil_applied_to_a_literal, MyDummyFixture)
+namespace
 {
-    Node* ceil_node = create<FunctionNode>(FunctionNodeType::ceil, create<LiteralNode>(3.7));
-    PrintVisitor printVisitor;
-    BOOST_CHECK(printVisitor.dispatch(ceil_node) == "ceil(3.700000)");
-}
+const std::vector<std::string> untrimmedInputs = {"   example",
+                                                  "   -value",
+                                                  "   +text",
+                                                  "noSign",
+                                                  "-already",
+                                                  "+already",
+                                                  "   ",
+                                                  ""};
+const std::vector<std::string>
+  trimmedOutputs = {"+example", "-value", "+text", "+noSign", "-already", "+already", "", ""};
+} // namespace
 
-BOOST_FIXTURE_TEST_CASE(print_ceil_applied_to_a_parameter, MyDummyFixture)
+BOOST_DATA_TEST_CASE(trimAndFormat_trims_and_adds_a_leading_sign,
+                     boost::unit_test::data::make(untrimmedInputs)
+                       ^ boost::unit_test::data::make(trimmedOutputs),
+                     input,
+                     expected)
 {
-    Node* ceil_node = create<FunctionNode>(FunctionNodeType::ceil, create<ParameterNode>("p"));
-    PrintVisitor printVisitor;
-    BOOST_CHECK(printVisitor.dispatch(ceil_node) == "ceil(p)");
-}
-
-BOOST_FIXTURE_TEST_CASE(print_round_applied_to_a_literal, MyDummyFixture)
-{
-    Node* round_node = create<FunctionNode>(FunctionNodeType::round, create<LiteralNode>(3.7));
-    PrintVisitor printVisitor;
-    BOOST_CHECK(printVisitor.dispatch(round_node) == "round(3.700000)");
-}
-
-BOOST_FIXTURE_TEST_CASE(print_round_applied_to_a_parameter, MyDummyFixture)
-{
-    Node* round_node = create<FunctionNode>(FunctionNodeType::round, create<ParameterNode>("p"));
-    PrintVisitor printVisitor;
-    BOOST_CHECK(printVisitor.dispatch(round_node) == "round(p)");
-}
-
-BOOST_FIXTURE_TEST_CASE(print_abs_applied_to_a_literal, MyDummyFixture)
-{
-    Node* abs_node = create<FunctionNode>(FunctionNodeType::abs, create<LiteralNode>(3.7));
-    PrintVisitor printVisitor;
-    BOOST_CHECK(printVisitor.dispatch(abs_node) == "abs(3.700000)");
-}
-
-BOOST_FIXTURE_TEST_CASE(print_abs_applied_to_a_parameter, MyDummyFixture)
-{
-    Node* abs_node = create<FunctionNode>(FunctionNodeType::abs, create<ParameterNode>("p"));
-    PrintVisitor printVisitor;
-    BOOST_CHECK(printVisitor.dispatch(abs_node) == "abs(p)");
-}
-
-BOOST_AUTO_TEST_CASE(shift_empty_vector)
-{
-    std::vector<int> emptyVector;
-    std::vector<int> result = shiftVector(emptyVector, 5);
-    BOOST_CHECK(result.empty());
-}
-
-BOOST_AUTO_TEST_CASE(shift_vector_with_zero)
-{
-    std::vector<int> v = {1, 2, 3, 4, 5};
-    std::vector<int> result = shiftVector(v, 0);
-    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), v.begin(), v.end());
-}
-
-BOOST_AUTO_TEST_CASE(shift_vector_with_a_positive_shift)
-{
-    std::vector<int> v = {1, 2, 3, 4, 5};
-    std::vector<int> expected = {3, 4, 5, 1, 2};
-    std::vector<int> result = shiftVector(v, 2);
-    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), expected.begin(), expected.end());
-}
-
-BOOST_AUTO_TEST_CASE(shift_vector_with_a_negative_shift)
-{
-    std::vector<int> v = {1, 2, 3, 4, 5};
-    std::vector<int> expected = {4, 5, 1, 2, 3};
-    std::vector<int> result = shiftVector(v, -2);
-    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), expected.begin(), expected.end());
-}
-
-BOOST_AUTO_TEST_CASE(shift_vector_with_a_shift_equal_to_vector_size)
-{
-    std::vector<int> v = {1, 2, 3, 4, 5};
-    std::vector<int> result = shiftVector(v, 5);
-    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), v.begin(), v.end());
-}
-
-BOOST_AUTO_TEST_CASE(shift_vector_with_a_shift_greater_than_vector_size)
-{
-    std::vector<int> v = {1, 2, 3, 4, 5};
-    std::vector<int> expected = {3, 4, 5, 1, 2};
-    std::vector<int> result = shiftVector(v, 7);
-    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), expected.begin(), expected.end());
-}
-
-BOOST_AUTO_TEST_CASE(shift_a_one_element_vector)
-{
-    std::vector<int> v = {42};
-    std::vector<int> result = shiftVector(v, 3);
-    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), v.begin(), v.end());
-}
-
-BOOST_AUTO_TEST_CASE(testLargeShiftValues)
-{
-    std::vector<int> v = {1, 2, 3, 4, 5};
-    std::vector<int> expectedPositive = {4, 5, 1, 2, 3};
-    std::vector<int> expectedNegative = {3, 4, 5, 1, 2};
-    // 1000003 % 5 = 3.
-    std::vector<int> resultPositive = shiftVector(v, 1000003);
-    // -1000003 % 5 = -3 and (-3 + 5) % 5 = 2
-    std::vector<int> resultNegative = shiftVector(v, -1000003);
-    BOOST_CHECK_EQUAL_COLLECTIONS(resultPositive.begin(),
-                                  resultPositive.end(),
-                                  expectedPositive.begin(),
-                                  expectedPositive.end());
-    BOOST_CHECK_EQUAL_COLLECTIONS(resultNegative.begin(),
-                                  resultNegative.end(),
-                                  expectedNegative.begin(),
-                                  expectedNegative.end());
-}
-
-BOOST_AUTO_TEST_CASE(TrimLeadingWhitespace)
-{
-    BOOST_CHECK_EQUAL(trimAndFormat("   example"), "+example");
-}
-
-BOOST_AUTO_TEST_CASE(PreserveLeadingMinus)
-{
-    BOOST_CHECK_EQUAL(trimAndFormat("   -value"), "-value");
-}
-
-BOOST_AUTO_TEST_CASE(PreserveLeadingPlus)
-{
-    BOOST_CHECK_EQUAL(trimAndFormat("   +text"), "+text");
-}
-
-BOOST_AUTO_TEST_CASE(AddPlusIfNoSign)
-{
-    BOOST_CHECK_EQUAL(trimAndFormat("noSign"), "+noSign");
-}
-
-BOOST_AUTO_TEST_CASE(HandleAlreadySignedString)
-{
-    BOOST_CHECK_EQUAL(trimAndFormat("-already"), "-already");
-    BOOST_CHECK_EQUAL(trimAndFormat("+already"), "+already");
-}
-
-BOOST_AUTO_TEST_CASE(HandleOnlySpaces)
-{
-    BOOST_CHECK_EQUAL(trimAndFormat("   "), "");
-}
-
-BOOST_AUTO_TEST_CASE(HandleEmptyString)
-{
-    BOOST_CHECK_EQUAL(trimAndFormat(""), "");
+    BOOST_CHECK_EQUAL(trimAndFormat(input), expected);
 }
 
 BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
