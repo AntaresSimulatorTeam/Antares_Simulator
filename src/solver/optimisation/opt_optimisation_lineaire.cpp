@@ -6,8 +6,10 @@
 
 #include <antares/logs/logs.h>
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
+#include "antares/solver/optimisation/gemsThermalHeuristics.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
@@ -204,15 +206,43 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
     return true;
 }
 
+/// Legacy thermal clusters: heuristic fast or accurate depending on the unit commitment mode
 void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
 {
-    if (problemeHebdo->OptimisationNotFastMode)
+    const auto NombreDePasDeTempsProblemeHebdo = static_cast<int>(
+      problemeHebdo->NombreDePasDeTemps);
+    for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
     {
-        OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(problemeHebdo);
-    }
-    else
-    {
-        OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(problemeHebdo);
+        RESULTATS_HORAIRES& ResultatsHoraires = problemeHebdo->ResultatsHoraires[pays];
+        bool OptimisationAvecVariablesEntieres = problemeHebdo->OptimisationAvecVariablesEntieres;
+        bool Expansion = problemeHebdo->Expansion;
+        PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+
+        std::vector<int>& NbGrpCourbeGuide = problemeHebdo->NbGrpCourbeGuide;
+        std::vector<int>& NbGrpOpt = problemeHebdo->NbGrpOpt;
+        for (int index = 0; index < PaliersThermiquesDuPays.NombreDePaliersThermiques; ++index)
+        {
+            if (problemeHebdo->OptimisationNotFastMode)
+            {
+                OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
+                  NombreDePasDeTempsProblemeHebdo,
+                  PaliersThermiquesDuPays,
+                  ResultatsHoraires,
+                  Expansion,
+                  index,
+                  OptimisationAvecVariablesEntieres,
+                  static_cast<int>(pays));
+            }
+            else
+            {
+                OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(NombreDePasDeTempsProblemeHebdo,
+                                                                  NbGrpCourbeGuide,
+                                                                  NbGrpOpt,
+                                                                  ResultatsHoraires,
+                                                                  PaliersThermiquesDuPays,
+                                                                  index);
+            }
+        }
     }
 }
 
@@ -287,6 +317,22 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                                                 && problemeHebdo->OptimisationAuPasHebdomadaire
                                                 && simulationTables->anyPostProcessStageSelected();
 
+    // GEMS components with integer strategy "heuristic": clear the values of the previous week
+    const bool useGemsThermalHeuristics = problemeHebdo->useGemsThermalHeuristics
+                                          && problemeHebdo->modelerData;
+    if (useGemsThermalHeuristics)
+    {
+        if (!problemeHebdo->gemsHeuristicsState)
+        {
+            problemeHebdo->gemsHeuristicsState = std::make_shared<
+              Antares::Optimization::GemsHeuristicsState>();
+        }
+        Antares::Optimization::resetGemsHeuristicsState(
+          *problemeHebdo->gemsHeuristicsState,
+          static_cast<unsigned>(problemeHebdo->HeureDansLAnnee),
+          static_cast<unsigned>(problemeHebdo->NombreDePasDeTemps));
+    }
+
     auto* firstOptimSimulationTable = simulationTables
                                         ? simulationTables->firstOptimSimulationTable()
                                         : nullptr;
@@ -303,10 +349,19 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode
     // and if the 1st one failed.
-    if (ret && !problemeHebdo->Expansion && problemeHebdo->useThermalHeuristic)
+    if (ret && !problemeHebdo->Expansion
+        && (problemeHebdo->useThermalHeuristic || useGemsThermalHeuristics))
     {
-        // We need to adjust some stuff before running the 2nd optimisation
-        runThermalHeuristic(problemeHebdo);
+        if (problemeHebdo->useThermalHeuristic)
+        {
+            runThermalHeuristic(problemeHebdo);
+        }
+        if (useGemsThermalHeuristics)
+        {
+            Antares::Optimization::runGemsThermalHeuristics(*problemeHebdo->gemsHeuristicsState,
+                                                            *problemeHebdo->modelerData,
+                                                            problemeHebdo->year);
+        }
         auto* secondOptimSimulationTable = simulationTables
                                              ? simulationTables->secondOptimSimulationTable()
                                              : nullptr;

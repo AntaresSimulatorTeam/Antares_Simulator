@@ -16,6 +16,56 @@ using namespace Antares::ModelerStudy;
 namespace Antares::Solver::LoadFiles
 {
 
+void checkIntegerStrategies(const ModelerData& data)
+{
+    for (const auto& component: data.system->Components())
+    {
+        const auto heuristicType = component.heuristicType();
+        if (!heuristicType)
+        {
+            continue;
+        }
+        if (data.resolutionMode == ResolutionMode::BENDERS_DECOMPOSITION)
+        {
+            throw ErrorLoadingYaml(
+              fmt::format("Component '{}': integer strategy 'heuristic' is not compatible with "
+                          "the benders-decomposition resolution mode",
+                          component.Id()));
+        }
+        const auto* heuristic = heuristicFor(data, component);
+        if (!heuristic)
+        {
+            const auto* model = component.getModel();
+            throw ErrorLoadingYaml(
+              fmt::format("Component '{}': heuristic '{}' is not declared in optim-config.yml "
+                          "for model '{}.{}'",
+                          component.Id(),
+                          SystemModel::toString(*heuristicType),
+                          model->LibraryId(),
+                          model->Id()));
+        }
+        for (const auto& input: heuristic->inputs)
+        {
+            if (input.source != SystemModel::HeuristicInputSource::Parameter
+                || SystemModel::expectedTimeDependency(input.element)
+                     != SystemModel::HeuristicElementTimeDependency::Constant)
+            {
+                continue;
+            }
+            const auto& parameter = component.getParameterValues().at(input.id);
+            if (LinearProblem::isTimeDependent(parameter.type))
+            {
+                throw ErrorLoadingYaml(
+                  fmt::format("Component '{}': parameter '{}' is used as heuristic input '{}' and "
+                              "must not be time-dependent",
+                              component.Id(),
+                              input.id,
+                              SystemModel::toString(input.element)));
+            }
+        }
+    }
+}
+
 ModelerData loadAll(const std::filesystem::path& studyPath)
 {
     Utils::TimeMeasurement measure;
@@ -26,6 +76,7 @@ ModelerData loadAll(const std::filesystem::path& studyPath)
     data.libraries = std::move(res.libraries);
     data.resolutionMode = res.resolutionMode;
     data.scenarioScope = std::move(res.scenarioScope);
+    data.heuristicsByModel = std::move(res.heuristicsByModel);
     logs.info() << "Libraries loaded";
 
     auto loadedSystem = loadSystem(studyPath, data.libraries);
@@ -45,6 +96,8 @@ ModelerData loadAll(const std::filesystem::path& studyPath)
     Checks::checkPortFields(data);
     Checks::checkLocations(data);
     logs.info() << "Locations validity OK";
+
+    checkIntegerStrategies(data);
 
     return data;
 }

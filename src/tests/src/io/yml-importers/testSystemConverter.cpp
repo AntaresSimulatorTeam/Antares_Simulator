@@ -84,6 +84,39 @@ BOOST_FIXTURE_TEST_CASE(full_model_system, LibraryObjects)
     BOOST_CHECK_EQUAL(std::stod(getComponent(components, "N")->getParameterValue("cost")), 30);
 }
 
+BOOST_FIXTURE_TEST_CASE(integer_strategy_is_converted, LibraryObjects)
+{
+    const auto system = R"(
+        system:
+            id: base_system
+            components:
+                - id: exact_component
+                  model: std.node
+                  parameters:
+                    - id: cost
+                      value: 30
+                - id: heuristic_component
+                  model: std.node
+                  integer-strategy:
+                    id: heuristic
+                    heuristic-id: accurate
+                  parameters:
+                    - id: cost
+                      value: 30
+    )"s;
+
+    auto systemModel = SystemConverter::convert(parser.parse(system, ""), libraries);
+
+    const auto& components = systemModel.Components();
+    const auto exact = getComponent(components, "exact_component");
+    BOOST_CHECK_EQUAL(exact->integerStrategy().id, "exact");
+    BOOST_CHECK(!exact->heuristicType().has_value());
+    const auto heuristic = getComponent(components, "heuristic_component");
+    BOOST_CHECK_EQUAL(heuristic->integerStrategy().id, "heuristic");
+    BOOST_REQUIRE(heuristic->heuristicType().has_value());
+    BOOST_CHECK(heuristic->heuristicType().value() == SystemModel::HeuristicType::Accurate);
+}
+
 BOOST_FIXTURE_TEST_CASE(bad_param_name_in_component, LibraryObjects)
 {
     const auto system = R"(

@@ -455,3 +455,32 @@ BOOST_AUTO_TEST_CASE(misspelled_component_field_is_rejected)
                           InputError,
                           containsMessage("Unrecognised field: scenario-groups"));
 }
+
+BOOST_AUTO_TEST_CASE(component_integer_strategy)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            components:
+                - id: default_strategy
+                  model: std.thermal
+                - id: relaxed_component
+                  model: std.thermal
+                  integer-strategy:
+                    id: relaxed
+                - id: heuristic_component
+                  model: std.thermal
+                  integer-strategy:
+                    id: heuristic
+                    heuristic-id: fast
+    )"s;
+    YmlSystem::System systemObj = parser.parse(system, "");
+    BOOST_REQUIRE_EQUAL(systemObj.components.size(), 3);
+    BOOST_CHECK_EQUAL(systemObj.components[0].integer_strategy.id, "exact");
+    BOOST_CHECK(systemObj.components[0].integer_strategy.heuristic_id.empty());
+    BOOST_CHECK_EQUAL(systemObj.components[1].integer_strategy.id, "relaxed");
+    BOOST_CHECK(systemObj.components[1].integer_strategy.heuristic_id.empty());
+    BOOST_CHECK_EQUAL(systemObj.components[2].integer_strategy.id, "heuristic");
+    BOOST_CHECK_EQUAL(systemObj.components[2].integer_strategy.heuristic_id, "fast");
+}

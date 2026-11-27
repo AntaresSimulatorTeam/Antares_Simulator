@@ -67,4 +67,25 @@ public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::OptimConfig& rhs);
 };
 
+template<>
+class convert<Antares::IO::Inputs::YmlOptimConfig::HeuristicInput>
+{
+public:
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::HeuristicInput& rhs);
+};
+
+template<>
+class convert<Antares::IO::Inputs::YmlOptimConfig::HeuristicOutput>
+{
+public:
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::HeuristicOutput& rhs);
+};
+
+template<>
+class convert<Antares::IO::Inputs::YmlOptimConfig::Heuristic>
+{
+public:
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::Heuristic& rhs);
+};
+
 } // namespace YAML

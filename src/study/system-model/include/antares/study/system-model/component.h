@@ -10,6 +10,7 @@
 #include <antares/expressions/nodes/PortFieldNode.h>
 #include <antares/study/system-model-base/variabilityType.h>
 #include "antares/study/system-model/connection.h"
+#include "antares/study/system-model/heuristic.h"
 
 #include "model.h"
 
@@ -25,6 +26,19 @@ struct ParameterTypeAndValue
 };
 
 /**
+ * How the integer variables of a component are handled (system.yml, field "integer-strategy"):
+ * - exact: the model is used as is (integer variables stay integer)
+ * - relaxed: integer variables are linearly relaxed
+ * - heuristic: integer variables are linearly relaxed, and a heuristic (heuristic_id: fast or
+ *   accurate) adjusts the bounds of some variables between two optimisations
+ */
+struct IntegerStrategy
+{
+    std::string id = "exact";
+    std::string heuristic_id;
+};
+
+/**
  * Defines the attributes of the Component class
  * Made into a struct to avoid duplication in ComponentBuilder
  */
@@ -35,6 +49,7 @@ public:
     const Model* model = nullptr;
     std::map<std::string, ParameterTypeAndValue> parameter_values;
     std::string scenario_group_id;
+    IntegerStrategy integer_strategy;
 
     void reset()
     {
@@ -42,6 +57,7 @@ public:
         model = nullptr;
         parameter_values.clear();
         scenario_group_id.clear();
+        integer_strategy = {};
     }
 };
 
@@ -68,6 +84,26 @@ public:
     const Model* getModel() const
     {
         return data_.model;
+    }
+
+    const IntegerStrategy& integerStrategy() const
+    {
+        return data_.integer_strategy;
+    }
+
+    bool hasRelaxedIntegerVariables() const
+    {
+        return data_.integer_strategy.id != "exact";
+    }
+
+    /// The heuristic applied to the component, if its integer strategy is "heuristic"
+    std::optional<HeuristicType> heuristicType() const
+    {
+        if (data_.integer_strategy.id != "heuristic")
+        {
+            return std::nullopt;
+        }
+        return heuristicTypeFromString(data_.integer_strategy.heuristic_id);
     }
 
     const std::map<std::string, ParameterTypeAndValue>& getParameterValues() const
@@ -135,6 +171,7 @@ class ComponentBuilder final
 public:
     ComponentBuilder& withId(std::string_view id);
     ComponentBuilder& withModel(const Model* model);
+    ComponentBuilder& withIntegerStrategy(std::string id, std::string heuristicId = "");
     ComponentBuilder& withParameterValues(
       std::map<std::string, ParameterTypeAndValue> parameter_values);
     ComponentBuilder& withScenarioGroupId(const std::string& scenario_group_id);

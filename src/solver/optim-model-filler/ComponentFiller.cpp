@@ -3,6 +3,7 @@
 
 #include <ranges>
 #include <stdexcept>
+#include <type_traits>
 #include <variant>
 
 #include <antares/exception/RuntimeError.hpp>
@@ -117,7 +118,8 @@ public:
     AddVariableVisitor(const Variable& variable,
                        Api::ILinearProblem& linear_problem,
                        const VariableNames& variableNames,
-                       const Dimensions& dimensions);
+                       const Dimensions& dimensions,
+                       bool relaxIntegerVariables);
 
     void operator()(double lb, double ub) const;
     void operator()(const std::vector<double>& lb, double ub) const;
@@ -139,8 +141,9 @@ private:
 AddVariableVisitor::AddVariableVisitor(const Variable& variable,
                                        Api::ILinearProblem& linear_problem,
                                        const VariableNames& variableNames,
-                                       const Dimensions& dimensions):
-    isInteger_(variable.Type() != ValueType::FLOAT),
+                                       const Dimensions& dimensions,
+                                       bool relaxIntegerVariables):
+    isInteger_(variable.Type() != ValueType::FLOAT && !relaxIntegerVariables),
     linear_problem_(linear_problem),
     variableNames_(variableNames),
     dims_(dimensions)
@@ -231,14 +234,16 @@ ComponentFiller::ComponentFiller(const Component& component,
                                  OptimEntityContainer& optimEntityContainer,
                                  const ScenarioGroupRepository& scenarioGroupRepo,
                                  Solver::Config::Location targetLocation,
-                                 BendersDecomposition* bendersDecomposition):
+                                 BendersDecomposition* bendersDecomposition,
+                                 const VariableBoundOverrides* boundOverrides):
     component_(component),
     optimEntityContainer_(optimEntityContainer),
     pb_(optimEntityContainer_.Problem()),
     data_(data),
     scenarioGroupRepo_(scenarioGroupRepo),
     targetLocation_(targetLocation),
-    bendersDecomposition_(bendersDecomposition)
+    bendersDecomposition_(bendersDecomposition),
+    boundOverrides_(boundOverrides)
 {
 }
 
@@ -252,6 +257,24 @@ Dimensions getDimensions(const Api::FillContext& ctx)
     Dimensions dims(IntegerInterval{ctx.getYear(), ctx.getYear()},
                     IntegerInterval(ctx.getLocalFirstTimeStep(), ctx.getLocalLastTimeStep()));
     return dims;
+}
+
+static std::vector<double> toTimeSeries(const Visitors::EvaluationResult& result,
+                                        std::size_t nbTimeSteps)
+{
+    return std::visit(
+      [nbTimeSteps](const auto& value) -> std::vector<double>
+      {
+          if constexpr (std::is_same_v<std::decay_t<decltype(value)>, double>)
+          {
+              return std::vector<double>(nbTimeSteps, value);
+          }
+          else
+          {
+              return value;
+          }
+      },
+      result.value());
 }
 
 Dimensions getDimensions(const Variable& var, const Api::FillContext& ctx)
@@ -297,8 +320,22 @@ void ComponentFiller::addVariables(const Api::FillContext& ctx)
         VariableNames variableNames;
         variableNames.makeNames(component_, variable, dims);
 
-        AddVariableVisitor addVariableVisitor(variable, pb_, variableNames, dims);
-        if (variable.isTimeDependent())
+        AddVariableVisitor addVariableVisitor(variable,
+                                              pb_,
+                                              variableNames,
+                                              dims,
+                                              component_.hasRelaxedIntegerVariables());
+        if (variable.isTimeDependent() && boundOverrides_
+            && boundOverrides_->contains(component_.Id(), variable.Id()))
+        {
+            // Bounds modified outside of the model, e.g. by a thermal heuristic
+            const auto nbTimeSteps = ctx.getLocalNumberOfTimeSteps();
+            auto lbValues = toTimeSeries(lb, nbTimeSteps);
+            auto ubValues = toTimeSeries(ub, nbTimeSteps);
+            boundOverrides_->apply(component_.Id(), variable.Id(), ctx, lbValues, ubValues);
+            addVariableVisitor(lbValues, ubValues);
+        }
+        else if (variable.isTimeDependent())
         {
             std::visit(addVariableVisitor, lb.value(), ub.value());
         }

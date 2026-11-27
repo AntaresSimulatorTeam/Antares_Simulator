@@ -35,6 +35,65 @@ struct Objective
     std::string location;
 };
 
+enum class HeuristicType
+{
+    Accurate,
+    Fast
+};
+
+enum class HeuristicElement
+{
+    NumUnitsOnOpt,
+    NumUnitsMax,
+    MinUpDuration,
+    MinDownDuration,
+
+    GenerationPower,
+    ClusterMaxGeneration,
+    MinPowerPerUnit,
+    MaxPowerPerUnit,
+
+    MinimumNumUnitsOn,
+    MinimumGenerationPower
+};
+
+enum class HeuristicInputType
+{
+    VariableSolution,
+    VariableUpperBound,
+    VariableLowerBound,
+    Parameter
+};
+
+enum class HeuristicOutputType
+{
+    VariableUpperBound,
+    VariableLowerBound
+};
+
+struct HeuristicInput
+{
+    HeuristicElement heuristic_element;
+    std::string id;
+    HeuristicInputType type = HeuristicInputType::Parameter;
+};
+
+struct HeuristicOutput
+{
+    HeuristicElement heuristic_element;
+    std::string id;
+    HeuristicOutputType type;
+};
+
+struct Heuristic
+{
+    HeuristicType type;
+    std::string id;
+
+    std::vector<HeuristicInput> inputs;
+    std::vector<HeuristicOutput> outputs;
+};
+
 struct Model
 {
     std::string id;
@@ -43,6 +102,7 @@ struct Model
     std::vector<Constraint> constraints;
     std::vector<Objective> objectives;
     std::vector<ConstraintOutOfBoundsProcessing> constraints_out_of_bounds_processing;
+    std::vector<Heuristic> heuristics;
 };
 
 struct ScenarioScope

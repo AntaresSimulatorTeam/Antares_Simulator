@@ -37,6 +37,11 @@ bool convert<YmlSystem::Component>::decode(const Node& node, YmlSystem::Componen
     rhs.scenarioGroup = node["scenario-group"].as<std::string>("");
     rhs.parameters = as_fallback_default<std::vector<YmlSystem::Parameter>>(node["parameters"]);
     rhs.properties = as_fallback_default<std::vector<YmlSystem::Property>>(node["properties"]);
+    if (const auto& strategyNode = node["integer-strategy"]; strategyNode)
+    {
+        rhs.integer_strategy.id = strategyNode["id"].as<std::string>("exact");
+        rhs.integer_strategy.heuristic_id = strategyNode["heuristic-id"].as<std::string>("");
+    }
     return true;
 }
 

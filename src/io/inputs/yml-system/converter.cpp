@@ -83,6 +83,7 @@ Component createComponent(const YmlSystem::Component& c, const std::vector<Libra
                        .withModel(&model)
                        .withScenarioGroupId(c.scenarioGroup)
                        .withParameterValues(parameters)
+                       .withIntegerStrategy(c.integer_strategy.id, c.integer_strategy.heuristic_id)
                        .build();
     return component;
 }

@@ -16,6 +16,7 @@
 #include "antares/solver/optimisation/HebdoAreaPriceProvider.h"
 #include "antares/solver/optimisation/LegacyNameMapper.h"
 #include "antares/solver/optimisation/LegacySimulationTableSnapshot.h"
+#include "antares/solver/optimisation/gemsThermalHeuristics.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/ortools_wrapper.h"
 #include "antares/solver/optimisation/simplex/InfeasibilityAnalyzer.h"
@@ -132,6 +133,16 @@ SimplexResult SimplexOrchestrator::solve()
                 .originalProblem = ortoolsProblem_,
                 .objectiveValue = 0,
                 .success = false};
+    }
+
+    // The heuristics of the GEMS components need some values of the first optimisation
+    if (optimizationNumber_ == PREMIERE_OPTIMISATION && problemeHebdo_.gemsHeuristicsState
+        && problemeHebdo_.modelerData)
+    {
+        Antares::Optimization::captureGemsHeuristicInputs(*problemeHebdo_.gemsHeuristicsState,
+                                                          *problemeHebdo_.modelerData,
+                                                          *optimEntityContainer_,
+                                                          *fillCtx_);
     }
 
     // Hand the modeler side to the post-process dumps. Called for both passes,
