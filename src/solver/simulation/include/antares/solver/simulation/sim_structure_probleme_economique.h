@@ -869,6 +869,8 @@ public:
 
     /// \brief Link capacity constraints of the LP being solved, pointing into ortoolsProblem_.
     /// Read after the solve to report the effective NTC and its dual on legacy link outputs.
+    /// Must be cleared before ortoolsProblem_ is reassigned or destroyed (SimplexOrchestrator does
+    /// it, and LpFiller::fillLinearProblem again before filling).
     std::vector<LINK_CAPACITY_CONSTRAINTS> linkCapacityConstraints;
 };
 

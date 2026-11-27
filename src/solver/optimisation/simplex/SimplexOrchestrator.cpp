@@ -95,6 +95,8 @@ SimplexResult SimplexOrchestrator::solve()
     problemeHebdo_.lastSolvedModelerProblem.reset();
 
     // Step 1: Create LP problem
+    // Its constraint pointers target the problem about to be replaced
+    problemeHebdo_.linkCapacityConstraints.clear();
     ortoolsProblem_ = std::make_shared<LegacyOrtoolsLinearProblem>(isMip, options_.solverName);
     // Heap-allocated so it can outlive this call: a post-process simulation
     // table re-emits the modeler rows through it, long after the solve.
