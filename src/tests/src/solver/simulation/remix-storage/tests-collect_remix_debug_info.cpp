@@ -27,6 +27,11 @@ public:
         return 0.0; // Unused in this test
     }
 
+    void applyExchange(unsigned, unsigned, double) override
+    {
+        // Unused in this test
+    }
+
     void update() override
     {
         // Unused in this test
@@ -35,6 +40,11 @@ public:
     [[nodiscard]] const std::vector<double>& initWithdrawal() const override
     {
         return withdrawal_data_;
+    }
+
+    [[nodiscard]] const std::vector<double>& initInjection() const override
+    {
+        return withdrawal_data_; // Unused in this test
     }
 
     std::vector<double>& withdrawal() override

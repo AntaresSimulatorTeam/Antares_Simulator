@@ -21,6 +21,7 @@ struct STS_holder
     STS_holder():
         withdrawal(nb_hours, 0),
         injection(nb_hours, 0),
+        injectionMax(nb_hours, std::numeric_limits<double>::max()),
         levels(nb_hours, 0.),
         pmax(nb_hours, std::numeric_limits<double>::max()),
         inflows(nb_hours, 0.),
@@ -40,6 +41,7 @@ struct STS_holder
                                inflows,
                                ovf,
                                injection,
+                               injectionMax,
                                lowRuleCurve,
                                upRuleCurve,
                                initLevel,
@@ -48,13 +50,13 @@ struct STS_holder
                                name);
     }
 
-    std::vector<double> withdrawal, injection, levels, pmax, inflows, ovf;
+    std::vector<double> withdrawal, injection, injectionMax, levels, pmax, inflows, ovf;
     std::vector<double> lowRuleCurve, upRuleCurve;
 
     double initLevel = 0.;
     double capacity = std::numeric_limits<double>::max();
     const double withdrawalEff = 1.;
-    const double injectionEff = 1.;
+    double injectionEff = 1.;
 };
 
 template<unsigned nb_hours, unsigned nb_storage>
@@ -142,6 +144,7 @@ BOOST_AUTO_TEST_CASE(create_2_STS_for_nb_of_hours_not_equal___check_input_for_al
 using fixture_with_5_hours_2_storages = InputFixture<5, 2>;
 using fixture_with_5_hours_3_storages = InputFixture<5, 3>;
 using fixture_with_8_hours_2_storages = InputFixture<8, 2>;
+using fixture_with_4_hours_1_storage = InputFixture<4, 1>;
 
 // ================================================
 // Note :
@@ -375,4 +378,29 @@ BOOST_FIXTURE_TEST_CASE(flow_conservation_two_hydro_units, fixture_with_8_hours_
                                 - (total_final_level - total_init_level));
 
     BOOST_TEST(imbalance < 1e-3); // Flow perfectly conserved within tolerance
+}
+
+BOOST_FIXTURE_TEST_CASE(withdrawal_at_pmin___injection_is_remixed___totals_and_final_level_kept,
+                        fixture_with_4_hours_1_storage,
+                        *boost::unit_test::tolerance(1e-6))
+{
+    std::ranges::fill(TotaGenWithoutStorage, 100.);
+    UnsupE = {40., 40., 10., 10.};
+
+    auto& sts = STS_holders[0];
+    sts.injection = {20., 20., 0., 0.}; // Withdrawal stays 0 (= Pmin) : only injection can move
+    sts.injectionEff = 0.8;
+    sts.initLevel = 500.;
+    sts.capacity = 1000.;
+    sts.upRuleCurve.assign(4, sts.capacity);
+
+    runRemixStorageAlgorithm();
+
+    std::vector<double> expectedUnsupE = {25., 25., 25., 25.};
+    std::vector<double> expectedInjection = {5., 5., 15., 15.};
+    std::vector<double> expectedWithdrawal = {0., 0., 0., 0.};
+    BOOST_TEST(UnsupE == expectedUnsupE, boost::test_tools::per_element());
+    BOOST_TEST(sts.injection == expectedInjection, boost::test_tools::per_element());
+    BOOST_TEST(sts.withdrawal == expectedWithdrawal, boost::test_tools::per_element());
+    BOOST_TEST(sts.levels.back() == 500. + 0.8 * 40.);
 }

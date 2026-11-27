@@ -24,8 +24,11 @@ public:
 
     virtual ~IStorageForRemix() = default;
     virtual double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const = 0;
+    // Moves 'amount' of net generation (withdrawal - injection) from hourOfMaxGen to hourOfMinGen
+    virtual void applyExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen, double amount) = 0;
     virtual void update() = 0;
     virtual const std::vector<double>& initWithdrawal() const = 0;
+    virtual const std::vector<double>& initInjection() const = 0;
     virtual std::vector<double>& withdrawal() = 0;
 
 private:

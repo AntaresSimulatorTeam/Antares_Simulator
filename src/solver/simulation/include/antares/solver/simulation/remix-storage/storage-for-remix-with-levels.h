@@ -14,11 +14,12 @@ public:
     StorageForRemixWithLevels(std::vector<double>& withdrawal,
                               std::vector<double>& unsupE,
                               std::vector<double>& levels,
-                              const std::vector<double> Pmax,
+                              const std::vector<double> withdrawalMax,
                               const std::vector<double> Pmin,
                               const std::vector<double> inflows,
                               const std::vector<double> overflow,
-                              const std::vector<double>& injection,
+                              std::vector<double>& injection,
+                              const std::vector<double> injectionMax,
                               const std::vector<double> lowRuleCurve,
                               const std::vector<double> upRuleCurve,
                               const double initLevel,
@@ -27,16 +28,24 @@ public:
                               const std::string& name = "");
 
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const override;
+    void applyExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen, double amount) override;
     void update() override;
+    const std::vector<double>& initInjection() const override;
 
 private:
     void checkLevels();
     void checkInput(size_t size) override;
+    double maxWithdrawalExchangeWithLevels(unsigned hourOfMaxGen, unsigned hourOfMinGen) const;
+    double maxInjectionExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const;
+    // Max level variation allowed on hours between hourOfMinGen and hourOfMaxGen
+    double levelMargin(unsigned hourOfMaxGen, unsigned hourOfMinGen) const;
 
     std::vector<double>& levels_;
     const std::vector<double> inflows_;
     const std::vector<double> overflow_;
-    const std::vector<double>& injection_;
+    std::vector<double>& injection_;
+    const std::vector<double> initInjection_;
+    const std::vector<double> injectionMax_;
 
     const std::vector<double> ruleCurveLow_;
     const std::vector<double> ruleCurveUp_;

@@ -31,6 +31,7 @@ struct InputFixture
         inflows.assign(size, 0.);
         ovf.assign(size, 0.);
         pump.assign(size, 0.);
+        pumpMax.assign(size, std::numeric_limits<double>::max());
         Spillage.assign(size, 0.);
         DTG_MRG.assign(size, 0.);
     }
@@ -45,6 +46,7 @@ struct InputFixture
                                  inflows,
                                  ovf,
                                  pump,
+                                 pumpMax,
                                  init_level,
                                  capacity,
                                  pumpEff,
@@ -61,7 +63,7 @@ struct InputFixture
     }
 
     std::vector<double> TotalGenNoHydro, Load, HydroGen, UnsupE, levels, pmax, pmin, inflows, ovf,
-      pump, Spillage, DTG_MRG;
+      pump, pumpMax, Spillage, DTG_MRG;
     ListStorageForRemix storagesForRemix;
     double init_level = 0.;
     double capacity = std::numeric_limits<double>::max();

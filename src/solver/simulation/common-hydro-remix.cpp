@@ -257,7 +257,9 @@ std::shared_ptr<IStorageForRemix> extractHydroForRemix(const Data::Area& area,
     const bool reservoirManagement = area.hydro.reservoirManagement;
     const auto& inflows = problem.CaracteristiquesHydrauliques[area.index].ApportNaturelHoraire;
     const auto& ovf = weeklyResults.debordementsHoraires;
-    const auto& pump = weeklyResults.PompageHoraire;
+    auto& pump = weeklyResults.PompageHoraire;
+    const auto& pumpMax = problem.CaracteristiquesHydrauliques[area.index]
+                            .ContrainteDePmaxPompageHoraire;
 
     return makeHydroForRemix(hydroGen,
                              unsupE,
@@ -267,6 +269,7 @@ std::shared_ptr<IStorageForRemix> extractHydroForRemix(const Data::Area& area,
                              inflows,
                              ovf,
                              pump,
+                             pumpMax,
                              initLevel,
                              capacity,
                              efficiency,
@@ -279,10 +282,18 @@ std::span<const double> weekSubRange(const std::vector<double>& v, unsigned firs
     return {v.begin() + firstHourOfWeek, v.begin() + firstHourOfWeek + HOURS_IN_WEEK};
 }
 
-std::vector<double> extractSTSpmax(const PROPERTIES& sts_properties, const unsigned firstHourOfWeek)
+std::vector<double> extractSTSwithdrawalMax(const PROPERTIES& sts_properties,
+                                            const unsigned firstHourOfWeek)
 {
     auto subrange = weekSubRange(sts_properties.series->maxWithdrawalModulation, firstHourOfWeek);
     return subrange * sts_properties.withdrawalNominalCapacity;
+}
+
+std::vector<double> extractSTSinjectionMax(const PROPERTIES& sts_properties,
+                                           const unsigned firstHourOfWeek)
+{
+    auto subrange = weekSubRange(sts_properties.series->maxInjectionModulation, firstHourOfWeek);
+    return subrange * sts_properties.injectionNominalCapacity;
 }
 
 std::vector<double> extractSTSlowRuleCurve(const PROPERTIES& sts_properties,
@@ -321,7 +332,7 @@ std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
     auto& stsResults = weeklyResults.ShortTermStorage;
 
     auto& withdrawal = stsResults[stsIndex].withdrawal;
-    const auto& injection = stsResults[stsIndex].injection;
+    auto& injection = stsResults[stsIndex].injection;
     auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
     auto& levels = stsResults[stsIndex].level;
 
@@ -336,11 +347,11 @@ std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
         overflows.assign(size, 0.0);
     }
 
-    const auto& pmax = extractSTSpmax(stsProperties, firstHourOfWeek);
+    const auto& withdrawalMax = extractSTSwithdrawalMax(stsProperties, firstHourOfWeek);
+    const auto injectionMax = extractSTSinjectionMax(stsProperties, firstHourOfWeek);
     const auto& inflows = extractSTSinflows(stsProperties, firstHourOfWeek, problem.year);
     const auto lowRuleCurve = extractSTSlowRuleCurve(stsProperties, firstHourOfWeek);
     const auto upRuleCurve = extractSTSupRuleCurve(stsProperties, firstHourOfWeek);
-    const double withdrawalcapacity = stsProperties.withdrawalNominalCapacity;
     const double withdrawalEff = stsProperties.withdrawalEfficiency;
     const double injectionEff = stsProperties.injectionEfficiency;
     const double initLevel = levels[0] - inflows[0] + overflows[0] - injectionEff * injection[0]
@@ -349,10 +360,11 @@ std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
     return makeSTSforRemix(withdrawal,
                            unsupE,
                            levels,
-                           pmax,
+                           withdrawalMax,
                            inflows,
                            overflows,
                            injection,
+                           injectionMax,
                            lowRuleCurve,
                            upRuleCurve,
                            initLevel,

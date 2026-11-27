@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE(extract_first_week_from_start)
     props.series = stsSeries;
     props.withdrawalNominalCapacity = 50.0;
 
-    auto result = extractSTSpmax(props, 0);
+    auto result = extractSTSwithdrawalMax(props, 0);
 
     BOOST_CHECK_EQUAL(result.size(), 168);
     BOOST_CHECK_CLOSE(result[0], 50.0, TOLERANCE);
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(extract_week_starting_at_hour_24)
     props.series = stsSeries;
     props.withdrawalNominalCapacity = 75.0;
 
-    auto result = extractSTSpmax(props, 24);
+    auto result = extractSTSwithdrawalMax(props, 24);
 
     BOOST_CHECK_EQUAL(result.size(), 168);
     BOOST_CHECK_CLOSE(result[0], 75.0, TOLERANCE);
@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE(extract_week_with_nominal_capacity_50)
     props.series = stsSeries;
     props.withdrawalNominalCapacity = 50.0;
 
-    auto result = extractSTSpmax(props, 0);
+    auto result = extractSTSwithdrawalMax(props, 0);
 
     BOOST_CHECK_CLOSE(result[0], 25.0, TOLERANCE);
     BOOST_CHECK_CLOSE(result[1], 30.0, TOLERANCE);
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(extract_week_with_nominal_capacity_200)
     props.series = stsSeries;
     props.withdrawalNominalCapacity = 200.0;
 
-    auto result = extractSTSpmax(props, 0);
+    auto result = extractSTSwithdrawalMax(props, 0);
 
     BOOST_CHECK_CLOSE(result[0], 200.0, TOLERANCE);
     BOOST_CHECK_CLOSE(result[9], 200.0, TOLERANCE);
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(extract_week_starting_at_hour_168_non_constant)
     props.series = stsSeries;
     props.withdrawalNominalCapacity = 100.0;
 
-    auto result = extractSTSpmax(props, 168);
+    auto result = extractSTSwithdrawalMax(props, 168);
 
     BOOST_CHECK_EQUAL(result.size(), 168);
     BOOST_CHECK_CLOSE(result[0], 50.0, TOLERANCE);
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE(modulation_factors_of_1_return_full_capacity)
     props.series = stsSeries;
     props.withdrawalNominalCapacity = 150.0;
 
-    auto result = extractSTSpmax(props, 0);
+    auto result = extractSTSwithdrawalMax(props, 0);
 
     for (int i = 0; i < 168; ++i)
     {
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(modulation_factors_of_0_return_zero_capacity)
     props.series = stsSeries;
     props.withdrawalNominalCapacity = 50.0;
 
-    auto result = extractSTSpmax(props, 0);
+    auto result = extractSTSwithdrawalMax(props, 0);
 
     for (int i = 0; i < 168; ++i)
     {
@@ -141,7 +141,7 @@ BOOST_AUTO_TEST_CASE(verify_withdrawalNominalCapacity_used_not_efficiency)
     props.withdrawalNominalCapacity = 80.0;
     props.withdrawalEfficiency = 0.5;
 
-    auto result = extractSTSpmax(props, 0);
+    auto result = extractSTSwithdrawalMax(props, 0);
 
     BOOST_CHECK_CLOSE(result[0], 80.0, TOLERANCE);
 }

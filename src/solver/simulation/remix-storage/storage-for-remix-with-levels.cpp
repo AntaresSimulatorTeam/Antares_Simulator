@@ -3,6 +3,8 @@
 
 #include "antares/solver/simulation/remix-storage/storage-for-remix-with-levels.h"
 
+#include <algorithm>
+#include <limits>
 #include <stdexcept>
 
 #include <antares/logs/logs.h>
@@ -17,22 +19,25 @@ namespace Antares::Solver::Simulation
 StorageForRemixWithLevels::StorageForRemixWithLevels(std::vector<double>& withdrawal,
                                                      std::vector<double>& unsupE,
                                                      std::vector<double>& levels,
-                                                     const std::vector<double> Pmax,
+                                                     const std::vector<double> withdrawalMax,
                                                      const std::vector<double> Pmin,
                                                      const std::vector<double> inflows,
                                                      const std::vector<double> overflow,
-                                                     const std::vector<double>& injection,
+                                                     std::vector<double>& injection,
+                                                     const std::vector<double> injectionMax,
                                                      const std::vector<double> lowRuleCurve,
                                                      const std::vector<double> upRuleCurve,
                                                      const double initLevel,
                                                      const double withdrawalEff,
                                                      const double injectionEff,
                                                      const std::string& name):
-    StorageForRemixNoLevels(withdrawal, unsupE, Pmax, Pmin, name),
+    StorageForRemixNoLevels(withdrawal, unsupE, withdrawalMax, Pmin, name),
     levels_(levels),
     inflows_(inflows),
     overflow_(overflow),
     injection_(injection),
+    initInjection_(injection),
+    injectionMax_(injectionMax),
     ruleCurveLow_(lowRuleCurve),
     ruleCurveUp_(upRuleCurve),
     initLevel_(initLevel),
@@ -44,21 +49,69 @@ StorageForRemixWithLevels::StorageForRemixWithLevels(std::vector<double>& withdr
     checkLevels();
 }
 
-double StorageForRemixWithLevels::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const
+// Both levers (withdrawal, injection) lower the level between hourOfMinGen and hourOfMaxGen
+// if hourOfMinGen comes first, raise it otherwise. Levels after both hours are unchanged.
+double StorageForRemixWithLevels::levelMargin(unsigned hourOfMaxGen, unsigned hourOfMinGen) const
 {
-    double boundNoLevels = StorageForRemixNoLevels::maxExchange(hourOfMaxGen, hourOfMinGen);
-
     unsigned hour = std::min(hourOfMinGen, hourOfMaxGen);
     unsigned HOUR = std::max(hourOfMinGen, hourOfMaxGen);
 
     if (hourOfMinGen < hourOfMaxGen)
     {
-        return std::min(boundNoLevels, min_on_subrange(levels_ - ruleCurveLow_, hour, HOUR));
+        return min_on_subrange(levels_ - ruleCurveLow_, hour, HOUR);
+    }
+    return min_on_subrange(ruleCurveUp_ - levels_, hour, HOUR);
+}
+
+static double levelBoundToPower(double levelMargin, double efficiency)
+{
+    return efficiency > 0. ? levelMargin / efficiency : std::numeric_limits<double>::max();
+}
+
+double StorageForRemixWithLevels::maxWithdrawalExchangeWithLevels(unsigned hourOfMaxGen,
+                                                                  unsigned hourOfMinGen) const
+{
+    return std::min(maxWithdrawalExchange(hourOfMaxGen, hourOfMinGen),
+                    levelBoundToPower(levelMargin(hourOfMaxGen, hourOfMinGen), withdrawalEff_));
+}
+
+double StorageForRemixWithLevels::maxInjectionExchange(unsigned hourOfMaxGen,
+                                                       unsigned hourOfMinGen) const
+{
+    // Less injection at hourOfMinGen, more injection at hourOfMaxGen
+    double boundPower = std::min({injection_[hourOfMinGen],
+                                  injectionMax_[hourOfMaxGen] - injection_[hourOfMaxGen],
+                                  unsupE_[hourOfMinGen]});
+    return std::min(boundPower,
+                    levelBoundToPower(levelMargin(hourOfMaxGen, hourOfMinGen), injectionEff_));
+}
+
+double StorageForRemixWithLevels::maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const
+{
+    return std::max(maxWithdrawalExchangeWithLevels(hourOfMaxGen, hourOfMinGen),
+                    maxInjectionExchange(hourOfMaxGen, hourOfMinGen));
+}
+
+void StorageForRemixWithLevels::applyExchange(unsigned hourOfMaxGen,
+                                              unsigned hourOfMinGen,
+                                              double amount)
+{
+    // Only one lever per exchange so that total withdrawal and total injection are kept
+    if (maxWithdrawalExchangeWithLevels(hourOfMaxGen, hourOfMinGen) >= amount - TOLERANCE)
+    {
+        exchangeWithdrawal(hourOfMaxGen, hourOfMinGen, amount);
     }
     else
     {
-        return std::min(boundNoLevels, min_on_subrange(ruleCurveUp_ - levels_, hour, HOUR));
+        injection_[hourOfMinGen] -= amount;
+        injection_[hourOfMaxGen] += amount;
     }
+    update();
+}
+
+const std::vector<double>& StorageForRemixWithLevels::initInjection() const
+{
+    return initInjection_;
 }
 
 void StorageForRemixWithLevels::update()
@@ -106,6 +159,7 @@ void StorageForRemixWithLevels::checkInput(size_t size)
                                  inflows_.size(),
                                  overflow_.size(),
                                  injection_.size(),
+                                 injectionMax_.size(),
                                  levels_.size()};
 
     if (!std::ranges::all_of(sizes, [&sizes](const size_t s) { return s == sizes.front(); }))
@@ -116,6 +170,22 @@ void StorageForRemixWithLevels::checkInput(size_t size)
     if (!size)
     {
         throw std::invalid_argument(error_msg_start_hydro_remix + "all arrays of sizes 0");
+    }
+
+    for (size_t h = 0; h < injection_.size(); ++h)
+    {
+        if (injection_[h] > injectionMax_[h] + TOLERANCE || injection_[h] < -TOLERANCE)
+        {
+            logs.error().appendFormat(
+              "%s - hour %zu : injection = %.17g, injection max = %.17g, tolerance = %.17g",
+              name().c_str(),
+              h,
+              injection_[h],
+              injectionMax_[h],
+              TOLERANCE);
+            throw std::invalid_argument(error_msg_start_hydro_remix
+                                        + "Storage injection not within [0, injection max]");
+        }
     }
 
     if (ruleCurveUp_[0] + TOLERANCE <= initLevel_)

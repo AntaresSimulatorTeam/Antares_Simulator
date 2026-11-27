@@ -10,8 +10,8 @@
 
 namespace Antares::Solver::Simulation
 {
-std::vector<double> extractSTSpmax(const PROPERTIES& sts_properties,
-                                   const unsigned firstHourOfWeek);
+std::vector<double> extractSTSwithdrawalMax(const PROPERTIES& sts_properties,
+                                            const unsigned firstHourOfWeek);
 
 } // namespace Antares::Solver::Simulation
 

@@ -21,8 +21,15 @@ class StorageMock: public IStorageForRemix
 public:
     StorageMock(int id);
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const override;
+    void applyExchange(unsigned, unsigned, double) override
+    {
+    }
     void update() override;
     const std::vector<double>& initWithdrawal() const override;
+    const std::vector<double>& initInjection() const override
+    {
+        return dummy_;
+    }
     std::vector<double>& withdrawal() override;
     int id();
 

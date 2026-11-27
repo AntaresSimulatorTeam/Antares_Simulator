@@ -38,6 +38,7 @@ struct StorageFixture
         lowRuleCurve.assign(size, 0.);
 
         injection.assign(size, 0.);
+        injectionMax.assign(size, 0.);
         ovf.assign(size, 0.);
     }
 
@@ -50,6 +51,7 @@ struct StorageFixture
                                inflows,
                                ovf,
                                injection,
+                               injectionMax,
                                lowRuleCurve,
                                upRuleCurve,
                                initLevel,
@@ -57,7 +59,7 @@ struct StorageFixture
                                injectionEff);
     }
 
-    std::vector<double> withdrawal, unsupE, levels, pmax, inflows, ovf, injection;
+    std::vector<double> withdrawal, unsupE, levels, pmax, inflows, ovf, injection, injectionMax;
     std::vector<double> lowRuleCurve, upRuleCurve;
     double maxCapacity;
     double initLevel;

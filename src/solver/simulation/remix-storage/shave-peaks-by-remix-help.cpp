@@ -34,7 +34,12 @@ void updateValidHours(std::set<unsigned>& validHours,
                       const std::vector<double>& UnsupEinit)
 {
     std::erase_if(validHours,
-                  [&](int h) { return storage.initWithdrawal()[h] + UnsupEinit[h] <= eps; });
+                  [&](int h)
+                  {
+                      return storage.initWithdrawal()[h] + storage.initInjection()[h]
+                               + UnsupEinit[h]
+                             <= eps;
+                  });
 }
 
 double computeExchange(const unsigned hourOfMinGen,
@@ -90,9 +95,7 @@ void update(const Exchange& exchange,
     unsigned hourOfMinGen = exchange.hourOfMinGen.value();
     unsigned hourOfMaxGen = exchange.hourOfMaxGen.value();
 
-    storage.withdrawal()[hourOfMaxGen] -= amount;
-    storage.withdrawal()[hourOfMinGen] += amount;
-    storage.update();
+    storage.applyExchange(hourOfMaxGen, hourOfMinGen, amount);
 
     UnsupE[hourOfMaxGen] += amount;
     UnsupE[hourOfMinGen] -= amount;
