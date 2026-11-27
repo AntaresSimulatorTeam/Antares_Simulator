@@ -4,6 +4,66 @@ toc_depth: 2
 
 # Antares Changelog
 
+## Branch 10.3.x
+
+### 10.3.0
+
+#### Breaking changes
+
+* Remove the hydro `leeway` feature [ANT-5838] (#3967). See the
+  [migration guide](../reference/migration-guides.md)
+* Legacy component IDs, in the simulation tables and in `system-for-views.yml`, no longer end with
+  `_node` (areas) or `_link` (links) [ANT-6126] (#4017), and spaces in them are replaced by underscores
+  [ANT-6132] (#4018)
+* `system-for-views.yml` is written to `views/input/` of the output folder instead of its root (#4023)
+* Simulation tables are written in a `simulation-tables/` subdirectory of the output folder instead of its
+  root [ANT-6195] (#4022)
+* The year, week and day in the names of the MPS, criterion, optimal-values, reduced-costs and
+  marginal-costs files are 0-based instead of 1-based [ANT-6021] (#4031)
+* Enabling reserves in a study older than version 10.1 is now an error instead of a crash later in the
+  run (#4012, #4039)
+* `sum(x)` over the whole block of a time-constant expression `x` is now multiplied by the number of time
+  steps in the optimisation problem, as in its evaluation [ANT-6200] (#4027)
+
+#### Features
+
+* Thermal cluster ramping: ramp constraints and costs, enabled with `include-thermal-cluster-ramping`
+  and the `ramping-enabled` cluster property, with the `RAMP COST` and `RAMP COST BY PLANT` outputs
+  [ANT-992] (#2684, #3984)
+* Reserve needs can be scenarised per Monte-Carlo year, with several time series per reserve and a new
+  `res` scenario-builder rule (#3719)
+* Add `domestic_unsupplied_energy` and `is_local_matching_rule_violated` per area in the simulation
+  table [ANT-5240] (#3980)
+* Simulation tables of the legacy solver are written incrementally [ANT-6073] (#4019)
+* System for views: add the district of each area [ANT-6074] (#4006), the names of clusters
+  [ANT-6050] (#4014) and of wind, run-of-river and solar [ANT-6169] (#4044); disabled components and legacy
+  wind/solar in cluster mode are no longer exported [ANT-5954] (#3968, #4021)
+
+#### GEMS / Modeler
+
+* Accept expressions as time indices and right-side multiplication / division in shifts
+  [ANT-6199] (#4026)
+* Add field checks for model nodes [ANT-6041] (#3976)
+* Use `system.yml` to determine whether a study is hybrid [ANT-6203] (#4033)
+* Clearer error message for `sum_connections` [ANT-5143] (#4005)
+
+#### Bug fixes
+
+* Fix `t + offset` evaluated with an unsigned wraparound, e.g. `t - 1` at `t = 0` [ANT-6201] (#4025)
+* Fix a scenario-independent GEMS parameter that did not always use its first time series [ANT-5944] (#3969)
+* District output filters are now ignored when `geographic-trimming = false` (#3972)
+* Fix the Arrow capacity error when writing the simulation table of large studies (#3975)
+* Clearer log messages for remix-hydro: MC year, area and reservoir names [ANT-5972] (#4004)
+
+#### Documentation
+
+* Document simulation tables written in a ZIP output (#4041)
+* Add a documentation page about sanitizers (#3988)
+
+#### CI
+
+* Add Ubuntu Clang workflow with sanitizers and strict warnings (#3763)
+
 ## Branch 10.2.x
 
 #### Breaking changes

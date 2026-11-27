@@ -45,8 +45,10 @@ Properties:
 
 For each defined reserve, the corresponding hourly need time-series must be located at
 **input/reserves/&lt;area id&gt;/&lt;reserve id&gt;.txt** (the reserve id is the reserve name lower-cased,
-characters outside of `[a-z0-9_-(),& ]` being replaced by spaces). The file contains 8760 hourly values
-(whitespace separated).
+characters outside of `[a-z0-9_-(),& ]` being replaced by spaces). Each column contains 8760 hourly values
+(whitespace separated). Several columns can be given, one per time series, so that the need differs between
+Monte-Carlo years. The time series number is drawn at the area level (it is the same for all the reserves of the
+area) and can be set in the scenario builder with the `res` rule.
 
 ## Reserve participations
 

@@ -25,6 +25,79 @@ Hydro leeway has been removed. The `[leeway low]` and `[leeway up]` sections in
 The `[use leeway]` section is also no longer supported. It is accepted for compatibility,
 but `use leeway = yes` is ignored with a warning; remove the section from the study.
 
+#### Thermal cluster ramping
+
+New optional feature. In **settings/generaldata.ini**, the new property `include-thermal-cluster-ramping`
+(default `false`) enables ramp constraints and ramping costs for the thermal clusters whose
+`ramping-enabled` property is `true`. Rates and costs are set per cluster in the thermal `list.ini`. When the
+property is `false`, the per-cluster ramping properties are ignored and existing studies are not affected.
+See [Thermal cluster ramping](solver/inputs.md#thermal-cluster-ramping) and
+[`include-thermal-cluster-ramping`](solver/parameters.md#include-thermal-cluster-ramping).
+
+#### Reserve needs per Monte-Carlo year
+
+The need of each reserve (`input/reserves/<area id>/<reserve id>.txt`) may now have several columns of 8760 values,
+one per time series, so that the need can differ between Monte-Carlo years. The time series number is drawn at
+the area level, and can be set in the scenario builder with the new `res` rule. See
+[inputs](solver/inputs.md).
+
+#### Reserves require study version 10.1 or later
+
+Enabling reserves (`include-reserves`) in a study whose format is older than 10.1 used to log a warning
+and continue, which led to a crash later in the run. The solver now stops with an error when the study
+is loaded. Upgrade the study to version 10.1 or later to use reserves.
+
+### Behavior
+
+#### Sum over a whole block of a time-constant expression
+
+In the modeler, `sum(c)` over the whole block (all time steps) where `c` is constant in time is now
+multiplied by the number of time steps, as `sum` does for any other operand. Previously the constraint
+was built with `c` alone, inconsistently with the evaluation of the expression. The objective changes for models using
+`sum(x)` with `x` constant in time (for example investment variables) or `sum(constant)`.
+
+### Output
+
+#### Legacy component names no longer have `_node` / `_link` suffixes
+
+The component IDs generated for legacy objects, in the simulation tables and in `system-for-views.yml`,
+no longer carry a suffix:
+
+| Object | Before | Now |
+|--------|--------|-----|
+| Area | `<area>_node` | `<area>` |
+| Link | `<origin>_<destination>_link` | `<origin>_<destination>` |
+
+Scripts that match on these IDs must be updated. The other components (`<area>_thermal_<cluster>`,
+`<area>_hydro_storage`, ...) are unchanged.
+
+#### Spaces in legacy component names are replaced by underscores
+
+Legacy object IDs may contain spaces (e.g. `all areas`, `semi base`). In the component IDs written to the
+simulation tables and to `system-for-views.yml`, spaces are now replaced by underscores, so that IDs are
+consistently underscore-separated. For instance `area_thermal_semi base` becomes `area_thermal_semi_base`
+and `district_all areas` becomes `district_all_areas`. Names on disk in the study are not modified.
+
+#### Simulation tables written in a `simulation-tables/` subdirectory
+
+When simulation tables are enabled, they are now written in a `simulation-tables` subdirectory of the run's
+output folder instead of its root, for the solver (`simulation-table-<year>-<stage>`) and for the modeler
+(`simulation-table-<scenario>`). Runs that do not export simulation tables do not create this directory.
+Scripts that read the tables must look in the new location.
+
+#### Year and week numbers in raw optimisation files are 0-based
+
+In the names of the exported MPS, `criterion`, `optimal-values`, `reduced-costs` and `marginal-costs` files, the
+year, week and day now start at 0, like the indices used in the simulation tables, instead of 1. For example
+`problem-1-1--optim-nb-1.mps` becomes `problem-0-0--optim-nb-1.mps` for the first year and first week.
+The stage names `optim-nb-1` and `optim-nb-2` are unchanged, and so are the log messages
+(`Year X failed at week Y`), which still count from 1.
+
+#### `system-for-views.yml` moved to `views/input/`
+
+The file is now written to `<timestamp output>/views/input/system-for-views.yml` instead of the root of
+the output folder, for both the solver and the modeler. Update any script that reads it from the old location.
+
 ## v10.2.0
 
 ### Input
@@ -56,6 +129,9 @@ district's output entirely for that report. These keys use the same syntax and s
 existing `filter-synthesis` / `filter-year-by-year` keys of areas and links. See
 [Definition of regional districts](solver/inputs.md#definition-of-regional-districts) for details.
 
+These district filters are only applied when `geographic-trimming = true` in
+**settings/generaldata.ini** (section `output`); otherwise all granularities are exported.
+
 #### Deprecated properties
 
 The following properties of the `general` section in file settings/generaldata.ini are now ignored. They are
@@ -72,7 +148,7 @@ still accepted for compatibility, but should be removed from the study:
 #### One simulation table per optimization and post-process
 
 A simulation table is now written after **each** stage (optimization or post-process), one
-file per stage under `simulation-tables/`, named `simulation-table-<year>-<stage>`:
+file per stage, named `simulation-table-<year>-<stage>`:
 
 | Stage | Written after | Produced |
 |---|---|---|
