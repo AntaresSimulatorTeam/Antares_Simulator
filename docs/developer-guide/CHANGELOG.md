@@ -46,6 +46,12 @@ toc_depth: 2
 * Add cucumber tests for antares-modeler + parquet simulation tables [ANT-5180] (#3752)
 * Add GEMS contribution to adequacy patch CSR bounds [ANT-5264] (#3853)
 * Modeler: allow several years [ANT-5144] (#3907)
+* Modeler: validate model libraries and `system.yml` against the GEMS JSON Schemas instead of
+  hand-written field lists, with line and column in every message (#4061). Accept `binary` as a
+  synonym of the `boolean` variable type, and the documented GEMS keys the Simulator ignores
+  (`library.version`, `library.taxonomy`, `library.dependencies`, `taxonomy-category`, `properties`,
+  constraint bounds, `integer-strategy`, `system.description`). Values are typed as in YAML 1.2:
+  digit-only ids must be quoted, and `yes`/`no` are no longer booleans (#4061)
 * Add an optional `price` field to the `area-connection` section of a port type: a GEMS component
   can read the legacy area's marginal price with `sum_connections(<port>.<price-field>)`, e.g. to
   compute a profit output. The price is 0 when the problem is solved as a MILP. The field must be one

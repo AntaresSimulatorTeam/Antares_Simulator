@@ -26,13 +26,13 @@ BOOST_AUTO_TEST_CASE(library_requires_mapping_root_and_section)
         {
             BOOST_CHECK_EXCEPTION(YmlModel::Parser{}.parse(value),
                                   InputError,
-                                  containsMessage("expected a YAML mapping"));
+                                  containsMessage("Expected object"));
         }
         BOOST_TEST_CONTEXT("library: " << value)
         {
             BOOST_CHECK_EXCEPTION(YmlModel::Parser{}.parse(std::string("library: ") + value),
                                   InputError,
-                                  containsMessage("expected a YAML mapping in 'library'"));
+                                  containsMessage("'library': Expected object"));
         }
     }
 }
@@ -51,11 +51,10 @@ BOOST_AUTO_TEST_CASE(port_type_connections_require_mappings)
                                                  "    - id: p\n"
                                                  "      ")
                                      + field + ": " + value;
-                BOOST_CHECK_EXCEPTION(
-                  YmlModel::Parser{}.parse(content),
-                  InputError,
-                  containsMessage(std::string("expected a YAML mapping in 'library/port-types/p/")
-                                  + field + "'"));
+                BOOST_CHECK_EXCEPTION(YmlModel::Parser{}.parse(content),
+                                      InputError,
+                                      containsMessage(std::string("'library/port-types/p/") + field
+                                                      + "': Expected object"));
             }
         }
     }
@@ -84,9 +83,8 @@ BOOST_AUTO_TEST_CASE(model_sequence_entries_require_mappings)
                                      + field + ": [" + value + "]";
                 BOOST_CHECK_EXCEPTION(YmlModel::Parser{}.parse(content),
                                       InputError,
-                                      containsMessage(
-                                        std::string("expected a YAML mapping in 'library/models/m/")
-                                        + field + "/[0]'"));
+                                      containsMessage(std::string("'library/models/m/") + field
+                                                      + "/[0]': Expected object"));
             }
         }
     }
@@ -124,11 +122,15 @@ library:
                                   "library/port-types/p/thermal-capacity-connection",
                                   "library/models/[0]"})
           {
-              BOOST_CHECK(message.find(std::string("expected a YAML mapping in '") + path + "'")
+              BOOST_CHECK(message.find(std::string("'") + path + "': Expected object")
                           != std::string::npos);
           }
-          BOOST_CHECK(message.find("Missing field: type") != std::string::npos);
-          BOOST_CHECK(message.find("Unknown variable-type") == std::string::npos);
+          BOOST_CHECK(message.find("Required property 'type' not found.") != std::string::npos);
+          // A bad value is reported in the same pass as the structural errors
+          BOOST_CHECK(
+            message.find(
+              "'library/models/m/variables/v/variable-type': 'invalid' is not a valid enum value")
+            != std::string::npos);
           return true;
       });
 }
@@ -171,6 +173,39 @@ library:
     BOOST_CHECK(emptyLibrary.models.empty());
 }
 
+BOOST_AUTO_TEST_CASE(documented_gems_metadata_is_accepted_and_ignored)
+{
+    const auto library = YmlModel::Parser{}.parse(R"(
+library:
+  id: lib
+  version: "1.2.3"
+  taxonomy: my-taxonomy
+  models:
+    - id: m
+      taxonomy-category: some-category
+      properties:
+        - id: prop1
+        - id: prop2
+)");
+    BOOST_CHECK_EQUAL(library.id, "lib");
+    BOOST_REQUIRE_EQUAL(library.models.size(), 1);
+    BOOST_CHECK_EQUAL(library.models[0].id, "m");
+}
+
+BOOST_AUTO_TEST_CASE(model_properties_require_an_id)
+{
+    BOOST_CHECK_EXCEPTION(YmlModel::Parser{}.parse(R"(
+library:
+  id: lib
+  models:
+    - id: m
+      properties:
+        - name: prop1
+)"),
+                          InputError,
+                          containsMessage("Required property 'id' not found."));
+}
+
 BOOST_AUTO_TEST_CASE(library_collects_errors_in_nested_and_sibling_nodes)
 {
     const auto content = R"(
@@ -195,15 +230,23 @@ library:
       [](const InputError& e)
       {
           const std::string message = e.what();
-          BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: injection-to-balance") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: spillage-bound") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: unsupplied-energy-bound") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: type") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: expression") != std::string::npos);
-          BOOST_CHECK(message.find("Unrecognised field: unexpected") != std::string::npos);
-          BOOST_CHECK(message.find("|__ [0]") != std::string::npos);
-          BOOST_CHECK(message.find("|__ missing_type") != std::string::npos);
+          BOOST_CHECK(message.find("Required property 'id' not found.") != std::string::npos);
+          BOOST_CHECK(message.find("Required property 'injection-to-balance' not found.")
+                      != std::string::npos);
+          BOOST_CHECK(message.find("Required property 'spillage-bound' not found.")
+                      != std::string::npos);
+          BOOST_CHECK(message.find("Required property 'unsupplied-energy-bound' not found.")
+                      != std::string::npos);
+          BOOST_CHECK(message.find("Required property 'type' not found.") != std::string::npos);
+          BOOST_CHECK(message.find("Required property 'expression' not found.")
+                      != std::string::npos);
+          BOOST_CHECK(message.find("Additional property 'unexpected' not allowed by schema.")
+                      != std::string::npos);
+          // Paths use the id of an entry when it has one, its index otherwise
+          BOOST_CHECK(message.find("'library/port-types/p/fields/[0]'") != std::string::npos);
+          BOOST_CHECK(message.find("'library/models/m/ports/missing_type'") != std::string::npos);
+          BOOST_CHECK(message.find("'library/models/m/constraints/missing_expression'")
+                      != std::string::npos);
           return true;
       });
     BOOST_CHECK(logs.getWarnings().empty());
@@ -232,12 +275,13 @@ system:
       [](const InputError& e)
       {
           const std::string message = e.what();
-          BOOST_CHECK(message.find("Missing field: model") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: value") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: component2") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: port1") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: port2") != std::string::npos);
+          BOOST_CHECK(message.find("Required property 'model' not found.") != std::string::npos);
+          BOOST_CHECK(message.find("Required property 'value' not found.") != std::string::npos);
+          BOOST_CHECK(message.find("Required property 'id' not found.") != std::string::npos);
+          BOOST_CHECK(message.find("Required property 'component2' not found.")
+                      != std::string::npos);
+          BOOST_CHECK(message.find("Required property 'port1' not found.") != std::string::npos);
+          BOOST_CHECK(message.find("Required property 'port2' not found.") != std::string::npos);
           return true;
       });
 }
@@ -250,16 +294,16 @@ system:
     - id: null
       model: lib.model
 )";
-    BOOST_CHECK_EXCEPTION(YmlSystem::Parser{}.parse(content, ""),
-                          InputError,
-                          [](const InputError& e)
-                          {
-                              const std::string message = e.what();
-                              BOOST_CHECK(message.find("Invalid null value for required field: id")
-                                          != std::string::npos);
-                              BOOST_CHECK(message.find("|__ [0]") != std::string::npos);
-                              return true;
-                          });
+    BOOST_CHECK_EXCEPTION(
+      YmlSystem::Parser{}.parse(content, ""),
+      InputError,
+      [](const InputError& e)
+      {
+          const std::string message = e.what();
+          BOOST_CHECK(message.find("'system/components/[0]/id': Expected string, found null")
+                      != std::string::npos);
+          return true;
+      });
 }
 
 BOOST_AUTO_TEST_CASE(optim_config_collects_errors_before_resolution_mode_conversion)
@@ -312,7 +356,7 @@ models:
                           });
 }
 
-BOOST_AUTO_TEST_CASE(duplicated_sections_are_all_validated)
+BOOST_AUTO_TEST_CASE(duplicated_sections_are_reported)
 {
     const auto content = R"(
 system:
@@ -326,11 +370,10 @@ system:
                           [](const InputError& e)
                           {
                               const std::string message = e.what();
-                              BOOST_CHECK(message.find("Duplicated field: components")
+                              BOOST_CHECK(message.find("duplicated field 'components'")
                                           != std::string::npos);
-                              BOOST_CHECK(message.find("Missing field: model")
+                              BOOST_CHECK(message.find("Required property 'model' not found.")
                                           != std::string::npos);
-                              BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
                               return true;
                           });
 }
@@ -356,10 +399,17 @@ unexpected-root-key: ignored
       [](const InputError& e)
       {
           const std::string message = e.what();
-          BOOST_CHECK(message.find("Unrecognised field: lower_bound") != std::string::npos);
-          BOOST_CHECK(message.find("Unrecognised field: extra-output") != std::string::npos);
-          BOOST_CHECK(message.find("Unrecognised field: unexpected-root-key") != std::string::npos);
-          BOOST_CHECK(message.find("|__X lower_bound at line 9") != std::string::npos);
+          BOOST_CHECK(message.find("Additional property 'lower_bound' not allowed by schema.")
+                      != std::string::npos);
+          BOOST_CHECK(message.find("Additional property 'extra-output' not allowed by schema.")
+                      != std::string::npos);
+          BOOST_CHECK(
+            message.find("Additional property 'unexpected-root-key' not allowed by schema.")
+            != std::string::npos);
+          BOOST_CHECK(
+            message.find("Line 9 column 11: 'library/models/m/variables/p/lower_bound': Additional "
+                         "property 'lower_bound' not allowed by schema.")
+            != std::string::npos);
           return true;
       });
     BOOST_CHECK(logs.getWarnings().empty());
@@ -381,7 +431,8 @@ system:
     CaptureAntaresLogs logs;
     BOOST_CHECK_EXCEPTION(YmlSystem::Parser{}.parse(content, ""),
                           InputError,
-                          containsMessage("Unrecognised field: scenario-group"));
+                          containsMessage(
+                            "Additional property 'scenario-group' not allowed by schema."));
     BOOST_CHECK(logs.getWarnings().empty());
 }
 
@@ -453,8 +504,10 @@ library:
                           [](const InputError& e)
                           {
                               const std::string message = e.what();
-                              BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
-                              BOOST_CHECK(message.find("Missing field: type") != std::string::npos);
+                              BOOST_CHECK(message.find("Required property 'id' not found.")
+                                          != std::string::npos);
+                              BOOST_CHECK(message.find("Required property 'type' not found.")
+                                          != std::string::npos);
                               return true;
                           });
 }
@@ -667,7 +720,7 @@ BOOST_AUTO_TEST_CASE(tree_displayer_handles_unmarked_and_unknown_keys)
                       "    |__? required (missing)\n");
 }
 
-BOOST_AUTO_TEST_CASE(system_parser_unknown_field_error_matches_complete_tree)
+BOOST_AUTO_TEST_CASE(system_parser_unknown_field_error_is_precise)
 {
     CaptureAntaresLogs logs;
     BOOST_CHECK_EXCEPTION(YmlSystem::Parser{}.parse("system:\n"
@@ -679,16 +732,11 @@ BOOST_AUTO_TEST_CASE(system_parser_unknown_field_error_matches_complete_tree)
                           InputError,
                           [](const InputError& e)
                           {
-                              BOOST_CHECK_EQUAL(e.what(),
-                                                "Line 3 column 7\n"
-                                                "YAML field validation:\n"
-                                                "- Unrecognised field: typo\n"
-                                                "\n"
-                                                "system\n"
-                                                "|__ components\n"
-                                                "    |__ generator\n"
-                                                "        |__X typo at line 5\n"
-                                                "\n");
+                              BOOST_CHECK_EQUAL(
+                                e.what(),
+                                "YAML schema validation failed:\n"
+                                "- Line 5 column 7: 'system/components/generator/typo': "
+                                "Additional property 'typo' not allowed by schema.");
                               return true;
                           });
     BOOST_CHECK(logs.getWarnings().empty());

@@ -17,10 +17,29 @@ Note that Antares will automatically create an **output** directory to write the
 
 ### YAML field validation
 
-Model libraries, `system.yml`, and optimization configuration files are checked for field names
-before their values are decoded. All missing required fields, duplicate fields, and unknown fields
-are reported with their location in the document and prevent loading. Absent optional fields do not
-produce warnings. Value conversion errors are reported after field validation succeeds.
+Model libraries and `system.yml` are validated against the GEMS JSON Schemas before their values
+are decoded; optimization configuration files are checked for field names. All missing required
+fields, duplicate fields, unknown fields and values of the wrong type are reported, with their line
+and column and the path of the entry (entries are named by their `id`), and prevent loading:
+
+```
+YAML schema validation failed:
+- Line 9 column 11: 'library/models/m/variables/p/lower_bound': Additional property 'lower_bound' not allowed by schema.
+```
+
+Absent optional fields do not produce warnings, and an empty collection (`components:`) is read as
+absent. Expression syntax, references between libraries, ports and components, and data-series
+dimensions are checked afterwards, when the values are decoded and converted.
+
+Plain values are typed as in YAML 1.2: `true` and `false` are booleans, `123` is an integer and
+`1.5` a number. Ids and names are strings, so write `"123"` for an id made of digits; `yes`, `on`,
+`no` and `off` are strings, not booleans. An empty value (`description:`) is `null`, not an empty
+string. A key repeated in the same mapping is an error. Anchors and aliases are expanded, and a
+document that nests deeper than 64 levels or expands to more than a million nodes is rejected.
+
+The schemas also accept some keys that the Simulator reads and ignores: `library.version`,
+`library.taxonomy`, `library.dependencies`, model `taxonomy-category` and `properties`, constraint
+`lower-bound` and `upper-bound`, component `integer-strategy`, and `system.description`.
 
 The following lists describe field presence requirements. A field listed as required inside an
 optional section or collection entry is required only when that section or entry is present.
@@ -218,7 +237,8 @@ models:
 - **variables** _(optional)_: a collection of optimization variables that are defined for this model
     - **id**: an ID for the variable. Must be unique inside the scope of the model, and
       respect [these rules](#rules-for-ids).
-    - **variable-type**: `continuous`, `integer`, or `binary`
+    - **variable-type**: `continuous`, `integer`, or `boolean` (`binary` is accepted as a synonym of
+      `boolean`)
     - **lower-bound** _(optional)_: an [expression](#expressions) representing the lower bound of the variable. The
       expression inside the parentheses must evaluate to a scalar.
       and/or parameters only. If missing, defaults to -inf for continuous and integer types, or 0 for binary.

@@ -24,8 +24,8 @@ target_link_libraries(yml-system
         Antares::input-error
         Antares::antares-study-system-model
         PRIVATE
+        Antares::yml-schema
         Antares::forbidden-nodes
-        Antares::yml-utils
         yaml-cpp::yaml-cpp
 )
 
