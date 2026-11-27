@@ -2,7 +2,6 @@ include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 add_boost_test(unit-tests-for-solver-optimisation
         SRC
         test_main.cpp
-        adequacy_patch.cpp
         FillerFixture.cpp
         FillerFixture.h
         test_componentToAreaConnectionFiller.cpp
