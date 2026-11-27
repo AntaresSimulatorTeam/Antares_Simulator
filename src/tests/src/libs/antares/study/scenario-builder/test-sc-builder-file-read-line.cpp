@@ -5,6 +5,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <functional>
+
+#include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <antares/study/scenario-builder/rules.h>
@@ -206,76 +209,71 @@ struct Fixture
 
 BOOST_AUTO_TEST_SUITE(s)
 
-// =================
-// Tests on Load
-// =================
-BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_18__load_TS_number_11_is_chosen__reading_OK, Fixture)
+namespace
 {
-    AreaName yearNumber = "18";
-    std::string tsNumber = "11";
-    std::vector<std::string> splitKey = {"l", "area 2", yearNumber};
-    BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
+struct AreaTsNumberCase
+{
+    std::string name;
+    std::string key; // "l", "w", "s", "h"
+    int area;        // 1, 2 or 3
+    std::string year;
+    std::string tsNumber;
+    // value stored in the rule after readLine
+    std::function<unsigned(Fixture&, Area*, unsigned)> valueInRule;
+    // value stored in the study after apply
+    std::function<unsigned(Area*, unsigned)> valueInStudy;
+};
 
-    BOOST_CHECK_EQUAL(my_rule.load.get_value(std::stoul(yearNumber), area_2->index),
-                      std::stoul(tsNumber));
-
-    BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(area_2->load.series.timeseriesNumbers[std::stoul(yearNumber)],
-                      std::stoul(tsNumber) - 1);
+std::ostream& operator<<(std::ostream& os, const AreaTsNumberCase& c)
+{
+    return os << c.name;
 }
+} // namespace
 
-// =================
-// Tests on Wind
-// =================
-BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_7__wind_TS_number_5_is_chosen__reading_OK, Fixture)
+BOOST_DATA_TEST_CASE_F(
+  Fixture,
+  ts_number_is_read_and_applied_per_area,
+  boost::unit_test::data::make<AreaTsNumberCase>({
+    {"load_area2_year18",
+     "l",
+     2,
+     "18",
+     "11",
+     [](Fixture& f, Area* a, unsigned y) { return f.my_rule.load.get_value(y, a->index); },
+     [](Area* a, unsigned y) { return a->load.series.timeseriesNumbers[y]; }},
+    {"wind_area3_year7",
+     "w",
+     3,
+     "7",
+     "5",
+     [](Fixture& f, Area* a, unsigned y) { return f.my_rule.wind.get_value(y, a->index); },
+     [](Area* a, unsigned y) { return a->wind.series.timeseriesNumbers[y]; }},
+    {"solar_area1_year4",
+     "s",
+     1,
+     "4",
+     "8",
+     [](Fixture& f, Area* a, unsigned y) { return f.my_rule.solar.get_value(y, a->index); },
+     [](Area* a, unsigned y) { return a->solar.series.timeseriesNumbers[y]; }},
+    {"hydro_area2_year15",
+     "h",
+     2,
+     "15",
+     "3",
+     [](Fixture& f, Area* a, unsigned y) { return f.my_rule.hydro.get_value(y, a->index); },
+     [](Area* a, unsigned y) { return a->hydro.series->timeseriesNumbers[y]; }},
+  }),
+  c)
 {
-    AreaName yearNumber = "7";
-    std::string tsNumber = "5";
-    std::vector<std::string> splitKey = {"w", "area 3", yearNumber};
-    BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
-
-    BOOST_CHECK_EQUAL(my_rule.wind.get_value(std::stoul(yearNumber), area_3->index),
-                      std::stoul(tsNumber));
+    Area* area = c.area == 1 ? area_1 : (c.area == 2 ? area_2 : area_3);
+    const auto year = static_cast<unsigned>(std::stoul(c.year));
+    const auto tsNumber = static_cast<unsigned>(std::stoul(c.tsNumber));
+    std::vector<std::string> splitKey = {c.key, "area " + std::to_string(c.area), c.year};
+    BOOST_CHECK(my_rule.readLine(splitKey, c.tsNumber));
+    BOOST_CHECK_EQUAL(c.valueInRule(*this, area, year), tsNumber);
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(area_3->wind.series.timeseriesNumbers[std::stoul(yearNumber)],
-                      std::stoul(tsNumber) - 1);
-}
-
-// =================
-// Tests on Solar
-// =================
-BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_4__solar_TS_number_8_is_chosen__reading_OK, Fixture)
-{
-    AreaName yearNumber = "4";
-    std::string tsNumber = "8";
-    std::vector<std::string> splitKey = {"s", "area 1", yearNumber};
-    BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
-
-    BOOST_CHECK_EQUAL(my_rule.solar.get_value(std::stoul(yearNumber), area_1->index),
-                      std::stoul(tsNumber));
-
-    BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(area_1->solar.series.timeseriesNumbers[std::stoul(yearNumber)],
-                      std::stoul(tsNumber) - 1);
-}
-
-// =================
-// Tests on Hydro
-// =================
-BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_15__solar_TS_number_3_is_chosen__reading_OK, Fixture)
-{
-    AreaName yearNumber = "15";
-    std::string tsNumber = "3";
-    std::vector<std::string> splitKey = {"h", "area 2", yearNumber};
-    BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
-
-    BOOST_CHECK_EQUAL(my_rule.hydro.get_value(std::stoul(yearNumber), area_2->index),
-                      std::stoul(tsNumber));
-
-    BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(area_2->hydro.series->timeseriesNumbers[std::stoul(yearNumber)],
-                      std::stoul(tsNumber) - 1);
+    BOOST_CHECK_EQUAL(c.valueInStudy(area, year), tsNumber - 1);
 }
 
 // ===========================
@@ -381,103 +379,55 @@ BOOST_FIXTURE_TEST_CASE(
 // ========================
 // Tests on Hydro initial levels
 // ========================
-BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_17__hydro_level_0_123_is_chosen__reading_OK, Fixture)
+namespace
 {
-    AreaName yearNumber = "17";
-    std::string level = "0.123";
-    std::vector<std::string> splitKey = {"hl", "area 1", yearNumber};
-    my_rule.readLine(splitKey, level);
+struct HydroLevelCase
+{
+    std::string name;
+    std::string key; // "hl": initial levels, "hfl": final levels
+    int area;
+    std::string year;
+    std::string level;
+    double expected; // level, clamped to [0, 1]
+};
 
-    BOOST_CHECK_EQUAL(my_rule.hydroInitialLevels.get_value(std::stoul(yearNumber), area_1->index),
-                      std::stod(level));
-
-    BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(study->scenarioInitialHydroLevels[area_1->index][std::stoul(yearNumber)],
-                      std::stod(level));
+std::ostream& operator<<(std::ostream& os, const HydroLevelCase& c)
+{
+    return os << c.name;
 }
+} // namespace
 
-BOOST_FIXTURE_TEST_CASE(
-  on_area2_and_on_year_9__hydro_level_1_5_is_chosen_level_lowered_to_1__reading_OK,
-  Fixture)
+BOOST_DATA_TEST_CASE_F(Fixture,
+                       hydro_level_is_read_and_clamped_to_0_1,
+                       boost::unit_test::data::make<HydroLevelCase>({
+                         {"initial_in_range", "hl", 1, "17", "0.123", 0.123},
+                         {"initial_lowered_to_1", "hl", 2, "9", "1.5", 1.},
+                         {"initial_raised_to_0", "hl", 3, "5", "-3.5", 0.},
+                         {"final_in_range", "hfl", 1, "8", "0.342", 0.342},
+                         {"final_lowered_to_1", "hfl", 2, "1", "2.4", 1.},
+                         {"final_raised_to_0", "hfl", 3, "3", "-5.2", 0.},
+                       }),
+                       c)
 {
-    AreaName yearNumber = "9";
-    std::string level = "1.5";
-    std::vector<std::string> splitKey = {"hl", "area 2", yearNumber};
-    BOOST_CHECK(my_rule.readLine(splitKey, level));
+    Area* area = c.area == 1 ? area_1 : (c.area == 2 ? area_2 : area_3);
+    const auto year = static_cast<unsigned>(std::stoul(c.year));
+    const bool initial = c.key == "hl";
+    std::vector<std::string> splitKey = {c.key, "area " + std::to_string(c.area), c.year};
+    BOOST_CHECK(my_rule.readLine(splitKey, c.level));
 
-    BOOST_CHECK_EQUAL(my_rule.hydroInitialLevels.get_value(std::stoul(yearNumber), area_2->index),
-                      1.);
+    const double inRule = initial ? my_rule.hydroInitialLevels.get_value(year, area->index)
+                                  : my_rule.hydroFinalLevels.get_value(year, area->index);
+    BOOST_CHECK_EQUAL(inRule, c.expected);
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(study->scenarioInitialHydroLevels[area_2->index][std::stoul(yearNumber)], 1.);
-}
-
-BOOST_FIXTURE_TEST_CASE(
-  on_area3_and_on_year_5__hydro_level_neg_3_5_is_chosen__level_raised_to_0__reading_OK,
-  Fixture)
-{
-    AreaName yearNumber = "5";
-    std::string level = "-3.5";
-    std::vector<std::string> splitKey = {"hl", "area 3", yearNumber};
-    BOOST_CHECK(my_rule.readLine(splitKey, level));
-
-    BOOST_CHECK_EQUAL(my_rule.hydroInitialLevels.get_value(std::stoul(yearNumber), area_3->index),
-                      0.);
-
-    BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(study->scenarioInitialHydroLevels[area_3->index][std::stoul(yearNumber)], 0.);
+    const auto& inStudy = initial ? study->scenarioInitialHydroLevels
+                                  : study->scenarioFinalHydroLevels;
+    BOOST_CHECK_EQUAL(inStudy[area->index][year], c.expected);
 }
 
 // ========================
 // Tests on Hydro final levels
 // ========================
-BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_8__hydro_level_0_342_is_chosen__reading_OK, Fixture)
-{
-    AreaName yearNumber = "8";
-    std::string level = "0.342";
-    std::vector<std::string> splitKey = {"hfl", "area 1", yearNumber};
-    my_rule.readLine(splitKey, level);
-
-    BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(std::stoul(yearNumber), area_1->index),
-                      std::stod(level));
-
-    BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(study->scenarioFinalHydroLevels[area_1->index][std::stoul(yearNumber)],
-                      std::stod(level));
-}
-
-BOOST_FIXTURE_TEST_CASE(
-  on_area2_and_on_year_1__hydro_level_2_4_is_chosen_level_lowered_to_1__reading_OK,
-  Fixture)
-{
-    AreaName yearNumber = "1";
-    std::string level = "2.4";
-    std::vector<std::string> splitKey = {"hfl", "area 2", yearNumber};
-    BOOST_CHECK(my_rule.readLine(splitKey, level));
-
-    BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(std::stoul(yearNumber), area_2->index),
-                      1.);
-
-    BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(study->scenarioFinalHydroLevels[area_2->index][std::stoul(yearNumber)], 1.);
-}
-
-BOOST_FIXTURE_TEST_CASE(
-  on_area3_and_on_year_3__hydro_level_neg_5_2_is_chosen__level_raised_to_0__reading_OK,
-  Fixture)
-{
-    AreaName yearNumber = "3";
-    std::string level = "-5.2";
-    std::vector<std::string> splitKey = {"hfl", "area 3", yearNumber};
-    BOOST_CHECK(my_rule.readLine(splitKey, level));
-
-    BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(std::stoul(yearNumber), area_3->index),
-                      0.);
-
-    BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(study->scenarioFinalHydroLevels[area_3->index][std::stoul(yearNumber)], 0.);
-}
-
 // ======================
 // Tests on Links NTC
 // ======================
