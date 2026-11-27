@@ -74,6 +74,15 @@ LinkCapacityFiller::LinkCapacityFiller(PROBLEME_HEBDO* problemeHebdo,
     scenarioGroupRepo_(scenarioGroupRepo),
     variableManager_(VariableManagerFromProblemHebdo(problemeHebdo))
 {
+    // NomsDesPays holds the lowercase area ids, like the link capacity connection ends
+    for (uint32_t interco = 0; interco < problemeHebdo_->NombreDInterconnexions; ++interco)
+    {
+        const auto& fromArea = problemeHebdo_->NomsDesPays
+                                 [problemeHebdo_->PaysOrigineDeLInterconnexion[interco]];
+        const auto& toArea = problemeHebdo_->NomsDesPays
+                               [problemeHebdo_->PaysExtremiteDeLInterconnexion[interco]];
+        intercoIndex_.try_emplace({fromArea, toArea}, static_cast<int>(interco));
+    }
 }
 
 void LinkCapacityFiller::addVariables(const FillContext&)
@@ -88,23 +97,11 @@ void LinkCapacityFiller::addObjectives(const FillContext&)
 
 int LinkCapacityFiller::getIntercoIndex(const std::string& from, const std::string& to) const
 {
-    bool reverseExists = false;
-    for (uint32_t interco = 0; interco < problemeHebdo_->NombreDInterconnexions; ++interco)
+    if (const auto it = intercoIndex_.find({from, to}); it != intercoIndex_.end())
     {
-        // Area ids and link capacity connection ends are both lowercase
-        const auto& fromArea = problemeHebdo_->NomsDesPays
-                                 [problemeHebdo_->PaysOrigineDeLInterconnexion[interco]];
-        const auto& toArea = problemeHebdo_->NomsDesPays
-                               [problemeHebdo_->PaysExtremiteDeLInterconnexion[interco]];
-        if (fromArea == from && toArea == to)
-        {
-            return static_cast<int>(interco);
-        }
-        if (fromArea == to && toArea == from)
-        {
-            reverseExists = true;
-        }
+        return it->second;
     }
+    const bool reverseExists = intercoIndex_.contains({to, from});
     if (reverseExists)
     {
         throw Error::RuntimeError(

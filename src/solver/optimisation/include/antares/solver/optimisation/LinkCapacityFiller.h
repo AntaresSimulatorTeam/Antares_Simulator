@@ -3,6 +3,10 @@
 
 #pragma once
 
+#include <map>
+#include <string>
+#include <utility>
+
 #include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/optimisation/linear-problem-api/linearProblemFiller.h"
 #include "antares/solver/optim-model-filler/TimeDependentLinearExpression.h"
@@ -45,6 +49,9 @@ private:
     const LinearProblem::Api::ILinearProblemData* data_;
     const LinearProblem::ScenarioGroupRepository& scenarioGroupRepo_;
     VariableManagement::VariableManager variableManager_;
+
+    /// (origin area id, extremity area id) -> legacy link index
+    std::map<std::pair<std::string, std::string>, int> intercoIndex_;
 
     int getIntercoIndex(const std::string& from, const std::string& to) const;
 
