@@ -13,8 +13,11 @@
 #include <antares/io/inputs/yml-utils/YmlTreeDisplayer.h>
 #include <antares/io/inputs/yml-utils/checkFields.h>
 
+#include "yml-test-helpers.h"
+
 using namespace Antares::IO::Inputs;
 using Antares::UnitTests::CaptureAntaresLogs;
+using YmlTest::containsAll;
 
 BOOST_AUTO_TEST_SUITE(FieldValidation)
 
@@ -189,23 +192,17 @@ library:
         - id: missing_expression
 )";
     CaptureAntaresLogs logs;
-    BOOST_CHECK_EXCEPTION(
-      YmlModel::Parser{}.parse(content),
-      InputError,
-      [](const InputError& e)
-      {
-          const std::string message = e.what();
-          BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: injection-to-balance") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: spillage-bound") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: unsupplied-energy-bound") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: type") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: expression") != std::string::npos);
-          BOOST_CHECK(message.find("Unrecognised field: unexpected") != std::string::npos);
-          BOOST_CHECK(message.find("|__ [0]") != std::string::npos);
-          BOOST_CHECK(message.find("|__ missing_type") != std::string::npos);
-          return true;
-      });
+    BOOST_CHECK_EXCEPTION(YmlModel::Parser{}.parse(content),
+                          InputError,
+                          containsAll({"Missing field: id",
+                                       "Missing field: injection-to-balance",
+                                       "Missing field: spillage-bound",
+                                       "Missing field: unsupplied-energy-bound",
+                                       "Missing field: type",
+                                       "Missing field: expression",
+                                       "Unrecognised field: unexpected",
+                                       "|__ [0]",
+                                       "|__ missing_type"}));
     BOOST_CHECK(logs.getWarnings().empty());
 }
 
@@ -226,20 +223,14 @@ system:
   connections:
     - component1: c
 )";
-    BOOST_CHECK_EXCEPTION(
-      YmlSystem::Parser{}.parse(content, ""),
-      InputError,
-      [](const InputError& e)
-      {
-          const std::string message = e.what();
-          BOOST_CHECK(message.find("Missing field: model") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: value") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: component2") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: port1") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: port2") != std::string::npos);
-          return true;
-      });
+    BOOST_CHECK_EXCEPTION(YmlSystem::Parser{}.parse(content, ""),
+                          InputError,
+                          containsAll({"Missing field: model",
+                                       "Missing field: value",
+                                       "Missing field: id",
+                                       "Missing field: component2",
+                                       "Missing field: port1",
+                                       "Missing field: port2"}));
 }
 
 BOOST_AUTO_TEST_CASE(required_ids_cannot_be_null)
@@ -252,14 +243,7 @@ system:
 )";
     BOOST_CHECK_EXCEPTION(YmlSystem::Parser{}.parse(content, ""),
                           InputError,
-                          [](const InputError& e)
-                          {
-                              const std::string message = e.what();
-                              BOOST_CHECK(message.find("Invalid null value for required field: id")
-                                          != std::string::npos);
-                              BOOST_CHECK(message.find("|__ [0]") != std::string::npos);
-                              return true;
-                          });
+                          containsAll({"Invalid null value for required field: id", "|__ [0]"}));
 }
 
 BOOST_AUTO_TEST_CASE(optim_config_collects_errors_before_resolution_mode_conversion)
@@ -276,18 +260,12 @@ models:
       constraints:
         - mode: drop
 )";
-    BOOST_CHECK_EXCEPTION(
-      YmlOptimConfig::Parser{}.parse(content),
-      InputError,
-      [](const InputError& e)
-      {
-          const std::string message = e.what();
-          BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: location") != std::string::npos);
-          BOOST_CHECK(message.find("|__ model-decomposition") != std::string::npos);
-          BOOST_CHECK(message.find("|__ out-of-bounds-processing") != std::string::npos);
-          return true;
-      });
+    BOOST_CHECK_EXCEPTION(YmlOptimConfig::Parser{}.parse(content),
+                          InputError,
+                          containsAll({"Missing field: id",
+                                       "Missing field: location",
+                                       "|__ model-decomposition",
+                                       "|__ out-of-bounds-processing"}));
 }
 
 BOOST_AUTO_TEST_CASE(optim_config_collects_missing_model_decomposition_with_sibling_errors)
@@ -302,14 +280,7 @@ models:
 )";
     BOOST_CHECK_EXCEPTION(YmlOptimConfig::Parser{}.parse(content),
                           InputError,
-                          [](const InputError& e)
-                          {
-                              const std::string message = e.what();
-                              BOOST_CHECK(message.find("Missing field: model-decomposition")
-                                          != std::string::npos);
-                              BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
-                              return true;
-                          });
+                          containsAll({"Missing field: model-decomposition", "Missing field: id"}));
 }
 
 BOOST_AUTO_TEST_CASE(duplicated_sections_are_all_validated)
@@ -321,18 +292,10 @@ system:
   components:
     - model: lib.model
 )";
-    BOOST_CHECK_EXCEPTION(YmlSystem::Parser{}.parse(content, ""),
-                          InputError,
-                          [](const InputError& e)
-                          {
-                              const std::string message = e.what();
-                              BOOST_CHECK(message.find("Duplicated field: components")
-                                          != std::string::npos);
-                              BOOST_CHECK(message.find("Missing field: model")
-                                          != std::string::npos);
-                              BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
-                              return true;
-                          });
+    BOOST_CHECK_EXCEPTION(
+      YmlSystem::Parser{}.parse(content, ""),
+      InputError,
+      containsAll({"Duplicated field: components", "Missing field: model", "Missing field: id"}));
 }
 
 BOOST_AUTO_TEST_CASE(unknown_fields_are_rejected)
@@ -350,18 +313,12 @@ library:
 unexpected-root-key: ignored
 )";
     CaptureAntaresLogs logs;
-    BOOST_CHECK_EXCEPTION(
-      YmlModel::Parser{}.parse(content),
-      InputError,
-      [](const InputError& e)
-      {
-          const std::string message = e.what();
-          BOOST_CHECK(message.find("Unrecognised field: lower_bound") != std::string::npos);
-          BOOST_CHECK(message.find("Unrecognised field: extra-output") != std::string::npos);
-          BOOST_CHECK(message.find("Unrecognised field: unexpected-root-key") != std::string::npos);
-          BOOST_CHECK(message.find("|__X lower_bound at line 9") != std::string::npos);
-          return true;
-      });
+    BOOST_CHECK_EXCEPTION(YmlModel::Parser{}.parse(content),
+                          InputError,
+                          containsAll({"Unrecognised field: lower_bound",
+                                       "Unrecognised field: extra-output",
+                                       "Unrecognised field: unexpected-root-key",
+                                       "|__X lower_bound at line 9"}));
     BOOST_CHECK(logs.getWarnings().empty());
 }
 
@@ -425,14 +382,7 @@ children:
                              std::vector<YmlUtils::Field>{{"id", true},
                                                           {"children", false, {{"value", true}}}})),
       InputError,
-      [](const InputError& e)
-      {
-          const std::string message = e.what();
-          BOOST_CHECK(message.find("expected a scalar field name") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: value") != std::string::npos);
-          return true;
-      });
+      containsAll({"expected a scalar field name", "Missing field: id", "Missing field: value"}));
 }
 
 BOOST_AUTO_TEST_CASE(non_scalar_ids_do_not_hide_sibling_field_errors)
@@ -450,13 +400,7 @@ library:
 )";
     BOOST_CHECK_EXCEPTION(YmlModel::Parser{}.parse(content),
                           InputError,
-                          [](const InputError& e)
-                          {
-                              const std::string message = e.what();
-                              BOOST_CHECK(message.find("Missing field: id") != std::string::npos);
-                              BOOST_CHECK(message.find("Missing field: type") != std::string::npos);
-                              return true;
-                          });
+                          containsAll({"Missing field: id", "Missing field: type"}));
 }
 
 BOOST_AUTO_TEST_CASE(validation_preserves_document_tags_on_failure)
@@ -503,14 +447,8 @@ BOOST_AUTO_TEST_CASE(mixed_findings_are_reported_as_errors)
                              std::vector<YmlUtils::Field>{{"id", true}, {"value", true}},
                              "root")),
       InputError,
-      [](const InputError& e)
-      {
-          const std::string message = e.what();
-          BOOST_CHECK(message.find("Missing field: value") != std::string::npos);
-          BOOST_CHECK(message.find("Duplicated field: id") != std::string::npos);
-          BOOST_CHECK(message.find("Unrecognised field: unexpected") != std::string::npos);
-          return true;
-      });
+      containsAll(
+        {"Missing field: value", "Duplicated field: id", "Unrecognised field: unexpected"}));
     BOOST_CHECK(logs.getWarnings().empty());
 }
 
@@ -724,22 +662,15 @@ BOOST_AUTO_TEST_CASE(optim_config_parser_error_matches_complete_tree)
 BOOST_AUTO_TEST_CASE(non_map_sequence_items_do_not_hide_other_field_errors)
 {
     const auto node = YAML::Load("children:\n  - scalar\n  - null\n  - {}\n");
-    BOOST_CHECK_EXCEPTION(
-      (YmlUtils::checkFields(node,
-                             std::vector<YmlUtils::Field>{{"children", false, {{"value", true}}}},
-                             "root")),
-      InputError,
-      [](const InputError& e)
-      {
-          const std::string message = e.what();
-          BOOST_CHECK(message.find("Line 2: expected a YAML mapping in 'root/children/[0]'.")
-                      != std::string::npos);
-          BOOST_CHECK(message.find("Line 3: expected a YAML mapping in 'root/children/[1]'.")
-                      != std::string::npos);
-          BOOST_CHECK(message.find("Missing field: value") != std::string::npos);
-          BOOST_CHECK(message.find("|__ [2]") != std::string::npos);
-          return true;
-      });
+    BOOST_CHECK_EXCEPTION((YmlUtils::checkFields(node,
+                                                 std::vector<YmlUtils::Field>{
+                                                   {"children", false, {{"value", true}}}},
+                                                 "root")),
+                          InputError,
+                          containsAll({"Line 2: expected a YAML mapping in 'root/children/[0]'.",
+                                       "Line 3: expected a YAML mapping in 'root/children/[1]'.",
+                                       "Missing field: value",
+                                       "|__ [2]"}));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

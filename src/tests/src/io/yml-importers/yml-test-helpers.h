@@ -9,6 +9,8 @@
 #include <string_view>
 #include <vector>
 
+#include <boost/test/unit_test.hpp>
+
 namespace YmlTest
 {
 
@@ -124,6 +126,22 @@ inline std::string library(const LibrarySpec& l)
 inline std::string libraryWithModel(const ModelSpec& m)
 {
     return library({.models = model(m)});
+}
+
+// Exception predicate: the message must contain every expected substring.
+inline auto containsAll(std::vector<std::string> expected)
+{
+    return [expected = std::move(expected)](const std::exception& e)
+    {
+        const std::string message = e.what();
+        for (const auto& text: expected)
+        {
+            BOOST_CHECK_MESSAGE(message.find(text) != std::string::npos,
+                                "expected message to contain \"" << text << "\" but got:\n"
+                                                                 << message);
+        }
+        return true;
+    };
 }
 
 } // namespace YmlTest

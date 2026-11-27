@@ -249,6 +249,8 @@ BOOST_AUTO_TEST_CASE(port_types_with_empty_thermal_capacity_connection_field)
     BOOST_CHECK_EQUAL(portType.thermal_capacity_connection_field, "");
 }
 
+namespace
+{
 struct AreaConnectionCase
 {
     std::string name;
@@ -263,6 +265,7 @@ std::ostream& operator<<(std::ostream& os, const AreaConnectionCase& c)
 {
     return os << c.name;
 }
+} // namespace
 
 BOOST_DATA_TEST_CASE(
   area_connection_fields_are_parsed,
