@@ -245,4 +245,16 @@ BOOST_FIXTURE_TEST_CASE(hydroPmax, Fixture)
     BOOST_CHECK(!StringToCompatibilityHydroPmax(p.compatibility.hydroPmax, "abc"));
 }
 
+BOOST_FIXTURE_TEST_CASE(remixBeforeCurtailmentSharing, Fixture)
+{
+    p.reset();
+    BOOST_CHECK(p.adqPatchParams.remixBeforeCurtailmentSharing);
+
+    BOOST_CHECK(p.adqPatchParams.updateFromKeyValue("remix-before-curtailment-sharing", "false"));
+    BOOST_CHECK(!p.adqPatchParams.remixBeforeCurtailmentSharing);
+
+    p.reset();
+    BOOST_CHECK(p.adqPatchParams.remixBeforeCurtailmentSharing);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

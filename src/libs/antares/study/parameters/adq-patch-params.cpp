@@ -119,6 +119,7 @@ void AdqPatchParams::reset()
 
     curtailmentSharing.reset();
     setToZeroOutsideInsideLinks = true;
+    remixBeforeCurtailmentSharing = true;
 }
 
 void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
@@ -152,6 +153,11 @@ bool AdqPatchParams::updateFromKeyValue(const std::string& key, const std::strin
     if (key == "redispatch")
     {
         redispatch = Antares::stringToBool(value);
+        return true;
+    }
+    if (key == "remix-before-curtailment-sharing")
+    {
+        remixBeforeCurtailmentSharing = Antares::stringToBool(value);
         return true;
     }
     return curtailmentSharing.updateFromKeyValue(key, value);

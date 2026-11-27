@@ -108,6 +108,10 @@ struct AdqPatchParams
     // This parameters does nothing right now, it will be implemented later in 9.3.x
     bool redispatch = false;
 
+    //! Run hydro remix (shave peaks) before curtailment sharing (if true) or after (if false).
+    //! CSR outputs are computed on the ENS available when CSR runs.
+    bool remixBeforeCurtailmentSharing = true;
+
     CurtailmentSharing curtailmentSharing;
 
     void reset();

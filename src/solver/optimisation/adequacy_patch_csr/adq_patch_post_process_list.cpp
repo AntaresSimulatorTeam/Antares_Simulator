@@ -23,48 +23,70 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(
     post_process_list.push_back(
       std::make_unique<DispatchableMarginPostProcessCmd>(problemeHebdo_, numSpace_, areas));
 
-    post_process_list.push_back(
-      std::make_unique<RemixHydroPostProcessCmd>(problemeHebdo_, areas, params, numSpace, writer));
-
-    post_process_list.push_back(
-      std::make_unique<DumpSimulationTablePostProcessCmd>(problemeHebdo_,
-                                                          IO::Outputs::Stage::peakShaving,
-                                                          simulationTables));
-
-    if (params.adqPatchDebug)
+    auto pushRemixBlock = [&]()
     {
-        post_process_list.push_back(std::make_unique<WriteDebugAdequacyPatch>(problemeHebdo_,
-                                                                              areas,
-                                                                              numSpace_,
-                                                                              writer,
-                                                                              "before"));
+        post_process_list.push_back(std::make_unique<RemixHydroPostProcessCmd>(problemeHebdo_,
+                                                                               areas,
+                                                                               params,
+                                                                               numSpace,
+                                                                               writer));
+
+        post_process_list.push_back(
+          std::make_unique<DumpSimulationTablePostProcessCmd>(problemeHebdo_,
+                                                              IO::Outputs::Stage::peakShaving,
+                                                              simulationTables));
+    };
+
+    // CSR, DTG netting and marginal price update are kept together: CSR outputs are
+    // computed on the ENS available when CSR runs.
+    auto pushCurtailmentSharingBlock = [&]()
+    {
+        if (params.adqPatchDebug)
+        {
+            post_process_list.push_back(std::make_unique<WriteDebugAdequacyPatch>(problemeHebdo_,
+                                                                                  areas,
+                                                                                  numSpace_,
+                                                                                  writer,
+                                                                                  "before"));
+        }
+
+        post_process_list.push_back(
+          std::make_unique<CurtailmentSharingPostProcessCmd>(adqPatchParams,
+                                                             problemeHebdo_,
+                                                             areas,
+                                                             numSpace_,
+                                                             params.optOptions));
+        post_process_list.push_back(
+          std::make_unique<DTGnettingAfterCSRcmd>(problemeHebdo_, areas, numSpace));
+        post_process_list.push_back(
+          std::make_unique<UpdateMrgPriceAfterCSRcmd>(problemeHebdo_, areas, numSpace));
+
+        // After curtailment sharing, DTG netting and the marginal price update, i.e.
+        // once the whole patch has been applied.
+        post_process_list.push_back(
+          std::make_unique<DumpSimulationTablePostProcessCmd>(problemeHebdo_,
+                                                              IO::Outputs::Stage::adequacyPatch,
+                                                              simulationTables));
+
+        if (params.adqPatchDebug)
+        {
+            post_process_list.push_back(std::make_unique<WriteDebugAdequacyPatch>(problemeHebdo_,
+                                                                                  areas,
+                                                                                  numSpace_,
+                                                                                  writer,
+                                                                                  "after"));
+        }
+    };
+
+    if (adqPatchParams.remixBeforeCurtailmentSharing)
+    {
+        pushRemixBlock();
+        pushCurtailmentSharingBlock();
     }
-
-    post_process_list.push_back(
-      std::make_unique<CurtailmentSharingPostProcessCmd>(adqPatchParams,
-                                                         problemeHebdo_,
-                                                         areas,
-                                                         numSpace_,
-                                                         params.optOptions));
-    post_process_list.push_back(
-      std::make_unique<DTGnettingAfterCSRcmd>(problemeHebdo_, areas, numSpace));
-    post_process_list.push_back(
-      std::make_unique<UpdateMrgPriceAfterCSRcmd>(problemeHebdo_, areas, numSpace));
-
-    // After curtailment sharing, DTG netting and the marginal price update, i.e.
-    // once the whole patch has been applied.
-    post_process_list.push_back(
-      std::make_unique<DumpSimulationTablePostProcessCmd>(problemeHebdo_,
-                                                          IO::Outputs::Stage::adequacyPatch,
-                                                          simulationTables));
-
-    if (params.adqPatchDebug)
+    else
     {
-        post_process_list.push_back(std::make_unique<WriteDebugAdequacyPatch>(problemeHebdo_,
-                                                                              areas,
-                                                                              numSpace_,
-                                                                              writer,
-                                                                              "after"));
+        pushCurtailmentSharingBlock();
+        pushRemixBlock();
     }
 
     post_process_list.push_back(
