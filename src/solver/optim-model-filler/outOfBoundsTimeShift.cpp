@@ -5,6 +5,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
+#include <antares/expressions/visitors/TimeSumUtils.h>
 #include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 #include <antares/study/system-model/component.h>
 #include <antares/study/system-model/connection.h>
@@ -59,6 +60,43 @@ bool hasOutOfBoundsTimeShift(const Expressions::Nodes::Node* node,
         {
             return true;
         }
+    }
+
+    if (const auto* timeSumNode = dynamic_cast<const Expressions::Nodes::TimeSumNode*>(node))
+    {
+        // The window [from, to] is expressed in local indices, relative to the local time step
+        // for "t + N" bounds. An empty window (from > to) adds no term.
+        const auto localFirst = static_cast<long long>(ctx.getLocalFirstTimeStep());
+        const auto localLast = static_cast<long long>(ctx.getLocalLastTimeStep());
+        const auto localTimeStep = static_cast<unsigned>(static_cast<long long>(timeStep)
+                                                         - localFirst);
+        const long long from = Expressions::Visitors::resolveTimeSumBound(timeSumNode->from(),
+                                                                          evalVisitor,
+                                                                          localTimeStep);
+        const long long to = Expressions::Visitors::resolveTimeSumBound(timeSumNode->to(),
+                                                                        evalVisitor,
+                                                                        localTimeStep);
+        if (from > to)
+        {
+            return false;
+        }
+        if (from < 0 || to > localLast - localFirst)
+        {
+            return true;
+        }
+        // The window is inside the block (at most one step per time step of the block): the
+        // summed expression is evaluated at each time step of the window.
+        for (long long index = from; index <= to; ++index)
+        {
+            if (hasOutOfBoundsTimeShift(timeSumNode->expression(),
+                                        static_cast<unsigned>(localFirst + index),
+                                        ctx,
+                                        evalVisitor))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     if (const auto* parentNode = dynamic_cast<const Expressions::Nodes::ParentNode*>(node))

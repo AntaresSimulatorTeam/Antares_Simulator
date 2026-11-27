@@ -230,4 +230,81 @@ BOOST_FIXTURE_TEST_CASE(outer_shift_composes_with_connected_port_field_shift,
     BOOST_CHECK(outOfBoundsAt(expression, 1));
 }
 
+namespace
+{
+struct TimeSumCase
+{
+    double from; // relative to t (t + from)
+    double to;   // relative to t (t + to)
+    unsigned timeStep;
+    bool expectedOutOfBounds;
+};
+
+std::ostream& operator<<(std::ostream& os, const TimeSumCase& c)
+{
+    return os << "{from=t+" << c.from << ", to=t+" << c.to << ", timeStep=" << c.timeStep
+              << ", expectedOutOfBounds=" << c.expectedOutOfBounds << "}";
+}
+} // namespace
+
+BOOST_DATA_TEST_CASE_F(
+  PortFieldSumTimeShiftFixture,
+  relative_time_sum_window,
+  bdata::make(std::vector<TimeSumCase>{// Window leaves the block on the left / on the right
+                                       {-1., 0., 0, true},
+                                       {-1., 0., 1, false},
+                                       {0., 1., 1, false},
+                                       {0., 1., 2, true},
+                                       // Window fully inside, or centered on t
+                                       {0., 0., 2, false},
+                                       {-1., 1., 1, false},
+                                       {-1., 1., 0, true},
+                                       // Empty window: no term, never out of bounds
+                                       {1., -1., 0, false},
+                                       {5., -5., 2, false},
+                                       // Window longer than the block
+                                       {-10., 10., 1, true}}),
+  c)
+{
+    Node* expression = create<TimeSumNode>(create<TPlusNode>(create<LiteralNode>(c.from)),
+                                           create<TPlusNode>(create<LiteralNode>(c.to)),
+                                           create<LiteralNode>(1.));
+    BOOST_CHECK_EQUAL(outOfBoundsAt(expression, c.timeStep), c.expectedOutOfBounds);
+}
+
+BOOST_FIXTURE_TEST_CASE(time_sum_with_absolute_bounds, PortFieldSumTimeShiftFixture)
+{
+    Node* inside = create<TimeSumNode>(create<LiteralNode>(0.),
+                                       create<LiteralNode>(2.),
+                                       create<LiteralNode>(1.));
+    Node* outside = create<TimeSumNode>(create<LiteralNode>(0.),
+                                        create<LiteralNode>(3.),
+                                        create<LiteralNode>(1.));
+    BOOST_CHECK(!outOfBoundsAt(inside, 1));
+    BOOST_CHECK(outOfBoundsAt(outside, 1));
+}
+
+BOOST_FIXTURE_TEST_CASE(time_sum_body_shift_is_checked_at_each_window_step,
+                        PortFieldSumTimeShiftFixture)
+{
+    // sum(t .. t+1, shift(0, +1)): at t = 1 the window is {1, 2} and the shift at 2 is out of
+    // bounds, even though the shift is in bounds at t = 1
+    Node* expression = create<TimeSumNode>(create<TPlusNode>(create<LiteralNode>(0.)),
+                                           create<TPlusNode>(create<LiteralNode>(1.)),
+                                           shifted(1.));
+    BOOST_CHECK(!outOfBoundsAt(expression, 0));
+    BOOST_CHECK(outOfBoundsAt(expression, 1));
+}
+
+BOOST_FIXTURE_TEST_CASE(time_sum_in_constraint_expression, PortFieldSumTimeShiftFixture)
+{
+    // sum(t-1 .. t, 1) <= 0
+    Node* sum = create<TimeSumNode>(create<TPlusNode>(create<LiteralNode>(-1.)),
+                                    create<TPlusNode>(create<LiteralNode>(0.)),
+                                    create<LiteralNode>(1.));
+    Node* expression = create<EqualNode>(sum, create<LiteralNode>(0.));
+    BOOST_CHECK(outOfBoundsAt(expression, 0));
+    BOOST_CHECK(!outOfBoundsAt(expression, 1));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
