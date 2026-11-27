@@ -112,12 +112,17 @@ namespace
 {
 struct LinkFixture: FillerFixture
 {
-    LinkFixture():
-        FillerFixture(false, "sirius")
+    // NomsDesPays points into these strings
+    std::vector<std::string> areaNames_;
+
+    explicit LinkFixture(bool isMip = false, const std::string& solverName = "sirius"):
+        FillerFixture(isMip, solverName)
     {
     }
 
-    void setUpLink(OptimEntityContainer& optimEntityContainer)
+    void setUpLink(OptimEntityContainer& optimEntityContainer,
+                   const std::vector<std::string>& areaNames = {"de", "fr"},
+                   bool managedWithCosts = false)
     {
         init(linkConnectionSystem, linkConnectionLib);
         setData("availability_factor_direct", {4.0});
@@ -127,12 +132,18 @@ struct LinkFixture: FillerFixture
 
         optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
 
-        problemeHebdo->NomsDesPays = {"de", "fr"};
+        areaNames_ = areaNames;
+        problemeHebdo->NomsDesPays.clear();
+        for (const auto& name: areaNames_)
+        {
+            problemeHebdo->NomsDesPays.push_back(name.c_str());
+        }
         problemeHebdo->NombreDePays = 2;
         problemeHebdo->NombreDInterconnexions = 1;
         problemeHebdo->PaysOrigineDeLInterconnexion = {0};
         problemeHebdo->PaysExtremiteDeLInterconnexion = {1};
         problemeHebdo->CoutDeTransport.resize(1);
+        problemeHebdo->CoutDeTransport[0].IntercoGereeAvecDesCouts = managedWithCosts;
         problemeHebdo->CorrespondanceVarNativesVarOptim.resize(1);
         auto& varMap = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
         varMap.NumeroDeVariableDuFluxDirect = {0};
@@ -199,8 +210,123 @@ BOOST_AUTO_TEST_CASE(legacy_bounds_reapplied_on_flow_are_detected)
     linearProblem.lookupVariable("direct_flow_t0")->setBounds(-1000., 1000.);
     linearProblem.solve(false);
 
-    BOOST_CHECK_THROW(applyLinkCapacityResults(*problemeHebdo, linearProblem, 0),
-                      Antares::Error::RuntimeError);
+    BOOST_CHECK_EXCEPTION(applyLinkCapacityResults(*problemeHebdo, linearProblem, 0),
+                          Antares::Error::RuntimeError,
+                          [](const Antares::Error::RuntimeError& e) {
+                              return (std::string(e.what()).find("legacy bounds")
+                                      != std::string::npos);
+                          });
+}
+
+BOOST_AUTO_TEST_CASE(unexpected_flow_coefficients_are_detected)
+{
+    OptimEntityContainer optimEntityContainer(linearProblem);
+    setUpLink(optimEntityContainer);
+    auto* flow = linearProblem.lookupVariable("direct_flow_t0");
+    linearProblem.lookupConstraint("LinkCapacity::from<de>::to<fr>::NTCDirectUpper::hour<0>")
+      ->setCoefficient(flow, 2.);
+    linearProblem.solve(false);
+
+    BOOST_CHECK_EXCEPTION(applyLinkCapacityResults(*problemeHebdo, linearProblem, 0),
+                          Antares::Error::RuntimeError,
+                          [](const Antares::Error::RuntimeError& e) {
+                              return (std::string(e.what()).find("flow coefficients")
+                                      != std::string::npos);
+                          });
+}
+
+BOOST_AUTO_TEST_CASE(unknown_link_is_rejected)
+{
+    OptimEntityContainer optimEntityContainer(linearProblem);
+    BOOST_CHECK_EXCEPTION(setUpLink(optimEntityContainer, {"de", "es"}),
+                          Antares::Error::RuntimeError,
+                          [](const Antares::Error::RuntimeError& e)
+                          {
+                              const std::string msg = e.what();
+                              return (msg.find("Unknown link 'de -> fr'") != std::string::npos)
+                                     && msg.find("reverse orientation") == std::string::npos;
+                          });
+}
+
+BOOST_AUTO_TEST_CASE(link_declared_in_reverse_orientation_is_rejected_with_a_hint)
+{
+    OptimEntityContainer optimEntityContainer(linearProblem);
+    // The legacy link is fr -> de while the connection is de -> fr
+    BOOST_CHECK_EXCEPTION(setUpLink(optimEntityContainer, {"fr", "de"}),
+                          Antares::Error::RuntimeError,
+                          [](const Antares::Error::RuntimeError& e)
+                          {
+                              const std::string msg = e.what();
+                              return (msg.find("Unknown link 'de -> fr'") != std::string::npos)
+                                     && (msg.find("reverse orientation 'fr -> de'")
+                                         != std::string::npos);
+                          });
+}
+
+BOOST_AUTO_TEST_CASE(link_not_managed_with_costs_has_no_hurdle_cost_constraints)
+{
+    OptimEntityContainer optimEntityContainer(linearProblem);
+    setUpLink(optimEntityContainer, {"de", "fr"}, false);
+
+    BOOST_CHECK(
+      linearProblem.lookupConstraint("LinkCapacity::from<de>::to<fr>::NTCDirectUpper::hour<0>"));
+    BOOST_CHECK(
+      linearProblem.lookupConstraint("LinkCapacity::from<de>::to<fr>::NTCDirectLower::hour<0>"));
+    BOOST_CHECK(!linearProblem.lookupConstraint(
+      "LinkCapacity::from<de>::to<fr>::IntercoDirectCostUpper::hour<0>"));
+    BOOST_CHECK(!linearProblem.lookupConstraint(
+      "LinkCapacity::from<de>::to<fr>::IntercoIndirectCostUpper::hour<0>"));
+}
+
+BOOST_AUTO_TEST_CASE(legacy_study_without_link_capacity_constraints_is_untouched)
+{
+    OptimEntityContainer optimEntityContainer(linearProblem);
+    setUpLink(optimEntityContainer);
+    problemeHebdo->linkCapacityConstraints.clear();
+    problemeHebdo->ProblemeAResoudre->CoutsReduits.assign(3, 42.);
+    linearProblem.solve(false);
+
+    applyLinkCapacityResults(*problemeHebdo, linearProblem, 0);
+
+    const auto& ntc = problemeHebdo->ValeursDeNTC[0];
+    BOOST_CHECK(std::isnan(ntc.CapaciteEffectiveOrigineVersExtremite[0]));
+    BOOST_CHECK(std::isnan(ntc.CapaciteEffectiveExtremiteVersOrigine[0]));
+    for (const double reducedCost: problemeHebdo->ProblemeAResoudre->CoutsReduits)
+    {
+        BOOST_CHECK_EQUAL(reducedCost, 42.);
+    }
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+namespace
+{
+struct MipLinkFixture: LinkFixture
+{
+    MipLinkFixture():
+        LinkFixture(true, "scip")
+    {
+    }
+};
+} // namespace
+
+BOOST_FIXTURE_TEST_SUITE(_LinkCapacityResultsMip_, MipLinkFixture)
+
+BOOST_AUTO_TEST_CASE(mip_reports_capacities_but_leaves_reduced_costs_untouched)
+{
+    OptimEntityContainer optimEntityContainer(linearProblem);
+    setUpLink(optimEntityContainer);
+    linearProblem.setObjectiveCoefficient(linearProblem.lookupVariable("direct_flow_t0"), -1.);
+    linearProblem.solve(false);
+    BOOST_REQUIRE(!linearProblem.isLP());
+
+    applyLinkCapacityResults(*problemeHebdo, linearProblem, 0);
+
+    const auto& ntc = problemeHebdo->ValeursDeNTC[0];
+    BOOST_CHECK_CLOSE(ntc.CapaciteEffectiveOrigineVersExtremite[0], 160., 1e-6);
+    BOOST_CHECK_CLOSE(ntc.CapaciteEffectiveExtremiteVersOrigine[0], 190., 1e-6);
+    // Duals are not available from a MIP
+    BOOST_CHECK_EQUAL(problemeHebdo->ProblemeAResoudre->CoutsReduits[0], 0.);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
