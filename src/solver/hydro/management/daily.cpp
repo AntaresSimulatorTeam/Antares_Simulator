@@ -52,8 +52,8 @@ enum
 
 struct DebugData
 {
-    using MaxPowerType = Matrix<double, double>::ColumnType;
-    using ReservoirLevelType = Matrix<double>::ColumnType;
+    using MaxPowerType = Matrix::ConstColumnType;
+    using ReservoirLevelType = Matrix::ConstColumnType;
 
     std::array<double, 366> OPP{0};
     std::array<double, 366> DailyTargetGen{0};
@@ -71,10 +71,10 @@ struct DebugData
     const Antares::Data::AreaDependantHydroManagementData& data;
     const VENTILATION_HYDRO_RESULTS_BY_AREA& ventilationResults;
     const double* srcinflows;
-    const MaxPowerType& maxP;
-    const MaxPowerType& maxE;
+    MaxPowerType maxP;
+    MaxPowerType maxE;
     const double* dailyTargetGen;
-    const ReservoirLevelType& lowLevel;
+    ReservoirLevelType lowLevel;
     const double reservoirCapacity;
 
     const Antares::Data::TimeDependantHydroManagementData& hydro_specific;
@@ -229,7 +229,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
 
     const auto& dailyNbHoursAtGenPmax = area.hydro.dailyNbHoursAtGenPmax;
 
-    const auto& maxP = meanMaxDailyGenPower[tsIndex];
+    const auto& maxP = meanMaxDailyGenPower.timeSeries.column(tsIndex);
     const auto& maxE = dailyNbHoursAtGenPmax[0];
 
     auto& ventilationResults = ventilationResults_[area.index];
@@ -255,7 +255,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
         auto daysPerMonth = calendar_.months[month].days;
         assert(daysPerMonth <= maxOPP);
         assert(daysPerMonth <= maxDailyTargetGen);
-        assert(daysPerMonth + dayYear - 1 < meanMaxDailyGenPower.timeSeries.height);
+        assert(daysPerMonth + dayYear - 1 < meanMaxDailyGenPower.timeSeries.height());
 
         for (uint day = 0; day != daysPerMonth; ++day)
         {

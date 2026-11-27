@@ -4,6 +4,8 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_PREPRO_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_PREPRO_H__
 
+#include <filesystem>
+
 #include <antares/array/matrix.h>
 
 #include "../../fwd.h"
@@ -84,7 +86,7 @@ public:
     //! The intermonthly correlation value
     double intermonthlyCorrelation;
     //! data
-    Matrix<> data;
+    Matrix data;
 
 }; // class PreproHydro
 

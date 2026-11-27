@@ -121,6 +121,44 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS)
     BOOST_CHECK_CLOSE(constraint->RHSTimeSeries()[2][8783], 0.6, 0.0001);
 }
 
+BOOST_AUTO_TEST_CASE(BC_load_dimension_headers_for_annual_and_padded_series)
+{
+    auto study = std::make_shared<Study>();
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto area2 = addAreaToListOfAreas(study->areas, "area2");
+    AreaAddLinkBetweenAreas(area1, area2);
+    study->header.version = StudyVersion(8, 7);
+    StudyLoadOptions options;
+    const auto directory = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    for (const auto& [type, height]: std::vector<std::pair<std::string, unsigned>>{{"hourly", 8760},
+                                                                                   {"hourly", 8784},
+                                                                                   {"daily", 365},
+                                                                                   {"daily", 366},
+                                                                                   {"weekly", 365},
+                                                                                   {"weekly", 366}})
+    {
+        std::ofstream ini(directory / "bindingconstraints.ini");
+        ini << "[1]\nname = c\nid = c\nenabled = true\ntype = " << type
+            << "\noperator = less\narea1%area2 = 1\n";
+        ini.close();
+        std::ofstream rhs(directory / "c_lt.txt");
+        rhs << "size:2x" << height << '\n';
+        for (unsigned i = 0; i < height; ++i)
+        {
+            rhs << "1\tinf\n";
+        }
+        rhs.close();
+        BindingConstraintsRepository constraints;
+        BOOST_REQUIRE(constraints.loadFromFolder(*study, options, directory.string()));
+        BOOST_REQUIRE_EQUAL(constraints.size(), 1);
+        const auto& matrix = (*constraints.begin())->RHSTimeSeries();
+        BOOST_CHECK_EQUAL(matrix.height(), height);
+        BOOST_CHECK_EQUAL(matrix.width(), 2);
+        BOOST_CHECK_EQUAL(matrix[0][height - 1], 1.);
+        BOOST_CHECK(std::isinf(matrix[1][height - 1]));
+    }
+}
+
 BOOST_AUTO_TEST_CASE(BC_load_range_type)
 {
     auto study = std::make_shared<Study>();
@@ -347,8 +385,8 @@ BOOST_AUTO_TEST_CASE(BC_disabled_returns_constraint_without_timeseries)
 
     auto constraint = *bindingConstraints.begin();
     BOOST_CHECK_EQUAL(constraint->enabled(), false);
-    BOOST_CHECK_EQUAL(constraint->RHSTimeSeries().width, 0);
-    BOOST_CHECK_EQUAL(constraint->RHSTimeSeries().height, 0);
+    BOOST_CHECK_EQUAL(constraint->RHSTimeSeries().width(), 0);
+    BOOST_CHECK_EQUAL(constraint->RHSTimeSeries().height(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(BC_disabled_both_operator_returns_single_constraint)
@@ -506,7 +544,7 @@ BOOST_AUTO_TEST_CASE(BC_enabled_without_any_weight_becomes_disabled)
     BOOST_CHECK_EQUAL(bcs.size(), 1);
     auto constraint = *bcs.begin();
     BOOST_CHECK_EQUAL(constraint->enabled(), false);
-    BOOST_CHECK_EQUAL(constraint->RHSTimeSeries().width, 0);
+    BOOST_CHECK_EQUAL(constraint->RHSTimeSeries().width(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(BC_link_not_found_weight_is_ignored)
@@ -1060,8 +1098,8 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_clearAndReset_hourly)
     BOOST_CHECK_EQUAL(bc.operatorType(), BindingConstraint::opEquality);
     BOOST_CHECK_EQUAL(bc.weight(link), 0.);
     BOOST_CHECK_EQUAL(bc.offset(link), 0);
-    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width, (unsigned int)BindingConstraint::columnMax);
-    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height, 8784u);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width(), (unsigned int)BindingConstraint::columnMax);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height(), 8784u);
 }
 
 BOOST_AUTO_TEST_CASE(BindingConstraint_clearAndReset_daily)
@@ -1069,8 +1107,8 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_clearAndReset_daily)
     BindingConstraint bc;
     bc.clearAndReset("c", BindingConstraint::typeDaily, BindingConstraint::opLess);
     BOOST_CHECK_EQUAL(bc.type(), BindingConstraint::typeDaily);
-    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width, (unsigned int)BindingConstraint::columnMax);
-    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height, 366u);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width(), (unsigned int)BindingConstraint::columnMax);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height(), 366u);
 }
 
 BOOST_AUTO_TEST_CASE(BindingConstraint_clearAndReset_weekly)
@@ -1078,8 +1116,8 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_clearAndReset_weekly)
     BindingConstraint bc;
     bc.clearAndReset("c", BindingConstraint::typeWeekly, BindingConstraint::opGreater);
     BOOST_CHECK_EQUAL(bc.type(), BindingConstraint::typeWeekly);
-    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width, (unsigned int)BindingConstraint::columnMax);
-    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height, 366u);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().width(), (unsigned int)BindingConstraint::columnMax);
+    BOOST_CHECK_EQUAL(bc.RHSTimeSeries().height(), 366u);
 }
 
 BOOST_AUTO_TEST_CASE(BindingConstraint_skipped_isActive_enabled)
@@ -1111,9 +1149,9 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_RHSTimeSeries_constOverload)
     bc.RHSTimeSeries()[0][0] = 42.0;
 
     const BindingConstraint& constBc = bc;
-    const Antares::Matrix<>& rhs = constBc.RHSTimeSeries();
-    BOOST_CHECK_EQUAL(rhs.width, 2u);
-    BOOST_CHECK_EQUAL(rhs.height, 4u);
+    const Antares::Matrix& rhs = constBc.RHSTimeSeries();
+    BOOST_CHECK_EQUAL(rhs.width(), 2u);
+    BOOST_CHECK_EQUAL(rhs.height(), 4u);
     BOOST_CHECK_CLOSE(rhs[0][0], 42.0, 0.0001);
 }
 

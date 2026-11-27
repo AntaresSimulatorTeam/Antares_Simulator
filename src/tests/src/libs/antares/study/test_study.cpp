@@ -8,6 +8,8 @@
 #include <files-system.h>
 #include <filesystem>
 #include <fstream>
+#include <iterator>
+#include <limits>
 
 #include <boost/test/unit_test.hpp>
 
@@ -77,6 +79,104 @@ BOOST_AUTO_TEST_CASE(area_add)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // areas
+
+BOOST_AUTO_TEST_CASE(xcast_multicolumn_translation_disables_translation)
+{
+    const auto path = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    XCast original(timeSeriesLoad);
+    original.useTranslation = XCast::tsTranslationBeforeConversion;
+    BOOST_REQUIRE(original.saveToFolder(path.string()));
+
+    {
+        std::ofstream output(path / "translation.txt", std::ios::trunc);
+        BOOST_REQUIRE(output);
+        for (unsigned int hour = 0; hour < HOURS_PER_YEAR; ++hour)
+        {
+            output << "2.5\t7\n";
+        }
+    }
+
+    XCast loaded(timeSeriesLoad);
+    BOOST_REQUIRE(loaded.loadFromFolder(path));
+    BOOST_CHECK(loaded.useTranslation == XCast::tsTranslationNone);
+    BOOST_REQUIRE_EQUAL(loaded.translation.width(), 1);
+    BOOST_CHECK_EQUAL(loaded.translation[0][0], 2.);
+    BOOST_CHECK_EQUAL(loaded.translation[0][HOURS_PER_YEAR - 1], 2.);
+    std::filesystem::remove_all(path);
+}
+
+BOOST_AUTO_TEST_CASE(xcast_translation_header_height_controls_validation)
+{
+    const auto path = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    XCast original(timeSeriesLoad);
+    original.useTranslation = XCast::tsTranslationAfterConversion;
+    BOOST_REQUIRE(original.saveToFolder(path.string()));
+
+    for (const unsigned int height: {HOURS_PER_YEAR - 1, HOURS_PER_YEAR, HOURS_PER_YEAR + 24})
+    {
+        {
+            std::ofstream output(path / "translation.txt", std::ios::trunc);
+            BOOST_REQUIRE(output);
+            output << "size:1x" << height << '\n';
+            for (unsigned int hour = 0; hour < height; ++hour)
+            {
+                output << "2000\n";
+            }
+        }
+        XCast loaded(timeSeriesLoad);
+        BOOST_REQUIRE(loaded.loadFromFolder(path));
+        BOOST_CHECK(loaded.useTranslation
+                    == (height == HOURS_PER_YEAR ? XCast::tsTranslationAfterConversion
+                                                 : XCast::tsTranslationNone));
+        BOOST_CHECK_EQUAL(loaded.translation.height(), HOURS_PER_YEAR);
+        BOOST_CHECK_EQUAL(loaded.translation[0][0], 2000.);
+    }
+    {
+        std::ofstream output(path / "translation.txt", std::ios::trunc);
+        BOOST_REQUIRE(output);
+        for (unsigned int hour = 0; hour < HOURS_PER_YEAR + 24; ++hour)
+        {
+            output << "2\n";
+        }
+    }
+    XCast loaded(timeSeriesLoad);
+    BOOST_REQUIRE(loaded.loadFromFolder(path));
+    BOOST_CHECK(loaded.useTranslation == XCast::tsTranslationAfterConversion);
+    BOOST_CHECK_EQUAL(loaded.translation[0][HOURS_PER_YEAR - 1], 2.);
+    std::filesystem::remove_all(path);
+}
+
+BOOST_AUTO_TEST_CASE(xcast_translation_checks_truncated_integer_boundaries)
+{
+    const auto path = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    XCast original(timeSeriesLoad);
+    original.useTranslation = XCast::tsTranslationAfterConversion;
+    BOOST_REQUIRE(original.saveToFolder(path.string()));
+
+    const auto writeTranslation = [&](const char* first, const char* second)
+    {
+        std::ofstream output(path / "translation.txt", std::ios::trunc);
+        BOOST_REQUIRE(output);
+        output << first << '\n' << second << '\n';
+        for (unsigned int hour = 2; hour < HOURS_PER_YEAR; ++hour)
+        {
+            output << "0\n";
+        }
+    };
+    writeTranslation("2147483647.5", "-2147483648.5");
+    XCast loaded(timeSeriesLoad);
+    BOOST_REQUIRE(loaded.loadFromFolder(path));
+    BOOST_CHECK_EQUAL(loaded.translation[0][0], std::numeric_limits<std::int32_t>::max());
+    BOOST_CHECK_EQUAL(loaded.translation[0][1], std::numeric_limits<std::int32_t>::min());
+
+    for (const char* invalid: {"2147483648", "-2147483649", "nan", "inf"})
+    {
+        writeTranslation(invalid, "0");
+        XCast rejected(timeSeriesLoad);
+        BOOST_CHECK(!rejected.loadFromFolder(path));
+    }
+    std::filesystem::remove_all(path);
+}
 
 // Check that disabled objects are indeed removed from computations
 BOOST_AUTO_TEST_SUITE(remove_disabled)
@@ -213,15 +313,45 @@ BOOST_FIXTURE_TEST_CASE(WithForceNoGenOptionTimeSeriesNotGeneratedForReverseSpin
     ts.fill(100);
     cluster->reverseCalculationOfSpinning();
 
-    for (unsigned i = 0; i < ts.width; ++i)
+    for (unsigned i = 0; i < ts.width(); ++i)
     {
-        for (unsigned j = 0; j < ts.height; ++j)
+        for (unsigned j = 0; j < ts.height(); ++j)
         {
             BOOST_CHECK_EQUAL_MESSAGE(ts[i][j],
                                       100,
                                       "Error at " + std::to_string(i) + ", " + std::to_string(j));
         }
     }
+}
+
+BOOST_FIXTURE_TEST_CASE(reverse_spinning_nonfinite_save_preserves_existing_series,
+                        ThermalClusterStudy)
+{
+    const auto path = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    const auto clusterPath = path / areaA->id / cluster->id();
+    std::filesystem::create_directories(clusterPath);
+    const auto seriesFile = clusterPath / "series.txt";
+    {
+        std::ofstream output(seriesFile);
+        BOOST_REQUIRE(output);
+        output << "original series";
+    }
+    cluster->tsGenBehavior = LocalTSGenerationBehavior::forceGen;
+    cluster->spinning = 100.;
+    cluster->series.timeSeries.reset(1, 1);
+    cluster->series.timeSeries[0][0] = 100.;
+    cluster->calculationOfSpinning();
+    cluster->reverseCalculationOfSpinning();
+    BOOST_REQUIRE(std::isnan(cluster->series.timeSeries[0][0]));
+    BOOST_CHECK(!cluster->saveDataSeriesToFolder(path.string()));
+    {
+        std::ifstream input(seriesFile);
+        BOOST_REQUIRE(input);
+        const std::string contents((std::istreambuf_iterator<char>(input)),
+                                   std::istreambuf_iterator<char>());
+        BOOST_CHECK_EQUAL(contents, "original series");
+    }
+    std::filesystem::remove_all(path);
 }
 
 BOOST_FIXTURE_TEST_CASE(thermal_integrity, ThermalClusterStudy)

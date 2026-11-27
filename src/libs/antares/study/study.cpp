@@ -50,12 +50,6 @@ void Study::setModelerData(std::unique_ptr<Solver::ModelerData> modelerData)
     modelerInput_ = std::move(modelerData);
 }
 
-void Study::reduceMemoryUsage()
-{
-    dataBuffer.clear();
-    dataBuffer.shrink();
-}
-
 unsigned Study::getNumberOfCoresPerMode(unsigned nbLogicalCores, int ncMode)
 {
     if (!nbLogicalCores)
@@ -134,13 +128,13 @@ void Study::performTransformationsBeforeLaunchingSimulation()
 
           // Informations about time-series for the load
           auto& matrix = area.load.series.timeSeries;
-          auto& dsmvalues = area.reserves[fhrDSM];
+          auto dsmvalues = area.reserves[fhrDSM];
 
           // Adding DSM values
-          for (unsigned int timeSeries = 0; timeSeries < matrix.width; ++timeSeries)
+          for (unsigned int timeSeries = 0; timeSeries < matrix.width(); ++timeSeries)
           {
-              auto& perHour = matrix[timeSeries];
-              for (unsigned int h = 0; h < matrix.height; ++h)
+              auto perHour = matrix[timeSeries];
+              for (unsigned int h = 0; h < matrix.height(); ++h)
               {
                   perHour[h] += dsmvalues[h];
                   // MBO - 13/05/2014 - #20

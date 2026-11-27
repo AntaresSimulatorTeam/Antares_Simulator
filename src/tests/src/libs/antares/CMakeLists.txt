@@ -12,32 +12,11 @@ add_subdirectory(antlr4-interface)
 
 set(src_libs_antares "${CMAKE_SOURCE_DIR}/src/libs/antares")
 
-# Adding a library embedding all Antares sources useful to test class Matrix
-
-set(SRC_MATRIX_LIB
-        # For confort in IDE, but not necessary
-        ${src_libs_antares}/array/include/antares/array/matrix.h
-        ${src_libs_antares}/array/include/antares/array/matrix.hxx
-
-        # Necessary cpp files
-        logs/logs.cpp)
-
-add_library(matrix ${SRC_MATRIX_LIB})
-
-target_link_libraries(matrix
-        PUBLIC
-        yuni-static-core)
-
-target_include_directories(matrix
-        PRIVATE
-        "${CMAKE_CURRENT_SOURCE_DIR}/logs")
-
 # Building tests on Matrix save operations
 add_boost_test(tests-matrix-save
         SRC
         logs/antares/logs/logs.h
         array/fill-matrix.h
-        array/matrix-bypass-load.h
         array/tests-matrix-save.h
         array/tests-matrix-save.cpp
         INCLUDE
@@ -47,7 +26,8 @@ add_boost_test(tests-matrix-save
         "${CMAKE_CURRENT_SOURCE_DIR}/logs"
         "${CMAKE_SOURCE_DIR}/src/tests/src/libs"
         LIBS
-        matrix
+        Antares::array
+        Antares::io
         yuni-static-core
         antares-core
         Antares::exception)
@@ -56,7 +36,6 @@ add_boost_test(tests-matrix-save
 add_boost_test(tests-matrix-load
         SRC
         array/fill-matrix.h
-        array/matrix-bypass-load.h
         array/tests-matrix-load.h
         array/tests-matrix-load.cpp
         INCLUDE
@@ -66,10 +45,12 @@ add_boost_test(tests-matrix-load
         "${CMAKE_CURRENT_SOURCE_DIR}/logs"
         "${CMAKE_SOURCE_DIR}/src/tests/src/libs"
         LIBS
-        matrix
+        Antares::array
+        Antares::io
         yuni-static-core
         antares-core
-        Antares::exception)
+        Antares::exception
+        test_utils_unit)
 
 # Test utilities
 add_boost_test(test-utils

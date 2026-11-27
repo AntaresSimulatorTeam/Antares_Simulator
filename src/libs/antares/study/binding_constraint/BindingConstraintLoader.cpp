@@ -12,6 +12,7 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 
+#include <antares/array/matrix-io.h>
 #include <antares/utils/utils.h>
 #include "antares/study/binding_constraint/BindingConstraint.h"
 #include "antares/study/version.h"
@@ -119,12 +120,14 @@ bool BindingConstraintLoader::loadTimeSeries(EnvForLoading& env,
                                              BindingConstraint* bindingConstraint) const
 {
     env.buffer = bindingConstraint->timeSeriesFileName(env);
-    bool load_ok = bindingConstraint->RHSTimeSeries_.loadFromCSVFile(
+    bool load_ok = MatrixIO::loadOrReset(
+      bindingConstraint->RHSTimeSeries_,
       env.buffer,
-      1,
-      (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8784 : 366,
-      Matrix<>::optNone,
-      &env.matrixBuffer);
+      {.minWidth = 1,
+       .height = (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8784u : 366u,
+       .rowPolicy = MatrixIO::RowPolicy::HeaderOrPrefix,
+       .minHeaderHeight = (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8760u
+                                                                                       : 365u});
     if (load_ok)
     {
         logs.info() << " loaded time series for `" << bindingConstraint->name() << "` ("
@@ -146,13 +149,15 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(
   BindingConstraint* bindingConstraint) const
 {
     std::filesystem::path path = env.folder / (bindingConstraint->pID + ".txt");
-    Matrix<> intermediate;
-    const int height = (bindingConstraint->pType == BindingConstraint::typeHourly) ? 8784 : 366;
-    if (intermediate.loadFromCSVFile(path.string(),
-                                     BindingConstraint::columnMax,
-                                     height,
-                                     Matrix<>::optFixedSize,
-                                     &env.matrixBuffer))
+    Matrix intermediate;
+    const unsigned int height = (bindingConstraint->pType == BindingConstraint::typeHourly) ? 8784
+                                                                                            : 366;
+    if (MatrixIO::load(intermediate,
+                       path.string(),
+                       {.minWidth = BindingConstraint::columnMax,
+                        .height = height,
+                        .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                        .rowPolicy = MatrixIO::RowPolicy::Prefix}))
     {
         logs.info() << " added `" << bindingConstraint->pName << "` ("
                     << BindingConstraint::TypeToCString(bindingConstraint->pType) << ", "

@@ -12,7 +12,7 @@ namespace Antares::Solver::Variable::Economy
 
 struct MaxMRGinput
 {
-    double* spillage = nullptr;
+    const double* spillage = nullptr;
     double* dens = nullptr;
     double* hydroGeneration = nullptr;
     Antares::Data::TimeSeries* maxHourlyGenPower = nullptr;

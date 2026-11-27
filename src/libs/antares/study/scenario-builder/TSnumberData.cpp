@@ -20,16 +20,16 @@ bool TSNumberData::reset(const Study& study)
 
 void TSNumberData::setTSnumber(unsigned int areaindex, unsigned int year, unsigned int value)
 {
-    assert(areaindex < pTSNumberRules.width);
-    if (year < pTSNumberRules.height)
+    assert(areaindex < pTSNumberRules.width());
+    if (year < pTSNumberRules.height())
     {
         pTSNumberRules[areaindex][year] = value;
     }
 }
 
-void TSNumberData::set_value(unsigned int x, unsigned int y, unsigned int value) const
+void TSNumberData::set_value(unsigned int x, unsigned int y, unsigned int value)
 {
-    pTSNumberRules.entry[y][x] = value;
+    pTSNumberRules[y][x] = value;
 }
 
 } // namespace Antares::Data::ScenarioBuilder

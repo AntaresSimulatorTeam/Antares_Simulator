@@ -44,6 +44,30 @@ BOOST_AUTO_TEST_CASE(saveToFolder_then_load_roundtrip_hourly)
     BOOST_CHECK_CLOSE(reader.maxHourlyPumpPower.timeSeries[0][0], 7.0, 0.0001);
 }
 
+BOOST_AUTO_TEST_CASE(load_daily_series_uses_annual_prefix)
+{
+    const auto dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    DataSeriesHydro writer;
+    writer.reset();
+    writer.ror.fill(1.);
+    writer.storage.fill(2.);
+    writer.mingen.fill(3.);
+    BOOST_REQUIRE(
+      writer.saveToFolder("area1", dir.string(), Parameters::Compatibility::HydroPmax::Daily));
+    {
+        std::ofstream output(dir / "area1" / "mod.txt");
+        for (unsigned i = 0; i < DAYS_PER_YEAR; ++i)
+        {
+            output << i << '\n';
+        }
+        output << "ignored\n";
+    }
+    DataSeriesHydro reader;
+    BOOST_REQUIRE(reader.loadGenerationTS("area1", dir, StudyVersion(8, 6)));
+    BOOST_CHECK_EQUAL(reader.storage.timeSeries.height(), DAYS_PER_YEAR);
+    BOOST_CHECK_EQUAL(reader.storage.timeSeries[0][DAYS_PER_YEAR - 1], DAYS_PER_YEAR - 1);
+}
+
 BOOST_AUTO_TEST_CASE(saveToFolder_daily_does_not_write_maxpower_files)
 {
     auto dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
@@ -100,6 +124,22 @@ BOOST_AUTO_TEST_CASE(LoadMaxPower_missing_folder_returns_false)
     BOOST_CHECK(!reader.LoadMaxPower("no_such_area", dir));
 }
 
+BOOST_AUTO_TEST_CASE(saveToFolder_returns_false_when_target_is_not_a_directory)
+{
+    auto dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    const auto blockingPath = dir / "not-a-directory";
+    std::ofstream blockingFile(blockingPath);
+    blockingFile << "blocking path";
+    blockingFile.close();
+
+    DataSeriesHydro writer;
+    writer.reset();
+
+    BOOST_CHECK(!writer.saveToFolder("area1",
+                                     blockingPath.string(),
+                                     Parameters::Compatibility::HydroPmax::Daily));
+}
+
 BOOST_AUTO_TEST_CASE(getDailyMaxGenAndPumpPowerFromHourlyTS_averages_per_day)
 {
     DataSeriesHydro d;
@@ -108,16 +148,16 @@ BOOST_AUTO_TEST_CASE(getDailyMaxGenAndPumpPowerFromHourlyTS_averages_per_day)
     d.maxHourlyPumpPower.reset(1, HOURS_PER_YEAR);
     d.maxHourlyPumpPower.fill(20.0);
 
-    Antares::Matrix<> dailyGen = d.getDailyMaxGenPowerFromHourlyTS();
-    Antares::Matrix<> dailyPump = d.getDailyMaxPumpPowerFromHourlyTS();
+    Antares::Matrix dailyGen = d.getDailyMaxGenPowerFromHourlyTS();
+    Antares::Matrix dailyPump = d.getDailyMaxPumpPowerFromHourlyTS();
 
-    BOOST_REQUIRE_EQUAL(dailyGen.width, 1u);
-    BOOST_REQUIRE_EQUAL(dailyGen.height, DAYS_PER_YEAR);
+    BOOST_REQUIRE_EQUAL(dailyGen.width(), 1u);
+    BOOST_REQUIRE_EQUAL(dailyGen.height(), DAYS_PER_YEAR);
     BOOST_CHECK_CLOSE(dailyGen[0][0], 10.0, 0.0001);
     BOOST_CHECK_CLOSE(dailyGen[0][DAYS_PER_YEAR - 1], 10.0, 0.0001);
 
-    BOOST_REQUIRE_EQUAL(dailyPump.width, 1u);
-    BOOST_REQUIRE_EQUAL(dailyPump.height, DAYS_PER_YEAR);
+    BOOST_REQUIRE_EQUAL(dailyPump.width(), 1u);
+    BOOST_REQUIRE_EQUAL(dailyPump.height(), DAYS_PER_YEAR);
     BOOST_CHECK_CLOSE(dailyPump[0][0], 20.0, 0.0001);
 }
 

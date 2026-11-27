@@ -81,7 +81,7 @@ public:
     ** It is merely a 3x8760 matrix
     ** [modulation cost, modulation capacity, market bid modulation] per hour
     */
-    Matrix<> modulation;
+    Matrix modulation;
 
     //! Reserve participation container to store the participation of the cluster in the reserves
     //! and the symmetries

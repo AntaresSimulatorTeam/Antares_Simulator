@@ -448,7 +448,7 @@ void initialize_additional_constraints_rhs(AdditionalConstraints& additionalCons
 {
     additionalConstraint.rhs().resize(values.size(), 0.0); // Default series data
     Matrix matrix(1, values.size());
-    matrix.pasteToColumn(0, values.data());
+    matrix.pasteToColumn(0, values);
     additionalConstraint.rhs().timeSeries = matrix;
 }
 

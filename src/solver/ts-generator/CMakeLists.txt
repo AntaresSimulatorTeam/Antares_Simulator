@@ -25,6 +25,7 @@ set(SRC_XCAST
 	xcast/gamma-euler.cpp
 	xcast/gamma-inc.cpp
 	xcast/core.cpp
+    xcast/transfer-function.h
     include/antares/solver/ts-generator/xcast/math.hxx
 	xcast/math.cpp
 	# XCAST

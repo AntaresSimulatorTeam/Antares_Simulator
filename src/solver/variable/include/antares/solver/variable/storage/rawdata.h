@@ -4,6 +4,8 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_RAWDATA_H__
 #define __SOLVER_VARIABLE_STORAGE_RAWDATA_H__
 
+#include <vector>
+
 #include <yuni/yuni.h>
 
 #include <antares/study/study.h>
@@ -34,7 +36,7 @@ public:
     double monthly[MONTHS_PER_YEAR];
     double weekly[WEEKS_PER_YEAR];
     double daily[DAYS_PER_YEAR];
-    Antares::Memory::Stored<double>::Type hourly;
+    std::vector<double> hourly;
     std::vector<double> year;
     mutable double allYears;
     unsigned int nbYearsCapacity;

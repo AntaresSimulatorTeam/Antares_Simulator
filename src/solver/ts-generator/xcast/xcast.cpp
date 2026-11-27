@@ -9,9 +9,12 @@
 #include <string>
 
 #include <antares/antares/fatal-error.h>
+#include <antares/array/matrix-io.h>
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
 #include "antares/solver/ts-generator/xcast/predicate.hxx"
+
+#include "transfer-function.h"
 
 namespace fs = std::filesystem;
 
@@ -55,7 +58,7 @@ void XCast::exportTimeSeriesToTheOutput(PredicateT& predicate)
           std::string areaId = area.id + "txt";
           fs::path filename = output / areaId;
           std::string buffer;
-          predicate.matrix(area).saveToBuffer(buffer);
+          MatrixIO::saveToBuffer(predicate.matrix(area), buffer, 6, false, std::identity{}, true);
 
           pWriter.addEntryFromBuffer(filename, buffer);
       });
@@ -71,7 +74,7 @@ void XCast::applyTransferFunction(PredicateT& predicate)
         maxPoints = Data::XCast::conversionMaxPoints,
     };
 
-    uint h, i, j, k;
+    uint h, i;
 
     float a[maxPoints];
     float b[maxPoints];
@@ -88,12 +91,10 @@ void XCast::applyTransferFunction(PredicateT& predicate)
 
             uint last_i = 0;
 
-            a[tf.width] = 0.f;
-            b[tf.width] = 0.f;
-            for (i = 0; i != tf.width - 1; ++i)
+            for (i = 0; i != tf.width() - 1; ++i)
             {
-                auto& p0 = tf[i];
-                auto& p1 = tf[i + 1];
+                auto p0 = tf[i];
+                auto p1 = tf[i + 1];
                 if (p1[x] <= p0[x])
                 {
                     std::ostringstream msg;
@@ -101,27 +102,25 @@ void XCast::applyTransferFunction(PredicateT& predicate)
                         << (i + 1) << ")";
                     throw FatalError(msg.str());
                 }
-                a[i] = (p1[y] - p0[y]) / (p1[x] - p0[x]);
-                b[i] = (p0[y] * p1[x] - p1[y] * p0[x]) / (p1[x] - p0[x]);
+                const auto [slope, intercept] = transferFunctionCoefficients(
+                  static_cast<float>(p0[x]),
+                  static_cast<float>(p0[y]),
+                  static_cast<float>(p1[x]),
+                  static_cast<float>(p1[y]));
+                a[i] = slope;
+                b[i] = intercept;
             }
 
             auto& dailyResults = DATA[s];
             for (h = 0; h != HOURS_PER_DAY; ++h)
             {
-                for (i = 0; i != tf.width; ++i)
+                const uint segmentCount = tf.width() - 1;
+                const auto segment = findTransferSegment(tf, tf.width(), dailyResults[h], last_i);
+                if (segment.index < segmentCount)
                 {
-                    j = (i + last_i) % (tf.width);
-                    k = (i + last_i + 1) % (tf.width);
-                    auto& pj = tf.column(j);
-                    auto& pk = tf.column(k);
-
-                    if (dailyResults[h] >= pj[x] && dailyResults[h] <= pk[x])
-                    {
-                        assert(!std::isinf(b[j]) && "Infinite value");
-                        dailyResults[h] = (a[j] * dailyResults[h]) + b[j];
-                        last_i = i;
-                        break;
-                    }
+                    assert(!std::isinf(b[segment.index]) && "Infinite value");
+                    dailyResults[h] = (a[segment.index] * dailyResults[h]) + b[segment.index];
+                    last_i = segment.searchOffset;
                 }
             }
         }
@@ -141,15 +140,22 @@ void XCast::updateMissingCoefficients(PredicateT& predicate)
             {
             case Data::XCast::dtNormal:
             {
-                float** v = data.data.entry;
-                v[gamma][realmonth] = v[alpha][realmonth] - 6.f * v[beta][realmonth];
-                v[delta][realmonth] = v[alpha][realmonth] + 6.f * v[beta][realmonth];
+                auto& v = data.data;
+                // Keep the historical float arithmetic used by XCast. The study data is stored
+                // as doubles, but the generated series and their seeded random path are
+                // float-based.
+                const float average = static_cast<float>(v[alpha][realmonth]);
+                const float deviation = static_cast<float>(v[beta][realmonth]);
+                v[gamma][realmonth] = static_cast<float>(average - 6.f * deviation);
+                v[delta][realmonth] = static_cast<float>(average + 6.f * deviation);
                 break;
             }
             case Data::XCast::dtWeibullShapeA:
             {
-                float** v = data.data.entry;
-                v[delta][realmonth] = (float)GammaEuler(1. + 1. / v[alpha][realmonth]);
+                auto& v = data.data;
+                const float shape = static_cast<float>(v[alpha][realmonth]);
+                const float mean = static_cast<float>(GammaEuler(1. + 1. / shape));
+                v[delta][realmonth] = mean;
                 break;
             }
             default:
@@ -253,7 +259,7 @@ bool XCast::runWithPredicate(PredicateT& predicate)
 
             auto& xcast = predicate.xcastData(area);
 
-            pUseConversion[s] = (xcast.useConversion && xcast.conversion.width >= 3);
+            pUseConversion[s] = (xcast.useConversion && xcast.conversion.width() >= 3);
         }
 
         pAccuracyOnCorrelation = ((study.parameters.timeSeriesAccuracyOnCorrelation
@@ -298,7 +304,7 @@ bool XCast::runWithPredicate(PredicateT& predicate)
                 B[s] = xcastdata.data[beta][realmonth];
                 G[s] = xcastdata.data[gamma][realmonth];
                 D[s] = xcastdata.data[delta][realmonth];
-                M[s] = (int)xcastdata.data[mu][realmonth];
+                M[s] = static_cast<int>(static_cast<float>(xcastdata.data[mu][realmonth]));
                 T[s] = xcastdata.data[theta][realmonth];
                 L[s] = xcastdata.distribution;
 
@@ -332,7 +338,7 @@ bool XCast::runWithPredicate(PredicateT& predicate)
                     MA[s] = +std::numeric_limits<float>::max();
                 }
                 }
-                memcpy(FO[s].data(), xcastdata.K[realmonth], sizeof(float) * HOURS_PER_DAY);
+                std::copy_n(xcastdata.K[realmonth].begin(), HOURS_PER_DAY, FO[s].begin());
             }
 
             uint nbDaysPerMonth = study.calendar.months[month].days;
@@ -367,9 +373,9 @@ bool XCast::runWithPredicate(PredicateT& predicate)
                         continue;
                     }
 
-                    auto& column = srcData.translation[0];
+                    auto column = srcData.translation[0];
                     auto& dailyResults = DATA[s];
-                    assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height
+                    assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height()
                            && "Bound checking");
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
@@ -402,8 +408,8 @@ bool XCast::runWithPredicate(PredicateT& predicate)
                     auto& srcData = predicate.xcastData(currentArea);
 
                     auto& series = predicate.matrix(currentArea);
-                    assert(tsIndex < series.width);
-                    auto& column = series.column(tsIndex);
+                    assert(tsIndex < series.width());
+                    auto column = series.column(tsIndex);
                     auto& dailyResults = DATA[s];
 
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
@@ -414,16 +420,16 @@ bool XCast::runWithPredicate(PredicateT& predicate)
 
                     if (srcData.useTranslation == Data::XCast::tsTranslationAfterConversion)
                     {
-                        assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height
+                        assert(hourInTheYear + HOURS_PER_DAY <= srcData.translation.height()
                                && "Bound checking");
-                        auto& tsavg = srcData.translation[0];
+                        auto tsavg = srcData.translation[0];
                         for (uint h = 0; h != HOURS_PER_DAY; ++h)
                         {
                             dailyResults[h] += (float)tsavg[hourInTheYear + h];
                         }
                     }
 
-                    assert(hourInTheYear + HOURS_PER_DAY <= series.height && "Bound checking");
+                    assert(hourInTheYear + HOURS_PER_DAY <= series.height() && "Bound checking");
                     for (uint h = 0; h != HOURS_PER_DAY; ++h)
                     {
                         column[hourInTheYear + h] = std::round(dailyResults[h]);
@@ -463,17 +469,17 @@ bool XCast::runWithPredicate(PredicateT& predicate)
         {
             auto& area = *(study.areas.byIndex[s]);
 
-            assert(static_cast<uint>(Data::fhrDSM) < area.reserves.width);
+            assert(static_cast<uint>(Data::fhrDSM) < area.reserves.width());
 
             auto& matrix = area.load.series.timeSeries;
-            auto& dsmvalues = area.reserves.column(Data::fhrDSM);
+            auto dsmvalues = area.reserves.column(Data::fhrDSM);
 
-            assert(matrix.width > 0);
-            assert(matrix.height > 0);
-            for (uint timeSeries = 0; timeSeries < matrix.width; ++timeSeries)
+            assert(matrix.width() > 0);
+            assert(matrix.height() > 0);
+            for (uint timeSeries = 0; timeSeries < matrix.width(); ++timeSeries)
             {
-                auto& perHour = matrix.column(timeSeries);
-                for (uint h = 0; h < matrix.height; ++h)
+                auto perHour = matrix.column(timeSeries);
+                for (uint h = 0; h < matrix.height(); ++h)
                 {
                     perHour[h] += dsmvalues[h];
                     assert(!std::isnan(perHour[h]));

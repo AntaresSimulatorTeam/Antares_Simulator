@@ -37,8 +37,8 @@ bool solarTSNumberData::apply(Study& study)
         // Alias to the current area
         Area& area = *(study.areas.byIndex[areaIndex]);
         // alias to the current column
-        assert(areaIndex < pTSNumberRules.width);
-        const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
+        assert(areaIndex < pTSNumberRules.width());
+        const auto col = pTSNumberRules[areaIndex];
 
         logprefix = "Solar: area '" + area.name + "': ";
         ret = ApplyToMatrix(errors, logprefix, area.solar.series, col, tsGenCountSolar) && ret;

@@ -4,9 +4,12 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_TIMESERIES_H__
 
+#include <cstdint>
+#include <filesystem>
 #include <map>
 #include <optional>
 #include <string>
+#include <vector>
 
 #include <antares/array/matrix.h>
 
@@ -17,7 +20,7 @@ namespace Antares::Data
  ** \brief This class is used to represent the generic time series
  **
  **  The goal is to handle indexing with the time series numbers: getCoefficient()
- **  and also providing a wrapper for all the Matrix<> functions such as resize()
+ **  and also providing a wrapper for all the Matrix functions such as resize()
  */
 class TimeSeries;
 
@@ -29,25 +32,25 @@ public:
     // otherwis
     std::optional<std::string> checkSeriesNumberOfColumnsConsistency() const;
 
-    uint32_t operator[](uint y) const;
-    uint32_t& operator[](uint y);
+    uint32_t operator[](uint32_t y) const;
+    uint32_t& operator[](uint32_t y);
 
     void clear();
-    void reset(uint h);
+    void reset(uint32_t h);
 
-    uint height() const;
+    uint32_t height() const;
 
     void saveToBuffer(std::string& data) const;
 
 private:
-    Matrix<uint32_t> tsNumbers;
+    std::vector<uint32_t> tsNumbers;
     std::map<std::string, const TimeSeries*> series;
 };
 
 class TimeSeries final
 {
 public:
-    using TS = Matrix<double>;
+    using TS = Matrix;
 
     explicit TimeSeries(TimeSeriesNumbers& tsNumbers);
     TimeSeries(const TimeSeries& other);
@@ -58,9 +61,7 @@ public:
      ** \param average used to average timeseries
      ** \return A non-zero value if the operation succeeded, 0 otherwise
      */
-    bool loadFromFile(const std::filesystem::path& path,
-                      const bool average,
-                      unsigned options = Matrix<>::optNone);
+    bool loadFromFile(const std::filesystem::path& path, const bool average);
     /*!
      ** \brief Save time series to a file
      **
@@ -79,7 +80,7 @@ public:
 
     /// \brief overload operator to return a column
     /// Unlike getColumn() it uses direct indexing and not timeseriesNumbers
-    double* operator[](uint32_t index);
+    Matrix::ColumnType operator[](uint32_t index);
 
     void reset();
     void reset(uint32_t width, uint32_t height);

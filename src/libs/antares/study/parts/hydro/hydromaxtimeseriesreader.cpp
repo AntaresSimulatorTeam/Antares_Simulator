@@ -3,6 +3,7 @@
 
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
 
+#include <antares/array/matrix-io.h>
 #include <antares/inifile/inifile.h>
 #include "antares/study/study.h"
 
@@ -19,11 +20,11 @@ HydroMaxTimeSeriesReader::HydroMaxTimeSeriesReader(PartHydro& hydro,
     hydro_.dailyMaxPumpAndGen.reset(4U, DAYS_PER_YEAR);
 }
 
-static bool checkPower(const Matrix<>& dailyMaxPumpAndGen, const std::string& areaName)
+static bool checkPower(const Matrix& dailyMaxPumpAndGen, const std::string& areaName)
 {
     for (unsigned int i = 0; i < 4U; ++i)
     {
-        auto& col = dailyMaxPumpAndGen[i];
+        auto col = dailyMaxPumpAndGen[i];
         for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
         {
             if (col[day] < 0. || (i % 2U /*column hours*/ && col[day] > 24.))
@@ -40,7 +41,6 @@ static bool checkPower(const Matrix<>& dailyMaxPumpAndGen, const std::string& ar
 bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const std::string& folder)
 {
     std::filesystem::path filePath;
-    Matrix<>::BufferType fileContent;
     bool ret = true;
 
     std::string filename = "maxpower_" + std::string(areaID_) + ".txt";
@@ -48,11 +48,12 @@ bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const std::string& 
 
     //  It is necessary to load maxpower_ txt file.
 
-    ret = hydro_.dailyMaxPumpAndGen.loadFromCSVFile(filePath.string(),
-                                                    4U,
-                                                    DAYS_PER_YEAR,
-                                                    Matrix<>::optFixedSize,
-                                                    &fileContent)
+    ret = MatrixIO::loadOrReset(hydro_.dailyMaxPumpAndGen,
+                                filePath.string(),
+                                {.minWidth = 4U,
+                                 .height = DAYS_PER_YEAR,
+                                 .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                                 .rowPolicy = MatrixIO::RowPolicy::Prefix})
           && ret;
     return ret;
 }

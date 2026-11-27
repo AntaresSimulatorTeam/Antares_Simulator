@@ -19,7 +19,7 @@ bool ReservesNeedTSNumberData::reset(const Study& study)
 
 void ReservesNeedTSNumberData::setAreaTSnumber(const uint year, uint value)
 {
-    if (year < pTSNumberRules.height)
+    if (year < pTSNumberRules.height())
     {
         pTSNumberRules[0][year] = value;
     }
@@ -41,7 +41,7 @@ bool ReservesNeedTSNumberData::apply(Study& study)
         return ret;
     }
 
-    const MatrixType::ColumnType& col = pTSNumberRules[0];
+    const auto col = pTSNumberRules.column(0);
     for (const auto& [reserveID, reserve]: area.allCapacityReservations->areaCapacityReservations)
     {
         logprefix.clear() << "Reserves Need: Area '" << area.name << "', Reserve '" << reserveID

@@ -3,6 +3,7 @@
 
 #include "antares/study/parts/hydro/prepro.h"
 
+#include <antares/array/matrix-io.h>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include "antares/study/study.h"
@@ -66,7 +67,7 @@ void PreproHydro::reset()
     // data
     data.reset(hydroPreproMax, 12);
     // Expectation
-    auto& col = data[expectation];
+    auto col = data[expectation];
     for (unsigned int i = 0; i != 12; ++i)
     {
         col[i] = 0.;
@@ -79,13 +80,8 @@ void PreproHydro::copyFrom(const PreproHydro& rhs)
     data = rhs.data;
 }
 
-bool PreproHydro::loadFromFolder(Study& s, const std::string& areaID, const fs::path& folder)
+bool PreproHydro::loadFromFolder(Study&, const std::string& areaID, const fs::path& folder)
 {
-    enum
-    {
-        mtrxOption = Matrix<>::optFixedSize,
-    };
-
     constexpr int maxNbOfLineToLoad = 12;
     data.resize(hydroPreproMax, 12);
 
@@ -93,11 +89,12 @@ bool PreproHydro::loadFromFolder(Study& s, const std::string& areaID, const fs::
     bool ret = PreproHydroLoadSettings(this, preproPath);
 
     fs::path energyPath = folder / areaID / "energy.txt";
-    ret = data.loadFromCSVFile(energyPath.string(),
-                               hydroPreproMax,
-                               maxNbOfLineToLoad,
-                               mtrxOption,
-                               &s.dataBuffer)
+    ret = MatrixIO::loadOrReset(data,
+                                energyPath.string(),
+                                {.minWidth = hydroPreproMax,
+                                 .height = maxNbOfLineToLoad,
+                                 .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                                 .rowPolicy = MatrixIO::RowPolicy::Prefix})
           && ret;
 
     return ret;
@@ -122,7 +119,7 @@ bool PreproHydro::validate(const std::string& areaID)
     }
 
     const auto& col = data[powerOverWater];
-    for (unsigned i = 0; i != data.height; ++i)
+    for (unsigned i = 0; i != data.height(); ++i)
     {
         const double d = col[i];
         if (d < 0. || d > 1.)
@@ -135,7 +132,7 @@ bool PreproHydro::validate(const std::string& areaID)
     const auto& colMin = data[minimumEnergy];
     const auto& colMax = data[maximumEnergy];
 
-    for (unsigned i = 0; i != data.height; ++i)
+    for (unsigned i = 0; i != data.height(); ++i)
     {
         if (colMin[i] < 0.)
         {
@@ -155,7 +152,7 @@ bool PreproHydro::validate(const std::string& areaID)
     }
 
     const auto& colExp = data[expectation];
-    for (unsigned i = 0; i != data.height; i++)
+    for (unsigned i = 0; i != data.height(); ++i)
     {
         if (colExp[i] < 0.)
         {
@@ -166,7 +163,7 @@ bool PreproHydro::validate(const std::string& areaID)
     }
 
     const auto& colStdDev = data[stdDeviation];
-    for (unsigned i = 0; i != data.height; i++)
+    for (unsigned i = 0; i != data.height(); ++i)
     {
         if (colStdDev[i] < 0.)
         {

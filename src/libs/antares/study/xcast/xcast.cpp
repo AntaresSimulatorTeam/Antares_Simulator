@@ -3,8 +3,11 @@
 
 #include "antares/study/xcast/xcast.h"
 
+#include <cmath>
+#include <cstdint>
 #include <limits>
 
+#include <antares/array/matrix-io.h>
 #include <antares/inifile/inifile.h>
 #include <antares/io/file.h>
 #include <antares/logs/logs.h>
@@ -17,6 +20,19 @@ static const std::string SEP(1, '/');
 
 namespace Antares::Data
 {
+namespace
+{
+void convertToFloatPrecision(Matrix& matrix)
+{
+    for (unsigned int x = 0; x < matrix.width(); ++x)
+    {
+        for (double& value: matrix[x])
+        {
+            value = static_cast<float>(value);
+        }
+    }
+}
+} // namespace
 
 const char* XCast::TSTranslationUseToCString(TSTranslationUse use)
 {
@@ -151,7 +167,6 @@ bool XCast::loadFromFolder(const fs::path& folder)
     useConversion = false;
 
     // A temporary buffer for reading matrices
-    Matrix<>::BufferType readBuffer;
     // Return value
     bool ret = true;
     // Settings
@@ -226,63 +241,85 @@ bool XCast::loadFromFolder(const fs::path& folder)
     fs::path p = folder / "data.txt";
 
     // Performing normal loading
-    ret = data.loadFromCSVFile(p.string(),
-                               (unsigned int)dataMax,
-                               12,
-                               Matrix<>::optFixedSize,
-                               &readBuffer)
+    ret = MatrixIO::loadOrReset(data,
+                                p.string(),
+                                {.minWidth = static_cast<unsigned int>(dataMax),
+                                 .height = 12,
+                                 .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                                 .rowPolicy = MatrixIO::RowPolicy::Prefix})
           && ret;
+    convertToFloatPrecision(data);
 
     // K
     p = folder / "k.txt";
-    ret = K.loadFromCSVFile(p.string(), 12, 24, Matrix<>::optFixedSize, &readBuffer) && ret;
-
-    unsigned int opts = Matrix<>::optNone;
+    ret = MatrixIO::loadOrReset(K,
+                                p,
+                                {.minWidth = 12,
+                                 .height = 24,
+                                 .widthPolicy = MatrixIO::WidthPolicy::Exact,
+                                 .rowPolicy = MatrixIO::RowPolicy::Prefix})
+          && ret;
+    convertToFloatPrecision(K);
 
     // Time-series translation
     p = folder / "translation.txt";
 
-    ret = translation.loadFromCSVFile(p.string(), 1, HOURS_PER_YEAR, opts, &readBuffer) && ret;
+    const bool translationLoaded = MatrixIO::loadOrReset(
+      translation,
+      p,
+      {.minWidth = 1,
+       .height = HOURS_PER_YEAR,
+       .rowPolicy = MatrixIO::RowPolicy::HeaderHeightOrPrefix});
+    ret = translationLoaded && ret;
 
-    if (translation.empty())
+    for (double& value: translation[0])
     {
-        // This is not really an error
-        useTranslation = tsTranslationNone;
-        translation.reset(1, HOURS_PER_YEAR);
-    }
-    else
-    {
-        if (translation.width != 1 || translation.height != HOURS_PER_YEAR)
+        const double truncated = std::trunc(value);
+        if (!std::isfinite(truncated)
+            || truncated < static_cast<double>(std::numeric_limits<std::int32_t>::min())
+            || truncated > static_cast<double>(std::numeric_limits<std::int32_t>::max()))
         {
-            logs.warning() << folder << ": invalid size for the time-series translation.";
-            translation.resizeWithoutDataLost(1, HOURS_PER_YEAR);
-            useTranslation = tsTranslationNone;
+            logs.warning() << folder << ": invalid value in the time-series translation.";
+            translation.reset(1, HOURS_PER_YEAR);
+            ret = false;
+            break;
         }
+        value = static_cast<std::int32_t>(truncated);
     }
 
-    opts = Matrix<>::optNone;
+    if (translation.width() != 1 || translation.height() != HOURS_PER_YEAR)
+    {
+        logs.warning() << folder << ": invalid size for the time-series translation.";
+        translation.resizeWithoutDataLost(1, HOURS_PER_YEAR);
+        useTranslation = tsTranslationNone;
+    }
 
     // Transfer function
     p = folder / "conversion.txt";
 
-    ret = conversion.loadFromCSVFile(p.string(), 3, 2, opts, &readBuffer) && ret;
-    if (conversion.width >= 3 && conversion.width <= conversionMaxPoints)
+    ret = MatrixIO::loadOrReset(conversion,
+                                p,
+                                {.minWidth = 3,
+                                 .height = 2,
+                                 .rowPolicy = MatrixIO::RowPolicy::Prefix})
+          && ret;
+    convertToFloatPrecision(conversion);
+    if (conversion.width() >= 3 && conversion.width() <= conversionMaxPoints)
     {
         // We will overwrite the left and the right value
         // Warning !!! std::numeric_limits must not be used
         //  it produces unwanted behavior on Linux
-        conversion[0][0] = (float)(-1.0e+19); // - std::numeric_limits<float>::max();
+        conversion[0][0] = static_cast<float>(-1.0e+19);
         conversion[0][1] = conversion[1][1];
-        for (unsigned int x = 1; x < conversion.width - 1; ++x)
+        for (unsigned int x = 1; x < conversion.width() - 1; ++x)
         {
             if (conversion[x][0] <= -1.0e+19 || conversion[x][0] >= +1.0e+19)
             {
                 logs.error() << "TS-Generator: Conversion: Invalid range: " << p;
             }
         }
-        conversion[conversion.width - 1][0] = (float)1.0e+19; // +
-                                                              // std::numeric_limits<float>::max();
-        conversion[conversion.width - 1][1] = conversion[conversion.width - 2][1];
+        conversion[conversion.width() - 1][0] = static_cast<float>(1.0e+19);
+        conversion[conversion.width() - 1][1] = conversion[conversion.width() - 2][1];
     }
     else
     {
@@ -297,12 +334,12 @@ bool XCast::loadFromFolder(const fs::path& folder)
 void XCast::resetTransferFunction()
 {
     conversion.reset(3, 2);
-    conversion[0][0] = (float)(-1.0e+19); // - std::numeric_limits<float>::max();
-    conversion[0][1] = 0.f;
-    conversion[1][0] = 0.f;
-    conversion[1][1] = 0.f;
-    conversion[2][0] = (float)(+1.0e+19); // + std::numeric_limits<float>::max();
-    conversion[2][1] = 0.f;
+    conversion[0][0] = static_cast<float>(-1.0e+19);
+    conversion[0][1] = 0.;
+    conversion[1][0] = 0.;
+    conversion[1][1] = 0.;
+    conversion[2][0] = static_cast<float>(1.0e+19);
+    conversion[2][1] = 0.;
 }
 
 bool XCast::saveToFolder(const std::string& folder) const
@@ -319,16 +356,16 @@ bool XCast::saveToFolder(const std::string& folder) const
     bool ret = true;
 
     // Coefficients
-    ret = data.saveToCSVFile(folder + SEP + "data.txt") && ret;
+    ret = MatrixIO::save(data, folder + SEP + "data.txt") && ret;
 
     // K
-    ret = K.saveToCSVFile(folder + SEP + "k.txt") && ret;
+    ret = MatrixIO::save(K, folder + SEP + "k.txt") && ret;
 
     // TimeSeriesAverage
-    ret = translation.saveToCSVFile(folder + SEP + "translation.txt") && ret;
+    ret = MatrixIO::save(translation, folder + SEP + "translation.txt") && ret;
 
     // Transfer function
-    ret = conversion.saveToCSVFile(folder + SEP + "conversion.txt") && ret;
+    ret = MatrixIO::save(conversion, folder + SEP + "conversion.txt") && ret;
 
     // Settings
     IniFile ini;

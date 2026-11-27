@@ -151,15 +151,15 @@ public:
     double pumpingEfficiency;
     //! Daily max power ({generating max Power, generating max energy, pumping max power, pumping
     //! max energy}x365)
-    Matrix<double, double> dailyMaxPumpAndGen;
+    Matrix dailyMaxPumpAndGen;
     //! Credit Modulation (default 0, 101 * 2)
-    Matrix<double, double> creditModulation;
+    Matrix creditModulation;
 
     //! Daily Inflow Patern ([default 1, 0<x<dayspermonth]x365)
-    Matrix<double> inflowPattern;
+    Matrix inflowPattern;
 
     //! Daily water value ({0,1,2%...100%}x365)
-    Matrix<double> waterValues;
+    Matrix waterValues;
 
     //! Hydro allocation, from other areas
     HydroAllocation allocation;
@@ -172,8 +172,8 @@ public:
     // TODO : following time series could be hosted by the series data member above (of type
     // DataSeriesHydro),
     //        which contains other time.
-    Matrix<double, double> dailyNbHoursAtGenPmax;
-    Matrix<double, double> dailyNbHoursAtPumpPmax;
+    Matrix dailyNbHoursAtGenPmax;
+    Matrix dailyNbHoursAtPumpPmax;
     std::unordered_map<unsigned int, AreaDependantHydroManagementData> managementData;
 
     std::vector<std::optional<double>> deltaBetweenFinalAndInitialLevels;
@@ -195,13 +195,11 @@ private:
 // As this function can be called a lot of times, we pass working variables and returned variables
 // as arguments, so that we don't have to create them locally (as in a classical function) each
 // time.
-double getWaterValue(const double& level,
-                     const Matrix<double>& waterValues,
-                     const unsigned int day);
+double getWaterValue(const double& level, const Matrix& waterValues, const unsigned int day);
 
 // Interpolates a rate from the credit modulation table according to a level
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,
-                           Matrix<double, double>& creditMod,
+                           Matrix& creditMod,
                            int modType);
 
 } // namespace Antares::Data
