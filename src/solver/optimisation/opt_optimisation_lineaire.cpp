@@ -6,14 +6,11 @@
 
 #include <antares/logs/logs.h>
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
-#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
-#include "antares/solver/optimisation/adequacy_patch_csr/gems-part.h"
 #include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
-#include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"
 
@@ -139,17 +136,6 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
     const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                         ->NombreDePasDeTempsPourUneOptimisation;
 
-    const bool captureDailyGems = !problemeHebdo->OptimisationAuPasHebdomadaire
-                                  && problemeHebdo->adequacyPatchRuntimeData
-                                  && problemeHebdo->modelerData
-                                  && problemeHebdo->modelerData->system;
-    if (captureDailyGems)
-    {
-        problemeHebdo->adequacyPatchRuntimeData->resetDailyGemsContributions(
-          problemeHebdo->NombreDePays,
-          problemeHebdo->NombreDePasDeTemps);
-    }
-
     int DernierPdtDeLIntervalle;
     for (uint pdtHebdo = 0, numeroDeLIntervalle = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps;
          pdtHebdo = DernierPdtDeLIntervalle, numeroDeLIntervalle++)
@@ -195,11 +181,6 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
                                                                 inactiveComponents))
         {
             return false;
-        }
-
-        if (captureDailyGems)
-        {
-            captureDailyGemsContributions(*problemeHebdo, numeroDeLIntervalle);
         }
 
         if (problemeHebdo->ExportMPS != mpsExportStatus::NO_EXPORT || problemeHebdo->Expansion)

@@ -3,8 +3,6 @@
 
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
-#include <stdexcept>
-
 #include <antares/antares/constants.h>
 
 namespace
@@ -68,30 +66,6 @@ void AdequacyPatchRuntimeData::setMarginalCostBeforeAdqPatch(int area,
 double AdequacyPatchRuntimeData::marginalCostBeforeAdqPatch(int area, int hour) const
 {
     return marginalCostsBeforeAdqPatch_[area][hour];
-}
-
-void AdequacyPatchRuntimeData::resetDailyGemsContributions(unsigned areaCount, unsigned hourCount)
-{
-    dailyGemsContributions_.assign(areaCount,
-                                   std::vector<std::optional<GemsCsrContribution>>(hourCount));
-}
-
-void AdequacyPatchRuntimeData::setDailyGemsContribution(unsigned area,
-                                                        unsigned hour,
-                                                        GemsCsrContribution contribution)
-{
-    dailyGemsContributions_.at(area).at(hour) = contribution;
-}
-
-const GemsCsrContribution& AdequacyPatchRuntimeData::dailyGemsContribution(unsigned area,
-                                                                           unsigned hour) const
-{
-    if (area >= dailyGemsContributions_.size() || hour >= dailyGemsContributions_[area].size()
-        || !dailyGemsContributions_[area][hour])
-    {
-        throw std::runtime_error("Missing daily GEMS contribution for CSR");
-    }
-    return *dailyGemsContributions_[area][hour];
 }
 
 AdequacyPatchRuntimeData::AdequacyPatchRuntimeData(
