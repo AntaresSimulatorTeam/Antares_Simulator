@@ -280,6 +280,25 @@ BOOST_AUTO_TEST_CASE(for_each_time_sum_index_visits_each_index_with_its_multipli
     BOOST_CHECK_EQUAL(total, 4294967296LL);
 }
 
+BOOST_AUTO_TEST_CASE(forEachTimeSumIndex_short_window_visits_only_window_length)
+{
+    int calls = 0;
+    forEachTimeSumIndex(10, 11, 1000000, [&calls](int, long long) { ++calls; });
+    BOOST_CHECK_EQUAL(calls, 2);
+}
+
+BOOST_AUTO_TEST_CASE(forEachTimeSumIndex_wraps_without_int_overflow_on_huge_block)
+{
+    constexpr int intMax = std::numeric_limits<int>::max();
+    // first = INT_MAX - 2: the 4th visited index must wrap to 1, not overflow
+    std::vector<int> visited;
+    forEachTimeSumIndex(-2,
+                        1,
+                        intMax,
+                        [&visited](int index, long long) { visited.push_back(index); });
+    BOOST_CHECK((visited == std::vector<int>{intMax - 2, intMax - 1, 0, 1}));
+}
+
 BOOST_FIXTURE_TEST_CASE(very_long_relative_time_sum_window_wraps_without_iterating, tests_fixture)
 {
     // sum(t-1e9 .. t+1e9, p) with p = {1, 2, 3} : 2e9+1 = 3 * 666666667 steps, i.e. 666666667

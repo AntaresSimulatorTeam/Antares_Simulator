@@ -13,30 +13,49 @@ class VariabilityVisitor;
 // Normalize a possibly negative or out-of-range time index into [0, size).
 int normalizeTimeIndex(int timeIndex, int size);
 
-// Visit the indices covered by the window [from, to] (no-op if from > to). Indices wrap cyclically
-// on [0, size): a window longer than the block covers some indices several times.
-// callback(index, count) is called once per index covered, with the number of times it is covered.
-// The cost is O(size), whatever the length of the window. For a window that is not longer than the
-// block, indices are visited in window order, each with a count of 1.
-template<class Callback>
-inline void forEachTimeSumIndex(int from, int to, int size, Callback callback)
+// Decomposition of the window [from, to] over a cyclic block of `size` steps:
+// the window covers every index of the block `fullCycles` times, plus the `remainder` indices
+// starting at `first` (wrapping around the block), once each.
+struct TimeSumWindow
+{
+    long long fullCycles = 0;
+    long long remainder = 0;
+    int first = 0;
+};
+
+// Empty window (from > to, or size <= 0) gives fullCycles == 0 and remainder == 0.
+inline TimeSumWindow splitTimeSumWindow(int from, int to, int size)
 {
     if (from > to || size <= 0)
     {
-        return;
+        return {};
     }
     // 64-bit arithmetic: to - from + 1 can exceed INT_MAX
     const long long length = static_cast<long long>(to) - from + 1;
-    const long long fullCycles = length / size;
-    const long long remainder = length % size;
-    const int first = normalizeTimeIndex(from, size);
-    for (int offset = 0; offset < size; ++offset)
+    return {length / size, length % size, normalizeTimeIndex(from, size)};
+}
+
+// Index of the offset-th step after `first`, wrapped on [0, size). 64-bit: first + offset can
+// exceed INT_MAX.
+inline int wrapTimeSumIndex(int first, long long offset, int size)
+{
+    return static_cast<int>((static_cast<long long>(first) + offset) % size);
+}
+
+// Visit the indices covered by the window [from, to] (no-op if from > to). Indices wrap cyclically
+// on [0, size): a window longer than the block covers some indices several times.
+// callback(index, count) is called once per index covered, with the number of times it is covered.
+// The cost is O(min(window length, size)). For a window that is not longer than the block,
+// indices are visited in window order, each with a count of 1.
+template<class Callback>
+inline void forEachTimeSumIndex(int from, int to, int size, Callback callback)
+{
+    const auto window = splitTimeSumWindow(from, to, size);
+    const long long visited = window.fullCycles > 0 ? size : window.remainder;
+    for (long long offset = 0; offset < visited; ++offset)
     {
-        const long long count = fullCycles + (offset < remainder ? 1 : 0);
-        if (count > 0)
-        {
-            callback((first + offset) % size, count);
-        }
+        const long long count = window.fullCycles + (offset < window.remainder ? 1 : 0);
+        callback(wrapTimeSumIndex(window.first, offset, size), count);
     }
 }
 
