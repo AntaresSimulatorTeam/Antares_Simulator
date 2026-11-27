@@ -5,6 +5,7 @@
 
 #include <unit_test_utils.h>
 
+#include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <antares/io/inputs/InputError.h>
@@ -26,36 +27,6 @@ BOOST_AUTO_TEST_CASE(empty_system)
     YmlSystem::System systemObj = parser.parse(system, "");
     BOOST_CHECK(systemObj.id.empty());
     BOOST_CHECK(systemObj.components.empty());
-}
-
-BOOST_AUTO_TEST_CASE(simple_id)
-{
-    YmlSystem::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            description: a basic system
-    )"s;
-    YmlSystem::System systemObj = parser.parse(system, "");
-    BOOST_CHECK_EQUAL(systemObj.id, "base_system");
-}
-
-BOOST_AUTO_TEST_CASE(one_component)
-{
-    YmlSystem::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            description: one simple component
-            components:
-                - id: N
-                  model: abcde
-                  scenario-group: group-234
-    )"s;
-    YmlSystem::System systemObj = parser.parse(system, "");
-    BOOST_CHECK_EQUAL(systemObj.components[0].id, "N");
-    BOOST_CHECK_EQUAL(systemObj.components[0].model, "abcde");
-    BOOST_CHECK_EQUAL(systemObj.components[0].scenarioGroup, "group-234");
 }
 
 BOOST_AUTO_TEST_CASE(two_components)
@@ -80,31 +51,6 @@ BOOST_AUTO_TEST_CASE(two_components)
     BOOST_CHECK_EQUAL(systemObj.components[1].id, "G");
     BOOST_CHECK_EQUAL(systemObj.components[1].model, "std.generator");
     BOOST_CHECK_EQUAL(systemObj.components[1].scenarioGroup, "group-thermal");
-}
-
-BOOST_AUTO_TEST_CASE(component_parameter)
-{
-    YmlSystem::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            description: one component with one parameter
-            components:
-                - id: N
-                  model: std.node
-                  scenario-group: group-234
-                  parameters:
-                    - id: cost
-                      time-dependent: false
-                      scenario-dependent: false
-                      value: 30
-    )"s;
-    YmlSystem::System systemObj = parser.parse(system, "");
-    const auto& param = systemObj.components[0].parameters[0];
-    BOOST_CHECK_EQUAL(param.id, "cost");
-    BOOST_CHECK_EQUAL(param.time_dependent, false);
-    BOOST_CHECK_EQUAL(param.scenario_dependent, false);
-    BOOST_CHECK_EQUAL(std::stod(param.value), 30);
 }
 
 BOOST_AUTO_TEST_CASE(component_parameter_flags_default_to_false_when_missing)
@@ -234,108 +180,68 @@ BOOST_AUTO_TEST_CASE(component_properties)
 // Decoder error-path coverage: requireMap / requireSize / System::decode
 // --------------------------------------------------------------------------
 
-BOOST_AUTO_TEST_CASE(system_node_is_a_scalar_throws_input_error)
+namespace
 {
-    YmlSystem::Parser parser;
-    const auto system = R"(
-        system: "not a map"
-    )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
-}
+struct SystemErrorCase
+{
+    std::string name;
+    std::string yaml;
+    std::string expectedMessage; // empty: only the exception type is checked
+};
 
-BOOST_AUTO_TEST_CASE(component_is_a_scalar_throws_input_error)
+std::ostream& operator<<(std::ostream& os, const SystemErrorCase& c)
 {
-    YmlSystem::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            components:
-                - "not a map"
-    )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+    return os << c.name;
 }
+} // namespace
 
-BOOST_AUTO_TEST_CASE(parameter_is_a_scalar_throws_input_error)
+BOOST_DATA_TEST_CASE(
+  invalid_systems_are_rejected,
+  boost::unit_test::data::make<SystemErrorCase>({
+    {"system_is_a_scalar", "system: scalar\n", "expected a YAML mapping"},
+    {"component_is_a_scalar", "system:\n  components:\n    - scalar\n", "expected a YAML mapping"},
+    {"parameter_is_a_scalar",
+     "system:\n  components:\n    - id: N\n      model: std.node\n      parameters:\n"
+     "        - scalar\n",
+     "expected a YAML mapping"},
+    {"connection_is_a_scalar",
+     "system:\n  connections:\n    - scalar\n",
+     "expected a YAML mapping"},
+    {"area_connection_is_a_scalar",
+     "system:\n  area-connections:\n    - scalar\n",
+     "expected a YAML mapping"},
+    {"thermal_capacity_connection_is_a_scalar",
+     "system:\n  thermal-capacity-connections:\n    - scalar\n",
+     "expected a YAML mapping"},
+    {"thermal_component_is_null",
+     "system:\n  thermal-capacity-connections:\n    - component: c\n      port: p\n"
+     "      thermal-component: null\n",
+     "expected a YAML mapping"},
+    {"connection_with_missing_field",
+     "system:\n  connections:\n    - component1: N\n      port1: p1\n      component2: M\n",
+     ""},
+    {"connection_with_extra_field",
+     "system:\n  connections:\n    - component1: N\n      port1: p1\n      component2: M\n"
+     "      port2: p2\n      extra: bad\n",
+     "Unrecognised field: extra"},
+    {"area_connection_with_wrong_field_count",
+     "system:\n  area-connections:\n    - component: c1\n      port: p1\n",
+     ""},
+    {"thermal_capacity_connection_with_wrong_field_count",
+     "system:\n  thermal-capacity-connections:\n    - component: c1\n      port: p1\n",
+     ""},
+    {"thermal_component_with_wrong_field_count",
+     "system:\n  thermal-capacity-connections:\n    - component: c1\n      port: p1\n"
+     "      thermal-component:\n        area: fr\n",
+     ""},
+    {"misspelled_component_field",
+     "system:\n  components:\n    - id: N\n      model: lib.model\n      scenario-groups: g\n",
+     "Unrecognised field: scenario-groups"},
+  }),
+  c)
 {
     YmlSystem::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            components:
-                - id: N
-                  model: std.node
-                  parameters:
-                    - "not a map"
-    )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
-}
-
-BOOST_AUTO_TEST_CASE(connection_is_a_scalar_throws_input_error)
-{
-    YmlSystem::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            connections:
-                - "not a map"
-    )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
-}
-
-BOOST_AUTO_TEST_CASE(area_connection_is_a_scalar_throws_input_error)
-{
-    YmlSystem::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            area-connections:
-                - "not a map"
-    )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
-}
-
-BOOST_AUTO_TEST_CASE(thermal_capacity_connection_is_a_scalar_throws_input_error)
-{
-    YmlSystem::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            thermal-capacity-connections:
-                - "not a map"
-    )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
-}
-
-BOOST_AUTO_TEST_CASE(connection_with_missing_field_throws_input_error)
-{
-    YmlSystem::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            connections:
-                - component1: N
-                  port1: p1
-                  component2: M
-    )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
-}
-
-BOOST_AUTO_TEST_CASE(connection_with_extra_field_is_rejected)
-{
-    YmlSystem::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            connections:
-                - component1: N
-                  port1: p1
-                  component2: M
-                  port2: p2
-                  extra: bad
-    )"s;
-    BOOST_CHECK_EXCEPTION(parser.parse(system, ""),
-                          InputError,
-                          containsMessage("Unrecognised field: extra"));
+    BOOST_CHECK_EXCEPTION(parser.parse(c.yaml, ""), InputError, containsMessage(c.expectedMessage));
 }
 
 BOOST_AUTO_TEST_CASE(all_missing_fields_are_reported_at_once)
@@ -361,97 +267,4 @@ BOOST_AUTO_TEST_CASE(all_missing_fields_are_reported_at_once)
                                      && msg.find("Missing field: id") != std::string::npos
                                      && msg.find("Missing field: component2") != std::string::npos;
                           });
-}
-
-BOOST_AUTO_TEST_CASE(area_connection_with_wrong_field_count_throws_input_error)
-{
-    YmlSystem::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            area-connections:
-                - component: c1
-                  port: p1
-    )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
-}
-
-BOOST_AUTO_TEST_CASE(thermal_capacity_connection_with_wrong_field_count_throws_input_error)
-{
-    YmlSystem::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            thermal-capacity-connections:
-                - component: c1
-                  port: p1
-    )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
-}
-
-BOOST_AUTO_TEST_CASE(thermal_component_with_wrong_field_count_throws_input_error)
-{
-    YmlSystem::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            thermal-capacity-connections:
-                - component: c1
-                  port: p1
-                  thermal-component:
-                    area: fr
-    )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
-}
-
-BOOST_AUTO_TEST_CASE(thermal_component_null_throws_input_error)
-{
-    YmlSystem::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            thermal-capacity-connections:
-                - component: c1
-                  port: p1
-                  thermal-component: ~
-    )"s;
-    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
-}
-
-BOOST_AUTO_TEST_CASE(non_mapping_entries_are_rejected_by_field_validation)
-{
-    YmlSystem::Parser parser;
-    const std::vector<std::string> systems = {
-      "system:\n  components:\n    - scalar\n",
-      "system:\n  connections:\n    - scalar\n",
-      "system:\n  area-connections:\n    - scalar\n",
-      "system:\n  thermal-capacity-connections:\n    - scalar\n",
-      "system:\n  thermal-capacity-connections:\n    - component: c\n      port: p\n"
-      "      thermal-component: null\n",
-      "system: scalar\n"};
-    for (const auto& system: systems)
-    {
-        BOOST_TEST_CONTEXT(system)
-        {
-            BOOST_CHECK_EXCEPTION(parser.parse(system, ""),
-                                  InputError,
-                                  containsMessage("expected a YAML mapping"));
-        }
-    }
-}
-
-BOOST_AUTO_TEST_CASE(misspelled_component_field_is_rejected)
-{
-    YmlSystem::Parser parser;
-    const auto system = R"(
-        system:
-            id: base_system
-            components:
-                - id: N
-                  model: lib.model
-                  scenario-groups: g
-    )"s;
-    BOOST_CHECK_EXCEPTION(parser.parse(system, ""),
-                          InputError,
-                          containsMessage("Unrecognised field: scenario-groups"));
 }

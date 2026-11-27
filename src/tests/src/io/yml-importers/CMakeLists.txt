@@ -9,6 +9,7 @@ add_boost_test(TestYmlModel
         testConvertorVisitor.cpp
         test_full.cpp
         enum_operators.h
+        yml-test-helpers.h
         testYmlSystem.cpp
         testSystemConverter.cpp
         test-system-with-connexions.cpp

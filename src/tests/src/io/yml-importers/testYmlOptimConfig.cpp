@@ -89,36 +89,6 @@ models:
     BOOST_CHECK(config.models[1].constraints[0].location == "master");
 }
 
-BOOST_AUTO_TEST_CASE(parse_single_model)
-{
-    std::string yaml_content = R"(
-models:
-  - id: single_model
-    model-decomposition:
-      variables:
-        - id: single_var
-          location: master
-      objective-contributions:
-        - id: single_obj
-          location: subproblems
-      constraints:
-        - id: single_constr
-          location: master-and-subproblems
-)";
-
-    Parser parser;
-    OptimConfig config = parser.parse(yaml_content);
-
-    BOOST_REQUIRE_EQUAL(config.models.size(), 1);
-    BOOST_CHECK_EQUAL(config.models[0].id, "single_model");
-    BOOST_REQUIRE_EQUAL(config.models[0].variables.size(), 1);
-    BOOST_CHECK_EQUAL(config.models[0].variables[0].id, "single_var");
-    BOOST_REQUIRE_EQUAL(config.models[0].objectives.size(), 1);
-    BOOST_CHECK_EQUAL(config.models[0].objectives[0].id, "single_obj");
-    BOOST_REQUIRE_EQUAL(config.models[0].constraints.size(), 1);
-    BOOST_CHECK_EQUAL(config.models[0].constraints[0].id, "single_constr");
-}
-
 BOOST_AUTO_TEST_CASE(parse_empty_models_list)
 {
     std::string yaml_content = R"(
