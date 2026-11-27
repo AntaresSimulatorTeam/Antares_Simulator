@@ -13,7 +13,7 @@ namespace YmlTest
 {
 
 // Removes the common leading whitespace of a raw string, so that test YAML can be written with
-// natural C++ indentation. Leading/trailing blank lines are dropped.
+// natural C++ indentation (spaces only, not tabs). Leading/trailing blank lines are dropped.
 inline std::string dedent(std::string_view text)
 {
     std::vector<std::string> lines;
@@ -64,7 +64,8 @@ inline std::string indent(const std::string& text, size_t spaces)
 inline std::string section(const std::string& key, const std::string& value, size_t spaces)
 {
     const auto body = dedent(value);
-    const bool isInline = body.find('\n') == body.size() - 1 && !body.starts_with("- ");
+    const bool isInline = !body.empty() && body.find('\n') == body.size() - 1
+                          && !body.starts_with("- ");
     if (isInline)
     {
         return std::string(spaces, ' ') + key + ": " + body.substr(0, body.size() - 1) + "\n";

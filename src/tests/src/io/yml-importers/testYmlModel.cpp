@@ -273,6 +273,7 @@ BOOST_DATA_TEST_CASE(
      "",
      "",
      ""},
+    // 'price' is optional: blocks written before its introduction must keep parsing
     {"only_injection",
      "injection-to-balance: capa\nspillage-bound:\nunsupplied-energy-bound:\n",
      "capa",
@@ -297,13 +298,6 @@ BOOST_DATA_TEST_CASE(
      "",
      "",
      "price"},
-    // 'price' is optional: blocks written before its introduction must keep parsing
-    {"price_is_optional",
-     "injection-to-balance: capa\nspillage-bound:\nunsupplied-energy-bound:\n",
-     "capa",
-     "",
-     "",
-     ""},
   }),
   c)
 {
