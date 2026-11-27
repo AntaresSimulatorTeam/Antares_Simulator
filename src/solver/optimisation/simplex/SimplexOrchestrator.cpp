@@ -85,13 +85,6 @@ SimplexResult SimplexOrchestrator::solve()
 
     const bool isMip = problemeHebdo_.OptimisationAvecVariablesEntieres;
 
-    // Clear the value published by the previous pass before running this one.
-    // Nothing can still want the old one: a post-process dump runs after the
-    // week's last pass, and a week whose solve fails throws out of
-    // OPT_OptimisationHebdomadaireLineaire before the post-processes run, so the
-    // value cleared here could never have been published either way.
-    problemeHebdo_.lastSolvedObjectiveValue.reset();
-
     // Step 1: Create LP problem
     ortoolsProblem_ = std::make_shared<LegacyOrtoolsLinearProblem>(isMip, options_.solverName);
     // Heap-allocated so it can outlive this call: a post-process simulation
@@ -132,12 +125,6 @@ SimplexResult SimplexOrchestrator::solve()
                 .objectiveValue = 0,
                 .success = false};
     }
-
-    // Publish the objective to the post-process dumps. Called for both passes,
-    // so what survives is the last one actually run. Independent of
-    // `simulationTable`: the stage selection can leave this pass without a table
-    // of its own while a later post-process stage still needs these rows.
-    problemeHebdo_.lastSolvedObjectiveValue = ::getObjectiveValue(solver_.get());
 
     // Success path: fill simulation table
     if (simulationTable_)

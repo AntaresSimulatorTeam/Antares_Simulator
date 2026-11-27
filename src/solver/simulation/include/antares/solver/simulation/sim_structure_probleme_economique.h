@@ -822,14 +822,6 @@ public:
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     Antares::Solver::ModelerData* modelerData = nullptr;
 
-    /// \brief Objective value of the current week's last successful optimisation
-    /// pass, set by SimplexOrchestrator so a post-process simulation table can
-    /// re-emit the modeler component rows with the same objective as the solve.
-    /// The LP and entity container it is paired with are already retained on
-    /// this struct (ortoolsProblem_ / optimEntityContainer). Empty until a
-    /// pass succeeds: a failing week throws before any post-process runs.
-    std::optional<double> lastSolvedObjectiveValue;
-
     /// \brief Kept alive past the solve so the CSR adequacy patch post-process
     /// can evaluate GEMS port field expressions via EvalVisitor.
     std::shared_ptr<Antares::LinearProblem::OptimEntityContainer> optimEntityContainer;
